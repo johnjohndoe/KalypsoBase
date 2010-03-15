@@ -66,10 +66,6 @@ public interface IWspmConstants
 
   public static String NS_WSPM_BOUNDARY = "org.kalypso.model.wspmboundary"; //$NON-NLS-1$
 
-  public static final String WSPWIN_PLOTTER = "org.kalypso.model.wspwin.plotter"; //$NON-NLS-1$
-
-  public static final String WSPWIN_PLOTTER_PATH = WSPWIN_PLOTTER + ".path"; //$NON-NLS-1$
-
   public static final String POINT_PROPERTY = "urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#"; //$NON-NLS-1$
 
   public static final String POINT_PROPERTY_BEWUCHS_AX = POINT_PROPERTY + "BEWUCHS_AX"; //$NON-NLS-1$

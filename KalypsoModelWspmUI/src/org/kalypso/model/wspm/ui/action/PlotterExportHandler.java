@@ -51,21 +51,19 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
-import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.serializer.IProfilSink;
 import org.kalypso.model.wspm.core.profil.serializer.ProfilSerializerUtilitites;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
+import org.kalypso.model.wspm.ui.wspwin.Plotter;
 
 /**
  * Action which exports the selected profile as .prf files.
@@ -85,9 +83,10 @@ public class PlotterExportHandler extends AbstractHandler
     final Shell shell = HandlerUtil.getActiveShellChecked( event );
     final ISelection selection = HandlerUtil.getCurrentSelection( event );
     final ProfileSelection profileSelection = new ProfileSelection( selection );
-    final IProfileFeature[] profiles = profileSelection.getProfiles();
+    final IProfileFeature[] profiles = profileSelection.getSelectedProfiles();
 
-    final String plotterExe = findPlotter( shell );
+    if( !Plotter.checkPlotterExe( shell ) )
+      return null;
 
     final String id = PluginUtilities.id( KalypsoModelWspmUIPlugin.getDefault() );
 
@@ -116,7 +115,8 @@ public class PlotterExportHandler extends AbstractHandler
           try
           {
             ProfilSerializerUtilitites.writeProfile( sink, profile, file );
-            Runtime.getRuntime().exec( "\"" + plotterExe + "\" \"" + file.getPath() + "\"" );//$NON-NLS-1$ //$NON-NLS-2$// $NON-NLS-3$
+
+            Plotter.openPrf( file );
           }
           catch( final IOException e )
           {
@@ -127,7 +127,6 @@ public class PlotterExportHandler extends AbstractHandler
           monitor.worked( 1 );
           if( monitor.isCanceled() )
             return new Status( IStatus.CANCEL, id, 1, "program abortion through user", null );
-
         }
 
         return new Status( IStatus.OK, id, "" );
@@ -136,21 +135,6 @@ public class PlotterExportHandler extends AbstractHandler
 
     ProgressUtilities.busyCursorWhile( op, "could not export cross section profile" );
     return null;
-  }
-
-  private final String findPlotter( final Shell shell )
-  {
-    String plotterPath = KalypsoCorePlugin.getDefault().getPreferenceStore().getString( IWspmConstants.WSPWIN_PLOTTER_PATH );
-
-    if( !plotterPath.equals( "" ) )
-      return plotterPath;
-
-    final FileDialog dlg = new FileDialog( shell );
-    plotterPath = dlg.open();
-    if( plotterPath == null )
-      return "";
-    KalypsoCorePlugin.getDefault().getPreferenceStore().setValue( IWspmConstants.WSPWIN_PLOTTER_PATH, plotterPath );
-    return plotterPath;
   }
 
 }
