@@ -44,22 +44,19 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.wizard.Wizard;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.util.DouglasPeuckerHelper;
 import org.kalypso.model.wspm.ui.action.ProfileSelection;
-import org.kalypso.model.wspm.ui.i18n.Messages;
-import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.wizard.ProfilesChooserPage;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Gernot Belger
@@ -70,6 +67,8 @@ public class SimplifyProfileWizard extends Wizard
 
   final private CommandableWorkspace m_workspace;
 
+  private final SimplifyProfilePage m_simplifyPage;
+
   public SimplifyProfileWizard( final ProfileSelection profileSelection )
   {
     m_workspace = profileSelection.getWorkspace();
@@ -77,27 +76,21 @@ public class SimplifyProfileWizard extends Wizard
 
     final String message = "Please select the profiles that will simplified.";
     m_profileChooserPage = new ProfilesChooserPage( message, profileSelection, false );
-  }
+    m_simplifyPage = new SimplifyProfilePage( "simplifyPage" );
 
-  /**
-   * @see org.eclipse.jface.wizard.Wizard#addPages()
-   */
-  @Override
-  public void addPages( )
-  {
-    super.addPages();
     addPage( m_profileChooserPage );
+    addPage( m_simplifyPage );
   }
 
   private IProfil[] toProfiles( final Object[] features )
   {
-
     final IProfil[] choosenProfiles = new IProfil[features.length];
     for( int i = 0; i < features.length; i++ )
     {
       final IProfileFeature wspmProfile = (IProfileFeature) features[i];
       choosenProfiles[i] = wspmProfile.getProfil();
     }
+
     return choosenProfiles;
   }
 
@@ -107,27 +100,18 @@ public class SimplifyProfileWizard extends Wizard
   @Override
   public boolean performFinish( )
   {
-    final double allowedDistance = 1.0;
+    final double allowedDistance = m_simplifyPage.getDistance();
 
     final Object[] profilFeatures = m_profileChooserPage.getChoosen();
     final IProfil[] choosenProfiles = toProfiles( profilFeatures );
     final List<FeatureChange> featureChanges = new ArrayList<FeatureChange>();
-    for( int i = 0; i < choosenProfiles.length; i++ )
+    for( final IProfil profile : choosenProfiles )
     {
-      final IProfil profile = choosenProfiles[i];
       final IRecord[] points = profile.getPoints();
 
-      /* Get the profile changes. */
-      final IProfilChange[] removeChanges = DouglasPeuckerHelper.reduce( allowedDistance, points, profile );
-// if( removeChanges.length == 0 )
-//        return StatusUtilities.createOkStatus( org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.DouglasPeuckerDialog.12" ) ); //$NON-NLS-1$
-
-      /* Create the profile operation. */
-      final String operationTitle = Messages.getString( "org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.DouglasPeuckerDialog.13" ); //$NON-NLS-1$
-      final ProfilOperation operation = new ProfilOperation( operationTitle, profile, removeChanges, false );
-      operation.execute( new NullProgressMonitor(), null );
-
-      featureChanges.addAll( Arrays.asList( ProfileFeatureFactory.toFeatureAsChanges( profile, (Feature) profilFeatures[i] ) ) );
+      final IRecord[] pointsToKeep = profile.getMarkedPoints();
+      final IRecord[] pointsToRemove = DouglasPeuckerHelper.reducePoints( points, pointsToKeep, allowedDistance );
+      profile.getResult().removeAll( Arrays.asList( pointsToRemove ) );
     }
 
     final ChangeFeaturesCommand command = new ChangeFeaturesCommand( m_workspace, featureChanges.toArray( new FeatureChange[0] ) );
@@ -137,9 +121,12 @@ public class SimplifyProfileWizard extends Wizard
     }
     catch( final Exception e )
     {
-      // TODO Auto-generated catch block
       e.printStackTrace();
+
+      final IStatus status = StatusUtilities.statusFromThrowable( e );
+      ErrorDialog.openError( getShell(), getWindowTitle(), "Failed to simplify profiles", status );
     }
+
     return true;
   }
 }

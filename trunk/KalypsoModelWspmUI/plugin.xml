@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
 <plugin>
-     <extension-point id="profilPointsSource" name="profilPointsSource" schema="schema/profilPointsSource.exsd"/>
+   <extension-point id="profilPointsSource" name="profilPointsSource" schema="schema/profilPointsSource.exsd"/>
    <extension-point id="profilPointsTarget" name="profilPointsTarget" schema="schema/profilPointsTarget.exsd"/>
    <extension-point id="profilChartLayerProvider" name="profilChartLayerProvider" schema="schema/profilChartLayerProvider.exsd"/>
    <extension-point id="pointPropertyCalculator" name="pointPropertyCalculator" schema="schema/pointPropertyCalculator.exsd"/>
@@ -225,13 +225,6 @@
                menubarPath="org.kalypso.model.wspm.ui.wspmProfileActions"
                style="push"
                tooltip="%org.kalypso.model.wspm.ui.action.CreateProfileMapAction.description"/>
-         <action
-               class="org.kalypso.model.wspm.ui.action.PropertyEditActionDelegate"
-               id="org.kalypso.model.wspm.ui.action.PropertyEditAction"
-               label="%org.kalypso.model.wspm.ui.action.PropertyEditAction"
-               menubarPath="org.kalypso.model.wspm.ui.wspmProfileActions"
-               tooltip="%org.kalypso.model.wspm.ui.action.PropertyEditAction.description">
-         </action>
       </objectContribution>
  
         <objectContribution
@@ -495,7 +488,7 @@
          <image
                commandId="org.kalypso.model.wspm.ui.command.profile.simplify"
                icon="KalypsoModelWspmUI.image1">
-         </image>
+         </image>	
       </extension>
      
     <!-- Commands for the map outline -->
@@ -741,6 +734,7 @@
       </enabledWhen>
    </handler>
    <handler
+         class="org.kalypso.model.wspm.ui.profil.wizard.simplify.SimplifyProfileHandler"
          commandId="org.kalypso.model.wspm.ui.command.profile.simplify">
       <enabledWhen>
          <reference
