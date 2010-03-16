@@ -10,6 +10,8 @@
  xmlns:gml="http://www.opengis.net/gml" xmlns:om="http://www.opengis.net/om"
  xmlns:swe="http://www.opengis.net/swe" gml:id="components">
 
+<!-- FIXME: we should reference the (existing) Kalypso phenomena... -->
+
  <gml:description>Dictionary for profile-observation components. Subtype 'profil-point-property'.</gml:description>
  <gml:name>Profile Point Component Dictionary</gml:name>
 
