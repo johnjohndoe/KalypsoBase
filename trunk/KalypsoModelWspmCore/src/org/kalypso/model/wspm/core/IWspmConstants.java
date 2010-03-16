@@ -45,9 +45,8 @@ package org.kalypso.model.wspm.core;
  * 
  * @author thuel2
  */
-public interface IWspmConstants
+public interface IWspmConstants extends IWspmPhenomenonConstants
 {
-
   public static String NS_WSPM = "org.kalypso.model.wspm"; //$NON-NLS-1$
 
   public static String NS_WSPMCOMMONS = "org.kalypso.model.wspmcommon"; //$NON-NLS-1$
@@ -128,5 +127,4 @@ public interface IWspmConstants
   public static final String PROFIL_DESCRIPTION = NS_WSPMPROF + "_DESCRIPTION"; //$NON-NLS-1$
 
   public static final String PROFIL_PROPERTY_COMMENT = NS_WSPMPROF + "_COMMENT"; //$NON-NLS-1$
-
 }
