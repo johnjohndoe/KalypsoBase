@@ -40,33 +40,46 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.observation.phenomenon;
 
+import org.kalypso.observation.util.DictionaryCache;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * An {@link IPhenomenon} implementation based on a dictionary entry.
  * 
- * @author dirk Kuch
+ * @author Dirk Kuch
  */
 public class DictionaryPhenomenon implements IPhenomenon
 {
-  private final String m_urn;
+  private static final DictionaryCache DICT_CACHE = new DictionaryCache();
 
-  private final String m_name;
+  private final String m_id;
 
-  private final String m_description;
-
-  public DictionaryPhenomenon( final String urn, final String name, final String description )
+  public DictionaryPhenomenon( final String id/* , final String name, final String description */)
   {
-    m_urn = urn;
-    m_name = name;
-    m_description = description;
+    m_id = id;
   }
 
-  /**
-   * @see org.kalypso.observation.IPhenomenon#getDescription()
-   */
   public String getDescription( )
   {
-    return m_description;
+    final Feature feature = getFeature();
+    if( feature != null )
+      return feature.getDescription();
+
+    return "";
+  }
+
+  private Feature getFeature( )
+  {
+    final String[] split = m_id.split( "#" ); //$NON-NLS-1$
+    final String dictionaryUrn = split[0];
+    final String itemId = split[1];
+
+    final GMLWorkspace dict = DICT_CACHE.get( dictionaryUrn );
+    if( dict == null )
+      return null;
+
+    return dict.getFeature( itemId );
   }
 
   /**
@@ -74,7 +87,7 @@ public class DictionaryPhenomenon implements IPhenomenon
    */
   public String getID( )
   {
-    throw new UnsupportedOperationException( "TODO Load dict-feature and retrieve data from it" ); //$NON-NLS-1$
+    return m_id;
   }
 
   /**
@@ -82,12 +95,10 @@ public class DictionaryPhenomenon implements IPhenomenon
    */
   public String getName( )
   {
-    return m_name;
-  }
+    final Feature feature = getFeature();
+    if( feature != null )
+      return feature.getDescription();
 
-  public String getDictionaryUrn( )
-  {
-    return m_urn;
+    return "";
   }
-
 }

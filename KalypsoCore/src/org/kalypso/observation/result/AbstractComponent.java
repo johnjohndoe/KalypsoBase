@@ -52,7 +52,6 @@ import org.kalypsodeegree.model.typeHandler.XsdBaseTypeHandler;
  */
 public abstract class AbstractComponent implements IComponent
 {
-
   /**
    * @see org.kalypso.observation.result.IComponent#getPrecision()
    */

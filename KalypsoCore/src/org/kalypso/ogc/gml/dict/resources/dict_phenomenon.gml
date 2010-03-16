@@ -6,6 +6,10 @@
      xmlns:gml="http://www.opengis.net/gml" xmlns:swe="http://www.opengis.net/swe"
      gml:id="phenomenon">
 
+<!-- FIXME: the usage of'name' as human readable description is against gml conventions.
+	We (probably) should use description instead.
+ -->
+
      <gml:description>Diese Phenomema werden in KALYPSO benutzt</gml:description>
      <gml:name>Phenomena in KALYPSO</gml:name>
 
@@ -20,6 +24,13 @@
                <gml:name>Wasserstand</gml:name>
           </swe:Phenomenon>
      </gml:dictionaryEntry>
+
+	<gml:dictionaryEntry>
+		<swe:Phenomenon gml:id="wasserstand2d">
+			<gml:name>Wasserstand-2D</gml:name>
+			<gml:name>2D-Wasserstand</gml:name>
+		</swe:Phenomenon>
+	</gml:dictionaryEntry>
 
      <gml:dictionaryEntry>
           <swe:Phenomenon gml:id="abfluss">

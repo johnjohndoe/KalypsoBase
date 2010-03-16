@@ -49,7 +49,6 @@ import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.property.restriction.IRestriction;
 import org.kalypso.gmlschema.property.restriction.RestrictionUtilities;
 import org.kalypso.gmlschema.swe.RepresentationType;
-import org.kalypso.observation.phenomenon.DictionaryPhenomenon;
 import org.kalypso.observation.phenomenon.FeaturePhenomenon;
 import org.kalypso.observation.phenomenon.IPhenomenon;
 import org.kalypso.observation.result.AbstractComponent;
@@ -60,7 +59,7 @@ import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
 /**
  * A component which was previously read from a feature.
- *
+ * 
  * @author schlienger
  */
 public class FeatureComponent extends AbstractComponent
@@ -154,13 +153,11 @@ public class FeatureComponent extends AbstractComponent
       return null;
 
     final Object phenomProperty = m_itemDef.getProperty( ObservationFeatureFactory.SWE_PROPERTY );
+
     if( phenomProperty instanceof String )
-      return new DictionaryPhenomenon( (String) phenomProperty, null, null );
-    else if( phenomProperty instanceof XLinkedFeature_Impl )
     {
-      final String name = NamedFeatureHelper.getName( (Feature) phenomProperty );
-      final String description = NamedFeatureHelper.getDescription( (Feature) phenomProperty );
-      return new DictionaryPhenomenon( ((XLinkedFeature_Impl) phenomProperty).getHref(), name, description );
+      final Feature phenomenonFeature = m_itemDef.getWorkspace().getFeature( (String) phenomProperty );
+      return new FeaturePhenomenon( phenomenonFeature );
     }
     else if( phenomProperty instanceof Feature )
       return new FeaturePhenomenon( (Feature) phenomProperty );
