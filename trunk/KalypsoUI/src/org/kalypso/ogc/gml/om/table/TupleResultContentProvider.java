@@ -98,6 +98,7 @@ public class TupleResultContentProvider implements IStructuredContentProvider, I
   public TupleResultContentProvider( final IComponentUiHandlerProvider factory )
   {
     m_factory = factory;
+    m_updateColumnsJob.setSystem( true );
   }
 
   /* default */
@@ -293,7 +294,6 @@ public class TupleResultContentProvider implements IStructuredContentProvider, I
   public void componentsChanged( final IComponent[] components, final TYPE type )
   {
     m_updateColumnsJob.cancel();
-    m_updateColumnsJob.setSystem( true );
     m_updateColumnsJob.schedule( 100 );
   }
 
