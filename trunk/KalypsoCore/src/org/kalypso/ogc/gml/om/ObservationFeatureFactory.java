@@ -68,7 +68,6 @@ import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.Observation;
-import org.kalypso.observation.phenomenon.DictionaryPhenomenon;
 import org.kalypso.observation.phenomenon.IPhenomenon;
 import org.kalypso.observation.phenomenon.Phenomenon;
 import org.kalypso.observation.phenomenon.PhenomenonUtilities;
@@ -445,8 +444,6 @@ public class ObservationFeatureFactory implements IAdapterFactory
 
   private static Feature itemDefinitionFromComponent( final Feature recordDefinition, final IRelationType itemDefinitionRelation, final IGMLSchema schema, final IComponent comp )
   {
-    // TODO set name and description
-
     final String id = comp.getId();
     // try to find a dictionary entry for this component, if it exists, create xlinked-feature to it
     final XLinkedFeature_Impl xlink = new XLinkedFeature_Impl( recordDefinition, itemDefinitionRelation, schema.getFeatureType( ObservationFeatureFactory.SWE_ITEMDEFINITION ), id, "", "", "", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
@@ -462,16 +459,14 @@ public class ObservationFeatureFactory implements IAdapterFactory
     }
 
     final Feature itemDefinition = recordDefinition.getWorkspace().createFeature( recordDefinition, itemDefinitionRelation, schema.getFeatureType( ObservationFeatureFactory.SWE_ITEMDEFINITION ) );
+    itemDefinition.setName( comp.getName() );
+    itemDefinition.setDescription( comp.getDescription() );
 
     /* Phenomenon */
     final IRelationType phenomenonRelation = (IRelationType) itemDefinition.getFeatureType().getProperty( ObservationFeatureFactory.SWE_PROPERTY );
     final IPhenomenon phenomenon = comp.getPhenomenon();
 
     final Feature featurePhenomenon = PhenomenonUtilities.createPhenomenonFeature( phenomenon, itemDefinition, phenomenonRelation );
-    // FIXME: hack, ask gernot - dictionary components were wrongly written to resultDefinition
-    if( phenomenon instanceof DictionaryPhenomenon )
-      return featurePhenomenon;
-
     itemDefinition.setProperty( phenomenonRelation, featurePhenomenon );
 
     /* Representation type */

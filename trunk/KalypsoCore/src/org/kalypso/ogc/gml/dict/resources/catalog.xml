@@ -3,7 +3,7 @@
     xmlns:ns0="xml" xmlns:catalog="urn:oasis:names:tc:entity:xmlns:xml:catalog">
 
     <!-- Component Dictionary -->
-    <catalog:public publicId="urn:ogc:gml:kalypso:dict:phenomenon:dont:know"
+    <catalog:public publicId="urn:ogc:gml:kalypso:dict:phenomenon:core"
         uri="dict_phenomenon.gml"/>
 
 </catalog:catalog>
