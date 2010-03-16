@@ -70,11 +70,12 @@ public class AbstractLayerStyleProvider implements ILayerStyleProvider
    * @see org.kalypso.model.wspm.ui.view.ILayerStyleProvider#getStyleFor(java.lang.String, java.lang.Class)
    */
   @SuppressWarnings("unchecked")
-  public <T extends IStyle> T getStyleFor( String id, Class<T> defaultStyle )
+  public <T extends IStyle> T getStyleFor( final String id, final Class<T> defaultStyle )
   {
     if( m_styles == null )
     {
       m_styles = new HashMap<String, IStyle>();
+      // EVIL: internal recursion, würg!
       createStyles();
     }
     final IStyle style = m_styles.get( id );

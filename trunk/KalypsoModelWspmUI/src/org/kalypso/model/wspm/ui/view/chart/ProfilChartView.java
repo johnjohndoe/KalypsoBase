@@ -56,7 +56,6 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilListener;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
-import org.kalypso.model.wspm.core.result.IStationResult;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIExtensions;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.profil.IProfilProviderListener;
@@ -86,14 +85,6 @@ import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
  */
 public class ProfilChartView implements IChartPart, IProfilListener
 {
-// public static final int AXIS_GAP = 5; // distance between layers and Axis
-
-//  public static final String ID_AXIS_DOMAIN = "domain";//$NON-NLS-1$
-//
-//  public static final String ID_AXIS_LEFT = "left";//$NON-NLS-1$
-//
-//  public static final String ID_AXIS_RIGHT = "right";//$NON-NLS-1$
-
   private AxisDragHandlerDelegate m_axisDragHandler;
 
   private ChartComposite m_chartComposite = null;
@@ -105,8 +96,6 @@ public class ProfilChartView implements IChartPart, IProfilListener
   private PlotDragHandlerDelegate m_plotDragHandler;
 
   private IProfil m_profile;
-
-  private IStationResult[] m_results;
 
   protected final void activeLayerChanged( final IChartLayer layer )
   {
@@ -392,13 +381,6 @@ public class ProfilChartView implements IChartPart, IProfilListener
     return this;
   }
 
-  public final IStationResult[] getResults( )
-  {
-    if( m_results == null )
-      return new IStationResult[] {};
-    return m_results;
-  }
-
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilListener#onProblemMarkerChanged(org.kalypso.model.wspm.core.profil.IProfil)
    */
@@ -493,7 +475,7 @@ public class ProfilChartView implements IChartPart, IProfilListener
         updateLayer();
       }
     }
-    
+
     fireProfilChanged( old );
   }
 
@@ -509,7 +491,7 @@ public class ProfilChartView implements IChartPart, IProfilListener
     if( m_chartComposite == null )
       return;
 
-    IChartModel chartModel = m_chartComposite.getChartModel();
+    final IChartModel chartModel = m_chartComposite.getChartModel();
     if( chartModel == null )
       return;
 
@@ -542,12 +524,9 @@ public class ProfilChartView implements IChartPart, IProfilListener
         lm.removeLayer( layer );
 
       // add layer
-      for( final String layerId : m_layerProvider.getRequiredLayer( this ) )
-      {
-        final IProfilChartLayer profilLayer = m_layerProvider.createLayer( layerId, this );
-        if( profilLayer != null )
-          lm.addLayer( profilLayer );
-      }
+      final IProfilChartLayer[] profileLayers = m_layerProvider.createLayers( this );
+      for( final IProfilChartLayer layer : profileLayers )
+        lm.addLayer( layer );
 
       restoreStatePosition( lm, positions );
       restoreStateVisible( lm, visibility );

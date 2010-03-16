@@ -63,6 +63,7 @@ import org.kalypso.model.wspm.core.profil.ProfilFactory;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
+import org.kalypso.observation.util.DictionaryCache;
 import org.kalypso.ogc.gml.om.FeatureComponent;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -175,12 +176,17 @@ public class ProfilUtil
     {
       final int iComponent = owner.indexOfComponent( componentID );
       if( iComponent > -1 )
-      {
-        final Object oValue = point.getValue( iComponent );
-        if( oValue instanceof Double )
-          return (Double) oValue;
-      }
+        return getDoubleValueFor( iComponent, point );
     }
+    return Double.NaN;
+  }
+
+  public static Double getDoubleValueFor( final int componentIndex, final IRecord point )
+  {
+    final Object oValue = point.getValue( componentIndex );
+    if( oValue instanceof Number )
+      return ((Number) oValue).doubleValue();
+
     return Double.NaN;
   }
 
@@ -545,16 +551,24 @@ public class ProfilUtil
     if( property == null || profil == null )
       return null;
     final int index = profil.indexOfProperty( property );
+
+    return getMaxValueFor( profil, index );
+  }
+
+  public static Double getMaxValueFor( final IProfil profil, final int propertyIndex )
+  {
+    if( profil == null )
+      return null;
+
     final IRecord[] points = profil.getPoints();
     if( points.length == 0 )
       return null;
-    Double maxValue = -Double.MAX_VALUE;
+    double maxValue = -Double.MAX_VALUE;
     for( final IRecord point : points )
     {
-      final Object o = point.getValue( index );
-      if( o instanceof Double )
-        maxValue = Math.max( maxValue, (Double) o );
-
+      final Object o = point.getValue( propertyIndex );
+      if( o instanceof Number )
+        maxValue = Math.max( maxValue, ((Number) o).doubleValue() );
     }
     return maxValue > -Double.MAX_VALUE ? maxValue : null;
   }
@@ -687,7 +701,9 @@ public class ProfilUtil
       return maxValue;
     for( final IRecord rec : section )
     {
-      maxValue = Math.max( maxValue, (Double) rec.getValue( index ) );
+      final Object value = rec.getValue( index );
+      if( value instanceof Number )
+        maxValue = Math.max( maxValue, ((Number) value).doubleValue() );
     }
     return maxValue;
   }
@@ -701,10 +717,30 @@ public class ProfilUtil
     return value instanceof Double ? (Double) value : null;
   }
 
+  public static Double getMinValueFor( final IProfil profil, final int propertyIndex )
+  {
+    final IRecord minPoint = getMinPoint( profil, propertyIndex );
+    if( minPoint == null )
+      return null;
+    final Object value = minPoint.getValue( propertyIndex );
+    return value instanceof Number ? ((Number) value).doubleValue() : null;
+  }
+
   /**
    * Return the profile-point of the given profile with the minimum value at the given property.
    */
   public static IRecord getMinPoint( final IProfil profil, final IComponent property )
+  {
+    if( profil == null )
+      return null;
+    final int index = profil.indexOfProperty( property );
+    return getMinPoint( profil, index );
+  }
+
+  /**
+   * Return the profile-point of the given profile with the minimum value at the given property.
+   */
+  public static IRecord getMinPoint( final IProfil profil, final int propertyIndex )
   {
     if( profil == null )
       return null;
@@ -714,17 +750,18 @@ public class ProfilUtil
 
     Double minValue = Double.MAX_VALUE;
     IRecord minPoint = null;
-    final int index = profil.indexOfProperty( property );
-    if( index == -1 )
-      return null;
 
     for( final IRecord point : points )
     {
-      final Object value = point.getValue( index );
-      if( (value instanceof Double) && (Double) value < minValue )
+      final Object value = point.getValue( propertyIndex );
+      if( value instanceof Number )
       {
-        minValue = (Double) value;
-        minPoint = point;
+        final double val = ((Number) value).doubleValue();
+        if( val < minValue )
+        {
+          minValue = val;
+          minPoint = point;
+        }
       }
     }
     return minPoint;

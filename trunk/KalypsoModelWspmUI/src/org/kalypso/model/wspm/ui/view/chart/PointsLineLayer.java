@@ -82,7 +82,12 @@ public class PointsLineLayer extends AbstractProfilLayer
   {
     super( profil, targetRangeProperty, styleProvider );
     setData( IProfilChartLayer.VIEW_DATA_KEY, IProfilChartLayer.ALLOW_VERTICAL_EDITING );
+  }
 
+  public PointsLineLayer( final String id, final IProfil profil, final int targetPropertyIndex, final ILayerStyleProvider styleProvider )
+  {
+    super( id, profil, targetPropertyIndex, styleProvider );
+    setData( IProfilChartLayer.VIEW_DATA_KEY, IProfilChartLayer.ALLOW_VERTICAL_EDITING );
   }
 
   /**
@@ -165,7 +170,7 @@ public class PointsLineLayer extends AbstractProfilLayer
       final Point p = toScreen( profilPoints[i] );
       if( p == null )
       {
-        //TODO: user message
+        // TODO: user message
       }
       else
       {

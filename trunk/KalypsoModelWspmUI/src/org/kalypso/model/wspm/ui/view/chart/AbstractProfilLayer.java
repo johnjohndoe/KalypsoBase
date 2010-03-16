@@ -89,26 +89,43 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
 
   private IProfil m_profil;
 
-  private String m_targetComponent;
+  private final int m_targetPropertyIndex;
 
   public AbstractProfilLayer( final IProfil profil, final String targetRangeProperty, final ILayerStyleProvider styleProvider )
   {
+    this( profil, profil.indexOfProperty( targetRangeProperty ), styleProvider );
+  }
+
+  public AbstractProfilLayer( final IProfil profil, final int targetPropertyIndex, final ILayerStyleProvider styleProvider )
+  {
     m_profil = profil;
+    m_targetPropertyIndex = targetPropertyIndex;
     m_domainComponent = IWspmConstants.POINT_PROPERTY_BREITE;
-    m_targetComponent = targetRangeProperty;
-    if( styleProvider != null )
-    {
-      final String id = getId();
+    final String id = getId();
+    createStyles( styleProvider, id );
+  }
 
-      m_lineStyle = styleProvider.getStyleFor( id + "_LINE", null ); //$NON-NLS-1$
-      m_pointStyle = styleProvider.getStyleFor( id + "_POINT", null ); //$NON-NLS-1$
+  public AbstractProfilLayer( final String id, final IProfil profil, final int targetPropertyIndex, final ILayerStyleProvider styleProvider )
+  {
+    m_profil = profil;
+    m_targetPropertyIndex = targetPropertyIndex;
+    m_domainComponent = IWspmConstants.POINT_PROPERTY_BREITE;
+    createStyles( styleProvider, id );
+  }
 
-      m_LineStyle_active = styleProvider.getStyleFor( id + "_LINE_ACTIVE", null ); //$NON-NLS-1$
-      m_pointStyle_active = styleProvider.getStyleFor( id + "_POINT_ACTIVE", null ); //$NON-NLS-1$
+  private void createStyles( final ILayerStyleProvider styleProvider, final String id )
+  {
+    if( styleProvider == null )
+      return;
 
-      m_LineStyle_hover = styleProvider.getStyleFor( id + "_LINE_HOVER", null ); //$NON-NLS-1$
-      m_pointStyle_hover = styleProvider.getStyleFor( id + "_POINT_HOVER", null ); //$NON-NLS-1$
-    }
+    m_lineStyle = styleProvider.getStyleFor( id + "_LINE", null ); //$NON-NLS-1$
+    m_pointStyle = styleProvider.getStyleFor( id + "_POINT", null ); //$NON-NLS-1$
+
+    m_LineStyle_active = styleProvider.getStyleFor( id + "_LINE_ACTIVE", null ); //$NON-NLS-1$
+    m_pointStyle_active = styleProvider.getStyleFor( id + "_POINT_ACTIVE", null ); //$NON-NLS-1$
+
+    m_LineStyle_hover = styleProvider.getStyleFor( id + "_LINE_HOVER", null ); //$NON-NLS-1$
+    m_pointStyle_hover = styleProvider.getStyleFor( id + "_POINT_HOVER", null ); //$NON-NLS-1$
   }
 
   /**
@@ -256,7 +273,8 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
   public String getId( )
   {
     final IComponent target = getTargetComponent();
-    return target == null ? m_targetComponent : target.getId();
+    // FIXME: the component is not a good id! Imagine several layers on the same component
+    return target == null ? "" + m_targetPropertyIndex : target.getId();
   }
 
   protected ILineStyle getLineStyle( )
@@ -289,7 +307,7 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
   public Point2D getPoint2D( final IRecord point )
   {
     final Double x = ProfilUtil.getDoubleValueFor( m_domainComponent, point );
-    final Double y = ProfilUtil.getDoubleValueFor( m_targetComponent, point );
+    final Double y = ProfilUtil.getDoubleValueFor( m_targetPropertyIndex, point );
     return new Point2D.Double( x, y );
   }
 
@@ -338,7 +356,10 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
 
   public IComponent getTargetComponent( )
   {
-    return getProfil() == null ? null : getProfil().hasPointProperty( m_targetComponent );
+    if( m_profil == null || m_targetPropertyIndex == -1 )
+      return null;
+
+    return m_profil.getPointProperties()[m_targetPropertyIndex];
   }
 
   /**
@@ -347,14 +368,14 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
   @Override
   public IDataRange<Number> getTargetRange( )
   {
-    if( getCoordinateMapper() == null )
+    if( getCoordinateMapper() == null || m_targetPropertyIndex == -1 )
       return null;
-    final Double max = ProfilUtil.getMaxValueFor( getProfil(), getTargetComponent() );
-    final Double min = ProfilUtil.getMinValueFor( getProfil(), getTargetComponent() );
+    final Double max = ProfilUtil.getMaxValueFor( getProfil(), m_targetPropertyIndex );
+    final Double min = ProfilUtil.getMinValueFor( getProfil(), m_targetPropertyIndex );
     if( (min == null) || (max == null) )
       return null;
-    if( Math.abs( min -max )< 0.001)
-      return new DataRange<Number>( min-1,  min+1 );
+    if( Math.abs( min - max ) < 0.001 )
+      return new DataRange<Number>( min - 1, min + 1 );
     return new DataRange<Number>( min, max );
   }
 
@@ -364,8 +385,11 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
   @Override
   public String getTitle( )
   {
-    final IComponent cmp = m_profil == null ? null : m_profil.hasPointProperty( m_targetComponent );
-    return cmp == null ? "" : cmp.getName(); //$NON-NLS-1$
+    final IComponent targetComponent = getTargetComponent();
+    if( targetComponent == null )
+      return ""; //$NON-NLS-1$
+
+    return targetComponent.getName();
   }
 
   public String getTooltipInfo( final IRecord point )
@@ -471,15 +495,6 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     m_profil = profil;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer#setTargetComponent(java.lang.String)
-   */
-  public void setTargetComponent( final String componentId )
-  {
-    m_targetComponent = componentId;
-
-  }
-
   public Point2D toNumeric( final Point point )
   {
     final ICoordinateMapper cm = getCoordinateMapper();
@@ -492,7 +507,7 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
   {
     final ICoordinateMapper cm = getCoordinateMapper();
     final Double x = ProfilUtil.getDoubleValueFor( m_domainComponent, point );
-    final Double y = ProfilUtil.getDoubleValueFor( m_targetComponent, point );
+    final Double y = ProfilUtil.getDoubleValueFor( m_targetPropertyIndex, point );
     if( cm != null && x != null && y != null && !x.isNaN() && !y.isNaN() )
       return cm == null ? null : cm.numericToScreen( x, y );
     return null;

@@ -69,7 +69,7 @@ public interface IProfilChartLayer extends IEditableChartLayer
   final public RGB COLOR_ACTIVE = new RGB( 255, 0, 0 );
 
   final public float[] HOVER_DASH = new float[] { 1, 1, 1 };
-  
+
   final public int POINT_STYLE_WIDTH = 5;
 
   /** Erzeugt eine Profil-View, welche die Spezifika dieses Layers anzeigt. */
@@ -99,7 +99,4 @@ public interface IProfilChartLayer extends IEditableChartLayer
   public void executeDrop( Point point, EditInfo dragStartData );
 
   public void executeClick( EditInfo dragStartData );
-
-  public void setTargetComponent( final String componentId );
-
 }
