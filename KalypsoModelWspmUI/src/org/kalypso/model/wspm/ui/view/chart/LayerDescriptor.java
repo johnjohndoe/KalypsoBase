@@ -38,53 +38,30 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.ui.view;
-
-import java.util.HashMap;
-
-import de.openali.odysseus.chart.framework.model.style.IStyle;
-import de.openali.odysseus.chart.framework.util.StyleUtils;
+package org.kalypso.model.wspm.ui.view.chart;
 
 /**
- * @author kimwerner
+ * @author Gernot Belger
  */
-public class AbstractLayerStyleProvider implements ILayerStyleProvider
+public class LayerDescriptor
 {
-  private HashMap<String, IStyle> m_styles = null;
+  private final String m_label;
 
-  protected void createStyles( )
+  private final String m_id;
+
+  public LayerDescriptor( final String label, final String id )
   {
-    // TODO: read styles from *.kod file or add Styles here
+    m_label = label;
+    m_id = id;
   }
 
-  final protected void addStyle( final String id, final IStyle style )
+  public String getId( )
   {
-    if( m_styles == null )
-    {
-      m_styles = new HashMap<String, IStyle>();
-    }
-    m_styles.put( id, style );
+    return m_id;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.view.ILayerStyleProvider#getStyleFor(java.lang.String, java.lang.Class)
-   */
-  @SuppressWarnings("unchecked")
-  public <T extends IStyle> T getStyleFor( final String id, final Class<T> defaultStyle )
+  public String getLabel( )
   {
-    if( m_styles == null )
-    {
-      m_styles = new HashMap<String, IStyle>();
-      // EVIL: internal recursion, würg!
-      createStyles();
-    }
-    final IStyle style = m_styles.get( id );
-    if( (style != null) )
-      return (T) style;
-    final IStyle newStyle = defaultStyle == null ? null : StyleUtils.getDefaultStyle( defaultStyle );
-    if( newStyle != null )
-      m_styles.put( id, newStyle );
-    return (T) newStyle;
-
+    return m_label;
   }
 }

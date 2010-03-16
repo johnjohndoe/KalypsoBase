@@ -40,9 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.view.legend;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -55,11 +52,9 @@ import org.eclipse.ui.dialogs.ListDialog;
 import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIExtensions;
-import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 import org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider;
+import org.kalypso.model.wspm.ui.view.chart.LayerDescriptor;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
-
-import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 
 /**
  * @author kimwerner
@@ -83,19 +78,14 @@ public class AddLayerHandler extends AbstractHandler
       return null;
     }
 
-    // liste anzeigen
-
-    final List<IProfilChartLayer> addables = new ArrayList<IProfilChartLayer>();
     final IProfilLayerProvider layerProvider = KalypsoModelWspmUIExtensions.createProfilLayerProvider( profil.getType() );
-    if( layerProvider != null )
+    if( layerProvider == null )
     {
-      for( final String al : layerProvider.getAddableLayers( chartView ) )
-      {
-        final IProfilChartLayer layer = layerProvider.createLayer( al, chartView );
-        if( layer != null )
-          addables.add( layer );
-      }
+      // TODO: show error message
+      return null;
     }
+
+    final LayerDescriptor[] layerDescriptors = layerProvider.getAddableLayers( chartView );
 
     final ListDialog dialog = new ListDialog( null );
     dialog.setAddCancelButton( true );
@@ -104,12 +94,13 @@ public class AddLayerHandler extends AbstractHandler
     dialog.setLabelProvider( new LabelProvider()
     {
       @Override
-      public final String getText( Object element )
+      public final String getText( final Object element )
       {
-        return ((IProfilChartLayer) element).getTitle();
+        return ((LayerDescriptor) element).getLabel();
       }
     } );
-    dialog.setInput( addables );
+    dialog.setInput( layerDescriptors );
+    // FIXME: always set message and title to dialogs!
     dialog.setMessage( "" ); //$NON-NLS-1$
     dialog.setTitle( "" ); //$NON-NLS-1$
 
@@ -119,13 +110,14 @@ public class AddLayerHandler extends AbstractHandler
     if( result == null || result.length != 1 )
       return null;
 
-    final IChartLayer layerToAdd = (IProfilChartLayer) result[0];
+    final LayerDescriptor layerToAdd = (LayerDescriptor) result[0];
     try
     {
       layerProvider.addLayerToChart( chartView, layerToAdd.getId() );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
+      // TODO: error handling here
       throw new ExecutionException( e.getLocalizedMessage() );
     }
     return null;

@@ -58,32 +58,20 @@ public interface IProfilLayerProvider
    * if the layer depends on other layers or properties, create all required things here. </p> if there is nothing to do
    * see getLayer( final String layerId, final ProfilChartView view ) </p> return all affected layer
    */
-  public IProfilChartLayer addLayerToChart( final ProfilChartView view, final String layerId );
+  public void addLayerToChart( final ProfilChartView view, final String layerId );
 
   /**
-   * return the layers, the view needs to show all of the required themes
+   * return the layers not shown yet, but addable.
+   * 
+   * @FIXME: return some wrapper for a potential layer instead.
    */
-  public String[] getRequiredLayer( final ProfilChartView view );
+  public LayerDescriptor[] getAddableLayers( final ProfilChartView view );
 
-  /**
-   * return the layers not shown yet, but addable
-   */
-  public String[] getAddableLayers( final ProfilChartView view );
-
-  /**
-   * the layer factory, no additional operations needed </p>
-   */
-  public IProfilChartLayer createLayer( final String layerId, final ProfilChartView view );
-
-  /**
-   * return true if The provider can create the layer
-   */
-  public boolean providesLayer( final String layerId );
+  public IProfilChartLayer[] createLayers( ProfilChartView chartView );
 
   public IComponentUiHandlerProvider getComponentUiHandlerProvider( final IProfil profile );
 
   public IAxis[] registerAxis( IMapperRegistry mapperRegistry );
 
   public IAxisRenderer[] registerAxisRenderer( IMapperRegistry mapperRegistry );
-
 }
