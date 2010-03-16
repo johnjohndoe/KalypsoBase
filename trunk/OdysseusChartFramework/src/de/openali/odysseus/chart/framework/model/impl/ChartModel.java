@@ -84,7 +84,7 @@ public class ChartModel implements IChartModel
 
   /**
    * adds layers to or removes layers from the chart
-   *
+   * 
    * @param bAdding
    *          if true, the layer will be added; if false, the layer will be removed
    */
@@ -300,28 +300,24 @@ public class ChartModel implements IChartModel
 
   }
 
-
   /**
    * @return DataRange of all domain or target data available in the given layer
    */
   private IDataRange<Number> getRangeFor( final IChartLayer layer, final IAxis axis )
   {
-    IDataRange<Number> numRange = null;
     if( axis == layer.getCoordinateMapper().getDomainAxis() )
-    {
-      numRange = layer.getDomainRange();
-    }
-    else if( axis == layer.getCoordinateMapper().getTargetAxis() )
-    {
-      numRange = layer.getTargetRange();
-    }
-    return numRange;
+      return layer.getDomainRange();
+
+    if( axis == layer.getCoordinateMapper().getTargetAxis() )
+      return layer.getTargetRange();
+
+    return null;
 
   }
 
   /**
    * sets autoscaling
-   *
+   * 
    * @param b
    *          if true, axes are automatically scaled to show the layers full data range
    */

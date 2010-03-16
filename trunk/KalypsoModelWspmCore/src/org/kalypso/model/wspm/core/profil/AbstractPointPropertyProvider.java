@@ -48,15 +48,12 @@ import org.kalypso.observation.result.TupleResult;
 
 /**
  * @author kimwerner
- *
  */
 public abstract class AbstractPointPropertyProvider implements IProfilPointPropertyProvider
 {
   protected final Set<String> m_properties = new LinkedHashSet<String>();
 
   protected final Set<String> m_markers = new LinkedHashSet<String>();
-
-  
 
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider#createProfil()
@@ -66,12 +63,10 @@ public abstract class AbstractPointPropertyProvider implements IProfilPointPrope
     return createProfil( new TupleResult() );
   }
 
-  
-
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider#getDefaultValue(java.lang.String)
    */
-  public Object getDefaultValue( String propertyID )
+  public Object getDefaultValue( final String propertyID )
   {
     final IComponent component = getPointProperty( propertyID );
     if( component == null )
@@ -87,34 +82,33 @@ public abstract class AbstractPointPropertyProvider implements IProfilPointPrope
     return m_properties.toArray( new String[] {} );
   }
 
-  
-
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider#isMarker(java.lang.String)
    */
-  public boolean isMarker( String markerID )
+  public boolean isMarker( final String markerID )
   {
-
     return m_markers.contains( markerID );
   }
 
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider#providesPointProperty(java.lang.String)
    */
-  public boolean providesPointProperty( String property )
+  public boolean providesPointProperty( final String property )
   {
-    return m_properties.contains( property );
+    return true;
+// return m_properties.contains( property );
   }
+
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider#checkComponents(org.kalypso.observation.result.TupleResult)
    */
   public void checkComponents( final TupleResult result ) throws IllegalArgumentException
   {
     final IComponent[] components = result.getComponents();
-    for(IComponent component : components)
+    for( final IComponent component : components )
     {
-      if(!providesPointProperty( component.getId()))
-          throw new IllegalArgumentException("unknown component: "+component.getName()); //$NON-NLS-1$
+      if( !providesPointProperty( component.getId() ) )
+        throw new IllegalArgumentException( "unknown component: " + component.getName() ); //$NON-NLS-1$
     }
   }
 
