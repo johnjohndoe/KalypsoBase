@@ -67,6 +67,8 @@ public class WspmWaterBody extends Feature_Impl implements IWspmConstants, IProf
 
   public static final QName QNAME_PROP_PROFILEMEMBER = new QName( NS_WSPM, "profileMember" ); //$NON-NLS-1$
 
+  private static final QName QNAME_REFNR = new QName( NS_WSPM, "refNr" );//$NON-NLS-1$
+
   public WspmWaterBody( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
@@ -83,7 +85,12 @@ public class WspmWaterBody extends Feature_Impl implements IWspmConstants, IProf
 
   public void setRefNr( final String refNr )
   {
-    setProperty( new QName( NS_WSPM, "refNr" ), refNr ); //$NON-NLS-1$
+    setProperty( QNAME_REFNR, refNr );
+  }
+
+  public String getRefNr( )
+  {
+    return getProperty( QNAME_REFNR, String.class ); //$NON-NLS-1$
   }
 
   public void setDirectionUpstreams( final boolean directionIsUpstream )
