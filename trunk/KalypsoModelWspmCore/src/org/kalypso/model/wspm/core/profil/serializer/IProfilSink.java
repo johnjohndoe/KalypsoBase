@@ -43,10 +43,12 @@ package org.kalypso.model.wspm.core.profil.serializer;
 import java.io.IOException;
 import java.io.Writer;
 
+import org.kalypso.model.wspm.core.profil.IProfil;
+
 /**
  * @author kimwerner
  */
 public interface IProfilSink
 {
-  public boolean write( final Object source, final Writer writer )throws IOException;
+  public boolean write( final IProfil[] profiles, final Writer writer ) throws IOException;
 }

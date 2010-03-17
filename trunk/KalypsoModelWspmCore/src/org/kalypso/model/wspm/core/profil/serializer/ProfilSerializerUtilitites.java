@@ -103,7 +103,7 @@ public class ProfilSerializerUtilitites
     try
     {
       writer = new BufferedWriter( new OutputStreamWriter( new FileOutputStream( file ) ) );
-      sink.write( profile, writer );
+      sink.write( new IProfil[] { profile }, writer );
       writer.close();
     }
     finally
@@ -126,7 +126,7 @@ public class ProfilSerializerUtilitites
     try
     {
       writer = new BufferedWriter( new OutputStreamWriter( stream ) );
-      sink.write( profile, writer );
+      sink.write( new IProfil[] { profile }, writer );
       writer.close();
     }
     finally
