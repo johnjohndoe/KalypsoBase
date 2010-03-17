@@ -61,7 +61,6 @@ import org.eclipse.ui.services.IDisposable;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.MetadataList;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.filter.FilterFactory;
 import org.kalypso.ogc.sensor.request.IRequest;
@@ -69,7 +68,6 @@ import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.request.RequestFactory;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
-import org.kalypso.ogc.sensor.zml.ZmlURLConstants;
 import org.kalypso.repository.IModifyableRepository;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryItem;
@@ -223,9 +221,6 @@ public class ObservationServiceFassade implements IObservationService, IDisposab
 //      m_logger.info( "Creating request-based observation for " + obean.getId() ); //$NON-NLS-1$
       obs = RequestFactory.createDefaultObservation( requestType );
     }
-
-    // and eventually manipulate the observation
-    updateObservation( obs, obean.getId() );
 
     try
     {
@@ -392,24 +387,15 @@ public class ObservationServiceFassade implements IObservationService, IDisposab
       if( obs == null )
         return null;
 
-      final MetadataList md = updateObservation( obs, ib.getId() );
       final Boolean modifyable = item instanceof IWriteableRepositoryItem;
 
-      return new ObservationBean( ib.getId(), obs.getName(), modifyable, md );
+      return new ObservationBean( ib.getId(), obs.getName(), modifyable, obs.getMetadataList() );
     }
     catch( final RepositoryException e )
     {
       m_logger.throwing( getClass().getName(), "adaptItem", e ); //$NON-NLS-1$
       throw new SensorException( e.getLocalizedMessage(), e );
     }
-  }
-
-  private MetadataList updateObservation( final IObservation obs, final String id )
-  {
-    // always update the observation metadata with the ocs-id
-    final MetadataList md = obs.getMetadataList();
-    md.setProperty( ZmlURLConstants.MD_OCS_ID, ZmlURL.addServerSideId( id ) );
-    return md;
   }
 
   /**

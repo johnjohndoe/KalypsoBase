@@ -69,6 +69,10 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
 import org.apache.commons.io.IOUtils;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.commons.factory.FactoryException;
 import org.kalypso.commons.java.util.PropertiesHelper;
@@ -132,17 +136,17 @@ import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
  * 
  * @author schlienger
  */
-public class ZmlFactory
+public final class ZmlFactory
 {
-  public final static NamespacePrefixMapper ZML_PREFIX_MAPPER = new ZmlNamespacePrefixMapper();
+  public static final NamespacePrefixMapper ZML_PREFIX_MAPPER = new ZmlNamespacePrefixMapper();
 
-  public final static ObjectFactory OF = new ObjectFactory();
+  public static final ObjectFactory OF = new ObjectFactory();
 
-  public final static JAXBContext JC = JaxbUtilities.createQuiet( ObjectFactory.class );
+  public static final JAXBContext JC = JaxbUtilities.createQuiet( ObjectFactory.class );
 
-  private static ParserFactory m_parserFactory = null;
+  private static ParserFactory PARSER_FACTORY = null;
 
-  private static Properties m_parserProps = null;
+  private static Properties PARSER_PROPERTIES = null;
 
   private static Logger LOG = Logger.getLogger( ZmlFactory.class.getName() );
 
@@ -162,19 +166,19 @@ public class ZmlFactory
 
   private static synchronized Properties getProperties( )
   {
-    if( m_parserProps == null )
+    if( PARSER_PROPERTIES == null )
     {
       InputStream ins = null;
 
       try
       {
-        m_parserProps = new Properties();
+        PARSER_PROPERTIES = new Properties();
 
         ins = ZmlFactory.class.getResourceAsStream( "resource/types2parser.properties" ); //$NON-NLS-1$
 
-        m_parserProps.load( ins );
+        PARSER_PROPERTIES.load( ins );
 
-        return m_parserProps;
+        return PARSER_PROPERTIES;
       }
       catch( final IOException e )
       {
@@ -186,7 +190,7 @@ public class ZmlFactory
       }
     }
 
-    return m_parserProps;
+    return PARSER_PROPERTIES;
   }
 
   /**
@@ -196,10 +200,10 @@ public class ZmlFactory
    */
   public static synchronized ParserFactory getParserFactory( )
   {
-    if( m_parserFactory == null )
-      m_parserFactory = new ParserFactory( getProperties(), ZmlFactory.class.getClassLoader() );
+    if( PARSER_FACTORY == null )
+      PARSER_FACTORY = new ParserFactory( getProperties(), ZmlFactory.class.getClassLoader() );
 
-    return m_parserFactory;
+    return PARSER_FACTORY;
   }
 
   /**
@@ -731,6 +735,18 @@ public class ZmlFactory
     final ParserFactory pf = getParserFactory();
 
     return pf.createParser( "JAVA_" + axis.getDataClass().getName(), null ); //$NON-NLS-1$
+  }
+
+  /**
+   * Helper method for simply writing the observation to an IFile
+   * 
+   * @throws SensorException
+   *           if an IOException or a FactoryException is thrown internally
+   */
+  public static void writeToFile( final IObservation obs, final IFile file ) throws SensorException, CoreException
+  {
+    writeToFile( obs, file.getLocation().toFile(), null );
+    file.refreshLocal( IResource.DEPTH_ONE, new NullProgressMonitor() );
   }
 
   /**
