@@ -65,7 +65,6 @@ import org.eclipse.ui.services.IDisposable;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.MetadataList;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.filter.FilterFactory;
 import org.kalypso.ogc.sensor.filter.filters.ZmlFilter;
@@ -74,11 +73,10 @@ import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.request.RequestFactory;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
-import org.kalypso.ogc.sensor.zml.ZmlURLConstants;
 import org.kalypso.repository.IModifyableRepository;
-import org.kalypso.repository.IWriteableRepositoryItem;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryItem;
+import org.kalypso.repository.IWriteableRepositoryItem;
 import org.kalypso.repository.RepositoryException;
 import org.kalypso.repository.conf.RepositoryConfigUtils;
 import org.kalypso.repository.conf.RepositoryFactoryConfig;
@@ -354,9 +352,6 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
       obs = RequestFactory.createDefaultObservation( requestType );
     }
 
-    // and eventually manipulate the observation
-    updateObservation( obs, obean.getId() );
-
     try
     {
       // tricky: maybe make a filtered observation out of this one
@@ -591,10 +586,9 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
       if( obs == null )
         return null;
 
-      final MetadataList md = updateObservation( obs, ib.getId() );
       final Boolean modifyable = item instanceof IWriteableRepositoryItem;
 
-      return new ObservationBean( ib.getId(), obs.getName(), modifyable, md );
+      return new ObservationBean( ib.getId(), obs.getName(), modifyable, obs.getMetadataList() );
     }
     catch( final RepositoryException e )
     {
@@ -603,13 +597,7 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
     }
   }
 
-  private MetadataList updateObservation( final IObservation obs, final String id )
-  {
-    // always update the observation metadata with the ocs-id
-    final MetadataList md = obs.getMetadataList();
-    md.setProperty( ZmlURLConstants.MD_OCS_ID, ZmlURL.addServerSideId( id ) );
-    return md;
-  }
+
 
   /**
    * @see org.kalypso.services.sensor.IObservationService#getServiceVersion()

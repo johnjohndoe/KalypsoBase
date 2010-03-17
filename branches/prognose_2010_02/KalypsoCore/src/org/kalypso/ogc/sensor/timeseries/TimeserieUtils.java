@@ -90,7 +90,7 @@ import org.kalypsodeegree.KalypsoDeegreePlugin;
  * 
  * @author schlienger
  */
-public class TimeserieUtils implements TimeserieConstants
+public final class TimeserieUtils implements TimeserieConstants
 {
 
   public static final String[] TYPES_ALL;
@@ -111,19 +111,19 @@ public class TimeserieUtils implements TimeserieConstants
 // locale
   /** @deprecated Should not be used any more. We use xs:dateTime format now for printing times into zml files. */
   @Deprecated
-  private final static DateFormat FORECAST_DF = DateFormat.getDateTimeInstance();
+  private static final DateFormat FORECAST_DF = DateFormat.getDateTimeInstance();
 
   private static final String PROP_TIMESERIES_CONFIG = "kalypso.timeseries.properties"; //$NON-NLS-1$
 
-  private static URL m_configBaseUrl = TimeserieUtils.class.getResource( "resource/" ); //$NON-NLS-1$
+  private static URL CONFIG_BASE_URL = TimeserieUtils.class.getResource( "resource/" ); //$NON-NLS-1$
 
-  private static String m_basename = "config"; //$NON-NLS-1$
+  private static String BASENAME = "config"; //$NON-NLS-1$
 
-  private static Properties m_config;
+  private static Properties CONFIG;
 
-  private static HashMap<String, NumberFormat> m_formatMap = new HashMap<String, NumberFormat>();
+  private static HashMap<String, NumberFormat> FORMAT_MAP = new HashMap<String, NumberFormat>();
 
-  private static NumberFormat m_defaultFormat = null;
+  private static NumberFormat DEFAULT_FORMAT = null;
 
   private TimeserieUtils( )
   {
@@ -142,8 +142,8 @@ public class TimeserieUtils implements TimeserieConstants
    */
   public static void setConfigUrl( final URL configUrl, final String basename )
   {
-    m_configBaseUrl = configUrl;
-    m_basename = basename;
+    CONFIG_BASE_URL = configUrl;
+    BASENAME = basename;
   }
 
   /**
@@ -155,7 +155,7 @@ public class TimeserieUtils implements TimeserieConstants
    * @param mdPrefix
    * @return list of metadata keys or empty array if nothing found
    */
-  public final static String[] findOutMDBeginningWith( final IObservation obs, final String mdPrefix )
+  public static String[] findOutMDBeginningWith( final IObservation obs, final String mdPrefix )
   {
     if( obs == null )
       return ArrayUtils.EMPTY_STRING_ARRAY;
@@ -181,7 +181,7 @@ public class TimeserieUtils implements TimeserieConstants
    * 
    * @return list of metadata keys
    */
-  public final static String[] findOutMDAlarmLevel( final IObservation obs )
+  public static String[] findOutMDAlarmLevel( final IObservation obs )
   {
     return findOutMDBeginningWith( obs, Messages.getString( "org.kalypso.ogc.sensor.timeseries.TimeserieUtils.2" ) ); //$NON-NLS-1$
   }
@@ -191,7 +191,7 @@ public class TimeserieUtils implements TimeserieConstants
    * 
    * @return color
    */
-  public final static Color getColorForAlarmLevel( final String mdAlarm )
+  public static Color getColorForAlarmLevel( final String mdAlarm )
   {
     final String strColor = getProperties().getProperty( Messages.getString( "org.kalypso.ogc.sensor.timeseries.TimeserieUtils.3" ) + mdAlarm ); //$NON-NLS-1$
     if( strColor == null )
@@ -207,15 +207,15 @@ public class TimeserieUtils implements TimeserieConstants
    */
   private static synchronized Properties getProperties( )
   {
-    if( m_config == null )
+    if( CONFIG == null )
     {
-      m_config = new Properties();
+      CONFIG = new Properties();
 
       final Properties defaultConfig = new Properties();
-      m_config = new Properties( defaultConfig );
+      CONFIG = new Properties( defaultConfig );
 
       // The config file in the sources is used as defaults
-      PropertiesUtilities.loadI18nProperties( defaultConfig, m_configBaseUrl, m_basename );
+      PropertiesUtilities.loadI18nProperties( defaultConfig, CONFIG_BASE_URL, BASENAME );
 
       // TODO: also load configured properties via i18n mechanism
       InputStream configIs = null;
@@ -241,7 +241,7 @@ public class TimeserieUtils implements TimeserieConstants
 
         if( configIs != null )
         {
-          m_config.load( configIs );
+          CONFIG.load( configIs );
           configIs.close();
         }
       }
@@ -254,14 +254,14 @@ public class TimeserieUtils implements TimeserieConstants
         IOUtils.closeQuietly( configIs );
       }
     }
-    return m_config;
+    return CONFIG;
   }
 
   /**
    * Sets the 'forecast' metadata of the given observation using the given date range. If from or to are null, does
    * nothing.
    */
-  public final static void setTargetForecast( final IObservation obs, final DateRange range )
+  public static void setTargetForecast( final IObservation obs, final DateRange range )
   {
     if( range == null )
       return;
@@ -273,7 +273,7 @@ public class TimeserieUtils implements TimeserieConstants
    * Sets the 'forecast' metadata of the given observation using the given date range. If from or to are null, does
    * nothing.
    */
-  public final static void setTargetForecast( final IObservation obs, final Date from, final Date to )
+  public static void setTargetForecast( final IObservation obs, final Date from, final Date to )
   {
     final TimeZone timeZone = KalypsoCorePlugin.getDefault().getTimeZone();
     if( from != null )
@@ -293,7 +293,7 @@ public class TimeserieUtils implements TimeserieConstants
    * Sets the 'forecast' metadata of the given observation using the given date range. If from or to are null, does
    * nothing.
    */
-  public final static void setTargetDateRange( final IObservation obs, final DateRange range )
+  public static void setTargetDateRange( final IObservation obs, final DateRange range )
   {
     if( range == null )
       return;
@@ -305,7 +305,7 @@ public class TimeserieUtils implements TimeserieConstants
    * Sets the 'forecast' metadata of the given observation using the given date range. If from or to are null, does
    * nothing.
    */
-  public final static void setTargetDateRange( final IObservation obs, final Date from, final Date to )
+  public static void setTargetDateRange( final IObservation obs, final Date from, final Date to )
   {
     final TimeZone timeZone = KalypsoCorePlugin.getDefault().getTimeZone();
     if( from != null )
@@ -330,7 +330,7 @@ public class TimeserieUtils implements TimeserieConstants
    * @param obs
    * @return date range of the forecast or null if obs isn't a forecast.
    */
-  public final static DateRange isTargetForecast( final IObservation obs )
+  public static DateRange isTargetForecast( final IObservation obs )
   {
     if( obs == null )
       return null;
@@ -511,7 +511,7 @@ public class TimeserieUtils implements TimeserieConstants
    */
   public static synchronized NumberFormat getNumberFormat( final String format )
   {
-    final NumberFormat nf = m_formatMap.get( format );
+    final NumberFormat nf = FORMAT_MAP.get( format );
     if( nf != null )
       return nf;
 
@@ -519,7 +519,7 @@ public class TimeserieUtils implements TimeserieConstants
     {
       final NumberFormat wf = NumberFormat.getIntegerInstance();
       wf.setGroupingUsed( false );
-      m_formatMap.put( format, wf );
+      FORMAT_MAP.put( format, wf );
       return wf;
     }
 
@@ -535,7 +535,7 @@ public class TimeserieUtils implements TimeserieConstants
       final int intValue = Integer.valueOf( minfd ).intValue();
       wf.setMinimumFractionDigits( intValue );
       wf.setMaximumFractionDigits( intValue );
-      m_formatMap.put( format, wf );
+      FORMAT_MAP.put( format, wf );
 
       return wf;
     }
@@ -545,13 +545,13 @@ public class TimeserieUtils implements TimeserieConstants
 
   private static synchronized NumberFormat getDefaultFormat( )
   {
-    if( m_defaultFormat == null )
+    if( DEFAULT_FORMAT == null )
     {
-      m_defaultFormat = NumberFormat.getNumberInstance();
-      m_defaultFormat.setMinimumFractionDigits( 3 );
+      DEFAULT_FORMAT = NumberFormat.getNumberInstance();
+      DEFAULT_FORMAT.setMinimumFractionDigits( 3 );
     }
 
-    return m_defaultFormat;
+    return DEFAULT_FORMAT;
   }
 
   /**
@@ -561,13 +561,11 @@ public class TimeserieUtils implements TimeserieConstants
    */
   public static DateFormat getDateFormat( )
   {
-    final DateFormat DF = new SimpleDateFormat( "dd.MM.yy HH:mm" ); //$NON-NLS-1$
-
+    final DateFormat sdf = new SimpleDateFormat( "dd.MM.yy HH:mm" ); //$NON-NLS-1$
     final TimeZone timeZone = KalypsoCorePlugin.getDefault().getTimeZone();
+    sdf.setTimeZone( timeZone );
 
-    DF.setTimeZone( timeZone );
-
-    return DF;
+    return sdf;
   }
 
   public static Class< ? > getDataClass( final String type )

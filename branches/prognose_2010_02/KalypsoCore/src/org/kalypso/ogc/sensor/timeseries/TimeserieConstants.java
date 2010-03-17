@@ -50,111 +50,111 @@ import org.kalypso.ogc.sensor.ObservationConstants;
 public  interface TimeserieConstants extends ObservationConstants
 {
   /** Niederschlag */
-  public final static String TYPE_RAINFALL = "N"; //$NON-NLS-1$
+  String TYPE_RAINFALL = "N"; //$NON-NLS-1$
 
   /** Abfluss */
-  public final static String TYPE_RUNOFF = "Q"; //$NON-NLS-1$
+  String TYPE_RUNOFF = "Q"; //$NON-NLS-1$
 
   /** Wasserstand */
-  public final static String TYPE_WATERLEVEL = "W"; //$NON-NLS-1$
+  String TYPE_WATERLEVEL = "W"; //$NON-NLS-1$
 
   /** Wasserstand gauge in cm */
-  public final static String TYPE_WATERLEVEL_GAUGE_CM = "W_GAUGE_CM"; //$NON-NLS-1$
+  String TYPE_WATERLEVEL_GAUGE_CM = "W_GAUGE_CM"; //$NON-NLS-1$
 
   /** Wasserstand gauge in m */
-  public final static String TYPE_WATERLEVEL_GAUGE_M = "W_GAUGE_M"; //$NON-NLS-1$
+  String TYPE_WATERLEVEL_GAUGE_M = "W_GAUGE_M"; //$NON-NLS-1$
 
   /** Normal Null */
-  public final static String TYPE_NORMNULL = "NN"; //$NON-NLS-1$
+  String TYPE_NORMNULL = "NN"; //$NON-NLS-1$
 
   /** Temperatur */
-  public final static String TYPE_TEMPERATURE = "T"; //$NON-NLS-1$
+  String TYPE_TEMPERATURE = "T"; //$NON-NLS-1$
 
   /** Datum */
-  public final static String TYPE_DATE = "date"; //$NON-NLS-1$
+  String TYPE_DATE = "date"; //$NON-NLS-1$
 
   /** Day - day 0-365 */
-  public final static String TYPE_DAY = "DAY"; //$NON-NLS-1$
+  String TYPE_DAY = "DAY"; //$NON-NLS-1$
 
   /** Füllung (VOLUMEN) */
-  public static final String TYPE_VOLUME = "V"; //$NON-NLS-1$
+  String TYPE_VOLUME = "V"; //$NON-NLS-1$
 
   /** Evaporation [mm] */
-  public static final String TYPE_EVAPORATION = "E"; //$NON-NLS-1$
+  String TYPE_EVAPORATION = "E"; //$NON-NLS-1$
 
   /** hours [h] */
-  public static final String TYPE_HOURS = "H"; //$NON-NLS-1$
+  String TYPE_HOURS = "H"; //$NON-NLS-1$
 
   /** minutes [min] */
-  public static final String TYPE_MIN = "min"; //$NON-NLS-1$
+  String TYPE_MIN = "min"; //$NON-NLS-1$
 
   /** area as norm [A/Asum] */
-  public static final String TYPE_NORM = "n"; //$NON-NLS-1$
+  String TYPE_NORM = "n"; //$NON-NLS-1$
 
   /** AREA [m^2] */
-  public static final String TYPE_AREA = "A"; //$NON-NLS-1$
+  String TYPE_AREA = "A"; //$NON-NLS-1$
 
   /** Die Wurzeltiefe in einem Nutzungszyklus [dm] */
-  public static final String TYPE_WT = "WT"; //$NON-NLS-1$
+  String TYPE_WT = "WT"; //$NON-NLS-1$
 
   /** Der Korrekturwert der Verdunstung gegenüber der pot. Verdunstung in einem Nutzungszyklus [-] */
-  public static final String TYPE_KC = "KC"; //$NON-NLS-1$
+  String TYPE_KC = "KC"; //$NON-NLS-1$
 
   /** Der Speicherinhalt des Interzeptionsspeichers in einem Nutzungszyklus [mm] */
-  public static final String TYPE_LAI = "LAI"; //$NON-NLS-1$
+  String TYPE_LAI = "LAI"; //$NON-NLS-1$
 
   /** Humidity [%] */
-  public static final String TYPE_HUMIDITY = "U"; //$NON-NLS-1$
+  String TYPE_HUMIDITY = "U"; //$NON-NLS-1$
 
   /** Velocity [m/s] */
-  public static final String TYPE_VELOCITY = "v"; //$NON-NLS-1$
+  String TYPE_VELOCITY = "v"; //$NON-NLS-1$
 
   /** Polder-Kontrolle: an/aus */
-  public static final String TYPE_POLDER_CONTROL = "POLDER_CONTROL"; //$NON-NLS-1$
+  String TYPE_POLDER_CONTROL = "POLDER_CONTROL"; //$NON-NLS-1$
 
-  public static final String TYPE_ORDINAL_NUMBER = "ordinalNr"; //$NON-NLS-1$
+  String TYPE_ORDINAL_NUMBER = "ordinalNr"; //$NON-NLS-1$
 
-  public static final String TYPE_NODEID = "nodeID"; //$NON-NLS-1$
+  String TYPE_NODEID = "nodeID"; //$NON-NLS-1$
 
-  public static final String TYPE_PEGEL = "pegel"; //$NON-NLS-1$
+  String TYPE_PEGEL = "pegel"; //$NON-NLS-1$
 
   /** virtual time series data source */
-  public static final String TYPE_DATA_SRC = "DATA_SRC"; //$NON-NLS-1$
+  String TYPE_DATA_SRC = "DATA_SRC"; //$NON-NLS-1$
 
 
   // METADATEN
-  public final static String MD_TIMEZONE = "Zeitzone"; //$NON-NLS-1$
+  String MD_TIMEZONE = "Zeitzone"; //$NON-NLS-1$
 
-  public final static String MD_WQWECHMANN = "WQ-Parameter"; //$NON-NLS-1$
+  String MD_WQWECHMANN = "WQ-Parameter"; //$NON-NLS-1$
 
-  public final static String MD_WQTABLE = "WQ-Tabelle"; //$NON-NLS-1$
+  String MD_WQTABLE = "WQ-Tabelle"; //$NON-NLS-1$
 
-  public final static String MD_GKR = "Rechtswert"; //$NON-NLS-1$
+  String MD_GKR = "Rechtswert"; //$NON-NLS-1$
 
-  public final static String MD_GKH = "Hochwert"; //$NON-NLS-1$
+  String MD_GKH = "Hochwert"; //$NON-NLS-1$
 
-  public final static String MD_COORDSYS = "Koordinatensystem"; //$NON-NLS-1$
+  String MD_COORDSYS = "Koordinatensystem"; //$NON-NLS-1$
 
-  public final static String MD_ALARM_1 = "Alarmstufe 1"; //$NON-NLS-1$
+  String MD_ALARM_1 = "Alarmstufe 1"; //$NON-NLS-1$
 
-  public final static String MD_ALARM_2 = "Alarmstufe 2"; //$NON-NLS-1$
+  String MD_ALARM_2 = "Alarmstufe 2"; //$NON-NLS-1$
 
-  public final static String MD_ALARM_3 = "Alarmstufe 3"; //$NON-NLS-1$
+  String MD_ALARM_3 = "Alarmstufe 3"; //$NON-NLS-1$
 
-  public final static String MD_ALARM_4 = "Alarmstufe 4"; //$NON-NLS-1$
+  String MD_ALARM_4 = "Alarmstufe 4"; //$NON-NLS-1$
 
-  public final static String MD_PEGELNULLPUNKT = "Pegelnullpunkt"; //$NON-NLS-1$
+  String MD_PEGELNULLPUNKT = "Pegelnullpunkt"; //$NON-NLS-1$
 
-  public final static String MD_HOEHENANGABEART = "Höhenangabeart"; //$NON-NLS-1$
+  String MD_HOEHENANGABEART = "Höhenangabeart"; //$NON-NLS-1$
 
-  public final static String MD_MESSTISCHBLATT = "Messtischblattnummer"; //$NON-NLS-1$
+  String MD_MESSTISCHBLATT = "Messtischblattnummer"; //$NON-NLS-1$
 
-  public final static String MD_FLUSSGEBIET = "Flussgebiet"; //$NON-NLS-1$
+  String MD_FLUSSGEBIET = "Flussgebiet"; //$NON-NLS-1$
 
-  public final static String MD_GEWAESSER = "Gewässer"; //$NON-NLS-1$
+  String MD_GEWAESSER = "Gewässer"; //$NON-NLS-1$
 
   /** Stationskennziffer */
-  public final static String MD_KENNZIFFER = "Kennziffer"; //$NON-NLS-1$
+  String MD_KENNZIFFER = "Kennziffer"; //$NON-NLS-1$
 
   /**
    * Markierung für eine Vorhersage. Wenn die Property gesetzt ist (true), handelt es sich um eine Vorhersage Zeitreihe.
@@ -162,20 +162,20 @@ public  interface TimeserieConstants extends ObservationConstants
    * @deprecated Es sollte nur noch {@link #MD_VORHERSAGE_START} und {@link #MD_VORHERSAGE_ENDE} benutzt werden.
    */
   @Deprecated
-  public final static String MD_VORHERSAGE = "Vorhersage"; //$NON-NLS-1$
+  String MD_VORHERSAGE = "Vorhersage"; //$NON-NLS-1$
 
-  public final static String MD_VORHERSAGE_START = "Vorhersage Start"; //$NON-NLS-1$
+  String MD_VORHERSAGE_START = "Vorhersage Start"; //$NON-NLS-1$
 
-  public final static String MD_VORHERSAGE_ENDE = "Vorhersage Ende"; //$NON-NLS-1$
+  String MD_VORHERSAGE_ENDE = "Vorhersage Ende"; //$NON-NLS-1$
 
-  public final static String MD_DATE_BEGIN = "Datum-Von"; //$NON-NLS-1$
+  String MD_DATE_BEGIN = "Datum-Von"; //$NON-NLS-1$
 
-  public final static String MD_DATE_END = "Datum-Bis"; //$NON-NLS-1$
+  String MD_DATE_END = "Datum-Bis"; //$NON-NLS-1$
  
   /** the forecast feature is used in some of the views to mark the forecast date-range */
-  public static final String FEATURE_FORECAST = "Vorhersage";
+  String FEATURE_FORECAST = "Vorhersage";
 
   /** the alarm-level feature used to show the alarm-levels in some views */
-  public static final String FEATURE_ALARMLEVEL = "Alarmstufen"; //$NON-NLS-1$
+  String FEATURE_ALARMLEVEL = "Alarmstufen"; //$NON-NLS-1$
 
 }

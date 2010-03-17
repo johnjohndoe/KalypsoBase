@@ -143,4 +143,10 @@ public final class ObservationHelper
       IOUtils.closeQuietly( stream );
     }
   }
+
+  public static IObservation clone( final IObservation observation, final String repositoryItemId ) throws SensorException
+  {
+    final byte[] byteArray = ObservationHelper.flushToByteArray( observation );
+    return ObservationHelper.parseFromByteArray( byteArray, repositoryItemId );
+  }
 }
