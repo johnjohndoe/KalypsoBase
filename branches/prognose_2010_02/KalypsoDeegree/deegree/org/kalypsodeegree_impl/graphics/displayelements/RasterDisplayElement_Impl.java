@@ -197,7 +197,8 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
     final GM_Surface< ? > gridSurface = grid.getSurface( targetCRS );
 
     // Experimental: change interpolation method for better rendering; is quite slow however
-    final GeoGridUtilities.Interpolation interpolation = Interpolation.bilinear;
+    // final GeoGridUtilities.Interpolation interpolation = Interpolation.bilinear;
+    final GeoGridUtilities.Interpolation interpolation = Interpolation.nearest;
 
     final Composite oldAlphaComposite = g.getComposite();
     try
