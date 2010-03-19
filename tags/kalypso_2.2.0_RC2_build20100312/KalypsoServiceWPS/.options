@@ -1,0 +1,5 @@
+# Debug output
+org.kalypso.service.wps/debug = true
+
+# Do not delete temp files 
+org.kalypso.service.wps/doNotDeleteTempFiles = true
