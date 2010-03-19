@@ -29,7 +29,6 @@ public class ChartUtilities
   {
     final ORIENTATION ori = axis.getPosition().getOrientation();
     final DIRECTION dir = axis.getDirection();
-
     return ori == ORIENTATION.VERTICAL && dir == DIRECTION.POSITIVE || ori == ORIENTATION.HORIZONTAL && dir == DIRECTION.NEGATIVE;
   }
 
