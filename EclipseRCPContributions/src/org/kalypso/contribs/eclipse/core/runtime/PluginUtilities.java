@@ -40,9 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse.core.runtime;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.eclipse.core.runtime.FileLocator;
@@ -52,7 +49,6 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IDialogSettings;
-import org.eclipse.osgi.service.datalocation.Location;
 import org.eclipse.ui.internal.util.BundleUtility;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.Bundle;
@@ -165,53 +161,6 @@ public class PluginUtilities
     }
 
     return bundle.loadClass( className );
-  }
-
-  public static URL findConfigLocation( final Plugin plugin, final String path, final String fallbackPath ) throws IOException
-  {
-    try
-    {
-      final Location configurationLocation = Platform.getConfigurationLocation();
-      final URL configurationURL = configurationLocation.getURL();
-      return checkConfigLocation( configurationURL, path );
-    }
-    catch( final IOException e )
-    {
-      // ignore exception for now, second try
-      try
-      {
-        final URL configResource = plugin.getBundle().getResource( fallbackPath );
-        return checkConfigLocation( configResource, path );
-      }
-      catch( final IOException e1 )
-      {
-        // we throw the originial, first exception, as this is the primary location that should work
-        throw e;
-      }
-    }
-  }
-
-  private static URL checkConfigLocation( final URL basisURL, final String configurationPath ) throws MalformedURLException, IOException
-  {
-    final URL configLocation = new URL( basisURL, configurationPath );
-    InputStream is = null;
-    try
-    {
-      is = configLocation.openStream();
-      return configLocation;
-    }
-    finally
-    {
-      try
-      {
-        if( is != null )
-          is.close();
-      }
-      catch( final IOException e )
-      {
-        // ignore
-      }
-    }
   }
 
 }

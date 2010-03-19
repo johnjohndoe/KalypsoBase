@@ -89,8 +89,6 @@ public abstract class JobObserverJob extends Job
       }
     }
 
-    monitor.done();
-
     return Status.OK_STATUS;
   }
 

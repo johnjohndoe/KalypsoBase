@@ -48,10 +48,14 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 
 /**
- * Helper class for deriving fonts from other fonts.<br>
- * Keeps track of created fonts and disposes theses if this class is disposed.<br>
+ * <p>
+ * Helper class for deriving fonts from other fonts.
+ * </p>
+ * <p>
+ * Keeps track of created fonts and disposes theses if this class is disposed
+ * </p>
  * 
- * @author Gernot Belger
+ * @author belger
  */
 public class FontUtilities
 {
@@ -66,15 +70,11 @@ public class FontUtilities
   public Font createChangedFontData( final FontData[] fontData, final int heightOffset, final int styleOffset,
       final Device device )
   {
-    for( final FontData element : fontData )
+    for( int i = 0; i < fontData.length; i++ )
     {
-      element.setHeight( element.getHeight() + heightOffset );
-      element.setStyle( element.getStyle() | styleOffset );
+      fontData[i].setHeight( fontData[i].getHeight() + heightOffset );
+      fontData[i].setStyle( fontData[i].getStyle() | styleOffset );
     }
-
-    final Font font = new Font( device, fontData );
-    m_disposeFonts.add( font );
-
-    return font;
+    return new Font( device, fontData );
   }
 }
