@@ -242,15 +242,16 @@ public class CascadingKalypsoTheme extends AbstractCascadingLayerTheme
     }
     catch( final Throwable e )
     {
-      final IStatus status = StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.ogc.gml.CascadingKalypsoTheme.6" ) + file.getName() + Messages.getString( "org.kalypso.ogc.gml.CascadingKalypsoTheme.7" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      String msessage = Messages.getString( "org.kalypso.ogc.gml.CascadingKalypsoTheme.6" ,file.getName() ); //$NON-NLS-1$ 
+      final IStatus status = StatusUtilities.statusFromThrowable( e, msessage ); 
       setStatus( status );
       return status;
     }
     finally
     {
       IOUtils.closeQuietly( contents );
+      m_resolved = true;
     }
-    m_resolved = true;
     return Status.OK_STATUS;
   }
 
