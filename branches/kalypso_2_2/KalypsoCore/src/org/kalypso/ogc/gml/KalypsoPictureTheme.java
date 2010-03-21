@@ -44,6 +44,8 @@ import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.template.types.ObjectFactory;
 import org.kalypso.template.types.StyledLayerType;
+import org.kalypso.transformation.GeoTransformer;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
@@ -118,17 +120,19 @@ abstract public class KalypsoPictureTheme extends AbstractKalypsoTheme
    */
   public GM_Envelope getFullExtent( )
   {
-    final GM_Envelope bbox = null;
     try
     {
-      return m_domain.getGM_Envelope( m_domain.getCoordinateSystem() );
+      final GM_Envelope gmEnvelope = m_domain.getGM_Envelope( m_domain.getCoordinateSystem() );
+      final String kalypsoCrs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
+      final GeoTransformer geoTransformer = new GeoTransformer( kalypsoCrs );
+      return geoTransformer.transformEnvelope( gmEnvelope );
     }
     catch( final Exception e2 )
     {
       e2.printStackTrace();
       KalypsoPictureTheme.LOGGER.warning( Messages.getString( "org.kalypso.ogc.gml.KalypsoPictureTheme.9" ) ); //$NON-NLS-1$
     }
-    return bbox;
+    return null;
   }
 
   protected TiledImage getImage( )
@@ -164,10 +168,10 @@ abstract public class KalypsoPictureTheme extends AbstractKalypsoTheme
 
     try
     {
-      final GM_Envelope envelope = m_domain.getGM_Envelope( m_domain.getCoordinateSystem() );
-      final String crs = m_domain.getCoordinateSystem();
-      // transform from crs to crs? optimisation possible?
-      TransformationUtilities.transformImage( m_image, envelope, crs, crs, p, g );
+      final String pictureCrs = m_domain.getCoordinateSystem();
+      final GM_Envelope envelope = m_domain.getGM_Envelope( pictureCrs );
+      final String crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
+      TransformationUtilities.transformImage( m_image, envelope, crs, p, g );
       return Status.OK_STATUS;
     }
     catch( final Exception e )
