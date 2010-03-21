@@ -82,7 +82,7 @@ public class KalypsoPictureThemeGml extends KalypsoPictureTheme
     try
     {
       // TODO: botch... find a better way of loading gml workspace!
-      // maybe it could be treated as normal gm with a special display element?
+      // maybe it could be treated as normal gml with a special display element?
       final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( UrlResolverSingleton.resolveUrl( getURLContext(), getStyledLayerType().getHref() ), null );
       final Feature fRoot = workspace.getRootFeature();
 
