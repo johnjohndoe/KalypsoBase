@@ -52,7 +52,6 @@ import org.kalypso.model.wspm.core.util.WspmGeometryUtilities;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResultUtilities;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
-import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -93,7 +92,7 @@ public class ProfileCacherFeaturePropertyFunction extends FeaturePropertyFunctio
   {
     try
     {
-      IProfileFeature profile = (IProfileFeature) feature;
+      final IProfileFeature profile = (IProfileFeature) feature;
 
       final IProfil profil = profile.getProfil();
       if( profil == null )
@@ -107,47 +106,28 @@ public class ProfileCacherFeaturePropertyFunction extends FeaturePropertyFunctio
       final int compBreite = TupleResultUtilities.indexOfComponent( profil, IWspmConstants.POINT_PROPERTY_BREITE );
       final int compHoehe = TupleResultUtilities.indexOfComponent( profil, IWspmConstants.POINT_PROPERTY_HOEHE );
 
+      // FIXME: no: do not interpolate here, use only the points that are really available
+      
+      final double[] rws = getInterpolatedValues( profil, compRechtswert, compBreite, compBreite );
+      final double[] hws = getInterpolatedValues( profil, compHochwert, compHoehe, compBreite );
+      final double[] heights = getInterpolatedValues( profil, compHoehe, compHoehe, compBreite );
+      
       String srsName = profile.getSrsName();
-      for( final IRecord point : points )
+      
+      for( int i = 0; i < hws.length; i++ )
       {
-        /* If there are no rw/hw create pseudo geometries from breite and station */
-        final Double rw;
-        final Double hw;
+        final double rw = rws[i];
+        final double hw = hws[i];
+        final double height = heights[i];
 
-        if( compRechtswert != -1 && compHochwert != -1 )
+        if( srsName == null )
+          srsName = TimeserieUtils.getCoordinateSystemNameForGkr( Double.toString( rw ) );
+        
+        if( !Double.isNaN( rw ) && !Double.isNaN( hw ) )
         {
-          rw = (Double) point.getValue( compRechtswert );
-          hw = (Double) point.getValue( compHochwert );
-
-          /* We assume here that we have a GAUSS-KRUEGER crs in a profile. */
-          if( srsName == null )
-            srsName = TimeserieUtils.getCoordinateSystemNameForGkr( Double.toString( rw ) );
+          final GM_Position position = GeometryFactory.createGM_Position( rw, hw, height );
+          positions.add( position );
         }
-        else
-        {
-          if( compBreite == -1 )
-            throw new IllegalStateException( "Cross sections without width or easting/northing attributes detected - geometric processing not possible." ); //$NON-NLS-1$
-
-          rw = (Double) point.getValue( compBreite );
-          hw = profil.getStation() * 1000;
-
-          /* We assume here that we have a GAUSS-KRUEGER crs in a profile. */
-          if( srsName == null )
-            srsName = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
-        }
-
-        if( rw == null || hw == null || rw.isNaN() || hw.isNaN() )
-          continue;
-
-        final Double h = compHoehe == -1 ? null : (Double) point.getValue( compHoehe );
-
-        final GM_Position position;
-        if( h == null )
-          position = GeometryFactory.createGM_Position( rw, hw );
-        else
-          position = GeometryFactory.createGM_Position( rw, hw, h );
-
-        positions.add( position );
       }
 
       if( positions.size() < 2 )
@@ -166,6 +146,14 @@ public class ProfileCacherFeaturePropertyFunction extends FeaturePropertyFunctio
     return null;
   }
 
+  private double[] getInterpolatedValues( final IProfil profil, final int componentIndex, final int fallbackComponentIndex, final int interpolateComponentIndex )
+  {
+    if( componentIndex == -1 )
+      return TupleResultUtilities.getInterpolatedValues( profil, fallbackComponentIndex, interpolateComponentIndex );
+
+    return TupleResultUtilities.getInterpolatedValues( profil, componentIndex, interpolateComponentIndex );
+  }
+
   /**
    * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#getValue(org.kalypsodeegree.model.feature.Feature,
    *      org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
@@ -179,10 +167,19 @@ public class ProfileCacherFeaturePropertyFunction extends FeaturePropertyFunctio
     if( compRechtswert == -1 || compHochwert == -1 )
       return null;
 
-    final Double rw = (Double) profilPoint.getValue( compRechtswert );
-    final Double hw = (Double) profilPoint.getValue( compHochwert );
-    final Double h = compHoehe == -1 ? null : (Double) profilPoint.getValue( compHoehe );
+    final Object rw = profilPoint.getValue( compRechtswert );
+    final Object hw = profilPoint.getValue( compHochwert );
+    final Object h = compHoehe == -1 ? null : profilPoint.getValue( compHoehe );
 
-    return WspmGeometryUtilities.pointFromRwHw( rw, hw, h, crs, WspmGeometryUtilities.GEO_TRANSFORMER );
+    if( rw instanceof Number && hw instanceof Number )
+    {
+      final double dRw = ((Number) rw).doubleValue();
+      final double dHw = ((Number) hw).doubleValue();
+      
+      final double dH = h instanceof Number ? ((Number)h).doubleValue() : Double.NaN;
+      return WspmGeometryUtilities.pointFromRwHw( dRw, dHw, dH, crs, WspmGeometryUtilities.GEO_TRANSFORMER );
+    }
+    
+    return null;
   }
 }

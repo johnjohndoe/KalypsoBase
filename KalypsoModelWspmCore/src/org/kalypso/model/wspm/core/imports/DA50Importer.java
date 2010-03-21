@@ -249,8 +249,8 @@ public class DA50Importer
         final double rwEnd = Double.parseDouble( rwEndString ) / 1000.0;
         final double hwEnd = Double.parseDouble( hwEndString ) / 1000.0;
 
-        final GM_Point start = WspmGeometryUtilities.pointFromRwHw( rwStart, hwStart, 0.0, srsName, null );
-        final GM_Point end = WspmGeometryUtilities.pointFromRwHw( rwEnd, hwEnd, 0.0, srsName, null );
+        final GM_Point start = WspmGeometryUtilities.pointFromRwHw( rwStart, hwStart, Double.NaN, srsName, null );
+        final GM_Point end = WspmGeometryUtilities.pointFromRwHw( rwEnd, hwEnd, Double.NaN, srsName, null );
 
         result.add( new DA50Entry( station, start, end ) );
       }
