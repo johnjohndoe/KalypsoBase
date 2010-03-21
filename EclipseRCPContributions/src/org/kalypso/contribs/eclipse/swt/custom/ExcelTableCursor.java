@@ -21,6 +21,7 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 
@@ -511,12 +512,21 @@ public class ExcelTableCursor extends TableCursor
           return;
 
         final int row = table.indexOf( row2 ) + dy;
-        final int col = getColumn() + dx;
+        int col = getColumn() + dx;
         final int rowCount = table.getItemCount();
         final int columnCount = table.getColumnCount();
 
         if( (col >= 0) && (col < columnCount) && (row >= 0) && (row < rowCount) )
+        {
+          /* Rather crude: advance further if the new column is not visible. Fixes the problem, that the first
+           * invisible column breaks the tabbing. */
+          final TableColumn column = getViewer().getTable().getColumn( col );
+          int width = column.getWidth();
+          if( width == 0 && col < columnCount - 1 )
+            col += 1;
+          
           setSelection( row, col, true );
+        }
 
         setFocus();
 
