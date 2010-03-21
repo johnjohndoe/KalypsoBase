@@ -61,8 +61,7 @@ public class RasterColorMapContentProvider implements IStructuredContentProvider
   enum PROPS
   {
     label,
-    quantity,
-    color
+    quantity
   }
 
   /**
@@ -109,11 +108,7 @@ public class RasterColorMapContentProvider implements IStructuredContentProvider
 
       final TableColumn opacityColumn = new TableColumn( table, SWT.NONE );
       opacityColumn.setText( Messages.getString("org.kalypso.ui.editor.sldEditor.RasterColorMapContentProvider.2") ); //$NON-NLS-1$
-      opacityColumn.setWidth( 50 );
-
-      final TableColumn colorColumn = new TableColumn( table, SWT.NONE );
-      colorColumn.setText( Messages.getString("org.kalypso.ui.editor.sldEditor.RasterColorMapContentProvider.3") ); //$NON-NLS-1$
-      colorColumn.setWidth( 50 );
+      opacityColumn.setWidth( 100 );
 
       final PROPS[] propValues = PROPS.values();
       final String[] props = new String[propValues.length];
