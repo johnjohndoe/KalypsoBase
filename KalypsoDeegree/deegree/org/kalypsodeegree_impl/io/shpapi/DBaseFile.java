@@ -718,6 +718,10 @@ public class DBaseFile
     {
       try
       {
+        /* Empty is not an error, just the non-existing value... */
+        if( value.isEmpty() )
+          return null;
+
         if( column.prec == 0 )
         {
           if( column.size < 10 )
