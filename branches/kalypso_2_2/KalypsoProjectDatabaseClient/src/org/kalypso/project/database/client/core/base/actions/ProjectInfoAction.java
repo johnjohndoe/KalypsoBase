@@ -101,6 +101,7 @@ public class ProjectInfoAction implements IProjectAction
         }
         else if( m_handler instanceof ILocalProject )
         {
+
           final LocalInfoDialog dialog = new LocalInfoDialog( (ILocalProject) m_handler, link.getShell() );
           dialog.open();
         }
