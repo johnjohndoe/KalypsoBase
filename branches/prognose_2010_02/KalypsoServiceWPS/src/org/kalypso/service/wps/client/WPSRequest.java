@@ -228,7 +228,6 @@ public class WPSRequest
     try
     {
       KalypsoServiceWPSDebug.DEBUG.printf( "Checking state file of the server ...\n" ); //$NON-NLS-1$
-      ExecuteResponseType exState = null;
 
       /* Poll to update the status. */
       final boolean run = true;
@@ -252,7 +251,7 @@ public class WPSRequest
           return StatusUtilities.statusFromThrowable( e );
         }
 
-        exState = wpsRequest.getExecuteResponse( m_manager );
+        final ExecuteResponseType exState = wpsRequest.getExecuteResponse( m_manager );
         if( exState == null )
           return StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.service.wps.client.WPSRequest.2" ) ); //$NON-NLS-1$
 
@@ -272,7 +271,7 @@ public class WPSRequest
         // TODO
         if( monitor.isCanceled() )
         {
-          IStatus doCanceled = doCanceled();
+          final IStatus doCanceled = doCanceled();
           if( doCanceled.matches( IStatus.CANCEL | IStatus.ERROR | IStatus.WARNING ) )
             return doCanceled;
 
@@ -323,9 +322,7 @@ public class WPSRequest
 
   protected IStatus doUnknownState( final ExecuteResponseType exState )
   {
-    IStatus status;
-    status = StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.service.wps.client.WPSRequest.4" ) ); //$NON-NLS-1$
-    return status;
+    return StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.service.wps.client.WPSRequest.4" ) );
   }
 
   protected IStatus doProcessSucceeded( final ExecuteResponseType exState )

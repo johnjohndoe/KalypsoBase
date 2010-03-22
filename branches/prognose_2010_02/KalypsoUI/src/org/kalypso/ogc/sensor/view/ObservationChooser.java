@@ -43,6 +43,8 @@ package org.kalypso.ogc.sensor.view;
 
 import org.eclipse.compare.internal.AbstractViewer;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
@@ -78,6 +80,29 @@ public class ObservationChooser extends AbstractViewer implements ISelectionProv
     m_repViewer.setContentProvider( new RepositoryTreeContentProvider() );
     m_repViewer.setLabelProvider( new RepositoryLabelProvider() );
     m_repViewer.setInput( m_repContainer );
+    m_repViewer.addDoubleClickListener( new IDoubleClickListener()
+    {
+      @Override
+      public void doubleClick( final DoubleClickEvent event )
+      {
+        onTreeDoubleClick( event );
+      }
+
+    } );
+  }
+
+  protected void onTreeDoubleClick( final DoubleClickEvent event )
+  {
+    final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+    final Object firstElement = selection.getFirstElement();
+    if( firstElement != null )
+    {
+      final boolean expandedState = m_repViewer.getExpandedState( firstElement );
+      if( expandedState )
+        m_repViewer.collapseToLevel( firstElement, 1 );
+      else
+        m_repViewer.expandToLevel( firstElement, 1 );
+    }
   }
 
   /**
