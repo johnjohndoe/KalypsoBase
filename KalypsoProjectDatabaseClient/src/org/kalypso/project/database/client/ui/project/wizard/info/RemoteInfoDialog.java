@@ -101,6 +101,9 @@ public class RemoteInfoDialog extends TitleAreaDialog
     m_isExpert = isExpert;
 
     setBlockOnOpen( true );
+    setDialogHelpAvailable( false );
+    setHelpAvailable( false );
+
     m_beans = KalypsoProjectBeanHelper.getSortedBeans( handler.getBean() );
   }
 
@@ -113,7 +116,7 @@ public class RemoteInfoDialog extends TitleAreaDialog
     final Control contents = super.createContents( parent );
 
     setTitle( Messages.getString( "org.kalypso.project.database.client.ui.project.wizard.info.RemoteInfoDialog.0" ) ); //$NON-NLS-1$
-    setMessage( null );
+    setMessage( Messages.getString( "org.kalypso.project.database.client.ui.project.wizard.info.RemoteInfoDialog.Description" ) ); //$NON-NLS-1$
 
     return contents;
   }
