@@ -768,7 +768,6 @@ public class FileUtilities
     return stati;
   }
 
-
   public static String resolveValidFileName( String fileName )
   {
     fileName = fileName.replaceAll( "\\\\", "_" ); //$NON-NLS-1$ //$NON-NLS-2$
@@ -779,4 +778,15 @@ public class FileUtilities
     return fileName.trim();
   }
 
+  public static void deleteQuitly( final File file )
+  {
+    try
+    {
+      FileUtils.forceDelete( file );
+    }
+    catch( final IOException e )
+    {
+      KalypsoCommonsPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+    }
+  }
 }
