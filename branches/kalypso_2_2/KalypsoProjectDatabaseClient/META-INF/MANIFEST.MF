@@ -4,6 +4,7 @@ Bundle-Name: KalypsoProjectDatabaseClient Plug-in
 Bundle-SymbolicName: org.kalypso.project.database.client;singleton:=true
 Bundle-Version: 1.0.0
 Bundle-Activator: org.kalypso.project.database.client.KalypsoProjectDatabaseClient
+Bundle-Localization: plugin
 Require-Bundle: org.junit4;bundle-version="4.3.1";resolution:=optional,
  org.kalypso.afgui;bundle-version="0.0.0";visibility:=reexport,
  org.kalypso.project.database;bundle-version="1.0.0";visibility:=reexport,
