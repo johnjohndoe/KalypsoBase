@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- Schema file written by PDE -->
-<schema targetNamespace="org.kalypso.model.wspm.tuhh.core">
+<schema targetNamespace="org.kalypso.contribs.eclipseplatform" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
       <appInfo>
-         <meta.schema plugin="org.kalypso.model.wspm.tuhh.core" id="demoProject" name="demoProject"/>
+         <meta.schema plugin="org.kalypso.contribs.eclipseplatform" id="projectTemplate" name="projectTemplate"/>
       </appInfo>
       <documentation>
          Via this extension-point it is possible to register project templates.
@@ -15,6 +15,11 @@ Each implementation of a project template references a single zip file, that con
    </annotation>
 
    <element name="extension">
+      <annotation>
+         <appInfo>
+            <meta.element />
+         </appInfo>
+      </annotation>
       <complexType>
          <sequence>
             <element ref="project" minOccurs="1" maxOccurs="unbounded"/>
@@ -149,13 +154,5 @@ Each implementation of a project template references a single zip file, that con
       </documentation>
    </annotation>
 
-   <annotation>
-      <appInfo>
-         <meta.section type="copyright"/>
-      </appInfo>
-      <documentation>
-         
-      </documentation>
-   </annotation>
 
 </schema>
