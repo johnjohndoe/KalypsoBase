@@ -42,6 +42,7 @@ package org.kalypso.contribs.eclipse.core.runtime;
 
 import java.util.Date;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 
 /**
@@ -68,6 +69,13 @@ public class StatusWithTime extends Status implements IStatusWithTime
   public StatusWithTime( final int severity, final String pluginId, final String message, final Date time )
   {
     super( severity, pluginId, message );
+
+    m_time = time;
+  }
+
+  public StatusWithTime( final IStatus status, final Date time )
+  {
+    super( status.getSeverity(), status.getPlugin(), status.getCode(), status.getMessage(), status.getException() );
 
     m_time = time;
   }
