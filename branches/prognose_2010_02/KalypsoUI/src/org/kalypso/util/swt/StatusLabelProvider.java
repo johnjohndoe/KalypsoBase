@@ -41,6 +41,7 @@
 package org.kalypso.util.swt;
 
 import java.text.DateFormat;
+import java.util.Date;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IStatus;
@@ -49,10 +50,10 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.internal.ide.IDEInternalWorkbenchImages;
+import org.kalypso.contribs.eclipse.core.runtime.IStatusWithTime;
 import org.kalypso.contribs.eclipse.jface.viewers.DefaultTableViewer;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.i18n.Messages;
-import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypsodeegree_impl.gml.binding.commons.IGeoStatus;
 
 /**
  * A label provider showing stati.
@@ -61,11 +62,7 @@ import org.kalypsodeegree_impl.gml.binding.commons.IGeoStatus;
  */
 public class StatusLabelProvider extends LabelProvider implements ITableLabelProvider
 {
-  private final static DateFormat DF = DateFormat.getDateTimeInstance( DateFormat.SHORT, DateFormat.SHORT );
-  static
-  {
-    DF.setTimeZone( KalypsoGisPlugin.getDefault().getDisplayTimeZone() );
-  }
+  private final DateFormat m_dateFormat = DateFormat.getDateTimeInstance( DateFormat.MEDIUM, DateFormat.MEDIUM );
 
   private static final String TIME = "time"; //$NON-NLS-1$
 
@@ -78,6 +75,7 @@ public class StatusLabelProvider extends LabelProvider implements ITableLabelPro
   public StatusLabelProvider( final Object[] columnProperties )
   {
     m_columnProperties = columnProperties;
+    m_dateFormat.setTimeZone( KalypsoCorePlugin.getDefault().getTimeZone() );
   }
 
   /**
@@ -86,9 +84,9 @@ public class StatusLabelProvider extends LabelProvider implements ITableLabelPro
    */
   public static void configureTableViewer( final DefaultTableViewer tableViewer )
   {
-    tableViewer.addColumn( SEVERITY, Messages.getString("org.kalypso.util.swt.StatusLabelProvider.3"), null, 30, 0, false, SWT.CENTER, false, true ); //$NON-NLS-1$
-    tableViewer.addColumn( MESSAGE, Messages.getString("org.kalypso.util.swt.StatusLabelProvider.4"), null, 500, 0, false, SWT.LEFT, true, true ); //$NON-NLS-1$
-    tableViewer.addColumn( TIME, Messages.getString("org.kalypso.util.swt.StatusLabelProvider.5"), null, 150, 0, false, SWT.LEFT, false, true ); //$NON-NLS-1$
+    tableViewer.addColumn( SEVERITY, Messages.getString( "org.kalypso.util.swt.StatusLabelProvider.3" ), null, 30, 0, false, SWT.CENTER, false, true ); //$NON-NLS-1$
+    tableViewer.addColumn( MESSAGE, Messages.getString( "org.kalypso.util.swt.StatusLabelProvider.4" ), null, 500, 0, false, SWT.LEFT, true, true ); //$NON-NLS-1$
+    tableViewer.addColumn( TIME, Messages.getString( "org.kalypso.util.swt.StatusLabelProvider.5" ), null, 150, 0, false, SWT.LEFT, false, true ); //$NON-NLS-1$
 
     tableViewer.setLabelProvider( new StatusLabelProvider( tableViewer.getColumnProperties() ) );
   }
@@ -96,7 +94,7 @@ public class StatusLabelProvider extends LabelProvider implements ITableLabelPro
   /**
    * @see org.kalypso.gml.ui.jface.FeatureWrapperLabelProvider#getColumnImage(java.lang.Object, int)
    */
-  @SuppressWarnings("restriction") //$NON-NLS-1$
+  @SuppressWarnings("restriction")//$NON-NLS-1$
   public Image getColumnImage( final Object element, final int columnIndex )
   {
     final IStatus status = statusForElement( element );
@@ -142,8 +140,14 @@ public class StatusLabelProvider extends LabelProvider implements ITableLabelPro
 
     if( columnProperty == TIME )
     {
-      if( status instanceof IGeoStatus )
-        return ((IGeoStatus) status).getTime().toString();
+      if( status instanceof IStatusWithTime )
+      {
+        final Date time = ((IStatusWithTime) status).getTime();
+        if( time == null )
+          return ""; //$NON-NLS-1$
+
+        return m_dateFormat.format( time );
+      }
     }
 
     return ""; //$NON-NLS-1$

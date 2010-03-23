@@ -50,6 +50,14 @@ import org.eclipse.core.runtime.Status;
  */
 public class StatusWithTime extends Status implements IStatusWithTime
 {
+  public static IStatusWithTime create( final IStatus status, final Date date )
+  {
+    if( status.isMultiStatus() )
+      return new MultiStatusWithTime( status, date );
+
+    return new StatusWithTime( status, date );
+  }
+
   private final Date m_time;
 
   public StatusWithTime( final int severity, final String pluginId, final int code, final String message, final Date time, final Throwable exception )
@@ -73,7 +81,7 @@ public class StatusWithTime extends Status implements IStatusWithTime
     m_time = time;
   }
 
-  public StatusWithTime( final IStatus status, final Date time )
+  /* default */StatusWithTime( final IStatus status, final Date time )
   {
     super( status.getSeverity(), status.getPlugin(), status.getCode(), status.getMessage(), status.getException() );
 

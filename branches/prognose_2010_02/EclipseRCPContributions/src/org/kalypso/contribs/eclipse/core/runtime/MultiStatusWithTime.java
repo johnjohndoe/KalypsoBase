@@ -66,6 +66,13 @@ public class MultiStatusWithTime extends MultiStatus implements IStatusWithTime
     m_time = time;
   }
 
+  /* default */MultiStatusWithTime( final IStatus status, final Date time )
+  {
+    super( status.getPlugin(), status.getCode(), status.getChildren(), status.getMessage(), status.getException() );
+
+    m_time = time;
+  }
+
   /**
    * @see org.kalypso.contribs.eclipse.core.runtime.IStatusWithTime#getTime()
    */

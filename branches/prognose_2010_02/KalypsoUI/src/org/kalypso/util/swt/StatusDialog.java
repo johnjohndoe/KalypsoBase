@@ -86,9 +86,6 @@ public class StatusDialog extends AbstractStatusDialog
     composite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     composite.setLayout( new GridLayout() );
 
-    // TODO show other properties:
-    // - time
-
     final Throwable exception = getStatus().getException();
     if( exception != null )
     {
