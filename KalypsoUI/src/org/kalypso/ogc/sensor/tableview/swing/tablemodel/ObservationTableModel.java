@@ -699,4 +699,24 @@ public class ObservationTableModel extends AbstractTableModel implements IObserv
   {
     return m_sharedAxis;
   }
+
+  /**
+   * Returns the row index of the given shared object.<br>
+   * Careful, this is a linear list search, so it is quite slow.
+   * 
+   * @return -1, if the given key was not found.
+   */
+  public int indexOfKey( final Object sharedKey )
+  {
+    int index = 0;
+    for( final Object key : m_sharedModel )
+    {
+      if( ObjectUtils.equals( sharedKey, key ) )
+        return index;
+
+      index++;
+    }
+
+    return -1;
+  }
 }

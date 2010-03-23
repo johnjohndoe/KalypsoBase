@@ -45,6 +45,8 @@ import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Panel;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.NumberFormat;
@@ -118,6 +120,10 @@ public class ObservationTable extends Panel implements IObsViewEventListener
   /** default background color for the date renderer when not displaying forecast */
   private static final Color BG_COLOR = new Color( 222, 222, 222 );
 
+  private final JScrollPane m_scrollPane;
+
+  private int m_lastVisibleRow = -1;
+
   public ObservationTable( final TableView template )
   {
     this( template, false, true );
@@ -188,16 +194,16 @@ public class ObservationTable extends Panel implements IObsViewEventListener
     vp.setView( rowHeader );
     vp.setPreferredSize( rowHeader.getPreferredSize() );
 
-    final JScrollPane scrollPane = new JScrollPane( m_table );
-    scrollPane.setRowHeader( vp );
-    scrollPane.setCorner( ScrollPaneConstants.UPPER_LEFT_CORNER, rowHeader.getTableHeader() );
+    m_scrollPane = new JScrollPane( m_table );
+    m_scrollPane.setRowHeader( vp );
+    m_scrollPane.setCorner( ScrollPaneConstants.UPPER_LEFT_CORNER, rowHeader.getTableHeader() );
 
     setLayout( new BoxLayout( this, BoxLayout.Y_AXIS ) );
 
     m_label.setVisible( false );
     add( m_label );
 
-    add( scrollPane );
+    add( m_scrollPane );
 
     // removed in this.dispose()
     m_view.addObsViewEventListener( this );
@@ -303,6 +309,9 @@ public class ObservationTable extends Panel implements IObsViewEventListener
             model.addColumn( column );
 
           analyseObservation( column.getObservation(), true );
+
+          /* Try to scroll for every added column, as the next one might be longer */
+          scrollToRowForecastOrLastVisible( column.getObservation() );
         }
 
         // REMOVE COLUMN
@@ -315,6 +324,7 @@ public class ObservationTable extends Panel implements IObsViewEventListener
 
           if( model.getColumnCount() == 0 )
           {
+            updateLastVisibleRow();
             clearLabel();
             m_currentScenarioName = ""; //$NON-NLS-1$
           }
@@ -323,6 +333,8 @@ public class ObservationTable extends Panel implements IObsViewEventListener
         // REMOVE ALL
         if( evenType == ObsViewEvent.TYPE_ITEM_REMOVE_ALL )
         {
+          updateLastVisibleRow();
+
           model.clearColumns();
           dateRenderer.clearMarkers();
 
@@ -346,6 +358,56 @@ public class ObservationTable extends Panel implements IObsViewEventListener
     };
 
     SwingEclipseUtilities.invokeAndHandleError( runnable, m_waitForSwing );
+  }
+
+  protected void updateLastVisibleRow( )
+  {
+    final Rectangle visibleRect = m_table.getVisibleRect();
+
+    final Point leadingPoint = new Point( visibleRect.x, visibleRect.y );
+    final int rowAtPoint = m_table.rowAtPoint( leadingPoint );
+    m_lastVisibleRow = rowAtPoint;
+  }
+
+  protected void scrollToRowForecastOrLastVisible( final IObservation observation )
+  {
+    if( observation == null )
+      return;
+
+    final int rowHeight = m_table.getRowHeight();
+    /* Remark: we cannot use m_table.getVisibleRect() as the visibleRect, as this might or might not be 0 at the moment. */
+    final Rectangle visibleRect = m_scrollPane.getViewportBorderBounds();
+    final int visibleRowsCount = visibleRect.height / rowHeight;
+
+    /* We have last visible index: just scroll there */
+    if( m_lastVisibleRow != -1 )
+    {
+      scrollTableToIndex( m_lastVisibleRow + visibleRowsCount );
+      return;
+    }
+
+    /* Else, scroll to start forecast (center it on middle of table) */
+    final DateRange dr = TimeserieUtils.isTargetForecast( observation );
+    if( dr == null )
+      return;
+
+    final Date from = dr.getFrom();
+    final int index = m_model.indexOfKey( from );
+    if( index == -1 )
+      return;
+
+    /* Center the table on this row */
+    final int indexCentered = index + visibleRowsCount / 2;
+    scrollTableToIndex( indexCentered );
+  }
+
+  private void scrollTableToIndex( final int index )
+  {
+    final int rowCount = m_model.getRowCount();
+    final int indexToShow = Math.min( index, rowCount - 1 );
+
+    final Rectangle cellRect = m_table.getCellRect( indexToShow, 0, false );
+    m_table.scrollRectToVisible( cellRect );
   }
 
   /**
