@@ -403,16 +403,6 @@
             </command>
          </menuContribution>
          <menuContribution
-               locationURI="toolbar:org.kalypso.chart.ui.editor.toolbar?after=additions">
-            <command
-                  commandId="org.kalypso.model.wspm.ui.action.LengthSectionExport"
-                  style="push">
-               <visibleWhen
-                     checkEnabled="true">
-               </visibleWhen>
-            </command>
-         </menuContribution>
-         <menuContribution
                locationURI="menu:org.kalypso.chart.ui.editor.menu?after=additions">
             <command
                   commandId="org.kalypso.model.wspm.ui.action.LengthSectionExport"
@@ -482,10 +472,6 @@
                icon="icons/obj16/flipProfile.gif">
          </image>
          <image
-               commandId="org.kalypso.model.wspm.ui.command.profile.openInPlotter"
-               icon="icons/etool16/profile_plotter.gif">
-         </image>
-         <image
                commandId="org.kalypso.model.wspm.ui.command.profile.simplify"
                icon="KalypsoModelWspmUI.image1">
          </image>	
@@ -513,10 +499,6 @@
         description="%org.kalypso.model.wspm.ui.action.FlipProfileAction.description"
         id="org.kalypso.model.wspm.ui.command.profile.flip"
         name="%org.kalypso.model.wspm.ui.action.FlipProfileAction">
-  </command>
-  <command
-        id="org.kalypso.model.wspm.ui.command.profile.openInPlotter"
-        name="WspWin Plotter">
   </command>
   <command
         description="Simplify profile by removing unimportant points"
@@ -616,13 +598,6 @@
              id="org.kalypso.model.wspm.ui.profileExport"
              label="Export"
              mnemonic="e">
-          <command
-                commandId="org.kalypso.model.wspm.ui.command.profile.openInPlotter"
-                style="push">
-             <visibleWhen
-                   checkEnabled="true">
-             </visibleWhen>
-          </command>
           <separator
                 name="additions"
                 visible="false">
@@ -718,15 +693,6 @@
    <handler
          class="org.kalypso.model.wspm.ui.profil.wizard.flipProfile.FlipProfileHandler"
          commandId="org.kalypso.model.wspm.ui.command.profile.flip">
-      <enabledWhen>
-         <reference
-               definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
-         </reference>
-      </enabledWhen>
-   </handler>
-   <handler
-         class="org.kalypso.model.wspm.tuhh.ui.actions.PlotterExportHandler"
-         commandId="org.kalypso.model.wspm.ui.command.profile.openInPlotter">
       <enabledWhen>
          <reference
                definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
