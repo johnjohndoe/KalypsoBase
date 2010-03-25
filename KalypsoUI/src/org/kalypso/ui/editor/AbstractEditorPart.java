@@ -152,7 +152,7 @@ public abstract class AbstractEditorPart extends WorkbenchPart implements IResou
   /**
    * @see org.eclipse.ui.part.EditorPart#doSave(org.eclipse.core.runtime.IProgressMonitor)
    */
-  public final void doSave( final IProgressMonitor monitor )
+  public final synchronized void doSave( final IProgressMonitor monitor )
   {
     final IEditorInput eInput = getEditorInput();
     if( eInput == null )

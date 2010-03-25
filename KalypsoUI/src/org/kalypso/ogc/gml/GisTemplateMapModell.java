@@ -161,6 +161,7 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
     m_modell.setName( name );
   }
 
+  @Override
   public IKalypsoTheme addLayer( final StyledLayerType layer ) throws CoreException
   {
     final IKalypsoTheme theme = loadTheme( layer, m_context );
@@ -172,6 +173,7 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
     return theme;
   }
 
+  @Override
   public IKalypsoTheme insertLayer( final StyledLayerType layer, final int position ) throws Exception
   {
     final IKalypsoTheme theme = loadTheme( layer, m_context );
@@ -183,6 +185,7 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
     return theme;
   }
 
+  @Override
   public void dispose( )
   {
     m_modell.dispose();
@@ -217,7 +220,7 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
   /**
    * Create the gismapview object from the current state of the model.
    */
-  public Gismapview createGismapTemplate( final GM_Envelope bbox, final String srsName, IProgressMonitor monitor ) throws CoreException
+  public synchronized Gismapview createGismapTemplate( final GM_Envelope bbox, final String srsName, IProgressMonitor monitor ) throws CoreException
   {
     if( monitor == null )
       monitor = new NullProgressMonitor();
@@ -292,7 +295,7 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
     }
   }
 
-  public void saveGismapTemplate( final GM_Envelope bbox, final String srsName, IProgressMonitor monitor, final IFile file ) throws CoreException
+  public synchronized void saveGismapTemplate( final GM_Envelope bbox, final String srsName, IProgressMonitor monitor, final IFile file ) throws CoreException
   {
     if( monitor == null )
       monitor = new NullProgressMonitor();
@@ -329,6 +332,7 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
     }
   }
 
+  @Override
   public void activateTheme( final IKalypsoTheme theme )
   {
     m_modell.activateTheme( theme );
@@ -337,31 +341,37 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
   /**
    * @see org.kalypso.ogc.gml.mapmodel.IMapModell#internalActivate(org.kalypso.ogc.gml.IKalypsoTheme)
    */
+  @Override
   public void internalActivate( final IKalypsoTheme theme )
   {
     m_modell.internalActivate( theme );
   }
 
+  @Override
   public void addTheme( final IKalypsoTheme theme )
   {
     m_modell.addTheme( theme );
   }
 
+  @Override
   public IKalypsoTheme getActiveTheme( )
   {
     return m_modell.getActiveTheme();
   }
 
+  @Override
   public IKalypsoTheme[] getAllThemes( )
   {
     return m_modell.getAllThemes();
   }
 
+  @Override
   public String getCoordinatesSystem( )
   {
     return m_modell.getCoordinatesSystem();
   }
 
+  @Override
   public GM_Envelope getFullExtentBoundingBox( )
   {
     return m_modell.getFullExtentBoundingBox();
@@ -376,21 +386,25 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
     return m_modell.getTheme( pos );
   }
 
+  @Override
   public int getThemeSize( )
   {
     return m_modell.getThemeSize();
   }
 
+  @Override
   public boolean isThemeActivated( final IKalypsoTheme theme )
   {
     return m_modell.isThemeActivated( theme );
   }
 
+  @Override
   public void moveDown( final IKalypsoTheme theme )
   {
     m_modell.moveDown( theme );
   }
 
+  @Override
   public void moveUp( final IKalypsoTheme theme )
   {
     m_modell.moveUp( theme );
@@ -406,17 +420,20 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
     return m_modell.paint( g, p, monitor );
   }
 
+  @Override
   public void removeTheme( final IKalypsoTheme theme )
   {
     m_modell.removeTheme( theme );
     theme.dispose();
   }
 
+  @Override
   public void swapThemes( final IKalypsoTheme theme1, final IKalypsoTheme theme2 )
   {
     m_modell.swapThemes( theme1, theme2 );
   }
 
+  @Override
   public URL getContext( )
   {
     return m_context;
@@ -430,6 +447,7 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
   /**
    * @see org.kalypso.ogc.gml.mapmodel.IMapModell#getProject()
    */
+  @Override
   public IProject getProject( )
   {
     return m_modell.getProject();
@@ -438,6 +456,7 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
   /**
    * @see org.kalypso.ogc.gml.mapmodel.IMapModell#accept(org.kalypso.ogc.gml.mapmodel.visitor.KalypsoThemeVisitor, int)
    */
+  @Override
   public void accept( final IKalypsoThemeVisitor visitor, final int depth )
   {
     m_modell.accept( visitor, depth );
@@ -447,6 +466,7 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
   /**
    * @see org.kalypso.ogc.gml.mapmodel.IMapModell#insertTheme(org.kalypso.ogc.gml.IKalypsoTheme, int)
    */
+  @Override
   public void insertTheme( final IKalypsoTheme theme, final int position )
   {
     m_modell.insertTheme( theme, position );
@@ -456,6 +476,7 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
   /**
    * @see org.kalypso.ogc.gml.mapmodel.IMapModell#getName()
    */
+  @Override
   public I10nString getName( )
   {
     return m_modell.getName();
@@ -465,6 +486,7 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
    * @see org.kalypso.ogc.gml.mapmodel.IMapModell#accept(org.kalypso.ogc.gml.mapmodel.visitor.KalypsoThemeVisitor, int,
    *      org.kalypso.ogc.gml.IKalypsoTheme)
    */
+  @Override
   public void accept( final IKalypsoThemeVisitor visitor, final int depth_infinite, final IKalypsoTheme theme )
   {
     m_modell.accept( visitor, depth_infinite, theme );
@@ -483,6 +505,7 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
   /**
    * @see org.kalypso.ogc.gml.mapmodel.IMapModell#addMapModelListener(org.kalypso.ogc.gml.mapmodel.IMapModellListener)
    */
+  @Override
   public void addMapModelListener( final IMapModellListener l )
   {
     m_modell.addMapModelListener( l );
@@ -491,6 +514,7 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
   /**
    * @see org.kalypso.ogc.gml.mapmodel.IMapModell#removeMapModelListener(org.kalypso.ogc.gml.mapmodel.IMapModellListener)
    */
+  @Override
   public void removeMapModelListener( final IMapModellListener l )
   {
     m_modell.removeMapModelListener( l );
@@ -499,6 +523,7 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
   /**
    * @see org.kalypso.ogc.gml.mapmodel.IMapModell#getThemeParent(org.kalypso.ogc.gml.IKalypsoTheme)
    */
+  @Override
   public Object getThemeParent( final IKalypsoTheme theme )
   {
     return this;
@@ -507,6 +532,7 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
   /**
    * @see org.kalypso.ogc.gml.mapmodel.IMapModell#isLoaded()
    */
+  @Override
   public boolean isLoaded( )
   {
     return m_isLoaded;

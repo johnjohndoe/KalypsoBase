@@ -53,7 +53,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.commons.i18n.ITranslator;
@@ -88,6 +87,7 @@ public class CascadingKalypsoTheme extends AbstractCascadingLayerTheme
 
   private final IResourceChangeListener m_resourceChangeListener = new IResourceChangeListener()
   {
+    @Override
     public void resourceChanged( final IResourceChangeEvent event )
     {
       handleResourceChanged( event );
@@ -142,7 +142,7 @@ public class CascadingKalypsoTheme extends AbstractCascadingLayerTheme
       throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.ogc.gml.CascadingKalypsoTheme.3" ) + url.toExternalForm() + Messages.getString( "org.kalypso.ogc.gml.CascadingKalypsoTheme.4" ) ) ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
-  public void createGismapTemplate( final GM_Envelope bbox, final String srsName, final IProgressMonitor monitor ) throws CoreException
+  public synchronized void createGismapTemplate( final GM_Envelope bbox, final String srsName, final IProgressMonitor monitor ) throws CoreException
   {
     if( m_file != null )
     {
@@ -222,7 +222,7 @@ public class CascadingKalypsoTheme extends AbstractCascadingLayerTheme
           ((IKalypsoSaveableTheme) theme).saveFeatures( monitor );
   }
 
-  protected IStatus loadJob( final IProgressMonitor monitor, IFile file )
+  protected synchronized IStatus loadJob( final IProgressMonitor monitor, final IFile file )
   {
     InputStream contents = null;
     try
