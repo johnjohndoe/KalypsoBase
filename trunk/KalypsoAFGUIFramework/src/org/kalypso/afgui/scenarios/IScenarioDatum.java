@@ -52,9 +52,9 @@ public interface IScenarioDatum
    * The unique id of this datum. Used to retrieve the {@link org.kalypsodeegree.model.feature.GMLWorkspace} from the
    * data provider.
    */
-  public String getID( );
+  String getID( );
 
-  public String getModelPath( );
+  String getModelPath( );
 
-  public Class< ? extends IModel> getModelClass( ) throws CoreException;
+  Class< ? extends IModel> getModelClass( ) throws CoreException;
 }
