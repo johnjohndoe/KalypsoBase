@@ -116,7 +116,7 @@ public class ScenarioManager extends AbstractCaseManager<IScenario> implements I
   }
 
   /**
-   * TODO handling of sub scenarios
+   * FIXME handling of sub scenarios
    */
   public IScenario cloneScenario( final String name, final IScenario toClone ) throws CoreException
   {
@@ -129,7 +129,7 @@ public class ScenarioManager extends AbstractCaseManager<IScenario> implements I
       scenarioNature.setDerivedScenarioCopyFilter( new IDerivedScenarioCopyFilter()
       {
         @Override
-        public boolean shouldBeCopied( final IResource resource )
+        public boolean copy( final IResource resource )
         {
           return false;
         }
