@@ -30,7 +30,7 @@ public interface IScenarioManager extends ICaseManager<IScenario>
    *              <li>The name of this scenario is not valid (according to <code>IWorkspace.validateName</code>).</li>
    *              <li>There is a problem persisting the database. See {@link #persist()} for details.</li>
    */
-  public IScenario deriveScenario( final String name, final IScenario parentScenario ) throws CoreException;
+  IScenario deriveScenario( final String name, final IScenario parentScenario ) throws CoreException;
 
   /**
    * Saves the changes in the scenario structure to the database.
@@ -44,7 +44,7 @@ public interface IScenarioManager extends ICaseManager<IScenario>
    *              <li>An error specific to the kind of database has occured. It will be included in the cause of the
    *              exception.</li>
    */
-  public void persist( final IProgressMonitor monitor ) throws CoreException;
+  void persist( final IProgressMonitor monitor ) throws CoreException;
 
-  public IScenario cloneScenario( final String name, final IScenario toClone ) throws CoreException;
+   IScenario cloneScenario( final String name, final IScenario toClone ) throws CoreException;
 }

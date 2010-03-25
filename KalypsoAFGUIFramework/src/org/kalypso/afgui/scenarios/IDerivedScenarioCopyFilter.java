@@ -50,5 +50,5 @@ import org.eclipse.core.resources.IResource;
  */
 public interface IDerivedScenarioCopyFilter
 {
-  boolean shouldBeCopied( IResource resource );
+  boolean copy( IResource resource );
 }
