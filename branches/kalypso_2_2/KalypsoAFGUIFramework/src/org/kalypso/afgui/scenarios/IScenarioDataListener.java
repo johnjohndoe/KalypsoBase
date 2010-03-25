@@ -45,12 +45,12 @@ import org.kalypso.afgui.model.IModel;
 
 /**
  * @author Stefan Kurzbach
- *
+ * 
  *         Is notified when a model has been loaded and when the scenario data folder has changed
  */
 public interface IScenarioDataListener
 {
-  public void modelLoaded( final IModel model, final IStatus status );
+  void modelLoaded( final IModel model, final IStatus status );
 
-  public void scenarioChanged( final IScenario caze );
+  void scenarioChanged( final IScenario caze );
 }

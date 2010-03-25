@@ -72,7 +72,7 @@ public class ScenarioHandlingProjectNature extends CaseHandlingProjectNature
   IDerivedScenarioCopyFilter m_filter = new IDerivedScenarioCopyFilter()
   {
     @Override
-    public boolean shouldBeCopied( final IResource resource )
+    public boolean copy( final IResource resource )
     {
       return true;
     }
@@ -181,7 +181,7 @@ public class ScenarioHandlingProjectNature extends CaseHandlingProjectNature
               return true;
             }
 
-            if( m_filter.shouldBeCopied( resource ) )
+            if( m_filter.copy( resource ) )
             {
               final IPath parentFolderPath = parentFolder.getFullPath();
               final IPath resourcePath = resource.getFullPath();
@@ -200,7 +200,7 @@ public class ScenarioHandlingProjectNature extends CaseHandlingProjectNature
               return true;
             }
 
-            if( !m_filter.shouldBeCopied( resource ) && resource instanceof IFolder )
+            if( !m_filter.copy( resource ) && resource instanceof IFolder )
               return false;
 
             return true;
