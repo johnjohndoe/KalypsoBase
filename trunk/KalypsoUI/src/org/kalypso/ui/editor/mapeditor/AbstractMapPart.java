@@ -420,7 +420,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
    *      org.eclipse.core.resources.IFile)
    */
   @Override
-  protected void doSaveInternal( final IProgressMonitor monitor, final IFile file ) throws CoreException
+  protected synchronized void doSaveInternal( final IProgressMonitor monitor, final IFile file ) throws CoreException
   {
     if( m_mapModell == null )
       return;

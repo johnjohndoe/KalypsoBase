@@ -110,15 +110,15 @@ public class ProjectOpenAction implements IProjectAction
     {
       final OPEN_TYPE type = valueOf( name() );
       if( eLocal.equals( type ) )
-        return Messages.getString("org.kalypso.project.database.client.core.base.actions.ProjectOpenAction.5"); //$NON-NLS-1$
+        return Messages.getString( "org.kalypso.project.database.client.core.base.actions.ProjectOpenAction.5" ); //$NON-NLS-1$
       else if( eLocalOffline.equals( type ) )
-        return Messages.getString("org.kalypso.project.database.client.core.base.actions.ProjectOpenAction.6"); //$NON-NLS-1$
+        return Messages.getString( "org.kalypso.project.database.client.core.base.actions.ProjectOpenAction.6" ); //$NON-NLS-1$
       else if( eTranscendenceReadable.equals( type ) )
-        return Messages.getString("org.kalypso.project.database.client.core.base.actions.ProjectOpenAction.7"); //$NON-NLS-1$
+        return Messages.getString( "org.kalypso.project.database.client.core.base.actions.ProjectOpenAction.7" ); //$NON-NLS-1$
       else if( eTranscendenceReadableServerLocked.equals( type ) )
-        return Messages.getString("org.kalypso.project.database.client.core.base.actions.ProjectOpenAction.8"); //$NON-NLS-1$
+        return Messages.getString( "org.kalypso.project.database.client.core.base.actions.ProjectOpenAction.8" ); //$NON-NLS-1$
       else if( eTranscendenceWriteable.equals( type ) )
-        return Messages.getString("org.kalypso.project.database.client.core.base.actions.ProjectOpenAction.9"); //$NON-NLS-1$
+        return Messages.getString( "org.kalypso.project.database.client.core.base.actions.ProjectOpenAction.9" ); //$NON-NLS-1$
 
       throw new NotImplementedException();
     }
@@ -137,7 +137,8 @@ public class ProjectOpenAction implements IProjectAction
         final IRemoteProjectPreferences remotePreferences = transcendence.getRemotePreferences();
         if( remotePreferences == null )
           m_type = OPEN_TYPE.eLocal;
-        else{
+        else
+        {
           final boolean localLock = remotePreferences.isLocked();
           final Boolean serverLock = transcendence.getBean().isProjectLockedForEditing();
           if( localLock )
@@ -154,7 +155,7 @@ public class ProjectOpenAction implements IProjectAction
         if( remotePreferences == null )
           m_type = OPEN_TYPE.eLocal;
         else
-        { 
+        {
           final boolean onServer = remotePreferences.isOnServer();
           if( onServer )
             m_type = OPEN_TYPE.eLocalOffline;
@@ -183,7 +184,7 @@ public class ProjectOpenAction implements IProjectAction
     link.setImage( m_type.getImage() );
     link.setText( m_handler.getName() );
 
-    link.setToolTipText(  Messages.getString("org.kalypso.project.database.client.core.base.actions.ProjectOpenAction.10", m_handler.getName(), m_type.getStatus() ) ); //$NON-NLS-1$
+    link.setToolTipText( Messages.getString( "org.kalypso.project.database.client.core.base.actions.ProjectOpenAction.10", m_handler.getName(), m_type.getStatus() ) ); //$NON-NLS-1$
 
     link.addHyperlinkListener( new HyperlinkAdapter()
     {
