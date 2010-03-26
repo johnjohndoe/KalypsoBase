@@ -76,14 +76,13 @@ import org.kalypsodeegree.model.feature.event.ModellEventListener;
  */
 public class GftTreeViewer
 {
-
   protected GmlTreeView m_treeViewer = null;
 
   private Gistreeview m_gistreeTemplate = null;
 
   protected Object[] m_selection;
 
-  Set<Object> m_listenersToAdd = new HashSet<Object>();
+  private final Set<Object> m_listenersToAdd = new HashSet<Object>();
 
   private ViewerSorter m_treeSorter = null;
 
