@@ -768,6 +768,10 @@
 		</command>
 		<command categoryId="org.kalypso.ui.tupleResult.category" description="%command.description.27" id="org.kalypso.ui.tupleResult.moveDownSelectedRowsCommand" name="%command.name.31">
 		</command>
+		<command categoryId="org.kalypso.ui.tupleResult.category" description="Add feature command" id="org.kalypso.ogc.gml.featureview.toolbar.AddFeatureHandler" name="Add feature command">
+		</command>
+		<command categoryId="org.kalypso.ui.tupleResult.category" description="Delete feature command" id="org.kalypso.ogc.gml.featureview.toolbar.DeleteFeatureHandler" name="Delete feature command">
+		</command>
 	</extension>
 	<extension point="org.eclipse.ui.handlers">
 		<handler class="org.kalypso.ogc.gml.om.table.command.CopyToClipboardHandler" commandId="org.kalypso.ui.tupleResult.copyToClipboardCommand">
@@ -784,6 +788,13 @@
 		</handler>
 		<handler class="org.kalypso.ogc.gml.om.table.command.MoveDownSelectedRowsHandler" commandId="org.kalypso.ui.tupleResult.moveDownSelectedRowsCommand">
 		</handler>
+		
+		
+		<handler class="org.kalypso.ogc.gml.featureview.toolbar.AddFeatureHandler" commandId="org.kalypso.ogc.gml.featureview.toolbar.AddFeatureHandler">
+		</handler>
+		<handler class="org.kalypso.ogc.gml.featureview.toolbar.DeleteFeatureHandler" commandId="org.kalypso.ogc.gml.featureview.toolbar.DeleteFeatureHandler">
+		</handler>
+		
 	</extension>
 	<extension point="org.eclipse.ui.commandImages">
 		<image commandId="org.kalypso.ui.tupleResult.copyToClipboardCommand" icon="icons/table/copy.gif">
@@ -800,6 +811,12 @@
 		</image>
 		<image commandId="org.kalypso.ui.tupleResult.moveDownSelectedRowsCommand" icon="icons/util/down.gif">
 		</image>
+		
+		<image commandId="org.kalypso.ogc.gml.featureview.toolbar.AddFeatureHandler" icon="icons/gistable/add_row.gif">
+		</image>
+		<image commandId="org.kalypso.ogc.gml.featureview.toolbar.DeleteFeatureHandler" icon="icons/table/remove.gif">
+		</image>
+			
 	</extension>
 
 	<!-- TupleResult-FeatureControl: standard tollbars -->
@@ -1438,6 +1455,4 @@
            name="Catalog Contribution for KalypsoUI">
      </catalogContribution>
   </extension>
-   
-   
 </plugin>

@@ -105,9 +105,9 @@ public class PasteFromClipboardHandler extends AbstractHandler
       return null;
     }
 
-    final TupleResult tupleResult = TupleResultCommandUtils.findTupleResult( event );
+    final TupleResult tupleResult = ToolbarCommandUtils.findTupleResult( event );
 
-    final TableViewer tupleResultViewer = TupleResultCommandUtils.findTableViewer( event );
+    final TableViewer tupleResultViewer = ToolbarCommandUtils.findTableViewer( event );
     if( tupleResultViewer == null )
     {
       MessageDialog.openError( shell, Messages.getString( "org.kalypso.ogc.gml.om.table.command.PasteFromClipboardHandler.0" ), Messages.getString( "org.kalypso.ogc.gml.om.table.command.PasteFromClipboardHandler.5" ) ); //$NON-NLS-1$ //$NON-NLS-2$

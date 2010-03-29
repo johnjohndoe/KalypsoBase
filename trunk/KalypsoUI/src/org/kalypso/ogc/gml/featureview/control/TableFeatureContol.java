@@ -5,17 +5,12 @@ import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.GroupMarker;
-import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
-import org.eclipse.jface.action.ToolBarManager;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -24,13 +19,13 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.command.DefaultCommandManager;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
@@ -41,23 +36,18 @@ import org.kalypso.core.util.pool.ResourcePool;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.KalypsoTableFeatureTheme;
-import org.kalypso.ogc.gml.command.DeleteFeatureCommand;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
+import org.kalypso.ogc.gml.featureview.toolbar.ToolbarHelper;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
-import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
-import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
 import org.kalypso.ogc.gml.table.celleditors.IFeatureModifierFactory;
+import org.kalypso.template.featureview.Toolbar;
+import org.kalypso.template.featureview.Toolbar.MenuContribution;
 import org.kalypso.template.gistableview.Gistableview;
-import org.kalypso.ui.ImageProvider;
-import org.kalypso.ui.editor.actions.FeatureActionUtilities;
-import org.kalypso.ui.editor.actions.TableFeatureControlUtils;
-import org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
+import org.kalypso.util.swt.SWTUtilities;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.IGMLWorkspaceModellEvent;
@@ -68,13 +58,13 @@ import org.kalypsodeegree_impl.model.feature.FeaturePath;
 /**
  * @author Gernot Belger
  */
-public class TableFeatureContol extends AbstractFeatureControl implements ModellEventListener
+public class TableFeatureContol extends AbstractToolbarFeatureControl implements ModellEventListener
 {
   private final IFeatureModifierFactory m_factory;
 
-  protected LayerTableViewer m_viewer;
+  private LayerTableViewer m_viewer;
 
-  protected KalypsoTableFeatureTheme m_kft;
+  private KalypsoTableFeatureTheme m_kft;
 
   private final ICommandTarget m_templateTarget = new JobExclusiveCommandTarget( new DefaultCommandManager(), null );
 
@@ -99,29 +89,27 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
 
   private Gistableview m_tableView;
 
-  private final boolean m_showToolbar;
-
   private final boolean m_showContextMenu;
 
-  private ToolBarManager m_toolbarManager;
+  private final Toolbar m_toolbar;
 
-  public TableFeatureContol( final IPropertyType ftp, final IFeatureModifierFactory factory, final IFeatureSelectionManager selectionManager, final boolean showToolbar, final boolean showContextMenu )
+  public TableFeatureContol( final IPropertyType ftp, final IFeatureModifierFactory factory, final IFeatureSelectionManager selectionManager, final Toolbar toolbar, final boolean showContextMenu )
   {
-    super( ftp );
+    super( ftp, ToolbarHelper.hasActions( toolbar ), SWT.VERTICAL | SWT.FLAT );
 
     Assert.isNotNull( ftp );
 
     m_factory = factory;
     m_selectionManager = selectionManager;
 
-    m_showToolbar = showToolbar;
     m_showContextMenu = showContextMenu;
-    m_toolbarManager = null;
+    m_toolbar = toolbar;
   }
 
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureControl#createControl(org.eclipse.swt.widgets.Composite, int)
    */
+  @Override
   public Control createControl( final Composite parent, final int style )
   {
     /* Create a new Composite for the toolbar. */
@@ -129,7 +117,7 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
     final GridLayout gridLayout = new GridLayout( 1, false );
     gridLayout.marginWidth = 0;
     gridLayout.marginHeight = 0;
-    if( m_showToolbar )
+    if( ToolbarHelper.hasActions( m_toolbar ) )
       gridLayout.numColumns++;
     client.setLayout( gridLayout );
 
@@ -149,139 +137,6 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
     final Feature feature = getFeature();
     setFeature( feature );
 
-    /* If wanted, add a toolbar. */
-    if( m_showToolbar )
-    {
-      /* Create the toolbar manager. */
-      m_toolbarManager = new ToolBarManager( SWT.VERTICAL );
-
-      /* IAction for adding a feature. */
-
-      // TODO: consider the case, where multiple feature-types substitute the target feature type
-      final IRelationType parentRelation = (IRelationType) getFeatureTypeProperty();
-      final String actionLabel = parentRelation == null ? Messages.getString("org.kalypso.ogc.gml.featureview.control.TableFeatureContol.0") : FeatureActionUtilities.newFeatureActionLabel( parentRelation.getTargetFeatureType() ); //$NON-NLS-1$
-      final IAction addAction = new Action( actionLabel + Messages.getString("org.kalypso.ogc.gml.featureview.control.TableFeatureContol.1"), ImageProvider.IMAGE_FEATURE_NEW ) //$NON-NLS-1$
-      {
-        /**
-         * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
-         */
-        @Override
-        public void runWithEvent( final Event event )
-        {
-          if( checkMaxCount() == false )
-          {
-            final Shell shell = event.display.getActiveShell();
-            MessageDialog.openInformation( shell, Messages.getString("org.kalypso.ogc.gml.featureview.control.TableFeatureContol.2"), Messages.getString("org.kalypso.ogc.gml.featureview.control.TableFeatureContol.3") ); //$NON-NLS-1$ //$NON-NLS-2$
-            return;
-          }
-
-          /* Get the needed properties. */
-          final Feature parentFeature = getFeature();
-          final CommandableWorkspace workspace = m_kft.getWorkspace();
-
-          final AddFeatureCommand command = new AddFeatureCommand( workspace, parentRelation.getTargetFeatureType(), parentFeature, parentRelation, -1, null, null, 0 );
-          fireFeatureChange( command );
-        }
-
-        /**
-         * This function checks, if more features can be added.
-         *
-         * @return True, if so.
-         */
-        private boolean checkMaxCount( )
-        {
-          int maxOccurs = -1;
-          int size = -1;
-
-          /* Get the needed properties. */
-          final Feature parentFeature = getFeature();
-
-          maxOccurs = parentRelation.getMaxOccurs();
-          if( parentFeature instanceof List< ? > )
-          {
-            size = ((List< ? >) parentFeature).size();
-            if( maxOccurs == IPropertyType.UNBOUND_OCCURENCY )
-              return true;
-            else if( maxOccurs < size )
-              return false;
-          }
-
-          return true;
-        }
-      };
-
-      /* Add the new Item. */
-      m_toolbarManager.add( addAction );
-
-      /* IAction for removing a feature. */
-      final IAction removeAction = new Action( actionLabel + Messages.getString("org.kalypso.ogc.gml.featureview.control.TableFeatureContol.4"), ImageProvider.IMAGE_FEATURE_DELETE ) //$NON-NLS-1$
-      {
-        /**
-         * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
-         */
-        @Override
-        public void runWithEvent( final Event event )
-        {
-          if( canDelete() == false )
-          {
-            final Shell shell = event.display.getActiveShell();
-            MessageDialog.openInformation( shell, actionLabel + Messages.getString("org.kalypso.ogc.gml.featureview.control.TableFeatureContol.5"), Messages.getString("org.kalypso.ogc.gml.featureview.control.TableFeatureContol.6") ); //$NON-NLS-1$ //$NON-NLS-2$
-            return;
-          }
-
-          /* Get the shell. */
-          final Shell shell = event.display.getActiveShell();
-
-          /* Get the current selection. */
-          final ISelection selection = m_viewer.getSelection();
-          if( selection == null || !(selection instanceof IFeatureSelection) )
-            return;
-
-          /* Get all selected features. */
-          final EasyFeatureWrapper[] allFeatures = ((IFeatureSelection) selection).getAllFeatures();
-
-          /* Build the delete command. */
-          final DeleteFeatureCommand command = TableFeatureControlUtils.deleteFeaturesFromSelection( allFeatures, shell );
-          if( command != null )
-          {
-            /* Execute the command. */
-            fireFeatureChange( command );
-
-            /* Reset the selection. */
-            m_viewer.setSelection( new StructuredSelection() );
-          }
-        }
-
-        /**
-         * This function checks, if there are features, which can be deleted.
-         *
-         * @return True, if so.
-         */
-        public boolean canDelete( )
-        {
-          final ISelection selection = m_viewer.getSelection();
-          if( selection == null )
-            return false;
-
-          if( !(selection instanceof IFeatureSelection) )
-            return false;
-
-          final int featureCount = FeatureSelectionHelper.getFeatureCount( (IFeatureSelection) selection );
-          if( featureCount > 0 )
-            return true;
-
-          return false;
-        }
-      };
-
-      /* Add the new Item. */
-      m_toolbarManager.add( removeAction );
-
-      /* Create the toolbar. */
-      final ToolBar toolbar = m_toolbarManager.createControl( client );
-      toolbar.setLayoutData( new GridData( GridData.CENTER, GridData.BEGINNING, false, true ) );
-    }
-
     /* Only show the context menu, if it is wanted to be shown. */
     if( m_showContextMenu )
     {
@@ -290,6 +145,7 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
       menuManager.setRemoveAllWhenShown( true );
       menuManager.addMenuListener( new IMenuListener()
       {
+        @Override
         public void menuAboutToShow( final IMenuManager manager )
         {
           manager.add( new GroupMarker( IWorkbenchActionConstants.MB_ADDITIONS ) );
@@ -309,6 +165,30 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
         activeEditor.getSite().registerContextMenu( menuManager, m_viewer );
       }
     }
+
+    if( m_toolbar == null )
+      return client;
+
+    final List<Toolbar.Command> commands = m_toolbar.getCommand();
+    for( final Toolbar.Command command : commands )
+    {
+      final String commandId = command.getCommandId();
+      final int itemStyle = SWTUtilities.createStyleFromString( command.getStyle() );
+      addToolbarItem( commandId, itemStyle );
+    }
+
+    final List<MenuContribution> contributionUris = m_toolbar.getMenuContribution();
+    for( final MenuContribution contribution : contributionUris )
+      addToolbarItems( contribution.getUri() );
+
+    final ToolBar toolbar = getToolbarManager().createControl( client );
+    toolbar.setLayoutData( new GridData( GridData.FILL, GridData.FILL, false, true ) );
+
+    final FormToolkit toolkit = new FormToolkit( toolbar.getDisplay() );
+    toolkit.adapt( client );
+    toolkit.adapt( toolbar );
+
+    hookExecutionListener( m_viewer, getToolbarManager() );
 
     return client;
   }
@@ -418,14 +298,18 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureControl#updateControl()
    */
+  @Override
   public void updateControl( )
   {
     m_viewer.refresh();
   }
 
   /**
+   * createFeatureControl
+   * 
    * @see org.kalypso.ogc.gml.featureview.IFeatureControl#isValid()
    */
+  @Override
   public boolean isValid( )
   {
     return true;
@@ -434,6 +318,7 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureControl#addModifyListener(org.eclipse.swt.events.ModifyListener)
    */
+  @Override
   public void addModifyListener( final ModifyListener l )
   {
     m_listeners.add( l );
@@ -442,6 +327,7 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureControl#removeModifyListener(org.eclipse.swt.events.ModifyListener)
    */
+  @Override
   public void removeModifyListener( final ModifyListener l )
   {
     m_listeners.remove( l );
@@ -450,11 +336,12 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
   /**
    * @see org.kalypsodeegree.model.feature.event.ModellEventListener#onModellChange(org.kalypsodeegree.model.feature.event.ModellEvent)
    */
+  @Override
   public void onModellChange( final ModellEvent modellEvent )
   {
     if( m_kft == null )
       return;
-    
+
     if( modellEvent instanceof IGMLWorkspaceModellEvent && ((IGMLWorkspaceModellEvent) modellEvent).getGMLWorkspace() == m_kft.getWorkspace() )
     {
       final Event event = new Event();
@@ -463,6 +350,7 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
       {
         control.getDisplay().asyncExec( new Runnable()
         {
+          @Override
           public void run( )
           {
             event.widget = control;
@@ -480,6 +368,26 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
 // }
       }
     }
+  }
+
+  public CommandableWorkspace getWorkspace( )
+  {
+    return m_kft.getWorkspace();
+  }
+
+  public IRelationType getParentRealtion( )
+  {
+    return (IRelationType) getFeatureTypeProperty();
+  }
+
+  public void execute( final ICommand command )
+  {
+    fireFeatureChange( command );
+  }
+
+  public void setSelection( final ISelection selection )
+  {
+    m_viewer.setSelection( selection );
   }
 
 }

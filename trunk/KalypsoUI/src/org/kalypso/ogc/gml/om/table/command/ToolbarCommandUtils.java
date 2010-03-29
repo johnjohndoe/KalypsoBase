@@ -45,24 +45,23 @@ import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbenchPart;
-import org.kalypso.i18n.Messages;
 import org.kalypso.observation.result.TupleResult;
-import org.kalypso.ogc.gml.featureview.control.TupleResultFeatureControl;
+import org.kalypso.ogc.gml.featureview.control.AbstractToolbarFeatureControl;
 
 /**
  * Utility methods for tuple-result command handlers.
  * 
  * @author Gernot Belger
  */
-public class TupleResultCommandUtils
+public class ToolbarCommandUtils
 {
-  public final static String ACTIVE_TUPLE_RESULT_TABLE_VIEWER_NAME = "tupleResultTableViewer"; //$NON-NLS-1$
+  public static final String ACTIVE_TUPLE_RESULT_TABLE_VIEWER_NAME = "tupleResultTableViewer"; //$NON-NLS-1$
 
-  public final static String ACTIVE_TUPLE_RESULT_FEATURE_CONTROL_NAME = "tupleResultFeatureControl"; //$NON-NLS-1$
+  public static final String ACTIVE_TUPLE_RESULT_FEATURE_CONTROL_NAME = "tupleResultFeatureControl"; //$NON-NLS-1$
 
   public static final String TUPLE_RESULT_COMMAND_CATEGORY = "org.kalypso.ui.tupleResult.category"; //$NON-NLS-1$
 
-  private TupleResultCommandUtils( )
+  private ToolbarCommandUtils( )
   {
     throw new UnsupportedOperationException( "Do not instantiate this helper class." ); //$NON-NLS-1$
   }
@@ -100,7 +99,7 @@ public class TupleResultCommandUtils
    * Normally (for editor and view) this is done via adapting the active workbench part.<br>
    * However for the feature view some hack was needed: here it is found via the activeChartComposite variable.
    */
-  public static TupleResultFeatureControl findFeatureControl( final ExecutionEvent event )
+  public static AbstractToolbarFeatureControl findFeatureControl( final ExecutionEvent event )
   {
     final Object applicationContext = event.getApplicationContext();
     if( !(applicationContext instanceof IEvaluationContext) )
@@ -109,8 +108,8 @@ public class TupleResultCommandUtils
     final IEvaluationContext context = (IEvaluationContext) applicationContext;
 
     final Object variable = context.getVariable( ACTIVE_TUPLE_RESULT_FEATURE_CONTROL_NAME );
-    if( variable instanceof TupleResultFeatureControl )
-      return (TupleResultFeatureControl) variable;
+    if( variable instanceof AbstractToolbarFeatureControl )
+      return (AbstractToolbarFeatureControl) variable;
 
     return null;
   }

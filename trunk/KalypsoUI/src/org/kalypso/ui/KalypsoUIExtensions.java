@@ -87,9 +87,9 @@ public class KalypsoUIExtensions
   private static Map<String, IConfigurationElement> THE_FEATURE_MODIFIERS_MAP = null;
 
   /* extension-point 'featureViewExtensionControl' */
-  private final static String FEATUREVIEW_CONTROL_EXTENSION_POINT = "org.kalypso.ui.featureViewExtensionControl"; //$NON-NLS-1$
+  private static final String FEATUREVIEW_CONTROL_EXTENSION_POINT = "org.kalypso.ui.featureViewExtensionControl"; //$NON-NLS-1$
 
-  private final static String OBSERVATION_TABLE_HEADER_POPUP_MENU_EXTENSION_POINT = "org.kalypso.ui.observationTableHeaderPopupMenu"; //$NON-NLS-1$
+  private static final String OBSERVATION_TABLE_HEADER_POPUP_MENU_EXTENSION_POINT = "org.kalypso.ui.observationTableHeaderPopupMenu"; //$NON-NLS-1$
 
   private static Map<String, IConfigurationElement> THE_FEATUREVIEW_CONTROL_MAP = null;
 
@@ -133,13 +133,13 @@ public class KalypsoUIExtensions
     if( map == null )
       return null;
 
-    Collection<IConfigurationElement> collection = map.values();
+    final Collection<IConfigurationElement> collection = map.values();
     if( collection.size() == 0 )
       return null;
     else if( collection.size() > 1 )
       throw new NotImplementedException(); // at the moment we only support one popup menu
 
-    IConfigurationElement element = collection.iterator().next();
+    final IConfigurationElement element = collection.iterator().next();
 
     return (PopupMenu) element.createExecutableExtension( "menu" ); //$NON-NLS-1$
   }
@@ -162,7 +162,6 @@ public class KalypsoUIExtensions
 
     return OBSERVATION_TABLE_HEADER_POPUP_MENUS;
   }
-
 
   public static IComponentUiHandlerProvider createComponentUiHandlerProvider( final String componentUiHandlerProviderId )
   {
@@ -239,7 +238,7 @@ public class KalypsoUIExtensions
     return modifier;
   }
 
-  private synchronized static IConfigurationElement getFeatureModifierElement( final String modifierId )
+  private static synchronized IConfigurationElement getFeatureModifierElement( final String modifierId )
   {
     if( THE_FEATURE_MODIFIERS_MAP == null )
     {
@@ -260,5 +259,4 @@ public class KalypsoUIExtensions
 
     return THE_FEATURE_MODIFIERS_MAP.get( modifierId );
   }
-
 }

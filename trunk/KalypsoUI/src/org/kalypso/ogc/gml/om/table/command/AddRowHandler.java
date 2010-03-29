@@ -64,8 +64,8 @@ public class AddRowHandler extends AbstractHandler
    */
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
-    final TableViewer viewer = TupleResultCommandUtils.findTableViewer( event );
-    final TupleResult tupleResult = TupleResultCommandUtils.findTupleResult( event );
+    final TableViewer viewer = ToolbarCommandUtils.findTableViewer( event );
+    final TupleResult tupleResult = ToolbarCommandUtils.findTupleResult( event );
     if( viewer == null || tupleResult==null)
       throw new ExecutionException( Messages.getString( "org.kalypso.ogc.gml.om.table.command.AddRowHandler.0" ) ); //$NON-NLS-1$
 

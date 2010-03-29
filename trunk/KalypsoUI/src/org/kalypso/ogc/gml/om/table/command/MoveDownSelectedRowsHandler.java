@@ -60,8 +60,8 @@ public class MoveDownSelectedRowsHandler extends AbstractHandler
    */
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
-    final TableViewer viewer = TupleResultCommandUtils.findTableViewer( event );
-    final TupleResult tupleResult = TupleResultCommandUtils.findTupleResult( event );
+    final TableViewer viewer = ToolbarCommandUtils.findTableViewer( event );
+    final TupleResult tupleResult = ToolbarCommandUtils.findTupleResult( event );
     if( tupleResult == null || viewer == null )
       throw new ExecutionException( Messages.getString("org.kalypso.ogc.gml.om.table.command.MoveDownSelectedRowsHandler.0") ); //$NON-NLS-1$
 
