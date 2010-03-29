@@ -190,8 +190,8 @@ public class WPSSimulationThread extends Thread
       /* Debug-Information. */
       KalypsoServiceWPSDebug.DEBUG.printf( "Deleting tmp files in directory '" + m_tmpDir.getAbsolutePath() + "' ...\n" ); //$NON-NLS-1$ //$NON-NLS-2$
 
-      /* Delete the tmp-data. */
-      FileUtilities.deleteRecursive( m_tmpDir );
+      /* Delete the tmp-data. Actual execute responses should not be deleted by simulation thread */
+//      FileUtilities.deleteRecursive( m_tmpDir );
     }
 
     m_inputData.dispose();
