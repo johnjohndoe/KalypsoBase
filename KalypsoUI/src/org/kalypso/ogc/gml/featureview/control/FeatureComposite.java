@@ -168,6 +168,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureControl#updateControl()
    */
+  @Override
   public void updateControl( )
   {
     for( final IFeatureControl fc : m_featureControls )
@@ -397,7 +398,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     {
       final CompositeType compositeType = (CompositeType) controlType;
       final Composite composite = createCompositeFromCompositeType( parent, style, compositeType, annotation );
-//      composite.setBackground( parent.getDisplay().getSystemColor( (int) (Math.random() * 16) ) );
+// composite.setBackground( parent.getDisplay().getSystemColor( (int) (Math.random() * 16) ) );
 
       // Layout setzen
       final LayoutType layoutType = compositeType.getLayout().getValue();

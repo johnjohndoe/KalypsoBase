@@ -38,45 +38,43 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.om.table.command;
+package org.kalypso.ogc.gml.featureview.toolbar;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.TableViewer;
-import org.kalypso.i18n.Messages;
-import org.kalypso.observation.result.TupleResult;
+import org.kalypso.ogc.gml.featureview.control.AbstractToolbarFeatureControl;
+import org.kalypso.ogc.gml.featureview.control.TableFeatureContol;
+import org.kalypso.ogc.gml.om.table.command.ToolbarCommandUtils;
+import org.kalypso.ogc.gml.selection.IFeatureSelection;
 
 /**
- * Moves the selected lines from the table one up.
- * 
- * @author kimwerner
+ * @author kuch
  */
-public class MoveDownSelectedRowsHandler extends AbstractHandler
+public abstract class AbstractTableFeatureControlHandler extends AbstractHandler
 {
-  /**
-   * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
-   */
-  public Object execute( final ExecutionEvent event ) throws ExecutionException
-  {
-    final TableViewer viewer = ToolbarCommandUtils.findTableViewer( event );
-    final TupleResult tupleResult = ToolbarCommandUtils.findTupleResult( event );
-    if( tupleResult == null || viewer == null )
-      throw new ExecutionException( Messages.getString("org.kalypso.ogc.gml.om.table.command.MoveDownSelectedRowsHandler.0") ); //$NON-NLS-1$
 
-    final IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
-    
-    final int index = tupleResult.indexOf( selection.getFirstElement() );
-    if (index < tupleResult.size()-1)
-    {
-    final int newPosition = index +1;
-    
-    tupleResult.removeAll( selection.toList() );
-    tupleResult.addAll( newPosition, selection.toList() );
-   
-       }
-    return null;
+  protected TableFeatureContol getFeatureControl( final ExecutionEvent event ) throws ExecutionException
+  {
+    /* feature control */
+    final AbstractToolbarFeatureControl control = ToolbarCommandUtils.findFeatureControl( event );
+    if( !(control instanceof TableFeatureContol) )
+      throw new ExecutionException( "Couldn't find TableFeatureControl" ); //$NON-NLS-1$
+
+    return (TableFeatureContol) control;
+  }
+
+  protected IFeatureSelection getSelection( final ExecutionEvent event ) throws ExecutionException
+  {
+    /* selection */
+    final TableViewer tableViewer = ToolbarCommandUtils.findTableViewer( event );
+    final ISelection sel = tableViewer.getSelection();
+    if( !(sel instanceof IFeatureSelection) )
+      throw new ExecutionException( "Couldn't resolve feature selection" );
+
+    return (IFeatureSelection) sel;
   }
 
 }

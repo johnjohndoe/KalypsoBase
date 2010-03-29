@@ -81,8 +81,8 @@ import org.kalypso.ogc.gml.featureview.maker.FeatureviewHelper;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.FeatureSelectionManager2;
 import org.kalypso.template.featureview.Featuretemplate;
-import org.kalypso.template.featureview.FeatureviewType;
 import org.kalypso.template.featureview.Featuretemplate.Layer;
+import org.kalypso.template.featureview.FeatureviewType;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 import org.kalypso.util.swt.SWTUtilities;
 import org.kalypsodeegree.model.feature.Feature;
@@ -104,11 +104,13 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
 
   private final IFeatureChangeListener m_changeListener = new IFeatureChangeListener()
   {
+    @Override
     public void featureChanged( final ICommand changeCommand )
     {
       onFeatureChanged( changeCommand );
     }
 
+    @Override
     public void openFeatureRequested( final Feature feature, final IPropertyType ftp )
     {
       // feature view öffnen
@@ -240,6 +242,7 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
 
     m_contentPanel.getDisplay().asyncExec( new Runnable()
     {
+      @Override
       public void run( )
       {
         updateControls();
@@ -251,6 +254,7 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
    * @see org.kalypso.util.pool.IPoolListener#objectLoaded(org.kalypso.util.pool.IPoolableObjectType, java.lang.Object,
    *      org.eclipse.core.runtime.IStatus)
    */
+  @Override
   public void objectLoaded( final IPoolableObjectType key, final Object newValue, final IStatus status )
   {
     // Daten sind jetzt da!
@@ -403,6 +407,7 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
   /**
    * @see org.kalypsodeegree.model.feature.event.ModellEventListener#onModellChange(org.kalypsodeegree.model.feature.event.ModellEvent)
    */
+  @Override
   public void onModellChange( final ModellEvent modellEvent )
   {
     final FeatureComposite featureComposite = m_featureComposite;
@@ -445,6 +450,7 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
   /**
    * @see org.kalypso.util.pool.IPoolListener#isDisposed()
    */
+  @Override
   public boolean isDisposed( )
   {
     return m_disposed;
@@ -453,6 +459,7 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
   /**
    * @see org.kalypso.util.pool.IPoolListener#dirtyChanged(org.kalypso.util.pool.IPoolableObjectType, boolean)
    */
+  @Override
   public void dirtyChanged( final IPoolableObjectType key, final boolean isDirty )
   {
   }

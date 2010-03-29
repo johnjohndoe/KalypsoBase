@@ -65,12 +65,12 @@ public class CopyToClipboardHandler extends AbstractHandler
    */
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
-    final TableViewer tupleResultViewer = TupleResultCommandUtils.findTableViewer( event );
-    if( tupleResultViewer == null )
-      throw new ExecutionException( Messages.getString("org.kalypso.ogc.gml.om.table.command.CopyToClipboardHandler.0") ); //$NON-NLS-1$
+    final TableViewer tableViewer = ToolbarCommandUtils.findTableViewer( event );
+    if( tableViewer == null )
+      throw new ExecutionException( Messages.getString( "org.kalypso.ogc.gml.om.table.command.CopyToClipboardHandler.0" ) ); //$NON-NLS-1$
 
     /* clip board copy function */
-    final Table table = tupleResultViewer.getTable();
+    final Table table = tableViewer.getTable();
 
     // if there is nothing selected, select all
     final boolean fullSelection = table.getSelectionCount() == 0;
@@ -91,14 +91,14 @@ public class CopyToClipboardHandler extends AbstractHandler
 
     // copy table header
     final TableColumn[] columns = table.getColumns();
-    final String [] headerLabels = new String[columns.length-1];
+    final String[] headerLabels = new String[columns.length - 1];
     for( int i = 0; i < headerLabels.length; i++ )
-      headerLabels[i] = columns[i+1].getText();
+      headerLabels[i] = columns[i + 1].getText();
     final String header = Arrays.implode( headerLabels, "\t", 0, headerLabels.length - 1 );
-    
+
     sbf.append( header );
-    sbf.append("\n");
-    
+    sbf.append( "\n" );
+
     // walk through every row (item)
     for( int i = 0; i < table.getItemCount(); i++ )
     {
@@ -118,7 +118,7 @@ public class CopyToClipboardHandler extends AbstractHandler
         sbf.append( "\n" ); //$NON-NLS-1$
       }
     }
-    
+
     return sbf.toString();
   }
 

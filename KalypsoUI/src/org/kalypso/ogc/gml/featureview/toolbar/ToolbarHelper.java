@@ -38,34 +38,38 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.om.table.command;
+package org.kalypso.ogc.gml.featureview.toolbar;
 
-import org.eclipse.core.commands.AbstractHandler;
-import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.jface.viewers.TableViewer;
-import org.kalypso.i18n.Messages;
-import org.kalypso.observation.result.TupleResult;
+import java.util.List;
+
+import org.kalypso.template.featureview.Toolbar;
+import org.kalypso.template.featureview.Toolbar.Command;
+import org.kalypso.template.featureview.Toolbar.MenuContribution;
 
 /**
- * Change Values in selected rows (one Component only)
- * 
- * @author kimwerner
+ * @author Dirk Kuch
  */
-public class ChangeValueSelectedRowsHandler extends AbstractHandler
+public final class ToolbarHelper
 {
-  /**
-   * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
-   */
-  public Object execute( final ExecutionEvent event ) throws ExecutionException
+  private ToolbarHelper( )
   {
-    final TableViewer viewer = ToolbarCommandUtils.findTableViewer( event );
-    final TupleResult tupleResult = ToolbarCommandUtils.findTupleResult( event );
-    if( tupleResult == null || viewer == null )
-      throw new ExecutionException( Messages.getString("org.kalypso.ogc.gml.om.table.command.ChangeValueSelectedRowsHandler.0") ); //$NON-NLS-1$
 
-   //TODO show dialog
-    return null;
+  }
+
+  public static boolean hasActions( final Toolbar toolbar )
+  {
+    if( toolbar == null )
+      return false;
+
+    final List<Command> commands = toolbar.getCommand();
+    if( commands.size() > 0 )
+      return true;
+
+    final List<MenuContribution> contributions = toolbar.getMenuContribution();
+    if( contributions.size() > 0 )
+      return true;
+
+    return false;
   }
 
 }

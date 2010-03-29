@@ -56,7 +56,9 @@ import org.kalypsodeegree.model.feature.Feature;
 public class TableFeatureContolFactory implements IFeatureControlFactory
 {
   /**
-   * @see org.kalypso.ogc.gml.featureview.control.IFeatureControlFactory#createFeatureControl(org.kalypso.ogc.gml.featureview.control.IFeatureComposite, org.kalypsodeegree.model.feature.Feature, org.kalypso.gmlschema.property.IPropertyType, org.kalypso.template.featureview.ControlType, org.kalypso.gmlschema.annotation.IAnnotation)
+   * @see org.kalypso.ogc.gml.featureview.control.IFeatureControlFactory#createFeatureControl(org.kalypso.ogc.gml.featureview.control.IFeatureComposite,
+   *      org.kalypsodeegree.model.feature.Feature, org.kalypso.gmlschema.property.IPropertyType,
+   *      org.kalypso.template.featureview.ControlType, org.kalypso.gmlschema.annotation.IAnnotation)
    */
   @Override
   public IFeatureControl createFeatureControl( final IFeatureComposite parentComposite, final Feature feature, final IPropertyType pt, final ControlType controlType, final IAnnotation annotation )
@@ -68,7 +70,7 @@ public class TableFeatureContolFactory implements IFeatureControlFactory
 
     final IFeatureSelectionManager selectionManager = parentComposite.getSelectionManager();
 
-    final TableFeatureContol fc = new TableFeatureContol( pt, featureTypeCellEditorFactory, selectionManager, tableType.isShowToolbar(), tableType.isShowContextMenu() );
+    final TableFeatureContol fc = new TableFeatureContol( pt, featureTypeCellEditorFactory, selectionManager, tableType.getToolbar(), tableType.isShowContextMenu() );
 
     final Gistableview gistableview = tableType.getGistableview();
     if( gistableview != null )
