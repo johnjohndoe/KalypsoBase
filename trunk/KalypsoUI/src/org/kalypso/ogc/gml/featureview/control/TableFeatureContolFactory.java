@@ -70,7 +70,7 @@ public class TableFeatureContolFactory implements IFeatureControlFactory
 
     final IFeatureSelectionManager selectionManager = parentComposite.getSelectionManager();
 
-    final TableFeatureContol fc = new TableFeatureContol( pt, featureTypeCellEditorFactory, selectionManager, tableType.getToolbar(), tableType.isShowContextMenu() );
+    final TableFeatureContol fc = new TableFeatureContol( pt, featureTypeCellEditorFactory, selectionManager, tableType.getToolbar(), tableType.isShowToolbar(), tableType.isShowContextMenu() );
 
     final Gistableview gistableview = tableType.getGistableview();
     if( gistableview != null )

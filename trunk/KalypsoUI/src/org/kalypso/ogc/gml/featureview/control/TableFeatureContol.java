@@ -38,12 +38,15 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.KalypsoTableFeatureTheme;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
+import org.kalypso.ogc.gml.featureview.toolbar.AddFeatureHandler;
+import org.kalypso.ogc.gml.featureview.toolbar.DeleteFeatureHandler;
 import org.kalypso.ogc.gml.featureview.toolbar.ToolbarHelper;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
 import org.kalypso.ogc.gml.table.celleditors.IFeatureModifierFactory;
 import org.kalypso.template.featureview.Toolbar;
+import org.kalypso.template.featureview.Toolbar.Command;
 import org.kalypso.template.featureview.Toolbar.MenuContribution;
 import org.kalypso.template.gistableview.Gistableview;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
@@ -93,9 +96,12 @@ public class TableFeatureContol extends AbstractToolbarFeatureControl implements
 
   private final Toolbar m_toolbar;
 
-  public TableFeatureContol( final IPropertyType ftp, final IFeatureModifierFactory factory, final IFeatureSelectionManager selectionManager, final Toolbar toolbar, final boolean showContextMenu )
+  private final boolean m_showToolbar;
+
+  public TableFeatureContol( final IPropertyType ftp, final IFeatureModifierFactory factory, final IFeatureSelectionManager selectionManager, final Toolbar toolbar, final boolean showToolbar, final boolean showContextMenu )
   {
     super( ftp, ToolbarHelper.hasActions( toolbar ), SWT.VERTICAL | SWT.FLAT );
+    m_showToolbar = showToolbar;
 
     Assert.isNotNull( ftp );
 
@@ -170,6 +176,23 @@ public class TableFeatureContol extends AbstractToolbarFeatureControl implements
       return client;
 
     final List<Toolbar.Command> commands = m_toolbar.getCommand();
+
+    /**
+     * support old definition of toolbar (add and delete feature actions)
+     */
+    if( m_showToolbar )
+    {
+      final Command addFeatureCommand = new Toolbar.Command();
+      addFeatureCommand.setCommandId( AddFeatureHandler.ID );
+      addFeatureCommand.setStyle( Integer.valueOf( SWT.PUSH ).toString() );
+      commands.add( addFeatureCommand );
+
+      final Command deleteFeatureCommand = new Toolbar.Command();
+      deleteFeatureCommand.setCommandId( DeleteFeatureHandler.ID );
+      deleteFeatureCommand.setStyle( Integer.valueOf( SWT.PUSH ).toString() );
+      commands.add( deleteFeatureCommand );
+    }
+
     for( final Toolbar.Command command : commands )
     {
       final String commandId = command.getCommandId();
@@ -242,11 +265,11 @@ public class TableFeatureContol extends AbstractToolbarFeatureControl implements
       final String ftpName = getFeatureTypeProperty().getQName().getLocalPart();
       final FeaturePath featurePath = new FeaturePath( parentFeaturePath, ftpName );
 
-      final CommandableWorkspace c_workspace = findCommandableWorkspace( workspace );
+      final CommandableWorkspace commandable = findCommandableWorkspace( workspace );
 
-      m_kft = new KalypsoTableFeatureTheme( c_workspace, featurePath.toString(), new I10nString( ftpName ), m_selectionManager );
+      m_kft = new KalypsoTableFeatureTheme( commandable, featurePath.toString(), new I10nString( ftpName ), m_selectionManager );
 
-      c_workspace.addModellListener( this );
+      commandable.addModellListener( this );
       m_viewer.setInput( m_kft );
 
       // create columns
@@ -282,12 +305,12 @@ public class TableFeatureContol extends AbstractToolbarFeatureControl implements
         return (CommandableWorkspace) object;
     }
 
-    final CommandableWorkspace c_workspace;
+    final CommandableWorkspace commandable;
     if( workspace instanceof CommandableWorkspace )
-      c_workspace = (CommandableWorkspace) workspace;
+      commandable = (CommandableWorkspace) workspace;
     else
-      c_workspace = new CommandableWorkspace( workspace );
-    return c_workspace;
+      commandable = new CommandableWorkspace( workspace );
+    return commandable;
   }
 
   public void setTableTemplate( final Gistableview tableView )
