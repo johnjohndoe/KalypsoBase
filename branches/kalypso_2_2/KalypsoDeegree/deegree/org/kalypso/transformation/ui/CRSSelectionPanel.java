@@ -422,7 +422,7 @@ public class CRSSelectionPanel extends Composite implements IJobChangeListener
           /* Monitor. */
           monitor.beginTask( "Aktualisiere Koordinaten-Systeme ...", 100 );
 
-          if( m_viewer == null || m_viewer.getControl().isDisposed() )
+          if( isDisposed() || m_viewer == null || m_viewer.getControl().isDisposed() )
           {
             /* Monitor. */
             monitor.worked( 100 );
@@ -511,7 +511,12 @@ public class CRSSelectionPanel extends Composite implements IJobChangeListener
         finally
         {
           /* Enable. */
-          setEnabled( true );
+          if( !isDisposed() )
+            setEnabled( true );
+          else
+          {
+            System.out.println("Disposed");
+          }
 
           /* Monitor. */
           monitor.done();
