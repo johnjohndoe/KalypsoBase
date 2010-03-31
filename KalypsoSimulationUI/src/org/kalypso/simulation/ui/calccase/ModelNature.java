@@ -92,6 +92,7 @@ import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.commons.runtime.LogAnalyzer;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.service.wps.client.WPSRequest;
 import org.kalypso.service.wps.client.simulation.SimulationDelegate;
@@ -445,6 +446,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
     // auf x stunden vorher runden! hängt von der Modellspec ab
     final Calendar cal = Calendar.getInstance();
+    cal.setTimeZone( KalypsoCorePlugin.getDefault().getTimeZone() );
     cal.setTime( now );
 
     attributes.setProperty( "kalypso.currentTime", DatatypeConverter.printDateTime( cal ) ); //$NON-NLS-1$
