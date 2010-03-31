@@ -154,6 +154,8 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
 
   private boolean m_hasStyles;
 
+  private final List<IKalypsoStyle> m_defaultStyles = new ArrayList<IKalypsoStyle>();
+
   public GisTemplateFeatureTheme( final I10nString layerName, final LayerType layerType, final URL context, final IFeatureSelectionManager selectionManager, final IMapModell mapModel )
   {
     super( layerName, layerType.getLinktype(), mapModel );
@@ -252,6 +254,9 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
     // remove styles
     final IKalypsoStyle[] templateStyles = m_styles.toArray( new IKalypsoStyle[m_styles.size()] );
     for( final IKalypsoStyle style : templateStyles )
+      removeStyle( style );
+    final IKalypsoStyle[] defaultStyles = m_defaultStyles.toArray( new IKalypsoStyle[m_defaultStyles.size()] );
+    for( final IKalypsoStyle style : defaultStyles )
       removeStyle( style );
 
     super.dispose();
@@ -465,17 +470,19 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
     final IFeatureType featureType = getFeatureType();
     final URL context = m_layerKey.getContext();
     if( m_styles.isEmpty() )
-    {
-      final IKalypsoStyle style = createDefaultStyle( featureType, context, false );
-      if( style != null )
-        addStyle( style );
-    }
+      addDefaultStyle( featureType, context, false );
 
     if( !hasSelectionStyle )
+      addDefaultStyle( featureType, context, true );
+  }
+
+  private void addDefaultStyle( final IFeatureType featureType, final URL context, final boolean b )
+  {
+    final IKalypsoStyle style = createDefaultStyle( featureType, context, false );
+    if( style != null )
     {
-      final IKalypsoStyle style = createDefaultStyle( featureType, context, true );
-      if( style != null )
-        addStyle( style );
+      m_defaultStyles.add( style );
+      addStyle( style );
     }
   }
 
