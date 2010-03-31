@@ -73,7 +73,7 @@ import org.kalypso.core.util.pool.ResourcePool;
 
 /**
  * Zeigt den Inhalt des {@link PoolView}in Form einer Tabelle an. Die Tabelle wird alle 2 Sekunden aktualisiert.
- *
+ * 
  * @author belger
  */
 public class PoolView extends ViewPart implements ITableLabelProvider
@@ -186,7 +186,8 @@ public class PoolView extends ViewPart implements ITableLabelProvider
             }
           };
           final ListSelectionDialog dialog = new ListSelectionDialog( event.getViewer().getControl().getShell(), listeners, new ArrayContentProvider(), labelProvider, "Listeners for KeyInfo: " + info );
-          dialog.open();
+          if( dialog.open() == dialog.OK )
+            printAddTraces( info, dialog.getResult() );
         }
       }
     } );
@@ -202,6 +203,20 @@ public class PoolView extends ViewPart implements ITableLabelProvider
       final TableColumn keytc = new TableColumn( table, SWT.BEGINNING );
       keytc.setText( col.text );
       keytc.setWidth( col.width );
+    }
+  }
+
+  protected void printAddTraces( final KeyInfo info, final Object[] result )
+  {
+    for( final Object object : result )
+    {
+      if( object instanceof IPoolListener )
+      {
+        final Exception addTrace = info.getAddTrace( (IPoolListener) object );
+        System.out.println( "Listener: " + object.toString() );
+        addTrace.printStackTrace();
+        System.out.println();
+      }
     }
   }
 
