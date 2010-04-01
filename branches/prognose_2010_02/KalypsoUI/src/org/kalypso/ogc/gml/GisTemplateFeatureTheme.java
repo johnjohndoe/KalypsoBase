@@ -476,9 +476,9 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
       addDefaultStyle( featureType, context, true );
   }
 
-  private void addDefaultStyle( final IFeatureType featureType, final URL context, final boolean b )
+  private void addDefaultStyle( final IFeatureType featureType, final URL context, final boolean usedForSelection )
   {
-    final IKalypsoStyle style = createDefaultStyle( featureType, context, false );
+    final IKalypsoStyle style = createDefaultStyle( featureType, context, usedForSelection );
     if( style != null )
     {
       m_defaultStyles.add( style );
