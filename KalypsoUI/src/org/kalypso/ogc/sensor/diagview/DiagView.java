@@ -191,7 +191,7 @@ public class DiagView extends ObsView
    *      java.lang.String, org.kalypso.ogc.sensor.template.ObsView.ItemData)
    */
   @Override
-  public synchronized void addObservation( final IObsProvider provider, final String tokenizedName, final ItemData data )
+  public void addObservation( final IObsProvider provider, final String tokenizedName, final ItemData data )
   {
     final List<String> ignoreTypeList = getIgnoreTypesAsList();
 

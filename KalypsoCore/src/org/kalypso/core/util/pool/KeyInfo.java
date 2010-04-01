@@ -457,7 +457,7 @@ public final class KeyInfo extends Job
     // System.out.println( String.format( "Resource change (flags): %d", flags ) );
 
     // TRICKY: if (exactly) only markers have changed, do nothing
-    if( flags == IResourceDelta.MARKERS || flags == IResourceDelta.SYNC || flags == (IResourceDelta.MARKERS & IResourceDelta.SYNC) )
+    if( flags == IResourceDelta.MARKERS || flags == IResourceDelta.SYNC || flags == (IResourceDelta.MARKERS | IResourceDelta.SYNC) )
     {
       // System.out.println( "Resource change (action): Ignored" );
       return;
