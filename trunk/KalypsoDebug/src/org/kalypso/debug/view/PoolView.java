@@ -55,6 +55,7 @@ import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.OpenEvent;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
@@ -186,7 +187,7 @@ public class PoolView extends ViewPart implements ITableLabelProvider
             }
           };
           final ListSelectionDialog dialog = new ListSelectionDialog( event.getViewer().getControl().getShell(), listeners, new ArrayContentProvider(), labelProvider, "Listeners for KeyInfo: " + info );
-          if( dialog.open() == dialog.OK )
+          if( dialog.open() == Window.OK )
             printAddTraces( info, dialog.getResult() );
         }
       }
@@ -212,10 +213,11 @@ public class PoolView extends ViewPart implements ITableLabelProvider
     {
       if( object instanceof IPoolListener )
       {
-        final Exception addTrace = info.getAddTrace( (IPoolListener) object );
-        System.out.println( "Listener: " + object.toString() );
-        addTrace.printStackTrace();
-        System.out.println();
+        // Deaktivated for the moment, we must wait until the prognose branch was mrged into the trunc
+// final Exception addTrace = info.getAddTrace( (IPoolListener) object );
+// System.out.println( "Listener: " + object.toString() );
+// addTrace.printStackTrace();
+// System.out.println();
       }
     }
   }
