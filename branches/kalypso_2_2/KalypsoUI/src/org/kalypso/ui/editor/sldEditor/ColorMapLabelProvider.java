@@ -59,59 +59,75 @@ import org.eclipse.swt.widgets.Table;
 public abstract class ColorMapLabelProvider extends LabelProvider implements ITableLabelProvider, ITableColorProvider
 {
   private static final String BRIGHT_FOREGROUND = "foregroundBright";//$NON-NLS-1$
+
   private static final String DARK_FOREGROUND = "foregroundDark";//$NON-NLS-1$
 
   private static final class DisposableColorRegistry extends ColorRegistry
   {
-    public DisposableColorRegistry( Display d )
+    public DisposableColorRegistry( final Display d )
     {
       super( d, false );
     }
-    
-    public void dispose()
+
+    public void dispose( )
     {
       clearCaches();
       clearListeners();
     }
   }
-  
+
   private final DisposableColorRegistry m_colorRegistry;
 
   public ColorMapLabelProvider( final Table table )
   {
-    Display display = table.getDisplay();
-    
+    final Display display = table.getDisplay();
+
     m_colorRegistry = new DisposableColorRegistry( display );
     final RGB rgbDark = display.getSystemColor( SWT.COLOR_BLACK ).getRGB();
     final RGB rgbBright = display.getSystemColor( SWT.COLOR_WHITE ).getRGB();
     m_colorRegistry.put( BRIGHT_FOREGROUND, rgbBright );
     m_colorRegistry.put( DARK_FOREGROUND, rgbDark );
-    
+
     table.addListener( SWT.EraseItem, new Listener()
     {
       @Override
-      public void handleEvent( Event event )
+      public void handleEvent( final Event event )
       {
-        final java.awt.Color awtColor = getAwtColor( event.item.getData(), event.index );
+        final Object element = event.item.getData();
+        final java.awt.Color awtColor = getAwtColor( element, event.index );
+        final String text = getColumnText( element, event.index );
+        final Color foreground = getForeground( element, event.index );
         if( awtColor == null )
           return;
-        
+
+        System.out.println( String.format( "Detail: %d", event.detail ) );
+        System.out.println( String.format( "Index: %d", event.index ) );
+        System.out.println( String.format( "ItemData: %s", element ) );
+
         if( (event.detail & SWT.SELECTED) != 0 )
           return;
-        
+        if( (event.detail & SWT.HOT) != 0 )
+          return;
         if( (event.detail & SWT.BACKGROUND) == 0 )
-          return; 
-        
+          return;
+
         final GC gc = event.gc;
-        int oldAlpha = gc.getAlpha();
-        
-        int alpha = awtColor.getAlpha();
+        final int oldAlpha = gc.getAlpha();
+
+        final int alpha = awtColor.getAlpha();
         gc.setAlpha( alpha );
         gc.fillRectangle( event.x, event.y, event.width, event.height );
         gc.setAlpha( oldAlpha );
-        
+
+        final Color oldForeground = gc.getForeground();
+        if( foreground != null )
+          gc.setForeground( oldForeground );
+        gc.drawText( text, event.x, event.y, true );
+        gc.setForeground( oldForeground );
+
+        event.doit = false;
         event.detail &= ~SWT.HOT;
-        event.detail &= ~( SWT.BACKGROUND );
+        event.detail &= ~(SWT.BACKGROUND);
       }
 
     } );
@@ -128,30 +144,29 @@ public abstract class ColorMapLabelProvider extends LabelProvider implements ITa
     m_colorRegistry.dispose();
   }
 
-  
-  protected abstract java.awt.Color getAwtColor(Object element, int columnIndex);
-  
-  private RGB getRGB( Object element, int columnIndex )
+  protected abstract java.awt.Color getAwtColor( Object element, int columnIndex );
+
+  private RGB getRGB( final Object element, final int columnIndex )
   {
     final java.awt.Color color = getAwtColor( element, columnIndex );
     if( color == null )
       return null;
-    
+
     return new RGB( color.getRed(), color.getGreen(), color.getBlue() );
   }
-  
+
   /**
    * @see org.eclipse.jface.viewers.ITableColorProvider#getForeground(java.lang.Object, int)
    */
   @Override
-  public Color getForeground( Object element, int columnIndex )
+  public Color getForeground( final Object element, final int columnIndex )
   {
     final RGB rgb = getRGB( element, columnIndex );
     if( rgb == null )
       return null;
-    
-    float[] hsb = rgb.getHSB();
-    if( hsb[2] < 0.5 )
+
+    final float[] hsb = rgb.getHSB();
+    if( hsb[2] < 0.7 )
       return m_colorRegistry.get( BRIGHT_FOREGROUND );
     else
       return m_colorRegistry.get( DARK_FOREGROUND );
@@ -161,12 +176,12 @@ public abstract class ColorMapLabelProvider extends LabelProvider implements ITa
    * @see org.eclipse.jface.viewers.ITableColorProvider#getBackground(java.lang.Object, int)
    */
   @Override
-  public Color getBackground( Object element, int columnIndex )
+  public Color getBackground( final Object element, final int columnIndex )
   {
     final RGB rgb = getRGB( element, columnIndex );
     if( rgb == null )
       return null;
-    
+
     final String symbolicName = rgb.toString();
     m_colorRegistry.put( symbolicName, rgb );
     return m_colorRegistry.get( symbolicName );
