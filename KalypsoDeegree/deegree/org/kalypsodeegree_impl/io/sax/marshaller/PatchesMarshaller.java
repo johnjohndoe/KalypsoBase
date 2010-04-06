@@ -46,41 +46,39 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
 /**
- * 
- * A marshaller for gml:SurfacePatchArrayPropertyType. It delegates the marshalling to the corresponding
- * Patch elements.
+ * A marshaller for gml:SurfacePatchArrayPropertyType. It delegates the marshalling to the corresponding Patch elements.
  * 
  * @author Felipe Maximino
  */
-public abstract class PatchesMarshaller<T extends GM_SurfacePatch> extends AbstractMarshaller< GM_Surface<T>>
+public abstract class PatchesMarshaller<T extends GM_SurfacePatch> extends AbstractMarshaller<GM_Surface<T>>
 {
   protected SurfacePatchMarshaller<T> m_surfacePatchMarshaller;
-  
+
   public PatchesMarshaller( final XMLReader xmlReader, final GM_Surface<T> surface, final String tag )
   {
     super( xmlReader, tag, surface );
     createPatchMarshaller();
   }
-  
+
   /**
    * @see org.kalypsodeegree_impl.io.sax.AbstractMarshaller#doMarshall()
    */
   @Override
   public void doMarshall( ) throws SAXException
   {
-    createPatchMarshaller(); 
-    m_surfacePatchMarshaller.setSurfaceCrs( m_marshalledObject.getCoordinateSystem() );
-    for( final T patch : m_marshalledObject )
-    { 
+    createPatchMarshaller();
+    m_surfacePatchMarshaller.setSurfaceCrs( getMarshalledObject().getCoordinateSystem() );
+    for( final T patch : getMarshalledObject() )
+    {
       m_surfacePatchMarshaller.setPatch( patch );
-      m_surfacePatchMarshaller.marshall( );
-    }   
+      m_surfacePatchMarshaller.marshall();
+    }
   }
-  
-  public abstract void createPatchMarshaller(  );
-  
-  public SurfacePatchMarshaller<T> getPatchMarshaller()
+
+  public abstract void createPatchMarshaller( );
+
+  public SurfacePatchMarshaller<T> getPatchMarshaller( )
   {
     return m_surfacePatchMarshaller;
-  }  
+  }
 }

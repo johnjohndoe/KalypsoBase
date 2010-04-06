@@ -46,21 +46,20 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
-/** 
+/**
  * A marshaller for gml:TriangulatedSurfaces
  * 
  * @author Gernot Belger
- * @author Felipe Maximino - Refaktoring 
- *  
+ * @author Felipe Maximino - Refaktoring
  */
 public class TriangulatedSurfaceMarshaller extends SurfaceMarshaller<GM_Triangle>
 {
   private static final String TAG_TRIANGULATED_SURFACE = "TriangulatedSurface";
-  
-  public TriangulatedSurfaceMarshaller( XMLReader xmlReader, GM_TriangulatedSurface surface )
+
+  public TriangulatedSurfaceMarshaller( final XMLReader xmlReader, final GM_TriangulatedSurface surface )
   {
     super( xmlReader, surface, TAG_TRIANGULATED_SURFACE );
-    m_patchesMarshaller = new TrianglePatchesMarshaller( m_xmlReader, m_marshalledObject );
+    m_patchesMarshaller = new TrianglePatchesMarshaller( xmlReader, surface );
   }
 
   /**
@@ -68,25 +67,25 @@ public class TriangulatedSurfaceMarshaller extends SurfaceMarshaller<GM_Triangle
    */
   @Override
   public void doMarshall( ) throws SAXException
-  { 
-    m_patchesMarshaller.marshall();   
-  }
-  
-  public void marshallTriangle( GM_Triangle triangle, String crs ) throws SAXException
   {
-    SurfacePatchMarshaller<GM_Triangle> triangleMarshaller = getPatchMarshaller();
+    m_patchesMarshaller.marshall();
+  }
+
+  public void marshallTriangle( final GM_Triangle triangle, final String crs ) throws SAXException
+  {
+    final SurfacePatchMarshaller<GM_Triangle> triangleMarshaller = getPatchMarshaller();
     triangleMarshaller.setPatch( triangle );
     triangleMarshaller.setSurfaceCrs( crs );
-    triangleMarshaller.marshall(); 
+    triangleMarshaller.marshall();
   }
-  
-  public void startSurface( Attributes atts ) throws SAXException
+
+  public void startSurface( final Attributes atts ) throws SAXException
   {
     startMarshalling( atts );
     m_patchesMarshaller.startMarshalling();
   }
-  
-  public void endSurface() throws SAXException
+
+  public void endSurface( ) throws SAXException
   {
     m_patchesMarshaller.endMarshalling();
     endMarshalling();

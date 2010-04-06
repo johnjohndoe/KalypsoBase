@@ -45,17 +45,17 @@ import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
-/** 
+/**
  * A marshaller for gml:PolyhedralSurfaces
  * 
  * @author Gernot Belger
- * @author Felipe Maximino - Refaktoring 
+ * @author Felipe Maximino - Refaktoring
  */
 public class PolyhedralSurfaceMarshaller extends SurfaceMarshaller<GM_Polygon>
 {
   private static final String TAG_POLYHEDRAL_SURFACE = "PolyhedralSurface";
-  
-  public PolyhedralSurfaceMarshaller( XMLReader xmlReader, GM_Surface<GM_Polygon> surface )
+
+  public PolyhedralSurfaceMarshaller( final XMLReader xmlReader, final GM_Surface<GM_Polygon> surface )
   {
     super( xmlReader, surface, TAG_POLYHEDRAL_SURFACE );
   }
@@ -65,8 +65,8 @@ public class PolyhedralSurfaceMarshaller extends SurfaceMarshaller<GM_Polygon>
    */
   @Override
   public void doMarshall( ) throws SAXException
-  { 
-    m_patchesMarshaller = new PolygonPatchesMarshaller( m_xmlReader, m_marshalledObject );
-    m_patchesMarshaller.marshall();   
+  {
+    m_patchesMarshaller = new PolygonPatchesMarshaller( getXmlReader(), getMarshalledObject() );
+    m_patchesMarshaller.marshall();
   }
 }

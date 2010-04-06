@@ -51,68 +51,61 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.AttributesImpl;
 
 /**
- * 
  * A marshaller for gml:coordinates
  * <p>
- * The default values for separators e decimal indicators are:
- * tuple separator: ", "
- * coordinate separator: " "
- * decimal indicator: "."
- * 
- * These values can be changed by the set methods:
- *  {@link setCoordinatesSeparator}
- *  {@link setTuplesSeparator}
- *  {@link setDecimalIndicator} 
+ * The default values for separators e decimal indicators are: tuple separator: ", " coordinate separator: " " decimal
+ * indicator: "." These values can be changed by the set methods: {@link setCoordinatesSeparator}
+ * {@link setTuplesSeparator} {@link setDecimalIndicator}
  * 
  * @author Felipe Maximino
  */
 public class CoordinatesMarshaller extends AbstractMarshaller<List<double[]>>
 {
-  private static final String TAG_COORDINATES = "coordinates";  
-  
+  private static final String TAG_COORDINATES = "coordinates";
+
   /* tuples separator */
   private String m_ts;
-  
+
   /* coordinates separator */
   private String m_cs;
-  
+
   /* decimal indicator */
   private String m_decimal;
-  
-  public CoordinatesMarshaller( XMLReader xmlReader )
+
+  public CoordinatesMarshaller( final XMLReader xmlReader )
   {
-    this( xmlReader, null);   
+    this( xmlReader, null );
   }
-  
-  public CoordinatesMarshaller( XMLReader xmlReader, List<double[]> coords )
+
+  public CoordinatesMarshaller( final XMLReader xmlReader, final List<double[]> coords )
   {
-    super( xmlReader, TAG_COORDINATES, coords);
-    
+    super( xmlReader, TAG_COORDINATES, coords );
+
     /* separators initialized to default values */
     m_ts = ",";
     m_cs = " ";
     m_decimal = GMLConstants.DEFAULT_DECIMAL;
   }
-  
+
   /**
    * @see org.kalypsodeegree_impl.io.sax.marshaller.AbstractMarshaller#startMarshalling()
    */
   @Override
   public void startMarshalling( ) throws SAXException
   {
-    Attributes atts = createCoordinatesDefaultAttributes();
-    
-    final ContentHandler contentHandler = m_xmlReader.getContentHandler();    
-    contentHandler.startElement( NS.GML3, m_tag, m_qName, atts );
+    final Attributes atts = createCoordinatesDefaultAttributes();
+
+    final ContentHandler contentHandler = getXmlReader().getContentHandler();
+    contentHandler.startElement( NS.GML3, getTag(), getQName(), atts );
   }
 
   private AttributesImpl createCoordinatesDefaultAttributes( )
   {
-    AttributesImpl atts = new AttributesImpl();
+    final AttributesImpl atts = new AttributesImpl();
     atts.addAttribute( "", "ts", "ts", "CDATA", m_ts );
     atts.addAttribute( "", "cs", "cs", "CDATA", m_cs );
     atts.addAttribute( "", "decimal", "decimal", "CDATA", m_decimal );
-    
+
     return atts;
   }
 
@@ -122,74 +115,74 @@ public class CoordinatesMarshaller extends AbstractMarshaller<List<double[]>>
   @Override
   public void doMarshall( ) throws SAXException
   {
-    final ContentHandler contentHandler = m_xmlReader.getContentHandler();
-    
-    int nTuples = m_marshalledObject.size();    
+    final ContentHandler contentHandler = getXmlReader().getContentHandler();
+
+    final int nTuples = getMarshalledObject().size();
     for( int i = 0; i < nTuples; i++ )
     {
-      double[] tuple = m_marshalledObject.get( i );
-      
+      final double[] tuple = getMarshalledObject().get( i );
+
       marshallTuple( contentHandler, tuple );
-      
+
       /* don't write the TS after the last tuple */
-      if( i != nTuples - 1  )
-      { 
+      if( i != nTuples - 1 )
+      {
         contentHandler.characters( m_ts.toCharArray(), 0, 1 );
       }
-      
-    }    
+
+    }
   }
 
-  private void marshallTuple( ContentHandler contentHandler, double[] tuple ) throws SAXException
+  private void marshallTuple( final ContentHandler contentHandler, final double[] tuple ) throws SAXException
   {
-    int nCoordinates = tuple.length;
+    final int nCoordinates = tuple.length;
     for( int i = 0; i < nCoordinates; i++ )
     {
       String dString = Double.toString( tuple[i] );
       /* transform to desired decimal indicator */
       if( !m_decimal.equals( GMLConstants.DEFAULT_DECIMAL ) )
-      { 
+      {
         dString = dString.replace( GMLConstants.DEFAULT_DECIMAL, m_decimal );
       }
-      
+
       final char[] charArray = dString.toCharArray();
-      
+
       contentHandler.characters( charArray, 0, charArray.length );
-      
+
       /* don't write the CS after the last coordinate */
       if( i != nCoordinates - 1 )
       {
-        contentHandler.characters( m_cs.toCharArray(), 0, 1 );  
+        contentHandler.characters( m_cs.toCharArray(), 0, 1 );
       }
-    }    
+    }
   }
-  
-  public void setCoordinates( List<double[]> coordinates )
+
+  public void setCoordinates( final List<double[]> coordinates )
   {
-    m_marshalledObject = coordinates;
+    setMarshalledObject( coordinates );
   }
-  
+
   /**
-   * sets the desired tuple separator for the marshalling  
+   * sets the desired tuple separator for the marshalling
    */
-  public void setTupleSeparator( String ts )
+  public void setTupleSeparator( final String ts )
   {
     m_ts = ts;
   }
-  
+
   /**
-   * sets the desired tuple coordinates separator for the marshalling  
+   * sets the desired tuple coordinates separator for the marshalling
    */
-  public void setCoordinatesSeparator( String cs )
+  public void setCoordinatesSeparator( final String cs )
   {
     m_cs = cs;
   }
-  
+
   /**
-   * sets the desired decimalIndicator for the marshalling  
+   * sets the desired decimalIndicator for the marshalling
    */
-  public void setDecimalIndicator( String decimal )
+  public void setDecimalIndicator( final String decimal )
   {
     m_decimal = decimal;
-  }  
+  }
 }

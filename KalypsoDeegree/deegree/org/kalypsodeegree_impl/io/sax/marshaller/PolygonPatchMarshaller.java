@@ -45,7 +45,6 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
 /**
- * 
  * A marshaller for gml:polygonPatch
  * 
  * @author Felipe Maximino
@@ -53,23 +52,23 @@ import org.xml.sax.XMLReader;
 public class PolygonPatchMarshaller extends SurfacePatchMarshaller<GM_Polygon>
 {
   private static final String TAG_POLYGON_PATCH = "PolygonPatch";
-    
-  public PolygonPatchMarshaller( XMLReader xmlReader )
+
+  public PolygonPatchMarshaller( final XMLReader xmlReader )
   {
     this( xmlReader, null );
   }
-  
+
   public PolygonPatchMarshaller( final XMLReader xmlReader, final String surfaceCrs )
   {
     super( xmlReader, TAG_POLYGON_PATCH, surfaceCrs );
-  }  
+  }
 
   /**
    * @see org.kalypsodeegree_impl.io.sax.PatchMarshaller#doMarshall()
    */
   @Override
   public void doMarshall( ) throws SAXException
-  { 
-    ( new ExteriorMarshaller( m_xmlReader, m_marshalledObject) ).marshall();
-  } 
+  {
+    (new ExteriorMarshaller( getXmlReader(), getMarshalledObject() )).marshall();
+  }
 }

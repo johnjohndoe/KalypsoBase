@@ -41,25 +41,22 @@
 package org.kalypsodeegree_impl.io.sax.marshaller;
 
 import org.kalypsodeegree.model.geometry.GM_Curve;
-import org.kalypsodeegree.model.geometry.GM_Point;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
 /**
- * 
- * A marshaller for gml:lineStringMember. It delegates the marshalling to the corresponding
- * gml:LineString marshaller.
+ * A marshaller for gml:lineStringMember. It delegates the marshalling to the corresponding gml:LineString marshaller.
  * 
  * @author Felipe Maximino
  */
 public class LineStringMemberMarshaller extends AbstractMarshaller<GM_Curve>
 {
-public final static String TAG_LINE_STRING_MEMBER = "lineStringMember";  
-  
-  public LineStringMemberMarshaller( XMLReader xmlReader)
+  public final static String TAG_LINE_STRING_MEMBER = "lineStringMember";
+
+  public LineStringMemberMarshaller( final XMLReader xmlReader )
   {
     super( xmlReader, TAG_LINE_STRING_MEMBER, null );
-  }  
+  }
 
   /**
    * @see org.kalypsodeegree_impl.io.sax.marshaller.AbstractMarshaller#doMarshall()
@@ -67,11 +64,11 @@ public final static String TAG_LINE_STRING_MEMBER = "lineStringMember";
   @Override
   protected void doMarshall( ) throws SAXException
   {
-    new LineStringMarshaller( m_xmlReader, m_marshalledObject ).marshall();
-  }  
-  
-  public void setLineString( GM_Curve lineString )
+    new LineStringMarshaller( getXmlReader(), getMarshalledObject() ).marshall();
+  }
+
+  public void setLineString( final GM_Curve lineString )
   {
-    m_marshalledObject = lineString;
+    setMarshalledObject( lineString );
   }
 }

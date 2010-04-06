@@ -46,17 +46,14 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
 /**
- * @author Felipe Maximino
- * 
- * A gml:LineString Marshaller. It marshalls the line string specifying a gml:posList
- * for its positions.
- * 
+ * @author Felipe Maximino A gml:LineString Marshaller. It marshalls the line string specifying a gml:posList for its
+ *         positions.
  */
 public class LineStringMarshaller extends GeometryMarshaller<GM_Curve>
 {
   public final static String TAG_LINE_STRING = "LineString";
 
-  public LineStringMarshaller( XMLReader xmlReader, GM_Curve lineString )
+  public LineStringMarshaller( final XMLReader xmlReader, final GM_Curve lineString )
   {
     super( xmlReader, TAG_LINE_STRING, lineString );
   }
@@ -69,9 +66,9 @@ public class LineStringMarshaller extends GeometryMarshaller<GM_Curve>
   {
     try
     {
-      new PosListMarshaller( m_xmlReader, m_marshalledObject.getAsLineString().getPositions() ).marshall();
+      new PosListMarshaller( getXmlReader(), getMarshalledObject().getAsLineString().getPositions() ).marshall();
     }
-    catch( GM_Exception e)
+    catch( final GM_Exception e )
     {
       throw new SAXException( "Error when marshalling a gml:LineString: " + e.getMessage() );
     }

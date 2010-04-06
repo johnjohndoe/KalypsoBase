@@ -45,7 +45,6 @@ import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.xml.sax.XMLReader;
 
 /**
- * 
  * A marshaller for gml:polygonPatches
  * 
  * @author Felipe Maximino
@@ -53,8 +52,8 @@ import org.xml.sax.XMLReader;
 public class PolygonPatchesMarshaller extends PatchesMarshaller<GM_Polygon>
 {
   public final static String TAG_POLYGON_PATCHES = "polygonPatches";
-  
-  public PolygonPatchesMarshaller( XMLReader xmlReader, GM_Surface<GM_Polygon> surface )
+
+  public PolygonPatchesMarshaller( final XMLReader xmlReader, final GM_Surface<GM_Polygon> surface )
   {
     super( xmlReader, surface, TAG_POLYGON_PATCHES );
   }
@@ -65,6 +64,6 @@ public class PolygonPatchesMarshaller extends PatchesMarshaller<GM_Polygon>
   @Override
   public void createPatchMarshaller( )
   {
-    m_surfacePatchMarshaller = new PolygonPatchMarshaller( m_xmlReader, m_marshalledObject.getCoordinateSystem() );    
+    m_surfacePatchMarshaller = new PolygonPatchMarshaller( getXmlReader(), getMarshalledObject().getCoordinateSystem() );
   }
 }

@@ -46,32 +46,32 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
 /**
- * A marshaller for gml:MultiLineString. 
+ * A marshaller for gml:MultiLineString.
  * 
  * @author Felipe Maximino
  */
 public class MultiLineStringMarshaller extends GeometryMarshaller<GM_MultiCurve>
 {
-public final static String TAG_MULTI_LINE_STRING = "MultiLineString";
-  
-  public MultiLineStringMarshaller( XMLReader xmlReader, GM_MultiCurve multiLineString )
+  public final static String TAG_MULTI_LINE_STRING = "MultiLineString";
+
+  public MultiLineStringMarshaller( final XMLReader xmlReader, final GM_MultiCurve multiLineString )
   {
     super( xmlReader, TAG_MULTI_LINE_STRING, multiLineString );
-  }  
+  }
 
   /**
    * @see org.kalypsodeegree_impl.io.sax.marshaller.AbstractMarshaller#doMarshall()
    */
   @Override
   protected void doMarshall( ) throws SAXException
-  {    
-    LineStringMemberMarshaller lineStringMemberMarshaller = new LineStringMemberMarshaller( m_xmlReader );
-    
-    GM_Curve[] lineStrings = m_marshalledObject.getAllCurves();
-    for( GM_Curve lineString : lineStrings )
+  {
+    final LineStringMemberMarshaller lineStringMemberMarshaller = new LineStringMemberMarshaller( getXmlReader() );
+
+    final GM_Curve[] lineStrings = getMarshalledObject().getAllCurves();
+    for( final GM_Curve lineString : lineStrings )
     {
       lineStringMemberMarshaller.setLineString( lineString );
       lineStringMemberMarshaller.marshall();
-    }    
+    }
   }
 }

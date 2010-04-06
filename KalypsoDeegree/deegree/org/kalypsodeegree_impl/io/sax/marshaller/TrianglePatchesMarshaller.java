@@ -45,7 +45,6 @@ import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.xml.sax.XMLReader;
 
 /**
- * 
  * A marshaller for gml: trianglesPatches
  * 
  * @author Felipe Maximino
@@ -53,8 +52,8 @@ import org.xml.sax.XMLReader;
 public class TrianglePatchesMarshaller extends PatchesMarshaller<GM_Triangle>
 {
   public final static String TAG_TRIANGLE_PATCHES = "trianglePatches";
-    
-  public TrianglePatchesMarshaller( XMLReader xmlReader, GM_Surface<GM_Triangle> surface )
+
+  public TrianglePatchesMarshaller( final XMLReader xmlReader, final GM_Surface<GM_Triangle> surface )
   {
     super( xmlReader, surface, TAG_TRIANGLE_PATCHES );
   }
@@ -65,6 +64,6 @@ public class TrianglePatchesMarshaller extends PatchesMarshaller<GM_Triangle>
   @Override
   public void createPatchMarshaller( )
   {
-    m_surfacePatchMarshaller = new TriangleMarshaller( m_xmlReader );    
+    m_surfacePatchMarshaller = new TriangleMarshaller( getXmlReader() );
   }
 }

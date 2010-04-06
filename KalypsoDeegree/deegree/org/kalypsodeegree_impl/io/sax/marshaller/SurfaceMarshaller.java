@@ -49,33 +49,31 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
 /**
- * 
- * A marshaller for GML surfaces. It delegates the marshalling to the corresponding
- * PatchesMarshaller 
+ * A marshaller for GML surfaces. It delegates the marshalling to the corresponding PatchesMarshaller
  * 
  * @author Felipe Maximino
  */
-public abstract class SurfaceMarshaller<T extends GM_SurfacePatch> extends GeometryMarshaller< GM_Surface<T> >
+public abstract class SurfaceMarshaller<T extends GM_SurfacePatch> extends GeometryMarshaller<GM_Surface<T>>
 {
   protected PatchesMarshaller<T> m_patchesMarshaller;
-  
+
   public SurfaceMarshaller( final XMLReader xmlReader, final GM_Surface<T> surface, final String tag )
   {
     super( xmlReader, tag, surface );
   }
 
-  public void startMarshalling( Attributes atts ) throws SAXException
+  public void startMarshalling( final Attributes atts ) throws SAXException
   {
-    final ContentHandler contentHandler = m_xmlReader.getContentHandler();
-    contentHandler.startElement( NS.GML3, m_tag, m_qName, atts );
+    final ContentHandler contentHandler = getXmlReader().getContentHandler();
+    contentHandler.startElement( NS.GML3, getTag(), getQName(), atts );
   }
 
-  public PatchesMarshaller<T> getPatchesMarshaller()
+  public PatchesMarshaller<T> getPatchesMarshaller( )
   {
     return m_patchesMarshaller;
-  }  
-  
-  public SurfacePatchMarshaller<T> getPatchMarshaller()
+  }
+
+  public SurfacePatchMarshaller<T> getPatchMarshaller( )
   {
     return m_patchesMarshaller.getPatchMarshaller();
   }
