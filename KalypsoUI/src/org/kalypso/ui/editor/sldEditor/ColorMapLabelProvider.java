@@ -100,10 +100,6 @@ public abstract class ColorMapLabelProvider extends LabelProvider implements ITa
         if( awtColor == null )
           return;
 
-        System.out.println( String.format( "Detail: %d", event.detail ) );
-        System.out.println( String.format( "Index: %d", event.index ) );
-        System.out.println( String.format( "ItemData: %s", element ) );
-
         if( (event.detail & SWT.SELECTED) != 0 )
           return;
         if( (event.detail & SWT.HOT) != 0 )

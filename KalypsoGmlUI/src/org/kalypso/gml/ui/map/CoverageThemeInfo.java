@@ -45,6 +45,7 @@ import java.util.List;
 import java.util.Properties;
 
 import org.eclipse.core.runtime.Assert;
+import org.kalypso.gml.ui.i18n.Messages;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.grid.GeoGridUtilities;
@@ -70,7 +71,7 @@ import com.vividsolutions.jts.geom.Coordinate;
  */
 public class CoverageThemeInfo implements IKalypsoThemeInfo
 {
-  private static final String DEFAULT_FORMAT_STRING = "Wert: %.2f"; //$NON-NLS-1$
+  private static final String DEFAULT_FORMAT_STRING = Messages.getString( "org.kalypso.gml.ui.map.CoverageThemeInfo.0" ); //$NON-NLS-1$
 
   /**
    * Value of the property for a format string.<br>
@@ -93,7 +94,6 @@ public class CoverageThemeInfo implements IKalypsoThemeInfo
 
     final IFeatureType featureType = m_theme.getFeatureType();
     Assert.isLegal( GMLSchemaUtilities.substitutes( featureType, ICoverage.QNAME ) );
-
     m_formatString = initFormatString( props );
   }
 
