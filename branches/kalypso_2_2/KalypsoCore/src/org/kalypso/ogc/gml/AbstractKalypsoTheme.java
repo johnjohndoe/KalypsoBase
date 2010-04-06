@@ -104,7 +104,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
 
   protected static final Object[] EMPTY_CHILDREN = new Object[] {};
 
-  protected static final IStatus PAINT_STATUS = StatusUtilities.createStatus( IStatus.INFO, Messages.getString("org.kalypso.ogc.gml.AbstractKalypsoTheme.0"), null ); //$NON-NLS-1$
+  protected static final IStatus PAINT_STATUS = StatusUtilities.createStatus( IStatus.INFO, Messages.getString( "org.kalypso.ogc.gml.AbstractKalypsoTheme.0" ), null ); //$NON-NLS-1$
 
   private final Collection<IKalypsoThemeListener> m_listeners = new HashSet<IKalypsoThemeListener>();
 
@@ -211,10 +211,16 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
     m_listeners.clear();
 
     if( m_standardThemeIcon != null )
+    {
       m_standardThemeIcon.dispose();
+      m_standardThemeIcon = null;
+    }
 
     if( m_externIcon != null )
+    {
       m_externIcon.dispose();
+      m_externIcon = null;
+    }
   }
 
   /**
@@ -495,6 +501,8 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
    */
   protected ImageDescriptor getDefaultIcon( )
   {
+    // FIXME: might be called after theme was already disposed... the image is then never disposed....
+    // Maybe we need to introduce a flag ot know if the theme is already disposed.
     if( m_standardThemeIcon == null )
       m_standardThemeIcon = new Image( Display.getCurrent(), AbstractKalypsoTheme.class.getResourceAsStream( "resources/standardTheme.gif" ) ); //$NON-NLS-1$
 
