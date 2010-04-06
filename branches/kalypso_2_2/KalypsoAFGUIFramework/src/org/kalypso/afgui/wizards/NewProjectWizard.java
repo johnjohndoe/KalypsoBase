@@ -75,7 +75,7 @@ import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 /**
  * Basic wizard implementation for the various workflow/scenario based projects.<br>
  * Normally, only the location of the project-template (-zip) should be enough.<br>
- *
+ * 
  * @author Gernot Belger
  */
 public class NewProjectWizard extends BasicNewProjectResourceWizard implements INewProjectWizard
@@ -219,7 +219,7 @@ public class NewProjectWizard extends BasicNewProjectResourceWizard implements I
       @Override
       public void execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException
       {
-        final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString("org.kalypso.afgui.wizards.NewProjectWizard.2"), 90 ); //$NON-NLS-1$
+        final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.afgui.wizards.NewProjectWizard.2" ), 90 ); //$NON-NLS-1$
         try
         {
           // REMARK: we unpack into a closed project here (not using unzip(URL, IFolder)), as else
@@ -249,7 +249,7 @@ public class NewProjectWizard extends BasicNewProjectResourceWizard implements I
           if( !validateNatureSetStatus.isOK() )
             throw new CoreException( validateNatureSetStatus );
 
-          progress.setWorkRemaining( natureIds.length );
+          progress.setWorkRemaining( natureIds.length + 1 );
 
           for( final String natureId : natureIds )
           {
@@ -258,15 +258,10 @@ public class NewProjectWizard extends BasicNewProjectResourceWizard implements I
             ProgressUtilities.worked( progress, 1 );
           }
 
-          /* Also activate new project */
-          final ScenarioHandlingProjectNature nature = ScenarioHandlingProjectNature.toThisNature( project );
-          if( nature == null )
-            return;
+          /* Let inherited wizards change the project */
+          postCreateProject( project, progress.newChild( 1 ) );
 
-          final IScenario caze = nature.getCaseManager().getCases().get( 0 );
-
-          if( m_activateScenario )
-            KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext().setCurrentCase( caze );
+          openProject( project );
         }
         catch( final CoreException t )
         {
@@ -289,10 +284,37 @@ public class NewProjectWizard extends BasicNewProjectResourceWizard implements I
 
     final IStatus resultStatus = RunnableContextHelper.execute( getContainer(), true, true, operation );
     KalypsoAFGUIFrameworkPlugin.getDefault().getLog().log( resultStatus );
-    ErrorDialog.openError( getShell(), Messages.getString("org.kalypso.afgui.wizards.NewProjectWizard.3"), Messages.getString("org.kalypso.afgui.wizards.NewProjectWizard.4"), resultStatus ); //$NON-NLS-1$ //$NON-NLS-2$
+    ErrorDialog.openError( getShell(), Messages.getString( "org.kalypso.afgui.wizards.NewProjectWizard.3" ), Messages.getString( "org.kalypso.afgui.wizards.NewProjectWizard.4" ), resultStatus ); //$NON-NLS-1$ //$NON-NLS-2$
 
     // REMARK: we always return here, because the BasicNewProjectWizard does not allow to create a project twice
     // So the wizard must be closed now
     return true;
+  }
+
+  /**
+   * Will be called after the project has been created. Overwrite to additionally change the project.<br>
+   * Does nothing by default.
+   */
+  @SuppressWarnings("unused")
+  protected void postCreateProject( final IProject project, final IProgressMonitor monitor ) throws CoreException
+  {
+    monitor.done();
+  }
+
+  /**
+   * Opens the project after it has been created. By default, if the project is scenario based, the Base-Scenario is
+   * opened.
+   */
+  protected void openProject( final IProject project ) throws CoreException
+  {
+    /* Also activate new project */
+    final ScenarioHandlingProjectNature nature = ScenarioHandlingProjectNature.toThisNature( project );
+    if( nature == null )
+      return;
+
+    final IScenario caze = nature.getCaseManager().getCases().get( 0 );
+
+    if( m_activateScenario )
+      KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext().setCurrentCase( caze );
   }
 }
