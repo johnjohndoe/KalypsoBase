@@ -20,6 +20,7 @@ public class KalypsoProjectDatabase extends Plugin
    */
   public KalypsoProjectDatabase( )
   {
+
   }
 
   /*
@@ -30,6 +31,7 @@ public class KalypsoProjectDatabase extends Plugin
   public void start( final BundleContext context ) throws Exception
   {
     super.start( context );
+
     plugin = this;
   }
 
