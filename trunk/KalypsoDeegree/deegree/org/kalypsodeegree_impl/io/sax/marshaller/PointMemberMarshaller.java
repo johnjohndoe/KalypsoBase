@@ -45,20 +45,18 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
 /**
- * 
- * A marshaller for gml:pointMember. It delegates the marshalling to the corresponding
- * gml:Point elements marshallers.
+ * A marshaller for gml:pointMember. It delegates the marshalling to the corresponding gml:Point elements marshallers.
  * 
  * @author Felipe Maximino
  */
 public class PointMemberMarshaller extends AbstractMarshaller<GM_Point>
 {
-  public final static String TAG_POINT_MEMBER = "pointMember";  
-  
-  public PointMemberMarshaller( XMLReader xmlReader)
+  public final static String TAG_POINT_MEMBER = "pointMember";
+
+  public PointMemberMarshaller( final XMLReader xmlReader )
   {
     super( xmlReader, TAG_POINT_MEMBER, null );
-  }  
+  }
 
   /**
    * @see org.kalypsodeegree_impl.io.sax.marshaller.AbstractMarshaller#doMarshall()
@@ -66,11 +64,11 @@ public class PointMemberMarshaller extends AbstractMarshaller<GM_Point>
   @Override
   protected void doMarshall( ) throws SAXException
   {
-    new PointMarshaller( m_xmlReader, m_marshalledObject ).marshall();
-  }  
-  
-  public void setMember( GM_Point point )
+    new PointMarshaller( getXmlReader(), getMarshalledObject() ).marshall();
+  }
+
+  public void setMember( final GM_Point point )
   {
-    m_marshalledObject = point;
+    setMarshalledObject( point );
   }
 }

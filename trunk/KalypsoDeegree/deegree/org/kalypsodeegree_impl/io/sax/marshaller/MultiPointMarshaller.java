@@ -45,20 +45,17 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
-
 /**
- * A marshaller for gml:MultiPoint. 
- * <br>
- * This marshaller always marshalls a gml:MultiPoint specifying it with a 
- * gml:pointMember property.
+ * A marshaller for gml:MultiPoint. <br>
+ * This marshaller always marshalls a gml:MultiPoint specifying it with a gml:pointMember property.
  * 
  * @author Felipe Maximino
  */
 public class MultiPointMarshaller extends GeometryMarshaller<GM_MultiPoint>
 {
   public final static String TAG_MULTI_POINT = "MultiPoint";
-  
-  public MultiPointMarshaller( XMLReader xmlReader, GM_MultiPoint multiPoint )
+
+  public MultiPointMarshaller( final XMLReader xmlReader, final GM_MultiPoint multiPoint )
   {
     super( xmlReader, TAG_MULTI_POINT, multiPoint );
   }
@@ -68,11 +65,11 @@ public class MultiPointMarshaller extends GeometryMarshaller<GM_MultiPoint>
    */
   @Override
   protected void doMarshall( ) throws SAXException
-  { 
-    PointMemberMarshaller pointMemberMarshllaer = new PointMemberMarshaller( m_xmlReader );
-    
-    GM_Point[] points =  m_marshalledObject.getAllPoints();
-    for( GM_Point point : points )
+  {
+    final PointMemberMarshaller pointMemberMarshllaer = new PointMemberMarshaller( getXmlReader() );
+
+    final GM_Point[] points = getMarshalledObject().getAllPoints();
+    for( final GM_Point point : points )
     {
       pointMemberMarshllaer.setMember( point );
       pointMemberMarshllaer.marshall();

@@ -45,7 +45,6 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
 /**
- * 
  * A marshaller for gml:Triangles
  * 
  * @author Felipe Maximino
@@ -53,12 +52,12 @@ import org.xml.sax.XMLReader;
 public class TriangleMarshaller extends SurfacePatchMarshaller<GM_Triangle>
 {
   private static final String TAG_TRIANGLE = "Triangle";
-    
+
   public TriangleMarshaller( final XMLReader xmlReader )
   {
     this( xmlReader, null );
   }
-  
+
   public TriangleMarshaller( final XMLReader xmlReader, final String surfaceCrs )
   {
     super( xmlReader, TAG_TRIANGLE, surfaceCrs );
@@ -69,7 +68,7 @@ public class TriangleMarshaller extends SurfacePatchMarshaller<GM_Triangle>
    */
   @Override
   public void doMarshall( ) throws SAXException
-  { 
-    ( new ExteriorMarshaller( m_xmlReader, m_marshalledObject) ).marshall();
-  } 
+  {
+    (new ExteriorMarshaller( getXmlReader(), getMarshalledObject() )).marshall();
+  }
 }

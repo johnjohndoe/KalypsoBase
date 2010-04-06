@@ -47,31 +47,29 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
 /**
- * A {@link ContentHandler} implementation used to delegate calls to a content handler to a child content handler that parses a sub-element of the
- * current scope. <br>
- *   
- * Subclasses should implement the blank methods to application-especific behavior. 
+ * A {@link ContentHandler} implementation used to delegate calls to a content handler to a child content handler that
+ * parses a sub-element of the current scope. <br>
+ * Subclasses should implement the blank methods to application-especific behavior.
  * 
  * @author Gernot Belger
- * @author Felipe Maximino 
- * 
+ * @author Felipe Maximino
  */
 public class DelegatingContentHandler implements ContentHandler
 {
   protected ContentHandler m_delegate;
-   
+
   protected final XMLReader m_xmlReader;
-  
+
   protected Locator m_locator;
-  
+
   protected final ContentHandler m_parentContentHandler;
-  
-  public DelegatingContentHandler ( final XMLReader xmlReader, final ContentHandler parentContentHandler )
-  { 
+
+  public DelegatingContentHandler( final XMLReader xmlReader, final ContentHandler parentContentHandler )
+  {
     m_xmlReader = xmlReader;
-    m_parentContentHandler = parentContentHandler;        
+    m_parentContentHandler = parentContentHandler;
   }
-  
+
   protected void setDelegate( final ContentHandler delegate )
   {
     m_delegate = delegate;
@@ -81,7 +79,7 @@ public class DelegatingContentHandler implements ContentHandler
       m_delegate.setDocumentLocator( m_locator );
     }
   }
-  
+
   protected void delegate( )
   {
     if( m_delegate != null )
@@ -89,22 +87,22 @@ public class DelegatingContentHandler implements ContentHandler
       m_xmlReader.setContentHandler( m_delegate );
     }
   }
-  
-  protected void delegate( final ContentHandler delegate  )
+
+  protected void delegate( final ContentHandler delegate )
   {
     setDelegate( delegate );
     delegate();
   }
-  
-  public void endDelegation()
+
+  public void endDelegation( )
   {
-    if ( m_parentContentHandler != null )
+    if( m_parentContentHandler != null )
     {
       setDelegate( null );
       m_xmlReader.setContentHandler( m_parentContentHandler );
     }
-  }  
-  
+  }
+
   public ContentHandler getDelegate( )
   {
     return m_delegate;
@@ -114,7 +112,7 @@ public class DelegatingContentHandler implements ContentHandler
   {
     return m_locator;
   }
-  
+
   /**
    * @see org.xml.sax.ContentHandler#setDocumentLocator(org.xml.sax.Locator)
    */
@@ -126,7 +124,7 @@ public class DelegatingContentHandler implements ContentHandler
     if( m_delegate != null )
       m_delegate.setDocumentLocator( locator );
   }
-  
+
   public XMLReader getXmlReader( )
   {
     return m_xmlReader;
@@ -141,7 +139,7 @@ public class DelegatingContentHandler implements ContentHandler
    * @see org.xml.sax.ContentHandler#characters(char[], int, int)
    */
   @Override
-  public void characters( char[] ch, int start, int length ) throws SAXException
+  public void characters( final char[] ch, final int start, final int length ) throws SAXException
   {
     // no op
   }
@@ -159,45 +157,45 @@ public class DelegatingContentHandler implements ContentHandler
    * @see org.xml.sax.ContentHandler#endElement(java.lang.String, java.lang.String, java.lang.String)
    */
   @Override
-  public void endElement( String uri, String localName, String qName ) throws SAXException
+  public void endElement( final String uri, final String localName, final String qName ) throws SAXException
   {
-    // endDelegation();    
+    // endDelegation();
   }
 
   /**
    * @see org.xml.sax.ContentHandler#endPrefixMapping(java.lang.String)
    */
   @Override
-  public void endPrefixMapping( String prefix ) throws SAXException
+  public void endPrefixMapping( final String prefix ) throws SAXException
   {
-    // no op    
+    // no op
   }
 
   /**
    * @see org.xml.sax.ContentHandler#ignorableWhitespace(char[], int, int)
    */
   @Override
-  public void ignorableWhitespace( char[] ch, int start, int length ) throws SAXException
+  public void ignorableWhitespace( final char[] ch, final int start, final int length ) throws SAXException
   {
-    // no op    
+    // no op
   }
 
   /**
    * @see org.xml.sax.ContentHandler#processingInstruction(java.lang.String, java.lang.String)
    */
   @Override
-  public void processingInstruction( String target, String data ) throws SAXException
+  public void processingInstruction( final String target, final String data ) throws SAXException
   {
-    // no op    
+    // no op
   }
 
   /**
    * @see org.xml.sax.ContentHandler#skippedEntity(java.lang.String)
    */
   @Override
-  public void skippedEntity( String name ) throws SAXException
+  public void skippedEntity( final String name ) throws SAXException
   {
-    // no op    
+    // no op
   }
 
   /**
@@ -206,24 +204,25 @@ public class DelegatingContentHandler implements ContentHandler
   @Override
   public void startDocument( ) throws SAXException
   {
-    // no op    
+    // no op
   }
 
   /**
-   * @see org.xml.sax.ContentHandler#startElement(java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
+   * @see org.xml.sax.ContentHandler#startElement(java.lang.String, java.lang.String, java.lang.String,
+   *      org.xml.sax.Attributes)
    */
   @Override
-  public void startElement( String uri, String localName, String qName, Attributes atts ) throws SAXException
+  public void startElement( final String uri, final String localName, final String qName, final Attributes atts ) throws SAXException
   {
-    // delegate();    
+    // delegate();
   }
 
   /**
    * @see org.xml.sax.ContentHandler#startPrefixMapping(java.lang.String, java.lang.String)
    */
   @Override
-  public void startPrefixMapping( String prefix, String uri ) throws SAXException
+  public void startPrefixMapping( final String prefix, final String uri ) throws SAXException
   {
-    // no op    
+    // no op
   }
 }

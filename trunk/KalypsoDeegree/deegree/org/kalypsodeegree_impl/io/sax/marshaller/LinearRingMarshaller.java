@@ -45,32 +45,30 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
 /**
- * 
- * A marshaller for gml:Exterior. It delegates the marshalling to the corresponding
- * gml:pos elements marshallers.
+ * A marshaller for gml:Exterior. It delegates the marshalling to the corresponding gml:pos elements marshallers.
  * 
  * @author Felipe Maximino
  */
 public class LinearRingMarshaller extends AbstractMarshaller<GM_Position[]>
 {
   public final static String TAG_LINEAR_RING = "LinearRing";
-  
-  public LinearRingMarshaller( XMLReader xmlReader, GM_Position[] ring )
+
+  public LinearRingMarshaller( final XMLReader xmlReader, final GM_Position[] ring )
   {
     super( xmlReader, TAG_LINEAR_RING, ring );
   }
-  
+
   /**
    * @see org.kalypsodeegree_impl.io.sax.AbstractMarshaller#doMarshall()
    */
   @Override
   public void doMarshall( ) throws SAXException
   {
-    PosMarshaller positionMarshaller = new PosMarshaller( m_xmlReader );
-    for( final GM_Position position : m_marshalledObject )
+    final PosMarshaller positionMarshaller = new PosMarshaller( getXmlReader() );
+    for( final GM_Position position : getMarshalledObject() )
     {
       positionMarshaller.setPosition( position );
       positionMarshaller.marshall();
     }
-  }      
+  }
 }

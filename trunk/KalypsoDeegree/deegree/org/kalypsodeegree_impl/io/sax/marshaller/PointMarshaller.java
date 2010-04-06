@@ -45,37 +45,29 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
 /**
- * A marshaller for gml:Point 
+ * A marshaller for gml:Point
  * <p>
- *  
- * The point positions are marshalled as a gml:pos element.
- * The default values for the gml:coordinates are:
- *  tuple separator: " "
- *  coordinate separator: ","
- *  decimal indicator: "."
- *  
- *  These values can be changed by the set methods:
- *  {@link setCoordinatesSeparator}
- *  {@link setTuplesSeparator}
- *  {@link setDecimalIndicator}
+ * The point positions are marshalled as a gml:pos element. The default values for the gml:coordinates are: tuple
+ * separator: " " coordinate separator: "," decimal indicator: "." These values can be changed by the set methods:
+ * {@link setCoordinatesSeparator} {@link setTuplesSeparator} {@link setDecimalIndicator}
  * 
  * @author Felipe Maximino
  */
 public class PointMarshaller extends GeometryMarshaller<GM_Point>
 {
   private static final String TAG_POINT = "Point";
-  
-  private PosMarshaller m_posMarshaller;  
-  
+
+  private final PosMarshaller m_posMarshaller;
+
   public PointMarshaller( final XMLReader xmlReader )
   {
     this( xmlReader, null );
   }
-  
+
   public PointMarshaller( final XMLReader xmlReader, final GM_Point point )
   {
-    super( xmlReader, TAG_POINT, point );    
-    
+    super( xmlReader, TAG_POINT, point );
+
     m_posMarshaller = new PosMarshaller( xmlReader );
   }
 
@@ -84,13 +76,13 @@ public class PointMarshaller extends GeometryMarshaller<GM_Point>
    */
   @Override
   public void doMarshall( ) throws SAXException
-  { 
-    m_posMarshaller.setPosition( m_marshalledObject.getPosition() );
-    m_posMarshaller.marshall();    
+  {
+    m_posMarshaller.setPosition( getMarshalledObject().getPosition() );
+    m_posMarshaller.marshall();
   }
-  
+
   public void setPoint( final GM_Point point )
   {
-    m_marshalledObject = point;
+    setMarshalledObject( point );
   }
 }

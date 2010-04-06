@@ -49,23 +49,22 @@ import org.xml.sax.XMLReader;
  * Abstract class for all GM_Object marshaller classes
  * 
  * @author Felipe Maximino
- *
  */
 public abstract class AbstractMarshaller<T extends Object> implements IMashallerConstants
 {
-  protected final XMLReader m_xmlReader;
-  
-  protected final String m_tag;
-  
-  protected final String m_qName;
-  
-  protected T m_marshalledObject;
-  
+  private final XMLReader m_xmlReader;
+
+  private final String m_tag;
+
+  private final String m_qName;
+
+  private T m_marshalledObject;
+
   public AbstractMarshaller( final XMLReader xmlReader, final String tag )
   {
     this( xmlReader, tag, null );
   }
-    
+
   public AbstractMarshaller( final XMLReader xmlReader, final String tag, final T object )
   {
     m_xmlReader = xmlReader;
@@ -73,25 +72,53 @@ public abstract class AbstractMarshaller<T extends Object> implements IMashaller
     m_qName = MarshallerUtils.getQName( m_tag );
     m_marshalledObject = object;
   }
-  
-  public void marshall() throws SAXException
+
+  protected T getMarshalledObject( )
+  {
+    return m_marshalledObject;
+  }
+
+  protected void setMarshalledObject( final T marshalledObject )
+  {
+    m_marshalledObject = marshalledObject;
+  }
+
+  protected XMLReader getXmlReader( )
+  {
+    return m_xmlReader;
+  }
+
+  protected String getTag( )
+  {
+    return m_tag;
+  }
+
+  /**
+   * String of form: 'namespace:localPart'
+   */
+  protected String getQName( )
+  {
+    return m_qName;
+  }
+
+  public void marshall( ) throws SAXException
   {
     startMarshalling();
     doMarshall();
-    endMarshalling();    
+    endMarshalling();
   }
-  
+
   protected void startMarshalling( ) throws SAXException
   {
-    final ContentHandler contentHandler = m_xmlReader.getContentHandler();    
+    final ContentHandler contentHandler = m_xmlReader.getContentHandler();
     contentHandler.startElement( NS.GML3, m_tag, m_qName, EMPTY_ATTRIBUTES );
   }
 
-  protected abstract void doMarshall() throws SAXException;  
-  
+  protected abstract void doMarshall( ) throws SAXException;
+
   protected void endMarshalling( ) throws SAXException
   {
-    final ContentHandler contentHandler = m_xmlReader.getContentHandler();    
-    contentHandler.endElement( NS.GML3, m_tag, m_qName );    
+    final ContentHandler contentHandler = m_xmlReader.getContentHandler();
+    contentHandler.endElement( NS.GML3, m_tag, m_qName );
   }
 }

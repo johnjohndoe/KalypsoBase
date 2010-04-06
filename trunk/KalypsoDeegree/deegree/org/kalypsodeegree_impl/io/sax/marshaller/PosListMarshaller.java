@@ -54,27 +54,27 @@ import org.xml.sax.helpers.AttributesImpl;
  */
 public class PosListMarshaller extends AbstractMarshaller<GM_Position[]>
 {
-  public static final String ELEMENT_POS_LIST = "posList";  
-  
-  public PosListMarshaller( XMLReader xmlReader, GM_Position[] posList )
+  public static final String ELEMENT_POS_LIST = "posList";
+
+  public PosListMarshaller( final XMLReader xmlReader, final GM_Position[] posList )
   {
     super( xmlReader, ELEMENT_POS_LIST, posList );
   }
-  
+
   /**
    * @see org.kalypsodeegree_impl.io.sax.marshaller.AbstractMarshaller#startMarshalling()
    */
   @Override
   protected void startMarshalling( ) throws SAXException
-  { 
+  {
     /* gets the dimension of any point in the posList */
-    int srsDimension = m_marshalledObject[0].getCoordinateDimension();
-    
-    AttributesImpl atts = new AttributesImpl();
+    final int srsDimension = getMarshalledObject()[0].getCoordinateDimension();
+
+    final AttributesImpl atts = new AttributesImpl();
     atts.addAttribute( "", "srsDimension", "srsDimension", "decimal", String.valueOf( srsDimension ) );
-        
-    final ContentHandler contentHandler = m_xmlReader.getContentHandler();
-    contentHandler.startElement( NS.GML3, m_tag, m_qName, atts );
+
+    final ContentHandler contentHandler = getXmlReader().getContentHandler();
+    contentHandler.startElement( NS.GML3, getTag(), getQName(), atts );
   }
 
   /**
@@ -83,16 +83,16 @@ public class PosListMarshaller extends AbstractMarshaller<GM_Position[]>
   @Override
   protected void doMarshall( ) throws SAXException
   {
-    for( GM_Position pos : m_marshalledObject )
+    for( final GM_Position pos : getMarshalledObject() )
     {
       marshallPosition( pos );
-    }    
+    }
   }
 
-  private void marshallPosition( GM_Position pos ) throws SAXException
+  private void marshallPosition( final GM_Position pos ) throws SAXException
   {
-    final ContentHandler contentHandler = m_xmlReader.getContentHandler();
-    
+    final ContentHandler contentHandler = getXmlReader().getContentHandler();
+
     final double[] asArray = pos.getAsArray();
     for( final double d : asArray )
     {

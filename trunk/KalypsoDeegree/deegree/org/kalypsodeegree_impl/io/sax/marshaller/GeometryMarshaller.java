@@ -48,16 +48,15 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.AttributesImpl;
 
 /**
- *  
  * An abstract marshaller for Geometries.
  * <p>
- * A geometry has the characteristic to have its attributes srsDimension and srsName to be marshalled
- *  * 
- * @author Felipe Maximino 
+ * A geometry has the characteristic to have its attributes srsDimension and srsName to be marshalled *
+ * 
+ * @author Felipe Maximino
  */
 public abstract class GeometryMarshaller<T extends GM_Object> extends AbstractMarshaller<T>
 {
-  public GeometryMarshaller( XMLReader xmlReader, String tag, T object )
+  public GeometryMarshaller( final XMLReader xmlReader, final String tag, final T object )
   {
     super( xmlReader, tag, object );
   }
@@ -67,18 +66,18 @@ public abstract class GeometryMarshaller<T extends GM_Object> extends AbstractMa
    */
   @Override
   protected void startMarshalling( ) throws SAXException
-  {    
-    String crs = m_marshalledObject.getCoordinateSystem();
-    int srsDimension = m_marshalledObject.getCoordinateDimension();
-    
-    AttributesImpl atts = new AttributesImpl();
+  {
+    final String crs = getMarshalledObject().getCoordinateSystem();
+    final int srsDimension = getMarshalledObject().getCoordinateDimension();
+
+    final AttributesImpl atts = new AttributesImpl();
     if( crs != null )
     {
       atts.addAttribute( "", "srsName", "srsName", "CDATA", crs );
     }
     atts.addAttribute( "", "srsDimension", "srsDimension", "decimal", String.valueOf( srsDimension ) );
-        
-    final ContentHandler contentHandler = m_xmlReader.getContentHandler();
-    contentHandler.startElement( NS.GML3, m_tag, m_qName, atts );
-  }  
+
+    final ContentHandler contentHandler = getXmlReader().getContentHandler();
+    contentHandler.startElement( NS.GML3, getTag(), getQName(), atts );
+  }
 }

@@ -46,8 +46,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
 /**
- * 
- * A marshaller for gml:pos. 
+ * A marshaller for gml:pos.
  * 
  * @author Felipe Maximino
  */
@@ -55,30 +54,30 @@ public class PosMarshaller extends AbstractMarshaller<GM_Position>
 {
   public final static String TAG_POS = "pos";
 
-  public PosMarshaller( XMLReader xmlReader )
+  public PosMarshaller( final XMLReader xmlReader )
   {
     super( xmlReader, TAG_POS );
   }
-  
+
   /**
    * @see org.kalypsodeegree_impl.io.sax.AbstractMarshaller#doMarshall()
    */
   @Override
   public void doMarshall( ) throws SAXException
-  { 
-    final ContentHandler contentHandler = m_xmlReader.getContentHandler();
-    
-    final double[] asArray = m_marshalledObject.getAsArray();
-    for( int i=0; i < asArray.length; i++ )
+  {
+    final ContentHandler contentHandler = getXmlReader().getContentHandler();
+
+    final double[] asArray = getMarshalledObject().getAsArray();
+    for( int i = 0; i < asArray.length; i++ )
     {
-      double d = asArray[i];
+      final double d = asArray[i];
       // do not write the third coordinate if not set
       if( !Double.isNaN( d ) )
       {
         final String dString = Double.toString( d );
         final char[] charArray = dString.toCharArray();
         contentHandler.characters( charArray, 0, charArray.length );
-        
+
         if( i != asArray.length - 1 )
         {
           contentHandler.characters( WHITESPACE, 0, 1 );
@@ -87,8 +86,8 @@ public class PosMarshaller extends AbstractMarshaller<GM_Position>
     }
   }
 
-  public void setPosition( GM_Position position )
+  public void setPosition( final GM_Position position )
   {
-    m_marshalledObject = position;
+    setMarshalledObject( position );
   }
 }

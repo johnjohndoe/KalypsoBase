@@ -48,34 +48,34 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.AttributesImpl;
 
 /**
- * A marshaller for a GML Surface patch. 
+ * A marshaller for a GML Surface patch.
  * 
  * @author Felipe Maximino
  */
 public abstract class SurfacePatchMarshaller<T extends GM_SurfacePatch> extends AbstractMarshaller<T>
-{ 
+{
   /*
    * the crs of the surface that contains this surfacePatch
    */
   protected String m_surfaceCrs;
-  
-  public SurfacePatchMarshaller( XMLReader xmlReader, String tag, String surfaceCrs )
+
+  public SurfacePatchMarshaller( final XMLReader xmlReader, final String tag, final String surfaceCrs )
   {
     super( xmlReader, tag );
     m_surfaceCrs = surfaceCrs;
   }
-  
+
   /**
    * @see org.kalypsodeegree_impl.io.sax.AbstractMarshaller#startMarshalling()
    */
   @Override
   public void startMarshalling( ) throws SAXException
   {
-    final ContentHandler contentHandler = m_xmlReader.getContentHandler();
-    final String crsTri = m_marshalledObject.getCoordinateSystem();
+    final ContentHandler contentHandler = getXmlReader().getContentHandler();
+    final String crsTri = getMarshalledObject().getCoordinateSystem();
 
     final AttributesImpl atts;
-    if( crsTri != null && m_surfaceCrs!= null && !crsTri.equals( m_surfaceCrs ) )
+    if( crsTri != null && m_surfaceCrs != null && !crsTri.equals( m_surfaceCrs ) )
     {
       atts = MarshallerUtils.createCrsAttributesWSrsDimension( crsTri );
     }
@@ -85,16 +85,16 @@ public abstract class SurfacePatchMarshaller<T extends GM_SurfacePatch> extends 
     }
     atts.addAttribute( "", "interpolation", "interpolation", "CDATA", "planar" );
 
-    contentHandler.startElement( NS.GML3, m_tag, m_qName, atts );
-  }
-    
-  public void setPatch( T patch )
-  {
-    m_marshalledObject = patch;
+    contentHandler.startElement( NS.GML3, getTag(), getQName(), atts );
   }
 
-  public void setSurfaceCrs( String crs )
+  public void setPatch( final T patch )
   {
-    m_surfaceCrs = crs;    
+    setMarshalledObject( patch );
+  }
+
+  public void setSurfaceCrs( final String crs )
+  {
+    m_surfaceCrs = crs;
   }
 }
