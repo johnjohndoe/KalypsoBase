@@ -48,7 +48,6 @@ import java.util.Map.Entry;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.kalypso.core.i18n.Messages;
 
 import com.vividsolutions.jts.util.Assert;
 
@@ -160,7 +159,7 @@ public class GmlSourceContentProvider implements ITreeContentProvider
   public IGmlSourceProvider getProvider( final Object element )
   {
     if( !m_providerHash.containsKey( element ) )
-      throw new IllegalStateException( Messages.getString("org.kalypso.core.gml.provider.GmlSourceContentProvider.0") + element ); //$NON-NLS-1$
+      throw new IllegalStateException( String.format( "Unknown element: %s", element ) ); //$NON-NLS-1$
 
     return m_providerHash.get( element );
   }

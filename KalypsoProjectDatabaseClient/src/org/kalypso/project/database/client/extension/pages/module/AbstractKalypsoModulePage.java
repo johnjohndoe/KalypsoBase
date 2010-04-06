@@ -41,7 +41,6 @@
 package org.kalypso.project.database.client.extension.pages.module;
 
 import java.io.File;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.eclipse.core.runtime.IPath;
@@ -67,25 +66,29 @@ public abstract class AbstractKalypsoModulePage implements IKalypsoModulePage
   {
     return m_module;
   }
-  
-  protected URL getInfoURL( Class< ?> clazz, final Plugin plugin ) throws MalformedURLException
+
+  protected URL getInfoURL( final Class< ? > clazz, final Plugin plugin )
   {
     final IPath stateLocation = plugin.getStateLocation();
     final File targetDir = new File( stateLocation.toFile(), "infoPage" ); //$NON-NLS-1$
-    final File targetFile = new File( targetDir, "index.html" ); //$NON-NLS-1$
 
     try
     {
-      // FIXME: use this i18n pattern in all modules
       /* info page of plugin */
       final URL zipURL = I18nUtils.getLocaleResource( clazz, "infoPage", ".zip" ); //$NON-NLS-1$ //$NON-NLS-2$
       ZipUtilities.unzip( zipURL, targetDir );
+
+      final File targetFile = I18nUtils.getLocaleFile( targetDir, "index", ".html" ); //$NON-NLS-1$ //$NON-NLS-2$
+      if( targetFile == null )
+        return null;
+
+      return targetFile.toURI().toURL();
     }
     catch( final Exception e )
     {
       plugin.getLog().log( StatusUtilities.statusFromThrowable( e ) );
+      return null;
     }
 
-    return targetFile.toURI().toURL();
   }
 }
