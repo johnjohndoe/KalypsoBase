@@ -48,5 +48,4 @@ public interface IKalypsoFtpServiceConstants
   public static String FTP_SERVICE_ENABLE = "org.kalypso.ftp.service.enable"; //$NON-NLS-1$
 
   public static String FTP_CONFIGURATION_XML = "org.kalypso.ftp.service.configuration.xml"; //$NON-NLS-1$
-
 }
