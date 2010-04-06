@@ -68,7 +68,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  */
 public class KalypsoPictureThemeWorldFile extends KalypsoPictureTheme
 {
-  public KalypsoPictureThemeWorldFile( final I10nString layerName, final StyledLayerType layerType, final URL context, final IMapModell modell, final String system ) 
+  public KalypsoPictureThemeWorldFile( final I10nString layerName, final StyledLayerType layerType, final URL context, final IMapModell modell )
   {
     super( layerName, layerType, context, modell );
 
@@ -81,16 +81,17 @@ public class KalypsoPictureThemeWorldFile extends KalypsoPictureTheme
     if( arrFileName.length != 2 )
       throw new IllegalStateException();
 
-    RenderedOp image = null; 
+    RenderedOp image = null;
     try
     {
       final String relativeURL = arrFileName[0];
       final String srsName = arrFileName[1];
-      
+
       // UGLY HACK: replace backslashes with slashes. The add-picture-theme action seems to put backslashes (on windows)
-      // in the relative URLs (which is even wrong in windows). Should be fixed there, but is fixed also here to support older projects.
+      // in the relative URLs (which is even wrong in windows). Should be fixed there, but is fixed also here to support
+      // older projects.
       final String relativeURLchecked = relativeURL.replaceAll( "\\\\", "/" );
-      
+
       final URL imageUrl = UrlResolverSingleton.resolveUrl( context, relativeURLchecked );
 
       if( GridFileVerifier.verify( imageUrl ) )
@@ -113,7 +114,7 @@ public class KalypsoPictureThemeWorldFile extends KalypsoPictureTheme
     }
     catch( final Exception e )
     {
-      final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, Messages.getString("org.kalypso.ogc.gml.KalypsoPictureThemeWorldFile.0"), e ); //$NON-NLS-1$
+      final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.ogc.gml.KalypsoPictureThemeWorldFile.0" ), e ); //$NON-NLS-1$
       KalypsoCorePlugin.getDefault().getLog().log( status );
       setStatus( status );
       // We cannot throw exceptions here, it will break the whole map. This holds for all themes...
