@@ -43,46 +43,72 @@ package org.kalypso.grid;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.contribs.java.io.filter.IgnoreCaseFilenameFilter;
 import org.kalypso.contribs.java.lang.NumberUtils;
 
 /**
  * Reads the contents of a World-File (tfw, gfw, ...).
- *
+ * 
  * @author Gernot Belger
  */
 public class WorldFileReader
 {
-  public final static String SUFFIX_TIFF = "TFW";
-
-  public final static String SUFFIX_JPG = "JGW";
-
-  public final static String SUFFIX_PNG = "PGW";
-
-  // private final static String SUFFIX_GIF = "GFW";
-
   public WorldFile readWorldFileForImageFile( final File imageFile ) throws IOException
   {
     final String suffix = FileUtilities.getSuffix( imageFile );
 
-    final String extName;
-    if( suffix.equals( "tif" ) )
-      extName = SUFFIX_TIFF;
-    else if( suffix.equals( "jpg" ) )
-      extName = SUFFIX_JPG;
-    else if( suffix.equals( "png" ) )
-      extName = SUFFIX_PNG;
-    else
-      throw new UnsupportedOperationException( "Unknown image file extension: " + suffix );
+    final WorldFileFormat worldFileFormat = findWorldFileFormat( suffix.toLowerCase() );
+    final String extName = worldFileFormat.getWorldFileExtension().toUpperCase();
 
-    final String wfName = FileUtilities.nameWithoutExtension( imageFile.getAbsolutePath() ) + '.' + extName;
-    final File file = new File( wfName );
-    return readWorldFile( file );
+    final String wfName = FileUtilities.nameWithoutExtension( imageFile.getName() ) + '.' + extName;
+
+    final File worldFile = findWorldFile( imageFile.getParentFile(), wfName );
+    if( worldFile == null )
+      throw new IOException( String.format( "Unable to find World-File for %s", imageFile.getAbsolutePath() ) );
+    return readWorldFile( worldFile );
+  }
+
+  public static File findWorldFile( final File imageFile )
+  {
+    final String extension = FilenameUtils.getExtension( imageFile.getName() );
+    final WorldFileFormat worldFileFormat = findWorldFileFormat( extension.toLowerCase() );
+    if( worldFileFormat == null )
+      return null;
+
+    final String worldFile = String.format( "%s.%s", FilenameUtils.removeExtension( imageFile.getName() ), worldFileFormat.getWorldFileExtension() );
+    return findWorldFile( imageFile.getParentFile(), worldFile );
+  }
+
+  public static File findWorldFile( final File dir, final String worldFileName )
+  {
+    final FilenameFilter filter = new IgnoreCaseFilenameFilter( worldFileName );
+
+    final File[] worldFiles = dir.listFiles( filter );
+    if( worldFiles.length == 0 )
+      return null;
+
+    return worldFiles[0];
+  }
+
+  private static WorldFileFormat findWorldFileFormat( final String lowerCaseImgFileExtension )
+  {
+    final WorldFileFormat[] availableFormats = WorldFileFormat.getAvailableFormats();
+    for( final WorldFileFormat worldFileFormat : availableFormats )
+    {
+      final String imgFileExt = worldFileFormat.getImgFileExtension().toLowerCase();
+      if( imgFileExt.equals( lowerCaseImgFileExtension ) )
+        return worldFileFormat;
+    }
+
+    throw new UnsupportedOperationException( "Unknown image file extension: " + lowerCaseImgFileExtension );
   }
 
   public WorldFile readWorldFile( final File file ) throws IOException
