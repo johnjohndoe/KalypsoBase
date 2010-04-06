@@ -60,7 +60,7 @@ public class GmlSourceChooserWizard extends Wizard
 
   /**
    * @param operation
-   *            This operation will be executed when the finish button is pressed, using the choosen {@link IGmlSource}s.
+   *          This operation will be executed when the finish button is pressed, using the chosen {@link IGmlSource}s.
    */
   public GmlSourceChooserWizard( final IGmlSourceProvider[] provider, final IGmlSourceRunnableWithProgress operation )
   {
@@ -72,7 +72,8 @@ public class GmlSourceChooserWizard extends Wizard
 
     setDialogSettings( getDialogSettings() );
 
-    m_page = new GmlSourceChooserPage( "sourceProviderPage", Messages.getString("org.kalypso.core.gml.provider.GmlSourceChooserWizard.1"), null, m_provider ); //$NON-NLS-1$ //$NON-NLS-2$
+    m_page = new GmlSourceChooserPage( "sourceProviderPage", m_provider ); //$NON-NLS-1$
+    m_page.setTitle( Messages.getString( "org.kalypso.core.gml.provider.GmlSourceChooserWizard.1" ) ); //$NON-NLS-1$
   }
 
   /**
