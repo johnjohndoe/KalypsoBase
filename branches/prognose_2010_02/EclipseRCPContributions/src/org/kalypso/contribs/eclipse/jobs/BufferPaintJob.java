@@ -125,8 +125,6 @@ public class BufferPaintJob extends Job
   @Override
   public IStatus run( final IProgressMonitor monitor )
   {
-    System.out.println( "Running paint job" );
-
     if( m_paintable == null )
       return Status.OK_STATUS;
 
