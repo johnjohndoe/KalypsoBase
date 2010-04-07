@@ -42,6 +42,7 @@ package org.kalypso.ogc.gml.map;
 
 import java.awt.Canvas;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -244,6 +245,8 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
 
   private IStatus m_status = Status.OK_STATUS;
 
+  private Dimension m_size;
+
   public MapPanel( final ICommandTarget viewCommandTarget, final IFeatureSelectionManager manager )
   {
     m_selectionManager = manager;
@@ -317,6 +320,22 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
    */
   public void componentResized( final ComponentEvent e )
   {
+    /*
+     * Bugfix: this prohibits a repaint, if the window is minimized: we do not repaint, and keep the old size. When the
+     * component is shown again, the new size is the old size and we also do not need to paint.
+     */
+    final Point locationOnScreen = getLocationOnScreen();
+    // TRICKY: we are minimized, iff the location is lesser than zero. Is there another way to find this out?
+    if( locationOnScreen.x < 0 && locationOnScreen.y < 0 )
+      return;
+
+    /* Only resize, if size really changed. */
+    final Dimension size = getSize();
+    if( ObjectUtils.equals( m_size, size ) )
+      return;
+
+    m_size = size;
+
     final GM_Envelope bbox = m_wishBBox != null ? m_wishBBox : m_boundingBox;
     if( bbox != null )
       setBoundingBox( bbox, false );
@@ -573,6 +592,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
       repaintJob.schedule();
 
       m_bufferPaintJob = bufferPaintJob;
+      System.out.println( "Scheduled paint job" );
       // delay the Schedule, so if another invalidate comes within that time-span, no repaint happens at all
       m_bufferPaintJob.schedule( 100 );
     }
