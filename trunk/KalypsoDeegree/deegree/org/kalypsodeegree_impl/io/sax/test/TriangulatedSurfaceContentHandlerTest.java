@@ -79,17 +79,17 @@ public class TriangulatedSurfaceContentHandlerTest extends Assert
     // load a surface from a file
 
     final URL tinLocation = getClass().getResource( "resources/triangulatedSurface.xml.gz" );
+
     assertNotNull( tinLocation );
 
     final InputStream is = new GZIPInputStream( tinLocation.openStream() );
     final byte[] buf = IOUtils.toByteArray( is );
     is.close();
-    
+
     for( int i = 0; i < 1; i++ )
     {
       final ByteArrayInputStream bais = new ByteArrayInputStream( buf );
       final GM_TriangulatedSurface surface = readTriangles( new InputSource( bais ) );
-      //final GM_TriangulatedSurface surface = readTriangles( new InputSource( getClass().getResourceAsStream( "resources/triangulatedSurface.xml" ) ) );
       assertSurface( surface );
     }
   }
@@ -97,36 +97,36 @@ public class TriangulatedSurfaceContentHandlerTest extends Assert
   private void assertSurface( final GM_TriangulatedSurface surface )
   {
     assertEquals( 244, surface.size() );
-    
+
     /* exterior ring gml:posList */
-    GM_Triangle triangle = surface.get( 0 );
+    final GM_Triangle triangle = surface.get( 0 );
     assertTriangle( triangle );
-    
+
     /* exterior ring gml:pos */
-    //triangle = surface.get( 1 );
-    //assertTriangle( triangle );
-    
+    // triangle = surface.get( 1 );
+    // assertTriangle( triangle );
+
     /* exterior ring gml:coordinates */
-    //triangle = surface.get( 2 );
-    //assertTriangle( triangle );
-    
+    // triangle = surface.get( 2 );
+    // assertTriangle( triangle );
+
     /* exterior ring gml:coord */
-    //triangle = surface.get( 3 );
-    //assertTriangle( triangle );
+    // triangle = surface.get( 3 );
+    // assertTriangle( triangle );
   }
 
-  private void assertTriangle( GM_Triangle triangle )
+  private void assertTriangle( final GM_Triangle triangle )
   {
     final String srs = triangle.getCoordinateSystem();
 
     assertEquals( "EPSG:31467", srs );
 
     final GM_Position[] exteriorRing = triangle.getExteriorRing();
-    assertExterior( exteriorRing );    
+    assertExterior( exteriorRing );
   }
 
   private void assertExterior( final GM_Position[] exteriorRing )
-  {    
+  {
     assertTrue( exteriorRing[0].getDistance( CHECK_POS_1 ) < DELTA );
     assertEquals( CHECK_POS_1.getZ(), exteriorRing[0].getZ(), DELTA );
 
@@ -137,9 +137,9 @@ public class TriangulatedSurfaceContentHandlerTest extends Assert
     assertEquals( CHECK_POS_3.getZ(), exteriorRing[2].getZ(), DELTA );
 
     assertTrue( exteriorRing[3].getDistance( CHECK_POS_1 ) < DELTA );
-    assertEquals( CHECK_POS_1.getZ(), exteriorRing[3].getZ(), DELTA ); 
-  }  
-  
+    assertEquals( CHECK_POS_1.getZ(), exteriorRing[3].getZ(), DELTA );
+  }
+
   private GM_TriangulatedSurface readTriangles( final InputSource is ) throws IOException, ParserConfigurationException, SAXException
   {
     final SAXParserFactory saxFac = SAXParserFactory.newInstance();
@@ -161,7 +161,7 @@ public class TriangulatedSurfaceContentHandlerTest extends Assert
         result[0] = (GM_TriangulatedSurface) value;
       }
     };
-    
+
     final TriangulatedSurfaceContentHandler contentHandler = new TriangulatedSurfaceContentHandler( resultEater, xmlReader );
 
     xmlReader.setContentHandler( contentHandler );
