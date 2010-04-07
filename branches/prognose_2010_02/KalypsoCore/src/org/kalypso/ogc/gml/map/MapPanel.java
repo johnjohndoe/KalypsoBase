@@ -592,7 +592,6 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
       repaintJob.schedule();
 
       m_bufferPaintJob = bufferPaintJob;
-      System.out.println( "Scheduled paint job" );
       // delay the Schedule, so if another invalidate comes within that time-span, no repaint happens at all
       m_bufferPaintJob.schedule( 100 );
     }
