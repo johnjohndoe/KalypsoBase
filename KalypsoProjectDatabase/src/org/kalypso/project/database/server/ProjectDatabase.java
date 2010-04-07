@@ -72,7 +72,6 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.project.database.IProjectDataBaseServerConstant;
 import org.kalypso.project.database.KalypsoProjectDatabase;
 import org.kalypso.project.database.KalypsoProjectDatabaseExtensions;
-import org.kalypso.project.database.i18n.Messages;
 import org.kalypso.project.database.sei.IProjectDatabase;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBeanPrimaryKey;
@@ -296,10 +295,10 @@ public class ProjectDatabase implements IProjectDatabase
     final Transaction myTx = mySession.beginTransaction();
 
     final String ticket = String.format( "Ticket%d", Calendar.getInstance().getTime().hashCode() ); //$NON-NLS-1$
-    
+
     final DateFormat sdf = new SimpleDateFormat( "yyyy-mm-dd hh:mm:ss" ); //$NON-NLS-1$
     final String now = sdf.format( new Date() );
-    
+
     final int updated = mySession.createQuery( String.format( "update KalypsoProjectBean set m_editLockTicket = '%s', edit_lock_date = '%s' where m_unixName = '%s'", ticket, now, projectUnixName ) ).executeUpdate(); //$NON-NLS-1$
     myTx.commit();
 
@@ -315,8 +314,6 @@ public class ProjectDatabase implements IProjectDatabase
       if( !child.isProjectLockedForEditing() )
         throw new IllegalStateException( "Updating edit lock of projects failed." ); //$NON-NLS-1$
 
-    
-    
     return ticket;
   }
 
