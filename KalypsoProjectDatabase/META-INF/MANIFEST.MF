@@ -8,8 +8,7 @@ Bundle-Vendor: kalypso.sourceforge.net
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.equinox.http.registry,
  javax.servlet;bundle-version="2.4.0",
- org.kalypso.commons;bundle-version="0.0.1",
- org.kalypso.ftp.service;bundle-version="1.0.4"
+ org.kalypso.commons;bundle-version="0.0.1"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: org.kalypso.project.database;uses:="org.eclipse.core.runtime,org.osgi.framework",
