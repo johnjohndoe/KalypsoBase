@@ -58,7 +58,7 @@ import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 /**
  * A {@link Job} that paints a IPaintable onto a {@link BufferedImage}.<br>
  * Its own paint method, paints the current state of the {@link BufferedImage}.<br>
- * 
+ *
  * @author Gernot Belger
  */
 public class BufferPaintJob extends Job
@@ -95,6 +95,7 @@ public class BufferPaintJob extends Job
    */
   public synchronized void dispose( )
   {
+  //  System.out.println("Dispose paint job");
     cancel();
 
     if( m_image != null )
@@ -111,7 +112,7 @@ public class BufferPaintJob extends Job
 
   /**
    * Returns the current state of the buffered image.
-   * 
+   *
    * @return The buffered image; <code>null</code>, if the job has not yet started.
    */
   public synchronized BufferedImage getImage( )
@@ -125,8 +126,13 @@ public class BufferPaintJob extends Job
   @Override
   public IStatus run( final IProgressMonitor monitor )
   {
+   // System.out.println("Paint job running");
+
     if( m_paintable == null )
+    {
+      //System.out.println("BufferPaintJob: paintable was null");
       return Status.OK_STATUS;
+    }
 
     final SubMonitor progress = SubMonitor.convert( monitor, "Painting buffer", 100 ); //$NON-NLS-1$
 
@@ -142,7 +148,10 @@ public class BufferPaintJob extends Job
         // if image is null, workbench is probably shutting down,
         // just return without comment
         if( gr == null )
+        {
+      //    System.out.println("BufferPaintJob: image was null");
           return Status.OK_STATUS;
+        }
 
         ProgressUtilities.worked( progress, 10 );
 
