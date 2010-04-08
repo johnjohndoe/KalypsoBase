@@ -593,7 +593,8 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
 
       m_bufferPaintJob = bufferPaintJob;
       // delay the Schedule, so if another invalidate comes within that time-span, no repaint happens at all
-      m_bufferPaintJob.schedule( 100 );
+      // System.out.println("Reschedule paint job");
+      bufferPaintJob.schedule( 100 );
     }
 
     repaintMap();
@@ -643,19 +644,9 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
       bufferGraphics.setRenderingHint( RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON );
 
       final BufferPaintJob bufferPaintJob = m_bufferPaintJob; // get copy (for more thread safety)
-      final BufferedImage image = bufferPaintJob == null ? null : bufferPaintJob.getImage();
-      if( image != null )
+      if( bufferPaintJob != null )
       {
-        final GM_Envelope imageBounds = imageBoundFromPaintable( bufferPaintJob );
-        if( ObjectUtils.equals( imageBounds, m_boundingBox ) )
-          bufferGraphics.drawImage( image, 0, 0, null );
-        else
-        {
-          // If current buffer only shows part of the map, paint it into the right screen-rect
-          final GeoTransform currentProjection = getProjection();
-          if( currentProjection != null && imageBounds != null )
-            MapPanelUtilities.paintIntoExtent( bufferGraphics, currentProjection, image, imageBounds, m_backgroundColor );
-        }
+        paintBufferedMap( bufferGraphics, bufferPaintJob );
       }
 
       // TODO: at the moment, we paint the status just on top of the map, if we change this component to SWT, we should
@@ -675,6 +666,31 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
     }
 
     g.drawImage( buffer, 0, 0, null );
+  }
+
+  private void paintBufferedMap( Graphics2D bufferGraphics, BufferPaintJob bufferPaintJob )
+  {
+    final BufferedImage image = bufferPaintJob.getImage();
+    if( image == null )
+    {
+      if( bufferPaintJob.getState() == Job.SLEEPING )
+      {
+        // System.out.println("Paint job should wake up?");
+        bufferPaintJob.wakeUp( 100 );
+        return;
+      }
+    }
+
+    final GM_Envelope imageBounds = imageBoundFromPaintable( bufferPaintJob );
+    if( ObjectUtils.equals( imageBounds, m_boundingBox ) )
+      bufferGraphics.drawImage( image, 0, 0, null );
+    else
+    {
+      // If current buffer only shows part of the map, paint it into the right screen-rect
+      final GeoTransform currentProjection = getProjection();
+      if( currentProjection != null && imageBounds != null )
+        MapPanelUtilities.paintIntoExtent( bufferGraphics, currentProjection, image, imageBounds, m_backgroundColor );
+    }
   }
 
   private GM_Envelope imageBoundFromPaintable( final BufferPaintJob bufferPaintJob )
