@@ -44,7 +44,6 @@ import java.util.List;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
-import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree.model.geometry.ISurfacePatchVisitor;
 import org.kalypsodeegree_impl.graphics.sld.awt.FillPainter;
 import org.kalypsodeegree_impl.graphics.sld.awt.SldAwtUtilities;
@@ -81,13 +80,17 @@ public class SurfacePaintPlainTriangleVisitor<T extends GM_SurfacePatch> impleme
     return true;
   }
 
+  /**
+   * this visitor actually works and worked with surface patches, internally by getting the nodes of it, so that this
+   * paint method does not need to check and cast given patch to triangle. TODO: perhaps this class should be recalled
+   */
   private void paintThisSurface( final GM_SurfacePatch patch )
   {
-    final GM_Triangle triangle = (GM_Triangle) patch;
-    getTriangleSurface( m_projection, triangle );
+// final GM_Triangle triangle = (GM_Triangle) patch;
+    getSurface( m_projection, patch );
   }
 
-  private void getTriangleSurface( final GeoTransform projection, final GM_Triangle triangle )
+  private void getSurface( final GeoTransform projection, final GM_SurfacePatch triangle )
   {
     m_colorModel.setProjection( projection );
 
@@ -125,12 +128,13 @@ public class SurfacePaintPlainTriangleVisitor<T extends GM_SurfacePatch> impleme
           /* paint whole triangle in one color and exit loop */
 
           /* get the mean elevation of the current ring */
-          double meanValue = getMeanValue( positions );
-          if( meanValue - minValue < VAL_EPS )
-            meanValue = meanValue + VAL_EPS;
-          else if( meanValue - maxValue < VAL_EPS )
-            meanValue = meanValue - VAL_EPS;
-
+          // TODO: is this meanValue needed???
+          // double meanValue = getMeanValue( positions );
+          // if( meanValue - minValue < VAL_EPS )
+          // meanValue = meanValue + VAL_EPS;
+          // else if( meanValue - maxValue < VAL_EPS )
+          // meanValue = meanValue - VAL_EPS;
+          
           /* get the color from the color model and paint the triangle */
 
           // TODO: check if triangle is too small (i.e. < stroke.width) and paint it as one point
