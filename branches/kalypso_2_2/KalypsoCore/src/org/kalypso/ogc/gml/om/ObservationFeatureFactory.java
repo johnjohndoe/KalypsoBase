@@ -392,7 +392,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
 
   /**
    * Helper: builds the record definition according to the components of the tuple result.
-   *
+   * 
    * @param map
    *          ATTENTION: the recordset is written in the same order as this map
    */
@@ -537,11 +537,18 @@ public class ObservationFeatureFactory implements IAdapterFactory
         final IComponent comp = components[i];
 
         if( comp != components[0] )
-          buffer.append( " " ); //$NON-NLS-1$
+          buffer.append( ' ' ); //$NON-NLS-1$
 
         final Object value = record.getValue( i );
         final String bufferValue = ObservationFeatureFactory.recordValueToString( value, handler );
-        buffer.append( bufferValue );
+
+        if( bufferValue != null && bufferValue.trim().isEmpty() )
+        {
+          // NEVER write an empty string! It will break the format....
+          buffer.append( "null" ); //$NON-NLS-1$
+        }
+        else
+          buffer.append( bufferValue );
       }
 
       buffer.append( "\n" ); //$NON-NLS-1$
@@ -587,7 +594,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
    * <p>
    * TODO do not create an observation twice for the same feature, pooling?
    * </p>
-   *
+   * 
    * @see org.eclipse.core.runtime.IAdapterFactory#getAdapter(java.lang.Object, java.lang.Class)
    */
   @SuppressWarnings("unchecked")
