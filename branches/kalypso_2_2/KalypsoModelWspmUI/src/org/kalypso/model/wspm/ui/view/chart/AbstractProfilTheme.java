@@ -120,24 +120,6 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
 
   private final ILayerManager m_layerManager = new LayerManager();
 
-// {
-//
-// /**
-// * @see de.openali.odysseus.chart.framework.model.layer.impl.LayerManager#getLayers()
-// */
-// @Override
-// public IChartLayer[] getLayers( )
-// {
-// final ArrayList<IChartLayer> layers = new ArrayList<IChartLayer>();
-// for( final IChartLayer layer : super.getLayers() )
-// {
-// if( getProfil().hasPointProperty( ((IProfilChartLayer) layer).getTargetComponent() ) )
-// layers.add( layer );
-// }
-// return layers.toArray(new IChartLayer[0]);
-// }
-// };
-
   private final String m_title;
 
   public AbstractProfilTheme( final IProfil profil, final String id, final String title, final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm )
@@ -287,8 +269,8 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
       final IDataRange<Number> dr = layer.getDomainRange();
       if( dr != null )
       {
-        double drMax = dr.getMax().doubleValue();
-        double drMin = dr.getMin().doubleValue();
+        final double drMax = dr.getMax().doubleValue();
+        final double drMin = dr.getMin().doubleValue();
 
         max = max == null ? drMax : Math.max( max, drMax );
         min = min == null ? drMin : Math.min( min, drMin );
