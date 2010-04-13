@@ -92,8 +92,6 @@ public class ProfilUtil
     for( final IRecord point : points )
     {
       final Object value = point.getValue( iProp );
-      if( value == null )
-        Debug.print( point, String.format( "Zero value for %s (property number %d)", iProp, pointProperty.getName() ) ); //$NON-NLS-1$
       values[i] = value;
       i++;
     }
@@ -179,7 +177,7 @@ public class ProfilUtil
 
   }
 
-  public final static boolean RangeIsConstantNumberFor( final IRecord start, IRecord end, IComponent component )
+  public final static boolean RangeIsConstantNumberFor( final IRecord start, final IRecord end, final IComponent component )
   {
     final Double p = component.getPrecision();
     if( p == null )
@@ -194,7 +192,7 @@ public class ProfilUtil
       return false;
     final int index = owner.indexOf( component );
 
-    for( int i = i1; i < i2-1; i++ )
+    for( int i = i1; i < i2 - 1; i++ )
     {
       if( Math.abs( (Double) (owner.get( i ).getValue( index )) - (Double) (owner.get( i + 1 ).getValue( index )) ) > p )
       {
@@ -271,7 +269,7 @@ public class ProfilUtil
   /**
    * mirror the profiles points (axis 0.0)
    */
-  public static final void flipProfile( final IProfil profile, boolean fireNoEvent )
+  public static final void flipProfile( final IProfil profile, final boolean fireNoEvent )
   {
     final IComponent[] components = profile.getPointProperties();
     final IRecord[] records = profile.getPoints();

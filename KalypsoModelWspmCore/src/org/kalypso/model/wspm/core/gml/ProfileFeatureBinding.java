@@ -207,8 +207,6 @@ public class ProfileFeatureBinding extends AbstractCachedFeature2 implements IPr
 
   private IProfil toProfile( )
   {
-    System.out.println( String.format( "Converting feature to profile: %f", getBigStation() ) );
-
     /* profile type */
     final String type = getProfileType();
     if( type == null )
