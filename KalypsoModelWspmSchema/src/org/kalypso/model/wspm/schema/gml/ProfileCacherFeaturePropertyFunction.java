@@ -40,24 +40,19 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.schema.gml;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
+import org.kalypso.model.wspm.core.gml.ProfileFeatureBinding;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.util.WspmGeometryUtilities;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResultUtilities;
-import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction;
-import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * @author Gernot Belger
@@ -83,75 +78,14 @@ public class ProfileCacherFeaturePropertyFunction extends FeaturePropertyFunctio
     return null;
   }
 
-  // $ANALYSIS-IGNORE
   /**
    * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#getValue(org.kalypsodeegree.model.feature.Feature,
    *      org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
    */
   public Object getValue( final Feature feature, final IPropertyType pt, final Object currentValue )
   {
-    try
-    {
-      final IProfileFeature profile = (IProfileFeature) feature;
-
-      final IProfil profil = profile.getProfil();
-      if( profil == null )
-        return null;
-
-      final IRecord[] points = profil.getPoints();
-      final List<GM_Position> positions = new ArrayList<GM_Position>( points.length );
-
-      final int compRechtswert = TupleResultUtilities.indexOfComponent( profil, IWspmConstants.POINT_PROPERTY_RECHTSWERT );
-      final int compHochwert = TupleResultUtilities.indexOfComponent( profil, IWspmConstants.POINT_PROPERTY_HOCHWERT );
-      final int compBreite = TupleResultUtilities.indexOfComponent( profil, IWspmConstants.POINT_PROPERTY_BREITE );
-      final int compHoehe = TupleResultUtilities.indexOfComponent( profil, IWspmConstants.POINT_PROPERTY_HOEHE );
-
-      // FIXME: no: do not interpolate here, use only the points that are really available
-      
-      final double[] rws = getInterpolatedValues( profil, compRechtswert, compBreite, compBreite );
-      final double[] hws = getInterpolatedValues( profil, compHochwert, compHoehe, compBreite );
-      final double[] heights = getInterpolatedValues( profil, compHoehe, compHoehe, compBreite );
-      
-      String srsName = profile.getSrsName();
-      
-      for( int i = 0; i < hws.length; i++ )
-      {
-        final double rw = rws[i];
-        final double hw = hws[i];
-        final double height = heights[i];
-
-        if( srsName == null )
-          srsName = TimeserieUtils.getCoordinateSystemNameForGkr( Double.toString( rw ) );
-        
-        if( !Double.isNaN( rw ) && !Double.isNaN( hw ) )
-        {
-          final GM_Position position = GeometryFactory.createGM_Position( rw, hw, height );
-          positions.add( position );
-        }
-      }
-
-      if( positions.size() < 2 )
-        return null;
-
-      final GM_Position[] poses = positions.toArray( new GM_Position[positions.size()] );
-      final GM_Curve curve = GeometryFactory.createGM_Curve( poses, srsName );
-
-      return WspmGeometryUtilities.GEO_TRANSFORMER.transform( curve );
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-    }
-
-    return null;
-  }
-
-  private double[] getInterpolatedValues( final IProfil profil, final int componentIndex, final int fallbackComponentIndex, final int interpolateComponentIndex )
-  {
-    if( componentIndex == -1 )
-      return TupleResultUtilities.getInterpolatedValues( profil, fallbackComponentIndex, interpolateComponentIndex );
-
-    return TupleResultUtilities.getInterpolatedValues( profil, componentIndex, interpolateComponentIndex );
+    final IProfileFeature profile = (IProfileFeature) feature;
+    return ProfileFeatureBinding.createProfileSegment( profile, null );
   }
 
   /**
@@ -175,11 +109,11 @@ public class ProfileCacherFeaturePropertyFunction extends FeaturePropertyFunctio
     {
       final double dRw = ((Number) rw).doubleValue();
       final double dHw = ((Number) hw).doubleValue();
-      
-      final double dH = h instanceof Number ? ((Number)h).doubleValue() : Double.NaN;
+
+      final double dH = h instanceof Number ? ((Number) h).doubleValue() : Double.NaN;
       return WspmGeometryUtilities.pointFromRwHw( dRw, dHw, dH, crs, WspmGeometryUtilities.GEO_TRANSFORMER );
     }
-    
+
     return null;
   }
 }
