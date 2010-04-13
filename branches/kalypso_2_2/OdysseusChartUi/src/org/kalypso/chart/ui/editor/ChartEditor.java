@@ -279,7 +279,7 @@ public class ChartEditor extends EditorPart implements IChartPart
   }
 
   /**
-   * Totally refreshes the control besed on the contents of {@link m_config.}
+   * Totally refreshes the control based on the contents of {@link m_config.}
    */
   public void updateControl( )
   {
@@ -290,7 +290,6 @@ public class ChartEditor extends EditorPart implements IChartPart
 
     if( m_chartModel == null )
     {
-
       /* Reset controls */
       final Control[] children = m_composite.getChildren();
       for( final Control control : children )

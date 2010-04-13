@@ -86,14 +86,6 @@ import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
  */
 public class ProfilChartView implements IChartPart, IProfilListener
 {
-// public static final int AXIS_GAP = 5; // distance between layers and Axis
-
-//  public static final String ID_AXIS_DOMAIN = "domain";//$NON-NLS-1$
-//
-//  public static final String ID_AXIS_LEFT = "left";//$NON-NLS-1$
-//
-//  public static final String ID_AXIS_RIGHT = "right";//$NON-NLS-1$
-
   private AxisDragHandlerDelegate m_axisDragHandler;
 
   private ChartComposite m_chartComposite = null;
@@ -110,7 +102,7 @@ public class ProfilChartView implements IChartPart, IProfilListener
 
   protected final void activeLayerChanged( final IChartLayer layer )
   {
-// if layer is deactivated do nothing
+    // if layer is deactivated do nothing
     if( !layer.isActive() )
       return;
     // otherwise deactivate all others
@@ -479,6 +471,7 @@ public class ProfilChartView implements IChartPart, IProfilListener
     if( m_profile == null )
     {
       ((GridData) (m_chartComposite.getLayoutData())).exclude = true;
+      m_chartComposite.getChartModel().setTitle( "<No Profile Selected>" ); //$NON-NLS-1$
 
       final ILayerManager lm = m_chartComposite.getChartModel().getLayerManager();
       lm.dispose();
@@ -493,7 +486,7 @@ public class ProfilChartView implements IChartPart, IProfilListener
         updateLayer();
       }
     }
-    
+
     fireProfilChanged( old );
   }
 

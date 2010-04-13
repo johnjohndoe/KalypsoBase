@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.chart.ui.editor;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
@@ -93,7 +92,6 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
 
   protected final IChartModel m_model;
 
-
   public ChartEditorTreeOutlinePage( final IChartModel model )
   {
     m_model = model;
@@ -126,7 +124,6 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
       @Override
       public void onLayerAdded( final IChartLayer layer )
       {
-//        m_treeViewer.update( m_contentProvider.getParent( layer ), null );
         refreshItems( m_contentProvider.getParent( layer ) );
       }
 
@@ -390,19 +387,6 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
   {
   }
 
-  private final void getChecked( final ILayerManager mngr, final ArrayList<IChartLayer> checkList )
-  {
-    for( final IChartLayer layer : mngr.getLayers() )
-    {
-      if( layer.isVisible() )
-        checkList.add( layer );
-      if( layer instanceof IExpandableChartLayer )
-      {
-        getChecked( ((IExpandableChartLayer) layer).getLayerManager(), checkList );
-      }
-    }
-  }
-
   public void setCheckStateListener( final ICheckStateListener checkStateListener )
   {
     m_checkStateListener = checkStateListener;
@@ -436,13 +420,11 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
 
   public void updateControl( )
   {
+    // TODO: works against eclipse best practice: we should replace the input instead of reusing it!
     if( m_treeViewer.getInput() == null )
       m_treeViewer.setInput( m_model );
-
-    final ArrayList<IChartLayer> checkList = new ArrayList<IChartLayer>();
-    getChecked( m_model.getLayerManager(), checkList );
-    m_treeViewer.setCheckedElements( checkList.toArray() );
-    m_treeViewer.refresh();
+    else
+      m_treeViewer.refresh();
   }
 
   /**
