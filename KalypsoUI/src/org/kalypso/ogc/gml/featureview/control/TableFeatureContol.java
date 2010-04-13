@@ -100,7 +100,7 @@ public class TableFeatureContol extends AbstractToolbarFeatureControl implements
 
   public TableFeatureContol( final IPropertyType ftp, final IFeatureModifierFactory factory, final IFeatureSelectionManager selectionManager, final Toolbar toolbar, final boolean showToolbar, final boolean showContextMenu )
   {
-    super( ftp, ToolbarHelper.hasActions( toolbar ), SWT.VERTICAL | SWT.FLAT );
+    super( ftp, showToolbar, SWT.VERTICAL | SWT.FLAT );
     m_showToolbar = showToolbar;
 
     Assert.isNotNull( ftp );
@@ -123,7 +123,7 @@ public class TableFeatureContol extends AbstractToolbarFeatureControl implements
     final GridLayout gridLayout = new GridLayout( 1, false );
     gridLayout.marginWidth = 0;
     gridLayout.marginHeight = 0;
-    if( ToolbarHelper.hasActions( m_toolbar ) )
+    if( ToolbarHelper.hasActions( m_toolbar ) || m_showToolbar )
       gridLayout.numColumns++;
     client.setLayout( gridLayout );
 
@@ -172,10 +172,11 @@ public class TableFeatureContol extends AbstractToolbarFeatureControl implements
       }
     }
 
+    final List<Toolbar.Command> commands;
     if( m_toolbar == null )
-      return client;
-
-    final List<Toolbar.Command> commands = m_toolbar.getCommand();
+      commands = new ArrayList<Toolbar.Command>();
+    else
+      commands = m_toolbar.getCommand();
 
     /**
      * support old definition of toolbar (add and delete feature actions)
@@ -200,9 +201,15 @@ public class TableFeatureContol extends AbstractToolbarFeatureControl implements
       addToolbarItem( commandId, itemStyle );
     }
 
-    final List<MenuContribution> contributionUris = m_toolbar.getMenuContribution();
-    for( final MenuContribution contribution : contributionUris )
-      addToolbarItems( contribution.getUri() );
+    if( m_toolbar != null )
+    {
+      final List<MenuContribution> contributionUris = m_toolbar.getMenuContribution();
+      for( final MenuContribution contribution : contributionUris )
+        addToolbarItems( contribution.getUri() );
+    }
+
+    if( getToolbarManager() == null || getToolbarManager().isEmpty() )
+      return client;
 
     final ToolBar toolbar = getToolbarManager().createControl( client );
     toolbar.setLayoutData( new GridData( GridData.FILL, GridData.FILL, false, true ) );
