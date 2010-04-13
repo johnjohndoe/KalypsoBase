@@ -87,6 +87,8 @@ import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
  */
 public class LegendView extends ViewPart implements IAdapterEater<ChartView>, IProfilProviderListener
 {
+  private static final String STR_NO_PROFILE_SELECTED = "No profile selected";
+
   private final AdapterPartListener<ChartView> m_chartProviderListener = new AdapterPartListener<ChartView>( ChartView.class, this, EditorFirstAdapterFinder.<ChartView> instance(), EditorFirstAdapterFinder.<ChartView> instance() );
 
   private Form m_composite;
@@ -160,7 +162,7 @@ public class LegendView extends ViewPart implements IAdapterEater<ChartView>, IP
       layerView.updatePanel( m_chart.getChart() );
       // FIXME: ugly! code copy/past and also: the LayerView should set its own state, not from outside!
       if( profil == null )
-        layerView.setPartName( String.format( "No profile selected" ) );
+        layerView.setPartName( String.format( STR_NO_PROFILE_SELECTED ) );
       else
         layerView.setPartName( String.format( "Station km %10.4f", profil.getStation() ) );
     }
@@ -335,6 +337,7 @@ public class LegendView extends ViewPart implements IAdapterEater<ChartView>, IP
         }
       }
 
+      m_chartlegend.updateControl();
       m_composite.layout();
     }
   }
@@ -342,7 +345,7 @@ public class LegendView extends ViewPart implements IAdapterEater<ChartView>, IP
   private void updatePartName( IProfil profil )
   {
     if( profil == null )
-      setPartName( String.format( "No profile selected" ) );
+      setPartName( String.format( STR_NO_PROFILE_SELECTED ) );
     else
       setPartName( String.format( "Station km %10.4f", profil.getStation() ) );
   }
