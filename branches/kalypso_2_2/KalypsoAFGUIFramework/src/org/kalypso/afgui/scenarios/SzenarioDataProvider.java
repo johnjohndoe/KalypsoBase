@@ -59,7 +59,7 @@ import de.renew.workflow.connector.cases.ICaseDataProvider;
  * This is preliminary, because at the moment we assume that there is only one simulation model per project which is
  * always at the same place.
  * </p>
- *
+ * 
  * @author Gernot Belger
  */
 public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommandPoster
@@ -105,7 +105,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
      */
     public void objectInvalid( final IPoolableObjectType key, final Object oldValue )
     {
-      System.out.println( Messages.getString("org.kalypso.afgui.scenarios.SzenarioDataProvider.2") + key ); //$NON-NLS-1$
+      System.out.println( Messages.getString( "org.kalypso.afgui.scenarios.SzenarioDataProvider.2" ) + key ); //$NON-NLS-1$
     }
 
     /**
@@ -113,7 +113,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
      *      java.lang.Object, org.eclipse.core.runtime.IStatus)
      */
     public void objectLoaded( final IPoolableObjectType key, final Object newValue, final IStatus status )
-    { 
+    {
       if( newValue instanceof GMLWorkspace )
       {
         final GMLWorkspace workspace = (GMLWorkspace) newValue;
@@ -139,7 +139,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
             public void run( )
             {
               final Shell activeShell = display.getActiveShell();
-              ErrorDialog.openError( activeShell, Messages.getString("org.kalypso.afgui.scenarios.SzenarioDataProvider.0"), Messages.getString("org.kalypso.afgui.scenarios.SzenarioDataProvider.1"), status ); //$NON-NLS-1$ //$NON-NLS-2$
+              ErrorDialog.openError( activeShell, Messages.getString( "org.kalypso.afgui.scenarios.SzenarioDataProvider.0" ), Messages.getString( "org.kalypso.afgui.scenarios.SzenarioDataProvider.1" ), status ); //$NON-NLS-1$ //$NON-NLS-2$
             }
           } );
         }
@@ -205,7 +205,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
       final IProject project = scenario.getProject();
       final ProjectScope projectScope = new ProjectScope( project );
       final IEclipsePreferences afguiNode = projectScope.getNode( "org.kalypso.afgui" ); //$NON-NLS-1$
-      m_dataSetScope = afguiNode == null ? null : afguiNode.get( Messages.getString("org.kalypso.afgui.scenarios.SzenarioDataProvider.3"), null ); //$NON-NLS-1$
+      m_dataSetScope = afguiNode == null ? null : afguiNode.get( Messages.getString( "org.kalypso.afgui.scenarios.SzenarioDataProvider.3" ), null ); //$NON-NLS-1$
     }
 
     m_scenario = (IScenario) scenario;
@@ -215,7 +215,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
       return;
 
     final String dataSetScope = m_dataSetScope;
-    final Job job = new Job( Messages.getString("org.kalypso.afgui.scenarios.SzenarioDataProvider.4") ) //$NON-NLS-1$
+    final Job job = new Job( Messages.getString( "org.kalypso.afgui.scenarios.SzenarioDataProvider.4" ) ) //$NON-NLS-1$
     {
       /**
        * @see org.eclipse.core.runtime.jobs.Job#run(org.eclipse.core.runtime.IProgressMonitor)
@@ -267,7 +267,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
             }
           }
         }
-        return StatusUtilities.createStatus( statusList, Messages.getString("org.kalypso.afgui.scenarios.SzenarioDataProvider.5") ); //$NON-NLS-1$
+        return StatusUtilities.createStatus( statusList, Messages.getString( "org.kalypso.afgui.scenarios.SzenarioDataProvider.5" ) ); //$NON-NLS-1$
       }
 
       private IFolder resolveFolder( final IScenario scene, final String gmlLocation ) throws CoreException
@@ -335,7 +335,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
     final Path path = new Path( modelFile );
     if( szenarioFolder.getFile( path ).exists() )
       return szenarioFolder;
-    
+
     final IContainer parent = szenarioFolder.getParent();
     if( parent.getType() != IResource.PROJECT )
       return findModelContext( (IFolder) parent, modelFile );
@@ -345,7 +345,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
 
   /**
    * Reloads all models.
-   *
+   * 
    * @see de.renew.workflow.connector.cases.ICaseDataProvider#reloadModel()
    */
   public void reloadModel( )
@@ -368,7 +368,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
 
   /**
    * Resets the pool-key for the given folder.
-   *
+   * 
    * @param szenarioFolder
    *          If <code>null</code>, just releases the existing key.
    */
@@ -446,7 +446,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
   {
     if( workspace == null )
       return null;
-    
+
     final Feature rootFeature = workspace.getRootFeature();
     if( modelClass.isAssignableFrom( rootFeature.getClass() ) )
       return (T) rootFeature;
@@ -513,11 +513,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
    */
   public boolean isDirty( final String id )
   {
-    final KeyPoolListener keyPoolListener;
-    synchronized( m_keyMap )
-    {
-      keyPoolListener = m_keyMap.get( id );
-    }
+    final KeyPoolListener keyPoolListener = getKeyPoolListener( id );
 
     if( keyPoolListener == null )
       return false;
@@ -555,16 +551,12 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
   {
     final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.afgui.scenarios.SzenarioDataProvider.14" ) + id + Messages.getString( "org.kalypso.afgui.scenarios.SzenarioDataProvider.15" ), 110 ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    final KeyPoolListener keyPoolListener;
-    synchronized( m_keyMap )
-    {
-      keyPoolListener = m_keyMap.get( id );
-    }
+    final KeyPoolListener keyPoolListener = getKeyPoolListener( id );
 
     try
     {
       if( keyPoolListener == null )
-        throw new IllegalArgumentException( Messages.getString("org.kalypso.afgui.scenarios.SzenarioDataProvider.7") + id ); //$NON-NLS-1$
+        throw new IllegalArgumentException( Messages.getString( "org.kalypso.afgui.scenarios.SzenarioDataProvider.7" ) + id ); //$NON-NLS-1$
 
       final IPoolableObjectType key = keyPoolListener.getKey();
       if( key != null )
@@ -627,14 +619,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
     if( locationMap == null || !locationMap.containsKey( id ) )
       throw new IllegalArgumentException( Messages.getString( "org.kalypso.afgui.scenarios.SzenarioDataProvider.13" ) + id ); //$NON-NLS-1$
 
-    final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
-
-    final KeyPoolListener keyPoolListener;
-    synchronized( m_keyMap )
-    {
-      keyPoolListener = m_keyMap.get( id );
-    }
-
+    final KeyPoolListener keyPoolListener = getKeyPoolListener( id );
     if( keyPoolListener == null )
       return null;
 
@@ -642,7 +627,16 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
     if( key == null )
       return null;
 
+    final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
     return (CommandableWorkspace) pool.getObject( key );
+  }
+
+  private KeyPoolListener getKeyPoolListener( final String id )
+  {
+    synchronized( m_keyMap )
+    {
+      return m_keyMap.get( id );
+    }
   }
 
   /**
@@ -659,5 +653,52 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
   public IScenario getScenario( )
   {
     return m_scenario;
+  }
+
+  /**
+   * Checks if a model has already been loaded. Returns <code>true</code>, as soon as the data object has been loaded by
+   * the pool, regardless of the success of that operation.
+   * 
+   * throws {@link IllegalArgumentException} If the given data id is not known.
+   */
+  public boolean isLoaded( final String id )
+  {
+    final KeyPoolListener keyPoolListener = getKeyPoolListener( id );
+    if( keyPoolListener == null )
+    {
+      final String msg = String.format( "Unknown data id '%s'", id );
+      throw new IllegalArgumentException( msg );
+    }
+
+    final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
+    final KeyInfo info = pool.getInfoForKey( keyPoolListener.getKey() );
+    if( info == null )
+      return false;
+
+    final IStatus result = info.getResult();
+    return result != null;
+  }
+
+  private static final long WAIT_TIME = 100;
+
+  /**
+   * Waits until a model is loaded.
+   */
+  public boolean waitForModelToLoad( final String id, final int maxWaitTimeInMillis ) throws InterruptedException
+  {
+    final SzenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
+
+    int waitTime = 0;
+    while( true )
+    {
+      if( dataProvider.isLoaded( id ) )
+        return true;
+
+      Thread.sleep( WAIT_TIME );
+      waitTime += WAIT_TIME;
+
+      if( waitTime > maxWaitTimeInMillis )
+        return false;
+    }
   }
 }
