@@ -47,7 +47,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.Map.Entry;
-import java.util.logging.Logger;
 
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
@@ -57,10 +56,10 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.core.KalypsoCoreDebug;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.loader.ILoader;
 import org.kalypso.loader.ILoaderFactory;
@@ -80,22 +79,15 @@ public class ResourcePool
    */
   private static final String CONFIG_INI_DO_ASK_FOR_POOL_SAVE = "kalypso.ask_for_pool_save"; //$NON-NLS-1$
 
-  private final static boolean DO_LOG = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.core/debug/resourcepool/keys" ) ); //$NON-NLS-1$
-
-  private final static Logger LOGGER = Logger.getLogger( ResourcePool.class.getName() );
-
   private final ILoaderFactory m_factory;
-
-// /** type -> loader */
-// private final Map<String, ILoader> m_loaderCache = new HashMap<String, ILoader>();
 
   /** key -> KeyInfo */
   private final Map<IPoolableObjectType, KeyInfo> m_keyInfos = new TreeMap<IPoolableObjectType, KeyInfo>( KeyComparator.getInstance() );
 
-  private IResourceChangeListener m_resourceChangeListener = new IResourceChangeListener()
+  private final IResourceChangeListener m_resourceChangeListener = new IResourceChangeListener()
   {
     @Override
-    public void resourceChanged( IResourceChangeEvent event )
+    public void resourceChanged( final IResourceChangeEvent event )
     {
       handleResourceChanged( event );
     }
@@ -142,10 +134,9 @@ public class ResourcePool
         }
         catch( final Exception e )
         {
-          e.printStackTrace();
-          e.getMessage();
-          final RuntimeException iae = new IllegalArgumentException( Messages.getString( "org.kalypso.util.pool.ResourcePool.1" ) + key.getType() ); //$NON-NLS-1$
-          ResourcePool.LOGGER.throwing( getClass().getName(), "addPoolListener", iae ); //$NON-NLS-1$
+          final String msg = String.format( "No Loader for type: %s", key.getType() );//$NON-NLS-1$
+          final RuntimeException iae = new IllegalArgumentException( msg );
+          KalypsoCoreDebug.RESOURCE_POOL.printStackTrace( iae );
           throw iae;
         }
 
@@ -169,8 +160,7 @@ public class ResourcePool
         final KeyInfo info = entry.getValue();
         if( info.removeListener( l ) && info.isEmpty() )
         {
-          if( ResourcePool.DO_LOG )
-            ResourcePool.LOGGER.info( Messages.getString( "org.kalypso.util.pool.ResourcePool.3" ) + key ); //$NON-NLS-1$
+          KalypsoCoreDebug.RESOURCE_POOL.printf( "Releasing key (no more listeners): %s%n", key ); //$NON-NLS-1$
 
           iter.remove();
 
@@ -310,7 +300,7 @@ public class ResourcePool
     return m_keyInfos.get( poolKey );
   }
 
-  protected void handleResourceChanged( IResourceChangeEvent event )
+  protected void handleResourceChanged( final IResourceChangeEvent event )
   {
     // allways true, because of the bitmask set on adding this listener
     if( event.getType() == IResourceChangeEvent.POST_CHANGE )
