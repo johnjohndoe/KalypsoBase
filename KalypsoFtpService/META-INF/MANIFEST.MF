@@ -4,7 +4,7 @@ Bundle-Name: KalypsoFtpService
 Bundle-SymbolicName: org.kalypso.ftp.service
 Bundle-Version: 1.0.4
 Bundle-Activator: org.kalypso.ftp.service.KalypsoFtpService
-Require-Bundle: org.kalypso.commons;bundle-version="2.2.0"
+Require-Bundle: org.kalypso.commons
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ClassPath: lib/apache/mina/ftplet-api-1.0.4.jar,
