@@ -122,27 +122,33 @@ public class ResourcePool
     if( l.isDisposed() )
       return null;
 
+    final KeyInfo info = getOrCreateInfo( key );
+    info.addListener( l );
+    return info;
+  }
+
+  private KeyInfo getOrCreateInfo( final IPoolableObjectType key )
+  {
     synchronized( m_keyInfos )
     {
-      KeyInfo info = m_keyInfos.get( key );
-      if( info == null )
-        try
-        {
-          final ILoader loader = m_factory.getLoaderInstance( key.getType() );
-          info = new KeyInfo( key, loader );
-          m_keyInfos.put( key, info );
-        }
-        catch( final Exception e )
-        {
-          final String msg = String.format( "No Loader for type: %s", key.getType() );//$NON-NLS-1$
-          final RuntimeException iae = new IllegalArgumentException( msg );
-          KalypsoCoreDebug.RESOURCE_POOL.printStackTrace( iae );
-          throw iae;
-        }
+      final KeyInfo info = m_keyInfos.get( key );
+      if( info != null )
+        return info;
 
-      info.addListener( l );
-
-      return info;
+      try
+      {
+        final ILoader loader = m_factory.getLoaderInstance( key.getType() );
+        final KeyInfo newInfo = new KeyInfo( key, loader );
+        m_keyInfos.put( key, newInfo );
+        return newInfo;
+      }
+      catch( final Exception e )
+      {
+        final String msg = String.format( "No Loader for type: %s", key.getType() );//$NON-NLS-1$
+        final RuntimeException iae = new IllegalArgumentException( msg );
+        KalypsoCoreDebug.RESOURCE_POOL.printStackTrace( iae );
+        throw iae;
+      }
     }
   }
 
