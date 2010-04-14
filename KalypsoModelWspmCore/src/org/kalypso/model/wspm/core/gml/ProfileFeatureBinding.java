@@ -49,6 +49,8 @@ public class ProfileFeatureBinding extends AbstractCachedFeature2 implements IPr
     CACHE_DEFINITION.addCachedProperty( QNAME_LINE, ObservationFeatureFactory.OM_RESULT );
     CACHE_DEFINITION.addCachedProperty( QNAME_LINE, ObservationFeatureFactory.OM_RESULTDEFINITION );
 
+    CACHE_DEFINITION.addCachedProperty( QNAME_PSEUDO_PROFILE, QN_NAME );
+    CACHE_DEFINITION.addCachedProperty( QNAME_PSEUDO_PROFILE, QN_DESCRIPTION );
     CACHE_DEFINITION.addCachedProperty( QNAME_PSEUDO_PROFILE, QNAME_SRS );
     CACHE_DEFINITION.addCachedProperty( QNAME_PSEUDO_PROFILE, QNAME_PROFILE );
     CACHE_DEFINITION.addCachedProperty( QNAME_PSEUDO_PROFILE, ObservationFeatureFactory.OM_RESULT );
