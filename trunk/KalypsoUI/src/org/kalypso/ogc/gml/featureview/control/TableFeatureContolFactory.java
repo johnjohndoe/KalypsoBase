@@ -46,6 +46,7 @@ import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ogc.gml.table.celleditors.IFeatureModifierFactory;
 import org.kalypso.template.featureview.ControlType;
 import org.kalypso.template.featureview.Table;
+import org.kalypso.template.featureview.Toolbar;
 import org.kalypso.template.gistableview.Gistableview;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.feature.Feature;
@@ -70,7 +71,12 @@ public class TableFeatureContolFactory implements IFeatureControlFactory
 
     final IFeatureSelectionManager selectionManager = parentComposite.getSelectionManager();
 
-    final TableFeatureContol fc = new TableFeatureContol( pt, featureTypeCellEditorFactory, selectionManager, tableType.getToolbar(), tableType.isShowToolbar(), tableType.isShowContextMenu() );
+    final TableFeatureContol fc;
+    final Toolbar toolbar = tableType.getToolbar();
+    if( toolbar == null )
+      fc = new TableFeatureContol( pt, featureTypeCellEditorFactory, selectionManager, toolbar, tableType.isShowToolbar(), tableType.isShowContextMenu() );
+    else
+      fc = new TableFeatureContol( pt, featureTypeCellEditorFactory, selectionManager, toolbar, true, tableType.isShowContextMenu() );
 
     final Gistableview gistableview = tableType.getGistableview();
     if( gistableview != null )
