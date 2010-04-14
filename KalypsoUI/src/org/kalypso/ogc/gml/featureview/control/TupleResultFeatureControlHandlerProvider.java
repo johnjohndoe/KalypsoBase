@@ -98,7 +98,7 @@ public class TupleResultFeatureControlHandlerProvider implements IComponentUiHan
         final String nullFormat = cd.getNullFormat();
         final String parseFormat = cd.getParseFormat();
 
-        final String columnLabel = label == null ? component.getName() : label;
+        final String columnLabel = createColumnLabel( component, label );
 
         final IComponentUiHandler handler = ComponentUiHandlerFactory.getHandler( componentIndex, component, editable, resizeable, moveable, columnLabel, alignment, width, widthPercent, displayFormat, nullFormat, parseFormat );
         result.put( componentIndex, handler );
@@ -108,12 +108,32 @@ public class TupleResultFeatureControlHandlerProvider implements IComponentUiHan
       if( component == null && !optional )
       {
         /* Non-optional columns must exists: throw error message */
-        final String msg = Messages.getString("org.kalypso.ogc.gml.featureview.control.TupleResultFeatureControlHandlerProvider.0", componentId ); //$NON-NLS-1$
+        final String msg = Messages.getString( "org.kalypso.ogc.gml.featureview.control.TupleResultFeatureControlHandlerProvider.0", componentId ); //$NON-NLS-1$
         throw new IllegalArgumentException( msg );
       }
     }
 
     return result;
+  }
+
+  private String createColumnLabel( final IComponent component, final String label )
+  {
+    if( label != null )
+      return label;
+
+    final String name = getComponentName( component );
+    final String unit = component.getUnit();
+
+    if( unit == null || unit.isEmpty() )
+      return name;
+
+    return String.format( "%s [%s]", name, unit );
+  }
+
+  private String getComponentName( final IComponent component )
+  {
+    // TODO: fixme, use description and or name of phenomenon
+    return component.getName();
   }
 
   public ColumnDescriptor[] getDescriptors( )
