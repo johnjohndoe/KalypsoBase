@@ -207,12 +207,30 @@ public class SplitSort implements FeatureList
    */
   public boolean add( final Object object )
   {
-    final Envelope env = getEnvelope( object );
+    // IMPORTANT/REMARK: 1) we mustn't call getEnvelope() in the synchronised block<br>
+    // 2) Calling getEnvelope() will eventually cause other workspace to be loaded<br>
+    // 3) So calling getEnvelope() during workspace load is not advisable<br>
+    // 4) So we should'nt call getEnvelope() if the index is null<br>
+    // => this leads to the slightly strange code below (which is still not thread safe). Any ideas how to solve this
+    // better?
+    final boolean isIndexed = m_index != null;
+    Envelope env = null;
+    if( isIndexed )
+      env = getEnvelope( object );
 
     synchronized( m_lock )
     {
       if( m_index != null )
+      {
+        if( !isIndexed )
+        {
+          // m_index changed between the first line of this method and here...
+          System.out.println( "Synchronization problem in SplitSort; check this out..." );
+        }
+
         m_index.insert( env, object );
+      }
+
       return m_items.add( object );
     }
   }
