@@ -181,7 +181,7 @@ public class TableFeatureContol extends AbstractToolbarFeatureControl implements
     /**
      * support old definition of toolbar (add and delete feature actions)
      */
-    if( m_showToolbar )
+    if( m_showToolbar && m_toolbar == null )
     {
       final Command addFeatureCommand = new Toolbar.Command();
       addFeatureCommand.setCommandId( AddFeatureHandler.ID );
@@ -208,7 +208,7 @@ public class TableFeatureContol extends AbstractToolbarFeatureControl implements
         addToolbarItems( contribution.getUri() );
     }
 
-    if( getToolbarManager() == null || getToolbarManager().isEmpty() )
+    if( getToolbarManager() == null )
       return client;
 
     final ToolBar toolbar = getToolbarManager().createControl( client );
