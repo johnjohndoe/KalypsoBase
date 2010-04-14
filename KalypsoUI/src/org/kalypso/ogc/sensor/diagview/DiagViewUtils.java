@@ -325,6 +325,9 @@ public class DiagViewUtils
     if( axisType.equals( TimeserieConstants.TYPE_RUNOFF ) )
       return new DiagramAxis( axisType, "double", label, unit, direction, position, false ); //$NON-NLS-1$
 
+    if( axisType.equals( TimeserieConstants.TYPE_RUNOFF_RHB ) )
+      return new DiagramAxis( axisType, "double", label, unit, direction, position, false ); //$NON-NLS-1$
+
     if( axisType.equals( TimeserieConstants.TYPE_VOLUME ) )
       return new DiagramAxis( axisType, "double", label, unit, direction, position, false ); //$NON-NLS-1$
 

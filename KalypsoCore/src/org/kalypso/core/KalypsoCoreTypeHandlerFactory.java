@@ -64,11 +64,13 @@ public class KalypsoCoreTypeHandlerFactory implements ITypeHandlerFactory<IMarsh
       final ZmlInlineTypeHandler taInline = new ZmlInlineTypeHandler( "ZmlInlineTAType", ZmlInlineTypeHandler.TA.axis, IObservation.class ); //$NON-NLS-1$
       final ZmlInlineTypeHandler wtKcLaiInline = new ZmlInlineTypeHandler( "ZmlInlineIdealKcWtLaiType", ZmlInlineTypeHandler.WtKcLai.axis, IObservation.class ); //$NON-NLS-1$
       final ZmlInlineTypeHandler tnInline = new ZmlInlineTypeHandler( "ZmlInlineTNType", ZmlInlineTypeHandler.TN.axis, IObservation.class ); //$NON-NLS-1$
+      final ZmlInlineTypeHandler qqInline = new ZmlInlineTypeHandler( "ZmlInlineQQType", ZmlInlineTypeHandler.QQ.axis, IObservation.class ); //$NON-NLS-1$
 
       marshallingRegistry.registerTypeHandler( wvqInline );
       marshallingRegistry.registerTypeHandler( taInline );
       marshallingRegistry.registerTypeHandler( wtKcLaiInline );
       marshallingRegistry.registerTypeHandler( tnInline );
+      marshallingRegistry.registerTypeHandler( qqInline );
     }
     catch( final Exception e ) // generic exception caught for simplicity
     {

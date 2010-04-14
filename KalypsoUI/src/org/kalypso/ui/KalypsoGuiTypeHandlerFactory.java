@@ -68,12 +68,14 @@ public class KalypsoGuiTypeHandlerFactory implements ITypeHandlerFactory<IGuiTyp
       final ZmlInlineTypeHandler taInline = new ZmlInlineTypeHandler( "ZmlInlineTAType", ZmlInlineTypeHandler.TA.axis, IObservation.class ); //$NON-NLS-1$
       final ZmlInlineTypeHandler wtKcLaiInline = new ZmlInlineTypeHandler( "ZmlInlineIdealKcWtLaiType", ZmlInlineTypeHandler.WtKcLai.axis, IObservation.class ); //$NON-NLS-1$
       final ZmlInlineTypeHandler tnInline = new ZmlInlineTypeHandler( "ZmlInlineTNType", ZmlInlineTypeHandler.TN.axis, IObservation.class ); //$NON-NLS-1$
+      final ZmlInlineTypeHandler qqInline = new ZmlInlineTypeHandler( "ZmlInlineQQType", ZmlInlineTypeHandler.QQ.axis, IObservation.class ); //$NON-NLS-1$
 
       GuiTypeHandlerUtilities.registerXSDSimpleTypeHandler( guiRegistry );
       guiRegistry.registerTypeHandler( new ZmlInlineGuiTypeHandler( wvqInline ) );
       guiRegistry.registerTypeHandler( new ZmlInlineGuiTypeHandler( taInline ) );
       guiRegistry.registerTypeHandler( new ZmlInlineGuiTypeHandler( wtKcLaiInline ) );
       guiRegistry.registerTypeHandler( new ZmlInlineGuiTypeHandler( tnInline ) );
+      guiRegistry.registerTypeHandler( new ZmlInlineGuiTypeHandler( qqInline ) );
       guiRegistry.registerTypeHandler( new TimeseriesLinkGuiTypeHandler() );
     }
     catch( final Exception e ) // generic exception caught for simplicity

@@ -57,6 +57,7 @@ public abstract class TimeserieConstants implements ObservationConstants
 
   /** Abfluss */
   public final static String TYPE_RUNOFF = "Q"; //$NON-NLS-1$
+  public final static String TYPE_RUNOFF_RHB = "Qrhb"; //$NON-NLS-1$
 
   /** Wasserstand */
   public final static String TYPE_WATERLEVEL = "W"; //$NON-NLS-1$
@@ -130,7 +131,7 @@ public abstract class TimeserieConstants implements ObservationConstants
    */
   static
   {
-    final String[] types = new String[] { TYPE_DATE, TYPE_EVAPORATION, TYPE_RAINFALL, TYPE_RUNOFF, TYPE_TEMPERATURE, TYPE_VOLUME, TYPE_WATERLEVEL, TYPE_NORM, TYPE_AREA, TYPE_HOURS, TYPE_NORMNULL,
+    final String[] types = new String[] { TYPE_DATE, TYPE_EVAPORATION, TYPE_RAINFALL, TYPE_RUNOFF, TYPE_RUNOFF_RHB, TYPE_TEMPERATURE, TYPE_VOLUME, TYPE_WATERLEVEL, TYPE_NORM, TYPE_AREA, TYPE_HOURS, TYPE_NORMNULL,
         TYPE_KC, TYPE_WT, TYPE_LAI, TYPE_HUMIDITY, TYPE_VELOCITY };
     Arrays.sort( types );
     TYPES_ALL = types;
