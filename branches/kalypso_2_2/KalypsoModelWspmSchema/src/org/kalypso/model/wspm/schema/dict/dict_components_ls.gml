@@ -10,11 +10,11 @@
      <!-- Length Section components -->
      <gml:dictionaryEntry>
           <swe:ItemDefinition gml:id="LengthSectionStation">
-               <gml:name>Station</gml:name>
+               <gml:name>%LengthSectionStation.item.name</gml:name>
                <swe:property>
                     <swe:Phenomenon gml:id="phen-stat">
-                         <gml:description>Gewässerstationierung</gml:description>
-                         <gml:name>Stationierung</gml:name>
+                         <gml:description>%phen-stat.description</gml:description>
+                         <gml:name>%phen-stat.name</gml:name>
                     </swe:Phenomenon>
                </swe:property>
                <swe:representation>
@@ -30,11 +30,11 @@
 
      <gml:dictionaryEntry>
           <swe:ItemDefinition gml:id="LengthSectionRunOff">
-               <gml:name>Abfluss</gml:name>
+               <gml:name>%LengthSectionRunOff.name</gml:name>
                <swe:property>
                     <swe:Phenomenon gml:id="phen_runoff">
-                         <gml:description>Abfluss</gml:description>
-                         <gml:name>Abfluss</gml:name>
+                         <gml:description>%phen_runoff.description</gml:description>
+                         <gml:name>%phen_runoff.name</gml:name>
                     </swe:Phenomenon>
                </swe:property>
                <swe:representation>
@@ -51,11 +51,11 @@
 
      <gml:dictionaryEntry>
           <swe:ItemDefinition gml:id="LengthSectionWaterlevel">
-               <gml:name>Wasserstand</gml:name>
+               <gml:name>%LengthSectionWaterlevel.name</gml:name>
                <swe:property>
                     <swe:Phenomenon gml:id="phen_waterlevel">
-                         <gml:description>Wasserstand</gml:description>
-                         <gml:name>Wasserstand</gml:name>
+                         <gml:description>%phen_waterlevel.description</gml:description>
+                         <gml:name>%phen_waterlevel.name</gml:name>
                     </swe:Phenomenon>
                </swe:property>
                <swe:representation>
@@ -71,10 +71,10 @@
 
      <gml:dictionaryEntry>
           <swe:ItemDefinition gml:id="LengthSectionProfileType">
-               <gml:name>Kennung</gml:name>
+               <gml:name>%LengthSectionProfileType.name</gml:name>
                <swe:property>
                     <swe:Phenomenon gml:id="phen-kenn">
-                         <gml:name>Kennung</gml:name>
+                         <gml:name>%phen-kenn.name</gml:name>
                     </swe:Phenomenon>
                </swe:property>
                <swe:representation>
@@ -90,10 +90,10 @@
 
      <gml:dictionaryEntry>
           <swe:ItemDefinition gml:id="LengthSectionGround">
-               <gml:name>Sohlhöhe</gml:name>
+               <gml:name>%LengthSectionGround.name</gml:name>
                <swe:property>
                     <swe:Phenomenon gml:id="phen-sohle">
-                         <gml:name>Sohlhöhe</gml:name>
+                         <gml:name>%phen-sohle.name</gml:name>
                     </swe:Phenomenon>
                </swe:property>
                <swe:representation>
@@ -109,10 +109,10 @@
 
      <gml:dictionaryEntry>
           <swe:ItemDefinition gml:id="LengthSection_hen">
-               <gml:name>Energielinie</gml:name>
+               <gml:name>%LengthSection_hen.name</gml:name>
                <swe:property>
                     <swe:Phenomenon gml:id="phen-hen">
-                         <gml:name>Energielinie</gml:name>
+                         <gml:name>%phen-hen.name</gml:name>
                     </swe:Phenomenon>
                </swe:property>
                <swe:representation>
@@ -128,10 +128,10 @@
 
      <gml:dictionaryEntry>
           <swe:ItemDefinition gml:id="LengthSection_h_BV">
-               <gml:name>Bordvoll Höhe</gml:name>
+               <gml:name>%LengthSection_h_BV.name</gml:name>
                <swe:property>
                     <swe:Phenomenon gml:id="phen-h_bv">
-                         <gml:name>Bordvoll Höhe</gml:name>
+                         <gml:name>%phen-h_bv.name</gml:name>
                     </swe:Phenomenon>
                </swe:property>
                <swe:representation>
@@ -147,10 +147,10 @@
 
      <gml:dictionaryEntry>
           <swe:ItemDefinition gml:id="LengthSection_Boe_li">
-               <gml:name>Böschung (links)</gml:name>
+               <gml:name>%LengthSection_Boe_li.name</gml:name>
                <swe:property>
                     <swe:Phenomenon gml:id="phen-boe_li">
-                         <gml:name>Böschung (links)</gml:name>
+                         <gml:name>%phen-boe_li.name</gml:name>
                     </swe:Phenomenon>
                </swe:property>
                <swe:representation>
@@ -166,10 +166,10 @@
 
      <gml:dictionaryEntry>
           <swe:ItemDefinition gml:id="LengthSection_Boe_re">
-               <gml:name>Böschung (rechts)</gml:name>
+               <gml:name>%LengthSection_Boe_re.name</gml:name>
                <swe:property>
                     <swe:Phenomenon gml:id="phen-boe_re">
-                         <gml:name>Böschung (rechts)</gml:name>
+                         <gml:name>%phen-boe_re.name</gml:name>
                     </swe:Phenomenon>
                </swe:property>
                <swe:representation>
@@ -185,10 +185,10 @@
 
      <gml:dictionaryEntry>
           <swe:ItemDefinition gml:id="LengthSection_v_m">
-               <gml:name>Mittlere Geschwindigkeit</gml:name>
+               <gml:name>%LengthSection_v_m.name</gml:name>
                <swe:property>
                     <swe:Phenomenon gml:id="phen-v_m">
-                         <gml:name>Mittlere Geschwindigkeit</gml:name>
+                         <gml:name>%phen-v_m.name</gml:name>
                     </swe:Phenomenon>
                </swe:property>
                <swe:representation>
@@ -205,10 +205,10 @@
 
      <gml:dictionaryEntry>
           <swe:ItemDefinition gml:id="LengthSection_tau_fl">
-               <gml:name>Sohlschubspannung (Flussschlauch)</gml:name>
+               <gml:name>%LengthSection_tau_fl.name</gml:name>
                <swe:property>
                     <swe:Phenomenon gml:id="phen-tau_fl">
-                         <gml:name>Sohlschubspannung (Flussschlauch)</gml:name>
+                         <gml:name>%phen-tau_fl.name</gml:name>
                     </swe:Phenomenon>
                </swe:property>
                <swe:representation>
@@ -226,10 +226,10 @@
 	<!-- Q -->
      <gml:dictionaryEntry>
           <swe:ItemDefinition gml:id="LengthSection_Q_li">
-               <gml:name>Abfluss (links)</gml:name>
+               <gml:name>%LengthSection_Q_li.name</gml:name>
                <swe:property>
                     <swe:Phenomenon gml:id="phen-Q_li">
-                         <gml:name>Abfluss (links)</gml:name>
+                         <gml:name>%phen-Q_li.name</gml:name>
                     </swe:Phenomenon>
                </swe:property>
                <swe:representation>
@@ -244,10 +244,10 @@
      </gml:dictionaryEntry>
      <gml:dictionaryEntry>
           <swe:ItemDefinition gml:id="LengthSection_Q_fl">
-               <gml:name>Abfluss (Flussschlauch)</gml:name>
+               <gml:name>%LengthSection_Q_fl.name</gml:name>
                <swe:property>
                     <swe:Phenomenon gml:id="phen-Q_fl">
-                         <gml:name>Abfluss (Flussschlauch)</gml:name>
+                         <gml:name>%phen-Q_fl.name</gml:name>
                     </swe:Phenomenon>
                </swe:property>
                <swe:representation>
@@ -262,10 +262,10 @@
      </gml:dictionaryEntry>
      <gml:dictionaryEntry>
           <swe:ItemDefinition gml:id="LengthSection_Q_re">
-               <gml:name>Abfluss (rechts)</gml:name>
+               <gml:name>%LengthSection_Q_re.name</gml:name>
                <swe:property>
                     <swe:Phenomenon gml:id="phen-Q_re">
-                         <gml:name>Abfluss (rechts)</gml:name>
+                         <gml:name>%phen-Q_re.name</gml:name>
                     </swe:Phenomenon>
                </swe:property>
                <swe:representation>
@@ -282,10 +282,10 @@
 	<!--  LAMBDA -->
      <gml:dictionaryEntry>
           <swe:ItemDefinition gml:id="LengthSection_lamb_li">
-               <gml:name>lambda (links)</gml:name>
+               <gml:name>%LengthSection_lamb_li.name</gml:name>
                <swe:property>
                     <swe:Phenomenon gml:id="phen-lam_li">
-                         <gml:name>lambda (lins)</gml:name>
+                         <gml:name>%phen-lam_li.name</gml:name>
                     </swe:Phenomenon>
                </swe:property>
                <swe:representation>
@@ -301,10 +301,10 @@
 
      <gml:dictionaryEntry>
           <swe:ItemDefinition gml:id="LengthSection_lamb_fl">
-               <gml:name>lambda (Flussschlauch)</gml:name>
+               <gml:name>%LengthSection_lamb_fl.name</gml:name>
                <swe:property>
                     <swe:Phenomenon gml:id="phen-lam_fl">
-                         <gml:name>lambda (Flussschlauch)</gml:name>
+                         <gml:name>%phen-lam_fl.name</gml:name>
                     </swe:Phenomenon>
                </swe:property>
                <swe:representation>
@@ -320,10 +320,10 @@
 
      <gml:dictionaryEntry>
           <swe:ItemDefinition gml:id="LengthSection_lamb_re">
-               <gml:name>lambda (rechts)</gml:name>
+               <gml:name>%LengthSection_lamb_re.name</gml:name>
                <swe:property>
                     <swe:Phenomenon gml:id="phen-lam_re">
-                         <gml:name>lambda (rechts)</gml:name>
+                         <gml:name>%phen-lam_re.name</gml:name>
                     </swe:Phenomenon>
                </swe:property>
                <swe:representation>
@@ -339,10 +339,10 @@
 
      <gml:dictionaryEntry>
           <swe:ItemDefinition gml:id="LengthSection_f_li">
-               <gml:name>Fläche (links)</gml:name>
+               <gml:name>%LengthSection_f_li.name</gml:name>
                <swe:property>
                     <swe:Phenomenon gml:id="phen-fl_li">
-                         <gml:name>Fläche (links)</gml:name>
+                         <gml:name>%phen-fl_li.name</gml:name>
                     </swe:Phenomenon>
                </swe:property>
                <swe:representation>
@@ -359,10 +359,10 @@
 
      <gml:dictionaryEntry>
           <swe:ItemDefinition gml:id="LengthSection_f_fl">
-               <gml:name>Fläche (Flussschlauch)</gml:name>
+               <gml:name>%LengthSection_f_fl.name</gml:name>
                <swe:property>
                     <swe:Phenomenon gml:id="phen-f_fl">
-                         <gml:name>Fläche (Flussschlauch)</gml:name>
+                         <gml:name>%phen-f_fl.name</gml:name>
                     </swe:Phenomenon>
                </swe:property>
                <swe:representation>
@@ -379,10 +379,10 @@
 
      <gml:dictionaryEntry>
           <swe:ItemDefinition gml:id="LengthSection_f_re">
-               <gml:name>Fläche (rechts)</gml:name>
+               <gml:name>%LengthSection_f_re.name</gml:name>
                <swe:property>
                     <swe:Phenomenon gml:id="phen-f_re">
-                         <gml:name>Fläche (rechts)</gml:name>
+                         <gml:name>%phen-f_re.name</gml:name>
                     </swe:Phenomenon>
                </swe:property>
                <swe:representation>
@@ -399,10 +399,10 @@
 
      <gml:dictionaryEntry>
           <swe:ItemDefinition gml:id="LengthSection_br_li">
-               <gml:name>Breite (links)</gml:name>
+               <gml:name>%LengthSection_br_li.name</gml:name>
                <swe:property>
                     <swe:Phenomenon gml:id="phen-br_li">
-                         <gml:name>Breite (links)</gml:name>
+                         <gml:name>%phen-br_li.name</gml:name>
                     </swe:Phenomenon>
                </swe:property>
                <swe:representation>
@@ -419,10 +419,10 @@
 
      <gml:dictionaryEntry>
           <swe:ItemDefinition gml:id="LengthSection_br_fl">
-               <gml:name>Breite (Flussschlauch)</gml:name>
+               <gml:name>%LengthSection_br_fl.name</gml:name>
                <swe:property>
                     <swe:Phenomenon gml:id="phen-br_fl">
-                         <gml:name>Breite (Flussschlauch)</gml:name>
+                         <gml:name>%phen-br_fl.name</gml:name>
                     </swe:Phenomenon>
                </swe:property>
                <swe:representation>
@@ -439,10 +439,10 @@
 
      <gml:dictionaryEntry>
           <swe:ItemDefinition gml:id="LengthSection_br_re">
-               <gml:name>Breite (rechts)</gml:name>
+               <gml:name>%LengthSection_br_re.name</gml:name>
                <swe:property>
                     <swe:Phenomenon gml:id="phen-br_re">
-                         <gml:name>Breite (rechts)</gml:name>
+                         <gml:name>%phen-br_re.name</gml:name>
                     </swe:Phenomenon>
                </swe:property>
                <swe:representation>
@@ -459,10 +459,10 @@
 
      <gml:dictionaryEntry>
           <swe:ItemDefinition gml:id="LengthSection_WeirOK">
-               <gml:name>Wehr (Oberkante)</gml:name>
+               <gml:name>%LengthSection_WeirOK.name</gml:name>
                <swe:property>
                     <swe:Phenomenon gml:id="phen-wehrok">
-                         <gml:name>Wehr (Oberkante)</gml:name>
+                         <gml:name>%phen-wehrok.name</gml:name>
                     </swe:Phenomenon>
                </swe:property>
                <swe:representation>
@@ -478,10 +478,10 @@
 
      <gml:dictionaryEntry>
           <swe:ItemDefinition gml:id="LengthSection_BridgeOK">
-               <gml:name>Brücke (Oberkante)</gml:name>
+               <gml:name>%LengthSection_BridgeOK.name</gml:name>
                <swe:property>
                     <swe:Phenomenon gml:id="phen-brueckok">
-                         <gml:name>Brücke (Oberkante)</gml:name>
+                         <gml:name>%phen-brueckok.name</gml:name>
                     </swe:Phenomenon>
                </swe:property>
                <swe:representation>
@@ -497,10 +497,10 @@
 
      <gml:dictionaryEntry>
           <swe:ItemDefinition gml:id="LengthSection_BridgeUK">
-               <gml:name>Brücke (Unterkante)</gml:name>
+               <gml:name>%LengthSection_BridgeUK.name</gml:name>
                <swe:property>
                     <swe:Phenomenon gml:id="phen-brueckuk">
-                         <gml:name>Brücke (Unterkante)</gml:name>
+                         <gml:name>%phen-brueckuk.name</gml:name>
                     </swe:Phenomenon>
                </swe:property>
                <swe:representation>
@@ -516,10 +516,10 @@
 
      <gml:dictionaryEntry>
           <swe:ItemDefinition gml:id="LengthSection_BridgeWidth">
-               <gml:name>Brücke (Breite in Fließrichtung)</gml:name>
+               <gml:name>%LengthSection_BridgeWidth.name</gml:name>
                <swe:property>
                     <swe:Phenomenon gml:id="phen-brueckb">
-                         <gml:name>Brücke (Breite in Fließrichtung)</gml:name>
+                         <gml:name>%phen-brueckb.name</gml:name>
                     </swe:Phenomenon>
                </swe:property>
                <swe:representation>
@@ -536,10 +536,10 @@
 
      <gml:dictionaryEntry>
           <swe:ItemDefinition gml:id="LengthSection_RohrDN">
-               <gml:name>Rohrdurchmesser</gml:name>
+               <gml:name>%LengthSection_RohrDN.name</gml:name>
                <swe:property>
                     <swe:Phenomenon gml:id="phen-rohrdn">
-                         <gml:name>Rohrdurchmesser</gml:name>
+                         <gml:name>%phen-rohrdn.name</gml:name>
                     </swe:Phenomenon>
                </swe:property>
                <swe:representation>
@@ -557,10 +557,10 @@
      <!-- ALPHA -->
      <gml:dictionaryEntry>
           <swe:ItemDefinition gml:id="LengthSection_AlphaIW">
-               <gml:name>Impulsstrombeiwert</gml:name>
+               <gml:name>%LengthSection_AlphaIW.name</gml:name>
                <swe:property>
                     <swe:Phenomenon gml:id="phen-alphaIW">
-                         <gml:name>Impulsstrombeiwert</gml:name>
+                         <gml:name>%phen-alphaIW.name</gml:name>
                     </swe:Phenomenon>
                </swe:property>
                <swe:representation>
@@ -577,10 +577,10 @@
 
      <gml:dictionaryEntry>
           <swe:ItemDefinition gml:id="LengthSection_AlphaEW">
-               <gml:name>Energiestrombeiwert</gml:name>
+               <gml:name>%LengthSection_AlphaEW.name</gml:name>
                <swe:property>
                     <swe:Phenomenon gml:id="phen-alphaEW">
-                         <gml:name>Energiestrombeiwert</gml:name>
+                         <gml:name>%phen-alphaEW.name</gml:name>
                     </swe:Phenomenon>
                </swe:property>
                <swe:representation>
@@ -598,10 +598,10 @@
      <!-- I_REIB -->
      <gml:dictionaryEntry>
           <swe:ItemDefinition gml:id="LengthSection_I_Reib">
-               <gml:name>Reibungsgefälle</gml:name>
+               <gml:name>%LengthSection_I_Reib.name=Reibungsgefälle</gml:name>
                <swe:property>
                     <swe:Phenomenon gml:id="phen-I_Reib">
-                         <gml:name>Reibungsgefälle</gml:name>
+                         <gml:name>%phen-I_Reib.name</gml:name>
                     </swe:Phenomenon>
                </swe:property>
                <swe:representation>
