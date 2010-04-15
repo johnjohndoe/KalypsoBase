@@ -55,7 +55,7 @@ import org.kalypsodeegree_impl.tools.TransformationUtilities;
  * KalypsoPictureTheme
  * <p>
  * created by
- *
+ * 
  * @author kuepfer (20.05.2005)
  */
 abstract public class KalypsoPictureTheme extends AbstractKalypsoTheme
@@ -164,6 +164,9 @@ abstract public class KalypsoPictureTheme extends AbstractKalypsoTheme
   public IStatus paint( final Graphics g, final GeoTransform p, final Boolean selected, final IProgressMonitor monitor )
   {
     if( selected != null && selected )
+      return Status.OK_STATUS;
+
+    if( m_domain == null )
       return Status.OK_STATUS;
 
     try
