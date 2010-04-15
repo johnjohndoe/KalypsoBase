@@ -64,4 +64,8 @@ public interface IWspmDictionaryConstants
 
   public static final String LS_COMPONENT_TYPE = LS_COMPONENT_URN + "#LengthSectionProfileType"; //$NON-NLS-1$
 
+  public static final String PH_STATION = "phen-stat"; //$NON-NLS-1$
+
+  public static final String PH_RUNOFF = "phen_runoff"; //$NON-NLS-1$
+
 }
