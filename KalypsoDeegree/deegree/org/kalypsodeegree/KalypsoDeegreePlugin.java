@@ -35,6 +35,7 @@
  */
 package org.kalypsodeegree;
 
+import org.deegree.crs.transformations.TransformationFactory;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -79,6 +80,11 @@ public class KalypsoDeegreePlugin extends Plugin
   public void start( final BundleContext context ) throws Exception
   {
     super.start( context );
+
+    // IMPORTANT: If this deegree code is static-initialised inside an ant-task, the internal
+    // Logger will not be correctly set-up and transformation will not work any more.
+    // So we force initialisation here.
+    TransformationFactory.getInstance();
   }
 
   /**
@@ -140,8 +146,8 @@ public class KalypsoDeegreePlugin extends Plugin
    * defaults, and returned.
    * </p>
    * <p>
-   * <strong>NOTE:</strong> As of Eclipse 3.1 this method is no longer referring to the core runtime compatibility
-   * layer and so plug-ins relying on Plugin#initializeDefaultPreferences will have to access the compatibility layer
+   * <strong>NOTE:</strong> As of Eclipse 3.1 this method is no longer referring to the core runtime compatibility layer
+   * and so plug-ins relying on Plugin#initializeDefaultPreferences will have to access the compatibility layer
    * themselves.
    * </p>
    * 
