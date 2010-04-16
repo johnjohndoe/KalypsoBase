@@ -8,6 +8,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.chart.ext.observation.data.TupleResultDomainValueData;
+import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.TupleResult;
 
 import de.openali.odysseus.chart.ext.base.layer.AbstractLineLayer;
@@ -49,7 +50,18 @@ public class TupleResultLineLayer extends AbstractLineLayer
     gc.dispose();
 
   }
-
+  /**
+   * @see de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer#getTitle()
+   */
+  @Override
+  public String getTitle( )
+  {
+    final String superTitle = super.getTitle();
+    if( superTitle != null )
+      return superTitle;
+      
+    return m_data.getTitel();
+  }
   @SuppressWarnings("unchecked")
   public void paint( final GC gc )
   {
