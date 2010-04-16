@@ -41,7 +41,7 @@
 package org.kalypso.simulation.core.ant.copyobservation;
 
 import java.io.File;
-import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -49,7 +49,6 @@ import java.util.Map.Entry;
 import java.util.logging.Level;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.IPath;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.contribs.java.util.logging.ILogger;
@@ -110,16 +109,23 @@ public class CopyObservationFeatureVisitor extends AbstractMonitoredFeatureVisit
 
       final ObservationSource[] sources = m_sources.getObservationSources( feature );
 
-      final IFile targetfile = createTargetFile( targetHref );
-      if( targetfile == null )
-        return true;
+      final URL targetLocation = UrlResolverSingleton.getDefault().resolveURL( m_target.getContext(), targetHref );
+
+      final File targetFile = getTargetFile( targetLocation );
 
       final IObservation resultObs = combineResultObservation( sources );
       updateMetaData( resultObs, sources );
       udpateMetaData( resultObs, feature );
 
       final IRequest request = new ObservationRequest( m_target.getTargetDateRange() );
-      wrtieTargetObservation( targetfile, resultObs, request );
+      writeTargetObservation( targetFile, resultObs, request );
+
+      final IFile targetfile = getTargetResource( targetLocation );
+      if( targetfile != null )
+      {
+        // FIXKME: is this enough? What happens if the mkdir on the local file creates new folders?
+        targetfile.refreshLocal( DEPTH_INFINITE, null );
+      }
     }
     catch( final Exception e )
     {
@@ -131,15 +137,26 @@ public class CopyObservationFeatureVisitor extends AbstractMonitoredFeatureVisit
     return true;
   }
 
-  private IFile createTargetFile( final String targetHref ) throws MalformedURLException
+  private File getTargetFile( final URL targetLocation )
   {
-    return ResourceUtilities.findFileFromURL( UrlResolverSingleton.getDefault().resolveURL( m_target.getContext(), targetHref ) );
+    final IFile eclipseFile = ResourceUtilities.findFileFromURL( targetLocation );
+    if( eclipseFile != null )
+      return eclipseFile.getLocation().toFile();
+
+    // TODO: resolve local file url
+    if( "file".equals( targetLocation.getProtocol() ) )
+      return new File( targetLocation.getFile() );
+
+    return null;
   }
 
-  private void wrtieTargetObservation( final IFile targetfile, final IObservation resultObs, final IRequest request ) throws SensorException
+  private IFile getTargetResource( final URL targetLocation )
   {
-    final IPath location = targetfile.getLocation();
-    final File file = location.toFile();
+    return ResourceUtilities.findFileFromURL( targetLocation );
+  }
+
+  private void writeTargetObservation( final File file, final IObservation resultObs, final IRequest request ) throws SensorException
+  {
     file.getParentFile().mkdirs();
     ZmlFactory.writeToFile( resultObs, file, request );
   }
