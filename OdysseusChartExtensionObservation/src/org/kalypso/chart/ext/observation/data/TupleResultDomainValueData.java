@@ -39,7 +39,7 @@ public class TupleResultDomainValueData<T_domain, T_target> implements IDataCont
   private IComponent m_domainComponent;
 
   private IComponent m_targetComponent;
-
+  
   // TODO: @Alex This is exactly that, what i never wanted to have in the new Chart Framework! Please do NOT! copy the
   // values out out of the real data object
   // That is really something we have to avoid!
@@ -220,6 +220,11 @@ public class TupleResultDomainValueData<T_domain, T_target> implements IDataCont
   public TupleResult getTupleResult( )
   {
     return m_result;
+  }
+
+  public String getTitel( )
+  {
+    return m_targetComponent == null ? "" : m_targetComponent.getName(); //$NON-NLS-1$
   }
 
 }
