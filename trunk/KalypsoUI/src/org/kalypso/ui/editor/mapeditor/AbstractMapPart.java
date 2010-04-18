@@ -225,7 +225,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     if( this instanceof IEditorPart )
     {
       final MenuManager contextMenu = MapPartHelper.createMapContextMenu( m_control.getBody(), m_mapPanel, site );
-      site.registerContextMenu( contextMenu, m_mapPanel );
+      ((IEditorSite) site).registerContextMenu( contextMenu, m_mapPanel, false );
     }
 
     site.setSelectionProvider( m_mapPanel );

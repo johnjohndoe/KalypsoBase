@@ -47,8 +47,9 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
  * <p>
  * Eclipse-Editor zum Editieren der GML-Gis-Templates.
  * </p>
- *
- * @author belger, Stefan Kurzbach
+ * 
+ * @author Gernot Belger
+ * @author Stefan Kurzbach
  */
 public class GisMapEditor extends AbstractMapPart implements IEditorPart
 {
