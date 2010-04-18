@@ -402,13 +402,6 @@
                   style="push">
             </command>
          </menuContribution>
-         <menuContribution
-               locationURI="menu:org.kalypso.chart.ui.editor.menu?after=additions">
-            <command
-                  commandId="org.kalypso.model.wspm.ui.action.LengthSectionExport"
-                  style="push">
-            </command>
-         </menuContribution>
       </extension>
       <extension
             point="de.openali.odysseus.chart.factory.LayerProvider">
@@ -471,40 +464,36 @@
                commandId="org.kalypso.model.wspm.ui.command.profile.flip"
                icon="icons/obj16/flipProfile.gif">
          </image>
-         <image
+         <image 
                commandId="org.kalypso.model.wspm.ui.command.profile.simplify"
-               icon="KalypsoModelWspmUI.image1">
-         </image>	
+               icon="TODO">
+         </image>
       </extension>
      
     <!-- Commands for the map outline -->
 	<extension point="org.eclipse.ui.commands">
 		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.map.outline.command.WspmCreateDevider" name="%org.kalypso.model.wspm.ui.action.CreateDeviderMapThemeAction"  description="%org.kalypso.model.wspm.ui.action.CreateDeviderMapThemeAction.description"/>
 		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.map.outline.command.WspmIntersectRoughnessMap" name="%org.kalypso.model.wspm.ui.action.IntersectRoughnessMapThemeAction"  description="%org.kalypso.model.wspm.ui.action.IntersectRoughnessMapThemeAction.description"/>
-  <command
-        id="org.kalypso.model.wspm.ui.action.LengthSectionExport"
-        name="Create Length-Section">
-  </command>
-  <command
-        description="%org.kalypso.model.wspm.ui.action.PropertyEditAction.description"
-        id="org.kalypso.model.wspm.ui.command.profile.editProperties"
-        name="%org.kalypso.model.wspm.ui.action.PropertyEditAction">
-  </command>
-  <command
-        description="%org.kalypso.model.wspm.ui.action.ValidateProfilesAction.description"
-        id="org.kalypso.model.wspm.ui.command.profile.validate"
-        name="%org.kalypso.model.wspm.ui.action.ValidateProfilesAction">
-  </command>
-  <command
-        description="%org.kalypso.model.wspm.ui.action.FlipProfileAction.description"
-        id="org.kalypso.model.wspm.ui.command.profile.flip"
-        name="%org.kalypso.model.wspm.ui.action.FlipProfileAction">
-  </command>
-  <command
-        description="Simplify profile by removing unimportant points"
-        id="org.kalypso.model.wspm.ui.command.profile.simplify"
-        name="Simplify">
-  </command>
+		  <command
+		        description="%org.kalypso.model.wspm.ui.action.PropertyEditAction.description"
+		        id="org.kalypso.model.wspm.ui.command.profile.editProperties"
+		        name="%org.kalypso.model.wspm.ui.action.PropertyEditAction">
+		  </command>
+		  <command
+		        description="%org.kalypso.model.wspm.ui.action.ValidateProfilesAction.description"
+		        id="org.kalypso.model.wspm.ui.command.profile.validate"
+		        name="%org.kalypso.model.wspm.ui.action.ValidateProfilesAction">
+		  </command>
+		  <command
+		        description="%org.kalypso.model.wspm.ui.action.FlipProfileAction.description"
+		        id="org.kalypso.model.wspm.ui.command.profile.flip"
+		        name="%org.kalypso.model.wspm.ui.action.FlipProfileAction">
+		  </command>
+		  <command
+		        description="Simplify profile by removing unimportant points"
+		        id="org.kalypso.model.wspm.ui.command.profile.simplify"
+		        name="Simplify">
+		  </command>
 	</extension>
 
 	<extension point="org.eclipse.ui.handlers">
@@ -582,7 +571,7 @@
        </toolbar>
     </menuContribution>
     <menuContribution
-          locationURI="popup:org.kalypso.ui.editor.GmlEditor?after=additions">
+          locationURI="popup:org.eclipse.ui.popup.any?after=additions">
        <menu
              icon="icons/elcl16/import_profiles.gif"
              id="org.kalypso.model.wspm.ui.profileImport"
@@ -636,13 +625,6 @@
                    checkEnabled="true">
              </visibleWhen>
           </command>
-          <command
-                commandId="org.kalypso.model.wspm.ui.command.profile.LengthSectionExport"
-                style="push">
-             <visibleWhen
-                   checkEnabled="true">
-             </visibleWhen>
-          </command>
           <separator
                 name="additions"
                 visible="false">
@@ -662,16 +644,6 @@
 </extension>
 <extension
       point="org.eclipse.ui.handlers">
-   <handler
-         class="org.kalypso.model.wspm.tuhh.core.wspwin.LengthSectionExportHandler"
-         commandId="org.kalypso.model.wspm.ui.action.LengthSectionExport">
-      <enabledWhen>
-                  <reference
-                        definitionId="org.kalypso.chart.ui.chartEditorActive">
-                  </reference>
-      </enabledWhen>
-   </handler>
-      
    <handler
          class="org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.PropertyEditHandler"
          commandId="org.kalypso.model.wspm.ui.command.profile.editProperties">
