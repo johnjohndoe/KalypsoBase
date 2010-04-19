@@ -174,4 +174,11 @@ public class AbstractCachedFeature2 extends Feature_Impl
   {
     return super.getProperty( property );
   }
+
+  public void clearCachedProperties( )
+  {
+    m_cache.clear();
+    m_dirty.clear();
+  }
+
 }

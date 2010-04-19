@@ -97,8 +97,7 @@ public interface IProfileFeature extends Feature, IFeatureWrapper2
 
   /**
    * Returns the profile geometry.<br>
-   * IMPORTANT: this geometry is (in contrast to {@link #getSrsName()} always in the
-   * Kalypso-Coorindate-System.
+   * IMPORTANT: this geometry is (in contrast to {@link #getSrsName()} always in the Kalypso-Coorindate-System.
    */
   public GM_Curve getLine( );
 
