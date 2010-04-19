@@ -40,11 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.profil.wizard.propertyEdit;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashSet;
-import java.util.List;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.IPageChangeProvider;
 import org.eclipse.jface.dialogs.IPageChangedListener;
 import org.eclipse.jface.dialogs.PageChangedEvent;
@@ -55,7 +54,6 @@ import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.Wizard;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.jface.wizard.ArrayChooserPage;
-import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureBinding;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
@@ -64,12 +62,11 @@ import org.kalypso.model.wspm.core.profil.changes.TupleResultChange;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.action.ProfileSelection;
 import org.kalypso.model.wspm.ui.i18n.Messages;
+import org.kalypso.model.wspm.ui.profil.wizard.ProfileManipulationOperation;
 import org.kalypso.model.wspm.ui.profil.wizard.ProfilesChooserPage;
+import org.kalypso.model.wspm.ui.profil.wizard.ProfileManipulationOperation.IProfileManipulator;
 import org.kalypso.observation.result.IComponent;
-import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
-import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * @author kimwerner
@@ -91,8 +88,6 @@ public class PropertyEditWizard extends Wizard
 
   final private IProfil m_profile;
 
-  final private IProfileFeature[] m_profiles;
-
   private OperationChooserPage m_operationChooserPage;
 
   final private CommandableWorkspace m_workspace;
@@ -103,7 +98,6 @@ public class PropertyEditWizard extends Wizard
   {
     m_profile = null;
     m_workspace = profileSelection.getWorkspace();
-    m_profiles = profileSelection.getProfiles();
     m_selectedPoints = null;
 
     setNeedsProgressMonitor( true );
@@ -117,7 +111,6 @@ public class PropertyEditWizard extends Wizard
     m_selectedPoints = selection instanceof IStructuredSelection ? (IStructuredSelection) selection : null;
     m_profile = profile;
     m_workspace = null;
-    m_profiles = null;
     m_profileChooserPage = null;
     setNeedsProgressMonitor( true );
     setDialogSettings( PluginUtilities.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), getClass().getName() ) );
@@ -176,63 +169,48 @@ public class PropertyEditWizard extends Wizard
   }
 
   /**
-   * @see org.eclipse.jface.wizard.Wizard#canFinish()
-   */
-  @Override
-  public boolean canFinish( )
-  {
-    return super.canFinish();
-  }
-
-  private IProfil[] toProfiles( final Object[] features )
-  {
-    if( features == null )
-      return new IProfil[] { m_profile };
-    final IProfil[] choosenProfiles = new IProfil[features.length];
-    for( int i = 0; i < features.length; i++ )
-    {
-      final IProfileFeature wspmProfile = (IProfileFeature) features[i];
-      choosenProfiles[i] = wspmProfile.getProfil();
-    }
-    return choosenProfiles;
-  }
-
-  /**
    * @see org.eclipse.jface.wizard.Wizard#performFinish()
    */
   @Override
   public boolean performFinish( )
   {
-    final Object[] profilFeatures = m_profile == null ? m_profileChooserPage.getChoosen() : null;
-    final IProfil[] choosenProfiles = toProfiles( profilFeatures );
-    final Object[] choosenProperties = m_propertyChooserPage.getChoosen();
-    final List<FeatureChange> featureChanges = new ArrayList<FeatureChange>();
-
-    for( final IProfil choosenProfile : choosenProfiles )
-      m_operationChooserPage.changeProfile( choosenProfile, choosenProperties );
-
     if( m_profile == null )
-    {
-      final GMLWorkspace workspace = m_profiles[0].getWorkspace();
-      final ChangeFeaturesCommand command = new ChangeFeaturesCommand( workspace, featureChanges.toArray( new FeatureChange[0] ) );
-      try
-      {
-        m_workspace.postCommand( command );
-      }
-      catch( final Exception e )
-      {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      }
-    }
+      return performFinishMultipleProfiles();
     else
-    {
-      final ProfilChangeHint hint = new ProfilChangeHint();
-      hint.setPointValuesChanged();
-      m_profile.fireProfilChanged( hint,new IProfilChange[]{new TupleResultChange()} );
-    }
+      return performFinishSingleProfile();
+  }
+
+  private boolean performFinishSingleProfile( )
+  {
+    final Object[] choosenProperties = m_propertyChooserPage.getChoosen();
+    m_operationChooserPage.changeProfile( m_profile, choosenProperties );
+
+    final ProfilChangeHint hint = new ProfilChangeHint();
+    hint.setPointValuesChanged();
+    m_profile.fireProfilChanged( hint, new IProfilChange[] { new TupleResultChange() } );
 
     return true;
+  }
+
+  private boolean performFinishMultipleProfiles( )
+  {
+    final Object[] choosenProperties = m_propertyChooserPage.getChoosen();
+    final OperationChooserPage operationChooserPage = m_operationChooserPage;
+
+    final Object[] profileFeatures = m_profileChooserPage.getChoosen();
+
+    final IProfileManipulator manipulator = new IProfileManipulator()
+    {
+      @Override
+      public void performProfileManipulation( final IProfil profile, final IProgressMonitor monitor )
+      {
+        monitor.beginTask( "", 1 );
+        operationChooserPage.changeProfile( profile, choosenProperties );
+        monitor.done();
+      }
+    };
+    final ProfileManipulationOperation operation = new ProfileManipulationOperation( getContainer(), getWindowTitle(), profileFeatures, m_workspace, manipulator );
+    return operation.perform();
   }
 
   protected void handlePageChanged( final Object selectedPage )

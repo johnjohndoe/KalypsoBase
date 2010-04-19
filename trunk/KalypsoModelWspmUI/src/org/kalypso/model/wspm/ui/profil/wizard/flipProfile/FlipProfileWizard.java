@@ -40,87 +40,39 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.profil.wizard.flipProfile;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import org.eclipse.jface.wizard.Wizard;
-import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.ui.action.ProfileSelection;
-import org.kalypso.model.wspm.ui.profil.wizard.ProfilesChooserPage;
-import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
-import org.kalypso.ogc.gml.command.FeatureChange;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypsodeegree.model.feature.Feature;
+import org.kalypso.model.wspm.ui.i18n.Messages;
+import org.kalypso.model.wspm.ui.profil.wizard.ManipulateProfileWizard;
+import org.kalypso.model.wspm.ui.profil.wizard.ProfileManipulationOperation.IProfileManipulator;
 
 /**
  * @author kimwerner
  */
-public class FlipProfileWizard extends Wizard
+public class FlipProfileWizard extends ManipulateProfileWizard
 {
-  final private ProfilesChooserPage m_profileChooserPage;
-
-  final private CommandableWorkspace m_workspace;
-
   public FlipProfileWizard( final ProfileSelection profileSelection )
   {
-    m_workspace = profileSelection.getWorkspace();
-    setNeedsProgressMonitor( true );
-
-    final String message = org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.flipProfile.FlipProfileWizard.2" ); //$NON-NLS-1$
-    m_profileChooserPage = new ProfilesChooserPage( message, profileSelection, false );
+    super( profileSelection, Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.flipProfile.FlipProfileWizard.2" ) ); //$NON-NLS-1$
   }
 
   /**
-   * @see org.eclipse.jface.wizard.Wizard#addPages()
+   * @see org.kalypso.model.wspm.ui.profil.wizard.ManipulateProfileWizard#getProfileManipulator()
    */
   @Override
-  public void addPages( )
+  protected IProfileManipulator getProfileManipulator( )
   {
-    super.addPages();
-    addPage( m_profileChooserPage );
-  }
-
-  private IProfil[] toProfiles( final Object[] features )
-  {
-
-    final IProfil[] choosenProfiles = new IProfil[features.length];
-    for( int i = 0; i < features.length; i++ )
+    return new IProfileManipulator()
     {
-      final IProfileFeature wspmProfile = (IProfileFeature) features[i];
-      choosenProfiles[i] = wspmProfile.getProfil();
-    }
-    return choosenProfiles;
-  }
-
-  /**
-   * @see org.eclipse.jface.wizard.Wizard#performFinish()
-   */
-  @Override
-  public boolean performFinish( )
-  {
-    final Object[] profilFeatures = m_profileChooserPage.getChoosen();
-    final IProfil[] choosenProfiles = toProfiles( profilFeatures );
-    final List<FeatureChange> featureChanges = new ArrayList<FeatureChange>();
-    for( int i = 0; i < choosenProfiles.length; i++ )
-    {
-      ProfilUtil.flipProfile( choosenProfiles[i], true );
-      featureChanges.addAll( Arrays.asList( ProfileFeatureFactory.toFeatureAsChanges( choosenProfiles[i], (Feature) profilFeatures[i] ) ) );
-    }
-
-    final ChangeFeaturesCommand command = new ChangeFeaturesCommand( m_workspace, featureChanges.toArray( new FeatureChange[0] ) );
-    try
-    {
-      m_workspace.postCommand( command );
-    }
-    catch( final Exception e )
-    {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
-    return true;
+      @Override
+      public void performProfileManipulation( final IProfil profile, final IProgressMonitor monitor )
+      {
+        monitor.beginTask( "", 1 );
+        ProfilUtil.flipProfile( profile, true );
+        monitor.done();
+      }
+    };
   }
 }

@@ -40,93 +40,54 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.profil.wizard.simplify;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jface.dialogs.ErrorDialog;
-import org.eclipse.jface.wizard.Wizard;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.model.wspm.core.gml.IProfileFeature;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.util.DouglasPeuckerHelper;
 import org.kalypso.model.wspm.ui.action.ProfileSelection;
-import org.kalypso.model.wspm.ui.profil.wizard.ProfilesChooserPage;
+import org.kalypso.model.wspm.ui.profil.wizard.ManipulateProfileWizard;
+import org.kalypso.model.wspm.ui.profil.wizard.ProfileManipulationOperation.IProfileManipulator;
 import org.kalypso.observation.result.IRecord;
-import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
-import org.kalypso.ogc.gml.command.FeatureChange;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 
 /**
  * @author Gernot Belger
  */
-public class SimplifyProfileWizard extends Wizard
+public class SimplifyProfileWizard extends ManipulateProfileWizard
 {
-  final private ProfilesChooserPage m_profileChooserPage;
-
-  final private CommandableWorkspace m_workspace;
-
   private final SimplifyProfilePage m_simplifyPage;
 
   public SimplifyProfileWizard( final ProfileSelection profileSelection )
   {
-    m_workspace = profileSelection.getWorkspace();
-    setNeedsProgressMonitor( true );
+    super( profileSelection, "Please select the profiles that will simplified." );
 
-    final String message = "Please select the profiles that will simplified.";
-    m_profileChooserPage = new ProfilesChooserPage( message, profileSelection, false );
     m_simplifyPage = new SimplifyProfilePage( "simplifyPage" );
 
-    addPage( m_profileChooserPage );
     addPage( m_simplifyPage );
   }
 
-  private IProfil[] toProfiles( final Object[] features )
-  {
-    final IProfil[] choosenProfiles = new IProfil[features.length];
-    for( int i = 0; i < features.length; i++ )
-    {
-      final IProfileFeature wspmProfile = (IProfileFeature) features[i];
-      choosenProfiles[i] = wspmProfile.getProfil();
-    }
-
-    return choosenProfiles;
-  }
-
   /**
-   * @see org.eclipse.jface.wizard.Wizard#performFinish()
+   * @see org.kalypso.model.wspm.ui.profil.wizard.ManipulateProfileWizard#getProfileManipulator()
    */
   @Override
-  public boolean performFinish( )
+  protected IProfileManipulator getProfileManipulator( )
   {
     final double allowedDistance = m_simplifyPage.getDistance();
 
-    final Object[] profilFeatures = m_profileChooserPage.getChoosen();
-    final IProfil[] choosenProfiles = toProfiles( profilFeatures );
-    final List<FeatureChange> featureChanges = new ArrayList<FeatureChange>();
-    for( final IProfil profile : choosenProfiles )
+    return new IProfileManipulator()
     {
-      final IRecord[] points = profile.getPoints();
+      @Override
+      public void performProfileManipulation( final IProfil profile, final IProgressMonitor monitor )
+      {
+        monitor.beginTask( "", 1 );
 
-      final IRecord[] pointsToKeep = profile.getMarkedPoints();
-      final IRecord[] pointsToRemove = DouglasPeuckerHelper.reducePoints( points, pointsToKeep, allowedDistance );
-      profile.getResult().removeAll( Arrays.asList( pointsToRemove ) );
-    }
+        final IRecord[] points = profile.getPoints();
+        final IRecord[] pointsToKeep = profile.getMarkedPoints();
+        final IRecord[] pointsToRemove = DouglasPeuckerHelper.reducePoints( points, pointsToKeep, allowedDistance );
+        profile.getResult().removeAll( Arrays.asList( pointsToRemove ) );
 
-    final ChangeFeaturesCommand command = new ChangeFeaturesCommand( m_workspace, featureChanges.toArray( new FeatureChange[0] ) );
-    try
-    {
-      m_workspace.postCommand( command );
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-
-      final IStatus status = StatusUtilities.statusFromThrowable( e );
-      ErrorDialog.openError( getShell(), getWindowTitle(), "Failed to simplify profiles", status );
-    }
-
-    return true;
+        monitor.done();
+      }
+    };
   }
 }
