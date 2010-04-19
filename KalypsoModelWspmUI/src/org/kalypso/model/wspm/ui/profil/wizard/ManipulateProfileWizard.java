@@ -38,56 +38,44 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.ui.profil.wizard.simplify;
+package org.kalypso.model.wspm.ui.profil.wizard;
 
-import java.util.Arrays;
-
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.util.DouglasPeuckerHelper;
+import org.eclipse.jface.wizard.Wizard;
 import org.kalypso.model.wspm.ui.action.ProfileSelection;
-import org.kalypso.model.wspm.ui.profil.wizard.ManipulateProfileWizard;
 import org.kalypso.model.wspm.ui.profil.wizard.ProfileManipulationOperation.IProfileManipulator;
-import org.kalypso.observation.result.IRecord;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 
 /**
  * @author Gernot Belger
  */
-public class SimplifyProfileWizard extends ManipulateProfileWizard
+public abstract class ManipulateProfileWizard extends Wizard
 {
-  private final SimplifyProfilePage m_simplifyPage;
+  final private ProfilesChooserPage m_profileChooserPage;
 
-  public SimplifyProfileWizard( final ProfileSelection profileSelection )
+  final private CommandableWorkspace m_workspace;
+
+  public ManipulateProfileWizard( final ProfileSelection profileSelection, final String profilePageMessage )
   {
-    super( profileSelection, "Please select the profiles that will simplified." );
+    m_workspace = profileSelection.getWorkspace();
+    setNeedsProgressMonitor( true );
 
-    m_simplifyPage = new SimplifyProfilePage( "simplifyPage" );
+    m_profileChooserPage = new ProfilesChooserPage( profilePageMessage, profileSelection, false );
 
-    addPage( m_simplifyPage );
+    addPage( m_profileChooserPage );
   }
 
   /**
-   * @see org.kalypso.model.wspm.ui.profil.wizard.ManipulateProfileWizard#getProfileManipulator()
+   * @see org.eclipse.jface.wizard.Wizard#performFinish()
    */
   @Override
-  protected IProfileManipulator getProfileManipulator( )
+  public boolean performFinish( )
   {
-    final double allowedDistance = m_simplifyPage.getDistance();
+    final Object[] profileFeatures = m_profileChooserPage.getChoosen();
 
-    return new IProfileManipulator()
-    {
-      @Override
-      public void performProfileManipulation( final IProfil profile, final IProgressMonitor monitor )
-      {
-        monitor.beginTask( "", 1 );
-
-        final IRecord[] points = profile.getPoints();
-        final IRecord[] pointsToKeep = profile.getMarkedPoints();
-        final IRecord[] pointsToRemove = DouglasPeuckerHelper.reducePoints( points, pointsToKeep, allowedDistance );
-        profile.getResult().removeAll( Arrays.asList( pointsToRemove ) );
-
-        monitor.done();
-      }
-    };
+    final IProfileManipulator manipulator = getProfileManipulator();
+    final ProfileManipulationOperation operation = new ProfileManipulationOperation( getContainer(), getWindowTitle(), profileFeatures, m_workspace, manipulator );
+    return operation.perform();
   }
+
+  protected abstract IProfileManipulator getProfileManipulator( );
 }
