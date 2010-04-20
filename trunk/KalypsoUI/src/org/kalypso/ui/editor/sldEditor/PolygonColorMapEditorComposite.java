@@ -42,7 +42,6 @@ package org.kalypso.ui.editor.sldEditor;
 
 import java.awt.Color;
 import java.math.BigDecimal;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -64,10 +63,11 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.i18n.Messages;
-import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.sld.Fill;
 import org.kalypsodeegree.graphics.sld.ParameterValueType;
 import org.kalypsodeegree.graphics.sld.PolygonColorMapEntry;
+import org.kalypsodeegree.graphics.sld.PolygonSymbolizerUtils;
+import org.kalypsodeegree.graphics.sld.SldHelper;
 import org.kalypsodeegree.graphics.sld.Stroke;
 import org.kalypsodeegree_impl.graphics.sld.PolygonColorMapEntry_Impl;
 import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
@@ -75,7 +75,6 @@ import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
 /**
  * @author Thomas Jung
  */
-
 public abstract class PolygonColorMapEditorComposite extends Composite
 {
   private static final Color DEFAULT_COLOR_MIN = new Color( Integer.parseInt( "ff0000", 16 ) ); //$NON-NLS-1$
@@ -112,7 +111,7 @@ public abstract class PolygonColorMapEditorComposite extends Composite
 
     m_globalMin = minGlobalValue == null ? "<Unknown>" : globalMin.toPlainString(); //$NON-NLS-1$
     m_globalMax = minGlobalValue == null ? "<Unknown>" : globalMax.toPlainString(); //$NON-NLS-1$
-    
+
     // check if an entry is null. If that is the case, create both entries.
     if( m_fromEntry == null || m_toEntry == null )
     {
@@ -159,12 +158,12 @@ public abstract class PolygonColorMapEditorComposite extends Composite
     final Group fromColorMapGroup = new Group( this, SWT.NONE );
     fromColorMapGroup.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     fromColorMapGroup.setLayout( new GridLayout( 1, true ) );
-    fromColorMapGroup.setText( Messages.getString("org.kalypso.ui.editor.sldEditor.PolygonColorMapEditorComposite.4") ); //$NON-NLS-1$
+    fromColorMapGroup.setText( Messages.getString( "org.kalypso.ui.editor.sldEditor.PolygonColorMapEditorComposite.4" ) ); //$NON-NLS-1$
 
     final Group toColorMapGroup = new Group( this, SWT.NONE );
     toColorMapGroup.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     toColorMapGroup.setLayout( new GridLayout( 1, true ) );
-    toColorMapGroup.setText( Messages.getString("org.kalypso.ui.editor.sldEditor.PolygonColorMapEditorComposite.5") ); //$NON-NLS-1$
+    toColorMapGroup.setText( Messages.getString( "org.kalypso.ui.editor.sldEditor.PolygonColorMapEditorComposite.5" ) ); //$NON-NLS-1$
 
     final PolygonColorMapEntryEditorComposite fromEntryComposite = new PolygonColorMapEntryEditorComposite( fromColorMapGroup, SWT.NONE, m_fromEntry );
     fromEntryComposite.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
@@ -211,7 +210,7 @@ public abstract class PolygonColorMapEditorComposite extends Composite
         colorMapChanged();
       }
     } );
-    
+
   }
 
   private void createMinMaxGroup( final Composite commonComposite )
@@ -222,7 +221,7 @@ public abstract class PolygonColorMapEditorComposite extends Composite
     gridDataProperty.horizontalSpan = 2;
     propertyGroup.setLayoutData( gridDataProperty );
     propertyGroup.setLayout( new GridLayout( 3, false ) );
-    propertyGroup.setText( Messages.getString("org.kalypso.ui.editor.sldEditor.PolygonColorMapEditorComposite.6") ); //$NON-NLS-1$
+    propertyGroup.setText( Messages.getString( "org.kalypso.ui.editor.sldEditor.PolygonColorMapEditorComposite.6" ) ); //$NON-NLS-1$
 
     final Label globalMinLabel = new Label( propertyGroup, SWT.BEGINNING );
     globalMinLabel.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, true, false ) );
@@ -258,7 +257,7 @@ public abstract class PolygonColorMapEditorComposite extends Composite
 
     minValueText.addKeyListener( new KeyAdapter()
     {
-      @SuppressWarnings("synthetic-access") //$NON-NLS-1$
+      @SuppressWarnings("synthetic-access")//$NON-NLS-1$
       @Override
       public void keyPressed( final KeyEvent event )
       {
@@ -274,7 +273,7 @@ public abstract class PolygonColorMapEditorComposite extends Composite
 
     minValueText.addFocusListener( new FocusListener()
     {
-      @SuppressWarnings("synthetic-access") //$NON-NLS-1$
+      @SuppressWarnings("synthetic-access")//$NON-NLS-1$
       public void focusGained( final FocusEvent e )
       {
         final BigDecimal value = SldHelper.checkDoubleTextValue( propertyGroup, minValueText, m_patternDouble );
@@ -282,7 +281,7 @@ public abstract class PolygonColorMapEditorComposite extends Composite
           m_minValue = value;
       }
 
-      @SuppressWarnings("synthetic-access") //$NON-NLS-1$
+      @SuppressWarnings("synthetic-access")//$NON-NLS-1$
       public void focusLost( final FocusEvent e )
       {
         final BigDecimal value = SldHelper.checkDoubleTextValue( propertyGroup, minValueText, m_patternDouble );
@@ -296,7 +295,7 @@ public abstract class PolygonColorMapEditorComposite extends Composite
 
     minValueText.addModifyListener( new ModifyListener()
     {
-      @SuppressWarnings("synthetic-access") //$NON-NLS-1$
+      @SuppressWarnings("synthetic-access")//$NON-NLS-1$
       public void modifyText( final ModifyEvent e )
       {
         final String tempText = minValueText.getText();
@@ -317,7 +316,7 @@ public abstract class PolygonColorMapEditorComposite extends Composite
 
     maxValueText.addKeyListener( new KeyAdapter()
     {
-      @SuppressWarnings("synthetic-access") //$NON-NLS-1$
+      @SuppressWarnings("synthetic-access")//$NON-NLS-1$
       @Override
       public void keyPressed( final KeyEvent event )
       {
@@ -333,7 +332,7 @@ public abstract class PolygonColorMapEditorComposite extends Composite
 
     maxValueText.addFocusListener( new FocusListener()
     {
-      @SuppressWarnings("synthetic-access") //$NON-NLS-1$
+      @SuppressWarnings("synthetic-access")//$NON-NLS-1$
       public void focusGained( final FocusEvent e )
       {
         final BigDecimal value = SldHelper.checkDoubleTextValue( propertyGroup, maxValueText, m_patternDouble );
@@ -341,7 +340,7 @@ public abstract class PolygonColorMapEditorComposite extends Composite
           m_maxValue = value;
       }
 
-      @SuppressWarnings("synthetic-access") //$NON-NLS-1$
+      @SuppressWarnings("synthetic-access")//$NON-NLS-1$
       public void focusLost( final FocusEvent e )
       {
         final BigDecimal value = SldHelper.checkDoubleTextValue( propertyGroup, maxValueText, m_patternDouble );
@@ -355,7 +354,7 @@ public abstract class PolygonColorMapEditorComposite extends Composite
 
     maxValueText.addModifyListener( new ModifyListener()
     {
-      @SuppressWarnings("synthetic-access") //$NON-NLS-1$
+      @SuppressWarnings("synthetic-access")//$NON-NLS-1$
       public void modifyText( final ModifyEvent e )
       {
         final String tempText = maxValueText.getText();
@@ -376,7 +375,7 @@ public abstract class PolygonColorMapEditorComposite extends Composite
 
     stepWidthText.addKeyListener( new KeyAdapter()
     {
-      @SuppressWarnings("synthetic-access") //$NON-NLS-1$
+      @SuppressWarnings("synthetic-access")//$NON-NLS-1$
       @Override
       public void keyPressed( final KeyEvent event )
       {
@@ -392,7 +391,7 @@ public abstract class PolygonColorMapEditorComposite extends Composite
 
     stepWidthText.addFocusListener( new FocusListener()
     {
-      @SuppressWarnings("synthetic-access") //$NON-NLS-1$
+      @SuppressWarnings("synthetic-access")//$NON-NLS-1$
       public void focusGained( final FocusEvent e )
       {
         final BigDecimal value = SldHelper.checkPositiveDoubleTextValue( propertyGroup, stepWidthText, m_patternDouble );
@@ -400,7 +399,7 @@ public abstract class PolygonColorMapEditorComposite extends Composite
           m_stepWidth = value;
       }
 
-      @SuppressWarnings("synthetic-access") //$NON-NLS-1$
+      @SuppressWarnings("synthetic-access")//$NON-NLS-1$
       public void focusLost( final FocusEvent e )
       {
         final BigDecimal value = SldHelper.checkPositiveDoubleTextValue( propertyGroup, stepWidthText, m_patternDouble );
@@ -414,7 +413,7 @@ public abstract class PolygonColorMapEditorComposite extends Composite
 
     stepWidthText.addModifyListener( new ModifyListener()
     {
-      @SuppressWarnings("synthetic-access") //$NON-NLS-1$
+      @SuppressWarnings("synthetic-access")//$NON-NLS-1$
       public void modifyText( final ModifyEvent e )
       {
         final String tempText = stepWidthText.getText();
@@ -437,92 +436,8 @@ public abstract class PolygonColorMapEditorComposite extends Composite
 
   public List<PolygonColorMapEntry> getColorMap( )
   {
-    return createColorMap( m_fromEntry, m_toEntry, m_stepWidth, m_minValue, m_maxValue, m_strokeChecked );
+    return PolygonSymbolizerUtils.createColorMap( m_fromEntry, m_toEntry, m_stepWidth, m_minValue, m_maxValue, m_strokeChecked );
   }
 
   protected abstract void colorMapChanged( );
-
-  public static List<PolygonColorMapEntry> createColorMap( final PolygonColorMapEntry fromEntry, final PolygonColorMapEntry toEntry, final BigDecimal stepWidth, final BigDecimal minValue, final BigDecimal maxValue, final boolean useStroke )
-  {
-    final List<PolygonColorMapEntry> colorMapList = new LinkedList<PolygonColorMapEntry>();
-
-    try
-    {
-      final Color fromPolygonColor = fromEntry.getFill().getFill( null );
-      final Color toPolygonColor = toEntry.getFill().getFill( null );
-      final double polygonOpacityFrom = fromEntry.getFill().getOpacity( null );
-      final double polygonOpacityTo = toEntry.getFill().getOpacity( null );
-
-      // Stroke
-      final Color fromLineColor = fromEntry.getStroke().getStroke( null );
-      final Color toLineColor = toEntry.getStroke().getStroke( null );
-      final double lineOpacityFrom = fromEntry.getStroke().getOpacity( null );
-      final double lineOpacityTo = toEntry.getStroke().getOpacity( null );
-      final double lineWidthFrom = fromEntry.getStroke().getWidth( null );
-      final double lineWidthTo = toEntry.getStroke().getWidth( null );
-
-      // get rounded values below min and above max (rounded by first decimal)
-      final BigDecimal minDecimal = minValue.setScale( 2, BigDecimal.ROUND_FLOOR );
-      final BigDecimal maxDecimal = maxValue.setScale( 2, BigDecimal.ROUND_CEILING );
-
-      final BigDecimal polygonStepWidth = stepWidth.setScale( 2, BigDecimal.ROUND_FLOOR );
-      final int numOfClasses = (maxDecimal.subtract( minDecimal ).divide( polygonStepWidth, BigDecimal.ROUND_HALF_UP )).intValue();
-
-      for( int currentClass = 0; currentClass < numOfClasses; currentClass++ )
-      {
-        final BigDecimal fromValue = new BigDecimal( minDecimal.doubleValue() + currentClass * polygonStepWidth.doubleValue() ).setScale( 2, BigDecimal.ROUND_HALF_UP );
-        final BigDecimal toValue = new BigDecimal( minDecimal.doubleValue() + (currentClass + 1) * polygonStepWidth.doubleValue() ).setScale( 2, BigDecimal.ROUND_HALF_UP );
-
-        // Stroke
-        Color lineColor;
-        if( fromLineColor == toLineColor )
-          lineColor = fromLineColor;
-        else
-          lineColor = SldHelper.interpolateColor( fromLineColor, toLineColor, currentClass, numOfClasses );
-
-        // Fill
-        final Color polygonColor = SldHelper.interpolateColor( fromPolygonColor, toPolygonColor, currentClass, numOfClasses );
-        final double polygonOpacity = SldHelper.interpolate( polygonOpacityFrom, polygonOpacityTo, currentClass, numOfClasses );
-        final Fill fill = StyleFactory.createFill( polygonColor, polygonOpacity );
-
-        // Stroke
-        BigDecimal lineOpacity;
-        BigDecimal lineWidth;
-
-        if( useStroke == false )
-        {
-          lineOpacity = new BigDecimal( 0 ).setScale( 2, BigDecimal.ROUND_HALF_UP );
-          lineWidth = new BigDecimal( 0.01 ).setScale( 2, BigDecimal.ROUND_HALF_UP );
-        }
-        else
-        {
-          lineOpacity = new BigDecimal( SldHelper.interpolate( lineOpacityFrom, lineOpacityTo, currentClass, numOfClasses ) ).setScale( 2, BigDecimal.ROUND_HALF_UP );
-          lineWidth = new BigDecimal( SldHelper.interpolate( lineWidthFrom, lineWidthTo, currentClass, numOfClasses ) ).setScale( 2, BigDecimal.ROUND_HALF_UP );
-          if( lineWidth == new BigDecimal( 0 ) )
-            lineWidth = new BigDecimal( 0.01 ).setScale( 2, BigDecimal.ROUND_HALF_UP );
-        }
-
-        final Stroke stroke = StyleFactory.createStroke( lineColor, lineWidth.doubleValue(), lineOpacity.doubleValue() );
-        stroke.setLineCap( java.awt.BasicStroke.CAP_ROUND );
-        stroke.setLineJoin( java.awt.BasicStroke.JOIN_ROUND );
-        final String labelStr = String.format( "%.2f - %.2f", fromValue, toValue ); //$NON-NLS-1$
-
-        final ParameterValueType label = StyleFactory.createParameterValueType( labelStr );
-        final ParameterValueType from = StyleFactory.createParameterValueType( fromValue.doubleValue() );
-        final ParameterValueType to = StyleFactory.createParameterValueType( toValue.doubleValue() );
-
-        final PolygonColorMapEntry colorMapEntry = new PolygonColorMapEntry_Impl( fill, stroke, label, from, to );
-
-        colorMapList.add( colorMapEntry );
-      }
-    }
-    catch( final FilterEvaluationException e )
-    {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
-
-    return colorMapList;
-  }
-
 }
