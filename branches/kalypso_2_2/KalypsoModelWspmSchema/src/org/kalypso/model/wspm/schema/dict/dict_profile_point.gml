@@ -19,7 +19,7 @@
    <swe:property>
     <swe:Phenomenon gml:id="Phenomenon_Breite">
      <gml:description/>
-            <gml:name>Breite [m]</gml:name>
+            <gml:name>Breite</gml:name>
     </swe:Phenomenon>
    </swe:property>
    <swe:representation>
@@ -27,7 +27,7 @@
 	        <xst:restriction base="double">
 	             <xst:fractionDigits value="4"/>
 	        </xst:restriction>
-	        <gml:unitOfMeasure uom="m"/>
+	        <gml:unitOfMeasure uom="dict_uom.xml#m"/>
 	   </swe:SimpleType>
    </swe:representation>
   </swe:ItemDefinition>
@@ -39,12 +39,12 @@
    <swe:property>
     <swe:Phenomenon gml:id="Phenomenon_Hoehe">
      <gml:description/>
-     <gml:name>Höhe [m NHN]</gml:name>
+     <gml:name>Höhe</gml:name>
     </swe:Phenomenon>
    </swe:property>
    <swe:representation>
     <swe:Number>
-     <gml:unitOfMeasure uom="m NHN"/>
+     <gml:unitOfMeasure uom="dict_uom.xml#m NHN"/>
     </swe:Number>
    </swe:representation>
   </swe:ItemDefinition>
@@ -62,7 +62,7 @@
    </swe:property>
    <swe:representation>
     <swe:Number>
-     <gml:unitOfMeasure uom="ks"/>
+     <gml:unitOfMeasure uom="dict_uom.xml#ks"/>
     </swe:Number>
    </swe:representation>
   </swe:ItemDefinition>
@@ -79,7 +79,7 @@
     </swe:property>
     <swe:representation>
      <swe:Number>
-      <gml:unitOfMeasure uom="kst"/>
+      <gml:unitOfMeasure uom="dict_uom.xml#kst"/>
      </swe:Number>
     </swe:representation>
    </swe:ItemDefinition>
@@ -96,7 +96,7 @@
    </swe:property>
    <swe:representation>
     <swe:Number>
-     <gml:unitOfMeasure uom="m"/>
+     <gml:unitOfMeasure uom="dict_uom.xml#m"/>
     </swe:Number>
    </swe:representation>
   </swe:ItemDefinition>
@@ -113,7 +113,7 @@
    </swe:property>
    <swe:representation>
     <swe:Number>
-     <gml:unitOfMeasure uom="m"/>
+     <gml:unitOfMeasure uom="dict_uom.xml#m"/>
     </swe:Number>
    </swe:representation>
   </swe:ItemDefinition>
@@ -130,7 +130,7 @@
    </swe:property>
    <swe:representation>
     <swe:Number>
-     <gml:unitOfMeasure uom="m"/>
+     <gml:unitOfMeasure uom="dict_uom.xml#m"/>
     </swe:Number>
    </swe:representation>
   </swe:ItemDefinition>
@@ -147,7 +147,7 @@
    </swe:property>
    <swe:representation>
     <swe:Number>
-     <gml:unitOfMeasure uom="m"/>
+     <gml:unitOfMeasure uom="dict_uom.xml#m"/>
     </swe:Number>
    </swe:representation>
   </swe:ItemDefinition>
@@ -164,7 +164,7 @@
    </swe:property>
    <swe:representation>
     <swe:Number>
-     <gml:unitOfMeasure uom="m"/>
+     <gml:unitOfMeasure uom="dict_uom.xml#m"/>
     </swe:Number>
    </swe:representation>
   </swe:ItemDefinition>
@@ -181,7 +181,7 @@
    </swe:property>
    <swe:representation>
     <swe:Number>
-     <gml:unitOfMeasure uom="mNN"/>
+     <gml:unitOfMeasure uom="dict_uom.xml#mNN"/>
     </swe:Number>
    </swe:representation>
   </swe:ItemDefinition>
@@ -198,7 +198,7 @@
    </swe:property>
    <swe:representation>
     <swe:Number>
-     <gml:unitOfMeasure uom="mNN"/>
+     <gml:unitOfMeasure uom="dict_uom.xml#mNN"/>
     </swe:Number>
    </swe:representation>
   </swe:ItemDefinition>
@@ -215,7 +215,7 @@
    </swe:property>
    <swe:representation>
     <swe:Number>
-     <gml:unitOfMeasure uom="mNN"/>
+     <gml:unitOfMeasure uom="dict_uom.xml#mNN"/>
     </swe:Number>
    </swe:representation>
   </swe:ItemDefinition>
