@@ -55,7 +55,7 @@
                               <st:minInclusive value="0.0"/>
                               <st:fractionDigits value="4"/>
                          </st:restriction>
-                         <gml:unitOfMeasure uom="#m3s"/>
+                         <gml:unitOfMeasure uom="dict_uom.xml#m³/s"/>
                     </swe:SimpleType>
                </swe:representation>
           </swe:ItemDefinition>
