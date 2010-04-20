@@ -65,6 +65,7 @@ import org.kalypso.i18n.Messages;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.sld.LineColorMapEntry;
 import org.kalypsodeegree.graphics.sld.ParameterValueType;
+import org.kalypsodeegree.graphics.sld.SldHelper;
 import org.kalypsodeegree.graphics.sld.Stroke;
 import org.kalypsodeegree_impl.graphics.sld.LineColorMap;
 import org.kalypsodeegree_impl.graphics.sld.LineColorMapEntry_Impl;

@@ -60,6 +60,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.i18n.Messages;
 import org.kalypsodeegree.graphics.sld.ColorMapEntry;
+import org.kalypsodeegree.graphics.sld.SldHelper;
 import org.kalypsodeegree_impl.graphics.sld.ColorMapEntry_Impl;
 
 /**
