@@ -36,42 +36,42 @@
       <command
             categoryId="org.kalypso.chart.ui.commands.category"
             id="org.kalypso.chart.ui.commands.pan"
-            name="Pan">
+            name="%org.kalypso.chart.ui.commands.pan.name">
       </command>
       <command
             categoryId="org.kalypso.chart.ui.commands.category"
             id="org.kalypso.chart.ui.commands.zoomIn"
-            name="Zoom in">
+            name="%org.kalypso.chart.ui.commands.zoomIn.name">
       </command>
       <command
             categoryId="org.kalypso.chart.ui.commands.category"
             id="org.kalypso.chart.ui.commands.zoomOut"
-            name="Zoom out">
+            name="%org.kalypso.chart.ui.commands.zoomOut.name">
       </command>
       <command
             categoryId="org.kalypso.chart.ui.commands.category"
             id="org.kalypso.chart.ui.commands.edit"
-            name="Edit">
+            name="%org.kalypso.chart.ui.commands.edit.name">
       </command>
       <command
             categoryId="org.kalypso.chart.ui.commands.category"
             id="org.kalypso.chart.ui.commands.maximize"
-            name="Reset view">
+            name="%org.kalypso.chart.ui.commands.maximize.name">
       </command>
       <command
             categoryId="org.kalypso.chart.ui.commands.category"
             id="org.kalypso.chart.ui.commands.maximizeView"
-            name="Maximize">
+            name="%org.kalypso.chart.ui.commands.maximizeView.name">
       </command>
       <command
             categoryId="org.kalypso.chart.ui.commands.category"
             id="org.kalypso.chart.ui.commands.export"
-            name="Export">
+            name="%org.kalypso.chart.ui.commands.export.name">
       </command>
       <command
             categoryId="org.kalypso.chart.ui.commands.category"
             id="org.kalypso.chart.ui.commands.openOutline"
-            name="Open outline">
+            name="%org.kalypso.chart.ui.commands.openOutline.name">
       </command>
    </extension>
    <extension
@@ -151,7 +151,7 @@
                <command
                      commandId="org.kalypso.chart.ui.commands.pan"
                      id="panId"
-                     label="Pan"
+                     label="%org.kalypso.chart.ui.commands.pan.name"
                      style="radio">
                      <visibleWhen
                checkEnabled="true">
@@ -162,7 +162,7 @@
          </command>
          <command
                commandId="org.kalypso.chart.ui.commands.zoomIn"
-               label="Zoom In"
+               label="%org.kalypso.chart.ui.commands.zoomIn.name"
                style="radio">
                <visibleWhen
                checkEnabled="true">
@@ -173,7 +173,7 @@
          </command>
          <command
                commandId="org.kalypso.chart.ui.commands.zoomOut"
-               label="Zoom out"
+               label="%org.kalypso.chart.ui.commands.zoomOut.name"
                style="radio">
                <visibleWhen
                checkEnabled="true">
@@ -184,7 +184,7 @@
          </command>
          <command
                commandId="org.kalypso.chart.ui.commands.edit"
-               label="Edit "
+               label="%org.kalypso.chart.ui.commands.edit.name "
                style="radio"
                tooltip="Edit ">
                <visibleWhen
@@ -196,7 +196,7 @@
          </command>
          <command
                commandId="org.kalypso.chart.ui.commands.maximize"
-               label="Maximize chart"
+               label="%org.kalypso.chart.ui.commands.maximize.name"
                style="push">
                <visibleWhen
                checkEnabled="true">
@@ -207,7 +207,7 @@
          </command>
          <command
                commandId="org.kalypso.chart.ui.commands.export"
-               label="Export"
+               label="%org.kalypso.chart.ui.commands.export.name"
                style="push">
                <visibleWhen
                checkEnabled="true">
@@ -235,33 +235,33 @@
                <command
                      commandId="org.kalypso.chart.ui.commands.pan"
                      id="panId"
-                     label="Pan"
+                     label="%org.kalypso.chart.ui.commands.pan.name"
                      style="radio">
          </command>
          <command
                commandId="org.kalypso.chart.ui.commands.zoomIn"
                id="zoomId"
-               label="Zoom In"
+               label="%org.kalypso.chart.ui.commands.zoomIn.name"
                style="radio">
          </command>
          <command
                commandId="org.kalypso.chart.ui.commands.zoomOut"
-               label="Zoom out"
+               label="%org.kalypso.chart.ui.commands.zoomOut.name"
                style="radio">
          </command>
          <command
                commandId="org.kalypso.chart.ui.commands.maximize"
-               label="Maximize chart"
+               label="%org.kalypso.chart.ui.commands.maximize.name"
                style="push">
          </command>
          <command
                commandId="org.kalypso.chart.ui.commands.export"
-               label="Export"
+               label="%org.kalypso.chart.ui.commands.export.name"
                style="push">
          </command>
          <command
                commandId="org.kalypso.chart.ui.commands.openOutline"
-               label="Open outline"
+               label="%org.kalypso.chart.ui.commands.openOutline.name"
                style="push">
          </command>
       
@@ -279,38 +279,38 @@
             </visibleWhen>
                            <command
                      commandId="org.kalypso.chart.ui.commands.pan"
-                     label="Pan"
+                     label="%org.kalypso.chart.ui.commands.pan.name"
                      style="radio">
     
          </command>
          <command
                commandId="org.kalypso.chart.ui.commands.zoomIn"
-               label="Zoom In"
+               label="%org.kalypso.chart.ui.commands.zoomIn.name"
                style="radio">
       
          </command>
          <command
                commandId="org.kalypso.chart.ui.commands.zoomOut"
-               label="Zoom out"
+               label="%org.kalypso.chart.ui.commands.zoomOut.name"
                style="radio">
 
          </command>
          <command
                commandId="org.kalypso.chart.ui.commands.edit"
-               label="Edit "
+               label="%org.kalypso.chart.ui.commands.edit.name"
                style="radio"
-               tooltip="Edit ">
+               tooltip="%org.kalypso.chart.ui.commands.edit.description">
        
          </command>
          <command
                commandId="org.kalypso.chart.ui.commands.maximize"
-               label="Maximize chart"
+               label="%org.kalypso.chart.ui.commands.maximize.name"
                style="push">
 
          </command>
          <command
                commandId="org.kalypso.chart.ui.commands.export"
-               label="Export"
+               label="%org.kalypso.chart.ui.commands.export.name"
                style="push">
 
          </command>
