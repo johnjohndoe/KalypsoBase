@@ -54,7 +54,6 @@ import org.kalypso.ogc.gml.KalypsoPictureThemeWorldFile;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.template.types.StyledLayerType;
-import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
@@ -72,11 +71,10 @@ public class PictureThemeFactory implements IKalypsoThemeFactory
   @Override
   public IKalypsoTheme createTheme( final I10nString layerName, final StyledLayerType layerType, final URL context, final IMapModell mapModell, final IFeatureSelectionManager selectionManager ) throws CoreException
   {
-    final String system = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
     if( "gmlpic".equals( layerType.getLinktype().toLowerCase() ) ) //$NON-NLS-1$
       return new KalypsoPictureThemeGml( layerName, layerType, context, mapModell );
 
-    return new KalypsoPictureThemeWorldFile( layerName, layerType, context, mapModell, system );
+    return new KalypsoPictureThemeWorldFile( layerName, layerType, context, mapModell );
   }
 
   /**
