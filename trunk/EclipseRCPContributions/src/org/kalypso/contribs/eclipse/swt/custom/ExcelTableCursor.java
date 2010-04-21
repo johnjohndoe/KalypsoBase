@@ -559,12 +559,21 @@ public class ExcelTableCursor extends TableCursor
           return;
 
         final int row = table.indexOf( row2 ) + dy;
-        final int col = getColumn() + dx;
+        int col = getColumn() + dx;
         final int rowCount = table.getItemCount();
         final int columnCount = table.getColumnCount();
 
         if( (col >= 0) && (col < columnCount) && (row >= 0) && (row < rowCount) )
+        {
+          /* Rather crude: advance further if the new column is not visible. Fixes the problem, that the first
+           * invisible column breaks the tabbing. */
+          final TableColumn column = getViewer().getTable().getColumn( col );
+          int width = column.getWidth();
+          if( width == 0 && col < columnCount - 1 )
+            col += 1;
+          
           setSelection( row, col, true );
+        }
 
         setFocus();
 

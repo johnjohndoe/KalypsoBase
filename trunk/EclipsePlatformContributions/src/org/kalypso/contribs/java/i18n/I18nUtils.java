@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.contribs.java.i18n;
 
+import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
@@ -60,6 +61,35 @@ public class I18nUtils
   }
 
   /**
+   * Searches a file based on the current locale.<br>
+   * The first of the following files that exist will be taken:
+   * <ul>
+   * <li><code>baseName_language_country_variantsuffix</code></li>
+   * <li><code>baseName_language_countrysuffix</code></li>
+   * <li><code>baseName_languagesuffix</code></li>
+   * <li><code>baseNamesuffixSuffix</code></li>
+   * </ul>
+   * Where lanugage, country and variant correspond to the current language settings.
+   * 
+   * @return The first suitable file, or <code>null</code>, if nothing could be found.
+   */
+  public static File getLocaleFile( final File dir, final String baseName, final String suffix )
+  {
+    final Locale locale = Locale.getDefault();
+    final String[] keys = generateKeys( locale, baseName );
+    for( final String key : keys )
+    {
+      final String filename = key + suffix;
+      final File file = new File( dir, filename );
+      if( file.isFile() )
+        return file;
+
+    }
+
+    return null;
+  }
+
+  /**
    * Similar as {@link Class#getResource(String)}, but tries different versions depending on the current locale.<br>
    * Tries to access
    * <ul>
@@ -77,7 +107,7 @@ public class I18nUtils
     final Locale locale = Locale.getDefault();
 
     final String[] names = generateKeys( locale, resourceBaseName );
-    for( String name : names )
+    for( final String name : names )
     {
       final URL location = clazz.getResource( name + resourceSuffix );
       if( location != null )
@@ -106,7 +136,7 @@ public class I18nUtils
     final Locale locale = Locale.getDefault();
 
     final String[] names = generateKeys( locale, resourceBaseName );
-    for( String name : names )
+    for( final String name : names )
     {
       final InputStream is = clazz.getResourceAsStream( name + resourceSuffix );
       if( is != null )

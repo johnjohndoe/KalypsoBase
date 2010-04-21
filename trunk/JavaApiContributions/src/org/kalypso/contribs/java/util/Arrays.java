@@ -345,6 +345,17 @@ public final class Arrays
   }
 
   /**
+   * Merges the contents of the given array into one String, separating the elements with separator.
+   */
+  public static String implode( final String[] array, final String separator )
+  {
+    if( array.length == 0 )
+      return "";
+
+    return implode( array, separator, 0, array.length - 1 );
+  }
+
+  /**
    * Merges the contents of the given array into one String, separating the elements with separator. You can restrict
    * the elements to fetch from the array by setting from and to.
    */
