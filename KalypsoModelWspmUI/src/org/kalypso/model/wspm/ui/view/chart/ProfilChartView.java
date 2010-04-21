@@ -99,7 +99,7 @@ public class ProfilChartView implements IChartPart, IProfilListener
 
   protected final void activeLayerChanged( final IChartLayer layer )
   {
-// if layer is deactivated do nothing
+    // if layer is deactivated do nothing
     if( !layer.isActive() )
       return;
     // otherwise deactivate all others
@@ -461,6 +461,7 @@ public class ProfilChartView implements IChartPart, IProfilListener
     if( m_profile == null )
     {
       ((GridData) (m_chartComposite.getLayoutData())).exclude = true;
+      m_chartComposite.getChartModel().setTitle( "<No Profile Selected>" ); //$NON-NLS-1$
 
       final ILayerManager lm = m_chartComposite.getChartModel().getLayerManager();
       lm.dispose();
