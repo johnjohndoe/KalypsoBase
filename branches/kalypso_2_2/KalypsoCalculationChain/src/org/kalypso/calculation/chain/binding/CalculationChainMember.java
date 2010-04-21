@@ -49,7 +49,7 @@ public class CalculationChainMember extends Feature_Impl implements ICalculation
   public String getTypeID( )
   {
     final Object property = getProperty( QNAME_PROP_TYPE_ID );
-    return property == null ? "" : property.toString();
+    return property == null ? "" : property.toString(); //$NON-NLS-1$
   }
 
   public void setTypeID( final String value )

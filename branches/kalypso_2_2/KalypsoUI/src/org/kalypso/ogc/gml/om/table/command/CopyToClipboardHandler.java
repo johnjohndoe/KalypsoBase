@@ -94,10 +94,10 @@ public class CopyToClipboardHandler extends AbstractHandler
     final String [] headerLabels = new String[columns.length-1];
     for( int i = 0; i < headerLabels.length; i++ )
       headerLabels[i] = columns[i+1].getText();
-    final String header = Arrays.implode( headerLabels, "\t", 0, headerLabels.length - 1 );
+    final String header = Arrays.implode( headerLabels, "\t", 0, headerLabels.length - 1 ); //$NON-NLS-1$
     
     sbf.append( header );
-    sbf.append("\n");
+    sbf.append("\n"); //$NON-NLS-1$
     
     // walk through every row (item)
     for( int i = 0; i < table.getItemCount(); i++ )
