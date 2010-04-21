@@ -87,7 +87,7 @@ import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
  */
 public class LegendView extends ViewPart implements IAdapterEater<ChartView>, IProfilProviderListener
 {
-  private static final String STR_NO_PROFILE_SELECTED = "No profile selected";
+  private static final String STR_NO_PROFILE_SELECTED = Messages.getString("org.kalypso.model.wspm.ui.view.legend.LegendView.3"); //$NON-NLS-1$
 
   private final AdapterPartListener<ChartView> m_chartProviderListener = new AdapterPartListener<ChartView>( ChartView.class, this, EditorFirstAdapterFinder.<ChartView> instance(), EditorFirstAdapterFinder.<ChartView> instance() );
 
@@ -164,7 +164,7 @@ public class LegendView extends ViewPart implements IAdapterEater<ChartView>, IP
       if( profil == null )
         layerView.setPartName( String.format( STR_NO_PROFILE_SELECTED ) );
       else
-        layerView.setPartName( String.format( "Station km %10.4f", profil.getStation() ) );
+        layerView.setPartName( String.format( Messages.getString("org.kalypso.model.wspm.ui.view.legend.LegendView.4"), profil.getStation() ) ); //$NON-NLS-1$
     }
   }
 
@@ -347,7 +347,7 @@ public class LegendView extends ViewPart implements IAdapterEater<ChartView>, IP
     if( profil == null )
       setPartName( String.format( STR_NO_PROFILE_SELECTED ) );
     else
-      setPartName( String.format( "Station km %10.4f", profil.getStation() ) );
+      setPartName( String.format( Messages.getString("org.kalypso.model.wspm.ui.view.legend.LegendView.5"), profil.getStation() ) ); //$NON-NLS-1$
   }
 
 }

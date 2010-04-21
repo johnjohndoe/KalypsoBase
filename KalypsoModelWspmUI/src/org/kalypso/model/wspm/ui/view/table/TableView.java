@@ -349,7 +349,7 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
     if( m_view.getContentProvider() != null )
       m_view.setInput( null ); // Reset input in order to avoid double refresh
 
-    this.setPartName( Messages.getString( "org.kalypso.model.wspm.ui.view.table.TableView.3", m_profile.getStation() ) );
+    this.setPartName( Messages.getString( "org.kalypso.model.wspm.ui.view.table.TableView.3", m_profile.getStation() ) ); //$NON-NLS-1$
     m_tupleResultContentProvider = new TupleResultContentProvider( handlerProvider );
     m_tupleResultLabelProvider = new TupleResultLabelProvider( m_tupleResultContentProvider );
 
