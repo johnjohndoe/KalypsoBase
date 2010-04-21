@@ -47,8 +47,6 @@ import org.kalypsodeegree.model.geometry.GM_Object;
  */
 public interface IShapeDataProvider
 {
-  public Feature getFeature( final int index );
-
   public int getFeaturesLength( );
 
   public byte getOutputShapeConstant( );

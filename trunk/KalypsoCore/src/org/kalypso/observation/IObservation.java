@@ -40,6 +40,9 @@
  --------------------------------------------------------------------------*/
 package org.kalypso.observation;
 
+import javax.xml.namespace.QName;
+
+import org.kalypso.commons.xml.NS;
 import org.kalypso.observation.phenomenon.IPhenomenon;
 
 /**
@@ -47,25 +50,27 @@ import org.kalypso.observation.phenomenon.IPhenomenon;
  */
 public interface IObservation<T>
 {
-  public String getName( );
+  static final QName QNAME_OBSERVATION = new QName( NS.OM, "Observation" );
 
-  public void setName( final String name );
+  String getName( );
 
-  public String getDescription( );
+  void setName( String name );
 
-  public void setDescription( final String desc );
+  String getDescription( );
+
+  void setDescription( String desc );
 
   /**
    * Returns the phenomenon the the observation.
    */
-  public IPhenomenon getPhenomenon( );
+  IPhenomenon getPhenomenon( );
 
   /**
    * Sets the phenomenon of the observation.
    */
-  public void setPhenomenon( final IPhenomenon phenomenon );
+  void setPhenomenon( IPhenomenon phenomenon );
 
-  public T getResult( );
+  T getResult( );
 
-  public void setResult( final T values );
+  void setResult( T values );
 }
