@@ -13,7 +13,7 @@
             category="org.kalypso.planer.client.manager.views"
             class="org.kalypso.project.database.client.ui.view.ViewManageServerProjects"
             id="org.kalypso.project.database.client.ui.view.ViewManageServerProjects"
-            name="Modelldatenbank Verwaltung">
+            name="%org.kalypso.project.database.client.ui.view.ViewManageServerProjects.name">
       </view>
    </extension>
 
