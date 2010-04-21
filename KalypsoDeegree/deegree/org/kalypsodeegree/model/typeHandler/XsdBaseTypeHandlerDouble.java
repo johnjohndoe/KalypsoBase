@@ -56,7 +56,9 @@ public class XsdBaseTypeHandlerDouble extends XsdBaseTypeHandler<Double>
     if( xmlString == null || xmlString.isEmpty() )
       return null;
 
-    return Double.valueOf( xmlString.replace( ",", "." ) );
+    // TODO: performance: we should distinguish between user input and parsing from a file.
+    // When parsing the observation we do not need to replace . and , (takes a bit of time)
+    return Double.valueOf( xmlString.replace( ',', '.' ) );
   }
 
   /**

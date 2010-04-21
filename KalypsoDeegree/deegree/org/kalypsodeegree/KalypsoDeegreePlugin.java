@@ -146,8 +146,8 @@ public class KalypsoDeegreePlugin extends Plugin
    * defaults, and returned.
    * </p>
    * <p>
-   * <strong>NOTE:</strong> As of Eclipse 3.1 this method is no longer referring to the core runtime compatibility
-   * layer and so plug-ins relying on Plugin#initializeDefaultPreferences will have to access the compatibility layer
+   * <strong>NOTE:</strong> As of Eclipse 3.1 this method is no longer referring to the core runtime compatibility layer
+   * and so plug-ins relying on Plugin#initializeDefaultPreferences will have to access the compatibility layer
    * themselves.
    * </p>
    * 

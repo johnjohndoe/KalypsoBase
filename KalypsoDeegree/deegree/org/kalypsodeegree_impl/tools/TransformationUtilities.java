@@ -74,33 +74,30 @@ public class TransformationUtilities
    * 
    * @param remoteImage
    *            Image to be transformed.
-   * @param env
+   * @param sourceEnvelope
    *            Bounding box of the remoteMap.
-   * @param localCSR
+   * @param localCrs
    *            Target coordinate system.
-   * @param remoteCSR
-   *            Source coordinate system.
    * @param worldToScreenTransformation
-   *            Transformation from target coordiante system to pixel unites.
+   *            Transformation from target coordinate system to pixel unites.
    * @param g
    *            Graphics context to draw the transformed image to.
    * @throws Exception
    */
-
-  public static void transformImage( TiledImage remoteImage, GM_Envelope env, String localCSR, String remoteCSR, GeoTransform worldToScreenTransformation, Graphics g ) throws Exception
+  public static void transformImage( TiledImage remoteImage, GM_Envelope sourceEnvelope, String targetCrs, GeoTransform worldToScreenTransformation, Graphics g ) throws Exception
   {
-    int height = remoteImage.getHeight();
-    int width = remoteImage.getWidth();
+    final int height = remoteImage.getHeight();
+    final int width = remoteImage.getWidth();
 
-    OffsetVector offsetX = new OffsetVector( (env.getMax().getX() - env.getMin().getX()) / width, 0.0 );
-    OffsetVector offsetY = new OffsetVector( 0.0, (env.getMax().getY() - env.getMin().getY()) / height );
+    final OffsetVector offsetX = new OffsetVector( (sourceEnvelope.getMax().getX() - sourceEnvelope.getMin().getX()) / width, 0.0 );
+    final OffsetVector offsetY = new OffsetVector( 0.0, (sourceEnvelope.getMax().getY() - sourceEnvelope.getMin().getY()) / height );
 
-    GridRange range = new GridRange_Impl( new double[] { 0, 0 }, new double[] { width, height } );
+    final GridRange range = new GridRange_Impl( new double[] { 0, 0 }, new double[] { width, height } );
 
-    GM_Point origin = GeometryFactory.createGM_Point( env.getMin().getX(), env.getMin().getY(), remoteCSR );
-    RectifiedGridDomain gridDomain = new RectifiedGridDomain( origin, offsetX, offsetY, range );
+    final GM_Point origin = GeometryFactory.createGM_Point( sourceEnvelope.getMin().getX(), sourceEnvelope.getMin().getY(), sourceEnvelope.getCoordinateSystem() );
+    final RectifiedGridDomain gridDomain = new RectifiedGridDomain( origin, offsetX, offsetY, range );
 
-    internalTransformation( (Graphics2D) g, worldToScreenTransformation, remoteImage, gridDomain, localCSR );
+    internalTransformation( (Graphics2D) g, worldToScreenTransformation, remoteImage, gridDomain, targetCrs );
   }
 
   /**

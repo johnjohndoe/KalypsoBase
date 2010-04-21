@@ -53,4 +53,5 @@ public class KalypsoDeegreeDebug
 
   public static Debug GRID_OPS = new Debug( KalypsoDeegreePlugin.getDefault(), "/debug/grid_ops" ); //$NON-NLS-1$
 
+  public static Debug FEATURE_PROPERTY_CACHING = new Debug( KalypsoDeegreePlugin.getDefault(), "/debug/feature/propertyCaching" ); //$NON-NLS-1$
 }
