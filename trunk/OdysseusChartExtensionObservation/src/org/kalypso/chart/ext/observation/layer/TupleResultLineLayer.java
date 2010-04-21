@@ -125,7 +125,8 @@ public class TupleResultLineLayer extends AbstractLineLayer
     gc.dispose();
 
   }
-
+ 
+ 
   @SuppressWarnings("unchecked")
   public void paint( final GC gc )
   {
