@@ -10,11 +10,11 @@
      <!-- Length Section components -->
      <gml:dictionaryEntry>
           <swe:ItemDefinition gml:id="LengthSectionStation">
-               <gml:name>%LengthSectionStation_name</gml:name>
+               <gml:name>%LengthSectionStation.item.name</gml:name>
                <swe:property>
                     <swe:Phenomenon gml:id="phen-stat">
-                         <gml:description>%LengthSectionStation_description</gml:description>
-                         <gml:name>%LengthSectionStation_name</gml:name>
+                         <gml:description>%phen-stat.description</gml:description>
+                         <gml:name>%phen-stat.name</gml:name>
                     </swe:Phenomenon>
                </swe:property>
                <swe:representation>
@@ -22,36 +22,19 @@
                          <st:restriction base="decimal">
                               <st:fractionDigits value="4"/>
                          </st:restriction>
-                         <gml:unitOfMeasure uom="km"/>
+                         <gml:unitOfMeasure uom="dict_uom.xml#km"/>
                     </swe:SimpleType>
                </swe:representation>
           </swe:ItemDefinition>
      </gml:dictionaryEntry>
 
      <gml:dictionaryEntry>
-          <swe:ItemDefinition gml:id="LengthSectionText">
-               <gml:name>%LengthSectionText_name</gml:name>
-               <swe:property>
-                    <swe:Phenomenon gml:id="phen-text">
-                         <gml:description>%LengthSectionText_description</gml:description>
-                         <gml:name>%LengthSectionText_name</gml:name>
-                    </swe:Phenomenon>
-               </swe:property>
-               <swe:representation>
-                    <swe:Word>
-                         <swe:classification/>
-                    </swe:Word>
-               </swe:representation>
-          </swe:ItemDefinition>
-     </gml:dictionaryEntry>
-
-     <gml:dictionaryEntry>
           <swe:ItemDefinition gml:id="LengthSectionRunOff">
-               <gml:name>%LengthSectionRunOff_name</gml:name>
+               <gml:name>%LengthSectionRunOff.name</gml:name>
                <swe:property>
                     <swe:Phenomenon gml:id="phen_runoff">
-                         <gml:description>%LengthSectionRunOff_description</gml:description>
-                         <gml:name>%LengthSectionRunOff_name</gml:name>
+                         <gml:description>%phen_runoff.description</gml:description>
+                         <gml:name>%phen_runoff.name</gml:name>
                     </swe:Phenomenon>
                </swe:property>
                <swe:representation>
@@ -60,7 +43,7 @@
                               <st:minInclusive value="0.0"/>
                               <st:fractionDigits value="3"/>
                          </st:restriction>
-                         <gml:unitOfMeasure uom="m³/s"/>
+                         <gml:unitOfMeasure uom="dict_uom.xml#m³/s"/>
                     </swe:SimpleType>
                </swe:representation>
           </swe:ItemDefinition>
@@ -68,11 +51,11 @@
 
      <gml:dictionaryEntry>
           <swe:ItemDefinition gml:id="LengthSectionWaterlevel">
-               <gml:name>%LengthSectionWaterlevel_name</gml:name>
+               <gml:name>%LengthSectionWaterlevel.name</gml:name>
                <swe:property>
                     <swe:Phenomenon gml:id="phen_waterlevel">
-                         <gml:description>%LengthSectionWaterlevel_description</gml:description>
-                         <gml:name>%LengthSectionWaterlevel_name</gml:name>
+                         <gml:description>%phen_waterlevel.description</gml:description>
+                         <gml:name>%phen_waterlevel.name</gml:name>
                     </swe:Phenomenon>
                </swe:property>
                <swe:representation>
@@ -80,7 +63,7 @@
                          <st:restriction base="decimal">
                               <st:fractionDigits value="2"/>
                          </st:restriction>
-                         <gml:unitOfMeasure uom="NN+m"/>
+                         <gml:unitOfMeasure uom="dict_uom.xml#mNN"/>
                     </swe:SimpleType>
                </swe:representation>
           </swe:ItemDefinition>
@@ -88,10 +71,10 @@
 
      <gml:dictionaryEntry>
           <swe:ItemDefinition gml:id="LengthSectionProfileType">
-               <gml:name>%LengthSectionProfileType_name</gml:name>
+               <gml:name>%LengthSectionProfileType.name</gml:name>
                <swe:property>
                     <swe:Phenomenon gml:id="phen-kenn">
-                         <gml:name>Kennung</gml:name>
+                         <gml:name>%phen-kenn.name</gml:name>
                     </swe:Phenomenon>
                </swe:property>
                <swe:representation>
@@ -107,10 +90,10 @@
 
      <gml:dictionaryEntry>
           <swe:ItemDefinition gml:id="LengthSectionGround">
-               <gml:name>%LengthSectionGround_name</gml:name>
+               <gml:name>%LengthSectionGround.name</gml:name>
                <swe:property>
                     <swe:Phenomenon gml:id="phen-sohle">
-                         <gml:name>%LengthSectionGround_name</gml:name>
+                         <gml:name>%phen-sohle.name</gml:name>
                     </swe:Phenomenon>
                </swe:property>
                <swe:representation>
@@ -118,7 +101,7 @@
                          <st:restriction base="decimal">
                               <st:fractionDigits value="3"/>
                          </st:restriction>
-                         <gml:unitOfMeasure uom="mNN"/>
+                         <gml:unitOfMeasure uom="dict_uom.xml#mNN"/>
                     </swe:SimpleType>
                </swe:representation>
           </swe:ItemDefinition>
@@ -126,10 +109,10 @@
 
      <gml:dictionaryEntry>
           <swe:ItemDefinition gml:id="LengthSection_hen">
-               <gml:name>%LengthSection_hen_name</gml:name>
+               <gml:name>%LengthSection_hen.name</gml:name>
                <swe:property>
                     <swe:Phenomenon gml:id="phen-hen">
-                         <gml:name>%LengthSection_hen_name</gml:name>
+                         <gml:name>%phen-hen.name</gml:name>
                     </swe:Phenomenon>
                </swe:property>
                <swe:representation>
@@ -137,7 +120,7 @@
                          <st:restriction base="decimal">
                               <st:fractionDigits value="3"/>
                          </st:restriction>
-                         <gml:unitOfMeasure uom="mNN"/>
+                         <gml:unitOfMeasure uom="dict_uom.xml#mNN"/>
                     </swe:SimpleType>
                </swe:representation>
           </swe:ItemDefinition>
@@ -145,10 +128,10 @@
 
      <gml:dictionaryEntry>
           <swe:ItemDefinition gml:id="LengthSection_h_BV">
-               <gml:name>%LengthSection_h_BV_name</gml:name>
+               <gml:name>%LengthSection_h_BV.name</gml:name>
                <swe:property>
                     <swe:Phenomenon gml:id="phen-h_bv">
-                         <gml:name>%LengthSection_h_BV_name</gml:name>
+                         <gml:name>%phen-h_bv.name</gml:name>
                     </swe:Phenomenon>
                </swe:property>
                <swe:representation>
@@ -156,7 +139,7 @@
                          <st:restriction base="decimal">
                               <st:fractionDigits value="3"/>
                          </st:restriction>
-                         <gml:unitOfMeasure uom="mNN"/>
+                         <gml:unitOfMeasure uom="dict_uom.xml#mNN"/>
                     </swe:SimpleType>
                </swe:representation>
           </swe:ItemDefinition>
@@ -164,10 +147,10 @@
 
      <gml:dictionaryEntry>
           <swe:ItemDefinition gml:id="LengthSection_Boe_li">
-               <gml:name>%LengthSection_Boe_li_name</gml:name>
+               <gml:name>%LengthSection_Boe_li.name</gml:name>
                <swe:property>
                     <swe:Phenomenon gml:id="phen-boe_li">
-                         <gml:name>%LengthSection_Boe_li_name</gml:name>
+                         <gml:name>%phen-boe_li.name</gml:name>
                     </swe:Phenomenon>
                </swe:property>
                <swe:representation>
@@ -175,7 +158,7 @@
                          <st:restriction base="decimal">
                               <st:fractionDigits value="3"/>
                          </st:restriction>
-                         <gml:unitOfMeasure uom="mNN"/>
+                         <gml:unitOfMeasure uom="dict_uom.xml#mNN"/>
                     </swe:SimpleType>
                </swe:representation>
           </swe:ItemDefinition>
@@ -183,10 +166,10 @@
 
      <gml:dictionaryEntry>
           <swe:ItemDefinition gml:id="LengthSection_Boe_re">
-               <gml:name>%LengthSection_Boe_re_name</gml:name>
+               <gml:name>%LengthSection_Boe_re.name</gml:name>
                <swe:property>
                     <swe:Phenomenon gml:id="phen-boe_re">
-                         <gml:name>%LengthSection_Boe_re_name</gml:name>
+                         <gml:name>%phen-boe_re.name</gml:name>
                     </swe:Phenomenon>
                </swe:property>
                <swe:representation>
@@ -194,7 +177,7 @@
                          <st:restriction base="decimal">
                               <st:fractionDigits value="3"/>
                          </st:restriction>
-                         <gml:unitOfMeasure uom="mNN"/>
+                         <gml:unitOfMeasure uom="dict_uom.xml#mNN"/>
                     </swe:SimpleType>
                </swe:representation>
           </swe:ItemDefinition>
@@ -202,10 +185,10 @@
 
      <gml:dictionaryEntry>
           <swe:ItemDefinition gml:id="LengthSection_v_m">
-               <gml:name>%LengthSection_v_m_name</gml:name>
+               <gml:name>%LengthSection_v_m.name</gml:name>
                <swe:property>
                     <swe:Phenomenon gml:id="phen-v_m">
-                         <gml:name>%LengthSection_v_m_name</gml:name>
+                         <gml:name>%phen-v_m.name</gml:name>
                     </swe:Phenomenon>
                </swe:property>
                <swe:representation>
@@ -214,7 +197,7 @@
                               <st:minInclusive value="0.0"/>
                               <st:fractionDigits value="3"/>
                          </st:restriction>
-                         <gml:unitOfMeasure uom="m_s"/>
+                         <gml:unitOfMeasure uom="dict_uom.xml#m/s"/>
                     </swe:SimpleType>
                </swe:representation>
           </swe:ItemDefinition>
@@ -222,10 +205,10 @@
 
      <gml:dictionaryEntry>
           <swe:ItemDefinition gml:id="LengthSection_tau_fl">
-               <gml:name>%LengthSection_tau_fl_name</gml:name>
+               <gml:name>%LengthSection_tau_fl.name</gml:name>
                <swe:property>
                     <swe:Phenomenon gml:id="phen-tau_fl">
-                         <gml:name>%LengthSection_tau_fl_name</gml:name>
+                         <gml:name>%phen-tau_fl.name</gml:name>
                     </swe:Phenomenon>
                </swe:property>
                <swe:representation>
@@ -234,7 +217,7 @@
                               <st:minInclusive value="0.0"/>
                               <st:fractionDigits value="2"/>
                          </st:restriction>
-                         <gml:unitOfMeasure uom="N_m2"/>
+                         <gml:unitOfMeasure uom="dict_uom.xml#N/m²"/>
                     </swe:SimpleType>
                </swe:representation>
           </swe:ItemDefinition>
@@ -243,10 +226,10 @@
 	<!-- Q -->
      <gml:dictionaryEntry>
           <swe:ItemDefinition gml:id="LengthSection_Q_li">
-               <gml:name>%LengthSection_Q_li-name</gml:name>
+               <gml:name>%LengthSection_Q_li.name</gml:name>
                <swe:property>
                     <swe:Phenomenon gml:id="phen-Q_li">
-                         <gml:name>%LengthSection_Q_li-name</gml:name>
+                         <gml:name>%phen-Q_li.name</gml:name>
                     </swe:Phenomenon>
                </swe:property>
                <swe:representation>
@@ -254,17 +237,17 @@
                          <st:restriction base="decimal">
                               <st:fractionDigits value="3"/>
                          </st:restriction>
-                         <gml:unitOfMeasure uom="m3_s"/>
+                         <gml:unitOfMeasure uom="dict_uom.xml#m³/s"/>
                     </swe:SimpleType>
                </swe:representation>
           </swe:ItemDefinition>
      </gml:dictionaryEntry>
      <gml:dictionaryEntry>
           <swe:ItemDefinition gml:id="LengthSection_Q_fl">
-               <gml:name>%LengthSection_Q_fl_name</gml:name>
+               <gml:name>%LengthSection_Q_fl.name</gml:name>
                <swe:property>
                     <swe:Phenomenon gml:id="phen-Q_fl">
-                         <gml:name>%LengthSection_Q_fl_name</gml:name>
+                         <gml:name>%phen-Q_fl.name</gml:name>
                     </swe:Phenomenon>
                </swe:property>
                <swe:representation>
@@ -272,17 +255,17 @@
                          <st:restriction base="decimal">
                               <st:fractionDigits value="3"/>
                          </st:restriction>
-                         <gml:unitOfMeasure uom="m3_s"/>
+                         <gml:unitOfMeasure uom="dict_uom.xml#m³/s"/>
                     </swe:SimpleType>
                </swe:representation>
           </swe:ItemDefinition>
      </gml:dictionaryEntry>
      <gml:dictionaryEntry>
           <swe:ItemDefinition gml:id="LengthSection_Q_re">
-               <gml:name>%LengthSection_Q_re_name</gml:name>
+               <gml:name>%LengthSection_Q_re.name</gml:name>
                <swe:property>
                     <swe:Phenomenon gml:id="phen-Q_re">
-                         <gml:name>%LengthSection_Q_re_name</gml:name>
+                         <gml:name>%phen-Q_re.name</gml:name>
                     </swe:Phenomenon>
                </swe:property>
                <swe:representation>
@@ -290,7 +273,7 @@
                          <st:restriction base="decimal">
                               <st:fractionDigits value="3"/>
                          </st:restriction>
-                         <gml:unitOfMeasure uom="m3_s"/>
+                         <gml:unitOfMeasure uom="dict_uom.xml#m³/s"/>
                     </swe:SimpleType>
                </swe:representation>
           </swe:ItemDefinition>
@@ -299,10 +282,10 @@
 	<!--  LAMBDA -->
      <gml:dictionaryEntry>
           <swe:ItemDefinition gml:id="LengthSection_lamb_li">
-               <gml:name>%LengthSection_lamb_li_name</gml:name>
+               <gml:name>%LengthSection_lamb_li.name</gml:name>
                <swe:property>
                     <swe:Phenomenon gml:id="phen-lam_li">
-                         <gml:name>%LengthSection_lamb_li_name</gml:name>
+                         <gml:name>%phen-lam_li.name</gml:name>
                     </swe:Phenomenon>
                </swe:property>
                <swe:representation>
@@ -318,10 +301,10 @@
 
      <gml:dictionaryEntry>
           <swe:ItemDefinition gml:id="LengthSection_lamb_fl">
-               <gml:name>%LengthSection_lamb_fl_name</gml:name>
+               <gml:name>%LengthSection_lamb_fl.name</gml:name>
                <swe:property>
                     <swe:Phenomenon gml:id="phen-lam_fl">
-                         <gml:name>%LengthSection_lamb_fl_name</gml:name>
+                         <gml:name>%phen-lam_fl.name</gml:name>
                     </swe:Phenomenon>
                </swe:property>
                <swe:representation>
@@ -337,10 +320,10 @@
 
      <gml:dictionaryEntry>
           <swe:ItemDefinition gml:id="LengthSection_lamb_re">
-               <gml:name>%LengthSection_lamb_re_name</gml:name>
+               <gml:name>%LengthSection_lamb_re.name</gml:name>
                <swe:property>
                     <swe:Phenomenon gml:id="phen-lam_re">
-                         <gml:name>%LengthSection_lamb_re_name</gml:name>
+                         <gml:name>%phen-lam_re.name</gml:name>
                     </swe:Phenomenon>
                </swe:property>
                <swe:representation>
@@ -356,10 +339,10 @@
 
      <gml:dictionaryEntry>
           <swe:ItemDefinition gml:id="LengthSection_f_li">
-               <gml:name>%LengthSection_f_li_name</gml:name>
+               <gml:name>%LengthSection_f_li.name</gml:name>
                <swe:property>
                     <swe:Phenomenon gml:id="phen-fl_li">
-                         <gml:name>%LengthSection_f_li_name</gml:name>
+                         <gml:name>%phen-fl_li.name</gml:name>
                     </swe:Phenomenon>
                </swe:property>
                <swe:representation>
@@ -368,7 +351,7 @@
                               <st:minInclusive value="0.0"/>
                               <st:fractionDigits value="3"/>
                          </st:restriction>
-                         <gml:unitOfMeasure uom="m2"/>
+                         <gml:unitOfMeasure uom="dict_uom.xml#m²"/>
                     </swe:SimpleType>
                </swe:representation>
           </swe:ItemDefinition>
@@ -376,10 +359,10 @@
 
      <gml:dictionaryEntry>
           <swe:ItemDefinition gml:id="LengthSection_f_fl">
-               <gml:name>%LengthSection_f_fl_name</gml:name>
+               <gml:name>%LengthSection_f_fl.name</gml:name>
                <swe:property>
                     <swe:Phenomenon gml:id="phen-f_fl">
-                         <gml:name>%LengthSection_f_fl_name</gml:name>
+                         <gml:name>%phen-f_fl.name</gml:name>
                     </swe:Phenomenon>
                </swe:property>
                <swe:representation>
@@ -388,7 +371,7 @@
                               <st:minInclusive value="0.0"/>
                               <st:fractionDigits value="3"/>
                          </st:restriction>
-                         <gml:unitOfMeasure uom="m2"/>
+                         <gml:unitOfMeasure uom="dict_uom.xml#m²"/>
                     </swe:SimpleType>
                </swe:representation>
           </swe:ItemDefinition>
@@ -396,10 +379,10 @@
 
      <gml:dictionaryEntry>
           <swe:ItemDefinition gml:id="LengthSection_f_re">
-               <gml:name>%LengthSection_f_re_name</gml:name>
+               <gml:name>%LengthSection_f_re.name</gml:name>
                <swe:property>
                     <swe:Phenomenon gml:id="phen-f_re">
-                         <gml:name>%LengthSection_f_re_name</gml:name>
+                         <gml:name>%phen-f_re.name</gml:name>
                     </swe:Phenomenon>
                </swe:property>
                <swe:representation>
@@ -408,7 +391,7 @@
                               <st:minInclusive value="0.0"/>
                               <st:fractionDigits value="3"/>
                          </st:restriction>
-                         <gml:unitOfMeasure uom="m2"/>
+                         <gml:unitOfMeasure uom="dict_uom.xml#m²"/>
                     </swe:SimpleType>
                </swe:representation>
           </swe:ItemDefinition>
@@ -416,10 +399,10 @@
 
      <gml:dictionaryEntry>
           <swe:ItemDefinition gml:id="LengthSection_br_li">
-               <gml:name>%LengthSection_br_li_name</gml:name>
+               <gml:name>%LengthSection_br_li.name</gml:name>
                <swe:property>
                     <swe:Phenomenon gml:id="phen-br_li">
-                         <gml:name>%LengthSection_br_li_name</gml:name>
+                         <gml:name>%phen-br_li.name</gml:name>
                     </swe:Phenomenon>
                </swe:property>
                <swe:representation>
@@ -428,7 +411,7 @@
                               <st:minInclusive value="0.0"/>
                               <st:fractionDigits value="3"/>
                          </st:restriction>
-                         <gml:unitOfMeasure uom="m"/>
+                         <gml:unitOfMeasure uom="dict_uom.xml#m"/>
                     </swe:SimpleType>
                </swe:representation>
           </swe:ItemDefinition>
@@ -436,10 +419,10 @@
 
      <gml:dictionaryEntry>
           <swe:ItemDefinition gml:id="LengthSection_br_fl">
-               <gml:name>%LengthSection_br_fl_name</gml:name>
+               <gml:name>%LengthSection_br_fl.name</gml:name>
                <swe:property>
                     <swe:Phenomenon gml:id="phen-br_fl">
-                         <gml:name>%LengthSection_br_fl_name</gml:name>
+                         <gml:name>%phen-br_fl.name</gml:name>
                     </swe:Phenomenon>
                </swe:property>
                <swe:representation>
@@ -448,7 +431,7 @@
                               <st:minInclusive value="0.0"/>
                               <st:fractionDigits value="3"/>
                          </st:restriction>
-                         <gml:unitOfMeasure uom="m"/>
+                         <gml:unitOfMeasure uom="dict_uom.xml#m"/>
                     </swe:SimpleType>
                </swe:representation>
           </swe:ItemDefinition>
@@ -456,10 +439,10 @@
 
      <gml:dictionaryEntry>
           <swe:ItemDefinition gml:id="LengthSection_br_re">
-               <gml:name>%LengthSection_br_re_name</gml:name>
+               <gml:name>%LengthSection_br_re.name</gml:name>
                <swe:property>
                     <swe:Phenomenon gml:id="phen-br_re">
-                         <gml:name>%LengthSection_br_re_name</gml:name>
+                         <gml:name>%phen-br_re.name</gml:name>
                     </swe:Phenomenon>
                </swe:property>
                <swe:representation>
@@ -468,7 +451,7 @@
                               <st:minInclusive value="0.0"/>
                               <st:fractionDigits value="3"/>
                          </st:restriction>
-                         <gml:unitOfMeasure uom="m"/>
+                         <gml:unitOfMeasure uom="dict_uom.xml#m"/>
                     </swe:SimpleType>
                </swe:representation>
           </swe:ItemDefinition>
@@ -476,10 +459,10 @@
 
      <gml:dictionaryEntry>
           <swe:ItemDefinition gml:id="LengthSection_WeirOK">
-               <gml:name>%LengthSection_WeirOK_name</gml:name>
+               <gml:name>%LengthSection_WeirOK.name</gml:name>
                <swe:property>
                     <swe:Phenomenon gml:id="phen-wehrok">
-                         <gml:name>%LengthSection_WeirOK_name</gml:name>
+                         <gml:name>%phen-wehrok.name</gml:name>
                     </swe:Phenomenon>
                </swe:property>
                <swe:representation>
@@ -487,7 +470,7 @@
                          <st:restriction base="decimal">
                               <st:fractionDigits value="3"/>
                          </st:restriction>
-                         <gml:unitOfMeasure uom="mNN"/>
+                         <gml:unitOfMeasure uom="dict_uom.xml#mNN"/>
                     </swe:SimpleType>
                </swe:representation>
           </swe:ItemDefinition>
@@ -495,10 +478,10 @@
 
      <gml:dictionaryEntry>
           <swe:ItemDefinition gml:id="LengthSection_BridgeOK">
-               <gml:name>%LengthSection_BridgeOK_name</gml:name>
+               <gml:name>%LengthSection_BridgeOK.name</gml:name>
                <swe:property>
                     <swe:Phenomenon gml:id="phen-brueckok">
-                         <gml:name>%LengthSection_BridgeOK_name</gml:name>
+                         <gml:name>%phen-brueckok.name</gml:name>
                     </swe:Phenomenon>
                </swe:property>
                <swe:representation>
@@ -506,7 +489,7 @@
                          <st:restriction base="decimal">
                               <st:fractionDigits value="3"/>
                          </st:restriction>
-                         <gml:unitOfMeasure uom="mNN"/>
+                         <gml:unitOfMeasure uom="dict_uom.xml#mNN"/>
                     </swe:SimpleType>
                </swe:representation>
           </swe:ItemDefinition>
@@ -514,10 +497,10 @@
 
      <gml:dictionaryEntry>
           <swe:ItemDefinition gml:id="LengthSection_BridgeUK">
-               <gml:name>%LengthSection_BridgeUK_name</gml:name>
+               <gml:name>%LengthSection_BridgeUK.name</gml:name>
                <swe:property>
                     <swe:Phenomenon gml:id="phen-brueckuk">
-                         <gml:name>%LengthSection_BridgeUK_name</gml:name>
+                         <gml:name>%phen-brueckuk.name</gml:name>
                     </swe:Phenomenon>
                </swe:property>
                <swe:representation>
@@ -525,7 +508,7 @@
                          <st:restriction base="decimal">
                               <st:fractionDigits value="3"/>
                          </st:restriction>
-                         <gml:unitOfMeasure uom="mNN"/>
+                         <gml:unitOfMeasure uom="dict_uom.xml#mNN"/>
                     </swe:SimpleType>
                </swe:representation>
           </swe:ItemDefinition>
@@ -533,10 +516,10 @@
 
      <gml:dictionaryEntry>
           <swe:ItemDefinition gml:id="LengthSection_BridgeWidth">
-               <gml:name>%LengthSection_BridgeWidth_name</gml:name>
+               <gml:name>%LengthSection_BridgeWidth.name</gml:name>
                <swe:property>
                     <swe:Phenomenon gml:id="phen-brueckb">
-                         <gml:name>%LengthSection_BridgeWidth_name</gml:name>
+                         <gml:name>%phen-brueckb.name</gml:name>
                     </swe:Phenomenon>
                </swe:property>
                <swe:representation>
@@ -545,7 +528,7 @@
                               <st:minInclusive value="0"/>
                               <st:fractionDigits value="3"/>
                          </st:restriction>
-                         <gml:unitOfMeasure uom="m"/>
+                         <gml:unitOfMeasure uom="dict_uom.xml#m"/>
                     </swe:SimpleType>
                </swe:representation>
           </swe:ItemDefinition>
@@ -553,10 +536,10 @@
 
      <gml:dictionaryEntry>
           <swe:ItemDefinition gml:id="LengthSection_RohrDN">
-               <gml:name>%LengthSection_RohrDN_name</gml:name>
+               <gml:name>%LengthSection_RohrDN.name</gml:name>
                <swe:property>
                     <swe:Phenomenon gml:id="phen-rohrdn">
-                         <gml:name>%LengthSection_RohrDN_name</gml:name>
+                         <gml:name>%phen-rohrdn.name</gml:name>
                     </swe:Phenomenon>
                </swe:property>
                <swe:representation>
@@ -565,7 +548,7 @@
                               <st:minInclusive value="0"/>
                               <st:fractionDigits value="3"/>
                          </st:restriction>
-                         <gml:unitOfMeasure uom="m"/>
+                         <gml:unitOfMeasure uom="dict_uom.xml#m"/>
                     </swe:SimpleType>
                </swe:representation>
           </swe:ItemDefinition>
@@ -574,10 +557,10 @@
      <!-- ALPHA -->
      <gml:dictionaryEntry>
           <swe:ItemDefinition gml:id="LengthSection_AlphaIW">
-               <gml:name>%LengthSection_AlphaIW_name</gml:name>
+               <gml:name>%LengthSection_AlphaIW.name</gml:name>
                <swe:property>
                     <swe:Phenomenon gml:id="phen-alphaIW">
-                         <gml:name>%LengthSection_AlphaIW_name</gml:name>
+                         <gml:name>%phen-alphaIW.name</gml:name>
                     </swe:Phenomenon>
                </swe:property>
                <swe:representation>
@@ -594,10 +577,10 @@
 
      <gml:dictionaryEntry>
           <swe:ItemDefinition gml:id="LengthSection_AlphaEW">
-               <gml:name>%LengthSection_AlphaEW_name</gml:name>
+               <gml:name>%LengthSection_AlphaEW.name</gml:name>
                <swe:property>
                     <swe:Phenomenon gml:id="phen-alphaEW">
-                         <gml:name>%LengthSection_AlphaEW_name</gml:name>
+                         <gml:name>%phen-alphaEW.name</gml:name>
                     </swe:Phenomenon>
                </swe:property>
                <swe:representation>
@@ -615,10 +598,10 @@
      <!-- I_REIB -->
      <gml:dictionaryEntry>
           <swe:ItemDefinition gml:id="LengthSection_I_Reib">
-               <gml:name>%LengthSection_I_Reib_name</gml:name>
+               <gml:name>%LengthSection_I_Reib.name=Reibungsgefälle</gml:name>
                <swe:property>
                     <swe:Phenomenon gml:id="phen-I_Reib">
-                         <gml:name>%LengthSection_I_Reib_name</gml:name>
+                         <gml:name>%phen-I_Reib.name</gml:name>
                     </swe:Phenomenon>
                </swe:property>
                <swe:representation>
