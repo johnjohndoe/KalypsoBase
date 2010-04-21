@@ -130,4 +130,59 @@ public final class ComponentUtilities
 
     return null;
   }
+
+  /**
+   * Returns a human readable label of the component.<br>
+   * The label is usually of the form '<componentName> [<unit-name>]' (e.g. 'Discharge [m³/s]'.
+   */
+  public static String getComponentLabel( final IComponent component )
+  {
+    final String name = getComponentName( component );
+    final String unit = getComponentUnitLabel( component );
+    if( unit == null )
+      return name;
+
+    return String.format( "%s [%s]", name, unit );
+  }
+
+  /**
+   * Returns the label of the unit of a {@link IComponent}.<br>
+   * The label is returned by the following rules:
+   * <ul>
+   * <li>TODO: use name/description of referenced unit</li>
+   * <li>if no reference is set, the local part of the reference is returned</li>
+   * <li>if the local part of the reference is 'none', '-' is returned</li>
+   * </ul>
+   */
+  private static String getComponentUnitLabel( final IComponent component )
+  {
+    final String unitReference = component.getUnit();
+    if( unitReference == null )
+      return null;
+
+    final String localRef = getLocalUnitReference( unitReference );
+    if( "none".equals( localRef ) ) //$NON-NLS-1$
+      return "-"; //$NON-NLS-1$
+
+    if( localRef.isEmpty() )
+      return null;
+
+    return localRef;
+  }
+
+  private static String getLocalUnitReference( final String unitReference )
+  {
+    final int hashIndex = unitReference.indexOf( '#' );
+    if( hashIndex == -1 )
+      return unitReference;
+
+    return unitReference.substring( hashIndex + 1 );
+  }
+
+  private static String getComponentName( final IComponent component )
+  {
+    // TODO: fixme, use description and or name of phenomenon
+    return component.getName();
+  }
+
 }
