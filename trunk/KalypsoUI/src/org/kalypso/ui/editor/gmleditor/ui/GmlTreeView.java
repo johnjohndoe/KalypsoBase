@@ -15,6 +15,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SafeRunner;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.util.LocalSelectionTransfer;
 import org.eclipse.jface.util.SafeRunnable;
@@ -35,6 +36,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Tree;
+import org.eclipse.ui.progress.UIJob;
 import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.viewers.ArrayTreeContentProvider;
@@ -165,7 +167,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
 
   /**
    * @param objectLoadedCallback
-   *            We be called each time after the tree-object was loaded
+   *          We be called each time after the tree-object was loaded
    */
   public GmlTreeView( final Composite composite, final int style, final IFeatureSelectionManager selectionManager, final Runnable objectLoadedCallback )
   {
@@ -318,7 +320,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
     catch( final Exception e )
     {
       e.printStackTrace();
-      throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.ui.editor.gmleditor.ui.GmlTreeView.1") ) ); //$NON-NLS-1$
+      throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.ui.editor.gmleditor.ui.GmlTreeView.1" ) ) ); //$NON-NLS-1$
     }
   }
 
@@ -409,7 +411,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
             }
             else
             {
-              ErrorDialog.openError( tree.getShell(), Messages.getString("org.kalypso.ui.editor.gmleditor.ui.GmlTreeView.3"), Messages.getString("org.kalypso.ui.editor.gmleditor.ui.GmlTreeView.4"), status ); //$NON-NLS-1$ //$NON-NLS-2$
+              ErrorDialog.openError( tree.getShell(), Messages.getString( "org.kalypso.ui.editor.gmleditor.ui.GmlTreeView.3" ), Messages.getString( "org.kalypso.ui.editor.gmleditor.ui.GmlTreeView.4" ), status ); //$NON-NLS-1$ //$NON-NLS-2$
               treeViewer.setLabelProvider( labelProvider );
               treeViewer.setContentProvider( contentProvider );
               tree.setLinesVisible( false );
@@ -446,16 +448,34 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
    */
   public void objectInvalid( final IPoolableObjectType key, final Object oldValue )
   {
-    final Image failImg = KalypsoGisPlugin.getImageProvider().getImage( DESCRIPTORS.FAILED_LOADING_OBJ );
-    m_treeViewer.setLabelProvider( new ConstantLabelProvider( Messages.getString("org.kalypso.ui.editor.gmleditor.ui.GmlTreeView.5"), failImg ) ); //$NON-NLS-1$
-    m_treeViewer.setContentProvider( new ArrayTreeContentProvider() );
-    m_treeViewer.getTree().setLinesVisible( false );
-    m_treeViewer.setInput( new Object[] { "" } ); //$NON-NLS-1$
+    final TreeViewer treeViewer = m_treeViewer;
+    final Control control = treeViewer.getControl();
+    if( control == null || control.isDisposed() )
+      return;
+
+    final UIJob uiJob = new UIJob( control.getDisplay(), "Invalidate GML-Tree Job" ) //$NON-NLS-1$
+    {
+      @Override
+      public IStatus runInUIThread( final IProgressMonitor monitor )
+      {
+        if( control.isDisposed() )
+          return Status.OK_STATUS;
+
+        final Image failImg = KalypsoGisPlugin.getImageProvider().getImage( DESCRIPTORS.FAILED_LOADING_OBJ );
+        treeViewer.setLabelProvider( new ConstantLabelProvider( Messages.getString( "org.kalypso.ui.editor.gmleditor.ui.GmlTreeView.5" ), failImg ) ); //$NON-NLS-1$
+        treeViewer.setContentProvider( new ArrayTreeContentProvider() );
+        treeViewer.getTree().setLinesVisible( false );
+        treeViewer.setInput( new Object[] { "" } ); //$NON-NLS-1$
+        return Status.OK_STATUS;
+      }
+    };
+    uiJob.setSystem( true );
+    uiJob.schedule();
   }
 
   public void loadInput( final Reader r, final URL context, final IProgressMonitor monitor ) throws CoreException
   {
-    monitor.beginTask( Messages.getString("org.kalypso.ui.editor.gmleditor.ui.GmlTreeView.7"), 1000 ); //$NON-NLS-1$
+    monitor.beginTask( Messages.getString( "org.kalypso.ui.editor.gmleditor.ui.GmlTreeView.7" ), 1000 ); //$NON-NLS-1$
     try
     {
       final Unmarshaller unmarshaller = GmlTreeView.JC.createUnmarshaller();
@@ -468,7 +488,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
     catch( final JAXBException e )
     {
       e.printStackTrace();
-      throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.ui.editor.gmleditor.ui.GmlTreeView.8") ) ); //$NON-NLS-1$
+      throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.ui.editor.gmleditor.ui.GmlTreeView.8" ) ) ); //$NON-NLS-1$
     }
     finally
     {
@@ -478,7 +498,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
 
   protected void saveInput( final Writer writer, final IProgressMonitor monitor ) throws CoreException
   {
-    monitor.beginTask( Messages.getString("org.kalypso.ui.editor.gmleditor.ui.GmlTreeView.9"), 1000 ); //$NON-NLS-1$
+    monitor.beginTask( Messages.getString( "org.kalypso.ui.editor.gmleditor.ui.GmlTreeView.9" ), 1000 ); //$NON-NLS-1$
     try
     {
       final GMLXPath rootPath = m_contentProvider.getRootPath();
@@ -490,7 +510,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
     catch( final JAXBException e )
     {
       e.printStackTrace();
-      throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.ui.editor.gmleditor.ui.GmlTreeView.10") ) ); //$NON-NLS-1$
+      throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.ui.editor.gmleditor.ui.GmlTreeView.10" ) ) ); //$NON-NLS-1$
     }
     finally
     {
@@ -655,7 +675,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
 
   /**
    * @param showContextWhileLoading
-   *            often kills the layout of a small composite
+   *          often kills the layout of a small composite
    */
   public void setInput( final Gistreeview treeview, final URL context, final boolean showContextWhileLoading )
   {
@@ -677,7 +697,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
     if( !m_treeViewer.getControl().isDisposed() )
     {
       if( showContextWhileLoading )
-        m_treeViewer.setLabelProvider( new ConstantLabelProvider( Messages.getString("org.kalypso.ui.editor.gmleditor.ui.GmlTreeView.11") + context + Messages.getString("org.kalypso.ui.editor.gmleditor.ui.GmlTreeView.12"), waitImg ) ); //$NON-NLS-1$ //$NON-NLS-2$
+        m_treeViewer.setLabelProvider( new ConstantLabelProvider( Messages.getString( "org.kalypso.ui.editor.gmleditor.ui.GmlTreeView.11" ) + context + Messages.getString( "org.kalypso.ui.editor.gmleditor.ui.GmlTreeView.12" ), waitImg ) ); //$NON-NLS-1$ //$NON-NLS-2$
       else
         m_treeViewer.setLabelProvider( new ConstantLabelProvider( " ", waitImg ) ); //$NON-NLS-1$
 
