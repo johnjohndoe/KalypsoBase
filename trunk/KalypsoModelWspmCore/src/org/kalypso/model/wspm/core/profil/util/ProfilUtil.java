@@ -99,8 +99,6 @@ public class ProfilUtil
     for( final IRecord point : points )
     {
       final Object value = point.getValue( iProp );
-      if( value == null )
-        Debug.print( point, String.format( "Zero value for %s (property number %d)", iProp, pointProperty.getName() ) ); //$NON-NLS-1$
       values[i] = value;
       i++;
     }

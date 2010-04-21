@@ -328,10 +328,12 @@ public class WspmProfileHelper
    * @param wspHoehe
    *          water level
    */
-  public static GM_Point[] calculateWspPoints( final IProfil profil, final double wspHoehe, String srsName )
+  public static GM_Point[] calculateWspPoints( final IProfil profil, final double wspHoehe )
   {
     final IComponent cHochwert = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_HOCHWERT );
     final IComponent cRechtswert = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
+
+    final String crs = (String) profil.getProperty( IWspmConstants.PROFIL_PROPERTY_CRS );
 
     /* ignore profile without geo-coordinates */
     if( cHochwert == null || cRechtswert == null )
@@ -377,10 +379,7 @@ public class WspmProfileHelper
       final double rw = rwLine.getYFor( x, false );
       final double hw = hwLine.getYFor( x, false );
 
-      if( srsName == null )
-        srsName = TimeserieUtils.getCoordinateSystemNameForGkr( Double.toString( rw ) );
-
-      final GM_Point point = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Point( rw, hw, wspHoehe, srsName );
+      final GM_Point point = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Point( rw, hw, wspHoehe, crs );
 
       poses[count++] = point;
     }
@@ -528,7 +527,7 @@ public class WspmProfileHelper
     return tmpProfil;
   }
 
-  public static IRecord addRecordByWidth( final IProfil profile, final IRecord record, boolean overwritePointMarkers )
+  public static IRecord addRecordByWidth( final IProfil profile, final IRecord record, final boolean overwritePointMarkers )
   {
 
     final Double width = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, record );
