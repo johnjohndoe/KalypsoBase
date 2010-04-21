@@ -464,7 +464,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     m_coverageViewer.getControl().setLayoutData( coverageViewerData );
     toolkit.adapt( m_coverageViewer.getControl(), true, false );
 
-    final ToolBar coverageToolbar = new ToolBar( coveragePanel, SWT.VERTICAL );
+    final ToolBar coverageToolbar = new ToolBar( coveragePanel, SWT.VERTICAL | SWT.FLAT );
     toolkit.adapt( coverageToolbar );
     coverageToolbar.getLayout();
     coverageToolbar.setLayoutData( new GridData( SWT.CENTER, SWT.FILL, false, true ) );
@@ -517,7 +517,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     m_colorMapTableViewer.getControl().setLayoutData( colormapTableData );
     toolkit.adapt( m_colorMapTableViewer.getControl(), true, true );
 
-    final ToolBar colormapToolbar = new ToolBar( colormapPanel, SWT.VERTICAL );
+    final ToolBar colormapToolbar = new ToolBar( colormapPanel, SWT.VERTICAL | SWT.FLAT );
     toolkit.adapt( colormapToolbar );
     colormapToolbar.setLayoutData( new GridData( SWT.CENTER, SWT.BEGINNING, false, true ) );
 
