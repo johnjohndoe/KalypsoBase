@@ -104,11 +104,10 @@ public class GMLContentProvider implements ITreeContentProvider
   }
 
   /**
-   * Full construcotr.<br>
    * Likely to be replaced by {@link #GMLContentProvider(boolean)} in the future.<br>
-   *
+   * 
    * @param handleModelEvents
-   *            Only for backwards compability. Should always be set to <code>true</code>.
+   *          Only for backwards compability. Should always be set to <code>true</code>.
    */
   public GMLContentProvider( final boolean showAssociations, final boolean handleModelEvents )
   {
@@ -118,7 +117,7 @@ public class GMLContentProvider implements ITreeContentProvider
 
   /**
    * Gets the children and updates the parent-hash.
-   *
+   * 
    * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
    */
   public Object[] getChildren( final Object parentElement )
@@ -244,9 +243,11 @@ public class GMLContentProvider implements ITreeContentProvider
             final Object property = parent.getProperty( associationTypeProperty );
             if( property == feature )
               return fate;
-            else if( property instanceof List )
+            else if( property instanceof List< ? > )
+            {
               if( ((List< ? >) property).contains( feature ) )
                 return fate;
+            }
           }
       }
     }
