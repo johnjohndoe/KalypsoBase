@@ -46,11 +46,12 @@ import java.util.List;
 import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.GMLSchemaException;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.wspm.core.IWspmConstants;
-import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
+import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
  * This is an abstraction layer over an wspmproje gml instance.
@@ -60,15 +61,15 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  * 
  * @author Gernot Belger
  */
-public class WspmProject extends AbstractFeatureBinder implements IWspmConstants
+public abstract class WspmProject extends Feature_Impl implements IWspmConstants
 {
   private static final QName QNAME_WATER_BODY_MEMBER = new QName( NS_WSPM, "waterBodyMember" ); //$NON-NLS-1$
 
   public final static QName QNAME = new QName( IWspmConstants.NS_WSPMPROJ, "WspmProject" ); //$NON-NLS-1$
 
-  public WspmProject( final Feature wspProject )
+  public WspmProject( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
-    super( wspProject, QNAME );
+    super( parent, parentRelation, ft, id, propValues );
   }
 
   public WspmWaterBody[] getWaterBodies( )
@@ -110,7 +111,7 @@ public class WspmProject extends AbstractFeatureBinder implements IWspmConstants
     if( water != null )
       return water;
 
-    final WspmWaterBody wspmWaterBody = (WspmWaterBody) FeatureHelper.addFeature( getFeature(), QNAME_WATER_BODY_MEMBER, null );
+    final WspmWaterBody wspmWaterBody = (WspmWaterBody) FeatureHelper.addFeature( this, QNAME_WATER_BODY_MEMBER, null );
 
     // set default values
     wspmWaterBody.setName( name );

@@ -150,4 +150,13 @@ public class WspmWaterBody extends Feature_Impl implements IWspmConstants, IProf
 
     return profile.toArray( new IProfileFeature[profile.size()] );
   }
+
+  public WspmProject getProject( )
+  {
+    final Feature owner = getOwner();
+    if( owner instanceof WspmProject )
+      return (WspmProject) owner;
+
+    return null;
+  }
 }

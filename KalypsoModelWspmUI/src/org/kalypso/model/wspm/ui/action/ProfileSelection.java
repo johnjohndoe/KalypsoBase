@@ -62,7 +62,7 @@ import org.kalypsodeegree.model.feature.FeatureList;
  */
 public class ProfileSelection
 {
-  private final IFeatureSelection m_selection;
+  private final IFeatureSelection m_featureSelection;
 
   private final Collection<IProfileFeature> m_foundProfiles = new LinkedHashSet<IProfileFeature>();
 
@@ -70,26 +70,27 @@ public class ProfileSelection
 
   private final CommandableWorkspace m_workspace;
 
+  private Feature m_container = null;
+
   public ProfileSelection( final ISelection selection )
   {
-    m_selection = selection instanceof IFeatureSelection ? (IFeatureSelection) selection : null;
-
+    m_featureSelection = selection instanceof IFeatureSelection ? (IFeatureSelection) selection : null;
     m_workspace = findProfiles();
   }
 
   private CommandableWorkspace findProfiles( )
   {
-    if( m_selection == null )
+    if( m_featureSelection == null )
       return null;
 
-    final List< ? > items = m_selection.toList();
+    final List< ? > items = m_featureSelection.toList();
     for( final Object item : items )
       addItem( item );
 
     if( m_foundProfiles.size() > 0 )
     {
       final IProfileFeature firstProfile = m_foundProfiles.iterator().next();
-      return m_selection.getWorkspace( firstProfile );
+      return m_featureSelection.getWorkspace( firstProfile );
     }
 
     return null;
@@ -102,7 +103,11 @@ public class ProfileSelection
     else if( item instanceof IProfileFeature )
       addProfileFeature( (IProfileFeature) item );
     else if( item instanceof IProfileSelectionProvider )
+    {
+      if( item instanceof Feature )
+        m_container = (Feature) item;
       addProfileSelectionProvider( (IProfileSelectionProvider) item, null );
+    }
   }
 
   private void addProfileFeature( final IProfileFeature profile )
@@ -111,6 +116,7 @@ public class ProfileSelection
 
     final IRelationType rt = (profile).getParentRelation();
     final Feature container = (profile).getOwner();
+    m_container = container;
     if( rt.isList() )
     {
       final FeatureList sisters = (FeatureList) container.getProperty( rt );
@@ -135,7 +141,10 @@ public class ProfileSelection
     final IRelationType rt = fate.getAssociationTypeProperty();
     final Feature parentFeature = fate.getParentFeature();
     if( parentFeature instanceof IProfileSelectionProvider )
+    {
       addProfileSelectionProvider( (IProfileSelectionProvider) parentFeature, rt );
+      m_container = parentFeature;
+    }
   }
 
   public boolean hasProfiles( )
@@ -158,4 +167,8 @@ public class ProfileSelection
     return m_workspace;
   }
 
+  public Feature getContainer( )
+  {
+    return m_container;
+  }
 }

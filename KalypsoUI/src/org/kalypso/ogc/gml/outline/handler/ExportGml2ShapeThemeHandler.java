@@ -48,7 +48,6 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
-import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -57,8 +56,6 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.ISources;
-import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -84,12 +81,7 @@ public class ExportGml2ShapeThemeHandler extends AbstractHandler implements IHan
    */
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
-    final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
-    final IWorkbenchPart part = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );
-    if( part == null )
-      throw new ExecutionException( Messages.getString( "org.kalypso.ogc.gml.outline.handler.ExportGml2ShapeThemeHandler.1" ) ); //$NON-NLS-1$
-
-    final Shell shell = part.getSite().getShell();
+    final Shell shell = HandlerUtil.getActiveShellChecked( event );
     final String title = Messages.getString( "org.kalypso.ogc.gml.outline.handler.ExportGml2ShapeThemeHandler.2" ); //$NON-NLS-1$
 
     final ISelection sel = HandlerUtil.getCurrentSelectionChecked( event );
@@ -99,13 +91,15 @@ public class ExportGml2ShapeThemeHandler extends AbstractHandler implements IHan
 
     // TODO: let the user choose what to export: visible features, all features, current extent, ...
     final FeatureList featureList = theme == null ? null : theme.getFeatureListVisible( null );
+    final IFeatureType type = resolveFeatureType( theme );
     if( featureList == null || featureList.size() == 0 )
     {
       MessageDialog.openWarning( shell, title, Messages.getString( "org.kalypso.ogc.gml.outline.handler.ExportGml2ShapeThemeHandler.3" ) ); //$NON-NLS-1$
       return Status.CANCEL_STATUS;
     }
 
-    final IFeatureType type = resolveFeatureType( theme );
+    // TODO: use reusable code from here on, we might want to export shape from other places as well
+
     final Gml2ShapeConverter converter = Gml2ShapeConverter.createDefault( type );
 
     // examine what we got and ask user
