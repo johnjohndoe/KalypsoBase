@@ -53,7 +53,7 @@ public class ProfileObjectSet implements IProfilChange
   /**
    * @param profil
    * @param building
-   *            maybe null to remove building
+   *          maybe null to remove building
    */
   public ProfileObjectSet( final IProfil profil, final IProfileObject[] profileObjects )
   {
@@ -76,7 +76,9 @@ public class ProfileObjectSet implements IProfilChange
 
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilChange#getObject()
+   * @deprecated Do not use!
    */
+  @Deprecated
   public Object[] getObjects( )
   {
     return new Object[] { m_object };
