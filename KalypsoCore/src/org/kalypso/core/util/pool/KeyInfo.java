@@ -49,28 +49,23 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.logging.Logger;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.ui.progress.IProgressConstants;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.core.KalypsoCoreDebug;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.loader.ILoader;
 import org.kalypso.loader.LoaderException;
 
 public final class KeyInfo extends Job
 {
-  private final static boolean DO_LOG = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.ui/debug/resourcepool/keys" ) ); //$NON-NLS-1$
-
-  protected final static Logger LOGGER = Logger.getLogger( KeyInfo.class.getName() );
-
   private final Collection<IPoolListener> m_listeners = Collections.synchronizedSet( new HashSet<IPoolListener>() );
 
   private Object m_object = null;
@@ -116,34 +111,37 @@ public final class KeyInfo extends Job
 
   public void dispose( )
   {
+    KalypsoCoreDebug.RESOURCE_POOL_KEYS.printf( "Disposing Info for key: %s%n", m_key );
+
     m_listeners.clear();
 
-    // TODO: this doesn't really kills the job
-    // are there means to kill it?
     cancel();
 
-    synchronized( this )
-    {
-      if( m_object != null )
-      {
-        m_loader.release( m_object );
-        m_object = null;
-      }
-    }
+    releaseObject();
   }
 
   public void addListener( final IPoolListener l )
   {
+    KalypsoCoreDebug.RESOURCE_POOL_KEYS.printf( "Adding Pool-Listener to key: %s%n", m_key ); //$NON-NLS-1$ 
+    final int state = getState();
+    KalypsoCoreDebug.RESOURCE_POOL_KEYS.printf( "Current Pool-Job state: %d%n", state ); //$NON-NLS-1$ 
+
     m_listeners.add( l );
+
+    // TODO: shouldn't we synchronise here?
 
     final Object o = m_object;
     if( o != null )
     {
       l.objectLoaded( m_key, o, Status.OK_STATUS );
     }
-    else if( getState() == Job.NONE )
+    else
     {
-      schedule();
+      if( state == Job.NONE )
+      {
+        KalypsoCoreDebug.RESOURCE_POOL_KEYS.printf( "Scheduling Pool-Info for key: %s%n", m_key ); //$NON-NLS-1$ 
+        schedule();
+      }
     }
   }
 
@@ -158,24 +156,15 @@ public final class KeyInfo extends Job
     if( isLocked() )
       return;
 
-    System.out.println( "Reloading " + getKey() + "..." ); //$NON-NLS-1$ //$NON-NLS-2$
+    KalypsoCoreDebug.RESOURCE_POOL_KEYS.printf( "Reloading '%s'...%n", m_key ); //$NON-NLS-1$ 
 
     synchronized( this )
     {
-      if( DO_LOG )
-      {
-        LOGGER.info( Messages.getString( "org.kalypso.util.pool.KeyInfo.2" ) + m_object + Messages.getString( "org.kalypso.util.pool.KeyInfo.3" ) + m_key ); //$NON-NLS-1$ //$NON-NLS-2$
-      }
-
-      if( m_object != null )
-      {
-        m_loader.release( m_object );
-        m_object = null;
-      }
-      
-      // TODO: better would be to cancel any old job and always start a new one
-      if( getState() == Job.NONE )
-        schedule();
+      final int state = getState();
+      KalypsoCoreDebug.RESOURCE_POOL_KEYS.printf( "Current Job-State: %d%n", state );
+// if( state == Job.NONE )
+      cancel();
+      schedule();
     }
   }
 
@@ -251,13 +240,14 @@ public final class KeyInfo extends Job
     {
       try
       {
-        if( DO_LOG )
-        {
-          LOGGER.info( Messages.getString( "org.kalypso.util.pool.KeyInfo.4" ) + m_key ); //$NON-NLS-1$
-        }
+        releaseObject();
 
-        m_object = m_loader.load( m_key, monitor );
-        m_isDirty = false;
+        KalypsoCoreDebug.RESOURCE_POOL_KEYS.printf( "Loading object for key: %s%n", m_key );//$NON-NLS-1$
+        final Object loadedObject = m_loader.load( m_key, monitor );
+        if( monitor.isCanceled() )
+          return Status.CANCEL_STATUS;
+
+        m_object = loadedObject;
       }
       catch( final CoreException ce )
       {
@@ -288,6 +278,18 @@ public final class KeyInfo extends Job
     }
 
     return m_loader.getStatus();
+  }
+
+  private synchronized void releaseObject( )
+  {
+    m_isDirty = false;
+    if( m_object == null )
+      return;
+
+    KalypsoCoreDebug.RESOURCE_POOL_KEYS.printf( "Releasing Pool-Objekt for Key: %s%n", m_key );
+
+    m_loader.release( m_object );
+    m_object = null;
   }
 
   public boolean isEmpty( )
@@ -461,6 +463,8 @@ public final class KeyInfo extends Job
         final Object oldObject = m_object;
         if( oldObject != null )
         {
+          KalypsoCoreDebug.RESOURCE_POOL_KEYS.printf( "Pool-Resource was removed for Key: %s%n", m_key );
+          KalypsoCoreDebug.RESOURCE_POOL_KEYS.printf( "Releasing Pool-Objekt for Key: %s%n", m_key );
           m_loader.release( m_object );
           m_object = null;
           fireObjectInvalid( oldObject );
@@ -469,8 +473,11 @@ public final class KeyInfo extends Job
 
       case IResourceDelta.ADDED:
       case IResourceDelta.CHANGED:
+      {
+        KalypsoCoreDebug.RESOURCE_POOL_KEYS.printf( "Pool-Resource was added/changed for Key: %s%n", m_key );
         reloadInternal();
         return;
+      }
     }
 
     return;

@@ -165,4 +165,9 @@ public class ZmlInlineTypeHandler extends XsdBaseTypeHandler<IObservation>
     final public static String[] axis = new String[] { TimeserieConstants.TYPE_MIN, TimeserieConstants.TYPE_RAINFALL };
   }
 
+  public interface QQ extends IObservation
+  {
+    final public static String[] axis = new String[] { TimeserieConstants.TYPE_RUNOFF, TimeserieConstants.TYPE_RUNOFF_RHB };
+  }
+
 }

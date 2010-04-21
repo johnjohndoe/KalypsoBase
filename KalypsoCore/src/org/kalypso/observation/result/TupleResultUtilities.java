@@ -41,6 +41,7 @@
 package org.kalypso.observation.result;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -48,9 +49,13 @@ import java.util.Map;
 
 import javax.xml.namespace.QName;
 
+import org.apache.commons.lang.ObjectUtils;
+import org.kalypso.commons.math.LinearEquation;
+import org.kalypso.commons.math.LinearEquation.SameXValuesException;
 import org.kalypso.commons.xml.XmlTypes;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.observation.IObservation;
+import org.kalypso.observation.phenomenon.IPhenomenon;
 
 /**
  * TODO: Merge most of the stuff with {@link ComponentUtilities}.
@@ -125,7 +130,7 @@ public class TupleResultUtilities
     {
       return null;
     }
-    final int iComp = result.indexOfComponent(  comp );
+    final int iComp = result.indexOfComponent( comp );
     final QName valueTypeName = comp.getValueTypeName();
 
     if( XmlTypes.XS_BOOLEAN.equals( valueTypeName ) )
@@ -214,7 +219,7 @@ public class TupleResultUtilities
       return null;
     }
     final QName valueTypeName = comp.getValueTypeName();
-    final int iComp = result.indexOfComponent(  comp );
+    final int iComp = result.indexOfComponent( comp );
 
     if( XmlTypes.XS_BOOLEAN.equals( valueTypeName ) )
     {
@@ -292,9 +297,9 @@ public class TupleResultUtilities
    * Copies records from one {@link TupleResult} to another.
    * 
    * @param componentMap
-   *            Map of component ids.
+   *          Map of component ids.
    * @throws IllegalArgumentException
-   *             If for an id from the map no component is found.
+   *           If for an id from the map no component is found.
    */
   public static void copyValues( final TupleResult sourceResult, final TupleResult targetResult, final Map<String, String> componentMap )
   {
@@ -310,11 +315,11 @@ public class TupleResultUtilities
 
       final IComponent sourceComponent = ComponentUtilities.findComponentByID( sourceResult.getComponents(), sourceID );
       if( sourceComponent == null )
-        throw new IllegalArgumentException( Messages.getString("org.kalypso.observation.result.TupleResultUtilities.0") + sourceID ); //$NON-NLS-1$
+        throw new IllegalArgumentException( Messages.getString( "org.kalypso.observation.result.TupleResultUtilities.0" ) + sourceID ); //$NON-NLS-1$
 
       final IComponent targetComponent = ComponentUtilities.findComponentByID( targetResult.getComponents(), targetID );
       if( targetComponent == null )
-        throw new IllegalArgumentException( Messages.getString("org.kalypso.observation.result.TupleResultUtilities.1") + targetID ); //$NON-NLS-1$
+        throw new IllegalArgumentException( Messages.getString( "org.kalypso.observation.result.TupleResultUtilities.1" ) + targetID ); //$NON-NLS-1$
 
       sourceComponents[count] = sourceComponent;
       targetComponents[count] = targetComponent;
@@ -328,8 +333,8 @@ public class TupleResultUtilities
 
       for( int i = 0; i < sourceComponents.length; i++ )
       {
-        final Object value = sourceRecord.getValue( sourceResult.indexOfComponent(  sourceComponents[i] ));
-        targetRecord.setValue( targetResult.indexOfComponent( targetComponents[i]), value );
+        final Object value = sourceRecord.getValue( sourceResult.indexOfComponent( sourceComponents[i] ) );
+        targetRecord.setValue( targetResult.indexOfComponent( targetComponents[i] ), value );
       }
 
       targetResult.add( targetRecord );
@@ -358,6 +363,96 @@ public class TupleResultUtilities
     {
       final IComponent component = components[i];
       if( component.getId().equals( id ) )
+        return i;
+    }
+
+    return -1;
+  }
+
+  /** Extracts a numerical column of values from an observation. */
+  public static Number[] getValuesAsNumbers( final IObservation<TupleResult> observation, final int componentIndex ) throws ClassCastException
+  {
+    final TupleResult result = observation.getResult();
+    final Collection<Number> values = new ArrayList<Number>( result.size() );
+
+    for( final IRecord record : result )
+    {
+      final Number value = (Number) record.getValue( componentIndex );
+      values.add( value );
+    }
+
+    return values.toArray( new Number[values.size()] );
+  }
+
+  public static double[] getInterpolatedValues( final IObservation<TupleResult> observation, final int valueIndex, final int interpolateIndex )
+  {
+    final Number[] domainValues = getValuesAsNumbers( observation, interpolateIndex );
+    final Number[] rangeValues = getValuesAsNumbers( observation, valueIndex );
+    final double[] interpolatedValues = new double[rangeValues.length];
+
+    int lastIndexNonNull = -1;
+
+    for( int i = 0; i < rangeValues.length; i++ )
+    {
+      final Number currentValue = rangeValues[i];
+      if( currentValue == null )
+        interpolatedValues[i] = Double.NaN;
+      else
+      {
+        interpolatedValues[i] = currentValue.doubleValue();
+
+        final Number domain = domainValues[i];
+        if( domain != null )
+        {
+          if( lastIndexNonNull != -1 && lastIndexNonNull != i - 1 )
+          {
+            final double startDomain = domainValues[lastIndexNonNull].doubleValue();
+            final double startValue = rangeValues[lastIndexNonNull].doubleValue();
+            final double endDomain = domainValues[i].doubleValue();
+            final double endValue = rangeValues[i].doubleValue();
+            try
+            {
+              final LinearEquation linearEquation = new LinearEquation( startDomain, startValue, endDomain, endValue );
+              for( int j = lastIndexNonNull + 1; j < i; j++ )
+              {
+                final Number currentDomain = domainValues[j];
+                if( currentDomain != null )
+                {
+                  final double interpolationValue = currentDomain.doubleValue();
+                  interpolatedValues[j] = linearEquation.computeY( interpolationValue );
+                }
+              }
+            }
+            catch( final SameXValuesException e )
+            {
+              // Unable to interpolate between same values, set all to Double.NaN
+              for( int j = lastIndexNonNull + 1; j < i; j++ )
+                interpolatedValues[j] = Double.NaN;
+            }
+          }
+
+          lastIndexNonNull = i;
+        }
+      }
+    }
+
+    return interpolatedValues;
+  }
+
+  /**
+   * Returns the first (index of a) component, that has the given component id.
+   * 
+   * @reutrn -1, if no such component was found.
+   */
+  public static int indexOfComponentByPhenomenon( final TupleResult result, final String phenomenonID )
+  {
+    final IComponent[] components = result.getComponents();
+    for( int i = 0; i < components.length; i++ )
+    {
+      final IComponent comp = components[i];
+      final IPhenomenon phenomenon = comp.getPhenomenon();
+      final String phenID = phenomenon.getID();
+      if( ObjectUtils.equals( phenomenonID, phenID ) )
         return i;
     }
 

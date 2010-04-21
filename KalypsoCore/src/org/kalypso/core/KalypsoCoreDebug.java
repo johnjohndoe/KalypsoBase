@@ -47,22 +47,26 @@ import org.kalypso.contribs.eclipse.core.runtime.Debug;
  * <p>
  * Debug constants correspond to entries in <code>.options</code> file.
  * </p>
- *
+ * 
  * @author Gernot Belger
  */
 public class KalypsoCoreDebug
 {
-  public static Debug MAP_MODELL = new Debug( KalypsoCorePlugin.getDefault(), "/debug/mapModell" ); //$NON-NLS-1$
+  public static final Debug RESOURCE_POOL = new Debug( KalypsoCorePlugin.getDefault(), "/debug/resourcepool" );
 
-  public static Debug SPATIAL_INDEX_PAINT = new Debug( KalypsoCorePlugin.getDefault(), "/debug/spatialIndex/paint" ); //$NON-NLS-1$
+  public static final Debug RESOURCE_POOL_KEYS = new Debug( KalypsoCorePlugin.getDefault(), "/debug/resourcepool/keys" );
 
-  public static Debug MAP_PANEL = new Debug( KalypsoCorePlugin.getDefault(), "/debug/mapPanel" ); //$NON-NLS-1$
+  public static final Debug MAP_MODELL = new Debug( KalypsoCorePlugin.getDefault(), "/debug/mapModell" ); //$NON-NLS-1$
 
-  public static Debug GISMAPVIEW_VALIDATE = new Debug( KalypsoCorePlugin.getDefault(), "/debug/validatebinding/gismapview" ); //$NON-NLS-1$
+  public static final Debug SPATIAL_INDEX_PAINT = new Debug( KalypsoCorePlugin.getDefault(), "/debug/spatialIndex/paint" ); //$NON-NLS-1$
 
-  public static Debug FEATUREVIEW_VALIDATE = new Debug( KalypsoCorePlugin.getDefault(), "/debug/validatebinding/gismapview" ); //$NON-NLS-1$
+  public static final Debug MAP_PANEL = new Debug( KalypsoCorePlugin.getDefault(), "/debug/mapPanel" ); //$NON-NLS-1$
 
-  public static Debug OBSTABLEREPORT_VALIDATE = new Debug( KalypsoCorePlugin.getDefault(), "/debug/validatebinding/obstablereport" ); //$NON-NLS-1$
+  public static final Debug GISMAPVIEW_VALIDATE = new Debug( KalypsoCorePlugin.getDefault(), "/debug/validatebinding/gismapview" ); //$NON-NLS-1$
 
-  public static Debug PERF_SERIALIZE_GML = new Debug( KalypsoCorePlugin.getDefault(), "/perf/serialization/gml" ); //$NON-NLS-1$
+  public static final Debug FEATUREVIEW_VALIDATE = new Debug( KalypsoCorePlugin.getDefault(), "/debug/validatebinding/gismapview" ); //$NON-NLS-1$
+
+  public static final Debug OBSTABLEREPORT_VALIDATE = new Debug( KalypsoCorePlugin.getDefault(), "/debug/validatebinding/obstablereport" ); //$NON-NLS-1$
+
+  public static final Debug PERF_SERIALIZE_GML = new Debug( KalypsoCorePlugin.getDefault(), "/perf/serialization/gml" ); //$NON-NLS-1$
 }
