@@ -40,22 +40,16 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.client.ui.project.wizard.info;
 
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
-import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -80,6 +74,8 @@ public class LocalInfoDialog extends TitleAreaDialog
     m_handler = handler;
 
     setBlockOnOpen( true );
+    setDialogHelpAvailable( false );
+    setHelpAvailable( false );
   }
 
   /**
@@ -91,7 +87,7 @@ public class LocalInfoDialog extends TitleAreaDialog
     final Control contents = super.createContents( parent );
 
     setTitle( Messages.getString( "org.kalypso.project.database.client.ui.project.wizard.info.LocalInfoDialog.0" ) ); //$NON-NLS-1$
-    setMessage( null );
+    setMessage( Messages.getString( "org.kalypso.project.database.client.ui.project.wizard.info.LocalInfoDialog.Description" ) ); //$NON-NLS-1$
 
     return contents;
   }
@@ -131,7 +127,7 @@ public class LocalInfoDialog extends TitleAreaDialog
     labelDescription.setText( Messages.getString( "org.kalypso.project.database.client.ui.project.wizard.info.LocalInfoDialog.2" ) ); //$NON-NLS-1$
     labelDescription.setLayoutData( new GridData( GridData.FILL, GridData.FILL, false, false ) );
 
-    final Text description = new Text( parent, SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.READ_ONLY );
+    final Text description = new Text( parent, SWT.BORDER | SWT.MULTI | SWT.WRAP );
     description.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
 
     description.addModifyListener( new ModifyListener()
@@ -160,40 +156,6 @@ public class LocalInfoDialog extends TitleAreaDialog
       name.setText( project.getName() );
       description.setText( project.getComment() );
       
-      /* change description */
-      final Button changeDescription = new Button( parent, SWT.PUSH );
-      changeDescription.setText( Messages.getString("org.kalypso.project.database.client.ui.project.wizard.info.LocalInfoDialog.3") ); //$NON-NLS-1$
-
-      changeDescription.addSelectionListener( new SelectionAdapter()
-      {
-        /**
-         * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-         */
-        @Override
-        public void widgetSelected( final SelectionEvent e )
-        {
-          final InputDialog input = new InputDialog( changeDescription.getShell(), Messages.getString("org.kalypso.project.database.client.ui.project.wizard.info.LocalInfoDialog.4"), Messages.getString("org.kalypso.project.database.client.ui.project.wizard.info.LocalInfoDialog.5"), project.getComment(), null ); //$NON-NLS-1$ //$NON-NLS-2$
-          if( input.open() == Window.OK )
-          {
-            final String inputDescription = input.getValue();
-
-            try
-            {
-              final IProject localProject = m_handler.getProject();
-
-              project.setComment( inputDescription );
-              localProject.setDescription( project, new NullProgressMonitor() );
-            }
-            catch( final CoreException e1 )
-            {
-              KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e1 ) );
-            }
-
-            description.setText( inputDescription );
-          }
-        }
-      } );
-
     }
     catch( final CoreException e )
     {
