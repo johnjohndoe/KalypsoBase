@@ -79,7 +79,6 @@ public class ImportImageSourceWizard extends Wizard implements IKalypsoDataImpor
         return false;
       }
     }
-    m_page.dispose();
     return true;
   }
 
@@ -89,7 +88,6 @@ public class ImportImageSourceWizard extends Wizard implements IKalypsoDataImpor
   public void setCommandTarget( final ICommandTarget commandTarget )
   {
     m_outlineviewer = commandTarget;
-
   }
 
   /**
@@ -98,21 +96,17 @@ public class ImportImageSourceWizard extends Wizard implements IKalypsoDataImpor
    */
   public void init( final IWorkbench workbench, final IStructuredSelection selection )
   {
-    // TODO Auto-generated method stub
-
   }
 
   @Override
   public void addPages( )
   {
-
-    m_page = new ImportImageWizardPage( "imageimport", Messages.getString("org.kalypso.ui.wizard.image.ImportImageSourceWizard.3"), ImageProvider.IMAGE_KALYPSO_ICON_BIG ); //$NON-NLS-1$ //$NON-NLS-2$
+    m_page = new ImportImageWizardPage( "imageimport", Messages.getString( "org.kalypso.ui.wizard.image.ImportImageSourceWizard.3" ), ImageProvider.IMAGE_KALYPSO_ICON_BIG ); //$NON-NLS-1$ //$NON-NLS-2$
     if( m_outlineviewer != null )
     {
       m_page.setProjectSelection( m_mapModel.getProject() );
     }
     addPage( m_page );
-
   }
 
   /**
