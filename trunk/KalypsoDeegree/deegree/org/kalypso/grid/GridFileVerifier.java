@@ -54,7 +54,7 @@ import com.sun.media.jai.codec.SeekableStream;
 
 /**
  * Helper class for handling of grid files.
- *
+ * 
  * @author Dirk Kuch
  */
 public class GridFileVerifier
@@ -111,7 +111,7 @@ public class GridFileVerifier
         return null;
 
       case eImageGeo:
-          return new GridMetaReaderGeoTiff( urlGrid, determineImageType( urlGrid ) );
+        return new GridMetaReaderGeoTiff( urlGrid, determineImageType( urlGrid ) );
 
       case eImageWorldFile:
       {
@@ -216,6 +216,7 @@ public class GridFileVerifier
     if( urlImage == null )
       throw new IllegalStateException();
 
+    // FIXME: merge this code with world file reader!
     final String[] worldFileExtensions = new String[] { "tfw", "gfw", "jpw", "jgw", "pgw", "wld" };
 
     for( final String extension : worldFileExtensions )

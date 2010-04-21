@@ -55,6 +55,7 @@ import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.contribs.java.lang.NumberUtils;
+import org.kalypso.deegree.i18n.Messages;
 import org.kalypsodeegree.KalypsoDeegreeDebug;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
@@ -65,7 +66,7 @@ import com.vividsolutions.jts.util.Assert;
 
 /**
  * Converter which converts an ESRI Ascii Grid into a {@link BinaryGrid}.
- *
+ * 
  * @author Gernot Belger
  */
 public class ConvertAscii2Binary
@@ -94,7 +95,7 @@ public class ConvertAscii2Binary
   {
     KalypsoDeegreeDebug.GRID_OPS.printf( "%s", "converting ascii-grid to binary (" + m_ascbinFile.getName() + ")...\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
-    final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString("ConvertAscii2Binary.4"), 100 ); //$NON-NLS-1$
+    final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString( "ConvertAscii2Binary.4" ), 100 ); //$NON-NLS-1$
 
     /* Convert to binary file */
     InputStream bis = null;
