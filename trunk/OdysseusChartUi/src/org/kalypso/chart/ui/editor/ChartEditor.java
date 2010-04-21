@@ -290,7 +290,6 @@ public class ChartEditor extends EditorPart implements IChartPart
 
     if( m_chartModel == null )
     {
-
       /* Reset controls */
       final Control[] children = m_composite.getChildren();
       for( final Control control : children )
