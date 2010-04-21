@@ -78,9 +78,6 @@ public class ProfileCacherFeaturePropertyFunction extends FeaturePropertyFunctio
     return null;
   }
 
-
-
-  // $ANALYSIS-IGNORE
   /**
    * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#getValue(org.kalypsodeegree.model.feature.Feature,
    *      org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
@@ -104,10 +101,19 @@ public class ProfileCacherFeaturePropertyFunction extends FeaturePropertyFunctio
     if( compRechtswert == -1 || compHochwert == -1 )
       return null;
 
-    final Double rw = (Double) profilPoint.getValue( compRechtswert );
-    final Double hw = (Double) profilPoint.getValue( compHochwert );
-    final Double h = compHoehe == -1 ? null : (Double) profilPoint.getValue( compHoehe );
+    final Object rw = profilPoint.getValue( compRechtswert );
+    final Object hw = profilPoint.getValue( compHochwert );
+    final Object h = compHoehe == -1 ? null : profilPoint.getValue( compHoehe );
 
-    return WspmGeometryUtilities.pointFromRwHw( rw, hw, h, crs, WspmGeometryUtilities.GEO_TRANSFORMER );
+    if( rw instanceof Number && hw instanceof Number )
+    {
+      final double dRw = ((Number) rw).doubleValue();
+      final double dHw = ((Number) hw).doubleValue();
+
+      final double dH = h instanceof Number ? ((Number) h).doubleValue() : Double.NaN;
+      return WspmGeometryUtilities.pointFromRwHw( dRw, dHw, dH, crs, WspmGeometryUtilities.GEO_TRANSFORMER );
+    }
+
+    return null;
   }
 }
