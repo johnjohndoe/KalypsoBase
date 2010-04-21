@@ -199,7 +199,7 @@ public class Feature_Impl extends PlatformObject implements Feature
     setEnvelopesUpdated();
   }
 
-  private Object trimValues( final Object value )
+  private synchronized Object trimValues( final Object value )
   {
     if( value instanceof String )
     {
@@ -207,7 +207,7 @@ public class Feature_Impl extends PlatformObject implements Feature
     }
     else if( value instanceof Collection< ? > && ((Collection< ? >) value).size() > 0 )
     {
-     
+
       List<Object> lListToAdd = new ArrayList<Object>();
 
       for( Iterator< ? > iterator = ((Collection< ? >) value).iterator(); iterator.hasNext(); )
@@ -243,15 +243,16 @@ public class Feature_Impl extends PlatformObject implements Feature
     else
     {
       final IFeaturePropertyHandler fsh = getPropertyHandler();
-      
-      if( Feature.QN_NAME.equals( pt.getQName() ) )
-      {
-        m_properties[pos] = fsh.setValue( this, pt, trimValues( value ) );
-      }
-      else
-      {
-        m_properties[pos] = fsh.setValue( this, pt, value );
-      }
+
+      // if( Feature.QN_NAME.equals( pt.getQName() ) )
+      // {
+      // m_properties[pos] = fsh.setValue( this, pt, trimValues( value ) );
+      // }
+      // else
+      // {
+      // m_properties[pos] = fsh.setValue( this, pt, value );
+      // }
+      m_properties[pos] = fsh.setValue( this, pt, value );
 
       if( fsh.invalidateEnvelope( pt ) )
       {
