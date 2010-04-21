@@ -8,7 +8,7 @@
      http://www.w3.org/1999/xlink http://dev.bjoernsen.de/ogc/schema/gml/3.1.1/xlink/xlinks.xsd"
      xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns:om="http://www.opengis.net/om"
      xmlns:swe="http://www.opengis.net/swe" gml:id="components">
-     <gml:description>Ein Dictionary für die Modellierung von Längsschnitten</gml:description>
+     <gml:description>Ein Dictionary fï¿½r die Modellierung von Lï¿½ngsschnitten</gml:description>
      <gml:name>LS-komponente</gml:name>
      <gml:dictionaryEntry>
           <swe:ItemDefinition gml:id="Stat">
@@ -64,17 +64,17 @@
                               <st:minInclusive value="0.0"/>
                               <st:fractionDigits value="3"/>
                          </st:restriction>
-                         <gml:unitOfMeasure uom="dict_uom.xml#m3s"/>
+                         <gml:unitOfMeasure uom="dict_uom.xml#mÂ³/s"/>
                     </swe:SimpleType>
                </swe:representation>
           </swe:ItemDefinition>
      </gml:dictionaryEntry>
      <gml:dictionaryEntry>
           <swe:ItemDefinition gml:id="Sohle">
-               <gml:name>Sohlhöhe</gml:name>
+               <gml:name>Sohlhï¿½he</gml:name>
                <swe:property>
                     <swe:Phenomenon gml:id="phen-sohle">
-                         <gml:name>Sohlhöhe</gml:name>
+                         <gml:name>Sohlhï¿½he</gml:name>
                     </swe:Phenomenon>
                </swe:property>
                <swe:representation>
@@ -90,10 +90,10 @@
      </gml:dictionaryEntry>
      <gml:dictionaryEntry>
           <swe:ItemDefinition gml:id="h_WSP">
-               <gml:name>Höhe WSP</gml:name>
+               <gml:name>Hï¿½he WSP</gml:name>
                <swe:property>
                     <swe:Phenomenon gml:id="phen-h_wsp">
-                         <gml:name>Höhe WSP</gml:name>
+                         <gml:name>Hï¿½he WSP</gml:name>
                     </swe:Phenomenon>
                </swe:property>
                <swe:representation>
@@ -128,10 +128,10 @@
      </gml:dictionaryEntry>
      <gml:dictionaryEntry>
           <swe:ItemDefinition gml:id="h_BV">
-               <gml:name>Bordvoll Höhe</gml:name>
+               <gml:name>Bordvoll Hï¿½he</gml:name>
                <swe:property>
                     <swe:Phenomenon gml:id="phen-h_bv">
-                         <gml:name>Bordvoll Höhe</gml:name>
+                         <gml:name>Bordvoll Hï¿½he</gml:name>
                     </swe:Phenomenon>
                </swe:property>
                <swe:representation>
@@ -147,10 +147,10 @@
      </gml:dictionaryEntry>
      <gml:dictionaryEntry>
           <swe:ItemDefinition gml:id="Boe_li">
-               <gml:name>Böschung (links)</gml:name>
+               <gml:name>Bï¿½schung (links)</gml:name>
                <swe:property>
                     <swe:Phenomenon gml:id="phen-boe_li">
-                         <gml:name>Böschung (links)</gml:name>
+                         <gml:name>Bï¿½schung (links)</gml:name>
                     </swe:Phenomenon>
                </swe:property>
                <swe:representation>
@@ -166,10 +166,10 @@
      </gml:dictionaryEntry>
      <gml:dictionaryEntry>
           <swe:ItemDefinition gml:id="Boe_re">
-               <gml:name>Böschung (rechts)</gml:name>
+               <gml:name>Bï¿½schung (rechts)</gml:name>
                <swe:property>
                     <swe:Phenomenon gml:id="phen-boe_re">
-                         <gml:name>Böschung (rechts)</gml:name>
+                         <gml:name>Bï¿½schung (rechts)</gml:name>
                     </swe:Phenomenon>
                </swe:property>
                <swe:representation>
@@ -197,7 +197,7 @@
                               <st:minInclusive value="0.0"/>
                               <st:fractionDigits value="3"/>
                          </st:restriction>
-                         <gml:unitOfMeasure uom="dict_uom.xml#m_s"/>
+                         <gml:unitOfMeasure uom="dict_uom.xml#m/s"/>
                     </swe:SimpleType>
                </swe:representation>
           </swe:ItemDefinition>
@@ -216,7 +216,7 @@
                               <st:minInclusive value="0.0"/>
                               <st:fractionDigits value="2"/>
                          </st:restriction>
-                         <gml:unitOfMeasure uom="dict_uom.xml#N_m2"/>
+                         <gml:unitOfMeasure uom="dict_uom.xml#N/mÂ²"/>
                     </swe:SimpleType>
                </swe:representation>
           </swe:ItemDefinition>
@@ -280,10 +280,10 @@
      </gml:dictionaryEntry>
      <gml:dictionaryEntry>
           <swe:ItemDefinition gml:id="f_li">
-               <gml:name>Fläche (links)</gml:name>
+               <gml:name>Flï¿½che (links)</gml:name>
                <swe:property>
                     <swe:Phenomenon gml:id="phen-fl_li">
-                         <gml:name>Fläche (links)</gml:name>
+                         <gml:name>Flï¿½che (links)</gml:name>
                     </swe:Phenomenon>
                </swe:property>
                <swe:representation>
@@ -292,17 +292,17 @@
                               <st:minInclusive value="0.0"/>
                               <st:fractionDigits value="3"/>
                          </st:restriction>
-                         <gml:unitOfMeasure uom="dict_uom.xml#m2"/>
+                         <gml:unitOfMeasure uom="dict_uom.xml#mÂ²"/>
                     </swe:SimpleType>
                </swe:representation>
           </swe:ItemDefinition>
      </gml:dictionaryEntry>
      <gml:dictionaryEntry>
           <swe:ItemDefinition gml:id="f_fl">
-               <gml:name>Fläche (Flussschlauch)</gml:name>
+               <gml:name>Flï¿½che (Flussschlauch)</gml:name>
                <swe:property>
                     <swe:Phenomenon gml:id="phen-f_fl">
-                         <gml:name>Fläche (Flussschlauch)</gml:name>
+                         <gml:name>Flï¿½che (Flussschlauch)</gml:name>
                     </swe:Phenomenon>
                </swe:property>
                <swe:representation>
@@ -311,17 +311,17 @@
                               <st:minInclusive value="0.0"/>
                               <st:fractionDigits value="3"/>
                          </st:restriction>
-                         <gml:unitOfMeasure uom="dict_uom.xml#m2"/>
+                         <gml:unitOfMeasure uom="dict_uom.xml#mÂ²"/>
                     </swe:SimpleType>
                </swe:representation>
           </swe:ItemDefinition>
      </gml:dictionaryEntry>
      <gml:dictionaryEntry>
           <swe:ItemDefinition gml:id="f_re">
-               <gml:name>Fläche (rechts)</gml:name>
+               <gml:name>Flï¿½che (rechts)</gml:name>
                <swe:property>
                     <swe:Phenomenon gml:id="phen-f_re">
-                         <gml:name>Fläche (rechts)</gml:name>
+                         <gml:name>Flï¿½che (rechts)</gml:name>
                     </swe:Phenomenon>
                </swe:property>
                <swe:representation>
@@ -330,7 +330,7 @@
                               <st:minInclusive value="0.0"/>
                               <st:fractionDigits value="3"/>
                          </st:restriction>
-                         <gml:unitOfMeasure uom="dict_uom.xml#m2"/>
+                         <gml:unitOfMeasure uom="dict_uom.xml#mÂ²"/>
                     </swe:SimpleType>
                </swe:representation>
           </swe:ItemDefinition>
@@ -413,10 +413,10 @@
      </gml:dictionaryEntry>
      <gml:dictionaryEntry>
           <swe:ItemDefinition gml:id="BrueckOK">
-               <gml:name>Brücke (Oberkante)</gml:name>
+               <gml:name>Brï¿½cke (Oberkante)</gml:name>
                <swe:property>
                     <swe:Phenomenon gml:id="phen-brueckok">
-                         <gml:name>Brücke (Oberkante)</gml:name>
+                         <gml:name>Brï¿½cke (Oberkante)</gml:name>
                     </swe:Phenomenon>
                </swe:property>
                <swe:representation>
@@ -432,10 +432,10 @@
      </gml:dictionaryEntry>
      <gml:dictionaryEntry>
           <swe:ItemDefinition gml:id="BrueckUK">
-               <gml:name>Brücke (Unterkante)</gml:name>
+               <gml:name>Brï¿½cke (Unterkante)</gml:name>
                <swe:property>
                     <swe:Phenomenon gml:id="phen-brueckuk">
-                         <gml:name>Brücke (Unterkante)</gml:name>
+                         <gml:name>Brï¿½cke (Unterkante)</gml:name>
                     </swe:Phenomenon>
                </swe:property>
                <swe:representation>
@@ -451,10 +451,10 @@
      </gml:dictionaryEntry>
      <gml:dictionaryEntry>
           <swe:ItemDefinition gml:id="BrueckB">
-               <gml:name>Brücke (Breite in Fließrichtung)</gml:name>
+               <gml:name>Brï¿½cke (Breite in Flieï¿½richtung)</gml:name>
                <swe:property>
                     <swe:Phenomenon gml:id="phen-brueckb">
-                         <gml:name>Brücke (Breite in Fließrichtung)</gml:name>
+                         <gml:name>Brï¿½cke (Breite in Flieï¿½richtung)</gml:name>
                     </swe:Phenomenon>
                </swe:property>
                <swe:representation>

@@ -21,7 +21,7 @@
    <swe:property>
     <swe:Phenomenon gml:id="Phenomenon_Breite">
      <gml:description/>
-            <gml:name>Breite [m]</gml:name>
+            <gml:name>Breite</gml:name>
     </swe:Phenomenon>
    </swe:property>
    <swe:representation>
@@ -29,7 +29,7 @@
 	        <xst:restriction base="double">
 	             <xst:fractionDigits value="4"/>
 	        </xst:restriction>
-	        <gml:unitOfMeasure uom="m"/>
+	        <gml:unitOfMeasure uom="dict_uom.xml#m"/>
 	   </swe:SimpleType>
    </swe:representation>
   </swe:ItemDefinition>
@@ -41,12 +41,12 @@
    <swe:property>
     <swe:Phenomenon gml:id="Phenomenon_Hoehe">
      <gml:description/>
-     <gml:name>Höhe [m NHN]</gml:name>
+     <gml:name>Höhe</gml:name>
     </swe:Phenomenon>
    </swe:property>
    <swe:representation>
     <swe:Number>
-     <gml:unitOfMeasure uom="m NHN"/>
+     <gml:unitOfMeasure uom="dict_uom.xml#m NHN"/>
     </swe:Number>
    </swe:representation>
   </swe:ItemDefinition>
@@ -55,16 +55,16 @@
 
  <gml:dictionaryEntry>
   <swe:ItemDefinition gml:id="RAUHEIT">
-   <gml:name>Rauheit ks</gml:name>
+   <gml:name>%rauheit.name</gml:name>
    <swe:property>
     <swe:Phenomenon gml:id="Phenomenon_Rauheit">
      <gml:description/>
-     <gml:name>Rauheit ks</gml:name>
+     <gml:name>%rauheit.name</gml:name>
     </swe:Phenomenon>
    </swe:property>
    <swe:representation>
     <swe:Number>
-     <gml:unitOfMeasure uom="ks"/>
+     <gml:unitOfMeasure uom="dict_uom.xml#ks"/>
     </swe:Number>
    </swe:representation>
   </swe:ItemDefinition>
@@ -72,16 +72,16 @@
 
  <gml:dictionaryEntry>
    <swe:ItemDefinition gml:id="RAUHEIT_KST">
-    <gml:name>Rauheit kst</gml:name>
+    <gml:name>%rauheit_kst.name</gml:name>
     <swe:property>
      <swe:Phenomenon gml:id="Phenomenon_Rauheit_kst">
       <gml:description/>
-      <gml:name>Rauheit kst</gml:name>
+      <gml:name>%rauheit_kst.name</gml:name>
      </swe:Phenomenon>
     </swe:property>
     <swe:representation>
      <swe:Number>
-      <gml:unitOfMeasure uom="kst"/>
+      <gml:unitOfMeasure uom="dict_uom.xml#kst"/>
      </swe:Number>
     </swe:representation>
    </swe:ItemDefinition>
@@ -98,7 +98,7 @@
    </swe:property>
    <swe:representation>
     <swe:Number>
-     <gml:unitOfMeasure uom="m"/>
+     <gml:unitOfMeasure uom="dict_uom.xml#m"/>
     </swe:Number>
    </swe:representation>
   </swe:ItemDefinition>
@@ -115,7 +115,7 @@
    </swe:property>
    <swe:representation>
     <swe:Number>
-     <gml:unitOfMeasure uom="m"/>
+     <gml:unitOfMeasure uom="dict_uom.xml#m"/>
     </swe:Number>
    </swe:representation>
   </swe:ItemDefinition>
@@ -132,7 +132,7 @@
    </swe:property>
    <swe:representation>
     <swe:Number>
-     <gml:unitOfMeasure uom="m"/>
+     <gml:unitOfMeasure uom="dict_uom.xml#m"/>
     </swe:Number>
    </swe:representation>
   </swe:ItemDefinition>
@@ -149,7 +149,7 @@
    </swe:property>
    <swe:representation>
     <swe:Number>
-     <gml:unitOfMeasure uom="m"/>
+     <gml:unitOfMeasure uom="dict_uom.xml#m"/>
     </swe:Number>
    </swe:representation>
   </swe:ItemDefinition>
@@ -166,7 +166,7 @@
    </swe:property>
    <swe:representation>
     <swe:Number>
-     <gml:unitOfMeasure uom="m"/>
+     <gml:unitOfMeasure uom="dict_uom.xml#m"/>
     </swe:Number>
    </swe:representation>
   </swe:ItemDefinition>
@@ -174,16 +174,16 @@
 
  <gml:dictionaryEntry>
   <swe:ItemDefinition gml:id="UNTERKANTEBRUECKE">
-   <gml:name>Brückenunterkante</gml:name>
+   <gml:name>%unterkantebruecke.name</gml:name>
    <swe:property>
     <swe:Phenomenon gml:id="Phenomenon_Brueckenunterkante">
      <gml:description/>
-     <gml:name>Brückenunterkante</gml:name>
+     <gml:name>%unterkantebruecke.name</gml:name>
     </swe:Phenomenon>
    </swe:property>
    <swe:representation>
     <swe:Number>
-     <gml:unitOfMeasure uom="mNN"/>
+     <gml:unitOfMeasure uom="dict_uom.xml#mNN"/>
     </swe:Number>
    </swe:representation>
   </swe:ItemDefinition>
@@ -191,16 +191,16 @@
 
  <gml:dictionaryEntry>
   <swe:ItemDefinition gml:id="OBERKANTEBRUECKE">
-   <gml:name>Brückenoberkante</gml:name>
+   <gml:name>%oberkantebruecke.name</gml:name>
    <swe:property>
     <swe:Phenomenon gml:id="Phenomenon_Oberkantebruecke">
      <gml:description/>
-     <gml:name>Brückenoberkante</gml:name>
+     <gml:name>%oberkantebruecke.name</gml:name>
     </swe:Phenomenon>
    </swe:property>
    <swe:representation>
     <swe:Number>
-     <gml:unitOfMeasure uom="mNN"/>
+     <gml:unitOfMeasure uom="dict_uom.xml#mNN"/>
     </swe:Number>
    </swe:representation>
   </swe:ItemDefinition>
@@ -208,16 +208,16 @@
 
  <gml:dictionaryEntry>
   <swe:ItemDefinition gml:id="OBERKANTEWEHR">
-   <gml:name>Wehr</gml:name>
+   <gml:name>%oberkantewehr.name</gml:name>
    <swe:property>
     <swe:Phenomenon gml:id="Phenomenon_Wehr">
      <gml:description/>
-     <gml:name>Wehr</gml:name>
+     <gml:name>%oberkantewehr.name</gml:name>
     </swe:Phenomenon>
    </swe:property>
    <swe:representation>
     <swe:Number>
-     <gml:unitOfMeasure uom="mNN"/>
+     <gml:unitOfMeasure uom="dict_uom.xml#mNN"/>
     </swe:Number>
    </swe:representation>
   </swe:ItemDefinition>
