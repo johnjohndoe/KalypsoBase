@@ -534,11 +534,18 @@ public class ObservationFeatureFactory implements IAdapterFactory
         final IComponent comp = components[i];
 
         if( comp != components[0] )
-          buffer.append( " " ); //$NON-NLS-1$
+          buffer.append( ' ' ); //$NON-NLS-1$
 
         final Object value = record.getValue( i );
         final String bufferValue = ObservationFeatureFactory.recordValueToString( value, handler );
-        buffer.append( bufferValue );
+
+        if( bufferValue != null && bufferValue.trim().isEmpty() )
+        {
+          // NEVER write an empty string! It will break the format....
+          buffer.append( "null" ); //$NON-NLS-1$
+        }
+        else
+          buffer.append( bufferValue );
       }
 
       buffer.append( "\n" ); //$NON-NLS-1$

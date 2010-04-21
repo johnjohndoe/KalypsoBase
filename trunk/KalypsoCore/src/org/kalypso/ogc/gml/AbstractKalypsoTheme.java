@@ -182,7 +182,10 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
     m_listeners.clear();
 
     if( m_standardThemeIcon != null )
+    {
       m_standardThemeIcon.dispose();
+      m_standardThemeIcon = null;
+    }
   }
 
   /**
@@ -283,6 +286,8 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
    */
   public ImageDescriptor getDefaultIcon( )
   {
+    // FIXME: might be called after theme was already disposed... the image is then never disposed....
+    // Maybe we need to introduce a flag ot know if the theme is already disposed.
     if( m_standardThemeIcon == null )
       m_standardThemeIcon = new Image( Display.getCurrent(), AbstractKalypsoTheme.class.getResourceAsStream( "resources/standardTheme.gif" ) ); //$NON-NLS-1$
 

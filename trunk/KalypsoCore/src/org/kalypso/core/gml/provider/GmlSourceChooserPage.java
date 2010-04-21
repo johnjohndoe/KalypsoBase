@@ -43,7 +43,6 @@ package org.kalypso.core.gml.provider;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
 import org.eclipse.jface.viewers.ICheckStateListener;
@@ -74,9 +73,9 @@ public class GmlSourceChooserPage extends WizardPage implements IWizardPage
 
   private Object[] m_checkedElements;
 
-  public GmlSourceChooserPage( final String pageName, final String title, final ImageDescriptor titleImage, final IGmlSourceProvider[] provider )
+  public GmlSourceChooserPage( final String pageName, final IGmlSourceProvider[] provider )
   {
-    super( pageName, title, titleImage );
+    super( pageName );
 
     m_provider = provider;
   }
@@ -97,7 +96,7 @@ public class GmlSourceChooserPage extends WizardPage implements IWizardPage
 
     /* Info Panel */
     final Group infoGroup = new Group( panel, SWT.NONE );
-    infoGroup.setText( Messages.getString("org.kalypso.core.gml.provider.GmlSourceChooserPage.0") ); //$NON-NLS-1$
+    infoGroup.setText( Messages.getString( "org.kalypso.core.gml.provider.GmlSourceChooserPage.0" ) ); //$NON-NLS-1$
     infoGroup.setLayout( new FillLayout() );
     final GridData infoGridData = new GridData( SWT.FILL, SWT.FILL, true, true );
     infoGroup.setLayoutData( infoGridData );
@@ -127,7 +126,7 @@ public class GmlSourceChooserPage extends WizardPage implements IWizardPage
 
     setPageComplete( false );
 
-    setDescription( Messages.getString("org.kalypso.core.gml.provider.GmlSourceChooserPage.3") ); //$NON-NLS-1$
+    setDescription( Messages.getString( "org.kalypso.core.gml.provider.GmlSourceChooserPage.3" ) ); //$NON-NLS-1$
   }
 
   protected void handleCheckStateChanged( final CheckStateChangedEvent event, final CheckboxTreeViewer treeViewer )
@@ -170,7 +169,7 @@ public class GmlSourceChooserPage extends WizardPage implements IWizardPage
     {
       final Label label = new Label( infoGroup, SWT.NONE );
       label.setAlignment( SWT.CENTER );
-      label.setText( Messages.getString("org.kalypso.core.gml.provider.GmlSourceChooserPage.1") ); //$NON-NLS-1$
+      label.setText( Messages.getString( "org.kalypso.core.gml.provider.GmlSourceChooserPage.1" ) ); //$NON-NLS-1$
     }
     else
     {
@@ -202,7 +201,7 @@ public class GmlSourceChooserPage extends WizardPage implements IWizardPage
     setPageComplete( choosenSources.length > 0 );
 
     if( choosenSources.length == 0 )
-      setMessage( Messages.getString("org.kalypso.core.gml.provider.GmlSourceChooserPage.2"), WARNING ); //$NON-NLS-1$
+      setMessage( Messages.getString( "org.kalypso.core.gml.provider.GmlSourceChooserPage.2" ), WARNING ); //$NON-NLS-1$
     else
       setMessage( null );
   }

@@ -519,7 +519,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
 
     /* If an explicit info is configured for this map, use it */
     // REMARK: is necessary to copy this from AbstractFeatureTheme, as this adapter must be called first
-    final String themeInfoId = getProperty( IKalypsoTheme.PROPERTY_THEME_INFO_ID, null );
+    final String themeInfoId = getInfoId();
     if( themeInfoId != null )
       return KalypsoCoreExtensions.createThemeInfo( themeInfoId, this );
 
@@ -531,6 +531,22 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
       return defaultFeatureThemeInfo;
 
     return new FeatureThemeInfo( this, new Properties() );
+  }
+
+ private String getInfoId( )
+  {
+    final String infoId = getProperty( IKalypsoTheme.PROPERTY_THEME_INFO_ID, null );
+    if( infoId == null )
+      return null;
+
+    if( infoId.startsWith( "%" ) )
+    {
+      final I10nString themeName = getName();
+      if( themeName != null )
+        return new I10nString( infoId, themeName.getTranslator() ).getValue();
+    }
+
+    return infoId;
   }
 
 }

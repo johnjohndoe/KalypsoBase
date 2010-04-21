@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.observation.result;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.kalypso.gmlschema.property.restriction.FractionDigitRestriction;
 import org.kalypso.gmlschema.property.restriction.IRestriction;
 import org.kalypso.ogc.gml.om.FeatureComponent;
@@ -107,7 +106,6 @@ public abstract class AbstractComponent implements IComponent
       final FeatureComponent c2 = (FeatureComponent) obj;
 
       return c1.getId().equals( c2.getId() );
-// return c1.getItemDefinition().equals( c2.getItemDefinition() );
     }
     else if( this instanceof Component && obj instanceof Component )
     {
@@ -128,21 +126,22 @@ public abstract class AbstractComponent implements IComponent
     }
   }
 
-  protected void fillHashCodeBuilder( final HashCodeBuilder builder )
-  {
-    builder.append( getId() );
-    builder.append( getValueTypeName() );
-  }
-
   /**
    * @see java.lang.Object#hashCode()
    */
   @Override
   public int hashCode( )
   {
-    final HashCodeBuilder builder = new HashCodeBuilder();
-    fillHashCodeBuilder( builder );
+    final String id = getId();
+    return id.hashCode();
+// final QName valueTypeName = getValueTypeName();
 
-    return builder.toHashCode();
+    // FIXME: equals is only using 'id', so we only use id for hashCode now... check if this always works....
+    // btw: valueTypeName should be alsways identical if we are using a component with the same id...
+// final HashCodeBuilder builder = new HashCodeBuilder();
+// builder.append( getId() );
+// builder.append( getValueTypeName() );
+//
+// return builder.toHashCode();
   }
 }
