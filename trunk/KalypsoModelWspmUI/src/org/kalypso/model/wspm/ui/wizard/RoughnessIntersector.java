@@ -52,6 +52,7 @@ import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
@@ -59,10 +60,11 @@ import org.kalypso.model.wspm.core.gml.assignment.AssignmentBinder;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter;
-import org.kalypso.model.wspm.schema.gml.ProfileCacherFeaturePropertyFunction;
+import org.kalypso.model.wspm.core.util.WspmGeometryUtilities;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
+import org.kalypso.observation.result.TupleResultUtilities;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -103,7 +105,7 @@ public class RoughnessIntersector
 
   public FeatureChange[] intersect( final IProgressMonitor monitor ) throws Exception
   {
-    monitor.beginTask( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.wizard.RoughnessIntersector.0"), m_profileFeatures.length ); //$NON-NLS-1$
+    monitor.beginTask( org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.wizard.RoughnessIntersector.0" ), m_profileFeatures.length ); //$NON-NLS-1$
 
     final List<FeatureChange> changes = new ArrayList<FeatureChange>();
 
@@ -119,24 +121,41 @@ public class RoughnessIntersector
 
       final IRecord[] points = profil.getPoints();
 
-      int count = 1;
-      final int length = points.length;
+      int widthIndex = profil.indexOfProperty( IWspmConstants.POINT_PROPERTY_BREITE );
+      int rwIndex = profil.indexOfProperty( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
+      int hwIndex = profil.indexOfProperty( IWspmConstants.POINT_PROPERTY_HOCHWERT );
 
-      for( final IRecord point : points )
+      double[] rws = TupleResultUtilities.getInterpolatedValues( profil, rwIndex, widthIndex );
+      double[] hws = TupleResultUtilities.getInterpolatedValues( profil, hwIndex, widthIndex );
+
+      int count = 1;
+
+      for( int i = 0; i < points.length; i++ )
       {
-        monitor.subTask( label + " (" + count + "/" + length + ")" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        final IRecord point = points[i];
+
+        if( count % 10 == 0 )
+        {
+          String subTaskMsg = String.format( "%s (%d/%d)", label, count, points.length ); //$NON-NLS-1$
+          monitor.subTask( subTaskMsg );
+        }
 
         if( !acceptPoint( profil, point ) )
           continue;
 
-        final GM_Point geoPoint = ProfileCacherFeaturePropertyFunction.convertPoint( profil, point, crs );
-        if( geoPoint == null )
-          continue;
-        final Geometry jtsPoint = JTSAdapter.export( geoPoint );
-        assignValueToPoint( profil, point, geoPoint, jtsPoint );
+        final double rw = rws[i];
+        final double hw = hws[i];
+        if( !Double.isNaN( rw ) && !Double.isNaN( hw ) )
+        {
+          final GM_Point geoPoint = WspmGeometryUtilities.pointFromRwHw( rw, hw, Double.NaN, crs, WspmGeometryUtilities.GEO_TRANSFORMER );
+          if( geoPoint != null )
+          {
+            final Geometry jtsPoint = JTSAdapter.export( geoPoint );
+            assignValueToPoint( profil, point, geoPoint, jtsPoint );
+          }
+        }
 
         count++;
-
       }
 
       final FeatureChange[] fcs = ProfileFeatureFactory.toFeatureAsChanges( profil, profile );
@@ -177,9 +196,9 @@ public class RoughnessIntersector
             final Double newValue = entry.getValue();
 
             if( newValue != null )
+            {
               if( componentId != null )
               {
-
                 final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profil.getType() );
 
                 final IComponent component = provider.getPointProperty( componentId );
@@ -192,6 +211,7 @@ public class RoughnessIntersector
 
                 point.setValue( owner.indexOfComponent( component ), newValue );
               }
+            }
           }
         }
         // DONT break, because we may have several polygone covering the point, but only one has an assigned value
@@ -204,8 +224,10 @@ public class RoughnessIntersector
   private boolean acceptPoint( final IProfil profil, final IRecord point )
   {
     for( final IProfilePointFilter pointFilter : m_pointFilters )
+    {
       if( !pointFilter.accept( profil, point ) )
         return false;
+    }
 
     return true;
   }
