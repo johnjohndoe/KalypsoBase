@@ -88,16 +88,22 @@ public class DefaultResultEater implements ISimulationResultEater
   public void addResult( final String id, final Object result ) throws SimulationException
   {
     if( !m_modelspec.hasOutput( id ) )
-      throw new SimulationException( Messages.getString("org.kalypso.simulation.core.internal.queued.DefaultResultEater.0") + id, null ); //$NON-NLS-1$
+      throw new SimulationException( Messages.getString( "org.kalypso.simulation.core.internal.queued.DefaultResultEater.0" ) + id, null ); //$NON-NLS-1$
 
     final SimulationDataPath clientBean = m_clientOutputMap.get( id );
-    if( clientBean == null )
-      throw new SimulationException( Messages.getString("org.kalypso.simulation.core.internal.queued.DefaultResultEater.1") + id, null ); //$NON-NLS-1$
+    if( clientBean != null )
+    {
+      // Do not throw an exception if the client does not expect this result,
+      // as long as the output self is defined.
+//      throw new SimulationException( Messages.getString( "org.kalypso.simulation.core.internal.queued.DefaultResultEater.1" ) + id, null ); //$NON-NLS-1$
 
-    final String clientPath = clientBean.getPath();
-    // only add results with a valid path, because null path will later lead to a NullPointerException
-    if( clientPath != null )
-      m_results.add( new SimulationResult( id, clientPath, (File) result ) );
+      // Strange: we are on the server side, but the client defines where to store the data. This does not
+      // fit to the WPS philosophie...
+      final String clientPath = clientBean.getPath();
+      // only add results with a valid path, because null path will later lead to a NullPointerException
+      if( clientPath != null )
+        m_results.add( new SimulationResult( id, clientPath, (File) result ) );
+    }
   }
 
   /**
@@ -126,7 +132,7 @@ public class DefaultResultEater implements ISimulationResultEater
       {
         final File file = result.getFile();
         final String path = result.getPath();
-        
+
         // destination file is the file relative to the target folder
         final File targetRelativeFile = new File( targetFolder, path );
 
@@ -136,7 +142,7 @@ public class DefaultResultEater implements ISimulationResultEater
     }
     catch( final IOException e )
     {
-      throw new SimulationException( Messages.getString("org.kalypso.simulation.core.internal.queued.DefaultResultEater.2"), e ); //$NON-NLS-1$
+      throw new SimulationException( Messages.getString( "org.kalypso.simulation.core.internal.queued.DefaultResultEater.2" ), e ); //$NON-NLS-1$
     }
   }
 
