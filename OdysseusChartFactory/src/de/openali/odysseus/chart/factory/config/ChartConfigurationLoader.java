@@ -53,15 +53,14 @@ public class ChartConfigurationLoader implements IReferenceResolver
 
   private HashMap<String, XmlObject> m_idMap = null;
 
-  /**
-   * @param path
-   *          file system path where the configuration file can be found
-   * @throws XmlException
-   * @throws IOException
-   */
   public ChartConfigurationLoader( final URL url ) throws XmlException, IOException
   {
     m_document = ChartConfigurationDocument.Factory.parse( url );
+  }
+
+  public ChartConfigurationLoader( final InputStream is ) throws XmlException, IOException
+  {
+    m_document = ChartConfigurationDocument.Factory.parse( is );
   }
 
   /**
@@ -98,7 +97,7 @@ public class ChartConfigurationLoader implements IReferenceResolver
         if( is != null )
           is.close();
       }
-      catch( IOException e )
+      catch( final IOException e )
       {
         // wird ignoriert
       }
@@ -115,7 +114,7 @@ public class ChartConfigurationLoader implements IReferenceResolver
   public ChartConfigurationLoader( final ChartType chartType )
   {
     final ChartConfigurationDocument document = ChartConfigurationDocument.Factory.newInstance();
-    ChartConfigurationType cct = document.addNewChartConfiguration();
+    final ChartConfigurationType cct = document.addNewChartConfiguration();
     cct.setChartArray( new ChartType[] { chartType } );
     m_document = document;
   }
@@ -133,60 +132,60 @@ public class ChartConfigurationLoader implements IReferenceResolver
     return m_document.getChartConfiguration().getChartArray();
   }
 
-  public LayerType[] getLayers( ChartType chart )
+  public LayerType[] getLayers( final ChartType chart )
   {
     return chart.getLayers().getLayerArray();
   }
 
-  public AxisType getDomainAxis( LayerType layer )
+  public AxisType getDomainAxis( final LayerType layer )
   {
     return (AxisType) resolveReference( layer.getMapperRefs().getDomainAxisRef().getRef() );
   }
 
-  public AxisType getTargetAxis( LayerType layer )
+  public AxisType getTargetAxis( final LayerType layer )
   {
     return (AxisType) resolveReference( layer.getMapperRefs().getTargetAxisRef().getRef() );
   }
 
-  public Map<String, AbstractStyleType> getStyles( LayerType layer )
+  public Map<String, AbstractStyleType> getStyles( final LayerType layer )
   {
-    Styles styles = layer.getStyles();
-    AreaStyleType[] asa = styles.getAreaStyleArray();
-    PointStyleType[] psa = styles.getPointStyleArray();
-    LineStyleType[] lsa = styles.getLineStyleArray();
-    TextStyleType[] tsa = styles.getTextStyleArray();
+    final Styles styles = layer.getStyles();
+    final AreaStyleType[] asa = styles.getAreaStyleArray();
+    final PointStyleType[] psa = styles.getPointStyleArray();
+    final LineStyleType[] lsa = styles.getLineStyleArray();
+    final TextStyleType[] tsa = styles.getTextStyleArray();
 
-    Map<String, AbstractStyleType> styleMap = new TreeMap<String, AbstractStyleType>();
-    for( AreaStyleType element : asa )
+    final Map<String, AbstractStyleType> styleMap = new TreeMap<String, AbstractStyleType>();
+    for( final AreaStyleType element : asa )
       styleMap.put( element.getRole(), element );
-    for( TextStyleType element : tsa )
+    for( final TextStyleType element : tsa )
       styleMap.put( element.getRole(), element );
-    for( LineStyleType element : lsa )
+    for( final LineStyleType element : lsa )
       styleMap.put( element.getRole(), element );
-    for( PointStyleType element : psa )
+    for( final PointStyleType element : psa )
       styleMap.put( element.getRole(), element );
 
     return styleMap;
   }
 
-  public Map<String, MapperType> getMappers( LayerType layer )
+  public Map<String, MapperType> getMappers( final LayerType layer )
   {
-    TreeMap<String, MapperType> map = new TreeMap<String, MapperType>();
-    RoleReferencingType[] mra = layer.getMapperRefs().getMapperRefArray();
-    for( RoleReferencingType refType : mra )
+    final TreeMap<String, MapperType> map = new TreeMap<String, MapperType>();
+    final RoleReferencingType[] mra = layer.getMapperRefs().getMapperRefArray();
+    for( final RoleReferencingType refType : mra )
       map.put( refType.getRole(), (MapperType) resolveReference( refType.getRef() ) );
     return map;
   }
 
-  public AxisRendererType getAxisRenderer( AxisType axis )
+  public AxisRendererType getAxisRenderer( final AxisType axis )
   {
     return (AxisRendererType) resolveReference( axis.getRendererRef().getRef() );
   }
 
-  public ChartType getChartById( String id )
+  public ChartType getChartById( final String id )
   {
-    ChartType[] charts = getCharts();
-    for( ChartType chart : charts )
+    final ChartType[] charts = getCharts();
+    for( final ChartType chart : charts )
       if( chart.getId().equals( id ) )
         return chart;
     return null;
@@ -194,8 +193,8 @@ public class ChartConfigurationLoader implements IReferenceResolver
 
   public String[] getChartIds( )
   {
-    ChartType[] charts = getCharts();
-    String[] chartIds = new String[charts.length];
+    final ChartType[] charts = getCharts();
+    final String[] chartIds = new String[charts.length];
     for( int i = 0; i < chartIds.length; i++ )
       chartIds[i] = charts[i].getId();
     return chartIds;
@@ -277,7 +276,7 @@ public class ChartConfigurationLoader implements IReferenceResolver
      */
 
     XmlObject obj = null;
-    String nodeName = node.getLocalName();
+    final String nodeName = node.getLocalName();
 
     if( nodeName.equals( "Chart" ) )
     {
