@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.observation.util;
+package org.kalypso.core.internal;
 
 import java.net.URI;
 import java.net.URL;

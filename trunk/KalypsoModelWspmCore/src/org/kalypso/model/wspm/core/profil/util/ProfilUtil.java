@@ -52,6 +52,9 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.math.LinearEquation;
 import org.kalypso.commons.math.LinearEquation.SameXValuesException;
+import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.deegree.binding.gml.Definition;
+import org.kalypso.deegree.binding.gml.Dictionary;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
@@ -63,15 +66,11 @@ import org.kalypso.model.wspm.core.profil.ProfilFactory;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
-import org.kalypso.observation.util.DictionaryCache;
 import org.kalypso.ogc.gml.om.FeatureComponent;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.kalypsodeegree_impl.tools.Debug;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.LineString;
@@ -81,9 +80,6 @@ import com.vividsolutions.jts.geom.LineString;
  */
 public class ProfilUtil
 {
-  // REMARK: it is not ideal to have this global/static cache here, but where is a better place?
-  private static final DictionaryCache DICT_CACHE = new DictionaryCache();
-
   /**
    * @return the values of each point for this pointProperty in the correct order
    */
@@ -111,11 +107,11 @@ public class ProfilUtil
     final String dictionaryUrn = split[0];
     final String itemId = split[1];
 
-    final GMLWorkspace dict = DICT_CACHE.get( dictionaryUrn );
+    final Dictionary dict = KalypsoCorePlugin.getDefault().getDictionary( dictionaryUrn );
     if( dict == null )
       throw new IllegalArgumentException( "Unknown dictionary: " + dictionaryUrn );
 
-    final Feature itemDefinition = dict.getFeature( itemId );
+    final Definition itemDefinition = dict.getDefinition( itemId );
     if( itemDefinition == null )
     {
       final String msg = String.format( "Unknown item '%s' in dictionary %s", itemId, dictionaryUrn );
