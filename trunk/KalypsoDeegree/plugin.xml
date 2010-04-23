@@ -184,6 +184,25 @@
       </feature>     
    </extension>
    <extension
+         point="org.kalypso.deegree.featureBinding">
+      <feature
+            class="org.kalypso.deegree.binding.gml.Dictionary"
+            qname="{http://www.opengis.net/gml}Dictionary">
+      </feature>
+      <feature
+            class="org.kalypso.deegree.binding.gml.Definition"
+            qname="{http://www.opengis.net/gml}Definition">
+      </feature>
+      <feature
+            class="org.kalypso.deegree.binding.swe.ItemDefinition"
+            qname="{http://www.opengis.net/swe}ItemDefinition">
+      </feature>
+      <feature
+            class="org.kalypso.deegree.binding.swe.Phenomenon"
+            qname="{http://www.opengis.net/swe}Phenomenon">
+      </feature>
+   </extension>
+   <extension
          point="org.kalypso.gmlschema.geometrySpecification">
       <GeometrySpecification
       	qName="{http://www.opengis.net/gml}LinearRing"
