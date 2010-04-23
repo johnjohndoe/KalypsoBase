@@ -67,17 +67,6 @@ import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
  */
 public class PointsLineLayer extends AbstractProfilLayer
 {
-  /**
-   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#onProfilChanged(org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint,
-   *      org.kalypso.model.wspm.core.profil.IProfilChange[])
-   */
-  @Override
-  public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
-  {
-    if( hint.isPointsChanged() || hint.isPointValuesChanged() )
-      getEventHandler().fireLayerContentChanged( this );
-  }
-
   public PointsLineLayer( final IProfil profil, final String targetRangeProperty, final ILayerStyleProvider styleProvider )
   {
     super( profil, targetRangeProperty, styleProvider );
@@ -88,6 +77,83 @@ public class PointsLineLayer extends AbstractProfilLayer
   {
     super( id, profil, targetPropertyIndex, styleProvider );
     setData( IProfilChartLayer.VIEW_DATA_KEY, IProfilChartLayer.ALLOW_VERTICAL_EDITING );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#drag(org.eclipse.swt.graphics.Point,
+   *      de.openali.odysseus.chart.framework.model.layer.EditInfo)
+   */
+  @Override
+  public EditInfo drag( final Point newPos, final EditInfo dragStartData )
+  {
+    final Point newPoint = verifyPos( dragStartData.m_pos, newPos );
+    final Integer index = (Integer) dragStartData.m_data;
+    final IRecord[] profilPoints = getProfil().getPoints();
+    final Point next = index == profilPoints.length - 1 ? newPoint : toScreen( profilPoints[index + 1] );
+    final Point previous = index == 0 ? newPoint : toScreen( profilPoints[index - 1] );
+
+    final PolylineFigure lineFigure = new PolylineFigure();
+    lineFigure.setPoints( new Point[] { previous, newPoint, next } );
+    lineFigure.setStyle( getLineStyle_hover() );
+
+    final PointFigure pointFigure = new PointFigure();
+
+    pointFigure.setStyle( getPointStyle_hover() );
+    pointFigure.setPoints( new Point[] { newPoint } );
+
+    final IPaintable dragFigure = new IPaintable()
+    {
+
+      @Override
+      public void paint( final GC gc )
+      {
+        lineFigure.paint( gc );
+        pointFigure.paint( gc );
+
+      }
+    };
+
+    final Point2D point = toNumeric( newPoint );
+    return new EditInfo( this, null, dragFigure, dragStartData.m_data, String.format( TOOLTIP_FORMAT, new Object[] { getDomainComponent().getName(), point.getX(), getTargetComponent().getName(),
+        point.getY(), getTargetComponent().getUnit() } ), dragStartData.m_pos );
+
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.tuhh.ui.chart.AbstractProfilLayer#executeDrop(org.eclipse.swt.graphics.Point,
+   *      de.openali.odysseus.chart.framework.model.layer.EditInfo)
+   */
+
+  @Override
+  public void executeDrop( final Point point, final EditInfo dragStartData )
+  {
+    final Point newPoint = verifyPos( dragStartData.m_pos, point );
+    final Integer pos = dragStartData.m_data instanceof Integer ? (Integer) (dragStartData.m_data) : -1;
+    if( pos > -1 )
+    {
+      final IProfil profil = getProfil();
+      final IRecord profilPoint = profil.getPoint( pos );
+      final Integer hoehe = profil.indexOfProperty( getTargetComponent() );
+      final Integer breite = profil.indexOfProperty( getDomainComponent() );
+      final ICoordinateMapper cm = getCoordinateMapper();
+      final Double x = cm.getDomainAxis().screenToNumeric( newPoint.x ).doubleValue();
+      final Double y = cm.getTargetAxis().screenToNumeric( newPoint.y ).doubleValue();
+      profilPoint.setValue( breite, x );
+      profilPoint.setValue( hoehe, y );
+      profil.setActivePoint( profilPoint );
+      getEventHandler().fireLayerContentChanged( this );
+    }
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getHoverRect(org.kalypso.observation.result.IRecord)
+   */
+
+  @Override
+  public Rectangle getHoverRect( final IRecord profilPoint )
+  {
+    final ICoordinateMapper cm = getCoordinateMapper();
+    return cm == null ? null : RectangleUtils.buffer( toScreen( profilPoint ) );
   }
 
   /**
@@ -122,29 +188,14 @@ public class PointsLineLayer extends AbstractProfilLayer
   }
 
   /**
-   * @see org.kalypso.model.wspm.tuhh.ui.chart.AbstractProfilLayer#executeDrop(org.eclipse.swt.graphics.Point,
-   *      de.openali.odysseus.chart.framework.model.layer.EditInfo)
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#onProfilChanged(org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint,
+   *      org.kalypso.model.wspm.core.profil.IProfilChange[])
    */
-
   @Override
-  public void executeDrop( final Point point, final EditInfo dragStartData )
+  public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
-    final Point newPoint = verifyPos( dragStartData.m_pos, point );
-    final Integer pos = dragStartData.m_data instanceof Integer ? (Integer) (dragStartData.m_data) : -1;
-    if( pos > -1 )
-    {
-      final IProfil profil = getProfil();
-      final IRecord profilPoint = profil.getPoint( pos );
-      final Integer hoehe = profil.indexOfProperty( getTargetComponent() );
-      final Integer breite = profil.indexOfProperty( getDomainComponent() );
-      final ICoordinateMapper cm = getCoordinateMapper();
-      final Double x = cm.getDomainAxis().screenToNumeric( newPoint.x ).doubleValue();
-      final Double y = cm.getTargetAxis().screenToNumeric( newPoint.y ).doubleValue();
-      profilPoint.setValue( breite, x );
-      profilPoint.setValue( hoehe, y );
-      profil.setActivePoint( profilPoint );
+    if( hint.isPointsChanged() || hint.isPointValuesChanged() )
       getEventHandler().fireLayerContentChanged( this );
-    }
   }
 
   /**
@@ -207,57 +258,6 @@ public class PointsLineLayer extends AbstractProfilLayer
       pf2.setPoints( new Point[] { activePoint } );
       pf2.paint( gc );
     }
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#drag(org.eclipse.swt.graphics.Point,
-   *      de.openali.odysseus.chart.framework.model.layer.EditInfo)
-   */
-  @Override
-  public EditInfo drag( final Point newPos, final EditInfo dragStartData )
-  {
-    final Point newPoint = verifyPos( dragStartData.m_pos, newPos );
-    final Integer index = (Integer) dragStartData.m_data;
-    final IRecord[] profilPoints = getProfil().getPoints();
-    final Point next = index == profilPoints.length - 1 ? newPoint : toScreen( profilPoints[index + 1] );
-    final Point previous = index == 0 ? newPoint : toScreen( profilPoints[index - 1] );
-
-    final PolylineFigure lineFigure = new PolylineFigure();
-    lineFigure.setPoints( new Point[] { previous, newPoint, next } );
-    lineFigure.setStyle( getLineStyle_hover() );
-
-    final PointFigure pointFigure = new PointFigure();
-
-    pointFigure.setStyle( getPointStyle_hover() );
-    pointFigure.setPoints( new Point[] { newPoint } );
-
-    final IPaintable dragFigure = new IPaintable()
-    {
-
-      @Override
-      public void paint( final GC gc )
-      {
-        lineFigure.paint( gc );
-        pointFigure.paint( gc );
-
-      }
-    };
-
-    final Point2D point = toNumeric( newPoint );
-    return new EditInfo( this, null, dragFigure, dragStartData.m_data, String.format( TOOLTIP_FORMAT, new Object[] { getDomainComponent().getName(), point.getX(), getTargetComponent().getName(),
-        point.getY(), getTargetComponent().getUnit() } ), dragStartData.m_pos );
-
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getHoverRect(org.kalypso.observation.result.IRecord)
-   */
-
-  @Override
-  public Rectangle getHoverRect( final IRecord profilPoint )
-  {
-    final ICoordinateMapper cm = getCoordinateMapper();
-    return cm == null ? null : RectangleUtils.buffer( toScreen( profilPoint ) );
   }
 
   private final Point verifyPos( final Point oldPos, final Point newPos )
