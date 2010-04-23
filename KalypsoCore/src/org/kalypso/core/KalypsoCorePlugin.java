@@ -53,13 +53,16 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.catalog.CatalogManager;
 import org.kalypso.core.catalog.CatalogSLD;
 import org.kalypso.core.i18n.Messages;
+import org.kalypso.core.internal.DictionaryCache;
 import org.kalypso.core.preferences.IKalypsoCorePreferences;
 import org.kalypso.core.util.pool.ResourcePool;
+import org.kalypso.deegree.binding.gml.Dictionary;
 import org.kalypso.loader.DefaultLoaderFactory;
 import org.kalypso.loader.ILoaderFactory;
 import org.kalypso.ogc.gml.selection.FeatureSelectionManager2;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -83,6 +86,8 @@ public class KalypsoCorePlugin extends Plugin
   private ResourcePool m_pool;
 
   private ILoaderFactory m_loaderFactory;
+
+  private DictionaryCache m_dictionaryCache;
 
   public static String getID( )
   {
@@ -157,7 +162,7 @@ public class KalypsoCorePlugin extends Plugin
 
     return m_selectionManager;
   }
-  
+
   /**
    * Gets the kalypso timezone (to be used to display any dates in the UI).<br>
    * The timezone is set in the user-preferences. If the preference is not set, the value of the system property
@@ -197,7 +202,6 @@ public class KalypsoCorePlugin extends Plugin
     }
   }
 
-
   /**
    * This function returns the coordinate system set in the preferences.
    * 
@@ -221,14 +225,14 @@ public class KalypsoCorePlugin extends Plugin
    * defaults, and returned.
    * </p>
    * <p>
-   * <strong>NOTE:</strong> As of Eclipse 3.1 this method is no longer referring to the core runtime compatibility
-   * layer and so plug-ins relying on Plugin#initializeDefaultPreferences will have to access the compatibility layer
+   * <strong>NOTE:</strong> As of Eclipse 3.1 this method is no longer referring to the core runtime compatibility layer
+   * and so plug-ins relying on Plugin#initializeDefaultPreferences will have to access the compatibility layer
    * themselves.
    * </p>
    * 
    * @return the preference store
    */
-  public IPreferenceStore getPreferenceStore( )
+  public synchronized IPreferenceStore getPreferenceStore( )
   {
     /* Create the preference store lazily. */
     if( m_preferenceStore == null )
@@ -242,7 +246,7 @@ public class KalypsoCorePlugin extends Plugin
    * 
    * @return The pool.
    */
-  public ResourcePool getPool( )
+  public synchronized ResourcePool getPool( )
   {
     if( m_pool == null )
       m_pool = new ResourcePool( getLoaderFactory() );
@@ -255,11 +259,29 @@ public class KalypsoCorePlugin extends Plugin
    * 
    * @return The loader factory.
    */
-  private ILoaderFactory getLoaderFactory( )
+  private synchronized ILoaderFactory getLoaderFactory( )
   {
     if( m_loaderFactory == null )
       m_loaderFactory = new DefaultLoaderFactory();
 
     return m_loaderFactory;
+  }
+
+  public Dictionary getDictionary( final String urn )
+  {
+    final DictionaryCache dictionaryCache = getDictionaryCache();
+    final GMLWorkspace gmlWorkspace = dictionaryCache.get( urn );
+    if( gmlWorkspace == null )
+      return null;
+
+    return (Dictionary) gmlWorkspace.getRootFeature();
+  }
+
+  private synchronized DictionaryCache getDictionaryCache( )
+  {
+    if( m_dictionaryCache == null )
+      m_dictionaryCache = new DictionaryCache();
+
+    return m_dictionaryCache;
   }
 }

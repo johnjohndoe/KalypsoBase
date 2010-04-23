@@ -40,9 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.observation.phenomenon;
 
-import org.kalypso.observation.util.DictionaryCache;
+import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.deegree.binding.gml.Dictionary;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * An {@link IPhenomenon} implementation based on a dictionary entry.
@@ -51,8 +51,6 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public class DictionaryPhenomenon implements IPhenomenon
 {
-  private static final DictionaryCache DICT_CACHE = new DictionaryCache();
-
   private final String m_id;
 
   public DictionaryPhenomenon( final String id/* , final String name, final String description */)
@@ -75,11 +73,11 @@ public class DictionaryPhenomenon implements IPhenomenon
     final String dictionaryUrn = split[0];
     final String itemId = split[1];
 
-    final GMLWorkspace dict = DICT_CACHE.get( dictionaryUrn );
+    final Dictionary dict = KalypsoCorePlugin.getDefault().getDictionary( dictionaryUrn );
     if( dict == null )
       return null;
 
-    return dict.getFeature( itemId );
+    return dict.getDefinition( itemId );
   }
 
   /**
