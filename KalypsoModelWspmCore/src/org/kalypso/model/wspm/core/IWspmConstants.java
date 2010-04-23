@@ -88,7 +88,9 @@ public interface IWspmConstants extends IWspmPhenomenonConstants
 
   public static final String POINT_PROPERTY_RECHTSWERT = POINT_PROPERTY + "RECHTSWERT"; //$NON-NLS-1$
 
-  public static final String LENGTH_SECTION_PROPERTY = "urn:ogc:gml:dict:kalypso:model:wspm:components#";//$NON-NLS-1$
+  public static final String URN_OGC_GML_DICT_KALYPSO_MODEL_WSPM_COMPONENTS = "urn:ogc:gml:dict:kalypso:model:wspm:components"; //$NON-NLS-1$
+
+  public static final String LENGTH_SECTION_PROPERTY = URN_OGC_GML_DICT_KALYPSO_MODEL_WSPM_COMPONENTS + "#";//$NON-NLS-1$
 
   public static final String LENGTH_SECTION_PROPERTY_RUNOFF = LENGTH_SECTION_PROPERTY + "LengthSectionRunOff";//$NON-NLS-1$
 
