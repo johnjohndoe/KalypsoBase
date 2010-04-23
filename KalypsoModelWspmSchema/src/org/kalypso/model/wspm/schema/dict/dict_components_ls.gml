@@ -28,6 +28,23 @@
           </swe:ItemDefinition>
      </gml:dictionaryEntry>
 
+    <gml:dictionaryEntry>
+          <swe:ItemDefinition gml:id="LengthSectionText">
+               <gml:name>%LengthSectionText_name</gml:name>
+               <swe:property>
+                    <swe:Phenomenon gml:id="phen-text">
+                         <gml:description>%LengthSectionText_description</gml:description>
+                         <gml:name>%LengthSectionText_name</gml:name>
+                    </swe:Phenomenon>
+               </swe:property>
+               <swe:representation>
+                    <swe:Word>
+                         <swe:classification/>
+                    </swe:Word>
+               </swe:representation>
+          </swe:ItemDefinition>
+     </gml:dictionaryEntry>
+
      <gml:dictionaryEntry>
           <swe:ItemDefinition gml:id="LengthSectionRunOff">
                <gml:name>%LengthSectionRunOff.name</gml:name>
