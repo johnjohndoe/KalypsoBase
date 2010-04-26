@@ -677,7 +677,9 @@ public class ProfilUtil
       return minValue;
     for( final IRecord rec : section )
     {
-      minValue = Math.min( minValue, (Double) rec.getValue( index ) );
+      final Object objVal = rec.getValue( index );
+      if( objVal != null && objVal instanceof Number )
+        minValue = Math.min( minValue, (Double) objVal );
     }
     return minValue;
   }
