@@ -154,8 +154,11 @@ public final class ComponentUtilities
    * <li>if the local part of the reference is 'none', '-' is returned</li>
    * </ul>
    */
-  private static String getComponentUnitLabel( final IComponent component )
+  public static String getComponentUnitLabel( final IComponent component )
   {
+    if( component == null )
+      return ""; //$NON-NLS-1$
+
     final String unitReference = component.getUnit();
     if( unitReference == null )
       return null;
