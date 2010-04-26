@@ -46,7 +46,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -93,9 +92,9 @@ public class ProfilSerializerUtilitites
    * Writes a single profile into a file.
    * 
    * @param file
-   *            The file to write into
+   *          The file to write into
    * @param profile
-   *            This profiles gets written
+   *          This profiles gets written
    */
   public static void writeProfile( final IProfilSink sink, final IProfil profile, final File file ) throws IOException
   {
@@ -116,9 +115,9 @@ public class ProfilSerializerUtilitites
    * Writes a single profile into a stream.
    * 
    * @param file
-   *            The file to write into
+   *          The file to write into
    * @param profile
-   *            This profiles gets written
+   *          This profiles gets written
    */
   public static void writeProfile( final IProfilSink sink, final IProfil profile, final OutputStream stream ) throws IOException
   {
@@ -132,26 +131,6 @@ public class ProfilSerializerUtilitites
     finally
     {
       IOUtils.closeQuietly( writer );
-    }
-  }
-
-  /** Read a file via the given profile source and creates a profile from it. */
-  public static IProfil readProfile( final IProfilSource source, final InputStream stream, final String profilType ) throws IOException
-  {
-    final IProfil profile = ProfilFactory.createProfil( profilType );
-
-    Reader fileReader = null;
-    try
-    {
-      fileReader = new BufferedReader( new InputStreamReader( stream ) );
-      source.read( profile, fileReader );
-      fileReader.close();
-
-      return profile;
-    }
-    finally
-    {
-      IOUtils.closeQuietly( fileReader );
     }
   }
 }
