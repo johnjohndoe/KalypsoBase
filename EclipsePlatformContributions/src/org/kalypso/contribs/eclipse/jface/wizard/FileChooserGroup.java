@@ -77,7 +77,7 @@ public class FileChooserGroup
     public void fileChanged( final File file );
   }
 
-  static public class FileChooserDelegate
+  public static class FileChooserDelegate
   {
     public enum FILE_CHOOSER_GROUP_TYPE
     {
@@ -193,7 +193,7 @@ public class FileChooserGroup
   }
 
   /**
-   * Has no effekt if the same listener has already been added.
+   * Has no effect if the same listener has already been added.
    */
   public void addFileChangedListener( final FileChangedListener l )
   {
