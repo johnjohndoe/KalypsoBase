@@ -102,7 +102,7 @@ public class PropertyEditWizard extends Wizard
 
     setNeedsProgressMonitor( true );
 
-    final String message = Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.PropertyEditWizard.5" ); //$NON-NLS-1$
+    final String message = Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.PropertyEditWizard.2" ); //$NON-NLS-1$
     m_profileChooserPage = new ProfilesChooserPage( message, profileSelection, false );
   }
 
