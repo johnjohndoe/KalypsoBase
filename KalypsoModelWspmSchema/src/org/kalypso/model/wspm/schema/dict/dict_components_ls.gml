@@ -34,7 +34,7 @@
                <swe:property>
                     <swe:Phenomenon gml:id="phen-text">
                          <gml:description>%LengthSectionText_description</gml:description>
-                         <gml:name>%LengthSectionText_name</gml:name>
+                         <gml:name>%phen-text_name</gml:name>
                     </swe:Phenomenon>
                </swe:property>
                <swe:representation>
@@ -615,7 +615,7 @@
      <!-- I_REIB -->
      <gml:dictionaryEntry>
           <swe:ItemDefinition gml:id="LengthSection_I_Reib">
-               <gml:name>%LengthSection_I_Reib.name=Reibungsgefälle</gml:name>
+               <gml:name>%LengthSection_I_Reib.name</gml:name>
                <swe:property>
                     <swe:Phenomenon gml:id="phen-I_Reib">
                          <gml:name>%phen-I_Reib.name</gml:name>
