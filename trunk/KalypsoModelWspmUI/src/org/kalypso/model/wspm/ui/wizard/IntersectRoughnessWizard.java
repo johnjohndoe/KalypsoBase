@@ -64,6 +64,8 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.model.wspm.core.gml.assignment.AssignmentBinder;
 import org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
+import org.kalypso.model.wspm.ui.i18n.Messages;
+import org.kalypso.model.wspm.ui.profil.wizard.ProfilesChooserPage;
 import org.kalypso.model.wspm.ui.wizard.FeatureThemeWizardUtilitites.FOUND_PROFILES;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.ogc.gml.command.FeatureChange;
@@ -89,7 +91,7 @@ public class IntersectRoughnessWizard extends Wizard
   {
     m_foundProfiles = foundProfiles;
 
-    setWindowTitle( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.wizard.IntersectRoughnessWizard.0") ); //$NON-NLS-1$
+    setWindowTitle( org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.wizard.IntersectRoughnessWizard.0" ) ); //$NON-NLS-1$
     setNeedsProgressMonitor( true );
     setDialogSettings( PluginUtilities.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), getClass().getName() ) );
   }
@@ -100,9 +102,10 @@ public class IntersectRoughnessWizard extends Wizard
   @Override
   public void addPages( )
   {
-    m_profileChooserPage = new ArrayChooserPage( m_foundProfiles.foundProfiles, new Object[] {}, m_foundProfiles.selectedProfiles, 0, "profileFeaturesChooserPage", org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.wizard.IntersectRoughnessWizard.1"), null ); //$NON-NLS-1$ //$NON-NLS-2$
-    m_profileChooserPage.setLabelProvider( m_chooserPageLabelProvider );
-    m_profileChooserPage.setMessage( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.wizard.IntersectRoughnessWizard.2") ); //$NON-NLS-1$
+    final String msg = Messages.getString( "org.kalypso.model.wspm.ui.wizard.IntersectRoughnessWizard.2" ); //$NON-NLS-1$
+    final String title = Messages.getString( "org.kalypso.model.wspm.ui.wizard.IntersectRoughnessWizard.1" );
+    m_profileChooserPage = new ProfilesChooserPage( msg, m_foundProfiles.foundProfiles, null, m_foundProfiles.selectedProfiles, 1, false );
+    m_profileChooserPage.setTitle( title );
 
     m_roughnessIntersectPage = new IntersectRoughnessPage( m_foundProfiles.theme.getMapModell() );
 
@@ -145,12 +148,12 @@ public class IntersectRoughnessWizard extends Wizard
     {
       public IStatus execute( final IProgressMonitor monitor ) throws InvocationTargetException
       {
-        monitor.beginTask( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.wizard.IntersectRoughnessWizard.3"), 1 + choosen.length ); //$NON-NLS-1$
+        monitor.beginTask( Messages.getString( "org.kalypso.model.wspm.ui.wizard.IntersectRoughnessWizard.3" ), 1 + choosen.length ); //$NON-NLS-1$
 
         try
         {
           /* Load assignment */
-          monitor.subTask( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.wizard.IntersectRoughnessWizard.4") ); //$NON-NLS-1$
+          monitor.subTask( Messages.getString( "org.kalypso.model.wspm.ui.wizard.IntersectRoughnessWizard.4" ) ); //$NON-NLS-1$
           final IWorkspace workspace = ResourcesPlugin.getWorkspace();
           final IFile assignmentFile = workspace.getRoot().getFile( assignmentPath );
           final URL assignmentUrl = ResourceUtilities.createURL( assignmentFile );
@@ -182,7 +185,7 @@ public class IntersectRoughnessWizard extends Wizard
     };
 
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, true, runnable );
-    ErrorDialog.openError( getShell(), getWindowTitle(), org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.wizard.IntersectRoughnessWizard.5"), status ); //$NON-NLS-1$
+    ErrorDialog.openError( getShell(), getWindowTitle(), Messages.getString( "org.kalypso.model.wspm.ui.wizard.IntersectRoughnessWizard.5" ), status ); //$NON-NLS-1$
 
     return status.isOK();
   }

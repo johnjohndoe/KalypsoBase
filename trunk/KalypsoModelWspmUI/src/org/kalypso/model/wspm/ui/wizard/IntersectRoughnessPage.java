@@ -83,7 +83,6 @@ import org.kalypso.ogc.gml.IKalypsoThemeFilter;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree_impl.tools.GMLConstants;
-import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
  * @author Gernot Belger
@@ -92,7 +91,7 @@ public class IntersectRoughnessPage extends WizardPage implements IUpdateable, I
 {
   private final static String SETTINGS_FILTER_IDS = "settings.filters.ids"; //$NON-NLS-1$
 
-  private final ResourceChooserGroup m_assignmentGroup = new ResourceChooserGroup( this, org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.wizard.IntersectRoughnessPage.0"), org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.wizard.IntersectRoughnessPage.1") ); //$NON-NLS-1$ //$NON-NLS-2$
+  private final ResourceChooserGroup m_assignmentGroup = new ResourceChooserGroup( this, org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.wizard.IntersectRoughnessPage.0" ), org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.wizard.IntersectRoughnessPage.1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
   private final ThemeAndPropertyChooserGroup m_themeGroup;
 
@@ -106,9 +105,9 @@ public class IntersectRoughnessPage extends WizardPage implements IUpdateable, I
 
   public IntersectRoughnessPage( final IMapModell modell )
   {
-    super( "intersectRoughnessPage", org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.wizard.IntersectRoughnessPage.2"), null ); //$NON-NLS-1$ //$NON-NLS-2$
+    super( "intersectRoughnessPage", Messages.getString( "org.kalypso.model.wspm.ui.wizard.IntersectRoughnessPage.2" ), null ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    setMessage( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.wizard.IntersectRoughnessPage.3") ); //$NON-NLS-1$
+    setMessage( Messages.getString( "org.kalypso.model.wspm.ui.wizard.IntersectRoughnessPage.3" ) ); //$NON-NLS-1$
 
     m_modell = modell;
 
@@ -135,8 +134,8 @@ public class IntersectRoughnessPage extends WizardPage implements IUpdateable, I
       }
     };
 
-    m_geoPd = new PropertyDescriptor( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.wizard.IntersectRoughnessPage.4"), geoFilter, true ); //$NON-NLS-1$
-    m_valuePd = new PropertyDescriptor( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.wizard.IntersectRoughnessPage.5"), valueFilter, false ); //$NON-NLS-1$
+    m_geoPd = new PropertyDescriptor( Messages.getString( "org.kalypso.model.wspm.ui.wizard.IntersectRoughnessPage.4" ), geoFilter, true ); //$NON-NLS-1$
+    m_valuePd = new PropertyDescriptor( Messages.getString( "org.kalypso.model.wspm.ui.wizard.IntersectRoughnessPage.5" ), valueFilter, false ); //$NON-NLS-1$
 
     final PropertyDescriptor[] pds = new PropertyDescriptor[] { m_geoPd, m_valuePd };
     m_themeGroup = new ThemeAndPropertyChooserGroup( this, m_modell, this, pds );
@@ -154,14 +153,14 @@ public class IntersectRoughnessPage extends WizardPage implements IUpdateable, I
     m_themeGroup.setDialogSettings( getDialogSettings() );
     final Group polygoneGroup = m_themeGroup.createControl( composite );
     polygoneGroup.setLayoutData( new GridData( SWT.FILL, SWT.BEGINNING, true, false ) );
-    polygoneGroup.setText( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.wizard.IntersectRoughnessPage.6") ); //$NON-NLS-1$
+    polygoneGroup.setText( Messages.getString( "org.kalypso.model.wspm.ui.wizard.IntersectRoughnessPage.6" ) ); //$NON-NLS-1$
 
     /* Assignment Group */
     final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 
     m_assignmentGroup.setDialogSettings( getDialogSettings() );
     final IResource initialSelection = getAssignmentPath() == null ? null : root.findMember( getAssignmentPath() );
-    final KalypsoResourceSelectionDialog dialog = new KalypsoResourceSelectionDialog( getShell(), initialSelection, Messages.getString("org.kalypso.model.wspm.ui.wizard.IntersectRoughnessPage.14"), new String[] { "gml" }, root, new ResourceSelectionValidator() );   //$NON-NLS-1$//$NON-NLS-2$
+    final KalypsoResourceSelectionDialog dialog = new KalypsoResourceSelectionDialog( getShell(), initialSelection, Messages.getString( "org.kalypso.model.wspm.ui.wizard.IntersectRoughnessPage.14" ), new String[] { "gml" }, root, new ResourceSelectionValidator() ); //$NON-NLS-1$//$NON-NLS-2$
     m_assignmentGroup.setSelectionDialog( dialog );
 
     final Control assignmentGroup = m_assignmentGroup.createControl( composite );
@@ -179,10 +178,10 @@ public class IntersectRoughnessPage extends WizardPage implements IUpdateable, I
     final Group group = new Group( composite, SWT.NONE );
     group.setLayoutData( new GridData( SWT.FILL, SWT.BEGINNING, true, false ) );
     group.setLayout( new GridLayout( 1, false ) );
-    group.setText( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.wizard.IntersectRoughnessPage.8") ); //$NON-NLS-1$
+    group.setText( Messages.getString( "org.kalypso.model.wspm.ui.wizard.IntersectRoughnessPage.8" ) ); //$NON-NLS-1$
 
     /* theme chooser */
-    new Label( group, SWT.NONE ).setText( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.wizard.IntersectRoughnessPage.9") ); //$NON-NLS-1$
+    new Label( group, SWT.NONE ).setText( Messages.getString( "org.kalypso.model.wspm.ui.wizard.IntersectRoughnessPage.9" ) ); //$NON-NLS-1$
 
     final Set<String> ids = new HashSet<String>();
     final IDialogSettings dialogSettings = getDialogSettings();
@@ -290,15 +289,15 @@ public class IntersectRoughnessPage extends WizardPage implements IUpdateable, I
     setPageComplete( pageComplete );
 
     if( polygoneTheme == null )
-      setErrorMessage( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.wizard.IntersectRoughnessPage.10") ); //$NON-NLS-1$
+      setErrorMessage( Messages.getString( "org.kalypso.model.wspm.ui.wizard.IntersectRoughnessPage.10" ) ); //$NON-NLS-1$
     else if( polygoneValueProperty == null )
-      setErrorMessage( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.wizard.IntersectRoughnessPage.11") ); //$NON-NLS-1$
+      setErrorMessage( Messages.getString( "org.kalypso.model.wspm.ui.wizard.IntersectRoughnessPage.11" ) ); //$NON-NLS-1$
     else if( assignmentPath == null )
-      setErrorMessage( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.wizard.IntersectRoughnessPage.12") ); //$NON-NLS-1$
+      setErrorMessage( Messages.getString( "org.kalypso.model.wspm.ui.wizard.IntersectRoughnessPage.12" ) ); //$NON-NLS-1$
     else
     {
       setErrorMessage( null );
-      setMessage( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.wizard.IntersectRoughnessPage.13") ); //$NON-NLS-1$
+      setMessage( Messages.getString( "org.kalypso.model.wspm.ui.wizard.IntersectRoughnessPage.13" ) ); //$NON-NLS-1$
     }
   }
 

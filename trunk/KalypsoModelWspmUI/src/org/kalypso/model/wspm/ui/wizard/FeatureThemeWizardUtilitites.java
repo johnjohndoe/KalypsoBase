@@ -49,6 +49,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
+import org.kalypso.ogc.gml.outline.nodes.FeatureThemeNode;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
@@ -86,10 +87,9 @@ public class FeatureThemeWizardUtilitites
     {
       for( final Object selectedObject : ((IStructuredSelection) selection).toList() )
       {
-        if( selectedObject instanceof IKalypsoFeatureTheme )
+        final IKalypsoFeatureTheme theme = searchTheme( selectedObject );
+        if( theme != null )
         {
-          final IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme) selectedObject;
-
           final List<Feature> foundProfiles = new ArrayList<Feature>();
           final List<Feature> selectedProfiles = new ArrayList<Feature>( foundProfiles );
           final Set<Object> selectedFeatures = new HashSet<Object>( theme.getSelectionManager().toList() );
@@ -117,6 +117,17 @@ public class FeatureThemeWizardUtilitites
         }
       }
     }
+
+    return null;
+  }
+
+  private static IKalypsoFeatureTheme searchTheme( final Object selectedObject )
+  {
+    if( selectedObject instanceof IKalypsoFeatureTheme )
+      return (IKalypsoFeatureTheme) selectedObject;
+
+    if( selectedObject instanceof FeatureThemeNode )
+      return (IKalypsoFeatureTheme) ((FeatureThemeNode) selectedObject).getTheme();
 
     return null;
   }

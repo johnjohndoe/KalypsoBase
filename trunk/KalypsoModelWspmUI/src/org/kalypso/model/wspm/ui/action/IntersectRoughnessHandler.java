@@ -49,6 +49,7 @@ import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
+import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.wizard.FeatureThemeWizardUtilitites;
 import org.kalypso.model.wspm.ui.wizard.IntersectRoughnessWizard;
 import org.kalypso.model.wspm.ui.wizard.FeatureThemeWizardUtilitites.FOUND_PROFILES;
@@ -70,10 +71,9 @@ public class IntersectRoughnessHandler extends AbstractHandler
 
     /* retrieve selected profiles, abort if none */
     final FOUND_PROFILES foundProfiles = FeatureThemeWizardUtilitites.getProfileFeaturesFromThemeSelection( selection );
-
     if( foundProfiles == null || foundProfiles.foundProfiles.length == 0 )
     {
-      MessageDialog.openWarning( shell, org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.action.IntersectRoughnessMapThemeAction.0" ), org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.action.IntersectRoughnessMapThemeAction.1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      MessageDialog.openWarning( shell, Messages.getString( "org.kalypso.model.wspm.ui.action.IntersectRoughnessMapThemeAction.0" ), org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.action.IntersectRoughnessMapThemeAction.1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
       return null;
     }
 
