@@ -68,8 +68,8 @@ import org.kalypso.gmlschema.property.IPropertyTypeFilter;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.PropertyUtils;
 import org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter;
+import org.kalypso.model.wspm.core.profil.filter.ProfilePointFilterComposite;
 import org.kalypso.model.wspm.ui.i18n.Messages;
-import org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.ProfileFilterComposite;
 import org.kalypso.model.wspm.ui.wizard.ThemeAndPropertyChooserGroup.PropertyDescriptor;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
@@ -93,7 +93,7 @@ public class IntersectRoughnessPage extends WizardPage implements IUpdateable, I
 
   private final PropertyDescriptor m_valuePd;
 
-  private final ProfileFilterComposite m_filterChooser = new ProfileFilterComposite();
+  private final ProfilePointFilterComposite m_filterChooser = new ProfilePointFilterComposite();
 
   public IntersectRoughnessPage( final IMapModell modell )
   {
@@ -168,7 +168,7 @@ public class IntersectRoughnessPage extends WizardPage implements IUpdateable, I
   {
     final Group group = new Group( composite, SWT.NONE );
     group.setLayout( new FillLayout() );
-    group.setText( ProfileFilterComposite.STR_GROUP_TEXT );
+    group.setText( ProfilePointFilterComposite.STR_GROUP_TEXT );
 
     m_filterChooser.createControl( group, SWT.BORDER );
 
