@@ -41,7 +41,6 @@
 package org.kalypso.util.swt;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.ILabelProvider;
@@ -69,17 +68,16 @@ public class ListSelectionWizardPage extends WizardPage
 
   private final ListSelectionComposite m_listSelectionPanel;
 
-  public ListSelectionWizardPage( final String pageName, final IStructuredContentProvider contentProvider, final ILabelProvider labelProvider )
+  public ListSelectionWizardPage( final String pageName, final ILabelProvider labelProvider )
   {
     super( pageName );
 
-    m_listSelectionPanel = new ListSelectionComposite( contentProvider, labelProvider );
-
+    m_listSelectionPanel = new ListSelectionComposite( labelProvider );
   }
 
-  public ListSelectionWizardPage( final String pageName, final String title, final ImageDescriptor titleImage, final IStructuredContentProvider contentProvider, final ILabelProvider labelProvider )
+  public ListSelectionWizardPage( final String pageName, final IStructuredContentProvider contentProvider, final ILabelProvider labelProvider )
   {
-    super( pageName, title, titleImage );
+    super( pageName );
 
     m_listSelectionPanel = new ListSelectionComposite( contentProvider, labelProvider );
   }
