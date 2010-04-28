@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -68,8 +69,8 @@ public class EclipsePlatformContributionsExtensions
    * Returns all registered project templates.
    * 
    * @param If
-   *            non-<code>null</code>, only the project templates of the given category are returned, else, every
-   *            registered template project is returned.
+   *          non-<code>null</code>, only the project templates of the given category are returned, else, every
+   *          registered template project is returned.
    */
   public static ProjectTemplate[] getProjectTemplates( final String categoryId )
   {
@@ -87,14 +88,10 @@ public class EclipsePlatformContributionsExtensions
       final String data = configurationElement.getAttribute( "data" ); //$NON-NLS-1$
       final String category = configurationElement.getAttribute( "category" ); //$NON-NLS-1$
 
-      /* Ingore templates of the wrong category id, if set. */
+      /* Ignore templates of the wrong category id, if set. */
       if( categoryId == null || categoryId.equals( category ) )
       {
-        final String bundleId = configurationElement.getContributor().getName();
-
-        final Bundle bundle = Platform.getBundle( bundleId );
-        final URL dataLocation = FileLocator.find( bundle, new Path( data ), null );
-
+        final URL dataLocation = findLocation( data, configurationElement );
         if( dataLocation == null )
         {
           final String msg = String.format( "Resource not found for project template '%s': %s", label, data ); //$NON-NLS-1$
@@ -107,5 +104,42 @@ public class EclipsePlatformContributionsExtensions
     }
 
     return demoProjects.toArray( new ProjectTemplate[demoProjects.size()] );
+  }
+
+  private static URL findLocation( final String data, final IConfigurationElement configurationElement )
+  {
+    if( data.startsWith( "bundle:" ) )
+      return findBundleLocation( data );
+    else
+      return findResourceLocation( data, configurationElement );
+  }
+
+  private static URL findBundleLocation( final String data )
+  {
+    try
+    {
+      final String[] split = data.split( ":" );
+      if( split.length < 2 )
+        return null;
+
+      final Bundle bundle = Platform.getBundle( split[1] );
+      if( bundle == null )
+        return null;
+
+      final URL location = bundle.getEntry( "/" );
+      return FileLocator.toFileURL( location );
+    }
+    catch( final IOException e )
+    {
+      e.printStackTrace();
+      return null;
+    }
+  }
+
+  private static URL findResourceLocation( final String data, final IConfigurationElement configurationElement )
+  {
+    final String bundleId = configurationElement.getContributor().getName();
+    final Bundle bundle = Platform.getBundle( bundleId );
+    return FileLocator.find( bundle, new Path( data ), null );
   }
 }
