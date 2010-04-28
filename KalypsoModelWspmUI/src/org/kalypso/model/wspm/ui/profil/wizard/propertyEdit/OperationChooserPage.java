@@ -74,6 +74,7 @@ import org.kalypso.contribs.eclipse.ui.forms.MessageProvider;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter;
+import org.kalypso.model.wspm.core.profil.filter.ProfilePointFilterComposite;
 import org.kalypso.model.wspm.core.util.pointpropertycalculator.IPointPropertyCalculator;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.i18n.Messages;
@@ -109,7 +110,7 @@ public class OperationChooserPage extends WizardPage
 
   private Double m_value = Double.NaN;
 
-  private final ProfileFilterComposite m_filterChooser = new ProfileFilterComposite();
+  private final ProfilePointFilterComposite m_filterChooser = new ProfilePointFilterComposite();
 
   public OperationChooserPage( final String title )
   {
@@ -165,7 +166,7 @@ public class OperationChooserPage extends WizardPage
     layout.marginHeight = 0;
     layout.marginWidth = 0;
     group.setLayout( layout );
-    group.setText( ProfileFilterComposite.STR_GROUP_TEXT );
+    group.setText( ProfilePointFilterComposite.STR_GROUP_TEXT );
 
     final Control filterControl = m_filterChooser.createControl( group, SWT.BORDER );
     filterControl.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
