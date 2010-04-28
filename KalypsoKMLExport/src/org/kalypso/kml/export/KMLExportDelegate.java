@@ -52,7 +52,6 @@ public class KMLExportDelegate implements IStylePaintable
 
   /*
    * (non-Javadoc)
-   * 
    * @see org.kalypso.ogc.gml.IPaintDelegate#paint(org.kalypsodeegree.graphics.displayelements.DisplayElement)
    */
   public void paint( final DisplayElement displayElement, final IProgressMonitor monitor )
