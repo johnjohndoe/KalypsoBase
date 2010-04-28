@@ -47,19 +47,16 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.IPageChangeProvider;
 import org.eclipse.jface.dialogs.IPageChangedListener;
 import org.eclipse.jface.dialogs.PageChangedEvent;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.Wizard;
-import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.jface.wizard.ArrayChooserPage;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureBinding;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.changes.TupleResultChange;
-import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
+import org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter;
 import org.kalypso.model.wspm.ui.action.ProfileSelection;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.profil.wizard.ProfileManipulationOperation;
@@ -92,56 +89,35 @@ public class PropertyEditWizard extends Wizard
 
   final private CommandableWorkspace m_workspace;
 
-  final private IStructuredSelection m_selectedPoints;
-
   public PropertyEditWizard( final ProfileSelection profileSelection )
   {
     m_profile = null;
     m_workspace = profileSelection.getWorkspace();
-    m_selectedPoints = null;
-
-    setNeedsProgressMonitor( true );
 
     final String message = Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.PropertyEditWizard.2" ); //$NON-NLS-1$
     m_profileChooserPage = new ProfilesChooserPage( message, profileSelection, false );
+    addPage( m_profileChooserPage );
+
+    init();
   }
 
-  public PropertyEditWizard( final IProfil profile, final ISelection selection )
+  public PropertyEditWizard( final IProfil profile )
   {
-    m_selectedPoints = selection instanceof IStructuredSelection ? (IStructuredSelection) selection : null;
     m_profile = profile;
     m_workspace = null;
     m_profileChooserPage = null;
+
+    init();
+  }
+
+  private void init( )
+  {
     setNeedsProgressMonitor( true );
-    setDialogSettings( PluginUtilities.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), getClass().getName() ) );
-  }
 
-  /**
-   * @see org.eclipse.jface.wizard.Wizard#setContainer(org.eclipse.jface.wizard.IWizardContainer)
-   */
-  @Override
-  public void setContainer( final IWizardContainer wizardContainer )
-  {
-    final IWizardContainer oldContainer = getContainer();
-    if( oldContainer instanceof IPageChangeProvider )
-      ((IPageChangeProvider) oldContainer).removePageChangedListener( m_pageChangedListener );
-
-    super.setContainer( wizardContainer );
-
-    if( wizardContainer instanceof IPageChangeProvider )
-      ((IPageChangeProvider) wizardContainer).addPageChangedListener( m_pageChangedListener );
-  }
-
-  /**
-   * @see org.eclipse.jface.wizard.Wizard#addPages()
-   */
-  @Override
-  public void addPages( )
-  {
-    super.addPages();
-
-    if( m_profile == null )
-      addPage( m_profileChooserPage );
+    final String msg = Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.PropertyEditWizard.10" ); //$NON-NLS-1$
+    m_operationChooserPage = new OperationChooserPage( msg );
+    // FIxME: add table filter if we got a selection
+    m_operationChooserPage.setDescription( Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.PropertyEditWizard.11" ) ); //$NON-NLS-1$
 
     m_propertyChooserPage = new ArrayChooserPage( null, null, null, 1, "profilePropertiesChooserPage", Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.PropertyEditWizard.8" ), null, true ); //$NON-NLS-1$ //$NON-NLS-2$
     m_propertyChooserPage.setLabelProvider( new LabelProvider()
@@ -160,12 +136,29 @@ public class PropertyEditWizard extends Wizard
     } );
     m_propertyChooserPage.setMessage( Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.PropertyEditWizard.9" ) ); //$NON-NLS-1$
 
-    m_operationChooserPage = new OperationChooserPage( m_selectedPoints, Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.PropertyEditWizard.10" ) ); //$NON-NLS-1$
-    m_operationChooserPage.setPageComplete( false );
-    m_operationChooserPage.setMessage( Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.PropertyEditWizard.11" ) ); //$NON-NLS-1$
-
     addPage( m_propertyChooserPage );
     addPage( m_operationChooserPage );
+  }
+
+  public void addFilter( final IProfilePointFilter filter )
+  {
+    m_operationChooserPage.addFilter( filter );
+  }
+
+  /**
+   * @see org.eclipse.jface.wizard.Wizard#setContainer(org.eclipse.jface.wizard.IWizardContainer)
+   */
+  @Override
+  public void setContainer( final IWizardContainer wizardContainer )
+  {
+    final IWizardContainer oldContainer = getContainer();
+    if( oldContainer instanceof IPageChangeProvider )
+      ((IPageChangeProvider) oldContainer).removePageChangedListener( m_pageChangedListener );
+
+    super.setContainer( wizardContainer );
+
+    if( wizardContainer instanceof IPageChangeProvider )
+      ((IPageChangeProvider) wizardContainer).addPageChangedListener( m_pageChangedListener );
   }
 
   /**

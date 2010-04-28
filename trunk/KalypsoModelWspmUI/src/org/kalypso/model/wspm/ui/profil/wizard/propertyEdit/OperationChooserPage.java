@@ -41,7 +41,6 @@
 package org.kalypso.model.wspm.ui.profil.wizard.propertyEdit;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -51,7 +50,9 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.dialogs.IDialogSettings;
-import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.dialogs.IMessageProvider;
+import org.eclipse.jface.viewers.CheckStateChangedEvent;
+import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
@@ -61,16 +62,16 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.contribs.eclipse.swt.events.DoubleModifyListener;
+import org.kalypso.contribs.eclipse.ui.forms.MessageProvider;
 import org.kalypso.contribs.java.lang.NumberUtils;
-import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter;
 import org.kalypso.model.wspm.core.util.pointpropertycalculator.IPointPropertyCalculator;
@@ -108,17 +109,21 @@ public class OperationChooserPage extends WizardPage
 
   private final List<PropertyCalculator> m_calculators = new ArrayList<PropertyCalculator>();
 
-  // FIXME: move filter stuff into separate control
-  private final Set<IProfilePointFilter> m_selectedFilters = new HashSet<IProfilePointFilter>();
-
   private Double m_value = Double.NaN;
 
-  private final IStructuredSelection m_selectedpoints;
+  private final ProfileFilterComposite m_filterChooser = new ProfileFilterComposite();
 
-  public OperationChooserPage( final IStructuredSelection selection, final String title )
+  public OperationChooserPage( final String title )
   {
     super( "operationChooserPage", title, null ); //$NON-NLS-1$
-    m_selectedpoints = selection;
+  }
+
+  /**
+   * Add additional filters to this page.
+   */
+  public void addFilter( final IProfilePointFilter filter )
+  {
+    m_filterChooser.addFilter( filter );
   }
 
   /**
@@ -129,16 +134,12 @@ public class OperationChooserPage extends WizardPage
     final Composite panel = new Composite( parent, SWT.NONE );
     panel.setLayout( new GridLayout() );
 
-    final Set<String> selectedFilters = new HashSet<String>();
     String selectedCalculator = ""; //$NON-NLS-1$
     String doubleValue = ""; //$NON-NLS-1$
     final IDialogSettings dialogSettings = getDialogSettings();
     if( dialogSettings != null )
     {
       // get selected filters
-      final String[] idArray = dialogSettings.getArray( SETTINGS_FILTER_IDS );
-      if( idArray != null )
-        Collections.addAll( selectedFilters, idArray );
 
       // get selected calculator
       selectedCalculator = dialogSettings.get( SETTINGS_CALCULATOR_ID );
@@ -152,39 +153,56 @@ public class OperationChooserPage extends WizardPage
       else
         m_value = Double.NaN;
     }
-    createFilterGroup( panel, selectedFilters );
+
+    createFilterGroup( panel );
     createOperationGroup( panel, selectedCalculator, doubleValue );
     setControl( panel );
 
   }
 
-  /**
-   * @see org.eclipse.jface.wizard.WizardPage#isPageComplete()
-   */
-  @Override
-  public boolean isPageComplete( )
-  {
-    return m_calculators.size() > 0 && m_selectedFilters.size() > 0 && !m_value.isNaN();
-  }
-
-  /**
-   * @see org.eclipse.jface.wizard.WizardPage#setPageComplete(boolean)
-   */
-  private void createFilterGroup( final Composite composite, final Set<String> filterIds )
+  private void createFilterGroup( final Composite composite )
   {
     final Group group = new Group( composite, SWT.NONE );
     group.setLayoutData( new GridData( SWT.FILL, SWT.BEGINNING, true, false ) );
     group.setLayout( new GridLayout( 1, false ) );
     group.setText( Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.OperationChooserPage.3" ) ); //$NON-NLS-1$
 
-    final IProfilePointFilter[] filters = KalypsoModelWspmCoreExtensions.getProfilePointFilters();
-    for( final IProfilePointFilter filter : filters )
+    final Control filterControl = m_filterChooser.createControl( group, SWT.BORDER );
+    filterControl.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+
+    final IDialogSettings dialogSettings = getDialogSettings();
+    if( dialogSettings != null )
     {
-      final boolean filterIsSelected = filterIds.contains( filter.getId() );
-      if( filterIsSelected )
-        m_selectedFilters.add( filter );
-      addFilterCheckbox( group, filter, filterIsSelected );
+      final String[] idArray = dialogSettings.getArray( SETTINGS_FILTER_IDS );
+      m_filterChooser.setCheckedFilters( idArray );
     }
+
+    m_filterChooser.addCheckStateListener( new ICheckStateListener()
+    {
+      @Override
+      public void checkStateChanged( final CheckStateChangedEvent event )
+      {
+        handleFilterChanged();
+      }
+
+    } );
+  }
+
+  protected void handleFilterChanged( )
+  {
+    final Object[] checkedElements = m_filterChooser.getCheckedElements();
+    final String[] ids = new String[checkedElements.length];
+    for( int i = 0; i < ids.length; i++ )
+    {
+      final IProfilePointFilter filter = (IProfilePointFilter) checkedElements[i];
+      ids[i] = filter.getId();
+    }
+
+    final IDialogSettings dialogSettings = getDialogSettings();
+    if( dialogSettings != null )
+      dialogSettings.put( SETTINGS_FILTER_IDS, ids );
+
+    updateMessage();
   }
 
   private void createOperationGroup( final Composite composite, final String calculatorId, final String value )
@@ -256,73 +274,26 @@ public class OperationChooserPage extends WizardPage
 
     combo.addSelectionListener( new SelectionAdapter()
     {
-      @SuppressWarnings("synthetic-access")
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
-        final IDialogSettings dialogSettings = getDialogSettings();
-        if( dialogSettings != null )
-        {
-          final PropertyCalculator propertyCalculator = m_calculators.get( combo.getSelectionIndex() );
-          dialogSettings.put( SETTINGS_CALCULATOR_ID, propertyCalculator.m_id );
-          bldText.setToolTipText( propertyCalculator.m_tooltip );
-        }
+        handleCalculationSelected( combo, bldText );
       }
+
     } );
   }
 
-  private void addFilterCheckbox( final Group group, final IProfilePointFilter filter, final boolean selected )
+  protected void handleCalculationSelected( final Combo combo, final Text bldText )
   {
-    final Button button = new Button( group, SWT.CHECK );
-    button.setText( filter.getName() );
-    button.setToolTipText( filter.getDescription() );
-    if( "org.kalypso.model.wspm.tuhh.core.profile.SelectedProfilePointFilter".equals( filter.getId() ) ) //$NON-NLS-1$
-      button.setEnabled( m_selectedpoints != null );
-    button.setSelection( selected );
-    button.addSelectionListener( new SelectionAdapter()
-    {
-      /**
-       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-       */
-      @SuppressWarnings("synthetic-access")
-      @Override
-      public void widgetSelected( final SelectionEvent e )
-      {
-        handleFilterSelected( filter, button.getSelection() );
-      }
-    } );
-  }
-
-  protected void handleFilterSelected( final IProfilePointFilter filter, final boolean selection )
-  {
-    if( selection )
-      m_selectedFilters.add( filter );
-    else
-      m_selectedFilters.remove( filter );
-
-    // TODO: validate and set some error message!
-    getContainer().updateButtons();
-
     final IDialogSettings dialogSettings = getDialogSettings();
-    if( dialogSettings == null )
-      return;
-
-    final IProfilePointFilter[] selectedFilters = m_selectedFilters.toArray( new IProfilePointFilter[m_selectedFilters.size()] );
-    final String[] ids = new String[selectedFilters.length];
-    for( int i = 0; i < selectedFilters.length; i++ )
-      ids[i] = selectedFilters[i].getId();
-
-    dialogSettings.put( SETTINGS_FILTER_IDS, ids );
-  }
-
-  private final boolean isValid( final IProfil profil, final IRecord point )
-  {
-    for( final IProfilePointFilter filter : m_selectedFilters )
+    if( dialogSettings != null )
     {
-      if( filter != null && filter.accept( profil, point ) )
-        return true;
+      final PropertyCalculator propertyCalculator = m_calculators.get( combo.getSelectionIndex() );
+      dialogSettings.put( SETTINGS_CALCULATOR_ID, propertyCalculator.m_id );
+      bldText.setToolTipText( propertyCalculator.m_tooltip );
     }
-    return false;
+
+    updateMessage();
   }
 
   public void changeProfile( final IProfil profil, final Object[] properties )
@@ -333,7 +304,6 @@ public class OperationChooserPage extends WizardPage
       propertyIds[i] = (IComponent) properties[i];
     }
     final IDialogSettings dialogSettings = getDialogSettings();
-    final Set<String> filterSet = new HashSet<String>();
     IPointPropertyCalculator calculator = null;
     if( dialogSettings != null )
     {
@@ -351,25 +321,14 @@ public class OperationChooserPage extends WizardPage
       }
     }
 
-    final List<IRecord> selectedPoints = new ArrayList<IRecord>();
+    final Set<IRecord> selectedPoints = new HashSet<IRecord>();
     for( final IRecord point : profil.getResult() )
     {
-      if( isValid( profil, point ) )
+      if( m_filterChooser.accept( profil, point ) )
         selectedPoints.add( point );
     }
-    if( m_selectedpoints != null && !m_selectedpoints.isEmpty() && filterSet.contains( "org.kalypso.model.wspm.tuhh.core.profile.SelectedProfilePointFilter" ) ) //$NON-NLS-1$
-      calculator.calculate( m_value, propertyIds, addSelection( selectedPoints ) );
-    calculator.calculate( m_value, propertyIds, selectedPoints );
-  }
 
-  final List<IRecord> addSelection( final List<IRecord> selected )
-  {
-    for( final Object obj : m_selectedpoints.toList() )
-    {
-      if( obj instanceof IRecord && !selected.contains( obj ) )
-        selected.add( (IRecord) obj );
-    }
-    return selected;
+    calculator.calculate( m_value, propertyIds, selectedPoints );
   }
 
   protected void handleFocusLost( final String text )
@@ -377,9 +336,36 @@ public class OperationChooserPage extends WizardPage
     final IDialogSettings dialogSettings = getDialogSettings();
     m_value = NumberUtils.parseQuietDouble( text );
     if( dialogSettings != null )
-    {
       dialogSettings.put( SETTINGS_CALCULATOR_VALUE, m_value.isNaN() ? "" : m_value.toString() ); //$NON-NLS-1$
-      setPageComplete( m_value.isNaN() );
+
+    updateMessage();
+  }
+
+  private void updateMessage( )
+  {
+    final IMessageProvider validatePage = validatePage();
+    if( validatePage == null )
+    {
+      setMessage( null );
+      setPageComplete( true );
+    }
+    else
+    {
+      setMessage( validatePage.getMessage(), validatePage.getMessageType() );
+      setPageComplete( false );
     }
   }
+
+  private IMessageProvider validatePage( )
+  {
+    final Object[] checkedElements = m_filterChooser.getCheckedElements();
+    if( checkedElements.length == 0 )
+      return new MessageProvider( "No profile points selected", IMessageProvider.WARNING );
+
+    if( m_value.isNaN() )
+      return new MessageProvider( "Please enter a valid value", IMessageProvider.WARNING );
+
+    return null;
+  }
+
 }
