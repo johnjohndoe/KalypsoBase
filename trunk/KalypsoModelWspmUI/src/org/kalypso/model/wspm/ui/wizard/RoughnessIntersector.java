@@ -91,16 +91,16 @@ public class RoughnessIntersector
 
   private final AssignmentBinder m_assignment;
 
-  private final IProfilePointFilter[] m_pointFilters;
+  private final IProfilePointFilter m_pointFilter;
 
-  public RoughnessIntersector( final Object[] profileFeatures, final FeatureList polygoneFeatures, final IPropertyType polygoneGeomType, final IPropertyType polygoneValueType, final AssignmentBinder assignment, final IProfilePointFilter[] pointFilters )
+  public RoughnessIntersector( final Object[] profileFeatures, final FeatureList polygoneFeatures, final IPropertyType polygoneGeomType, final IPropertyType polygoneValueType, final AssignmentBinder assignment, final IProfilePointFilter pointFilter )
   {
     m_profileFeatures = profileFeatures;
     m_polygoneFeatures = polygoneFeatures;
     m_polygoneGeomType = polygoneGeomType;
     m_polygoneValueType = polygoneValueType;
     m_assignment = assignment;
-    m_pointFilters = pointFilters;
+    m_pointFilter = pointFilter;
   }
 
   public FeatureChange[] intersect( final IProgressMonitor monitor ) throws Exception
@@ -121,12 +121,12 @@ public class RoughnessIntersector
 
       final IRecord[] points = profil.getPoints();
 
-      int widthIndex = profil.indexOfProperty( IWspmConstants.POINT_PROPERTY_BREITE );
-      int rwIndex = profil.indexOfProperty( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
-      int hwIndex = profil.indexOfProperty( IWspmConstants.POINT_PROPERTY_HOCHWERT );
+      final int widthIndex = profil.indexOfProperty( IWspmConstants.POINT_PROPERTY_BREITE );
+      final int rwIndex = profil.indexOfProperty( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
+      final int hwIndex = profil.indexOfProperty( IWspmConstants.POINT_PROPERTY_HOCHWERT );
 
-      double[] rws = TupleResultUtilities.getInterpolatedValues( profil, rwIndex, widthIndex );
-      double[] hws = TupleResultUtilities.getInterpolatedValues( profil, hwIndex, widthIndex );
+      final double[] rws = TupleResultUtilities.getInterpolatedValues( profil, rwIndex, widthIndex );
+      final double[] hws = TupleResultUtilities.getInterpolatedValues( profil, hwIndex, widthIndex );
 
       int count = 1;
 
@@ -136,11 +136,11 @@ public class RoughnessIntersector
 
         if( count % 10 == 0 )
         {
-          String subTaskMsg = String.format( "%s (%d/%d)", label, count, points.length ); //$NON-NLS-1$
+          final String subTaskMsg = String.format( "%s (%d/%d)", label, count, points.length ); //$NON-NLS-1$
           monitor.subTask( subTaskMsg );
         }
 
-        if( !acceptPoint( profil, point ) )
+        if( !m_pointFilter.accept( profil, point ) )
           continue;
 
         final double rw = rws[i];
@@ -220,16 +220,4 @@ public class RoughnessIntersector
     }
     return foundPolygones;
   }
-
-  private boolean acceptPoint( final IProfil profil, final IRecord point )
-  {
-    for( final IProfilePointFilter pointFilter : m_pointFilters )
-    {
-      if( !pointFilter.accept( profil, point ) )
-        return false;
-    }
-
-    return true;
-  }
-
 }

@@ -55,5 +55,4 @@ public interface IProfilePointFilter
   public String getDescription( );
 
   public boolean accept( final IProfil profil, final IRecord point );
-
 }
