@@ -47,7 +47,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -57,15 +59,22 @@ import org.kalypso.contribs.eclipse.jface.dialog.ListSelectionComposite;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter;
+import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.observation.result.IRecord;
 
 /**
- * Presents all registered profile filters as check-buttons and let the user choose a subset of them.
+ * Presents all registered profile filters as check-buttons and let the user choose a subset of them.<br>
+ * Also acts as a {@link IProfilePointFilter} itself, based on the current choice of filters.
  * 
  * @author Gernot Belger
  */
-public class ProfileFilterComposite extends ListSelectionComposite
+public class ProfileFilterComposite extends ListSelectionComposite implements IProfilePointFilter
 {
+  // Some commonly used i10n strings
+  public static final String STR_GROUP_TEXT = Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.ProfileFilterComposite.0" ); //$NON-NLS-1$
+
+  private final static String SETTINGS_FILTER_IDS = "settings.filters.ids"; //$NON-NLS-1$
+
   private static ILabelProvider LABEL_PROVIDER = new LabelProvider()
   {
     @Override
@@ -76,6 +85,8 @@ public class ProfileFilterComposite extends ListSelectionComposite
   };
 
   private final Collection<IProfilePointFilter> m_filters = new ArrayList<IProfilePointFilter>();
+
+  private IDialogSettings m_dialogSettings;
 
   /**
    * Same as {@link ProfileFilterComposite#ProfileFilterComposite(new ArrayContentProvider(), ILabelProvider)}
@@ -94,6 +105,31 @@ public class ProfileFilterComposite extends ListSelectionComposite
   }
 
   /**
+   * @see org.kalypso.contribs.eclipse.jface.dialog.ListSelectionComposite#fireCheckStateChanged(org.eclipse.jface.viewers.CheckStateChangedEvent)
+   */
+  @Override
+  protected void fireCheckStateChanged( final CheckStateChangedEvent event )
+  {
+    super.fireCheckStateChanged( event );
+
+    handleFilterChanged();
+  }
+
+  protected void handleFilterChanged( )
+  {
+    final Object[] checkedElements = getCheckedElements();
+    final String[] ids = new String[checkedElements.length];
+    for( int i = 0; i < ids.length; i++ )
+    {
+      final IProfilePointFilter filter = (IProfilePointFilter) checkedElements[i];
+      ids[i] = filter.getId();
+    }
+
+    if( m_dialogSettings != null )
+      m_dialogSettings.put( SETTINGS_FILTER_IDS, ids );
+  }
+
+  /**
    * @see org.kalypso.contribs.eclipse.jface.dialog.ListSelectionComposite#createControl(org.eclipse.swt.widgets.Composite,
    *      int)
    */
@@ -107,7 +143,7 @@ public class ProfileFilterComposite extends ListSelectionComposite
     return control;
   }
 
-  public void setCheckedFilters( final String[] idArray )
+  private void setCheckedFilters( final String[] idArray )
   {
     final Set<IProfilePointFilter> checkedFilters = new HashSet<IProfilePointFilter>();
     for( final IProfilePointFilter filter : m_filters )
@@ -119,6 +155,12 @@ public class ProfileFilterComposite extends ListSelectionComposite
     setCheckedElements( checkedFilters.toArray( new IProfilePointFilter[checkedFilters.size()] ) );
   }
 
+  /**
+   * This implementation accepts a point, if any of the selected filters accepts the point.
+   * 
+   * @see org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter#accept(org.kalypso.model.wspm.core.profil.IProfil,
+   *      org.kalypso.observation.result.IRecord)
+   */
   public boolean accept( final IProfil profil, final IRecord point )
   {
     final Object[] checkedElements = getCheckedElements();
@@ -134,6 +176,45 @@ public class ProfileFilterComposite extends ListSelectionComposite
   {
     m_filters.add( filter );
     refresh();
+  }
+
+  public void setDialogSettings( final IDialogSettings dialogSettings )
+  {
+    m_dialogSettings = dialogSettings;
+
+    if( dialogSettings != null )
+    {
+      final String[] idArray = dialogSettings.getArray( SETTINGS_FILTER_IDS );
+      setCheckedFilters( idArray );
+    }
+
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter#getDescription()
+   */
+  @Override
+  public String getDescription( )
+  {
+    throw new UnsupportedOperationException();
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter#getId()
+   */
+  @Override
+  public String getId( )
+  {
+    throw new UnsupportedOperationException();
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter#getName()
+   */
+  @Override
+  public String getName( )
+  {
+    throw new UnsupportedOperationException();
   }
 
 }

@@ -140,7 +140,7 @@ public class IntersectRoughnessWizard extends Wizard
     final IPropertyType polygoneGeomType = m_roughnessIntersectPage.getPolygoneGeomProperty();
     final IPropertyType polygoneValueType = m_roughnessIntersectPage.getPolygoneValueProperty();
     final IPath assignmentPath = m_roughnessIntersectPage.getAssignmentPath();
-    final IProfilePointFilter[] pointFilters = m_roughnessIntersectPage.getSelectedPointFilter();
+    final IProfilePointFilter pointFilters = m_roughnessIntersectPage.getSelectedPointFilter();
 
     final ICommandTarget target = m_foundProfiles.theme;
 

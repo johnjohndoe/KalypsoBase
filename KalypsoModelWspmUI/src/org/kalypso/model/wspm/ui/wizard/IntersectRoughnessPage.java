@@ -40,42 +40,36 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.wizard;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import javax.xml.namespace.QName;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.jface.dialogs.IDialogSettings;
+import org.eclipse.jface.dialogs.IMessageProvider;
+import org.eclipse.jface.viewers.CheckStateChangedEvent;
+import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Label;
 import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
 import org.kalypso.contribs.eclipse.jface.wizard.ResourceChooserGroup;
 import org.kalypso.contribs.eclipse.ui.dialogs.KalypsoResourceSelectionDialog;
 import org.kalypso.contribs.eclipse.ui.dialogs.ResourceSelectionValidator;
+import org.kalypso.contribs.eclipse.ui.forms.MessageProvider;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IPropertyTypeFilter;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.PropertyUtils;
-import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter;
 import org.kalypso.model.wspm.ui.i18n.Messages;
+import org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.ProfileFilterComposite;
 import org.kalypso.model.wspm.ui.wizard.ThemeAndPropertyChooserGroup.PropertyDescriptor;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
@@ -89,13 +83,9 @@ import org.kalypsodeegree_impl.tools.GMLConstants;
  */
 public class IntersectRoughnessPage extends WizardPage implements IUpdateable, IKalypsoThemeFilter
 {
-  private final static String SETTINGS_FILTER_IDS = "settings.filters.ids"; //$NON-NLS-1$
-
   private final ResourceChooserGroup m_assignmentGroup = new ResourceChooserGroup( this, org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.wizard.IntersectRoughnessPage.0" ), org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.wizard.IntersectRoughnessPage.1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
   private final ThemeAndPropertyChooserGroup m_themeGroup;
-
-  private final List<IProfilePointFilter> m_selectedFilters = new ArrayList<IProfilePointFilter>();
 
   private final IMapModell m_modell;
 
@@ -103,11 +93,13 @@ public class IntersectRoughnessPage extends WizardPage implements IUpdateable, I
 
   private final PropertyDescriptor m_valuePd;
 
+  private final ProfileFilterComposite m_filterChooser = new ProfileFilterComposite();
+
   public IntersectRoughnessPage( final IMapModell modell )
   {
     super( "intersectRoughnessPage", Messages.getString( "org.kalypso.model.wspm.ui.wizard.IntersectRoughnessPage.2" ), null ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    setMessage( Messages.getString( "org.kalypso.model.wspm.ui.wizard.IntersectRoughnessPage.3" ) ); //$NON-NLS-1$
+    setDescription( Messages.getString( "org.kalypso.model.wspm.ui.wizard.IntersectRoughnessPage.3" ) ); //$NON-NLS-1$
 
     m_modell = modell;
 
@@ -166,83 +158,32 @@ public class IntersectRoughnessPage extends WizardPage implements IUpdateable, I
     final Control assignmentGroup = m_assignmentGroup.createControl( composite );
     assignmentGroup.setLayoutData( new GridData( SWT.FILL, SWT.BEGINNING, true, false ) );
 
-    createFilterGroup( composite );
+    final Control filterControl = createFilterGroup( composite );
+    filterControl.setLayoutData( new GridData( SWT.FILL, SWT.BEGINNING, true, false ) );
 
     setControl( composite );
   }
 
-  private void createFilterGroup( final Composite composite )
+  private Control createFilterGroup( final Composite composite )
   {
-    final IProfilePointFilter[] filters = KalypsoModelWspmCoreExtensions.getProfilePointFilters();
-
     final Group group = new Group( composite, SWT.NONE );
-    group.setLayoutData( new GridData( SWT.FILL, SWT.BEGINNING, true, false ) );
-    group.setLayout( new GridLayout( 1, false ) );
-    group.setText( Messages.getString( "org.kalypso.model.wspm.ui.wizard.IntersectRoughnessPage.8" ) ); //$NON-NLS-1$
+    group.setLayout( new FillLayout() );
+    group.setText( ProfileFilterComposite.STR_GROUP_TEXT );
 
-    /* theme chooser */
-    new Label( group, SWT.NONE ).setText( Messages.getString( "org.kalypso.model.wspm.ui.wizard.IntersectRoughnessPage.9" ) ); //$NON-NLS-1$
+    m_filterChooser.createControl( group, SWT.BORDER );
 
-    final Set<String> ids = new HashSet<String>();
-    final IDialogSettings dialogSettings = getDialogSettings();
-    if( dialogSettings != null )
+    m_filterChooser.setDialogSettings( getDialogSettings() );
+
+    m_filterChooser.addCheckStateListener( new ICheckStateListener()
     {
-      final String[] idArray = dialogSettings.getArray( SETTINGS_FILTER_IDS );
-      if( idArray != null )
-        Collections.addAll( ids, idArray );
-    }
-
-    for( final IProfilePointFilter filter : filters )
-    {
-      final String id = filter.getId();
-      final boolean select = ids.contains( id );
-      addFilterCheckbox( group, filter, select );
-    }
-  }
-
-  private void addFilterCheckbox( final Group group, final IProfilePointFilter filter, final boolean select )
-  {
-    final Button button = new Button( group, SWT.CHECK );
-    button.setText( filter.getName() );
-    button.setToolTipText( filter.getDescription() );
-    button.addSelectionListener( new SelectionAdapter()
-    {
-      /**
-       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-       */
       @Override
-      public void widgetSelected( final SelectionEvent e )
+      public void checkStateChanged( final CheckStateChangedEvent event )
       {
-        selectFilter( filter, button.getSelection() );
+        update();
       }
     } );
 
-    button.setSelection( select );
-    selectFilter( filter, select );
-  }
-
-  protected void selectFilter( final IProfilePointFilter filter, final boolean select )
-  {
-    if( select )
-      m_selectedFilters.add( filter );
-    else
-      m_selectedFilters.remove( filter );
-
-    final IDialogSettings dialogSettings = getDialogSettings();
-    if( dialogSettings != null )
-    {
-      final String[] ids = new String[m_selectedFilters.size()];
-      for( int i = 0; i < ids.length; i++ )
-        ids[i] = m_selectedFilters.get( i ).getId();
-      dialogSettings.put( SETTINGS_FILTER_IDS, ids );
-    }
-
-    update();
-  }
-
-  public IProfilePointFilter[] getSelectedPointFilter( )
-  {
-    return m_selectedFilters.toArray( new IProfilePointFilter[m_selectedFilters.size()] );
+    return group;
   }
 
   private IKalypsoFeatureTheme getPolygoneTheme( )
@@ -279,6 +220,16 @@ public class IntersectRoughnessPage extends WizardPage implements IUpdateable, I
    */
   public void update( )
   {
+    final IMessageProvider message = validatePage();
+    if( message == null )
+      setMessage( null );
+    else
+      setMessage( message.getMessage(), message.getMessageType() );
+    setPageComplete( message == null );
+  }
+
+  private IMessageProvider validatePage( )
+  {
     final IPath assignmentPath = m_assignmentGroup.getPath();
     final IKalypsoTheme polygoneTheme = getPolygoneTheme();
     final IPropertyType polygoneGeomProperty = getPolygoneGeomProperty();
@@ -289,16 +240,15 @@ public class IntersectRoughnessPage extends WizardPage implements IUpdateable, I
     setPageComplete( pageComplete );
 
     if( polygoneTheme == null )
-      setErrorMessage( Messages.getString( "org.kalypso.model.wspm.ui.wizard.IntersectRoughnessPage.10" ) ); //$NON-NLS-1$
-    else if( polygoneValueProperty == null )
-      setErrorMessage( Messages.getString( "org.kalypso.model.wspm.ui.wizard.IntersectRoughnessPage.11" ) ); //$NON-NLS-1$
-    else if( assignmentPath == null )
-      setErrorMessage( Messages.getString( "org.kalypso.model.wspm.ui.wizard.IntersectRoughnessPage.12" ) ); //$NON-NLS-1$
-    else
-    {
-      setErrorMessage( null );
-      setMessage( Messages.getString( "org.kalypso.model.wspm.ui.wizard.IntersectRoughnessPage.13" ) ); //$NON-NLS-1$
-    }
+      return new MessageProvider( Messages.getString( "org.kalypso.model.wspm.ui.wizard.IntersectRoughnessPage.10" ), ERROR ); //$NON-NLS-1$
+
+    if( polygoneValueProperty == null )
+      return new MessageProvider( Messages.getString( "org.kalypso.model.wspm.ui.wizard.IntersectRoughnessPage.11" ), ERROR ); //$NON-NLS-1$
+
+    if( assignmentPath == null )
+      return new MessageProvider( Messages.getString( "org.kalypso.model.wspm.ui.wizard.IntersectRoughnessPage.12" ), ERROR ); //$NON-NLS-1$
+
+    return null;
   }
 
   /**
@@ -319,6 +269,11 @@ public class IntersectRoughnessPage extends WizardPage implements IUpdateable, I
     }
 
     return false;
+  }
+
+  public IProfilePointFilter getSelectedPointFilter( )
+  {
+    return m_filterChooser;
   }
 
 }

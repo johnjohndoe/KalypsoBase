@@ -101,8 +101,6 @@ public class OperationChooserPage extends WizardPage
     }
   }
 
-  private final String SETTINGS_FILTER_IDS = "operationChooserPage.selectedfilters"; //$NON-NLS-1$
-
   private final String SETTINGS_CALCULATOR_ID = "operationChooserPage.selectedcalculator"; //$NON-NLS-1$
 
   private final String SETTINGS_CALCULATOR_VALUE = "operationChooserPage.calculatorvalue"; //$NON-NLS-1$
@@ -157,52 +155,30 @@ public class OperationChooserPage extends WizardPage
     createFilterGroup( panel );
     createOperationGroup( panel, selectedCalculator, doubleValue );
     setControl( panel );
-
   }
 
   private void createFilterGroup( final Composite composite )
   {
     final Group group = new Group( composite, SWT.NONE );
     group.setLayoutData( new GridData( SWT.FILL, SWT.BEGINNING, true, false ) );
-    group.setLayout( new GridLayout( 1, false ) );
-    group.setText( Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.OperationChooserPage.3" ) ); //$NON-NLS-1$
+    final GridLayout layout = new GridLayout();
+    layout.marginHeight = 0;
+    layout.marginWidth = 0;
+    group.setLayout( layout );
+    group.setText( ProfileFilterComposite.STR_GROUP_TEXT );
 
     final Control filterControl = m_filterChooser.createControl( group, SWT.BORDER );
     filterControl.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
-    final IDialogSettings dialogSettings = getDialogSettings();
-    if( dialogSettings != null )
-    {
-      final String[] idArray = dialogSettings.getArray( SETTINGS_FILTER_IDS );
-      m_filterChooser.setCheckedFilters( idArray );
-    }
-
+    m_filterChooser.setDialogSettings( getDialogSettings() );
     m_filterChooser.addCheckStateListener( new ICheckStateListener()
     {
       @Override
       public void checkStateChanged( final CheckStateChangedEvent event )
       {
-        handleFilterChanged();
+        updateMessage();
       }
-
     } );
-  }
-
-  protected void handleFilterChanged( )
-  {
-    final Object[] checkedElements = m_filterChooser.getCheckedElements();
-    final String[] ids = new String[checkedElements.length];
-    for( int i = 0; i < ids.length; i++ )
-    {
-      final IProfilePointFilter filter = (IProfilePointFilter) checkedElements[i];
-      ids[i] = filter.getId();
-    }
-
-    final IDialogSettings dialogSettings = getDialogSettings();
-    if( dialogSettings != null )
-      dialogSettings.put( SETTINGS_FILTER_IDS, ids );
-
-    updateMessage();
   }
 
   private void createOperationGroup( final Composite composite, final String calculatorId, final String value )
@@ -341,7 +317,7 @@ public class OperationChooserPage extends WizardPage
     updateMessage();
   }
 
-  private void updateMessage( )
+  protected void updateMessage( )
   {
     final IMessageProvider validatePage = validatePage();
     if( validatePage == null )
