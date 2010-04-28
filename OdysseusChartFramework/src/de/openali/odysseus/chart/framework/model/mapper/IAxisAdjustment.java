@@ -41,23 +41,16 @@
 package de.openali.odysseus.chart.framework.model.mapper;
 
 /**
- * @author burtscher1
- * 
- * AxisAdjustment is used when axes are adjusted automatically (e.g. maximize action); in general, auto adjustment means
- * that axes are ranged in a way that all data from all layers can be seen; if an axis contains a preferred axis
- * adjustment, than the auto adjustment will range the axis in a way that there can also be some space before and after
- * the data range;
- * 
+ * @author burtscher1 AxisAdjustment is used when axes are adjusted automatically (e.g. maximize action); in general,
+ *         auto adjustment means that axes are ranged in a way that all data from all layers can be seen; if an axis
+ *         contains a preferred axis adjustment, than the auto adjustment will range the axis in a way that there can
+ *         also be some space before and after the data range;
  */
 public interface IAxisAdjustment
 {
-
-
-
   public double getBefore( );
 
   public double getRange( );
 
   public double getAfter( );
-
 }

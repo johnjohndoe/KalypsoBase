@@ -12,14 +12,11 @@ import de.openali.odysseus.chart.framework.util.ChartUtilities;
  */
 public class GenericLinearAxis extends AbstractAxis
 {
-
-  
-
   private IDataRange<Number> m_numericRange;
 
   private int m_height = 1;
 
-  public GenericLinearAxis( final String id, final POSITION pos, Class< ? > clazz )
+  public GenericLinearAxis( final String id, final POSITION pos, final Class< ? > clazz )
   {
     super( id, pos, clazz );
     // set initial range, so we can prevent NPEs
@@ -34,7 +31,7 @@ public class GenericLinearAxis extends AbstractAxis
     return norm;
   }
 
-  private Number normalizedToNumeric( double value )
+  private Number normalizedToNumeric( final double value )
   {
     final IDataRange<Number> dataRange = getNumericRange();
 
@@ -56,7 +53,7 @@ public class GenericLinearAxis extends AbstractAxis
   /**
    * @see org.kalypso.chart.framework.model.mapper.IAxis#numericToScreen(java.lang.Number)
    */
-  public Integer numericToScreen( Number value )
+  public Integer numericToScreen( final Number value )
   {
     return normalizedToScreen( numericToNormalized( value ) );
   }
@@ -64,7 +61,7 @@ public class GenericLinearAxis extends AbstractAxis
   /**
    * @see org.kalypso.chart.framework.model.mapper.IAxis#screenToNumeric(int)
    */
-  public Number screenToNumeric( int value )
+  public Number screenToNumeric( final int value )
   {
     return normalizedToNumeric( screenToNormalized( value ) );
   }
@@ -72,7 +69,7 @@ public class GenericLinearAxis extends AbstractAxis
   /**
    * @see org.kalypso.chart.framework.model.mapper.IAxis#setNumericRange(org.kalypso.chart.framework.model.data.IDataRange)
    */
-  public void setNumericRange( IDataRange<Number> range )
+  public void setNumericRange( final IDataRange<Number> range )
   {
     m_numericRange = range;
     getEventHandler().fireMapperRangeChanged( this );
@@ -82,7 +79,7 @@ public class GenericLinearAxis extends AbstractAxis
    * @see de.openali.odysseus.chart.ext.base.axis.AbstractAxis#setLogicalRange(org.kalypso.chart.framework.model.data.IDataRange)
    */
   @Override
-  public void setLogicalRange( IDataRange<Number> dataRange )
+  public void setLogicalRange( final IDataRange<Number> dataRange )
   {
     // Nix machen! Wir wollen auf logical Range verzichten
     assert (false);
@@ -139,11 +136,12 @@ public class GenericLinearAxis extends AbstractAxis
   {
     return m_height;
   }
+
   /**
    * @see de.openali.odysseus.chart.ext.base.axis.AbstractAxis#setLabel(java.lang.String)
    */
   @Override
-  public void setLabel( String label )
+  public void setLabel( final String label )
   {
     if( !getLabel().equals( label ) )
     {
@@ -151,7 +149,8 @@ public class GenericLinearAxis extends AbstractAxis
       getEventHandler().fireMapperRangeChanged( this );
     }
   }
-  public void setScreenHeight( int height )
+
+  public void setScreenHeight( final int height )
   {
     m_height = height;
   }
