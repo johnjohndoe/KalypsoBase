@@ -40,17 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.afgui.wizards;
 
-import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IProjectDescription;
-import org.eclipse.core.resources.IProjectNature;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.IPageChangingListener;
 import org.eclipse.jface.dialogs.PageChangingEvent;
@@ -66,11 +61,9 @@ import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.ScenarioHandlingProjectNature;
 import org.kalypso.afgui.i18n.Messages;
 import org.kalypso.afgui.scenarios.IScenario;
-import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.eclipse.core.resources.ProjectTemplate;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.wizard.ProjectTemplatePage;
-import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 
 /**
  * Basic wizard implementation for the various workflow/scenario based projects.<br>
@@ -80,6 +73,8 @@ import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
  */
 public class NewProjectWizard extends BasicNewProjectResourceWizard implements INewProjectWizard
 {
+  protected static final String PDE_NATURE_ID = "org.eclipse.pde.PluginNature"; //$NON-NLS-1$
+
   private final IPageChangingListener m_pageChangeingListener = new IPageChangingListener()
   {
     public void handlePageChanging( final PageChangingEvent event )
@@ -210,77 +205,10 @@ public class NewProjectWizard extends BasicNewProjectResourceWizard implements I
     if( !result )
       return false;
 
-    final URL zipURl = m_templateProjectPage.getSelectedProject().getData();
+    final URL dataLocation = m_templateProjectPage.getSelectedProject().getData();
     final IProject project = getNewProject();
-    final String newName = project.getName();
 
-    final WorkspaceModifyOperation operation = new WorkspaceModifyOperation( project.getWorkspace().getRoot() )
-    {
-      @Override
-      public void execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException
-      {
-        final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.afgui.wizards.NewProjectWizard.2" ), 90 ); //$NON-NLS-1$
-        try
-        {
-          // REMARK: we unpack into a closed project here (not using unzip(URL, IFolder)), as else
-          // the project description will not be up-to-date in time, resulting in missing natures.
-          project.close( progress.newChild( 10 ) );
-
-          /* Unpack project from template */
-          ZipUtilities.unzip( zipURl, project.getLocation().toFile() );
-          ProgressUtilities.worked( progress, 40 );
-          project.open( progress.newChild( 10 ) );
-
-          // IMPORTANT: As the project was already open once before, we need to refresh here, else
-          // not all resources are up-to-date
-          project.refreshLocal( IResource.DEPTH_INFINITE, progress.newChild( 10 ) );
-
-          /* Re-set name to new name, as un-zipping probably did change the internal name */
-          final IProjectDescription description = project.getDescription();
-          description.setName( newName );
-          // HACK: in order to enforce the change, we also change the comment a bit, else
-          // the description does not recognise any change and the .project file does not get written
-          description.setComment( description.getComment() + " " ); //$NON-NLS-1$
-          project.setDescription( description, IResource.FORCE | IResource.AVOID_NATURE_CONFIG, progress.newChild( 10 ) );
-
-          /* validate and configure all natures of this project. */
-          final String[] natureIds = description.getNatureIds();
-          final IStatus validateNatureSetStatus = project.getWorkspace().validateNatureSet( natureIds );
-          if( !validateNatureSetStatus.isOK() )
-            throw new CoreException( validateNatureSetStatus );
-
-          progress.setWorkRemaining( natureIds.length + 1 );
-
-          for( final String natureId : natureIds )
-          {
-            final IProjectNature nature = project.getNature( natureId );
-            nature.configure();
-            ProgressUtilities.worked( progress, 1 );
-          }
-
-          /* Let inherited wizards change the project */
-          postCreateProject( project, progress.newChild( 1 ) );
-
-          openProject( project );
-        }
-        catch( final CoreException t )
-        {
-          // If anything went wrong, clean up the project
-          progress.setWorkRemaining( 10 );
-          project.delete( true, progress );
-
-          throw t;
-        }
-        catch( final Throwable t )
-        {
-          // If anything went wrong, clean up the project
-          progress.setWorkRemaining( 10 );
-          project.delete( true, progress );
-
-          throw new InvocationTargetException( t );
-        }
-      }
-    };
+    final WorkspaceModifyOperation operation = new UnpackProjectTemplateOperation( this, dataLocation, project );
 
     final IStatus resultStatus = RunnableContextHelper.execute( getContainer(), true, true, operation );
     KalypsoAFGUIFrameworkPlugin.getDefault().getLog().log( resultStatus );
@@ -296,7 +224,7 @@ public class NewProjectWizard extends BasicNewProjectResourceWizard implements I
    * Does nothing by default.
    */
   @SuppressWarnings("unused")
-  protected void postCreateProject( final IProject project, final IProgressMonitor monitor ) throws CoreException
+  public void postCreateProject( final IProject project, final IProgressMonitor monitor ) throws CoreException
   {
     monitor.done();
   }
@@ -305,7 +233,7 @@ public class NewProjectWizard extends BasicNewProjectResourceWizard implements I
    * Opens the project after it has been created. By default, if the project is scenario based, the Base-Scenario is
    * opened.
    */
-  protected void openProject( final IProject project ) throws CoreException
+  public void openProject( final IProject project ) throws CoreException
   {
     /* Also activate new project */
     final ScenarioHandlingProjectNature nature = ScenarioHandlingProjectNature.toThisNature( project );
