@@ -45,11 +45,13 @@ import java.util.HashSet;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
+import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -63,6 +65,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.internal.WorkbenchMessages;
+import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
 
 /**
  * @author Gernot Belger
@@ -80,12 +83,31 @@ public class ListSelectionComposite
 
   private CheckboxTableViewer m_viewer;
 
+  /**
+   * Same as {@link ProfileFilterComposite#ProfileFilterComposite(new ArrayContentProvider(), new LabelProvier())}
+   */
+  public ListSelectionComposite( )
+  {
+    this( new ArrayContentProvider(), new LabelProvider() );
+  }
+
+  /**
+   * Same as {@link ProfileFilterComposite#ProfileFilterComposite(new ArrayContentProvider(), ILabelProvider)}
+   */
+  public ListSelectionComposite( final ILabelProvider labelProvider )
+  {
+    this( new ArrayContentProvider(), labelProvider );
+  }
+
   public ListSelectionComposite( final IStructuredContentProvider contentProvider, final ILabelProvider labelProvider )
   {
     m_contentProvider = contentProvider;
     m_labelProvider = labelProvider;
   }
 
+  /**
+   * Must be called, after {@link #createControl(Composite, int)} has been invoked.
+   */
   public void setInput( final Object input )
   {
     m_viewer.setInput( input );
@@ -255,6 +277,11 @@ public class ListSelectionComposite
   public void setComparator( final ViewerComparator viewerComparator )
   {
     m_viewer.setComparator( viewerComparator );
+  }
+
+  protected void refresh( )
+  {
+    ViewerUtilities.refresh( m_viewer, true );
   }
 
 }
