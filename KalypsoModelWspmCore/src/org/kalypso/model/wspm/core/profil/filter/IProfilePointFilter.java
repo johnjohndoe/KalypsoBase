@@ -40,14 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil.filter;
 
-import org.eclipse.core.runtime.IExecutableExtension;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.observation.result.IRecord;
 
 /**
  * @author Gernot Belger
  */
-public interface IProfilePointFilter extends IExecutableExtension
+public interface IProfilePointFilter
 {
   public String getId( );
 

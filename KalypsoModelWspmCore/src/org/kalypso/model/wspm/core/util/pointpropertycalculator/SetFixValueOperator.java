@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.util.pointpropertycalculator;
 
-import java.util.List;
+import java.util.Collection;
 
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.xml.XmlTypes;
@@ -55,12 +55,7 @@ import org.kalypso.observation.result.TupleResult;
  */
 public class SetFixValueOperator implements IPointPropertyCalculator
 {
-
-  /**
-   * @see org.kalypso.model.wspm.core.util.pointpropertycalculator.IPointPropertyCalculator#calculate(java.lang.Double,
-   *      java.lang.Strinfinal g[], java.util.List)
-   */
-  public final void calculate( final Double operand, final IComponent[] properties, final List<IRecord> points )
+  public final void calculate( final Double operand, final IComponent[] properties, final Collection<IRecord> points )
   {
     for( final IRecord point : points )
     {

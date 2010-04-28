@@ -41,11 +41,12 @@
 package org.kalypso.model.wspm.core.profil.filter;
 
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExecutableExtension;
 
 /**
  * @author Gernot Belger
  */
-public abstract class AbstractProfilePointFilter implements IProfilePointFilter
+public abstract class AbstractProfilePointFilter implements IProfilePointFilter, IExecutableExtension
 {
   private String m_id;
 
@@ -60,7 +61,7 @@ public abstract class AbstractProfilePointFilter implements IProfilePointFilter
   {
     return m_id;
   }
-  
+
   /**
    * @see org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter#getName()
    */

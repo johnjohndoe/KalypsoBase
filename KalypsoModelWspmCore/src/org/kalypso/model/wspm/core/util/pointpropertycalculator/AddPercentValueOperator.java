@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.util.pointpropertycalculator;
 
-import java.util.List;
+import java.util.Collection;
 
 import org.eclipse.core.runtime.Status;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
@@ -54,12 +54,7 @@ import org.kalypso.observation.result.TupleResult;
  */
 public class AddPercentValueOperator implements IPointPropertyCalculator
 {
-
-  /**
-   * @see org.kalypso.model.wspm.core.util.pointpropertycalculator.IPointPropertyCalculator#calculate(java.lang.Double,
-   *      java.lang.String[], java.util.List)
-   */
-  public void calculate( final Double operand, final IComponent[] properties, final List<IRecord> points )
+  public void calculate( final Double operand, final IComponent[] properties, final Collection<IRecord> points )
   {
     for( final IRecord point : points )
     {
@@ -70,7 +65,7 @@ public class AddPercentValueOperator implements IPointPropertyCalculator
         final Object oldVal = point.getValue( i );
         if( i > 0 && oldVal instanceof Double )
         {
-          point.setValue( i, (Double) oldVal *operand, true );
+          point.setValue( i, (Double) oldVal * operand, true );
         }
         else
           KalypsoModelWspmCorePlugin.getDefault().getLog().log( new Status( Status.CANCEL, KalypsoModelWspmCorePlugin.getID(), Messages.getString( "org.kalypso.model.wspm.core.util.pointpropertycalculator.AddFixValueOperator.0", property, point ) ) ); //$NON-NLS-1$

@@ -46,9 +46,13 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
+import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter;
+import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.PropertyEditWizard;
+import org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.TableSelectionProfilePointFilter;
 
 /**
  * @author Belger
@@ -82,8 +86,14 @@ public class PropertyEditDelegate implements IViewActionDelegate
       return;
     }
 
-    final PropertyEditWizard propertyEditWizard = new PropertyEditWizard( profile, ((TableView) m_view).getTupleResultViewer().getSelection() );
+    /** Add special filter for points from table-selection */
+    final ISelection selection = ((TableView) m_view).getTupleResultViewer().getSelection();
+    final IProfilePointFilter tableSelectionFilter = new TableSelectionProfilePointFilter( selection );
+
+    final PropertyEditWizard propertyEditWizard = new PropertyEditWizard( profile );
+    propertyEditWizard.addFilter( tableSelectionFilter );
     propertyEditWizard.setWindowTitle( action.getText() );
+    propertyEditWizard.setDialogSettings( PluginUtilities.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), getClass().getName() ) );
 
     /* show wizard */
     final WizardDialog2 dialog = new WizardDialog2( viewShell, propertyEditWizard );
