@@ -48,9 +48,13 @@ import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Spinner;
+import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.filter.ProfilePointFilterComposite;
+import org.kalypso.observation.result.IRecord;
 
 /**
  * @author Gernot Belger
@@ -62,6 +66,8 @@ public class SimplifyProfilePage extends WizardPage
   private static final double DEFAULT_DISTANCE = 0.5;
 
   private double m_distance = DEFAULT_DISTANCE;
+
+  private final ProfilePointFilterComposite m_filterChooser = new ProfilePointFilterComposite();
 
   protected SimplifyProfilePage( final String pageName )
   {
@@ -83,14 +89,34 @@ public class SimplifyProfilePage extends WizardPage
 
     initDistance();
 
+    createDistanceControl( group );
+    createFilterControl( group );
+  }
+
+  private void createFilterControl( final Composite parent )
+  {
+    final Control filterControl = m_filterChooser.createControl( parent, SWT.BORDER );
+    filterControl.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true, 2, 1 ) );
+
+    m_filterChooser.setDialogSettings( getDialogSettings() );
+// m_filterChooser.addCheckStateListener( new ICheckStateListener()
+// {
+// @Override
+// public void checkStateChanged( final CheckStateChangedEvent event )
+// {
+// updateMessage();
+// }
+// } );
+  }
+
+  private void createDistanceControl( final Group group )
+  {
     final Label label = new Label( group, SWT.NONE );
     label.setLayoutData( new GridData( SWT.BEGINNING, SWT.CENTER, false, false ) );
     label.setText( "Maximal Distance [m]" );
 
     final Spinner spinner = new Spinner( group, SWT.BORDER | SWT.TRAIL );
     final GridData gridData = new GridData( SWT.FILL, SWT.CENTER, true, false );
-// gridData.minimumWidth = 50;
-// gridData.widthHint = 50;
     spinner.setLayoutData( gridData );
 
     spinner.setDigits( 2 );
@@ -136,6 +162,11 @@ public class SimplifyProfilePage extends WizardPage
   public double getDistance( )
   {
     return m_distance;
+  }
+
+  public IRecord[] getSelectedPoints( final IProfil profile )
+  {
+    return m_filterChooser.getSelectedPoints( profile );
   }
 
 }

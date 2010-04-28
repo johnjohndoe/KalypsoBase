@@ -208,4 +208,21 @@ public class ProfilePointFilterComposite extends ListSelectionComposite implemen
     throw new UnsupportedOperationException();
   }
 
+  public IRecord[] getSelectedPoints( final IProfil profile )
+  {
+    final IRecord[] points = profile.getPoints();
+    final Object[] checkedElements = getCheckedElements();
+    if( checkedElements.length == 0 )
+      return points;
+
+    final Collection<IRecord> filteredPoints = new ArrayList<IRecord>( points.length );
+    for( final IRecord point : points )
+    {
+      if( accept( profile, point ) )
+        filteredPoints.add( point );
+    }
+
+    return filteredPoints.toArray( new IRecord[filteredPoints.size()] );
+  }
+
 }

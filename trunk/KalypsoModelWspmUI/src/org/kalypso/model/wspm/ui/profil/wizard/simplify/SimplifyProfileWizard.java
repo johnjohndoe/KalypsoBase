@@ -72,7 +72,8 @@ public class SimplifyProfileWizard extends ManipulateProfileWizard
   @Override
   protected IProfileManipulator getProfileManipulator( )
   {
-    final double allowedDistance = m_simplifyPage.getDistance();
+    final SimplifyProfilePage simplifyPage = m_simplifyPage;
+    final double allowedDistance = simplifyPage.getDistance();
 
     return new IProfileManipulator()
     {
@@ -81,7 +82,7 @@ public class SimplifyProfileWizard extends ManipulateProfileWizard
       {
         monitor.beginTask( "", 1 );
 
-        final IRecord[] points = profile.getPoints();
+        final IRecord[] points = simplifyPage.getSelectedPoints( profile );
         final IRecord[] pointsToKeep = profile.getMarkedPoints();
         final IRecord[] pointsToRemove = DouglasPeuckerHelper.reducePoints( points, pointsToKeep, allowedDistance );
         profile.getResult().removeAll( Arrays.asList( pointsToRemove ) );
