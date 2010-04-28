@@ -65,6 +65,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.internal.WorkbenchMessages;
+import org.kalypso.contribs.eclipse.jface.viewers.TableViewerTooltipListener;
 import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
 
 /**
@@ -121,6 +122,8 @@ public class ListSelectionComposite
     final Table table = new Table( panel, style | SWT.CHECK );
     table.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     m_viewer = new CheckboxTableViewer( table );
+
+    TableViewerTooltipListener.hookViewer( m_viewer, false );
 
     m_viewer.setContentProvider( m_contentProvider );
     m_viewer.setLabelProvider( m_labelProvider );
