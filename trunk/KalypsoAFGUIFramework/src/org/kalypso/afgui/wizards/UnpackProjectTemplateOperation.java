@@ -55,6 +55,7 @@ import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -157,7 +158,8 @@ public final class UnpackProjectTemplateOperation extends WorkspaceModifyOperati
       ZipUtilities.unzip( data, destinationDir );
     else
     {
-      final File dataDir = FileUtils.toFile( data );
+      final URL fileURL = FileLocator.toFileURL( data );
+      final File dataDir = FileUtils.toFile( fileURL );
       if( dataDir == null )
       {
         final String msg = String.format( "Invalid dataLocation: %s", data );
