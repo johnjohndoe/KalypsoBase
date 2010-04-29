@@ -66,7 +66,7 @@ import org.kalypso.contribs.eclipse.i18n.Messages;
  */
 public class ProjectTemplatePage extends WizardPage
 {
-  private final ProjectTemplate[] m_projectsTemplates;
+  private final ProjectTemplate[] m_projectTemplates;
 
   private ProjectTemplate m_selectedProject;
 
@@ -79,32 +79,36 @@ public class ProjectTemplatePage extends WizardPage
   {
     super( "projectTemplatePage" ); //$NON-NLS-1$
 
-    m_projectsTemplates = EclipsePlatformContributionsExtensions.getProjectTemplates( categoryId );
+    setTitle( Messages.getString( "org.kalypso.contribs.eclipse.jface.wizard.ProjectTemplatePage.0" ) ); //$NON-NLS-1$
+    setDescription( Messages.getString( "org.kalypso.contribs.eclipse.jface.wizard.ProjectTemplatePage.1" ) ); //$NON-NLS-1$
 
-    /* Preselect the first entry, if any exists. */
-    if( m_projectsTemplates.length > 0 )
-    {
-      m_selectedProject = m_projectsTemplates[0];
-    }
-
-    setTitle( Messages.getString("org.kalypso.contribs.eclipse.jface.wizard.ProjectTemplatePage.0") ); //$NON-NLS-1$
-    setMessage( Messages.getString("org.kalypso.contribs.eclipse.jface.wizard.ProjectTemplatePage.1") ); //$NON-NLS-1$
+    m_projectTemplates = EclipsePlatformContributionsExtensions.getProjectTemplates( categoryId );
+    initSelectedProject( categoryId );
   }
 
   public ProjectTemplatePage( final String header, final String description, final ProjectTemplate[] templates )
   {
     super( "projectTemplatePage" ); //$NON-NLS-1$
 
-    m_projectsTemplates = templates;
-
-    /* Preselect the first entry, if any exists. */
-    if( templates.length > 0 )
-    {
-      m_selectedProject = m_projectsTemplates[0];
-    }
-
     setTitle( header );
-    setMessage( description );
+    setDescription( description );
+
+    m_projectTemplates = templates;
+
+    initSelectedProject( null );
+  }
+
+  private void initSelectedProject( final String categoryId )
+  {
+    /* Preselect the first entry, if any exists. */
+    if( m_projectTemplates.length > 0 )
+      m_selectedProject = m_projectTemplates[0];
+    else
+    {
+      final String msg = String.format( "No project template available for category '%s'", categoryId );
+      setMessage( msg, ERROR );
+      setPageComplete( false );
+    }
   }
 
   /**
@@ -149,19 +153,19 @@ public class ProjectTemplatePage extends WizardPage
       }
     } );
 
-    tableViewer.setInput( m_projectsTemplates );
+    tableViewer.setInput( m_projectTemplates );
 
     // Info Group
     final Group group = new Group( composite, SWT.NONE );
     group.setLayout( new GridLayout() );
-    group.setText( Messages.getString("org.kalypso.contribs.eclipse.jface.wizard.ProjectTemplatePage.2") ); //$NON-NLS-1$
+    group.setText( Messages.getString( "org.kalypso.contribs.eclipse.jface.wizard.ProjectTemplatePage.2" ) ); //$NON-NLS-1$
     final GridData groupData = new GridData( SWT.FILL, SWT.CENTER, true, false );
     groupData.heightHint = 100;
     group.setLayoutData( groupData );
 
     final Label descriptionLabel = new Label( group, SWT.H_SCROLL | SWT.V_SCROLL );
     descriptionLabel.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-    descriptionLabel.setText( Messages.getString("org.kalypso.contribs.eclipse.jface.wizard.ProjectTemplatePage.3") ); //$NON-NLS-1$
+    descriptionLabel.setText( Messages.getString( "org.kalypso.contribs.eclipse.jface.wizard.ProjectTemplatePage.3" ) ); //$NON-NLS-1$
 
     tableViewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
@@ -193,16 +197,7 @@ public class ProjectTemplatePage extends WizardPage
   {
     m_selectedProject = selectedProject;
 
-    getContainer().updateButtons();
-  }
-
-  /**
-   * @see org.eclipse.jface.wizard.WizardPage#canFlipToNextPage()
-   */
-  @Override
-  public boolean canFlipToNextPage( )
-  {
-    return m_selectedProject != null;
+    setPageComplete( m_selectedProject != null );
   }
 
   public ProjectTemplate getSelectedProject( )
