@@ -104,28 +104,8 @@ public final class UnpackProjectTemplateOperation extends WorkspaceModifyOperati
       // not all resources are up-to-date
       m_project.refreshLocal( IResource.DEPTH_INFINITE, progress.newChild( 10 ) );
 
-      /* Re-set name to new name, as un-zipping probably did change the internal name */
-      final IProjectDescription description = m_project.getDescription();
-      description.setName( newName );
-      // HACK: in order to enforce the change, we also change the comment a bit, else
-      // the description does not recognise any change and the .project file does not get written
-      description.setComment( description.getComment() + " " ); //$NON-NLS-1$
-      m_project.setDescription( description, IResource.FORCE | IResource.AVOID_NATURE_CONFIG, progress.newChild( 10 ) );
-
-      /* validate and configure all natures of this project. */
-      final String[] natureIds = (String[]) ArrayUtils.removeElement( description.getNatureIds(), NewProjectWizard.PDE_NATURE_ID );
-      final IStatus validateNatureSetStatus = m_project.getWorkspace().validateNatureSet( natureIds );
-      if( !validateNatureSetStatus.isOK() )
-        throw new CoreException( validateNatureSetStatus );
-
-      progress.setWorkRemaining( natureIds.length + 1 );
-
-      for( final String natureId : natureIds )
-      {
-        final IProjectNature nature = m_project.getNature( natureId );
-        nature.configure();
-        ProgressUtilities.worked( progress, 1 );
-      }
+      final String[] natureIds = cleanDescription( newName, progress );
+      configureNatures( natureIds, progress );
 
       /* Let inherited wizards change the project */
       m_newProjectWizard.postCreateProject( m_project, progress.newChild( 1 ) );
@@ -147,6 +127,43 @@ public final class UnpackProjectTemplateOperation extends WorkspaceModifyOperati
       m_project.delete( true, progress );
 
       throw new InvocationTargetException( t );
+    }
+  }
+
+  /**
+   * Cleans the description of the freshly created project: reset the name and remove PDE-nature if it was configured.
+   */
+  private String[] cleanDescription( final String newName, final SubMonitor progress ) throws CoreException
+  {
+    /* Re-set name to new name, as un-zipping probably did change the internal name */
+    final IProjectDescription description = m_project.getDescription();
+    description.setName( newName );
+    final String[] natureIds = description.getNatureIds();
+    /* Also remove the PDE-nature, if it is present. This is needed for self-hosted project templates. */
+    final String[] cleanedNatureIds = (String[]) ArrayUtils.removeElement( natureIds, NewProjectWizard.PDE_NATURE_ID );
+    description.setNatureIds( cleanedNatureIds );
+
+    // HACK: in order to enforce the change, we also change the comment a bit, else
+    // the description does not recognise any change and the .project file does not get written
+    description.setComment( description.getComment() + " " ); //$NON-NLS-1$
+    m_project.setDescription( description, IResource.FORCE /* | IResource.AVOID_NATURE_CONFIG */, progress.newChild( 10 ) );
+    return cleanedNatureIds;
+  }
+
+  private void configureNatures( final String[] natureIds, final SubMonitor progress ) throws CoreException
+  {
+    /* validate and configure all natures of this project. */
+    final IStatus validateNatureSetStatus = m_project.getWorkspace().validateNatureSet( natureIds );
+    if( !validateNatureSetStatus.isOK() )
+      throw new CoreException( validateNatureSetStatus );
+
+    progress.setWorkRemaining( natureIds.length + 1 );
+
+    for( final String natureId : natureIds )
+    {
+      final IProjectNature nature = m_project.getNature( natureId );
+      nature.configure();
+      ProgressUtilities.worked( progress, 1 );
     }
   }
 
