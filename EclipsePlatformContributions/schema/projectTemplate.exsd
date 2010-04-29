@@ -6,11 +6,9 @@
          <meta.schema plugin="org.kalypso.contribs.eclipseplatform" id="projectTemplate" name="projectTemplate"/>
       </appInfo>
       <documentation>
-         Via this extension-point it is possible to register project templates.
+         This extension-point allows to register project templates. These project templates are uses as template data projects in Kalypso.
 
-A project template is the content of an eclipse project in an archive (zip).
-
-Each implementation of a project template references a single zip file, that contains the whole demo project structure.
+Each implementation of a project template references a single zip file or a plugin folder, that contains the whole demo project structure.
       </documentation>
    </annotation>
 
@@ -101,7 +99,11 @@ Each implementation of a project template references a single zip file, that con
          <attribute name="data" type="string" use="required">
             <annotation>
                <documentation>
-                  The zip file containing the data of the project. The content of the zip must be the content of the project starting at root level (i.e. the .projet file must in the root of the zip file).
+                  Points to a resource located inside a project bundle. Syntax is &apos;bundleId:resourcePath&apos;.
+
+If the resource is a zip-file, it will be unpacked if a project is created from the template.
+
+Else, the location must point to a folder within the given bundle. If a project is created, the whole content of the referenced folder is copied into the new project.
                </documentation>
                <appInfo>
                   <meta.attribute kind="resource"/>
@@ -123,7 +125,7 @@ Each implementation of a project template references a single zip file, that con
          <meta.section type="since"/>
       </appInfo>
       <documentation>
-         [Enter the first release in which this extension point appears.]
+         Kalypso 2.2
       </documentation>
    </annotation>
 
@@ -141,7 +143,7 @@ Each implementation of a project template references a single zip file, that con
          <meta.section type="apiInfo"/>
       </appInfo>
       <documentation>
-         [Enter API information here.]
+         See org.kalypso.contribs.eclipse.core.resources.ProjectTemplate
       </documentation>
    </annotation>
 
@@ -154,5 +156,31 @@ Each implementation of a project template references a single zip file, that con
       </documentation>
    </annotation>
 
+   <annotation>
+      <appInfo>
+         <meta.section type="copyright"/>
+      </appInfo>
+      <documentation>
+         This file is part of Kalypso
+     
+Copyright (c) 2008 by
+   
+Björnsen Beratende Ingenieure GmbH, Koblenz, Germany (Bjoernsen Consulting Engineers), http://www.bjoernsen.de
+Technische Universität Hamburg-Harburg, Institut für Wasserbau, Hamburg, Germany
+(Technical University Hamburg-Harburg, Institute of River and Coastal Engineering), http://www.tu-harburg.de/wb/
+   
+Kalypso is free software: you can redistribute it and/or modify it under the terms  
+of the GNU Lesser General Public License (LGPL) as published by the Free Software 
+Foundation, either version 3 of the License, or (at your option) any later version.
+   
+Kalypso is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied 
+warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for 
+more details.
+   
+You should have received a copy of the GNU Lesser General Public
+License along with Kalypso.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+
+      </documentation>
+   </annotation>
 
 </schema>

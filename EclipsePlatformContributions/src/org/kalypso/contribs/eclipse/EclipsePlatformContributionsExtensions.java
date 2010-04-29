@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -108,38 +107,25 @@ public class EclipsePlatformContributionsExtensions
 
   private static URL findLocation( final String data, final IConfigurationElement configurationElement )
   {
-    if( data.startsWith( "bundle:" ) )
-      return findBundleLocation( data );
+    final String[] parts = data.split( ":", 2 );
+    final String definingBundleId = configurationElement.getContributor().getName();
+    final String bundleID;
+    final String path;
+    if( parts.length == 2 )
+    {
+      bundleID = parts[0];
+      path = parts[1];
+    }
     else
-      return findResourceLocation( data, configurationElement );
-  }
-
-  private static URL findBundleLocation( final String data )
-  {
-    try
     {
-      final String[] split = data.split( ":" );
-      if( split.length < 2 )
-        return null;
-
-      final Bundle bundle = Platform.getBundle( split[1] );
-      if( bundle == null )
-        return null;
-
-      final URL location = bundle.getEntry( "/" );
-      return FileLocator.toFileURL( location );
+      bundleID = definingBundleId;
+      path = parts[0];
     }
-    catch( final IOException e )
-    {
-      e.printStackTrace();
+
+    final Bundle bundle = Platform.getBundle( bundleID );
+    if( bundle == null )
       return null;
-    }
-  }
 
-  private static URL findResourceLocation( final String data, final IConfigurationElement configurationElement )
-  {
-    final String bundleId = configurationElement.getContributor().getName();
-    final Bundle bundle = Platform.getBundle( bundleId );
-    return FileLocator.find( bundle, new Path( data ), null );
+    return FileLocator.find( bundle, new Path( path ), null );
   }
 }
