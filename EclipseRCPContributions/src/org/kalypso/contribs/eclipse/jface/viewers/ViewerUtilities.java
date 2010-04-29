@@ -85,8 +85,8 @@ public final class ViewerUtilities
    * null, or its control is disposed.
    * 
    * @param async
-   *          if true, refresh is done asynchronously, else refresh is done synchronously.
-   * @see Viewer#setInput(java.lang.Object )
+   *            if true, refresh is done asynchronously, else refresh is done synchronously.
+   * @see Viewer#setInput( java.lang.Object )
    * @see Display#asyncExec(java.lang.Runnable)
    * @see Display#syncExec(java.lang.Runnable)
    */
@@ -116,38 +116,38 @@ public final class ViewerUtilities
   }
 
   /**
-   * Refresh a {@link Viewer}in the display thread of its underlying control. Does nothing if the viewer is null, or its
-   * control is disposed.
+   * Refresh a {@link Viewer}in the display thread of its underlying control. Does nothing if the viewer is null, or
+   * its control is disposed.
    * 
    * @param async
-   *          if true, refresh is done asynchronously, else refresh is done synchronously.
+   *            if true, refresh is done asynchronously, else refresh is done synchronously.
    * @see Viewer#refresh()
    * @see Display#asyncExec(java.lang.Runnable)
    * @see Display#syncExec(java.lang.Runnable)
    */
   public static void refresh( final Viewer viewer, final boolean async )
   {
-    if( viewer == null )
-      return;
-
-    final Control control = viewer.getControl();
-    if( control == null || control.isDisposed() )
-      return;
-
-    final Runnable runner = new Runnable()
+    if( viewer != null )
     {
-      public void run( )
+      final Control control = viewer.getControl();
+      if( control != null && !control.isDisposed() )
       {
-        if( !viewer.getControl().isDisposed() )
-          viewer.refresh();
-      }
-    };
-    final Display display = control.getDisplay();
+        final Runnable runner = new Runnable()
+        {
+          public void run( )
+          {
+            if( !viewer.getControl().isDisposed() )
+              viewer.refresh();
+          }
+        };
+        final Display display = control.getDisplay();
 
-    if( async )
-      display.asyncExec( runner );
-    else
-      display.syncExec( runner );
+        if( async )
+          display.asyncExec( runner );
+        else
+          display.syncExec( runner );
+      }
+    }
   }
 
   public static void refresh( final StructuredViewer viewer, final Object element, final boolean async )

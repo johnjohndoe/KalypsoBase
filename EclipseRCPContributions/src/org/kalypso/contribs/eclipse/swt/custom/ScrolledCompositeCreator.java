@@ -65,6 +65,11 @@ public abstract class ScrolledCompositeCreator
   {
     final ScrolledComposite scrolledComposite = new ScrolledComposite( parent, style );
 
+    // Die folgende Zeile hängt vom Layout des Parent ab, wenn der Parent kein GridLayout hat,
+    // kommts zu seltsamen Effekten beim Resize etc.
+    // sollte demnach vom aufrufenden gesetzt werden
+    // scrolledComposite.setLayoutData( new GridData( GridData.FILL_BOTH ) );
+
     m_contentControl = createContents( scrolledComposite, contentStyle );
     scrolledComposite.setContent( m_contentControl );
 

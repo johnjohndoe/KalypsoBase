@@ -77,14 +77,11 @@ public class BufferPaintJob extends Job
 
   private BufferedImage m_image = null;
 
-  private final ImageCache m_imageCache;
-
-  public BufferPaintJob( final IPaintable paintable, final ImageCache imageCache )
+  public BufferPaintJob( final IPaintable paintable )
   {
     super( "" );
 
     m_paintable = paintable;
-    m_imageCache = imageCache;
 
     if( m_paintable != null )
       setName( m_paintable.toString() );
@@ -99,7 +96,7 @@ public class BufferPaintJob extends Job
 
     if( m_image != null )
     {
-      m_imageCache.release( m_image );
+      m_image.flush();
       m_image = null;
     }
   }
@@ -136,9 +133,11 @@ public class BufferPaintJob extends Job
       progress.subTask( "Initializing buffer-image" );
 
       final Point size = m_paintable.getSize();
-      if( size.x > 0 && size.y > 0 )
+      final int width = size.x;
+      final int height = size.y;
+      if( width > 0 && height > 0 )
       {
-        gr = createGraphics( size );
+        gr = createGraphics( width, height );
         // if image is null, workbench is probably shutting down,
         // just return without comment
         if( gr == null )
@@ -180,13 +179,20 @@ public class BufferPaintJob extends Job
     return Status.OK_STATUS;
   }
 
-  private synchronized Graphics2D createGraphics( final Point size )
+  private Graphics2D createGraphics( final int width, final int height )
   {
     /* Only recreate image, if width/height does not fit any more */
-    if( m_image != null )
-      m_imageCache.release( m_image );
+    if( m_image != null && (m_image.getWidth() != width || m_image.getHeight() != height) )
+    {
+      m_image.flush();
+      m_image = null;
+    }
 
-    ceateImage( size );
+    if( m_image == null )
+      m_image = new BufferedImage( width, height, BufferedImage.TYPE_INT_ARGB );
+
+    if( m_image == null )
+      return null;
 
     final Graphics2D gr = m_image.createGraphics();
     if( gr == null )
@@ -195,11 +201,6 @@ public class BufferPaintJob extends Job
     configureGraphics( gr );
 
     return gr;
-  }
-
-  private void ceateImage( final Point size )
-  {
-    m_image = m_imageCache.akquire( size );
   }
 
   /**

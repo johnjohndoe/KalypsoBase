@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,45 +36,45 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.contribs.eclipse.swt.graphics;
+package org.kalypso.contribs.eclipse.swt.widgets;
 
-import java.util.Collection;
-import java.util.LinkedList;
-
-import org.eclipse.swt.graphics.Device;
-import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.graphics.FontData;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.TableColumn;
 
 /**
+ * Provides Tooltips for TableItems
+ * 
  * <p>
- * Helper class for deriving fonts from other fonts.
+ * Funktioniert leider nicht! Die Tablecolumn lässt keinerlei Mouse-Events durch
  * </p>
- * <p>
- * Keeps track of created fonts and disposes theses if this class is disposed
- * </p>
+ * 
+ * @TODO: not properly merges from 3.0, check, if still used
  * 
  * @author belger
  */
-public class FontUtilities
+public final class TableColumnTooltipListener extends AbstractControlTooltipListener
 {
-  private final Collection<Font> m_disposeFonts = new LinkedList<Font>();
+  /** Property-Name for TooltipText in TableColumn or TableItem data */
+  public static final String TOOLTIP_PROPERTY = "_TABLE_TOOLTIP_";
 
-  public void dispose()
+  /** Creates the listener and hooks it to the table column. */
+  public final static void hookControl( final TableColumn column )
   {
-    for( final Font font : m_disposeFonts )
-      font.dispose();
+    final AbstractControlTooltipListener tableListener = new TableColumnTooltipListener( column );
+    hookListener( column, tableListener );
   }
 
-  public Font createChangedFontData( final FontData[] fontData, final int heightOffset, final int styleOffset,
-      final Device device )
+  public TableColumnTooltipListener( final TableColumn column )
   {
-    for( int i = 0; i < fontData.length; i++ )
-    {
-      fontData[i].setHeight( fontData[i].getHeight() + heightOffset );
-      fontData[i].setStyle( fontData[i].getStyle() | styleOffset );
-    }
-    return new Font( device, fontData );
+    super( column.getParent().getShell(), false );
+  }
+
+  @Override
+  protected String getTooltipForEvent( Event e )
+  {
+    // TODO Auto-generated method stub
+    return null;
   }
 }
