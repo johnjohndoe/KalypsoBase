@@ -46,8 +46,10 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.IPageChangingListener;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.PageChangingEvent;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.IWizardPage;
@@ -205,14 +207,30 @@ public class NewProjectWizard extends BasicNewProjectResourceWizard implements I
     if( !result )
       return false;
 
-    final URL dataLocation = m_templateProjectPage.getSelectedProject().getData();
     final IProject project = getNewProject();
+    final ProjectTemplate selectedProject = m_templateProjectPage.getSelectedProject();
+    if( selectedProject == null )
+    {
+      try
+      {
+        MessageDialog.openError( getShell(), getWindowTitle(), "No project template available" );
+        project.delete( true, new NullProgressMonitor() );
+        return false;
+      }
+      catch( final CoreException e )
+      {
+        ErrorDialog.openError( getShell(), getWindowTitle(), "Failed to delete corrupt project", e.getStatus() );
+        return false;
+      }
+    }
+
+    final URL dataLocation = selectedProject.getData();
 
     final WorkspaceModifyOperation operation = new UnpackProjectTemplateOperation( this, dataLocation, project );
 
     final IStatus resultStatus = RunnableContextHelper.execute( getContainer(), true, true, operation );
     KalypsoAFGUIFrameworkPlugin.getDefault().getLog().log( resultStatus );
-    ErrorDialog.openError( getShell(), Messages.getString( "org.kalypso.afgui.wizards.NewProjectWizard.3" ), Messages.getString( "org.kalypso.afgui.wizards.NewProjectWizard.4" ), resultStatus ); //$NON-NLS-1$ //$NON-NLS-2$
+    ErrorDialog.openError( getShell(), getWindowTitle(), Messages.getString( "org.kalypso.afgui.wizards.NewProjectWizard.4" ), resultStatus ); //$NON-NLS-1$ //$NON-NLS-2$
 
     // REMARK: we always return here, because the BasicNewProjectWizard does not allow to create a project twice
     // So the wizard must be closed now
