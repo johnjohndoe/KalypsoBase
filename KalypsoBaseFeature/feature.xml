@@ -29,6 +29,10 @@
          version="0.0.0"
          search-location="both"/>
 
+   <includes
+         id="org.kalypso.babel.nls_eclipse"
+         version="0.0.0"/>
+
    <plugin
          id="org.kalypso.contribs.java"
          download-size="0"
