@@ -80,6 +80,7 @@ public abstract class AbstractMapper implements IMapper
     m_handler.removeListener( l );
   }
 
+  // EVIL: do not exhibit internal event manager
   public MapperEventHandler getEventHandler( )
   {
     return m_handler;

@@ -5,8 +5,6 @@ import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisAdjustment;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.DIRECTION;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
-import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
-import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
 
 /**
  * @author burtscher Abstract implementation of IAxis - implements some methods which are equal for all concrete
@@ -14,13 +12,13 @@ import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
  */
 public abstract class AbstractAxis extends AbstractMapper implements IAxis
 {
-  private final IMapperRegistry m_registry = null;
-
   private final String m_id;
 
   private String m_label = "";
 
   private final POSITION m_pos;
+
+  private boolean m_visible = true;
 
   private DIRECTION m_dir = DIRECTION.POSITIVE;
 
@@ -38,17 +36,30 @@ public abstract class AbstractAxis extends AbstractMapper implements IAxis
     m_dataClass = dataClass;
   }
 
-  /**
-   * @see org.kalypso.chart.framework.axis.IAxis#getRenderer()
-   */
-  @Deprecated
-  public IAxisRenderer getRenderer( )
+  public boolean isVisible( )
   {
-    if( m_registry == null )
-      throw new IllegalStateException( "Registry is null" );
-
-    return m_registry.getRenderer( this );
+    return m_visible;
   }
+
+  public void setVisible( boolean visible )
+  {
+    if( visible == m_visible )
+      return;
+    m_visible = visible;
+    getEventHandler().fireMapperChanged( this );
+  }
+
+// /**
+// * @see org.kalypso.chart.framework.axis.IAxis#getRenderer()
+// */
+// @Deprecated
+// public IAxisRenderer getRenderer( )
+// {
+// if( m_registry == null )
+// throw new IllegalStateException( "Registry is null" );
+//
+// return m_registry.getRenderer( this );
+// }
 
   /**
    * @see org.kalypso.chart.framework.axis.IAxis#getLabel()
@@ -60,7 +71,11 @@ public abstract class AbstractAxis extends AbstractMapper implements IAxis
 
   public void setLabel( String label )
   {
-    m_label = label;
+    if( !getLabel().equals( label ) )
+    {
+      m_label = label;
+      getEventHandler().fireMapperChanged( this );
+    }
   }
 
   /**
@@ -109,7 +124,7 @@ public abstract class AbstractAxis extends AbstractMapper implements IAxis
   public void setLogicalRange( final IDataRange<Number> dataRange )
   {
     m_dataRange = dataRange;
-    getEventHandler().fireMapperRangeChanged( this );
+    getEventHandler().fireMapperChanged( this );
   }
 
   public IAxisAdjustment getPreferredAdjustment( )
