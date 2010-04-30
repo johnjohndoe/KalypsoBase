@@ -95,16 +95,25 @@ public class ChartComposite extends Canvas implements IChartView
       public void onMapperRemoved( final IMapper mapper )
       {
         if( mapper instanceof de.openali.odysseus.chart.framework.model.mapper.IAxis )
+        {
+          // STRANGE: normally we would destroy the component here (symetry!), but the mapper registry disposes it
+          // itself.
+// IAxisComponent component = m_model.getMapperRegistry().getComponent( (IAxis)mapper );
+// component.dispose();
+
           layout();
+        }
       }
 
       /**
        * @see de.openali.odysseus.chart.framework.impl.model.event.AbstractMapperRegistryEventListener#onMapperRangeChanged(de.openali.odysseus.chart.framework.model.mapper.IMapper)
        */
       @Override
-      public void onMapperRangeChanged( final IMapper mapper )
+      public void onMapperChanged( final IMapper mapper )
       {
-        layout();
+        if( isDisposed() )
+          return;
+// layout();
         if( mapper instanceof IAxis )
         {
           final IAxis axis = (IAxis) mapper;
@@ -115,10 +124,11 @@ public class ChartComposite extends Canvas implements IChartView
             final IChartLayer[] changedLayers = layerList.toArray( new IChartLayer[] {} );
             m_plot.invalidate( changedLayers );
           }
-          final AxisCanvas ac = (AxisCanvas) m_model.getMapperRegistry().getComponent( axis );
-          ac.layout();
+          // final AxisCanvas ac = (AxisCanvas) m_model.getMapperRegistry().getComponent( axis );
+          // ac.layout();
         }
-        redraw();
+        layout( true );
+// redraw();
       }
 
     };
@@ -230,8 +240,8 @@ public class ChartComposite extends Canvas implements IChartView
   }
 
   /**
-   * FIXME: we should listen to dipsoe-event instead
-   *
+   * FIXME: we should listen to dipsose-event instead
+   * 
    * @see org.eclipse.swt.widgets.Widget#dispose()
    */
   @Override
@@ -250,7 +260,7 @@ public class ChartComposite extends Canvas implements IChartView
 
   /**
    * No Layout can be set on this chart. It manages its children and the layout on its own.
-   *
+   * 
    * @see org.eclipse.swt.widgets.Composite#setLayout(org.eclipse.swt.widgets.Layout)
    */
   @Override
@@ -304,8 +314,8 @@ public class ChartComposite extends Canvas implements IChartView
     layout();
 
     /**
-     * Leider funktioniert die obige Vergr��erung nicht problemlos, es muss daher noch etwas handarbeit erfolgen;
-     * TODO: �berpr�fen, ob es da einen besseren Weg geben k�nnte
+     * Leider funktioniert die obige Vergr��erung nicht problemlos, es muss daher noch etwas handarbeit erfolgen; TODO:
+     * �berpr�fen, ob es da einen besseren Weg geben k�nnte
      */
 
     // Vergr�ssern, falls zu klein

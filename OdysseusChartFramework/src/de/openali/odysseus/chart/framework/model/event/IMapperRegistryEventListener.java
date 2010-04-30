@@ -11,5 +11,5 @@ public interface IMapperRegistryEventListener
 
   public void onMapperRemoved( IMapper mapper );
 
-  public void onMapperRangeChanged( IMapper mapper );
+  public void onMapperChanged( IMapper mapper );
 }

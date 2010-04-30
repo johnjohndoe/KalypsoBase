@@ -24,7 +24,7 @@ import de.openali.odysseus.chart.framework.view.IChartViewer;
 
 /**
  * Displays a chart in a canvas using no sub components. ONLY FOR TESTING PURPOSES
- *
+ * 
  * @author burtscher1
  */
 public class ChartCanvas extends Canvas implements PaintListener, IChartViewer
@@ -125,9 +125,8 @@ public class ChartCanvas extends Canvas implements PaintListener, IChartViewer
 
     m_plotRect = new Rectangle( left, top, width - (left + right), height - (top + bottom) );
 
-    POSITION p = POSITION.BOTTOM;
     int offset = 0;
-    for( IAxis a : m_axisPosMap.get( p ) )
+    for( IAxis a : m_axisPosMap.get( POSITION.BOTTOM ) )
     {
       int rHeight = a.getRegistry().getRenderer( a ).getAxisWidth( a );
       int rWidth = width - spaceWidthMap.get( POSITION.LEFT ) - spaceWidthMap.get( POSITION.RIGHT );
@@ -138,9 +137,8 @@ public class ChartCanvas extends Canvas implements PaintListener, IChartViewer
       a.setScreenHeight( rWidth );
     }
 
-    p = POSITION.LEFT;
     offset = 0;
-    for( IAxis a : m_axisPosMap.get( p ) )
+    for( IAxis a : m_axisPosMap.get( POSITION.LEFT ) )
     {
       int rWidth = a.getRegistry().getRenderer( a ).getAxisWidth( a );
       int rHeight = height - spaceWidthMap.get( POSITION.TOP ) - spaceWidthMap.get( POSITION.BOTTOM );
@@ -151,9 +149,8 @@ public class ChartCanvas extends Canvas implements PaintListener, IChartViewer
       a.setScreenHeight( rHeight );
     }
 
-    p = POSITION.TOP;
     offset = 0;
-    for( IAxis a : m_axisPosMap.get( p ) )
+    for( IAxis a : m_axisPosMap.get( POSITION.TOP ) )
     {
       int rHeight = a.getRegistry().getRenderer( a ).getAxisWidth( a );
       int rWidth = width - spaceWidthMap.get( POSITION.LEFT ) - spaceWidthMap.get( POSITION.RIGHT );
@@ -164,9 +161,8 @@ public class ChartCanvas extends Canvas implements PaintListener, IChartViewer
       a.setScreenHeight( rWidth );
     }
 
-    p = POSITION.RIGHT;
     offset = 0;
-    for( IAxis a : m_axisPosMap.get( p ) )
+    for( IAxis a : m_axisPosMap.get( POSITION.RIGHT ) )
     {
       int rWidth = a.getRegistry().getRenderer( a ).getAxisWidth( a );
       int rHeight = height - spaceWidthMap.get( POSITION.TOP ) - spaceWidthMap.get( POSITION.BOTTOM );
