@@ -319,7 +319,7 @@ public class ChartEditor extends EditorPart implements IChartPart
              * @see org.kalypso.chart.framework.model.event.impl.AbstractMapperRegistryEventListener#onMapperRangeChanged(org.kalypso.chart.framework.model.mapper.IMapper)
              */
             @Override
-            public void onMapperRangeChanged( final IMapper mapper )
+            public void onMapperChanged( final IMapper mapper )
             {
               setDirty( true );
             }
