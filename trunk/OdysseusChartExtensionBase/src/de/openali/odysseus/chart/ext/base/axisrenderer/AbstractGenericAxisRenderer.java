@@ -3,6 +3,7 @@ package de.openali.odysseus.chart.ext.base.axisrenderer;
 import java.awt.Insets;
 import java.text.Format;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
@@ -19,7 +20,6 @@ import de.openali.odysseus.chart.framework.util.StyleUtils;
  */
 public abstract class AbstractGenericAxisRenderer implements IAxisRenderer
 {
-
   private final int m_tickLength;
 
   private final int m_gap;
@@ -33,9 +33,9 @@ public abstract class AbstractGenericAxisRenderer implements IAxisRenderer
   /**
    * Hashmap to store arbitrary key value pairs
    */
-  private final HashMap<String, Object> m_data = new HashMap<String, Object>();
+  private final Map<String, Object> m_data = new HashMap<String, Object>();
 
-  private final HashMap<IAxis, Number[]> m_tickMap = new HashMap<IAxis, Number[]>();
+  private final Map<IAxis, Number[]> m_tickMap = new HashMap<IAxis, Number[]>();
 
   private ILineStyle m_axisLineStyle;
 
@@ -63,7 +63,7 @@ public abstract class AbstractGenericAxisRenderer implements IAxisRenderer
   protected Point getTextExtent( final GC gc, final String value, final ITextStyle style )
   {
     style.apply( gc );
-    final Point point = gc.textExtent( value==null?"":value);
+    final Point point = gc.textExtent( value == null ? "" : value );
     return point;
   }
 
@@ -138,7 +138,6 @@ public abstract class AbstractGenericAxisRenderer implements IAxisRenderer
 
   public void dispose( )
   {
-
   }
 
   public ILineStyle getTickLineStyle( )

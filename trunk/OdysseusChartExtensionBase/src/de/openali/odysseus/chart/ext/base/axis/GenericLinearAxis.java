@@ -12,20 +12,26 @@ import de.openali.odysseus.chart.framework.util.ChartUtilities;
  */
 public class GenericLinearAxis extends AbstractAxis
 {
-  private IDataRange<Number> m_numericRange;
 
+  private IDataRange<Number> m_numericRange = new DataRange<Number>( null, null );
+
+ 
+
+ 
   private int m_height = 1;
 
   public GenericLinearAxis( final String id, final POSITION pos, final Class< ? > clazz )
   {
     super( id, pos, clazz );
     // set initial range, so we can prevent NPEs
-    setNumericRange( new DataRange<Number>( 0, 1 ) );
+    // setNumericRange( new DataRange<Number>( 0, 1 ) );
   }
 
   public double numericToNormalized( final Number value )
   {
     final IDataRange<Number> dataRange = getNumericRange();
+    if( dataRange.getMax() == null || dataRange.getMin() == null )
+      return Double.NaN;
     final double r = dataRange.getMax().doubleValue() - dataRange.getMin().doubleValue();
     final double norm = (value.doubleValue() - dataRange.getMin().doubleValue()) / r;
     return norm;
@@ -35,6 +41,8 @@ public class GenericLinearAxis extends AbstractAxis
   {
     final IDataRange<Number> dataRange = getNumericRange();
 
+    if( dataRange.getMax() == null || dataRange.getMin() == null )
+      return Double.NaN;
     final double r = dataRange.getMax().doubleValue() - dataRange.getMin().doubleValue();
 
     final double logical = value * r + dataRange.getMin().doubleValue();
@@ -72,7 +80,7 @@ public class GenericLinearAxis extends AbstractAxis
   public void setNumericRange( final IDataRange<Number> range )
   {
     m_numericRange = range;
-    getEventHandler().fireMapperRangeChanged( this );
+    getEventHandler().fireMapperChanged( this );
   }
 
   /**
@@ -137,20 +145,7 @@ public class GenericLinearAxis extends AbstractAxis
     return m_height;
   }
 
-  /**
-   * @see de.openali.odysseus.chart.ext.base.axis.AbstractAxis#setLabel(java.lang.String)
-   */
-  @Override
-  public void setLabel( final String label )
-  {
-    if( !getLabel().equals( label ) )
-    {
-      super.setLabel( label );
-      getEventHandler().fireMapperRangeChanged( this );
-    }
-  }
-
-  public void setScreenHeight( final int height )
+  public void setScreenHeight( int height )
   {
     m_height = height;
   }

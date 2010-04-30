@@ -25,7 +25,9 @@ public class GenericNumberTickCalculator implements ITickCalculator
    */
   public Number[] calcTicks( final GC gc, final IAxis axis, final Number minDisplayInterval, final Point ticklabelSize )
   {
-
+    final IDataRange<Number> range = axis.getNumericRange();
+    if( range.getMax() == null || range.getMin() == null )
+      return new Number[] {};
     // TickLabelGr��e + 2 wegen Rundungsfehlern beim positionieren
     /*
      * minimaler Bildschirmabstand zwischen zwei labels
@@ -46,7 +48,6 @@ public class GenericNumberTickCalculator implements ITickCalculator
 
     // Mini- und maximalen Grenz-Wert ermitteln anhand der Gr��e der Labels
     int screenMin, screenMax;
-    final IDataRange<Number> range = axis.getNumericRange();
 
     final Point screenMinMax = GenericNumberTickCalculator.getScreenMinMax( axis, range, ticklabelSize );
     screenMin = screenMinMax.x;
@@ -101,22 +102,21 @@ public class GenericNumberTickCalculator implements ITickCalculator
     }
 
     // to fit the range into axissize we need a small distance here
-//    if(normmin == normmax)
-//    {
-//      normmin*= 0.9999;
-//      normmax*= 1.0001;
-//    }
-    
+// if(normmin == normmax)
+// {
+// normmin*= 0.9999;
+// normmax*= 1.0001;
+// }
+
     // hier werden alle Zahlen gespeichert, die als gute Divisoren eines Intervalls gelten
     // 3 w�rde z.B. schnell krumme werte erzeugen
     final LinkedList<Integer> goodDivisors = new LinkedList<Integer>();
 
     goodDivisors.add( 5 );
     goodDivisors.add( 2 );
-      
 
-    ticks.add( new Double(normmin ));
-    ticks.add( new Double( normmax )) ;
+    ticks.add( new Double( normmin ) );
+    ticks.add( new Double( normmax ) );
 
     if( normmid == 1 )
     {
