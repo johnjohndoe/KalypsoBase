@@ -16,7 +16,9 @@ import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 
+import de.openali.odysseus.chart.framework.model.event.IMapperEventListener;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
+import de.openali.odysseus.chart.framework.model.mapper.IMapper;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
 import de.openali.odysseus.chart.framework.model.mapper.component.IAxisComponent;
 import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
@@ -40,6 +42,25 @@ public class AxisCanvas extends Canvas implements PaintListener, IAxisComponent
 
   private Point m_panOffset = new Point( 0, 0 );
 
+  private IMapperEventListener m_axisListener = new IMapperEventListener()
+  {
+    @Override
+    public void onMapperChanged( IMapper mapper )
+    {
+      // TODO: redraw...
+      // change my visibility?
+
+      // -> evtl. parent-composite layout auslösen
+      // Böse: getParent().layout();
+      // gut: fireSomeEvent.. an ChartComposite
+
+      // Wir können momentan darauf verzichten, wiel die MapperRegistry den event bereits weiterleitet
+
+      // TODO Auto-generated method stub
+
+    }
+  };
+
   public AxisCanvas( final IAxis axis, final Composite parent, final int style )
   {
     super( parent, style );
@@ -62,7 +83,9 @@ public class AxisCanvas extends Canvas implements PaintListener, IAxisComponent
       {
         dispose();
       }
-    });
+    } );
+
+    axis.addListener( m_axisListener );
   }
 
   protected void handleControlResized( )
@@ -90,6 +113,8 @@ public class AxisCanvas extends Canvas implements PaintListener, IAxisComponent
   @Override
   public void dispose( )
   {
+    m_axis.addListener( m_axisListener );
+
     if( m_bufferImage != null )
     {
       m_bufferImage.dispose();
@@ -107,7 +132,7 @@ public class AxisCanvas extends Canvas implements PaintListener, IAxisComponent
   @Override
   public Point computeSize( final int wHint, final int hHint, final boolean changed )
   {
-    if( m_axis != null )
+    if( m_axis != null  )
     {
       final IAxisRenderer renderer = m_axis.getRegistry().getRenderer( m_axis );
       if( renderer != null )
@@ -214,67 +239,6 @@ public class AxisCanvas extends Canvas implements PaintListener, IAxisComponent
     return usedBufferImage;
   }
 
-  // /**
-  // * Uses the widgets' complete extension to calculate the screen value in
-  // * correspondance to a normalized value
-  // *
-  // * @see
-  // de.openali.odysseus.chart.framework.model.mapper.component.IAxisComponent#normalizedToScreen(double)
-  // */
-  // public int normalizedToScreen(final double normValue)
-  // {
-  // double myNormValue = normValue;
-  // final int range = getRange();
-  // if (ChartUtilities.isInverseScreenCoords(m_axis))
-  // {
-  // myNormValue = 1 - myNormValue;
-  // }
-  // final int screenValue = (int) (range * myNormValue);
-  // return screenValue;
-  // }
-  //
-  // /**
-  // * Uses the widgets' complete extension to alculates the normalized value
-  // in
-  // * correspondance to a screen value
-  // *
-  // * @see
-  // de.openali.odysseus.chart.framework.model.mapper.component.IAxisComponent#screenToNormalized(int)
-  // */
-  // public double screenToNormalized(final int screenValue)
-  // {
-  // final int range = getRange();
-  // if (range == 0)
-  // {
-  // return 0;
-  // }
-  // final double normValue = (double) screenValue / range;
-  // if (ChartUtilities.isInverseScreenCoords(m_axis))
-  // {
-  // return 1 - normValue;
-  // }
-  //
-  // return normValue;
-  // }
-
-  // /**
-  // * calculates the significant (= not variable) extension of the widget
-  // */
-  // private int getRange()
-  // {
-  // final Rectangle bounds = getBounds();
-  // final int range;
-  // if (m_axis.getPosition().getOrientation().equals(ORIENTATION.HORIZONTAL))
-  // {
-  // range = bounds.width;// horizontal
-  // }
-  // else
-  // {
-  // range = bounds.height; // vertical
-  // }
-  // return range;
-  // }
-
   @Override
   public void layout( )
   {
@@ -329,6 +293,7 @@ public class AxisCanvas extends Canvas implements PaintListener, IAxisComponent
 
   private void setAxisHeight( )
   {
+
     if( m_axis.getPosition().getOrientation().equals( ORIENTATION.HORIZONTAL ) )
     {
       m_axis.setScreenHeight( getBounds().width );

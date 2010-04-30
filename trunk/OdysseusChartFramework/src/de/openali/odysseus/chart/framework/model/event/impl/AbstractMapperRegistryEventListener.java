@@ -68,7 +68,7 @@ public abstract class AbstractMapperRegistryEventListener implements IMapperRegi
   /**
    * @see de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistryEventListener#onMapperRangeChanged(de.openali.odysseus.chart.framework.model.mapper.IMapper)
    */
-  public void onMapperRangeChanged( IMapper mapper )
+  public void onMapperChanged( IMapper mapper )
   {
     // not implemented - override in subclass if needed
   }

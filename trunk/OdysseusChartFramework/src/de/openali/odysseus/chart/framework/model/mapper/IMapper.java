@@ -10,7 +10,6 @@ import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry
  */
 public interface IMapper extends IEventProvider<IMapperEventListener>
 {
-
   /**
    * @return the unique identifier
    */
