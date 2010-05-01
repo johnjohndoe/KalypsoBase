@@ -156,14 +156,14 @@ public class ProfilUtil
     return values;
   }
 
-  public static Double getDoubleValueFor( final IComponent component, final IRecord point )
+  public static double getDoubleValueFor( final IComponent component, final IRecord point )
   {
     if( component == null )
       return Double.NaN;
     return getDoubleValueFor( component.getId(), point );
   }
 
-  public static Double getDoubleValueFor( final String componentID, final IRecord point )
+  public static double getDoubleValueFor( final String componentID, final IRecord point )
   {
     final TupleResult owner = point == null ? null : point.getOwner();
     if( owner != null )
@@ -175,7 +175,7 @@ public class ProfilUtil
     return Double.NaN;
   }
 
-  public static Double getDoubleValueFor( final int componentIndex, final IRecord point )
+  public static double getDoubleValueFor( final int componentIndex, final IRecord point )
   {
     final Object oValue = point.getValue( componentIndex );
     if( oValue instanceof Number )
@@ -184,7 +184,7 @@ public class ProfilUtil
     return Double.NaN;
   }
 
-  public static Double getDoubleValueFor( final String componentID, final IProfileObject building )
+  public static double getDoubleValueFor( final String componentID, final IProfileObject building )
   {
     final IComponent property = building.getObjectProperty( componentID );
 
