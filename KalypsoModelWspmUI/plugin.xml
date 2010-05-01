@@ -113,10 +113,6 @@
               name="%org.kalypso.model.wspm.ui.preferences.ValidatorPreferencePage"/>
      </extension>
      <extension
-           point="org.eclipse.core.runtime.preferences">
-        <initializer class="org.kalypso.model.wspm.ui.preferences.PreferenceInitializer"/>
-     </extension>
-     <extension
            point="org.kalypso.model.wspm.ui.profilPointsSource">
         <profilPointsSource
               class="org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.impl.FilePointsSource"
@@ -390,6 +386,17 @@
                   commandId="org.kalypso.chart.ui.commands.edit"
                   style="radio">
             </command>
+            <separator
+                  name="additions"
+                  visible="false">
+            </separator>
+         </menuContribution>
+         <menuContribution
+               locationURI="menu:org.kalypso.model.wspm.ui.view.chart.ChartView">
+            <separator
+                  name="additions"
+                  visible="false">
+            </separator>
          </menuContribution>
          <menuContribution
                locationURI="toolbar:org.kalypso.model.wspm.ui.view.legend.LegendView">
