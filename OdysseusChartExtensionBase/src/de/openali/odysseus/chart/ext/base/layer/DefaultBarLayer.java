@@ -21,7 +21,7 @@ public class DefaultBarLayer extends AbstractBarLayer
 
   private final AbstractDomainIntervalValueData m_data;
 
-  public DefaultBarLayer( AbstractDomainIntervalValueData data, IAreaStyle areaStyle )
+  public DefaultBarLayer( final AbstractDomainIntervalValueData data, final IAreaStyle areaStyle )
   {
     super( areaStyle );
     m_data = data;
@@ -32,13 +32,13 @@ public class DefaultBarLayer extends AbstractBarLayer
    *      org.eclipse.swt.graphics.Device)
    */
   @SuppressWarnings("unchecked")
-  public void paint( GC gc )
+  public void paint( final GC gc )
   {
-    AbstractDomainIntervalValueData dataContainer = getDataContainer();
+    final AbstractDomainIntervalValueData dataContainer = getDataContainer();
 
     if( dataContainer != null )
     {
-      PolygonFigure pf = getPolygonFigure();
+      final PolygonFigure pf = getPolygonFigure();
 
       dataContainer.open();
 
@@ -48,10 +48,10 @@ public class DefaultBarLayer extends AbstractBarLayer
 
       final ArrayList<Point> path = new ArrayList<Point>();
 
-      IDataOperator dopDomain = getCoordinateMapper().getDomainAxis().getDataOperator( domainStartComponent[0].getClass() );
-      IDataOperator dopTarget = getCoordinateMapper().getTargetAxis().getDataOperator( targetComponent[0].getClass() );
+      final IDataOperator dopDomain = getCoordinateMapper().getDomainAxis().getDataOperator( domainStartComponent[0].getClass() );
+      final IDataOperator dopTarget = getCoordinateMapper().getTargetAxis().getDataOperator( targetComponent[0].getClass() );
 
-      ICoordinateMapper cm = getCoordinateMapper();
+      final ICoordinateMapper cm = getCoordinateMapper();
 
       for( int i = 0; i < domainStartComponent.length; i++ )
       {
@@ -61,10 +61,10 @@ public class DefaultBarLayer extends AbstractBarLayer
         final Object endValue = domainEndComponent[i];
         final Object targetValue = targetComponent[i];
 
-        Point p1 = cm.numericToScreen( dopDomain.logicalToNumeric( startValue ), 0 );
-        Point p2 = cm.numericToScreen( dopDomain.logicalToNumeric( startValue ), dopTarget.logicalToNumeric( targetValue ) );
-        Point p3 = cm.numericToScreen( dopDomain.logicalToNumeric( endValue ), dopTarget.logicalToNumeric( targetValue ) );
-        Point p4 = cm.numericToScreen( dopDomain.logicalToNumeric( endValue ), 0 );
+        final Point p1 = cm.numericToScreen( dopDomain.logicalToNumeric( startValue ), 0 );
+        final Point p2 = cm.numericToScreen( dopDomain.logicalToNumeric( startValue ), dopTarget.logicalToNumeric( targetValue ) );
+        final Point p3 = cm.numericToScreen( dopDomain.logicalToNumeric( endValue ), dopTarget.logicalToNumeric( targetValue ) );
+        final Point p4 = cm.numericToScreen( dopDomain.logicalToNumeric( endValue ), 0 );
 
         path.add( p1 );
         path.add( p2 );
@@ -85,8 +85,8 @@ public class DefaultBarLayer extends AbstractBarLayer
   public IDataRange<Number> getTargetRange( )
   {
     // muss als minimalen Wert 0 zurückgeben, weil die Bars bis dahin laufen
-    IDataRange targetRange = getDataContainer().getTargetRange();
-    IDataOperator dop = getTargetAxis().getDataOperator( getTargetAxis().getDataClass() );
+    final IDataRange targetRange = getDataContainer().getTargetRange();
+    final IDataOperator dop = getTargetAxis().getDataOperator( getTargetAxis().getDataClass() );
     return new DataRange<Number>( 0, dop.logicalToNumeric( targetRange.getMax() ) );
   }
 
@@ -96,9 +96,9 @@ public class DefaultBarLayer extends AbstractBarLayer
   @SuppressWarnings("unchecked")
   public IDataRange<Number> getDomainRange( )
   {
-    IDataRange domainRange = getDataContainer().getDomainRange();
-    Object max = domainRange.getMax();
-    IDataOperator dop = getDomainAxis().getDataOperator( max.getClass() );
+    final IDataRange domainRange = getDataContainer().getDomainRange();
+    final Object max = domainRange.getMax();
+    final IDataOperator dop = getDomainAxis().getDataOperator( max.getClass() );
     return new DataRange<Number>( dop.logicalToNumeric( domainRange.getMin() ), dop.logicalToNumeric( domainRange.getMax() ) );
   }
 

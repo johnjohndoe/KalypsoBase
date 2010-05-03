@@ -1,10 +1,12 @@
 package org.kalypso.chart.ui.editor.mousehandler;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.MouseMoveListener;
 import org.eclipse.swt.graphics.Point;
+
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.ITooltipChartLayer;
 import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
@@ -14,7 +16,7 @@ import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
  * 
  * @author alibu
  */
-public class TooltipHandler implements MouseListener, MouseMoveListener
+public class TooltipHandler extends MouseAdapter implements MouseListener, MouseMoveListener
 {
   private final ChartComposite m_chart;
 
@@ -36,32 +38,9 @@ public class TooltipHandler implements MouseListener, MouseMoveListener
   }
 
   /**
-   * @see org.eclipse.swt.events.MouseListener#mouseDoubleClick(org.eclipse.swt.events.MouseEvent)
-   */
-  public void mouseDoubleClick( final MouseEvent e )
-  {
-    // ignore
-  }
-
-  /**
-   * @see org.eclipse.swt.events.MouseListener#mouseDown(org.eclipse.swt.events.MouseEvent)
-   */
-  public void mouseDown( final MouseEvent e )
-  {
-    // nothing to do
-  }
-
-  /**
-   * @see org.eclipse.swt.events.MouseListener#mouseUp(org.eclipse.swt.events.MouseEvent)
-   */
-  public void mouseUp( final MouseEvent e )
-  {
-    // nothing to do
-  }
-
-  /**
    * @see org.eclipse.swt.events.MouseMoveListener#mouseMove(org.eclipse.swt.events.MouseEvent)
    */
+  @Override
   public void mouseMove( final MouseEvent e )
   {
     if( m_chart.getPlot().isEditing() )
@@ -73,7 +52,7 @@ public class TooltipHandler implements MouseListener, MouseMoveListener
     {
       final Point point = new Point( e.x, e.y );
 
-      ITooltipChartLayer[] tooltipLayers = m_chart.getChartModel().getLayerManager().getTooltipLayers();
+      final ITooltipChartLayer[] tooltipLayers = m_chart.getChartModel().getLayerManager().getTooltipLayers();
       // Array umdrehen, damit die oberen Layer zuerst befragt werden
       ArrayUtils.reverse( tooltipLayers );
 
