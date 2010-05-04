@@ -62,7 +62,6 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public class KalypsoCascadingThemeSelection extends AbstractFeatureSelection
 {
-
   private final IFeatureSelectionManager m_selectionManager;
 
   private final Feature m_focusedFeature;
@@ -145,12 +144,12 @@ public class KalypsoCascadingThemeSelection extends AbstractFeatureSelection
     return new CommandableWorkspace( workspace );
   }
 
-  /** Return a new selection wich contains all features from the given selection wich are contained in the theme. */
+  /** Return a new selection that contains all features from the given selection that are contained in the theme. */
   public static IStructuredSelection filter( final List<Feature> selection, final IKalypsoCascadingTheme theme )
   {
     final List<Feature> retained = new ArrayList<Feature>();
 
-    final IKalypsoTheme[] themes = theme.getChildThemes();
+    final IKalypsoTheme[] themes = theme.getAllThemes();
     for( final IKalypsoTheme kt : themes )
     {
       if( !(kt instanceof IKalypsoFeatureTheme) )
