@@ -42,12 +42,7 @@ package org.kalypso.ui.editor.mapeditor;
 
 import java.awt.Component;
 import java.awt.Frame;
-import java.awt.event.ComponentListener;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -59,26 +54,19 @@ import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartSite;
-import org.eclipse.ui.forms.widgets.Form;
-import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.internal.ObjectActionContributorManager;
-import org.eclipse.ui.progress.UIJob;
 import org.kalypso.commons.command.ICommandTarget;
-import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
 import org.kalypso.contribs.eclipse.swt.events.SWTAWT_ContextMenuMouseAdapter;
-import org.kalypso.contribs.eclipse.ui.forms.MessageUtilitites;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.MapPanel;
-import org.kalypso.ogc.gml.map.listeners.MapPanelAdapter;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ui.editor.actions.NewFeatureScope;
@@ -91,77 +79,11 @@ import org.kalypso.ui.editor.actions.NewFeatureScope;
 @SuppressWarnings("restriction")
 public class MapPartHelper
 {
-  final static ISchedulingRule UI_JOB_MUTEXT = new MutexRule();
+// final static ISchedulingRule UI_JOB_MUTEXT = new MutexRule();
 
   private MapPartHelper( )
   {
     // will not be instantiated
-  }
-
-  /**
-   * Does nothing more than create an empty form containing a {@link FillLayout}'ed body. This form is suitable to be
-   * filled next by {@link #createMapPanelInForm(Form, ICommandTarget, IFeatureSelectionManager).
-   */
-  public static Form createMapForm( final Composite parent )
-  {
-    final FormToolkit formToolkit = new FormToolkit( parent.getDisplay() );
-    final Form form = formToolkit.createForm( parent );
-    form.setSeparatorVisible( true );
-    final Composite body = form.getBody();
-    body.setLayout( new FillLayout() );
-    return form;
-  }
-
-  /**
-   * Creates a {@link MapPanel} on a form. The body's layout must already have been set.<br>
-   * The form message will be reflecting the status of the {@link MapPanel}.
-   * 
-   * @see createMapForm
-   */
-  public static IMapPanel createMapPanelInForm( final Form form, final ICommandTarget commandTarget, final IFeatureSelectionManager selectionManager )
-  {
-    final IMapPanel mapPanel = createMapPanel( form.getBody(), SWT.NONE, null, commandTarget, selectionManager );
-
-    mapPanel.addMapPanelListener( new MapPanelAdapter()
-    {
-      /**
-       * @see org.kalypso.ogc.gml.map.listeners.MapPanelAdapter#onStatusChanged(org.kalypso.ogc.gml.map.IMapPanel)
-       */
-      @Override
-      public void onStatusChanged( final IMapPanel source )
-      {
-        final IStatus status = source.getStatus();
-
-        final UIJob job = new UIJob( "Update status" ) //$NON-NLS-1$
-        {
-          @Override
-          public IStatus runInUIThread( final IProgressMonitor monitor )
-          {
-            if( form.isDisposed() )
-              return Status.OK_STATUS;
-
-            final String oldMessage = form.getMessage();
-            final boolean ok = status.isOK();
-            if( ok )
-              form.setMessage( null );
-            else
-              MessageUtilitites.setMessage( form, status );
-            // TODO: add hyperlink listener if sub-messages exist. Show these sub-messages on click
-            // Same for tooltip support
-
-            // If visibility of header changed, send resize event, else the map has not the right extent
-            if( source instanceof ComponentListener && ((oldMessage == null && !ok) || (oldMessage != null && ok)) )
-              ((ComponentListener) source).componentResized( null );
-            return Status.OK_STATUS;
-          }
-        };
-        job.setRule( UI_JOB_MUTEXT );
-        job.setSystem( true );
-        job.schedule();
-      }
-    } );
-
-    return mapPanel;
   }
 
   public static IMapPanel createMapPanel( final Composite parent, final int style, final Object layoutData, final ICommandTarget commandTarget, final IFeatureSelectionManager selectionManager )
@@ -211,7 +133,7 @@ public class MapPartHelper
 
       /* Add a 'new' menu corresponding to the theme's feature type. */
       final IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme) activeTheme;
-      CommandableWorkspace workspace = theme.getWorkspace();
+      final CommandableWorkspace workspace = theme.getWorkspace();
       final NewFeatureScope scope = new NewFeatureScope( workspace, theme.getFeatureList(), selectionManager );
       manager.add( scope.createMenu() );
 

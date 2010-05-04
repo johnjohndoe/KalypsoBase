@@ -55,6 +55,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.StatusLineContributionItem;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -124,7 +125,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
 
   private GisTemplateMapModell m_mapModell;
 
-  private Form m_control;
+  private MapForm m_control;
 
   private boolean m_disposed = false;
 
@@ -214,8 +215,8 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
   {
     final IWorkbenchPartSite site = getSite();
 
-    m_control = MapPartHelper.createMapForm( parent );
-    m_mapPanel = MapPartHelper.createMapPanelInForm( m_control, this, m_selectionManager );
+    m_control = MapForm.createMapForm( parent );
+    m_mapPanel = m_control.createMapPanel( this, m_selectionManager );
     updatePanel( m_mapModell, m_initialEnv );
     m_mapPanel.addMapPanelListener( m_mapPanelListener );
     m_mapSourceProvider = new MapPanelSourceProvider( site, m_mapPanel );
@@ -318,7 +319,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
       if( m_mapPanel != null )
       {
         final String message = Messages.getString( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.1", input.getName() ); //$NON-NLS-1$;
-        m_mapPanel.setStatus( StatusUtilities.createStatus( IStatus.INFO, message, null ) );
+        m_control.setStatus( new Status( IStatus.INFO, KalypsoGisPlugin.getId(), message ) );
       }
 
       final Gismapview gisview = GisTemplateHelper.loadGisMapView( input.getStorage() );
@@ -354,8 +355,11 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
 
       setMapModell( null, null );
 
-      if( m_mapPanel != null )
-        m_mapPanel.setStatus( new MultiStatus( KalypsoGisPlugin.getId(), -1, new IStatus[] { status }, Messages.getString( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.2" ), null ) ); //$NON-NLS-1$
+      final IStatus error = new MultiStatus( KalypsoGisPlugin.getId(), -1, new IStatus[] { status }, Messages.getString( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.2" ), null ); //$NON-NLS-1$
+      if( m_control != null )
+        // FIXME: the control might not yet have been created, so this status is lost.
+        // shouldn't we keep it ourselfs and set it to the control when created?
+        m_control.setStatus( error );
 
       throw new CoreException( status );
     }
