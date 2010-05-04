@@ -55,7 +55,7 @@ public class Perspective implements IPerspectiveFactory
     rightTop.addPlaceholder( FeatureTemplateView.ID );
     rightTop.addPlaceholder( DiagramViewPart.ID );
     rightTop.addPlaceholder( ChartView.ID );
-    rightTop.addPlaceholder( "org.kalypso.risk.views.RiskStatisticsResultView" );
+    rightTop.addPlaceholder( "org.kalypso.risk.views.RiskStatisticsResultView" ); //$NON-NLS-1$
 
     rightBottom.addPlaceholder( FeatureView.ID );
     rightBottom.addPlaceholder( TableViewPart.ID );
@@ -85,7 +85,7 @@ public class Perspective implements IPerspectiveFactory
     layout.getViewLayout( ChartView.ID ).setMoveable( false );
     layout.getViewLayout( ChartView.ID ).setCloseable( false );
 
-    layout.getViewLayout( "org.kalypso.risk.views.RiskStatisticsResultView" ).setMoveable( false );
-    layout.getViewLayout( "org.kalypso.risk.views.RiskStatisticsResultView" ).setCloseable( false );
+    layout.getViewLayout( "org.kalypso.risk.views.RiskStatisticsResultView" ).setMoveable( false ); //$NON-NLS-1$
+    layout.getViewLayout( "org.kalypso.risk.views.RiskStatisticsResultView" ).setCloseable( false ); //$NON-NLS-1$
   }
 }

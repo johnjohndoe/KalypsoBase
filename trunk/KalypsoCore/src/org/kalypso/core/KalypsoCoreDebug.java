@@ -52,9 +52,9 @@ import org.kalypso.contribs.eclipse.core.runtime.Debug;
  */
 public class KalypsoCoreDebug
 {
-  public static final Debug RESOURCE_POOL = new Debug( KalypsoCorePlugin.getDefault(), "/debug/resourcepool" );
+  public static final Debug RESOURCE_POOL = new Debug( KalypsoCorePlugin.getDefault(), "/debug/resourcepool" ); //$NON-NLS-1$
 
-  public static final Debug RESOURCE_POOL_KEYS = new Debug( KalypsoCorePlugin.getDefault(), "/debug/resourcepool/keys" );
+  public static final Debug RESOURCE_POOL_KEYS = new Debug( KalypsoCorePlugin.getDefault(), "/debug/resourcepool/keys" ); //$NON-NLS-1$
 
   public static final Debug MAP_MODELL = new Debug( KalypsoCorePlugin.getDefault(), "/debug/mapModell" ); //$NON-NLS-1$
 

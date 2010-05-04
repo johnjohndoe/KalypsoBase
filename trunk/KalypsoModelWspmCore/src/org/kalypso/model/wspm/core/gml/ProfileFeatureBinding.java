@@ -39,7 +39,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 public class ProfileFeatureBinding extends AbstractCachedFeature2 implements IProfileFeature
 {
   // HACK: we define a pseudo qname that simulates a property. We use this property to cache the generated IProfil.
-  private static final QName QNAME_PSEUDO_PROFILE = new QName( "--", "--" );
+  private static final QName QNAME_PSEUDO_PROFILE = new QName( "--", "--" ); //$NON-NLS-1$ //$NON-NLS-2$
 
   private static final FeatureCacheDefinition CACHE_DEFINITION = new FeatureCacheDefinition();
   static

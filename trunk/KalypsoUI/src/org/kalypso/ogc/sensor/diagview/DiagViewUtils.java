@@ -42,6 +42,7 @@ package org.kalypso.ogc.sensor.diagview;
 
 import java.awt.BasicStroke;
 import java.awt.Stroke;
+import java.io.BufferedWriter;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -109,17 +110,17 @@ public class DiagViewUtils
   /**
    * Saves the given template (binding). Closes the stream.
    */
-  public static void saveDiagramTemplateXML( final Obsdiagview xml, final OutputStream outs ) throws JAXBException
+  public static void saveDiagramTemplateXML( final Obsdiagview xml, final BufferedWriter outDiag ) throws JAXBException
   {
     try
     {
       final Marshaller m = JaxbUtilities.createMarshaller( ODT_JC );
       m.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
-      m.marshal( xml, outs );
+      m.marshal( xml, outDiag );
     }
     finally
     {
-      IOUtils.closeQuietly( outs );
+      IOUtils.closeQuietly( outDiag );
     }
   }
 
