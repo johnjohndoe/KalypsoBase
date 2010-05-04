@@ -183,6 +183,8 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
     {
       if( theme.isVisible() )
         invalidateMap();
+
+      updateStatus();
     }
 
     /**
@@ -811,22 +813,28 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
       m_model = modell;
     }
 
-    if( modell == null )
+    if( modell != null )
+      modell.addMapModelListener( m_modellListener );
+
+    invalidateMap();
+
+    updateStatus();
+
+    fireMapModelChanged( oldModel, modell );
+  }
+
+  protected void updateStatus( )
+  {
+    if( m_model == null )
       setStatus( StatusUtilities.createStatus( IStatus.INFO, Messages.getString( "org.kalypso.ogc.gml.map.MapPanel.20" ), null ) ); //$NON-NLS-1$
     else
     {
-      modell.addMapModelListener( m_modellListener );
-
       // We should instead get a status from the model itself
-      if( modell.getThemeSize() == 0 )
+      if( m_model.getThemeSize() == 0 )
         setStatus( StatusUtilities.createStatus( IStatus.INFO, Messages.getString( "org.kalypso.ogc.gml.map.MapPanel.21" ), null ) ); //$NON-NLS-1$
       else
         setStatus( Status.OK_STATUS );
     }
-
-    invalidateMap();
-
-    fireMapModelChanged( oldModel, modell );
   }
 
   /**
@@ -893,7 +901,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
     return m_extentHistory;
   }
 
-  public void setStatus( final IStatus status )
+  private void setStatus( final IStatus status )
   {
     if( StatusUtilities.equals( m_status, status ) )
       return;
@@ -1024,5 +1032,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
 
     if( lastVisibility )
       invalidateMap();
+
+    updateStatus();
   }
 }
