@@ -42,26 +42,15 @@ package org.kalypso.ogc.gml;
 
 import org.jfree.util.ObjectUtils;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
-import org.kalypso.ogc.gml.mapmodel.visitor.KalypsoThemeVisitor;
-import org.kalypsodeegree.model.feature.FeatureVisitor;
 
 /**
  * @author kuch
  */
 public class CascadingThemeHelper
 {
-  public static IKalypsoTheme[] getAllChildThemes( final AbstractCascadingLayerTheme cascadingTheme )
-  {
-    final CascadingThemeVisitor predicate = new CascadingThemeVisitor();
-    final KalypsoThemeVisitor visitor = new KalypsoThemeVisitor( predicate );
-    cascadingTheme.accept( visitor, FeatureVisitor.DEPTH_INFINITE );
-
-    return visitor.getFoundThemes();
-  }
-
   /**
    * Finds Cascading theme with the given name from the map model. Searches only for instances of CascadingKalypsoTheme
-   *
+   * 
    * @param mapModell
    * @param themeName
    * @return CascadingKalypsoTheme, or null if no theme with that name is found
@@ -80,7 +69,7 @@ public class CascadingThemeHelper
   /**
    * Finds Cascading theme with the given name or given theme property from the map model. Searches only for instances
    * of CascadingKalypsoTheme. This code is for old projects, in which the maps didn't have the property set.
-   *
+   * 
    * @param mapModell
    * @param themeName
    * @param themeProperty
@@ -138,7 +127,7 @@ public class CascadingThemeHelper
       {
         final IKalypsoFeatureTheme featureTheme = (IKalypsoFeatureTheme) kalypsoTheme;
         if( ObjectUtils.equal( featureTheme.getFeaturePath(), featurePath ) )
-            return featureTheme;
+          return featureTheme;
       }
     }
     return null;

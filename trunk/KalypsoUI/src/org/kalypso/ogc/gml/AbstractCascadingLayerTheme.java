@@ -179,7 +179,6 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
     m_innerMapModel.accept( visitor, depth_infinite, theme );
   }
 
-
   /**
    * @param theme
    * @see org.kalypso.ogc.gml.mapmodel.IMapModell#activateTheme(org.kalypso.ogc.gml.IKalypsoTheme)
@@ -296,7 +295,7 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
 
   /**
    * Overwritten in order to have correct parent for tree strucutures.
-   *
+   * 
    * @see org.kalypso.ogc.gml.mapmodel.IMapModell#getThemeParent(org.kalypso.ogc.gml.IKalypsoTheme)
    */
   public Object getThemeParent( final IKalypsoTheme theme )
@@ -450,14 +449,6 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
   public void swapThemes( final IKalypsoTheme theme1, final IKalypsoTheme theme2 )
   {
     m_innerMapModel.swapThemes( theme1, theme2 );
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoCascadingTheme#getAllChildFeatures()
-   */
-  public IKalypsoTheme[] getChildThemes( )
-  {
-    return CascadingThemeHelper.getAllChildThemes( this );
   }
 
   /**

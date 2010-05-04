@@ -47,8 +47,7 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.ogc.gml.AbstractCascadingLayerTheme;
-import org.kalypso.ogc.gml.CascadingThemeHelper;
+import org.kalypso.ogc.gml.IKalypsoCascadingTheme;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
@@ -67,7 +66,7 @@ public class QNameFeaturesProvider implements IFeaturesProvider
   /**
    * The qname, which must be substituted.
    */
-  private QName m_qname;
+  private final QName m_qname;
 
   /**
    * The constructor.
@@ -75,7 +74,7 @@ public class QNameFeaturesProvider implements IFeaturesProvider
    * @param qname
    *          The qname, which must be substituted.
    */
-  public QNameFeaturesProvider( QName qname )
+  public QNameFeaturesProvider( final QName qname )
   {
     m_qname = qname;
   }
@@ -83,16 +82,16 @@ public class QNameFeaturesProvider implements IFeaturesProvider
   /**
    * @see org.kalypso.ogc.gml.map.widgets.providers.IFeaturesProvider#getFeatures(org.kalypso.ogc.gml.map.IMapPanel)
    */
-  public EasyFeatureWrapper[] getFeatures( IMapPanel mapPanel )
+  public EasyFeatureWrapper[] getFeatures( final IMapPanel mapPanel )
   {
     /* Get all themes. */
-    IKalypsoTheme[] allThemes = mapPanel.getMapModell().getAllThemes();
+    final IKalypsoTheme[] allThemes = mapPanel.getMapModell().getAllThemes();
 
     /* The list of found features. */
-    List<EasyFeatureWrapper> foundfeatures = new ArrayList<EasyFeatureWrapper>();
+    final List<EasyFeatureWrapper> foundfeatures = new ArrayList<EasyFeatureWrapper>();
 
     /* Check each theme. */
-    for( IKalypsoTheme theme : allThemes )
+    for( final IKalypsoTheme theme : allThemes )
       inspectTheme( foundfeatures, theme );
 
     return foundfeatures.toArray( new EasyFeatureWrapper[foundfeatures.size()] );
@@ -106,7 +105,7 @@ public class QNameFeaturesProvider implements IFeaturesProvider
    * @param theme
    *          A kalypso theme.
    */
-  private void inspectTheme( List<EasyFeatureWrapper> found, IKalypsoTheme theme )
+  private void inspectTheme( final List<EasyFeatureWrapper> found, final IKalypsoTheme theme )
   {
     /* Kalypso feature theme. */
     if( theme instanceof IKalypsoFeatureTheme )
@@ -116,10 +115,11 @@ public class QNameFeaturesProvider implements IFeaturesProvider
     }
 
     /* Abstract cascading theme. */
-    if( theme instanceof AbstractCascadingLayerTheme )
+    if( theme instanceof IKalypsoCascadingTheme )
     {
-      IKalypsoTheme[] themes = CascadingThemeHelper.getAllChildThemes( (AbstractCascadingLayerTheme) theme );
-      for( IKalypsoTheme ct : themes )
+      final IKalypsoCascadingTheme cascadingTheme = (IKalypsoCascadingTheme) theme;
+      final IKalypsoTheme[] themes = cascadingTheme.getAllThemes();
+      for( final IKalypsoTheme ct : themes )
         inspectTheme( found, ct );
 
       return;
@@ -136,17 +136,17 @@ public class QNameFeaturesProvider implements IFeaturesProvider
    * @param theme
    *          A kalypso feature theme.
    */
-  private void handleTheme( List<EasyFeatureWrapper> found, IKalypsoFeatureTheme theme )
+  private void handleTheme( final List<EasyFeatureWrapper> found, final IKalypsoFeatureTheme theme )
   {
     /* Get the workspace. */
-    CommandableWorkspace workspace = theme.getWorkspace();
+    final CommandableWorkspace workspace = theme.getWorkspace();
 
     /* Get all visible features. */
-    FeatureList featureList = theme.getFeatureListVisible( null );
+    final FeatureList featureList = theme.getFeatureListVisible( null );
 
     if( featureList != null )
     {
-      for( Object object : featureList )
+      for( final Object object : featureList )
       {
         Feature feature = null;
         if( object instanceof Feature )
@@ -156,7 +156,7 @@ public class QNameFeaturesProvider implements IFeaturesProvider
         else
           continue;
 
-        IFeatureType targetFeatureType = feature.getFeatureType();
+        final IFeatureType targetFeatureType = feature.getFeatureType();
         if( GMLSchemaUtilities.substitutes( targetFeatureType, m_qname ) )
           found.add( new EasyFeatureWrapper( workspace, feature, featureList.getParentFeature(), featureList.getParentFeatureTypeProperty() ) );
       }

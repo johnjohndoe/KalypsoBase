@@ -45,5 +45,4 @@ package org.kalypso.ogc.gml;
  */
 public interface IKalypsoCascadingTheme extends IKalypsoLayerModell, IKalypsoTheme
 {
-  IKalypsoTheme[] getChildThemes( );
 }

@@ -63,6 +63,6 @@ class CascadingThemeNode extends KalypsoThemeNode<IKalypsoCascadingTheme> implem
   protected Object[] getElementChildren( )
   {
     final IKalypsoCascadingTheme theme = getElement();
-    return theme.getChildThemes();
+    return theme.getAllThemes();
   }
 }
