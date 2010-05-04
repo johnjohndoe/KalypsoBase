@@ -7,15 +7,15 @@ import org.kalypsodeegree.model.feature.Feature;
 
 public interface ICalculationChainMemberEntry extends Feature
 {
-  public final static QName QNAME = new QName( ModelConnectorUrlCatalog.NS_CCHAIN, "Entry" );
+  public final static QName QNAME = new QName( ModelConnectorUrlCatalog.NS_CCHAIN, "Entry" ); //$NON-NLS-1$
 
-  public final static QName QNAME_PROP_KEY = new QName( ModelConnectorUrlCatalog.NS_CCHAIN, "key" );
+  public final static QName QNAME_PROP_KEY = new QName( ModelConnectorUrlCatalog.NS_CCHAIN, "key" ); //$NON-NLS-1$
 
-  public final static QName QNAME_PROP_VALUE = new QName( ModelConnectorUrlCatalog.NS_CCHAIN, "value" );
+  public final static QName QNAME_PROP_VALUE = new QName( ModelConnectorUrlCatalog.NS_CCHAIN, "value" ); //$NON-NLS-1$
 
-  public final static QName QNAME_PROP_IS_RELATIVE_TO_CALC_CASE = new QName( ModelConnectorUrlCatalog.NS_CCHAIN, "isRelativeToCalculationCase" );
+  public final static QName QNAME_PROP_IS_RELATIVE_TO_CALC_CASE = new QName( ModelConnectorUrlCatalog.NS_CCHAIN, "isRelativeToCalculationCase" ); //$NON-NLS-1$
 
-  public final static QName QNAME_PROP_IS_OPTIONAL = new QName( ModelConnectorUrlCatalog.NS_CCHAIN, "isOptional" );
+  public final static QName QNAME_PROP_IS_OPTIONAL = new QName( ModelConnectorUrlCatalog.NS_CCHAIN, "isOptional" ); //$NON-NLS-1$
 
   public void setKey( final String value );
 

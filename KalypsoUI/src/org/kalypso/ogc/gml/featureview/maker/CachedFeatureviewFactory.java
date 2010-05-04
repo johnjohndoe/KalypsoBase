@@ -122,7 +122,7 @@ public class CachedFeatureviewFactory implements IFeatureviewFactory
     if( m_cache.containsKey( qname ) )
       return m_cache.get( qname );
 
-    /* In order to allow substituion, we need to search inside the viewMap */
+    /* In order to allow substitution, we need to search inside the viewMap */
     for( final Map.Entry<QName, FeatureviewType> viewEntry : m_viewMap.entrySet() )
     {
       final QName key = viewEntry.getKey();
@@ -162,8 +162,8 @@ public class CachedFeatureviewFactory implements IFeatureviewFactory
     {
       final Unmarshaller unmarshaller = TemplateUtilitites.createFeatureviewUnmarshaller();
       Object unmarshal = unmarshaller.unmarshal( url );
-      if( unmarshal instanceof JAXBElement )
-        unmarshal = ((JAXBElement) unmarshal).getValue();
+      if( unmarshal instanceof JAXBElement< ? > )
+        unmarshal = ((JAXBElement< ? >) unmarshal).getValue();
 
       if( unmarshal instanceof FeatureviewType )
         addView( (FeatureviewType) unmarshal );

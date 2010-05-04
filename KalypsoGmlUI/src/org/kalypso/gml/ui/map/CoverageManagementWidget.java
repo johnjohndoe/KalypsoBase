@@ -823,7 +823,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     {
       public IStatus execute( final IProgressMonitor monitor ) throws CoreException
       {
-        monitor.beginTask( "Saving Styles", styles.length );
+        monitor.beginTask( Messages.getString("org.kalypso.gml.ui.map.CoverageManagementWidget.5"), styles.length ); //$NON-NLS-1$
 
         for( final IKalypsoStyle style : styles )
         {

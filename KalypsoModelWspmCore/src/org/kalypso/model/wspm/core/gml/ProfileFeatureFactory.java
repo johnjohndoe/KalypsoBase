@@ -168,8 +168,8 @@ public class ProfileFeatureFactory implements IWspmConstants
       }
 
       /* Always to set the building, even if null */
-      //At the moment, we do not look into the building. Always cange the property if we have any building
-      final List<?> oldBuildingList = (List< ? >) binding.getProperty( buildingRT );
+      // At the moment, we do not look into the building. Always cange the property if we have any building
+      final List< ? > oldBuildingList = (List< ? >) binding.getProperty( buildingRT );
       if( !oldBuildingList.isEmpty() || !buildingList.isEmpty() )
         changes.add( new FeatureChange( binding, buildingRT, buildingList ) );
     }
@@ -200,6 +200,8 @@ public class ProfileFeatureFactory implements IWspmConstants
       /* name and description */
       final String name = profile.getName();
       final String description = profile.getComment();
+      final String srs = ObjectUtils.toString( profile.getProperty( IWspmConstants.PROFIL_PROPERTY_CRS ) );
+      changes.add( new FeatureChange( targetFeature, featureType.getProperty( ProfileFeatureBinding.QNAME_SRS ), srs ) );
 
       final List<String> namelist = new ArrayList<String>();
       namelist.add( name );
@@ -279,7 +281,7 @@ public class ProfileFeatureFactory implements IWspmConstants
   {
     final List<String> namelist = new ArrayList<String>();
     namelist.add( profileName );
-  
+
     return new FeatureChange( feature, Feature.QN_NAME, namelist );
   }
 
@@ -302,10 +304,10 @@ public class ProfileFeatureFactory implements IWspmConstants
       final GMLWorkspace workspace = feature.getWorkspace();
       final IRelationType rdParentRelation = (IRelationType) feature.getFeatureType().getProperty( ObservationFeatureFactory.OM_RESULTDEFINITION );
       final Feature rd = workspace.createFeature( feature, rdParentRelation, workspace.getGMLSchema().getFeatureType( ObservationFeatureFactory.SWE_RECORDDEFINITIONTYPE ) );
-  
+
       return new FeatureChange( feature, rdParentRelation, rd );
     }
-  
+
     return null;
   }
 

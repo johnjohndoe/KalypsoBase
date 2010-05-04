@@ -666,7 +666,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
     final KeyPoolListener keyPoolListener = getKeyPoolListener( id );
     if( keyPoolListener == null )
     {
-      final String msg = String.format( "Unknown data id '%s'", id );
+      final String msg = String.format( "Unknown data id '%s'", id ); //$NON-NLS-1$
       throw new IllegalArgumentException( msg );
     }
 

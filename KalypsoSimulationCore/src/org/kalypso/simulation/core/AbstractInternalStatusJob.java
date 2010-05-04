@@ -9,7 +9,7 @@ public abstract class AbstractInternalStatusJob
    * Abstract class used by classes extending Job, for easier status manipulation.
    */
 
-  private IStatus m_status = StatusUtilities.createInfoStatus( "Init", new Object[0] );
+  private IStatus m_status = StatusUtilities.createInfoStatus( "Init", new Object[0] ); //$NON-NLS-1$
 
   protected static enum STATUS
   {
