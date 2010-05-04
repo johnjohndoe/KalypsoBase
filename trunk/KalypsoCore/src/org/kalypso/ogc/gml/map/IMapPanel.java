@@ -103,7 +103,7 @@ public interface IMapPanel extends ISelectionProvider
 
   /**
    * Set the bounding box of the panel.
-   *
+   * 
    * @param wishBBox
    *          The new extent, will be adapted so it fits into the current size of the panel. Call
    *          {@link #getBoundingBox()} to get the adjusted extent.
@@ -121,8 +121,6 @@ public interface IMapPanel extends ISelectionProvider
   void setSelection( final ISelection selection );
 
   ExtentHistory getExtentHistory( );
-
-  void setStatus( final IStatus status );
 
   IStatus getStatus( );
 
