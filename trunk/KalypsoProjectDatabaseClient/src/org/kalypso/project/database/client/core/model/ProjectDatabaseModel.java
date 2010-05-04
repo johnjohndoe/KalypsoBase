@@ -176,7 +176,8 @@ public class ProjectDatabaseModel implements IProjectDatabaseModel, ILocalWorksp
 
   }
 
-  public IProjectHandler[] getProjects( )
+  @Override
+  public synchronized IProjectHandler[] getProjects( )
   {
     if( m_projects == null )
     {
