@@ -43,6 +43,7 @@ package org.kalypso.ogc.gml.map.widgets;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
@@ -140,10 +141,28 @@ public class ThemeInfoWidget extends AbstractThemeInfoWidget
     final Object[] selectedElements = sel.toArray();
     for( final Object object : selectedElements )
     {
-      if( object instanceof IKalypsoTheme )
-        themes.add( (IKalypsoTheme) object );
+      final IKalypsoTheme theme = findTheme( object );
+      if( theme != null )
+        themes.add( theme );
     }
 
     setThemes( themes.toArray( new IKalypsoTheme[themes.size()] ) );
+  }
+
+  private IKalypsoTheme findTheme( final Object object )
+  {
+    if( object instanceof IKalypsoTheme )
+      return (IKalypsoTheme) object;
+
+    if( object instanceof IAdaptable )
+    {
+      final IAdaptable adapable = (IAdaptable) object;
+      final IKalypsoTheme theme = (IKalypsoTheme) adapable.getAdapter( IKalypsoTheme.class );
+      if( theme != null )
+        return theme;
+    }
+
+    // other checks needed?
+    return null;
   }
 }
