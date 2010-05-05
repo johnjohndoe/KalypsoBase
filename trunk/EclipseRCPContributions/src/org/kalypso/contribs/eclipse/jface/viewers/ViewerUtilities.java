@@ -92,27 +92,27 @@ public final class ViewerUtilities
    */
   public static void setInput( final Viewer viewer, final Object input, final boolean async )
   {
-    if( viewer != null )
-    {
-      final Control control = viewer.getControl();
-      if( control != null && !control.isDisposed() )
-      {
-        final Runnable runner = new Runnable()
-        {
-          public void run( )
-          {
-            if( !viewer.getControl().isDisposed() )
-              viewer.setInput( input );
-          }
-        };
-        final Display display = control.getDisplay();
+    if( viewer == null )
+      return;
 
-        if( async )
-          display.asyncExec( runner );
-        else
-          display.syncExec( runner );
+    final Control control = viewer.getControl();
+    if( control == null || control.isDisposed() )
+      return;
+
+    final Runnable runner = new Runnable()
+    {
+      public void run( )
+      {
+        if( !viewer.getControl().isDisposed() )
+          viewer.setInput( input );
       }
-    }
+    };
+
+    final Display display = control.getDisplay();
+    if( async )
+      display.asyncExec( runner );
+    else
+      display.syncExec( runner );
   }
 
   /**
