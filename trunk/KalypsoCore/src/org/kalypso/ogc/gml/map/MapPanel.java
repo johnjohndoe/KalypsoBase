@@ -88,8 +88,8 @@ import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.KalypsoCascadingThemeSelection;
 import org.kalypso.ogc.gml.KalypsoFeatureThemeSelection;
 import org.kalypso.ogc.gml.map.layer.BufferedRescaleMapLayer;
+import org.kalypso.ogc.gml.map.layer.CacscadingMapLayer;
 import org.kalypso.ogc.gml.map.layer.DirectMapLayer;
-import org.kalypso.ogc.gml.map.layer.NullMapLayer;
 import org.kalypso.ogc.gml.map.layer.SelectionMapLayer;
 import org.kalypso.ogc.gml.map.listeners.IMapPanelListener;
 import org.kalypso.ogc.gml.map.listeners.IMapPanelPaintListener;
@@ -990,7 +990,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
       // TODO: move into factory method; there should be an extension-point...
       final IMapLayer newLayer;
       if( theme instanceof IKalypsoCascadingTheme )
-        newLayer = new NullMapLayer( this, theme );
+        newLayer = new CacscadingMapLayer( this, theme );
       else if( theme instanceof IKalypsoFeatureTheme )
       {
         // REMARK: un-comment to change to different rendering strategy. I like

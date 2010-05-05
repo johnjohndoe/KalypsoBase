@@ -50,7 +50,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
  * This implementation does nothing i.e. the theme does not get painted.
- *
+ * 
  * @author Gernot Belger
  */
 public class NullMapLayer extends AbstractMapLayer
