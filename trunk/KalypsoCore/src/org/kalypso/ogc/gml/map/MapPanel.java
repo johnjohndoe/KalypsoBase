@@ -86,7 +86,6 @@ import org.kalypso.ogc.gml.IKalypsoCascadingTheme;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.KalypsoCascadingThemeSelection;
-import org.kalypso.ogc.gml.KalypsoFeatureThemeSelection;
 import org.kalypso.ogc.gml.map.layer.BufferedRescaleMapLayer;
 import org.kalypso.ogc.gml.map.layer.CacscadingMapLayer;
 import org.kalypso.ogc.gml.map.layer.DirectMapLayer;
@@ -507,8 +506,9 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
 
     final IKalypsoTheme activeTheme = mapModell.getActiveTheme();
     if( activeTheme instanceof IKalypsoFeatureTheme )
-      return new KalypsoFeatureThemeSelection( m_selectionManager.toList(), (IKalypsoFeatureTheme) activeTheme, m_selectionManager, null, null );
-    else if( activeTheme instanceof IKalypsoCascadingTheme )
+      return (ISelection) activeTheme.getAdapter( IFeatureSelection.class );
+
+    if( activeTheme instanceof IKalypsoCascadingTheme )
       return new KalypsoCascadingThemeSelection( m_selectionManager.toList(), (IKalypsoCascadingTheme) activeTheme, m_selectionManager, null, null );
 
     return StructuredSelection.EMPTY;

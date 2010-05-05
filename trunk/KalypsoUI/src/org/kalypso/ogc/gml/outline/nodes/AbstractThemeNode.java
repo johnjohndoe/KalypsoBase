@@ -450,7 +450,9 @@ abstract class AbstractThemeNode<T> implements IThemeNode
     if( element instanceof IAdaptable )
     {
       final IAdaptable adaptable = (IAdaptable) element;
-      return adaptable.getAdapter( adapter );
+      final Object adapted = adaptable.getAdapter( adapter );
+      if( adapted != null )
+        return adapted;
     }
 
     return null;

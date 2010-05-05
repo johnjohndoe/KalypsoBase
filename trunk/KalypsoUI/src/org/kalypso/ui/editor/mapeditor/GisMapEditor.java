@@ -70,7 +70,9 @@ public class GisMapEditor extends AbstractMapPart implements IEditorPart
       final GisMapOutlinePage page = new GisMapOutlinePage( getCommandTarget() );
       page.addActionURI( OUTLINE_URI_TOOLBAR );
       page.addActionURI( OUTLINE_URI_MENU );
+      // TODO: check we do not need the other popup-uri any more and should probably remove it
       page.addActionURI( OUTLINE_URI_POPUP );
+      page.addActionURI( "popup:org.eclipse.ui.popup.any" );
 
       page.setMapPanel( getMapPanel() );
       return page;

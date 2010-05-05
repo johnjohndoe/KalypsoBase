@@ -517,7 +517,7 @@
 	</extension>
 
 	<extension point="org.eclipse.ui.menus">
-   		<menuContribution locationURI="popup:org.kalypso.map.outline.GisMapEditor?after=additions">
+   		<menuContribution locationURI="popup:org.eclipse.ui.popup.any?after=additions">
 			<command commandId="org.kalypso.ui.map.outline.command.WspmCreateDevider" style="push">
 				<visibleWhen checkEnabled="false">
 					<reference definitionId="org.kalypso.model.wspm.ui.definition.oneProfileThemeSelected"/>
@@ -579,26 +579,6 @@
     </menuContribution>
     <menuContribution
           locationURI="popup:org.eclipse.ui.popup.any?after=additions">
-       <menu
-             icon="icons/elcl16/import_profiles.gif"
-             id="org.kalypso.model.wspm.ui.profileImport"
-             label="Import"
-             mnemonic="i">
-          <separator
-                name="additions"
-                visible="false">
-          </separator>
-       </menu>
-       <menu
-             icon="icons/elcl16/export_profiles.gif"
-             id="org.kalypso.model.wspm.ui.profileExport"
-             label="Export"
-             mnemonic="e">
-          <separator
-                name="additions"
-                visible="false">
-          </separator>
-       </menu>
        <menu
              icon="icons/etool16/profileChange.gif"
              id="org.kalypso.model.wspm.ui.profileChange"

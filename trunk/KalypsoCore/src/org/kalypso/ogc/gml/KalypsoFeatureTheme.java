@@ -73,6 +73,7 @@ import org.kalypso.ogc.gml.painter.FeatureThemePaintable;
 import org.kalypso.ogc.gml.painter.IStylePaintable;
 import org.kalypso.ogc.gml.painter.IStylePainter;
 import org.kalypso.ogc.gml.painter.StylePainterFactory;
+import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
@@ -505,8 +506,17 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
   @Override
   public Object getAdapter( final Class adapter )
   {
+    if( adapter == IFeatureSelection.class )
+      return new KalypsoFeatureThemeSelection( m_selectionManager.toList(), this, m_selectionManager, null, null );
+
     if( adapter == IKalypsoThemeInfo.class )
       return createThemeInfo();
+
+    if( adapter == CommandableWorkspace.class )
+      return m_workspace;
+
+    if( adapter == FeatureList.class )
+      return m_featureList;
 
     return super.getAdapter( adapter );
   }
@@ -533,7 +543,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     return new FeatureThemeInfo( this, new Properties() );
   }
 
- private String getInfoId( )
+  private String getInfoId( )
   {
     final String infoId = getProperty( IKalypsoTheme.PROPERTY_THEME_INFO_ID, null );
     if( infoId == null )
