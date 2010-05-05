@@ -222,7 +222,7 @@ public class CascadingKalypsoTheme extends AbstractCascadingLayerTheme
           ((IKalypsoSaveableTheme) theme).saveFeatures( monitor );
   }
 
-  protected synchronized IStatus loadJob( final IProgressMonitor monitor, final IFile file )
+  protected synchronized IStatus loadJob( final IFile file )
   {
     InputStream contents = null;
     try
@@ -238,12 +238,12 @@ public class CascadingKalypsoTheme extends AbstractCascadingLayerTheme
       }
 
       getInnerMapModel().createFromTemplate( innerGisView );
-      fireContextChanged();
+      fireStatusChanged( this );
     }
     catch( final Throwable e )
     {
-      String msessage = Messages.getString( "org.kalypso.ogc.gml.CascadingKalypsoTheme.6" ,file.getName() ); //$NON-NLS-1$ 
-      final IStatus status = StatusUtilities.statusFromThrowable( e, msessage ); 
+      final String msessage = Messages.getString( "org.kalypso.ogc.gml.CascadingKalypsoTheme.6", file.getName() ); //$NON-NLS-1$ 
+      final IStatus status = StatusUtilities.statusFromThrowable( e, msessage );
       setStatus( status );
       return status;
     }
@@ -264,20 +264,11 @@ public class CascadingKalypsoTheme extends AbstractCascadingLayerTheme
       @Override
       public IStatus runInUIThread( final IProgressMonitor monitor )
       {
-        return loadJob( monitor, file );
+        return loadJob( file );
       }
     };
     job.setRule( m_file );
     job.schedule();
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#fireContextChanged()
-   */
-  @Override
-  protected void fireContextChanged( )
-  {
-    super.fireContextChanged();
   }
 
   protected void handleResourceChanged( final IResourceChangeEvent event )

@@ -78,7 +78,7 @@ public class KalypsoThemeNode<T extends IKalypsoTheme> extends AbstractThemeNode
     @Override
     public void statusChanged( final IKalypsoTheme source )
     {
-      updateViewer( new IThemeNode[] { KalypsoThemeNode.this } );
+      handleStatusChanged();
     }
 
     @Override
@@ -97,6 +97,11 @@ public class KalypsoThemeNode<T extends IKalypsoTheme> extends AbstractThemeNode
     super( parent, theme );
 
     theme.addKalypsoThemeListener( m_themeListener );
+  }
+
+  protected void handleStatusChanged( )
+  {
+    updateViewer( new IThemeNode[] { KalypsoThemeNode.this } );
   }
 
   @Override
@@ -276,10 +281,10 @@ public class KalypsoThemeNode<T extends IKalypsoTheme> extends AbstractThemeNode
   }
 
   /**
-   * @see org.kalypso.contribs.eclipse.jface.viewers.ITooltipProvider#getTooltip(java.lang.Object)
+   * @see org.kalypso.ogc.gml.outline.nodes.AbstractThemeNode#getDescription()
    */
   @Override
-  public String getTooltip( final Object element )
+  public String getDescription( )
   {
     final IKalypsoTheme theme = getElement();
 

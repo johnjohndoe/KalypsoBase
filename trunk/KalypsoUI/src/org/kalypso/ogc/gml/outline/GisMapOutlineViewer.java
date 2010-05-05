@@ -47,21 +47,12 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.MouseMoveListener;
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.GC;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Tree;
-import org.eclipse.swt.widgets.TreeItem;
-import org.eclipse.ui.internal.util.Util;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
-import org.kalypso.contribs.eclipse.jface.viewers.ITooltipProvider;
+import org.kalypso.contribs.eclipse.jface.viewers.ColumnViewerTooltipListener;
+import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.outline.nodes.IThemeNode;
 import org.kalypso.ogc.gml.outline.nodes.NodeFactory;
@@ -126,54 +117,26 @@ public class GisMapOutlineViewer implements ISelectionProvider, ICommandTarget
       }
     } );
 
-    final Tree tree = m_viewer.getTree();
-    tree.addMouseMoveListener( new MouseMoveListener()
-    {
-      public void mouseMove( final MouseEvent e )
-      {
-        final TreeItem item = tree.getItem( new Point( e.x, e.y ) );
-        final String text;
-        if( item == null )
-          text = null; // remove tooltip
-        else
-        {
-          final Object data = item.getData();
-          final ITooltipProvider ttProvider = (ITooltipProvider) Util.getAdapter( data, ITooltipProvider.class );
-          text = ttProvider == null ? null : ttProvider.getTooltip( data );
-        }
-        tree.setToolTipText( text );
-      }
-    } );
+    ColumnViewerTooltipListener.hookViewer( viewer, true );
 
-    /* Allow the tree item to draw themselves. */
-    tree.addListener( SWT.EraseItem, new Listener()
-    {
-      public void handleEvent( final Event event )
-      {
-        final Composite c = (Composite) event.widget;
-
-        if( (event.detail & SWT.SELECTED) == 0 )
-          return; /* item not selected */
-
-        final Color leftColor = c.getDisplay().getSystemColor( SWT.COLOR_TITLE_BACKGROUND_GRADIENT );
-        final Color rightColor = c.getDisplay().getSystemColor( SWT.COLOR_WHITE );
-        final Color fontColor = c.getDisplay().getSystemColor( SWT.COLOR_BLACK );
-
-        final GC gc = event.gc;
-        final int clientWidth = event.width;
-
-        final Color oldForeground = gc.getForeground();
-        final Color oldBackground = gc.getBackground();
-        gc.setForeground( leftColor );
-        gc.setBackground( rightColor );
-        gc.fillGradientRectangle( 0, event.y, clientWidth, event.height, false );
-        gc.setForeground( oldForeground );
-        gc.setBackground( oldBackground );
-        event.detail &= ~SWT.SELECTED;
-
-        gc.setForeground( fontColor );
-      }
-    } );
+// final Tree tree = m_viewer.getTree();
+// tree.addMouseMoveListener( new MouseMoveListener()
+// {
+// public void mouseMove( final MouseEvent e )
+// {
+// final TreeItem item = tree.getItem( new Point( e.x, e.y ) );
+// final String text;
+// if( item == null )
+// text = null; // remove tooltip
+// else
+// {
+// final Object data = item.getData();
+// final ITooltipProvider ttProvider = (ITooltipProvider) Util.getAdapter( data, ITooltipProvider.class );
+// text = ttProvider == null ? null : ttProvider.getTooltip( data );
+// }
+// tree.setToolTipText( text );
+// }
+// } );
 
     setMapModel( m_mapModell );
   }
@@ -200,17 +163,7 @@ public class GisMapOutlineViewer implements ISelectionProvider, ICommandTarget
     m_input = model == null ? null : NodeFactory.createRootNode( model, m_viewer );
 
     final CheckboxTreeViewer viewer = m_viewer;
-    if( viewer != null && !viewer.getControl().isDisposed() )
-    {
-      viewer.getControl().getDisplay().asyncExec( new Runnable()
-      {
-        public void run( )
-        {
-          if( !viewer.getControl().isDisposed() )
-            viewer.setInput( m_input );
-        }
-      } );
-    }
+    ViewerUtilities.setInput( viewer, m_input, true );
   }
 
   /**

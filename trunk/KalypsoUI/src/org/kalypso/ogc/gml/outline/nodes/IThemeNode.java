@@ -45,17 +45,16 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ICheckStateProvider;
 import org.eclipse.jface.viewers.IFontProvider;
 import org.kalypso.commons.command.ICommand;
-import org.kalypso.contribs.eclipse.jface.viewers.ITooltipProvider;
 
 /**
  * @author Gernot Belger
  */
-public interface IThemeNode extends ITooltipProvider, ICheckStateProvider, IFontProvider, ILegendProvider, IAdaptable
+public interface IThemeNode extends ICheckStateProvider, IFontProvider, ILegendProvider, IAdaptable
 {
   void dispose( );
 
   void clear( );
-  
+
   Object getElement( );
 
   // TREE STUFF
@@ -73,8 +72,13 @@ public interface IThemeNode extends ITooltipProvider, ICheckStateProvider, IFont
 
   String getLabel( );
 
+  String getDescription( );
+
   // HELPER STUFF: TODO: move into own interfaces
   String resolveI18nString( String text );
 
   ICommand setVisible( boolean visible );
+
+  boolean isCompactable( );
+
 }

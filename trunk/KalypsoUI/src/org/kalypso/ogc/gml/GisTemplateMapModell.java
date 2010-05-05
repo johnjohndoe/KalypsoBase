@@ -101,7 +101,7 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
 
   /**
    * Replaces layers based on Gismapview template. Resolves cascading themes if necessary.
-   *
+   * 
    * @throws CoreException
    *           if a theme in the {@link Gismapview} cannot be loaded.
    */
@@ -205,7 +205,7 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
 
     final IKalypsoThemeFactory themeFactory = ThemeFactoryExtension.getThemeFactory( linktype );
     if( themeFactory == null )
-      throw new NotImplementedException(  Messages.getString("org.kalypso.ogc.gml.GisTemplateMapModell.1", layerName.getValue(), linktype ) ); //$NON-NLS-1$
+      throw new NotImplementedException( Messages.getString( "org.kalypso.ogc.gml.GisTemplateMapModell.1", layerName.getValue(), linktype ) ); //$NON-NLS-1$
 
     final IKalypsoTheme theme = themeFactory.createTheme( layerName, layerType, context, this, m_selectionManager );
     if( theme instanceof AbstractKalypsoTheme )
