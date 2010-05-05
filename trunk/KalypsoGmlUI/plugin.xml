@@ -108,8 +108,12 @@
       </themeInfo>
    </extension>
 	<extension point="org.eclipse.ui.menus">
-		<menuContribution locationURI="popup:org.kalypso.ui.editor.GmlEditor">
-			<menu id="imports" label="%menuContribution.menu.imports.label">
+		<menuContribution locationURI="popup:org.eclipse.ui.popup.any?after=additions">
+			<menu
+         icon="icons/obj16/import.gif"
+         id="org.kalypso.gml.ui.imports"
+         label="%menuContribution.menu.imports.label"
+         mnemonic="i">
 				<command commandId="org.kalypso.gml.ui.importGridCommand">
 					<visibleWhen checkEnabled="false">
 						<with variable="selection">
@@ -120,8 +124,16 @@
 						</with>
 					</visibleWhen>
 				</command>
+    <separator
+          name="additions"
+          visible="false">
+    </separator>
 			</menu>
-			<menu id="exports" label="%menuContribution.menu.exports.label">
+			<menu
+         icon="icons/obj16/export.gif"
+         id="org.kalypso.gml.ui.exports"
+         label="%menuContribution.menu.exports.label"
+         mnemonic="e">
 				<command commandId="org.kalypso.gml.ui.exportGridCommand">
 					<visibleWhen checkEnabled="false">
 						<with variable="selection">
@@ -132,6 +144,10 @@
 						</with>
 					</visibleWhen>
 				</command>
+    <separator
+          name="additions"
+          visible="false">
+    </separator>
 			</menu>
 		</menuContribution>
 		<menuContribution locationURI="toolbar:org.kalypso.ui.menus.mapToolbar?before=widgetAdditions">
