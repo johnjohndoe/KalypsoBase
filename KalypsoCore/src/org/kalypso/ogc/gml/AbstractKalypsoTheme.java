@@ -253,6 +253,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
    */
   protected void fireRepaintRequested( final GM_Envelope invalidExtent )
   {
+    final IKalypsoTheme theme = AbstractKalypsoTheme.this;
     acceptListenersRunnable( new IListenerRunnable()
     {
       public void visit( final IKalypsoThemeListener l )
@@ -260,7 +261,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
         if( l == null )
           return;
 
-        l.repaintRequested( AbstractKalypsoTheme.this, invalidExtent );
+        l.repaintRequested( theme, invalidExtent );
       }
     } );
   }
