@@ -496,24 +496,6 @@
 			<separator name="additions" visible="true"/>
 		</menuContribution>
 
-		<menuContribution locationURI="popup:org.kalypso.map.outline.GisMapEditor">
-			<command commandId="org.kalypso.ui.map.outline.command.NodeProperties" style="push"/>
-			<!--
-		    <command commandId="org.kalypso.ui.map.outline.command.RemoveNode" style="push"/>
-			<menu label="New" mnemonic="s" id="org.kalypso.map.outline.GisMapEditor.new">
-			    <command commandId="org.kalypso.ui.map.outline.command.AddNode" style="push"/>
-			</menu>
-			-->
-			<menu label="Export" mnemonic="e" id="org.kalypso.map.outline.GisMapEditor.export">
-				<command commandId="org.kalypso.ui.views.outline.ShapeExport" style="push"/>
-				<command commandId="org.kalypso.ui.views.outline.GMLExport" style="push"/>
-				<command commandId="org.kalypso.ui.views.outline.LegendExport" style="push"/>
-				<command commandId="org.kalypso.ui.views.outline.SldExport" style="push"/>
-				<command commandId="org.kalypso.ui.views.outline.HMOExport" style="push"/>
-			</menu>
-			<separator name="additions" visible="false"/>
-		</menuContribution>
-
 		<menuContribution locationURI="menu:org.kalypso.map.outline.GisMapEditor">
 			<menu label="View" mnemonic="v" id="org.kalypso.map.outline.GisMapEditor.menu.view">
 				<separator name="outline" visible="false"/>
@@ -522,6 +504,44 @@
 			</menu>
 			<separator name="additions" visible="false"/>
 		</menuContribution>
+  <menuContribution
+        locationURI="popup:org.kalypso.gml.ui.exports?after=additions">
+        <command
+              commandId="org.kalypso.ui.views.outline.ShapeExport"
+              style="push">
+           <visibleWhen
+                 checkEnabled="true">
+           </visibleWhen>
+        </command>
+        <command
+              commandId="org.kalypso.ui.views.outline.GMLExport"
+              style="push">
+           <visibleWhen
+                 checkEnabled="true">
+           </visibleWhen>
+        </command>
+        <command
+              commandId="org.kalypso.ui.views.outline.LegendExport"
+              style="push">
+           <visibleWhen
+                 checkEnabled="true">
+           </visibleWhen>
+        </command>
+        <command
+              commandId="org.kalypso.ui.views.outline.SldExport"
+              style="push">
+           <visibleWhen
+                 checkEnabled="true">
+           </visibleWhen>
+        </command>
+        <command
+              commandId="org.kalypso.ui.views.outline.HMOExport"
+              style="push">
+           <visibleWhen
+                 checkEnabled="true">
+           </visibleWhen>
+        </command>
+  </menuContribution>
 	</extension>
 	
 	<!-- Map-View-Outline: tool/menu-items for standard Map-View-Outline -->
@@ -610,11 +630,11 @@
 		<image commandId="org.kalypso.ui.map.outline.command.AddNode" icon="icons/full/elcl16/nodeAdd.gif" />
 		<image commandId="org.kalypso.ui.map.outline.command.RemoveNode" icon="icons/full/elcl16/nodeRemove.gif" />
 
-		<image commandId="org.kalypso.ui.views.outline.ShapeExport" icon="icons/full/obj16/exportGml2Shp.gif" />
-		<image commandId="org.kalypso.ui.views.outline.GMLExport" icon="icons/full/obj16/exportGml2Shp.gif" />
-		<image commandId="org.kalypso.ui.views.outline.LegendExport" icon="icons/full/obj16/exportGml2Shp.gif" />
-		<image commandId="org.kalypso.ui.views.outline.SldExport" icon="icons/full/obj16/exportGml2Shp.gif" />
-		<image commandId="org.kalypso.ui.views.outline.HMOExport" icon="icons/full/obj16/exportGml2Shp.gif" />
+		<image commandId="org.kalypso.ui.views.outline.ShapeExport" icon="icons/full/obj16/exportShp.gif" />
+		<image commandId="org.kalypso.ui.views.outline.GMLExport" icon="icons/full/obj16/exportGml.gif" />
+		<image commandId="org.kalypso.ui.views.outline.LegendExport" icon="icons/full/obj16/exportLegend.gif" />
+		<image commandId="org.kalypso.ui.views.outline.SldExport" icon="icons/full/obj16/exportSld.gif" />
+		<image commandId="org.kalypso.ui.views.outline.HMOExport" icon="icons/full/obj16/exportHmo.gif" />
 	</extension>
 	
 	<extension id="org.kalypso.ui.repositoryContainerCommands" name="Repository Container Commands" point="org.eclipse.ui.commands">

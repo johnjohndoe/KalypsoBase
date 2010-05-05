@@ -43,7 +43,7 @@ public interface IFeatureSelection extends IStructuredSelection
    * @param feature
    *          Must be an element of this selection
    */
-  public CommandableWorkspace getWorkspace( final Feature feature );
+  CommandableWorkspace getWorkspace( Feature feature );
 
   /**
    * TODO: remove this method from the interface, it is not needed anymore
@@ -51,27 +51,28 @@ public interface IFeatureSelection extends IStructuredSelection
    * @param feature
    *          Must be an element of this selection
    */
-  public Feature getParentFeature( final Feature feature );
+  Feature getParentFeature( Feature feature );
 
   /**
-   * Returns the property of the parent feature of the given feature, for which the given feature is the value (maybe inside a list).
+   * Returns the property of the parent feature of the given feature, for which the given feature is the value (maybe
+   * inside a list).
    * 
    * @param feature
    *          Must be an element of this selection
    */
-  public IRelationType getParentFeatureProperty( final Feature feature );
+  IRelationType getParentFeatureProperty( Feature feature );
 
-  /** Extracs all features of this selection together with each parent and workspace. */
-  public EasyFeatureWrapper[] getAllFeatures( );
+  /** Extracts all features of this selection together with each parent and workspace. */
+  EasyFeatureWrapper[] getAllFeatures( );
 
-  public IFeatureSelectionManager getSelectionManager( );
+  IFeatureSelectionManager getSelectionManager( );
 
   /** In addition to the normal selection, one feature may have the focus. */
-  public Feature getFocusedFeature( );
+  Feature getFocusedFeature( );
 
   /**
    * This is the focused property of the focused feature. This is for example used in the table, where each cell
    * represents a property of one feature.
    */
-  public IPropertyType getFocusedProperty( );
+  IPropertyType getFocusedProperty( );
 }

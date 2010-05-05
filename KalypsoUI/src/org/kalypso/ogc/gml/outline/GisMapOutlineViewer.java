@@ -64,7 +64,6 @@ import org.kalypso.util.command.JobExclusiveCommandTarget;
 /**
  * @author Gernot Belger
  */
-@SuppressWarnings("restriction")
 public class GisMapOutlineViewer implements ISelectionProvider, ICommandTarget
 {
   private final ThemeNodeContentProvider m_contentProvider;

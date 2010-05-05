@@ -45,7 +45,9 @@ import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
 
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.IProfileSelectionProvider;
@@ -62,52 +64,81 @@ import org.kalypsodeegree.model.feature.FeatureList;
  */
 public class ProfileSelection
 {
-  private final IFeatureSelection m_featureSelection;
-
   private final Collection<IProfileFeature> m_foundProfiles = new LinkedHashSet<IProfileFeature>();
 
   private final Collection<IProfileFeature> m_selectedProfiles = new LinkedHashSet<IProfileFeature>();
 
-  private final CommandableWorkspace m_workspace;
+  private CommandableWorkspace m_workspace;
 
   private Feature m_container = null;
 
+  private final ISelection m_selection;
+
   public ProfileSelection( final ISelection selection )
   {
-    m_featureSelection = selection instanceof IFeatureSelection ? (IFeatureSelection) selection : null;
-    m_workspace = findProfiles();
+    m_selection = selection;
+    findProfiles();
   }
 
-  private CommandableWorkspace findProfiles( )
+  private void findProfiles( )
   {
-    if( m_featureSelection == null )
-      return null;
+    if( !(m_selection instanceof IStructuredSelection) )
+      return;
 
-    final List< ? > items = m_featureSelection.toList();
+    final List< ? > items = ((IStructuredSelection) m_selection).toList();
     for( final Object item : items )
       addItem( item );
-
-    if( m_foundProfiles.size() > 0 )
-    {
-      final IProfileFeature firstProfile = m_foundProfiles.iterator().next();
-      return m_featureSelection.getWorkspace( firstProfile );
-    }
-
-    return null;
   }
 
   private void addItem( final Object item )
   {
-    if( item instanceof FeatureAssociationTypeElement )
-      addFeatureAssociation( (FeatureAssociationTypeElement) item );
-    else if( item instanceof IProfileFeature )
-      addProfileFeature( (IProfileFeature) item );
-    else if( item instanceof IProfileSelectionProvider )
+    if( m_workspace == null )
+      m_workspace = getAs( item, CommandableWorkspace.class );
+
+    final FeatureList featureList = getAs( item, FeatureList.class );
+    if( featureList != null )
     {
-      if( item instanceof Feature )
-        m_container = (Feature) item;
-      addProfileSelectionProvider( (IProfileSelectionProvider) item, null );
+      addFeatureList( featureList );
+      return;
     }
+
+    final FeatureAssociationTypeElement fate = getAs( item, FeatureAssociationTypeElement.class );
+    if( fate != null )
+    {
+      addFeatureAssociation( (FeatureAssociationTypeElement) item );
+      return;
+    }
+
+    final IProfileFeature profileFeature = getAs( item, IProfileFeature.class );
+    if( profileFeature != null )
+    {
+      addProfileFeature( (IProfileFeature) item );
+      return;
+    }
+
+    final IProfileSelectionProvider profileSelection = getAs( item, IProfileSelectionProvider.class );
+    if( profileSelection != null )
+    {
+      m_container = getAs( item, Feature.class );
+      addProfileSelectionProvider( profileSelection, null );
+      return;
+    }
+  }
+
+  private <T> T getAs( final Object item, final Class<T> type )
+  {
+    if( type.isInstance( item ) )
+      return type.cast( item );
+
+    if( item instanceof IAdaptable )
+    {
+      final IAdaptable adaptable = (IAdaptable) item;
+      final Object adapter = adaptable.getAdapter( type );
+      if( type.isInstance( adapter ) )
+        return type.cast( adapter );
+    }
+
+    return null;
   }
 
   private void addProfileFeature( final IProfileFeature profile )
@@ -123,26 +154,54 @@ public class ProfileSelection
       for( final Object sister : sisters )
       {
         if( sister instanceof IProfileFeature )
-          m_foundProfiles.add( (IProfileFeature) sister );
+          addProfile( (IProfileFeature) sister );
       }
     }
+  }
+
+  private void addProfile( final IProfileFeature... profiles )
+  {
+    m_foundProfiles.addAll( Arrays.asList( profiles ) );
+
+    /* Set the first commandable workspace we find */
+    for( final IProfileFeature profile : profiles )
+    {
+      if( m_workspace != null )
+        return;
+
+      if( m_selection instanceof IFeatureSelection )
+        m_workspace = ((IFeatureSelection) m_selection).getWorkspace( profile );
+    }
+
   }
 
   private void addProfileSelectionProvider( final IProfileSelectionProvider item, final IRelationType selectionHint )
   {
     final IProfileFeature[] selectedProfiles = item.getSelectedProfiles( selectionHint );
     final List<IProfileFeature> asList = Arrays.asList( selectedProfiles );
-    m_foundProfiles.addAll( asList );
+    addProfile( selectedProfiles );
     m_selectedProfiles.addAll( asList );
+  }
+
+  private void addFeatureList( final FeatureList featureList )
+  {
+    final IRelationType rt = featureList.getParentFeatureTypeProperty();
+    final Feature parentFeature = featureList.getParentFeature();
+    addParentFeature( parentFeature, rt );
   }
 
   private void addFeatureAssociation( final FeatureAssociationTypeElement fate )
   {
     final IRelationType rt = fate.getAssociationTypeProperty();
     final Feature parentFeature = fate.getParentFeature();
+    addParentFeature( parentFeature, rt );
+  }
+
+  private void addParentFeature( final Feature parentFeature, final IRelationType property )
+  {
     if( parentFeature instanceof IProfileSelectionProvider )
     {
-      addProfileSelectionProvider( (IProfileSelectionProvider) parentFeature, rt );
+      addProfileSelectionProvider( (IProfileSelectionProvider) parentFeature, property );
       m_container = parentFeature;
     }
   }
