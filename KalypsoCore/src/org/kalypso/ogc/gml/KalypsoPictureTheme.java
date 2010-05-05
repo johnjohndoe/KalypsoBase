@@ -169,6 +169,9 @@ abstract public class KalypsoPictureTheme extends AbstractKalypsoTheme
     if( m_domain == null )
       return Status.OK_STATUS;
 
+    if( m_image == null )
+      return Status.OK_STATUS;
+
     try
     {
       final String pictureCrs = m_domain.getCoordinateSystem();
