@@ -62,7 +62,7 @@ public class KalypsoProjectDatabaseClient extends AbstractUIPlugin
 
     return m_service;
   }
-  
+
   public static IProjectDatabaseModel getModel( )
   {
     return getDefault().getProjectDatabaseModel();
