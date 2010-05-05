@@ -158,21 +158,21 @@ abstract class AbstractThemeNode<T> implements IThemeNode
     return m_parent;
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.outline.nodes.IThemeNode#getDescription()
+   */
+  @Override
+  public String getDescription( )
+  {
+    return null;
+  }
+
   public ImageDescriptor getImageDescriptor( )
   {
     final IThemeNode[] children = getChildren();
     if( children.length > 0 )
       return children[children.length - 1].getImageDescriptor();
 
-    return null;
-  }
-
-  /**
-   * @see org.kalypso.contribs.eclipse.jface.viewers.ITooltipProvider#getTooltip(java.lang.Object)
-   */
-  @Override
-  public String getTooltip( final Object element )
-  {
     return null;
   }
 
@@ -216,14 +216,22 @@ abstract class AbstractThemeNode<T> implements IThemeNode
   @Override
   public IThemeNode[] getChildren( )
   {
-    /* Dispose all old children */
     if( m_childNodes != null )
       return m_childNodes;
 
     final Object[] children = getElementChildren();
     m_childNodes = NodeFactory.createNodes( this, children );
-    ArrayUtils.reverse( m_childNodes );
+    if( doReverseChildren() )
+      ArrayUtils.reverse( m_childNodes );
     return m_childNodes;
+  }
+
+  /**
+   * Returns <code>true</code> by default, overwrite to change.
+   */
+  protected boolean doReverseChildren( )
+  {
+    return true;
   }
 
   /**
@@ -292,14 +300,14 @@ abstract class AbstractThemeNode<T> implements IThemeNode
     return ((AbstractThemeNode< ? >) m_parent).getViewer();
   }
 
-  protected void refreshViewer( final IThemeNode elementToRefresh )
+  protected final void refreshViewer( final IThemeNode elementToRefresh )
   {
     elementToRefresh.clear();
 
     ViewerUtilities.refresh( getViewer(), elementToRefresh, true );
   }
 
-  protected void updateViewer( final IThemeNode[] elementsToUpdate )
+  protected final void updateViewer( final IThemeNode[] elementsToUpdate )
   {
     ViewerUtilities.update( getViewer(), elementsToUpdate, null, true );
   }
@@ -446,6 +454,17 @@ abstract class AbstractThemeNode<T> implements IThemeNode
     }
 
     return null;
+  }
+
+  /**
+   * Return <code>true</code> by default, overwrite to change.
+   * 
+   * @see org.kalypso.ogc.gml.outline.nodes.IThemeNode#isCompactable()
+   */
+  @Override
+  public boolean isCompactable( )
+  {
+    return true;
   }
 
 }

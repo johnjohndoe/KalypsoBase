@@ -43,17 +43,57 @@ package org.kalypso.ogc.gml.outline.nodes;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.viewers.IFontProvider;
 import org.kalypso.ogc.gml.IKalypsoCascadingTheme;
+import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.ogc.gml.mapmodel.IMapModellListener;
+import org.kalypso.ogc.gml.mapmodel.MapModellAdapter;
 
 /**
  * @author Gernot Belger
  */
 class CascadingThemeNode extends KalypsoThemeNode<IKalypsoCascadingTheme> implements IFontProvider
 {
+  private final IMapModellListener m_mapModellListener = new MapModellAdapter()
+  {
+    @Override
+    public void themeAdded( final IMapModell source, final org.kalypso.ogc.gml.IKalypsoTheme theme )
+    {
+      refreshViewer( CascadingThemeNode.this );
+    }
+
+    @Override
+    public void themeRemoved( final IMapModell source, final org.kalypso.ogc.gml.IKalypsoTheme theme, final boolean lastVisibility )
+    {
+      refreshViewer( CascadingThemeNode.this );
+    }
+
+    /**
+     * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#themeOrderChanged(org.kalypso.ogc.gml.mapmodel.IMapModell)
+     */
+    @Override
+    public void themeOrderChanged( final IMapModell source )
+    {
+      refreshViewer( CascadingThemeNode.this );
+    }
+  };
+
   CascadingThemeNode( final IThemeNode parent, final IKalypsoCascadingTheme theme )
   {
     super( parent, theme );
 
     Assert.isNotNull( theme );
+
+    theme.addMapModelListener( m_mapModellListener );
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.outline.nodes.KalypsoThemeNode#dispose()
+   */
+  @Override
+  public void dispose( )
+  {
+    getElement().removeMapModelListener( m_mapModellListener );
+
+    super.dispose();
   }
 
   /**
@@ -64,5 +104,23 @@ class CascadingThemeNode extends KalypsoThemeNode<IKalypsoCascadingTheme> implem
   {
     final IKalypsoCascadingTheme theme = getElement();
     return theme.getAllThemes();
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.outline.nodes.AbstractThemeNode#isCompactable()
+   */
+  @Override
+  public boolean isCompactable( )
+  {
+    return false;
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.outline.nodes.AbstractThemeNode#doReverseChildren()
+   */
+  @Override
+  protected boolean doReverseChildren( )
+  {
+    return false;
   }
 }

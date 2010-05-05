@@ -44,6 +44,7 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Control;
+import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
 
 /**
  * Content provider for modifying the outline tree. It filters the styles and the rules.
@@ -83,7 +84,7 @@ public class ThemeNodeContentProvider implements ITreeContentProvider
   {
     final IThemeNode node = (IThemeNode) element;
 
-    if( m_isCompact )
+    if( m_isCompact && node.isCompactable() )
       return node.getChildrenCompact();
 
     return node.getChildren();
@@ -97,7 +98,7 @@ public class ThemeNodeContentProvider implements ITreeContentProvider
   {
     final IThemeNode node = (IThemeNode) element;
 
-    if( m_isCompact )
+    if( m_isCompact && node.isCompactable() )
       return node.hasChildrenCompact();
 
     return node.hasChildren();
@@ -131,17 +132,7 @@ public class ThemeNodeContentProvider implements ITreeContentProvider
       return;
 
     final Object elementToRefresh = element == null ? m_viewer.getInput() : element;
-
-    control.getDisplay().asyncExec( new Runnable()
-    {
-      public void run( )
-      {
-        if( control.isDisposed() )
-          return;
-
-        viewer.refresh( elementToRefresh );
-      }
-    } );
+    ViewerUtilities.refresh( viewer, elementToRefresh, true );
   }
 
   public boolean isCompact( )

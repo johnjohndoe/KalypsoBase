@@ -175,14 +175,11 @@ public class RuleNode extends AbstractThemeNode<Rule>
   }
 
   /**
-   * @see org.kalypso.contribs.eclipse.jface.viewers.ITooltipProvider#getTooltip(java.lang.Object)
+   * @see org.kalypso.ogc.gml.outline.nodes.AbstractThemeNode#getDescription()
    */
   @Override
-  public String getTooltip( final Object element )
+  public String getDescription( )
   {
-    if( element != this )
-      throw new IllegalStateException();
-
     final Rule rule = getElement();
 
     final String tooltip = rule.getAbstract();

@@ -48,13 +48,14 @@ import org.eclipse.jface.viewers.IFontProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
+import org.kalypso.contribs.eclipse.jface.viewers.ITooltipProvider;
 
 /**
  * The this label provider modifies some labels for handling themes, that have only one style.
  * 
  * @author Gernot Belger
  */
-public class ThemeNodeLabelProvider extends LabelProvider implements IFontProvider
+public class ThemeNodeLabelProvider extends LabelProvider implements IFontProvider, ITooltipProvider
 {
   private ResourceManager m_resourceManager;
 
@@ -118,5 +119,15 @@ public class ThemeNodeLabelProvider extends LabelProvider implements IFontProvid
   {
     final IThemeNode node = (IThemeNode) element;
     return ((IFontProvider) node).getFont( element );
+  }
+
+  /**
+   * @see org.kalypso.contribs.eclipse.jface.viewers.ITooltipProvider#getTooltip(java.lang.Object)
+   */
+  @Override
+  public String getTooltip( final Object element )
+  {
+    final IThemeNode node = (IThemeNode) element;
+    return node.getDescription();
   }
 }

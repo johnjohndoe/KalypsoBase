@@ -50,7 +50,7 @@ import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
 
 /**
  * Tree object representing a {@link FeatureTypeStyle}.
- *
+ * 
  * @author Gernot Belger
  */
 public class FeatureTypeStyleNode extends KalypsoStyleNode<FeatureTypeStyle>
@@ -81,14 +81,11 @@ public class FeatureTypeStyleNode extends KalypsoStyleNode<FeatureTypeStyle>
   }
 
   /**
-   * @see org.kalypso.contribs.eclipse.jface.viewers.ITooltipProvider#getTooltip(java.lang.Object)
+   * @see org.kalypso.ogc.gml.outline.nodes.AbstractThemeNode#getDescription()
    */
   @Override
-  public String getTooltip( final Object element )
+  public String getDescription( )
   {
-    if( element != this )
-      throw new IllegalStateException();
-
     final String tooltip = getElement().getAbstract();
     return resolveI18nString( tooltip );
   }
