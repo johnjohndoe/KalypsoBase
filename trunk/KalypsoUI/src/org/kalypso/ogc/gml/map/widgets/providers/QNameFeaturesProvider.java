@@ -158,7 +158,7 @@ public class QNameFeaturesProvider implements IFeaturesProvider
 
         final IFeatureType targetFeatureType = feature.getFeatureType();
         if( GMLSchemaUtilities.substitutes( targetFeatureType, m_qname ) )
-          found.add( new EasyFeatureWrapper( workspace, feature, featureList.getParentFeature(), featureList.getParentFeatureTypeProperty() ) );
+          found.add( new EasyFeatureWrapper( workspace, feature ) );
       }
     }
   }

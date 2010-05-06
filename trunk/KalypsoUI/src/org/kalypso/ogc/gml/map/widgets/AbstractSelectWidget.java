@@ -47,7 +47,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jface.viewers.ISelection;
-import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
@@ -273,7 +272,7 @@ public abstract class AbstractSelectWidget extends AbstractWidget
         changeSelection( listFe, (IKalypsoFeatureTheme) activeTheme, selectionManager, selectionMode );
       }
       else
-        // dragged
+      // dragged
       {
         final double g2x = transform.getSourceX( endPoint.getX() );
         final double g2y = transform.getSourceY( endPoint.getY() );
@@ -319,15 +318,12 @@ public abstract class AbstractSelectWidget extends AbstractWidget
     if( featureList == null )
       return;
 
-    final Feature parentFeature = featureList.getParentFeature();
-    final IRelationType parentProperty = featureList.getParentFeatureTypeProperty();
-
     // add all selected features
     final EasyFeatureWrapper[] selectedWrapped = new EasyFeatureWrapper[features.size()];
     for( int i = 0; i < features.size(); i++ )
     {
       final Feature f = (Feature) features.get( i );
-      selectedWrapped[i] = new EasyFeatureWrapper( theme.getWorkspace(), f, parentFeature, parentProperty );
+      selectedWrapped[i] = new EasyFeatureWrapper( theme.getWorkspace(), f );
     }
 
     final Feature[] toRemove;

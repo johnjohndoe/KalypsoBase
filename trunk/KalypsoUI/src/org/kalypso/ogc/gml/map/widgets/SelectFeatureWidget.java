@@ -352,21 +352,21 @@ public class SelectFeatureWidget extends AbstractWidget
         m_addMode = true;
         break;
 
-        // "STRG": Toggle mode
+      // "STRG": Toggle mode
       case KeyEvent.VK_CONTROL:
         m_toggleMode = true;
         break;
 
-        // "ALT": switch between intersect / contains mode
+      // "ALT": switch between intersect / contains mode
       case KeyEvent.VK_ALT:
         m_intersectMode = true;
         break;
 
-        // "SPACE": switch between polygon / rect mode
+      // "SPACE": switch between polygon / rect mode
       case KeyEvent.VK_SPACE:
         changeGeometryBuilder( mapPanel );
         break;
-        // "ESC": deselection
+      // "ESC": deselection
       case KeyEvent.VK_ESCAPE:
         m_geometryBuilder.reset();
         final IFeatureSelectionManager selectionManager = getMapPanel().getSelectionManager();
@@ -582,17 +582,17 @@ public class SelectFeatureWidget extends AbstractWidget
         if( add )
         {
           if( !selectionManager.isSelected( feature ) )
-            toAdd.add( new EasyFeatureWrapper( workspace, feature, feature.getOwner(), feature.getParentRelation() ) );
+            toAdd.add( new EasyFeatureWrapper( workspace, feature ) );
         }
         else if( toggle )
         {
           if( selectionManager.isSelected( feature ) )
             toRemove.add( feature );
           else
-            toAdd.add( new EasyFeatureWrapper( workspace, feature, feature.getOwner(), feature.getParentRelation() ) );
+            toAdd.add( new EasyFeatureWrapper( workspace, feature ) );
         }
         else
-          toAdd.add( new EasyFeatureWrapper( workspace, feature, feature.getOwner(), feature.getParentRelation() ) );
+          toAdd.add( new EasyFeatureWrapper( workspace, feature ) );
       }
     }
 
@@ -614,7 +614,7 @@ public class SelectFeatureWidget extends AbstractWidget
     final Collection<Feature> selectedFeatures = new HashSet<Feature>();
 
     // Only works for surface geometries:: select everything that intersects this geometry
-    if( selectGeometry instanceof GM_Surface )
+    if( selectGeometry instanceof GM_Surface< ? > )
     {
       final GM_Envelope envelope = selectGeometry.getEnvelope();
       final GMLWorkspace workspace = featureList.getParentFeature().getWorkspace();

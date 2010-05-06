@@ -65,7 +65,7 @@ public class GeometryFeaturesProvider implements IFeaturesProvider
   /**
    * The qname, which must be substituted.
    */
-  private QName m_qname;
+  private final QName m_qname;
 
   /**
    * The constructor.
@@ -73,7 +73,7 @@ public class GeometryFeaturesProvider implements IFeaturesProvider
    * @param qname
    *          The qname, which must be substituted.
    */
-  public GeometryFeaturesProvider( QName qname )
+  public GeometryFeaturesProvider( final QName qname )
   {
     m_qname = qname;
   }
@@ -81,22 +81,22 @@ public class GeometryFeaturesProvider implements IFeaturesProvider
   /**
    * @see org.kalypso.ogc.gml.map.widgets.providers.IFeaturesProvider#getFeatures(org.kalypso.ogc.gml.map.IMapPanel)
    */
-  public EasyFeatureWrapper[] getFeatures( IMapPanel mapPanel )
+  public EasyFeatureWrapper[] getFeatures( final IMapPanel mapPanel )
   {
-    IKalypsoTheme[] allThemes = mapPanel.getMapModell().getAllThemes();
-    List<EasyFeatureWrapper> foundfeatures = new ArrayList<EasyFeatureWrapper>();
+    final IKalypsoTheme[] allThemes = mapPanel.getMapModell().getAllThemes();
+    final List<EasyFeatureWrapper> foundfeatures = new ArrayList<EasyFeatureWrapper>();
 
-    for( IKalypsoTheme theme : allThemes )
+    for( final IKalypsoTheme theme : allThemes )
     {
       if( theme instanceof IKalypsoFeatureTheme )
       {
-        IKalypsoFeatureTheme featureTheme = (IKalypsoFeatureTheme) theme;
-        CommandableWorkspace workspace = featureTheme.getWorkspace();
-        FeatureList featureList = featureTheme.getFeatureListVisible( null );
+        final IKalypsoFeatureTheme featureTheme = (IKalypsoFeatureTheme) theme;
+        final CommandableWorkspace workspace = featureTheme.getWorkspace();
+        final FeatureList featureList = featureTheme.getFeatureListVisible( null );
 
         if( featureList != null )
         {
-          for( Object object : featureList )
+          for( final Object object : featureList )
           {
             Feature f;
             if( object instanceof Feature )
@@ -108,9 +108,9 @@ public class GeometryFeaturesProvider implements IFeaturesProvider
 
             if( f.getGeometryProperties().length > 0 )
             {
-              IFeatureType targetFeatureType = f.getFeatureType();
+              final IFeatureType targetFeatureType = f.getFeatureType();
               if( GMLSchemaUtilities.substitutes( targetFeatureType, m_qname ) )
-                foundfeatures.add( new EasyFeatureWrapper( workspace, f, featureList.getParentFeature(), featureList.getParentFeatureTypeProperty() ) );
+                foundfeatures.add( new EasyFeatureWrapper( workspace, f ) );
             }
           }
         }

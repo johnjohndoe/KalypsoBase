@@ -85,7 +85,7 @@ public class NewFeatureScope
     m_workspace = workspace;
   }
 
-  public NewFeatureScope( final FeatureAssociationTypeElement fate, CommandableWorkspace workspace, final IFeatureSelectionManager selectionManager )
+  public NewFeatureScope( final FeatureAssociationTypeElement fate, final CommandableWorkspace workspace, final IFeatureSelectionManager selectionManager )
   {
     m_selectionManager = selectionManager;
     m_targetRelation = fate.getAssociationTypeProperty();
@@ -108,7 +108,7 @@ public class NewFeatureScope
     else
     {
       m_parentFeature = feature.getOwner();
-      m_targetRelation = selection.getParentFeatureProperty( feature );
+      m_targetRelation = feature.getParentRelation();
       m_workspace = selectionManager.getWorkspace( feature );
     }
   }

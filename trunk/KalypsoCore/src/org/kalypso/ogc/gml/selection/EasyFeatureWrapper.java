@@ -57,16 +57,10 @@ public final class EasyFeatureWrapper
 
   private final Feature m_feature;
 
-  private final Feature m_parentFeature;
-
-  private final IRelationType m_parentFeatureProperty;
-
-  public EasyFeatureWrapper( final CommandableWorkspace workspace, final Feature feature, final Feature parentFeature, final IRelationType parentFeatureProperty )
+  public EasyFeatureWrapper( final CommandableWorkspace workspace, final Feature feature )
   {
     m_workspace = workspace;
     m_feature = feature;
-    m_parentFeature = parentFeature;
-    m_parentFeatureProperty = parentFeatureProperty;
   }
 
   public Feature getFeature( )
@@ -76,12 +70,12 @@ public final class EasyFeatureWrapper
 
   public Feature getParentFeature( )
   {
-    return m_parentFeature;
+    return m_feature.getOwner();
   }
 
   public IRelationType getParentFeatureProperty( )
   {
-    return m_parentFeatureProperty;
+    return m_feature.getParentRelation();
   }
 
   public CommandableWorkspace getWorkspace( )
