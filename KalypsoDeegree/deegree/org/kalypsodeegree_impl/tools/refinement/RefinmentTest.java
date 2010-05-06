@@ -13,6 +13,8 @@ import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
+ * FIXME_ compare results with expected-results instead of writing it to system out.
+ * 
  * @author Thomas Jung
  */
 public class RefinmentTest extends TestCase
@@ -47,7 +49,7 @@ public class RefinmentTest extends TestCase
     curvePositions[0] = GeometryFactory.createGM_Position( 0, 0, 0 );
     curvePositions[1] = GeometryFactory.createGM_Position( 1, 2, 0 );
 
-    System.out.format( "curve1\n" );
+// System.out.format( "curve1\n" );
 
     final GM_Curve curve = GeometryFactory.createGM_Curve( curvePositions, crs );
 
@@ -63,10 +65,10 @@ public class RefinmentTest extends TestCase
         for( final GM_SurfacePatch surfacePatch : surface1 )
         {
           final GM_Position[] ring = surfacePatch.getExteriorRing();
-          for( int i = 0; i < ring.length; i++ )
+          for( final GM_Position element : ring )
           {
-            System.out.format( "ring # %d", i );
-            System.out.format( "%9.2f %9.2f %9.2f \n", ring[i].getX(), ring[i].getY(), ring[i].getZ() );
+//            System.out.format( "ring # %d", i );
+//            System.out.format( "%9.2f %9.2f %9.2f \n", ring[i].getX(), ring[i].getY(), ring[i].getZ() );
           }
         }
       }
@@ -76,7 +78,7 @@ public class RefinmentTest extends TestCase
     curvePositions2[0] = GeometryFactory.createGM_Position( 0, 0, 0 );
     curvePositions2[1] = GeometryFactory.createGM_Position( 2, 2, 0 );
 
-    System.out.format( "curve2\n" );
+// System.out.format( "curve2\n" );
 
     final GM_Curve curve2 = GeometryFactory.createGM_Curve( curvePositions2, crs );
 
@@ -90,10 +92,10 @@ public class RefinmentTest extends TestCase
         for( final GM_SurfacePatch surfacePatch : surface2 )
         {
           final GM_Position[] ring = surfacePatch.getExteriorRing();
-          for( int i = 0; i < ring.length; i++ )
+          for( final GM_Position element : ring )
           {
-            System.out.format( "ring # %d", i );
-            System.out.format( "%9.2f %9.2f %9.2f \n", ring[i].getX(), ring[i].getY(), ring[i].getZ() );
+//            System.out.format( "ring # %d", i );
+//            System.out.format( "%9.2f %9.2f %9.2f \n", ring[i].getX(), ring[i].getY(), ring[i].getZ() );
           }
         }
       }
@@ -104,7 +106,7 @@ public class RefinmentTest extends TestCase
     curvePositions3[0] = GeometryFactory.createGM_Position( 0, 0, 0 );
     curvePositions3[1] = GeometryFactory.createGM_Position( 0, 1, 0 );
 
-    System.out.format( "curve3\n" );
+// System.out.format( "curve3\n" );
 
     final GM_Curve curve3 = GeometryFactory.createGM_Curve( curvePositions3, crs );
 
@@ -118,10 +120,10 @@ public class RefinmentTest extends TestCase
         for( final GM_SurfacePatch surfacePatch : surface3 )
         {
           final GM_Position[] ring = surfacePatch.getExteriorRing();
-          for( int i = 0; i < ring.length; i++ )
+          for( final GM_Position element : ring )
           {
-            System.out.format( "pos # %d:  ", i );
-            System.out.format( "%9.2f %9.2f %9.2f \n", ring[i].getX(), ring[i].getY(), ring[i].getZ() );
+//            System.out.format( "pos # %d:  ", i );
+//            System.out.format( "%9.2f %9.2f %9.2f \n", ring[i].getX(), ring[i].getY(), ring[i].getZ() );
           }
         }
       }
@@ -131,7 +133,7 @@ public class RefinmentTest extends TestCase
     curvePositions4[0] = GeometryFactory.createGM_Position( -0.50, 0, 0 );
     curvePositions4[1] = GeometryFactory.createGM_Position( 1, 1.5, 0 );
 
-    System.out.format( "curve4\n" );
+// System.out.format( "curve4\n" );
 
     final GM_Curve curve4 = GeometryFactory.createGM_Curve( curvePositions4, crs );
 
@@ -157,20 +159,20 @@ public class RefinmentTest extends TestCase
               for( final GM_SurfacePatch trianglePatches : triangle )
               {
                 final GM_Position[] trianglePoses = trianglePatches.getExteriorRing();
-                for( int i = 0; i < trianglePoses.length; i++ )
+                for( final GM_Position trianglePose : trianglePoses )
                 {
-                  System.out.format( "pos # %d:  ", i );
-                  System.out.format( "%9.2f %9.2f %9.2f \n", trianglePoses[i].getX(), trianglePoses[i].getY(), trianglePoses[i].getZ() );
+//                  System.out.format( "pos # %d:  ", i );
+//                  System.out.format( "%9.2f %9.2f %9.2f \n", trianglePoses[i].getX(), trianglePoses[i].getY(), trianglePoses[i].getZ() );
                 }
               }
             }
           }
           else
           {
-            for( int i = 0; i < ring.length; i++ )
+            for( final GM_Position element : ring )
             {
-              System.out.format( "pos # %d:  ", i );
-              System.out.format( "%9.2f %9.2f %9.2f \n", ring[i].getX(), ring[i].getY(), ring[i].getZ() );
+//              System.out.format( "pos # %d:  ", i );
+//              System.out.format( "%9.2f %9.2f %9.2f \n", ring[i].getX(), ring[i].getY(), ring[i].getZ() );
             }
           }
         }
@@ -181,7 +183,7 @@ public class RefinmentTest extends TestCase
     curvePositions5[0] = GeometryFactory.createGM_Position( 0.50, 0.5, 0 );
     curvePositions5[1] = GeometryFactory.createGM_Position( 0.50, 1.5, 0 );
 
-    System.out.format( "curve5\n" );
+// System.out.format( "curve5\n" );
 
     final GM_Curve curve5 = GeometryFactory.createGM_Curve( curvePositions5, crs );
 
@@ -195,10 +197,10 @@ public class RefinmentTest extends TestCase
         for( final GM_SurfacePatch surfacePatch : surface5 )
         {
           final GM_Position[] ring = surfacePatch.getExteriorRing();
-          for( int i = 0; i < ring.length; i++ )
+          for( final GM_Position element : ring )
           {
-            System.out.format( "pos # %d:  ", i );
-            System.out.format( "%9.2f %9.2f %9.2f \n", ring[i].getX(), ring[i].getY(), ring[i].getZ() );
+//            System.out.format( "pos # %d:  ", i );
+//            System.out.format( "%9.2f %9.2f %9.2f \n", ring[i].getX(), ring[i].getY(), ring[i].getZ() );
           }
         }
       }
