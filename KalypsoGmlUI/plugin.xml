@@ -125,6 +125,10 @@
 					</visibleWhen>
 				</command>
     <separator
+          name="genericGml"
+          visible="true">
+    </separator>
+    <separator
           name="additions"
           visible="false">
     </separator>
