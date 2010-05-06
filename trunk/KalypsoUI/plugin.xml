@@ -300,7 +300,6 @@
 		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.map.outline.command.AddNode" name="Add" description="Adds a new element."/>
 		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.map.outline.command.RemoveNode" name="Remove" description="Removes the selected element."/>
 
-		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.views.outline.ShapeExport" name="%command.name.12" description="%command.tooltip.2" />
 		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.views.outline.GMLExport" name="%command.name.15" description="%command.tooltip.3"/>
 		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.views.outline.LegendExport" name="%command.name.16" description="%command.tooltip.4"/>
 		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.views.outline.SldExport" name="SLD..." description="Export styling of selected layer as SLD-File"/>
@@ -515,13 +514,6 @@
       <menuContribution
             locationURI="popup:org.kalypso.gml.ui.exports?after=genericGml">
             <command
-                  commandId="org.kalypso.ui.views.outline.ShapeExport"
-                  style="push">
-               <visibleWhen
-                     checkEnabled="true">
-               </visibleWhen>
-            </command>
-            <command
                   commandId="org.kalypso.ui.views.outline.GMLExport"
                   style="push">
                <visibleWhen
@@ -569,7 +561,6 @@
 			<!-- Properties not allowed until they recognize how to handle non-editable themes
 			<command commandId="org.kalypso.ui.map.outline.command.NodeProperties" style="push"/>
 			-->
-			<command commandId="org.kalypso.ui.views.outline.ShapeExport" style="push"/>
 			<command commandId="org.kalypso.ui.views.outline.GMLExport" style="push"/>
 			<command commandId="org.kalypso.ui.views.outline.LegendExport" style="push"/>
 			<command commandId="org.kalypso.ui.views.outline.HMOExport" style="push"/>
@@ -638,7 +629,6 @@
 		<image commandId="org.kalypso.ui.map.outline.command.AddNode" icon="icons/full/elcl16/nodeAdd.gif" />
 		<image commandId="org.kalypso.ui.map.outline.command.RemoveNode" icon="icons/full/elcl16/nodeRemove.gif" />
 
-		<image commandId="org.kalypso.ui.views.outline.ShapeExport" icon="icons/full/obj16/exportShp.gif" />
 		<image commandId="org.kalypso.ui.views.outline.GMLExport" icon="icons/full/obj16/exportGml.gif" />
 		<image commandId="org.kalypso.ui.views.outline.LegendExport" icon="icons/full/obj16/exportLegend.gif" />
 		<image commandId="org.kalypso.ui.views.outline.SldExport" icon="icons/full/obj16/exportSld.gif" />
@@ -1236,12 +1226,6 @@
 		<handler commandId="org.kalypso.ui.map.outline.command.RemoveNode" class="org.kalypso.ogc.gml.outline.handler.RemoveNodeHandler" >
 			<enabledWhen>
 				<reference definitionId="org.kalypso.ui.definition.oneThemeNodeSelected"/>
-			</enabledWhen>
-		</handler>
-
-		<handler commandId="org.kalypso.ui.views.outline.ShapeExport" class="org.kalypso.ogc.gml.outline.handler.ExportGml2ShapeThemeHandler" >
-			<enabledWhen>
-				<reference definitionId="org.kalypso.ui.definition.oneFeatureThemeSelected"/>
 			</enabledWhen>
 		</handler>
 

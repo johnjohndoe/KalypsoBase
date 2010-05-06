@@ -34,19 +34,14 @@
             id="org.kalypso.gml.ui.exportGridCommand"
             name="Raster exportieren">
       </command>
+      <command id="org.kalypso.ui.views.outline.ShapeExport" name="%org.kalypso.ui.views.outline.ShapeExport.name" description="%org.kalypso.ui.views.outline.ShapeExport.description" />
       <command categoryId="org.kalypso.ogc.gml.map.category" description="%org.kalypso.ogc.gml.map.CoverageManagementCommand.description" id="org.kalypso.ogc.gml.map.CoverageManagementCommand" name="%org.kalypso.ogc.gml.map.CoverageManagementCommand.name" />
    </extension>
-   <extension
-         point="org.eclipse.ui.commandImages">
-      <image
-            commandId="org.kalypso.gml.ui.importGridCommand"
-            icon="icons/obj16/gridImport.gif">
-      </image>
-      <image
-            commandId="org.kalypso.gml.ui.exportGridCommand"
-            icon="icons/obj16/gridImport.gif">
-      </image>
+   <extension point="org.eclipse.ui.commandImages">
+      <image commandId="org.kalypso.gml.ui.importGridCommand" icon="icons/obj16/gridImport.gif"/>
+      <image commandId="org.kalypso.gml.ui.exportGridCommand" icon="icons/obj16/gridImport.gif"/>
       <image commandId="org.kalypso.ogc.gml.map.CoverageManagementCommand" icon="icons/obj16/manageCoverages.gif" />
+      <image commandId="org.kalypso.ui.views.outline.ShapeExport" icon="icons/obj16/exportShp.gif" />
    </extension>
    <extension
          point="org.eclipse.ui.handlers">
@@ -99,6 +94,11 @@
 				</and>
 			</enabledWhen>
 		</handler>
+        <handler commandId="org.kalypso.ui.views.outline.ShapeExport" class="org.kalypso.gml.ui.commands.exportshape.ExportGml2ShapeThemeHandler" >
+            <enabledWhen>
+                <reference definitionId="org.kalypso.ui.definition.oneFeatureThemeSelected"/>
+            </enabledWhen>
+        </handler>
    </extension>
    <extension
          point="org.kalypso.core.themeInfo">
@@ -124,20 +124,27 @@
 						</with>
 					</visibleWhen>
 				</command>
-    <separator
-          name="genericGml"
-          visible="true">
-    </separator>
-    <separator
-          name="additions"
-          visible="false">
-    </separator>
+                <separator
+                      name="genericGml"
+                      visible="true">
+                </separator>
+                <separator
+                      name="additions"
+                      visible="false">
+                </separator>
 			</menu>
 			<menu
          icon="icons/obj16/export.gif"
          id="org.kalypso.gml.ui.exports"
          label="%menuContribution.menu.exports.label"
          mnemonic="e">
+                <command
+                      commandId="org.kalypso.ui.views.outline.ShapeExport"
+                      style="push">
+                   <visibleWhen
+                         checkEnabled="true">
+                   </visibleWhen>
+                </command>
 				<command commandId="org.kalypso.gml.ui.exportGridCommand">
 					<visibleWhen checkEnabled="false">
 						<with variable="selection">
@@ -148,15 +155,18 @@
 						</with>
 					</visibleWhen>
 				</command>
-    <separator
-          name="genericGml">
-    </separator>
-    <separator
-          name="additions"
-          visible="true">
-    </separator>
+                <separator
+                      name="genericGml">
+                </separator>
+                <separator
+                      name="additions"
+                      visible="true">
+                </separator>
 			</menu>
 		</menuContribution>
+        <menuContribution locationURI="popup:org.kalypso.ui.views.mapView.outline?after=additions">
+            <command commandId="org.kalypso.ui.views.outline.ShapeExport" style="push"/>
+        </menuContribution>
 		<menuContribution locationURI="toolbar:org.kalypso.ui.menus.mapToolbar?before=widgetAdditions">
 			<command commandId="org.kalypso.ogc.gml.map.CoverageManagementCommand" style="radio" tooltip="%org.kalypso.ogc.gml.map.CoverageManagementCommand.description">
 				<visibleWhen checkEnabled="false">
