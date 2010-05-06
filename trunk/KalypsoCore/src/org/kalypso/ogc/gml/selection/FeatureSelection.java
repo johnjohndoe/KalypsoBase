@@ -45,7 +45,6 @@ import java.util.Map;
 
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -95,32 +94,6 @@ public class FeatureSelection extends AbstractFeatureSelection
   public IPropertyType getFocusedProperty( )
   {
     return null;
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.selection.IFeatureSelection#getParentFeature(org.kalypsodeegree.model.feature.Feature)
-   */
-  @Override
-  public Feature getParentFeature( final Feature feature )
-  {
-    final EasyFeatureWrapper wrapper = m_featureHash.get( feature );
-    if( wrapper == null )
-      return null;
-
-    return wrapper.getParentFeature();
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.selection.IFeatureSelection#getParentFeatureProperty(org.kalypsodeegree.model.feature.Feature)
-   */
-  @Override
-  public IRelationType getParentFeatureProperty( final Feature feature )
-  {
-    final EasyFeatureWrapper wrapper = m_featureHash.get( feature );
-    if( wrapper == null )
-      return null;
-
-    return wrapper.getParentFeatureProperty();
   }
 
   /**

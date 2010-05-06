@@ -31,7 +31,6 @@ package org.kalypso.ogc.gml.selection;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -44,23 +43,6 @@ public interface IFeatureSelection extends IStructuredSelection
    *          Must be an element of this selection
    */
   CommandableWorkspace getWorkspace( Feature feature );
-
-  /**
-   * TODO: remove this method from the interface, it is not needed anymore
-   * 
-   * @param feature
-   *          Must be an element of this selection
-   */
-  Feature getParentFeature( Feature feature );
-
-  /**
-   * Returns the property of the parent feature of the given feature, for which the given feature is the value (maybe
-   * inside a list).
-   * 
-   * @param feature
-   *          Must be an element of this selection
-   */
-  IRelationType getParentFeatureProperty( Feature feature );
 
   /** Extracts all features of this selection together with each parent and workspace. */
   EasyFeatureWrapper[] getAllFeatures( );
