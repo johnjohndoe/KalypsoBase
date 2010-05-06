@@ -112,7 +112,7 @@ public class ProfileSelection
     final IProfileFeature profileFeature = getAs( item, IProfileFeature.class );
     if( profileFeature != null )
     {
-      addProfileFeature( (IProfileFeature) item );
+      addProfileFeature( profileFeature );
       return;
     }
 
