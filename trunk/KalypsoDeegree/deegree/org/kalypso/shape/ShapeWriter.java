@@ -43,6 +43,9 @@ package org.kalypso.shape;
 import java.io.IOException;
 import java.nio.charset.Charset;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.shape.dbf.DBFField;
 import org.kalypso.shape.dbf.DBaseException;
 import org.kalypso.shape.geometry.ISHPGeometry;
@@ -66,15 +69,18 @@ public class ShapeWriter
    * @param shapeFileBase
    *          The absolute file path to the shape file that will be written.
    */
-  public void write( final String shapeFileBase, final Charset charset ) throws IOException, DBaseException, SHPException, ShapeDataException
+  public void write( final String shapeFileBase, final Charset charset, final IProgressMonitor monitor ) throws IOException, DBaseException, SHPException, ShapeDataException, CoreException
   {
+    final String taskMsg = String.format( "Writing shape %s", shapeFileBase );
+    monitor.beginTask( taskMsg, m_dataProvider.size() );
+
     final byte shapeType = m_dataProvider.getShapeType();
     final DBFField[] fields = m_dataProvider.getFields();
 
     final ShapeFile shapeFile = ShapeFile.create( shapeFileBase, shapeType, charset, fields );
     try
     {
-      writeData( fields, shapeFile );
+      writeData( fields, shapeFile, monitor );
       // verbose close
       shapeFile.close();
     }
@@ -89,10 +95,12 @@ public class ShapeWriter
       {
         // ignore
       }
+
+      monitor.done();
     }
   }
 
-  private void writeData( final DBFField[] fields, final ShapeFile shapeFile ) throws IOException, DBaseException, SHPException, ShapeDataException
+  private void writeData( final DBFField[] fields, final ShapeFile shapeFile, final IProgressMonitor monitor ) throws IOException, DBaseException, SHPException, ShapeDataException, CoreException
   {
     final int rows = m_dataProvider.size();
     for( int row = 0; row < rows; row++ )
@@ -101,6 +109,8 @@ public class ShapeWriter
 
       final Object[] data = getRow( row, fields );
       shapeFile.addFeature( geometry, data );
+
+      ProgressUtilities.worked( monitor, 1 );
     }
   }
 

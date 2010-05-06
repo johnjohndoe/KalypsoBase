@@ -85,7 +85,7 @@ class DBFHeader
 
     final int numColumns = (dataStartPosition - 33) / 32;
 
-    raf.skipBytes( 19 );
+    raf.skipBytes( 20 );
 
     final DBFFields fields = DBFFields.read( raf, numColumns, charset );
 
@@ -114,7 +114,7 @@ class DBFHeader
     DataUtils.writeLEShort( output, 0 ); // Reserved
     output.writeByte( (byte) 0 ); // No incomplete transaction
     output.writeByte( (byte) 0 ); // Not encrypted
-    for( int i = 16; i < 27; i++ )
+    for( int i = 16; i < 28; i++ )
       // Reserved for multi-user processing.
       output.writeByte( (byte) 0 );
 

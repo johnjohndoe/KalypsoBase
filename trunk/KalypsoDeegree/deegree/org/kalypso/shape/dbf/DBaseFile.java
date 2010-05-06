@@ -82,6 +82,7 @@ public class DBaseFile
     final RandomAccessFile rdbf = new RandomAccessFile( file, "rw" );
     header.write( rdbf, 0, charset );
     rdbf.writeByte( 0x1A ); // EOF
+    rdbf.close();
 
     return new DBaseFile( file, FileMode.WRITE, charset );
   }

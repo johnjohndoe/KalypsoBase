@@ -170,9 +170,7 @@ public class ShapeFile
   public SHPEnvelope getEnvelope( final int recordIndex ) throws IOException
   {
     final SHXRecord record = m_shx.getRecord( recordIndex );
-    final SHPEnvelope shpenv = m_shp.getEnvelope( record );
-    return shpenv;
-// return GeometryFactory.createGM_Envelope( shpenv.west, shpenv.south, shpenv.east, shpenv.north, m_crs );
+    return m_shp.getEnvelope( record );
   }
 
   /**
