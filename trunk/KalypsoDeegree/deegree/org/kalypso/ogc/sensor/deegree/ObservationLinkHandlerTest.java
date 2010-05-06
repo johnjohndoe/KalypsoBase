@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.deegree;
 
@@ -47,6 +47,7 @@ import javax.xml.bind.Marshaller;
 
 import junit.framework.TestCase;
 
+import org.apache.commons.io.output.NullOutputStream;
 import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.zml.obslink.ObjectFactory;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
@@ -70,6 +71,7 @@ public class ObservationLinkHandlerTest extends TestCase
     link.setType( "simple" );
 
     final JAXBElement<TimeseriesLinkType> element = factory.createTimeseriesLink( link );
-    m_marshaller.marshal( element, System.out );
+    // FIXME: compare with some result
+    m_marshaller.marshal( element, new NullOutputStream() );
   }
 }
