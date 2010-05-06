@@ -43,88 +43,49 @@ package org.kalypsodeegree_impl.io.sax.test;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.net.URL;
 
 import junit.framework.TestCase;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.xml.serializer.ToXMLStream;
 import org.junit.Test;
-import org.kalypso.commons.java.net.UrlUtilities;
 import org.kalypsodeegree.model.geometry.GM_MultiPoint;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.io.sax.marshaller.MultiPointMarshaller;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
-import org.xml.sax.helpers.XMLReaderFactory;
 
 /**
  * @author Felipe Maximino
- *
  */
 public class MarshallGMMultiPointTest extends TestCase
 {
-  private ToXMLStream m_xmlStream;  
-  
   @Test
-  public void testeMultiPoint() throws IOException, SAXException
+  public void testeMultiPoint( ) throws IOException, SAXException
   {
-      File temp = File.createTempFile( "multiPoint", "gml" );
-      temp.deleteOnExit();
-      
-      GM_MultiPoint multiPoint = createMultiPoint();
-      
-      
-      XMLReader xmlReader = initMarshalling( new FileOutputStream( temp ) );
-      MultiPointMarshaller marshaller = new MultiPointMarshaller( xmlReader, multiPoint );
-      marshaller.marshall();      
-      endMarshalling();
-      
-      URL url = getClass().getResource( "resources/multiPointa.gml" );
-      
-      assertContentEquals( temp, url );
-  }
-  
-  private void assertContentEquals( File file, URL fileExpected ) throws IOException
-  {
-    String actual = FileUtils.readFileToString( file, System.getProperty( "file.encoding" ) );
-    String expected = UrlUtilities.toString( fileExpected, System.getProperty( "file.encoding" ) );
-    assertEquals( expected, actual );
+    final File temp = File.createTempFile( "multiPoint", "gml" );
+    temp.deleteOnExit();
+
+    final GM_MultiPoint multiPoint = createMultiPoint();
+
+    final FileOutputStream os = new FileOutputStream( temp );
+    final XMLReader xmlReader = SaxParserTestUtils.createXMLReader( os );
+    final MultiPointMarshaller marshaller = new MultiPointMarshaller( xmlReader, multiPoint );
+    SaxParserTestUtils.marshallDocument( xmlReader, marshaller );
+    os.close();
+
+    final URL url = getClass().getResource( "resources/multiPointa.gml" );
+
+    SaxParserTestUtils.assertContentEquals( temp, url );
   }
 
   private GM_MultiPoint createMultiPoint( )
   {
-    GM_Point[] multiPoint = new GM_Point[3];
+    final GM_Point[] multiPoint = new GM_Point[3];
     multiPoint[0] = GeometryFactory.createGM_Point( 0.0, 0.0, "EPSG:4267" );
     multiPoint[1] = GeometryFactory.createGM_Point( 0.0, 1.0, "EPSG:4267" );
     multiPoint[2] = GeometryFactory.createGM_Point( 1.0, 0.0, "EPSG:4267" );
-    
+
     return GeometryFactory.createGM_MultiPoint( multiPoint, "EPSG:4267" );
-    
-  }
-
-  private XMLReader initMarshalling( OutputStream os ) throws SAXException
-  {
-    m_xmlStream = new ToXMLStream();
-    m_xmlStream.setOutputStream( os );
-    // Configure content handler. IMPORTANT: call after setOutputStream!
-    m_xmlStream.setLineSepUse( true );
-    m_xmlStream.setIndent( true );
-    m_xmlStream.setIndentAmount( 1 );
-    m_xmlStream.setEncoding( System.getProperty( "file.encoding" ) );
-
-    final XMLReader xmlReader = XMLReaderFactory.createXMLReader();
-    xmlReader.setContentHandler( m_xmlStream );
-
-    m_xmlStream.startDocument();
-    
-    return xmlReader;
-  }
-  
-  private void endMarshalling( ) throws SAXException
-  {
-    m_xmlStream.endDocument();    
   }
 }
