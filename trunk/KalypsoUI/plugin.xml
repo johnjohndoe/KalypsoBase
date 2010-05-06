@@ -505,7 +505,7 @@
 			<separator name="additions" visible="false"/>
 		</menuContribution>
   <menuContribution
-        locationURI="popup:org.kalypso.gml.ui.exports?after=additions">
+        locationURI="popup:org.kalypso.gml.ui.exports?after=genericGml">
         <command
               commandId="org.kalypso.ui.views.outline.ShapeExport"
               style="push">
