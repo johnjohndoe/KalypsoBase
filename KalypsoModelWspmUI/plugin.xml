@@ -516,20 +516,6 @@
 		</handler>
 	</extension>
 
-	<extension point="org.eclipse.ui.menus">
-   		<menuContribution locationURI="popup:org.eclipse.ui.popup.any?after=additions">
-			<command commandId="org.kalypso.ui.map.outline.command.WspmCreateDevider" style="push">
-				<visibleWhen checkEnabled="false">
-					<reference definitionId="org.kalypso.model.wspm.ui.definition.oneProfileThemeSelected"/>
-				</visibleWhen>
-			</command>
-			<command commandId="org.kalypso.ui.map.outline.command.WspmIntersectRoughnessMap" style="push">
-				<visibleWhen checkEnabled="false">
-					<reference definitionId="org.kalypso.model.wspm.ui.definition.oneProfileThemeSelected"/>
-				</visibleWhen>
-			</command>
-		</menuContribution>
-	</extension>
 
 	<extension point="org.eclipse.core.expressions.definitions">
 		<definition id="org.kalypso.model.wspm.ui.definition.oneProfileThemeSelected">
@@ -584,6 +570,26 @@
              id="org.kalypso.model.wspm.ui.profileChange"
              label="Profile"
              mnemonic="p">
+          <command
+                commandId="org.kalypso.ui.map.outline.command.WspmCreateDevider"
+                style="push">
+             <visibleWhen
+                   checkEnabled="false">
+                <reference
+                      definitionId="org.kalypso.model.wspm.ui.definition.oneProfileThemeSelected">
+                </reference>
+             </visibleWhen>
+          </command>
+          <command
+                commandId="org.kalypso.ui.map.outline.command.WspmIntersectRoughnessMap"
+                style="push">
+             <visibleWhen
+                   checkEnabled="false">
+                <reference
+                      definitionId="org.kalypso.model.wspm.ui.definition.oneProfileThemeSelected">
+                </reference>
+             </visibleWhen>
+          </command>
           <command
                 commandId="org.kalypso.model.wspm.ui.command.profile.editProperties"
                 style="push">
