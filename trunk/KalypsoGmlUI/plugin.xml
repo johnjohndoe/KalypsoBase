@@ -145,8 +145,11 @@
 					</visibleWhen>
 				</command>
     <separator
+          name="genericGml">
+    </separator>
+    <separator
           name="additions"
-          visible="false">
+          visible="true">
     </separator>
 			</menu>
 		</menuContribution>
