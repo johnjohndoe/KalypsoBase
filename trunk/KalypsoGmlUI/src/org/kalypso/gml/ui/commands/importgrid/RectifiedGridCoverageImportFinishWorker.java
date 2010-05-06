@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.gml.ui.wizard.grid;
+package org.kalypso.gml.ui.commands.importgrid;
 
 import java.io.File;
 import java.io.OutputStreamWriter;

@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.gml.ui.wizard.grid;
+package org.kalypso.gml.ui.commands.exportgrid;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;

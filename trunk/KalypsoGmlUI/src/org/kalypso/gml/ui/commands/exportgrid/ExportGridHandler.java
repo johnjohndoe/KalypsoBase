@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.gml.ui.handler;
+package org.kalypso.gml.ui.commands.exportgrid;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -49,7 +49,6 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.PlatformUI;
-import org.kalypso.gml.ui.wizard.grid.RectifiedGridCoverageExportWizard;
 
 /**
  * @author Gernot Belger

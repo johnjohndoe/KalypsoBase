@@ -5,7 +5,7 @@
          point="org.eclipse.ui.importWizards">
       <wizard
             category="org.kalypso.ui.importwizards.kalypso"
-            class="org.kalypso.gml.ui.wizard.grid.RectifiedGridCoverageImportWizard"
+            class="org.kalypso.gml.ui.commands.importgrid.RectifiedGridCoverageImportWizard"
             icon="icons/obj16/gridImport.gif"
             id="org.kalypso.gml.ui.wizard.imports.RectifiedGridCoverageImportWizard"
             name="Rasterdaten">
@@ -51,7 +51,7 @@
    <extension
          point="org.eclipse.ui.handlers">
       <handler
-            class="org.kalypso.gml.ui.handler.ImportGridHandler"
+            class="org.kalypso.gml.ui.commands.importgrid.ImportGridHandler"
             commandId="org.kalypso.gml.ui.importGridCommand">
          <enabledWhen>
             <with
@@ -69,7 +69,7 @@
          </enabledWhen>
       </handler>
       <handler
-            class="org.kalypso.gml.ui.handler.ExportGridHandler"
+            class="org.kalypso.gml.ui.commands.exportgrid.ExportGridHandler"
             commandId="org.kalypso.gml.ui.exportGridCommand">
          <enabledWhen>
             <with
