@@ -120,7 +120,7 @@ public class FeatureSelectionHelper
     for( int i = 0; i < features.size(); i++ )
     {
       /* Get the feature. */
-      Feature feature = (Feature) features.get( i );
+      final Feature feature = (Feature) features.get( i );
       if( selectionManager.isSelected( feature ) )
         results.add( feature );
     }
@@ -141,7 +141,7 @@ public class FeatureSelectionHelper
     for( int i = 0; i < wrappers.length; i++ )
     {
       final Feature f = features[i];
-      wrappers[i] = new EasyFeatureWrapper( selection.getWorkspace( f ), f, selection.getParentFeature( f ), selection.getParentFeatureProperty( f ) );
+      wrappers[i] = new EasyFeatureWrapper( selection.getWorkspace( f ), f );
     }
 
     return wrappers;

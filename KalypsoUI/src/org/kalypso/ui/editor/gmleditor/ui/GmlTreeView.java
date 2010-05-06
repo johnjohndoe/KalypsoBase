@@ -235,10 +235,8 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
       for( int i = 0; i < toAdd.length; i++ )
       {
         final Feature feature = features[i];
-        final Feature parent = feature.getOwner();
-        final IRelationType parentProperty = m_contentProvider.getParentFeatureProperty( feature );
 
-        toAdd[i] = new EasyFeatureWrapper( workspace, feature, parent, parentProperty );
+        toAdd[i] = new EasyFeatureWrapper( workspace, feature );
       }
 
       /**
@@ -586,11 +584,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
 
     public IRelationType getParentFeatureProperty( final Feature feature )
     {
-      final GMLContentProvider contentProvider = (GMLContentProvider) getTreeViewer().getContentProvider();
-      if( contentProvider == null )
-        return null;
-
-      return contentProvider.getParentFeatureProperty( feature );
+      return feature.getParentRelation();
     }
 
     /**

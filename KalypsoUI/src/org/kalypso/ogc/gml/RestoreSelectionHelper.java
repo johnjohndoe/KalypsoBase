@@ -81,8 +81,7 @@ public class RestoreSelectionHelper
 
   private final IPoolableObjectType m_key;
 
-  public RestoreSelectionHelper( final IPoolableObjectType key, final IFeatureSelectionManager selectionManager )
-  throws CoreException
+  public RestoreSelectionHelper( final IPoolableObjectType key, final IFeatureSelectionManager selectionManager ) throws CoreException
   {
     m_key = key;
     m_selectionManager = selectionManager;
@@ -96,7 +95,7 @@ public class RestoreSelectionHelper
     return (CommandableWorkspace) pool.getObject( key );
   }
 
-  public void restoreSelection() throws CoreException
+  public void restoreSelection( ) throws CoreException
   {
     // if we have nothing in store, just return
     if( m_oldSelectionState == null )
@@ -113,11 +112,10 @@ public class RestoreSelectionHelper
       {
         final Feature feature = workspace.getFeature( fid );
         if( feature != null )
-          easyFeatures.add( new EasyFeatureWrapper( workspace, feature, null, null ) );
+          easyFeatures.add( new EasyFeatureWrapper( workspace, feature ) );
       }
     }
-    final EasyFeatureWrapper[] easyArray = easyFeatures
-    .toArray( new EasyFeatureWrapper[easyFeatures.size()] );
+    final EasyFeatureWrapper[] easyArray = easyFeatures.toArray( new EasyFeatureWrapper[easyFeatures.size()] );
 
     m_selectionManager.setSelection( easyArray );
   }

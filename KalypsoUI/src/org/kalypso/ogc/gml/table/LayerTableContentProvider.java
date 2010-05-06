@@ -90,16 +90,16 @@ public class LayerTableContentProvider implements IStructuredContentProvider
 
     // HACK: at the moment, we know this event is sent when the data has been loaded. So we refresah all in that case
     @Override
-    public void contextChanged( IKalypsoTheme source )
+    public void contextChanged( final IKalypsoTheme source )
     {
       handleStatusChanged();
     }
-    
-    // HACK: at the moment, we know this event is sent when the data changes in any way (i.e. a feature is added). 
+
+    // HACK: at the moment, we know this event is sent when the data changes in any way (i.e. a feature is added).
     // So we refresh the table in that case.
-    // FIXME: this should be removed in the head; the layerTable should not use a theme at all....! 
+    // FIXME: this should be removed in the head; the layerTable should not use a theme at all....!
     @Override
-    public void repaintRequested(IKalypsoTheme source, GM_Envelope invalidExtent )
+    public void repaintRequested( final IKalypsoTheme source, final GM_Envelope invalidExtent )
     {
       handleRepaintRequested();
     }
@@ -215,7 +215,7 @@ public class LayerTableContentProvider implements IStructuredContentProvider
     // TODO: remove only previously selected
     // collect elements as "Feature"
     final List<Feature> featureToRemove = new ArrayList<Feature>();
-    for( final Iterator<?> iter = featureList.iterator(); iter.hasNext(); )
+    for( final Iterator< ? > iter = featureList.iterator(); iter.hasNext(); )
     {
       final Object element = iter.next();
       if( element instanceof Feature )
@@ -226,12 +226,12 @@ public class LayerTableContentProvider implements IStructuredContentProvider
 
     // add current selection
     final List<EasyFeatureWrapper> wrappers = new ArrayList<EasyFeatureWrapper>( selection.size() );
-    for( final Iterator<?> sIt = selection.iterator(); sIt.hasNext(); )
+    for( final Iterator< ? > sIt = selection.iterator(); sIt.hasNext(); )
     {
       final Object object = sIt.next();
       if( object instanceof Feature )
       {
-        final EasyFeatureWrapper wrapper = new EasyFeatureWrapper( theme.getWorkspace(), (Feature) object, featureList.getParentFeature(), featureList.getParentFeatureTypeProperty() );
+        final EasyFeatureWrapper wrapper = new EasyFeatureWrapper( theme.getWorkspace(), (Feature) object );
         wrappers.add( wrapper );
       }
     }
@@ -262,5 +262,5 @@ public class LayerTableContentProvider implements IStructuredContentProvider
   {
     ViewerUtilities.refresh( m_viewer, true );
   }
-  
+
 }

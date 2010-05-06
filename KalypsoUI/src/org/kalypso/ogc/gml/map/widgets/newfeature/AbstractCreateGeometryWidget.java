@@ -40,7 +40,6 @@ import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.tools.GMLConstants;
-import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
  * @author Gernot Belger
@@ -65,13 +64,13 @@ public abstract class AbstractCreateGeometryWidget extends AbstractWidget
 
   /**
    * @param qname
-   *            The qname of the feature to create
+   *          The qname of the feature to create
    * @param geomProperties
-   *            The properties of the feature which shall be edited (in the given order).
+   *          The properties of the feature which shall be edited (in the given order).
    */
   public AbstractCreateGeometryWidget( final QName qname, final QName[] geomProperties )
   {
-    super( Messages.getString("org.kalypso.ogc.gml.map.widgets.newfeature.AbstractCreateGeometryWidget.0"), Messages.getString("org.kalypso.ogc.gml.map.widgets.newfeature.AbstractCreateGeometryWidget.1") ); //$NON-NLS-1$ //$NON-NLS-2$
+    super( Messages.getString( "org.kalypso.ogc.gml.map.widgets.newfeature.AbstractCreateGeometryWidget.0" ), Messages.getString( "org.kalypso.ogc.gml.map.widgets.newfeature.AbstractCreateGeometryWidget.1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
     m_qname = qname;
     m_geomProperties = geomProperties;
@@ -149,7 +148,7 @@ public abstract class AbstractCreateGeometryWidget extends AbstractWidget
     else if( GMLConstants.QN_LINE_STRING.equals( valueQName ) )
       m_builder = new LineGeometryBuilder( 0, targetCrs );
     else if( GMLConstants.QN_MULTI_LINE_STRING.equals( valueQName ) )
-      m_builder = new LineGeometryBuilder( 0, targetCrs ); //TODO
+      m_builder = new LineGeometryBuilder( 0, targetCrs ); // TODO
     else if( GMLConstants.QN_POINT.equals( valueQName ) )
       m_builder = new PointGeometryBuilder( targetCrs );
     else
@@ -279,7 +278,7 @@ public abstract class AbstractCreateGeometryWidget extends AbstractWidget
   public static void selectAndShowFeatures( final CommandableWorkspace workspace, final Feature[] selectedFeatures, final IFeatureSelectionManager selectionManager )
   {
     final Feature featureToSelect = selectedFeatures[0];
-    final EasyFeatureWrapper easyToSelect = new EasyFeatureWrapper( workspace, featureToSelect, featureToSelect.getParent(), featureToSelect.getParentRelation() );
+    final EasyFeatureWrapper easyToSelect = new EasyFeatureWrapper( workspace, featureToSelect );
 
     final Feature[] featuresToRemove = FeatureSelectionHelper.getFeatures( selectionManager );
     selectionManager.changeSelection( featuresToRemove, new EasyFeatureWrapper[] { easyToSelect } );

@@ -358,20 +358,7 @@ public class GMLContentProvider implements ITreeContentProvider
       }
       else
         m_workspace = null;
-
-// m_rootPath = new GMLXPath( "", null );
     }
-  }
-
-  public IRelationType getParentFeatureProperty( final Feature feature )
-  {
-    // TODO: do not just use the getParent method because root element dont have a parent
-    // use a internalParent method instead
-    final FeatureAssociationTypeElement parent = (FeatureAssociationTypeElement) getParent( feature );
-    if( parent == null )
-      return null;
-
-    return parent.getAssociationTypeProperty();
   }
 
   /** Expand the element and all of its parents */

@@ -119,27 +119,25 @@ public class SelectNextFeatureHandler extends AbstractHandler implements IElemen
     /* Find the first selected element of the active theme. */
     Object currentElement = null;
     final IFeatureSelectionManager selectionManager = mapPanel.getSelectionManager();
-    EasyFeatureWrapper[] wrappers = selectionManager.getAllFeatures();
-    for( int i = 0; i < wrappers.length; i++ )
+    final EasyFeatureWrapper[] wrappers = selectionManager.getAllFeatures();
+    for( final EasyFeatureWrapper wrapper : wrappers )
     {
-      /* Get the wrapper. */
-      EasyFeatureWrapper wrapper = wrappers[i];
-      
       /* Get the feature. */
-      Feature feature = wrapper.getFeature();
-      if (featureList.contains( feature )) {
+      final Feature feature = wrapper.getFeature();
+      if( featureList.contains( feature ) )
+      {
         currentElement = feature;
         break;
       }
     }
-    
+
     final Feature featureToSelect = findFeatureToSelect( featureTheme, featureList, currentElement );
     if( featureToSelect == null )
       return null;
 
     // do change the selection
     final CommandableWorkspace workspace = featureTheme.getWorkspace();
-    final EasyFeatureWrapper wrapperToSelect = new EasyFeatureWrapper( workspace, featureToSelect, featureToSelect.getOwner(), featureToSelect.getParentRelation() );
+    final EasyFeatureWrapper wrapperToSelect = new EasyFeatureWrapper( workspace, featureToSelect );
 
     // HINT: This will remove all selected features...
     // final Feature[] toRemove = FeatureSelectionHelper.getFeatures( selectionManager );
