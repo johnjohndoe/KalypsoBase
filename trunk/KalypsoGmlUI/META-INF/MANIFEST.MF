@@ -11,8 +11,7 @@ Require-Bundle: org.junit;resolution:=optional,
  org.kalypso.gml.processes,
  org.kalypso.ui.addlayer,
  org.eclipse.core.expressions
-Export-Package: org.kalypso.gml.ui,
- org.kalypso.gml.ui.jface,
- org.kalypso.gml.ui.map
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Export-Package: org.kalypso.gml.ui,
+ org.kalypso.gml.ui.map
