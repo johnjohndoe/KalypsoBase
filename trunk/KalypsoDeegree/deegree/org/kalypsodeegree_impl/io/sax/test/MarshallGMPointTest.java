@@ -44,56 +44,47 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.net.URL;
 
 import junit.framework.TestCase;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.xml.serializer.ToXMLStream;
 import org.junit.Test;
-import org.kalypso.commons.java.net.UrlUtilities;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.io.sax.marshaller.PointMarshaller;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
-import org.xml.sax.helpers.XMLReaderFactory;
-
 
 /**
  * @author Felipe Maximino
- *
  */
 public class MarshallGMPointTest extends TestCase
 {
   private static final GM_Point point2D = GeometryFactory.createGM_Point( 0.0, 1.0, "EPSG:31467" );
   private static final GM_Point point3D = GeometryFactory.createGM_Point( 0.0, 1.0, 2.0, "EPSG:31467" );
-  
-  private ToXMLStream m_xmlStream;
-  
+
   /**
    * tests a 2DPoint marshalling
    */
   @Test
   public void testPoint1() throws IOException, SAXException
   {
-    File f = File.createTempFile( "point2d", "gml" );
+    final File f = File.createTempFile( "point2d", "gml" );
     f.deleteOnExit();
 
-    XMLReader xmlReader = initMarshalling( new BufferedOutputStream( new FileOutputStream( f ) ) );
+    final BufferedOutputStream os = new BufferedOutputStream( new FileOutputStream( f ) );
+    final XMLReader xmlReader = SaxParserTestUtils.createXMLReader( os );
 
-    PointMarshaller marshaller = new PointMarshaller( xmlReader, point2D );
-    marshaller.marshall();
-    
-    endMarshalling();
-    
-    URL filePoint2D = getClass().getResource( "resources/pointb.gml" );
+    final PointMarshaller marshaller = new PointMarshaller( xmlReader, point2D );
+    SaxParserTestUtils.marshallDocument( xmlReader, marshaller );
+    os.close();
+
+    final URL filePoint2D = getClass().getResource( "resources/pointb.gml" );
     assertNotNull( filePoint2D );
-    
-    assertContentEquals(f, filePoint2D );
+
+    SaxParserTestUtils.assertContentEquals( f, filePoint2D );
   }
-  
+
   /**
    * tests a 3DPoint marshalling with specific tuples and coordinates separator
    * as well as the decimal separator
@@ -101,50 +92,20 @@ public class MarshallGMPointTest extends TestCase
   @Test
   public void testPoint2() throws IOException, SAXException
   {
-    File f = File.createTempFile( "point3d", "gml" );
+    final File f = File.createTempFile( "point3d", "gml" );
     f.deleteOnExit();
 
-    XMLReader xmlReader = initMarshalling( new BufferedOutputStream( new FileOutputStream( f ) ) );
+    final BufferedOutputStream os = new BufferedOutputStream( new FileOutputStream( f ) );
+    final XMLReader xmlReader = SaxParserTestUtils.createXMLReader( os );
 
-    PointMarshaller marshaller = new PointMarshaller( xmlReader, point3D );
-    marshaller.marshall();
-    
-    endMarshalling();
-    
-    URL filePoint3D = getClass().getResource( "resources/pointa.gml" );
+    final PointMarshaller marshaller = new PointMarshaller( xmlReader, point3D );
+    SaxParserTestUtils.marshallDocument( xmlReader, marshaller );
+    os.close();
+
+    final URL filePoint3D = getClass().getResource( "resources/pointa.gml" );
     assertNotNull( filePoint3D );
-    
-    assertContentEquals(f, filePoint3D );
-  }
-  
-  
-  private void assertContentEquals( File file, URL fileExpected ) throws IOException
-  {
-    String actual = FileUtils.readFileToString( file, System.getProperty( "file.encoding" ) );
-    String expected = UrlUtilities.toString( fileExpected, System.getProperty( "file.encoding" ) );
-    assertEquals( expected, actual );
+
+    SaxParserTestUtils.assertContentEquals( f, filePoint3D );
   }
 
-  private XMLReader initMarshalling( OutputStream os ) throws SAXException
-  {
-    m_xmlStream = new ToXMLStream();
-    m_xmlStream.setOutputStream( os );
-    // Configure content handler. IMPORTANT: call after setOutputStream!
-    m_xmlStream.setLineSepUse( true );
-    m_xmlStream.setIndent( true );
-    m_xmlStream.setIndentAmount( 1 );
-    m_xmlStream.setEncoding( System.getProperty( "file.encoding" ) );
-
-    final XMLReader xmlReader = XMLReaderFactory.createXMLReader();
-    xmlReader.setContentHandler( m_xmlStream );
-
-    m_xmlStream.startDocument();
-    
-    return xmlReader;
-  }
-  
-  private void endMarshalling( ) throws SAXException
-  {
-    m_xmlStream.endDocument();    
-  }
 }

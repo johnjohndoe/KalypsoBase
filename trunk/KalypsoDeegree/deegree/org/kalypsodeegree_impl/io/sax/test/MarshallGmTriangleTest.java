@@ -45,6 +45,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.URL;
 
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Result;
@@ -55,9 +56,7 @@ import javax.xml.transform.sax.SAXTransformerFactory;
 import javax.xml.transform.sax.TransformerHandler;
 import javax.xml.transform.stream.StreamResult;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.deegree.model.crs.UnknownCRSException;
 import org.junit.Test;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -73,64 +72,8 @@ import org.xml.sax.helpers.XMLReaderFactory;
  */
 public class MarshallGmTriangleTest
 {
-// @Test
-// public void writeOneTriangle( ) throws IOException, GM_Exception, SAXException, UnknownCRSException
-// {
-// final File tinFile = File.createTempFile( "tinTest", ".gml" );
-// tinFile.deleteOnExit();
-//
-// OutputStream os = null;
-// try
-// {
-// os = new BufferedOutputStream( new FileOutputStream( tinFile ) );
-//
-// // Create XMLReader, where xml-output is written to;
-// // A bit hacky, but the official way (using transformers) is way too complicated
-// final ToXMLStream ch = new ToXMLStream();
-// ch.setOutputStream( os );
-// // Configure content handler. IMPORTANT: call after setOutputStream!
-// ch.setLineSepUse( true );
-// ch.setIndent( true );
-// ch.setIndentAmount( 2 );
-//
-// final XMLReader xmlReader = XMLReaderFactory.createXMLReader();
-// xmlReader.setContentHandler( ch );
-//
-// final TriangulatedSurfaceMarshaller marshaller = new TriangulatedSurfaceMarshaller( xmlReader, null );
-//
-// // Write header
-// ch.startDocument();
-// marshaller.startSurface( TriangulatedSurfaceMarshaller.EMPTY_ATTRIBUTES );
-//
-// // write one triangle
-// final GM_Position pos1 = GeometryFactory.createGM_Position( 0.0, 0.0, 1.0 );
-// final GM_Position pos2 = GeometryFactory.createGM_Position( 0.0, 1.0, 2.0 );
-// final GM_Position pos3 = GeometryFactory.createGM_Position( 1.0, 0.0, 3.0 );
-// final GM_Triangle triangle = GeometryFactory.createGM_Triangle( pos1, pos2, pos3, null );
-// marshaller.marshalTriangle( triangle, null );
-//
-// // Write footer
-// marshaller.endSurface();
-// // IMPORTANT: call endDocument before stream is closed,
-// // else internal writer is not flushed and not everything may be written into the file
-// ch.endDocument();
-//
-// os.close();
-//
-// final String xmlString = FileUtils.readFileToString( tinFile, "UTF-8" );
-// System.out.println( xmlString );
-// }
-// finally
-// {
-// tinFile.delete();
-//
-// IOUtils.closeQuietly( os );
-// }
-// }
-
-
   @Test
-  public void writeONeTriangleTransform( ) throws IOException, TransformerConfigurationException, SAXException, GM_Exception, UnknownCRSException
+  public void writeONeTriangleTransform( ) throws IOException, TransformerConfigurationException, SAXException, GM_Exception
   {
     final String charsetEncoding = "UTF-8";
 
@@ -180,8 +123,8 @@ public class MarshallGmTriangleTest
 
       os.close();
 
-      final String xmlString = FileUtils.readFileToString( tinFile, "UTF-8" );
-      System.out.println( xmlString );
+      final URL url = getClass().getResource( "resources/triangulatedSurface_marshall.gml" );
+      SaxParserTestUtils.assertContentEquals( tinFile, url );
     }
     finally
     {
