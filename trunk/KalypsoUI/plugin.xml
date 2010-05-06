@@ -504,44 +504,52 @@
 			</menu>
 			<separator name="additions" visible="false"/>
 		</menuContribution>
-  <menuContribution
-        locationURI="popup:org.kalypso.gml.ui.exports?after=genericGml">
-        <command
-              commandId="org.kalypso.ui.views.outline.ShapeExport"
-              style="push">
-           <visibleWhen
-                 checkEnabled="true">
-           </visibleWhen>
-        </command>
-        <command
-              commandId="org.kalypso.ui.views.outline.GMLExport"
-              style="push">
-           <visibleWhen
-                 checkEnabled="true">
-           </visibleWhen>
-        </command>
-        <command
-              commandId="org.kalypso.ui.views.outline.LegendExport"
-              style="push">
-           <visibleWhen
-                 checkEnabled="true">
-           </visibleWhen>
-        </command>
-        <command
-              commandId="org.kalypso.ui.views.outline.SldExport"
-              style="push">
-           <visibleWhen
-                 checkEnabled="true">
-           </visibleWhen>
-        </command>
-        <command
-              commandId="org.kalypso.ui.views.outline.HMOExport"
-              style="push">
-           <visibleWhen
-                 checkEnabled="true">
-           </visibleWhen>
-        </command>
-  </menuContribution>
+  
+        <menuContribution
+              locationURI="popup:org.eclipse.ui.popup.any?after=additions">
+              <command commandId="org.kalypso.ui.map.outline.command.NodeProperties" style="push">
+                   <visibleWhen checkEnabled="true"/>
+              </command>
+        </menuContribution>
+  
+      <menuContribution
+            locationURI="popup:org.kalypso.gml.ui.exports?after=genericGml">
+            <command
+                  commandId="org.kalypso.ui.views.outline.ShapeExport"
+                  style="push">
+               <visibleWhen
+                     checkEnabled="true">
+               </visibleWhen>
+            </command>
+            <command
+                  commandId="org.kalypso.ui.views.outline.GMLExport"
+                  style="push">
+               <visibleWhen
+                     checkEnabled="true">
+               </visibleWhen>
+            </command>
+            <command
+                  commandId="org.kalypso.ui.views.outline.LegendExport"
+                  style="push">
+               <visibleWhen
+                     checkEnabled="true">
+               </visibleWhen>
+            </command>
+            <command
+                  commandId="org.kalypso.ui.views.outline.SldExport"
+                  style="push">
+               <visibleWhen
+                     checkEnabled="true">
+               </visibleWhen>
+            </command>
+            <command
+                  commandId="org.kalypso.ui.views.outline.HMOExport"
+                  style="push">
+               <visibleWhen
+                     checkEnabled="true">
+               </visibleWhen>
+            </command>
+      </menuContribution>
 	</extension>
 	
 	<!-- Map-View-Outline: tool/menu-items for standard Map-View-Outline -->
