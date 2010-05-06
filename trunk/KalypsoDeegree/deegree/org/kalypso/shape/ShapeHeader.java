@@ -166,10 +166,10 @@ public class ShapeHeader
     DataUtils.writeLEInt( output, SHAPE_FILE_VERSION );
     DataUtils.writeLEInt( output, m_shapeType );
     if( m_mbr == null )
-      output.write( new byte[4 * 8] ); // just random bytes, does not matter
+      new SHPEnvelope().writeLESHPEnvelope( output );
     else
       m_mbr.writeLESHPEnvelope( output );
-    // TODO: ShapeHEader supports z- and m-rnages, we should do so also.
+    // TODO: ShapeHEader supports z- and m-ranges, we should do so also.
     new SHPZRange( 0.0, 0.0 ).writeLESHPRange( output ); // Z-Range
     new SHPZRange( 0.0, 0.0 ).writeLESHPRange( output ); // M-Range
   }
