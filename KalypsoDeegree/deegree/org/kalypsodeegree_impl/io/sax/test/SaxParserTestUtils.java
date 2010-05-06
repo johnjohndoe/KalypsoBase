@@ -44,6 +44,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URL;
+import java.util.regex.Pattern;
 
 import junit.framework.Assert;
 
@@ -97,7 +98,13 @@ public final class SaxParserTestUtils
   {
     final String actual = FileUtils.readFileToString( file, System.getProperty( "file.encoding" ) );
     final String expected = UrlUtilities.toString( fileExpected, System.getProperty( "file.encoding" ) );
-    Assert.assertEquals( expected.trim(), actual.trim() );
+
+    final Pattern whitespacePattern = Pattern.compile( "\\s", Pattern.MULTILINE );
+
+    final String actualCleaned = whitespacePattern.matcher( actual ).replaceAll( "" );
+    final String expectedCleaned = whitespacePattern.matcher( expected ).replaceAll( "" );
+
+    Assert.assertEquals( expectedCleaned, actualCleaned );
   }
 
 }
