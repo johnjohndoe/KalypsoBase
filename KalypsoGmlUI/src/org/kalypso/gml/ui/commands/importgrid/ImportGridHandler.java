@@ -1,4 +1,4 @@
-package org.kalypso.gml.ui.handler;
+package org.kalypso.gml.ui.commands.importgrid;
 
 import java.net.URL;
 
@@ -15,7 +15,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.gml.ui.i18n.Messages;
-import org.kalypso.gml.ui.wizard.grid.AddRectifiedGridCoveragesWizard;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 
