@@ -45,9 +45,9 @@ import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
 
-import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.kalypso.contribs.eclipse.core.runtime.AdapterUtils;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.IProfileSelectionProvider;
@@ -93,52 +93,36 @@ public class ProfileSelection
   private void addItem( final Object item )
   {
     if( m_workspace == null )
-      m_workspace = getAs( item, CommandableWorkspace.class );
+      m_workspace = AdapterUtils.getAdapter( item, CommandableWorkspace.class );
 
-    final FeatureList featureList = getAs( item, FeatureList.class );
+    final FeatureList featureList = AdapterUtils.getAdapter( item, FeatureList.class );
     if( featureList != null )
     {
       addFeatureList( featureList );
       return;
     }
 
-    final FeatureAssociationTypeElement fate = getAs( item, FeatureAssociationTypeElement.class );
+    final FeatureAssociationTypeElement fate = AdapterUtils.getAdapter( item, FeatureAssociationTypeElement.class );
     if( fate != null )
     {
       addFeatureAssociation( (FeatureAssociationTypeElement) item );
       return;
     }
 
-    final IProfileFeature profileFeature = getAs( item, IProfileFeature.class );
+    final IProfileFeature profileFeature = AdapterUtils.getAdapter( item, IProfileFeature.class );
     if( profileFeature != null )
     {
       addProfileFeature( profileFeature );
       return;
     }
 
-    final IProfileSelectionProvider profileSelection = getAs( item, IProfileSelectionProvider.class );
+    final IProfileSelectionProvider profileSelection = AdapterUtils.getAdapter( item, IProfileSelectionProvider.class );
     if( profileSelection != null )
     {
-      m_container = getAs( item, Feature.class );
+      m_container = AdapterUtils.getAdapter( item, Feature.class );
       addProfileSelectionProvider( profileSelection, null );
       return;
     }
-  }
-
-  private <T> T getAs( final Object item, final Class<T> type )
-  {
-    if( type.isInstance( item ) )
-      return type.cast( item );
-
-    if( item instanceof IAdaptable )
-    {
-      final IAdaptable adaptable = (IAdaptable) item;
-      final Object adapter = adaptable.getAdapter( type );
-      if( type.isInstance( adapter ) )
-        return type.cast( adapter );
-    }
-
-    return null;
   }
 
   private void addProfileFeature( final IProfileFeature profile )
