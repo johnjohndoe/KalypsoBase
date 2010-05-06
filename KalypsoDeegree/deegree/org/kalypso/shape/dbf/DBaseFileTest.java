@@ -120,7 +120,8 @@ public class DBaseFileTest extends Assert
 
     final DBFField[] fields = createAllFields();
 
-    final Charset charset = Charset.forName( "UTF-8" );
+    final Charset charset = Charset.forName( "ISO-8859-1" );
+
     final DBaseFile dBaseFile = DBaseFile.create( dbfFile, fields, charset );
     dBaseFile.close();
 

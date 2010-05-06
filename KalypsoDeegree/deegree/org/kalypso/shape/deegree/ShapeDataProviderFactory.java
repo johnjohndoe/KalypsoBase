@@ -47,6 +47,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.kalypso.gmlschema.builder.GeometryPropertyBuilder;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
@@ -69,9 +70,14 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
  * 
  * @author Gernot Belger
  */
-public class ShapeDataProviderFactory
+public final class ShapeDataProviderFactory
 {
-  public IShapeDataProvider createDefaultProvider( final List<Feature> features ) throws DBaseException
+  private ShapeDataProviderFactory( )
+  {
+    throw new UnsupportedOperationException();
+  }
+
+  public static IShapeDataProvider createDefaultProvider( final List<Feature> features ) throws DBaseException
   {
     if( features.isEmpty() )
       return new FeatureShapeDataProvider( features, (byte) ShapeConst.SHAPE_TYPE_NULL, new HashMap<DBFField, GMLXPath>(), null );
@@ -84,7 +90,7 @@ public class ShapeDataProviderFactory
     return new FeatureShapeDataProvider( features, (byte) shapeType, mapping, geometry );
   }
 
-  private Map<DBFField, GMLXPath> findDataMapping( final IFeatureType type ) throws DBaseException
+  private static Map<DBFField, GMLXPath> findDataMapping( final IFeatureType type ) throws DBaseException
   {
     final Map<DBFField, GMLXPath> mapping = new HashMap<DBFField, GMLXPath>();
 
@@ -103,9 +109,12 @@ public class ShapeDataProviderFactory
     return mapping;
   }
 
-  private DBFField findField( final IPropertyType property ) throws DBaseException
+  private static DBFField findField( final IPropertyType property ) throws DBaseException
   {
     if( !(property instanceof IValuePropertyType) )
+      return null;
+
+    if( property instanceof GeometryPropertyBuilder )
       return null;
 
     final String fieldName = findFieldName( property );
@@ -147,7 +156,7 @@ public class ShapeDataProviderFactory
     return null;
   }
 
-  private String findFieldName( final IPropertyType property )
+  private static String findFieldName( final IPropertyType property )
   {
     final String localPart = property.getQName().getLocalPart();
     final int pos = localPart.lastIndexOf( '.' );
@@ -157,7 +166,7 @@ public class ShapeDataProviderFactory
     return localPart.substring( pos + 1 );
   }
 
-  private GMLXPath findGeometry( final IFeatureType type )
+  private static GMLXPath findGeometry( final IFeatureType type )
   {
     final IValuePropertyType property = type.getDefaultGeometryProperty();
     if( property == null )
@@ -166,7 +175,7 @@ public class ShapeDataProviderFactory
     return new GMLXPath( property.getQName() );
   }
 
-  private int findShapeType( final IFeatureType type )
+  private static int findShapeType( final IFeatureType type )
   {
     final IValuePropertyType property = type.getDefaultGeometryProperty();
     if( property == null )

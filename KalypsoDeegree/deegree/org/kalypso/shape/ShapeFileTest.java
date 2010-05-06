@@ -65,7 +65,7 @@ import org.kalypso.shape.tools.TmpFileHelper;
  */
 public class ShapeFileTest extends Assert
 {
-  private final TmpFileHelper m_tmpFiles = new TmpFileHelper( true );
+  private final TmpFileHelper m_tmpFiles = new TmpFileHelper( false );
 
   @Test
   public void writeReadEmpty( ) throws IOException, DBaseException
