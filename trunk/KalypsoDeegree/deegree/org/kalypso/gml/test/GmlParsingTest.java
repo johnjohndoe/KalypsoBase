@@ -46,6 +46,8 @@ import java.util.List;
 import javax.xml.namespace.QName;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.junit.Ignore;
+import org.junit.Test;
 import org.kalypso.gml.GMLException;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -60,8 +62,8 @@ import org.xml.sax.SAXException;
 public class GmlParsingTest extends GmlParsingTester
 {
   public final static String NS_GMLTEST = "org.kalypso.deegree.gmlparsertest";
-  
-  public final static String NS_1D2D = "http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults"; 
+
+  public final static String NS_1D2D = "http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults";
 
   public void testEmptyGml( ) throws IOException, ParserConfigurationException, SAXException, GMLException
   {
@@ -102,16 +104,18 @@ public class GmlParsingTest extends GmlParsingTester
     assertNotNull( triangle );
     assertEquals( 4, triangle.length );
     assertEquals( triangle[0], triangle[3] );
-  } 
-  
-  public void testTerrain( ) throws IOException, ParserConfigurationException, SAXException, GMLException
+  }
+
+  @Ignore("we need dependency to Kalypso1d2d just for this test...")
+  @Test
+  public void tostTerrain( ) throws IOException, ParserConfigurationException, SAXException, GMLException
   {
     final GMLWorkspace tinWorkspace = readGml( "resources/tin_TERRAIN" );
     assertNotNull( tinWorkspace );
 
     final Feature rootFeature = tinWorkspace.getRootFeature();
-    assertNotNull( rootFeature );  
-    
+    assertNotNull( rootFeature );
+
     final GM_TriangulatedSurface triangulatedSurface = (GM_TriangulatedSurface) rootFeature.getProperty( new QName( NS_1D2D, "triangulatedSurfaceMember" ) );
     assertNotNull( triangulatedSurface );
 
@@ -124,8 +128,8 @@ public class GmlParsingTest extends GmlParsingTester
     assertNotNull( triangle );
     assertEquals( 4, triangle.length );
     assertEquals( triangle[0], triangle[3] );
-    
+
     final String unit = (String) rootFeature.getProperty( new QName( NS_1D2D, "unit" ) );
-    assertEquals( "m", unit);
+    assertEquals( "m", unit );
   }
 }

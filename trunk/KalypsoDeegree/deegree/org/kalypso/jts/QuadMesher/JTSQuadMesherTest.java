@@ -116,7 +116,6 @@ public class JTSQuadMesherTest extends TestCase
         assertEquals( (double) i, coordinate.x );
         assertEquals( (double) j, coordinate.y );
       }
-
     }
 
     final JTSCoordsAreaElevAdjust areaAdjuster = new JTSCoordsAreaElevAdjust( test2 );
