@@ -182,7 +182,7 @@ public class JTSAdapter
   /**
    * Same as {@link #wrap(Geometry, null)}.
    * 
-   * @deprecated Use {@link #wrap(Geometry, String)} instead. The coordonate system should always be known.
+   * @deprecated Use {@link #wrap(Geometry, String)} instead. The coordinate system should always be known.
    */
   @Deprecated
   public static GM_Object wrap( final Geometry geometry ) throws GM_Exception
@@ -212,7 +212,7 @@ public class JTSAdapter
    */
   public static Coordinate export( final GM_Position pos )
   {
-     return new Coordinate( pos.getX(), pos.getY(), pos.getZ() );
+    return new Coordinate( pos.getX(), pos.getY(), pos.getZ() );
   }
 
   public static GM_Position wrap( final Coordinate coord )

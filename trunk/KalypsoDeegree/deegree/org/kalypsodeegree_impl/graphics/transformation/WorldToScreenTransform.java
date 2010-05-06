@@ -238,7 +238,6 @@ public class WorldToScreenTransform implements GeoTransform
   public double getDestX( final double xsource )
   {
     return m_destRect.getMinX() + (xsource - m_sourceRect.getMinX()) * m_qx;
-//    return m_destRect.getMin().getX() + (xsource - m_sourceRect.getMin().getX()) * m_qx;
   }
 
   /**
@@ -251,9 +250,8 @@ public class WorldToScreenTransform implements GeoTransform
   public double getDestY( final double ysource )
   {
     return m_destRect.getMinY() + m_destRect.getHeight() - (ysource - m_sourceRect.getMinY())* m_qy;
-//    return m_destRect.getMin().getY() + m_destRect.getHeight() - (ysource - m_sourceRect.getMin().getY()) * m_qy;
   }
-  
+
 
   /**
    * executes a coordinate transformation for the submitted point of the source coordinat system.
@@ -282,8 +280,8 @@ public class WorldToScreenTransform implements GeoTransform
   }
 
   /**
-   * executes a coordinat transformation for the submitted y-coordinate of the destination coordinate system.
-   *
+   * executes a coordinate transformation for the submitted y-coordinate of the destination coordinate system.
+   * 
    * @param ydest
    *          , y-coordinate of a point in the destination coordinate system.
    * @return the y-coordinate of the submitted value in the source coordinate system.

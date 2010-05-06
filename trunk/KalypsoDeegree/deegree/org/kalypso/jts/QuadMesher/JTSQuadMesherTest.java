@@ -47,11 +47,10 @@ import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
 
 /**
- * @author jung
+ * @author Thomas Jung
  */
 public class JTSQuadMesherTest extends TestCase
 {
-
   /**
    * Test method for {@link org.kalypso.jts.JTSQuadMesher#calculateMesh()}.
    */
@@ -109,7 +108,6 @@ public class JTSQuadMesherTest extends TestCase
     final Coordinate[][] test2 = adjuster.calculateElevations();
     for( int i = 0; i < test2.length; i++ )
     {
-
       final Coordinate[] coordinates = test2[i];
 
       for( int j = 0; j < coordinates.length; j++ )
@@ -126,7 +124,6 @@ public class JTSQuadMesherTest extends TestCase
     final Coordinate[][] test3 = areaAdjuster.adjustElevations();
     for( int i = 0; i < test3.length; i++ )
     {
-
       final Coordinate[] coordinates = test3[i];
 
       for( int j = 0; j < coordinates.length; j++ )

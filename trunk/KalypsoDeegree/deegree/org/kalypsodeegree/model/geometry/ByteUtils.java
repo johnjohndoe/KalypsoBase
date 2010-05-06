@@ -80,7 +80,7 @@ public class ByteUtils
    * 
    * not tested!
    */
-  public static int readBEShort( byte[] b, int off )
+  public static int readBEShort( final byte[] b, final int off )
   {
 
     return ( ( ( b[off + 0] & 0xff ) << 8 ) | ( ( b[off + 1] & 0xff ) ) );
@@ -99,7 +99,7 @@ public class ByteUtils
    * 
    * not tested!
    */
-  public static int readLEShort( byte[] b, int off )
+  public static int readLEShort( final byte[] b, final int off )
   {
 
     return ( ( ( b[off + 1] & 0xff ) << 8 ) | ( ( b[off + 0] & 0xff ) ) );
@@ -115,7 +115,7 @@ public class ByteUtils
    *          the offset into the buffer where the int resides
    * @return the int read from the buffer at the offset location
    */
-  public static int readBEInt( byte[] b, int off )
+  public static int readBEInt( final byte[] b, final int off )
   {
 
     return ( ( ( b[off + 0] & 0xff ) << 24 ) | ( ( b[off + 1] & 0xff ) << 16 ) | ( ( b[off + 2] & 0xff ) << 8 ) | ( ( b[off + 3] & 0xff ) ) );
@@ -131,11 +131,9 @@ public class ByteUtils
    *          the offset into the buffer where the int resides
    * @return the int read from the buffer at the offset location
    */
-  public static int readLEInt( byte[] b, int off )
+  public static int readLEInt( final byte[] b, final int off )
   {
-
     return ( ( ( b[off + 3] & 0xff ) << 24 ) | ( ( b[off + 2] & 0xff ) << 16 ) | ( ( b[off + 1] & 0xff ) << 8 ) | ( ( b[off + 0] & 0xff ) ) );
-
   }
 
   /**
@@ -148,13 +146,11 @@ public class ByteUtils
    *          the offset into the buffer where the long resides
    * @return the long read from the buffer at the offset location
    */
-  public static long readLELong( byte[] b, int off )
+  public static long readLELong( final byte[] b, final int off )
   {
-
     return ( ( ( b[off + 0] & 0xffL ) ) | ( ( b[off + 1] & 0xffL ) << 8 ) | ( ( b[off + 2] & 0xffL ) << 16 )
         | ( ( b[off + 3] & 0xffL ) << 24 ) | ( ( b[off + 4] & 0xffL ) << 32 ) | ( ( b[off + 5] & 0xffL ) << 40 )
         | ( ( b[off + 6] & 0xffL ) << 48 ) | ( ( b[off + 7] & 0xffL ) << 56 ) );
-
   }
 
   /**
@@ -167,7 +163,7 @@ public class ByteUtils
    *          the offset into the buffer where the long resides
    * @return the long read from the buffer at the offset location
    */
-  public static long readBELong( byte[] b, int off )
+  public static long readBELong( final byte[] b, final int off )
   {
 
     return ( ( ( b[off + 7] & 0xffL ) ) | ( ( b[off + 6] & 0xffL ) << 8 ) | ( ( b[off + 5] & 0xffL ) << 16 )
@@ -185,10 +181,10 @@ public class ByteUtils
    *          the offset into the buffer where the float resides
    * @return the float read from the buffer at the offset location
    */
-  public static float readLEFloat( byte[] b, int off )
+  public static float readLEFloat( final byte[] b, final int off )
   {
 
-    float result = Float.intBitsToFloat( readLEInt( b, off ) );
+    final float result = Float.intBitsToFloat( readLEInt( b, off ) );
 
     return result;
 
@@ -203,13 +199,9 @@ public class ByteUtils
    *          the offset into the buffer where the float resides
    * @return the float read from the buffer at the offset location
    */
-  public static float readBEFloat( byte[] b, int off )
+  public static float readBEFloat( final byte[] b, final int off )
   {
-
-    float result = Float.intBitsToFloat( readBEInt( b, off ) );
-
-    return result;
-
+    return Float.intBitsToFloat( readBEInt( b, off ) );
   }
 
   /**
@@ -222,12 +214,9 @@ public class ByteUtils
    *          the offset into the buffer where the double resides
    * @return the double read from the buffer at the offset location
    */
-  public static double readLEDouble( byte[] b, int off )
+  public static double readLEDouble( final byte[] b, final int off )
   {
-
-    double result = Double.longBitsToDouble( readLELong( b, off ) );
-
-    return result;
+    return Double.longBitsToDouble( readLELong( b, off ) );
 
   }
 
@@ -241,13 +230,9 @@ public class ByteUtils
    *          the offset into the buffer where the double resides
    * @return the double read from the buffer at the offset location
    */
-  public static double readBEDouble( byte[] b, int off )
+  public static double readBEDouble( final byte[] b, final int off )
   {
-
-    double result = Double.longBitsToDouble( readBELong( b, off ) );
-
-    return result;
-
+    return Double.longBitsToDouble( readBELong( b, off ) );
   }
 
   /**
@@ -264,9 +249,8 @@ public class ByteUtils
    * 
    * not tested!
    */
-  public static int writeBEShort( byte[] b, int off, int val )
+  public static int writeBEShort( final byte[] b, final int off, final int val )
   {
-
     b[off + 0] = (byte)( ( val >> 8 ) & 0xff );
     b[off + 1] = (byte)( ( val ) & 0xff );
 
@@ -288,7 +272,7 @@ public class ByteUtils
    * 
    * not tested!
    */
-  public static int writeLEShort( byte[] b, int off, int val )
+  public static int writeLEShort( final byte[] b, final int off, final int val )
   {
 
     b[off + 0] = (byte)( ( val ) & 0xff );
@@ -310,7 +294,7 @@ public class ByteUtils
    *          the integer to write
    * @return the number of bytes written
    */
-  public static int writeBEInt( byte[] b, int off, int val )
+  public static int writeBEInt( final byte[] b, final int off, final int val )
   {
 
     b[off + 0] = (byte)( ( val >> 24 ) & 0xff );
@@ -334,9 +318,8 @@ public class ByteUtils
    *          the integer to write
    * @return the number of bytes written
    */
-  public static int writeLEInt( byte[] b, int off, int val )
+  public static int writeLEInt( final byte[] b, final int off, final int val )
   {
-
     b[off + 0] = (byte)( ( val ) & 0xff );
     b[off + 1] = (byte)( ( val >> 8 ) & 0xff );
     b[off + 2] = (byte)( ( val >> 16 ) & 0xff );
@@ -358,9 +341,8 @@ public class ByteUtils
    *          the long to write
    * @return the number of bytes written
    */
-  public static int writeLELong( byte[] b, int off, long val )
+  public static int writeLELong( final byte[] b, final int off, final long val )
   {
-
     b[off + 0] = (byte)( ( val ) & 0xff );
     b[off + 1] = (byte)( ( val >> 8 ) & 0xff );
     b[off + 2] = (byte)( ( val >> 16 ) & 0xff );
@@ -371,7 +353,6 @@ public class ByteUtils
     b[off + 7] = (byte)( ( val >> 56 ) & 0xff );
 
     return 8;
-
   }
 
   /**
@@ -386,7 +367,7 @@ public class ByteUtils
    *          the long to write
    * @return the number of bytes written
    */
-  public static int writeBELong( byte[] b, int off, long val )
+  public static int writeBELong( final byte[] b, final int off, final long val )
   {
 
     b[off + 0] = (byte)( ( val >> 56 ) & 0xff );
@@ -414,11 +395,9 @@ public class ByteUtils
    *          the double to write
    * @return the number of bytes written
    */
-  public static int writeLEDouble( byte[] b, int off, double val )
+  public static int writeLEDouble( final byte[] b, final int off, final double val )
   {
-
     return writeLELong( b, off, Double.doubleToLongBits( val ) );
-
   }
 
   /**
@@ -433,7 +412,7 @@ public class ByteUtils
    *          the double to write
    * @return the number of bytes written
    */
-  public static int writeBEDouble( byte[] b, int off, double val )
+  public static int writeBEDouble( final byte[] b, final int off, final double val )
   {
 
     return writeBELong( b, off, Double.doubleToLongBits( val ) );
