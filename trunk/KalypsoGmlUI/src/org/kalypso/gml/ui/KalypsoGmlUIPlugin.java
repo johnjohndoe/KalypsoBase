@@ -3,6 +3,7 @@ package org.kalypso.gml.ui;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.kalypso.commons.eclipse.core.runtime.PluginImageProvider;
+import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -27,7 +28,7 @@ public class KalypsoGmlUIPlugin extends AbstractUIPlugin
    * This method is called upon plug-in activation
    */
   @Override
-  public void start( BundleContext context ) throws Exception
+  public void start( final BundleContext context ) throws Exception
   {
     super.start( context );
 
@@ -40,7 +41,7 @@ public class KalypsoGmlUIPlugin extends AbstractUIPlugin
    * This method is called when the plug-in is stopped
    */
   @Override
-  public void stop( BundleContext context ) throws Exception
+  public void stop( final BundleContext context ) throws Exception
   {
     // delete tmp images both on startup and shutdown
     m_imageProvider.resetTmpFiles();
@@ -62,10 +63,10 @@ public class KalypsoGmlUIPlugin extends AbstractUIPlugin
    * Returns an image descriptor for the image file at the given plug-in relative path.
    * 
    * @param path
-   *            the path
+   *          the path
    * @return the image descriptor
    */
-  public static ImageDescriptor getImageDescriptor( String path )
+  public static ImageDescriptor getImageDescriptor( final String path )
   {
     return AbstractUIPlugin.imageDescriptorFromPlugin( "org.kalypso.gml.ui", path ); //$NON-NLS-1$
   }
@@ -73,5 +74,10 @@ public class KalypsoGmlUIPlugin extends AbstractUIPlugin
   public static PluginImageProvider getImageProvider( )
   {
     return getDefault().m_imageProvider;
+  }
+
+  public static String id( )
+  {
+    return PluginUtilities.id( getDefault() );
   }
 }
