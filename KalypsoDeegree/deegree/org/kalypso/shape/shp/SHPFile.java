@@ -216,9 +216,12 @@ public class SHPFile
     final int shapeType = m_header.getShapeType();
     m_header = new ShapeHeader( (int) newFileLength, shapeType, newMbr );
 
+    final int writtenLength = (int) (newFileLength - fileLength) / 2;
+    final int recordLength = writtenLength - 4;
+
     final int recordOffset = (int) (fileLength / 2);
-    final int recordLength = (int) (newFileLength - fileLength - 8) / 2;
     Assert.isTrue( contentLength == recordLength );
+
     return new SHXRecord( recordOffset, recordLength );
   }
 

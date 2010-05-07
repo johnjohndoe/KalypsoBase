@@ -137,17 +137,17 @@ public class SHPEnvelope implements Serializable
   public SHPEnvelope( final DataInput input ) throws IOException
   {
     this.west = DataUtils.readLEDouble( input );
+    this.south = DataUtils.readLEDouble( input );
     this.east = DataUtils.readLEDouble( input );
     this.north = DataUtils.readLEDouble( input );
-    this.south = DataUtils.readLEDouble( input );
   }
 
   public void writeLESHPEnvelope( final DataOutput output ) throws IOException
   {
     DataUtils.writeLEDouble( output, west );
+    DataUtils.writeLEDouble( output, south );
     DataUtils.writeLEDouble( output, east );
     DataUtils.writeLEDouble( output, north );
-    DataUtils.writeLEDouble( output, south );
   }
 
   @Override

@@ -84,7 +84,9 @@ public final class ShapeDataProviderFactory
 
     final IFeatureType type = features.get( 0 ).getFeatureType();
     final int shapeType = findShapeType( type );
+// final int shapeType = ShapeConst.SHAPE_TYPE_POLYLINE;
     final GMLXPath geometry = findGeometry( type );
+// final GMLXPath geometry = new GMLXPath( new QName( "org.kalypso.model.wspmprofile", "profileLocation" ) );
     final Map<DBFField, GMLXPath> mapping = findDataMapping( type );
 
     return new FeatureShapeDataProvider( features, (byte) shapeType, mapping, geometry );
@@ -115,6 +117,9 @@ public final class ShapeDataProviderFactory
       return null;
 
     if( property instanceof GeometryPropertyBuilder )
+      return null;
+
+    if( property.isList() )
       return null;
 
     final String fieldName = findFieldName( property );
