@@ -61,7 +61,6 @@ import org.kalypsodeegree.model.geometry.GM_LineString;
  * @version 16.08.2000
  * @author Andreas Poth
  */
-
 public class SHPPolyLine implements ISHPParts
 {
   private final int m_numPoints;
@@ -171,7 +170,7 @@ public class SHPPolyLine implements ISHPParts
     writePart( output, m_envelope, m_numPoints, m_parts );
   }
 
-  public static void writePart( final DataOutput output, final SHPEnvelope envelope, final int numPoints, final ISHPPoint[][] points ) throws IOException
+  static void writePart( final DataOutput output, final SHPEnvelope envelope, final int numPoints, final ISHPPoint[][] points ) throws IOException
   {
     envelope.writeLESHPEnvelope( output );
     DataUtils.writeLEInt( output, points.length );
