@@ -84,10 +84,18 @@ public class FeatureSelectionHelper
     final ArrayList<Feature> features = new ArrayList<Feature>( list.size() );
     for( final Object element : list )
     {
+      final Feature feature;
       if( element instanceof Feature )
+        feature = (Feature) element;
+      else if( element instanceof EasyFeatureWrapper )
+        feature = ((EasyFeatureWrapper) element).getFeature();
+      else
+        feature = null;
+
+      if( feature != null )
       {
-        if( filterWorkspace == null || (filterWorkspace != null && selection.getWorkspace( (Feature) element ) == filterWorkspace) )
-          features.add( (Feature) element );
+        if( filterWorkspace == null || (filterWorkspace != null && selection.getWorkspace( feature ) == filterWorkspace) )
+          features.add( feature );
       }
     }
 
