@@ -41,6 +41,9 @@
 package org.kalypso.gml.ui.commands.exportshape;
 
 import java.io.File;
+import java.nio.charset.Charset;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.xml.namespace.QName;
 
@@ -59,20 +62,21 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
+import org.kalypso.gml.ui.KalypsoGmlUIPlugin;
 import org.kalypso.gml.ui.i18n.Messages;
 import org.kalypso.gml.ui.util.GenericFeatureSelection;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.map.handlers.MapHandlerUtils;
+import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.ogc.gml.serialize.Gml2ShapeConverter;
+import org.kalypso.ogc.gml.serialize.ShapeSerializer;
+import org.kalypso.shape.ShapeWriter;
+import org.kalypso.shape.dbf.DBaseException;
+import org.kalypso.shape.deegree.ShapeDataProviderFactory;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.geometry.GM_Object;
-import org.kalypsodeegree_impl.io.shpapi.ShapeConst;
-import org.kalypsodeegree_impl.io.shpapi.dataprovider.IShapeDataProvider;
-import org.kalypsodeegree_impl.io.shpapi.dataprovider.TriangulatedSurfaceSinglePartShapeDataProvider;
-import org.kalypsodeegree_impl.model.geometry.GM_TriangulatedSurface_Impl;
 
 /**
  * @author Gernot Belger
@@ -131,6 +135,9 @@ public class ExportGml2ShapeThemeHandler extends AbstractHandler implements IHan
     if( file == null )
       return null;
 
+    // FIXME: should fetch charset from dialog
+    final Charset shapeCharset = ShapeSerializer.getShapeDefaultCharset();
+
     final String result = file.getAbsolutePath();
     final String shapeFileBase;
     if( result.toLowerCase().endsWith( ".shp" ) || result.toLowerCase().endsWith( ".dbf" ) ) //$NON-NLS-1$ //$NON-NLS-2$
@@ -143,22 +150,41 @@ public class ExportGml2ShapeThemeHandler extends AbstractHandler implements IHan
       @Override
       protected IStatus run( final IProgressMonitor monitor )
       {
-        IShapeDataProvider shapeDataProvider = null;
-
-        final Feature feature = (Feature) featureList.get( 0 );
-        final GM_Object geometryProperty = feature.getDefaultGeometryProperty();
-        if( geometryProperty instanceof GM_TriangulatedSurface_Impl )
-        {
-          final byte shapeType = ShapeConst.SHAPE_TYPE_POLYGONZ;
-          shapeDataProvider = new TriangulatedSurfaceSinglePartShapeDataProvider( (Feature[]) featureList.toArray( new Feature[featureList.size()] ), shapeType );
-        }
         try
         {
-          converter.writeShape( featureList, shapeFileBase, shapeDataProvider, monitor );
+          final Feature[] featureArray = FeatureSelectionHelper.getFeatures( featureSelection );
+          final List<Feature> features = Arrays.asList( featureArray );
+          final org.kalypso.shape.IShapeDataProvider dataProvider = ShapeDataProviderFactory.createDefaultProvider( features );
+          final ShapeWriter shapeWriter = new ShapeWriter( dataProvider );
+          shapeWriter.write( shapeFileBase, shapeCharset, monitor );
+
+// IShapeDataProvider shapeDataProvider = null;
+
+// final Feature feature = (Feature) featureList.get( 0 );
+// final GM_Object geometryProperty = feature.getDefaultGeometryProperty();
+
+          // FIXME: reimplement old behaviour
+// if( geometryProperty instanceof GM_TriangulatedSurface_Impl )
+// {
+// final byte shapeType = ShapeConst.SHAPE_TYPE_POLYGONZ;
+// shapeDataProvider = new TriangulatedSurfaceSinglePartShapeDataProvider( (Feature[]) featureList.toArray( new
+          // Feature[featureList.size()] ), shapeType );
+// }
+// converter.writeShape( featureList, shapeFileBase, shapeDataProvider, monitor );
         }
         catch( final CoreException e )
         {
           return e.getStatus();
+        }
+        catch( final DBaseException e )
+        {
+          e.printStackTrace();
+          return new Status( IStatus.ERROR, KalypsoGmlUIPlugin.id(), "Failed to create default shape provider", e );
+        }
+        catch( final Exception e )
+        {
+          e.printStackTrace();
+          return new Status( IStatus.ERROR, KalypsoGmlUIPlugin.id(), "Failed to write shape file", e );
         }
         return Status.OK_STATUS;
       }
