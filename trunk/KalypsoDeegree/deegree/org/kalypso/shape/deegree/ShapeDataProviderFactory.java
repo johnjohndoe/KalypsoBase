@@ -51,7 +51,7 @@ import org.kalypso.gmlschema.builder.GeometryPropertyBuilder;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
-import org.kalypso.shape.IShapeDataProvider;
+import org.kalypso.shape.IShapeData;
 import org.kalypso.shape.ShapeConst;
 import org.kalypso.shape.dbf.DBFField;
 import org.kalypso.shape.dbf.DBaseException;
@@ -70,14 +70,9 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
  * 
  * @author Gernot Belger
  */
-public final class ShapeDataProviderFactory
+public class ShapeDataProviderFactory
 {
-  private ShapeDataProviderFactory( )
-  {
-    throw new UnsupportedOperationException();
-  }
-
-  public static IShapeDataProvider createDefaultProvider( final List<Feature> features ) throws DBaseException
+  public static IShapeData createDefaultProvider( final List<Feature> features ) throws DBaseException
   {
     if( features.isEmpty() )
       return new FeatureShapeDataProvider( features, (byte) ShapeConst.SHAPE_TYPE_NULL, new HashMap<DBFField, GMLXPath>(), null );

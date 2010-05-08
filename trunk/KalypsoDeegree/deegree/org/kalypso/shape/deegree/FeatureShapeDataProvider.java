@@ -43,7 +43,7 @@ package org.kalypso.shape.deegree;
 import java.util.List;
 import java.util.Map;
 
-import org.kalypso.shape.IShapeDataProvider;
+import org.kalypso.shape.IShapeData;
 import org.kalypso.shape.ShapeDataException;
 import org.kalypso.shape.dbf.DBFField;
 import org.kalypso.shape.geometry.ISHPGeometry;
@@ -57,7 +57,7 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
 /**
  * @author Gernot Belger
  */
-public class FeatureShapeDataProvider implements IShapeDataProvider
+public class FeatureShapeDataProvider implements IShapeData
 {
   private final List<Feature> m_features;
 
