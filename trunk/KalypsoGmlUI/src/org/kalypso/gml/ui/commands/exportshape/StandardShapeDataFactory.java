@@ -43,8 +43,6 @@ package org.kalypso.gml.ui.commands.exportshape;
 import java.util.Arrays;
 import java.util.List;
 
-import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
-import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.shape.IShapeData;
 import org.kalypso.shape.ShapeDataException;
 import org.kalypso.shape.dbf.DBaseException;
@@ -57,11 +55,11 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class StandardShapeDataFactory implements IShapeDataFactory
 {
-  private final IFeatureSelection m_featureSelection;
+  private final Feature[] m_features;
 
-  public StandardShapeDataFactory( final IFeatureSelection featureSelection )
+  public StandardShapeDataFactory( final Feature[] feature )
   {
-    m_featureSelection = featureSelection;
+    m_features = feature;
   }
 
   /**
@@ -72,8 +70,7 @@ public class StandardShapeDataFactory implements IShapeDataFactory
   {
     try
     {
-      final Feature[] featureArray = FeatureSelectionHelper.getFeatures( m_featureSelection );
-      final List<Feature> features = Arrays.asList( featureArray );
+      final List<Feature> features = Arrays.asList( m_features );
       return ShapeDataProviderFactory.createDefaultProvider( features );
     }
     catch( final DBaseException e )

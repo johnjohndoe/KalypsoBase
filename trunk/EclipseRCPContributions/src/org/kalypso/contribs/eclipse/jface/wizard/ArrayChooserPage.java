@@ -67,7 +67,7 @@ import org.eclipse.ui.internal.WorkbenchMessages;
 
 /**
  * This page lists a list of objects from which the user can choose from.
- *
+ * 
  * @author Gernot Belger, Holger Albert
  */
 @SuppressWarnings("restriction")
@@ -130,7 +130,18 @@ public class ArrayChooserPage extends WizardPage
    */
   private IBaseLabelProvider m_labelProvider = new LabelProvider();
 
-  private final boolean m_useDialogSettings;
+  private boolean m_useDialogSettings;
+
+  /**
+   * @param chooseables
+   *          Used as input for {@link ArrayContentProvider}
+   * @param pageName
+   *          The name of this page (internal use).
+   */
+  public ArrayChooserPage( final Object chooseables, final String pageName )
+  {
+    this( chooseables, pageName, null, null );
+  }
 
   /**
    * @param chooseables
@@ -149,7 +160,7 @@ public class ArrayChooserPage extends WizardPage
 
   /**
    * The constructor.
-   *
+   * 
    * @param chooseables
    *          Used as input for {@link ArrayContentProvider}
    * @param selected
@@ -201,9 +212,14 @@ public class ArrayChooserPage extends WizardPage
     m_useDialogSettings = useDialogSettings;
   }
 
+  public void setUseDialogSettings( final boolean useDialogSettings )
+  {
+    m_useDialogSettings = useDialogSettings;
+  }
+
   /**
    * This function sets a LabelProvider, that will be used generate the list names of the objects.
-   *
+   * 
    * @param labelProvider
    *          The new LabelProvider.
    */
@@ -214,7 +230,7 @@ public class ArrayChooserPage extends WizardPage
 
   /**
    * This function returns the current LabelProvider, that will be used to generate the list names of the objects.
-   *
+   * 
    * @return The current LabelProvider.
    */
   public IBaseLabelProvider getLabelProvider( )
@@ -279,7 +295,7 @@ public class ArrayChooserPage extends WizardPage
 
   /**
    * This function returns a list of selected objects from the chooseable list.
-   *
+   * 
    * @return All selected objects.
    */
   public Object[] getChoosen( )
@@ -293,7 +309,7 @@ public class ArrayChooserPage extends WizardPage
   /**
    * This function creates one type of button from two available types. Each type of button will change the check-state
    * of all chooseables.
-   *
+   * 
    * @param parent
    *          The parent composite.
    * @param viewer
@@ -308,7 +324,7 @@ public class ArrayChooserPage extends WizardPage
     final Button button = new Button( parent, SWT.PUSH );
 
     button.setLayoutData( new GridData( GridData.FILL_BOTH ) );
-    button.setText( select ?  SELECT_ALL_TITLE : DESELECT_ALL_TITLE );
+    button.setText( select ? SELECT_ALL_TITLE : DESELECT_ALL_TITLE );
 
     button.addSelectionListener( new SelectionAdapter()
     {
@@ -337,7 +353,7 @@ public class ArrayChooserPage extends WizardPage
   /**
    * This function sets the list of chooseables. If one is already set via the constructor, it will be replaced by this
    * list.
-   *
+   * 
    * @param input
    *          The new list of chooseables.
    */
@@ -348,14 +364,14 @@ public class ArrayChooserPage extends WizardPage
 
     if( m_viewer != null )
       m_viewer.setInput( input );
-    
+
     chkDialogSettings();
     chkPageComplete( true );
   }
 
   /**
    * This function will check, if all requirements of this page are met.
-   *
+   * 
    * @param firstTime
    *          This parameter should be true, if the page calls the function the first time. If true, the finish-state
    *          will be checked, but no error-message will be displayed.
