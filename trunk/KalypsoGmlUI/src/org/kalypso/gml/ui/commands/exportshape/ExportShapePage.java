@@ -41,18 +41,25 @@
 package org.kalypso.gml.ui.commands.exportshape;
 
 import java.io.File;
+import java.nio.charset.Charset;
 
+import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.IMessageProvider;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
 import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.contribs.eclipse.jface.viewers.CharsetViewer;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserDelegateSave;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup.FileChangedListener;
+import org.kalypso.gml.ui.jface.ShapeCharsetUI;
 
 /**
  * @author belger
@@ -62,6 +69,8 @@ public class ExportShapePage extends WizardPage
   private FileChooserGroup m_fileChooserGroup;
 
   private final FileChooserDelegateSave m_fileDelegate;
+
+  private CharsetViewer m_charsetViewer;
 
   public ExportShapePage( final String pageName, final String fileName )
   {
@@ -83,11 +92,37 @@ public class ExportShapePage extends WizardPage
   public void createControl( final Composite parent )
   {
     final Composite panel = new Composite( parent, SWT.NONE );
-    panel.setLayout( new GridLayout() );
+    panel.setLayout( new GridLayout( 3, false ) );
 
-    // examine what we got and ask user
-    // TODO: only use file extension which make sense (dbf OR shp)
+    createFileChooser( panel );
 
+    final Label charsetLabel = new Label( panel, SWT.NONE );
+    charsetLabel.setText( "Charset" );
+    charsetLabel.setLayoutData( new GridData( SWT.BEGINNING, SWT.CENTER, false, false ) );
+    final Control charsetControl = createCharsetChooser( panel );
+    charsetControl.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 ) );
+
+    setControl( panel );
+  }
+
+  private Control createCharsetChooser( final Composite parent )
+  {
+    final IDialogSettings dialogSettings = getDialogSettings();
+    m_charsetViewer = ShapeCharsetUI.createCharsetViewer( parent, dialogSettings );
+    m_charsetViewer.addSelectionChangedListener( new ISelectionChangedListener()
+    {
+      @Override
+      public void selectionChanged( final SelectionChangedEvent event )
+      {
+        updateMessage();
+      }
+    } );
+
+    return m_charsetViewer.getControl();
+  }
+
+  private void createFileChooser( final Composite panel )
+  {
     m_fileChooserGroup = new FileChooserGroup( m_fileDelegate );
     m_fileChooserGroup.setDialogSettings( getDialogSettings() );
     m_fileChooserGroup.addFileChangedListener( new FileChangedListener()
@@ -99,10 +134,7 @@ public class ExportShapePage extends WizardPage
       }
     } );
 
-    final Group fileChooserControl = m_fileChooserGroup.createControl( panel, SWT.NONE );
-    fileChooserControl.setLayoutData( new GridData( SWT.FILL, SWT.BEGINNING, true, false ) );
-
-    setControl( panel );
+    m_fileChooserGroup.createControlsInGrid( panel );
   }
 
   protected void updateMessage( )
@@ -123,9 +155,9 @@ public class ExportShapePage extends WizardPage
     return null;
   }
 
-  public File getFile( )
+  public Charset getCharset( )
   {
-    return m_fileChooserGroup.getFile();
+    return m_charsetViewer.getCharset();
   }
 
   public String getShapeFileBase( )

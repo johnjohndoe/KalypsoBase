@@ -14,8 +14,7 @@ import org.kalypso.shape.dbf.DBaseException;
 import org.kalypso.shape.deegree.IShapeDataFactory;
 
 /**
- * @author belger
- *
+ * @author Gernot Belger
  */
 public final class ExportShapeOperation implements ICoreRunnableWithProgress
 {
@@ -25,7 +24,7 @@ public final class ExportShapeOperation implements ICoreRunnableWithProgress
 
   private final IShapeDataFactory m_shapeDataFactory;
 
-  public ExportShapeOperation( Charset shapeCharset, String shapeFileBase, IShapeDataFactory shapeDataFactory )
+  public ExportShapeOperation( final Charset shapeCharset, final String shapeFileBase, final IShapeDataFactory shapeDataFactory )
   {
     m_shapeCharset = shapeCharset;
     m_shapeFileBase = shapeFileBase;
