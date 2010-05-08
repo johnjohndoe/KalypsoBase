@@ -47,23 +47,31 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.wizard.Wizard;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.contribs.java.util.Arrays;
+import org.kalypso.gml.ui.jface.FeatureSelectionPage;
+import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.shape.deegree.IShapeDataFactory;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author belger
  */
 public class ExportShapeWizard extends Wizard
 {
-  private final IFeatureSelection m_featureSelection;
-
   private final ExportShapePage m_exportShapePage;
+
+  private final FeatureSelectionPage m_selectFeaturesPage;
 
   public ExportShapeWizard( final IFeatureSelection featureSelection, final String fileName )
   {
-    m_featureSelection = featureSelection;
+    final Feature[] featureArray = FeatureSelectionHelper.getFeatures( featureSelection );
+    m_selectFeaturesPage = new FeatureSelectionPage( "festureSelection", featureArray, null, featureArray, 1 );
+    m_selectFeaturesPage.setTitle( "Choose Features" );
+    m_selectFeaturesPage.setDescription( "Please choose features for export." );
 
-    // TODO: show list of features to user?
+    addPage( m_selectFeaturesPage );
+
     m_exportShapePage = new ExportShapePage( "exportShapePage", fileName );
     addPage( m_exportShapePage );
 
@@ -88,7 +96,10 @@ public class ExportShapeWizard extends Wizard
 
   private IShapeDataFactory getDataFactory( )
   {
-    return new StandardShapeDataFactory( m_featureSelection );
+    final Object[] choosen = m_selectFeaturesPage.getChoosen();
+    final Feature[] chosenFeatures = Arrays.castArray( choosen, new Feature[choosen.length] );
+
+    return new StandardShapeDataFactory( chosenFeatures );
   }
 
 }

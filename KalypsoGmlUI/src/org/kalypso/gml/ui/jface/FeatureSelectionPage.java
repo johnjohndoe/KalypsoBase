@@ -38,45 +38,26 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.gml.ui.commands.exportshape;
+package org.kalypso.gml.ui.jface;
 
-import java.util.Arrays;
-import java.util.List;
-
-import org.kalypso.shape.IShapeData;
-import org.kalypso.shape.ShapeDataException;
-import org.kalypso.shape.dbf.DBaseException;
-import org.kalypso.shape.deegree.IShapeDataFactory;
-import org.kalypso.shape.deegree.ShapeDataProviderFactory;
+import org.kalypso.contribs.eclipse.jface.wizard.ArrayChooserPage;
+import org.kalypso.ui.editor.gmleditor.ui.GMLLabelProvider;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Gernot Belger
  */
-public class StandardShapeDataFactory implements IShapeDataFactory
+public class FeatureSelectionPage extends ArrayChooserPage
 {
-  private final Feature[] m_features;
-
-  public StandardShapeDataFactory( final Feature[] feature )
+  public FeatureSelectionPage( final String pageName, final Feature[] features )
   {
-    m_features = feature;
+    this( pageName, features, null, null, 0 );
   }
 
-  /**
-   * @see org.kalypso.shape.deegree.IShapeDataFactory#createData()
-   */
-  @Override
-  public IShapeData createData( ) throws ShapeDataException
+  public FeatureSelectionPage( final String pageName, final Feature[] features, final Object[] selected, final Object[] checked, final int numToSelect )
   {
-    try
-    {
-      final List<Feature> features = Arrays.asList( m_features );
-      return ShapeDataProviderFactory.createDefaultProvider( features );
-    }
-    catch( final DBaseException e )
-    {
-      throw new ShapeDataException( "Failed to create shape data provider", e );
-    }
+    super( features, selected, checked, numToSelect, pageName, null, null );
+    setUseDialogSettings( false );
+    setLabelProvider( new GMLLabelProvider() );
   }
-
 }
