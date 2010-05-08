@@ -44,7 +44,7 @@ import org.kalypso.shape.geometry.ISHPGeometry;
  * @author Thomas Jung
  * @author Gernot Belger
  */
-public interface IShapeDataProvider
+public interface IShapeData
 {
   /** Numbers of entries of the shape file */
   public int size( ) throws ShapeDataException;
