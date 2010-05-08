@@ -44,6 +44,7 @@ import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.IMessageProvider;
@@ -61,6 +62,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.contribs.eclipse.i18n.Messages;
 
@@ -158,12 +160,32 @@ public class FileChooserGroup
     return fileName.substring( 0, indexDot + 1 ) + suffix;
   }
 
-  public Group createControl( final Composite parent, final int style )
+  public Group createGroup( final Composite parent, final int style )
   {
     final Group group = new Group( parent, style );
+
+    final GridLayout gridLayout = new GridLayout( 3, false );
+    group.setLayout( gridLayout );
+
+    createControlsInGrid( group );
+
+    return group;
+  }
+
+  /**
+   * Creates the controls of this {@link FileChooserGroup} inside the given {@link Composite}.<br>
+   * The composite must have a {@link GridLayout} as layout with at least 3 columns.
+   */
+  public void createControlsInGrid( final Composite parent )
+  {
+    final Layout layout = parent.getLayout();
+    Assert.isTrue( layout instanceof GridLayout );
+    final GridLayout gridLayout = (GridLayout) layout;
+    Assert.isTrue( gridLayout.numColumns >= 3 );
+
     // Remove all listeners when disposed; no events can happen anymore, and the client will most certainly do not
     // unregister its listener
-    group.addDisposeListener( new DisposeListener()
+    parent.addDisposeListener( new DisposeListener()
     {
       /**
        * @see org.eclipse.swt.events.DisposeListener#widgetDisposed(org.eclipse.swt.events.DisposeEvent)
@@ -175,20 +197,16 @@ public class FileChooserGroup
       }
     } );
 
-    final GridLayout gridLayout = new GridLayout();
-    gridLayout.numColumns = m_showLabel ? 3 : 2;
-
-    group.setLayout( gridLayout );
-
     if( m_showLabel )
     {
-      final Label label = new Label( group, SWT.NONE );
+      final Label label = new Label( parent, SWT.NONE );
       label.setText( Messages.getString( "org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup.4" ) ); //$NON-NLS-1$
     }
 
-    final Text text = new Text( group, m_delegate.getTextBoxStyle() );
+    final Text text = new Text( parent, m_delegate.getTextBoxStyle() );
     m_text = text;
-    text.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    final int textSpan = m_showLabel ? gridLayout.numColumns - 2 : gridLayout.numColumns - 1;
+    text.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, textSpan, 1 ) );
     m_text.addModifyListener( new ModifyListener()
     {
       public void modifyText( final ModifyEvent e )
@@ -197,7 +215,7 @@ public class FileChooserGroup
       }
     } );
 
-    final Button button = new Button( group, SWT.NONE );
+    final Button button = new Button( parent, SWT.NONE );
     button.setText( "..." ); //$NON-NLS-1$
     button.setToolTipText( m_delegate.getButtonText() );
     button.addSelectionListener( new SelectionAdapter()
@@ -213,8 +231,6 @@ public class FileChooserGroup
     final String filename = getInitialPath();
     if( filename != null )
       m_text.setText( filename );
-
-    return group;
   }
 
   private String getInitialPath( )
