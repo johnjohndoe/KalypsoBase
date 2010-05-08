@@ -58,6 +58,8 @@ public abstract class FileChooserDelegateFile implements IFileChooserDelegate
 
   private final int m_fileDialogType;
 
+  private String m_filename;
+
   protected FileChooserDelegateFile( final int fileDialogType )
   {
     this( fileDialogType, new String[0], new String[0] );
@@ -71,6 +73,14 @@ public abstract class FileChooserDelegateFile implements IFileChooserDelegate
 
     for( int i = 0; i < filterExtensions.length; i++ )
       addFilter( filterNames[i], filterExtensions[i] );
+  }
+
+  /**
+   * Sets the initial filename.
+   */
+  public void setFileName( final String filename )
+  {
+    m_filename = filename;
   }
 
   /**
@@ -106,10 +116,10 @@ public abstract class FileChooserDelegateFile implements IFileChooserDelegate
   {
     final FileDialog dialog = new FileDialog( shell, m_fileDialogType );
 
-    final String parentDir = currentFile == null ? null : currentFile.getParent();
-    dialog.setFilterPath( parentDir );
+    final String parentDir = getFilterPath( currentFile );
+    final String filename = getFileName( currentFile );
 
-    final String filename = currentFile == null ? "" : currentFile.getName();
+    dialog.setFilterPath( parentDir );
     dialog.setFileName( filename );
 
     dialog.setText( getButtonText() );
@@ -134,12 +144,28 @@ public abstract class FileChooserDelegateFile implements IFileChooserDelegate
     return new File( updatedFilename );
   }
 
+  private String getFileName( final File currentFile )
+  {
+    if( currentFile == null )
+      return "";
+
+    return currentFile.getName();
+  }
+
+  protected String getFilterPath( final File currentFile )
+  {
+    if( currentFile == null )
+      return null;
+
+    return currentFile.getParent();
+  }
+
   abstract String updateFileName( String filename, String suffix );
 
   private final int getFilterIndex( final String fileName )
   {
-    final int index = fileName.lastIndexOf( "." );
-    final String suffix = index < 0 ? "*.*" : "*" + fileName.substring( index );
+    final int index = fileName.lastIndexOf( "." );//$NON-NLS-1$
+    final String suffix = index < 0 ? "*.*" : "*" + fileName.substring( index ); //$NON-NLS-1$ //$NON-NLS-2$
 
     int i = 0;
     final String[] filterExtensions = getFilterExtensions();
@@ -159,10 +185,28 @@ public abstract class FileChooserDelegateFile implements IFileChooserDelegate
   @Override
   public IMessageProvider validate( final File file )
   {
-    final String path = file == null ? "" : file.getPath().trim();
+    final String path = file == null ? "" : file.getPath().trim();//$NON-NLS-1$
     if( path.length() == 0 )
       return new MessageProvider( "Es muss eine Datei angegeben werden.", IMessageProvider.ERROR );
 
     return null;
+  }
+
+  /**
+   * @see org.kalypso.contribs.eclipse.jface.wizard.IFileChooserDelegate#getInitialPath(java.lang.String)
+   */
+  @Override
+  public String getInitialPath( final String savedPath )
+  {
+    if( m_filename == null )
+      return savedPath;
+
+    /* Replace filename with our filename. We keep the last directory */
+    final File savedFile = savedPath == null ? null : new File( savedPath );
+    final File savedDir = savedFile == null ? null : savedFile.getParentFile();
+    final File userDir = new File( System.getProperty( "user.dir" ) );
+    final File initialDir = savedDir == null ? userDir : savedDir;
+    final File initialFile = new File( initialDir, m_filename );
+    return initialFile.getAbsolutePath();
   }
 }

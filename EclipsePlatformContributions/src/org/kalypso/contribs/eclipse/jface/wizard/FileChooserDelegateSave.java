@@ -68,7 +68,7 @@ public class FileChooserDelegateSave extends FileChooserDelegateFile
   @Override
   public int getTextBoxStyle( )
   {
-    return SWT.BORDER | SWT.READ_ONLY;
+    return SWT.BORDER;
   }
 
   @Override
