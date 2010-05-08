@@ -40,43 +40,27 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gml.ui.commands.exportshape;
 
-import java.io.File;
-import java.nio.charset.Charset;
-import java.util.Arrays;
-import java.util.List;
-
-import javax.xml.namespace.QName;
+import java.util.Iterator;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
-import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
+import org.kalypso.contribs.eclipse.core.runtime.AdapterUtils;
+import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
+import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.gml.ui.KalypsoGmlUIPlugin;
-import org.kalypso.gml.ui.i18n.Messages;
 import org.kalypso.gml.ui.util.GenericFeatureSelection;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
-import org.kalypso.ogc.gml.map.handlers.MapHandlerUtils;
-import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
+import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
-import org.kalypso.ogc.gml.serialize.Gml2ShapeConverter;
-import org.kalypso.ogc.gml.serialize.ShapeSerializer;
-import org.kalypso.shape.ShapeWriter;
-import org.kalypso.shape.dbf.DBaseException;
-import org.kalypso.shape.deegree.ShapeDataProviderFactory;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureList;
 
 /**
  * @author Gernot Belger
@@ -103,121 +87,39 @@ public class ExportGml2ShapeThemeHandler extends AbstractHandler implements IHan
       return null;
     }
 
-    final IKalypsoFeatureTheme theme = MapHandlerUtils.getFirstElement( selection, IKalypsoFeatureTheme.class );
-    if( theme == null )
-      throw new ExecutionException( "No Feature-Theme in selection." );
+    final String fileName = findFileName( selection );
 
-    // TODO: let the user choose what to export: visible features, all features, current extent, ...
-    final FeatureList featureList = theme == null ? null : theme.getFeatureListVisible( null );
-    final IFeatureType type = resolveFeatureType( theme );
-    if( featureList == null || featureList.size() == 0 )
-    {
-      MessageDialog.openWarning( shell, title, Messages.getString( "org.kalypso.ogc.gml.outline.handler.ExportGml2ShapeThemeHandler.3" ) ); //$NON-NLS-1$
-      return Status.CANCEL_STATUS;
-    }
+    final Wizard wizard = new ExportShapeWizard( featureSelection, fileName );
+    wizard.setWindowTitle( title );
+    final IDialogSettings wizardSettings = PluginUtilities.getDialogSettings( KalypsoGmlUIPlugin.getDefault(), getClass().getName() );
+    wizard.setDialogSettings( wizardSettings );
+    final WizardDialog2 dialog = new WizardDialog2( shell, wizard );
+    dialog.setRememberSize( true );
+    dialog.open();
 
-    // TODO: show list of features to user?
+    return null;
+  }
 
-    // TODO: use reusable code from here on, we might want to export shape from other places as well
-
-    final Gml2ShapeConverter converter = Gml2ShapeConverter.createDefault( type );
-
-    // examine what we got and ask user
-    // TODO: only use file extension which make sense (dbf OR shp)
-
-    /* ask user for file */
-    final String fileName = theme.getLabel();
-    final String[] filterExtensions = new String[] { "*.shp", "*.dbf" }; //$NON-NLS-1$ //$NON-NLS-2$
-    final String[] filterNames = new String[] {
-        Messages.getString( "org.kalypso.ogc.gml.outline.handler.ExportGml2ShapeThemeHandler.9" ), Messages.getString( "org.kalypso.ogc.gml.outline.handler.ExportGml2ShapeThemeHandler.10" ) }; //$NON-NLS-1$ //$NON-NLS-2$
-
-    final File file = MapHandlerUtils.showSaveFileDialog( shell, title, fileName, "gml2shapeExport", filterExtensions, filterNames ); //$NON-NLS-1$
-    if( file == null )
+  private String findFileName( final ISelection selection )
+  {
+    if( selection.isEmpty() || !(selection instanceof IStructuredSelection) )
       return null;
 
-    // FIXME: should fetch charset from dialog
-    final Charset shapeCharset = ShapeSerializer.getShapeDefaultCharset();
-
-    final String result = file.getAbsolutePath();
-    final String shapeFileBase;
-    if( result.toLowerCase().endsWith( ".shp" ) || result.toLowerCase().endsWith( ".dbf" ) ) //$NON-NLS-1$ //$NON-NLS-2$
-      shapeFileBase = FileUtilities.nameWithoutExtension( result );
-    else
-      shapeFileBase = result;
-
-    final Job job = new Job( title + " - " + result ) //$NON-NLS-1$
+    final IStructuredSelection structSel = (IStructuredSelection) selection;
+    for( final Iterator< ? > iterator = structSel.iterator(); iterator.hasNext(); )
     {
-      @Override
-      protected IStatus run( final IProgressMonitor monitor )
-      {
-        try
-        {
-          final Feature[] featureArray = FeatureSelectionHelper.getFeatures( featureSelection );
-          final List<Feature> features = Arrays.asList( featureArray );
-          final org.kalypso.shape.IShapeDataProvider dataProvider = ShapeDataProviderFactory.createDefaultProvider( features );
-          final ShapeWriter shapeWriter = new ShapeWriter( dataProvider );
-          shapeWriter.write( shapeFileBase, shapeCharset, monitor );
+      final Object selectedElement = iterator.next();
+      final IKalypsoTheme theme = AdapterUtils.getAdapter( selectedElement, IKalypsoTheme.class );
+      if( theme != null )
+        return theme.getLabel();
 
-// IShapeDataProvider shapeDataProvider = null;
+      // TODO: other special cases
 
-// final Feature feature = (Feature) featureList.get( 0 );
-// final GM_Object geometryProperty = feature.getDefaultGeometryProperty();
+      return selectedElement.toString();
 
-          // FIXME: reimplement old behaviour
-// if( geometryProperty instanceof GM_TriangulatedSurface_Impl )
-// {
-// final byte shapeType = ShapeConst.SHAPE_TYPE_POLYGONZ;
-// shapeDataProvider = new TriangulatedSurfaceSinglePartShapeDataProvider( (Feature[]) featureList.toArray( new
-          // Feature[featureList.size()] ), shapeType );
-// }
-// converter.writeShape( featureList, shapeFileBase, shapeDataProvider, monitor );
-        }
-        catch( final CoreException e )
-        {
-          return e.getStatus();
-        }
-        catch( final DBaseException e )
-        {
-          e.printStackTrace();
-          return new Status( IStatus.ERROR, KalypsoGmlUIPlugin.id(), "Failed to create default shape provider", e );
-        }
-        catch( final Exception e )
-        {
-          e.printStackTrace();
-          return new Status( IStatus.ERROR, KalypsoGmlUIPlugin.id(), "Failed to write shape file", e );
-        }
-        return Status.OK_STATUS;
-      }
-    };
-    job.setUser( true );
-    job.schedule();
-
-    return Status.OK_STATUS;
-  }
-
-  /**
-   * @hack special handling for wfs-themes!
-   */
-  private IFeatureType resolveFeatureType( final IKalypsoFeatureTheme theme )
-  {
-    final IFeatureType featureType = theme.getFeatureType();
-    final QName qname = featureType.getQName();
-    if( Feature.QNAME_FEATURE.equals( qname ) )
-    {
-      final FeatureList list = theme.getFeatureList();
-      if( list.size() == 0 )
-        return featureType;
-
-      final Object object = list.get( 0 );
-      if( object instanceof Feature )
-      {
-        final Feature feature = (Feature) object;
-
-        return feature.getFeatureType();
-      }
+      // TODO: more than one element selected?
     }
 
-    return featureType;
+    return null;
   }
-
 }
