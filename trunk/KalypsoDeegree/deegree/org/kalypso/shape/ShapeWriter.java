@@ -58,9 +58,9 @@ import org.kalypso.shape.shp.SHPException;
  */
 public class ShapeWriter
 {
-  private final IShapeDataProvider m_dataProvider;
+  private final IShapeData m_dataProvider;
 
-  public ShapeWriter( final IShapeDataProvider dataProvider )
+  public ShapeWriter( final IShapeData dataProvider )
   {
     m_dataProvider = dataProvider;
   }
