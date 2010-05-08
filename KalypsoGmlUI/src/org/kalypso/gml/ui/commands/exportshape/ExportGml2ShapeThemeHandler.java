@@ -77,7 +77,6 @@ public class ExportGml2ShapeThemeHandler extends AbstractHandler implements IHan
     final String commandName = HandlerUtils.getCommandName( event );
     final String title = commandName;//Messages.getString( "org.kalypso.ogc.gml.outline.handler.ExportGml2ShapeThemeHandler.2" ); //$NON-NLS-1$
 
-    // FIXME: more flexibility for selection!
     final ISelection selection = HandlerUtil.getCurrentSelectionChecked( event );
     final IFeatureSelection featureSelection = GenericFeatureSelection.create( selection, null );
     if( featureSelection == null || featureSelection.size() == 0 )

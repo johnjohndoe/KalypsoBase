@@ -48,7 +48,6 @@ import org.eclipse.jface.wizard.Wizard;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
-import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypso.shape.deegree.IShapeDataFactory;
 
 /**
@@ -64,8 +63,11 @@ public class ExportShapeWizard extends Wizard
   {
     m_featureSelection = featureSelection;
 
+    // TODO: show list of features to user?
     m_exportShapePage = new ExportShapePage( "exportShapePage", fileName );
     addPage( m_exportShapePage );
+
+    setNeedsProgressMonitor( true );
   }
 
   /**
@@ -74,11 +76,7 @@ public class ExportShapeWizard extends Wizard
   @Override
   public boolean performFinish( )
   {
-    // TODO: show list of features to user?
-
-    // FIXME: should fetch charset from dialog
-    final Charset shapeCharset = ShapeSerializer.getShapeDefaultCharset();
-
+    final Charset shapeCharset = m_exportShapePage.getCharset();
     final String shapeFileBase = m_exportShapePage.getShapeFileBase();
     final IShapeDataFactory shapeDataFactory = getDataFactory();
 
