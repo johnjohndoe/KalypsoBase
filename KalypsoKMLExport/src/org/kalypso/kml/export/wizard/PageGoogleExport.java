@@ -124,7 +124,7 @@ public class PageGoogleExport extends WizardPage implements IKMLExportSettings
     if( m_file == null )
     {
       final FileChooserGroup fc = new FileChooserGroup( saveDelegate );
-      final Group fcGroup = fc.createControl( container, SWT.NONE );
+      final Group fcGroup = fc.createGroup( container, SWT.NONE );
       fcGroup.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false, 2, 0 ) );
 
       fc.addFileChangedListener( new FileChooserGroup.FileChangedListener()
