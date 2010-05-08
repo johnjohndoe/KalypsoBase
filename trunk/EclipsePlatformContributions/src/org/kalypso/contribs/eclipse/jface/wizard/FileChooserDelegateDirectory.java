@@ -98,4 +98,13 @@ public class FileChooserDelegateDirectory implements IFileChooserDelegate
     return null;
   }
 
+  /**
+   * @see org.kalypso.contribs.eclipse.jface.wizard.IFileChooserDelegate#getInitialPath(java.lang.String)
+   */
+  @Override
+  public String getInitialPath( final String savedPath )
+  {
+    return savedPath;
+  }
+
 }

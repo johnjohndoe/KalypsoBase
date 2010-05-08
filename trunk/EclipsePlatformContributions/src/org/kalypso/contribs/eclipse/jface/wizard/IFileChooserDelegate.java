@@ -52,11 +52,19 @@ public interface IFileChooserDelegate
   int getTextBoxStyle( );
 
   /**
-   * Show the dialog and aks for the file.
+   * Shows the dialog and asks for the file.
    * 
    * @return <code>null</code>, if the dialog was cancelled.
    */
   File chooseFile( Shell shell, File currentFile );
 
   IMessageProvider validate( File file );
+
+  /**
+   * Returns the absolute file path with which the ui will be initialised.
+   * 
+   * @param savePath
+   *          The previously saved path of the last session (saved in {@link org.eclipse.jface.dialogs.IDialogSettings}.
+   */
+  String getInitialPath( String savedPath );
 }

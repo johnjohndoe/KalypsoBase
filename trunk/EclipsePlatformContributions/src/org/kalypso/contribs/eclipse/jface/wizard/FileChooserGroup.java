@@ -46,6 +46,7 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.jface.dialogs.IDialogSettings;
+import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
@@ -209,14 +210,22 @@ public class FileChooserGroup
     } );
 
     /* Restore settings */
-    if( m_settings != null )
-    {
-      final String filename = m_settings.get( FileChooserGroup.SETTINGS_FILENAME );
-      if( filename != null )
-        m_text.setText( filename );
-    }
+    final String filename = getInitialPath();
+    if( filename != null )
+      m_text.setText( filename );
 
     return group;
+  }
+
+  private String getInitialPath( )
+  {
+    final String savedPath;
+    if( m_settings == null )
+      savedPath = null;
+    else
+      savedPath = m_settings.get( FileChooserGroup.SETTINGS_FILENAME );
+
+    return m_delegate.getInitialPath( savedPath );
   }
 
   protected void dispose( )
@@ -254,21 +263,21 @@ public class FileChooserGroup
   {
     m_settings = settings;
 
-    if( (m_settings != null) && (m_text != null) && !m_text.isDisposed() )
+    if( m_text == null || m_text.isDisposed() )
+      return;
+
+    final String filename = getInitialPath();
+    if( filename == null || filename.equalsIgnoreCase( m_text.getText() ) )
+      return;
+
+    final Text text = m_text;
+    text.getDisplay().syncExec( new Runnable()
     {
-      final String filename = m_settings.get( FileChooserGroup.SETTINGS_FILENAME );
-      if( filename != null && !filename.equalsIgnoreCase( m_text.getText() ) )
+      public void run( )
       {
-        final Text text = m_text;
-        text.getDisplay().syncExec( new Runnable()
-        {
-          public void run( )
-          {
-            text.setText( filename );
-          }
-        } );
+        text.setText( filename );
       }
-    }
+    } );
   }
 
   /**
@@ -304,5 +313,10 @@ public class FileChooserGroup
       m_settings.put( FileChooserGroup.SETTINGS_FILENAME, text );
 
     fireFileChanged( getFile() );
+  }
+
+  public IMessageProvider validate( )
+  {
+    return m_delegate.validate( getFile() );
   }
 }
