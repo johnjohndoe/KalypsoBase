@@ -471,6 +471,7 @@ public class ProfilChartView implements IChartPart, IProfilListener
       if( m_chartComposite != null && !m_chartComposite.isDisposed() )
       {
         m_profile.addProfilListener( this );
+
         m_chartComposite.getChartModel().setTitle( Messages.getString( "org.kalypso.model.wspm.ui.view.AbstractProfilViewPart_3", m_profile.getStation() ) ); //$NON-NLS-1$
         ((GridData) (m_chartComposite.getLayoutData())).exclude = false;
         updateLayer();
@@ -532,6 +533,9 @@ public class ProfilChartView implements IChartPart, IProfilListener
       restoreStatePosition( lm, positions );
       restoreStateVisible( lm, visibility );
       restoreStateActive( lm, activeLayerId );
+//
+// m_chartComposite.getPlot().invalidate( lm.getLayers() );
     }
+
   }
 }
