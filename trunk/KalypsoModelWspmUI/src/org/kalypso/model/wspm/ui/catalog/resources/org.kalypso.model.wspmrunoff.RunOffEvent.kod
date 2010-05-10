@@ -37,18 +37,14 @@
 					</PointStyle>
 				</Styles>
 			</Layer>
-
 		</Layers>
 		<Mappers>
 			<Axis id="Station_Axis">
 				<Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
-				<Label>Station [km]</Label>
+				<Label>Stationkim [km]</Label>
 				<Direction>NEGATIVE</Direction>
 				<Position>BOTTOM</Position>
-				<NumberRange>
-					<MinValue>0</MinValue>
-					<MaxValue>1</MaxValue>
-				</NumberRange>
+                <PreferredAdjustment before="1" range="98" after="1" />
 				<RendererRef ref="NumberAxisRenderer" />
 			</Axis>
 			<Axis id="m3sAxis">
@@ -56,44 +52,26 @@
 				<Label>Abfluss [m³/s]</Label>
 				<Direction>POSITIVE</Direction>
 				<Position>RIGHT</Position>
-				<NumberRange>
-					<MinValue>0</MinValue>
-					<MaxValue>1</MaxValue>
-				</NumberRange>
-				<PreferredAdjustment before="2" range="10" after="2" />
+				<PreferredAdjustment before="5" range="90" after="5" />
 				<RendererRef ref="NumberDisAxisRenderer" />
 			</Axis>
 		</Mappers>
 		<Renderers>
 			<AxisRenderer id="NumberAxisRenderer">
-				<Provider epid="de.openali.odysseus.chart.ext.test.axisrenderer.provider.GenericNumberAxisRendererProvider">
+				<Provider epid="de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericNumberAxisRendererProvider">
 					<Parameters>
 						<Parameter name="inset_tick" value="1" />
+                        <Parameter name="hide_cut" value="true" />
+                        <Parameter name="gap" value="3" />
 					</Parameters>
 				</Provider>
-				<Styles>
-					<LineStyle role="axisLine">
-						<Title></Title>
-						<LineColor>000000</LineColor>
-					</LineStyle>
-					<TextStyle role="axisLabel">
-						<Title></Title>
-						<TextColor>000000</TextColor>
-					</TextStyle>
-					<LineStyle role="tickLine">
-						<Title></Title>
-						<LineColor>000000</LineColor>
-					</LineStyle>
-					<TextStyle role="tickLabel">
-						<Title></Title>
-						<TextColor>000000</TextColor>
-					</TextStyle>
-				</Styles>
 			</AxisRenderer>
 			<AxisRenderer id="NumberDisAxisRenderer">
-				<Provider epid="de.openali.odysseus.chart.ext.test.axisrenderer.provider.GenericNumberAxisRendererProvider">
+				<Provider epid="de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericNumberAxisRendererProvider">
 					<Parameters>
 						<Parameter name="inset_tick" value="1" />
+                        <Parameter name="hide_cut" value="true" />
+                        <Parameter name="gap" value="3" />
 					</Parameters>
 				</Provider>
 				<Styles>
