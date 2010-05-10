@@ -9,7 +9,6 @@ import de.openali.odysseus.chart.framework.model.event.IMapperRegistryEventListe
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants;
 import de.openali.odysseus.chart.framework.model.mapper.IMapper;
-import de.openali.odysseus.chart.framework.model.mapper.component.IAxisComponent;
 import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
 
 /**
@@ -64,17 +63,17 @@ public interface IMapperRegistry extends IEventProvider<IMapperRegistryEventList
   /**
    * @return the AxisComponent of the given axis or null if there isn't any
    */
-  public IAxisComponent getComponent( IAxis axis );
+// public IAxisComponent getComponent( IAxis axis );
 
   /**
    * sets the component for a particular axis
    */
-  public void setComponent( IAxis axis, IAxisComponent comp );
+// public void setComponent( IAxis axis, IAxisComponent comp );
 
   /**
    * @return map of Axis-AxisComponent-Pairs
    */
-  public Map<IAxis, IAxisComponent> getAxesToComponentsMap( );
+  // public Map<IAxis, IAxisComponent> getAxesToComponentsMap( );
 
   /**
    * removes all IAxis, IAxisRenderer and IAxisComponent entries

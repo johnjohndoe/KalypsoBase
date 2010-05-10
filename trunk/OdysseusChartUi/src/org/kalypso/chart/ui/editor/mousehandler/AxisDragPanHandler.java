@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.chart.ui.editor.mousehandler;
 
-import java.util.Map.Entry;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Cursor;
@@ -58,7 +56,6 @@ import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
 
 /**
  * @author burtscher1
- * 
  */
 public class AxisDragPanHandler extends AbstractAxisDragHandler
 {
@@ -71,8 +68,7 @@ public class AxisDragPanHandler extends AbstractAxisDragHandler
   /**
    * @see org.kalypso.chart.ui.editor.mousehandler.IAxisDragHandler#setUseCurrentAxis(boolean)
    */
-  public void setUseCurrentAxis( @SuppressWarnings("unused")
-  boolean useCurrentAxis )
+  public void setUseCurrentAxis( @SuppressWarnings("unused") boolean useCurrentAxis )
   {
 
   }
@@ -97,27 +93,29 @@ public class AxisDragPanHandler extends AbstractAxisDragHandler
 
       // // Zoom-Anzeige in AxisCanvas
       final AxisCanvas curAc = (AxisCanvas) e.getSource();
-      final IAxis curAxis = m_axes.get( curAc );
-      final ORIENTATION ori = curAxis.getPosition().getOrientation();
+// m_axes.get( curAc );
+      // final ORIENTATION ori = curAxis.getPosition().getOrientation();
 
       if( m_applyOnAllAxes )
       {
-        for( Entry<AxisCanvas, IAxis> entry : m_axes.entrySet() )
+// for( Entry<AxisCanvas, IAxis> entry : m_axes.entrySet() )
+// {
+// IAxis axis = entry.getValue();
+        for( final IAxis axis : getAxis( getOrientation( curAc ) ) )
         {
-          IAxis axis = entry.getValue();
-          if( axis.getPosition().getOrientation().equals( ori ) )
-          {
-            // AchsenOffset zurücksetzen
-            entry.getKey().setPanOffsetInterval( new Point( 0, 0 ) );
-            panAxis( m_mouseDragStart, m_mouseDragEnd, axis );
-          }
+          // AchsenOffset zurücksetzen
+          // entry.getKey().setPanOffsetInterval( new Point( 0, 0 ) );
+          m_chartComposite.getAxisCanvas( axis ).setPanOffsetInterval( new Point( 0, 0 ) );
+          panAxis( m_mouseDragStart, m_mouseDragEnd, axis );
         }
+        // }
         // PlotOffset zurücksetzen
         m_chartComposite.getPlot().setPanOffset( null, new Point( 0, 0 ) );
       }
       else
       {
         // zugehörige Layer rausfinden
+        final IAxis curAxis = curAc.getAxis();
         IChartLayer[] pannedLayers = m_chartComposite.getChartModel().getAxis2Layers().get( curAxis ).toArray( new IChartLayer[] {} );
         m_chartComposite.getPlot().setPanOffset( pannedLayers, new Point( 0, 0 ) );
 
@@ -160,24 +158,24 @@ public class AxisDragPanHandler extends AbstractAxisDragHandler
         hasStarted = true;
         // // Zoom-Anzeige in AxisCanvas
         final AxisCanvas curAc = (AxisCanvas) e.getSource();
-        final IAxis curAxis = m_axes.get( curAc );
-        final ORIENTATION ori = curAxis.getPosition().getOrientation();
+// m_axes.get( curAc );
+        final ORIENTATION ori = getOrientation( curAc );
 
         if( m_applyOnAllAxes )
         {
-          for( AxisCanvas ac : m_axes.keySet() )
+// for( AxisCanvas ac : m_axes.keySet() )
+// {
+// if( m_axes.get( ac ).getPosition().getOrientation().equals( ori ) )
+// {
+          for( final IAxis axis : getAxis( ori ) )
           {
-            if( m_axes.get( ac ).getPosition().getOrientation().equals( ori ) )
-            {
-              if( ori.equals( ORIENTATION.HORIZONTAL ) )
-                ac.setPanOffsetInterval( new Point( diff, 0 ) );
-              else
-                ac.setPanOffsetInterval( new Point( 0, diff ) );
-            }
-
+            if( ori.equals( ORIENTATION.HORIZONTAL ) )
+              m_chartComposite.getAxisCanvas( axis ).setPanOffsetInterval( new Point( diff, 0 ) );
+            else
+              m_chartComposite.getAxisCanvas( axis ).setPanOffsetInterval( new Point( 0, diff ) );
           }
 
-          if( curAxis.getPosition().getOrientation().equals( ORIENTATION.HORIZONTAL ) )
+          if( ori.equals( ORIENTATION.HORIZONTAL ) )
           {
             m_chartComposite.getPlot().setPanOffset( null, new Point( m_mouseDragStart - e.x, 0 ) );
           }
@@ -189,6 +187,7 @@ public class AxisDragPanHandler extends AbstractAxisDragHandler
         }
         else
         {
+          final IAxis curAxis = curAc.getAxis();
           // AxisCanvas verschieben
           if( ori.equals( ORIENTATION.HORIZONTAL ) )
             curAc.setPanOffsetInterval( new Point( diff, 0 ) );
@@ -198,7 +197,7 @@ public class AxisDragPanHandler extends AbstractAxisDragHandler
           // zugehörige Layer rausfinden
           IChartLayer[] pannedLayers = m_chartComposite.getChartModel().getAxis2Layers().get( curAxis ).toArray( new IChartLayer[] {} );
 
-          if( curAxis.getPosition().getOrientation().equals( ORIENTATION.HORIZONTAL ) )
+          if( ori.equals( ORIENTATION.HORIZONTAL ) )
           {
             m_chartComposite.getPlot().setPanOffset( pannedLayers, new Point( m_mouseDragStart - e.x, 0 ) );
           }

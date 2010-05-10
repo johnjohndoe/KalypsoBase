@@ -10,6 +10,7 @@ import org.eclipse.swt.graphics.Point;
 
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
+import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants;
 import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.ITextStyle;
@@ -20,15 +21,17 @@ import de.openali.odysseus.chart.framework.util.StyleUtils;
  */
 public abstract class AbstractGenericAxisRenderer implements IAxisRenderer
 {
-  private final int m_tickLength;
+  // private final int m_tickLength;
 
-  private final int m_gap;
+  // private final int m_gap;
 
   private final Insets m_labelInsets;
 
   private final Insets m_tickLabelInsets;
 
   private final String m_id;
+
+  // private final int m_borderSize;
 
   /**
    * Hashmap to store arbitrary key value pairs
@@ -47,15 +50,23 @@ public abstract class AbstractGenericAxisRenderer implements IAxisRenderer
 
   public AbstractGenericAxisRenderer( final String id, final int tickLength, final Insets tickLabelInsets, final Insets labelInsets, final int gap, final ILineStyle axisLineStyle, final ITextStyle labelStyle, final ILineStyle tickLineStyle, final ITextStyle tickLabelStyle )
   {
+    this( id, tickLength, tickLabelInsets, labelInsets, gap, axisLineStyle, labelStyle, tickLineStyle, tickLabelStyle, 0 );
+
+  }
+
+  public AbstractGenericAxisRenderer( final String id, final int tickLength, final Insets tickLabelInsets, final Insets labelInsets, final int gap, final ILineStyle axisLineStyle, final ITextStyle labelStyle, final ILineStyle tickLineStyle, final ITextStyle tickLabelStyle, final int borderSize )
+  {
     m_id = id;
-    m_tickLength = tickLength;
+    m_data.put( IAxisConstants.TICK_LENGTH, tickLength );
     m_tickLabelInsets = tickLabelInsets;
     m_labelInsets = labelInsets;
-    m_gap = gap;
+    m_data.put( IAxisConstants.AXIS_GAP, gap );
     m_axisLineStyle = axisLineStyle;
     m_labelStyle = labelStyle;
     m_tickLabelStyle = tickLabelStyle;
     m_tickLineStyle = tickLineStyle;
+    m_data.put( IAxisConstants.BORDER_SIZE, borderSize );
+
   }
 
   protected abstract Point getTextExtent( GC gcw, Number value, ITextStyle style, Format format, IDataRange<Number> range );
@@ -81,12 +92,17 @@ public abstract class AbstractGenericAxisRenderer implements IAxisRenderer
 
   public int getTickLength( )
   {
-    return m_tickLength;
+    return (Integer) m_data.get( IAxisConstants.TICK_LENGTH );
+  }
+
+  public int getBorderSize( )
+  {
+    return (Integer) m_data.get( IAxisConstants.BORDER_SIZE );
   }
 
   public int getGap( )
   {
-    return m_gap;
+    return (Integer) m_data.get( IAxisConstants.AXIS_GAP );
   }
 
   public Insets getLabelInsets( )

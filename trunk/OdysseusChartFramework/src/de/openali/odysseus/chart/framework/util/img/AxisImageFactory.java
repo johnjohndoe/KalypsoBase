@@ -29,14 +29,15 @@ public class AxisImageFactory
     // TODO: Idealerweise sollte hier kein Chart erzeugt werden, sondern nur der AxisCanvas
     final IMapperRegistry mapperRegistry = chart.getChartModel().getMapperRegistry();
     final IAxis axis = mapperRegistry.getAxis( axisId );
-    final AxisCanvas axisCanvas = (AxisCanvas) mapperRegistry.getComponent( axis );
+    final AxisCanvas axisCanvas = chart.getAxisCanvas( axis );// (AxisCanvas) mapperRegistry.getComponent( axis );
     return createAxisImage( axisCanvas, dev );
   }
 
-  public static ImageData createAxisImageFromShell( Shell shell, IMapperRegistry mapperRegistry, String axisId, Device dev, int width, int height )
+  public static ImageData createAxisImageFromShell( Shell shell, ChartComposite chart, String axisId, Device dev, int width, int height )
   {
+    final IMapperRegistry mapperRegistry = chart.getChartModel().getMapperRegistry();
     final IAxis axis = mapperRegistry.getAxis( axisId );
-    final AxisCanvas axisCanvas = (AxisCanvas) mapperRegistry.getComponent( axis );
+    final AxisCanvas axisCanvas = chart.getAxisCanvas( axis );
     final IAxisRenderer axisRenderer = mapperRegistry.getRenderer( axis );
     final int axisWidth = axisRenderer.getAxisWidth( axis );
     int canvasHeight = 0;

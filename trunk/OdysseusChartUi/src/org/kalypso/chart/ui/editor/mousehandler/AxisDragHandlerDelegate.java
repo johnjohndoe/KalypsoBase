@@ -53,11 +53,9 @@ import de.openali.odysseus.chart.framework.view.impl.AxisCanvas;
 import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
 
 /**
- * 
  * delegate to manage handlers for mouse dragging; only one handler is active at a time
  * 
  * @author burtscher1
- * 
  */
 public class AxisDragHandlerDelegate
 {
@@ -132,7 +130,7 @@ public class AxisDragHandlerDelegate
     final IAxis[] axes = reg.getAxes();
     for( final IAxis axis : axes )
     {
-      final IAxisComponent component = reg.getComponent( axis );
+      final IAxisComponent component = m_chartComposite.getAxisCanvas( axis );
       if( component != null )
       {
         final AxisCanvas ac = (AxisCanvas) component;

@@ -1,9 +1,5 @@
 package de.openali.odysseus.chart.framework.util.img;
 
-import java.util.Map;
-import java.util.Set;
-import java.util.Map.Entry;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.GC;
@@ -12,7 +8,6 @@ import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Point;
 
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
-import de.openali.odysseus.chart.framework.model.mapper.component.IAxisComponent;
 import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
 import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
 import de.openali.odysseus.chart.framework.view.impl.AxisCanvas;
@@ -59,18 +54,23 @@ public class ChartImageFactory
 
     // Plot zeichnen
     final PlotCanvas plotCanvas = chart.getPlot();
-    tmpImg = plotCanvas.paintBuffered( tmpGc, img.getBounds(), null );
+    tmpImg = plotCanvas.paintBuffered( chart.getChartModel().getLayerManager().getLayers(), tmpGc, img.getBounds(), null );
     gcw.drawImage( tmpImg, 0, 0, plotCanvas.getBounds().width, plotCanvas.getBounds().height, plotCanvas.getBounds().x, plotCanvas.getBounds().y, plotCanvas.getBounds().width, plotCanvas.getBounds().height );
     tmpGc.fillRectangle( 0, 0, tmpImg.getBounds().width, tmpImg.getBounds().height );
 
     final IMapperRegistry ar = chart.getChartModel().getMapperRegistry();
-    final Map<IAxis, IAxisComponent> components = ar.getAxesToComponentsMap();
-    final Set<Entry<IAxis, IAxisComponent>> acs = components.entrySet();
-    for( final Entry<IAxis, IAxisComponent> ac : acs )
+// final Map<IAxis, IAxisComponent> components = ar.getAxesToComponentsMap();
+// final Set<Entry<IAxis, IAxisComponent>> acs = components.entrySet();
+// for( final Entry<IAxis, IAxisComponent> ac : acs )
+// {
+    for( final IAxis axis : ar.getAxes() )
     {
-      final IAxis axis = ac.getKey();
+      // final IAxis axis = ac.getKey();
       // Casten, damit man auf die Component-Eigenschaften zugreifen kann
-      final AxisCanvas comp = (AxisCanvas) ac.getValue();
+      final AxisCanvas comp = chart.getAxisCanvas( axis );// (AxisCanvas) ac.getValue();
+// final IAxis axis = ac.getKey();
+// // Casten, damit man auf die Component-Eigenschaften zugreifen kann
+// final AxisCanvas comp = (AxisCanvas) ac.getValue();
       final IAxisRenderer rend = ar.getRenderer( axis ); // axis.getRgetRenderer();
 
       // Wenn man den GC nicht neu erzeugt, werden die AChsen nicht

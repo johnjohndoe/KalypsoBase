@@ -85,4 +85,13 @@ public interface IAxisConstants
     NEGATIVE;
   }
 
+  /**
+   * Axis Render Data key's
+   */
+  public String BORDER_SIZE = "de.openali.odysseus.chart.framework.model.mapper.IAxisRendere_border_size";
+
+  public String TICK_LENGTH = "de.openali.odysseus.chart.framework.model.mapper.IAxisRendere_tick_length";
+
+  public String AXIS_GAP = "de.openali.odysseus.chart.framework.model.mapper.IAxisRendere_gap";
+
 }

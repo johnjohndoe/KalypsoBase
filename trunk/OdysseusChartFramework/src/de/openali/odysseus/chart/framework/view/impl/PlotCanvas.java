@@ -7,6 +7,8 @@ import java.util.Map;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
@@ -21,13 +23,10 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
 import org.kalypso.contribs.eclipse.swt.graphics.RectangleUtils;
 
 import de.openali.odysseus.chart.framework.OdysseusChartFrameworkPlugin;
 import de.openali.odysseus.chart.framework.logging.impl.Logger;
-import de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
@@ -36,11 +35,12 @@ import de.openali.odysseus.chart.framework.util.ChartUtilities;
 /**
  * @author burtscher widget in which the layers content is painted
  */
-public class PlotCanvas extends Canvas implements PaintListener, Listener
+public class PlotCanvas extends Canvas implements PaintListener
 {
   private Image m_bufferImg = null;
 
-  private final ILayerManager m_manager;
+  // TODO: remove ILayerManagaer from here
+  public ILayerManager m_layerManager;
 
   private EditInfo m_editInfo;
 
@@ -62,9 +62,9 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
 
   private final boolean m_bufferLayers;
 
-  public PlotCanvas( final ILayerManager manager, final Composite parent, final int style )
+  public PlotCanvas( final Composite parent, final int style )
   {
-    this( manager, parent, style, true );
+    this( parent, style, true );
   }
 
   /**
@@ -72,71 +72,45 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
    *          if set to true, each layer is buffered on an individual image; set this to true if you plan to offer
    *          panning of single layers in the chart front end
    */
-  public PlotCanvas( final ILayerManager manager, final Composite parent, final int style, final boolean bufferLayers )
+  public PlotCanvas( final Composite parent, final int style, final boolean bufferLayers )
   {
     super( parent, style );
-    m_manager = manager;
     m_bufferLayers = bufferLayers;
 
     addPaintListener( this );
-    addListener( SWT.Resize, this );
-
-    if( m_bufferLayers )
-      for( IChartLayer layer : manager.getLayers() )
-        m_layerImageMap.put( layer, null );
-
-    final AbstractLayerManagerEventListener m_almel = new AbstractLayerManagerEventListener()
+    // addListener( SWT.Resize, this );
+    addDisposeListener( new DisposeListener()
     {
-      /**
-       * @see de.openali.odysseus.chart.framework.model.layer.impl.AbstractLayerManagerEventListener#onLayerAdded(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
-       */
       @Override
-      public void onLayerAdded( IChartLayer layer )
+      public void widgetDisposed( DisposeEvent e )
       {
-        invalidate( new IChartLayer[] { layer } );
+        disposeImages();
       }
+    } );
+  }
 
-      /**
-       * @see de.openali.odysseus.chart.framework.model.layer.impl.AbstractLayerManagerEventListener#onLayerRemoved(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
-       */
-      @Override
-      public void onLayerRemoved( IChartLayer layer )
-      {
-        Image image = m_layerImageMap.get( layer );
-        if( (image != null) && !image.isDisposed() )
-          image.dispose();
-        m_layerImageMap.remove( layer );
-        invalidate( null );
-      }
+  protected void disposeImages( )
+  {
+    if( m_bufferImg != null )
+    {
+      m_bufferImg.dispose();
+      m_bufferImg = null;
+    }
 
-      /**
-       * @see de.openali.odysseus.chart.framework.model.layer.impl.AbstractLayerManagerEventListener#onLayerRemoved(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
-       */
-      @Override
-      public void onLayerMoved( IChartLayer layer )
-      {
-        invalidate( null );
-      }
+    if( m_layerImageMap != null )
+      for( Image img : m_layerImageMap.values() )
+        if( img != null )
+          img.dispose();
+  }
 
-      /**
-       * @see de.openali.odysseus.chart.framework.model.layer.impl.AbstractLayerManagerEventListener#onLayerVisibilityChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
-       */
-      @Override
-      public void onLayerVisibilityChanged( IChartLayer layer )
-      {
-        invalidate( null );
-      }
+  public ILayerManager getLayerManager( )
+  {
+    return m_layerManager;
+  }
 
-      /**
-       * @see de.openali.odysseus.chart.framework.model.layer.impl.AbstractLayerManagerEventListener#onLayerContentChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
-       */
-      @Override
-      public void onLayerContentChanged( IChartLayer layer )
-      {
-        invalidate( new IChartLayer[] { layer } );
-      }
-    };
-    manager.addListener( m_almel );
+  public EditInfo getTooltipInfo( )
+  {
+    return m_editInfo;
   }
 
   /**
@@ -160,142 +134,37 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
       m_bufferImg.dispose();
       m_bufferImg = null;
     }
-    if( !isDisposed())
+    if( !isDisposed() )
+    {
       redraw();
-  }
-
-  /**
-   * @see org.eclipse.swt.widgets.Widget#dispose()
-   */
-  @Override
-  public void dispose( )
-  {
-    if( m_bufferImg != null )
-    {
-      m_bufferImg.dispose();
-      m_bufferImg = null;
-    }
-
-    if( m_layerImageMap != null )
-      for( Image img : m_layerImageMap.values() )
-        if( img != null )
-          img.dispose();
-
-    m_manager.dispose();
-
-    super.dispose();
-  }
-
-  /**
-   * @see org.eclipse.swt.events.PaintListener#paintControl(org.eclipse.swt.events.PaintEvent) Draws all layers if a
-   *      PaintEvent is thrown; only exeption: if the PaintEvent is thrown by a MouseDrag-Action, a buffered plot image
-   *      is used
-   */
-  public void paintControl( final PaintEvent e )
-  {
-    GC gc = e.gc;
-    final Rectangle screenArea = getClientArea();
-    m_bufferImg = paintBuffered( gc, screenArea, m_bufferImg );
-    paintDragArea( gc );
-    paintEditInfo( gc );
-  }
-
-  private void paintDragArea( final GC gcw )
-  {
-    // Wenn ein DragRectangle da ist, dann muss nur das gezeichnet werden
-    if( m_dragArea != null )
-    {
-      gcw.setLineWidth( 1 );
-      gcw.setForeground( gcw.getDevice().getSystemColor( SWT.COLOR_BLACK ) );
-
-      gcw.setBackground( gcw.getDevice().getSystemColor( SWT.COLOR_BLUE ) );
-      final Rectangle r = RectangleUtils.createNormalizedRectangle( m_dragArea );
-      // TODO: SWT-Bug mit drawFocus (wird nicht immer gezeichnet),
-      // irgendwann mal wieder ï¿½berprï¿½fen
-      gcw.setAlpha( 50 );
-      gcw.fillRectangle( r.x, r.y, r.width, r.height );
-      gcw.setAlpha( 255 );
-      gcw.setLineStyle( SWT.LINE_DASH );
-      gcw.drawRectangle( r.x, r.y, r.width, r.height );
     }
   }
 
-  private void paintEditInfo( final GC gcw )
+  public boolean isDragging( )
   {
-    ChartUtilities.resetGC( gcw );
+    // TODO: Check callers
+    return false;
+  }
 
-    if( m_editInfo != null )
-    {
-      // draw hover shape
-      if( m_editInfo.m_hoverFigure != null )
-        m_editInfo.m_hoverFigure.paint( gcw );
-      // draw edit shape
-      if( m_editInfo.m_editFigure != null )
-        m_editInfo.m_editFigure.paint( gcw );
-
-      // draw tooltip
-      ChartUtilities.resetGC( gcw );
-
-      final Rectangle screen = gcw.getClipping();
-
-      final String tooltiptext = m_editInfo.m_text;
-      final Point mousePos = m_editInfo.m_pos;
-      if( (tooltiptext != null) && (mousePos != null) )
-      {
-        final int TOOLINSET = 3;
-
-        final Font oldFont = gcw.getFont();
-
-        final Font bannerFont = JFaceResources.getTextFont();
-        gcw.setFont( bannerFont );
-
-        gcw.setBackground( getDisplay().getSystemColor( SWT.COLOR_INFO_BACKGROUND ) );
-        gcw.setForeground( getDisplay().getSystemColor( SWT.COLOR_INFO_FOREGROUND ) );
-        final Point toolsize = gcw.textExtent( tooltiptext );
-
-        /*
-         * Positionieren der Tooltip-Box: der ideale Platz liegt rechts unter dem Mauszeiger. Wenn rechts nicht genügend
-         * Platz ist, dann wird er nach links verschoben. Der Startpunkt soll dabei immer im sichtbaren Bereich liegen.
-         */
-
-        int toolx = mousePos.x + 3 + TOOLINSET;
-        if( toolx + toolsize.x > screen.width )
-        {
-          toolx = screen.width - 5 - toolsize.x;
-          if( toolx < 5 )
-            toolx = 5;
-        }
-
-        int tooly = mousePos.y + 3 + TOOLINSET + 20;
-        if( (tooly + toolsize.y > screen.height) && ((mousePos.y - 3 - TOOLINSET - toolsize.y - 20) > 0) )
-          tooly = mousePos.y - 3 - TOOLINSET - toolsize.y - 20;
-
-        gcw.setLineWidth( 1 );
-        final Rectangle toolrect = new Rectangle( toolx - TOOLINSET, tooly - TOOLINSET, toolsize.x + TOOLINSET * 2, toolsize.y + TOOLINSET * 2 );
-        gcw.fillRectangle( toolrect );
-        gcw.drawRectangle( toolrect );
-
-        gcw.drawText( tooltiptext, toolx, tooly, true );
-
-        gcw.setFont( oldFont );
-      }
-    }
+  public boolean isEditing( )
+  {
+    return m_isEditing;
   }
 
   /**
    * double-buffered paint method; set to public in order to be used from ouside, e.g. from ChartImageContainer
    */
-  public Image paintBuffered( final GC gcw, final Rectangle screen, final Image bufferImage )
+  public Image paintBuffered( final IChartLayer[] layers, final GC gcw, final Rectangle screen, final Image bufferImage )
   {
     final Image usedBufferImage;
-    if( bufferImage == null )
+
+    if( bufferImage == null && layers != null )
     {
       usedBufferImage = new Image( Display.getDefault(), screen.width, screen.height );
 
       final GC buffGc = new GC( usedBufferImage );
       try
       {
-        final IChartLayer[] layers = m_manager.getLayers();
         for( final IChartLayer layer : layers )
           if( layer.isVisible() )
           {
@@ -393,30 +262,106 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
   }
 
   /**
-   * @see org.eclipse.swt.widgets.Listener#handleEvent(org.eclipse.swt.widgets.Event)
+   * @see org.eclipse.swt.events.PaintListener#paintControl(org.eclipse.swt.events.PaintEvent) Draws all layers if a
+   *      PaintEvent is thrown; only exeption: if the PaintEvent is thrown by a MouseDrag-Action, a buffered plot image
+   *      is used
    */
-  public void handleEvent( final Event event )
+  public void paintControl( final PaintEvent e )
   {
-    if( event.type == SWT.Resize )
-      invalidate( m_manager.getLayers() );
+    if( m_layerManager == null )
+      return;
+    final Rectangle screenArea = getClientArea();
+    m_bufferImg = paintBuffered( m_layerManager.getLayers(), e.gc, screenArea, m_bufferImg );
+    paintDragArea( e.gc );
+    paintEditInfo( e.gc );
   }
 
-  public void setTooltipInfo( final EditInfo hoverInfo )
+  private void paintDragArea( final GC gcw )
   {
-    if( hoverInfo == null )
-      m_editInfo = hoverInfo;
-    m_editInfo = hoverInfo;
+    // Wenn ein DragRectangle da ist, dann muss nur das gezeichnet werden
+    if( m_dragArea != null )
+    {
+      gcw.setLineWidth( 1 );
+      gcw.setForeground( gcw.getDevice().getSystemColor( SWT.COLOR_BLACK ) );
 
+      gcw.setBackground( gcw.getDevice().getSystemColor( SWT.COLOR_BLUE ) );
+      final Rectangle r = RectangleUtils.createNormalizedRectangle( m_dragArea );
+      // TODO: SWT-Bug mit drawFocus (wird nicht immer gezeichnet),
+      // irgendwann mal wieder ï¿½berprï¿½fen
+      gcw.setAlpha( 50 );
+      gcw.fillRectangle( r.x, r.y, r.width, r.height );
+      gcw.setAlpha( 255 );
+      gcw.setLineStyle( SWT.LINE_DASH );
+      gcw.drawRectangle( r.x, r.y, r.width, r.height );
+    }
   }
 
-  public EditInfo getTooltipInfo( )
+  private void paintEditInfo( final GC gcw )
   {
-    return m_editInfo;
+    ChartUtilities.resetGC( gcw );
+
+    if( m_editInfo != null )
+    {
+      // draw hover shape
+      if( m_editInfo.m_hoverFigure != null )
+        m_editInfo.m_hoverFigure.paint( gcw );
+      // draw edit shape
+      if( m_editInfo.m_editFigure != null )
+        m_editInfo.m_editFigure.paint( gcw );
+
+      // draw tooltip
+      ChartUtilities.resetGC( gcw );
+
+      final Rectangle screen = gcw.getClipping();
+
+      final String tooltiptext = m_editInfo.m_text;
+      final Point mousePos = m_editInfo.m_pos;
+      if( (tooltiptext != null) && (mousePos != null) )
+      {
+        final int TOOLINSET = 3;
+
+        final Font oldFont = gcw.getFont();
+
+        final Font bannerFont = JFaceResources.getTextFont();
+        gcw.setFont( bannerFont );
+
+        gcw.setBackground( getDisplay().getSystemColor( SWT.COLOR_INFO_BACKGROUND ) );
+        gcw.setForeground( getDisplay().getSystemColor( SWT.COLOR_INFO_FOREGROUND ) );
+        final Point toolsize = gcw.textExtent( tooltiptext );
+
+        /*
+         * Positionieren der Tooltip-Box: der ideale Platz liegt rechts unter dem Mauszeiger. Wenn rechts nicht genï¿½gend
+         * Platz ist, dann wird er nach links verschoben. Der Startpunkt soll dabei immer im sichtbaren Bereich liegen.
+         */
+
+        int toolx = mousePos.x + 3 + TOOLINSET;
+        if( toolx + toolsize.x > screen.width )
+        {
+          toolx = screen.width - 5 - toolsize.x;
+          if( toolx < 5 )
+            toolx = 5;
+        }
+
+        int tooly = mousePos.y + 3 + TOOLINSET + 20;
+        if( (tooly + toolsize.y > screen.height) && ((mousePos.y - 3 - TOOLINSET - toolsize.y - 20) > 0) )
+          tooly = mousePos.y - 3 - TOOLINSET - toolsize.y - 20;
+
+        gcw.setLineWidth( 1 );
+        final Rectangle toolrect = new Rectangle( toolx - TOOLINSET, tooly - TOOLINSET, toolsize.x + TOOLINSET * 2, toolsize.y + TOOLINSET * 2 );
+        gcw.fillRectangle( toolrect );
+        gcw.drawRectangle( toolrect );
+
+        gcw.drawText( tooltiptext, toolx, tooly, true );
+
+        gcw.setFont( oldFont );
+      }
+    }
   }
 
-  public boolean isEditing( )
+  public void setDragArea( final Rectangle dragArea )
   {
-    return m_isEditing;
+    m_dragArea = dragArea;
+    redraw();
   }
 
   public void setIsEditing( final boolean isEditing )
@@ -424,16 +369,9 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
     m_isEditing = isEditing;
   }
 
-  public boolean isDragging( )
+  public void setLayerManager( ILayerManager layerManager )
   {
-    // TODO Auto-generated method stub
-    return false;
-  }
-
-  public void setDragArea( final Rectangle dragArea )
-  {
-    m_dragArea = dragArea;
-    redraw();
+    m_layerManager = layerManager;
   }
 
   /**
@@ -457,6 +395,14 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
     else
       m_panLayers = null;
     redraw();
+  }
+
+  public void setTooltipInfo( final EditInfo hoverInfo )
+  {
+    if( hoverInfo == null )
+      m_editInfo = hoverInfo;
+    m_editInfo = hoverInfo;
+
   }
 
 }

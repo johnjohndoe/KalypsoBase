@@ -56,14 +56,19 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
    * @param fixedWidth
    *          if > 0, no actual width is calculated - the getWidth() will always return the value of fixed width
    */
-  public GenericAxisRenderer( final String id, final int tickLength, final Insets tickLabelInsets, final Insets labelInsets, final int gap, ILabelCreator labelCreator, ITickCalculator tickCalculator, Number minTickInterval, boolean hideCut, int fixedWidth, ILineStyle axisLineStyle, ITextStyle labelStyle, ILineStyle tickLineStyle, ITextStyle tickLabelStyle )
+  public GenericAxisRenderer( final String id, final int tickLength, final Insets tickLabelInsets, final Insets labelInsets, final int gap, ILabelCreator labelCreator, ITickCalculator tickCalculator, Number minTickInterval, boolean hideCut, int fixedWidth, ILineStyle axisLineStyle, ITextStyle labelStyle, ILineStyle tickLineStyle, ITextStyle tickLabelStyle, int borderSize )
   {
-    super( id, tickLength, tickLabelInsets, labelInsets, gap, axisLineStyle, labelStyle, tickLineStyle, tickLabelStyle );
+    super( id, tickLength, tickLabelInsets, labelInsets, gap, axisLineStyle, labelStyle, tickLineStyle, tickLabelStyle, borderSize );
     m_tickCalculator = tickCalculator;
     m_labelCreator = labelCreator;
     m_minTickInterval = minTickInterval;
     m_hideCut = hideCut;
     m_fixedWidth = fixedWidth;
+  }
+
+  public GenericAxisRenderer( final String id, final int tickLength, final Insets tickLabelInsets, final Insets labelInsets, final int gap, ILabelCreator labelCreator, ITickCalculator tickCalculator, Number minTickInterval, boolean hideCut, int fixedWidth, ILineStyle axisLineStyle, ITextStyle labelStyle, ILineStyle tickLineStyle, ITextStyle tickLabelStyle )
+  {
+    this( id, tickLength, tickLabelInsets, labelInsets, gap, labelCreator, tickCalculator, minTickInterval, hideCut, fixedWidth, axisLineStyle, labelStyle, tickLineStyle, tickLabelStyle, 0 );
   }
 
   public GenericAxisRenderer( final String id, ILabelCreator labelCreator, ITickCalculator tickCalculator, AxisRendererConfig config )

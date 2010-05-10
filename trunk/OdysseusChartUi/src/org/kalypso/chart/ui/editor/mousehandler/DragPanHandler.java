@@ -130,7 +130,7 @@ public class DragPanHandler implements IChartDragHandler
     IAxis[] axes = mapperRegistry.getAxes();
     for( IAxis axis : axes )
     {
-      IAxisComponent component = mapperRegistry.getComponent( axis );
+      IAxisComponent component = m_chartComposite.getAxisCanvas( axis );
       if( component != null && component instanceof AxisCanvas )
       {
         AxisCanvas ac = (AxisCanvas) component;

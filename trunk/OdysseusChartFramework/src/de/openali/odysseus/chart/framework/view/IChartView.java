@@ -40,13 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package de.openali.odysseus.chart.framework.view;
 
-import org.eclipse.swt.graphics.Point;
-
 import de.openali.odysseus.chart.framework.model.IChartModel;
 
 /**
  * @author alibu
- * 
  */
 public interface IChartView
 {
@@ -55,8 +52,9 @@ public interface IChartView
 
   public IChartModel getChartModel( );
 
-  public void setSize( Point size );
+// TODO get rid of this, the Control implementation is never overwritten
+// public void setSize( Point size );
 
-  public Point getSize( );
+// public Point getSize( );
 
 }

@@ -50,7 +50,6 @@ import de.openali.odysseus.chart.framework.util.StyleUtils;
  * Helper object to reduce the complexity of the GenericAxisRenderer constructor
  * 
  * @author burtscher1
- * 
  */
 public class AxisRendererConfig
 {
@@ -110,6 +109,8 @@ public class AxisRendererConfig
    * style for tick label text
    */
   public ITextStyle tickLabelStyle = StyleUtils.getDefaultTextStyle();
+
+  public int borderSize = 0;
 
   public AxisRendererConfig( )
   {

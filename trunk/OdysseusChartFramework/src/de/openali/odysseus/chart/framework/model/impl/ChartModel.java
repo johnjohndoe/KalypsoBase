@@ -20,7 +20,6 @@ import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisAdjustment;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
-import de.openali.odysseus.chart.framework.model.mapper.component.IAxisComponent;
 import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
 import de.openali.odysseus.chart.framework.model.mapper.registry.impl.MapperRegistry;
 import de.openali.odysseus.chart.framework.util.ChartUtilities;
@@ -116,21 +115,6 @@ public class ChartModel implements IChartModel
       }
       valList.add( layer );
 
-      // axis-components must be visible
-
-      final IAxisComponent domainComp = m_mapperRegistry.getComponent( cm.getDomainAxis() );
-      if( domainComp != null )
-      {
-        domainComp.setVisible( true );
-      }
-      final IAxisComponent valueComp = m_mapperRegistry.getComponent( cm.getTargetAxis() );
-      if( valueComp != null )
-      {
-        valueComp.setVisible( true );
-        // m_mapperRegistry.getComponent( layer.getValueAxis()
-        // ).setVisible( true );
-      }
-
     }
     else
     {
@@ -146,18 +130,6 @@ public class ChartModel implements IChartModel
         valList.remove( layer );
       }
 
-      // eventually hide axes
-      if( m_hideUnusedAxes )
-      {
-        if( domList == null || domList.size() == 0 )
-        {
-          m_mapperRegistry.getComponent( cm.getDomainAxis() ).setVisible( false );
-        }
-        if( valList == null || valList.size() == 0 )
-        {
-          m_mapperRegistry.getComponent( cm.getTargetAxis() ).setVisible( false );
-        }
-      }
     }
 
     if( m_autoscale )
@@ -211,18 +183,32 @@ public class ChartModel implements IChartModel
    */
   public void setHideUnusedAxes( final boolean b )
   {
+    if( b == m_hideUnusedAxes )
+      return;
     m_hideUnusedAxes = b;
-
     final IAxis[] axes = m_mapperRegistry.getAxes();
+
     for( final IAxis axis : axes )
     {
-      final List<IChartLayer> list = m_axis2Layers.get( axis );
-      if( list == null || list.size() == 0 )
+      if( !m_hideUnusedAxes )
       {
-        final IAxisComponent comp = m_mapperRegistry.getComponent( axis );
-        comp.setVisible( !m_hideUnusedAxes );
+        axis.setVisible( true );
+        continue;
       }
+      final List<IChartLayer> list = m_axis2Layers.get( axis );
+      if( list == null )
+      {
+        axis.setVisible( false );
+        continue;
+      }
+      boolean visible = false;
+      for( final IChartLayer layer : list )
+      {
+        visible = visible | layer.isVisible();
+      }
+      axis.setVisible( visible );
     }
+
   }
 
   /**
@@ -521,7 +507,7 @@ public class ChartModel implements IChartModel
         axis.setNumericRange( new ComparableDataRange( new Number[] { new Double( newFrom ), new Double( newTo ) } ) );
       }
     }
-    // m_eventHandler.fireModelChanged();
+
   }
 
   public void panTo( final Point start, final Point end )
@@ -554,7 +540,7 @@ public class ChartModel implements IChartModel
       axis.setNumericRange( newRange );
 
     }
-    // m_eventHandler.fireModelChanged();
+
   }
 
 }

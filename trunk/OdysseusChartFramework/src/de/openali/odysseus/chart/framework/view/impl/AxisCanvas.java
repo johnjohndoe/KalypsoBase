@@ -12,6 +12,7 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -27,16 +28,16 @@ import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
  * @author burtscher Implementation of IAxisComponent; AxisComponent is a widget displaying the charts' axes; its used
  *         to calculate screen coordinates for normalized values
  */
-public class AxisCanvas extends Canvas implements PaintListener, IAxisComponent
+public class AxisCanvas extends Canvas implements IAxisComponent
 {
   /**
    * the corresponding axis
    */
-  private final IAxis m_axis;
+  protected final IAxis m_axis;
 
   private Image m_bufferImage = null;
 
-  private IAxisRenderer m_renderer;
+  protected IAxisRenderer m_renderer;
 
   private Point m_dragInterval;
 
@@ -47,17 +48,12 @@ public class AxisCanvas extends Canvas implements PaintListener, IAxisComponent
     @Override
     public void onMapperChanged( IMapper mapper )
     {
-      // TODO: redraw...
-      // change my visibility?
-
-      // -> evtl. parent-composite layout auslösen
-      // Böse: getParent().layout();
-      // gut: fireSomeEvent.. an ChartComposite
-
-      // Wir können momentan darauf verzichten, wiel die MapperRegistry den event bereits weiterleitet
-
-      // TODO Auto-generated method stub
-
+      final Object data = getLayoutData();
+      if( data != null && data instanceof GridData )
+      {
+        ((GridData) data).exclude = !m_axis.isVisible();
+      }
+      handleControlResized();
     }
   };
 
@@ -65,7 +61,15 @@ public class AxisCanvas extends Canvas implements PaintListener, IAxisComponent
   {
     super( parent, style );
     m_axis = axis;
-    addPaintListener( this );
+    addPaintListener( new PaintListener()
+    {
+
+      @Override
+      public void paintControl( PaintEvent e )
+      {
+        paint( e.gc );
+      }
+    } );
 
     addControlListener( new ControlAdapter()
     {
@@ -86,6 +90,11 @@ public class AxisCanvas extends Canvas implements PaintListener, IAxisComponent
     } );
 
     axis.addListener( m_axisListener );
+  }
+
+  public IAxis getAxis( )
+  {
+    return m_axis;
   }
 
   protected void handleControlResized( )
@@ -113,7 +122,7 @@ public class AxisCanvas extends Canvas implements PaintListener, IAxisComponent
   @Override
   public void dispose( )
   {
-    m_axis.addListener( m_axisListener );
+    m_axis.removeListener( m_axisListener );
 
     if( m_bufferImage != null )
     {
@@ -132,7 +141,7 @@ public class AxisCanvas extends Canvas implements PaintListener, IAxisComponent
   @Override
   public Point computeSize( final int wHint, final int hHint, final boolean changed )
   {
-    if( m_axis != null  )
+    if( m_axis != null )
     {
       final IAxisRenderer renderer = m_axis.getRegistry().getRenderer( m_axis );
       if( renderer != null )
@@ -151,15 +160,15 @@ public class AxisCanvas extends Canvas implements PaintListener, IAxisComponent
     return new Point( 1, 1 );
   }
 
-  /**
-   * @see org.eclipse.swt.events.PaintListener#paintControl(org.eclipse.swt.events.PaintEvent)
-   */
-  public void paintControl( final PaintEvent e )
-  {
-    paint( e.gc );
-  }
+// /**
+// * @see org.eclipse.swt.events.PaintListener#paintControl(org.eclipse.swt.events.PaintEvent)
+// */
+// public void paintControl( final PaintEvent e )
+// {
+// paint( e.gc );
+// }
 
-  private void paint( final GC gc )
+  protected void paint( final GC gc )
   {
     setAxisHeight();
     final Rectangle bounds = getClientArea();
@@ -268,6 +277,7 @@ public class AxisCanvas extends Canvas implements PaintListener, IAxisComponent
 
   public void setPanOffsetInterval( Point offset )
   {
+    // TODO: check callers
     if( true )
     {
       return;
