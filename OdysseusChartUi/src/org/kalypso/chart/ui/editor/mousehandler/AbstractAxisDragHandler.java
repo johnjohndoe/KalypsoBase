@@ -40,8 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.chart.ui.editor.mousehandler;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
@@ -49,14 +49,11 @@ import org.eclipse.swt.events.MouseEvent;
 
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
-import de.openali.odysseus.chart.framework.model.mapper.component.IAxisComponent;
-import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
 import de.openali.odysseus.chart.framework.view.impl.AxisCanvas;
 import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
 
 /**
  * @author burtscher1
- * 
  */
 public abstract class AbstractAxisDragHandler implements IAxisDragHandler
 {
@@ -67,7 +64,7 @@ public abstract class AbstractAxisDragHandler implements IAxisDragHandler
 
   protected int m_mouseDragEnd = -1;
 
-  protected final Map<AxisCanvas, IAxis> m_axes = new HashMap<AxisCanvas, IAxis>();
+  // protected final Map<AxisCanvas, IAxis> m_axes = new HashMap<AxisCanvas, IAxis>();
 
   protected boolean m_applyOnAllAxes = false;
 
@@ -76,17 +73,17 @@ public abstract class AbstractAxisDragHandler implements IAxisDragHandler
     m_chartComposite = chartComposite;
 
     // zugehörige Achsen rausfinden
-    final IMapperRegistry reg = m_chartComposite.getChartModel().getMapperRegistry();
-    final IAxis[] axes = reg.getAxes();
-    for( final IAxis axis : axes )
-    {
-      final IAxisComponent component = reg.getComponent( axis );
-      if( component != null )
-      {
-        final AxisCanvas ac = (AxisCanvas) component;
-        m_axes.put( ac, axis );
-      }
-    }
+// final IMapperRegistry reg = m_chartComposite.getChartModel().getMapperRegistry();
+// final IAxis[] axes = reg.getAxes();
+// for( final IAxis axis : axes )
+// {
+// final IAxisComponent component = reg.getComponent( axis );
+// if( component != null )
+// {
+// final AxisCanvas ac = (AxisCanvas) component;
+// m_axes.put( ac, axis );
+// }
+// }
   }
 
   /**
@@ -106,11 +103,14 @@ public abstract class AbstractAxisDragHandler implements IAxisDragHandler
     m_mouseDragStart = getPos( e );
   }
 
+  protected final ORIENTATION getOrientation( final AxisCanvas ac )
+  {
+    return ac.getAxis().getPosition().getOrientation();
+  }
+
   protected int getPos( final MouseEvent e )
   {
-    final AxisCanvas ac = getEventSource( e );
-    final IAxis axis = m_axes.get( ac );
-    if( axis.getPosition().getOrientation().equals( ORIENTATION.HORIZONTAL ) )
+    if( getOrientation( getEventSource( e ) ).equals( ORIENTATION.HORIZONTAL ) )
     {
       return e.x;
     }
@@ -118,6 +118,18 @@ public abstract class AbstractAxisDragHandler implements IAxisDragHandler
     {
       return e.y;
     }
+  }
+
+  protected final IAxis[] getAxis( final ORIENTATION ori )
+  {
+    final List<IAxis> axisList = new ArrayList<IAxis>();
+
+    for( final IAxis axis : m_chartComposite.getChartModel().getMapperRegistry().getAxes() )
+      if( axis.getPosition().getOrientation().equals( ori ) )
+
+        axisList.add( axis );
+
+    return axisList.toArray( new IAxis[] {} );
   }
 
   protected AxisCanvas getEventSource( final MouseEvent e )

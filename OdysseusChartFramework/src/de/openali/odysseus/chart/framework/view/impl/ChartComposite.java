@@ -1,30 +1,31 @@
 package de.openali.odysseus.chart.framework.view.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Layout;
 import org.kalypso.contribs.eclipse.swt.widgets.SizedComposite;
 
 import de.openali.odysseus.chart.framework.OdysseusChartFrameworkPlugin;
 import de.openali.odysseus.chart.framework.model.IChartModel;
-import de.openali.odysseus.chart.framework.model.event.impl.AbstractChartModelEventListener;
+import de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener;
 import de.openali.odysseus.chart.framework.model.event.impl.AbstractMapperRegistryEventListener;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IMapper;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
-import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
 import de.openali.odysseus.chart.framework.view.IChartView;
 
 /**
@@ -34,28 +35,231 @@ import de.openali.odysseus.chart.framework.view.IChartView;
 public class ChartComposite extends Canvas implements IChartView
 {
   /** axis pos --> axis placeholder */
-  final Map<POSITION, Composite> m_axisPlaces = new HashMap<POSITION, Composite>();
+  protected final Map<POSITION, Composite> m_axisPlaces = new HashMap<POSITION, Composite>();
 
-  PlotCanvas m_plot;
+  // protected final Map<IAxis, AxisCanvas> m_axisCanvas = new HashMap<IAxis, AxisCanvas>();
 
-  final IChartModel m_model;
+  protected PlotCanvas m_plot;
 
-  private AbstractMapperRegistryEventListener m_mapperListener;
+  protected IChartModel m_model;
 
-  private AbstractChartModelEventListener m_chartModelListener;
+  private final GridLayout m_GridLayout = new GridLayout( 3, false );
 
-  private final RGB m_backgroundRGB;
+  private final ILayerManagerEventListener m_layerEventListener = new ILayerManagerEventListener()
+  {
+
+    /**
+     * @see de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener#onActivLayerChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
+     */
+    @Override
+    public void onActivLayerChanged( IChartLayer layer )
+    {
+      // do nothing
+    }
+
+    /**
+     * @see de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener#onLayerAdded(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
+     */
+    @Override
+    public void onLayerAdded( IChartLayer layer )
+    {
+      m_plot.invalidate( new IChartLayer[] { layer } );
+    }
+
+    /**
+     * @see de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener#onLayerContentChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
+     */
+    @Override
+    public void onLayerContentChanged( IChartLayer layer )
+    {
+      m_plot.invalidate( new IChartLayer[] { layer } );
+    }
+
+    /**
+     * @see de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener#onLayerMoved(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
+     */
+    @Override
+    public void onLayerMoved( IChartLayer layer )
+    {
+      // do nothing
+    }
+
+    /**
+     * @see de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener#onLayerRemoved(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
+     */
+    @Override
+    public void onLayerRemoved( IChartLayer layer )
+    {
+      m_plot.invalidate( new IChartLayer[] { layer } );
+    }
+
+    /**
+     * @see de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener#onLayerVisibilityChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
+     */
+    @Override
+    public void onLayerVisibilityChanged( IChartLayer layer )
+    {
+      m_plot.invalidate( new IChartLayer[] { layer } );
+    }
+  };
+
+  private final AbstractMapperRegistryEventListener m_mapperListener = new AbstractMapperRegistryEventListener()
+  {
+    /**
+     * @see de.openali.odysseus.chart.framework.axis.IMapperRegistryEventListener#onMapperAdded(de.openali.odysseus.chart.framework.axis.IAxis)
+     *      adds an AxisComponent for any newly added axis and reports Axis and its AxisComponent to the AxisRegistry
+     */
+    @Override
+    public void onMapperAdded( final IMapper mapper )
+    {
+      if( mapper instanceof de.openali.odysseus.chart.framework.model.mapper.IAxis )
+        addAxisInternal( (IAxis) mapper );
+
+      // TODO: die Map(axis,component) aus der Mapperregistry entfernen (die Axiscanvas werden hier verwaltet
+      // m_model.getMapperRegistry().setComponent( axis, ac );
+
+    }
+
+    /**
+     * @see de.openali.odysseus.chart.framework.impl.model.event.AbstractMapperRegistryEventListener#onMapperRangeChanged(de.openali.odysseus.chart.framework.model.mapper.IMapper)
+     */
+    @Override
+    public void onMapperChanged( final IMapper mapper )
+    {
+      if( isDisposed() )
+        return;
+
+      if( mapper instanceof IAxis )
+      {
+        final IAxis axis = (IAxis) mapper;
+        final AxisCanvas ac = getAxisCanvas( axis );
+        ac.setVisible( axis.isVisible() );
+        final List<IChartLayer> list = m_model.getAxis2Layers().get( axis );
+        if( list != null )
+          m_plot.invalidate( list.toArray( new IChartLayer[] {} ) );
+      }
+    }
+
+    /**
+     * @see de.openali.odysseus.chart.framework.axis.IMapperRegistryEventListener#onMapperRemoved(de.openali.odysseus.chart.framework.axis.IAxis)
+     *      TODO: not implemented yet (or is it? - right now there's no way to remove an axis, so this should be checked
+     *      in the future)
+     */
+    @Override
+    public void onMapperRemoved( final IMapper mapper )
+    {
+      if( mapper instanceof de.openali.odysseus.chart.framework.model.mapper.IAxis )
+      {
+        removeAxisInternal( (IAxis) mapper );
+      }
+    }
+  };
 
   public ChartComposite( final Composite parent, final int style, final IChartModel model, final RGB backgroundRGB )
   {
     super( parent, style | SWT.DOUBLE_BUFFERED | SWT.NO_REDRAW_RESIZE );
-    m_model = model;
-    m_backgroundRGB = backgroundRGB;
+    addDisposeListener( new DisposeListener()
+    {
 
-    super.setBackground( OdysseusChartFrameworkPlugin.getDefault().getColorRegistry().getResource( parent.getDisplay(), m_backgroundRGB ) );
+      @Override
+      public void widgetDisposed( DisposeEvent e )
+      {
+        unregisterListener();
+        // brauchen wir das ?
+        m_model.clear();
+      }
+    } );
 
-    createControl( this );
+    setLayout( m_GridLayout );
+    setBackground( OdysseusChartFrameworkPlugin.getDefault().getColorRegistry().getResource( parent.getDisplay(), backgroundRGB ) );
+    createControl();
     setChartModel( model );
+  }
+
+  protected final AxisCanvas addAxisInternal( final IAxis axis )
+  {
+    final Composite parent = m_axisPlaces.get( axis.getPosition() );
+    final AxisCanvas ac = new AxisCanvas( axis, parent, SWT.DOUBLE_BUFFERED );
+    // ac.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    ac.setBackground( getBackground() );
+    // m_axisCanvas.put( axis, ac );
+    return ac;
+  }
+
+  /**
+   * creates components for all 4 AxisComponent (TOP, RIGHT, BOTTOM, TOP) and Plot
+   */
+  private final void createControl( )
+  {
+
+    m_GridLayout.horizontalSpacing = 0;
+    m_GridLayout.verticalSpacing = 0;
+    m_GridLayout.marginHeight = 0;
+    m_GridLayout.marginWidth = 0;
+
+    // 1.1 - first field of first row
+    final Label lbl11 = new Label( this, SWT.NONE );
+    lbl11.setSize( 0, 0 );
+    lbl11.setVisible( false );
+
+    // 1.2
+    final Composite topAxes = new SizedComposite( this, SWT.DOUBLE_BUFFERED );
+    topAxes.setLayout( new FillLayout( SWT.VERTICAL ) );
+    final GridData tad = new GridData( SWT.FILL, SWT.NONE, true, false );
+    // tad.exclude = true;
+    topAxes.setLayoutData( tad );
+    topAxes.setBackground( getBackground() );
+    m_axisPlaces.put( POSITION.TOP, topAxes );
+
+    // 1.3 - last field of first row
+    final Label lbl13 = new Label( this, SWT.NONE );
+    lbl13.setSize( 0, 0 );
+    lbl13.setVisible( false );
+
+    // 2.1 - first field
+    final Composite leftAxes = new SizedComposite( this, SWT.DOUBLE_BUFFERED );
+    leftAxes.setLayout( new FillLayout( SWT.HORIZONTAL ) );
+    final GridData lad = new GridData( SWT.NONE, SWT.FILL, false, true );
+    // lad.exclude = true;
+    leftAxes.setLayoutData( lad );
+    leftAxes.setBackground( getBackground() );
+    m_axisPlaces.put( POSITION.LEFT, leftAxes );
+
+    // 2.2
+    m_plot = new PlotCanvas( this, SWT.LEFT_TO_RIGHT | SWT.DOUBLE_BUFFERED );
+    m_plot.setLayout( new FillLayout() );
+    final GridData pad = new GridData( SWT.FILL, SWT.FILL, true, true );
+    // pad.exclude = true;
+    m_plot.setLayoutData( pad );
+    m_plot.setBackground( getBackground() );
+
+    // 2.3
+    final Composite rightAxes = new SizedComposite( this, SWT.DOUBLE_BUFFERED );
+    rightAxes.setLayout( new FillLayout( SWT.HORIZONTAL ) );
+    final GridData rad = new GridData( SWT.NONE, SWT.FILL, false, true );
+    // rad.exclude = true;
+    rightAxes.setLayoutData( rad );
+    rightAxes.setBackground( getBackground() );
+    m_axisPlaces.put( POSITION.RIGHT, rightAxes );
+
+    // 3.1 - wird ins erste Feld der letzten Zeile gef�llt
+    final Label lbl31 = new Label( this, SWT.NONE );
+    lbl31.setSize( 0, 0 );
+    lbl31.setVisible( false );
+
+    // 3.2
+    final Composite bottomAxes = new SizedComposite( this, SWT.DOUBLE_BUFFERED );
+    bottomAxes.setLayout( new FillLayout( SWT.VERTICAL ) );
+    final GridData bad = new GridData( SWT.FILL, SWT.NONE, true, false );
+    // bad.exclude = true;
+    bottomAxes.setLayoutData( bad );
+    leftAxes.setBackground( getBackground() );
+    m_axisPlaces.put( POSITION.BOTTOM, bottomAxes );
+
+    // 3.3 - wird ins letzte Feld der lezten Zeile gef�llt
+    final Label lbl33 = new Label( this, SWT.NONE );
+    lbl33.setSize( 0, 0 );
+    lbl33.setVisible( false );
   }
 
   public IChartModel getChartModel( )
@@ -63,235 +267,61 @@ public class ChartComposite extends Canvas implements IChartView
     return m_model;
   }
 
-  public void setChartModel( final IChartModel model )
-  {
-    final RGB backgroundRGB = m_backgroundRGB;
-    m_mapperListener = new AbstractMapperRegistryEventListener()
-    {
-      /**
-       * @see de.openali.odysseus.chart.framework.axis.IMapperRegistryEventListener#onMapperAdded(de.openali.odysseus.chart.framework.axis.IAxis)
-       *      adds an AxisComponent for any newly added axis and reports Axis and its AxisComponent to the AxisRegistry
-       */
-      @Override
-      public void onMapperAdded( final IMapper mapper )
-      {
-        if( mapper instanceof de.openali.odysseus.chart.framework.model.mapper.IAxis )
-        {
-          final IAxis axis = (IAxis) mapper;
-          final Composite parent = m_axisPlaces.get( axis.getPosition() );
-          final AxisCanvas component = new AxisCanvas( axis, parent, SWT.DOUBLE_BUFFERED );
-          component.setBackground( OdysseusChartFrameworkPlugin.getDefault().getColorRegistry().getResource( parent.getDisplay(), backgroundRGB ) );
-          m_model.getMapperRegistry().setComponent( axis, component );
-          layout();
-        }
-      }
-
-      /**
-       * @see de.openali.odysseus.chart.framework.axis.IMapperRegistryEventListener#onMapperRemoved(de.openali.odysseus.chart.framework.axis.IAxis)
-       *      TODO: not implemented yet (or is it? - right now there's no way to remove an axis, so this should be
-       *      checked in the future)
-       */
-      @Override
-      public void onMapperRemoved( final IMapper mapper )
-      {
-        if( mapper instanceof de.openali.odysseus.chart.framework.model.mapper.IAxis )
-        {
-          // STRANGE: normally we would destroy the component here (symetry!), but the mapper registry disposes it
-          // itself.
-// IAxisComponent component = m_model.getMapperRegistry().getComponent( (IAxis)mapper );
-// component.dispose();
-
-          layout();
-        }
-      }
-
-      /**
-       * @see de.openali.odysseus.chart.framework.impl.model.event.AbstractMapperRegistryEventListener#onMapperRangeChanged(de.openali.odysseus.chart.framework.model.mapper.IMapper)
-       */
-      @Override
-      public void onMapperChanged( final IMapper mapper )
-      {
-        if( isDisposed() )
-          return;
-// layout();
-        if( mapper instanceof IAxis )
-        {
-          final IAxis axis = (IAxis) mapper;
-
-          final List<IChartLayer> layerList = getChartModel().getAxis2Layers().get( axis );
-          if( layerList != null )
-          {
-            final IChartLayer[] changedLayers = layerList.toArray( new IChartLayer[] {} );
-            m_plot.invalidate( changedLayers );
-          }
-          // final AxisCanvas ac = (AxisCanvas) m_model.getMapperRegistry().getComponent( axis );
-          // ac.layout();
-        }
-        layout( true );
-// redraw();
-      }
-
-    };
-
-    m_model.getMapperRegistry().addListener( m_mapperListener );
-
-    m_chartModelListener = new AbstractChartModelEventListener()
-    {
-      /**
-       * @see de.openali.odysseus.chart.framework.model.event.IChartModelEventListener#onAutoscale()
-       */
-      @Override
-      public void onModelChanged( )
-      {
-        layout();
-        redraw();
-      }
-    };
-
-    m_model.addListener( m_chartModelListener );
-
-    final IMapperRegistry ar = m_model.getMapperRegistry();
-    final IAxis[] axes = ar.getAxes();
-
-    // Falls das Model schon gef�llt ist, m�ssen den vorhandenen Achsen
-    // noch Components hinzugef�gt werden
-    for( final IAxis axis : axes )
-      m_mapperListener.onMapperAdded( axis );
-  }
-
-  /**
-   * creates components for all 4 AxisComponent (TOP, RIGHT, BOTTOM, TOP) and Plot
-   */
-  private final void createControl( final Composite parent )
-  {
-    final Color bgColor = OdysseusChartFrameworkPlugin.getDefault().getColorRegistry().getResource( parent.getDisplay(), m_backgroundRGB );
-
-    final GridLayout gridLayout = new GridLayout( 3, false );
-    gridLayout.horizontalSpacing = 0;
-    gridLayout.verticalSpacing = 0;
-    gridLayout.marginHeight = 0;
-    gridLayout.marginWidth = 0;
-    super.setLayout( gridLayout );
-
-    final int axisContainerStyle = SWT.DOUBLE_BUFFERED;
-
-    // 1.1 - first field of first row
-    final Label lbl11 = new Label( parent, SWT.SHADOW_ETCHED_IN );
-    lbl11.setSize( 0, 0 );
-    lbl11.setVisible( false );
-
-    // 1.2
-    final Composite topAxes = new SizedComposite( parent, axisContainerStyle );
-    topAxes.setLayout( new FillLayout( SWT.VERTICAL ) );
-    final GridData tad = new GridData( SWT.FILL, SWT.NONE, true, false );
-    topAxes.setLayoutData( tad );
-    topAxes.setBackground( bgColor );
-    m_axisPlaces.put( POSITION.TOP, topAxes );
-
-    // 1.3 - last field of first row
-    final Label lbl13 = new Label( parent, SWT.NONE );
-    lbl13.setSize( 0, 0 );
-    lbl13.setVisible( false );
-
-    // 2.1 - first field
-    final Composite leftAxes = new SizedComposite( parent, axisContainerStyle );
-    leftAxes.setLayout( new FillLayout( SWT.HORIZONTAL ) );
-    final GridData lad = new GridData( SWT.NONE, SWT.FILL, false, true );
-    leftAxes.setLayoutData( lad );
-    leftAxes.setBackground( bgColor );
-    m_axisPlaces.put( POSITION.LEFT, leftAxes );
-
-    // 2.2
-    // m_plot = new PlotCanvas( m_model.getLayerManager(), parent,
-    // SWT.NO_BACKGROUND | SWT.DOUBLE_BUFFERED |
-    // SWT.NO_FOCUS );
-    m_plot = new PlotCanvas( m_model.getLayerManager(), parent, SWT.LEFT_TO_RIGHT | SWT.DOUBLE_BUFFERED );
-    m_plot.setLayout( new FillLayout() );
-    final GridData pad = new GridData( SWT.FILL, SWT.FILL, true, true );
-    m_plot.setLayoutData( pad );
-    m_plot.setBackground( bgColor );
-
-    // 2.3
-    final Composite rightAxes = new SizedComposite( parent, axisContainerStyle );
-    rightAxes.setLayout( new FillLayout( SWT.HORIZONTAL ) );
-    final GridData rad = new GridData( SWT.NONE, SWT.FILL, false, true );
-    rightAxes.setLayoutData( rad );
-    rightAxes.setBackground( bgColor );
-    m_axisPlaces.put( POSITION.RIGHT, rightAxes );
-
-    // 3.1 - wird ins erste Feld der letzten Zeile gef�llt
-    final Label lbl31 = new Label( parent, SWT.NONE );
-    lbl31.setSize( 0, 0 );
-    lbl31.setVisible( false );
-
-    // 3.2
-    final Composite bottomAxes = new SizedComposite( parent, axisContainerStyle );
-    bottomAxes.setLayout( new FillLayout( SWT.VERTICAL ) );
-    final GridData bad = new GridData( SWT.FILL, SWT.NONE, true, false );
-    bottomAxes.setLayoutData( bad );
-    leftAxes.setBackground( bgColor );
-    m_axisPlaces.put( POSITION.BOTTOM, bottomAxes );
-
-    // 3.3 - wird ins letzte Feld der lezten Zeile gef�llt
-    final Label lbl33 = new Label( parent, SWT.NONE );
-    lbl33.setSize( 0, 0 );
-    lbl33.setVisible( false );
-
-  }
-
-  /**
-   * FIXME: we should listen to dipsose-event instead
-   * 
-   * @see org.eclipse.swt.widgets.Widget#dispose()
-   */
-  @Override
-  public void dispose( )
-  {
-    m_plot.dispose();
-
-    m_model.getMapperRegistry().removeListener( m_mapperListener );
-
-    m_model.clear();
-
-    m_axisPlaces.clear();
-
-    super.dispose();
-  }
-
-  /**
-   * No Layout can be set on this chart. It manages its children and the layout on its own.
-   * 
-   * @see org.eclipse.swt.widgets.Composite#setLayout(org.eclipse.swt.widgets.Layout)
-   */
-  @Override
-  public void setLayout( final Layout layout )
-  {
-    checkWidget();
-  }
-
   public PlotCanvas getPlot( )
   {
     return m_plot;
   }
 
-  /**
-   * repaints all paintable elements (which are: Plot and AxisComponents)
-   */
-  @Override
-  public void redraw( )
+  public final AxisCanvas getAxisCanvas( final IAxis axis )
   {
-    final IMapperRegistry mapperRegistry = m_model.getMapperRegistry();
-    final IAxis[] axes = mapperRegistry.getAxes();
-    for( final IAxis axis : axes )
+    final Composite axisPlace = m_axisPlaces.get( axis.getPosition() );
+    if( axisPlace == null )
+      return null;
+    for( final AxisCanvas ac : getAxisCanvas( axis.getPosition() ) )
     {
-      /*
-       * zum Neuzeichnen der Achse muss nach die IAxisComponent nach AxisComponent gecastet werden - sonst gibts keinen
-       * Zugriff auf die Paint-Sachen
-       */
-      final AxisCanvas ac = (AxisCanvas) mapperRegistry.getComponent( axis );
-      ac.redraw();
+      if( ac.getAxis() == axis )
+        return ac;
     }
-    m_plot.redraw();
+    return null;
+  }
+
+  public final AxisCanvas[] getAxisCanvas( final POSITION position )
+  {
+    final Composite axisPlace = m_axisPlaces.get( position );
+    if( axisPlace == null || axisPlace.getChildren().length == 0 )
+      return new AxisCanvas[] {};
+    final List<AxisCanvas> acList = new ArrayList<AxisCanvas>();
+    for( final Control comp : axisPlace.getChildren() )
+    {
+      if( comp instanceof AxisCanvas )
+        acList.add( (AxisCanvas) comp );
+    }
+    return acList.toArray( new AxisCanvas[] {} );
+  }
+
+  private final void registerListener( )
+  {
+    if( m_model == null )
+      return;
+    // m_model.addListener( m_chartModelListener );
+    m_model.getLayerManager().addListener( m_layerEventListener );
+    m_model.getMapperRegistry().addListener( m_mapperListener );
+  }
+
+  protected final void removeAxisInternal( final IAxis axis )
+  {
+    final AxisCanvas ac = getAxisCanvas( axis );
+    if( ac != null )
+      ac.dispose();
+    // m_axisCanvas.remove( axis );
+  }
+
+  public void setChartModel( final IChartModel model )
+  {
+    unregisterListener();
+    m_model = model;
+    registerListener();
+    updateControl();
   }
 
   /**
@@ -331,10 +361,25 @@ public class ChartComposite extends Canvas implements IChartView
 
   }
 
-  public void setHideUnusedAxes( final boolean hide )
+  protected final void unregisterListener( )
   {
-    m_model.setHideUnusedAxes( hide );
-    redraw();
+    if( m_model == null )
+      return;
+    // m_model.removeListener( m_chartModelListener );
+    m_model.getLayerManager().removeListener( m_layerEventListener );
+    m_model.getMapperRegistry().removeListener( m_mapperListener );
+  }
+
+  private final void updateControl( )
+  {
+    if( m_model == null )
+      return;
+    m_plot.m_layerManager = m_model.getLayerManager();
+
+    m_GridLayout.marginBottom = 5;
+    m_GridLayout.marginLeft = 5;
+    m_GridLayout.marginTop = 5;
+    m_GridLayout.marginRight = 5;
   }
 
 }

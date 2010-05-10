@@ -21,7 +21,7 @@ public interface IAxisRenderer
    * draws the IAxis-Representation into the given GC;
    * 
    * @param screenArea
-   *            Rectangle describing the axis size and location within the drawing area
+   *          Rectangle describing the axis size and location within the drawing area
    */
   public void paint( GC gc, IAxis axis, Rectangle screenArea );
 
@@ -46,5 +46,7 @@ public interface IAxisRenderer
   public void invalidateTicks( IAxis axis );
 
   public void dispose( );
+
+  public String BORDER_SIZE = "de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer_border_size";
 
 }

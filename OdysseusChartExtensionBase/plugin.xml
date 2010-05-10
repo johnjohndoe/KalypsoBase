@@ -27,11 +27,11 @@
          point="de.openali.odysseus.chart.factory.AxisRendererProvider">
       <provider
             class="de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericCalendarAxisRendererProvider"
-            id="de.openali.odysseus.chart.ext.test.axisrenderer.provider.GenericCalendarAxisRendererProvider">
+            id="de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericCalendarAxisRendererProvider">
       </provider>
       <provider
             class="de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericNumberAxisRendererProvider"
-            id="de.openali.odysseus.chart.ext.test.axisrenderer.provider.GenericNumberAxisRendererProvider">
+            id="de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericNumberAxisRendererProvider">
       </provider>
    </extension>
 </plugin>

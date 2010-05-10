@@ -24,7 +24,7 @@ public class PlotImageFactory
 
   /**
    * @param transparency
-   *            RGB to which the transparency-color should be set; transparency will not be used if RGB is null
+   *          RGB to which the transparency-color should be set; transparency will not be used if RGB is null
    */
   public static ImageData createPlotImage( ChartComposite chart, Device dev, int width, int height )
   {
@@ -34,7 +34,7 @@ public class PlotImageFactory
 
     final Image img = new Image( dev, width, height );
 
-    final GC gcw = new GC( img  );
+    final GC gcw = new GC( img );
     Image tmpImg = new Image( dev, width, height );
     final GC tmpGc = new GC( tmpImg );
 
@@ -44,7 +44,7 @@ public class PlotImageFactory
 
     // Plot zeichnen
     final PlotCanvas plotCanvas = chart.getPlot();
-    tmpImg = plotCanvas.paintBuffered( tmpGc, img.getBounds(), null );
+    tmpImg = plotCanvas.paintBuffered( chart.getChartModel().getLayerManager().getLayers(), tmpGc, img.getBounds(), null );
     gcw.drawImage( tmpImg, 0, 0, plotCanvas.getBounds().width, plotCanvas.getBounds().height, plotCanvas.getBounds().x, plotCanvas.getBounds().y, plotCanvas.getBounds().width, plotCanvas.getBounds().height );
     gcw.drawImage( tmpImg, 0, 0 );
 

@@ -42,7 +42,6 @@ package de.openali.odysseus.chart.ext.base.axisrenderer.provider;
 
 import java.awt.Insets;
 
-
 import de.openali.odysseus.chart.ext.base.axisrenderer.GenericAxisRenderer;
 import de.openali.odysseus.chart.ext.base.axisrenderer.ILabelCreator;
 import de.openali.odysseus.chart.ext.base.axisrenderer.ITickCalculator;
@@ -55,7 +54,6 @@ import de.openali.odysseus.chart.framework.model.style.ITextStyle;
 
 /**
  * @author burtscher1
- * 
  */
 public abstract class AbstractGenericAxisRendererProvider extends AbstractAxisRendererProvider
 {
@@ -87,6 +85,8 @@ public abstract class AbstractGenericAxisRendererProvider extends AbstractAxisRe
 
     final Number minTickInterval = getMinTickInteval();
 
+    final int borderSize = getBorderSize();
+
     ILineStyle axisLine = getStyleSet().getStyle( ROLE_AXIS_LINE_STYLE, ILineStyle.class );
     ITextStyle labelText = getStyleSet().getStyle( ROLE_AXIS_LABEL_STYLE, ITextStyle.class );
     ILineStyle tickLine = getStyleSet().getStyle( ROLE_AXIS_TICK_LINE_STYLE, ILineStyle.class );
@@ -95,13 +95,19 @@ public abstract class AbstractGenericAxisRendererProvider extends AbstractAxisRe
     ITickCalculator tickCalculator = getTickCalculator();
     ILabelCreator labelCreator = getLabelCreator();
 
-    final IAxisRenderer calendarAxisRenderer = new GenericAxisRenderer( getId(), tickLength, insetsTick, insetsLabel, gap, labelCreator, tickCalculator, minTickInterval, hideCut, fixedWidth, axisLine, labelText, tickLine, tickLabelText );
+    final IAxisRenderer calendarAxisRenderer = new GenericAxisRenderer( getId(), tickLength, insetsTick, insetsLabel, gap, labelCreator, tickCalculator, minTickInterval, hideCut, fixedWidth, axisLine, labelText, tickLine, tickLabelText, borderSize );
     return calendarAxisRenderer;
   }
 
   private int getFixedWidth( )
   {
     return Integer.parseInt( getParameterContainer().getParameterValue( "fixed_width", "0" ) );
+  }
+
+  private int getBorderSize( )
+
+  {
+    return Integer.parseInt( getParameterContainer().getParameterValue( "border_size", "0" ) );
   }
 
   private int getGap( )

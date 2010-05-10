@@ -17,7 +17,6 @@ import de.openali.odysseus.chart.framework.model.event.impl.MapperRegistryEventH
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IMapper;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
-import de.openali.odysseus.chart.framework.model.mapper.component.IAxisComponent;
 import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
 import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
 
@@ -34,8 +33,9 @@ public class MapperRegistry implements IMapperRegistry
   /** axis-identifier --> renderer */
   private final Map<String, IAxisRenderer> m_id2renderers = new HashMap<String, IAxisRenderer>();
 
+  /** TODO: don't map axes here, ChartComposite deal with this Components */
   /** axis --> component */
-  private final Map<IAxis, IAxisComponent> m_components = new HashMap<IAxis, IAxisComponent>();
+  // private final Map<IAxis, IAxisComponent> m_components = new HashMap<IAxis, IAxisComponent>();
 
   private final DataOperatorHelper m_dataOperatorHelper = new DataOperatorHelper();
 
@@ -109,16 +109,16 @@ public class MapperRegistry implements IMapperRegistry
 
     mapper.removeListener( m_mapperEventListener );
 
-    if( mapper instanceof de.openali.odysseus.chart.framework.model.mapper.IAxis )
-    {
-      final IAxis axis = (IAxis) mapper;
-      final IAxisComponent component = m_components.get( axis );
-      if( component != null )
-      {
-        component.dispose();
-        m_components.remove( axis );
-      }
-    }
+// if( mapper instanceof de.openali.odysseus.chart.framework.model.mapper.IAxis )
+// {
+// final IAxis axis = (IAxis) mapper;
+// final IAxisComponent component = m_components.get( axis );
+// if( component != null )
+// {
+// component.dispose();
+// m_components.remove( axis );
+// }
+// }
     m_handler.fireMapperRemoved( mapper );
   }
 
@@ -128,9 +128,9 @@ public class MapperRegistry implements IMapperRegistry
    */
   public void clear( )
   {
-    for( final IAxisComponent comp : m_components.values() )
-      comp.dispose();
-    m_components.clear();
+// for( final IAxisComponent comp : m_components.values() )
+// comp.dispose();
+// m_components.clear();
 
     for( final IMapper mapper : m_mappers.values() )
       m_handler.fireMapperRemoved( mapper );
@@ -197,10 +197,10 @@ public class MapperRegistry implements IMapperRegistry
    * org.kalypso.chart.framework.model.axis.registry.IMapperRegistry#getComponent(org.kalypso.chart.framework.model.
    * axis.IAxis)
    */
-  public IAxisComponent getComponent( final IAxis axis )
-  {
-    return m_components.get( axis );
-  }
+// public IAxisComponent getComponent( final IAxis axis )
+// {
+// return m_components.get( axis );
+// }
 
   /*
    * (non-Javadoc)
@@ -227,10 +227,10 @@ public class MapperRegistry implements IMapperRegistry
    * org.kalypso.chart.framework.model.axis.registry.IMapperRegistry#setComponent(org.kalypso.chart.framework.model.
    * axis.IAxis, org.kalypso.chart.framework.model.axis.component.IAxisComponent)
    */
-  public void setComponent( final IAxis axis, final IAxisComponent comp )
-  {
-    m_components.put( axis, comp );
-  }
+// public void setComponent( final IAxis axis, final IAxisComponent comp )
+// {
+// m_components.put( axis, comp );
+// }
 
   /*
    * (non-Javadoc)
@@ -265,10 +265,10 @@ public class MapperRegistry implements IMapperRegistry
    * (non-Javadoc)
    * @see org.kalypso.chart.framework.model.axis.registry.IMapperRegistry#getComponents()
    */
-  public Map<IAxis, IAxisComponent> getAxesToComponentsMap( )
-  {
-    return m_components;
-  }
+// public Map<IAxis, IAxisComponent> getAxesToComponentsMap( )
+// {
+// return m_components;
+// }
 
   public IAxis getAxis( final String id )
   {

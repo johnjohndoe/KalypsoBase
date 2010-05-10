@@ -49,18 +49,6 @@ public abstract class AbstractAxis extends AbstractMapper implements IAxis
     getEventHandler().fireMapperChanged( this );
   }
 
-// /**
-// * @see org.kalypso.chart.framework.axis.IAxis#getRenderer()
-// */
-// @Deprecated
-// public IAxisRenderer getRenderer( )
-// {
-// if( m_registry == null )
-// throw new IllegalStateException( "Registry is null" );
-//
-// return m_registry.getRenderer( this );
-// }
-
   /**
    * @see org.kalypso.chart.framework.axis.IAxis#getLabel()
    */

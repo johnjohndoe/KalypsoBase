@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.chart.ui.editor.mousehandler;
 
-import java.util.Map.Entry;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Cursor;
@@ -57,7 +55,6 @@ import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
 
 /**
  * @author burtscher1
- * 
  */
 public class AxisDragZoomInHandler extends AbstractAxisDragHandler
 {
@@ -89,26 +86,29 @@ public class AxisDragZoomInHandler extends AbstractAxisDragHandler
 
     // Zoom-Anzeige in AxisCanvas
     final AxisCanvas curAc = (AxisCanvas) e.getSource();
-    final IAxis curAxis = m_axes.get( curAc );
-    final ORIENTATION ori = curAxis.getPosition().getOrientation();
+
+    final ORIENTATION ori = getOrientation( curAc );// curAxis.getPosition().getOrientation();
 
     if( m_applyOnAllAxes )
     {
-      for( final Entry<AxisCanvas, IAxis> entry : m_axes.entrySet() )
+// for( final Entry<AxisCanvas, IAxis> entry : m_axes.entrySet() )
+// {
+// IAxis axis = entry.getValue();
+// if( axis.getPosition().getOrientation().equals( ori ) )
+// {
+      for( final IAxis axis : getAxis( ori ) )
       {
-        IAxis axis = entry.getValue();
-        if( axis.getPosition().getOrientation().equals( ori ) )
+        if( diff > 5 )
         {
-          if( diff > 5 )
-          {
-            performZoomAction( axis );
-          }
-          entry.getKey().setDragInterval( 0, 0 );
+          performZoomAction( axis );
         }
+        m_chartComposite.getAxisCanvas( axis ).setDragInterval( 0, 0 );
       }
     }
+
     else
     {
+      final IAxis curAxis = curAc.getAxis();// m_axes.get( curAc );
       if( diff > 5 )
       {
         performZoomAction( curAxis );
@@ -134,8 +134,8 @@ public class AxisDragZoomInHandler extends AbstractAxisDragHandler
       m_mouseDragEnd = getPos( e );
       // Zoom-Anzeige in AxisCanvas
       final AxisCanvas curAc = (AxisCanvas) e.getSource();
-      final IAxis curAxis = m_axes.get( curAc );
-      final ORIENTATION ori = curAxis.getPosition().getOrientation();
+      // final IAxis curAxis = m_axes.get( curAc );
+      final ORIENTATION ori = getOrientation( curAc );// curAxis.getPosition().getOrientation();
 
       // zoom-Rechteck im Plot
       Rectangle dragArea;
@@ -149,16 +149,15 @@ public class AxisDragZoomInHandler extends AbstractAxisDragHandler
       if( m_applyOnAllAxes )
       {
         // zoom-Rechteck im AxisCanvas
-        for( final AxisCanvas ac : m_axes.keySet() )
-        {
-          final IAxis axis = m_axes.get( ac );
-          if( axis.getPosition().getOrientation().equals( ori ) )
-          {
-            ac.setDragInterval( m_mouseDragStart, m_mouseDragEnd );
-          }
-        }
-
+// for( final AxisCanvas ac : m_axes.keySet() )
+// {
+// final IAxis axis = m_axes.get( ac );
+// if( axis.getPosition().getOrientation().equals( ori ) )
+// {
+        for( final IAxis axis : getAxis( ori ) )
+          m_chartComposite.getAxisCanvas( axis ).setDragInterval( m_mouseDragStart, m_mouseDragEnd );
       }
+
       else
       {
         curAc.setDragInterval( m_mouseDragStart, m_mouseDragEnd );
