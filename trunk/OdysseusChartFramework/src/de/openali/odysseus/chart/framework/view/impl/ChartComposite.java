@@ -26,6 +26,7 @@ import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IMapper;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
+import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
 import de.openali.odysseus.chart.framework.view.IChartView;
 
 /**
@@ -133,7 +134,8 @@ public class ChartComposite extends Canvas implements IChartView
       {
         final IAxis axis = (IAxis) mapper;
         final AxisCanvas ac = getAxisCanvas( axis );
-        ac.setVisible( axis.isVisible() );
+        if( ac != null )
+          ac.setVisible( axis.isVisible() );
         final List<IChartLayer> list = m_model.getAxis2Layers().get( axis );
         if( list != null )
           m_plot.invalidate( list.toArray( new IChartLayer[] {} ) );
@@ -164,12 +166,14 @@ public class ChartComposite extends Canvas implements IChartView
       @Override
       public void widgetDisposed( final DisposeEvent e )
       {
-        unregisterListener();
-        // brauchen wir das ?
-        m_model.clear();
+        if( m_model != null )
+        {
+          unregisterListener();
+          // brauchen wir das ?
+          m_model.clear();
+        }
       }
     } );
-
     setLayout( m_GridLayout );
     setBackground( OdysseusChartFrameworkPlugin.getDefault().getColorRegistry().getResource( parent.getDisplay(), backgroundRGB ) );
     createControl();
@@ -301,9 +305,6 @@ public class ChartComposite extends Canvas implements IChartView
 
   private final void registerListener( )
   {
-    if( m_model == null )
-      return;
-    // m_model.addListener( m_chartModelListener );
     m_model.getLayerManager().addListener( m_layerEventListener );
     m_model.getMapperRegistry().addListener( m_mapperListener );
   }
@@ -313,19 +314,46 @@ public class ChartComposite extends Canvas implements IChartView
     final AxisCanvas ac = getAxisCanvas( axis );
     if( ac != null )
       ac.dispose();
-    // m_axisCanvas.remove( axis );
+  }
+
+  private final void addAllAxis( )
+  {
+    final IMapperRegistry mr = m_model.getMapperRegistry();
+    if( mr == null )
+      return;
+    final IAxis[] axes = mr == null ? new IAxis[] {} : mr.getAxes();
+    for( final IAxis axis : axes )
+      addAxisInternal( axis );
+  }
+
+  private final void removeAllAxis( )
+  {
+    final IMapperRegistry mr = m_model.getMapperRegistry();
+    if( mr == null )
+      return;
+    final IAxis[] axes = mr == null ? new IAxis[] {} : mr.getAxes();
+    for( final IAxis axis : axes )
+      removeAxisInternal( axis );
   }
 
   public void setChartModel( final IChartModel model )
   {
-    unregisterListener();
+    if( m_model != null )
+    {
+      unregisterListener();
+      removeAllAxis();
+    }
     m_model = model;
-    registerListener();
+    if( m_model != null )
+    {
+      registerListener();
+      addAllAxis();
+    }
     updateControl();
   }
 
   /**
-   * resizes the chart according to a given plot size;
+   * resizes the chart according to a given plot size; only used in ChartImageFactory
    */
   public void setPlotSize( final int width, final int height )
   {
@@ -363,9 +391,6 @@ public class ChartComposite extends Canvas implements IChartView
 
   protected final void unregisterListener( )
   {
-    if( m_model == null )
-      return;
-    // m_model.removeListener( m_chartModelListener );
     m_model.getLayerManager().removeListener( m_layerEventListener );
     m_model.getMapperRegistry().removeListener( m_mapperListener );
   }
