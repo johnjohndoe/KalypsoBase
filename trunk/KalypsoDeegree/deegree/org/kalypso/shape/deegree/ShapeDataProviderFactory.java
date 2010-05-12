@@ -72,7 +72,7 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
  */
 public class ShapeDataProviderFactory
 {
-  public static IShapeData createDefaultProvider( final List<Feature> features ) throws DBaseException
+  public static IShapeData createDefaultData( final List<Feature> features ) throws DBaseException
   {
     if( features.isEmpty() )
       return new FeatureShapeDataProvider( features, (byte) ShapeConst.SHAPE_TYPE_NULL, new HashMap<DBFField, GMLXPath>(), null );
@@ -87,7 +87,7 @@ public class ShapeDataProviderFactory
     return new FeatureShapeDataProvider( features, (byte) shapeType, mapping, geometry );
   }
 
-  private static Map<DBFField, GMLXPath> findDataMapping( final IFeatureType type ) throws DBaseException
+  public static Map<DBFField, GMLXPath> findDataMapping( final IFeatureType type ) throws DBaseException
   {
     final Map<DBFField, GMLXPath> mapping = new HashMap<DBFField, GMLXPath>();
 

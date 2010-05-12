@@ -41,7 +41,6 @@
 package org.kalypso.gml.ui.commands.exportshape;
 
 import java.util.Arrays;
-import java.util.List;
 
 import org.kalypso.shape.IShapeData;
 import org.kalypso.shape.ShapeDataException;
@@ -57,9 +56,9 @@ public class StandardShapeDataFactory implements IShapeDataFactory
 {
   private final Feature[] m_features;
 
-  public StandardShapeDataFactory( final Feature[] feature )
+  public StandardShapeDataFactory( final Feature[] features )
   {
-    m_features = feature;
+    m_features = features;
   }
 
   /**
@@ -70,8 +69,7 @@ public class StandardShapeDataFactory implements IShapeDataFactory
   {
     try
     {
-      final List<Feature> features = Arrays.asList( m_features );
-      return ShapeDataProviderFactory.createDefaultProvider( features );
+      return ShapeDataProviderFactory.createDefaultData( Arrays.asList( m_features ) );
     }
     catch( final DBaseException e )
     {

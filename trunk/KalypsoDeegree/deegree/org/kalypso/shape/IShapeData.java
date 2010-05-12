@@ -46,13 +46,13 @@ import org.kalypso.shape.geometry.ISHPGeometry;
  */
 public interface IShapeData
 {
-  /** Numbers of entries of the shape file */
-  public int size( ) throws ShapeDataException;
-
   /** Type of shape (like POINTZ). One of {@link ShapeConst} constants. */
   public byte getShapeType( ) throws ShapeDataException;
 
   public DBFField[] getFields( ) throws ShapeDataException;
+
+  /** Numbers of entries of the shape file */
+  public int size( ) throws ShapeDataException;
 
   public ISHPGeometry getGeometry( final int index ) throws ShapeDataException;
 

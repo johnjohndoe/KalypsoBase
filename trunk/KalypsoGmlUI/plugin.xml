@@ -35,6 +35,7 @@
             name="Raster exportieren">
       </command>
       <command id="org.kalypso.ui.views.outline.ShapeExport" name="%org.kalypso.ui.views.outline.ShapeExport.name" description="%org.kalypso.ui.views.outline.ShapeExport.description" />
+      <command id="org.kalypso.gml.ui.commands.Tin2ShapeExport" name="%org.kalypso.gml.ui.commands.Tin2ShapeExport.name" description="%org.kalypso.gml.ui.commands.Tin2ShapeExport.description" />
       <command categoryId="org.kalypso.ogc.gml.map.category" description="%org.kalypso.ogc.gml.map.CoverageManagementCommand.description" id="org.kalypso.ogc.gml.map.CoverageManagementCommand" name="%org.kalypso.ogc.gml.map.CoverageManagementCommand.name" />
    </extension>
    <extension point="org.eclipse.ui.commandImages">
@@ -42,6 +43,7 @@
       <image commandId="org.kalypso.gml.ui.exportGridCommand" icon="icons/obj16/gridImport.gif"/>
       <image commandId="org.kalypso.ogc.gml.map.CoverageManagementCommand" icon="icons/obj16/manageCoverages.gif" />
       <image commandId="org.kalypso.ui.views.outline.ShapeExport" icon="icons/obj16/exportShp.gif" />
+      <image commandId="org.kalypso.gml.ui.commands.Tin2ShapeExport" icon="icons/obj16/exportTin.gif" />
    </extension>
    <extension
          point="org.eclipse.ui.handlers">
@@ -94,7 +96,12 @@
 				</and>
 			</enabledWhen>
 		</handler>
-        <handler commandId="org.kalypso.ui.views.outline.ShapeExport" class="org.kalypso.gml.ui.commands.exportshape.ExportGml2ShapeThemeHandler" >
+        <handler commandId="org.kalypso.ui.views.outline.ShapeExport" class="org.kalypso.gml.ui.commands.exportshape.ExportShapeHandler" >
+            <enabledWhen>
+                <reference definitionId="org.kalypso.gml.ui.definition.selectionHasFeatures"/>
+            </enabledWhen>
+        </handler>
+        <handler commandId="org.kalypso.gml.ui.commands.Tin2ShapeExport" class="org.kalypso.gml.ui.commands.exportshape.ExportTin2ShapeHandler" >
             <enabledWhen>
                 <reference definitionId="org.kalypso.gml.ui.definition.selectionHasFeatures"/>
             </enabledWhen>
@@ -138,13 +145,27 @@
          id="org.kalypso.gml.ui.exports"
          label="%menuContribution.menu.exports.label"
          mnemonic="e">
-                <command
-                      commandId="org.kalypso.ui.views.outline.ShapeExport"
-                      style="push">
-                   <visibleWhen
-                         checkEnabled="true">
-                   </visibleWhen>
-                </command>
+      <menu
+            commandId="org.kalypso.ui.views.outline.ShapeExport"
+            icon="icons/obj16/exportShp.gif"
+            id="org.kalypso.gml.ui.exports.shape"
+            label="Shape"
+            mnemonic="s">
+         <command
+               commandId="org.kalypso.ui.views.outline.ShapeExport"
+               mnemonic="s">
+            <visibleWhen checkEnabled="true"/>
+         </command>
+         <command
+               commandId="org.kalypso.gml.ui.commands.Tin2ShapeExport"
+               mnemonic="t">
+            <visibleWhen checkEnabled="true"/>
+         </command>
+         <separator
+               name="additions"
+               visible="false">
+         </separator>
+      </menu>
 				<command commandId="org.kalypso.gml.ui.exportGridCommand">
 					<visibleWhen checkEnabled="false">
 						<with variable="selection">
