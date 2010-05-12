@@ -55,7 +55,7 @@ import org.kalypso.shape.deegree.IShapeDataFactory;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * @author belger
+ * @author Gernot Belger
  */
 public class ExportShapeWizard extends Wizard
 {

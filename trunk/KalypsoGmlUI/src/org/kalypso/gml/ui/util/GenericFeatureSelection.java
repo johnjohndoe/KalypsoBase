@@ -162,7 +162,26 @@ public class GenericFeatureSelection implements IFeatureSelection
 
   private void addFeatureWithWorkspace( final EasyFeatureWrapper featureWithWorkspace )
   {
-    m_data.put( featureWithWorkspace.getFeature(), featureWithWorkspace );
+    final Feature feature = featureWithWorkspace.getFeature();
+    final CommandableWorkspace defaultWorkspace = featureWithWorkspace.getWorkspace();
+    m_data.put( feature, featureWithWorkspace );
+
+    final IRelationType rt = feature.getParentRelation();
+    final Feature container = feature.getOwner();
+    final GMLWorkspace workspace = feature.getWorkspace();
+// m_container = container;
+    if( rt.isList() )
+    {
+      // FIXME: much too slow...
+// final FeatureList sisters = (FeatureList) container.getProperty( rt );
+// for( final Object sister : sisters )
+// {
+// // TODO: put sisters into another list (separate selected from possible selected features)
+// final Feature sisterFeature = FeatureHelper.resolveLinkedFeature( workspace, sister );
+// if( !m_data.containsKey( sisterFeature ) )
+// m_data.put( sisterFeature, new EasyFeatureWrapper( defaultWorkspace, sisterFeature ) );
+// }
+    }
   }
 
   private void addFeatureSelection( final IFeatureSelection selection )
