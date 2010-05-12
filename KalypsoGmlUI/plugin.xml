@@ -96,7 +96,7 @@
 		</handler>
         <handler commandId="org.kalypso.ui.views.outline.ShapeExport" class="org.kalypso.gml.ui.commands.exportshape.ExportGml2ShapeThemeHandler" >
             <enabledWhen>
-                <reference definitionId="org.kalypso.ui.definition.oneFeatureThemeSelected"/>
+                <reference definitionId="org.kalypso.gml.ui.definition.selectionHasFeatures"/>
             </enabledWhen>
         </handler>
    </extension>
@@ -183,5 +183,23 @@
 			</command>		
 		</menuContribution>
 	</extension>
+
+    <extension point="org.eclipse.core.expressions.propertyTesters">
+       <propertyTester
+             class="org.kalypso.gml.ui.extensions.FeatureSelectionTester"
+             id="org.kalypso.gml.ui.propertyTester.features"
+             namespace="org.kalypso.gml.ui"
+             properties="hasFeatureSelection"
+             type="org.eclipse.jface.viewers.ISelection">
+       </propertyTester>
+    </extension>
+
+    <extension point="org.eclipse.core.expressions.definitions">
+          <definition id="org.kalypso.gml.ui.definition.selectionHasFeatures">
+             <with variable="selection">
+                <test property="org.kalypso.gml.ui.hasFeatureSelection"/>
+             </with>
+          </definition>
+    </extension>
 
 </plugin>
