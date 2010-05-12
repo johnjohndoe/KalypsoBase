@@ -86,7 +86,11 @@ public class ExportShapeWizard extends Wizard
   {
     final Charset shapeCharset = m_exportShapePage.getCharset();
     final String shapeFileBase = m_exportShapePage.getShapeFileBase();
-    final IShapeDataFactory shapeDataFactory = getDataFactory();
+
+    final Object[] choosen = m_selectFeaturesPage.getChoosen();
+    final Feature[] chosenFeatures = Arrays.castArray( choosen, new Feature[choosen.length] );
+
+    final IShapeDataFactory shapeDataFactory = createDataFactory( chosenFeatures );
 
     final ICoreRunnableWithProgress operation = new ExportShapeOperation( shapeCharset, shapeFileBase, shapeDataFactory );
     final IStatus status = ProgressUtilities.busyCursorWhile( operation );
@@ -94,11 +98,8 @@ public class ExportShapeWizard extends Wizard
     return status.isOK();
   }
 
-  private IShapeDataFactory getDataFactory( )
+  protected IShapeDataFactory createDataFactory( final Feature[] chosenFeatures )
   {
-    final Object[] choosen = m_selectFeaturesPage.getChoosen();
-    final Feature[] chosenFeatures = Arrays.castArray( choosen, new Feature[choosen.length] );
-
     return new StandardShapeDataFactory( chosenFeatures );
   }
 

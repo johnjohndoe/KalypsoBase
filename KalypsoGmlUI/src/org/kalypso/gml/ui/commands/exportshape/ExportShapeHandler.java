@@ -63,9 +63,12 @@ import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 
 /**
+ * Handler for shape-export command.<br>
+ * Intended to be overwritten by specialised shape-exporters.
+ * 
  * @author Gernot Belger
  */
-public class ExportGml2ShapeThemeHandler extends AbstractHandler implements IHandler
+public class ExportShapeHandler extends AbstractHandler implements IHandler
 {
   /**
    * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
@@ -75,7 +78,7 @@ public class ExportGml2ShapeThemeHandler extends AbstractHandler implements IHan
     final Shell shell = HandlerUtil.getActiveShellChecked( event );
 
     final String commandName = HandlerUtils.getCommandName( event );
-    final String title = commandName;//Messages.getString( "org.kalypso.ogc.gml.outline.handler.ExportGml2ShapeThemeHandler.2" ); //$NON-NLS-1$
+    final String title = commandName;
 
     final ISelection selection = HandlerUtil.getCurrentSelectionChecked( event );
     final IFeatureSelection featureSelection = GenericFeatureSelection.create( selection, null );
@@ -88,10 +91,12 @@ public class ExportGml2ShapeThemeHandler extends AbstractHandler implements IHan
 
     final String fileName = findFileName( selection );
 
-    final Wizard wizard = new ExportShapeWizard( featureSelection, fileName );
+    final Wizard wizard = createWizard( featureSelection, fileName );
     wizard.setWindowTitle( title );
+
     final IDialogSettings wizardSettings = PluginUtilities.getDialogSettings( KalypsoGmlUIPlugin.getDefault(), getClass().getName() );
     wizard.setDialogSettings( wizardSettings );
+
     final WizardDialog2 dialog = new WizardDialog2( shell, wizard );
     dialog.setRememberSize( true );
     dialog.open();
@@ -99,7 +104,12 @@ public class ExportGml2ShapeThemeHandler extends AbstractHandler implements IHan
     return null;
   }
 
-  private String findFileName( final ISelection selection )
+  protected Wizard createWizard( final IFeatureSelection featureSelection, final String fileName )
+  {
+    return new ExportShapeWizard( featureSelection, fileName );
+  }
+
+  protected String findFileName( final ISelection selection )
   {
     if( selection.isEmpty() || !(selection instanceof IStructuredSelection) )
       return null;

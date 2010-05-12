@@ -40,41 +40,31 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gml.ui.commands.exportshape;
 
-import java.util.Arrays;
-
 import org.kalypso.shape.IShapeData;
 import org.kalypso.shape.ShapeDataException;
-import org.kalypso.shape.dbf.DBaseException;
 import org.kalypso.shape.deegree.IShapeDataFactory;
-import org.kalypso.shape.deegree.ShapeDataProviderFactory;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Gernot Belger
  */
-public class StandardShapeDataFactory implements IShapeDataFactory
+public class Tin2ShapeDataFactory implements IShapeDataFactory
 {
   private final Feature[] m_features;
 
-  public StandardShapeDataFactory( final Feature[] features )
+  public Tin2ShapeDataFactory( final Feature[] features )
   {
     m_features = features;
   }
 
   /**
-   * @see org.kalypso.shape.deegree.IShapeDataFactory#createData()
+   * @see org.kalypso.gml.ui.commands.exportshape.IShapeDataFactory#createData()
    */
   @Override
   public IShapeData createData( ) throws ShapeDataException
   {
-    try
-    {
-      return ShapeDataProviderFactory.createDefaultData( Arrays.asList( m_features ) );
-    }
-    catch( final DBaseException e )
-    {
-      throw new ShapeDataException( "Failed to create shape data provider", e );
-    }
+    // TODO Auto-generated method stub
+    return null;
   }
 
 }

@@ -40,41 +40,26 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gml.ui.commands.exportshape;
 
-import java.util.Arrays;
-
-import org.kalypso.shape.IShapeData;
-import org.kalypso.shape.ShapeDataException;
-import org.kalypso.shape.dbf.DBaseException;
+import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.shape.deegree.IShapeDataFactory;
-import org.kalypso.shape.deegree.ShapeDataProviderFactory;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Gernot Belger
  */
-public class StandardShapeDataFactory implements IShapeDataFactory
+public class ExportTin2ShapeWizard extends ExportShapeWizard
 {
-  private final Feature[] m_features;
-
-  public StandardShapeDataFactory( final Feature[] features )
+  public ExportTin2ShapeWizard( final IFeatureSelection featureSelection, final String fileName )
   {
-    m_features = features;
+    super( featureSelection, fileName );
   }
 
   /**
-   * @see org.kalypso.shape.deegree.IShapeDataFactory#createData()
+   * @see org.kalypso.gml.ui.commands.exportshape.ExportShapeWizard#createDataFactory(org.kalypsodeegree.model.feature.Feature[])
    */
   @Override
-  public IShapeData createData( ) throws ShapeDataException
+  protected IShapeDataFactory createDataFactory( final Feature[] chosenFeatures )
   {
-    try
-    {
-      return ShapeDataProviderFactory.createDefaultData( Arrays.asList( m_features ) );
-    }
-    catch( final DBaseException e )
-    {
-      throw new ShapeDataException( "Failed to create shape data provider", e );
-    }
+    return new Tin2ShapeDataFactory( chosenFeatures );
   }
-
 }
