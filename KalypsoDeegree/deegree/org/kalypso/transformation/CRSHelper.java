@@ -70,10 +70,10 @@ public class CRSHelper
    * This function returns true, if the given name is one of the known coordinate systems.
    * 
    * @param name
-   *            The name of the coordinate system to check.
+   *          The name of the coordinate system to check.
    * @return True, if the coordinate system exists.
    */
-  public static boolean isKnownCRS( String name )
+  public static boolean isKnownCRS( final String name )
   {
     if( name == null )
       return false;
@@ -81,15 +81,15 @@ public class CRSHelper
     try
     {
       /* In case it is asked often, it is better to used the cached crs factory. */
-      CachedCRSFactory factory = CachedCRSFactory.getInstance();
+      final CachedCRSFactory factory = CachedCRSFactory.getInstance();
 
-      CoordinateSystem crs = factory.create( name );
+      final CoordinateSystem crs = factory.create( name );
       if( crs == null )
         return false;
 
       return true;
     }
-    catch( UnknownCRSException e )
+    catch( final UnknownCRSException e )
     {
       return false;
     }
@@ -102,13 +102,13 @@ public class CRSHelper
    */
   public static List<String> getAllNames( )
   {
-    Preferences preferences = KalypsoDeegreePlugin.getDefault().getPluginPreferences();
+    final Preferences preferences = KalypsoDeegreePlugin.getDefault().getPluginPreferences();
 
-    String preferenceNames = preferences.getString( IKalypsoDeegreePreferences.AVAILABLE_CRS_SETTING );
+    final String preferenceNames = preferences.getString( IKalypsoDeegreePreferences.AVAILABLE_CRS_SETTING );
     if( preferenceNames == null || preferenceNames.length() == 0 )
       return new ArrayList<String>();
 
-    String[] availableNames = preferenceNames.split( ";" );
+    final String[] availableNames = preferenceNames.split( ";" );
     return Arrays.asList( availableNames );
   }
 
@@ -117,9 +117,9 @@ public class CRSHelper
    * 
    * @return The dimension of the coordinate system.
    */
-  public static int getDimension( String name ) throws UnknownCRSException
+  public static int getDimension( final String name ) throws UnknownCRSException
   {
-    CoordinateSystem coordinateSystem = CachedCRSFactory.getInstance().create( name );
+    final CoordinateSystem coordinateSystem = CachedCRSFactory.getInstance().create( name );
 
     return coordinateSystem.getDimension();
   }
@@ -130,17 +130,17 @@ public class CRSHelper
    * ATTENTION: Outside of this plugin, only the names should be used.
    * 
    * @param names
-   *            The list of names.
+   *          The list of names.
    * @return The list of coordinate systems.
    */
-  public static List<CoordinateSystem> getCRSListByNames( List<String> names ) throws UnknownCRSException
+  public static List<CoordinateSystem> getCRSListByNames( final List<String> names ) throws UnknownCRSException
   {
     /* Memory for the coordinate systems. */
-    ArrayList<CoordinateSystem> coordinateSystems = new ArrayList<CoordinateSystem>();
+    final ArrayList<CoordinateSystem> coordinateSystems = new ArrayList<CoordinateSystem>();
 
     for( int i = 0; i < names.size(); i++ )
     {
-      CoordinateSystem coordinateSystem = CachedCRSFactory.getInstance().create( names.get( i ) );
+      final CoordinateSystem coordinateSystem = CachedCRSFactory.getInstance().create( names.get( i ) );
       coordinateSystems.add( coordinateSystem );
     }
 
@@ -152,14 +152,14 @@ public class CRSHelper
    * given CRS.
    * 
    * @param name
-   *            The name of the crs.
+   *          The name of the crs.
    * @return The tooltip string.
    */
-  public static String getTooltipText( String name )
+  public static String getTooltipText( final String name )
   {
     try
     {
-      CoordinateSystem coordinateSystem = CachedCRSFactory.getInstance().create( name );
+      final CoordinateSystem coordinateSystem = CachedCRSFactory.getInstance().create( name );
       if( coordinateSystem != null )
       {
         /* The tooltip. */
@@ -170,12 +170,9 @@ public class CRSHelper
         tooltip = tooltip + "Identifier:\n";
 
         /* Get all identifiers. */
-        String[] identifiers = coordinateSystem.getCRS().getIdentifiers();
-        for( int i = 0; i < identifiers.length; i++ )
+        final String[] identifiers = coordinateSystem.getCRS().getIdentifiers();
+        for( final String identifier : identifiers )
         {
-          /* Get the identifier. */
-          String identifier = identifiers[i];
-
           tooltip = tooltip + identifier + "\n";
         }
 
@@ -185,13 +182,13 @@ public class CRSHelper
       /* Leave the tooltip empty. */
       return "No valid CRS: " + name;
     }
-    catch( Exception ex )
+    catch( final Exception ex )
     {
       /* Log the error. */
       KalypsoDeegreePlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( ex ) );
 
       /* Leave the tooltip empty. */
-      return "";
+      return "";//$NON-NLS-1$
     }
   }
 
@@ -200,19 +197,43 @@ public class CRSHelper
    * 
    * @return The hash of the given coordinate systems.
    */
-  public static HashMap<String, CoordinateSystem> getCoordHash( List<String> names ) throws UnknownCRSException
+  public static HashMap<String, CoordinateSystem> getCoordHash( final List<String> names ) throws UnknownCRSException
   {
     /* Get all coordinate systems. */
-    List<CoordinateSystem> coordinateSystems = CRSHelper.getCRSListByNames( names );
+    final List<CoordinateSystem> coordinateSystems = CRSHelper.getCRSListByNames( names );
 
     /* Cache the coordinate systems. */
-    HashMap<String, CoordinateSystem> coordHash = new HashMap<String, CoordinateSystem>();
+    final HashMap<String, CoordinateSystem> coordHash = new HashMap<String, CoordinateSystem>();
     for( int i = 0; i < coordinateSystems.size(); i++ )
     {
-      CoordinateSystem coordinateSystem = coordinateSystems.get( i );
+      final CoordinateSystem coordinateSystem = coordinateSystems.get( i );
       coordHash.put( coordinateSystem.getIdentifier(), coordinateSystem );
     }
 
     return coordHash;
   }
+
+  /**
+   * Returns the epsg code of the given coordinate system.
+   */
+  public static String getEPSG( final String coordinateSystem ) throws UnknownCRSException
+  {
+    /* first try: parse it direct5ly from the crs name */
+    final String epsgPrefix = "EPSG:";//$NON-NLS-1$
+    if( coordinateSystem.startsWith( epsgPrefix ) )
+      return coordinateSystem.substring( epsgPrefix.length() );
+
+    /* second try: check all identifiers */
+    final CoordinateSystem crs = CachedCRSFactory.getInstance().create( coordinateSystem );
+
+    final String[] identifiers = crs.getCRS().getIdentifiers();
+    for( final String id : identifiers )
+    {
+      if( id.startsWith( epsgPrefix ) )
+        return id.substring( epsgPrefix.length() );
+    }
+
+    return null;
+  }
+
 }
