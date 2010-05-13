@@ -1156,6 +1156,11 @@ final public class GeometryFactory
     return triangulatedSurface;
   }
 
+  public static GM_TriangulatedSurface createGM_TriangulatedSurface( final List<GM_Triangle> triangles, final String crs ) throws GM_Exception
+  {
+    return new GM_TriangulatedSurface_Impl( triangles, crs );
+  }
+
   public static GM_Surface<GM_Polygon> createGM_PolyhedralSurface( final GM_Polygon[] polygons, final String crs ) throws GM_Exception
   {
     final GM_Surface<GM_Polygon> triangulatedSurface = createGM_PolyhedralSurface( crs );
