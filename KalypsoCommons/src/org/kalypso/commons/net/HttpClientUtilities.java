@@ -65,6 +65,8 @@ public class HttpClientUtilities
   }
 
   /**
+   * FIXME: is this method reallyneeded at all?<br>
+   * Why not use: org.apache.commons.io.FileUtils.copyURLToFile( sourceUrl, targetFile );<br>
    * This function asks a server for a file, downloads it and copies it to the given file.
    * 
    * @param sourceUrl
@@ -72,8 +74,10 @@ public class HttpClientUtilities
    * @param targetFile
    *          The target file.
    */
-  public static void requestFileFromServer( URL sourceUrl, File targetFile ) throws Exception
+  // FIXME: do not use generic exceptions!
+  public static void requestFileFromServer( final URL sourceUrl, final File targetFile ) throws Exception
   {
+
     /* The input stream. */
     InputStream is = null;
 
@@ -83,20 +87,22 @@ public class HttpClientUtilities
     try
     {
       /* Get a http client. */
-      HttpClient httpClient = ProxyUtilities.getConfiguredHttpClient( 10000, sourceUrl, 0 );
+      final HttpClient httpClient = ProxyUtilities.getConfiguredHttpClient( 10000, sourceUrl, 0 );
 
       /* Build the get method. */
-      GetMethod method = new GetMethod( sourceUrl.toString() );
+      final GetMethod method = new GetMethod( sourceUrl.toString() );
       method.setDoAuthentication( true );
 
       /* Execute the method. */
-      int status = httpClient.executeMethod( method );
+      final int status = httpClient.executeMethod( method );
       if( status != 200 )
+        // FIXME: do not throw generic exceptions!
         throw new Exception( String.format( Messages.getString( "org.kalypso.commons.net.HttpClientUtilities.0" ), status ) ); //$NON-NLS-1$
 
       /* Get the response. */
       is = method.getResponseBodyAsStream();
       if( is == null )
+        // FIXME: do not throw generic exceptions!
         throw new Exception( Messages.getString( "org.kalypso.commons.net.HttpClientUtilities.1" ) ); //$NON-NLS-1$
 
       /* Create the output stream. */
