@@ -35,6 +35,8 @@
  */
 package org.kalypso.shape;
 
+import java.nio.charset.Charset;
+
 import org.kalypso.shape.dbf.DBFField;
 import org.kalypso.shape.geometry.ISHPGeometry;
 
@@ -46,8 +48,15 @@ import org.kalypso.shape.geometry.ISHPGeometry;
  */
 public interface IShapeData
 {
+  public Charset getCharset( ) throws ShapeDataException;
+
+  /**
+   * Coordinate system of all the geometries this data provider returns.
+   */
+  public String getCoordinateSystem( );
+
   /** Type of shape (like POINTZ). One of {@link ShapeConst} constants. */
-  public byte getShapeType( ) throws ShapeDataException;
+  public int getShapeType( ) throws ShapeDataException;
 
   public DBFField[] getFields( ) throws ShapeDataException;
 
@@ -63,4 +72,5 @@ public interface IShapeData
    *          Must be between 0 and {@link #getFields()}.length
    */
   public Object getData( int row, int field ) throws ShapeDataException;
+
 }

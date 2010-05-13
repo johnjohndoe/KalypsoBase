@@ -42,6 +42,8 @@ package org.kalypso.shape.deegree;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.nio.charset.Charset;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -70,21 +72,22 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
  * 
  * @author Gernot Belger
  */
-public class ShapeDataProviderFactory
+public class GenericShapeDataFactory
 {
-  public static IShapeData createDefaultData( final List<Feature> features ) throws DBaseException
+  public static IShapeData createDefaultData( final List<Feature> features, final Charset charset, final String coordinateSystem ) throws DBaseException
   {
     if( features.isEmpty() )
-      return new FeatureShapeDataProvider( features, (byte) ShapeConst.SHAPE_TYPE_NULL, new HashMap<DBFField, GMLXPath>(), null );
+      return new FeatureShapeData( features, new HashMap<DBFField, GMLXPath>(), null, charset, new GM_Object2Shape( ShapeConst.SHAPE_TYPE_NULL, coordinateSystem ) );
 
-    final IFeatureType type = features.get( 0 ).getFeatureType();
+    final IFeatureType type = findLeastCommonType( features );
+
     final int shapeType = findShapeType( type );
-// final int shapeType = ShapeConst.SHAPE_TYPE_POLYLINE;
     final GMLXPath geometry = findGeometry( type );
-// final GMLXPath geometry = new GMLXPath( new QName( "org.kalypso.model.wspmprofile", "profileLocation" ) );
     final Map<DBFField, GMLXPath> mapping = findDataMapping( type );
 
-    return new FeatureShapeDataProvider( features, (byte) shapeType, mapping, geometry );
+    final GM_Object2Shape shapeConverter = new GM_Object2Shape( shapeType, coordinateSystem );
+
+    return new FeatureShapeData( features, mapping, geometry, charset, shapeConverter );
   }
 
   public static Map<DBFField, GMLXPath> findDataMapping( final IFeatureType type ) throws DBaseException
@@ -184,24 +187,35 @@ public class ShapeDataProviderFactory
     final Class< ? > valueClass = property.getValueClass();
 
     // take the default geometry of the first feature to get the shape type.
-    if( valueClass == GM_Point.class )
+    if( GM_Point.class.isAssignableFrom( valueClass ) )
       return ShapeConst.SHAPE_TYPE_POINT;
 
-    if( valueClass == GM_Curve.class )
+    if( GM_Curve.class.isAssignableFrom( valueClass ) )
       return ShapeConst.SHAPE_TYPE_POLYLINE;
 
-    if( valueClass == GM_Surface.class )
+    if( GM_Surface.class.isAssignableFrom( valueClass ) )
       return ShapeConst.SHAPE_TYPE_POLYGON;
 
-    if( valueClass == GM_MultiPoint.class )
+    if( GM_MultiPoint.class.isAssignableFrom( valueClass ) )
       return ShapeConst.SHAPE_TYPE_POINT;
 
-    if( valueClass == GM_MultiCurve.class )
+    if( GM_MultiCurve.class.isAssignableFrom( valueClass ) )
       return ShapeConst.SHAPE_TYPE_POLYLINE;
 
-    if( valueClass == GM_MultiSurface.class )
+    if( GM_MultiSurface.class.isAssignableFrom( valueClass ) )
       return ShapeConst.SHAPE_TYPE_POLYGON;
 
     return ShapeConst.SHAPE_TYPE_NULL;
   }
+
+  public static IFeatureType findLeastCommonType( final Feature[] features )
+  {
+    return findLeastCommonType( Arrays.asList( features ) );
+  }
+
+  public static IFeatureType findLeastCommonType( final List<Feature> features )
+  {
+    return features.get( 0 ).getFeatureType();
+  }
+
 }
