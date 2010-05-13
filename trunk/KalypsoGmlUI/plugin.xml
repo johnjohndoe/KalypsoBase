@@ -103,7 +103,7 @@
         </handler>
         <handler commandId="org.kalypso.gml.ui.commands.Tin2ShapeExport" class="org.kalypso.gml.ui.commands.exportshape.ExportTin2ShapeHandler" >
             <enabledWhen>
-                <reference definitionId="org.kalypso.gml.ui.definition.selectionHasFeatures"/>
+                <reference definitionId="org.kalypso.gml.ui.definition.selectionHasTins"/>
             </enabledWhen>
         </handler>
    </extension>
@@ -209,8 +209,8 @@
        <propertyTester
              class="org.kalypso.gml.ui.extensions.FeatureSelectionTester"
              id="org.kalypso.gml.ui.propertyTester.features"
-             namespace="org.kalypso.gml.ui"
-             properties="hasFeatureSelection"
+             namespace="org.kalypso.gml.ui.featureSelection"
+             properties="isNotEmpty,hasGeometryOfType"
              type="org.eclipse.jface.viewers.ISelection">
        </propertyTester>
     </extension>
@@ -218,7 +218,17 @@
     <extension point="org.eclipse.core.expressions.definitions">
           <definition id="org.kalypso.gml.ui.definition.selectionHasFeatures">
              <with variable="selection">
-                <test property="org.kalypso.gml.ui.hasFeatureSelection"/>
+                <test property="org.kalypso.gml.ui.featureSelection.isNotEmpty"/>
+             </with>
+          </definition>
+          <definition
+                id="org.kalypso.gml.ui.definition.selectionHasTins">
+             <with
+                   variable="selection">
+                <test
+                      property="org.kalypso.gml.ui.featureSelection.hasGeometryOfType"
+                      value="org.kalypsodeegree.model.geometry.GM_TriangulatedSurface">
+                </test>
              </with>
           </definition>
     </extension>
