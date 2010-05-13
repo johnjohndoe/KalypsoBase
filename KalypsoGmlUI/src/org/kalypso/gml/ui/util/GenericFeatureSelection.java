@@ -170,7 +170,7 @@ public class GenericFeatureSelection implements IFeatureSelection
     final Feature container = feature.getOwner();
     final GMLWorkspace workspace = feature.getWorkspace();
 // m_container = container;
-    if( rt.isList() )
+    if( rt != null && rt.isList() )
     {
       // FIXME: much too slow...
 // final FeatureList sisters = (FeatureList) container.getProperty( rt );
