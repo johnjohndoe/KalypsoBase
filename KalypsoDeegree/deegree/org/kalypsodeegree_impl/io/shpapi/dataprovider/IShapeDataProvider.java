@@ -51,8 +51,6 @@ public interface IShapeDataProvider
 
   public byte getOutputShapeConstant( );
 
-  public void setOutputShapeConstant( final byte shapeConstant );
-
   public IFeatureType getFeatureType( );
 
   public IPropertyType getGeometryPropertyType( );
