@@ -161,4 +161,12 @@ public class KalypsoDeegreePlugin extends Plugin
 
     return m_preferenceStore;
   }
+
+  /**
+   * Returns the symbolic name of this plug-in.
+   */
+  public static String getID( )
+  {
+    return getDefault().getBundle().getSymbolicName();
+  }
 }
