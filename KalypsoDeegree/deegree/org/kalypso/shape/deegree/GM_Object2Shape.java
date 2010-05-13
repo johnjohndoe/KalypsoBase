@@ -54,6 +54,8 @@ import org.kalypso.shape.geometry.SHPPolygon;
 import org.kalypso.shape.geometry.SHPPolygonz;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_CurveSegment;
+import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_LineString;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -67,9 +69,9 @@ import org.kalypsodeegree_impl.model.geometry.GM_PositionOrientation.TYPE;
  */
 public class GM_Object2Shape
 {
-  private final byte m_shapeType;
+  private final int m_shapeType;
 
-  public GM_Object2Shape( final byte shapeType )
+  public GM_Object2Shape( final int shapeType )
   {
     m_shapeType = shapeType;
   }
@@ -99,7 +101,7 @@ public class GM_Object2Shape
         if( curves == null )
           return null;
         else
-          return new SHPPolyLine( curves );
+          return toPolyline( curves );
       }
 
       case ShapeConst.SHAPE_TYPE_POLYGON:
@@ -110,7 +112,7 @@ public class GM_Object2Shape
         else
         {
           final GM_Curve[] curves = orientCurves( surfacePatches );
-          return new SHPPolygon( new SHPPolyLine( curves ) );
+          return new SHPPolygon( toPolyline( curves ) );
         }
       }
 
@@ -129,7 +131,7 @@ public class GM_Object2Shape
         if( curves == null )
           return null;
         else
-          return new SHPPolyLinez( curves );
+          return toPolylineZ( curves );
       }
 
       case ShapeConst.SHAPE_TYPE_POLYGONZ:
@@ -140,7 +142,7 @@ public class GM_Object2Shape
         else
         {
           final GM_Curve[] curves = orientCurves( surfacePatches );
-          return new SHPPolygonz( new SHPPolyLinez( curves ) );
+          return new SHPPolygonz( toPolylineZ( curves ) );
         }
       }
 
@@ -267,9 +269,88 @@ public class GM_Object2Shape
     return curveList.toArray( new GM_Curve[curveList.size()] );
   }
 
-  public byte getShapeType( )
+  public int getShapeType( )
   {
     return m_shapeType;
+  }
+
+  public ISHPGeometry convert( final GM_SurfacePatch patch )
+  {
+    if( patch == null )
+      return new SHPNullShape();
+
+    final GM_SurfacePatch[] patches = new GM_SurfacePatch[] { patch };
+    final GM_Curve[] curves = orientCurves( patches );
+
+    switch( m_shapeType )
+    {
+      case ShapeConst.SHAPE_TYPE_POLYLINE:
+        return toPolyline( curves );
+
+      case ShapeConst.SHAPE_TYPE_POLYGON:
+        return new SHPPolygon( toPolyline( curves ) );
+
+      case ShapeConst.SHAPE_TYPE_POLYLINEZ:
+        return toPolylineZ( curves );
+
+      case ShapeConst.SHAPE_TYPE_POLYGONZ:
+        return new SHPPolygonz( toPolylineZ( curves ) );
+
+        // TODO: other conversions
+
+      default:
+        throw new IllegalStateException( "Illegal shape type for patch: " + m_shapeType );
+    }
+  }
+
+  public static SHPPolyLine toPolyline( final GM_Curve[] curves )
+  {
+    final int numParts = curves.length;
+
+    final SHPPoint[][] parts = new SHPPoint[numParts][];
+
+    try
+    {
+      for( int i = 0; i < numParts; i++ )
+      {
+        final GM_LineString ls = curves[i].getAsLineString();
+        parts[i] = new SHPPoint[ls.getNumberOfPoints()];
+        for( int j = 0; j < ls.getNumberOfPoints(); j++ )
+          parts[i][j] = new SHPPoint( ls.getPositionAt( j ) );
+      }
+    }
+    catch( final GM_Exception e )
+    {
+      System.out.println( "SHPPolyLine:: " + e );
+    }
+
+    return new SHPPolyLine( parts );
+  }
+
+  public static SHPPolyLinez toPolylineZ( final GM_Curve[] curve )
+  {
+    final int numParts = curve.length;
+
+    final SHPPointz[][] parts = new SHPPointz[numParts][];
+
+    try
+    {
+      for( int i = 0; i < numParts; i++ )
+      {
+        final GM_LineString ls = curve[i].getAsLineString();
+
+        parts[i] = new SHPPointz[ls.getNumberOfPoints()];
+
+        for( int j = 0; j < ls.getNumberOfPoints(); j++ )
+          parts[i][j] = new SHPPointz( ls.getPositionAt( j ) );
+      }
+    }
+    catch( final GM_Exception e )
+    {
+      System.out.println( "SHPPolyLineZ:: " + e );
+    }
+
+    return new SHPPolyLinez( parts );
   }
 
 }
