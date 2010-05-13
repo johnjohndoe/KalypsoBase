@@ -40,13 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gml.ui.commands.exportshape;
 
+import java.nio.charset.Charset;
 import java.util.Arrays;
 
 import org.kalypso.shape.IShapeData;
 import org.kalypso.shape.ShapeDataException;
 import org.kalypso.shape.dbf.DBaseException;
+import org.kalypso.shape.deegree.GenericShapeDataFactory;
 import org.kalypso.shape.deegree.IShapeDataFactory;
-import org.kalypso.shape.deegree.ShapeDataProviderFactory;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -56,9 +57,15 @@ public class StandardShapeDataFactory implements IShapeDataFactory
 {
   private final Feature[] m_features;
 
-  public StandardShapeDataFactory( final Feature[] features )
+  private final Charset m_shapeCharset;
+
+  private final String m_coordinateSystem;
+
+  public StandardShapeDataFactory( final Feature[] features, final Charset shapeCharset, final String coordinateSystem )
   {
     m_features = features;
+    m_shapeCharset = shapeCharset;
+    m_coordinateSystem = coordinateSystem;
   }
 
   /**
@@ -69,7 +76,7 @@ public class StandardShapeDataFactory implements IShapeDataFactory
   {
     try
     {
-      return ShapeDataProviderFactory.createDefaultData( Arrays.asList( m_features ) );
+      return GenericShapeDataFactory.createDefaultData( Arrays.asList( m_features ), m_shapeCharset, m_coordinateSystem );
     }
     catch( final DBaseException e )
     {

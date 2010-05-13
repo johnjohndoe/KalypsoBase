@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gml.ui.commands.exportshape;
 
+import java.nio.charset.Charset;
+
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.shape.deegree.IShapeDataFactory;
 import org.kalypsodeegree.model.feature.Feature;
@@ -55,11 +57,12 @@ public class ExportTin2ShapeWizard extends ExportShapeWizard
   }
 
   /**
-   * @see org.kalypso.gml.ui.commands.exportshape.ExportShapeWizard#createDataFactory(org.kalypsodeegree.model.feature.Feature[])
+   * @see org.kalypso.gml.ui.commands.exportshape.ExportShapeWizard#createDataFactory(org.kalypsodeegree.model.feature.Feature[],
+   *      java.nio.charset.Charset, java.lang.String)
    */
   @Override
-  protected IShapeDataFactory createDataFactory( final Feature[] chosenFeatures )
+  protected IShapeDataFactory createDataFactory( final Feature[] chosenFeatures, final Charset shapeCharset, final String coordinateSystem )
   {
-    return new Tin2ShapeDataFactory( chosenFeatures );
+    return new Tin2ShapeDataFactory( chosenFeatures, shapeCharset, coordinateSystem );
   }
 }
