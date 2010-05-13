@@ -42,6 +42,8 @@ package org.kalypso.jts.QuadMesher;
 
 import junit.framework.TestCase;
 
+import org.junit.Ignore;
+
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
@@ -49,6 +51,7 @@ import com.vividsolutions.jts.geom.LineString;
 /**
  * @author Thomas Jung
  */
+@Ignore
 public class JTSQuadMesherTest extends TestCase
 {
   /**
