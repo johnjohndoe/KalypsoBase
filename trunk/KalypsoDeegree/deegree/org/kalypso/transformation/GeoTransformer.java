@@ -64,11 +64,12 @@ import org.deegree.crs.transformations.CRSTransformation;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * Class for transforming deegree geometries to new coordinate reference systems.
- *
+ * 
  * @author Holger Albert
  */
 public class GeoTransformer
@@ -80,9 +81,9 @@ public class GeoTransformer
 
   /**
    * Creates a new GeoTransformer object.
-   *
+   * 
    * @param target
-   *            The name of the target coordinate system.
+   *          The name of the target coordinate system.
    */
   public GeoTransformer( final String target )
   {
@@ -92,7 +93,7 @@ public class GeoTransformer
 
   /**
    * This function returns the name of the target coordinate system.
-   *
+   * 
    * @return The name of the target coordinate system.
    */
   public String getTarget( )
@@ -102,9 +103,9 @@ public class GeoTransformer
 
   /**
    * This function transforms the coordinates of a deegree geometry to the target coordinate reference system.
-   *
+   * 
    * @param geo
-   *            The object to be transformed.
+   *          The object to be transformed.
    * @return The transformed object.
    */
   public GM_Object transform( final GM_Object geo ) throws Exception
@@ -122,9 +123,9 @@ public class GeoTransformer
   /**
    * This function returns a transformation for a source coordinate system name.<br>
    * Therefore it uses the {@link CachedTransformationFactory}.
-   *
+   * 
    * @param source
-   *            The name of the source coordinate system.
+   *          The name of the source coordinate system.
    * @return The transformation from the source coordinate system to the GeoTransformers target coordinate system.
    */
   private CRSTransformation getTransformation( final String source ) throws Exception
@@ -138,7 +139,7 @@ public class GeoTransformer
   /**
    * This function transforms a <tt>GM_Envelope</tt> to the target coordinate system of the <tt>GeoTransformer</tt>
    * instance.
-   *
+   * 
    * @param envelope
    *          The envelope to be transformed.
    * @return The transformed envelope.
@@ -180,9 +181,9 @@ public class GeoTransformer
 
   /**
    * This function transforms the coordinates of a deegree position to the target coordinate reference system.
-   *
+   * 
    * @param position
-   *            The position to be transformed.
+   *          The position to be transformed.
    * @return The transformed position.
    */
   public GM_Position transformPosition( final GM_Position position, final String source ) throws Exception
@@ -193,6 +194,25 @@ public class GeoTransformer
     if( source == null || source.equalsIgnoreCase( m_target ) )
       return position;
 
-    return position.transform( getTransformation( source ));
+    return position.transform( getTransformation( source ) );
+  }
+
+  /**
+   * This method transforms the coordinates of a deegree geometry to the target coordinate reference system.
+   * 
+   * @param geo
+   *          The object to be transformed.
+   * @return The transformed object.
+   */
+  public GM_SurfacePatch transform( final GM_SurfacePatch patch ) throws Exception
+  {
+    if( patch == null )
+      return null;
+
+    final String cs = patch.getCoordinateSystem();
+    if( cs == null || cs.equalsIgnoreCase( m_target ) )
+      return patch;
+
+    return (GM_SurfacePatch) patch.transform( getTransformation( cs ), m_target );
   }
 }
