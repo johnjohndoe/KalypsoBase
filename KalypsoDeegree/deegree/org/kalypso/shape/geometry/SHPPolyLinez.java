@@ -42,8 +42,6 @@ import java.io.IOException;
 import org.kalypso.shape.ShapeConst;
 import org.kalypso.shape.tools.DataUtils;
 import org.kalypsodeegree.model.geometry.ByteUtils;
-import org.kalypsodeegree.model.geometry.GM_Curve;
-import org.kalypsodeegree.model.geometry.GM_LineString;
 
 /**
  * Class representig a two dimensional ESRI PolyLine <BR>
@@ -143,39 +141,6 @@ public class SHPPolyLinez implements ISHPParts
     // next the z-range of the pointsz...
     final int byteposition = 44 + (4 * numParts) + (m_numPoints * 16);
     m_zrange = new SHPZRange( recBuf, byteposition );
-
-    SHPGeometryUtils.checkParts( m_parts );
-  }
-
-  /**
-   * constructor: recieves a matrix of GM_Points <BR>
-   */
-  public SHPPolyLinez( final GM_Curve[] curve )
-  {
-    final int numParts = curve.length;
-
-    m_parts = new SHPPointz[numParts][];
-
-    try
-    {
-      for( int i = 0; i < numParts; i++ )
-      {
-        final GM_LineString ls = curve[i].getAsLineString();
-
-        m_parts[i] = new SHPPointz[ls.getNumberOfPoints()];
-
-        for( int j = 0; j < ls.getNumberOfPoints(); j++ )
-          m_parts[i][j] = new SHPPointz( ls.getPositionAt( j ) );
-      }
-    }
-    catch( final Exception e )
-    {
-      System.out.println( "SHPPolyLine:: " + e );
-    }
-
-    m_numPoints = SHPGeometryUtils.countPoints( m_parts );
-    m_envelope = SHPGeometryUtils.createEnvelope( m_parts );
-    m_zrange = SHPGeometryUtils.createZRange( m_parts );
 
     SHPGeometryUtils.checkParts( m_parts );
   }
