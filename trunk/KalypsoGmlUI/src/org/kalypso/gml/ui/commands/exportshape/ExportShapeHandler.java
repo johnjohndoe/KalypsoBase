@@ -45,7 +45,6 @@ import java.util.Iterator;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.commands.IHandler;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
@@ -68,7 +67,7 @@ import org.kalypso.ogc.gml.selection.IFeatureSelection;
  * 
  * @author Gernot Belger
  */
-public class ExportShapeHandler extends AbstractHandler implements IHandler
+public class ExportShapeHandler extends AbstractHandler
 {
   /**
    * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
@@ -109,7 +108,7 @@ public class ExportShapeHandler extends AbstractHandler implements IHandler
     return new ExportShapeWizard( featureSelection, fileName );
   }
 
-  protected String findFileName( final ISelection selection )
+  public static String findFileName( final ISelection selection )
   {
     if( selection.isEmpty() || !(selection instanceof IStructuredSelection) )
       return null;
