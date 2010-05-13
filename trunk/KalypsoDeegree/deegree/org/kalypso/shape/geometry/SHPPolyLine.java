@@ -42,9 +42,6 @@ import java.io.IOException;
 import org.kalypso.shape.ShapeConst;
 import org.kalypso.shape.tools.DataUtils;
 import org.kalypsodeegree.model.geometry.ByteUtils;
-import org.kalypsodeegree.model.geometry.GM_Curve;
-import org.kalypsodeegree.model.geometry.GM_Exception;
-import org.kalypsodeegree.model.geometry.GM_LineString;
 
 /**
  * Class representig a two dimensional ESRI PolyLine <BR>
@@ -134,59 +131,32 @@ public class SHPPolyLine implements ISHPParts
     SHPGeometryUtils.checkParts( m_parts );
   }
 
-  /**
-   * constructor: receives a matrix of GM_Points <BR>
-   */
-  public SHPPolyLine( final GM_Curve[] curves )
-  {
-    final int numParts = curves.length;
-
-    m_parts = new SHPPoint[numParts][];
-
-    try
-    {
-      for( int i = 0; i < numParts; i++ )
-      {
-        final GM_LineString ls = curves[i].getAsLineString();
-        m_parts[i] = new SHPPoint[ls.getNumberOfPoints()];
-        for( int j = 0; j < ls.getNumberOfPoints(); j++ )
-          m_parts[i][j] = new SHPPoint( ls.getPositionAt( j ) );
-      }
-    }
-    catch( final GM_Exception e )
-    {
-      System.out.println( "SHPPolyLine:: " + e );
-    }
-
-    m_numPoints = SHPGeometryUtils.countPoints( m_parts );
-    m_envelope = SHPGeometryUtils.createEnvelope( m_parts );
-
-    SHPGeometryUtils.checkParts( m_parts );
-  }
-
   @Override
   public void write( final DataOutput output ) throws IOException
   {
     writePart( output, m_envelope, m_numPoints, m_parts );
   }
 
-  static void writePart( final DataOutput output, final SHPEnvelope envelope, final int numPoints, final ISHPPoint[][] points ) throws IOException
+  static void writePart( final DataOutput output, final SHPEnvelope envelope, final int numPoints, final ISHPPoint[][] parts ) throws IOException
   {
     envelope.writeLESHPEnvelope( output );
-    DataUtils.writeLEInt( output, points.length );
+    DataUtils.writeLEInt( output, parts.length );
     DataUtils.writeLEInt( output, numPoints );
 
     int partIndex = 0;
-    for( final ISHPPoint[] part : points )
+    for( final ISHPPoint[] part : parts )
     {
       DataUtils.writeLEInt( output, partIndex );
       partIndex += part.length;
     }
 
-    for( final ISHPPoint[] part : points )
+    for( final ISHPPoint[] part : parts )
     {
       for( final ISHPPoint point : part )
-        point.write( output );
+      {
+        DataUtils.writeLEDouble( output, point.getX() );
+        DataUtils.writeLEDouble( output, point.getY() );
+      }
     }
   }
 
