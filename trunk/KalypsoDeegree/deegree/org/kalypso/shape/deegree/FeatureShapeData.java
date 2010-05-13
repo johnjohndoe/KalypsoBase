@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.shape.deegree;
 
+import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
 
@@ -57,7 +58,7 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
 /**
  * @author Gernot Belger
  */
-public class FeatureShapeDataProvider implements IShapeData
+public class FeatureShapeData implements IShapeData
 {
   private final List<Feature> m_features;
 
@@ -69,13 +70,34 @@ public class FeatureShapeDataProvider implements IShapeData
 
   private final GMLXPath m_geometry;
 
-  public FeatureShapeDataProvider( final List<Feature> features, final byte shapeType, final Map<DBFField, GMLXPath> mapping, final GMLXPath geometry )
+  private final Charset m_charset;
+
+  public FeatureShapeData( final List<Feature> features, final Map<DBFField, GMLXPath> mapping, final GMLXPath geometry, final Charset shapeCharset, final GM_Object2Shape gmObject2Shape )
   {
     m_features = features;
     m_geometry = geometry;
+    m_charset = shapeCharset;
     m_fields = mapping.keySet().toArray( new DBFField[mapping.size()] );
     m_mapping = mapping;
-    m_gmObject2Shape = new GM_Object2Shape( shapeType );
+    m_gmObject2Shape = gmObject2Shape;
+  }
+
+  /**
+   * @see org.kalypso.shape.IShapeData#getCharset()
+   */
+  @Override
+  public Charset getCharset( )
+  {
+    return m_charset;
+  }
+
+  /**
+   * @see org.kalypso.shape.IShapeData#getCoordinateSystem()
+   */
+  @Override
+  public String getCoordinateSystem( )
+  {
+    return m_gmObject2Shape.getCoordinateSystem();
   }
 
   /**
@@ -143,7 +165,7 @@ public class FeatureShapeDataProvider implements IShapeData
    * @see org.kalypso.shape.IShapeDataProvider#getShapeType()
    */
   @Override
-  public byte getShapeType( )
+  public int getShapeType( )
   {
     return m_gmObject2Shape.getShapeType();
   }

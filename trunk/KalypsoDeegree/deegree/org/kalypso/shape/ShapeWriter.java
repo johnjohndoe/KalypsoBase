@@ -40,16 +40,22 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.shape;
 
+import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.nio.charset.Charset;
 
+import org.apache.commons.io.FileUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.shape.dbf.DBFField;
 import org.kalypso.shape.dbf.DBaseException;
 import org.kalypso.shape.geometry.ISHPGeometry;
 import org.kalypso.shape.shp.SHPException;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 
 /**
  * Writes a {@link ShapeFile} based on data from a {@link IShapeDataProvider}.
@@ -58,24 +64,25 @@ import org.kalypso.shape.shp.SHPException;
  */
 public class ShapeWriter
 {
-  private final IShapeData m_dataProvider;
+  private final IShapeData m_data;
 
   public ShapeWriter( final IShapeData dataProvider )
   {
-    m_dataProvider = dataProvider;
+    m_data = dataProvider;
   }
 
   /**
    * @param shapeFileBase
    *          The absolute file path to the shape file that will be written.
    */
-  public void write( final String shapeFileBase, final Charset charset, final IProgressMonitor monitor ) throws IOException, DBaseException, SHPException, ShapeDataException, CoreException
+  public void write( final String shapeFileBase, final IProgressMonitor monitor ) throws IOException, DBaseException, SHPException, ShapeDataException, CoreException
   {
     final String taskMsg = String.format( "Writing shape %s", shapeFileBase );
-    monitor.beginTask( taskMsg, m_dataProvider.size() );
+    monitor.beginTask( taskMsg, m_data.size() );
 
-    final byte shapeType = m_dataProvider.getShapeType();
-    final DBFField[] fields = m_dataProvider.getFields();
+    final Charset charset = m_data.getCharset();
+    final int shapeType = m_data.getShapeType();
+    final DBFField[] fields = m_data.getFields();
 
     final ShapeFile shapeFile = ShapeFile.create( shapeFileBase, shapeType, charset, fields );
     try
@@ -100,12 +107,53 @@ public class ShapeWriter
     }
   }
 
+  /**
+   * Fetches the coordinate system as ESRI PRJ file to the given destination.<br>
+   * Long running, as this involves access to internet.<br>
+   * TODO: Performance: we should at least cache the PRJ content, so we can reuse it later for quicker access.
+   */
+  public void writePrj( final String shapeFileBase, final IProgressMonitor monitor ) throws CoreException
+  {
+    final String coordinateSystem = m_data.getCoordinateSystem();
+
+    final String name = String.format( "Fetching PRJ for %s", coordinateSystem );
+    monitor.beginTask( name, IProgressMonitor.UNKNOWN );
+
+    try
+    {
+      /* Request the .prj file from the server. */
+      final String code = coordinateSystem.substring( coordinateSystem.lastIndexOf( ":" ) + 1 ); //$NON-NLS-1$
+      final URL sourceUrl = new URL( "http://spatialreference.org/ref/epsg/" + code + "/prj/" ); //$NON-NLS-1$ //$NON-NLS-2$
+
+      monitor.subTask( String.format( "Accessing %s", sourceUrl.toString() ) );
+
+      /* Request the .prj file from the server. */
+      final File prjFile = new File( shapeFileBase + ".prj" );
+      FileUtils.copyURLToFile( sourceUrl, prjFile );
+      // TODO: check, why was this one used before?
+      // HttpClientUtilities.requestFileFromServer( sourceUrl, prjFile );
+    }
+    catch( final IOException e )
+    {
+      final String msg = String.format( "Failed to fetch PRJ for coordinate system'%s'", coordinateSystem );
+      final Status status = new Status( IStatus.WARNING, KalypsoDeegreePlugin.getID(), msg, e );
+      throw new CoreException( status );
+    }
+    finally
+    {
+      monitor.done();
+    }
+  }
+
   private void writeData( final DBFField[] fields, final ShapeFile shapeFile, final IProgressMonitor monitor ) throws IOException, DBaseException, SHPException, ShapeDataException, CoreException
   {
-    final int rows = m_dataProvider.size();
+    final int rows = m_data.size();
     for( int row = 0; row < rows; row++ )
     {
-      final ISHPGeometry geometry = m_dataProvider.getGeometry( row );
+      if( row % 100 == 0 )
+        monitor.subTask( String.format( "Writing shape %d/%d", row, rows ) );
+
+      final ISHPGeometry geometry = m_data.getGeometry( row );
 
       final Object[] data = getRow( row, fields );
       shapeFile.addFeature( geometry, data );
@@ -118,7 +166,7 @@ public class ShapeWriter
   {
     final Object[] data = new Object[fields.length];
     for( int i = 0; i < data.length; i++ )
-      data[i] = m_dataProvider.getData( row, i );
+      data[i] = m_data.getData( row, i );
     return data;
   }
 

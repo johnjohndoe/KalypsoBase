@@ -44,6 +44,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.kalypso.shape.ShapeConst;
+import org.kalypso.shape.ShapeDataException;
 import org.kalypso.shape.geometry.ISHPGeometry;
 import org.kalypso.shape.geometry.SHPNullShape;
 import org.kalypso.shape.geometry.SHPPoint;
@@ -52,6 +53,7 @@ import org.kalypso.shape.geometry.SHPPolyLine;
 import org.kalypso.shape.geometry.SHPPolyLinez;
 import org.kalypso.shape.geometry.SHPPolygon;
 import org.kalypso.shape.geometry.SHPPolygonz;
+import org.kalypso.transformation.GeoTransformer;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_CurveSegment;
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -71,15 +73,20 @@ public class GM_Object2Shape
 {
   private final int m_shapeType;
 
-  public GM_Object2Shape( final int shapeType )
+  private final GeoTransformer m_transformer;
+
+  public GM_Object2Shape( final int shapeType, final String coordinateSystem )
   {
     m_shapeType = shapeType;
+    m_transformer = new GeoTransformer( coordinateSystem );
   }
 
-  public ISHPGeometry convert( final GM_Object geom )
+  public ISHPGeometry convert( final GM_Object geom ) throws ShapeDataException
   {
     if( geom == null )
       return new SHPNullShape();
+
+    final GM_Object transformedGeom = getTransformedGeom( geom );
 
     switch( m_shapeType )
     {
@@ -88,7 +95,7 @@ public class GM_Object2Shape
 
       case ShapeConst.SHAPE_TYPE_POINT:
       {
-        final GM_Point point = (GM_Point) geom.getAdapter( GM_Point.class );
+        final GM_Point point = (GM_Point) transformedGeom.getAdapter( GM_Point.class );
         if( point == null )
           return null;
         else
@@ -97,7 +104,7 @@ public class GM_Object2Shape
 
       case ShapeConst.SHAPE_TYPE_POLYLINE:
       {
-        final GM_Curve[] curves = (GM_Curve[]) geom.getAdapter( GM_Curve[].class );
+        final GM_Curve[] curves = (GM_Curve[]) transformedGeom.getAdapter( GM_Curve[].class );
         if( curves == null )
           return null;
         else
@@ -106,7 +113,7 @@ public class GM_Object2Shape
 
       case ShapeConst.SHAPE_TYPE_POLYGON:
       {
-        final GM_SurfacePatch[] surfacePatches = (GM_SurfacePatch[]) geom.getAdapter( GM_SurfacePatch[].class );
+        final GM_SurfacePatch[] surfacePatches = (GM_SurfacePatch[]) transformedGeom.getAdapter( GM_SurfacePatch[].class );
         if( surfacePatches == null )
           return null;
         else
@@ -118,7 +125,7 @@ public class GM_Object2Shape
 
       case ShapeConst.SHAPE_TYPE_POINTZ:
       {
-        final GM_Point point = (GM_Point) geom.getAdapter( GM_Point.class );
+        final GM_Point point = (GM_Point) transformedGeom.getAdapter( GM_Point.class );
         if( point == null )
           return null;
         else
@@ -127,7 +134,7 @@ public class GM_Object2Shape
 
       case ShapeConst.SHAPE_TYPE_POLYLINEZ:
       {
-        final GM_Curve[] curves = (GM_Curve[]) geom.getAdapter( GM_Curve[].class );
+        final GM_Curve[] curves = (GM_Curve[]) transformedGeom.getAdapter( GM_Curve[].class );
         if( curves == null )
           return null;
         else
@@ -136,7 +143,7 @@ public class GM_Object2Shape
 
       case ShapeConst.SHAPE_TYPE_POLYGONZ:
       {
-        final GM_SurfacePatch[] surfacePatches = (GM_SurfacePatch[]) geom.getAdapter( GM_SurfacePatch[].class );
+        final GM_SurfacePatch[] surfacePatches = (GM_SurfacePatch[]) transformedGeom.getAdapter( GM_SurfacePatch[].class );
         if( surfacePatches == null )
           return null;
         else
@@ -236,6 +243,18 @@ public class GM_Object2Shape
     throw new IllegalStateException( "Unknown shape type: " + m_shapeType );
   }
 
+  private GM_Object getTransformedGeom( final GM_Object geom2 ) throws ShapeDataException
+  {
+    try
+    {
+      return m_transformer.transform( geom2 );
+    }
+    catch( final Exception e )
+    {
+      throw new ShapeDataException( "Failed to project geometry", e );
+    }
+  }
+
   private static GM_Curve[] orientCurves( final GM_SurfacePatch[] surfacePatch )
   {
     final List<GM_Curve> curveList = new LinkedList<GM_Curve>();
@@ -244,7 +263,7 @@ public class GM_Object2Shape
       try
       {
         final GM_Position[] exteriorRing = element.getExteriorRing();
-        // TODO: real necessary? why not also force positive orientation for interior rings below?
+        // TODO: really necessary? why not also force positive orientation for interior rings below?
         final GM_Position[] positions = GM_PositionOrientation.orient( exteriorRing, TYPE.NEGATIV );
 
         final GM_CurveSegment cs = GeometryFactory.createGM_CurveSegment( positions, element.getCoordinateSystem() );
@@ -274,12 +293,14 @@ public class GM_Object2Shape
     return m_shapeType;
   }
 
-  public ISHPGeometry convert( final GM_SurfacePatch patch )
+  public ISHPGeometry convert( final GM_SurfacePatch patch ) throws ShapeDataException
   {
     if( patch == null )
       return new SHPNullShape();
 
-    final GM_SurfacePatch[] patches = new GM_SurfacePatch[] { patch };
+    final GM_SurfacePatch transformedPatch = getTransformedPatch( patch );
+
+    final GM_SurfacePatch[] patches = new GM_SurfacePatch[] { transformedPatch };
     final GM_Curve[] curves = orientCurves( patches );
 
     switch( m_shapeType )
@@ -303,7 +324,19 @@ public class GM_Object2Shape
     }
   }
 
-  public static SHPPolyLine toPolyline( final GM_Curve[] curves )
+  private GM_SurfacePatch getTransformedPatch( final GM_SurfacePatch patch ) throws ShapeDataException
+  {
+    try
+    {
+      return m_transformer.transform( patch );
+    }
+    catch( final Exception e )
+    {
+      throw new ShapeDataException( "Failed to project geometry", e );
+    }
+  }
+
+  private static SHPPolyLine toPolyline( final GM_Curve[] curves )
   {
     final int numParts = curves.length;
 
@@ -327,7 +360,7 @@ public class GM_Object2Shape
     return new SHPPolyLine( parts );
   }
 
-  public static SHPPolyLinez toPolylineZ( final GM_Curve[] curve )
+  private static SHPPolyLinez toPolylineZ( final GM_Curve[] curve )
   {
     final int numParts = curve.length;
 
@@ -351,6 +384,11 @@ public class GM_Object2Shape
     }
 
     return new SHPPolyLinez( parts );
+  }
+
+  public String getCoordinateSystem( )
+  {
+    return m_transformer.getTarget();
   }
 
 }
