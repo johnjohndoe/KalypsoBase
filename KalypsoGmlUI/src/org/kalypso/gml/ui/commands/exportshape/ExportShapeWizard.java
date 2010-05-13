@@ -43,15 +43,16 @@ package org.kalypso.gml.ui.commands.exportshape;
 import java.nio.charset.Charset;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.Wizard;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.java.util.Arrays;
 import org.kalypso.gml.ui.jface.FeatureSelectionPage;
 import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.shape.deegree.IShapeDataFactory;
+import org.kalypso.util.swt.StatusDialog2;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -85,22 +86,29 @@ public class ExportShapeWizard extends Wizard
   public boolean performFinish( )
   {
     final Charset shapeCharset = m_exportShapePage.getCharset();
+    final String coordinateSystem = m_exportShapePage.getCoordinateSystem();
     final String shapeFileBase = m_exportShapePage.getShapeFileBase();
+    final boolean doWritePrj = m_exportShapePage.isWritePrj();
 
     final Object[] choosen = m_selectFeaturesPage.getChoosen();
     final Feature[] chosenFeatures = Arrays.castArray( choosen, new Feature[choosen.length] );
 
-    final IShapeDataFactory shapeDataFactory = createDataFactory( chosenFeatures );
+    final IShapeDataFactory shapeDataFactory = createDataFactory( chosenFeatures, shapeCharset, coordinateSystem );
 
-    final ICoreRunnableWithProgress operation = new ExportShapeOperation( shapeCharset, shapeFileBase, shapeDataFactory );
-    final IStatus status = ProgressUtilities.busyCursorWhile( operation );
-    ErrorDialog.openError( getShell(), getWindowTitle(), "Failed to write shape file", status );
+    final ICoreRunnableWithProgress operation = new ExportShapeOperation( shapeFileBase, shapeDataFactory, doWritePrj );
+
+    final IWizardContainer container = getContainer();
+    final IStatus status = RunnableContextHelper.execute( container, true, true, operation );
+
+    if( !status.isOK() )
+      new StatusDialog2( getShell(), status, getWindowTitle() ).open();
+// ErrorDialog.openError( getShell(), getWindowTitle(), "Failed to write shape file", status );
     return status.isOK();
   }
 
-  protected IShapeDataFactory createDataFactory( final Feature[] chosenFeatures )
+  protected IShapeDataFactory createDataFactory( final Feature[] chosenFeatures, final Charset shapeCharset, final String coordinateSystem )
   {
-    return new StandardShapeDataFactory( chosenFeatures );
+    return new StandardShapeDataFactory( chosenFeatures, shapeCharset, coordinateSystem );
   }
 
 }

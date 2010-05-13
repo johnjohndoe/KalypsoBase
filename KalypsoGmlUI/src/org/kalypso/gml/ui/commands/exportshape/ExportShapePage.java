@@ -49,8 +49,11 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -60,17 +63,28 @@ import org.kalypso.contribs.eclipse.jface.wizard.FileChooserDelegateSave;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup.FileChangedListener;
 import org.kalypso.gml.ui.jface.ShapeCharsetUI;
+import org.kalypso.ogc.gml.serialize.ShapeSerializer;
+import org.kalypso.transformation.ui.CRSSelectionPanel;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 
 /**
  * @author belger
  */
 public class ExportShapePage extends WizardPage
 {
+  private static final String SETTINGS_CRS = "crs"; //$NON-NLS-1$
+
+  private static final String SETTINGS_WRITE_PRJ = "doWritePrj";//$NON-NLS-1$
+
   private FileChooserGroup m_fileChooserGroup;
 
   private final FileChooserDelegateSave m_fileDelegate;
 
   private CharsetViewer m_charsetViewer;
+
+  private String m_crs;
+
+  private boolean m_writePrj;
 
   public ExportShapePage( final String pageName, final String fileName )
   {
@@ -81,6 +95,7 @@ public class ExportShapePage extends WizardPage
 
     m_fileDelegate = new FileChooserDelegateSave();
     m_fileDelegate.setFileName( fileName );
+    // TODO: fetch filter from central place
     m_fileDelegate.addFilter( "ESRI Shape Files", "*.shp" );
     m_fileDelegate.addFilter( "DBase Files", "*.dbf" );
   }
@@ -96,17 +111,108 @@ public class ExportShapePage extends WizardPage
 
     createFileChooser( panel );
 
-    final Label charsetLabel = new Label( panel, SWT.NONE );
-    charsetLabel.setText( "Charset" );
-    charsetLabel.setLayoutData( new GridData( SWT.BEGINNING, SWT.CENTER, false, false ) );
+    createCoordinateSystemChooser( panel );
+
     final Control charsetControl = createCharsetChooser( panel );
-    charsetControl.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 ) );
+    charsetControl.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    new Label( panel, SWT.NONE );
+
+    final Control writePrjControl = createWritePrjControl( panel );
+    writePrjControl.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 3, 1 ) );
 
     setControl( panel );
   }
 
+  private Control createWritePrjControl( final Composite panel )
+  {
+    final IDialogSettings dialogSettings = getDialogSettings();
+    if( dialogSettings != null )
+      m_writePrj = dialogSettings.getBoolean( SETTINGS_WRITE_PRJ );
+
+    final Button button = new Button( panel, SWT.CHECK );
+    button.setText( "Write PRJ file (needs internet access)" );
+    button.setToolTipText( "Fetches and saves the ESRI projection file (PRJ) from http://spatialreferences.org." );
+
+    button.setSelection( m_writePrj );
+
+    button.addSelectionListener( new SelectionAdapter()
+    {
+      @Override
+      public void widgetSelected( final SelectionEvent e )
+      {
+        handleWritePrjChanged( button.getSelection() );
+      }
+    } );
+
+    return button;
+  }
+
+  protected void handleWritePrjChanged( final boolean writePrj )
+  {
+    m_writePrj = writePrj;
+
+    final IDialogSettings dialogSettings = getDialogSettings();
+    if( dialogSettings != null )
+      dialogSettings.put( SETTINGS_WRITE_PRJ, writePrj );
+
+    updateMessage();
+  }
+
+  private void createCoordinateSystemChooser( final Composite parent )
+  {
+    final Label label = new Label( parent, SWT.NONE );
+    label.setText( "Coordinate System" );
+    final String tooltip = "All exported geometries will be projected into the chosen coordinate system.";
+    label.setToolTipText( tooltip );
+    label.setLayoutData( new GridData( SWT.BEGINNING, SWT.CENTER, false, false ) );
+
+    final CRSSelectionPanel crsSelector = new CRSSelectionPanel( parent, CRSSelectionPanel.NO_GROUP );
+    crsSelector.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 ) );
+    crsSelector.setToolTipText( tooltip );
+
+    final IDialogSettings dialogSettings = getDialogSettings();
+    if( dialogSettings != null )
+    {
+      final String crs = dialogSettings.get( SETTINGS_CRS );
+      if( crs == null )
+        crsSelector.setSelectedCRS( KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
+      else
+        crsSelector.setSelectedCRS( crs );
+    }
+
+    crsSelector.addSelectionChangedListener( new ISelectionChangedListener()
+    {
+      @Override
+      public void selectionChanged( final SelectionChangedEvent event )
+      {
+        handleCrsChanged( crsSelector, dialogSettings );
+      }
+
+    } );
+
+    m_crs = crsSelector.getSelectedCRS();
+  }
+
+  protected void handleCrsChanged( final CRSSelectionPanel crsSelector, final IDialogSettings dialogSettings )
+  {
+    final String selectedCRS = crsSelector.getSelectedCRS();
+    if( dialogSettings != null )
+      dialogSettings.put( SETTINGS_CRS, selectedCRS );
+
+    m_crs = selectedCRS;
+
+    updateMessage();
+  }
+
   private Control createCharsetChooser( final Composite parent )
   {
+    final Label charsetLabel = new Label( parent, SWT.NONE );
+    charsetLabel.setText( "Charset" );
+    final Charset shapeDefaultCharset = ShapeSerializer.getShapeDefaultCharset();
+    final String tooltip = String.format( "The chosen charset will be used for string encodings of .dbf file. Default for ESRI Shape Files is %s.", shapeDefaultCharset.displayName() );
+    charsetLabel.setToolTipText( tooltip );
+    charsetLabel.setLayoutData( new GridData( SWT.BEGINNING, SWT.CENTER, false, false ) );
+
     final IDialogSettings dialogSettings = getDialogSettings();
     m_charsetViewer = ShapeCharsetUI.createCharsetViewer( parent, dialogSettings );
     m_charsetViewer.addSelectionChangedListener( new ISelectionChangedListener()
@@ -160,6 +266,11 @@ public class ExportShapePage extends WizardPage
     return m_charsetViewer.getCharset();
   }
 
+  public String getCoordinateSystem( )
+  {
+    return m_crs;
+  }
+
   public String getShapeFileBase( )
   {
     final File file = m_fileChooserGroup.getFile();
@@ -168,5 +279,10 @@ public class ExportShapePage extends WizardPage
       return FileUtilities.nameWithoutExtension( path );
 
     return path;
+  }
+
+  public boolean isWritePrj( )
+  {
+    return m_writePrj;
   }
 }
