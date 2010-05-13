@@ -89,10 +89,10 @@ public class SHXFileTest extends Assert
     shxFile.addRecord( new SHXRecord( 30, 10 ), new SHPEnvelope( 1, 2, 3, 4 ) );
 
     assertEquals( 3, shxFile.getNumRecords() );
-    final long shxLength = shxFile.getHeader().getLength();
 
     shxFile.close();
 
+    final long shxLength = shxFile.getHeader().getLength();
     assertEquals( file.length(), shxLength );
 
     final SHXFile readShxFile = new SHXFile( file, FileMode.READ );

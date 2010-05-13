@@ -109,7 +109,7 @@ public class SHXFile
   {
     if( m_mode == FileMode.WRITE && !m_syncWriteRecord )
     {
-      m_raf.seek( 0 );
+      m_raf.seek( ShapeHeader.SHAPE_FILE_HEADER_LENGTH );
       for( int i = 0; i < m_index.size(); i++ )
       {
         final SHXRecord record = m_index.get( i );
