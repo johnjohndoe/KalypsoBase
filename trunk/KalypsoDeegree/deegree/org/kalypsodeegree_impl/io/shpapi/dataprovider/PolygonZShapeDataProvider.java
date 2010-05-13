@@ -59,7 +59,7 @@ public class PolygonZShapeDataProvider implements IShapeDataProvider
    * @param features
    *          The features.
    */
-  public PolygonZShapeDataProvider( Feature[] features )
+  public PolygonZShapeDataProvider( final Feature[] features )
   {
     m_features = features;
   }
@@ -67,7 +67,7 @@ public class PolygonZShapeDataProvider implements IShapeDataProvider
   /**
    * @see org.kalypsodeegree_impl.io.shpapi.IShapeDataProvider#getFeature(int)
    */
-  public Feature getFeature( int index )
+  public Feature getFeature( final int index )
   {
     return m_features[index];
   }
@@ -107,22 +107,15 @@ public class PolygonZShapeDataProvider implements IShapeDataProvider
   /**
    * @see org.kalypsodeegree_impl.io.shpapi.IShapeDataProvider#setFeatures(org.kalypsodeegree.model.feature.Feature[])
    */
-  public void setFeatures( Feature[] features )
+  public void setFeatures( final Feature[] features )
   {
     m_features = features;
   }
 
   /**
-   * @see org.kalypsodeegree_impl.io.shpapi.IShapeDataProvider#setOutputShapeConstant(byte)
-   */
-  public void setOutputShapeConstant( byte shapeConstant )
-  {
-  }
-
-  /**
    * @see org.kalypsodeegree_impl.io.shpapi.IShapeDataProvider#getGeometry(int)
    */
-  public GM_Object getGeometry( int index )
+  public GM_Object getGeometry( final int index )
   {
     return (GM_Object) m_features[index].getProperty( getGeometryPropertyType() );
   }
@@ -131,7 +124,7 @@ public class PolygonZShapeDataProvider implements IShapeDataProvider
    * @see org.kalypsodeegree_impl.io.shpapi.dataprovider.IShapeDataProvider#getFeatureProperty(int,
    *      org.kalypso.gmlschema.property.IPropertyType)
    */
-  public Object getFeatureProperty( int featureIndex, IPropertyType propertyType )
+  public Object getFeatureProperty( final int featureIndex, final IPropertyType propertyType )
   {
     return m_features[featureIndex].getProperty( propertyType );
   }

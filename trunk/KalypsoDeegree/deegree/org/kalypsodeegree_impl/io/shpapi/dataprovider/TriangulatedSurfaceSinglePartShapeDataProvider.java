@@ -35,19 +35,24 @@
  */
 package org.kalypsodeegree_impl.io.shpapi.dataprovider;
 
+import java.nio.charset.Charset;
+import java.util.Map;
+
+import org.deegree.framework.util.Pair;
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.property.IValuePropertyType;
+import org.kalypso.shape.IShapeData;
+import org.kalypso.shape.ShapeDataException;
+import org.kalypso.shape.dbf.DBFField;
+import org.kalypso.shape.dbf.DBaseException;
+import org.kalypso.shape.deegree.GM_Object2Shape;
+import org.kalypso.shape.deegree.GenericShapeDataFactory;
+import org.kalypso.shape.geometry.ISHPGeometry;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.geometry.GM_Exception;
-import org.kalypsodeegree.model.geometry.GM_Object;
-import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
-import org.kalypsodeegree_impl.io.shpapi.ShapeConst;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
-import org.kalypsodeegree_impl.model.geometry.GM_TriangulatedSurface_Impl;
-import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathException;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
 
 /**
  * data provider for exporting GM_TriangulatedSurface patches from 1d2d result. It converts the existing
@@ -58,131 +63,198 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  * 
  * @author Thomas Jung
  */
-public class TriangulatedSurfaceSinglePartShapeDataProvider implements IShapeDataProvider
+public class TriangulatedSurfaceSinglePartShapeDataProvider implements IShapeData
 {
-  private Feature[] m_features;
+  private final GM_Object2Shape m_gmObject2Shape;
 
-  private byte m_shapeConstant;
+  private final Feature[] m_features;
 
-  private GM_TriangulatedSurface_Impl m_triSurface;
+  private final GMLXPath m_geometry;
 
-  private final int m_length;
+  private Map<DBFField, GMLXPath> m_dataMapping = null;
 
-  private final IValuePropertyType m_geometryPropertyType;
+  private DBFField[] m_fields;
 
-  public TriangulatedSurfaceSinglePartShapeDataProvider( final Feature[] features, final byte shapeType )
+  private int m_total;
+
+  private Integer[] m_tinSizes;
+
+  private final Charset m_charset;
+
+  public TriangulatedSurfaceSinglePartShapeDataProvider( final Feature[] features, final GMLXPath geometry, final Charset charset, final GM_Object2Shape gmObject2Shape )
   {
     m_features = features;
-    m_shapeConstant = shapeType;
-
-    m_geometryPropertyType = features[0].getFeatureType().getDefaultGeometryProperty();
-
-    // get the GM_Objects in order to get the number of patches
-    final GM_Object geom = (GM_Object) features[0].getProperty( getGeometryPropertyType() );
-    if( geom instanceof GM_TriangulatedSurface_Impl )
-    {
-      m_triSurface = (GM_TriangulatedSurface_Impl) geom;
-    }
-
-    m_length = m_triSurface.size();
-
+    m_geometry = geometry;
+    m_charset = charset;
+    m_gmObject2Shape = gmObject2Shape;
   }
 
   /**
-   * @see org.kalypsodeegree_impl.io.shpapi.IShapeDataProvider#getFeature(int)
+   * @see org.kalypso.shape.IShapeData#getCharset()
    */
-  public Feature getFeature( int index )
+  @Override
+  public Charset getCharset( )
+  {
+    return m_charset;
+  }
+
+  /**
+   * @see org.kalypso.shape.IShapeData#getCoordinateSystem()
+   */
+  @Override
+  public String getCoordinateSystem( )
+  {
+    return m_gmObject2Shape.getCoordinateSystem();
+  }
+
+  /**
+   * @see org.kalypso.shape.IShapeData#getFields()
+   */
+  @Override
+  public DBFField[] getFields( ) throws ShapeDataException
+  {
+    if( m_fields == null )
+    {
+      try
+      {
+        final Map<DBFField, GMLXPath> dataMapping = getDataMapping();
+        m_fields = dataMapping.keySet().toArray( new DBFField[dataMapping.size()] );
+      }
+      catch( final DBaseException e )
+      {
+        throw new ShapeDataException( "Unable to create DBF signature.", e ); //$NON-NLS-1$
+      }
+    }
+
+    return m_fields;
+  }
+
+  private Map<DBFField, GMLXPath> getDataMapping( ) throws DBaseException
+  {
+    if( m_dataMapping == null )
+    {
+      final IFeatureType featureType = GenericShapeDataFactory.findLeastCommonType( m_features );
+      m_dataMapping = GenericShapeDataFactory.findDataMapping( featureType );
+    }
+    return m_dataMapping;
+  }
+
+  /**
+   * @see org.kalypso.shape.IShapeData#getShapeType()
+   */
+  @Override
+  public int getShapeType( )
+  {
+    return m_gmObject2Shape.getShapeType();
+  }
+
+  /**
+   * @see org.kalypso.shape.IShapeData#size()
+   */
+  @Override
+  public int size( ) throws ShapeDataException
+  {
+    if( m_tinSizes == null )
+    {
+      m_tinSizes = new Integer[m_features.length];
+
+      m_total = 0;
+      for( int i = 0; i < m_features.length; i++ )
+      {
+        final Feature feature = m_features[i];
+
+        final GM_TriangulatedSurface tin = getTin( feature );
+        if( tin == null )
+          m_tinSizes[i] = 0;
+        else
+          m_tinSizes[i] = tin.size();
+
+        m_total += m_tinSizes[i];
+      }
+
+    }
+
+    return m_total;
+  }
+
+  private GM_TriangulatedSurface getTin( final Feature feature ) throws ShapeDataException
   {
     try
     {
-      // TODO return generated feature for each patch
-      /* Copy the feature. */
-      Feature copiedFeature = FeatureHelper.cloneFeature( m_features[0].getParent(), m_features[0].getParentRelation(), m_features[0] );
-      copiedFeature.setProperty( getGeometryPropertyType(), m_triSurface.get( index ) );
-      return copiedFeature;
+      final Object property = GMLXPathUtilities.query( m_geometry, feature );
+      if( property == null )
+        return null;
+
+      if( property instanceof GM_TriangulatedSurface )
+        return (GM_TriangulatedSurface) property;
+
+      throw new ShapeDataException( String.format( "Geometry is not a GM_TriangualtedSurface: %s", m_geometry.toString() ) ); //$NON-NLS-1$
     }
-    catch( Exception e )
+    catch( final GMLXPathException e )
     {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      throw new ShapeDataException( "Unable to access triangulated surface", e ); //$NON-NLS-1$
     }
-    return null;
   }
 
   /**
-   * @see org.kalypsodeegree_impl.io.shpapi.IShapeDataProvider#getFeatureType()
+   * Calculates feature and triangle index from the outer index.<br>
+   * Returns a Pair<Festure-Index, Triangle-Index>
    */
-  public IFeatureType getFeatureType( )
+  private Pair<Integer, Integer> calcFeatureAndTriangleIndex( final int index ) throws ShapeDataException
   {
-    return m_features[0].getFeatureType();
+    int total = 0;
+
+    for( int featureIndex = 0; featureIndex < m_tinSizes.length; featureIndex++ )
+    {
+      final Integer tinSize = m_tinSizes[featureIndex];
+      if( total + tinSize > index )
+      {
+        final int triangleIndex = index - total;
+        return new Pair<Integer, Integer>( featureIndex, triangleIndex );
+      }
+      else
+        featureIndex++;
+
+      total += tinSize;
+    }
+
+    throw new ShapeDataException( String.format( "Index out of bounds: %d", index ) );
+  }
+
+  public ISHPGeometry getGeometry( final int index ) throws ShapeDataException
+  {
+    final Pair<Integer, Integer> featureAndTriangleIndex = calcFeatureAndTriangleIndex( index );
+    final Feature feature = m_features[featureAndTriangleIndex.first];
+    final GM_TriangulatedSurface tin = getTin( feature );
+
+    final GM_Triangle triangle = tin.get( featureAndTriangleIndex.second );
+
+    return m_gmObject2Shape.convert( triangle );
   }
 
   /**
-   * @see org.kalypsodeegree_impl.io.shpapi.IShapeDataProvider#getFeaturesLength()
+   * @see org.kalypso.shape.IShapeData#getData(int, int)
    */
-  public int getFeaturesLength( )
+  @Override
+  public Object getData( final int row, final int field ) throws ShapeDataException
   {
-    // return the number of surfacePatches
-    return m_length;
-  }
-
-  /**
-   * @see org.kalypsodeegree_impl.io.shpapi.IShapeDataProvider#getGeometryPropertyType()
-   */
-  public IPropertyType getGeometryPropertyType( )
-  {
-    return m_geometryPropertyType;
-  }
-
-  /**
-   * @see org.kalypsodeegree_impl.io.shpapi.IShapeDataProvider#getOutputShapeConstant()
-   */
-  public byte getOutputShapeConstant( )
-  {
-    return m_shapeConstant;
-  }
-
-  /**
-   * @see org.kalypsodeegree_impl.io.shpapi.IShapeDataProvider#setFeatures(org.kalypsodeegree.model.feature.Feature[])
-   */
-  public void setFeatures( Feature[] features )
-  {
-    m_features = features;
-  }
-
-  /**
-   * @see org.kalypsodeegree_impl.io.shpapi.IShapeDataProvider#setOutputShapeConstant(byte)
-   */
-  public void setOutputShapeConstant( byte shapeConstant )
-  {
-    m_shapeConstant = ShapeConst.SHAPE_TYPE_POLYGONZ;
-  }
-
-  /**
-   * @see org.kalypsodeegree_impl.io.shpapi.IShapeDataProvider#getGeometry(int)
-   */
-  public GM_Object getGeometry( final int index )
-  {
-    GM_Triangle triangle = m_triSurface.get( index );
     try
     {
-      GM_Surface<GM_SurfacePatch> patch = GeometryFactory.createGM_Surface( triangle );
-      return patch;
+      final Pair<Integer, Integer> featureAndTriangleIndex = calcFeatureAndTriangleIndex( row );
+      final Feature feature = m_features[featureAndTriangleIndex.first];
+      final Map<DBFField, GMLXPath> dataMapping = getDataMapping();
+      final DBFField[] fields = getFields();
+      final GMLXPath xPath = dataMapping.get( fields[field] );
+      return GMLXPathUtilities.query( xPath, feature );
     }
-    catch( GM_Exception e )
+    catch( final DBaseException e )
     {
-      e.printStackTrace();
+      throw new ShapeDataException( e );
     }
-    return null;
+    catch( final GMLXPathException e )
+    {
+      final String message = String.format( "Unable to resolve data for row %d, field %d", row, field ); //$NON-NLS-1$
+      throw new ShapeDataException( message, e );
+    }
   }
-
-  /**
-   * @see org.kalypsodeegree_impl.io.shpapi.IShapeDataProvider#getFeatureProperty(int,
-   *      org.kalypso.gmlschema.property.IPropertyType)
-   */
-  public Object getFeatureProperty( int featureIndex, IPropertyType propertyType )
-  {
-    return m_features[0].getProperty( propertyType );
-  }
-
 }
