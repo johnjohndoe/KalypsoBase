@@ -36,10 +36,12 @@
 
 package org.kalypso.shape.shp;
 
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 
+import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.runtime.Assert;
 import org.kalypso.shape.FileMode;
@@ -71,6 +73,8 @@ import org.kalypsodeegree.model.geometry.ByteUtils;
 
 public class SHPFile
 {
+  private static int RECORD_HEADER_BYTES = 4 + 4;
+
   private ShapeHeader m_header;
 
   private final RandomAccessFile m_raf;
@@ -105,7 +109,10 @@ public class SHPFile
   {
     if( isWriting() )
     {
+      final long fileLength = m_raf.length();
+      m_header = new ShapeHeader( (int) fileLength, getShapeType(), getMBR() );
       m_raf.seek( 0 );
+      // Update header with length
       m_header.write( m_raf );
     }
 
@@ -149,7 +156,6 @@ public class SHPFile
     final int position = record.getOffset() * 2;
     final int contentLength = record.getLength() * 2;
 
-    // TODO: directly read data from m_raf
     final byte[] recBuf = new byte[contentLength];
     m_raf.seek( position + 8 );
     m_raf.readFully( recBuf );
@@ -188,7 +194,9 @@ public class SHPFile
   }
 
   /**
-   * Adds a new shape entry to the end of the file.
+   * Adds a new shape entry to the end of the file.<br>
+   * This method is atomic in that sense that if an exception occurs while a shape convertet to bytes, inetad a
+   * Null-Shape will be written.
    */
   public SHXRecord addShape( final ISHPGeometry shape, final int recordNumber ) throws IOException, SHPException
   {
@@ -198,31 +206,55 @@ public class SHPFile
     if( !(shape instanceof SHPNullShape) && shape.getType() != m_header.getShapeType() )
       throw new SHPException( "Cannot add shape, wrong type." );
 
+    final long currentFileLength = m_raf.length();
+
+    /* Convert shape into bytes and write them in one go */
+    final byte[] bytes = writeRecordAsBytes( recordNumber, shape );
+    m_raf.seek( currentFileLength );
+    m_raf.write( bytes );
+
+    /* Update header */
     final SHPEnvelope shapeMbr = shape.getEnvelope();
+    expandMbr( shapeMbr );
 
-    final long fileLength = m_raf.length();
-    m_raf.seek( fileLength );
+    /* Create and return index record */
+    final int contentLength = bytes.length - RECORD_HEADER_BYTES;
+    return new SHXRecord( (int) currentFileLength / 2, contentLength / 2 );
+  }
 
-    m_raf.writeInt( recordNumber );
-    final int contentLength = (shape.length() + 4) / 2;
-    m_raf.writeInt( contentLength );
-    DataUtils.writeLEInt( m_raf, shape.getType() );
-    shape.write( m_raf );
+  private byte[] writeRecordAsBytes( final int recordNumber, final ISHPGeometry shape ) throws IOException
+  {
+    final int contentLength = shape.length() + 4;
+    final int recordLength = RECORD_HEADER_BYTES + contentLength;
 
-    final long newFileLength = m_raf.length();
+    final ByteArrayOutputStream out = new ByteArrayOutputStream( recordLength );
+    final DataOutputStream os = new DataOutputStream( out );
 
+    /* Record Header */
+    os.writeInt( recordNumber );
+    os.writeInt( contentLength / 2 );
+
+    /* record Content */
+    DataUtils.writeLEInt( os, shape.getType() );
+    shape.write( os );
+
+    os.flush();
+
+    final byte[] byteArray = out.toByteArray();
+
+    Assert.isTrue( recordLength == byteArray.length );
+
+    return byteArray;
+  }
+
+  private void expandMbr( final SHPEnvelope shapeMbr )
+  {
     final SHPEnvelope mbr = m_header.getMBR();
     final SHPEnvelope newMbr = mbr == null ? shapeMbr : mbr.expand( shapeMbr );
     final int shapeType = m_header.getShapeType();
-    m_header = new ShapeHeader( (int) newFileLength, shapeType, newMbr );
-
-    final int writtenLength = (int) (newFileLength - fileLength) / 2;
-    final int recordLength = writtenLength - 4;
-
-    final int recordOffset = (int) (fileLength / 2);
-    Assert.isTrue( contentLength == recordLength );
-
-    return new SHXRecord( recordOffset, recordLength );
+    // PERFORMANCE: we always set -1 as file length here. The file length will e updated as soon as the
+    // header gets really written
+    m_header = new ShapeHeader( -1, shapeType, newMbr );
   }
 
   private boolean isWriting( )

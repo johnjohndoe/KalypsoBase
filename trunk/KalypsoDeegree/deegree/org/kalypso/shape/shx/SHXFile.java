@@ -58,13 +58,18 @@ public class SHXFile
 
   private final RandomAccessFile m_raf;
 
-  // FIXME: is it really necessary to keep the records in memory...?
   private final List<SHXRecord> m_index = new ArrayList<SHXRecord>();
 
   /**
    * IndexFileHeader is equal to ShapeFileHeader
    */
   private ShapeHeader m_header;
+
+  private final boolean m_syncWriteHeader = false;
+
+  private final boolean m_syncWriteRecord = false;
+
+  private final FileMode m_mode;
 
   public static SHXFile create( final File file, final int shapeType ) throws IOException
   {
@@ -82,6 +87,7 @@ public class SHXFile
    */
   public SHXFile( final File file, final FileMode mode ) throws IOException
   {
+    m_mode = mode;
     final String rwMode = mode == FileMode.READ ? "r" : "rw";
 
     m_raf = new RandomAccessFile( file, rwMode );
@@ -101,6 +107,19 @@ public class SHXFile
 
   public void close( ) throws IOException
   {
+    if( m_mode == FileMode.WRITE && !m_syncWriteRecord )
+    {
+      m_raf.seek( 0 );
+      for( int i = 0; i < m_index.size(); i++ )
+      {
+        final SHXRecord record = m_index.get( i );
+        record.write( m_raf );
+      }
+    }
+
+    if( m_mode == FileMode.WRITE && !m_syncWriteHeader )
+      writeHeader();
+
     m_raf.close();
   }
 
@@ -129,7 +148,7 @@ public class SHXFile
    */
   public void addRecord( final SHXRecord record, final SHPEnvelope mbr ) throws IOException
   {
-    final int filePos = ShapeHeader.SHAPE_FILE_HEADER_LENGTH + m_index.size() * INDEX_RECORD_LENGTH;
+    final int index = m_index.size();
 
     m_index.add( record );
 
@@ -138,10 +157,19 @@ public class SHXFile
     final SHPEnvelope newMbr = fileMbr == null ? mbr : fileMbr.expand( mbr );
     m_header = new ShapeHeader( newLength, m_header.getShapeType(), newMbr );
 
-    // update file
-    m_raf.seek( filePos );
-    record.write( m_raf );
+    if( m_syncWriteRecord )
+    {
+      final int filePos = ShapeHeader.SHAPE_FILE_HEADER_LENGTH + index * INDEX_RECORD_LENGTH;
+      m_raf.seek( filePos );
+      record.write( m_raf );
+    }
 
+    if( m_syncWriteHeader )
+      writeHeader();
+  }
+
+  private void writeHeader( ) throws IOException
+  {
     m_raf.seek( 0 );
     m_header.write( m_raf );
   }

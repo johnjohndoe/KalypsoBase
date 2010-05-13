@@ -35,10 +35,14 @@
  */
 package org.kalypso.shape.dbf;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.charset.Charset;
+
+import junit.framework.Assert;
 
 import org.kalypso.shape.FileMode;
 
@@ -136,12 +140,30 @@ public class DBaseFile
     return fields.readRecord( m_raf, m_charset );
   }
 
+  /**
+   * Really writes the record into the underlying file.<br>
+   * This method is atomic, in the sense that a record only gets written if all fields could successfully be written.
+   */
   private void writeRecord( final Object[] data, final int numRecords ) throws DBaseException, IOException
   {
     seekRecordForWrite( numRecords );
 
+    final byte[] bytes = recordAsBytes( data );
+    m_raf.write( bytes );
+  }
+
+  private byte[] recordAsBytes( final Object[] data ) throws DBaseException, IOException
+  {
     final DBFFields fields = m_header.getFields();
-    fields.writeRecord( m_raf, data, m_charset );
+    final int recordLength = fields.getRecordLength();
+    final ByteArrayOutputStream out = new ByteArrayOutputStream( recordLength );
+    final DataOutputStream os = new DataOutputStream( out );
+    fields.writeRecord( os, data, m_charset );
+    out.flush();
+
+    Assert.assertEquals( recordLength, out.size() );
+
+    return out.toByteArray();
   }
 
   /**
