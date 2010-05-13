@@ -44,6 +44,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.deegree.model.crs.CoordinateSystem;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -63,6 +64,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -76,12 +78,24 @@ import org.kalypso.i18n.Messages;
 import org.kalypso.transformation.CRSHelper;
 
 /**
- * This class represents a panel with elements for choosing a coordinate system.
+ * This class represents a panel with elements for choosing a coordinate system.<br>
+ * *
+ * <dl>
+ * <dt><b>Styles:</b></dt>
+ * <dd>NO_GROUP</dd>
+ * <dt><b>Events:</b></dt>
+ * <dd>(none)</dd>
+ * </dl>
  * 
  * @author Holger Albert
  */
 public class CRSSelectionPanel extends Composite implements IJobChangeListener
 {
+  /**
+   * Style constant. If set, no group is shown in this composite.
+   */
+  public static final int NO_GROUP = SWT.SEARCH;
+
   /**
    * The list of selection changed listener. This listeners will be added to the combo viewer, too. The list is only
    * maintained here for a special case. It should not be used otherwise.
@@ -145,9 +159,7 @@ public class CRSSelectionPanel extends Composite implements IJobChangeListener
     m_imageList = new ArrayList<Image>();
     m_lazySelection = null;
 
-    /* Create the controls. */
     createControls();
-
   }
 
   /**
@@ -155,24 +167,10 @@ public class CRSSelectionPanel extends Composite implements IJobChangeListener
    */
   private void createControls( )
   {
-    /* Set the layout data. */
-    final GridLayout gridLayout = new GridLayout( 1, false );
-    gridLayout.horizontalSpacing = 0;
-    gridLayout.verticalSpacing = 0;
-    gridLayout.marginHeight = 0;
-    gridLayout.marginWidth = 0;
-    super.setLayout( gridLayout );
+    super.setLayout( new FillLayout() );
 
     /* Create the main group for the panel. */
-    final Group main = new Group( this, SWT.NONE );
-    main.setLayout( new GridLayout( 2, false ) );
-    main.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
-
-    String title = Messages.getString( "org.kalypso.transformation.ui.CRSSelectionPanel.0" ); //$NON-NLS-1$
-    if( m_extText != null && m_extText.length() > 0 )
-      title = title + " " + m_extText; //$NON-NLS-1$
-
-    main.setText( title );
+    final Composite main = createMainComposite();
 
     /* Create the combo. */
     m_viewer = new ComboViewer( main, SWT.READ_ONLY | SWT.DROP_DOWN );
@@ -188,8 +186,8 @@ public class CRSSelectionPanel extends Composite implements IJobChangeListener
     imageLabel.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, false, false ) );
 
     /* Set the image. */
-    ImageDescriptor imgDesc = ImageDescriptor.createFromURL( getClass().getResource( "resources/info.gif" ) ); //$NON-NLS-1$
-    Image infoImage = imgDesc.createImage();
+    final ImageDescriptor imgDesc = ImageDescriptor.createFromURL( getClass().getResource( "resources/info.gif" ) ); //$NON-NLS-1$
+    final Image infoImage = imgDesc.createImage();
     m_imageList.add( infoImage );
     imageLabel.setImage( infoImage );
 
@@ -216,6 +214,30 @@ public class CRSSelectionPanel extends Composite implements IJobChangeListener
 
     /* Set the input. */
     updateCoordinateSystemsCombo( CRSHelper.getAllNames() );
+  }
+
+  private Composite createMainComposite( )
+  {
+    if( (getStyle() & NO_GROUP) != 0 )
+    {
+      final Composite composite = new Composite( this, SWT.NONE );
+      final GridLayout layout = new GridLayout( 2, false );
+      layout.marginHeight = 0;
+      layout.marginWidth = 0;
+      composite.setLayout( layout );
+      return composite;
+    }
+
+    final Group main = new Group( this, SWT.NONE );
+    final String title = Messages.getString( "org.kalypso.transformation.ui.CRSSelectionPanel.0" ); //$NON-NLS-1$
+
+    if( StringUtils.isEmpty( m_extText ) )
+      main.setText( title );
+    else
+      main.setText( String.format( "%s %s", title, m_extText ) ); //$NON-NLS-1$
+    main.setLayout( new GridLayout( 2, false ) );
+
+    return main;
   }
 
   /**
@@ -367,7 +389,7 @@ public class CRSSelectionPanel extends Composite implements IJobChangeListener
     setEnabled( false );
 
     /* Start the job. */
-    CRSInitializeJob initCRSJob = new CRSInitializeJob( "CRSInitializeJob", names ); //$NON-NLS-1$
+    final CRSInitializeJob initCRSJob = new CRSInitializeJob( "CRSInitializeJob", names ); //$NON-NLS-1$
     initCRSJob.setSystem( true );
 
     /* Add myself as a listener. */
@@ -406,7 +428,7 @@ public class CRSSelectionPanel extends Composite implements IJobChangeListener
     final Display display = getDisplay();
 
     /* Create a UI job. */
-    UIJob uiJob = new UIJob( display, "CRSSelectionPanelRefreshJob" ) //$NON-NLS-1$
+    final UIJob uiJob = new UIJob( display, "CRSSelectionPanelRefreshJob" ) //$NON-NLS-1$
     {
       /**
        * @see org.eclipse.ui.progress.UIJob#runInUIThread(org.eclipse.core.runtime.IProgressMonitor)
@@ -513,7 +535,7 @@ public class CRSSelectionPanel extends Composite implements IJobChangeListener
         {
           /* Enable. */
           if( !isDisposed() )
-          setEnabled( true );
+            setEnabled( true );
           else
           {
             System.out.println( "Disposed" ); //$NON-NLS-1$
