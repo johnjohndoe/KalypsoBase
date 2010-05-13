@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.shape.dbf;
 
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.util.IllegalFormatException;
 import java.util.Locale;
@@ -61,7 +62,7 @@ abstract class FieldFormatter
   /**
    * @see org.kalypsodeegree_impl.io.shpapi.FieldFormatter#toBytes(java.lang.Object, java.lang.String)
    */
-  public byte[] toBytes( final Object value, @SuppressWarnings("unused") final Charset charset ) throws DBaseException
+  public byte[] toBytes( final Object value, final Charset charset ) throws DBaseException
   {
     if( value == null )
       return EMPY_BYTES;
@@ -69,11 +70,20 @@ abstract class FieldFormatter
     try
     {
       final String format = String.format( Locale.US, m_pattern, value );
-      return format.getBytes();
+      final String name = charset.name();
+      // PERFORMANCE: we use the charset's NAME instead of the charset as this is considerably faster.
+      // Probably a java-bug.
+      return format.getBytes( name );
     }
     catch( final IllegalFormatException e )
     {
-      throw new DBaseException( "Unable to format value as number: " + value );
+      throw new DBaseException( "Unable to format value as number: " + value ); //$NON-NLS-1$
+    }
+    catch( final UnsupportedEncodingException e )
+    {
+      // will not happen
+      e.printStackTrace();
+      throw new DBaseException( "Unknown charset", e ); //$NON-NLS-1$
     }
   }
 
