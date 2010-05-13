@@ -102,7 +102,6 @@ public class ExportShapeWizard extends Wizard
 
     if( !status.isOK() )
       new StatusDialog2( getShell(), status, getWindowTitle() ).open();
-// ErrorDialog.openError( getShell(), getWindowTitle(), "Failed to write shape file", status );
     return status.isOK();
   }
 

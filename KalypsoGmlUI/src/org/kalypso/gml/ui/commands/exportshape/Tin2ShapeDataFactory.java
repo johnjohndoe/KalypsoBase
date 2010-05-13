@@ -41,11 +41,9 @@
 package org.kalypso.gml.ui.commands.exportshape;
 
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Collection;
 
+import org.kalypso.gml.ui.extensions.FeatureSelectionTester;
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.shape.IShapeData;
 import org.kalypso.shape.ShapeConst;
@@ -87,7 +85,7 @@ public class Tin2ShapeDataFactory implements IShapeDataFactory
     final int shapeType = ShapeConst.SHAPE_TYPE_POLYGONZ;
 
     final IFeatureType featureType = GenericShapeDataFactory.findLeastCommonType( m_features );
-    final IValuePropertyType[] tinTypes = findTinTypes( featureType );
+    final IValuePropertyType[] tinTypes = FeatureSelectionTester.findGeometryTypes( featureType, GM_TriangulatedSurface.class );
 
     if( tinTypes.length == 0 )
     {
@@ -99,28 +97,4 @@ public class Tin2ShapeDataFactory implements IShapeDataFactory
     final GM_Object2Shape shapeConverter = new GM_Object2Shape( shapeType, m_coordinateSystem );
     return new TriangulatedSurfaceSinglePartShapeDataProvider( m_features, geometry, m_charset, shapeConverter );
   }
-
-  private IValuePropertyType[] findTinTypes( final IFeatureType featureType )
-  {
-    final Collection<IValuePropertyType> geometries = new ArrayList<IValuePropertyType>();
-    final IPropertyType[] geometryProperties = featureType.getProperties();
-    for( final IPropertyType propertyType : geometryProperties )
-    {
-      if( propertyType instanceof IValuePropertyType )
-      {
-        final IValuePropertyType vpt = (IValuePropertyType) propertyType;
-        if( vpt.isGeometry() && !vpt.isList() )
-        {
-          // TODO: list of tins not yet supported (the data provider is not able to handle them)
-
-          final Class< ? > valueClass = vpt.getValueClass();
-          if( GM_TriangulatedSurface.class.isAssignableFrom( valueClass ) )
-            geometries.add( vpt );
-        }
-      }
-    }
-
-    return geometries.toArray( new IValuePropertyType[geometries.size()] );
-  }
-
 }
