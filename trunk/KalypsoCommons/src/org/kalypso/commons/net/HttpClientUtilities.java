@@ -40,14 +40,21 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.commons.net;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URL;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.io.IOUtils;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.kalypso.commons.KalypsoCommonsPlugin;
 import org.kalypso.commons.i18n.Messages;
 
 /**
@@ -65,8 +72,6 @@ public class HttpClientUtilities
   }
 
   /**
-   * FIXME: is this method reallyneeded at all?<br>
-   * Why not use: org.apache.commons.io.FileUtils.copyURLToFile( sourceUrl, targetFile );<br>
    * This function asks a server for a file, downloads it and copies it to the given file.
    * 
    * @param sourceUrl
@@ -75,14 +80,10 @@ public class HttpClientUtilities
    *          The target file.
    */
   // FIXME: do not use generic exceptions!
-  public static void requestFileFromServer( final URL sourceUrl, final File targetFile ) throws Exception
+  public static void requestFileFromServer( final URL sourceUrl, final File targetFile ) throws CoreException
   {
-
-    /* The input stream. */
     InputStream is = null;
-
-    /* The output stream. */
-    FileOutputStream os = null;
+    OutputStream os = null;
 
     try
     {
@@ -94,29 +95,38 @@ public class HttpClientUtilities
       method.setDoAuthentication( true );
 
       /* Execute the method. */
-      final int status = httpClient.executeMethod( method );
-      if( status != 200 )
-        // FIXME: do not throw generic exceptions!
-        throw new Exception( String.format( Messages.getString( "org.kalypso.commons.net.HttpClientUtilities.0" ), status ) ); //$NON-NLS-1$
+      final int statusCode = httpClient.executeMethod( method );
+      if( statusCode != 200 )
+      {
+        final String msg = Messages.getString( "org.kalypso.commons.net.HttpClientUtilities.0", statusCode ); //$NON-NLS-1$
+        final Status error = new Status( IStatus.ERROR, KalypsoCommonsPlugin.getID(), msg );
+        throw new CoreException( error );
+      }
 
       /* Get the response. */
       is = method.getResponseBodyAsStream();
       if( is == null )
-        // FIXME: do not throw generic exceptions!
-        throw new Exception( Messages.getString( "org.kalypso.commons.net.HttpClientUtilities.1" ) ); //$NON-NLS-1$
+      {
+        final String msg = Messages.getString( "org.kalypso.commons.net.HttpClientUtilities.1" ); //$NON-NLS-1$
+        final Status error = new Status( IStatus.ERROR, KalypsoCommonsPlugin.getID(), msg );
+        throw new CoreException( error );
+      }
 
       /* Create the output stream. */
-      os = new FileOutputStream( targetFile );
+      os = new BufferedOutputStream( new FileOutputStream( targetFile ) );
 
       /* Copy the stream to the target file. */
       IOUtils.copy( is, os );
     }
+    catch( final IOException e )
+    {
+      final String msg = String.format( "Failed to retreive %s", sourceUrl );
+      final Status error = new Status( IStatus.ERROR, KalypsoCommonsPlugin.getID(), msg, e );
+      throw new CoreException( error );
+    }
     finally
     {
-      /* Close the input stream. */
       IOUtils.closeQuietly( is );
-
-      /* Close the output stream. */
       IOUtils.closeQuietly( os );
     }
   }

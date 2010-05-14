@@ -57,13 +57,11 @@ import org.kalypsodeegree.KalypsoDeegreePlugin;
  * 
  * @author Holger Albert
  */
-public class CRSHelper
+public final class CRSHelper
 {
-  /**
-   * The constructor.
-   */
   private CRSHelper( )
   {
+    throw new UnsupportedOperationException( "Helper class, do not instantiate" ); //$NON-NLS-1$
   }
 
   /**
