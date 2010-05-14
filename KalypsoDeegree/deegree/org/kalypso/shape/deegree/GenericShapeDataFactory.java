@@ -43,11 +43,11 @@ package org.kalypso.shape.deegree;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.kalypso.gmlschema.builder.GeometryPropertyBuilder;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -58,6 +58,7 @@ import org.kalypso.shape.ShapeConst;
 import org.kalypso.shape.dbf.DBFField;
 import org.kalypso.shape.dbf.DBaseException;
 import org.kalypso.shape.dbf.FieldType;
+import org.kalypso.shape.dbf.IDBFValue;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_MultiCurve;
@@ -77,36 +78,35 @@ public class GenericShapeDataFactory
   public static IShapeData createDefaultData( final List<Feature> features, final Charset charset, final String coordinateSystem ) throws DBaseException
   {
     if( features.isEmpty() )
-      return new FeatureShapeData( features, new HashMap<DBFField, GMLXPath>(), null, charset, new GM_Object2Shape( ShapeConst.SHAPE_TYPE_NULL, coordinateSystem ) );
+      return new FeatureShapeData( features, new IDBFValue[0], null, charset, new GM_Object2Shape( ShapeConst.SHAPE_TYPE_NULL, coordinateSystem ) );
 
     final IFeatureType type = findLeastCommonType( features );
 
     final int shapeType = findShapeType( type );
     final GMLXPath geometry = findGeometry( type );
-    final Map<DBFField, GMLXPath> mapping = findDataMapping( type );
+    final IDBFValue[] fields = findFields( type );
 
     final GM_Object2Shape shapeConverter = new GM_Object2Shape( shapeType, coordinateSystem );
 
-    return new FeatureShapeData( features, mapping, geometry, charset, shapeConverter );
+    return new FeatureShapeData( features, fields, geometry, charset, shapeConverter );
   }
 
-  public static Map<DBFField, GMLXPath> findDataMapping( final IFeatureType type ) throws DBaseException
+  public static IDBFValue[] findFields( final IFeatureType type ) throws DBaseException
   {
-    final Map<DBFField, GMLXPath> mapping = new HashMap<DBFField, GMLXPath>();
+    final Collection<IDBFValue> fields = new ArrayList<IDBFValue>();
 
     final IPropertyType[] ftp = type.getProperties();
     for( final IPropertyType element : ftp )
     {
-
       final DBFField field = findField( element );
       if( field != null )
       {
         final GMLXPath path = new GMLXPath( element.getQName() );
-        mapping.put( field, path );
+        fields.add( new FeatureValue( field, path ) );
       }
     }
 
-    return mapping;
+    return fields.toArray( new IDBFValue[fields.size()] );
   }
 
   private static DBFField findField( final IPropertyType property ) throws DBaseException

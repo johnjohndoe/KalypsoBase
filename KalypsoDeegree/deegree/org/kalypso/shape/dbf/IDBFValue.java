@@ -38,49 +38,17 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypsodeegree_impl.io.shpapi.dataprovider;
+package org.kalypso.shape.dbf;
 
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
+import org.kalypso.shape.ShapeDataException;
+import org.kalypso.shape.dbf.DBFField;
 
 /**
  * @author Gernot Belger
  */
-public class TinPointer
+public interface IDBFValue
 {
-  private final int m_featureIndex;
+  DBFField getField( );
 
-  private final int m_triangleIndex;
-
-  private final GM_TriangulatedSurface m_tin;
-
-  private final Feature m_feature;
-
-  public TinPointer( final Feature feature, final int featureIndex, final int triangleIndex, final GM_TriangulatedSurface tin )
-  {
-    m_feature = feature;
-    m_featureIndex = featureIndex;
-    m_triangleIndex = triangleIndex;
-    m_tin = tin;
-  }
-
-  public int getFeatureIndex( )
-  {
-    return m_featureIndex;
-  }
-
-  public int getTriangleIndex( )
-  {
-    return m_triangleIndex;
-  }
-
-  public GM_TriangulatedSurface getTin( )
-  {
-    return m_tin;
-  }
-
-  public Feature getFeature( )
-  {
-    return m_feature;
-  }
+  Object getValue( Object element ) throws ShapeDataException;
 }

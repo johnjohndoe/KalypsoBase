@@ -40,47 +40,38 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.io.shpapi.dataprovider;
 
+import org.kalypso.shape.ShapeDataException;
+import org.kalypso.shape.dbf.DBFField;
+import org.kalypso.shape.dbf.IDBFValue;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 
-/**
- * @author Gernot Belger
- */
-public class TinPointer
+public class TinValue implements IDBFValue
 {
-  private final int m_featureIndex;
+  private final IDBFValue m_delegate;
 
-  private final int m_triangleIndex;
-
-  private final GM_TriangulatedSurface m_tin;
-
-  private final Feature m_feature;
-
-  public TinPointer( final Feature feature, final int featureIndex, final int triangleIndex, final GM_TriangulatedSurface tin )
+  public TinValue( final IDBFValue delegate )
   {
-    m_feature = feature;
-    m_featureIndex = featureIndex;
-    m_triangleIndex = triangleIndex;
-    m_tin = tin;
+    m_delegate = delegate;
   }
 
-  public int getFeatureIndex( )
+  /**
+   * @see org.kalypso.shape.dbf.IDBFValue#getField()
+   */
+  @Override
+  public DBFField getField( )
   {
-    return m_featureIndex;
+    return m_delegate.getField();
   }
 
-  public int getTriangleIndex( )
+  /**
+   * @see org.kalypso.shape.dbf.IDBFValue#getValue(java.lang.Object)
+   */
+  @Override
+  public Object getValue( final Object element ) throws ShapeDataException
   {
-    return m_triangleIndex;
+    final TinPointer pointer = (TinPointer) element;
+    final Feature feature = pointer.getFeature();
+    return m_delegate.getValue( feature );
   }
 
-  public GM_TriangulatedSurface getTin( )
-  {
-    return m_tin;
-  }
-
-  public Feature getFeature( )
-  {
-    return m_feature;
-  }
 }

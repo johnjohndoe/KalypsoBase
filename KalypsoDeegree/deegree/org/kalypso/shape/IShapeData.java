@@ -38,7 +38,7 @@ package org.kalypso.shape;
 import java.nio.charset.Charset;
 import java.util.Iterator;
 
-import org.kalypso.shape.dbf.DBFField;
+import org.kalypso.shape.dbf.IDBFValue;
 import org.kalypso.shape.geometry.ISHPGeometry;
 
 /**
@@ -59,7 +59,7 @@ public interface IShapeData
   /** Type of shape (like POINTZ). One of {@link ShapeConst} constants. */
   public int getShapeType( ) throws ShapeDataException;
 
-  public DBFField[] getFields( ) throws ShapeDataException;
+  public IDBFValue[] getFields( ) throws ShapeDataException;
 
   /**
    * Access to the data elements. Use the object retrieved from the iterator to call {@link #getGeometry(int)} and
@@ -71,12 +71,4 @@ public interface IShapeData
   public int size( ) throws ShapeDataException;
 
   public ISHPGeometry getGeometry( final Object element ) throws ShapeDataException;
-
-  /**
-   * @param row
-   *          Must be between 0 and {@link #size()}.
-   * @param field
-   *          Must be between 0 and {@link #getFields()}.length
-   */
-  public Object getData( Object element, int field ) throws ShapeDataException;
 }

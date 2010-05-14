@@ -62,7 +62,7 @@ class TinIterator implements Iterator<TinPointer>
   {
     m_geometry = geoemtry;
     m_tinFeatures = tinFeatures;
-    m_pointer = searchNext( new TinPointer( 0, 0, null ) );
+    m_pointer = searchNext( new TinPointer( null, 0, 0, null ) );
   }
 
   private TinPointer searchNext( final TinPointer start )
@@ -89,7 +89,7 @@ class TinIterator implements Iterator<TinPointer>
 
         final int tinSize = tin.size();
         if( triangleIndex < tinSize )
-          return new TinPointer( featureIndex, triangleIndex, tin );
+          return new TinPointer( m_tinFeatures[featureIndex], featureIndex, triangleIndex, tin );
 
         /* Skip to next tin */
         triangleIndex = 0;

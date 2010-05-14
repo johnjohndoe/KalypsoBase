@@ -38,49 +38,29 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypsodeegree_impl.io.shpapi.dataprovider;
+package org.kalypso.shape.dbf;
 
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
+import org.kalypso.shape.dbf.DBFField;
 
 /**
  * @author Gernot Belger
  */
-public class TinPointer
+public abstract class AbstractDBFValue implements IDBFValue
 {
-  private final int m_featureIndex;
+  private final DBFField m_field;
 
-  private final int m_triangleIndex;
-
-  private final GM_TriangulatedSurface m_tin;
-
-  private final Feature m_feature;
-
-  public TinPointer( final Feature feature, final int featureIndex, final int triangleIndex, final GM_TriangulatedSurface tin )
+  public AbstractDBFValue( final DBFField field )
   {
-    m_feature = feature;
-    m_featureIndex = featureIndex;
-    m_triangleIndex = triangleIndex;
-    m_tin = tin;
+    m_field = field;
   }
 
-  public int getFeatureIndex( )
+  /**
+   * @see org.kalypso.model.wspm.tuhh.ui.export.shape.IDBFValue#getField()
+   */
+  @Override
+  public DBFField getField( )
   {
-    return m_featureIndex;
+    return m_field;
   }
 
-  public int getTriangleIndex( )
-  {
-    return m_triangleIndex;
-  }
-
-  public GM_TriangulatedSurface getTin( )
-  {
-    return m_tin;
-  }
-
-  public Feature getFeature( )
-  {
-    return m_feature;
-  }
 }

@@ -38,49 +38,46 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypsodeegree_impl.io.shpapi.dataprovider;
+package org.kalypso.shape.deegree;
 
+import org.kalypso.shape.ShapeDataException;
+import org.kalypso.shape.dbf.AbstractDBFValue;
+import org.kalypso.shape.dbf.DBFField;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathException;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
 
 /**
  * @author Gernot Belger
  */
-public class TinPointer
+public class FeatureValue extends AbstractDBFValue
 {
-  private final int m_featureIndex;
+  private final GMLXPath m_path;
 
-  private final int m_triangleIndex;
-
-  private final GM_TriangulatedSurface m_tin;
-
-  private final Feature m_feature;
-
-  public TinPointer( final Feature feature, final int featureIndex, final int triangleIndex, final GM_TriangulatedSurface tin )
+  public FeatureValue( final DBFField field, final GMLXPath path )
   {
-    m_feature = feature;
-    m_featureIndex = featureIndex;
-    m_triangleIndex = triangleIndex;
-    m_tin = tin;
+    super( field );
+
+    m_path = path;
   }
 
-  public int getFeatureIndex( )
+  /**
+   * @see org.kalypso.model.wspm.tuhh.ui.export.shape.IDBFValue#getValue(java.lang.Object)
+   */
+  @Override
+  public Object getValue( final Object element ) throws ShapeDataException
   {
-    return m_featureIndex;
+    final Feature feature = (Feature) element;
+    try
+    {
+      return GMLXPathUtilities.query( m_path, feature );
+    }
+    catch( final GMLXPathException e )
+    {
+      final String message = String.format( "Failed to evaluate xpath '%s' on feature '%s'.", m_path, feature );
+      throw new ShapeDataException( message, e );
+    }
   }
 
-  public int getTriangleIndex( )
-  {
-    return m_triangleIndex;
-  }
-
-  public GM_TriangulatedSurface getTin( )
-  {
-    return m_tin;
-  }
-
-  public Feature getFeature( )
-  {
-    return m_feature;
-  }
 }

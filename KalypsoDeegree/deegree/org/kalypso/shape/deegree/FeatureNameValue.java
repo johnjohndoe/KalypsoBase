@@ -38,49 +38,33 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypsodeegree_impl.io.shpapi.dataprovider;
+package org.kalypso.shape.deegree;
 
+import org.kalypso.shape.dbf.AbstractDBFValue;
+import org.kalypso.shape.dbf.DBFField;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 
 /**
  * @author Gernot Belger
  */
-public class TinPointer
+public class FeatureNameValue extends AbstractDBFValue
 {
-  private final int m_featureIndex;
-
-  private final int m_triangleIndex;
-
-  private final GM_TriangulatedSurface m_tin;
-
-  private final Feature m_feature;
-
-  public TinPointer( final Feature feature, final int featureIndex, final int triangleIndex, final GM_TriangulatedSurface tin )
+  public FeatureNameValue( final DBFField field )
   {
-    m_feature = feature;
-    m_featureIndex = featureIndex;
-    m_triangleIndex = triangleIndex;
-    m_tin = tin;
+    super( field );
   }
 
-  public int getFeatureIndex( )
+  /**
+   * @see org.kalypso.model.wspm.tuhh.ui.export.shape.IDBFValue#getValue(java.lang.Object)
+   */
+  @Override
+  public Object getValue( final Object element )
   {
-    return m_featureIndex;
+    final Feature feature = (Feature) element;
+    if( feature == null )
+      return null;
+
+    return feature.getName();
   }
 
-  public int getTriangleIndex( )
-  {
-    return m_triangleIndex;
-  }
-
-  public GM_TriangulatedSurface getTin( )
-  {
-    return m_tin;
-  }
-
-  public Feature getFeature( )
-  {
-    return m_feature;
-  }
 }
