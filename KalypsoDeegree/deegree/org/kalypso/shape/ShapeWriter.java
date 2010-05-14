@@ -42,20 +42,17 @@ package org.kalypso.shape;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.nio.charset.Charset;
+import java.util.Iterator;
 
-import org.apache.commons.io.FileUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.shape.dbf.DBFField;
 import org.kalypso.shape.dbf.DBaseException;
 import org.kalypso.shape.geometry.ISHPGeometry;
 import org.kalypso.shape.shp.SHPException;
-import org.kalypsodeegree.KalypsoDeegreePlugin;
+import org.kalypso.transformation.PrjHelper;
 
 /**
  * Writes a {@link ShapeFile} based on data from a {@link IShapeDataProvider}.
@@ -78,6 +75,7 @@ public class ShapeWriter
   public void write( final String shapeFileBase, final IProgressMonitor monitor ) throws IOException, DBaseException, SHPException, ShapeDataException, CoreException
   {
     final String taskMsg = String.format( "Writing shape %s", shapeFileBase );
+
     monitor.beginTask( taskMsg, m_data.size() );
 
     final Charset charset = m_data.getCharset();
@@ -116,53 +114,33 @@ public class ShapeWriter
   {
     final String coordinateSystem = m_data.getCoordinateSystem();
 
-    final String name = String.format( "Fetching PRJ for %s", coordinateSystem );
-    monitor.beginTask( name, IProgressMonitor.UNKNOWN );
+    final File prjFile = new File( shapeFileBase + ".prj" );
 
-    try
-    {
-      /* Request the .prj file from the server. */
-      final String code = coordinateSystem.substring( coordinateSystem.lastIndexOf( ":" ) + 1 ); //$NON-NLS-1$
-      final URL sourceUrl = new URL( "http://spatialreference.org/ref/epsg/" + code + "/prj/" ); //$NON-NLS-1$ //$NON-NLS-2$
-
-      monitor.subTask( String.format( "Accessing %s", sourceUrl.toString() ) );
-
-      /* Request the .prj file from the server. */
-      final File prjFile = new File( shapeFileBase + ".prj" );
-      FileUtils.copyURLToFile( sourceUrl, prjFile );
-      // TODO: check, why was this one used before?
-      // HttpClientUtilities.requestFileFromServer( sourceUrl, prjFile );
-    }
-    catch( final IOException e )
-    {
-      final String msg = String.format( "Failed to fetch PRJ for coordinate system'%s'", coordinateSystem );
-      final Status status = new Status( IStatus.WARNING, KalypsoDeegreePlugin.getID(), msg, e );
-      throw new CoreException( status );
-    }
-    finally
-    {
-      monitor.done();
-    }
+    PrjHelper.fetchPrjFile( coordinateSystem, prjFile, monitor );
   }
 
   private void writeData( final DBFField[] fields, final ShapeFile shapeFile, final IProgressMonitor monitor ) throws IOException, DBaseException, SHPException, ShapeDataException, CoreException
   {
-    final int rows = m_data.size();
-    for( int row = 0; row < rows; row++ )
+    int count = 0;
+    final String size = m_data.size() == -1 ? "Unknown" : String.format( "%d", m_data.size() );
+    for( final Iterator< ? > iterator = m_data.iterator(); iterator.hasNext(); )
     {
-      if( row % 100 == 0 )
-        monitor.subTask( String.format( "Writing shape %d/%d", row, rows ) );
+      final Object element = iterator.next();
 
-      final ISHPGeometry geometry = m_data.getGeometry( row );
+      if( count % 100 == 0 )
+        monitor.subTask( String.format( "Writing shape %d/%s", count, size ) );
 
-      final Object[] data = getRow( row, fields );
+      final ISHPGeometry geometry = m_data.getGeometry( element );
+
+      final Object[] data = getRow( element, fields );
       shapeFile.addFeature( geometry, data );
 
       ProgressUtilities.worked( monitor, 1 );
+      count++;
     }
   }
 
-  private Object[] getRow( final int row, final DBFField[] fields ) throws ShapeDataException
+  private Object[] getRow( final Object row, final DBFField[] fields ) throws ShapeDataException
   {
     final Object[] data = new Object[fields.length];
     for( int i = 0; i < data.length; i++ )

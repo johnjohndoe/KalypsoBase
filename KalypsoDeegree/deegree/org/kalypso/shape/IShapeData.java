@@ -36,6 +36,7 @@
 package org.kalypso.shape;
 
 import java.nio.charset.Charset;
+import java.util.Iterator;
 
 import org.kalypso.shape.dbf.DBFField;
 import org.kalypso.shape.geometry.ISHPGeometry;
@@ -60,10 +61,16 @@ public interface IShapeData
 
   public DBFField[] getFields( ) throws ShapeDataException;
 
-  /** Numbers of entries of the shape file */
+  /**
+   * Access to the data elements. Use the object retrieved from the iterator to call {@link #getGeometry(int)} and
+   * {@link #getData(int, int)}
+   */
+  public Iterator< ? > iterator( );
+
+  /** Returns the total size. @return -1 if the total size is not known. */
   public int size( ) throws ShapeDataException;
 
-  public ISHPGeometry getGeometry( final int index ) throws ShapeDataException;
+  public ISHPGeometry getGeometry( final Object element ) throws ShapeDataException;
 
   /**
    * @param row
@@ -71,6 +78,5 @@ public interface IShapeData
    * @param field
    *          Must be between 0 and {@link #getFields()}.length
    */
-  public Object getData( int row, int field ) throws ShapeDataException;
-
+  public Object getData( Object element, int field ) throws ShapeDataException;
 }

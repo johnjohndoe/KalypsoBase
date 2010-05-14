@@ -301,7 +301,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
     }
 
     final IMarshallingTypeHandler handler = typeRegistry.getTypeHandlerForTypeName( valueTypeName );
-    if( handler instanceof XsdBaseTypeHandler )
+    if( handler instanceof XsdBaseTypeHandler< ? > )
       return (XsdBaseTypeHandler< ? >) handler;
 
     return null;

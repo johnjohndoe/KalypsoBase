@@ -41,6 +41,7 @@
 package org.kalypso.shape.deegree;
 
 import java.nio.charset.Charset;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -100,16 +101,14 @@ public class FeatureShapeData implements IShapeData
     return m_gmObject2Shape.getCoordinateSystem();
   }
 
-  /**
-   * @see org.kalypso.shape.IShapeDataProvider#getData(int, int)
-   */
   @Override
-  public Object getData( final int row, final int field ) throws ShapeDataException
+  public Object getData( final Object element, final int field ) throws ShapeDataException
   {
+    final Feature feature = (Feature) element;
+
     try
     {
       final GMLXPath xPath = m_mapping.get( m_fields[field] );
-      final Feature feature = m_features.get( row );
       final Object value = GMLXPathUtilities.query( xPath, feature );
 
       // TODO: we need an additional mapping here?!
@@ -118,7 +117,7 @@ public class FeatureShapeData implements IShapeData
     }
     catch( final GMLXPathException e )
     {
-      final String message = String.format( "Failed to evaluate geometry xpath on row %d", row );
+      final String message = String.format( "Failed to evaluate geometry xpath on row %s", feature );
       throw new ShapeDataException( message, e );
     }
 
@@ -134,21 +133,22 @@ public class FeatureShapeData implements IShapeData
   }
 
   /**
-   * @see org.kalypso.shape.IShapeDataProvider#getGeometry(int)
+   * @see org.kalypso.shape.IShapeData#getGeometry(java.lang.Object)
    */
   @Override
-  public ISHPGeometry getGeometry( final int index ) throws ShapeDataException
+  public ISHPGeometry getGeometry( final Object element ) throws ShapeDataException
   {
+    final Feature feature = (Feature) element;
+
     try
     {
-      final Feature feature = m_features.get( index );
       final Object geom = GMLXPathUtilities.query( m_geometry, feature );
       if( geom == null )
         return new SHPNullShape();
 
       if( !(geom instanceof GM_Object) )
       {
-        final String message = String.format( "XPath failed to evaluate to a geometry on row %d", index );
+        final String message = String.format( "XPath failed to evaluate to a geometry for feature %s", feature );
         throw new ShapeDataException( message );
       }
 
@@ -156,7 +156,7 @@ public class FeatureShapeData implements IShapeData
     }
     catch( final GMLXPathException e )
     {
-      final String message = String.format( "Failed to evaluate geometry xpath on row %d", index );
+      final String message = String.format( "Failed to evaluate geometry xpath for feature %s", feature );
       throw new ShapeDataException( message, e );
     }
   }
@@ -168,6 +168,15 @@ public class FeatureShapeData implements IShapeData
   public int getShapeType( )
   {
     return m_gmObject2Shape.getShapeType();
+  }
+
+  /**
+   * @see org.kalypso.shape.IShapeData#iterator()
+   */
+  @Override
+  public Iterator< ? > iterator( )
+  {
+    return m_features.iterator();
   }
 
   /**
