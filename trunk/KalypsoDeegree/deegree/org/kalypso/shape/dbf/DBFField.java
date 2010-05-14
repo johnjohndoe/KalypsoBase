@@ -50,13 +50,13 @@ public class DBFField
 {
   private static final int MAX_COLUMN_NAME_LENGTH = 11;
 
-  private final byte m_fieldLength;
+  private final short m_fieldLength;
+
+  private final short m_decimalCount;
 
   private final FieldFormatter m_formatter;
 
   private final FieldType m_type;
-
-  private final byte m_decimalCount;
 
   private final String m_name;
 
@@ -64,7 +64,7 @@ public class DBFField
    * constructor recieves name and type of the field, the length of the field in bytes and the decimalcount. the
    * decimalcount is only considered if type id "N" or "F", it's maxvalue if fieldlength - 2!
    */
-  public DBFField( final String name, final FieldType type, final byte fieldLength, final byte decimalCount ) throws DBaseException
+  public DBFField( final String name, final FieldType type, final short fieldLength, final short decimalCount ) throws DBaseException
   {
     m_name = name;
     m_type = type;
@@ -76,6 +76,18 @@ public class DBFField
       throw new DBaseException( "Deicmal count must be smaller than 16" );
 
     /* Validate arguments */
+    if( fieldLength < 0 || fieldLength > 255 )
+    {
+      final String msg = String.format( "Field length must not exceed 255 (is %d)", fieldLength );
+      throw new DBaseException( msg );
+    }
+
+    if( decimalCount < 0 || decimalCount > 255 )
+    {
+      final String msg = String.format( "Decimal count  must not exceed 255 (is %d)", decimalCount );
+      throw new DBaseException( msg );
+    }
+
     final int fixedLength = type.getFixedLength();
     final char typeName = type.getName();
     final boolean supportsDecimal = type.isSupportDecimal();
@@ -97,7 +109,7 @@ public class DBFField
     }
   }
 
-  private FieldFormatter createFormatter( final FieldType type, final byte fieldLength, final byte decimalCount )
+  private FieldFormatter createFormatter( final FieldType type, final short fieldLength, final short decimalCount )
   {
     switch( type )
     {
@@ -124,7 +136,7 @@ public class DBFField
     return m_name;
   }
 
-  public byte getLength( )
+  public short getLength( )
   {
     return m_fieldLength;
   }
@@ -134,7 +146,7 @@ public class DBFField
     return m_type;
   }
 
-  public byte getDecimalCount( )
+  public short getDecimalCount( )
   {
     return m_decimalCount;
   }
@@ -174,13 +186,25 @@ public class DBFField
     input.skipBytes( 4 );
 
     // get field length and precision
-    final byte fieldLength = input.readByte();
-    final byte decimalCount = input.readByte();
+    final short fieldLength = fixByte( input.readByte() );
+    final short decimalCount = fixByte( input.readByte() );
 
     input.skipBytes( 14 );
 
     final FieldType fieldType = FieldType.valueOf( "" + columnType );
     return new DBFField( columnName, fieldType, fieldLength, decimalCount );
+  }
+
+  /**
+   * method: private fixByte (byte b)<BR>
+   * bytes are signed; let's fix them...
+   */
+  private static short fixByte( final byte b )
+  {
+    if( b < 0 )
+      return (short) (b + 256);
+
+    return b;
   }
 
   // HACK: we truncate names at '0' bytes. It is however unclear, if this is according to the specification.
@@ -209,8 +233,8 @@ public class DBFField
 
     final FieldType type = getType();
     bytes[11] = (byte) type.getName();
-    bytes[16] = getLength();
-    bytes[17] = getDecimalCount();
+    bytes[16] = (byte) getLength();
+    bytes[17] = (byte) getDecimalCount();
 
     bytes[20] = 1; // work area id (don't know if it should be 1)
 

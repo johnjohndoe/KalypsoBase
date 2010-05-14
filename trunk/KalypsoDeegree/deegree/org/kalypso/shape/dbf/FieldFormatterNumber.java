@@ -47,18 +47,18 @@ import java.nio.charset.Charset;
  */
 class FieldFormatterNumber extends FieldFormatter
 {
-  private final byte m_length;
+  private final short m_length;
 
-  private final byte m_precision;
+  private final short m_precision;
 
-  public FieldFormatterNumber( final byte length, final byte precision )
+  public FieldFormatterNumber( final short length, final short precision )
   {
     super( createPattern( length, precision ) );
     m_length = length;
     m_precision = precision;
   }
 
-  private static String createPattern( final byte length, final byte precision )
+  private static String createPattern( final short length, final short precision )
   {
     final StringBuffer pattern = new StringBuffer();
     pattern.append( '%' );
