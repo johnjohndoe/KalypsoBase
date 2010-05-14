@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.io.shpapi.dataprovider;
 
+import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 
 /**
@@ -53,8 +54,11 @@ public class TinPointer
 
   private final GM_TriangulatedSurface m_tin;
 
-  public TinPointer( final int featureIndex, final int triangleIndex, final GM_TriangulatedSurface tin )
+  private final Feature m_feature;
+
+  public TinPointer( final Feature feature, final int featureIndex, final int triangleIndex, final GM_TriangulatedSurface tin )
   {
+    m_feature = feature;
     m_featureIndex = featureIndex;
     m_triangleIndex = triangleIndex;
     m_tin = tin;
@@ -75,4 +79,8 @@ public class TinPointer
     return m_tin;
   }
 
+  public Feature getFeature( )
+  {
+    return m_feature;
+  }
 }

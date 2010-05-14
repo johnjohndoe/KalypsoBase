@@ -50,6 +50,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.shape.dbf.DBFField;
 import org.kalypso.shape.dbf.DBaseException;
+import org.kalypso.shape.dbf.IDBFValue;
 import org.kalypso.shape.geometry.ISHPGeometry;
 import org.kalypso.shape.shp.SHPException;
 import org.kalypso.transformation.PrjHelper;
@@ -80,9 +81,12 @@ public class ShapeWriter
 
     final Charset charset = m_data.getCharset();
     final int shapeType = m_data.getShapeType();
-    final DBFField[] fields = m_data.getFields();
+    final IDBFValue[] fields = m_data.getFields();
+    final DBFField[] dbfFields = new DBFField[fields.length];
+    for( int i = 0; i < fields.length; i++ )
+      dbfFields[i] = fields[i].getField();
 
-    final ShapeFile shapeFile = ShapeFile.create( shapeFileBase, shapeType, charset, fields );
+    final ShapeFile shapeFile = ShapeFile.create( shapeFileBase, shapeType, charset, dbfFields );
     try
     {
       writeData( fields, shapeFile, monitor );
@@ -108,7 +112,6 @@ public class ShapeWriter
   /**
    * Fetches the coordinate system as ESRI PRJ file to the given destination.<br>
    * Long running, as this involves access to internet.<br>
-   * TODO: Performance: we should at least cache the PRJ content, so we can reuse it later for quicker access.
    */
   public void writePrj( final String shapeFileBase, final IProgressMonitor monitor ) throws CoreException
   {
@@ -119,7 +122,7 @@ public class ShapeWriter
     PrjHelper.fetchPrjFile( coordinateSystem, prjFile, monitor );
   }
 
-  private void writeData( final DBFField[] fields, final ShapeFile shapeFile, final IProgressMonitor monitor ) throws IOException, DBaseException, SHPException, ShapeDataException, CoreException
+  private void writeData( final IDBFValue[] fields, final ShapeFile shapeFile, final IProgressMonitor monitor ) throws IOException, DBaseException, SHPException, ShapeDataException, CoreException
   {
     int count = 0;
     final String size = m_data.size() == -1 ? "Unknown" : String.format( "%d", m_data.size() );
@@ -140,11 +143,11 @@ public class ShapeWriter
     }
   }
 
-  private Object[] getRow( final Object row, final DBFField[] fields ) throws ShapeDataException
+  private Object[] getRow( final Object row, final IDBFValue[] fields ) throws ShapeDataException
   {
     final Object[] data = new Object[fields.length];
     for( int i = 0; i < data.length; i++ )
-      data[i] = m_data.getData( row, i );
+      data[i] = fields[i].getValue( row );
     return data;
   }
 

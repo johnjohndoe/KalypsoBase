@@ -43,11 +43,10 @@ package org.kalypso.shape.deegree;
 import java.nio.charset.Charset;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import org.kalypso.shape.IShapeData;
 import org.kalypso.shape.ShapeDataException;
-import org.kalypso.shape.dbf.DBFField;
+import org.kalypso.shape.dbf.IDBFValue;
 import org.kalypso.shape.geometry.ISHPGeometry;
 import org.kalypso.shape.geometry.SHPNullShape;
 import org.kalypsodeegree.model.feature.Feature;
@@ -65,21 +64,18 @@ public class FeatureShapeData implements IShapeData
 
   private final GM_Object2Shape m_gmObject2Shape;
 
-  private final Map<DBFField, GMLXPath> m_mapping;
-
-  private final DBFField[] m_fields;
-
   private final GMLXPath m_geometry;
 
   private final Charset m_charset;
 
-  public FeatureShapeData( final List<Feature> features, final Map<DBFField, GMLXPath> mapping, final GMLXPath geometry, final Charset shapeCharset, final GM_Object2Shape gmObject2Shape )
+  private final IDBFValue[] m_fields;
+
+  public FeatureShapeData( final List<Feature> features, final IDBFValue[] fields, final GMLXPath geometry, final Charset shapeCharset, final GM_Object2Shape gmObject2Shape )
   {
     m_features = features;
+    m_fields = fields;
     m_geometry = geometry;
     m_charset = shapeCharset;
-    m_fields = mapping.keySet().toArray( new DBFField[mapping.size()] );
-    m_mapping = mapping;
     m_gmObject2Shape = gmObject2Shape;
   }
 
@@ -101,33 +97,11 @@ public class FeatureShapeData implements IShapeData
     return m_gmObject2Shape.getCoordinateSystem();
   }
 
-  @Override
-  public Object getData( final Object element, final int field ) throws ShapeDataException
-  {
-    final Feature feature = (Feature) element;
-
-    try
-    {
-      final GMLXPath xPath = m_mapping.get( m_fields[field] );
-      final Object value = GMLXPathUtilities.query( xPath, feature );
-
-      // TODO: we need an additional mapping here?!
-
-      return value;
-    }
-    catch( final GMLXPathException e )
-    {
-      final String message = String.format( "Failed to evaluate geometry xpath on row %s", feature );
-      throw new ShapeDataException( message, e );
-    }
-
-  }
-
   /**
-   * @see org.kalypso.shape.IShapeDataProvider#getFields()
+   * @see org.kalypso.shape.IShapeData#getFields()
    */
   @Override
-  public DBFField[] getFields( )
+  public IDBFValue[] getFields( )
   {
     return m_fields;
   }
