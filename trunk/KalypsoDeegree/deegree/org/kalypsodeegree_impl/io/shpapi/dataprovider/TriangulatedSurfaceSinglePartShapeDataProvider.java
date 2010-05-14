@@ -36,9 +36,9 @@
 package org.kalypsodeegree_impl.io.shpapi.dataprovider;
 
 import java.nio.charset.Charset;
+import java.util.Iterator;
 import java.util.Map;
 
-import org.deegree.framework.util.Pair;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.shape.IShapeData;
 import org.kalypso.shape.ShapeDataException;
@@ -75,9 +75,7 @@ public class TriangulatedSurfaceSinglePartShapeDataProvider implements IShapeDat
 
   private DBFField[] m_fields;
 
-  private int m_total;
-
-  private Integer[] m_tinSizes;
+  private int m_total = -1;
 
   private final Charset m_charset;
 
@@ -154,22 +152,16 @@ public class TriangulatedSurfaceSinglePartShapeDataProvider implements IShapeDat
   @Override
   public int size( ) throws ShapeDataException
   {
-    if( m_tinSizes == null )
+    if( m_total == -1 )
     {
-      m_tinSizes = new Integer[m_features.length];
-
       m_total = 0;
-      for( int i = 0; i < m_features.length; i++ )
+      for( final Feature feature : m_features )
       {
-        final Feature feature = m_features[i];
-
-        final GM_TriangulatedSurface tin = getTin( feature );
+        final GM_TriangulatedSurface tin = TinIterator.getTin( m_geometry, feature );
         if( tin == null )
-          m_tinSizes[i] = 0;
+          m_total += 0;
         else
-          m_tinSizes[i] = tin.size();
-
-        m_total += m_tinSizes[i];
+          m_total += tin.size();
       }
 
     }
@@ -177,71 +169,35 @@ public class TriangulatedSurfaceSinglePartShapeDataProvider implements IShapeDat
     return m_total;
   }
 
-  private GM_TriangulatedSurface getTin( final Feature feature ) throws ShapeDataException
-  {
-    try
-    {
-      final Object property = GMLXPathUtilities.query( m_geometry, feature );
-      if( property == null )
-        return null;
-
-      if( property instanceof GM_TriangulatedSurface )
-        return (GM_TriangulatedSurface) property;
-
-      throw new ShapeDataException( String.format( "Geometry is not a GM_TriangualtedSurface: %s", m_geometry.toString() ) ); //$NON-NLS-1$
-    }
-    catch( final GMLXPathException e )
-    {
-      throw new ShapeDataException( "Unable to access triangulated surface", e ); //$NON-NLS-1$
-    }
-  }
-
   /**
-   * Calculates feature and triangle index from the outer index.<br>
-   * Returns a Pair<Festure-Index, Triangle-Index>
+   * @see org.kalypso.shape.IShapeData#iterator()
    */
-  private Pair<Integer, Integer> calcFeatureAndTriangleIndex( final int index ) throws ShapeDataException
+  @Override
+  public Iterator< ? > iterator( )
   {
-    int total = 0;
-
-    for( int featureIndex = 0; featureIndex < m_tinSizes.length; featureIndex++ )
-    {
-      final Integer tinSize = m_tinSizes[featureIndex];
-      if( total + tinSize > index )
-      {
-        final int triangleIndex = index - total;
-        return new Pair<Integer, Integer>( featureIndex, triangleIndex );
-      }
-      else
-        featureIndex++;
-
-      total += tinSize;
-    }
-
-    throw new ShapeDataException( String.format( "Index out of bounds: %d", index ) );
+    return new TinIterator( m_geometry, m_features );
   }
 
-  public ISHPGeometry getGeometry( final int index ) throws ShapeDataException
+  public ISHPGeometry getGeometry( final Object element ) throws ShapeDataException
   {
-    final Pair<Integer, Integer> featureAndTriangleIndex = calcFeatureAndTriangleIndex( index );
-    final Feature feature = m_features[featureAndTriangleIndex.first];
-    final GM_TriangulatedSurface tin = getTin( feature );
-
-    final GM_Triangle triangle = tin.get( featureAndTriangleIndex.second );
-
+    final TinPointer pointer = (TinPointer) element;
+    final GM_TriangulatedSurface tin = pointer.getTin();
+    final int triangleIndex = pointer.getTriangleIndex();
+    final GM_Triangle triangle = tin.get( triangleIndex );
     return m_gmObject2Shape.convert( triangle );
   }
 
   /**
-   * @see org.kalypso.shape.IShapeData#getData(int, int)
+   * @see org.kalypso.shape.IShapeData#getData(java.lang.Object, int)
    */
   @Override
-  public Object getData( final int row, final int field ) throws ShapeDataException
+  public Object getData( final Object element, final int field ) throws ShapeDataException
   {
+    final TinPointer pointer = (TinPointer) element;
+    final Feature feature = m_features[pointer.getFeatureIndex()];
+
     try
     {
-      final Pair<Integer, Integer> featureAndTriangleIndex = calcFeatureAndTriangleIndex( row );
-      final Feature feature = m_features[featureAndTriangleIndex.first];
       final Map<DBFField, GMLXPath> dataMapping = getDataMapping();
       final DBFField[] fields = getFields();
       final GMLXPath xPath = dataMapping.get( fields[field] );
@@ -253,7 +209,7 @@ public class TriangulatedSurfaceSinglePartShapeDataProvider implements IShapeDat
     }
     catch( final GMLXPathException e )
     {
-      final String message = String.format( "Unable to resolve data for row %d, field %d", row, field ); //$NON-NLS-1$
+      final String message = String.format( "Unable to resolve data for feature %s, field %d", feature, field ); //$NON-NLS-1$
       throw new ShapeDataException( message, e );
     }
   }
