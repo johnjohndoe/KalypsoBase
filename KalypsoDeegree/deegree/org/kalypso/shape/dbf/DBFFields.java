@@ -64,7 +64,7 @@ class DBFFields
     int recordLength = 0;
     for( final DBFField field : fields )
     {
-      final byte length = field.getLength();
+      final short length = field.getLength();
       recordLength += length;
     }
 
