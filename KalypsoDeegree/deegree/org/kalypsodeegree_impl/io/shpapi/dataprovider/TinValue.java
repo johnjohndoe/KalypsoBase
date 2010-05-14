@@ -58,7 +58,7 @@ public class TinValue implements IDBFValue
    * @see org.kalypso.shape.dbf.IDBFValue#getField()
    */
   @Override
-  public DBFField getField( )
+  public DBFField getField( ) throws ShapeDataException
   {
     return m_delegate.getField();
   }

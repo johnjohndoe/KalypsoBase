@@ -41,14 +41,13 @@
 package org.kalypso.shape.dbf;
 
 import org.kalypso.shape.ShapeDataException;
-import org.kalypso.shape.dbf.DBFField;
 
 /**
  * @author Gernot Belger
  */
 public interface IDBFValue
 {
-  DBFField getField( );
+  DBFField getField( ) throws ShapeDataException;
 
   Object getValue( Object element ) throws ShapeDataException;
 }
