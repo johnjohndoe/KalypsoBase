@@ -47,7 +47,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.IPageChangingListener;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.PageChangingEvent;
@@ -61,11 +60,11 @@ import org.eclipse.ui.dialogs.WizardNewProjectReferencePage;
 import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.ScenarioHandlingProjectNature;
-import org.kalypso.afgui.i18n.Messages;
 import org.kalypso.afgui.scenarios.IScenario;
 import org.kalypso.contribs.eclipse.core.resources.ProjectTemplate;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.wizard.ProjectTemplatePage;
+import org.kalypso.util.swt.StatusDialog;
 
 /**
  * Basic wizard implementation for the various workflow/scenario based projects.<br>
@@ -219,7 +218,9 @@ public class NewProjectWizard extends BasicNewProjectResourceWizard implements I
       }
       catch( final CoreException e )
       {
-        ErrorDialog.openError( getShell(), getWindowTitle(), "Failed to delete corrupt project", e.getStatus() );
+        final IStatus status = e.getStatus();
+        if( !status.isOK() )
+          new StatusDialog( getShell(), status, getWindowTitle() ).open();
         return false;
       }
     }
@@ -230,7 +231,8 @@ public class NewProjectWizard extends BasicNewProjectResourceWizard implements I
 
     final IStatus resultStatus = RunnableContextHelper.execute( getContainer(), true, true, operation );
     KalypsoAFGUIFrameworkPlugin.getDefault().getLog().log( resultStatus );
-    ErrorDialog.openError( getShell(), getWindowTitle(), Messages.getString( "org.kalypso.afgui.wizards.NewProjectWizard.4" ), resultStatus ); //$NON-NLS-1$ //$NON-NLS-2$
+    if( !resultStatus.isOK() )
+      new StatusDialog( getShell(), resultStatus, getWindowTitle() ).open();
 
     // REMARK: we always return here, because the BasicNewProjectWizard does not allow to create a project twice
     // So the wizard must be closed now
