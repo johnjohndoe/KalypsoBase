@@ -123,7 +123,7 @@ public class ExportShapeHandler extends AbstractHandler
 
       // TODO: other special cases
 
-      return selectedElement.toString();
+      return null;
 
       // TODO: more than one element selected?
     }
