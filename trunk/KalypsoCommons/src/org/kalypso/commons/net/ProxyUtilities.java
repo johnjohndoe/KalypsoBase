@@ -223,7 +223,7 @@ public class ProxyUtilities
     {
       return isNonProxyHost( new URL( url ) );
     }
-    catch( MalformedURLException ex )
+    catch( final MalformedURLException ex )
     {
       return true;
     }
@@ -257,12 +257,6 @@ public class ProxyUtilities
 
     /* All hosts, that should use no proxy. */
     final List<String> nonProxyHosts = proxy.getNonProxyHosts();
-    for( final String nonProxyHost : nonProxyHosts )
-    {
-      if( host.equals( nonProxyHost ) )
-        return true;
-    }
-
-    return false;
+    return nonProxyHosts.contains( host );
   }
 }
