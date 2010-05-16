@@ -54,7 +54,7 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.shape.IShapeData;
-import org.kalypso.shape.ShapeConst;
+import org.kalypso.shape.ShapeType;
 import org.kalypso.shape.dbf.DBFField;
 import org.kalypso.shape.dbf.DBaseException;
 import org.kalypso.shape.dbf.FieldType;
@@ -75,14 +75,14 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
  */
 public class GenericShapeDataFactory
 {
-  public static IShapeData createDefaultData( final List<Feature> features, final Charset charset, final String coordinateSystem ) throws DBaseException
+  public static IShapeData createDefaultData( final List<Feature> features, final Charset charset, final String coordinateSystem )
   {
     if( features.isEmpty() )
-      return new FeatureShapeData( features, new IDBFValue[0], null, charset, new GM_Object2Shape( ShapeConst.SHAPE_TYPE_NULL, coordinateSystem ) );
+      return new FeatureShapeData( features, new IDBFValue[0], null, charset, new GM_Object2Shape( ShapeType.NULL, coordinateSystem ) );
 
     final IFeatureType type = findLeastCommonType( features );
 
-    final int shapeType = findShapeType( type );
+    final ShapeType shapeType = findShapeType( type );
     final GMLXPath geometry = findGeometry( type );
     final IDBFValue[] fields = findFields( type );
 
@@ -91,18 +91,26 @@ public class GenericShapeDataFactory
     return new FeatureShapeData( features, fields, geometry, charset, shapeConverter );
   }
 
-  public static IDBFValue[] findFields( final IFeatureType type ) throws DBaseException
+  public static IDBFValue[] findFields( final IFeatureType type )
   {
     final Collection<IDBFValue> fields = new ArrayList<IDBFValue>();
 
     final IPropertyType[] ftp = type.getProperties();
     for( final IPropertyType element : ftp )
     {
-      final DBFField field = findField( element );
-      if( field != null )
+      try
       {
-        final GMLXPath path = new GMLXPath( element.getQName() );
-        fields.add( new FeatureValue( field, path ) );
+        final DBFField field = findField( element );
+        if( field != null )
+        {
+          final GMLXPath path = new GMLXPath( element.getQName() );
+          fields.add( new FeatureValue( field, path ) );
+        }
+      }
+      catch( final DBaseException e )
+      {
+        // should never happen
+        e.printStackTrace();
       }
     }
 
@@ -169,7 +177,7 @@ public class GenericShapeDataFactory
     return localPart.substring( pos + 1 );
   }
 
-  private static GMLXPath findGeometry( final IFeatureType type )
+  public static GMLXPath findGeometry( final IFeatureType type )
   {
     final IValuePropertyType property = type.getDefaultGeometryProperty();
     if( property == null )
@@ -178,34 +186,34 @@ public class GenericShapeDataFactory
     return new GMLXPath( property.getQName() );
   }
 
-  private static int findShapeType( final IFeatureType type )
+  public static ShapeType findShapeType( final IFeatureType type )
   {
     final IValuePropertyType property = type.getDefaultGeometryProperty();
     if( property == null )
-      return ShapeConst.SHAPE_TYPE_NULL;
+      return ShapeType.NULL;
 
     final Class< ? > valueClass = property.getValueClass();
 
     // take the default geometry of the first feature to get the shape type.
     if( GM_Point.class.isAssignableFrom( valueClass ) )
-      return ShapeConst.SHAPE_TYPE_POINT;
+      return ShapeType.POINT;
 
     if( GM_Curve.class.isAssignableFrom( valueClass ) )
-      return ShapeConst.SHAPE_TYPE_POLYLINE;
+      return ShapeType.POLYLINE;
 
     if( GM_Surface.class.isAssignableFrom( valueClass ) )
-      return ShapeConst.SHAPE_TYPE_POLYGON;
+      return ShapeType.POLYGON;
 
     if( GM_MultiPoint.class.isAssignableFrom( valueClass ) )
-      return ShapeConst.SHAPE_TYPE_POINT;
+      return ShapeType.POINT;
 
     if( GM_MultiCurve.class.isAssignableFrom( valueClass ) )
-      return ShapeConst.SHAPE_TYPE_POLYLINE;
+      return ShapeType.POLYLINE;
 
     if( GM_MultiSurface.class.isAssignableFrom( valueClass ) )
-      return ShapeConst.SHAPE_TYPE_POLYGON;
+      return ShapeType.POLYGON;
 
-    return ShapeConst.SHAPE_TYPE_NULL;
+    return ShapeType.NULL;
   }
 
   public static IFeatureType findLeastCommonType( final Feature[] features )

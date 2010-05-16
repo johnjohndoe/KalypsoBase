@@ -47,8 +47,8 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 import org.kalypso.shape.FileMode;
-import org.kalypso.shape.ShapeConst;
 import org.kalypso.shape.ShapeHeader;
+import org.kalypso.shape.ShapeType;
 import org.kalypso.shape.geometry.SHPEnvelope;
 import org.kalypso.shape.tools.TmpFileHelper;
 
@@ -64,7 +64,7 @@ public class SHXFileTest extends Assert
   {
     final File file = m_tmpFiles.create( "shxTest-writeEmpty", ".shx" );
 
-    final SHXFile shxFile = SHXFile.create( file, ShapeConst.SHAPE_TYPE_POINTZ );
+    final SHXFile shxFile = SHXFile.create( file, ShapeType.POINTZ );
     shxFile.close();
 
     assertTrue( file.exists() );
@@ -74,7 +74,7 @@ public class SHXFileTest extends Assert
 
     final ShapeHeader header = shxFile.getHeader();
     assertNull( header.getMBR() );
-    assertEquals( ShapeConst.SHAPE_TYPE_POINTZ, header.getShapeType() );
+    assertEquals( ShapeType.POINTZ, header.getShapeType() );
   }
 
   @Test
@@ -82,7 +82,7 @@ public class SHXFileTest extends Assert
   {
     final File file = m_tmpFiles.create( "shxTest-writeEmpty", ".shx" );
 
-    final SHXFile shxFile = SHXFile.create( file, ShapeConst.SHAPE_TYPE_POINTZ );
+    final SHXFile shxFile = SHXFile.create( file, ShapeType.POINTZ );
 
     shxFile.addRecord( new SHXRecord( 10, 100 ), null );
     shxFile.addRecord( new SHXRecord( 20, 199 ), new SHPEnvelope( 0.1, 0.2, 0.3, 0.4 ) );

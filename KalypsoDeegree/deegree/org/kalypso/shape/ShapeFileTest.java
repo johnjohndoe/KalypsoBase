@@ -75,7 +75,7 @@ public class ShapeFileTest extends Assert
 
     final Charset charset = Charset.forName( "UTF-8" );
     final DBFField[] fields = createFields();
-    final ShapeFile shapeFile = ShapeFile.create( basePath, ShapeConst.SHAPE_TYPE_POLYGON, charset, fields );
+    final ShapeFile shapeFile = ShapeFile.create( basePath, ShapeType.POLYGON, charset, fields );
     shapeFile.close();
 
     final File[] shpFiles = createFiles( basePath );
@@ -84,7 +84,7 @@ public class ShapeFileTest extends Assert
       assertTrue( shpFile.exists() );
 
     assertNull( shapeFile.getFileMBR() );
-    assertEquals( ShapeConst.SHAPE_TYPE_POLYGON, shapeFile.getShapeType() );
+    assertEquals( ShapeType.POLYGON, shapeFile.getShapeType() );
   }
 
   private File[] createFiles( final String basePath )
@@ -112,7 +112,7 @@ public class ShapeFileTest extends Assert
 
     final Charset charset = Charset.forName( "UTF-8" );
     final DBFField[] fields = createFields();
-    final ShapeFile shapeFile = ShapeFile.create( basePath, ShapeConst.SHAPE_TYPE_POLYLINE, charset, fields );
+    final ShapeFile shapeFile = ShapeFile.create( basePath, ShapeType.POLYLINE, charset, fields );
 
     final File[] shpFiles = createFiles( basePath );
     m_tmpFiles.addFiles( shpFiles );

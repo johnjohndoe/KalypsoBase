@@ -43,8 +43,8 @@ package org.kalypso.shape.deegree;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.kalypso.shape.ShapeConst;
 import org.kalypso.shape.ShapeDataException;
+import org.kalypso.shape.ShapeType;
 import org.kalypso.shape.geometry.ISHPGeometry;
 import org.kalypso.shape.geometry.SHPNullShape;
 import org.kalypso.shape.geometry.SHPPoint;
@@ -71,11 +71,11 @@ import org.kalypsodeegree_impl.model.geometry.GM_PositionOrientation.TYPE;
  */
 public class GM_Object2Shape
 {
-  private final int m_shapeType;
+  private final ShapeType m_shapeType;
 
   private final GeoTransformer m_transformer;
 
-  public GM_Object2Shape( final int shapeType, final String coordinateSystem )
+  public GM_Object2Shape( final ShapeType shapeType, final String coordinateSystem )
   {
     m_shapeType = shapeType;
     m_transformer = new GeoTransformer( coordinateSystem );
@@ -90,10 +90,10 @@ public class GM_Object2Shape
 
     switch( m_shapeType )
     {
-      case ShapeConst.SHAPE_TYPE_NULL:
+      case NULL:
         return new SHPNullShape();
 
-      case ShapeConst.SHAPE_TYPE_POINT:
+      case POINT:
       {
         final GM_Point point = (GM_Point) transformedGeom.getAdapter( GM_Point.class );
         if( point == null )
@@ -102,7 +102,7 @@ public class GM_Object2Shape
           return new SHPPoint( point );
       }
 
-      case ShapeConst.SHAPE_TYPE_POLYLINE:
+      case POLYLINE:
       {
         final GM_Curve[] curves = (GM_Curve[]) transformedGeom.getAdapter( GM_Curve[].class );
         if( curves == null )
@@ -111,7 +111,7 @@ public class GM_Object2Shape
           return toPolyline( curves );
       }
 
-      case ShapeConst.SHAPE_TYPE_POLYGON:
+      case POLYGON:
       {
         final GM_SurfacePatch[] surfacePatches = (GM_SurfacePatch[]) transformedGeom.getAdapter( GM_SurfacePatch[].class );
         if( surfacePatches == null )
@@ -123,7 +123,7 @@ public class GM_Object2Shape
         }
       }
 
-      case ShapeConst.SHAPE_TYPE_POINTZ:
+      case POINTZ:
       {
         final GM_Point point = (GM_Point) transformedGeom.getAdapter( GM_Point.class );
         if( point == null )
@@ -132,7 +132,7 @@ public class GM_Object2Shape
           return new SHPPointz( point.getX(), point.getY(), point.getZ(), 0.0 );
       }
 
-      case ShapeConst.SHAPE_TYPE_POLYLINEZ:
+      case POLYLINEZ:
       {
         final GM_Curve[] curves = (GM_Curve[]) transformedGeom.getAdapter( GM_Curve[].class );
         if( curves == null )
@@ -141,7 +141,7 @@ public class GM_Object2Shape
           return toPolylineZ( curves );
       }
 
-      case ShapeConst.SHAPE_TYPE_POLYGONZ:
+      case POLYGONZ:
       {
         final GM_SurfacePatch[] surfacePatches = (GM_SurfacePatch[]) transformedGeom.getAdapter( GM_SurfacePatch[].class );
         if( surfacePatches == null )
@@ -153,7 +153,7 @@ public class GM_Object2Shape
         }
       }
 
-      case ShapeConst.SHAPE_TYPE_MULTIPOINT:
+      case MULTIPOINT:
         // /**
         // * constructor: recieves an array of gm_points
         // */
@@ -190,7 +190,7 @@ public class GM_Object2Shape
         // }
         break;
 
-      case ShapeConst.SHAPE_TYPE_MULTIPOINTZ:
+      case MULTIPOINTZ:
         // /**
         // * constructor: recieves an array of gm_points
         // */
@@ -288,7 +288,7 @@ public class GM_Object2Shape
     return curveList.toArray( new GM_Curve[curveList.size()] );
   }
 
-  public int getShapeType( )
+  public ShapeType getShapeType( )
   {
     return m_shapeType;
   }
@@ -305,16 +305,16 @@ public class GM_Object2Shape
 
     switch( m_shapeType )
     {
-      case ShapeConst.SHAPE_TYPE_POLYLINE:
+      case POLYLINE:
         return toPolyline( curves );
 
-      case ShapeConst.SHAPE_TYPE_POLYGON:
+      case POLYGON:
         return new SHPPolygon( toPolyline( curves ) );
 
-      case ShapeConst.SHAPE_TYPE_POLYLINEZ:
+      case POLYLINEZ:
         return toPolylineZ( curves );
 
-      case ShapeConst.SHAPE_TYPE_POLYGONZ:
+      case POLYGONZ:
         return new SHPPolygonz( toPolylineZ( curves ) );
 
         // TODO: other conversions

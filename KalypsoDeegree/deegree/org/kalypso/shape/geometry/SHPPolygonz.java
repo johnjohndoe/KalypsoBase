@@ -39,7 +39,7 @@ package org.kalypso.shape.geometry;
 import java.io.DataOutput;
 import java.io.IOException;
 
-import org.kalypso.shape.ShapeConst;
+import org.kalypso.shape.ShapeType;
 
 /**
  * Class representing a three dimensional ESRI Polygonz <BR>
@@ -83,9 +83,9 @@ public class SHPPolygonz implements ISHPParts
    * @see org.kalypsodeegree_impl.io.shpapi.ISHPGeometry#getType()
    */
   @Override
-  public int getType( )
+  public ShapeType getType( )
   {
-    return ShapeConst.SHAPE_TYPE_POLYGONZ;
+    return ShapeType.POLYGONZ;
   }
 
   /**

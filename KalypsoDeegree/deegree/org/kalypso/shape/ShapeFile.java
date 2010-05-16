@@ -80,7 +80,7 @@ public class ShapeFile
   /**
    * Create a new shape file and opens it for writing.<br>
    */
-  public static ShapeFile create( final String basePath, final int shapeType, final Charset charset, final DBFField[] fields ) throws IOException, DBaseException
+  public static ShapeFile create( final String basePath, final ShapeType shapeType, final Charset charset, final DBFField[] fields ) throws IOException, DBaseException
   {
     SHPFile.create( new File( basePath + ".shp" ), shapeType ).close();
     SHXFile.create( new File( basePath + ".shx" ), shapeType ).close();
@@ -201,7 +201,7 @@ public class ShapeFile
     m_shx.addRecord( record, mbr );
   }
 
-  public int getShapeType( )
+  public ShapeType getShapeType( )
   {
     return m_shp.getShapeType();
   }
