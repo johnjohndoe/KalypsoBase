@@ -80,7 +80,7 @@ public class ShapeWriter
     monitor.beginTask( taskMsg, m_data.size() );
 
     final Charset charset = m_data.getCharset();
-    final int shapeType = m_data.getShapeType();
+    final ShapeType shapeType = m_data.getShapeType();
     final IDBFValue[] fields = m_data.getFields();
     final DBFField[] dbfFields = new DBFField[fields.length];
     for( int i = 0; i < fields.length; i++ )

@@ -38,7 +38,7 @@ package org.kalypso.shape.geometry;
 
 import java.io.DataOutput;
 
-import org.kalypso.shape.ShapeConst;
+import org.kalypso.shape.ShapeType;
 
 /**
  * Class representig an empty geometry <BR>
@@ -65,9 +65,9 @@ public class SHPNullShape implements ISHPGeometry
    * @see org.kalypsodeegree_impl.io.shpapi.ISHPGeometry#getType()
    */
   @Override
-  public int getType( )
+  public ShapeType getType( )
   {
-    return ShapeConst.SHAPE_TYPE_NULL;
+    return ShapeType.NULL;
   }
 
   @Override

@@ -39,6 +39,8 @@ package org.kalypso.shape.geometry;
 import java.io.DataOutput;
 import java.io.IOException;
 
+import org.kalypso.shape.ShapeType;
+
 /**
  * Class representing basic Geometry for geometries read from a shape-file.
  * <p>
@@ -62,7 +64,7 @@ public interface ISHPGeometry
 
   SHPEnvelope getEnvelope( );
 
-  int getType( );
+  ShapeType getType( );
 
   /* The length in bytes, when written */
   int length( );

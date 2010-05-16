@@ -39,7 +39,7 @@ package org.kalypso.shape.geometry;
 import java.io.DataOutput;
 import java.io.IOException;
 
-import org.kalypso.shape.ShapeConst;
+import org.kalypso.shape.ShapeType;
 import org.kalypso.shape.tools.DataUtils;
 import org.kalypsodeegree.model.geometry.ByteUtils;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -127,9 +127,9 @@ public class SHPPointz implements ISHPPoint
    * @see org.kalypsodeegree_impl.io.shpapi.ISHPGeometry#getType()
    */
   @Override
-  public int getType( )
+  public ShapeType getType( )
   {
-    return ShapeConst.SHAPE_TYPE_POINTZ;
+    return ShapeType.POINTZ;
   }
 
   /**

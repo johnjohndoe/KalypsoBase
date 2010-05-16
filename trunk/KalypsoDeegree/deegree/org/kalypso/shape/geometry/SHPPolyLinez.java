@@ -40,6 +40,7 @@ import java.io.DataOutput;
 import java.io.IOException;
 
 import org.kalypso.shape.ShapeConst;
+import org.kalypso.shape.ShapeType;
 import org.kalypso.shape.tools.DataUtils;
 import org.kalypsodeegree.model.geometry.ByteUtils;
 
@@ -162,9 +163,9 @@ public class SHPPolyLinez implements ISHPParts
    * @see org.kalypsodeegree_impl.io.shpapi.ISHPGeometry#getType()
    */
   @Override
-  public int getType( )
+  public ShapeType getType( )
   {
-    return ShapeConst.SHAPE_TYPE_POLYLINEZ;
+    return ShapeType.POLYLINEZ;
   }
 
   @Override

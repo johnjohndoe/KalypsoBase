@@ -44,6 +44,7 @@ import java.util.List;
 
 import org.kalypso.shape.FileMode;
 import org.kalypso.shape.ShapeHeader;
+import org.kalypso.shape.ShapeType;
 import org.kalypso.shape.geometry.SHPEnvelope;
 
 /**
@@ -71,7 +72,7 @@ public class SHXFile
 
   private final FileMode m_mode;
 
-  public static SHXFile create( final File file, final int shapeType ) throws IOException
+  public static SHXFile create( final File file, final ShapeType shapeType ) throws IOException
   {
     final RandomAccessFile raf = new RandomAccessFile( file, "rw" );
 

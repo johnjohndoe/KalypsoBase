@@ -73,7 +73,7 @@ public class ShapeHeader
 
   private final int m_length;
 
-  private final int m_shapeType;
+  private final ShapeType m_shapeType;
 
   private final SHPEnvelope m_mbr;
 
@@ -81,7 +81,7 @@ public class ShapeHeader
    * @param length
    *          File length in bytes.
    */
-  public ShapeHeader( final int length, final int shapeType, final SHPEnvelope mbr )
+  public ShapeHeader( final int length, final ShapeType shapeType, final SHPEnvelope mbr )
   {
     m_length = length;
     m_shapeType = shapeType;
@@ -107,7 +107,7 @@ public class ShapeHeader
     if( version != SHAPE_FILE_VERSION )
       throw new IOException( "Unable to read shape files with version " + version );
 
-    m_shapeType = DataUtils.readLEInt( input );
+    m_shapeType = ShapeType.valueOf( DataUtils.readLEInt( input ) );
 
     /* Set explicitly to null, else we get (0,0,0,0) as bbox */
     if( m_length == SHAPE_FILE_HEADER_LENGTH )
@@ -146,7 +146,7 @@ public class ShapeHeader
   /**
    * returns the code for the shape type of the file <BR>
    */
-  public int getShapeType( )
+  public ShapeType getShapeType( )
   {
     return m_shapeType;
   }
@@ -164,7 +164,7 @@ public class ShapeHeader
     output.writeInt( 0x0 ); // unused
     output.writeInt( m_length / 2 );
     DataUtils.writeLEInt( output, SHAPE_FILE_VERSION );
-    DataUtils.writeLEInt( output, m_shapeType );
+    DataUtils.writeLEInt( output, m_shapeType.getType() );
     if( m_mbr == null )
       new SHPEnvelope().writeLESHPEnvelope( output );
     else

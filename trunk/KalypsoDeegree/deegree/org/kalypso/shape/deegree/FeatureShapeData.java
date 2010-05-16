@@ -46,6 +46,7 @@ import java.util.List;
 
 import org.kalypso.shape.IShapeData;
 import org.kalypso.shape.ShapeDataException;
+import org.kalypso.shape.ShapeType;
 import org.kalypso.shape.dbf.IDBFValue;
 import org.kalypso.shape.geometry.ISHPGeometry;
 import org.kalypso.shape.geometry.SHPNullShape;
@@ -139,7 +140,7 @@ public class FeatureShapeData implements IShapeData
    * @see org.kalypso.shape.IShapeDataProvider#getShapeType()
    */
   @Override
-  public int getShapeType( )
+  public ShapeType getShapeType( )
   {
     return m_gmObject2Shape.getShapeType();
   }

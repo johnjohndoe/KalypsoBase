@@ -57,7 +57,7 @@ public interface IShapeData
   public String getCoordinateSystem( );
 
   /** Type of shape (like POINTZ). One of {@link ShapeConst} constants. */
-  public int getShapeType( ) throws ShapeDataException;
+  public ShapeType getShapeType( ) throws ShapeDataException;
 
   public IDBFValue[] getFields( ) throws ShapeDataException;
 
