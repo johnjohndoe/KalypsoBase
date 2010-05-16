@@ -40,46 +40,46 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gml.ui.commands.exportshape;
 
-import java.nio.charset.Charset;
-
-import org.kalypso.shape.IShapeData;
 import org.kalypso.shape.ShapeType;
-import org.kalypso.shape.deegree.GM_Object2Shape;
-import org.kalypso.shape.deegree.IShapeDataFactory;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree_impl.io.shpapi.dataprovider.TriangulatedSurfaceSinglePartShapeDataProvider;
+import org.kalypso.shape.dbf.IDBFValue;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
 /**
  * @author Gernot Belger
  */
-public class Tin2ShapeDataFactory implements IShapeDataFactory
+public class ShapeSignature
 {
-  private final Feature[] m_features;
+  private ShapeType m_shapeType;
 
-  private final Charset m_charset;
+  private final GMLXPath m_geometry;
 
-  private final String m_coordinateSystem;
+  private final IDBFValue[] m_fields;
 
-  private final ShapeSignature m_signature;
-
-  public Tin2ShapeDataFactory( final Feature[] features, final Charset charset, final String coordinateSystem, final ShapeSignature signature )
+  public ShapeSignature( final ShapeType shapeType, final GMLXPath geometry, final IDBFValue[] fields )
   {
-    m_features = features;
-    m_charset = charset;
-    m_coordinateSystem = coordinateSystem;
-    m_signature = signature;
+    m_shapeType = shapeType;
+    m_geometry = geometry;
+    m_fields = fields;
   }
 
-  /**
-   * @see org.kalypso.gml.ui.commands.exportshape.IShapeDataFactory#createData()
-   */
-  @Override
-  public IShapeData createData( )
+  public GMLXPath getGeometry( )
   {
-    final ShapeType shapeType = m_signature.getShapeType();
-    final GMLXPath geometry = m_signature.getGeometry();
-    final GM_Object2Shape shapeConverter = new GM_Object2Shape( shapeType, m_coordinateSystem );
-    return new TriangulatedSurfaceSinglePartShapeDataProvider( m_features, geometry, m_charset, shapeConverter );
+    return m_geometry;
   }
+
+  public IDBFValue[] getFields( )
+  {
+    return m_fields;
+  }
+
+  public ShapeType getShapeType( )
+  {
+    return m_shapeType;
+  }
+
+  public void setShapeType( final ShapeType type )
+  {
+    m_shapeType = type;
+  }
+
 }
