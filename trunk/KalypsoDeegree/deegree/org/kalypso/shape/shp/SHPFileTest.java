@@ -47,8 +47,8 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 import org.kalypso.shape.FileMode;
-import org.kalypso.shape.ShapeConst;
 import org.kalypso.shape.ShapeHeader;
+import org.kalypso.shape.ShapeType;
 import org.kalypso.shape.geometry.ISHPGeometry;
 import org.kalypso.shape.geometry.SHPEnvelope;
 import org.kalypso.shape.geometry.SHPNullShape;
@@ -69,14 +69,14 @@ public class SHPFileTest extends Assert
   {
     final File file = m_tmpFiles.create( "shpTest-writeEmpty", ".shp" );
 
-    final SHPFile shpFile = SHPFile.create( file, ShapeConst.SHAPE_TYPE_POLYGON );
+    final SHPFile shpFile = SHPFile.create( file, ShapeType.POLYGON );
     shpFile.close();
 
     assertTrue( file.exists() );
     assertEquals( ShapeHeader.SHAPE_FILE_HEADER_LENGTH, file.length() );
 
     assertNull( shpFile.getMBR() );
-    assertEquals( ShapeConst.SHAPE_TYPE_POLYGON, shpFile.getShapeType() );
+    assertEquals( ShapeType.POLYGON, shpFile.getShapeType() );
   }
 
   @Test
@@ -84,7 +84,7 @@ public class SHPFileTest extends Assert
   {
     final File file = m_tmpFiles.create( "shxTest-writeData", ".shp" );
 
-    final SHPFile shpFile = SHPFile.create( file, ShapeConst.SHAPE_TYPE_POINTZ );
+    final SHPFile shpFile = SHPFile.create( file, ShapeType.POINTZ );
 
     final SHXRecord record0 = shpFile.addShape( new SHPPointz( 1, 2, 3, 4 ), 0 );
     final SHXRecord record1 = shpFile.addShape( new SHPNullShape(), 1 );
