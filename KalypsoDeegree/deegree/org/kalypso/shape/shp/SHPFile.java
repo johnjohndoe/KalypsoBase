@@ -45,8 +45,8 @@ import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.runtime.Assert;
 import org.kalypso.shape.FileMode;
-import org.kalypso.shape.ShapeConst;
 import org.kalypso.shape.ShapeHeader;
+import org.kalypso.shape.ShapeType;
 import org.kalypso.shape.geometry.ISHPGeometry;
 import org.kalypso.shape.geometry.SHPEnvelope;
 import org.kalypso.shape.geometry.SHPMultiPoint;
@@ -81,7 +81,7 @@ public class SHPFile
 
   private final FileMode m_mode;
 
-  public static SHPFile create( final File file, final int shapeType ) throws IOException
+  public static SHPFile create( final File file, final ShapeType shapeType ) throws IOException
   {
     final RandomAccessFile raf = new RandomAccessFile( file, "rw" );
 
@@ -135,13 +135,13 @@ public class SHPFile
   {
     final int position = record.getOffset() * 2;
     m_raf.seek( position + 8 );
-    final int shpType = DataUtils.readLEInt( m_raf );
+    final ShapeType shpType = ShapeType.valueOf( DataUtils.readLEInt( m_raf ) );
 
     /*
      * only for PolyLines, Polygons and MultiPoints minimum bounding rectangles are defined
      */
-    if( (shpType == ShapeConst.SHAPE_TYPE_POLYLINE) || (shpType == ShapeConst.SHAPE_TYPE_POLYGON) || (shpType == ShapeConst.SHAPE_TYPE_MULTIPOINT) || (shpType == ShapeConst.SHAPE_TYPE_POLYLINEZ)
-        || (shpType == ShapeConst.SHAPE_TYPE_POLYGONZ) || (shpType == ShapeConst.SHAPE_TYPE_MULTIPOINTZ) )
+    if( (shpType == ShapeType.POLYLINE) || (shpType == ShapeType.POLYGON) || (shpType == ShapeType.MULTIPOINT) || (shpType == ShapeType.POLYLINEZ) || (shpType == ShapeType.POLYGONZ)
+        || (shpType == ShapeType.MULTIPOINTZ) )
       return new SHPEnvelope( m_raf );
 
     return null;
@@ -160,35 +160,35 @@ public class SHPFile
     m_raf.seek( position + 8 );
     m_raf.readFully( recBuf );
 
-    final int shpType = ByteUtils.readLEInt( recBuf, 0 );
+    final ShapeType shpType = ShapeType.valueOf( ByteUtils.readLEInt( recBuf, 0 ) );
 
     // create a geometry out of record buffer with shapetype
     switch( shpType )
     {
-      case ShapeConst.SHAPE_TYPE_NULL:
+      case NULL:
         return new SHPNullShape();
-      case ShapeConst.SHAPE_TYPE_POINT:
+      case POINT:
         return new SHPPoint( recBuf );
-      case ShapeConst.SHAPE_TYPE_MULTIPOINT:
+      case MULTIPOINT:
         return new SHPMultiPoint( recBuf );
-      case ShapeConst.SHAPE_TYPE_POLYLINE:
+      case POLYLINE:
         return new SHPPolyLine( recBuf );
-      case ShapeConst.SHAPE_TYPE_POLYGON:
+      case POLYGON:
         return new SHPPolygon( recBuf );
-      case ShapeConst.SHAPE_TYPE_POINTZ:
+      case POINTZ:
         return new SHPPointz( recBuf );
-      case ShapeConst.SHAPE_TYPE_POLYLINEZ:
+      case POLYLINEZ:
         return new SHPPolyLinez( recBuf );
-      case ShapeConst.SHAPE_TYPE_POLYGONZ:
+      case POLYGONZ:
         return new SHPPolygonz( recBuf );
-      case ShapeConst.SHAPE_TYPE_MULTIPOINTZ:
+      case MULTIPOINTZ:
         return new SHPMultiPointz( recBuf );
       default:
         throw new NotImplementedException( "Unknown shape type: " + shpType );
     }
   }
 
-  public int getShapeType( )
+  public ShapeType getShapeType( )
   {
     return m_header.getShapeType();
   }
@@ -235,7 +235,7 @@ public class SHPFile
     os.writeInt( contentLength / 2 );
 
     /* record Content */
-    DataUtils.writeLEInt( os, shape.getType() );
+    DataUtils.writeLEInt( os, shape.getType().getType() );
     shape.write( os );
 
     os.flush();
@@ -251,7 +251,7 @@ public class SHPFile
   {
     final SHPEnvelope mbr = m_header.getMBR();
     final SHPEnvelope newMbr = mbr == null ? shapeMbr : mbr.expand( shapeMbr );
-    final int shapeType = m_header.getShapeType();
+    final ShapeType shapeType = m_header.getShapeType();
     // PERFORMANCE: we always set -1 as file length here. The file length will e updated as soon as the
     // header gets really written
     m_header = new ShapeHeader( -1, shapeType, newMbr );
