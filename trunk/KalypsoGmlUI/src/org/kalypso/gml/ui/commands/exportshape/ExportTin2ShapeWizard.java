@@ -42,9 +42,18 @@ package org.kalypso.gml.ui.commands.exportshape;
 
 import java.nio.charset.Charset;
 
+import org.kalypso.gml.ui.extensions.FeatureSelectionTester;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
+import org.kalypso.shape.ShapeType;
+import org.kalypso.shape.dbf.IDBFValue;
+import org.kalypso.shape.deegree.GenericShapeDataFactory;
 import org.kalypso.shape.deegree.IShapeDataFactory;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
+import org.kalypsodeegree_impl.io.shpapi.dataprovider.TinValue;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
 /**
  * @author Gernot Belger
@@ -57,12 +66,40 @@ public class ExportTin2ShapeWizard extends ExportShapeWizard
   }
 
   /**
-   * @see org.kalypso.gml.ui.commands.exportshape.ExportShapeWizard#createDataFactory(org.kalypsodeegree.model.feature.Feature[],
-   *      java.nio.charset.Charset, java.lang.String)
+   * @see org.kalypso.gml.ui.commands.exportshape.ExportShapeWizard#createSignature(org.kalypsodeegree.model.feature.Feature[])
    */
   @Override
-  protected IShapeDataFactory createDataFactory( final Feature[] chosenFeatures, final Charset shapeCharset, final String coordinateSystem )
+  protected ShapeSignature createSignature( final Feature[] features )
   {
-    return new Tin2ShapeDataFactory( chosenFeatures, shapeCharset, coordinateSystem );
+    final ShapeType shapeType = ShapeType.POLYGONZ;
+
+    final IFeatureType featureType = GenericShapeDataFactory.findLeastCommonType( features );
+    final IValuePropertyType[] tinTypes = FeatureSelectionTester.findGeometryTypes( featureType, GM_TriangulatedSurface.class );
+    if( tinTypes.length == 0 )
+    {
+      // TODO: error handling
+// final String message = String.format( "Choosen features do not contains a Triangulated-Surface: %s", featureType );
+      return new ShapeSignature( shapeType, null, null );
+// throw new ShapeDataException( message );
+    }
+
+    final GMLXPath geometry = new GMLXPath( tinTypes[0].getQName() );
+
+    final IDBFValue[] featureFields = GenericShapeDataFactory.findFields( featureType );
+    final IDBFValue[] tinFields = new IDBFValue[featureFields.length];
+    for( int i = 0; i < featureFields.length; i++ )
+      tinFields[i] = new TinValue( featureFields[i] );
+
+    return new ShapeSignature( shapeType, geometry, tinFields );
+  }
+
+  /**
+   * @see org.kalypso.gml.ui.commands.exportshape.ExportShapeWizard#createDataFactory(org.kalypsodeegree.model.feature.Feature[],
+   *      java.nio.charset.Charset, java.lang.String, org.kalypso.gml.ui.commands.exportshape.ShapeSignature)
+   */
+  @Override
+  protected IShapeDataFactory createDataFactory( final Feature[] chosenFeatures, final Charset shapeCharset, final String coordinateSystem, final ShapeSignature signature )
+  {
+    return new Tin2ShapeDataFactory( chosenFeatures, shapeCharset, coordinateSystem, signature );
   }
 }

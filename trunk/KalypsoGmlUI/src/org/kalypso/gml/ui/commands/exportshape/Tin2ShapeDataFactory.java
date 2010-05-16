@@ -42,17 +42,11 @@ package org.kalypso.gml.ui.commands.exportshape;
 
 import java.nio.charset.Charset;
 
-import org.kalypso.gml.ui.extensions.FeatureSelectionTester;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.shape.IShapeData;
-import org.kalypso.shape.ShapeConst;
-import org.kalypso.shape.ShapeDataException;
+import org.kalypso.shape.ShapeType;
 import org.kalypso.shape.deegree.GM_Object2Shape;
-import org.kalypso.shape.deegree.GenericShapeDataFactory;
 import org.kalypso.shape.deegree.IShapeDataFactory;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 import org.kalypsodeegree_impl.io.shpapi.dataprovider.TriangulatedSurfaceSinglePartShapeDataProvider;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
@@ -67,33 +61,24 @@ public class Tin2ShapeDataFactory implements IShapeDataFactory
 
   private final String m_coordinateSystem;
 
-  public Tin2ShapeDataFactory( final Feature[] features, final Charset charset, final String coordinateSystem )
+  private final ShapeSignature m_signature;
+
+  public Tin2ShapeDataFactory( final Feature[] features, final Charset charset, final String coordinateSystem, final ShapeSignature signature )
   {
     m_features = features;
     m_charset = charset;
     m_coordinateSystem = coordinateSystem;
+    m_signature = signature;
   }
 
   /**
    * @see org.kalypso.gml.ui.commands.exportshape.IShapeDataFactory#createData()
    */
   @Override
-  public IShapeData createData( ) throws ShapeDataException
+  public IShapeData createData( )
   {
-    // TODO: get shape type from dialog
-    // TODO: let user choose
-    final int shapeType = ShapeConst.SHAPE_TYPE_POLYGONZ;
-
-    final IFeatureType featureType = GenericShapeDataFactory.findLeastCommonType( m_features );
-    final IValuePropertyType[] tinTypes = FeatureSelectionTester.findGeometryTypes( featureType, GM_TriangulatedSurface.class );
-
-    if( tinTypes.length == 0 )
-    {
-      final String message = String.format( "Choosen features do not contains a Triangulated-Surface: %s", featureType );
-      throw new ShapeDataException( message );
-    }
-
-    final GMLXPath geometry = new GMLXPath( tinTypes[0].getQName() );
+    final ShapeType shapeType = m_signature.getShapeType();
+    final GMLXPath geometry = m_signature.getGeometry();
     final GM_Object2Shape shapeConverter = new GM_Object2Shape( shapeType, m_coordinateSystem );
     return new TriangulatedSurfaceSinglePartShapeDataProvider( m_features, geometry, m_charset, shapeConverter );
   }

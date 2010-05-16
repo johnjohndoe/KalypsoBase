@@ -43,12 +43,16 @@ package org.kalypso.gml.ui.commands.exportshape;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.shape.IShapeData;
-import org.kalypso.shape.ShapeDataException;
-import org.kalypso.shape.dbf.DBaseException;
+import org.kalypso.shape.ShapeType;
+import org.kalypso.shape.dbf.IDBFValue;
+import org.kalypso.shape.deegree.FeatureShapeData;
+import org.kalypso.shape.deegree.GM_Object2Shape;
 import org.kalypso.shape.deegree.GenericShapeDataFactory;
 import org.kalypso.shape.deegree.IShapeDataFactory;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
 /**
  * @author Gernot Belger
@@ -61,27 +65,39 @@ public class StandardShapeDataFactory implements IShapeDataFactory
 
   private final String m_coordinateSystem;
 
-  public StandardShapeDataFactory( final Feature[] features, final Charset shapeCharset, final String coordinateSystem )
+  private final ShapeSignature m_signature;
+
+  public StandardShapeDataFactory( final Feature[] features, final Charset shapeCharset, final String coordinateSystem, final ShapeSignature signature )
   {
     m_features = features;
     m_shapeCharset = shapeCharset;
     m_coordinateSystem = coordinateSystem;
+    m_signature = signature;
   }
 
   /**
    * @see org.kalypso.shape.deegree.IShapeDataFactory#createData()
    */
   @Override
-  public IShapeData createData( ) throws ShapeDataException
+  public IShapeData createData( )
   {
-    try
-    {
-      return GenericShapeDataFactory.createDefaultData( Arrays.asList( m_features ), m_shapeCharset, m_coordinateSystem );
-    }
-    catch( final DBaseException e )
-    {
-      throw new ShapeDataException( "Failed to create shape data provider", e );
-    }
+    final IDBFValue[] fields = m_signature.getFields();
+    final GMLXPath geometry = m_signature.getGeometry();
+    final ShapeType shapeType = m_signature.getShapeType();
+    final GM_Object2Shape shapeConverter = new GM_Object2Shape( shapeType, m_coordinateSystem );
+
+    return new FeatureShapeData( Arrays.asList( m_features ), fields, geometry, m_shapeCharset, shapeConverter );
+  }
+
+  public static ShapeSignature createDefaultSignature( final Feature[] featureArray )
+  {
+    final IFeatureType type = GenericShapeDataFactory.findLeastCommonType( featureArray );
+
+    final ShapeType shapeType = GenericShapeDataFactory.findShapeType( type );
+    final GMLXPath geometry = GenericShapeDataFactory.findGeometry( type );
+    final IDBFValue[] fields = GenericShapeDataFactory.findFields( type );
+
+    return new ShapeSignature( shapeType, geometry, fields );
   }
 
 }

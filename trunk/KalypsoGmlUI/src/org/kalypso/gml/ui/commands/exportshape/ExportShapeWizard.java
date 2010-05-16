@@ -64,6 +64,10 @@ public class ExportShapeWizard extends Wizard
 
   private final FeatureSelectionPage m_selectFeaturesPage;
 
+  private final ExportShapeSignaturePage m_shapeSignaturePage;
+
+  private final ShapeSignature m_signature;
+
   public ExportShapeWizard( final IFeatureSelection featureSelection, final String fileName )
   {
     final Feature[] featureArray = FeatureSelectionHelper.getFeatures( featureSelection );
@@ -73,10 +77,19 @@ public class ExportShapeWizard extends Wizard
 
     addPage( m_selectFeaturesPage );
 
+    m_signature = createSignature( featureArray );
+    m_shapeSignaturePage = new ExportShapeSignaturePage( "exportShapeSignaturePage", m_signature );
+    addPage( m_shapeSignaturePage );
+
     m_exportShapePage = new ExportShapePage( "exportShapePage", fileName );
     addPage( m_exportShapePage );
 
     setNeedsProgressMonitor( true );
+  }
+
+  protected ShapeSignature createSignature( final Feature[] featureArray )
+  {
+    return StandardShapeDataFactory.createDefaultSignature( featureArray );
   }
 
   /**
@@ -93,7 +106,7 @@ public class ExportShapeWizard extends Wizard
     final Object[] choosen = m_selectFeaturesPage.getChoosen();
     final Feature[] chosenFeatures = Arrays.castArray( choosen, new Feature[choosen.length] );
 
-    final IShapeDataFactory shapeDataFactory = createDataFactory( chosenFeatures, shapeCharset, coordinateSystem );
+    final IShapeDataFactory shapeDataFactory = createDataFactory( chosenFeatures, shapeCharset, coordinateSystem, m_signature );
 
     final ICoreRunnableWithProgress operation = new ExportShapeOperation( shapeFileBase, shapeDataFactory, doWritePrj );
 
@@ -105,9 +118,9 @@ public class ExportShapeWizard extends Wizard
     return status.isOK();
   }
 
-  protected IShapeDataFactory createDataFactory( final Feature[] chosenFeatures, final Charset shapeCharset, final String coordinateSystem )
+  protected IShapeDataFactory createDataFactory( final Feature[] chosenFeatures, final Charset shapeCharset, final String coordinateSystem, final ShapeSignature signature )
   {
-    return new StandardShapeDataFactory( chosenFeatures, shapeCharset, coordinateSystem );
+    return new StandardShapeDataFactory( chosenFeatures, shapeCharset, coordinateSystem, signature );
   }
 
 }

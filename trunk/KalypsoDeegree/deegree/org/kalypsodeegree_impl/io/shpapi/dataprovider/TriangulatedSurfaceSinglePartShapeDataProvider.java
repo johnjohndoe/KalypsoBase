@@ -41,7 +41,7 @@ import java.util.Iterator;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.shape.IShapeData;
 import org.kalypso.shape.ShapeDataException;
-import org.kalypso.shape.dbf.DBaseException;
+import org.kalypso.shape.ShapeType;
 import org.kalypso.shape.dbf.IDBFValue;
 import org.kalypso.shape.deegree.GM_Object2Shape;
 import org.kalypso.shape.deegree.GenericShapeDataFactory;
@@ -104,22 +104,15 @@ public class TriangulatedSurfaceSinglePartShapeDataProvider implements IShapeDat
    * @see org.kalypso.shape.IShapeData#getFields()
    */
   @Override
-  public IDBFValue[] getFields( ) throws ShapeDataException
+  public IDBFValue[] getFields( )
   {
     if( m_fields == null )
     {
-      try
-      {
-        final IFeatureType featureType = GenericShapeDataFactory.findLeastCommonType( m_features );
-        final IDBFValue[] fields = GenericShapeDataFactory.findFields( featureType );
-        m_fields = new IDBFValue[fields.length];
-        for( int i = 0; i < fields.length; i++ )
-          m_fields[i] = new TinValue( fields[i] );
-      }
-      catch( final DBaseException e )
-      {
-        throw new ShapeDataException( "Unable to create DBF signature.", e ); //$NON-NLS-1$
-      }
+      final IFeatureType featureType = GenericShapeDataFactory.findLeastCommonType( m_features );
+      final IDBFValue[] fields = GenericShapeDataFactory.findFields( featureType );
+      m_fields = new IDBFValue[fields.length];
+      for( int i = 0; i < fields.length; i++ )
+        m_fields[i] = new TinValue( fields[i] );
     }
 
     return m_fields;
@@ -129,7 +122,7 @@ public class TriangulatedSurfaceSinglePartShapeDataProvider implements IShapeDat
    * @see org.kalypso.shape.IShapeData#getShapeType()
    */
   @Override
-  public int getShapeType( )
+  public ShapeType getShapeType( )
   {
     return m_gmObject2Shape.getShapeType();
   }
