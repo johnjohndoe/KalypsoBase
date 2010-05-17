@@ -30,13 +30,19 @@ import org.eclipse.core.runtime.jobs.JobChangeAdapter;
  * A job that observes a given job and calls a 'jobRunning' method while the observed job is running and a 'jobDone'
  * method when finished.<br>
  * This job registers/unregisters itself on the given job and finishs automatically when the observed job is done.
- *
+ * 
  * @author Gernot Belger
  */
 public abstract class JobObserverJob extends Job
 {
   private final IJobChangeListener m_jobListener = new JobChangeAdapter()
   {
+    @Override
+    public void sleeping( IJobChangeEvent event )
+    {
+      // System.out.println("Job was sent so sleep: " + event.getJob() );
+    }
+
     /**
      * @see org.eclipse.core.runtime.jobs.JobChangeAdapter#done(org.eclipse.core.runtime.jobs.IJobChangeEvent)
      */

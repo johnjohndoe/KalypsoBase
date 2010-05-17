@@ -1,7 +1,6 @@
 package org.kalypso.contribs.eclipse.core.runtime;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -13,12 +12,14 @@ import org.eclipse.core.runtime.Status;
  * using the ErrorDialog. If no error messages have been added to it, isOK() returns true.
  * 
  * @author schlienger
+ * @deprecated Use {@link org.eclipse.core.runtime.MultiStatus} instead.
  */
+@Deprecated
 public class MultiStatus extends Status
 {
   private final Map<String, Throwable> m_errorMessages = new HashMap<String, Throwable>();
 
-  public MultiStatus( int severity, String pluginId, int code, String message )
+  public MultiStatus( final int severity, final String pluginId, final int code, final String message )
   {
     super( severity, pluginId, code, message, null );
   }
@@ -27,7 +28,7 @@ public class MultiStatus extends Status
    * @see java.lang.Object#finalize()
    */
   @Override
-  protected void finalize() throws Throwable
+  protected void finalize( ) throws Throwable
   {
     m_errorMessages.clear();
 
@@ -37,7 +38,7 @@ public class MultiStatus extends Status
   /**
    * @return true if at least one message is available
    */
-  public boolean hasMessages()
+  public boolean hasMessages( )
   {
     return m_errorMessages.size() > 0;
   }
@@ -46,7 +47,7 @@ public class MultiStatus extends Status
    * @see org.eclipse.core.runtime.Status#isOK()
    */
   @Override
-  public boolean isOK()
+  public boolean isOK( )
   {
     return !hasMessages();
   }
@@ -55,7 +56,7 @@ public class MultiStatus extends Status
    * @see org.eclipse.core.runtime.Status#isMultiStatus()
    */
   @Override
-  public boolean isMultiStatus()
+  public boolean isMultiStatus( )
   {
     return true;
   }
@@ -64,18 +65,12 @@ public class MultiStatus extends Status
    * @see org.eclipse.core.runtime.MultiStatus#getChildren()
    */
   @Override
-  public IStatus[] getChildren()
+  public IStatus[] getChildren( )
   {
     final IStatus[] stati = new IStatus[m_errorMessages.size()];
     int i = 0;
-    for( final Iterator<Entry<String, Throwable>> it = m_errorMessages.entrySet().iterator(); it.hasNext(); )
-    {
-      final Entry<String, Throwable> entry = it.next();
-
-      stati[i] = new Status( getSeverity(), getPlugin(), getCode(), entry.getKey(), entry.getValue() );
-
-      i++;
-    }
+    for( final Entry<String, Throwable> entry : m_errorMessages.entrySet() )
+      stati[i++] = new Status( getSeverity(), getPlugin(), getCode(), entry.getKey(), entry.getValue() );
 
     return stati;
   }
@@ -84,7 +79,7 @@ public class MultiStatus extends Status
    * @see org.eclipse.core.runtime.Status#getException()
    */
   @Override
-  public Throwable getException()
+  public Throwable getException( )
   {
     return new Exception( "Siehe details" );
   }

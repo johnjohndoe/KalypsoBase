@@ -42,6 +42,7 @@ package org.kalypso.contribs.eclipse.core.runtime;
 
 import java.util.Date;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 
 /**
@@ -49,6 +50,22 @@ import org.eclipse.core.runtime.Status;
  */
 public class StatusWithTime extends Status implements IStatusWithTime
 {
+  public static IStatusWithTime create( final IStatus status, final Date date )
+  {
+    if( status.isMultiStatus() )
+      return new MultiStatusWithTime( status, date );
+
+    return new StatusWithTime( status, date );
+  }
+
+  public static IStatusWithTime create( final IStatus status, final String message, final Date date )
+  {
+    if( status.isMultiStatus() )
+      return new MultiStatusWithTime( status, message, date );
+
+    return new StatusWithTime( status, message, date );
+  }
+
   private final Date m_time;
 
   public StatusWithTime( final int severity, final String pluginId, final int code, final String message, final Date time, final Throwable exception )
@@ -68,6 +85,20 @@ public class StatusWithTime extends Status implements IStatusWithTime
   public StatusWithTime( final int severity, final String pluginId, final String message, final Date time )
   {
     super( severity, pluginId, message );
+
+    m_time = time;
+  }
+
+  /* default */StatusWithTime( final IStatus status, final Date time )
+  {
+    super( status.getSeverity(), status.getPlugin(), status.getCode(), status.getMessage(), status.getException() );
+
+    m_time = time;
+  }
+
+  /* default */StatusWithTime( final IStatus status, final String message, final Date time )
+  {
+    super( status.getSeverity(), status.getPlugin(), status.getCode(), message, status.getException() );
 
     m_time = time;
   }
