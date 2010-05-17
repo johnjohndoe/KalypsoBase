@@ -35,10 +35,14 @@
  */
 package org.kalypsodeegree_impl.gml.binding.commons;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Object;
 
@@ -54,7 +58,7 @@ public class StatusCollection extends FeatureWrapperCollection<IGeoStatus> imple
    * 
    * @param featureCol
    */
-  public StatusCollection( Feature featureCol )
+  public StatusCollection( final Feature featureCol )
   {
     super( featureCol, IGeoStatus.class, QNAME_PROP_STATUS_MEMBER );
   }
@@ -62,7 +66,7 @@ public class StatusCollection extends FeatureWrapperCollection<IGeoStatus> imple
   /**
    * @see org.kalypsodeegree_impl.gml.binding.commons.IStatusCollection#createGeoStatus(org.eclipse.core.runtime.IStatus)
    */
-  public IGeoStatus createGeoStatus( IStatus status )
+  public IGeoStatus createGeoStatus( final IStatus status )
   {
     return createGeoStatus( status, null, null );
   }
@@ -71,7 +75,7 @@ public class StatusCollection extends FeatureWrapperCollection<IGeoStatus> imple
    * @see org.kalypsodeegree_impl.gml.binding.commons.IStatusCollection#createGeoStatus(org.eclipse.core.runtime.IStatus,
    *      org.kalypsodeegree.model.geometry.GM_Object, java.util.Date)
    */
-  public IGeoStatus createGeoStatus( IStatus status, GM_Object location, Date time )
+  public IGeoStatus createGeoStatus( final IStatus status, final GM_Object location, final Date time )
   {
     if( status == null )
       return null;
@@ -85,7 +89,7 @@ public class StatusCollection extends FeatureWrapperCollection<IGeoStatus> imple
   /**
    * @see org.kalypsodeegree_impl.gml.binding.commons.IStatusCollection#createGeoStatus(org.kalypsodeegree_impl.gml.binding.commons.IGeoStatus)
    */
-  public IGeoStatus createGeoStatus( IGeoStatus geoStatus )
+  public IGeoStatus createGeoStatus( final IGeoStatus geoStatus )
   {
     if( geoStatus == null )
       return null;
@@ -100,10 +104,10 @@ public class StatusCollection extends FeatureWrapperCollection<IGeoStatus> imple
    * @see org.kalypsodeegree_impl.gml.binding.commons.IStatusCollection#createGeoStatus(int, java.lang.String, int,
    *      java.lang.String, java.lang.Throwable, org.kalypsodeegree.model.geometry.GM_Object, java.util.Date)
    */
-  public IGeoStatus createGeoStatus( int severity, String pluginId, int code, String message, Throwable exception, GM_Object location, Date time )
+  public IGeoStatus createGeoStatus( final int severity, final String pluginId, final int code, final String message, final Throwable exception, final GM_Object location, final Date time )
   {
     /* Add a new feature. */
-    IGeoStatus geoStatus = addNew( IGeoStatus.QNAME );
+    final IGeoStatus geoStatus = addNew( IGeoStatus.QNAME );
 
     /* Set its properties. */
     geoStatus.setSeverity( severity );
@@ -122,10 +126,10 @@ public class StatusCollection extends FeatureWrapperCollection<IGeoStatus> imple
     return geoStatus;
   }
 
-  private IGeoStatus createMultiGeoStatus( IStatus status, GM_Object location, Date time )
+  private IGeoStatus createMultiGeoStatus( final IStatus status, final GM_Object location, final Date time )
   {
     /* Add a new feature. */
-    IGeoStatus multiGeoStatus = addNew( IGeoStatus.QNAME );
+    final IGeoStatus multiGeoStatus = addNew( IGeoStatus.QNAME );
 
     /* Set its properties. */
     multiGeoStatus.setSeverity( status.getSeverity() );
@@ -142,20 +146,20 @@ public class StatusCollection extends FeatureWrapperCollection<IGeoStatus> imple
       multiGeoStatus.setTime( new Date() );
 
     /* Get the children. */
-    IStatus[] children = status.getChildren();
+    final IStatus[] children = status.getChildren();
     for( int i = 0; i < children.length; i++ )
       addToMultiGeoStatus( multiGeoStatus, children[i], location, time );
 
     return multiGeoStatus;
   }
 
-  private void addToMultiGeoStatus( IGeoStatus parent, IStatus status, GM_Object location, Date time )
+  private void addToMultiGeoStatus( final IGeoStatus parent, final IStatus status, final GM_Object location, final Date time )
   {
     /* If the given status is no multi status, simply add a new geo status and return. */
     if( !status.isMultiStatus() )
     {
       /* Add a new feature. */
-      IGeoStatus geoStatus = parent.addNew( IGeoStatus.QNAME );
+      final IGeoStatus geoStatus = parent.addNew( IGeoStatus.QNAME );
 
       /* Set its properties. */
       geoStatus.setSeverity( status.getSeverity() );
@@ -175,7 +179,7 @@ public class StatusCollection extends FeatureWrapperCollection<IGeoStatus> imple
     }
 
     /* Add a new feature. */
-    IGeoStatus multiGeoStatus = parent.addNew( IGeoStatus.QNAME );
+    final IGeoStatus multiGeoStatus = parent.addNew( IGeoStatus.QNAME );
 
     /* Set its properties. */
     multiGeoStatus.setSeverity( status.getSeverity() );
@@ -192,15 +196,15 @@ public class StatusCollection extends FeatureWrapperCollection<IGeoStatus> imple
       multiGeoStatus.setTime( new Date() );
 
     /* Get the children. */
-    IStatus[] children = status.getChildren();
+    final IStatus[] children = status.getChildren();
     for( int i = 0; i < children.length; i++ )
       addToMultiGeoStatus( multiGeoStatus, children[i], location, time );
   }
 
-  private IGeoStatus createMultiGeoStatus( IGeoStatus geoStatus )
+  private IGeoStatus createMultiGeoStatus( final IGeoStatus geoStatus )
   {
     /* Add a new feature. */
-    IGeoStatus multiGeoStatus = addNew( IGeoStatus.QNAME );
+    final IGeoStatus multiGeoStatus = addNew( IGeoStatus.QNAME );
 
     /* Set its properties. */
     multiGeoStatus.setSeverity( geoStatus.getSeverity() );
@@ -211,27 +215,27 @@ public class StatusCollection extends FeatureWrapperCollection<IGeoStatus> imple
     multiGeoStatus.setLocation( geoStatus.getLocation() );
 
     /* If a time was provided, use it. Otherwise set the current time. */
-    Date time = geoStatus.getTime();
+    final Date time = geoStatus.getTime();
     if( time != null )
       multiGeoStatus.setTime( time );
     else
       multiGeoStatus.setTime( new Date() );
 
     /* Get the children. */
-    IStatus[] children = geoStatus.getChildren();
+    final IStatus[] children = geoStatus.getChildren();
     for( int i = 0; i < children.length; i++ )
       addToMultiGeoStatus( multiGeoStatus, (IGeoStatus) children[i] );
 
     return multiGeoStatus;
   }
 
-  private void addToMultiGeoStatus( IGeoStatus parent, IGeoStatus geoStatus )
+  private void addToMultiGeoStatus( final IGeoStatus parent, final IGeoStatus geoStatus )
   {
     /* If the given geo status is no multi geo status, simply add a new geo status and return. */
     if( !geoStatus.isMultiStatus() )
     {
       /* Add a new feature. */
-      IGeoStatus children = parent.addNew( IGeoStatus.QNAME );
+      final IGeoStatus children = parent.addNew( IGeoStatus.QNAME );
 
       /* Set its properties. */
       children.setSeverity( geoStatus.getSeverity() );
@@ -242,7 +246,7 @@ public class StatusCollection extends FeatureWrapperCollection<IGeoStatus> imple
       children.setLocation( geoStatus.getLocation() );
 
       /* If a time was provided, use it. Otherwise set the current time. */
-      Date time = geoStatus.getTime();
+      final Date time = geoStatus.getTime();
       if( time != null )
         children.setTime( time );
       else
@@ -252,7 +256,7 @@ public class StatusCollection extends FeatureWrapperCollection<IGeoStatus> imple
     }
 
     /* Add a new feature. */
-    IGeoStatus multiGeoStatus = parent.addNew( IGeoStatus.QNAME );
+    final IGeoStatus multiGeoStatus = parent.addNew( IGeoStatus.QNAME );
 
     /* Set its properties. */
     multiGeoStatus.setSeverity( geoStatus.getSeverity() );
@@ -263,15 +267,38 @@ public class StatusCollection extends FeatureWrapperCollection<IGeoStatus> imple
     multiGeoStatus.setLocation( geoStatus.getLocation() );
 
     /* If a time was provided, use it. Otherwise set the current time. */
-    Date time = geoStatus.getTime();
+    final Date time = geoStatus.getTime();
     if( time != null )
       multiGeoStatus.setTime( time );
     else
       multiGeoStatus.setTime( new Date() );
 
     /* Get the children. */
-    IStatus[] children = geoStatus.getChildren();
+    final IStatus[] children = geoStatus.getChildren();
     for( int i = 0; i < children.length; i++ )
       addToMultiGeoStatus( multiGeoStatus, (IGeoStatus) children[i] );
   }
+
+  public final IStatus toStatus( )
+  {
+    final List<IStatus> children = new ArrayList<IStatus>();
+
+    final FeatureList list = this.getWrappedList();
+    for( final Object object : list )
+    {
+      if( !(object instanceof Feature) )
+        continue;
+
+      final GeoStatus status = new GeoStatus( (Feature) object );
+      children.add( status );
+    }
+
+    if( children.isEmpty() )
+      return null;
+    else if( children.size() == 1 )
+      return children.get( 0 );
+
+    return StatusUtilities.createStatus( children, "Multistatus" );
+  }
+
 }
