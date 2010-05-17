@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.shape.dbf;
 
-import org.kalypso.shape.dbf.DBFField;
-
 /**
  * @author Gernot Belger
  */
@@ -49,9 +47,12 @@ public abstract class AbstractDBFValue implements IDBFValue
 {
   private final DBFField m_field;
 
-  public AbstractDBFValue( final DBFField field )
+  private final String m_label;
+
+  public AbstractDBFValue( final String label, final DBFField field )
   {
     m_field = field;
+    m_label = label;
   }
 
   /**
@@ -61,6 +62,15 @@ public abstract class AbstractDBFValue implements IDBFValue
   public DBFField getField( )
   {
     return m_field;
+  }
+
+  /**
+   * @see org.kalypso.shape.dbf.IDBFValue#getLabel()
+   */
+  @Override
+  public String getLabel( )
+  {
+    return m_label;
   }
 
 }

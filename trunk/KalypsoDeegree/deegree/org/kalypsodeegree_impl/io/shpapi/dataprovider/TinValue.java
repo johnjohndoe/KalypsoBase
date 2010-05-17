@@ -74,4 +74,13 @@ public class TinValue implements IDBFValue
     return m_delegate.getValue( feature );
   }
 
+  /**
+   * @see org.kalypso.shape.dbf.IDBFValue#getLabel()
+   */
+  @Override
+  public String getLabel( )
+  {
+    return m_delegate.getLabel();
+  }
+
 }

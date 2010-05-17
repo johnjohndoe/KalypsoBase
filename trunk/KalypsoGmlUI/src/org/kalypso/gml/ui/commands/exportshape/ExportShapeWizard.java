@@ -64,7 +64,7 @@ public class ExportShapeWizard extends Wizard
 
   private final FeatureSelectionPage m_selectFeaturesPage;
 
-  private final ExportShapeSignaturePage m_shapeSignaturePage;
+// private final ExportShapeSignaturePage m_shapeSignaturePage;
 
   private final ShapeSignature m_signature;
 
@@ -78,8 +78,9 @@ public class ExportShapeWizard extends Wizard
     addPage( m_selectFeaturesPage );
 
     m_signature = createSignature( featureArray );
-    m_shapeSignaturePage = new ExportShapeSignaturePage( "exportShapeSignaturePage", m_signature );
-    addPage( m_shapeSignaturePage );
+    // FIXME: commented out as this is not yet finished
+// m_shapeSignaturePage = new ExportShapeSignaturePage( "exportShapeSignaturePage", m_signature );
+// addPage( m_shapeSignaturePage );
 
     m_exportShapePage = new ExportShapePage( "exportShapePage", fileName );
     addPage( m_exportShapePage );

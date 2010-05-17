@@ -38,6 +38,7 @@ package org.kalypsodeegree_impl.model.feature.gmlxpath;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.xelement.IXElement;
@@ -66,6 +67,14 @@ public final class GMLXPathUtilities
   public static Object query( final GMLXPath xPath, final Feature feature ) throws GMLXPathException
   {
     return getResultForSegment( xPath, feature, 0, false );
+  }
+
+  /**
+   * query xPath for Feature
+   */
+  public static Object query( final GMLXPath xPath, final IFeatureType featureType ) throws GMLXPathException
+  {
+    return getResultForSegment( xPath, featureType, 0, true );
   }
 
   /**
