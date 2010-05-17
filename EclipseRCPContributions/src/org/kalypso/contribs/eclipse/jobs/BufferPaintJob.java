@@ -93,8 +93,9 @@ public class BufferPaintJob extends Job
   /**
    * Cancels the job and releases the buffered image.
    */
-  public void dispose( )
+  public synchronized void dispose( )
   {
+  //  System.out.println("Dispose paint job");
     cancel();
 
     if( m_image != null )
@@ -114,7 +115,7 @@ public class BufferPaintJob extends Job
    *
    * @return The buffered image; <code>null</code>, if the job has not yet started.
    */
-  public BufferedImage getImage( )
+  public synchronized BufferedImage getImage( )
   {
     return m_image;
   }
@@ -125,8 +126,13 @@ public class BufferPaintJob extends Job
   @Override
   public IStatus run( final IProgressMonitor monitor )
   {
+   // System.out.println("Paint job running");
+
     if( m_paintable == null )
+    {
+      //System.out.println("BufferPaintJob: paintable was null");
       return Status.OK_STATUS;
+    }
 
     final SubMonitor progress = SubMonitor.convert( monitor, "Painting buffer", 100 ); //$NON-NLS-1$
 
@@ -142,7 +148,10 @@ public class BufferPaintJob extends Job
         // if image is null, workbench is probably shutting down,
         // just return without comment
         if( gr == null )
+        {
+      //    System.out.println("BufferPaintJob: image was null");
           return Status.OK_STATUS;
+        }
 
         ProgressUtilities.worked( progress, 10 );
 
@@ -183,10 +192,14 @@ public class BufferPaintJob extends Job
   private synchronized Graphics2D createGraphics( final Point size )
   {
     /* Only recreate image, if width/height does not fit any more */
-    if( m_image != null )
+    if( m_image != null && m_image.getWidth() != size.x && m_image.getHeight() != size.y )
+    {
       m_imageCache.release( m_image );
+      m_image = null;
+    }
 
-    ceateImage( size );
+    if( m_image == null )
+      ceateImage( size );
 
     final Graphics2D gr = m_image.createGraphics();
     if( gr == null )
@@ -208,7 +221,7 @@ public class BufferPaintJob extends Job
    * Default behaviour is to set activate anti-aliasing (normal and text).<br>
    * Overwrite to change.
    */
-  protected void configureGraphics( final Graphics2D gr )
+  private void configureGraphics( final Graphics2D gr )
   {
     gr.setRenderingHint( RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON );
     gr.setRenderingHint( RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON );
