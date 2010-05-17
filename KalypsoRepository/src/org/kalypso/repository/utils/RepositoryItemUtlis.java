@@ -252,6 +252,19 @@ public final class RepositoryItemUtlis
     return false;
   }
 
+  /**
+   * @return wiski://HVZ_Modelle_Elbe.Elbe_Prio_1 -> will return true
+   */
+  public static boolean isModelItem( final IRepositoryItem item )
+  {
+    final String identifier = item.getIdentifier();
+    final String[] parts = identifier.split( "\\." );
+    if( parts.length == 1 )
+      return true;
+
+    return false;
+  }
+
   public static boolean isZrxpItem( final String identifier )
   {
     return identifier.contains( ZRXP_ITEM_IDENTIFIER );
