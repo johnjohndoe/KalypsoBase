@@ -42,6 +42,7 @@ package org.kalypso.utils.log;
 
 import java.io.File;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.ILogListener;
 import org.eclipse.core.runtime.IStatus;
@@ -86,6 +87,11 @@ public class GeoStatusLog implements ILog
     m_statusCollection = null;
     if( m_workspace != null )
       m_statusCollection = (IStatusCollection) m_workspace.getRootFeature().getAdapter( IStatusCollection.class );
+  }
+
+  public GeoStatusLog( final IFile iFile )
+  {
+    this( iFile.getLocation().toFile() );
   }
 
   /**
