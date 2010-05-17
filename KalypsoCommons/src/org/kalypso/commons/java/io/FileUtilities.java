@@ -800,4 +800,16 @@ public class FileUtilities
 
     return files;
   }
+  
+   public static void deleteQuitly( final File file )
+  {
+    try
+    {
+      FileUtils.forceDelete( file );
+    }
+    catch( final IOException e )
+    {
+      KalypsoCommonsPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+    }
+  }
 }
