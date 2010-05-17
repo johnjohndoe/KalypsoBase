@@ -230,7 +230,8 @@ public class PropertyIsBetweenOperation extends ComparisonOperation
     if( evaluate instanceof Date )
       return new Long( ((Date) evaluate).getTime() );
 
-    throw new FilterEvaluationException( "PropertyIsBetweenOperation can only be applied to numerical expressions!" );
+    final String msg = String.format( "PropertyIsBetweenOperation can only be applied to numerical expressions: %s", evaluate );
+    throw new FilterEvaluationException( msg );
   }
 
   /**

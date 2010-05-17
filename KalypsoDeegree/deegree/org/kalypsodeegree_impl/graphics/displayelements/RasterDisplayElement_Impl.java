@@ -197,7 +197,8 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
     final GM_Surface< ? > gridSurface = grid.getSurface( targetCRS );
 
     // Experimental: change interpolation method for better rendering; is quite slow however
-    final GeoGridUtilities.Interpolation interpolation = Interpolation.bilinear;
+    // final GeoGridUtilities.Interpolation interpolation = Interpolation.bilinear;
+    final GeoGridUtilities.Interpolation interpolation = Interpolation.nearest;
 
     final Composite oldAlphaComposite = g.getComposite();
     try
@@ -229,7 +230,7 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
 
     /* The width of the envelope (in pixel) on the screen. */
     final double gridPixelWidthX = projection.getDestX( gridEnvelope.getMaxX() ) - projection.getDestX( gridEnvelope.getMinX() );
-    final double gridPixelWidthY = projection.getDestY( gridEnvelope.getMaxY() ) - projection.getDestX( gridEnvelope.getMinY() );
+    final double gridPixelWidthY = projection.getDestY( gridEnvelope.getMaxY() ) - projection.getDestY( gridEnvelope.getMinY() );
 
     /* The cell width (in pixel). */
     final double cellPixelWidthX = gridPixelWidthX / grid.getSizeX();
@@ -273,8 +274,8 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
       paintCellWise( g, grid, projection, targetCRS, clusterSize, clippedMinCell, clippedMaxCell, progress );
 
     /* DEBUG: This can be used to paint the grid cells and its center point. */
-    // paintCells( g, grid, projection, targetCRS, normalizedMinCell, normalizedMaxCell, true, true, progress.newChild(
-    // 1 ) );
+    // paintCells( g, grid, projection, targetCRS, normalizedMinCell, normalizedMaxCell, true, true, new
+    // NullProgressMonitor() );
   }
 
   /**
@@ -293,7 +294,7 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
     final int screenYto = (int) projection.getDestY( env.getMinY() ) + 1;
 
     // Split up into tiles...
-    // TODO: check, if this is ok in combination with the cahced-grid
+    // TODO: check, if this is ok in combination with the cached-grid
     final int tileSizeX = 100;
     final int tileSizeY = 100;
 
@@ -406,12 +407,12 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
 
     // First Slope ...
     final double x = z * // 
-    (values[i - 1][j - 1] + values[i - 1][j] + values[i - 1][j] + values[i - 1][j + 1] - values[i + 1][j - 1] - values[i + 1][j] - values[i + 1][j] - values[i + 1][j + 1]) //
-    / (8.0 * xres * scale);
+        (values[i - 1][j - 1] + values[i - 1][j] + values[i - 1][j] + values[i - 1][j + 1] - values[i + 1][j - 1] - values[i + 1][j] - values[i + 1][j] - values[i + 1][j + 1]) //
+        / (8.0 * xres * scale);
 
     final double y = z * //
-    (values[i - 1][j + 1] + values[i][j + 1] + values[i][j + 1] + values[i + 1][j + 1] - values[i - 1][j - 1] - values[i][j - 1] - values[i][j - 1] - values[i + 1][j - 1]) //
-    / (8.0 * yres * scale);
+        (values[i - 1][j + 1] + values[i][j + 1] + values[i][j + 1] + values[i + 1][j + 1] - values[i - 1][j - 1] - values[i][j - 1] - values[i][j - 1] - values[i + 1][j - 1]) //
+        / (8.0 * yres * scale);
 
     final double slope = 90.0 - Math.toDegrees( Math.atan( Math.sqrt( x * x + y * y ) ) );
 
@@ -420,8 +421,8 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
 
     // ... then the shade value
     final double cang = Math.sin( Math.toRadians( alt ) ) * Math.sin( Math.toRadians( slope ) ) + //
-    Math.cos( Math.toRadians( alt ) ) * Math.cos( Math.toRadians( slope ) ) //
-    * Math.cos( Math.toRadians( az - 90.0 ) - aspect );
+        Math.cos( Math.toRadians( alt ) ) * Math.cos( Math.toRadians( slope ) ) //
+        * Math.cos( Math.toRadians( az - 90.0 ) - aspect );
 
     if( cang <= 0.0 )
       return 1.0;
@@ -719,9 +720,9 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
       final Graphic graphic = StyleFactory.createGraphic( null, mark, 1, 2, 0 );
       centerPointSymbolizer.setGraphic( graphic );
 
-      for( int x = minCell.x - 1; x < maxCell.x + 1; x++ )
+      for( int x = minCell.x; x < maxCell.x; x++ )
       {
-        for( int y = minCell.y - 1; y < maxCell.y + 1; y++ )
+        for( int y = minCell.y; y < maxCell.y; y++ )
         {
           if( cells )
           {
