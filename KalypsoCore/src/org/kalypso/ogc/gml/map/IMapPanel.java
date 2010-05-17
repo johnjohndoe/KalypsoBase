@@ -65,6 +65,7 @@ public interface IMapPanel extends ISelectionProvider
 
   void addPaintListener( final IMapPanelPaintListener pl );
 
+  @Override
   void addSelectionChangedListener( final ISelectionChangedListener listener );
 
   void dispose( );
@@ -79,6 +80,7 @@ public interface IMapPanel extends ISelectionProvider
 
   GeoTransform getProjection( );
 
+  @Override
   ISelection getSelection( );
 
   IFeatureSelectionManager getSelectionManager( );
@@ -89,6 +91,7 @@ public interface IMapPanel extends ISelectionProvider
 
   void removePaintListener( final IMapPanelPaintListener pl );
 
+  @Override
   void removeSelectionChangedListener( final ISelectionChangedListener listener );
 
   /**
@@ -118,6 +121,7 @@ public interface IMapPanel extends ISelectionProvider
 
   void setMessage( final String message );
 
+  @Override
   void setSelection( final ISelection selection );
 
   ExtentHistory getExtentHistory( );
