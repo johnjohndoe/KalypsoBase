@@ -47,14 +47,19 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
 import org.kalypso.shape.ShapeType;
 
 /**
@@ -142,7 +147,45 @@ public class ExportShapeSignaturePage extends WizardPage
   private Control createFieldsControl( final Composite parent )
   {
     final Group group = new Group( parent, SWT.NONE );
+    group.setLayout( new FillLayout() );
     group.setText( "Fields" );
+
+    final TableViewer tableViewer = new TableViewer( group, SWT.BORDER );
+
+    tableViewer.setContentProvider( new ArrayContentProvider() );
+    tableViewer.setLabelProvider( new ViewerColumLabelProvider( tableViewer ) );
+
+    final TableViewerColumn nameColumn = new TableViewerColumn( tableViewer, SWT.LEFT );
+
+    nameColumn.setLabelProvider( new FieldNameLabelProvider() );
+    nameColumn.getColumn().setText( "Field Name" );
+    nameColumn.getColumn().setWidth( 100 );
+    nameColumn.setEditingSupport( new FieldNameEditingSupport( tableViewer ) );
+
+    final TableViewerColumn typeColumn = new TableViewerColumn( tableViewer, SWT.LEFT );
+    typeColumn.setLabelProvider( new FieldTypeLabelProvider() );
+    typeColumn.getColumn().setText( "Field Type" );
+
+    final TableViewerColumn lengthColumn = new TableViewerColumn( tableViewer, SWT.LEFT );
+    lengthColumn.setLabelProvider( new FieldLengthLabelProvider() );
+    lengthColumn.getColumn().setText( "Field Length" );
+
+    final TableViewerColumn decimalColumn = new TableViewerColumn( tableViewer, SWT.LEFT );
+    decimalColumn.setLabelProvider( new FieldDecimalsLabelProvider() );
+    decimalColumn.getColumn().setText( "Field Decimals" );
+
+    final TableViewerColumn sourceColumn = new TableViewerColumn( tableViewer, SWT.LEFT );
+    sourceColumn.setLabelProvider( new FieldSourceLabelProvider() );
+    sourceColumn.getColumn().setText( "Source" );
+
+    tableViewer.setInput( m_signature.getFields() );
+
+    final Table table = tableViewer.getTable();
+    table.setHeaderVisible( true );
+    final TableColumn[] columns = table.getColumns();
+    for( final TableColumn tableColumn : columns )
+      tableColumn.pack();
+
     return group;
   }
 

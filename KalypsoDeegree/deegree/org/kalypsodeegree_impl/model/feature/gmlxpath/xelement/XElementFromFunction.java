@@ -47,17 +47,16 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.IGMLXPathFunction;
  */
 public class XElementFromFunction extends AbstractXElement
 {
-
   private final IGMLXPathFunction m_function;
 
   private final IXElement m_argumentXElement;
 
-  public XElementFromFunction( IGMLXPathFunction function )
+  public XElementFromFunction( final IGMLXPathFunction function )
   {
     this( function, null );
   }
 
-  public XElementFromFunction( IGMLXPathFunction function, IXElement argumentXElement )
+  public XElementFromFunction( final IGMLXPathFunction function, final IXElement argumentXElement )
   {
     m_function = function;
     m_argumentXElement = argumentXElement;
@@ -68,7 +67,7 @@ public class XElementFromFunction extends AbstractXElement
    * @see org.kalypsodeegree_impl.model.feature.xpath.AbstractXElement#evaluateOther(java.lang.Object, boolean)
    */
   @Override
-  public Object evaluateOther( Object context, boolean featureTypeLevel ) throws GMLXPathException
+  public Object evaluateOther( final Object context, final boolean featureTypeLevel ) throws GMLXPathException
   {
     if( context instanceof GMLWorkspace )
     {
@@ -83,7 +82,7 @@ public class XElementFromFunction extends AbstractXElement
    *      boolean)
    */
   @Override
-  public Object evaluateFeature( Feature contextFeature, boolean featureTypeLevel ) throws GMLXPathException
+  public Object evaluateFeature( final Feature contextFeature, final boolean featureTypeLevel ) throws GMLXPathException
   {
     return m_function.evaluate( contextFeature, m_argumentXElement, featureTypeLevel );
   }

@@ -38,34 +38,33 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.shape.deegree;
+package org.kalypso.gml.ui.commands.exportshape;
 
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.shape.dbf.DBFField;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
+import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.kalypso.shape.ShapeDataException;
+import org.kalypso.shape.dbf.IDBFValue;
 
 /**
- * @author Gernot Belger
+ * @author Gernot
  */
-public class FeatureNameValue extends FeatureValue
+public class FieldNameLabelProvider extends ColumnLabelProvider
 {
-  public FeatureNameValue( final IFeatureType type, final DBFField field )
-  {
-    super( type, field, new GMLXPath( Feature.QN_NAME ) );
-  }
-
   /**
-   * @see org.kalypso.model.wspm.tuhh.ui.export.shape.IDBFValue#getValue(java.lang.Object)
+   * @see org.eclipse.jface.viewers.ColumnLabelProvider#getText(java.lang.Object)
    */
   @Override
-  public Object getValue( final Object element )
+  public String getText( final Object element )
   {
-    final Feature feature = (Feature) element;
-    if( feature == null )
-      return null;
-
-    return feature.getName();
+    try
+    {
+      final IDBFValue value = (IDBFValue) element;
+      return value.getField().getName();
+    }
+    catch( final ShapeDataException e )
+    {
+      e.printStackTrace();
+      return e.getLocalizedMessage();
+    }
   }
 
 }

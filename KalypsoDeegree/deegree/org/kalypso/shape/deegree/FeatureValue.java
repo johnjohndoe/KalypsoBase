@@ -40,6 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.shape.deegree;
 
+import org.kalypso.gmlschema.annotation.AnnotationUtilities;
+import org.kalypso.gmlschema.annotation.IAnnotation;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.shape.ShapeDataException;
 import org.kalypso.shape.dbf.AbstractDBFValue;
 import org.kalypso.shape.dbf.DBFField;
@@ -55,11 +59,32 @@ public class FeatureValue extends AbstractDBFValue
 {
   private final GMLXPath m_path;
 
-  public FeatureValue( final DBFField field, final GMLXPath path )
+  public FeatureValue( final IFeatureType type, final DBFField field, final GMLXPath path )
   {
-    super( field );
+    super( labelFromType( type, path ), field );
 
     m_path = path;
+  }
+
+  private static String labelFromType( final IFeatureType type, final GMLXPath path )
+  {
+    try
+    {
+      final Object result = GMLXPathUtilities.query( path, type );
+      if( result instanceof IPropertyType )
+      {
+        final IPropertyType pt = (IPropertyType) result;
+        final String localPart = pt.getQName().getLocalPart();
+        return AnnotationUtilities.getAnnotation( pt.getAnnotation(), localPart, IAnnotation.ANNO_NAME );
+      }
+      else
+        return String.format( "XPath does not evaluate to property: %s", path );
+    }
+    catch( final GMLXPathException e )
+    {
+      e.printStackTrace();
+      return e.getLocalizedMessage();
+    }
   }
 
   /**
@@ -79,5 +104,4 @@ public class FeatureValue extends AbstractDBFValue
       throw new ShapeDataException( message, e );
     }
   }
-
 }

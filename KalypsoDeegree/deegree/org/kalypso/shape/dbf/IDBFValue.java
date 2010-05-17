@@ -50,4 +50,7 @@ public interface IDBFValue
   DBFField getField( ) throws ShapeDataException;
 
   Object getValue( Object element ) throws ShapeDataException;
+
+  /** Human readable name of this field. */
+  String getLabel( );
 }

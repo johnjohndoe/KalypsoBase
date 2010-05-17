@@ -38,39 +38,53 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.shape.dbf;
+package org.kalypso.gml.ui.commands.exportshape;
+
+import org.eclipse.jface.viewers.BaseLabelProvider;
+import org.eclipse.jface.viewers.CellLabelProvider;
+import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.ColumnViewer;
+import org.eclipse.jface.viewers.ITableLabelProvider;
+import org.eclipse.swt.graphics.Image;
 
 /**
- * @author Gernot Belger
+ * FIXME: Generalize and add other stuff that can be fetched from column label providers (tooltip, colors, ...)
+ * 
+ * @author belger
  */
-public abstract class AbstractDBFValue implements IDBFValue
+public class ViewerColumLabelProvider extends BaseLabelProvider implements ITableLabelProvider
 {
-  private final DBFField m_field;
+  private final ColumnViewer m_viewer;
 
-  private final String m_label;
-
-  public AbstractDBFValue( final String label, final DBFField field )
+  public ViewerColumLabelProvider( final ColumnViewer viewer )
   {
-    m_field = field;
-    m_label = label;
+    m_viewer = viewer;
   }
 
   /**
-   * @see org.kalypso.model.wspm.tuhh.ui.export.shape.IDBFValue#getField()
+   * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang.Object, int)
    */
   @Override
-  public DBFField getField( )
+  public Image getColumnImage( final Object element, final int columnIndex )
   {
-    return m_field;
+    final CellLabelProvider labelProvider = m_viewer.getLabelProvider( columnIndex );
+    if( labelProvider instanceof ColumnLabelProvider )
+      return ((ColumnLabelProvider) labelProvider).getImage( element );
+
+    return null;
   }
 
   /**
-   * @see org.kalypso.shape.dbf.IDBFValue#getLabel()
+   * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.lang.Object, int)
    */
   @Override
-  public String getLabel( )
+  public String getColumnText( final Object element, final int columnIndex )
   {
-    return m_label;
+    final CellLabelProvider labelProvider = m_viewer.getLabelProvider( columnIndex );
+    if( labelProvider instanceof ColumnLabelProvider )
+      return ((ColumnLabelProvider) labelProvider).getText( element );
+
+    return "---";
   }
 
 }

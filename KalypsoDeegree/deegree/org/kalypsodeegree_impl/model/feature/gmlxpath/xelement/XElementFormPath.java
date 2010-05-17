@@ -136,7 +136,25 @@ public class XElementFormPath extends AbstractXElement
       final GMLWorkspace gmlWorkspace = (GMLWorkspace) context;
       return evaluateFeature( gmlWorkspace.getRootFeature(), featureTypeLevel );
     }
+
+    if( context instanceof IFeatureType )
+      return evaluateFeatureType( (IFeatureType) context );
+
+    if( context instanceof IRelationType )
+    {
+      final IRelationType relationType = (IRelationType) context;
+      return evaluateFeatureType( relationType.getTargetFeatureType() );
+    }
+
     return null;
+  }
+
+  private Object evaluateFeatureType( final IFeatureType featureType )
+  {
+    if( m_propName == QNAME_ALL )
+      return featureType.getProperties();
+
+    return getPropertyType( featureType, m_propName );
   }
 
   public QName getQName( )

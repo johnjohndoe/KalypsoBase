@@ -40,7 +40,7 @@ import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathException;
 
 /**
- * abstract Class intended to be subclassed by implementors of XElements
+ * Abstract Class intended to be subclassed by implementors of XElements
  * 
  * @author doemming
  */
@@ -58,6 +58,7 @@ public abstract class AbstractXElement implements IXElement
     }
     else if( context instanceof Feature )
       return evaluateFeature( (Feature) context, featureTypeLevel );
+
     return evaluateOther( context, featureTypeLevel );
   }
 

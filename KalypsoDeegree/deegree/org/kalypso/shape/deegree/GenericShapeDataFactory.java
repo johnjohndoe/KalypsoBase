@@ -49,6 +49,8 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
+import javax.xml.namespace.QName;
+
 import org.kalypso.gmlschema.builder.GeometryPropertyBuilder;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -103,8 +105,9 @@ public class GenericShapeDataFactory
         final DBFField field = findField( element );
         if( field != null )
         {
-          final GMLXPath path = new GMLXPath( element.getQName() );
-          fields.add( new FeatureValue( field, path ) );
+          final QName qName = element.getQName();
+          final GMLXPath path = new GMLXPath( qName );
+          fields.add( new FeatureValue( type, field, path ) );
         }
       }
       catch( final DBaseException e )
