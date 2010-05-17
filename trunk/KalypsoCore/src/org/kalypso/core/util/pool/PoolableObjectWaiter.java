@@ -35,8 +35,8 @@ public abstract class PoolableObjectWaiter implements IPoolListener
    * {@link #objectLoaded(IPoolableObjectType, Object)}
    * 
    * @param synchron
-   *            when true the object-loading is done synchronuously and the caller of this constructor will only take
-   *            control back once the object is loaded internally.
+   *          when true the object-loading is done synchronuously and the caller of this constructor will only take
+   *          control back once the object is loaded internally.
    */
   public PoolableObjectWaiter( final PoolableObjectType key, final Object[] data, final boolean synchron )
   {
@@ -71,9 +71,12 @@ public abstract class PoolableObjectWaiter implements IPoolListener
     try
     {
       if( newValue != null && status.isOK() )
+      {
         objectLoaded( key, newValue );
+        m_result = Status.OK_STATUS;
+      }
       else
-        Logger.getLogger( getClass().getName() ).warning( Messages.getString( "org.kalypso.util.pool.PoolableObjectWaiter.1" ) + key ); //$NON-NLS-1$
+        m_result = objectFailed( key );
     }
     // what happens if objectLoaded throws an exception?
     // set status?
@@ -81,6 +84,16 @@ public abstract class PoolableObjectWaiter implements IPoolListener
     {
       dispose();
     }
+  }
+
+  /**
+   * Called if loading the object return <code>null</code> or an error.<br>
+   * The default implementation just logs this problem to the console.
+   */
+  protected IStatus objectFailed( final IPoolableObjectType key )
+  {
+    Logger.getLogger( getClass().getName() ).warning( Messages.getString( "org.kalypso.util.pool.PoolableObjectWaiter.1" ) + key ); //$NON-NLS-1$
+    return Status.OK_STATUS;
   }
 
   /**

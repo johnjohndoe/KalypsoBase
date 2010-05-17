@@ -62,28 +62,28 @@ import org.kalypso.ogc.sensor.impl.DefaultAxis;
  */
 public class KalypsoStatusUtils
 {
-  private final static String STATUS_AXIS_LABELPREFIX = "_kalypso_status_"; //$NON-NLS-1$
+  private static final String STATUS_AXIS_LABELPREFIX = "_kalypso_status_"; //$NON-NLS-1$
 
-  public final static String STATUS_AXIS_TYPE = "kalypso-status"; //$NON-NLS-1$
+  public static final String STATUS_AXIS_TYPE = "kalypso-status"; //$NON-NLS-1$
 
-  public final static String SRC_AXIS_TYPE = "DATA_SRC"; //$NON-NLS-1$
+  public static final String SRC_AXIS_TYPE = "DATA_SRC"; //$NON-NLS-1$
 
-  public final static Class<?> STATUS_AXIS_DATACLASS = Integer.class;
+  public static final Class< ? > STATUS_AXIS_DATACLASS = Integer.class;
 
-  public final static String STATUS_AXIS_UNIT = ""; //$NON-NLS-1$
+  public static final String STATUS_AXIS_UNIT = ""; //$NON-NLS-1$
 
-  private final static ImageIcon ICON_QUESTION = new ImageIcon( KalypsoStatusUtils.class.getResource( "resource/question.gif" ), "question" ); //$NON-NLS-1$ //$NON-NLS-2$
+  private static final ImageIcon ICON_QUESTION = new ImageIcon( KalypsoStatusUtils.class.getResource( "resource/question.gif" ), "question" ); //$NON-NLS-1$ //$NON-NLS-2$
 
-  private final static ImageIcon ICON_WARNING = new ImageIcon( KalypsoStatusUtils.class.getResource( "resource/warning.gif" ), "warning" ); //$NON-NLS-1$ //$NON-NLS-2$
+  private static final ImageIcon ICON_WARNING = new ImageIcon( KalypsoStatusUtils.class.getResource( "resource/warning.gif" ), "warning" ); //$NON-NLS-1$ //$NON-NLS-2$
 
   // private final static Icon ICON_ERROR = new ImageIcon(
   // KalypsoStatusUtils.class.getResource( "resource/error.gif" ) );
 
-  private final static ImageIcon ICON_CONFLICT = new ImageIcon( KalypsoStatusUtils.class.getResource( "resource/conflict.gif" ) ); //$NON-NLS-1$
+  private static final ImageIcon ICON_CONFLICT = new ImageIcon( KalypsoStatusUtils.class.getResource( "resource/conflict.gif" ) ); //$NON-NLS-1$
 
-  private final static ImageIcon ICON_WRITE = new ImageIcon( KalypsoStatusUtils.class.getResource( "resource/write.gif" ), "write" ); //$NON-NLS-1$ //$NON-NLS-2$
+  private static final ImageIcon ICON_WRITE = new ImageIcon( KalypsoStatusUtils.class.getResource( "resource/write.gif" ), "write" ); //$NON-NLS-1$ //$NON-NLS-2$
 
-  private final static Color COLOR_LIGHTYELLOW = new Color( 248, 243, 192 );
+  private static final Color COLOR_LIGHTYELLOW = new Color( 248, 243, 192 );
 
   private KalypsoStatusUtils( )
   {
