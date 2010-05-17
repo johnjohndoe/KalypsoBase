@@ -49,6 +49,8 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.logging.Logger;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.java.util.StringUtilities;
 import org.kalypso.contribs.java.awt.ColorUtilities;
 import org.kalypso.core.util.pool.IPoolableObjectType;
@@ -66,21 +68,19 @@ import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.template.obsdiagview.TypeAxisMapping;
 import org.kalypso.template.obsdiagview.TypeCurve;
 import org.kalypso.template.obsdiagview.TypeObservation;
+import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
  * Waits for the observation to be loaded and creates a diagram-curve using the xml-template information.
  * 
  * @see org.kalypso.util.pool.PoolableObjectWaiter
- * 
  * @author schlienger
  */
 public class DiagViewCurveXMLLoader extends PoolableObjectWaiter
 {
-  public DiagViewCurveXMLLoader( final DiagView view, final TypeObservation xmlObs, final URL context,
-      final boolean synchron )
+  public DiagViewCurveXMLLoader( final DiagView view, final TypeObservation xmlObs, final URL context, final boolean synchron )
   {
-    super( new PoolableObjectType( xmlObs.getLinktype(), xmlObs.getHref(), context ), new Object[]
-    { view, xmlObs }, synchron );
+    super( new PoolableObjectType( xmlObs.getLinktype(), xmlObs.getHref(), context ), new Object[] { view, xmlObs }, synchron );
   }
 
   /**
@@ -90,10 +90,10 @@ public class DiagViewCurveXMLLoader extends PoolableObjectWaiter
   @Override
   protected void objectLoaded( final IPoolableObjectType key, final Object newValue )
   {
-    final IObservation obs = (IObservation)newValue;
+    final IObservation obs = (IObservation) newValue;
 
-    final TypeObservation xmlObs = (TypeObservation)m_data[1];
-    final DiagView view = (DiagView)m_data[0];
+    final TypeObservation xmlObs = (TypeObservation) m_data[1];
+    final DiagView view = (DiagView) m_data[0];
 
     final List<String> ignoreTypes = view.getIgnoreTypesAsList();
 
@@ -108,8 +108,7 @@ public class DiagViewCurveXMLLoader extends PoolableObjectWaiter
       {
         try
         {
-          final IAxis obsAxis = ObservationUtilities.findAxisByNameThenByType( obs.getAxisList(), tmap
-              .getObservationAxis() );
+          final IAxis obsAxis = ObservationUtilities.findAxisByNameThenByType( obs.getAxisList(), tmap.getObservationAxis() );
 
           if( ignoreTypes.contains( obsAxis.getType() ) )
           {
@@ -123,8 +122,7 @@ public class DiagViewCurveXMLLoader extends PoolableObjectWaiter
         }
         catch( final NoSuchElementException e )
         {
-          Logger.getLogger( getClass().getName() ).warning(
-              Messages.getString("org.kalypso.ogc.sensor.diagview.DiagViewCurveXMLLoader.0") + e.getLocalizedMessage() ); //$NON-NLS-1$
+          Logger.getLogger( getClass().getName() ).warning( Messages.getString( "org.kalypso.ogc.sensor.diagview.DiagViewCurveXMLLoader.0" ) + e.getLocalizedMessage() ); //$NON-NLS-1$
 
           useThisCurve = false;
           break;
@@ -149,9 +147,8 @@ public class DiagViewCurveXMLLoader extends PoolableObjectWaiter
 
         if( color == null )
         {
-          final IAxis axis = DiagViewUtils.getValueAxis( mappings.toArray( new AxisMapping[mappings
-              .size()] ) );
-      if( axis == null )
+          final IAxis axis = DiagViewUtils.getValueAxis( mappings.toArray( new AxisMapping[mappings.size()] ) );
+          if( axis == null )
             color = ColorUtilities.random();
           else
             color = TimeserieUtils.getColorsFor( axis.getType() )[0];
@@ -174,14 +171,12 @@ public class DiagViewCurveXMLLoader extends PoolableObjectWaiter
             for( int i = 0; i < dashList.size(); i++ )
               dashArray[i] = dashList.get( i ).floatValue();
 
-            stroke = new BasicStroke( xmlStroke.getWidth(), BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 1.0f,
-                dashArray, 0.0f );
+            stroke = new BasicStroke( xmlStroke.getWidth(), BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 1.0f, dashArray, 0.0f );
           }
         }
 
         // each curve gets its own provider since the curve disposes its provider, when it get disposed
-        final IObsProvider provider = isSynchron() ? (IObsProvider)new PlainObsProvider( obs, null )
-            : new PooledObsProvider( key, null );
+        final IObsProvider provider = isSynchron() ? (IObsProvider) new PlainObsProvider( obs, null ) : new PooledObsProvider( key, null );
 
         final DiagViewCurve curve = new DiagViewCurve( view, provider, curveName, color, stroke, mappings.toArray( new AxisMapping[0] ) );
         curve.setShown( tcurve.isShown() );
@@ -189,6 +184,18 @@ public class DiagViewCurveXMLLoader extends PoolableObjectWaiter
         view.addItem( curve );
       }
     }
+  }
+
+  /**
+   * @see org.kalypso.core.util.pool.PoolableObjectWaiter#objectFailed(org.kalypso.core.util.pool.IPoolableObjectType)
+   */
+  @Override
+  protected IStatus objectFailed( final IPoolableObjectType key )
+  {
+    super.objectFailed( key );
+
+    final String msg = String.format( "Zeitreihe konnte nicht geladen werden: %s", key.getLocation() );
+    return new Status( IStatus.WARNING, KalypsoGisPlugin.getId(), msg );
   }
 
   /**

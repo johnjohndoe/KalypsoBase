@@ -87,9 +87,9 @@ public class TableView extends ObsView
   }
 
   /**
-  * Set the flag for alphabetical sorting order. If true, columns are sorted according to their name in alphabetical
-  * order.
-  */
+   * Set the flag for alphabetical sorting order. If true, columns are sorted according to their name in alphabetical
+   * order.
+   */
   public void setAlphaSort( final boolean alphaSort )
   {
     m_alphaSort = alphaSort;
@@ -107,10 +107,11 @@ public class TableView extends ObsView
   @Override
   public void addObservation( final IObsProvider provider, final String tokenizedName, final ItemData data )
   {
-    final List ignoreTypeList = getIgnoreTypesAsList();
+    final List<String> ignoreTypeList = getIgnoreTypesAsList();
 
     final IObservation obs = provider.getObservation();
-
+    // FIXME: should also work if the provider has a null-observation currently. This code should always be called
+    // again, if the provider-observation changes
     if( obs != null )
     {
       final IAxis[] axes = obs.getAxisList();
@@ -140,7 +141,7 @@ public class TableView extends ObsView
             String name = valueAxis.getName();
             // FIXME: the next line was probably introduced for Sachsen, but makes no sense...
             // Check where we need that for Sachsen and fix it there
-//            if( name == null || name.length() == 0 )
+// if( name == null || name.length() == 0 )
             name = ObservationTokenHelper.replaceTokens( tokenizedName, obs, valueAxis );
             final TableViewColumn col = new TableViewColumn( this, provider.copy(), name, data.editable, 50, keyAxes[0], valueAxis, TimeserieUtils.getDefaultFormatString( valueAxis.getType() ) );
 

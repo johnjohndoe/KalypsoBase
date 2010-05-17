@@ -195,7 +195,10 @@ public class DiagView extends ObsView
   {
     final List<String> ignoreTypeList = getIgnoreTypesAsList();
 
+    // FIXME: should also work if the provider has a null-observation currently. This code should always be called
+    // again, if the provider-observation changes
     final IObservation obs = provider.getObservation();
+
     if( obs != null )
     {
       final IAxis[] valueAxis = KalypsoStatusUtils.findAxesByClasses( obs.getAxisList(), new Class[] { Number.class, Boolean.class }, true );

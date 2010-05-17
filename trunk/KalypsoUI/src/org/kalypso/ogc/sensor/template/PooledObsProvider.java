@@ -44,12 +44,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.util.pool.IPoolListener;
 import org.kalypso.core.util.pool.IPoolableObjectType;
 import org.kalypso.core.util.pool.ResourcePool;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.request.IRequest;
-import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
  * A Theme for an IObservation
@@ -62,7 +62,7 @@ public final class PooledObsProvider implements IObsProvider, IPoolListener
 
   private final List<IObsProviderListener> m_listeners = new ArrayList<IObsProviderListener>();
 
-  private final ResourcePool m_pool = KalypsoGisPlugin.getDefault().getPool();
+  private final ResourcePool m_pool = KalypsoCorePlugin.getDefault().getPool();
 
   private IObservation m_observation;
 
@@ -136,8 +136,8 @@ public final class PooledObsProvider implements IObsProvider, IPoolListener
     synchronized( m_listeners )
     {
       final Object[] listeners = m_listeners.toArray();
-      for( int i = 0; i < listeners.length; i++ )
-        ((IObsProviderListener) listeners[i]).obsProviderChanged();
+      for( final Object listener : listeners )
+        ((IObsProviderListener) listener).obsProviderChanged();
     }
   }
 
@@ -184,7 +184,7 @@ public final class PooledObsProvider implements IObsProvider, IPoolListener
   /**
    * @see org.kalypso.util.pool.IPoolListener#dirtyChanged(org.kalypso.util.pool.IPoolableObjectType, boolean)
    */
-  public void dirtyChanged( IPoolableObjectType key, boolean isDirty )
+  public void dirtyChanged( final IPoolableObjectType key, final boolean isDirty )
   {
     // TODO Auto-generated method stub
   }

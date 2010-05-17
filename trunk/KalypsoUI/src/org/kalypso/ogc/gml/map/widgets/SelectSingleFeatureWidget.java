@@ -203,13 +203,14 @@ public class SelectSingleFeatureWidget extends AbstractWidget
 
     setHoverFeature( null, null, currentPos );
 
-    if( m_themes == null || m_currentPoint == null )
+    final IKalypsoFeatureTheme[] themes = m_themes;
+    if( themes == null || m_currentPoint == null )
       return;
 
     final double grabDistance = MapUtilities.calculateWorldDistance( mapPanel, currentPoint, SelectFeatureWidget.GRAB_RADIUS * 2 );
     final GM_Envelope reqEnvelope = GeometryUtilities.grabEnvelopeFromDistance( currentPoint, grabDistance );
 
-    for( final IKalypsoFeatureTheme theme : m_themes )
+    for( final IKalypsoFeatureTheme theme : themes )
     {
       if( theme == null )
         continue;

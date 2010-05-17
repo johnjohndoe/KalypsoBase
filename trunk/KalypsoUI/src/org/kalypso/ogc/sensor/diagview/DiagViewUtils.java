@@ -64,6 +64,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.commons.java.util.StringUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -260,7 +261,7 @@ public class DiagViewUtils
         final Stroke stroke = curve.getStroke();
         if( stroke instanceof BasicStroke )
         {
-          final BasicStroke bs = (BasicStroke)stroke;
+          final BasicStroke bs = (BasicStroke) stroke;
           final TypeCurve.Stroke strokeType = ODT_OF.createTypeCurveStroke();
           xmlCurve.setStroke( strokeType );
           strokeType.setWidth( bs.getLineWidth() );
@@ -342,12 +343,12 @@ public class DiagViewUtils
 
     if( axisType.equals( TimeserieConstants.TYPE_POLDER_CONTROL ) )
       return new DiagramAxis( axisType, "boolean", label, unit, direction, position, false ); //$NON-NLS-1$
-    
+
     position = isKey == true ? DiagramAxis.POSITION_BOTTOM : DiagramAxis.POSITION_RIGHT;
 
     if( axisType.equals( TimeserieConstants.TYPE_RAINFALL ) )
       return new DiagramAxis( axisType, "double", label, unit, direction, position, true, null, TimeserieUtils //$NON-NLS-1$
-          .getTopMargin( axisType ) ); //$NON-NLS-1$
+      .getTopMargin( axisType ) ); //$NON-NLS-1$
 
     if( axisType.equals( TimeserieConstants.TYPE_TEMPERATURE ) )
       return new DiagramAxis( axisType, "double", label, unit, direction, position, false ); //$NON-NLS-1$
@@ -365,10 +366,10 @@ public class DiagViewUtils
    * Apply the given xml-template representation to the diagview.
    * 
    * @param ignoreHref
-   *            [optional] tricky, used in the context of the wizard where token replace takes place. If a href could
-   *            not be replaced, it is set to a specific tag-value and the ignoreHref parameter if specified denotes is
-   *            compared to each href found in the template. If it is found, then the href is ignored and the
-   *            corresponding observation isn't loaded.
+   *          [optional] tricky, used in the context of the wizard where token replace takes place. If a href could not
+   *          be replaced, it is set to a specific tag-value and the ignoreHref parameter if specified denotes is
+   *          compared to each href found in the template. If it is found, then the href is ignored and the
+   *          corresponding observation isn't loaded.
    */
   public static IStatus applyXMLTemplate( final DiagView view, final Obsdiagview xml, final URL context, final boolean synchron, final String ignoreHref )
   {
@@ -422,17 +423,24 @@ public class DiagViewUtils
       }
 
       final DiagViewCurveXMLLoader loader = new DiagViewCurveXMLLoader( view, tobs, context, synchron );
-      stati.add( loader.getResult() );
+      final IStatus result = loader.getResult();
+      if( !result.isOK() )
+        stati.add( result );
     }
 
-    return StatusUtilities.createStatus( stati, Messages.getString( "org.kalypso.ogc.sensor.diagview.DiagViewUtils.17" ) ); //$NON-NLS-1$
+    if( stati.size() == 0 )
+      return Status.OK_STATUS;
+    else if( stati.size() == 1 )
+      return stati.get( 0 );
+    else
+      return StatusUtilities.createStatus( stati, Messages.getString( "org.kalypso.ogc.sensor.diagview.DiagViewUtils.17" ) ); //$NON-NLS-1$
   }
 
   /**
    * Return the first axis of the mappings list which is not a key axis.
    * 
    * @param mappings
-   *            array of obs-diag axes mappings
+   *          array of obs-diag axes mappings
    * @return obs axis (not a key axis) or null if not found
    */
   public static IAxis getValueAxis( final AxisMapping[] mappings )
