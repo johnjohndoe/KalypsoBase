@@ -85,6 +85,8 @@ public final class KeyInfo extends Job
    */
   private boolean m_hasNothingBlocked = false;
 
+  private final Map<IPoolListener, Exception> m_addListenerTraces = Collections.synchronizedMap( new HashMap<IPoolListener, Exception>() );
+
   public KeyInfo( final IPoolableObjectType key, final ILoader loader )
   {
     super( Messages.getString( "org.kalypso.util.pool.KeyInfo.1", key.getLocation() ) ); //$NON-NLS-1$
@@ -127,6 +129,7 @@ public final class KeyInfo extends Job
     KalypsoCoreDebug.RESOURCE_POOL_KEYS.printf( "Current Pool-Job state: %d%n", state ); //$NON-NLS-1$ 
 
     m_listeners.add( l );
+    m_addListenerTraces.put( l, new Exception() );
 
     // TODO: shouldn't we synchronise here?
 
@@ -147,6 +150,7 @@ public final class KeyInfo extends Job
 
   public boolean removeListener( final IPoolListener l )
   {
+    m_addListenerTraces.remove( l );
     return m_listeners.remove( l );
   }
 
@@ -162,7 +166,7 @@ public final class KeyInfo extends Job
     {
       final int state = getState();
       KalypsoCoreDebug.RESOURCE_POOL_KEYS.printf( "Current Job-State: %d%n", state );
-// if( state == Job.NONE )
+
       cancel();
       schedule();
     }
@@ -362,6 +366,11 @@ public final class KeyInfo extends Job
     return m_listeners.toArray( new IPoolListener[m_listeners.size()] );
   }
 
+  public Exception getAddTrace( final IPoolListener l )
+  {
+    return m_addListenerTraces.get( l );
+  }
+
   public Object getObject( )
   {
     return m_object;
@@ -446,17 +455,17 @@ public final class KeyInfo extends Job
     final int flags = delta.getFlags();
     final int kind = delta.getKind();
 
-    //System.out.println( String.format( "Resource change (kind): %d", kind ) );
-    //System.out.println( String.format( "Resource change (flags): %d", flags ) );
+    // System.out.println( String.format( "Resource change (kind): %d", kind ) );
+    // System.out.println( String.format( "Resource change (flags): %d", flags ) );
 
     // TRICKY: if (exactly) only markers have changed, do nothing
-    if( flags == IResourceDelta.MARKERS || flags == IResourceDelta.SYNC || flags == (IResourceDelta.MARKERS & IResourceDelta.SYNC) )
+    if( flags == IResourceDelta.MARKERS || flags == IResourceDelta.SYNC || flags == (IResourceDelta.MARKERS | IResourceDelta.SYNC) )
     {
-      //System.out.println( "Resource change (action): Ignored" );
+      // System.out.println( "Resource change (action): Ignored" );
       return;
     }
 
-    //System.out.println( "Resource change (action): Handled" );
+    // System.out.println( "Resource change (action): Handled" );
     switch( kind )
     {
       case IResourceDelta.REMOVED:

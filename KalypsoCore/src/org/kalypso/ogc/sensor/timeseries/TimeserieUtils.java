@@ -87,10 +87,10 @@ import org.kalypsodeegree.KalypsoDeegreePlugin;
 
 /**
  * Utilities when dealing with Observations which are Kalypso Timeseries.
- * 
+ *
  * @author schlienger
  */
-public class TimeserieUtils implements TimeserieConstants
+public final class TimeserieUtils implements TimeserieConstants
 {
 
   public static final String[] TYPES_ALL;
@@ -111,19 +111,19 @@ public class TimeserieUtils implements TimeserieConstants
 // locale
   /** @deprecated Should not be used any more. We use xs:dateTime format now for printing times into zml files. */
   @Deprecated
-  private final static DateFormat FORECAST_DF = DateFormat.getDateTimeInstance();
+  private static final DateFormat FORECAST_DF = DateFormat.getDateTimeInstance();
 
   private static final String PROP_TIMESERIES_CONFIG = "kalypso.timeseries.properties"; //$NON-NLS-1$
 
-  private static URL m_configBaseUrl = TimeserieUtils.class.getResource( "resource/" ); //$NON-NLS-1$
+  private static URL CONFIG_BASE_URL = TimeserieUtils.class.getResource( "resource/" ); //$NON-NLS-1$
 
-  private static String m_basename = "config"; //$NON-NLS-1$
+  private static String BASENAME = "config"; //$NON-NLS-1$
 
-  private static Properties m_config;
+  private static Properties CONFIG;
 
-  private static HashMap<String, NumberFormat> m_formatMap = new HashMap<String, NumberFormat>();
+  private static HashMap<String, NumberFormat> FORMAT_MAP = new HashMap<String, NumberFormat>();
 
-  private static NumberFormat m_defaultFormat = null;
+  private static NumberFormat DEFAULT_FORMAT = null;
 
   private TimeserieUtils( )
   {
@@ -134,7 +134,7 @@ public class TimeserieUtils implements TimeserieConstants
    * Allows to overwrite the location of the config.properties file.<br>
    * If international alternatives are present these will be used (i.e. config_de.properties instead of
    * config.properties).
-   * 
+   *
    * @param configUrl
    *          Base location of the config file(s) (i.e. getClass().getResource("resources")).
    * @param basename
@@ -142,20 +142,20 @@ public class TimeserieUtils implements TimeserieConstants
    */
   public static void setConfigUrl( final URL configUrl, final String basename )
   {
-    m_configBaseUrl = configUrl;
-    m_basename = basename;
+    CONFIG_BASE_URL = configUrl;
+    BASENAME = basename;
   }
 
   /**
    * Finds out which metadata of the given observation begin with the given prefix.
    * <p>
    * This is for instance useful for the Alarmstufen
-   * 
+   *
    * @param obs
    * @param mdPrefix
    * @return list of metadata keys or empty array if nothing found
    */
-  public final static String[] findOutMDBeginningWith( final IObservation obs, final String mdPrefix )
+  public static String[] findOutMDBeginningWith( final IObservation obs, final String mdPrefix )
   {
     if( obs == null )
       return ArrayUtils.EMPTY_STRING_ARRAY;
@@ -178,20 +178,20 @@ public class TimeserieUtils implements TimeserieConstants
 
   /**
    * Finds out the list of alarmstufen metadata keys
-   * 
+   *
    * @return list of metadata keys
    */
-  public final static String[] findOutMDAlarmLevel( final IObservation obs )
+  public static String[] findOutMDAlarmLevel( final IObservation obs )
   {
     return findOutMDBeginningWith( obs, Messages.getString( "org.kalypso.ogc.sensor.timeseries.TimeserieUtils.2" ) ); //$NON-NLS-1$
   }
 
   /**
    * Returns the color to use when displaying the value of the given Alarmstufe.
-   * 
+   *
    * @return color
    */
-  public final static Color getColorForAlarmLevel( final String mdAlarm )
+  public static Color getColorForAlarmLevel( final String mdAlarm )
   {
     final String strColor = getProperties().getProperty( Messages.getString( "org.kalypso.ogc.sensor.timeseries.TimeserieUtils.3" ) + mdAlarm ); //$NON-NLS-1$
     if( strColor == null )
@@ -202,20 +202,20 @@ public class TimeserieUtils implements TimeserieConstants
 
   /**
    * Lazy loading of the properties
-   * 
+   *
    * @return config of the timeseries package
    */
   private static synchronized Properties getProperties( )
   {
-    if( m_config == null )
+    if( CONFIG == null )
     {
-      m_config = new Properties();
+      CONFIG = new Properties();
 
       final Properties defaultConfig = new Properties();
-      m_config = new Properties( defaultConfig );
+      CONFIG = new Properties( defaultConfig );
 
       // The config file in the sources is used as defaults
-      PropertiesUtilities.loadI18nProperties( defaultConfig, m_configBaseUrl, m_basename );
+      PropertiesUtilities.loadI18nProperties( defaultConfig, CONFIG_BASE_URL, BASENAME );
 
       // TODO: also load configured properties via i18n mechanism
       InputStream configIs = null;
@@ -225,6 +225,9 @@ public class TimeserieUtils implements TimeserieConstants
         final URL configUrl = Platform.isRunning() ? Platform.getConfigurationLocation().getURL() : null;
         final String timeseriesConfigLocation = System.getProperty( PROP_TIMESERIES_CONFIG );
         final URL timeseriesConfigUrl = timeseriesConfigLocation == null ? null : new URL( configUrl, timeseriesConfigLocation );
+
+        // TODO: load timeseries ini from local config: ni order to support debugging correctly, sue this pattern:
+//        final URL proxyConfigLocation = HwvProductSachsenAnhalt.findConfigLocation( CONFIG_PROXY_PATH );
 
         try
         {
@@ -241,7 +244,7 @@ public class TimeserieUtils implements TimeserieConstants
 
         if( configIs != null )
         {
-          m_config.load( configIs );
+          CONFIG.load( configIs );
           configIs.close();
         }
       }
@@ -254,14 +257,14 @@ public class TimeserieUtils implements TimeserieConstants
         IOUtils.closeQuietly( configIs );
       }
     }
-    return m_config;
+    return CONFIG;
   }
 
   /**
    * Sets the 'forecast' metadata of the given observation using the given date range. If from or to are null, does
    * nothing.
    */
-  public final static void setTargetForecast( final IObservation obs, final DateRange range )
+  public static void setTargetForecast( final IObservation obs, final DateRange range )
   {
     if( range == null )
       return;
@@ -273,7 +276,7 @@ public class TimeserieUtils implements TimeserieConstants
    * Sets the 'forecast' metadata of the given observation using the given date range. If from or to are null, does
    * nothing.
    */
-  public final static void setTargetForecast( final IObservation obs, final Date from, final Date to )
+  public static void setTargetForecast( final IObservation obs, final Date from, final Date to )
   {
     final TimeZone timeZone = KalypsoCorePlugin.getDefault().getTimeZone();
     if( from != null )
@@ -293,7 +296,7 @@ public class TimeserieUtils implements TimeserieConstants
    * Sets the 'forecast' metadata of the given observation using the given date range. If from or to are null, does
    * nothing.
    */
-  public final static void setTargetDateRange( final IObservation obs, final DateRange range )
+  public static void setTargetDateRange( final IObservation obs, final DateRange range )
   {
     if( range == null )
       return;
@@ -305,7 +308,7 @@ public class TimeserieUtils implements TimeserieConstants
    * Sets the 'forecast' metadata of the given observation using the given date range. If from or to are null, does
    * nothing.
    */
-  public final static void setTargetDateRange( final IObservation obs, final Date from, final Date to )
+  public static void setTargetDateRange( final IObservation obs, final Date from, final Date to )
   {
     final TimeZone timeZone = KalypsoCorePlugin.getDefault().getTimeZone();
     if( from != null )
@@ -326,11 +329,11 @@ public class TimeserieUtils implements TimeserieConstants
    * observation is a forecast.
    * <p>
    * An observation is a forecast when it has the MD_VORHERSAGE Metadata.
-   * 
+   *
    * @param obs
    * @return date range of the forecast or null if obs isn't a forecast.
    */
-  public final static DateRange isTargetForecast( final IObservation obs )
+  public static DateRange isTargetForecast( final IObservation obs )
   {
     if( obs == null )
       return null;
@@ -387,7 +390,7 @@ public class TimeserieUtils implements TimeserieConstants
 
   /**
    * Units are read from the config.properties file.
-   * 
+   *
    * @param type
    * @return corresponding unit
    */
@@ -400,7 +403,7 @@ public class TimeserieUtils implements TimeserieConstants
    * Returns a user-friendly name for the given type.
    * <p>
    * Note to Developer: keep the config.properties file up-to-date
-   * 
+   *
    * @return corresponding name (user friendly)
    */
   public static String getName( final String type )
@@ -412,7 +415,7 @@ public class TimeserieUtils implements TimeserieConstants
    * Returns a color for the given type.
    * <p>
    * Note to Developer: keep the config.properties file up-to-date
-   * 
+   *
    * @return a Color that is defined to be used with the given axis type, or a random color when no fits
    */
   public static Color[] getColorsFor( final String type )
@@ -455,7 +458,7 @@ public class TimeserieUtils implements TimeserieConstants
    * <p>
    * Uses UNIT_TO_TYPE_ Keys in config.properties
    * </p>
-   * 
+   *
    * @param unit
    * @return type
    */
@@ -491,7 +494,7 @@ public class TimeserieUtils implements TimeserieConstants
   /**
    * Returns a NumberFormat instance according to the given timeserie type. If there is no specific instance for the
    * given type, then a default number format is returned.
-   * 
+   *
    * @return instance of NumberFormat that can be used to display the values to the user
    */
   public static NumberFormat getNumberFormatFor( final String type )
@@ -511,7 +514,7 @@ public class TimeserieUtils implements TimeserieConstants
    */
   public static synchronized NumberFormat getNumberFormat( final String format )
   {
-    final NumberFormat nf = m_formatMap.get( format );
+    final NumberFormat nf = FORMAT_MAP.get( format );
     if( nf != null )
       return nf;
 
@@ -519,7 +522,7 @@ public class TimeserieUtils implements TimeserieConstants
     {
       final NumberFormat wf = NumberFormat.getIntegerInstance();
       wf.setGroupingUsed( false );
-      m_formatMap.put( format, wf );
+      FORMAT_MAP.put( format, wf );
       return wf;
     }
 
@@ -535,7 +538,7 @@ public class TimeserieUtils implements TimeserieConstants
       final int intValue = Integer.valueOf( minfd ).intValue();
       wf.setMinimumFractionDigits( intValue );
       wf.setMaximumFractionDigits( intValue );
-      m_formatMap.put( format, wf );
+      FORMAT_MAP.put( format, wf );
 
       return wf;
     }
@@ -545,29 +548,27 @@ public class TimeserieUtils implements TimeserieConstants
 
   private static synchronized NumberFormat getDefaultFormat( )
   {
-    if( m_defaultFormat == null )
+    if( DEFAULT_FORMAT == null )
     {
-      m_defaultFormat = NumberFormat.getNumberInstance();
-      m_defaultFormat.setMinimumFractionDigits( 3 );
+      DEFAULT_FORMAT = NumberFormat.getNumberInstance();
+      DEFAULT_FORMAT.setMinimumFractionDigits( 3 );
     }
 
-    return m_defaultFormat;
+    return DEFAULT_FORMAT;
   }
 
   /**
    * It is currently fix and is: "dd.MM.yy HH:mm"
-   * 
+   *
    * @return the date format to use when displaying dates for observations/timeseries
    */
   public static DateFormat getDateFormat( )
   {
-    final DateFormat DF = new SimpleDateFormat( "dd.MM.yy HH:mm" ); //$NON-NLS-1$
-
+    final DateFormat sdf = new SimpleDateFormat( "dd.MM.yy HH:mm" ); //$NON-NLS-1$
     final TimeZone timeZone = KalypsoCorePlugin.getDefault().getTimeZone();
+    sdf.setTimeZone( timeZone );
 
-    DF.setTimeZone( timeZone );
-
-    return DF;
+    return sdf;
   }
 
   public static Class< ? > getDataClass( final String type )
@@ -617,7 +618,7 @@ public class TimeserieUtils implements TimeserieConstants
   /**
    * Create a test timeserie with a date axis and one default axis for each of the given axisTypes. A tupple-model is
    * randomly generated.
-   * 
+   *
    * @param axisTypes
    *          as seen in TimeserieConstants.TYPE_*
    * @param amountRows
@@ -674,7 +675,7 @@ public class TimeserieUtils implements TimeserieConstants
   /**
    * Return the value of the alarmLevel in regard to the given axisType. The alarm-levels are stored according to the
    * W-axis. If you want the value according to the Q-axis you should call this function with axisType = Q
-   * 
+   *
    * @param axisType
    *          the type of the axis for which to convert the alarm-level
    * @throws WQException
@@ -695,7 +696,7 @@ public class TimeserieUtils implements TimeserieConstants
   /**
    * Returns the class name for the given axis-type. The class must inherit from
    * <code>org.jfree.chart.axis.ValueAxis</code>.
-   * 
+   *
    * @return The class name for the given axis-type. The class must inherit from
    *         <code>org.jfree.chart.axis.ValueAxis</code>.
    */

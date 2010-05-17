@@ -50,11 +50,11 @@ import org.kalypso.core.i18n.Messages;
 public interface ObservationConstants
 {
   /** Name of the observation */
-  public final static String MD_NAME = Messages.getString("org.kalypso.ogc.sensor.ObservationConstants.0"); //$NON-NLS-1$
+  String MD_NAME = Messages.getString( "org.kalypso.ogc.sensor.ObservationConstants.0" ); //$NON-NLS-1$
 
   /** Description of the observation */
-  public final static String MD_DESCRIPTION = Messages.getString("org.kalypso.ogc.sensor.ObservationConstants.1"); //$NON-NLS-1$
+  String MD_DESCRIPTION = Messages.getString( "org.kalypso.ogc.sensor.ObservationConstants.1" ); //$NON-NLS-1$
 
   /** Some information about the Origin of the observation */
-  public final static String MD_ORIGIN = Messages.getString("org.kalypso.ogc.sensor.ObservationConstants.2"); //$NON-NLS-1$
+  String MD_ORIGIN = Messages.getString( "org.kalypso.ogc.sensor.ObservationConstants.2" ); //$NON-NLS-1$
 }

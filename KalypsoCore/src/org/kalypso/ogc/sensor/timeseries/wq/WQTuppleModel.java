@@ -44,7 +44,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.SensorException;
@@ -114,12 +113,9 @@ public class WQTuppleModel extends AbstractTuppleModel
    * @param destAxisPos
    *          position of the axis in the array
    */
-  public WQTuppleModel( final ITuppleModel model, final IAxis[] axes, final IAxis dateAxis, final IAxis srcAxis, final IAxis srcStatusAxis, final IAxis destAxis, final IAxis destStatusAxis, final IWQConverter converter, int destAxisPos, int destStatusAxisPos )
+  public WQTuppleModel( final ITuppleModel model, final IAxis[] axes, final IAxis dateAxis, final IAxis srcAxis, final IAxis srcStatusAxis, final IAxis destAxis, final IAxis destStatusAxis, final IWQConverter converter, final int destAxisPos, final int destStatusAxisPos )
   {
     super( axes );
-
-    if( converter == null )
-      throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.sensor.timeseries.wq.WQTuppleModel.0") ); //$NON-NLS-1$
 
     m_destAxisPos = destAxisPos;
     m_destStatusAxisPos = destStatusAxisPos;
@@ -194,7 +190,7 @@ public class WQTuppleModel extends AbstractTuppleModel
         else if( type.equals( m_converter.getToType() ) )
         {
           final double w = number.doubleValue();
-          double q = m_converter.computeQ( d, w );
+          final double q = m_converter.computeQ( d, w );
 
           value = new Double( q );
           status = KalypsoStati.STATUS_DERIVATED;
@@ -250,7 +246,12 @@ public class WQTuppleModel extends AbstractTuppleModel
       try
       {
         final String type = axis.getType();
-        if( type.equals( m_converter.getFromType() ) )
+        if( m_converter == null )
+        {
+          value = ZERO;
+          status = KalypsoStati.STATUS_CHECK;
+        }
+        else if( type.equals( m_converter.getFromType() ) )
         {
           final double w = ((Number) element).doubleValue();
           value = new Double( m_converter.computeQ( d, w ) );

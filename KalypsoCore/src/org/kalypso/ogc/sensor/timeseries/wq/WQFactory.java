@@ -43,6 +43,7 @@ package org.kalypso.ogc.sensor.timeseries.wq;
 
 import java.io.StringReader;
 
+import org.apache.commons.lang.StringUtils;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.MetadataList;
@@ -81,6 +82,8 @@ public class WQFactory
       if( mdl.containsKey( TimeserieConstants.MD_WQTABLE ) )
       {
         final String wqtable = mdl.getProperty( TimeserieConstants.MD_WQTABLE );
+        if( StringUtils.isBlank( wqtable ) )
+          return null;
 
         return WQTableFactory.parse( new InputSource( new StringReader( wqtable ) ) );
       }
