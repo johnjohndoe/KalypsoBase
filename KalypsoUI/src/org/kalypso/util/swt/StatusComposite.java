@@ -337,20 +337,40 @@ public class StatusComposite extends Composite
     switch( severity )
     {
       case IStatus.OK:
-        return KalypsoGisPlugin.getImageProvider().getImage( ImageProvider.DESCRIPTORS.STATUS_IMAGE_OK );
+        return getOKImage();
 
       case IStatus.ERROR:
-        return getIDEImage( IDEInternalWorkbenchImages.IMG_OBJS_ERROR_PATH );
+        return getErrorImage();
 
       case IStatus.WARNING:
-        return getIDEImage( IDEInternalWorkbenchImages.IMG_OBJS_WARNING_PATH );
+        return getWarningImage();
 
       case IStatus.INFO:
-        return getIDEImage( IDEInternalWorkbenchImages.IMG_OBJS_INFO_PATH );
+        return getInfoImage();
 
       default:
         return null;
     }
+  }
+
+  public static Image getOKImage( )
+  {
+    return KalypsoGisPlugin.getImageProvider().getImage( ImageProvider.DESCRIPTORS.STATUS_IMAGE_OK );
+  }
+
+  public static Image getErrorImage( )
+  {
+    return getIDEImage( IDEInternalWorkbenchImages.IMG_OBJS_ERROR_PATH );
+  }
+
+  public static Image getWarningImage( )
+  {
+    return getIDEImage( IDEInternalWorkbenchImages.IMG_OBJS_WARNING_PATH );
+  }
+
+  public static Image getInfoImage( )
+  {
+    return getIDEImage( IDEInternalWorkbenchImages.IMG_OBJS_INFO_PATH );
   }
 
   public IStatus getStatus( )

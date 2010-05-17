@@ -79,7 +79,7 @@ public class ColumnHeaderRenderer implements TableCellRenderer
   /**
    * Creates a new button renderer.
    */
-  public ColumnHeaderRenderer()
+  public ColumnHeaderRenderer( )
   {
     m_pressedColumn = -1;
 
@@ -95,7 +95,7 @@ public class ColumnHeaderRenderer implements TableCellRenderer
 
   /**
    * Sets the pressed column.
-   *
+   * 
    * @param column
    *          the column.
    */
@@ -104,8 +104,7 @@ public class ColumnHeaderRenderer implements TableCellRenderer
     m_pressedColumn = column;
   }
 
-  public Component getTableCellRendererComponent( final JTable table, final Object value, final boolean isSelected,
-      final boolean hasFocus, final int row, final int column )
+  public Component getTableCellRendererComponent( final JTable table, final Object value, final boolean isSelected, final boolean hasFocus, final int row, final int column )
   {
     final int cc = table == null ? -1 : table.convertColumnIndexToModel( column );
     final JTableHeader header = table == null ? null : table.getTableHeader();
@@ -121,7 +120,6 @@ public class ColumnHeaderRenderer implements TableCellRenderer
     m_button.getModel().setPressed( isPressed );
     m_button.getModel().setArmed( isPressed );
 
-    
     final String text = getText( value );
     final Icon icon = getIcon( value );
 
@@ -135,7 +133,7 @@ public class ColumnHeaderRenderer implements TableCellRenderer
   private String getText( final Object tvc )
   {
     if( tvc == null )
-      return Messages.getString("org.kalypso.ogc.sensor.tableview.swing.renderer.ColumnHeaderRenderer.2"); //$NON-NLS-1$
+      return Messages.getString( "org.kalypso.ogc.sensor.tableview.swing.renderer.ColumnHeaderRenderer.2" ); //$NON-NLS-1$
 
     return tvc.toString();
   }
@@ -144,12 +142,12 @@ public class ColumnHeaderRenderer implements TableCellRenderer
   {
     final String text = getText( element );
 
-    if( !( element instanceof TableViewColumn ) )
+    if( !(element instanceof TableViewColumn) )
       return text;
 
     try
     {
-      final TableViewColumn tvc = (TableViewColumn)element;
+      final TableViewColumn tvc = (TableViewColumn) element;
       final IObservation observation = tvc.getObservation();
       final IRequest arguments = tvc.getArguments();
       final IAxis valueAxis = tvc.getAxis();
@@ -170,13 +168,16 @@ public class ColumnHeaderRenderer implements TableCellRenderer
 
   private Icon getIcon( final Object element )
   {
-    if( !( element instanceof TableViewColumn ) )
+    if( !(element instanceof TableViewColumn) )
       return null;
 
     try
     {
-      final TableViewColumn tvc = (TableViewColumn)element;
+      final TableViewColumn tvc = (TableViewColumn) element;
       final IObservation observation = tvc.getObservation();
+      if( observation == null )
+        return null;
+
       final IRequest arguments = tvc.getArguments();
       final IAxis valueAxis = tvc.getAxis();
       final ITuppleModel values = observation.getValues( arguments );
@@ -194,20 +195,20 @@ public class ColumnHeaderRenderer implements TableCellRenderer
 
   public void openDialog( final Object element )
   {
-    if( !( element instanceof TableViewColumn ) )
+    if( !(element instanceof TableViewColumn) )
       return;
 
-    final TableViewColumn tvc = (TableViewColumn)element;
+    final TableViewColumn tvc = (TableViewColumn) element;
 
     final IObservation observation = tvc.getObservation();
     final IAxis valueAxis = tvc.getAxis();
 
     final StringBuffer msg = new StringBuffer();
-    msg.append( Messages.getString("org.kalypso.ogc.sensor.tableview.swing.renderer.ColumnHeaderRenderer.4") ); //$NON-NLS-1$
+    msg.append( Messages.getString( "org.kalypso.ogc.sensor.tableview.swing.renderer.ColumnHeaderRenderer.4" ) ); //$NON-NLS-1$
     msg.append( observation.getName() );
     msg.append( '\n' );
 
-    msg.append( Messages.getString("org.kalypso.ogc.sensor.tableview.swing.renderer.ColumnHeaderRenderer.5") ); //$NON-NLS-1$
+    msg.append( Messages.getString( "org.kalypso.ogc.sensor.tableview.swing.renderer.ColumnHeaderRenderer.5" ) ); //$NON-NLS-1$
     msg.append( valueAxis.getName() );
     msg.append( '\n' );
 
@@ -218,6 +219,6 @@ public class ColumnHeaderRenderer implements TableCellRenderer
     // - stati of values
     // - stati of observation (not yet implemented)
 
-    //    JOptionPane.showMessageDialog( e.getComponent(), msg.toString() );
+    // JOptionPane.showMessageDialog( e.getComponent(), msg.toString() );
   }
 }
