@@ -60,7 +60,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.resources.SetContentHelper;
 import org.kalypso.contribs.eclipse.core.resources.IProjectProvider;
@@ -78,7 +77,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * Wizard-Page zur Eingabe der Steuerparameter
- *
+ * 
  * @author belger
  */
 public class SteuerparameterWizardPage extends WizardPage
@@ -103,7 +102,7 @@ public class SteuerparameterWizardPage extends WizardPage
 
   public SteuerparameterWizardPage( final IProjectProvider pp, final ImageDescriptor image, final boolean canGoBack )
   {
-    super( "EditCalcCaseControlPage", Messages.getString("org.kalypso.simulation.ui.wizards.createCalcCase.SteuerparameterWizardPage.0"), image ); //$NON-NLS-1$ //$NON-NLS-2$
+    super( "EditCalcCaseControlPage", Messages.getString( "org.kalypso.simulation.ui.wizards.createCalcCase.SteuerparameterWizardPage.0" ), image ); //$NON-NLS-1$ //$NON-NLS-2$
     m_canGoBack = canGoBack;
 
     final FeatureComposite featureComposite = m_featureComposite;
@@ -132,15 +131,15 @@ public class SteuerparameterWizardPage extends WizardPage
     m_projectProvider = pp;
   }
 
- /**
+  /**
    * @see org.eclipse.jface.dialogs.IDialogPage#dispose()
    */
   @Override
-  public void dispose()
+  public void dispose( )
   {
     if( m_featureComposite != null )
       m_featureComposite.dispose();
-    
+
     if( m_workspace != null )
       m_workspace.dispose();
   }
@@ -161,7 +160,7 @@ public class SteuerparameterWizardPage extends WizardPage
 
   public void saveChanges( final IFolder folder, final IProgressMonitor monitor ) throws CoreException
   {
-    monitor.beginTask( Messages.getString("org.kalypso.simulation.ui.wizards.createCalcCase.SteuerparameterWizardPage.1"), 1000 ); //$NON-NLS-1$
+    monitor.beginTask( Messages.getString( "org.kalypso.simulation.ui.wizards.createCalcCase.SteuerparameterWizardPage.1" ), 1000 ); //$NON-NLS-1$
 
     // SPEICHERN
     final IFile controlFile = folder.getFile( ModelNature.CONTROL_NAME );
@@ -212,7 +211,7 @@ public class SteuerparameterWizardPage extends WizardPage
   /**
    * Setzt die aktuelle Rechenvariante, ist dort schon eine .calculation vorhanden, wird diese geladen, sonst die
    * default.
-   *
+   * 
    * @param currentCalcCase
    */
   public void setFolder( final IFolder currentCalcCase )
@@ -292,13 +291,12 @@ public class SteuerparameterWizardPage extends WizardPage
       return;
     }
 
-    final Control featureControl = m_featureComposite.createControl( panel, SWT.NONE );
-    featureControl.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    m_featureComposite.createControl( panel, SWT.NONE );
 
     final Button checkUpdate = new Button( m_panel, SWT.CHECK );
     checkUpdate.setLayoutData( new GridData( SWT.LEFT, SWT.CENTER, false, false ) );
-    checkUpdate.setText( Messages.getString("org.kalypso.simulation.ui.wizards.createCalcCase.SteuerparameterWizardPage.2") ); //$NON-NLS-1$
-    checkUpdate.setToolTipText( Messages.getString("org.kalypso.simulation.ui.wizards.createCalcCase.SteuerparameterWizardPage.3") ); //$NON-NLS-1$
+    checkUpdate.setText( Messages.getString( "org.kalypso.simulation.ui.wizards.createCalcCase.SteuerparameterWizardPage.2" ) ); //$NON-NLS-1$
+    checkUpdate.setToolTipText( Messages.getString( "org.kalypso.simulation.ui.wizards.createCalcCase.SteuerparameterWizardPage.3" ) ); //$NON-NLS-1$
     checkUpdate.setSelection( m_update );
     m_checkUpdate = checkUpdate;
 
@@ -319,7 +317,6 @@ public class SteuerparameterWizardPage extends WizardPage
     {
       featureComposite.setFeature( m_workspace.getRootFeature() );
       featureComposite.updateControl();
-      featureControl.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     }
   }
 
