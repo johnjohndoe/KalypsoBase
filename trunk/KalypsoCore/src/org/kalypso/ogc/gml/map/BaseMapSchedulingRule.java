@@ -80,6 +80,7 @@ public class BaseMapSchedulingRule implements IMapSchedulingRule
     return m_selectWidgetSchedulingRule;
   }
 
+  @Override
   public IMapPanel getMapPanel( )
   {
     return m_mapPanel;
@@ -93,6 +94,7 @@ public class BaseMapSchedulingRule implements IMapSchedulingRule
   /**
    * @see org.eclipse.core.runtime.jobs.ISchedulingRule#contains(org.eclipse.core.runtime.jobs.ISchedulingRule)
    */
+  @Override
   public boolean contains( final ISchedulingRule rule )
   {
     if( this == rule )
@@ -116,6 +118,7 @@ public class BaseMapSchedulingRule implements IMapSchedulingRule
   /**
    * @see org.eclipse.core.runtime.jobs.ISchedulingRule#isConflicting(org.eclipse.core.runtime.jobs.ISchedulingRule)
    */
+  @Override
   public boolean isConflicting( final ISchedulingRule rule )
   {
     if( rule instanceof IMapSchedulingRule )
@@ -142,6 +145,7 @@ public class BaseMapSchedulingRule implements IMapSchedulingRule
       m_parent = parent;
     }
 
+    @Override
     public IMapPanel getMapPanel( )
     {
       return m_parent.getMapPanel();
@@ -150,6 +154,7 @@ public class BaseMapSchedulingRule implements IMapSchedulingRule
     /**
      * @see org.eclipse.core.runtime.jobs.ISchedulingRule#contains(org.eclipse.core.runtime.jobs.ISchedulingRule)
      */
+    @Override
     public boolean contains( final ISchedulingRule rule )
     {
       if( this == rule )
@@ -168,6 +173,7 @@ public class BaseMapSchedulingRule implements IMapSchedulingRule
     /**
      * @see org.eclipse.core.runtime.jobs.ISchedulingRule#isConflicting(org.eclipse.core.runtime.jobs.ISchedulingRule)
      */
+    @Override
     public boolean isConflicting( final ISchedulingRule rule )
     {
       if( rule instanceof IMapSchedulingRule )
@@ -189,6 +195,7 @@ public class BaseMapSchedulingRule implements IMapSchedulingRule
       m_parent = parent;
     }
 
+    @Override
     public IMapPanel getMapPanel( )
     {
       return m_parent.getMapPanel();
@@ -197,6 +204,7 @@ public class BaseMapSchedulingRule implements IMapSchedulingRule
     /**
      * @see org.eclipse.core.runtime.jobs.ISchedulingRule#contains(org.eclipse.core.runtime.jobs.ISchedulingRule)
      */
+    @Override
     public boolean contains( final ISchedulingRule rule )
     {
       if( this == rule )
@@ -215,6 +223,7 @@ public class BaseMapSchedulingRule implements IMapSchedulingRule
     /**
      * @see org.eclipse.core.runtime.jobs.ISchedulingRule#isConflicting(org.eclipse.core.runtime.jobs.ISchedulingRule)
      */
+    @Override
     public boolean isConflicting( final ISchedulingRule rule )
     {
       if( rule instanceof IMapSchedulingRule )

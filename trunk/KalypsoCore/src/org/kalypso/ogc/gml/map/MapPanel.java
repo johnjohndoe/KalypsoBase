@@ -76,10 +76,10 @@ import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
 import org.kalypso.contribs.eclipse.jobs.BufferPaintJob;
+import org.kalypso.contribs.eclipse.jobs.BufferPaintJob.IPaintable;
 import org.kalypso.contribs.eclipse.jobs.ImageCache;
 import org.kalypso.contribs.eclipse.jobs.JobObserverJob;
 import org.kalypso.contribs.eclipse.jobs.TextPaintable;
-import org.kalypso.contribs.eclipse.jobs.BufferPaintJob.IPaintable;
 import org.kalypso.core.KalypsoCoreDebug;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoCascadingTheme;
@@ -144,6 +144,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
 
   private final IFeatureSelectionListener m_globalSelectionListener = new IFeatureSelectionListener()
   {
+    @Override
     public void selectionChanged( final IFeatureSelection selection )
     {
       globalSelectionChanged();
@@ -268,6 +269,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
     {
       final ISafeRunnable code = new SafeRunnable()
       {
+        @Override
         public void run( ) throws Exception
         {
           r.visit( l );
@@ -282,16 +284,19 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
    * Add a listener in the mapPanel that will be notified in specific changes. <br/>
    * At the moment there is only the message changed event.
    */
+  @Override
   public void addMapPanelListener( final IMapPanelListener l )
   {
     m_mapPanelListeners.add( l );
   }
 
+  @Override
   public void addPaintListener( final IMapPanelPaintListener pl )
   {
     m_paintListeners.add( pl );
   }
 
+  @Override
   public void addSelectionChangedListener( final ISelectionChangedListener listener )
   {
     m_selectionListeners.add( listener );
@@ -300,6 +305,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
   /**
    * @see java.awt.event.ComponentListener#componentHidden(java.awt.event.ComponentEvent)
    */
+  @Override
   public void componentHidden( final ComponentEvent e )
   {
     //
@@ -308,6 +314,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
   /**
    * @see java.awt.event.ComponentListener#componentMoved(java.awt.event.ComponentEvent)
    */
+  @Override
   public void componentMoved( final ComponentEvent e )
   {
     //
@@ -316,6 +323,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
   /**
    * @see java.awt.event.ComponentListener#componentResized(java.awt.event.ComponentEvent)
    */
+  @Override
   public void componentResized( final ComponentEvent e )
   {
     final GM_Envelope bbox = m_wishBBox != null ? m_wishBBox : m_boundingBox;
@@ -326,12 +334,14 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
   /**
    * @see java.awt.event.ComponentListener#componentShown(java.awt.event.ComponentEvent)
    */
+  @Override
   public void componentShown( final ComponentEvent e )
   {
     final GM_Envelope bbox = m_wishBBox != null ? m_wishBBox : m_boundingBox;
     setBoundingBox( bbox, false );
   }
 
+  @Override
   public void dispose( )
   {
     removeMouseListener( m_widgetManager );
@@ -369,6 +379,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
   {
     acceptListenersRunnable( new IListenerRunnable()
     {
+      @Override
       public void visit( final IMapPanelListener l )
       {
         l.onExtentChanged( MapPanel.this, oldExtent, newExtent );
@@ -380,6 +391,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
   {
     acceptListenersRunnable( new IListenerRunnable()
     {
+      @Override
       public void visit( final IMapPanelListener l )
       {
         l.onMapModelChanged( MapPanel.this, oldModel, newModel );
@@ -394,6 +406,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
   {
     acceptListenersRunnable( new IListenerRunnable()
     {
+      @Override
       public void visit( final IMapPanelListener l )
       {
         l.onMessageChanged( MapPanel.this, message );
@@ -408,6 +421,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
   {
     acceptListenersRunnable( new IListenerRunnable()
     {
+      @Override
       public void visit( final IMapPanelListener l )
       {
         l.onStatusChanged( MapPanel.this );
@@ -425,6 +439,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
       final Display display = PlatformUI.getWorkbench().getDisplay();
       display.asyncExec( new Runnable()
       {
+        @Override
         public void run( )
         {
           final SafeRunnable safeRunnable = new SafeRunnable()
@@ -440,6 +455,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
               t.printStackTrace();
             }
 
+            @Override
             public void run( )
             {
               // TODO: fire in SWT display thread!
@@ -453,6 +469,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
     }
   }
 
+  @Override
   public GM_Envelope getBoundingBox( )
   {
     return m_boundingBox;
@@ -472,6 +489,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
    * 
    * @return scale of the map
    */
+  @Override
   public double getCurrentScale( )
   {
     final GeoTransform projection = getProjection();
@@ -485,11 +503,13 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
   /**
    * @see org.kalypso.ogc.gml.mapmodel.IMapModellView#getMapModell()
    */
+  @Override
   public IMapModell getMapModell( )
   {
     return m_model;
   }
 
+  @Override
   public String getMessage( )
   {
     return m_message;
@@ -498,6 +518,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
   /**
    * @see org.eclipse.jface.viewers.ISelectionProvider#getSelection()
    */
+  @Override
   public ISelection getSelection( )
   {
     final IMapModell mapModell = getMapModell();
@@ -514,11 +535,13 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
     return StructuredSelection.EMPTY;
   }
 
+  @Override
   public IFeatureSelectionManager getSelectionManager( )
   {
     return m_selectionManager;
   }
 
+  @Override
   public IWidgetManager getWidgetManager( )
   {
     return m_widgetManager;
@@ -540,6 +563,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
    * Important: does not invalidate the theme's buffers, so this will in most cases not do what you want.. please always
    * invalidate the theme by correctly firing gml-events
    */
+  @Override
   public void invalidateMap( )
   {
     synchronized( this )
@@ -717,16 +741,19 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
   /**
    * Removes this listener from the mapPanel.
    */
+  @Override
   public void removeMapPanelListener( final IMapPanelListener l )
   {
     m_mapPanelListeners.remove( l );
   }
 
+  @Override
   public void removePaintListener( final IMapPanelPaintListener pl )
   {
     m_paintListeners.remove( pl );
   }
 
+  @Override
   public void removeSelectionChangedListener( final ISelectionChangedListener listener )
   {
     m_selectionListeners.remove( listener );
@@ -738,6 +765,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
    * @param wishBBox
    *          The new extent, will be adapted so it fits into the current size of the panel.
    */
+  @Override
   public void setBoundingBox( final GM_Envelope wishBBox )
   {
     setBoundingBox( wishBBox, true );
@@ -746,6 +774,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
   /**
    * @see IMapPanel#setBoundingBox(GM_Envelope, boolean, boolean)
    */
+  @Override
   public void setBoundingBox( final GM_Envelope wishBBox, final boolean useHistory )
   {
     setBoundingBox( wishBBox, useHistory, true );
@@ -754,6 +783,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
   /**
    * @see IMapPanel#setBoundingBox(GM_Envelope, boolean, boolean)
    */
+  @Override
   public void setBoundingBox( final GM_Envelope wishBBox, final boolean useHistory, final boolean invalidateMap )
   {
     final GM_Envelope oldExtent;
@@ -796,6 +826,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
   /**
    * @see org.kalypso.ogc.gml.mapmodel.IMapModellView#setMapModell(org.kalypso.ogc.gml.mapmodel.IMapModell)
    */
+  @Override
   public void setMapModell( final IMapModell modell )
   {
     final IMapModell oldModel;
@@ -840,6 +871,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
   /**
    * Sets the message of this mapPanel. Some widgets update it, so that the MapView could update the status-bar text.
    */
+  @Override
   public void setMessage( final String message )
   {
     m_message = message;
@@ -847,6 +879,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
     fireMessageChanged( message );
   }
 
+  @Override
   public void setSelection( final ISelection selection )
   {
     // should not be called!
@@ -860,6 +893,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
     paint( g );
   }
 
+  @Override
   public void fireMouseMouveEvent( final int mousex, final int mousey )
   {
     final IMapModell mapModell = getMapModell();
@@ -881,6 +915,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
       mpl.onMouseMoveEvent( this, gmPoint, mousex, mousey );
   }
 
+  @Override
   public GeoTransform getProjection( )
   {
     final GM_Envelope boundingBox = m_boundingBox;
@@ -896,6 +931,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
     return projection;
   }
 
+  @Override
   public ExtentHistory getExtentHistory( )
   {
     return m_extentHistory;
@@ -911,6 +947,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
     fireStatusChanged();
   }
 
+  @Override
   public IStatus getStatus( )
   {
     return m_status;
