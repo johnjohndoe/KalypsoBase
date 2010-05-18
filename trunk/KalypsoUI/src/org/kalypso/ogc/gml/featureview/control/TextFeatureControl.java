@@ -80,12 +80,14 @@ public class TextFeatureControl extends AbstractFeatureControl implements Modell
 
   private final IFeatureModifier m_modifier;
 
+  private boolean m_editable = true;
+
   public TextFeatureControl( final Feature feature, final IValuePropertyType ftp, final String format )
   {
     super( feature, ftp );
 
     Assert.isNotNull( ftp, "Unknown Feature-Property" );
-    
+
     m_modifier = new StringModifier( ftp, format );
   }
 
@@ -95,6 +97,7 @@ public class TextFeatureControl extends AbstractFeatureControl implements Modell
   public Control createControl( final Composite parent, final int style )
   {
     m_text = new Text( parent, style );
+    m_text.setEditable( m_editable );
 
     m_text.addModifyListener( new ModifyListener()
     {
@@ -155,10 +158,11 @@ public class TextFeatureControl extends AbstractFeatureControl implements Modell
     return m_isValid;
   }
 
-  public void setEditable( final boolean enabled )
+  public void setEditable( final boolean editable )
   {
+    m_editable = editable;
     if( m_text != null && !m_text.isDisposed() )
-      m_text.setEditable( enabled );
+      m_text.setEditable( editable );
   }
 
   /**
