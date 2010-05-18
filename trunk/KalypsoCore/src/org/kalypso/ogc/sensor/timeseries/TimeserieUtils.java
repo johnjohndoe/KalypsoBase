@@ -55,6 +55,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Properties;
 import java.util.Set;
 import java.util.TimeZone;
@@ -87,16 +88,15 @@ import org.kalypsodeegree.KalypsoDeegreePlugin;
 
 /**
  * Utilities when dealing with Observations which are Kalypso Timeseries.
- *
+ * 
  * @author schlienger
  */
 public final class TimeserieUtils implements TimeserieConstants
 {
-
   public static final String[] TYPES_ALL;
 
   /**
-   * to enable seaching in types the array must be sorted
+   * to enable searching in types the array must be sorted
    */
   static
   {
@@ -107,11 +107,11 @@ public final class TimeserieUtils implements TimeserieConstants
   }
 
   /** default date format used within some of the timeseries dependent properties */
-// TODO: this dateFormat depends on the locale. This results in problems reading ZML files created using a different
-// locale
   /** @deprecated Should not be used any more. We use xs:dateTime format now for printing times into zml files. */
   @Deprecated
-  private static final DateFormat FORECAST_DF = DateFormat.getDateTimeInstance();
+  private static final DateFormat FORECAST_DF = DateFormat.getDateTimeInstance( DateFormat.DEFAULT, DateFormat.DEFAULT, Locale.GERMANY );
+
+// private static final DateFormat FORECAST_DF = new SimpleDateFormat( "dd.MM.yyyy HH:mm:ss", Locale.GERMANY );
 
   private static final String PROP_TIMESERIES_CONFIG = "kalypso.timeseries.properties"; //$NON-NLS-1$
 
@@ -134,7 +134,7 @@ public final class TimeserieUtils implements TimeserieConstants
    * Allows to overwrite the location of the config.properties file.<br>
    * If international alternatives are present these will be used (i.e. config_de.properties instead of
    * config.properties).
-   *
+   * 
    * @param configUrl
    *          Base location of the config file(s) (i.e. getClass().getResource("resources")).
    * @param basename
@@ -150,7 +150,7 @@ public final class TimeserieUtils implements TimeserieConstants
    * Finds out which metadata of the given observation begin with the given prefix.
    * <p>
    * This is for instance useful for the Alarmstufen
-   *
+   * 
    * @param obs
    * @param mdPrefix
    * @return list of metadata keys or empty array if nothing found
@@ -178,7 +178,7 @@ public final class TimeserieUtils implements TimeserieConstants
 
   /**
    * Finds out the list of alarmstufen metadata keys
-   *
+   * 
    * @return list of metadata keys
    */
   public static String[] findOutMDAlarmLevel( final IObservation obs )
@@ -188,7 +188,7 @@ public final class TimeserieUtils implements TimeserieConstants
 
   /**
    * Returns the color to use when displaying the value of the given Alarmstufe.
-   *
+   * 
    * @return color
    */
   public static Color getColorForAlarmLevel( final String mdAlarm )
@@ -202,7 +202,7 @@ public final class TimeserieUtils implements TimeserieConstants
 
   /**
    * Lazy loading of the properties
-   *
+   * 
    * @return config of the timeseries package
    */
   private static synchronized Properties getProperties( )
@@ -227,7 +227,7 @@ public final class TimeserieUtils implements TimeserieConstants
         final URL timeseriesConfigUrl = timeseriesConfigLocation == null ? null : new URL( configUrl, timeseriesConfigLocation );
 
         // TODO: load timeseries ini from local config: ni order to support debugging correctly, sue this pattern:
-//        final URL proxyConfigLocation = HwvProductSachsenAnhalt.findConfigLocation( CONFIG_PROXY_PATH );
+// final URL proxyConfigLocation = HwvProductSachsenAnhalt.findConfigLocation( CONFIG_PROXY_PATH );
 
         try
         {
@@ -329,7 +329,7 @@ public final class TimeserieUtils implements TimeserieConstants
    * observation is a forecast.
    * <p>
    * An observation is a forecast when it has the MD_VORHERSAGE Metadata.
-   *
+   * 
    * @param obs
    * @return date range of the forecast or null if obs isn't a forecast.
    */
@@ -368,10 +368,10 @@ public final class TimeserieUtils implements TimeserieConstants
         }
         catch( final IllegalArgumentException e )
         {
-          // ignore, pobably it is an old zml
+          // ignore, probably it is an old zml
         }
 
-        // TRICKY: in order to support backwards compability, we still trey to parse the old format
+        // TRICKY: in order to support backwards compatibility, we still try to parse the old format
         try
         {
           final Date from = FORECAST_DF.parse( fromStr );
@@ -390,7 +390,7 @@ public final class TimeserieUtils implements TimeserieConstants
 
   /**
    * Units are read from the config.properties file.
-   *
+   * 
    * @param type
    * @return corresponding unit
    */
@@ -403,7 +403,7 @@ public final class TimeserieUtils implements TimeserieConstants
    * Returns a user-friendly name for the given type.
    * <p>
    * Note to Developer: keep the config.properties file up-to-date
-   *
+   * 
    * @return corresponding name (user friendly)
    */
   public static String getName( final String type )
@@ -415,7 +415,7 @@ public final class TimeserieUtils implements TimeserieConstants
    * Returns a color for the given type.
    * <p>
    * Note to Developer: keep the config.properties file up-to-date
-   *
+   * 
    * @return a Color that is defined to be used with the given axis type, or a random color when no fits
    */
   public static Color[] getColorsFor( final String type )
@@ -458,7 +458,7 @@ public final class TimeserieUtils implements TimeserieConstants
    * <p>
    * Uses UNIT_TO_TYPE_ Keys in config.properties
    * </p>
-   *
+   * 
    * @param unit
    * @return type
    */
@@ -494,7 +494,7 @@ public final class TimeserieUtils implements TimeserieConstants
   /**
    * Returns a NumberFormat instance according to the given timeserie type. If there is no specific instance for the
    * given type, then a default number format is returned.
-   *
+   * 
    * @return instance of NumberFormat that can be used to display the values to the user
    */
   public static NumberFormat getNumberFormatFor( final String type )
@@ -559,7 +559,7 @@ public final class TimeserieUtils implements TimeserieConstants
 
   /**
    * It is currently fix and is: "dd.MM.yy HH:mm"
-   *
+   * 
    * @return the date format to use when displaying dates for observations/timeseries
    */
   public static DateFormat getDateFormat( )
@@ -618,7 +618,7 @@ public final class TimeserieUtils implements TimeserieConstants
   /**
    * Create a test timeserie with a date axis and one default axis for each of the given axisTypes. A tupple-model is
    * randomly generated.
-   *
+   * 
    * @param axisTypes
    *          as seen in TimeserieConstants.TYPE_*
    * @param amountRows
@@ -675,7 +675,7 @@ public final class TimeserieUtils implements TimeserieConstants
   /**
    * Return the value of the alarmLevel in regard to the given axisType. The alarm-levels are stored according to the
    * W-axis. If you want the value according to the Q-axis you should call this function with axisType = Q
-   *
+   * 
    * @param axisType
    *          the type of the axis for which to convert the alarm-level
    * @throws WQException
@@ -696,7 +696,7 @@ public final class TimeserieUtils implements TimeserieConstants
   /**
    * Returns the class name for the given axis-type. The class must inherit from
    * <code>org.jfree.chart.axis.ValueAxis</code>.
-   *
+   * 
    * @return The class name for the given axis-type. The class must inherit from
    *         <code>org.jfree.chart.axis.ValueAxis</code>.
    */
