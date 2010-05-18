@@ -430,6 +430,15 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
     m_isApplyTemplate = false;
   }
 
+  public boolean isLoaded( )
+  {
+    final IKalypsoFeatureTheme theme = getTheme();
+    if( theme == null )
+      return true;
+
+    return theme.isLoaded();
+  }
+
   private void applyFilter( final Layer layer )
   {
     try
