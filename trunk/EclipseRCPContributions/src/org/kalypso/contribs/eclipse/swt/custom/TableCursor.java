@@ -244,24 +244,6 @@ public class TableCursor extends Canvas
       addListener( element, listener );
     }
 
-// m_tableListener = new Listener()
-// {
-// public void handleEvent( final Event event )
-// {
-// switch( event.type )
-// {
-// case SWT.MouseDown:
-// tableMouseDown( event );
-// break;
-// case SWT.FocusIn:
-// tableFocusIn();
-// break;
-// }
-// }
-// };
-// m_table.addListener( SWT.FocusIn, m_tableListener );
-// m_table.addListener( SWT.MouseDown, m_tableListener );
-
     m_disposeItemListener = new Listener()
     {
       public void handleEvent( final Event event )

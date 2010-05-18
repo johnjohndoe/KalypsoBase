@@ -3,6 +3,8 @@ package org.kalypso.contribs.eclipse.swt.custom;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.CheckboxCellEditor;
 import org.eclipse.jface.viewers.ICellModifier;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
@@ -245,6 +247,15 @@ public class ExcelTableCursor extends TableCursor
     }
   };
 
+  private final ISelectionChangedListener m_tableSelectionListener = new ISelectionChangedListener()
+  {
+    @Override
+    public void selectionChanged( final SelectionChangedEvent event )
+    {
+      handleTableSelectionChanged();
+    }
+  };
+
   /**
    * handle activation of cursor after multiselection
    */
@@ -345,6 +356,7 @@ public class ExcelTableCursor extends TableCursor
     table.addKeyListener( m_tableKeyListener );
     table.addFocusListener( m_tableFocusListener );
     table.addMouseListener( m_tableMouseListener );
+    viewer.addSelectionChangedListener( m_tableSelectionListener );
 
     // BUGFIX: always invalidate self if table was redrawn. Fixes: if a row was deleted/added,
     // the cursor showed still the old value
@@ -360,6 +372,24 @@ public class ExcelTableCursor extends TableCursor
     } );
 
     addMouseListener( m_mouseListener );
+  }
+
+  protected void handleTableSelectionChanged( )
+  {
+    final Table table = m_viewer.getTable();
+    final int selectionIndex = table.getSelectionIndex();
+    final TableItem row = getRow();
+    final TableItem selectedRow = selectionIndex == -1 ? null : table.getItem( selectionIndex );
+    if( selectedRow != row )
+    {
+      if( selectedRow == null )
+        setVisible( false );
+      else
+      {
+        final int column = getColumn();
+        setSelection( selectionIndex, column, false );
+      }
+    }
   }
 
   protected void handleWidgetSelected( )
@@ -565,13 +595,15 @@ public class ExcelTableCursor extends TableCursor
 
         if( (col >= 0) && (col < columnCount) && (row >= 0) && (row < rowCount) )
         {
-          /* Rather crude: advance further if the new column is not visible. Fixes the problem, that the first
-           * invisible column breaks the tabbing. */
+          /*
+           * Rather crude: advance further if the new column is not visible. Fixes the problem, that the first invisible
+           * column breaks the tabbing.
+           */
           final TableColumn column = getViewer().getTable().getColumn( col );
-          int width = column.getWidth();
+          final int width = column.getWidth();
           if( width == 0 && col < columnCount - 1 )
             col += 1;
-          
+
           setSelection( row, col, true );
         }
 
