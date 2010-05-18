@@ -158,4 +158,13 @@ public class Task_Impl implements ITask
   {
     return getURI().hashCode();
   }
+
+  /**
+   * @see java.lang.Object#toString()
+   */
+  @Override
+  public String toString( )
+  {
+    return getURI().toString();
+  }
 }
