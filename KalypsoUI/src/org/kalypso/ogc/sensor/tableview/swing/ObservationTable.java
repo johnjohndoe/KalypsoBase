@@ -229,7 +229,8 @@ public class ObservationTable extends Panel implements IObsViewEventListener
             try
             {
               header.setCursor( java.awt.Cursor.getPredefinedCursor( Cursor.WAIT_CURSOR ) );
-              menu.show( header, e.getX(), e.getY() );
+              if( menu != null )
+                menu.show( header, e.getX(), e.getY() );
             }
             finally
             {
