@@ -66,7 +66,7 @@ import org.kalypsodeegree_impl.model.feature.IFeatureProviderFactory;
 /**
  * Decorator über einen Workspace, der diesen um die Fähigkeiten eines
  * {@link org.kalypso.commons.command.ICommandManager ICommandManagers}erweitert
- *
+ * 
  * @author belger
  */
 public class CommandableWorkspace implements GMLWorkspace, ICommandManager
@@ -87,11 +87,13 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
   /**
    * @see org.kalypsodeegree.model.feature.event.ModellEventProvider#dispose()
    */
+  @Override
   public void dispose( )
   {
     m_workspace.dispose();
   }
 
+  @Override
   public void addCommandManagerListener( final ICommandManagerListener l )
   {
     m_commandManager.addCommandManagerListener( l );

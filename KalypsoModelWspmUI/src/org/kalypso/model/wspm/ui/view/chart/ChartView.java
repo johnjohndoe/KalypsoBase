@@ -128,6 +128,7 @@ public class ChartView extends ViewPart implements IChartPart, IProfilListener, 
     return m_profile;
   }
 
+  @Override
   public void setAdapter( final IWorkbenchPart part, final IProfilProvider adapter )
   {
     if( adapter == m_provider )
@@ -176,6 +177,7 @@ public class ChartView extends ViewPart implements IChartPart, IProfilListener, 
    *      com.bce.eind.core.profil.IProfilEventManager, com.bce.profil.ui.view.ProfilViewData,
    *      com.bce.profil.ui.view.ProfilViewData)
    */
+  @Override
   public void onProfilProviderChanged( final IProfilProvider provider, final IProfil oldProfile, final IProfil newProfile )
   {
     setPartNames( Messages.getString( "org.kalypso.model.wspm.ui.view.AbstractProfilViewPart_1" ), Messages.getString( "org.kalypso.model.wspm.ui.view.AbstractProfilViewPart_2" ) ); //$NON-NLS-1$ //$NON-NLS-2$
@@ -197,6 +199,7 @@ public class ChartView extends ViewPart implements IChartPart, IProfilListener, 
     {
       final Runnable object = new Runnable()
       {
+        @Override
         public void run( )
         {
           if( !control.isDisposed() )
@@ -342,6 +345,7 @@ public class ChartView extends ViewPart implements IChartPart, IProfilListener, 
    * @see com.bce.eind.core.profil.IProfilListener#onProfilChanged(com.bce.eind.core.profil.changes.ProfilChangeHint,
    *      com.bce.eind.core.profil.IProfilChange[])
    */
+  @Override
   public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
     if( hint.isPointPropertiesChanged() )
@@ -356,6 +360,7 @@ public class ChartView extends ViewPart implements IChartPart, IProfilListener, 
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilListener#onProblemMarkerChanged(org.kalypso.model.wspm.core.profil.IProfil)
    */
+  @Override
   public void onProblemMarkerChanged( final IProfil source )
   {
     //
@@ -380,6 +385,7 @@ public class ChartView extends ViewPart implements IChartPart, IProfilListener, 
   /**
    * @see org.kalypso.chart.ui.IChartPart#getAxisDragHandler()
    */
+  @Override
   public AxisDragHandlerDelegate getAxisDragHandler( )
   {
     if( m_chart == null )
@@ -390,6 +396,7 @@ public class ChartView extends ViewPart implements IChartPart, IProfilListener, 
   /**
    * @see org.kalypso.chart.ui.IChartPart#getChartComposite()
    */
+  @Override
   public ChartComposite getChartComposite( )
   {
     if( m_chart == null )
@@ -400,6 +407,7 @@ public class ChartView extends ViewPart implements IChartPart, IProfilListener, 
   /**
    * @see org.kalypso.chart.ui.IChartPart#getPlotDragHandler()
    */
+  @Override
   public PlotDragHandlerDelegate getPlotDragHandler( )
   {
     if( m_chart == null )

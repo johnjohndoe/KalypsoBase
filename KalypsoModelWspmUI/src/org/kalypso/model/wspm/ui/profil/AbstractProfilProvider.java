@@ -50,11 +50,12 @@ import org.kalypso.model.wspm.core.profil.IProfil;
  */
 public abstract class AbstractProfilProvider implements IProfilProvider
 {
-  private List<IProfilProviderListener> m_listeners = new ArrayList<IProfilProviderListener>( 5 );
+  private final List<IProfilProviderListener> m_listeners = new ArrayList<IProfilProviderListener>( 5 );
 
   /**
    * @see com.bce.profil.ui.view.IProfilProvider2#addProfilProviderListener(com.bce.profil.ui.view.IProfilProviderListener)
    */
+  @Override
   public void addProfilProviderListener( final IProfilProviderListener l )
   {
     m_listeners.add( l );
@@ -63,15 +64,16 @@ public abstract class AbstractProfilProvider implements IProfilProvider
   /**
    * @see com.bce.profil.ui.view.IProfilProvider2#removeProfilProviderListener(com.bce.profil.ui.view.IProfilProviderListener)
    */
+  @Override
   public void removeProfilProviderListener( final IProfilProviderListener l )
   {
     m_listeners.remove( l );
   }
 
-  protected void fireOnProfilProviderChanged( final IProfilProvider provider, final IProfil oldProfile, final IProfil newProfile)
+  protected void fireOnProfilProviderChanged( final IProfilProvider provider, final IProfil oldProfile, final IProfil newProfile )
   {
     final IProfilProviderListener[] ls = m_listeners.toArray( new IProfilProviderListener[m_listeners.size()] );
     for( final IProfilProviderListener l : ls )
-      l.onProfilProviderChanged( provider, oldProfile, newProfile);
+      l.onProfilProviderChanged( provider, oldProfile, newProfile );
   }
 }

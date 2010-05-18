@@ -79,6 +79,7 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider impl
   /**
    * @see org.kalypso.model.wspm.ui.profil.IProfilProvider#getProfil()
    */
+  @Override
   public IProfil getProfil( )
   {
     return m_profile;
@@ -110,6 +111,7 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider impl
     }
   }
 
+  @Override
   public void dispose( )
   {
     m_provider.removeSelectionChangedListener( this );
@@ -168,9 +170,10 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider impl
 
   /**
    * If the feature changes, write it back to the profile.
-   *
+   * 
    * @see org.kalypsodeegree.model.feature.event.ModellEventListener#onModellChange(org.kalypsodeegree.model.feature.event.ModellEvent)
    */
+  @Override
   public void onModellChange( final ModellEvent modellEvent )
   {
     if( m_lockNextModelChange )
@@ -201,10 +204,11 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider impl
 
   /**
    * If the profile changes, write it back to the feature.
-   *
+   * 
    * @see com.bce.eind.core.profil.IProfilListener#onProfilChanged(com.bce.eind.core.profil.changes.ProfilChangeHint,
    *      com.bce.eind.core.profil.IProfilChange[])
    */
+  @Override
   public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
     if( m_profile != null && m_feature != null )
@@ -232,6 +236,7 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider impl
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilListener#onProblemMarkerChanged(org.kalypso.model.wspm.core.profil.IProfil)
    */
+  @Override
   public void onProblemMarkerChanged( final IProfil source )
   {
     // Nothing to do: this class is probably the source for the event anyway
@@ -240,6 +245,7 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider impl
   /**
    * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
    */
+  @Override
   public void selectionChanged( final SelectionChangedEvent event )
   {
     final ISelection selection = event.getSelection();
@@ -323,7 +329,7 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider impl
     if( m_feature != null )
       m_feature.getWorkspace().addModellListener( this );
 
-    fireOnProfilProviderChanged( this, oldProfile, m_profile);
+    fireOnProfilProviderChanged( this, oldProfile, m_profile );
   }
 
   private void unhookListeners( )

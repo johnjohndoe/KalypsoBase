@@ -107,6 +107,7 @@ public class ScenarioDatumProxy implements IScenarioDatum
   /**
    * @see org.kalypso.afgui.scenarios.IScenarioDatum#getModelPath()
    */
+  @Override
   public String getModelPath( )
   {
     final String modelPath = m_element.getAttribute( ATTRIBUTE_MODEL_PATH );

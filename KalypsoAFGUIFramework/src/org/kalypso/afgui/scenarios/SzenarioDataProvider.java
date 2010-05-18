@@ -348,6 +348,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
    * 
    * @see de.renew.workflow.connector.cases.ICaseDataProvider#reloadModel()
    */
+  @Override
   public void reloadModel( )
   {
     final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
@@ -657,9 +658,8 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
 
   /**
    * Checks if a model has already been loaded. Returns <code>true</code>, as soon as the data object has been loaded by
-   * the pool, regardless of the success of that operation.
-   * 
-   * throws {@link IllegalArgumentException} If the given data id is not known.
+   * the pool, regardless of the success of that operation. throws {@link IllegalArgumentException} If the given data id
+   * is not known.
    */
   public boolean isLoaded( final String id )
   {
