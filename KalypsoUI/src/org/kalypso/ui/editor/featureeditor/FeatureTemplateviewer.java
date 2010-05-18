@@ -48,6 +48,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -81,8 +83,8 @@ import org.kalypso.ogc.gml.featureview.maker.FeatureviewHelper;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.FeatureSelectionManager2;
 import org.kalypso.template.featureview.Featuretemplate;
-import org.kalypso.template.featureview.Featuretemplate.Layer;
 import org.kalypso.template.featureview.FeatureviewType;
+import org.kalypso.template.featureview.Featuretemplate.Layer;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 import org.kalypso.util.swt.SWTUtilities;
 import org.kalypsodeegree.model.feature.Feature;
@@ -149,6 +151,8 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
 
   private Composite m_topLevelComposite;
 
+  FormToolkit m_toolkit;
+
   public FeatureTemplateviewer( final JobExclusiveCommandTarget commandtarget )
   {
     m_commandtarget = commandtarget;
@@ -195,6 +199,12 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
     m_pool.removePoolListener( this );
 
     m_template = template;
+
+    if( m_toolkit != null )
+    {
+      m_toolkit.dispose();
+      m_toolkit = null;
+    }
 
     final List<FeatureviewType> view = template.getView();
     for( final FeatureviewType featureviewType : view )
@@ -281,6 +291,22 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
 
     m_contentPanel = createTopLevelComposite( parent, formStyle );
 
+    if( m_template != null && m_template.isToolkit() )
+      m_toolkit = new FormToolkit( m_contentPanel.getDisplay() );
+
+    m_contentPanel.addDisposeListener( new DisposeListener()
+    {
+      @Override
+      public void widgetDisposed( final DisposeEvent e )
+      {
+        if( m_toolkit != null )
+        {
+          m_toolkit.dispose();
+          m_toolkit = null;
+        }
+      }
+    } );
+
     final GridLayout gridLayout = new GridLayout();
     gridLayout.marginHeight = 0;
     gridLayout.marginWidth = 0;
@@ -300,13 +326,16 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
 
   private Composite createTopLevelComposite( final Composite parent, final int formStyle )
   {
-    final boolean useScrolledForm = ((formStyle & SWT.V_SCROLL) != 0) || ((formStyle & SWT.H_SCROLL) != 0);
+    final boolean scrollVertical = (formStyle & SWT.V_SCROLL) != 0;
+    final boolean scrollHorzizontal = (formStyle & SWT.H_SCROLL) != 0;
 
+    final boolean useScrolledForm = scrollVertical || scrollHorzizontal;
     if( useScrolledForm )
     {
       final ScrolledForm scrolledForm = new ScrolledForm( parent, formStyle );
       scrolledForm.setExpandHorizontal( true );
       scrolledForm.setExpandVertical( true );
+
       m_topLevelComposite = scrolledForm;
       return scrolledForm.getBody();
     }
@@ -366,23 +395,17 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
       /* Set the new feature. May be null. */
       m_featureComposite.setFeature( feature );
 
-      /* Process rendering properties. */
-      if( m_template != null )
-      {
-        if( m_template.isToolkit() )
-        {
-          // FIXME: toolkit never gets disposed. Should not be
-          m_featureComposite.setFormToolkit( new FormToolkit( m_contentPanel.getDisplay() ) );
-        }
-      }
+      if( m_toolkit != null )
+        m_featureComposite.setFormToolkit( m_toolkit );
 
       /* Create the control. */
       final IFeatureType featureType = feature != null ? feature.getFeatureType() : null;
       final Control control = m_featureComposite.createControl( m_contentPanel, SWT.NONE, featureType );
-      control.setLayoutData( new GridData( GridData.FILL_BOTH ) );
 
       /* Update the control of the feature composite. */
       m_featureComposite.updateControl();
+
+      control.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     }
     catch( final Exception e )
     {
