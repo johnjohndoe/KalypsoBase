@@ -80,7 +80,7 @@ import org.kalypso.contribs.java.io.filter.PrefixSuffixFilter;
 
 /**
  * Utility class for io and files
- *
+ * 
  * @author schlienger
  */
 public class FileUtilities
@@ -97,7 +97,7 @@ public class FileUtilities
 
   /**
    * See makeFileFromStream(). this method calls makeFileFromStream with url.openStream() as parameter.
-   *
+   * 
    * @param charMode
    * @param prefix
    *          prefix of new file name
@@ -129,7 +129,7 @@ public class FileUtilities
 
   /**
    * See makeFileFromStream(). this method calls makeFileFromStream with url.openStream() as parameter.
-   *
+   * 
    * @param charMode
    * @param url
    *          data is read from this url
@@ -156,7 +156,7 @@ public class FileUtilities
   /**
    * Creates a new temporary file given its pathName and an InputStream. The content from the InputStream is written
    * into the file. The file will be deleted after the VM shuts down
-   *
+   * 
    * @param charMode
    * @param prefix
    *          prefix of file name
@@ -198,7 +198,7 @@ public class FileUtilities
   /**
    * Wie {@link #makeFileFromStream(boolean, String, String, InputStream, boolean)}, benutzt aber eine vorgegebene
    * Dateiposition
-   *
+   * 
    * @param charMode
    * @param file
    * @param ins
@@ -228,7 +228,7 @@ public class FileUtilities
   /**
    * Looks in the given path if a file with the given prefix and suffix exists. Returns the file in the positive. If
    * more than one such file is found, returns the first of them.
-   *
+   * 
    * @param prefix
    *          name of the file should begin with this prefix
    * @param suffix
@@ -253,12 +253,12 @@ public class FileUtilities
         return files[0];
     }
 
-    throw new FileNotFoundException( Messages.getString("org.kalypso.commons.java.io.FileUtilities.0", prefix , suffix , path) ); //$NON-NLS-1$ 
+    throw new FileNotFoundException( Messages.getString( "org.kalypso.commons.java.io.FileUtilities.0", prefix, suffix, path ) ); //$NON-NLS-1$ 
   }
 
   /**
    * Rekursives löschen von Dateien und Verzeichnissen
-   *
+   * 
    * @param file
    *          Falls das Argument eine Datei ist, wird diese gelöscht. Ist es ein Verzeichnis, wird dieses mitsamt aller
    *          darin liegenden Verzeichnisse und Dateien gelöscht.
@@ -271,8 +271,11 @@ public class FileUtilities
     if( file.isDirectory() )
     {
       final File[] files = file.listFiles();
-      for( final File element : files )
-        deleteRecursive( element );
+      if( files != null )
+      {
+        for( final File element : files )
+          deleteRecursive( element );
+      }
     }
 
     file.delete();
@@ -287,7 +290,7 @@ public class FileUtilities
 
   /**
    * Creates a temp directory in java.io.tmpdir.
-   *
+   * 
    * @param prefix
    * @return temporary directory
    * @see FileUtilities#createNewTempDir(String, File )
@@ -300,7 +303,7 @@ public class FileUtilities
   /**
    * Creates a temp directory inside the given one. It uses <code>System.currentTimeMillis</code> for naming the new
    * temp dir. This method can hang a little while in the case the directory it tries to create already exist.
-   *
+   * 
    * @param prefix
    * @param parentDir
    * @return temporary directory
@@ -318,7 +321,7 @@ public class FileUtilities
   /**
    * Creates a temp file inside the given folder. It uses <code>System.currentTimeMillis</code> for naming the new temp
    * file. This method can hang a little while in the case the file it tries to create already exist.
-   *
+   * 
    * @param prefix
    * @param parentDir
    * @return unique file
@@ -336,7 +339,7 @@ public class FileUtilities
   /**
    * Creates a unique file name inside the given folder. It uses <code>System.currentTimeMillis</code> for creating the
    * new file name. This method can hang a little while in the case the file it tries to create already exist.
-   *
+   * 
    * @param prefix
    * @param extension
    * @param parentDir
@@ -358,7 +361,7 @@ public class FileUtilities
    * Creates a unique file name inside the given folder. It adds a counter between prefix and extension for creating the
    * new file name.<br>
    * First try is parent/prefix.extension
-   *
+   * 
    * @param prefix
    * @param extension
    * @param parentDir
@@ -379,7 +382,7 @@ public class FileUtilities
 
   /**
    * Macht aus einer absoluten Dateiangabe eine relative
-   *
+   * 
    * @param basedir
    * @param absoluteFile
    * @return Ein File-Object, welches einen relativen Pfad enth?lt; null, wenn <code>basedir</code> kein Parent-Dir von
@@ -397,7 +400,7 @@ public class FileUtilities
    * Returns the relative path, without any reserved characters such as '.'. This is meant to be used without string
    * concatenation function to reproduce an absolute path again. Directly creating a File object on the path returned by
    * this method won't produce a good result. Use the <code>getRelativeFileTo()</code> method instead.
-   *
+   * 
    * @param basedir
    *          if null, the absolute path of absoluteFile is returned.
    * @param absoluteFile
@@ -439,7 +442,7 @@ public class FileUtilities
 
   /**
    * Returns true if childCandidate is stored under the path of parent, either directly or in a sub directory.
-   *
+   * 
    * @param parent
    * @param childCandidate
    * @return true if childCandidate is a child of the given parent.
@@ -485,12 +488,12 @@ public class FileUtilities
    * Returns only the name part of the given file name removing the extension part.
    * <p>
    * Example:
-   *
+   * 
    * <pre>
    *     test.foo -- test
    *     robert.tt -- robert
    * </pre>
-   *
+   * 
    * @param fileName
    * @return fileName without the last '.???' extension part (NOTE: the extension part is not limited to 3 chars)
    */
@@ -505,7 +508,7 @@ public class FileUtilities
 
   /**
    * Lässt den FileVisitor die angegebene Datei bzw. Verzeichnis und alle darin enthaltenen Dateien besuchen.
-   *
+   * 
    * @param recurse
    *          Falls true, werden auch Unterverzeichnisse besucht
    * @throws IOException
@@ -578,7 +581,7 @@ public class FileUtilities
 
   /**
    * Replaces all invalid characters from the given fileName so that it is valid against the OS-rules for naming files.
-   *
+   * 
    * @return a valid filename that can be used to create a new file, special (invalid) characters are removed and
    *         replaced by the given replacement-string
    */
@@ -622,7 +625,7 @@ public class FileUtilities
   /**
    * Sets a certain suffix to the given file name. If the file name already has a suffix (that is a non-empty string
    * after the last '.') it will be replaced.
-   *
+   * 
    * @param suffix
    *          The suffix without the point '.'
    */
@@ -637,7 +640,7 @@ public class FileUtilities
 
   /**
    * Copies the content of a url into a string.
-   *
+   * 
    * @param encoding
    *          The encoding to read the content, if <code>null</code> the platforms default encoding will be used.
    */
@@ -661,7 +664,7 @@ public class FileUtilities
 
   /**
    * Moves the complete content of one directory into another.
-   *
+   * 
    * @throws IOException
    *           If the move failed.
    */
@@ -688,7 +691,7 @@ public class FileUtilities
   /**
    * Replaces all invalid characters from the given fileName so that it is valid against the OS-rules for naming files.
    * and looks if file already exists in baseFolder
-   *
+   * 
    * @return a valid filename that can be used to create a new file, special (invalid) characters are removed and
    *         replaced by the given replacement-string
    */
@@ -740,7 +743,7 @@ public class FileUtilities
     }
 
     /* List for success or error messages. */
-    final MultiStatus stati = new MultiStatus( KalypsoCommonsPlugin.getID(), Status.OK, Messages.getString("org.kalypso.commons.java.io.FileUtilities.1" , String.valueOf( days )), null ); //$NON-NLS-1$ 
+    final MultiStatus stati = new MultiStatus( KalypsoCommonsPlugin.getID(), Status.OK, Messages.getString( "org.kalypso.commons.java.io.FileUtilities.1", String.valueOf( days ) ), null ); //$NON-NLS-1$ 
 
     /* Delete these files. */
     for( int i = 0; i < filesToDelete.size(); i++ )
@@ -769,7 +772,6 @@ public class FileUtilities
 
     return stati;
   }
-
 
   public static String resolveValidFileName( String fileName )
   {
@@ -800,8 +802,8 @@ public class FileUtilities
 
     return files;
   }
-  
-   public static void deleteQuitly( final File file )
+
+  public static void deleteQuitly( final File file )
   {
     try
     {
