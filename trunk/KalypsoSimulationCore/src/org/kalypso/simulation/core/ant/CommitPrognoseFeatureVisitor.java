@@ -51,7 +51,6 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.logging.Logger;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -195,7 +194,12 @@ public class CommitPrognoseFeatureVisitor extends AbstractMonitoredFeatureVisito
         LOG.info( "Observation saved on server: " + targetHref ); //$NON-NLS-1$
       }
       else
-        throw new NotImplementedException();
+      {
+        if( repository == null )
+          throw new RepositoryException( String.format( "Konnte Zeitreihen-Repository für '%s' nicht finden.", targetHref ) );
+        else
+          throw new RepositoryException( String.format( "Zeitreihen-Repository '%s' ist nicht beschreibbar ", repository.getLabel() ) );
+      }
 
     }
     catch( final IllegalArgumentException e )
