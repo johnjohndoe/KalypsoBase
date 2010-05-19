@@ -40,339 +40,68 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.simulation.ui.calccase.jface;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Hashtable;
-
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.jface.util.Assert;
-import org.eclipse.jface.util.ListenerList;
-import org.eclipse.jface.util.SafeRunnable;
-import org.eclipse.jface.viewers.CheckStateChangedEvent;
-import org.eclipse.jface.viewers.ICheckStateListener;
-import org.eclipse.jface.viewers.ICheckable;
-import org.eclipse.jface.viewers.TableTreeViewer;
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.viewers.ITreeContentProvider;
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.TableTree;
-import org.eclipse.swt.custom.TableTreeItem;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.swt.widgets.Widget;
-import org.kalypso.contribs.eclipse.jface.viewers.IViewerSorterFactory;
-import org.kalypso.contribs.eclipse.swt.widgets.TableSorter;
+import org.eclipse.swt.widgets.Tree;
+import org.eclipse.swt.widgets.TreeItem;
+import org.kalypso.contribs.eclipse.jface.viewers.FolderModifiedSorter;
+import org.kalypso.contribs.eclipse.jface.viewers.FolderNameSorter;
+import org.kalypso.contribs.eclipse.swt.widgets.ColumnViewerSorter;
 import org.kalypso.simulation.ui.i18n.Messages;
 
 /**
  * A Table tree viewer, showing calc cases in a tree with additional column 'modiifed since'.
  * 
- * @author belger
+ * @author Gernot Belger
  */
-public class CalcCaseTableTreeViewer extends TableTreeViewer implements ICheckable
+public final class CalcCaseTableTreeViewer
 {
-  /**
-   * List of check state listeners (element type: <code>ICheckStateListener</code>).
-   */
-  private final ListenerList m_checkStateListeners = new ListenerList( 3 );
-
-  private final TableSorter m_tableSorter = new TableSorter( new IViewerSorterFactory()
+  public static void configureTreeViewer( final TreeViewer viewer )
   {
-    public ViewerSorter createSorter( final int columnIndex, final boolean inverse )
-    {
-      return new CalcCaseViewerSorter( columnIndex, inverse );
-    }
-  } );
-
-  public CalcCaseTableTreeViewer( final IFolder markedCalcCase, final TableTree tree )
-  {
-    super( tree );
-
-    init( markedCalcCase );
+    configureTreeViewer( viewer, null );
   }
 
-  public CalcCaseTableTreeViewer( final IFolder markedCalcCase, final Composite parent )
+  public static void configureTreeViewer( final TreeViewer viewer, final IFolder markedCalcCase )
   {
-    super( parent );
+    final Tree tree = viewer.getTree();
+    tree.setHeaderVisible( true );
 
-    init( markedCalcCase );
-  }
+    final Color markedColor = tree.getDisplay().getSystemColor( SWT.COLOR_YELLOW );
+    viewer.setContentProvider( new CalcCaseTreeContentProvider() );
 
-  public CalcCaseTableTreeViewer( final IFolder markedCalcCase, final Composite parent, final int style )
-  {
-    super( parent, style );
+    final TreeViewerColumn forecastColumn = new TreeViewerColumn( viewer, SWT.NONE );
+    final String forecastLabel = Messages.getString( "org.kalypso.simulation.ui.calccase.jface.CalcCaseTableTreeViewer.1" ); //$NON-NLS-1$
+    forecastColumn.getColumn().setText( forecastLabel );
 
-    init( markedCalcCase );
-  }
+    ColumnViewerSorter.registerSorter( forecastColumn, new FolderNameSorter() );
 
-  /**
-   * Post construction, used by all constutors. Initialized default label and content providers.
-   */
-  private void init( final IFolder markedCalcCase )
-  {
-    final TableTree tableTree = getTableTree();
-    tableTree.setLayoutData( new GridData( GridData.FILL_BOTH ) );
-    final Table table = tableTree.getTable();
-    table.setHeaderVisible( true );
+    final TreeViewerColumn timeColumn = new TreeViewerColumn( viewer, SWT.NONE );
+    final String timeLabel = Messages.getString( "org.kalypso.simulation.ui.calccase.jface.CalcCaseTableTreeViewer.2" ); //$NON-NLS-1$
+    timeColumn.getColumn().setText( timeLabel );
+    ColumnViewerSorter.registerSorter( timeColumn, new FolderModifiedSorter() );
 
-    final TableColumn column = new TableColumn( table, SWT.NONE );
-    column.setText( "" ); //$NON-NLS-1$
-    column.setWidth( 0 );
-    m_tableSorter.createSortedColumn( table, Messages.getString("org.kalypso.simulation.ui.calccase.jface.CalcCaseTableTreeViewer.1"), this ); //$NON-NLS-1$
-    final TableColumn timeColumn = m_tableSorter.createSortedColumn( table, Messages.getString("org.kalypso.simulation.ui.calccase.jface.CalcCaseTableTreeViewer.2"), this ); //$NON-NLS-1$
-
-    final Color markedColor = tableTree.getDisplay().getSystemColor( SWT.COLOR_YELLOW );
-    setLabelProvider( new CalcCaseTableLabelProvider( markedCalcCase, markedColor ) );
-    setContentProvider( new CalcCaseTreeContentProvider() );
-    
     // Always sort by time initially
-    m_tableSorter.sortColumn( this, timeColumn, Boolean.TRUE );
+    ColumnViewerSorter.setSortState( timeColumn, Boolean.TRUE );
+
+    viewer.setLabelProvider( new CalcCaseTableLabelProvider( markedCalcCase, markedColor ) );
   }
 
-  private static final class CalcCaseViewerSorter extends ViewerSorter
+  public static boolean isEmpty( final TreeViewer viewer )
   {
-    private final int m_columnIndex;
-
-    private final int m_sign;
-
-    public CalcCaseViewerSorter( final int columnIndex, final boolean inverse )
-    {
-      m_columnIndex = columnIndex;
-      m_sign = inverse ? -1 : 1;
-    }
-
-    /**
-     * @see org.eclipse.jface.viewers.ViewerSorter#compare(org.eclipse.jface.viewers.Viewer, java.lang.Object,
-     *      java.lang.Object)
-     */
-    @Override
-    public int compare( final Viewer viewer, final Object e1, final Object e2 )
-    {
-      if( e1 instanceof IFolder && e2 instanceof IFolder )
-      {
-        final IFolder f1 = (IFolder)e1;
-        final IFolder f2 = (IFolder)e2;
-
-        switch( m_columnIndex )
-        {
-        case 1:
-          final String n1 = f1.getName();
-          final String n2 = f2.getName();
-          return n1.compareToIgnoreCase( n2 ) * m_sign;
-
-        case 2:
-          final Date m1 = CalcCaseTableLabelProvider.lastModifiedFromFolder( f1 );
-          final Date m2 = CalcCaseTableLabelProvider.lastModifiedFromFolder( f2 );
-          return m1.compareTo( m2 ) * m_sign;
-
-        default:
-          break;
-        }
-      }
-
-      return super.compare( viewer, e1, e2 );
-    }
+    final Object input = viewer.getInput();
+    final ITreeContentProvider contentProvider = (ITreeContentProvider) viewer.getContentProvider();
+    return contentProvider.getElements( input ).length == 0;
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.AbstractTreeViewer#inputChanged(java.lang.Object, java.lang.Object)
-   */
-  @Override
-  protected void inputChanged( final Object input, final Object oldInput )
+  public static void selectFirst( final TreeViewer viewer )
   {
-    super.inputChanged( input, oldInput );
-
-    final TableColumn[] columns = getTableTree().getTable().getColumns();
-    for( final TableColumn column : columns )
-      column.pack();
-  }
-
-  /**
-   * @see org.eclipse.jface.viewers.ICheckable#addCheckStateListener(org.eclipse.jface.viewers.ICheckStateListener)
-   */
-  public void addCheckStateListener( final ICheckStateListener listener )
-  {
-    m_checkStateListeners.add( listener );
-  }
-
-  /**
-   * @see org.eclipse.jface.viewers.ICheckable#getChecked(java.lang.Object)
-   */
-  public boolean getChecked( final Object element )
-  {
-    final Widget widget = findItem( element );
-    if( widget instanceof TableTreeItem )
-      return ( (TableTreeItem)widget ).getChecked();
-
-    return false;
-  }
-
-  /**
-   * Returns a list of elements corresponding to checked table items in this viewer.
-   * <p>
-   * This method is typically used when preserving the interesting state of a viewer; <code>setCheckedElements</code>
-   * is used during the restore.
-   * </p>
-   * 
-   * @return the array of checked elements
-   * @see #setCheckedElements
-   */
-  public Object[] getCheckedElements()
-  {
-    final TableTreeItem[] children = getTableTree().getItems();
-    final ArrayList<Object> v = new ArrayList<Object>( children.length );
-    for( final TableTreeItem item : children )
-    {
-      if( item.getChecked() )
-        v.add( item.getData() );
-    }
-    return v.toArray();
-  }
-
-  /**
-   * @see org.eclipse.jface.viewers.ICheckable#setChecked(java.lang.Object, boolean)
-   */
-  public boolean setChecked( final Object element, final boolean state )
-  {
-    Assert.isNotNull( element );
-    final Widget widget = findItem( element );
-    if( widget instanceof TableTreeItem )
-    {
-      ( (TableTreeItem)widget ).setChecked( state );
-      return true;
-    }
-    return false;
-  }
-
-  /**
-   * Sets which nodes are checked in this viewer. The given list contains the elements that are to be checked; all other
-   * nodes are to be unchecked.
-   * <p>
-   * This method is typically used when restoring the interesting state of a viewer captured by an earlier call to
-   * <code>getCheckedElements</code>.
-   * </p>
-   * 
-   * @param elements
-   *          the list of checked elements (element type: <code>Object</code>)
-   * @see #getCheckedElements
-   */
-  public void setCheckedElements( final Object[] elements )
-  {
-    assertElementsNotNull( elements );
-    final Hashtable<Object, Object> set = new Hashtable<Object, Object>( elements.length * 2 + 1 );
-    for( int i = 0; i < elements.length; ++i )
-      set.put( elements[i], elements[i] );
-
-    final TableTreeItem[] items = getTableTree().getItems();
-    for( int i = 0; i < items.length; ++i )
-    {
-      final TableTreeItem item = items[i];
-      final Object element = item.getData();
-      if( element != null )
-      {
-        final boolean check = set.containsKey( element );
-        // only set if different, to avoid flicker
-        if( item.getChecked() != check )
-          item.setChecked( check );
-      }
-    }
-  }
-
-  /**
-   * @see org.eclipse.jface.viewers.ICheckable#removeCheckStateListener(org.eclipse.jface.viewers.ICheckStateListener)
-   */
-  public void removeCheckStateListener( final ICheckStateListener listener )
-  {
-    m_checkStateListeners.remove( listener );
-  }
-
-  /**
-   * @see org.eclipse.jface.viewers.StructuredViewer#handleSelect(org.eclipse.swt.events.SelectionEvent)
-   */
-  @Override
-  public void handleSelect( final SelectionEvent event )
-  {
-    if( event.detail == SWT.CHECK )
-    {
-      super.handleSelect( event ); // this will change the current selection
-
-      final TableTreeItem item = (TableTreeItem)event.item;
-      final Object data = item.getData();
-      if( data != null )
-        fireCheckStateChanged( new CheckStateChangedEvent( this, data, item.getChecked() ) );
-    }
-    else
-      super.handleSelect( event );
-  }
-
-  /**
-   * Notifies any check state listeners that a check state changed has been received. Only listeners registered at the
-   * time this method is called are notified.
-   * 
-   * @param event
-   *          a check state changed event
-   * 
-   * @see ICheckStateListener#checkStateChanged
-   */
-  private void fireCheckStateChanged( final CheckStateChangedEvent event )
-  {
-    final Object[] array = m_checkStateListeners.getListeners();
-    for( final Object element : array )
-    {
-      final ICheckStateListener l = (ICheckStateListener)element;
-      Platform.run( new SafeRunnable()
-      {
-        public void run()
-        {
-          l.checkStateChanged( event );
-        }
-      } );
-    }
-  }
-
-  /*
-   * (non-Javadoc) Method declared on Viewer.
-   */
-  @Override
-  protected void preservingSelection( final Runnable updateCode )
-  {
-    final TableTreeItem[] children = getTableTree().getItems();
-    final Hashtable<Object, Object> checked = new Hashtable<Object, Object>( children.length * 2 + 1 );
-    //  	Hashtable grayed = new Hashtable(children.length*2+1);
-
-    for( final TableTreeItem item : children )
-    {
-      final Object data = item.getData();
-      if( data != null )
-      {
-        if( item.getChecked() )
-          checked.put( data, data );
-        //  			if (item.getGrayed())
-        //  				grayed.put(data, data);
-      }
-    }
-
-    super.preservingSelection( updateCode );
-
-    final TableTreeItem[] newChildren = getTableTree().getItems();
-    for( final TableTreeItem item : newChildren )
-    {
-      final Object data = item.getData();
-      if( data != null )
-      {
-        item.setChecked( checked.containsKey( data ) );
-        //        item.setGrayed( grayed.containsKey( data ) );
-      }
-    }
-  }
-  
-  public boolean isEmpty()
-  {
-    return ((CalcCaseTreeContentProvider)getContentProvider()).getElements( getInput() ).length == 0;
+    final TreeItem[] items = viewer.getTree().getItems();
+    if( items.length > 0 )
+      viewer.setSelection( new StructuredSelection( items[0].getData() ) );
   }
 }
