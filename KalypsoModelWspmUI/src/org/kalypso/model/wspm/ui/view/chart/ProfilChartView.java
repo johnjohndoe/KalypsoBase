@@ -194,7 +194,6 @@ public class ProfilChartView implements IChartPart, IProfilListener
 
     if( m_plotDragHandler != null )
       m_plotDragHandler.dispose();
-
   }
 
   private void fireProfilChanged( final IProfil old )
@@ -340,7 +339,6 @@ public class ProfilChartView implements IChartPart, IProfilListener
   /**
    * @see org.kalypso.chart.ui.IChartPart#getChartComposite()
    */
-
   public ChartComposite getChartComposite( )
   {
     return m_chartComposite;
