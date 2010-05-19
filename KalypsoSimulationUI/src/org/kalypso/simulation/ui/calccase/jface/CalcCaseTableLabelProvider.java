@@ -54,13 +54,13 @@ import org.kalypso.simulation.ui.calccase.ModelNature;
 
 /**
  * Label provider used by {@link org.kalypso.simulation.ui.calccase.jface.CalcCaseTableTreeViewer}.
- *
+ * 
  * @author belger
  */
 public class CalcCaseTableLabelProvider extends LabelProvider implements ITableLabelProvider, IColorProvider
 {
   private final WorkbenchLabelProvider m_provider;
-  
+
   private final DateFormat m_df = DateFormat.getDateTimeInstance( DateFormat.SHORT, DateFormat.SHORT );
 
   private final IFolder m_markedCalcCase;
@@ -71,7 +71,7 @@ public class CalcCaseTableLabelProvider extends LabelProvider implements ITableL
   {
     m_markedCalcCase = markedCalcCase;
     m_markedColor = markedColor;
-    
+
     m_provider = new WorkbenchLabelProvider();
   }
 
@@ -91,26 +91,19 @@ public class CalcCaseTableLabelProvider extends LabelProvider implements ITableL
    */
   public String getColumnText( final Object element, final int columnIndex )
   {
-    if( columnIndex == 0 )
-    {
-      if( element instanceof IFolder && ModelNature.isCalcCalseFolder( (IFolder)element ) )
-        return ""; //$NON-NLS-1$
-      return m_provider.getText( element );
-    }
-    
-    if( columnIndex == 1 && element instanceof IFolder && ModelNature.isCalcCalseFolder( (IFolder)element ) )
+    if( columnIndex == 0 && element instanceof IFolder && ModelNature.isCalcCalseFolder( (IFolder) element ) )
       return m_provider.getText( element );
 
-    if( columnIndex == 2 && element instanceof IFolder )
+    if( columnIndex == 1 && element instanceof IFolder )
     {
-      final IFolder folder = (IFolder)element;
-      return m_df.format( lastModifiedFromFolder(folder) );
+      final IFolder folder = (IFolder) element;
+      return m_df.format( lastModifiedFromFolder( folder ) );
     }
-    
+
     return ""; //$NON-NLS-1$
   }
 
-  public final static Date lastModifiedFromFolder( final IFolder folder )
+  private final static Date lastModifiedFromFolder( final IFolder folder )
   {
     return new Date( folder.getLocalTimeStamp() );
   }
@@ -130,7 +123,7 @@ public class CalcCaseTableLabelProvider extends LabelProvider implements ITableL
   {
     if( element != null && element.equals( m_markedCalcCase ) )
       return m_markedColor;
-    
+
     return null;
   }
 }

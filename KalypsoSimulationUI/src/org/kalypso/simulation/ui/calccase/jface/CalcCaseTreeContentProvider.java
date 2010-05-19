@@ -76,7 +76,7 @@ public class CalcCaseTreeContentProvider implements ITreeContentProvider
   public Object getParent( final Object element )
   {
     if( element instanceof IResource )
-      return ( (IResource)element ).getParent();
+      return ((IResource) element).getParent();
 
     return null;
   }
@@ -107,28 +107,27 @@ public class CalcCaseTreeContentProvider implements ITreeContentProvider
     {
       try
       {
-        final IContainer container = (IContainer)element;
+        final IContainer container = (IContainer) element;
         if( container instanceof IFolder && ModelNature.isCalcCalseFolder( container ) )
           return new Object[0];
-        
+
         if( !container.exists() )
           return new Object[0];
-        
+
         final IResource[] members = container.members( 0 );
         final List<IFolder> children = new ArrayList<IFolder>( members.length );
-        for( int i = 0; i < members.length; i++ )
+        for( final IResource resource : members )
         {
-          final IResource resource = members[i];
           if( resource.getType() == IResource.FOLDER )
           {
-            final IFolder childFolder = (IFolder)resource;
+            final IFolder childFolder = (IFolder) resource;
             m_collector.clear();
             childFolder.accept( m_collector, IResource.DEPTH_INFINITE, false );
             if( m_collector.getCalcCases().length > 0 )
               children.add( childFolder );
           }
         }
-        
+
         return children.toArray();
       }
       catch( final CoreException e )
@@ -144,13 +143,15 @@ public class CalcCaseTreeContentProvider implements ITreeContentProvider
   /**
    * @see org.eclipse.jface.viewers.IContentProvider#dispose()
    */
-  public void dispose()
-  {}
+  public void dispose( )
+  {
+  }
 
   /**
    * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object,
    *      java.lang.Object)
    */
   public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
-  {}
+  {
+  }
 }
