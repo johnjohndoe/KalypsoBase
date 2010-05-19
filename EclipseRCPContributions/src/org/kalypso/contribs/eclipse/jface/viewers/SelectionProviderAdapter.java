@@ -51,15 +51,10 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 
 /**
- * Default implementation of {@link org.eclipse.jface.viewers.IPostSelectionProvider}.
+ * Default implementation of {@link org.eclipse.jface.viewers.IPostSelectionProvider}.<br>
+ * Implements support for the listeners and the getter / setter. Subclasses may re-implement the getter/setter.<br>
  * 
- * <p>
- * Implements support for the listeners and the getter / setter.
- * 
- * Subclasses may reimplement the getter/setter.
- * </p>
- * 
- * @author belger
+ * @author Gernot Belger
  */
 public class SelectionProviderAdapter implements IPostSelectionProvider
 {
@@ -88,7 +83,7 @@ public class SelectionProviderAdapter implements IPostSelectionProvider
   /**
    * @see org.eclipse.jface.viewers.ISelectionProvider#getSelection()
    */
-  public ISelection getSelection()
+  public ISelection getSelection( )
   {
     if( m_selection == null )
       m_selection = StructuredSelection.EMPTY;
@@ -111,18 +106,16 @@ public class SelectionProviderAdapter implements IPostSelectionProvider
     m_postListeners.remove( listener );
   }
 
-  private final void fireSelectionChanged()
+  public final void fireSelectionChanged( )
   {
-    final ISelectionChangedListener[] listenersArray = m_listeners
-        .toArray( new ISelectionChangedListener[m_listeners.size()] );
+    final ISelectionChangedListener[] listenersArray = m_listeners.toArray( new ISelectionChangedListener[m_listeners.size()] );
 
     fireSelectionChanged( new SelectionChangedEvent( this, getSelection() ), listenersArray );
   }
 
-  public final void firePostSelectionChanged()
+  public final void firePostSelectionChanged( )
   {
-    final ISelectionChangedListener[] listenersArray = m_postListeners
-        .toArray( new ISelectionChangedListener[m_postListeners.size()] );
+    final ISelectionChangedListener[] listenersArray = m_postListeners.toArray( new ISelectionChangedListener[m_postListeners.size()] );
 
     fireSelectionChanged( new SelectionChangedEvent( this, getSelection() ), listenersArray );
   }
@@ -133,7 +126,7 @@ public class SelectionProviderAdapter implements IPostSelectionProvider
     {
       final SafeRunnable safeRunnable = new SafeRunnable()
       {
-        public void run()
+        public void run( )
         {
           l.selectionChanged( e );
         }
