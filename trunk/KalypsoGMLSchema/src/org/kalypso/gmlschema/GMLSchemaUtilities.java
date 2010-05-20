@@ -141,7 +141,7 @@ public class GMLSchemaUtilities
 // private static final Map<QName, Map<QName, Boolean>> m_substitutesCache = new HashMap<QName, Map<QName, Boolean>>();
 
   private static final Map<QNameUnique, Map<QNameUnique, Boolean>> m_substitutesIDCache = new HashMap<QNameUnique, Map<QNameUnique, Boolean>>();
-  
+
   private final static QName XSD_SCHEMALOCATION = new QName( NS.XSD, "schemaLocation" );
 
   /**
@@ -191,7 +191,7 @@ public class GMLSchemaUtilities
 //
 // return substitutesResult;
   }
-  
+
   /**
    * @param substitueeName
    *          Name of the type which may or may not be substituted by type
@@ -204,14 +204,14 @@ public class GMLSchemaUtilities
     // everyone is substituting himself
     if( featureType.getLocalQName() == localQName )
       return true;
-    
+
     // this comparison comes up as one of the very often used operations
     // using static comparison might be slightly faster then using isEmpty()
     // if check for string being null has to be done use StringUtils.isEmpty( pQName.getNamespaceURI() )
 
 // if( "".equals( pQName.getNamespaceURI() ) && type1.getLocalID() == mLocalID )
 // return true;
-    
+
     final IFeatureType substitutionGroupFT = featureType.getSubstitutionGroupFT();
     final boolean substitutesResult;
     if( substitutionGroupFT == null )
@@ -220,7 +220,7 @@ public class GMLSchemaUtilities
     {
       final QNameUnique substQName = substitutionGroupFT.getQName();
       final Map<QNameUnique, Boolean> substitutesMap = getSubsitutesMap( substQName );
-        
+
       final Boolean cachedResult = substitutesMap.get( pQName );
       if( cachedResult != null )
       {
@@ -232,7 +232,7 @@ public class GMLSchemaUtilities
         substitutesMap.put( pQName, substitutesResult );
       }
     }
-    
+
     return substitutesResult;
   }
 
@@ -453,7 +453,7 @@ public class GMLSchemaUtilities
     final QName base = restriction.getBase();
 
     if( base == null )
-      throw new GMLSchemaException( Messages.getString("org.kalypso.gmlschema.GMLSchemaUtilities.0", restriction) ); //$NON-NLS-1$
+      throw new GMLSchemaException( Messages.getString( "org.kalypso.gmlschema.GMLSchemaUtilities.0", restriction ) ); //$NON-NLS-1$
     if( isKnownType( base, gmlVersion ) )
       return getKnownTypeFor( base, gmlVersion );
 
@@ -507,10 +507,10 @@ public class GMLSchemaUtilities
       case CONSTRUCTION_NAMED_TYPE:
         final TypeReference typeReference = ((GMLSchema) schema).resolveTypeReference( qName );
         if( typeReference == null )
-          throw new GMLSchemaException( Messages.getString("org.kalypso.gmlschema.GMLSchemaUtilities.1", qName )); //$NON-NLS-1$
+          throw new GMLSchemaException( Messages.getString( "org.kalypso.gmlschema.GMLSchemaUtilities.1", qName ) ); //$NON-NLS-1$
         return findBaseType( typeReference, gmlVersion );
       default:
-        throw new GMLSchemaException( Messages.getString("org.kalypso.gmlschema.GMLSchemaUtilities.2", element.toString() )); //$NON-NLS-1$
+        throw new GMLSchemaException( Messages.getString( "org.kalypso.gmlschema.GMLSchemaUtilities.2", element.toString() ) ); //$NON-NLS-1$
     }
   }
 
@@ -1126,7 +1126,7 @@ public class GMLSchemaUtilities
     }
     return visitor.getSubstitutes( includeAbstract, inclusiveThis );
   }
-  
+
   public static String getSchemaLocation( final Attributes atts )
   {
     for( int i = 0; i < atts.getLength(); i++ )
@@ -1140,5 +1140,25 @@ public class GMLSchemaUtilities
     }
     // no schemalocation found in attributes
     return null;
+  }
+
+  /**
+   * Tries to find the feature type of a given name.<br>
+   * Exceptions are silently ignored, in this case <code>null</code> is returned.
+   */
+  public static IFeatureType getFeatureTypeQuiet( final QName qname )
+  {
+    try
+    {
+      final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
+      final GMLSchema schema = schemaCatalog.getSchema( qname.getNamespaceURI(), (String) null );
+      return schema.getFeatureType( qname );
+    }
+    catch( final GMLSchemaException e )
+    {
+      // ignore
+      e.printStackTrace();
+      return null;
+    }
   }
 }

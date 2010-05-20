@@ -66,7 +66,6 @@ import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
@@ -301,14 +300,10 @@ public class ProfileFeatureFactory implements IWspmConstants
     final Feature recordDefinition = FeatureHelper.resolveLink( feature, ObservationFeatureFactory.OM_RESULTDEFINITION );
     if( recordDefinition == null )
     {
-      final GMLWorkspace workspace = feature.getWorkspace();
-      final IRelationType rdParentRelation = (IRelationType) feature.getFeatureType().getProperty( ObservationFeatureFactory.OM_RESULTDEFINITION );
-      final Feature rd = workspace.createFeature( feature, rdParentRelation, workspace.getGMLSchema().getFeatureType( ObservationFeatureFactory.SWE_RECORDDEFINITIONTYPE ) );
-
-      return new FeatureChange( feature, rdParentRelation, rd );
+      final Feature rd = ObservationFeatureFactory.createSafeFeature( feature, ObservationFeatureFactory.OM_RESULTDEFINITION, ObservationFeatureFactory.SWE_RECORDDEFINITIONTYPE );
+      return new FeatureChange( feature, ObservationFeatureFactory.OM_RESULTDEFINITION, rd );
     }
 
     return null;
   }
-
 }
