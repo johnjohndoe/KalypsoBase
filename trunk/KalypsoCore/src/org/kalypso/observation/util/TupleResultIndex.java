@@ -42,6 +42,7 @@ package org.kalypso.observation.util;
 
 import java.util.Date;
 import java.util.Iterator;
+import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -63,7 +64,7 @@ public class TupleResultIndex
 {
   private final ITupleResultChangedListener m_changeListener = new ITupleResultChangedListener()
   {
-    public void componentsChanged( IComponent[] components, TYPE type )
+    public void componentsChanged( final IComponent[] components, final TYPE type )
     {
       handleComponentsChanged( components );
     }
@@ -73,7 +74,7 @@ public class TupleResultIndex
       handleRecordsChanged( records, type );
     }
 
-    public void valuesChanged( ITupleResultChangedListener.ValueChange[] changes )
+    public void valuesChanged( final ITupleResultChangedListener.ValueChange[] changes )
     {
       handleValuesChanged( changes );
     }
@@ -127,7 +128,7 @@ public class TupleResultIndex
   }
 
   /**
-   * TODO: move into helper class<br>
+   * FIXME: move into helper class<br>
    * 
    * @return an interpolated object based in the neighboring objects before and after the given domain
    */
@@ -135,7 +136,7 @@ public class TupleResultIndex
   {
     checkIndex();
 
-    XMLGregorianCalendar domain = DateUtilities.toXMLGregorianCalendar( date );
+    final XMLGregorianCalendar domain = DateUtilities.toXMLGregorianCalendar( date );
 
     if( m_index.containsKey( domain ) )
       return m_index.get( domain ).getValue( component );
@@ -239,10 +240,8 @@ public class TupleResultIndex
     if( m_index == null )
       return;
 
-    for( int i = 0; i < changes.length; i++ )
+    for( final ValueChange change : changes )
     {
-      final ValueChange change = changes[i];
-
       final int index = change.getComponent();
       final IComponent component = m_result.getComponent( index );
       if( component.equals( m_component ) )
@@ -251,5 +250,13 @@ public class TupleResultIndex
         m_index.put( change.getNewValue(), change.getRecord() );
       }
     }
+  }
+
+  public Object[] getKeys( )
+  {
+    checkIndex();
+
+    final Set<Object> keys = m_index.keySet();
+    return keys.toArray( new Object[keys.size()] );
   }
 }
