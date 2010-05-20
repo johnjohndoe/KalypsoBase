@@ -51,7 +51,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
-import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -109,7 +108,7 @@ import org.xml.sax.XMLReader;
 
 /**
  * Helper - Klasse, um Gml zu lesen und zu schreiben.
- *
+ * 
  * @author Gernot Belger
  */
 public final class GmlSerializer
@@ -158,7 +157,7 @@ public final class GmlSerializer
 
   /**
    * REMARK: This method closes the given writer, which is VERY bad. Every caller should close the write on its own
-   *
+   * 
    * @deprecated Because this method closes it writer. Change to {@link #serializeWorkspace(Writer, GMLWorkspace,
    *             String, false)}, rewrite your code, then we can get rid of this method and the flag.
    */
@@ -251,7 +250,7 @@ public final class GmlSerializer
       else
       {
         final long contentLength = getContentLength( gmlURL );
-        final String tskMsg = Messages.getString("org.kalypso.ogc.gml.serialize.GmlSerializer.3", gmlURL ); //$NON-NLS-1$
+        final String tskMsg = Messages.getString( "org.kalypso.ogc.gml.serialize.GmlSerializer.3", gmlURL ); //$NON-NLS-1$
         monitor.beginTask( tskMsg, (int) contentLength );
         bis = new ProgressInputStream( urlStream, contentLength, monitor );
       }
@@ -273,7 +272,7 @@ public final class GmlSerializer
     {
       // Handle cancel of progress monitor: ProgressInputStreams throws IOException with a CoreException as cause
       if( e == ProgressInputStream.CANCEL_EXCEPTION )
-        throw new CoreException( StatusUtilities.createStatus( IStatus.CANCEL, Messages.getString("org.kalypso.ogc.gml.serialize.GmlSerializer.5"), e ) ); //$NON-NLS-1$
+        throw new CoreException( StatusUtilities.createStatus( IStatus.CANCEL, Messages.getString( "org.kalypso.ogc.gml.serialize.GmlSerializer.5" ), e ) ); //$NON-NLS-1$
 
       throw e;
     }
@@ -405,7 +404,7 @@ public final class GmlSerializer
 
   }
 
-  public static void createGmlFile( final QName rootFeatureQName, final String[] introduceNamespaces, final IFile targetFile, final IProgressMonitor monitor, final IFeatureProviderFactory factory ) throws CoreException, InvocationTargetException
+  public static void createGmlFile( final QName rootFeatureQName, final String[] introduceNamespaces, final IFile targetFile, final IProgressMonitor monitor, final IFeatureProviderFactory factory ) throws CoreException, GMLSchemaException
   {
     monitor.beginTask( Messages.getString( "org.kalypso.ogc.gml.serialize.GmlSerializer.10" ), 2 ); //$NON-NLS-1$
 
@@ -459,7 +458,7 @@ public final class GmlSerializer
 
   /**
    * This function loads a workspace from a {@link IFile}.
-   *
+   * 
    * @param file
    *          The file of the workspace.
    * @return The workspace of the file.
@@ -476,7 +475,7 @@ public final class GmlSerializer
   /**
    * This function saves a given workspace to a file. Don't forget to set your charset to the file you are about to
    * create. It will be used by this function.
-   *
+   * 
    * @param workspace
    *          The workspace to save.
    * @param file
@@ -485,7 +484,7 @@ public final class GmlSerializer
   public static void saveWorkspace( final GMLWorkspace workspace, final IFile file ) throws Exception
   {
     if( workspace == null || file == null )
-      throw new Exception( Messages.getString("org.kalypso.ogc.gml.serialize.GmlSerializer.2") ); //$NON-NLS-1$
+      throw new Exception( Messages.getString( "org.kalypso.ogc.gml.serialize.GmlSerializer.2" ) ); //$NON-NLS-1$
 
     /* The default encoding is that of the file. */
     final String encoding = file.getCharset();

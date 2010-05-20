@@ -42,7 +42,6 @@ package org.kalypso.gmlschema;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Date;
@@ -57,7 +56,7 @@ import org.shiftone.cache.policy.lfu.LfuCacheFactory;
 /**
  * Cached GMLSchemata zweistufig. Zuerst wird das eigentliche Schema (aus einer URL) lokal in einem File-Cache
  * gespeichert und dann zusätzlich noch im Speicher gehalten.
- *
+ * 
  * @author schlienger
  */
 public class GMLSchemaCache
@@ -92,14 +91,14 @@ public class GMLSchemaCache
 
   /**
    * Lädt das Schmea aus dieser URL und nimmt diese id für den cache
-   *
+   * 
    * @param namespace
    *          ID für den Cache, wenn null, wird die id anhand des geladenen schemas ermittelt
    */
-  public synchronized GMLSchema getSchema( final String namespace, final String gmlVersion, final URL schemaURL ) throws InvocationTargetException
+  public synchronized GMLSchema getSchema( final String namespace, final String gmlVersion, final URL schemaURL ) throws GMLSchemaException
   {
     if( schemaURL == null )
-      throw new InvocationTargetException( new GMLSchemaException( Messages.getString("org.kalypso.gmlschema.GMLSchemaCache.0", namespace )) ); //$NON-NLS-1$
+      throw new GMLSchemaException( Messages.getString( "org.kalypso.gmlschema.GMLSchemaCache.0", namespace ) ); //$NON-NLS-1$
 
     Debug.CATALOG.printf( "GML-Schema cache lookup: %s, %s, %s%n", namespace, gmlVersion, schemaURL ); //$NON-NLS-1$
 
@@ -153,20 +152,12 @@ public class GMLSchemaCache
       }
     }
 
-    try
-    {
-      final GMLSchema schema = GMLSchemaFactory.createGMLSchema( gmlVersion, schemaURL );
-      final Date validity = lastModified( schemaURL );
-      m_memCache.addObject( publicId, new GMLSchemaWrapper( schema, validity, currentMillis ) );
+    final GMLSchema schema = GMLSchemaFactory.createGMLSchema( gmlVersion, schemaURL );
+    final Date validity = lastModified( schemaURL );
+    m_memCache.addObject( publicId, new GMLSchemaWrapper( schema, validity, currentMillis ) );
 
-      Debug.CATALOG.printf( "Schema successfully looked-up: %s%n%n", namespace ); //$NON-NLS-1$
-      return schema;
-    }
-    catch( final GMLSchemaException e )
-    {
-      Debug.CATALOG.printf( "Schema was not loaded/looked-up: %s%n%n", namespace ); //$NON-NLS-1$
-      throw new InvocationTargetException( e );
-    }
+    Debug.CATALOG.printf( "Schema successfully looked-up: %s%n%n", namespace ); //$NON-NLS-1$
+    return schema;
 
   }
 
@@ -243,7 +234,7 @@ public class GMLSchemaCache
 
   /**
    * Clears the cache. Schematas will be reloaded after this operation.
-   *
+   * 
    * @param onlyMemoryCache
    *          If true, only the memory cache is cleared. Else, file and memory cache are cleared.
    */

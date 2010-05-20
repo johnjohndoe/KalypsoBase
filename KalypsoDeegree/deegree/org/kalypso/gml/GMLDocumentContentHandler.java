@@ -40,16 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gml;
 
-import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.Map;
 
-import org.eclipse.core.runtime.IStatus;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.GMLSchemaLoaderWithLocalCache;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.IGMLSchema;
-import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.io.sax.parser.DelegatingContentHandler;
@@ -67,25 +63,25 @@ import org.xml.sax.XMLReader;
  * <p>
  * All the rest of parsing is delegated to the {@link GMLContentHandler} content handler.
  * </p>
- *
+ * 
  * @author Gernot Belger
  * @author Felipe Maximino - Refactoring
  */
 public class GMLDocumentContentHandler extends DelegatingContentHandler implements IWorkspaceProvider
-{ 
-  private XMLReader m_xmlReader;
-  
-  private URL m_schemaLocationHint;
-  
-  private URL m_context;
-  
-  private IFeatureProviderFactory m_providerFactory;
-  
+{
+  private final XMLReader m_xmlReader;
+
+  private final URL m_schemaLocationHint;
+
+  private final URL m_context;
+
+  private final IFeatureProviderFactory m_providerFactory;
+
   private String m_schemaLocationString;
 
   /** Schema of root feature */
   private IGMLSchema m_rootSchema;
-  
+
   public GMLDocumentContentHandler( final XMLReader xmlReader, final ContentHandler parentContentHandler, final URL schemaLocationHint, final URL context, final IFeatureProviderFactory providerFactory )
   {
     super( xmlReader, parentContentHandler );
@@ -94,60 +90,54 @@ public class GMLDocumentContentHandler extends DelegatingContentHandler implemen
     m_schemaLocationHint = schemaLocationHint;
     m_context = context;
     m_providerFactory = providerFactory;
-    
+
     m_schemaLocationString = null;
     m_rootSchema = null;
-  }  
-  
+  }
+
   /**
-   * @see org.kalypsodeegree_impl.io.sax.parser.DelegatingContentHandler#endElement(java.lang.String, java.lang.String, java.lang.String)
+   * @see org.kalypsodeegree_impl.io.sax.parser.DelegatingContentHandler#endElement(java.lang.String, java.lang.String,
+   *      java.lang.String)
    */
   @Override
-  public void endElement( String uri, String localName, String qName )
+  public void endElement( final String uri, final String localName, final String qName )
   {
     endDelegation();
   }
-  
+
   /**
-   * @see org.kalypsodeegree_impl.io.sax.parser.DelegatingContentHandler#startElement(java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
+   * @see org.kalypsodeegree_impl.io.sax.parser.DelegatingContentHandler#startElement(java.lang.String,
+   *      java.lang.String, java.lang.String, org.xml.sax.Attributes)
    */
   @Override
-  public void startElement( String uri, String localName, String qName, Attributes atts ) throws SAXException
+  public void startElement( final String uri, final String localName, final String qName, final Attributes atts ) throws SAXException
   {
-    GMLSchemaLoaderWithLocalCache schemaLoader = new GMLSchemaLoaderWithLocalCache();
-    loadDocumentSchema( schemaLoader, uri, atts);
-    
+    final GMLSchemaLoaderWithLocalCache schemaLoader = new GMLSchemaLoaderWithLocalCache();
+    loadDocumentSchema( schemaLoader, uri, atts );
+
     delegate( new GMLContentHandler( m_xmlReader, this, m_context, schemaLoader ) );
     m_delegate.startElement( uri, localName, qName, atts );
   }
-  
-  private void loadDocumentSchema( GMLSchemaLoaderWithLocalCache schemaLoader, String uri, Attributes atts ) throws SAXException
+
+  private void loadDocumentSchema( final GMLSchemaLoaderWithLocalCache schemaLoader, final String uri, final Attributes atts ) throws SAXException
   {
     // first element may have schema-location
     m_schemaLocationString = GMLSchemaUtilities.getSchemaLocation( atts );
-        
-    try
-    {
-      m_rootSchema = schemaLoader.loadMainSchema( uri, atts, m_schemaLocationString, m_schemaLocationHint, m_context );
-      
-      final Map<String, URL> namespaces = GMLSchemaUtilities.parseSchemaLocation( m_schemaLocationString, m_context );
-      /* If a localtionHint is given, this precedes any schemaLocation in the GML-File */
-      if( m_schemaLocationHint != null )
-        namespaces.put( uri, m_schemaLocationHint );
-      
-      schemaLoader.setSchemaLocation( namespaces );
-    }
-    catch (InvocationTargetException e) {
-      /* Log it, because the following SaxException eats the inner exception */
-      final IStatus status = StatusUtilities.createStatus( IStatus.WARNING, "Failed to load schema from catalog: " + uri, null );
-      KalypsoDeegreePlugin.getDefault().getLog().log( status );
-    }
+
+    m_rootSchema = schemaLoader.loadMainSchema( uri, atts, m_schemaLocationString, m_schemaLocationHint, m_context );
+
+    final Map<String, URL> namespaces = GMLSchemaUtilities.parseSchemaLocation( m_schemaLocationString, m_context );
+    /* If a localtionHint is given, this precedes any schemaLocation in the GML-File */
+    if( m_schemaLocationHint != null )
+      namespaces.put( uri, m_schemaLocationHint );
+
+    schemaLoader.setSchemaLocation( namespaces );
   }
 
   public GMLWorkspace getWorkspace( ) throws GMLException
-  { 
+  {
     final Feature rootFeature = ((IRootFeatureProvider) m_delegate).getRootFeature();
-  
+
     return FeatureFactory.createGMLWorkspace( m_rootSchema, rootFeature, m_context, m_schemaLocationString, m_providerFactory, null );
   }
 }

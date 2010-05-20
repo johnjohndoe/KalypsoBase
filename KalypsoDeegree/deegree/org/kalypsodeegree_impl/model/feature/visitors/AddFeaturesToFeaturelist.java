@@ -35,7 +35,6 @@
  */
 package org.kalypsodeegree_impl.model.feature.visitors;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 import java.util.Properties;
 
@@ -43,6 +42,7 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
+import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -137,7 +137,7 @@ public class AddFeaturesToFeaturelist implements FeatureVisitor
     return true;
   }
 
-  private Feature getTargetFeature( final Feature sourceFeature ) throws InvocationTargetException
+  private Feature getTargetFeature( final Feature sourceFeature ) throws GMLSchemaException
   {
     final Object fromID = sourceFeature.getProperty( m_fromID );
 
@@ -165,7 +165,7 @@ public class AddFeaturesToFeaturelist implements FeatureVisitor
     throw new IllegalArgumentException( "Argument 'handleExisting' must be one of 'change', 'overwrite' or 'existing', but is: " + m_handleExisting );
   }
 
-  private IFeatureType findTargetFeatureType( final Feature sourceFeature ) throws InvocationTargetException
+  private IFeatureType findTargetFeatureType( final Feature sourceFeature ) throws GMLSchemaException
   {
     if( m_targetFeatureType == null )
       return m_featureType;

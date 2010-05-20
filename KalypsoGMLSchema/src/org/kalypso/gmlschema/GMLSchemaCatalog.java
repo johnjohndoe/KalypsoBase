@@ -1,6 +1,5 @@
 package org.kalypso.gmlschema;
 
-import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Date;
@@ -16,7 +15,7 @@ import org.kalypso.gmlschema.i18n.Messages;
  * <p>
  * GML Schema Catalog, benutzt den {@link org.kalypsodeegree_impl.gml.schema.GMLSchemaCache}.
  * </p>
- *
+ * 
  * @author schlienger
  */
 public final class GMLSchemaCatalog
@@ -27,7 +26,7 @@ public final class GMLSchemaCatalog
 
   /**
    * @throws NullPointerException
-   *             If catalog or cacheDirectory is null.
+   *           If catalog or cacheDirectory is null.
    */
   public GMLSchemaCatalog( final IUrlCatalog catalog )
   {
@@ -46,7 +45,7 @@ public final class GMLSchemaCatalog
 
   /**
    * Lädt ein Schema aus dieser URL (nicht aus dem Cache!) und fügt es dann dem cache hinzu (mit namespace als key).
-   *
+   * 
    * @return null, wenn schema nicht geladen werden konnte
    */
   public GMLSchema getSchema( final String gmlVersion, final URL schemaLocation )
@@ -66,7 +65,7 @@ public final class GMLSchemaCatalog
     }
     catch( final Exception e )
     {
-      final String message = Messages.getString("org.kalypso.gmlschema.GMLSchemaCatalog.0", schemaLocation); //$NON-NLS-1$
+      final String message = Messages.getString( "org.kalypso.gmlschema.GMLSchemaCatalog.0", schemaLocation ); //$NON-NLS-1$
       StatusUtilities.statusFromThrowable( e, message );
 
       Debug.CATALOG.printf( message );
@@ -79,7 +78,7 @@ public final class GMLSchemaCatalog
   /**
    * Lädt ein (eventuell gecachetes Schema über den Katalog. Als CacheId wird dieser Name benutzt.
    */
-  public GMLSchema getSchema( final String namespace, final String gmlVersion ) throws InvocationTargetException
+  public GMLSchema getSchema( final String namespace, final String gmlVersion ) throws GMLSchemaException
   {
     return getSchema( namespace, gmlVersion, null );
   }
@@ -91,7 +90,7 @@ public final class GMLSchemaCatalog
    * Ist im Katalog eine schema-location gegeben, wird diese bevorzugt.
    * </p>
    */
-  public GMLSchema getSchema( final String namespace, final String gmlVersion, final URL schemaLocation ) throws InvocationTargetException
+  public GMLSchema getSchema( final String namespace, final String gmlVersion, final URL schemaLocation ) throws GMLSchemaException
   {
     Debug.CATALOG.printf( "Trying to retrieve schema from cache for:%n\tnamespace: %s%n\tgmlVersion: %s%n\tschemaLocation: %s%n", namespace, gmlVersion, schemaLocation ); //$NON-NLS-1$
 
@@ -123,7 +122,6 @@ public final class GMLSchemaCatalog
         version = gmlVersion;
     }
 
-
     Debug.CATALOG.printf( "Determined version and catalogUrl: %s - %s%n", version, catalogUrl ); //$NON-NLS-1$
 
     final URL schemaUrl = catalogUrl == null ? schemaLocation : catalogUrl;
@@ -144,7 +142,7 @@ public final class GMLSchemaCatalog
     }
     catch( final MalformedURLException e )
     {
-      throw new InvocationTargetException( e );
+      throw new GMLSchemaException( e );
     }
   }
 

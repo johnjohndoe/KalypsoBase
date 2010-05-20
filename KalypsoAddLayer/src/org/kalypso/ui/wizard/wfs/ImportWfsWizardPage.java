@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.wizard.wfs;
 
-import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -89,6 +88,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
+import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -105,7 +105,7 @@ import org.kalypsodeegree.filterencoding.Filter;
  */
 public class ImportWfsWizardPage extends WizardPage
 {
-  private static final IStatus LOADING_STATUS = StatusUtilities.createStatus( IStatus.INFO, Messages.getString("org.kalypso.ui.wizard.wfs.ImportWfsWizardPage.0"), null ); //$NON-NLS-1$
+  private static final IStatus LOADING_STATUS = StatusUtilities.createStatus( IStatus.INFO, Messages.getString( "org.kalypso.ui.wizard.wfs.ImportWfsWizardPage.0" ), null ); //$NON-NLS-1$
 
   protected Button getDefault;
 
@@ -245,7 +245,7 @@ public class ImportWfsWizardPage extends WizardPage
 
     setControl( composite );
 
-    setMessage( Messages.getString("org.kalypso.ui.wizard.wfs.ImportWfsWizardPage.1") ); //$NON-NLS-1$
+    setMessage( Messages.getString( "org.kalypso.ui.wizard.wfs.ImportWfsWizardPage.1" ) ); //$NON-NLS-1$
     setPageComplete( false );
     setStatus( null );
   }
@@ -255,12 +255,12 @@ public class ImportWfsWizardPage extends WizardPage
     final Group fieldGroup = new Group( parent, SWT.NULL );
     fieldGroup.setLayout( new GridLayout( 2, false ) );
     fieldGroup.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    fieldGroup.setText( Messages.getString("org.kalypso.ui.wizard.wfs.ImportWfsWizardPage.2") ); //$NON-NLS-1$
+    fieldGroup.setText( Messages.getString( "org.kalypso.ui.wizard.wfs.ImportWfsWizardPage.2" ) ); //$NON-NLS-1$
 
     // add url
     m_labelUrl = new Label( fieldGroup, SWT.NONE );
-    m_labelUrl.setText( Messages.getString("org.kalypso.ui.wizard.wfs.ImportWfsWizardPage.3") ); //$NON-NLS-1$
-    m_labelUrl.setToolTipText( Messages.getString("org.kalypso.ui.wizard.wfs.ImportWfsWizardPage.4") ); //$NON-NLS-1$
+    m_labelUrl.setText( Messages.getString( "org.kalypso.ui.wizard.wfs.ImportWfsWizardPage.3" ) ); //$NON-NLS-1$
+    m_labelUrl.setToolTipText( Messages.getString( "org.kalypso.ui.wizard.wfs.ImportWfsWizardPage.4" ) ); //$NON-NLS-1$
     m_labelUrl.setLayoutData( new GridData( SWT.BEGINNING, SWT.CENTER, false, false ) );
 
     // initialize availabel Servers
@@ -317,7 +317,7 @@ public class ImportWfsWizardPage extends WizardPage
   private void createLayerSelectionControl( final Composite composite )
   {
     m_layerGroup = new Group( composite, SWT.CENTER );
-    m_layerGroup.setText( Messages.getString("org.kalypso.ui.wizard.wfs.ImportWfsWizardPage.5") ); //$NON-NLS-1$
+    m_layerGroup.setText( Messages.getString( "org.kalypso.ui.wizard.wfs.ImportWfsWizardPage.5" ) ); //$NON-NLS-1$
     final GridLayout gridLayout = new GridLayout( 4, false );
     gridLayout.marginHeight = 10;
     gridLayout.horizontalSpacing = 10;
@@ -336,7 +336,7 @@ public class ImportWfsWizardPage extends WizardPage
 
     m_addLayer = new Button( m_layerGroup, SWT.PUSH );
     m_addLayer.setImage( ImageProvider.IMAGE_STYLEEDITOR_FORWARD.createImage() );
-    m_addLayer.setToolTipText( Messages.getString("org.kalypso.ui.wizard.wfs.ImportWfsWizardPage.6") ); //$NON-NLS-1$
+    m_addLayer.setToolTipText( Messages.getString( "org.kalypso.ui.wizard.wfs.ImportWfsWizardPage.6" ) ); //$NON-NLS-1$
     m_addLayer.addSelectionListener( m_addButtonSelectionListener );
     m_addLayer.setEnabled( false );
     m_listRightSide = new ListViewer( m_layerGroup, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL );
@@ -352,11 +352,11 @@ public class ImportWfsWizardPage extends WizardPage
     m_removeLayer = new Button( m_leftsideButtonC, SWT.PUSH );
     m_removeLayer.setEnabled( false );
     m_removeLayer.setImage( ImageProvider.IMAGE_STYLEEDITOR_REMOVE.createImage() );
-    m_removeLayer.setToolTipText( Messages.getString("org.kalypso.ui.wizard.wfs.ImportWfsWizardPage.7") ); //$NON-NLS-1$
+    m_removeLayer.setToolTipText( Messages.getString( "org.kalypso.ui.wizard.wfs.ImportWfsWizardPage.7" ) ); //$NON-NLS-1$
     m_removeLayer.addSelectionListener( m_removeButtonSelectionListener );
     m_addFilterButton = new Button( m_leftsideButtonC, SWT.NULL );
     m_addFilterButton.setImage( ImageProvider.IMAGE_FILTERDIALOG_ADD_FILTER.createImage() );
-    m_addFilterButton.setToolTipText( Messages.getString("org.kalypso.ui.wizard.wfs.ImportWfsWizardPage.8") ); //$NON-NLS-1$
+    m_addFilterButton.setToolTipText( Messages.getString( "org.kalypso.ui.wizard.wfs.ImportWfsWizardPage.8" ) ); //$NON-NLS-1$
     m_addFilterButton.addSelectionListener( m_filterButtonSelectionListener );
     m_addFilterButton.setEnabled( false );
     m_layerGroup.setVisible( true );
@@ -405,7 +405,7 @@ public class ImportWfsWizardPage extends WizardPage
     catch( final MalformedURLException e )
     {
       e.printStackTrace();
-      final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, Messages.getString("org.kalypso.ui.wizard.wfs.ImportWfsWizardPage.9") + m_uri, e ); //$NON-NLS-1$
+      final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.ui.wizard.wfs.ImportWfsWizardPage.9" ) + m_uri, e ); //$NON-NLS-1$
       setErrorMessage( status.getMessage() );
       setStatus( status );
     }
@@ -495,10 +495,10 @@ public class ImportWfsWizardPage extends WizardPage
         m_filter.put( wfsFT, dialog.getFilter() );
       revalidatePage();
     }
-    catch( final InvocationTargetException e )
+    catch( final GMLSchemaException e )
     {
-      e.getTargetException().printStackTrace();
-      setErrorMessage( e.getTargetException().toString() );
+      e.printStackTrace();
+      setErrorMessage( e.toString() );
     }
   }
 

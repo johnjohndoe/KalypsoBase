@@ -1,11 +1,11 @@
 package org.kalypso.ogc.gml.convert.source;
 
-import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 
 import javax.xml.namespace.QName;
 
 import org.kalypso.gml.util.Gmlnew;
+import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.ogc.gml.convert.GmlConvertException;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
@@ -29,16 +29,16 @@ public class GmlNewHandler implements ISourceHandler
    * @throws GmlConvertException
    * @see org.kalypso.ogc.gml.convert.source.ISourceHandler#getWorkspace()
    */
-  public GMLWorkspace getWorkspace() throws GmlConvertException
+  public GMLWorkspace getWorkspace( ) throws GmlConvertException
   {
     try
     {
       return FeatureFactory.createGMLWorkspace( m_featureQName, m_context, null );
     }
-    catch( final InvocationTargetException e )
+    catch( final GMLSchemaException e )
     {
       final String msg = String.format( "Unable to create GML with root feture '%s'", m_featureQName );//$NON-NLS-1$
-      throw new GmlConvertException( msg, e.getTargetException() );
+      throw new GmlConvertException( msg, e );
     }
   }
 

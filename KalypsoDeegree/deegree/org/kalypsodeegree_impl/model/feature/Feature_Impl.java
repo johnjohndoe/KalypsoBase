@@ -72,7 +72,6 @@ public class Feature_Impl extends PlatformObject implements Feature
 // */
 // @Deprecated
 // private Object m_geometry = null;
-  
 
   /**
    * all property-values are stored here in sequential order (as defined in application-schema) properties with
@@ -125,7 +124,6 @@ public class Feature_Impl extends PlatformObject implements Feature
    *         java.util.List-objects
    * @see org.kalypsodeegree.model.feature.Feature#getProperties()
    */
-  @SuppressWarnings("deprecation")
   @Deprecated
   public Object[] getProperties( )
   {

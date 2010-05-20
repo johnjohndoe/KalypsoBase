@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.service.wps.server.operations;
 
-import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -65,6 +64,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
+import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
@@ -322,7 +322,7 @@ public class DescribeProcessOperation implements IOperation
       final URL context = gmlSchema.getContext();
       schema = context.toString();
     }
-    catch( final InvocationTargetException e )
+    catch( final GMLSchemaException e )
     {
       // gobble
       schema = null;

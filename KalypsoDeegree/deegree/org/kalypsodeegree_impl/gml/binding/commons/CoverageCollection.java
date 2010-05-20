@@ -35,13 +35,13 @@
  */
 package org.kalypsodeegree_impl.gml.binding.commons;
 
-import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 
 import ogc31.www.opengis.net.gml.FileType;
 import ogc31.www.opengis.net.gml.FileValueModelType;
 
 import org.kalypso.contribs.ogc31.KalypsoOGC31JAXBcontext;
+import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
@@ -53,7 +53,7 @@ import org.kalypsodeegree_impl.model.feature.IFeatureProviderFactory;
 public class CoverageCollection extends FeatureWrapperCollection<ICoverage> implements ICoverageCollection
 {
   /** Creates a new workspace with this collection as root feature. */
-  public CoverageCollection( final URL context, final IFeatureProviderFactory providerFactory ) throws InvocationTargetException
+  public CoverageCollection( final URL context, final IFeatureProviderFactory providerFactory ) throws GMLSchemaException
   {
     this( FeatureFactory.createGMLWorkspace( ICoverageCollection.QNAME, context, providerFactory ).getRootFeature() );
   }
