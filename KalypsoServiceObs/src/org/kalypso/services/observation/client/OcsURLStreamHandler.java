@@ -55,8 +55,8 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.request.RequestFactory;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
-import org.kalypso.ogc.sensor.zml.ZmlURL;
 import org.kalypso.services.observation.KalypsoServiceObsActivator;
+import org.kalypso.services.observation.ObservationServiceUtils;
 import org.kalypso.services.observation.i18n.Messages;
 import org.kalypso.services.observation.sei.DataBean;
 import org.kalypso.services.observation.sei.IObservationService;
@@ -143,22 +143,22 @@ public class OcsURLStreamHandler extends AbstractURLStreamHandlerService
   {
     final String href = u.toExternalForm();
 
-    m_logger.info( Messages.getString("org.kalypso.services.observation.client.OcsURLStreamHandler.0") + href ); //$NON-NLS-1$
+    m_logger.info( Messages.getString( "org.kalypso.services.observation.client.OcsURLStreamHandler.0" ) + href ); //$NON-NLS-1$
 
     // check if an empty id is provided, in that case use the request if provided
-    if( ZmlURL.isEmpty( href ) )
+    if( org.kalypso.ogc.sensor.zml.ZmlURL.isEmpty( href ) )
     {
       try
       {
-        m_logger.warning( Messages.getString("org.kalypso.services.observation.client.OcsURLStreamHandler.1") ); //$NON-NLS-1$
+        m_logger.warning( Messages.getString( "org.kalypso.services.observation.client.OcsURLStreamHandler.1" ) ); //$NON-NLS-1$
 
         return tryWithRequest( href, null );
       }
       catch( final Exception e )
       {
-        m_logger.warning( Messages.getString("org.kalypso.services.observation.client.OcsURLStreamHandler.2") + e.getLocalizedMessage() ); //$NON-NLS-1$
+        m_logger.warning( Messages.getString( "org.kalypso.services.observation.client.OcsURLStreamHandler.2" ) + e.getLocalizedMessage() ); //$NON-NLS-1$
 
-        throw new IOException( Messages.getString("org.kalypso.services.observation.client.OcsURLStreamHandler.3") + e.getLocalizedMessage() ); //$NON-NLS-1$
+        throw new IOException( Messages.getString( "org.kalypso.services.observation.client.OcsURLStreamHandler.3" ) + e.getLocalizedMessage() ); //$NON-NLS-1$
       }
     }
 
@@ -168,9 +168,8 @@ public class OcsURLStreamHandler extends AbstractURLStreamHandlerService
     try
     {
       // use the default url connection if this is not a kalypso server-side one
-      if( !ZmlURL.isServerSide( href ) )
+      if( !ObservationServiceUtils.isServerSide( href ) )
         return u.openConnection();
-
 
       // else fetch the observation from the server
       final IObservationService srv = KalypsoServiceObsActivator.getDefault().getDefaultObservationService();
@@ -192,23 +191,23 @@ public class OcsURLStreamHandler extends AbstractURLStreamHandlerService
     }
     catch( final Throwable e ) // generic exception caught for simplicity
     {
-      final IStatus status = StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.services.observation.client.OcsURLStreamHandler.4") + href ); //$NON-NLS-1$
+      final IStatus status = StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.services.observation.client.OcsURLStreamHandler.4" ) + href ); //$NON-NLS-1$
       KalypsoServiceObsActivator.getDefault().getLog().log( status );
 
       try
       {
-        m_logger.warning( Messages.getString("org.kalypso.services.observation.client.OcsURLStreamHandler.5") ); //$NON-NLS-1$
+        m_logger.warning( Messages.getString( "org.kalypso.services.observation.client.OcsURLStreamHandler.5" ) ); //$NON-NLS-1$
 
         return tryWithRequest( href, file );
       }
       catch( final Exception se )
       {
-        m_logger.warning( Messages.getString("org.kalypso.services.observation.client.OcsURLStreamHandler.6") ); //$NON-NLS-1$
-        final IStatus status2 = StatusUtilities.statusFromThrowable( se, Messages.getString("org.kalypso.services.observation.client.OcsURLStreamHandler.7", href )); //$NON-NLS-1$
+        m_logger.warning( Messages.getString( "org.kalypso.services.observation.client.OcsURLStreamHandler.6" ) ); //$NON-NLS-1$
+        final IStatus status2 = StatusUtilities.statusFromThrowable( se, Messages.getString( "org.kalypso.services.observation.client.OcsURLStreamHandler.7", href ) ); //$NON-NLS-1$
         KalypsoServiceObsActivator.getDefault().getLog().log( status2 );
       }
 
-      throw new IOException( Messages.getString("org.kalypso.services.observation.client.OcsURLStreamHandler.8", e.getLocalizedMessage()) ); //$NON-NLS-1$
+      throw new IOException( Messages.getString( "org.kalypso.services.observation.client.OcsURLStreamHandler.8", e.getLocalizedMessage() ) ); //$NON-NLS-1$
     }
     finally
     {
@@ -235,7 +234,7 @@ public class OcsURLStreamHandler extends AbstractURLStreamHandlerService
     // a request, let create a default observation according to it.
     final IObservation obs = RequestFactory.createDefaultObservation( href );
 
-    m_logger.info( Messages.getString("org.kalypso.services.observation.client.OcsURLStreamHandler.9", obs.getName()) ); //$NON-NLS-1$ 
+    m_logger.info( Messages.getString( "org.kalypso.services.observation.client.OcsURLStreamHandler.9", obs.getName() ) ); //$NON-NLS-1$ 
 
     ZmlFactory.writeToFile( obs, file );
 

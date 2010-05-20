@@ -39,9 +39,6 @@ public interface ZmlURLConstants
   /** fragment part of the url denoting a Zml-Url with a context, not a Zml-Id */
   String FRAGMENT_USEASCONTEXT = "useascontext"; //$NON-NLS-1$
 
-  /** URL-Scheme that identifies the observation service */
-  String SCHEME_OCS = "kalypso-ocs"; //$NON-NLS-1$
-
   /** Specification-Tags for the Zml-Request in the URL */
 // public final static String TAG_REQUEST1 = "<request"; // !NOTE: without ending '>'
 // public final static String TAG_REQUEST2 = "</request>";

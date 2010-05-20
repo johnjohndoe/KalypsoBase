@@ -74,42 +74,6 @@ public final class ZmlURL
   }
 
   /**
-   * Return true if the given id represents a server-side url. A server-side url begins with the server-specific
-   * scheme-name.
-   * 
-   * @param href
-   *          string representation of the zml url
-   * @return true if server side
-   * @see ZmlURLConstants#SCHEME_OCS
-   */
-  public static boolean isServerSide( final String href )
-  {
-    return href.startsWith( ZmlURLConstants.SCHEME_OCS );
-  }
-
-  /**
-   * Add the kalypso-ocs-scheme part to the id (if not already present)
-   */
-  public static String addServerSideId( final String href )
-  {
-    String ssid = href;
-    if( !isServerSide( ssid ) )
-      ssid = ZmlURLConstants.SCHEME_OCS + ":" + ssid; //$NON-NLS-1$
-
-    return ssid;
-  }
-
-  /**
-   * Remove the kalypso-ocs-scheme part
-   */
-  public static String removeServerSideId( final String href )
-  {
-    final String id = href.replaceFirst( ZmlURLConstants.SCHEME_OCS + ":", "" ); //$NON-NLS-1$ //$NON-NLS-2$
-
-    return id;
-  }
-
-  /**
    * Returns only the identifier part of the zml url. The URL may contain a query part which will be ignored by this
    * convenience method.
    * 
