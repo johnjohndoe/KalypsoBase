@@ -35,7 +35,6 @@
  */
 package org.kalypsodeegree_impl.model.feature;
 
-import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -48,6 +47,7 @@ import javax.xml.namespace.NamespaceContext;
 import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.GMLSchemaCatalog;
+import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -124,7 +124,7 @@ public class FeatureFactory
         if( pt instanceof IRelationType )
           feature.setProperty( pt, FeatureFactory.createFeatureList( feature, (IRelationType) pt ) );
         else
-          feature.setProperty( pt, new ArrayList() );
+          feature.setProperty( pt, new ArrayList<Object>() );
       }
       else
       {
@@ -253,7 +253,7 @@ public class FeatureFactory
   /**
    * create a new GMLWorkspace with a root feature for the given feature type
    */
-  public static GMLWorkspace createGMLWorkspace( final QName rootFeatureQName, final URL context, final IFeatureProviderFactory factory ) throws InvocationTargetException
+  public static GMLWorkspace createGMLWorkspace( final QName rootFeatureQName, final URL context, final IFeatureProviderFactory factory ) throws GMLSchemaException
   {
     return createGMLWorkspace( rootFeatureQName, null, context, factory );
   }
@@ -261,7 +261,7 @@ public class FeatureFactory
   /**
    * create a new GMLWorkspace with a root feature for the given feature type
    */
-  public static GMLWorkspace createGMLWorkspace( final QName rootFeatureQName, final URL context, final IFeatureProviderFactory factory, final int depth ) throws InvocationTargetException
+  public static GMLWorkspace createGMLWorkspace( final QName rootFeatureQName, final URL context, final IFeatureProviderFactory factory, final int depth ) throws GMLSchemaException
   {
     return createGMLWorkspace( rootFeatureQName, null, context, factory, depth );
   }
@@ -269,23 +269,32 @@ public class FeatureFactory
   /**
    * create a new GMLWorkspace with a root feature for the given feature type
    */
-  public static GMLWorkspace createGMLWorkspace( final QName rootFeatureQName, final String gmlVersion, final URL context, final IFeatureProviderFactory factory ) throws InvocationTargetException
+  public static GMLWorkspace createGMLWorkspace( final QName rootFeatureQName, final String gmlVersion, final URL context, final IFeatureProviderFactory factory ) throws GMLSchemaException
   {
-    final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
-    final IGMLSchema schema = schemaCatalog.getSchema( rootFeatureQName.getNamespaceURI(), gmlVersion );
-    final IFeatureType rootFeatureType = schema.getFeatureType( rootFeatureQName );
+    final IFeatureType rootFeatureType = getFeatureType( rootFeatureQName, gmlVersion );
     return createGMLWorkspace( rootFeatureType, context, factory );
   }
 
   /**
    * create a new GMLWorkspace with a root feature for the given feature type
    */
-  public static GMLWorkspace createGMLWorkspace( final QName rootFeatureQName, final String gmlVersion, final URL context, final IFeatureProviderFactory factory, final int depth ) throws InvocationTargetException
+  public static GMLWorkspace createGMLWorkspace( final QName rootFeatureQName, final String gmlVersion, final URL context, final IFeatureProviderFactory factory, final int depth ) throws GMLSchemaException
+  {
+    final IFeatureType rootFeatureType = getFeatureType( rootFeatureQName, gmlVersion );
+    return createGMLWorkspace( rootFeatureType, context, factory, depth );
+  }
+
+  private static IFeatureType getFeatureType( final QName rootFeatureQName, final String gmlVersion ) throws GMLSchemaException
   {
     final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
     final IGMLSchema schema = schemaCatalog.getSchema( rootFeatureQName.getNamespaceURI(), gmlVersion );
-    final IFeatureType rootFeatureType = schema.getFeatureType( rootFeatureQName );
-    return createGMLWorkspace( rootFeatureType, context, factory, depth );
+    return schema.getFeatureType( rootFeatureQName );
+  }
+
+  public static Feature createFeature( final String id, final QName qname ) throws GMLSchemaException
+  {
+    final IFeatureType featureType = getFeatureType( qname, null );
+    return createFeature( null, null, id, featureType, true );
   }
 
   /**
