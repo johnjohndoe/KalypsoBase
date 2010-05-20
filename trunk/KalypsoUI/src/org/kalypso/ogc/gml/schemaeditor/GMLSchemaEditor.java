@@ -2,7 +2,6 @@ package org.kalypso.ogc.gml.schemaeditor;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
@@ -185,15 +184,8 @@ public class GMLSchemaEditor extends EditorPart
     {
       final GmlSchemaEditorInput schemaInput = (GmlSchemaEditorInput) editorInput;
 
-      try
-      {
-        final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
-        return schemaCatalog.getSchema( schemaInput.getNamespace(), schemaInput.getGmlVersion(), schemaInput.getLocation() );
-      }
-      catch( final InvocationTargetException e )
-      {
-        throw new CoreException( StatusUtilities.statusFromThrowable( e ) );
-      }
+      final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
+      return schemaCatalog.getSchema( schemaInput.getNamespace(), schemaInput.getGmlVersion(), schemaInput.getLocation() );
     }
     else
     {
@@ -210,7 +202,7 @@ public class GMLSchemaEditor extends EditorPart
         final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
         final GMLSchema schema = schemaCatalog.getSchema( null, context );
         if( schema == null )
-          throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, Messages.getString("org.kalypso.ogc.gml.schemaeditor.GMLSchemaEditor.4") + context.toExternalForm(), null ) ); //$NON-NLS-1$
+          throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.ogc.gml.schemaeditor.GMLSchemaEditor.4" ) + context.toExternalForm(), null ) ); //$NON-NLS-1$
         return schema;
       }
       else if( contents != null )

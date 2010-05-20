@@ -40,18 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gml;
 
-import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 
-import org.eclipse.core.runtime.IStatus;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.GMLSchemaLoaderWithLocalCache;
 import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.TypeRegistryException;
 import org.kalypso.gmlschema.types.UnmarshallResultEater;
-import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree_impl.io.sax.parser.DelegatingContentHandler;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -59,12 +55,11 @@ import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 
 /**
- * A {@link org.xml.sax.ContentHandler} implementation which parses GML value-properties.
- * 
- * This content handler delegates the parsing to a proper IMarshallingTypeHandler.
+ * A {@link org.xml.sax.ContentHandler} implementation which parses GML value-properties. This content handler delegates
+ * the parsing to a proper IMarshallingTypeHandler.
  * <p>
- * NOTE: at this moment, the value-properties that are parsed by a IMarshallingTypeHandler2
- *  are resolved in the {@link org.kalypso.gml.PropertyContentHandler}.
+ * NOTE: at this moment, the value-properties that are parsed by a IMarshallingTypeHandler2 are resolved in the
+ * {@link org.kalypso.gml.PropertyContentHandler}.
  * 
  * @author Andreas von Doemming
  * @author Felipe Maximino - Refaktoring
@@ -72,19 +67,19 @@ import org.xml.sax.XMLReader;
 public class ValuePropertyContentHandler extends DelegatingContentHandler implements UnmarshallResultEater
 {
   private final URL m_context;
-  
+
   private final IFeatureHandler m_featureHandler;
-  
+
   private final IMarshallingTypeHandler m_typeHandler;
-  
+
   private final GMLSchemaLoaderWithLocalCache m_schemaLoader;
-  
+
   private final IPropertyType m_scopeProperty;
-  
+
   public ValuePropertyContentHandler( final XMLReader xmlReader, final IFeatureHandler featureHandler, final IMarshallingTypeHandler typeHandler, final GMLSchemaLoaderWithLocalCache schemaLoader, final IPropertyType scopeProperty, final URL context )
   {
     super( xmlReader, featureHandler );
-    
+
     m_featureHandler = featureHandler;
     m_schemaLoader = schemaLoader;
     m_typeHandler = typeHandler;
@@ -93,22 +88,25 @@ public class ValuePropertyContentHandler extends DelegatingContentHandler implem
   }
 
   /**
-   * @see org.kalypsodeegree_impl.io.sax.parser.DelegatingContentHandler#endElement(java.lang.String, java.lang.String, java.lang.String)
+   * @see org.kalypsodeegree_impl.io.sax.parser.DelegatingContentHandler#endElement(java.lang.String, java.lang.String,
+   *      java.lang.String)
    */
   @Override
-  public void endElement( String uri, String localName, String qName ) throws SAXException
+  public void endElement( final String uri, final String localName, final String qName ) throws SAXException
   {
     endDelegation();
     m_parentContentHandler.endElement( uri, localName, qName );
   }
 
   /**
-   * @see org.kalypsodeegree_impl.io.sax.parser.DelegatingContentHandler#startElement(java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
+   * @see org.kalypsodeegree_impl.io.sax.parser.DelegatingContentHandler#startElement(java.lang.String,
+   *      java.lang.String, java.lang.String, org.xml.sax.Attributes)
    */
   @Override
-  public void startElement( String uri, String localName, String qName, Attributes atts ) throws SAXException
+  public void startElement( final String uri, final String localName, final String qName, final Attributes atts ) throws SAXException
   {
-    try{
+    try
+    {
       final IGMLSchema schema = m_schemaLoader.findSchema( uri );
       final String gmlVersion = schema.getGMLVersion();
 
@@ -117,13 +115,8 @@ public class ValuePropertyContentHandler extends DelegatingContentHandler implem
     }
     catch( final TypeRegistryException e )
     {
-      e.printStackTrace();  
+      e.printStackTrace();
       m_xmlReader.getErrorHandler().warning( new SAXParseException( "Failed to unmarshall property value: ", getLocator(), e ) );
-    }
-    catch( final InvocationTargetException ite )
-    {
-      final IStatus status = StatusUtilities.createStatus( IStatus.WARNING, "Failed to load schema from catalog: " + uri, null );
-      KalypsoDeegreePlugin.getDefault().getLog().log( status );
     }
   }
 
@@ -131,15 +124,16 @@ public class ValuePropertyContentHandler extends DelegatingContentHandler implem
    * @see org.kalypso.gmlschema.types.UnmarshallResultEater#unmarshallSuccesful(java.lang.Object)
    */
   @Override
-  public void unmarshallSuccesful( Object value ) throws SAXParseException
-  { 
+  public void unmarshallSuccesful( final Object value ) throws SAXParseException
+  {
     try
     {
-      (( UnmarshallResultEater ) m_featureHandler).unmarshallSuccesful( value );
+      ((UnmarshallResultEater) m_featureHandler).unmarshallSuccesful( value );
       endDelegation();
     }
-    catch ( SAXException e ) {
+    catch( final SAXException e )
+    {
       throw new SAXParseException( String.format( "Unexpected end element: %s", m_scopeProperty.getQName() ), m_locator );
-    }   
+    }
   }
 }

@@ -62,6 +62,7 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
+import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -85,10 +86,10 @@ public class FeatureTypeSelectionPage extends WizardPage implements ISelectionCh
 
   public FeatureTypeSelectionPage( )
   {
-    super( "FeatureTypeSelectionPage", Messages.getString("org.kalypso.ui.wizard.FeatureTypeSelectionPage.1"), null ); //$NON-NLS-1$ //$NON-NLS-2$
+    super( "FeatureTypeSelectionPage", Messages.getString( "org.kalypso.ui.wizard.FeatureTypeSelectionPage.1" ), null ); //$NON-NLS-1$ //$NON-NLS-2$
 
     setPageComplete( false );
-    setMessage( Messages.getString("org.kalypso.ui.wizard.FeatureTypeSelectionPage.2") ); //$NON-NLS-1$
+    setMessage( Messages.getString( "org.kalypso.ui.wizard.FeatureTypeSelectionPage.2" ) ); //$NON-NLS-1$
   }
 
   /**
@@ -153,10 +154,17 @@ public class FeatureTypeSelectionPage extends WizardPage implements ISelectionCh
     {
       public IStatus execute( final IProgressMonitor monitor ) throws InvocationTargetException
       {
-        final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
-        final GMLSchema schema = schemaCatalog.getSchema( namespace, (String) null );
-        viewer.setInput( schema.getAllFeatureTypes() );
-        return Status.OK_STATUS;
+        try
+        {
+          final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
+          final GMLSchema schema = schemaCatalog.getSchema( namespace, (String) null );
+          viewer.setInput( schema.getAllFeatureTypes() );
+          return Status.OK_STATUS;
+        }
+        catch( final GMLSchemaException e )
+        {
+          throw new InvocationTargetException( e );
+        }
       }
     };
     RunnableContextHelper.execute( getContainer(), false, false, runnable );
@@ -166,7 +174,7 @@ public class FeatureTypeSelectionPage extends WizardPage implements ISelectionCh
    * @see org.eclipse.jface.dialogs.DialogPage#setVisible(boolean)
    */
   @Override
-  public void setVisible( boolean visible )
+  public void setVisible( final boolean visible )
   {
     super.setVisible( visible );
 
@@ -177,7 +185,7 @@ public class FeatureTypeSelectionPage extends WizardPage implements ISelectionCh
   /**
    * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
    */
-  public void selectionChanged( SelectionChangedEvent event )
+  public void selectionChanged( final SelectionChangedEvent event )
   {
     final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
     m_selectedfeatureType = (IFeatureType) selection.getFirstElement();

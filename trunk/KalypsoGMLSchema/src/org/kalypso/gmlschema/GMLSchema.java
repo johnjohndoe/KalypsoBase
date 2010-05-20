@@ -234,7 +234,7 @@ public class GMLSchema implements IGMLSchema
           if( gmlSchema != null )
             m_importedSchemasHash.put( gmlSchema.getTargetNamespace(), gmlSchema );
           else
-            throw new GMLSchemaException( Messages.getString("org.kalypso.gmlschema.GMLSchema.0" ,namespaceToImport ,schemaLocation )); //$NON-NLS-1$
+            throw new GMLSchemaException( Messages.getString( "org.kalypso.gmlschema.GMLSchema.0", namespaceToImport, schemaLocation ) ); //$NON-NLS-1$
         }
       }
 
@@ -296,7 +296,7 @@ public class GMLSchema implements IGMLSchema
     // beware of recursion
     if( gmlschema == null || gmlschema == this )
     {
-      final IStatus status = StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.gmlschema.GMLSchema.1", qName )); //$NON-NLS-1$
+      final IStatus status = StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.gmlschema.GMLSchema.1", qName ) ); //$NON-NLS-1$
       KalypsoGMLSchemaPlugin.getDefault().getLog().log( status );
       return null;
     }
@@ -373,26 +373,18 @@ public class GMLSchema implements IGMLSchema
       }
     }
 
-    // if schema is not implemented we have to ask GMLSchemaCache, maybe it is a well known schema like wfs.xsd
-    try
+    // load all imported schema with same gml version
+    final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
+    final GMLSchema schema = schemaCatalog.getSchema( namespaceURI, getGMLVersion() );
+    if( schema != null )
     {
-      // load all imported schema with same gml version
-      final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
-      final GMLSchema schema = schemaCatalog.getSchema( namespaceURI, getGMLVersion() );
-      if( schema != null )
-      {
-        m_additionalSchemas.put( namespaceURI, schema );
-      }
+      m_additionalSchemas.put( namespaceURI, schema );
+    }
 
-      // REAMRK: we load schemas here, which are not known as imported schemes
-      // They are probably used by the gml instance via substitution
-      // We need to remember those schemes for later (e.g. for substitution resolution)
-      return schema;
-    }
-    catch( final InvocationTargetException e )
-    {
-      throw new GMLSchemaException( Messages.getString("org.kalypso.gmlschema.GMLSchema.2", namespaceURI), e.getTargetException() ); //$NON-NLS-1$
-    }
+    // REAMRK: we load schemas here, which are not known as imported schemes
+    // They are probably used by the gml instance via substitution
+    // We need to remember those schemes for later (e.g. for substitution resolution)
+    return schema;
   }
 
   public String getTargetNamespace( )
