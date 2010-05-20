@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -326,7 +327,6 @@ public class ProfileFeatureBinding extends AbstractCachedFeature2 implements IPr
 
       if( pointMarkerName != null )
       {
-
         final IProfilPointMarker[] durchstroemte = profil.getPointMarkerFor( pointMarkerName );
 
         if( durchstroemte.length < 2 )
@@ -350,7 +350,7 @@ public class ProfileFeatureBinding extends AbstractCachedFeature2 implements IPr
           hw = (Double) point.getValue( compHochwert );
 
           /* We assume here that we have a GAUSS-KRUEGER crs in a profile. */
-          if( srsName == null )
+          if( StringUtils.isBlank( srsName ) )
             srsName = TimeserieUtils.getCoordinateSystemNameForGkr( Double.toString( rw ) );
         }
         else
