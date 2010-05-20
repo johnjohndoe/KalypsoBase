@@ -43,6 +43,7 @@ package org.kalypso.observation.result;
 import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.property.restriction.EnumerationRestriction;
+import org.kalypso.gmlschema.property.restriction.FractionDigitRestriction;
 import org.kalypso.gmlschema.property.restriction.IRestriction;
 
 /**
@@ -186,6 +187,24 @@ public final class ComponentUtilities
   {
     // TODO: fixme, use description and or name of phenomenon
     return component.getName();
+  }
+
+  /**
+   * Returns the scale (number of decimal digits) of this component.<br>
+   * This works only for components that contain a {@link FractionDigitRestriction}.<br>
+   * 
+   * @return -1 If no scale can be determined.
+   * @see org.kalypso.observation.result.IComponent#getPrecision()
+   */
+  public static int getScale( final IComponent component )
+  {
+    for( final IRestriction restriction : component.getRestrictions() )
+    {
+      if( restriction instanceof FractionDigitRestriction )
+        return ((FractionDigitRestriction) restriction).getFractionDigits();
+    }
+
+    return -1;
   }
 
 }

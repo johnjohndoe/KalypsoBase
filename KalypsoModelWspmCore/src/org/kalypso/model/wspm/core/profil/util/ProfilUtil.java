@@ -41,6 +41,7 @@
 package org.kalypso.model.wspm.core.profil.util;
 
 import java.awt.geom.Point2D;
+import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
@@ -52,6 +53,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.math.LinearEquation;
 import org.kalypso.commons.math.LinearEquation.SameXValuesException;
+import org.kalypso.contribs.java.util.Arrays;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.deegree.binding.gml.Definition;
 import org.kalypso.deegree.binding.gml.Dictionary;
@@ -86,19 +88,7 @@ public class ProfilUtil
   public static Object[] getValuesFor( final IProfil profil, final IComponent pointProperty )
   {
     final IRecord[] points = profil.getPoints();
-    final Object[] values = new Object[points.length];
-    final int iProp = profil.indexOfProperty( pointProperty );
-    if( iProp < 0 )
-      return values;
-    int i = 0;
-
-    for( final IRecord point : points )
-    {
-      final Object value = point.getValue( iProp );
-      values[i] = value;
-      i++;
-    }
-    return values;
+    return getValuesFor( points, pointProperty );
   }
 
   public static IComponent getFeatureComponent( final String propertyId )
@@ -136,18 +126,29 @@ public class ProfilUtil
    */
   public static Object[] getValuesFor( final IRecord[] points, final IComponent pointProperty )
   {
+    return getValuesFor( points, pointProperty.getId() );
+  }
+
+  public static Object[] getValuesFor( final IRecord[] points, final String component ) throws IndexOutOfBoundsException
+  {
     if( points == null || points.length < 1 )
       return new Object[0];
-    final TupleResult owner = points[0].getOwner();
-    final Object[] values = new Object[points.length];
-    final int iProp = owner.indexOfComponent( pointProperty );
-    if( iProp < 0 )
-      return values;
-    int i = 0;
 
+    final TupleResult owner = points[0].getOwner();
+    final int iProp = owner.indexOfComponent( component );
+    if( iProp < 0 )
+      throw new IllegalArgumentException( String.format( "Unknown component: %s", component ) );
+
+    return getValuesFor( points, iProp );
+  }
+
+  public static Object[] getValuesFor( final IRecord[] points, final int componentIndex ) throws IndexOutOfBoundsException
+  {
+    final Object[] values = new Object[points.length];
+    int i = 0;
     for( final IRecord point : points )
     {
-      final Object value = point.getValue( iProp );
+      final Object value = point.getValue( componentIndex );
       // if( value == null )
       // Debug.print( point, Messages.getString( "org.kalypso.model.wspm.core.profil.util.ProfilUtil.5", pointProperty.getName(), iProp ) ); //$NON-NLS-1$
       values[i] = value;
@@ -238,13 +239,11 @@ public class ProfilUtil
     final IRecord[] points = profil.getPoints();
     final int leftPos = leftMarker != null ? ArrayUtils.indexOf( points, leftMarker.getPoint() ) : 0;
     final int rightPos = rightMarker != null ? ArrayUtils.indexOf( points, rightMarker.getPoint() ) + 1 : 0;
-
     return leftPos < rightPos ? profil.getResult().subList( leftPos, rightPos ) : null;
-
   }
 
   /**
-   * Returns all points between within the given markers (closed interval).
+   * Returns all points between the given markers (closed interval).
    */
   public static final List<IRecord> getInnerPoints( final IProfil profil, final IComponent markerTyp )
   {
@@ -942,8 +941,7 @@ public class ProfilUtil
       final Double z = getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, georeferencedPoints[i] );
       pos[i] = GeometryFactory.createGM_Position( x, y, z );
     }
-    final GM_Curve curve = GeometryFactory.createGM_Curve( pos, crs );
-    return curve;
+    return GeometryFactory.createGM_Curve( pos, crs );
 
   }
 
@@ -1114,5 +1112,21 @@ public class ProfilUtil
         }
       }
     }
+  }
+
+  /**
+   * Same as {@link #getValuesFor(IRecord[], String)}, but casts the result to the given type.
+   */
+  @SuppressWarnings("unchecked")
+  public static <T> T[] getValuesFor( final IRecord[] points, final String component, final Class<T> type )
+  {
+    final Object[] values = getValuesFor( points, component );
+    final T[] targetArray = (T[]) Array.newInstance( type, values.length );
+    return Arrays.castArray( values, targetArray );
+  }
+
+  public static Double[] getValuesFor( final IProfil profil, final String component, final Class<Double> type )
+  {
+    return getValuesFor( profil.getPoints(), component, type );
   }
 }

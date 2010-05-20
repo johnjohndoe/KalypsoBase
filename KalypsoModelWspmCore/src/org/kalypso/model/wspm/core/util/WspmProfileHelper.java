@@ -66,7 +66,6 @@ import com.vividsolutions.jts.geom.LineSegment;
  */
 public class WspmProfileHelper
 {
-
   public static final double FUZZINESS = 0.005; // Inaccuracies profile of points
 
   /**
@@ -278,8 +277,9 @@ public class WspmProfileHelper
   }
 
   /**
-   * returns the corresponding height for an given width coordinate. if the width is outside of the profile points, the
-   * first / last point height is returned.
+   * Returns the corresponding height for an given width coordinate. if the width is outside of the profile points, the
+   * first / last point height is returned. Else the height is obtained by linear interpolation between the adjacent
+   * profile points.
    * 
    * @param width
    *          width coordinate
@@ -287,36 +287,69 @@ public class WspmProfileHelper
    *          profile
    * @return The height
    */
-  public static Double getHeigthPositionByWidth( final double width, final IProfil profile ) throws Exception
+  public static Double getHeightByWidth( final double width, final IProfil profile ) throws IndexOutOfBoundsException
+  {
+    return interpolateValue( profile, width, IWspmConstants.POINT_PROPERTY_HOEHE );
+  }
+
+  /**
+   * Returns the corresponding value for an given width coordinate. iFf the width is outside of the profile points, the
+   * first / last value is returned. Else the value is obtained by linear interpolation between the adjacent profile
+   * points.
+   * 
+   * @param width
+   *          width coordinate
+   * @param profile
+   *          profile
+   * @return The height
+   */
+  public static Double interpolateValue( final IProfil profile, final double width, final String valueComponent ) throws IndexOutOfBoundsException
+  {
+    final int indexValueComponent = profile.indexOfProperty( valueComponent );
+    return interpolateValue( profile, width, indexValueComponent );
+  }
+
+  /**
+   * Same as {@link #interpolateValue(IProfil, double, String)} but used the component index.
+   */
+  public static Double interpolateValue( final IProfil profile, final double width, final int indexValueComponent ) throws IndexOutOfBoundsException
   {
     final IRecord[] points = profile.getPoints();
     if( points.length < 1 )
       return null;
 
     final int iBreite = profile.indexOfProperty( IWspmConstants.POINT_PROPERTY_BREITE );
-    final int iHoehe = profile.indexOfProperty( IWspmConstants.POINT_PROPERTY_HOEHE );
-
     for( int i = 0; i < points.length - 1; i++ )
     {
       /* We need a line string of the to neighbour points. */
-      final IRecord tempPointOne = points[i];
-      final double widthValueOne = (Double) tempPointOne.getValue( iBreite );
-      final double heigthValueOne = (Double) tempPointOne.getValue( iHoehe );
+      final IRecord pointOne = points[i];
+      final IRecord pointTwo = points[i + 1];
 
-      final IRecord tempPointTwo = points[i + 1];
-      final double widthValueTwo = (Double) tempPointTwo.getValue( iBreite );
-      final double heigthValueTwo = (Double) tempPointTwo.getValue( iHoehe );
+      final double widthOne = (Double) pointOne.getValue( iBreite );
+      final double widthTwo = (Double) pointTwo.getValue( iBreite );
 
       /* searching for the right segment */
-      if( widthValueOne <= width & widthValueTwo >= width )
-        /* calculate the heigth */
-        return (width - widthValueOne) * (heigthValueTwo - heigthValueOne) / (widthValueTwo - widthValueOne) + heigthValueOne;
-
+      if( widthOne <= width & widthTwo >= width )
+      {
+        final Object valueOne = pointOne.getValue( indexValueComponent );
+        final Object valueTwo = pointTwo.getValue( indexValueComponent );
+        if( valueOne instanceof Number && valueTwo instanceof Number )
+        {
+          final double doubleOne = ((Number) valueOne).doubleValue();
+          final double doubleTwo = ((Number) valueTwo).doubleValue();
+          return (width - widthOne) * (doubleTwo - doubleOne) / (widthTwo - widthOne) + doubleOne;
+        }
+        else
+          return null;
+      }
     }
+
     if( width < (Double) points[0].getValue( iBreite ) )
-      return (Double) points[0].getValue( iHoehe );
-    else if( width > (Double) points[points.length - 1].getValue( iBreite ) )
-      return (Double) points[points.length - 1].getValue( iHoehe );
+      return (Double) points[0].getValue( indexValueComponent );
+
+    if( width > (Double) points[points.length - 1].getValue( iBreite ) )
+      return (Double) points[points.length - 1].getValue( indexValueComponent );
+
     return null;
   }
 
@@ -457,8 +490,8 @@ public class WspmProfileHelper
     }
 
     // calculate elevations
-    final double heigth1 = WspmProfileHelper.getHeigthPositionByWidth( startWidth, orgIProfil );
-    final double heigth2 = WspmProfileHelper.getHeigthPositionByWidth( endWidth, orgIProfil );
+    final double heigth1 = WspmProfileHelper.getHeightByWidth( startWidth, orgIProfil );
+    final double heigth2 = WspmProfileHelper.getHeightByWidth( endWidth, orgIProfil );
 
     final IRecord[] profilPointList = profile.getPoints();
     final IProfil tmpProfil = ProfilFactory.createProfil( profile.getType() );
