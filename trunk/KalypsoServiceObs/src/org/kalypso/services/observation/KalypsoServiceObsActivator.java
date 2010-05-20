@@ -13,8 +13,8 @@ import javax.xml.ws.Service;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.SafeRunner;
 import org.kalypso.contribs.eclipse.core.runtime.ThreadContextClassLoaderRunnable;
-import org.kalypso.ogc.sensor.zml.ZmlURLConstants;
 import org.kalypso.services.observation.client.OcsURLStreamHandler;
+import org.kalypso.services.observation.client.repository.ObservationServiceRepository;
 import org.kalypso.services.observation.sei.IObservationService;
 import org.kalypso.services.observation.server.ObservationServiceImpl;
 import org.osgi.framework.BundleContext;
@@ -66,7 +66,7 @@ public class KalypsoServiceObsActivator extends Plugin
     final OcsURLStreamHandler handler = new OcsURLStreamHandler();
 
     final Dictionary<Object, Object> properties = new Hashtable<Object, Object>( 1 );
-    properties.put( URLConstants.URL_HANDLER_PROTOCOL, new String[] { ZmlURLConstants.SCHEME_OCS } );
+    properties.put( URLConstants.URL_HANDLER_PROTOCOL, new String[] { ObservationServiceRepository.ID } );
     context.registerService( URLStreamHandlerService.class.getName(), handler, properties );
   }
 
@@ -91,7 +91,7 @@ public class KalypsoServiceObsActivator extends Plugin
   public synchronized IObservationService getDefaultObservationService( )
   {
 
-    IObservationService service = m_services.get( DEFAULT_OBSERVATION_SERVICE_ID );
+    final IObservationService service = m_services.get( DEFAULT_OBSERVATION_SERVICE_ID );
     if( service == null )
     {
       // REMARK: We enforce the plugin-classloader as context classloader here. Else, if the plug-in is loaded too
@@ -110,10 +110,9 @@ public class KalypsoServiceObsActivator extends Plugin
       if( exception != null )
         exception.printStackTrace();
     }
-    
+
     return m_services.get( DEFAULT_OBSERVATION_SERVICE_ID );
   }
-
 
   /**
    * Convenience method that returns the observation service proxy.
@@ -122,7 +121,7 @@ public class KalypsoServiceObsActivator extends Plugin
    */
   public synchronized IObservationService getObservationService( final String repository )
   {
-    IObservationService service = m_services.get( repository );
+    final IObservationService service = m_services.get( repository );
 
     return service;
   }
@@ -134,7 +133,7 @@ public class KalypsoServiceObsActivator extends Plugin
 
   public boolean isObservationServiceInitialized( final String repository )
   {
-    IObservationService service = m_services.get( repository );
+    final IObservationService service = m_services.get( repository );
     if( service == null )
       return false;
 

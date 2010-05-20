@@ -55,21 +55,21 @@ public class RepositoryRegistry implements IRepositoryRegistry
    * @see org.kalypso.repository.IRepositoryRegistry#getRepository(java.lang.String)
    */
   @Override
-  public IRepository getRepository( final String protocol )
+  public IRepository getRepository( final String identifier )
   {
     // TODO: evtl. default zurückgeben für bestimmte protokolle wie file, platform, http etc. Ggfs. an strategy
     // delegieren
 
-    final String cleanProtocol = getProtocol( protocol );
-    return m_repositories.get( cleanProtocol );
+    final String protocol = getProtocol( identifier );
+    return m_repositories.get( protocol );
   }
 
   private String getProtocol( final String protocol )
   {
     if( protocol.endsWith( "://" ) )
-      return protocol;
+      return protocol.substring( 0, protocol.length() - 3 );
 
-    return protocol + "://";
+    return protocol;
   }
 
   /**
@@ -79,8 +79,8 @@ public class RepositoryRegistry implements IRepositoryRegistry
   public void registerProtocol( final IRepository repository )
   {
     final String identifier = repository.getIdentifier();
-    final String cleanIdentifier = getProtocol( identifier );
-    m_repositories.put( cleanIdentifier, repository );
+    final String protocol = getProtocol( identifier );
+    m_repositories.put( protocol, repository );
   }
 
 }

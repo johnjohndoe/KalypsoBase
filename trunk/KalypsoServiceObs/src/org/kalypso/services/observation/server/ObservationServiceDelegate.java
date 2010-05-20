@@ -72,7 +72,6 @@ import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.request.RequestFactory;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
-import org.kalypso.ogc.sensor.zml.ZmlURL;
 import org.kalypso.repository.IModifyableRepository;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryItem;
@@ -84,6 +83,7 @@ import org.kalypso.repository.factory.IRepositoryFactory;
 import org.kalypso.repository.utils.RepositoryItemUtlis;
 import org.kalypso.repository.utils.RepositoryUtils;
 import org.kalypso.services.observation.KalypsoServiceObsActivator;
+import org.kalypso.services.observation.ObservationServiceUtils;
 import org.kalypso.services.observation.i18n.Messages;
 import org.kalypso.services.observation.sei.DataBean;
 import org.kalypso.services.observation.sei.IObservationService;
@@ -301,8 +301,8 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
       throw new SensorException( e1 );
     }
 
-    final String hereHref = ZmlURL.removeServerSideId( href );
-    final String obsId = ZmlURL.getIdentifierPart( hereHref );
+    final String hereHref = ObservationServiceUtils.removeServerSideId( href );
+    final String obsId = org.kalypso.ogc.sensor.zml.ZmlURL.getIdentifierPart( hereHref );
     final ObservationBean obean = new ObservationBean( obsId );
 
     // request part specified?
@@ -371,7 +371,7 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
       f.deleteOnExit();
 
       ZmlFactory.writeToFile( obs, f, request );
-      
+
       final DataBean data = new DataBean( f.toString(), new DataHandler( new FileDataSource( f ) ) );
       m_mapDataId2File.put( data.getId(), f );
 
@@ -392,10 +392,10 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
       final boolean b = file.delete();
 
       if( !b )
-        m_logger.warning( Messages.getString("org.kalypso.services.observation.server.ObservationServiceDelegate.0", file.toString() , dataId )); //$NON-NLS-1$
+        m_logger.warning( Messages.getString( "org.kalypso.services.observation.server.ObservationServiceDelegate.0", file.toString(), dataId ) ); //$NON-NLS-1$
     }
     else
-      m_logger.warning( Messages.getString("org.kalypso.services.observation.server.ObservationServiceDelegate.1", dataId )); //$NON-NLS-1$
+      m_logger.warning( Messages.getString( "org.kalypso.services.observation.server.ObservationServiceDelegate.1", dataId ) ); //$NON-NLS-1$
   }
 
   public final void writeData( final ObservationBean obean, final DataHandler odb ) throws SensorException
@@ -441,7 +441,7 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
     /* Create the repository beans, if neccessary. */
     createRepositoryBeans();
 
-    final String id = ZmlURL.removeServerSideId( obean.getId() );
+    final String id = ObservationServiceUtils.removeServerSideId( obean.getId() );
 
     // maybe bean already in map?
     if( m_mapBeanId2Item.containsKey( id ) )
@@ -485,17 +485,17 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
     if( parent == null )
       return m_repositories.size() > 0;
 
-      try
-      {
-        final IRepositoryItem item = itemFromBean( parent );
+    try
+    {
+      final IRepositoryItem item = itemFromBean( parent );
 
-        return item.hasChildren();
-      }
-      catch( final RepositoryException e )
-      {
-        m_logger.throwing( getClass().getName(), "hasChildren", e ); //$NON-NLS-1$
-        throw e;
-      }
+      return item.hasChildren();
+    }
+    catch( final RepositoryException e )
+    {
+      m_logger.throwing( getClass().getName(), "hasChildren", e ); //$NON-NLS-1$
+      throw e;
+    }
   }
 
   /**
@@ -597,8 +597,6 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
     }
   }
 
-
-
   /**
    * @see org.kalypso.services.sensor.IObservationService#getServiceVersion()
    */
@@ -656,7 +654,7 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
       return bean;
     }
 
-    m_logger.warning( Messages.getString("org.kalypso.services.observation.server.ObservationServiceDelegate.3", id )); //$NON-NLS-1$
+    m_logger.warning( Messages.getString( "org.kalypso.services.observation.server.ObservationServiceDelegate.3", id ) ); //$NON-NLS-1$
 
     return null;
   }

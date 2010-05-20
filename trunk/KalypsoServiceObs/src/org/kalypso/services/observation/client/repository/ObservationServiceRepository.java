@@ -49,8 +49,6 @@ import org.kalypso.repository.IModifyableRepository;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.repository.IWriteableRepository;
 import org.kalypso.repository.RepositoryException;
-import org.kalypso.repository.utils.RepositoryItemUtlis;
-import org.kalypso.repository.utils.RepositoryUtils;
 import org.kalypso.services.observation.KalypsoServiceObsActivator;
 import org.kalypso.services.observation.sei.IObservationService;
 import org.kalypso.services.observation.sei.ItemBean;
@@ -62,6 +60,11 @@ import org.kalypso.services.observation.sei.ItemBean;
  */
 public class ObservationServiceRepository extends AbstractRepository implements IModifyableRepository, IWriteableRepository
 {
+  /** URL-Scheme that identifies the observation service */
+  public static String ID = "kalypso-ocs"; //$NON-NLS-1$
+
+  private static String ID_COLON = ID + ":"; //$NON-NLS-1$
+
   /** root item is identified by the null bean */
   private static final ItemBean ROOT_ITEM = null;
 
@@ -71,10 +74,18 @@ public class ObservationServiceRepository extends AbstractRepository implements 
    */
   public ObservationServiceRepository( final String name, final String label, final String factory, final boolean readOnly, final boolean cached ) throws RepositoryException
   {
-    super( name, label, factory, "", readOnly, cached, "observation-service-repository" ); //$NON-NLS-1$ //$NON-NLS-2$
+    super( name, label, factory, "", readOnly, cached, ID ); //$NON-NLS-1$
 
     if( getService() == null )
       throw new RepositoryException( "Could not find Repository Service" ); //$NON-NLS-1$
+  }
+
+  private String getServiceId( final String id ) throws RepositoryException
+  {
+    if( !id.startsWith( ID_COLON ) )
+      throw new RepositoryException( String.format( "Unknown repository item id '%s'", id ) );
+
+    return id.substring( ID_COLON.length() );
   }
 
   private IObservationService getService( )
@@ -119,16 +130,7 @@ public class ObservationServiceRepository extends AbstractRepository implements 
 
       final ItemBean[] beans = service.getChildren( ROOT_ITEM );
       for( final ItemBean bean : beans )
-      {
-        if( bean.getModifyable() )
-        {
-          items.add( new ModifyableServiceRepositoryItem( service, bean, null, this ) );
-        }
-        else
-        {
-          items.add( new ServiceRepositoryItem( service, bean, null, this ) );
-        }
-      }
+        items.add( beanToItem( service, bean ) );
 
       /** @hack single repository? skip one hierarchy level and return children of repository item */
       if( items.size() == 1 )
@@ -140,6 +142,14 @@ public class ObservationServiceRepository extends AbstractRepository implements 
     {
       throw new RepositoryException( e );
     }
+  }
+
+  private IRepositoryItem beanToItem( final IObservationService service, final ItemBean bean )
+  {
+    if( bean.getModifyable() )
+      return new ModifyableServiceRepositoryItem( service, bean, null, this );
+
+    return new ServiceRepositoryItem( service, bean, null, this );
   }
 
   /**
@@ -160,54 +170,13 @@ public class ObservationServiceRepository extends AbstractRepository implements 
   /**
    * @see org.kalypso.repository.IRepository#findItem(java.lang.String)
    */
-  public final IRepositoryItem findItem( final String id ) throws RepositoryException
+  public final IRepositoryItem findItem( final String identifier ) throws RepositoryException
   {
-    if( this.getIdentifier() == id )
-      return this;
-
-    final IRepositoryItem[] children = this.getChildren();
-    for( final IRepositoryItem child : children )
-    {
-      final IRepositoryItem item = findItemRecursive( id, child );
-      if( item != null )
-        return item;
-    }
-
-    return null;
-  }
-
-  /**
-   * Helper: finds item using recursion
-   * 
-   * @return item if found, otherwise null.
-   */
-  private IRepositoryItem findItemRecursive( final String id, final IRepositoryItem item ) throws RepositoryException
-  {
-    // either this is the item, or find recursive
-    final String identifier = RepositoryItemUtlis.replaceIdentifier( item.getIdentifier(), this.getIdentifier() );
-    if( identifier.equals( id ) )
-    {
-      return item;
-    }
-
-    if( !RepositoryUtils.continueSearch( identifier, id ) )
+    final ItemBean bean = getService().findItem( getServiceId( identifier ) );
+    if( bean == null )
       return null;
-    else
-    {
-      final IRepositoryItem[] items = item.getChildren();
-      for( final IRepositoryItem child : items )
-      {
-        final String childIdentifier = RepositoryItemUtlis.replaceIdentifier( item.getIdentifier(), this.getIdentifier() );
-        if( !RepositoryUtils.continueSearch( childIdentifier, id ) )
-          continue;
 
-        final IRepositoryItem found = findItemRecursive( id, child );
-        if( found != null )
-          return found;
-      }
-    }
-
-    return null;
+    return beanToItem( getService(), bean );
   }
 
   /**
@@ -216,7 +185,7 @@ public class ObservationServiceRepository extends AbstractRepository implements 
   @Override
   public final void makeItem( final String identifier ) throws RepositoryException
   {
-    getService().makeItem( identifier );
+    getService().makeItem( getServiceId( identifier ) );
   }
 
   /**
@@ -225,7 +194,7 @@ public class ObservationServiceRepository extends AbstractRepository implements 
   @Override
   public final void deleteItem( final String identifier ) throws RepositoryException
   {
-    getService().deleteItem( identifier );
+    getService().deleteItem( getServiceId( identifier ) );
   }
 
   /**
@@ -250,9 +219,9 @@ public class ObservationServiceRepository extends AbstractRepository implements 
    * @see org.kalypso.repository.IWriteableRepository#setData(java.lang.String, java.io.Serializable)
    */
   @Override
-  public void setData( final String id, final Serializable data ) throws RepositoryException
+  public void setData( final String identifier, final Serializable data ) throws RepositoryException
   {
-    getService().setItemData( id, data );
+    getService().setItemData( getServiceId( identifier ), data );
   }
 
 }

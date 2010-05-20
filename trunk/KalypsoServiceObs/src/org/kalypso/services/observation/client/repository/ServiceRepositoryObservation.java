@@ -57,7 +57,7 @@ import org.kalypso.ogc.sensor.cache.ObservationCache;
 import org.kalypso.ogc.sensor.event.ObservationEventAdapter;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
-import org.kalypso.ogc.sensor.zml.ZmlURL;
+import org.kalypso.services.observation.ObservationServiceUtils;
 import org.kalypso.services.observation.sei.DataBean;
 import org.kalypso.services.observation.sei.IObservationService;
 import org.kalypso.services.observation.sei.ObservationBean;
@@ -108,7 +108,7 @@ public class ServiceRepositoryObservation implements IObservation
   {
     String href = m_ob.getId();
     if( args != null )
-      href = ZmlURL.insertRequest( href, args );
+      href = org.kalypso.ogc.sensor.zml.ZmlURL.insertRequest( href, args );
 
     InputStream ins = null;
 
@@ -136,7 +136,7 @@ public class ServiceRepositoryObservation implements IObservation
 
   public final String getIdentifier( )
   {
-    return ZmlURL.addServerSideId( m_ob.getId() );
+    return ObservationServiceUtils.addServerSideId( m_ob.getId() );
   }
 
   public final String getName( )

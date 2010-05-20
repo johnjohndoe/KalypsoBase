@@ -219,7 +219,7 @@ public final class RepositoryItemUtlis
    */
   public static String getProtocol( final String identifier )
   {
-    final String[] parts = identifier.split( "://" );
+    final String[] parts = identifier.split( ":" );
     return parts[0];
   }
 

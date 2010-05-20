@@ -67,7 +67,6 @@ import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.request.RequestFactory;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
-import org.kalypso.ogc.sensor.zml.ZmlURL;
 import org.kalypso.repository.IModifyableRepository;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryItem;
@@ -79,6 +78,7 @@ import org.kalypso.repository.factory.IRepositoryFactory;
 import org.kalypso.repository.utils.RepositoryItemUtlis;
 import org.kalypso.repository.utils.RepositoryUtils;
 import org.kalypso.services.observation.KalypsoServiceObsActivator;
+import org.kalypso.services.observation.ObservationServiceUtils;
 import org.kalypso.services.observation.sei.DataBean;
 import org.kalypso.services.observation.sei.IObservationService;
 import org.kalypso.services.observation.sei.ItemBean;
@@ -172,8 +172,8 @@ public class ObservationServiceFassade implements IObservationService, IDisposab
 
   public final DataBean readData( final String href ) throws SensorException
   {
-    final String hereHref = ZmlURL.removeServerSideId( href );
-    final String obsId = ZmlURL.getIdentifierPart( hereHref );
+    final String hereHref = ObservationServiceUtils.removeServerSideId( href );
+    final String obsId = org.kalypso.ogc.sensor.zml.ZmlURL.getIdentifierPart( hereHref );
     final ObservationBean obean = new ObservationBean( obsId );
 
     // request part specified?
@@ -226,7 +226,6 @@ public class ObservationServiceFassade implements IObservationService, IDisposab
     {
       // tricky: maybe make a filtered observation out of this one
       obs = FilterFactory.createFilterFrom( hereHref, obs, null );
-
 
       // name of the temp file must be valid against OS-rules for naming files
       // so remove any special characters
@@ -305,7 +304,7 @@ public class ObservationServiceFassade implements IObservationService, IDisposab
    */
   private IRepositoryItem itemFromBean( final ItemBean obean ) throws RepositoryException
   {
-    final String id = ZmlURL.removeServerSideId( obean.getId() );
+    final String id = ObservationServiceUtils.removeServerSideId( obean.getId() );
 
     final IRepositoryItem item = m_repository.findItem( id );
     if( item == null )
