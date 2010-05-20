@@ -43,6 +43,7 @@ package org.kalypso.ogc.sensor.view.actions;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
@@ -85,12 +86,18 @@ public class RepositoryArrayContentProvider extends ArrayContentProvider impleme
       final RepositoryFactoryConfig[] factories = (RepositoryFactoryConfig[]) inputElement;
       for( final RepositoryFactoryConfig factory : factories )
       {
-        for( final IRepositoryFilter filter : m_filters )
-        {
-          if( !filter.select( factory ) )
-            continue;
 
+        if( ArrayUtils.isEmpty( m_filters ) )
           filtered.add( factory );
+        else
+        {
+          for( final IRepositoryFilter filter : m_filters )
+          {
+            if( !filter.select( factory ) )
+              continue;
+
+            filtered.add( factory );
+          }
         }
       }
 
