@@ -178,7 +178,11 @@ public class AbstractCachedFeature2 extends Feature_Impl
   public void clearCachedProperties( )
   {
     m_cache.clear();
-    m_dirty.clear();
+
+    /* Set all to dirty, so they will be recalculated next time */
+    final QName[] cachedProperties = m_cacheDefinition.getCachedProperties();
+    for( final QName cachedProp : cachedProperties )
+      m_dirty.add( cachedProp );
   }
 
 }
