@@ -82,12 +82,17 @@ public class FeatureCacheDefinition
   {
     if( m_dirtyMap.containsKey( changedProperty ) )
       return m_dirtyMap.get( changedProperty );
-    
+
     return EMPTY_QNAMES;
   }
 
   public boolean isCached( final QName property )
   {
     return m_cachedProperties.contains( property );
+  }
+
+  public QName[] getCachedProperties( )
+  {
+    return m_cachedProperties.toArray( new QName[m_cachedProperties.size()] );
   }
 }
