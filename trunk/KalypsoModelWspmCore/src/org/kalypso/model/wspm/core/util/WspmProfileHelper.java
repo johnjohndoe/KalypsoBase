@@ -69,14 +69,7 @@ public class WspmProfileHelper
   public static final double FUZZINESS = 0.005; // Inaccuracies profile of points
 
   /**
-   * The constructor is private, should not be instanciated.
-   */
-  private WspmProfileHelper( )
-  {
-  }
-
-  /**
-   * Returns the witdh position of a geo point projected on a profile.
+   * Returns the width position of a geo point projected on a profile.
    * <p>
    * It works with the following steps:<br />
    * <ol>
