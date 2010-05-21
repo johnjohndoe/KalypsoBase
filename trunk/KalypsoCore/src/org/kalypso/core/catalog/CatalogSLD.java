@@ -71,7 +71,7 @@ public class CatalogSLD extends ObjectCatalog<FeatureTypeStyle>
 
   public static final String DEFAULT_STYLE_DEFAULT = "urn:ogc:gml:featuretype:default:%s:sld:default"; //$NON-NLS-1$
 
-  /** Do not call this yourself but rather get the catalog via {@link KalypsoCorePlugin#}*/
+  /** Do not call this yourself but rather get the catalog via {@link KalypsoCorePlugin#} */
   public CatalogSLD( final CatalogManager cManager, final File repositoryBase )
   {
     super( repositoryBase, cManager, FeatureTypeStyle.class );
@@ -88,7 +88,6 @@ public class CatalogSLD extends ObjectCatalog<FeatureTypeStyle>
     final URNGeneratorFeatureTypeStyle generatorFeatureTypeStyle = new URNGeneratorFeatureTypeStyle();
     return generatorFeatureTypeStyle.generateSelectedURNForRelated( featureType );
   }
-
 
   /**
    * @see org.kalypso.commons.serializer.ISerializer#read(java.io.InputStream)
@@ -132,5 +131,19 @@ public class CatalogSLD extends ObjectCatalog<FeatureTypeStyle>
     {
       IOUtils.closeQuietly( os );
     }
+  }
+
+  public static String getDefaultURN( final ICatalog catalog, final String style )
+  {
+    final String styleURN = String.format( DEFAULT_STYLE_DEFAULT, style );
+
+    return catalog.resolve( styleURN, styleURN );
+  }
+
+  public static String getSelectedURN( final ICatalog catalog, final String style )
+  {
+    final String styleURN = String.format( DEFAULT_STYLE_SELECTED, style );
+
+    return catalog.resolve( styleURN, styleURN );
   }
 }
