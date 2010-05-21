@@ -78,6 +78,7 @@ public abstract class AbstractWidget implements IWidget
    * @see org.kalypso.ogc.gml.widgets.IWidget#activate(org.kalypso.commons.command.ICommandTarget,
    *      org.kalypso.ogc.gml.map.MapPanel)
    */
+  @Override
   public void activate( final ICommandTarget commandPoster, final IMapPanel mapPanel )
   {
     m_commandPoster = commandPoster;
@@ -97,6 +98,7 @@ public abstract class AbstractWidget implements IWidget
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#setSelection(org.kalypso.ogc.gml.selection.IFeatureSelection)
    */
+  @Override
   public void setSelection( final ISelection selection )
   {
     // does nothing on default
@@ -108,6 +110,7 @@ public abstract class AbstractWidget implements IWidget
    *          maybe it is better to give the whole selection
    * @see org.kalypso.ogc.gml.widgets.IWidget#isActive()
    */
+  @Override
   public boolean canBeActivated( final ISelection selection, final IMapPanel mapPanel )
   {
     return true;
@@ -170,6 +173,7 @@ public abstract class AbstractWidget implements IWidget
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#clickPopup(java.awt.Point)
    */
+  @Override
   @SuppressWarnings("deprecation")
   @Deprecated
   public void clickPopup( final Point p )
@@ -180,6 +184,7 @@ public abstract class AbstractWidget implements IWidget
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#dragged(java.awt.Point)
    */
+  @Override
   public void dragged( final Point p )
   {
     // not implemented by default
@@ -188,6 +193,7 @@ public abstract class AbstractWidget implements IWidget
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#finish()
    */
+  @Override
   public void finish( )
   {
   }
@@ -195,6 +201,7 @@ public abstract class AbstractWidget implements IWidget
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#leftClicked(java.awt.Point)
    */
+  @Override
   public void leftClicked( final Point p )
   {
     // not implemented by default
@@ -203,6 +210,7 @@ public abstract class AbstractWidget implements IWidget
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#leftPressed(java.awt.Point)
    */
+  @Override
   public void leftPressed( final Point p )
   {
     // not implemented by default
@@ -211,6 +219,7 @@ public abstract class AbstractWidget implements IWidget
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#leftReleased(java.awt.Point)
    */
+  @Override
   public void leftReleased( final Point p )
   {
     // not implemented by default
@@ -219,6 +228,7 @@ public abstract class AbstractWidget implements IWidget
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#moved(java.awt.Point)
    */
+  @Override
   public void moved( final Point p )
   {
     // not implemented by default
@@ -227,6 +237,7 @@ public abstract class AbstractWidget implements IWidget
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#rightClicked(java.awt.Point)
    */
+  @Override
   @SuppressWarnings("deprecation")
   @Deprecated
   public void rightClicked( final Point p )
@@ -237,6 +248,7 @@ public abstract class AbstractWidget implements IWidget
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#rightPressed(java.awt.Point)
    */
+  @Override
   @SuppressWarnings("deprecation")
   @Deprecated
   public void rightPressed( final Point p )
@@ -247,6 +259,7 @@ public abstract class AbstractWidget implements IWidget
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#rightReleased(java.awt.Point)
    */
+  @Override
   @SuppressWarnings("deprecation")
   @Deprecated
   public void rightReleased( final Point p )
@@ -256,9 +269,10 @@ public abstract class AbstractWidget implements IWidget
 
   /**
    * TODO: give World2Screen Transformation into paint method
-   *
+   * 
    * @see org.kalypso.ogc.gml.widgets.IWidget#paint(java.awt.Graphics)
    */
+  @Override
   public void paint( final Graphics g )
   {
     // not implemented by default
@@ -300,11 +314,13 @@ public abstract class AbstractWidget implements IWidget
     }
   }
 
+  @Override
   public String getName( )
   {
     return m_name;
   }
 
+  @Override
   public String getToolTip( )
   {
     return m_toolTip;
@@ -318,6 +334,7 @@ public abstract class AbstractWidget implements IWidget
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#doubleClickedLeft(java.awt.Point)
    */
+  @Override
   public void doubleClickedLeft( final Point p )
   {
     // not implemented by default
@@ -327,6 +344,7 @@ public abstract class AbstractWidget implements IWidget
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#doubleClickedRight(java.awt.Point)
    */
+  @Override
   public void doubleClickedRight( final Point p )
   {
     // not implemented by default
@@ -336,6 +354,7 @@ public abstract class AbstractWidget implements IWidget
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#keyPressed(java.awt.event.KeyEvent)
    */
+  @Override
   public void keyPressed( final KeyEvent e )
   {
     // not implemented by default
@@ -344,6 +363,7 @@ public abstract class AbstractWidget implements IWidget
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#keyReleased(java.awt.event.KeyEvent)
    */
+  @Override
   public void keyReleased( final KeyEvent e )
   {
     // not implemented by default
@@ -352,6 +372,7 @@ public abstract class AbstractWidget implements IWidget
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#keyTyped(java.awt.event.KeyEvent)
    */
+  @Override
   public void keyTyped( final KeyEvent e )
   {
     // not implemented by default

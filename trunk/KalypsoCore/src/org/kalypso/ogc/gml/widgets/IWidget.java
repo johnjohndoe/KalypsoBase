@@ -53,39 +53,39 @@ import org.kalypso.ogc.gml.map.IMapPanel;
  */
 public interface IWidget
 {
-  public String getName( );
+  String getName( );
 
-  public String getToolTip( );
+  String getToolTip( );
 
   // KeyEvents
-  public void keyPressed( KeyEvent e );
+  void keyPressed( KeyEvent e );
 
-  public void keyReleased( KeyEvent e );
+  void keyReleased( KeyEvent e );
 
-  public void keyTyped( KeyEvent e );
+  void keyTyped( KeyEvent e );
 
   // MouseClicks
-  public void leftClicked( Point p );
+  void leftClicked( Point p );
 
-  public void leftPressed( Point p );
+  void leftPressed( Point p );
 
-  public void leftReleased( Point p );
+  void leftReleased( Point p );
 
-  public void doubleClickedLeft( Point p );
+  void doubleClickedLeft( Point p );
 
-  public void doubleClickedRight( Point p );
-
-  /**
-   * @deprecated Do not use: widget must use only left button
-   */
-  @Deprecated
-  public void rightClicked( Point p );
+  void doubleClickedRight( Point p );
 
   /**
    * @deprecated Do not use: widget must use only left button
    */
   @Deprecated
-  public void rightPressed( Point p );
+  void rightClicked( Point p );
+
+  /**
+   * @deprecated Do not use: widget must use only left button
+   */
+  @Deprecated
+  void rightPressed( Point p );
 
   /**
    * @deprecated Do not use: widget must use only left button
@@ -97,19 +97,19 @@ public interface IWidget
    * @deprecated Do not use: widget must use only left button
    */
   @Deprecated
-  public void clickPopup( final Point p );
+  void clickPopup( final Point p );
 
   // MouseMotions
-  public void moved( Point p );
+  void moved( Point p );
 
-  public void dragged( Point p );
+  void dragged( Point p );
 
   // Graphics
-  public void paint( Graphics g );
+  void paint( Graphics g );
 
-  public void finish( );
+  void finish( );
 
-  public void activate( final ICommandTarget commandPoster, final IMapPanel mapPanel );
+  void activate( final ICommandTarget commandPoster, final IMapPanel mapPanel );
 
   /**
    * Will be called:
@@ -118,11 +118,11 @@ public interface IWidget
    * <li>everytime the selection changes if active</li>
    * </ul>
    */
-  public void setSelection( final ISelection selection );
+  void setSelection( final ISelection selection );
 
   /**
    * This function checks and returns if the widget may be activated. This may be used by the action delegates, to
    * determine if the action should be enabled.
    */
-  public boolean canBeActivated( final ISelection selection, final IMapPanel mapPanel );
+  boolean canBeActivated( final ISelection selection, final IMapPanel mapPanel );
 }

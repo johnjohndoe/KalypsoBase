@@ -35,8 +35,10 @@
  */
 package org.kalypsodeegree_impl.graphics.displayelements;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Stroke;
 import java.io.Serializable;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -96,6 +98,9 @@ public class PolygonDisplayElement_Impl extends GeometryDisplayElement_Impl impl
   {
     final Graphics2D g2 = (Graphics2D) g;
 
+    final Color oColor = g2.getColor();
+    final Stroke oStroke = g2.getStroke();
+
     final PolygonSymbolizer sym = (PolygonSymbolizer) getSymbolizer();
     final org.kalypsodeegree.graphics.sld.Fill fill = sym.getFill();
     final org.kalypsodeegree.graphics.sld.Stroke stroke = sym.getStroke();
@@ -125,6 +130,9 @@ public class PolygonDisplayElement_Impl extends GeometryDisplayElement_Impl impl
     {
       Debug.debugException( ex, "Exception caught evaluating an Expression!" );
     }
+
+    g2.setColor( oColor );
+    g2.setStroke( oStroke );
   }
 
 }

@@ -131,6 +131,7 @@ public class PolygonGeometryBuilder implements IGeometryBuilder
   /**
    * @see org.kalypso.ogc.gml.map.widgets.builders.IGeometryBuilder#addPoint(org.kalypsodeegree.model.geometry.GM_Point)
    */
+  @Override
   public GM_Object addPoint( final GM_Point p ) throws Exception
   {
     m_points.add( p );
@@ -166,6 +167,7 @@ public class PolygonGeometryBuilder implements IGeometryBuilder
   /**
    * @see org.kalypso.ogc.gml.map.widgets.builders.IGeometryBuilder#finish()
    */
+  @Override
   public GM_Object finish( ) throws Exception
   {
     if( m_extender != null && m_updateCursor )
@@ -225,6 +227,7 @@ public class PolygonGeometryBuilder implements IGeometryBuilder
    * @see org.kalypso.ogc.gml.map.widgets.builders.IGeometryBuilder#paint(java.awt.Graphics,
    *      org.kalypsodeegree.graphics.transformation.GeoTransform, java.awt.Point)
    */
+  @Override
   public void paint( final Graphics g, final GeoTransform projection, final Point currentPoint )
   {
     // IMPORTANT: we remember GM_Points (not Point's) and retransform them for painting
@@ -248,6 +251,7 @@ public class PolygonGeometryBuilder implements IGeometryBuilder
   /**
    * @see org.kalypso.nofdpidss.ui.view.wizard.measure.construction.create.builders.geometry.IMyGeometryBuilder#removeLastPoint()
    */
+  @Override
   public void removeLastPoint( )
   {
     if( m_points.size() > 0 )
@@ -257,6 +261,7 @@ public class PolygonGeometryBuilder implements IGeometryBuilder
   /**
    * @see org.kalypso.ogc.gml.map.widgets.builders.IGeometryBuilder#reset()
    */
+  @Override
   public void reset( )
   {
     m_points.clear();

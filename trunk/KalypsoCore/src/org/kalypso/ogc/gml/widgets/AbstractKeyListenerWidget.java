@@ -111,6 +111,10 @@ public abstract class AbstractKeyListenerWidget extends AbstractWidget
     {
       reset();
     }
+    else if( KeyEvent.VK_ENTER == keyCode )
+    {
+      finish();
+    }
 
     super.keyPressed( e );
   }
