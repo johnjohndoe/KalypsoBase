@@ -538,6 +538,23 @@ public class GeoGridUtilities
       progress.done();
     }
   }
+  
+  
+  public static ICoverage addSequentialBinaryGridAsCoverage(final ICoverageCollection coverages, final IGeoGrid grid, final String filePath, final String mimeType, final IProgressMonitor monitor ) {
+    final SubMonitor progress = SubMonitor.convert( monitor, 100 );
+
+    try
+    {
+      /* create new coverage and fill domain/range */
+      final ICoverage coverage = CoverageCollection.addCoverage( coverages, toGridDomain( grid ), filePath, mimeType );
+      ProgressUtilities.worked( progress, 10 );
+      return coverage;
+      
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    return null; 
+  }
 
   /**
    * Reads values from the given {@link IGeoGrid} and write it out with the scale factor of two (i.e. rounding to two
