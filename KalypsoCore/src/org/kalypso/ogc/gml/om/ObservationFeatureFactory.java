@@ -91,27 +91,27 @@ import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
  */
 public class ObservationFeatureFactory implements IAdapterFactory
 {
-  public final static QName GML_METADATA = new QName( NS.GML3, "metaDataProperty" ); //$NON-NLS-1$
+  public static final QName GML_METADATA = new QName( NS.GML3, "metaDataProperty" ); //$NON-NLS-1$
 
-  public final static QName OM_OBSERVATION = new QName( NS.OM, "Observation" ); //$NON-NLS-1$
+  public static final QName OM_OBSERVATION = new QName( NS.OM, "Observation" ); //$NON-NLS-1$
 
-  public final static QName OM_OBSERVED_PROP = new QName( NS.OM, "observedProperty" ); //$NON-NLS-1$
+  public static final QName OM_OBSERVED_PROP = new QName( NS.OM, "observedProperty" ); //$NON-NLS-1$
 
-  public final static QName OM_RESULT = new QName( NS.OM, "result" ); //$NON-NLS-1$
+  public static final QName OM_RESULT = new QName( NS.OM, "result" ); //$NON-NLS-1$
 
-  public final static QName OM_RESULTDEFINITION = new QName( NS.OM, "resultDefinition" ); //$NON-NLS-1$
+  public static final QName OM_RESULTDEFINITION = new QName( NS.OM, "resultDefinition" ); //$NON-NLS-1$
 
-  public final static QName SWE_COMPONENT = new QName( NS.SWE, "component" ); //$NON-NLS-1$
+  public static final QName SWE_COMPONENT = new QName( NS.SWE, "component" ); //$NON-NLS-1$
 
-  public final static QName SWE_ITEMDEFINITION = new QName( NS.SWE, "ItemDefinition" ); //$NON-NLS-1$
+  public static final QName SWE_ITEMDEFINITION = new QName( NS.SWE, "ItemDefinition" ); //$NON-NLS-1$
 
-  public final static QName SWE_PROPERTY = new QName( NS.SWE, "property" ); //$NON-NLS-1$
+  public static final QName SWE_PROPERTY = new QName( NS.SWE, "property" ); //$NON-NLS-1$
 
-  public final static QName SWE_PHENOMENONTYPE = new QName( NS.SWE, "Phenomenon" ); //$NON-NLS-1$
+  public static final QName SWE_PHENOMENONTYPE = new QName( NS.SWE, "Phenomenon" ); //$NON-NLS-1$
 
-  public final static QName SWE_RECORDDEFINITIONTYPE = new QName( NS.SWE, "RecordDefinition" ); //$NON-NLS-1$
+  public static final QName SWE_RECORDDEFINITIONTYPE = new QName( NS.SWE, "RecordDefinition" ); //$NON-NLS-1$
 
-  public final static QName SWE_REPRESENTATION = new QName( NS.SWE, "representation" ); //$NON-NLS-1$
+  public static final QName SWE_REPRESENTATION = new QName( NS.SWE, "representation" ); //$NON-NLS-1$
 
   private static final QName QNAME_F_SORTED_RECORD_DEFINITION = new QName( NS.SWE_EXTENSIONS, "SortedRecordDefinition" ); //$NON-NLS-1$
 
@@ -598,6 +598,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
    * 
    * @see org.eclipse.core.runtime.IAdapterFactory#getAdapter(java.lang.Object, java.lang.Class)
    */
+  @Override
   @SuppressWarnings("unchecked")
   public Object getAdapter( final Object adaptableObject, final Class adapterType )
   {
@@ -610,6 +611,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
   /**
    * @see org.eclipse.core.runtime.IAdapterFactory#getAdapterList()
    */
+  @Override
   @SuppressWarnings("unchecked")
   public Class[] getAdapterList( )
   {
