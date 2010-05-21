@@ -89,7 +89,7 @@ public class BinaryGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
 {
   private final static int HEADER_SIZE = 4 * 4;
 
-  private static final int NO_DATA = Integer.MIN_VALUE;
+  public static final int NO_DATA = Integer.MIN_VALUE;
 
   /* Buffer for encoding read/written integers. */
   private final byte[] m_intBuffer = new byte[4];

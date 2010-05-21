@@ -20,7 +20,7 @@ import com.vividsolutions.jts.geom.Envelope;
 /**
  * {@link IGeoGrid} implementation based on {@link org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridCoverage}s.<br>
  * This implementation analyzes the wrapped coverage and generates a suitable grid, to which all calls are delegated.
- *
+ * 
  * @author Gernot Belger
  */
 public class RectifiedGridCoverageGeoGrid implements IGeoGrid
@@ -97,6 +97,29 @@ public class RectifiedGridCoverageGeoGrid implements IGeoGrid
     return grid.getValue( x, y );
   }
 
+  public URL getGridURL( ) throws GeoGridException
+  {
+    if( m_rangeSet != null )
+    {
+      try
+      {
+        if( m_rangeSet instanceof FileType )
+        {
+          final FileType file = (FileType) m_rangeSet;
+          return new URL( m_context, file.getFileName() );
+        }
+        else
+          throw new UnsupportedOperationException( "Only FileSet rangeSets supported by now" );
+      }
+      catch( final IOException e )
+      {
+        throw new GeoGridException( "Could not access grid-file", e );
+      }
+    }
+
+    return null;
+  }
+
   protected synchronized IGeoGrid getGrid( ) throws GeoGridException
   {
     if( m_grid == null )
@@ -107,7 +130,7 @@ public class RectifiedGridCoverageGeoGrid implements IGeoGrid
         {
           final FileType file = (FileType) m_rangeSet;
           final URL url = new URL( m_context, file.getFileName() );
-          
+
           m_grid = GeoGridUtilities.openGrid( file.getMimeType(), url, m_origin, m_offsetX, m_offsetY, m_sourceCRS, m_writeable );
         }
         else
