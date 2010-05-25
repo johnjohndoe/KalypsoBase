@@ -35,6 +35,7 @@
  */
 package org.kalypsodeegree_impl.graphics.displayelements;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.io.Serializable;
@@ -92,6 +93,9 @@ class LineStringDisplayElement_Impl extends GeometryDisplayElement_Impl implemen
   {
     final Graphics2D g2 = (Graphics2D) g;
 
+    final Color oColor = g2.getColor();
+    final java.awt.Stroke oStroke = g2.getStroke();
+
     final LineSymbolizer sym = (LineSymbolizer) getSymbolizer();
     final Stroke stroke = sym.getStroke();
     final UOM uom = sym.getUom();
@@ -118,6 +122,9 @@ class LineStringDisplayElement_Impl extends GeometryDisplayElement_Impl implemen
     {
       e.printStackTrace();
     }
+
+    g2.setColor( oColor );
+    g2.setStroke( oStroke );
   }
 
   private void paintCurve( final Graphics2D g2, final GeoTransform projection, final GM_Curve curve, final StrokePainter painter ) throws GM_Exception
