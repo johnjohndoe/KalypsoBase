@@ -46,8 +46,8 @@ import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.CommandEvent;
@@ -134,6 +134,7 @@ public class DropDownToolbarItem extends CompoundContributionItem implements IEx
    */
   private final ICommandListener m_commandListener = new ICommandListener()
   {
+    @Override
     public void commandChanged( final CommandEvent commandEvent )
     {
       if( m_currentCommand != null && commandEvent.getCommand() == m_currentCommand.getCommand().getCommand() )
@@ -184,6 +185,7 @@ public class DropDownToolbarItem extends CompoundContributionItem implements IEx
    * @see org.eclipse.core.runtime.IExecutableExtension#setInitializationData(org.eclipse.core.runtime.IConfigurationElement,
    *      java.lang.String, java.lang.Object)
    */
+  @Override
   @SuppressWarnings("unchecked")
   public void setInitializationData( final IConfigurationElement config, final String propertyName, final Object data )
   {
@@ -353,10 +355,6 @@ public class DropDownToolbarItem extends CompoundContributionItem implements IEx
             {
               item.setText( text );
             }
-            else
-            {
-              item.setText( text + '\t' + keyBindingText );
-            }
           }
 
           if( item.getSelection() != checkedState )
@@ -496,6 +494,7 @@ public class DropDownToolbarItem extends CompoundContributionItem implements IEx
     {
       menuItemListener = new Listener()
       {
+        @Override
         public void handleEvent( final Event event )
         {
           switch( event.type )
@@ -585,6 +584,7 @@ public class DropDownToolbarItem extends CompoundContributionItem implements IEx
           final Menu menu = menuManager.createContextMenu( ti.getParent() );
           menuManager.addMenuListener( new IMenuListener()
           {
+            @Override
             public void menuAboutToShow( final IMenuManager manager )
             {
               final IContributionItem[] contributionItems = getContributionItems();
