@@ -158,6 +158,9 @@ public abstract class AbstractKeyListenerWidget extends AbstractWidget
 
   public GM_Point getCurrentGmPoint( )
   {
+    if( getMapPanel() == null )
+      return null;
+
     final Point current = getCurrentPoint();
     if( current != null )
       return MapUtilities.transform( getMapPanel(), current );

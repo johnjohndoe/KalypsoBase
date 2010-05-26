@@ -42,12 +42,14 @@ package org.kalypso.jts;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.NotImplementedException;
@@ -1105,6 +1107,36 @@ public class JTSUtilities
   }
 
   /**
+   * @return coordinates in range sorted by distance
+   */
+  public static Coordinate[] findCoordinatesInRange( final Coordinate[] coordinates, final Coordinate base, final double radius )
+  {
+    final Comparator<Coordinate> comparator = new Comparator<Coordinate>()
+    {
+      @Override
+      public int compare( final Coordinate c1, final Coordinate c2 )
+      {
+
+        final Double d1 = Double.valueOf( c1.distance( base ) );
+        final Double d2 = Double.valueOf( c2.distance( base ) );
+
+        return d1.compareTo( d2 );
+      }
+    };
+
+    final Set<Coordinate> myCoordinates = new TreeSet<Coordinate>( comparator );
+
+    for( final Coordinate c : coordinates )
+    {
+      final double distance = base.distance( c );
+      if( distance <= radius )
+        myCoordinates.add( c );
+    }
+
+    return myCoordinates.toArray( new Coordinate[] {} );
+  }
+
+  /**
    * Returns the minimal x-value of a sequence of coordinates.
    * 
    * @return {@link Double#POSITIVE_INFINITY} if the sequence is empty
@@ -1196,7 +1228,7 @@ public class JTSUtilities
    *          parameter is <= 0, all points will be used.
    * @return A new geometry with x, y and z coordinates.
    */
-  public static Geometry addZCoordinates( Geometry geometry, List<Point> points, int numberOfPoints )
+  public static Geometry addZCoordinates( final Geometry geometry, final List<Point> points, final int numberOfPoints )
   {
     /* Check the prerequisites. */
     if( geometry == null )
@@ -1207,18 +1239,15 @@ public class JTSUtilities
       throw new IllegalArgumentException( "No points with z coordinates given ..." );
 
     /* Create the geometry factory. */
-    GeometryFactory factory = new GeometryFactory();
+    final GeometryFactory factory = new GeometryFactory();
 
     /* Clone the geometry. */
-    Geometry newGeometry = factory.createGeometry( geometry );
+    final Geometry newGeometry = factory.createGeometry( geometry );
 
     /* Modify the coordinates of the new geometry. */
-    Coordinate[] coordinates = newGeometry.getCoordinates();
-    for( int i = 0; i < coordinates.length; i++ )
+    final Coordinate[] coordinates = newGeometry.getCoordinates();
+    for( final Coordinate coordinate : coordinates )
     {
-      /* Get the coordinate. */
-      Coordinate coordinate = coordinates[i];
-
       /* Now add a z coordinate to the coordinate. */
       addZCoordinate( coordinate, points, numberOfPoints );
     }
@@ -1241,7 +1270,7 @@ public class JTSUtilities
    *          The number of the nearest points of the list, that will be used in the distance weighting. If this
    *          parameter is <= 0, all points will be used.
    */
-  private static void addZCoordinate( Coordinate coordinate, List<Point> points, int numberOfPoints )
+  private static void addZCoordinate( final Coordinate coordinate, final List<Point> points, final int numberOfPoints )
   {
     /* Check the prerequisites. */
     if( coordinate == null )
@@ -1252,23 +1281,23 @@ public class JTSUtilities
       throw new IllegalArgumentException( "No points with z coordinates given ..." );
 
     /* Get the coordinate pairs. */
-    List<CoordinatePair> coordinatePairs = getCoordinatePairs( coordinate, points );
+    final List<CoordinatePair> coordinatePairs = getCoordinatePairs( coordinate, points );
 
     /* The sum of all distances. */
     double sumDistances = 0.0;
 
     /* Calculate the distances. */
-    List<Double> distances = new ArrayList<Double>();
+    final List<Double> distances = new ArrayList<Double>();
     for( int i = 0; i < coordinatePairs.size(); i++ )
     {
       if( numberOfPoints > 0 && i >= numberOfPoints )
         break;
 
       /* Get the coordinate pair. */
-      CoordinatePair coordinatePair = coordinatePairs.get( i );
+      final CoordinatePair coordinatePair = coordinatePairs.get( i );
 
       /* Get the distance of the coordinate to the coordinate of the point. */
-      double distance = 1 / coordinatePair.getDistance();
+      final double distance = 1 / coordinatePair.getDistance();
 
       /* First add it to the sum of distances. */
       sumDistances = sumDistances + distance;
@@ -1278,14 +1307,14 @@ public class JTSUtilities
     }
 
     /* Calculate the factors. */
-    List<Double> factors = new ArrayList<Double>();
+    final List<Double> factors = new ArrayList<Double>();
     for( int i = 0; i < distances.size(); i++ )
     {
       /* Get the distance. */
-      Double distance = distances.get( i );
+      final Double distance = distances.get( i );
 
       /* Calculate the factor. */
-      double factor = (distance.doubleValue() / sumDistances);
+      final double factor = (distance.doubleValue() / sumDistances);
 
       /* Add it to the list of factors. */
       factors.add( new Double( factor ) );
@@ -1299,10 +1328,10 @@ public class JTSUtilities
         break;
 
       /* Get the coordinate pair. */
-      CoordinatePair coordinatePair = coordinatePairs.get( i );
+      final CoordinatePair coordinatePair = coordinatePairs.get( i );
 
       /* Get the factor. */
-      Double factor = factors.get( i );
+      final Double factor = factors.get( i );
 
       /* Calculate the new z coordinate. */
       newZ = newZ + (coordinatePair.getSecondCoordinate().z * factor.doubleValue());
@@ -1325,18 +1354,18 @@ public class JTSUtilities
    *         second coordinate of a pair will be a coordinate of one point of the list. The list will be sorted by the
    *         distance, each pair has.
    */
-  public static List<CoordinatePair> getCoordinatePairs( Coordinate coordinate, List<Point> points )
+  public static List<CoordinatePair> getCoordinatePairs( final Coordinate coordinate, final List<Point> points )
   {
     /* Memory for the results. */
-    List<CoordinatePair> results = new ArrayList<CoordinatePair>();
+    final List<CoordinatePair> results = new ArrayList<CoordinatePair>();
 
     for( int i = 0; i < points.size(); i++ )
     {
       /* Get the point. */
-      Point point = points.get( i );
+      final Point point = points.get( i );
 
       /* Create the coordinate pair. */
-      CoordinatePair coordinatePair = new CoordinatePair( coordinate, point.getCoordinate() );
+      final CoordinatePair coordinatePair = new CoordinatePair( coordinate, point.getCoordinate() );
 
       /* Add to the results. */
       results.add( coordinatePair );

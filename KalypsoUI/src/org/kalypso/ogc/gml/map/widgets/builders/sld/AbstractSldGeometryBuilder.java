@@ -144,7 +144,17 @@ public abstract class AbstractSldGeometryBuilder implements ISldGeometryBuilder
     return null;
   }
 
-  private void addPoint( final Point point )
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.builders.sld.ISldGeometryBuilder#addPoint(com.vividsolutions.jts.geom.Coordinate)
+   */
+  @Override
+  public void addPoint( final Coordinate coordinate )
+  {
+    m_coordinates.add( coordinate );
+  }
+
+  @Override
+  public void addPoint( final Point point )
   {
     m_coordinates.add( point.getCoordinate() );
   }
