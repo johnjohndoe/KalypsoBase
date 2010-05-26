@@ -41,6 +41,7 @@
 package org.kalypso.ogc.gml.map.widgets.builders.sld;
 
 import org.kalypso.ogc.gml.map.widgets.builders.IGeometryBuilder;
+import org.kalypso.ogc.gml.map.widgets.builders.sld.rules.IGeometryBuilderValidationRule;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Point;
@@ -50,7 +51,6 @@ import com.vividsolutions.jts.geom.Point;
  */
 public interface ISldGeometryBuilder extends IGeometryBuilder
 {
-
   int size( );
 
   void addPoint( Coordinate coordinate );
@@ -60,4 +60,6 @@ public interface ISldGeometryBuilder extends IGeometryBuilder
   Coordinate removeLastCoordinate( );
 
   void addRule( IGeometryBuilderValidationRule rule );
+
+  String getTooltip( );
 }
