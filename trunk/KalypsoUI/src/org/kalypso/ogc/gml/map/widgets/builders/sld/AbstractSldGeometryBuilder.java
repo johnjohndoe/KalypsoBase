@@ -214,13 +214,24 @@ public abstract class AbstractSldGeometryBuilder implements ISldGeometryBuilder
   public void reset( )
   {
     m_coordinates.clear();
-
   }
 
   @Override
   public int size( )
   {
     return m_coordinates.size();
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.builders.sld.ISldGeometryBuilder#removeLastCoordinate()
+   */
+  @Override
+  public Coordinate removeLastCoordinate( )
+  {
+    if( m_coordinates.size() > 0 )
+      return m_coordinates.remove( m_coordinates.size() - 1 );
+
+    return null;
   }
 
 }
