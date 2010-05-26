@@ -42,11 +42,16 @@ package org.kalypso.ogc.gml.map.widgets.advanced.utils;
 
 import java.awt.Graphics;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.java.net.IUrlResolver2;
+import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
@@ -57,13 +62,16 @@ import org.kalypsodeegree_impl.graphics.sld.SLDFactory;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 import org.w3c.dom.Document;
 
+import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.Point;
 
 /**
  * @author Dirk Kuch
  */
 public class SLDPainter
 {
+  Map<URL, Symbolizer> m_symbolizerMap = new HashMap<URL, Symbolizer>();
 
   private final GeoTransform m_projection;
 
@@ -75,22 +83,44 @@ public class SLDPainter
     m_crs = crs;
   }
 
+  public void paint( final Graphics g, final URL sld, final Coordinate coordinate ) throws CoreException
+  {
+    final Point point = JTSAdapter.jtsFactory.createPoint( coordinate );
+    paint( g, sld, point );
+  }
+
   public void paint( final Graphics g, final URL sld, final Geometry geometry ) throws CoreException
   {
-    try
+    Symbolizer symbolizer = m_symbolizerMap.get( sld );
+    if( symbolizer == null )
     {
-      final InputStream inputStream = sld.openStream();
-      final Document document = XMLTools.parse( inputStream );
-      inputStream.close();
+      try
+      {
+        final InputStream inputStream = sld.openStream();
+        final Document document = XMLTools.parse( inputStream );
+        inputStream.close();
 
-      final Symbolizer symbolizer = SLDFactory.createSymbolizer( null, document.getDocumentElement(), 0.0, Double.MAX_VALUE );
+        final IUrlResolver2 resolver = new IUrlResolver2()
+        {
 
-      paint( g, symbolizer, geometry );
+          @Override
+          public URL resolveURL( final String relativeOrAbsolute ) throws MalformedURLException
+          {
+            return UrlResolverSingleton.resolveUrl( sld, relativeOrAbsolute );
+          }
+        };
+
+        symbolizer = SLDFactory.createSymbolizer( resolver, document.getDocumentElement(), 0.0, Double.MAX_VALUE );
+        m_symbolizerMap.put( sld, symbolizer );
+      }
+      catch( final Exception e )
+      {
+        throw new CoreException( StatusUtilities.createErrorStatus( "Painting sld failed.", e ) );
+      }
     }
-    catch( final Exception e )
-    {
-      throw new CoreException( StatusUtilities.createErrorStatus( "Painting sld failed.", e ) );
-    }
+
+    paint( g, symbolizer, geometry );
+
   }
 
   public void paint( final Graphics g, final Symbolizer symbolizer, final Geometry geometry ) throws CoreException

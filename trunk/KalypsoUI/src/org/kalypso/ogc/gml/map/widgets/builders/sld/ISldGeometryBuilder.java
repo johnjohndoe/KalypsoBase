@@ -42,6 +42,9 @@ package org.kalypso.ogc.gml.map.widgets.builders.sld;
 
 import org.kalypso.ogc.gml.map.widgets.builders.IGeometryBuilder;
 
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Point;
+
 /**
  * @author Dirk Kuch
  */
@@ -49,4 +52,8 @@ public interface ISldGeometryBuilder extends IGeometryBuilder
 {
 
   int size( );
+
+  void addPoint( Coordinate coordinate );
+
+  void addPoint( Point point );
 }

@@ -45,8 +45,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -76,6 +76,7 @@ public class AdvancedEditModeMultiDelegate extends AbstractAdvancedEditModeMovem
     super( widget, provider );
   }
 
+  @Override
   public void paint( final Graphics g )
   {
     final GM_Point gmp = getWidget().getCurrentGmPoint();
@@ -176,9 +177,10 @@ public class AdvancedEditModeMultiDelegate extends AbstractAdvancedEditModeMovem
   @Override
   public String getToolTip( )
   {
-    return Messages.getString("org.kalypso.ogc.gml.map.widgets.advanced.edit.delegates.AdvancedEditModeMultiDelegate.0"); //$NON-NLS-1$
+    return Messages.getString( "org.kalypso.ogc.gml.map.widgets.advanced.edit.delegates.AdvancedEditModeMultiDelegate.0" ); //$NON-NLS-1$
   }
 
+  @Override
   public double getRange( )
   {
     final double width = getWidget().getIMapPanel().getBoundingBox().getWidth();
