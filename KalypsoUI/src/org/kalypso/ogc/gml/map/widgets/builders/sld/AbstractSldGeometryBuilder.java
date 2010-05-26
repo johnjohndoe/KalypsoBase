@@ -55,6 +55,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.widgets.advanced.utils.SLDPainter;
+import org.kalypso.ogc.gml.map.widgets.builders.sld.rules.IGeometryBuilderValidationRule;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.graphics.sld.LineSymbolizer;
 import org.kalypsodeegree.graphics.sld.PointSymbolizer;
@@ -87,6 +88,8 @@ public abstract class AbstractSldGeometryBuilder implements ISldGeometryBuilder
   private final List<Coordinate> m_coordinates = new ArrayList<Coordinate>();
 
   private final IMapPanel m_panel;
+
+  private String m_tooltip;
 
   public AbstractSldGeometryBuilder( final IMapPanel panel )
   {
@@ -207,20 +210,38 @@ public abstract class AbstractSldGeometryBuilder implements ISldGeometryBuilder
     final IGeometryBuilderValidationRule[] rules = getRules();
     for( final IGeometryBuilderValidationRule rule : rules )
     {
-      if( !rule.isValid( geometry ) )
+      if( !rule.isValid( geometry, p ) )
       {
         final URL sld = rule.getSld( geometry );
         if( sld == null )
           return;
 
+        setTooltip( rule.getTooltip() );
         painter.paint( g, sld, geometry );
 
         return;
       }
     }
 
+    /* reset vailidation tooltip */
+    setTooltip( null );
+
     final Symbolizer symbolizer = getSymbolizer( geometry );
     painter.paint( g, symbolizer, geometry );
+  }
+
+  private void setTooltip( final String tooltip )
+  {
+    m_tooltip = tooltip;
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.builders.sld.ISldGeometryBuilder#getTooltip()
+   */
+  @Override
+  public String getTooltip( )
+  {
+    return m_tooltip;
   }
 
   protected Symbolizer getSymbolizer( final Geometry geometry )

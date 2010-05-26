@@ -38,20 +38,21 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.map.widgets.builders.sld;
+package org.kalypso.ogc.gml.map.widgets.builders.sld.rules;
 
 import java.net.URL;
 
 import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.Point;
 
 /**
  * @author Dirk Kuch
  */
 public interface IGeometryBuilderValidationRule
 {
-  boolean isValid( Geometry geometry );
+  boolean isValid( Geometry geometry, Point current );
 
   URL getSld( Geometry geometry );
 
-  String[] getTooltip( );
+  String getTooltip( );
 }

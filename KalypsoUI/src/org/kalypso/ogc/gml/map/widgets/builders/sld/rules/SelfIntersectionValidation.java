@@ -38,28 +38,45 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.map.widgets.builders.sld;
+package org.kalypso.ogc.gml.map.widgets.builders.sld.rules;
 
-import org.kalypso.ogc.gml.map.widgets.builders.IGeometryBuilder;
-import org.kalypso.ogc.gml.map.widgets.builders.sld.rules.IGeometryBuilderValidationRule;
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.NotImplementedException;
+import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Point;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.LineString;
+import com.vividsolutions.jts.geom.Polygon;
 
 /**
  * @author Dirk Kuch
  */
-public interface ISldGeometryBuilder extends IGeometryBuilder
+public class SelfIntersectionValidation
 {
-  int size( );
+  private SelfIntersectionValidation( )
+  {
+  }
 
-  void addPoint( Coordinate coordinate );
+  public static boolean isSelfIntersecting( final Geometry geometry )
+  {
+    if( geometry instanceof Polygon )
+    {
+      final Polygon polygon = (Polygon) geometry;
+      Coordinate[] coordinates = polygon.getCoordinates();
+      coordinates = (Coordinate[]) ArrayUtils.remove( coordinates, coordinates.length - 1 );
 
-  void addPoint( Point point );
+      final LineString lineString = JTSAdapter.jtsFactory.createLineString( coordinates );
+      return isValid( lineString );
+    }
+    else if( geometry instanceof LineString )
+      return isValid( (LineString) geometry );
 
-  Coordinate removeLastCoordinate( );
+    throw new NotImplementedException();
+  }
 
-  void addRule( IGeometryBuilderValidationRule rule );
-
-  String getTooltip( );
+  private static boolean isValid( final LineString lineString )
+  {
+    return !lineString.isSimple();
+  }
 }
