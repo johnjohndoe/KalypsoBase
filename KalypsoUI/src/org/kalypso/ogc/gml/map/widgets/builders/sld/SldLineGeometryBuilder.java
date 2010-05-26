@@ -40,20 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.widgets.builders.sld;
 
-import java.awt.Graphics;
 import java.net.URL;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.eclipse.core.runtime.CoreException;
 import org.kalypso.ogc.gml.map.IMapPanel;
-import org.kalypso.ogc.gml.map.widgets.advanced.utils.SLDPainter;
-import org.kalypsodeegree.graphics.sld.LineSymbolizer;
-import org.kalypsodeegree.graphics.sld.Symbolizer;
-import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Point;
@@ -79,7 +74,7 @@ public class SldLineGeometryBuilder extends AbstractSldGeometryBuilder implement
   @Override
   public GM_Object finish( ) throws Exception
   {
-    final LineString lineString = getGeometry( getCoordinates()[0] );
+    final LineString lineString = getGeometry();
 
     return JTSAdapter.wrap( lineString, getCrs() );
   }
@@ -91,23 +86,21 @@ public class SldLineGeometryBuilder extends AbstractSldGeometryBuilder implement
     Coordinate[] coordinates = getCoordinates();
     coordinates = (Coordinate[]) ArrayUtils.addAll( coordinates, additional );
 
-    final LineString lineString = factory.createLineString( coordinates );
+    if( coordinates.length < 2 )
+      return null;
 
+    final LineString lineString = factory.createLineString( coordinates );
     return lineString;
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.builders.sld.AbstractSldGeometryBuilder#buildGeometry(com.vividsolutions.jts.geom.Point)
+   */
   @Override
-  public void paint( final Graphics g, final GeoTransform projection, final Point current ) throws CoreException
+  protected Geometry buildGeometry( final Point current )
   {
-    final SLDPainter painter = new SLDPainter( projection, getCrs() );
-
-    if( size() >= 1 )
-    {
-      final LineString lineString = getGeometry( current.getCoordinate() );
-
-      final Symbolizer symbolizer = getSymbolizer( LineSymbolizer.class );
-      painter.paint( g, symbolizer, lineString );
-    }
+    final LineString lineString = getGeometry( current.getCoordinate() );
+    return lineString;
   }
 
 }

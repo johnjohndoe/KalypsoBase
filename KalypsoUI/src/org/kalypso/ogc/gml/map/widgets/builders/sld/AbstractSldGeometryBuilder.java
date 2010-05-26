@@ -44,17 +44,20 @@ import java.awt.Graphics;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
+import org.kalypso.ogc.gml.map.widgets.advanced.utils.SLDPainter;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.graphics.sld.LineSymbolizer;
+import org.kalypsodeegree.graphics.sld.PointSymbolizer;
 import org.kalypsodeegree.graphics.sld.PolygonSymbolizer;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
@@ -67,14 +70,19 @@ import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 import org.w3c.dom.Document;
 
 import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Point;
+import com.vividsolutions.jts.geom.Polygon;
 
 /**
  * @author Dirk Kuch
  */
 public abstract class AbstractSldGeometryBuilder implements ISldGeometryBuilder
 {
-  private final Map<Class, Symbolizer> m_symbolizers = new HashMap<Class, Symbolizer>();
+  private final Set<IGeometryBuilderValidationRule> m_rules = new LinkedHashSet<IGeometryBuilderValidationRule>();
+
+  private final Set<Symbolizer> m_symbolizers = new HashSet<Symbolizer>();
 
   private final List<Coordinate> m_coordinates = new ArrayList<Coordinate>();
 
@@ -108,16 +116,7 @@ public abstract class AbstractSldGeometryBuilder implements ISldGeometryBuilder
         inputStream.close();
 
         final Symbolizer symbolizer = SLDFactory.createSymbolizer( null, document.getDocumentElement(), 0.0, Double.MAX_VALUE );
-        if( symbolizer instanceof LineSymbolizer )
-        {
-          m_symbolizers.put( LineSymbolizer.class, symbolizer );
-        }
-        else if( symbolizer instanceof PolygonSymbolizer )
-        {
-          m_symbolizers.put( PolygonSymbolizer.class, symbolizer );
-        }
-        else
-          throw new NotImplementedException();
+        m_symbolizers.add( symbolizer );
       }
       catch( final Exception e )
       {
@@ -194,17 +193,49 @@ public abstract class AbstractSldGeometryBuilder implements ISldGeometryBuilder
     }
   }
 
+  protected abstract Geometry buildGeometry( Point point );
+
   public void paint( final Graphics g, final GeoTransform projection, final GM_Point current ) throws GM_Exception, CoreException
   {
     final Point p = (Point) JTSAdapter.export( current );
-    paint( g, projection, p );
+    final Geometry geometry = buildGeometry( p );
+    if( geometry == null )
+      return;
+
+    final SLDPainter painter = new SLDPainter( projection, getCrs() );
+
+    final IGeometryBuilderValidationRule[] rules = getRules();
+    for( final IGeometryBuilderValidationRule rule : rules )
+    {
+      if( !rule.isValid( geometry ) )
+      {
+        final URL sld = rule.getSld( geometry );
+        if( sld == null )
+          return;
+
+        painter.paint( g, sld, geometry );
+
+        return;
+      }
+    }
+
+    final Symbolizer symbolizer = getSymbolizer( geometry );
+    painter.paint( g, symbolizer, geometry );
   }
 
-  public abstract void paint( final Graphics g, final GeoTransform projection, final Point current ) throws CoreException;
-
-  protected Symbolizer getSymbolizer( final Class clazz )
+  protected Symbolizer getSymbolizer( final Geometry geometry )
   {
-    return m_symbolizers.get( clazz );
+    for( final Symbolizer symbolizer : m_symbolizers )
+    {
+      if( geometry instanceof Point && symbolizer instanceof PointSymbolizer )
+        return symbolizer;
+      else if( geometry instanceof LineString && symbolizer instanceof LineSymbolizer )
+        return symbolizer;
+      else if( geometry instanceof Polygon && symbolizer instanceof PolygonSymbolizer )
+        return symbolizer;
+    }
+
+    throw new NotImplementedException();
   }
 
   /**
@@ -232,6 +263,20 @@ public abstract class AbstractSldGeometryBuilder implements ISldGeometryBuilder
       return m_coordinates.remove( m_coordinates.size() - 1 );
 
     return null;
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.builders.sld.ISldGeometryBuilder#addRule(org.kalypso.ogc.gml.map.widgets.builders.sld.IGeometryBuilderValidationRule)
+   */
+  @Override
+  public void addRule( final IGeometryBuilderValidationRule rule )
+  {
+    m_rules.add( rule );
+  }
+
+  protected IGeometryBuilderValidationRule[] getRules( )
+  {
+    return m_rules.toArray( new IGeometryBuilderValidationRule[] {} );
   }
 
 }

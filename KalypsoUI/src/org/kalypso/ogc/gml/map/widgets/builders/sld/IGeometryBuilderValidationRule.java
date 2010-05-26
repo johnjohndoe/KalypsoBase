@@ -40,24 +40,18 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.widgets.builders.sld;
 
-import org.kalypso.ogc.gml.map.widgets.builders.IGeometryBuilder;
+import java.net.URL;
 
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Point;
+import com.vividsolutions.jts.geom.Geometry;
 
 /**
  * @author Dirk Kuch
  */
-public interface ISldGeometryBuilder extends IGeometryBuilder
+public interface IGeometryBuilderValidationRule
 {
+  boolean isValid( Geometry geometry );
 
-  int size( );
+  URL getSld( Geometry geometry );
 
-  void addPoint( Coordinate coordinate );
-
-  void addPoint( Point point );
-
-  Coordinate removeLastCoordinate( );
-
-  void addRule( IGeometryBuilderValidationRule rule );
+  String[] getTooltip( );
 }
