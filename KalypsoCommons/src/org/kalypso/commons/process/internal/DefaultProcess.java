@@ -56,9 +56,11 @@ import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
+import org.kalypso.commons.KalypsoCommonsPlugin;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.process.IProcess;
 import org.kalypso.commons.process.ProcessTimeoutException;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.lang.ICancelable;
 
 /**
@@ -100,7 +102,7 @@ public class DefaultProcess implements IProcess
       sandbox = FileUtilities.createNewTempDir( tempDirName );
 
     m_command = findCommand( sandbox, executable );
-
+    
     final List<String> commandLine = new ArrayList<String>();
     commandLine.add( m_command.getAbsolutePath() );
 
@@ -166,6 +168,13 @@ public class DefaultProcess implements IProcess
 
     try
     {
+      try{
+        m_command.setExecutable( true, false );
+      }
+      catch (Throwable e) {
+        KalypsoCommonsPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+      }
+      
       process = m_processBuilder.start();
 
       procCtrlThread = new ProcessControlJob( process, cancelable, m_timeout );
