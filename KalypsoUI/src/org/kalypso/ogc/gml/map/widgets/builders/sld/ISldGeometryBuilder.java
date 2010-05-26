@@ -56,4 +56,6 @@ public interface ISldGeometryBuilder extends IGeometryBuilder
   void addPoint( Coordinate coordinate );
 
   void addPoint( Point point );
+
+  Coordinate removeLastCoordinate( );
 }
