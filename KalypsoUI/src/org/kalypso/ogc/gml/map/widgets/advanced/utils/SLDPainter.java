@@ -44,10 +44,13 @@ import java.awt.Graphics;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver2;
@@ -81,6 +84,27 @@ public class SLDPainter
   {
     m_projection = projection;
     m_crs = crs;
+  }
+
+  public void paint( final Graphics g, final URL sld, final Coordinate[] coordinates ) throws CoreException
+  {
+    final List<IStatus> statis = new ArrayList<IStatus>();
+
+    for( final Coordinate coordinate : coordinates )
+    {
+      try
+      {
+        paint( g, sld, coordinate );
+      }
+      catch( final Exception e )
+      {
+        final String msg = String.format( "Painting coordinate (x=%d, y=%d) failed", coordinate.x, coordinate.y );
+        StatusUtilities.createErrorStatus( msg, e );
+      }
+    }
+
+    if( !statis.isEmpty() )
+      throw new CoreException( StatusUtilities.createStatus( statis, "Paintig of one ore more coordinates failed." ) );
   }
 
   public void paint( final Graphics g, final URL sld, final Coordinate coordinate ) throws CoreException
