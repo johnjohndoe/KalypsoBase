@@ -40,21 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.widgets.builders.sld;
 
-import java.awt.Graphics;
 import java.net.URL;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.eclipse.core.runtime.CoreException;
 import org.kalypso.ogc.gml.map.IMapPanel;
-import org.kalypso.ogc.gml.map.widgets.advanced.utils.SLDPainter;
-import org.kalypsodeegree.graphics.sld.LineSymbolizer;
-import org.kalypsodeegree.graphics.sld.PolygonSymbolizer;
-import org.kalypsodeegree.graphics.sld.Symbolizer;
-import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.LinearRing;
@@ -82,45 +76,44 @@ public class SldPolygonGeometryBuilder extends AbstractSldGeometryBuilder implem
   @Override
   public GM_Object finish( ) throws Exception
   {
-    final Polygon polygone = getGeometry( getCoordinates()[0] );
+    final Geometry polygone = getGeometry( getCoordinates()[0] );
 
     return JTSAdapter.wrap( polygone, getCrs() );
   }
 
-  protected Polygon getGeometry( final Coordinate... additional )
+  protected Geometry getGeometry( final Coordinate... additional )
   {
     final GeometryFactory factory = JTSAdapter.jtsFactory;
 
     Coordinate[] coordinates = getCoordinates();
     coordinates = (Coordinate[]) ArrayUtils.addAll( coordinates, additional );
 
-    final LinearRing linearRing = factory.createLinearRing( coordinates );
-    final Polygon polygon = factory.createPolygon( linearRing, new LinearRing[] {} );
+    if( coordinates.length < 2 )
+      return null;
+    else if( coordinates.length == 2 )
+    {
+      final LineString lineString = factory.createLineString( coordinates );
 
-    return polygon;
+      return lineString;
+    }
+    else
+    {
+      coordinates = (Coordinate[]) ArrayUtils.add( coordinates, coordinates[0] );
+
+      final LinearRing linearRing = factory.createLinearRing( coordinates );
+      final Polygon polygon = factory.createPolygon( linearRing, new LinearRing[] {} );
+
+      return polygon;
+    }
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.builders.sld.AbstractSldGeometryBuilder#buildGeometry(com.vividsolutions.jts.geom.Point)
+   */
   @Override
-  public void paint( final Graphics g, final GeoTransform projection, final Point current ) throws CoreException
+  protected Geometry buildGeometry( final Point current )
   {
-    final GeometryFactory factory = JTSAdapter.jtsFactory;
-    final SLDPainter painter = new SLDPainter( projection, getCrs() );
-
-    if( size() == 1 )
-    {
-      final LineString lineString = factory.createLineString( new Coordinate[] { getCoordinates()[0], current.getCoordinate() } );
-
-      final Symbolizer symbolizer = getSymbolizer( LineSymbolizer.class );
-      painter.paint( g, symbolizer, lineString );
-
-    }
-    else if( size() > 1 )
-    {
-      final Polygon polygon = getGeometry( current.getCoordinate(), getCoordinates()[0] );
-
-      final Symbolizer symbolizer = getSymbolizer( PolygonSymbolizer.class );
-      painter.paint( g, symbolizer, polygon );
-    }
+    return getGeometry( current.getCoordinate() );
   }
 
 }

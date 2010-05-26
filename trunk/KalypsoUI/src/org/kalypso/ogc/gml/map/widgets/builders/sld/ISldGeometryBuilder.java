@@ -58,4 +58,6 @@ public interface ISldGeometryBuilder extends IGeometryBuilder
   void addPoint( Point point );
 
   Coordinate removeLastCoordinate( );
+
+  void addRule( IGeometryBuilderValidationRule rule );
 }
