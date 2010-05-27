@@ -74,9 +74,16 @@ public class SldLineGeometryBuilder extends AbstractSldGeometryBuilder implement
   @Override
   public GM_Object finish( ) throws Exception
   {
-    final LineString lineString = getGeometry();
+    return JTSAdapter.wrap( finishJts(), getCrs() );
+  }
 
-    return JTSAdapter.wrap( lineString, getCrs() );
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.builders.sld.ISldGeometryBuilder#finishJts()
+   */
+  @Override
+  public Geometry finishJts( )
+  {
+    return getGeometry();
   }
 
   protected LineString getGeometry( final Coordinate... additional )
