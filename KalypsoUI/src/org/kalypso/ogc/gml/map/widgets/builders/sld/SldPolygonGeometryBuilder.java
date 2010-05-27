@@ -76,9 +76,16 @@ public class SldPolygonGeometryBuilder extends AbstractSldGeometryBuilder implem
   @Override
   public GM_Object finish( ) throws Exception
   {
-    final Geometry polygone = getGeometry( getCoordinates()[0] );
+    final Geometry polygon = finishJts();
 
-    return JTSAdapter.wrap( polygone, getCrs() );
+    return JTSAdapter.wrap( polygon, getCrs() );
+  }
+
+  public Geometry finishJts( )
+  {
+    final Geometry polygon = getGeometry( getCoordinates()[0] );
+
+    return polygon;
   }
 
   protected Geometry getGeometry( final Coordinate... additional )
