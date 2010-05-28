@@ -41,37 +41,15 @@
 package org.kalypso.model.wspm.ui.view.chart;
 
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandlerProvider;
 
-import de.openali.odysseus.chart.framework.model.mapper.IAxis;
-import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
-import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
+import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
 
 /**
- * A layer provider provides layers for the view, depending on the specific profile type.
- * 
- * @author kimwerner
+ * @author Dirk Kuch
  */
-public interface IProfilLayerProvider
+public interface IProfilChartView
 {
-  /**
-   * if the layer depends on other layers or properties, create all required things here. </p> if there is nothing to do
-   * see getLayer( final String layerId, final ProfilChartView view ) </p> return all affected layer
-   */
-  public void addLayerToChart( final IProfilChartView view, final String layerId );
+  IProfil getProfil( );
 
-  /**
-   * return the layers not shown yet, but addable.
-   * 
-   * @FIXME: return some wrapper for a potential layer instead.
-   */
-  public LayerDescriptor[] getAddableLayers( final IProfilChartView view );
-
-  public IProfilChartLayer[] createLayers( IProfilChartView chartView );
-
-  public IComponentUiHandlerProvider getComponentUiHandlerProvider( final IProfil profile );
-
-  public IAxis[] registerAxis( IMapperRegistry mapperRegistry );
-
-  public IAxisRenderer[] registerAxisRenderer( IMapperRegistry mapperRegistry );
+  ChartComposite getChart( );
 }

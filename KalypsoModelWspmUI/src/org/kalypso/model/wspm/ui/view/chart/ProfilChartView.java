@@ -83,7 +83,7 @@ import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
  * @author belger
  * @author kimwerner
  */
-public class ProfilChartView implements IChartPart, IProfilListener
+public class ProfilChartView implements IChartPart, IProfilListener, IProfilChartView
 {
   private AxisDragHandlerDelegate m_axisDragHandler;
 
@@ -326,6 +326,7 @@ public class ProfilChartView implements IChartPart, IProfilListener
    * @see org.kalypso.chart.ui.IChartPart#getAxisDragHandler()
    */
 
+  @Override
   public AxisDragHandlerDelegate getAxisDragHandler( )
   {
     return m_axisDragHandler;
@@ -339,6 +340,7 @@ public class ProfilChartView implements IChartPart, IProfilListener
   /**
    * @see org.kalypso.chart.ui.IChartPart#getChartComposite()
    */
+  @Override
   public ChartComposite getChartComposite( )
   {
     return m_chartComposite;
@@ -361,6 +363,7 @@ public class ProfilChartView implements IChartPart, IProfilListener
    * @see org.kalypso.chart.ui.IChartPart#getPlotDragHandler()
    */
 
+  @Override
   public PlotDragHandlerDelegate getPlotDragHandler( )
   {
     return m_plotDragHandler;
@@ -383,12 +386,14 @@ public class ProfilChartView implements IChartPart, IProfilListener
    * @see org.kalypso.model.wspm.core.profil.IProfilListener#onProblemMarkerChanged(org.kalypso.model.wspm.core.profil.IProfil)
    */
 
+  @Override
   public void onProblemMarkerChanged( final IProfil source )
   {
     // TODO Auto-generated method stub
 
   }
 
+  @Override
   public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
     final ChartComposite chart = m_chartComposite;
@@ -397,6 +402,7 @@ public class ProfilChartView implements IChartPart, IProfilListener
 
     chart.getDisplay().syncExec( new Runnable()
     {
+      @Override
       public void run( )
       {
         if( hint.isObjectChanged() || hint.isPointPropertiesChanged() )
@@ -423,6 +429,7 @@ public class ProfilChartView implements IChartPart, IProfilListener
       chart.getDisplay().syncExec( new Runnable()
       {
 
+        @Override
         public void run( )
         {
           chart.redraw();
