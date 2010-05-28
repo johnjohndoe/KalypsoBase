@@ -58,16 +58,16 @@ public interface IProfilLayerProvider
    * if the layer depends on other layers or properties, create all required things here. </p> if there is nothing to do
    * see getLayer( final String layerId, final ProfilChartView view ) </p> return all affected layer
    */
-  public void addLayerToChart( final ProfilChartView view, final String layerId );
+  public void addLayerToChart( final IProfilChartView view, final String layerId );
 
   /**
    * return the layers not shown yet, but addable.
    * 
    * @FIXME: return some wrapper for a potential layer instead.
    */
-  public LayerDescriptor[] getAddableLayers( final ProfilChartView view );
+  public LayerDescriptor[] getAddableLayers( final IProfilChartView view );
 
-  public IProfilChartLayer[] createLayers( ProfilChartView chartView );
+  public IProfilChartLayer[] createLayers( IProfilChartView chartView );
 
   public IComponentUiHandlerProvider getComponentUiHandlerProvider( final IProfil profile );
 
