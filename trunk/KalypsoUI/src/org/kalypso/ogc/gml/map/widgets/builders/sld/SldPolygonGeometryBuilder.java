@@ -81,6 +81,7 @@ public class SldPolygonGeometryBuilder extends AbstractSldGeometryBuilder implem
     return JTSAdapter.wrap( polygon, getCrs() );
   }
 
+  @Override
   public Geometry finishJts( )
   {
     final Geometry polygon = getGeometry( getCoordinates()[0] );
@@ -120,6 +121,9 @@ public class SldPolygonGeometryBuilder extends AbstractSldGeometryBuilder implem
   @Override
   protected Geometry buildGeometry( final Point current )
   {
+    if( current == null )
+      return null;
+
     return getGeometry( current.getCoordinate() );
   }
 
