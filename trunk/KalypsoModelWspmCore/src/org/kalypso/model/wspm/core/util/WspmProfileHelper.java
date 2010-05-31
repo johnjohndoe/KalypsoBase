@@ -563,7 +563,6 @@ public class WspmProfileHelper
 
   public static IRecord addRecordByWidth( final IProfil profile, final IRecord record, final boolean overwritePointMarkers )
   {
-
     final Double width = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, record );
 
     final IRecord[] records = profile.getPoints();
@@ -592,7 +591,6 @@ public class WspmProfileHelper
         // add new record
         profile.getResult().add( i, record );
         return record;
-
       }
       else if( width == rw )
         throw new IllegalStateException();
@@ -611,5 +609,4 @@ public class WspmProfileHelper
   {
     return addRecordByWidth( profile, record, false );
   }
-
 }
