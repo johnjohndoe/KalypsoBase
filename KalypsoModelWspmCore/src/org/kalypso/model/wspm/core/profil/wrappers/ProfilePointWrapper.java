@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil.wrappers;
 
+import java.util.Comparator;
+
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
@@ -49,6 +51,19 @@ import org.kalypso.observation.result.IRecord;
  */
 public class ProfilePointWrapper extends AbstractRecordWrapper implements IRecord
 {
+
+  public static final Comparator<ProfilePointWrapper> COMPARATOR = new Comparator<ProfilePointWrapper>()
+  {
+
+    @Override
+    public int compare( final ProfilePointWrapper o1, final ProfilePointWrapper o2 )
+    {
+      final double b1 = o1.getBreite();
+      final double b2 = o2.getBreite();
+
+      return Double.valueOf( b1 ).compareTo( Double.valueOf( b2 ) );
+    }
+  };
 
   public ProfilePointWrapper( final IRecord record )
   {
@@ -99,4 +114,17 @@ public class ProfilePointWrapper extends AbstractRecordWrapper implements IRecor
     return Double.NaN;
   }
 
+  public void setBreite( final Double width )
+  {
+    final IComponent component = findComponent( IWspmConstants.POINT_PROPERTY_BREITE );
+    getRecord().setValue( component, Double.valueOf( width ) );
+
+  }
+
+  public void setHöhe( final double hoehe )
+  {
+    final IComponent component = findComponent( IWspmConstants.POINT_PROPERTY_HOEHE );
+    getRecord().setValue( component, Double.valueOf( hoehe ) );
+
+  }
 }

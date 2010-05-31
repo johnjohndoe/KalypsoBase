@@ -60,6 +60,7 @@ import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineSegment;
+import com.vividsolutions.jts.geom.Point;
 
 /**
  * @author Holger Albert, Thomas Jung , kimwerner TODO: merge / check this class with {@link ProfilUtil}
@@ -67,6 +68,13 @@ import com.vividsolutions.jts.geom.LineSegment;
 public class WspmProfileHelper
 {
   public static final double FUZZINESS = 0.005; // Inaccuracies profile of points
+
+  public static Double getWidthPosition( final Point point, final IProfil profile, final String srsName ) throws Exception
+  {
+    final GM_Point p = (GM_Point) JTSAdapter.wrap( point );
+
+    return getWidthPosition( p, profile, srsName );
+  }
 
   /**
    * Returns the width position of a geo point projected on a profile.
@@ -569,7 +577,6 @@ public class WspmProfileHelper
       if( Math.abs( width - rw ) < FUZZINESS )
       {
         /* record already exists - copy values */
-
         for( final IComponent component : profile.getPointProperties() )
         {
           // don't overwrite existing point markers!
