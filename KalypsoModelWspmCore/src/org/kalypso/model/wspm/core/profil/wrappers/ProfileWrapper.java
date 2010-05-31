@@ -62,22 +62,30 @@ public class ProfileWrapper
 
   public boolean hasPoint( final double width )
   {
+    if( findPoint( width ) == null )
+      return false;
+
+    return true;
+  }
+
+  private ProfilePointWrapper findPoint( final Double width )
+  {
     final IRecord[] points = m_profile.getPoints();
     for( final IRecord point : points )
     {
       final ProfilePointWrapper wrapper = new ProfilePointWrapper( point );
       final double breite = wrapper.getBreite();
       if( breite == width )
-        return true;
+        return wrapper;
     }
 
-    return false;
+    return null;
   }
 
-  public void addPoint( final Double width )
+  public ProfilePointWrapper addPoint( final Double width )
   {
     if( hasPoint( width ) )
-      return;
+      return findPoint( width );
 
     final IRecord[] points = m_profile.getPoints();
     ProfilePointWrapper base = null;
@@ -98,9 +106,10 @@ public class ProfileWrapper
     final IRecord add = m_profile.createProfilPoint();
     final ProfilePointWrapper addWrapper = new ProfilePointWrapper( add );
     addWrapper.setBreite( width );
-    addWrapper.setHöhe( base.getHoehe() );
+    addWrapper.setHoehe( base.getHoehe() );
 
-    WspmProfileHelper.addRecordByWidth( m_profile, add );
+    final IRecord added = WspmProfileHelper.addRecordByWidth( m_profile, add );
+    return new ProfilePointWrapper( added );
   }
 
   public ProfilePointWrapper[] findPointsBetween( final Double p1, final Double p2 )

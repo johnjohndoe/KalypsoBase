@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil.wrappers;
 
+import org.eclipse.core.runtime.Assert;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
@@ -53,6 +54,8 @@ public class AbstractRecordWrapper implements IRecord
 
   public AbstractRecordWrapper( final IRecord record )
   {
+    Assert.isNotNull( record );
+
     m_record = record;
   }
 
