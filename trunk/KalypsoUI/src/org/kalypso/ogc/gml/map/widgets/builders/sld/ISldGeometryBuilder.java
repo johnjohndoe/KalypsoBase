@@ -42,6 +42,7 @@ package org.kalypso.ogc.gml.map.widgets.builders.sld;
 
 import org.kalypso.ogc.gml.map.widgets.builders.IGeometryBuilder;
 import org.kalypso.ogc.gml.map.widgets.builders.sld.rules.IGeometryBuilderValidationRule;
+import org.kalypsodeegree.model.geometry.GM_Position;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
@@ -54,6 +55,8 @@ public interface ISldGeometryBuilder extends IGeometryBuilder
 {
   void addPoint( Coordinate coordinate );
 
+  void addPoint( GM_Position position );
+
   void addPoint( Point point );
 
   void addRule( IGeometryBuilderValidationRule rule );
@@ -65,4 +68,5 @@ public interface ISldGeometryBuilder extends IGeometryBuilder
   Coordinate removeLastCoordinate( );
 
   int size( );
+
 }
