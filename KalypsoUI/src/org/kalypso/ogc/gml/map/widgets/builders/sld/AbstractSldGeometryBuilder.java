@@ -65,6 +65,7 @@ import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.xml.XMLTools;
 import org.kalypsodeegree_impl.graphics.sld.SLDFactory;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
@@ -85,7 +86,7 @@ public abstract class AbstractSldGeometryBuilder implements ISldGeometryBuilder
 
   private final Set<Symbolizer> m_symbolizers = new HashSet<Symbolizer>();
 
-  private final List<Coordinate> m_coordinates = new ArrayList<Coordinate>();
+  private final Set<Coordinate> m_coordinates = new LinkedHashSet<Coordinate>();
 
   private final IMapPanel m_panel;
 
@@ -155,17 +156,19 @@ public abstract class AbstractSldGeometryBuilder implements ISldGeometryBuilder
     m_coordinates.add( coordinate );
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.builders.sld.ISldGeometryBuilder#addPoint(org.kalypsodeegree.model.geometry.GM_Position)
+   */
+  @Override
+  public void addPoint( final GM_Position position )
+  {
+    addPoint( JTSAdapter.export( position ) );
+  }
+
   @Override
   public void addPoint( final Point point )
   {
     m_coordinates.add( point.getCoordinate() );
-  }
-
-  @Override
-  public void removeLastPoint( )
-  {
-    if( m_coordinates.size() > 0 )
-      m_coordinates.remove( m_coordinates.size() - 1 );
   }
 
   protected String getCrs( )
@@ -278,12 +281,24 @@ public abstract class AbstractSldGeometryBuilder implements ISldGeometryBuilder
    * @see org.kalypso.ogc.gml.map.widgets.builders.sld.ISldGeometryBuilder#removeLastCoordinate()
    */
   @Override
-  public Coordinate removeLastCoordinate( )
+  public synchronized Coordinate removeLastCoordinate( )
   {
     if( m_coordinates.size() > 0 )
-      return m_coordinates.remove( m_coordinates.size() - 1 );
+    {
+      final Coordinate[] coordinates = m_coordinates.toArray( new Coordinate[] {} );
+      final Coordinate remove = coordinates[coordinates.length - 1];
+      m_coordinates.remove( remove );
+
+      return remove;
+    }
 
     return null;
+  }
+
+  @Override
+  public synchronized void removeLastPoint( )
+  {
+    removeLastCoordinate();
   }
 
   /**
