@@ -40,10 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil.wrappers;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.util.WspmProfileHelper;
 import org.kalypso.observation.result.IRecord;
 
@@ -132,6 +135,19 @@ public class ProfileWrapper
     }
 
     return between.toArray( new ProfilePointWrapper[] {} );
+  }
+
+  public ProfilePointMarkerWrapper[] getProfilePointMarkerWrapper( final String marker )
+  {
+    final List<ProfilePointMarkerWrapper> wrappers = new ArrayList<ProfilePointMarkerWrapper>();
+
+    final IProfilPointMarker[] markers = m_profile.getPointMarkerFor( marker );
+    for( final IProfilPointMarker m : markers )
+    {
+      wrappers.add( new ProfilePointMarkerWrapper( m ) );
+    }
+
+    return wrappers.toArray( new ProfilePointMarkerWrapper[] {} );
   }
 
 }

@@ -125,6 +125,15 @@ public class ProfilePointWrapper extends AbstractRecordWrapper implements IRecor
   {
     final IComponent component = findComponent( IWspmConstants.POINT_PROPERTY_HOEHE );
     getRecord().setValue( component, Double.valueOf( hoehe ) );
-
   }
+
+  /**
+   * @see java.lang.Object#toString()
+   */
+  @Override
+  public String toString( )
+  {
+    return String.format( "%.2f, %.2f", getBreite(), getHoehe() );
+  }
+
 }
