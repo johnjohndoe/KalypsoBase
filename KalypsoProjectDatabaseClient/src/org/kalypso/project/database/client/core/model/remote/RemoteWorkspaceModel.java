@@ -15,6 +15,7 @@ import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
 import org.kalypso.project.database.client.core.model.interfaces.IRemoteWorkspaceModel;
 import org.kalypso.project.database.client.extension.database.IProjectDatabaseFilter;
@@ -33,6 +34,8 @@ public class RemoteWorkspaceModel implements IRemoteWorkspaceModel
 {
   // 300 000 = 5 min
   private static final int JOB_DELAY = 5000;
+
+  private final static MutexRule JOB_MUTEX = new MutexRule();
 
   protected KalypsoProjectBean[] m_beans = new KalypsoProjectBean[] {};
 
@@ -76,7 +79,7 @@ public class RemoteWorkspaceModel implements IRemoteWorkspaceModel
             for( final KalypsoProjectBean bean : remote )
             {
               final int index = ArrayUtils.indexOf( m_beans, bean );
-              
+
               if( index == -1 ) // not found
               {
                 m_beans = remote;
@@ -115,6 +118,8 @@ public class RemoteWorkspaceModel implements IRemoteWorkspaceModel
         return Status.OK_STATUS;
       }
     };
+
+    UPDATE_JOB.setRule( JOB_MUTEX );
 
     UPDATE_JOB.addJobChangeListener( new JobChangeAdapter()
     {
