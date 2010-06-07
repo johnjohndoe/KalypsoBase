@@ -100,7 +100,7 @@ public class CachedCRSFactory
    * created and put into the cache.
    * 
    * @param name
-   *            The name of the coordinate system.
+   *          The name of the coordinate system.
    * @return The coordinate system.
    */
   private CoordinateSystem getCachedCoordinateSystem( String name ) throws UnknownCRSException
