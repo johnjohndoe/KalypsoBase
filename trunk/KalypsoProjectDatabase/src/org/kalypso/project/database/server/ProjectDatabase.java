@@ -139,7 +139,7 @@ public class ProjectDatabase implements IProjectDatabase
    * @see org.kalypso.projectfinal .database.sei.IProjectDatabase#getProjects()
    */
   @Override
-  public KalypsoProjectBean[] getProjectHeads( final String projectType )
+  public synchronized KalypsoProjectBean[] getProjectHeads( final String projectType )
   {
     /** Getting the Session Factory and session */
     final Session session = m_factory.getCurrentSession();
@@ -211,7 +211,7 @@ public class ProjectDatabase implements IProjectDatabase
    * @see org.kalypso.project.database.sei.IProjectDatabase#getProject()
    */
   @Override
-  public KalypsoProjectBean getProject( final String projectUnixName )
+  public synchronized KalypsoProjectBean getProject( final String projectUnixName )
   {
     /** Getting the Session Factory and session */
     final Session session = m_factory.getCurrentSession();
@@ -242,7 +242,7 @@ public class ProjectDatabase implements IProjectDatabase
    * @see org.kalypso.project.database.sei.IProjectDatabase#createProject(java.lang.String)
    */
   @Override
-  public KalypsoProjectBean createProject( final KalypsoProjectBean bean, final URL incoming ) throws IOException
+  public synchronized KalypsoProjectBean createProject( final KalypsoProjectBean bean, final URL incoming ) throws IOException
   {
     final FileSystemManager manager = VFSUtilities.getManager();
     final FileObject src = manager.resolveFile( incoming.toExternalForm() );
@@ -283,7 +283,7 @@ public class ProjectDatabase implements IProjectDatabase
    * @see org.kalypso.project.database.sei.IProjectDatabase#updateProject(java.lang.String)
    */
   @Override
-  public KalypsoProjectBean udpateProject( final KalypsoProjectBean bean, final URL incoming ) throws IOException
+  public synchronized KalypsoProjectBean udpateProject( final KalypsoProjectBean bean, final URL incoming ) throws IOException
   {
     /* get head */
     final KalypsoProjectBean head = getProject( bean.getUnixName() );
@@ -296,7 +296,7 @@ public class ProjectDatabase implements IProjectDatabase
    * @see org.kalypso.project.database.sei.IProjectDatabase#acquireProjectEditLock(org.kalypso.project.database.sei.beans.KalypsoProjectBean)
    */
   @Override
-  public String acquireProjectEditLock( final String projectUnixName )
+  public synchronized String acquireProjectEditLock( final String projectUnixName )
   {
     // TODO lock already acquired
     final Session mySession = m_factory.getCurrentSession();
@@ -329,7 +329,7 @@ public class ProjectDatabase implements IProjectDatabase
    * @see org.kalypso.project.database.sei.IProjectDatabase#releaseProjectEditLock(java.lang.String, java.lang.String)
    */
   @Override
-  public Boolean releaseProjectEditLock( final String projectUnixName, final String ticketId )
+  public synchronized Boolean releaseProjectEditLock( final String projectUnixName, final String ticketId )
   {
     // TODO lock already released
 
@@ -356,7 +356,7 @@ public class ProjectDatabase implements IProjectDatabase
    */
   @SuppressWarnings("unchecked")
   @Override
-  public String[] getProjectTypes( )
+  public synchronized String[] getProjectTypes( )
   {
     /** Getting the Session Factory and session */
     final Session session = m_factory.getCurrentSession();
@@ -375,7 +375,7 @@ public class ProjectDatabase implements IProjectDatabase
    * @see org.kalypso.project.database.sei.IProjectDatabase#getProjectHeads()
    */
   @Override
-  public KalypsoProjectBean[] getAllProjectHeads( )
+  public synchronized KalypsoProjectBean[] getAllProjectHeads( )
   {
     final Set<KalypsoProjectBean> myBeans = new TreeSet<KalypsoProjectBean>();
 
@@ -403,7 +403,7 @@ public class ProjectDatabase implements IProjectDatabase
    * @see org.kalypso.project.database.sei.IProjectDatabase#deleteProject(org.kalypso.project.database.sei.beans.KalypsoProjectBean)
    */
   @Override
-  public Boolean deleteProject( final KalypsoProjectBean bean )
+  public synchronized Boolean deleteProject( final KalypsoProjectBean bean )
   {
     return ProjectDatabaseHelper.removeBean( m_factory.getCurrentSession(), bean );
   }
@@ -412,7 +412,7 @@ public class ProjectDatabase implements IProjectDatabase
    * @see org.kalypso.project.database.sei.IProjectDatabase#forceUnlock(org.kalypso.project.database.sei.beans.KalypsoProjectBean)
    */
   @Override
-  public void forceUnlock( final KalypsoProjectBean bean )
+  public synchronized void forceUnlock( final KalypsoProjectBean bean )
   {
     final Session mySession = m_factory.getCurrentSession();
     final Transaction myTx = mySession.beginTransaction();
@@ -428,7 +428,7 @@ public class ProjectDatabase implements IProjectDatabase
    *      java.lang.String)
    */
   @Override
-  public void setProjectDescription( final KalypsoProjectBean bean, final String description )
+  public synchronized void setProjectDescription( final KalypsoProjectBean bean, final String description )
   {
     final Session mySession = m_factory.getCurrentSession();
     final Transaction myTx = mySession.beginTransaction();
