@@ -216,12 +216,12 @@ public final class CRSHelper
    */
   public static String getEPSG( final String coordinateSystem ) throws UnknownCRSException
   {
-    /* first try: parse it direct5ly from the crs name */
+    /* First try: Parse it directly from the crs name. */
     final String epsgPrefix = "EPSG:";//$NON-NLS-1$
     if( coordinateSystem.startsWith( epsgPrefix ) )
       return coordinateSystem.substring( epsgPrefix.length() );
 
-    /* second try: check all identifiers */
+    /* Second try: Check all identifiers. */
     final CoordinateSystem crs = CachedCRSFactory.getInstance().create( coordinateSystem );
 
     final String[] identifiers = crs.getCRS().getIdentifiers();
@@ -233,5 +233,4 @@ public final class CRSHelper
 
     return null;
   }
-
 }
