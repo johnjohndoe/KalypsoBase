@@ -45,6 +45,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import org.eclipse.ant.internal.launching.AntLaunching;
+import org.eclipse.ant.internal.launching.AntLaunchingUtil;
+import org.eclipse.ant.launching.IAntLaunchConstants;
+import org.eclipse.core.externaltools.internal.launchConfigurations.ExternalToolsCoreUtil;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
@@ -56,7 +60,6 @@ import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.core.ILaunchManager;
-import org.eclipse.ui.externaltools.internal.launchConfigurations.ExternalToolsUtil;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 
 /**
@@ -92,16 +95,20 @@ public class AntLauncher
   }
 
   @SuppressWarnings("unchecked")
-  public void initLaunch( ) throws CoreException
+  private void initLaunch( ) throws CoreException
   {
     final ILaunchManager launchManager = DebugPlugin.getDefault().getLaunchManager();
 
     m_launchConfiguration = launchManager.getLaunchConfiguration( m_launchFile ).getWorkingCopy();
 
     // add user-variables to LaunchConfiguration
-    final Map<Object, Object> attribute = m_launchConfiguration.getAttribute( "org.eclipse.ui.externaltools.ATTR_ANT_PROPERTIES", new HashMap<Object, Object>() ); //$NON-NLS-1$
+    final Map<Object, Object> attribute = m_launchConfiguration.getAttribute( IAntLaunchConstants.ATTR_ANT_PROPERTIES, new HashMap<Object, Object>() ); //$NON-NLS-1$
     attribute.putAll( m_antProperties );
-    m_launchConfiguration.setAttribute( "org.eclipse.ui.externaltools.ATTR_ANT_PROPERTIES", attribute ); //$NON-NLS-1$
+    m_launchConfiguration.setAttribute( IAntLaunchConstants.ATTR_ANT_PROPERTIES, attribute ); //$NON-NLS-1$
+
+    // We do not need an input handler, and also the input handler lives in org.eclipse.ant.ui, we do not want the
+    // dependency to that plug-in.
+    m_launchConfiguration.setAttribute( AntLaunching.SET_INPUTHANDLER, false );
   }
 
   private void initLogFile( ) throws CoreException
@@ -115,7 +122,7 @@ public class AntLauncher
 
   private File findLogFile( ) throws CoreException
   {
-    final String[] arguments = ExternalToolsUtil.getArguments( m_launchConfiguration );
+    final String[] arguments = ExternalToolsCoreUtil.getArguments( m_launchConfiguration );
 
     if( arguments == null )
       return null;
@@ -137,22 +144,16 @@ public class AntLauncher
     return m_logFile;
   }
 
-  private boolean isBlocking( ) throws CoreException
-  {
-    // Check if there is a helper method in debug stuff
-    return m_launchConfiguration.getAttribute( "org.eclipse.debug.ui.ATTR_LAUNCH_IN_BACKGROUND", false );//$NON-NLS-1$
-  }
-
   public IStatus execute( final IProgressMonitor monitor ) throws InterruptedException
   {
     checkInit();
 
     try
     {
-      if( isBlocking() )
-        return executeBlocking( monitor );
+      if( AntLaunchingUtil.isLaunchInBackground( m_launchConfiguration ) )
+        return executeAndWait( monitor );
 
-      return executeAndWait( monitor );
+      return executeBlocking( monitor );
     }
     catch( final CoreException e )
     {
@@ -188,7 +189,7 @@ public class AntLauncher
 
       if( launch.isTerminated() )
       {
-        final String[] arguments = ExternalToolsUtil.getArguments( m_launchConfiguration );
+        final String[] arguments = ExternalToolsCoreUtil.getArguments( m_launchConfiguration );
         if( arguments == null )
           return Status.OK_STATUS;
 

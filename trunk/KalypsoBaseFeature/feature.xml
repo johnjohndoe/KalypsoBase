@@ -25,11 +25,6 @@
          search-location="both"/>
 
    <includes
-         id="org.eclipse.jdt"
-         version="0.0.0"
-         search-location="both"/>
-
-   <includes
          id="org.kalypso.babel.nls_eclipse"
          version="0.0.0"/>
 
@@ -360,5 +355,32 @@
          install-size="0"
          version="0.0.0"
          unpack="false"/>
+
+   <plugin
+         id="org.eclipse.ant.launching"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.jdt.core"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.jdt.launching"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.jdt.debug"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
 
 </feature>
