@@ -56,12 +56,11 @@ import net.opengeospatial.wps.InputDescriptionType;
 import net.opengeospatial.wps.LiteralInputType;
 import net.opengeospatial.wps.OutputDescriptionType;
 import net.opengeospatial.wps.ProcessDescriptionType;
-import net.opengeospatial.wps.SupportedComplexDataType;
 import net.opengeospatial.wps.ProcessDescriptionType.DataInputs;
 import net.opengeospatial.wps.ProcessDescriptionType.ProcessOutputs;
+import net.opengeospatial.wps.SupportedComplexDataType;
 
 import org.eclipse.core.runtime.CoreException;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
 import org.kalypso.gmlschema.GMLSchemaException;
@@ -105,6 +104,7 @@ public class DescribeProcessOperation implements IOperation
   /**
    * @see org.kalypso.service.wps.operations.IOperation#executeOperation(org.kalypso.service.ogc.RequestBean)
    */
+  @Override
   public StringBuffer executeOperation( final RequestBean request ) throws OWSException
   {
     try
@@ -207,15 +207,7 @@ public class DescribeProcessOperation implements IOperation
 
     /* Get the specification for that simulation. */
     final URL spezifikation = simulation.getSpezifikation();
-    Modelspec modelData;
-    try
-    {
-      modelData = (Modelspec) KalypsoSimulationCoreJaxb.JC.createUnmarshaller().unmarshal( spezifikation );
-    }
-    catch( final JAXBException e )
-    {
-      throw new CoreException( StatusUtilities.statusFromThrowable( e ) );
-    }
+    Modelspec modelData = KalypsoSimulationCoreJaxb.readModelspec( spezifikation );
 
     /* Build all content for the process description. */
     final String identifier = modelData.getTypeID();

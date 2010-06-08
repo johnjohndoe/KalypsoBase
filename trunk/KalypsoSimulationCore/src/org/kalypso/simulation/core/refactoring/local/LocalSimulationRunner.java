@@ -45,14 +45,13 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.simulation.core.ISimulation;
-import org.kalypso.simulation.core.KalypsoSimulationCoreJaxb;
 import org.kalypso.simulation.core.SimulationDataPath;
 import org.kalypso.simulation.core.i18n.Messages;
 import org.kalypso.simulation.core.internal.local.LocalSimulationFactory;
@@ -72,7 +71,6 @@ public class LocalSimulationRunner implements ISimulationRunner
   private final String m_calculationTypeId;
 
   private final Modeldata m_modeldata;
-
 
   private final URL m_inputDir;
 
@@ -100,7 +98,7 @@ public class LocalSimulationRunner implements ISimulationRunner
       /* FIXME - ask gernot, we really need to move inputs to simulation tempDir? */
       final LocalSimulationFactory factory = new LocalSimulationFactory();
       final ISimulation job = factory.createJob( m_calculationTypeId );
-      final ModelspecData modelspec = new ModelspecData( job.getSpezifikation(), KalypsoSimulationCoreJaxb.JC.createUnmarshaller() );
+      final ModelspecData modelspec = new ModelspecData( job.getSpezifikation() );
 
       final LocalSimulationDataProvider inputProvider = new LocalSimulationDataProvider( modelspec, inputPaths, m_inputDir );
       final DefaultResultEater resultEater = new DefaultResultEater( modelspec, outputPaths );
@@ -111,11 +109,12 @@ public class LocalSimulationRunner implements ISimulationRunner
     catch( final Exception e )
     {
       e.printStackTrace();
-      throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.simulation.core.refactoring.local.LocalSimulationRunner.0"), e ) ); //$NON-NLS-1$
+      throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.simulation.core.refactoring.local.LocalSimulationRunner.0" ), e ) ); //$NON-NLS-1$
     }
-    finally {
+    finally
+    {
       // TODO delete tmpDir
-   // tmpDir.delete();
+      // tmpDir.delete();
     }
   }
 

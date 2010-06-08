@@ -54,14 +54,12 @@ import java.util.logging.Logger;
 
 import javax.activation.DataHandler;
 import javax.activation.URLDataSource;
-import javax.xml.bind.JAXBException;
 
 import org.eclipse.core.runtime.Platform;
 import org.kalypso.contribs.java.net.IUrlCatalog;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.ISimulationConstants;
 import org.kalypso.simulation.core.ISimulationService;
-import org.kalypso.simulation.core.KalypsoSimulationCoreJaxb;
 import org.kalypso.simulation.core.SimulationDataPath;
 import org.kalypso.simulation.core.SimulationDescription;
 import org.kalypso.simulation.core.SimulationException;
@@ -122,11 +120,13 @@ public class QueuedSimulationService implements ISimulationService
     return 0;
   }
 
+  @Override
   public synchronized final String[] getJobTypes( )
   {
     return m_calcJobFactory.getSupportedTypes();
   }
 
+  @Override
   public synchronized SimulationInfo[] getJobs( )
   {
     synchronized( m_threads )
@@ -148,6 +148,7 @@ public class QueuedSimulationService implements ISimulationService
    * @throws CalcJobServiceException
    * @see org.kalypso.services.calculation.service.ICalculationService#getJob(java.lang.String)
    */
+  @Override
   public SimulationInfo getJob( final String jobID ) throws SimulationException
   {
     return findJobThread( jobID ).getJobBean();
@@ -186,6 +187,7 @@ public class QueuedSimulationService implements ISimulationService
   /**
    * @see org.kalypso.services.calculation.service.ICalculationService#cancelJob(java.lang.String)
    */
+  @Override
   public void cancelJob( final String jobID ) throws SimulationException
   {
     findJobThread( jobID ).getJobBean().cancel();
@@ -194,12 +196,13 @@ public class QueuedSimulationService implements ISimulationService
   /**
    * @see org.kalypso.services.calculation.service.ICalculationService#disposeJob(java.lang.String)
    */
+  @Override
   public void disposeJob( final String jobID ) throws SimulationException
   {
     final SimulationThread cjt = findJobThread( jobID );
 
     if( cjt.isAlive() )
-      throw new SimulationException( Messages.getString("org.kalypso.simulation.core.internal.queued.QueuedSimulationService.0"), null ); //$NON-NLS-1$
+      throw new SimulationException( Messages.getString( "org.kalypso.simulation.core.internal.queued.QueuedSimulationService.0" ), null ); //$NON-NLS-1$
 
     cjt.dispose();
 
@@ -226,7 +229,7 @@ public class QueuedSimulationService implements ISimulationService
       }
     }
 
-    throw new SimulationException( Messages.getString("org.kalypso.simulation.core.internal.queued.QueuedSimulationService.1") + jobID, null ); //$NON-NLS-1$
+    throw new SimulationException( Messages.getString( "org.kalypso.simulation.core.internal.queued.QueuedSimulationService.1" ) + jobID, null ); //$NON-NLS-1$
   }
 
   /**
@@ -234,6 +237,7 @@ public class QueuedSimulationService implements ISimulationService
    *      javax.activation.DataHandler,
    *      org.kalypso.services.calculation.service.CalcJobClientBean[],org.kalypso.services.calculation.service.CalcJobClientBean[])
    */
+  @Override
   public final SimulationInfo startJob( final String typeID, final String description, final DataHandler zipHandler, final SimulationDataPath[] input, final SimulationDataPath[] output ) throws SimulationException
   {
     /*
@@ -272,7 +276,7 @@ public class QueuedSimulationService implements ISimulationService
       catch( final IOException e )
       {
         e.printStackTrace();
-        throw new SimulationException( Messages.getString("org.kalypso.simulation.core.internal.queued.QueuedSimulationService.2"), e ); //$NON-NLS-1$
+        throw new SimulationException( Messages.getString( "org.kalypso.simulation.core.internal.queued.QueuedSimulationService.2" ), e ); //$NON-NLS-1$
       }
 
       final ModelspecData modelspec = getModelspec( typeID );
@@ -379,6 +383,7 @@ public class QueuedSimulationService implements ISimulationService
    * @throws CalcJobServiceException
    * @see org.kalypso.services.calculation.service.ICalculationService#transferCurrentResults(java.lang.String)
    */
+  @Override
   public void transferCurrentResults( final File targetFolder, final String jobID ) throws SimulationException
   {
     final SimulationThread thread = findJobThread( jobID );
@@ -388,6 +393,7 @@ public class QueuedSimulationService implements ISimulationService
   /**
    * @see org.kalypso.services.calculation.service.ICalculationService#getCurrentResults(java.lang.String)
    */
+  @Override
   public String[] getCurrentResults( final String jobID ) throws SimulationException
   {
     final SimulationThread thread = findJobThread( jobID );
@@ -402,22 +408,17 @@ public class QueuedSimulationService implements ISimulationService
 
     final ISimulation job = m_calcJobFactory.createJob( typeID );
     if( job == null )
-      throw new SimulationException( Messages.getString("org.kalypso.simulation.core.internal.queued.QueuedSimulationService.3", typeID ) ); //$NON-NLS-1$
+      throw new SimulationException( Messages.getString( "org.kalypso.simulation.core.internal.queued.QueuedSimulationService.3", typeID ) ); //$NON-NLS-1$
 
     try
     {
       final URL modelspecURL = job.getSpezifikation();
-      data = new ModelspecData( modelspecURL, KalypsoSimulationCoreJaxb.JC.createUnmarshaller() );
-    }
-    catch( final JAXBException e )
-    {
-      e.printStackTrace();
-      throw new SimulationException( "Unable to initialize jaxb unmarshaller", e ); //$NON-NLS-1$
+      data = new ModelspecData( modelspecURL );
     }
     catch( final IllegalArgumentException e )
     {
       e.printStackTrace();
-      throw new SimulationException( Messages.getString("org.kalypso.simulation.core.internal.queued.QueuedSimulationService.5"), e ); //$NON-NLS-1$
+      throw new SimulationException( Messages.getString( "org.kalypso.simulation.core.internal.queued.QueuedSimulationService.5" ), e ); //$NON-NLS-1$
     }
 
     m_modelspecMap.put( typeID, data );
@@ -429,6 +430,7 @@ public class QueuedSimulationService implements ISimulationService
    * @throws CalcJobServiceException
    * @see org.kalypso.services.calculation.service.ICalculationService#getRequiredInput(java.lang.String)
    */
+  @Override
   public SimulationDescription[] getRequiredInput( final String typeID ) throws SimulationException
   {
     return getModelspec( typeID ).getInput();
@@ -438,6 +440,7 @@ public class QueuedSimulationService implements ISimulationService
    * @throws CalcJobServiceException
    * @see org.kalypso.services.calculation.service.ICalculationService#getDeliveringResults(java.lang.String)
    */
+  @Override
   public SimulationDescription[] getDeliveringResults( final String typeID ) throws SimulationException
   {
     return getModelspec( typeID ).getOutput();
@@ -446,6 +449,7 @@ public class QueuedSimulationService implements ISimulationService
   /**
    * @see org.kalypso.services.calculation.service.ICalculationService#getSchema(java.lang.String)
    */
+  @Override
   public DataHandler getSchema( final String namespace )
   {
     final URL url = m_catalog.getURL( namespace );
@@ -458,13 +462,14 @@ public class QueuedSimulationService implements ISimulationService
   /**
    * @see org.kalypso.services.calculation.service.ICalculationService#getSchemaValidity(java.lang.String)
    */
+  @Override
   public long getSchemaValidity( final String namespace ) throws SimulationException
   {
     try
     {
       final URL url = m_catalog.getURL( namespace );
       if( url == null )
-        throw new SimulationException( Messages.getString("org.kalypso.simulation.core.internal.queued.QueuedSimulationService.6") + namespace, null ); //$NON-NLS-1$
+        throw new SimulationException( Messages.getString( "org.kalypso.simulation.core.internal.queued.QueuedSimulationService.6" ) + namespace, null ); //$NON-NLS-1$
 
       final URLConnection connection = url.openConnection();
       return connection.getLastModified();
@@ -473,13 +478,14 @@ public class QueuedSimulationService implements ISimulationService
     {
       e.printStackTrace();
 
-      throw new SimulationException( Messages.getString("org.kalypso.simulation.core.internal.queued.QueuedSimulationService.7") + namespace, e ); //$NON-NLS-1$
+      throw new SimulationException( Messages.getString( "org.kalypso.simulation.core.internal.queued.QueuedSimulationService.7" ) + namespace, e ); //$NON-NLS-1$
     }
   }
 
   /**
    * @see org.kalypso.services.calculation.service.ICalculationService#getSupportedSchemata()
    */
+  @Override
   public String[] getSupportedSchemata( )
   {
     final Map<String, URL> catalog = m_catalog.getCatalog();

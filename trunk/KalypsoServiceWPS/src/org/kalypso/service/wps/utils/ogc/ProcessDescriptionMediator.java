@@ -47,7 +47,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import javax.xml.bind.JAXBException;
 import javax.xml.namespace.QName;
 
 import net.opengeospatial.ows.AnyValue;
@@ -60,7 +59,6 @@ import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ISimpleMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
@@ -138,17 +136,8 @@ public class ProcessDescriptionMediator extends AbstractWPSMediator<net.opengis.
 
     /* Get the specification for that simulation. */
     final URL spezifikation = simulation.getSpezifikation();
-    Modelspec modelSpec;
-    try
-    {
-      modelSpec = (Modelspec) KalypsoSimulationCoreJaxb.JC.createUnmarshaller().unmarshal( spezifikation );
-    }
-    catch( final JAXBException e )
-    {
-      throw new CoreException( StatusUtilities.statusFromThrowable( e ) );
-    }
+    Modelspec modelSpec = KalypsoSimulationCoreJaxb.readModelspec( spezifikation );
 
-    // 
     final String identifier = modelSpec.getTypeID();
     if( !ObjectUtils.equals( typeID, identifier ) )
     {

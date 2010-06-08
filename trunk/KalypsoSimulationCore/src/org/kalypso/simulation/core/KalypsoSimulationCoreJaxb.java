@@ -40,14 +40,89 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.simulation.core;
 
-import javax.xml.bind.JAXBContext;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
+
+import org.apache.commons.io.IOUtils;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.bind.JaxbUtilities;
+import org.kalypso.simulation.core.simspec.Modeldata;
+import org.kalypso.simulation.core.simspec.Modelspec;
 
 /**
  * @author Belger
  */
 public class KalypsoSimulationCoreJaxb
 {
-  public static final JAXBContext JC = JaxbUtilities.createQuiet( org.kalypso.simulation.core.simspec.ObjectFactory.class );
+  private static final String STR_FAILED_TO_LOAD_SIMULATION_SPECIFICATION = "Failed to load simulation specification";
+
+  private static final JAXBContext JC = JaxbUtilities.createQuiet( org.kalypso.simulation.core.simspec.ObjectFactory.class );
+
+  private static Unmarshaller createUnmarshaller( )
+  {
+    try
+    {
+      return JC.createUnmarshaller();
+    }
+    catch( final JAXBException e )
+    {
+      // will not happen
+      e.printStackTrace();
+      return null;
+    }
+  }
+
+  public static Modeldata readModeldata( final IFile file ) throws CoreException
+  {
+    final InputStream contents = file.getContents();
+    return (Modeldata) unmarshallAndCloseStream( contents );
+  }
+
+  public static Modelspec readModelspec( final URL location ) throws CoreException
+  {
+    try
+    {
+      final InputStream contents = location.openStream();
+      return (Modelspec) unmarshallAndCloseStream( contents );
+    }
+    catch( final IOException e )
+    {
+      final IStatus status = new Status( IStatus.ERROR, KalypsoSimulationCorePlugin.getID(), STR_FAILED_TO_LOAD_SIMULATION_SPECIFICATION );
+      throw new CoreException( status );
+    }
+  }
+
+  private static Object unmarshallAndCloseStream( final InputStream contents ) throws CoreException
+  {
+    try
+    {
+      final Unmarshaller unmarshaller = KalypsoSimulationCoreJaxb.createUnmarshaller();
+      final Object unmarshal = unmarshaller.unmarshal( contents );
+      contents.close();
+      return unmarshal;
+    }
+    catch( final JAXBException e )
+    {
+      final IStatus status = new Status( IStatus.ERROR, KalypsoSimulationCorePlugin.getID(), STR_FAILED_TO_LOAD_SIMULATION_SPECIFICATION );
+      throw new CoreException( status );
+    }
+    catch( final IOException e )
+    {
+      final IStatus status = new Status( IStatus.ERROR, KalypsoSimulationCorePlugin.getID(), STR_FAILED_TO_LOAD_SIMULATION_SPECIFICATION );
+      throw new CoreException( status );
+    }
+    finally
+    {
+      IOUtils.closeQuietly( contents );
+    }
+  }
+
 }
