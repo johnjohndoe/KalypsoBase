@@ -8,7 +8,7 @@ Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.kalypso.calculation.chain,
  org.kalypso.calculation.chain.binding
-Require-Bundle: org.junit4;bundle-version="4.3.1";resolution:=optional,
+Require-Bundle: org.junit4;bundle-version="4.8.1";resolution:=optional,
  org.kalypso.contribs.java;bundle-version="1.0.0",
  org.kalypso.deegree;bundle-version="1.0.0",
  org.kalypso.simulation.core;bundle-version="1.0.0",
