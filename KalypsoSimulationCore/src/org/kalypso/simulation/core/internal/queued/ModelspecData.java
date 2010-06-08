@@ -46,10 +46,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
-
+import org.eclipse.core.runtime.CoreException;
 import org.kalypso.simulation.core.ISimulationDataProvider;
+import org.kalypso.simulation.core.KalypsoSimulationCoreJaxb;
 import org.kalypso.simulation.core.SimulationDescription;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.simulation.core.i18n.Messages;
@@ -67,18 +66,18 @@ public class ModelspecData
 
   private final Map<String, DataType> m_outputHash;
 
-  public ModelspecData( final URL modelspecUrl, final Unmarshaller unmarshaller ) throws SimulationException
+  public ModelspecData( final URL modelspecUrl ) throws SimulationException
   {
     try
     {
-      m_modelspec = (Modelspec) unmarshaller.unmarshal( modelspecUrl );
+      m_modelspec = KalypsoSimulationCoreJaxb.readModelspec( modelspecUrl );
 
       m_inputHash = createHash( m_modelspec.getInput() );
       m_outputHash = createHash( m_modelspec.getOutput() );
     }
-    catch( final JAXBException e )
+    catch( CoreException e )
     {
-      throw new SimulationException( Messages.getString("org.kalypso.simulation.core.internal.queued.ModelspecData.0"), e ); //$NON-NLS-1$
+      throw new SimulationException( Messages.getString( "org.kalypso.simulation.core.internal.queued.ModelspecData.0" ), e ); //$NON-NLS-1$
     }
   }
 
@@ -98,7 +97,7 @@ public class ModelspecData
 
   /**
    * Prüft, ob für alle benötigten ID eine eingabe da ist.
-   *
+   * 
    * @throws CalcJobServiceException
    */
   public void checkInput( final ISimulationDataProvider data ) throws SimulationException
@@ -108,7 +107,7 @@ public class ModelspecData
       final String id = input.getId();
       final String description = input.getDescription();
       if( !input.isOptional() && !data.hasID( id ) )
-        throw new SimulationException( Messages.getString("org.kalypso.simulation.core.internal.queued.ModelspecData.1", id,description ), null ); //$NON-NLS-1$ 
+        throw new SimulationException( Messages.getString( "org.kalypso.simulation.core.internal.queued.ModelspecData.1", id, description ), null ); //$NON-NLS-1$ 
     }
   }
 

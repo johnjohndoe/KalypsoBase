@@ -66,7 +66,8 @@ public class GetCapabilitiesOperation implements IOperation
   /**
    * @see org.kalypso.service.wps.operations.IOperation#executeOperation(org.kalypso.service.ogc.RequestBean)
    */
-  public StringBuffer executeOperation( RequestBean request ) throws OWSException
+  @Override
+  public StringBuffer executeOperation( final RequestBean request ) throws OWSException
   {
     try
     {
@@ -103,7 +104,7 @@ public class GetCapabilitiesOperation implements IOperation
           continue;
         }
 
-        Modelspec modelData = (Modelspec) KalypsoSimulationCoreJaxb.JC.createUnmarshaller().unmarshal( spezifikation );
+        Modelspec modelData = KalypsoSimulationCoreJaxb.readModelspec( spezifikation );
 
         /* Save the specification. */
         m_simModelspecs.add( modelData );
@@ -149,7 +150,7 @@ public class GetCapabilitiesOperation implements IOperation
    *          The request.
    * @return The AcceptVersions parameter or null if not present.
    */
-  private String getAcceptVersions( RequestBean request )
+  private String getAcceptVersions( final RequestBean request )
   {
     if( !request.isPost() )
     {

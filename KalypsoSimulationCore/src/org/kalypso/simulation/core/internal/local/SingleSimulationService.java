@@ -46,12 +46,10 @@ import java.net.URL;
 import java.util.logging.Logger;
 
 import javax.activation.DataHandler;
-import javax.xml.bind.JAXBException;
 
 import org.eclipse.core.runtime.Platform;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.ISimulationService;
-import org.kalypso.simulation.core.KalypsoSimulationCoreJaxb;
 import org.kalypso.simulation.core.SimulationDataPath;
 import org.kalypso.simulation.core.SimulationDescription;
 import org.kalypso.simulation.core.SimulationException;
@@ -96,6 +94,7 @@ public class SingleSimulationService implements ISimulationService
    * (non-Javadoc)
    * @see org.kalypso.simulation.core.ISimulationService#getJobTypes()
    */
+  @Override
   public synchronized final String[] getJobTypes( )
   {
     return m_calcJobFactory.getSupportedTypes();
@@ -105,6 +104,7 @@ public class SingleSimulationService implements ISimulationService
    * (non-Javadoc)
    * @see org.kalypso.simulation.core.ISimulationService#getJobs()
    */
+  @Override
   public synchronized SimulationInfo[] getJobs( )
   {
     return new SimulationInfo[] { m_simulationInfo };
@@ -114,6 +114,7 @@ public class SingleSimulationService implements ISimulationService
    * (non-Javadoc)
    * @see org.kalypso.simulation.core.ISimulationService#getJob(java.lang.String)
    */
+  @Override
   public SimulationInfo getJob( final String jobID )
   {
     return m_simulationInfo;
@@ -123,6 +124,7 @@ public class SingleSimulationService implements ISimulationService
    * (non-Javadoc)
    * @see org.kalypso.simulation.core.ISimulationService#cancelJob(java.lang.String )
    */
+  @Override
   public void cancelJob( final String jobID )
   {
     m_simulationInfo.cancel();
@@ -132,6 +134,7 @@ public class SingleSimulationService implements ISimulationService
    * (non-Javadoc)
    * @see org.kalypso.simulation.core.ISimulationService#disposeJob(java.lang.String )
    */
+  @Override
   public void disposeJob( final String jobID )
   {
     m_simulationThread.dispose();
@@ -142,6 +145,7 @@ public class SingleSimulationService implements ISimulationService
    *      javax.activation.DataHandler,
    *      org.kalypso.services.calculation.service.CalcJobClientBean[],org.kalypso.services.calculation.service.CalcJobClientBean[])
    */
+  @Override
   public final SimulationInfo startJob( final String typeID, final String description, final DataHandler zipHandler, final SimulationDataPath[] input, final SimulationDataPath[] output ) throws SimulationException
   {
     final ModelspecData modelspec = getModelspec( typeID );
@@ -156,7 +160,7 @@ public class SingleSimulationService implements ISimulationService
       }
       catch( final IOException e )
       {
-        throw new SimulationException( Messages.getString("org.kalypso.simulation.core.internal.local.SingleSimulationService.0"), e ); //$NON-NLS-1$
+        throw new SimulationException( Messages.getString( "org.kalypso.simulation.core.internal.local.SingleSimulationService.0" ), e ); //$NON-NLS-1$
       }
     }
 
@@ -173,6 +177,7 @@ public class SingleSimulationService implements ISimulationService
    * (non-Javadoc)
    * @see org.kalypso.simulation.core.ISimulationService#transferCurrentResults (java.lang.String)
    */
+  @Override
   public void transferCurrentResults( final File targetFolder, final String jobID ) throws SimulationException
   {
     m_simulationThread.transferCurrentResults( targetFolder );
@@ -182,6 +187,7 @@ public class SingleSimulationService implements ISimulationService
    * (non-Javadoc)
    * @see org.kalypso.simulation.core.ISimulationService#getCurrentResults(java .lang.String)
    */
+  @Override
   public String[] getCurrentResults( final String jobID )
   {
     return m_simulationThread.getCurrentResults();
@@ -189,33 +195,25 @@ public class SingleSimulationService implements ISimulationService
 
   private ModelspecData getModelspec( final String typeID ) throws SimulationException
   {
-
     final ISimulation job = m_calcJobFactory.createJob( typeID );
     final URL modelspecURL = job.getSpezifikation();
 
-    ModelspecData data;
     try
     {
-      data = new ModelspecData( modelspecURL, KalypsoSimulationCoreJaxb.JC.createUnmarshaller() );
-    }
-    catch( final JAXBException e )
-    {
-      e.printStackTrace();
-      throw new SimulationException( "Unable to initialize jaxb unmarshaller", e ); //$NON-NLS-1$
+      return new ModelspecData( modelspecURL );
     }
     catch( final IllegalArgumentException e )
     {
       e.printStackTrace();
-      throw new SimulationException( Messages.getString("org.kalypso.simulation.core.internal.local.SingleSimulationService.2"), e ); //$NON-NLS-1$
+      throw new SimulationException( Messages.getString( "org.kalypso.simulation.core.internal.local.SingleSimulationService.2" ), e ); //$NON-NLS-1$
     }
-
-    return data;
   }
 
   /*
    * (non-Javadoc)
    * @see org.kalypso.simulation.core.ISimulationService#getRequiredInput(java. lang.String)
    */
+  @Override
   public SimulationDescription[] getRequiredInput( final String typeID ) throws SimulationException
   {
     return getModelspec( typeID ).getInput();
@@ -225,6 +223,7 @@ public class SingleSimulationService implements ISimulationService
    * (non-Javadoc)
    * @see org.kalypso.simulation.core.ISimulationService#getDeliveringResults(java .lang.String)
    */
+  @Override
   public SimulationDescription[] getDeliveringResults( final String typeID ) throws SimulationException
   {
     return getModelspec( typeID ).getOutput();
@@ -234,6 +233,7 @@ public class SingleSimulationService implements ISimulationService
    * (non-Javadoc)
    * @see org.kalypso.simulation.core.ISimulationService#getSchema(java.lang.String )
    */
+  @Override
   public DataHandler getSchema( final String namespace )
   {
     return null;
@@ -243,6 +243,7 @@ public class SingleSimulationService implements ISimulationService
    * (non-Javadoc)
    * @see org.kalypso.simulation.core.ISimulationService#getSchemaValidity(java .lang.String)
    */
+  @Override
   public long getSchemaValidity( final String namespace )
   {
     return 0;
@@ -252,6 +253,7 @@ public class SingleSimulationService implements ISimulationService
    * (non-Javadoc)
    * @see org.kalypso.simulation.core.ISimulationService#getSupportedSchemata()
    */
+  @Override
   public String[] getSupportedSchemata( )
   {
     return null;
