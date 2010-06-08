@@ -53,15 +53,10 @@ import java.util.Map;
 import java.util.Properties;
 
 import javax.xml.bind.DatatypeConverter;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
 
 import net.opengeospatial.wps.ProcessDescriptionType;
 
 import org.apache.commons.io.IOUtils;
-import org.eclipse.ant.internal.ui.launchConfigurations.IAntLaunchConfigurationConstants;
-import org.eclipse.core.internal.variables.ValueVariable;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -88,7 +83,6 @@ import org.eclipse.core.variables.IValueVariable;
 import org.eclipse.core.variables.VariablesPlugin;
 import org.kalypso.auth.KalypsoAuthPlugin;
 import org.kalypso.auth.user.IKalypsoUser;
-import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.commons.runtime.LogAnalyzer;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -97,6 +91,7 @@ import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.service.wps.client.WPSRequest;
 import org.kalypso.service.wps.client.simulation.SimulationDelegate;
 import org.kalypso.simulation.core.ISimulationService;
+import org.kalypso.simulation.core.KalypsoSimulationCoreJaxb;
 import org.kalypso.simulation.core.calccase.CalcJobHandler;
 import org.kalypso.simulation.core.internal.local.LocalSimulationService;
 import org.kalypso.simulation.core.simspec.Modeldata;
@@ -110,15 +105,9 @@ import org.kalypsodeegree_impl.model.feature.visitors.FindPropertyByNameVisitor;
 /**
  * @author belger
  */
-@SuppressWarnings("restriction")
 public class ModelNature implements IProjectNature, IResourceChangeListener
 {
   public static final String METADATA_KEY_CALCCASE_CONTINUE_ALLOWED = "CALCCASE_CONTINUE_ALLOWED"; //$NON-NLS-1$
-
-  // TODO Move this to KalypsoSimulationCore plugin
-  public static final JAXBContext JC_SPEC = JaxbUtilities.createQuiet( org.kalypso.simulation.core.simspec.ObjectFactory.class );
-
-  public static final org.kalypso.simulation.core.simspec.ObjectFactory OF_SPEC = new org.kalypso.simulation.core.simspec.ObjectFactory();
 
   private static final String STR_MODELLRECHNUNG_WIRD_DURCHGEFUEHRT = Messages.getString( "org.kalypso.simulation.ui.calccase.ModelNature.0" ); //$NON-NLS-1$
 
@@ -155,33 +144,6 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
   /** Standardddifferenz des Simulationsstarts vor dem Vorhersagezeitpunkt */
   private static final String META_PROP_DEFAULT_SIMHOURS = "DEFAULT_SIMHOURS"; //$NON-NLS-1$
 
-  /**
-   * 2005-09-01 - Schlienger - added this constant in order to get a static dependency to the org.eclipse.ant.ui plugin
-   * (else it is only a runtime-dependency), thus the dependency is checked by the manifest editor and the plugin is
-   * kept in the dependency list. Not doing this results in problems at runtime if the org.eclipse.ant.ui plugin is
-   * missing.
-   * <p>
-   * This is the id to use in your own launch files.
-   * <p>
-   * Example of an launch-file:
-   * 
-   * <pre>
-   *    &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
-   *    &lt;launchConfiguration type=&quot;org.eclipse.ant.AntLaunchConfigurationType&quot;&gt;
-   *    &lt;stringAttribute key=&quot;process_factory_id&quot; value=&quot;org.eclipse.ant.ui.remoteAntProcessFactory&quot;/&gt;
-   *    &lt;booleanAttribute key=&quot;org.eclipse.debug.ui.ATTR_LAUNCH_IN_BACKGROUND&quot; value=&quot;false&quot;/&gt;
-   *    &lt;stringAttribute key=&quot;org.eclipse.ui.externaltools.ATTR_TOOL_ARGUMENTS&quot; value=&quot;-q -e -logfile ${calc.dir}/afterCalc.log&quot;/&gt;
-   *    &lt;booleanAttribute key=&quot;org.eclipse.ui.externaltools.ATTR_CAPTURE_OUTPUT&quot; value=&quot;false&quot;/&gt;
-   *    &lt;stringAttribute key=&quot;org.eclipse.ui.externaltools.ATTR_LOCATION&quot; value=&quot;${project_loc}/.model/launch/build.xml&quot;/&gt;
-   *    &lt;booleanAttribute key=&quot;org.eclipse.debug.core.appendEnvironmentVariables&quot; value=&quot;true&quot;/&gt;
-   *    &lt;stringAttribute key=&quot;org.eclipse.ant.ui.ATTR_BUILD_SCOPE&quot; value=&quot;${none}&quot;/&gt;
-   *    &lt;stringAttribute key=&quot;org.eclipse.jdt.launching.CLASSPATH_PROVIDER&quot; value=&quot;org.eclipse.ant.ui.AntClasspathProvider&quot;/&gt;
-   *    &lt;stringAttribute key=&quot;org.eclipse.ui.externaltools.ATTR_ANT_TARGETS&quot; value=&quot;afterCalc,&quot;/&gt;
-   *    &lt;/launchConfiguration&gt;
-   * &lt;pre&gt;
-   */
-  public static final String ANT_LAUNCH_CONFIGURATION_TYPE = IAntLaunchConfigurationConstants.ID_ANT_LAUNCH_CONFIGURATION_TYPE;
-
   public ModelNature( )
   {
     // Set some default value for the metadata
@@ -191,33 +153,10 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
   /**
    * @see org.eclipse.core.resources.IProjectNature#configure()
    */
+  @Override
   public void configure( )
   {
-    // REMARK: creating this file is now work for the configure method!
-    // Normally, this file already should exist in any empty project template
-    // If removal of this cde causes problems, move it into the create project wizard of the corresponding project
-    // If not, remove this dead code
-// // create the .metadata file
-// try
-// {
-// final IFile file = getMetadataFile();
-//
-// if( !file.exists() )
-// {
-// final ByteArrayOutputStream bos = new ByteArrayOutputStream();
-// m_metadata.store( bos, "Modell-Projekt Metadata Information" );
-// bos.close();
-//
-// final ByteArrayInputStream bis = new ByteArrayInputStream( bos.toByteArray() );
-// file.create( bis, false, new NullProgressMonitor() );
-//
-// bis.close();
-// }
-// }
-// catch( final IOException e )
-// {
-// e.printStackTrace();
-// }
+    // nothing to do
   }
 
   public final IFolder getPrognoseFolder( )
@@ -233,6 +172,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
   /**
    * @see org.eclipse.core.resources.IProjectNature#deconfigure()
    */
+  @Override
   public void deconfigure( )
   {
     // nothing to do; only thing to do might be to delete the .metadata file
@@ -241,6 +181,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
   /**
    * @see org.eclipse.core.resources.IProjectNature#getProject()
    */
+  @Override
   public IProject getProject( )
   {
     return m_project;
@@ -249,6 +190,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
   /**
    * @see org.eclipse.core.resources.IProjectNature#setProject(org.eclipse.core.resources.IProject)
    */
+  @Override
   public void setProject( final IProject project )
   {
     if( m_project != null )
@@ -329,9 +271,6 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
   {
     monitor.beginTask( progressText, 1000 ); //$NON-NLS-1$
 
-    // TODO: check, if already another ant-task is running in the platform
-    // if yes, wait until it has finished
-
     final IStringVariableManager svm = VariablesPlugin.getDefault().getStringVariableManager();
     IValueVariable[] userVariables = null;
 
@@ -407,8 +346,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       final String name = (String) entry.getKey();
       final String value = (String) entry.getValue();
 
-      final IValueVariable valueVariable = new ValueVariable( name, value, true, value );
-      valueVariable.setValue( value );
+      final IValueVariable valueVariable = svm.newValueVariable( name, value, true, value );
       variables[count++] = valueVariable;
 
       try
@@ -553,6 +491,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
   /**
    * @see org.eclipse.core.resources.IResourceChangeListener#resourceChanged(org.eclipse.core.resources.IResourceChangeEvent)
    */
+  @Override
   public void resourceChanged( final IResourceChangeEvent event )
   {
     final IResourceDelta delta = event.getDelta();
@@ -628,21 +567,11 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
   private Modeldata getModelspec( final String modelSpec ) throws CoreException
   {
-    try
-    {
-      final IFile file = getModelFolder().getFile( modelSpec );
-      if( !file.exists() )
-        return null;
+    final IFile file = getModelFolder().getFile( modelSpec );
+    if( !file.exists() )
+      return null;
 
-      final Unmarshaller unmarshaller = JC_SPEC.createUnmarshaller();
-      return (Modeldata) unmarshaller.unmarshal( file.getContents() );
-    }
-    catch( final JAXBException e )
-    {
-      e.printStackTrace();
-
-      throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.simulation.ui.calccase.ModelNature.13" ) ) ); //$NON-NLS-1$
-    }
+    return KalypsoSimulationCoreJaxb.readModeldata( file );
   }
 
   public GMLWorkspace loadOrCreateControl( final IContainer folder ) throws CoreException

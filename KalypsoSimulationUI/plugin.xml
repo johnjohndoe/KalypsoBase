@@ -73,4 +73,13 @@
             library="lib/anttasks.jar">
       </extraClasspathEntry>
    </extension>
+   
+   <extension
+         point="org.eclipse.debug.core.sourceLocators">
+      <sourceLocator
+            name="HACK: we need to register this one, else we would need org.eclipse.ant.ui (and hence jdt.ui etc.)"
+            class="org.eclipse.ant.internal.launching.debug.AntSourceLookupDirector"
+            id="org.eclipse.ant.ui.debug.sourceLookupDirector">
+      </sourceLocator>
+   </extension>   
 </plugin>
