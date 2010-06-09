@@ -332,6 +332,7 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
     return m_axisDragHandler;
   }
 
+  @Override
   public ChartComposite getChart( )
   {
     return m_chartComposite;
@@ -369,6 +370,7 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
     return m_plotDragHandler;
   }
 
+  @Override
   public IProfil getProfil( )
   {
     return m_profile;
@@ -531,9 +533,12 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
         lm.removeLayer( layer );
 
       // add layer
-      final IProfilChartLayer[] profileLayers = m_layerProvider.createLayers( this );
-      for( final IProfilChartLayer layer : profileLayers )
-        lm.addLayer( layer );
+      if( m_profile != null )
+      {
+        final IProfilChartLayer[] profileLayers = m_layerProvider.createLayers( this );
+        for( final IProfilChartLayer layer : profileLayers )
+          lm.addLayer( layer );
+      }
 
       restoreStatePosition( lm, positions );
       restoreStateVisible( lm, visibility );
