@@ -43,7 +43,7 @@ package org.kalypso.model.wspm.core.profil.wrappers;
 import java.util.Comparator;
 
 import org.kalypso.model.wspm.core.IWspmConstants;
-import org.kalypso.observation.result.IComponent;
+import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.observation.result.IRecord;
 
 /**
@@ -72,59 +72,37 @@ public class ProfilePointWrapper extends AbstractRecordWrapper implements IRecor
 
   public double getHoehe( )
   {
-    final IComponent component = findComponent( IWspmConstants.POINT_PROPERTY_HOEHE );
-
-    final Object value = getRecord().getValue( component );
-    if( value instanceof Double )
-      return (Double) value;
-
-    return Double.NaN;
+    return ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, this );
   }
 
   public double getBreite( )
   {
-    final IComponent component = findComponent( IWspmConstants.POINT_PROPERTY_BREITE );
 
-    final Object value = getRecord().getValue( component );
-    if( value instanceof Double )
-      return (Double) value;
-
-    return Double.NaN;
+    return ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, this );
   }
 
   public double getHochwert( )
   {
-    final IComponent component = findComponent( IWspmConstants.POINT_PROPERTY_HOCHWERT );
 
-    final Object value = getRecord().getValue( component );
-    if( value instanceof Double )
-      return (Double) value;
-
-    return Double.NaN;
+    return ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOCHWERT, this );
   }
 
   public double getRechtswert( )
   {
-    final IComponent component = findComponent( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
-
-    final Object value = getRecord().getValue( component );
-    if( value instanceof Double )
-      return (Double) value;
-
-    return Double.NaN;
+    return ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT, this );
   }
 
-  public void setBreite( final Double width )
+  public void setBreite( final double width )
   {
-    final IComponent component = findComponent( IWspmConstants.POINT_PROPERTY_BREITE );
-    getRecord().setValue( component, Double.valueOf( width ) );
+    final int index = findComponent( IWspmConstants.POINT_PROPERTY_BREITE );
+    getRecord().setValue( index, Double.valueOf( width ) );
 
   }
 
   public void setHoehe( final double hoehe )
   {
-    final IComponent component = findComponent( IWspmConstants.POINT_PROPERTY_HOEHE );
-    getRecord().setValue( component, Double.valueOf( hoehe ) );
+    final int index = findComponent( IWspmConstants.POINT_PROPERTY_HOEHE );
+    getRecord().setValue( index, Double.valueOf( hoehe ) );
   }
 
   /**

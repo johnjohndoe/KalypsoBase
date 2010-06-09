@@ -73,7 +73,7 @@ import org.kalypso.observation.result.TupleResult;
 
 /**
  * Basisprofil with Events
- *
+ * 
  * @author kimwerner
  */
 public abstract class AbstractProfil implements IProfil
@@ -110,6 +110,7 @@ public abstract class AbstractProfil implements IProfil
     setResult( result );
   }
 
+  @Override
   public boolean addPoint( final IRecord point )
   {
     return getResult().add( point );
@@ -118,10 +119,11 @@ public abstract class AbstractProfil implements IProfil
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfil#addPointProperty(org.kalypso.model.wspm.core.profil.POINT_PROPERTY)
    */
+  @Override
   public void addPointProperty( final IComponent pointProperty )
   {
     if( pointProperty == null )
-      throw new IllegalStateException( Messages.getString( "org.kalypso.model.wspm.core.profil.impl.AbstractProfil.0" )); //$NON-NLS-1$
+      throw new IllegalStateException( Messages.getString( "org.kalypso.model.wspm.core.profil.impl.AbstractProfil.0" ) ); //$NON-NLS-1$
 
     final IComponent[] pointProperties = getPointProperties();
     if( ArrayUtils.contains( pointProperties, pointProperty ) )
@@ -130,6 +132,7 @@ public abstract class AbstractProfil implements IProfil
     getResult().addComponent( pointProperty );
   }
 
+  @Override
   public void addPointProperty( final IComponent pointProperty, final Object defaultValue )
   {
     if( pointProperty == null )
@@ -142,10 +145,11 @@ public abstract class AbstractProfil implements IProfil
     getResult().addComponent( pointProperty, defaultValue );
   }
 
+  @Override
   public void addPointProperty( final IComponent pointProperty, final IComponent initialValues )
   {
     if( pointProperty == null )
-      throw new IllegalStateException( Messages.getString( "org.kalypso.model.wspm.core.profil.impl.AbstractProfil.0" )); //$NON-NLS-1$
+      throw new IllegalStateException( Messages.getString( "org.kalypso.model.wspm.core.profil.impl.AbstractProfil.0" ) ); //$NON-NLS-1$
 
     final IComponent[] pointProperties = getPointProperties();
     if( ArrayUtils.contains( pointProperties, pointProperty ) )
@@ -157,6 +161,7 @@ public abstract class AbstractProfil implements IProfil
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfil#setProfileObject(org.kalypso.model.wspm.core.profil.IProfileObject[])
    */
+  @Override
   @SuppressWarnings("unchecked")
   public IProfileObject[] addProfileObjects( final IProfileObject[] profileObjects )
   {
@@ -170,17 +175,19 @@ public abstract class AbstractProfil implements IProfil
     return profileObjectList.toArray( new IProfileObject[] {} );
   }
 
+  @Override
   public void addProfilListener( final IProfilListener pl )
   {
     m_listeners.add( pl );
   }
 
   /**
-   * @see
+   * @see 
    *      org.kalypso.model.wspm.core.profil.IProfil#createProfileObjects(org.kalypso.observation.IObservation<org.kalypso
    *      .observation.result.TupleResult>[]) override this method if you have got the
    *      org.kalypso.model.wspm.core.profil.IProfileObjectProvider for your m_type
    */
+  @Override
   public void createProfileObjects( final IObservation<TupleResult>[] profileObjects )
   {
     throw new NotImplementedException();
@@ -190,6 +197,7 @@ public abstract class AbstractProfil implements IProfil
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfil#createProfilPoint()
    */
+  @Override
   public IRecord createProfilPoint( )
   {
     return m_result.createRecord();
@@ -212,6 +220,7 @@ public abstract class AbstractProfil implements IProfil
     }
   }
 
+  @Override
   public void fireProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
     if( changes == null || changes.length == 0 )
@@ -235,6 +244,7 @@ public abstract class AbstractProfil implements IProfil
   /**
    * @return Returns the activePoint.
    */
+  @Override
   public IRecord getActivePoint( )
   {
     if( m_result.isEmpty() )
@@ -245,11 +255,13 @@ public abstract class AbstractProfil implements IProfil
       return m_activePoint;
   }
 
+  @Override
   public IComponent getActiveProperty( )
   {
     return m_activePointProperty;
   }
 
+  @Override
   public String getComment( )
   {
     final String description = getDescription();
@@ -262,6 +274,7 @@ public abstract class AbstractProfil implements IProfil
   /**
    * @see org.kalypso.observation.IObservation#getDescription()
    */
+  @Override
   public String getDescription( )
   {
     return m_description;
@@ -270,6 +283,7 @@ public abstract class AbstractProfil implements IProfil
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfil#getMarkedPoints()
    */
+  @Override
   public IRecord[] getMarkedPoints( )
   {
     final ArrayList<IRecord> records = new ArrayList<IRecord>();
@@ -280,6 +294,7 @@ public abstract class AbstractProfil implements IProfil
     return records.toArray( new IRecord[] {} );
   }
 
+  @Override
   public String getName( )
   {
     return m_name;
@@ -288,6 +303,7 @@ public abstract class AbstractProfil implements IProfil
   /**
    * @see org.kalypso.observation.IObservation#getPhenomenon()
    */
+  @Override
   public IPhenomenon getPhenomenon( )
   {
     return m_phenomenon;
@@ -296,6 +312,7 @@ public abstract class AbstractProfil implements IProfil
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfil#getPoint(int)
    */
+  @Override
   public IRecord getPoint( final int index )
   {
 
@@ -305,6 +322,7 @@ public abstract class AbstractProfil implements IProfil
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfil#getPointMarkerFor(org.kalypso.observation.result.IComponent)
    */
+  @Override
   public IProfilPointMarker[] getPointMarkerFor( final IComponent markerColumn )
   {
 
@@ -327,6 +345,7 @@ public abstract class AbstractProfil implements IProfil
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfil#getPointMarkerFor(org.kalypso.observation.result.IRecord)
    */
+  @Override
   public IProfilPointMarker[] getPointMarkerFor( final IRecord record )
   {
     final ArrayList<IProfilPointMarker> pointMarkers = new ArrayList<IProfilPointMarker>();
@@ -343,6 +362,7 @@ public abstract class AbstractProfil implements IProfil
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfil#getPointMarkerFor(java.lang.String)
    */
+  @Override
   public IProfilPointMarker[] getPointMarkerFor( final String pointMarkerID )
   {
     final IComponent cmp = hasPointProperty( pointMarkerID );
@@ -354,6 +374,7 @@ public abstract class AbstractProfil implements IProfil
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfil#getPointMarkerTypes()
    */
+  @Override
   public IComponent[] getPointMarkerTypes( )
   {
     final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( getType() );
@@ -366,12 +387,14 @@ public abstract class AbstractProfil implements IProfil
     return marker.toArray( new IComponent[] {} );
   }
 
+  @Override
   public boolean isPointMarker( final String propertyID )
   {
     final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( getType() );
     return provider == null ? false : provider.isMarker( propertyID );
   }
 
+  @Override
   public IComponent[] getPointProperties( )
   {
     final TupleResult result = getResult();
@@ -379,12 +402,13 @@ public abstract class AbstractProfil implements IProfil
   }
 
   /**
-   * @return a pointProperty from PointPropertyProvider, see {@code
-   *         IProfilPointPropertyProvider#getPointProperty(String)}
+   * @return a pointProperty from PointPropertyProvider, see
+   *         {@code IProfilPointPropertyProvider#getPointProperty(String)}
    *         <p>
    *         you must check {@link #hasPointProperty(IComponent)}, if false you must call
    *         {@link #addPointProperty(IComponent)}
    */
+  @Override
   public IComponent getPointPropertyFor( final String propertyID )
   {
     final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( getType() );
@@ -394,6 +418,7 @@ public abstract class AbstractProfil implements IProfil
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfil#getRecordPoints()
    */
+  @Override
   public IRecord[] getPoints( )
   {
     return getResult().toArray( new IRecord[] {} );
@@ -402,6 +427,7 @@ public abstract class AbstractProfil implements IProfil
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfil#getPoints(int, int)
    */
+  @Override
   public IRecord[] getPoints( final int startPoint, final int endPoint )
   {
     final int size = endPoint - startPoint + 1;
@@ -416,6 +442,7 @@ public abstract class AbstractProfil implements IProfil
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfil#getProblemMarker()
    */
+  @Override
   public MarkerIndex getProblemMarker( )
   {
     return m_markerIndex;
@@ -424,6 +451,7 @@ public abstract class AbstractProfil implements IProfil
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfil#getProfileObject()
    */
+  @Override
   @SuppressWarnings("unchecked")
   public IProfileObject[] getProfileObjects( )
   {
@@ -433,6 +461,7 @@ public abstract class AbstractProfil implements IProfil
     return profileObjectList.toArray( new IProfileObject[] {} );
   }
 
+  @Override
   public Object getProperty( final Object key )
   {
     return m_additionalProfileSettings.get( key );
@@ -441,11 +470,13 @@ public abstract class AbstractProfil implements IProfil
   /**
    * @see org.kalypso.observation.IObservation#getResult()
    */
+  @Override
   public TupleResult getResult( )
   {
     return m_result;
   }
 
+  @Override
   public double getStation( )
   {
     return m_station;
@@ -454,6 +485,7 @@ public abstract class AbstractProfil implements IProfil
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfil#getType()
    */
+  @Override
   public String getType( )
   {
     return m_type;
@@ -462,6 +494,7 @@ public abstract class AbstractProfil implements IProfil
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfil#hasPointProperty(org.kalypso.model.wspm.core.profil.IComponent)
    */
+  @Override
   public boolean hasPointProperty( final IComponent property )
   {
     return property == null ? false : getResult().hasComponent( property );
@@ -470,6 +503,7 @@ public abstract class AbstractProfil implements IProfil
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfil#hasPointProperty(org.kalypso.model.wspm.core.profil.IComponent)
    */
+  @Override
   public IComponent hasPointProperty( final String propertyId )
   {
     for( final IComponent component : getResult().getComponents() )
@@ -481,6 +515,7 @@ public abstract class AbstractProfil implements IProfil
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfil#indexOfPoint(org.kalypso.observation.result.IRecord)
    */
+  @Override
   public int indexOfPoint( final IRecord point )
   {
     return getResult().indexOf( point );
@@ -489,6 +524,7 @@ public abstract class AbstractProfil implements IProfil
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfil#indexOfProperty(org.kalypso.observation.result.IComponent)
    */
+  @Override
   public int indexOfProperty( final IComponent pointProperty )
   {
     return getResult().indexOfComponent( pointProperty );
@@ -497,6 +533,7 @@ public abstract class AbstractProfil implements IProfil
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfil#indexOfProperty(java.lang.String)
    */
+  @Override
   public int indexOfProperty( final String id )
   {
     final IComponent comp = hasPointProperty( id );
@@ -508,6 +545,7 @@ public abstract class AbstractProfil implements IProfil
   /**
    * @see org.kalypso.model.wspm.core.profilinterface.IProfil#removePoint(org.kalypso.model.wspm.core.profilinterface.IPoint)
    */
+  @Override
   public boolean removePoint( final IRecord point )
   {
     return getResult().remove( point );
@@ -516,6 +554,7 @@ public abstract class AbstractProfil implements IProfil
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfil#removePointMarker(org.kalypso.model.wspm.core.profil.IProfilPointMarker)
    */
+  @Override
   public Object removePointMarker( final IProfilPointMarker marker )
   {
     final Object oldValue = marker.getValue();
@@ -527,6 +566,7 @@ public abstract class AbstractProfil implements IProfil
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfil#removePointProperty(org.kalypso.model.wspm.core.profil.POINT_PROPERTY)
    */
+  @Override
   public boolean removePointProperty( final IComponent pointProperty )
   {
     final int index = getResult().indexOfComponent( pointProperty );
@@ -538,6 +578,7 @@ public abstract class AbstractProfil implements IProfil
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfil#removeProfileObject(org.kalypso.model.wspm.core.profil.IProfileObject)
    */
+  @Override
   @SuppressWarnings("unchecked")
   public boolean removeProfileObject( final IProfileObject profileObject )
   {
@@ -547,6 +588,7 @@ public abstract class AbstractProfil implements IProfil
     return profileObjectList.remove( profileObject );
   }
 
+  @Override
   public void removeProfilListener( final IProfilListener pl )
   {
     m_listeners.remove( pl );
@@ -555,6 +597,7 @@ public abstract class AbstractProfil implements IProfil
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfil#removeProperty(java.lang.Object)
    */
+  @Override
   public Object removeProperty( final Object key )
   {
     final Object old = m_additionalProfileSettings.get( key );
@@ -562,6 +605,7 @@ public abstract class AbstractProfil implements IProfil
     return old;
   }
 
+  @Override
   public void setActivePoint( final IRecord point )
   {
     m_activePoint = point;
@@ -573,6 +617,7 @@ public abstract class AbstractProfil implements IProfil
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfil#setActiveproperty(org.kalypso.model.wspm.core.profil.IComponent)
    */
+  @Override
   public void setActivePointProperty( final IComponent pointProperty )
   {
     m_activePointProperty = pointProperty;
@@ -581,6 +626,7 @@ public abstract class AbstractProfil implements IProfil
     fireProfilChanged( hint, new IProfilChange[] { new ActiveObjectEdit( this, m_activePoint, m_activePointProperty ) } );
   }
 
+  @Override
   public void setComment( final String comment )
   {
     setDescription( comment );
@@ -589,11 +635,13 @@ public abstract class AbstractProfil implements IProfil
   /**
    * @see org.kalypso.observation.IObservation#setDescription(java.lang.String)
    */
+  @Override
   public void setDescription( final String desc )
   {
     m_description = desc;
   }
 
+  @Override
   public void setName( final String name )
   {
     m_name = name;
@@ -602,6 +650,7 @@ public abstract class AbstractProfil implements IProfil
   /**
    * @see org.kalypso.observation.IObservation#setPhenomenon(org.kalypso.observation.phenomenon.IPhenomenon)
    */
+  @Override
   public void setPhenomenon( final IPhenomenon phenomenon )
   {
     m_phenomenon = phenomenon;
@@ -610,6 +659,7 @@ public abstract class AbstractProfil implements IProfil
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfil#setProblemMarker(org.eclipse.core.resources.IMarker[])
    */
+  @Override
   public void setProblemMarker( final IMarker[] markers )
   {
     m_markerIndex = new MarkerIndex( this, markers );
@@ -620,6 +670,7 @@ public abstract class AbstractProfil implements IProfil
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfil#setProperty(java.lang.Object, java.lang.Object)
    */
+  @Override
   public void setProperty( final Object key, final Object value )
   {
     m_additionalProfileSettings.put( key, value );
