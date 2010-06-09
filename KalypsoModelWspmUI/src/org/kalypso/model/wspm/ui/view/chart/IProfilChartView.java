@@ -52,4 +52,6 @@ public interface IProfilChartView
   IProfil getProfil( );
 
   ChartComposite getChart( );
+
+  void setProfil( IProfil profile );
 }
