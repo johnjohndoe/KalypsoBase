@@ -60,14 +60,9 @@ import com.vividsolutions.jts.geom.Polygon;
  */
 public class SldPolygonGeometryBuilder extends AbstractSldGeometryBuilder implements ISldGeometryBuilder
 {
-  public SldPolygonGeometryBuilder( final IMapPanel panel, final URL[] slds )
+  public SldPolygonGeometryBuilder( final IMapPanel panel, final URL... slds )
   {
     super( panel, slds );
-  }
-
-  public SldPolygonGeometryBuilder( final IMapPanel panel )
-  {
-    super( panel );
   }
 
   /**

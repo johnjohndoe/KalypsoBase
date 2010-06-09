@@ -43,12 +43,11 @@ package org.kalypso.ogc.gml.map.widgets.builders.sld;
 import java.awt.Graphics;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -92,21 +91,20 @@ public abstract class AbstractSldGeometryBuilder implements ISldGeometryBuilder
 
   private String m_tooltip;
 
-  public AbstractSldGeometryBuilder( final IMapPanel panel )
+  public AbstractSldGeometryBuilder( final IMapPanel panel, URL... slds )
   {
     m_panel = panel;
 
-    final List<URL> urls = new ArrayList<URL>();
-    urls.add( AbstractSldGeometryBuilder.class.getResource( "resources/default.line.sld" ) );
-    urls.add( AbstractSldGeometryBuilder.class.getResource( "resources/default.polygon.sld" ) );
+    if( ArrayUtils.isEmpty( slds ) )
+    {
+      final URL urlLine = AbstractSldGeometryBuilder.class.getResource( "resources/default.line.sld" );
+      final URL urlPolygon = AbstractSldGeometryBuilder.class.getResource( "resources/default.polygon.sld" );
 
-    init( urls.toArray( new URL[] {} ) );
-  }
+      slds = new URL[] { urlLine, urlPolygon };
+    }
 
-  public AbstractSldGeometryBuilder( final IMapPanel panel, final URL[] slds )
-  {
-    m_panel = panel;
     init( slds );
+
   }
 
   private void init( final URL[] slds )
