@@ -23,6 +23,7 @@ public class LayerManager implements ILayerManager
   /**
    * @see de.openali.odysseus.chart.framework.layer.ILayerManager#addLayer(de.openali.odysseus.chart.framework.layer.IChartLayer)
    */
+  @Override
   public void addLayer( final IChartLayer layer )
   {
     m_layers.add( layer );
@@ -69,22 +70,26 @@ public class LayerManager implements ILayerManager
    * @see de.openali.odysseus.chart.framework.layer.ILayerManager#removeLayer(de.openali.odysseus.chart.framework.layer.IChartLayer)
    *      reomves layer from chart
    */
+  @Override
   public void removeLayer( final IChartLayer layer )
   {
     m_layers.remove( layer );
     m_handler.fireLayerRemoved( layer );
   }
 
+  @Override
   public void addListener( final ILayerManagerEventListener l )
   {
     m_handler.addListener( l );
   }
 
+  @Override
   public void removeListener( final ILayerManagerEventListener l )
   {
     m_handler.removeListener( l );
   }
 
+  @Override
   public void clear( )
   {
 
@@ -93,11 +98,13 @@ public class LayerManager implements ILayerManager
   /**
    * @return List of all ChartLayer objects
    */
+  @Override
   public IChartLayer[] getLayers( )
   {
     return m_layers.toArray( new IChartLayer[0] );
   }
 
+  @Override
   public void moveLayerToPosition( final IChartLayer layer, final int position )
   {
     m_layers.remove( layer );
@@ -108,6 +115,7 @@ public class LayerManager implements ILayerManager
     m_handler.fireLayerMoved( layer );
   }
 
+  @Override
   public IChartLayer getLayerById( final String id )
   {
     for( final IChartLayer layer : m_layers )
@@ -124,6 +132,7 @@ public class LayerManager implements ILayerManager
    * @see de.openali.odysseus.chart.framework.model.layer.ILayerManager#addLayer(de.openali.odysseus.chart.framework.model.layer.IChartLayer,
    *      int)
    */
+  @Override
   public void addLayer( final IChartLayer layer, final int position )
   {
     m_layers.add( position, layer );
@@ -134,6 +143,7 @@ public class LayerManager implements ILayerManager
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.ILayerManager#getLayerPosition(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
    */
+  @Override
   public int getLayerPosition( final IChartLayer layer )
   {
     int count = 0;
@@ -151,6 +161,7 @@ public class LayerManager implements ILayerManager
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.ILayerManager#getSize()
    */
+  @Override
   public int getSize( )
   {
     return m_layers.size();
@@ -159,7 +170,8 @@ public class LayerManager implements ILayerManager
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.ILayerManager#getEditableLayers()
    */
-  @SuppressWarnings( { "cast" })
+  @Override
+  @SuppressWarnings({ "cast" })
   public IEditableChartLayer[] getEditableLayers( )
   {
     final List<IEditableChartLayer> editLayers = new ArrayList<IEditableChartLayer>();
@@ -176,6 +188,7 @@ public class LayerManager implements ILayerManager
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.ILayerManager#dispose()
    */
+  @Override
   public void dispose( )
   {
     // dispose layers
@@ -195,6 +208,7 @@ public class LayerManager implements ILayerManager
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.ILayerManager#getTooltipLayers()
    */
+  @Override
   public ITooltipChartLayer[] getTooltipLayers( )
   {
     final List<ITooltipChartLayer> tooltipLayers = new ArrayList<ITooltipChartLayer>();
