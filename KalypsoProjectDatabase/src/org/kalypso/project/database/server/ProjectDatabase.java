@@ -139,216 +139,237 @@ public class ProjectDatabase implements IProjectDatabase
    * @see org.kalypso.projectfinal .database.sei.IProjectDatabase#getProjects()
    */
   @Override
-  public synchronized KalypsoProjectBean[] getProjectHeads( final String projectType )
+  public KalypsoProjectBean[] getProjectHeads( final String projectType )
   {
-    /** Getting the Session Factory and session */
-    final Session session = m_factory.getCurrentSession();
-
-    /** Starting the Transaction */
-    final Transaction tx = session.beginTransaction();
-
-    /* names of existing projects */
-    final List< ? > names = session.createQuery( String.format( "select m_unixName from KalypsoProjectBean where m_projectType = '%s' ORDER by m_name", projectType ) ).list(); //$NON-NLS-1$
-    tx.commit();
-
-    final Set<String> projects = new HashSet<String>();
-
-    for( final Object object : names )
+    synchronized( this )
     {
-      if( !(object instanceof String) )
-        continue;
+      /** Getting the Session Factory and session */
+      final Session session = m_factory.getCurrentSession();
 
-      final String name = object.toString();
-      projects.add( name );
-    }
+      /** Starting the Transaction */
+      final Transaction tx = session.beginTransaction();
 
-    final List<KalypsoProjectBean> projectBeans = new ArrayList<KalypsoProjectBean>();
+      /* names of existing projects */
+      final List< ? > names = session.createQuery( String.format( "select m_unixName from KalypsoProjectBean where m_projectType = '%s' ORDER by m_name", projectType ) ).list(); //$NON-NLS-1$
+      tx.commit();
 
-    for( final String project : projects )
-    {
-      final TreeMap<Integer, KalypsoProjectBean> myBeans = new TreeMap<Integer, KalypsoProjectBean>();
+      final Set<String> projects = new HashSet<String>();
 
-      final Session mySession = m_factory.getCurrentSession();
-      final Transaction myTx = mySession.beginTransaction();
-      final List< ? > beans = mySession.createQuery( String.format( "from KalypsoProjectBean where m_unixName = '%s'  ORDER by m_projectVersion", project ) ).list(); //$NON-NLS-1$
-      myTx.commit();
-
-      for( final Object object : beans )
+      for( final Object object : names )
       {
-        if( !(object instanceof KalypsoProjectBean) )
+        if( !(object instanceof String) )
           continue;
 
-        final KalypsoProjectBean b = (KalypsoProjectBean) object;
-        myBeans.put( b.getProjectVersion(), b );
+        final String name = object.toString();
+        projects.add( name );
       }
 
-      final Integer[] keys = myBeans.keySet().toArray( new Integer[] {} );
+      final List<KalypsoProjectBean> projectBeans = new ArrayList<KalypsoProjectBean>();
 
-      /* determine head */
-      final KalypsoProjectBean head = myBeans.get( keys[keys.length - 1] );
-
-      KalypsoProjectBean[] values = myBeans.values().toArray( new KalypsoProjectBean[] {} );
-      values = (KalypsoProjectBean[]) ArrayUtils.remove( values, values.length - 1 ); // remove last entry -> cycle!
-
-      // TODO check needed? - order by clauses
-      Arrays.sort( values, new Comparator<KalypsoProjectBean>()
+      for( final String project : projects )
       {
-        @Override
-        public int compare( final KalypsoProjectBean o1, final KalypsoProjectBean o2 )
-        {
-          return o1.getProjectVersion().compareTo( o2.getProjectVersion() );
-        }
-      } );
+        final TreeMap<Integer, KalypsoProjectBean> myBeans = new TreeMap<Integer, KalypsoProjectBean>();
 
-      head.setChildren( values );
-      projectBeans.add( head );
+        final Session mySession = m_factory.getCurrentSession();
+        final Transaction myTx = mySession.beginTransaction();
+        final List< ? > beans = mySession.createQuery( String.format( "from KalypsoProjectBean where m_unixName = '%s'  ORDER by m_projectVersion", project ) ).list(); //$NON-NLS-1$
+        myTx.commit();
+
+        for( final Object object : beans )
+        {
+          if( !(object instanceof KalypsoProjectBean) )
+            continue;
+
+          final KalypsoProjectBean b = (KalypsoProjectBean) object;
+          myBeans.put( b.getProjectVersion(), b );
+        }
+
+        final Integer[] keys = myBeans.keySet().toArray( new Integer[] {} );
+
+        /* determine head */
+        final KalypsoProjectBean head = myBeans.get( keys[keys.length - 1] );
+
+        KalypsoProjectBean[] values = myBeans.values().toArray( new KalypsoProjectBean[] {} );
+        values = (KalypsoProjectBean[]) ArrayUtils.remove( values, values.length - 1 ); // remove last entry -> cycle!
+
+        // TODO check needed? - order by clauses
+        Arrays.sort( values, new Comparator<KalypsoProjectBean>()
+        {
+          @Override
+          public int compare( final KalypsoProjectBean o1, final KalypsoProjectBean o2 )
+          {
+            return o1.getProjectVersion().compareTo( o2.getProjectVersion() );
+          }
+        } );
+
+        head.setChildren( values );
+        projectBeans.add( head );
+      }
+
+      return projectBeans.toArray( new KalypsoProjectBean[] {} );
     }
 
-    return projectBeans.toArray( new KalypsoProjectBean[] {} );
   }
 
   /**
    * @see org.kalypso.project.database.sei.IProjectDatabase#getProject()
    */
   @Override
-  public synchronized KalypsoProjectBean getProject( final String projectUnixName )
+  public KalypsoProjectBean getProject( final String projectUnixName )
   {
-    /** Getting the Session Factory and session */
-    final Session session = m_factory.getCurrentSession();
+    synchronized( this )
+    {
+      /** Getting the Session Factory and session */
+      final Session session = m_factory.getCurrentSession();
 
-    /** Starting the Transaction */
-    final Transaction tx = session.beginTransaction();
+      /** Starting the Transaction */
+      final Transaction tx = session.beginTransaction();
 
-    /* names of exsting projects */
-    final List< ? > projects = session.createQuery( String.format( "from KalypsoProjectBean where m_unixName = '%s' ORDER by m_projectVersion desc", projectUnixName ) ).list(); //$NON-NLS-1$
-    tx.commit();
+      /* names of exsting projects */
+      final List< ? > projects = session.createQuery( String.format( "from KalypsoProjectBean where m_unixName = '%s' ORDER by m_projectVersion desc", projectUnixName ) ).list(); //$NON-NLS-1$
+      tx.commit();
 
-    if( projects.size() <= 0 )
-      return null;
+      if( projects.size() <= 0 )
+        return null;
 
-    /* determine head */
-    final KalypsoProjectBean head = (KalypsoProjectBean) projects.get( 0 );
+      /* determine head */
+      final KalypsoProjectBean head = (KalypsoProjectBean) projects.get( 0 );
 
-    final List<KalypsoProjectBean> beans = new ArrayList<KalypsoProjectBean>();
-    for( int i = 1; i < projects.size(); i++ )
-      beans.add( (KalypsoProjectBean) projects.get( i ) );
+      final List<KalypsoProjectBean> beans = new ArrayList<KalypsoProjectBean>();
+      for( int i = 1; i < projects.size(); i++ )
+        beans.add( (KalypsoProjectBean) projects.get( i ) );
 
-    head.setChildren( beans.toArray( new KalypsoProjectBean[] {} ) );
+      head.setChildren( beans.toArray( new KalypsoProjectBean[] {} ) );
 
-    return head;
+      return head;
+    }
   }
 
   /**
    * @see org.kalypso.project.database.sei.IProjectDatabase#createProject(java.lang.String)
    */
   @Override
-  public synchronized KalypsoProjectBean createProject( final KalypsoProjectBean bean, final URL incoming ) throws IOException
+  public KalypsoProjectBean createProject( final KalypsoProjectBean bean, final URL incoming ) throws IOException
   {
-    final FileSystemManager manager = VFSUtilities.getManager();
-    final FileObject src = manager.resolveFile( incoming.toExternalForm() );
-
-    try
+    synchronized( this )
     {
-      if( !src.exists() )
-        throw new FileNotFoundException( String.format( "Incoming file not exists: %s", incoming.toExternalForm() ) ); //$NON-NLS-1$
+      final FileSystemManager manager = VFSUtilities.getManager();
+      final FileObject src = manager.resolveFile( incoming.toExternalForm() );
 
-      /* destination of incoming file */
-      final String urlDestination = ProjectDatabaseHelper.resolveDestinationUrl( bean );
+      try
+      {
+        if( !src.exists() )
+          throw new FileNotFoundException( String.format( "Incoming file not exists: %s", incoming.toExternalForm() ) ); //$NON-NLS-1$
 
-      final FileObject destination = manager.resolveFile( urlDestination );
-      VFSUtilities.copy( src, destination );
+        /* destination of incoming file */
+        final String urlDestination = ProjectDatabaseHelper.resolveDestinationUrl( bean );
 
-      /* store project bean in database */
-      bean.setCreationDate( Calendar.getInstance().getTime() );
+        final FileObject destination = manager.resolveFile( urlDestination );
+        VFSUtilities.copy( src, destination );
 
-      final Session session = m_factory.getCurrentSession();
-      final Transaction tx = session.beginTransaction();
-      session.save( bean );
+        /* store project bean in database */
+        bean.setCreationDate( Calendar.getInstance().getTime() );
 
-      tx.commit();
+        final Session session = m_factory.getCurrentSession();
+        final Transaction tx = session.beginTransaction();
+        session.save( bean );
 
-      final IConfigurationElement confElementTrigger = KalypsoProjectDatabaseExtensions.getProjectDatabaseTriggers( bean.getProjectType() );
-      if( confElementTrigger != null )
-        TriggerHelper.handleBean( bean, confElementTrigger );
+        tx.commit();
 
-      return bean;
+        final IConfigurationElement confElementTrigger = KalypsoProjectDatabaseExtensions.getProjectDatabaseTriggers( bean.getProjectType() );
+        if( confElementTrigger != null )
+          TriggerHelper.handleBean( bean, confElementTrigger );
+
+        return bean;
+      }
+      catch( final Exception e )
+      {
+        throw new IOException( e.getMessage(), e );
+      }
     }
-    catch( final Exception e )
-    {
-      throw new IOException( e.getMessage(), e );
-    }
+
   }
 
   /**
    * @see org.kalypso.project.database.sei.IProjectDatabase#updateProject(java.lang.String)
    */
   @Override
-  public synchronized KalypsoProjectBean udpateProject( final KalypsoProjectBean bean, final URL incoming ) throws IOException
+  public KalypsoProjectBean udpateProject( final KalypsoProjectBean bean, final URL incoming ) throws IOException
   {
-    /* get head */
-    final KalypsoProjectBean head = getProject( bean.getUnixName() );
-    bean.setProjectVersion( head.getProjectVersion() + 1 );
+    synchronized( this )
+    {
+      /* get head */
+      final KalypsoProjectBean head = getProject( bean.getUnixName() );
+      bean.setProjectVersion( head.getProjectVersion() + 1 );
 
-    return createProject( bean, incoming );
+      return createProject( bean, incoming );
+    }
+
   }
 
   /**
    * @see org.kalypso.project.database.sei.IProjectDatabase#acquireProjectEditLock(org.kalypso.project.database.sei.beans.KalypsoProjectBean)
    */
   @Override
-  public synchronized String acquireProjectEditLock( final String projectUnixName )
+  public String acquireProjectEditLock( final String projectUnixName )
   {
-    // TODO lock already acquired
-    final Session mySession = m_factory.getCurrentSession();
-    final Transaction myTx = mySession.beginTransaction();
+    synchronized( this )
+    {
+      // TODO lock already acquired
+      final Session mySession = m_factory.getCurrentSession();
+      final Transaction myTx = mySession.beginTransaction();
 
-    final String ticket = String.format( "Ticket%d", Calendar.getInstance().getTime().hashCode() ); //$NON-NLS-1$
+      final String ticket = String.format( "Ticket%d", Calendar.getInstance().getTime().hashCode() ); //$NON-NLS-1$
 
-    final DateFormat sdf = new SimpleDateFormat( "yyyy-mm-dd hh:mm:ss" ); //$NON-NLS-1$
-    final String now = sdf.format( new Date() );
+      final DateFormat sdf = new SimpleDateFormat( "yyyy-mm-dd hh:mm:ss" ); //$NON-NLS-1$
+      final String now = sdf.format( new Date() );
 
-    final int updated = mySession.createQuery( String.format( "update KalypsoProjectBean set m_editLockTicket = '%s', edit_lock_date = '%s' where m_unixName = '%s'", ticket, now, projectUnixName ) ).executeUpdate(); //$NON-NLS-1$
-    myTx.commit();
+      final int updated = mySession.createQuery( String.format( "update KalypsoProjectBean set m_editLockTicket = '%s', edit_lock_date = '%s' where m_unixName = '%s'", ticket, now, projectUnixName ) ).executeUpdate(); //$NON-NLS-1$
+      myTx.commit();
 
-    if( updated == 0 )
-      return null;
+      if( updated == 0 )
+        return null;
 
-    final KalypsoProjectBean project = getProject( projectUnixName );
-    if( !project.isProjectLockedForEditing() )
-      throw new IllegalStateException( "Updating edit lock of projects failed." ); //$NON-NLS-1$
-
-    final KalypsoProjectBean[] children = project.getChildren();
-    for( final KalypsoProjectBean child : children )
-      if( !child.isProjectLockedForEditing() )
+      final KalypsoProjectBean project = getProject( projectUnixName );
+      if( !project.isProjectLockedForEditing() )
         throw new IllegalStateException( "Updating edit lock of projects failed." ); //$NON-NLS-1$
 
-    return ticket;
+      final KalypsoProjectBean[] children = project.getChildren();
+      for( final KalypsoProjectBean child : children )
+        if( !child.isProjectLockedForEditing() )
+          throw new IllegalStateException( "Updating edit lock of projects failed." ); //$NON-NLS-1$
+
+      return ticket;
+    }
+
   }
 
   /**
    * @see org.kalypso.project.database.sei.IProjectDatabase#releaseProjectEditLock(java.lang.String, java.lang.String)
    */
   @Override
-  public synchronized Boolean releaseProjectEditLock( final String projectUnixName, final String ticketId )
+  public Boolean releaseProjectEditLock( final String projectUnixName, final String ticketId )
   {
-    // TODO lock already released
+    synchronized( this )
+    {
+      // TODO lock already released
+      final Session mySession = m_factory.getCurrentSession();
+      final Transaction myTx = mySession.beginTransaction();
 
-    final Session mySession = m_factory.getCurrentSession();
-    final Transaction myTx = mySession.beginTransaction();
+      mySession.createQuery( String.format( "update KalypsoProjectBean set m_editLockTicket = '' where m_unixName = '%s' and m_editLockTicket = '%s'", projectUnixName, ticketId ) ).executeUpdate(); //$NON-NLS-1$
+      myTx.commit();
 
-    mySession.createQuery( String.format( "update KalypsoProjectBean set m_editLockTicket = '' where m_unixName = '%s' and m_editLockTicket = '%s'", projectUnixName, ticketId ) ).executeUpdate(); //$NON-NLS-1$
-    myTx.commit();
-
-    final KalypsoProjectBean project = getProject( projectUnixName );
-    if( project.isProjectLockedForEditing() )
-      return false;
-
-    final KalypsoProjectBean[] children = project.getChildren();
-    for( final KalypsoProjectBean child : children )
-      if( child.isProjectLockedForEditing() )
+      final KalypsoProjectBean project = getProject( projectUnixName );
+      if( project.isProjectLockedForEditing() )
         return false;
 
-    return true;
+      final KalypsoProjectBean[] children = project.getChildren();
+      for( final KalypsoProjectBean child : children )
+        if( child.isProjectLockedForEditing() )
+          return false;
+
+      return true;
+    }
   }
 
   /**
@@ -356,7 +377,7 @@ public class ProjectDatabase implements IProjectDatabase
    */
   @SuppressWarnings("unchecked")
   @Override
-  public synchronized String[] getProjectTypes( )
+  public String[] getProjectTypes( )
   {
     /** Getting the Session Factory and session */
     final Session session = m_factory.getCurrentSession();
@@ -375,7 +396,7 @@ public class ProjectDatabase implements IProjectDatabase
    * @see org.kalypso.project.database.sei.IProjectDatabase#getProjectHeads()
    */
   @Override
-  public synchronized KalypsoProjectBean[] getAllProjectHeads( )
+  public KalypsoProjectBean[] getAllProjectHeads( )
   {
     final Set<KalypsoProjectBean> myBeans = new TreeSet<KalypsoProjectBean>();
 
@@ -403,24 +424,30 @@ public class ProjectDatabase implements IProjectDatabase
    * @see org.kalypso.project.database.sei.IProjectDatabase#deleteProject(org.kalypso.project.database.sei.beans.KalypsoProjectBean)
    */
   @Override
-  public synchronized Boolean deleteProject( final KalypsoProjectBean bean )
+  public Boolean deleteProject( final KalypsoProjectBean bean )
   {
-    return ProjectDatabaseHelper.removeBean( m_factory.getCurrentSession(), bean );
+    synchronized( this )
+    {
+      return ProjectDatabaseHelper.removeBean( m_factory.getCurrentSession(), bean );
+    }
   }
 
   /**
    * @see org.kalypso.project.database.sei.IProjectDatabase#forceUnlock(org.kalypso.project.database.sei.beans.KalypsoProjectBean)
    */
   @Override
-  public synchronized void forceUnlock( final KalypsoProjectBean bean )
+  public void forceUnlock( final KalypsoProjectBean bean )
   {
-    final Session mySession = m_factory.getCurrentSession();
-    final Transaction myTx = mySession.beginTransaction();
+    synchronized( this )
+    {
+      final Session mySession = m_factory.getCurrentSession();
+      final Transaction myTx = mySession.beginTransaction();
 
-    final String unixName = bean.getUnixName();
+      final String unixName = bean.getUnixName();
 
-    mySession.createQuery( String.format( "update KalypsoProjectBean set m_editLockTicket = '' where m_unixName = '%s'", unixName ) ).executeUpdate(); //$NON-NLS-1$
-    myTx.commit();
+      mySession.createQuery( String.format( "update KalypsoProjectBean set m_editLockTicket = '' where m_unixName = '%s'", unixName ) ).executeUpdate(); //$NON-NLS-1$
+      myTx.commit();
+    }
   }
 
   /**
@@ -428,12 +455,15 @@ public class ProjectDatabase implements IProjectDatabase
    *      java.lang.String)
    */
   @Override
-  public synchronized void setProjectDescription( final KalypsoProjectBean bean, final String description )
+  public void setProjectDescription( final KalypsoProjectBean bean, final String description )
   {
-    final Session mySession = m_factory.getCurrentSession();
-    final Transaction myTx = mySession.beginTransaction();
+    synchronized( this )
+    {
+      final Session mySession = m_factory.getCurrentSession();
+      final Transaction myTx = mySession.beginTransaction();
 
-    mySession.createQuery( String.format( "update KalypsoProjectBean set m_description = '%s' where m_unixName = '%s'", description, bean.getUnixName() ) ).executeUpdate(); //$NON-NLS-1$
-    myTx.commit();
+      mySession.createQuery( String.format( "update KalypsoProjectBean set m_description = '%s' where m_unixName = '%s'", description, bean.getUnixName() ) ).executeUpdate(); //$NON-NLS-1$
+      myTx.commit();
+    }
   }
 }
