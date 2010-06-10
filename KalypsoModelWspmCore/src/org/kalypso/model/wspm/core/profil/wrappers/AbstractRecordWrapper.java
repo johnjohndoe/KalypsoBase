@@ -59,7 +59,7 @@ public class AbstractRecordWrapper implements IRecord
     m_record = record;
   }
 
-  protected IRecord getRecord( )
+  public IRecord getRecord( )
   {
     return m_record;
   }

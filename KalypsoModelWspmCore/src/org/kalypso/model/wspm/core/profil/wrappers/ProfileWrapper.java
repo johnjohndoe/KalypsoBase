@@ -115,7 +115,7 @@ public class ProfileWrapper
     return new ProfilePointWrapper( added );
   }
 
-  public ProfilePointWrapper[] findPointsBetween( final Double p1, final Double p2 )
+  public ProfilePointWrapper[] findPointsBetween( final Double p1, final Double p2, final boolean includeVertexPoints )
   {
     final Double min = Math.min( p1, p2 );
     final Double max = Math.max( p1, p2 );
@@ -128,7 +128,11 @@ public class ProfileWrapper
       final ProfilePointWrapper wrapper = new ProfilePointWrapper( point );
       final double breite = wrapper.getBreite();
 
-      if( breite >= min && breite <= max )
+      if( breite > min && breite < max )
+      {
+        between.add( wrapper );
+      }
+      else if( includeVertexPoints && breite == min || breite == max )
       {
         between.add( wrapper );
       }
