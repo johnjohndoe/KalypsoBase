@@ -14,7 +14,6 @@ import de.openali.odysseus.chart.framework.model.layer.ITooltipChartLayer;
 
 public class LayerManager implements ILayerManager
 {
-
   /** my layers */
   private final List<IChartLayer> m_layers = new ArrayList<IChartLayer>();
 

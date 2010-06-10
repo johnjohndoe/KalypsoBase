@@ -1,8 +1,7 @@
-#Mon May 10 13:20:57 CEST 2010
+#Thu Jun 10 11:37:35 CEST 2010
 eclipse.preferences.version=1
 encoding//src/de/openali/odysseus/chart/framework/model/event/impl/ChartModelEventHandler.java=UTF-8
 encoding//src/de/openali/odysseus/chart/framework/util/img/AxisImageFactory.java=UTF-8
-encoding//src/de/openali/odysseus/chart/framework/util/img/PlotImageFactory.java=UTF-8
 encoding//src/de/openali/odysseus/chart/framework/view/impl/ChartComposite.java=UTF-8
 encoding//src/de/openali/odysseus/chart/framework/view/impl/PlotCanvas.java=UTF-8
 encoding/<project>=ISO-8859-1

@@ -6,7 +6,6 @@ import de.openali.odysseus.chart.framework.model.data.IDataRange;
 
 public class ComparableDataRange<T> implements IDataRange<T>
 {
-
   private final T[] m_items;
 
   private T m_max;
@@ -15,17 +14,19 @@ public class ComparableDataRange<T> implements IDataRange<T>
 
   private final ComparableComparator m_comp = new ComparableComparator();
 
-  public ComparableDataRange( T[] items )
+  public ComparableDataRange( final T[] items )
   {
     m_items = items;
     findMinMax();
   }
 
+  @Override
   public T getMax( )
   {
     return m_max;
   }
 
+  @Override
   public T getMin( )
   {
     return m_min;
@@ -34,9 +35,8 @@ public class ComparableDataRange<T> implements IDataRange<T>
   private void findMinMax( )
   {
     boolean hasMinAndMax = false;
-    for( int i = 0; i < m_items.length; i++ )
+    for( final T item : m_items )
     {
-      final T item = m_items[i];
       if( item != null )
       {
         // erster von Null verschiedener Wert wird als max und min genutzt
