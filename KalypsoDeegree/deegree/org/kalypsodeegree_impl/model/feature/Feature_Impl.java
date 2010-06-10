@@ -106,6 +106,7 @@ public class Feature_Impl extends PlatformObject implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.Feature#getId()
    */
+  @Override
   public String getId( )
   {
     return m_id;
@@ -114,6 +115,7 @@ public class Feature_Impl extends PlatformObject implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.Feature#getFeatureType()
    */
+  @Override
   public IFeatureType getFeatureType( )
   {
     return m_featureType;
@@ -124,6 +126,7 @@ public class Feature_Impl extends PlatformObject implements Feature
    *         java.util.List-objects
    * @see org.kalypsodeegree.model.feature.Feature#getProperties()
    */
+  @Override
   @Deprecated
   public Object[] getProperties( )
   {
@@ -137,6 +140,7 @@ public class Feature_Impl extends PlatformObject implements Feature
    *         embedded in java.util.List-objects
    * @see org.kalypsodeegree.model.feature.Feature#getProperty(java.lang.String)
    */
+  @Override
   public Object getProperty( final IPropertyType pt )
   {
     if( pt == null )
@@ -158,6 +162,7 @@ public class Feature_Impl extends PlatformObject implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.Feature#getGeometryProperties()
    */
+  @Override
   public GM_Object[] getGeometryProperties( )
   {
     return getGeometryPropertyValues();
@@ -166,6 +171,7 @@ public class Feature_Impl extends PlatformObject implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.Feature#getDefaultGeometryProperty()
    */
+  @Override
   public GM_Object getDefaultGeometryProperty( )
   {
     return getDefaultGeometryPropertyValue();
@@ -174,6 +180,7 @@ public class Feature_Impl extends PlatformObject implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.Feature#getEnvelope()
    */
+  @Override
   public GM_Envelope getEnvelope( )
   {
     return getBoundedBy();
@@ -194,6 +201,7 @@ public class Feature_Impl extends PlatformObject implements Feature
     m_envelope = env;
   }
 
+  @Override
   public void invalidEnvelope( )
   {
     setEnvelopesUpdated();
@@ -202,6 +210,7 @@ public class Feature_Impl extends PlatformObject implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.Feature#setProperty(java.lang.String, java.lang.Object)
    */
+  @Override
   public void setProperty( final IPropertyType pt, final Object value )
   {
     final int pos = m_featureType.getPropertyPosition( pt );
@@ -226,6 +235,7 @@ public class Feature_Impl extends PlatformObject implements Feature
    * @deprecated use getProperty(IPropertyType)
    * @see org.kalypsodeegree.model.feature.Feature#getProperty(java.lang.String)
    */
+  @Override
   @Deprecated
   public Object getProperty( final String propNameLocalPart )
   {
@@ -242,6 +252,7 @@ public class Feature_Impl extends PlatformObject implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.Feature#getProperty(javax.xml.namespace.QName)
    */
+  @Override
   public Object getProperty( final QName propQName )
   {
     final IPropertyType pt = m_featureType.getProperty( propQName );
@@ -257,6 +268,7 @@ public class Feature_Impl extends PlatformObject implements Feature
    * @deprecated
    * @see org.kalypsodeegree.model.feature.Feature#setProperty(java.lang.String, java.lang.Object)
    */
+  @Override
   @Deprecated
   public void setProperty( final String propLocalName, final Object value )
   {
@@ -268,6 +280,7 @@ public class Feature_Impl extends PlatformObject implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.Feature#getWorkspace()
    */
+  @Override
   public GMLWorkspace getWorkspace( )
   {
     if( m_parent instanceof GMLWorkspace )
@@ -280,6 +293,7 @@ public class Feature_Impl extends PlatformObject implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.Feature#getParent()
    */
+  @Override
   public Feature getParent( )
   {
     return getOwner();
@@ -288,6 +302,7 @@ public class Feature_Impl extends PlatformObject implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.Feature#getParentRelation()
    */
+  @Override
   public IRelationType getParentRelation( )
   {
     return m_parentRelation;
@@ -296,6 +311,7 @@ public class Feature_Impl extends PlatformObject implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.Feature#setWorkspace(org.kalypsodeegree.model.feature.GMLWorkspace)
    */
+  @Override
   public void setWorkspace( final GMLWorkspace workspace )
   {
     if( (m_parent == null) || (m_parent == workspace) )
@@ -327,6 +343,7 @@ public class Feature_Impl extends PlatformObject implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.Feature#setProperty(javax.xml.namespace.QName, java.lang.Object)
    */
+  @Override
   public void setProperty( final QName propQName, final Object value )
   {
     final IFeatureType featureType = getFeatureType();
@@ -357,6 +374,7 @@ public class Feature_Impl extends PlatformObject implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.Deegree2Feature#getBoundedBy()
    */
+  @Override
   public GM_Envelope getBoundedBy( )
   {
     if( m_envelope == Feature_Impl.INVALID_ENV )
@@ -368,6 +386,7 @@ public class Feature_Impl extends PlatformObject implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.Deegree2Feature#getDefaultGeometryPropertyValue()
    */
+  @Override
   public GM_Object getDefaultGeometryPropertyValue( )
   {
     final IValuePropertyType defaultGeomProp = m_featureType.getDefaultGeometryProperty();
@@ -377,7 +396,7 @@ public class Feature_Impl extends PlatformObject implements Feature
     final Object prop = getProperty( defaultGeomProp );
     if( defaultGeomProp.isList() )
     {
-      final List props = (List) prop;
+      final List< ? > props = (List< ? >) prop;
       return (GM_Object) (props.size() > 0 ? props.get( 0 ) : null);
     }
 
@@ -390,6 +409,7 @@ public class Feature_Impl extends PlatformObject implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.Deegree2Feature#getGeometryPropertyValues()
    */
+  @Override
   public GM_Object[] getGeometryPropertyValues( )
   {
     final List<GM_Object> result = new ArrayList<GM_Object>();
@@ -421,6 +441,7 @@ public class Feature_Impl extends PlatformObject implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.Deegree2Feature#getOwner()
    */
+  @Override
   public Feature getOwner( )
   {
     if( m_parent instanceof Feature )
@@ -432,6 +453,7 @@ public class Feature_Impl extends PlatformObject implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.Deegree2Feature#getQualifiedName()
    */
+  @Override
   public QName getQualifiedName( )
   {
     return getFeatureType().getQName();
@@ -440,6 +462,7 @@ public class Feature_Impl extends PlatformObject implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.Deegree2Feature#setEnvelopesUpdated()
    */
+  @Override
   public void setEnvelopesUpdated( )
   {
     m_envelope = INVALID_ENV;
@@ -466,6 +489,7 @@ public class Feature_Impl extends PlatformObject implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.Deegree2Feature#setFeatureType(org.kalypso.gmlschema.feature.IFeatureType)
    */
+  @Override
   public void setFeatureType( final IFeatureType ft )
   {
     throw new UnsupportedOperationException();
@@ -474,6 +498,7 @@ public class Feature_Impl extends PlatformObject implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.Deegree2Feature#setId(java.lang.String)
    */
+  @Override
   public void setId( final String fid )
   {
     throw new UnsupportedOperationException();
@@ -482,6 +507,7 @@ public class Feature_Impl extends PlatformObject implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getName()
    */
+  @Override
   public String getName( )
   {
     return NamedFeatureHelper.getName( this );
@@ -490,6 +516,7 @@ public class Feature_Impl extends PlatformObject implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#setName(java.lang.String)
    */
+  @Override
   public void setName( final String name )
   {
     NamedFeatureHelper.setName( this, name );
@@ -498,6 +525,7 @@ public class Feature_Impl extends PlatformObject implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getDescription()
    */
+  @Override
   public String getDescription( )
   {
     return NamedFeatureHelper.getDescription( this );
@@ -506,6 +534,7 @@ public class Feature_Impl extends PlatformObject implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#setDescription(java.lang.String)
    */
+  @Override
   public void setDescription( final String desc )
   {
     NamedFeatureHelper.setDescription( this, desc );
@@ -514,6 +543,7 @@ public class Feature_Impl extends PlatformObject implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getLocation()
    */
+  @Override
   public GM_Object getLocation( )
   {
     final Object property = getProperty( NamedFeatureHelper.GML_LOCATION );
@@ -526,6 +556,7 @@ public class Feature_Impl extends PlatformObject implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#setLocation(org.kalypsodeegree.model.geometry.GM_Object)
    */
+  @Override
   public void setLocation( final GM_Object location )
   {
     setProperty( NamedFeatureHelper.GML_LOCATION, location );
