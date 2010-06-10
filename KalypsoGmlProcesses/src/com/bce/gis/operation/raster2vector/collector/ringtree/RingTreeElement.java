@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.Collections;
 
 import com.vividsolutions.jts.algorithm.PointInRing;
-import com.vividsolutions.jts.algorithm.SIRtreePointInRing;
+import com.vividsolutions.jts.algorithm.SimplePointInRing;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.CoordinateArrays;
 import com.vividsolutions.jts.geom.GeometryFactory;
@@ -36,7 +36,7 @@ public class RingTreeElement
     this.index = index;
     this.innerCrd = innerCrd;
 
-    this.pir = (lr == null) ? null : new SIRtreePointInRing( lr );
+    this.pir = (lr == null) ? null : new SimplePointInRing( lr );
   }
 
   public void addChild( final RingTreeElement rte )

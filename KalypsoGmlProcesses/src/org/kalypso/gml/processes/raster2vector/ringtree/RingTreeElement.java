@@ -9,7 +9,7 @@ import java.util.TreeSet;
 import org.kalypso.gml.processes.raster2vector.collector.PolygonCollector.Interval;
 
 import com.vividsolutions.jts.algorithm.PointInRing;
-import com.vividsolutions.jts.algorithm.SIRtreePointInRing;
+import com.vividsolutions.jts.algorithm.SimplePointInRing;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LinearRing;
@@ -49,7 +49,7 @@ public class RingTreeElement
     this.innerCrd = innerCrd;
     m_id = id;
 
-    pir = (lr == null) ? null : new SIRtreePointInRing( lr );
+    pir = (lr == null) ? null : new SimplePointInRing( lr );
   }
 
   public String getId( )

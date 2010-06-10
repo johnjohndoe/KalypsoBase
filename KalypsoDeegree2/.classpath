@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
+	<classpathentry exported="true" kind="lib" path="lib/jts/jts-1.11.jar" sourcepath="lib/jts/jts-1.11_src.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/deegree2/deegree2_v2_2.jar" sourcepath="lib/deegree2/deegree-src_v2_2.zip"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry exported="true" kind="lib" path="lib/acme/acme.jar" sourcepath="KalypsoDeegree2src.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/arcsde/jsde90_sdk.jar" sourcepath="KalypsoDeegree2src.zip"/>
-	<classpathentry exported="true" kind="lib" path="lib/jts/jts-1.8.jar" sourcepath="/KalypsoDeegree/lib/jts/jts-1.8_src.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/j3d/j3d_deegreeversion.jar" sourcepath="KalypsoDeegree2src.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/j3d/j3d-vrml97.jar" sourcepath="KalypsoDeegree2src.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/java3d/j3dcore.jar" sourcepath="KalypsoDeegree2src.zip"/>
