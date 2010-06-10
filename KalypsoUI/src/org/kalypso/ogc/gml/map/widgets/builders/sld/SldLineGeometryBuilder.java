@@ -58,14 +58,9 @@ import com.vividsolutions.jts.geom.Point;
  */
 public class SldLineGeometryBuilder extends AbstractSldGeometryBuilder implements ISldGeometryBuilder
 {
-  public SldLineGeometryBuilder( final IMapPanel panel, final URL[] slds )
+  public SldLineGeometryBuilder( final IMapPanel panel, final URL... slds )
   {
     super( panel, slds );
-  }
-
-  public SldLineGeometryBuilder( final IMapPanel panel )
-  {
-    super( panel );
   }
 
   /**
