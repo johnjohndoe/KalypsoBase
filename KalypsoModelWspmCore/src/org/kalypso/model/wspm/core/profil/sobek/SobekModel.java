@@ -144,12 +144,16 @@ public class SobekModel
     /* If an error occurs later on, this model will be definitly empty. */
     m_profiles = new ArrayList<SobekProfile>();
 
+    /* Get the profiles. */
+    SobekProfile[] profiles = provider.getSobekProfiles( monitor );
+
     /* Now add the new profiles. */
-    m_profiles = provider.getSobekProfiles( monitor );
+    for( int i = 0; i < profiles.length; i++ )
+      m_profiles.add( profiles[i] );
   }
 
   /**
-   * This function writes the profiles to the files profile.dat and profile.def into the given folder.
+   * This function writes the profiles to the files 'profile.dat' and 'profile.def' into the given folder.
    * 
    * @param destinationFolder
    *          The destination folder.

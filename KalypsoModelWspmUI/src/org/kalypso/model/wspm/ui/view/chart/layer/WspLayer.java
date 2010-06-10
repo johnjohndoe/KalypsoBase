@@ -107,7 +107,7 @@ public abstract class WspLayer extends AbstractProfilLayer
    */
   public WspLayer( IProfil profile, String layerId, ILayerStyleProvider styleProvider, IWspLayerData data, boolean fill )
   {
-    super( profile, layerId, styleProvider );
+    super( layerId, profile, -1, styleProvider );
 
     m_profil = profile;
     m_data = data;

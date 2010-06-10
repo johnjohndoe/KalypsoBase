@@ -71,7 +71,7 @@ public abstract class AbstractSobekProvider
    * 
    * @return The profiles, which will be iterated, to help create the sobek profiles.
    */
-  protected abstract List<IProfileFeature> getProfiles( );
+  protected abstract IProfileFeature[] getProfiles( );
 
   /**
    * This function returns the sobek profiles. <br>
@@ -82,7 +82,7 @@ public abstract class AbstractSobekProvider
    *          A progress monitor.
    * @return The sobek profiles.
    */
-  public List<SobekProfile> getSobekProfiles( IProgressMonitor monitor ) throws CoreException
+  public SobekProfile[] getSobekProfiles( IProgressMonitor monitor ) throws CoreException
   {
     /* Monitor. */
     if( monitor == null )
@@ -91,23 +91,23 @@ public abstract class AbstractSobekProvider
     try
     {
       /* Get the profiles. */
-      List<IProfileFeature> profiles = getProfiles();
+      IProfileFeature[] profiles = getProfiles();
 
       /* Monitor. */
-      monitor.beginTask( "Converting profiles...", profiles.size() * 100 );
+      monitor.beginTask( "Converting profiles...", profiles.length * 100 );
       monitor.subTask( "Converting profiles..." );
 
       /* Memory for the results. */
       List<SobekProfile> results = new ArrayList<SobekProfile>();
 
-      for( int i = 0; i < profiles.size(); i++ )
+      for( int i = 0; i < profiles.length; i++ )
       {
         /* Monitor. */
         if( monitor.isCanceled() )
           throw new CoreException( new Status( IStatus.CANCEL, KalypsoModelWspmCorePlugin.getID(), "The operation was canceled by the user..." ) );
 
         /* Get the profile. */
-        IProfileFeature profileFeature = profiles.get( i );
+        IProfileFeature profileFeature = profiles[i];
 
         /* Convert the profile into a sobek profile. */
         SobekProfile sobekProfile = convertProfile( profileFeature );
@@ -119,7 +119,7 @@ public abstract class AbstractSobekProvider
         monitor.worked( 100 );
       }
 
-      return results;
+      return results.toArray( new SobekProfile[] {} );
     }
     finally
     {

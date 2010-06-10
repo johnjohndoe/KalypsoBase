@@ -7,6 +7,8 @@ import java.util.Map;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
+import org.eclipse.swt.events.ControlAdapter;
+import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.PaintEvent;
@@ -78,7 +80,15 @@ public class PlotCanvas extends Canvas implements PaintListener
     m_bufferLayers = bufferLayers;
 
     addPaintListener( this );
-    // addListener( SWT.Resize, this );
+    addControlListener( new ControlAdapter()
+    {
+      @Override
+      public void controlResized( ControlEvent e )
+      {
+        disposeImages();
+      }
+    } );
+
     addDisposeListener( new DisposeListener()
     {
       @Override
@@ -98,9 +108,13 @@ public class PlotCanvas extends Canvas implements PaintListener
     }
 
     if( m_layerImageMap != null )
+    {
       for( Image img : m_layerImageMap.values() )
         if( img != null )
           img.dispose();
+
+      m_layerImageMap.clear();
+    }
   }
 
   public ILayerManager getLayerManager( )
