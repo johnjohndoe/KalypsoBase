@@ -41,6 +41,7 @@
 package org.kalypso.model.wspm.core.profil.impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -78,7 +79,7 @@ import org.kalypso.observation.result.TupleResult;
  */
 public abstract class AbstractProfil implements IProfil
 {
-  protected static String PROFILE_OBJECTS = "org.kalypso.model.wspm.core.profilobjects"; //$NON-NLS-1$
+  private final List<IProfileObject> m_profileObjects = new ArrayList<IProfileObject>();
 
   private final String m_type;
 
@@ -163,16 +164,11 @@ public abstract class AbstractProfil implements IProfil
    */
   @Override
   @SuppressWarnings("unchecked")
-  public IProfileObject[] addProfileObjects( final IProfileObject[] profileObjects )
+  public IProfileObject[] addProfileObjects( final IProfileObject... profileObjects )
   {
-    if( m_additionalProfileSettings.get( PROFILE_OBJECTS ) == null )
-      m_additionalProfileSettings.put( PROFILE_OBJECTS, new ArrayList<IProfileObject>() );
-    final List<IProfileObject> profileObjectList = (ArrayList<IProfileObject>) m_additionalProfileSettings.get( PROFILE_OBJECTS );
+    Collections.addAll( m_profileObjects, profileObjects );
 
-    for( final IProfileObject profileObject : profileObjects )
-      profileObjectList.add( profileObject );
-
-    return profileObjectList.toArray( new IProfileObject[] {} );
+    return m_profileObjects.toArray( new IProfileObject[] {} );
   }
 
   @Override
@@ -451,16 +447,19 @@ public abstract class AbstractProfil implements IProfil
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfil#getProfileObject()
    */
+  // FIXME: separate profile objects from general profile-properties.
   @Override
   @SuppressWarnings("unchecked")
   public IProfileObject[] getProfileObjects( )
   {
-    final List<IProfileObject> profileObjectList = (ArrayList<IProfileObject>) m_additionalProfileSettings.get( PROFILE_OBJECTS );
-    if( profileObjectList == null )
-      return new IProfileObject[] {};
-    return profileObjectList.toArray( new IProfileObject[] {} );
+    return m_profileObjects.toArray( new IProfileObject[] {} );
   }
 
+  /**
+   * @deprecated caution: additional properties will not be serialized to profile features
+   * @see org.kalypso.model.wspm.core.profil.IProfil#getProperty(java.lang.Object)
+   */
+  @Deprecated
   @Override
   public Object getProperty( final Object key )
   {
@@ -579,13 +578,9 @@ public abstract class AbstractProfil implements IProfil
    * @see org.kalypso.model.wspm.core.profil.IProfil#removeProfileObject(org.kalypso.model.wspm.core.profil.IProfileObject)
    */
   @Override
-  @SuppressWarnings("unchecked")
   public boolean removeProfileObject( final IProfileObject profileObject )
   {
-    final List<IProfileObject> profileObjectList = (ArrayList<IProfileObject>) m_additionalProfileSettings.get( PROFILE_OBJECTS );
-    if( profileObjectList == null )
-      return true;
-    return profileObjectList.remove( profileObject );
+    return m_profileObjects.remove( profileObject );
   }
 
   @Override
@@ -668,8 +663,10 @@ public abstract class AbstractProfil implements IProfil
   }
 
   /**
+   * @deprecated caution: additional properties will not be serialized to profile features
    * @see org.kalypso.model.wspm.core.profil.IProfil#setProperty(java.lang.Object, java.lang.Object)
    */
+  @Deprecated
   @Override
   public void setProperty( final Object key, final Object value )
   {
@@ -679,6 +676,7 @@ public abstract class AbstractProfil implements IProfil
   /**
    * @see org.kalypso.observation.IObservation#setResult(java.lang.Object)
    */
+  @Override
   public void setResult( final TupleResult result )
   {
     Assert.isNotNull( result );
@@ -697,6 +695,7 @@ public abstract class AbstractProfil implements IProfil
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfil#setStation(double)
    */
+  @Override
   public void setStation( final double station )
   {
     m_station = station;

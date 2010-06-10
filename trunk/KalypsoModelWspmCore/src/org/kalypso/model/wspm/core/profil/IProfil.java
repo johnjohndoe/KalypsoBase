@@ -76,9 +76,9 @@ public interface IProfil extends IObservation<TupleResult>
    * 
    * @return the oldObject
    * @param building
-   *            must not be null, in this case use removeProfileObject()
+   *          must not be null, in this case use removeProfileObject()
    */
-  public IProfileObject[] addProfileObjects( final IProfileObject[] profileObjects );
+  public IProfileObject[] addProfileObjects( final IProfileObject... profileObjects );
 
   public void addProfilListener( final IProfilListener pl );
 
@@ -210,7 +210,7 @@ public interface IProfil extends IObservation<TupleResult>
 
   /**
    * @param pointProperty
-   *            to remove
+   *          to remove
    * @return false if the pointProperty is not used in this profile
    */
   public boolean removePointProperty( final IComponent pointProperty );
@@ -219,7 +219,7 @@ public interface IProfil extends IObservation<TupleResult>
 
   /**
    * @param key
-   *            removes the key and its value from the profiles internal HashMap<Object,Object>
+   *          removes the key and its value from the profiles internal HashMap<Object,Object>
    */
   public Object removeProperty( final Object key );
 
@@ -232,7 +232,7 @@ public interface IProfil extends IObservation<TupleResult>
   /**
    * @param key
    * @param value
-   *            saves any (key,value-Object) in the profiles internal HashMap
+   *          saves any (key,value-Object) in the profiles internal HashMap
    */
   public void setProperty( final Object key, final Object value );
 
