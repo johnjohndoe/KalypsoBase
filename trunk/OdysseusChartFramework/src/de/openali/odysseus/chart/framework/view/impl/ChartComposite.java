@@ -24,8 +24,8 @@ import de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListene
 import de.openali.odysseus.chart.framework.model.event.impl.AbstractMapperRegistryEventListener;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
-import de.openali.odysseus.chart.framework.model.mapper.IMapper;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
+import de.openali.odysseus.chart.framework.model.mapper.IMapper;
 import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
 import de.openali.odysseus.chart.framework.view.IChartView;
 
@@ -44,7 +44,7 @@ public class ChartComposite extends Canvas implements IChartView
 
   protected IChartModel m_model;
 
-  private final GridLayout m_GridLayout = new GridLayout( 3, false );
+  private final GridLayout m_gridLayout = new GridLayout( 3, false );
 
   private final ILayerManagerEventListener m_layerEventListener = new ILayerManagerEventListener()
   {
@@ -174,7 +174,7 @@ public class ChartComposite extends Canvas implements IChartView
         }
       }
     } );
-    setLayout( m_GridLayout );
+    setLayout( m_gridLayout );
     setBackground( OdysseusChartFrameworkPlugin.getDefault().getColorRegistry().getResource( parent.getDisplay(), backgroundRGB ) );
     createControl();
     setChartModel( model );
@@ -196,10 +196,10 @@ public class ChartComposite extends Canvas implements IChartView
   private final void createControl( )
   {
 
-    m_GridLayout.horizontalSpacing = 0;
-    m_GridLayout.verticalSpacing = 0;
-    m_GridLayout.marginHeight = 0;
-    m_GridLayout.marginWidth = 0;
+    m_gridLayout.horizontalSpacing = 0;
+    m_gridLayout.verticalSpacing = 0;
+    m_gridLayout.marginHeight = 0;
+    m_gridLayout.marginWidth = 0;
 
     // 1.1 - first field of first row
     final Label lbl11 = new Label( this, SWT.NONE );
@@ -266,6 +266,7 @@ public class ChartComposite extends Canvas implements IChartView
     lbl33.setVisible( false );
   }
 
+  @Override
   public IChartModel getChartModel( )
   {
     return m_model;
@@ -336,6 +337,7 @@ public class ChartComposite extends Canvas implements IChartView
       removeAxisInternal( axis );
   }
 
+  @Override
   public void setChartModel( final IChartModel model )
   {
     if( m_model != null )
@@ -344,10 +346,13 @@ public class ChartComposite extends Canvas implements IChartView
       removeAllAxis();
     }
     m_model = model;
+
     if( m_model != null )
     {
       registerListener();
       addAllAxis();
+
+      m_plot.setLayerManager( m_model.getLayerManager() );
     }
     updateControl();
   }
@@ -397,14 +402,10 @@ public class ChartComposite extends Canvas implements IChartView
 
   private final void updateControl( )
   {
-    if( m_model == null )
-      return;
-    m_plot.m_layerManager = m_model.getLayerManager();
-
-    m_GridLayout.marginBottom = 5;
-    m_GridLayout.marginLeft = 5;
-    m_GridLayout.marginTop = 5;
-    m_GridLayout.marginRight = 5;
+    m_gridLayout.marginBottom = 5;
+    m_gridLayout.marginLeft = 5;
+    m_gridLayout.marginTop = 5;
+    m_gridLayout.marginRight = 5;
   }
 
 }

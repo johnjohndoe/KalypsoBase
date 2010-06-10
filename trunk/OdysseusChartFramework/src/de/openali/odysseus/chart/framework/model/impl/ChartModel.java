@@ -18,8 +18,8 @@ import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.model.layer.impl.LayerManager;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisAdjustment;
-import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
+import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
 import de.openali.odysseus.chart.framework.model.mapper.registry.impl.MapperRegistry;
 import de.openali.odysseus.chart.framework.util.ChartUtilities;
@@ -143,6 +143,7 @@ public class ChartModel implements IChartModel
    * (non-Javadoc)
    * @see org.kalypso.chart.framework.model.IChartModel#getAxisRegistry()
    */
+  @Override
   public IMapperRegistry getMapperRegistry( )
   {
     return m_mapperRegistry;
@@ -152,15 +153,16 @@ public class ChartModel implements IChartModel
    * (non-Javadoc)
    * @see org.kalypso.chart.framework.model.IChartModel#getLayerManager()
    */
+  @Override
   public ILayerManager getLayerManager( )
   {
     return m_manager;
   }
 
-  /*
-   * (non-Javadoc)
+  /**
    * @see org.kalypso.chart.framework.model.IChartModel#clear()
    */
+  @Override
   public void clear( )
   {
     m_axis2Layers.clear();
@@ -168,10 +170,10 @@ public class ChartModel implements IChartModel
     m_mapperRegistry.clear();
   }
 
-  /*
-   * (non-Javadoc)
+  /**
    * @see org.kalypso.chart.framework.model.IChartModel#getAxis2Layers()
    */
+  @Override
   public Map<IAxis, List<IChartLayer>> getAxis2Layers( )
   {
     return m_axis2Layers;
@@ -181,6 +183,7 @@ public class ChartModel implements IChartModel
    * (non-Javadoc)
    * @see org.kalypso.chart.framework.model.IChartModel#setHideUnusedAxes(boolean)
    */
+  @Override
   public void setHideUnusedAxes( final boolean b )
   {
     if( b == m_hideUnusedAxes )
@@ -214,6 +217,7 @@ public class ChartModel implements IChartModel
   /**
    * automatically scales all given axes; scaling means here: show all available values
    */
+  @Override
   @SuppressWarnings("unchecked")
   public void autoscale( IAxis[] axes )
   {
@@ -307,6 +311,7 @@ public class ChartModel implements IChartModel
    * @param b
    *          if true, axes are automatically scaled to show the layers full data range
    */
+  @Override
   public void setAutoscale( final boolean b )
   {
     m_autoscale = b;
@@ -330,6 +335,7 @@ public class ChartModel implements IChartModel
   /**
    * @see de.openali.odysseus.chart.framework.model.event.IEventProvider#addListener(java.lang.Object)
    */
+  @Override
   public void addListener( final IChartModelEventListener listener )
   {
     m_eventHandler.addListener( listener );
@@ -338,6 +344,7 @@ public class ChartModel implements IChartModel
   /**
    * @see de.openali.odysseus.chart.framework.model.event.IEventProvider#removeListener(java.lang.Object)
    */
+  @Override
   public void removeListener( final IChartModelEventListener listener )
   {
     m_eventHandler.removeListener( listener );
@@ -346,6 +353,7 @@ public class ChartModel implements IChartModel
   /**
    * @see de.openali.odysseus.chart.framework.model.IChartModel#getId()
    */
+  @Override
   public String getId( )
   {
     return m_id;
@@ -354,6 +362,7 @@ public class ChartModel implements IChartModel
   /**
    * @see de.openali.odysseus.chart.framework.model.IChartModel#setId()
    */
+  @Override
   public void setId( final String id )
   {
     m_id = id;
@@ -362,6 +371,7 @@ public class ChartModel implements IChartModel
   /**
    * @see de.openali.odysseus.chart.framework.model.IChartModel#getDescription()
    */
+  @Override
   public String getDescription( )
   {
     return m_description;
@@ -370,6 +380,7 @@ public class ChartModel implements IChartModel
   /**
    * @see de.openali.odysseus.chart.framework.model.IChartModel#getTitle()
    */
+  @Override
   public String getTitle( )
   {
     return m_title;
@@ -378,6 +389,7 @@ public class ChartModel implements IChartModel
   /**
    * @see de.openali.odysseus.chart.framework.model.IChartModel#setDescription(java.lang.String)
    */
+  @Override
   public void setDescription( final String description )
   {
     m_description = description;
@@ -386,6 +398,7 @@ public class ChartModel implements IChartModel
   /**
    * @see de.openali.odysseus.chart.framework.model.IChartModel#setTitle(java.lang.String)
    */
+  @Override
   public void setTitle( final String title )
   {
     m_title = title;
@@ -394,7 +407,7 @@ public class ChartModel implements IChartModel
   /**
    * maximises the content of the plot to the values inside a dragged rectangle
    */
-  @SuppressWarnings("unchecked")
+  @Override
   public <T_logical> void zoomIn( final Point start, final Point end )
   {
     final IMapperRegistry ar = getMapperRegistry();
@@ -439,7 +452,7 @@ public class ChartModel implements IChartModel
 
       if( from != null && to != null )
       {
-        axis.setNumericRange( new ComparableDataRange( new Number[] { from, to } ) );
+        axis.setNumericRange( new ComparableDataRange<Number>( new Number[] { from, to } ) );
       }
     }
     m_eventHandler.fireModelChanged();
@@ -448,7 +461,7 @@ public class ChartModel implements IChartModel
   /**
    * minimizes the content of the plot to the values inside a dragged rectangle
    */
-  @SuppressWarnings("unchecked")
+  @Override
   public <T_logical> void zoomOut( final Point start, final Point end )
   {
     final IMapperRegistry ar = getMapperRegistry();
@@ -504,12 +517,13 @@ public class ChartModel implements IChartModel
         final double newFrom = oldmin - ((Math.abs( from - oldmin ) / oldrange) * newrange);
         final double newTo = oldmax + ((Math.abs( to - oldmax ) / oldrange) * newrange);
 
-        axis.setNumericRange( new ComparableDataRange( new Number[] { new Double( newFrom ), new Double( newTo ) } ) );
+        axis.setNumericRange( new ComparableDataRange<Number>( new Number[] { new Double( newFrom ), new Double( newTo ) } ) );
       }
     }
 
   }
 
+  @Override
   public void panTo( final Point start, final Point end )
   {
     if( start.equals( end ))
