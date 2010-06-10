@@ -109,27 +109,6 @@ public class SobekProfileDat
    *          profile.def.
    * @param rl
    *          The reference level 1.
-   */
-  public SobekProfileDat( String id, String di, BigDecimal rl )
-  {
-    m_id = id;
-    m_di = di;
-    m_rl = rl;
-    m_ll = null;
-    m_rs = null;
-    m_ls = null;
-  }
-
-  /**
-   * The constructor.
-   * 
-   * @param id
-   *          The id of the cross section location.
-   * @param di
-   *          The id of the cross section definition. <strong>NOTE:</strong> This id maps to a data block in the file
-   *          profile.def.
-   * @param rl
-   *          The reference level 1.
    * @param ll
    *          The reference level 2. <strong>NOTE:</strong> Optional
    * @param rs
