@@ -18,7 +18,7 @@ import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.algorithm.PointInRing;
-import com.vividsolutions.jts.algorithm.SIRtreePointInRing;
+import com.vividsolutions.jts.algorithm.SimplePointInRing;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LinearRing;
@@ -64,6 +64,7 @@ public class PolygonCollector implements SegmentCollector, RingTreeWalker
    *      org.kalypso.gml.processes.raster2vector.LinkedCoordinate,
    *      org.kalypso.gml.processes.raster2vector.LinkedCoordinate)
    */
+  @Override
   public void addSegment( final int index, final LinkedCoordinate lc0, final LinkedCoordinate lc1 ) throws LinkedCoordinateException
   {
     lc0.link( lc1 );
@@ -83,7 +84,7 @@ public class PolygonCollector implements SegmentCollector, RingTreeWalker
       }
       else
       {
-        final PointInRing pir = new SIRtreePointInRing( m_gf.createLinearRing( crds ) );
+        final PointInRing pir = new SimplePointInRing( m_gf.createLinearRing( crds ) );
 
         final Coordinate innerCrd = lc0.findInnerCrd( pir );
 //
@@ -163,6 +164,7 @@ public class PolygonCollector implements SegmentCollector, RingTreeWalker
   /**
    * @see com.bce.gis.operation.raster2vector.collector.ringtree.RingTreeWalker#operate(com.bce.gis.operation.raster2vector.collector.ringtree.RingTreeElement)
    */
+  @Override
   public void operate( final RingTreeElement element )
   {
     final Polygon[] p = element.getAsPolygon();
@@ -293,6 +295,7 @@ public class PolygonCollector implements SegmentCollector, RingTreeWalker
   /**
    * @see org.kalypso.grid.processes.raster2vector.SegmentCollector#getData()
    */
+  @Override
   public CollectorDataProvider[] getData( )
   {
     if( !m_bSimple )
@@ -304,6 +307,7 @@ public class PolygonCollector implements SegmentCollector, RingTreeWalker
   /**
    * @see org.kalypso.grid.processes.raster2vector.collector.ringtree.RingTreeWalker#getResult()
    */
+  @Override
   public Object getResult( )
   {
     // TODO Auto-generated method stub
@@ -313,6 +317,7 @@ public class PolygonCollector implements SegmentCollector, RingTreeWalker
   /**
    * @see org.kalypso.gml.processes.raster2vector.collector.SegmentCollector#finish()
    */
+  @Override
   public void finish( )
   {
     m_tree.root.initIntervals( m_intervals );
@@ -323,6 +328,7 @@ public class PolygonCollector implements SegmentCollector, RingTreeWalker
    * @see org.kalypso.gml.processes.raster2vector.collector.SegmentCollector#interpolate(com.vividsolutions.jts.geom.Coordinate,
    *      com.vividsolutions.jts.geom.Coordinate, int)
    */
+  @Override
   public LinkedCoordinate interpolate( final Coordinate c1, final Coordinate c2, final int index )
   {
     double zFaktor = -1.0;

@@ -23,7 +23,7 @@ import com.bce.gis.operation.raster2vector.collector.ringtree.RingTree;
 import com.bce.gis.operation.raster2vector.collector.ringtree.RingTreeElement;
 import com.bce.gis.operation.raster2vector.collector.ringtree.RingTreeWalker;
 import com.vividsolutions.jts.algorithm.PointInRing;
-import com.vividsolutions.jts.algorithm.SIRtreePointInRing;
+import com.vividsolutions.jts.algorithm.SimplePointInRing;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LinearRing;
@@ -31,7 +31,7 @@ import com.vividsolutions.jts.geom.Polygon;
 
 /**
  * Sammelt LineStrings und kombiniert Sie als Polygone
- *
+ * 
  * @author belger
  */
 public class PolygonCollector implements SegmentCollector, RingTreeWalker
@@ -79,6 +79,7 @@ public class PolygonCollector implements SegmentCollector, RingTreeWalker
    *      com.bce.gis.operation.raster2vector.LinkedCoordinate, com.bce.gis.operation.raster2vector.LinkedCoordinate,
    *      com.vividsolutions.jts.geom.Coordinate, com.vividsolutions.jts.geom.Coordinate)
    */
+  @Override
   public void addSegment( final int index, final LinkedCoordinate lc0, final LinkedCoordinate lc1, final Coordinate nearC0, final Coordinate nearC1 ) throws LinkedCoordinateException
   {
     lc0.link( lc1 );
@@ -98,7 +99,8 @@ public class PolygonCollector implements SegmentCollector, RingTreeWalker
       }
       else
       {
-        final PointInRing pir = new SIRtreePointInRing( m_gf.createLinearRing( crds ) );
+
+        final PointInRing pir = new SimplePointInRing( m_gf.createLinearRing( crds ) );
         Coordinate innerCrd = null;
         if( pir.isInside( nearC0 ) )
           innerCrd = nearC0;
@@ -147,6 +149,7 @@ public class PolygonCollector implements SegmentCollector, RingTreeWalker
   /**
    * @see com.bce.gis.operation.raster2vector.SegmentCollector#getFeatures()
    */
+  @Override
   public Feature getFeatures( )
   {
     if( !m_bSimple )
@@ -155,6 +158,7 @@ public class PolygonCollector implements SegmentCollector, RingTreeWalker
     return m_fc;
   }
 
+  @Override
   public Object getResult( )
   {
     return m_fc;
@@ -163,6 +167,7 @@ public class PolygonCollector implements SegmentCollector, RingTreeWalker
   /**
    * @see com.bce.gis.operation.raster2vector.collector.ringtree.RingTreeWalker#operate(com.bce.gis.operation.raster2vector.collector.ringtree.RingTreeElement)
    */
+  @Override
   public void operate( final RingTreeElement element )
   {
     final Polygon p = element.getAsPolygon( m_gf );

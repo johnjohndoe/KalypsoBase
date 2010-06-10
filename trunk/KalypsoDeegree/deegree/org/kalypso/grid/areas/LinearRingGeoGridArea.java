@@ -43,7 +43,7 @@ package org.kalypso.grid.areas;
 import org.kalypso.grid.GeoGridException;
 import org.kalypso.grid.IGeoGrid;
 
-import com.vividsolutions.jts.algorithm.SimplePointInAreaLocator;
+import com.vividsolutions.jts.algorithm.locate.SimplePointInAreaLocator;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Location;
@@ -59,7 +59,7 @@ public class LinearRingGeoGridArea extends AbstractGeoGridArea
   /**
    * The area geometry.
    */
-  private Geometry m_geom;
+  private final Geometry m_geom;
 
   /**
    * The constructor.
@@ -69,7 +69,7 @@ public class LinearRingGeoGridArea extends AbstractGeoGridArea
    * @param geom
    *          The area geometry.
    */
-  public LinearRingGeoGridArea( IGeoGrid grid, Geometry geom )
+  public LinearRingGeoGridArea( final IGeoGrid grid, final Geometry geom )
   {
     super( grid, geom );
 
@@ -80,13 +80,13 @@ public class LinearRingGeoGridArea extends AbstractGeoGridArea
    * @see org.kalypso.grid.areas.AbstractGeoGridArea#contains(int, int, com.vividsolutions.jts.geom.Coordinate)
    */
   @Override
-  public boolean contains( int x, int y, Coordinate coordinate ) throws GeoGridException
+  public boolean contains( final int x, final int y, final Coordinate coordinate ) throws GeoGridException
   {
-    boolean contains = super.contains( x, y, coordinate );
+    final boolean contains = super.contains( x, y, coordinate );
     if( contains == false )
       return false;
 
-    int locate = SimplePointInAreaLocator.locate( coordinate, m_geom );
+    final int locate = SimplePointInAreaLocator.locate( coordinate, m_geom );
     if( locate != Location.INTERIOR )
       return false;
 
