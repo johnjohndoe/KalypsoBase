@@ -511,8 +511,10 @@ public class ChartModel implements IChartModel
   }
 
   public void panTo( final Point start, final Point end )
-
   {
+    if( start.equals( end ))
+      return;
+    
     final IAxis[] axes = getMapperRegistry().getAxes();
     for( final IAxis axis : axes )
     {
@@ -538,7 +540,6 @@ public class ChartModel implements IChartModel
 
       final IDataRange<Number> newRange = new ComparableDataRange<Number>( new Number[] { new Double( newmin ), new Double( newmax ) } );
       axis.setNumericRange( newRange );
-
     }
 
   }

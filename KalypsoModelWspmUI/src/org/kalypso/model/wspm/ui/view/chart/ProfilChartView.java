@@ -214,20 +214,21 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
     }
   }
 
-  private final void saveStatePosition( final ILayerManager mngr, final ArrayList<Object> list )
+  private final List<Object> saveStatePosition( final ILayerManager mngr )
   {
+    final List<Object> list = new ArrayList<Object>();
+
     for( final IChartLayer layer : mngr.getLayers() )
     {
+      list.add( layer.getId() );
       if( layer instanceof IExpandableChartLayer )
       {
-        final ArrayList<Object> l = new ArrayList<Object>();
-        l.add( layer.getId() );
-        saveStatePosition( ((IExpandableChartLayer) layer).getLayerManager(), l );
-        list.add( l );
+        List<Object> subList = saveStatePosition( ((IExpandableChartLayer) layer).getLayerManager() );
+        list.add( subList );
       }
-      else
-        list.add( layer.getId() );
     }
+    
+    return list;
   }
 
   private final String saveStateActive( final ILayerManager mngr )
@@ -255,14 +256,14 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
   }
 
   @SuppressWarnings("unchecked")
-  private final void restoreStatePosition( final ILayerManager mngr, final ArrayList<Object> list )
+  private final void restoreStatePosition( final ILayerManager mngr, final List<Object> list )
   {
     int pos = 0;
     for( final Object o : list )
     {
-      if( o instanceof ArrayList )
+      if( o instanceof List )
       {
-        final ArrayList<Object> l = (ArrayList<Object>) o;
+        final List<Object> l = (ArrayList<Object>) o;
         final Object id = l.get( 0 );
         final IChartLayer layer = mngr.getLayerById( id.toString() );
         if( layer != null )
@@ -526,8 +527,7 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
       final String activeLayerId = saveStateActive( lm );
       final HashMap<String, Boolean> visibility = new HashMap<String, Boolean>();
       saveStateVisible( lm, visibility );
-      final ArrayList<Object> positions = new ArrayList<Object>();
-      saveStatePosition( lm, positions );
+      final List<Object> positions = saveStatePosition( lm );
       // remove layer
       for( final IChartLayer layer : lm.getLayers() )
         lm.removeLayer( layer );
