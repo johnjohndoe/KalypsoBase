@@ -98,11 +98,20 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
 
   public AbstractProfilLayer( final IProfil profil, final int targetPropertyIndex, final ILayerStyleProvider styleProvider )
   {
-    m_profil = profil;
-    m_targetPropertyIndex = targetPropertyIndex;
-    m_domainComponent = IWspmConstants.POINT_PROPERTY_BREITE;
-    final String id = getId();
-    createStyles( styleProvider, id );
+    this( createId(profil, targetPropertyIndex), profil, targetPropertyIndex, styleProvider );
+  }
+
+  private static String createId( IProfil profil, int targetPropertyIndex )
+  {
+    if( profil == null )
+      return null;
+    
+    if( targetPropertyIndex == -1 )
+      return null;
+
+    IComponent target = profil.getPointProperties()[targetPropertyIndex];
+    // FIXME: the component is not a good id! Imagine several layers on the same component
+    return target == null ? "" + targetPropertyIndex : target.getId();
   }
 
   public AbstractProfilLayer( final String id, final IProfil profil, final int targetPropertyIndex, final ILayerStyleProvider styleProvider )
@@ -110,6 +119,7 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     m_profil = profil;
     m_targetPropertyIndex = targetPropertyIndex;
     m_domainComponent = IWspmConstants.POINT_PROPERTY_BREITE;
+    setId( id );
     createStyles( styleProvider, id );
   }
 
@@ -264,17 +274,6 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
   public Rectangle getHoverRect( final IRecord profilPoint )
   {
     return null;
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer#getId()
-   */
-  @Override
-  public String getId( )
-  {
-    final IComponent target = getTargetComponent();
-    // FIXME: the component is not a good id! Imagine several layers on the same component
-    return target == null ? "" + m_targetPropertyIndex : target.getId();
   }
 
   protected ILineStyle getLineStyle( )
