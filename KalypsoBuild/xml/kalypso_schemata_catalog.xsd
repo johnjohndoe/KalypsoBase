@@ -5,4 +5,6 @@
 
 	<uri name="featureview.template.kalypso.org" uri="platform:/resource/KalypsoCore/etc/schemas/template/featureview.xsd" />
 
+	<uri name="http://www.sourceforge.net/projects/kalypsobase/layout" uri="platform:/resource/KalypsoHwvCore/etc/schemes/ui/layout.xsd" />
+
 </catalog>

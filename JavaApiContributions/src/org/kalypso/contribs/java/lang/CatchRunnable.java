@@ -60,7 +60,8 @@ public abstract class CatchRunnable implements Runnable
   /**
    * @see java.lang.Runnable#run()
    */
-  public final void run()
+  @Override
+  public final void run( )
   {
     try
     {
@@ -73,9 +74,9 @@ public abstract class CatchRunnable implements Runnable
     }
   }
 
-  protected abstract void runIntern() throws Throwable;
+  protected abstract void runIntern( ) throws Throwable;
 
-  public Throwable getThrown()
+  public Throwable getThrown( )
   {
     return m_throwable;
   }
