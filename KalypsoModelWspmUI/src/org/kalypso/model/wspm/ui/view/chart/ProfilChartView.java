@@ -223,11 +223,11 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
       list.add( layer.getId() );
       if( layer instanceof IExpandableChartLayer )
       {
-        List<Object> subList = saveStatePosition( ((IExpandableChartLayer) layer).getLayerManager() );
+        final List<Object> subList = saveStatePosition( ((IExpandableChartLayer) layer).getLayerManager() );
         list.add( subList );
       }
     }
-    
+
     return list;
   }
 
@@ -258,6 +258,9 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
   @SuppressWarnings("unchecked")
   private final void restoreStatePosition( final ILayerManager mngr, final List<Object> list )
   {
+    if( mngr == null )
+      return;
+
     int pos = 0;
     for( final Object o : list )
     {
@@ -454,6 +457,7 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
     m_layerProvider = layerProvider;
   }
 
+  @Override
   public synchronized void setProfil( final IProfil profil )
   {
     if( m_profile == profil )
