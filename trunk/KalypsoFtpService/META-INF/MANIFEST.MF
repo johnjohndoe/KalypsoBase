@@ -14,4 +14,6 @@ Bundle-ClassPath: lib/apache/mina/ftplet-api-1.0.4.jar,
  lib/apache/mina/slf4j-log4j12-1.5.2.jar,
  lib/apache/mina/log4j-1.2.14.jar,
  .
-Export-Package: org.kalypso.ftp.service
+Export-Package: org.kalypso.ftp.service,
+ org.kalypso.ftp.service.ftplet,
+ org.kalypso.ftp.service.schema
