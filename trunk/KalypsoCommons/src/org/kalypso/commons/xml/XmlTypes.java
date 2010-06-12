@@ -46,7 +46,6 @@ import java.util.TimeZone;
 import javax.xml.namespace.QName;
 
 import org.kalypso.commons.parser.impl.DateParser;
-import org.kalypso.commons.parser.impl.DoubleParser;
 
 /**
  * Utility class that contains the default java formaters for the types found in xml.
@@ -94,11 +93,6 @@ public final class XmlTypes
    */
   @Deprecated
   public final static String XML_DATETIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";//$NON-NLS-1$
-
-  /**
-   * Parser for the type <code>double</code>. It uses the default behaviour of the java.lang.Double class.
-   */
-  public final static DoubleParser PDOUBLE = new DoubleParser();
 
   /**
    * Returns true if the given QName represents an xml-type which is a number

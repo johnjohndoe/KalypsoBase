@@ -73,6 +73,15 @@ public final class NumberUtils
   }
 
   /**
+   * Parses a string as {@link BigDecimal}.<br>
+   * The decimal separator may be one of '.' or ','.
+   */
+  public static final BigDecimal parseBigDecimal( final String string ) throws NumberFormatException
+  {
+    return new BigDecimal( string.replace( ',', '.' ) );
+  }
+
+  /**
    * Tries to parse a double, if fails, returns {@link java.lang.Double#NaN} <br>
    * The decimal separator may be one of '.' or ','.
    */

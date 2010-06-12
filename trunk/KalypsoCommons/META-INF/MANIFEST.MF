@@ -203,6 +203,7 @@ Export-Package: au.com.bytecode.opencsv,
  org.kalypso.commons.tuple,
  org.kalypso.commons.tuple.event,
  org.kalypso.commons.tuple.impl,
+ org.kalypso.commons.validation,
  org.kalypso.commons.xml,
  org.w3c.dom
 Require-Bundle: org.junit4;bundle-version="4.5.0";resolution:=optional,
