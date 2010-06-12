@@ -199,5 +199,20 @@
           type="shape">
     </loader>
  </extension>
+ <extension
+       point="org.eclipse.wst.xml.core.catalogContributions">
+    <catalogContribution>
+       <nextCatalog
+             catalog="etc/schemas/catalog.xml">
+       </nextCatalog>
+    </catalogContribution>
+ </extension>
+ <extension
+       point="org.eclipse.core.contenttype.contentTypes">
+    <file-association
+          content-type="org.eclipse.core.runtime.xml"
+          file-extensions="gml,gmt,gmv,gft,gtt,gmc,ott,odt,zml">
+    </file-association>
+ </extension>
 
 </plugin>
