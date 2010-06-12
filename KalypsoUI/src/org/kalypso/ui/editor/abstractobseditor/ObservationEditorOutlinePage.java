@@ -42,8 +42,7 @@ import org.kalypso.ui.editor.diagrameditor.actions.EditDiagCurveAction;
  * 
  * @author schlienger
  */
-public class ObservationEditorOutlinePage extends ContentOutlinePage2 implements IObsViewEventListener,
-    ICheckStateListener
+public class ObservationEditorOutlinePage extends ContentOutlinePage2 implements IObsViewEventListener, ICheckStateListener
 {
   protected ObsView m_view;
 
@@ -68,11 +67,10 @@ public class ObservationEditorOutlinePage extends ContentOutlinePage2 implements
   {
     super.createControl( parent );
 
-    final ContainerCheckedTreeViewer tv = (ContainerCheckedTreeViewer)getTreeViewer();
+    final ContainerCheckedTreeViewer tv = (ContainerCheckedTreeViewer) getTreeViewer();
 
     // drop support for files
-    final Transfer[] transfers = new Transfer[]
-    { FileTransfer.getInstance() };
+    final Transfer[] transfers = new Transfer[] { FileTransfer.getInstance() };
     tv.addDropSupport( DND.DROP_COPY | DND.DROP_MOVE, transfers, new DropAdapter( tv, m_editor ) );
 
     tv.setLabelProvider( new ObsTemplateLabelProvider() );
@@ -114,14 +112,14 @@ public class ObservationEditorOutlinePage extends ContentOutlinePage2 implements
   /**
    * @return the selected items or empty array
    */
-  public ObsViewItem[] getSelectedItems()
+  public ObsViewItem[] getSelectedItems( )
   {
     final ISelection sel = getSelection();
     final List<ObsViewItem> items = new ArrayList<ObsViewItem>();
 
     if( sel instanceof IStructuredSelection )
     {
-      final IStructuredSelection structSel = (IStructuredSelection)sel;
+      final IStructuredSelection structSel = (IStructuredSelection) sel;
 
       Arrays.addAllOfClass( structSel.toList(), items, ObsViewItem.class );
     }
@@ -132,6 +130,7 @@ public class ObservationEditorOutlinePage extends ContentOutlinePage2 implements
   /**
    * @see org.kalypso.ogc.sensor.template.IObsViewEventListener#onObsViewChanged(org.kalypso.ogc.sensor.template.ObsViewEvent)
    */
+  @Override
   public void onObsViewChanged( final ObsViewEvent evt )
   {
     final TreeViewer tv = getTreeViewer();
@@ -140,21 +139,23 @@ public class ObservationEditorOutlinePage extends ContentOutlinePage2 implements
     {
       control.getDisplay().asyncExec( new Runnable()
       {
-        public void run()
+        @Override
+        public void run( )
         {
           if( control.isDisposed() )
             return;
 
           tv.refresh();
-          refreshCheckState( (ContainerCheckedTreeViewer)tv );
+          refreshCheckState( (ContainerCheckedTreeViewer) tv );
         }
       } );
     }
   }
-  
+
   /**
    * @see org.kalypso.ogc.sensor.template.IObsViewEventListener#onPrintObsView(org.kalypso.ogc.sensor.template.ObsViewEvent)
    */
+  @Override
   public void onPrintObsView( final ObsViewEvent evt )
   {
     // nothing to do
@@ -167,12 +168,13 @@ public class ObservationEditorOutlinePage extends ContentOutlinePage2 implements
 
     m_view = view;
 
-    final ContainerCheckedTreeViewer tv = (ContainerCheckedTreeViewer)getTreeViewer();
+    final ContainerCheckedTreeViewer tv = (ContainerCheckedTreeViewer) getTreeViewer();
     if( tv != null )
     {
       getSite().getShell().getDisplay().syncExec( new Runnable()
       {
-        public void run()
+        @Override
+        public void run( )
         {
           tv.setInput( m_view );
 
@@ -201,12 +203,12 @@ public class ObservationEditorOutlinePage extends ContentOutlinePage2 implements
    * @see org.eclipse.ui.part.IPage#dispose()
    */
   @Override
-  public void dispose()
+  public void dispose( )
   {
     if( m_view != null )
       m_view.removeObsViewListener( this );
 
-    final ContainerCheckedTreeViewer tv = (ContainerCheckedTreeViewer)getTreeViewer();
+    final ContainerCheckedTreeViewer tv = (ContainerCheckedTreeViewer) getTreeViewer();
     if( tv != null )
       tv.removeCheckStateListener( this );
 
@@ -216,28 +218,29 @@ public class ObservationEditorOutlinePage extends ContentOutlinePage2 implements
   /**
    * @see org.eclipse.jface.viewers.ICheckStateListener#checkStateChanged(org.eclipse.jface.viewers.CheckStateChangedEvent)
    */
+  @Override
   public void checkStateChanged( final CheckStateChangedEvent event )
   {
     final Object element = event.getElement();
 
     if( element instanceof ObsViewItem )
     {
-      final ObsViewItem item = (ObsViewItem)element;
+      final ObsViewItem item = (ObsViewItem) element;
       m_editor.postCommand( new SetShownCommand( item, event.getChecked() ), null );
-//      item.setShown( event.getChecked() );
+// item.setShown( event.getChecked() );
     }
   }
 
-  public AbstractObservationEditor getEditor()
+  public AbstractObservationEditor getEditor( )
   {
     return m_editor;
   }
 
-  public ObsView getView()
+  public ObsView getView( )
   {
     return m_view;
   }
-  
+
   /**
    * @see org.eclipse.ui.part.IPage#setActionBars(org.eclipse.ui.IActionBars)
    */
@@ -282,10 +285,10 @@ public class ObservationEditorOutlinePage extends ContentOutlinePage2 implements
       if( m_view == null )
         return false;
 
-      final String[] files = (String[])data;
+      final String[] files = (String[]) data;
 
       m_editor2.postCommand( new DropZmlCommand( m_editor2, m_view, files ), null );
-      
+
       return true;
     }
 
