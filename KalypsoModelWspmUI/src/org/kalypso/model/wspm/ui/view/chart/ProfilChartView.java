@@ -268,7 +268,7 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
       {
         final List<Object> l = (ArrayList<Object>) o;
         final Object id = l.get( 0 );
-        final IChartLayer layer = mngr.getLayerById( id.toString() );
+        final IChartLayer layer = id == null ? null : mngr.getLayerById( id.toString() );
         if( layer != null )
         {
           mngr.moveLayerToPosition( layer, pos++ );
