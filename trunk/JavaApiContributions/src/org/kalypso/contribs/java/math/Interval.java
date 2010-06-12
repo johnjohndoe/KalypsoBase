@@ -50,12 +50,12 @@ public class Interval
   /**
    * The minimum value of the interval.
    */
-  private double m_min;
+  private final double m_min;
 
   /**
    * The maximum value of the interval.
    */
-  private double m_max;
+  private final double m_max;
 
   /**
    * The constructor.
@@ -71,7 +71,7 @@ public class Interval
    * @param interval
    *          The values will be copied from this interval.
    */
-  public Interval( Interval interval )
+  public Interval( final Interval interval )
   {
     this( interval.getMin(), interval.getMax() );
   }
@@ -84,11 +84,14 @@ public class Interval
    * @param max
    *          The maximum value of the interval.
    */
-  public Interval( double min, double max )
+  public Interval( final double min, final double max )
   {
-    m_min = min;
-    m_max = max;
-    if( min > max )
+    if( min <= max )
+    {
+      m_min = min;
+      m_max = max;
+    }
+    else
     {
       m_min = max;
       m_max = min;
@@ -125,12 +128,12 @@ public class Interval
     return m_max - m_min;
   }
 
-  public boolean overlaps( Interval interval )
+  public boolean overlaps( final Interval interval )
   {
     return overlaps( interval.getMin(), interval.getMax() );
   }
 
-  public boolean overlaps( double min, double max )
+  public boolean overlaps( final double min, final double max )
   {
     if( m_min > max || m_max < min )
       return false;
@@ -138,22 +141,22 @@ public class Interval
     return true;
   }
 
-  public boolean contains( Interval interval )
+  public boolean contains( final Interval interval )
   {
     return contains( interval.getMin(), interval.getMax() );
   }
 
-  public boolean contains( double min, double max )
+  public boolean contains( final double min, final double max )
   {
     return (min >= m_min && max <= m_max);
   }
 
-  public Interval[] difference( Interval interval )
+  public Interval[] difference( final Interval interval )
   {
     return difference( interval.getMin(), interval.getMax() );
   }
 
-  public Interval[] difference( double min, double max )
+  public Interval[] difference( final double min, final double max )
   {
     /* Only if this and the given interval overlaps each other in one way, we can do the difference operation. */
     if( !overlaps( min, max ) )
