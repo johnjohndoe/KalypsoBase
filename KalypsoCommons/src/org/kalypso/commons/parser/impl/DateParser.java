@@ -85,6 +85,7 @@ public class DateParser extends AbstractParser
   /**
    * @see org.kalypso.commons.parser.IParser#getObjectClass()
    */
+  @Override
   public Class<Date> getObjectClass( )
   {
     return Date.class;
@@ -93,6 +94,7 @@ public class DateParser extends AbstractParser
   /**
    * @see org.kalypso.commons.parser.IParser#getFormat()
    */
+  @Override
   public String getFormat()
   {
     return m_format;
@@ -102,6 +104,7 @@ public class DateParser extends AbstractParser
    * @throws ParserException
    * @see org.kalypso.commons.parser.IParser#parse(java.lang.String)
    */
+  @Override
   public Object parse( final String text ) throws ParserException
   {
     try
@@ -126,6 +129,7 @@ public class DateParser extends AbstractParser
   /**
    * @see org.kalypso.commons.parser.IParser#compare(java.lang.Object, java.lang.Object)
    */
+  @Override
   public int compare( final Object value1, final Object value2 )
   {
     final Date d1 = (Date)value1;

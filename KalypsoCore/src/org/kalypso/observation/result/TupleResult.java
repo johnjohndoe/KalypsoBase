@@ -86,6 +86,7 @@ public class TupleResult implements List<IRecord>
 
   private final Comparator<IRecord> m_sortComparator = new Comparator<IRecord>()
   {
+    @Override
     public int compare( final IRecord o1, final IRecord o2 )
     {
       IComponent[] sortComponents = getSortComponents();
@@ -223,6 +224,7 @@ public class TupleResult implements List<IRecord>
   /**
    * @see java.util.List#add(int, E)
    */
+  @Override
   public void add( final int index, final IRecord element )
   {
     checkRecord( element );
@@ -234,6 +236,7 @@ public class TupleResult implements List<IRecord>
   /**
    * @see java.util.List#add(E)
    */
+  @Override
   public boolean add( final IRecord o )
   {
     checkRecord( o );
@@ -248,6 +251,7 @@ public class TupleResult implements List<IRecord>
   /**
    * @see java.util.List#addAll(java.util.Collection)
    */
+  @Override
   public boolean addAll( final Collection< ? extends IRecord> c )
   {
     checkRecords( c );
@@ -261,6 +265,7 @@ public class TupleResult implements List<IRecord>
   /**
    * @see java.util.List#addAll(int, java.util.Collection)
    */
+  @Override
   public boolean addAll( final int index, final Collection< ? extends IRecord> c )
   {
     checkRecords( c );
@@ -274,6 +279,7 @@ public class TupleResult implements List<IRecord>
   /**
    * @see java.util.List#clear()
    */
+  @Override
   public void clear( )
   {
     final IRecord[] oldRecords = m_records.toArray( new IRecord[m_records.size()] );
@@ -287,6 +293,7 @@ public class TupleResult implements List<IRecord>
   /**
    * @see java.util.List#contains(java.lang.Object)
    */
+  @Override
   public boolean contains( final Object o )
   {
     return m_records.contains( o );
@@ -295,6 +302,7 @@ public class TupleResult implements List<IRecord>
   /**
    * @see java.util.List#containsAll(java.util.Collection)
    */
+  @Override
   public boolean containsAll( final Collection< ? > c )
   {
     return m_records.containsAll( c );
@@ -303,6 +311,7 @@ public class TupleResult implements List<IRecord>
   /**
    * @see java.util.List#get(int)
    */
+  @Override
   public IRecord get( final int index )
   {
     sort();
@@ -313,6 +322,7 @@ public class TupleResult implements List<IRecord>
   /**
    * @see java.util.List#isEmpty()
    */
+  @Override
   public boolean isEmpty( )
   {
     return m_records.isEmpty();
@@ -323,6 +333,7 @@ public class TupleResult implements List<IRecord>
    * 
    * @see java.util.List#iterator()
    */
+  @Override
   public Iterator<IRecord> iterator( )
   {
     sort();
@@ -333,6 +344,7 @@ public class TupleResult implements List<IRecord>
   /**
    * @see java.util.List#lastIndexOf(java.lang.Object)
    */
+  @Override
   public int lastIndexOf( final Object o )
   {
     sort();
@@ -345,6 +357,7 @@ public class TupleResult implements List<IRecord>
    * 
    * @see java.util.List#listIterator()
    */
+  @Override
   public ListIterator<IRecord> listIterator( )
   {
     sort();
@@ -357,6 +370,7 @@ public class TupleResult implements List<IRecord>
    * 
    * @see java.util.List#listIterator(int)
    */
+  @Override
   public ListIterator<IRecord> listIterator( final int index )
   {
     sort();
@@ -367,6 +381,7 @@ public class TupleResult implements List<IRecord>
   /**
    * @see java.util.List#remove(int)
    */
+  @Override
   public IRecord remove( final int index )
   {
     sort();
@@ -380,6 +395,7 @@ public class TupleResult implements List<IRecord>
   /**
    * @see java.util.List#remove(java.lang.Object)
    */
+  @Override
   public boolean remove( final Object o )
   {
     final boolean result = m_records.remove( o );
@@ -395,6 +411,7 @@ public class TupleResult implements List<IRecord>
   /**
    * @see java.util.List#removeAll(java.util.Collection)
    */
+  @Override
   public boolean removeAll( final Collection< ? > c )
   {
     final boolean removeAll = m_records.removeAll( c );
@@ -412,6 +429,7 @@ public class TupleResult implements List<IRecord>
   /**
    * @see java.util.List#retainAll(java.util.Collection)
    */
+  @Override
   public boolean retainAll( final Collection< ? > c )
   {
     // TODO check if this works? Hmm...
@@ -424,6 +442,7 @@ public class TupleResult implements List<IRecord>
   /**
    * @see java.util.List#set(int, E)
    */
+  @Override
   public IRecord set( final int index, final IRecord element )
   {
     final IRecord result = m_records.set( index, element );
@@ -438,6 +457,7 @@ public class TupleResult implements List<IRecord>
   /**
    * @see java.util.List#size()
    */
+  @Override
   public int size( )
   {
     return m_records.size();
@@ -446,6 +466,7 @@ public class TupleResult implements List<IRecord>
   /**
    * @see java.util.List#subList(int, int)
    */
+  @Override
   public List<IRecord> subList( final int fromIndex, final int toIndex )
   {
     // TODO: problem:
@@ -461,6 +482,7 @@ public class TupleResult implements List<IRecord>
   /**
    * @see java.util.List#toArray()
    */
+  @Override
   public Object[] toArray( )
   {
     sort();
@@ -471,6 +493,7 @@ public class TupleResult implements List<IRecord>
   /**
    * @see java.util.List#toArray(T[])
    */
+  @Override
   public <T> T[] toArray( final T[] a )
   {
     sort();
@@ -702,6 +725,7 @@ public class TupleResult implements List<IRecord>
   /**
    * @see java.util.List#indexOf(java.lang.Object)
    */
+  @Override
   public int indexOf( final Object o )
   {
     if( o instanceof IRecord )

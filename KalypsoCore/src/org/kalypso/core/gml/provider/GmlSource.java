@@ -68,6 +68,7 @@ public class GmlSource implements IGmlSource
   /**
    * @see org.kalypso.core.gml.provider.IGmlSource#getDescription()
    */
+  @Override
   public String getDescription( )
   {
     return m_description;
@@ -76,6 +77,7 @@ public class GmlSource implements IGmlSource
   /**
    * @see org.kalypso.core.gml.provider.IGmlSource#getLocation()
    */
+  @Override
   public URL getLocation( )
   {
     return m_location;
@@ -84,6 +86,7 @@ public class GmlSource implements IGmlSource
   /**
    * @see org.kalypso.core.gml.provider.IGmlSource#getName()
    */
+  @Override
   public String getName( )
   {
     return m_name;
@@ -92,6 +95,7 @@ public class GmlSource implements IGmlSource
   /**
    * @see org.kalypso.core.gml.provider.IGmlSource#getPath()
    */
+  @Override
   public GMLXPath getPath( )
   {
     return m_path;

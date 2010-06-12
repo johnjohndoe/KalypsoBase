@@ -53,6 +53,7 @@ public class URNGeneratorIFeatureType implements IURNGenerator
   /**
    * @see org.kalypso.core.catalog.IURNGenerator#getSupportingClass()
    */
+  @Override
   public Class< ? > getSupportingClass( )
   {
     return IFeatureType.class;
@@ -61,6 +62,7 @@ public class URNGeneratorIFeatureType implements IURNGenerator
   /**
    * @see org.kalypso.core.catalog.IURNGenerator#isURNGeneratorFor(java.lang.Object)
    */
+  @Override
   public boolean isURNGeneratorFor( final Object object )
   {
     if( object instanceof IFeatureType )
@@ -73,6 +75,7 @@ public class URNGeneratorIFeatureType implements IURNGenerator
   /**
    * @see org.kalypso.core.catalog.IURNGenerator#generateURNFor(java.lang.Object)
    */
+  @Override
   public String generateURNFor( final Object object )
   {
     if( object instanceof IFeatureType )
@@ -93,6 +96,7 @@ public class URNGeneratorIFeatureType implements IURNGenerator
   /**
    * @see org.kalypso.core.catalog.IURNGenerator#generateURNPatternForRelated(java.lang.Object)
    */
+  @Override
   public String generateURNPatternForRelated( final Object object )
   {
     // nothing
@@ -102,6 +106,7 @@ public class URNGeneratorIFeatureType implements IURNGenerator
   /**
    * @see org.kalypso.core.catalog.IURNGenerator#generateDefaultURNForRelated(java.lang.Object)
    */
+  @Override
   public String generateDefaultURNForRelated( final Object object )
   {
     // nothing

@@ -56,6 +56,7 @@ public class InvisibleCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#isUndoable()
    */
+  @Override
   public boolean isUndoable()
   {
     return false;
@@ -64,6 +65,7 @@ public class InvisibleCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#process()
    */
+  @Override
   public void process() throws Exception
   {
   // nichts tun
@@ -72,6 +74,7 @@ public class InvisibleCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#redo()
    */
+  @Override
   public void redo() throws Exception
   {
     process();
@@ -80,6 +83,7 @@ public class InvisibleCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#undo()
    */
+  @Override
   public void undo() throws Exception
   {
   // nichts tun
@@ -88,6 +92,7 @@ public class InvisibleCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#getDescription()
    */
+  @Override
   public String getDescription()
   {
     return null;

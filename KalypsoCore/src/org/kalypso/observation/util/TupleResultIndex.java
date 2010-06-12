@@ -54,8 +54,8 @@ import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.ITupleResultChangedListener;
-import org.kalypso.observation.result.TupleResult;
 import org.kalypso.observation.result.ITupleResultChangedListener.ValueChange;
+import org.kalypso.observation.result.TupleResult;
 
 /**
  * @author Gernot Belger
@@ -64,16 +64,19 @@ public class TupleResultIndex
 {
   private final ITupleResultChangedListener m_changeListener = new ITupleResultChangedListener()
   {
+    @Override
     public void componentsChanged( final IComponent[] components, final TYPE type )
     {
       handleComponentsChanged( components );
     }
 
+    @Override
     public void recordsChanged( final IRecord[] records, final TYPE type )
     {
       handleRecordsChanged( records, type );
     }
 
+    @Override
     public void valuesChanged( final ITupleResultChangedListener.ValueChange[] changes )
     {
       handleValuesChanged( changes );

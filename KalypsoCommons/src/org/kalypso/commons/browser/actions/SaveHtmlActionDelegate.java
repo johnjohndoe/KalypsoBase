@@ -95,6 +95,7 @@ public class SaveHtmlActionDelegate implements IViewActionDelegate, IEditorActio
   /**
    * @see org.eclipse.ui.IViewActionDelegate#init(org.eclipse.ui.IViewPart)
    */
+  @Override
   public void init( final IViewPart view )
   {
     m_part = view;
@@ -103,6 +104,7 @@ public class SaveHtmlActionDelegate implements IViewActionDelegate, IEditorActio
   /**
    * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
    */
+  @Override
   public void run( final IAction action )
   {
     final String html = getHtml();
@@ -167,6 +169,7 @@ public class SaveHtmlActionDelegate implements IViewActionDelegate, IEditorActio
    * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
    *      org.eclipse.jface.viewers.ISelection)
    */
+  @Override
   public void selectionChanged( final IAction action, final ISelection selection )
   {
     action.setEnabled( getHtml() != null );
@@ -176,6 +179,7 @@ public class SaveHtmlActionDelegate implements IViewActionDelegate, IEditorActio
    * @see org.eclipse.ui.IEditorActionDelegate#setActiveEditor(org.eclipse.jface.action.IAction,
    *      org.eclipse.ui.IEditorPart)
    */
+  @Override
   public void setActiveEditor( final IAction action, final IEditorPart targetEditor )
   {
     m_part = targetEditor;

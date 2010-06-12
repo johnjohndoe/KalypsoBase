@@ -37,6 +37,7 @@ public abstract class AbstractDiffObject implements IDiffObject
   /**
    * @see org.kalypso.commons.diff.IDiffObject#getDiffComparator(java.lang.String)
    */
+  @Override
   public IDiffComparator getDiffComparator( final String path )
   {
     final String suffix = "." + path.replaceAll( ".+\\.", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$

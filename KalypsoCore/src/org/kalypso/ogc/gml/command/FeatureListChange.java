@@ -54,7 +54,7 @@ public class FeatureListChange extends FeatureChange
 {
   /**
    * @param newValues
-   *            a list of Features or Feature ids or both
+   *          a list of Features or Feature ids or both
    */
   public FeatureListChange( final Feature feature, final IRelationType listProperty, final List< ? extends Object> newValues )
   {
@@ -64,13 +64,13 @@ public class FeatureListChange extends FeatureChange
   /**
    * @see org.kalypso.ogc.gml.command.FeatureChange#getNewValue()
    */
-  @SuppressWarnings("unchecked") //$NON-NLS-1$
+  @SuppressWarnings("unchecked")//$NON-NLS-1$
   @Override
   public Object getNewValue( )
   {
     final Feature feature = getFeature();
     final IRelationType property = (IRelationType) getProperty();
-    final List newValues = (List) super.getNewValue();
+    final List< ? > newValues = (List< ? >) super.getNewValue();
     if( property != null )
     {
       final FeatureList featureList = (FeatureList) feature.getProperty( property );

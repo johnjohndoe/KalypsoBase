@@ -59,6 +59,7 @@ public class TupleResultColumnComparator implements Comparator<TupleResultColumn
   /**
    * @see java.util.Comparator#compare(T, T)
    */
+  @Override
   public int compare( TupleResultColumn o1, TupleResultColumn o2 )
   {
     if( o1.getTupleResult() == o2.getTupleResult() && o1.getKeyComponent() == o2.getKeyComponent() && o1.getValueComponent() == o2.getValueComponent() )

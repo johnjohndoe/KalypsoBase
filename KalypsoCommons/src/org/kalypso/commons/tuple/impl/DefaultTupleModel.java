@@ -64,6 +64,7 @@ public class DefaultTupleModel<R extends IRowKey, C extends IColumnKey> extends 
   /**
    * @see org.kalypso.tuplemodel.ITupleModel#getColumnCount()
    */
+  @Override
   public int getColumnCount( )
   {
     return m_columns.size();
@@ -72,6 +73,7 @@ public class DefaultTupleModel<R extends IRowKey, C extends IColumnKey> extends 
   /**
    * @see org.kalypso.tuplemodel.ITupleModel#getRowCount()
    */
+  @Override
   public int getRowCount( )
   {
     return m_model.size();
@@ -80,6 +82,7 @@ public class DefaultTupleModel<R extends IRowKey, C extends IColumnKey> extends 
   /**
    * @see org.kalypso.tuple.ITupleModel#getColumnKeySet()
    */
+  @Override
   public Set<C> getColumnKeySet( )
   {
     return m_columns;
@@ -88,6 +91,7 @@ public class DefaultTupleModel<R extends IRowKey, C extends IColumnKey> extends 
   /**
    * @see org.kalypso.tuple.ITupleModel#getRowKeySet()
    */
+  @Override
   public Set<R> getRowKeySet( )
   {
     return m_model.keySet();
@@ -96,6 +100,7 @@ public class DefaultTupleModel<R extends IRowKey, C extends IColumnKey> extends 
   /**
    * @see org.kalypso.commons.tuple.ITupleModel#hasRowKey(R)
    */
+  @Override
   public boolean hasRowKey( final R rowKey )
   {
     return m_model.containsKey( rowKey );
@@ -104,11 +109,13 @@ public class DefaultTupleModel<R extends IRowKey, C extends IColumnKey> extends 
   /**
    * @see org.kalypso.commons.tuple.ITupleModel#hasColumnKey(null)
    */
+  @Override
   public boolean hasColumnKey( final C columnKey )
   {
     return m_columns.contains( columnKey );
   }
   
+  @Override
   public Object getValue( final R rowKey, final C columnKey )
   {
     final Map<C, Object> row = m_model.get( rowKey );

@@ -133,6 +133,7 @@ public class PoolView extends ViewPart implements ITableLabelProvider
     if( (table != null) && !table.isDisposed() )
       table.getDisplay().asyncExec( new Runnable()
       {
+        @Override
         public void run( )
         {
           // to avoid exception when window is closed test for content provider
@@ -164,6 +165,7 @@ public class PoolView extends ViewPart implements ITableLabelProvider
 
     m_viewer.addOpenListener( new IOpenListener()
     {
+      @Override
       public void open( final OpenEvent event )
       {
         final ISelection selection = event.getSelection();
@@ -207,7 +209,7 @@ public class PoolView extends ViewPart implements ITableLabelProvider
     }
   }
 
-  protected void printAddTraces( final KeyInfo info, final Object[] result )
+  protected void printAddTraces( @SuppressWarnings("unused") final KeyInfo info, final Object[] result )
   {
     for( final Object object : result )
     {
@@ -234,6 +236,7 @@ public class PoolView extends ViewPart implements ITableLabelProvider
   /**
    * @see org.eclipse.jface.viewers.IBaseLabelProvider#addListener(org.eclipse.jface.viewers.ILabelProviderListener)
    */
+  @Override
   public void addListener( final ILabelProviderListener listener )
   {
     // egal
@@ -242,6 +245,7 @@ public class PoolView extends ViewPart implements ITableLabelProvider
   /**
    * @see org.eclipse.jface.viewers.IBaseLabelProvider#isLabelProperty(java.lang.Object, java.lang.String)
    */
+  @Override
   public boolean isLabelProperty( final Object element, final String property )
   {
     return true;
@@ -250,6 +254,7 @@ public class PoolView extends ViewPart implements ITableLabelProvider
   /**
    * @see org.eclipse.jface.viewers.IBaseLabelProvider#removeListener(org.eclipse.jface.viewers.ILabelProviderListener)
    */
+  @Override
   public void removeListener( final ILabelProviderListener listener )
   {
     // egal
@@ -259,6 +264,7 @@ public class PoolView extends ViewPart implements ITableLabelProvider
   /**
    * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang.Object, int)
    */
+  @Override
   public Image getColumnImage( final Object element, final int columnIndex )
   {
     return null;
@@ -267,6 +273,7 @@ public class PoolView extends ViewPart implements ITableLabelProvider
   /**
    * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.lang.Object, int)
    */
+  @Override
   public String getColumnText( final Object element, final int columnIndex )
   {
     final KeyInfo info = (KeyInfo) element;

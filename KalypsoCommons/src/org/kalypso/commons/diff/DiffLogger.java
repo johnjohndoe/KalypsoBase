@@ -52,6 +52,7 @@ public class DiffLogger implements IDiffLogger
   /**
    * @see org.kalypso.commons.diff.IDiffLogger#log(int, java.lang.String)
    */
+  @Override
   public void log( int status, String message )
   {
     final String diff;
@@ -105,6 +106,7 @@ public class DiffLogger implements IDiffLogger
   /**
    * @see org.kalypso.commons.diff.IDiffLogger#block()
    */
+  @Override
   public void block()
   {
     final StringBuffer stringBuffer = new StringBuffer();
@@ -114,6 +116,7 @@ public class DiffLogger implements IDiffLogger
   /**
    * @see org.kalypso.commons.diff.IDiffLogger#unblock(boolean)
    */
+  @Override
   public void unblock( boolean keepLastLog )
   {
     final StringBuffer buffer = m_buffers.pop();

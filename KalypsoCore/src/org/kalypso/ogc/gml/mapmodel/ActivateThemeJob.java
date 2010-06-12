@@ -60,6 +60,7 @@ public final class ActivateThemeJob extends Job
 
   protected final IKalypsoThemeVisitor m_themeVisitor = new IKalypsoThemeVisitor()
   {
+    @Override
     public boolean visit( final IKalypsoTheme theme )
     {
       if( theme.isLoaded() )

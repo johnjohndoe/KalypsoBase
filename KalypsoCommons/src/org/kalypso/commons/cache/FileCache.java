@@ -16,8 +16,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.Map.Entry;
+import java.util.TreeMap;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.IStatus;

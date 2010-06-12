@@ -58,6 +58,7 @@ public class SimpleColumnKey extends SimpleKey implements IColumnKey
   /**
    * @see org.kalypso.tuple.IColumnKey#getValueClass()
    */
+  @Override
   public Class< ? > getValueClass( )
   {
     return m_clazz;

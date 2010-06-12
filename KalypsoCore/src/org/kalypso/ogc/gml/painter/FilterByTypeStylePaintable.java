@@ -69,21 +69,25 @@ public class FilterByTypeStylePaintable implements IStylePaintable
     m_localFeatureTypeName = m_featureTypeName.asLocal();
   }
 
+  @Override
   public GM_Envelope getBoundingBox( )
   {
     return m_paintable.getBoundingBox();
   }
 
+  @Override
   public Double getScale( )
   {
     return m_paintable.getScale();
   }
 
+  @Override
   public void paint( final DisplayElement displayElement, final IProgressMonitor monitor ) throws CoreException
   {
     m_paintable.paint( displayElement, monitor );
   }
 
+  @Override
   public boolean shouldPaintFeature( final Feature feature )
   {
     /* Only paint features which applies to the given qname */

@@ -65,6 +65,7 @@ public class SwtWidgetManager implements IWidgetManager, MouseListener, MouseMov
 
   private final IFeatureSelectionListener m_featureSelectionListener = new IFeatureSelectionListener()
   {
+    @Override
     public void selectionChanged( final IFeatureSelection selection )
     {
       onSelectionChanged( selection );
@@ -87,6 +88,7 @@ public class SwtWidgetManager implements IWidgetManager, MouseListener, MouseMov
     m_mapPanel.getSelectionManager().addSelectionListener( m_featureSelectionListener );
   }
 
+  @Override
   public void dispose( )
   {
     setActualWidget( null );
@@ -94,6 +96,7 @@ public class SwtWidgetManager implements IWidgetManager, MouseListener, MouseMov
     m_mapPanel.getSelectionManager().removeSelectionListener( m_featureSelectionListener );
   }
 
+  @Override
   public ICommandTarget getCommandTarget( )
   {
     return m_commandTarget;
@@ -106,11 +109,13 @@ public class SwtWidgetManager implements IWidgetManager, MouseListener, MouseMov
       actualWidget.paint( g );
   }
 
+  @Override
   public IWidget getActualWidget( )
   {
     return m_actualWidget;
   }
 
+  @Override
   public void setActualWidget( final IWidget newWidget )
   {
     if( m_actualWidget != null )
@@ -135,6 +140,7 @@ public class SwtWidgetManager implements IWidgetManager, MouseListener, MouseMov
    * <p>
    * Has no effect, if the same listener was already registered.
    */
+  @Override
   public void addWidgetChangeListener( final IWidgetChangeListener listener )
   {
     m_widgetChangeListener.add( listener );
@@ -145,6 +151,7 @@ public class SwtWidgetManager implements IWidgetManager, MouseListener, MouseMov
    * <p>
    * Has no effect, if this listener was not added to this manager before.
    */
+  @Override
   public void removeWidgetChangeListener( final IWidgetChangeListener listener )
   {
     m_widgetChangeListener.remove( listener );

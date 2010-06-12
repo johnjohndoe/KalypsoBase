@@ -87,6 +87,7 @@ public class ChangeSourceTypeHandler implements ISourceHandler
   /**
    * @see org.kalypso.ogc.gml.convert.source.ISourceHandler#getWorkspace()
    */
+  @Override
   public GMLWorkspace getWorkspace() throws GmlConvertException
   {
     try

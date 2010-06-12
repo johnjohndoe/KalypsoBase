@@ -75,6 +75,7 @@ public class WFSLayer implements IWFSLayer
   /**
    * @see org.kalypso.ogc.wfs.IWFSLayer#getName()
    */
+  @Override
   public QName getQName( )
   {
     return m_qName;
@@ -83,6 +84,7 @@ public class WFSLayer implements IWFSLayer
   /**
    * @see org.kalypso.ogc.wfs.IWFSLayer#getTitle()
    */
+  @Override
   public String getTitle( )
   {
     return m_title;
@@ -91,6 +93,7 @@ public class WFSLayer implements IWFSLayer
   /**
    * @see org.kalypso.ogc.wfs.IWFSLayer#getFeatureType()
    */
+  @Override
   public IFeatureType getFeatureType( )
   {
     if( m_gmlSchema == null )
@@ -111,6 +114,7 @@ public class WFSLayer implements IWFSLayer
   /**
    * @see org.kalypso.ogc.wfs.IWFSLayer#getSRS()
    */
+  @Override
   public String getSRS( )
   {
     return m_remoteCRS;

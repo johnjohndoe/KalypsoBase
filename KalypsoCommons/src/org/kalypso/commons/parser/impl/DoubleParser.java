@@ -74,6 +74,7 @@ public class DoubleParser extends AbstractParser
   /**
    * @see org.kalypso.commons.parser.IParser#getObjectClass()
    */
+  @Override
   public Class<Double> getObjectClass( )
   {
     return Double.class;
@@ -82,6 +83,7 @@ public class DoubleParser extends AbstractParser
   /**
    * @see org.kalypso.commons.parser.IParser#getFormat()
    */
+  @Override
   public String getFormat()
   {
     return ""; //$NON-NLS-1$
@@ -90,6 +92,7 @@ public class DoubleParser extends AbstractParser
   /**
    * @see org.kalypso.commons.parser.IParser#parse(java.lang.String)
    */
+  @Override
   public Object parse( final String text ) throws ParserException
   {
     try
@@ -114,6 +117,7 @@ public class DoubleParser extends AbstractParser
   /**
    * @see org.kalypso.commons.parser.IParser#compare(java.lang.Object, java.lang.Object)
    */
+  @Override
   public int compare( final Object value1, final Object value2 )
   {
     final double n1 = ( (Number)value1 ).doubleValue();

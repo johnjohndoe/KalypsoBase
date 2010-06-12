@@ -59,6 +59,7 @@ public class EmptyCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#getDescription()
    */
+  @Override
   public String getDescription( )
   {
     return m_description;
@@ -67,6 +68,7 @@ public class EmptyCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#isUndoable()
    */
+  @Override
   public boolean isUndoable( )
   {
     return m_isUndoable;
@@ -75,6 +77,7 @@ public class EmptyCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#process()
    */
+  @Override
   public void process( ) throws Exception
   {
     // does nothing
@@ -83,6 +86,7 @@ public class EmptyCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#redo()
    */
+  @Override
   public void redo( ) throws Exception
   {
     // does nothing
@@ -91,6 +95,7 @@ public class EmptyCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#undo()
    */
+  @Override
   public void undo( ) throws Exception
   {
     // does nothing

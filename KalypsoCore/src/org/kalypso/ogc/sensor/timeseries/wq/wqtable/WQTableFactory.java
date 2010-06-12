@@ -164,6 +164,7 @@ public class WQTableFactory implements ISerializer<WQTableSet>
    * 
    * @see org.kalypso.commons.serializer.ISerializer#read(java.io.InputStream)
    */
+  @Override
   public WQTableSet read( final InputStream ins ) throws InvocationTargetException
   {
     try
@@ -180,6 +181,7 @@ public class WQTableFactory implements ISerializer<WQTableSet>
   /**
    * @see org.kalypso.commons.serializer.ISerializer#write(java.lang.Object, java.io.OutputStream)
    */
+  @Override
   public void write( final WQTableSet object, final OutputStream os ) throws InvocationTargetException, IOException
   {
     try

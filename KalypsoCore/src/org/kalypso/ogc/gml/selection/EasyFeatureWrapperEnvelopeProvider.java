@@ -51,6 +51,7 @@ public class EasyFeatureWrapperEnvelopeProvider implements IEnvelopeProvider
   /**
    * @see org.kalypsodeegree_impl.model.sort.IEnvelopeProvider#getEnvelope(java.lang.Object)
    */
+  @Override
   public GM_Envelope getEnvelope( final Object o )
   {
     if( o instanceof EasyFeatureWrapper )

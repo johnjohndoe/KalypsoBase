@@ -54,6 +54,7 @@ public abstract class AbstractComponent implements IComponent
   /**
    * @see org.kalypso.observation.result.IComponent#getPrecision()
    */
+  @Override
   public Double getPrecision( )
   {
     for( final IRestriction restriction : getRestrictions() )
@@ -71,6 +72,7 @@ public abstract class AbstractComponent implements IComponent
   /**
    * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
    */
+  @Override
   public int compare( final Object objFirst, final Object objSecond )
   {
     final XsdBaseTypeHandler handler = ObservationFeatureFactory.typeHanderForComponent( this );

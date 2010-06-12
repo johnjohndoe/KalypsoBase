@@ -82,6 +82,7 @@ public class FileCopyVisitor implements FileVisitor
   /**
    * @see org.kalypso.contribs.java.io.FileVisitor#visit(java.io.File)
    */
+  @Override
   public boolean visit( final File file ) throws IOException
   {
     final String relativePathTo = FileUtilities.getRelativePathTo( m_fromDir, file );

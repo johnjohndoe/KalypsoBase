@@ -75,6 +75,7 @@ public class AutoProxyFactory implements IProxyFactory
    * @param obs
    * @return either a proxy observation or the original observation
    */
+  @Override
   public IObservation proxyObservation( final IObservation obs )
   {
     // direct assignment, just to be able to use 'proxy' as name everywhere

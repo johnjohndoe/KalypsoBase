@@ -67,6 +67,7 @@ class FeatureTypeStylePainter implements IStylePainter
     m_features = features;
   }
 
+  @Override
   public void paint( final IStylePaintable paintable, final IProgressMonitor monitor ) throws CoreException
   {
     try
@@ -81,8 +82,6 @@ class FeatureTypeStylePainter implements IStylePainter
 
   private void doPaint( final IStylePaintable paintable, final IProgressMonitor monitor ) throws CoreException
   {
-    final QName qname = m_style.getFeatureTypeName();
-
     final Rule[] rules = m_style.getRules();
 
     final SubMonitor progress = SubMonitor.convert( monitor, rules.length );
@@ -93,7 +92,7 @@ class FeatureTypeStylePainter implements IStylePainter
     for( final Rule rule : rules )
     {
       final SubMonitor childProgress = progress.newChild( 1 );
-      final IStylePainter rulePainter = StylePainterFactory.create( rule, qname, m_features );
+      final IStylePainter rulePainter = StylePainterFactory.create( rule, m_features );
       rulePainter.paint( delegatePaintable, childProgress );
     }
   }

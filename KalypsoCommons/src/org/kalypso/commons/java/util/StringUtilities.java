@@ -42,8 +42,8 @@ package org.kalypso.commons.java.util;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.util.Properties;
 import java.util.Map.Entry;
+import java.util.Properties;
 
 import org.apache.commons.lang.StringUtils;
 import org.kalypso.commons.i18n.Messages;

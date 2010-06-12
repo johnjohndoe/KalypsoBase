@@ -48,7 +48,6 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.AbstractFeatureSelection;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
@@ -81,6 +80,7 @@ public class KalypsoCascadingThemeSelection extends AbstractFeatureSelection
   /**
    * @see org.kalypso.ogc.gml.selection.IFeatureSelection#getAllFeatures()
    */
+  @Override
   public EasyFeatureWrapper[] getAllFeatures( )
   {
     return m_selectionManager.getAllFeatures();
@@ -89,6 +89,7 @@ public class KalypsoCascadingThemeSelection extends AbstractFeatureSelection
   /**
    * @see org.kalypso.ogc.gml.selection.IFeatureSelection#getFocusedFeature()
    */
+  @Override
   public Feature getFocusedFeature( )
   {
     return m_focusedFeature;
@@ -97,30 +98,16 @@ public class KalypsoCascadingThemeSelection extends AbstractFeatureSelection
   /**
    * @see org.kalypso.ogc.gml.selection.IFeatureSelection#getFocusedProperty()
    */
+  @Override
   public IPropertyType getFocusedProperty( )
   {
     return m_focusedProperty;
   }
 
   /**
-   * @see org.kalypso.ogc.gml.selection.IFeatureSelection#getParentFeature(org.kalypsodeegree.model.feature.Feature)
-   */
-  public Feature getParentFeature( final Feature feature )
-  {
-    throw (new NotImplementedException());
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.selection.IFeatureSelection#getParentFeatureProperty(org.kalypsodeegree.model.feature.Feature)
-   */
-  public IRelationType getParentFeatureProperty( final Feature feature )
-  {
-    throw (new NotImplementedException());
-  }
-
-  /**
    * @see org.kalypso.ogc.gml.selection.IFeatureSelection#getSelectionManager()
    */
+  @Override
   public IFeatureSelectionManager getSelectionManager( )
   {
     throw (new NotImplementedException());
@@ -129,6 +116,7 @@ public class KalypsoCascadingThemeSelection extends AbstractFeatureSelection
   /**
    * @see org.kalypso.ogc.gml.selection.IFeatureSelection#getWorkspace(org.kalypsodeegree.model.feature.Feature)
    */
+  @Override
   public CommandableWorkspace getWorkspace( final Feature feature )
   {
     if( feature == null )

@@ -175,6 +175,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     fireRepaintRequested( getFullExtent() );
   }
 
+  @Override
   public CommandableWorkspace getWorkspace( )
   {
     return m_workspace;
@@ -183,6 +184,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
   /**
    * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#getFeatureType()
    */
+  @Override
   public IFeatureType getFeatureType( )
   {
     return m_featureType;
@@ -191,6 +193,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
   /**
    * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#getFeaturePath()
    */
+  @Override
   public String getFeaturePath( )
   {
     return m_featurePath;
@@ -250,6 +253,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     return false;
   }
 
+  @Override
   public void addStyle( final IKalypsoStyle style )
   {
     m_styles.add( style );
@@ -259,6 +263,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     fireVisibilityChanged( isVisible() );
   }
 
+  @Override
   public void removeStyle( final IKalypsoStyle style )
   {
     style.removeStyleListener( this );
@@ -268,6 +273,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     fireVisibilityChanged( isVisible() );
   }
 
+  @Override
   public IKalypsoStyle[] getStyles( )
   {
     return m_styles.toArray( new IKalypsoStyle[m_styles.size()] );
@@ -276,6 +282,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
   /**
    * @see org.kalypsodeegree.model.feature.event.ModellEventListener#onModellChange(org.kalypsodeegree.model.feature.event.ModellEvent)
    */
+  @Override
   public void onModellChange( final ModellEvent modellEvent )
   {
     if( m_featureList == null )
@@ -363,6 +370,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#getBoundingBox()
    */
+  @Override
   public GM_Envelope getFullExtent( )
   {
     final FeatureList visibleFeatures = getFeatureListVisible( null );
@@ -372,6 +380,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     return visibleFeatures.getBoundingBox();
   }
 
+  @Override
   public FeatureList getFeatureList( )
   {
     return m_featureList;
@@ -380,6 +389,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
   /**
    * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#getFeatureListVisible(org.kalypsodeegree.model.geometry.GM_Envelope)
    */
+  @Override
   public FeatureList getFeatureListVisible( final GM_Envelope searchEnvelope )
   {
     if( m_featureList == null )
@@ -394,6 +404,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     final Set<Feature> features = new LinkedHashSet<Feature>();
     final IStylePaintable paintDelegate = new IStylePaintable()
     {
+      @Override
       public void paint( final DisplayElement displayElement, final IProgressMonitor paintMonitor )
       {
         final Feature feature = displayElement.getFeature();
@@ -446,6 +457,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
    * @see org.kalypso.commons.command.ICommandTarget#postCommand(org.kalypso.commons.command.ICommand,
    *      java.lang.Runnable)
    */
+  @Override
   public void postCommand( final ICommand command, final Runnable runnable )
   {
     try
@@ -465,6 +477,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
   /**
    * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#getSchedulingRule()
    */
+  @Override
   public ISchedulingRule getSchedulingRule( )
   {
     return null;
@@ -473,6 +486,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
   /**
    * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#getSelectionManager()
    */
+  @Override
   public IFeatureSelectionManager getSelectionManager( )
   {
     return m_selectionManager;
@@ -493,6 +507,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
   /**
    * @see org.kalypso.ogc.gml.IKalypsoStyleListener#styleChanged()
    */
+  @Override
   public void styleChanged( )
   {
     setDirty();
@@ -502,9 +517,8 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
   /**
    * @see org.eclipse.core.runtime.PlatformObject#getAdapter(java.lang.Class)
    */
-  @SuppressWarnings("unchecked")
   @Override
-  public Object getAdapter( final Class adapter )
+  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
   {
     if( adapter == IFeatureSelection.class )
       return new KalypsoFeatureThemeSelection( m_selectionManager.toList(), this, m_selectionManager, null, null );

@@ -162,6 +162,7 @@ public class DynamicCatalog implements ICatalog
   /**
    * @see org.kalypso.core.catalog.ICatalog#addNextCatalog(java.net.URL)
    */
+  @Override
   public void addNextCatalog( final URL catalogURL )
   {
     final List<Object> publicOrSystemOrUri = m_catalog.getPublicOrSystemOrUri();
@@ -174,6 +175,7 @@ public class DynamicCatalog implements ICatalog
   /**
    * @see org.kalypso.core.catalog.ICatalog#addEntry(java.lang.String, java.lang.String, java.lang.String)
    */
+  @Override
   public void addEntry( final String uri, final String systemID, final String publicID )
   {
     if( systemID != null && !"".equals( systemID ) ) //$NON-NLS-1$
@@ -189,6 +191,7 @@ public class DynamicCatalog implements ICatalog
   /**
    * @see org.kalypso.core.catalog.ICatalog#addEntryRelative(java.lang.String, java.lang.String, java.lang.String)
    */
+  @Override
   public void addEntryRelative( final String uri, final String systemID, final String publicID )
   {
     if( systemID != null && !"".equals( systemID ) ) //$NON-NLS-1$
@@ -328,11 +331,13 @@ public class DynamicCatalog implements ICatalog
     return UrlResolverSingleton.resolveUrl( m_context, href );
   }
 
+  @Override
   public String resolve( final String systemID, final String publicID )
   {
     return resolve( systemID, publicID, true );
   }
 
+  @Override
   public String resolve( final String systemID, final String publicID, final boolean resolveContext )
   {
     return resolveLocal( systemID, publicID, false, resolveContext );
@@ -349,6 +354,7 @@ public class DynamicCatalog implements ICatalog
   /**
    * @see org.kalypso.core.catalog.ICatalog#getEnryURNS(java.lang.String)
    */
+  @Override
   public List<String> getEntryURNS( final String urnPattern )
   {
     return internResolve( urnPattern, urnPattern, null, true, true, false, true );
@@ -414,7 +420,7 @@ public class DynamicCatalog implements ICatalog
       collector = new ArrayList<String>();
 
     final List<Object> publicOrSystemOrUri = m_catalog.getPublicOrSystemOrUri();
-    final List entries = new ArrayList();
+    final List<Object> entries = new ArrayList<Object>();
     entries.addAll( publicOrSystemOrUri );
     // TODO add entries from imported catalogs or extension-point catalogs
     for( int step = SYSTEM_RESOLVE_1; step <= DELEGATE_SEARCH_5; step++ )
@@ -505,7 +511,7 @@ public class DynamicCatalog implements ICatalog
               final DelegateURI delegateURI = (DelegateURI) item;
               final String uriStartString = delegateURI.getUriStartString();
               if( (systemID != null && systemID.startsWith( uriStartString )) //
-                  || // 
+                  || //
                   (publicID != null && publicID.startsWith( uriStartString )) )
               {
                 final String catalogHref = delegateURI.getCatalog();
@@ -523,7 +529,7 @@ public class DynamicCatalog implements ICatalog
     return collector;
   }
 
-  private boolean matches( final String requestedID, final String entryID, boolean supportPattern )
+  private boolean matches( final String requestedID, final String entryID, final boolean supportPattern )
   {
     if( !supportPattern )
       return requestedID.equals( entryID );

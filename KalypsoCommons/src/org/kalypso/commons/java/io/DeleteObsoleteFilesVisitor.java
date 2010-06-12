@@ -67,6 +67,7 @@ public class DeleteObsoleteFilesVisitor implements FileVisitor
   /**
    * @see org.kalypso.contribs.java.io.FileVisitor#visit(java.io.File)
    */
+  @Override
   public boolean visit( final File file )
   {
     final String relativePathTo = FileUtilities.getRelativePathTo( m_adoptDir, file );

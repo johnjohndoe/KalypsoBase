@@ -63,17 +63,17 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  * {@link IKalypsoThemeInfo}-implementation for features which contain
  * {@link org.kalypsodeegree.model.geometry.GM_TriangulatedSurface}s.<br>
  * Show the interpolated value at the given position.
- *
+ * 
  * @author Gernot Belger
  */
 public class TriangulatedSurfaceThemeInfo implements IKalypsoThemeInfo
 {
-  private static final String DEFAULT_FORMAT_STRING = Messages.getString("org.kalypso.ogc.gml.map.themeinfo.TriangulatedSurfaceThemeInfo.0"); //$NON-NLS-1$
+  private static final String DEFAULT_FORMAT_STRING = Messages.getString( "org.kalypso.ogc.gml.map.themeinfo.TriangulatedSurfaceThemeInfo.0" ); //$NON-NLS-1$
 
   /**
    * Value of the property for a format string.<br>
-   * A {@link Formatter}-style format string, can only contain one variable of type f. Example:
-   * <code>Value: %.3f</code>.<br>
+   * A {@link Formatter}-style format string, can only contain one variable of type f. Example: <code>Value: %.3f</code>
+   * .<br>
    * Defaults to <code>Wert: %.2f</code>.
    */
   public final static String PROP_FORMAT = "format"; //$NON-NLS-1$
@@ -94,6 +94,7 @@ public class TriangulatedSurfaceThemeInfo implements IKalypsoThemeInfo
   /**
    * @see org.kalypso.ogc.gml.IKalypsoThemeInfo#init(org.kalypso.ogc.gml.IKalypsoTheme, java.util.Properties)
    */
+  @Override
   public void init( final IKalypsoTheme theme, final Properties props )
   {
     Assert.isLegal( theme instanceof IKalypsoFeatureTheme );
@@ -110,6 +111,7 @@ public class TriangulatedSurfaceThemeInfo implements IKalypsoThemeInfo
    * @see org.kalypso.ogc.gml.IKalypsoThemeInfo#appendInfo(java.util.Formatter,
    *      org.kalypsodeegree.model.geometry.GM_Position)
    */
+  @Override
   public void appendInfo( final Formatter formatter, final GM_Position pos )
   {
     // not yet implemented, use quick-info
@@ -120,6 +122,7 @@ public class TriangulatedSurfaceThemeInfo implements IKalypsoThemeInfo
    * @see org.kalypso.ogc.gml.IKalypsoThemeInfo#appendQuickInfo(java.util.Formatter,
    *      org.kalypsodeegree.model.geometry.GM_Position)
    */
+  @Override
   @SuppressWarnings("unchecked")
   public void appendQuickInfo( final Formatter formatter, final GM_Position pos )
   {
@@ -131,7 +134,7 @@ public class TriangulatedSurfaceThemeInfo implements IKalypsoThemeInfo
     if( featureList == null )
       return;
 
-    final List tins = featureList.query( pos, null );
+    final List< ? > tins = featureList.query( pos, null );
     for( final Object tinObject : tins )
     {
       /* Search for the first feature which provides a value */

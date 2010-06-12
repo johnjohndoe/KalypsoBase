@@ -65,6 +65,7 @@ public class Observation<T> implements IObservation<T>
   /**
    * @see org.kalypso.om.IObservation#getName()
    */
+  @Override
   public String getName( )
   {
     return m_name;
@@ -73,6 +74,7 @@ public class Observation<T> implements IObservation<T>
   /**
    * @see org.kalypso.om.IObservation#setName(java.lang.String)
    */
+  @Override
   public void setName( final String name )
   {
     m_name = name;
@@ -81,6 +83,7 @@ public class Observation<T> implements IObservation<T>
   /**
    * @see org.kalypso.om.IObservation#getDescription()
    */
+  @Override
   public String getDescription( )
   {
     return m_desc;
@@ -89,6 +92,7 @@ public class Observation<T> implements IObservation<T>
   /**
    * @see org.kalypso.om.IObservation#setDescription(java.lang.String)
    */
+  @Override
   public void setDescription( final String desc )
   {
     m_desc = desc;
@@ -97,6 +101,7 @@ public class Observation<T> implements IObservation<T>
   /**
    * @see org.kalypso.om.IObservation#getResult()
    */
+  @Override
   public T getResult( )
   {
     return m_result;
@@ -105,6 +110,7 @@ public class Observation<T> implements IObservation<T>
   /**
    * @see org.kalypso.om.IObservation#setResult(T)
    */
+  @Override
   public void setResult( final T values )
   {
     m_result = values;
@@ -113,6 +119,7 @@ public class Observation<T> implements IObservation<T>
   /**
    * @see org.kalypso.observation.IObservation#getPhenomenon()
    */
+  @Override
   public IPhenomenon getPhenomenon( )
   {
     return m_phenomenon;
@@ -121,6 +128,7 @@ public class Observation<T> implements IObservation<T>
   /**
    * @see org.kalypso.observation.IObservation#setPhenomenon(java.lang.String)
    */
+  @Override
   public void setPhenomenon( final IPhenomenon phenomenon )
   {
     m_phenomenon = phenomenon;

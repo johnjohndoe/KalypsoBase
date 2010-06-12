@@ -77,6 +77,7 @@ public class MsgGetStringTranslator implements ITranslator, IExecutableExtension
    * @see org.eclipse.core.runtime.IExecutableExtension#setInitializationData(org.eclipse.core.runtime.IConfigurationElement,
    *      java.lang.String, java.lang.Object)
    */
+  @Override
   public void setInitializationData( final IConfigurationElement config, final String propertyName, final Object data )
   {
     m_id = config.getAttribute( "id" ); //$NON-NLS-1$
@@ -85,6 +86,7 @@ public class MsgGetStringTranslator implements ITranslator, IExecutableExtension
   /**
    * @see org.kalypso.contribs.java.lang.I10nTranslator#getId()
    */
+  @Override
   public String getId( )
   {
     return m_id;
@@ -93,6 +95,7 @@ public class MsgGetStringTranslator implements ITranslator, IExecutableExtension
   /**
    * @see org.kalypso.contribs.java.lang.I10nTranslator#configure(java.util.List)
    */
+  @Override
   @SuppressWarnings("unchecked")
   public void configure( final URL context, final List<Element> configuration )
   {
@@ -122,6 +125,7 @@ public class MsgGetStringTranslator implements ITranslator, IExecutableExtension
   /**
    * @see org.kalypso.contribs.java.lang.I10nTranslator#getConfiguration()
    */
+  @Override
   public List<Element> getConfiguration( )
   {
     return m_configuration;
@@ -133,6 +137,7 @@ public class MsgGetStringTranslator implements ITranslator, IExecutableExtension
    * 
    * @see org.kalypso.contribs.java.lang.I10nTranslator#get(java.lang.String, java.util.Locale, java.lang.Object[])
    */
+  @Override
   public String get( final String key, final Locale locale, final Object[] context )
   {
     if( m_nls == null )

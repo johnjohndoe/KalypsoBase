@@ -110,6 +110,7 @@ public class ZipResourceVisitor implements IResourceVisitor
   /**
    * @see org.eclipse.core.resources.IResourceVisitor#visit(org.eclipse.core.resources.IResource)
    */
+  @Override
   public boolean visit( final IResource resource ) throws CoreException
   {
     if( resource.getType() == IResource.FILE )

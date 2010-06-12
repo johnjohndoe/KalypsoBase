@@ -58,31 +58,37 @@ public abstract class AbstractFeatureSelection implements IFeatureSelection
     m_selection = selection;
   }
 
+  @Override
   public final Object getFirstElement()
   {
     return m_selection.getFirstElement();
   }
 
+  @Override
   public final Iterator< ? > iterator( )
   {
     return m_selection.iterator();
   }
 
+  @Override
   public final int size()
   {
     return m_selection.size();
   }
 
+  @Override
   public final Object[] toArray()
   {
     return m_selection.toArray();
   }
 
+  @Override
   public final List< ? > toList( )
   {
     return m_selection.toList();
   }
 
+  @Override
   public final boolean isEmpty()
   {
     return m_selection.isEmpty();

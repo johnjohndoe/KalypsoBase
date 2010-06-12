@@ -71,6 +71,7 @@ public class ZmlTuppleModel extends AbstractTuppleModel
   /**
    * @see org.kalypso.ogc.sensor.ITuppleModel#getCount()
    */
+  @Override
   public int getCount( ) throws SensorException
   {
     if( m_valuesMap.size() == 0 )
@@ -82,6 +83,7 @@ public class ZmlTuppleModel extends AbstractTuppleModel
   /**
    * @see org.kalypso.ogc.sensor.ITuppleModel#indexOf(java.lang.Object, org.kalypso.ogc.sensor.IAxis)
    */
+  @Override
   public int indexOf( final Object element, final IAxis axis ) throws SensorException
   {
     if( m_valuesMap.size() == 0 )
@@ -97,6 +99,7 @@ public class ZmlTuppleModel extends AbstractTuppleModel
   /**
    * @see org.kalypso.ogc.sensor.ITuppleModel#getElement(int, org.kalypso.ogc.sensor.IAxis)
    */
+  @Override
   public Object getElement( final int index, final IAxis axis ) throws SensorException
   {
     if( m_valuesMap.size() == 0 )
@@ -112,6 +115,7 @@ public class ZmlTuppleModel extends AbstractTuppleModel
   /**
    * @see org.kalypso.ogc.sensor.ITuppleModel#setElement(int, java.lang.Object, org.kalypso.ogc.sensor.IAxis)
    */
+  @Override
   public void setElement( final int index, final Object element, final IAxis axis ) throws SensorException
   {
     if( m_valuesMap.size() == 0 )

@@ -86,6 +86,7 @@ public class FeatureComponent extends AbstractComponent
   /**
    * @see org.kalypso.observation.result.IComponent#getDefaultValue()
    */
+  @Override
   public Object getDefaultValue( )
   {
     // HACK: in case of enums, we use the first value. Maybe we could add a annotation for that
@@ -103,6 +104,7 @@ public class FeatureComponent extends AbstractComponent
     return null;
   }
 
+  @Override
   public String getDescription( )
   {
     if( m_itemDef == null )
@@ -113,6 +115,7 @@ public class FeatureComponent extends AbstractComponent
   /**
    * @see org.kalypso.observation.result.IComponent#getFrame()
    */
+  @Override
   public String getFrame( )
   {
     return getRepresentationType().getFrame();
@@ -121,6 +124,7 @@ public class FeatureComponent extends AbstractComponent
   /**
    * @see org.kalypso.observation.result.IComponent#getId()
    */
+  @Override
   public String getId( )
   {
     if( m_itemDef instanceof XLinkedFeature_Impl )
@@ -140,6 +144,7 @@ public class FeatureComponent extends AbstractComponent
     return m_itemDef;
   }
 
+  @Override
   public String getName( )
   {
     if( m_itemDef == null )
@@ -147,6 +152,7 @@ public class FeatureComponent extends AbstractComponent
     return NamedFeatureHelper.getName( m_itemDef );
   }
 
+  @Override
   public IPhenomenon getPhenomenon( )
   {
     if( m_itemDef == null )
@@ -173,6 +179,7 @@ public class FeatureComponent extends AbstractComponent
   /**
    * @see org.kalypso.observation.result.IComponent#getUnit()
    */
+  @Override
   public String getUnit( )
   {
     return getRepresentationType().getUnit();
@@ -181,6 +188,7 @@ public class FeatureComponent extends AbstractComponent
   /**
    * @see org.kalypso.observation.result.IComponent#getValueTypeName()
    */
+  @Override
   public QName getValueTypeName( )
   {
     return getRepresentationType().getValueTypeName();
@@ -189,6 +197,7 @@ public class FeatureComponent extends AbstractComponent
   /**
    * @see org.kalypso.observation.result.IComponent#getRestrictions()
    */
+  @Override
   public IRestriction[] getRestrictions( )
   {
     return getRepresentationType().getRestrictions();

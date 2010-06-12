@@ -59,6 +59,7 @@ public class DefaultTokenReplacer implements ITokenReplacer
   /**
    * @see org.kalypso.commons.tokenreplace.ITokenReplacer#replaceToken(java.lang.Object, java.lang.String)
    */
+  @Override
   public String replaceToken( Object value, String argument )
   {
     return m_replaceString;
@@ -67,6 +68,7 @@ public class DefaultTokenReplacer implements ITokenReplacer
   /**
    * @see org.kalypso.commons.tokenreplace.ITokenReplacer#getToken()
    */
+  @Override
   public String getToken( )
   {
     return m_token;

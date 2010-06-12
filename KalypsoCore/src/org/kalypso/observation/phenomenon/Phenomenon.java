@@ -62,6 +62,7 @@ public class Phenomenon implements IPhenomenon
   /**
    * @see org.kalypso.observation.IPhenomenon#getDescription()
    */
+  @Override
   public String getDescription( )
   {
     return m_description;
@@ -70,6 +71,7 @@ public class Phenomenon implements IPhenomenon
   /**
    * @see org.kalypso.observation.IPhenomenon#getID()
    */
+  @Override
   public String getID( )
   {
     return m_id;
@@ -78,6 +80,7 @@ public class Phenomenon implements IPhenomenon
   /**
    * @see org.kalypso.observation.IPhenomenon#getName()
    */
+  @Override
   public String getName( )
   {
     return m_name;

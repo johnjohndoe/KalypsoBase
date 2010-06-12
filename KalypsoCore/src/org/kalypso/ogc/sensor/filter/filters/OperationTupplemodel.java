@@ -70,6 +70,7 @@ public class OperationTupplemodel extends AbstractTuppleModel
     m_baseModel = baseModel;
   }
 
+  @Override
   public int getCount( ) throws SensorException
   {
     return m_baseModel.getCount();
@@ -87,6 +88,7 @@ public class OperationTupplemodel extends AbstractTuppleModel
     return m_baseModel.toString();
   }
 
+  @Override
   public Object getElement( int index, IAxis axis ) throws SensorException
   {
     IAxis a = ObservationUtilities.findAxisByName( m_baseModel.getAxisList(), axis.getName() );
@@ -117,12 +119,14 @@ public class OperationTupplemodel extends AbstractTuppleModel
         + object.getClass().getName() + Messages.getString( "org.kalypso.ogc.sensor.filter.filters.OperationTupplemodel.1" ) ); //$NON-NLS-1$
   }
 
+  @Override
   public void setElement( int index, Object element, IAxis axis )
   {
     throw new UnsupportedOperationException( getClass().getName() + Messages.getString( "org.kalypso.ogc.sensor.filter.filters.OperationTupplemodel.2" ) ); //$NON-NLS-1$
     // TODO support it
   }
 
+  @Override
   public int indexOf( Object element, IAxis axis ) throws SensorException
   {
     if( element instanceof Date )

@@ -66,6 +66,7 @@ public abstract class PoolableObjectWaiter implements IPoolListener
       m_pool.addPoolListener( this, key );
   }
 
+  @Override
   public final void objectLoaded( final IPoolableObjectType key, final Object newValue, final IStatus status )
   {
     try
@@ -105,6 +106,7 @@ public abstract class PoolableObjectWaiter implements IPoolListener
   /**
    * @see org.kalypso.util.pool.IPoolListener#objectInvalid(org.kalypso.util.pool.IPoolableObjectType, java.lang.Object)
    */
+  @Override
   public final void objectInvalid( final IPoolableObjectType key, final Object oldValue )
   {
     dispose();
@@ -113,6 +115,7 @@ public abstract class PoolableObjectWaiter implements IPoolListener
   /**
    * @see org.kalypso.util.pool.IPoolListener#dirtyChanged(org.kalypso.util.pool.IPoolableObjectType, boolean)
    */
+  @Override
   public void dirtyChanged( final IPoolableObjectType key, final boolean isDirty )
   {
     // TODO Auto-generated method stub
@@ -137,6 +140,7 @@ public abstract class PoolableObjectWaiter implements IPoolListener
   /**
    * @see org.kalypso.util.pool.IPoolListener#isDisposed()
    */
+  @Override
   public boolean isDisposed( )
   {
     return m_disposed;

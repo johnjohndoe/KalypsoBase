@@ -65,6 +65,7 @@ public class RegisterSourceHandler implements ISourceHandler
   /**
    * @see org.kalypso.ogc.gml.convert.source.ISourceHandler#getWorkspace()
    */
+  @Override
   public GMLWorkspace getWorkspace( )
   {
     return (GMLWorkspace) m_externData.get( m_registeredID );

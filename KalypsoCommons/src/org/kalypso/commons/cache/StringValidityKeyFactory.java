@@ -14,6 +14,7 @@ public class StringValidityKeyFactory implements IKeyFactory<StringValidityKey>
 
   private final static SimpleDateFormat DF = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" ); //$NON-NLS-1$
 
+  @Override
   public StringValidityKey createKey( final String string )
   {
     final String[] splits = string.split( KEY_SEP );
@@ -29,6 +30,7 @@ public class StringValidityKeyFactory implements IKeyFactory<StringValidityKey>
     }
   }
 
+  @Override
   public String toString( final StringValidityKey key )
   {
     final StringValidityKey rtkey = key;

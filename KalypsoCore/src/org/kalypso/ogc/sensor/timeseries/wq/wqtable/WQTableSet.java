@@ -59,6 +59,7 @@ public class WQTableSet implements IWQConverter
   /**
    * @return Returns the fromType.
    */
+  @Override
   public String getFromType()
   {
     return m_fromType;
@@ -67,6 +68,7 @@ public class WQTableSet implements IWQConverter
   /**
    * @return Returns the toType.
    */
+  @Override
   public String getToType()
   {
     return m_toType;
@@ -92,6 +94,7 @@ public class WQTableSet implements IWQConverter
   /**
    * @see org.kalypso.ogc.sensor.timeseries.wq.IWQConverter#computeW(java.util.Date, double)
    */
+  @Override
   public double computeW( final Date date, final double Q ) throws WQException
   {
     return getFor( date ).getWFor( Q );
@@ -100,6 +103,7 @@ public class WQTableSet implements IWQConverter
   /**
    * @see org.kalypso.ogc.sensor.timeseries.wq.IWQConverter#computeQ(java.util.Date, double)
    */
+  @Override
   public double computeQ( final Date date, final double W ) throws WQException
   {
     return getFor( date ).getQFor( W );

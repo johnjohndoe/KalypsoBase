@@ -53,11 +53,13 @@ public class TupleModelEventAdapter<R extends IRowKey, C extends IColumnKey> imp
 {
   private final Set<ITupleModelListener<R, C>> m_listeners = new HashSet<ITupleModelListener<R, C>>();
 
+  @Override
   public void addListener( final ITupleModelListener<R, C> listener )
   {
     m_listeners.add( listener );
   }
 
+  @Override
   public void removeListener( final ITupleModelListener<R, C> listener )
   {
     m_listeners.remove( listener );

@@ -58,6 +58,7 @@ public class DictionaryPhenomenon implements IPhenomenon
     m_id = id;
   }
 
+  @Override
   public String getDescription( )
   {
     final Feature feature = getFeature();
@@ -83,6 +84,7 @@ public class DictionaryPhenomenon implements IPhenomenon
   /**
    * @see org.kalypso.observation.IPhenomenon#getID()
    */
+  @Override
   public String getID( )
   {
     return m_id;
@@ -91,6 +93,7 @@ public class DictionaryPhenomenon implements IPhenomenon
   /**
    * @see org.kalypso.observation.IPhenomenon#getName()
    */
+  @Override
   public String getName( )
   {
     final Feature feature = getFeature();

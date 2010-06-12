@@ -78,6 +78,7 @@ public abstract class AbstractTuppleModel implements ITuppleModel
   /**
    * @see org.kalypso.ogc.sensor.ITuppleModel#getAxisList()
    */
+  @Override
   public IAxis[] getAxisList( )
   {
     return m_axes;
@@ -86,6 +87,7 @@ public abstract class AbstractTuppleModel implements ITuppleModel
   /**
    * @see org.kalypso.ogc.sensor.ITuppleModel#getPositionFor(org.kalypso.ogc.sensor.IAxis)
    */
+  @Override
   public int getPositionFor( final IAxis axis ) throws SensorException
   {
     if( !m_axes2pos.containsKey( axis ) )
@@ -119,6 +121,7 @@ public abstract class AbstractTuppleModel implements ITuppleModel
    * 
    * @see org.kalypso.ogc.sensor.ITuppleModel#getRangeFor(org.kalypso.ogc.sensor.IAxis)
    */
+  @Override
   public IAxisRange getRangeFor( final IAxis axis ) throws SensorException
   {
     if( getCount() > 0 )

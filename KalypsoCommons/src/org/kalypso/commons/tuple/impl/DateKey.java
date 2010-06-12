@@ -59,6 +59,7 @@ public class DateKey implements IRowKey
   /**
    * @see org.kalypso.tuple.IKey#getKeyName()
    */
+  @Override
   public String getKeyName( )
   {
     return m_date.toString();
@@ -76,6 +77,7 @@ public class DateKey implements IRowKey
   /**
    * @see java.lang.Comparable#compareTo(T)
    */
+  @Override
   public int compareTo( final IRowKey o )
   {
     return m_date.compareTo( ((DateKey)o).m_date );

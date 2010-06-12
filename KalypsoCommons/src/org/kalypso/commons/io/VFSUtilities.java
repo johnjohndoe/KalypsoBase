@@ -43,7 +43,6 @@ package org.kalypso.commons.io;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.StringReader;
-import java.net.MalformedURLException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -456,7 +455,7 @@ public class VFSUtilities
    *          relative files.
    * @return The file object.
    */
-  public static FileObject checkProxyFor( final String absoluteFile, final FileSystemManager fsManager ) throws FileSystemException, MalformedURLException
+  public static FileObject checkProxyFor( final String absoluteFile, final FileSystemManager fsManager ) throws FileSystemException
   {
     final Proxy proxy = ProxyUtilities.getProxy();
     KalypsoCommonsDebug.DEBUG.printf( "Should use proxy: %s%n", String.valueOf( proxy.useProxy() ) ); //$NON-NLS-1$
@@ -537,7 +536,7 @@ public class VFSUtilities
    *          relative files.
    * @return The file object.
    */
-  public static FileObject checkProxyFor( final String absoluteFile ) throws FileSystemException, MalformedURLException
+  public static FileObject checkProxyFor( final String absoluteFile ) throws FileSystemException
   {
     final FileSystemManager fsManager = getManager();
     return checkProxyFor( absoluteFile, fsManager );
@@ -582,7 +581,7 @@ public class VFSUtilities
   /**
    * bad hack - set a custom file system manager to ensure custom file system settings of the given file system manager
    */
-  public static void setCustomFileSystemManager( final IFileSystemManagerResolveDelegate delegate ) throws FileSystemException
+  public static void setCustomFileSystemManager( final IFileSystemManagerResolveDelegate delegate )
   {
     FILE_SYSTEM_MANAGER_DELEGATE = delegate;
   }

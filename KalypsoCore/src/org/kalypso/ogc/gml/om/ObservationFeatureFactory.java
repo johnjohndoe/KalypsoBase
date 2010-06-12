@@ -599,8 +599,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
    * @see org.eclipse.core.runtime.IAdapterFactory#getAdapter(java.lang.Object, java.lang.Class)
    */
   @Override
-  @SuppressWarnings("unchecked")
-  public Object getAdapter( final Object adaptableObject, final Class adapterType )
+  public Object getAdapter( final Object adaptableObject, @SuppressWarnings("rawtypes") final Class adapterType )
   {
     if( adapterType == IObservation.class && adaptableObject instanceof Feature )
       return ObservationFeatureFactory.toObservation( (Feature) adaptableObject );
@@ -612,8 +611,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
    * @see org.eclipse.core.runtime.IAdapterFactory#getAdapterList()
    */
   @Override
-  @SuppressWarnings("unchecked")
-  public Class[] getAdapterList( )
+  public Class< ? >[] getAdapterList( )
   {
     return new Class[] { IObservation.class };
   }

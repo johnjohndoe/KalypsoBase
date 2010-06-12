@@ -52,6 +52,7 @@ public class MathOperationFactory
         /**
          * @see org.kalypso.commons.math.IMathOperation#calculate(double[])
          */
+        @Override
         public double calculate( double... operands )
         {
           double result = operands[0];
@@ -66,6 +67,7 @@ public class MathOperationFactory
         /**
          * @see org.kalypso.commons.math.IMathOperation#calculate(double[])
          */
+        @Override
         public double calculate( double... operands )
         {
           double result = operands[0];
@@ -80,6 +82,7 @@ public class MathOperationFactory
         /**
          * @see org.kalypso.commons.math.IMathOperation#calculate(double[])
          */
+        @Override
         public double calculate( double... operands )
         {
           double result = 0;
@@ -94,6 +97,7 @@ public class MathOperationFactory
         /**
          * @see org.kalypso.commons.math.IMathOperation#calculate(double[])
          */
+        @Override
         public double calculate( double... operands )
         {
           double result = operands[0];

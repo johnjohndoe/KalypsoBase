@@ -87,6 +87,7 @@ public abstract class ObjectCatalog<O> extends Storage
       final ICatalog baseCatalog = m_manager.getBaseCatalog();
       final IUrlResolver2 catalogResolver = new IUrlResolver2()
       {
+        @Override
         public URL resolveURL( final String href ) throws MalformedURLException
         {
           final String ref = baseCatalog.resolve( href, href );

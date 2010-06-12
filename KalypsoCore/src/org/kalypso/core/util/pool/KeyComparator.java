@@ -65,6 +65,7 @@ public final class KeyComparator implements Comparator<IPoolableObjectType>
   /**
    * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
    */
+  @Override
   public int compare( final IPoolableObjectType k1, final IPoolableObjectType k2 )
   {
     final int typeCompare = k1.getType().compareToIgnoreCase( k2.getType() );

@@ -17,7 +17,7 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 @SuppressWarnings("restriction")
 public class CalculationChainMember extends Feature_Impl implements ICalculationChainMember
 {
-  private final FeatureBindingCollection<ICalculationChainMemberEntry> m_inputs = new FeatureBindingCollection<ICalculationChainMemberEntry>( this, ICalculationChainMemberEntry.class, QNAME_PROP_INPUTS );;
+  private final FeatureBindingCollection<ICalculationChainMemberEntry> m_inputs = new FeatureBindingCollection<ICalculationChainMemberEntry>( this, ICalculationChainMemberEntry.class, QNAME_PROP_INPUTS );
 
   private final FeatureBindingCollection<ICalculationChainMemberEntry> m_outputs = new FeatureBindingCollection<ICalculationChainMemberEntry>( this, ICalculationChainMemberEntry.class, QNAME_PROP_OUTPUTS );
 
@@ -26,54 +26,64 @@ public class CalculationChainMember extends Feature_Impl implements ICalculation
     super( parent, parentRelation, ft, id, propValues );
   }
 
+  @Override
   public FeatureBindingCollection<ICalculationChainMemberEntry> getInputs( )
   {
     return m_inputs;
   }
 
+  @Override
   public FeatureBindingCollection<ICalculationChainMemberEntry> getOutputs( )
   {
     return m_outputs;
   }
 
+  @Override
   public void addInput( final ICalculationChainMemberEntry entry )
   {
     m_inputs.add( entry );
   }
 
+  @Override
   public void addOutput( final ICalculationChainMemberEntry entry )
   {
     m_outputs.add( entry );
   }
 
+  @Override
   public String getTypeID( )
   {
     final Object property = getProperty( QNAME_PROP_TYPE_ID );
     return property == null ? "" : property.toString(); //$NON-NLS-1$
   }
 
+  @Override
   public void setTypeID( final String value )
   {
     setProperty( QNAME_PROP_TYPE_ID, value );
   }
 
+  @Override
   public int getOrdinalNumber( )
   {
     final Integer property = (Integer) getProperty( QNAME_PROP_ORDINAL_NUMBER );
     return property == null ? 0 : property.intValue();
   }
 
+  @Override
   public void setOrdinalNumber( final int value )
   {
     setProperty( QNAME_PROP_ORDINAL_NUMBER, value );
   }
 
+  @Override
   public boolean getUseAntLauncher( )
   {
     final Boolean property = (Boolean) getProperty( QNAME_PROP_USE_ANT_LAUNCHER );
     return property == null ? false : property.booleanValue();
   }
 
+  @Override
   public void setUseAntLauncher( final boolean value )
   {
     setProperty( QNAME_PROP_USE_ANT_LAUNCHER, value );
@@ -94,7 +104,7 @@ public class CalculationChainMember extends Feature_Impl implements ICalculation
       final String encodedUrl = (String) property;
       final String decodedUrl = URIUtil.decode( encodedUrl );
       IPath path;
-      
+
       if( encodedUrl.startsWith( PlatformURLResourceConnection.RESOURCE_URL_STRING ) )
       {
         path = ResourceUtilities.findPathFromURL( new URL( decodedUrl ) );

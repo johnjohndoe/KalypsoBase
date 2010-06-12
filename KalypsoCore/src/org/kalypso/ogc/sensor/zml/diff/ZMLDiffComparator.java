@@ -61,6 +61,7 @@ public class ZMLDiffComparator implements IDiffComparator
    * @see org.kalypso.commons.diff.IDiffComparator#diff(org.kalypso.commons.diff.IDiffLogger, java.lang.Object,
    *      java.lang.Object)
    */
+  @Override
   public boolean diff( IDiffLogger logger, Object content, Object content2 ) throws Exception
   {
     boolean result = false;

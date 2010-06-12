@@ -64,6 +64,7 @@ public abstract class WorkspaceLoader extends AbstractLoader
   /** A special command listener, which sets the dirty flag on the corresponding KeyInfo for the loaded workspace. */
   private final ICommandManagerListener m_commandManagerListener = new ICommandManagerListener()
   {
+    @Override
     public void onCommandManagerChanged( final ICommandManager source )
     {
       handleCommandManagerChanged( source );

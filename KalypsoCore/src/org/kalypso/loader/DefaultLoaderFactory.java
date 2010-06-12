@@ -62,6 +62,7 @@ public class DefaultLoaderFactory implements ILoaderFactory
   /**
    * @see org.kalypso.loader.ILoaderFactory#getLoaderInstance(java.lang.String)
    */
+  @Override
   public ILoader getLoaderInstance( String type ) throws FactoryException
   {
     /* Memory for the loader. */

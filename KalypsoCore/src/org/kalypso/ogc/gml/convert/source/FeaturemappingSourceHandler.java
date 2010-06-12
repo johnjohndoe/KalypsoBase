@@ -54,6 +54,7 @@ public class FeaturemappingSourceHandler implements ISourceHandler
    * @throws GmlConvertException
    * @see org.kalypso.ogc.gml.convert.source.ISourceHandler#getWorkspace()
    */
+  @Override
   public GMLWorkspace getWorkspace() throws GmlConvertException
   {
     final List<JAXBElement<? extends SourceType>> sourceList = m_source.getSource();

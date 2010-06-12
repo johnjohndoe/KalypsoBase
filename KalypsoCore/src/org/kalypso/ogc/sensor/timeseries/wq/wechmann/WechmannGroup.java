@@ -100,6 +100,7 @@ public class WechmannGroup implements IWQConverter
   /**
    * @see org.kalypso.ogc.sensor.timeseries.wq.IWQConverter#computeW(java.util.Date, double)
    */
+  @Override
   public double computeW( Date date, double Q ) throws WQException
   {
     final WechmannParams params = getFor( date ).getForQ( Q );
@@ -110,6 +111,7 @@ public class WechmannGroup implements IWQConverter
    * Returns 0.0, if W is too big for current validity
    * @see org.kalypso.ogc.sensor.timeseries.wq.IWQConverter#computeQ(java.util.Date, double)
    */
+  @Override
   public double computeQ( Date date, double W ) throws WQException
   {
     final WechmannParams params = getFor( date ).getForW( W );
@@ -122,6 +124,7 @@ public class WechmannGroup implements IWQConverter
   /**
    * @see org.kalypso.ogc.sensor.timeseries.wq.IWQConverter#getFromType()
    */
+  @Override
   public String getFromType()
   {
     // HARDCODED: Wechman always converts from W to Q?
@@ -131,6 +134,7 @@ public class WechmannGroup implements IWQConverter
   /**
    * @see org.kalypso.ogc.sensor.timeseries.wq.IWQConverter#getToType()
    */
+  @Override
   public String getToType()
   {
     // HARDCODED: Wechman always converts from W to Q?

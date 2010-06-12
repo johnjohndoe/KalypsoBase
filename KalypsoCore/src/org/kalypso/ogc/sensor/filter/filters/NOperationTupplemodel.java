@@ -68,6 +68,7 @@ public class NOperationTupplemodel extends AbstractTuppleModel
     m_operation = operation;
   }
 
+  @Override
   public int getCount( ) throws SensorException
   {
     return m_baseModels[0].getCount();
@@ -79,6 +80,7 @@ public class NOperationTupplemodel extends AbstractTuppleModel
     return m_baseModels[0].hashCode();
   }
 
+  @Override
   public Object getElement( final int index, final IAxis axis ) throws SensorException
   {
     final String axisType = axis.getType();
@@ -141,11 +143,13 @@ public class NOperationTupplemodel extends AbstractTuppleModel
         + axis.getDataClass().getName() + Messages.getString( "org.kalypso.ogc.sensor.filter.filters.NOperationTupplemodel.1" ) ); //$NON-NLS-1$
   }
 
+  @Override
   public void setElement( final int index, final Object element, final IAxis axis )
   {
     throw new UnsupportedOperationException( getClass().getName() + Messages.getString( "org.kalypso.ogc.sensor.filter.filters.NOperationTupplemodel.2" ) ); //$NON-NLS-1$
   }
 
+  @Override
   public int indexOf( final Object element, final IAxis axis ) throws SensorException
   {
     // TODO: better than this test: should test if axis.isKey() is true

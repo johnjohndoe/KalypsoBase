@@ -46,8 +46,8 @@ import java.util.HashSet;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.core.i18n.Messages;
@@ -94,6 +94,7 @@ public class ModifyFeatureGeometryCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#isUndoable()
    */
+  @Override
   public boolean isUndoable( )
   {
     return true;
@@ -102,6 +103,7 @@ public class ModifyFeatureGeometryCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#process()
    */
+  @Override
   public void process( ) throws Exception
   {
     doIt( false );
@@ -185,6 +187,7 @@ public class ModifyFeatureGeometryCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#redo()
    */
+  @Override
   public void redo( ) throws Exception
   {
     doIt( false );
@@ -193,6 +196,7 @@ public class ModifyFeatureGeometryCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#undo()
    */
+  @Override
   public void undo( ) throws Exception
   {
     doIt( true );
@@ -201,6 +205,7 @@ public class ModifyFeatureGeometryCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#getDescription()
    */
+  @Override
   public String getDescription( )
   {
     return Messages.getString("org.kalypso.ogc.gml.command.ModifyFeatureGeometryCommand.0"); //$NON-NLS-1$

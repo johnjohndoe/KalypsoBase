@@ -95,6 +95,7 @@ public class DeleteFeatureCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#isUndoable()
    */
+  @Override
   public boolean isUndoable( )
   {
     return true;
@@ -103,6 +104,7 @@ public class DeleteFeatureCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#process()
    */
+  @Override
   public void process( ) throws Exception
   {
     delete();
@@ -111,6 +113,7 @@ public class DeleteFeatureCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#redo()
    */
+  @Override
   public void redo( ) throws Exception
   {
     delete();
@@ -119,6 +122,7 @@ public class DeleteFeatureCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#undo()
    */
+  @Override
   public void undo( ) throws Exception
   {
     final Map<Feature, List<Feature>> parentMap = new HashMap<Feature, List<Feature>>();
@@ -165,6 +169,7 @@ public class DeleteFeatureCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#getDescription()
    */
+  @Override
   public String getDescription( )
   {
     return Messages.getString( "org.kalypso.ogc.gml.command.DeleteFeatureCommand.0" ); //$NON-NLS-1$
@@ -278,6 +283,7 @@ public class DeleteFeatureCommand implements ICommand
     /**
      * @see org.kalypsodeegree.model.feature.FeatureVisitor#visit(org.kalypsodeegree.model.feature.Feature)
      */
+    @Override
     public boolean visit( final Feature f )
     {
       final IFeatureType ft = f.getFeatureType();
@@ -332,6 +338,7 @@ public class DeleteFeatureCommand implements ICommand
     /**
      * @see org.kalypso.commons.command.ICommand#isUndoable()
      */
+    @Override
     public boolean isUndoable( )
     {
       return true;
@@ -340,6 +347,7 @@ public class DeleteFeatureCommand implements ICommand
     /**
      * @see org.kalypso.commons.command.ICommand#process()
      */
+    @Override
     public void process( ) throws Exception
     {
       m_workspace.removeLinkedAsAggregationFeature( m_parentFeature, m_ftp, m_childID );
@@ -350,6 +358,7 @@ public class DeleteFeatureCommand implements ICommand
     /**
      * @see org.kalypso.commons.command.ICommand#redo()
      */
+    @Override
     public void redo( ) throws Exception
     {
       process();
@@ -358,6 +367,7 @@ public class DeleteFeatureCommand implements ICommand
     /**
      * @see org.kalypso.commons.command.ICommand#undo()
      */
+    @Override
     public void undo( ) throws Exception
     {
       m_workspace.addFeatureAsAggregation( m_parentFeature, m_ftp, m_pos, m_childID );
@@ -368,6 +378,7 @@ public class DeleteFeatureCommand implements ICommand
     /**
      * @see org.kalypso.commons.command.ICommand#getDescription()
      */
+    @Override
     public String getDescription( )
     {
       // egal

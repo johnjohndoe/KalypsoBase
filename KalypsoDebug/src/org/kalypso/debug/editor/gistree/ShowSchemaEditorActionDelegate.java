@@ -82,6 +82,7 @@ public class ShowSchemaEditorActionDelegate implements IEditorActionDelegate
   /**
    * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
    */
+  @Override
   public void run( final IAction action )
   {
     final GMLWorkspace workspace = m_targetEditor.getTreeView().getWorkspace();
@@ -118,6 +119,7 @@ public class ShowSchemaEditorActionDelegate implements IEditorActionDelegate
    * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
    *      org.eclipse.jface.viewers.ISelection)
    */
+  @Override
   public void selectionChanged( final IAction action, final ISelection selection )
   {
     refreshAction( action );

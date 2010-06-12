@@ -71,6 +71,7 @@ public class ChangeFeatureCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#isUndoable()
    */
+  @Override
   public boolean isUndoable( )
   {
     return true;
@@ -79,6 +80,7 @@ public class ChangeFeatureCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#process()
    */
+  @Override
   public void process( ) throws Exception
   {
     applyChanges( m_newValue );
@@ -87,6 +89,7 @@ public class ChangeFeatureCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#redo()
    */
+  @Override
   public void redo( ) throws Exception
   {
     applyChanges( m_newValue );
@@ -95,6 +98,7 @@ public class ChangeFeatureCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#undo()
    */
+  @Override
   public void undo( ) throws Exception
   {
     applyChanges( m_oldValue );
@@ -103,6 +107,7 @@ public class ChangeFeatureCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#getDescription()
    */
+  @Override
   public String getDescription( )
   {
     return Messages.getString("org.kalypso.ogc.gml.command.ChangeFeatureCommand.0"); //$NON-NLS-1$

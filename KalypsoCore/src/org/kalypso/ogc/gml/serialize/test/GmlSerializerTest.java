@@ -43,7 +43,6 @@ package org.kalypso.ogc.gml.serialize.test;
 import java.io.File;
 import java.net.URL;
 
-import org.junit.Test;
 import org.kalypso.commons.performance.TimeLogger;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.GMLWorkspace;

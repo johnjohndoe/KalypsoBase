@@ -21,12 +21,14 @@ public class CalculationChain extends Feature_Impl implements ICalculationChain
   /**
    * @return List of calculations, ordered by ordinalNumber property
    */
+  @Override
   public FeatureBindingCollection<ICalculationChainMember> getCalculations( )
   {
     sort();
     return m_calculations;
   }
 
+  @Override
   public void addCalculation( final ICalculationChainMember member )
   {
     m_calculations.add( member );

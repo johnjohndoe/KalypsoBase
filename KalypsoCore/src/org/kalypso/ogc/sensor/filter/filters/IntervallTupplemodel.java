@@ -394,6 +394,7 @@ public class IntervallTupplemodel extends AbstractTuppleModel
     return result;
   }
 
+  @Override
   public int getCount( ) throws SensorException
   {
     return m_intervallModel.getCount();
@@ -411,17 +412,20 @@ public class IntervallTupplemodel extends AbstractTuppleModel
     return m_intervallModel.toString();
   }
 
+  @Override
   public Object getElement( final int index, final IAxis axis ) throws SensorException
   {
     return m_intervallModel.getElement( index, axis );
   }
 
+  @Override
   public void setElement( final int index, final Object element, final IAxis axis )
   {
     throw new UnsupportedOperationException( getClass().getName() + Messages.getString( "org.kalypso.ogc.sensor.filter.filters.IntervallTupplemodel.0" ) ); //$NON-NLS-1$
     // TODO support it
   }
 
+  @Override
   public int indexOf( final Object element, final IAxis axis ) throws SensorException
   {
     // TODO: better than this test: should test if axis.isKey() is true
