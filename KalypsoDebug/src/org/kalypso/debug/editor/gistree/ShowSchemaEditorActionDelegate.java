@@ -71,6 +71,7 @@ public class ShowSchemaEditorActionDelegate implements IEditorActionDelegate
    * @see org.eclipse.ui.IEditorActionDelegate#setActiveEditor(org.eclipse.jface.action.IAction,
    *      org.eclipse.ui.IEditorPart)
    */
+  @Override
   public void setActiveEditor( final IAction action, final IEditorPart targetEditor )
   {
     m_targetEditor = (GmlEditor) targetEditor;

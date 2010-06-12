@@ -82,7 +82,7 @@ public class ScenarioWorkspaceHandler
     }
 
     m_workspace = GmlSerializer.createGMLWorkspace( gmlFile );
-    return (T) m_workspace.getRootFeature();
+    return modelType.cast( m_workspace.getRootFeature() );
   }
 
   public void dispose( )

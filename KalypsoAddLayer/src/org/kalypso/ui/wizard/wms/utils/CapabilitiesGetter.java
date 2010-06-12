@@ -48,6 +48,7 @@ public class CapabilitiesGetter implements ICoreRunnableWithProgress
    *            A progress monitor.
    * @return A status containing the result.
    */
+  @Override
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
     /*

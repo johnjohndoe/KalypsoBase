@@ -40,6 +40,7 @@ public class CreateGisMapViewWizardPage extends WizardPage
     m_selection = selection;
   }
 
+  @Override
   public void createControl( Composite parent )
   {
     Composite container = new Composite( parent, SWT.NULL );
@@ -55,6 +56,7 @@ public class CreateGisMapViewWizardPage extends WizardPage
     containerText.setLayoutData( gd );
     containerText.addModifyListener( new ModifyListener()
     {
+      @Override
       public void modifyText( ModifyEvent e )
       {
         dialogChanged();
@@ -79,6 +81,7 @@ public class CreateGisMapViewWizardPage extends WizardPage
     fileText.setLayoutData( gd );
     fileText.addModifyListener( new ModifyListener()
     {
+      @Override
       public void modifyText( ModifyEvent e )
       {
         dialogChanged();

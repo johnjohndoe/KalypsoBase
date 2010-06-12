@@ -49,6 +49,7 @@ public class WorkflowView extends ViewPart
     /**
      * @see org.kalypso.kalypso1d2d.pjt.IActiveContextChangeListener#activeProjectChanged(org.eclipse.core.resources.IProject)
      */
+    @Override
     public void activeScenarioChanged( final CaseHandlingProjectNature newProject, final IScenario scenario )
     {
       handleScenarioChanged( newProject, scenario );

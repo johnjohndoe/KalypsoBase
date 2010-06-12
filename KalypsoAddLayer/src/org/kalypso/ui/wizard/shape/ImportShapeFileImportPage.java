@@ -165,6 +165,7 @@ public class ImportShapeFileImportPage extends WizardPage implements SelectionLi
    *
    * @see wizard.eclipse.jface.dialogs.IDialogPage#createControl(wizard.eclipse.swt.widgets.Composite)
    */
+  @Override
   public void createControl( final Composite parent )
   {
     m_topComposite = new Composite( parent, SWT.NULL );
@@ -347,6 +348,7 @@ public class ImportShapeFileImportPage extends WizardPage implements SelectionLi
   /**
    * @see org.eclipse.swt.events.SelectionListener#widgetSelected(org.eclipse.swt.events.SelectionEvent)
    */
+  @Override
   public void widgetSelected( final SelectionEvent e )
   {
     Button b;
@@ -387,6 +389,7 @@ public class ImportShapeFileImportPage extends WizardPage implements SelectionLi
             final IUrlResolver2 resolver = new IUrlResolver2()
             {
 
+              @Override
               public URL resolveURL( final String href ) throws MalformedURLException
               {
                 return UrlResolverSingleton.resolveUrl( styleURL, href );
@@ -463,6 +466,7 @@ public class ImportShapeFileImportPage extends WizardPage implements SelectionLi
   /**
    * @see org.eclipse.swt.events.SelectionListener#widgetDefaultSelected(org.eclipse.swt.events.SelectionEvent)
    */
+  @Override
   public void widgetDefaultSelected( final SelectionEvent e )
   {
     // no default selection
@@ -472,6 +476,7 @@ public class ImportShapeFileImportPage extends WizardPage implements SelectionLi
   /**
    * @see org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.swt.events.ModifyEvent)
    */
+  @Override
   public void modifyText( final ModifyEvent e )
   {
     validate();
@@ -481,6 +486,7 @@ public class ImportShapeFileImportPage extends WizardPage implements SelectionLi
   /**
    * @see org.eclipse.swt.events.KeyListener#keyPressed(org.eclipse.swt.events.KeyEvent)
    */
+  @Override
   public void keyPressed( final KeyEvent e )
   {
     final Widget w = e.widget;
@@ -493,6 +499,7 @@ public class ImportShapeFileImportPage extends WizardPage implements SelectionLi
   /**
    * @see org.eclipse.swt.events.KeyListener#keyReleased(org.eclipse.swt.events.KeyEvent)
    */
+  @Override
   public void keyReleased( final KeyEvent e )
   {
     // do nothing

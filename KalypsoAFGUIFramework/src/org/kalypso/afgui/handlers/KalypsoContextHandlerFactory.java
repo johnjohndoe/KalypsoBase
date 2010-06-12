@@ -49,8 +49,8 @@ import org.kalypso.afgui.i18n.Messages;
 
 import de.renew.workflow.contexts.ContextType;
 import de.renew.workflow.contexts.ExtensionContext;
-import de.renew.workflow.contexts.IContextHandlerFactory;
 import de.renew.workflow.contexts.ExtensionContext.Parameter;
+import de.renew.workflow.contexts.IContextHandlerFactory;
 
 /**
  * Extends the capabilities of the {@link WorkflowContextHandlerFactory} by the required context handlers for the
@@ -68,6 +68,7 @@ public class KalypsoContextHandlerFactory implements IContextHandlerFactory
   /**
    * @see org.kalypso.afgui.workflow.IContextHandlerFactory#getHandler(org.kalypso.afgui.workflow.ContextType)
    */
+  @Override
   public IHandler getHandler( final ContextType context )
   {
     if( !(context instanceof ExtensionContext) )

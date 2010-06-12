@@ -48,8 +48,8 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.deegree.ogcwebservices.wms.capabilities.Layer;
 import org.deegree.ogcwebservices.wms.capabilities.WMSCapabilities;
@@ -256,6 +256,7 @@ public class ImportWmsWizardPage extends WizardPage
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
    */
+  @Override
   public void createControl( final Composite parent )
   {
     /* Init the dialog settings. */
@@ -388,6 +389,7 @@ public class ImportWmsWizardPage extends WizardPage
       /**
        * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
        */
+      @Override
       public Object[] getElements( final Object inputElement )
       {
         if( m_input instanceof List )
@@ -399,6 +401,7 @@ public class ImportWmsWizardPage extends WizardPage
       /**
        * @see org.eclipse.jface.viewers.IContentProvider#dispose()
        */
+      @Override
       public void dispose( )
       {
         m_input = null;
@@ -408,6 +411,7 @@ public class ImportWmsWizardPage extends WizardPage
        * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer,
        *      java.lang.Object, java.lang.Object)
        */
+      @Override
       public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
       {
         m_input = newInput;
@@ -451,6 +455,7 @@ public class ImportWmsWizardPage extends WizardPage
       /**
        * @see org.eclipse.swt.events.FocusListener#focusGained(org.eclipse.swt.events.FocusEvent)
        */
+      @Override
       public void focusGained( final FocusEvent e )
       {
       }
@@ -458,6 +463,7 @@ public class ImportWmsWizardPage extends WizardPage
       /**
        * @see org.eclipse.swt.events.FocusListener#focusLost(org.eclipse.swt.events.FocusEvent)
        */
+      @Override
       public void focusLost( final FocusEvent e )
       {
         /* Get the source. */
@@ -474,6 +480,7 @@ public class ImportWmsWizardPage extends WizardPage
       /**
        * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
        */
+      @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
         if( !m_urlText.getText().equals( m_lastService ) )
@@ -506,6 +513,7 @@ public class ImportWmsWizardPage extends WizardPage
       /**
        * @see org.eclipse.jface.viewers.IDoubleClickListener#doubleClick(org.eclipse.jface.viewers.DoubleClickEvent)
        */
+      @Override
       public void doubleClick( final DoubleClickEvent event )
       {
         /* Get the current selection. */

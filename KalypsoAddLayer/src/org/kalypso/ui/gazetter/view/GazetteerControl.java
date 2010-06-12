@@ -185,6 +185,7 @@ public class GazetteerControl implements ISelectionChangedListener, IStructuredC
       m_comboViewer.getControl().getDisplay().asyncExec( new Runnable()
       {
 
+        @Override
         public void run( )
         {
           if( m_comboViewer != null && !m_comboViewer.getControl().isDisposed() )
@@ -225,6 +226,7 @@ public class GazetteerControl implements ISelectionChangedListener, IStructuredC
       m_comboViewer.getControl().getDisplay().asyncExec( new Runnable()
       {
 
+        @Override
         public void run( )
         {
           m_comboViewer.setInput( workspace );
@@ -237,6 +239,7 @@ public class GazetteerControl implements ISelectionChangedListener, IStructuredC
   /**
    * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
    */
+  @Override
   public void selectionChanged( final SelectionChangedEvent event )
   {
     // combo invoked
@@ -261,6 +264,7 @@ public class GazetteerControl implements ISelectionChangedListener, IStructuredC
   /**
    * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
    */
+  @Override
   public Object[] getElements( final Object inputElement )
   {
     if( inputElement instanceof GMLWorkspace )
@@ -282,6 +286,7 @@ public class GazetteerControl implements ISelectionChangedListener, IStructuredC
   /**
    * @see org.eclipse.jface.viewers.IContentProvider#dispose()
    */
+  @Override
   public void dispose( )
   {
     // nothing to do
@@ -291,6 +296,7 @@ public class GazetteerControl implements ISelectionChangedListener, IStructuredC
    * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object,
    *      java.lang.Object)
    */
+  @Override
   public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
   {
     // TODO Auto-generated method stub

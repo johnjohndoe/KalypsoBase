@@ -56,6 +56,7 @@ public class UnversionedModel extends AbstractFeatureBinder implements IModel
     super( featureToBind, qnameToBind );
   }
 
+  @Override
   public String getVersion( )
   {
     return IModel.NO_VERSION;

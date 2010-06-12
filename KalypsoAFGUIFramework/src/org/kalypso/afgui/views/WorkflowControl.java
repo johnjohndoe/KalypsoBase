@@ -83,6 +83,7 @@ public class WorkflowControl implements IWorklistChangeListener, ITaskExecutionL
     final ITaskExecutor taskExecutor = m_taskExecutor;
     m_treeViewer.getControl().addDisposeListener( new DisposeListener()
     {
+      @Override
       public void widgetDisposed( final DisposeEvent e )
       {
         taskExecutor.removeTaskExecutionListener( WorkflowControl.this );
@@ -92,6 +93,7 @@ public class WorkflowControl implements IWorklistChangeListener, ITaskExecutionL
     // Listen to open events
     m_treeViewer.addOpenListener( new IOpenListener()
     {
+      @Override
       public void open( final OpenEvent event )
       {
         final ITreeSelection selection = (ITreeSelection) event.getSelection();
@@ -110,6 +112,7 @@ public class WorkflowControl implements IWorklistChangeListener, ITaskExecutionL
     // listen to select events
     m_treeViewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
+      @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
         handleSelectionChanged( event );
@@ -158,6 +161,7 @@ public class WorkflowControl implements IWorklistChangeListener, ITaskExecutionL
   /**
    * @see de.renew.workflow.event.IWorklistChangeListener#worklistChanged()
    */
+  @Override
   public void worklistChanged( )
   {
     if( m_treeViewer.getTree().isDisposed() )
@@ -180,6 +184,7 @@ public class WorkflowControl implements IWorklistChangeListener, ITaskExecutionL
    * @see de.renew.workflow.connector.worklist.ITaskExecutionListener#handleTaskExecuted(org.eclipse.core.runtime.IStatus,
    *      de.renew.workflow.base.ITask)
    */
+  @Override
   public void handleTaskExecuted( final IStatus result, final ITask task )
   {
     final TreeViewer treeViewer = m_treeViewer;
@@ -211,6 +216,7 @@ public class WorkflowControl implements IWorklistChangeListener, ITaskExecutionL
   /**
    * @see de.renew.workflow.connector.worklist.ITaskExecutionListener#handleTaskStopped(de.renew.workflow.base.ITask)
    */
+  @Override
   public void handleTaskStopped( final ITask task )
   {
 

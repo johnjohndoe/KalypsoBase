@@ -150,6 +150,7 @@ public class GmlFileImportPage extends WizardPage
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
    */
+  @Override
   public void createControl( final Composite parent )
   {
     final Composite topComposite = new Composite( parent, SWT.NULL );
@@ -174,6 +175,7 @@ public class GmlFileImportPage extends WizardPage
       /**
        * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
        */
+      @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
         handleTreeSelection( (IStructuredSelection) event.getSelection() );
@@ -246,6 +248,7 @@ public class GmlFileImportPage extends WizardPage
 
     final ICoreRunnableWithProgress progress = new ICoreRunnableWithProgress()
     {
+      @Override
       public IStatus execute( final IProgressMonitor monitor )
       {
         try

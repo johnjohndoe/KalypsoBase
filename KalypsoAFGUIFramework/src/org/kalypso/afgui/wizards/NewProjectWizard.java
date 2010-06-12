@@ -78,6 +78,7 @@ public class NewProjectWizard extends BasicNewProjectResourceWizard implements I
 
   private final IPageChangingListener m_pageChangeingListener = new IPageChangingListener()
   {
+    @Override
     public void handlePageChanging( final PageChangingEvent event )
     {
       doHandlePageChangeing( event );
@@ -106,6 +107,7 @@ public class NewProjectWizard extends BasicNewProjectResourceWizard implements I
       addPage( m_templateProjectPage );
   }
 
+  @Override
   public void setActivateScenarioOnPerformFinish( final boolean activate )
   {
     m_activateScenario = activate;

@@ -29,6 +29,7 @@ public class Perspective implements IPerspectiveFactory
 
   public final static String TIMESERIES_REPOSITORY_VIEW_ID = "org.kalypso.kalypso1d2d.pjt.views.TimeseriesRepositoryView"; //$NON-NLS-1$
 
+  @Override
   public void createInitialLayout( final IPageLayout layout )
   {
     // HACK: make sure that all action sets are initially disabled for this perspective

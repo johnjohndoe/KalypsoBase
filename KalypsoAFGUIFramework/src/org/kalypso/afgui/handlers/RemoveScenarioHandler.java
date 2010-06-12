@@ -22,9 +22,10 @@ import org.eclipse.ui.ISources;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.ScenarioHandlingProjectNature;
+import org.kalypso.afgui.i18n.Messages;
 import org.kalypso.afgui.scenarios.IScenario;
 import org.kalypso.afgui.scenarios.IScenarioList;
-import org.kalypso.afgui.i18n.Messages;
+
 import de.renew.workflow.connector.cases.ICaseManager;
 
 /**
@@ -36,6 +37,7 @@ public class RemoveScenarioHandler extends AbstractHandler
   /**
    * @see de.renew.workflow.WorkflowCommandHandler#executeInternal(org.eclipse.core.commands.ExecutionEvent)
    */
+  @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();

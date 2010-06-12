@@ -68,6 +68,7 @@ public class TaskExecutionAuthority implements ITaskExecutionAuthority
   /**
    * @see de.renew.workflow.connector.ITaskExecutionAuthority#canStopTask(de.renew.workflow.base.Task)
    */
+  @Override
   public boolean canStopTask( final ITask task )
   {
     final ICaseDataProvider< ? > dataProvider = KalypsoAFGUIFrameworkPlugin.getDefault().getDataProvider();
@@ -90,6 +91,7 @@ public class TaskExecutionAuthority implements ITaskExecutionAuthority
       {
         final IRunnableWithProgress op = new IRunnableWithProgress()
         {
+          @Override
           public void run( final IProgressMonitor monitor ) throws InvocationTargetException
           {
             try

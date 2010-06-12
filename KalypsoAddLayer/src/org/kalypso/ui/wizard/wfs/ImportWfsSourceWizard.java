@@ -67,7 +67,6 @@ import org.kalypso.ui.wizard.IKalypsoDataImportWizard;
 import org.kalypsodeegree.filterencoding.ElseFilter;
 import org.kalypsodeegree.filterencoding.Filter;
 import org.kalypsodeegree.filterencoding.visitor.TransformSRSVisitor;
-import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.tools.FilterUtilites;
 import org.kalypsodeegree_impl.filterencoding.ComplexFilter;
 import org.kalypsodeegree_impl.filterencoding.FeatureFilter;
@@ -148,12 +147,6 @@ public class ImportWfsSourceWizard extends Wizard implements IKalypsoDataImportW
         m_filterWFSPage.setErrorMessage( e.getMessage() );
         return false;
       }
-      catch( final GM_Exception e )
-      {
-        e.printStackTrace();
-        m_filterWFSPage.setErrorMessage( e.getMessage() );
-        return false;
-      }
     }
     return true;
   }
@@ -162,6 +155,7 @@ public class ImportWfsSourceWizard extends Wizard implements IKalypsoDataImportW
    * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
    *      org.eclipse.jface.viewers.IStructuredSelection)
    */
+  @Override
   public void init( final IWorkbench workbench, final IStructuredSelection selection )
   {
     final InputStream is = getClass().getResourceAsStream( "resources/kalypsoOWS.catalog" ); //$NON-NLS-1$
@@ -185,8 +179,8 @@ public class ImportWfsSourceWizard extends Wizard implements IKalypsoDataImportW
   @Override
   public void addPages( )
   {
-    m_importWFSPage = new ImportWfsWizardPage( "WfsImportPage", Messages.getString("org.kalypso.ui.wizard.wfs.ImportWfsSourceWizard.0"), ImageProvider.IMAGE_UTIL_UPLOAD_WIZ ); //$NON-NLS-1$ //$NON-NLS-2$
-    m_filterWFSPage = new ImportWfsFilterWizardPage( "WfsImportFilterPage", Messages.getString("org.kalypso.ui.wizard.wfs.ImportWfsSourceWizard.1"), ImageProvider.IMAGE_UTIL_IMPORT_WIZARD, m_modell ); //$NON-NLS-1$ //$NON-NLS-2$
+    m_importWFSPage = new ImportWfsWizardPage( "WfsImportPage", Messages.getString( "org.kalypso.ui.wizard.wfs.ImportWfsSourceWizard.0" ), ImageProvider.IMAGE_UTIL_UPLOAD_WIZ ); //$NON-NLS-1$ //$NON-NLS-2$
+    m_filterWFSPage = new ImportWfsFilterWizardPage( "WfsImportFilterPage", Messages.getString( "org.kalypso.ui.wizard.wfs.ImportWfsSourceWizard.1" ), ImageProvider.IMAGE_UTIL_IMPORT_WIZARD, m_modell ); //$NON-NLS-1$ //$NON-NLS-2$
     addPage( m_importWFSPage );
     addPage( m_filterWFSPage );
   }
@@ -201,6 +195,7 @@ public class ImportWfsSourceWizard extends Wizard implements IKalypsoDataImportW
   /**
    * @see org.kalypso.ui.wizard.data.IKalypsoDataImportWizard#setOutlineViewer(org.kalypso.ogc.gml.outline.GisMapOutlineViewer)
    */
+  @Override
   public void setCommandTarget( final ICommandTarget commandTarget )
   {
     m_outlineviewer = commandTarget;
@@ -240,6 +235,7 @@ public class ImportWfsSourceWizard extends Wizard implements IKalypsoDataImportW
   /**
    * @see org.kalypso.ui.wizard.IKalypsoDataImportWizard#setMapModel(org.kalypso.ogc.gml.IKalypsoLayerModell)
    */
+  @Override
   public void setMapModel( final IKalypsoLayerModell modell )
   {
     m_modell = modell;
