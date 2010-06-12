@@ -67,6 +67,7 @@ public class Interval_Impl implements Interval, Comparable
    * @param x
    * @return true, if Interval contains the value; otherwise false
    */
+  @Override
   public boolean contains( double x )
   {
     return ( ( m_lowerLimit <= x ) && ( x <= m_upperLimit ) );
@@ -75,6 +76,7 @@ public class Interval_Impl implements Interval, Comparable
   /**
    * @return Returns the lowerLimit.
    */
+  @Override
   public double getLowerLimit()
   {
     return m_lowerLimit;
@@ -83,6 +85,7 @@ public class Interval_Impl implements Interval, Comparable
   /**
    * @return Returns the upperLimit.
    */
+  @Override
   public double getUpperLimit()
   {
     return m_upperLimit;
@@ -92,6 +95,7 @@ public class Interval_Impl implements Interval, Comparable
    * @param lowerLimit
    *          The lowerLimit to set.
    */
+  @Override
   public void setLowerLimit( double lowerLimit )
   {
     m_lowerLimit = lowerLimit;
@@ -101,11 +105,13 @@ public class Interval_Impl implements Interval, Comparable
    * @param upperLimit
    *          The upperLimit to set.
    */
+  @Override
   public void setUpperLimit( double upperLimit )
   {
     m_upperLimit = upperLimit;
   }
 
+  @Override
   public int compareTo( Object o )
   {
     int result = 0;

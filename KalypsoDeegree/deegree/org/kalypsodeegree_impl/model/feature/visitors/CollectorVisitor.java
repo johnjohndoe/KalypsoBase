@@ -55,6 +55,7 @@ public class CollectorVisitor implements FeatureVisitor
   /**
    * @see org.kalypsodeegree.model.feature.FeatureVisitor#visit(org.kalypsodeegree.model.feature.Feature)
    */
+  @Override
   public synchronized boolean visit( final Feature f )
   {
     m_results.add( f );

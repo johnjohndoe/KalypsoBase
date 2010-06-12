@@ -49,6 +49,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import junit.framework.TestCase;
+
 import org.apache.commons.io.IOUtils;
 import org.junit.Ignore;
 import org.kalypso.gml.GMLException;
@@ -57,8 +59,6 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
-
-import junit.framework.TestCase;
 
 @Ignore
 public class GmlParsingTester extends TestCase

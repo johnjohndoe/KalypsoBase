@@ -75,6 +75,7 @@ public class TablePreferencePage extends FieldEditorPreferencePage implements IW
   /**
    * @see org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
    */
+  @Override
   public void init( final IWorkbench workbench )
   {
   }

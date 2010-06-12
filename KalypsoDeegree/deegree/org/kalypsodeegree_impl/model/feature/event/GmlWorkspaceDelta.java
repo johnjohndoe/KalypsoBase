@@ -79,6 +79,7 @@ class GmlWorkspaceDelta implements IGmlWorkspaceDelta
   /**
    * @see org.kalypsodeegree.model.feature.event.IGmlWorkspaceDelta#accept(org.kalypsodeegree.model.feature.event.IGmlWorkspaceDeltaVisitor)
    */
+  @Override
   public void accept( final IGmlWorkspaceDeltaVisitor visitor ) throws CoreException
   {
     if( !visitor.visit( this ) )
@@ -91,6 +92,7 @@ class GmlWorkspaceDelta implements IGmlWorkspaceDelta
   /**
    * @see org.kalypsodeegree.model.feature.event.IGmlWorkspaceDelta#findMember(javax.xml.namespace.QName)
    */
+  @Override
   public IGmlWorkspaceDelta[] findMember( final QName qname )
   {
     final QNameDeltaVisitor visitor = new QNameDeltaVisitor( qname );
@@ -109,6 +111,7 @@ class GmlWorkspaceDelta implements IGmlWorkspaceDelta
   /**
    * @see org.kalypsodeegree.model.feature.event.IGmlWorkspaceDelta#getAffectedChildren()
    */
+  @Override
   public IGmlWorkspaceDelta[] getAffectedChildren( )
   {
     return m_children.toArray( new IGmlWorkspaceDelta[m_children.size()] );
@@ -117,6 +120,7 @@ class GmlWorkspaceDelta implements IGmlWorkspaceDelta
   /**
    * @see org.kalypsodeegree.model.feature.event.IGmlWorkspaceDelta#getFeature()
    */
+  @Override
   public Feature getFeature( )
   {
     return m_feature;
@@ -125,6 +129,7 @@ class GmlWorkspaceDelta implements IGmlWorkspaceDelta
   /**
    * @see org.kalypsodeegree.model.feature.event.IGmlWorkspaceDelta#getKind()
    */
+  @Override
   public int getKind( )
   {
     return m_kind;
@@ -133,6 +138,7 @@ class GmlWorkspaceDelta implements IGmlWorkspaceDelta
   /**
    * @see org.kalypsodeegree.model.feature.event.IGmlWorkspaceDelta#getProperty()
    */
+  @Override
   public IPropertyType getProperty( )
   {
     return m_property;

@@ -54,6 +54,7 @@ public class LineStringCollector implements SegmentCollector
    *      com.bce.gis.operation.raster2vector.LinkedCoordinate, com.bce.gis.operation.raster2vector.LinkedCoordinate,
    *      com.vividsolutions.jts.geom.Coordinate, com.vividsolutions.jts.geom.Coordinate)
    */
+  @Override
   public void addSegment( final int index, final LinkedCoordinate lc0, final LinkedCoordinate lc1, final Coordinate nearC0, final Coordinate nearC1 ) throws LinkedCoordinateException
   {
     try
@@ -105,6 +106,7 @@ public class LineStringCollector implements SegmentCollector
   /**
    * @see com.bce.gis.operation.raster2vector.SegmentCollector#getFeatures()
    */
+  @Override
   public Feature getFeatures( )
   {
     return m_fc;

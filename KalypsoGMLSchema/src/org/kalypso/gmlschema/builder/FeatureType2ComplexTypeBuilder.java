@@ -47,6 +47,7 @@ public class FeatureType2ComplexTypeBuilder extends AbstractBuilder
   /**
    * @see org.kalypso.gmlschema.builder.IBuilder#build(org.kalypso.gmlschema.GMLSchema, java.lang.Object)
    */
+  @Override
   public Object[] build( final GMLSchema gmlSchema, final Object featureTypeObject ) throws GMLSchemaException
   {
     final FeatureType ft = (FeatureType) featureTypeObject;
@@ -61,6 +62,7 @@ public class FeatureType2ComplexTypeBuilder extends AbstractBuilder
    * @see org.kalypso.gmlschema.builder.IBuilder#isBuilderFor(org.kalypso.gmlschema.GMLSchema, java.lang.Object,
    *      java.lang.String)
    */
+  @Override
   public boolean isBuilderFor( final GMLSchema gmlSchema, final Object object, final String namedPass )
   {
     return object instanceof FeatureType;

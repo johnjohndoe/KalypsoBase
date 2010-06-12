@@ -97,6 +97,7 @@ public class ImportProfilePrfAction extends ActionDelegate implements IObjectAct
    * @see org.eclipse.ui.IObjectActionDelegate#setActivePart(org.eclipse.jface.action.IAction,
    *      org.eclipse.ui.IWorkbenchPart)
    */
+  @Override
   public void setActivePart( final IAction action, final IWorkbenchPart targetPart )
   {
     m_action = action;

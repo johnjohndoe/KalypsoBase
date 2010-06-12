@@ -33,10 +33,10 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
+import org.apache.xmlbeans.impl.xb.xsdschema.ComplexContentDocument.ComplexContent;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexRestrictionType;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.ExtensionType;
-import org.apache.xmlbeans.impl.xb.xsdschema.ComplexContentDocument.ComplexContent;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaException;
@@ -56,6 +56,7 @@ public class ComplexType2FeatureContentTypeBuilder extends AbstractBuilder
 {
 
   private static final String ABSTRACT_GML_TYPE_STRING = "AbstractGMLType";
+
   private final String m_version;
 
   public ComplexType2FeatureContentTypeBuilder( final String version )
@@ -66,40 +67,43 @@ public class ComplexType2FeatureContentTypeBuilder extends AbstractBuilder
   /**
    * @see org.kalypso.gmlschema.builder.IBuilder#build(org.kalypso.gmlschema.GMLSchema, java.lang.Object)
    */
+  @Override
   public Object[] build( final GMLSchema gmlSchema, final Object complexTypeObject ) throws GMLSchemaException
   {
-    FeatureContentType result = null;
     final ComplexType complexType = (ComplexType) complexTypeObject;
 
+    final FeatureContentType result = buildResult( gmlSchema, complexType );
+
+    gmlSchema.register( complexTypeObject, result );
+    return new Object[] { result };
+  }
+
+  private FeatureContentType buildResult( final GMLSchema gmlSchema, final ComplexType complexType ) throws GMLSchemaException
+  {
     final ComplexContent complexContent = complexType.getComplexContent();
     if( complexContent != null )
     {
       final ExtensionType extension = complexContent.getExtension();
       final ComplexRestrictionType restriction = complexContent.getRestriction();
       if( extension != null )
-        result = new FeatureContentTypeFromExtension( gmlSchema, complexType, extension );
+        return new FeatureContentTypeFromExtension( gmlSchema, complexType, extension );
       else if( restriction != null )
-        result = new FeatureContentTypeFromRestriction( gmlSchema, complexType, restriction );
+        return new FeatureContentTypeFromRestriction( gmlSchema, complexType, restriction );
       else
         throw new UnsupportedOperationException();
     }
     else
     {
       final List<ElementWithOccurs> collector = GMLSchemaUtilities.collectElements( gmlSchema, complexType, null, null );
-      result = new FeatureContentTypeFromSequence( gmlSchema, complexType, collector );
+      return new FeatureContentTypeFromSequence( gmlSchema, complexType, collector );
     }
-    if( result != null )
-    {
-      gmlSchema.register( complexTypeObject, result );
-      return new Object[] { result };
-    }
-    return new Object[0];
   }
 
   /**
    * @see org.kalypso.gmlschema.builder.IBuilder#isBuilderFor(org.kalypso.gmlschema.GMLSchema, java.lang.Object,
    *      java.lang.String)
    */
+  @Override
   public boolean isBuilderFor( final GMLSchema gmlSchema, final Object object, final String namedPass ) throws GMLSchemaException
   {
     if( !(object instanceof ComplexType) )

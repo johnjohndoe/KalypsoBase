@@ -58,6 +58,7 @@ public class OpenGISException extends Exception
     message = s;
   }
 
+  @Override
   public String toString()
   {
     return message + "\n" + this.getLocalizedMessage();

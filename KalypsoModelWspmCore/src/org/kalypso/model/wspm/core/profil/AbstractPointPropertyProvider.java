@@ -58,6 +58,7 @@ public abstract class AbstractPointPropertyProvider implements IProfilPointPrope
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider#createProfil()
    */
+  @Override
   public IProfil createProfil( )
   {
     return createProfil( new TupleResult() );
@@ -66,6 +67,7 @@ public abstract class AbstractPointPropertyProvider implements IProfilPointPrope
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider#getDefaultValue(java.lang.String)
    */
+  @Override
   public Object getDefaultValue( final String propertyID )
   {
     final IComponent component = getPointProperty( propertyID );
@@ -77,6 +79,7 @@ public abstract class AbstractPointPropertyProvider implements IProfilPointPrope
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider#getPointProperties()
    */
+  @Override
   public String[] getPointProperties( )
   {
     return m_properties.toArray( new String[] {} );
@@ -85,6 +88,7 @@ public abstract class AbstractPointPropertyProvider implements IProfilPointPrope
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider#isMarker(java.lang.String)
    */
+  @Override
   public boolean isMarker( final String markerID )
   {
     return m_markers.contains( markerID );
@@ -93,6 +97,7 @@ public abstract class AbstractPointPropertyProvider implements IProfilPointPrope
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider#providesPointProperty(java.lang.String)
    */
+  @Override
   public boolean providesPointProperty( final String property )
   {
     return true;
@@ -102,6 +107,7 @@ public abstract class AbstractPointPropertyProvider implements IProfilPointPrope
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider#checkComponents(org.kalypso.observation.result.TupleResult)
    */
+  @Override
   public void checkComponents( final TupleResult result ) throws IllegalArgumentException
   {
     final IComponent[] components = result.getComponents();

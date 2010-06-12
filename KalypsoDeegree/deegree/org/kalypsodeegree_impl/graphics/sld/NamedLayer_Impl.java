@@ -66,6 +66,7 @@ public class NamedLayer_Impl extends Layer_Impl implements NamedLayer, Marshalla
    * 
    * @return xml representation of the Font
    */
+  @Override
   public String exportAsXML()
   {
     Debug.debugMethodBegin();

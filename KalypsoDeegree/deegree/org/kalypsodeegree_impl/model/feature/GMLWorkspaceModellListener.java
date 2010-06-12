@@ -82,6 +82,7 @@ public class GMLWorkspaceModellListener implements ModellEventListener, FeatureV
   /**
    * @see org.kalypsodeegree.model.feature.FeatureVisitor#visit(org.kalypsodeegree.model.feature.Feature)
    */
+  @Override
   public boolean visit( final Feature f )
   {
     initQName( f.getFeatureType() );
@@ -116,6 +117,7 @@ public class GMLWorkspaceModellListener implements ModellEventListener, FeatureV
   /**
    * @see org.kalypsodeegree.model.feature.event.ModellEventListener#onModellChange(org.kalypsodeegree.model.feature.event.ModellEvent)
    */
+  @Override
   public void onModellChange( final ModellEvent modellEvent )
   {
     if( modellEvent instanceof FeatureStructureChangeModellEvent )

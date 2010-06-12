@@ -71,11 +71,13 @@ public abstract class AbstractPropertyTypeFromElement extends QualifiedElement i
     return m_occurs;
   }
 
+  @Override
   public int getMinOccurs( )
   {
     return m_occurs.getMin();
   }
 
+  @Override
   public int getMaxOccurs( )
   {
     return m_occurs.getMax();
@@ -84,6 +86,7 @@ public abstract class AbstractPropertyTypeFromElement extends QualifiedElement i
   /**
    * @see org.kalypso.gmlschema.property.IPropertyType#isList()
    */
+  @Override
   public boolean isList( )
   {
     return getMaxOccurs() > 1 || getMaxOccurs() == UNBOUND_OCCURENCY;
@@ -92,6 +95,7 @@ public abstract class AbstractPropertyTypeFromElement extends QualifiedElement i
   /**
    * @see org.kalypso.gmlschema.property.IPropertyType#isNillable()
    */
+  @Override
   public boolean isNillable( )
   {
     return getElement().getNillable();
@@ -102,6 +106,7 @@ public abstract class AbstractPropertyTypeFromElement extends QualifiedElement i
    * 
    * @see org.kalypso.gmlschema.property.IPropertyType#isVirtual()
    */
+  @Override
   public boolean isVirtual( )
   {
     return false;
@@ -110,6 +115,7 @@ public abstract class AbstractPropertyTypeFromElement extends QualifiedElement i
   /**
    * @see org.kalypso.gmlschema.property.IPropertyType#getAnnotation()
    */
+  @Override
   public IAnnotation getAnnotation( )
   {
     return m_annotation;

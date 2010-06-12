@@ -58,6 +58,7 @@ public class DocumentReference implements IDocumentReference
   /**
    * @see org.kalypso.gmlschema.property.relation.IDocumentReference#getReference()
    */
+  @Override
   public String getReference( )
   {
     return m_uri;

@@ -65,6 +65,7 @@ class NamedStyle_Impl extends Style_Impl implements NamedStyle, Marshallable
    *
    * @return xml representation of the NamedStyle
    */
+  @Override
   public String exportAsXML()
   {
     Debug.debugMethodBegin();

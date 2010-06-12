@@ -163,6 +163,7 @@ public class SplitSort implements FeatureList
   /**
    * @see java.util.List#add(java.lang.Object)
    */
+  @Override
   public boolean add( final Object object )
   {
     // IMPORTANT/REMARK: 1) we mustn't call getEnvelope() in the synchronised block<br>
@@ -197,6 +198,7 @@ public class SplitSort implements FeatureList
    * @see org.kalypsodeegree.model.sort.JMSpatialIndex#query(org.kalypsodeegree.model.geometry.GM_Envelope,
    *      java.util.List)
    */
+  @Override
   public List< ? > query( final GM_Envelope queryEnv, final List result )
   {
     checkIndex();
@@ -218,6 +220,7 @@ public class SplitSort implements FeatureList
    * @see org.kalypsodeegree.model.sort.JMSpatialIndex#query(org.kalypsodeegree.model.geometry.GM_Position,
    *      java.util.List)
    */
+  @Override
   public List< ? > query( final GM_Position pos, final List result )
   {
     return query( GeometryFactory.createGM_Envelope( pos, pos, null ), result );
@@ -228,6 +231,7 @@ public class SplitSort implements FeatureList
    * 
    * @see java.util.List#remove(java.lang.Object)
    */
+  @Override
   public boolean remove( final Object object )
   {
     final Envelope env = getEnvelope( object );
@@ -254,6 +258,7 @@ public class SplitSort implements FeatureList
    * @see org.kalypsodeegree.model.sort.JMSpatialIndex#paint(java.awt.Graphics,
    *      org.kalypsodeegree.graphics.transformation.GeoTransform)
    */
+  @Override
   public void paint( final Graphics g, final GeoTransform geoTransform )
   {
     checkIndex();
@@ -268,6 +273,7 @@ public class SplitSort implements FeatureList
    * @see org.kalypsodeegree.model.sort.JMSpatialIndex#getBoundingBox()
    */
   // TODO: slow; check if we can improve it by maintaining the bbox in this class
+  @Override
   public GM_Envelope getBoundingBox( )
   {
     checkIndex();
@@ -284,6 +290,7 @@ public class SplitSort implements FeatureList
   /**
    * @see java.util.List#size()
    */
+  @Override
   public int size( )
   {
     synchronized( this )
@@ -295,6 +302,7 @@ public class SplitSort implements FeatureList
   /**
    * @see java.util.List#clear()
    */
+  @Override
   public void clear( )
   {
     synchronized( this )
@@ -307,6 +315,7 @@ public class SplitSort implements FeatureList
   /**
    * @see java.util.List#isEmpty()
    */
+  @Override
   public boolean isEmpty( )
   {
     return size() == 0;
@@ -315,6 +324,7 @@ public class SplitSort implements FeatureList
   /**
    * @see java.util.List#toArray()
    */
+  @Override
   public Object[] toArray( )
   {
     synchronized( this )
@@ -326,6 +336,7 @@ public class SplitSort implements FeatureList
   /**
    * @see java.util.List#get(int)
    */
+  @Override
   public Object get( final int index )
   {
     synchronized( this )
@@ -337,6 +348,7 @@ public class SplitSort implements FeatureList
   /**
    * @see java.util.List#remove(int)
    */
+  @Override
   public Object remove( final int index )
   {
     synchronized( this )
@@ -353,6 +365,7 @@ public class SplitSort implements FeatureList
    * @deprecated SLOW (as we are using ArrayList internally) TODO: better comment, make deprecated in interface
    * @see java.util.List#add(int, java.lang.Object)
    */
+  @Override
   @Deprecated
   public void add( final int index, final Object item )
   {
@@ -370,6 +383,7 @@ public class SplitSort implements FeatureList
    * @deprecated SLOW TODO: better comment, make deprecated in interface
    * @see java.util.List#indexOf(java.lang.Object)
    */
+  @Override
   @Deprecated
   public int indexOf( final Object item )
   {
@@ -383,6 +397,7 @@ public class SplitSort implements FeatureList
    * @deprecated SLOW TODO: better comment, make deprecated in interface
    * @see java.util.List#lastIndexOf(java.lang.Object)
    */
+  @Override
   @Deprecated
   public int lastIndexOf( final Object item )
   {
@@ -395,6 +410,7 @@ public class SplitSort implements FeatureList
   /**
    * @see java.util.List#contains(java.lang.Object)
    */
+  @Override
   public boolean contains( final Object item )
   {
     final Envelope env = getEnvelope( item );
@@ -410,6 +426,7 @@ public class SplitSort implements FeatureList
   /**
    * @see java.util.List#addAll(int, java.util.Collection)
    */
+  @Override
   public boolean addAll( final int index, final Collection c )
   {
     // First get all envelope, in order no to break the synchronize code by calling getEnvelope inside
@@ -433,6 +450,7 @@ public class SplitSort implements FeatureList
   /**
    * @see java.util.List#addAll(java.util.Collection)
    */
+  @Override
   public boolean addAll( final Collection c )
   {
     // First get all envelope, in order no to break the synchronize code by calling getEnvelope inside
@@ -456,6 +474,7 @@ public class SplitSort implements FeatureList
   /**
    * @see java.util.List#containsAll(java.util.Collection)
    */
+  @Override
   public boolean containsAll( final Collection c )
   {
     // First get all envelope, in order no to break the synchronize code by calling getEnvelope inside
@@ -482,6 +501,7 @@ public class SplitSort implements FeatureList
    *  SLOW: TODO: better comment, make deprecated in interface! FAST TODO: check the comments
    * @see java.util.List#removeAll(java.util.Collection)
    */
+  @Override
   public boolean removeAll( final Collection c )
   {
 
@@ -511,6 +531,7 @@ public class SplitSort implements FeatureList
    * 
    * @see java.util.List#retainAll(java.util.Collection)
    */
+  @Override
   public boolean retainAll( final Collection c )
   {
     // TODO: implement
@@ -523,6 +544,7 @@ public class SplitSort implements FeatureList
    * 
    * @see java.util.List#iterator()
    */
+  @Override
   public Iterator iterator( )
   {
     // TODO: what about synchronization?
@@ -535,6 +557,7 @@ public class SplitSort implements FeatureList
    * 
    * @see java.util.List#subList(int, int)
    */
+  @Override
   public List subList( final int fromIndex, final int toIndex )
   {
     throw new UnsupportedOperationException();
@@ -546,6 +569,7 @@ public class SplitSort implements FeatureList
    * 
    * @see java.util.List#listIterator()
    */
+  @Override
   public ListIterator listIterator( )
   {
     // TODO: what about synchronization?
@@ -558,6 +582,7 @@ public class SplitSort implements FeatureList
    * 
    * @see java.util.List#listIterator(int)
    */
+  @Override
   public ListIterator listIterator( final int index )
   {
     // TODO: what about synchronization?
@@ -567,6 +592,7 @@ public class SplitSort implements FeatureList
   /**
    * @see java.util.List#set(int, java.lang.Object)
    */
+  @Override
   public Object set( final int index, final Object newItem )
   {
     final Envelope newEnv = getEnvelope( newItem );
@@ -587,6 +613,7 @@ public class SplitSort implements FeatureList
   /**
    * @see java.util.List#toArray(java.lang.Object[])
    */
+  @Override
   public Object[] toArray( final Object[] a )
   {
     synchronized( this )
@@ -598,6 +625,7 @@ public class SplitSort implements FeatureList
   /**
    * @see org.kalypsodeegree.model.feature.FeatureList#toFeatures()
    */
+  @Override
   public Feature[] toFeatures( )
   {
     synchronized( this )
@@ -610,6 +638,7 @@ public class SplitSort implements FeatureList
   /**
    * @see org.kalypsodeegree.model.feature.FeatureList#accept(org.kalypsodeegree.model.feature.FeatureVisitor)
    */
+  @Override
   public void accept( final FeatureVisitor visitor )
   {
     accept( visitor, FeatureVisitor.DEPTH_INFINITE );
@@ -618,6 +647,7 @@ public class SplitSort implements FeatureList
   /**
    * @see org.kalypsodeegree.model.feature.FeatureList#accept(org.kalypsodeegree.model.feature.FeatureVisitor, int)
    */
+  @Override
   public void accept( final FeatureVisitor visitor, final int depth )
   {
     // TODO: not synchronized: Problem?
@@ -636,6 +666,7 @@ public class SplitSort implements FeatureList
   /**
    * @see org.kalypsodeegree.model.feature.FeatureList#getParentFeature()
    */
+  @Override
   public Feature getParentFeature( )
   {
     return m_parentFeature;
@@ -644,6 +675,7 @@ public class SplitSort implements FeatureList
   /**
    * @see org.kalypsodeegree.model.feature.FeatureList#getParentFeatureTypeProperty()
    */
+  @Override
   public IRelationType getParentFeatureTypeProperty( )
   {
     return m_parentFeatureTypeProperty;
@@ -652,6 +684,7 @@ public class SplitSort implements FeatureList
   /**
    * @see org.kalypsodeegree.model.sort.JMSpatialIndex#invalidate()
    */
+  @Override
   public void invalidate( )
   {
     synchronized( this )
@@ -663,6 +696,7 @@ public class SplitSort implements FeatureList
   /**
    * @see org.kalypsodeegree.model.sort.JMSpatialIndex#invalidate(java.lang.Object)
    */
+  @Override
   public void invalidate( final Object o )
   {
     synchronized( this )
@@ -680,6 +714,7 @@ public class SplitSort implements FeatureList
   /**
    * @see org.kalypsodeegree.model.feature.FeatureList#first()
    */
+  @Override
   public Object first( )
   {
     synchronized( this )

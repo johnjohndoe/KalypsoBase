@@ -100,6 +100,7 @@ public class RectifiedGridCoverageImportFinishWorker implements ICoreRunnableWit
   /**
    * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
    */
+  @Override
   public IStatus execute( final IProgressMonitor monitor ) throws InvocationTargetException, CoreException
   {
     final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString("org.kalypso.gml.ui.wizard.grid.RectifiedGridCoverageImportFinishWorker.0"), 100 ); //$NON-NLS-1$

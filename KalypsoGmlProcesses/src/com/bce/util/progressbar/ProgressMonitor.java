@@ -92,6 +92,7 @@ public class ProgressMonitor implements Progressable
 
     m_optionPane.addPropertyChangeListener( new PropertyChangeListener()
     {
+      @Override
       public void propertyChange( final PropertyChangeEvent event )
       {
         if( dialog.isVisible() && event.getSource() == op && (event.getPropertyName().equals( JOptionPane.VALUE_PROPERTY ) || event.getPropertyName().equals( JOptionPane.INPUT_VALUE_PROPERTY )) )
@@ -105,6 +106,7 @@ public class ProgressMonitor implements Progressable
   /**
    * @see com.bce.util.progressbar.Progressable#setNote(java.lang.String)
    */
+  @Override
   public void setNote( final String note )
   {
     m_noteField.setText( note );
@@ -114,6 +116,7 @@ public class ProgressMonitor implements Progressable
   /**
    * @see com.bce.util.progressbar.Progressable#reset(int, int)
    */
+  @Override
   public void reset( final int min, final int max )
   {
     m_progressBar.setMinimum( min );
@@ -124,6 +127,7 @@ public class ProgressMonitor implements Progressable
   /**
    * @see com.bce.util.progressbar.Progressable#setCurrent(int)
    */
+  @Override
   public void setCurrent( final int current )
   {
     m_progressBar.setValue( current );
@@ -132,6 +136,7 @@ public class ProgressMonitor implements Progressable
   /**
    * @see com.bce.util.progressbar.Progressable#isCanceled()
    */
+  @Override
   public boolean isCanceled( )
   {
     return m_canceled;
@@ -140,6 +145,7 @@ public class ProgressMonitor implements Progressable
   /**
    * @see com.bce.util.progressbar.Progressable#cancel()
    */
+  @Override
   public void cancel( )
   {
     m_canceled = true;

@@ -66,6 +66,7 @@ public class XsdBaseTypeHandlerString extends XsdBaseTypeHandler<String>
   /**
    * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
    */
+  @Override
   public int compare( final String o1, final String o2 )
   {
     if( (o1 == null) && (o2 == null) )

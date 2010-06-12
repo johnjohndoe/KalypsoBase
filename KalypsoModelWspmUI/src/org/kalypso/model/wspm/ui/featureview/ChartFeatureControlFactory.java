@@ -52,8 +52,8 @@ import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.i18n.Messages;
-import org.kalypso.ogc.gml.featureview.control.IFeatureControl;
 import org.kalypso.ogc.gml.featureview.control.IExtensionsFeatureControlFactory;
+import org.kalypso.ogc.gml.featureview.control.IFeatureControl;
 import org.kalypso.util.swt.SWTUtilities;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -79,6 +79,7 @@ public class ChartFeatureControlFactory implements IExtensionsFeatureControlFact
    * @see org.kalypso.ogc.gml.featureview.control.IFeatureviewControlFactory#createFeatureControl(org.kalypsodeegree.model.feature.Feature,
    *      org.kalypso.gmlschema.property.IPropertyType, java.util.Properties)
    */
+  @Override
   public IFeatureControl createFeatureControl( final Feature feature, final IPropertyType pt, final Properties arguments )
   {
     final String configurationUrn = arguments.getProperty( "configuration", null ); //$NON-NLS-1$

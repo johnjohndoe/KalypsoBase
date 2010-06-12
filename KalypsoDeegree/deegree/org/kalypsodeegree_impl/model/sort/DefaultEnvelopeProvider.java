@@ -55,6 +55,7 @@ final class DefaultEnvelopeProvider implements IEnvelopeProvider
     m_parentFeature = parentFeature;
   }
 
+  @Override
   public GM_Envelope getEnvelope( final Object object )
   {
     if( object instanceof DisplayElement )

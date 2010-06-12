@@ -124,6 +124,7 @@ public class ComplexFilter extends AbstractFilter
    * @throws FilterEvaluationException
    *             if the evaluation fails
    */
+  @Override
   public boolean evaluate( final Feature feature ) throws FilterEvaluationException
   {
     return m_operation.evaluate( feature );

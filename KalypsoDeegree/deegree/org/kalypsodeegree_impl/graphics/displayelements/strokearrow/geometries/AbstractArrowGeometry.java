@@ -87,6 +87,7 @@ public abstract class AbstractArrowGeometry implements IArrowGeometry
   /**
    * @see org.kalypsodeegree_impl.graphics.displayelements.strokearrow.IArrowGeometry#paint()
    */
+  @Override
   public void paint( final Double size )
   {
     // calculate screenpoints

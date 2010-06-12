@@ -33,10 +33,10 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
+import org.apache.xmlbeans.impl.xb.xsdschema.ComplexContentDocument.ComplexContent;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexRestrictionType;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.ExtensionType;
-import org.apache.xmlbeans.impl.xb.xsdschema.ComplexContentDocument.ComplexContent;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaException;
@@ -64,6 +64,7 @@ public class ComplexTypeDirectReference2RelationContentTypeBuilder extends Abstr
   /**
    * @see org.kalypso.gmlschema.builder.IBuilder#build(org.kalypso.gmlschema.GMLSchema, java.lang.Object)
    */
+  @Override
   public Object[] build( final GMLSchema gmlSchema, final Object complexTypeObject ) throws GMLSchemaException
   {
     RelationContentType result = null;
@@ -93,6 +94,7 @@ public class ComplexTypeDirectReference2RelationContentTypeBuilder extends Abstr
    * @see org.kalypso.gmlschema.builder.IBuilder#isBuilderFor(org.kalypso.gmlschema.GMLSchema, java.lang.Object,
    *      java.lang.String)
    */
+  @Override
   public boolean isBuilderFor( final GMLSchema gmlSchema, final Object object, final String namedPass ) throws GMLSchemaException
   {
     if( !(object instanceof ComplexType) )

@@ -62,46 +62,55 @@ public class ColorMapEntry_Impl implements ColorMapEntry
     m_label = label;
   }
 
+  @Override
   public Color getColor( )
   {
     return m_color;
   }
 
+  @Override
   public void setColor( final Color color )
   {
     m_color = color;
   }
 
+  @Override
   public String getLabel( )
   {
     return m_label;
   }
 
+  @Override
   public void setLabel( final String label )
   {
     m_label = label;
   }
 
+  @Override
   public double getOpacity( )
   {
     return m_opacity;
   }
 
+  @Override
   public void setOpacity( final double opacity )
   {
     m_opacity = opacity;
   }
 
+  @Override
   public double getQuantity( )
   {
     return m_quantity;
   }
 
+  @Override
   public void setQuantity( final double quantity )
   {
     m_quantity = quantity;
   }
 
+  @Override
   public String exportAsXML( )
   {
     final StringBuffer sb = new StringBuffer( 1000 );

@@ -75,6 +75,7 @@ public class GM_SurfaceInterpolation_Impl implements GM_SurfaceInterpolation, Se
     }
   }
 
+  @Override
   public int getValue( )
   {
     return m_surfaceInterpolation;

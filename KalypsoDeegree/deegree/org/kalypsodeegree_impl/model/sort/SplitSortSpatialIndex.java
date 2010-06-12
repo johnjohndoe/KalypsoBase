@@ -62,6 +62,7 @@ public class SplitSortSpatialIndex implements SpatialIndexExt
   /**
    * @see com.vividsolutions.jts.index.SpatialIndex#insert(com.vividsolutions.jts.geom.Envelope, java.lang.Object)
    */
+  @Override
   public void insert( final Envelope env, final Object item )
   {
     if( env == null || m_rootContainer.hasNullEnvelope() || m_rootContainer.containsEnvelope( env ) )
@@ -82,6 +83,7 @@ public class SplitSortSpatialIndex implements SpatialIndexExt
   /**
    * @see com.vividsolutions.jts.index.SpatialIndex#query(com.vividsolutions.jts.geom.Envelope)
    */
+  @Override
   public List<Object> query( final Envelope searchEnv )
   {
     return m_rootContainer.query( searchEnv, null );
@@ -91,6 +93,7 @@ public class SplitSortSpatialIndex implements SpatialIndexExt
    * @see com.vividsolutions.jts.index.SpatialIndex#query(com.vividsolutions.jts.geom.Envelope,
    *      com.vividsolutions.jts.index.ItemVisitor)
    */
+  @Override
   public void query( final Envelope searchEnv, final ItemVisitor visitor )
   {
     final List<Object> list = query( searchEnv );
@@ -106,16 +109,19 @@ public class SplitSortSpatialIndex implements SpatialIndexExt
   /**
    * @see com.vividsolutions.jts.index.SpatialIndex#remove(com.vividsolutions.jts.geom.Envelope, java.lang.Object)
    */
+  @Override
   public boolean remove( final Envelope itemEnv, final Object item )
   {
     return m_rootContainer.remove( itemEnv, item );
   }
 
+  @Override
   public void paint( final Graphics g, final GeoTransform geoTransform )
   {
     m_rootContainer.paint( g, geoTransform );
   }
 
+  @Override
   public Envelope getBoundingBox( )
   {
     return m_rootContainer.getEnvelope();
@@ -125,6 +131,7 @@ public class SplitSortSpatialIndex implements SpatialIndexExt
    * @see org.kalypsodeegree_impl.model.sort.SpatialIndexExt#contains(com.vividsolutions.jts.geom.Envelope,
    *      java.lang.Object)
    */
+  @Override
   public boolean contains( final Envelope itemEnv, final Object item )
   {
     return m_rootContainer.contains( itemEnv, item );

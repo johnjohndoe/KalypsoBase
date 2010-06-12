@@ -56,11 +56,13 @@ public class ProfilLayerActionDelegate implements IObjectActionDelegate
 {
   private IWorkbenchPart m_targetPart;
 
+  @Override
   public void setActivePart( final IAction action, final IWorkbenchPart targetPart )
   {
     m_targetPart = targetPart;
   }
 
+  @Override
   public void run( final IAction action )
   {
     final IWorkbenchPartSite site = m_targetPart.getSite();
@@ -76,6 +78,7 @@ public class ProfilLayerActionDelegate implements IObjectActionDelegate
     }
   }
 
+  @Override
   public void selectionChanged( final IAction action, final ISelection selection )
   {
   }

@@ -171,6 +171,7 @@ public class CustomFeatureType extends QualifiedElement implements IFeatureType
   /**
    * @see org.kalypso.gmlschema.feature.IFeatureType#getProperties()
    */
+  @Override
   public IPropertyType[] getProperties( )
   {
     return m_properties;
@@ -179,6 +180,7 @@ public class CustomFeatureType extends QualifiedElement implements IFeatureType
   /**
    * @see org.kalypso.gmlschema.feature.IFeatureType#getProperties(int)
    */
+  @Override
   public IPropertyType getProperties( final int position )
   {
     return m_properties[position];
@@ -187,6 +189,7 @@ public class CustomFeatureType extends QualifiedElement implements IFeatureType
   /**
    * @see org.kalypso.gmlschema.feature.IFeatureType#getSizeOfProperties()
    */
+  @Override
   public int getSizeOfProperties( )
   {
     return m_properties.length;
@@ -195,6 +198,7 @@ public class CustomFeatureType extends QualifiedElement implements IFeatureType
   /**
    * @see org.kalypso.gmlschema.feature.IFeatureType#getProperty(javax.xml.namespace.QName)
    */
+  @Override
   public IPropertyType getProperty( final QName qname )
   {
     return m_qNameMap.get( qname );
@@ -203,6 +207,7 @@ public class CustomFeatureType extends QualifiedElement implements IFeatureType
   /**
    * @see org.kalypso.gmlschema.feature.IFeatureType#getProperty(java.lang.String)
    */
+  @Override
   @SuppressWarnings("deprecation")
   @Deprecated
   public IPropertyType getProperty( final String propNameLocalPart )
@@ -213,6 +218,7 @@ public class CustomFeatureType extends QualifiedElement implements IFeatureType
   /**
    * @see org.kalypso.gmlschema.feature.IFeatureType#isAbstract()
    */
+  @Override
   public boolean isAbstract( )
   {
     return false;
@@ -221,6 +227,7 @@ public class CustomFeatureType extends QualifiedElement implements IFeatureType
   /**
    * @see org.kalypso.gmlschema.feature.IFeatureType#getSubstitutionGroupFT()
    */
+  @Override
   public IFeatureType getSubstitutionGroupFT( )
   {
     return m_substitutionGroupFT;
@@ -237,6 +244,7 @@ public class CustomFeatureType extends QualifiedElement implements IFeatureType
   /**
    * @see org.kalypso.gmlschema.feature.IFeatureType#getPropertyPosition(org.kalypso.gmlschema.property.IPropertyType)
    */
+  @Override
   public int getPropertyPosition( final IPropertyType pt )
   {
     final Integer pos = m_positionMap.get( pt );
@@ -250,6 +258,7 @@ public class CustomFeatureType extends QualifiedElement implements IFeatureType
   /**
    * @see org.kalypso.gmlschema.feature.IFeatureType#getAllGeomteryProperties()
    */
+  @Override
   public IValuePropertyType[] getAllGeomteryProperties( )
   {
     return m_allGeometryPTS;
@@ -258,6 +267,7 @@ public class CustomFeatureType extends QualifiedElement implements IFeatureType
   /**
    * @see org.kalypso.gmlschema.feature.IFeatureType#getDefaultGeometryProperty()
    */
+  @Override
   public IValuePropertyType getDefaultGeometryProperty( )
   {
     return m_allGeometryPTS[0];
@@ -266,6 +276,7 @@ public class CustomFeatureType extends QualifiedElement implements IFeatureType
   /**
    * @see org.kalypso.gmlschema.basics.IInitialize#init(int)
    */
+  @Override
   public void init( final int initializeRun )
   {
     // nothing to init
@@ -274,6 +285,7 @@ public class CustomFeatureType extends QualifiedElement implements IFeatureType
   /**
    * @see org.kalypso.gmlschema.feature.IFeatureType#getAnnotation()
    */
+  @Override
   public IAnnotation getAnnotation( )
   {
     return m_annotation;

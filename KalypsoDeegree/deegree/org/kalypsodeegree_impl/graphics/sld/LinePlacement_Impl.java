@@ -89,6 +89,7 @@ public class LinePlacement_Impl implements LinePlacement, Marshallable
    * @throws FilterEvaluationException
    *           if the evaluation fails
    */
+  @Override
   public double getPerpendicularOffset( Feature feature ) throws FilterEvaluationException
   {
 
@@ -120,6 +121,7 @@ public class LinePlacement_Impl implements LinePlacement, Marshallable
    *      <p>
    * @param perpendicularOffset
    */
+  @Override
   public void setPerpendicularOffset( double perpendicularOffset )
   {
     ParameterValueType pvt = StyleFactory.createParameterValueType( "" + perpendicularOffset );
@@ -132,6 +134,7 @@ public class LinePlacement_Impl implements LinePlacement, Marshallable
    * 
    * @throws FilterEvaluationException
    */
+  @Override
   public int getPlacementType( Feature feature ) throws FilterEvaluationException
   {
     int type = TYPE_ABSOLUTE;
@@ -165,6 +168,7 @@ public class LinePlacement_Impl implements LinePlacement, Marshallable
    * 
    * @param placementType
    */
+  @Override
   public void setPlacementType( int placementType )
   {
     ParameterValueType pvt = null;
@@ -196,6 +200,7 @@ public class LinePlacement_Impl implements LinePlacement, Marshallable
    * 
    * @throws FilterEvaluationException
    */
+  @Override
   public double getLineWidth( Feature feature ) throws FilterEvaluationException
   {
     double width = 3;
@@ -215,6 +220,7 @@ public class LinePlacement_Impl implements LinePlacement, Marshallable
    * @param lineWidth
    *          the lineWidth to be set
    */
+  @Override
   public void setLineWidth( double lineWidth )
   {
     ParameterValueType pvt = StyleFactory.createParameterValueType( "" + lineWidth );
@@ -227,6 +233,7 @@ public class LinePlacement_Impl implements LinePlacement, Marshallable
    * 
    * @throws FilterEvaluationException
    */
+  @Override
   public int getGap( Feature feature ) throws FilterEvaluationException
   {
     int gapValue = 6;
@@ -245,6 +252,7 @@ public class LinePlacement_Impl implements LinePlacement, Marshallable
    * @param gap
    *          the gap to be set
    */
+  @Override
   public void setGap( int gap )
   {
     ParameterValueType pvt = StyleFactory.createParameterValueType( "" + gap );
@@ -256,6 +264,7 @@ public class LinePlacement_Impl implements LinePlacement, Marshallable
    * 
    * @return xml representation of the Font
    */
+  @Override
   public String exportAsXML()
   {
     Debug.debugMethodBegin();

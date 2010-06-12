@@ -46,10 +46,10 @@ import java.util.Set;
 
 import javax.xml.namespace.QName;
 
-import org.apache.xmlbeans.impl.xb.xsdschema.Element;
-import org.apache.xmlbeans.impl.xb.xsdschema.Facet;
 import org.apache.xmlbeans.impl.xb.xsdschema.AnnotationDocument.Annotation;
 import org.apache.xmlbeans.impl.xb.xsdschema.DocumentationDocument.Documentation;
+import org.apache.xmlbeans.impl.xb.xsdschema.Element;
+import org.apache.xmlbeans.impl.xb.xsdschema.Facet;
 import org.eclipse.core.runtime.Platform;
 import org.kalypso.commons.i18n.ResourceBundleUtils;
 import org.kalypso.commons.xml.NS;

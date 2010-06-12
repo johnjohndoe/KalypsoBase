@@ -72,6 +72,7 @@ public class LayerFeatureConstraints_Impl implements LayerFeatureConstraints, Ma
    * 
    * @return the FeatureTypeConstraints as Array
    */
+  @Override
   public FeatureTypeConstraint[] getFeatureTypeConstraint()
   {
     return (FeatureTypeConstraint[])m_featureTypeConstraint.toArray( new FeatureTypeConstraint[m_featureTypeConstraint
@@ -84,6 +85,7 @@ public class LayerFeatureConstraints_Impl implements LayerFeatureConstraints, Ma
    * @param featureTypeConstraint
    *          the <FeatureTypeConstraint>
    */
+  @Override
   public void setFeatureTypeConstraint( FeatureTypeConstraint[] featureTypeConstraint )
   {
     this.m_featureTypeConstraint.clear();
@@ -103,6 +105,7 @@ public class LayerFeatureConstraints_Impl implements LayerFeatureConstraints, Ma
    * @param featureTypeConstraint
    *          the <FeatureTypeConstraint>
    */
+  @Override
   public void addFeatureTypeConstraint( FeatureTypeConstraint featureTypeConstraint )
   {
     this.m_featureTypeConstraint.add( featureTypeConstraint );
@@ -114,6 +117,7 @@ public class LayerFeatureConstraints_Impl implements LayerFeatureConstraints, Ma
    * @param featureTypeConstraint
    *          the <FeatureTypeConstraint>
    */
+  @Override
   public void removeFeatureTypeConstraint( FeatureTypeConstraint featureTypeConstraint )
   {
     this.m_featureTypeConstraint.remove( this.m_featureTypeConstraint.indexOf( featureTypeConstraint ) );
@@ -124,6 +128,7 @@ public class LayerFeatureConstraints_Impl implements LayerFeatureConstraints, Ma
    * 
    * @return the LayerFeatureConstraints as String
    */
+  @Override
   public String toString()
   {
     String ret = getClass().getName() + "\n";
@@ -137,6 +142,7 @@ public class LayerFeatureConstraints_Impl implements LayerFeatureConstraints, Ma
    * 
    * @return xml representation of the Font
    */
+  @Override
   public String exportAsXML()
   {
     Debug.debugMethodBegin();

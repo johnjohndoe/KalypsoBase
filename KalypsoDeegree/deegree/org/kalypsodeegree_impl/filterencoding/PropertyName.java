@@ -155,6 +155,7 @@ public class PropertyName extends Expression_Impl
    *          that determines the value of this <tt>PropertyName</tt>
    * @return the resulting value
    */
+  @Override
   public Object evaluate( final Feature feature ) throws FilterEvaluationException
   {
     try

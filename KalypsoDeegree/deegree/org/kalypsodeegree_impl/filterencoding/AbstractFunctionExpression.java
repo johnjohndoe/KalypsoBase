@@ -55,6 +55,7 @@ public abstract class AbstractFunctionExpression implements IFunctionExpression,
    * @see org.eclipse.core.runtime.IExecutableExtension#setInitializationData(org.eclipse.core.runtime.IConfigurationElement,
    *      java.lang.String, java.lang.Object)
    */
+  @Override
   public void setInitializationData( final IConfigurationElement config, final String propertyName, final Object data )
   {
     m_name = config.getAttribute( "name" );
@@ -64,6 +65,7 @@ public abstract class AbstractFunctionExpression implements IFunctionExpression,
   /**
    * @see org.kalypsodeegree.filterencoding.IFunctionExpression#getName()
    */
+  @Override
   public String getName( )
   {
     return m_name;
@@ -72,6 +74,7 @@ public abstract class AbstractFunctionExpression implements IFunctionExpression,
   /**
    * @see org.kalypsodeegree.filterencoding.IFunctionExpression#getLabel()
    */
+  @Override
   public String getLabel( )
   {
     return m_label;

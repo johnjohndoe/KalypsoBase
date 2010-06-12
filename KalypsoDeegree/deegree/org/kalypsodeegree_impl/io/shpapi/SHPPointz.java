@@ -119,6 +119,7 @@ public class SHPPointz implements ISHPPoint
   /**
    * method: writeSHPPoint: writes a SHPPoint Objekt to a recBuffer <BR>
    */
+  @Override
   public byte[] writeShape( )
   {
     int offset = ShapeConst.SHAPE_FILE_RECORD_HEADER_LENGTH;
@@ -153,6 +154,7 @@ public class SHPPointz implements ISHPPoint
   /**
    * returns the size of the point shape in bytes <BR>
    */
+  @Override
   public int size( )
   {
     return 36;
@@ -164,26 +166,31 @@ public class SHPPointz implements ISHPPoint
     return "SHPPOINTZ" + "[" + this.x + "; " + this.y + "; " + this.z + "; " + this.m + "]";
   }
 
+  @Override
   public double getX( )
   {
     return x;
   }
 
+  @Override
   public double getY( )
   {
     return y;
   }
 
+  @Override
   public double getZ( )
   {
     return z;
   }
 
+  @Override
   public double getM( )
   {
     return m;
   }
 
+  @Override
   public SHPEnvelope getEnvelope( )
   {
     return m_envelope;

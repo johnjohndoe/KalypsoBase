@@ -96,6 +96,7 @@ public class LabelDisplayElement_Impl extends GeometryDisplayElement_Impl implem
   /**
    * Sets the caption of the label.
    */
+  @Override
   public void setLabel( final ParameterValueType label )
   {
     this.m_label = label;
@@ -104,6 +105,7 @@ public class LabelDisplayElement_Impl extends GeometryDisplayElement_Impl implem
   /**
    * Returns the caption of the label as <tt>ParameterValueType<tt>.
    */
+  @Override
   public ParameterValueType getLabel( )
   {
     return m_label;
@@ -166,6 +168,7 @@ public class LabelDisplayElement_Impl extends GeometryDisplayElement_Impl implem
    * Removes all <tt>Label<tt> representations for this
    * <tt>LabelDisplayElement</tt>.
    */
+  @Override
   public void clearLabels( )
   {
     m_labels = null;
@@ -175,6 +178,7 @@ public class LabelDisplayElement_Impl extends GeometryDisplayElement_Impl implem
    * Adds a <tt>Label<tt> representation that is to be considered when the
    * <tt>LabelDisplayElement</tt> is painted to the view.
    */
+  @Override
   public void addLabel( final Label label )
   {
     if( m_labels == null )
@@ -188,6 +192,7 @@ public class LabelDisplayElement_Impl extends GeometryDisplayElement_Impl implem
    * Adds <tt>Label<tt> representations that are to be considered when the
    * <tt>LabelDisplayElement</tt> is painted to the view.
    */
+  @Override
   public void addLabels( final Label[] labels )
   {
     if( m_labels == null )
@@ -201,6 +206,7 @@ public class LabelDisplayElement_Impl extends GeometryDisplayElement_Impl implem
    * Sets the <tt>Label<tt> representations that are to be considered when
    * the <tt>LabelDisplayElement</tt> is painted to the view.
    */
+  @Override
   public void setLabels( final Label[] labels )
   {
     m_labels = new ArrayList<Label>( 100 );

@@ -44,15 +44,15 @@ import javax.xml.namespace.QName;
 
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
+import org.apache.xmlbeans.impl.xb.xsdschema.ImportDocument.Import;
+import org.apache.xmlbeans.impl.xb.xsdschema.IncludeDocument.Include;
 import org.apache.xmlbeans.impl.xb.xsdschema.NamedGroup;
 import org.apache.xmlbeans.impl.xb.xsdschema.SchemaDocument;
+import org.apache.xmlbeans.impl.xb.xsdschema.SchemaDocument.Schema;
 import org.apache.xmlbeans.impl.xb.xsdschema.SimpleType;
 import org.apache.xmlbeans.impl.xb.xsdschema.TopLevelComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.TopLevelElement;
 import org.apache.xmlbeans.impl.xb.xsdschema.TopLevelSimpleType;
-import org.apache.xmlbeans.impl.xb.xsdschema.ImportDocument.Import;
-import org.apache.xmlbeans.impl.xb.xsdschema.IncludeDocument.Include;
-import org.apache.xmlbeans.impl.xb.xsdschema.SchemaDocument.Schema;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.xml.NS;
@@ -153,6 +153,7 @@ public class GMLSchema implements IGMLSchema
     init( schemaDocument );
   }
 
+  @Override
   public String getGMLVersion( )
   {
     return m_gmlVersion;
@@ -315,6 +316,7 @@ public class GMLSchema implements IGMLSchema
     return gmlschema.resolveSimpleTypeReference( qName );
   }
 
+  @Override
   public ComplexTypeReference resolveComplexTypeReference( final QName qName ) throws GMLSchemaException
   {
     final String namespaceURI = qName.getNamespaceURI();
@@ -387,6 +389,7 @@ public class GMLSchema implements IGMLSchema
     return schema;
   }
 
+  @Override
   public String getTargetNamespace( )
   {
     return m_schemaDocument.getSchema().getTargetNamespace();
@@ -400,6 +403,7 @@ public class GMLSchema implements IGMLSchema
   /**
    * @see org.kalypso.gmlschema.IGMLSchema#getContext()
    */
+  @Override
   public URL getContext( )
   {
     return m_context;
@@ -503,6 +507,7 @@ public class GMLSchema implements IGMLSchema
     return m_propertyContentTypes.get( simpleType );
   }
 
+  @Override
   public IFeatureType[] getAllFeatureTypes( )
   {
     // return m_featureTypesList.toArray( new IFeatureType[m_featureTypesList.size()] );
@@ -540,6 +545,7 @@ public class GMLSchema implements IGMLSchema
   /**
    * @param visitor
    */
+  @Override
   public void accept( final IGMLSchemaVisitor visitor )
   {
     innerAccept( visitor, new ArrayList<GMLSchema>() );
@@ -566,6 +572,7 @@ public class GMLSchema implements IGMLSchema
     }
   }
 
+  @Override
   public GMLSchema[] getAdditionalSchemas( )
   {
     return m_additionalSchemas.values().toArray( new GMLSchema[m_additionalSchemas.values().size()] );
@@ -577,6 +584,7 @@ public class GMLSchema implements IGMLSchema
     return collection.toArray( new GMLSchema[collection.size()] );
   }
 
+  @Override
   public IFeatureType getFeatureType( final QName qName )
   {
     final String namespaceURI = qName.getNamespaceURI();

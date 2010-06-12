@@ -68,6 +68,7 @@ public class LegendGraphic_Impl implements LegendGraphic, Marshallable
    * 
    * @return graphic
    */
+  @Override
   public Graphic getGraphic()
   {
     return graphic;
@@ -78,6 +79,7 @@ public class LegendGraphic_Impl implements LegendGraphic, Marshallable
    * 
    * @param graphic
    */
+  @Override
   public void setGraphic( Graphic graphic )
   {
     this.graphic = graphic;
@@ -88,6 +90,7 @@ public class LegendGraphic_Impl implements LegendGraphic, Marshallable
    * 
    * @return xml representation of the Font
    */
+  @Override
   public String exportAsXML()
   {
     Debug.debugMethodBegin();

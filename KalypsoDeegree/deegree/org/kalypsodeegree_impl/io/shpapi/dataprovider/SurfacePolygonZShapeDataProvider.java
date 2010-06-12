@@ -107,6 +107,7 @@ public class SurfacePolygonZShapeDataProvider implements IShapeDataProvider
   /**
    * @see org.kalypsodeegree_impl.io.shpapi.IShapeDataProvider#getFeatureType()
    */
+  @Override
   public IFeatureType getFeatureType( )
   {
     return m_features[0].getFeatureType();
@@ -115,6 +116,7 @@ public class SurfacePolygonZShapeDataProvider implements IShapeDataProvider
   /**
    * @see org.kalypsodeegree_impl.io.shpapi.IShapeDataProvider#getFeaturesLength()
    */
+  @Override
   public int getFeaturesLength( )
   {
     // return the number of surfacePatches
@@ -124,6 +126,7 @@ public class SurfacePolygonZShapeDataProvider implements IShapeDataProvider
   /**
    * @see org.kalypsodeegree_impl.io.shpapi.IShapeDataProvider#getGeometryPropertyType()
    */
+  @Override
   public IPropertyType getGeometryPropertyType( )
   {
     return m_geometryPropertyType;
@@ -132,6 +135,7 @@ public class SurfacePolygonZShapeDataProvider implements IShapeDataProvider
   /**
    * @see org.kalypsodeegree_impl.io.shpapi.IShapeDataProvider#getOutputShapeConstant()
    */
+  @Override
   public byte getOutputShapeConstant( )
   {
     return m_shapeConstant;
@@ -140,6 +144,7 @@ public class SurfacePolygonZShapeDataProvider implements IShapeDataProvider
   /**
    * @see org.kalypsodeegree_impl.io.shpapi.IShapeDataProvider#setFeatures(org.kalypsodeegree.model.feature.Feature[])
    */
+  @Override
   public void setFeatures( final Feature[] features )
   {
     m_features = features;
@@ -156,6 +161,7 @@ public class SurfacePolygonZShapeDataProvider implements IShapeDataProvider
   /**
    * @see org.kalypsodeegree_impl.io.shpapi.IShapeDataProvider#getGeometry(int)
    */
+  @Override
   public GM_Object getGeometry( final int index )
   {
     final GM_Object geom = (GM_Object) m_features[index].getProperty( getGeometryPropertyType() );
@@ -167,6 +173,7 @@ public class SurfacePolygonZShapeDataProvider implements IShapeDataProvider
    * @see org.kalypsodeegree_impl.io.shpapi.IShapeDataProvider#getFeatureProperty(int,
    *      org.kalypso.gmlschema.property.IPropertyType)
    */
+  @Override
   public Object getFeatureProperty( final int featureIndex, final IPropertyType propertyType )
   {
     return m_features[0].getProperty( propertyType );

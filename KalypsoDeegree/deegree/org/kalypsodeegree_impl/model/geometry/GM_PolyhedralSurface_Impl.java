@@ -103,6 +103,7 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
   /**
    * @see org.kalypsodeegree.model.geometry.GM_Object#getDimension()
    */
+  @Override
   public int getDimension( )
   {
     return 2;
@@ -120,6 +121,7 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
   /**
    * @see java.util.List#add(java.lang.Object)
    */
+  @Override
   public boolean add( final T o )
   {
     m_items.add( o );
@@ -132,6 +134,7 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
   /**
    * @see java.util.List#add(int, java.lang.Object)
    */
+  @Override
   public void add( final int index, final T element )
   {
     m_items.add( index, element );
@@ -141,6 +144,7 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
   /**
    * @see java.util.List#addAll(java.util.Collection)
    */
+  @Override
   public boolean addAll( final Collection< ? extends T> c )
   {
     for( final T polygon : c )
@@ -152,6 +156,7 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
   /**
    * @see java.util.List#addAll(int, java.util.Collection)
    */
+  @Override
   public boolean addAll( final int index, final Collection< ? extends T> c )
   {
     m_items.addAll( index, c );
@@ -165,6 +170,7 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
   /**
    * @see java.util.List#clear()
    */
+  @Override
   public void clear( )
   {
     m_items.clear();
@@ -177,6 +183,7 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
   /**
    * @see java.util.List#contains(java.lang.Object)
    */
+  @Override
   public boolean contains( final Object o )
   {
     return m_items.contains( o );
@@ -185,6 +192,7 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
   /**
    * @see java.util.List#containsAll(java.util.Collection)
    */
+  @Override
   public boolean containsAll( final Collection< ? > c )
   {
     return m_items.containsAll( c );
@@ -193,6 +201,7 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
   /**
    * @see java.util.List#get(int)
    */
+  @Override
   public T get( final int index )
   {
     return m_items.get( index );
@@ -201,6 +210,7 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
   /**
    * @see java.util.List#indexOf(java.lang.Object)
    */
+  @Override
   public int indexOf( final Object o )
   {
     return m_items.indexOf( o );
@@ -211,6 +221,7 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
    * 
    * @see java.util.List#iterator()
    */
+  @Override
   public Iterator<T> iterator( )
   {
     // TODO + CHECK: see TODO above; beter do this
@@ -221,6 +232,7 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
   /**
    * @see java.util.List#lastIndexOf(java.lang.Object)
    */
+  @Override
   public int lastIndexOf( final Object o )
   {
     // TODO: see iterator()
@@ -232,6 +244,7 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
    * 
    * @see java.util.List#listIterator()
    */
+  @Override
   public ListIterator<T> listIterator( )
   {
     // TODO: see iterator()
@@ -243,6 +256,7 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
    * 
    * @see java.util.List#listIterator(int)
    */
+  @Override
   public ListIterator<T> listIterator( final int index )
   {
     // TODO: see iterator()
@@ -252,6 +266,7 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
   /**
    * @see java.util.List#remove(java.lang.Object)
    */
+  @Override
   public boolean remove( final Object o )
   {
     removeFromIndex( o );
@@ -262,6 +277,7 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
   /**
    * @see java.util.List#remove(int)
    */
+  @Override
   public T remove( final int index )
   {
     final T polygon = get( index );
@@ -273,6 +289,7 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
   /**
    * @see java.util.List#removeAll(java.util.Collection)
    */
+  @Override
   public boolean removeAll( final Collection< ? > c )
   {
     boolean hasRemoved = false;
@@ -285,6 +302,7 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
   /**
    * @see java.util.List#retainAll(java.util.Collection)
    */
+  @Override
   public boolean retainAll( final Collection< ? > c )
   {
     throw new UnsupportedOperationException();
@@ -293,6 +311,7 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
   /**
    * @see java.util.List#set(int, java.lang.Object)
    */
+  @Override
   public T set( final int index, final T element )
   {
     final T polygon = get( index );
@@ -307,6 +326,7 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
   /**
    * @see java.util.List#size()
    */
+  @Override
   public int size( )
   {
     return m_items.size();
@@ -315,6 +335,7 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
   /**
    * @see java.util.List#subList(int, int)
    */
+  @Override
   public List<T> subList( final int fromIndex, final int toIndex )
   {
     try
@@ -331,6 +352,7 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
   /**
    * @see java.util.List#toArray()
    */
+  @Override
   public Object[] toArray( )
   {
     return m_items.toArray();
@@ -339,6 +361,7 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
   /**
    * @see java.util.List#toArray(T[])
    */
+  @Override
   public <otherT> otherT[] toArray( final otherT[] a )
   {
     return m_items.toArray( a );
@@ -438,6 +461,7 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
   /**
    * @see org.kalypsodeegree.model.geometry.GM_Object#getCoordinateDimension()
    */
+  @Override
   public int getCoordinateDimension( )
   {
     try
@@ -555,6 +579,7 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
   /**
    * @see org.kalypsodeegree.model.geometry.GM_OrientableSurface#getSurfaceBoundary()
    */
+  @Override
   public GM_SurfaceBoundary getSurfaceBoundary( )
   {
     throw new UnsupportedOperationException();
@@ -563,6 +588,7 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
   /**
    * @see org.kalypsodeegree.model.geometry.GM_GenericSurface#getArea()
    */
+  @Override
   public double getArea( )
   {
     throw new UnsupportedOperationException();
@@ -571,6 +597,7 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
   /**
    * @see org.kalypsodeegree.model.geometry.GM_GenericSurface#getPerimeter()
    */
+  @Override
   public double getPerimeter( )
   {
     throw new UnsupportedOperationException();
@@ -580,12 +607,14 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
    * @see org.kalypsodeegree.model.geometry.ISurfacePatchVisitable#acceptSurfacePatches(org.kalypsodeegree.model.geometry.GM_Envelope,
    *      org.kalypsodeegree.model.geometry.ISurfacePatchVisitor, org.eclipse.core.runtime.IProgressMonitor)
    */
+  @Override
   public void acceptSurfacePatches( final GM_Envelope envToVisit, final ISurfacePatchVisitor<T> surfacePatchVisitor, final IProgressMonitor monitor ) throws CoreException
   {
     monitor.beginTask( "", IProgressMonitor.UNKNOWN );
 
     final ItemVisitor visitor = new ItemVisitor()
     {
+      @Override
       @SuppressWarnings("unchecked")
       public void visitItem( final Object item )
       {
@@ -619,6 +648,7 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
    * @see org.kalypsodeegree.model.geometry.GM_Object#transform(org.deegree.crs.transformations.CRSTransformation,
    *      java.lang.String)
    */
+  @Override
   @SuppressWarnings("unchecked")
   public GM_Object transform( final CRSTransformation trans, final String targetOGCCS ) throws Exception
   {

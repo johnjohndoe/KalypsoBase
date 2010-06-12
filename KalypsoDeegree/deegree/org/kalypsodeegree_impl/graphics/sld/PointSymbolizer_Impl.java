@@ -122,6 +122,7 @@ public class PointSymbolizer_Impl extends Symbolizer_Impl implements PointSymbol
    * 
    * @return the graphic of the point
    */
+  @Override
   public Graphic getGraphic( )
   {
     return m_graphic;
@@ -133,6 +134,7 @@ public class PointSymbolizer_Impl extends Symbolizer_Impl implements PointSymbol
    * @param graphic
    *            the graphic of the point
    */
+  @Override
   public void setGraphic( final Graphic graphic )
   {
     this.m_graphic = graphic;
@@ -143,6 +145,7 @@ public class PointSymbolizer_Impl extends Symbolizer_Impl implements PointSymbol
    * 
    * @return xml representation of the PointSymbolizer
    */
+  @Override
   public String exportAsXML( )
   {
     Debug.debugMethodBegin();

@@ -61,6 +61,7 @@ public class FeatureContentTypeFromSequence extends FeatureContentType
   /**
    * @see org.kalypso.gmlschema.feature.IFeatureContentType#getBase()
    */
+  @Override
   public IFeatureContentType getBase( )
   {
     return null;
@@ -69,6 +70,7 @@ public class FeatureContentTypeFromSequence extends FeatureContentType
   /**
    * @see org.kalypso.gmlschema.feature.IFeatureContentType#getDerivationType()
    */
+  @Override
   public int getDerivationType( )
   {
     return DERIVATION_NONE;
@@ -77,6 +79,7 @@ public class FeatureContentTypeFromSequence extends FeatureContentType
   /**
    * @see org.kalypso.gmlschema.feature.IFeatureContentType#getDirectProperties()
    */
+  @Override
   public IPropertyType[] getDirectProperties( )
   {
     return getProperties();

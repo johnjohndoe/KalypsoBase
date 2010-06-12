@@ -53,6 +53,7 @@ import org.kalypsodeegree.model.TypeHandlerUtilities;
  */
 public class ObservationTypeHandlerFactory implements ITypeHandlerFactory<IMarshallingTypeHandler>
 {
+  @Override
   public void registerTypeHandlers( final ITypeRegistry<IMarshallingTypeHandler> registry ) throws TypeRegistryException
   {
     TypeHandlerUtilities.registerXSDSimpleTypeHandler( registry );

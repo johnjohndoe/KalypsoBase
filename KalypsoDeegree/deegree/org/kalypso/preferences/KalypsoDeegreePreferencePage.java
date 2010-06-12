@@ -155,6 +155,7 @@ public class KalypsoDeegreePreferencePage extends PreferencePage implements IWor
       /**
        * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
        */
+      @Override
       public void selectionChanged( SelectionChangedEvent event )
       {
         /* Store the coordinate system. */
@@ -179,6 +180,7 @@ public class KalypsoDeegreePreferencePage extends PreferencePage implements IWor
       /**
        * @see org.kalypso.transformation.ui.IAvailableCRSPanelListener#coordinateSystemsInitialized(java.util.List)
        */
+      @Override
       public void coordinateSystemsInitialized( List<String> names )
       {
         /* Store the available coordinate systems. */
@@ -188,6 +190,7 @@ public class KalypsoDeegreePreferencePage extends PreferencePage implements IWor
       /**
        * @see org.kalypso.transformation.ui.IAvailableCRSPanelListener#coordinateSystemAdded(java.lang.String)
        */
+      @Override
       public void coordinateSystemAdded( String name )
       {
         /* Store the available coordinate systems. */
@@ -197,6 +200,7 @@ public class KalypsoDeegreePreferencePage extends PreferencePage implements IWor
       /**
        * @see org.kalypso.transformation.ui.IAvailableCRSPanelListener#coordinateSystemRemoved(java.lang.String)
        */
+      @Override
       public void coordinateSystemRemoved( String name )
       {
         /* Store the available coordinate systems. */
@@ -306,6 +310,7 @@ public class KalypsoDeegreePreferencePage extends PreferencePage implements IWor
   /**
    * @see org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
    */
+  @Override
   public void init( IWorkbench workbench )
   {
   }

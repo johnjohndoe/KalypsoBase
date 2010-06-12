@@ -99,6 +99,7 @@ public abstract class AbstractGeoGrid implements IGeoGrid
   /**
    * @see org.kalypso.grid.IGeoGrid#getSurface(java.lang.String)
    */
+  @Override
   public GM_Surface< ? > getSurface( String targetCRS ) throws GeoGridException
   {
     return GeoGridUtilities.createSurface( this, targetCRS );
@@ -107,6 +108,7 @@ public abstract class AbstractGeoGrid implements IGeoGrid
   /**
    * @see org.kalypso.grid.IGeoGrid#getCell(int, int, java.lang.String)
    */
+  @Override
   public GM_Surface< ? > getCell( int x, int y, String targetCRS ) throws GeoGridException
   {
     return GeoGridUtilities.createCell( this, x, y, targetCRS );
@@ -115,6 +117,7 @@ public abstract class AbstractGeoGrid implements IGeoGrid
   /**
    * @see org.kalypso.grid.IGeoGrid#getEnvelope()
    */
+  @Override
   public Envelope getEnvelope( ) throws GeoGridException
   {
     return GeoGridUtilities.toEnvelope( this );
@@ -123,6 +126,7 @@ public abstract class AbstractGeoGrid implements IGeoGrid
   /**
    * @see org.kalypso.grid.IGeoGrid#getOrigin()
    */
+  @Override
   public Coordinate getOrigin( )
   {
     return m_origin;
@@ -131,6 +135,7 @@ public abstract class AbstractGeoGrid implements IGeoGrid
   /**
    * @see org.kalypso.grid.IGeoGrid#getOffsetX()
    */
+  @Override
   public Coordinate getOffsetX( )
   {
     return m_offsetX;
@@ -139,6 +144,7 @@ public abstract class AbstractGeoGrid implements IGeoGrid
   /**
    * @see org.kalypso.grid.IGeoGrid#getOffsetY()
    */
+  @Override
   public Coordinate getOffsetY( )
   {
     return m_offsetY;
@@ -147,6 +153,7 @@ public abstract class AbstractGeoGrid implements IGeoGrid
   /**
    * @see org.kalypso.grid.IGeoGrid#getSourceCRS()
    */
+  @Override
   public String getSourceCRS( )
   {
     return m_sourceCRS;
@@ -157,6 +164,7 @@ public abstract class AbstractGeoGrid implements IGeoGrid
    * 
    * @see IGeoGrid#getValueChecked(int, int)
    */
+  @Override
   public double getValueChecked( final int x, final int y ) throws GeoGridException
   {
     if( (x < 0) || (x >= getSizeX()) || (y < 0) || (y >= getSizeY()) )
@@ -168,6 +176,7 @@ public abstract class AbstractGeoGrid implements IGeoGrid
   /**
    * @see org.kalypso.grid.IGeoValueProvider#getValue(com.vividsolutions.jts.geom.Coordinate, java.lang.String)
    */
+  @Override
   public double getValue( final Coordinate crd ) throws GeoGridException
   {
     final GeoGridCell cell = GeoGridUtilities.cellFromPosition( this, crd );
@@ -189,6 +198,7 @@ public abstract class AbstractGeoGrid implements IGeoGrid
   /**
    * @see org.kalypso.grid.IGeoGrid#dispose()
    */
+  @Override
   public void dispose( )
   {
   }
@@ -209,6 +219,7 @@ public abstract class AbstractGeoGrid implements IGeoGrid
   /**
    * @see org.kalypso.grid.IGeoGrid#getWalkingStrategy()
    */
+  @Override
   public IGeoWalkingStrategy getWalkingStrategy( )
   {
     return new DefaultWalkingStrategy();

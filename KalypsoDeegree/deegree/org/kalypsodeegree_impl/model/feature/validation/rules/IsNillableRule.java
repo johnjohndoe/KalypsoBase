@@ -62,6 +62,7 @@ public class IsNillableRule implements IRule
    * 
    * @see org.kalypso.ogc.gml.util.IRule#isValid(java.lang.Object)
    */
+  @Override
   public IStatus isValid( Object object )
   {
     Status status = new Status( Status.OK, Platform.PI_RUNTIME, Status.OK, "IsNillableRule: Validation OK.", null );

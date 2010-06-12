@@ -52,21 +52,25 @@ public class PolygonColorMap_Impl implements PolygonColorMap
   /**
    * @see org.kalypsodeegree_impl.graphics.sld.PolygonColorMap#getColorMap()
    */
+  @Override
   public PolygonColorMapEntry[] getColorMap( )
   {
     return m_colorMap.toArray( new PolygonColorMapEntry[m_colorMap.size()] );
   }
 
+  @Override
   public void setColorMap( final List<PolygonColorMapEntry> colorMap )
   {
     m_colorMap.addAll( colorMap );
   }
 
+  @Override
   public void addColorMapClass( final PolygonColorMapEntry colorMapEntry )
   {
     m_colorMap.add( colorMapEntry );
   }
 
+  @Override
   public String exportAsXML( )
   {
     final StringBuffer sb = new StringBuffer( 1000 );
@@ -91,6 +95,7 @@ public class PolygonColorMap_Impl implements PolygonColorMap
    * @see org.kalypsodeegree_impl.graphics.sld.PolygonColorMap#findEntry(java.lang.String,
    *      org.kalypsodeegree.model.feature.Feature)
    */
+  @Override
   public PolygonColorMapEntry findEntry( String label, Feature feature )
   {
     for( final PolygonColorMapEntry entry : m_colorMap )
@@ -105,6 +110,7 @@ public class PolygonColorMap_Impl implements PolygonColorMap
   /**
    * @see org.kalypsodeegree_impl.graphics.sld.PolygonColorMap#replaceColorMap(java.util.List)
    */
+  @Override
   public void replaceColorMap( List<PolygonColorMapEntry> colorMapList )
   {
     m_colorMap.clear();

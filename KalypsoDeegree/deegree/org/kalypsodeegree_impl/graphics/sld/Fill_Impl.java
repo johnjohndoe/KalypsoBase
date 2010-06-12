@@ -86,6 +86,7 @@ public class Fill_Impl extends Drawing_Impl implements Fill, Marshallable
    * @throws FilterEvaluationException
    *           if the evaluation fails or the value is invalid
    */
+  @Override
   public Color getFill( Feature feature ) throws FilterEvaluationException
   {
     Color awtColor = FILL_DEFAULT;
@@ -123,6 +124,7 @@ public class Fill_Impl extends Drawing_Impl implements Fill, Marshallable
    * @param color
    *          color to be set
    */
+  @Override
   public void setFill( Color color )
   {
 
@@ -142,6 +144,7 @@ public class Fill_Impl extends Drawing_Impl implements Fill, Marshallable
    * @throws FilterEvaluationException
    *           if the evaluation fails or the value is invalid
    */
+  @Override
   public double getOpacity( Feature feature ) throws FilterEvaluationException
   {
     double opacity = OPACITY_DEFAULT;
@@ -179,6 +182,7 @@ public class Fill_Impl extends Drawing_Impl implements Fill, Marshallable
    * @param opacity
    *          opacity to be set
    */
+  @Override
   public void setOpacity( double opacity )
   {
 
@@ -200,6 +204,7 @@ public class Fill_Impl extends Drawing_Impl implements Fill, Marshallable
    * 
    * @return xml representation of the CssParameter
    */
+  @Override
   public String exportAsXML()
   {
     Debug.debugMethodBegin();

@@ -175,6 +175,7 @@ public class ValidateProfilesWizard extends Wizard
 
     final ICoreRunnableWithProgress m_validateJob = new ICoreRunnableWithProgress()
     {
+      @Override
       public IStatus execute( final IProgressMonitor monitor )
       {
         monitor.beginTask( Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.validateProfiles.ValidateProfilesWizard.7" ), 2 * profilFeatures.length ); //$NON-NLS-1$
@@ -245,6 +246,7 @@ public class ValidateProfilesWizard extends Wizard
                           {
                             Display.getDefault().syncExec( new Runnable()
                             {
+                              @Override
                               public void run( )
                               {
                                 uiResults.put( quickFix.getClass().getName(), mr.getUIresult( getShell(), prof ) );
@@ -282,6 +284,7 @@ public class ValidateProfilesWizard extends Wizard
     };
     Display.getDefault().asyncExec( new Runnable()
     {
+      @Override
       public void run( )
       {
         RunnableContextHelper.execute( new ProgressMonitorDialog( getShell() ), true, true, m_validateJob );

@@ -62,6 +62,7 @@ public class ProfilComparator implements Comparator<IRecord>
   /**
    * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
    */
+  @Override
   public int compare( final IRecord p1, final IRecord p2 )
   {
     final Double v1 = ProfilUtil.getDoubleValueFor( m_pointProperty.getId(),p1);

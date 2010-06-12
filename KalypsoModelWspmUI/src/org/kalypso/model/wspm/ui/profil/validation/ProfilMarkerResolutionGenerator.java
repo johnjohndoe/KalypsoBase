@@ -59,6 +59,7 @@ public class ProfilMarkerResolutionGenerator implements IMarkerResolutionGenerat
   /**
    * @see org.eclipse.ui.IMarkerResolutionGenerator2#hasResolutions(org.eclipse.core.resources.IMarker)
    */
+  @Override
   public boolean hasResolutions( final IMarker marker )
   {
     final IMarkerResolution2[] mss = getResolutions( marker );
@@ -68,6 +69,7 @@ public class ProfilMarkerResolutionGenerator implements IMarkerResolutionGenerat
   /**
    * @see org.eclipse.ui.IMarkerResolutionGenerator#getResolutions(org.eclipse.core.resources.IMarker)
    */
+  @Override
   public IMarkerResolution2[] getResolutions( final IMarker marker )
   {
     final String resArray = marker.getAttribute( IValidatorMarkerCollector.MARKER_ATTRIBUTE_QUICK_FIX_RESOLUTIONS, (String) null );

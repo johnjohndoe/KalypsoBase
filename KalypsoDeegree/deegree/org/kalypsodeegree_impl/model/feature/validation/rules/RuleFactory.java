@@ -147,7 +147,7 @@ public abstract class RuleFactory
         {
           /* Add the Rule. */
           final EnumerationRestriction enumerationrestriction = (EnumerationRestriction) restriction;
-          final IMarshallingTypeHandler typeHandler = (IMarshallingTypeHandler) vpt.getTypeHandler();
+          final IMarshallingTypeHandler typeHandler = vpt.getTypeHandler();
           final Object[] enumValues = enumerationrestriction.getEnumeration();
           final Object[] enumValueObjects = new Object[enumValues.length];
           for( int j = 0; j < enumValues.length; j++ )

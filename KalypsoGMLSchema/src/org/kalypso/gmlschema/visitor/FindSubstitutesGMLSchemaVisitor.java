@@ -62,6 +62,7 @@ public class FindSubstitutesGMLSchemaVisitor implements IGMLSchemaVisitor
   /**
    * @see org.kalypso.gmlschema.visitor.IGMLSchemaVisitor#visit(org.kalypso.gmlschema.GMLSchema)
    */
+  @Override
   public boolean visit( final IGMLSchema gmlSchema )
   {
     final IFeatureType[] allFeatureTypes = gmlSchema.getAllFeatureTypes();

@@ -72,6 +72,7 @@ public abstract class AbstractExporter implements IExporter
    * @see org.eclipse.core.runtime.IExecutableExtension#setInitializationData(org.eclipse.core.runtime.IConfigurationElement,
    *      java.lang.String, java.lang.Object)
    */
+  @Override
   public final void setInitializationData( final IConfigurationElement config, final String propertyName, Object data )
   {
     m_name = config.getAttribute( "name" );
@@ -85,6 +86,7 @@ public abstract class AbstractExporter implements IExporter
   /**
    * @see org.kalypso.metadoc.IExporter#getName()
    */
+  @Override
   public final String getName( )
   {
     return m_name;
@@ -93,6 +95,7 @@ public abstract class AbstractExporter implements IExporter
   /**
    * @see org.kalypso.metadoc.IExporter#setName(java.lang.String)
    */
+  @Override
   public void setName( final String name )
   {
     m_name = name;
@@ -101,12 +104,14 @@ public abstract class AbstractExporter implements IExporter
   /**
    * @see org.kalypso.metadoc.IExporter#getDescription()
    */
+  @Override
   public final String getDescription( )
   {
     return m_desc;
   }
 
   /** Overwrite the internal description */
+  @Override
   public void setDescription( final String desc )
   {
     m_desc = desc;
@@ -115,6 +120,7 @@ public abstract class AbstractExporter implements IExporter
   /**
    * @see org.kalypso.metadoc.IExporter#getImageDescriptor()
    */
+  @Override
   public ImageDescriptor getImageDescriptor( )
   {
     return m_imageDescriptor;
@@ -123,6 +129,7 @@ public abstract class AbstractExporter implements IExporter
   /**
    * @see org.kalypso.metadoc.IExporter#init(org.kalypso.contribs.java.lang.ISupplier)
    */
+  @Override
   @SuppressWarnings("unused")
   public void init( final ISupplier supplier ) throws CoreException
   {
@@ -132,6 +139,7 @@ public abstract class AbstractExporter implements IExporter
   /**
    * @see org.kalypso.metadoc.IExporter#createTreeItem()
    */
+  @Override
   public ExportableTreeItem createTreeItem( final ExportableTreeItem parent ) throws CoreException
   {
     final ExportableTreeItem item = new ExportableTreeItem( getName(), getImageDescriptor(), parent, null, true, false );

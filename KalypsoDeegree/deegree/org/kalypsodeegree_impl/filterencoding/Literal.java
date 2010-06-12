@@ -139,6 +139,7 @@ public class Literal extends Expression_Impl
    *          that determines the values of <tt>PropertyNames</tt> in the expression (no use here)
    * @return the resulting value
    */
+  @Override
   public Object evaluate( final Feature feature )
   {
     if( m_number != null )

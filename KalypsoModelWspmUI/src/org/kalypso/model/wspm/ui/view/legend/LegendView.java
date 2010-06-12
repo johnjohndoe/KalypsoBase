@@ -123,6 +123,7 @@ public class LegendView extends ViewPart implements IAdapterEater<ChartView>, IP
       /**
        * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
        */
+      @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
         final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
@@ -214,9 +215,8 @@ public class LegendView extends ViewPart implements IAdapterEater<ChartView>, IP
    * @see org.eclipse.ui.part.WorkbenchPart#getAdapter(java.lang.Class)
    */
 
-  @SuppressWarnings("unchecked")
   @Override
-  public Object getAdapter( final Class adapter )
+  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
   {
     if( adapter == ChartEditorTreeOutlinePage.class )
     {
@@ -243,6 +243,7 @@ public class LegendView extends ViewPart implements IAdapterEater<ChartView>, IP
   /**
    * @see org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater#setAdapter(java.lang.Object)
    */
+  @Override
   public void setAdapter( final IWorkbenchPart part, final ChartView adapter )
   {
     if( m_chart == adapter )
@@ -342,7 +343,7 @@ public class LegendView extends ViewPart implements IAdapterEater<ChartView>, IP
     }
   }
 
-  private void updatePartName( IProfil profil )
+  private void updatePartName( final IProfil profil )
   {
     if( profil == null )
       setPartName( String.format( STR_NO_PROFILE_SELECTED ) );

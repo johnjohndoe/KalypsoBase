@@ -63,6 +63,7 @@ public class StrokeArrowPainter implements IAdditionalStrokePainter
     m_uom = uom;
   }
 
+  @Override
   public void paint( final Graphics2D g2, final GM_Curve curve, final int[][] positions )
   {
     final ARROW_TYPE arrowType = StrokeArrowHelper.getArrowType( m_cssParameters );

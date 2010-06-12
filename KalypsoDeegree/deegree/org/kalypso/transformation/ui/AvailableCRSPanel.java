@@ -162,6 +162,7 @@ public class AvailableCRSPanel extends Composite implements IJobChangeListener
       /**
        * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
        */
+      @Override
       public void selectionChanged( SelectionChangedEvent event )
       {
         /* Get the name of the selected coordinate system. */

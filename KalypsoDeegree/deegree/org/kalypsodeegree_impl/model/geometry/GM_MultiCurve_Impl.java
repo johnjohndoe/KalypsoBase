@@ -91,6 +91,7 @@ final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
   /**
    * adds a GM_Curve to the aggregation
    */
+  @Override
   public void addCurve( final GM_Curve gmc )
   {
     super.add( gmc );
@@ -105,6 +106,7 @@ final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
    * @param index
    *          position where to insert the new GM_Curve
    */
+  @Override
   public void insertCurveAt( final GM_Curve gmc, final int index ) throws GM_Exception
   {
     super.insertObjectAt( gmc, index );
@@ -119,6 +121,7 @@ final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
    * @param index
    *          position where to set the new GM_Curve
    */
+  @Override
   public void setCurveAt( final GM_Curve gmc, final int index ) throws GM_Exception
   {
     setObjectAt( gmc, index );
@@ -129,6 +132,7 @@ final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
    * 
    * @return the removed GM_Curve
    */
+  @Override
   public GM_Curve removeCurve( final GM_Curve gmc )
   {
     return (GM_Curve) super.removeObject( gmc );
@@ -140,6 +144,7 @@ final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
    * 
    * @return the removed GM_Curve
    */
+  @Override
   public GM_Curve removeCurveAt( final int index ) throws GM_Exception
   {
     return (GM_Curve) super.removeObjectAt( index );
@@ -157,6 +162,7 @@ final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
   /**
    * returns the GM_Curve at the submitted index.
    */
+  @Override
   public GM_Curve getCurveAt( final int index )
   {
     return (GM_Curve) super.getPrimitiveAt( index );
@@ -165,6 +171,7 @@ final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
   /**
    * returns all GM_Curves as array
    */
+  @Override
   public GM_Curve[] getAllCurves( )
   {
     return m_aggregate.toArray( new GM_Curve[getSize()] );

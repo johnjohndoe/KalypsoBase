@@ -80,6 +80,7 @@ public class LabelPlacement_Impl implements LabelPlacement, Marshallable
    * 
    * @return the pointplacement for the label
    */
+  @Override
   public PointPlacement getPointPlacement()
   {
     return pointPlacement;
@@ -91,6 +92,7 @@ public class LabelPlacement_Impl implements LabelPlacement, Marshallable
    * @param pointPlacement
    *          the pointplacement for the label
    */
+  @Override
   public void setPointPlacement( PointPlacement pointPlacement )
   {
     this.pointPlacement = pointPlacement;
@@ -103,6 +105,7 @@ public class LabelPlacement_Impl implements LabelPlacement, Marshallable
    * 
    * @return the lineplacement for the label
    */
+  @Override
   public LinePlacement getLinePlacement()
   {
     return linePlacement;
@@ -114,6 +117,7 @@ public class LabelPlacement_Impl implements LabelPlacement, Marshallable
    * @param linePlacement
    *          the lineplacement for the label
    */
+  @Override
   public void setLinePlacement( LinePlacement linePlacement )
   {
     this.linePlacement = linePlacement;
@@ -125,6 +129,7 @@ public class LabelPlacement_Impl implements LabelPlacement, Marshallable
    * 
    * @return xml representation of the Font
    */
+  @Override
   public String exportAsXML()
   {
     Debug.debugMethodBegin();

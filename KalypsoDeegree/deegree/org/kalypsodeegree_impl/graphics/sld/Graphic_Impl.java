@@ -139,6 +139,7 @@ public class Graphic_Impl implements Graphic, Marshallable
    * 
    * @return contains <tt>ExternalGraphic</tt> and <tt>Mark</tt> -objects
    */
+  @Override
   public Object[] getMarksAndExtGraphics( )
   {
     final Object[] objects = new Object[m_marksAndExtGraphics.size()];
@@ -153,6 +154,7 @@ public class Graphic_Impl implements Graphic, Marshallable
    * @param object
    *          to be used as basis for the resulting image
    */
+  @Override
   public void setMarksAndExtGraphics( final Object[] object )
   {
     this.m_marksAndExtGraphics.clear();
@@ -174,6 +176,7 @@ public class Graphic_Impl implements Graphic, Marshallable
    * @param object
    *          to be used as basis for the resulting image
    */
+  @Override
   public void addMarksAndExtGraphic( final Object object )
   {
     m_marksAndExtGraphics.add( object );
@@ -187,6 +190,7 @@ public class Graphic_Impl implements Graphic, Marshallable
    * @param object
    *          to be used as basis for the resulting image
    */
+  @Override
   public void removeMarksAndExtGraphic( final Object object )
   {
     m_marksAndExtGraphics.remove( m_marksAndExtGraphics.indexOf( object ) );
@@ -202,6 +206,7 @@ public class Graphic_Impl implements Graphic, Marshallable
    * @throws FilterEvaluationException
    *           if the evaluation fails or the value is invalid
    */
+  @Override
   public double getOpacity( final Feature feature ) throws FilterEvaluationException
   {
     double opacityVal = OPACITY_DEFAULT;
@@ -233,6 +238,7 @@ public class Graphic_Impl implements Graphic, Marshallable
    * @param opacity
    *          Opacity to be set for the graphic
    */
+  @Override
   public void setOpacity( final double opacity )
   {
     m_opacity = StyleFactory.createParameterValueType( "" + opacity );
@@ -250,6 +256,7 @@ public class Graphic_Impl implements Graphic, Marshallable
    * @throws FilterEvaluationException
    *           if the evaluation fails or the value is invalid
    */
+  @Override
   public double getSize( final Feature feature ) throws FilterEvaluationException
   {
     double sizeVal = SIZE_DEFAULT;
@@ -274,6 +281,7 @@ public class Graphic_Impl implements Graphic, Marshallable
     return sizeVal;
   }
 
+  @Override
   public ParameterValueType getSizeParameter( )
   {
     return m_size;
@@ -282,6 +290,7 @@ public class Graphic_Impl implements Graphic, Marshallable
   /**
    * Returns the size in pixel, interpreted in the defined units, any default behaviours are applied.
    */
+  @Override
   public int getNormalizedSize( final Feature feature, final UOM uom, final GeoTransform transform ) throws FilterEvaluationException
   {
     double size = getSize( feature );
@@ -336,6 +345,7 @@ public class Graphic_Impl implements Graphic, Marshallable
    * @param size
    *          size to be set for the graphic
    */
+  @Override
   public void setSize( final double size )
   {
     final ParameterValueType pvt = StyleFactory.createParameterValueType( "" + size );
@@ -354,6 +364,7 @@ public class Graphic_Impl implements Graphic, Marshallable
    * @throws FilterEvaluationException
    *           if the evaluation fails or the value is invalid
    */
+  @Override
   public double getRotation( final Feature feature ) throws FilterEvaluationException
   {
     double rotVal = ROTATION_DEFAULT;
@@ -380,6 +391,7 @@ public class Graphic_Impl implements Graphic, Marshallable
    * @param rotation
    *          rotation to be set for the graphic
    */
+  @Override
   public void setRotation( final double rotation )
   {
     final ParameterValueType pvt = StyleFactory.createParameterValueType( "" + rotation );
@@ -396,6 +408,7 @@ public class Graphic_Impl implements Graphic, Marshallable
    * @throws FilterEvaluationException
    *           if the evaluation fails
    */
+  @Override
   public BufferedImage getAsImage( final Feature feature, final UOM uom, final GeoTransform transform ) throws FilterEvaluationException
   {
     final int size = getNormalizedSize( feature, uom, transform );
@@ -424,6 +437,7 @@ public class Graphic_Impl implements Graphic, Marshallable
    *      org.kalypsodeegree.model.feature.Feature, org.kalypsodeegree_impl.graphics.sld.Symbolizer_Impl.UOM,
    *      org.kalypsodeegree.graphics.transformation.GeoTransform)
    */
+  @Override
   public void paintAwt( final Graphics2D g, final int size, final Feature feature ) throws FilterEvaluationException
   {
     if( size <= 0 )
@@ -465,6 +479,7 @@ public class Graphic_Impl implements Graphic, Marshallable
    * @throws FilterEvaluationException
    *           if the evaluation fails
    */
+  @Override
   public void paint( final GC gc, final Feature feature ) throws FilterEvaluationException
   {
     for( final Object o : m_marksAndExtGraphics )
@@ -493,6 +508,7 @@ public class Graphic_Impl implements Graphic, Marshallable
    * 
    * @return xml representation of the Graphic
    */
+  @Override
   public String exportAsXML( )
   {
     Debug.debugMethodBegin();

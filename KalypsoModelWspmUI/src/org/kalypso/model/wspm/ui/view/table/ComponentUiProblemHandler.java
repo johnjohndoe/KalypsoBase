@@ -107,6 +107,7 @@ public class ComponentUiProblemHandler implements IComponentUiHandler
   /**
    * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#createCellEditor(org.eclipse.swt.widgets.Table)
    */
+  @Override
   public CellEditor createCellEditor( final Table table )
   {
     return null;
@@ -115,6 +116,7 @@ public class ComponentUiProblemHandler implements IComponentUiHandler
   /**
    * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#formatValue(org.kalypso.observation.result.IRecord)
    */
+  @Override
   public Object doGetValue( final IRecord record )
   {
     return null;
@@ -123,6 +125,7 @@ public class ComponentUiProblemHandler implements IComponentUiHandler
   /**
    * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#getColumnLabel()
    */
+  @Override
   public String getColumnLabel( )
   {
     return "-"; //$NON-NLS-1$
@@ -131,6 +134,7 @@ public class ComponentUiProblemHandler implements IComponentUiHandler
   /**
    * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#getColumnStyle()
    */
+  @Override
   public int getColumnStyle( )
   {
     return SWT.CENTER;
@@ -139,6 +143,7 @@ public class ComponentUiProblemHandler implements IComponentUiHandler
   /**
    * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#getColumnWidth()
    */
+  @Override
   public int getColumnWidth( )
   {
     return 20;
@@ -147,6 +152,7 @@ public class ComponentUiProblemHandler implements IComponentUiHandler
   /**
    * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#getColumnWidthPercent()
    */
+  @Override
   public int getColumnWidthPercent( )
   {
     return -1;
@@ -155,6 +161,7 @@ public class ComponentUiProblemHandler implements IComponentUiHandler
   /**
    * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#getIdentity()
    */
+  @Override
   public String getIdentity( )
   {
     return getClass().getName();
@@ -163,11 +170,13 @@ public class ComponentUiProblemHandler implements IComponentUiHandler
   /**
    * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#getStringRepresentation(org.kalypso.observation.result.IRecord)
    */
+  @Override
   public String getStringRepresentation( final IRecord record )
   {
     return ""; //$NON-NLS-1$
   }
 
+  @Override
   public Image getImage( final IRecord record )
   {
     final MarkerIndex markerIndex = m_profile.getProblemMarker();
@@ -224,6 +233,7 @@ public class ComponentUiProblemHandler implements IComponentUiHandler
   /**
    * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#isEditable()
    */
+  @Override
   public boolean isEditable( )
   {
     // TODO: set to true and implement editor
@@ -233,6 +243,7 @@ public class ComponentUiProblemHandler implements IComponentUiHandler
   /**
    * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#isMoveable()
    */
+  @Override
   public boolean isMoveable( )
   {
     return true;
@@ -241,6 +252,7 @@ public class ComponentUiProblemHandler implements IComponentUiHandler
   /**
    * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#isResizeable()
    */
+  @Override
   public boolean isResizeable( )
   {
     return false;
@@ -250,6 +262,7 @@ public class ComponentUiProblemHandler implements IComponentUiHandler
    * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#setValue(org.kalypso.observation.result.IRecord,
    *      java.lang.Object)
    */
+  @Override
   public void doSetValue( final IRecord record, final Object value )
   {
   }
@@ -292,6 +305,7 @@ public class ComponentUiProblemHandler implements IComponentUiHandler
   /**
    * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#parseValue(java.lang.String)
    */
+  @Override
   public Object parseValue( final String text )
   {
     return null;
@@ -301,6 +315,7 @@ public class ComponentUiProblemHandler implements IComponentUiHandler
    * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#setValue(org.kalypso.observation.result.IRecord,
    *      java.lang.Object)
    */
+  @Override
   public void setValue( final IRecord record, final Object value )
   {
   }

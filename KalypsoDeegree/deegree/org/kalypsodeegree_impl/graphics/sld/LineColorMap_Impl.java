@@ -58,21 +58,25 @@ public class LineColorMap_Impl implements LineColorMap
     setColorMap( colorMap );
   }
 
+  @Override
   public LineColorMapEntry[] getColorMap( )
   {
     return m_colorMap.toArray( new LineColorMapEntry[m_colorMap.size()] );
   }
 
+  @Override
   public void setColorMap( final List<LineColorMapEntry> colorMap )
   {
     m_colorMap.addAll( colorMap );
   }
 
+  @Override
   public void addColorMapClass( final LineColorMapEntry colorMapEntry )
   {
     m_colorMap.add( colorMapEntry );
   }
 
+  @Override
   public String exportAsXML( )
   {
     final StringBuffer sb = new StringBuffer( 1000 );
@@ -96,6 +100,7 @@ public class LineColorMap_Impl implements LineColorMap
   /**
    * @see org.kalypsodeegree_impl.graphics.sld.LineColorMap#findEntry(java.lang.String)
    */
+  @Override
   public LineColorMapEntry findEntry( final String label, final Feature feature )
   {
     for( final LineColorMapEntry entry : m_colorMap )
@@ -110,6 +115,7 @@ public class LineColorMap_Impl implements LineColorMap
   /**
    * @see org.kalypsodeegree_impl.graphics.sld.LineColorMap#replaceColorMap(java.util.List)
    */
+  @Override
   public void replaceColorMap( List<LineColorMapEntry> colorMapList )
   {
     m_colorMap.clear();

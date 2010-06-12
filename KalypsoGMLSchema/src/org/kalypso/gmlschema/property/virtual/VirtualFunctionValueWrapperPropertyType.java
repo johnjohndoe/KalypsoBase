@@ -77,6 +77,7 @@ public class VirtualFunctionValueWrapperPropertyType implements IFunctionPropert
   /**
    * @see org.kalypso.gmlschema.property.virtual.IVirtualFunctionValuePropertyType#getFunctionId()
    */
+  @Override
   public String getFunctionId( )
   {
     return m_functionId;
@@ -85,6 +86,7 @@ public class VirtualFunctionValueWrapperPropertyType implements IFunctionPropert
   /**
    * @see org.kalypso.gmlschema.property.virtual.IVirtualFunctionValuePropertyType#getFunctionProperties()
    */
+  @Override
   public Map<String, String> getFunctionProperties( )
   {
     return m_functionProperties;
@@ -93,6 +95,7 @@ public class VirtualFunctionValueWrapperPropertyType implements IFunctionPropert
   /**
    * @see org.kalypso.gmlschema.property.IValuePropertyType#getDefault()
    */
+  @Override
   public String getDefault( )
   {
     return m_realPropertyType.getDefault();
@@ -101,6 +104,7 @@ public class VirtualFunctionValueWrapperPropertyType implements IFunctionPropert
   /**
    * @see org.kalypso.gmlschema.property.IValuePropertyType#getFixed()
    */
+  @Override
   public String getFixed( )
   {
     return m_realPropertyType.getFixed();
@@ -109,6 +113,7 @@ public class VirtualFunctionValueWrapperPropertyType implements IFunctionPropert
   /**
    * @see org.kalypso.gmlschema.property.IPropertyType#getMaxOccurs()
    */
+  @Override
   public int getMaxOccurs( )
   {
     return m_realPropertyType.getMaxOccurs();
@@ -117,6 +122,7 @@ public class VirtualFunctionValueWrapperPropertyType implements IFunctionPropert
   /**
    * @see org.kalypso.gmlschema.property.IPropertyType#getMinOccurs()
    */
+  @Override
   public int getMinOccurs( )
   {
     return m_realPropertyType.getMinOccurs();
@@ -125,6 +131,7 @@ public class VirtualFunctionValueWrapperPropertyType implements IFunctionPropert
   /**
    * @see org.kalypso.gmlschema.property.IPropertyType#getName()
    */
+  @Override
   @SuppressWarnings("deprecation")
   @Deprecated
   public String getName( )
@@ -135,6 +142,7 @@ public class VirtualFunctionValueWrapperPropertyType implements IFunctionPropert
   /**
    * @see org.kalypso.gmlschema.xml.IQualifiedElement#getQName()
    */
+  @Override
   public QName getQName( )
   {
     return m_realPropertyType.getQName();
@@ -143,6 +151,7 @@ public class VirtualFunctionValueWrapperPropertyType implements IFunctionPropert
   /**
    * @see org.kalypso.gmlschema.property.IValuePropertyType#getRestriction()
    */
+  @Override
   public IRestriction[] getRestriction( )
   {
     return m_realPropertyType.getRestriction();
@@ -151,6 +160,7 @@ public class VirtualFunctionValueWrapperPropertyType implements IFunctionPropert
   /**
    * @see org.kalypso.gmlschema.property.IValuePropertyType#getTypeHandler()
    */
+  @Override
   public IMarshallingTypeHandler getTypeHandler( )
   {
     return m_realPropertyType.getTypeHandler();
@@ -159,6 +169,7 @@ public class VirtualFunctionValueWrapperPropertyType implements IFunctionPropert
   /**
    * @see org.kalypso.gmlschema.property.IValuePropertyType#getValueClass()
    */
+  @Override
   public Class< ? > getValueClass( )
   {
     return m_realPropertyType.getValueClass();
@@ -167,6 +178,7 @@ public class VirtualFunctionValueWrapperPropertyType implements IFunctionPropert
   /**
    * @see org.kalypso.gmlschema.property.IValuePropertyType#getValueQName()
    */
+  @Override
   public QName getValueQName( )
   {
     return m_realPropertyType.getValueQName();
@@ -175,6 +187,7 @@ public class VirtualFunctionValueWrapperPropertyType implements IFunctionPropert
   /**
    * @see org.kalypso.gmlschema.property.IValuePropertyType#hasDefault()
    */
+  @Override
   public boolean hasDefault( )
   {
     return m_realPropertyType.hasDefault();
@@ -183,6 +196,7 @@ public class VirtualFunctionValueWrapperPropertyType implements IFunctionPropert
   /**
    * @see org.kalypso.gmlschema.property.IValuePropertyType#hasRestriction()
    */
+  @Override
   public boolean hasRestriction( )
   {
     return m_realPropertyType.hasRestriction();
@@ -191,6 +205,7 @@ public class VirtualFunctionValueWrapperPropertyType implements IFunctionPropert
   /**
    * @see org.kalypso.gmlschema.builder.IInitialize#init(int)
    */
+  @Override
   public void init( final int initializeRun ) throws GMLSchemaException
   {
     m_realPropertyType.init( initializeRun );
@@ -199,6 +214,7 @@ public class VirtualFunctionValueWrapperPropertyType implements IFunctionPropert
   /**
    * @see org.kalypso.gmlschema.property.IValuePropertyType#isFixed()
    */
+  @Override
   public boolean isFixed( )
   {
     return m_realPropertyType.isFixed();
@@ -207,6 +223,7 @@ public class VirtualFunctionValueWrapperPropertyType implements IFunctionPropert
   /**
    * @see org.kalypso.gmlschema.property.IValuePropertyType#isGeometry()
    */
+  @Override
   public boolean isGeometry( )
   {
     return m_realPropertyType.isGeometry();
@@ -215,6 +232,7 @@ public class VirtualFunctionValueWrapperPropertyType implements IFunctionPropert
   /**
    * @see org.kalypso.gmlschema.property.IPropertyType#isList()
    */
+  @Override
   public boolean isList( )
   {
     return m_realPropertyType.isList();
@@ -223,6 +241,7 @@ public class VirtualFunctionValueWrapperPropertyType implements IFunctionPropert
   /**
    * @see org.kalypso.gmlschema.property.IPropertyType#isNillable()
    */
+  @Override
   public boolean isNillable( )
   {
     return m_realPropertyType.isNillable();
@@ -231,6 +250,7 @@ public class VirtualFunctionValueWrapperPropertyType implements IFunctionPropert
   /**
    * @see org.kalypso.gmlschema.property.IValuePropertyType#isNullable()
    */
+  @Override
   public boolean isNullable( )
   {
     return m_realPropertyType.isNullable();
@@ -239,6 +259,7 @@ public class VirtualFunctionValueWrapperPropertyType implements IFunctionPropert
   /**
    * @see org.kalypso.gmlschema.property.IPropertyType#isVirtual()
    */
+  @Override
   public boolean isVirtual( )
   {
     return m_realPropertyType.isVirtual();
@@ -256,6 +277,7 @@ public class VirtualFunctionValueWrapperPropertyType implements IFunctionPropert
   /**
    * @see org.kalypso.gmlschema.property.IPropertyType#getAnnotation()
    */
+  @Override
   public IAnnotation getAnnotation( )
   {
     return m_realPropertyType.getAnnotation();
@@ -264,6 +286,7 @@ public class VirtualFunctionValueWrapperPropertyType implements IFunctionPropert
   /**
    * @see org.kalypso.gmlschema.property.IPropertyType#cloneForFeatureType(org.kalypso.gmlschema.feature.IFeatureType)
    */
+  @Override
   public IPropertyType cloneForFeatureType( final IFeatureType featureType )
   {
     return new VirtualFunctionValueWrapperPropertyType( (IValuePropertyType) m_realPropertyType.cloneForFeatureType( featureType ), m_functionId, m_functionProperties );

@@ -41,6 +41,7 @@ public class FeatureVolumeRasterWalker implements IGeoGridWalker
   /**
    * @see org.kalypso.gis.doubleraster.DoubleRasterWalker#start(org.kalypso.gis.doubleraster.DoubleRaster)
    */
+  @Override
   public void start( final IGeoGrid r ) throws GeoGridException
   {
     final Coordinate offsetX = r.getOffsetX();
@@ -51,6 +52,7 @@ public class FeatureVolumeRasterWalker implements IGeoGridWalker
   /**
    * @see org.kalypso.gis.doubleraster.DoubleRasterWalker#operate(int, int, com.vividsolutions.jts.geom.Coordinate)
    */
+  @Override
   public void operate( final int x, final int y, final Coordinate c )
   {
     final double cellVolume = m_cellArea * c.z;
@@ -96,6 +98,7 @@ public class FeatureVolumeRasterWalker implements IGeoGridWalker
   /**
    * @see org.kalypso.gis.doubleraster.DoubleRasterWalker#getResult()
    */
+  @Override
   public Object finish( )
   {
     return null;

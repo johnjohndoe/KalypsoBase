@@ -110,6 +110,7 @@ class GM_MultiPrimitive_Impl extends GM_Aggregate_Impl implements GM_MultiPrimit
   /**
    * returns the GM_Primitive at the submitted index.
    */
+  @Override
   public GM_Primitive getPrimitiveAt( final int index )
   {
     return (GM_Primitive) super.getObjectAt( index );
@@ -118,6 +119,7 @@ class GM_MultiPrimitive_Impl extends GM_Aggregate_Impl implements GM_MultiPrimit
   /**
    * returns all GM_Primitives as array
    */
+  @Override
   public GM_Primitive[] getAllPrimitives( )
   {
     final GM_Primitive[] gmos = new GM_Primitive[this.getSize()];
@@ -125,11 +127,13 @@ class GM_MultiPrimitive_Impl extends GM_Aggregate_Impl implements GM_MultiPrimit
     return m_aggregate.toArray( gmos );
   }
 
+  @Override
   public int getCoordinateDimension( )
   {
     return -1;
   }
 
+  @Override
   public int getDimension( )
   {
     return 2;
@@ -139,6 +143,7 @@ class GM_MultiPrimitive_Impl extends GM_Aggregate_Impl implements GM_MultiPrimit
    * @see org.kalypsodeegree.model.geometry.GM_Object#transform(org.deegree.crs.transformations.CRSTransformation,
    *      java.lang.String)
    */
+  @Override
   public GM_Object transform( final CRSTransformation trans, final String targetOGCCS ) throws Exception
   {
     throw new UnsupportedOperationException();

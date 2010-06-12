@@ -10,6 +10,7 @@ package net.opengis.kml;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -91,7 +92,7 @@ public class PlacemarkType
      *     
      */
     public void setAbstractGeometryGroup(JAXBElement<? extends AbstractGeometryType> value) {
-        this.abstractGeometryGroup = ((JAXBElement<? extends AbstractGeometryType> ) value);
+        this.abstractGeometryGroup = (value);
     }
 
     /**

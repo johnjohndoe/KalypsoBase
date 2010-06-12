@@ -54,6 +54,7 @@ public abstract class AbstractLegendViewActionDelegate implements IViewActionDel
 
   private LegendView m_view;
 
+  @Override
   public final void init( final IViewPart view )
   {
     m_view = (LegendView) view;
@@ -66,6 +67,7 @@ public abstract class AbstractLegendViewActionDelegate implements IViewActionDel
    // MessageDialog.openWarning( m_view.getViewSite().getShell(), Messages.AbstractLegendViewActionDelegate_1, msg );
   }
 
+  @Override
   public final void selectionChanged( final IAction action, final ISelection selection )
   {
     m_selection = (IStructuredSelection) selection;

@@ -116,6 +116,7 @@ public class DelegatingContentHandler implements ContentHandler
   /**
    * @see org.xml.sax.ContentHandler#setDocumentLocator(org.xml.sax.Locator)
    */
+  @Override
   public void setDocumentLocator( final Locator locator )
   {
     /* We remember the document locator in order to set it to every new delegate. */

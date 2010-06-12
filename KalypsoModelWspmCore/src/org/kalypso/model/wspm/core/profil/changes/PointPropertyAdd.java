@@ -85,6 +85,7 @@ public final class PointPropertyAdd implements IProfilChange
     m_values =  new Object[]{defaultValue};
   }
 
+  @Override
   public IProfilChange doChange( final ProfilChangeHint hint )
   {
     if( hint != null )
@@ -113,6 +114,7 @@ public final class PointPropertyAdd implements IProfilChange
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilChange#getObject()
    */
+  @Override
   public Object[] getObjects( )
   {
     return m_values;
@@ -121,6 +123,7 @@ public final class PointPropertyAdd implements IProfilChange
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilChange#getPointProperty()
    */
+  @Override
   public String getInfo( )
   {
     return m_property.toString();
@@ -129,6 +132,7 @@ public final class PointPropertyAdd implements IProfilChange
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilChange#getValue()
    */
+  @Override
   public Double getValue( )
   {
     return null;

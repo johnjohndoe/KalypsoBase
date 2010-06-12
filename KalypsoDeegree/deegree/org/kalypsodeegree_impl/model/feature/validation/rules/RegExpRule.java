@@ -66,6 +66,7 @@ public class RegExpRule implements IRule
    * 
    * @see org.kalypso.ogc.gml.util.Rule#isValid(java.lang.Object)
    */
+  @Override
   public IStatus isValid( Object object )
   {
     Status status = new Status( Status.OK, Platform.PI_RUNTIME, Status.OK, "RegExpRule: Validation OK.", null );

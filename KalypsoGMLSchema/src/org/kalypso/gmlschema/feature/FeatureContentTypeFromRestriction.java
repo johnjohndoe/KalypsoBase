@@ -81,6 +81,7 @@ public class FeatureContentTypeFromRestriction extends FeatureContentType
   /**
    * @see org.kalypso.gmlschema.feature.IFeatureContentType#getBase()
    */
+  @Override
   public IFeatureContentType getBase( )
   {
     if( m_restrictionBase == null )
@@ -105,6 +106,7 @@ public class FeatureContentTypeFromRestriction extends FeatureContentType
   /**
    * @see org.kalypso.gmlschema.feature.IFeatureContentType#getDerivationType()
    */
+  @Override
   public int getDerivationType( )
   {
     return DERIVATION_BY_RESTRICTION;
@@ -113,6 +115,7 @@ public class FeatureContentTypeFromRestriction extends FeatureContentType
   /**
    * @see org.kalypso.gmlschema.feature.IFeatureContentType#getDirectProperties()
    */
+  @Override
   public IPropertyType[] getDirectProperties( )
   {
     return super.getProperties();

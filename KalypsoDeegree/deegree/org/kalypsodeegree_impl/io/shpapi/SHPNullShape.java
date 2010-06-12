@@ -54,6 +54,7 @@ public class SHPNullShape implements ISHPGeometry
   /**
    * method: writeNullShape: writes a NullShape Object to a recBuffer <BR>
    */
+  @Override
   public byte[] writeShape( )
   {
     int offset = ShapeConst.SHAPE_FILE_RECORD_HEADER_LENGTH;
@@ -70,6 +71,7 @@ public class SHPNullShape implements ISHPGeometry
   /**
    * returns the polygon shape size in bytes <BR>
    */
+  @Override
   public int size( )
   {
     return 12;
@@ -78,6 +80,7 @@ public class SHPNullShape implements ISHPGeometry
   /**
    * @see org.kalypsodeegree_impl.io.shpapi.SHPGeometry#getEnvelope()
    */
+  @Override
   public SHPEnvelope getEnvelope( )
   {
     return null;

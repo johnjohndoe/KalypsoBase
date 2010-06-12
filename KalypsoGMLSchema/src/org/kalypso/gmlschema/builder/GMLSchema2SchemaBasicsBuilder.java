@@ -33,10 +33,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.xmlbeans.impl.xb.xsdschema.SchemaDocument;
+import org.apache.xmlbeans.impl.xb.xsdschema.SchemaDocument.Schema;
 import org.apache.xmlbeans.impl.xb.xsdschema.TopLevelComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.TopLevelElement;
 import org.apache.xmlbeans.impl.xb.xsdschema.TopLevelSimpleType;
-import org.apache.xmlbeans.impl.xb.xsdschema.SchemaDocument.Schema;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.xml.ElementWithOccurs;
 
@@ -50,6 +50,7 @@ public class GMLSchema2SchemaBasicsBuilder extends AbstractBuilder
   /**
    * @see org.kalypso.gmlschema.builder.IBuilder#build(org.kalypso.gmlschema.GMLSchema, java.lang.Object)
    */
+  @Override
   public Object[] build( final GMLSchema gmlSchema, final Object schemaObject )
   {
     // process included schemas
@@ -98,6 +99,7 @@ public class GMLSchema2SchemaBasicsBuilder extends AbstractBuilder
    * @see org.kalypso.gmlschema.builder.IBuilder#isBuilderFor(org.kalypso.gmlschema.GMLSchema, java.lang.Object,
    *      java.lang.String)
    */
+  @Override
   public boolean isBuilderFor( final GMLSchema gmlSchema, final Object object, final String namedPass )
   {
     return object instanceof GMLSchema;

@@ -65,6 +65,7 @@ public class DefaultAnnotation implements IAnnotation
   /**
    * @see org.kalypso.gmlschema.adapter.IAnnotation#getLabel()
    */
+  @Override
   public String getLabel( )
   {
     return getValue( ANNO_LABEL );
@@ -73,6 +74,7 @@ public class DefaultAnnotation implements IAnnotation
   /**
    * @see org.kalypso.gmlschema.adapter.IAnnotation#getDescription()
    */
+  @Override
   public String getDescription( )
   {
     return getValue( ANNO_DESCRIPTION );
@@ -81,6 +83,7 @@ public class DefaultAnnotation implements IAnnotation
   /**
    * @see org.kalypso.gmlschema.adapter.IAnnotation#getTooltip()
    */
+  @Override
   public String getTooltip( )
   {
     return getValue( ANNO_TOOLTIP );
@@ -109,6 +112,7 @@ public class DefaultAnnotation implements IAnnotation
   /**
    * @see org.kalypso.gmlschema.adapter.IAnnotation#getValue(java.lang.String)
    */
+  @Override
   public String getValue( final String element )
   {
     if( !m_values.containsKey( element ) )

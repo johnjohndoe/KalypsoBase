@@ -151,6 +151,7 @@ public class PropertyIsCOMPOperation extends ComparisonOperation
   }
 
   /** Produces an indented XML representation of this object. */
+  @Override
   public StringBuffer toXML( )
   {
     final StringBuffer sb = new StringBuffer( 500 );
@@ -171,6 +172,7 @@ public class PropertyIsCOMPOperation extends ComparisonOperation
    * @throws FilterEvaluationException
    *             if the expressions to be compared are of different types
    */
+  @Override
   public boolean evaluate( final Feature feature ) throws FilterEvaluationException
   {
     Object value1 = m_expr1.evaluate( feature );
@@ -291,6 +293,7 @@ public class PropertyIsCOMPOperation extends ComparisonOperation
    * @see org.kalypsodeegree.filterencoding.Operation#accept(org.kalypsodeegree.filterencoding.visitor.FilterVisitor,
    *      org.kalypsodeegree.filterencoding.Operation, int)
    */
+  @Override
   public void accept( final FilterVisitor fv, final Operation operation, final int depth )
   {
     fv.visit( this );

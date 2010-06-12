@@ -70,6 +70,7 @@ public class ProfilOperationRunnable implements ICoreRunnableWithProgress, IAdap
   /**
    * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
    */
+  @Override
   public IStatus execute( final IProgressMonitor monitor )
   {
     try
@@ -81,15 +82,15 @@ public class ProfilOperationRunnable implements ICoreRunnableWithProgress, IAdap
     }
     catch( final ExecutionException e )
     {
-      return new Status( IStatus.ERROR, KalypsoModelWspmUIPlugin.ID, 0, Messages.getString("org.kalypso.model.wspm.ui.profil.operation.ProfilOperationRunnable.0",m_operation.getLabel()) , e ); //$NON-NLS-1$
+      return new Status( IStatus.ERROR, KalypsoModelWspmUIPlugin.ID, 0, Messages.getString( "org.kalypso.model.wspm.ui.profil.operation.ProfilOperationRunnable.0", m_operation.getLabel() ), e ); //$NON-NLS-1$
     }
   }
 
   /**
    * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
    */
-  @SuppressWarnings("unchecked")
-  public Object getAdapter( final Class adapter )
+  @Override
+  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
   {
     if( adapter == Shell.class )
     {

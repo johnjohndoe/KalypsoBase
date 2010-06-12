@@ -112,6 +112,7 @@ public class FeatureStructureChangeModellEvent extends ModellEvent implements IG
     return m_changedFeature;
   }
 
+  @Override
   public GMLWorkspace getGMLWorkspace( )
   {
     return m_workspace;

@@ -219,6 +219,7 @@ public class LabelChoice
   /**
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString()
   {
     if( candidates.length > 0 )

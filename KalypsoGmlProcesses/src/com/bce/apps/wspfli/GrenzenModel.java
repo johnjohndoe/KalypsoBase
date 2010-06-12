@@ -37,6 +37,7 @@ public class GrenzenModel extends AbstractTableModel
   /**
    * @see javax.swing.table.TableModel#getRowCount()
    */
+  @Override
   public int getRowCount( )
   {
     return m_data.size();
@@ -45,6 +46,7 @@ public class GrenzenModel extends AbstractTableModel
   /**
    * @see javax.swing.table.TableModel#getColumnCount()
    */
+  @Override
   public int getColumnCount( )
   {
     return 1;
@@ -87,6 +89,7 @@ public class GrenzenModel extends AbstractTableModel
   /**
    * @see javax.swing.table.TableModel#getValueAt(int, int)
    */
+  @Override
   public Object getValueAt( int rowIndex, int columnIndex )
   {
     checkRow( rowIndex );

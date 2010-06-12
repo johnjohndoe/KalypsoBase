@@ -81,9 +81,8 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  * Helper class for tringle.exe<BR>
  * for more information goto: http://www.cs.cmu.edu/~quake/triangle.html
  * 
- * @author Thomas Jung
- * 
- * extension for creating triangulated surfaces without writing temporary files and using triangle.exe
+ * @author Thomas Jung extension for creating triangulated surfaces without writing temporary files and using
+ *         triangle.exe
  * @author ig
  */
 public class ConstraintDelaunayHelper
@@ -93,8 +92,7 @@ public class ConstraintDelaunayHelper
   /**
    * writes out a triangle-polyfile with linestrings for the console program Triangle.exe
    */
-  @SuppressWarnings({ "unchecked", "deprecation" })
-  public static String writePolyFileForLinestrings( final OutputStream polyStream, final List list, final PrintWriter simLog )
+  public static String writePolyFileForLinestrings( final OutputStream polyStream, final List< ? > list, final PrintWriter simLog )
   {
     final List<GM_LineString> breaklines = new ArrayList<GM_LineString>( list.size() );
     int totalPointCount = 0;
@@ -471,7 +469,7 @@ public class ConstraintDelaunayHelper
   }
 
   @SuppressWarnings("unchecked")
-  public static GM_Triangle[] convertToTriangles( final GM_MultiSurface polygonSurface, final String crs, boolean pBoolWriteFiles ) throws GM_Exception
+  public static GM_Triangle[] convertToTriangles( final GM_MultiSurface polygonSurface, final String crs, final boolean pBoolWriteFiles ) throws GM_Exception
   {
     final List<GM_Triangle> triangleList = new LinkedList<GM_Triangle>();
 
@@ -496,10 +494,10 @@ public class ConstraintDelaunayHelper
     return convertToTriangles( surface, crs, true );
   }
 
-  public static GM_Triangle[] convertToTriangles( final GM_Surface<GM_SurfacePatch> pSurface, final String crs, boolean pBoolWriteFiles ) throws GM_Exception
+  public static GM_Triangle[] convertToTriangles( final GM_Surface<GM_SurfacePatch> pSurface, final String crs, final boolean pBoolWriteFiles ) throws GM_Exception
   {
     final List<GM_Triangle> triangleList = new LinkedList<GM_Triangle>();
-    boolean lBoolConvex = pSurface.getConvexHull().difference( pSurface ) == null;
+    final boolean lBoolConvex = pSurface.getConvexHull().difference( pSurface ) == null;
     for( final GM_SurfacePatch surfacePatch : pSurface )
     {
       final GM_Position[] exterior = surfacePatch.getExteriorRing();
@@ -530,7 +528,7 @@ public class ConstraintDelaunayHelper
         }
       }
     }
-    //can be used for reducing of all angles in triangles
+    // can be used for reducing of all angles in triangles
     return triangleList.toArray( new GM_Triangle[triangleList.size()] );
   }
 
@@ -538,7 +536,7 @@ public class ConstraintDelaunayHelper
    * converts an array of {@link GM_Position} into a list of {@link GM_Triangle}. If there are more than 3 positions in
    * the array the positions gets triangulated by Triangle.exe The positions must build a closed polygon.
    */
-  private static GM_Triangle[] createGM_Triangles( final GM_Position[] exterior, final GM_Position[][] interior, final String crs, boolean pBoolWriteFiles ) throws GM_Exception
+  private static GM_Triangle[] createGM_Triangles( final GM_Position[] exterior, final GM_Position[][] interior, final String crs, final boolean pBoolWriteFiles ) throws GM_Exception
   {
     // check if pos arrays are closed polygons
 
@@ -608,7 +606,7 @@ public class ConstraintDelaunayHelper
     return triangulatePolygon( exterior, interiorPolygons, crs, true );
   }
 
-  public static GM_Triangle[] triangulatePolygon( final GM_Position[] exterior, @SuppressWarnings("unused") final GM_Position[][] interiorPolygons, final String crs, boolean pBoolWriteFiles )
+  public static GM_Triangle[] triangulatePolygon( final GM_Position[] exterior, @SuppressWarnings("unused") final GM_Position[][] interiorPolygons, final String crs, final boolean pBoolWriteFiles )
   {
     BufferedReader nodeReader = null;
     BufferedReader eleReader = null;
@@ -636,9 +634,9 @@ public class ConstraintDelaunayHelper
     // triangulate without triangle.exe
     if( !pBoolWriteFiles )
     {
-      List<GM_Triangle> lListAllResults = new ArrayList<GM_Triangle>();
+      final List<GM_Triangle> lListAllResults = new ArrayList<GM_Triangle>();
 
-      GM_Triangle[] lArrTriRes = getTrianglesWithTriangulationDT( exterior, crs );
+      final GM_Triangle[] lArrTriRes = getTrianglesWithTriangulationDT( exterior, crs );
       for( final GM_Triangle lTriAct : lArrTriRes )
       {
         {
@@ -716,10 +714,10 @@ public class ConstraintDelaunayHelper
 
   private static GM_Triangle[] getTrianglesWithTriangulationDT( final GM_Position[] pPositions, final String pStrCrs )
   {
-    TriangulationDT lTriangulationDT = new TriangulationDT( pPositions, pStrCrs );
-    QuadraticAlgorithm lAlgorithmRunner = new QuadraticAlgorithm();
+    final TriangulationDT lTriangulationDT = new TriangulationDT( pPositions, pStrCrs );
+    final QuadraticAlgorithm lAlgorithmRunner = new QuadraticAlgorithm();
     lAlgorithmRunner.triangulate( lTriangulationDT );
-    List<GM_Triangle> lListActResults = lTriangulationDT.getListGMTriangles();
+    final List<GM_Triangle> lListActResults = lTriangulationDT.getListGMTriangles();
     return lListActResults.toArray( new GM_Triangle[lListActResults.size()] );
 
   }

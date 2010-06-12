@@ -41,12 +41,12 @@
 package org.kalypso.model.wspm.core.gml.coverages;
 
 import java.util.Iterator;
-import java.util.TreeMap;
 import java.util.Map.Entry;
+import java.util.TreeMap;
 
 import org.kalypso.grid.GeoGridUtilities;
-import org.kalypso.grid.IGeoGrid;
 import org.kalypso.grid.GeoGridUtilities.Interpolation;
+import org.kalypso.grid.IGeoGrid;
 import org.kalypso.jts.JTSUtilities;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;

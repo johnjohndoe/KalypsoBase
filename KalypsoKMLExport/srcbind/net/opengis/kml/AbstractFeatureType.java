@@ -10,6 +10,7 @@ package net.opengis.kml;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -18,6 +19,7 @@ import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.XmlType;
+
 import org.oasis.xal.AddressDetails;
 import org.w3c.atom.AtomPersonConstruct;
 import org.w3c.atom.Link;
@@ -424,7 +426,7 @@ public abstract class AbstractFeatureType
      *     
      */
     public void setAbstractViewGroup(JAXBElement<? extends AbstractViewType> value) {
-        this.abstractViewGroup = ((JAXBElement<? extends AbstractViewType> ) value);
+        this.abstractViewGroup = (value);
     }
 
     /**
@@ -452,7 +454,7 @@ public abstract class AbstractFeatureType
      *     
      */
     public void setAbstractTimePrimitiveGroup(JAXBElement<? extends AbstractTimePrimitiveType> value) {
-        this.abstractTimePrimitiveGroup = ((JAXBElement<? extends AbstractTimePrimitiveType> ) value);
+        this.abstractTimePrimitiveGroup = (value);
     }
 
     /**

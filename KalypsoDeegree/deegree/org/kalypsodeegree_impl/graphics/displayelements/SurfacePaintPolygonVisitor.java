@@ -72,6 +72,7 @@ public class SurfacePaintPolygonVisitor implements ISurfacePatchVisitor<GM_Polyg
    * @see org.kalypsodeegree.model.geometry.ISurfacePatchVisitor#visit(org.kalypsodeegree.model.geometry.GM_SurfacePatch,
    *      double)
    */
+  @Override
   public boolean visit( final GM_Polygon polygon, final double elevationSample )
   {
     getPolygonSurface( polygon );

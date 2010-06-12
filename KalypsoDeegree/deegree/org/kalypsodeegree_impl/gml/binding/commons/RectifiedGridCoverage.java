@@ -122,6 +122,7 @@ public class RectifiedGridCoverage extends AbstractFeatureBinder implements ICov
   /**
    * @see org.kalypsodeegree_impl.gml.binding.commons.ICoverage#getEnvelope()
    */
+  @Override
   public GM_Envelope getEnvelope( )
   {
     return (GM_Envelope) getFeature().getProperty( QNAME_PROP_BOUNDED_BY );

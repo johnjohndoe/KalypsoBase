@@ -115,6 +115,7 @@ class HorizontalLabel implements Label
     return caption;
   }
 
+  @Override
   public void paintBoundaries( final Graphics2D g )
   {
     setColor( g, new Color( 0x888888 ), 0.5 );
@@ -132,6 +133,7 @@ class HorizontalLabel implements Label
    * @param g
    *          <tt>Graphics2D</tt> context to be used
    */
+  @Override
   public void paint( final Graphics2D g )
   {
     // render the halo (only if specified)
@@ -258,31 +260,37 @@ class HorizontalLabel implements Label
     }
   }
 
+  @Override
   public int getX()
   {
     return xpoints[0];
   }
 
+  @Override
   public int getY()
   {
     return ypoints[0];
   }
 
+  @Override
   public int getMaxX()
   {
     return xpoints[1];
   }
 
+  @Override
   public int getMaxY()
   {
     return ypoints[1];
   }
 
+  @Override
   public int getMinX()
   {
     return xpoints[3];
   }
 
+  @Override
   public int getMinY()
   {
     return ypoints[3];
@@ -296,6 +304,7 @@ class HorizontalLabel implements Label
    *          label to test
    * @return true if the labels intersect
    */
+  @Override
   public boolean intersects( final Label that )
   {
     if( !( that instanceof HorizontalLabel ) )

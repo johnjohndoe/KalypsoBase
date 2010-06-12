@@ -203,6 +203,7 @@ public class ImportGridUtilities
   {
     final IOverwriteQuery overwriteQuery = new IOverwriteQuery()
     {
+      @Override
       public String queryOverwrite( final String pathString )
       {
         if( MessageDialog.openQuestion( shell, Messages.getString("org.kalypso.gml.ui.wizard.grid.ImportGridUtilities.5"),//$NON-NLS-1$ 

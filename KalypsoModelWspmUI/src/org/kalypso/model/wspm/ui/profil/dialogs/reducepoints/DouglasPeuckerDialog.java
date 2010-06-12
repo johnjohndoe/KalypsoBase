@@ -289,11 +289,13 @@ public class DouglasPeuckerDialog extends TitleAreaDialog
 
       button.addSelectionListener( new SelectionListener()
       {
+        @Override
         public void widgetSelected( final SelectionEvent e )
         {
           handleRadioSelected( provider );
         }
 
+        @Override
         public void widgetDefaultSelected( final SelectionEvent e )
         {
           handleRadioSelected( provider );
@@ -352,6 +354,7 @@ public class DouglasPeuckerDialog extends TitleAreaDialog
     spinner.setSelection( (int) (m_distance * 100) );
     spinner.addModifyListener( new ModifyListener()
     {
+      @Override
       public void modifyText( final ModifyEvent e )
       {
         handleDistanceChanged( spinner.getSelection() / 100.0 );

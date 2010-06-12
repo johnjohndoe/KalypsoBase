@@ -53,6 +53,7 @@ public class Triangulation {
      * Shows number of simplices currently in the Triangulation.
      * @return a String representing the Triangulation
      */
+    @Override
     public String toString () {
         return "Triangulation (with " + neighbors.size() + " elements)";
     }
@@ -150,7 +151,7 @@ public class Triangulation {
         // Collect all simplices neighboring the oldSet
         Set allNeighbors = new HashSet();
         for (Iterator it = oldSet.iterator(); it.hasNext();)
-            allNeighbors.addAll((Set) neighbors.get((Simplex) it.next()));
+            allNeighbors.addAll((Set) neighbors.get(it.next()));
         // Delete the oldSet
         for (Iterator it = oldSet.iterator(); it.hasNext();) {
             Simplex simplex = (Simplex) it.next();
@@ -164,7 +165,7 @@ public class Triangulation {
         allNeighbors.addAll(newSet);
         // Create entries for the simplices in the newSet
         for (Iterator it = newSet.iterator(); it.hasNext();)
-            neighbors.put((Simplex) it.next(), new HashSet());
+            neighbors.put(it.next(), new HashSet());
         // Update all the neighbors info
         for (Iterator it = newSet.iterator(); it.hasNext();) {
             Simplex s1 = (Simplex) it.next();

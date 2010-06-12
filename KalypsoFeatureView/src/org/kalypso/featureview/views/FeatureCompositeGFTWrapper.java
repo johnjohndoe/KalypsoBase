@@ -49,8 +49,8 @@ import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -68,7 +68,6 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.featureview.i18n.Messages;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.featureview.control.FeatureComposite;
@@ -103,7 +102,6 @@ public class FeatureCompositeGFTWrapper
     show( file, new CommandableWorkspace( feature.getWorkspace() ), feature, composite, toolkit );
   }
 
-  
   public void show( final IFile file, final CommandableWorkspace workspace, final Feature feature, final Composite composite, final FormToolkit toolkit ) throws UnsupportedEncodingException, CoreException, JAXBException
   {
     /* Create a new FeatureComposite. */
@@ -173,6 +171,7 @@ public class FeatureCompositeGFTWrapper
     /* ModellListener erzeugen. */
     final ModellEventListener listener = new ModellEventListener()
     {
+      @Override
       public void onModellChange( final ModellEvent modellEvent )
       {
         if( modellEvent.isType( ModellEvent.FEATURE_CHANGE ) )
@@ -181,6 +180,7 @@ public class FeatureCompositeGFTWrapper
           if( (control != null) && !control.isDisposed() )
             control.getDisplay().asyncExec( new Runnable()
             {
+              @Override
               public void run( )
               {
                 if( !control.isDisposed() )
@@ -194,6 +194,7 @@ public class FeatureCompositeGFTWrapper
 
     m_ifFtrChLstner = new IFeatureChangeListener()
     {
+      @Override
       public void featureChanged( final ICommand changeCommand )
       {
         try
@@ -207,6 +208,7 @@ public class FeatureCompositeGFTWrapper
 
       }
 
+      @Override
       public void openFeatureRequested( final Feature feature, final IPropertyType ftp )
       {
       }
@@ -224,13 +226,13 @@ public class FeatureCompositeGFTWrapper
    * id.
    * 
    * @param project
-   *            your active eclipse project
+   *          your active eclipse project
    * @param templateFilePath
-   *            project relative file name
+   *          project relative file name
    * @param gftFile
-   *            filePointer to new gft-File which will be created
+   *          filePointer to new gft-File which will be created
    * @param gmlId
-   *            the id which will be replaced
+   *          the id which will be replaced
    */
   public static void createGftFile( final IFile iTemplate, final IFile iDestination, final String gmlId ) throws IOException, CoreException
   {
@@ -244,19 +246,17 @@ public class FeatureCompositeGFTWrapper
    * dto. - in this function you can replace different kind of keys and values (hashmap)
    * 
    * @param project
-   *            your active eclipse project
+   *          your active eclipse project
    * @param templateFilePath
-   *            project relative file name
+   *          project relative file name
    * @param gftFile
-   *            filePointer to new gft-File which will be created
+   *          filePointer to new gft-File which will be created
    * @param hReplacements
-   *            index[key, value] - keys will be replaced with their assigned values
+   *          index[key, value] - keys will be replaced with their assigned values
    */
   public static void createGftFile( final IFile iTemplate, final IFile iDestination, final Map<String, String> hReplacements ) throws IOException, CoreException
   {
     final InputStreamReader input = new InputStreamReader( iTemplate.getContents() );
-    if( input == null )
-      return;
 
     final StringBuffer buffer = new StringBuffer();
     int c;

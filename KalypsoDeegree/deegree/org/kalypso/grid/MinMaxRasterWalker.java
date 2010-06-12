@@ -61,6 +61,7 @@ public class MinMaxRasterWalker implements IGeoGridWalker
    * 
    * @see org.kalypso.gis.doubleraster.DoubleRasterWalker#getResult()
    */
+  @Override
   public Object finish( )
   {
     return null;
@@ -69,6 +70,7 @@ public class MinMaxRasterWalker implements IGeoGridWalker
   /**
    * @see org.kalypso.gis.doubleraster.DoubleRasterWalker#operate(int, int, com.vividsolutions.jts.geom.Coordinate)
    */
+  @Override
   public void operate( final int x, final int y, final Coordinate c )
   {
     if( !Double.isNaN( c.z ) )
@@ -81,6 +83,7 @@ public class MinMaxRasterWalker implements IGeoGridWalker
   /**
    * @see org.kalypso.gis.doubleraster.DoubleRasterWalker#start(org.kalypso.gis.doubleraster.DoubleRaster)
    */
+  @Override
   public void start( final IGeoGrid r )
   {
   }

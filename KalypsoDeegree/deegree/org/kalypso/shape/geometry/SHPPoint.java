@@ -106,6 +106,7 @@ public class SHPPoint implements ISHPPoint
     this( point.getX(), point.getY() );
   }
 
+  @Override
   public SHPEnvelope getEnvelope( )
   {
     return m_envelope;
@@ -139,11 +140,13 @@ public class SHPPoint implements ISHPPoint
     return "SHPPOINT" + "[" + this.m_x + "; " + this.m_y + "]";
   }
 
+  @Override
   public double getX( )
   {
     return m_x;
   }
 
+  @Override
   public double getY( )
   {
     return m_y;

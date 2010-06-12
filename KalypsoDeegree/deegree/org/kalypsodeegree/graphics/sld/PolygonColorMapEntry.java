@@ -53,6 +53,7 @@ public interface PolygonColorMapEntry extends Marshallable
 
   public String getLabel( Feature feature );
 
+  @Override
   public String exportAsXML( );
 
 }

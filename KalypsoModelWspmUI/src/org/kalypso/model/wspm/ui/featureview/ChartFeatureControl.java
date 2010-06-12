@@ -119,6 +119,7 @@ public class ChartFeatureControl extends AbstractFeatureControl implements IFeat
   /**
    * @see org.kalypso.ogc.gml.featureview.control.IFeatureControl#createControl(org.eclipse.swt.widgets.Composite, int)
    */
+  @Override
   public Control createControl( final Composite parent, final int style )
   {
     m_charts = new ChartComposite[m_chartTypes.length];
@@ -188,6 +189,7 @@ public class ChartFeatureControl extends AbstractFeatureControl implements IFeat
   /**
    * @see org.kalypso.ogc.gml.featureview.control.IFeatureControl#isValid()
    */
+  @Override
   public boolean isValid( )
   {
     return true;
@@ -196,6 +198,7 @@ public class ChartFeatureControl extends AbstractFeatureControl implements IFeat
   /**
    * @see org.kalypso.ogc.gml.featureview.control.IFeatureControl#addModifyListener(org.eclipse.swt.events.ModifyListener)
    */
+  @Override
   public void addModifyListener( final ModifyListener l )
   {
   }
@@ -203,6 +206,7 @@ public class ChartFeatureControl extends AbstractFeatureControl implements IFeat
   /**
    * @see org.kalypso.ogc.gml.featureview.control.IFeatureControl#removeModifyListener(org.eclipse.swt.events.ModifyListener)
    */
+  @Override
   public void removeModifyListener( final ModifyListener l )
   {
   }
@@ -210,6 +214,7 @@ public class ChartFeatureControl extends AbstractFeatureControl implements IFeat
   /**
    * @see org.kalypso.ogc.gml.featureview.control.IFeatureControl#updateControl()
    */
+  @Override
   public void updateControl( )
   {
     for( int i = 0; i < m_charts.length; i++ )

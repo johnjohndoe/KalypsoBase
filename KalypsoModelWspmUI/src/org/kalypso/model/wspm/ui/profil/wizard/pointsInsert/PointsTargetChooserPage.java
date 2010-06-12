@@ -70,6 +70,7 @@ public class PointsTargetChooserPage extends WizardPage implements IWizardPage
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
    */
+  @Override
   public void createControl( final Composite parent )
   {
     final String targetID = getDialogSettings().get( DLG_SETTINGS_TARGET_ID );

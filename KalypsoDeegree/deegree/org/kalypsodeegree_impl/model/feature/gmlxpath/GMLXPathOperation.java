@@ -55,6 +55,7 @@ public abstract class GMLXPathOperation implements IGMLXPathOperation
   /**
    * @see org.kalypsodeegree_impl.model.feature.path.IOperation#getPattern()
    */
+  @Override
   public Pattern getPattern( )
   {
     return m_pattern;

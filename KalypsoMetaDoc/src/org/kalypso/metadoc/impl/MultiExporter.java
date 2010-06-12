@@ -89,6 +89,7 @@ public class MultiExporter extends AbstractExporter
     final Collection<IStatus> stati = new ArrayList<IStatus>();
     final ISupplierCreator creator = new ISupplierCreator()
     {
+      @Override
       public ISupplier createSupplier( final Arguments args ) throws InvocationTargetException
       {
         return (ISupplier) supplier.supply( args );

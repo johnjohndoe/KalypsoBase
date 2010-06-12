@@ -57,10 +57,12 @@ public class SchemaRestrictionFeatureRule extends AbstractFeatureRule implements
    * @see org.kalypsodeegree.model.feature.validation.IFeatureRule#validate(org.kalypsodeegree.model.feature.Feature,
    *      org.kalypsodeegree.model.feature.validation.IFeatureMarkerCollector)
    */
+  @Override
   public void validate( final Feature feature, final IFeatureMarkerCollector collector ) 
   {
     final FeatureVisitor visitor = new FeatureVisitor()
     {
+      @Override
       public boolean visit( final Feature f )
       {
         final IFeatureType featureType = f.getFeatureType();

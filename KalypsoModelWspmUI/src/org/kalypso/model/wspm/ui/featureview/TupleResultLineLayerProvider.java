@@ -77,13 +77,14 @@ public class TupleResultLineLayerProvider extends AbstractLayerProvider
   /**
    * @see org.kalypso.swtchart.chart.layer.ILayerProvider#getLayers()
    */
+  @Override
   public IChartLayer getLayer( final URL context )
   {
     final TupleResultLineLayer icl = new TupleResultLineLayer( getDataContainer(), getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ) ); //$NON-NLS-1$ //$NON-NLS-2$
     return icl;
   }
 
-  @SuppressWarnings( { "unchecked" })
+  @SuppressWarnings({ "unchecked" })
   private TupleResultDomainValueData getDataContainer( )
   {
     final IParameterContainer pc = getParameterContainer();
@@ -102,7 +103,7 @@ public class TupleResultLineLayerProvider extends AbstractLayerProvider
       return null;
 
     final IObservation<TupleResult> obs = ObservationFeatureFactory.toObservation( feature );
-   // final TupleResult result = obs.getResult();
+    // final TupleResult result = obs.getResult();
     final String domainComponentId = pc.getParameterValue( "domainComponentId", "" ); //$NON-NLS-1$ //$NON-NLS-2$
     final String valueComponentId = pc.getParameterValue( "valueComponentId", "" ); //$NON-NLS-1$ //$NON-NLS-2$
     final TupleResultDomainValueData data = new TupleResultDomainValueData( obs, domainComponentId, valueComponentId );

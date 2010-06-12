@@ -79,7 +79,6 @@ import org.kalypso.ogc.gml.IKalypsoThemeFilter;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.tools.GMLConstants;
-import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
  * @author Gernot Belger
@@ -110,6 +109,7 @@ public class CreateProfileDeviderPage extends WizardPage implements IUpdateable,
 
     final IPropertyTypeFilter geoFilter = new IPropertyTypeFilter()
     {
+      @Override
       public boolean accept( final IPropertyType pt )
       {
         if( pt instanceof IValuePropertyType )
@@ -131,6 +131,7 @@ public class CreateProfileDeviderPage extends WizardPage implements IUpdateable,
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
    */
+  @Override
   public void createControl( final Composite parent )
   {
     final Composite composite = new Composite( parent, SWT.NONE );
@@ -230,6 +231,7 @@ public class CreateProfileDeviderPage extends WizardPage implements IUpdateable,
 
     viewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
+      @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
         final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
@@ -288,6 +290,7 @@ public class CreateProfileDeviderPage extends WizardPage implements IUpdateable,
   /**
    * @see org.kalypso.contribs.eclipse.jface.wizard.IUpdateable#update()
    */
+  @Override
   public void update( )
   {
     final IKalypsoTheme polygoneTheme = getTheme();
@@ -309,6 +312,7 @@ public class CreateProfileDeviderPage extends WizardPage implements IUpdateable,
   /**
    * @see org.kalypso.ogc.gml.IKalypsoThemeFilter#accept(org.kalypso.ogc.gml.IKalypsoTheme)
    */
+  @Override
   public boolean accept( final IKalypsoTheme theme )
   {
     if( theme instanceof IKalypsoFeatureTheme && theme != m_profileTheme )

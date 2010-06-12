@@ -90,6 +90,7 @@ public class TriangulatedSurfaceMultiPartShapeDataProvider implements IShapeData
   /**
    * @see org.kalypsodeegree_impl.io.shpapi.IShapeDataProvider#getFeatureType()
    */
+  @Override
   public IFeatureType getFeatureType( )
   {
     return m_features[0].getFeatureType();
@@ -98,6 +99,7 @@ public class TriangulatedSurfaceMultiPartShapeDataProvider implements IShapeData
   /**
    * @see org.kalypsodeegree_impl.io.shpapi.IShapeDataProvider#getFeaturesLength()
    */
+  @Override
   public int getFeaturesLength( )
   {
     return m_features.length;
@@ -106,6 +108,7 @@ public class TriangulatedSurfaceMultiPartShapeDataProvider implements IShapeData
   /**
    * @see org.kalypsodeegree_impl.io.shpapi.IShapeDataProvider#getGeometryPropertyType()
    */
+  @Override
   public IPropertyType getGeometryPropertyType( )
   {
     return m_geometryPropertyType;
@@ -114,6 +117,7 @@ public class TriangulatedSurfaceMultiPartShapeDataProvider implements IShapeData
   /**
    * @see org.kalypsodeegree_impl.io.shpapi.IShapeDataProvider#getOutputShapeConstant()
    */
+  @Override
   public byte getOutputShapeConstant( )
   {
     return m_shapeConstant;
@@ -122,6 +126,7 @@ public class TriangulatedSurfaceMultiPartShapeDataProvider implements IShapeData
   /**
    * @see org.kalypsodeegree_impl.io.shpapi.IShapeDataProvider#setFeatures(org.kalypsodeegree.model.feature.Feature[])
    */
+  @Override
   public void setFeatures( Feature[] features )
   {
     m_features = features;
@@ -138,6 +143,7 @@ public class TriangulatedSurfaceMultiPartShapeDataProvider implements IShapeData
   /**
    * @see org.kalypsodeegree_impl.io.shpapi.IShapeDataProvider#getGeometry(int)
    */
+  @Override
   public GM_Object getGeometry( final int index )
   {
     return m_triSurface;
@@ -147,6 +153,7 @@ public class TriangulatedSurfaceMultiPartShapeDataProvider implements IShapeData
    * @see org.kalypsodeegree_impl.io.shpapi.IShapeDataProvider#getFeatureProperty(int,
    *      org.kalypso.gmlschema.property.IPropertyType)
    */
+  @Override
   public Object getFeatureProperty( int featureIndex, IPropertyType propertyType )
   {
     return m_features[0].getProperty( propertyType );

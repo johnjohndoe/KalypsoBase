@@ -82,6 +82,7 @@ public class ImageGeoGrid extends AbstractGeoGrid implements IGeoGrid
   /**
    * @see org.kalypso.gis.doubleraster.grid.DoubleGrid#getSizeX()
    */
+  @Override
   public int getSizeX( )
   {
     return m_sizeX;
@@ -90,6 +91,7 @@ public class ImageGeoGrid extends AbstractGeoGrid implements IGeoGrid
   /**
    * @see org.kalypso.gis.doubleraster.grid.DoubleGrid#getSizeY()
    */
+  @Override
   public int getSizeY( )
   {
     return m_sizeY;
@@ -98,6 +100,7 @@ public class ImageGeoGrid extends AbstractGeoGrid implements IGeoGrid
   /**
    * @see org.kalypso.gis.doubleraster.grid.DoubleGrid#getValue(int, int)
    */
+  @Override
   public double getValue( final int x, final int y )
   {
     final int tileX = m_image.XToTileX( x );
@@ -122,6 +125,7 @@ public class ImageGeoGrid extends AbstractGeoGrid implements IGeoGrid
   /**
    * @see org.kalypso.grid.IGeoGrid#getMax()
    */
+  @Override
   public BigDecimal getMax( )
   {
     // TODO Auto-generated method stub
@@ -131,6 +135,7 @@ public class ImageGeoGrid extends AbstractGeoGrid implements IGeoGrid
   /**
    * @see org.kalypso.grid.IGeoGrid#getMin()
    */
+  @Override
   public BigDecimal getMin( )
   {
     // TODO Auto-generated method stub
@@ -140,6 +145,7 @@ public class ImageGeoGrid extends AbstractGeoGrid implements IGeoGrid
   /**
    * @see org.kalypso.grid.IGeoGrid#setMax(java.math.BigDecimal)
    */
+  @Override
   public void setMax( final BigDecimal maxValue )
   {
     // TODO Auto-generated method stub
@@ -149,6 +155,7 @@ public class ImageGeoGrid extends AbstractGeoGrid implements IGeoGrid
   /**
    * @see org.kalypso.grid.IGeoGrid#setMin(java.math.BigDecimal)
    */
+  @Override
   public void setMin( final BigDecimal minValue )
   {
     // TODO Auto-generated method stub

@@ -63,6 +63,7 @@ public class ActiveObjectEdit implements IProfilChange
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilChange#doChange(ProfilChangeHint)
    */
+  @Override
   public IProfilChange doChange( final ProfilChangeHint hint )
   {
     if( hint != null )
@@ -80,6 +81,7 @@ public class ActiveObjectEdit implements IProfilChange
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilChange#getObject()
    */
+  @Override
   public Object[] getObjects( )
   {
     return new IRecord[] { m_point };
@@ -88,6 +90,7 @@ public class ActiveObjectEdit implements IProfilChange
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilChange#getPointProperty()
    */
+  @Override
   public String getInfo( )
   {
     return m_property.toString();
@@ -96,6 +99,7 @@ public class ActiveObjectEdit implements IProfilChange
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilChange#getValue()
    */
+  @Override
   public Double getValue( )
   {
     return null;

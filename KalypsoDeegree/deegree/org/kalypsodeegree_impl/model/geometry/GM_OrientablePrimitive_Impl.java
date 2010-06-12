@@ -79,6 +79,7 @@ abstract class GM_OrientablePrimitive_Impl extends GM_Primitive_Impl implements 
    * 
    * @return curve orientation ('+'|'-')
    */
+  @Override
   public char getOrientation( )
   {
     return m_orientation;
@@ -92,6 +93,7 @@ abstract class GM_OrientablePrimitive_Impl extends GM_Primitive_Impl implements 
    * @exception GM_Exception
    *                will be thrown if orientation is invalid
    */
+  @Override
   public void setOrientation( char orientation ) throws GM_Exception
   {
     if( (orientation != '+') && (orientation != '-') )

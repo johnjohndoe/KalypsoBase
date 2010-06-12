@@ -61,6 +61,7 @@ public class XElementFromOperation implements IXElement
   /**
    * @see org.kalypsodeegree_impl.model.feature.xpath.IXElement#evaluate(java.lang.Object, boolean)
    */
+  @Override
   public Object evaluate( final Object context, final boolean featureTypeLevel ) throws GMLXPathException
   {
     final Object value1 = m_operand1.evaluate( context, featureTypeLevel );

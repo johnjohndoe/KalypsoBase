@@ -125,6 +125,7 @@ public class PageSelectGeodataFile extends WizardPage
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
    */
+  @Override
   public void createControl( final Composite parent )
   {
     setPageComplete( false );
@@ -145,6 +146,7 @@ public class PageSelectGeodataFile extends WizardPage
     m_tFile = new Text( fileGroup, SWT.BORDER );
     m_tFile.addModifyListener( new ModifyListener()
     {
+      @Override
       public void modifyText( final ModifyEvent e )
       {
         m_sFile = m_tFile.getText();
@@ -205,6 +207,7 @@ public class PageSelectGeodataFile extends WizardPage
     tVectorXx.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
     tVectorXx.addModifyListener( new ModifyListener()
     {
+      @Override
       public void modifyText( final ModifyEvent e )
       {
         checkBoxes();
@@ -219,6 +222,7 @@ public class PageSelectGeodataFile extends WizardPage
     tVectorXy.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
     tVectorXy.addModifyListener( new ModifyListener()
     {
+      @Override
       public void modifyText( final ModifyEvent e )
       {
         checkBoxes();
@@ -233,6 +237,7 @@ public class PageSelectGeodataFile extends WizardPage
     tVectorYx.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
     tVectorYx.addModifyListener( new ModifyListener()
     {
+      @Override
       public void modifyText( final ModifyEvent e )
       {
         checkBoxes();
@@ -247,6 +252,7 @@ public class PageSelectGeodataFile extends WizardPage
     tVectorYy.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
     tVectorYy.addModifyListener( new ModifyListener()
     {
+      @Override
       public void modifyText( final ModifyEvent e )
       {
         checkBoxes();
@@ -261,6 +267,7 @@ public class PageSelectGeodataFile extends WizardPage
     tUlcX.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
     tUlcX.addModifyListener( new ModifyListener()
     {
+      @Override
       public void modifyText( final ModifyEvent e )
       {
         checkBoxes();
@@ -275,6 +282,7 @@ public class PageSelectGeodataFile extends WizardPage
     tUlcY.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
     tUlcY.addModifyListener( new ModifyListener()
     {
+      @Override
       public void modifyText( final ModifyEvent e )
       {
         checkBoxes();

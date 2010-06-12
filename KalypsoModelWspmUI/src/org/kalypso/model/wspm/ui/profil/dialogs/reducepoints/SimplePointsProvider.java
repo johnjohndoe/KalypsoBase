@@ -62,6 +62,7 @@ public class SimplePointsProvider implements IPointsProvider
   /**
    * @see org.kalypso.model.wspm.ui.profil.wizard.douglasPeucker.IPointsProvider#getPoints()
    */
+  @Override
   public IRecord[] getPoints( )
   {
     return m_points;
@@ -70,6 +71,7 @@ public class SimplePointsProvider implements IPointsProvider
   /**
    * @see org.kalypso.model.wspm.ui.profil.wizard.douglasPeucker.IPointsProvider#getErrorMessage()
    */
+  @Override
   public String getErrorMessage( )
   {
     return null;
@@ -78,6 +80,7 @@ public class SimplePointsProvider implements IPointsProvider
   /**
    * @see org.kalypso.model.wspm.ui.profil.wizard.douglasPeucker.IPointsProvider#getName()
    */
+  @Override
   public String getName( )
   {
     return m_name;

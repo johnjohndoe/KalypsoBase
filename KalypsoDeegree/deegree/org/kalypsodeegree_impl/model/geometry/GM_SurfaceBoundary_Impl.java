@@ -79,6 +79,7 @@ class GM_SurfaceBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Su
   /**
    * gets the exterior ring
    */
+  @Override
   public GM_Ring getExteriorRing( )
   {
     return m_exterior;
@@ -87,6 +88,7 @@ class GM_SurfaceBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Su
   /**
    * gets the interior ring(s)
    */
+  @Override
   public GM_Ring[] getInteriorRings( )
   {
     return m_interior;
@@ -138,6 +140,7 @@ class GM_SurfaceBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Su
    * any of its pieces. Points are 0-dimensional, curves are 1-dimensional, surfaces are 2-dimensional, and solids are
    * 3-dimensional.
    */
+  @Override
   public int getDimension( )
   {
     return 1;
@@ -147,6 +150,7 @@ class GM_SurfaceBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Su
    * The operation "coordinateDimension" shall return the dimension of the coordinates that define this GM_Object, which
    * must be the same as the coordinate dimension of the coordinate reference system for this GM_Object.
    */
+  @Override
   public int getCoordinateDimension( )
   {
     return m_exterior.getPositions()[0].getCoordinateDimension();
@@ -314,6 +318,7 @@ class GM_SurfaceBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Su
    * @see org.kalypsodeegree.model.geometry.GM_Object#transform(org.deegree.crs.transformations.CRSTransformation,
    *      java.lang.String)
    */
+  @Override
   public GM_Object transform( final CRSTransformation trans, final String targetOGCCS ) throws Exception
   {
     /* If the target is the same coordinate system, do not transform. */

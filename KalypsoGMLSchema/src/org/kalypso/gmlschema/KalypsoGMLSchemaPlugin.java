@@ -1,7 +1,5 @@
 package org.kalypso.gmlschema;
 
-import java.util.Map;
-
 import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.Plugin;

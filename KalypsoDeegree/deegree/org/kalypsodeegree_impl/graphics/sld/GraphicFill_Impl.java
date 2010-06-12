@@ -74,6 +74,7 @@ public class GraphicFill_Impl implements GraphicFill, Marshallable
    * 
    * @return graphic
    */
+  @Override
   public Graphic getGraphic()
   {
     return graphic;
@@ -84,6 +85,7 @@ public class GraphicFill_Impl implements GraphicFill, Marshallable
    * 
    * @param graphic
    */
+  @Override
   public void setGraphic( Graphic graphic )
   {
     this.graphic = graphic;
@@ -94,6 +96,7 @@ public class GraphicFill_Impl implements GraphicFill, Marshallable
    * 
    * @return xml representation of the GraphicFill
    */
+  @Override
   public String exportAsXML()
   {
     Debug.debugMethodBegin();

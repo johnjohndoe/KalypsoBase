@@ -147,26 +147,31 @@ public class SHPPointz implements ISHPPoint
     return "SHPPOINTZ" + "[" + this.x + "; " + this.y + "; " + this.z + "; " + this.m + "]";
   }
 
+  @Override
   public double getX( )
   {
     return x;
   }
 
+  @Override
   public double getY( )
   {
     return y;
   }
 
+  @Override
   public double getZ( )
   {
     return z;
   }
 
+  @Override
   public double getM( )
   {
     return m;
   }
 
+  @Override
   public SHPEnvelope getEnvelope( )
   {
     return m_envelope;

@@ -69,6 +69,7 @@ public class PointRemove implements IProfilChange
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilChange#doChange()
    */
+  @Override
   public IProfilChange doChange( final ProfilChangeHint hint ) throws IllegalProfileOperationException
   {
     if( hint != null )
@@ -89,6 +90,7 @@ public class PointRemove implements IProfilChange
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilChange#getObject()
    */
+  @Override
   public Object[] getObjects( )
   {
     return new Object[] { m_point };
@@ -97,6 +99,7 @@ public class PointRemove implements IProfilChange
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilChange#getPointProperty()
    */
+  @Override
   public String getInfo( )
   {
     return   Messages.getString("org.kalypso.model.wspm.core.profil.changes.PointRemove.0", ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, m_point ) ); //$NON-NLS-1$
@@ -105,6 +108,7 @@ public class PointRemove implements IProfilChange
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilChange#getValue()
    */
+  @Override
   public Double getValue( )
   {
     return null;

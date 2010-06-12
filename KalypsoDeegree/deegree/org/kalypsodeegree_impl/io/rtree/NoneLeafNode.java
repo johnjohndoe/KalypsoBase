@@ -68,6 +68,7 @@ public class NoneLeafNode extends Node
    *          des Kindknoten
    * @return Object KindKnoten
    */
+  @Override
   public Object getData( int index )
   {
     Object obj = null;
@@ -92,6 +93,7 @@ public class NoneLeafNode extends Node
    * @param box
    *          des Kindknoten
    */
+  @Override
   public void insertData( Object node, HyperBoundingBox box )
   {
     childNodes[counter] = ( (Node)node ).getPageNumber();
@@ -118,6 +120,7 @@ public class NoneLeafNode extends Node
    * @param index
    *          des Eintrages.
    */
+  @Override
   public void deleteData( int index )
   {
     if( this.getUsedSpace() == 1 )
@@ -190,6 +193,7 @@ public class NoneLeafNode extends Node
    * 
    * @return Object NoneLeafNode-Kopie
    */
+  @Override
   public Object clone()
   {
     NoneLeafNode clone = new NoneLeafNode( this.pageNumber, this.file );

@@ -83,6 +83,7 @@ public class LeafNode extends Node
    *          für Eintrag
    * @return Object Dateneintrag
    */
+  @Override
   public Object getData( int index )
   {
     return new Integer( data[index] );
@@ -96,6 +97,7 @@ public class LeafNode extends Node
    * @param box
    *          des Datums
    */
+  @Override
   public void insertData( Object obj, HyperBoundingBox box )
   {
     data[counter] = ( (Integer)obj ).intValue();
@@ -110,6 +112,7 @@ public class LeafNode extends Node
    * @param index
    *          des Eintrages
    */
+  @Override
   public void deleteData( int index )
   {
     if( this.getUsedSpace() == 1 )
@@ -135,6 +138,7 @@ public class LeafNode extends Node
    * 
    * @return Object LeafNode-Kopie
    */
+  @Override
   public Object clone()
   {
     LeafNode clone = new LeafNode( this.pageNumber, this.file );

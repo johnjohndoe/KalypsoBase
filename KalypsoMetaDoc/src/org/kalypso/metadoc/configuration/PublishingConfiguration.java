@@ -52,7 +52,7 @@ import org.apache.commons.configuration.Configuration;
 
 /**
  * Default implementation of the IPublishingConfiguration interface
- *
+ * 
  * @author schlienger
  */
 public class PublishingConfiguration implements IPublishingConfiguration
@@ -86,6 +86,7 @@ public class PublishingConfiguration implements IPublishingConfiguration
   /**
    * @see org.kalypso.metadoc.configuration.IPublishingConfiguration#addListener(org.kalypso.metadoc.configuration.IConfigurationListener)
    */
+  @Override
   public void addListener( final IConfigurationListener listener )
   {
     m_listeners.add( listener );
@@ -94,11 +95,13 @@ public class PublishingConfiguration implements IPublishingConfiguration
   /**
    * @see org.kalypso.metadoc.configuration.IPublishingConfiguration#removeListener(org.kalypso.metadoc.configuration.IConfigurationListener)
    */
+  @Override
   public void removeListener( final IConfigurationListener listener )
   {
     m_listeners.remove( listener );
   }
 
+  @Override
   public void addProperty( final String key, final Object arg1 )
   {
     m_conf.addProperty( key, arg1 );
@@ -106,6 +109,7 @@ public class PublishingConfiguration implements IPublishingConfiguration
     fireConfigurationChanged( key );
   }
 
+  @Override
   public void clear( )
   {
     m_conf.clear();
@@ -113,6 +117,7 @@ public class PublishingConfiguration implements IPublishingConfiguration
     fireConfigurationChanged( null );
   }
 
+  @Override
   public void clearProperty( final String key )
   {
     m_conf.clearProperty( key );
@@ -120,6 +125,7 @@ public class PublishingConfiguration implements IPublishingConfiguration
     fireConfigurationChanged( key );
   }
 
+  @Override
   public boolean containsKey( final String arg0 )
   {
     return m_conf.containsKey( arg0 );
@@ -131,172 +137,205 @@ public class PublishingConfiguration implements IPublishingConfiguration
     return m_conf.equals( obj );
   }
 
+  @Override
   public BigDecimal getBigDecimal( final String arg0 )
   {
     return m_conf.getBigDecimal( arg0 );
   }
 
+  @Override
   public BigDecimal getBigDecimal( final String arg0, final BigDecimal arg1 )
   {
     return m_conf.getBigDecimal( arg0, arg1 );
   }
 
+  @Override
   public BigInteger getBigInteger( final String arg0 )
   {
     return m_conf.getBigInteger( arg0 );
   }
 
+  @Override
   public BigInteger getBigInteger( final String arg0, final BigInteger arg1 )
   {
     return m_conf.getBigInteger( arg0, arg1 );
   }
 
+  @Override
   public boolean getBoolean( final String arg0 )
   {
     return m_conf.getBoolean( arg0 );
   }
 
+  @Override
   public boolean getBoolean( final String arg0, final boolean arg1 )
   {
     return m_conf.getBoolean( arg0, arg1 );
   }
 
+  @Override
   public Boolean getBoolean( final String arg0, final Boolean arg1 ) throws NoClassDefFoundError
   {
     return m_conf.getBoolean( arg0, arg1 );
   }
 
+  @Override
   public byte getByte( final String arg0 )
   {
     return m_conf.getByte( arg0 );
   }
 
+  @Override
   public byte getByte( final String arg0, final byte arg1 )
   {
     return m_conf.getByte( arg0, arg1 );
   }
 
+  @Override
   public Byte getByte( final String arg0, final Byte arg1 )
   {
     return m_conf.getByte( arg0, arg1 );
   }
 
+  @Override
   public double getDouble( final String arg0 )
   {
     return m_conf.getDouble( arg0 );
   }
 
+  @Override
   public double getDouble( final String arg0, final double arg1 )
   {
     return m_conf.getDouble( arg0, arg1 );
   }
 
+  @Override
   public Double getDouble( final String arg0, final Double arg1 )
   {
     return m_conf.getDouble( arg0, arg1 );
   }
 
+  @Override
   public float getFloat( final String arg0 )
   {
     return m_conf.getFloat( arg0 );
   }
 
+  @Override
   public float getFloat( final String arg0, final float arg1 )
   {
     return m_conf.getFloat( arg0, arg1 );
   }
 
+  @Override
   public Float getFloat( final String arg0, final Float arg1 )
   {
     return m_conf.getFloat( arg0, arg1 );
   }
 
+  @Override
   public int getInt( final String arg0 )
   {
     return m_conf.getInt( arg0 );
   }
 
+  @Override
   public int getInt( final String arg0, final int arg1 )
   {
     return m_conf.getInt( arg0, arg1 );
   }
 
+  @Override
   public Integer getInteger( final String arg0, final Integer arg1 )
   {
     return m_conf.getInteger( arg0, arg1 );
   }
 
+  @Override
   public Iterator< ? > getKeys( )
   {
     return m_conf.getKeys();
   }
 
+  @Override
   public Iterator< ? > getKeys( final String arg0 )
   {
     return m_conf.getKeys( arg0 );
   }
 
+  @Override
   public List< ? > getList( final String arg0 )
   {
     return m_conf.getList( arg0 );
   }
 
-  @SuppressWarnings("unchecked")
-  public List< ? > getList( final String arg0, final List arg1 )
+  @Override
+  public List< ? > getList( final String arg0, @SuppressWarnings("rawtypes") final List arg1 )
   {
     return m_conf.getList( arg0, arg1 );
   }
 
+  @Override
   public long getLong( final String arg0 )
   {
     return m_conf.getLong( arg0 );
   }
 
+  @Override
   public Long getLong( final String arg0, final Long arg1 )
   {
     return m_conf.getLong( arg0, arg1 );
   }
 
+  @Override
   public long getLong( final String arg0, final long arg1 )
   {
     return m_conf.getLong( arg0, arg1 );
   }
 
+  @Override
   public Properties getProperties( final String arg0 )
   {
     return m_conf.getProperties( arg0 );
   }
 
+  @Override
   public Object getProperty( final String arg0 )
   {
     return m_conf.getProperty( arg0 );
   }
 
+  @Override
   public short getShort( final String arg0 )
   {
     return m_conf.getShort( arg0 );
   }
 
+  @Override
   public Short getShort( final String arg0, final Short arg1 )
   {
     return m_conf.getShort( arg0, arg1 );
   }
 
+  @Override
   public short getShort( final String arg0, final short arg1 )
   {
     return m_conf.getShort( arg0, arg1 );
   }
 
+  @Override
   public String getString( final String arg0 )
   {
     return m_conf.getString( arg0 );
   }
 
+  @Override
   public String getString( final String arg0, final String arg1 )
   {
     return m_conf.getString( arg0, arg1 );
   }
 
+  @Override
   public String[] getStringArray( final String arg0 )
   {
     return m_conf.getStringArray( arg0 );
@@ -308,11 +347,13 @@ public class PublishingConfiguration implements IPublishingConfiguration
     return m_conf.hashCode();
   }
 
+  @Override
   public boolean isEmpty( )
   {
     return m_conf.isEmpty();
   }
 
+  @Override
   public void setProperty( final String key, final Object arg1 )
   {
     m_conf.setProperty( key, arg1 );
@@ -320,6 +361,7 @@ public class PublishingConfiguration implements IPublishingConfiguration
     fireConfigurationChanged( key );
   }
 
+  @Override
   public Configuration subset( final String prefix )
   {
     return m_conf.subset( prefix );

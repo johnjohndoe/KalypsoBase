@@ -25,6 +25,7 @@ public class DiffGeoValueProvider implements IGeoValueProvider
   /**
    * @see com.bce.gis.operation.hmo2fli.DoubleProvider#getDouble(com.vividsolutions.jts.geom.Coordinate)
    */
+  @Override
   public final double getValue( final Coordinate crd ) throws GeoGridException
   {
     return m_higher.getValue( crd ) - m_lower.getValue( crd );

@@ -125,6 +125,7 @@ public class ArithmeticExpression extends Expression_Impl
    * @return the resulting value (as <tt>Double</tt>)
    * @throw FilterEvaluationException if the expressions are not numerical
    */
+  @Override
   public Object evaluate( final Feature feature ) throws FilterEvaluationException
   {
     final Object o1 = m_expr1.evaluate( feature );

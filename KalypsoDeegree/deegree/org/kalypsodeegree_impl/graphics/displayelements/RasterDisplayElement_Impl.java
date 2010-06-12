@@ -43,9 +43,9 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.SortedMap;
-import java.util.Map.Entry;
 
 import javax.xml.bind.DatatypeConverter;
 
@@ -64,9 +64,9 @@ import org.kalypso.grid.CachingGeoGrid;
 import org.kalypso.grid.GeoGridCell;
 import org.kalypso.grid.GeoGridException;
 import org.kalypso.grid.GeoGridUtilities;
+import org.kalypso.grid.GeoGridUtilities.Interpolation;
 import org.kalypso.grid.IGeoGrid;
 import org.kalypso.grid.RectifiedGridCoverageGeoGrid;
-import org.kalypso.grid.GeoGridUtilities.Interpolation;
 import org.kalypso.transformation.GeoTransformer;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;

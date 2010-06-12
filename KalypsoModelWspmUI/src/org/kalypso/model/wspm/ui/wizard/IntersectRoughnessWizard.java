@@ -146,6 +146,7 @@ public class IntersectRoughnessWizard extends Wizard
 
     final ICoreRunnableWithProgress runnable = new ICoreRunnableWithProgress()
     {
+      @Override
       public IStatus execute( final IProgressMonitor monitor ) throws InvocationTargetException
       {
         monitor.beginTask( Messages.getString( "org.kalypso.model.wspm.ui.wizard.IntersectRoughnessWizard.3" ), 1 + choosen.length ); //$NON-NLS-1$

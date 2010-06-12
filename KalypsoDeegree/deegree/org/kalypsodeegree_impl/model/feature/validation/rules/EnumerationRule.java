@@ -68,6 +68,7 @@ public class EnumerationRule implements IRule
    * 
    * @see org.kalypso.ogc.gml.util.IRule#isValid(java.lang.Object)
    */
+  @Override
   public IStatus isValid( Object object )
   {
     Status status = new Status( Status.CANCEL, Platform.PI_RUNTIME, Status.CANCEL, "Der Ausdruck entspricht nicht einem Wert aus der Enumeration.", null );

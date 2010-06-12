@@ -61,6 +61,7 @@ public class ProfileObjectSet implements IProfilChange
     m_object = profileObjects;
   }
 
+  @Override
   public IProfilChange doChange( final ProfilChangeHint hint )
   {
     if( hint != null )
@@ -78,6 +79,7 @@ public class ProfileObjectSet implements IProfilChange
    * @see org.kalypso.model.wspm.core.profil.IProfilChange#getObject()
    * @deprecated Do not use!
    */
+  @Override
   @Deprecated
   public Object[] getObjects( )
   {
@@ -87,6 +89,7 @@ public class ProfileObjectSet implements IProfilChange
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilChange#getPointProperty()
    */
+  @Override
   public String getInfo( )
   {
     return getClass().getName();
@@ -95,6 +98,7 @@ public class ProfileObjectSet implements IProfilChange
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilChange#getValue()
    */
+  @Override
   public Double getValue( )
   {
 

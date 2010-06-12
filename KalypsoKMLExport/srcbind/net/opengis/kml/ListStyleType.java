@@ -10,6 +10,7 @@ package net.opengis.kml;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -116,7 +117,7 @@ public class ListStyleType
      *     
      */
     public void setBgColor(byte[] value) {
-        this.bgColor = ((byte[]) value);
+        this.bgColor = (value);
     }
 
     /**

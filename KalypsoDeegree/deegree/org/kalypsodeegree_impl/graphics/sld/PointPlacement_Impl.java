@@ -102,6 +102,7 @@ public class PointPlacement_Impl implements PointPlacement, Marshallable
    * @throws FilterEvaluationException
    *           if the evaluation fails
    */
+  @Override
   public double[] getAnchorPoint( Feature feature ) throws FilterEvaluationException
   {
     double[] anchorPointVal =
@@ -124,6 +125,7 @@ public class PointPlacement_Impl implements PointPlacement, Marshallable
    * @param anchorPoint
    *          anchorPoint for the PointPlacement
    */
+  @Override
   public void setAnchorPoint( double[] anchorPoint )
   {
     ParameterValueType pvt = null;
@@ -152,6 +154,7 @@ public class PointPlacement_Impl implements PointPlacement, Marshallable
    * @throws FilterEvaluationException
    *           if the evaluation fails*
    */
+  @Override
   public double[] getDisplacement( Feature feature ) throws FilterEvaluationException
   {
     double[] displacementVal =
@@ -173,6 +176,7 @@ public class PointPlacement_Impl implements PointPlacement, Marshallable
    *      <p>
    * @param displacement
    */
+  @Override
   public void setDisplacement( double[] displacement )
   {
     ParameterValueType pvt = null;
@@ -196,6 +200,7 @@ public class PointPlacement_Impl implements PointPlacement, Marshallable
    * @throws FilterEvaluationException
    *           if the evaluation fails*
    */
+  @Override
   public double getRotation( Feature feature ) throws FilterEvaluationException
   {
     double rot = 0.0;
@@ -213,6 +218,7 @@ public class PointPlacement_Impl implements PointPlacement, Marshallable
    * @param rotation
    *          the rotation to be set for the PointPlacement
    */
+  @Override
   public void setRotation( double rotation )
   {
     ParameterValueType pvt = null;
@@ -226,6 +232,7 @@ public class PointPlacement_Impl implements PointPlacement, Marshallable
    * 
    * @return true, if it should be optimized
    */
+  @Override
   public boolean isAuto()
   {
     return auto;
@@ -237,6 +244,7 @@ public class PointPlacement_Impl implements PointPlacement, Marshallable
    * 
    * @param auto
    */
+  @Override
   public void setAuto( boolean auto )
   {
     this.auto = auto;
@@ -247,6 +255,7 @@ public class PointPlacement_Impl implements PointPlacement, Marshallable
    * 
    * @return xml representation of the PointPlacement
    */
+  @Override
   public String exportAsXML()
   {
     Debug.debugMethodBegin();

@@ -32,6 +32,7 @@ public class KalypsoGmlUiImages
     /**
      * @see org.kalypso.commons.eclipse.core.runtime.PluginImageProvider.ImageKey#getImagePath()
      */
+    @Override
     public String getImagePath( )
     {
       return m_imagePath;

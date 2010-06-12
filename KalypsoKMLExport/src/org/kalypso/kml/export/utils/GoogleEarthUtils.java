@@ -29,7 +29,7 @@ public class GoogleEarthUtils
    * @param documentType
    * @throws Exception
    */
-  public static void setLookAt( final GM_Envelope boundingBox, final String coordinatesSystem, final ObjectFactory factory, final DocumentType documentType ) throws Exception
+  public static void setLookAt( final GM_Envelope boundingBox, final String coordinatesSystem, final ObjectFactory factory ) throws Exception
   {
     // set look at to the middle of bounding box
     final GeoTransformer transformer = new GeoTransformer( GoogleEarthUtils.GOOGLE_EARTH_CS );

@@ -27,6 +27,7 @@ public class TypeRegistry_impl<H extends ITypeHandler> implements ITypeRegistry<
    * @throws TypeRegistryException
    * @see org.kalypsodeegree_impl.extension.ITypeRegistry#registerTypeHandler(org.kalypsodeegree_impl.extension.IMarshallingTypeHandler)
    */
+  @Override
   public void registerTypeHandler( final H typeHandler )
   {
     final QName typeName = typeHandler.getTypeName();
@@ -45,6 +46,7 @@ public class TypeRegistry_impl<H extends ITypeHandler> implements ITypeRegistry<
   /**
    * @see org.kalypsodeegree_impl.extension.ITypeRegistry#getTypeHandlerForTypeName(java.lang.String)
    */
+  @Override
   public H getTypeHandlerForTypeName( final QName typeName )
   {
     if( !hasTypeName( typeName ) )
@@ -55,6 +57,7 @@ public class TypeRegistry_impl<H extends ITypeHandler> implements ITypeRegistry<
   /**
    * @see org.kalypso.gmlschema.types.ITypeRegistry#getTypeHandlerForClassName(java.lang.Class)
    */
+  @Override
   @SuppressWarnings("deprecation")
   @Deprecated
   public H getTypeHandlerForClassName( final Class< ? > className )
@@ -67,6 +70,7 @@ public class TypeRegistry_impl<H extends ITypeHandler> implements ITypeRegistry<
   /**
    * @see org.kalypsodeegree_impl.extension.ITypeRegistry#unregisterTypeHandler(org.kalypsodeegree_impl.extension.IMarshallingTypeHandler)
    */
+  @Override
   public void unregisterTypeHandler( final H typeHandler )
   {
     m_typeMap.remove( typeHandler.getTypeName() );
@@ -76,6 +80,7 @@ public class TypeRegistry_impl<H extends ITypeHandler> implements ITypeRegistry<
   /**
    * @see org.kalypsodeegree_impl.extension.ITypeRegistry#hasTypeName(java.lang.String)
    */
+  @Override
   public boolean hasTypeName( final QName typeName )
   {
     return m_typeMap.containsKey( typeName );
@@ -84,6 +89,7 @@ public class TypeRegistry_impl<H extends ITypeHandler> implements ITypeRegistry<
   /**
    * @see org.kalypsodeegree_impl.extension.ITypeRegistry#hasClassName(java.lang.String)
    */
+  @Override
   @SuppressWarnings("deprecation")
   @Deprecated
   public boolean hasClassName( final Class< ? > className )
@@ -94,6 +100,7 @@ public class TypeRegistry_impl<H extends ITypeHandler> implements ITypeRegistry<
   /**
    * @see org.kalypsodeegree_impl.extension.ITypeRegistry#getTypeHandlerFor(org.kalypso.gmlschema.property.IPropertyType)
    */
+  @Override
   public H getTypeHandlerFor( final IPropertyType pt )
   {
     if( !(pt instanceof IValuePropertyType) )
@@ -104,11 +111,13 @@ public class TypeRegistry_impl<H extends ITypeHandler> implements ITypeRegistry<
   /**
    * @see org.kalypso.gmlschema.types.ITypeRegistry#getRegisteredTypeHandler()
    */
+  @Override
   public H[] getRegisteredTypeHandler( final H[] a )
   {
     return m_typeMap.values().toArray( a );
   }
 
+  @Override
   public int getRegisteredTypeHandlerSize( )
   {
     return m_typeMap.values().size();
@@ -117,6 +126,7 @@ public class TypeRegistry_impl<H extends ITypeHandler> implements ITypeRegistry<
   /**
    * @see org.kalypso.gmlschema.types.ITypeRegistry#clearRegistry()
    */
+  @Override
   public void clearRegistry( )
   {
     m_classMap.clear();

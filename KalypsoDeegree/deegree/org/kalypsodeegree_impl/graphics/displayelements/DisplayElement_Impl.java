@@ -77,6 +77,7 @@ abstract class DisplayElement_Impl implements DisplayElement, Serializable
   /**
    * Returns the associated <tt>Feature</tt>.
    */
+  @Override
   public Feature getFeature( )
   {
     return m_feature;
@@ -85,11 +86,13 @@ abstract class DisplayElement_Impl implements DisplayElement, Serializable
   /**
    * renders the DisplayElement to the submitted graphic context
    */
+  @Override
   public abstract void paint( Graphics g, GeoTransform projection, final IProgressMonitor monitor ) throws CoreException;
 
   /**
    * marks a <tt>DisplayElement</tt> as selected or not
    */
+  @Override
   public void setSelected( final boolean selected )
   {
     m_selected = selected;
@@ -98,6 +101,7 @@ abstract class DisplayElement_Impl implements DisplayElement, Serializable
   /**
    * returns if the <tt>DisplayElement</tt> is selected or not
    */
+  @Override
   public boolean isSelected( )
   {
     return m_selected;
@@ -106,6 +110,7 @@ abstract class DisplayElement_Impl implements DisplayElement, Serializable
   /**
    * marks the <tt>DisplayElement</tt> as highlighted or not
    */
+  @Override
   public void setHighlighted( final boolean highlighted )
   {
     m_highlighted = highlighted;
@@ -114,6 +119,7 @@ abstract class DisplayElement_Impl implements DisplayElement, Serializable
   /**
    * returns if the <tt>DisplayElement</tt> is highlighted or not.
    */
+  @Override
   public boolean isHighlighted( )
   {
     return m_highlighted;
@@ -122,6 +128,7 @@ abstract class DisplayElement_Impl implements DisplayElement, Serializable
   /**
    * Returns if the <tt>DisplayElement</tt> should be painted at the current scale or not.
    */
+  @Override
   public boolean doesScaleConstraintApply( final double scale )
   {
     return true;

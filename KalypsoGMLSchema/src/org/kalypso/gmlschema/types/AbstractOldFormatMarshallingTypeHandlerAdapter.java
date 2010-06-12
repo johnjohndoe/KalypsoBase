@@ -89,6 +89,7 @@ public abstract class AbstractOldFormatMarshallingTypeHandlerAdapter implements 
    * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#marshal(java.lang.Object, org.xml.sax.ContentHandler,
    *      org.xml.sax.ext.LexicalHandler, java.net.URL)
    */
+  @Override
   public void marshal( final Object value, final XMLReader reader, final URL context, final String gmlVersion ) throws SAXException
   {
     try
@@ -129,6 +130,7 @@ public abstract class AbstractOldFormatMarshallingTypeHandlerAdapter implements 
    * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#unmarshal(org.xml.sax.XMLReader,
    *      org.kalypso.contribs.java.net.IUrlResolver, org.kalypso.gmlschema.types.MarshalResultEater)
    */
+  @Override
   public void unmarshal( final XMLReader xmlReader, final URL context, final UnmarshallResultEater marshalResultEater, final String gmlVersion ) throws TypeRegistryException
   {
     // xml to memory
@@ -136,6 +138,7 @@ public abstract class AbstractOldFormatMarshallingTypeHandlerAdapter implements 
     {
       final UnmarshallResultEater eater = new UnmarshallResultEater()
       {
+        @Override
         public void unmarshallSuccesful( final Object value ) throws SAXParseException
         {
           final Node node = (Node) value;

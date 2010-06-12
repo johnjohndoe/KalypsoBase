@@ -131,14 +131,14 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  * ISelectionProvider</li>
  * <li></li>
  * </ul>
- *
+ * 
  * @see org.eclipse.jface.viewers.IPostSelectionProvider
  */
 public class FeatureView extends ViewPart implements ModellEventListener
 {
   public static final String ID = "org.kalypso.featureview.views.FeatureView"; //$NON-NLS-1$
 
-  private static final String _KEIN_FEATURE_SELEKTIERT_ = Messages.getString("org.kalypso.featureview.views.FeatureView.1"); //$NON-NLS-1$
+  static final String _KEIN_FEATURE_SELEKTIERT_ = Messages.getString( "org.kalypso.featureview.views.FeatureView.1" ); //$NON-NLS-1$
 
   /**
    * Settings constant for section name (value <code>FeatureView</code>).
@@ -157,12 +157,14 @@ public class FeatureView extends ViewPart implements ModellEventListener
 
   private final IFeatureChangeListener m_fcl = new IFeatureChangeListener()
   {
+    @Override
     public void featureChanged( final ICommand changeCommand )
     {
       m_target.setCommandManager( m_commandManager );
       m_target.postCommand( changeCommand, null );
     }
 
+    @Override
     public void openFeatureRequested( final Feature feature, final IPropertyType ftp )
     {
       // just show this feature in the view, don't change the selection this doesn't work
@@ -197,6 +199,7 @@ public class FeatureView extends ViewPart implements ModellEventListener
 
   private final ISelectionListener m_selectionListener = new INullSelectionListener()
   {
+    @Override
     public void selectionChanged( final IWorkbenchPart part, final ISelection selection )
     {
       // controls of my feature composite may create events, don't react
@@ -402,7 +405,7 @@ public class FeatureView extends ViewPart implements ModellEventListener
     // add showTables-Action to menu-bar
     // we do this here, because adding it via the org.eclipse.ui.viewActions extension-point
     // does not allow to set the checked state dynamically
-    m_showTablesAction = new Action( Messages.getString("org.kalypso.featureview.views.FeatureView.2"), Action.AS_CHECK_BOX ) //$NON-NLS-1$
+    m_showTablesAction = new Action( Messages.getString( "org.kalypso.featureview.views.FeatureView.2" ), Action.AS_CHECK_BOX ) //$NON-NLS-1$
     {
       /**
        * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
@@ -415,7 +418,7 @@ public class FeatureView extends ViewPart implements ModellEventListener
     };
     m_showTablesAction.setChecked( isShowTables() );
 
-    m_showValidationOkAction = new Action( Messages.getString("org.kalypso.featureview.views.FeatureView.3"), Action.AS_CHECK_BOX ) //$NON-NLS-1$
+    m_showValidationOkAction = new Action( Messages.getString( "org.kalypso.featureview.views.FeatureView.3" ), Action.AS_CHECK_BOX ) //$NON-NLS-1$
     {
       /**
        * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
@@ -458,7 +461,7 @@ public class FeatureView extends ViewPart implements ModellEventListener
     final ScrolledCompositeCreator creator = m_creator;
     final FeatureSelectionActionGroup featureSelectionActionGroup = m_featureSelectionActionGroup;
 
-    final Job job = new UIJob( getSite().getShell().getDisplay(), Messages.getString("org.kalypso.featureview.views.FeatureView.4") ) //$NON-NLS-1$
+    final Job job = new UIJob( getSite().getShell().getDisplay(), Messages.getString( "org.kalypso.featureview.views.FeatureView.4" ) ) //$NON-NLS-1$
     {
       @Override
       public IStatus runInUIThread( final IProgressMonitor monitor )
@@ -554,6 +557,7 @@ public class FeatureView extends ViewPart implements ModellEventListener
   /**
    * @see org.kalypsodeegree.model.feature.event.ModellEventListener#onModellChange(org.kalypsodeegree.model.feature.event.ModellEvent)
    */
+  @Override
   public void onModellChange( final ModellEvent modellEvent )
   {
     // TODO: why doesn't the feature composite itself is a modelllistener and reacts to the changes?
@@ -566,6 +570,7 @@ public class FeatureView extends ViewPart implements ModellEventListener
       {
         final Runnable runnable = new Runnable()
         {
+          @Override
           public void run( )
           {
             // As the label of the main group may depend on the values of the feature, we must update it as well.

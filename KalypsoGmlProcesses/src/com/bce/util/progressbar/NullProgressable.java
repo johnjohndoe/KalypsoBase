@@ -48,6 +48,7 @@ public class NullProgressable implements Progressable
   /**
    * @see com.bce.util.progressbar.Progressable#setNote(java.lang.String)
    */
+  @Override
   public void setNote( String string )
   {
   }
@@ -55,6 +56,7 @@ public class NullProgressable implements Progressable
   /**
    * @see com.bce.util.progressbar.Progressable#reset(int, int)
    */
+  @Override
   public void reset( int min, int max )
   {
   }
@@ -62,6 +64,7 @@ public class NullProgressable implements Progressable
   /**
    * @see com.bce.util.progressbar.Progressable#setCurrent(int)
    */
+  @Override
   public void setCurrent( int current )
   {
   }
@@ -69,6 +72,7 @@ public class NullProgressable implements Progressable
   /**
    * @see com.bce.util.progressbar.Progressable#isCanceled()
    */
+  @Override
   public boolean isCanceled( )
   {
     return false;
@@ -77,6 +81,7 @@ public class NullProgressable implements Progressable
   /**
    * @see com.bce.util.progressbar.Progressable#cancel()
    */
+  @Override
   public void cancel( )
   {
   }

@@ -64,6 +64,7 @@ public class ProfilUndoContext implements IUndoContext
   /**
    * @see org.eclipse.core.commands.operations.IUndoContext#getLabel()
    */
+  @Override
   public String getLabel( )
   {
     return "ProfilUndoContext"; //$NON-NLS-1$
@@ -72,6 +73,7 @@ public class ProfilUndoContext implements IUndoContext
   /**
    * @see org.eclipse.core.commands.operations.IUndoContext#matches(org.eclipse.core.commands.operations.IUndoContext)
    */
+  @Override
   public boolean matches( final IUndoContext context )
   {
     return context instanceof ProfilUndoContext && m_profil == ((ProfilUndoContext)context).m_profil;

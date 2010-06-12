@@ -67,6 +67,7 @@ public class FeaturesChangedModellEvent extends ModellEvent implements IGMLWorks
     return m_features;
   }
 
+  @Override
   public GMLWorkspace getGMLWorkspace( )
   {
     return m_workspace;

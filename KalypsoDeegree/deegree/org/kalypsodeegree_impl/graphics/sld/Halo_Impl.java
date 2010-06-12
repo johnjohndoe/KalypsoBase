@@ -87,6 +87,7 @@ public class Halo_Impl implements Halo, Marshallable
    * 
    * @return the underlying <tt>Fill</tt> -object or null
    */
+  @Override
   public Fill getFill()
   {
     return fill;
@@ -99,6 +100,7 @@ public class Halo_Impl implements Halo, Marshallable
    * @param fill
    *          defines the fill color and pattern
    */
+  @Override
   public void setFill( Fill fill )
   {
     this.fill = fill;
@@ -113,6 +115,7 @@ public class Halo_Impl implements Halo, Marshallable
    * 
    * @return the radius definition as <tt>ParameterValueType</tt>, or null if it has not been specified
    */
+  @Override
   public ParameterValueType getRadius()
   {
     return radius;
@@ -125,6 +128,7 @@ public class Halo_Impl implements Halo, Marshallable
    * @param radius
    *          radius to be used for the halo, use null for a rectangle styled halo
    */
+  @Override
   public void setRadius( ParameterValueType radius )
   {
     this.radius = radius;
@@ -143,6 +147,7 @@ public class Halo_Impl implements Halo, Marshallable
    * @throws FilterEvaluationException
    *           if the evaluation fails
    */
+  @Override
   public double getRadius( Feature feature ) throws FilterEvaluationException
   {
     if( radius == null )
@@ -173,6 +178,7 @@ public class Halo_Impl implements Halo, Marshallable
    * @param radius
    *          radius to be set for the halo
    */
+  @Override
   public void setRadius( double radius )
   {
     ParameterValueType pvt = null;
@@ -189,6 +195,7 @@ public class Halo_Impl implements Halo, Marshallable
    * 
    * @return the underlying <tt>Stroke</tt> -object or null
    */
+  @Override
   public Stroke getStroke()
   {
     return stroke;
@@ -201,6 +208,7 @@ public class Halo_Impl implements Halo, Marshallable
    * @param stroke
    *          defines the stroke color and pattern
    */
+  @Override
   public void setStroke( Stroke stroke )
   {
     this.stroke = stroke;
@@ -211,6 +219,7 @@ public class Halo_Impl implements Halo, Marshallable
    * 
    * @return xml representation of the Halo
    */
+  @Override
   public String exportAsXML()
   {
     Debug.debugMethodBegin();

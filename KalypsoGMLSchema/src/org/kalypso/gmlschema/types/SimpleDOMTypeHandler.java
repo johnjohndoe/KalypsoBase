@@ -84,6 +84,7 @@ public abstract class SimpleDOMTypeHandler implements IMarshallingTypeHandler
    * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#marshal(java.lang.Object, org.xml.sax.XMLReader,
    *      java.net.URL, java.lang.String)
    */
+  @Override
   public void marshal( final Object value, final XMLReader reader, final URL context, final String gmlVersion ) throws SAXException
   {
     try
@@ -125,12 +126,14 @@ public abstract class SimpleDOMTypeHandler implements IMarshallingTypeHandler
    * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#unmarshal(org.xml.sax.XMLReader,
    *      org.kalypso.contribs.java.net.IUrlResolver, org.kalypso.gmlschema.types.UnMarshallResultEater)
    */
+  @Override
   public void unmarshal( final XMLReader xmlReader, final URL context, final UnmarshallResultEater marshalResultEater, final String gmlVersion ) throws TypeRegistryException
   {
     try
     {
       final UnmarshallResultEater eater = new UnmarshallResultEater()
       {
+        @Override
         public void unmarshallSuccesful( final Object value ) throws SAXParseException
         {
           final Node node = (Node) value;
@@ -179,6 +182,7 @@ public abstract class SimpleDOMTypeHandler implements IMarshallingTypeHandler
   /**
    * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#getShortname()
    */
+  @Override
   public String getShortname( )
   {
     return m_shortName;
@@ -187,6 +191,7 @@ public abstract class SimpleDOMTypeHandler implements IMarshallingTypeHandler
   /**
    * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#cloneObject(java.lang.Object)
    */
+  @Override
   public Object cloneObject( final Object objectToClone, final String gmlVersion ) throws CloneNotSupportedException
   {
     throw new CloneNotSupportedException();
@@ -195,6 +200,7 @@ public abstract class SimpleDOMTypeHandler implements IMarshallingTypeHandler
   /**
    * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#parseType(java.lang.String)
    */
+  @Override
   @SuppressWarnings("unused")
   public Object parseType( final String text ) throws ParseException
   {
@@ -204,11 +210,13 @@ public abstract class SimpleDOMTypeHandler implements IMarshallingTypeHandler
   /**
    * @see org.kalypso.gmlschema.types.ITypeHandler#getValueClass()
    */
+  @Override
   public abstract Class< ? > getValueClass( );
 
   /**
    * @see org.kalypso.gmlschema.types.ITypeHandler#getTypeName()
    */
+  @Override
   public QName getTypeName( )
   {
     return m_qname;
@@ -217,6 +225,7 @@ public abstract class SimpleDOMTypeHandler implements IMarshallingTypeHandler
   /**
    * @see org.kalypso.gmlschema.types.ITypeHandler#isGeometry()
    */
+  @Override
   public boolean isGeometry( )
   {
     return m_isGeometry;

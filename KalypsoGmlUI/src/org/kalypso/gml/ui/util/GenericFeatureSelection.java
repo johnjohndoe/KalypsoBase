@@ -163,12 +163,12 @@ public class GenericFeatureSelection implements IFeatureSelection
   private void addFeatureWithWorkspace( final EasyFeatureWrapper featureWithWorkspace )
   {
     final Feature feature = featureWithWorkspace.getFeature();
-    final CommandableWorkspace defaultWorkspace = featureWithWorkspace.getWorkspace();
+// final CommandableWorkspace defaultWorkspace = featureWithWorkspace.getWorkspace();
     m_data.put( feature, featureWithWorkspace );
 
     final IRelationType rt = feature.getParentRelation();
-    final Feature container = feature.getOwner();
-    final GMLWorkspace workspace = feature.getWorkspace();
+// final Feature container = feature.getOwner();
+// final GMLWorkspace workspace = feature.getWorkspace();
 // m_container = container;
     if( rt != null && rt.isList() )
     {

@@ -152,6 +152,7 @@ public class XLinkedFeature_Impl extends PlatformObject implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.Feature#getId()
    */
+  @Override
   public String getId( )
   {
     // return null in order to let the workspace generate internal ids
@@ -166,6 +167,7 @@ public class XLinkedFeature_Impl extends PlatformObject implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.Feature#getFeatureType()
    */
+  @Override
   public IFeatureType getFeatureType( )
   {
     /* As long as the feature was not accessed, we only know the target feature type of our defining property. */
@@ -181,6 +183,7 @@ public class XLinkedFeature_Impl extends PlatformObject implements Feature
    *         java.util.List-objects
    * @see org.kalypsodeegree.model.feature.Feature#getProperties()
    */
+  @Override
   @Deprecated
   public Object[] getProperties( )
   {
@@ -195,6 +198,7 @@ public class XLinkedFeature_Impl extends PlatformObject implements Feature
    *         java.util.List-objects
    * @see org.kalypsodeegree.model.feature.Feature#getProperty(java.lang.String)
    */
+  @Override
   public Object getProperty( final IPropertyType pt )
   {
     final Feature feature = getFeature();
@@ -207,6 +211,7 @@ public class XLinkedFeature_Impl extends PlatformObject implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.Feature#getGeometryProperties()
    */
+  @Override
   public GM_Object[] getGeometryProperties( )
   {
     return getGeometryPropertyValues();
@@ -215,6 +220,7 @@ public class XLinkedFeature_Impl extends PlatformObject implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.Feature#getDefaultGeometryProperty()
    */
+  @Override
   public GM_Object getDefaultGeometryProperty( )
   {
     return getDefaultGeometryPropertyValue();
@@ -223,6 +229,7 @@ public class XLinkedFeature_Impl extends PlatformObject implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.Feature#getEnvelope()
    */
+  @Override
   public GM_Envelope getEnvelope( )
   {
     try
@@ -240,6 +247,7 @@ public class XLinkedFeature_Impl extends PlatformObject implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.Feature#setProperty(java.lang.String, java.lang.Object)
    */
+  @Override
   public void setProperty( final IPropertyType pt, final Object value )
   {
     final Feature feature = getFeature();
@@ -251,6 +259,7 @@ public class XLinkedFeature_Impl extends PlatformObject implements Feature
    * @deprecated use getProperty(IPropertyType)
    * @see org.kalypsodeegree.model.feature.Feature#getProperty(java.lang.String)
    */
+  @Override
   @Deprecated
   public Object getProperty( final String propNameLocalPart )
   {
@@ -263,6 +272,7 @@ public class XLinkedFeature_Impl extends PlatformObject implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.Feature#getProperty(javax.xml.namespace.QName)
    */
+  @Override
   public Object getProperty( final QName propQName )
   {
     final Feature feature = getFeature();
@@ -275,6 +285,7 @@ public class XLinkedFeature_Impl extends PlatformObject implements Feature
    * @deprecated
    * @see org.kalypsodeegree.model.feature.Feature#setProperty(java.lang.String, java.lang.Object)
    */
+  @Override
   @Deprecated
   public void setProperty( final String propLocalName, final Object value )
   {
@@ -288,6 +299,7 @@ public class XLinkedFeature_Impl extends PlatformObject implements Feature
    * 
    * @see org.kalypsodeegree.model.feature.Feature#getWorkspace()
    */
+  @Override
   public GMLWorkspace getWorkspace( )
   {
     return m_parentFeature.getWorkspace();
@@ -296,6 +308,7 @@ public class XLinkedFeature_Impl extends PlatformObject implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.Feature#getParent()
    */
+  @Override
   public Feature getParent( )
   {
     return getOwner();
@@ -304,6 +317,7 @@ public class XLinkedFeature_Impl extends PlatformObject implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.Feature#setWorkspace(org.kalypsodeegree.model.feature.GMLWorkspace)
    */
+  @Override
   public void setWorkspace( final GMLWorkspace workspace )
   {
     // nothing to do, a delegated feature is never a root feature
@@ -322,6 +336,7 @@ public class XLinkedFeature_Impl extends PlatformObject implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.Feature#setProperty(javax.xml.namespace.QName, java.lang.Object)
    */
+  @Override
   public void setProperty( final QName propQName, final Object value )
   {
     final Feature feature = getFeature();
@@ -332,6 +347,7 @@ public class XLinkedFeature_Impl extends PlatformObject implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.Feature#invalidEnvelope()
    */
+  @Override
   public void invalidEnvelope( )
   {
     setEnvelopesUpdated();
@@ -370,6 +386,7 @@ public class XLinkedFeature_Impl extends PlatformObject implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.Feature#getParentRelation()
    */
+  @Override
   public IRelationType getParentRelation( )
   {
     return m_parentRelation;
@@ -413,6 +430,7 @@ public class XLinkedFeature_Impl extends PlatformObject implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.Deegree2Feature#getBoundedBy()
    */
+  @Override
   public GM_Envelope getBoundedBy( ) throws GeometryException
   {
     final Feature feature = getFeature();
@@ -425,6 +443,7 @@ public class XLinkedFeature_Impl extends PlatformObject implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.Deegree2Feature#getDefaultGeometryPropertyValue()
    */
+  @Override
   public GM_Object getDefaultGeometryPropertyValue( )
   {
     return getFeature().getDefaultGeometryPropertyValue();
@@ -433,6 +452,7 @@ public class XLinkedFeature_Impl extends PlatformObject implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.Deegree2Feature#getGeometryPropertyValues()
    */
+  @Override
   public GM_Object[] getGeometryPropertyValues( )
   {
     return getFeature().getGeometryPropertyValues();
@@ -441,6 +461,7 @@ public class XLinkedFeature_Impl extends PlatformObject implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.Deegree2Feature#getOwner()
    */
+  @Override
   public Feature getOwner( )
   {
     return m_parentFeature;
@@ -449,6 +470,7 @@ public class XLinkedFeature_Impl extends PlatformObject implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.Deegree2Feature#getQualifiedName()
    */
+  @Override
   public QName getQualifiedName( )
   {
     return getFeatureType().getQName();
@@ -457,6 +479,7 @@ public class XLinkedFeature_Impl extends PlatformObject implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.Deegree2Feature#setEnvelopesUpdated()
    */
+  @Override
   public void setEnvelopesUpdated( )
   {
     final Feature feature = getFeature();
@@ -467,6 +490,7 @@ public class XLinkedFeature_Impl extends PlatformObject implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.Deegree2Feature#setFeatureType(org.kalypso.gmlschema.feature.IFeatureType)
    */
+  @Override
   public void setFeatureType( final IFeatureType ft )
   {
     m_featureType = ft;
@@ -475,6 +499,7 @@ public class XLinkedFeature_Impl extends PlatformObject implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.Deegree2Feature#setId(java.lang.String)
    */
+  @Override
   public void setId( final String fid )
   {
     m_featureId = fid;
@@ -483,6 +508,7 @@ public class XLinkedFeature_Impl extends PlatformObject implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getName()
    */
+  @Override
   public String getName( )
   {
     return NamedFeatureHelper.getName( getFeature() );
@@ -491,6 +517,7 @@ public class XLinkedFeature_Impl extends PlatformObject implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#setName(java.lang.String)
    */
+  @Override
   public void setName( final String name )
   {
     NamedFeatureHelper.setName( getFeature(), name );
@@ -499,6 +526,7 @@ public class XLinkedFeature_Impl extends PlatformObject implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getDescription()
    */
+  @Override
   public String getDescription( )
   {
     return NamedFeatureHelper.getDescription( getFeature() );
@@ -507,6 +535,7 @@ public class XLinkedFeature_Impl extends PlatformObject implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#setDescription(java.lang.String)
    */
+  @Override
   public void setDescription( final String desc )
   {
     NamedFeatureHelper.setDescription( getFeature(), desc );
@@ -515,6 +544,7 @@ public class XLinkedFeature_Impl extends PlatformObject implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getLocation()
    */
+  @Override
   public GM_Object getLocation( )
   {
     final Object property = getFeature().getProperty( NamedFeatureHelper.GML_LOCATION );
@@ -527,6 +557,7 @@ public class XLinkedFeature_Impl extends PlatformObject implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#setLocation(org.kalypsodeegree.model.geometry.GM_Object)
    */
+  @Override
   public void setLocation( final GM_Object location )
   {
     getFeature().setProperty( NamedFeatureHelper.GML_LOCATION, location );

@@ -92,6 +92,7 @@ final class GM_MultiPoint_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
   /**
    * adds a GM_Point to the aggregation
    */
+  @Override
   public void addPoint( final GM_Point gmp )
   {
     super.add( gmp );
@@ -106,6 +107,7 @@ final class GM_MultiPoint_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
    * @param index
    *          position where to insert the new GM_Point
    */
+  @Override
   public void insertPointAt( final GM_Point gmp, final int index ) throws GM_Exception
   {
     super.insertObjectAt( gmp, index );
@@ -120,6 +122,7 @@ final class GM_MultiPoint_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
    * @param index
    *          position where to set the new GM_Point
    */
+  @Override
   public void setPointAt( final GM_Point gmp, final int index ) throws GM_Exception
   {
     setObjectAt( gmp, index );
@@ -130,6 +133,7 @@ final class GM_MultiPoint_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
    * 
    * @return the removed GM_Point
    */
+  @Override
   public GM_Point removePoint( final GM_Point gmp )
   {
     return (GM_Point) super.removeObject( gmp );
@@ -141,6 +145,7 @@ final class GM_MultiPoint_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
    * 
    * @return the removed GM_Point
    */
+  @Override
   public GM_Point removePointAt( final int index ) throws GM_Exception
   {
     return (GM_Point) super.removeObjectAt( index );
@@ -149,6 +154,7 @@ final class GM_MultiPoint_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
   /**
    * returns the GM_Point at the submitted index.
    */
+  @Override
   public GM_Point getPointAt( final int index )
   {
     return (GM_Point) super.getPrimitiveAt( index );
@@ -157,6 +163,7 @@ final class GM_MultiPoint_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
   /**
    * returns all GM_Points as array
    */
+  @Override
   public GM_Point[] getAllPoints( )
   {
     return m_aggregate.toArray( new GM_Point[getSize()] );

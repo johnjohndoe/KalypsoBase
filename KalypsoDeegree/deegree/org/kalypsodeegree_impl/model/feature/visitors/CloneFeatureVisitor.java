@@ -80,6 +80,7 @@ public class CloneFeatureVisitor implements FeatureVisitor
   /**
    * @see org.kalypsodeegree.model.feature.FeatureVisitor#visit(org.kalypsodeegree.model.feature.Feature)
    */
+  @Override
   public synchronized boolean visit( final Feature parentFEOriginal )
   {
     Feature parentFEClone = getFeatureClone( parentFEOriginal );

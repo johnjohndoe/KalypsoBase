@@ -74,6 +74,7 @@ public abstract class AbstractFeatureBinder implements IFeatureWrapper2
   /**
    * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper#getWrappedFeature()
    */
+  @Override
   public Feature getFeature( )
   {
     return m_featureToBind;
@@ -82,6 +83,7 @@ public abstract class AbstractFeatureBinder implements IFeatureWrapper2
   /**
    * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper#getGmlID()
    */
+  @Override
   public String getGmlID( )
   {
     return getFeature().getId();
@@ -95,6 +97,7 @@ public abstract class AbstractFeatureBinder implements IFeatureWrapper2
   /**
    * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getName()
    */
+  @Override
   public String getName( )
   {
     return NamedFeatureHelper.getName( m_featureToBind );
@@ -103,6 +106,7 @@ public abstract class AbstractFeatureBinder implements IFeatureWrapper2
   /**
    * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#setName(java.lang.String)
    */
+  @Override
   public void setName( final String name )
   {
     NamedFeatureHelper.setName( m_featureToBind, name );
@@ -111,6 +115,7 @@ public abstract class AbstractFeatureBinder implements IFeatureWrapper2
   /**
    * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getDescription()
    */
+  @Override
   public String getDescription( )
   {
     return NamedFeatureHelper.getDescription( m_featureToBind );
@@ -119,6 +124,7 @@ public abstract class AbstractFeatureBinder implements IFeatureWrapper2
   /**
    * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#setDescription(java.lang.String)
    */
+  @Override
   public void setDescription( final String desc )
   {
     NamedFeatureHelper.setDescription( m_featureToBind, desc );
@@ -127,6 +133,7 @@ public abstract class AbstractFeatureBinder implements IFeatureWrapper2
   /**
    * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getLocation()
    */
+  @Override
   public GM_Object getLocation( )
   {
     return getProperty( NamedFeatureHelper.GML_LOCATION, GM_Object.class );
@@ -135,6 +142,7 @@ public abstract class AbstractFeatureBinder implements IFeatureWrapper2
   /**
    * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#setLocation(org.kalypsodeegree.model.geometry.GM_Object)
    */
+  @Override
   public void setLocation( final GM_Object location )
   {
     setProperty( NamedFeatureHelper.GML_LOCATION, location );

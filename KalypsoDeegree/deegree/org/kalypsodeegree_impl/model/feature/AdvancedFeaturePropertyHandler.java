@@ -104,6 +104,7 @@ public class AdvancedFeaturePropertyHandler implements IFeaturePropertyHandler
    * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#setValue(org.kalypsodeegree.model.feature.Feature,
    *      org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
    */
+  @Override
   public Object setValue( final Feature feature, final IPropertyType pt, final Object valueToSet )
   {
     final Object checkedValue = CHECK_HANDLER.setValue( feature, pt, valueToSet );
@@ -119,6 +120,7 @@ public class AdvancedFeaturePropertyHandler implements IFeaturePropertyHandler
    * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#getValue(org.kalypsodeegree.model.feature.Feature,
    *      org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
    */
+  @Override
   public Object getValue( final Feature feature, final IPropertyType pt, final Object currentValue )
   {
     final Object checkedValue = CHECK_HANDLER.getValue( feature, pt, currentValue );
@@ -133,6 +135,7 @@ public class AdvancedFeaturePropertyHandler implements IFeaturePropertyHandler
   /**
    * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#invalidateEnvelope(org.kalypso.gmlschema.property.IPropertyType)
    */
+  @Override
   public boolean invalidateEnvelope( final IPropertyType pt )
   {
     final IFeaturePropertyHandler handler = m_handlers.get( pt.getQName() );
@@ -145,6 +148,7 @@ public class AdvancedFeaturePropertyHandler implements IFeaturePropertyHandler
   /**
    * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#isFunctionProperty(org.kalypso.gmlschema.property.IPropertyType)
    */
+  @Override
   public boolean isFunctionProperty( final IPropertyType pt )
   {
     final IFeaturePropertyHandler handler = m_handlers.get( pt.getQName() );

@@ -107,6 +107,7 @@ public class FeatureContentTypeFromExtension extends FeatureContentType
   /**
    * @see org.kalypso.gmlschema.feature.IFeatureContentType#getBase()
    */
+  @Override
   public IFeatureContentType getBase( )
   {
     if( m_extensionBase == null )
@@ -131,6 +132,7 @@ public class FeatureContentTypeFromExtension extends FeatureContentType
   /**
    * @see org.kalypso.gmlschema.feature.IFeatureContentType#getDerivationType()
    */
+  @Override
   public int getDerivationType( )
   {
     return DERIVATION_BY_EXTENSION;
@@ -139,6 +141,7 @@ public class FeatureContentTypeFromExtension extends FeatureContentType
   /**
    * @see org.kalypso.gmlschema.feature.IFeatureContentType#getDirectProperties()
    */
+  @Override
   public IPropertyType[] getDirectProperties( )
   {
     return super.getProperties();

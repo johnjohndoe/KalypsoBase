@@ -84,6 +84,7 @@ public class PropertyContentTypeFromTypeHandler implements IPropertyContentType
   /**
    * @see org.kalypso.gmlschema.basics.IInitialize#init(int)
    */
+  @Override
   public void init( final int initializeRun )
   {
     switch( initializeRun )
@@ -98,6 +99,7 @@ public class PropertyContentTypeFromTypeHandler implements IPropertyContentType
     return m_gmlSchema;
   }
 
+  @Override
   public QName getValueQName( )
   {
     return m_valueQName;
@@ -106,6 +108,7 @@ public class PropertyContentTypeFromTypeHandler implements IPropertyContentType
   /**
    * @see org.kalypso.gmlschema.property.IPropertyContentType#getTypeObject()
    */
+  @Override
   public Object getTypeObject( )
   {
     return m_typeObject;
@@ -114,6 +117,7 @@ public class PropertyContentTypeFromTypeHandler implements IPropertyContentType
   /**
    * @see org.kalypso.gmlschema.property.IPropertyContentType#isGeometry()
    */
+  @Override
   public boolean isGeometry( )
   {
     return m_typeHandler.isGeometry();
@@ -122,6 +126,7 @@ public class PropertyContentTypeFromTypeHandler implements IPropertyContentType
   /**
    * @see org.kalypso.gmlschema.property.IPropertyContentType#getValueClass()
    */
+  @Override
   public Class< ? > getValueClass( )
   {
     return m_typeHandler.getValueClass();
@@ -130,6 +135,7 @@ public class PropertyContentTypeFromTypeHandler implements IPropertyContentType
   /**
    * @see org.kalypso.gmlschema.property.IPropertyContentType#getTypeHandler()
    */
+  @Override
   public IMarshallingTypeHandler getTypeHandler( )
   {
     return m_typeHandler;
@@ -138,6 +144,7 @@ public class PropertyContentTypeFromTypeHandler implements IPropertyContentType
   /**
    * @see org.kalypso.gmlschema.property.IPropertyContentType#getGmlSchema()
    */
+  @Override
   public IGMLSchema getGmlSchema( )
   {
     return m_gmlSchema;

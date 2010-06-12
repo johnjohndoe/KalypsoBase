@@ -101,6 +101,7 @@ public abstract class AbstractOperation implements Operation
   }
 
   /** Returns the name of the operator. */
+  @Override
   public String getOperatorName( )
   {
     return OperationDefines.getNameById( m_operatorId );
@@ -111,6 +112,7 @@ public abstract class AbstractOperation implements Operation
    * 
    * @see OperationDefines
    */
+  @Override
   public int getOperatorId( )
   {
     return m_operatorId;

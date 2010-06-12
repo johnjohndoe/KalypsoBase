@@ -70,6 +70,7 @@ public class XsdBaseTypeHandlerShort extends XsdBaseTypeHandler<Short>
   /**
    * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
    */
+  @Override
   public int compare( final Short o1, final Short o2 )
   {
     if( (o1 == null) && (o2 == null) )

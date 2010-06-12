@@ -159,6 +159,7 @@ public class TriangulatedSurfaceSinglePartShapeDataProvider implements IShapeDat
     return new TinIterator( m_geometry, m_features );
   }
 
+  @Override
   public ISHPGeometry getGeometry( final Object element ) throws ShapeDataException
   {
     final TinPointer pointer = (TinPointer) element;

@@ -72,6 +72,7 @@ public class XsdBaseTypeHandlerQName extends XsdBaseTypeHandler<QName>
   /**
    * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
    */
+  @Override
   public int compare( final QName o1, final QName o2 )
   {
     return ("" + o1).compareTo( "" + o2 );

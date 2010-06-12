@@ -177,6 +177,7 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
   /**
    * returns the boundary of the curve
    */
+  @Override
   public GM_CurveBoundary getCurveBoundary( )
   {
     return (GM_CurveBoundary) getBoundary();
@@ -188,6 +189,7 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
    * any of its pieces. Points are 0-dimensional, curves are 1-dimensional, surfaces are 2-dimensional, and solids are
    * 3-dimensional.
    */
+  @Override
   public int getDimension( )
   {
     return 1;
@@ -197,6 +199,7 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
    * The operation "coordinateDimension" shall return the dimension of the coordinates that define this GM_Object, which
    * must be the same as the coordinate dimension of the coordinate reference system for this GM_Object.
    */
+  @Override
   public int getCoordinateDimension( )
   {
     return getStartPoint().getAsArray().length;
@@ -238,6 +241,7 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
   /**
    * returns the length of the curve in units of the related spatial reference system
    */
+  @Override
   public double getLength( )
   {
     double length = 0;
@@ -251,6 +255,7 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
   /**
    * returns the number of segments building the curve
    */
+  @Override
   public int getNumberOfCurveSegments( )
   {
     return m_segments.size();
@@ -260,6 +265,7 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
    * returns the first point of the curve. if the curve doesn't contain a segment or the first segment doesn't contain a
    * point null will be returned
    */
+  @Override
   public GM_Point getStartPoint( )
   {
     if( getNumberOfCurveSegments() == 0 )
@@ -284,6 +290,7 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
    * returns the last point of the curve.if the curve doesn't contain a segment or the last segment doesn't contain a
    * point null will be returned
    */
+  @Override
   public GM_Point getEndPoint( )
   {
     if( getNumberOfCurveSegments() == 0 )
@@ -307,6 +314,7 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
   /**
    * returns the curve as GM_LineString. if there isn't a curve segment within the curve null will be returned
    */
+  @Override
   public GM_LineString getAsLineString( ) throws GM_Exception
   {
     if( getNumberOfCurveSegments() == 0 )
@@ -377,6 +385,7 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
    *              a exception will be thrown if <tt>index</tt> is smaller than '0' or larger than
    *              <tt>getNumberOfCurveSegments()-1</tt>
    */
+  @Override
   public GM_CurveSegment getCurveSegmentAt( final int index ) throws GM_Exception
   {
     if( (index < 0) || (index > getNumberOfCurveSegments() - 1) )
@@ -400,6 +409,7 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
    *              equal to the ending point of segment at <tt>index-1</tt> and/or the ending point of the submitted
    *              segment isn't equals to the curve segment at <tt>index+1</tt>
    */
+  @Override
   public void setCurveSegmentAt( final GM_CurveSegment segment, final int index ) throws GM_Exception
   {
     if( (index < 0) || (index > getNumberOfCurveSegments() - 1) )
@@ -471,6 +481,7 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
    *              equal to the ending point of segment at <tt>index-1</tt> and/or the ending point of the submitted
    *              segment isn't equals to the curve segment at <tt>index+1</tt>
    */
+  @Override
   public void insertCurveSegmentAt( final GM_CurveSegment segment, final int index ) throws GM_Exception
   {
     if( (index < 0) || (index > getNumberOfCurveSegments() - 1) )
@@ -537,6 +548,7 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
    *              a exception will be thrown if the starting point of the submitted curve segment isn't equal to the
    *              ending point of the last segment.
    */
+  @Override
   public void addCurveSegment( final GM_CurveSegment segment ) throws GM_Exception
   {
     // TODO: Was wenn keine Curve da?
@@ -562,6 +574,7 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
    * @exception GM_Exception
    *              will be thrown if <tt>index</tt> is smaller '0' or larger <tt>getNumberOfCurveSegments()-1</tt>
    */
+  @Override
   public void deleteCurveSegmentAt( final int index ) throws GM_Exception
   {
     if( (index < 0) || (index > getNumberOfCurveSegments() - 1) )
@@ -706,6 +719,7 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
    * @see org.kalypsodeegree.model.geometry.GM_Object#transform(org.deegree.crs.transformations.CRSTransformation,
    *      java.lang.String)
    */
+  @Override
   public GM_Object transform( final CRSTransformation trans, final String targetOGCCS ) throws Exception
   {
     /* If the target is the same coordinate system, do not transform. */

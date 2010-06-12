@@ -72,6 +72,7 @@ public class FilePointsSource extends AbstractPointsSource
   /**
    * @see org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.IPointsSource#getPoints()
    */
+  @Override
   public List<IRecord> getPoints( )
   {
     final File f = new File( m_fileName.getText() );
@@ -134,6 +135,7 @@ public class FilePointsSource extends AbstractPointsSource
 
   }
 
+  @Override
   public void saveState( final IDialogSettings settings )
   {
     settings.put( "DLG_SETTINGS_FILENAME", m_fileName.getText() ); //$NON-NLS-1$

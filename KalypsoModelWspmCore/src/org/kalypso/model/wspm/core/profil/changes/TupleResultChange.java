@@ -51,6 +51,7 @@ public class TupleResultChange implements IProfilChange
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilChange#doChange(org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint)
    */
+  @Override
   public IProfilChange doChange( final ProfilChangeHint hint )
   {
     hint.setPointsChanged();
@@ -61,6 +62,7 @@ public class TupleResultChange implements IProfilChange
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilChange#getInfo()
    */
+  @Override
   public String getInfo( )
   {
     return ""; //$NON-NLS-1$
@@ -69,6 +71,7 @@ public class TupleResultChange implements IProfilChange
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilChange#getObjects()
    */
+  @Override
   public Object[] getObjects( )
   {
     return new Object[] {};
@@ -77,6 +80,7 @@ public class TupleResultChange implements IProfilChange
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilChange#getValue()
    */
+  @Override
   public Double getValue( )
   {
     return Double.NaN;

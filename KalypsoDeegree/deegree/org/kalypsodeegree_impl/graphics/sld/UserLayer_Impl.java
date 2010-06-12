@@ -75,6 +75,7 @@ public class UserLayer_Impl extends Layer_Impl implements UserLayer, Marshallabl
    * 
    * @return the RemoteOWS
    */
+  @Override
   public RemoteOWS getRemoteOWS()
   {
     return remoteOWS;
@@ -86,11 +87,13 @@ public class UserLayer_Impl extends Layer_Impl implements UserLayer, Marshallabl
    * @param remoteOWS
    *          the RemoteOWS
    */
+  @Override
   public void setRemoteOWS( RemoteOWS remoteOWS )
   {
     this.remoteOWS = remoteOWS;
   }
 
+  @Override
   public String toString()
   {
     String ret = getClass().getName() + "\n";
@@ -104,6 +107,7 @@ public class UserLayer_Impl extends Layer_Impl implements UserLayer, Marshallabl
    * 
    * @return xml representation of the UserLayer
    */
+  @Override
   public String exportAsXML()
   {
     Debug.debugMethodBegin();

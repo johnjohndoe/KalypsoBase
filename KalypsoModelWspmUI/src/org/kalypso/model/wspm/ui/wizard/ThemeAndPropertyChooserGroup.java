@@ -156,6 +156,7 @@ public class ThemeAndPropertyChooserGroup
 
     themeComboViewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
+      @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
         handleSelectionChanged( (IStructuredSelection) event.getSelection(), propertyCombos, propertyControls );
@@ -170,6 +171,7 @@ public class ThemeAndPropertyChooserGroup
 
       viewer.addSelectionChangedListener( new ISelectionChangedListener()
       {
+        @Override
         public void selectionChanged( final SelectionChangedEvent event )
         {
           handlePropertyChanged( (IStructuredSelection) event.getSelection(), pd );

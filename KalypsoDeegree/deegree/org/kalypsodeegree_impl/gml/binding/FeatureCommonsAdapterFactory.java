@@ -85,6 +85,7 @@ public class FeatureCommonsAdapterFactory implements IAdapterFactory
   /**
    * @see org.eclipse.core.runtime.IAdapterFactory#getAdapter(java.lang.Object, java.lang.Class)
    */
+  @Override
   @SuppressWarnings("unchecked")
   public Object getAdapter( final Object adaptableObject, final Class adapterType )
   {
@@ -101,6 +102,7 @@ public class FeatureCommonsAdapterFactory implements IAdapterFactory
   /**
    * @see org.eclipse.core.runtime.IAdapterFactory#getAdapterList()
    */
+  @Override
   public Class< ? >[] getAdapterList( )
   {
     return m_constructors.keySet().toArray( new Class[m_constructors.size()] );
@@ -113,6 +115,7 @@ public class FeatureCommonsAdapterFactory implements IAdapterFactory
     // polynomial 1d
     cMap.put( IPolynomial1D.class, new AdapterConstructor()
     {
+      @Override
       public Object constructAdapter( final Feature feature, final Class< ? > cls ) throws IllegalArgumentException
       {
         return new Polynomial1D( feature );
@@ -122,6 +125,7 @@ public class FeatureCommonsAdapterFactory implements IAdapterFactory
     // Polynomial 2d
     cMap.put( IPolynomial2D.class, new AdapterConstructor()
     {
+      @Override
       public Object constructAdapter( final Feature feature, final Class< ? > cls ) throws IllegalArgumentException
       {
         return new Polynomial2D( feature );
@@ -131,6 +135,7 @@ public class FeatureCommonsAdapterFactory implements IAdapterFactory
     // Status
     cMap.put( IStatusCollection.class, new AdapterConstructor()
     {
+      @Override
       public Object constructAdapter( final Feature feature, final Class< ? > cls ) throws IllegalArgumentException
       {
         if( GMLSchemaUtilities.substitutes( feature.getFeatureType(), IStatusCollection.QNAME ) )
@@ -142,6 +147,7 @@ public class FeatureCommonsAdapterFactory implements IAdapterFactory
 
     cMap.put( IGeoStatus.class, new AdapterConstructor()
     {
+      @Override
       public Object constructAdapter( final Feature feature, final Class< ? > cls ) throws IllegalArgumentException
       {
         if( GMLSchemaUtilities.substitutes( feature.getFeatureType(), IGeoStatus.QNAME ) )
@@ -154,6 +160,7 @@ public class FeatureCommonsAdapterFactory implements IAdapterFactory
     // Coverages
     cMap.put( ICoverageCollection.class, new AdapterConstructor()
     {
+      @Override
       public Object constructAdapter( final Feature feature, final Class< ? > cls ) throws IllegalArgumentException
       {
         if( GMLSchemaUtilities.substitutes( feature.getFeatureType(), ICoverageCollection.QNAME ) )
@@ -165,6 +172,7 @@ public class FeatureCommonsAdapterFactory implements IAdapterFactory
 
     cMap.put( ICoverage.class, new AdapterConstructor()
     {
+      @Override
       public Object constructAdapter( final Feature feature, final Class< ? > cls ) throws IllegalArgumentException
       {
         if( GMLSchemaUtilities.substitutes( feature.getFeatureType(), ICoverage.QNAME ) )

@@ -88,6 +88,7 @@ public class PolynomeChartLayer extends AbstractLineLayer
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#paint(org.kalypso.contribs.eclipse.swt.graphics.GCWrapper,
    *      org.eclipse.swt.graphics.Device)
    */
+  @Override
   public void paint( final GC gc )
   {
     final IDataRange<Number> domainRange = m_data.getDomainRange();
@@ -135,6 +136,7 @@ public class PolynomeChartLayer extends AbstractLineLayer
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getDomainRange()
    */
+  @Override
   public IDataRange<Number> getDomainRange( )
   {
     return m_data.getDomainRange();
@@ -143,6 +145,7 @@ public class PolynomeChartLayer extends AbstractLineLayer
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getTargetRange()
    */
+  @Override
   public IDataRange<Number> getTargetRange( )
   {
     return m_data.getTargetRange();

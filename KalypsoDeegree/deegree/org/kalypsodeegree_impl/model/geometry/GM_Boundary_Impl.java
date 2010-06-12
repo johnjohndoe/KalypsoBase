@@ -66,6 +66,7 @@ abstract class GM_Boundary_Impl extends GM_Object_Impl implements GM_Boundary, S
   /**
    * A geometric object, which has no boundary is a cycle.
    */
+  @Override
   public boolean isCycle( )
   {
     return true;

@@ -77,6 +77,7 @@ public class FeatureFilter extends AbstractFilter
    *          that determines the Id
    * @return true, if the <tt>FeatureFilter</tt> evaluates to true, else false
    */
+  @Override
   public boolean evaluate( Feature feature )
   {
     String id = feature.getId();

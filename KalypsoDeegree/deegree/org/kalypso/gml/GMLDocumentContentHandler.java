@@ -134,6 +134,7 @@ public class GMLDocumentContentHandler extends DelegatingContentHandler implemen
     schemaLoader.setSchemaLocation( namespaces );
   }
 
+  @Override
   public GMLWorkspace getWorkspace( ) throws GMLException
   {
     final Feature rootFeature = ((IRootFeatureProvider) m_delegate).getRootFeature();

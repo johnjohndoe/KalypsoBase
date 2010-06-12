@@ -181,6 +181,7 @@ public class SHPPolyLine implements ISHPParts
   /**
    * method: writeSHPPolyLine(byte[] bytearray, int start) <BR>
    */
+  @Override
   public byte[] writeShape( )
   {
     int offset = ShapeConst.SHAPE_FILE_RECORD_HEADER_LENGTH;
@@ -273,26 +274,31 @@ public class SHPPolyLine implements ISHPParts
   /**
    * returns the polyline shape size in bytes <BR>
    */
+  @Override
   public int size( )
   {
     return 44 + numParts * 4 + numPoints * 16;
   }
 
+  @Override
   public SHPEnvelope getEnvelope( )
   {
     return m_envelope;
   }
 
+  @Override
   public int getNumParts( )
   {
     return numParts;
   }
 
+  @Override
   public int getNumPoints( )
   {
     return numPoints;
   }
 
+  @Override
   public ISHPPoint[][] getPoints( )
   {
     return points;

@@ -22,11 +22,13 @@ public class Result implements IResultSet
     m_name = name;
   }
 
+  @Override
   public String getName( )
   {
     return m_name;
   }
 
+  @Override
   public Double getValue( final String station, final String type )
   {
     final Map<String, Double> map = m_map.get( station );
@@ -54,17 +56,20 @@ public class Result implements IResultSet
   }
 
   /** Returns an iterator over the stations. */
+  @Override
   public Iterator<String> iterator( )
   {
     return m_unmodMap.keySet().iterator();
   }
 
+  @Override
   public IStationResult getValues( final String station )
   {
     final Map<String, Double> results = getResults( station );
     return new StationResult( m_name, Collections.unmodifiableMap( results ) );
   }
 
+  @Override
   public Double putValue( final String station, final String type, final double value )
   {
     final Map<String, Double> results = getResults( station );

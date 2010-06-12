@@ -87,6 +87,7 @@ public abstract class RelationContentType implements IRelationContentType, IInit
   /**
    * @see org.kalypso.gmlschema.basics.IInitialize#init(int)
    */
+  @Override
   public void init( final int initializeRun ) throws GMLSchemaException
   {
     switch( initializeRun )
@@ -195,6 +196,7 @@ public abstract class RelationContentType implements IRelationContentType, IInit
    * @see org.kalypso.gmlschema.property.relation.IRelationContentType#getTargetFeatureTypes(org.kalypso.gmlschema.GMLSchema,
    *      boolean)
    */
+  @Override
   public IFeatureType getTargetFeatureType( )
   {
     return m_ftRelationTarget;
@@ -203,11 +205,13 @@ public abstract class RelationContentType implements IRelationContentType, IInit
   /**
    * @see org.kalypso.gmlschema.property.relation.IRelationContentType#isLinkable()
    */
+  @Override
   public boolean isLinkable( )
   {
     return m_linkable;
   }
 
+  @Override
   public boolean isInlineable( )
   {
     return m_inlinable;
@@ -216,6 +220,7 @@ public abstract class RelationContentType implements IRelationContentType, IInit
   /**
    * @see org.kalypso.gmlschema.property.relation.IRelationContentType#getDocumentReferences()
    */
+  @Override
   public IDocumentReference[] getDocumentReferences( )
   {
     return m_documentReferences;

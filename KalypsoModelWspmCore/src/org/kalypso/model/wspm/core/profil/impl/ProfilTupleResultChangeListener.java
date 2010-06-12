@@ -74,6 +74,7 @@ public class ProfilTupleResultChangeListener implements ITupleResultChangedListe
    * @see org.kalypso.observation.result.ITupleResultChangedListener#componentsChanged(org.kalypso.observation.result.IComponent[],
    *      org.kalypso.observation.result.ITupleResultChangedListener.TYPE)
    */
+  @Override
   public void componentsChanged( final IComponent[] components, final TYPE type )
   {
     /*
@@ -89,6 +90,7 @@ public class ProfilTupleResultChangeListener implements ITupleResultChangedListe
    * @see org.kalypso.observation.result.ITupleResultChangedListener#recordsChanged(org.kalypso.observation.result.IRecord[],
    *      org.kalypso.observation.result.ITupleResultChangedListener.TYPE)
    */
+  @Override
   public void recordsChanged( final IRecord[] records, final TYPE type )
   {
 // if( type == TYPE.ADDED )
@@ -106,6 +108,7 @@ public class ProfilTupleResultChangeListener implements ITupleResultChangedListe
   /**
    * @see org.kalypso.observation.result.ITupleResultChangedListener#valuesChanged(org.kalypso.observation.result.ITupleResultChangedListener.ValueChange[])
    */
+  @Override
   public void valuesChanged( final ValueChange[] changes )
   {
     final ProfilChangeHint hint = new ProfilChangeHint();

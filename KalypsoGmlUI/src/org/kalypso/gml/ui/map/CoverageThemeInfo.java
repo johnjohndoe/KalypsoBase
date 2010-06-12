@@ -87,6 +87,7 @@ public class CoverageThemeInfo implements IKalypsoThemeInfo
   /**
    * @see org.kalypso.ogc.gml.IKalypsoThemeInfo#init(org.kalypso.ogc.gml.IKalypsoTheme, java.util.Properties)
    */
+  @Override
   public void init( final IKalypsoTheme theme, final Properties props )
   {
     Assert.isLegal( theme instanceof IKalypsoFeatureTheme );
@@ -106,6 +107,7 @@ public class CoverageThemeInfo implements IKalypsoThemeInfo
    * @see org.kalypso.ogc.gml.IKalypsoThemeInfo#appendInfo(java.util.Formatter,
    *      org.kalypsodeegree.model.geometry.GM_Position)
    */
+  @Override
   public void appendInfo( final Formatter formatter, final GM_Position pos )
   {
     Assert.isNotNull( m_theme );
@@ -117,6 +119,7 @@ public class CoverageThemeInfo implements IKalypsoThemeInfo
    * @see org.kalypso.ogc.gml.IKalypsoThemeInfo#appendQuickInfo(java.util.Formatter,
    *      org.kalypsodeegree.model.geometry.GM_Position)
    */
+  @Override
   public void appendQuickInfo( final Formatter formatter, final GM_Position pos )
   {
     try

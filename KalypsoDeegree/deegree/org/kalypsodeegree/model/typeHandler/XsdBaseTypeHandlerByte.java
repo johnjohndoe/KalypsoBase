@@ -70,6 +70,7 @@ public class XsdBaseTypeHandlerByte extends XsdBaseTypeHandler<Byte>
   /**
    * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
    */
+  @Override
   public int compare( final Byte o1, final Byte o2 )
   {
     if( (o1 == null) && (o2 == null) )

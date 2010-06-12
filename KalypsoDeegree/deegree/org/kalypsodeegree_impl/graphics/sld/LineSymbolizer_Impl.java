@@ -93,6 +93,7 @@ public class LineSymbolizer_Impl extends Symbolizer_Impl implements LineSymboliz
    * 
    * @return the Stroke
    */
+  @Override
   public Stroke getStroke( )
   {
     return m_stroke;
@@ -104,6 +105,7 @@ public class LineSymbolizer_Impl extends Symbolizer_Impl implements LineSymboliz
    * @param stroke
    *            the Stroke
    */
+  @Override
   public void setStroke( final Stroke stroke )
   {
     this.m_stroke = stroke;
@@ -114,6 +116,7 @@ public class LineSymbolizer_Impl extends Symbolizer_Impl implements LineSymboliz
    * 
    * @return xml representation of the LineSymbolizer
    */
+  @Override
   public String exportAsXML( )
   {
     Debug.debugMethodBegin();

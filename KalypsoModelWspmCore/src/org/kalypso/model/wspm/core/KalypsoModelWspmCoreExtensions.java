@@ -104,7 +104,7 @@ public class KalypsoModelWspmCoreExtensions
     for( final String key : sinks.keySet() )
     {
       final IConfigurationElement sink = sinks.get( key );
-      sinkMap.put(key, sink.getAttribute( "name" ) );
+      sinkMap.put( key, sink.getAttribute( "name" ) );
     }
     return sinkMap;
   }
@@ -221,13 +221,9 @@ public class KalypsoModelWspmCoreExtensions
   public static IProfilPointMarkerProvider[] getAllMarkerProviders( )
   {
     final Map<String, List<IProfilPointMarkerProvider>> map = getMarkerProviders();
-    final ArrayList<IProfilPointMarkerProvider> list = new ArrayList<IProfilPointMarkerProvider>();
+    final List<IProfilPointMarkerProvider> list = new ArrayList<IProfilPointMarkerProvider>();
     for( final List<IProfilPointMarkerProvider> ppmp : map.values() )
-    {
       list.addAll( ppmp );
-    }
-    if( list == null )
-      return new IProfilPointMarkerProvider[0];
 
     return list.toArray( new IProfilPointMarkerProvider[list.size()] );
   }

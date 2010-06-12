@@ -68,6 +68,7 @@ public class Geometry_Impl implements Geometry, Marshallable
    * 
    * @return the name of the geometry property
    */
+  @Override
   public PropertyName getPropertyName( )
   {
     return m_propertyName;
@@ -79,6 +80,7 @@ public class Geometry_Impl implements Geometry, Marshallable
    * @param propertyName
    *            the name of the geometry property
    */
+  @Override
   public void setPropertyName( final PropertyName propertyName )
   {
     this.m_propertyName = propertyName;
@@ -111,6 +113,7 @@ public class Geometry_Impl implements Geometry, Marshallable
    * 
    * @return xml representation of the Geometry
    */
+  @Override
   public String exportAsXML( )
   {
     Debug.debugMethodBegin();

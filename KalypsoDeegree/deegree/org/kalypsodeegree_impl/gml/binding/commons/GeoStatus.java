@@ -89,6 +89,7 @@ public class GeoStatus extends FeatureWrapperCollection<IGeoStatus> implements I
   /**
    * @see org.eclipse.core.runtime.IStatus#getChildren()
    */
+  @Override
   public org.eclipse.core.runtime.IStatus[] getChildren( )
   {
     return m_children.toArray( new IGeoStatus[m_children.size()] );
@@ -97,6 +98,7 @@ public class GeoStatus extends FeatureWrapperCollection<IGeoStatus> implements I
   /**
    * @see org.eclipse.core.runtime.IStatus#getCode()
    */
+  @Override
   public int getCode( )
   {
     return getProperty( QNAME_PROP_STATUS_CODE, Integer.class );
@@ -105,6 +107,7 @@ public class GeoStatus extends FeatureWrapperCollection<IGeoStatus> implements I
   /**
    * @see org.eclipse.core.runtime.IStatus#getException()
    */
+  @Override
   public Throwable getException( )
   {
     // REMARK: we do deserialize the exception from a byte stream which was obtained as string from the gml
@@ -139,6 +142,7 @@ public class GeoStatus extends FeatureWrapperCollection<IGeoStatus> implements I
   /**
    * @see org.eclipse.core.runtime.IStatus#getMessage()
    */
+  @Override
   public String getMessage( )
   {
     return getDescription();
@@ -147,6 +151,7 @@ public class GeoStatus extends FeatureWrapperCollection<IGeoStatus> implements I
   /**
    * @see org.eclipse.core.runtime.IStatus#getPlugin()
    */
+  @Override
   public String getPlugin( )
   {
     return getProperty( QNAME_PROP_STATUS_PLUGIN, String.class );
@@ -155,6 +160,7 @@ public class GeoStatus extends FeatureWrapperCollection<IGeoStatus> implements I
   /**
    * @see org.eclipse.core.runtime.IStatus#getSeverity()
    */
+  @Override
   public int getSeverity( )
   {
     final SEVERITYTYPE severityType = getSeverityType();
@@ -179,6 +185,7 @@ public class GeoStatus extends FeatureWrapperCollection<IGeoStatus> implements I
   /**
    * @see org.eclipse.core.runtime.IStatus#isMultiStatus()
    */
+  @Override
   public boolean isMultiStatus( )
   {
     return m_children.size() > 0;
@@ -187,6 +194,7 @@ public class GeoStatus extends FeatureWrapperCollection<IGeoStatus> implements I
   /**
    * @see org.eclipse.core.runtime.IStatus#isOK()
    */
+  @Override
   public boolean isOK( )
   {
     return getSeverityType() == SEVERITYTYPE.ok;
@@ -195,6 +203,7 @@ public class GeoStatus extends FeatureWrapperCollection<IGeoStatus> implements I
   /**
    * @see org.eclipse.core.runtime.IStatus#matches(int)
    */
+  @Override
   public boolean matches( final int severityMask )
   {
     return (severityMask & getSeverity()) != 0;
@@ -210,6 +219,7 @@ public class GeoStatus extends FeatureWrapperCollection<IGeoStatus> implements I
   /**
    * @see org.kalypsodeegree_impl.gml.binding.commons.IGeoStatus#setCode(int)
    */
+  @Override
   public void setCode( final int code )
   {
     setProperty( QNAME_PROP_STATUS_CODE, code );
@@ -218,6 +228,7 @@ public class GeoStatus extends FeatureWrapperCollection<IGeoStatus> implements I
   /**
    * @see org.kalypsodeegree_impl.gml.binding.commons.IGeoStatus#setException(java.lang.Throwable)
    */
+  @Override
   public void setException( final Throwable t )
   {
     // REMARK: we do serialize the exception as a byte stream and write it as string into the gml
@@ -251,6 +262,7 @@ public class GeoStatus extends FeatureWrapperCollection<IGeoStatus> implements I
   /**
    * @see org.kalypsodeegree_impl.gml.binding.commons.IGeoStatus#setMessage(java.lang.String)
    */
+  @Override
   public void setMessage( final String message )
   {
     setDescription( message );
@@ -259,6 +271,7 @@ public class GeoStatus extends FeatureWrapperCollection<IGeoStatus> implements I
   /**
    * @see org.kalypsodeegree_impl.gml.binding.commons.IGeoStatus#setPlugin(java.lang.String)
    */
+  @Override
   public void setPlugin( final String pluginId )
   {
     setProperty( QNAME_PROP_STATUS_PLUGIN, pluginId );
@@ -267,6 +280,7 @@ public class GeoStatus extends FeatureWrapperCollection<IGeoStatus> implements I
   /**
    * @see org.kalypsodeegree_impl.gml.binding.commons.IGeoStatus#setSeverity(int)
    */
+  @Override
   public void setSeverity( final int severity )
   {
     final SEVERITYTYPE severityType = toSeverityType( severity );
@@ -305,6 +319,7 @@ public class GeoStatus extends FeatureWrapperCollection<IGeoStatus> implements I
   /**
    * @see org.kalypsodeegree_impl.gml.binding.commons.IGeoStatus#getTime()
    */
+  @Override
   public Date getTime( )
   {
     final XMLGregorianCalendar cal = getProperty( QNAME_PROP_STATUS_TIME, XMLGregorianCalendar.class );
@@ -314,6 +329,7 @@ public class GeoStatus extends FeatureWrapperCollection<IGeoStatus> implements I
   /**
    * @see org.kalypsodeegree_impl.gml.binding.commons.IGeoStatus#setTime(java.util.Date)
    */
+  @Override
   public void setTime( final Date time )
   {
     final XMLGregorianCalendar cal = DateUtilities.toXMLGregorianCalendar( time );

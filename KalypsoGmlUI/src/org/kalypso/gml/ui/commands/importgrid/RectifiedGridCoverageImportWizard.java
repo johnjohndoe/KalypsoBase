@@ -91,6 +91,7 @@ public class RectifiedGridCoverageImportWizard extends Wizard implements IImport
    * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
    *      org.eclipse.jface.viewers.IStructuredSelection)
    */
+  @Override
   public void init( final IWorkbench workbench, final IStructuredSelection selection )
   {
     m_selection = selection;

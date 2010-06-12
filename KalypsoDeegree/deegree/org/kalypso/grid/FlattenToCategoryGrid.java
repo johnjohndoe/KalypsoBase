@@ -95,6 +95,7 @@ public class FlattenToCategoryGrid extends AbstractGeoGrid implements IGeoGrid
   /**
    * @see org.kalypso.grid.IGeoGrid#getValue(int, int)
    */
+  @Override
   public double getValue( final int x, final int y ) throws GeoGridException
   {
     try
@@ -153,6 +154,7 @@ public class FlattenToCategoryGrid extends AbstractGeoGrid implements IGeoGrid
   /**
    * @see org.kalypso.grid.IGeoGrid#getMax()
    */
+  @Override
   public BigDecimal getMax( )
   {
     return m_max;
@@ -161,6 +163,7 @@ public class FlattenToCategoryGrid extends AbstractGeoGrid implements IGeoGrid
   /**
    * @see org.kalypso.grid.IGeoGrid#getMin()
    */
+  @Override
   public BigDecimal getMin( )
   {
     return m_min;
@@ -169,6 +172,7 @@ public class FlattenToCategoryGrid extends AbstractGeoGrid implements IGeoGrid
   /**
    * @see org.kalypso.grid.IGeoGrid#getSizeX()
    */
+  @Override
   public int getSizeX( )
   {
     return m_sizeX;
@@ -177,6 +181,7 @@ public class FlattenToCategoryGrid extends AbstractGeoGrid implements IGeoGrid
   /**
    * @see org.kalypso.grid.IGeoGrid#getSizeY()
    */
+  @Override
   public int getSizeY( )
   {
     return m_sizeY;
@@ -185,6 +190,7 @@ public class FlattenToCategoryGrid extends AbstractGeoGrid implements IGeoGrid
   /**
    * @see org.kalypso.grid.IGeoGrid#setMax(java.math.BigDecimal)
    */
+  @Override
   public void setMax( final BigDecimal maxValue )
   {
     if( maxValue != null )
@@ -194,6 +200,7 @@ public class FlattenToCategoryGrid extends AbstractGeoGrid implements IGeoGrid
   /**
    * @see org.kalypso.grid.IGeoGrid#setMin(java.math.BigDecimal)
    */
+  @Override
   public void setMin( final BigDecimal minValue )
   {
     if( minValue != null )

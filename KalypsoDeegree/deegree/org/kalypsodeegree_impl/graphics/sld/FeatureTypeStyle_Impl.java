@@ -93,6 +93,7 @@ public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable
    *
    * @return name
    */
+  @Override
   public String getName( )
   {
     return m_name;
@@ -105,6 +106,7 @@ public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable
    * @param name
    *            the name
    */
+  @Override
   public void setName( final String name )
   {
     this.m_name = name;
@@ -115,6 +117,7 @@ public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable
    *
    * @return the title of the FeatureTypeStyle
    */
+  @Override
   public String getTitle( )
   {
     return m_title;
@@ -126,6 +129,7 @@ public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable
    * @param title
    *            the title of the FeatureTypeStyle
    */
+  @Override
   public void setTitle( final String title )
   {
     this.m_title = title;
@@ -136,6 +140,7 @@ public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable
    *
    * @return an abstract of the FeatureTypeStyle
    */
+  @Override
   public String getAbstract( )
   {
     return m_abstract;
@@ -147,6 +152,7 @@ public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable
    * @param abstract_
    *            an abstract of the FeatureTypeStyle
    */
+  @Override
   public void setAbstract( final String abstract_ )
   {
     this.m_abstract = abstract_;
@@ -157,6 +163,7 @@ public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable
    *
    * @return the name of the FeatureTypeStyle as String
    */
+  @Override
   public QName getFeatureTypeName( )
   {
     return m_featureTypeName;
@@ -168,6 +175,7 @@ public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable
    * @param featureTypeName
    *            the name of the FeatureTypeStyle
    */
+  @Override
   public void setFeatureTypeName( final QName featureTypeQName )
   {
     m_featureTypeName = featureTypeQName;
@@ -183,6 +191,7 @@ public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable
    *
    * @return the SemanticTypeIdentifiers from the FeatureTypeStyle as String-Array
    */
+  @Override
   public String[] getSemanticTypeIdentifier( )
   {
     return m_semanticTypeIdentifier.toArray( new String[m_semanticTypeIdentifier.size()] );
@@ -194,6 +203,7 @@ public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable
    * @param semanticTypeIdentifiers
    *            SemanticTypeIdentifiers for the FeatureTypeStyle
    */
+  @Override
   public void setSemanticTypeIdentifier( final String[] semanticTypeIdentifiers )
   {
     m_semanticTypeIdentifier.clear();
@@ -213,6 +223,7 @@ public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable
    * @param semanticTypeIdentifier
    *            SemanticTypeIdentifier to add
    */
+  @Override
   public void addSemanticTypeIdentifier( final String semanticTypeIdentifier )
   {
     this.m_semanticTypeIdentifier.add( semanticTypeIdentifier );
@@ -224,6 +235,7 @@ public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable
    * @param semanticTypeIdentifier
    *            SemanticTypeIdentifier to remove
    */
+  @Override
   public void removeSemanticTypeIdentifier( final String semanticTypeIdentifier )
   {
     this.m_semanticTypeIdentifier.remove( this.m_semanticTypeIdentifier.indexOf( semanticTypeIdentifier ) );
@@ -235,6 +247,7 @@ public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable
    *
    * @return the rules of the FeatureTypeStyle as Array
    */
+  @Override
   public Rule[] getRules( )
   {
     return m_rules.toArray( new Rule[m_rules.size()] );
@@ -243,6 +256,7 @@ public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable
   /**
    * @see org.kalypsodeegree.graphics.sld.FeatureTypeStyle#getRule(java.lang.String)
    */
+  @Override
   public Rule getRule( final String ruleName )
   {
     for( int i = 0; i < m_rules.size(); i++ )
@@ -259,6 +273,7 @@ public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable
    * @param rules
    *            the rules of the FeatureTypeStyle as Array
    */
+  @Override
   public void setRules( final Rule[] rules )
   {
     this.m_rules.clear();
@@ -278,6 +293,7 @@ public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable
    * @param rule
    *            a rule
    */
+  @Override
   public void addRule( final Rule rule )
   {
     m_rules.add( rule );
@@ -289,6 +305,7 @@ public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable
    * @param rule
    *            a rule
    */
+  @Override
   public void removeRule( final Rule rule )
   {
     m_rules.remove( m_rules.indexOf( rule ) );
@@ -299,6 +316,7 @@ public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable
    *
    * @return xml representation of the FeatureTypeStyle
    */
+  @Override
   public String exportAsXML( )
   {
     final StringBuffer sb = new StringBuffer( 1000 );

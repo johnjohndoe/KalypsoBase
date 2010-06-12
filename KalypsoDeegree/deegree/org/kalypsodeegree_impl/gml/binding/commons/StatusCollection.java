@@ -66,6 +66,7 @@ public class StatusCollection extends FeatureWrapperCollection<IGeoStatus> imple
   /**
    * @see org.kalypsodeegree_impl.gml.binding.commons.IStatusCollection#createGeoStatus(org.eclipse.core.runtime.IStatus)
    */
+  @Override
   public IGeoStatus createGeoStatus( final IStatus status )
   {
     return createGeoStatus( status, null, null );
@@ -75,6 +76,7 @@ public class StatusCollection extends FeatureWrapperCollection<IGeoStatus> imple
    * @see org.kalypsodeegree_impl.gml.binding.commons.IStatusCollection#createGeoStatus(org.eclipse.core.runtime.IStatus,
    *      org.kalypsodeegree.model.geometry.GM_Object, java.util.Date)
    */
+  @Override
   public IGeoStatus createGeoStatus( final IStatus status, final GM_Object location, final Date time )
   {
     if( status == null )
@@ -89,6 +91,7 @@ public class StatusCollection extends FeatureWrapperCollection<IGeoStatus> imple
   /**
    * @see org.kalypsodeegree_impl.gml.binding.commons.IStatusCollection#createGeoStatus(org.kalypsodeegree_impl.gml.binding.commons.IGeoStatus)
    */
+  @Override
   public IGeoStatus createGeoStatus( final IGeoStatus geoStatus )
   {
     if( geoStatus == null )
@@ -104,6 +107,7 @@ public class StatusCollection extends FeatureWrapperCollection<IGeoStatus> imple
    * @see org.kalypsodeegree_impl.gml.binding.commons.IStatusCollection#createGeoStatus(int, java.lang.String, int,
    *      java.lang.String, java.lang.Throwable, org.kalypsodeegree.model.geometry.GM_Object, java.util.Date)
    */
+  @Override
   public IGeoStatus createGeoStatus( final int severity, final String pluginId, final int code, final String message, final Throwable exception, final GM_Object location, final Date time )
   {
     /* Add a new feature. */

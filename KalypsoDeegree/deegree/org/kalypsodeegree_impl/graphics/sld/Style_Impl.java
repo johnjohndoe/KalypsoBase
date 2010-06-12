@@ -66,6 +66,7 @@ class Style_Impl implements Style
    *
    * @return the name
    */
+  @Override
   public String getName()
   {
     return m_name;
@@ -78,6 +79,7 @@ class Style_Impl implements Style
    *          the name of the style
    *          <p>
    */
+  @Override
   public void setName( final String name )
   {
     this.m_name = name;

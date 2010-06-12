@@ -97,6 +97,7 @@ public class PolygonSymbolizer_Impl extends Symbolizer_Impl implements PolygonSy
    *
    * @return the fill of the polygon
    */
+  @Override
   public Fill getFill( )
   {
     return m_fill;
@@ -108,6 +109,7 @@ public class PolygonSymbolizer_Impl extends Symbolizer_Impl implements PolygonSy
    * @param fill
    *            the fill of the polygon
    */
+  @Override
   public void setFill( final Fill fill )
   {
     this.m_fill = fill;
@@ -121,6 +123,7 @@ public class PolygonSymbolizer_Impl extends Symbolizer_Impl implements PolygonSy
    *
    * @return the stroke of the polygon
    */
+  @Override
   public Stroke getStroke( )
   {
     return m_stroke;
@@ -132,6 +135,7 @@ public class PolygonSymbolizer_Impl extends Symbolizer_Impl implements PolygonSy
    * @param stroke
    *            the stroke of the polygon
    */
+  @Override
   public void setStroke( final Stroke stroke )
   {
     this.m_stroke = stroke;
@@ -174,6 +178,7 @@ public class PolygonSymbolizer_Impl extends Symbolizer_Impl implements PolygonSy
    *
    * @return xml representation of the PolygonSymbolizer
    */
+  @Override
   public String exportAsXML( )
   {
     Debug.debugMethodBegin();

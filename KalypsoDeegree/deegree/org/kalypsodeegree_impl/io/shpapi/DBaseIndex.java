@@ -181,6 +181,7 @@ public class DBaseIndex
       /**
        * Compare the time stamp from this object to the time stamp of another object
        */
+      @Override
       public int compareTo( Object o )
       {
         return new Long( timeStamp ).compareTo( new Long( ( (Item)o ).timeStamp ) );
@@ -704,6 +705,7 @@ public class DBaseIndex
     /**
      * Convert the page to a string (for debugging)
      */
+    @Override
     public String toString()
     {
       String s = "Number: " + number + "\nValidEntries: " + validEntries + "\n";
@@ -1026,6 +1028,7 @@ public class DBaseIndex
     return uniqueFlag;
   }
 
+  @Override
   public String toString()
   {
     return fileName;

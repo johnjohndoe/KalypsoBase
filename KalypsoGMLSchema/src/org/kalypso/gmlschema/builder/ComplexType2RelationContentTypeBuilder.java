@@ -33,10 +33,10 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
+import org.apache.xmlbeans.impl.xb.xsdschema.ComplexContentDocument.ComplexContent;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexRestrictionType;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.ExtensionType;
-import org.apache.xmlbeans.impl.xb.xsdschema.ComplexContentDocument.ComplexContent;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
@@ -64,35 +64,36 @@ public class ComplexType2RelationContentTypeBuilder extends AbstractBuilder
   /**
    * @see org.kalypso.gmlschema.builder.IBuilder#build(org.kalypso.gmlschema.GMLSchema, java.lang.Object)
    */
+  @Override
   public Object[] build( final GMLSchema gmlSchema, final Object complexTypeObject ) throws GMLSchemaException
   {
-    RelationContentType result = null;
     final ComplexType complexType = (ComplexType) complexTypeObject;
     final ComplexContent complexContent = complexType.getComplexContent();
     final ExtensionType extension = complexContent.getExtension();
     final ComplexRestrictionType restriction = complexContent.getRestriction();
 
+    final RelationContentType result = buildResult( gmlSchema, complexType, extension, restriction );
+    gmlSchema.register( complexTypeObject, result );
+    return new Object[] { result };
+  }
+
+  private RelationContentType buildResult( final GMLSchema gmlSchema, final ComplexType complexType, final ExtensionType extension, final ComplexRestrictionType restriction ) throws GMLSchemaException
+  {
     if( extension != null )
-      result = new RelationContentTypeFromExtension( gmlSchema, complexType, extension );
-    else if( restriction != null )
-      result = new RelationContentTypeFromRestriction( gmlSchema, complexType, restriction );
-    else
-    {
-      final List<ElementWithOccurs> collector = GMLSchemaUtilities.collectElements( gmlSchema, complexType, null, null );
-      result = new RelationContentTypeFromSequence( gmlSchema, complexType, collector );
-    }
-    if( result != null )
-    {
-      gmlSchema.register( complexTypeObject, result );
-      return new Object[] { result };
-    }
-    return new Object[0];
+      return new RelationContentTypeFromExtension( gmlSchema, complexType, extension );
+
+    if( restriction != null )
+      return new RelationContentTypeFromRestriction( gmlSchema, complexType, restriction );
+
+    final List<ElementWithOccurs> collector = GMLSchemaUtilities.collectElements( gmlSchema, complexType, null, null );
+    return new RelationContentTypeFromSequence( gmlSchema, complexType, collector );
   }
 
   /**
    * @see org.kalypso.gmlschema.builder.IBuilder#isBuilderFor(org.kalypso.gmlschema.GMLSchema, java.lang.Object,
    *      java.lang.String)
    */
+  @Override
   public boolean isBuilderFor( final GMLSchema gmlSchema, final Object object, final String namedPass ) throws GMLSchemaException
   {
     if( !(object instanceof ComplexType) )

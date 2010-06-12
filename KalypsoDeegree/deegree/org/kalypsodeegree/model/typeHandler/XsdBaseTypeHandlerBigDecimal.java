@@ -77,6 +77,7 @@ public class XsdBaseTypeHandlerBigDecimal extends XsdBaseTypeHandler<BigDecimal>
   /**
    * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
    */
+  @Override
   public int compare( final BigDecimal o1, final BigDecimal o2 )
   {
     if( (o1 == null) && (o2 == null) )

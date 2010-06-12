@@ -76,6 +76,7 @@ public class PointMove implements IProfilChange
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilChange#doChange()
    */
+  @Override
   public IProfilChange doChange( final ProfilChangeHint hint )
   {
     if( hint != null )
@@ -98,6 +99,7 @@ public class PointMove implements IProfilChange
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilChange#getObject()
    */
+  @Override
   public Object[] getObjects( )
   {
     return m_points.toArray();
@@ -106,6 +108,7 @@ public class PointMove implements IProfilChange
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilChange#getPointProperty()
    */
+  @Override
   public String getInfo( )
   {
     return Messages.getString( "org.kalypso.model.wspm.core.profil.changes.PointMove.0"); //$NON-NLS-1$
@@ -114,6 +117,7 @@ public class PointMove implements IProfilChange
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilChange#getValue()
    */
+  @Override
   public Double getValue( )
   {
     return new Double( m_direction );

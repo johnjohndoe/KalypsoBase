@@ -61,6 +61,7 @@ public abstract class AbstractProfilePointFilter implements IProfilePointFilter,
   /**
    * @see org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter#getId()
    */
+  @Override
   public String getId( )
   {
     return m_id;
@@ -69,6 +70,7 @@ public abstract class AbstractProfilePointFilter implements IProfilePointFilter,
   /**
    * @see org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter#getName()
    */
+  @Override
   public String getName( )
   {
     return m_name;
@@ -77,6 +79,7 @@ public abstract class AbstractProfilePointFilter implements IProfilePointFilter,
   /**
    * @see org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter#getDescription()
    */
+  @Override
   public String getDescription( )
   {
     return m_description;
@@ -86,6 +89,7 @@ public abstract class AbstractProfilePointFilter implements IProfilePointFilter,
    * @see org.eclipse.core.runtime.IExecutableExtension#setInitializationData(org.eclipse.core.runtime.IConfigurationElement,
    *      java.lang.String, java.lang.Object)
    */
+  @Override
   public void setInitializationData( final IConfigurationElement config, final String propertyName, final Object data )
   {
     m_id = config.getAttribute( "id" ); //$NON-NLS-1$

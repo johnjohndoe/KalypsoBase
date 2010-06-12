@@ -127,6 +127,7 @@ public class SurfacePolygonSymbolizer_Impl extends Symbolizer_Impl implements Su
   /**
    * @see org.kalypsodeegree.graphics.sld.SurfacePolygonSymbolizer#getColorMap()
    */
+  @Override
   public PolygonColorMap getColorMap( )
   {
     return m_colorMap;
@@ -135,6 +136,7 @@ public class SurfacePolygonSymbolizer_Impl extends Symbolizer_Impl implements Su
   /**
    * @see org.kalypsodeegree.graphics.sld.SurfacePolygonSymbolizer#setColorMap(org.kalypsodeegree_impl.graphics.sld.PolygonColorMap)
    */
+  @Override
   public void setColorMap( final PolygonColorMap colorMap )
   {
     m_colorMap = colorMap;
@@ -181,6 +183,7 @@ public class SurfacePolygonSymbolizer_Impl extends Symbolizer_Impl implements Su
    * 
    * @return xml representation of the PolygonSymbolizer
    */
+  @Override
   public String exportAsXML( )
   {
     Debug.debugMethodBegin();

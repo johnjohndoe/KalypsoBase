@@ -103,11 +103,13 @@ public class SHPPoint implements ISHPPoint
     m_envelope = new SHPEnvelope( x, x, y, y );
   }
 
+  @Override
   public SHPEnvelope getEnvelope( )
   {
     return m_envelope;
   }
 
+  @Override
   public byte[] writeShape( )
   {
     int offset = ShapeConst.SHAPE_FILE_RECORD_HEADER_LENGTH;
@@ -129,6 +131,7 @@ public class SHPPoint implements ISHPPoint
     return byteArray;
   }
 
+  @Override
   public int size( )
   {
     return 20;
@@ -140,11 +143,13 @@ public class SHPPoint implements ISHPPoint
     return "SHPPOINT" + "[" + this.x + "; " + this.y + "]";
   }
 
+  @Override
   public double getX( )
   {
     return x;
   }
 
+  @Override
   public double getY( )
   {
     return y;

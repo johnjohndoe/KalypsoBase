@@ -63,12 +63,14 @@ public class FalseFilter implements Filter
    *          (in this special case irrelevant)
    * @return false (always)
    */
+  @Override
   public boolean evaluate( Feature feature )
   {
     return false;
   }
 
   /** Produces an indented XML representation of this object. */
+  @Override
   public StringBuffer toXML( )
   {
     StringBuffer sb = new StringBuffer();

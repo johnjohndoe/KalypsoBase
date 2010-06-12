@@ -149,6 +149,7 @@ public final class ProfilOperation extends AbstractOperation
       final Display d = PlatformUI.getWorkbench().getDisplay();
       d.asyncExec( new Runnable()
       {
+        @Override
         public void run( )
         {
           if( !d.isDisposed() )

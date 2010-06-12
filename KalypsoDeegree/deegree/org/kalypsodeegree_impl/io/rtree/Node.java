@@ -218,11 +218,13 @@ public abstract class Node
    * 
    * @see java.lang.Object#clone()
    */
+  @Override
   public abstract Object clone();
 
   /**
    * String-Repräsentation des Knotens
    */
+  @Override
   public String toString()
   {
     String str = "";

@@ -46,6 +46,7 @@ import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 
 public class RemoveLayerActionDelegate extends AbstractLegendViewActionDelegate
 {
+  @Override
   public void run( final IAction action )
   {
     final IStructuredSelection selection = getSelection();

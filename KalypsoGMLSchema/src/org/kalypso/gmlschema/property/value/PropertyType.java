@@ -33,9 +33,9 @@ import javax.xml.namespace.QName;
 
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
+import org.apache.xmlbeans.impl.xb.xsdschema.RestrictionDocument.Restriction;
 import org.apache.xmlbeans.impl.xb.xsdschema.SimpleType;
 import org.apache.xmlbeans.impl.xb.xsdschema.TopLevelSimpleType;
-import org.apache.xmlbeans.impl.xb.xsdschema.RestrictionDocument.Restriction;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaException;
@@ -83,6 +83,7 @@ public class PropertyType extends AbstractPropertyTypeFromElement implements IVa
   /**
    * @see org.kalypso.gmlschema.basics.IInitialize#init(int)
    */
+  @Override
   public void init( final int initializeRun ) throws GMLSchemaException
   {
     final GMLSchema gmlSchema = (GMLSchema) getGMLSchema();
@@ -173,6 +174,7 @@ public class PropertyType extends AbstractPropertyTypeFromElement implements IVa
     }
   }
 
+  @Override
   public QName getValueQName( )
   {
     return m_propertyContentType.getValueQName();
@@ -181,6 +183,7 @@ public class PropertyType extends AbstractPropertyTypeFromElement implements IVa
   /**
    * @see org.kalypso.gmlschema.property.IValuePropertyType#hasRestriction()
    */
+  @Override
   public boolean hasRestriction( )
   {
     return m_restrictions.length > 0;
@@ -189,6 +192,7 @@ public class PropertyType extends AbstractPropertyTypeFromElement implements IVa
   /**
    * @see org.kalypso.gmlschema.property.IValuePropertyType#getRestriction()
    */
+  @Override
   public IRestriction[] getRestriction( )
   {
     return m_restrictions;
@@ -197,6 +201,7 @@ public class PropertyType extends AbstractPropertyTypeFromElement implements IVa
   /**
    * @see org.kalypso.gmlschema.property.IValuePropertyType#isFixed()
    */
+  @Override
   public boolean isFixed( )
   {
     return getElement().isSetFixed();
@@ -205,6 +210,7 @@ public class PropertyType extends AbstractPropertyTypeFromElement implements IVa
   /**
    * @see org.kalypso.gmlschema.property.IValuePropertyType#getFixed()
    */
+  @Override
   public String getFixed( )
   {
     return getElement().getFixed();
@@ -213,6 +219,7 @@ public class PropertyType extends AbstractPropertyTypeFromElement implements IVa
   /**
    * @see org.kalypso.gmlschema.property.IValuePropertyType#hasDefault()
    */
+  @Override
   public boolean hasDefault( )
   {
     return getElement().isSetDefault();
@@ -221,11 +228,13 @@ public class PropertyType extends AbstractPropertyTypeFromElement implements IVa
   /**
    * @see org.kalypso.gmlschema.property.IValuePropertyType#getDefault()
    */
+  @Override
   public String getDefault( )
   {
     return getElement().getDefault();
   }
 
+  @Override
   public boolean isNullable( )
   {
     return getElement().isSetNillable();
@@ -245,6 +254,7 @@ public class PropertyType extends AbstractPropertyTypeFromElement implements IVa
   /**
    * @see org.kalypso.gmlschema.property.IValuePropertyType#isGeometry()
    */
+  @Override
   public boolean isGeometry( )
   {
     // HACK: this happens for not initialized property types....
@@ -261,6 +271,7 @@ public class PropertyType extends AbstractPropertyTypeFromElement implements IVa
   /**
    * @see org.kalypso.gmlschema.property.IValuePropertyType#getValueClass()
    */
+  @Override
   public Class< ? > getValueClass( )
   {
     return m_propertyContentType.getValueClass();
@@ -269,6 +280,7 @@ public class PropertyType extends AbstractPropertyTypeFromElement implements IVa
   /**
    * @see org.kalypso.gmlschema.property.IValuePropertyType#getTypeHandler()
    */
+  @Override
   public IMarshallingTypeHandler getTypeHandler( )
   {
     return m_propertyContentType.getTypeHandler();
@@ -277,6 +289,7 @@ public class PropertyType extends AbstractPropertyTypeFromElement implements IVa
   /**
    * @see org.kalypso.gmlschema.property.IPropertyType#cloneForFeatureType(org.kalypso.gmlschema.feature.IFeatureType)
    */
+  @Override
   public IPropertyType cloneForFeatureType( final IFeatureType featureType )
   {
     return new PropertyType( getGMLSchema(), getElement(), getOccurs(), featureType );

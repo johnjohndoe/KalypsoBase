@@ -55,6 +55,7 @@ public class ThemeGoogleEarthExportable implements IKalypsoThemePredicate
   /**
    * @see org.kalypso.ogc.gml.mapmodel.IKalypsoThemePredicate#decide(org.kalypso.ogc.gml.IKalypsoTheme)
    */
+  @Override
   public boolean decide( final IKalypsoTheme theme )
   {
     if( theme instanceof GisTemplateFeatureTheme )

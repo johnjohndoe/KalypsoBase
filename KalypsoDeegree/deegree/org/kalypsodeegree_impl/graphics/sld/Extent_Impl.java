@@ -68,6 +68,7 @@ public class Extent_Impl implements Extent, Marshallable
    * 
    * @return the name of the extent
    */
+  @Override
   public String getName()
   {
     return name;
@@ -79,6 +80,7 @@ public class Extent_Impl implements Extent, Marshallable
    * @param name
    *          the name of the extent
    */
+  @Override
   public void setName( String name )
   {
     this.name = name;
@@ -89,6 +91,7 @@ public class Extent_Impl implements Extent, Marshallable
    * 
    * @return the value of the extent
    */
+  @Override
   public String getValue()
   {
     return value;
@@ -100,6 +103,7 @@ public class Extent_Impl implements Extent, Marshallable
    * @param value
    *          the value of the extent
    */
+  @Override
   public void setValue( String value )
   {
     this.value = value;
@@ -110,6 +114,7 @@ public class Extent_Impl implements Extent, Marshallable
    * 
    * @return xml representation of the FeatureTypeConstraint
    */
+  @Override
   public String exportAsXML()
   {
     Debug.debugMethodBegin();

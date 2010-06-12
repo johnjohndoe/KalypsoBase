@@ -126,6 +126,7 @@ public class SelectionPointsProvider implements IPointsProvider
   /**
    * @see org.kalypso.model.wspm.ui.profil.wizard.douglasPeucker.IPointsProvider#getPoints()
    */
+  @Override
   public IRecord[] getPoints( )
   {
     return m_points;
@@ -134,6 +135,7 @@ public class SelectionPointsProvider implements IPointsProvider
   /**
    * @see org.kalypso.model.wspm.ui.profil.wizard.douglasPeucker.IPointsProvider#getErrorMessage()
    */
+  @Override
   public String getErrorMessage( )
   {
     return m_errorMessage;
@@ -142,6 +144,7 @@ public class SelectionPointsProvider implements IPointsProvider
   /**
    * @see org.kalypso.model.wspm.ui.profil.wizard.douglasPeucker.IPointsProvider#getName()
    */
+  @Override
   public String getName( )
   {
     return org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.SelectionPointsProvider.5"); //$NON-NLS-1$

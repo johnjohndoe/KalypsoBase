@@ -105,6 +105,7 @@ public class IntersectRoughnessPage extends WizardPage implements IUpdateable, I
 
     final IPropertyTypeFilter geoFilter = new IPropertyTypeFilter()
     {
+      @Override
       public boolean accept( final IPropertyType pt )
       {
         if( pt instanceof IValuePropertyType )
@@ -120,6 +121,7 @@ public class IntersectRoughnessPage extends WizardPage implements IUpdateable, I
 
     final IPropertyTypeFilter valueFilter = new IPropertyTypeFilter()
     {
+      @Override
       public boolean accept( final IPropertyType pt )
       {
         return pt instanceof IValuePropertyType && !((IValuePropertyType) pt).isGeometry();
@@ -136,6 +138,7 @@ public class IntersectRoughnessPage extends WizardPage implements IUpdateable, I
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
    */
+  @Override
   public void createControl( final Composite parent )
   {
     final Composite composite = new Composite( parent, SWT.NONE );
@@ -218,6 +221,7 @@ public class IntersectRoughnessPage extends WizardPage implements IUpdateable, I
   /**
    * @see org.kalypso.contribs.eclipse.jface.wizard.IUpdateable#update()
    */
+  @Override
   public void update( )
   {
     final IMessageProvider message = validatePage();
@@ -254,6 +258,7 @@ public class IntersectRoughnessPage extends WizardPage implements IUpdateable, I
   /**
    * @see org.kalypso.ogc.gml.IKalypsoThemeFilter#accept(org.kalypso.ogc.gml.IKalypsoTheme)
    */
+  @Override
   public boolean accept( final IKalypsoTheme theme )
   {
     if( theme instanceof IKalypsoFeatureTheme )

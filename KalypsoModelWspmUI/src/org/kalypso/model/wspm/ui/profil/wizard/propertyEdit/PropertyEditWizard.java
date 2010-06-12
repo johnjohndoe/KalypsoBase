@@ -60,8 +60,8 @@ import org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter;
 import org.kalypso.model.wspm.ui.action.ProfileSelection;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.profil.wizard.ProfileManipulationOperation;
-import org.kalypso.model.wspm.ui.profil.wizard.ProfilesChooserPage;
 import org.kalypso.model.wspm.ui.profil.wizard.ProfileManipulationOperation.IProfileManipulator;
+import org.kalypso.model.wspm.ui.profil.wizard.ProfilesChooserPage;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 

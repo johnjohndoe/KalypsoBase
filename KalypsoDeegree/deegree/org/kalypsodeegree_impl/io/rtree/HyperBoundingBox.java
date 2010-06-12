@@ -261,6 +261,7 @@ public class HyperBoundingBox
    * 
    * @return Object geklonte HyperBoundingBox
    */
+  @Override
   public Object clone()
   {
     return new HyperBoundingBox( (HyperPoint)pMin.clone(), (HyperPoint)pMax.clone() );
@@ -271,6 +272,7 @@ public class HyperBoundingBox
    * 
    * @return String Stringrepräsentation der Box
    */
+  @Override
   public String toString()
   {
     return "BOX: P-Min (" + pMin.toString() + "), P-Max (" + pMax.toString() + ")";
@@ -281,6 +283,7 @@ public class HyperBoundingBox
    * 
    * @see java.lang.Object
    */
+  @Override
   public boolean equals( Object obj )
   {
     HyperBoundingBox box = (HyperBoundingBox)obj;

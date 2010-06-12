@@ -128,6 +128,7 @@ public class SimplifyProfilePage extends WizardPage
 
     spinner.addModifyListener( new ModifyListener()
     {
+      @Override
       public void modifyText( final ModifyEvent e )
       {
         handleDistanceChanged( spinner.getSelection() / 100.0 );

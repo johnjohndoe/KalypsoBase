@@ -60,12 +60,14 @@ public class PolynomDataContainer implements IDataContainer<Number, Number>
     m_polyArray = polyArray;
   }
 
+  @Override
   public void close( )
   {
     // not needed; data is always opened, so it cannot be closed
 
   }
 
+  @Override
   public IDataRange<Number> getDomainRange( )
   {
     double min = Double.POSITIVE_INFINITY;
@@ -98,6 +100,7 @@ public class PolynomDataContainer implements IDataContainer<Number, Number>
     return null;
   }
 
+  @Override
   public IDataRange<Number> getTargetRange( )
   {
     double min = Double.POSITIVE_INFINITY;
@@ -160,12 +163,14 @@ public class PolynomDataContainer implements IDataContainer<Number, Number>
     return null;
   }
 
+  @Override
   public boolean isOpen( )
   {
     // data is always opened
     return true;
   }
 
+  @Override
   public void open( )
   {
     // Not implemented; data is always opened

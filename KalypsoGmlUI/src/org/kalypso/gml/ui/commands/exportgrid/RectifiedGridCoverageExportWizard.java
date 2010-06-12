@@ -93,6 +93,7 @@ public class RectifiedGridCoverageExportWizard extends Wizard implements IImport
    * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
    *      org.eclipse.jface.viewers.IStructuredSelection)
    */
+  @Override
   public void init( final IWorkbench workbench, final IStructuredSelection selection )
   {
     final List< ? > list = selection.toList();
@@ -148,6 +149,7 @@ public class RectifiedGridCoverageExportWizard extends Wizard implements IImport
       final ICoverage coverage = m_coverages[0];
       final ICoreRunnableWithProgress op = new ICoreRunnableWithProgress()
       {
+        @Override
         public IStatus execute( IProgressMonitor monitor ) throws CoreException, InvocationTargetException
         {
           try

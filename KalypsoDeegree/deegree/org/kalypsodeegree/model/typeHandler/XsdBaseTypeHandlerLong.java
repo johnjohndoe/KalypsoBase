@@ -71,6 +71,7 @@ public class XsdBaseTypeHandlerLong extends XsdBaseTypeHandler<Long>
   /**
    * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
    */
+  @Override
   public int compare( final Long o1, final Long o2 )
   {
     if( (o1 == null) && (o2 == null) )

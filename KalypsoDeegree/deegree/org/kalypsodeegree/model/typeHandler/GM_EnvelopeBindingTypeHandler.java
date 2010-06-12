@@ -97,10 +97,12 @@ public class GM_EnvelopeBindingTypeHandler implements IMarshallingTypeHandler
    * @see org.kalypso.gmlschema.types.GenericBindingTypeHandler#unmarshal(org.xml.sax.XMLReader,
    *      org.kalypso.contribs.java.net.IUrlResolver, org.kalypso.gmlschema.types.MarshalResultEater)
    */
+  @Override
   public void unmarshal( final XMLReader xmlReader, final URL context, final UnmarshallResultEater marshalResultEater, final String gmlVersion ) throws TypeRegistryException
   {
     final UnmarshallResultEater eater = new UnmarshallResultEater()
     {
+      @Override
       public void unmarshallSuccesful( final Object bindingGeometry ) throws SAXParseException
       {
         try
@@ -124,6 +126,7 @@ public class GM_EnvelopeBindingTypeHandler implements IMarshallingTypeHandler
       final UnmarshallerHandler unmarshallerHandler = unmarshaller.getUnmarshallerHandler();
       final UnmarshalResultProvider provider = new UnmarshalResultProvider()
       {
+        @Override
         public Object getResult( ) throws GMLSchemaException
         {
           try
@@ -152,6 +155,7 @@ public class GM_EnvelopeBindingTypeHandler implements IMarshallingTypeHandler
    * @see org.kalypso.gmlschema.types.GenericBindingTypeHandler#marshal(java.lang.Object, org.xml.sax.ContentHandler,
    *      org.xml.sax.ext.LexicalHandler, java.net.URL)
    */
+  @Override
   public void marshal( final Object geometry, final XMLReader reader, final URL context, final String gmlVersion ) throws SAXException
   {
     try
@@ -181,6 +185,7 @@ public class GM_EnvelopeBindingTypeHandler implements IMarshallingTypeHandler
   /**
    * @see org.kalypso.gmlschema.types.ITypeHandler#getValueClass()
    */
+  @Override
   public Class< ? > getValueClass( )
   {
     return m_valueClass;
@@ -189,6 +194,7 @@ public class GM_EnvelopeBindingTypeHandler implements IMarshallingTypeHandler
   /**
    * @see org.kalypso.gmlschema.types.ITypeHandler#getTypeName()
    */
+  @Override
   public QName getTypeName( )
   {
     return m_xmlTypeQName;
@@ -197,6 +203,7 @@ public class GM_EnvelopeBindingTypeHandler implements IMarshallingTypeHandler
   /**
    * @see org.kalypso.gmlschema.types.ITypeHandler#isGeometry()
    */
+  @Override
   public boolean isGeometry( )
   {
     return m_isGeometry;
@@ -205,6 +212,7 @@ public class GM_EnvelopeBindingTypeHandler implements IMarshallingTypeHandler
   /**
    * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#getShortname()
    */
+  @Override
   public String getShortname( )
   {
     return m_xmlTypeQName.getLocalPart();
@@ -213,6 +221,7 @@ public class GM_EnvelopeBindingTypeHandler implements IMarshallingTypeHandler
   /**
    * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#cloneObject(java.lang.Object)
    */
+  @Override
   public Object cloneObject( final Object objectToClone, final String gmlVersion )
   {
     if( objectToClone == null )
@@ -224,6 +233,7 @@ public class GM_EnvelopeBindingTypeHandler implements IMarshallingTypeHandler
   /**
    * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#parseType(java.lang.String)
    */
+  @Override
   public Object parseType( final String text )
   {
     throw new UnsupportedOperationException();

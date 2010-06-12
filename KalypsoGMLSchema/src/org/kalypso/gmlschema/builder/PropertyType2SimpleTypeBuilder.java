@@ -49,6 +49,7 @@ public class PropertyType2SimpleTypeBuilder extends AbstractBuilder
   /**
    * @see org.kalypso.gmlschema.builder.IBuilder#build(org.kalypso.gmlschema.GMLSchema, java.lang.Object)
    */
+  @Override
   public Object[] build( final GMLSchema gmlSchema, final Object typeObject ) throws GMLSchemaException
   {
     final PropertyType propertyType = (PropertyType) typeObject;
@@ -76,6 +77,7 @@ public class PropertyType2SimpleTypeBuilder extends AbstractBuilder
    * @see org.kalypso.gmlschema.builder.IBuilder#isBuilderFor(org.kalypso.gmlschema.GMLSchema, java.lang.Object,
    *      java.lang.String)
    */
+  @Override
   public boolean isBuilderFor( final GMLSchema gmlSchema, final Object object, final String namedPass )
   {
     return object instanceof PropertyType;

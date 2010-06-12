@@ -85,21 +85,25 @@ public class RasterSymbolizer_Impl extends Symbolizer_Impl implements RasterSymb
     setImageOutline( imageOutline );
   }
 
+  @Override
   public ParameterValueType getOpacity( )
   {
     return m_opacity;
   }
 
+  @Override
   public void setOpacity( final ParameterValueType opacity )
   {
     m_opacity = opacity;
   }
 
+  @Override
   public SortedMap<Double, ColorMapEntry> getColorMap( )
   {
     return m_colorMap;
   }
 
+  @Override
   public void setColorMap( final SortedMap<Double, ColorMapEntry> colorMap )
   {
     m_colorMap = colorMap;
@@ -108,6 +112,7 @@ public class RasterSymbolizer_Impl extends Symbolizer_Impl implements RasterSymb
   /**
    * @see org.kalypsodeegree.graphics.sld.RasterSymbolizer#getImageOutline()
    */
+  @Override
   public Symbolizer getImageOutline( )
   {
     return m_imageOutline;
@@ -116,6 +121,7 @@ public class RasterSymbolizer_Impl extends Symbolizer_Impl implements RasterSymb
   /**
    * @see org.kalypsodeegree.graphics.sld.RasterSymbolizer#setImageOutline(org.kalypsodeegree.graphics.sld.Symbolizer)
    */
+  @Override
   public void setImageOutline( final Symbolizer imageOutline )
   {
     Assert.isTrue( imageOutline == null || imageOutline instanceof LineSymbolizer || imageOutline instanceof PolygonSymbolizer );
@@ -123,16 +129,19 @@ public class RasterSymbolizer_Impl extends Symbolizer_Impl implements RasterSymb
     m_imageOutline = imageOutline;
   }
 
+  @Override
   public ShadedRelief getShadedRelief( )
   {
     return m_shadedRelief;
   }
 
+  @Override
   public void setShadedRelief( final ShadedRelief shadedRelief )
   {
     m_shadedRelief = shadedRelief;
   }
 
+  @Override
   public String exportAsXML( )
   {
     final Formatter formatter = new Formatter();

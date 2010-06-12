@@ -20,14 +20,17 @@ import org.kalypso.ui.views.map.MapView;
 public class KMLExportCommandHandler implements IHandler
 {
 
+  @Override
   public void addHandlerListener( final IHandlerListener handlerListener )
   {
   }
 
+  @Override
   public void dispose( )
   {
   }
 
+  @Override
   public Object execute( final ExecutionEvent event )
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
@@ -69,16 +72,19 @@ public class KMLExportCommandHandler implements IHandler
     return wizard.getExportedSettings();
   }
 
+  @Override
   public boolean isEnabled( )
   {
     return true;
   }
 
+  @Override
   public boolean isHandled( )
   {
     return true;
   }
 
+  @Override
   public void removeHandlerListener( final IHandlerListener handlerListener )
   {
   }

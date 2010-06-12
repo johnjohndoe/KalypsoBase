@@ -38,7 +38,7 @@ import com.vividsolutions.jts.geom.Polygon;
  */
 public class TriangleDoubleProvider implements IGeoValueProvider
 {
-  private FeatureList m_triangleList;
+  private final FeatureList m_triangleList;
 
   public final QName QN_GEOM_TRIANGLE;
 
@@ -48,18 +48,18 @@ public class TriangleDoubleProvider implements IGeoValueProvider
     QN_GEOM_TRIANGLE = new QName( GmlProcessesUrlCatalog.NS_MESH, "triangle" ); //$NON-NLS-1$
   }
 
-  @SuppressWarnings("unchecked") //$NON-NLS-1$
+  @SuppressWarnings("unchecked")//$NON-NLS-1$
   private final LinearRing[] getAllContaining( final Coordinate c ) throws GM_Exception
   {
     final Vector<LinearRing> results = new Vector<LinearRing>();
 
     final GM_Position position = GeometryFactory.createGM_Position( c.x, c.y );
-    final List list = m_triangleList.query( position, null );
+    final List< ? > list = m_triangleList.query( position, null );
 
     for( final Object listItem : list )
     {
       final Feature feature = (Feature) listItem;
-      final GM_Surface surface = (GM_Surface) feature.getProperty( QN_GEOM_TRIANGLE );
+      final GM_Surface< ? > surface = (GM_Surface< ? >) feature.getProperty( QN_GEOM_TRIANGLE );
 
       final Geometry geometry = JTSAdapter.export( surface );
       if( geometry instanceof Polygon )
@@ -87,6 +87,7 @@ public class TriangleDoubleProvider implements IGeoValueProvider
     return results.toArray( new LinearRing[results.size()] );
   }
 
+  @Override
   public final double getValue( final Coordinate c )
   {
     try

@@ -138,6 +138,7 @@ class RotatedLabel implements Label
     return m_rotation;
   }
 
+  @Override
   public void paintBoundaries( Graphics2D g )
   {
     setColor( g, new Color( 0x888888 ), 0.5 );
@@ -166,6 +167,7 @@ class RotatedLabel implements Label
    * @param g
    *          <tt>Graphics2D</tt> context to be used
    */
+  @Override
   public void paint( Graphics2D g )
   {
 
@@ -305,31 +307,37 @@ class RotatedLabel implements Label
     }
   }
 
+  @Override
   public int getX()
   {
     return m_xpoints[0];
   }
 
+  @Override
   public int getY()
   {
     return m_ypoints[0];
   }
 
+  @Override
   public int getMaxX()
   {
     return m_xpoints[1];
   }
 
+  @Override
   public int getMaxY()
   {
     return m_ypoints[1];
   }
 
+  @Override
   public int getMinX()
   {
     return m_xpoints[3];
   }
 
+  @Override
   public int getMinY()
   {
     return m_ypoints[3];
@@ -343,6 +351,7 @@ class RotatedLabel implements Label
    *          label to test
    * @return true if the labels intersect
    */
+  @Override
   public boolean intersects( Label that )
   {
     System.out.println( "Intersection test for rotated labels is " + "not implemented yet!" );
@@ -389,6 +398,7 @@ class RotatedLabel implements Label
     return g2;
   }
 
+  @Override
   public String toString()
   {
     return caption;

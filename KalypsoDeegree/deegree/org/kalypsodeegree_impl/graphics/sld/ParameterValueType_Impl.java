@@ -73,6 +73,7 @@ public class ParameterValueType_Impl implements ParameterValueType, Marshallable
    * 
    * @return mix of <tt>String</tt>/<tt>Expression</tt> -objects
    */
+  @Override
   public Object[] getComponents( )
   {
     return components.toArray( new Object[components.size()] );
@@ -85,6 +86,7 @@ public class ParameterValueType_Impl implements ParameterValueType, Marshallable
    * @param components
    *            mix of <tt>String</tt> and <tt>Expression</tt> -objects
    */
+  @Override
   public void setComponents( Object[] components )
   {
     this.components.clear();
@@ -106,6 +108,7 @@ public class ParameterValueType_Impl implements ParameterValueType, Marshallable
    * @param component
    *            either a <tt>String</tt> or an <tt>Expression</tt> -object
    */
+  @Override
   public void addComponent( Object component )
   {
     components.add( component );
@@ -118,6 +121,7 @@ public class ParameterValueType_Impl implements ParameterValueType, Marshallable
    * @param component
    *            either a <tt>String</tt> or an <tt>Expression</tt> -object
    */
+  @Override
   public void removeComponent( Object component )
   {
     components.remove( components.indexOf( component ) );
@@ -134,6 +138,7 @@ public class ParameterValueType_Impl implements ParameterValueType, Marshallable
    * @throws FilterEvaluationException
    *             if the evaluation fails
    */
+  @Override
   public String evaluate( Feature feature ) throws FilterEvaluationException
   {
 //    StringBuffer sb = new StringBuffer();
@@ -178,6 +183,7 @@ public class ParameterValueType_Impl implements ParameterValueType, Marshallable
    * 
    * @return xml representation of the ParameterValueType
    */
+  @Override
   public String exportAsXML( )
   {
     Debug.debugMethodBegin();

@@ -105,6 +105,7 @@ public class ImportProfileWizard extends Wizard implements IWizard
     /* Do import */
     final ICoreRunnableWithProgress op = new ICoreRunnableWithProgress()
     {
+      @Override
       @SuppressWarnings("synthetic-access")//$NON-NLS-1$
       public IStatus execute( final IProgressMonitor monitor )
       {

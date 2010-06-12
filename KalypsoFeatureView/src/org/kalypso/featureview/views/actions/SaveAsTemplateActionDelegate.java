@@ -76,9 +76,9 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.featureview.i18n.Messages;
 import org.kalypso.featureview.views.FeatureView;
 import org.kalypso.template.featureview.Featuretemplate;
+import org.kalypso.template.featureview.Featuretemplate.Layer;
 import org.kalypso.template.featureview.FeatureviewType;
 import org.kalypso.template.featureview.ObjectFactory;
-import org.kalypso.template.featureview.Featuretemplate.Layer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
@@ -100,6 +100,7 @@ public class SaveAsTemplateActionDelegate implements IViewActionDelegate
   /**
    * @see org.eclipse.ui.IViewActionDelegate#init(org.eclipse.ui.IViewPart)
    */
+  @Override
   public void init( final IViewPart view )
   {
     m_view = view;
@@ -108,6 +109,7 @@ public class SaveAsTemplateActionDelegate implements IViewActionDelegate
   /**
    * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
    */
+  @Override
   public void run( final IAction action )
   {
     final FeatureView view = (FeatureView) m_view;
@@ -205,6 +207,7 @@ public class SaveAsTemplateActionDelegate implements IViewActionDelegate
    * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
    *      org.eclipse.jface.viewers.ISelection)
    */
+  @Override
   public void selectionChanged( final IAction action, final ISelection selection )
   {
     // nichts tun

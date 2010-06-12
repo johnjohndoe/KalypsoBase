@@ -156,6 +156,7 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
   // ProfileContentProvider
   private final IProfilListener m_profileListener = new IProfilListener()
   {
+    @Override
     public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
     {
       if( hint.isActivePointChanged() )
@@ -168,6 +169,7 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
     /**
      * @see org.kalypso.model.wspm.core.profil.IProfilListener#onProblemMarkerChanged(org.kalypso.model.wspm.core.profil.IProfil)
      */
+    @Override
     public void onProblemMarkerChanged( final IProfil source )
     {
       m_markerRefreshJob.cancel();
@@ -259,17 +261,21 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
     final ControlEditor m_controlEditor = new ControlEditor( m_cursor );
     m_controlEditor.grabHorizontal = true;
     m_controlEditor.grabVertical = true;
-    
-    try{
+
+    try
+    {
       m_cursor.setVisible( true );
     }
-    catch (Exception e) {
+    catch( final Exception e )
+    {
       e.printStackTrace();
     }
-    try{
+    try
+    {
       m_cursor.setEnabled( true );
     }
-    catch (Exception e) {
+    catch( final Exception e )
+    {
       e.printStackTrace();
     }
 
@@ -283,6 +289,7 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
 
     m_view.addPostSelectionChangedListener( new ISelectionChangedListener()
     {
+      @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
         final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
@@ -385,6 +392,7 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
   /**
    * @see org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater#setAdapter(java.lang.Object)
    */
+  @Override
   public void setAdapter( final IWorkbenchPart part, final IProfilProvider provider )
   {
     if( (m_provider == provider) && (provider != null) )
@@ -407,6 +415,7 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
    *      org.kalypso.model.wspm.core.profil.IProfilEventManager, org.kalypso.model.wspm.ui.profil.view.ProfilViewData,
    *      org.kalypso.model.wspm.ui.profil.view.ProfilViewData)
    */
+  @Override
   public void onProfilProviderChanged( final IProfilProvider provider, final IProfil oldProfile, final IProfil newProfile )
   {
     if( m_profile != null )
@@ -420,6 +429,7 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
     if( (m_form != null) && !m_form.isDisposed() )
       m_form.getDisplay().asyncExec( new Runnable()
       {
+        @Override
         public void run( )
         {
 
@@ -459,9 +469,8 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
   /**
    * @see org.eclipse.ui.part.WorkbenchPart#getAdapter(java.lang.Class)
    */
-  @SuppressWarnings("unchecked")
   @Override
-  public Object getAdapter( final Class adapter )
+  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
   {
     if( adapter == ITupleResultViewerProvider.class )
       return this;
@@ -472,6 +481,7 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
   /**
    * @see org.kalypso.ogc.gml.om.table.command.ITupleResultViewerProvider#getTupleResult()
    */
+  @Override
   public TupleResult getTupleResult( )
   {
     if( m_view == null )
@@ -483,6 +493,7 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
   /**
    * @see org.kalypso.ogc.gml.om.table.command.ITupleResultViewerProvider#getTupleResultViewer()
    */
+  @Override
   public TableViewer getTupleResultViewer( )
   {
     return m_view;

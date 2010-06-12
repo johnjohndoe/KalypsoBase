@@ -92,6 +92,7 @@ public class IndexByPropertyVisitor implements FeatureVisitor
   /**
    * @see org.kalypsodeegree.model.feature.FeatureVisitor#visit(org.kalypsodeegree.model.feature.Feature)
    */
+  @Override
   public boolean visit( Feature f )
   {
     if( m_property == null )

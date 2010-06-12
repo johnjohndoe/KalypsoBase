@@ -62,6 +62,7 @@ public class MinInclusiveRule implements IRule
    * 
    * @see org.kalypso.ogc.gml.util.Rule#isValid(java.lang.Object)
    */
+  @Override
   public IStatus isValid( Object object )
   {
     Status status = new Status( Status.CANCEL, Platform.PI_RUNTIME, Status.CANCEL, "Wert muss größer oder gleich " + m_checkagainst.toString() + " sein.", null );
