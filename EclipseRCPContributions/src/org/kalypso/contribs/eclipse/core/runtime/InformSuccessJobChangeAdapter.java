@@ -50,6 +50,7 @@ public final class InformSuccessJobChangeAdapter extends JobChangeAdapter
     {
       final Runnable runnable = new Runnable()
       {
+        @Override
         public void run()
         {
           MessageDialog.openInformation( m_shell, m_messageTitle, m_messageFirstline + "\n"

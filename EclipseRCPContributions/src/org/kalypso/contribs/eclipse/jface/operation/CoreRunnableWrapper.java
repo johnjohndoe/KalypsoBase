@@ -63,6 +63,7 @@ public final class CoreRunnableWrapper implements IRunnableWithProgress
     m_runnable = runnable;
   }
 
+  @Override
   public void run( final IProgressMonitor monitor ) throws InvocationTargetException, InterruptedException
   {
     try

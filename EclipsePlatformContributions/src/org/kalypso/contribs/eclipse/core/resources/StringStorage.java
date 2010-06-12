@@ -78,6 +78,7 @@ public class StringStorage implements IEncodedStorage, IPersistableElement
    * @throws CoreException
    * @see org.eclipse.core.resources.IStorage#getContents()
    */
+  @Override
   public InputStream getContents( ) throws CoreException
   {
     try
@@ -94,6 +95,7 @@ public class StringStorage implements IEncodedStorage, IPersistableElement
   /**
    * @see org.eclipse.core.resources.IStorage#getFullPath()
    */
+  @Override
   public IPath getFullPath( )
   {
     return m_path;
@@ -102,6 +104,7 @@ public class StringStorage implements IEncodedStorage, IPersistableElement
   /**
    * @see org.eclipse.core.resources.IStorage#getName()
    */
+  @Override
   public String getName( )
   {
     return m_path.lastSegment();
@@ -110,6 +113,7 @@ public class StringStorage implements IEncodedStorage, IPersistableElement
   /**
    * @see org.eclipse.core.resources.IStorage#isReadOnly()
    */
+  @Override
   public boolean isReadOnly( )
   {
     return true;
@@ -118,9 +122,9 @@ public class StringStorage implements IEncodedStorage, IPersistableElement
   /**
    * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
    */
-  @SuppressWarnings("unchecked")
-  public Object getAdapter( final Class adapter )
-  { 
+  @Override
+  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
+  {
     final IAdapterManager adapterManager = Platform.getAdapterManager();
     return adapterManager.loadAdapter( this, adapter.getName() );
   }
@@ -128,6 +132,7 @@ public class StringStorage implements IEncodedStorage, IPersistableElement
   /**
    * @see org.eclipse.core.resources.IEncodedStorage#getCharset()
    */
+  @Override
   public String getCharset( )
   {
     // allways Unicode
@@ -150,13 +155,14 @@ public class StringStorage implements IEncodedStorage, IPersistableElement
 
     if( m_path == null )
       return m_content.equals( other.m_content ) && other.m_path == null;
-    
+
     return m_content.equals( other.m_content ) && m_path.equals( other.m_path );
   }
 
   /**
    * @see org.eclipse.ui.IPersistableElement#getFactoryId()
    */
+  @Override
   public String getFactoryId( )
   {
     return StringStorageInputFactory.ID;
@@ -165,6 +171,7 @@ public class StringStorage implements IEncodedStorage, IPersistableElement
   /**
    * @see org.eclipse.ui.IPersistable#saveState(org.eclipse.ui.IMemento)
    */
+  @Override
   public void saveState( final IMemento memento )
   {
     StringStorageInputFactory.saveState( this, memento );

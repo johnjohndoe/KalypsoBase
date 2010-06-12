@@ -74,6 +74,7 @@ public class FileFilterVisitor implements IResourceVisitor
   /**
    * @see org.eclipse.core.resources.IResourceVisitor#visit(org.eclipse.core.resources.IResource)
    */
+  @Override
   public boolean visit( final IResource resource )
   {
     if( resource instanceof IFile )

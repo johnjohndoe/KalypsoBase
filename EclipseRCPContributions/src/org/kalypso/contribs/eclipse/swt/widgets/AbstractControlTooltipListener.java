@@ -79,6 +79,7 @@ public abstract class AbstractControlTooltipListener implements Listener
 
     m_controlListener = new Listener()
     {
+      @Override
       public void handleEvent( final Event event )
       {
         switch( event.type )
@@ -102,6 +103,7 @@ public abstract class AbstractControlTooltipListener implements Listener
   /**
    * @see org.eclipse.swt.widgets.Listener#handleEvent(org.eclipse.swt.widgets.Event)
    */
+  @Override
   public void handleEvent( final Event event )
   {
     if( event.widget instanceof Control )

@@ -131,12 +131,14 @@ public class ScrolledSection
 
     final IExpansionListener lnerExp = new IExpansionListener()
     {
+      @Override
       public void expansionStateChanged( final ExpansionEvent e )
       {
         setLayout( secLayoutExpanded, secLayoutCollapsed );
         m_parent.layout();
       }
 
+      @Override
       public void expansionStateChanging( final ExpansionEvent e )
       {
       }

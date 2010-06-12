@@ -279,6 +279,7 @@ public class ExcelTableCursor extends TableCursor
 
   private final TraverseListener m_dontTraverseListener = new TraverseListener()
   {
+    @Override
     public void keyTraversed( final TraverseEvent e )
     {
       if( (e.detail == SWT.TRAVERSE_TAB_NEXT) || (e.detail == SWT.TRAVERSE_TAB_PREVIOUS) )
@@ -364,6 +365,7 @@ public class ExcelTableCursor extends TableCursor
     // relative place in the table
     table.addPaintListener( new PaintListener()
     {
+      @Override
       public void paintControl( final PaintEvent e )
       {
         if( !ExcelTableCursor.this.isDisposed() )

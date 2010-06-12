@@ -189,6 +189,7 @@ public abstract class DefaultContentArea implements IContentArea
   @Override
   abstract public Point getContentAreaAnchorPoint( );
 
+  @Override
   public void setImage( final Image image )
   {
     m_image = image;
@@ -208,6 +209,7 @@ public abstract class DefaultContentArea implements IContentArea
    *          at the moment only SWT.BOTTOM & SWT.RIGHT supported
    */
 
+  @Override
   public void setText( final String text, final Font textFont, final Color textColor, final int textPosition )
   {
     m_text = text;

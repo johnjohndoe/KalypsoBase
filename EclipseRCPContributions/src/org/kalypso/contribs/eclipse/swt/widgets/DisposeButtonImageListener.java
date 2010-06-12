@@ -28,6 +28,7 @@ public class DisposeButtonImageListener implements DisposeListener
     m_button = button;
   }
 
+  @Override
   public void widgetDisposed( final DisposeEvent e )
   {
     m_button.getImage().dispose();

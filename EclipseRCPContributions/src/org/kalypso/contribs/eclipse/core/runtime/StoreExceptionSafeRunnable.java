@@ -58,6 +58,7 @@ public abstract class StoreExceptionSafeRunnable implements ISafeRunnable
   /**
    * @see org.eclipse.core.runtime.ISafeRunnable#handleException(java.lang.Throwable)
    */
+  @Override
   public void handleException( final Throwable exception )
   {
     m_exception = exception;

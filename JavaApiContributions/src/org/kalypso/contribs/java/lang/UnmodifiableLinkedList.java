@@ -131,46 +131,55 @@ public class UnmodifiableLinkedList<E> extends LinkedList<E>
     {
       ListIterator<? extends E> i = m_list.listIterator( index );
 
+      @Override
       public boolean hasNext( )
       {
         return i.hasNext();
       }
 
+      @Override
       public E next( )
       {
         return i.next();
       }
 
+      @Override
       public boolean hasPrevious( )
       {
         return i.hasPrevious();
       }
 
+      @Override
       public E previous( )
       {
         return i.previous();
       }
 
+      @Override
       public int nextIndex( )
       {
         return i.nextIndex();
       }
 
+      @Override
       public int previousIndex( )
       {
         return i.previousIndex();
       }
 
+      @Override
       public void remove( )
       {
         throw new UnsupportedOperationException();
       }
 
+      @Override
       public void set( E o )
       {
         throw new UnsupportedOperationException();
       }
 
+      @Override
       public void add( E o )
       {
         throw new UnsupportedOperationException();

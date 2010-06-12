@@ -55,8 +55,9 @@ import org.kalypso.contribs.eclipse.i18n.Messages;
 
 /**
  * An {@link org.eclipse.ui.IEditorInput} which is based on a {@link IStorage}.
- * <p>Is persitable if the storage implements {@link org.eclipse.ui.IPersistableElement}.
- *
+ * <p>
+ * Is persitable if the storage implements {@link org.eclipse.ui.IPersistableElement}.
+ * 
  * @author Gernot Belger
  */
 public class StorageEditorInput implements IFileEditorInput
@@ -75,6 +76,7 @@ public class StorageEditorInput implements IFileEditorInput
   /**
    * @see org.eclipse.ui.IStorageEditorInput#getStorage()
    */
+  @Override
   public IStorage getStorage( )
   {
     return m_storage;
@@ -94,6 +96,7 @@ public class StorageEditorInput implements IFileEditorInput
   /**
    * @see org.eclipse.ui.IEditorInput#exists()
    */
+  @Override
   public boolean exists( )
   {
     return getFile().exists();
@@ -102,6 +105,7 @@ public class StorageEditorInput implements IFileEditorInput
   /**
    * @see org.eclipse.ui.IEditorInput#getImageDescriptor()
    */
+  @Override
   public ImageDescriptor getImageDescriptor( )
   {
     return null;
@@ -110,6 +114,7 @@ public class StorageEditorInput implements IFileEditorInput
   /**
    * @see org.eclipse.ui.IEditorInput#getName()
    */
+  @Override
   public String getName( )
   {
     return m_storage.getName();
@@ -118,6 +123,7 @@ public class StorageEditorInput implements IFileEditorInput
   /**
    * @see org.eclipse.ui.IEditorInput#getPersistable()
    */
+  @Override
   public IPersistableElement getPersistable( )
   {
     if( m_storage instanceof IPersistableElement )
@@ -129,11 +135,12 @@ public class StorageEditorInput implements IFileEditorInput
   /**
    * @see org.eclipse.ui.IEditorInput#getToolTipText()
    */
+  @Override
   public String getToolTipText( )
   {
     final IPath fullPath = m_storage.getFullPath();
     if( fullPath == null )
-      return Messages.getString("org.kalypso.contribs.eclipse.ui.editorinput.StorageEditorInput.0"); //$NON-NLS-1$
+      return Messages.getString( "org.kalypso.contribs.eclipse.ui.editorinput.StorageEditorInput.0" ); //$NON-NLS-1$
 
     return fullPath.toOSString();
   }
@@ -141,8 +148,8 @@ public class StorageEditorInput implements IFileEditorInput
   /**
    * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
    */
-  @SuppressWarnings("unchecked")
-  public Object getAdapter( final Class adapter )
+  @Override
+  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
   {
     final IAdapterManager adapterManager = Platform.getAdapterManager();
     return adapterManager.loadAdapter( this, adapter.getName() );

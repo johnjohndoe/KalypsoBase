@@ -51,6 +51,7 @@ import org.kalypso.contribs.eclipse.ui.actions.RetargetActionManager.RetargetInf
  */
 public class RetargetInfoComparator implements Comparator<RetargetInfo>
 {
+  @Override
   public int compare( RetargetInfo info0, RetargetInfo info1 )
   {
     final String str0 = (info0.getMenuPath() == null ? "" : info0.getMenuPath())+"/"+info0.getID();

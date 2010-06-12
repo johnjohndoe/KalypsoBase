@@ -124,6 +124,7 @@ public class DateRangeInputControl extends Composite
     m_txtDays.setLayoutData( gd );
     m_txtDays.addModifyListener( new ModifyListener()
     {
+      @Override
       public void modifyText( final ModifyEvent e )
       {
         try
@@ -146,6 +147,7 @@ public class DateRangeInputControl extends Composite
     m_txtFrom.setText( m_df.format( from ) );
     m_txtFrom.addModifyListener( new ModifyListener()
     {
+      @Override
       public void modifyText( ModifyEvent e )
       {
         m_from = parseForDate( m_txtFrom.getText() );
@@ -157,6 +159,7 @@ public class DateRangeInputControl extends Composite
     m_txtTo.setText( m_df.format( to ) );
     m_txtTo.addModifyListener( new ModifyListener()
     {
+      @Override
       public void modifyText( ModifyEvent e )
       {
         m_to = parseForDate( m_txtTo.getText() );
@@ -266,12 +269,14 @@ public class DateRangeInputControl extends Composite
       m_useRange = br;
     }
 
+    @Override
     public void widgetSelected( final SelectionEvent e )
     {
       if( e.widget == m_btnUseRange )
         explicitSelect();
     }
 
+    @Override
     public void widgetDefaultSelected( final SelectionEvent e )
     {
       // empty

@@ -44,8 +44,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Map.Entry;
+import java.util.Properties;
 
 /**
  * A {@link PropertyUrlCatalog}based on a properties-hash.
@@ -80,6 +80,7 @@ public class PropertyUrlCatalog implements IUrlCatalog
   /**
    * @see org.kalypso.contribs.java.net.IUrlCatalog#getURL(java.lang.String)
    */
+  @Override
   public URL getURL( final String key )
   {
     return m_catalog.get( key );
@@ -88,6 +89,7 @@ public class PropertyUrlCatalog implements IUrlCatalog
   /**
    * @see org.kalypso.contribs.java.net.IUrlCatalog#getCatalog()
    */
+  @Override
   public Map<String, URL> getCatalog()
   {
     return m_catalog;
@@ -96,6 +98,7 @@ public class PropertyUrlCatalog implements IUrlCatalog
   /**
    * @see org.kalypso.contribs.java.net.IUrlCatalog#getPreferredNamespacePrefix(java.lang.String)
    */
+  @Override
   public String getPreferedNamespacePrefix( final String namespace )
   {
     return null;

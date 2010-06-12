@@ -101,6 +101,7 @@ public final class ViewerUtilities
 
     final Runnable runner = new Runnable()
     {
+      @Override
       public void run( )
       {
         if( !viewer.getControl().isDisposed() )
@@ -136,6 +137,7 @@ public final class ViewerUtilities
 
     final Runnable runner = new Runnable()
     {
+      @Override
       public void run( )
       {
         if( !viewer.getControl().isDisposed() )
@@ -159,6 +161,7 @@ public final class ViewerUtilities
       {
         final Runnable runner = new Runnable()
         {
+          @Override
           public void run( )
           {
             if( !viewer.getControl().isDisposed() )
@@ -185,6 +188,7 @@ public final class ViewerUtilities
       {
         final Runnable runner = new Runnable()
         {
+          @Override
           public void run( )
           {
             if( !viewer.getControl().isDisposed() )

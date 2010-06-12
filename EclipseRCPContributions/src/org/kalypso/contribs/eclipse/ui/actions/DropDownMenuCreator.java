@@ -57,6 +57,7 @@ public class DropDownMenuCreator implements IMenuCreator
   /**
    * @see org.eclipse.jface.action.IMenuCreator#getMenu(org.eclipse.swt.widgets.Control)
    */
+  @Override
   public Menu getMenu( final Control parent )
   {
     return m_menuManager.createContextMenu( parent );
@@ -65,6 +66,7 @@ public class DropDownMenuCreator implements IMenuCreator
   /**
    * @see org.eclipse.jface.action.IMenuCreator#getMenu(org.eclipse.swt.widgets.Menu)
    */
+  @Override
   public Menu getMenu( final Menu parent )
   {
     return null;
@@ -79,6 +81,7 @@ public class DropDownMenuCreator implements IMenuCreator
   /**
    * @see org.eclipse.jface.action.IMenuCreator#dispose()
    */
+  @Override
   public void dispose( )
   {
     // TODO Auto-generated method stub

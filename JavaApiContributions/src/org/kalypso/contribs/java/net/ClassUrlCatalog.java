@@ -132,6 +132,7 @@ public class ClassUrlCatalog implements IUrlCatalog
   /**
    * @see org.kalypso.contribs.java.net.IUrlCatalog#getURL(java.lang.String)
    */
+  @Override
   public URL getURL( final String key )
   {
     if( m_catalog != null )
@@ -143,6 +144,7 @@ public class ClassUrlCatalog implements IUrlCatalog
   /**
    * @see org.kalypso.contribs.java.net.IUrlCatalog#getPreferredNamespacePrefix(java.lang.String)
    */
+  @Override
   public String getPreferedNamespacePrefix( final String namespace )
   {
     if( m_catalog != null )
@@ -154,6 +156,7 @@ public class ClassUrlCatalog implements IUrlCatalog
   /**
    * @see org.kalypso.contribs.java.net.IUrlCatalog#getCatalog()
    */
+  @Override
   public Map<String, URL> getCatalog( )
   {
     return m_catalog.getCatalog();

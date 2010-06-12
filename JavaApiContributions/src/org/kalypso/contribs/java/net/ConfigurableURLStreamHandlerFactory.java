@@ -63,6 +63,7 @@ public class ConfigurableURLStreamHandlerFactory implements URLStreamHandlerFact
   /**
    * @see java.net.URLStreamHandlerFactory#createURLStreamHandler(java.lang.String)
    */
+  @Override
   public URLStreamHandler createURLStreamHandler( final String protocol )
   {
     if( !m_map.containsKey( protocol ) )

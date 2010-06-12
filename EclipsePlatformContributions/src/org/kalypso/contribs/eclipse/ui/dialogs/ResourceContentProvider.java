@@ -12,16 +12,20 @@ import java.util.List;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 
+/**
+ * @author N. Peiler
+ * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
+ * @deprecated Use {@link org.eclipse.ui.model.WorkbenchContentProvider} and
+ *             {@link org.eclipse.jface.viewers.ViewerFilter} instead.
+ */
+@Deprecated
 public class ResourceContentProvider extends BaseResourceContentProvider implements ITreeContentProvider
 {
-  private final boolean m_showClosedProjects = true;
-
   private final String[] m_allowedResourceExtensions;
 
   /**
@@ -29,8 +33,6 @@ public class ResourceContentProvider extends BaseResourceContentProvider impleme
    * 
    * @param allowedResourceExtensions
    *          tip: set a ViewerFilter and use {@link BaseResourceContentProvider}
-   * @author N. Peiler
-   * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
    */
   public ResourceContentProvider( final String[] allowedResourceExtensions )
   {
@@ -46,18 +48,7 @@ public class ResourceContentProvider extends BaseResourceContentProvider impleme
   {
     if( element instanceof IWorkspace )
     {
-      // check if closed projects should be shown
-      final IProject[] allProjects = ((IWorkspace) element).getRoot().getProjects();
-      if( m_showClosedProjects )
-        return allProjects;
-
-      final ArrayList<IProject> accessibleProjects = new ArrayList<IProject>();
-      for( int i = 0; i < allProjects.length; i++ )
-      {
-        if( allProjects[i].isOpen() )
-          accessibleProjects.add( allProjects[i] );
-      }
-      return accessibleProjects.toArray();
+      return ((IWorkspace) element).getRoot().getProjects();
     }
     else if( element instanceof IContainer )
     {
@@ -68,16 +59,16 @@ public class ResourceContentProvider extends BaseResourceContentProvider impleme
         {
           final List<IResource> children = new ArrayList<IResource>();
           final IResource[] members = container.members();
-          for( int i = 0; i < members.length; i++ )
+          for( final IResource member : members )
           {
-            if( members[i].getType() == IResource.FILE )
+            if( member.getType() == IResource.FILE )
             {
-              if( checkExtension( ((IFile) members[i]).getFileExtension() ) )
-                children.add( members[i] );
+              if( checkExtension( ((IFile) member).getFileExtension() ) )
+                children.add( member );
             }
             else
             {
-              children.add( members[i] );
+              children.add( member );
             }
           }
           return children.toArray();
@@ -99,9 +90,9 @@ public class ResourceContentProvider extends BaseResourceContentProvider impleme
     if( m_allowedResourceExtensions == null )
       return true;
     boolean returnValue = false;
-    for( int i = 0; i < m_allowedResourceExtensions.length; i++ )
+    for( final String m_allowedResourceExtension : m_allowedResourceExtensions )
     {
-      if( extension.equals( m_allowedResourceExtensions[i] ) )
+      if( extension.equals( m_allowedResourceExtension ) )
       {
         returnValue = true;
       }

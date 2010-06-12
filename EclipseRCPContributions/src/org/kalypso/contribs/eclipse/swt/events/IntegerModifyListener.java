@@ -40,6 +40,7 @@ public class IntegerModifyListener implements ModifyListener
   /**
    * @see org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.swt.events.ModifyEvent)
    */
+  @Override
   public void modifyText( ModifyEvent e )
   {
     if( e.widget instanceof Text )

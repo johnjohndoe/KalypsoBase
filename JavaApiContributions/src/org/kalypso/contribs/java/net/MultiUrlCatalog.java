@@ -68,6 +68,7 @@ public class MultiUrlCatalog implements IUrlCatalog
    * 
    * @see org.kalypso.contribs.java.net.IUrlCatalog#getURL(java.lang.String)
    */
+  @Override
   public URL getURL( final String namespace )
   {
     return m_catalog.get( namespace );
@@ -76,6 +77,7 @@ public class MultiUrlCatalog implements IUrlCatalog
   /**
    * @see org.kalypso.contribs.java.net.IUrlCatalog#getPreferredNamespacePrefix(java.lang.String)
    */
+  @Override
   public String getPreferedNamespacePrefix( final String namespace )
   {
     for( final IUrlCatalog catalog : m_catalogs )
@@ -91,6 +93,7 @@ public class MultiUrlCatalog implements IUrlCatalog
   /**
    * @see org.kalypso.contribs.java.net.IUrlCatalog#getCatalog()
    */
+  @Override
   public Map<String, URL> getCatalog( )
   {
     return m_catalog;

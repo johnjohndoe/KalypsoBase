@@ -76,6 +76,7 @@ public abstract class ContentOutlinePage2 extends Page implements IContentOutlin
   /**
    * @see org.eclipse.jface.viewers.ISelectionProvider#addSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
    */
+  @Override
   public void addSelectionChangedListener( ISelectionChangedListener listener )
   {
     selectionChangedListeners.add( listener );
@@ -128,6 +129,7 @@ public abstract class ContentOutlinePage2 extends Page implements IContentOutlin
       final ISelectionChangedListener l = (ISelectionChangedListener) listeners[i];
       SafeRunnable.run( new SafeRunnable()
       {
+        @Override
         public void run( )
         {
           l.selectionChanged( event );
@@ -150,6 +152,7 @@ public abstract class ContentOutlinePage2 extends Page implements IContentOutlin
   /**
    * @see org.eclipse.jface.viewers.ISelectionProvider#getSelection()
    */
+  @Override
   public ISelection getSelection( )
   {
     if( treeViewer == null )
@@ -180,6 +183,7 @@ public abstract class ContentOutlinePage2 extends Page implements IContentOutlin
   /**
    * @see org.eclipse.jface.viewers.ISelectionProvider#removeSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
    */
+  @Override
   public void removeSelectionChangedListener( ISelectionChangedListener listener )
   {
     selectionChangedListeners.remove( listener );
@@ -188,6 +192,7 @@ public abstract class ContentOutlinePage2 extends Page implements IContentOutlin
   /**
    * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
    */
+  @Override
   public void selectionChanged( SelectionChangedEvent event )
   {
     fireSelectionChanged( event.getSelection() );
@@ -205,6 +210,7 @@ public abstract class ContentOutlinePage2 extends Page implements IContentOutlin
   /**
    * @see org.eclipse.jface.viewers.ISelectionProvider#setSelection(org.eclipse.jface.viewers.ISelection)
    */
+  @Override
   public void setSelection( ISelection selection )
   {
     if( treeViewer != null )

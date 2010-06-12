@@ -23,6 +23,7 @@ public class FindFirstFileVisitor implements IResourceVisitor
     return m_result;
   }
 
+  @Override
   public boolean visit( final IResource resource )
   {
     if( m_result == null && resource instanceof IFile )

@@ -65,6 +65,7 @@ public abstract class AbstractUrlCatalog implements IUrlCatalog
   /**
    * @see org.kalypso.contribs.java.net.IUrlCatalog#getCatalog()
    */
+  @Override
   public final Map<String, URL> getCatalog( )
   {
     return m_catalog;
@@ -73,6 +74,7 @@ public abstract class AbstractUrlCatalog implements IUrlCatalog
   /**
    * @see org.kalypso.contribs.java.net.IUrlCatalog#getURL(java.lang.String)
    */
+  @Override
   public final URL getURL( final String namespace )
   {
     return m_catalog.get( namespace );
@@ -83,6 +85,7 @@ public abstract class AbstractUrlCatalog implements IUrlCatalog
    * 
    * @see org.kalypso.contribs.java.net.IUrlCatalog#getPreferredNamespacePrefix(java.lang.String)
    */
+  @Override
   public String getPreferedNamespacePrefix( final String namespace )
   {
     return m_prefixes.get( namespace );

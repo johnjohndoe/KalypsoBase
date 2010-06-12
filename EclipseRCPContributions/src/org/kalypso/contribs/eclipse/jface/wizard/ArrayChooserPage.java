@@ -112,6 +112,7 @@ public class ArrayChooserPage extends WizardPage
    */
   private final ICheckStateListener m_checkStateListener = new ICheckStateListener()
   {
+    @Override
     public void checkStateChanged( final CheckStateChangedEvent event )
     {
       /* Update the list of checked elements. */
@@ -253,6 +254,7 @@ public class ArrayChooserPage extends WizardPage
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
    */
+  @Override
   public void createControl( final Composite parent )
   {
     /* Init the dialog settings. */

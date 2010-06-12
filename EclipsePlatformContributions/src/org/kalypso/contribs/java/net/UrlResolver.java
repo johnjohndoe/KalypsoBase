@@ -51,8 +51,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.UnknownServiceException;
 import java.util.Iterator;
-import java.util.Properties;
 import java.util.Map.Entry;
+import java.util.Properties;
 
 import org.eclipse.core.internal.resources.PlatformURLResourceConnection;
 import org.eclipse.core.resources.IFile;
@@ -95,6 +95,7 @@ public class UrlResolver implements IUrlResolver
    * @param relativeURL
    * @throws MalformedURLException
    */
+  @Override
   public URL resolveURL( final URL baseURL, final String relativeURL ) throws MalformedURLException
   {
     if( relativeURL.startsWith( "project:" ) ) //$NON-NLS-1$
@@ -135,6 +136,7 @@ public class UrlResolver implements IUrlResolver
   /**
    * @see org.kalypso.contribs.java.net.IUrlResolver#getReplaceEntries()
    */
+  @Override
   public final Iterator<Entry<Object, Object>> getReplaceEntries( )
   {
     return m_replaceTokenMap.entrySet().iterator();
@@ -143,6 +145,7 @@ public class UrlResolver implements IUrlResolver
   /**
    * @see org.kalypso.contribs.java.net.IUrlResolver#addReplaceToken(java.lang.String, java.lang.String)
    */
+  @Override
   public void addReplaceToken( final String key, final String value )
   {
     m_replaceTokenMap.setProperty( key, value );
@@ -154,6 +157,7 @@ public class UrlResolver implements IUrlResolver
    * @throws IOException
    * @see org.kalypso.contribs.java.net.IUrlResolver#createWriter(java.net.URL)
    */
+  @Override
   public OutputStreamWriter createWriter( final URL url ) throws IOException
   {
     try
@@ -170,6 +174,7 @@ public class UrlResolver implements IUrlResolver
 
         final Runnable runnable = new Runnable()
         {
+          @Override
           public void run( )
           {
             try
@@ -215,6 +220,7 @@ public class UrlResolver implements IUrlResolver
    * 
    * @see org.kalypso.contribs.java.net.IUrlResolver#createReader(java.net.URL)
    */
+  @Override
   public InputStreamReader createReader( final URL url ) throws IOException
   {
     try

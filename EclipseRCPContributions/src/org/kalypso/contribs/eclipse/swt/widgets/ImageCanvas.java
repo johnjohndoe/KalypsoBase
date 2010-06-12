@@ -49,6 +49,7 @@ public class ImageCanvas extends Canvas
       sbHorz.setIncrement( 20 );
       sbHorz.addListener( SWT.Selection, new Listener()
       {
+        @Override
         public void handleEvent( final Event e )
         {
           repaint();
@@ -62,6 +63,7 @@ public class ImageCanvas extends Canvas
       sbVert.setIncrement( 20 );
       sbVert.addListener( SWT.Selection, new Listener()
       {
+        @Override
         public void handleEvent( final Event e )
         {
           repaint();
@@ -71,6 +73,7 @@ public class ImageCanvas extends Canvas
 
     addListener( SWT.Resize, new Listener()
     {
+      @Override
       public void handleEvent( final Event e )
       {
         handleResize();
@@ -79,6 +82,7 @@ public class ImageCanvas extends Canvas
 
     addListener( SWT.Paint, new Listener()
     {
+      @Override
       public void handleEvent( final Event event )
       {
         paint( event.gc );

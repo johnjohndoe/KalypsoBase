@@ -71,6 +71,7 @@ public class PasswordDialog extends InputDialog
     /**
      * @see org.eclipse.jface.dialogs.IInputValidator#isValid(java.lang.String)
      */
+    @Override
     public String isValid( final String newText )
     {
       if( newText == null || newText.length() == 0 )

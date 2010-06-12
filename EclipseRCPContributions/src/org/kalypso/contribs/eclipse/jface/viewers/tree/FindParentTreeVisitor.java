@@ -61,6 +61,7 @@ public class FindParentTreeVisitor implements ITreeVisitor
    * @see org.kalypso.contribs.eclipse.jface.ITreeVisitor#visit(java.lang.Object,
    *      org.eclipse.jface.viewers.ITreeContentProvider)
    */
+  @Override
   public boolean visit( final Object parent, final ITreeContentProvider contentprovider ) throws TreeVisiterAbortException
   {
     final Object[] children = contentprovider.getChildren( parent );

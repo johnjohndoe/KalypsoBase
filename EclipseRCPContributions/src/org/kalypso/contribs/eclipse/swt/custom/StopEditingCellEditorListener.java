@@ -67,6 +67,7 @@ public class StopEditingCellEditorListener implements ICellEditorListener
   /**
    * @see org.eclipse.jface.viewers.ICellEditorListener#applyEditorValue()
    */
+  @Override
   public void applyEditorValue( )
   {
     m_cellEditor.removeListener( this );
@@ -77,6 +78,7 @@ public class StopEditingCellEditorListener implements ICellEditorListener
   /**
    * @see org.eclipse.jface.viewers.ICellEditorListener#cancelEditor()
    */
+  @Override
   public void cancelEditor( )
   {
     m_cellEditor.removeListener( this );
@@ -90,6 +92,7 @@ public class StopEditingCellEditorListener implements ICellEditorListener
   /**
    * @see org.eclipse.jface.viewers.ICellEditorListener#editorValueChanged(boolean, boolean)
    */
+  @Override
   public void editorValueChanged( boolean oldValidState, boolean newValidState )
   {
   }

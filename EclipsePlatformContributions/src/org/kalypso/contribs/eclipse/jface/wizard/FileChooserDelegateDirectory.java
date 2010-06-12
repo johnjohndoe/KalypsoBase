@@ -50,11 +50,13 @@ import org.kalypso.contribs.eclipse.ui.forms.MessageProvider;
 
 public class FileChooserDelegateDirectory implements IFileChooserDelegate
 {
+  @Override
   public String getButtonText( )
   {
     return "Choose Directory";
   }
 
+  @Override
   public int getTextBoxStyle( )
   {
     return SWT.BORDER;

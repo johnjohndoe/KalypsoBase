@@ -59,6 +59,7 @@ public class ValueIterator implements Iterator<Object>
   /**
    * @see java.util.Iterator#remove()
    */
+  @Override
   public void remove()
   {
     throw new UnsupportedOperationException();
@@ -67,6 +68,7 @@ public class ValueIterator implements Iterator<Object>
   /**
    * @see java.util.Iterator#hasNext()
    */
+  @Override
   public boolean hasNext()
   {
     return m_pos < m_rows;
@@ -75,6 +77,7 @@ public class ValueIterator implements Iterator<Object>
   /**
    * @see java.util.Iterator#next()
    */
+  @Override
   public Object next()
   {
     int n = m_pos;

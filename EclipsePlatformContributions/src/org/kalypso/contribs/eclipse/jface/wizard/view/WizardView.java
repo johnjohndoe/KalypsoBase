@@ -656,6 +656,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
    * 
    * @see org.eclipse.jface.wizard.IWizardContainer2#updateSize()
    */
+  @Override
   public void updateSize( )
   {
     //
@@ -664,6 +665,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
   /**
    * @see org.eclipse.jface.wizard.IWizardContainer#getCurrentPage()
    */
+  @Override
   public IWizardPage getCurrentPage( )
   {
     return m_currentPage;
@@ -672,6 +674,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
   /**
    * @see org.eclipse.jface.wizard.IWizardContainer#getShell()
    */
+  @Override
   public Shell getShell( )
   {
     return getViewSite().getShell();
@@ -680,6 +683,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
   /**
    * @see org.eclipse.jface.wizard.IWizardContainer#showPage(org.eclipse.jface.wizard.IWizardPage)
    */
+  @Override
   public void showPage( final IWizardPage page )
   {
     showPageInternal( page );
@@ -722,6 +726,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
   /**
    * @see org.eclipse.jface.wizard.IWizardContainer#updateButtons()
    */
+  @Override
   public void updateButtons( )
   {
     if( m_wizard == null || m_currentPage == null )
@@ -826,6 +831,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
    * @see org.eclipse.jface.operation.IRunnableContext#run(boolean, boolean,
    *      org.eclipse.jface.operation.IRunnableWithProgress)
    */
+  @Override
   public void run( final boolean fork, final boolean cancelable, final IRunnableWithProgress runnable ) throws InvocationTargetException, InterruptedException
   {
     final IProgressService progressService = (IProgressService) getSite().getService( IProgressService.class );
@@ -930,6 +936,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
   /**
    * @see org.kalypso.contribs.eclipse.jface.wizard.view.IWizardContainer3#addWizardContainerListener(org.kalypso.contribs.eclipse.jface.wizard.view.IWizardContainerListener)
    */
+  @Override
   public void addWizardContainerListener( final IWizardContainerListener l )
   {
     m_listeners.add( l );
@@ -938,6 +945,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
   /**
    * @see org.kalypso.contribs.eclipse.jface.wizard.view.IWizardContainer3#removeWizardContainerListener(org.kalypso.contribs.eclipse.jface.wizard.view.IWizardContainerListener)
    */
+  @Override
   public void removeWizardContainerListener( final IWizardContainerListener l )
   {
     m_listeners.remove( l );
@@ -950,6 +958,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
     {
       SafeRunnable.run( new SafeRunnable()
       {
+        @Override
         public void run( ) throws Exception
         {
           listener.onWizardChanged( newwizard, reason );
@@ -1048,6 +1057,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
 
     BusyIndicator.showWhile( null, new Runnable()
     {
+      @Override
       public void run( )
       {
         final IContext context = HelpSystem.getContext( helpId );
@@ -1096,6 +1106,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
 
       final ICoreRunnableWithProgress saveOperation = new ICoreRunnableWithProgress()
       {
+        @Override
         public IStatus execute( final IProgressMonitor monitor ) throws CoreException
         {
           return wizard2.saveAllPages( monitor );
@@ -1616,6 +1627,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
   /**
    * @see org.eclipse.jface.wizard.IWizardContainer#updateMessage()
    */
+  @Override
   public void updateMessage( )
   {
     if( m_currentPage == null )
@@ -1636,6 +1648,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
   /**
    * @see org.eclipse.jface.wizard.IWizardContainer#updateTitleBar()
    */
+  @Override
   public void updateTitleBar( )
   {
     // update title-bar colors
@@ -1684,6 +1697,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
   /**
    * @see org.eclipse.jface.wizard.IWizardContainer#updateWindowTitle()
    */
+  @Override
   public void updateWindowTitle( )
   {
     if( m_wizard == null )
@@ -1726,6 +1740,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
    * (non-Javadoc)
    * @see org.eclipse.jface.dialogs.IPageChangeProvider#getSelectedPage()
    */
+  @Override
   public Object getSelectedPage( )
   {
     return getCurrentPage();
@@ -1735,6 +1750,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
    * (non-Javadoc)
    * @see org.eclipse.jface.dialog.IPageChangeProvider#addPageChangedListener()
    */
+  @Override
   public void addPageChangedListener( final IPageChangedListener listener )
   {
     pageChangedListeners.add( listener );
@@ -1744,6 +1760,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
    * (non-Javadoc)
    * @see org.eclipse.jface.dialog.IPageChangeProvider#removePageChangedListener()
    */
+  @Override
   public void removePageChangedListener( final IPageChangedListener listener )
   {
     pageChangedListeners.remove( listener );
@@ -1766,6 +1783,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
       final IPageChangedListener l = (IPageChangedListener) listeners[i];
       SafeRunnable.run( new SafeRunnable()
       {
+        @Override
         public void run( )
         {
           l.pageChanged( event );
@@ -1830,6 +1848,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
       final IPageChangingListener l = (IPageChangingListener) listeners[i];
       SafeRunnable.run( new SafeRunnable()
       {
+        @Override
         public void run( )
         {
           l.handlePageChanging( event );

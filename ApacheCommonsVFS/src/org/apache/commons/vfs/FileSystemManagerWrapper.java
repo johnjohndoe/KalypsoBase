@@ -162,7 +162,6 @@ public class FileSystemManagerWrapper implements FileSystemManager
     return m_manager.getCacheStrategy();
   }
 
-
   /**
    * @see org.apache.commons.vfs.FileSystemManager#getFileContentInfoFactory()
    */
@@ -176,7 +175,7 @@ public class FileSystemManagerWrapper implements FileSystemManager
    * @see org.apache.commons.vfs.FileSystemManager#getFileObjectDecorator()
    */
   @Override
-  public Class getFileObjectDecorator( )
+  public Class< ? > getFileObjectDecorator( )
   {
     return m_manager.getFileObjectDecorator();
   }
@@ -185,7 +184,7 @@ public class FileSystemManagerWrapper implements FileSystemManager
    * @see org.apache.commons.vfs.FileSystemManager#getFileObjectDecoratorConst()
    */
   @Override
-  public Constructor getFileObjectDecoratorConst( )
+  public Constructor< ? > getFileObjectDecoratorConst( )
   {
     return m_manager.getFileObjectDecoratorConst();
   }
@@ -221,7 +220,7 @@ public class FileSystemManagerWrapper implements FileSystemManager
    * @see org.apache.commons.vfs.FileSystemManager#getProviderCapabilities(java.lang.String)
    */
   @Override
-  public Collection getProviderCapabilities( final String scheme ) throws FileSystemException
+  public Collection< ? > getProviderCapabilities( final String scheme ) throws FileSystemException
   {
     return m_manager.getProviderCapabilities( scheme );
   }
@@ -338,6 +337,5 @@ public class FileSystemManagerWrapper implements FileSystemManager
   {
     return m_manager.toFileObject( file );
   }
-
 
 }

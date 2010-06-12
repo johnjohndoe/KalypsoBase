@@ -195,6 +195,7 @@ public class TreeSelectionDialog extends SelectionDialog
 
     m_treeViewer.addCheckStateListener( new ICheckStateListener()
     {
+      @Override
       @SuppressWarnings("synthetic-access")
       public void checkStateChanged( final CheckStateChangedEvent event )
       {

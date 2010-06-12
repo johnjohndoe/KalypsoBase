@@ -146,6 +146,7 @@ public class TreeSingleSelectionDialog extends SelectionDialog
 
     m_treeViewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
+      @Override
       @SuppressWarnings("synthetic-access")
       public void selectionChanged( final SelectionChangedEvent event )
       {

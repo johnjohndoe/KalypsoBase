@@ -54,6 +54,7 @@ public abstract class SafeRunnable implements ISafeRunnable
   /**
    * @see org.eclipse.core.runtime.ISafeRunnable#handleException(java.lang.Throwable)
    */
+  @Override
   public void handleException( final Throwable exception )
   {
     final IStatus status = StatusUtilities.statusFromThrowable( exception );

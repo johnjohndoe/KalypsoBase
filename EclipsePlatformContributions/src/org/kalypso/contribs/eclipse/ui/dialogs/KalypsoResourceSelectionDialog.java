@@ -77,6 +77,7 @@ public class KalypsoResourceSelectionDialog extends SelectionDialog
 
     final Listener listener = new Listener()
     {
+      @Override
       public void handleEvent( final Event event )
       {
         final IResource selectedResource = group.getSelectedResource();
