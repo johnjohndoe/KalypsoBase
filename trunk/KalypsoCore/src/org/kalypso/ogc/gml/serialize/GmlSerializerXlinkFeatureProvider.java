@@ -78,6 +78,7 @@ public class GmlSerializerXlinkFeatureProvider extends AbstractXLinkFeatureProvi
   /**
    * @see org.kalypsodeegree.model.feature.IFeatureProvider#getWorkspace()
    */
+  @Override
   public GMLWorkspace getWorkspace( )
   {
     final String uri = getUri();
@@ -106,6 +107,7 @@ public class GmlSerializerXlinkFeatureProvider extends AbstractXLinkFeatureProvi
   /**
    * @see org.kalypsodeegree.model.feature.IFeatureProvider#dispose()
    */
+  @Override
   public void dispose( )
   {
     m_workspace = null;

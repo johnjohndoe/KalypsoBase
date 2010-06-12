@@ -39,6 +39,7 @@ public final class FeatureThemePaintable implements IStylePaintable
     m_boundingBox = worldToScreen.getSourceRect();
   }
 
+  @Override
   public void paint( final DisplayElement displayElement, final IProgressMonitor paintMonitor ) throws CoreException
   {
     displayElement.paint( m_graphics, m_p, paintMonitor );

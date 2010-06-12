@@ -9,6 +9,7 @@ import org.kalypsodeegree.model.feature.Feature;
 
 public class QNamePropertyTester extends PropertyTester
 {
+  @Override
   public boolean test( final Object receiver, final String property, final Object[] args, final Object expectedValue )
   {
     if( "qname".equals( property ) ) //$NON-NLS-1$

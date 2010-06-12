@@ -37,6 +37,7 @@ public class StringValidityKey
 
   protected static class StringComparator implements Comparator<StringValidityKey>
   {
+    @Override
     public int compare( final StringValidityKey k1, final StringValidityKey k2 )
     {
       return k1.getString().compareTo( k2.getString() );

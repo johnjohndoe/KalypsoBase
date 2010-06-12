@@ -130,6 +130,7 @@ public class PointUtilities
         /**
          * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
          */
+        @Override
         public int compare( Point2D p1, Point2D p2 )
         {
             return m_dc.compare( p1.getX(  ), p2.getX(  ) );
@@ -159,6 +160,7 @@ public class PointUtilities
         /**
          * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
          */
+        @Override
         public int compare( Point2D p1, Point2D p2 )
         {
             return m_dc.compare( p1.getY(  ), p2.getY(  ) );

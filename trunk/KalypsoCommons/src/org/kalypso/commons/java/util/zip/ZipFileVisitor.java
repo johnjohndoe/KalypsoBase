@@ -100,6 +100,7 @@ public class ZipFileVisitor implements FileVisitor
    * @throws IOException
    * @see org.kalypso.contribs.java.io.FileVisitor#visit(java.io.File)
    */
+  @Override
   public boolean visit( final File file ) throws IOException
   {
     if( file.isFile() )

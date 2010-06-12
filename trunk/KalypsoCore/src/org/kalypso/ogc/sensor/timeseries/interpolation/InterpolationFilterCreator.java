@@ -61,6 +61,7 @@ import org.kalypso.zml.filters.InterpolationFilterType;
  */
 public class InterpolationFilterCreator implements IFilterCreator
 {
+  @Override
   public IObservationFilter createFilter( AbstractFilterType aft, IObservation baseObs, final URL context )
       throws SensorException
   {

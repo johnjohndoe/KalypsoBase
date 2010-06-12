@@ -50,6 +50,7 @@ public class KalypsoThemeLoadStatusVisitor implements IKalypsoThemeVisitor
 {
   boolean m_isLoaded = true;
 
+  @Override
   public boolean visit( final IKalypsoTheme theme )
   {
     if( !m_isLoaded )

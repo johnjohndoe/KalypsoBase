@@ -56,6 +56,7 @@ public abstract class MapPanelAdapter implements IMapPanelListener
    * @see org.kalypso.ogc.gml.map.listeners.IMapPanelListener#onExtentChanged(org.kalypso.ogc.gml.map.IMapPanel,
    *      org.kalypsodeegree.model.geometry.GM_Envelope, org.kalypsodeegree.model.geometry.GM_Envelope)
    */
+  @Override
   public void onExtentChanged( final IMapPanel source, final GM_Envelope oldExtent, final GM_Envelope newExtent )
   {
   }
@@ -64,6 +65,7 @@ public abstract class MapPanelAdapter implements IMapPanelListener
    * @see org.kalypso.ogc.gml.map.IMapPanelListener#onMapModelChanged(org.kalypso.ogc.gml.map.MapPanel,
    *      org.kalypso.ogc.gml.mapmodel.IMapModell, org.kalypso.ogc.gml.mapmodel.IMapModell)
    */
+  @Override
   public void onMapModelChanged( final IMapPanel source, final IMapModell oldModel, final IMapModell newModel )
   {
   }
@@ -71,6 +73,7 @@ public abstract class MapPanelAdapter implements IMapPanelListener
   /**
    * @see org.kalypso.ogc.gml.map.IMapPanelListener#onMessageChanged(org.kalypso.ogc.gml.map.MapPanel, java.lang.String)
    */
+  @Override
   public void onMessageChanged( final IMapPanel source, final String message )
   {
   }
@@ -87,6 +90,7 @@ public abstract class MapPanelAdapter implements IMapPanelListener
    * @see org.kalypso.ogc.gml.map.listeners.IMapPanelListener#onMouseMoveEvent(org.kalypso.ogc.gml.map.IMapPanel,
    *      org.kalypsodeegree.model.geometry.GM_Point, int, int)
    */
+  @Override
   public void onMouseMoveEvent( final IMapPanel source, final GM_Point gmPoint, final int mousex, final int mousey )
   {
   }

@@ -57,6 +57,7 @@ public class FeatureThemeQNameActionFilter implements IActionFilterEx
   /**
    * @see org.kalypso.contribs.eclipse.ui.actionfilters.IActionFilterEx#getNames()
    */
+  @Override
   public String[] getNames( )
   {
     return new String[] { ATTR_QNAME };
@@ -65,6 +66,7 @@ public class FeatureThemeQNameActionFilter implements IActionFilterEx
   /**
    * @see org.eclipse.ui.IActionFilter#testAttribute(java.lang.Object, java.lang.String, java.lang.String)
    */
+  @Override
   public boolean testAttribute( final Object target, final String name, final String value )
   {
 

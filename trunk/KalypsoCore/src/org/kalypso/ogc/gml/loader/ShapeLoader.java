@@ -79,6 +79,7 @@ public class ShapeLoader extends WorkspaceLoader
   /**
    * @see org.kalypso.loader.ILoader#getDescription()
    */
+  @Override
   public String getDescription( )
   {
     return "ESRI Shape"; //$NON-NLS-1$

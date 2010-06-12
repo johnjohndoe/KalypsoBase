@@ -91,6 +91,7 @@ public class CompositeCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#getDescription()
    */
+  @Override
   public String getDescription( )
   {
     return m_description;
@@ -101,6 +102,7 @@ public class CompositeCommand implements ICommand
    * 
    * @see org.kalypso.commons.command.ICommand#isUndoable()
    */
+  @Override
   public boolean isUndoable( )
   {
     return m_canUndo;
@@ -111,6 +113,7 @@ public class CompositeCommand implements ICommand
    * 
    * @see org.kalypso.commons.command.ICommand#process()
    */
+  @Override
   public void process( ) throws Exception
   {
     for( final ICommand command : m_commands )
@@ -122,6 +125,7 @@ public class CompositeCommand implements ICommand
    * 
    * @see org.kalypso.commons.command.ICommand#redo()
    */
+  @Override
   public void redo( ) throws Exception
   {
     process();
@@ -132,6 +136,7 @@ public class CompositeCommand implements ICommand
    * 
    * @see org.kalypso.commons.command.ICommand#undo()
    */
+  @Override
   public void undo( ) throws Exception
   {
     for( int i = m_commands.size() - 1; i >= 0; i-- )

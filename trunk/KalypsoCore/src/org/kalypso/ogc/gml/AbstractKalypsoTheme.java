@@ -154,6 +154,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
     {
       final ISafeRunnable code = new SafeRunnable()
       {
+        @Override
         public void run( ) throws Exception
         {
           r.visit( l );
@@ -167,6 +168,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#addKalypsoThemeListener(org.kalypso.ogc.gml.IKalypsoThemeListener)
    */
+  @Override
   public void addKalypsoThemeListener( final IKalypsoThemeListener listener )
   {
     Assert.isNotNull( listener );
@@ -177,6 +179,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#dispose()
    */
+  @Override
   public void dispose( )
   {
     m_listeners.clear();
@@ -195,6 +198,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
   {
     acceptListenersRunnable( new IListenerRunnable()
     {
+      @Override
       public void visit( final IKalypsoThemeListener l )
       {
         if( l == null )
@@ -217,6 +221,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
 
     acceptListenersRunnable( new IListenerRunnable()
     {
+      @Override
       public void visit( final IKalypsoThemeListener l )
       {
         if( l == null )
@@ -234,6 +239,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
   {
     acceptListenersRunnable( new IListenerRunnable()
     {
+      @Override
       public void visit( final IKalypsoThemeListener l )
       {
         if( l == null )
@@ -256,6 +262,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
     final IKalypsoTheme theme = AbstractKalypsoTheme.this;
     acceptListenersRunnable( new IListenerRunnable()
     {
+      @Override
       public void visit( final IKalypsoThemeListener l )
       {
         if( l == null )
@@ -271,6 +278,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
    * 
    * @see org.kalypso.ogc.gml.IKalypsoTheme#getContext()
    */
+  @Override
   public String getTypeContext( )
   {
     return getType();
@@ -285,6 +293,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
    * 
    * @return The default image descriptor.
    */
+  @Override
   public ImageDescriptor getDefaultIcon( )
   {
     // FIXME: might be called after theme was already disposed... the image is then never disposed....
@@ -298,6 +307,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#getLabel()
    */
+  @Override
   public String getLabel( )
   {
     return getName().getValue();
@@ -306,11 +316,13 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#getMapModell()
    */
+  @Override
   public IMapModell getMapModell( )
   {
     return m_mapModel;
   }
 
+  @Override
   public I10nString getName( )
   {
     return m_name;
@@ -330,6 +342,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
    * @return <code>defaultValue</code>, if the requested property is not set.
    * @see org.kalypso.ogc.gml.IKalypsoTheme#getProperty(java.lang.String, java.lang.String)
    */
+  @Override
   public String getProperty( final String name, final String defaultValue )
   {
     if( !m_properties.containsKey( name ) )
@@ -349,11 +362,13 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#getStatus()
    */
+  @Override
   public IStatus getStatus( )
   {
     return m_status;
   }
 
+  @Override
   public String getType( )
   {
     return m_type;
@@ -362,6 +377,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#isLoaded()
    */
+  @Override
   public boolean isLoaded( )
   {
     return true;
@@ -370,6 +386,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#isVisible()
    */
+  @Override
   public boolean isVisible( )
   {
     return m_isVisible;
@@ -378,6 +395,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#removeKalypsoThemeListener(org.kalypso.ogc.gml.IKalypsoThemeListener)
    */
+  @Override
   public void removeKalypsoThemeListener( final IKalypsoThemeListener listener )
   {
     m_listeners.remove( listener );
@@ -386,6 +404,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#setName(org.kalypso.contribs.java.lang.I10nString)
    */
+  @Override
   public void setName( final I10nString name )
   {
     m_name = name;
@@ -396,6 +415,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#setProperty(java.lang.String, java.lang.String)
    */
+  @Override
   public void setProperty( final String name, final String value )
   {
     m_properties.put( name, value );
@@ -425,6 +445,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#setVisible(boolean)
    */
+  @Override
   public void setVisible( final boolean visible )
   {
     if( visible != m_isVisible )
@@ -443,9 +464,8 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
   /**
    * @see org.eclipse.core.runtime.PlatformObject#getAdapter(java.lang.Class)
    */
-  @SuppressWarnings("unchecked")
   @Override
-  public Object getAdapter( final Class adapter )
+  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
   {
     if( adapter == IKalypsoThemeInfo.class )
     {
@@ -464,11 +484,13 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
    * 
    * @return The URL or URN string. May be null.
    */
+  @Override
   public String getLegendIcon( )
   {
     return m_externIconUrn;
   }
 
+  @Override
   public void setLegendIcon( final String legendIcon, final URL context )
   {
     if( ObjectUtils.equals( m_externIconUrn, legendIcon ) && ObjectUtils.equals( m_context, context ) )
@@ -485,6 +507,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
    * 
    * @return The context, if the theme is part of a template loaded from a file. May be null.
    */
+  @Override
   public URL getContext( )
   {
     return m_context;
@@ -496,6 +519,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
    * 
    * @return True,if the theme allows showing its children in an outline. Otherwise, false.
    */
+  @Override
   public boolean shouldShowLegendChildren( )
   {
     return m_showLegendChildren;

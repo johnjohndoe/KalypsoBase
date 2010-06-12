@@ -59,6 +59,7 @@ public class FeaturePhenomenon implements IPhenomenon
   /**
    * @see org.kalypso.observation.phenomenon.IPhenomenon#getDescription()
    */
+  @Override
   public String getDescription( )
   {
     return NamedFeatureHelper.getDescription( m_feature );
@@ -67,6 +68,7 @@ public class FeaturePhenomenon implements IPhenomenon
   /**
    * @see org.kalypso.observation.phenomenon.IPhenomenon#getID()
    */
+  @Override
   public String getID( )
   {
     if( m_feature instanceof XLinkedFeature_Impl )
@@ -78,6 +80,7 @@ public class FeaturePhenomenon implements IPhenomenon
   /**
    * @see org.kalypso.observation.phenomenon.IPhenomenon#getName()
    */
+  @Override
   public String getName( )
   {
     return NamedFeatureHelper.getName( m_feature );

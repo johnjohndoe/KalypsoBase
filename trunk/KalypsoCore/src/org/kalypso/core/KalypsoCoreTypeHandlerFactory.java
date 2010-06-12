@@ -56,6 +56,7 @@ public class KalypsoCoreTypeHandlerFactory implements ITypeHandlerFactory<IMarsh
   /**
    * @see org.kalypso.gmlschema.types.ITypeHandlerFactory#registerTypeHandlers(org.kalypso.gmlschema.types.ITypeRegistry)
    */
+  @Override
   public void registerTypeHandlers( final ITypeRegistry<IMarshallingTypeHandler> marshallingRegistry )
   {
     try

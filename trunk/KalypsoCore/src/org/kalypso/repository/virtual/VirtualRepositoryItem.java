@@ -53,7 +53,7 @@ import org.kalypso.zml.filters.AbstractFilterType;
 
 /**
  * VirtualRepositoryItem
- *
+ * 
  * @author schlienger
  */
 public class VirtualRepositoryItem implements IRepositoryItem
@@ -81,6 +81,7 @@ public class VirtualRepositoryItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#getName()
    */
+  @Override
   public String getName( )
   {
     return m_name;
@@ -88,13 +89,16 @@ public class VirtualRepositoryItem implements IRepositoryItem
 
   /**
    * Returns
-   *
+   * 
    * <pre>
    * vrep://&lt;item_id&gt;
-   * </pre>.
-   *
+   * </pre>
+   * 
+   * .
+   * 
    * @see org.kalypso.repository.IRepositoryItem#getIdentifier()
    */
+  @Override
   public String getIdentifier( )
   {
     return getRepository().getIdentifier() + m_itemId;
@@ -103,6 +107,7 @@ public class VirtualRepositoryItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#getParent()
    */
+  @Override
   public IRepositoryItem getParent( )
   {
     return m_parent;
@@ -111,6 +116,7 @@ public class VirtualRepositoryItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#hasChildren()
    */
+  @Override
   public boolean hasChildren( )
   {
     return m_children != null && m_children.length > 0;
@@ -119,6 +125,7 @@ public class VirtualRepositoryItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#getChildren()
    */
+  @Override
   public IRepositoryItem[] getChildren( )
   {
     return m_children;
@@ -132,6 +139,7 @@ public class VirtualRepositoryItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#getRepository()
    */
+  @Override
   public IRepository getRepository( )
   {
     return m_repository;
@@ -139,7 +147,7 @@ public class VirtualRepositoryItem implements IRepositoryItem
 
   /**
    * Sets the filter type. If valid, this allows this item to be adapted into an IObservation.
-   *
+   * 
    * @param filterType
    */
   public void setFilterType( final AbstractFilterType filterType )
@@ -147,8 +155,8 @@ public class VirtualRepositoryItem implements IRepositoryItem
     m_filterType = filterType;
   }
 
-  @SuppressWarnings("unchecked")
-  public Object getAdapter( final Class anotherClass )
+  @Override
+  public Object getAdapter( @SuppressWarnings("rawtypes") final Class anotherClass )
   {
     if( m_filterType != null && anotherClass == IObservation.class )
     {
@@ -174,7 +182,7 @@ public class VirtualRepositoryItem implements IRepositoryItem
    * @see org.kalypso.repository.IRepositoryItem#hasAdapter(java.lang.Class)
    */
   @Override
-  public boolean hasAdapter( final Class adapter )
+  public boolean hasAdapter( final Class< ? > adapter )
   {
     if( m_filterType != null && adapter == IObservation.class )
     {

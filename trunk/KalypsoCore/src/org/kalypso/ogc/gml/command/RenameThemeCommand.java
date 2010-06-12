@@ -67,6 +67,7 @@ public class RenameThemeCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#isUndoable()
    */
+  @Override
   public boolean isUndoable( )
   {
     return true;
@@ -75,6 +76,7 @@ public class RenameThemeCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#process()
    */
+  @Override
   public void process( ) throws Exception
   {
     m_theme.setName( m_newName );
@@ -83,6 +85,7 @@ public class RenameThemeCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#redo()
    */
+  @Override
   public void redo( ) throws Exception
   {
     m_theme.setName( m_newName );
@@ -91,6 +94,7 @@ public class RenameThemeCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#undo()
    */
+  @Override
   public void undo( ) throws Exception
   {
     m_theme.setName( m_oldName );
@@ -99,6 +103,7 @@ public class RenameThemeCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#getDescription()
    */
+  @Override
   public String getDescription( )
   {
     return  "org.kalypso.ogc.gml.command.RenameThemeCommand" ; //$NON-NLS-1$

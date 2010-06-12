@@ -58,6 +58,7 @@ import org.kalypso.zml.filters.ForecastFilterType;
  */
 public class ForecastFilterCreator implements IFilterCreator
 {
+  @Override
   public IObservationFilter createFilter( AbstractFilterType aft, IObservation baseObs, final URL context )
       throws SensorException
   {

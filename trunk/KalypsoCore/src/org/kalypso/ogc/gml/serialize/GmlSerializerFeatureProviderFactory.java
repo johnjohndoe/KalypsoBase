@@ -57,6 +57,7 @@ public class GmlSerializerFeatureProviderFactory implements IFeatureProviderFact
    * @see org.kalypsodeegree_impl.model.feature.IFeatureProviderFactory#createFeatureProvider(org.kalypsodeegree.model.feature.Feature,
    *      java.lang.String)
    */
+  @Override
   public IFeatureProvider createFeatureProvider( final GMLWorkspace context, final String urn )
   {
     final ICatalog baseCatalog = KalypsoCorePlugin.getDefault().getCatalogManager().getBaseCatalog();

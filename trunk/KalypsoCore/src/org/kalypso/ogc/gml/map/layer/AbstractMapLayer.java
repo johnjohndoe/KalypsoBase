@@ -126,6 +126,7 @@ public abstract class AbstractMapLayer implements IMapLayer
     m_panel.removeMapPanelListener( m_panelListener );
   }
 
+  @Override
   public String getLabel( )
   {
     return m_theme.getLabel();

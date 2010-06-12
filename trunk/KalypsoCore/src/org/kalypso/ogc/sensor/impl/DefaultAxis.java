@@ -116,6 +116,7 @@ public final class DefaultAxis extends AbstractAxis implements IAxis
   /**
    * @see org.kalypso.ogc.sensor.IAxis#getUnit()
    */
+  @Override
   public String getUnit( )
   {
     return m_unit;
@@ -124,6 +125,7 @@ public final class DefaultAxis extends AbstractAxis implements IAxis
   /**
    * @see org.kalypso.ogc.sensor.IAxis#getName()
    */
+  @Override
   public String getName( )
   {
     return m_label;
@@ -132,6 +134,7 @@ public final class DefaultAxis extends AbstractAxis implements IAxis
   /**
    * @see org.kalypso.ogc.sensor.IAxis#getDataClass()
    */
+  @Override
   public Class< ? > getDataClass( )
   {
     return m_dataClass;
@@ -140,6 +143,7 @@ public final class DefaultAxis extends AbstractAxis implements IAxis
   /**
    * @see org.kalypso.ogc.sensor.IAxis#getType()
    */
+  @Override
   public String getType( )
   {
     return m_type;
@@ -148,6 +152,7 @@ public final class DefaultAxis extends AbstractAxis implements IAxis
   /**
    * @see org.kalypso.ogc.sensor.IAxis#isKey()
    */
+  @Override
   public boolean isKey( )
   {
     return m_isKey;
@@ -156,6 +161,7 @@ public final class DefaultAxis extends AbstractAxis implements IAxis
   /**
    * @see org.kalypso.ogc.sensor.IAxis#isPersistable()
    */
+  @Override
   public boolean isPersistable( )
   {
     return m_persistable;

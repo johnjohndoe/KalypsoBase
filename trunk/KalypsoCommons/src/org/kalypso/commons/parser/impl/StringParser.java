@@ -61,6 +61,7 @@ public class StringParser extends AbstractParser
   /**
    * @see org.kalypso.commons.parser.IParser#getObjectClass()
    */
+  @Override
   public Class<String> getObjectClass( )
   {
     return String.class;
@@ -69,6 +70,7 @@ public class StringParser extends AbstractParser
   /**
    * @see org.kalypso.commons.parser.IParser#getFormat()
    */
+  @Override
   public String getFormat()
   {
     return ""; //$NON-NLS-1$
@@ -77,6 +79,7 @@ public class StringParser extends AbstractParser
   /**
    * @see org.kalypso.commons.parser.IParser#parse(java.lang.String)
    */
+  @Override
   public Object parse( final String text )
   {
     return text;
@@ -100,6 +103,7 @@ public class StringParser extends AbstractParser
   /**
    * @see org.kalypso.commons.parser.IParser#compare(java.lang.Object, java.lang.Object)
    */
+  @Override
   public int compare( final Object value1, final Object value2 )
   {
     return compare( value1.toString(), value2.toString() );

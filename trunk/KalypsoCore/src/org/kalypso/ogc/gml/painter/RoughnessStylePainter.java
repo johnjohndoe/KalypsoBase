@@ -42,8 +42,6 @@ package org.kalypso.ogc.gml.painter;
 
 import java.util.List;
 
-import javax.xml.namespace.QName;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
@@ -69,6 +67,7 @@ class RoughnessStylePainter implements IStylePainter
     m_features = features;
   }
 
+  @Override
   public void paint( final IStylePaintable paintable, final IProgressMonitor monitor ) throws CoreException
   {
     try
@@ -83,7 +82,6 @@ class RoughnessStylePainter implements IStylePainter
 
   private void doPaint( final IStylePaintable paintable, final IProgressMonitor monitor ) throws CoreException
   {
-    final QName qname = m_style.getFeatureTypeName();
     final Rule[] rules = m_style.getRules();
 
     // collect ALL roughness rules and put them in the filter
@@ -91,7 +89,7 @@ class RoughnessStylePainter implements IStylePainter
     for( final Rule rule : rules )
       lRoughRule.put( rule.getTitle(), rule );
 
-    final IStylePainter rulePainter = StylePainterFactory.create( lRoughRule, qname, m_features );
+    final IStylePainter rulePainter = StylePainterFactory.create( lRoughRule, m_features );
     rulePainter.paint( paintable, monitor );
   }
 

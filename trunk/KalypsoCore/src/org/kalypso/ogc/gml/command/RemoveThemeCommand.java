@@ -75,6 +75,7 @@ public class RemoveThemeCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#isUndoable()
    */
+  @Override
   public boolean isUndoable( )
   {
     return true;
@@ -83,6 +84,7 @@ public class RemoveThemeCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#process()
    */
+  @Override
   public void process( ) throws Exception
   {
     /* Check if deleteable, should never fail, all user actions should be aware of this flag. */
@@ -97,6 +99,7 @@ public class RemoveThemeCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#redo()
    */
+  @Override
   public void redo( ) throws Exception
   {
     m_mapModell.removeTheme( m_theme );
@@ -105,6 +108,7 @@ public class RemoveThemeCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#undo()
    */
+  @Override
   public void undo( ) throws Exception
   {
     m_mapModell.addTheme( m_theme );
@@ -113,6 +117,7 @@ public class RemoveThemeCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#getDescription()
    */
+  @Override
   public String getDescription( )
   {
     return Messages.getString( "org.kalypso.ogc.gml.command.RemoveThemeCommand.1" ); //$NON-NLS-1$

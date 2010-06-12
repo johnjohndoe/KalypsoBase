@@ -233,6 +233,7 @@ public class GmlLoader extends WorkspaceLoader
   /**
    * @see org.kalypso.loader.ILoader#getDescription()
    */
+  @Override
   public String getDescription( )
   {
     return Messages.getString( "org.kalypso.ogc.gml.loader.GmlLoader.14" ); //$NON-NLS-1$

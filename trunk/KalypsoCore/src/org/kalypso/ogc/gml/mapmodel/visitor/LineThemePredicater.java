@@ -59,6 +59,7 @@ public class LineThemePredicater implements IKalypsoThemePredicate
   /**
    * @see org.kalypso.ogc.gml.mapmodel.IKalypsoThemePredicate#decide(org.kalypso.ogc.gml.IKalypsoTheme)
    */
+  @Override
   public boolean decide( final IKalypsoTheme theme )
   {
     if( theme instanceof IKalypsoFeatureTheme )

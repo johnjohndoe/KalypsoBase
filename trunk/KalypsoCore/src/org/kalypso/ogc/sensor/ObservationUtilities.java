@@ -483,6 +483,7 @@ public class ObservationUtilities
     /**
      * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
      */
+    @Override
     public int compare( final IAxis a1, final IAxis a2 )
     {
       return a1.getType().compareTo( a2.getType() );

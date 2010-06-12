@@ -32,7 +32,7 @@ import org.kalypso.contribs.eclipse.ui.MementoWithUrlResolver;
 
 /**
  * This abstract class is a facade for the eclipse browser view.
- *
+ * 
  * @see org.eclipse.ui.internal.browser.BrowserViewer Supports the IMemento for persistance and context for relative
  *      references MementoWithUrlResolver.
  * @author kuepfer
@@ -195,6 +195,7 @@ public abstract class AbstractBrowserView extends ViewPart implements IBrowserVi
 
     m_viewer.getDisplay().asyncExec( new Runnable()
     {
+      @Override
       public void run( )
       {
         try
@@ -232,6 +233,7 @@ public abstract class AbstractBrowserView extends ViewPart implements IBrowserVi
     m_viewer.setFocus();
   }
 
+  @Override
   public boolean close( )
   {
     try
@@ -245,11 +247,13 @@ public abstract class AbstractBrowserView extends ViewPart implements IBrowserVi
     }
   }
 
+  @Override
   public IActionBars getActionBars( )
   {
     return getViewSite().getActionBars();
   }
 
+  @Override
   public void openInExternalBrowser( final String url )
   {
     try
@@ -270,9 +274,9 @@ public abstract class AbstractBrowserView extends ViewPart implements IBrowserVi
 
   /**
    * Return true if the filename has a "web" extension.
-   *
+   * 
    * @param name
-   *            The filename.
+   *          The filename.
    * @return True if the filename has a "web" extension.
    */
   public static boolean isWebFile( final String name )
@@ -333,6 +337,7 @@ public abstract class AbstractBrowserView extends ViewPart implements IBrowserVi
         /**
          * @see java.lang.Runnable#run()
          */
+        @Override
         public void run( )
         {
           m_viewer.setURL( fileAsString );
@@ -352,6 +357,7 @@ public abstract class AbstractBrowserView extends ViewPart implements IBrowserVi
         runnable = new Runnable()
         {
 
+          @Override
           public void run( )
           {
             m_viewer.setURL( url );
@@ -398,9 +404,8 @@ public abstract class AbstractBrowserView extends ViewPart implements IBrowserVi
   /**
    * @see org.eclipse.ui.part.WorkbenchPart#getAdapter(java.lang.Class)
    */
-  @SuppressWarnings("unchecked")
   @Override
-  public Object getAdapter( final Class adapter )
+  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
   {
     if( adapter == IHtmlProvider.class )
       return new DefaultHtmlProvider( getHtml() );

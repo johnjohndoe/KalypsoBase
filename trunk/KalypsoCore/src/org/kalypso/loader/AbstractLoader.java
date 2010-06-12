@@ -57,6 +57,7 @@ public abstract class AbstractLoader implements ILoader
   /**
    * @see org.kalypso.loader.ILoader#getStatus()
    */
+  @Override
   public IStatus getStatus( )
   {
     return m_status;

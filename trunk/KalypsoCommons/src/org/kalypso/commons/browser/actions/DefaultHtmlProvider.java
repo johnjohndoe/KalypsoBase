@@ -57,6 +57,7 @@ public class DefaultHtmlProvider implements IHtmlProvider
   /**
    * @see org.kalypso.contribs.eclipse.ui.browser.actions.IHtmlProvider#getHtml()
    */
+  @Override
   public String getHtml( )
   {
     return m_html;

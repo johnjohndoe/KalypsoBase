@@ -1,6 +1,5 @@
 package org.kalypso.calculation.chain.binding.testing;
 
-import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.util.ArrayList;
@@ -22,7 +21,7 @@ import org.kalypso.simulation.core.SimulationJobSpecification;
 public class JUnitTest_CalculationChain extends TestCase
 {
 
-  public final void testExecute( ) throws UnsupportedEncodingException
+  public final void testExecute( )
   {
 
     final List<SimulationJobSpecification> jobSpecificationList = new ArrayList<SimulationJobSpecification>();

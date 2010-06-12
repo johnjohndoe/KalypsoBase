@@ -87,25 +87,10 @@ public final class KalypsoFeatureThemeSelection extends AbstractFeatureSelection
   /**
    * @see org.kalypso.ogc.gml.selection.IFeatureSelection#getWorkspace(org.kalypsodeegree.model.feature.Feature)
    */
+  @Override
   public CommandableWorkspace getWorkspace( final Feature feature )
   {
     return m_workspace;
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.selection.IFeatureSelection#getParentFeature(org.kalypsodeegree.model.feature.Feature)
-   */
-  public Feature getParentFeature( final Feature feature )
-  {
-    return m_parentFeature;
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.selection.IFeatureSelection#getParentFeatureProperty(org.kalypsodeegree.model.feature.Feature)
-   */
-  public IRelationType getParentFeatureProperty( final Feature feature )
-  {
-    return m_parentPropertyName;
   }
 
   /** Return a new selection wich contains all features from the given selection wich are contained in the theme. */
@@ -124,6 +109,7 @@ public final class KalypsoFeatureThemeSelection extends AbstractFeatureSelection
   /**
    * @see org.kalypso.ogc.gml.selection.IFeatureSelection#getAllFeatures()
    */
+  @Override
   public EasyFeatureWrapper[] getAllFeatures( )
   {
     return FeatureSelectionHelper.createEasyWrappers( this );
@@ -132,6 +118,7 @@ public final class KalypsoFeatureThemeSelection extends AbstractFeatureSelection
   /**
    * @see org.kalypso.ogc.gml.selection.IFeatureSelection#getSelectionManager()
    */
+  @Override
   public IFeatureSelectionManager getSelectionManager( )
   {
     return m_selectionManager;
@@ -140,6 +127,7 @@ public final class KalypsoFeatureThemeSelection extends AbstractFeatureSelection
   /**
    * @see org.kalypso.ogc.gml.selection.IFeatureSelection#getFocusedFeature()
    */
+  @Override
   public Feature getFocusedFeature( )
   {
     return m_focusedFeature;
@@ -148,6 +136,7 @@ public final class KalypsoFeatureThemeSelection extends AbstractFeatureSelection
   /**
    * @see org.kalypso.ogc.gml.selection.IFeatureSelection#getFocusedProperty()
    */
+  @Override
   public IPropertyType getFocusedProperty( )
   {
     return m_focusedProperty;

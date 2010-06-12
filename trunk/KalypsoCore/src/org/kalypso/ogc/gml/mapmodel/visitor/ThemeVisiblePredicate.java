@@ -5,6 +5,7 @@ import org.kalypso.ogc.gml.mapmodel.IKalypsoThemePredicate;
 
 public final class ThemeVisiblePredicate implements IKalypsoThemePredicate
 {
+  @Override
   public boolean decide( final IKalypsoTheme theme )
   {
     return theme.isVisible();

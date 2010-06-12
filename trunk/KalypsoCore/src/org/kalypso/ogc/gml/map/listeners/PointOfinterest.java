@@ -90,6 +90,7 @@ public class PointOfinterest implements IMapPanelPaintListener
   /**
    * @see org.kalypso.ogc.gml.map.listeners.IMapPanelPaintListener#paint(java.awt.Graphics)
    */
+  @Override
   public void paint( final Graphics g )
   {
     final Graphics2D g2d = (Graphics2D) g;

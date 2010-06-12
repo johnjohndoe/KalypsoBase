@@ -4,10 +4,10 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Comparator;
 import java.util.Enumeration;
+import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.Map.Entry;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -223,6 +223,7 @@ public class DebugServlet extends HttpServlet
     final Set<Entry<Object, Object>> entrySet = sysProps.entrySet();
     final TreeSet<Entry<Object, Object>> sortedEntries = new TreeSet<Entry<Object, Object>>( new Comparator<Entry<Object, Object>>()
     {
+      @Override
       public int compare( final Entry<Object, Object> o1, final Entry<Object, Object> o2 )
       {
         final Object key1 = o1.getKey();
@@ -261,6 +262,7 @@ public class DebugServlet extends HttpServlet
     final Set<Entry<Object, Object>> entrySet = fProps.entrySet();
     final TreeSet<Entry<Object, Object>> sortedEntries = new TreeSet<Entry<Object, Object>>( new Comparator<Entry<Object, Object>>()
     {
+      @Override
       public int compare( final Entry<Object, Object> o1, final Entry<Object, Object> o2 )
       {
         final Object key1 = o1.getKey();

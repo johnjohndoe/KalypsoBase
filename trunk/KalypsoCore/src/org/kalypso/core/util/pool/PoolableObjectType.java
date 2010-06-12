@@ -93,6 +93,7 @@ public class PoolableObjectType implements IPoolableObjectType
   /**
    * @see org.kalypso.util.pool.IPoolableObjectType#getType()
    */
+  @Override
   public String getType()
   {
     return m_type;
@@ -101,6 +102,7 @@ public class PoolableObjectType implements IPoolableObjectType
   /**
    * @see org.kalypso.util.pool.IPoolableObjectType#getLocation()
    */
+  @Override
   public String getLocation()
   {
     return m_source;
@@ -109,6 +111,7 @@ public class PoolableObjectType implements IPoolableObjectType
   /**
    * @see org.kalypso.util.pool.IPoolableObjectType#getContext()
    */
+  @Override
   public URL getContext()
   {
     return m_context;
@@ -117,6 +120,7 @@ public class PoolableObjectType implements IPoolableObjectType
   /**
    * @return Returns the ignoreExceptions.
    */
+  @Override
   public boolean isIgnoreExceptions()
   {
     return m_ignoreExceptions;

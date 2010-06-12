@@ -52,6 +52,7 @@ public class MTRMColumnPositionComparator implements Comparator<MTRMColumn>
   /**
    * @see java.util.Comparator#compare(T, T)
    */
+  @Override
   public int compare( MTRMColumn o1, MTRMColumn o2 )
   {
     return o1.getPosition() - o2.getPosition();

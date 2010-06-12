@@ -83,6 +83,7 @@ public class GmlSourceChooserPage extends WizardPage implements IWizardPage
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
    */
+  @Override
   public void createControl( final Composite parent )
   {
     final Composite panel = new Composite( parent, SWT.NONE );
@@ -108,6 +109,7 @@ public class GmlSourceChooserPage extends WizardPage implements IWizardPage
     /* Hook listeners */
     treeViewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
+      @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
         handleSelectionChanged( event, infoGroup );
@@ -116,6 +118,7 @@ public class GmlSourceChooserPage extends WizardPage implements IWizardPage
 
     treeViewer.addCheckStateListener( new ICheckStateListener()
     {
+      @Override
       public void checkStateChanged( final CheckStateChangedEvent event )
       {
         handleCheckStateChanged( event, treeViewer );

@@ -69,6 +69,7 @@ public class SimpleAxis extends AbstractAxis implements IAxis
     // TODO Andreas: warum nimmst du nicht auch die Einheit?
   }
 
+  @Override
   public String getName( )
   {
     return m_name;
@@ -79,21 +80,25 @@ public class SimpleAxis extends AbstractAxis implements IAxis
     m_name = name;
   }
 
+  @Override
   public boolean isKey( )
   {
     return m_isKey;
   }
 
+  @Override
   public boolean isPersistable( )
   {
     return m_isPersistable;
   }
 
+  @Override
   public Class< ? > getDataClass( )
   {
     return TimeserieUtils.getDataClass( m_type );
   }
 
+  @Override
   public String getType( )
   {
     return m_type;
@@ -104,6 +109,7 @@ public class SimpleAxis extends AbstractAxis implements IAxis
     m_type = type;
   }
 
+  @Override
   public String getUnit( )
   {
     // TODO Kannst das nicht Seiteneffekte haben? Ich bin der Meinung diese Klasse sollte sein eigenes Member für die

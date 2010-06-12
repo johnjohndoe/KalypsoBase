@@ -97,6 +97,7 @@ public class ObservationRequest implements IRequest
   /**
    * @see org.kalypso.ogc.sensor.request.IRequest#getDateRange()
    */
+  @Override
   public DateRange getDateRange()
   {
     return m_dateRange;
@@ -105,6 +106,7 @@ public class ObservationRequest implements IRequest
   /**
    * @see org.kalypso.ogc.sensor.request.IRequest#getName()
    */
+  @Override
   public String getName()
   {
     return m_name;
@@ -113,6 +115,7 @@ public class ObservationRequest implements IRequest
   /**
    * @see org.kalypso.ogc.sensor.request.IRequest#getAxisTypes()
    */
+  @Override
   public String[] getAxisTypes()
   {
     return m_axisTypes;
@@ -121,6 +124,7 @@ public class ObservationRequest implements IRequest
   /**
    * @see org.kalypso.ogc.sensor.request.IRequest#getAxisTypesWithStatus()
    */
+  @Override
   public String[] getAxisTypesWithStatus()
   {
     return m_axisTypesWithStatus;

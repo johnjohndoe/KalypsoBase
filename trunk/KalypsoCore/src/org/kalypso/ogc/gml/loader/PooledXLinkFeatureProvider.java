@@ -80,6 +80,7 @@ public class PooledXLinkFeatureProvider extends AbstractXLinkFeatureProvider imp
   /**
    * @see org.kalypsodeegree.model.feature.IFeatureProvider#dispose()
    */
+  @Override
   public void dispose( )
   {
     final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
@@ -89,6 +90,7 @@ public class PooledXLinkFeatureProvider extends AbstractXLinkFeatureProvider imp
   /**
    * @see org.kalypsodeegree.model.feature.IFeatureProvider#getWorkspace()
    */
+  @Override
   public GMLWorkspace getWorkspace( )
   {
     if( m_workspace != null )
@@ -181,6 +183,7 @@ public class PooledXLinkFeatureProvider extends AbstractXLinkFeatureProvider imp
    * @see org.kalypso.util.pool.IPoolListener#objectLoaded(org.kalypso.util.pool.IPoolableObjectType, java.lang.Object,
    *      org.eclipse.core.runtime.IStatus)
    */
+  @Override
   public void objectLoaded( final IPoolableObjectType key, final Object newValue, final IStatus status )
   {
     if( KeyComparator.getInstance().compare( key, m_key ) == 0 )
@@ -193,6 +196,7 @@ public class PooledXLinkFeatureProvider extends AbstractXLinkFeatureProvider imp
   /**
    * @see org.kalypso.util.pool.IPoolListener#objectInvalid(org.kalypso.util.pool.IPoolableObjectType, java.lang.Object)
    */
+  @Override
   public void objectInvalid( final IPoolableObjectType key, final Object oldValue )
   {
     if( KeyComparator.getInstance().compare( key, m_key ) == 0 )
@@ -202,6 +206,7 @@ public class PooledXLinkFeatureProvider extends AbstractXLinkFeatureProvider imp
   /**
    * @see org.kalypso.util.pool.IPoolListener#dirtyChanged(org.kalypso.util.pool.IPoolableObjectType, boolean)
    */
+  @Override
   public void dirtyChanged( final IPoolableObjectType key, final boolean isDirty )
   {
   }
@@ -209,6 +214,7 @@ public class PooledXLinkFeatureProvider extends AbstractXLinkFeatureProvider imp
   /**
    * @see org.kalypso.util.pool.IPoolListener#isDisposed()
    */
+  @Override
   public boolean isDisposed( )
   {
     return false;

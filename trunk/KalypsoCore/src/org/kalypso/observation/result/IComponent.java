@@ -86,8 +86,10 @@ public interface IComponent extends Comparator<Object>
   public Double getPrecision();
 
   /** override equals. Component are equals if their name, description, valueTyleName and defaultValue are equals */
+  @Override
   public boolean equals( final Object object );
 
   /** override hashCode according to equals */
+  @Override
   public int hashCode( );
 }

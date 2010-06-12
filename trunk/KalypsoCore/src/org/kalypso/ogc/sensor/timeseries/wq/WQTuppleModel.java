@@ -135,6 +135,7 @@ public class WQTuppleModel extends AbstractTuppleModel
   /**
    * @see org.kalypso.ogc.sensor.ITuppleModel#getCount()
    */
+  @Override
   public int getCount( ) throws SensorException
   {
     return m_model.getCount();
@@ -143,6 +144,7 @@ public class WQTuppleModel extends AbstractTuppleModel
   /**
    * @see org.kalypso.ogc.sensor.ITuppleModel#getElement(int, org.kalypso.ogc.sensor.IAxis)
    */
+  @Override
   public Object getElement( final int index, final IAxis axis ) throws SensorException
   {
     final boolean bDestAxis = axis.equals( m_destAxis );
@@ -232,6 +234,7 @@ public class WQTuppleModel extends AbstractTuppleModel
   /**
    * @see org.kalypso.ogc.sensor.ITuppleModel#setElement(int, java.lang.Object, org.kalypso.ogc.sensor.IAxis)
    */
+  @Override
   public void setElement( final int index, final Object element, final IAxis axis ) throws SensorException
   {
     final Integer objIndex = new Integer( index );
@@ -316,6 +319,7 @@ public class WQTuppleModel extends AbstractTuppleModel
   /**
    * @see org.kalypso.ogc.sensor.ITuppleModel#indexOf(java.lang.Object, org.kalypso.ogc.sensor.IAxis)
    */
+  @Override
   public int indexOf( final Object element, final IAxis axis ) throws SensorException
   {
     if( axis.equals( m_destAxis ) )

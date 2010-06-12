@@ -70,6 +70,7 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
 
   private final IFeatureSelectionListener m_featureSelectionListener = new IFeatureSelectionListener()
   {
+    @Override
     public void selectionChanged( final IFeatureSelection selection )
     {
       onSelectionChanged( selection );
@@ -98,6 +99,7 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
     m_middleWidget.activate( commandTarget, mapPanel );
   }
 
+  @Override
   public void dispose( )
   {
     setActualWidget( null );
@@ -105,12 +107,14 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
     m_mapPanel.getSelectionManager().removeSelectionListener( m_featureSelectionListener );
   }
 
+  @Override
   public ICommandTarget getCommandTarget( )
   {
     return m_commandTarget;
   }
 
   // MouseAdapter
+  @Override
   public void mouseClicked( final MouseEvent e )
   {
     final IWidget actualWidget = getActualWidget();
@@ -151,6 +155,7 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
     }
   }
 
+  @Override
   public void mouseMoved( final MouseEvent e )
   {
     final IWidget actualWidget = getActualWidget();
@@ -161,6 +166,7 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
   }
 
   // MouseMotionAdapter:
+  @Override
   public void mouseDragged( final MouseEvent e )
   {
     if( m_middleDown )
@@ -174,16 +180,19 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
       actualWidget.dragged( e.getPoint() );
   }
 
+  @Override
   public void mouseEntered( final MouseEvent e )
   {
     //
   }
 
+  @Override
   public void mouseExited( final MouseEvent e )
   {
     //
   }
 
+  @Override
   public void mousePressed( final MouseEvent e )
   {
     final IWidget actualWidget = getActualWidget();
@@ -214,6 +223,7 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
     }
   }
 
+  @Override
   public void mouseReleased( final MouseEvent e )
   {
     final IWidget actualWidget = getActualWidget();
@@ -272,11 +282,13 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
       actualWidget.paint( g );
   }
 
+  @Override
   public IWidget getActualWidget( )
   {
     return m_actualWidget;
   }
 
+  @Override
   public void setActualWidget( final IWidget newWidget )
   {
     if( m_actualWidget != null )
@@ -301,6 +313,7 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
    * <p>
    * Has no effect, if the same listener was already registered.
    */
+  @Override
   public void addWidgetChangeListener( final IWidgetChangeListener listener )
   {
     m_widgetChangeListener.add( listener );
@@ -311,6 +324,7 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
    * <p>
    * Has no effect, if this listener was not added to this manager before.
    */
+  @Override
   public void removeWidgetChangeListener( final IWidgetChangeListener listener )
   {
     m_widgetChangeListener.remove( listener );
@@ -326,6 +340,7 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
   /**
    * @see java.awt.event.KeyListener#keyTyped(java.awt.event.KeyEvent)
    */
+  @Override
   public void keyTyped( final KeyEvent e )
   {
     final IWidget widget = getActualWidget();
@@ -336,6 +351,7 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
   /**
    * @see java.awt.event.KeyListener#keyPressed(java.awt.event.KeyEvent)
    */
+  @Override
   public void keyPressed( final KeyEvent e )
   {
     final IWidget widget = getActualWidget();
@@ -346,6 +362,7 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
   /**
    * @see java.awt.event.KeyListener#keyReleased(java.awt.event.KeyEvent)
    */
+  @Override
   public void keyReleased( final KeyEvent e )
   {
     final IWidget widget = getActualWidget();

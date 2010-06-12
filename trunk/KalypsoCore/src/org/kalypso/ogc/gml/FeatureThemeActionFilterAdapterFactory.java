@@ -59,8 +59,8 @@ public class FeatureThemeActionFilterAdapterFactory implements IAdapterFactory
   /**
    * @see org.eclipse.core.runtime.IAdapterFactory#getAdapter(java.lang.Object, java.lang.Class)
    */
-  @SuppressWarnings("unchecked")
-  public Object getAdapter( final Object adaptableObject, final Class adapterType )
+  @Override
+  public Object getAdapter( final Object adaptableObject, @SuppressWarnings("rawtypes") final Class adapterType )
   {
     if( adapterType == IActionFilter.class )
       return m_featureActionFilter;
@@ -71,8 +71,8 @@ public class FeatureThemeActionFilterAdapterFactory implements IAdapterFactory
   /**
    * @see org.eclipse.core.runtime.IAdapterFactory#getAdapterList()
    */
-  @SuppressWarnings("unchecked")
-  public Class[] getAdapterList( )
+  @Override
+  public Class< ? >[] getAdapterList( )
   {
     return new Class[] { IActionFilter.class };
   }

@@ -63,6 +63,7 @@ public class DiffVisitor implements IDiffVisitor
    * @see org.kalypso.commons.diff.IDiffVisitor#diff(org.kalypso.commons.diff.IDiffLogger, java.lang.String,
    *      org.kalypso.commons.diff.IDiffObject)
    */
+  @Override
   public boolean diff( final IDiffLogger logger, final String path, final IDiffObject other ) throws Exception
   {
     if( !other.exists( path ) )

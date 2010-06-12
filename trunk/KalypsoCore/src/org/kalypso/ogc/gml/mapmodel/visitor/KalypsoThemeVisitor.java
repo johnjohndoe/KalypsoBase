@@ -74,6 +74,7 @@ public class KalypsoThemeVisitor implements IKalypsoThemeVisitor
     m_recurseIntoFailedPredicate = recurseIntoFailedPredicate;
   }
 
+  @Override
   public boolean visit( final IKalypsoTheme theme )
   {
     if( m_predicate.decide( theme ) )

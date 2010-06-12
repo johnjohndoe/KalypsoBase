@@ -118,6 +118,7 @@ public class CachingCatalog implements ICatalog
   /**
    * @see org.kalypso.core.catalog.ICatalog#addEntry(java.lang.String, java.lang.String, java.lang.String)
    */
+  @Override
   public void addEntry( final String uri, final String systemID, final String publicID )
   {
     m_cache.clear();
@@ -128,6 +129,7 @@ public class CachingCatalog implements ICatalog
   /**
    * @see org.kalypso.core.catalog.ICatalog#addEntryRelative(java.lang.String, java.lang.String, java.lang.String)
    */
+  @Override
   public void addEntryRelative( final String uri, final String systemID, final String publicID )
   {
     m_cache.clear();
@@ -138,6 +140,7 @@ public class CachingCatalog implements ICatalog
   /**
    * @see org.kalypso.core.catalog.ICatalog#addNextCatalog(java.net.URL)
    */
+  @Override
   public void addNextCatalog( final URL catalogURL )
   {
     m_cache.clear();
@@ -148,6 +151,7 @@ public class CachingCatalog implements ICatalog
   /**
    * @see org.kalypso.core.catalog.ICatalog#getEnryURNS(java.lang.String)
    */
+  @Override
   public List<String> getEntryURNS( final String urnPattern ) throws MalformedURLException, JAXBException
   {
     return m_delegateCatalog.getEntryURNS( urnPattern );
@@ -156,6 +160,7 @@ public class CachingCatalog implements ICatalog
   /**
    * @see org.kalypso.core.catalog.ICatalog#resolve(java.lang.String, java.lang.String, boolean)
    */
+  @Override
   public String resolve( final String systemID, final String publicID, final boolean resolveContext )
   {
     final CacheKey cacheKey = new CacheKey( publicID, systemID, resolveContext );
@@ -173,6 +178,7 @@ public class CachingCatalog implements ICatalog
   /**
    * @see org.kalypso.core.catalog.ICatalog#resolve(java.lang.String, java.lang.String)
    */
+  @Override
   public String resolve( final String systemID, final String publicID )
   {
     final CacheKey cacheKey = new CacheKey( publicID, systemID, true );

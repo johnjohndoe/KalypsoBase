@@ -93,6 +93,7 @@ public class FeatureThemeInfo implements IKalypsoThemeInfo, IKalypsoFeatureTheme
    * 
    * @see org.kalypso.ogc.gml.IKalypsoThemeInfo#init(org.kalypso.ogc.gml.IKalypsoTheme)
    */
+  @Override
   public final void init( final IKalypsoTheme theme, final Properties props )
   {
     Assert.isLegal( theme instanceof IKalypsoFeatureTheme );
@@ -109,6 +110,7 @@ public class FeatureThemeInfo implements IKalypsoThemeInfo, IKalypsoFeatureTheme
    * @see org.kalypso.ogc.gml.IKalypsoThemeInfo#appendInfo(java.util.Formatter,
    *      org.kalypsodeegree.model.geometry.GM_Position)
    */
+  @Override
   public void appendInfo( final Formatter formatter, final GM_Position pos )
   {
     Assert.isNotNull( m_theme, Messages.getString( "org.kalypso.ogc.gml.FeatureThemeInfo.2" ) ); //$NON-NLS-1$
@@ -121,6 +123,7 @@ public class FeatureThemeInfo implements IKalypsoThemeInfo, IKalypsoFeatureTheme
    * @see org.kalypso.ogc.gml.IKalypsoThemeInfo#appendQuickInfo(java.util.Formatter,
    *      org.kalypsodeegree.model.geometry.GM_Position)
    */
+  @Override
   @SuppressWarnings("unchecked")
   public void appendQuickInfo( final Formatter formatter, final GM_Position pos )
   {
@@ -191,6 +194,7 @@ public class FeatureThemeInfo implements IKalypsoThemeInfo, IKalypsoFeatureTheme
    * Writes the info into the formatter for the given feature<br>
    * Intended to be overwritten by specialised implementations.
    */
+  @Override
   public void formatInfo( final Formatter formatter, final Feature feature )
   {
     final String label = getInfo( feature );

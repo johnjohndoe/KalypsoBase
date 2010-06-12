@@ -70,6 +70,7 @@ public class AbstractObservationDecorator implements IObservation
     m_obs = obs;
   }
 
+  @Override
   public void addListener( final IObservationListener listener )
   {
     m_obs.addListener( listener );
@@ -81,26 +82,31 @@ public class AbstractObservationDecorator implements IObservation
     return m_obs.equals( obj );
   }
 
+  @Override
   public IAxis[] getAxisList()
   {
     return m_obs.getAxisList();
   }
 
+  @Override
   public String getIdentifier()
   {
     return m_obs.getIdentifier();
   }
 
+  @Override
   public MetadataList getMetadataList()
   {
     return m_obs.getMetadataList();
   }
 
+  @Override
   public String getName()
   {
     return m_obs.getName();
   }
 
+  @Override
   public ITuppleModel getValues( final IRequest args ) throws SensorException
   {
     return m_obs.getValues( args );
@@ -112,21 +118,25 @@ public class AbstractObservationDecorator implements IObservation
     return m_obs.hashCode();
   }
 
+  @Override
   public boolean isEditable()
   {
     return m_obs.isEditable();
   }
 
+  @Override
   public void removeListener( final IObservationListener listener )
   {
     m_obs.removeListener( listener );
   }
   
+  @Override
   public void fireChangedEvent( final Object source )
   {
     m_obs.fireChangedEvent( source );
   }
 
+  @Override
   public void setValues( final ITuppleModel values ) throws SensorException
   {
     m_obs.setValues( values );
@@ -138,11 +148,13 @@ public class AbstractObservationDecorator implements IObservation
     return m_obs.toString();
   }
 
+  @Override
   public String getHref()
   {
     return m_obs.getHref();
   }
 
+  @Override
   public void clearListeners()
   {
     m_obs.clearListeners();

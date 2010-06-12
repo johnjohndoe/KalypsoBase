@@ -50,6 +50,7 @@ public class TupleResultChangeAdapter implements ITupleResultChangedListener
   /**
    * @see org.kalypso.observation.result.ITupleResultChangedListener#valuesChanged(org.kalypso.observation.result.ITupleResultChangedListener.ValueChange[])
    */
+  @Override
   public void valuesChanged( ValueChange[] changes )
   {
   }
@@ -58,6 +59,7 @@ public class TupleResultChangeAdapter implements ITupleResultChangedListener
    * @see org.kalypso.observation.result.ITupleResultChangedListener#recordsChanged(org.kalypso.observation.result.IRecord[],
    *      org.kalypso.observation.result.ITupleResultChangedListener.TYPE)
    */
+  @Override
   public void recordsChanged( IRecord[] records, TYPE type )
   {
   }
@@ -66,6 +68,7 @@ public class TupleResultChangeAdapter implements ITupleResultChangedListener
    * @see org.kalypso.observation.result.ITupleResultChangedListener#componentsChanged(org.kalypso.observation.result.IComponent[],
    *      org.kalypso.observation.result.ITupleResultChangedListener.TYPE)
    */
+  @Override
   public void componentsChanged( IComponent[] components, TYPE type )
   {
   }

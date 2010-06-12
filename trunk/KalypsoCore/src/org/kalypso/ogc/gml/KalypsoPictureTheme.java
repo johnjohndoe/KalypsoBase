@@ -118,6 +118,7 @@ abstract public class KalypsoPictureTheme extends AbstractKalypsoTheme
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#getBoundingBox()
    */
+  @Override
   public GM_Envelope getFullExtent( )
   {
     try

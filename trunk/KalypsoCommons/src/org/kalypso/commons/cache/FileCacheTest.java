@@ -52,6 +52,7 @@ public class FileCacheTest extends TestCase
 
   protected static class StringComparator implements Comparator<String>
   {
+    @Override
     public int compare( String s1, String s2 )
     {
       return s1.compareTo( s2 );
@@ -60,11 +61,13 @@ public class FileCacheTest extends TestCase
 
   protected static class StringKeyFactory implements IKeyFactory<String>
   {
+    @Override
     public String createKey( final String string )
     {
       return string;
     }
 
+    @Override
     public String toString( final String key )
     {
       return key;
@@ -73,6 +76,7 @@ public class FileCacheTest extends TestCase
 
   protected static class StringSerializer implements ISerializer<String>
   {
+    @Override
     public String read( final InputStream ins ) throws IOException
     {
       BufferedReader r = null;
@@ -88,6 +92,7 @@ public class FileCacheTest extends TestCase
       }
     }
 
+    @Override
     public void write( final String object, final OutputStream os ) throws IOException
     {
       BufferedWriter w = null;

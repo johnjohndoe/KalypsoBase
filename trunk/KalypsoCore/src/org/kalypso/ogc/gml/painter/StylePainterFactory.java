@@ -42,8 +42,6 @@ package org.kalypso.ogc.gml.painter;
 
 import java.util.List;
 
-import javax.xml.namespace.QName;
-
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoFeatureTypeStyle;
 import org.kalypso.ogc.gml.IKalypsoStyle;
@@ -73,9 +71,9 @@ public class StylePainterFactory
     return new FeatureTypeStylePainter( style, features );
   }
 
-  public static IStylePainter create( final Rule rule, final QName qname, final List<Feature> features )
+  public static IStylePainter create( final Rule rule, final List<Feature> features )
   {
-    return new RulePainter( rule, qname, features );
+    return new RulePainter( rule, features );
   }
 
   public static IStylePainter create( final IKalypsoStyle style, final List<Feature> features )

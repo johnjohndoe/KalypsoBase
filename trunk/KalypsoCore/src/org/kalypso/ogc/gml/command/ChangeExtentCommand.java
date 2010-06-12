@@ -73,21 +73,25 @@ public class ChangeExtentCommand implements ICommand
     m_undoBoundingBox = mapPanel.getBoundingBox();
   }
 
+  @Override
   public boolean isUndoable( )
   {
     return true;
   }
 
+  @Override
   public void process( ) throws Exception
   {
     m_mapPanel.setBoundingBox( m_doBoundingBox, m_useHistory );
   }
 
+  @Override
   public void redo( ) throws Exception
   {
     process();
   }
 
+  @Override
   public void undo( ) throws Exception
   {
     m_mapPanel.setBoundingBox( m_undoBoundingBox, m_useHistory );
@@ -96,6 +100,7 @@ public class ChangeExtentCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#getDescription()
    */
+  @Override
   public String getDescription( )
   {
     return Messages.getString("org.kalypso.ogc.gml.command.ChangeExtentCommand.0"); //$NON-NLS-1$

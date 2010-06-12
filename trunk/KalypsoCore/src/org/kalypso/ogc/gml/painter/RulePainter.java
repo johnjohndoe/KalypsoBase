@@ -42,8 +42,6 @@ package org.kalypso.ogc.gml.painter;
 
 import java.util.List;
 
-import javax.xml.namespace.QName;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -70,14 +68,11 @@ class RulePainter implements IStylePainter
 
   private final Rule m_rule;
 
-  private final QName m_qname;
-
   private final List<Feature> m_features;
 
-  RulePainter( final Rule rule, final QName qname, final List<Feature> features )
+  RulePainter( final Rule rule, final List<Feature> features )
   {
     m_rule = rule;
-    m_qname = qname;
     m_features = features;
   }
 

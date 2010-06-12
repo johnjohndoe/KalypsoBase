@@ -27,6 +27,7 @@ public class WQPairComparator implements Comparator<WQPair>
   /**
    * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
    */
+  @Override
   public int compare( final WQPair p1, final WQPair p2 )
   {
     if( m_field == W )

@@ -58,6 +58,7 @@ public class SimpleKey implements IKey
   /**
    * @see org.kalypso.tuple.IKey#getKeyName()
    */
+  @Override
   public String getKeyName( )
   {
     return m_name;

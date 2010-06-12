@@ -90,6 +90,7 @@ public class Component extends AbstractComponent
   /**
    * @see org.kalypso.om.tuple.IComponent#getDefaultValue()
    */
+  @Override
   public Object getDefaultValue( )
   {
     return m_defaultValue;
@@ -98,6 +99,7 @@ public class Component extends AbstractComponent
   /**
    * @see org.kalypso.observation.result.IComponent#getDescription()
    */
+  @Override
   public String getDescription( )
   {
     return m_description;
@@ -106,6 +108,7 @@ public class Component extends AbstractComponent
   /**
    * @see org.kalypso.observation.result.IComponent#getFrame()
    */
+  @Override
   public String getFrame( )
   {
     return m_frame;
@@ -114,6 +117,7 @@ public class Component extends AbstractComponent
   /**
    * @see org.kalypso.observation.result.IComponent#getId()
    */
+  @Override
   public String getId( )
   {
     return m_id;
@@ -122,6 +126,7 @@ public class Component extends AbstractComponent
   /**
    * @see org.kalypso.om.tuple.IComponent#getName()
    */
+  @Override
   public String getName( )
   {
     return m_name;
@@ -130,11 +135,13 @@ public class Component extends AbstractComponent
   /**
    * @see org.kalypso.observation.result.IComponent#getPhenomenon()
    */
+  @Override
   public IPhenomenon getPhenomenon( )
   {
     return m_phenomenon;
   }
 
+  @Override
   public String getUnit( )
   {
     return m_unit;
@@ -143,6 +150,7 @@ public class Component extends AbstractComponent
   /**
    * @see org.kalypso.observation.result.IComponent#getValueTypeName()
    */
+  @Override
   public QName getValueTypeName( )
   {
     return m_valueTypeName;
@@ -160,6 +168,7 @@ public class Component extends AbstractComponent
   /**
    * @see org.kalypso.observation.result.IComponent#getRestrictions()
    */
+  @Override
   public IRestriction[] getRestrictions( )
   {
     return m_restrictions;

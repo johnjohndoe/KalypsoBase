@@ -54,6 +54,7 @@ import org.kalypso.zml.filters.IntervallFilterType;
 
 public class IntervallFilterCreator implements IFilterCreator
 {
+  @Override
   public IObservationFilter createFilter( final AbstractFilterType aft, final IObservation baseObs, final URL context ) throws SensorException
   {
     final IntervallFilterType filter = (IntervallFilterType) aft;

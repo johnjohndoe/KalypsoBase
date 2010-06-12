@@ -41,9 +41,9 @@
 package org.kalypso.commons.java.util;
 
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
-import java.util.Map.Entry;
 
 /**
  * @author bce

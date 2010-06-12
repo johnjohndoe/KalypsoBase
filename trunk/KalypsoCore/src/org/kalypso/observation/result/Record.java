@@ -80,6 +80,7 @@ import org.kalypso.observation.result.ITupleResultChangedListener.ValueChange;
   /**
    * @see org.kalypso.om.tuple.IRecord#getValue(org.kalypso.om.tuple.IComponent)
    */
+  @Override
   @Deprecated
   public Object getValue( final IComponent comp )
   {
@@ -90,6 +91,7 @@ import org.kalypso.observation.result.ITupleResultChangedListener.ValueChange;
   /**
    * @see org.kalypso.observation.result.IRecord#getValue(int)
    */
+  @Override
   public Object getValue( final int index ) throws IndexOutOfBoundsException
   {
     return m_values.get( index );
@@ -107,6 +109,7 @@ import org.kalypso.observation.result.ITupleResultChangedListener.ValueChange;
   /**
    * @see org.kalypso.om.tuple.IRecord#setValue(org.kalypso.om.tuple.IComponent, java.lang.Object)
    */
+  @Override
   @Deprecated
   public void setValue( final IComponent comp, final Object value )
   {
@@ -117,6 +120,7 @@ import org.kalypso.observation.result.ITupleResultChangedListener.ValueChange;
   /**
    * @see org.kalypso.observation.result.IRecord#setValue(int, java.lang.Object)
    */
+  @Override
   public void setValue( final int index, final Object value ) throws IndexOutOfBoundsException
   {
     setValue( index, value, false );
@@ -156,6 +160,7 @@ import org.kalypso.observation.result.ITupleResultChangedListener.ValueChange;
   /**
    * @see org.kalypso.observation.result.IRecord#getOwner()
    */
+  @Override
   public TupleResult getOwner( )
   {
     return m_owner;
@@ -164,6 +169,7 @@ import org.kalypso.observation.result.ITupleResultChangedListener.ValueChange;
   /**
    * @see org.kalypso.observation.result.IRecord#cloneRecord()
    */
+  @Override
   public IRecord cloneRecord( )
   {
     final TupleResult result = getOwner();

@@ -56,10 +56,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.TimeZone;
 import java.util.TreeSet;
-import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -112,12 +112,12 @@ import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.repository.RepositoryException;
 import org.kalypso.repository.utils.RepositoryUtils;
 import org.kalypso.zml.AxisType;
+import org.kalypso.zml.AxisType.ValueArray;
+import org.kalypso.zml.AxisType.ValueLink;
 import org.kalypso.zml.MetadataListType;
 import org.kalypso.zml.MetadataType;
 import org.kalypso.zml.ObjectFactory;
 import org.kalypso.zml.Observation;
-import org.kalypso.zml.AxisType.ValueArray;
-import org.kalypso.zml.AxisType.ValueLink;
 import org.kalypso.zml.request.Request;
 import org.kalypsodeegree_impl.gml.schema.SpecialPropertyMapper;
 import org.xml.sax.InputSource;
@@ -583,6 +583,7 @@ public final class ZmlFactory
       // Junit-Test)
       final TreeSet<IAxis> sortedAxis = new TreeSet<IAxis>( new Comparator<IAxis>()
       {
+        @Override
         public int compare( final IAxis a1, final IAxis a2 )
         {
           String type1 = a1.getType();

@@ -52,6 +52,7 @@ public class CsvSourceHandler implements ISourceHandler
    * @throws GmlConvertException
    * @see org.kalypso.ogc.gml.convert.source.ISourceHandler#getWorkspace()
    */
+  @Override
   public GMLWorkspace getWorkspace( ) throws GmlConvertException
   {
     final String href = m_type.getHref();

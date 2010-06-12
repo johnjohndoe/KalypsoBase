@@ -47,16 +47,14 @@ import java.util.Comparator;
  * 
  * @author schlienger
  */
-public class WechmannSetComparator implements Comparator
+public class WechmannSetComparator implements Comparator<WechmannSet>
 {
   /**
    * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
    */
-  public int compare( Object o1, Object o2 )
+  @Override
+  public int compare( final WechmannSet ws1, final WechmannSet ws2 )
   {
-    final WechmannSet ws1 = (WechmannSet)o1;
-    final WechmannSet ws2 = (WechmannSet)o2;
-
     return ws1.getValidity().compareTo( ws2.getValidity() );
   }
 }

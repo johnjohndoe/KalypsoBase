@@ -62,6 +62,7 @@ public class EnableThemeCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#isUndoable()
    */
+  @Override
   public boolean isUndoable( )
   {
     return true;
@@ -70,6 +71,7 @@ public class EnableThemeCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#process()
    */
+  @Override
   public void process( ) throws Exception
   {
     m_theme.setVisible( m_bEnable );
@@ -78,6 +80,7 @@ public class EnableThemeCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#redo()
    */
+  @Override
   public void redo( ) throws Exception
   {
     m_theme.setVisible( m_bEnable );
@@ -86,6 +89,7 @@ public class EnableThemeCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#undo()
    */
+  @Override
   public void undo( ) throws Exception
   {
     m_theme.setVisible( !m_bEnable );
@@ -94,6 +98,7 @@ public class EnableThemeCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#getDescription()
    */
+  @Override
   public String getDescription( )
   {
     return m_bEnable ? Messages.getString( "org.kalypso.ogc.gml.command.EnableThemeCommand.0" ) : Messages.getString( "org.kalypso.ogc.gml.command.EnableThemeCommand.1" ); //$NON-NLS-1$ //$NON-NLS-2$

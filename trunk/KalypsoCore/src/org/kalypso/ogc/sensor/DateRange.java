@@ -181,6 +181,7 @@ public class DateRange implements Comparable<DateRange>
   /**
    * @see java.lang.Comparable#compareTo(java.lang.Object)
    */
+  @Override
   public int compareTo( final DateRange other )
   {
     if( other == null )
