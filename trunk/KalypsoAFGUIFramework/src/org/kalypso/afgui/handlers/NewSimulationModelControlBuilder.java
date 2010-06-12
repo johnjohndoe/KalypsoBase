@@ -21,11 +21,12 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.ScenarioHandlingProjectNature;
+import org.kalypso.afgui.i18n.Messages;
 import org.kalypso.afgui.scenarios.IScenario;
 import org.kalypso.afgui.scenarios.ScenarioManager;
 import org.kalypso.afgui.scenarios.TaskExecutionAuthority;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.afgui.i18n.Messages;
+
 import de.renew.workflow.base.ITask;
 import de.renew.workflow.connector.context.ActiveWorkContext;
 
@@ -66,11 +67,13 @@ public class NewSimulationModelControlBuilder
   private final KeyListener keyListener = new KeyListener()
   {
 
+    @Override
     public void keyPressed( final KeyEvent e )
     {
       // Empty
     }
 
+    @Override
     public void keyReleased( final KeyEvent e )
     {
       cacheNewName();

@@ -83,6 +83,7 @@ public class ScenarioDatumProxy implements IScenarioDatum
   /**
    * @see org.kalypso.afgui.scenarios.IScenarioDatum#getModelClass()
    */
+  @Override
   @SuppressWarnings("unchecked")
   public Class< ? extends IModel> getModelClass( ) throws CoreException
   {

@@ -66,6 +66,7 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
   // Executes the default task as soon as the scenario was activated
   private final IActiveScenarioChangeListener<IScenario> m_activeContextChangeListener = new IActiveScenarioChangeListener<IScenario>()
   {
+    @Override
     public void activeScenarioChanged( final CaseHandlingProjectNature newProject, final IScenario caze )
     {
       handleScenarioChanged( newProject, caze );
@@ -102,6 +103,7 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
         /**
          * @see org.eclipse.ui.IWorkbenchListener#postShutdown(org.eclipse.ui.IWorkbench)
          */
+        @Override
         @SuppressWarnings("synthetic-access")
         public void postShutdown( final IWorkbench workbench2 )
         {
@@ -111,6 +113,7 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
         /**
          * @see org.eclipse.ui.IWorkbenchListener#preShutdown(org.eclipse.ui.IWorkbench, boolean)
          */
+        @Override
         @SuppressWarnings("synthetic-access")
         public boolean preShutdown( final IWorkbench workbench2, final boolean forced )
         {

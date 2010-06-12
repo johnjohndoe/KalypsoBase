@@ -120,6 +120,7 @@ public class ScenarioDataExtension
       extensionTracker = new ExtensionTracker();
       extensionTracker.registerHandler( new ExtensionChangeHandler(), new IFilter()
       {
+        @Override
         public boolean matches( final IExtensionPoint target )
         {
           return extensionPoint.equals( target );
@@ -143,6 +144,7 @@ public class ScenarioDataExtension
      * @see org.eclipse.core.runtime.dynamichelpers.IExtensionChangeHandler#addExtension(org.eclipse.core.runtime.dynamichelpers.IExtensionTracker,
      *      org.eclipse.core.runtime.IExtension)
      */
+    @Override
     public void addExtension( final IExtensionTracker tracker, final IExtension extension )
     {
       extensionsInvalid();
@@ -152,6 +154,7 @@ public class ScenarioDataExtension
      * @see org.eclipse.core.runtime.dynamichelpers.IExtensionChangeHandler#removeExtension(org.eclipse.core.runtime.IExtension,
      *      java.lang.Object[])
      */
+    @Override
     public void removeExtension( final IExtension extension, final Object[] objects )
     {
       extensionsInvalid();

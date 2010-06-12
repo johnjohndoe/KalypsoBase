@@ -113,6 +113,7 @@ public class ImportRasterSourceWizardPage extends WizardPage
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
    */
+  @Override
   public void createControl( final Composite parent )
   {
     topComposite = new Composite( parent, SWT.NULL );
@@ -222,6 +223,7 @@ public class ImportRasterSourceWizardPage extends WizardPage
             reader = new InputStreamReader( (styleURL).openStream() );
             final IUrlResolver2 resolver = new IUrlResolver2()
             {
+              @Override
               public URL resolveURL( final String href ) throws MalformedURLException
               {
                 return UrlResolverSingleton.resolveUrl( styleURL, href );

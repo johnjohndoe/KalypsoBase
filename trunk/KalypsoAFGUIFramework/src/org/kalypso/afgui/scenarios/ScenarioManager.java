@@ -84,6 +84,7 @@ public class ScenarioManager extends AbstractCaseManager<IScenario> implements I
    * @see org.kalypso.afgui.scenarios.IScenarioManager#deriveScenario(java.lang.String,
    *      org.kalypso.afgui.scenarios.Scenario)
    */
+  @Override
   public IScenario deriveScenario( final String name, final IScenario parentScenario )
   {
     final org.kalypso.afgui.scenarios.ObjectFactory of = new org.kalypso.afgui.scenarios.ObjectFactory();
@@ -118,6 +119,7 @@ public class ScenarioManager extends AbstractCaseManager<IScenario> implements I
   /**
    * FIXME handling of sub scenarios
    */
+  @Override
   public IScenario cloneScenario( final String name, final IScenario toClone ) throws CoreException
   {
     final IScenario parentScenario = toClone.getParentScenario();
@@ -222,6 +224,7 @@ public class ScenarioManager extends AbstractCaseManager<IScenario> implements I
   /**
    * @see org.kalypso.afgui.scenarios.IScenarioManager#getScenario(java.lang.String)
    */
+  @Override
   public IScenario getCase( final String id )
   {
     IScenario result = null;
@@ -239,6 +242,7 @@ public class ScenarioManager extends AbstractCaseManager<IScenario> implements I
   /**
    * @see de.renew.workflow.connector.context.ICaseManager#getCases()
    */
+  @Override
   public List<IScenario> getCases( )
   {
     // FIXME

@@ -18,6 +18,7 @@ public class KalypsoUser implements IKalypsoUser
     m_rights = rights;
   }
   
+  @Override
   public String getUserName()
   {
     return m_userName;
@@ -29,6 +30,7 @@ public class KalypsoUser implements IKalypsoUser
     return m_userName;
   }
 
+  @Override
   public boolean hasRight( final String right )
   {
     for( final String mRight : m_rights )

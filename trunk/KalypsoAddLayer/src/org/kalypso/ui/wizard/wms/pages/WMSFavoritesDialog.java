@@ -240,6 +240,7 @@ public class WMSFavoritesDialog extends Dialog
       /**
        * @see org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.swt.events.ModifyEvent)
        */
+      @Override
       public void modifyText( ModifyEvent e )
       {
         Text source = (Text) e.getSource();
@@ -261,6 +262,7 @@ public class WMSFavoritesDialog extends Dialog
       /**
        * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
        */
+      @Override
       public void selectionChanged( SelectionChangedEvent event )
       {
         ISelection selection = event.getSelection();

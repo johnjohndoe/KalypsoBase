@@ -142,6 +142,7 @@ public class ImportWfsWizardPage extends WizardPage
   private final ISelectionChangedListener m_leftSelectionListener = new ISelectionChangedListener()
   {
 
+    @Override
     public void selectionChanged( final SelectionChangedEvent event )
     {
       updateButtons();
@@ -177,6 +178,7 @@ public class ImportWfsWizardPage extends WizardPage
 
   private final ISelectionChangedListener m_rightSelectionListener = new ISelectionChangedListener()
   {
+    @Override
     public void selectionChanged( final SelectionChangedEvent event )
     {
       updateButtons();
@@ -209,6 +211,7 @@ public class ImportWfsWizardPage extends WizardPage
 
   final IDoubleClickListener m_doubleClickListener = new IDoubleClickListener()
   {
+    @Override
     public void doubleClick( final DoubleClickEvent event )
     {
       addButtonPressed();
@@ -232,6 +235,7 @@ public class ImportWfsWizardPage extends WizardPage
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
    */
+  @Override
   public void createControl( final Composite parent )
   {
     final Group composite = new Group( parent, SWT.NULL );
@@ -282,11 +286,13 @@ public class ImportWfsWizardPage extends WizardPage
     combo.setLayoutData( gridData );
     combo.addSelectionListener( new SelectionListener()
     {
+      @Override
       public void widgetSelected( final SelectionEvent e )
       {
         handleUrlComboChanged( combo.getText() );
       }
 
+      @Override
       public void widgetDefaultSelected( final SelectionEvent e )
       {
         handleUrlComboChanged( combo.getText() );
@@ -295,6 +301,7 @@ public class ImportWfsWizardPage extends WizardPage
 
     combo.addModifyListener( new ModifyListener()
     {
+      @Override
       public void modifyText( final ModifyEvent e )
       {
         revalidatePage();
@@ -536,6 +543,7 @@ public class ImportWfsWizardPage extends WizardPage
       m_service = service;
     }
 
+    @Override
     public IStatus execute( final IProgressMonitor monitor )
     {
       m_wfs = new WFSClient( m_service );

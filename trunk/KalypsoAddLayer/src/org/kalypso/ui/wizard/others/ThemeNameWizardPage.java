@@ -68,6 +68,7 @@ public class ThemeNameWizardPage extends WizardPage
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
    */
+  @Override
   public void createControl( final Composite parent )
   {
     final Composite topComposite = new Composite( parent, SWT.NULL );
@@ -89,6 +90,7 @@ public class ThemeNameWizardPage extends WizardPage
 
     text.addModifyListener( new ModifyListener()
     {
+      @Override
       @SuppressWarnings("synthetic-access")
       public void modifyText( final ModifyEvent e )
       {

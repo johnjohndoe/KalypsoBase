@@ -124,6 +124,7 @@ public class AddThemeCommand implements IThemeCommand
   /**
    * @see org.kalypso.commons.command.ICommand#getDescription()
    */
+  @Override
   public String getDescription( )
   {
     return Messages.getString("org.kalypso.ui.action.AddThemeCommand.0"); //$NON-NLS-1$
@@ -160,6 +161,7 @@ public class AddThemeCommand implements IThemeCommand
   /**
    * @see org.kalypso.commons.command.ICommand#isUndoable()
    */
+  @Override
   public boolean isUndoable( )
   {
     return true;
@@ -168,6 +170,7 @@ public class AddThemeCommand implements IThemeCommand
   /**
    * @see org.kalypso.commons.command.ICommand#process()
    */
+  @Override
   public void process( ) throws Exception
   {
     m_layer = init();
@@ -178,6 +181,7 @@ public class AddThemeCommand implements IThemeCommand
   /**
    * @see org.kalypso.commons.command.ICommand#redo()
    */
+  @Override
   public void redo( ) throws Exception
   {
     m_mapModell.addLayer( m_layer );
@@ -186,6 +190,7 @@ public class AddThemeCommand implements IThemeCommand
   /**
    * @see org.kalypso.commons.command.ICommand#undo()
    */
+  @Override
   public void undo( ) throws Exception
   {
     m_mapModell.removeTheme( m_theme );
@@ -200,6 +205,7 @@ public class AddThemeCommand implements IThemeCommand
   /**
    * @see org.kalypso.ui.action.IThemeCommand#toStyledLayerType()
    */
+  @Override
   public StyledLayerType toStyledLayerType( )
   {
     return init();

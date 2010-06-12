@@ -123,6 +123,7 @@ public class ImportImageWizardPage extends WizardPage implements SelectionListen
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
    */
+  @Override
   public void createControl( final Composite parent )
   {
     m_topComposite = new Composite( parent, SWT.NONE );
@@ -228,6 +229,7 @@ public class ImportImageWizardPage extends WizardPage implements SelectionListen
   /**
    * @see org.eclipse.swt.events.SelectionListener#widgetSelected(org.eclipse.swt.events.SelectionEvent)
    */
+  @Override
   public void widgetSelected( final SelectionEvent e )
   {
     Button b;
@@ -394,6 +396,7 @@ public class ImportImageWizardPage extends WizardPage implements SelectionListen
   /**
    * @see org.eclipse.swt.events.SelectionListener#widgetDefaultSelected(org.eclipse.swt.events.SelectionEvent)
    */
+  @Override
   public void widgetDefaultSelected( final SelectionEvent e )
   {
     // nothing to do
@@ -413,6 +416,7 @@ public class ImportImageWizardPage extends WizardPage implements SelectionListen
   /**
    * @see org.eclipse.swt.events.KeyListener#keyPressed(org.eclipse.swt.events.KeyEvent)
    */
+  @Override
   public void keyPressed( final KeyEvent e )
   {
     // do nothing
@@ -421,6 +425,7 @@ public class ImportImageWizardPage extends WizardPage implements SelectionListen
   /**
    * @see org.eclipse.swt.events.KeyListener#keyReleased(org.eclipse.swt.events.KeyEvent)
    */
+  @Override
   public void keyReleased( final KeyEvent e )
   {
     if( (e.widget == m_textDx || e.widget == m_textDy || e.widget == m_textPhix || e.widget == m_textPhiy || e.widget == m_textULCx || e.widget == m_textULCy) && e.character == SWT.CR )

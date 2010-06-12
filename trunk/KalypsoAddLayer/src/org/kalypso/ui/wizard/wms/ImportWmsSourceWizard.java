@@ -43,9 +43,9 @@ package org.kalypso.ui.wizard.wms;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
-import java.util.Map.Entry;
 
 import org.apache.commons.io.IOUtils;
 import org.deegree.ogcwebservices.wms.capabilities.Layer;
@@ -228,6 +228,7 @@ public class ImportWmsSourceWizard extends Wizard implements IKalypsoDataImportW
    * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
    *      org.eclipse.jface.viewers.IStructuredSelection)
    */
+  @Override
   public void init( IWorkbench workbench, IStructuredSelection selection )
   {
     // read service catalog file
@@ -258,11 +259,13 @@ public class ImportWmsSourceWizard extends Wizard implements IKalypsoDataImportW
   /**
    * @see org.kalypso.ui.wizard.data.IKalypsoDataImportWizard#setOutlineViewer(org.kalypso.ogc.gml.outline.GisMapOutlineViewer)
    */
+  @Override
   public void setCommandTarget( ICommandTarget commandTarget )
   {
     m_outlineviewer = commandTarget;
   }
 
+  @Override
   public ArrayList<String> getCatalog( )
   {
     return m_catalog;
@@ -297,6 +300,7 @@ public class ImportWmsSourceWizard extends Wizard implements IKalypsoDataImportW
   /**
    * @see org.kalypso.ui.wizard.IKalypsoDataImportWizard#setMapModel(org.kalypso.ogc.gml.IKalypsoLayerModell)
    */
+  @Override
   public void setMapModel( IKalypsoLayerModell modell )
   {
     m_modell = modell;

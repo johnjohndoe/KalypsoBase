@@ -83,16 +83,19 @@ public abstract class AbstractOtherThemeWizard extends Wizard implements IKalyps
     addPage( m_themeNameWizardPage );
   }
 
+  @Override
   public void setMapModel( final IKalypsoLayerModell modell )
   {
     m_mapModel = modell;
   }
 
+  @Override
   public void setCommandTarget( final ICommandTarget commandTarget )
   {
     m_outlineviewer = commandTarget;
   }
 
+  @Override
   public void init( final IWorkbench workbench, final IStructuredSelection selection )
   {
     // nothing
@@ -111,6 +114,7 @@ public abstract class AbstractOtherThemeWizard extends Wizard implements IKalyps
     final ICommandTarget outlineviewer = m_outlineviewer;
     final ICoreRunnableWithProgress operation = new ICoreRunnableWithProgress()
     {
+      @Override
       public IStatus execute( final IProgressMonitor monitor ) throws InvocationTargetException
       {
         try

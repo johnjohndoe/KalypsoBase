@@ -67,6 +67,7 @@ public class CreateGisMapViewWizard extends Wizard implements INewWizard
     final String fileName = page.getFileName();
     IRunnableWithProgress op = new IRunnableWithProgress()
     {
+      @Override
       public void run( IProgressMonitor monitor ) throws InvocationTargetException
       {
         try
@@ -132,6 +133,7 @@ public class CreateGisMapViewWizard extends Wizard implements INewWizard
     monitor.setTaskName( Messages.getString("org.kalypso.ui.createGisMapView.CreateGisMapViewWizard.4") ); //$NON-NLS-1$
     getShell().getDisplay().asyncExec( new Runnable()
     {
+      @Override
       public void run( )
       {
         IWorkbenchPage workbenchPage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
@@ -169,6 +171,7 @@ public class CreateGisMapViewWizard extends Wizard implements INewWizard
     throw new CoreException( status );
   }
 
+  @Override
   public void init( IWorkbench workbench, IStructuredSelection selection )
   {
     m_selection = selection;

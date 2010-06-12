@@ -178,6 +178,7 @@ public class ScenarioContentProvider extends WorkbenchContentProvider implements
   /**
    * @see de.renew.workflow.connector.context.ICaseManagerListener#caseAdded(de.renew.workflow.cases.Case)
    */
+  @Override
   public void caseAdded( final IScenario caze )
   {
     refreshViewer( caze );
@@ -186,6 +187,7 @@ public class ScenarioContentProvider extends WorkbenchContentProvider implements
   /**
    * @see de.renew.workflow.connector.context.ICaseManagerListener#caseRemoved(de.renew.workflow.cases.Case)
    */
+  @Override
   public void caseRemoved( final IScenario caze )
   {
     refreshViewer( caze );
@@ -195,6 +197,7 @@ public class ScenarioContentProvider extends WorkbenchContentProvider implements
    * @see de.renew.workflow.connector.context.IActiveContextChangeListener#activeContextChanged(de.renew.workflow.connector.cases.CaseHandlingProjectNature,
    *      de.renew.workflow.cases.Case)
    */
+  @Override
   public void activeScenarioChanged( final CaseHandlingProjectNature newProject, final IScenario caze )
   {
     refreshViewer( null );

@@ -18,6 +18,7 @@ public class NewSimulationModelWizardPage extends WizardPage
 
   IUpdateListener updateListener = new IUpdateListener()
   {
+    @Override
     public void update( )
     {
       final boolean status = c.isValid();
@@ -42,6 +43,7 @@ public class NewSimulationModelWizardPage extends WizardPage
     super.setTitle( pageName );
   }
 
+  @Override
   public void createControl( final Composite parent )
   {
     c = new NewSimulationModelControlBuilder( m_scenario, parent );
