@@ -14,6 +14,7 @@ public class PolygonMarker extends AbstractMarker
     m_points = points;
   }
 
+  @Override
   public void paint( GC gc, Point p, int width, int height, boolean drawForeground, boolean drawBackground )
   {
     Point[] resized = FigureUtilities.resizeInOrigin( m_points, width, height );
@@ -26,6 +27,7 @@ public class PolygonMarker extends AbstractMarker
       gc.drawPolygon( intArray );
   }
 
+  @Override
   public PolygonMarker copy( )
   {
     return new PolygonMarker( m_points );

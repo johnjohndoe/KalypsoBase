@@ -40,9 +40,9 @@ import de.openali.odysseus.chartconfig.x020.MapperType;
 import de.openali.odysseus.chartconfig.x020.PointStyleDocument;
 import de.openali.odysseus.chartconfig.x020.PointStyleType;
 import de.openali.odysseus.chartconfig.x020.RoleReferencingType;
+import de.openali.odysseus.chartconfig.x020.StylesDocument.Styles;
 import de.openali.odysseus.chartconfig.x020.TextStyleDocument;
 import de.openali.odysseus.chartconfig.x020.TextStyleType;
-import de.openali.odysseus.chartconfig.x020.StylesDocument.Styles;
 
 /**
  * @author alibu
@@ -208,6 +208,7 @@ public class ChartConfigurationLoader implements IReferenceResolver
    * @param myClass
    * @return
    */
+  @Override
   public XmlObject resolveReference( final String idref )
   {
     final Map<String, XmlObject> idMap = getIdMap();
@@ -217,14 +218,9 @@ public class ChartConfigurationLoader implements IReferenceResolver
 
   private synchronized Map<String, XmlObject> getIdMap( )
   {
-    if( (m_idMap != null) && false )
-      return m_idMap;
-    else
-    {
-      m_idMap = new HashMap<String, XmlObject>();
-      fillIdMap( m_document.getDomNode() );
-      return m_idMap;
-    }
+    m_idMap = new HashMap<String, XmlObject>();
+    fillIdMap( m_document.getDomNode() );
+    return m_idMap;
   }
 
   private void fillIdMap( final Node node )

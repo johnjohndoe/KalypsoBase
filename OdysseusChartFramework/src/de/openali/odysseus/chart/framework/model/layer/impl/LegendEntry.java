@@ -21,14 +21,16 @@ public abstract class LegendEntry implements ILegendEntry
 		m_description = description;
 	}
 
-	public String getDescription()
+	@Override
+  public String getDescription()
 	{
 		return m_description;
 	}
 
 	public abstract void paintSymbol(GC gc, Point size);
 
-	public ImageData getSymbol(Point size)
+	@Override
+  public ImageData getSymbol(Point size)
 	{
 		Point realSize = computeSize(size);
 		Image img = new Image(Display.getDefault(), realSize.x, realSize.y);
@@ -45,7 +47,8 @@ public abstract class LegendEntry implements ILegendEntry
 	 *            the preferred size
 	 * @return the minimum size or null if any
 	 */
-	public Point computeSize(Point size)
+	@Override
+  public Point computeSize(Point size)
 	{
 		Point neededSize = getMinimumSize();
 		Point realSize = new Point(Math.max(neededSize.x, size.x), Math.max(neededSize.y, size.y));
@@ -64,7 +67,8 @@ public abstract class LegendEntry implements ILegendEntry
 		return new Point(16, 16);
 	}
 
-	public IChartLayer getParentLayer()
+	@Override
+  public IChartLayer getParentLayer()
 	{
 		return m_parent;
 	}

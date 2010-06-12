@@ -70,6 +70,7 @@ public class LastLineLabelProvider implements ITableLabelProvider, IColorProvide
   /**
    * @see org.eclipse.jface.viewers.IBaseLabelProvider#addListener(org.eclipse.jface.viewers.ILabelProviderListener)
    */
+  @Override
   public void addListener( final ILabelProviderListener listener )
   {
     m_provider.addListener( listener );
@@ -78,6 +79,7 @@ public class LastLineLabelProvider implements ITableLabelProvider, IColorProvide
   /**
    * @see org.eclipse.jface.viewers.IBaseLabelProvider#dispose()
    */
+  @Override
   public void dispose( )
   {
     m_provider.dispose();
@@ -86,6 +88,7 @@ public class LastLineLabelProvider implements ITableLabelProvider, IColorProvide
   /**
    * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang.Object, int)
    */
+  @Override
   public Image getColumnImage( final Object element, final int columnIndex )
   {
     if( element == LastLineContentProvider.DUMMY_ELEMENT )
@@ -97,6 +100,7 @@ public class LastLineLabelProvider implements ITableLabelProvider, IColorProvide
   /**
    * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.lang.Object, int)
    */
+  @Override
   public String getColumnText( final Object element, final int columnIndex )
   {
     if( element == LastLineContentProvider.DUMMY_ELEMENT )
@@ -108,6 +112,7 @@ public class LastLineLabelProvider implements ITableLabelProvider, IColorProvide
   /**
    * @see org.eclipse.jface.viewers.IBaseLabelProvider#isLabelProperty(java.lang.Object, java.lang.String)
    */
+  @Override
   public boolean isLabelProperty( final Object element, final String property )
   {
     if( element == LastLineContentProvider.DUMMY_ELEMENT )
@@ -119,6 +124,7 @@ public class LastLineLabelProvider implements ITableLabelProvider, IColorProvide
   /**
    * @see org.eclipse.jface.viewers.IBaseLabelProvider#removeListener(org.eclipse.jface.viewers.ILabelProviderListener)
    */
+  @Override
   public void removeListener( final ILabelProviderListener listener )
   {
     m_provider.removeListener( listener );
@@ -127,6 +133,7 @@ public class LastLineLabelProvider implements ITableLabelProvider, IColorProvide
   /**
    * @see org.eclipse.jface.viewers.IColorProvider#getForeground(java.lang.Object)
    */
+  @Override
   public Color getForeground( final Object element )
   {
     return null;
@@ -135,6 +142,7 @@ public class LastLineLabelProvider implements ITableLabelProvider, IColorProvide
   /**
    * @see org.eclipse.jface.viewers.IColorProvider#getBackground(java.lang.Object)
    */
+  @Override
   public Color getBackground( final Object element )
   {
     if( element == LastLineContentProvider.DUMMY_ELEMENT )

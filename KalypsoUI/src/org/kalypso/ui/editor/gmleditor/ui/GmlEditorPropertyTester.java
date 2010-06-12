@@ -18,6 +18,7 @@ public class GmlEditorPropertyTester extends PropertyTester
 
   private static final String ARG_FEATURE = "feature"; //$NON-NLS-1$
 
+  @Override
   public boolean test( final Object receiver, final String property, final Object[] args, final Object expectedValue )
   {
     if( PROPERTY_QNAME.equals( property ) )

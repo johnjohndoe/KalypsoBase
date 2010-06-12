@@ -63,6 +63,7 @@ public class NumberLabelCreator implements ILabelCreator
    * @see org.kalypso.chart.ext.test.axisrenderer.ILabelCreator#getLabel(java.lang.Number,
    *      org.kalypso.chart.framework.model.data.IDataRange)
    */
+  @Override
   public String getLabel( Number value, IDataRange<Number> range )
   {
     if( value == null )

@@ -68,6 +68,7 @@ public class ServerPropertiesUrlCatalog implements IUrlCatalog
   /**
    * @see org.kalypso.contribs.java.net.IUrlCatalog#getURL(java.lang.String)
    */
+  @Override
   public URL getURL( final String namespace )
   {
     return getInternalCatalog().getURL( namespace );
@@ -76,6 +77,7 @@ public class ServerPropertiesUrlCatalog implements IUrlCatalog
   /**
    * @see org.kalypso.contribs.java.net.IUrlCatalog#getPreferedNamespacePrefix(java.lang.String)
    */
+  @Override
   public String getPreferedNamespacePrefix( final String namespace )
   {
     return getInternalCatalog().getPreferedNamespacePrefix( namespace );
@@ -84,6 +86,7 @@ public class ServerPropertiesUrlCatalog implements IUrlCatalog
   /**
    * @see org.kalypso.contribs.java.net.IUrlCatalog#getCatalog()
    */
+  @Override
   public Map<String, URL> getCatalog( )
   {
     return getInternalCatalog().getCatalog();

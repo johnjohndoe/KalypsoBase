@@ -17,6 +17,7 @@ public class ZoomOutActionDelegate extends ActionDelegate implements IEditorActi
 
   private IEditorPart m_targetEditor;
 
+  @Override
   public void setActiveEditor( IAction action, IEditorPart targetEditor )
   {
     m_targetEditor = targetEditor;

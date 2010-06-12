@@ -106,6 +106,7 @@ public class NewGMLFileWizard extends Wizard implements INewWizard
 
     final ICoreRunnableWithProgress op = new ICoreRunnableWithProgress()
     {
+      @Override
       public IStatus execute( final IProgressMonitor monitor ) throws CoreException
       {
         monitor.beginTask( Messages.getString("org.kalypso.ui.wizard.NewGMLFileWizard.1") + fileName, 3 ); //$NON-NLS-1$
@@ -123,6 +124,7 @@ public class NewGMLFileWizard extends Wizard implements INewWizard
         monitor.subTask( Messages.getString("org.kalypso.ui.wizard.NewGMLFileWizard.4") ); //$NON-NLS-1$
         getShell().getDisplay().asyncExec( new Runnable()
         {
+          @Override
           public void run( )
           {
             try
@@ -176,6 +178,7 @@ public class NewGMLFileWizard extends Wizard implements INewWizard
     final FeatureTypeSelectionPage featureTypeSelectionPage = m_featureTypeSelectionPage;
     schemaSelectionPage.getSelectionProvider().addSelectionChangedListener( new ISelectionChangedListener()
     {
+      @Override
       public void selectionChanged( SelectionChangedEvent event )
       {
         final String namespace = schemaSelectionPage.getNamespace();
@@ -188,6 +191,7 @@ public class NewGMLFileWizard extends Wizard implements INewWizard
    * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
    *      org.eclipse.jface.viewers.IStructuredSelection)
    */
+  @Override
   public void init( final IWorkbench workbench, final IStructuredSelection selection )
   {
     m_workbench = workbench;

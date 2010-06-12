@@ -31,6 +31,7 @@ public class CSVBarLayerProvider extends AbstractLayerProvider
   /**
    * @see org.kalypso.swtchart.chart.layer.ILayerProvider#getLayer(java.net.URL)
    */
+  @Override
   public IChartLayer getLayer( final URL context )
   {
     return new DefaultBarLayer( getDataContainer(), getStyleSet().getStyle( ROLE_BAR_STYLE, IAreaStyle.class ) );
@@ -176,6 +177,7 @@ public class CSVBarLayerProvider extends AbstractLayerProvider
 
       }
 
+      @Override
       public IDataRange getDomainRange( )
       {
         final Object[] domainStart = getDomainDataIntervalStart();
@@ -189,6 +191,7 @@ public class CSVBarLayerProvider extends AbstractLayerProvider
         return new ComparableDataRange<Object>( merged );
       }
 
+      @Override
       public IDataRange<Object> getTargetRange( )
       {
         return new ComparableDataRange<Object>( getTargetValues() );

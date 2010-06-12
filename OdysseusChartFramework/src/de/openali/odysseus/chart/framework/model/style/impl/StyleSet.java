@@ -12,6 +12,7 @@ public class StyleSet implements IStyleSet
 {
   private final Map<String, IStyle> m_styleMap = new HashMap<String, IStyle>();
 
+  @Override
   public void addStyle( String id, IStyle style )
   {
     m_styleMap.put( id, style );
@@ -20,6 +21,7 @@ public class StyleSet implements IStyleSet
   /**
    * if no style is found, a default style is created, saved for later use and returned
    */
+  @Override
   @SuppressWarnings("unchecked")
   public <T extends IStyle> T getStyle( String id, Class<T> styleClass )
   {
@@ -47,11 +49,13 @@ public class StyleSet implements IStyleSet
 
   }
 
+  @Override
   public void dispose( )
   {
 
   }
 
+  @Override
   public Map<String, IStyle> getStyles( )
   {
     return m_styleMap;

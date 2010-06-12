@@ -84,6 +84,7 @@ public class FeatureEditor extends EditorPart
 {
   private final Runnable m_dirtyRunnable = new Runnable()
   {
+    @Override
     public void run( )
     {
       final Shell shell = getSite().getShell();
@@ -91,6 +92,7 @@ public class FeatureEditor extends EditorPart
       {
         shell.getDisplay().asyncExec( new Runnable()
         {
+          @Override
           public void run( )
           {
             fireDirtyChange();

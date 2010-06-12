@@ -83,8 +83,8 @@ import org.kalypso.ogc.gml.featureview.maker.FeatureviewHelper;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.FeatureSelectionManager2;
 import org.kalypso.template.featureview.Featuretemplate;
-import org.kalypso.template.featureview.FeatureviewType;
 import org.kalypso.template.featureview.Featuretemplate.Layer;
+import org.kalypso.template.featureview.FeatureviewType;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 import org.kalypso.util.swt.SWTUtilities;
 import org.kalypsodeegree.model.feature.Feature;
@@ -276,6 +276,7 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
   /**
    * @see org.kalypso.util.pool.IPoolListener#objectInvalid(org.kalypso.util.pool.IPoolableObjectType, java.lang.Object)
    */
+  @Override
   public void objectInvalid( final IPoolableObjectType key, final Object oldValue )
   {
     if( KeyComparator.getInstance().compare( key, m_key ) == 0 )
@@ -439,6 +440,7 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
     {
       m_contentPanel.getDisplay().asyncExec( new Runnable()
       {
+        @Override
         public void run( )
         {
           featureComposite.updateControl();

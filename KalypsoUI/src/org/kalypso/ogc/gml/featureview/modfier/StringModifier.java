@@ -80,6 +80,7 @@ public class StringModifier implements IFeatureModifier
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#dispose()
    */
+  @Override
   public void dispose( )
   {
     // nix zu tun
@@ -88,6 +89,7 @@ public class StringModifier implements IFeatureModifier
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#getValue(org.kalypsodeegree.model.feature.Feature)
    */
+  @Override
   public Object getValue( final Feature f )
   {
     if( m_ftp == null )
@@ -131,6 +133,7 @@ public class StringModifier implements IFeatureModifier
    * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#parseInput(org.kalypsodeegree.model.feature.Feature,
    *      java.lang.Object)
    */
+  @Override
   public Object parseInput( final Feature f, final Object editedStringValue )
   {
     Object result = null;
@@ -180,6 +183,7 @@ public class StringModifier implements IFeatureModifier
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#createCellEditor(org.eclipse.swt.widgets.Composite)
    */
+  @Override
   public CellEditor createCellEditor( final Composite parent )
   {
     return new TextCellEditor( parent );
@@ -188,6 +192,7 @@ public class StringModifier implements IFeatureModifier
   /**
    * @see org.eclipse.jface.viewers.ICellEditorValidator#isValid(java.lang.Object)
    */
+  @Override
   public String isValid( final Object editedStringValue )
   {
     try
@@ -209,6 +214,7 @@ public class StringModifier implements IFeatureModifier
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#getFeatureTypeProperty()
    */
+  @Override
   public IPropertyType getFeatureTypeProperty( )
   {
     return m_ftp;
@@ -217,6 +223,7 @@ public class StringModifier implements IFeatureModifier
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#getLabel(org.kalypsodeegree.model.feature.Feature)
    */
+  @Override
   public String getLabel( final Feature f )
   {
     final Object data = f.getProperty( m_ftp );
@@ -254,6 +261,7 @@ public class StringModifier implements IFeatureModifier
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#getImage(org.kalypsodeegree.model.feature.Feature)
    */
+  @Override
   public Image getImage( final Feature f )
   {
     if( m_guiTypeHandler != null )
@@ -269,6 +277,7 @@ public class StringModifier implements IFeatureModifier
    * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#equals(java.lang.Object, java.lang.Object)
    * @deprecated Do not use.
    */
+  @Override
   @Deprecated
   public boolean equals( final Object newData, final Object oldData )
   {

@@ -62,8 +62,8 @@ import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.template.gistreeview.Gistreeview;
 import org.kalypso.template.gistreeview.ObjectFactory;
 import org.kalypso.template.types.LayerType;
-import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.ImageProvider.DESCRIPTORS;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
@@ -83,6 +83,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
 
   private final IFeatureSelectionListener m_globalSelectionChangedListener = new IFeatureSelectionListener()
   {
+    @Override
     public void selectionChanged( final IFeatureSelection selection )
     {
       if( m_bHandleGlobalEvents )
@@ -92,6 +93,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
 
   private final ISelectionChangedListener m_treeSelectionChangedListener = new ISelectionChangedListener()
   {
+    @Override
     public void selectionChanged( final SelectionChangedEvent event )
     {
       handleTreeSelectionChanged( event );
@@ -100,6 +102,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
 
   private final IDoubleClickListener m_doubleClickListener = new IDoubleClickListener()
   {
+    @Override
     public void doubleClick( final DoubleClickEvent event )
     {
       if( event.getSelection() instanceof IStructuredSelection )
@@ -196,6 +199,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
     final GMLContentProvider contentProvider = m_contentProvider;
     control.getDisplay().syncExec( new Runnable()
     {
+      @Override
       public void run( )
       {
         if( !control.isDisposed() )
@@ -288,6 +292,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
     m_treeViewer.addDropSupport( ops, transfers, new GmlTreeDropAdapter( this ) );
   }
 
+  @Override
   public void dispose( )
   {
     m_disposed = true;
@@ -303,6 +308,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
   /**
    * @see org.kalypsodeegree.model.feature.event.ModellEventListener#onModellChange(org.kalypsodeegree.model.feature.event.ModellEvent)
    */
+  @Override
   public void onModellChange( final ModellEvent modellEvent )
   {
     fireModellEvent( modellEvent );
@@ -330,6 +336,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
   /**
    * @see org.kalypsodeegree.model.feature.event.ModellEventProvider#addModellListener(org.kalypsodeegree.model.feature.event.ModellEventListener)
    */
+  @Override
   public void addModellListener( final ModellEventListener listener )
   {
     m_eventProvider.addModellListener( listener );
@@ -338,6 +345,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
   /**
    * @see org.kalypsodeegree.model.feature.event.ModellEventProvider#removeModellListener(org.kalypsodeegree.model.feature.event.ModellEventListener)
    */
+  @Override
   public void removeModellListener( final ModellEventListener listener )
   {
     m_eventProvider.removeModellListener( listener );
@@ -346,6 +354,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
   /**
    * @see org.kalypsodeegree.model.feature.event.ModellEventProvider#fireModellEvent(org.kalypsodeegree.model.feature.event.ModellEvent)
    */
+  @Override
   public void fireModellEvent( final ModellEvent event )
   {
     m_eventProvider.fireModellEvent( event );
@@ -356,6 +365,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
     return m_treeViewer;
   }
 
+  @Override
   public ISelection getSelection( )
   {
     if( m_treeViewer.getContentProvider() != m_contentProvider )
@@ -368,6 +378,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
    * @see org.kalypso.util.pool.IPoolListener#objectLoaded(org.kalypso.util.pool.IPoolableObjectType, java.lang.Object,
    *      org.eclipse.core.runtime.IStatus)
    */
+  @Override
   public void objectLoaded( final IPoolableObjectType key, final Object newValue, final IStatus status )
   {
     if( KeyComparator.getInstance().compare( key, m_key ) == 0 )
@@ -394,6 +405,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
       final Display display = control.getDisplay();
       display.asyncExec( new Runnable()
       {
+        @Override
         public void run( )
         {
           if( !control.isDisposed() )
@@ -428,6 +440,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
       if( m_workspace != null )
         display.asyncExec( new Runnable()
         {
+          @Override
           public void run( )
           {
             if( !control.isDisposed() )
@@ -444,6 +457,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
   /**
    * @see org.kalypso.util.pool.IPoolListener#objectInvalid(org.kalypso.util.pool.IPoolableObjectType, java.lang.Object)
    */
+  @Override
   public void objectInvalid( final IPoolableObjectType key, final Object oldValue )
   {
     final TreeViewer treeViewer = m_treeViewer;
@@ -524,6 +538,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
   /**
    * @see org.eclipse.jface.viewers.ISelectionProvider#addSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
    */
+  @Override
   public void addSelectionChangedListener( final ISelectionChangedListener listener )
   {
     m_selectionListeners.add( listener );
@@ -532,6 +547,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
   /**
    * @see org.eclipse.jface.viewers.ISelectionProvider#removeSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
    */
+  @Override
   public void removeSelectionChangedListener( final ISelectionChangedListener listener )
   {
     m_selectionListeners.remove( listener );
@@ -540,6 +556,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
   /**
    * @see org.eclipse.jface.viewers.ISelectionProvider#setSelection(org.eclipse.jface.viewers.ISelection)
    */
+  @Override
   public void setSelection( final ISelection selection )
   {
     // should never happen
@@ -555,6 +572,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
     {
       final SafeRunnable safeRunnable = new SafeRunnable()
       {
+        @Override
         public void run( )
         {
           l.selectionChanged( e );
@@ -572,6 +590,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
       super( selection );
     }
 
+    @Override
     public CommandableWorkspace getWorkspace( final Feature feature )
     {
       return m_workspace;
@@ -590,6 +609,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
     /**
      * @see org.kalypso.ogc.gml.selection.IFeatureSelection#getAllFeatures()
      */
+    @Override
     public EasyFeatureWrapper[] getAllFeatures( )
     {
       return FeatureSelectionHelper.createEasyWrappers( this );
@@ -598,6 +618,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
     /**
      * @see org.kalypso.ogc.gml.selection.IFeatureSelection#getSelectionManager()
      */
+    @Override
     public IFeatureSelectionManager getSelectionManager( )
     {
       return m_selectionManager;
@@ -606,6 +627,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
     /**
      * @see org.kalypso.ogc.gml.selection.IFeatureSelection#getFocusedFeature()
      */
+    @Override
     public Feature getFocusedFeature( )
     {
       // the tree doesn't support focused features
@@ -615,6 +637,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
     /**
      * @see org.kalypso.ogc.gml.selection.IFeatureSelection#getFocusedProperty()
      */
+    @Override
     public IPropertyType getFocusedProperty( )
     {
       // the tree doesn't support focused features
@@ -625,6 +648,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
   /**
    * @see org.kalypso.util.pool.IPoolListener#isDisposed()
    */
+  @Override
   public boolean isDisposed( )
   {
     return m_disposed;
@@ -657,6 +681,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
   /**
    * @see org.kalypso.util.pool.IPoolListener#dirtyChanged(org.kalypso.util.pool.IPoolableObjectType, boolean)
    */
+  @Override
   public void dirtyChanged( final IPoolableObjectType key, final boolean isDirty )
   {
     // TODO propagate dirty change to GmlEditor if present

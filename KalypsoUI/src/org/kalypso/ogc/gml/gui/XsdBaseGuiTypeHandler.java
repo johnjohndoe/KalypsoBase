@@ -84,6 +84,7 @@ public class XsdBaseGuiTypeHandler extends LabelProvider implements IGuiTypeHand
    * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#createFeatureDialog(org.kalypsodeegree.model.feature.Feature,
    *      org.kalypso.gmlschema.property.IPropertyType)
    */
+  @Override
   public IFeatureDialog createFeatureDialog( final Feature feature, final IPropertyType ftp )
   {
     return new NotImplementedFeatureDialog();
@@ -93,6 +94,7 @@ public class XsdBaseGuiTypeHandler extends LabelProvider implements IGuiTypeHand
    * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#createFeatureviewControl(javax.xml.namespace.QName,
    *      org.kalypso.template.featureview.ObjectFactory)
    */
+  @Override
   public JAXBElement< ? extends ControlType> createFeatureviewControl( final IPropertyType property, final ObjectFactory factory )
   {
     // if we get a ClassCastException here, something is very wrong
@@ -139,6 +141,7 @@ public class XsdBaseGuiTypeHandler extends LabelProvider implements IGuiTypeHand
    *      org.kalypso.ogc.gml.selection.IFeatureSelectionManager,
    *      org.kalypso.ogc.gml.featureview.IFeatureChangeListener, java.lang.String)
    */
+  @Override
   public IFeatureModifier createFeatureModifier( final IPropertyType ftp, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl, final String format )
   {
     // if we get a ClassCastExxception here, something is very wrong
@@ -159,6 +162,7 @@ public class XsdBaseGuiTypeHandler extends LabelProvider implements IGuiTypeHand
   /**
    * @see org.kalypso.gmlschema.types.ITypeHandler#getValueClass()
    */
+  @Override
   public Class< ? > getValueClass( )
   {
     return m_handler.getValueClass();
@@ -167,6 +171,7 @@ public class XsdBaseGuiTypeHandler extends LabelProvider implements IGuiTypeHand
   /**
    * @see org.kalypso.gmlschema.types.ITypeHandler#getTypeName()
    */
+  @Override
   public QName getTypeName( )
   {
     return m_handler.getTypeName();
@@ -175,6 +180,7 @@ public class XsdBaseGuiTypeHandler extends LabelProvider implements IGuiTypeHand
   /**
    * @see org.kalypso.gmlschema.types.ITypeHandler#isGeometry()
    */
+  @Override
   public boolean isGeometry( )
   {
     return m_handler.isGeometry();
@@ -183,6 +189,7 @@ public class XsdBaseGuiTypeHandler extends LabelProvider implements IGuiTypeHand
   /**
    * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#fromText(java.lang.String)
    */
+  @Override
   public Object parseText( final String text, final String formatHint ) throws ParseException
   {
     // Standard is to use the parseType method from the corresponding marhsalling type handler

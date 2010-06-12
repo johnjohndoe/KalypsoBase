@@ -118,6 +118,7 @@ public abstract class AbstractBarLayer extends AbstractChartLayer
     return entries.toArray( new ILegendEntry[] {} );
   }
 
+  @Override
   public void dispose( )
   {
 

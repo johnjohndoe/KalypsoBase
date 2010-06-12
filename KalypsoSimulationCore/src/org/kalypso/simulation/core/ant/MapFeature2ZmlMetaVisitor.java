@@ -83,6 +83,7 @@ public class MapFeature2ZmlMetaVisitor implements FeatureVisitor
   /**
    * @see org.kalypsodeegree.model.feature.FeatureVisitor#visit(org.kalypsodeegree.model.feature.Feature)
    */
+  @Override
   public final boolean visit( final Feature f )
   {
     final URL observationLocation = getObservationLocation( f );

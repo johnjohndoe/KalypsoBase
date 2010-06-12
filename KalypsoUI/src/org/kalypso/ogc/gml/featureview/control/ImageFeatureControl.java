@@ -98,6 +98,7 @@ public class ImageFeatureControl extends AbstractFeatureControl
   /**
    * @see org.kalypso.ogc.gml.featureview.control.IFeatureControl#createControl(org.eclipse.swt.widgets.Composite, int)
    */
+  @Override
   public Control createControl( final Composite parent, final int style )
   {
     final ImageCanvas imgCanvas = new ImageCanvas( parent, style );
@@ -135,6 +136,7 @@ public class ImageFeatureControl extends AbstractFeatureControl
   /**
    * @see org.kalypso.ogc.gml.featureview.control.IFeatureControl#isValid()
    */
+  @Override
   public boolean isValid( )
   {
     // this control does not modify, so its always valid
@@ -144,6 +146,7 @@ public class ImageFeatureControl extends AbstractFeatureControl
   /**
    * @see org.kalypso.ogc.gml.featureview.control.IFeatureControl#addModifyListener(org.eclipse.swt.events.ModifyListener)
    */
+  @Override
   public void addModifyListener( final ModifyListener l )
   {
     // this control does not modify, so listeners are ignored
@@ -152,6 +155,7 @@ public class ImageFeatureControl extends AbstractFeatureControl
   /**
    * @see org.kalypso.ogc.gml.featureview.control.IFeatureControl#removeModifyListener(org.eclipse.swt.events.ModifyListener)
    */
+  @Override
   public void removeModifyListener( final ModifyListener l )
   {
     // this control does not modify, so listeners are ignored
@@ -160,6 +164,7 @@ public class ImageFeatureControl extends AbstractFeatureControl
   /**
    * @see org.kalypso.ogc.gml.featureview.control.IFeatureControl#updateControl()
    */
+  @Override
   public void updateControl( )
   {
     final Image waitingImage = KalypsoGisPlugin.getImageProvider().getImage( ImageProvider.DESCRIPTORS.WAIT_LOADING_OBJ );

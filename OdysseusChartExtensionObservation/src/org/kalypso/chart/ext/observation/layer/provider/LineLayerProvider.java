@@ -13,6 +13,7 @@ import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 
 public class LineLayerProvider extends AbstractLayerProvider
 {
+  @Override
   public IChartLayer getLayer( final URL context )
   {
     return new TupleResultLineLayer( getDataContainer(), getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ) );

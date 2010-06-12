@@ -74,6 +74,7 @@ public class CopyObservationNATarget extends AbstractObservationTarget implement
     m_targetobservationDir = targetobservationDir;
   }
 
+  @Override
   public final String getTargetHref( final Feature f ) throws CoreException
   {
     final TimeseriesLinkType targetlink = getTargetLink( f );

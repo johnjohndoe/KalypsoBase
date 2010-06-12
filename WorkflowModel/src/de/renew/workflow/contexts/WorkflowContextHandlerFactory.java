@@ -53,6 +53,7 @@ public class WorkflowContextHandlerFactory implements IContextHandlerFactory
   /**
    * @see org.kalypso.afgui.workflow.IContextHandlerFactory#getHandler(org.kalypso.afgui.workflow.ContextType)
    */
+  @Override
   public IHandler getHandler( final ContextType context )
   {
     if( context instanceof PerspectiveContextType )

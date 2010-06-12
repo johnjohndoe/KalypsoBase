@@ -29,6 +29,7 @@ public class CSVLineLayerProvider extends AbstractLayerProvider
   /**
    * @see org.kalypso.swtchart.chart.layer.ILayerProvider#getLayer(java.net.URL)
    */
+  @Override
   public IChartLayer getLayer( final URL context )
   {
     return new DefaultLineLayer( getDataContainer(), getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ) );
@@ -107,11 +108,13 @@ public class CSVLineLayerProvider extends AbstractLayerProvider
 
       }
 
+      @Override
       public IDataRange getDomainRange( )
       {
         return new ComparableDataRange<Object>( getDomainValues() );
       }
 
+      @Override
       public IDataRange getTargetRange( )
       {
         return new ComparableDataRange<Object>( getTargetValues() );

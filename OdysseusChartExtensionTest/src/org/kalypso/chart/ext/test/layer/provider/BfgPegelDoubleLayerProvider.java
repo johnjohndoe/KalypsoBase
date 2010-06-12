@@ -54,7 +54,6 @@ import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 
 /**
  * @author alibu
- * 
  */
 public class BfgPegelDoubleLayerProvider extends AbstractLayerProvider
 {
@@ -62,7 +61,8 @@ public class BfgPegelDoubleLayerProvider extends AbstractLayerProvider
   /**
    * @see org.kalypso.chart.factory.provider.ILayerProvider#getLayer(java.net.URL)
    */
-  public IChartLayer getLayer( URL context ) throws ConfigurationException
+  @Override
+  public IChartLayer getLayer( final URL context ) throws ConfigurationException
   {
     return new DefaultDoubleUnfilteredLineLayer( getDataContainer(), getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ) );
   }
@@ -72,22 +72,15 @@ public class BfgPegelDoubleLayerProvider extends AbstractLayerProvider
    */
   public BfgPegelDoubleData getDataContainer( ) throws ConfigurationException
   {
-    String urlString = getParameterContainer().getParameterValue( "url", null );
-    URL url = null;
     try
     {
-      url = new URL( urlString );
+      final String urlString = getParameterContainer().getParameterValue( "url", null );
+      final URL url = new URL( urlString );
+      return new BfgPegelDoubleData( url );
     }
-    catch( MalformedURLException e )
+    catch( final MalformedURLException e )
     {
       throw new ConfigurationException( "URL can not be opened", e );
     }
-
-    if( url != null )
-    {
-      BfgPegelDoubleData data = new BfgPegelDoubleData( url );
-      return data;
-    }
-    return null;
   }
 }

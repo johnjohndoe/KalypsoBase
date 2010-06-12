@@ -132,6 +132,7 @@ public class CreateProjectComposite extends Composite
         {
           private boolean resetProjectName = true;
 
+          @Override
           public void pageChanged( final PageChangedEvent event )
           {
             final Object page = event.getSelectedPage();

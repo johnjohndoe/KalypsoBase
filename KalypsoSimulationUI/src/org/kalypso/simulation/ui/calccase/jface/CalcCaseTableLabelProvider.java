@@ -78,6 +78,7 @@ public class CalcCaseTableLabelProvider extends LabelProvider implements ITableL
   /**
    * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang.Object, int)
    */
+  @Override
   public Image getColumnImage( final Object element, final int columnIndex )
   {
     if( columnIndex == 0 )
@@ -89,6 +90,7 @@ public class CalcCaseTableLabelProvider extends LabelProvider implements ITableL
   /**
    * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.lang.Object, int)
    */
+  @Override
   public String getColumnText( final Object element, final int columnIndex )
   {
     if( columnIndex == 0 && element instanceof IFolder && ModelNature.isCalcCalseFolder( (IFolder) element ) )
@@ -111,6 +113,7 @@ public class CalcCaseTableLabelProvider extends LabelProvider implements ITableL
   /**
    * @see org.eclipse.jface.viewers.IColorProvider#getForeground(java.lang.Object)
    */
+  @Override
   public Color getForeground( final Object element )
   {
     return null;
@@ -119,6 +122,7 @@ public class CalcCaseTableLabelProvider extends LabelProvider implements ITableL
   /**
    * @see org.eclipse.jface.viewers.IColorProvider#getBackground(java.lang.Object)
    */
+  @Override
   public Color getBackground( final Object element )
   {
     if( element != null && element.equals( m_markedCalcCase ) )

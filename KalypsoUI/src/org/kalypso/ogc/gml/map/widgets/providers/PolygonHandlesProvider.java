@@ -63,6 +63,7 @@ public class PolygonHandlesProvider implements IHandlesProvider
   /**
    * @see org.kalypso.informdss.manager.util.widgets.providers.IHandlesProvider#collectHandles(org.kalypsodeegree.model.feature.Feature)
    */
+  @Override
   public List<IHandle> collectHandles( final Feature feature, final int radius )
   {
     final ArrayList<IHandle> list = new ArrayList<IHandle>();

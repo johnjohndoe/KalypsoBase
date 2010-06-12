@@ -66,6 +66,7 @@ public class ComponentUiDecimalHandler extends AbstractComponentUiHandler
   /**
    * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#createCellEditor(org.eclipse.swt.widgets.Table)
    */
+  @Override
   public CellEditor createCellEditor( final Table table )
   {
     final TextCellEditor textCellEditor = new TextCellEditor( table, SWT.NONE );
@@ -76,6 +77,7 @@ public class ComponentUiDecimalHandler extends AbstractComponentUiHandler
   /**
    * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#formatValue(java.lang.Object)
    */
+  @Override
   public Object doGetValue( final IRecord record )
   {
     final Object value = record.getValue( getComponent() );
@@ -89,6 +91,7 @@ public class ComponentUiDecimalHandler extends AbstractComponentUiHandler
    * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#setValue(org.kalypso.observation.result.IRecord,
    *      java.lang.Object)
    */
+  @Override
   public void doSetValue( final IRecord record, final Object value )
   {
     if( value == null || (value instanceof String && ((String) value).length() == 0) )
@@ -97,6 +100,7 @@ public class ComponentUiDecimalHandler extends AbstractComponentUiHandler
       setValue( record, parseValue( value.toString() ) );
   }
 
+  @Override
   public Object parseValue( final String text )
   {
     return new BigDecimal( text.replace( ",", "." ) ); //$NON-NLS-1$ //$NON-NLS-2$
@@ -106,6 +110,7 @@ public class ComponentUiDecimalHandler extends AbstractComponentUiHandler
    * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#setValue(org.kalypso.observation.result.IRecord,
    *      java.lang.Object)
    */
+  @Override
   public void setValue( final IRecord record, final Object value )
   {
     final int index = getComponent();

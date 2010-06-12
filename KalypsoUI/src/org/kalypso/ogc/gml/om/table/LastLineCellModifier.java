@@ -60,6 +60,7 @@ public abstract class LastLineCellModifier implements ICellModifier
   /**
    * @see org.eclipse.jface.viewers.ICellModifier#canModify(java.lang.Object, java.lang.String)
    */
+  @Override
   public boolean canModify( final Object element, final String property )
   {
     if( element == LastLineContentProvider.DUMMY_ELEMENT )
@@ -71,6 +72,7 @@ public abstract class LastLineCellModifier implements ICellModifier
   /**
    * @see org.eclipse.jface.viewers.ICellModifier#getValue(java.lang.Object, java.lang.String)
    */
+  @Override
   public Object getValue( final Object element, final String property )
   {
     if( element == LastLineContentProvider.DUMMY_ELEMENT )
@@ -82,6 +84,7 @@ public abstract class LastLineCellModifier implements ICellModifier
   /**
    * @see org.eclipse.jface.viewers.ICellModifier#modify(java.lang.Object, java.lang.String, java.lang.Object)
    */
+  @Override
   public void modify( final Object element, final String property, final Object value )
   {
     final TableItem item = (TableItem) element;

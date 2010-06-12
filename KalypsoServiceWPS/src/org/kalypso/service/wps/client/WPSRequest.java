@@ -51,12 +51,12 @@ import net.opengeospatial.ows.ExceptionReport;
 import net.opengeospatial.wps.ComplexValueType;
 import net.opengeospatial.wps.ExecuteResponseType;
 import net.opengeospatial.wps.IOValueType;
+import net.opengeospatial.wps.IOValueType.ComplexValueReference;
 import net.opengeospatial.wps.LiteralValueType;
 import net.opengeospatial.wps.ProcessDescriptionType;
 import net.opengeospatial.wps.ProcessFailedType;
 import net.opengeospatial.wps.ProcessStartedType;
 import net.opengeospatial.wps.StatusType;
-import net.opengeospatial.wps.IOValueType.ComplexValueReference;
 
 import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileSystemException;
@@ -68,7 +68,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.commons.io.VFSUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.service.wps.client.exceptions.WPSException;
 import org.kalypso.service.wps.i18n.Messages;
 import org.kalypso.service.wps.internal.KalypsoServiceWPSDebug;
 import org.kalypso.service.wps.utils.WPSUtilities;
@@ -320,7 +319,7 @@ public class WPSRequest
     return wpsRequest.cancelJob();
   }
 
-  protected IStatus doUnknownState( final ExecuteResponseType exState )
+  protected IStatus doUnknownState( @SuppressWarnings("unused") final ExecuteResponseType exState )
   {
     return StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.service.wps.client.WPSRequest.4" ) );
   }
@@ -345,7 +344,7 @@ public class WPSRequest
     }
   }
 
-  protected void doProcessStarted( final IProgressMonitor monitor, final ExecuteResponseType exState ) throws WPSException
+  protected void doProcessStarted( final IProgressMonitor monitor, final ExecuteResponseType exState )
   {
     final ProcessStartedType processStarted = exState.getStatus().getProcessStarted();
     final String descriptionValue = processStarted.getValue();
@@ -380,7 +379,7 @@ public class WPSRequest
     return status;
   }
 
-  protected void doProcessAccepted( final ExecuteResponseType exState )
+  protected void doProcessAccepted( @SuppressWarnings("unused") final ExecuteResponseType exState )
   {
   }
 

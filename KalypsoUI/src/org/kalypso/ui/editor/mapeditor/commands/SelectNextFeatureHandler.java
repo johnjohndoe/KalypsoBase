@@ -86,6 +86,7 @@ public class SelectNextFeatureHandler extends AbstractHandler implements IElemen
    * @see org.eclipse.core.runtime.IExecutableExtension#setInitializationData(org.eclipse.core.runtime.IConfigurationElement,
    *      java.lang.String, java.lang.Object)
    */
+  @Override
   @SuppressWarnings("unchecked")
   public void setInitializationData( final IConfigurationElement config, final String propertyName, final Object data )
   {
@@ -103,6 +104,7 @@ public class SelectNextFeatureHandler extends AbstractHandler implements IElemen
   /**
    * @see org.eclipse.ui.commands.IHandler#execute(java.util.Map)
    */
+  @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();

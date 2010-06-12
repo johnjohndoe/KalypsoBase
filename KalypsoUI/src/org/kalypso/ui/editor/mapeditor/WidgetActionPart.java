@@ -75,6 +75,7 @@ public class WidgetActionPart implements ICommandTarget
    * @see org.kalypso.commons.command.ICommandTarget#postCommand(org.kalypso.commons.command.ICommand,
    *      java.lang.Runnable)
    */
+  @Override
   public void postCommand( final ICommand command, final Runnable runnable )
   {
     final ICommandTarget commandTarget = getCommandTarget();

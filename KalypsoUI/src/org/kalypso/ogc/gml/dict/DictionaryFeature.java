@@ -79,6 +79,7 @@ public class DictionaryFeature implements Feature
   /**
    * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
    */
+  @Override
   public Object getAdapter( final Class adapter )
   {
     return m_feature.getAdapter( adapter );
@@ -87,6 +88,7 @@ public class DictionaryFeature implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.DeegreeFeature#getDefaultGeometryProperty()
    */
+  @Override
   public GM_Object getDefaultGeometryProperty( )
   {
     return m_feature.getDefaultGeometryProperty();
@@ -95,6 +97,7 @@ public class DictionaryFeature implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.DeegreeFeature#getEnvelope()
    */
+  @Override
   public GM_Envelope getEnvelope( )
   {
     return m_feature.getEnvelope();
@@ -103,6 +106,7 @@ public class DictionaryFeature implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.DeegreeFeature#getFeatureType()
    */
+  @Override
   public IFeatureType getFeatureType( )
   {
     return m_feature.getFeatureType();
@@ -111,6 +115,7 @@ public class DictionaryFeature implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.DeegreeFeature#getGeometryProperties()
    */
+  @Override
   public GM_Object[] getGeometryProperties( )
   {
     return m_feature.getGeometryProperties();
@@ -119,6 +124,7 @@ public class DictionaryFeature implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.DeegreeFeature#getId()
    */
+  @Override
   public String getId( )
   {
     return m_feature.getId();
@@ -127,6 +133,7 @@ public class DictionaryFeature implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.Feature#getParent()
    */
+  @Override
   public Feature getParent( )
   {
     return m_feature.getParent();
@@ -135,6 +142,7 @@ public class DictionaryFeature implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.Feature#getParentRelation()
    */
+  @Override
   public IRelationType getParentRelation( )
   {
     return m_feature.getParentRelation();
@@ -143,6 +151,7 @@ public class DictionaryFeature implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.DeegreeFeature#getProperties()
    */
+  @Override
   public Object[] getProperties( )
   {
     return m_feature.getProperties();
@@ -151,6 +160,7 @@ public class DictionaryFeature implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.DeegreeFeature#getProperty(org.kalypso.gmlschema.property.IPropertyType)
    */
+  @Override
   public Object getProperty( final IPropertyType propertyType )
   {
     return m_feature.getProperty( propertyType );
@@ -159,6 +169,7 @@ public class DictionaryFeature implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.Feature#getProperty(javax.xml.namespace.QName)
    */
+  @Override
   public Object getProperty( final QName propQName )
   {
     return m_feature.getProperty( propQName );
@@ -167,6 +178,7 @@ public class DictionaryFeature implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.Feature#getProperty(java.lang.String)
    */
+  @Override
   public Object getProperty( final String propLocalName )
   {
     return m_feature.getProperty( propLocalName );
@@ -175,6 +187,7 @@ public class DictionaryFeature implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.Feature#getWorkspace()
    */
+  @Override
   public GMLWorkspace getWorkspace( )
   {
     return m_feature.getWorkspace();
@@ -184,6 +197,7 @@ public class DictionaryFeature implements Feature
    * @see org.kalypsodeegree.model.feature.Feature#setProperty(org.kalypso.gmlschema.property.IPropertyType,
    *      java.lang.Object)
    */
+  @Override
   public void setProperty( final IPropertyType propertyType, final Object value )
   {
     throw new UnsupportedOperationException( "Dictionary entries may not be changed." ); //$NON-NLS-1$
@@ -192,6 +206,7 @@ public class DictionaryFeature implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.Feature#setProperty(javax.xml.namespace.QName, java.lang.Object)
    */
+  @Override
   public void setProperty( final QName propQName, final Object value )
   {
     throw new UnsupportedOperationException( "Dictionary entries may not be changed." ); //$NON-NLS-1$
@@ -200,6 +215,7 @@ public class DictionaryFeature implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.Feature#setProperty(java.lang.String, java.lang.Object)
    */
+  @Override
   public void setProperty( final String propLocalName, final Object value )
   {
     throw new UnsupportedOperationException( "Dictionary entries may not be changed." ); //$NON-NLS-1$
@@ -208,6 +224,7 @@ public class DictionaryFeature implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.Feature#setWorkspace(org.kalypsodeegree.model.feature.GMLWorkspace)
    */
+  @Override
   public void setWorkspace( final GMLWorkspace workspace )
   {
     throw new UnsupportedOperationException( "Dictionary entries may not be changed." ); //$NON-NLS-1$
@@ -216,6 +233,7 @@ public class DictionaryFeature implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.Feature#invalidEnvelope()
    */
+  @Override
   public void invalidEnvelope( )
   {
     m_feature.invalidEnvelope();
@@ -224,6 +242,7 @@ public class DictionaryFeature implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.Deegree2Feature#getBoundedBy()
    */
+  @Override
   public GM_Envelope getBoundedBy( ) throws GeometryException
   {
     return m_feature.getBoundedBy();
@@ -232,6 +251,7 @@ public class DictionaryFeature implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.Deegree2Feature#getDefaultGeometryPropertyValue()
    */
+  @Override
   public GM_Object getDefaultGeometryPropertyValue( )
   {
     return m_feature.getDefaultGeometryPropertyValue();
@@ -240,6 +260,7 @@ public class DictionaryFeature implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.Deegree2Feature#getGeometryPropertyValues()
    */
+  @Override
   public GM_Object[] getGeometryPropertyValues( )
   {
     return m_feature.getGeometryPropertyValues();
@@ -248,6 +269,7 @@ public class DictionaryFeature implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.Deegree2Feature#getOwner()
    */
+  @Override
   public Feature getOwner( )
   {
     return m_feature.getOwner();
@@ -256,6 +278,7 @@ public class DictionaryFeature implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.Deegree2Feature#getQualifiedName()
    */
+  @Override
   public QName getQualifiedName( )
   {
     return m_feature.getQualifiedName();
@@ -264,6 +287,7 @@ public class DictionaryFeature implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.Deegree2Feature#setEnvelopesUpdated()
    */
+  @Override
   public void setEnvelopesUpdated( )
   {
     m_feature.setEnvelopesUpdated();
@@ -272,6 +296,7 @@ public class DictionaryFeature implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.Deegree2Feature#setFeatureType(org.kalypso.gmlschema.feature.IFeatureType)
    */
+  @Override
   public void setFeatureType( final IFeatureType ft )
   {
     throw new UnsupportedOperationException( "Dictionary entries may not be changed." ); //$NON-NLS-1$
@@ -280,6 +305,7 @@ public class DictionaryFeature implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.Deegree2Feature#setId(java.lang.String)
    */
+  @Override
   public void setId( final String fid )
   {
     throw new UnsupportedOperationException( "Dictionary entries may not be changed." ); //$NON-NLS-1$
@@ -288,6 +314,7 @@ public class DictionaryFeature implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getName()
    */
+  @Override
   public String getName( )
   {
     return NamedFeatureHelper.getName( m_feature );
@@ -296,6 +323,7 @@ public class DictionaryFeature implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#setName(java.lang.String)
    */
+  @Override
   public void setName( final String name )
   {
     throw new UnsupportedOperationException( "Dictionary entries may not be changed." ); //$NON-NLS-1$
@@ -304,6 +332,7 @@ public class DictionaryFeature implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getDescription()
    */
+  @Override
   public String getDescription( )
   {
     return NamedFeatureHelper.getDescription( m_feature );
@@ -312,6 +341,7 @@ public class DictionaryFeature implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#setDescription(java.lang.String)
    */
+  @Override
   public void setDescription( final String desc )
   {
     throw new UnsupportedOperationException( "Dictionary entries may not be changed." ); //$NON-NLS-1$
@@ -320,6 +350,7 @@ public class DictionaryFeature implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getLocation()
    */
+  @Override
   public GM_Object getLocation( )
   {
     final Object property = m_feature.getProperty( NamedFeatureHelper.GML_LOCATION );
@@ -332,6 +363,7 @@ public class DictionaryFeature implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#setLocation(org.kalypsodeegree.model.geometry.GM_Object)
    */
+  @Override
   public void setLocation( final GM_Object location )
   {
     throw new UnsupportedOperationException( "Dictionary entries may not be changed." ); //$NON-NLS-1$

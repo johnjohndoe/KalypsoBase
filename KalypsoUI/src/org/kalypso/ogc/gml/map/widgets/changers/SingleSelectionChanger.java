@@ -71,6 +71,7 @@ public class SingleSelectionChanger implements IFeatureSelectionChanger
   /**
    * @see org.kalypso.informdss.manager.util.widgets.IFeatureSelectionChanger#changeSelection(org.kalypsodeegree.model.feature.Feature[])
    */
+  @Override
   public void changeSelection( final IFeatureSelectionManager selectionManager, final EasyFeatureWrapper[] featureToRemove, final EasyFeatureWrapper[] featuresToSelect )
   {
     final Feature[] toRemove = new Feature[featureToRemove.length];

@@ -128,6 +128,7 @@ public class LegendPropertyPage extends PropertyPage implements IWorkbenchProper
 
       canvas.addDisposeListener( new DisposeListener()
       {
+        @Override
         public void widgetDisposed( final DisposeEvent e )
         {
           legendGraphic.dispose();

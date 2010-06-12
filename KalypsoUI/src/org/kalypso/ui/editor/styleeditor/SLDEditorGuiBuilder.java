@@ -103,6 +103,7 @@ public class SLDEditorGuiBuilder
 
   private final PanelListener m_panelListener = new PanelListener()
   {
+    @Override
     public void valueChanged( final PanelEvent event )
     {
       handleValueChanged( event.eventType, event.param );

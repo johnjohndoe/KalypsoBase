@@ -64,6 +64,7 @@ public class SelectWidgetHandler extends AbstractHandler implements IHandler, IE
 
   private String m_widgetTooltipFromExtension;
 
+  @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     final IEvaluationContext applicationContext = (IEvaluationContext) event.getApplicationContext();
@@ -214,6 +215,7 @@ public class SelectWidgetHandler extends AbstractHandler implements IHandler, IE
    * @see org.kalypso.ui.GenericCommandActionDelegate#setInitializationData(org.eclipse.core.runtime.IConfigurationElement,
    *      java.lang.String, java.lang.Object)
    */
+  @Override
   public void setInitializationData( final IConfigurationElement config, final String propertyName, final Object data )
   {
     if( data != null && data instanceof Map<?,?> )
@@ -232,6 +234,7 @@ public class SelectWidgetHandler extends AbstractHandler implements IHandler, IE
   /**
    * @see org.eclipse.ui.commands.IElementUpdater#updateElement(org.eclipse.ui.menus.UIElement, java.util.Map)
    */
+  @Override
   @SuppressWarnings("unchecked")
   public void updateElement( final UIElement element, final Map parameters )
   {

@@ -134,16 +134,19 @@ public class ServiceRepositoryObservation implements IObservation
     }
   }
 
+  @Override
   public final String getIdentifier( )
   {
     return ObservationServiceUtils.addServerSideId( m_ob.getId() );
   }
 
+  @Override
   public final String getName( )
   {
     return m_ob.getName();
   }
 
+  @Override
   public final boolean isEditable( )
   {
     try
@@ -160,6 +163,7 @@ public class ServiceRepositoryObservation implements IObservation
   /**
    * @see org.kalypso.ogc.sensor.IObservation#getMetadataList()
    */
+  @Override
   public final MetadataList getMetadataList( )
   {
     if( m_obs != null )
@@ -177,6 +181,7 @@ public class ServiceRepositoryObservation implements IObservation
   /**
    * @see org.kalypso.ogc.sensor.IObservation#getAxisList()
    */
+  @Override
   public final IAxis[] getAxisList( )
   {
     try
@@ -193,6 +198,7 @@ public class ServiceRepositoryObservation implements IObservation
   /**
    * @see org.kalypso.ogc.sensor.IObservation#getValues(org.kalypso.ogc.sensor.request.IRequest)
    */
+  @Override
   public final synchronized ITuppleModel getValues( final IRequest args ) throws SensorException
   {
     ITuppleModel values = ObservationCache.getInstance().getValues( this );
@@ -211,32 +217,38 @@ public class ServiceRepositoryObservation implements IObservation
    * @see org.kalypso.ogc.sensor.IObservation#setValues(org.kalypso.ogc.sensor.ITuppleModel)
    * @deprecated
    */
+  @Override
   @Deprecated
   public final void setValues( final ITuppleModel values )
   {
     throw new NotImplementedException( "Not used anymore. Use repository#setData instead" );
   }
 
+  @Override
   public final void addListener( final IObservationListener listener )
   {
     m_evtPrv.addListener( listener );
   }
 
+  @Override
   public final void removeListener( final IObservationListener listener )
   {
     m_evtPrv.removeListener( listener );
   }
 
+  @Override
   public final void clearListeners( )
   {
     m_evtPrv.clearListeners();
   }
 
+  @Override
   public final void fireChangedEvent( final Object source )
   {
     m_evtPrv.fireChangedEvent( source );
   }
 
+  @Override
   public final String getHref( )
   {
     return getIdentifier();

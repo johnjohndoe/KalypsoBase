@@ -79,6 +79,7 @@ public class ChartEditorTreeContentProvider implements ITreeContentProvider
   /**
    * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
    */
+  @Override
   public Object[] getChildren( final Object element )
   {
     if( element instanceof IChartModel )
@@ -117,6 +118,7 @@ public class ChartEditorTreeContentProvider implements ITreeContentProvider
   /**
    * @see org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.Object)
    */
+  @Override
   public Object getParent( final Object element )
   {
     if( element instanceof IChartLayer )
@@ -134,6 +136,7 @@ public class ChartEditorTreeContentProvider implements ITreeContentProvider
   /**
    * @see org.eclipse.jface.viewers.ITreeContentProvider#hasChildren(java.lang.Object)
    */
+  @Override
   public boolean hasChildren( final Object element )
   {
     if( element instanceof IChartModel )
@@ -163,6 +166,7 @@ public class ChartEditorTreeContentProvider implements ITreeContentProvider
   /**
    * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
    */
+  @Override
   public Object[] getElements( final Object inputElement )
   {
     return getChildren( inputElement );
@@ -171,6 +175,7 @@ public class ChartEditorTreeContentProvider implements ITreeContentProvider
   /**
    * @see org.eclipse.jface.viewers.IContentProvider#dispose()
    */
+  @Override
   public void dispose( )
   {
     // TODO Auto-generated method stub
@@ -181,6 +186,7 @@ public class ChartEditorTreeContentProvider implements ITreeContentProvider
    * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object,
    *      java.lang.Object)
    */
+  @Override
   public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
   {
     if( oldInput == newInput )

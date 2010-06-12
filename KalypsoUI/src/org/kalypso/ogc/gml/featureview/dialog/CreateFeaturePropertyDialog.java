@@ -81,6 +81,7 @@ public class CreateFeaturePropertyDialog implements IFeatureDialog
   /**
    * @see org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog#open(org.eclipse.swt.widgets.Shell)
    */
+  @Override
   public int open( final Shell shell )
   {
     final GMLWorkspace workspace = m_feature.getWorkspace();
@@ -126,6 +127,7 @@ public class CreateFeaturePropertyDialog implements IFeatureDialog
   /**
    * @see org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog#collectChanges(java.util.Collection)
    */
+  @Override
   public void collectChanges( final Collection<FeatureChange> c )
   {
     if( c != null && m_change != null )
@@ -135,6 +137,7 @@ public class CreateFeaturePropertyDialog implements IFeatureDialog
   /**
    * @see org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog#getLabel()
    */
+  @Override
   public String getLabel( )
   {
     final String label = m_relationType.getTargetFeatureType().getAnnotation().getValue( IAnnotation.ANNO_NAME );

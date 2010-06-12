@@ -192,6 +192,7 @@ class PropertyIsCOMPOperationComposite extends AbstractFilterComposite
     m_propViewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
 
+      @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
         final Object firstElement = ((IStructuredSelection) event.getSelection()).getFirstElement();
@@ -210,11 +211,13 @@ class PropertyIsCOMPOperationComposite extends AbstractFilterComposite
     m_secondRowText.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
     m_secondRowText.addFocusListener( new FocusListener()
     {
+      @Override
       public void focusGained( final FocusEvent e )
       {
         // do nothing
       }
 
+      @Override
       public void focusLost( final FocusEvent e )
       {
         updateOperation();
@@ -224,11 +227,13 @@ class PropertyIsCOMPOperationComposite extends AbstractFilterComposite
     m_secondRowText.addKeyListener( new KeyListener()
     {
 
+      @Override
       public void keyPressed( final KeyEvent e )
       {
         // do nothing
       }
 
+      @Override
       public void keyReleased( final KeyEvent e )
       {
         if( e.keyCode == SWT.CR && m_secondRowTextModified )
@@ -242,6 +247,7 @@ class PropertyIsCOMPOperationComposite extends AbstractFilterComposite
     m_secondRowText.addModifyListener( new ModifyListener()
     {
 
+      @Override
       public void modifyText( final ModifyEvent e )
       {
         m_secondRowTextModified = true;

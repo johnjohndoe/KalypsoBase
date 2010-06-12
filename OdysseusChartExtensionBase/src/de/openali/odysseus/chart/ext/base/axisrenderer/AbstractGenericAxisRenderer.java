@@ -129,6 +129,7 @@ public abstract class AbstractGenericAxisRenderer implements IAxisRenderer
   /**
    * @see org.kalypso.chart.framework.model.layer.IChartLayer#setData()
    */
+  @Override
   public void setData( final String id, final Object data )
   {
     m_data.put( id, data );
@@ -137,21 +138,25 @@ public abstract class AbstractGenericAxisRenderer implements IAxisRenderer
   /**
    * @see org.kalypso.chart.framework.model.layer.IChartLayer#getData()
    */
+  @Override
   public Object getData( final String id )
   {
     return m_data.get( id );
   }
 
+  @Override
   public String getId( )
   {
     return m_id;
   }
 
+  @Override
   public void invalidateTicks( final IAxis axis )
   {
     m_tickMap.put( axis, null );
   }
 
+  @Override
   public void dispose( )
   {
   }

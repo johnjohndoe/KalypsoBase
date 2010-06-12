@@ -80,6 +80,7 @@ public class LineColorMapEntryEditorComposite extends Composite
 
     strokeEditor.addModifyListener( new IStrokeModifyListener()
     {
+      @Override
       public void onStrokeChanged( final Object source, final Stroke stroke )
       {
         contentChanged();

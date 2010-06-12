@@ -87,6 +87,7 @@ public class ColorMapEntryEditorComposite extends Composite
     m_fillEditor.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     m_fillEditor.addModifyListener( new IFillModifyListener()
     {
+      @Override
       public void onFillChanged( final Object source, final Fill fill )
       {
         contentChanged();

@@ -65,8 +65,8 @@ import org.kalypso.ui.editor.styleeditor.panels.PanelEvent;
 import org.kalypso.ui.editor.styleeditor.panels.PanelListener;
 import org.kalypso.ui.editor.styleeditor.panels.SliderPanel;
 import org.kalypso.ui.editor.styleeditor.panels.TextInputPanel;
-import org.kalypso.ui.editor.styleeditor.panels.TextLabelComboPanel;
 import org.kalypso.ui.editor.styleeditor.panels.TextInputPanel.ModifyListener;
+import org.kalypso.ui.editor.styleeditor.panels.TextLabelComboPanel;
 import org.kalypsodeegree.filterencoding.Expression;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.sld.Font;
@@ -168,6 +168,7 @@ public class TextSymbolizerLayout extends AbstractSymbolizerLayout
     textLabelComboPanel = new TextLabelComboPanel( fontGroup, MessageBundle.STYLE_EDITOR_LABEL, m_featureTyped, labelTextCombo );
     textLabelComboPanel.addPanelListener( new PanelListener()
     {
+      @Override
       public void valueChanged( final PanelEvent event )
       {
         final String ftpString = ((TextLabelComboPanel) event.getSource()).getSelectedFeatureTypeProperty();
@@ -197,6 +198,7 @@ public class TextSymbolizerLayout extends AbstractSymbolizerLayout
     final FontChooserPanel fontChooserPanel = new FontChooserPanel( fontGroup, MessageBundle.STYLE_EDITOR_FONT, font );
     fontChooserPanel.addPanelListener( new PanelListener()
     {
+      @Override
       public void valueChanged( final PanelEvent event )
       {
         final FontChooserPanel source = (FontChooserPanel) event.getSource();
@@ -217,6 +219,7 @@ public class TextSymbolizerLayout extends AbstractSymbolizerLayout
     haloColorChooserPanel = new ColorChooserPanel( fontGroup, MessageBundle.STYLE_EDITOR_COLOR, halo.getFill().getFill( null ) );
     haloColorChooserPanel.addColorChooserListener( new PanelListener()
     {
+      @Override
       public void valueChanged( final PanelEvent event )
       {
         final Color color = ((ColorChooserPanel) event.getSource()).getColor();
@@ -232,6 +235,7 @@ public class TextSymbolizerLayout extends AbstractSymbolizerLayout
     haloOpacityPanel = new SliderPanel( fontGroup, MessageBundle.STYLE_EDITOR_OPACITY, 0, 1, 1, SliderPanel.DECIMAL, halo.getFill().getOpacity( null ) );
     haloOpacityPanel.addPanelListener( new PanelListener()
     {
+      @Override
       public void valueChanged( final PanelEvent event )
       {
         final double opacity = ((SliderPanel) event.getSource()).getSelection();
@@ -247,6 +251,7 @@ public class TextSymbolizerLayout extends AbstractSymbolizerLayout
     haloStrokeOpacityPanel = new SliderPanel( fontGroup, MessageBundle.STYLE_EDITOR_STROKE_OPACITY, 0, 1, 1, SliderPanel.DECIMAL, halo.getStroke().getOpacity( null ) );
     haloStrokeOpacityPanel.addPanelListener( new PanelListener()
     {
+      @Override
       public void valueChanged( final PanelEvent event )
       {
         final double opacity = ((SliderPanel) event.getSource()).getSelection();
@@ -276,6 +281,7 @@ public class TextSymbolizerLayout extends AbstractSymbolizerLayout
       final LabelPlacementComboPanel labelPlacementComboBoxPanel = new LabelPlacementComboPanel( fontGroup, MessageBundle.STYLE_EDITOR_PLACEMENT, linePlacementIndex );
       labelPlacementComboBoxPanel.addPanelListener( new PanelListener()
       {
+        @Override
         public void valueChanged( final PanelEvent event )
         {
           final int type = ((LabelPlacementComboPanel) event.getSource()).getSelection();
@@ -289,6 +295,7 @@ public class TextSymbolizerLayout extends AbstractSymbolizerLayout
       final SliderPanel gapPanel = new SliderPanel( fontGroup, MessageBundle.STYLE_EDITOR_GAP, 0, 10, 1, SliderPanel.INTEGER, labelPlacement.getLinePlacement().getGap( null ) );
       gapPanel.addPanelListener( new PanelListener()
       {
+        @Override
         public void valueChanged( final PanelEvent event )
         {
           final double gap = ((SliderPanel) event.getSource()).getSelection();
@@ -310,6 +317,7 @@ public class TextSymbolizerLayout extends AbstractSymbolizerLayout
       final LabelPointPlacementPanel labelPointPlacementPanel = new LabelPointPlacementPanel( fontGroup, MessageBundle.STYLE_EDITOR_PLACEMENT, displacement );
       labelPointPlacementPanel.addPanelListener( new PanelListener()
       {
+        @Override
         public void valueChanged( final PanelEvent event )
         {
           final double disp[] = ((LabelPointPlacementPanel) event.getSource()).getValue();
@@ -323,6 +331,7 @@ public class TextSymbolizerLayout extends AbstractSymbolizerLayout
       final SliderPanel rotationPanel = new SliderPanel( fontGroup, MessageBundle.STYLE_EDITOR_ROTATION, 0, 360, 15, SliderPanel.INTEGER, pointPlacement.getRotation( null ) * 180 );
       rotationPanel.addPanelListener( new PanelListener()
       {
+        @Override
         public void valueChanged( final PanelEvent event )
         {
           double rotation = ((SliderPanel) event.getSource()).getSelection();

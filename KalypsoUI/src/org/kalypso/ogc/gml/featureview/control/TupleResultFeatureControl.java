@@ -213,6 +213,7 @@ public class TupleResultFeatureControl extends AbstractToolbarFeatureControl imp
   /**
    * @see org.kalypso.ogc.gml.featureview.control.IFeatureControl#updateControl()
    */
+  @Override
   public void updateControl( )
   {
     if( m_ignoreNextUpdateControl > 0 )
@@ -263,6 +264,7 @@ public class TupleResultFeatureControl extends AbstractToolbarFeatureControl imp
   /**
    * @see org.kalypso.ogc.gml.featureview.control.IFeatureControl#isValid()
    */
+  @Override
   public boolean isValid( )
   {
     return true;
@@ -271,6 +273,7 @@ public class TupleResultFeatureControl extends AbstractToolbarFeatureControl imp
   /**
    * @see org.kalypso.ogc.gml.featureview.control.IFeatureControl#addModifyListener(org.eclipse.swt.events.ModifyListener)
    */
+  @Override
   public void addModifyListener( final ModifyListener l )
   {
     m_listener.add( l );
@@ -279,6 +282,7 @@ public class TupleResultFeatureControl extends AbstractToolbarFeatureControl imp
   /**
    * @see org.kalypso.ogc.gml.featureview.control.IFeatureControl#removeModifyListener(org.eclipse.swt.events.ModifyListener)
    */
+  @Override
   public void removeModifyListener( final ModifyListener l )
   {
     m_listener.remove( l );
@@ -287,6 +291,7 @@ public class TupleResultFeatureControl extends AbstractToolbarFeatureControl imp
   /**
    * @see org.kalypso.observation.result.ITupleResultChangedListener#valuesChanged(org.kalypso.observation.result.ITupleResultChangedListener.ValueChange[])
    */
+  @Override
   public void valuesChanged( final ValueChange[] changes )
   {
     fireChanges( false );
@@ -297,6 +302,7 @@ public class TupleResultFeatureControl extends AbstractToolbarFeatureControl imp
    * @see org.kalypso.observation.result.ITupleResultChangedListener#recordsChanged(org.kalypso.observation.result.IRecord[],
    *      org.kalypso.observation.result.ITupleResultChangedListener.TYPE)
    */
+  @Override
   public void recordsChanged( final IRecord[] records, final TYPE type )
   {
     fireChanges( false );
@@ -307,6 +313,7 @@ public class TupleResultFeatureControl extends AbstractToolbarFeatureControl imp
    * @see org.kalypso.observation.result.ITupleResultChangedListener#componentsChanged(org.kalypso.observation.result.IComponent[],
    *      org.kalypso.observation.result.ITupleResultChangedListener.TYPE)
    */
+  @Override
   public void componentsChanged( final IComponent[] components, final TYPE type )
   {
     fireChanges( true );

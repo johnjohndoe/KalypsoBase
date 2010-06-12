@@ -157,6 +157,7 @@ public class RuleNode extends AbstractThemeNode<Rule>
     }
   }
 
+  @Override
   public String getLabel( )
   {
     final Rule rule = getElement();

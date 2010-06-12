@@ -44,8 +44,8 @@ import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 import java.util.Map.Entry;
+import java.util.Properties;
 import java.util.logging.Level;
 
 import org.eclipse.core.resources.IFile;
@@ -100,6 +100,7 @@ public class CopyObservationFeatureVisitor extends AbstractMonitoredFeatureVisit
   /**
    * @see org.kalypsodeegree.model.feature.FeatureVisitor#visit(org.kalypsodeegree.model.feature.Feature)
    */
+  @Override
   public final boolean visit( final Feature feature )
   {
     try

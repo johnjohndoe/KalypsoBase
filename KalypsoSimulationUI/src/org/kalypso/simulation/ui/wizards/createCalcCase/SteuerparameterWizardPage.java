@@ -108,6 +108,7 @@ public class SteuerparameterWizardPage extends WizardPage
     final FeatureComposite featureComposite = m_featureComposite;
     m_featureComposite.addChangeListener( new IFeatureChangeListener()
     {
+      @Override
       public void featureChanged( final ICommand changeCommand )
       {
         try
@@ -123,6 +124,7 @@ public class SteuerparameterWizardPage extends WizardPage
         }
       }
 
+      @Override
       public void openFeatureRequested( final Feature feature, final IPropertyType ftp )
       {
       }
@@ -147,6 +149,7 @@ public class SteuerparameterWizardPage extends WizardPage
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
    */
+  @Override
   public void createControl( final Composite parent )
   {
     m_panel = new Composite( parent, SWT.NONE );
@@ -200,6 +203,7 @@ public class SteuerparameterWizardPage extends WizardPage
       if( checkUpdate != null && !checkUpdate.isDisposed() )
         checkUpdate.getDisplay().asyncExec( new Runnable()
         {
+          @Override
           public void run( )
           {
             checkUpdate.setSelection( update );
@@ -223,6 +227,7 @@ public class SteuerparameterWizardPage extends WizardPage
     {
       m_panel.getDisplay().asyncExec( new Runnable()
       {
+        @Override
         public void run( )
         {
           createFeatureControl( panel );

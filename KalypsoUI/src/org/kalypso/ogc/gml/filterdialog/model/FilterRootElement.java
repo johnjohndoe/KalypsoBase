@@ -55,6 +55,7 @@ public class FilterRootElement implements Filter
   /**
    * @see org.kalypsodeegree.filterencoding.Filter#evaluate(org.kalypsodeegree.model.feature.Feature)
    */
+  @Override
   public boolean evaluate( final Feature feature ) throws FilterEvaluationException
   {
     return m_filter.evaluate( feature );
@@ -63,6 +64,7 @@ public class FilterRootElement implements Filter
   /**
    * @see org.kalypsodeegree.filterencoding.Filter#toXML()
    */
+  @Override
   public StringBuffer toXML( )
   {
     return m_filter.toXML();

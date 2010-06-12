@@ -144,6 +144,7 @@ public class FontChooserPanel
     dialog.setRGB( new RGB( color.getRed(), color.getGreen(), color.getBlue() ) );
     fontChooserButton.addSelectionListener( new SelectionListener()
     {
+      @Override
       public void widgetSelected( SelectionEvent e )
       {
         setFontData( dialog.open() );
@@ -163,6 +164,7 @@ public class FontChooserPanel
         }
       }
 
+      @Override
       public void widgetDefaultSelected( SelectionEvent e )
       {
         widgetSelected( e );

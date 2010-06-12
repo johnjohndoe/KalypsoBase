@@ -55,6 +55,7 @@ public class GenericLinearAxisProvider extends AbstractAxisProvider
   /**
    * @see org.kalypso.chart.factory.provider.IAxisProvider#getAxis()
    */
+  @Override
   public IAxis getAxis( )
   {
     IAxis axis = new GenericLinearAxis( getId(), getPosition(), getDataClass() );

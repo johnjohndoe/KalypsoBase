@@ -152,6 +152,7 @@ public class ComboBoxViewerCellEditor extends CellEditor
 
     m_viewer.getCombo().addTraverseListener( new TraverseListener()
     {
+      @Override
       public void keyTraversed( final TraverseEvent e )
       {
         if( (e.detail == SWT.TRAVERSE_ESCAPE) || (e.detail == SWT.TRAVERSE_RETURN) )
@@ -172,6 +173,7 @@ public class ComboBoxViewerCellEditor extends CellEditor
 
     m_viewer.getCombo().addListener( SWT.MouseDown, new Listener()
     {
+      @Override
       public void handleEvent( final Event event )
       {
         event.time += 100000;

@@ -144,7 +144,7 @@ public class ChartView extends ViewPart implements IChartPart, ISelectionListene
     {
       final IStatus status = StatusUtilities.statusFromThrowable( e );
       KalypsoChartUiPlugin.getDefault().getLog().log( status );
-      ErrorDialog.openError( getSite().getShell(), Messages.getString("org.kalypso.chart.ui.view.ChartView0"), Messages.getString("org.kalypso.chart.ui.view.ChartView1"), status ); //$NON-NLS-1$ //$NON-NLS-2$
+      ErrorDialog.openError( getSite().getShell(), Messages.getString( "org.kalypso.chart.ui.view.ChartView0" ), Messages.getString( "org.kalypso.chart.ui.view.ChartView1" ), status ); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     updateControl();
@@ -170,7 +170,7 @@ public class ChartView extends ViewPart implements IChartPart, ISelectionListene
     if( m_chartType == null )
     {
       final Label label = new Label( m_composite, SWT.NONE );
-      label.setText( Messages.getString("org.kalypso.chart.ui.view.ChartView2") ); //$NON-NLS-1$
+      label.setText( Messages.getString( "org.kalypso.chart.ui.view.ChartView2" ) ); //$NON-NLS-1$
     }
     else
     {
@@ -208,7 +208,7 @@ public class ChartView extends ViewPart implements IChartPart, ISelectionListene
       {
         final IStatus status = StatusUtilities.statusFromThrowable( e );
         KalypsoChartUiPlugin.getDefault().getLog().log( status );
-        ErrorDialog.openError( getSite().getShell(), Messages.getString("org.kalypso.chart.ui.view.ChartView3"), Messages.getString("org.kalypso.chart.ui.view.ChartView4"), status ); //$NON-NLS-1$ //$NON-NLS-2$
+        ErrorDialog.openError( getSite().getShell(), Messages.getString( "org.kalypso.chart.ui.view.ChartView3" ), Messages.getString( "org.kalypso.chart.ui.view.ChartView4" ), status ); //$NON-NLS-1$ //$NON-NLS-2$
       }
     }
 
@@ -227,6 +227,7 @@ public class ChartView extends ViewPart implements IChartPart, ISelectionListene
   /**
    * @see org.kalypso.chart.ui.IChartPart#getChartComposite()
    */
+  @Override
   public ChartComposite getChartComposite( )
   {
     return m_chartComposite;
@@ -235,6 +236,7 @@ public class ChartView extends ViewPart implements IChartPart, ISelectionListene
   /**
    * @see org.kalypso.chart.ui.IChartPart#getChartDragHandler()
    */
+  @Override
   public PlotDragHandlerDelegate getPlotDragHandler( )
   {
     return m_plotDragHandler;
@@ -265,9 +267,8 @@ public class ChartView extends ViewPart implements IChartPart, ISelectionListene
     }
   }
 
-  @SuppressWarnings("unchecked")
   @Override
-  public Object getAdapter( final Class adapter )
+  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
   {
     if( ChartComposite.class.equals( adapter ) )
     {
@@ -309,6 +310,7 @@ public class ChartView extends ViewPart implements IChartPart, ISelectionListene
   /**
    * @see org.kalypso.chart.ui.IChartPart#getAxisDragHandler()
    */
+  @Override
   public AxisDragHandlerDelegate getAxisDragHandler( )
   {
     return m_axisDragHandler;
@@ -318,6 +320,7 @@ public class ChartView extends ViewPart implements IChartPart, ISelectionListene
    * @see org.eclipse.ui.ISelectionListener#selectionChanged(org.eclipse.ui.IWorkbenchPart,
    *      org.eclipse.jface.viewers.ISelection)
    */
+  @Override
   public void selectionChanged( final IWorkbenchPart part, final ISelection selection )
   {
 

@@ -96,6 +96,7 @@ public class TestCalculationDelegate implements IWorkbenchWindowActionDelegate
   /**
    * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#dispose()
    */
+  @Override
   public void dispose()
   {
   // nix zu disposen
@@ -104,6 +105,7 @@ public class TestCalculationDelegate implements IWorkbenchWindowActionDelegate
   /**
    * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#init(org.eclipse.ui.IWorkbenchWindow)
    */
+  @Override
   public void init( final IWorkbenchWindow window )
   {
     m_window = window;
@@ -112,6 +114,7 @@ public class TestCalculationDelegate implements IWorkbenchWindowActionDelegate
   /**
    * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
    */
+  @Override
   public void run( final IAction action )
   {
     final Display display = m_window.getShell().getDisplay();
@@ -155,6 +158,7 @@ public class TestCalculationDelegate implements IWorkbenchWindowActionDelegate
 
               final Runnable runnable = new Runnable()
               {
+                @Override
                 public void run()
                 {
                   CompareUI.openCompareEditor( inputWrapper );
@@ -206,6 +210,7 @@ public class TestCalculationDelegate implements IWorkbenchWindowActionDelegate
    * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
    *      org.eclipse.jface.viewers.ISelection)
    */
+  @Override
   public void selectionChanged( final IAction action, final ISelection selection )
   {
   // egal

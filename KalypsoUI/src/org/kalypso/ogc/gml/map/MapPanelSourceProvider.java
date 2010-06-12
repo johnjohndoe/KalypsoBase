@@ -205,6 +205,7 @@ public class MapPanelSourceProvider extends AbstractSourceProvider
   /**
    * @see org.eclipse.ui.ISourceProvider#dispose()
    */
+  @Override
   public void dispose( )
   {
     // unregister the registered source provider
@@ -223,6 +224,7 @@ public class MapPanelSourceProvider extends AbstractSourceProvider
   /**
    * @see org.eclipse.ui.ISourceProvider#getCurrentState()
    */
+  @Override
   public Map< ? , ? > getCurrentState( )
   {
     final Map<String, Object> currentState = new TreeMap<String, Object>();
@@ -233,6 +235,7 @@ public class MapPanelSourceProvider extends AbstractSourceProvider
   /**
    * @see org.eclipse.ui.ISourceProvider#getProvidedSourceNames()
    */
+  @Override
   public String[] getProvidedSourceNames( )
   {
     return PROVIDED_SOURCE_NAMES;

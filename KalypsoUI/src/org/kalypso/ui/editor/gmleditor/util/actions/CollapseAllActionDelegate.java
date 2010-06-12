@@ -58,6 +58,7 @@ public class CollapseAllActionDelegate implements IEditorActionDelegate
   /**
    * @see org.eclipse.ui.IEditorActionDelegate#setActiveEditor(org.eclipse.jface.action.IAction, org.eclipse.ui.IEditorPart)
    */
+  @Override
   public void setActiveEditor( final IAction action, final IEditorPart targetEditor )
   {
     m_targetEditor = targetEditor;
@@ -66,6 +67,7 @@ public class CollapseAllActionDelegate implements IEditorActionDelegate
   /**
    * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
    */
+  @Override
   public void run( final IAction action )
   {
     if( m_targetEditor instanceof GmlEditor )
@@ -79,6 +81,7 @@ public class CollapseAllActionDelegate implements IEditorActionDelegate
   /**
    * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction, org.eclipse.jface.viewers.ISelection)
    */
+  @Override
   public void selectionChanged( final IAction action, final ISelection selection )
   {
   }

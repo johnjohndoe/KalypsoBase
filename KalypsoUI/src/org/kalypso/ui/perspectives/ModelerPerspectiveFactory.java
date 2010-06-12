@@ -57,6 +57,7 @@ public class ModelerPerspectiveFactory implements IPerspectiveFactory
   /**
    * @see org.eclipse.ui.IPerspectiveFactory#createInitialLayout(org.eclipse.ui.IPageLayout)
    */
+  @Override
   @SuppressWarnings("restriction")
   public void createInitialLayout( final IPageLayout layout )
   {

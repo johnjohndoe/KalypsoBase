@@ -116,6 +116,7 @@ public class DiagramPropertiesDialog extends TitleAreaDialog
     txtTitle.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
     txtTitle.addModifyListener( new ModifyListener()
     {
+      @Override
       public void modifyText( final ModifyEvent e )
       {
         m_diagTitle = txtTitle.getText();
@@ -128,11 +129,13 @@ public class DiagramPropertiesDialog extends TitleAreaDialog
     btnShowLegend.setSelection( m_showLegend );
     btnShowLegend.addSelectionListener( new SelectionListener()
     {
+      @Override
       public void widgetSelected( final SelectionEvent e )
       {
         m_showLegend = btnShowLegend.getSelection();
       }
 
+      @Override
       public void widgetDefaultSelected( final SelectionEvent e )
       {
         // empty
@@ -146,6 +149,7 @@ public class DiagramPropertiesDialog extends TitleAreaDialog
     txtLegTitle.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
     txtLegTitle.addModifyListener( new ModifyListener()
     {
+      @Override
       public void modifyText( final ModifyEvent e )
       {
         m_legendTitle = txtLegTitle.getText();
@@ -174,6 +178,7 @@ public class DiagramPropertiesDialog extends TitleAreaDialog
 
     cmbTz.addModifyListener( new ModifyListener()
     {
+      @Override
       public void modifyText( final ModifyEvent e )
       {
         handleTimeZoneChanged( cmbTz );

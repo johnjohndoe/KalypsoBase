@@ -62,8 +62,8 @@ import org.kalypso.contribs.eclipse.core.resources.StringStorage;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.editorinput.StorageEditorInput;
 import org.kalypso.template.featureview.Featuretemplate;
-import org.kalypso.template.featureview.ObjectFactory;
 import org.kalypso.template.featureview.Featuretemplate.Layer;
+import org.kalypso.template.featureview.ObjectFactory;
 import org.kalypso.template.types.LayerTypeUtilities;
 
 /**
@@ -76,6 +76,7 @@ public class FeatureTemplateLauncher implements IDefaultTemplateLauncher
   /**
    * @see org.kalypso.ui.editorLauncher.IDefaultTemplateLauncher#getFilename()
    */
+  @Override
   public String getFilename()
   {
     return "<Standard Feature Editor>.gft"; //$NON-NLS-1$
@@ -84,6 +85,7 @@ public class FeatureTemplateLauncher implements IDefaultTemplateLauncher
   /**
    * @see org.kalypso.ui.editorLauncher.IDefaultTemplateLauncher#getEditor()
    */
+  @Override
   public IEditorDescriptor getEditor()
   {
     final IWorkbench workbench = PlatformUI.getWorkbench();
@@ -96,6 +98,7 @@ public class FeatureTemplateLauncher implements IDefaultTemplateLauncher
    * @throws CoreException
    * @see org.kalypso.ui.editorLauncher.IDefaultTemplateLauncher#createInput(org.eclipse.core.resources.IFile)
    */
+  @Override
   public IEditorInput createInput( final IFile file ) throws CoreException
   {
     try

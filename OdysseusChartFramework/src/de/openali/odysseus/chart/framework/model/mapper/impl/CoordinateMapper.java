@@ -44,8 +44,8 @@ import org.eclipse.swt.graphics.Point;
 
 import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
-import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
+import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.util.resource.IPair;
 import de.openali.odysseus.chart.framework.util.resource.Pair;
 
@@ -68,6 +68,7 @@ public class CoordinateMapper implements ICoordinateMapper
     m_ori = m_domainAxis.getPosition().getOrientation();
   }
 
+  @Override
   public Point numericToScreen( Number domVal, Number targetVal )
   {
     final int domScreen = m_domainAxis.numericToScreen( domVal );
@@ -80,6 +81,7 @@ public class CoordinateMapper implements ICoordinateMapper
   /**
    * @see de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper#getDomainAxis()
    */
+  @Override
   public IAxis getDomainAxis( )
   {
     return m_domainAxis;
@@ -88,6 +90,7 @@ public class CoordinateMapper implements ICoordinateMapper
   /**
    * @see de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper#getTargetAxis()
    */
+  @Override
   public IAxis getTargetAxis( )
   {
     return m_targetAxis;
@@ -97,6 +100,7 @@ public class CoordinateMapper implements ICoordinateMapper
    * @see de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper#logicalToScreen(java.lang.Object,
    *      java.lang.Object)
    */
+  @Override
   @SuppressWarnings("unchecked")
   public Point logicalToScreen( Object domainValue, Object targetValue )
   {
@@ -109,6 +113,7 @@ public class CoordinateMapper implements ICoordinateMapper
   /**
    * @see de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper#screenToNumeric(int, int)
    */
+  @Override
   public IPair<Number, Number> screenToNumeric( Point screenValue )
   {
     int domainScreen = getDomainAxis().getPosition().getOrientation().equals( ORIENTATION.HORIZONTAL ) ? screenValue.x : screenValue.y;

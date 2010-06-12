@@ -67,6 +67,7 @@ public class AxisDragZoomInHandler extends AbstractAxisDragHandler
   /**
    * @see org.kalypso.chart.framework.view.IChartDragHandler#getCursor()
    */
+  @Override
   public Cursor getCursor( )
   {
     return Display.getDefault().getSystemCursor( SWT.CURSOR_CROSS );
@@ -75,6 +76,7 @@ public class AxisDragZoomInHandler extends AbstractAxisDragHandler
   /**
    * @see org.eclipse.swt.events.MouseListener#mouseUp(org.eclipse.swt.events.MouseEvent)
    */
+  @Override
   public void mouseUp( MouseEvent e )
   {
     if( m_mouseDragStart == -1 )
@@ -126,6 +128,7 @@ public class AxisDragZoomInHandler extends AbstractAxisDragHandler
   /**
    * @see org.eclipse.swt.events.MouseMoveListener#mouseMove(org.eclipse.swt.events.MouseEvent)
    */
+  @Override
   public void mouseMove( MouseEvent e )
   {
 

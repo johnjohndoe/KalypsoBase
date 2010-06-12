@@ -71,11 +71,13 @@ public class RadioFeatureControl extends AbstractFeatureControl
 {
   private final SelectionListener m_listener = new SelectionListener()
   {
+    @Override
     public void widgetSelected( final SelectionEvent e )
     {
       buttonSelected();
     }
 
+    @Override
     public void widgetDefaultSelected( final SelectionEvent e )
     {
       buttonSelected();
@@ -135,6 +137,7 @@ public class RadioFeatureControl extends AbstractFeatureControl
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureControl#createControl(org.eclipse.swt.widgets.Composite, int)
    */
+  @Override
   public Control createControl( final Composite parent, final int style )
   {
     final IPropertyType pt = getFeatureTypeProperty();
@@ -166,6 +169,7 @@ public class RadioFeatureControl extends AbstractFeatureControl
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureControl#updateControl()
    */
+  @Override
   public void updateControl( )
   {
     final Object currentFeatureValue = getFeature().getProperty( getFeatureTypeProperty() );
@@ -179,6 +183,7 @@ public class RadioFeatureControl extends AbstractFeatureControl
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureControl#isValid()
    */
+  @Override
   public boolean isValid( )
   {
     // a radio button is always valid
@@ -188,6 +193,7 @@ public class RadioFeatureControl extends AbstractFeatureControl
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureControl#addModifyListener(org.eclipse.swt.events.ModifyListener)
    */
+  @Override
   public void addModifyListener( final ModifyListener l )
   {
     m_listeners.add( l );
@@ -196,6 +202,7 @@ public class RadioFeatureControl extends AbstractFeatureControl
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureControl#removeModifyListener(org.eclipse.swt.events.ModifyListener)
    */
+  @Override
   public void removeModifyListener( final ModifyListener l )
   {
     m_listeners.remove( l );

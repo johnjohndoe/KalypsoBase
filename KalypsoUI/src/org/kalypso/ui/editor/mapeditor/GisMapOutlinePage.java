@@ -315,6 +315,7 @@ public class GisMapOutlinePage extends Page implements IContentOutlinePage, IPag
    * @see org.kalypso.util.command.JobExclusiveCommandTarget#postCommand(org.kalypso.commons.command.ICommand,
    *      java.lang.Runnable)
    */
+  @Override
   public void postCommand( final ICommand command, final Runnable runnable )
   {
     m_commandTarget.postCommand( command, runnable );

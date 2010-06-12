@@ -60,11 +60,13 @@ public final class PlainObsProvider implements IObsProvider
     m_obs = obs;
   }
 
+  @Override
   public void dispose()
   {
   // nix zu tun
   }
 
+  @Override
   public IObservation getObservation()
   {
     return m_obs;
@@ -73,6 +75,7 @@ public final class PlainObsProvider implements IObsProvider
   /**
    * @return [optional] variable arguments that can be used when values are fetched from the observation
    */
+  @Override
   public IRequest getArguments()
   {
     return m_args;
@@ -81,6 +84,7 @@ public final class PlainObsProvider implements IObsProvider
   /**
    * @see org.kalypso.ogc.sensor.template.IObsProvider#addListener(org.kalypso.ogc.sensor.template.IObsProviderListener)
    */
+  @Override
   public void addListener( final IObsProviderListener l )
   {
   // obs kann sich nicht ändern
@@ -89,6 +93,7 @@ public final class PlainObsProvider implements IObsProvider
   /**
    * @see org.kalypso.ogc.sensor.template.IObsProvider#removeListener(org.kalypso.ogc.sensor.template.IObsProviderListener)
    */
+  @Override
   public void removeListener( IObsProviderListener l )
   {
   // obs kann sich nicht ändern
@@ -105,6 +110,7 @@ public final class PlainObsProvider implements IObsProvider
   /**
    * @see org.kalypso.ogc.sensor.template.IObsProvider#copy()
    */
+  @Override
   public IObsProvider copy()
   {
     return new PlainObsProvider( m_obs, m_args );

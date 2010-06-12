@@ -14,6 +14,7 @@ public class EditObservationAction implements IActionDelegate
 {
   private IFeatureSelection m_selection = null;
 
+  @Override
   @SuppressWarnings("unchecked") //$NON-NLS-1$
   public void run( final IAction action )
   {
@@ -32,6 +33,7 @@ public class EditObservationAction implements IActionDelegate
     }
   }
 
+  @Override
   public void selectionChanged( final IAction action, final ISelection selection )
   {
     if( selection instanceof IFeatureSelection )

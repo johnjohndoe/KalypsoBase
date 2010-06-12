@@ -62,6 +62,7 @@ public class GoIntoActionDelegate implements IEditorActionDelegate
    * @see org.eclipse.ui.IEditorActionDelegate#setActiveEditor(org.eclipse.jface.action.IAction,
    *      org.eclipse.ui.IEditorPart)
    */
+  @Override
   public void setActiveEditor( final IAction action, final IEditorPart targetEditor )
   {
     m_targetEditor = (GmlEditor) targetEditor;
@@ -70,6 +71,7 @@ public class GoIntoActionDelegate implements IEditorActionDelegate
   /**
    * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
    */
+  @Override
   public void run( final IAction action )
   {
     final TreeViewer treeViewer = m_targetEditor.getTreeView().getTreeViewer();
@@ -88,6 +90,7 @@ public class GoIntoActionDelegate implements IEditorActionDelegate
    * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
    *      org.eclipse.jface.viewers.ISelection)
    */
+  @Override
   public void selectionChanged( final IAction action, final ISelection selection )
   {
     final IStructuredSelection structSel = (IStructuredSelection) selection;

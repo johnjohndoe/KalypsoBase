@@ -87,6 +87,8 @@ import net.opengis.wps._1_0.OutputDefinitionsType;
 import net.opengis.wps._1_0.OutputDescriptionType;
 import net.opengis.wps._1_0.ProcessBriefType;
 import net.opengis.wps._1_0.ProcessDescriptionType;
+import net.opengis.wps._1_0.ProcessDescriptionType.DataInputs;
+import net.opengis.wps._1_0.ProcessDescriptionType.ProcessOutputs;
 import net.opengis.wps._1_0.ProcessDescriptions;
 import net.opengis.wps._1_0.ProcessFailedType;
 import net.opengis.wps._1_0.ProcessOfferings;
@@ -95,8 +97,6 @@ import net.opengis.wps._1_0.ResponseDocumentType;
 import net.opengis.wps._1_0.ResponseFormType;
 import net.opengis.wps._1_0.StatusType;
 import net.opengis.wps._1_0.SupportedComplexDataType;
-import net.opengis.wps._1_0.ProcessDescriptionType.DataInputs;
-import net.opengis.wps._1_0.ProcessDescriptionType.ProcessOutputs;
 
 import org.kalypso.service.wps.utils.WPSUtilities;
 

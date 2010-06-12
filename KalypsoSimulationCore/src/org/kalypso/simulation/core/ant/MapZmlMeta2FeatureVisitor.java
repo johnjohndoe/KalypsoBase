@@ -144,6 +144,7 @@ public class MapZmlMeta2FeatureVisitor extends AbstractMonitoredFeatureVisitor i
   /**
    * @see org.kalypsodeegree.model.feature.FeatureVisitor#visit(org.kalypsodeegree.model.feature.Feature)
    */
+  @Override
   public final boolean visit( final Feature f )
   {
     final TimeseriesLinkType link = fetchTimeseriesLink( f );

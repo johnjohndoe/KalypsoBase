@@ -85,6 +85,7 @@ public class DefaultResultEater implements ISimulationResultEater
    * @throws SimulationException
    * @see org.kalypso.simulation.core.ISimulationResultEater#addResult(java.lang.String, java.lang.Object)
    */
+  @Override
   public void addResult( final String id, final Object result ) throws SimulationException
   {
     if( !m_modelspec.hasOutput( id ) )

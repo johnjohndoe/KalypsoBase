@@ -127,12 +127,14 @@ public abstract class FilterComboPanel
 
     comboBox.addSelectionListener( new SelectionListener()
     {
+      @Override
       public void widgetSelected( SelectionEvent e )
       {
         setSelection_index( ( (Combo)e.getSource() ).getSelectionIndex() );
         fire();
       }
 
+      @Override
       public void widgetDefaultSelected( SelectionEvent e )
       {
         widgetSelected( e );

@@ -9,10 +9,10 @@ import org.eclipse.core.runtime.NullProgressMonitor;
  */
 public class SimpleCaseDataProvider implements ICaseDataProvider<Object>
 {
-
   /**
    * @see de.renew.workflow.cases.ICaseDataProvider#setCurrent(org.eclipse.core.resources.IFolder)
    */
+  @Override
   public void setCurrent( final ICase scenario )
   {
     try
@@ -31,6 +31,7 @@ public class SimpleCaseDataProvider implements ICaseDataProvider<Object>
   /**
    * @see de.renew.workflow.cases.ICaseDataProvider#reloadModel()
    */
+  @Override
   public void reloadModel( )
   {
 
@@ -39,12 +40,13 @@ public class SimpleCaseDataProvider implements ICaseDataProvider<Object>
   /**
    * @see de.renew.workflow.cases.ICaseDataProvider#getModel(java.lang.Class)
    */
-  @SuppressWarnings( { "unchecked", "deprecation" })
-  public Object getModel( final Class modelClass )
+  @Override
+  public <D extends Object> D getModel( final Class<D> modelClass )
   {
     return null;
   }
 
+  @Override
   public boolean isDirty( )
   {
     return false;
@@ -53,8 +55,8 @@ public class SimpleCaseDataProvider implements ICaseDataProvider<Object>
   /**
    * @see de.renew.workflow.cases.ICaseDataProvider#isDirty(java.lang.Class)
    */
-  @SuppressWarnings( { "unchecked", "deprecation" })
-  public boolean isDirty( final Class modelClass )
+  @Override
+  public boolean isDirty( final Class< ? extends Object> modelClass )
   {
     return false;
   }
@@ -63,15 +65,15 @@ public class SimpleCaseDataProvider implements ICaseDataProvider<Object>
    * @see de.renew.workflow.cases.ICaseDataProvider#saveModel(java.lang.Class,
    *      org.eclipse.core.runtime.IProgressMonitor)
    */
-  @SuppressWarnings( { "unchecked", "deprecation" })
-  public void saveModel( final Class modelClass, final IProgressMonitor monitor )
+  @Override
+  public void saveModel( final Class< ? extends Object> modelClass, final IProgressMonitor monitor )
   {
-
   }
 
   /**
    * @see de.renew.workflow.cases.ICaseDataProvider#saveModel(org.eclipse.core.runtime.IProgressMonitor)
    */
+  @Override
   public void saveModel( final IProgressMonitor monitor )
   {
 

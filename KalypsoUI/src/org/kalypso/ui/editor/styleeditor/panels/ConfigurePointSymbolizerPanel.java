@@ -115,17 +115,20 @@ public class ConfigurePointSymbolizerPanel
     addMarkButton.setToolTipText( MessageBundle.STYLE_EDITOR_ADD_MARK );
     addMarkButton.addMouseListener( new MouseListener()
     {
+      @Override
       public void mouseDoubleClick( MouseEvent e )
       {
         setCurrentAction( ADD_MARK );
         fire();
       }
 
+      @Override
       public void mouseDown( MouseEvent e )
       {
         mouseDoubleClick( e );
       }
 
+      @Override
       public void mouseUp( MouseEvent e )
       {
       // nothing
@@ -146,17 +149,20 @@ public class ConfigurePointSymbolizerPanel
     removeMarkButton.setToolTipText( MessageBundle.STYLE_EDITOR_REMOVE_MARK );
     removeMarkButton.addMouseListener( new MouseListener()
     {
+      @Override
       public void mouseDoubleClick( MouseEvent e )
       {
         setCurrentAction( REM_MARK );
         fire();
       }
 
+      @Override
       public void mouseDown( MouseEvent e )
       {
         mouseDoubleClick( e );
       }
 
+      @Override
       public void mouseUp( MouseEvent e )
       {
       // nothing
@@ -175,17 +181,20 @@ public class ConfigurePointSymbolizerPanel
     moveBackwardMarkButton.setToolTipText( MessageBundle.STYLE_EDITOR_BACKWARD );
     moveBackwardMarkButton.addMouseListener( new MouseListener()
     {
+      @Override
       public void mouseDoubleClick( MouseEvent e )
       {
         setCurrentAction( BAK_MARK );
         fire();
       }
 
+      @Override
       public void mouseDown( MouseEvent e )
       {
         mouseDoubleClick( e );
       }
 
+      @Override
       public void mouseUp( MouseEvent e )
       {
       // nothing
@@ -204,17 +213,20 @@ public class ConfigurePointSymbolizerPanel
     moveForwardMarkButton.setToolTipText( MessageBundle.STYLE_EDITOR_FORWARD );
     moveForwardMarkButton.addMouseListener( new MouseListener()
     {
+      @Override
       public void mouseDoubleClick( MouseEvent e )
       {
         setCurrentAction( FOR_MARK );
         fire();
       }
 
+      @Override
       public void mouseDown( MouseEvent e )
       {
         mouseDoubleClick( e );
       }
 
+      @Override
       public void mouseUp( MouseEvent e )
       {
       // nothing

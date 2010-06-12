@@ -98,6 +98,7 @@ public abstract class AbstractTemplateStyle implements IKalypsoStyle, Marshallab
     pool.addPoolListener( this, m_styleKey );
   }
 
+  @Override
   public boolean isDisposed( )
   {
     return m_disposed;
@@ -106,6 +107,7 @@ public abstract class AbstractTemplateStyle implements IKalypsoStyle, Marshallab
   /**
    * Adds a listener to the list of listeners. Has no effect if the same listeners is already registered.
    */
+  @Override
   public void addStyleListener( final IKalypsoStyleListener l )
   {
     m_listeners.add( l );
@@ -114,6 +116,7 @@ public abstract class AbstractTemplateStyle implements IKalypsoStyle, Marshallab
   /**
    * Removes a listener from the list of listeners. Has no effect if the listeners is not registered.
    */
+  @Override
   public void removeStyleListener( final IKalypsoStyleListener l )
   {
     m_listeners.remove( l );
@@ -122,6 +125,7 @@ public abstract class AbstractTemplateStyle implements IKalypsoStyle, Marshallab
   /**
    * @return <code>true</code>, if this layer is used to draw selected features. Else, <code>false</code>.
    */
+  @Override
   public boolean isUsedForSelection( )
   {
     return m_isUsedForSelection;
@@ -131,6 +135,7 @@ public abstract class AbstractTemplateStyle implements IKalypsoStyle, Marshallab
    * @see org.kalypso.util.pool.IPoolListener#objectLoaded(org.kalypso.util.pool.IPoolableObjectType, java.lang.Object,
    *      org.eclipse.core.runtime.IStatus)
    */
+  @Override
   public void objectLoaded( final IPoolableObjectType key, final Object newValue, final IStatus status )
   {
     m_loaded = true;
@@ -161,6 +166,7 @@ public abstract class AbstractTemplateStyle implements IKalypsoStyle, Marshallab
   /**
    * @see org.kalypso.util.pool.IPoolListener#objectInvalid(org.kalypso.util.pool.IPoolableObjectType, java.lang.Object)
    */
+  @Override
   public void objectInvalid( final IPoolableObjectType key, final Object oldValue )
   {
     if( KeyComparator.getInstance().compare( m_styleKey, key ) == 0 )
@@ -172,6 +178,7 @@ public abstract class AbstractTemplateStyle implements IKalypsoStyle, Marshallab
     }
   }
 
+  @Override
   public void dispose( )
   {
     m_disposed = true;
@@ -186,6 +193,7 @@ public abstract class AbstractTemplateStyle implements IKalypsoStyle, Marshallab
   /**
    * @see org.kalypso.loader.IPooledObject#isLoaded()
    */
+  @Override
   public boolean isLoaded( )
   {
     return m_loaded;
@@ -199,6 +207,7 @@ public abstract class AbstractTemplateStyle implements IKalypsoStyle, Marshallab
   /**
    * @see org.kalypso.util.pool.IPoolListener#dirtyChanged(org.kalypso.util.pool.IPoolableObjectType, boolean)
    */
+  @Override
   public void dirtyChanged( final IPoolableObjectType key, final boolean isDirty )
   {
     setDirty( isDirty );
@@ -217,6 +226,7 @@ public abstract class AbstractTemplateStyle implements IKalypsoStyle, Marshallab
     return Messages.getString( "org.kalypso.ogc.gml.GisTemplateUserStyle.6" ); //$NON-NLS-1$
   }
 
+  @Override
   public String getLabel( )
   {
     final String label = findLabel();
@@ -230,12 +240,14 @@ public abstract class AbstractTemplateStyle implements IKalypsoStyle, Marshallab
     return label;
   }
 
+  @Override
   public boolean isDirty( )
   {
     final KeyInfo info = getPoolInfo();
     return info.isDirty();
   }
 
+  @Override
   public void save( final IProgressMonitor monitor ) throws CoreException
   {
     try
@@ -252,6 +264,7 @@ public abstract class AbstractTemplateStyle implements IKalypsoStyle, Marshallab
   /**
    * Runs the given runnable on every listener in a safe way.
    */
+  @Override
   public void fireStyleChanged( )
   {
     final IKalypsoStyleListener[] listeners = m_listeners.toArray( new IKalypsoStyleListener[m_listeners.size()] );
@@ -259,6 +272,7 @@ public abstract class AbstractTemplateStyle implements IKalypsoStyle, Marshallab
     {
       final ISafeRunnable code = new SafeRunnable()
       {
+        @Override
         public void run( ) throws Exception
         {
           l.styleChanged();
@@ -289,6 +303,7 @@ public abstract class AbstractTemplateStyle implements IKalypsoStyle, Marshallab
    * @return If <code>text</code> startswith '%', the text is assumed to be a key of the internal resource bundle and is
    *         resolved against it. Else, <code>text</code> is returned.
    */
+  @Override
   public String resolveI18nString( final String text )
   {
     if( text == null )
@@ -319,6 +334,7 @@ public abstract class AbstractTemplateStyle implements IKalypsoStyle, Marshallab
   /**
    * @param styleType
    */
+  @Override
   public void fillStyleType( final List<Style> stylesList, final Style styleType )
   {
     if( m_styleKey == null )

@@ -129,17 +129,20 @@ public class AddFilterPropertyPanel
     symbolizerAddButton.setToolTipText( MessageBundle.STYLE_EDITOR_SET );
     symbolizerAddButton.addMouseListener( new MouseListener()
     {
+      @Override
       public void mouseDoubleClick( MouseEvent e )
       {
         setSelection( getGeometryCombo().getSelectionIndex() );
         fire();
       }
 
+      @Override
       public void mouseDown( MouseEvent e )
       {
         mouseDoubleClick( e );
       }
 
+      @Override
       public void mouseUp( MouseEvent e )
       {
       // nothing

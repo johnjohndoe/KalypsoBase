@@ -131,6 +131,7 @@ public class ColorChooserPanel
     dialog.setRGB( color.getRGB() );
     colorChooserButton.addSelectionListener( new SelectionListener()
     {
+      @Override
       public void widgetSelected( SelectionEvent e )
       {
         dialog.open();
@@ -139,6 +140,7 @@ public class ColorChooserPanel
         fire();
       }
 
+      @Override
       public void widgetDefaultSelected( SelectionEvent e )
       {
         widgetSelected( e );

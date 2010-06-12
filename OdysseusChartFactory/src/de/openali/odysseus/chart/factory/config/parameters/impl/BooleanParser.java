@@ -13,6 +13,7 @@ public class BooleanParser implements IStringParser<Boolean>
   /**
    * @see org.kalypso.chart.framework.model.data.IStringParser#stringToLogical(java.lang.String)
    */
+  @Override
   public Boolean stringToLogical( String value ) throws MalformedValueException
   {
     if( value.compareTo( "true" ) == 0 ) 
@@ -26,6 +27,7 @@ public class BooleanParser implements IStringParser<Boolean>
   /**
    * @see org.kalypso.chart.framework.model.data.IStringParser#getFormatHint()
    */
+  @Override
   public String getFormatHint( )
   {
     return m_formatHint;

@@ -80,6 +80,7 @@ public class ExportableMap implements IExportableObject
   /**
    * @see org.kalypso.metadoc.IExportableObject#getPreferredDocumentName()
    */
+  @Override
   public String getPreferredDocumentName( )
   {
     // TODO besserer Name? JA: mapModell.getName()!
@@ -90,6 +91,7 @@ public class ExportableMap implements IExportableObject
    * @see org.kalypso.metadoc.IExportableObject#exportObject(java.io.OutputStream,
    *      org.eclipse.core.runtime.IProgressMonitor)
    */
+  @Override
   public IStatus exportObject( final OutputStream output, final IProgressMonitor monitor )
   {
     try
@@ -119,6 +121,7 @@ public class ExportableMap implements IExportableObject
   /**
    * @see org.kalypso.metadoc.IExportableObject#getIdentifier()
    */
+  @Override
   public String getIdentifier( )
   {
     // TODO bessere Id?
@@ -128,6 +131,7 @@ public class ExportableMap implements IExportableObject
   /**
    * @see org.kalypso.metadoc.IExportableObject#getCategory()
    */
+  @Override
   public String getCategory( )
   {
     // TODO bessere category
@@ -137,6 +141,7 @@ public class ExportableMap implements IExportableObject
   /**
    * @see org.kalypso.metadoc.IExportableObject#getStationIDs()
    */
+  @Override
   public String getStationIDs( )
   {
     return ""; //$NON-NLS-1$

@@ -71,6 +71,7 @@ public class ChangeTablePropsCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#isUndoable()
    */
+  @Override
   public boolean isUndoable( )
   {
     return true;
@@ -79,6 +80,7 @@ public class ChangeTablePropsCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#process()
    */
+  @Override
   public void process( ) throws Exception
   {
     final TimeZone timeZone = m_timezoneName == null ? null : TimeZone.getTimeZone( m_timezoneName );
@@ -88,6 +90,7 @@ public class ChangeTablePropsCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#redo()
    */
+  @Override
   public void redo( ) throws Exception
   {
     process();
@@ -96,6 +99,7 @@ public class ChangeTablePropsCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#undo()
    */
+  @Override
   public void undo( ) throws Exception
   {
     if( m_orgTimezoneName == null )
@@ -107,6 +111,7 @@ public class ChangeTablePropsCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#getDescription()
    */
+  @Override
   public String getDescription( )
   {
     return Messages.getString( "org.kalypso.ui.editor.obstableeditor.actions.ChangeTablePropsCommand.0" ); //$NON-NLS-1$

@@ -69,6 +69,7 @@ public class GmlSchemaEditorInput implements IEditorInput
   /**
    * @see org.eclipse.ui.IEditorInput#exists()
    */
+  @Override
   public boolean exists( )
   {
     return false;
@@ -77,6 +78,7 @@ public class GmlSchemaEditorInput implements IEditorInput
   /**
    * @see org.eclipse.ui.IEditorInput#getImageDescriptor()
    */
+  @Override
   public ImageDescriptor getImageDescriptor( )
   {
     return null;
@@ -85,6 +87,7 @@ public class GmlSchemaEditorInput implements IEditorInput
   /**
    * @see org.eclipse.ui.IEditorInput#getName()
    */
+  @Override
   public String getName( )
   {
     return m_namespace;
@@ -93,6 +96,7 @@ public class GmlSchemaEditorInput implements IEditorInput
   /**
    * @see org.eclipse.ui.IEditorInput#getPersistable()
    */
+  @Override
   public IPersistableElement getPersistable( )
   {
     return null;
@@ -101,6 +105,7 @@ public class GmlSchemaEditorInput implements IEditorInput
   /**
    * @see org.eclipse.ui.IEditorInput#getToolTipText()
    */
+  @Override
   public String getToolTipText( )
   {
     return m_namespace + " - " + m_location; //$NON-NLS-1$
@@ -109,6 +114,7 @@ public class GmlSchemaEditorInput implements IEditorInput
   /**
    * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
    */
+  @Override
   public Object getAdapter( final Class adapter )
   {
     return null;

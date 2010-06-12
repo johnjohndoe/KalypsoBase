@@ -107,6 +107,7 @@ public class FeatureThemePropertyPage extends PropertyPage implements IWorkbench
     sourceText.setText( themeLocation );
     sourceText.addModifyListener( new ModifyListener()
     {
+      @Override
       public void modifyText( final ModifyEvent e )
       {
         final String location = sourceText.getText();
@@ -126,6 +127,7 @@ public class FeatureThemePropertyPage extends PropertyPage implements IWorkbench
     typeText.setText( themeType.toUpperCase() );
     typeText.addModifyListener( new ModifyListener()
     {
+      @Override
       public void modifyText( final ModifyEvent e )
       {
         final String type = typeText.getText();
@@ -147,6 +149,7 @@ public class FeatureThemePropertyPage extends PropertyPage implements IWorkbench
     fpathText.setText( themeFeaturePath );
     fpathText.addModifyListener( new ModifyListener()
     {
+      @Override
       public void modifyText( final ModifyEvent e )
       {
         final String fpath = fpathText.getText();

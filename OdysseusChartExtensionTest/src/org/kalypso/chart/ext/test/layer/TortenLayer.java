@@ -117,7 +117,8 @@ public class TortenLayer extends AbstractChartLayer
   /**
    * @see org.kalypso.chart.framework.model.layer.IChartLayer#paint(org.eclipse.swt.graphics.GC)
    */
-  public void paint( GC gc )
+  @Override
+public void paint( GC gc )
   {
     IAxis da = getDomainAxis();
     IAxis ta = getTargetAxis();
@@ -210,12 +211,14 @@ public class TortenLayer extends AbstractChartLayer
 
   }
 
-  public IDataRange<Number> getDomainRange( )
+  @Override
+public IDataRange<Number> getDomainRange( )
   {
     return new ComparableDataRange<Number>( new Number[] { -100, 100 } );
   }
 
-  public IDataRange<Number> getTargetRange( )
+  @Override
+public IDataRange<Number> getTargetRange( )
   {
     return new ComparableDataRange<Number>( new Number[] { -100, 100 } );
   }
@@ -263,7 +266,8 @@ public class TortenLayer extends AbstractChartLayer
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#dispose()
    */
-  public void dispose( )
+  @Override
+public void dispose( )
   {
     // nothing to do
   }

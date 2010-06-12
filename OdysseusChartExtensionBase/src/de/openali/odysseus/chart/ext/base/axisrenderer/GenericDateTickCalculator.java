@@ -65,6 +65,7 @@ public class GenericDateTickCalculator implements ITickCalculator
   /**
    * Calculates the ticks shown for the given Axis
    */
+  @Override
   public Number[] calcTicks( GC gc, final IAxis axis, final Number minDisplayInterval, Point ticklabelSize )
   {
 

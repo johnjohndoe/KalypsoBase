@@ -223,6 +223,7 @@ public abstract class ObsView implements IObsViewEventProvider
     fireObsViewChanged( new ObsViewEvent( source, item, ObsViewEvent.TYPE_ITEM_STATE_CHANGED ) );
   }
 
+  @Override
   public void addObsViewEventListener( final IObsViewEventListener l )
   {
     synchronized( m_listeners )
@@ -231,6 +232,7 @@ public abstract class ObsView implements IObsViewEventProvider
     }
   }
 
+  @Override
   public void removeObsViewListener( final IObsViewEventListener l )
   {
     synchronized( m_listeners )

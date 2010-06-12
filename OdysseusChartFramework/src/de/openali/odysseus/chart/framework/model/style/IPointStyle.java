@@ -29,6 +29,7 @@ public interface IPointStyle extends IStyle
 
   public RGB getInlineColor( );
 
+  @Override
   public IPointStyle copy( );
 
 }

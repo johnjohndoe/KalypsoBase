@@ -195,6 +195,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureControl#isValid()
    */
+  @Override
   public boolean isValid( )
   {
     for( final Object element : m_featureControls )
@@ -224,6 +225,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     return m_control;
   }
 
+  @Override
   public final Control createControl( final Composite parent, final int defaultStyle )
   {
     try
@@ -569,6 +571,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureControl#addModifyListener(org.eclipse.swt.events.ModifyListener)
    */
+  @Override
   public void addModifyListener( final ModifyListener l )
   {
     m_modifyListeners.add( l );
@@ -577,6 +580,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureControl#removeModifyListener(org.eclipse.swt.events.ModifyListener)
    */
+  @Override
   public void removeModifyListener( final ModifyListener l )
   {
     m_modifyListeners.remove( this );
@@ -663,6 +667,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureChangeListener#featureChanged(org.kalypso.commons.command.ICommand)
    */
+  @Override
   public void featureChanged( final ICommand changeCommand )
   {
     fireFeatureChange( changeCommand );
@@ -672,6 +677,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
    * @see org.kalypso.ogc.gml.featureview.IFeatureChangeListener#openFeatureRequested(org.kalypsodeegree.model.feature.Feature,
    *      org.kalypsodeegree.model.feature.IPropertyType)
    */
+  @Override
   public void openFeatureRequested( final Feature feature, final IPropertyType ftp )
   {
     fireOpenFeatureRequested( feature, ftp );
@@ -680,12 +686,14 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
   /**
    * @see org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.swt.events.ModifyEvent)
    */
+  @Override
   public void modifyText( final ModifyEvent e )
   {
     final ModifyListener[] listeners = m_modifyListeners.toArray( new ModifyListener[m_modifyListeners.size()] );
     for( final ModifyListener listener : listeners )
       SafeRunnable.run( new SafeRunnable()
       {
+        @Override
         public void run( ) throws Exception
         {
           listener.modifyText( e );
@@ -732,6 +740,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     return m_selectionManager;
   }
 
+  @Override
   public FormToolkit getFormToolkit( )
   {
     return m_formToolkit;
@@ -759,6 +768,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
    * 
    * @return The flag, indicating, if the green hook should be displayed.
    */
+  @Override
   public boolean isShowOk( )
   {
     return m_showOk;

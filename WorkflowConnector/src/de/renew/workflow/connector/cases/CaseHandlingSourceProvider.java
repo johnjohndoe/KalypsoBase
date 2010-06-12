@@ -47,6 +47,7 @@ public class CaseHandlingSourceProvider<T extends ICase, D extends Object> exten
   /**
    * @see org.eclipse.ui.ISourceProvider#dispose()
    */
+  @Override
   public void dispose( )
   {
     m_activeWorkContext = null;
@@ -56,10 +57,10 @@ public class CaseHandlingSourceProvider<T extends ICase, D extends Object> exten
   /**
    * @see org.eclipse.ui.ISourceProvider#getCurrentState()
    */
-  @SuppressWarnings("unchecked")
-  public Map getCurrentState( )
+  @Override
+  public Map<String, Object> getCurrentState( )
   {
-    final Map currentState = new TreeMap();
+    final Map<String, Object> currentState = new TreeMap<String, Object>();
     currentState.put( ACTIVE_CASE_FOLDER_NAME, getSzenarioFolder() );
     currentState.put( ACTIVE_CASE_DATA_PROVIDER_NAME, getDataProvider() );
     currentState.put( ACTIVE_CASE_URI_NAME, getSzenarioUri() );
@@ -69,6 +70,7 @@ public class CaseHandlingSourceProvider<T extends ICase, D extends Object> exten
   /**
    * @see org.eclipse.ui.ISourceProvider#getProvidedSourceNames()
    */
+  @Override
   public String[] getProvidedSourceNames( )
   {
     return PROVIDED_SOURCE_NAMES;
@@ -90,7 +92,7 @@ public class CaseHandlingSourceProvider<T extends ICase, D extends Object> exten
   private IContainer getSzenarioFolder( )
   {
     final T currentCase = m_activeWorkContext.getCurrentCase();
-    final CaseHandlingProjectNature currentProject = m_activeWorkContext.getCurrentProject();
+    final CaseHandlingProjectNature<T> currentProject = m_activeWorkContext.getCurrentProject();
     if( currentProject == null || currentCase == null )
     {
       return null;

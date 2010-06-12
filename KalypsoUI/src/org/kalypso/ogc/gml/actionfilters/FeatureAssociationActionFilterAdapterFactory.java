@@ -60,6 +60,7 @@ public class FeatureAssociationActionFilterAdapterFactory implements IAdapterFac
   /**
    * @see org.eclipse.core.runtime.IAdapterFactory#getAdapter(java.lang.Object, java.lang.Class)
    */
+  @Override
   public Object getAdapter( final Object adaptableObject, final Class adapterType )
   {
     if( adapterType == IActionFilter.class )
@@ -71,6 +72,7 @@ public class FeatureAssociationActionFilterAdapterFactory implements IAdapterFac
   /**
    * @see org.eclipse.core.runtime.IAdapterFactory#getAdapterList()
    */
+  @Override
   public Class[] getAdapterList( )
   {
     return new Class[]{ IActionFilter.class };

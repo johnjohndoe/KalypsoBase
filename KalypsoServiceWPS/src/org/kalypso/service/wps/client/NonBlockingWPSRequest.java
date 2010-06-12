@@ -63,12 +63,11 @@ import net.opengeospatial.wps.OutputDefinitionType;
 import net.opengeospatial.wps.OutputDefinitionsType;
 import net.opengeospatial.wps.OutputDescriptionType;
 import net.opengeospatial.wps.ProcessDescriptionType;
-import net.opengeospatial.wps.ProcessFailedType;
-import net.opengeospatial.wps.StatusType;
-import net.opengeospatial.wps.SupportedCRSsType;
-import net.opengeospatial.wps.SupportedComplexDataType;
 import net.opengeospatial.wps.ProcessDescriptionType.DataInputs;
 import net.opengeospatial.wps.ProcessDescriptionType.ProcessOutputs;
+import net.opengeospatial.wps.ProcessFailedType;
+import net.opengeospatial.wps.StatusType;
+import net.opengeospatial.wps.SupportedComplexDataType;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.ObjectUtils;
@@ -218,7 +217,7 @@ public class NonBlockingWPSRequest
     if( WPSRequest.SERVICE_LOCAL.equals( m_serviceEndpoint ) )
     {
       final ProcessDescriptionMediator processDescriptionMediator = new ProcessDescriptionMediator( WPS_VERSION.V040 );
-      m_processDescription = (ProcessDescriptionType) processDescriptionMediator.getProcessDescription( m_identifier );
+      m_processDescription = processDescriptionMediator.getProcessDescription( m_identifier );
     }
     else
     {
@@ -424,7 +423,7 @@ public class NonBlockingWPSRequest
     /* Supported complex data type. */
     final SupportedComplexDataType complexData = inputDescription.getComplexData();
     final LiteralInputType literalInput = inputDescription.getLiteralData();
-    final SupportedCRSsType boundingBoxInput = inputDescription.getBoundingBoxData();
+// final SupportedCRSsType boundingBoxInput = inputDescription.getBoundingBoxData();
 
     if( complexData != null )
     {

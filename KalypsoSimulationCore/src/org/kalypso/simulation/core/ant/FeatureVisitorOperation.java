@@ -82,6 +82,7 @@ public class FeatureVisitorOperation implements ICoreRunnableWithProgress
   /**
    * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
    */
+  @Override
   public final IStatus execute( final IProgressMonitor monitor ) throws InterruptedException
   {
     try

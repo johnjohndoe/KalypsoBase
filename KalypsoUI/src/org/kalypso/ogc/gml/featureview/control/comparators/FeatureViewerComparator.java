@@ -80,6 +80,7 @@ public class FeatureViewerComparator extends ViewerComparator implements IViewer
    * @see org.kalypso.ogc.gml.featureview.control.comparators.IViewerComparator#init(org.kalypsodeegree.model.feature.Feature,
    *      java.util.HashMap)
    */
+  @Override
   public void init( final Feature parent, final Map<String, String> params )
   {
     /* Store the parameter. */

@@ -118,6 +118,7 @@ public class ExportableChart implements IExportableObject
   /**
    * @see org.kalypso.metadoc.IExportableObject#getPreferredDocumentName()
    */
+  @Override
   public String getPreferredDocumentName( )
   {
     final TextTitle title = m_chart.getTitle();
@@ -133,6 +134,7 @@ public class ExportableChart implements IExportableObject
    * @see org.kalypso.metadoc.IExportableObject#exportObject(java.io.OutputStream,
    *      org.eclipse.core.runtime.IProgressMonitor)
    */
+  @Override
   public IStatus exportObject( final OutputStream outs, final IProgressMonitor monitor )
   {
     monitor.beginTask( Messages.getString( "org.kalypso.ogc.sensor.diagview.jfreechart.ExportableChart.3" ), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
@@ -157,6 +159,7 @@ public class ExportableChart implements IExportableObject
   /**
    * @see org.kalypso.metadoc.IExportableObject#getIdentifier()
    */
+  @Override
   public String getIdentifier( )
   {
     return m_identifierPrefix + getPreferredDocumentName();
@@ -165,6 +168,7 @@ public class ExportableChart implements IExportableObject
   /**
    * @see org.kalypso.metadoc.IExportableObject#getCategory()
    */
+  @Override
   public String getCategory( )
   {
     return m_category;
@@ -173,6 +177,7 @@ public class ExportableChart implements IExportableObject
   /**
    * @see org.kalypso.metadoc.IExportableObject#getStationIDs()
    */
+  @Override
   public String getStationIDs( )
   {
     return m_stationIDs;

@@ -83,16 +83,15 @@ public class CaseTreeContentAdapter extends WorkbenchAdapter
   /**
    * @see org.eclipse.ui.model.IWorkbenchAdapter#getChildren(java.lang.Object)
    */
-  @SuppressWarnings("unchecked")
   @Override
   public Object[] getChildren( final Object o )
   {
     if( o instanceof CaseHandlingProjectNature )
     {
-      final CaseHandlingProjectNature nature = (CaseHandlingProjectNature) o;
+      final CaseHandlingProjectNature< ? > nature = (CaseHandlingProjectNature< ? >) o;
       try
       {
-        final ICaseManager caseManager = nature.getCaseManager();
+        final ICaseManager< ? > caseManager = nature.getCaseManager();
         return caseManager.getCases().toArray();
       }
       catch( final CoreException e )
@@ -112,7 +111,7 @@ public class CaseTreeContentAdapter extends WorkbenchAdapter
   {
     if( o instanceof CaseHandlingProjectNature )
     {
-      final CaseHandlingProjectNature nature = (CaseHandlingProjectNature) o;
+      final CaseHandlingProjectNature< ? > nature = (CaseHandlingProjectNature< ? >) o;
       final IProject project = nature.getProject();
       final IWorkbenchAdapter adapter = (IWorkbenchAdapter) project.getAdapter( IWorkbenchAdapter.class );
       return adapter.getImageDescriptor( project );
@@ -131,7 +130,7 @@ public class CaseTreeContentAdapter extends WorkbenchAdapter
   {
     if( o instanceof CaseHandlingProjectNature )
     {
-      final CaseHandlingProjectNature nature = (CaseHandlingProjectNature) o;
+      final CaseHandlingProjectNature< ? > nature = (CaseHandlingProjectNature< ? >) o;
       final IProject project = nature.getProject();
       final IWorkbenchAdapter adapter = (IWorkbenchAdapter) project.getAdapter( IWorkbenchAdapter.class );
       return adapter.getLabel( project );
@@ -149,7 +148,7 @@ public class CaseTreeContentAdapter extends WorkbenchAdapter
   {
     if( o instanceof CaseHandlingProjectNature )
     {
-      final CaseHandlingProjectNature nature = (CaseHandlingProjectNature) o;
+      final CaseHandlingProjectNature< ? > nature = (CaseHandlingProjectNature< ? >) o;
       final IProject project = nature.getProject();
       final IWorkbenchAdapter2 adapter = (IWorkbenchAdapter2) project.getAdapter( IWorkbenchAdapter2.class );
       return adapter.getFont( project );

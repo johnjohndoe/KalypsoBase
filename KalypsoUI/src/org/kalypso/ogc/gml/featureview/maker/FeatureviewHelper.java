@@ -102,6 +102,7 @@ public class FeatureviewHelper implements IFeatureviewFactory
    * @see org.kalypso.ogc.gml.featureview.maker.IFeatureviewFactory#get(org.kalypso.gmlschema.feature.IFeatureType,
    *      org.kalypsodeegree.model.feature.Feature)
    */
+  @Override
   public FeatureviewType get( final IFeatureType featureType, final Feature feature )
   {
     if( featureType != null && feature != null )

@@ -118,6 +118,7 @@ public class StrokeDashoffsetPanel
     okButton.setToolTipText( MessageBundle.STYLE_EDITOR_OK );
     okButton.addMouseListener( new MouseListener()
     {
+      @Override
       public void mouseDoubleClick( MouseEvent e )
       {
         Float fl = null;
@@ -136,11 +137,13 @@ public class StrokeDashoffsetPanel
         }
       }
 
+      @Override
       public void mouseDown( MouseEvent e )
       {
         mouseDoubleClick( e );
       }
 
+      @Override
       public void mouseUp( MouseEvent e )
       {
       // nothing

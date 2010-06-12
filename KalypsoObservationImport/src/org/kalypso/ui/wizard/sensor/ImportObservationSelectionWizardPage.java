@@ -163,6 +163,7 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
    */
+  @Override
   public void createControl( final Composite parent )
   {
     initializeDialogUnits( parent );
@@ -236,31 +237,37 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
     m_formatCombo.setContentProvider( provider );
     m_formatCombo.setLabelProvider( new ILabelProvider()
     {
+      @Override
       public Image getImage( final Object element )
       {
         return null;
       }
 
+      @Override
       public String getText( final Object element )
       {
         return element.toString();
       }
 
+      @Override
       public void addListener( final ILabelProviderListener listener )
       {
         // nothing as labelprovider will not change
       }
 
+      @Override
       public void dispose( )
       {
         // nothing as labelprovider will not change
       }
 
+      @Override
       public boolean isLabelProperty( final Object element, final String property )
       {
         return true;
       }
 
+      @Override
       public void removeListener( final ILabelProviderListener listener )
       {
         // nothing
@@ -436,6 +443,7 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
   /**
    * @see org.eclipse.swt.events.FocusListener#focusGained(org.eclipse.swt.events.FocusEvent)
    */
+  @Override
   public void focusGained( final FocusEvent e )
   {
     // nothing
@@ -444,6 +452,7 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
   /**
    * @see org.eclipse.swt.events.FocusListener#focusLost(org.eclipse.swt.events.FocusEvent)
    */
+  @Override
   public void focusLost( final FocusEvent e )
   {
     if( m_sourceFile != null && !m_sourceFile.getName().equals( m_textFileSource.getText() ) )
@@ -468,6 +477,7 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
   /**
    * @see org.eclipse.jface.viewers.ISelectionProvider#addSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
    */
+  @Override
   public void addSelectionChangedListener( final ISelectionChangedListener listener )
   {
     m_selectionListener.add( listener );
@@ -476,12 +486,14 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
   /**
    * @see org.eclipse.jface.viewers.ISelectionProvider#getSelection()
    */
+  @Override
   public ISelection getSelection( )
   {
     final IStructuredSelection formatSelection = (IStructuredSelection) m_formatCombo.getSelection();
     if( !m_controlFinished )
       return new ISelection()
       {
+        @Override
         public boolean isEmpty( )
         {
           return true;
@@ -493,6 +505,7 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
   /**
    * @see org.eclipse.jface.viewers.ISelectionProvider#removeSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
    */
+  @Override
   public void removeSelectionChangedListener( final ISelectionChangedListener listener )
   {
     m_selectionListener.remove( listener );
@@ -501,6 +514,7 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
   /**
    * @see org.eclipse.jface.viewers.ISelectionProvider#setSelection(org.eclipse.jface.viewers.ISelection)
    */
+  @Override
   public void setSelection( final ISelection selection )
   {
     if( selection instanceof ObservationImportSelection )
@@ -529,6 +543,7 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
   /**
    * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
    */
+  @Override
   public void selectionChanged( final SelectionChangedEvent event )
   {
     fireSelectionChanged();

@@ -43,6 +43,7 @@ public class NumberDataOperator extends AbstractDataOperator<Number>
     return dataRange;
   }
 
+  @Override
   public Double logicalToNumeric( final Number logVal )
   {
     if( logVal == null )
@@ -52,16 +53,19 @@ public class NumberDataOperator extends AbstractDataOperator<Number>
     return logVal.doubleValue();
   }
 
+  @Override
   public Number numericToLogical( final Number numVal )
   {
     return new Double( numVal.doubleValue() );
   }
 
+  @Override
   public String logicalToString( final Number value )
   {
     return "" + value.toString();
   }
 
+  @Override
   public Number stringToLogical( final String value ) throws MalformedValueException
   {
     if( value == null )
@@ -86,6 +90,7 @@ public class NumberDataOperator extends AbstractDataOperator<Number>
     }
   }
 
+  @Override
   public String getFormatHint( )
   {
     return "[1-9]([0-9])*.([0-9])*[1-9]";
@@ -100,6 +105,7 @@ public class NumberDataOperator extends AbstractDataOperator<Number>
     return new ComparableDataRange<Number>( new Double[] { 0.0, 1.0 } );
   }
 
+  @Override
   public Format getFormat( final IDataRange<Number> range )
   {
     Number min = range.getMin();

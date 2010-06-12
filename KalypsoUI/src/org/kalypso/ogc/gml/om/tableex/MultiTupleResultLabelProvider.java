@@ -62,6 +62,7 @@ public class MultiTupleResultLabelProvider implements ITableLabelProvider
   /**
    * @see org.eclipse.jface.viewers.IBaseLabelProvider#addListener(org.eclipse.jface.viewers.ILabelProviderListener)
    */
+  @Override
   public void addListener( final ILabelProviderListener listener )
   {
     // empty
@@ -70,6 +71,7 @@ public class MultiTupleResultLabelProvider implements ITableLabelProvider
   /**
    * @see org.eclipse.jface.viewers.IBaseLabelProvider#dispose()
    */
+  @Override
   public void dispose( )
   {
     // empty
@@ -78,6 +80,7 @@ public class MultiTupleResultLabelProvider implements ITableLabelProvider
   /**
    * @see org.eclipse.jface.viewers.IBaseLabelProvider#isLabelProperty(java.lang.Object, java.lang.String)
    */
+  @Override
   public boolean isLabelProperty( Object element, String property )
   {
     return false;
@@ -86,6 +89,7 @@ public class MultiTupleResultLabelProvider implements ITableLabelProvider
   /**
    * @see org.eclipse.jface.viewers.IBaseLabelProvider#removeListener(org.eclipse.jface.viewers.ILabelProviderListener)
    */
+  @Override
   public void removeListener( ILabelProviderListener listener )
   {
     // empty
@@ -94,6 +98,7 @@ public class MultiTupleResultLabelProvider implements ITableLabelProvider
   /**
    * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang.Object, int)
    */
+  @Override
   public Image getColumnImage( Object element, int columnIndex )
   {
     return null;
@@ -102,6 +107,7 @@ public class MultiTupleResultLabelProvider implements ITableLabelProvider
   /**
    * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.lang.Object, int)
    */
+  @Override
   public String getColumnText( Object element, int columnIndex )
   {
     if( m_model != null && element instanceof MTRMRow )

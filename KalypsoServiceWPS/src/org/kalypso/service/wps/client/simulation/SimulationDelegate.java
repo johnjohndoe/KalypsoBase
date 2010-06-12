@@ -52,13 +52,13 @@ import java.util.Map;
 import javax.xml.bind.DatatypeConverter;
 
 import net.opengeospatial.ows.CodeType;
+import net.opengeospatial.wps.IOValueType.ComplexValueReference;
 import net.opengeospatial.wps.InputDescriptionType;
 import net.opengeospatial.wps.LiteralInputType;
 import net.opengeospatial.wps.ProcessDescriptionType;
+import net.opengeospatial.wps.ProcessDescriptionType.DataInputs;
 import net.opengeospatial.wps.SupportedCRSsType;
 import net.opengeospatial.wps.SupportedComplexDataType;
-import net.opengeospatial.wps.IOValueType.ComplexValueReference;
-import net.opengeospatial.wps.ProcessDescriptionType.DataInputs;
 
 import org.apache.commons.httpclient.util.URIUtil;
 import org.apache.commons.vfs.FileObject;

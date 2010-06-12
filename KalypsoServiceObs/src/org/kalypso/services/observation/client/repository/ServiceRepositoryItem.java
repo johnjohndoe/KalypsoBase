@@ -76,6 +76,7 @@ public class ServiceRepositoryItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#getName()
    */
+  @Override
   public final String getName( )
   {
     return m_bean.getName();
@@ -84,6 +85,7 @@ public class ServiceRepositoryItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#getParent()
    */
+  @Override
   public final IRepositoryItem getParent( )
   {
     return m_parent;
@@ -92,6 +94,7 @@ public class ServiceRepositoryItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#hasChildren()
    */
+  @Override
   public final boolean hasChildren( ) throws RepositoryException
   {
     try
@@ -107,6 +110,7 @@ public class ServiceRepositoryItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#getChildren()
    */
+  @Override
   public final IRepositoryItem[] getChildren( ) throws RepositoryException
   {
     try
@@ -137,8 +141,8 @@ public class ServiceRepositoryItem implements IRepositoryItem
   /**
    * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
    */
-  @SuppressWarnings("unchecked")
-  public Object getAdapter( final Class anotherClass )
+  @Override
+  public Object getAdapter( @SuppressWarnings("rawtypes") final Class anotherClass )
   {
     if( anotherClass == IObservation.class )
     {
@@ -169,6 +173,7 @@ public class ServiceRepositoryItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#getIdentifier()
    */
+  @Override
   public final String getIdentifier( )
   {
     return m_bean.getId();
@@ -177,6 +182,7 @@ public class ServiceRepositoryItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#getRepository()
    */
+  @Override
   public final IRepository getRepository( )
   {
     return m_rep;
@@ -186,9 +192,9 @@ public class ServiceRepositoryItem implements IRepositoryItem
    * @see org.kalypso.repository.IRepositoryItem#hasAdapter(java.lang.Class)
    */
   @Override
-  public final boolean hasAdapter( final Class adapter )
+  public final boolean hasAdapter( final Class< ? > adapter )
   {
-    Object object = getAdapter( adapter );
+    final Object object = getAdapter( adapter );
     if( object == null )
       return false;
 

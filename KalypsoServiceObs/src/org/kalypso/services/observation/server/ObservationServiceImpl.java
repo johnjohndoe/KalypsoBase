@@ -137,6 +137,7 @@ public class ObservationServiceImpl implements IObservationService
   /**
    * @see org.kalypso.services.observation.sei.IObservationService#adaptItem(org.kalypso.services.observation.sei.ItemBean)
    */
+  @Override
   public ObservationBean adaptItem( final ItemBean ib ) throws SensorException
   {
     /* Get the observation service delegate. */
@@ -152,6 +153,7 @@ public class ObservationServiceImpl implements IObservationService
   /**
    * @see org.kalypso.services.observation.sei.IObservationService#clearTempData(java.lang.String)
    */
+  @Override
   public void clearTempData( final String dataId ) throws SensorException
   {
     /* Get the observation service delegate. */
@@ -165,6 +167,7 @@ public class ObservationServiceImpl implements IObservationService
   /**
    * @see org.kalypso.services.observation.sei.IObservationService#getServiceVersion()
    */
+  @Override
   public int getServiceVersion( ) throws RemoteException
   {
     /* Get the observation service delegate. */
@@ -180,6 +183,7 @@ public class ObservationServiceImpl implements IObservationService
   /**
    * @see org.kalypso.services.observation.sei.IObservationService#readData(java.lang.String)
    */
+  @Override
   public DataBean readData( final String href ) throws SensorException
   {
     /* Get the observation service delegate. */
@@ -196,6 +200,7 @@ public class ObservationServiceImpl implements IObservationService
    * @see org.kalypso.services.observation.sei.IObservationService#writeData(org.kalypso.services.observation.sei.ObservationBean,
    *      javax.activation.DataHandler)
    */
+  @Override
   public void writeData( final ObservationBean observation, final DataHandler data ) throws SensorException
   {
     /* Get the observation service delegate. */
@@ -209,6 +214,7 @@ public class ObservationServiceImpl implements IObservationService
   /**
    * @see org.kalypso.services.observation.sei.IRepositoryService#findItem(java.lang.String)
    */
+  @Override
   public ItemBean findItem( final String id ) throws RepositoryException
   {
     /* Get the observation service delegate. */
@@ -224,6 +230,7 @@ public class ObservationServiceImpl implements IObservationService
   /**
    * @see org.kalypso.services.observation.sei.IRepositoryService#getChildren(org.kalypso.services.observation.sei.ItemBean)
    */
+  @Override
   public ItemBean[] getChildren( final ItemBean parent ) throws RepositoryException
   {
     /* Get the observation service delegate. */
@@ -239,6 +246,7 @@ public class ObservationServiceImpl implements IObservationService
   /**
    * @see org.kalypso.services.observation.sei.IRepositoryService#hasChildren(org.kalypso.services.observation.sei.ItemBean)
    */
+  @Override
   public boolean hasChildren( final ItemBean parent ) throws RepositoryException
   {
     /* Get the observation service delegate. */
@@ -254,6 +262,7 @@ public class ObservationServiceImpl implements IObservationService
   /**
    * @see org.kalypso.services.observation.sei.IRepositoryService#reload()
    */
+  @Override
   public void reload( )
   {
     /* When the client requests a reload, do nothing, because every short period of time it is reloaded automatically. */

@@ -86,6 +86,7 @@ public abstract class AbstractExpandableLayer extends AbstractChartLayer impleme
     }
   }
 
+  @Override
   public ILayerManager getLayerManager( )
   {
     return m_layerManager;
@@ -95,6 +96,7 @@ public abstract class AbstractExpandableLayer extends AbstractChartLayer impleme
   /**
    * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getDomainRange()
    */
+  @Override
   public IDataRange<Number> getDomainRange( )
   {
     Double min = null;
@@ -142,6 +144,7 @@ public abstract class AbstractExpandableLayer extends AbstractChartLayer impleme
   /**
    * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getTargetRange()
    */
+  @Override
   public IDataRange<Number> getTargetRange( )
   {
     Double min = null;
@@ -170,6 +173,7 @@ public abstract class AbstractExpandableLayer extends AbstractChartLayer impleme
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#paint(org.eclipse.swt.graphics.GC)
    */
+  @Override
   public void paint( final GC gc )
   {
     for( final IChartLayer layer : getLayerManager().getLayers() )

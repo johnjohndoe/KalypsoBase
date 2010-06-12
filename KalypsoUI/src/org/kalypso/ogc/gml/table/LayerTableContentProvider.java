@@ -71,6 +71,7 @@ public class LayerTableContentProvider implements IStructuredContentProvider
 {
   private final ISelectionChangedListener m_tableSelectionListener = new ISelectionChangedListener()
   {
+    @Override
     public void selectionChanged( final SelectionChangedEvent event )
     {
       viewerSelectionChanged( (IStructuredSelection) event.getSelection() );
@@ -119,6 +120,7 @@ public class LayerTableContentProvider implements IStructuredContentProvider
    * 
    * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
    */
+  @Override
   public Object[] getElements( final Object inputElement )
   {
     final List<Feature> result = new ArrayList<Feature>();
@@ -153,6 +155,7 @@ public class LayerTableContentProvider implements IStructuredContentProvider
   /**
    * @see org.eclipse.jface.viewers.IContentProvider#dispose()
    */
+  @Override
   public void dispose( )
   {
     if( m_viewer != null )
@@ -173,6 +176,7 @@ public class LayerTableContentProvider implements IStructuredContentProvider
    * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object,
    *      java.lang.Object)
    */
+  @Override
   public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
   {
     if( oldInput instanceof IKalypsoFeatureTheme )
@@ -249,6 +253,7 @@ public class LayerTableContentProvider implements IStructuredContentProvider
       final Control control = viewer.getControl();
       control.getDisplay().asyncExec( new Runnable()
       {
+        @Override
         public void run( )
         {
           if( !control.isDisposed() )

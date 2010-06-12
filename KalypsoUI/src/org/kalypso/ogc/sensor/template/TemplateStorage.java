@@ -96,6 +96,7 @@ public class TemplateStorage implements IEncodedStorage
   /**
    * @see org.eclipse.core.resources.IStorage#getContents()
    */
+  @Override
   public InputStream getContents() throws CoreException
   {
     return m_file.getContents();
@@ -104,6 +105,7 @@ public class TemplateStorage implements IEncodedStorage
   /**
    * @see org.eclipse.core.resources.IStorage#getFullPath()
    */
+  @Override
   public IPath getFullPath()
   {
     return m_file.getFullPath();
@@ -112,6 +114,7 @@ public class TemplateStorage implements IEncodedStorage
   /**
    * @see org.eclipse.core.resources.IStorage#getName()
    */
+  @Override
   public String getName()
   {
     return m_file.getName();
@@ -120,6 +123,7 @@ public class TemplateStorage implements IEncodedStorage
   /**
    * @see org.eclipse.core.resources.IStorage#isReadOnly()
    */
+  @Override
   public boolean isReadOnly()
   {
     return false;
@@ -128,6 +132,7 @@ public class TemplateStorage implements IEncodedStorage
   /**
    * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
    */
+  @Override
   public Object getAdapter( Class adapter )
   {
     return null;
@@ -136,6 +141,7 @@ public class TemplateStorage implements IEncodedStorage
   /**
    * @see org.eclipse.core.resources.IEncodedStorage#getCharset()
    */
+  @Override
   public String getCharset() throws CoreException
   {
     return m_file.getCharset();

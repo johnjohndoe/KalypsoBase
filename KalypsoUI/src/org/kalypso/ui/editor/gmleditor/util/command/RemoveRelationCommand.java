@@ -80,6 +80,7 @@ public class RemoveRelationCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#isUndoable()
    */
+  @Override
   public boolean isUndoable( )
   {
     return true;
@@ -88,6 +89,7 @@ public class RemoveRelationCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#process()
    */
+  @Override
   public void process( ) throws Exception
   {
     final GMLWorkspace workspace = m_srcFE.getWorkspace();
@@ -104,6 +106,7 @@ public class RemoveRelationCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#redo()
    */
+  @Override
   public void redo( ) throws Exception
   {
     process();
@@ -112,6 +115,7 @@ public class RemoveRelationCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#undo()
    */
+  @Override
   public void undo( ) throws Exception
   {
     final GMLWorkspace workspace = m_srcFE.getWorkspace();
@@ -127,6 +131,7 @@ public class RemoveRelationCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#getDescription()
    */
+  @Override
   public String getDescription( )
   {
     return Messages.getString("org.kalypso.ui.editor.gmleditor.util.command.RemoveRelationCommand.0"); //$NON-NLS-1$

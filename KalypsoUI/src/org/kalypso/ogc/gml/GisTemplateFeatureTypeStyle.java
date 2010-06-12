@@ -76,6 +76,7 @@ public class GisTemplateFeatureTypeStyle extends AbstractTemplateStyle implement
   /**
    * @see org.kalypsodeegree.xml.Marshallable#exportAsXML()
    */
+  @Override
   public String exportAsXML( )
   {
     return ((Marshallable) m_style).exportAsXML();

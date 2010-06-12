@@ -63,6 +63,7 @@ public class FilterContentProvider implements ITreeContentProvider, IPropertyCha
   /**
    * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
    */
+  @Override
   public Object[] getChildren( final Object parentElement )
   {
     try
@@ -128,6 +129,7 @@ public class FilterContentProvider implements ITreeContentProvider, IPropertyCha
   /**
    * @see org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.Object)
    */
+  @Override
   public Object getParent( final Object element )
   {
     return null;
@@ -136,6 +138,7 @@ public class FilterContentProvider implements ITreeContentProvider, IPropertyCha
   /**
    * @see org.eclipse.jface.viewers.ITreeContentProvider#hasChildren(java.lang.Object)
    */
+  @Override
   public boolean hasChildren( final Object element )
   {
     if( element == null )
@@ -146,6 +149,7 @@ public class FilterContentProvider implements ITreeContentProvider, IPropertyCha
   /**
    * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
    */
+  @Override
   public Object[] getElements( final Object inputElement )
   {
     if( inputElement instanceof Object[] )
@@ -160,6 +164,7 @@ public class FilterContentProvider implements ITreeContentProvider, IPropertyCha
   /**
    * @see org.eclipse.jface.viewers.IContentProvider#dispose()
    */
+  @Override
   public void dispose( )
   {
     // nothing
@@ -169,6 +174,7 @@ public class FilterContentProvider implements ITreeContentProvider, IPropertyCha
    * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object,
    *      java.lang.Object)
    */
+  @Override
   public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
   {
     m_viewer = viewer;
@@ -192,6 +198,7 @@ public class FilterContentProvider implements ITreeContentProvider, IPropertyCha
   /**
    * @see org.eclipse.jface.util.IPropertyChangeListener#propertyChange(org.eclipse.jface.util.PropertyChangeEvent)
    */
+  @Override
   public void propertyChange( final PropertyChangeEvent event )
   {
     final Object source = event.getSource();

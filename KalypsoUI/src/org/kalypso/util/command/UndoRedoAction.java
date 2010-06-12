@@ -77,6 +77,7 @@ public class UndoRedoAction extends FullAction implements ICommandManagerListene
   /**
    * @see org.kalypso.commons.command.ICommandManagerListener#onCommandManagerChanged(org.kalypso.commons.command.ICommandManager)
    */
+  @Override
   public void onCommandManagerChanged( final ICommandManager source )
   {
     refresh( source );

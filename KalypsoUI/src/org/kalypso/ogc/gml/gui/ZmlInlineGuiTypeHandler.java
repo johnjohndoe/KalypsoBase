@@ -67,6 +67,7 @@ public class ZmlInlineGuiTypeHandler extends LabelProvider implements IGuiTypeHa
    * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#createFeatureDialog(org.kalypsodeegree.model.feature.Feature,
    *      org.kalypso.gmlschema.property.IPropertyType)
    */
+  @Override
   public IFeatureDialog createFeatureDialog( final Feature feature, final IPropertyType ftp )
   {
     return new ZmlInlineFeatureDialog( feature, ftp, m_typeHandler );
@@ -76,6 +77,7 @@ public class ZmlInlineGuiTypeHandler extends LabelProvider implements IGuiTypeHa
    * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#createFeatureviewControl(javax.xml.namespace.QName,
    *      org.kalypso.template.featureview.ObjectFactory)
    */
+  @Override
   public JAXBElement< ? extends ControlType> createFeatureviewControl( final IPropertyType property, final ObjectFactory factory )
   {
     final Button button = factory.createButton();
@@ -90,6 +92,7 @@ public class ZmlInlineGuiTypeHandler extends LabelProvider implements IGuiTypeHa
    *      org.kalypso.ogc.gml.selection.IFeatureSelectionManager,
    *      org.kalypso.ogc.gml.featureview.IFeatureChangeListener, java.lang.String)
    */
+  @Override
   public IFeatureModifier createFeatureModifier( final IPropertyType ftp, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl, final String format )
   {
     return new ButtonModifier( ftp, fcl );
@@ -98,6 +101,7 @@ public class ZmlInlineGuiTypeHandler extends LabelProvider implements IGuiTypeHa
   /**
    * @see org.kalypsodeegree_impl.extension.ITypeHandler#getClassName()
    */
+  @Override
   public Class getValueClass( )
   {
     return m_typeHandler.getValueClass();
@@ -106,6 +110,7 @@ public class ZmlInlineGuiTypeHandler extends LabelProvider implements IGuiTypeHa
   /**
    * @see org.kalypsodeegree_impl.extension.ITypeHandler#getTypeName()
    */
+  @Override
   public QName getTypeName( )
   {
     return m_typeHandler.getTypeName();
@@ -124,6 +129,7 @@ public class ZmlInlineGuiTypeHandler extends LabelProvider implements IGuiTypeHa
   /**
    * @see org.kalypso.gmlschema.types.ITypeHandler#isGeometry()
    */
+  @Override
   public boolean isGeometry( )
   {
     return true;
@@ -132,6 +138,7 @@ public class ZmlInlineGuiTypeHandler extends LabelProvider implements IGuiTypeHa
   /**
    * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#fromText(java.lang.String)
    */
+  @Override
   public Object parseText( final String text, final String formatHint ) throws ParseException
   {
     // Standard is to use the parseType method from the corresponding marhsalling type handler

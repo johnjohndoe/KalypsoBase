@@ -190,11 +190,13 @@ public class DynamicTabFolderFeatureControl extends AbstractFeatureControl
     final IFeatureControl featureControl = featureTabItem.createFeatureConrol( m_parentComposite );
     featureControl.addChangeListener( new IFeatureChangeListener()
     {
+      @Override
       public void featureChanged( final ICommand changeCommand )
       {
         fireFeatureChange( changeCommand );
       }
 
+      @Override
       public void openFeatureRequested( final Feature featureToOpen, final IPropertyType ftpToOpen )
       {
         fireOpenFeatureRequested( featureToOpen, ftpToOpen );

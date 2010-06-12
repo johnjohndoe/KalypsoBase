@@ -261,6 +261,7 @@ public class ObservationTable extends Panel implements IObsViewEventListener
   /**
    * @see org.kalypso.ogc.sensor.template.IObsViewEventListener#onObsViewChanged(org.kalypso.ogc.sensor.template.ObsViewEvent)
    */
+  @Override
   public final void onObsViewChanged( final ObsViewEvent evt )
   {
     // for runnable
@@ -460,6 +461,7 @@ public class ObservationTable extends Panel implements IObsViewEventListener
   /**
    * @see org.kalypso.ogc.sensor.template.IObsViewEventListener#onPrintObsView(org.kalypso.ogc.sensor.template.ObsViewEvent)
    */
+  @Override
   public void onPrintObsView( final ObsViewEvent evt )
   {
   }

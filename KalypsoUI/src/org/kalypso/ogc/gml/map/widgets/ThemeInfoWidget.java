@@ -66,6 +66,7 @@ public class ThemeInfoWidget extends AbstractThemeInfoWidget
 {
   private final ISelectionChangedListener m_selectionListener = new ISelectionChangedListener()
   {
+    @Override
     public void selectionChanged( final SelectionChangedEvent event )
     {
       handleSelectionChanged( event.getSelection() );

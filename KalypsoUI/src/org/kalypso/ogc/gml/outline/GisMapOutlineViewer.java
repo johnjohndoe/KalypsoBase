@@ -107,6 +107,7 @@ public class GisMapOutlineViewer implements ISelectionProvider, ICommandTarget
 
     m_viewer.addCheckStateListener( new ICheckStateListener()
     {
+      @Override
       public void checkStateChanged( final CheckStateChangedEvent event )
       {
         final IThemeNode node = (IThemeNode) event.getElement();
@@ -168,6 +169,7 @@ public class GisMapOutlineViewer implements ISelectionProvider, ICommandTarget
   /**
    * @see org.eclipse.jface.viewers.ISelectionProvider#addSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
    */
+  @Override
   public void addSelectionChangedListener( final ISelectionChangedListener listener )
   {
     m_viewer.addSelectionChangedListener( listener );
@@ -176,6 +178,7 @@ public class GisMapOutlineViewer implements ISelectionProvider, ICommandTarget
   /**
    * @see org.eclipse.jface.viewers.ISelectionProvider#getSelection()
    */
+  @Override
   public ISelection getSelection( )
   {
     if( m_viewer == null )
@@ -187,6 +190,7 @@ public class GisMapOutlineViewer implements ISelectionProvider, ICommandTarget
   /**
    * @see org.eclipse.jface.viewers.ISelectionProvider#removeSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
    */
+  @Override
   public void removeSelectionChangedListener( final ISelectionChangedListener listener )
   {
     m_viewer.removeSelectionChangedListener( listener );
@@ -195,6 +199,7 @@ public class GisMapOutlineViewer implements ISelectionProvider, ICommandTarget
   /**
    * @see org.eclipse.jface.viewers.ISelectionProvider#setSelection(org.eclipse.jface.viewers.ISelection)
    */
+  @Override
   public void setSelection( final ISelection selection )
   {
     m_viewer.setSelection( selection );
@@ -204,6 +209,7 @@ public class GisMapOutlineViewer implements ISelectionProvider, ICommandTarget
    * @see org.kalypso.commons.command.ICommandTarget#postCommand(org.kalypso.commons.command.ICommand,
    *      java.lang.Runnable)
    */
+  @Override
   public void postCommand( final ICommand command, final Runnable runnable )
   {
     if( m_commandTarget != null )

@@ -87,6 +87,7 @@ public class ComboFeatureControl extends AbstractFeatureControl
 
   private final ISelectionChangedListener m_listener = new ISelectionChangedListener()
   {
+    @Override
     public void selectionChanged( final SelectionChangedEvent event )
     {
       comboSelected( (IStructuredSelection) event.getSelection() );
@@ -182,6 +183,7 @@ public class ComboFeatureControl extends AbstractFeatureControl
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureControl#createControl(org.eclipse.swt.widgets.Composite, int)
    */
+  @Override
   public Control createControl( final Composite parent, final int style )
   {
     m_comboViewer = new ComboViewer( parent, style );
@@ -244,6 +246,7 @@ public class ComboFeatureControl extends AbstractFeatureControl
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureControl#updateControl()
    */
+  @Override
   public void updateControl( )
   {
     if( m_ignoreNextUpdate )
@@ -277,6 +280,7 @@ public class ComboFeatureControl extends AbstractFeatureControl
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureControl#isValid()
    */
+  @Override
   public boolean isValid( )
   {
     // a radio button is always valid
@@ -286,6 +290,7 @@ public class ComboFeatureControl extends AbstractFeatureControl
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureControl#addModifyListener(org.eclipse.swt.events.ModifyListener)
    */
+  @Override
   public void addModifyListener( final ModifyListener l )
   {
     m_listeners.add( l );
@@ -294,6 +299,7 @@ public class ComboFeatureControl extends AbstractFeatureControl
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureControl#removeModifyListener(org.eclipse.swt.events.ModifyListener)
    */
+  @Override
   public void removeModifyListener( final ModifyListener l )
   {
     m_listeners.remove( l );

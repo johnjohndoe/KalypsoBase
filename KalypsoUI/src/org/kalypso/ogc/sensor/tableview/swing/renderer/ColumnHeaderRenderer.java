@@ -104,6 +104,7 @@ public class ColumnHeaderRenderer implements TableCellRenderer
     m_pressedColumn = column;
   }
 
+  @Override
   public Component getTableCellRendererComponent( final JTable table, final Object value, final boolean isSelected, final boolean hasFocus, final int row, final int column )
   {
     final int cc = table == null ? -1 : table.convertColumnIndexToModel( column );

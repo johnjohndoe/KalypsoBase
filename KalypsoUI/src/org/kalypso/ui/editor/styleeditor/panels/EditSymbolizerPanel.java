@@ -123,17 +123,20 @@ public class EditSymbolizerPanel
     removeSymbolizerButton.setToolTipText( MessageBundle.STYLE_EDITOR_REMOVE_SYMBOLIZER );
     removeSymbolizerButton.addMouseListener( new MouseListener()
     {
+      @Override
       public void mouseDoubleClick( final MouseEvent e )
       {
         setCurrentAction( REM_SYMB );
         fire();
       }
 
+      @Override
       public void mouseDown( final MouseEvent e )
       {
         mouseDoubleClick( e );
       }
 
+      @Override
       public void mouseUp( final MouseEvent e )
       {
       // nothing
@@ -154,17 +157,20 @@ public class EditSymbolizerPanel
     moveBackwardSymbolizerButton.setToolTipText( MessageBundle.STYLE_EDITOR_BACKWARD );
     moveBackwardSymbolizerButton.addMouseListener( new MouseListener()
     {
+      @Override
       public void mouseDoubleClick( final MouseEvent e )
       {
         setCurrentAction( BAK_SYMB );
         fire();
       }
 
+      @Override
       public void mouseDown( final MouseEvent e )
       {
         mouseDoubleClick( e );
       }
 
+      @Override
       public void mouseUp( final MouseEvent e )
       {
       // nothing
@@ -185,17 +191,20 @@ public class EditSymbolizerPanel
     moveForwardSymbolizerButton.setToolTipText( MessageBundle.STYLE_EDITOR_FORWARD );
     moveForwardSymbolizerButton.addMouseListener( new MouseListener()
     {
+      @Override
       public void mouseDoubleClick( final MouseEvent e )
       {
         setCurrentAction( FOR_SYMB );
         fire();
       }
 
+      @Override
       public void mouseDown( final MouseEvent e )
       {
         mouseDoubleClick( e );
       }
 
+      @Override
       public void mouseUp( final MouseEvent e )
       {
       // nothing

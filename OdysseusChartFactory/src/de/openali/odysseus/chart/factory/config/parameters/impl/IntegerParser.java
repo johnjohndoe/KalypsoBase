@@ -12,6 +12,7 @@ public class IntegerParser implements IStringParser<Integer>
   /**
    * @see org.kalypso.chart.framework.model.data.IStringParser#stringToLogical(java.lang.String)
    */
+  @Override
   public Integer stringToLogical( String value ) throws MalformedValueException
   {
     Integer n = null;
@@ -33,6 +34,7 @@ public class IntegerParser implements IStringParser<Integer>
   /**
    * @see org.kalypso.chart.framework.model.data.IStringParser#getFormatHint()
    */
+  @Override
   public String getFormatHint( )
   {
     return "Integer value";

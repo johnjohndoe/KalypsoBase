@@ -81,7 +81,8 @@ public class EditableTestDataContainer implements IDataContainer
   /**
    * @see org.kalypso.chart.framework.model.data.IDataContainer#close()
    */
-  public void close( )
+  @Override
+public void close( )
   {
 
   }
@@ -89,7 +90,8 @@ public class EditableTestDataContainer implements IDataContainer
   /**
    * @see org.kalypso.chart.framework.model.data.IDataContainer#getDomainRange()
    */
-  public IDataRange<Object> getDomainRange( )
+  @Override
+public IDataRange<Object> getDomainRange( )
   {
     return m_domainRange;
   }
@@ -97,7 +99,8 @@ public class EditableTestDataContainer implements IDataContainer
   /**
    * @see org.kalypso.chart.framework.model.data.IDataContainer#getTargetRange()
    */
-  public IDataRange<Object> getTargetRange( )
+  @Override
+public IDataRange<Object> getTargetRange( )
   {
     return m_targetRange;
   }
@@ -105,7 +108,8 @@ public class EditableTestDataContainer implements IDataContainer
   /**
    * @see org.kalypso.chart.framework.model.data.IDataContainer#isOpen()
    */
-  public boolean isOpen( )
+  @Override
+public boolean isOpen( )
   {
     return true;
   }
@@ -113,7 +117,8 @@ public class EditableTestDataContainer implements IDataContainer
   /**
    * @see org.kalypso.chart.framework.model.data.IDataContainer#open()
    */
-  public void open( )
+  @Override
+public void open( )
   {
     // nothing to do
 

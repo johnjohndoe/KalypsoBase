@@ -256,6 +256,7 @@ public class FilterDialog extends TitleAreaDialog implements IErrorMessageReciev
       {
         return new TreeSelection( (IStructuredSelection) super.getSelection() )
         {
+          @Override
           public void contentChanged( )
           {
             refresh( true );
@@ -263,6 +264,7 @@ public class FilterDialog extends TitleAreaDialog implements IErrorMessageReciev
             expandAll();
           }
 
+          @Override
           public void structureChanged( )
           {
             refresh( true );
@@ -289,6 +291,7 @@ public class FilterDialog extends TitleAreaDialog implements IErrorMessageReciev
     m_viewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
 
+      @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
         final ISelection selection = event.getSelection();
@@ -407,6 +410,7 @@ public class FilterDialog extends TitleAreaDialog implements IErrorMessageReciev
     m_loadFilterItem.setImage( ImageProvider.IMAGE_UTIL_IMPORT_WIZARD.createImage() );
     m_loadFilterItem.addSelectionListener( new SelectionListener()
     {
+      @Override
       public void widgetSelected( final SelectionEvent e )
       {
         final IWorkspace workspace = ResourcesPlugin.getWorkspace();
@@ -434,6 +438,7 @@ public class FilterDialog extends TitleAreaDialog implements IErrorMessageReciev
         }
       }
 
+      @Override
       public void widgetDefaultSelected( final SelectionEvent e )
       {
         widgetSelected( e );
@@ -444,6 +449,7 @@ public class FilterDialog extends TitleAreaDialog implements IErrorMessageReciev
     m_saveFilterItem.setImage( ImageProvider.IMAGE_STYLEEDITOR_SAVE.createImage() );
     m_saveFilterItem.addSelectionListener( new SelectionListener()
     {
+      @Override
       public void widgetSelected( final SelectionEvent e )
       {
         final IWorkspace workspace = ResourcesPlugin.getWorkspace();
@@ -465,6 +471,7 @@ public class FilterDialog extends TitleAreaDialog implements IErrorMessageReciev
         }
       }
 
+      @Override
       public void widgetDefaultSelected( final SelectionEvent e )
       {
         widgetSelected( e );
@@ -480,6 +487,7 @@ public class FilterDialog extends TitleAreaDialog implements IErrorMessageReciev
     menuManager.setRemoveAllWhenShown( true );
     menuManager.addMenuListener( new IMenuListener()
     {
+      @Override
       public void menuAboutToShow( final IMenuManager manager )
       {
         final IStructuredSelection selection = (IStructuredSelection) m_viewer.getSelection();
@@ -576,6 +584,7 @@ public class FilterDialog extends TitleAreaDialog implements IErrorMessageReciev
   /**
    * @see org.kalypso.ogc.gml.filterdialog.dialog.IErrorMessageReciever#getErrorMessageReciever()
    */
+  @Override
   public IErrorMessageReciever getErrorMessageReciever( )
   {
     return this;

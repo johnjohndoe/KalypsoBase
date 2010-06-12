@@ -99,6 +99,7 @@ public class WMSThemePropertyPage extends PropertyPage implements IWorkbenchProp
     sourceText.setText( theme.getSource() );
     sourceText.addModifyListener( new ModifyListener()
     {
+      @Override
       public void modifyText( final ModifyEvent e )
       {
         final String source = sourceText.getText();

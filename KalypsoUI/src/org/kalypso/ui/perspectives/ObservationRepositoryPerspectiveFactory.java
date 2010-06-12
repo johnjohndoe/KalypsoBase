@@ -61,6 +61,7 @@ public class ObservationRepositoryPerspectiveFactory implements IPerspectiveFact
   /**
    * @see IPerspectiveFactory#createInitialLayout(IPageLayout)
    */
+  @Override
   @SuppressWarnings("restriction")
   public void createInitialLayout( final IPageLayout layout )
   {

@@ -87,6 +87,7 @@ public class ImageTest implements PaintListener
   /**
    * @see org.eclipse.swt.events.PaintListener#paintControl(org.eclipse.swt.events.PaintEvent)
    */
+  @Override
   public void paintControl( PaintEvent e )
   {
     GC gc = e.gc;

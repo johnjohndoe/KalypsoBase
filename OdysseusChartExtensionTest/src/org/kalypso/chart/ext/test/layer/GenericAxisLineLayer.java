@@ -57,14 +57,13 @@ import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 
 /**
  * @author alibu
- * 
  */
 public class GenericAxisLineLayer extends AbstractLineLayer
 {
 
   private final IListDataContainer m_data;
 
-  public GenericAxisLineLayer( IListDataContainer data, ILineStyle lineStyle, IPointStyle pointStyle )
+  public GenericAxisLineLayer( final IListDataContainer data, final ILineStyle lineStyle, final IPointStyle pointStyle )
   {
     super( lineStyle, pointStyle );
     m_data = data;
@@ -73,32 +72,33 @@ public class GenericAxisLineLayer extends AbstractLineLayer
   /**
    * @see org.kalypso.chart.framework.model.layer.IChartLayer#paint(org.eclipse.swt.graphics.GC)
    */
+  @Override
   @SuppressWarnings("unchecked")
-  public void paint( GC gc )
+  public void paint( final GC gc )
   {
 
     final ArrayList<Point> path = new ArrayList<Point>();
 
-    List<Object> domainValues = getDataContainer().getDomainValues();
-    List<Object> targetValues = getDataContainer().getTargetValues();
+    final List<Object> domainValues = getDataContainer().getDomainValues();
+    final List<Object> targetValues = getDataContainer().getTargetValues();
 
-    GenericLinearAxis dAxis = (GenericLinearAxis) getDomainAxis();
-    GenericLinearAxis tAxis = (GenericLinearAxis) getTargetAxis();
+    final GenericLinearAxis dAxis = (GenericLinearAxis) getDomainAxis();
+    final GenericLinearAxis tAxis = (GenericLinearAxis) getTargetAxis();
 
-    Object domainFirst = domainValues.get( 0 );
-    Object targetFirst = targetValues.get( 0 );
+    final Object domainFirst = domainValues.get( 0 );
+    final Object targetFirst = targetValues.get( 0 );
 
-    IDataOperator ddo = dAxis.getDataOperator( domainFirst.getClass() );
-    IDataOperator tdo = tAxis.getDataOperator( targetFirst.getClass() );
+    final IDataOperator ddo = dAxis.getDataOperator( domainFirst.getClass() );
+    final IDataOperator tdo = tAxis.getDataOperator( targetFirst.getClass() );
 
-    int dataSize = domainValues.size();
+    final int dataSize = domainValues.size();
 
     for( int i = 0; i < dataSize; i++ )
     {
-      IDataRange<Number> domRange = dAxis.getNumericRange();
+      final IDataRange<Number> domRange = dAxis.getNumericRange();
 
-      Number min = domRange.getMin();
-      Number max = domRange.getMax();
+      final Number min = domRange.getMin();
+      final Number max = domRange.getMax();
 
       final Object domVal = domainValues.get( i );
       final Number domValNum = ddo.logicalToNumeric( domVal );
@@ -113,9 +113,9 @@ public class GenericAxisLineLayer extends AbstractLineLayer
         if( domValNum.doubleValue() <= min.doubleValue() && i < domainValues.size() - 1 )
         {
 
-          Object next = domainValues.get( i + 1 );
+          final Object next = domainValues.get( i + 1 );
 
-          Number nextNum = ddo.logicalToNumeric( next );
+          final Number nextNum = ddo.logicalToNumeric( next );
           if( nextNum.doubleValue() >= min.doubleValue() )
           {
             setPoint = true;
@@ -124,8 +124,8 @@ public class GenericAxisLineLayer extends AbstractLineLayer
         // größer als max: Vorgänger muss <= max sein
         else if( domValNum.doubleValue() >= max.doubleValue() && i > 0 )
         {
-          Object prev = domainValues.get( i - 1 );
-          Number prevNum = ddo.logicalToNumeric( prev );
+          final Object prev = domainValues.get( i - 1 );
+          final Number prevNum = ddo.logicalToNumeric( prev );
           if( prevNum.doubleValue() <= max.doubleValue() )
           {
             setPoint = true;
@@ -164,15 +164,15 @@ public class GenericAxisLineLayer extends AbstractLineLayer
     drawPoints( gc, path );
   }
 
-  @SuppressWarnings("unchecked")
   public IListDataContainer getDataContainer( )
   {
-    return (IListDataContainer) m_data;
+    return m_data;
   }
 
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getDomainRange()
    */
+  @Override
   public IDataRange<Number> getDomainRange( )
   {
     // TODO Auto-generated method stub
@@ -182,6 +182,7 @@ public class GenericAxisLineLayer extends AbstractLineLayer
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getTargetRange()
    */
+  @Override
   public IDataRange<Number> getTargetRange( )
   {
     // TODO Auto-generated method stub

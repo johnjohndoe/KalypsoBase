@@ -74,6 +74,7 @@ public class DropZmlCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#isUndoable()
    */
+  @Override
   public boolean isUndoable( )
   {
     return true;
@@ -82,6 +83,7 @@ public class DropZmlCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#process()
    */
+  @Override
   public void process( ) throws Exception
   {
     final IWorkspaceRoot wksp = ResourcesPlugin.getWorkspace().getRoot();
@@ -99,6 +101,7 @@ public class DropZmlCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#redo()
    */
+  @Override
   public void redo( ) throws Exception
   {
     process();
@@ -107,6 +110,7 @@ public class DropZmlCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#undo()
    */
+  @Override
   public void undo( ) throws Exception
   {
     m_view.removeAllItems();
@@ -117,6 +121,7 @@ public class DropZmlCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#getDescription()
    */
+  @Override
   public String getDescription( )
   {
     return Messages.getString("org.kalypso.ui.editor.abstractobseditor.commands.DropZmlCommand.0"); //$NON-NLS-1$

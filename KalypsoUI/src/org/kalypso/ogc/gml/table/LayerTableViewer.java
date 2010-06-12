@@ -102,10 +102,10 @@ import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ogc.gml.table.celleditors.IFeatureModifierFactory;
 import org.kalypso.ogc.gml.table.command.ChangeSortingCommand;
 import org.kalypso.template.gistableview.Gistableview;
-import org.kalypso.template.gistableview.ObjectFactory;
 import org.kalypso.template.gistableview.Gistableview.Layer;
 import org.kalypso.template.gistableview.Gistableview.Layer.Column;
 import org.kalypso.template.gistableview.Gistableview.Layer.Sort;
+import org.kalypso.template.gistableview.ObjectFactory;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.KalypsoUIExtensions;
 import org.kalypso.util.swt.SWTUtilities;
@@ -168,6 +168,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
 
   private final IFeatureSelectionListener m_globalSelectionListener = new IFeatureSelectionListener()
   {
+    @Override
     public void selectionChanged( final IFeatureSelection selection )
     {
       final Feature[] features = FeatureSelectionHelper.getFeatures( selection );
@@ -188,6 +189,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
 
       control.getDisplay().syncExec( new Runnable()
       {
+        @Override
         public void run( )
         {
           if( !getTable().isDisposed() )
@@ -320,6 +322,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
     m_featureCommandTarget = featureCommandTarget;
   }
 
+  @Override
   public void dispose( )
   {
     applyTableTemplate( null, null );
@@ -377,6 +380,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
       final Control control = getControl();
       control.getDisplay().asyncExec( new Runnable()
       {
+        @Override
         public void run( )
         {
           if( !control.isDisposed() )
@@ -745,6 +749,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
   /**
    * @see org.kalypsodeegree.model.feature.event.ModellEventListener#onModellChange(org.kalypsodeegree.model.feature.event.ModellEvent)
    */
+  @Override
   public void onModellChange( final ModellEvent modellEvent )
   {
     if( getTheme() == null )
@@ -754,6 +759,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
       if( !isDisposed() )
         getControl().getDisplay().asyncExec( new Runnable()
         {
+          @Override
           public void run( )
           {
             handleModelChanged( modellEvent );
@@ -766,6 +772,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
       {
         getControl().getDisplay().asyncExec( new Runnable()
         {
+          @Override
           public void run( )
           {
             refresh();
@@ -973,16 +980,19 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
     return lines.toArray( new String[features.length][] );
   }
 
+  @Override
   public void addModellListener( final ModellEventListener listener )
   {
     m_modellEventProvider.addModellListener( listener );
   }
 
+  @Override
   public void fireModellEvent( final ModellEvent event )
   {
     m_modellEventProvider.fireModellEvent( event );
   }
 
+  @Override
   public void removeModellListener( final ModellEventListener listener )
   {
     m_modellEventProvider.removeModellListener( listener );
@@ -996,6 +1006,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
   /**
    * @see org.eclipse.jface.viewers.ICellModifier#canModify(java.lang.Object, java.lang.String)
    */
+  @Override
   public boolean canModify( final Object element, final String property )
   {
     // TODO ask modifier also, as for some types editor may not be implemented
@@ -1005,6 +1016,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
   /**
    * @see org.eclipse.jface.viewers.ICellModifier#getValue(java.lang.Object, java.lang.String)
    */
+  @Override
   public Object getValue( final Object element, final String property )
   {
     final IFeatureModifier modifier = getModifier( property );
@@ -1018,6 +1030,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
   /**
    * @see org.eclipse.jface.viewers.ICellModifier#modify(java.lang.Object, java.lang.String, java.lang.Object)
    */
+  @Override
   public void modify( final Object element, final String property, final Object value )
   {
     final IFeatureModifier modifier = getModifier( property );

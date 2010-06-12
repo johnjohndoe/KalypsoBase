@@ -271,6 +271,7 @@ public class KalypsoScreenshotPreferencePage extends PreferencePage implements I
 
     m_width.addModifyListener( new ModifyListener()
     {
+      @Override
       public void modifyText( final ModifyEvent e )
       {
         checkPage();
@@ -292,6 +293,7 @@ public class KalypsoScreenshotPreferencePage extends PreferencePage implements I
 
     m_height.addModifyListener( new ModifyListener()
     {
+      @Override
       public void modifyText( final ModifyEvent e )
       {
         checkPage();
@@ -338,6 +340,7 @@ public class KalypsoScreenshotPreferencePage extends PreferencePage implements I
     m_cmbFormat.addSelectionChangedListener( new ISelectionChangedListener()
     {
 
+      @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
         checkPage();
@@ -357,6 +360,7 @@ public class KalypsoScreenshotPreferencePage extends PreferencePage implements I
     m_target.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
     m_target.addModifyListener( new ModifyListener()
     {
+      @Override
       public void modifyText( final ModifyEvent e )
       {
         checkPage();
@@ -455,6 +459,7 @@ public class KalypsoScreenshotPreferencePage extends PreferencePage implements I
   /**
    * @see org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
    */
+  @Override
   public void init( final IWorkbench workbench )
   {
     getPreferenceStore().setDefault( KalypsoScreenshotPreferencePage.KEY_SCREENSHOT_WIDTH, KalypsoScreenshotPreferencePage.DEFAULT_SCREENSHOT_WIDTH );

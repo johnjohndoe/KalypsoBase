@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.Map.Entry;
+import java.util.TreeMap;
 
 import de.openali.odysseus.chart.factory.config.parameters.IParameterContainer;
 import de.openali.odysseus.chart.framework.exception.MalformedValueException;
@@ -13,9 +13,9 @@ import de.openali.odysseus.chart.framework.logging.impl.Logger;
 import de.openali.odysseus.chart.framework.model.data.IStringParser;
 import de.openali.odysseus.chartconfig.x020.ParameterListType;
 import de.openali.odysseus.chartconfig.x020.ParameterMapType;
+import de.openali.odysseus.chartconfig.x020.ParameterMapType.Element;
 import de.openali.odysseus.chartconfig.x020.ParameterType;
 import de.openali.odysseus.chartconfig.x020.ParametersType;
-import de.openali.odysseus.chartconfig.x020.ParameterMapType.Element;
 
 /**
  * The class provides some help for extracting values from a set of configuration parameters
@@ -75,6 +75,7 @@ public class XmlbeansParameterContainer implements IParameterContainer
     m_epId = epId;
   }
 
+  @Override
   public String getOwnerId( )
   {
     return m_ownerId;
@@ -88,6 +89,7 @@ public class XmlbeansParameterContainer implements IParameterContainer
   /**
    * returns the value of a parameter with the given name or the defaultValue if the parameter is not found.
    */
+  @Override
   public <T> T getParsedParameterValue( String paramName, String defaultValue, IStringParser<T> parser )
   {
     T value = null;
@@ -124,6 +126,7 @@ public class XmlbeansParameterContainer implements IParameterContainer
    * returns the String representation of a parameter with the given name or the defaultValue if the parameter is not
    * found.
    */
+  @Override
   public String getParameterValue( String paramName, String defaultValue )
   {
     String value = m_parameters.get( paramName );
@@ -140,6 +143,7 @@ public class XmlbeansParameterContainer implements IParameterContainer
   /**
    * @see org.kalypso.chart.factory.configuration.parameters.IParameterContainer#getParameterList(java.lang.String)
    */
+  @Override
   public List<String> getParameterList( String paramName )
   {
     return m_parameterLists.get( paramName );
@@ -148,6 +152,7 @@ public class XmlbeansParameterContainer implements IParameterContainer
   /**
    * @see org.kalypso.chart.factory.configuration.parameters.IParameterContainer#getParameterMap(java.lang.String)
    */
+  @Override
   public Map<String, String> getParameterMap( String paramName )
   {
     return m_parameterMaps.get( paramName );
@@ -157,6 +162,7 @@ public class XmlbeansParameterContainer implements IParameterContainer
    * @see org.kalypso.chart.factory.configuration.parameters.IParameterContainer#getParsedParameterList(java.lang.String,
    *      java.util.List, org.kalypso.chart.framework.model.data.IStringParser)
    */
+  @Override
   public <T> List<T> getParsedParameterList( String paramName, List<String> defaultValues, IStringParser<T> parser )
   {
     List<T> valueList = new ArrayList<T>();
@@ -198,6 +204,7 @@ public class XmlbeansParameterContainer implements IParameterContainer
    * @see org.kalypso.chart.factory.configuration.parameters.IParameterContainer#getParsedParameterList(java.lang.String,
    *      java.util.Map, org.kalypso.chart.framework.model.data.IStringParser)
    */
+  @Override
   public <T> Map<String, T> getParsedParameterMap( String paramName, Map<String, String> defaultValues, IStringParser<T> parser )
   {
     Map<String, T> valueMap = new TreeMap<String, T>();

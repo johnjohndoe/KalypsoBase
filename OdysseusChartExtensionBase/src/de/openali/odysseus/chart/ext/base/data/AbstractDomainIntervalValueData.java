@@ -19,11 +19,13 @@ public abstract class AbstractDomainIntervalValueData<T_domain, T_target> implem
 
   private List<T_target> m_targetValues = new ArrayList<T_target>();
 
+  @Override
   public boolean isOpen( )
   {
     return m_isOpen;
   }
 
+  @Override
   public void open( )
   {
     // nur öffnen, wenn nicht schon offen
@@ -80,6 +82,7 @@ public abstract class AbstractDomainIntervalValueData<T_domain, T_target> implem
     m_domainIntervalStartValues = domainIntervalStartValues;
   }
 
+  @Override
   public void close( )
   {
     m_domainIntervalStartValues = null;

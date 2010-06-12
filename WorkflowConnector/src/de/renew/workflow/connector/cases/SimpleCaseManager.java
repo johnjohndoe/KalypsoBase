@@ -108,6 +108,7 @@ public class SimpleCaseManager extends AbstractCaseManager<ICase> implements ICa
   /**
    * @see de.renew.workflow.connector.context.ICaseManager#getCase(java.lang.String)
    */
+  @Override
   public ICase getCase( final String uri )
   {
     for( final ICase caze : getCases() )
@@ -123,6 +124,7 @@ public class SimpleCaseManager extends AbstractCaseManager<ICase> implements ICa
   /**
    * @see de.renew.workflow.connector.context.ICaseManager#getCases()
    */
+  @Override
   public List<ICase> getCases( )
   {
     return internalGetCases();

@@ -80,6 +80,7 @@ public class PseudoTemplateEditorInput implements IFileEditorInput
   /**
    * @see org.eclipse.ui.IStorageEditorInput#getStorage()
    */
+  @Override
   public IStorage getStorage( )
   {
     return m_storage;
@@ -88,6 +89,7 @@ public class PseudoTemplateEditorInput implements IFileEditorInput
   /**
    * @see org.eclipse.ui.IEditorInput#exists()
    */
+  @Override
   public boolean exists( )
   {
     return false;
@@ -96,6 +98,7 @@ public class PseudoTemplateEditorInput implements IFileEditorInput
   /**
    * @see org.eclipse.ui.IEditorInput#getImageDescriptor()
    */
+  @Override
   public ImageDescriptor getImageDescriptor( )
   {
     return null;
@@ -104,6 +107,7 @@ public class PseudoTemplateEditorInput implements IFileEditorInput
   /**
    * @see org.eclipse.ui.IEditorInput#getName()
    */
+  @Override
   public String getName( )
   {
     return FilenameUtils.getBaseName( m_storage.getName() ) + m_fileExtension;
@@ -112,6 +116,7 @@ public class PseudoTemplateEditorInput implements IFileEditorInput
   /**
    * @see org.eclipse.ui.IEditorInput#getPersistable()
    */
+  @Override
   public IPersistableElement getPersistable( )
   {
     return null;
@@ -120,6 +125,7 @@ public class PseudoTemplateEditorInput implements IFileEditorInput
   /**
    * @see org.eclipse.ui.IEditorInput#getToolTipText()
    */
+  @Override
   public String getToolTipText( )
   {
     return m_storage.getHref();
@@ -128,6 +134,7 @@ public class PseudoTemplateEditorInput implements IFileEditorInput
   /**
    * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
    */
+  @Override
   @SuppressWarnings("unchecked")
   public Object getAdapter( final Class adapter )
   {

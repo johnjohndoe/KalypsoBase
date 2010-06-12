@@ -86,6 +86,7 @@ public class MapOverView extends AbstractMapPart implements IAdapterEater<IMapPa
   /**
    * @see org.eclipse.ui.IViewPart#init(org.eclipse.ui.IViewSite, org.eclipse.ui.IMemento)
    */
+  @Override
   public void init( final IViewSite site, final IMemento memento )
   {
     init( site );
@@ -94,6 +95,7 @@ public class MapOverView extends AbstractMapPart implements IAdapterEater<IMapPa
   /**
    * @see org.eclipse.ui.IViewPart#saveState(org.eclipse.ui.IMemento)
    */
+  @Override
   public void saveState( final IMemento memento )
   {
   }
@@ -123,6 +125,7 @@ public class MapOverView extends AbstractMapPart implements IAdapterEater<IMapPa
    * @see org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater#setAdapter(org.eclipse.ui.IWorkbenchPart,
    *      java.lang.Object)
    */
+  @Override
   public void setAdapter( final IWorkbenchPart part, final IMapPanel adapter )
   {
     if( m_panel != null )
@@ -157,6 +160,7 @@ public class MapOverView extends AbstractMapPart implements IAdapterEater<IMapPa
    * @see org.kalypso.ogc.gml.map.listeners.IMapPanelListener#onExtentChanged(org.kalypso.ogc.gml.map.IMapPanel,
    *      org.kalypsodeegree.model.geometry.GM_Envelope, org.kalypsodeegree.model.geometry.GM_Envelope)
    */
+  @Override
   public void onExtentChanged( final IMapPanel source, final GM_Envelope oldExtent, final GM_Envelope newExtent )
   {
     // TODO: update extent layer
@@ -166,6 +170,7 @@ public class MapOverView extends AbstractMapPart implements IAdapterEater<IMapPa
    * @see org.kalypso.ogc.gml.map.IMapPanelListener#onMapModelChanged(org.kalypso.ogc.gml.map.MapPanel,
    *      org.kalypso.ogc.gml.mapmodel.IMapModell, org.kalypso.ogc.gml.mapmodel.IMapModell)
    */
+  @Override
   public void onMapModelChanged( final IMapPanel source, final IMapModell oldModel, final IMapModell newModel )
   {
     setModell( newModel );
@@ -174,6 +179,7 @@ public class MapOverView extends AbstractMapPart implements IAdapterEater<IMapPa
   /**
    * @see org.kalypso.ogc.gml.map.IMapPanelListener#onMessageChanged(org.kalypso.ogc.gml.map.MapPanel, java.lang.String)
    */
+  @Override
   public void onMessageChanged( final IMapPanel source, final String message )
   {
   }
@@ -181,6 +187,7 @@ public class MapOverView extends AbstractMapPart implements IAdapterEater<IMapPa
   /**
    * @see org.kalypso.ogc.gml.map.listeners.IMapPanelListener#onStatusChanged(org.kalypso.ogc.gml.map.IMapPanel)
    */
+  @Override
   public void onStatusChanged( final IMapPanel source )
   {
   }
@@ -189,6 +196,7 @@ public class MapOverView extends AbstractMapPart implements IAdapterEater<IMapPa
    * @see org.kalypso.ogc.gml.map.listeners.IMapPanelListener#onMouseMoveEvent(org.kalypso.ogc.gml.map.IMapPanel,
    *      org.kalypsodeegree.model.geometry.GM_Point, int, int)
    */
+  @Override
   public void onMouseMoveEvent( final IMapPanel source, final GM_Point gmPoint, final int mousex, final int mousey )
   {
   }

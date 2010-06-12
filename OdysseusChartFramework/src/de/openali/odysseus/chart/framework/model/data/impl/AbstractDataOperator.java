@@ -61,6 +61,7 @@ public abstract class AbstractDataOperator<T> implements IDataOperator<T>
   /**
    * @see de.openali.odysseus.chart.framework.model.data.IDataOperator#getComparator()
    */
+  @Override
   public Comparator<T> getComparator( )
   {
     return m_comparator;

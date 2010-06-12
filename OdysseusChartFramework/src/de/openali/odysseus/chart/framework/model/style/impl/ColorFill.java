@@ -22,17 +22,20 @@ public class ColorFill implements IFill
     m_rgb = rgb;
   }
 
+  @Override
   public void apply( GC gc )
   {
     gc.setBackground( OdysseusChartFrameworkPlugin.getDefault().getColorRegistry().getResource( gc.getDevice(), getFillColor() ) );
 
   }
 
+  @Override
   public void dispose( )
   {
 
   }
 
+  @Override
   public ColorFill copy( )
   {
     return new ColorFill( getFillColor() );

@@ -82,6 +82,7 @@ public class SetColumnVisibleCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#isUndoable()
    */
+  @Override
   public boolean isUndoable( )
   {
     return true;
@@ -90,6 +91,7 @@ public class SetColumnVisibleCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#process()
    */
+  @Override
   public void process( ) throws Exception
   {
     doIt( m_viewer, m_propertyName, m_bVisible, 100, m_alignment, m_format, m_modifier, true );
@@ -98,6 +100,7 @@ public class SetColumnVisibleCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#redo()
    */
+  @Override
   public void redo( ) throws Exception
   {
     doIt( m_viewer, m_propertyName, m_bVisible, 100, m_alignment, m_format, m_modifier, true );
@@ -106,6 +109,7 @@ public class SetColumnVisibleCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#undo()
    */
+  @Override
   public void undo( ) throws Exception
   {
     doIt( m_viewer, m_propertyName, !m_bVisible, m_oldWidth, m_alignment, m_format, m_modifier, m_wasEditable );
@@ -114,6 +118,7 @@ public class SetColumnVisibleCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#getDescription()
    */
+  @Override
   public String getDescription( )
   {
     return Messages.getString( "org.kalypso.ogc.gml.table.command.SetColumnVisibleCommand.0" ) + m_propertyName + "' " + (m_bVisible ? Messages.getString( "org.kalypso.ogc.gml.table.command.SetColumnVisibleCommand.2" ) : Messages.getString( "org.kalypso.ogc.gml.table.command.SetColumnVisibleCommand.3" )); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
@@ -123,6 +128,7 @@ public class SetColumnVisibleCommand implements ICommand
   {
     m_viewer.getControl().getDisplay().syncExec( new Runnable()
     {
+      @Override
       public void run( )
       {
         if( bVisible )

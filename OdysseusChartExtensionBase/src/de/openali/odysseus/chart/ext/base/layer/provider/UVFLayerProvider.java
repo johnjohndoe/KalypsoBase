@@ -33,6 +33,7 @@ public class UVFLayerProvider extends AbstractLayerProvider
   /**
    * @see org.kalypso.swtchart.chart.layer.ILayerProvider#getLayer(java.net.URL)
    */
+  @Override
   @SuppressWarnings( { "unused" })
   public IChartLayer getLayer( final URL context ) throws ConfigurationException
   {
@@ -114,6 +115,7 @@ public class UVFLayerProvider extends AbstractLayerProvider
 
       }
 
+      @Override
       @SuppressWarnings("cast")
       public IDataRange<Calendar> getDomainRange( )
       {
@@ -127,6 +129,7 @@ public class UVFLayerProvider extends AbstractLayerProvider
         return (IDataRange<Calendar>) new ComparableDataRange( getDomainValues() );
       }
 
+      @Override
       @SuppressWarnings("cast")
       public IDataRange<Number> getTargetRange( )
       {

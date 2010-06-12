@@ -68,17 +68,20 @@ public class AxisAdjustment implements IAxisAdjustment
 		m_after = after;
 	}
 
-	public double getBefore()
+	@Override
+  public double getBefore()
 	{
 		return m_before;
 	}
 
-	public double getRange()
+	@Override
+  public double getRange()
 	{
 		return m_range;
 	}
 
-	public double getAfter()
+	@Override
+  public double getAfter()
 	{
 		return m_after;
 	}

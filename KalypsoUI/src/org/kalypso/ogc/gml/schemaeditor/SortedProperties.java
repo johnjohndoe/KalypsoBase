@@ -588,7 +588,7 @@ public class SortedProperties extends TreeMap<String, String>
       }
       else
       {
-        out[outLen++] = (char) aChar;
+        out[outLen++] = aChar;
       }
     }
     return new String( out, 0, outLen );

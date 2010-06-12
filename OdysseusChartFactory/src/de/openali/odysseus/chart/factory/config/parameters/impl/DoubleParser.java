@@ -12,6 +12,7 @@ public class DoubleParser implements IStringParser<Double>
   /**
    * @see org.kalypso.chart.framework.model.data.IStringParser#stringToLogical(java.lang.String)
    */
+  @Override
   public Double stringToLogical( String value ) throws MalformedValueException
   {
     Double n = null;
@@ -33,6 +34,7 @@ public class DoubleParser implements IStringParser<Double>
   /**
    * @see org.kalypso.chart.framework.model.data.IStringParser#getFormatHint()
    */
+  @Override
   public String getFormatHint( )
   {
     return "Number; use '.' as decimal seperator";

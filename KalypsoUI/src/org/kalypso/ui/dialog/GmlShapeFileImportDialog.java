@@ -294,6 +294,7 @@ public class GmlShapeFileImportDialog extends Dialog
         BusyIndicator.showWhile( getShell().getDisplay(), new Runnable()
         {
 
+          @Override
           public void run( )
           {
             if( m_sourceFileText.getText().length() > 0 )
@@ -309,6 +310,7 @@ public class GmlShapeFileImportDialog extends Dialog
       /**
        * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
        */
+      @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
         validateSelection( (IStructuredSelection) event.getSelection() );
@@ -451,6 +453,7 @@ public class GmlShapeFileImportDialog extends Dialog
           BusyIndicator.showWhile( getShell().getDisplay(), new Runnable()
           {
 
+            @Override
             public void run( )
             {
               final File file = getFile();
@@ -606,6 +609,7 @@ public class GmlShapeFileImportDialog extends Dialog
 
         final IUrlResolver2 resolver = new IUrlResolver2()
         {
+          @Override
           public URL resolveURL( final String href ) throws MalformedURLException
           {
             return UrlResolverSingleton.resolveUrl( styleURL, href );

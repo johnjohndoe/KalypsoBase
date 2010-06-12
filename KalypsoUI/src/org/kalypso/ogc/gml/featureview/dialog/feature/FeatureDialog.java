@@ -83,6 +83,7 @@ public class FeatureDialog extends TitleAreaDialog
     /**
      * @see org.kalypso.ogc.gml.featureview.IFeatureChangeListener#featureChanged(org.kalypso.commons.command.ICommand)
      */
+    @Override
     public void featureChanged( ICommand changeCommand )
     {
       try
@@ -104,6 +105,7 @@ public class FeatureDialog extends TitleAreaDialog
      * @see org.kalypso.ogc.gml.featureview.IFeatureChangeListener#openFeatureRequested(org.kalypsodeegree.model.feature.Feature,
      *      org.kalypso.gmlschema.property.IPropertyType)
      */
+    @Override
     public void openFeatureRequested( Feature feature, IPropertyType pt )
     {
     }
@@ -117,6 +119,7 @@ public class FeatureDialog extends TitleAreaDialog
     /**
      * @see org.kalypsodeegree.model.feature.event.ModellEventListener#onModellChange(org.kalypsodeegree.model.feature.event.ModellEvent)
      */
+    @Override
     public void onModellChange( ModellEvent modellEvent )
     {
       if( modellEvent.isType( ModellEvent.FEATURE_CHANGE ) )
@@ -127,6 +130,7 @@ public class FeatureDialog extends TitleAreaDialog
         {
           PlatformUI.getWorkbench().getDisplay().asyncExec( new Runnable()
           {
+            @Override
             public void run( )
             {
               /* Update. */

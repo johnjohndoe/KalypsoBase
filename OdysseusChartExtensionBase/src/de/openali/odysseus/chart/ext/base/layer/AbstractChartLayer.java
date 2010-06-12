@@ -44,6 +44,7 @@ public abstract class AbstractChartLayer implements IChartLayer
   /**
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#getDescription()
    */
+  @Override
   public String getDescription( )
   {
     return m_description;
@@ -60,6 +61,7 @@ public abstract class AbstractChartLayer implements IChartLayer
   /**
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#getTitle()
    */
+  @Override
   public String getTitle( )
   {
     return m_title;
@@ -68,6 +70,7 @@ public abstract class AbstractChartLayer implements IChartLayer
   /**
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#getId()
    */
+  @Override
   public String getId( )
   {
     return m_id;
@@ -84,6 +87,7 @@ public abstract class AbstractChartLayer implements IChartLayer
   /**
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#getVisibility()
    */
+  @Override
   public boolean isVisible( )
   {
     return m_isVisible;
@@ -92,6 +96,7 @@ public abstract class AbstractChartLayer implements IChartLayer
   /**
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#isActive()
    */
+  @Override
   public boolean isActive( )
   {
     return m_isActive;
@@ -100,6 +105,7 @@ public abstract class AbstractChartLayer implements IChartLayer
   /**
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#isActive()
    */
+  @Override
   public void setActive( final boolean isActive )
   {
     if( m_isActive != isActive )
@@ -112,6 +118,7 @@ public abstract class AbstractChartLayer implements IChartLayer
   /**
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#setDescription(java.lang.String)
    */
+  @Override
   public void setDescription( final String description )
   {
     m_description = description;
@@ -120,6 +127,7 @@ public abstract class AbstractChartLayer implements IChartLayer
   /**
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#setTitle(java.lang.String)
    */
+  @Override
   public void setTitle( final String title )
   {
     m_title = title;
@@ -128,6 +136,7 @@ public abstract class AbstractChartLayer implements IChartLayer
   /**
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#setID(java.lang.String)
    */
+  @Override
   public void setId( final String id )
   {
     m_id = id;
@@ -136,6 +145,7 @@ public abstract class AbstractChartLayer implements IChartLayer
   /**
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#setVisibility(boolean)
    */
+  @Override
   public void setVisible( final boolean isVisible )
   {
     if( m_isVisible != isVisible )
@@ -148,6 +158,7 @@ public abstract class AbstractChartLayer implements IChartLayer
   /**
    * @see org.kalypso.chart.framework.model.layer.IChartLayer#setData()
    */
+  @Override
   public void setData( String id, Object data )
   {
     m_data.put( id, data );
@@ -156,16 +167,19 @@ public abstract class AbstractChartLayer implements IChartLayer
   /**
    * @see org.kalypso.chart.framework.model.layer.IChartLayer#getData()
    */
+  @Override
   public Object getData( String id )
   {
     return m_data.get( id );
   }
 
+  @Override
   public void addListener( ILayerEventListener l )
   {
     m_handler.addListener( l );
   }
 
+  @Override
   public void removeListener( ILayerEventListener l )
   {
     m_handler.removeListener( l );
@@ -210,11 +224,13 @@ public abstract class AbstractChartLayer implements IChartLayer
   // return null;
   // }
 
+  @Override
   public final void setCoordinateMapper( ICoordinateMapper coordinateMapper )
   {
     m_coordinateMapper = coordinateMapper;
   }
 
+  @Override
   public final ICoordinateMapper getCoordinateMapper( )
   {
     return m_coordinateMapper;
@@ -225,6 +241,7 @@ public abstract class AbstractChartLayer implements IChartLayer
     return null;
   }
 
+  @Override
   public void init( )
   {
 
@@ -232,6 +249,7 @@ public abstract class AbstractChartLayer implements IChartLayer
 
   protected abstract ILegendEntry[] createLegendEntries( );
 
+  @Override
   public synchronized ILegendEntry[] getLegendEntries( )
   {
     if( m_legendEntries == null )

@@ -40,10 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.om.table.handlers;
 
-import java.text.NumberFormat;
-import java.text.ParseException;
-import java.util.Locale;
-
 import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.TextCellEditor;
@@ -69,6 +65,7 @@ public class ComponentUiDoubleHandler extends AbstractComponentUiHandler
   /**
    * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#createCellEditor(org.eclipse.swt.widgets.Table)
    */
+  @Override
   public CellEditor createCellEditor( final Table table )
   {
     final TextCellEditor textCellEditor = new TextCellEditor( table, SWT.NONE );
@@ -79,6 +76,7 @@ public class ComponentUiDoubleHandler extends AbstractComponentUiHandler
   /**
    * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#formatValue(java.lang.Object)
    */
+  @Override
   public Object doGetValue( final IRecord record )
   {
     final Object value = record.getValue( getComponent() );
@@ -92,6 +90,7 @@ public class ComponentUiDoubleHandler extends AbstractComponentUiHandler
    * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#setValue(org.kalypso.observation.result.IRecord,
    *      java.lang.Object)
    */
+  @Override
   public void doSetValue( final IRecord record, final Object value )
   {
     if( value == null || value.toString().trim().length() == 0 )
@@ -103,6 +102,7 @@ public class ComponentUiDoubleHandler extends AbstractComponentUiHandler
   /**
    * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#parseValue(java.lang.String)
    */
+  @Override
   public Object parseValue( final String text )
   {
     return NumberUtils.parseDouble( text );
@@ -112,6 +112,7 @@ public class ComponentUiDoubleHandler extends AbstractComponentUiHandler
    * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#setValue(org.kalypso.observation.result.IRecord,
    *      java.lang.Object)
    */
+  @Override
   public void setValue( final IRecord record, final Object value )
   {
     final int index = getComponent();

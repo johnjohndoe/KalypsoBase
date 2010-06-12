@@ -82,6 +82,7 @@ public class SldLoader extends AbstractLoader
   /**
    * @see org.kalypso.loader.ILoader#getDescription()
    */
+  @Override
   public String getDescription( )
   {
     return "OGC SLD"; //$NON-NLS-1$
@@ -209,6 +210,7 @@ public class SldLoader extends AbstractLoader
       is = new BufferedInputStream( url.openStream() );
       final IUrlResolver2 resolver = new IUrlResolver2()
       {
+        @Override
         public URL resolveURL( final String href ) throws MalformedURLException
         {
           return UrlResolverSingleton.resolveUrl( url, href );

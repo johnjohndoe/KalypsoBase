@@ -22,6 +22,7 @@ public class DefaultTimeline implements Timeline, Serializable
    * 
    * @return The timeline value.
    */
+  @Override
   public long toTimelineValue( long millisecond )
   {
     return millisecond;
@@ -35,6 +36,7 @@ public class DefaultTimeline implements Timeline, Serializable
    * 
    * @return The timeline value.
    */
+  @Override
   public long toTimelineValue( Date date )
   {
     return date.getTime();
@@ -48,6 +50,7 @@ public class DefaultTimeline implements Timeline, Serializable
    * 
    * @return The millisecond.
    */
+  @Override
   public long toMillisecond( long value )
   {
     return value;
@@ -61,6 +64,7 @@ public class DefaultTimeline implements Timeline, Serializable
    * 
    * @return <code>true</code>.
    */
+  @Override
   public boolean containsDomainValue( long millisecond )
   {
     return true;
@@ -74,6 +78,7 @@ public class DefaultTimeline implements Timeline, Serializable
    * 
    * @return <code>true</code>.
    */
+  @Override
   public boolean containsDomainValue( Date date )
   {
     return true;
@@ -89,6 +94,7 @@ public class DefaultTimeline implements Timeline, Serializable
    * 
    * @return <code>true</code>.
    */
+  @Override
   public boolean containsDomainRange( long from, long to )
   {
     return true;
@@ -104,6 +110,7 @@ public class DefaultTimeline implements Timeline, Serializable
    * 
    * @return <code>true</code>.
    */
+  @Override
   public boolean containsDomainRange( Date from, Date to )
   {
     return true;
@@ -117,6 +124,7 @@ public class DefaultTimeline implements Timeline, Serializable
    * 
    * @return A boolean.
    */
+  @Override
   public boolean equals( Object object )
   {
 

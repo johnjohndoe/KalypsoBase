@@ -59,16 +59,16 @@ import net.opengeospatial.ows.BoundingBoxType;
 import net.opengeospatial.wps.ComplexValueType;
 import net.opengeospatial.wps.Execute;
 import net.opengeospatial.wps.IOValueType;
+import net.opengeospatial.wps.IOValueType.ComplexValueReference;
 import net.opengeospatial.wps.LiteralOutputType;
 import net.opengeospatial.wps.LiteralValueType;
 import net.opengeospatial.wps.OutputDefinitionType;
 import net.opengeospatial.wps.OutputDefinitionsType;
 import net.opengeospatial.wps.OutputDescriptionType;
 import net.opengeospatial.wps.ProcessDescriptionType;
+import net.opengeospatial.wps.ProcessDescriptionType.ProcessOutputs;
 import net.opengeospatial.wps.SupportedCRSsType;
 import net.opengeospatial.wps.SupportedComplexDataType;
-import net.opengeospatial.wps.IOValueType.ComplexValueReference;
-import net.opengeospatial.wps.ProcessDescriptionType.ProcessOutputs;
 
 import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileSystemException;
@@ -155,7 +155,7 @@ public class WPSSimulationResultEater implements ISimulationResultEater
   {
     try
     {
-      m_processDescription = (ProcessDescriptionType) processDescriptionMediator.getProcessDescription( executeMediator.getProcessId() );
+      m_processDescription = processDescriptionMediator.getProcessDescription( executeMediator.getProcessId() );
     }
     catch( final CoreException e1 )
     {
@@ -192,6 +192,7 @@ public class WPSSimulationResultEater implements ISimulationResultEater
   /**
    * @see org.kalypso.simulation.core.ISimulationResultEater#addResult(java.lang.String, java.lang.Object)
    */
+  @Override
   public synchronized void addResult( final String id, final Object result ) throws SimulationException
   {
     if( !m_outputList.containsKey( id ) )

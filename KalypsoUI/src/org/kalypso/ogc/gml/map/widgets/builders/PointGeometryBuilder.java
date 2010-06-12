@@ -74,6 +74,7 @@ public class PointGeometryBuilder implements IGeometryBuilder
   /**
    * @see org.kalypso.informdss.manager.util.widgets.IGeometryBuilder#addPoint(org.kalypsodeegree.model.geometry.GM_Position)
    */
+  @Override
   public GM_Object addPoint( final GM_Point p ) throws Exception
   {
     m_point = p;
@@ -84,6 +85,7 @@ public class PointGeometryBuilder implements IGeometryBuilder
   /**
    * @see org.kalypso.informdss.manager.util.widgets.IGeometryBuilder#finish()
    */
+  @Override
   public GM_Object finish( ) throws Exception
   {
     if( m_result != null )
@@ -101,6 +103,7 @@ public class PointGeometryBuilder implements IGeometryBuilder
    * @see org.kalypso.informdss.manager.util.widgets.IGeometryBuilder#paint(java.awt.Graphics,
    *      org.kalypsodeegree.graphics.transformation.GeoTransform)
    */
+  @Override
   public void paint( final Graphics g, final GeoTransform projection, final Point currentPoint )
   {
     if( currentPoint == null )
@@ -127,6 +130,7 @@ public class PointGeometryBuilder implements IGeometryBuilder
   /**
    * @see org.kalypso.ogc.gml.map.widgets.builders.IGeometryBuilder#removeLastPoint()
    */
+  @Override
   public void removeLastPoint( )
   {
     // nothing to do...
@@ -135,6 +139,7 @@ public class PointGeometryBuilder implements IGeometryBuilder
   /**
    * @see org.kalypso.ogc.gml.map.widgets.builders.IGeometryBuilder#removePoints()
    */
+  @Override
   public void reset( )
   {
     m_point = null;

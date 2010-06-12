@@ -50,6 +50,7 @@ public class TaskExecutionAuthority implements ITaskExecutionAuthority
   /**
    * @see de.renew.workflow.connector.ITaskExecutionAuthority#canStopTask(de.renew.workflow.base.Task)
    */
+  @Override
   public boolean canStopTask( final ITask task )
   {
     // always return true

@@ -80,6 +80,7 @@ public class RepositoryTreeContentProvider implements ITreeContentProvider
   /**
    * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
    */
+  @Override
   public Object[] getChildren( final Object parentElement )
   {
     final IRepositoryItem item = testArg( parentElement );
@@ -100,6 +101,7 @@ public class RepositoryTreeContentProvider implements ITreeContentProvider
   /**
    * @see org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.Object)
    */
+  @Override
   public Object getParent( final Object element )
   {
     final IRepositoryItem item = testArg( element );
@@ -123,6 +125,7 @@ public class RepositoryTreeContentProvider implements ITreeContentProvider
   /**
    * @see org.eclipse.jface.viewers.ITreeContentProvider#hasChildren(java.lang.Object)
    */
+  @Override
   public boolean hasChildren( final Object element )
   {
     final IRepositoryItem item = testArg( element );
@@ -143,6 +146,7 @@ public class RepositoryTreeContentProvider implements ITreeContentProvider
   /**
    * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
    */
+  @Override
   public Object[] getElements( final Object inputElement )
   {
     final IRepositoryContainer container = (IRepositoryContainer) inputElement;
@@ -153,6 +157,7 @@ public class RepositoryTreeContentProvider implements ITreeContentProvider
   /**
    * @see org.eclipse.jface.viewers.IContentProvider#dispose()
    */
+  @Override
   public void dispose( )
   {
     // empty
@@ -162,6 +167,7 @@ public class RepositoryTreeContentProvider implements ITreeContentProvider
    * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object,
    *      java.lang.Object)
    */
+  @Override
   public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
   {
     /* oldInput has an IRepositoryContainerListener attached? remove old listener */
@@ -186,6 +192,7 @@ public class RepositoryTreeContentProvider implements ITreeContentProvider
       /* Re-create both listeners in order to have a fresh reference to the new viewer */
       m_repositoryListener = new IRepositoryListener()
       {
+        @Override
         public void onRepositoryStructureChanged( )
         {
           ViewerUtilities.refresh( viewer, true );
@@ -194,6 +201,7 @@ public class RepositoryTreeContentProvider implements ITreeContentProvider
 
       m_containerListener = new IRepositoryContainerListener()
       {
+        @Override
         public void onRepositoryContainerChanged( )
         {
           ViewerUtilities.refresh( viewer, true );

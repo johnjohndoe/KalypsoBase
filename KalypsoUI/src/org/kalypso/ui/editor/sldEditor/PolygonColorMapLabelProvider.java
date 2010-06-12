@@ -64,6 +64,7 @@ public class PolygonColorMapLabelProvider extends ColorMapLabelProvider
   /**
    * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang.Object, int)
    */
+  @Override
   public Image getColumnImage( final Object element, final int columnIndex )
   {
     return null;
@@ -72,6 +73,7 @@ public class PolygonColorMapLabelProvider extends ColorMapLabelProvider
   /**
    * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.lang.Object, int)
    */
+  @Override
   public String getColumnText( final Object element, final int columnIndex )
   {
     final PolygonColorMapEntry entry = (PolygonColorMapEntry) element;

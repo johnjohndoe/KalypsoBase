@@ -68,8 +68,8 @@ import org.kalypso.ogc.sensor.diagview.jfreechart.ObservationChart;
 import org.kalypso.ogc.sensor.tableview.TableView;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTable;
 import org.kalypso.ogc.sensor.template.ObsView;
-import org.kalypso.ogc.sensor.template.PlainObsProvider;
 import org.kalypso.ogc.sensor.template.ObsView.ItemData;
+import org.kalypso.ogc.sensor.template.PlainObsProvider;
 import org.kalypso.ogc.sensor.view.propertySource.ObservationPropertySource;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
@@ -204,11 +204,13 @@ public class ObservationViewer extends Composite
 
     m_txtHref.addFocusListener( new FocusListener()
     {
+      @Override
       public void focusGained( final FocusEvent e )
       {
         // nothing
       }
 
+      @Override
       public void focusLost( final FocusEvent e )
       {
         final String filterText = m_txtFilter == null ? "" : m_txtFilter.getText(); //$NON-NLS-1$
@@ -221,6 +223,7 @@ public class ObservationViewer extends Composite
     m_btnSelectObsLocal.setLayoutData( new GridData( GridData.VERTICAL_ALIGN_BEGINNING ) );
     m_btnSelectObsLocal.addSelectionListener( new SelectionListener()
     {
+      @Override
       public void widgetSelected( final SelectionEvent e )
       {
         // hack to support local references (doemming)
@@ -260,6 +263,7 @@ public class ObservationViewer extends Composite
         }
       }
 
+      @Override
       public void widgetDefaultSelected( final SelectionEvent e )
       {
         // nothing
@@ -270,6 +274,7 @@ public class ObservationViewer extends Composite
     m_btnSelectObsProject.setLayoutData( new GridData( GridData.VERTICAL_ALIGN_BEGINNING ) );
     m_btnSelectObsProject.addSelectionListener( new SelectionListener()
     {
+      @Override
       public void widgetSelected( final SelectionEvent e )
       {
         try
@@ -306,6 +311,7 @@ public class ObservationViewer extends Composite
         }
       }
 
+      @Override
       public void widgetDefaultSelected( final SelectionEvent e )
       {
         // nothing
@@ -318,12 +324,14 @@ public class ObservationViewer extends Composite
     showRadioButton.setSelection( false );
     showRadioButton.addSelectionListener( new SelectionListener()
     {
+      @Override
       public void widgetSelected( final SelectionEvent e )
       {
         // refresh...
         setInput( m_txtHref.getText(), null, showRadioButton.getSelection() );
       }
 
+      @Override
       public void widgetDefaultSelected( final SelectionEvent e )
       {
         // nothing

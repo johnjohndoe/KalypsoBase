@@ -58,6 +58,7 @@ public class StringDataOperator implements IOrdinalDataOperator<String>
   private final Comparator<String> m_comparator = new Comparator<String>()
   {
 
+    @Override
     public int compare( final String o1, final String o2 )
     {
       final int pos1 = getPosition( o1 );
@@ -98,6 +99,7 @@ public class StringDataOperator implements IOrdinalDataOperator<String>
   /**
    * @see de.openali.odysseus.chart.framework.model.data.IOrdinalDataOperator#getValues()
    */
+  @Override
   public String[] getValues( )
   {
     return m_values;
@@ -106,6 +108,7 @@ public class StringDataOperator implements IOrdinalDataOperator<String>
   /**
    * @see de.openali.odysseus.chart.framework.model.data.IDataOperator#getComparator()
    */
+  @Override
   public Comparator<String> getComparator( )
   {
     return m_comparator;
@@ -114,6 +117,7 @@ public class StringDataOperator implements IOrdinalDataOperator<String>
   /**
    * @see de.openali.odysseus.chart.framework.model.data.IDataOperator#getFormat(de.openali.odysseus.chart.framework.model.data.IDataRange)
    */
+  @Override
   public Format getFormat( final IDataRange<Number> range )
   {
     return m_format;
@@ -122,6 +126,7 @@ public class StringDataOperator implements IOrdinalDataOperator<String>
   /**
    * @see de.openali.odysseus.chart.framework.model.data.IDataOperator#logicalToNumeric(java.lang.Object)
    */
+  @Override
   public Number logicalToNumeric( final String logVal )
   {
     return getPosition( logVal );
@@ -130,6 +135,7 @@ public class StringDataOperator implements IOrdinalDataOperator<String>
   /**
    * @see de.openali.odysseus.chart.framework.model.data.IDataOperator#numericToLogical(java.lang.Number)
    */
+  @Override
   public String numericToLogical( final Number numVal )
   {
     return m_values[numVal.intValue()];
@@ -138,6 +144,7 @@ public class StringDataOperator implements IOrdinalDataOperator<String>
   /**
    * @see de.openali.odysseus.chart.framework.model.data.IStringDataConverter#logicalToString(java.lang.Object)
    */
+  @Override
   public String logicalToString( final String value )
   {
     return value;
@@ -146,6 +153,7 @@ public class StringDataOperator implements IOrdinalDataOperator<String>
   /**
    * @see de.openali.odysseus.chart.framework.model.data.IStringParser#getFormatHint()
    */
+  @Override
   public String getFormatHint( )
   {
     return "see available values";
@@ -154,6 +162,7 @@ public class StringDataOperator implements IOrdinalDataOperator<String>
   /**
    * @see de.openali.odysseus.chart.framework.model.data.IStringParser#stringToLogical(java.lang.String)
    */
+  @Override
   public String stringToLogical( final String value )
   {
     return value;

@@ -125,6 +125,7 @@ public class UrlInputPanel
 
     okButton.addMouseListener( new MouseListener()
     {
+      @Override
       public void mouseDoubleClick( MouseEvent e )
       {
         try
@@ -138,11 +139,13 @@ public class UrlInputPanel
         }
       }
 
+      @Override
       public void mouseDown( MouseEvent e )
       {
         mouseDoubleClick( e );
       }
 
+      @Override
       public void mouseUp( MouseEvent e )
       {
       // nothing

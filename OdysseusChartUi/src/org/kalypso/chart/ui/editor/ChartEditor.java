@@ -425,13 +425,13 @@ public class ChartEditor extends EditorPart implements IChartPart
                 final AxisNumberRangeType range = axisType.getNumberRange();
                 min = range.getMinValue();
                 max = range.getMaxValue();
-                if(Double.isNaN( (Double)min))
-                  min=null;
-                if(Double.isNaN( (Double)max))
-                  max=null;
+                if( Double.isNaN( (Double) min ) )
+                  min = null;
+                if( Double.isNaN( (Double) max ) )
+                  max = null;
               }
 
-              if( min == null || max == null   )
+              if( min == null || max == null )
               {
                 autoscaledAxes.add( mapperRegistry.getAxis( axisType.getId() ) );
               }
@@ -470,6 +470,7 @@ public class ChartEditor extends EditorPart implements IChartPart
     }
   }
 
+  @Override
   public ChartComposite getChartComposite( )
   {
     return m_chartComposite;
@@ -488,9 +489,8 @@ public class ChartEditor extends EditorPart implements IChartPart
   /**
    * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
    */
-  @SuppressWarnings("unchecked")
   @Override
-  public Object getAdapter( final Class adapter )
+  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
   {
     if( IContentOutlinePage.class.equals( adapter ) )
     {
@@ -526,11 +526,13 @@ public class ChartEditor extends EditorPart implements IChartPart
     m_configuration = doc;
   }
 
+  @Override
   public PlotDragHandlerDelegate getPlotDragHandler( )
   {
     return m_plotDragHandler;
   }
 
+  @Override
   public AxisDragHandlerDelegate getAxisDragHandler( )
   {
     return m_axisDragHandler;

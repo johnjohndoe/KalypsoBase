@@ -180,6 +180,7 @@ public class FilterPatternDialog extends Dialog
     dialog.setRGB( getColor().getRGB() );
     box.addPanelListener( new PanelListener()
     {
+      @Override
       public void valueChanged( PanelEvent event )
       {
         dialog.open();

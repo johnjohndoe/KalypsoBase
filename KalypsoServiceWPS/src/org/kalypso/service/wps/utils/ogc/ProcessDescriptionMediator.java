@@ -53,8 +53,10 @@ import net.opengeospatial.ows.AnyValue;
 import net.opengeospatial.ows.DomainMetadataType;
 import net.opengeospatial.ows.MetadataType;
 import net.opengeospatial.wps.InputDescriptionType;
+import net.opengeospatial.wps.OutputDescriptionType;
 import net.opengeospatial.wps.ProcessDescriptionType;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
@@ -72,6 +74,9 @@ import org.kalypso.simulation.core.simspec.DataType;
 import org.kalypso.simulation.core.simspec.Modelspec;
 
 /**
+ * FIXME: remove the case switch for the version. Rather implement two different medioators or better even
+ * WPS-operations.
+ * 
  * @author kurzbach
  */
 public class ProcessDescriptionMediator extends AbstractWPSMediator<net.opengis.wps._1_0.ProcessDescriptions, net.opengeospatial.wps.ProcessDescriptions>
@@ -93,11 +98,11 @@ public class ProcessDescriptionMediator extends AbstractWPSMediator<net.opengis.
   {
     /* Build the process description for all simulations. */
     /* It is vital, that the two lists have the same order and length. */
-    final List<Object> processDescriptions = new ArrayList<Object>( identifiers.size() );
+    final List<ProcessDescriptionType> processDescriptions = new ArrayList<ProcessDescriptionType>( identifiers.size() );
     for( final String typeID : identifiers )
     {
       /* Build the process description. */
-      final Object processDescription = getProcessDescription( typeID );
+      final ProcessDescriptionType processDescription = getProcessDescription( typeID );
 
       /* Save the process description. */
       processDescriptions.add( processDescription );
@@ -108,13 +113,15 @@ public class ProcessDescriptionMediator extends AbstractWPSMediator<net.opengis.
   /**
    * Returns the process descriptions wrapper for the given process descriptions
    */
-  @SuppressWarnings("unchecked")
-  private Object getProcessDescriptionsWrapper( final List processDescriptions )
+  private Object getProcessDescriptionsWrapper( final List<ProcessDescriptionType> processDescriptions )
   {
     switch( getVersion() )
     {
       case V040:
         return WPS040ObjectFactoryUtilities.buildProcessDescriptions( processDescriptions );
+
+      case V100:
+        throw new NotImplementedException();
     }
     return null;
   }
@@ -125,7 +132,7 @@ public class ProcessDescriptionMediator extends AbstractWPSMediator<net.opengis.
    * @throws CoreException
    *           If the simulation could not be found or if there is a problem parsing the simulation specification.
    */
-  public Object getProcessDescription( final String typeID ) throws CoreException
+  public ProcessDescriptionType getProcessDescription( final String typeID ) throws CoreException
   {
     /* Get the Simulation.. */
     final ISimulation simulation = WPSUtilities.getSimulation( typeID );
@@ -136,7 +143,7 @@ public class ProcessDescriptionMediator extends AbstractWPSMediator<net.opengis.
 
     /* Get the specification for that simulation. */
     final URL spezifikation = simulation.getSpezifikation();
-    Modelspec modelSpec = KalypsoSimulationCoreJaxb.readModelspec( spezifikation );
+    final Modelspec modelSpec = KalypsoSimulationCoreJaxb.readModelspec( spezifikation );
 
     final String identifier = modelSpec.getTypeID();
     if( !ObjectUtils.equals( typeID, identifier ) )
@@ -155,11 +162,11 @@ public class ProcessDescriptionMediator extends AbstractWPSMediator<net.opengis.
         final List<DataType> input = modelSpec.getInput();
 
         /* Build the data inputs. */
-        final List<Object> inputDescriptions = new ArrayList<Object>( input.size() );
+        final List<InputDescriptionType> inputDescriptions = new ArrayList<InputDescriptionType>( input.size() );
 
         for( final DataType data : input )
         {
-          final Object inputDescription = getInputDescription( data );
+          final InputDescriptionType inputDescription = getInputDescription( data );
           inputDescriptions.add( inputDescription );
         }
 
@@ -167,10 +174,10 @@ public class ProcessDescriptionMediator extends AbstractWPSMediator<net.opengis.
         final List<DataType> output = modelSpec.getOutput();
 
         /* Build the output descriptions. */
-        final List<Object> outputDescriptions = new ArrayList<Object>( output.size() );
+        final List<OutputDescriptionType> outputDescriptions = new ArrayList<OutputDescriptionType>( output.size() );
         for( final DataType data : output )
         {
-          final Object outputDescription = getOutputDescription( data );
+          final OutputDescriptionType outputDescription = getOutputDescription( data );
           outputDescriptions.add( outputDescription );
         }
 
@@ -179,6 +186,10 @@ public class ProcessDescriptionMediator extends AbstractWPSMediator<net.opengis.
         final boolean storeSupported = true;
         final boolean statusSupported = true;
         return getProcessDescription( identifier, title, abstrakt, inputDescriptions, outputDescriptions, storeSupported, statusSupported );
+
+      case V100:
+        throw new NotImplementedException();
+
     }
     return null;
   }
@@ -186,8 +197,7 @@ public class ProcessDescriptionMediator extends AbstractWPSMediator<net.opengis.
   /**
    * Returns the process description wrapper object for input and output descriptions
    */
-  @SuppressWarnings("unchecked")
-  private Object getProcessDescription( final String identifier, final String title, final String abstrakt, final List inputDescriptions, final List outputDescriptions, final boolean storeSupported, final boolean statusSupported )
+  private ProcessDescriptionType getProcessDescription( final String identifier, final String title, final String abstrakt, final List<InputDescriptionType> inputDescriptions, final List<OutputDescriptionType> outputDescriptions, final boolean storeSupported, final boolean statusSupported )
   {
     switch( getVersion() )
     {
@@ -198,6 +208,9 @@ public class ProcessDescriptionMediator extends AbstractWPSMediator<net.opengis.
         final String version = WPSUtilities.WPS_VERSION.V040.toString();
         final List<MetadataType> metaDatas = null; // TODO: metadata
         return WPS040ObjectFactoryUtilities.buildProcessDescriptionType( code, title, abstrakt, metaDatas, version, dataInputs, processOutputs, storeSupported, statusSupported );
+
+      case V100:
+        throw new NotImplementedException();
     }
     return null;
   }
@@ -205,7 +218,7 @@ public class ProcessDescriptionMediator extends AbstractWPSMediator<net.opengis.
   /**
    * Returns the output description for a single output
    */
-  private Object getOutputDescription( final DataType data )
+  private OutputDescriptionType getOutputDescription( final DataType data )
   {
     switch( getVersion() )
     {
@@ -234,6 +247,9 @@ public class ProcessDescriptionMediator extends AbstractWPSMediator<net.opengis.
           outputFormChoice = WPS040ObjectFactoryUtilities.buildSupportedComplexDataType( complexDatas, null, null, null );
         }
         return WPS040ObjectFactoryUtilities.buildOutputDescriptionType( outputCode, outputTitle, outputAbstrakt, outputFormChoice );
+
+      case V100:
+        throw new NotImplementedException();
     }
     return null;
   }
@@ -241,7 +257,7 @@ public class ProcessDescriptionMediator extends AbstractWPSMediator<net.opengis.
   /**
    * Returns the input description for a single input
    */
-  private Object getInputDescription( final DataType data )
+  private InputDescriptionType getInputDescription( final DataType data )
   {
     final net.opengeospatial.ows.CodeType inputCode = WPS040ObjectFactoryUtilities.buildCodeType( "", data.getId() ); //$NON-NLS-1$
     final String inputTitle = data.getId();
@@ -272,6 +288,9 @@ public class ProcessDescriptionMediator extends AbstractWPSMediator<net.opengis.
           inputFormChoice = WPS040ObjectFactoryUtilities.buildSupportedComplexDataType( complexDatas, null, null, null );
         }
         return WPS040ObjectFactoryUtilities.buildInputDescriptionType( inputCode, inputTitle, inputAbstrakt, inputFormChoice, minOccurs );
+
+      case V100:
+        throw new NotImplementedException();
     }
     return null;
   }
@@ -291,6 +310,10 @@ public class ProcessDescriptionMediator extends AbstractWPSMediator<net.opengis.
           inputDescriptions.put( inputId, inputDescriptionType );
         }
         break;
+
+      case V100:
+        throw new NotImplementedException();
+
     }
     return inputDescriptions;
   }

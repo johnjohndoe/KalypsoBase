@@ -77,6 +77,7 @@ public class DefaultFeatureThemeInfo implements IKalypsoThemeInfo
   /**
    * @see org.kalypso.ogc.gml.IKalypsoThemeInfo#init(org.kalypso.ogc.gml.IKalypsoTheme, java.util.Properties)
    */
+  @Override
   public void init( final IKalypsoTheme theme, final Properties props ) throws CoreException
   {
     Assert.isLegal( theme instanceof IKalypsoFeatureTheme );
@@ -112,6 +113,7 @@ public class DefaultFeatureThemeInfo implements IKalypsoThemeInfo
    * @see org.kalypso.ogc.gml.IKalypsoThemeInfo#appendInfo(java.util.Formatter,
    *      org.kalypsodeegree.model.geometry.GM_Position)
    */
+  @Override
   public void appendInfo( final Formatter formatter, final GM_Position pos )
   {
     Assert.isNotNull( m_delegate, "call init first" ); //$NON-NLS-1$
@@ -124,6 +126,7 @@ public class DefaultFeatureThemeInfo implements IKalypsoThemeInfo
    * @see org.kalypso.ogc.gml.IKalypsoThemeInfo#appendQuickInfo(java.util.Formatter,
    *      org.kalypsodeegree.model.geometry.GM_Position)
    */
+  @Override
   public void appendQuickInfo( final Formatter formatter, final GM_Position pos )
   {
     Assert.isNotNull( m_delegate, "call init first" ); //$NON-NLS-1$

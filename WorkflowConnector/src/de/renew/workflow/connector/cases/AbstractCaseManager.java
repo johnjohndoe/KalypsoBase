@@ -141,8 +141,10 @@ public abstract class AbstractCaseManager<T extends ICase> implements ICaseManag
     }
   }
 
+  @Override
   public abstract T createCase( final String name ) throws CoreException;
 
+  @Override
   public abstract void removeCase( final T caze, IProgressMonitor monitor ) throws CoreException;
 
   protected final void internalAddCase( final ICase caze )
@@ -158,6 +160,7 @@ public abstract class AbstractCaseManager<T extends ICase> implements ICaseManag
   /**
    * @see de.renew.workflow.connector.context.ICaseManager#getCurrentCase()
    */
+  @Override
   public T getCurrentCase( )
   {
     return m_currentCase;
@@ -166,6 +169,7 @@ public abstract class AbstractCaseManager<T extends ICase> implements ICaseManag
   /**
    * @see de.renew.workflow.connector.context.ICaseManager#setCurrentCase(de.renew.workflow.cases.Case)
    */
+  @Override
   public void setCurrentCase( final T caze )
   {
     m_currentCase = caze;
@@ -228,6 +232,7 @@ public abstract class AbstractCaseManager<T extends ICase> implements ICaseManag
   /**
    * @see de.renew.workflow.connector.context.ICaseManager#addCaseManagerListener(de.renew.workflow.connector.context.ICaseManagerListener)
    */
+  @Override
   public void addCaseManagerListener( final ICaseManagerListener<T> l )
   {
     if( l == null )
@@ -250,6 +255,7 @@ public abstract class AbstractCaseManager<T extends ICase> implements ICaseManag
   /**
    * @see de.renew.workflow.connector.context.ICaseManager#removeCaseManagerListener(de.renew.workflow.connector.context.ICaseManagerListener)
    */
+  @Override
   public void removeCaseManagerListener( final ICaseManagerListener<T> l )
   {
     if( l == null )
@@ -281,6 +287,7 @@ public abstract class AbstractCaseManager<T extends ICase> implements ICaseManag
   /**
    * @see de.renew.workflow.connector.context.ICaseManager#dispose()
    */
+  @Override
   public void dispose( )
   {
     m_listeners.clear();

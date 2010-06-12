@@ -68,6 +68,7 @@ public class RemoveRepositoryRunnable implements Runnable
   /**
    * @see java.lang.Runnable#run()
    */
+  @Override
   public void run( )
   {
     if( m_repository == null )

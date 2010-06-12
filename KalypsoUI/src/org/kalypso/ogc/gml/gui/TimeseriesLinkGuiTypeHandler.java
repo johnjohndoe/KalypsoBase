@@ -54,7 +54,6 @@ import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
 import org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog;
 import org.kalypso.ogc.gml.featureview.dialog.TimeserieLinkFeatureDialog;
-import org.kalypso.ogc.gml.featureview.maker.FeatureviewHelper;
 import org.kalypso.ogc.gml.featureview.modfier.ButtonModifier;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
@@ -77,6 +76,7 @@ public class TimeseriesLinkGuiTypeHandler extends LabelProvider implements IGuiT
    * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#createFeatureDialog(org.kalypsodeegree.model.feature.GMLWorkspace,
    *      org.kalypsodeegree.model.feature.Feature, org.kalypsodeegree.model.feature.IPropertyType)
    */
+  @Override
   public IFeatureDialog createFeatureDialog( final Feature feature, final IPropertyType ftp )
   {
     return new TimeserieLinkFeatureDialog( feature, ftp );
@@ -85,6 +85,7 @@ public class TimeseriesLinkGuiTypeHandler extends LabelProvider implements IGuiT
   /**
    * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#getClassName()
    */
+  @Override
   public Class getValueClass( )
   {
     return TimeseriesLinkType.class;
@@ -93,6 +94,7 @@ public class TimeseriesLinkGuiTypeHandler extends LabelProvider implements IGuiT
   /**
    * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#getTypeName()
    */
+  @Override
   public QName getTypeName( )
   {
     return ObservationLinkHandler.TYPE_NAME;
@@ -115,6 +117,7 @@ public class TimeseriesLinkGuiTypeHandler extends LabelProvider implements IGuiT
    * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#createFeatureviewControl(javax.xml.namespace.QName,
    *      org.kalypso.template.featureview.ObjectFactory)
    */
+  @Override
   public JAXBElement< ? extends ControlType> createFeatureviewControl( final IPropertyType property, final ObjectFactory factory )
   {
     final CompositeType composite = factory.createCompositeType();
@@ -157,6 +160,7 @@ public class TimeseriesLinkGuiTypeHandler extends LabelProvider implements IGuiT
    *      org.kalypso.ogc.gml.selection.IFeatureSelectionManager,
    *      org.kalypso.ogc.gml.featureview.IFeatureChangeListener, java.lang.String)
    */
+  @Override
   public IFeatureModifier createFeatureModifier( final IPropertyType ftp, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl, final String format )
   {
     return new ButtonModifier( ftp, fcl );
@@ -165,6 +169,7 @@ public class TimeseriesLinkGuiTypeHandler extends LabelProvider implements IGuiT
   /**
    * @see org.kalypso.gmlschema.types.ITypeHandler#isGeometry()
    */
+  @Override
   public boolean isGeometry( )
   {
     return true;
@@ -173,6 +178,7 @@ public class TimeseriesLinkGuiTypeHandler extends LabelProvider implements IGuiT
   /**
    * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#fromText(java.lang.String)
    */
+  @Override
   public Object parseText( final String text, final String formatHint ) throws ParseException
   {
     // Standard is to use the parseType method from the corresponding marhsalling type handler

@@ -76,6 +76,7 @@ public class ViewWQRelationObjectContribution implements IObjectActionDelegate
    * @see org.eclipse.ui.IObjectActionDelegate#setActivePart(org.eclipse.jface.action.IAction,
    *      org.eclipse.ui.IWorkbenchPart)
    */
+  @Override
   public void setActivePart( final IAction action, final IWorkbenchPart targetPart )
   {
     m_part = targetPart;
@@ -84,6 +85,7 @@ public class ViewWQRelationObjectContribution implements IObjectActionDelegate
   /**
    * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
    */
+  @Override
   public void run( final IAction action )
   {
     final Object object = ((IStructuredSelection) m_selection).getFirstElement();
@@ -145,6 +147,7 @@ public class ViewWQRelationObjectContribution implements IObjectActionDelegate
    * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
    *      org.eclipse.jface.viewers.ISelection)
    */
+  @Override
   public void selectionChanged( final IAction action, final ISelection selection )
   {
     m_selection = selection;

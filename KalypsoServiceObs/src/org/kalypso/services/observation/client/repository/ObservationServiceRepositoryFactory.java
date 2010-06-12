@@ -69,6 +69,7 @@ public class ObservationServiceRepositoryFactory extends AbstractRepositoryFacto
    * 
    * @see org.kalypso.repository.factory.IRepositoryFactory#configureRepository()
    */
+  @Override
   public final boolean configureRepository( ) throws RepositoryException
   {
     final KalypsoServiceObsActivator plugin = KalypsoServiceObsActivator.getDefault();
@@ -108,6 +109,7 @@ public class ObservationServiceRepositoryFactory extends AbstractRepositoryFacto
   /**
    * @see org.kalypso.repository.factory.IRepositoryFactory#createRepository()
    */
+  @Override
   public final IRepository createRepository( ) throws RepositoryException
   {
     final KalypsoServiceObsActivator plugin = KalypsoServiceObsActivator.getDefault();

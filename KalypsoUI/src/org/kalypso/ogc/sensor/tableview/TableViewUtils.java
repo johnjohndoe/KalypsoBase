@@ -42,7 +42,6 @@ package org.kalypso.ogc.sensor.tableview;
 
 import java.io.BufferedWriter;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.net.URL;
@@ -51,9 +50,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TimeZone;
-import java.util.Map.Entry;
 import java.util.logging.Logger;
 
 import javax.xml.bind.JAXBContext;
@@ -81,10 +80,10 @@ import org.kalypso.ogc.sensor.template.ObsViewItem;
 import org.kalypso.ogc.sensor.template.ObsViewUtils;
 import org.kalypso.template.obstableview.ObjectFactory;
 import org.kalypso.template.obstableview.Obstableview;
+import org.kalypso.template.obstableview.Obstableview.Rules;
 import org.kalypso.template.obstableview.TypeColumn;
 import org.kalypso.template.obstableview.TypeObservation;
 import org.kalypso.template.obstableview.TypeRenderingRule;
-import org.kalypso.template.obstableview.Obstableview.Rules;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.xml.sax.InputSource;
 

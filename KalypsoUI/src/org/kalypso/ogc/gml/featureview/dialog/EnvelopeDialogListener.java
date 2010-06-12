@@ -62,6 +62,7 @@ final class EnvelopeDialogListener implements ModifyListener
     m_whichText = whichText;
   }
 
+  @Override
   public void modifyText( ModifyEvent e )
   {
     final Text text = (Text) e.getSource();

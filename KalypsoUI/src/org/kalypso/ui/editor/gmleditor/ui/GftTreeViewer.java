@@ -150,6 +150,7 @@ public class GftTreeViewer
   {
     final Runnable objectLoadedCallback = new Runnable()
     {
+      @Override
       public void run( )
       {
         treeLoaded();
@@ -175,6 +176,7 @@ public class GftTreeViewer
 
     m_treeViewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
+      @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
         final ISelection selection = m_treeViewer.getSelection();
@@ -246,6 +248,7 @@ public class GftTreeViewer
     if( m_treeViewer != null )
       m_treeViewer.getTreeViewer().getTree().getDisplay().asyncExec( new Runnable()
       {
+        @Override
         public void run( )
         {
           if( !m_treeViewer.getTreeViewer().getTree().isDisposed() )

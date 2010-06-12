@@ -72,6 +72,7 @@ public class FeaturePage extends WizardPage
 
   private final ModellEventListener m_modellListener = new ModellEventListener()
   {
+    @Override
     public void onModellChange( final ModellEvent modellEvent )
     {
       handleModellChange();
@@ -109,6 +110,7 @@ public class FeaturePage extends WizardPage
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
    */
+  @Override
   public void createControl( final Composite parent )
   {
     final Group group = new Group( parent, SWT.NONE );
@@ -120,11 +122,13 @@ public class FeaturePage extends WizardPage
     m_featureComposite.setFeature( m_feature );
     m_featureComposite.addChangeListener( new IFeatureChangeListener()
     {
+      @Override
       public void featureChanged( final ICommand changeCommand )
       {
         applyFeatureChange( changeCommand );
       }
 
+      @Override
       public void openFeatureRequested( final Feature feature, final IPropertyType ftp )
       {
         // TODO: open modal dialog?

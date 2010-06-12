@@ -274,6 +274,7 @@ public class RulePatternTabItem
     // for every rule of the pattern
     addFilterPropertyPanel.addPanelListener( new PanelListener()
     {
+      @Override
       public void valueChanged( final PanelEvent event )
       {
         final String filterPropertyName = addFilterPropertyPanel.getSelection();
@@ -342,6 +343,7 @@ public class RulePatternTabItem
 
     addSymbolizerPanel.addPanelListener( new PanelListener()
     {
+      @Override
       public void valueChanged( final PanelEvent event )
       {
         final Symbolizer symbolizer = ((AddSymbolizerPanel) event.getSource()).getSelection();
@@ -365,6 +367,7 @@ public class RulePatternTabItem
     {
       rulePatternInputPanel.addPanelListener( new PanelListener()
       {
+        @Override
         public void valueChanged( final PanelEvent event )
         {
           final RulePatternInputPanel panel = (RulePatternInputPanel) event.getSource();
@@ -452,6 +455,7 @@ public class RulePatternTabItem
     }
     editSymbolizerPanel.addPanelListener( new PanelListener()
     {
+      @Override
       public void valueChanged( final PanelEvent event )
       {
         final int action = ((EditSymbolizerPanel) event.getSource()).getAction();

@@ -95,6 +95,7 @@ public class LineSymbolizerLayout extends AbstractSymbolizerLayout
     strokeColorChooserPanel = new ColorChooserPanel( strokeGroup, MessageBundle.STYLE_EDITOR_COLOR, stroke.getStroke( null ) );
     strokeColorChooserPanel.addColorChooserListener( new PanelListener()
     {
+      @Override
       public void valueChanged( final PanelEvent event )
       {
         final Color color = ((ColorChooserPanel) event.getSource()).getColor();
@@ -107,6 +108,7 @@ public class LineSymbolizerLayout extends AbstractSymbolizerLayout
     final SliderPanel strokeWidthPanel = new SliderPanel( strokeGroup, MessageBundle.STYLE_EDITOR_WIDTH, 0, 10, 1, SliderPanel.INTEGER, stroke.getWidth( null ) );
     strokeWidthPanel.addPanelListener( new PanelListener()
     {
+      @Override
       public void valueChanged( final PanelEvent event )
       {
         final double width = ((SliderPanel) event.getSource()).getSelection();
@@ -119,6 +121,7 @@ public class LineSymbolizerLayout extends AbstractSymbolizerLayout
     final SliderPanel strokeOpacityPanel = new SliderPanel( strokeGroup, MessageBundle.STYLE_EDITOR_OPACITY, 0, 1, 1, SliderPanel.DECIMAL, stroke.getOpacity( null ) );
     strokeOpacityPanel.addPanelListener( new PanelListener()
     {
+      @Override
       public void valueChanged( final PanelEvent event )
       {
         final double opacity = ((SliderPanel) event.getSource()).getSelection();
@@ -132,6 +135,7 @@ public class LineSymbolizerLayout extends AbstractSymbolizerLayout
     stroke.setLineJoin( strokeLinejoinPanel.getSelection() );
     strokeLinejoinPanel.addPanelListener( new PanelListener()
     {
+      @Override
       public void valueChanged( final PanelEvent event )
       {
         final int lineJoin = ((StrokeLinejoinComboPanel) event.getSource()).getSelection();
@@ -145,6 +149,7 @@ public class LineSymbolizerLayout extends AbstractSymbolizerLayout
     stroke.setLineCap( strokeLinecapPanel.getSelection() );
     strokeLinecapPanel.addPanelListener( new PanelListener()
     {
+      @Override
       public void valueChanged( final PanelEvent event )
       {
         final int lineCap = ((StrokeLinecapComboPanel) event.getSource()).getSelection();
@@ -157,6 +162,7 @@ public class LineSymbolizerLayout extends AbstractSymbolizerLayout
     final StrokeDashoffsetPanel strokeDashoffsetPanel = new StrokeDashoffsetPanel( strokeGroup, MessageBundle.STYLE_EDITOR_DASHOFFSET, stroke.getDashOffset( null ) );
     strokeDashoffsetPanel.addPanelListener( new PanelListener()
     {
+      @Override
       public void valueChanged( final PanelEvent event )
       {
         final float dashOffset = ((StrokeDashoffsetPanel) event.getSource()).getValue();
@@ -169,6 +175,7 @@ public class LineSymbolizerLayout extends AbstractSymbolizerLayout
     final StrokeDasharrayPanel strokeDasharrayPanel = new StrokeDasharrayPanel( strokeGroup, MessageBundle.STYLE_EDITOR_DASHARRAY, stroke.getDashArray( null ) );
     strokeDasharrayPanel.addPanelListener( new PanelListener()
     {
+      @Override
       public void valueChanged( final PanelEvent event )
       {
         final float dashArray[] = ((StrokeDasharrayPanel) event.getSource()).getValue();

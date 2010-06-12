@@ -66,7 +66,8 @@ public class BfgPegelLayerProvider extends AbstractLayerProvider
   /**
    * @see org.kalypso.chart.factory.provider.ILayerProvider#getLayer(java.net.URL)
    */
-  public IChartLayer getLayer( URL context ) throws ConfigurationException
+  @Override
+public IChartLayer getLayer( URL context ) throws ConfigurationException
   {
     return new DefaultLineLayer( getDataContainer(), getStyleSet().getStyle( ROLE_LINE_STYLE, ILineStyle.class ), getStyleSet().getStyle( ROLE_POINT_STYLE, IPointStyle.class ) );
   }

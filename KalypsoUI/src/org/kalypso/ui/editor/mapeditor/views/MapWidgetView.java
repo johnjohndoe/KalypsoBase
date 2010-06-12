@@ -112,6 +112,7 @@ public class MapWidgetView extends ViewPart
 
   private final IAdapterEater<IMapPanel> m_adapterEater = new IAdapterEater<IMapPanel>()
   {
+    @Override
     public void setAdapter( final IWorkbenchPart part, final IMapPanel panel )
     {
       mapActivated( panel );
@@ -138,6 +139,7 @@ public class MapWidgetView extends ViewPart
 
   private final IWidgetChangeListener m_widgetListener = new IWidgetChangeListener()
   {
+    @Override
     public void widgetChanged( final IWidget newWidget )
     {
       onWidgetChanged( newWidget );

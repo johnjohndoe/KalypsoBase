@@ -60,7 +60,8 @@ public class RGBMapperProvider extends AbstractMapperProvider
   /**
    * @see de.openali.odysseus.chart.factory.provider.IMapperProvider#getMapper()
    */
-  public RGBMapper getMapper( )
+  @Override
+public RGBMapper getMapper( )
   {
 
     IParameterContainer pc = getParameterContainer();

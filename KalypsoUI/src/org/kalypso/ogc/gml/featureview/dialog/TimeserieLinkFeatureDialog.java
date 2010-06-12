@@ -62,6 +62,7 @@ public class TimeserieLinkFeatureDialog implements IFeatureDialog
   /**
    * @see org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog#open(org.eclipse.swt.widgets.Shell)
    */
+  @Override
   public int open( final Shell shell )
   {
     ObservationViewerDialog dialog = new ObservationViewerDialog( shell );
@@ -91,6 +92,7 @@ public class TimeserieLinkFeatureDialog implements IFeatureDialog
   /**
    * @see org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog#collectChanges(java.util.Collection)
    */
+  @Override
   public void collectChanges( final Collection<FeatureChange> c )
   {
     if( m_change != null )
@@ -100,6 +102,7 @@ public class TimeserieLinkFeatureDialog implements IFeatureDialog
   /**
    * @see org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog#getLabel()
    */
+  @Override
   public String getLabel( )
   {
     return "..."; //$NON-NLS-1$

@@ -82,6 +82,7 @@ public class QNameFeaturesProvider implements IFeaturesProvider
   /**
    * @see org.kalypso.ogc.gml.map.widgets.providers.IFeaturesProvider#getFeatures(org.kalypso.ogc.gml.map.IMapPanel)
    */
+  @Override
   public EasyFeatureWrapper[] getFeatures( final IMapPanel mapPanel )
   {
     /* Get all themes. */

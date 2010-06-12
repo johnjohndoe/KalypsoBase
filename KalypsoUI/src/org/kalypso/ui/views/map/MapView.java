@@ -81,6 +81,7 @@ public class MapView extends AbstractMapPart implements IViewPart
   /**
    * @see org.eclipse.ui.IViewPart#init(org.eclipse.ui.IViewSite, org.eclipse.ui.IMemento)
    */
+  @Override
   public void init( final IViewSite site, final IMemento memento )
   {
     init( site );
@@ -101,6 +102,7 @@ public class MapView extends AbstractMapPart implements IViewPart
   /**
    * @see org.eclipse.ui.part.ViewPart#saveState(org.eclipse.ui.IMemento)
    */
+  @Override
   public void saveState( final IMemento memento )
   {
     IStorageEditorInput input = getEditorInput();

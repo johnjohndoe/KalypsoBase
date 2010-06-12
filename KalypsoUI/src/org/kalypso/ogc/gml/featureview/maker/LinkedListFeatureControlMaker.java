@@ -51,10 +51,10 @@ import org.kalypso.ogc.gml.featureview.control.ChecklistOfLinksFeatureControl;
 import org.kalypso.ogc.gml.featureview.control.ChecklistOfLinksFeatureviewControlFactory;
 import org.kalypso.template.featureview.ControlType;
 import org.kalypso.template.featureview.Extensioncontrol;
+import org.kalypso.template.featureview.Extensioncontrol.Param;
 import org.kalypso.template.featureview.GridDataType;
 import org.kalypso.template.featureview.GridLayout;
 import org.kalypso.template.featureview.Group;
-import org.kalypso.template.featureview.Extensioncontrol.Param;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**

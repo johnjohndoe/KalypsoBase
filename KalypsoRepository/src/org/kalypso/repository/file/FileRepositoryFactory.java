@@ -20,6 +20,7 @@ public class FileRepositoryFactory extends AbstractRepositoryFactory
   /**
    * @see org.kalypso.repository.factory.IRepositoryFactory#configureRepository()
    */
+  @Override
   public boolean configureRepository()
   {
     return true;
@@ -43,6 +44,7 @@ public class FileRepositoryFactory extends AbstractRepositoryFactory
    * 
    * @see org.kalypso.repository.factory.IRepositoryFactory#createRepository()
    */
+  @Override
   public IRepository createRepository() throws RepositoryException
   {
     final String[] conf = getConfiguration().split( SEPARATOR );

@@ -90,6 +90,7 @@ public abstract class AbstractWorkflowHandler extends AbstractHandler implements
   /**
    * @see de.renew.workflow.connector.IWorklistChangeListener#worklistChanged()
    */
+  @Override
   public void worklistChanged( )
   {
     final boolean newEnabled = WorkflowConnectorPlugin.getDefault().getConnector().canRequest( m_task );
@@ -104,6 +105,7 @@ public abstract class AbstractWorkflowHandler extends AbstractHandler implements
    * @see org.eclipse.core.runtime.IExecutableExtension#setInitializationData(org.eclipse.core.runtime.IConfigurationElement,
    *      java.lang.String, java.lang.Object)
    */
+  @Override
   @SuppressWarnings("unchecked")
   public void setInitializationData( final IConfigurationElement config, final String propertyName, final Object data )
   {

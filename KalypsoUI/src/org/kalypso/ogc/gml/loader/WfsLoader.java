@@ -130,6 +130,7 @@ public class WfsLoader extends WorkspaceLoader
     }
   }
 
+  @Override
   public String getDescription( )
   {
     return "WFS Layer"; //$NON-NLS-1$

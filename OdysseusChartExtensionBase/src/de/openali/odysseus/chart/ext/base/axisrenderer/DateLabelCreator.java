@@ -42,7 +42,6 @@ package de.openali.odysseus.chart.ext.base.axisrenderer;
 
 import java.util.Date;
 
-
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.CalendarFormat;
 
@@ -71,6 +70,7 @@ public class DateLabelCreator implements ILabelCreator
    *            can be null, is not evaluated
    * @see org.kalypso.chart.ext.test.axisrenderer.ILabelCreator#getLabel(java.lang.Number)
    */
+  @Override
   public String getLabel( Number value, IDataRange<Number> range )
   {
     return m_format.format( new Date( value.longValue() ) );

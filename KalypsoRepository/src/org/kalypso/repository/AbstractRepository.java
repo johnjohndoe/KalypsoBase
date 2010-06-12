@@ -51,7 +51,7 @@ import org.kalypso.commons.java.util.PropertiesHelper;
 
 /**
  * Abstract implementation of <code>IRepository</code> to provide basic functionality.
- *
+ * 
  * @author schlienger
  */
 public abstract class AbstractRepository implements IRepository
@@ -91,22 +91,26 @@ public abstract class AbstractRepository implements IRepository
   /**
    * @see org.kalypso.repository.IRepository#dispose()
    */
+  @Override
   public void dispose( )
   {
     m_listeners.clear();
     m_properties.clear();
   }
 
+  @Override
   public String getFactory( )
   {
     return m_factory;
   }
 
+  @Override
   public String getConfiguration( )
   {
     return m_conf;
   }
 
+  @Override
   public boolean isReadOnly( )
   {
     return m_readOnly;
@@ -129,6 +133,7 @@ public abstract class AbstractRepository implements IRepository
   /**
    * @see org.kalypso.repository.IRepository#getDescription()
    */
+  @Override
   public String getDescription( )
   {
     return ""; //$NON-NLS-1$
@@ -137,6 +142,7 @@ public abstract class AbstractRepository implements IRepository
   /**
    * @see org.kalypso.repository.IRepository#addRepositoryListener(org.kalypso.repository.IRepositoryListener)
    */
+  @Override
   public void addRepositoryListener( final IRepositoryListener l )
   {
     m_listeners.add( l );
@@ -145,6 +151,7 @@ public abstract class AbstractRepository implements IRepository
   /**
    * @see org.kalypso.repository.IRepository#fireRepositoryStructureChanged()
    */
+  @Override
   public void fireRepositoryStructureChanged( )
   {
     for( final Object element2 : m_listeners )
@@ -157,6 +164,7 @@ public abstract class AbstractRepository implements IRepository
   /**
    * @see org.kalypso.repository.IRepository#removeRepositoryListener(org.kalypso.repository.IRepositoryListener)
    */
+  @Override
   public void removeRepositoryListener( final IRepositoryListener l )
   {
     m_listeners.remove( l );
@@ -165,6 +173,7 @@ public abstract class AbstractRepository implements IRepository
   /**
    * @see org.kalypso.repository.IRepositoryItem#getName()
    */
+  @Override
   public String getName( )
   {
     return m_name;
@@ -185,6 +194,7 @@ public abstract class AbstractRepository implements IRepository
   /**
    * @see org.kalypso.repository.IRepositoryItem#getParent()
    */
+  @Override
   public IRepositoryItem getParent( )
   {
     return null;
@@ -193,7 +203,7 @@ public abstract class AbstractRepository implements IRepository
   /**
    * This default implementation uses recursion to find an item with the requested id. Subclasses may use this method if
    * they want to implement findItem using recursion.
-   *
+   * 
    * @return item if found, else null
    */
   protected final IRepositoryItem findItemRecursive( final IRepositoryItem item, final String id ) throws RepositoryException
@@ -232,8 +242,8 @@ public abstract class AbstractRepository implements IRepository
   /**
    * This default implementation always returns null.
    */
-  @SuppressWarnings("unchecked")
-  public Object getAdapter( final Class anotherClass )
+  @Override
+  public Object getAdapter( @SuppressWarnings("rawtypes") final Class anotherClass )
   {
     return null;
   }
@@ -242,7 +252,7 @@ public abstract class AbstractRepository implements IRepository
    * @see org.kalypso.repository.IRepositoryItem#hasAdapter(java.lang.Class)
    */
   @Override
-  public boolean hasAdapter( final Class adapter )
+  public boolean hasAdapter( final Class< ? > adapter )
   {
     return false;
   }
@@ -250,6 +260,7 @@ public abstract class AbstractRepository implements IRepository
   /**
    * @see org.kalypso.repository.IRepositoryItem#getRepository()
    */
+  @Override
   public IRepository getRepository( )
   {
     return this;
@@ -258,6 +269,7 @@ public abstract class AbstractRepository implements IRepository
   /**
    * @see org.kalypso.repository.IRepository#dumpStructure(java.io.Writer, org.eclipse.core.runtime.IProgressMonitor)
    */
+  @Override
   public void dumpStructure( final Writer writer, final IProgressMonitor monitor ) throws RepositoryException, InterruptedException
   {
     dumpRecursive( writer, this, "", monitor ); //$NON-NLS-1$
@@ -308,6 +320,7 @@ public abstract class AbstractRepository implements IRepository
   /**
    * @see org.kalypso.repository.IRepository#getProperty(java.lang.String, java.lang.String)
    */
+  @Override
   public String getProperty( final String name, final String defaultValue )
   {
     return m_properties.getProperty( name, defaultValue );
@@ -316,6 +329,7 @@ public abstract class AbstractRepository implements IRepository
   /**
    * @see org.kalypso.repository.IRepository#getProperty(java.lang.String)
    */
+  @Override
   public String getProperty( final String name )
   {
     return m_properties.getProperty( name );
@@ -324,6 +338,7 @@ public abstract class AbstractRepository implements IRepository
   /**
    * @see org.kalypso.repository.IRepository#getProperties()
    */
+  @Override
   public Properties getProperties( )
   {
     return m_properties;
@@ -332,6 +347,7 @@ public abstract class AbstractRepository implements IRepository
   /**
    * @see org.kalypso.repository.IRepository#setProperties(java.util.Properties)
    */
+  @Override
   public void setProperties( final Properties props )
   {
     m_properties.clear();
@@ -341,11 +357,13 @@ public abstract class AbstractRepository implements IRepository
   /**
    * @see org.kalypso.repository.IRepository#setProperty(java.lang.String, java.lang.String)
    */
+  @Override
   public void setProperty( final String name, final String value )
   {
     m_properties.setProperty( name, value );
   }
 
+  @Override
   public String getIdentifier( )
   {
     return m_identifier;

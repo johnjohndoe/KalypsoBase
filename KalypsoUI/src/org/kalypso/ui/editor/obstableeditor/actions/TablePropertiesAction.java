@@ -58,6 +58,7 @@ public class TablePropertiesAction extends AbstractEditorActionDelegate
   /**
    * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
    */
+  @Override
   public void run( final IAction action )
   {
     final ObservationTableEditor editor = (ObservationTableEditor) getEditor();

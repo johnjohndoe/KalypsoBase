@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-
 import de.openali.odysseus.chart.ext.base.data.AbstractDomainValueData;
 import de.openali.odysseus.chart.framework.logging.impl.Logger;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
@@ -145,12 +144,14 @@ public class BfgPegelDoubleData extends AbstractDomainValueData<Double, Double>
     return true;
   }
 
-  public IDataRange<Double> getDomainRange( )
+  @Override
+public IDataRange<Double> getDomainRange( )
   {
     return new ComparableDataRange<Double>( getDomainValues() );
   }
 
-  public IDataRange<Double> getTargetRange( )
+  @Override
+public IDataRange<Double> getTargetRange( )
   {
     Double[] targetValues = getTargetValues();
     return new ComparableDataRange<Double>( targetValues );
@@ -165,7 +166,7 @@ public class BfgPegelDoubleData extends AbstractDomainValueData<Double, Double>
     {
       list.add( (Double) val );
     }
-    return (Double[]) list.toArray( new Double[] {} );
+    return list.toArray( new Double[] {} );
   }
 
   @Override
@@ -177,6 +178,6 @@ public class BfgPegelDoubleData extends AbstractDomainValueData<Double, Double>
     {
       list.add( (Double) val );
     }
-    return (Double[]) list.toArray( new Double[] {} );
+    return list.toArray( new Double[] {} );
   }
 }

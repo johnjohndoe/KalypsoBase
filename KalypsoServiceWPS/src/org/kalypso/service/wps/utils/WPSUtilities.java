@@ -61,8 +61,8 @@ import net.opengeospatial.wps.OutputDefinitionType;
 import net.opengeospatial.wps.OutputDefinitionsType;
 import net.opengeospatial.wps.OutputDescriptionType;
 import net.opengeospatial.wps.ProcessDescriptionType;
-import net.opengeospatial.wps.ProcessDescriptions;
 import net.opengeospatial.wps.ProcessDescriptionType.ProcessOutputs;
+import net.opengeospatial.wps.ProcessDescriptions;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;

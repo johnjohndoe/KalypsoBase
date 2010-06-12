@@ -152,6 +152,7 @@ class CurveDataset extends AbstractIntervalXYDataset
   /**
    * @see org.jfree.data.xy.XYDataset#getItemCount(int)
    */
+  @Override
   public int getItemCount( final int series )
   {
     final RendererInfo[] curveArray = getCurveArray();
@@ -180,6 +181,7 @@ class CurveDataset extends AbstractIntervalXYDataset
   /**
    * @see org.jfree.data.xy.XYDataset#getX(int, int)
    */
+  @Override
   public Number getX( final int series, final int item )
   {
     final RendererInfo[] curveArray = getCurveArray();
@@ -209,6 +211,7 @@ class CurveDataset extends AbstractIntervalXYDataset
   /**
    * @see org.jfree.data.xy.XYDataset#getY(int, int)
    */
+  @Override
   public Number getY( final int series, final int item )
   {
     final RendererInfo[] curveArray = getCurveArray();
@@ -269,6 +272,7 @@ class CurveDataset extends AbstractIntervalXYDataset
   /**
    * @see org.jfree.data.xy.IntervalXYDataset#getStartX(int, int)
    */
+  @Override
   public Number getStartX( final int series, final int item )
   {
     if( item > 0 )
@@ -280,6 +284,7 @@ class CurveDataset extends AbstractIntervalXYDataset
   /**
    * @see org.jfree.data.xy.IntervalXYDataset#getEndX(int, int)
    */
+  @Override
   public Number getEndX( final int series, final int item )
   {
     return getX( series, item );
@@ -288,6 +293,7 @@ class CurveDataset extends AbstractIntervalXYDataset
   /**
    * @see org.jfree.data.xy.IntervalXYDataset#getStartY(int, int)
    */
+  @Override
   public Number getStartY( final int series, final int item )
   {
     if( item > 0 )
@@ -299,6 +305,7 @@ class CurveDataset extends AbstractIntervalXYDataset
   /**
    * @see org.jfree.data.xy.IntervalXYDataset#getEndY(int, int)
    */
+  @Override
   public Number getEndY( final int series, final int item )
   {
     return getY( series, item );

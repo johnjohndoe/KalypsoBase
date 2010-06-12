@@ -62,6 +62,7 @@ public class ChangeSelectionRunnable implements Runnable
   /**
    * @see java.lang.Runnable#run()
    */
+  @Override
   public void run( )
   {
     final ISelectionProvider selProvider = m_selProvider;
@@ -71,6 +72,7 @@ public class ChangeSelectionRunnable implements Runnable
 
     m_display.asyncExec( new Runnable()
     {
+      @Override
       public void run( )
       {
         selProvider.setSelection( newSelection );

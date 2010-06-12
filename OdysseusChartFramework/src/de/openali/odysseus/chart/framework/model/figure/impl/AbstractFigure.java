@@ -10,17 +10,20 @@ public abstract class AbstractFigure<T_style extends IStyle> implements IFigure<
 
 	private T_style m_style;
 
-	public void setStyle(T_style ts)
+	@Override
+  public void setStyle(T_style ts)
 	{
 		m_style = ts;
 	}
 
-	public T_style getStyle()
+	@Override
+  public T_style getStyle()
 	{
 		return m_style;
 	}
 
-	public final void paint(GC gc)
+	@Override
+  public final void paint(GC gc)
 	{
 		if (m_style.isVisible())
 		{

@@ -41,6 +41,7 @@ public class WPSService implements IOGCService
    * @see org.kalypso.service.ogc.IOGCService#executeOperation(org.kalypso.service.ogc.RequestBean,
    *      org.kalypso.service.ogc.ResponseBean)
    */
+  @Override
   public void executeOperation( final RequestBean request, final ResponseBean responseBean ) throws OWSException
   {
     String parameterValue = null;
@@ -153,6 +154,7 @@ public class WPSService implements IOGCService
   /**
    * @see org.kalypso.service.ogc.IOGCService#responsibleFor(org.kalypso.service.ogc.RequestBean)
    */
+  @Override
   public boolean responsibleFor( final RequestBean request )
   {
     if( request.isPost() )
@@ -223,6 +225,7 @@ public class WPSService implements IOGCService
   /**
    * @see org.kalypso.service.ogc.IOGCService#destroy()
    */
+  @Override
   public void destroy( )
   {
   }

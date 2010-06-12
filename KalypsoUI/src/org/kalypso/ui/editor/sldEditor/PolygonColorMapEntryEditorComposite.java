@@ -81,6 +81,7 @@ public class PolygonColorMapEntryEditorComposite extends Composite
     strokeEditor.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     strokeEditor.addModifyListener( new IStrokeModifyListener()
     {
+      @Override
       public void onStrokeChanged( Object source, Stroke stroke )
       {
         contentChanged();
@@ -91,6 +92,7 @@ public class PolygonColorMapEntryEditorComposite extends Composite
     m_fillEditor.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     m_fillEditor.addModifyListener( new IFillModifyListener()
     {
+      @Override
       public void onFillChanged( Object source, Fill fill )
       {
         contentChanged();

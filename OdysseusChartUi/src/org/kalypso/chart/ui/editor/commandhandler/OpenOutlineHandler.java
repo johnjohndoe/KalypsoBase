@@ -13,11 +13,11 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartSite;
 import org.kalypso.chart.ui.IChartPart;
-import org.kalypso.chart.ui.i18n.Messages;
 import org.kalypso.chart.ui.view.ChartOutlinePopupDialog;
 
 public class OpenOutlineHandler extends AbstractHandler
 {
+  @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();

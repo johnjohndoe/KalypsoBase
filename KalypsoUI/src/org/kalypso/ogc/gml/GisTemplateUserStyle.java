@@ -81,11 +81,13 @@ public class GisTemplateUserStyle extends AbstractTemplateStyle implements IKaly
   /**
    * @see org.kalypsodeegree.xml.Marshallable#exportAsXML()
    */
+  @Override
   public String exportAsXML( )
   {
     return ((Marshallable) m_userStyle).exportAsXML();
   }
 
+  @Override
   public void addFeatureTypeStyle( final FeatureTypeStyle featureTypeStyle )
   {
     m_userStyle.addFeatureTypeStyle( featureTypeStyle );
@@ -97,6 +99,7 @@ public class GisTemplateUserStyle extends AbstractTemplateStyle implements IKaly
     return m_userStyle.getAbstract();
   }
 
+  @Override
   public FeatureTypeStyle[] getFeatureTypeStyles( )
   {
     return m_userStyle.getFeatureTypeStyles();
@@ -114,11 +117,13 @@ public class GisTemplateUserStyle extends AbstractTemplateStyle implements IKaly
     return m_userStyle.getTitle();
   }
 
+  @Override
   public boolean isDefault( )
   {
     return m_userStyle.isDefault();
   }
 
+  @Override
   public void removeFeatureTypeStyle( final FeatureTypeStyle featureTypeStyle )
   {
     m_userStyle.removeFeatureTypeStyle( featureTypeStyle );
@@ -130,11 +135,13 @@ public class GisTemplateUserStyle extends AbstractTemplateStyle implements IKaly
     m_userStyle.setAbstract( abstract_ );
   }
 
+  @Override
   public void setDefault( final boolean default_ )
   {
     m_userStyle.setDefault( default_ );
   }
 
+  @Override
   public void setFeatureTypeStyles( final FeatureTypeStyle[] featureTypeStyles )
   {
     m_userStyle.setFeatureTypeStyles( featureTypeStyles );
@@ -143,6 +150,7 @@ public class GisTemplateUserStyle extends AbstractTemplateStyle implements IKaly
   /**
    * @see org.kalypsodeegree.graphics.sld.UserStyle#getFeatureTypeStyle(java.lang.String)
    */
+  @Override
   public FeatureTypeStyle getFeatureTypeStyle( final String featureTypeStyleName )
   {
     return m_userStyle.getFeatureTypeStyle( featureTypeStyleName );

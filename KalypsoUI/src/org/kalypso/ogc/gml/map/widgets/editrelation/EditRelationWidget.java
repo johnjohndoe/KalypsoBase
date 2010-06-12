@@ -337,6 +337,7 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
       if( viewer.getInput() != activeTheme )
         m_viewer.getControl().getDisplay().asyncExec( new Runnable()
         {
+          @Override
           public void run( )
           {
             if( viewer != null && !viewer.getControl().isDisposed() )
@@ -358,6 +359,7 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
     final List<IRelationType> fitList = getFitList( srcFeature, targetFeature );
     m_topLevel.getDisplay().asyncExec( new Runnable()
     {
+      @Override
       public void run( )
       {
         for( final IRelationType element : fitList )
@@ -376,6 +378,7 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
         {
           final IStructuredContentProvider cProvider = new IStructuredContentProvider()
           {
+            @Override
             public Object[] getElements( final Object inputElement )
             {
               if( inputElement instanceof List )
@@ -385,11 +388,13 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
               return null;
             }
 
+            @Override
             public void dispose( )
             {
               // m_input = null;
             }
 
+            @Override
             public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
             {
               // m_input = newInput;
@@ -470,6 +475,7 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
     {
       m_textProblem.getDisplay().asyncExec( new Runnable()
       {
+        @Override
         public void run( )
         {
           final String problems = m_fitProblems.toString();
@@ -526,6 +532,7 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
     {
       m_textInfo.getDisplay().asyncExec( new Runnable()
       {
+        @Override
         public void run( )
         {
           if( m_textInfo != null && !m_textInfo.isDisposed() )
@@ -560,6 +567,7 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
   /**
    * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#disposeControl()
    */
+  @Override
   public void disposeControl( )
   {
     if( m_modeCombo != null && !m_modeCombo.isDisposed() )
@@ -576,6 +584,7 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
   /**
    * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#createControl(org.eclipse.swt.widgets.Composite)
    */
+  @Override
   public Control createControl( final Composite parent, final FormToolkit toolkit )
   {
     m_topLevel = toolkit.createComposite( parent, SWT.NONE );
@@ -614,6 +623,7 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
     m_modeCombo.setLayoutData( data3 );
     m_modeCombo.addModifyListener( new ModifyListener()
     {
+      @Override
       public void modifyText( final ModifyEvent e )
       {
         m_modificationMode = ((Combo) e.getSource()).getSelectionIndex();

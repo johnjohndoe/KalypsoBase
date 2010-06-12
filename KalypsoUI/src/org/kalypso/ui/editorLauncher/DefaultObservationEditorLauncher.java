@@ -73,6 +73,7 @@ public class DefaultObservationEditorLauncher implements IDefaultTemplateLaunche
   /**
    * @see org.kalypso.ui.editorLauncher.IDefaultTemplateLauncher#getFilename()
    */
+  @Override
   public String getFilename()
   {
     return m_pseudoFilename;
@@ -81,6 +82,7 @@ public class DefaultObservationEditorLauncher implements IDefaultTemplateLaunche
   /**
    * @see org.kalypso.ui.editorLauncher.IDefaultTemplateLauncher#getEditor()
    */
+  @Override
   public IEditorDescriptor getEditor()
   {
     final IWorkbench workbench = PlatformUI.getWorkbench();
@@ -91,6 +93,7 @@ public class DefaultObservationEditorLauncher implements IDefaultTemplateLaunche
   /**
    * @see org.kalypso.ui.editorLauncher.IDefaultTemplateLauncher#createInput(org.eclipse.core.resources.IFile)
    */
+  @Override
   public IEditorInput createInput( final IFile file )
   {
     try

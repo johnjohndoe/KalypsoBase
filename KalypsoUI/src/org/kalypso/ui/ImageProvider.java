@@ -86,6 +86,7 @@ public class ImageProvider
     /**
      * @see org.kalypso.informdss.KalypsoInformDSSImages.ImageKey#getImagePath()
      */
+    @Override
     public String getImagePath( )
     {
       return m_imagePath;

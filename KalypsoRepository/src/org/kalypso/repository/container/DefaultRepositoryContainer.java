@@ -70,6 +70,7 @@ public class DefaultRepositoryContainer implements IRepositoryContainer
     m_reps.addAll( Arrays.asList( repositories ) );
   }
 
+  @Override
   public void dispose( )
   {
     for( final IRepository element : m_reps )
@@ -79,6 +80,7 @@ public class DefaultRepositoryContainer implements IRepositoryContainer
     m_listeners.clear();
   }
 
+  @Override
   public void addRepository( final IRepository rep )
   {
     if( rep == null )
@@ -99,6 +101,7 @@ public class DefaultRepositoryContainer implements IRepositoryContainer
     }
   }
 
+  @Override
   public void removeRepository( final IRepository rep )
   {
     m_reps.remove( rep );
@@ -116,6 +119,7 @@ public class DefaultRepositoryContainer implements IRepositoryContainer
   /**
    * @see org.kalypso.repository.container.IRepositoryContainer#addRepositoryContainerListener(org.kalypso.repository.container.IRepositoryContainerListener)
    */
+  @Override
   public void addRepositoryContainerListener( final IRepositoryContainerListener l )
   {
     m_listeners.add( l );
@@ -124,6 +128,7 @@ public class DefaultRepositoryContainer implements IRepositoryContainer
   /**
    * @see org.kalypso.repository.container.IRepositoryContainer#removeRepositoryContainerListener(org.kalypso.repository.container.IRepositoryContainerListener)
    */
+  @Override
   public void removeRepositoryContainerListener( final IRepositoryContainerListener l )
   {
     m_listeners.remove( l );
@@ -132,6 +137,7 @@ public class DefaultRepositoryContainer implements IRepositoryContainer
   /**
    * @see org.kalypso.repository.container.IRepositoryContainer#getRepositories()
    */
+  @Override
   public IRepository[] getRepositories( )
   {
     return m_reps.toArray( new IRepository[m_reps.size()] );
@@ -140,6 +146,7 @@ public class DefaultRepositoryContainer implements IRepositoryContainer
   /**
    * @see org.kalypso.repository.container.IRepositoryContainer#findItem(java.lang.String)
    */
+  @Override
   public IRepositoryItem findItem( final String id ) throws NoSuchElementException
   {
     for( final Object element : m_reps )

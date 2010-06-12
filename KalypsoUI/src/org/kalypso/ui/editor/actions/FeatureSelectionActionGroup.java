@@ -74,20 +74,24 @@ public class FeatureSelectionActionGroup extends ActionGroup
 {
   private final ISelectionProvider m_provider = new ISelectionProvider()
   {
+    @Override
     public void addSelectionChangedListener( ISelectionChangedListener listener )
     {
     }
 
+    @Override
     public ISelection getSelection( )
     {
       final ActionContext context = getContext();
       return context == null ? null : context.getSelection();
     }
 
+    @Override
     public void removeSelectionChangedListener( ISelectionChangedListener listener )
     {
     }
 
+    @Override
     public void setSelection( final ISelection selection )
     {
     }

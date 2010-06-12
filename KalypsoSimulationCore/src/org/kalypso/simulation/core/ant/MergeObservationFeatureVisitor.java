@@ -100,6 +100,7 @@ public class MergeObservationFeatureVisitor implements FeatureVisitor
   /**
    * @see org.kalypsodeegree.model.feature.FeatureVisitor#visit(org.kalypsodeegree.model.feature.Feature)
    */
+  @Override
   public final boolean visit( final Feature f )
   {
     final String featureId = f.getId();

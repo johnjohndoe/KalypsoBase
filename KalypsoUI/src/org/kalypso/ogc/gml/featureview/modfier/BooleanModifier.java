@@ -74,6 +74,7 @@ public class BooleanModifier implements IFeatureModifier
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#getValue(org.kalypsodeegree.model.feature.Feature)
    */
+  @Override
   public Object getValue( final Feature f )
   {
     final Object property = f.getProperty( m_ftp );
@@ -87,6 +88,7 @@ public class BooleanModifier implements IFeatureModifier
    * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#parseInput(org.kalypsodeegree.model.feature.Feature,
    *      java.lang.Object)
    */
+  @Override
   public Object parseInput( final Feature f, final Object value )
   {
     return value;
@@ -95,6 +97,7 @@ public class BooleanModifier implements IFeatureModifier
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#createCellEditor(org.eclipse.swt.widgets.Composite)
    */
+  @Override
   public CellEditor createCellEditor( Composite parent )
   {
     return new CheckboxCellEditor( parent );
@@ -103,6 +106,7 @@ public class BooleanModifier implements IFeatureModifier
   /**
    * @see org.eclipse.jface.viewers.ICellEditorValidator#isValid(java.lang.Object)
    */
+  @Override
   public String isValid( final Object value )
   {
     if( value instanceof Boolean )
@@ -114,6 +118,7 @@ public class BooleanModifier implements IFeatureModifier
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#getFeatureTypeProperty()
    */
+  @Override
   public IPropertyType getFeatureTypeProperty( )
   {
     return m_ftp;
@@ -122,6 +127,7 @@ public class BooleanModifier implements IFeatureModifier
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#getLabel(org.kalypsodeegree.model.feature.Feature)
    */
+  @Override
   public String getLabel( final Feature f )
   {
     return null;
@@ -132,6 +138,7 @@ public class BooleanModifier implements IFeatureModifier
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#getImage(org.kalypsodeegree.model.feature.Feature)
    */
+  @Override
   public Image getImage( final Feature f )
   {
     final Boolean b = (Boolean) getValue( f );
@@ -158,6 +165,7 @@ public class BooleanModifier implements IFeatureModifier
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#dispose()
    */
+  @Override
   public void dispose( )
   {
     if( m_checkedImage != null )
@@ -169,6 +177,7 @@ public class BooleanModifier implements IFeatureModifier
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#equals(java.lang.Object, java.lang.Object)
    */
+  @Override
   public boolean equals( final Object newData, final Object oldData )
   {
     return newData.equals( oldData );

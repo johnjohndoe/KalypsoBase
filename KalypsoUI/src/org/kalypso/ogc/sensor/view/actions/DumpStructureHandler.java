@@ -63,6 +63,7 @@ public class DumpStructureHandler extends AbstractHandler
   /**
    * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
+  @Override
   public Object execute( final ExecutionEvent event )
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
@@ -78,6 +79,7 @@ public class DumpStructureHandler extends AbstractHandler
 
     final IRunnableWithProgress runnable = new IRunnableWithProgress()
     {
+      @Override
       public void run( final IProgressMonitor monitor ) throws InvocationTargetException, InterruptedException
       {
         monitor.beginTask( Messages.getString("org.kalypso.ogc.sensor.view.DumpStructureHandler.0"), 1000 ); //$NON-NLS-1$

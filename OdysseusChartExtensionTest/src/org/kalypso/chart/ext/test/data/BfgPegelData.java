@@ -14,7 +14,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
-
 import de.openali.odysseus.chart.ext.base.data.AbstractDomainValueData;
 import de.openali.odysseus.chart.framework.logging.impl.Logger;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
@@ -152,12 +151,14 @@ public class BfgPegelData extends AbstractDomainValueData<Calendar, Number>
     return true;
   }
 
-  public IDataRange<Calendar> getDomainRange( )
+  @Override
+public IDataRange<Calendar> getDomainRange( )
   {
     return new ComparableDataRange<Calendar>( getDomainValues() );
   }
 
-  public IDataRange<Number> getTargetRange( )
+  @Override
+public IDataRange<Number> getTargetRange( )
   {
     Number[] targetValues = getTargetValues();
     return new ComparableDataRange<Number>( targetValues );
@@ -177,7 +178,7 @@ public class BfgPegelData extends AbstractDomainValueData<Calendar, Number>
         System.out.println( "Fehlerhaftes Objekt: " + val.getClass() + " statt Calendar" );
       }
     }
-    return (Number[]) list.toArray( new Number[] {} );
+    return list.toArray( new Number[] {} );
   }
 
   @Override
@@ -194,6 +195,6 @@ public class BfgPegelData extends AbstractDomainValueData<Calendar, Number>
         System.out.println( "Fehlerhaftes Objekt: " + val.getClass() + " statt Calendar" );
       }
     }
-    return (Calendar[]) list.toArray( new Calendar[] {} );
+    return list.toArray( new Calendar[] {} );
   }
 }

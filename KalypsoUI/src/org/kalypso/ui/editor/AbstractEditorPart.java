@@ -97,10 +97,12 @@ public abstract class AbstractEditorPart extends WorkbenchPart implements IResou
 
   private final Runnable m_dirtyRunnable = new Runnable()
   {
+    @Override
     public void run( )
     {
       getSite().getShell().getDisplay().asyncExec( new Runnable()
       {
+        @Override
         public void run( )
         {
           fireDirty();
@@ -317,6 +319,7 @@ public abstract class AbstractEditorPart extends WorkbenchPart implements IResou
 
     getSite().getShell().getDisplay().syncExec( new Runnable()
     {
+      @Override
       @SuppressWarnings("synthetic-access")
       public void run( )
       {
@@ -359,6 +362,7 @@ public abstract class AbstractEditorPart extends WorkbenchPart implements IResou
   /**
    * @see org.eclipse.core.resources.IResourceChangeListener#resourceChanged(org.eclipse.core.resources.IResourceChangeEvent)
    */
+  @Override
   public void resourceChanged( final IResourceChangeEvent event )
   {
     if( m_isSaving )
@@ -439,6 +443,7 @@ public abstract class AbstractEditorPart extends WorkbenchPart implements IResou
    * @see org.kalypso.commons.command.ICommandTarget#postCommand(org.kalypso.commons.command.ICommand,
    *      java.lang.Runnable)
    */
+  @Override
   public void postCommand( final ICommand command, final Runnable runnable )
   {
     m_commandTarget.postCommand( command, runnable );

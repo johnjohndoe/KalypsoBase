@@ -107,6 +107,7 @@ public class PolygonSymbolizerLayout extends AbstractSymbolizerLayout
     final ColorChooserPanel fillColorChooserPanel = new ColorChooserPanel( fillGroup, MessageBundle.STYLE_EDITOR_FILL_COLOR, polygonFill.getFill( null ) );
     fillColorChooserPanel.addColorChooserListener( new PanelListener()
     {
+      @Override
       public void valueChanged( final PanelEvent event )
       {
         final Color color = ((ColorChooserPanel) event.getSource()).getColor();
@@ -118,6 +119,7 @@ public class PolygonSymbolizerLayout extends AbstractSymbolizerLayout
     final SliderPanel fillOpacityPanel = new SliderPanel( fillGroup, MessageBundle.STYLE_EDITOR_FILL_OPACITY, 0, 1, 1, SliderPanel.DECIMAL, polygonFill.getOpacity( null ) );
     fillOpacityPanel.addPanelListener( new PanelListener()
     {
+      @Override
       public void valueChanged( final PanelEvent event )
       {
         final double opacity = ((SliderPanel) event.getSource()).getSelection();
@@ -143,6 +145,7 @@ public class PolygonSymbolizerLayout extends AbstractSymbolizerLayout
     final ColorChooserPanel strokeColorChooserPanel = new ColorChooserPanel( strokeGroup, MessageBundle.STYLE_EDITOR_COLOR, polygonStroke.getStroke( null ) );
     strokeColorChooserPanel.addColorChooserListener( new PanelListener()
     {
+      @Override
       public void valueChanged( final PanelEvent event )
       {
         final Color color = ((ColorChooserPanel) event.getSource()).getColor();
@@ -154,6 +157,7 @@ public class PolygonSymbolizerLayout extends AbstractSymbolizerLayout
     final SliderPanel strokeWidthPanel = new SliderPanel( strokeGroup, MessageBundle.STYLE_EDITOR_WIDTH, 0, 10, 1, SliderPanel.INTEGER, polygonStroke.getWidth( null ) );
     strokeWidthPanel.addPanelListener( new PanelListener()
     {
+      @Override
       public void valueChanged( final PanelEvent event )
       {
         final double width = ((SliderPanel) event.getSource()).getSelection();
@@ -165,6 +169,7 @@ public class PolygonSymbolizerLayout extends AbstractSymbolizerLayout
     final SliderPanel strokeOpacityPanel = new SliderPanel( strokeGroup, MessageBundle.STYLE_EDITOR_OPACITY, 0, 1, 1, SliderPanel.DECIMAL, polygonStroke.getOpacity( null ) );
     strokeOpacityPanel.addPanelListener( new PanelListener()
     {
+      @Override
       public void valueChanged( final PanelEvent event )
       {
         final double opacity = ((SliderPanel) event.getSource()).getSelection();
@@ -178,6 +183,7 @@ public class PolygonSymbolizerLayout extends AbstractSymbolizerLayout
     polygonStroke.setLineJoin( strokeLinejoinPanel.getSelection() );
     strokeLinejoinPanel.addPanelListener( new PanelListener()
     {
+      @Override
       public void valueChanged( final PanelEvent event )
       {
         final int lineJoin = ((StrokeLinejoinComboPanel) event.getSource()).getSelection();
@@ -191,6 +197,7 @@ public class PolygonSymbolizerLayout extends AbstractSymbolizerLayout
     polygonStroke.setLineCap( strokeLinecapPanel.getSelection() );
     strokeLinecapPanel.addPanelListener( new PanelListener()
     {
+      @Override
       public void valueChanged( final PanelEvent event )
       {
         final int lineCap = ((StrokeLinecapComboPanel) event.getSource()).getSelection();
@@ -203,6 +210,7 @@ public class PolygonSymbolizerLayout extends AbstractSymbolizerLayout
     final StrokeDashoffsetPanel strokeDashoffsetPanel = new StrokeDashoffsetPanel( strokeGroup, MessageBundle.STYLE_EDITOR_DASHOFFSET, polygonStroke.getDashOffset( null ) );
     strokeDashoffsetPanel.addPanelListener( new PanelListener()
     {
+      @Override
       public void valueChanged( final PanelEvent event )
       {
         final float dashOffset = ((StrokeDashoffsetPanel) event.getSource()).getValue();
@@ -215,6 +223,7 @@ public class PolygonSymbolizerLayout extends AbstractSymbolizerLayout
     final StrokeDasharrayPanel strokeDasharrayPanel = new StrokeDasharrayPanel( strokeGroup, MessageBundle.STYLE_EDITOR_DASHARRAY, polygonStroke.getDashArray( null ) );
     strokeDasharrayPanel.addPanelListener( new PanelListener()
     {
+      @Override
       public void valueChanged( final PanelEvent event )
       {
         final float dashArray[] = ((StrokeDasharrayPanel) event.getSource()).getValue();

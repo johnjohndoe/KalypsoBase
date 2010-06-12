@@ -97,6 +97,7 @@ public class CachedFeatureviewFactory implements IFeatureviewFactory
    * @see org.kalypso.ogc.gml.featureview.maker.IFeatureviewFactory#get(org.kalypso.gmlschema.feature.IFeatureType,
    *      org.kalypsodeegree.model.feature.Feature)
    */
+  @Override
   public FeatureviewType get( final IFeatureType featureType, final Feature feature )
   {
     /* Is there a special view already registered for this type? */

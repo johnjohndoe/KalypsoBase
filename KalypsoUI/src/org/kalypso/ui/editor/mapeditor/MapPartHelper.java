@@ -103,6 +103,7 @@ public class MapPartHelper
     menuManager.setRemoveAllWhenShown( true );
     menuManager.addMenuListener( new IMenuListener()
     {
+      @Override
       public void menuAboutToShow( final IMenuManager manager )
       {
         fillMapContextMenu( site.getPart(), manager, mapPanel );
@@ -141,19 +142,23 @@ public class MapPartHelper
       final StructuredSelection themeSelection = new StructuredSelection( theme );
       final ISelectionProvider selectionProvider = new ISelectionProvider()
       {
+        @Override
         public void addSelectionChangedListener( final ISelectionChangedListener listener )
         {
         }
 
+        @Override
         public ISelection getSelection( )
         {
           return themeSelection;
         }
 
+        @Override
         public void removeSelectionChangedListener( final ISelectionChangedListener listener )
         {
         }
 
+        @Override
         public void setSelection( final ISelection selection )
         {
         }

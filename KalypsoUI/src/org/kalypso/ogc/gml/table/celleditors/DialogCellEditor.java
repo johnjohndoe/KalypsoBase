@@ -113,6 +113,7 @@ public abstract class DialogCellEditor extends CellEditor
       setValueValid( true );
       display.asyncExec( new Runnable()
       {
+        @Override
         @SuppressWarnings("synthetic-access") //$NON-NLS-1$
         public void run( )
         {
@@ -124,6 +125,7 @@ public abstract class DialogCellEditor extends CellEditor
     {
       display.asyncExec( new Runnable()
       {
+        @Override
         @SuppressWarnings("synthetic-access") //$NON-NLS-1$
         public void run( )
         {

@@ -96,7 +96,8 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
   {
     m_model = model;
 
-    m_labelProvider = new ChartTreeLabelProvider();
+    final ChartTreeLabelProvider chartTreeLabelProvider = new ChartTreeLabelProvider();
+    m_labelProvider = chartTreeLabelProvider;
     m_contentProvider = new ChartEditorTreeContentProvider( model );
     m_eventListener = new AbstractLayerManagerEventListener()
     {
@@ -104,7 +105,7 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
        * @see de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener#onLayerVisibilityChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
        */
       @Override
-      public void onLayerVisibilityChanged( IChartLayer layer )
+      public void onLayerVisibilityChanged( final IChartLayer layer )
       {
         if( layer instanceof IExpandableChartLayer )
         {
@@ -155,17 +156,18 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
       public void onLayerRemoved( final IChartLayer layer )
       {
         m_treeViewer.remove( layer );
-        m_labelProvider.clearLayer(layer);
+        chartTreeLabelProvider.clearLayer( layer );
       }
     };
     m_checkStateListener = new ICheckStateListener()
     {
+      @Override
       public void checkStateChanged( final CheckStateChangedEvent event )
       {
         final Object elt = event.getElement();
         if( elt instanceof IChartLayer )
         {
-          ((IChartLayer)elt).setVisible( event.getChecked() );
+          ((IChartLayer) elt).setVisible( event.getChecked() );
         }
         else
         {
@@ -175,6 +177,7 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
     };
     m_selectionChangeListener = new ISelectionChangedListener()
     {
+      @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
         final ISelection selection = event.getSelection();
@@ -195,18 +198,19 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
     final DragSourceListener dragSL = new DragSourceListener()
     {
 
+      @Override
       public void dragFinished( final DragSourceEvent event )
       {
         // nothing to do
       }
 
-      @SuppressWarnings("unchecked")
+      @Override
       public void dragSetData( final DragSourceEvent event )
       {
         // resolve selected layer
         final IStructuredSelection selection = (IStructuredSelection) m_treeViewer.getSelection();
 
-        final List list = selection.toList();
+        final List< ? > list = selection.toList();
         // only one can be selected
         final Object elt = list.get( 0 );
         // only layers can be dragged
@@ -217,6 +221,7 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
         }
       }
 
+      @Override
       public void dragStart( final DragSourceEvent event )
       {
         // nothing to do
@@ -284,6 +289,7 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
   /**
    * @see org.eclipse.jface.viewers.ISelectionProvider#addSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
    */
+  @Override
   public void addSelectionChangedListener( final ISelectionChangedListener listener )
   {
     m_treeViewer.addSelectionChangedListener( listener );
@@ -292,6 +298,7 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
   /**
    * @see org.eclipse.ui.part.IPage#createControl(org.eclipse.swt.widgets.Composite)
    */
+  @Override
   public void createControl( final Composite parent )
   {
     final Tree tree = new Tree( parent, SWT.CHECK );
@@ -300,9 +307,9 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
 
     m_treeViewer.setContentProvider( m_contentProvider );
     m_treeViewer.setLabelProvider( m_labelProvider );
-    
+
     m_treeViewer.setCheckStateProvider( new ChartTreeCheckstateProvider() );
-    
+
     m_treeViewer.addCheckStateListener( m_checkStateListener );
 
     m_treeViewer.addSelectionChangedListener( m_selectionChangeListener );
@@ -338,6 +345,7 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
   /**
    * @see org.eclipse.ui.part.IPage#getControl()
    */
+  @Override
   public Control getControl( )
   {
     return m_treeViewer.getControl();
@@ -346,6 +354,7 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
   /**
    * @see org.eclipse.jface.viewers.ISelectionProvider#getSelection()
    */
+  @Override
   public ISelection getSelection( )
   {
     return m_treeViewer.getSelection();
@@ -375,6 +384,7 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
   /**
    * @see org.eclipse.jface.viewers.ISelectionProvider#removeSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
    */
+  @Override
   public void removeSelectionChangedListener( final ISelectionChangedListener listener )
   {
     m_treeViewer.removeSelectionChangedListener( listener );
@@ -383,6 +393,7 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
   /**
    * @see org.eclipse.ui.part.IPage#setActionBars(org.eclipse.ui.IActionBars)
    */
+  @Override
   public void setActionBars( final IActionBars actionBars )
   {
   }
@@ -400,6 +411,7 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
   /**
    * @see org.eclipse.ui.part.IPage#setFocus()
    */
+  @Override
   public void setFocus( )
   {
     m_treeViewer.getControl().setFocus();
@@ -408,6 +420,7 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
   /**
    * @see org.eclipse.jface.viewers.ISelectionProvider#setSelection(org.eclipse.jface.viewers.ISelection)
    */
+  @Override
   public void setSelection( final ISelection selection )
   {
     m_treeViewer.setSelection( selection );
@@ -428,7 +441,8 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
   }
 
   /**
-   * Selects ands shows the given layer.<br> If needed, the tree is expanded to show the element.
+   * Selects ands shows the given layer.<br>
+   * If needed, the tree is expanded to show the element.
    */
   public void selectLayer( final IChartLayer layer )
   {

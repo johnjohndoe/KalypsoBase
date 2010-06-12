@@ -54,6 +54,7 @@ public class DummyWorkflowHandler extends AbstractWorkflowHandler
   /**
    * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
+  @Override
   public Object execute( final ExecutionEvent event )
   {
     // does nothing

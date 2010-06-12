@@ -30,7 +30,7 @@ public class ActiveWorkContext<T extends ICase> implements IResourceChangeListen
 {
   private ICaseManager<T> m_caseManager;
 
-  private CaseHandlingProjectNature m_currentProjectNature;
+  private CaseHandlingProjectNature<T> m_currentProjectNature;
 
   private final List<IActiveScenarioChangeListener<T>> m_activeContextChangeListeners = new ArrayList<IActiveScenarioChangeListener<T>>();
 
@@ -52,8 +52,7 @@ public class ActiveWorkContext<T extends ICase> implements IResourceChangeListen
   /**
    * Sets the active case handling project
    */
-  @SuppressWarnings("unchecked")
-  protected void setCurrentProject( final CaseHandlingProjectNature currentProject ) throws CoreException
+  protected void setCurrentProject( final CaseHandlingProjectNature<T> currentProject ) throws CoreException
   {
     if( m_currentProjectNature == currentProject )
     {
@@ -71,7 +70,7 @@ public class ActiveWorkContext<T extends ICase> implements IResourceChangeListen
     m_caseManager = currentProject.getCaseManager();
   }
 
-  public CaseHandlingProjectNature getCurrentProject( )
+  public CaseHandlingProjectNature<T> getCurrentProject( )
   {
     return m_currentProjectNature;
   }
@@ -100,7 +99,7 @@ public class ActiveWorkContext<T extends ICase> implements IResourceChangeListen
   }
 
   @SuppressWarnings("unchecked")
-  protected void fireActiveContextChanged( final CaseHandlingProjectNature newProject, final T caze )
+  protected void fireActiveContextChanged( final CaseHandlingProjectNature<T> newProject, final T caze )
   {
     // Convert to array to avoid concurrent modification exceptions
     final IActiveScenarioChangeListener<T>[] listeners = m_activeContextChangeListeners.toArray( new IActiveScenarioChangeListener[m_activeContextChangeListeners.size()] );
@@ -135,7 +134,8 @@ public class ActiveWorkContext<T extends ICase> implements IResourceChangeListen
       {
         // open a closed project, should we do this?
         project.open( null );
-        setCurrentProject( (CaseHandlingProjectNature) project.getNature( m_natureID ) );
+        final CaseHandlingProjectNature< ? > nature = (CaseHandlingProjectNature< ? >) project.getNature( m_natureID );
+        setCurrentProject( (CaseHandlingProjectNature<T>) nature );
       }
       else
       {
@@ -155,6 +155,7 @@ public class ActiveWorkContext<T extends ICase> implements IResourceChangeListen
   /**
    * @see org.eclipse.core.resources.IResourceChangeListener#resourceChanged(org.eclipse.core.resources.IResourceChangeEvent)
    */
+  @Override
   public void resourceChanged( final IResourceChangeEvent event )
   {
     // TODO:

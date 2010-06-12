@@ -105,6 +105,7 @@ public class SelectFeaturesMapFunction implements IRectangleMapFunction
    * @see org.kalypso.informdss.manager.util.widgets.IRectangleMapFunction#execute(org.kalypso.ogc.gml.map.MapPanel,
    *      org.eclipse.swt.graphics.Rectangle)
    */
+  @Override
   public void execute( final IMapPanel mapPanel, final Rectangle rectangle )
   {
     final EasyFeatureWrapper[] wrappers = m_featuresProvider.getFeatures( mapPanel );

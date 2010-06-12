@@ -233,6 +233,7 @@ public class ChartTreeLabelProvider extends LabelProvider implements ITableLabel
   /**
    * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang.Object, int)
    */
+  @Override
   public Image getColumnImage( final Object element, final int columnIndex )
   {
     return getImage( element );
@@ -241,6 +242,7 @@ public class ChartTreeLabelProvider extends LabelProvider implements ITableLabel
   /**
    * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.lang.Object, int)
    */
+  @Override
   public String getColumnText( final Object element, final int columnIndex )
   {
     return getText( element );

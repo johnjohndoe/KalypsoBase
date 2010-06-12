@@ -76,6 +76,7 @@ public class AxisDragPanHandler extends AbstractAxisDragHandler
   /**
    * @see org.kalypso.chart.framework.view.IChartDragHandler#getCursor()
    */
+  @Override
   public Cursor getCursor( )
   {
     return Display.getDefault().getSystemCursor( SWT.CURSOR_SIZEALL );
@@ -84,6 +85,7 @@ public class AxisDragPanHandler extends AbstractAxisDragHandler
   /**
    * @see org.eclipse.swt.events.MouseListener#mouseUp(org.eclipse.swt.events.MouseEvent)
    */
+  @Override
   public void mouseUp( MouseEvent e )
   {
     m_mouseDragEnd = getPos( e );
@@ -144,6 +146,7 @@ public class AxisDragPanHandler extends AbstractAxisDragHandler
   /**
    * @see org.eclipse.swt.events.MouseMoveListener#mouseMove(org.eclipse.swt.events.MouseEvent)
    */
+  @Override
   public void mouseMove( MouseEvent e )
   {
     if( m_mouseDragStart != -1 )

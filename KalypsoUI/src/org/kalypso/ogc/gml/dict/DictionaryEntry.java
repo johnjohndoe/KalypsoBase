@@ -78,6 +78,7 @@ public class DictionaryEntry extends Job implements IPoolListener
    * @see org.kalypso.util.pool.IPoolListener#objectLoaded(org.kalypso.util.pool.IPoolableObjectType, java.lang.Object,
    *      org.eclipse.core.runtime.IStatus)
    */
+  @Override
   public void objectLoaded( final IPoolableObjectType key, final Object newValue, final IStatus status )
   {
     if( key.equals( m_key ) )
@@ -90,6 +91,7 @@ public class DictionaryEntry extends Job implements IPoolListener
   /**
    * @see org.kalypso.util.pool.IPoolListener#objectInvalid(org.kalypso.util.pool.IPoolableObjectType, java.lang.Object)
    */
+  @Override
   public void objectInvalid( final IPoolableObjectType key, final Object oldValue )
   {
     if( m_key.equals( key ) )
@@ -99,6 +101,7 @@ public class DictionaryEntry extends Job implements IPoolListener
   /**
    * @see org.kalypso.util.pool.IPoolListener#dirtyChanged(org.kalypso.util.pool.IPoolableObjectType, boolean)
    */
+  @Override
   public void dirtyChanged( final IPoolableObjectType key, final boolean isDirty )
   {
   }
@@ -106,6 +109,7 @@ public class DictionaryEntry extends Job implements IPoolListener
   /**
    * @see org.kalypso.util.pool.IPoolListener#isDisposed()
    */
+  @Override
   public boolean isDisposed( )
   {
     return m_disposed;

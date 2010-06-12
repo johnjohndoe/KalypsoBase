@@ -89,6 +89,7 @@ public class ExportableObservationTable implements IExportableObject
   /**
    * @see org.kalypso.metadoc.IExportableObject#getPreferredDocumentName()
    */
+  @Override
   public String getPreferredDocumentName( )
   {
     return FileUtilities.validateName( m_preferredDocumentName, "_" ); //$NON-NLS-1$ 
@@ -98,6 +99,7 @@ public class ExportableObservationTable implements IExportableObject
    * @see org.kalypso.metadoc.IExportableObject#exportObject(java.io.OutputStream,
    *      org.eclipse.core.runtime.IProgressMonitor)
    */
+  @Override
   public IStatus exportObject( final OutputStream output, final IProgressMonitor monitor )
   {
     monitor.beginTask( Messages.getString( "org.kalypso.ogc.sensor.tableview.swing.ExportableObservationTable.1" ), 2 ); //$NON-NLS-1$
@@ -152,6 +154,7 @@ public class ExportableObservationTable implements IExportableObject
   /**
    * @see org.kalypso.metadoc.IExportableObject#getIdentifier()
    */
+  @Override
   public String getIdentifier( )
   {
     return m_identifierPrefix + getPreferredDocumentName();
@@ -160,6 +163,7 @@ public class ExportableObservationTable implements IExportableObject
   /**
    * @see org.kalypso.metadoc.IExportableObject#getCategory()
    */
+  @Override
   public String getCategory( )
   {
     return m_category;
@@ -168,6 +172,7 @@ public class ExportableObservationTable implements IExportableObject
   /**
    * @see org.kalypso.metadoc.IExportableObject#getStationIDs()
    */
+  @Override
   public String getStationIDs( )
   {
     return m_stationIDs;

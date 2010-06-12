@@ -17,6 +17,7 @@ public class ImageMarker extends AbstractMarker
     m_id = id;
   }
 
+  @Override
   public void paint( GC gc, Point pos, int width, int height, boolean drawForeground, boolean drawBackground )
   {
     Image img = OdysseusChartFrameworkPlugin.getDefault().getImageRegistry().getResource( gc.getDevice(), m_id );
@@ -27,6 +28,7 @@ public class ImageMarker extends AbstractMarker
       gc.drawRectangle( pos.x, pos.y, width, height );
   }
 
+  @Override
   public ImageMarker copy( )
   {
     return new ImageMarker( m_id );

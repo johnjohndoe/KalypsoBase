@@ -17,6 +17,7 @@ public class EditActionDelegate extends ActionDelegate implements IEditorActionD
 
   private IEditorPart m_targetEditor;
 
+  @Override
   public void setActiveEditor( IAction action, IEditorPart targetEditor )
   {
     m_targetEditor = targetEditor;

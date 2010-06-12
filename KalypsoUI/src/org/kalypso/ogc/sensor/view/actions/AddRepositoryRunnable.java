@@ -77,6 +77,7 @@ public class AddRepositoryRunnable implements Runnable
   /**
    * @see java.lang.Runnable#run()
    */
+  @Override
   public void run( )
   {
     final ListDialog dlg = new ListDialog( m_shell );
@@ -99,6 +100,7 @@ public class AddRepositoryRunnable implements Runnable
         final IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
         progressService.busyCursorWhile( new IRunnableWithProgress()
         {
+          @Override
           public void run( final IProgressMonitor monitor ) throws InvocationTargetException
           {
             monitor.beginTask( Messages.getString("org.kalypso.ogc.sensor.view.actions.AddRepositoryRunnable.1"), 2 ); //$NON-NLS-1$

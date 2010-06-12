@@ -266,6 +266,7 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
     return new int[] { startX, startY, endX, endY };
   }
 
+  @Override
   public void paint( GC gc, final IAxis axis, final Rectangle screen )
   {
     if( (screen.width > 0) && (screen.height > 0) && axis.isVisible() )
@@ -375,6 +376,7 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
   /**
    * @see org.kalypso.chart.framework.model.mapper.renderer.IAxisRenderer#getTicks(org.kalypso.chart.framework.model.mapper.IAxis)
    */
+  @Override
   public Number[] getTicks( IAxis axis )
   {
     Number[] tickMapElement = getTickMapElement( axis );
@@ -411,6 +413,7 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
   /**
    * Gibt die Breite bzw. Tiefe einer Achse zurück. Dadurch wird die Grösse der AxisComponent bestimmt
    */
+  @Override
   public int getAxisWidth( IAxis axis )
   {
     if( !axis.isVisible() )

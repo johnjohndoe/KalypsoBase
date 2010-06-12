@@ -120,6 +120,7 @@ public class GMLSchemaEditor extends EditorPart
 
           getSite().getShell().getDisplay().asyncExec( new Runnable()
           {
+            @Override
             public void run( )
             {
               final TreeViewer viewer = getViewer();

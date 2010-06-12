@@ -53,6 +53,7 @@ public class GenericLinearAxis extends AbstractAxis
   /**
    * @see org.kalypso.chart.framework.model.mapper.IAxis#getNumericRange()
    */
+  @Override
   public IDataRange<Number> getNumericRange( )
   {
     return m_numericRange;
@@ -61,6 +62,7 @@ public class GenericLinearAxis extends AbstractAxis
   /**
    * @see org.kalypso.chart.framework.model.mapper.IAxis#numericToScreen(java.lang.Number)
    */
+  @Override
   public Integer numericToScreen( final Number value )
   {
     return normalizedToScreen( numericToNormalized( value ) );
@@ -69,6 +71,7 @@ public class GenericLinearAxis extends AbstractAxis
   /**
    * @see org.kalypso.chart.framework.model.mapper.IAxis#screenToNumeric(int)
    */
+  @Override
   public Number screenToNumeric( final int value )
   {
     return normalizedToNumeric( screenToNormalized( value ) );
@@ -77,6 +80,7 @@ public class GenericLinearAxis extends AbstractAxis
   /**
    * @see org.kalypso.chart.framework.model.mapper.IAxis#setNumericRange(org.kalypso.chart.framework.model.data.IDataRange)
    */
+  @Override
   public void setNumericRange( final IDataRange<Number> range )
   {
     m_numericRange = range;
@@ -108,6 +112,7 @@ public class GenericLinearAxis extends AbstractAxis
    * 
    * @see de.openali.odysseus.chart.framework.model.mapper.component.IAxisComponent#normalizedToScreen(double)
    */
+  @Override
   public int normalizedToScreen( final double normValue )
   {
     double myNormValue = normValue;
@@ -123,6 +128,7 @@ public class GenericLinearAxis extends AbstractAxis
    * 
    * @see de.openali.odysseus.chart.framework.model.mapper.component.IAxisComponent#screenToNormalized(int)
    */
+  @Override
   public double screenToNormalized( final int screenValue )
   {
     final int range = getScreenHeight();
@@ -140,11 +146,13 @@ public class GenericLinearAxis extends AbstractAxis
    * 
    * @see de.openali.odysseus.chart.framework.model.mapper.IAxis#getScreenHeight()
    */
+  @Override
   public int getScreenHeight( )
   {
     return m_height;
   }
 
+  @Override
   public void setScreenHeight( int height )
   {
     m_height = height;

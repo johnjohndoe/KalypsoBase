@@ -79,6 +79,7 @@ import net.opengeospatial.wps.DescribeProcess;
 import net.opengeospatial.wps.Execute;
 import net.opengeospatial.wps.ExecuteResponseType;
 import net.opengeospatial.wps.IOValueType;
+import net.opengeospatial.wps.IOValueType.ComplexValueReference;
 import net.opengeospatial.wps.InputDescriptionType;
 import net.opengeospatial.wps.LiteralInputType;
 import net.opengeospatial.wps.LiteralOutputType;
@@ -88,6 +89,8 @@ import net.opengeospatial.wps.OutputDefinitionsType;
 import net.opengeospatial.wps.OutputDescriptionType;
 import net.opengeospatial.wps.ProcessBriefType;
 import net.opengeospatial.wps.ProcessDescriptionType;
+import net.opengeospatial.wps.ProcessDescriptionType.DataInputs;
+import net.opengeospatial.wps.ProcessDescriptionType.ProcessOutputs;
 import net.opengeospatial.wps.ProcessDescriptions;
 import net.opengeospatial.wps.ProcessFailedType;
 import net.opengeospatial.wps.ProcessOfferings;
@@ -96,9 +99,6 @@ import net.opengeospatial.wps.StatusType;
 import net.opengeospatial.wps.SupportedCRSsType;
 import net.opengeospatial.wps.SupportedComplexDataType;
 import net.opengeospatial.wps.SupportedUOMsType;
-import net.opengeospatial.wps.IOValueType.ComplexValueReference;
-import net.opengeospatial.wps.ProcessDescriptionType.DataInputs;
-import net.opengeospatial.wps.ProcessDescriptionType.ProcessOutputs;
 
 import org.kalypso.service.wps.utils.WPSUtilities;
 

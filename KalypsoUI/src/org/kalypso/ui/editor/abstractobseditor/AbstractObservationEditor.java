@@ -195,6 +195,7 @@ public abstract class AbstractObservationEditor extends AbstractEditorPart imple
 
       getSite().getShell().getDisplay().asyncExec( new Runnable()
       {
+        @Override
         public void run( )
         {
           ErrorDialog.openError( getSite().getShell(), Messages.getString("org.kalypso.ui.editor.abstractobseditor.AbstractObservationEditor.2"), Messages.getString("org.kalypso.ui.editor.abstractobseditor.AbstractObservationEditor.3"), finalStatus ); //$NON-NLS-1$ //$NON-NLS-2$
@@ -212,6 +213,7 @@ public abstract class AbstractObservationEditor extends AbstractEditorPart imple
   /**
    * @see org.kalypso.ogc.sensor.template.IObsViewEventListener#onObsViewChanged(org.kalypso.ogc.sensor.template.ObsViewEvent)
    */
+  @Override
   public void onObsViewChanged( final ObsViewEvent evt )
   {
     if( evt.getType() != ObsViewEvent.TYPE_ITEM_DATA_CHANGED )
@@ -221,6 +223,7 @@ public abstract class AbstractObservationEditor extends AbstractEditorPart imple
   /**
    * @see org.kalypso.ogc.sensor.template.IObsViewEventListener#onPrintObsView(org.kalypso.ogc.sensor.template.ObsViewEvent)
    */
+  @Override
   public void onPrintObsView( final ObsViewEvent evt )
   {
     // empty

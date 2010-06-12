@@ -67,6 +67,7 @@ public class RasterColorMapContentProvider implements IStructuredContentProvider
   /**
    * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
    */
+  @Override
   public Object[] getElements( final Object inputElement )
   {
     final RasterSymbolizer symb = (RasterSymbolizer) inputElement;
@@ -83,6 +84,7 @@ public class RasterColorMapContentProvider implements IStructuredContentProvider
   /**
    * @see org.eclipse.jface.viewers.IContentProvider#dispose()
    */
+  @Override
   public void dispose( )
   {
   }
@@ -91,6 +93,7 @@ public class RasterColorMapContentProvider implements IStructuredContentProvider
    * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object,
    *      java.lang.Object)
    */
+  @Override
   public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
   {
     if( viewer instanceof TableViewer )

@@ -156,6 +156,7 @@ public class WQRelationDiagramViewer extends AbstractViewer implements DisposeLi
   /**
    * @see org.eclipse.swt.events.DisposeListener#widgetDisposed(org.eclipse.swt.events.DisposeEvent)
    */
+  @Override
   public void widgetDisposed( final DisposeEvent e )
   {
     dispose();

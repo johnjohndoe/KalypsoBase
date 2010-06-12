@@ -12,6 +12,7 @@ public class LongParser implements IStringParser<Long>
   /**
    * @see org.kalypso.chart.framework.model.data.IStringParser#stringToLogical(java.lang.String)
    */
+  @Override
   public Long stringToLogical( String value ) throws MalformedValueException
   {
     Long n = null;
@@ -33,6 +34,7 @@ public class LongParser implements IStringParser<Long>
   /**
    * @see org.kalypso.chart.framework.model.data.IStringParser#getFormatHint()
    */
+  @Override
   public String getFormatHint( )
   {
     return "Number without decimal separator";

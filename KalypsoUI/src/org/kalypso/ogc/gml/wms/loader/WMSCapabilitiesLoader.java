@@ -84,6 +84,7 @@ public class WMSCapabilitiesLoader implements ICapabilitiesLoader
   /**
    * @see org.kalypso.ogc.gml.wms.loader.ICapabilitiesLoader#init(java.net.URL)
    */
+  @Override
   public void init( final URL baseURL )
   {
     m_baseURL = baseURL;
@@ -92,6 +93,7 @@ public class WMSCapabilitiesLoader implements ICapabilitiesLoader
   /**
    * @see org.kalypso.ogc.gml.wms.loader.ICapabilitiesLoader#getCapabilitiesStream(org.eclipse.core.runtime.IProgressMonitor)
    */
+  @Override
   public InputStream getCapabilitiesStream( final IProgressMonitor monitor ) throws CoreException
   {
     if( m_baseURL == null )

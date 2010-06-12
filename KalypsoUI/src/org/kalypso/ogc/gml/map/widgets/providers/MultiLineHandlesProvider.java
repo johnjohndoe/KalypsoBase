@@ -64,6 +64,7 @@ public class MultiLineHandlesProvider implements IHandlesProvider
   /**
    * @see org.kalypso.informdss.manager.util.widgets.providers.IHandlesProvider#collectHandles(org.kalypsodeegree.model.feature.Feature)
    */
+  @Override
   public List<IHandle> collectHandles( Feature feature, int radius )
   {
     ArrayList<IHandle> list = new ArrayList<IHandle>();

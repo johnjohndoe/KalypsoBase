@@ -159,6 +159,7 @@ public class DateTimeDialog extends TitleAreaDialog
     /* listeners */
     calendar.addSWTCalendarListener( new SWTCalendarListener()
     {
+      @Override
       public void dateChanged( final SWTCalendarEvent event )
       {
         setDateTime( calendar, time );

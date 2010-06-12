@@ -14,6 +14,7 @@ public class AxisDirectionParser implements IStringParser<DIRECTION>
   /**
    * @see org.kalypso.chart.framework.model.data.IStringParser#stringToLogical(java.lang.String)
    */
+  @Override
   public DIRECTION stringToLogical( String value )
   {
     DIRECTION dir = DIRECTION.POSITIVE;
@@ -25,6 +26,7 @@ public class AxisDirectionParser implements IStringParser<DIRECTION>
   /**
    * @see org.kalypso.chart.framework.model.data.IStringParser#getFormatHint()
    */
+  @Override
   public String getFormatHint( )
   {
     return m_formatHint;

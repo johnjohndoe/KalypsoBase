@@ -34,6 +34,7 @@ public class GmlConvertLauncher implements IEditorLauncher
   /**
    * @see org.eclipse.ui.IEditorLauncher#open(org.eclipse.core.runtime.IPath)
    */
+  @Override
   public void open( final IPath filePath )
   {
     final IWorkbench workbench = PlatformUI.getWorkbench();

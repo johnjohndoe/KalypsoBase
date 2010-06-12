@@ -64,6 +64,7 @@ public class FixedComponentUIHandlerProvider implements IComponentUiHandlerProvi
   /**
    * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandlerProvider#createComponentHandler(org.kalypso.observation.result.TupleResult)
    */
+  @Override
   public Map<Integer, IComponentUiHandler> createComponentHandler( final TupleResult tupleResult )
   {
     return m_unmodHandler;
