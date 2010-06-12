@@ -105,8 +105,11 @@ public class StatusDialog extends AbstractStatusDialog
         msgLabel.setText( excMsg );
       }
 
-      final Text stackText = new Text( exceptionGroup, SWT.MULTI | SWT.READ_ONLY );
-      stackText.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+      final Text stackText = new Text( exceptionGroup, SWT.MULTI | SWT.READ_ONLY | SWT.V_SCROLL | SWT.H_SCROLL );
+      final GridData stackLayoutData = new GridData( SWT.FILL, SWT.FILL, true, true );
+      stackLayoutData.widthHint = 100;
+      stackLayoutData.heightHint = 100;
+      stackText.setLayoutData( stackLayoutData );
       stackText.setText( sw.toString() );
       stackText.setEnabled( true );
     }
@@ -125,6 +128,7 @@ public class StatusDialog extends AbstractStatusDialog
 
       tableViewer.addDoubleClickListener( new IDoubleClickListener()
       {
+        @Override
         public void doubleClick( final DoubleClickEvent event )
         {
           final IStructuredSelection sel = (IStructuredSelection) event.getSelection();
