@@ -77,6 +77,7 @@ public class EstimatedTimeProgressMonitor implements IProgressMonitor
   /**
    * @see org.eclipse.core.runtime.IProgressMonitor#beginTask(java.lang.String, int)
    */
+  @Override
   public void beginTask( String name, int totalWork )
   {
     m_monitor.beginTask( name, totalWork );
@@ -88,6 +89,7 @@ public class EstimatedTimeProgressMonitor implements IProgressMonitor
   /**
    * @see org.eclipse.core.runtime.IProgressMonitor#done()
    */
+  @Override
   public void done( )
   {
     m_monitor.done();
@@ -98,6 +100,7 @@ public class EstimatedTimeProgressMonitor implements IProgressMonitor
   /**
    * @see org.eclipse.core.runtime.IProgressMonitor#internalWorked(double)
    */
+  @Override
   public void internalWorked( double work )
   {
     m_monitor.internalWorked( work );
@@ -106,6 +109,7 @@ public class EstimatedTimeProgressMonitor implements IProgressMonitor
   /**
    * @see org.eclipse.core.runtime.IProgressMonitor#isCanceled()
    */
+  @Override
   public boolean isCanceled( )
   {
     return m_monitor.isCanceled();
@@ -114,6 +118,7 @@ public class EstimatedTimeProgressMonitor implements IProgressMonitor
   /**
    * @see org.eclipse.core.runtime.IProgressMonitor#setCanceled(boolean)
    */
+  @Override
   public void setCanceled( boolean value )
   {
     m_monitor.setCanceled( value );
@@ -122,6 +127,7 @@ public class EstimatedTimeProgressMonitor implements IProgressMonitor
   /**
    * @see org.eclipse.core.runtime.IProgressMonitor#setTaskName(java.lang.String)
    */
+  @Override
   public void setTaskName( String name )
   {
     m_monitor.setTaskName( name );
@@ -130,6 +136,7 @@ public class EstimatedTimeProgressMonitor implements IProgressMonitor
   /**
    * @see org.eclipse.core.runtime.IProgressMonitor#subTask(java.lang.String)
    */
+  @Override
   public void subTask( String name )
   {
     m_monitor.subTask( name );
@@ -138,6 +145,7 @@ public class EstimatedTimeProgressMonitor implements IProgressMonitor
   /**
    * @see org.eclipse.core.runtime.IProgressMonitor#worked(int)
    */
+  @Override
   public void worked( int work )
   {
     m_monitor.worked( work );

@@ -63,10 +63,12 @@ import org.eclipse.ui.services.IServiceLocator;
  * This class may be instantiated; it is not intended to be subclassed.
  * </p>
  * 
+ * @deprecated We should now use eclipse's {@link org.eclipse.ui.menus.CommandContributionItem} instead.
  * @since 3.3
  */
+@Deprecated
 // We suppress everything at class level as this is a copied class and we do not want to change too much
-@SuppressWarnings( { "unchecked", "restriction", "hiding", "synthetic-access" })
+@SuppressWarnings({ "unchecked", "restriction", "hiding", "synthetic-access" })
 public final class CommandContributionItem extends ContributionItem
 {
   /**
@@ -252,6 +254,7 @@ public final class CommandContributionItem extends ContributionItem
     {
       commandListener = new ICommandListener()
       {
+        @Override
         public void commandChanged( final CommandEvent commandEvent )
         {
           if( commandEvent.isHandledChanged() || commandEvent.isEnabledChanged() || commandEvent.isDefinedChanged() )
@@ -593,6 +596,7 @@ public final class CommandContributionItem extends ContributionItem
     {
       menuItemListener = new Listener()
       {
+        @Override
         public void handleEvent( final Event event )
         {
           switch( event.type )
@@ -681,6 +685,7 @@ public final class CommandContributionItem extends ContributionItem
           final Menu menu = menuManager.createContextMenu( ti.getParent() );
           menuManager.addMenuListener( new IMenuListener()
           {
+            @Override
             public void menuAboutToShow( final IMenuManager manager )
             {
               String id = getId();

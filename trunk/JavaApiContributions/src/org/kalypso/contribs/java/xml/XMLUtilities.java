@@ -126,16 +126,19 @@ public final class XMLUtilities
     // sure there is no existing implementation?
     return new NamespaceContext()
     {
+      @Override
       public String getNamespaceURI( final String prefix )
       {
         return node.lookupNamespaceURI( prefix );
       }
 
+      @Override
       public String getPrefix( final String namespaceURI )
       {
         return node.lookupPrefix( namespaceURI );
       }
 
+      @Override
       public Iterator<String> getPrefixes( final String namespaceURI )
       {
         throw new UnsupportedOperationException();

@@ -69,6 +69,7 @@ public class StringStorageInputFactory implements IElementFactory
   /**
    * @see org.eclipse.ui.IElementFactory#createElement(org.eclipse.ui.IMemento)
    */
+  @Override
   public IAdaptable createElement( final IMemento memento )
   {
     final String data = memento.getString( MEMENTO_DATA );

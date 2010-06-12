@@ -103,6 +103,7 @@ public class FileSelectWizardPage extends WizardPage
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
    */
+  @Override
   public void createControl( final Composite parent )
   {
     final Composite sub = new Composite( parent, SWT.FILL );
@@ -135,6 +136,7 @@ public class FileSelectWizardPage extends WizardPage
     final Text textControl = m_ffe.getTextControl( sub );
     textControl.addModifyListener( new ModifyListener()
     {
+      @Override
       public void modifyText( final ModifyEvent e )
       {
         textControl.setEnabled( false );

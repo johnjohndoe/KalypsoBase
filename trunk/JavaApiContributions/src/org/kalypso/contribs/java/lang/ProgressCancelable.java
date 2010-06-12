@@ -59,6 +59,7 @@ public class ProgressCancelable implements ICancelable
   /**
    * @see org.kalypso.contribs.java.lang.ICancelable#cancel()
    */
+  @Override
   public void cancel( )
   {
     m_monitor.setCanceled( true );
@@ -67,6 +68,7 @@ public class ProgressCancelable implements ICancelable
   /**
    * @see org.kalypso.contribs.java.lang.ICancelable#isCanceled()
    */
+  @Override
   public boolean isCanceled( )
   {
     return m_monitor.isCanceled();

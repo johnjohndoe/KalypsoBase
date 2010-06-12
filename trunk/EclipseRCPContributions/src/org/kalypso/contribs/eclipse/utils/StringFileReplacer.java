@@ -46,8 +46,8 @@ import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -85,8 +85,6 @@ public class StringFileReplacer implements ICoreRunnableWithProgress
     try
     {
       final BufferedReader in = new BufferedReader( new InputStreamReader( m_src.getContents(), "UTF8" ) ); //$NON-NLS-1$
-      if( in == null )
-        return StatusUtilities.createErrorStatus( String.format( "Couldn't find src file: %s", m_src.getFullPath().toString() ) );
 
       final StringBuffer content = new StringBuffer( "" ); //$NON-NLS-1$
       String line;

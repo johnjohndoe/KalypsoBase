@@ -68,6 +68,7 @@ public final class HandleDoneJobChangeAdapter extends AutoRemoveJobChangeAdapter
 
     final Runnable runnable = new Runnable()
     {
+      @Override
       public void run( )
       {
         final IStatus status = event.getResult();

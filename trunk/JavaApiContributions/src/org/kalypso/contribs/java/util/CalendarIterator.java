@@ -70,6 +70,7 @@ public class CalendarIterator implements Iterator<Calendar>
   /**
    * @see java.util.Iterator#remove()
    */
+  @Override
   public void remove( )
   {
     throw new UnsupportedOperationException( getClass().getName() + " does not support remove()" );
@@ -78,6 +79,7 @@ public class CalendarIterator implements Iterator<Calendar>
   /**
    * @see java.util.Iterator#hasNext()
    */
+  @Override
   public boolean hasNext( )
   {
     return !m_currentCal.after( m_end );
@@ -86,6 +88,7 @@ public class CalendarIterator implements Iterator<Calendar>
   /**
    * @see java.util.Iterator#next()
    */
+  @Override
   public Calendar next( )
   {
     final Calendar result = (Calendar) m_currentCal.clone();

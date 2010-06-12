@@ -14,6 +14,7 @@ import org.eclipse.ui.IEditorReference;
  */
 public class FileResourceEditorMatchingStrategy implements IEditorMatchingStrategy
 {
+  @Override
   public boolean matches( final IEditorReference editorRef, final IEditorInput input )
   {
     final IEditorPart editor = editorRef.getEditor( false );

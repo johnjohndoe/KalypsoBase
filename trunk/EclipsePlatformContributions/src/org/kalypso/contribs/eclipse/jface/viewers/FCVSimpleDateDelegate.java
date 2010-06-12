@@ -45,7 +45,6 @@ import java.util.Date;
 
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.kalypso.contribs.eclipse.jface.viewers.IFCVDelegate;
 
 /**
  * @author Dirk Kuch
@@ -63,6 +62,7 @@ public class FCVSimpleDateDelegate implements IFCVDelegate
   /**
    * @see org.kalypso.nofdpidss.ui.application.widgets.IWComboViewerDelegate#getDefaultKey()
    */
+  @Override
   public ISelection getDefaultKey( )
   {
     if( m_array.length > 0 )
@@ -74,6 +74,7 @@ public class FCVSimpleDateDelegate implements IFCVDelegate
   /**
    * @see org.kalypso.nofdpidss.ui.application.widgets.IWComboViewerDelegate#getInputData()
    */
+  @Override
   public Object[] getInputData( )
   {
     return m_array;
@@ -82,6 +83,7 @@ public class FCVSimpleDateDelegate implements IFCVDelegate
   /**
    * @see org.kalypso.nofdpidss.ui.application.widgets.IWComboViewerDelegate#getValue(java.lang.Object)
    */
+  @Override
   public String getValue( final Object element )
   {
     if( element instanceof SimpleDateFormat )

@@ -123,6 +123,7 @@ public final class ExcelClipboardAdapter
       super( "Kopieren" );
     }
 
+    @Override
     public void actionPerformed( final ActionEvent e )
     {
       // Check to ensure we have selected only a contiguous block of cells
@@ -165,6 +166,7 @@ public final class ExcelClipboardAdapter
       super( "Einfügen" );
     }
 
+    @Override
     public void actionPerformed( final ActionEvent e )
     {
       final int startRow = ( m_table.getSelectedRows() )[0];

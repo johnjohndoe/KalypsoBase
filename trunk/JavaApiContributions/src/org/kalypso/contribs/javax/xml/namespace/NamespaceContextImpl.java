@@ -79,6 +79,7 @@ public class NamespaceContextImpl implements NamespaceContext
   /**
    * @see javax.xml.namespace.NamespaceContext#getNamespaceURI(java.lang.String)
    */
+  @Override
   public String getNamespaceURI( final String prefix )
   {
     return m_prefixMap.get( prefix );
@@ -87,6 +88,7 @@ public class NamespaceContextImpl implements NamespaceContext
   /**
    * @see javax.xml.namespace.NamespaceContext#getPrefix(java.lang.String)
    */
+  @Override
   public String getPrefix( final String namespaceURI )
   {
     final Set<String> prefixSet = getPrefixSet( namespaceURI );
@@ -98,6 +100,7 @@ public class NamespaceContextImpl implements NamespaceContext
   /**
    * @see javax.xml.namespace.NamespaceContext#getPrefixes(java.lang.String)
    */
+  @Override
   public Iterator< ? > getPrefixes( final String namespaceURI )
   {
     return getPrefixSet( namespaceURI ).iterator();

@@ -70,8 +70,8 @@ public final class Arrays
    * @param desiredclass
    *          instances of this class or subclasses of it will be added to dest
    */
-  @SuppressWarnings("unchecked")
-  public static void addAllOfClass( final Collection source, final Collection dest, final Class< ? > desiredclass )
+  @SuppressWarnings({ "rawtypes", "unchecked" })
+  public static void addAllOfClass( final Collection< ? > source, final Collection dest, final Class< ? > desiredclass )
   {
     for( final Object obj : source )
     {

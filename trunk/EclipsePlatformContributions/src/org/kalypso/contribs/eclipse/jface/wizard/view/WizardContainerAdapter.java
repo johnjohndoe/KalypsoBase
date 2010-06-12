@@ -56,6 +56,7 @@ public class WizardContainerAdapter implements IWizardContainerListener
    * @see org.kalypso.contribs.eclipse.jface.wizard.view.IWizardContainerListener#onWizardChanged(org.eclipse.jface.wizard.IWizard,
    *      int)
    */
+  @Override
   public void onWizardChanged( final IWizard newwizard, final int reason )
   {}
 }

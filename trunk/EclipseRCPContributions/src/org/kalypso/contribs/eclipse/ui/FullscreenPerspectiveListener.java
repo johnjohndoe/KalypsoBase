@@ -96,6 +96,7 @@ public class FullscreenPerspectiveListener implements IPerspectiveListener
    * @see org.eclipse.ui.IPerspectiveListener#perspectiveActivated(org.eclipse.ui.IWorkbenchPage,
    *      org.eclipse.ui.IPerspectiveDescriptor)
    */
+  @Override
   public void perspectiveActivated( final IWorkbenchPage page, final IPerspectiveDescriptor perspective )
   {
     if( m_descriptor.equals( perspective ) )
@@ -172,6 +173,7 @@ public class FullscreenPerspectiveListener implements IPerspectiveListener
    * @see org.eclipse.ui.IPerspectiveListener#perspectiveChanged(org.eclipse.ui.IWorkbenchPage,
    *      org.eclipse.ui.IPerspectiveDescriptor, java.lang.String)
    */
+  @Override
   public void perspectiveChanged( final IWorkbenchPage page, final IPerspectiveDescriptor perspective, final String changeId )
   {
   }

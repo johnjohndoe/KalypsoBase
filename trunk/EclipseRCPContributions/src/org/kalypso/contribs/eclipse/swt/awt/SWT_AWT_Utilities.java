@@ -69,6 +69,7 @@ public class SWT_AWT_Utilities
     final boolean[] result = new boolean[1];
     shell.getDisplay().syncExec( new Runnable()
     {
+      @Override
       public void run( )
       {
         result[0] = MessageDialog.openConfirm( shell, title, message );
@@ -86,6 +87,7 @@ public class SWT_AWT_Utilities
     final boolean[] result = new boolean[1];
     shell.getDisplay().syncExec( new Runnable()
     {
+      @Override
       public void run( )
       {
         result[0] = MessageDialog.openQuestion( shell, title, message );
@@ -108,6 +110,7 @@ public class SWT_AWT_Utilities
     // Force it into swt
     shell.getDisplay().syncExec( new Runnable()
     {
+      @Override
       public void run( )
       {
         MessageDialog.openInformation( shell, title, message );
@@ -122,6 +125,7 @@ public class SWT_AWT_Utilities
     // Force it into swt
     shell.getDisplay().syncExec( new Runnable()
     {
+      @Override
       public void run( )
       {
         MessageDialog.openError( shell, title, message );

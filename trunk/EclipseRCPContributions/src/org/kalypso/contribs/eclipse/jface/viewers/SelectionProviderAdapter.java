@@ -64,16 +64,19 @@ public class SelectionProviderAdapter implements IPostSelectionProvider
 
   private ISelection m_selection = null;
 
+  @Override
   public final void addSelectionChangedListener( final ISelectionChangedListener listener )
   {
     m_listeners.add( listener );
   }
 
+  @Override
   public final void removeSelectionChangedListener( final ISelectionChangedListener listener )
   {
     m_listeners.remove( listener );
   }
 
+  @Override
   public void setSelection( final ISelection selection )
   {
     m_selection = selection;
@@ -83,6 +86,7 @@ public class SelectionProviderAdapter implements IPostSelectionProvider
   /**
    * @see org.eclipse.jface.viewers.ISelectionProvider#getSelection()
    */
+  @Override
   public ISelection getSelection( )
   {
     if( m_selection == null )
@@ -93,6 +97,7 @@ public class SelectionProviderAdapter implements IPostSelectionProvider
   /**
    * @see org.eclipse.jface.viewers.IPostSelectionProvider#addPostSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
    */
+  @Override
   public void addPostSelectionChangedListener( final ISelectionChangedListener listener )
   {
     m_postListeners.add( listener );
@@ -101,6 +106,7 @@ public class SelectionProviderAdapter implements IPostSelectionProvider
   /**
    * @see org.eclipse.jface.viewers.IPostSelectionProvider#removePostSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
    */
+  @Override
   public void removePostSelectionChangedListener( final ISelectionChangedListener listener )
   {
     m_postListeners.remove( listener );
@@ -126,6 +132,7 @@ public class SelectionProviderAdapter implements IPostSelectionProvider
     {
       final SafeRunnable safeRunnable = new SafeRunnable()
       {
+        @Override
         public void run( )
         {
           l.selectionChanged( e );

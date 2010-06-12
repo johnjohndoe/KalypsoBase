@@ -183,6 +183,7 @@ public class ResourceSelectionGroup extends Composite
     treeViewer.setSorter( new ViewerSorter() );
     treeViewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
+      @Override
       public void selectionChanged( SelectionChangedEvent event )
       {
         IStructuredSelection selection = (IStructuredSelection) event.getSelection();
@@ -192,6 +193,7 @@ public class ResourceSelectionGroup extends Composite
     } );
     treeViewer.addDoubleClickListener( new IDoubleClickListener()
     {
+      @Override
       public void doubleClick( DoubleClickEvent event )
       {
         ISelection selection = event.getSelection();

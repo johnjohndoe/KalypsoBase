@@ -57,6 +57,7 @@ public class DoubleComparator implements Comparator<Number>
   /**
    * @see java.util.Comparator#compare(Object, Object)
    */
+  @Override
   public int compare( Number o1, Number o2 )
   {
     double d1 = o1.doubleValue();

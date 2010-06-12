@@ -47,6 +47,7 @@ public final class NoMouseDownTableViewer extends TableViewer
     // from ContentViewer
     control.addDisposeListener( new DisposeListener()
     {
+      @Override
       @SuppressWarnings( "synthetic-access" )
       public void widgetDisposed( DisposeEvent event )
       {
@@ -58,12 +59,14 @@ public final class NoMouseDownTableViewer extends TableViewer
     final OpenStrategy handler = new OpenStrategy( control );
     handler.addSelectionListener( new SelectionListener()
     {
+      @Override
       @SuppressWarnings( "synthetic-access" )
       public void widgetSelected( SelectionEvent e )
       {
         handleSelect( e );
       }
 
+      @Override
       @SuppressWarnings( "synthetic-access" )
       public void widgetDefaultSelected( SelectionEvent e )
       {

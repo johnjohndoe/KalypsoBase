@@ -40,6 +40,7 @@ public class MutexRule implements ISchedulingRule
   /**
    * @see org.eclipse.core.runtime.jobs.ISchedulingRule#contains(org.eclipse.core.runtime.jobs.ISchedulingRule)
    */
+  @Override
   public boolean contains( final ISchedulingRule rule )
   {
     return rule == this;
@@ -48,6 +49,7 @@ public class MutexRule implements ISchedulingRule
   /**
    * @see org.eclipse.core.runtime.jobs.ISchedulingRule#isConflicting(org.eclipse.core.runtime.jobs.ISchedulingRule)
    */
+  @Override
   public boolean isConflicting( final ISchedulingRule rule )
   {
     return rule == this;

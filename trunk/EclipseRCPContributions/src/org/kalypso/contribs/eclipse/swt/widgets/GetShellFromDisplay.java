@@ -59,6 +59,7 @@ public class GetShellFromDisplay implements Runnable
     m_display = display;
   }
 
+  @Override
   public void run()
   {
     m_shell = m_display.getActiveShell();

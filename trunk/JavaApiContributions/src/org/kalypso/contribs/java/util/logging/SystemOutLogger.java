@@ -53,6 +53,7 @@ public class SystemOutLogger implements ILogger
   /**
    * @see org.kalypso.contribs.java.util.logging.ILogger#log(java.util.logging.Level, boolean, java.lang.String)
    */
+  @Override
   public void log( final Level level, final int code, final String message )
   {
     final String outString = formatLogStylish( level, code, message );

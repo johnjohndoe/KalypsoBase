@@ -188,6 +188,7 @@ public class ChecklistFieldEditor extends FieldEditor implements ICheckStateList
     return 1;
   }
 
+  @Override
   public void checkStateChanged( final CheckStateChangedEvent event )
   {
     m_checkedElements = m_checklist.getCheckedElements();

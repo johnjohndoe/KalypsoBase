@@ -215,6 +215,7 @@ public class TableCursor extends Canvas
 
     final Listener listener = new Listener()
     {
+      @Override
       public void handleEvent( final Event event )
       {
         switch( event.type )
@@ -246,6 +247,7 @@ public class TableCursor extends Canvas
 
     m_disposeItemListener = new Listener()
     {
+      @Override
       public void handleEvent( final Event event )
       {
         m_row = null;
@@ -255,6 +257,7 @@ public class TableCursor extends Canvas
     };
     m_disposeColumnListener = new Listener()
     {
+      @Override
       public void handleEvent( final Event event )
       {
         m_row = null;
@@ -264,6 +267,7 @@ public class TableCursor extends Canvas
     };
     m_resizeListener = new Listener()
     {
+      @Override
       public void handleEvent( final Event event )
       {
         resize();

@@ -104,6 +104,7 @@ public class MultipleRegexFileFilter implements java.io.FileFilter
    *          The name of the file.
    * @return True if and only if the name should be included in the file list; false otherwise.
    */
+  @Override
   public boolean accept( File file )
   {
     if( m_patterns == null )

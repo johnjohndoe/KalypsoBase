@@ -71,6 +71,7 @@ public class WizardComposite extends Composite implements IWizardContainer2
   /**
    * @see org.eclipse.jface.wizard.IWizardContainer2#updateSize()
    */
+  @Override
   public void updateSize( )
   {
     //  
@@ -79,6 +80,7 @@ public class WizardComposite extends Composite implements IWizardContainer2
   /**
    * @see org.eclipse.jface.wizard.IWizardContainer#getCurrentPage()
    */
+  @Override
   public IWizardPage getCurrentPage( )
   {
     return null;
@@ -96,6 +98,7 @@ public class WizardComposite extends Composite implements IWizardContainer2
   /**
    * @see org.eclipse.jface.wizard.IWizardContainer#showPage(org.eclipse.jface.wizard.IWizardPage)
    */
+  @Override
   public void showPage( IWizardPage page )
   {
     //  
@@ -104,6 +107,7 @@ public class WizardComposite extends Composite implements IWizardContainer2
   /**
    * @see org.eclipse.jface.wizard.IWizardContainer#updateButtons()
    */
+  @Override
   public void updateButtons( )
   {
     //  
@@ -112,6 +116,7 @@ public class WizardComposite extends Composite implements IWizardContainer2
   /**
    * @see org.eclipse.jface.wizard.IWizardContainer#updateMessage()
    */
+  @Override
   public void updateMessage( )
   {
     //  
@@ -120,6 +125,7 @@ public class WizardComposite extends Composite implements IWizardContainer2
   /**
    * @see org.eclipse.jface.wizard.IWizardContainer#updateTitleBar()
    */
+  @Override
   public void updateTitleBar( )
   {
     //  
@@ -128,6 +134,7 @@ public class WizardComposite extends Composite implements IWizardContainer2
   /**
    * @see org.eclipse.jface.wizard.IWizardContainer#updateWindowTitle()
    */
+  @Override
   public void updateWindowTitle( )
   {
     //  
@@ -137,6 +144,7 @@ public class WizardComposite extends Composite implements IWizardContainer2
    * @see org.eclipse.jface.operation.IRunnableContext#run(boolean, boolean,
    *      org.eclipse.jface.operation.IRunnableWithProgress)
    */
+  @Override
   public void run( boolean fork, boolean cancelable, IRunnableWithProgress runnable )
   // throws InvocationTargetException, InterruptedException
   {

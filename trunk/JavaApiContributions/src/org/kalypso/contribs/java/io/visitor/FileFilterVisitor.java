@@ -88,6 +88,7 @@ public class FileFilterVisitor implements FileVisitor
   /**
    * @see org.kalypso.contribs.java.io.FileVisitor#visit(java.io.File)
    */
+  @Override
   public boolean visit( final File file )
   {
     if( m_fileFilter.accept( file ) )

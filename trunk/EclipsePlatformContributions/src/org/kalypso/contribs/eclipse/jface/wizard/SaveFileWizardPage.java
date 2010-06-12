@@ -114,6 +114,7 @@ public class SaveFileWizardPage extends WizardPage
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
    */
+  @Override
   public void createControl( final Composite parent )
   {
     final Composite panel = new Composite( parent, SWT.NONE );
@@ -220,6 +221,7 @@ public class SaveFileWizardPage extends WizardPage
     m_destinationNameField = new Combo( targetGroup, SWT.BORDER );
     m_destinationNameField.addModifyListener( new ModifyListener()
     {
+      @Override
       public void modifyText( final ModifyEvent e )
       {
         updatePageCompletion();

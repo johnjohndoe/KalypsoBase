@@ -12,6 +12,7 @@ public abstract class RunnableWithException implements IRunnableWithProgress
 {
   public abstract void runWithException( final IProgressMonitor monitor ) throws Throwable;
 
+  @Override
   public void run( final IProgressMonitor monitor ) throws InvocationTargetException, InterruptedException
   {
     try

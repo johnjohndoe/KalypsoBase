@@ -209,6 +209,7 @@ public class FileChooserGroup
     text.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, textSpan, 1 ) );
     m_text.addModifyListener( new ModifyListener()
     {
+      @Override
       public void modifyText( final ModifyEvent e )
       {
         textModified( text.getText() );
@@ -289,6 +290,7 @@ public class FileChooserGroup
     final Text text = m_text;
     text.getDisplay().syncExec( new Runnable()
     {
+      @Override
       public void run( )
       {
         text.setText( filename );

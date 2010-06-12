@@ -69,6 +69,7 @@ public class ModalRunnableContext implements IRunnableContext
    * @see org.eclipse.jface.operation.IRunnableContext#run(boolean, boolean,
    *      org.eclipse.jface.operation.IRunnableWithProgress)
    */
+  @Override
   public void run( final boolean fork, final boolean cancelable, final IRunnableWithProgress runnable ) throws InvocationTargetException, InterruptedException
   {
     ModalContext.run( runnable, fork, m_monitor, m_display );

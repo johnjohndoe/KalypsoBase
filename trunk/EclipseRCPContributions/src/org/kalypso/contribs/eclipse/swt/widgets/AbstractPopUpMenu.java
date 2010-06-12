@@ -73,6 +73,7 @@ public abstract class AbstractPopUpMenu implements IPopUpMenu
     m_menu = menu;
   }
 
+  @Override
   public Menu getMenu( )
   {
     return m_menu;

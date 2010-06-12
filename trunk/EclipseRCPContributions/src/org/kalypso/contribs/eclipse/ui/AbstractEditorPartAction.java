@@ -40,6 +40,7 @@ public abstract class AbstractEditorPartAction extends Action implements IEditor
   /**
    * @see org.kalypso.contribs.eclipse.ui.IEditorPartAction#setEditorPart(org.eclipse.ui.IEditorPart)
    */
+  @Override
   public void setEditorPart( final IEditorPart targetEditor )
   {
     m_targetEditor = targetEditor;

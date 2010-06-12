@@ -102,6 +102,7 @@ public class SelectionProviderDelegator implements ISelectionProvider, ISelectio
   /**
    * @see org.eclipse.jface.viewers.ISelectionProvider#addSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
    */
+  @Override
   public void addSelectionChangedListener( final ISelectionChangedListener listener )
   {
     m_listener.add( listener );
@@ -110,6 +111,7 @@ public class SelectionProviderDelegator implements ISelectionProvider, ISelectio
   /**
    * @see org.eclipse.jface.viewers.ISelectionProvider#getSelection()
    */
+  @Override
   public ISelection getSelection( )
   {
     if( m_delegate != null )
@@ -121,6 +123,7 @@ public class SelectionProviderDelegator implements ISelectionProvider, ISelectio
   /**
    * @see org.eclipse.jface.viewers.ISelectionProvider#removeSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
    */
+  @Override
   public void removeSelectionChangedListener( final ISelectionChangedListener listener )
   {
     m_listener.remove( listener );
@@ -129,6 +132,7 @@ public class SelectionProviderDelegator implements ISelectionProvider, ISelectio
   /**
    * @see org.eclipse.jface.viewers.ISelectionProvider#setSelection(org.eclipse.jface.viewers.ISelection)
    */
+  @Override
   public void setSelection( final ISelection selection )
   {
     if( m_delegate != null )
@@ -138,6 +142,7 @@ public class SelectionProviderDelegator implements ISelectionProvider, ISelectio
   /**
    * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
    */
+  @Override
   public void selectionChanged( final SelectionChangedEvent event )
   {
     // changes from my delegate,

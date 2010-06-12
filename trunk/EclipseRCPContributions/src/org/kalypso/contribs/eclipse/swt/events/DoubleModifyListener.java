@@ -26,6 +26,7 @@ public class DoubleModifyListener implements ModifyListener
   /**
    * @see org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.swt.events.ModifyEvent)
    */
+  @Override
   public void modifyText( final ModifyEvent e )
   {
     if( e.widget instanceof Text )

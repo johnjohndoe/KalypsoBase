@@ -69,6 +69,7 @@ public class EditorFirstAdapterFinder<C> implements IAdapterFinder<C>
   /**
    * @see org.kalypso.contribs.eclipse.ui.partlistener.IAdapterFinder#findAdapterPart(org.kalypso.contribs.eclipse.ui.partlistener.AdapterPartListener)
    */
+  @Override
   public void findAdapterPart( final IWorkbenchPage page, final AdapterPartListener<C> listener )
   {
     if( page == null )

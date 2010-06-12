@@ -156,6 +156,7 @@ public class FacadeComboViewer
 
     m_comboViewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
+      @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
         m_selection = m_comboViewer.getSelection();

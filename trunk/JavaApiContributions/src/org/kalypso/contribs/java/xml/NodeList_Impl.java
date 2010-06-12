@@ -24,6 +24,7 @@ public class NodeList_Impl implements NodeList
     add( nl );
   }
 
+  @Override
   public int getLength()
   {
     return nodes.size();
@@ -40,6 +41,7 @@ public class NodeList_Impl implements NodeList
     nodes.add( node );
   }
 
+  @Override
   public Node item( int pos )
   {
     return nodes.get( pos );

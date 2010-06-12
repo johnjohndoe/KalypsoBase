@@ -86,6 +86,7 @@ public final class ResourceListSelectionDialog extends SelectionDialog
 
     boolean resourcesSorted = true;
 
+    @Override
     public int compareTo( Object o )
     {
       return collator.compare( label, ( (ResourceDescriptor)o ).label );
@@ -114,6 +115,7 @@ public final class ResourceListSelectionDialog extends SelectionDialog
       { false };
       display.syncExec( new Runnable()
       {
+        @Override
         public void run()
         {
           //Be sure the widget still exists
@@ -167,6 +169,7 @@ public final class ResourceListSelectionDialog extends SelectionDialog
           final int index = i;
           display.syncExec( new Runnable()
           {
+            @Override
             public void run()
             {
               if( stop || resourceNames.isDisposed() )
@@ -208,6 +211,7 @@ public final class ResourceListSelectionDialog extends SelectionDialog
             last = index;
             display.syncExec( new Runnable()
             {
+              @Override
               public void run()
               {
                 if( stop || resourceNames.isDisposed() )
@@ -226,6 +230,7 @@ public final class ResourceListSelectionDialog extends SelectionDialog
       lastMatch = last;
       display.syncExec( new Runnable()
       {
+        @Override
         public void run()
         {
           if( resourceNames.isDisposed() )
@@ -271,6 +276,7 @@ public final class ResourceListSelectionDialog extends SelectionDialog
       { false };
       display.syncExec( new Runnable()
       {
+        @Override
         public void run()
         {
           //Be sure the widget still exists
@@ -309,6 +315,7 @@ public final class ResourceListSelectionDialog extends SelectionDialog
           final int index = i;
           display.syncExec( new Runnable()
           {
+            @Override
             public void run()
             {
               if( stop || resourceNames.isDisposed() )
@@ -343,6 +350,7 @@ public final class ResourceListSelectionDialog extends SelectionDialog
           {
             display.syncExec( new Runnable()
             {
+              @Override
               public void run()
               {
                 if( stop || resourceNames.isDisposed() )
@@ -362,6 +370,7 @@ public final class ResourceListSelectionDialog extends SelectionDialog
 
       display.syncExec( new Runnable()
       {
+        @Override
         public void run()
         {
           if( resourceNames.isDisposed() )
@@ -557,6 +566,7 @@ public final class ResourceListSelectionDialog extends SelectionDialog
 
     pattern.addModifyListener( new ModifyListener()
     {
+      @Override
       public void modifyText( ModifyEvent e )
       {
         textChanged();
@@ -710,6 +720,7 @@ public final class ResourceListSelectionDialog extends SelectionDialog
     final ArrayList<IResource> resources = new ArrayList<IResource>();
     BusyIndicator.showWhile( getShell().getDisplay(), new Runnable()
     {
+      @Override
       public void run()
       {
         getMatchingResources( resources );
@@ -789,6 +800,7 @@ public final class ResourceListSelectionDialog extends SelectionDialog
     {
       container.accept( new IResourceProxyVisitor()
       {
+        @Override
         public boolean visit( IResourceProxy proxy )
         {
           int type = proxy.getType();
@@ -849,6 +861,7 @@ public final class ResourceListSelectionDialog extends SelectionDialog
   {
     BusyIndicator.showWhile( null, new Runnable()
     {
+      @Override
       public void run()
       {
         descriptors = new ResourceDescriptor[resources.length];
@@ -959,6 +972,7 @@ public final class ResourceListSelectionDialog extends SelectionDialog
   {
     BusyIndicator.showWhile( getShell().getDisplay(), new Runnable()
     {
+      @Override
       public void run()
       {
         if( !desc.resourcesSorted )
@@ -966,6 +980,7 @@ public final class ResourceListSelectionDialog extends SelectionDialog
           // sort the folder names
           Collections.sort( desc.resources, new Comparator<IResource>()
           {
+            @Override
             public int compare( IResource o1, IResource o2 )
             {
               String s1 = getParentLabel( o1 );

@@ -57,6 +57,7 @@ public class FindParentProjectVisitor implements IResourceVisitor
   /**
    * @see org.eclipse.core.resources.IResourceVisitor#visit(org.eclipse.core.resources.IResource)
    */
+  @Override
   public boolean visit( IResource resource ) throws CoreException
   {
     final IContainer parent = resource.getParent();

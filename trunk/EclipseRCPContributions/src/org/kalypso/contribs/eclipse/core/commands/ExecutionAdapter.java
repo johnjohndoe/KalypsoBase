@@ -55,6 +55,7 @@ public class ExecutionAdapter implements IExecutionListener
    * @see org.eclipse.core.commands.IExecutionListener#notHandled(java.lang.String,
    *      org.eclipse.core.commands.NotHandledException)
    */
+  @Override
   public void notHandled( final String commandId, final NotHandledException exception )
   {
   }
@@ -63,6 +64,7 @@ public class ExecutionAdapter implements IExecutionListener
    * @see org.eclipse.core.commands.IExecutionListener#postExecuteFailure(java.lang.String,
    *      org.eclipse.core.commands.ExecutionException)
    */
+  @Override
   public void postExecuteFailure( final String commandId, final ExecutionException exception )
   {
   }
@@ -70,6 +72,7 @@ public class ExecutionAdapter implements IExecutionListener
   /**
    * @see org.eclipse.core.commands.IExecutionListener#postExecuteSuccess(java.lang.String, java.lang.Object)
    */
+  @Override
   public void postExecuteSuccess( final String commandId, final Object returnValue )
   {
 
@@ -79,6 +82,7 @@ public class ExecutionAdapter implements IExecutionListener
    * @see org.eclipse.core.commands.IExecutionListener#preExecute(java.lang.String,
    *      org.eclipse.core.commands.ExecutionEvent)
    */
+  @Override
   public void preExecute( final String commandId, final ExecutionEvent event )
   {
 

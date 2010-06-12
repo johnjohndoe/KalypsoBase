@@ -54,8 +54,8 @@ import java.net.UnknownServiceException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Map.Entry;
+import java.util.Properties;
 
 /**
  * @author belger
@@ -76,6 +76,7 @@ public class UrlUtilities implements IUrlResolver
    * @return if relativeURL is relative, return new URL( baseURL, relativeURL ), else return new URL( relativeURL )
    * @throws MalformedURLException
    */
+  @Override
   public URL resolveURL( final URL baseURL, final String relativeURL ) throws MalformedURLException
   {
     // REMARK: warum nicht einfach so?
@@ -85,6 +86,7 @@ public class UrlUtilities implements IUrlResolver
   /**
    * @see org.kalypso.contribs.java.net.IUrlResolver#getReplaceEntries()
    */
+  @Override
   public final Iterator<Entry<Object, Object>> getReplaceEntries( )
   {
     return m_replaceTokenMap.entrySet().iterator();
@@ -93,6 +95,7 @@ public class UrlUtilities implements IUrlResolver
   /**
    * @see org.kalypso.contribs.java.net.IUrlResolver#addReplaceToken(java.lang.String, java.lang.String)
    */
+  @Override
   public void addReplaceToken( final String key, final String value )
   {
     m_replaceTokenMap.setProperty( key, value );
@@ -102,6 +105,7 @@ public class UrlUtilities implements IUrlResolver
    * @throws IOException
    * @see org.kalypso.contribs.java.net.IUrlResolver#createWriter(java.net.URL)
    */
+  @Override
   public OutputStreamWriter createWriter( final URL url ) throws IOException
   {
     final URLConnection connection = url.openConnection();
@@ -134,6 +138,7 @@ public class UrlUtilities implements IUrlResolver
    *
    * @see org.kalypso.contribs.java.net.IUrlResolver#createReader(java.net.URL)
    */
+  @Override
   public InputStreamReader createReader( final URL url ) throws IOException
   {
     final URLConnection connection = url.openConnection();

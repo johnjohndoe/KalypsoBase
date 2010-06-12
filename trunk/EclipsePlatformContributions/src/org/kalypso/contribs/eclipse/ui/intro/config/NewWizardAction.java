@@ -77,6 +77,7 @@ public class NewWizardAction implements IIntroAction
   /**
    * @see org.eclipse.ui.intro.config.IIntroAction#run(org.eclipse.ui.intro.IIntroSite, java.util.Properties)
    */
+  @Override
   public void run( final IIntroSite site, final Properties params )
   {
     try

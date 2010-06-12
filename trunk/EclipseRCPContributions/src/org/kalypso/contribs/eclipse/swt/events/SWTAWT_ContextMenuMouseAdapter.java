@@ -68,6 +68,7 @@ public class SWTAWT_ContextMenuMouseAdapter extends MouseAdapter
     {
       m_mapMenu.getDisplay().asyncExec( new Runnable()
       {
+        @Override
         public void run()
         {
           final Event event = new Event();

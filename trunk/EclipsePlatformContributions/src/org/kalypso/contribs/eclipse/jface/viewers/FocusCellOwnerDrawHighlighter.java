@@ -65,6 +65,7 @@ public class FocusCellOwnerDrawHighlighter extends FocusCellHighlighter
 
     final Listener listener = new Listener()
     {
+      @Override
       public void handleEvent( final Event event )
       {
         if( (event.detail & SWT.SELECTED) > 0 )

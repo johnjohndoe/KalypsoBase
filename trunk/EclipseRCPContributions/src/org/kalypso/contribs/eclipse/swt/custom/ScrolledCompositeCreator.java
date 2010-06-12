@@ -112,6 +112,7 @@ public abstract class ScrolledCompositeCreator
     final Control contentControl = m_contentControl;
     m_scrolledComposite.getDisplay().asyncExec( new Runnable()
     {
+      @Override
       public void run( )
       {
         if( contentControl != null && !contentControl.isDisposed() )

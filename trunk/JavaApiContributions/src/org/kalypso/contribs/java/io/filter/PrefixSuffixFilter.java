@@ -67,6 +67,7 @@ public class PrefixSuffixFilter implements FilenameFilter
   /**
    * @see java.io.FilenameFilter#accept(java.io.File, java.lang.String)
    */
+  @Override
   public boolean accept( File dir, String name )
   {
     if( name.startsWith( m_prefix ) && name.endsWith( m_suffix ) )

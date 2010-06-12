@@ -19,6 +19,7 @@ public class ResourceSelectionValidator implements ISelectionValidator
   /**
    * @see org.eclipse.ui.dialogs.ISelectionValidator#isValid(java.lang.Object)
    */
+  @Override
   public String isValid( Object selection )
   {
     if( selection != null && selection instanceof IResource )

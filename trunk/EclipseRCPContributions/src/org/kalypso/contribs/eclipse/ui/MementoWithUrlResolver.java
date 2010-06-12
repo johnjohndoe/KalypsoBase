@@ -42,8 +42,8 @@ package org.kalypso.contribs.eclipse.ui;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.util.Properties;
 import java.util.Map.Entry;
+import java.util.Properties;
 
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.XMLMemento;
@@ -94,6 +94,7 @@ public class MementoWithUrlResolver implements IMemento
   /**
    * @see org.eclipse.ui.IMemento#createChild(java.lang.String, java.lang.String)
    */
+  @Override
   public IMemento createChild( String type, String id )
   {
     final IMemento child = m_memento.createChild( type, id );
@@ -105,6 +106,7 @@ public class MementoWithUrlResolver implements IMemento
   /**
    * @see org.eclipse.ui.IMemento#createChild(java.lang.String)
    */
+  @Override
   public IMemento createChild( String type )
   {
     final IMemento child = m_memento.createChild( type );
@@ -116,6 +118,7 @@ public class MementoWithUrlResolver implements IMemento
   /**
    * @see org.eclipse.ui.IMemento#getChild(java.lang.String)
    */
+  @Override
   public IMemento getChild( String type )
   {
     final IMemento child = m_memento.getChild( type );
@@ -127,6 +130,7 @@ public class MementoWithUrlResolver implements IMemento
   /**
    * @see org.eclipse.ui.IMemento#getChildren(java.lang.String)
    */
+  @Override
   public IMemento[] getChildren( String type )
   {
     final IMemento[] children = m_memento.getChildren( type );
@@ -142,6 +146,7 @@ public class MementoWithUrlResolver implements IMemento
   /**
    * @see org.eclipse.ui.IMemento#getFloat(java.lang.String)
    */
+  @Override
   public Float getFloat( String key )
   {
     return m_memento.getFloat( key );
@@ -150,6 +155,7 @@ public class MementoWithUrlResolver implements IMemento
   /**
    * @see org.eclipse.ui.IMemento#getID()
    */
+  @Override
   public String getID( )
   {
     return m_memento.getID();
@@ -158,6 +164,7 @@ public class MementoWithUrlResolver implements IMemento
   /**
    * @see org.eclipse.ui.IMemento#getInteger(java.lang.String)
    */
+  @Override
   public Integer getInteger( String key )
   {
     return m_memento.getInteger( key );
@@ -166,6 +173,7 @@ public class MementoWithUrlResolver implements IMemento
   /**
    * @see org.eclipse.ui.IMemento#getString(java.lang.String)
    */
+  @Override
   public String getString( String key )
   {
     return replace( m_memento.getString( key ) );
@@ -174,6 +182,7 @@ public class MementoWithUrlResolver implements IMemento
   /**
    * @see org.eclipse.ui.IMemento#getTextData()
    */
+  @Override
   public String getTextData( )
   {
     return replace( m_memento.getTextData() );
@@ -182,6 +191,7 @@ public class MementoWithUrlResolver implements IMemento
   /**
    * @see org.eclipse.ui.IMemento#putFloat(java.lang.String, float)
    */
+  @Override
   public void putFloat( String key, float value )
   {
     m_memento.putFloat( key, value );
@@ -190,6 +200,7 @@ public class MementoWithUrlResolver implements IMemento
   /**
    * @see org.eclipse.ui.IMemento#putInteger(java.lang.String, int)
    */
+  @Override
   public void putInteger( String key, int value )
   {
     m_memento.putInteger( key, value );
@@ -198,6 +209,7 @@ public class MementoWithUrlResolver implements IMemento
   /**
    * @see org.eclipse.ui.IMemento#putMemento(org.eclipse.ui.IMemento)
    */
+  @Override
   public void putMemento( IMemento memento )
   {
     m_memento.putMemento( memento );
@@ -206,6 +218,7 @@ public class MementoWithUrlResolver implements IMemento
   /**
    * @see org.eclipse.ui.IMemento#putString(java.lang.String, java.lang.String)
    */
+  @Override
   public void putString( String key, String value )
   {
     m_memento.putString( key, replace( value ) );
@@ -214,6 +227,7 @@ public class MementoWithUrlResolver implements IMemento
   /**
    * @see org.eclipse.ui.IMemento#putTextData(java.lang.String)
    */
+  @Override
   public void putTextData( String data )
   {
     m_memento.putTextData( replace( data ) );
@@ -252,6 +266,7 @@ public class MementoWithUrlResolver implements IMemento
    * @return
    * @see org.eclipse.ui.IMemento#getAttributeKeys()
    */
+  @Override
   public String[] getAttributeKeys( )
   {
     return m_memento.getAttributeKeys();
@@ -262,6 +277,7 @@ public class MementoWithUrlResolver implements IMemento
    * @return
    * @see org.eclipse.ui.IMemento#getBoolean(java.lang.String)
    */
+  @Override
   public Boolean getBoolean( String key )
   {
     return m_memento.getBoolean( key );
@@ -271,6 +287,7 @@ public class MementoWithUrlResolver implements IMemento
    * @return
    * @see org.eclipse.ui.IMemento#getType()
    */
+  @Override
   public String getType( )
   {
     return m_memento.getType();
@@ -281,6 +298,7 @@ public class MementoWithUrlResolver implements IMemento
    * @param value
    * @see org.eclipse.ui.IMemento#putBoolean(java.lang.String, boolean)
    */
+  @Override
   public void putBoolean( String key, boolean value )
   {
     m_memento.putBoolean( key, value );
