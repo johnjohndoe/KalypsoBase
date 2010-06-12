@@ -110,6 +110,7 @@ public class ValidationProfilListener implements IProfilListener
 
     m_propertyListener = new IPropertyChangeListener()
     {
+      @Override
       public void propertyChange( final PropertyChangeEvent event )
       {
         if( PreferenceConstants.P_VALIDATE_PROFILE.equals( event.getProperty() ) || PreferenceConstants.P_VALIDATE_RULES_TO_EXCLUDE.equals( event.getProperty() ) )
@@ -133,6 +134,7 @@ public class ValidationProfilListener implements IProfilListener
     m_validateJob.schedule( 100 );
   }
 
+  @Override
   public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
     // only revalidate if rellay data has changed
@@ -144,6 +146,7 @@ public class ValidationProfilListener implements IProfilListener
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilListener#onProblemMarkerChanged(org.kalypso.model.wspm.core.profil.IProfil)
    */
+  @Override
   public void onProblemMarkerChanged( final IProfil source )
   {
     // Ignored

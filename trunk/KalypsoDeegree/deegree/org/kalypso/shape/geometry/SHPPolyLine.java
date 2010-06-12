@@ -176,21 +176,25 @@ public class SHPPolyLine implements ISHPParts
     return 40 + m_parts.length * 4 + m_numPoints * 16;
   }
 
+  @Override
   public SHPEnvelope getEnvelope( )
   {
     return m_envelope;
   }
 
+  @Override
   public int getNumParts( )
   {
     return m_parts.length;
   }
 
+  @Override
   public int getNumPoints( )
   {
     return m_numPoints;
   }
 
+  @Override
   public ISHPPoint[][] getPoints( )
   {
     return m_parts;

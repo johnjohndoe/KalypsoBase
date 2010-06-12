@@ -316,6 +316,7 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
     return m_id;
   }
 
+  @Override
   public final ILayerManager getLayerManager( )
   {
     return m_layerManager;

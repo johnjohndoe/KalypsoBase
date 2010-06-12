@@ -80,6 +80,7 @@ public class GM_TriangulatedSurface_Impl extends GM_PolyhedralSurface_Impl<GM_Tr
   /**
    * @see org.kalypsodeegree.model.geometry.GM_TriangulatedSurface#getValue(org.kalypsodeegree.model.geometry.GM_Position)
    */
+  @Override
   public double getValue( final GM_Point location )
   {
     // TODO: transform to my own crs
@@ -91,6 +92,7 @@ public class GM_TriangulatedSurface_Impl extends GM_PolyhedralSurface_Impl<GM_Tr
   /**
    * @see org.kalypsodeegree.model.geometry.GM_TriangulatedSurface#getValue(org.kalypsodeegree.model.geometry.GM_Position)
    */
+  @Override
   @SuppressWarnings("unchecked")
   public double getValue( final GM_Position position )
   {
@@ -105,6 +107,7 @@ public class GM_TriangulatedSurface_Impl extends GM_PolyhedralSurface_Impl<GM_Tr
     return Double.NaN;
   }
 
+  @Override
   @SuppressWarnings("unchecked")
   public GM_Triangle getTriangle( final GM_Position position )
   {

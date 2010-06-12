@@ -141,6 +141,7 @@ public class SHPMultiPointz implements ISHPGeometry
    * method: writeSHPmultipointz (byte [] bytearray, int start) <BR>
    * loops through the pointz array and writes each pointz to the bytearray <BR>
    */
+  @Override
   public byte[] writeShape( )
   {
     final int start = ShapeConst.SHAPE_FILE_RECORD_HEADER_LENGTH;
@@ -247,6 +248,7 @@ public class SHPMultiPointz implements ISHPGeometry
   /**
    * returns the size of the multipointz shape in bytes <BR>
    */
+  @Override
   public int size( )
   {
     return 40 + pointsz.length * 16 + 16 + (8 * numPoints);
@@ -255,6 +257,7 @@ public class SHPMultiPointz implements ISHPGeometry
   /**
    * @see org.kalypsodeegree_impl.io.shpapi.SHPGeometry#getEnvelope()
    */
+  @Override
   public SHPEnvelope getEnvelope( )
   {
     return m_envelope;

@@ -61,6 +61,7 @@ public abstract class AbstractGMLXPathFunction implements IGMLXPathFunction
    * @see org.kalypsodeegree_impl.model.feature.path.IFunction#getArgument(java.util.regex.Matcher,
    *      org.kalypsodeegree_impl.model.feature.path.Cond)
    */
+  @Override
   public String getArgument( Matcher matcher, GMLXPathString cond )
   {
     final String condition = cond.getCond();
@@ -73,6 +74,7 @@ public abstract class AbstractGMLXPathFunction implements IGMLXPathFunction
   /**
    * @see org.kalypsodeegree_impl.model.feature.xpath.IFunction#getPattern()
    */
+  @Override
   public Pattern getPattern( )
   {
     return m_pattern;

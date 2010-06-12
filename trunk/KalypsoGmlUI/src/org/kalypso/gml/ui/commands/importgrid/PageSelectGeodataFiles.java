@@ -109,6 +109,7 @@ public class PageSelectGeodataFiles extends WizardPage
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
    */
+  @Override
   public void createControl( final Composite parent )
   {
     setPageComplete( false );
@@ -125,6 +126,7 @@ public class PageSelectGeodataFiles extends WizardPage
     final Text tFile = new Text( fileGroup, SWT.BORDER );
     tFile.addModifyListener( new ModifyListener()
     {
+      @Override
       public void modifyText( final ModifyEvent e )
       {
         handleModified( tFile.getText() );
@@ -184,6 +186,7 @@ public class PageSelectGeodataFiles extends WizardPage
     final Text tFolder = new Text( folderGroup, SWT.BORDER );
     tFolder.addModifyListener( new ModifyListener()
     {
+      @Override
       public void modifyText( final ModifyEvent e )
       {
         handleFolderModified( tFolder.getText() );

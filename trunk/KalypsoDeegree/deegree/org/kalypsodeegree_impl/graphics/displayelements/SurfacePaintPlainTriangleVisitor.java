@@ -74,6 +74,7 @@ public class SurfacePaintPlainTriangleVisitor<T extends GM_SurfacePatch> impleme
    * @see org.kalypsodeegree.model.geometry.ISurfacePatchVisitor#visit(org.kalypsodeegree.model.geometry.GM_SurfacePatch,
    *      double)
    */
+  @Override
   public boolean visit( final T patch, final double elevationSample )
   {
     paintThisSurface( patch );

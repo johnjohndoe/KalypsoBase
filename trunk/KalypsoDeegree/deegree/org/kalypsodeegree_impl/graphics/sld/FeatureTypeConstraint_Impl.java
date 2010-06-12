@@ -77,6 +77,7 @@ class FeatureTypeConstraint_Impl implements FeatureTypeConstraint, Marshallable
    * 
    * @return the name of the feature type
    */
+  @Override
   public String getFeatureTypeName()
   {
     return featureTypeName;
@@ -88,6 +89,7 @@ class FeatureTypeConstraint_Impl implements FeatureTypeConstraint, Marshallable
    * @param featureTypeName
    *          the name of the feature type
    */
+  @Override
   public void setFeatureTypeName( String featureTypeName )
   {
     this.featureTypeName = featureTypeName;
@@ -98,6 +100,7 @@ class FeatureTypeConstraint_Impl implements FeatureTypeConstraint, Marshallable
    * 
    * @return the filter of the FeatureTypeConstraints
    */
+  @Override
   public Filter getFilter()
   {
     return filter;
@@ -109,6 +112,7 @@ class FeatureTypeConstraint_Impl implements FeatureTypeConstraint, Marshallable
    * @param filter
    *          the filter of the FeatureTypeConstraints
    */
+  @Override
   public void setFilter( Filter filter )
   {
     this.filter = filter;
@@ -119,6 +123,7 @@ class FeatureTypeConstraint_Impl implements FeatureTypeConstraint, Marshallable
    * 
    * @return the extent for filtering the feature type
    */
+  @Override
   public Extent[] getExtents()
   {
     return (Extent[])extents.toArray( new Extent[extents.size()] );
@@ -130,6 +135,7 @@ class FeatureTypeConstraint_Impl implements FeatureTypeConstraint, Marshallable
    * @param extents
    *          extents for filtering the feature type
    */
+  @Override
   public void setExtents( Extent[] extents )
   {
     this.extents.clear();
@@ -149,6 +155,7 @@ class FeatureTypeConstraint_Impl implements FeatureTypeConstraint, Marshallable
    * @param extent
    *          an extent to add
    */
+  @Override
   public void addExtent( Extent extent )
   {
     extents.add( extent );
@@ -160,6 +167,7 @@ class FeatureTypeConstraint_Impl implements FeatureTypeConstraint, Marshallable
    * @param extent
    *          an extent to remove
    */
+  @Override
   public void removeExtent( Extent extent )
   {
     extents.remove( extents.indexOf( extent ) );
@@ -170,6 +178,7 @@ class FeatureTypeConstraint_Impl implements FeatureTypeConstraint, Marshallable
    * 
    * @return the FeatureTypeConstraint as String
    */
+  @Override
   public String toString()
   {
     String ret = getClass().getName() + "\n";
@@ -185,6 +194,7 @@ class FeatureTypeConstraint_Impl implements FeatureTypeConstraint, Marshallable
    * 
    * @return xml representation of the FeatureTypeConstraint
    */
+  @Override
   public String exportAsXML()
   {
     Debug.debugMethodBegin();

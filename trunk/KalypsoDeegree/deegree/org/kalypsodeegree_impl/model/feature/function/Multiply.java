@@ -82,6 +82,7 @@ public class Multiply extends FeaturePropertyFunction
    * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#getValue(org.kalypsodeegree.model.feature.Feature,
    *      org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
    */
+  @Override
   public Object getValue( Feature feature, IPropertyType pt, Object currentValue )
   {
 
@@ -182,6 +183,7 @@ public class Multiply extends FeaturePropertyFunction
    * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#setValue(org.kalypsodeegree.model.feature.Feature,
    *      org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
    */
+  @Override
   public Object setValue( Feature feature, IPropertyType pt, Object valueToSet )
   {
     // value can't be set by the user

@@ -131,6 +131,7 @@ abstract class GM_SurfacePatch_Impl implements GM_SurfacePatch, GM_GenericSurfac
   /**
    * returns the bounding box / envelope of a geometry
    */
+  @Override
   public GM_Envelope getEnvelope( )
   {
     if( m_envelope == null )
@@ -163,6 +164,7 @@ abstract class GM_SurfacePatch_Impl implements GM_SurfacePatch, GM_GenericSurfac
   /**
    * returns a reference to the exterior ring of the surface
    */
+  @Override
   public GM_Position[] getExteriorRing( )
   {
     return m_exteriorRing;
@@ -171,6 +173,7 @@ abstract class GM_SurfacePatch_Impl implements GM_SurfacePatch, GM_GenericSurfac
   /**
    * returns a reference to the interior rings of the surface
    */
+  @Override
   public GM_Position[][] getInteriorRings( )
   {
     return m_interiorRings;
@@ -179,6 +182,7 @@ abstract class GM_SurfacePatch_Impl implements GM_SurfacePatch, GM_GenericSurfac
   /**
    * returns the length of all boundaries of the surface in a reference system appropriate for measuring distances.
    */
+  @Override
   public double getPerimeter( )
   {
     return -1;
@@ -187,6 +191,7 @@ abstract class GM_SurfacePatch_Impl implements GM_SurfacePatch, GM_GenericSurfac
   /**
    * returns the coordinate system of the surface patch
    */
+  @Override
   public String getCoordinateSystem( )
   {
     return m_crs;
@@ -259,6 +264,7 @@ abstract class GM_SurfacePatch_Impl implements GM_SurfacePatch, GM_GenericSurfac
     return true;
   }
 
+  @Override
   public GM_Point getCentroid( )
   {
     if( m_centroid == null )
@@ -279,6 +285,7 @@ abstract class GM_SurfacePatch_Impl implements GM_SurfacePatch, GM_GenericSurfac
    * shall be a numeric measure of its surface area Since area is an accumulation (integral) of the product of two
    * distances, its return value shall be in a unit of measure appropriate for measuring distances squared.
    */
+  @Override
   public double getArea( )
   {
     // TODO: Still a bit hacky: centroid and area are calculated at the same moment;
@@ -361,6 +368,7 @@ abstract class GM_SurfacePatch_Impl implements GM_SurfacePatch, GM_GenericSurfac
     return ret;
   }
 
+  @Override
   public void invalidate( )
   {
     m_envelope = null;

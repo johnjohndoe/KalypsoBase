@@ -75,6 +75,7 @@ public class XsdBaseTypeHandlerDuration extends XsdBaseTypeHandler<Duration>
   /**
    * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
    */
+  @Override
   public int compare( final Duration o1, final Duration o2 )
   {
     return ("" + o1).compareTo( "" + o2 );

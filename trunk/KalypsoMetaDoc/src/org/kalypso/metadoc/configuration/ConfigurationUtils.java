@@ -63,9 +63,9 @@ import org.apache.commons.lang.StringUtils;
  */
 public final class ConfigurationUtils
 {
-  private ConfigurationUtils()
+  private ConfigurationUtils( )
   {
-  // not intended to be instanciated
+    // not intended to be instanciated
   }
 
   /**
@@ -73,24 +73,24 @@ public final class ConfigurationUtils
    * its Map is returned.
    */
   @SuppressWarnings("unchecked")
-  public static Map<Object,Object> createMap( final Configuration conf )
+  public static Map<Object, Object> createMap( final Configuration conf )
   {
-    final Map<Object,Object> map = new HashMap<Object,Object>();
-    
+    final Map<Object, Object> map = new HashMap<Object, Object>();
+
     if( conf instanceof MapConfiguration )
     {
-      map.putAll( ( (MapConfiguration)conf ).getMap() );
+      map.putAll( ((MapConfiguration) conf).getMap() );
       return map;
     }
 
-    for( final Iterator it = conf.getKeys(); it.hasNext(); )
+    for( final Iterator< ? > it = conf.getKeys(); it.hasNext(); )
     {
-      final String key = (String)it.next();
-      
+      final String key = (String) it.next();
+
       // we don't know when we have an array or not, so let's always
       // take a string array here. It will be joined later again
       final String[] values = conf.getStringArray( key );
-      
+
       // join array again in our map using the delimiter provided by the configuration
       map.put( key, StringUtils.join( values, AbstractConfiguration.getDelimiter() ) );
     }
@@ -106,7 +106,7 @@ public final class ConfigurationUtils
   {
     if( conf == null || value == null || property == null )
       return;
-    
+
     final String[] array = conf.getStringArray( property );
     if( array == null || array != null && !Arrays.asList( array ).contains( value ) )
       conf.addProperty( property, value );

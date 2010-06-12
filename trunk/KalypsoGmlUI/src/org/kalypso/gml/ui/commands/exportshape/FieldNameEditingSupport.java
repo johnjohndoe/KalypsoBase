@@ -62,14 +62,15 @@ public class FieldNameEditingSupport extends EditingSupport
   {
     super( viewer );
 
-    m_cellEditor = new TextCellEditor( (Composite) viewer.getControl(), SWT.NONE );
+    final TextCellEditor textCellEditor = new TextCellEditor( (Composite) viewer.getControl(), SWT.NONE );
+    m_cellEditor = textCellEditor;
 
     viewer.getControl().addDisposeListener( new DisposeListener()
     {
       @Override
       public void widgetDisposed( final DisposeEvent e )
       {
-        m_cellEditor.dispose();
+        textCellEditor.dispose();
       }
     } );
   }

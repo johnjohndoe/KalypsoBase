@@ -65,6 +65,7 @@ public class DouglasPeuckerActionDelegate implements IViewActionDelegate
   /**
    * @see org.eclipse.ui.IViewActionDelegate#init(org.eclipse.ui.IViewPart)
    */
+  @Override
   public void init( final IViewPart view )
   {
     m_view = view;
@@ -73,6 +74,7 @@ public class DouglasPeuckerActionDelegate implements IViewActionDelegate
   /**
    * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
    */
+  @Override
   public void run( final IAction action )
   {
     final Shell viewShell = m_view.getViewSite().getShell();
@@ -104,6 +106,7 @@ public class DouglasPeuckerActionDelegate implements IViewActionDelegate
    * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
    *      org.eclipse.jface.viewers.ISelection)
    */
+  @Override
   public void selectionChanged( final IAction action, final ISelection selection )
   {
     m_selection = selection;

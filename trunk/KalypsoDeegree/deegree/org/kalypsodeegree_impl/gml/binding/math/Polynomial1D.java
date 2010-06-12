@@ -63,6 +63,7 @@ public class Polynomial1D extends AbstractFeatureBinder implements IPolynomial1D
   /**
    * @see org.kalypso.kalypsosimulationmodel.util.math.IPolynom1D#computeResult(double)
    */
+  @Override
   public double computeResult( final double input )
   {
     // computation based on Hornerschema
@@ -85,6 +86,7 @@ public class Polynomial1D extends AbstractFeatureBinder implements IPolynomial1D
   /**
    * @see org.kalypso.kalypsosimulationmodel.util.math.IPolynom1D#getCoefficients()
    */
+  @Override
   @SuppressWarnings("unchecked")
   public double[] getCoefficients( )
   {
@@ -96,6 +98,7 @@ public class Polynomial1D extends AbstractFeatureBinder implements IPolynomial1D
     return ArrayUtils.toPrimitive( objects, Double.NaN );
   }
 
+  @Override
   public void setCoefficients( final double[] coefficients ) throws IllegalArgumentException
   {
     final List<Double> list = new ArrayList<Double>();
@@ -167,6 +170,7 @@ public class Polynomial1D extends AbstractFeatureBinder implements IPolynomial1D
   /**
    * @see org.kalypsodeegree_impl.gml.binding.math.IPolynomial#checkConsistency()
    */
+  @Override
   public PolynomialConfigState checkConsistency( )
   {
     // how should it be ever inconsistent
@@ -176,6 +180,7 @@ public class Polynomial1D extends AbstractFeatureBinder implements IPolynomial1D
   /**
    * @see org.kalypsodeegree_impl.gml.binding.math.IPolynomial1D#getRangeMin()
    */
+  @Override
   public double getRangeMin( )
   {
     final Double property = (Double) getFeature().getProperty( QNAME_PROP_MINRANGE );
@@ -188,6 +193,7 @@ public class Polynomial1D extends AbstractFeatureBinder implements IPolynomial1D
   /**
    * @see org.kalypsodeegree_impl.gml.binding.math.IPolynomial1D#getRangeMax()
    */
+  @Override
   public double getRangeMax( )
   {
     final Double property = (Double) getFeature().getProperty( QNAME_PROP_MAXRANGE );
@@ -200,6 +206,7 @@ public class Polynomial1D extends AbstractFeatureBinder implements IPolynomial1D
   /**
    * @see org.kalypsodeegree_impl.gml.binding.math.IPolynomial1D#setRange(double, double)
    */
+  @Override
   public void setRange( final double from, final double to )
   {
     getFeature().setProperty( QNAME_PROP_MINRANGE, Double.isNaN( from ) ? null : from );
@@ -209,6 +216,7 @@ public class Polynomial1D extends AbstractFeatureBinder implements IPolynomial1D
   /**
    * @see org.kalypsodeegree_impl.gml.binding.math.IPolynomial1D#setDomainPhenomenon(java.lang.String)
    */
+  @Override
   public void setDomainPhenomenon( final String domainId )
   {
     final Feature ref = refForId( domainId );
@@ -219,6 +227,7 @@ public class Polynomial1D extends AbstractFeatureBinder implements IPolynomial1D
   /**
    * @see org.kalypsodeegree_impl.gml.binding.math.IPolynomial1D#setRangePhenomenon(java.lang.String)
    */
+  @Override
   public void setRangePhenomenon( final String rangeId )
   {
     final Feature ref = refForId( rangeId );
@@ -238,6 +247,7 @@ public class Polynomial1D extends AbstractFeatureBinder implements IPolynomial1D
   /**
    * @see org.kalypsodeegree_impl.gml.binding.math.IPolynomial1D#getDomainPhenomenon()
    */
+  @Override
   public String getDomainPhenomenon( )
   {
     final Feature feature = getFeature();
@@ -248,6 +258,7 @@ public class Polynomial1D extends AbstractFeatureBinder implements IPolynomial1D
   /**
    * @see org.kalypsodeegree_impl.gml.binding.math.IPolynomial1D#getRangePhenomenon()
    */
+  @Override
   public String getRangePhenomenon( )
   {
     final Feature feature = getFeature();

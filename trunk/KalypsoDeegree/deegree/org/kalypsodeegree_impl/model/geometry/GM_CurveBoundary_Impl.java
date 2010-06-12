@@ -82,6 +82,7 @@ class GM_CurveBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Curv
    * any of its pieces. Points are 0-dimensional, curves are 1-dimensional, surfaces are 2-dimensional, and solids are
    * 3-dimensional.
    */
+  @Override
   public int getDimension( )
   {
     return 1;
@@ -91,6 +92,7 @@ class GM_CurveBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Curv
    * The operation "coordinateDimension" shall return the dimension of the coordinates that define this GM_Object, which
    * must be the same as the coordinate dimension of the coordinate reference system for this GM_Object.
    */
+  @Override
   public int getCoordinateDimension( )
   {
     return getStartPoint().getCoordinateDimension();
@@ -114,6 +116,7 @@ class GM_CurveBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Curv
   /**
    * returns the StartPoint of the boundary
    */
+  @Override
   public GM_Position getStartPoint( )
   {
     return m_sp;
@@ -122,6 +125,7 @@ class GM_CurveBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Curv
   /**
    * returns the EndPoint of the boundary
    */
+  @Override
   public GM_Position getEndPoint( )
   {
     return m_ep;
@@ -252,6 +256,7 @@ class GM_CurveBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Curv
    * @see org.kalypsodeegree.model.geometry.GM_Object#transform(org.deegree.crs.transformations.CRSTransformation,
    *      java.lang.String)
    */
+  @Override
   public GM_Object transform( final CRSTransformation trans, final String targetOGCCS ) throws Exception
   {
     /* If the target is the same coordinate system, do not transform. */

@@ -55,6 +55,7 @@ public class Raster2Lines implements IGeoGridWalker
   /**
    * @see org.kalypso.gis.doubleraster.DoubleRasterWalker#start(org.kalypso.gis.doubleraster.DoubleRaster)
    */
+  @Override
   public final void start( final IGeoGrid grid ) throws GeoGridException
   {
     m_grid = grid;
@@ -76,6 +77,7 @@ public class Raster2Lines implements IGeoGridWalker
   /**
    * @see org.kalypso.gis.doubleraster.DoubleRasterWalker#operate(int, int, com.vividsolutions.jts.geom.Coordinate)
    */
+  @Override
   public final void operate( final int x, final int y, final Coordinate crd ) throws GeoGridException
   {
     // Volumen aufaddieren
@@ -142,9 +144,10 @@ public class Raster2Lines implements IGeoGridWalker
 
   /**
    * Gibt ein Objekt vom Type LineString[] zurück
-   *
+   * 
    * @see org.kalypso.gis.doubleraster.DoubleRasterWalker#getResult()
    */
+  @Override
   public Object finish( )
   {
     m_strategy.finish();
@@ -273,9 +276,7 @@ public class Raster2Lines implements IGeoGridWalker
       {
         final LinkedCoordinate currentLC = lcs.get( prev );
 
-        if( currentLC == null )
-         ;// System.out.println();
-        else
+        if( currentLC != null )
         {
           final Coordinate innerLeft = interpolateForInnerCrd( prevprev, prev );
           final Coordinate innerRight = interpolateForInnerCrd( prev, crd );
@@ -370,7 +371,7 @@ public class Raster2Lines implements IGeoGridWalker
     }
     else
     {
-      final String msg =  Messages.getString( "org.kalypso.gml.processes.raster2vector.Raster2Lines.1" , x, y, index ); //$NON-NLS-1$
+      final String msg = Messages.getString( "org.kalypso.gml.processes.raster2vector.Raster2Lines.1", x, y, index ); //$NON-NLS-1$
       throw new GeoGridException( msg, null );
     }
   }

@@ -125,6 +125,7 @@ public class ExternalGraphic_Impl implements ExternalGraphic, Marshallable
    * 
    * @return Format of the external graphic
    */
+  @Override
   public String getFormat( )
   {
     return m_format;
@@ -136,6 +137,7 @@ public class ExternalGraphic_Impl implements ExternalGraphic, Marshallable
    * @param format
    *          Format of the external graphic
    */
+  @Override
   public void setFormat( final String format )
   {
     m_format = format;
@@ -146,6 +148,7 @@ public class ExternalGraphic_Impl implements ExternalGraphic, Marshallable
    * 
    * @return URL of the external graphic
    */
+  @Override
   public String getOnlineResource( )
   {
     return m_onlineResource;
@@ -154,6 +157,7 @@ public class ExternalGraphic_Impl implements ExternalGraphic, Marshallable
   /**
    * @see org.kalypsodeegree.graphics.sld.ExternalGraphic#getOnlineResourceURL()
    */
+  @Override
   public URL getOnlineResourceURL( ) throws MalformedURLException
   {
     return m_resolver.resolveURL( m_onlineResource );
@@ -165,6 +169,7 @@ public class ExternalGraphic_Impl implements ExternalGraphic, Marshallable
    * @param onlineResource
    *          URL of the external graphic
    */
+  @Override
   public void setOnlineResource( final String onlineResource )
   {
     m_image = null;
@@ -235,6 +240,7 @@ public class ExternalGraphic_Impl implements ExternalGraphic, Marshallable
    * 
    * @return the external graphic as BufferedImage
    */
+  @Override
   public BufferedImage getAsImage( final int targetSizeX, final int targetSizeY )
   {
     if( m_image == null )
@@ -281,6 +287,7 @@ public class ExternalGraphic_Impl implements ExternalGraphic, Marshallable
   /**
    * @see org.kalypsodeegree.graphics.sld.ExternalGraphic#paintAwt(java.awt.Graphics2D)
    */
+  @Override
   public void paintAwt( final Graphics2D g, final int targetSizeX, final int targetSizeY )
   {
     /* Make sure buffered image is created */
@@ -296,6 +303,7 @@ public class ExternalGraphic_Impl implements ExternalGraphic, Marshallable
   /**
    * @see org.kalypsodeegree.graphics.sld.ExternalGraphic#paint(org.eclipse.swt.graphics.GC)
    */
+  @Override
   public void paint( final GC gc )
   {
     if( m_image != null )
@@ -346,6 +354,7 @@ public class ExternalGraphic_Impl implements ExternalGraphic, Marshallable
    * 
    * @return xml representation of the ExternalGraphic
    */
+  @Override
   public String exportAsXML( )
   {
     Debug.debugMethodBegin();

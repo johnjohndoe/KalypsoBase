@@ -73,6 +73,7 @@ public class StrokeArrowPaintDelegateLine extends AbstractStrokeArrowPaintDelega
    *      java.awt.Graphics2D, org.kalypsodeegree.graphics.transformation.GeoTransform,
    *      org.kalypsodeegree.model.geometry.GM_Curve)
    */
+  @Override
   public void paint( final Graphics2D g2, final GeoTransform projection, final GM_Curve curve, final UOM uom )
   {
     try

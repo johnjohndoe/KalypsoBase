@@ -62,6 +62,7 @@ public class QNameDeltaVisitor implements IGmlWorkspaceDeltaVisitor
   /**
    * @see org.kalypsodeegree.model.feature.event.IGmlWorkspaceDeltaVisitor#visit(org.kalypsodeegree.model.feature.event.IGmlWorkspaceDelta)
    */
+  @Override
   public boolean visit( final IGmlWorkspaceDelta delta )
   {
     final QName qname = delta.getFeature().getFeatureType().getQName();

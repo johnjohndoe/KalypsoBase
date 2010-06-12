@@ -49,6 +49,7 @@ public abstract class AbstractXElement implements IXElement
   /**
    * @see org.kalypsodeegree_impl.model.feature.xpath.IXElement#evaluate(java.lang.Object)
    */
+  @Override
   public Object evaluate( final Object context, final boolean featureTypeLevel ) throws GMLXPathException
   {
     if( context instanceof XLinkedFeature_Impl )

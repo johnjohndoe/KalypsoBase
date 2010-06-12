@@ -86,8 +86,8 @@ public class ProfileProviderAdapterFactory implements IAdapterFactory
   /**
    * @see org.eclipse.core.runtime.IAdapterFactory#getAdapter(java.lang.Object, java.lang.Class)
    */
-  @SuppressWarnings("unchecked")//$NON-NLS-1$
-  public Object getAdapter( final Object adaptableObject, final Class adapterType )
+  @Override
+  public Object getAdapter( final Object adaptableObject, @SuppressWarnings("rawtypes") final Class adapterType )
   {
     if( adapterType == IProfilProvider.class )
       if( adaptableObject instanceof IWorkbenchPart )
@@ -129,8 +129,8 @@ public class ProfileProviderAdapterFactory implements IAdapterFactory
   /**
    * @see org.eclipse.core.runtime.IAdapterFactory#getAdapterList()
    */
-  @SuppressWarnings("unchecked")//$NON-NLS-1$
-  public Class[] getAdapterList( )
+  @Override
+  public Class< ? >[] getAdapterList( )
   {
     return new Class[] { IProfilProvider.class };
   }

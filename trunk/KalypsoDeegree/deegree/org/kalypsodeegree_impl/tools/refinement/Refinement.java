@@ -3,8 +3,6 @@ package org.kalypsodeegree_impl.tools.refinement;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.text.StyledEditorKit.ForegroundAction;
-
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_LineString;

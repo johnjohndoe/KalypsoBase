@@ -70,6 +70,7 @@ public class Drawing_Impl implements Drawing
    * 
    * @return the GraphicFill-Element
    */
+  @Override
   public GraphicFill getGraphicFill( )
   {
     return graphicFill;
@@ -82,6 +83,7 @@ public class Drawing_Impl implements Drawing
    * @param graphicFill
    *            the GraphicFill-Element
    */
+  @Override
   public void setGraphicFill( final GraphicFill graphicFill )
   {
     this.graphicFill = graphicFill;
@@ -95,6 +97,7 @@ public class Drawing_Impl implements Drawing
    * 
    * @return the CssParameters
    */
+  @Override
   public Map getCssParameters( )
   {
     return cssParams;
@@ -109,6 +112,7 @@ public class Drawing_Impl implements Drawing
    * @param cssParameters
    *            the CssParameters
    */
+  @Override
   public void setCssParameters( final Map cssParameters )
   {
     this.cssParams = cssParameters;
@@ -124,6 +128,7 @@ public class Drawing_Impl implements Drawing
    * @param value
    *            the value of the object to insert
    */
+  @Override
   public void addCssParameter( final Object key, final Object value )
   {
     cssParams.put( key, value );
@@ -137,6 +142,7 @@ public class Drawing_Impl implements Drawing
    * @param key
    *            the key of the object to remove
    */
+  @Override
   public void removeCssParameter( final Object key )
   {
     cssParams.remove( key );

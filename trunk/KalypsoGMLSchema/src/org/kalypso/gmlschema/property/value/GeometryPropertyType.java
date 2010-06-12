@@ -98,11 +98,13 @@ public class GeometryPropertyType extends AbstractPropertyTypeFromElement implem
   /**
    * @see org.kalypso.gmlschema.basics.IInitialize#init(int)
    */
+  @Override
   public void init( final int initializeRun )
   {
     // Nothing to do
   }
 
+  @Override
   public QName getValueQName( )
   {
     return m_typeHandler.getTypeName();
@@ -111,6 +113,7 @@ public class GeometryPropertyType extends AbstractPropertyTypeFromElement implem
   /**
    * @see org.kalypso.gmlschema.property.IValuePropertyType#hasRestriction()
    */
+  @Override
   public boolean hasRestriction( )
   {
     return false;
@@ -119,6 +122,7 @@ public class GeometryPropertyType extends AbstractPropertyTypeFromElement implem
   /**
    * @see org.kalypso.gmlschema.property.IValuePropertyType#getRestriction()
    */
+  @Override
   public IRestriction[] getRestriction( )
   {
     return EMPTY_RESTRICTION;
@@ -127,6 +131,7 @@ public class GeometryPropertyType extends AbstractPropertyTypeFromElement implem
   /**
    * @see org.kalypso.gmlschema.property.IValuePropertyType#isFixed()
    */
+  @Override
   public boolean isFixed( )
   {
     return false;
@@ -135,6 +140,7 @@ public class GeometryPropertyType extends AbstractPropertyTypeFromElement implem
   /**
    * @see org.kalypso.gmlschema.property.IValuePropertyType#getFixed()
    */
+  @Override
   public String getFixed( )
   {
     return null;
@@ -143,6 +149,7 @@ public class GeometryPropertyType extends AbstractPropertyTypeFromElement implem
   /**
    * @see org.kalypso.gmlschema.property.IValuePropertyType#hasDefault()
    */
+  @Override
   public boolean hasDefault( )
   {
     return false;
@@ -151,11 +158,13 @@ public class GeometryPropertyType extends AbstractPropertyTypeFromElement implem
   /**
    * @see org.kalypso.gmlschema.property.IValuePropertyType#getDefault()
    */
+  @Override
   public String getDefault( )
   {
     return null;
   }
 
+  @Override
   public boolean isNullable( )
   {
     return false;
@@ -175,6 +184,7 @@ public class GeometryPropertyType extends AbstractPropertyTypeFromElement implem
   /**
    * @see org.kalypso.gmlschema.property.IValuePropertyType#isGeometry()
    */
+  @Override
   public boolean isGeometry( )
   {
     return true;
@@ -183,6 +193,7 @@ public class GeometryPropertyType extends AbstractPropertyTypeFromElement implem
   /**
    * @see org.kalypso.gmlschema.property.IValuePropertyType#getValueClass()
    */
+  @Override
   public Class< ? > getValueClass( )
   {
     return m_valueClass;
@@ -191,6 +202,7 @@ public class GeometryPropertyType extends AbstractPropertyTypeFromElement implem
   /**
    * @see org.kalypso.gmlschema.property.IValuePropertyType#getTypeHandler()
    */
+  @Override
   public IMarshallingTypeHandler getTypeHandler( )
   {
     return m_typeHandler;
@@ -199,6 +211,7 @@ public class GeometryPropertyType extends AbstractPropertyTypeFromElement implem
   /**
    * @see org.kalypso.gmlschema.property.IPropertyType#cloneForFeatureType(org.kalypso.gmlschema.feature.IFeatureType)
    */
+  @Override
   public IPropertyType cloneForFeatureType( final IFeatureType featureType )
   {
     return new GeometryPropertyType( getGMLSchema(), getElement(), m_geometries, getOccurs(), featureType );

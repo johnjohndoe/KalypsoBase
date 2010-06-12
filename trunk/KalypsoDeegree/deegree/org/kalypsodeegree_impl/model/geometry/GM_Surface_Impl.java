@@ -195,6 +195,7 @@ class GM_Surface_Impl<T extends GM_SurfacePatch> extends GM_OrientableSurface_Im
   /**
    * returns the length of all boundaries of the surface in a reference system appropriate for measuring distances.
    */
+  @Override
   public double getPerimeter( )
   {
     throw new UnsupportedOperationException();
@@ -205,6 +206,7 @@ class GM_Surface_Impl<T extends GM_SurfacePatch> extends GM_OrientableSurface_Im
    * shall be a numeric measure of its surface area Since area is an accumulation (integral) of the product of two
    * distances, its return value shall be in a unit of measure appropriate for measuring distances squared.
    */
+  @Override
   public double getArea( )
   {
     return m_patch.getArea();
@@ -213,6 +215,7 @@ class GM_Surface_Impl<T extends GM_SurfacePatch> extends GM_OrientableSurface_Im
   /**
    * returns the boundary of the surface as surface boundary
    */
+  @Override
   public GM_SurfaceBoundary getSurfaceBoundary( )
   {
     return (GM_SurfaceBoundary) getBoundary();
@@ -270,6 +273,7 @@ class GM_Surface_Impl<T extends GM_SurfacePatch> extends GM_OrientableSurface_Im
    * any of its pieces. Points are 0-dimensional, curves are 1-dimensional, surfaces are 2-dimensional, and solids are
    * 3-dimensional.
    */
+  @Override
   public int getDimension( )
   {
     return 2;
@@ -279,6 +283,7 @@ class GM_Surface_Impl<T extends GM_SurfacePatch> extends GM_OrientableSurface_Im
    * The operation "coordinateDimension" shall return the dimension of the coordinates that define this GM_Object, which
    * must be the same as the coordinate dimension of the coordinate reference system for this GM_Object.
    */
+  @Override
   public int getCoordinateDimension( )
   {
     return m_patch.getExteriorRing()[0].getCoordinateDimension();
@@ -430,6 +435,7 @@ class GM_Surface_Impl<T extends GM_SurfacePatch> extends GM_OrientableSurface_Im
    * @param element
    * @see java.util.List#add(int, java.lang.Object)
    */
+  @Override
   public void add( final int index, final T element )
   {
     // Makes no sense: m_list was immutable, so this will throw an UnsupportedExceptionAnyway
@@ -442,6 +448,7 @@ class GM_Surface_Impl<T extends GM_SurfacePatch> extends GM_OrientableSurface_Im
    * @return
    * @see java.util.List#add(java.lang.Object)
    */
+  @Override
   public boolean add( final T o )
   {
     // Makes no sense: m_list was immutable, so this will throw an UnsupportedExceptionAnyway
@@ -454,6 +461,7 @@ class GM_Surface_Impl<T extends GM_SurfacePatch> extends GM_OrientableSurface_Im
    * @return
    * @see java.util.List#addAll(java.util.Collection)
    */
+  @Override
   public boolean addAll( final Collection< ? extends T> c )
   {
     // Makes no sense: m_list was immutable, so this will throw an UnsupportedExceptionAnyway
@@ -467,6 +475,7 @@ class GM_Surface_Impl<T extends GM_SurfacePatch> extends GM_OrientableSurface_Im
    * @return
    * @see java.util.List#addAll(int, java.util.Collection)
    */
+  @Override
   public boolean addAll( final int index, final Collection< ? extends T> c )
   {
     // Makes no sense: m_list was immutable, so this will throw an UnsupportedExceptionAnyway
@@ -477,6 +486,7 @@ class GM_Surface_Impl<T extends GM_SurfacePatch> extends GM_OrientableSurface_Im
   /**
    * @see java.util.List#clear()
    */
+  @Override
   public void clear( )
   {
     // Makes no sense: m_list was immutable, so this will throw an UnsupportedExceptionAnyway
@@ -489,6 +499,7 @@ class GM_Surface_Impl<T extends GM_SurfacePatch> extends GM_OrientableSurface_Im
    * @return
    * @see java.util.List#contains(java.lang.Object)
    */
+  @Override
   public boolean contains( final Object o )
   {
     return ObjectUtils.equals( m_patch, o );
@@ -500,6 +511,7 @@ class GM_Surface_Impl<T extends GM_SurfacePatch> extends GM_OrientableSurface_Im
    * @return
    * @see java.util.List#containsAll(java.util.Collection)
    */
+  @Override
   public boolean containsAll( final Collection< ? > c )
   {
     return c.contains( m_patch );
@@ -512,6 +524,7 @@ class GM_Surface_Impl<T extends GM_SurfacePatch> extends GM_OrientableSurface_Im
    * @return
    * @see java.util.List#get(int)
    */
+  @Override
   public T get( final int index )
   {
     if( index == 0 )
@@ -537,6 +550,7 @@ class GM_Surface_Impl<T extends GM_SurfacePatch> extends GM_OrientableSurface_Im
    * @return
    * @see java.util.List#indexOf(java.lang.Object)
    */
+  @Override
   public int indexOf( final Object o )
   {
     if( ObjectUtils.equals( m_patch, o ) )
@@ -561,6 +575,7 @@ class GM_Surface_Impl<T extends GM_SurfacePatch> extends GM_OrientableSurface_Im
    * @return
    * @see java.util.List#iterator()
    */
+  @Override
   public Iterator<T> iterator( )
   {
     final List<T> l = Collections.singletonList( m_patch );
@@ -573,6 +588,7 @@ class GM_Surface_Impl<T extends GM_SurfacePatch> extends GM_OrientableSurface_Im
    * @return
    * @see java.util.List#lastIndexOf(java.lang.Object)
    */
+  @Override
   public int lastIndexOf( final Object o )
   {
     return indexOf( o );
@@ -583,6 +599,7 @@ class GM_Surface_Impl<T extends GM_SurfacePatch> extends GM_OrientableSurface_Im
    * @return
    * @see java.util.List#listIterator()
    */
+  @Override
   public ListIterator<T> listIterator( )
   {
     return Collections.singletonList( m_patch ).listIterator();
@@ -593,6 +610,7 @@ class GM_Surface_Impl<T extends GM_SurfacePatch> extends GM_OrientableSurface_Im
    * @return
    * @see java.util.List#listIterator(int)
    */
+  @Override
   public ListIterator<T> listIterator( final int index )
   {
     return Collections.singletonList( m_patch ).listIterator( index );
@@ -604,6 +622,7 @@ class GM_Surface_Impl<T extends GM_SurfacePatch> extends GM_OrientableSurface_Im
    * @return
    * @see java.util.List#remove(int)
    */
+  @Override
   public T remove( final int index )
   {
     // Makes no sense: m_list was immutable, so this will throw an UnsupportedExceptionAnyway
@@ -616,6 +635,7 @@ class GM_Surface_Impl<T extends GM_SurfacePatch> extends GM_OrientableSurface_Im
    * @return
    * @see java.util.List#remove(java.lang.Object)
    */
+  @Override
   public boolean remove( final Object o )
   {
     // Makes no sense: m_list was immutable, so this will throw an UnsupportedExceptionAnyway
@@ -628,6 +648,7 @@ class GM_Surface_Impl<T extends GM_SurfacePatch> extends GM_OrientableSurface_Im
    * @return
    * @see java.util.List#removeAll(java.util.Collection)
    */
+  @Override
   public boolean removeAll( final Collection< ? > c )
   {
     // Makes no sense: m_list was immutable, so this will throw an UnsupportedExceptionAnyway
@@ -640,6 +661,7 @@ class GM_Surface_Impl<T extends GM_SurfacePatch> extends GM_OrientableSurface_Im
    * @return
    * @see java.util.List#retainAll(java.util.Collection)
    */
+  @Override
   public boolean retainAll( final Collection< ? > c )
   {
     // Makes no sense: m_list was immutable, so this will throw an UnsupportedExceptionAnyway
@@ -653,6 +675,7 @@ class GM_Surface_Impl<T extends GM_SurfacePatch> extends GM_OrientableSurface_Im
    * @return
    * @see java.util.List#set(int, java.lang.Object)
    */
+  @Override
   public T set( final int index, final T element )
   {
     // Makes no sense: m_list was immutable, so this will throw an UnsupportedExceptionAnyway
@@ -664,6 +687,7 @@ class GM_Surface_Impl<T extends GM_SurfacePatch> extends GM_OrientableSurface_Im
    * @return
    * @see java.util.List#size()
    */
+  @Override
   public int size( )
   {
     return 1;
@@ -677,6 +701,7 @@ class GM_Surface_Impl<T extends GM_SurfacePatch> extends GM_OrientableSurface_Im
    * @return
    * @see java.util.List#subList(int, int)
    */
+  @Override
   public List<T> subList( final int fromIndex, final int toIndex )
   {
     throw new UnsupportedOperationException();
@@ -688,6 +713,7 @@ class GM_Surface_Impl<T extends GM_SurfacePatch> extends GM_OrientableSurface_Im
    * @return
    * @see java.util.List#toArray()
    */
+  @Override
   public Object[] toArray( )
   {
     return new Object[] { m_patch };
@@ -701,6 +727,7 @@ class GM_Surface_Impl<T extends GM_SurfacePatch> extends GM_OrientableSurface_Im
    * @return
    * @see java.util.List#toArray(T[])
    */
+  @Override
   public <S> S[] toArray( final S[] a )
   {
     final S[] r = a.length >= 1 ? a : (S[]) java.lang.reflect.Array.newInstance( a.getClass().getComponentType(), 1 );
@@ -714,6 +741,7 @@ class GM_Surface_Impl<T extends GM_SurfacePatch> extends GM_OrientableSurface_Im
    * @see org.kalypsodeegree.model.geometry.ISurfacePatchVisitable#acceptSurfacePatches(org.kalypsodeegree.model.geometry.GM_Envelope,
    *      org.kalypsodeegree.model.geometry.ISurfacePatchVisitor, org.eclipse.core.runtime.IProgressMonitor)
    */
+  @Override
   public void acceptSurfacePatches( final GM_Envelope envToVisit, final ISurfacePatchVisitor<T> visitor, final IProgressMonitor monitor ) throws CoreException
   {
     monitor.beginTask( "", 1 );
@@ -733,6 +761,7 @@ class GM_Surface_Impl<T extends GM_SurfacePatch> extends GM_OrientableSurface_Im
    * @see org.kalypsodeegree.model.geometry.GM_Object#transform(org.deegree.crs.transformations.CRSTransformation,
    *      java.lang.String)
    */
+  @Override
   public GM_Object transform( final CRSTransformation trans, final String targetOGCCS ) throws Exception
   {
     /* If the target is the same coordinate system, do not transform. */

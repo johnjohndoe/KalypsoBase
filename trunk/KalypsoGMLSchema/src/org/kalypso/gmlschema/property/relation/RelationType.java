@@ -57,6 +57,7 @@ public class RelationType extends AbstractPropertyTypeFromElement implements IRe
   /**
    * @see org.kalypso.gmlschema.basics.IInitialize#init(int)
    */
+  @Override
   public void init( final int initializeRun ) throws GMLSchemaException
   {
     switch( initializeRun )
@@ -76,6 +77,7 @@ public class RelationType extends AbstractPropertyTypeFromElement implements IRe
   /**
    * @see org.kalypso.gmlschema.property.relation.IRelationType#isInlineAble()
    */
+  @Override
   public boolean isInlineAble( )
   {
     return m_relationContentType.isInlineable();
@@ -84,6 +86,7 @@ public class RelationType extends AbstractPropertyTypeFromElement implements IRe
   /**
    * @see org.kalypso.gmlschema.property.relation.IRelationType#isLinkAble()
    */
+  @Override
   public boolean isLinkAble( )
   {
     return m_relationContentType.isLinkable();
@@ -93,6 +96,7 @@ public class RelationType extends AbstractPropertyTypeFromElement implements IRe
    * @see org.kalypso.gmlschema.property.relation.IRelationType#getTargetFeatureTypes(org.kalypso.gmlschema.GMLSchema,
    *      boolean)
    */
+  @Override
   public IFeatureType getTargetFeatureType( )
   {
     return m_relationContentType.getTargetFeatureType();
@@ -101,6 +105,7 @@ public class RelationType extends AbstractPropertyTypeFromElement implements IRe
   /**
    * @see org.kalypso.gmlschema.property.relation.IRelationType#getDocumentReferences()
    */
+  @Override
   public IDocumentReference[] getDocumentReferences( )
   {
     return m_relationContentType.getDocumentReferences();
@@ -109,6 +114,7 @@ public class RelationType extends AbstractPropertyTypeFromElement implements IRe
   /**
    * @see org.kalypso.gmlschema.property.IPropertyType#cloneForFeatureType(org.kalypso.gmlschema.feature.IFeatureType)
    */
+  @Override
   public IPropertyType cloneForFeatureType( final IFeatureType featureType )
   {
     return new RelationType( getGMLSchema(), getElement(), getOccurs(), featureType );

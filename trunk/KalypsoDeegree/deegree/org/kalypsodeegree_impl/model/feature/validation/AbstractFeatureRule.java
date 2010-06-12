@@ -56,6 +56,7 @@ public abstract class AbstractFeatureRule implements IFeatureRule
 
   private QName[] m_qnames;
 
+  @Override
   public void setInitializationData( final IConfigurationElement config, final String propertyName, final Object data )
   {
     m_id = config.getAttribute( "id" );
@@ -77,21 +78,25 @@ public abstract class AbstractFeatureRule implements IFeatureRule
     }
   }
 
+  @Override
   public String getID( )
   {
     return m_id;
   }
 
+  @Override
   public String getName( )
   {
     return m_name;
   }
 
+  @Override
   public String getDescription( )
   {
     return m_description;
   }
 
+  @Override
   public QName[] getQNames( )
   {
     return m_qnames;

@@ -82,18 +82,19 @@ public abstract class AbstractProfilView implements IProfilListener, IProfilView
   @Override
   public final Control createControl( final Composite parent, final FormToolkit toolkit )
   {
-    m_control = doCreateControl( parent, toolkit );
-    
+    final Control control = doCreateControl( parent, toolkit );
+    m_control = control;
+
     m_control.addDisposeListener( new DisposeListener()
     {
       @Override
-      public void widgetDisposed( DisposeEvent e )
+      public void widgetDisposed( final DisposeEvent e )
       {
         AbstractProfilView.this.dispose();
-        m_control.removeDisposeListener( this );
+        control.removeDisposeListener( this );
       }
-    });
-    
+    } );
+
     return m_control;
   }
 
@@ -102,12 +103,14 @@ public abstract class AbstractProfilView implements IProfilListener, IProfilView
   /**
    * @see org.kalypso.model.wspm.ui.profil.view.IProfilView#dispose()
    */
+  @Override
   public void dispose( )
   {
     if( m_profile != null )
       m_profile.removeProfilListener( this );
   }
 
+  @Override
   public final Control getControl( )
   {
     return m_control;
@@ -129,6 +132,7 @@ public abstract class AbstractProfilView implements IProfilListener, IProfilView
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilListener#onProblemMarkerChanged(org.kalypso.model.wspm.core.profil.IProfil)
    */
+  @Override
   public void onProblemMarkerChanged( final IProfil source )
   {
     // instances must overwrite this method

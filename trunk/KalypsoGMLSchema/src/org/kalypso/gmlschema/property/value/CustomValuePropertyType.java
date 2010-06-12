@@ -94,6 +94,7 @@ public class CustomValuePropertyType implements IValuePropertyType
   /**
    * @see org.kalypso.gmlschema.property.IValuePropertyType#getValueQName()
    */
+  @Override
   public QName getValueQName( )
   {
     return m_contentType.getValueQName();
@@ -102,6 +103,7 @@ public class CustomValuePropertyType implements IValuePropertyType
   /**
    * @see org.kalypso.gmlschema.property.IValuePropertyType#getRestriction()
    */
+  @Override
   public IRestriction[] getRestriction( )
   {
     return m_restrictions;
@@ -110,6 +112,7 @@ public class CustomValuePropertyType implements IValuePropertyType
   /**
    * @see org.kalypso.gmlschema.property.IValuePropertyType#hasRestriction()
    */
+  @Override
   public boolean hasRestriction( )
   {
     return m_restrictions.length > 0;
@@ -118,6 +121,7 @@ public class CustomValuePropertyType implements IValuePropertyType
   /**
    * @see org.kalypso.gmlschema.property.IPropertyType#isVirtual()
    */
+  @Override
   public boolean isVirtual( )
   {
     return false;
@@ -126,6 +130,7 @@ public class CustomValuePropertyType implements IValuePropertyType
   /**
    * @see org.kalypso.gmlschema.property.IValuePropertyType#isFixed()
    */
+  @Override
   public boolean isFixed( )
   {
     return false;
@@ -134,6 +139,7 @@ public class CustomValuePropertyType implements IValuePropertyType
   /**
    * @see org.kalypso.gmlschema.property.IValuePropertyType#isNullable()
    */
+  @Override
   public boolean isNullable( )
   {
     return true;
@@ -142,6 +148,7 @@ public class CustomValuePropertyType implements IValuePropertyType
   /**
    * @see org.kalypso.gmlschema.property.IValuePropertyType#getFixed()
    */
+  @Override
   public String getFixed( )
   {
     return null;
@@ -150,6 +157,7 @@ public class CustomValuePropertyType implements IValuePropertyType
   /**
    * @see org.kalypso.gmlschema.property.IValuePropertyType#hasDefault()
    */
+  @Override
   public boolean hasDefault( )
   {
     return false;
@@ -158,6 +166,7 @@ public class CustomValuePropertyType implements IValuePropertyType
   /**
    * @see org.kalypso.gmlschema.property.IValuePropertyType#getDefault()
    */
+  @Override
   public String getDefault( )
   {
     return null;
@@ -166,6 +175,7 @@ public class CustomValuePropertyType implements IValuePropertyType
   /**
    * @see org.kalypso.gmlschema.property.IValuePropertyType#isGeometry()
    */
+  @Override
   public boolean isGeometry( )
   {
     return m_contentType.isGeometry();
@@ -174,6 +184,7 @@ public class CustomValuePropertyType implements IValuePropertyType
   /**
    * @see org.kalypso.gmlschema.property.IValuePropertyType#getValueClass()
    */
+  @Override
   public Class< ? > getValueClass( )
   {
     return m_contentType.getValueClass();
@@ -182,6 +193,7 @@ public class CustomValuePropertyType implements IValuePropertyType
   /**
    * @see org.kalypso.gmlschema.property.IPropertyType#getMinOccurs()
    */
+  @Override
   public int getMinOccurs( )
   {
     return m_minOccurs;
@@ -190,6 +202,7 @@ public class CustomValuePropertyType implements IValuePropertyType
   /**
    * @see org.kalypso.gmlschema.property.IPropertyType#getMaxOccurs()
    */
+  @Override
   public int getMaxOccurs( )
   {
     return m_maxOccurs;
@@ -198,6 +211,7 @@ public class CustomValuePropertyType implements IValuePropertyType
   /**
    * @see org.kalypso.gmlschema.property.IPropertyType#getQName()
    */
+  @Override
   public QName getQName( )
   {
     return m_qName;
@@ -206,6 +220,7 @@ public class CustomValuePropertyType implements IValuePropertyType
   /**
    * @see org.kalypso.gmlschema.property.IPropertyType#getName()
    */
+  @Override
   @SuppressWarnings("deprecation")
   @Deprecated
   public String getName( )
@@ -216,6 +231,7 @@ public class CustomValuePropertyType implements IValuePropertyType
   /**
    * @see org.kalypso.gmlschema.basics.IInitialize#init(int)
    */
+  @Override
   public void init( final int initializeRun )
   {
     // nothing to init
@@ -224,6 +240,7 @@ public class CustomValuePropertyType implements IValuePropertyType
   /**
    * @see org.kalypso.gmlschema.property.IValuePropertyType#getTypeHandler()
    */
+  @Override
   public IMarshallingTypeHandler getTypeHandler( )
   {
     return m_contentType.getTypeHandler();
@@ -232,6 +249,7 @@ public class CustomValuePropertyType implements IValuePropertyType
   /**
    * @see org.kalypso.gmlschema.property.IPropertyType#isList()
    */
+  @Override
   public boolean isList( )
   {
     return (m_maxOccurs > 1) || (m_maxOccurs == IPropertyType.UNBOUND_OCCURENCY);
@@ -240,8 +258,7 @@ public class CustomValuePropertyType implements IValuePropertyType
   /**
    * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
    */
-  @SuppressWarnings("unchecked")
-  public Object getAdapter( final Class adapterClass )
+  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapterClass )
   {
     final IAdapterManager adapterManager = Platform.getAdapterManager();
     final Object adapter = adapterManager.loadAdapter( this, adapterClass.getName() );
@@ -251,6 +268,7 @@ public class CustomValuePropertyType implements IValuePropertyType
   /**
    * @see org.kalypso.gmlschema.property.IPropertyType#isNillable()
    */
+  @Override
   public boolean isNillable( )
   {
     return m_isNillable;
@@ -305,6 +323,7 @@ public class CustomValuePropertyType implements IValuePropertyType
   /**
    * @see org.kalypso.gmlschema.property.IPropertyType#getAnnotation()
    */
+  @Override
   public IAnnotation getAnnotation( )
   {
     return m_annotation;
@@ -313,6 +332,7 @@ public class CustomValuePropertyType implements IValuePropertyType
   /**
    * @see org.kalypso.gmlschema.property.IPropertyType#cloneForFeatureType(org.kalypso.gmlschema.feature.IFeatureType)
    */
+  @Override
   public IPropertyType cloneForFeatureType( final IFeatureType featureType )
   {
     return new CustomValuePropertyType( m_qName, m_contentType, m_restrictions, m_minOccurs, m_maxOccurs, m_isNillable );

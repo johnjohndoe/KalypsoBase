@@ -114,6 +114,7 @@ public class ListSimpleTypeHandler implements ISimpleMarshallingTypeHandler<List
   /**
    * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#cloneObject(java.lang.Object, java.lang.String)
    */
+  @Override
   public Object cloneObject( final Object objectToClone, final String gmlVersion ) throws CloneNotSupportedException
   {
     if( objectToClone == null )
@@ -131,6 +132,7 @@ public class ListSimpleTypeHandler implements ISimpleMarshallingTypeHandler<List
   /**
    * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#getShortname()
    */
+  @Override
   public String getShortname( )
   {
     return m_baseTypeHandler.getShortname();
@@ -140,6 +142,7 @@ public class ListSimpleTypeHandler implements ISimpleMarshallingTypeHandler<List
    * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#marshal(java.lang.Object, org.xml.sax.XMLReader,
    *      java.net.URL, java.lang.String)
    */
+  @Override
   public void marshal( final Object value, final XMLReader xmlReader, final URL context, final String gmlVersion )
   {
     throw new UnsupportedOperationException();
@@ -149,6 +152,7 @@ public class ListSimpleTypeHandler implements ISimpleMarshallingTypeHandler<List
    * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#unmarshal(org.xml.sax.XMLReader, java.net.URL,
    *      org.kalypso.gmlschema.types.UnMarshallResultEater, java.lang.String)
    */
+  @Override
   public void unmarshal( final XMLReader xmlReader, final URL context, final UnmarshallResultEater marshalResultEater, final String gmlVersion )
   {
     throw new UnsupportedOperationException();
@@ -157,6 +161,7 @@ public class ListSimpleTypeHandler implements ISimpleMarshallingTypeHandler<List
   /**
    * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#parseType(java.lang.String)
    */
+  @Override
   public Object parseType( final String text )
   {
     return convertToJavaValue( text );
@@ -165,6 +170,7 @@ public class ListSimpleTypeHandler implements ISimpleMarshallingTypeHandler<List
   /**
    * @see org.kalypso.gmlschema.types.ITypeHandler#getTypeName()
    */
+  @Override
   public QName getTypeName( )
   {
     return m_baseTypeHandler.getTypeName();
@@ -173,6 +179,7 @@ public class ListSimpleTypeHandler implements ISimpleMarshallingTypeHandler<List
   /**
    * @see org.kalypso.gmlschema.types.ITypeHandler#getValueClass()
    */
+  @Override
   public Class< ? > getValueClass( )
   {
     return List.class;
@@ -181,6 +188,7 @@ public class ListSimpleTypeHandler implements ISimpleMarshallingTypeHandler<List
   /**
    * @see org.kalypso.gmlschema.types.ITypeHandler#isGeometry()
    */
+  @Override
   public boolean isGeometry( )
   {
     return m_baseTypeHandler.isGeometry();

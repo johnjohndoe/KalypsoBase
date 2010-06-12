@@ -78,6 +78,7 @@ public class ObservationLinkHandler extends AbstractOldFormatMarshallingTypeHand
   /**
    * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#getClassName()
    */
+  @Override
   public Class< ? > getValueClass( )
   {
     return CLASS_NAME;
@@ -86,6 +87,7 @@ public class ObservationLinkHandler extends AbstractOldFormatMarshallingTypeHand
   /**
    * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#getTypeName()
    */
+  @Override
   public QName getTypeName( )
   {
     return TYPE_NAME;
@@ -140,6 +142,7 @@ public class ObservationLinkHandler extends AbstractOldFormatMarshallingTypeHand
   /**
    * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#getShortname()
    */
+  @Override
   public String getShortname( )
   {
     return "Zeitreihen Verknüpfung";
@@ -148,6 +151,7 @@ public class ObservationLinkHandler extends AbstractOldFormatMarshallingTypeHand
   /**
    * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#cloneObject(java.lang.Object)
    */
+  @Override
   public Object cloneObject( final Object objectToClone, final String gmlVersion )
   {
     final TimeseriesLinkType link = (TimeseriesLinkType) objectToClone;
@@ -168,6 +172,7 @@ public class ObservationLinkHandler extends AbstractOldFormatMarshallingTypeHand
   /**
    * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#parseType(java.lang.String)
    */
+  @Override
   public Object parseType( final String text )
   {
     final org.kalypso.zml.obslink.ObjectFactory factory = new org.kalypso.zml.obslink.ObjectFactory();
@@ -179,6 +184,7 @@ public class ObservationLinkHandler extends AbstractOldFormatMarshallingTypeHand
   /**
    * @see org.kalypso.gmlschema.types.ITypeHandler#isGeometry()
    */
+  @Override
   public boolean isGeometry( )
   {
     return false;

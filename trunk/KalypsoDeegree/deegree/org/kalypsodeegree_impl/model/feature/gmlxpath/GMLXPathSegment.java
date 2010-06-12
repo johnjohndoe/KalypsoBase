@@ -179,16 +179,19 @@ public final class GMLXPathSegment
     // Create a constant context
     final NamespaceContext namespaceContext = new NamespaceContext()
     {
+      @Override
       public String getNamespaceURI( final String pref )
       {
         return namespaceURI;
       }
 
+      @Override
       public String getPrefix( final String namespace )
       {
         return prefix;
       }
 
+      @Override
       public Iterator<String> getPrefixes( final String namespace )
       {
         throw new UnsupportedOperationException();

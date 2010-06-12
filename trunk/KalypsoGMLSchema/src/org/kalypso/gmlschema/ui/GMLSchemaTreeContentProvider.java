@@ -80,6 +80,7 @@ public class GMLSchemaTreeContentProvider implements ITreeContentProvider
   /**
    * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
    */
+  @Override
   public Object[] getChildren( final Object parent )
   {
     if( parent == null )
@@ -147,6 +148,7 @@ public class GMLSchemaTreeContentProvider implements ITreeContentProvider
       final IFeatureType[] targetFeatureTypes = GMLSchemaUtilities.getSubstituts( targetFeatureType, m_context, true, true );
       final TreeSet<IFeatureType> sortedFTs = new TreeSet<IFeatureType>( new Comparator<IFeatureType>()
       {
+        @Override
         public int compare( IFeatureType ft1, IFeatureType ft2 )
         {
           String ns1 = ft1.getQName().getNamespaceURI();
@@ -213,6 +215,7 @@ public class GMLSchemaTreeContentProvider implements ITreeContentProvider
   /**
    * @see org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.Object)
    */
+  @Override
   public Object getParent( final Object element )
   {
     // is not supported
@@ -222,6 +225,7 @@ public class GMLSchemaTreeContentProvider implements ITreeContentProvider
   /**
    * @see org.eclipse.jface.viewers.ITreeContentProvider#hasChildren(java.lang.Object)
    */
+  @Override
   public boolean hasChildren( final Object element )
   {
     return getChildren( element ).length > 0;
@@ -230,6 +234,7 @@ public class GMLSchemaTreeContentProvider implements ITreeContentProvider
   /**
    * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
    */
+  @Override
   public Object[] getElements( final Object inputElement )
   {
     return getChildren( inputElement );
@@ -238,6 +243,7 @@ public class GMLSchemaTreeContentProvider implements ITreeContentProvider
   /**
    * @see org.eclipse.jface.viewers.IContentProvider#dispose()
    */
+  @Override
   public void dispose( )
   {
     // nothing to dispose
@@ -247,6 +253,7 @@ public class GMLSchemaTreeContentProvider implements ITreeContentProvider
    * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object,
    *      java.lang.Object)
    */
+  @Override
   public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
   {
     m_importMap.clear();

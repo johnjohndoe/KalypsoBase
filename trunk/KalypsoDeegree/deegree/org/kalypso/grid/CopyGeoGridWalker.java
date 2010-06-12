@@ -65,6 +65,7 @@ public class CopyGeoGridWalker implements IGeoGridWalker
   /**
    * @see org.kalypso.grid.IGeoGridWalker#start(org.kalypso.grid.IGeoGrid)
    */
+  @Override
   public void start( final IGeoGrid r )
   {
     // nothing to do
@@ -73,6 +74,7 @@ public class CopyGeoGridWalker implements IGeoGridWalker
   /**
    * @see org.kalypso.grid.IGeoGridWalker#operate(int, int, com.vividsolutions.jts.geom.Coordinate)
    */
+  @Override
   public void operate( final int x, final int y, final Coordinate c ) throws GeoGridException
   {
     m_outputGrid.setValue( x, y, c.z );
@@ -89,6 +91,7 @@ public class CopyGeoGridWalker implements IGeoGridWalker
   /**
    * @see org.kalypso.grid.IGeoGridWalker#finish()
    */
+  @Override
   public Object finish( )
   {
     // nothing to do

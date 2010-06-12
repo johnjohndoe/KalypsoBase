@@ -47,6 +47,7 @@ public class Raster2Lines implements IGeoGridWalker
   /**
    * @see org.kalypso.gis.doubleraster.DoubleRasterWalker#start(org.kalypso.gis.doubleraster.DoubleRaster)
    */
+  @Override
   public final void start( final IGeoGrid grid ) throws GeoGridException
   {
     m_grid = grid;
@@ -68,6 +69,7 @@ public class Raster2Lines implements IGeoGridWalker
   /**
    * @see org.kalypso.gis.doubleraster.DoubleRasterWalker#operate(int, int, com.vividsolutions.jts.geom.Coordinate)
    */
+  @Override
   public final void operate( final int x, final int y, final Coordinate crd ) throws GeoGridException
   {
     // Volumen aufaddieren
@@ -142,6 +144,7 @@ public class Raster2Lines implements IGeoGridWalker
    * 
    * @see org.kalypso.gis.doubleraster.DoubleRasterWalker#getResult()
    */
+  @Override
   public Object finish( )
   {
     return m_strategy;

@@ -52,6 +52,7 @@ public class ProfilAdapter implements IProfilListener
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilListener#onProblemMarkerChanged(org.kalypso.model.wspm.core.profil.IProfil)
    */
+  @Override
   public void onProblemMarkerChanged( final IProfil source )
   {
     // nothing to do, overwrite to implement
@@ -61,6 +62,7 @@ public class ProfilAdapter implements IProfilListener
    * @see org.kalypso.model.wspm.core.profil.IProfilListener#onProfilChanged(org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint,
    *      org.kalypso.model.wspm.core.profil.IProfilChange[])
    */
+  @Override
   public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
     // nothing to do, overwrite to implement

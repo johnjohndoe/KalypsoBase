@@ -75,6 +75,7 @@ public abstract class AbstractExportTarget implements IExportTarget
    * @see org.eclipse.core.runtime.IExecutableExtension#setInitializationData(org.eclipse.core.runtime.IConfigurationElement,
    *      java.lang.String, java.lang.Object)
    */
+  @Override
   public final void setInitializationData( final IConfigurationElement config, final String propertyName, Object data )
   {
     m_name = config.getAttribute( "name" );
@@ -92,6 +93,7 @@ public abstract class AbstractExportTarget implements IExportTarget
   /**
    * @see org.kalypso.metadoc.IExportTarget#getName()
    */
+  @Override
   public final String getName( )
   {
     return m_name;
@@ -100,6 +102,7 @@ public abstract class AbstractExportTarget implements IExportTarget
   /**
    * @see org.kalypso.metadoc.IExportTarget#getDescription()
    */
+  @Override
   public final String getDescription( )
   {
     return m_desc;
@@ -108,6 +111,7 @@ public abstract class AbstractExportTarget implements IExportTarget
   /**
    * @see org.kalypso.metadoc.IExportTarget#getImage()
    */
+  @Override
   public final ImageDescriptor getImage( )
   {
     return m_imageDescriptor;
@@ -116,6 +120,7 @@ public abstract class AbstractExportTarget implements IExportTarget
   /**
    * @see org.kalypso.metadoc.IExportTarget#isModeSupported(java.lang.String)
    */
+  @Override
   public boolean isModeSupported( final String mode )
   {
     return mode == null || m_modes.isEmpty() || m_modes.contains( mode );
@@ -124,6 +129,7 @@ public abstract class AbstractExportTarget implements IExportTarget
   /**
    * @see org.kalypso.metadoc.IExportTarget#setProperty(java.lang.String, java.lang.String)
    */
+  @Override
   public void setProperty( final String key, final String value )
   {
     m_properties.setProperty( key, value );

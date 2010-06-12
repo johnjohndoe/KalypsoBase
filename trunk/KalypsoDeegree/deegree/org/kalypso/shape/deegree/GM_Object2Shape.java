@@ -63,8 +63,8 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree_impl.model.geometry.GM_PositionOrientation;
-import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.model.geometry.GM_PositionOrientation.TYPE;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * @author Gernot Belger

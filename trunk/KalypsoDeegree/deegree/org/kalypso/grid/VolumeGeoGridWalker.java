@@ -77,6 +77,7 @@ public class VolumeGeoGridWalker implements IGeoGridWalker
   /**
    * @see org.kalypso.grid.IGeoGridWalker#finish()
    */
+  @Override
   public Object finish( )
   {
     return null;
@@ -85,6 +86,7 @@ public class VolumeGeoGridWalker implements IGeoGridWalker
   /**
    * @see org.kalypso.grid.IGeoGridWalker#operate(int, int, com.vividsolutions.jts.geom.Coordinate)
    */
+  @Override
   public void operate( final int x, final int y, final Coordinate c )
   {
     final double height = m_height - c.z;
@@ -95,6 +97,7 @@ public class VolumeGeoGridWalker implements IGeoGridWalker
   /**
    * @see org.kalypso.grid.IGeoGridWalker#start(org.kalypso.grid.IGeoGrid)
    */
+  @Override
   public void start( final IGeoGrid grid ) throws GeoGridException
   {
     // Reset in order to reuse this walker

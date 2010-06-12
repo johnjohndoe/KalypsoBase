@@ -59,6 +59,7 @@ public class EmptyGMLSchema implements IGMLSchema
   /**
    * @see org.kalypso.gmlschema.IGMLSchema#getGMLVersion()
    */
+  @Override
   public String getGMLVersion( )
   {
     return "3.1"; //$NON-NLS-1$
@@ -67,6 +68,7 @@ public class EmptyGMLSchema implements IGMLSchema
   /**
    * @see org.kalypso.gmlschema.IGMLSchema#getTargetNamespace()
    */
+  @Override
   public String getTargetNamespace( )
   {
     return "empty"; //$NON-NLS-1$
@@ -75,6 +77,7 @@ public class EmptyGMLSchema implements IGMLSchema
   /**
    * @see org.kalypso.gmlschema.IGMLSchema#getContext()
    */
+  @Override
   public URL getContext( )
   {
     return null;
@@ -83,6 +86,7 @@ public class EmptyGMLSchema implements IGMLSchema
   /**
    * @see org.kalypso.gmlschema.IGMLSchema#accept(org.kalypso.gmlschema.visitor.IGMLSchemaVisitor)
    */
+  @Override
   public void accept( final IGMLSchemaVisitor visitor )
   {
     visitor.visit( this );
@@ -91,6 +95,7 @@ public class EmptyGMLSchema implements IGMLSchema
   /**
    * @see org.kalypso.gmlschema.IGMLSchema#getFeatureType(javax.xml.namespace.QName)
    */
+  @Override
   public IFeatureType getFeatureType( final QName qName )
   {
     return null;
@@ -99,6 +104,7 @@ public class EmptyGMLSchema implements IGMLSchema
   /**
    * @see org.kalypso.gmlschema.IGMLSchema#getAllFeatureTypes()
    */
+  @Override
   public IFeatureType[] getAllFeatureTypes( )
   {
     return new IFeatureType[] {};
@@ -116,6 +122,7 @@ public class EmptyGMLSchema implements IGMLSchema
   /**
    * @see org.kalypso.gmlschema.IGMLSchema#getAdditionalSchemas()
    */
+  @Override
   public IGMLSchema[] getAdditionalSchemas( )
   {
     return new IGMLSchema[0];

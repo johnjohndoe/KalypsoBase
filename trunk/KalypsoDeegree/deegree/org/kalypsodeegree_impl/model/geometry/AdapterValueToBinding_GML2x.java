@@ -100,6 +100,7 @@ public class AdapterValueToBinding_GML2x implements AdapterValueToGMLBinding
   /**
    * @see org.kalypsodeegree_impl.model.geometry.IValueToGMLBindingAdapter#wrapToBinding(org.kalypsodeegree.model.geometry.GM_Object)
    */
+  @Override
   public Object wrapToBinding( final GM_Object geometry ) throws GM_Exception
   {
     final String csNameDefault = getCSName( geometry, null );
@@ -268,6 +269,7 @@ public class AdapterValueToBinding_GML2x implements AdapterValueToGMLBinding
   /**
    * @see org.kalypsodeegree_impl.model.geometry.AdapterValueToGMLBinding#wrapToElement(org.kalypsodeegree.model.geometry.GM_Object)
    */
+  @Override
   public Element wrapToElement( final GM_Object geometry ) throws GM_Exception
   {
     try
@@ -288,6 +290,7 @@ public class AdapterValueToBinding_GML2x implements AdapterValueToGMLBinding
     }
   }
 
+  @Override
   public JAXBElement< ? extends Object> createJAXBGeometryElement( final Object geometry )
   {
     if( geometry instanceof PointType )
@@ -309,6 +312,7 @@ public class AdapterValueToBinding_GML2x implements AdapterValueToGMLBinding
   /**
    * @see org.kalypsodeegree_impl.model.geometry.AdapterValueToGMLBinding#wrapToBinding(org.kalypsodeegree.model.geometry.GM_Envelope)
    */
+  @Override
   public Object wrapToBinding( final GM_Envelope envelope )
   {
     final BoxType boxType = AdapterValueToBinding_GML2x.OF_GML2.createBoxType();

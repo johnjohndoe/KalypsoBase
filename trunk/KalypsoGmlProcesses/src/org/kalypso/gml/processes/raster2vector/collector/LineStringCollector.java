@@ -42,6 +42,7 @@ public class LineStringCollector implements SegmentCollector
    *      org.kalypso.gml.processes.raster2vector.LinkedCoordinate,
    *      org.kalypso.gml.processes.raster2vector.LinkedCoordinate)
    */
+  @Override
   public void addSegment( final int index, final LinkedCoordinate lc0, final LinkedCoordinate lc1 ) throws LinkedCoordinateException
   {
     try
@@ -93,6 +94,7 @@ public class LineStringCollector implements SegmentCollector
   /**
    * @see com.bce.gis.operation.raster2vector.SegmentCollector#getFeatures()
    */
+  @Override
   public CollectorDataProvider[] getData( )
   {
     return m_dataList.toArray( new CollectorDataProvider[m_dataList.size()] );
@@ -101,6 +103,7 @@ public class LineStringCollector implements SegmentCollector
   /**
    * @see org.kalypso.gml.processes.raster2vector.collector.SegmentCollector#finish()
    */
+  @Override
   public void finish( )
   {
 // nothing to do
@@ -110,6 +113,7 @@ public class LineStringCollector implements SegmentCollector
    * @see org.kalypso.gml.processes.raster2vector.collector.SegmentCollector#interpolate(com.vividsolutions.jts.geom.Coordinate,
    *      com.vividsolutions.jts.geom.Coordinate, int)
    */
+  @Override
   public LinkedCoordinate interpolate( final Coordinate c1, final Coordinate c2, final int index )
   {
     double zFaktor = -1.0;

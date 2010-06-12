@@ -45,8 +45,8 @@ import org.kalypsodeegree.model.geometry.GM_CurveSegment;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree_impl.model.geometry.GM_PositionOrientation;
-import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.model.geometry.GM_PositionOrientation.TYPE;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * Class representing a two dimensional ESRI Polygon <BR>
@@ -115,6 +115,7 @@ public class SHPPolygon implements ISHPParts
   /**
    * method: writeSHPPolygon(byte[] bytearray, int start) <BR>
    */
+  @Override
   public byte[] writeShape( )
   {
     int offset = ShapeConst.SHAPE_FILE_RECORD_HEADER_LENGTH;
@@ -209,6 +210,7 @@ public class SHPPolygon implements ISHPParts
   /**
    * returns the polygon shape size in bytes <BR>
    */
+  @Override
   public int size( )
   {
     return 44 + getNumParts() * 4 + getNumPoints() * 16;
@@ -220,16 +222,19 @@ public class SHPPolygon implements ISHPParts
     return "WKBPOLYGON" + " numRings: " + getNumParts();
   }
 
+  @Override
   public SHPEnvelope getEnvelope( )
   {
     return m_rings.getEnvelope();
   }
 
+  @Override
   public int getNumParts( )
   {
     return m_rings.getNumParts();
   }
 
+  @Override
   public int getNumPoints( )
   {
     return m_rings.getNumPoints();

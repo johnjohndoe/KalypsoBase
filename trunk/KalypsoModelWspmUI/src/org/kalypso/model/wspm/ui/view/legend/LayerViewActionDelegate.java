@@ -47,6 +47,7 @@ import org.eclipse.jface.action.IAction;
  */
 public class LayerViewActionDelegate extends AbstractLegendViewActionDelegate
 {
+  @Override
   public void run( final IAction action )
   {
    // getView().showLayerProperties();

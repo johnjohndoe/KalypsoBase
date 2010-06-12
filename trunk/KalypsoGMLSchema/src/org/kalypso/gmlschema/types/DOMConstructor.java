@@ -96,6 +96,7 @@ public class DOMConstructor implements ContentHandler, LexicalHandler
     m_contextStack = new Stack<Node>();
   }
 
+  @Override
   public void startElement( final String uri, final String local, final String qname, final Attributes atts ) throws SAXException
   {
     m_level++;
@@ -130,6 +131,7 @@ public class DOMConstructor implements ContentHandler, LexicalHandler
     pushContext( elem );
   }
 
+  @Override
   public void endElement( final String uri, final String local, final String qname ) throws SAXException
   {
     m_level--;
@@ -213,18 +215,21 @@ public class DOMConstructor implements ContentHandler, LexicalHandler
   }
 
   // Text and CDATA section
+  @Override
   public void startCDATA( ) throws SAXException
   {
     flushText();
     m_inCdata = true;
   }
 
+  @Override
   public void endCDATA( ) throws SAXException
   {
     flushText();
     m_inCdata = false;
   }
 
+  @Override
   public void characters( final char[] ch, final int start, final int length )
   {
     if( m_buffer == null )
@@ -232,11 +237,13 @@ public class DOMConstructor implements ContentHandler, LexicalHandler
     m_buffer.append( ch, start, length );
   }
 
+  @Override
   public void ignorableWhitespace( final char[] ch, final int start, final int len )
   {
     characters( ch, start, len );
   }
 
+  @Override
   public void processingInstruction( final String target, final String data ) throws SAXException
   {
     flushText();
@@ -245,6 +252,7 @@ public class DOMConstructor implements ContentHandler, LexicalHandler
     output( pi );
   }
 
+  @Override
   public void comment( final char[] ch, final int start, final int length ) throws SAXException
   {
     flushText();
@@ -252,16 +260,19 @@ public class DOMConstructor implements ContentHandler, LexicalHandler
     output( m_factory.createComment( data ) );
   }
 
+  @Override
   public void startDocument( )
   {
     pushContext( m_factory );
   }
 
+  @Override
   public void endDocument( ) throws SAXException
   {
     output( popContext() );
   }
 
+  @Override
   public void startPrefixMapping( final String prefix, final String uri )
   {
     if( m_prefixes == null )
@@ -277,11 +288,13 @@ public class DOMConstructor implements ContentHandler, LexicalHandler
     m_prefixes.addElement( attr );
   }
 
+  @Override
   public void endPrefixMapping( final String prefix )
   {
   }
 
   // EntityReference
+  @Override
   public void startEntity( final String name ) throws SAXException
   {
     flushText();
@@ -289,6 +302,7 @@ public class DOMConstructor implements ContentHandler, LexicalHandler
     pushContext( entityref );
   }
 
+  @Override
   public void endEntity( final String name ) throws SAXException
   {
     flushText();
@@ -296,18 +310,22 @@ public class DOMConstructor implements ContentHandler, LexicalHandler
   }
 
   // DOCTYPE: ignored
+  @Override
   public void startDTD( final String root, final String p, final String s )
   {
   }
 
+  @Override
   public void endDTD( )
   {
   }
 
+  @Override
   public void setDocumentLocator( final Locator locator )
   {
   }
 
+  @Override
   public void skippedEntity( final String name )
   {
   }

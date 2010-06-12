@@ -89,6 +89,7 @@ public class ProfilChartViewActionBarContributor implements IActionBarContributo
   /**
    * @see org.kalypso.contribs.eclipse.ui.actions.IActionBarContributor#contributeTo(org.eclipse.jface.action.IMenuManager)
    */
+  @Override
   public void contributeTo( final IMenuManager menuManager )
   {
     for( final ChartAction action : m_chartActions )
@@ -103,6 +104,7 @@ public class ProfilChartViewActionBarContributor implements IActionBarContributo
   /**
    * @see org.kalypso.contribs.eclipse.ui.actions.IActionBarContributor#dispose(org.eclipse.jface.action.IMenuManager)
    */
+  @Override
   public void dispose( final IMenuManager menuManager )
   {
   }
@@ -110,6 +112,7 @@ public class ProfilChartViewActionBarContributor implements IActionBarContributo
   /**
    * @see org.kalypso.contribs.eclipse.ui.actions.IActionBarContributor#contributeTo(org.eclipse.jface.action.ICoolBarManager)
    */
+  @Override
   public void contributeTo( final ICoolBarManager coolbarManager )
   {
     for( final ChartAction action : m_chartActions )
@@ -120,6 +123,7 @@ public class ProfilChartViewActionBarContributor implements IActionBarContributo
   /**
    * @see org.kalypso.contribs.eclipse.ui.actions.IActionBarContributor#dispose(org.eclipse.jface.action.ICoolBarManager)
    */
+  @Override
   public void dispose( final ICoolBarManager coolbarManager )
   {
   }
@@ -127,6 +131,7 @@ public class ProfilChartViewActionBarContributor implements IActionBarContributo
   /**
    * @see org.kalypso.contribs.eclipse.ui.actions.IActionBarContributor#contributeTo(org.eclipse.jface.action.IToolBarManager)
    */
+  @Override
   public void contributeTo( final IToolBarManager toolbarManager )
   {
     for( final ChartAction action : m_chartActions )
@@ -137,6 +142,7 @@ public class ProfilChartViewActionBarContributor implements IActionBarContributo
   /**
    * @see org.kalypso.contribs.eclipse.ui.actions.IActionBarContributor#dispose(org.eclipse.jface.action.IToolBarManager)
    */
+  @Override
   public void dispose( final IToolBarManager toolbarManager )
   {
   }
@@ -144,6 +150,7 @@ public class ProfilChartViewActionBarContributor implements IActionBarContributo
   /**
    * @see org.kalypso.contribs.eclipse.ui.actions.IActionBarContributor#contributeTo(org.eclipse.jface.action.IStatusLineManager)
    */
+  @Override
   public void contributeTo( final IStatusLineManager statuslineManager )
   {
     statuslineManager.add( m_statusPosItem );
@@ -152,6 +159,7 @@ public class ProfilChartViewActionBarContributor implements IActionBarContributo
   /**
    * @see org.kalypso.contribs.eclipse.ui.actions.IActionBarContributor#dispose(org.eclipse.jface.action.IStatusLineManager)
    */
+  @Override
   public void dispose( final IStatusLineManager statuslineManager )
   {
     statuslineManager.remove( m_statusPosItem );
@@ -160,6 +168,7 @@ public class ProfilChartViewActionBarContributor implements IActionBarContributo
   /**
    * @see org.kalypso.contribs.eclipse.ui.actions.IActionBarContributor#dispose()
    */
+  @Override
   public void dispose( )
   {
     m_statusPosItem.dispose();
@@ -179,6 +188,7 @@ public class ProfilChartViewActionBarContributor implements IActionBarContributo
   /**
    * @see org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater#setAdapter(java.lang.Object)
    */
+  @Override
   public void setAdapter( final IWorkbenchPart part, final ProfilChartView chartView )
   {
     m_statusPosItem.setChartView( chartView );

@@ -76,6 +76,7 @@ public class XsdBaseTypeHandlerXMLGregorianCalendar extends XsdBaseTypeHandler<X
   /**
    * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
    */
+  @Override
   public int compare( final XMLGregorianCalendar o1, final XMLGregorianCalendar o2 )
   {
     if( (o1 == null) && (o2 == null) )

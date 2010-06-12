@@ -105,6 +105,7 @@ public class GenericBindingTypeHandler implements IMarshallingTypeHandler
     m_xmlTypeQName = xmlTypeQName;
   }
 
+  @Override
   public void marshal( final Object value, final XMLReader xmlReader, final URL context, final String gmlVersion ) throws SAXException
   {
     final JAXBElement<Object> jaxElement = JaxbUtilities.createJaxbElement( m_xmlTagQName, value );
@@ -128,6 +129,7 @@ public class GenericBindingTypeHandler implements IMarshallingTypeHandler
     }
   }
 
+  @Override
   public void unmarshal( final XMLReader xmlReader, final URL context, final UnmarshallResultEater marshalResultEater, final String gmlVersion ) throws TypeRegistryException
   {
     // xml to memory
@@ -138,6 +140,7 @@ public class GenericBindingTypeHandler implements IMarshallingTypeHandler
       final UnmarshallerHandler unmarshallerHandler = unmarshaller.getUnmarshallerHandler();
       final UnmarshalResultProvider provider = new UnmarshalResultProvider()
       {
+        @Override
         public Object getResult( ) throws GMLSchemaException
         {
           try
@@ -164,6 +167,7 @@ public class GenericBindingTypeHandler implements IMarshallingTypeHandler
   /**
    * @see org.kalypso.gmlschema.types.ITypeHandler#getValueClass()
    */
+  @Override
   public Class< ? > getValueClass( )
   {
     return m_valueClass;
@@ -172,6 +176,7 @@ public class GenericBindingTypeHandler implements IMarshallingTypeHandler
   /**
    * @see org.kalypso.gmlschema.types.ITypeHandler#getTypeName()
    */
+  @Override
   public QName getTypeName( )
   {
     return m_xmlTypeQName;
@@ -180,6 +185,7 @@ public class GenericBindingTypeHandler implements IMarshallingTypeHandler
   /**
    * @see org.kalypso.gmlschema.types.ITypeHandler#isGeometry()
    */
+  @Override
   public boolean isGeometry( )
   {
     return m_isGeometry;
@@ -188,6 +194,7 @@ public class GenericBindingTypeHandler implements IMarshallingTypeHandler
   /**
    * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#getShortname()
    */
+  @Override
   public String getShortname( )
   {
     return m_xmlTypeQName.getLocalPart();
@@ -196,6 +203,7 @@ public class GenericBindingTypeHandler implements IMarshallingTypeHandler
   /**
    * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#cloneObject(java.lang.Object)
    */
+  @Override
   public Object cloneObject( final Object objectToClone, final String gmlVersion ) throws CloneNotSupportedException
   {
     try
@@ -216,6 +224,7 @@ public class GenericBindingTypeHandler implements IMarshallingTypeHandler
   /**
    * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#parseType(java.lang.String)
    */
+  @Override
   public Object parseType( final String text )
   {
     throw new UnsupportedOperationException();

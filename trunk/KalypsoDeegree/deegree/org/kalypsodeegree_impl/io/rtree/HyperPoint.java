@@ -110,6 +110,7 @@ public class HyperPoint
    * 
    * @return String Stringrepräsentation des Hyperpoints
    */
+  @Override
   public String toString()
   {
     String ret = "";
@@ -127,6 +128,7 @@ public class HyperPoint
    * 
    * @see java.lang.Object
    */
+  @Override
   public boolean equals( Object obj )
   {
     HyperPoint point = (HyperPoint)obj;
@@ -146,6 +148,7 @@ public class HyperPoint
    * 
    * @return Object geklonter HyperPoint
    */
+  @Override
   public Object clone()
   {
     double[] point = new double[coords.length];

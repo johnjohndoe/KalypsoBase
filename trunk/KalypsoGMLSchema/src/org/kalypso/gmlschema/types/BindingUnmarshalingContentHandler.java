@@ -91,6 +91,7 @@ public class BindingUnmarshalingContentHandler implements ContentHandler
    * @see org.xml.sax.ContentHandler#startElement(java.lang.String, java.lang.String, java.lang.String,
    *      org.xml.sax.Attributes)
    */
+  @Override
   public void startElement( final String uri, String local, String qname, final Attributes atts ) throws SAXException
   {
     // hack:
@@ -131,6 +132,7 @@ public class BindingUnmarshalingContentHandler implements ContentHandler
     }
   }
 
+  @Override
   @SuppressWarnings("unchecked")
   public void endElement( final String uri, String local, String qname ) throws SAXException
   {
@@ -179,49 +181,58 @@ public class BindingUnmarshalingContentHandler implements ContentHandler
     }
   }
 
+  @Override
   public void characters( final char[] ch, final int start, final int length ) throws SAXException
   {
     if( m_level > 0 )
       m_unmarshallerHandler.characters( ch, start, length );
   }
 
+  @Override
   public void ignorableWhitespace( final char[] ch, final int start, final int len ) throws SAXException
   {
     if( m_level > 0 )
       m_unmarshallerHandler.ignorableWhitespace( ch, start, len );
   }
 
+  @Override
   public void processingInstruction( final String target, final String data ) throws SAXException
   {
     if( m_level > 0 )
       m_unmarshallerHandler.processingInstruction( target, data );
   }
 
+  @Override
   public void startDocument( ) throws SAXException
   {
     m_unmarshallerHandler.startDocument();
   }
 
+  @Override
   public void endDocument( ) throws SAXException
   {
     m_unmarshallerHandler.endDocument();
   }
 
+  @Override
   public void startPrefixMapping( final String prefix, final String uri ) throws SAXException
   {
     m_unmarshallerHandler.startPrefixMapping( prefix, uri );
   }
 
+  @Override
   public void endPrefixMapping( final String prefix ) throws SAXException
   {
     m_unmarshallerHandler.endPrefixMapping( prefix );
   }
 
+  @Override
   public void setDocumentLocator( final Locator locator )
   {
     m_unmarshallerHandler.setDocumentLocator( locator );
   }
 
+  @Override
   public void skippedEntity( final String name ) throws SAXException
   {
     m_unmarshallerHandler.skippedEntity( name );

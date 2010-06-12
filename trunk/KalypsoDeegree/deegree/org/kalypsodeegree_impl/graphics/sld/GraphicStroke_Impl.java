@@ -74,6 +74,7 @@ public class GraphicStroke_Impl implements GraphicStroke, Marshallable
    * 
    * @return graphic
    */
+  @Override
   public Graphic getGraphic()
   {
     return graphic;
@@ -84,6 +85,7 @@ public class GraphicStroke_Impl implements GraphicStroke, Marshallable
    * 
    * @param graphic
    */
+  @Override
   public void setGraphic( Graphic graphic )
   {
     this.graphic = graphic;
@@ -94,6 +96,7 @@ public class GraphicStroke_Impl implements GraphicStroke, Marshallable
    * 
    * @return xml representation of the GraphicStroke
    */
+  @Override
   public String exportAsXML()
   {
     Debug.debugMethodBegin();

@@ -122,21 +122,25 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
     return new GM_Envelope_Impl( m_minX, m_minY, m_maxX, m_maxY, m_coordinateSystem );
   }
 
+  @Override
   public double getMinX( )
   {
     return m_minX;
   }
 
+  @Override
   public double getMinY( )
   {
     return m_minY;
   }
 
+  @Override
   public double getMaxX( )
   {
     return m_maxX;
   }
 
+  @Override
   public double getMaxY( )
   {
     return m_maxY;
@@ -145,6 +149,7 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
   /**
    * returns the minimum coordinates of bounding box
    */
+  @Override
   public GM_Position getMin( )
   {
     return GeometryFactory.createGM_Position( m_minX, m_minY );
@@ -153,6 +158,7 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
   /**
    * returns the maximum coordinates of bounding box
    */
+  @Override
   public GM_Position getMax( )
   {
     return GeometryFactory.createGM_Position( m_maxX, m_maxY );
@@ -161,6 +167,7 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
   /**
    * returns the width of bounding box
    */
+  @Override
   public double getWidth( )
   {
     return m_maxX - m_minX;
@@ -169,6 +176,7 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
   /**
    * returns the height of bounding box
    */
+  @Override
   public double getHeight( )
   {
     return m_maxY - m_minY;
@@ -177,6 +185,7 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
   /**
    * returns true if the bounding box contains the point specified by the given x and y coordinates
    */
+  @Override
   public boolean contains( final double pointX, final double pointY )
   {
     return (pointX >= m_minX) && (pointX <= m_maxX) && (pointY >= m_minY) && (pointY <= m_maxY);
@@ -185,6 +194,7 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
   /**
    * returns true if the bounding box contains the specified GM_Point
    */
+  @Override
   public boolean contains( final GM_Position point )
   {
     return contains( point.getX(), point.getY() );
@@ -193,6 +203,7 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
   /**
    * returns true if this envelope and the submitted intersects
    */
+  @Override
   public boolean intersects( final GM_Envelope bb )
   {
     // TODO: true or false?
@@ -221,6 +232,7 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
   /**
    * returns true if all points of the submitted bounding box are within this bounding box
    */
+  @Override
   public boolean contains( final GM_Envelope bb )
   {
     if( bb == null )
@@ -240,6 +252,7 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
    *          the GM_Envelope to be intersected with this GM_Envelope
    * @return the largest GM_Envelope contained in both the specified GM_Envelope and in this GM_Envelope.
    */
+  @Override
   public GM_Envelope createIntersection( final GM_Envelope bb )
   {
     Rectangle2D rect = new Rectangle2D.Double( bb.getMin().getX(), bb.getMin().getY(), bb.getWidth(), bb.getHeight() );
@@ -284,6 +297,7 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
    *          If <code>false</code>, the positions are compared by {@link GM_Position#equals(Object, false)}
    * @see GM_Position#equals(Object, boolean)
    */
+  @Override
   public boolean equals( final Object other, final boolean exact )
   {
     if( (other == null) || !(other instanceof GM_Envelope_Impl) )
@@ -308,6 +322,7 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
     return true;
   }
 
+  @Override
   public GM_Envelope getBuffer( final double b )
   {
     final double minX = m_minX - b;
@@ -318,6 +333,7 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
     return GeometryFactory.createGM_Envelope( minX, minY, maxX, maxY, m_coordinateSystem );
   }
 
+  @Override
   public GM_Envelope getMerged( final GM_Position pos )
   {
     if( pos == null )
@@ -336,6 +352,7 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
   /**
    * @see org.kalypsodeegree.model.geometry.GM_Envelope#getMerged(org.kalypsodeegree.model.geometry.GM_Envelope)
    */
+  @Override
   public GM_Envelope getMerged( final GM_Envelope envelope )
   {
     if( envelope == null )
@@ -364,6 +381,7 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
   /**
    * @see org.kalypsodeegree.model.geometry.GM_Envelope#getPaned(org.kalypsodeegree.model.geometry.GM_Point)
    */
+  @Override
   public GM_Envelope getPaned( final GM_Point center )
   {
     final double dx = getMax().getX() - getMin().getX();
@@ -380,6 +398,7 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
   /**
    * @see org.kalypsodeegree.model.geometry.GM_Envelope#getCoordinateSystem()
    */
+  @Override
   public String getCoordinateSystem( )
   {
     return m_coordinateSystem;

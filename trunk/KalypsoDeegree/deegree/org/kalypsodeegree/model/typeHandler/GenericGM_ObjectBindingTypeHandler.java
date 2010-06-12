@@ -75,6 +75,7 @@ public class GenericGM_ObjectBindingTypeHandler extends GenericBindingTypeHandle
   {
     final UnmarshallResultEater eater = new UnmarshallResultEater()
     {
+      @Override
       public void unmarshallSuccesful( final Object bindingGeometry ) throws SAXParseException
       {
         Object geometryValue = null;

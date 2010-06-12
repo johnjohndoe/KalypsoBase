@@ -84,6 +84,7 @@ public class ReferencedPropertyType extends AbstractPropertyTypeFromElement impl
   /**
    * @see org.kalypso.gmlschema.basics.IInitialize#init(int)
    */
+  @Override
   public void init( final int initializeRun ) throws GMLSchemaException
   {
     // find referenced relation type, it should also be build by now
@@ -116,6 +117,7 @@ public class ReferencedPropertyType extends AbstractPropertyTypeFromElement impl
   /**
    * @see org.kalypso.gmlschema.property.IValuePropertyType#hasRestriction()
    */
+  @Override
   public boolean hasRestriction( )
   {
     checkState();
@@ -127,6 +129,7 @@ public class ReferencedPropertyType extends AbstractPropertyTypeFromElement impl
   /**
    * @see org.kalypso.gmlschema.property.IValuePropertyType#getRestriction()
    */
+  @Override
   public IRestriction[] getRestriction( )
   {
     checkState();
@@ -138,6 +141,7 @@ public class ReferencedPropertyType extends AbstractPropertyTypeFromElement impl
   /**
    * @see org.kalypso.gmlschema.property.IValuePropertyType#isFixed()
    */
+  @Override
   public boolean isFixed( )
   {
     checkState();
@@ -149,6 +153,7 @@ public class ReferencedPropertyType extends AbstractPropertyTypeFromElement impl
   /**
    * @see org.kalypso.gmlschema.property.IValuePropertyType#getFixed()
    */
+  @Override
   public String getFixed( )
   {
     checkState();
@@ -163,6 +168,7 @@ public class ReferencedPropertyType extends AbstractPropertyTypeFromElement impl
   /**
    * @see org.kalypso.gmlschema.property.IValuePropertyType#isNullable()
    */
+  @Override
   public boolean isNullable( )
   {
     checkState();
@@ -174,6 +180,7 @@ public class ReferencedPropertyType extends AbstractPropertyTypeFromElement impl
   /**
    * @see org.kalypso.gmlschema.property.IValuePropertyType#hasDefault()
    */
+  @Override
   public boolean hasDefault( )
   {
     checkState();
@@ -185,6 +192,7 @@ public class ReferencedPropertyType extends AbstractPropertyTypeFromElement impl
   /**
    * @see org.kalypso.gmlschema.property.IValuePropertyType#getDefault()
    */
+  @Override
   public String getDefault( )
   {
     checkState();
@@ -199,6 +207,7 @@ public class ReferencedPropertyType extends AbstractPropertyTypeFromElement impl
   /**
    * @see org.kalypso.gmlschema.property.IValuePropertyType#isGeometry()
    */
+  @Override
   public boolean isGeometry( )
   {
     checkState();
@@ -210,6 +219,7 @@ public class ReferencedPropertyType extends AbstractPropertyTypeFromElement impl
   /**
    * @see org.kalypso.gmlschema.property.IValuePropertyType#getValueClass()
    */
+  @Override
   public Class< ? > getValueClass( )
   {
     checkState();
@@ -221,6 +231,7 @@ public class ReferencedPropertyType extends AbstractPropertyTypeFromElement impl
   /**
    * @see org.kalypso.gmlschema.property.IValuePropertyType#getTypeHandler()
    */
+  @Override
   public IMarshallingTypeHandler getTypeHandler( )
   {
     checkState();
@@ -232,6 +243,7 @@ public class ReferencedPropertyType extends AbstractPropertyTypeFromElement impl
   /**
    * @see org.kalypso.gmlschema.property.IValuePropertyType#getValueQName()
    */
+  @Override
   public QName getValueQName( )
   {
     checkState();
@@ -243,6 +255,7 @@ public class ReferencedPropertyType extends AbstractPropertyTypeFromElement impl
   /**
    * @see org.kalypso.gmlschema.property.IPropertyType#cloneForFeatureType(org.kalypso.gmlschema.feature.IFeatureType)
    */
+  @Override
   public IPropertyType cloneForFeatureType( final IFeatureType featureType )
   {
     return new ReferencedPropertyType( getGMLSchema(), super.getElement(), getOccurs(), m_reference, featureType );

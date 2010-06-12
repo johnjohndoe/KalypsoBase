@@ -82,6 +82,7 @@ public class UserStyle_Impl extends Style_Impl implements UserStyle, Marshallabl
    *
    * @return the title of the User-Style
    */
+  @Override
   public String getTitle( )
   {
     return m_title;
@@ -93,6 +94,7 @@ public class UserStyle_Impl extends Style_Impl implements UserStyle, Marshallabl
    * @param title
    *            the title of the User-Style
    */
+  @Override
   public void setTitle( final String title )
   {
     this.m_title = title;
@@ -103,6 +105,7 @@ public class UserStyle_Impl extends Style_Impl implements UserStyle, Marshallabl
    *
    * @return the abstract of the User-Style
    */
+  @Override
   public String getAbstract( )
   {
     return m_abstract_;
@@ -114,6 +117,7 @@ public class UserStyle_Impl extends Style_Impl implements UserStyle, Marshallabl
    * @param abstract_
    *            the abstract of the User-Style
    */
+  @Override
   public void setAbstract( final String abstract_ )
   {
     this.m_abstract_ = abstract_;
@@ -125,6 +129,7 @@ public class UserStyle_Impl extends Style_Impl implements UserStyle, Marshallabl
    *
    * @return true if the style ist the default style
    */
+  @Override
   public boolean isDefault( )
   {
     return m_default_;
@@ -135,6 +140,7 @@ public class UserStyle_Impl extends Style_Impl implements UserStyle, Marshallabl
    *
    * @param default_
    */
+  @Override
   public void setDefault( final boolean default_ )
   {
     this.m_default_ = default_;
@@ -153,6 +159,7 @@ public class UserStyle_Impl extends Style_Impl implements UserStyle, Marshallabl
    *
    * @return the FeatureTypeStyles of a User-Style
    */
+  @Override
   public FeatureTypeStyle[] getFeatureTypeStyles( )
   {
     final FeatureTypeStyle[] ft = new FeatureTypeStyle[m_featureTypeStyles.size()];
@@ -163,6 +170,7 @@ public class UserStyle_Impl extends Style_Impl implements UserStyle, Marshallabl
   /**
    * @see org.kalypsodeegree.graphics.sld.UserStyle#getFeatureTypeStyle(java.lang.String)
    */
+  @Override
   public FeatureTypeStyle getFeatureTypeStyle( final String featureTypeStyleName )
   {
     for( int i = 0; i < m_featureTypeStyles.size(); i++ )
@@ -179,6 +187,7 @@ public class UserStyle_Impl extends Style_Impl implements UserStyle, Marshallabl
    * @param featureTypeStyles
    *            the FeatureTypeStyles of a User-Style
    */
+  @Override
   public void setFeatureTypeStyles( final FeatureTypeStyle[] featureTypeStyles )
   {
     this.m_featureTypeStyles.clear();
@@ -198,6 +207,7 @@ public class UserStyle_Impl extends Style_Impl implements UserStyle, Marshallabl
    * @param featureTypeStyle
    *            a FeatureTypeStyle to add
    */
+  @Override
   public void addFeatureTypeStyle( final FeatureTypeStyle featureTypeStyle )
   {
     m_featureTypeStyles.add( featureTypeStyle );
@@ -206,6 +216,7 @@ public class UserStyle_Impl extends Style_Impl implements UserStyle, Marshallabl
   /**
    * Removes a <FeatureTypeStyle>
    */
+  @Override
   public void removeFeatureTypeStyle( final FeatureTypeStyle featureTypeStyle )
   {
     if( m_featureTypeStyles.indexOf( featureTypeStyle ) != -1 )
@@ -219,6 +230,7 @@ public class UserStyle_Impl extends Style_Impl implements UserStyle, Marshallabl
    *
    * @return xml representation of the UserStyle
    */
+  @Override
   public String exportAsXML( )
   {
     Debug.debugMethodBegin();

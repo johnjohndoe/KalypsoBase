@@ -168,6 +168,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 {
   private static final IKalypsoThemePredicate COVERAGE_PREDICATE = new IKalypsoThemePredicate()
   {
+    @Override
     public boolean decide( final IKalypsoTheme theme )
     {
       if( !(theme instanceof IKalypsoFeatureTheme) )
@@ -226,6 +227,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
   private final Runnable m_refreshCoverageViewerRunnable = new Runnable()
   {
+    @Override
     @SuppressWarnings("synthetic-access")
     public void run( )
     {
@@ -264,6 +266,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
   private final ModellEventListener m_modellistener = new ModellEventListener()
   {
+    @Override
     public void onModellChange( final ModellEvent modellEvent )
     {
       refreshControl();
@@ -395,6 +398,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     {
       coverageViewer.getControl().getDisplay().syncExec( new Runnable()
       {
+        @Override
         public void run( )
         {
           if( !coverageViewer.getControl().isDisposed() )
@@ -412,6 +416,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
    * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#createControl(org.eclipse.swt.widgets.Composite,
    *      org.eclipse.ui.forms.widgets.FormToolkit)
    */
+  @Override
   public Control createControl( final Composite parent, final FormToolkit toolkit )
   {
 // final ScrolledComposite sc = new ScrolledComposite( parent, SWT.V_SCROLL | SWT.H_SCROLL );
@@ -483,6 +488,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
     featureComposite.addChangeListener( new IFeatureChangeListener()
     {
+      @Override
       @SuppressWarnings("synthetic-access")
       public void featureChanged( final ICommand changeCommand )
       {
@@ -491,6 +497,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
         updateButtons();
       }
 
+      @Override
       public void openFeatureRequested( final Feature feature, final IPropertyType pt )
       {
       }
@@ -532,6 +539,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     /* Hook Events */
     m_coverageViewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
+      @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
         handleListSelectionChanged( parent, coverageInfoGroup, featureComposite, event );
@@ -540,6 +548,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
     m_themeCombo.addSelectionChangedListener( new ISelectionChangedListener()
     {
+      @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
         handleThemeComboSelected( event );
@@ -622,6 +631,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     final ComboViewer themeCombo = m_themeCombo;
     control.getDisplay().asyncExec( new Runnable()
     {
+      @Override
       public void run( )
       {
         if( control.isDisposed() )
@@ -820,9 +830,10 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
     final ICoreRunnableWithProgress operation = new ICoreRunnableWithProgress()
     {
+      @Override
       public IStatus execute( final IProgressMonitor monitor ) throws CoreException
       {
-        monitor.beginTask( Messages.getString("org.kalypso.gml.ui.map.CoverageManagementWidget.5"), styles.length ); //$NON-NLS-1$
+        monitor.beginTask( Messages.getString( "org.kalypso.gml.ui.map.CoverageManagementWidget.5" ), styles.length ); //$NON-NLS-1$
 
         for( final IKalypsoStyle style : styles )
         {
@@ -1092,7 +1103,6 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
   }
 
-  @SuppressWarnings("unchecked")
   protected void handleCoverageMove( final int step )
   {
     if( m_selectedCoverage == null )
@@ -1102,7 +1112,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     final IPropertyType pt = parentFeature.getFeatureType().getProperty( ICoverageCollection.QNAME_PROP_COVERAGE_MEMBER );
     final Feature coverageFeature = m_selectedCoverage.getFeature();
 
-    final List featureList = (List) parentFeature.getProperty( pt );
+    final List< ? > featureList = (List< ? >) parentFeature.getProperty( pt );
     final int newIndex = featureList.indexOf( coverageFeature ) + step;
     if( newIndex < 0 || newIndex >= featureList.size() )
       return;
@@ -1133,6 +1143,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     // TODO: move into finish method? / very slow, because all the tins are saved as well...
     final ICoreRunnableWithProgress operation = new ICoreRunnableWithProgress()
     {
+      @Override
       public IStatus execute( final IProgressMonitor monitor ) throws InvocationTargetException
       {
         try
@@ -1211,6 +1222,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
     final ICoreRunnableWithProgress operation = new ICoreRunnableWithProgress()
     {
+      @Override
       public IStatus execute( final IProgressMonitor monitor ) throws InvocationTargetException
       {
         try
@@ -1279,6 +1291,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
   /**
    * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#disposeControl()
    */
+  @Override
   public void disposeControl( )
   {
     if( m_theme != null && m_modellistener != null )

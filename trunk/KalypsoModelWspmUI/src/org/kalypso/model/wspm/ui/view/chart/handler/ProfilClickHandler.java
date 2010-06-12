@@ -34,6 +34,7 @@ public class ProfilClickHandler implements MouseMoveListener
   /**
    * @see org.eclipse.swt.events.MouseMoveListener#mouseMove(org.eclipse.swt.events.MouseEvent)
    */
+  @Override
   public void mouseMove( final MouseEvent e )
   {
     if( m_chart.getPlot().isEditing() )

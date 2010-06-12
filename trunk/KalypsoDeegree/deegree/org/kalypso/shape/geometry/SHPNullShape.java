@@ -79,6 +79,7 @@ public class SHPNullShape implements ISHPGeometry
   /**
    * @see org.kalypsodeegree_impl.io.shpapi.SHPGeometry#getEnvelope()
    */
+  @Override
   public SHPEnvelope getEnvelope( )
   {
     return null;

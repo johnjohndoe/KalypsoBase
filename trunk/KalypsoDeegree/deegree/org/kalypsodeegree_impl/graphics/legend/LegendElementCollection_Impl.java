@@ -86,6 +86,7 @@ public class LegendElementCollection_Impl extends LegendElement_Impl implements 
    * @param legendElement
    *          to add
    */
+  @Override
   public void addLegendElement( LegendElement legendElement )
   {
     this.collection.add( legendElement );
@@ -103,6 +104,7 @@ public class LegendElementCollection_Impl extends LegendElement_Impl implements 
    * @param title
    *          title of the <tt>LegendElement</tt>
    */
+  @Override
   public void setTitle( String title )
   {
     this.title = title;
@@ -111,6 +113,7 @@ public class LegendElementCollection_Impl extends LegendElement_Impl implements 
   /**
    * returns the title of the <tt>LegendElement</tt>
    */
+  @Override
   public String getTitle()
   {
     return title;
@@ -121,11 +124,13 @@ public class LegendElementCollection_Impl extends LegendElement_Impl implements 
    * 
    * @return number of legend elements
    */
+  @Override
   public int getSize()
   {
     return this.collection.size();
   }
 
+  @Override
   public BufferedImage exportAsImage() throws LegendException
   {
     Debug.debugMethodBegin( "LegendElementCollection_Impl", "exportAsImage" );

@@ -57,6 +57,7 @@ public abstract class GmlWorkspaceListener implements IGmlWorkspaceListener, IEx
    * @see org.eclipse.core.runtime.IExecutableExtension#setInitializationData(org.eclipse.core.runtime.IConfigurationElement,
    *      java.lang.String, java.lang.Object)
    */
+  @Override
   public void setInitializationData( final IConfigurationElement config, final String propertyName, final Object data )
   {
     // TODO: this is done twice at the moment
@@ -66,6 +67,7 @@ public abstract class GmlWorkspaceListener implements IGmlWorkspaceListener, IEx
   /**
    * @see org.kalypsodeegree.model.feature.IGmlWorkspaceListener#getQNames()
    */
+  @Override
   public final QName[] getQNames( )
   {
     return m_qnames;

@@ -78,6 +78,7 @@ public final class PointPropertyEdit implements IProfilChange
    * @throws IllegalProfileOperationException
    * @see org.kalypso.model.wspm.core.profil.changes.AbstractChange#doChange(PlainProfil)
    */
+  @Override
   public IProfilChange doChange( final ProfilChangeHint hint )
   {
     if( hint != null )
@@ -101,6 +102,7 @@ public final class PointPropertyEdit implements IProfilChange
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilChange#getObject()
    */
+  @Override
   public Object[] getObjects( )
   {
     return m_points;
@@ -109,6 +111,7 @@ public final class PointPropertyEdit implements IProfilChange
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilChange#getPointProperty()
    */
+  @Override
   public String getInfo( )
   {
     return m_property.getId();
@@ -117,6 +120,7 @@ public final class PointPropertyEdit implements IProfilChange
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilChange#getValue()
    */
+  @Override
   public Double getValue( )
   {
     return Double.NaN;

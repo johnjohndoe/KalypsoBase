@@ -87,6 +87,7 @@ public interface GM_SurfacePatch extends GM_GenericSurface
    * shall be a numeric measure of its surface area Since area is an accumulation (integral) of the product of two
    * distances, its return value shall be in a unit of measure appropriate for measuring distances squared.
    */
+  @Override
   public double getArea( );
 
   /**

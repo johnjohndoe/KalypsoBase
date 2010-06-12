@@ -59,6 +59,7 @@ public class BoundaryExpression extends Expression_Impl implements Expression
     return new StringBuffer( m_value.toString() );
   }
 
+  @Override
   public Object evaluate( Feature feature ) throws FilterEvaluationException
   {
     Double returnValue = null;

@@ -110,6 +110,7 @@ public class XsdBaseTypeHandlerRGB extends XsdBaseTypeHandler<RGB>
   /**
    * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
    */
+  @Override
   public int compare( final RGB o1, final RGB o2 )
   {
     return ("" + o1).compareTo( "" + o2 );

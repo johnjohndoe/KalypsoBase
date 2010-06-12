@@ -55,6 +55,7 @@ public class FeatureTypeFunctionExpression extends AbstractFunctionExpression
    * @see org.kalypsodeegree.filterencoding.IFunctionExpression#evaluate(org.kalypsodeegree.model.feature.Feature,
    *      java.util.List)
    */
+  @Override
   public Object evaluate( final Feature feature, final List<Expression> args )
   {
     return feature.getFeatureType().getQName().toString();

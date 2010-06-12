@@ -62,6 +62,7 @@ public class GridCategoryWrapper implements Comparable<GridCategoryWrapper>
   /**
    * @see java.lang.Comparable#compareTo(java.lang.Object)
    */
+  @Override
   public int compareTo( final GridCategoryWrapper o )
   {
     return m_value.compareTo( o.getValue() );

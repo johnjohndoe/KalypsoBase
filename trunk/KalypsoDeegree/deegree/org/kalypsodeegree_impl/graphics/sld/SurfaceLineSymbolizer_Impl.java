@@ -79,11 +79,13 @@ public class SurfaceLineSymbolizer_Impl extends Symbolizer_Impl implements Surfa
     setMaxScaleDenominator( max );
   }
 
+  @Override
   public void setColorMap( final LineColorMap colorMap )
   {
     m_colorMap = colorMap;
   }
 
+  @Override
   public LineColorMap getColorMap( )
   {
     return m_colorMap;
@@ -161,6 +163,7 @@ public class SurfaceLineSymbolizer_Impl extends Symbolizer_Impl implements Surfa
    * 
    * @return xml representation of the PolygonSymbolizer
    */
+  @Override
   public String exportAsXML( )
   {
     Debug.debugMethodBegin();

@@ -70,6 +70,7 @@ public class XsdBaseTypeHandlerInteger extends XsdBaseTypeHandler<Integer>
   /**
    * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
    */
+  @Override
   public int compare( final Integer o1, final Integer o2 )
   {
     if( (o1 == null) && (o2 == null) )

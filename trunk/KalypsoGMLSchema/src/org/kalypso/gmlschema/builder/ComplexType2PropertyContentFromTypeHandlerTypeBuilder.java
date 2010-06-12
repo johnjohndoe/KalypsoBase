@@ -65,6 +65,7 @@ public class ComplexType2PropertyContentFromTypeHandlerTypeBuilder extends Abstr
   /**
    * @see org.kalypso.gmlschema.builder.IBuilder#build(org.kalypso.gmlschema.GMLSchema, java.lang.Object)
    */
+  @Override
   public Object[] build( final GMLSchema gmlSchema, final Object typeObject ) throws GMLSchemaException
   {
     final QName valueQName;
@@ -84,6 +85,7 @@ public class ComplexType2PropertyContentFromTypeHandlerTypeBuilder extends Abstr
    * @see org.kalypso.gmlschema.builder.IBuilder#isBuilderFor(org.kalypso.gmlschema.GMLSchema, java.lang.Object,
    *      java.lang.String)
    */
+  @Override
   public boolean isBuilderFor( final GMLSchema gmlSchema, final Object object, final String namedPass ) throws GMLSchemaException
   {
     return getTypeHandler( gmlSchema, object ) != null;

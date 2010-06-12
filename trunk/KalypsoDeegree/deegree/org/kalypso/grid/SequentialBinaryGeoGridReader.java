@@ -43,13 +43,11 @@ package org.kalypso.grid;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 
 import org.apache.commons.io.FileUtils;
 import org.deegree.model.spatialschema.ByteUtils;
-import org.eclipse.core.runtime.Assert;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 
 /**

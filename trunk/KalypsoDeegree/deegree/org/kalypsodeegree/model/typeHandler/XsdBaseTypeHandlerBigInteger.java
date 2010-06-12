@@ -72,6 +72,7 @@ public class XsdBaseTypeHandlerBigInteger extends XsdBaseTypeHandler<BigInteger>
   /**
    * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
    */
+  @Override
   public int compare( final BigInteger o1, final BigInteger o2 )
   {
     if( o1 == null && o2 == null )

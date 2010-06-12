@@ -71,6 +71,7 @@ public class XsdBaseTypeHandlerFloat extends XsdBaseTypeHandler<Float>
   /**
    * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
    */
+  @Override
   public int compare( final Float o1, final Float o2 )
   {
     if( (o1 == null) && (o2 == null) )

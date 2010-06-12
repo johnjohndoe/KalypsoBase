@@ -36,8 +36,8 @@
 package org.kalypsodeegree_impl.model.feature;
 
 import java.util.Map;
-import java.util.Properties;
 import java.util.Map.Entry;
+import java.util.Properties;
 
 import javax.xml.namespace.QName;
 

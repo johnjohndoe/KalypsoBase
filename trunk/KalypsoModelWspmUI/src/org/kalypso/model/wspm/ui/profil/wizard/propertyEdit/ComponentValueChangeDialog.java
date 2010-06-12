@@ -53,6 +53,7 @@ public class ComponentValueChangeDialog extends DialogPage
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
    */
+  @Override
   public void createControl( Composite parent )
   {
     // TODO Auto-generated method stub

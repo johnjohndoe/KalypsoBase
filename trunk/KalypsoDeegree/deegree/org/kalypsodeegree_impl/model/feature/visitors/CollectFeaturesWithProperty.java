@@ -72,6 +72,7 @@ public class CollectFeaturesWithProperty implements FeatureVisitor
   /**
    * @see org.kalypsodeegree.model.feature.FeatureVisitor#visit(org.kalypsodeegree.model.feature.Feature)
    */
+  @Override
   public boolean visit( Feature f )
   {
     final IFeatureType featureType = f.getFeatureType();

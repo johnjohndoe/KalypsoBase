@@ -94,6 +94,7 @@ abstract class GeometryDisplayElement_Impl extends DisplayElement_Impl implement
    * @param o
    *            the placement to be used
    */
+  @Override
   public void setPlacement( final Object o )
   {
   }
@@ -101,6 +102,7 @@ abstract class GeometryDisplayElement_Impl extends DisplayElement_Impl implement
   /**
    * sets the geometry that determines the position the DisplayElement will be rendered to
    */
+  @Override
   public void setGeometry( final GM_Object[] geometry )
   {
     m_geometries = geometry;
@@ -109,6 +111,7 @@ abstract class GeometryDisplayElement_Impl extends DisplayElement_Impl implement
   /**
    * returns the geometry that determines the position the DisplayElement will be rendered to
    */
+  @Override
   public GM_Object[] getGeometry( )
   {
     return m_geometries;
@@ -117,6 +120,7 @@ abstract class GeometryDisplayElement_Impl extends DisplayElement_Impl implement
   /**
    * sets the rules that determines how the geometry will be rendered
    */
+  @Override
   public void setSymbolizer( final Symbolizer symbolizer )
   {
     m_symbolizer = symbolizer;
@@ -125,6 +129,7 @@ abstract class GeometryDisplayElement_Impl extends DisplayElement_Impl implement
   /**
    * Returns the symbolizer that determines how the geometry will be rendered.
    */
+  @Override
   public Symbolizer getSymbolizer( )
   {
     return m_symbolizer;

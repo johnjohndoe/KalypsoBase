@@ -51,6 +51,7 @@ public class DefaultFeaturePropertyHandler implements IFeaturePropertyHandler
    * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#setValue(org.kalypsodeegree.model.feature.Feature,
    *      org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
    */
+  @Override
   public Object setValue( final Feature feature, final IPropertyType pt, final Object valueToSet )
   {
     return valueToSet;
@@ -60,6 +61,7 @@ public class DefaultFeaturePropertyHandler implements IFeaturePropertyHandler
    * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#getValue(org.kalypsodeegree.model.feature.Feature,
    *      org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
    */
+  @Override
   public Object getValue( final Feature feature, final IPropertyType pt, final Object currentValue )
   {
     return currentValue;
@@ -68,6 +70,7 @@ public class DefaultFeaturePropertyHandler implements IFeaturePropertyHandler
   /**
    * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#invalidateEnvelope(org.kalypso.gmlschema.property.IPropertyType)
    */
+  @Override
   public boolean invalidateEnvelope( final IPropertyType pt )
   {
     return GeometryUtilities.isGeometry( pt );
@@ -76,6 +79,7 @@ public class DefaultFeaturePropertyHandler implements IFeaturePropertyHandler
   /**
    * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#isFunctionProperty(org.kalypso.gmlschema.property.IPropertyType)
    */
+  @Override
   public boolean isFunctionProperty( final IPropertyType pt )
   {
     return false;

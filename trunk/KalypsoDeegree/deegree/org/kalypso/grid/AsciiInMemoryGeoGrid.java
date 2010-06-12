@@ -128,6 +128,7 @@ public class AsciiInMemoryGeoGrid extends AbstractGeoGrid implements IGeoGrid
   /**
    * @see org.kalypso.gis.doubleraster.grid.DoubleGrid#getSizeX()
    */
+  @Override
   public int getSizeX( )
   {
     return m_sizeX;
@@ -136,6 +137,7 @@ public class AsciiInMemoryGeoGrid extends AbstractGeoGrid implements IGeoGrid
   /**
    * @see org.kalypso.gis.doubleraster.grid.DoubleGrid#getSizeY()
    */
+  @Override
   public int getSizeY( )
   {
     return m_sizeY;
@@ -144,6 +146,7 @@ public class AsciiInMemoryGeoGrid extends AbstractGeoGrid implements IGeoGrid
   /**
    * @see org.kalypso.gis.doubleraster.grid.DoubleGrid#getValue(int, int)
    */
+  @Override
   public double getValue( final int x, final int y )
   {
     return m_grid[y][x];
@@ -162,6 +165,7 @@ public class AsciiInMemoryGeoGrid extends AbstractGeoGrid implements IGeoGrid
   /**
    * @see org.kalypso.grid.IGeoGrid#getMax()
    */
+  @Override
   public BigDecimal getMax( )
   {
     return new BigDecimal( m_max );
@@ -170,6 +174,7 @@ public class AsciiInMemoryGeoGrid extends AbstractGeoGrid implements IGeoGrid
   /**
    * @see org.kalypso.grid.IGeoGrid#getMin()
    */
+  @Override
   public BigDecimal getMin( )
   {
     return new BigDecimal( m_min );
@@ -178,6 +183,7 @@ public class AsciiInMemoryGeoGrid extends AbstractGeoGrid implements IGeoGrid
   /**
    * @see org.kalypso.grid.IGeoGrid#setMax(java.math.BigDecimal)
    */
+  @Override
   public void setMax( final BigDecimal maxValue )
   {
     if( maxValue != null )
@@ -188,6 +194,7 @@ public class AsciiInMemoryGeoGrid extends AbstractGeoGrid implements IGeoGrid
   /**
    * @see org.kalypso.grid.IGeoGrid#setMin(java.math.BigDecimal)
    */
+  @Override
   public void setMin( final BigDecimal minValue )
   {
     if( minValue != null )

@@ -54,6 +54,7 @@ public class DefaultProfileFeatureProvider implements IProfileFeatureProvider
   /**
    * @see org.kalypso.model.wspm.core.gml.IProfileFeatureProvider#getProfile(org.kalypsodeegree.model.feature.Feature)
    */
+  @Override
   public IProfileFeature getProfile( final Feature feature )
   {
     if( GMLSchemaUtilities.substitutes( feature.getFeatureType(), new QName( IWspmConstants.NS_WSPMPROF, "Profile" ) ) ) //$NON-NLS-1$

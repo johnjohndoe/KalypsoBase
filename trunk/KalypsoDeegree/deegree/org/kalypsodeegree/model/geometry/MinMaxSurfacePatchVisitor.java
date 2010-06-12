@@ -52,6 +52,7 @@ public class MinMaxSurfacePatchVisitor<P extends GM_SurfacePatch> implements ISu
    * @see org.kalypsodeegree.model.geometry.ISurfacePatchVisitor#visit(org.kalypsodeegree.model.geometry.GM_SurfacePatch,
    *      double)
    */
+  @Override
   public boolean visit( final P surfacePatch, final double elevationSample )
   {
     final GM_Position[] exteriorRing = surfacePatch.getExteriorRing();

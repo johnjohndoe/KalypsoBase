@@ -73,6 +73,7 @@ public class GM_Triangle_Impl extends GM_Polygon_Impl implements GM_Triangle
   /**
    * @see org.kalypsodeegree.model.geometry.GM_Triangle#getValue(org.kalypsodeegree.model.geometry.GM_Point)
    */
+  @Override
   public double getValue( final GM_Point location )
   {
     final GM_Position position = location.getPosition();
@@ -83,6 +84,7 @@ public class GM_Triangle_Impl extends GM_Polygon_Impl implements GM_Triangle
   /**
    * @see org.kalypsodeegree.model.geometry.GM_Triangle#getValue(org.kalypsodeegree.model.geometry.GM_Position)
    */
+  @Override
   public double getValue( final GM_Position position )
   {
     final double x = position.getX();
@@ -101,6 +103,7 @@ public class GM_Triangle_Impl extends GM_Polygon_Impl implements GM_Triangle
     return JTSUtilities.calculateTriangleZ( m_planarEquation, x, y );
   }
 
+  @Override
   public boolean contains( final GM_Position position )
   {
     final GM_Position[] exteriorRing = getExteriorRing();
@@ -197,6 +200,7 @@ public class GM_Triangle_Impl extends GM_Polygon_Impl implements GM_Triangle
     throw new IllegalStateException();
   }
   
+  @Override
   public int getOrientation(){
     return orientation( getExteriorRing()[0], getExteriorRing()[1], getExteriorRing()[2] );
   }

@@ -89,6 +89,7 @@ class GM_CurveSegment_Impl implements GM_CurveSegment, Serializable
    * returns the first point of the curve. if the curve segment doesn't contain a point <code>null</code> will be
    * returned
    */
+  @Override
   public GM_Point getStartPoint( )
   {
     return new GM_Point_Impl( points[0], m_crs );
@@ -98,6 +99,7 @@ class GM_CurveSegment_Impl implements GM_CurveSegment, Serializable
    * returns the last point of the curve. if the curve segment doesn't contain a point <code>null</code> will be
    * returned
    */
+  @Override
   public GM_Point getEndPoint( )
   {
     return new GM_Point_Impl( points[getNumberOfPoints() - 1], m_crs );
@@ -106,6 +108,7 @@ class GM_CurveSegment_Impl implements GM_CurveSegment, Serializable
   /**
    * returns the number of points building the curve or curve segment
    */
+  @Override
   public int getNumberOfPoints( )
   {
     return points.length;
@@ -114,6 +117,7 @@ class GM_CurveSegment_Impl implements GM_CurveSegment, Serializable
   /**
    * returns all positions of the segement as array of GM_Position. If the segment is empty null will be returned
    */
+  @Override
   public GM_Position[] getPositions( )
   {
     return points;
@@ -122,6 +126,7 @@ class GM_CurveSegment_Impl implements GM_CurveSegment, Serializable
   /**
    * returns the curve segment position at the submitted index
    */
+  @Override
   public GM_Position getPositionAt( final int index )
   {
     return points[index];
@@ -130,6 +135,7 @@ class GM_CurveSegment_Impl implements GM_CurveSegment, Serializable
   /**
    * reverses the direction of the curvesegment
    */
+  @Override
   public void reverse( )
   {
     final GM_Position[] reverse_ = new GM_Position[points.length];
@@ -145,6 +151,7 @@ class GM_CurveSegment_Impl implements GM_CurveSegment, Serializable
   /**
    * returns the coordinate system of the curve segment
    */
+  @Override
   public String getCoordinateSystem( )
   {
     return m_crs;
@@ -200,6 +207,7 @@ class GM_CurveSegment_Impl implements GM_CurveSegment, Serializable
    * <p>
    * </p>
    */
+  @Override
   public boolean contains( final GM_Object gmo )
   {
     throw new NoSuchMethodError( "the contains operation for curve segments " + "isn't supported at the moment." );
@@ -239,6 +247,7 @@ class GM_CurveSegment_Impl implements GM_CurveSegment, Serializable
   /**
    * @see org.kalypsodeegree.model.geometry.GM_CurveSegment#intersects(org.kalypsodeegree.model.geometry.GM_Object)
    */
+  @Override
   public boolean intersects( final GM_Object gmo )
   {
     throw new NotImplementedException();
@@ -247,6 +256,7 @@ class GM_CurveSegment_Impl implements GM_CurveSegment, Serializable
   /**
    * @see org.kalypsodeegree.model.geometry.GM_GenericCurve#getAsLineString()
    */
+  @Override
   public GM_LineString getAsLineString( )
   {
     throw new NotImplementedException();
@@ -255,6 +265,7 @@ class GM_CurveSegment_Impl implements GM_CurveSegment, Serializable
   /**
    * @see org.kalypsodeegree.model.geometry.GM_GenericCurve#getLength()
    */
+  @Override
   public double getLength( )
   {
     double result = 0;

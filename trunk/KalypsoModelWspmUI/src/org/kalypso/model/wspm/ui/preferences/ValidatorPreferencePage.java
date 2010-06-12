@@ -62,11 +62,13 @@ public class ValidatorPreferencePage extends FieldEditorPreferencePage implement
 {
   protected final static class ValidatorLabelProvider extends LabelProvider implements ITableLabelProvider 
   {
+    @Override
     public Image getColumnImage( Object element, int columnIndex )
     {
       return null;
     }
 
+    @Override
     public String getColumnText( final Object element, int columnIndex )
     {
       if( element instanceof IValidatorRule )
@@ -98,6 +100,7 @@ public class ValidatorPreferencePage extends FieldEditorPreferencePage implement
   /**
    * @see org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
    */
+  @Override
   public void init( IWorkbench workbench )
   {
   }

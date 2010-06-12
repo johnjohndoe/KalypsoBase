@@ -109,6 +109,7 @@ abstract public class Expression_Impl implements Expression
   }
 
   /** Returns the name of the expression. */
+  @Override
   public String getExpressionName( )
   {
     return EXPRESSION_DEFINES.getNameById( m_id );
@@ -119,11 +120,13 @@ abstract public class Expression_Impl implements Expression
    * 
    * @see ExpressionDefines
    */
+  @Override
   public int getExpressionId( )
   {
     return m_id;
   }
 
   /** Produces an indented XML representation of this object. */
+  @Override
   public abstract StringBuffer toXML( );
 }

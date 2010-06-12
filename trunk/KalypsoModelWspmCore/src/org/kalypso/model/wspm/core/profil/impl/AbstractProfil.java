@@ -163,7 +163,6 @@ public abstract class AbstractProfil implements IProfil
    * @see org.kalypso.model.wspm.core.profil.IProfil#setProfileObject(org.kalypso.model.wspm.core.profil.IProfileObject[])
    */
   @Override
-  @SuppressWarnings("unchecked")
   public IProfileObject[] addProfileObjects( final IProfileObject... profileObjects )
   {
     Collections.addAll( m_profileObjects, profileObjects );
@@ -449,7 +448,6 @@ public abstract class AbstractProfil implements IProfil
    */
   // FIXME: separate profile objects from general profile-properties.
   @Override
-  @SuppressWarnings("unchecked")
   public IProfileObject[] getProfileObjects( )
   {
     return m_profileObjects.toArray( new IProfileObject[] {} );

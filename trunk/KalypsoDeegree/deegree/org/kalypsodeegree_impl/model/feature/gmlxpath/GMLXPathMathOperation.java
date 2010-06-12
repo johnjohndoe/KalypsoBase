@@ -47,6 +47,7 @@ public abstract class GMLXPathMathOperation extends GMLXPathOperation implements
     super( pattern );
   }
 
+  @Override
   public Object operate( Object value1, Object value2 ) throws GMLXPathException
   {
     final double n1;

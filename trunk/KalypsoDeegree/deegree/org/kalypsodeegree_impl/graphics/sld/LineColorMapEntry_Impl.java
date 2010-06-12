@@ -64,6 +64,7 @@ public class LineColorMapEntry_Impl implements LineColorMapEntry
   /**
    * @see org.kalypsodeegree.graphics.sld.LineColorMapEntry#exportAsXML()
    */
+  @Override
   public String exportAsXML( )
   {
     final StringBuffer sb = new StringBuffer( 1000 );
@@ -90,6 +91,7 @@ public class LineColorMapEntry_Impl implements LineColorMapEntry
   /**
    * @see org.kalypsodeegree.graphics.sld.LineColorMapEntry#getLabel(org.kalypsodeegree.model.feature.Feature)
    */
+  @Override
   public String getLabel( Feature feature )
   {
     String val = null;
@@ -108,6 +110,7 @@ public class LineColorMapEntry_Impl implements LineColorMapEntry
   /**
    * @see org.kalypsodeegree.graphics.sld.LineColorMapEntry#getQuantity(org.kalypsodeegree.model.feature.Feature)
    */
+  @Override
   public double getQuantity( Feature feature )
   {
     String val = null;
@@ -129,6 +132,7 @@ public class LineColorMapEntry_Impl implements LineColorMapEntry
   /**
    * @see org.kalypsodeegree.graphics.sld.LineColorMapEntry#getStroke()
    */
+  @Override
   public Stroke getStroke( )
   {
     return m_stroke;

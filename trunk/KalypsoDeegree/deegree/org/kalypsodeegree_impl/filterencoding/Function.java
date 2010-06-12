@@ -148,6 +148,7 @@ public class Function extends Expression_Impl
    *            that determines the concrete values of <tt>PropertyNames</tt> found in the expression
    * @return the resulting value
    */
+  @Override
   public Object evaluate( final Feature feature ) throws FilterEvaluationException
   {
     try

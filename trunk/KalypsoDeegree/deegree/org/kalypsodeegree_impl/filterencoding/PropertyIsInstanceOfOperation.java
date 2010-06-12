@@ -63,8 +63,6 @@ import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree.xml.ElementList;
 import org.kalypsodeegree.xml.XMLTools;
-import org.kalypsodeegree_impl.model.feature.GMLUtilities;
-import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
 import org.w3c.dom.Element;
 
 /**
@@ -109,6 +107,7 @@ public class PropertyIsInstanceOfOperation extends ComparisonOperation
   /**
    * Produces an XML representation of this object.
    */
+  @Override
   public StringBuffer toXML( )
   {
     final StringBuffer sb = new StringBuffer();
@@ -128,6 +127,7 @@ public class PropertyIsInstanceOfOperation extends ComparisonOperation
    * @throws FilterEvaluationException
    *           if the evaluation fails
    */
+  @Override
   @SuppressWarnings("deprecation")
   public boolean evaluate( final Feature feature ) throws FilterEvaluationException
   {

@@ -54,6 +54,7 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.restriction.IRestriction;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
+
 /**
  * Default implementation of {@link IVirtualFunctionValuePropertyType} bases on the {@link ITypeHandler} associated with
  * the property q-name
@@ -94,9 +95,9 @@ public class VirtualFunctionValuePropertyType implements IFunctionPropertyType, 
    * Creates a new {@link VirtualFunctionPropertyType} for the given value handler and the property q-name
    * 
    * @param handler
-   *            handler for the property value
+   *          handler for the property value
    * @param propertyQName
-   *            the q-name of the virtual property
+   *          the q-name of the virtual property
    */
   public VirtualFunctionValuePropertyType( final IFeatureType featureType, final IMarshallingTypeHandler handler, final QName propertyQName, final String functionId, final int minOccurs, final int maxOccurs, final Map<String, String> properties ) throws IllegalArgumentException
   {
@@ -114,6 +115,7 @@ public class VirtualFunctionValuePropertyType implements IFunctionPropertyType, 
   /**
    * @see org.kalypso.gmlschema.xml.IQualifiedElement#getQName()
    */
+  @Override
   public QName getQName( )
   {
     return m_qName;
@@ -122,6 +124,7 @@ public class VirtualFunctionValuePropertyType implements IFunctionPropertyType, 
   /**
    * @see org.kalypso.gmlschema.property.virtual.IVirtualFunctionPropertyType#isGeometry()
    */
+  @Override
   public boolean isGeometry( )
   {
     return m_handler.isGeometry();
@@ -130,6 +133,7 @@ public class VirtualFunctionValuePropertyType implements IFunctionPropertyType, 
   /**
    * @see org.kalypso.gmlschema.property.IPropertyType#getMaxOccurs()
    */
+  @Override
   public int getMaxOccurs( )
   {
     return m_maxOccurs;
@@ -138,6 +142,7 @@ public class VirtualFunctionValuePropertyType implements IFunctionPropertyType, 
   /**
    * @see org.kalypso.gmlschema.property.IPropertyType#getMinOccurs()
    */
+  @Override
   public int getMinOccurs( )
   {
     return m_minOccurs;
@@ -146,6 +151,7 @@ public class VirtualFunctionValuePropertyType implements IFunctionPropertyType, 
   /**
    * @see org.kalypso.gmlschema.property.IPropertyType#isList()
    */
+  @Override
   public boolean isList( )
   {
     return m_maxOccurs > 1;
@@ -156,6 +162,7 @@ public class VirtualFunctionValuePropertyType implements IFunctionPropertyType, 
    * 
    * @see org.kalypso.gmlschema.property.IPropertyType#isVirtual()
    */
+  @Override
   public boolean isVirtual( )
   {
     return true;
@@ -164,6 +171,7 @@ public class VirtualFunctionValuePropertyType implements IFunctionPropertyType, 
   /**
    * @see org.kalypso.gmlschema.property.IPropertyType#isNillable()
    */
+  @Override
   public boolean isNillable( )
   {
     return m_isNillable;
@@ -172,6 +180,7 @@ public class VirtualFunctionValuePropertyType implements IFunctionPropertyType, 
   /**
    * @see org.kalypso.gmlschema.basics.IInitialize#init(int)
    */
+  @Override
   public void init( final int initializeRun )
   {
 
@@ -180,6 +189,7 @@ public class VirtualFunctionValuePropertyType implements IFunctionPropertyType, 
   /**
    * @see org.kalypso.gmlschema.property.IValuePropertyType#getDefault()
    */
+  @Override
   public String getDefault( )
   {
     return m_defaultValue;
@@ -188,6 +198,7 @@ public class VirtualFunctionValuePropertyType implements IFunctionPropertyType, 
   /**
    * @see org.kalypso.gmlschema.property.IValuePropertyType#getFixed()
    */
+  @Override
   public String getFixed( )
   {
     return m_fixed;
@@ -196,6 +207,7 @@ public class VirtualFunctionValuePropertyType implements IFunctionPropertyType, 
   /**
    * @see org.kalypso.gmlschema.property.IValuePropertyType#getRestriction()
    */
+  @Override
   public IRestriction[] getRestriction( )
   {
     return m_restrictions;
@@ -204,6 +216,7 @@ public class VirtualFunctionValuePropertyType implements IFunctionPropertyType, 
   /**
    * @see org.kalypso.gmlschema.property.IValuePropertyType#getTypeHandler()
    */
+  @Override
   public IMarshallingTypeHandler getTypeHandler( )
   {
     return m_handler;
@@ -212,6 +225,7 @@ public class VirtualFunctionValuePropertyType implements IFunctionPropertyType, 
   /**
    * @see org.kalypso.gmlschema.property.IValuePropertyType#getValueClass()
    */
+  @Override
   public Class< ? > getValueClass( )
   {
     return m_handler.getValueClass();
@@ -220,6 +234,7 @@ public class VirtualFunctionValuePropertyType implements IFunctionPropertyType, 
   /**
    * @see org.kalypso.gmlschema.property.IValuePropertyType#getValueQName()
    */
+  @Override
   public QName getValueQName( )
   {
     return m_handler.getTypeName();
@@ -228,6 +243,7 @@ public class VirtualFunctionValuePropertyType implements IFunctionPropertyType, 
   /**
    * @see org.kalypso.gmlschema.property.IValuePropertyType#hasDefault()
    */
+  @Override
   public boolean hasDefault( )
   {
     return m_hasDefault;
@@ -236,6 +252,7 @@ public class VirtualFunctionValuePropertyType implements IFunctionPropertyType, 
   /**
    * @see org.kalypso.gmlschema.property.IValuePropertyType#hasRestriction()
    */
+  @Override
   public boolean hasRestriction( )
   {
     if( m_restrictions == null )
@@ -251,6 +268,7 @@ public class VirtualFunctionValuePropertyType implements IFunctionPropertyType, 
   /**
    * @see org.kalypso.gmlschema.property.IValuePropertyType#isFixed()
    */
+  @Override
   public boolean isFixed( )
   {
     return m_isFixed;
@@ -259,6 +277,7 @@ public class VirtualFunctionValuePropertyType implements IFunctionPropertyType, 
   /**
    * @see org.kalypso.gmlschema.property.IValuePropertyType#isNullable()
    */
+  @Override
   public boolean isNullable( )
   {
     return m_isNullable;
@@ -276,8 +295,7 @@ public class VirtualFunctionValuePropertyType implements IFunctionPropertyType, 
   /**
    * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
    */
-  @SuppressWarnings("unchecked")
-  public Object getAdapter( final Class adapter )
+  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
   {
     if( !Platform.isRunning() )
       return null;
@@ -288,6 +306,7 @@ public class VirtualFunctionValuePropertyType implements IFunctionPropertyType, 
   /**
    * @see org.kalypso.gmlschema.property.IPropertyType#getName()
    */
+  @Override
   @SuppressWarnings("deprecation")
   @Deprecated
   public String getName( )
@@ -298,6 +317,7 @@ public class VirtualFunctionValuePropertyType implements IFunctionPropertyType, 
   /**
    * @see org.kalypso.gmlschema.property.virtual.IVirtualFunctionValuePropertyType#getFunctionId()
    */
+  @Override
   public String getFunctionId( )
   {
     return m_functionId;
@@ -306,6 +326,7 @@ public class VirtualFunctionValuePropertyType implements IFunctionPropertyType, 
   /**
    * @see org.kalypso.gmlschema.property.virtual.IVirtualFunctionValuePropertyType#getFunctionProperties()
    */
+  @Override
   public Map<String, String> getFunctionProperties( )
   {
     return m_properties;
@@ -314,6 +335,7 @@ public class VirtualFunctionValuePropertyType implements IFunctionPropertyType, 
   /**
    * @see org.kalypso.gmlschema.property.IPropertyType#getAnnotation()
    */
+  @Override
   public IAnnotation getAnnotation( )
   {
     return m_annotation;
@@ -322,6 +344,7 @@ public class VirtualFunctionValuePropertyType implements IFunctionPropertyType, 
   /**
    * @see org.kalypso.gmlschema.property.IPropertyType#cloneForFeatureType(org.kalypso.gmlschema.feature.IFeatureType)
    */
+  @Override
   public IPropertyType cloneForFeatureType( final IFeatureType featureType )
   {
     return new VirtualFunctionValuePropertyType( featureType, m_handler, m_qName, m_functionId, m_minOccurs, m_maxOccurs, m_properties );

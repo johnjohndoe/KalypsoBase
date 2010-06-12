@@ -347,6 +347,7 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
    * 
    * @returns the underlying <tt>GraphicStroke</tt> instance (may be null)
    */
+  @Override
   public GraphicStroke getGraphicStroke( )
   {
     return graphicStroke;
@@ -359,6 +360,7 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
    *            the graphicStroke element
    *            <p>
    */
+  @Override
   public void setGraphicStroke( final GraphicStroke graphicStroke )
   {
     this.graphicStroke = graphicStroke;
@@ -378,6 +380,7 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
    * @throws FilterEvaluationException
    *             if the evaluation fails
    */
+  @Override
   public Color getStroke( final Feature feature ) throws FilterEvaluationException
   {
     Color awtColor = COLOR_DEFAULT;
@@ -413,6 +416,7 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
    * @param stroke
    *            the stroke to be set
    */
+  @Override
   public void setStroke( final Color stroke )
   {
     this.color = stroke;
@@ -433,6 +437,7 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
    * @throws FilterEvaluationException
    *             if the evaluation fails
    */
+  @Override
   public double getOpacity( final Feature feature ) throws FilterEvaluationException
   {
     if( smplOpacity < 0 )
@@ -469,6 +474,7 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
    * @param opacity
    *            the opacity to be set for the stroke
    */
+  @Override
   public void setOpacity( double opacity )
   {
     if( opacity > 1 )
@@ -493,6 +499,7 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
    * @throws FilterEvaluationException
    *             if the evaluation fails
    */
+  @Override
   public double getWidth( final Feature feature ) throws FilterEvaluationException
   {
     double width = WIDTH_DEFAULT;
@@ -531,6 +538,7 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
    * @param width
    *            the width to be set for the stroke
    */
+  @Override
   public void setWidth( double width )
   {
     if( width <= 0 )
@@ -552,6 +560,7 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
    * @throws FilterEvaluationException
    *             if the evaluation fails
    */
+  @Override
   public int getLineJoin( final Feature feature ) throws FilterEvaluationException
   {
     int lineJoin = LJ_DEFAULT;
@@ -586,6 +595,7 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
    * @param lineJoin
    *            the lineJoin to be set for the stroke
    */
+  @Override
   public void setLineJoin( int lineJoin )
   {
     String join = null;
@@ -618,6 +628,7 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
    * @throws FilterEvaluationException
    *             if the evaluation fails
    */
+  @Override
   public int getLineCap( final Feature feature ) throws FilterEvaluationException
   {
     int lineCap = LC_DEFAULT;
@@ -653,6 +664,7 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
    * @param lineCap
    *            lineCap to be set for the stroke
    */
+  @Override
   public void setLineCap( int lineCap )
   {
     String cap = null;
@@ -688,6 +700,7 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
    *             if the eevaluation fails or the encoded pattern is erroneous
    * @return the decoded pattern as an array of float-values (null if the parameter was not specified)
    */
+  @Override
   public float[] getDashArray( final Feature feature ) throws FilterEvaluationException
   {
     final CssParameter cssParam = (CssParameter) cssParams.get( "stroke-dasharray" );
@@ -742,6 +755,7 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
    * @param dashArray
    *            the dashArray to be set for the Stroke
    */
+  @Override
   public void setDashArray( final float[] dashArray )
   {
     if( dashArray != null )
@@ -767,6 +781,7 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
    * @throws FilterEvaluationException
    *             if the evaluation fails
    */
+  @Override
   public float getDashOffset( final Feature feature ) throws FilterEvaluationException
   {
     float dashOffset = 0;
@@ -802,6 +817,7 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
    * @param dashOffset
    *            the dashOffset to be set for the Stroke
    */
+  @Override
   public void setDashOffset( float dashOffset )
   {
     if( dashOffset < 0 )
@@ -816,6 +832,7 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
    * 
    * @return xml representation of the Stroke
    */
+  @Override
   public String exportAsXML( )
   {
     Debug.debugMethodBegin();

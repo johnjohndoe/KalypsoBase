@@ -10,6 +10,7 @@ package net.opengis.kml;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -99,7 +100,7 @@ public class BalloonStyleType
      *     
      */
     public void setColor(byte[] value) {
-        this.color = ((byte[]) value);
+        this.color = (value);
     }
 
     /**
@@ -123,7 +124,7 @@ public class BalloonStyleType
      *     
      */
     public void setBgColor(byte[] value) {
-        this.bgColor = ((byte[]) value);
+        this.bgColor = (value);
     }
 
     /**
@@ -147,7 +148,7 @@ public class BalloonStyleType
      *     
      */
     public void setTextColor(byte[] value) {
-        this.textColor = ((byte[]) value);
+        this.textColor = (value);
     }
 
     /**

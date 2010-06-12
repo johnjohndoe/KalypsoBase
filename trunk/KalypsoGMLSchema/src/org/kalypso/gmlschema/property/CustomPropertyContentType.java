@@ -71,6 +71,7 @@ public class CustomPropertyContentType implements IPropertyContentType
   /**
    * @see org.kalypso.gmlschema.property.IPropertyContentType#getValueQName()
    */
+  @Override
   public QName getValueQName( )
   {
     if( m_qname != null )
@@ -82,6 +83,7 @@ public class CustomPropertyContentType implements IPropertyContentType
   /**
    * @see org.kalypso.gmlschema.property.IPropertyContentType#getTypeObject()
    */
+  @Override
   public Object getTypeObject( )
   {
     return null;
@@ -90,6 +92,7 @@ public class CustomPropertyContentType implements IPropertyContentType
   /**
    * @see org.kalypso.gmlschema.property.IPropertyContentType#isGeometry()
    */
+  @Override
   public boolean isGeometry( )
   {
     return m_typeHandler.isGeometry();
@@ -98,6 +101,7 @@ public class CustomPropertyContentType implements IPropertyContentType
   /**
    * @see org.kalypso.gmlschema.property.IPropertyContentType#getValueClass()
    */
+  @Override
   public Class< ? > getValueClass( )
   {
     return m_typeHandler.getValueClass();
@@ -106,6 +110,7 @@ public class CustomPropertyContentType implements IPropertyContentType
   /**
    * @see org.kalypso.gmlschema.basics.IInitialize#init(int)
    */
+  @Override
   public void init( final int initializeRun )
   {
     // nothing to init
@@ -114,6 +119,7 @@ public class CustomPropertyContentType implements IPropertyContentType
   /**
    * @see org.kalypso.gmlschema.property.IPropertyContentType#getTypeHandler()
    */
+  @Override
   public IMarshallingTypeHandler getTypeHandler( )
   {
     return m_typeHandler;
@@ -122,6 +128,7 @@ public class CustomPropertyContentType implements IPropertyContentType
   /**
    * @see org.kalypso.gmlschema.property.IPropertyContentType#getGmlSchema()
    */
+  @Override
   public IGMLSchema getGmlSchema( )
   {
     return null;

@@ -83,6 +83,7 @@ public class TableSelectionProfilePointFilter implements IProfilePointFilter
    * @see org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter#accept(org.kalypso.model.wspm.core.profil.IProfil,
    *      org.kalypso.model.wspm.core.profil.IProfilPoint)
    */
+  @Override
   public boolean accept( final IProfil profil, final IRecord point )
   {
     return m_points.contains( point );

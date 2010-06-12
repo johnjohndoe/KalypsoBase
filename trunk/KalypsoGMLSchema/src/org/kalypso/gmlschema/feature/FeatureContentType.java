@@ -72,6 +72,7 @@ public abstract class FeatureContentType implements IFeatureContentType
       m_qName = new QName( "anonymous" ); //$NON-NLS-1$
   }
 
+  @Override
   public QName getQName( )
   {
     return m_qName;
@@ -87,6 +88,7 @@ public abstract class FeatureContentType implements IFeatureContentType
   /**
    * @see org.kalypso.gmlschema.builder.IInitialize#init(int)
    */
+  @Override
   public void init( final int initializeRun )
   {
 // nothing to do
@@ -95,6 +97,7 @@ public abstract class FeatureContentType implements IFeatureContentType
   /**
    * @see org.kalypso.gmlschema.feature.IFeatureContentType#getProperties()
    */
+  @Override
   public IPropertyType[] getProperties( )
   {
     if( m_pt == null )
@@ -151,6 +154,7 @@ public abstract class FeatureContentType implements IFeatureContentType
   /**
    * @see org.kalypso.gmlschema.feature.IFeatureContentType#collectFunctionProperties()
    */
+  @Override
   public XmlObject[] collectFunctionProperties( )
   {
     final String namespaceDecl = "declare namespace xs='" + NS.XSD_SCHEMA + "' " + "declare namespace kapp" + "='" + NS.KALYPSO_APPINFO + "' "; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$

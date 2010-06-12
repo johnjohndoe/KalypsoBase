@@ -77,6 +77,7 @@ public class RectifiedGridDomainTypeHandlerGml3 extends AbstractOldFormatMarshal
   /**
    * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#getClassName()
    */
+  @Override
   public Class getValueClass( )
   {
     return RectifiedGridDomain.class;
@@ -85,6 +86,7 @@ public class RectifiedGridDomainTypeHandlerGml3 extends AbstractOldFormatMarshal
   /**
    * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#getTypeName()
    */
+  @Override
   public QName getTypeName( )
   {
     return TYPENAME;
@@ -231,6 +233,7 @@ public class RectifiedGridDomainTypeHandlerGml3 extends AbstractOldFormatMarshal
   /**
    * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#getShortname()
    */
+  @Override
   public String getShortname( )
   {
     return "rectifiedGridDomain";
@@ -240,6 +243,7 @@ public class RectifiedGridDomainTypeHandlerGml3 extends AbstractOldFormatMarshal
    * @throws CloneNotSupportedException
    * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#cloneObject(java.lang.Object)
    */
+  @Override
   public Object cloneObject( final Object objectToClone, final String gmlVersion ) throws CloneNotSupportedException
   {
     throw new CloneNotSupportedException( "Clone is not supported!" );
@@ -248,6 +252,7 @@ public class RectifiedGridDomainTypeHandlerGml3 extends AbstractOldFormatMarshal
   /**
    * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#parseType(java.lang.String)
    */
+  @Override
   public Object parseType( final String text )
   {
     throw new UnsupportedOperationException();
@@ -256,6 +261,7 @@ public class RectifiedGridDomainTypeHandlerGml3 extends AbstractOldFormatMarshal
   /**
    * @see org.kalypso.gmlschema.types.ITypeHandler#isGeometry()
    */
+  @Override
   public boolean isGeometry( )
   {
     return false;

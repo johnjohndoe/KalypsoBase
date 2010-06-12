@@ -83,6 +83,7 @@ public class CustomRelationType implements IRelationType
   /**
    * @see org.kalypso.gmlschema.property.IPropertyType#isVirtual()
    */
+  @Override
   public boolean isVirtual( )
   {
     return false;
@@ -92,6 +93,7 @@ public class CustomRelationType implements IRelationType
    * @return allways <code>true</code> as in shapefile
    * @see org.kalypso.gmlschema.property.relation.IRelationType#isInlineAble()
    */
+  @Override
   public boolean isInlineAble( )
   {
     return true;
@@ -101,6 +103,7 @@ public class CustomRelationType implements IRelationType
    * @return allways <code>false</code> as in shapefile
    * @see org.kalypso.gmlschema.property.relation.IRelationType#isLinkAble()
    */
+  @Override
   public boolean isLinkAble( )
   {
     return false;
@@ -110,6 +113,7 @@ public class CustomRelationType implements IRelationType
    * @see org.kalypso.gmlschema.property.relation.IRelationType#getTargetFeatureTypes(org.kalypso.gmlschema.GMLSchema,
    *      boolean)
    */
+  @Override
   public IFeatureType getTargetFeatureType( )
   {
     return m_targetFT;
@@ -118,6 +122,7 @@ public class CustomRelationType implements IRelationType
   /**
    * @see org.kalypso.gmlschema.property.IPropertyType#getMinOccurs()
    */
+  @Override
   public int getMinOccurs( )
   {
     return m_minOccurs;
@@ -126,6 +131,7 @@ public class CustomRelationType implements IRelationType
   /**
    * @see org.kalypso.gmlschema.property.IPropertyType#getMaxOccurs()
    */
+  @Override
   public int getMaxOccurs( )
   {
     return m_maxOccurs;
@@ -134,6 +140,7 @@ public class CustomRelationType implements IRelationType
   /**
    * @see org.kalypso.gmlschema.property.IPropertyType#getQName()
    */
+  @Override
   public QName getQName( )
   {
     return m_qName;
@@ -142,6 +149,7 @@ public class CustomRelationType implements IRelationType
   /**
    * @see org.kalypso.gmlschema.property.IPropertyType#getName()
    */
+  @Override
   @SuppressWarnings("deprecation")
   @Deprecated
   public String getName( )
@@ -152,6 +160,7 @@ public class CustomRelationType implements IRelationType
   /**
    * @see org.kalypso.gmlschema.basics.IInitialize#init(int)
    */
+  @Override
   public void init( final int initializeRun )
   {
     // TODO nothing to init
@@ -160,6 +169,7 @@ public class CustomRelationType implements IRelationType
   /**
    * @see org.kalypso.gmlschema.property.IPropertyType#isList()
    */
+  @Override
   public boolean isList( )
   {
     return (m_maxOccurs > 1) || (m_maxOccurs == IPropertyType.UNBOUND_OCCURENCY);
@@ -168,8 +178,7 @@ public class CustomRelationType implements IRelationType
   /**
    * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
    */
-  @SuppressWarnings("unchecked")
-  public Object getAdapter( final Class adapter )
+  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
   {
     return Platform.getAdapterManager().getAdapter( this, adapter );
   }
@@ -177,6 +186,7 @@ public class CustomRelationType implements IRelationType
   /**
    * @see org.kalypso.gmlschema.property.IPropertyType#isNillable()
    */
+  @Override
   public boolean isNillable( )
   {
     return m_isNillable;
@@ -185,6 +195,7 @@ public class CustomRelationType implements IRelationType
   /**
    * @see org.kalypso.gmlschema.property.relation.IRelationType#getDocumentReferences()
    */
+  @Override
   public IDocumentReference[] getDocumentReferences( )
   {
     return CustomRelationType.DOCUMENT_REFERENCES;
@@ -202,6 +213,7 @@ public class CustomRelationType implements IRelationType
   /**
    * @see org.kalypso.gmlschema.property.IPropertyType#getAnnotation()
    */
+  @Override
   public IAnnotation getAnnotation( )
   {
     return m_annotation;
@@ -210,6 +222,7 @@ public class CustomRelationType implements IRelationType
   /**
    * @see org.kalypso.gmlschema.property.IPropertyType#cloneForFeatureType(org.kalypso.gmlschema.feature.IFeatureType)
    */
+  @Override
   public IPropertyType cloneForFeatureType( final IFeatureType featureType )
   {
     return new CustomRelationType( m_qName, m_targetFT, m_minOccurs, m_maxOccurs, m_isNillable );

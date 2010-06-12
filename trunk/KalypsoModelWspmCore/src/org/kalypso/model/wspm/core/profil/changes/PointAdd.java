@@ -68,6 +68,7 @@ public class PointAdd implements IProfilChange
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilChange#doChange()
    */
+  @Override
   public IProfilChange doChange( final ProfilChangeHint hint )
   {
     if( hint != null )
@@ -98,6 +99,7 @@ public class PointAdd implements IProfilChange
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilChange#getObject()
    */
+  @Override
   public Object[] getObjects( )
   {
     return new IRecord[] { m_point };
@@ -106,6 +108,7 @@ public class PointAdd implements IProfilChange
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilChange#getPointProperty()
    */
+  @Override
   public String getInfo( )
   {
     return null;
@@ -114,6 +117,7 @@ public class PointAdd implements IProfilChange
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilChange#getValue()
    */
+  @Override
   public Double getValue( )
   {
     return null;

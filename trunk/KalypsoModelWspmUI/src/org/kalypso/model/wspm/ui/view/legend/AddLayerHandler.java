@@ -64,6 +64,7 @@ public class AddLayerHandler extends AbstractHandler
   /**
    * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
+  @Override
   public final Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     // find chartview

@@ -84,6 +84,7 @@ public class TransformVisitor implements FeatureVisitor
   /**
    * @see org.kalypsodeegree.model.feature.FeatureVisitor#visit(org.kalypsodeegree.model.feature.Feature)
    */
+  @Override
   public boolean visit( final Feature f )
   {
     try

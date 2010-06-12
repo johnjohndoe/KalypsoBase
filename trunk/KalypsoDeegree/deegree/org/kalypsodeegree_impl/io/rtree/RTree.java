@@ -582,6 +582,7 @@ public class RTree
           this.minDist = minDist;
         }
 
+        @Override
         public int compareTo( Object obj )
         {
           ABL help = (ABL)obj;

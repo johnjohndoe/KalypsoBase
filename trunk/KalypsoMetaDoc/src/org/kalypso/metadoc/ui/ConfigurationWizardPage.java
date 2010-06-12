@@ -80,6 +80,7 @@ public class ConfigurationWizardPage extends WizardPage
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
    */
+  @Override
   public void createControl( final Composite parent )
   {
     final Composite composite = new Composite( parent, SWT.NONE );
@@ -99,6 +100,7 @@ public class ConfigurationWizardPage extends WizardPage
       final Configuration config = m_config;
       text.addModifyListener( new ModifyListener()
       {
+        @Override
         public void modifyText( ModifyEvent e )
         {
           config.setProperty( key, text.getText() );

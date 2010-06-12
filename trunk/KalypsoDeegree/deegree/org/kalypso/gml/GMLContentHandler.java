@@ -112,6 +112,7 @@ public class GMLContentHandler extends DelegatingContentHandler implements IFeat
     m_delegate.startElement( uri, localName, qName, atts );
   }
 
+  @Override
   public Feature getRootFeature( ) throws GMLException
   {
     if( m_rootFeature == null )
@@ -125,6 +126,7 @@ public class GMLContentHandler extends DelegatingContentHandler implements IFeat
     m_rootFeature = rootFeature;
   }
 
+  @Override
   public void handle( final Feature feature )
   {
     setRootFeature( feature ); 

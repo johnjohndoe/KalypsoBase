@@ -81,6 +81,7 @@ public class XElementFactory
     final IGMLXPathOperation op1 = new GMLXPathOperation( "(.+)( mod )(.+)" )
     {
       // "mod";
+      @Override
       public Object operate( Object value1, Object value2 )
       {
         // TODO Auto-generated method stub
@@ -90,6 +91,7 @@ public class XElementFactory
 
     final IGMLXPathOperation op2 = new GMLXPathOperation( "(.+)( div )(.+)" )
     {
+      @Override
       public Object operate( Object value1, Object value2 )
       {
         // TODO Auto-generated method stub
@@ -99,6 +101,7 @@ public class XElementFactory
 
     final IGMLXPathOperation op3 = new GMLXPathOperation( "(.+)( or )(.+)" )
     {
+      @Override
       public Object operate( Object value1, Object value2 )
       {
         boolean b1;
@@ -117,6 +120,7 @@ public class XElementFactory
 
     final IGMLXPathOperation op4 = new GMLXPathOperation( "(.+)( and )(.+)" )
     {
+      @Override
       public Object operate( Object value1, Object value2 )
       {
         boolean b1;
@@ -238,6 +242,7 @@ public class XElementFactory
     final IGMLXPathFunction f1 = new AbstractGMLXPathFunction( "not" )
     {
 
+      @Override
       public Boolean evaluate( Feature contextFE, IXElement argumentXEelement, boolean isFeatureTypeLevel ) throws GMLXPathException
       {
         Object object = argumentXEelement.evaluate( contextFE, isFeatureTypeLevel );
@@ -249,6 +254,7 @@ public class XElementFactory
     final IGMLXPathFunction f2 = new AbstractGMLXPathFunction( "name" )
     {
 
+      @Override
       public Object evaluate( Feature contextFE, IXElement argumentXEelement, boolean isFeatureTypeLevel ) throws GMLXPathException
       {
         final Feature fe;
@@ -261,6 +267,7 @@ public class XElementFactory
     };
     final IGMLXPathFunction f3 = new AbstractGMLXPathFunction( "position" )
     {
+      @Override
       public Object evaluate( Feature contextFE, IXElement argumentXEelement, boolean isFeatureTypeLevel )
       {
         throw new UnsupportedOperationException();
@@ -269,6 +276,7 @@ public class XElementFactory
     final IGMLXPathFunction f4 = new AbstractGMLXPathFunction( "id" )
     {
 
+      @Override
       public Object evaluate( Feature contextFE, IXElement argumentXEelement, boolean isFeatureTypeLevel ) throws GMLXPathException
       {
         final GMLWorkspace workspace = contextFE.getWorkspace();

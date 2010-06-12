@@ -132,6 +132,7 @@ public class LogicalOperation extends AbstractOperation
   }
 
   /** Produces an indented XML representation of this object. */
+  @Override
   public StringBuffer toXML( )
   {
     final StringBuffer sb = new StringBuffer( 1000 );
@@ -157,6 +158,7 @@ public class LogicalOperation extends AbstractOperation
    * @throws FilterEvaluationException
    *             if the evaluation fails
    */
+  @Override
   public boolean evaluate( final Feature feature ) throws FilterEvaluationException
   {
     switch( getOperatorId() )
@@ -197,6 +199,7 @@ public class LogicalOperation extends AbstractOperation
    * @see org.kalypsodeegree.filterencoding.Operation#accept(org.kalypsodeegree.filterencoding.visitor.FilterVisitor,
    *      org.kalypsodeegree.filterencoding.Operation, int)
    */
+  @Override
   public void accept( final FilterVisitor fv, final Operation operation, final int depth )
   {
     if( operation != null && OperationDefines.getTypeById( operation.getOperatorId() ) == OperationDefines.TYPE_LOGICAL )

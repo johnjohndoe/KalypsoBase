@@ -20,6 +20,7 @@ public class ProfileditorPerspective implements IPerspectiveFactory
   /**
    * @see org.eclipse.ui.IPerspectiveFactory#createInitialLayout(org.eclipse.ui.IPageLayout)
    */
+  @Override
   public void createInitialLayout( final IPageLayout layout )
   {
     layout.setEditorAreaVisible( true );

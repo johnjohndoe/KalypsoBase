@@ -118,6 +118,7 @@ public class PropertyIsNullOperation extends ComparisonOperation
   }
 
   /** Produces an indented XML representation of this object. */
+  @Override
   public StringBuffer toXML( )
   {
     StringBuffer sb = new StringBuffer( 500 );
@@ -137,6 +138,7 @@ public class PropertyIsNullOperation extends ComparisonOperation
    * @throws FilterEvaluationException
    *           if the evaluation fails
    */
+  @Override
   public boolean evaluate( Feature feature ) throws FilterEvaluationException
   {
     Object value = m_expression.evaluate( feature );
@@ -148,6 +150,7 @@ public class PropertyIsNullOperation extends ComparisonOperation
   /**
    * @see org.kalypsodeegree.filterencoding.Operation#accept(org.kalypsodeegree.filterencoding.visitor.FilterVisitor, org.kalypsodeegree.filterencoding.Operation, int)
    */
+  @Override
   public void accept( FilterVisitor fv, Operation operation, int depth )
   {
     fv.visit( this );

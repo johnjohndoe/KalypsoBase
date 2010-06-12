@@ -67,9 +67,9 @@ public class TupleResultDomainValueData<T_domain, T_target> implements IDataCont
     m_domainComponentName = domainComponentName;
     m_targetComponentName = targetComponentName;
     m_observation = observation;
-
   }
 
+  @Override
   public void open( )
   {
     if( !m_isOpen )
@@ -92,11 +92,13 @@ public class TupleResultDomainValueData<T_domain, T_target> implements IDataCont
     m_isOpen = true;
   }
 
+  @Override
   public IDataRange<T_domain> getDomainRange( )
   {
     return new ComparableDataRange<T_domain>( getDomainValues() );
   }
 
+  @Override
   public IDataRange<T_target> getTargetRange( )
   {
     return new ComparableDataRange<T_target>( getTargetValues() );
@@ -110,7 +112,7 @@ public class TupleResultDomainValueData<T_domain, T_target> implements IDataCont
   protected Object[] getValues( final String compName )
   {
     open();
-    if( !m_isOpen||m_observation==null )
+    if( !m_isOpen || m_observation == null )
       return new Object[] {};
     final int iComp = m_observation.getResult().indexOfComponent( compName );
     if( iComp < 0 )

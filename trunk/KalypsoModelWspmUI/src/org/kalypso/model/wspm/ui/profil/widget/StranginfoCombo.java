@@ -85,6 +85,7 @@ public class StranginfoCombo implements IStranginfoListener, SelectionListener
   /**
    * @see org.kalypso.model.wspm.core.strang.IStranginfoListener#onIndexChanged(org.kalypso.model.wspm.core.strang.StrangInfo)
    */
+  @Override
   public void onIndexChanged( final StrangInfo source )
   {
     if( source != null )
@@ -103,6 +104,7 @@ public class StranginfoCombo implements IStranginfoListener, SelectionListener
   /**
    * @see org.eclipse.swt.events.SelectionListener#widgetSelected(org.eclipse.swt.events.SelectionEvent)
    */
+  @Override
   public void widgetSelected( final SelectionEvent e )
   {
     if( m_info == null )
@@ -118,6 +120,7 @@ public class StranginfoCombo implements IStranginfoListener, SelectionListener
   /**
    * @see org.eclipse.swt.events.SelectionListener#widgetDefaultSelected(org.eclipse.swt.events.SelectionEvent)
    */
+  @Override
   public void widgetDefaultSelected( SelectionEvent e )
   {
   }
@@ -125,6 +128,7 @@ public class StranginfoCombo implements IStranginfoListener, SelectionListener
   /**
    * @see org.kalypso.model.wspm.core.strang.IStranginfoListener#onTryChangeIndex(org.kalypso.model.wspm.core.strang.StrangInfo)
    */
+  @Override
   public boolean onTryChangeIndex( StrangInfo source )
   {
     return true;

@@ -50,6 +50,7 @@ public abstract class AbstractBuilder implements IBuilder
   /**
    * @see org.kalypso.gmlschema.builder.IBuilder#replaces(org.kalypso.gmlschema.builder.IBuilder)
    */
+  @Override
   public boolean replaces( final IBuilder other )
   {
     return false;

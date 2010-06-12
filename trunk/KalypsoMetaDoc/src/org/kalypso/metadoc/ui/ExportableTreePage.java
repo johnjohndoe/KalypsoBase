@@ -94,6 +94,7 @@ public class ExportableTreePage extends TreeSelectionPage
     // handle check state changes
     viewer.addCheckStateListener( new ICheckStateListener()
     {
+      @Override
       public void checkStateChanged( CheckStateChangedEvent event )
       {
         final Object element = event.getElement();

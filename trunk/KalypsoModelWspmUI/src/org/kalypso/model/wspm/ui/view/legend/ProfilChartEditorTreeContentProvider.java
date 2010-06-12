@@ -58,10 +58,9 @@ public class ProfilChartEditorTreeContentProvider extends ChartEditorTreeContent
   public ProfilChartEditorTreeContentProvider( final IChartModel model )
   {
     super( model );
-    
+
     m_modelLayer = new AbstractExpandableLayer()
     {
-
       /**
        * @see de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer#getTitle()
        */

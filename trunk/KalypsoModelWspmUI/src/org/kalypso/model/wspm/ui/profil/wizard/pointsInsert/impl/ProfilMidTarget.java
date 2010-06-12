@@ -62,6 +62,7 @@ public class ProfilMidTarget extends AbstractPointsTarget
    * @see org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.IPointsTarget#insertPoints(org.kalypso.model.wspm.core.profil.impl.ProfilEventManager,
    *      IProfilPoints)
    */
+  @Override
   public void insertPoints( final IProfil profile, final List<IRecord> points )
   {
     if( points != null )

@@ -77,6 +77,7 @@ public class XsdBaseTypeHandlerByteArray extends XsdBaseTypeHandler<Byte[]>
   /**
    * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
    */
+  @Override
   public int compare( final Byte[] o1, final Byte[] o2 )
   {
     return ("" + o1).compareTo( "" + o2 );

@@ -71,11 +71,13 @@ public class VirtualFunctionWrapperRelationType implements IFunctionPropertyType
     m_functionProperties = functionProperties;
   }
 
+  @Override
   public String getFunctionId( )
   {
     return m_functionId;
   }
 
+  @Override
   public Map<String, String> getFunctionProperties( )
   {
     return m_functionProperties;
@@ -84,6 +86,7 @@ public class VirtualFunctionWrapperRelationType implements IFunctionPropertyType
   /**
    * @see org.kalypso.gmlschema.property.relation.IRelationType#getDocumentReferences()
    */
+  @Override
   public IDocumentReference[] getDocumentReferences( )
   {
     return m_realPt.getDocumentReferences();
@@ -92,6 +95,7 @@ public class VirtualFunctionWrapperRelationType implements IFunctionPropertyType
   /**
    * @see org.kalypso.gmlschema.property.IPropertyType#getMaxOccurs()
    */
+  @Override
   public int getMaxOccurs( )
   {
     return m_realPt.getMaxOccurs();
@@ -100,6 +104,7 @@ public class VirtualFunctionWrapperRelationType implements IFunctionPropertyType
   /**
    * @see org.kalypso.gmlschema.property.IPropertyType#getMinOccurs()
    */
+  @Override
   public int getMinOccurs( )
   {
     return m_realPt.getMinOccurs();
@@ -109,6 +114,7 @@ public class VirtualFunctionWrapperRelationType implements IFunctionPropertyType
    * @deprecated
    * @see org.kalypso.gmlschema.property.IPropertyType#getName()
    */
+  @Override
   @SuppressWarnings("deprecation")
   @Deprecated
   public String getName( )
@@ -119,6 +125,7 @@ public class VirtualFunctionWrapperRelationType implements IFunctionPropertyType
   /**
    * @see org.kalypso.gmlschema.xml.IQualifiedElement#getQName()
    */
+  @Override
   public QName getQName( )
   {
     return m_realPt.getQName();
@@ -127,6 +134,7 @@ public class VirtualFunctionWrapperRelationType implements IFunctionPropertyType
   /**
    * @see org.kalypso.gmlschema.property.relation.IRelationType#getTargetFeatureType()
    */
+  @Override
   public IFeatureType getTargetFeatureType( )
   {
     return m_realPt.getTargetFeatureType();
@@ -136,6 +144,7 @@ public class VirtualFunctionWrapperRelationType implements IFunctionPropertyType
    * @throws GMLSchemaException
    * @see org.kalypso.gmlschema.builder.IInitialize#init(int)
    */
+  @Override
   public void init( final int initializeRun ) throws GMLSchemaException
   {
     m_realPt.init( initializeRun );
@@ -144,6 +153,7 @@ public class VirtualFunctionWrapperRelationType implements IFunctionPropertyType
   /**
    * @see org.kalypso.gmlschema.property.relation.IRelationType#isInlineAble()
    */
+  @Override
   public boolean isInlineAble( )
   {
     return m_realPt.isInlineAble();
@@ -152,6 +162,7 @@ public class VirtualFunctionWrapperRelationType implements IFunctionPropertyType
   /**
    * @see org.kalypso.gmlschema.property.relation.IRelationType#isLinkAble()
    */
+  @Override
   public boolean isLinkAble( )
   {
     return m_realPt.isLinkAble();
@@ -160,6 +171,7 @@ public class VirtualFunctionWrapperRelationType implements IFunctionPropertyType
   /**
    * @see org.kalypso.gmlschema.property.IPropertyType#isList()
    */
+  @Override
   public boolean isList( )
   {
     return m_realPt.isList();
@@ -168,6 +180,7 @@ public class VirtualFunctionWrapperRelationType implements IFunctionPropertyType
   /**
    * @see org.kalypso.gmlschema.property.IPropertyType#isNillable()
    */
+  @Override
   public boolean isNillable( )
   {
     return m_realPt.isNillable();
@@ -176,6 +189,7 @@ public class VirtualFunctionWrapperRelationType implements IFunctionPropertyType
   /**
    * @see org.kalypso.gmlschema.property.IPropertyType#isVirtual()
    */
+  @Override
   public boolean isVirtual( )
   {
     return m_realPt.isVirtual();
@@ -193,6 +207,7 @@ public class VirtualFunctionWrapperRelationType implements IFunctionPropertyType
   /**
    * @see org.kalypso.gmlschema.property.IPropertyType#getAnnotation()
    */
+  @Override
   public IAnnotation getAnnotation( )
   {
     return m_realPt.getAnnotation();
@@ -201,6 +216,7 @@ public class VirtualFunctionWrapperRelationType implements IFunctionPropertyType
   /**
    * @see org.kalypso.gmlschema.property.IPropertyType#cloneForFeatureType(org.kalypso.gmlschema.feature.IFeatureType)
    */
+  @Override
   public IPropertyType cloneForFeatureType( final IFeatureType featureType )
   {
     return new VirtualFunctionWrapperRelationType( (IRelationType) m_realPt.cloneForFeatureType( featureType ), m_functionId, m_functionProperties );

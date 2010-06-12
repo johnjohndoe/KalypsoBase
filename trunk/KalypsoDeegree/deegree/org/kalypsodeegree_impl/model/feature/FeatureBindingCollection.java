@@ -115,21 +115,25 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
     return m_featureLst;
   }
 
+  @Override
   public void add( final int index, final FWCls element )
   {
     getFeatureList().add( index, element );
   }
 
+  @Override
   public boolean add( final FWCls o )
   {
     return getFeatureList().add( o );
   }
 
+  @Override
   public FWCls addNew( final QName newChildType )
   {
     return addNew( newChildType, m_defaultWrapperClass );
   }
 
+  @Override
   public <T extends FWCls> T addNew( final QName newChildType, final Class<T> classToAdapt )
   {
     Feature feature = null;
@@ -148,11 +152,13 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
     }
   }
 
+  @Override
   public FWCls addNew( final QName newChildType, final String newFeatureId )
   {
     return addNew( newChildType, newFeatureId, m_defaultWrapperClass );
   }
 
+  @Override
   public <T extends FWCls> T addNew( final QName newChildType, final String newFeatureId, final Class<T> classToAdapt )
   {
     Feature feature = null;
@@ -175,6 +181,7 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
     return addNew( index, newChildType, m_defaultWrapperClass );
   }
 
+  @Override
   public <T extends FWCls> T addNew( final int index, final QName newChildType, final Class<T> classToAdapt )
   {
     try
@@ -192,28 +199,33 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
     }
   }
 
+  @Override
   public boolean addAll( final Collection< ? extends FWCls> c )
   {
 // return getFeatureList().addAll( FeatureHelper.toFeatureList( c ) );
     throw new UnsupportedOperationException();
   }
 
+  @Override
   public boolean addAll( final int index, final Collection< ? extends FWCls> c )
   {
 // return getFeatureList().addAll( index, FeatureHelper.toFeatureList( c ) );
     throw new UnsupportedOperationException();
   }
 
+  @Override
   public void clear( )
   {
     getFeatureList().clear();
   }
 
+  @Override
   public boolean contains( final Object o )
   {
     return indexOf( o ) != -1;
   }
 
+  @Override
   public boolean containsAll( final Collection< ? > c )
   {
     throw new UnsupportedOperationException();
@@ -226,6 +238,7 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
      */
   }
 
+  @Override
   public FWCls get( final int index )
   {
     final Object property = getFeatureList().get( index );
@@ -233,6 +246,7 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
     return getAdaptedFeature( f );
   }
 
+  @Override
   public int indexOf( final Object o )
   {
     if( o instanceof Feature )
@@ -272,11 +286,13 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
     return -1;
   }
 
+  @Override
   public boolean isEmpty( )
   {
     return getFeatureList().isEmpty();
   }
 
+  @Override
   public Iterator<FWCls> iterator( )
   {
     return new Iterator<FWCls>()
@@ -285,11 +301,13 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
 
       private final GMLWorkspace workspace = m_featureCollection.getWorkspace();
 
+      @Override
       synchronized public boolean hasNext( )
       {
         return it.hasNext();
       }
 
+      @Override
       synchronized public FWCls next( )
       {
         final Object next = it.next();
@@ -302,6 +320,7 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
         return wrapper;
       }
 
+      @Override
       public void remove( )
       {
         it.remove();
@@ -310,6 +329,7 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
     };
   }
 
+  @Override
   public int lastIndexOf( final Object o )
   {
     if( o instanceof Feature )
@@ -318,32 +338,38 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
     return -1;
   }
 
+  @Override
   public ListIterator<FWCls> listIterator( )
   {
     return listIterator( 0 );
   }
 
+  @Override
   public ListIterator<FWCls> listIterator( final int index )
   {
     return new ListIterator<FWCls>()
     {
       private final ListIterator lit = getFeatureList().listIterator( index );
 
+      @Override
       public void add( final FWCls o )
       {
         lit.add( o );
       }
 
+      @Override
       public boolean hasNext( )
       {
         return lit.hasNext();
       }
 
+      @Override
       public boolean hasPrevious( )
       {
         return lit.hasPrevious();
       }
 
+      @Override
       public FWCls next( )
       {
         final Feature f = FeatureHelper.getFeature( m_featureCollection.getWorkspace(), lit.next() );
@@ -351,11 +377,13 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
         return (FWCls) wrapper;
       }
 
+      @Override
       public int nextIndex( )
       {
         return lit.nextIndex();
       }
 
+      @Override
       public FWCls previous( )
       {
         final Feature f = (Feature) lit.previous();
@@ -363,16 +391,19 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
         return (FWCls) wrapper;
       }
 
+      @Override
       public int previousIndex( )
       {
         return lit.previousIndex();
       }
 
+      @Override
       public void remove( )
       {
         lit.remove();
       }
 
+      @Override
       public void set( final FWCls o )
       {
         lit.set( o );
@@ -381,12 +412,14 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
     };
   }
 
+  @Override
   public FWCls remove( final int index )
   {
     final FWCls wrapper = FeatureHelper.getFeature( m_featureCollection.getWorkspace(), getFeatureList().remove( index ), m_defaultWrapperClass );
     return wrapper;
   }
 
+  @Override
   public boolean remove( final Object o )
   {
     if( o instanceof Feature )
@@ -404,6 +437,7 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
       return getFeatureList().remove( o );
   }
 
+  @Override
   public boolean removeAll( final Collection< ? > c )
   {
     boolean ret = false;
@@ -414,11 +448,13 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
     return ret;
   }
 
+  @Override
   public boolean retainAll( final Collection< ? > c )
   {
     throw new UnsupportedOperationException();
   }
 
+  @Override
   public FWCls set( final int index, final FWCls element )
   {
     final FWCls r = get( index );
@@ -427,16 +463,19 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
     return r;
   }
 
+  @Override
   public int size( )
   {
     return getFeatureList().size();
   }
 
+  @Override
   public List<FWCls> subList( final int fromIndex, final int toIndex )
   {
     return null;
   }
 
+  @Override
   public Object[] toArray( )
   {
     final Object objs[] = new Object[size()];
@@ -455,6 +494,7 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
     return objs;
   }
 
+  @Override
   public <T> T[] toArray( T[] a )
   {
     final int SIZE = size();
@@ -503,6 +543,7 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection#addRef(org.kalypsodeegree.model.feature.binding.IFeatureWrapper)
    */
+  @Override
   public boolean addRef( final FWCls toAdd ) throws IllegalArgumentException
   {
     final String gmlID = toAdd.getId();
@@ -516,6 +557,7 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
    * @see org.kalypsodeegree.model.feature.IFeatureBindingCollection#query(org.kalypsodeegree.model.geometry.GM_Surface,
    *      javax.xml.namespace.QName, boolean)
    */
+  @Override
   public List<FWCls> query( final GM_Surface selectionSurface, final QName qname, final boolean containedOnly )
   {
     final List selectedFeature = getFeatureList().query( selectionSurface.getEnvelope(), null );
@@ -566,6 +608,7 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
   /**
    * @see org.kalypsodeegree.model.feature.IFeatureBindingCollection#query(org.kalypsodeegree.model.geometry.GM_Envelope)
    */
+  @Override
   public List<FWCls> query( final GM_Envelope envelope )
   {
     final List selectedFeature = getFeatureList().query( envelope, null );
@@ -585,6 +628,7 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection#query(org.kalypsodeegree.model.geometry.GM_Position)
    */
+  @Override
   public List<FWCls> query( final GM_Position position )
   {
     final List selectedFeature = getFeatureList().query( position, null );
@@ -605,6 +649,7 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection#countFeatureWrappers(java.lang.Class)
    */
+  @Override
   public int countFeatureWrappers( final Class wrapperClass )
   {
     int num = 0;
@@ -619,6 +664,7 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
   /**
    * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection#cloneInto(org.kalypsodeegree.model.feature.binding.IFeatureWrapper2)
    */
+  @Override
   public void cloneInto( final FWCls toClone ) throws Exception
   {
     final IRelationType relationType = getFeatureList().getParentFeatureTypeProperty();
@@ -654,6 +700,7 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
   /**
    * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection#getBoundingBox()
    */
+  @Override
   public GM_Envelope getBoundingBox( )
   {
     return getFeatureList().getBoundingBox();

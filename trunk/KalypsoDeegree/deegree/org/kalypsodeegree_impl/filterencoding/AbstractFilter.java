@@ -150,6 +150,7 @@ public abstract class AbstractFilter implements Filter
   }
 
   /** Produces an indented XML representation of this object. */
+  @Override
   public abstract StringBuffer toXML( );
 
   public Filter clone( final Filter filter ) throws FilterConstructionException

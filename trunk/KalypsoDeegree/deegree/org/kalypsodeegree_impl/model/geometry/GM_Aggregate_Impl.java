@@ -91,6 +91,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
   /**
    * returns the number of GM_Object within the aggregation
    */
+  @Override
   public int getSize( )
   {
     return m_aggregate.size();
@@ -102,6 +103,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
    * @exception GM_Exception
    *                a GM_Exception will be thrown if the submitted isn't the same type as the recieving one.
    */
+  @Override
   public void merge( final GM_Aggregate aggregate ) throws GM_Exception
   {
     if( !this.getClass().getName().equals( aggregate.getClass().getName() ) )
@@ -120,6 +122,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
   /**
    * adds an GM_Object to the aggregation
    */
+  @Override
   public void add( final GM_Object gmo )
   {
     m_aggregate.add( gmo );
@@ -136,6 +139,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
    * @param index
    *            position where to insert the new GM_Object
    */
+  @Override
   public void insertObjectAt( final GM_Object gmo, final int index ) throws GM_Exception
   {
     if( (index < 0) || (index > this.getSize() - 1) )
@@ -162,6 +166,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
    * @param index
    *            position where to set the new GM_Object
    */
+  @Override
   public void setObjectAt( final GM_Object gmo, final int index ) throws GM_Exception
   {
     if( (index < 0) || (index > this.getSize() - 1) )
@@ -184,6 +189,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
    * 
    * @return the removed GM_Object
    */
+  @Override
   public GM_Object removeObject( final GM_Object gmo )
   {
     if( gmo == null )
@@ -215,6 +221,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
    * 
    * @return the removed GM_Object
    */
+  @Override
   public GM_Object removeObjectAt( final int index ) throws GM_Exception
   {
     if( index < 0 )
@@ -237,6 +244,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
   /**
    * removes all GM_Object from the aggregation.
    */
+  @Override
   public void removeAll( )
   {
     m_aggregate.clear();
@@ -247,6 +255,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
    * returns the GM_Object at the submitted index. if index is larger then getSize() - 1 or smaller then 0 an exception
    * will be thrown.
    */
+  @Override
   public GM_Object getObjectAt( final int index )
   {
     return m_aggregate.get( index );
@@ -255,6 +264,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
   /**
    * returns all GM_Objects as array
    */
+  @Override
   public GM_Object[] getAll( )
   {
     final GM_Object[] gmos = new GM_Object[this.getSize()];
@@ -265,6 +275,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
   /**
    * returns true if the submitted GM_Object is within the aggregation
    */
+  @Override
   public boolean isMember( final GM_Object gmo )
   {
     return m_aggregate.contains( gmo );
@@ -273,6 +284,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
   /**
    * returns the aggregation as an iterator
    */
+  @Override
   public Iterator<GM_Object> getIterator( )
   {
     return m_aggregate.iterator();

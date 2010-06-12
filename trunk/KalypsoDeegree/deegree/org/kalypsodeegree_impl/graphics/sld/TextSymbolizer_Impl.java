@@ -91,6 +91,7 @@ public class TextSymbolizer_Impl extends Symbolizer_Impl implements TextSymboliz
    * 
    * @return the label
    */
+  @Override
   public ParameterValueType getLabel( )
   {
     return m_label;
@@ -102,6 +103,7 @@ public class TextSymbolizer_Impl extends Symbolizer_Impl implements TextSymboliz
    * @param label
    *            the label
    */
+  @Override
   public void setLabel( final ParameterValueType label )
   {
     m_label = label;
@@ -112,6 +114,7 @@ public class TextSymbolizer_Impl extends Symbolizer_Impl implements TextSymboliz
    * 
    * @return the font
    */
+  @Override
   public Font getFont( )
   {
     return m_font;
@@ -123,6 +126,7 @@ public class TextSymbolizer_Impl extends Symbolizer_Impl implements TextSymboliz
    * @param font
    *            the font
    */
+  @Override
   public void setFont( final Font font )
   {
     m_font = font;
@@ -138,6 +142,7 @@ public class TextSymbolizer_Impl extends Symbolizer_Impl implements TextSymboliz
    * 
    * @return the labelPlacement
    */
+  @Override
   public LabelPlacement getLabelPlacement( )
   {
     return m_labelPlacement;
@@ -149,6 +154,7 @@ public class TextSymbolizer_Impl extends Symbolizer_Impl implements TextSymboliz
    * @param labelPlacement
    *            the labelPlacement
    */
+  @Override
   public void setLabelPlacement( final LabelPlacement labelPlacement )
   {
     m_labelPlacement = labelPlacement;
@@ -162,6 +168,7 @@ public class TextSymbolizer_Impl extends Symbolizer_Impl implements TextSymboliz
    * 
    * @return the halo
    */
+  @Override
   public Halo getHalo( )
   {
     return m_halo;
@@ -173,6 +180,7 @@ public class TextSymbolizer_Impl extends Symbolizer_Impl implements TextSymboliz
    * @param halo
    *            the halo
    */
+  @Override
   public void setHalo( final Halo halo )
   {
     m_halo = halo;
@@ -185,6 +193,7 @@ public class TextSymbolizer_Impl extends Symbolizer_Impl implements TextSymboliz
    * 
    * @return the fill
    */
+  @Override
   public Fill getFill( )
   {
     return m_fill;
@@ -196,6 +205,7 @@ public class TextSymbolizer_Impl extends Symbolizer_Impl implements TextSymboliz
    * @param fill
    *            the fill
    */
+  @Override
   public void setFill( final Fill fill )
   {
     m_fill = fill;
@@ -206,6 +216,7 @@ public class TextSymbolizer_Impl extends Symbolizer_Impl implements TextSymboliz
    * 
    * @return xml representation of the TextSymbolizer
    */
+  @Override
   public String exportAsXML( )
   {
     Debug.debugMethodBegin();

@@ -76,6 +76,7 @@ public class ProfileditorPreferencePage extends FieldEditorPreferencePage
   /**
    * @see org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
    */
+  @Override
   public void init( IWorkbench workbench )
   {
     // nix zu tun

@@ -29,17 +29,20 @@ public class DoubleFakeRaster extends AbstractGeoGrid implements IGeoGrid
     m_doubleProvider = dp;
   }
 
+  @Override
   public final double getValue( final int x, final int y ) throws GeoGridException
   {
     final Coordinate c = GeoGridUtilities.toCoordinate( this, x, y, null );
     return m_doubleProvider.getValue( c );
   }
 
+  @Override
   public int getSizeX( )
   {
     return m_sizeX;
   }
 
+  @Override
   public int getSizeY( )
   {
     return m_sizeY;
@@ -48,6 +51,7 @@ public class DoubleFakeRaster extends AbstractGeoGrid implements IGeoGrid
   /**
    * @see org.kalypso.grid.IGeoGrid#getMax()
    */
+  @Override
   public BigDecimal getMax( )
   {
     return null;
@@ -56,6 +60,7 @@ public class DoubleFakeRaster extends AbstractGeoGrid implements IGeoGrid
   /**
    * @see org.kalypso.grid.IGeoGrid#getMin()
    */
+  @Override
   public BigDecimal getMin( )
   {
     return null;
@@ -64,6 +69,7 @@ public class DoubleFakeRaster extends AbstractGeoGrid implements IGeoGrid
   /**
    * @see org.kalypso.grid.IGeoGrid#setMax(java.math.BigDecimal)
    */
+  @Override
   public void setMax( final BigDecimal maxValue )
   {
     // TODO Auto-generated method stub
@@ -73,6 +79,7 @@ public class DoubleFakeRaster extends AbstractGeoGrid implements IGeoGrid
   /**
    * @see org.kalypso.grid.IGeoGrid#setMin(java.math.BigDecimal)
    */
+  @Override
   public void setMin( final BigDecimal minValue )
   {
     // TODO Auto-generated method stub

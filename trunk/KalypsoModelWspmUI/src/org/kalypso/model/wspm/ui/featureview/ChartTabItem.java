@@ -134,10 +134,12 @@ public class ChartTabItem extends Composite implements IChartPart
 
     m_executionListener = new IExecutionListener()
     {
+      @Override
       public void notHandled( final String commandId, final NotHandledException exception )
       {
       }
 
+      @Override
       public void preExecute( final String commandId, final ExecutionEvent event )
       {
         if( !commands.keySet().contains( commandId ) )
@@ -155,6 +157,7 @@ public class ChartTabItem extends Composite implements IChartPart
         }
       }
 
+      @Override
       public void postExecuteFailure( final String commandId, final ExecutionException exception )
       {
         if( !commands.keySet().contains( commandId ) )
@@ -170,6 +173,7 @@ public class ChartTabItem extends Composite implements IChartPart
 // ErrorDialog.openError( getShell(), "Kommando ausführen", "Fehler bei der Ausführung eines Kommandos", errorStatus );
       }
 
+      @Override
       public void postExecuteSuccess( final String commandId, final Object returnValue )
       {
         if( !commands.keySet().contains( commandId ) )
@@ -186,6 +190,7 @@ public class ChartTabItem extends Composite implements IChartPart
   /**
    * @see org.kalypso.chart.ui.IChartPart#getChartComposite()
    */
+  @Override
   public ChartComposite getChartComposite( )
   {
     return m_chartComposite;
@@ -194,6 +199,7 @@ public class ChartTabItem extends Composite implements IChartPart
   /**
    * @see org.kalypso.chart.ui.IChartPart#getChartDragHandler()
    */
+  @Override
   public PlotDragHandlerDelegate getPlotDragHandler( )
   {
     return m_plotDragHandlerDelegate;
@@ -221,13 +227,14 @@ public class ChartTabItem extends Composite implements IChartPart
   /**
    * @see org.kalypso.chart.ui.IChartPart#getAxisDragHandler()
    */
+  @Override
   public AxisDragHandlerDelegate getAxisDragHandler( )
   {
     return m_axisDragHandlerDelegate;
   }
 
-  @SuppressWarnings("unchecked")
-  public Object getAdapter( final Class adapter )
+  @Override
+  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
   {
     if( IContentOutlinePage.class.equals( adapter ) )
     {

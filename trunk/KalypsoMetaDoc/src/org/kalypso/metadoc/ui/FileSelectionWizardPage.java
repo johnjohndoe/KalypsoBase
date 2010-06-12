@@ -110,6 +110,7 @@ public class FileSelectionWizardPage extends WizardPage implements IConfiguratio
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
    */
+  @Override
   public void createControl( final Composite parent )
   {
     final Composite panel = new Composite( parent, SWT.NONE );
@@ -256,6 +257,7 @@ public class FileSelectionWizardPage extends WizardPage implements IConfiguratio
     m_destinationNameField = destinationNameField;
     m_destinationNameField.addModifyListener( new ModifyListener()
     {
+      @Override
       public void modifyText( final ModifyEvent e )
       {
         handleDestinationNameChanged();
@@ -376,6 +378,7 @@ public class FileSelectionWizardPage extends WizardPage implements IConfiguratio
    * @see org.kalypso.metadoc.configuration.IConfigurationListener#configurationChanged(org.apache.commons.configuration.Configuration,
    *      java.lang.String)
    */
+  @Override
   public void configurationChanged( final Configuration config, final String key )
   {
     final Control control = getControl();
@@ -387,6 +390,7 @@ public class FileSelectionWizardPage extends WizardPage implements IConfiguratio
     {
       display.asyncExec( new Runnable()
       {
+        @Override
         public void run( )
         {
           updateControl( key );

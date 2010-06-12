@@ -61,6 +61,7 @@ public class CRSInputValidator implements IInputValidator
   /**
    * @see org.eclipse.jface.dialogs.IInputValidator#isValid(java.lang.String)
    */
+  @Override
   public String isValid( String newText )
   {
     if( !CRSHelper.isKnownCRS( newText ) )

@@ -66,6 +66,7 @@ public class AdvRelationType extends AbstractPropertyTypeFromElement implements 
   /**
    * @see org.kalypso.gmlschema.basics.IInitialize#init(int)
    */
+  @Override
   public void init( final int initializeRun ) throws GMLSchemaException
   {
     switch( initializeRun )
@@ -87,6 +88,7 @@ public class AdvRelationType extends AbstractPropertyTypeFromElement implements 
   /**
    * @see org.kalypso.gmlschema.property.relation.IRelationType#isInlineAble()
    */
+  @Override
   public boolean isInlineAble( )
   {
     return false;
@@ -95,6 +97,7 @@ public class AdvRelationType extends AbstractPropertyTypeFromElement implements 
   /**
    * @see org.kalypso.gmlschema.property.relation.IRelationType#isLinkAble()
    */
+  @Override
   public boolean isLinkAble( )
   {
     return true;
@@ -104,6 +107,7 @@ public class AdvRelationType extends AbstractPropertyTypeFromElement implements 
    * @see org.kalypso.gmlschema.property.relation.IRelationContentType#getTargetFeatureTypes(org.kalypso.gmlschema.GMLSchema,
    *      boolean)
    */
+  @Override
   public IFeatureType getTargetFeatureType( )
   {
     return m_ftRelationTarget;
@@ -112,6 +116,7 @@ public class AdvRelationType extends AbstractPropertyTypeFromElement implements 
   /**
    * @see org.kalypso.gmlschema.property.relation.IRelationType#getDocumentReferences()
    */
+  @Override
   public IDocumentReference[] getDocumentReferences( )
   {
     return DOCUMENT_REFERENCES;
@@ -129,6 +134,7 @@ public class AdvRelationType extends AbstractPropertyTypeFromElement implements 
   /**
    * @see org.kalypso.gmlschema.property.IPropertyType#cloneForFeatureType(org.kalypso.gmlschema.feature.IFeatureType)
    */
+  @Override
   public IPropertyType cloneForFeatureType( final IFeatureType featureType )
   {
     return new AdvRelationType( getGMLSchema(), getElement(), getOccurs(), m_advReferenziertesElement, featureType );

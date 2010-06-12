@@ -103,6 +103,7 @@ public class PersistentPageFile extends PageFile
    *          Kapazität der Knoten
    * @throws PageFileException
    */
+  @Override
   public void initialize( int dimension, int capacity ) throws PageFileException
   {
     // Initialisierung
@@ -185,6 +186,7 @@ public class PersistentPageFile extends PageFile
   /**
    * @see PageFile#readNode(int)
    */
+  @Override
   public Node readNode( int pageNumber ) throws PageFileException
   {
     Node node = null;
@@ -269,6 +271,7 @@ public class PersistentPageFile extends PageFile
   /**
    * @see PageFile#writeNode(Node)
    */
+  @Override
   public int writeNode( Node node ) throws PageFileException
   {
     try
@@ -369,6 +372,7 @@ public class PersistentPageFile extends PageFile
   /**
    * @see PageFile#deleteNode(int)
    */
+  @Override
   public Node deleteNode( int pageNumber ) throws PageFileException
   {
     Node node = this.readNode( pageNumber );
@@ -391,6 +395,7 @@ public class PersistentPageFile extends PageFile
   /**
    * @see PageFile#close()
    */
+  @Override
   public void close() throws PageFileException
   {
     try
@@ -411,6 +416,7 @@ public class PersistentPageFile extends PageFile
    * 
    * @throws Throwable
    */
+  @Override
   public void finalize() throws Throwable
   {
     if( !closed && file!=null)

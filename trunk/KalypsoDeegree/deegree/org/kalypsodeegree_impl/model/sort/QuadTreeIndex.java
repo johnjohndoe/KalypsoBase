@@ -89,6 +89,7 @@ public class QuadTreeIndex implements SpatialIndexExt
   /**
    * @see org.kalypsodeegree_impl.model.sort.SpatialIndexExt#getBoundingBox()
    */
+  @Override
   public Envelope getBoundingBox( )
   {
     if( m_boundingBox == null )
@@ -177,6 +178,7 @@ public class QuadTreeIndex implements SpatialIndexExt
    * @see org.kalypsodeegree_impl.model.sort.SpatialIndexExt#paint(java.awt.Graphics,
    *      org.kalypsodeegree.graphics.transformation.GeoTransform)
    */
+  @Override
   public void paint( final Graphics g, final GeoTransform geoTransform )
   {
     // sorry, don't know how to paint a quadtree
@@ -193,6 +195,7 @@ public class QuadTreeIndex implements SpatialIndexExt
   /**
    * @see com.vividsolutions.jts.index.SpatialIndex#insert(com.vividsolutions.jts.geom.Envelope, java.lang.Object)
    */
+  @Override
   public void insert( final Envelope itemEnv, final Object item )
   {
     m_items.add( item );
@@ -211,6 +214,7 @@ public class QuadTreeIndex implements SpatialIndexExt
   /**
    * @see com.vividsolutions.jts.index.SpatialIndex#query(com.vividsolutions.jts.geom.Envelope)
    */
+  @Override
   public List query( final Envelope searchEnv )
   {
     revalidate();
@@ -222,6 +226,7 @@ public class QuadTreeIndex implements SpatialIndexExt
    * @see com.vividsolutions.jts.index.SpatialIndex#query(com.vividsolutions.jts.geom.Envelope,
    *      com.vividsolutions.jts.index.ItemVisitor)
    */
+  @Override
   public void query( final Envelope searchEnv, final ItemVisitor visitor )
   {
     revalidate();
@@ -232,6 +237,7 @@ public class QuadTreeIndex implements SpatialIndexExt
   /**
    * @see com.vividsolutions.jts.index.SpatialIndex#remove(com.vividsolutions.jts.geom.Envelope, java.lang.Object)
    */
+  @Override
   public boolean remove( final Envelope itemEnv, final Object item )
   {
     m_index.remove( itemEnv, item );
@@ -246,6 +252,7 @@ public class QuadTreeIndex implements SpatialIndexExt
    * @see org.kalypsodeegree_impl.model.sort.SpatialIndexExt#contains(com.vividsolutions.jts.geom.Envelope,
    *      java.lang.Object)
    */
+  @Override
   public boolean contains( final Envelope itemEnv, final Object item )
   {
     throw new UnsupportedOperationException();

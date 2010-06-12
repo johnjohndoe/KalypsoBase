@@ -97,6 +97,7 @@ public class StyledLayerDescriptor_Impl implements StyledLayerDescriptor, Marsha
   /**
    * @return the Layers as Array
    */
+  @Override
   public Layer[] getLayers( )
   {
     return m_layers.toArray( new Layer[m_layers.size()] );
@@ -108,6 +109,7 @@ public class StyledLayerDescriptor_Impl implements StyledLayerDescriptor, Marsha
    * @param layers
    *            the Layers as Array
    */
+  @Override
   public void setLayers( final Layer[] layers )
   {
     m_layers.clear();
@@ -127,6 +129,7 @@ public class StyledLayerDescriptor_Impl implements StyledLayerDescriptor, Marsha
    * @param layer
    *            a Layer to add
    */
+  @Override
   public void addLayer( final Layer layer )
   {
     m_layers.add( layer );
@@ -138,6 +141,7 @@ public class StyledLayerDescriptor_Impl implements StyledLayerDescriptor, Marsha
    * @param layer
    *            a Layer to remove
    */
+  @Override
   public void removeLayer( final Layer layer )
   {
     if( m_layers.indexOf( layer ) != -1 )
@@ -154,6 +158,7 @@ public class StyledLayerDescriptor_Impl implements StyledLayerDescriptor, Marsha
    * 
    * @return the UserLayers as Array
    */
+  @Override
   public UserLayer[] getUserLayers( )
   {
     final List<UserLayer> list = new ArrayList<UserLayer>( m_layers.size() );
@@ -173,6 +178,7 @@ public class StyledLayerDescriptor_Impl implements StyledLayerDescriptor, Marsha
    * 
    * @return the NamedLayers as Array
    */
+  @Override
   public NamedLayer[] getNamedLayers( )
   {
     final List<NamedLayer> list = new ArrayList<NamedLayer>();
@@ -190,6 +196,7 @@ public class StyledLayerDescriptor_Impl implements StyledLayerDescriptor, Marsha
    * 
    * @return the NamedLayers as Array
    */
+  @Override
   public NamedLayer getNamedLayer( final String layerName )
   {
     for( int i = 0; i < m_layers.size(); i++ )
@@ -208,6 +215,7 @@ public class StyledLayerDescriptor_Impl implements StyledLayerDescriptor, Marsha
    * 
    * @return the version of the SLD as String
    */
+  @Override
   public String getVersion( )
   {
     return m_version;
@@ -219,6 +227,7 @@ public class StyledLayerDescriptor_Impl implements StyledLayerDescriptor, Marsha
    * @param version
    *            the version of the SLD
    */
+  @Override
   public void setVersion( final String version )
   {
     throw new UnsupportedOperationException( "Cannot change version, must always be 1.0.0" );
@@ -280,6 +289,7 @@ public class StyledLayerDescriptor_Impl implements StyledLayerDescriptor, Marsha
    * 
    * @return xml representation of the Font
    */
+  @Override
   public String exportAsXML( )
   {
     Debug.debugMethodBegin();
@@ -308,6 +318,7 @@ public class StyledLayerDescriptor_Impl implements StyledLayerDescriptor, Marsha
   /**
    * @see org.kalypsodeegree.graphics.sld.StyledLayerDescriptor#findUserStyle(java.lang.String)
    */
+  @Override
   public UserStyle findUserStyle( final String name )
   {
     final NamedLayer[] namedLayers = getNamedLayers();

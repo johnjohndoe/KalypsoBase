@@ -278,6 +278,7 @@ public class AdapterBindingToValue_GML2x implements AdapterBindingToValue
   /**
    * @see org.kalypsodeegree_impl.model.geometry.IGMLBindingToValueAdapter#wrapFromBinding(java.lang.Object)
    */
+  @Override
   public Object wrapFromBinding( final Object bindingGeometry, final Class geometryClass ) throws GM_Exception
   {
     if( bindingGeometry == null )
@@ -344,6 +345,7 @@ public class AdapterBindingToValue_GML2x implements AdapterBindingToValue
   /**
    * @see org.kalypsodeegree_impl.model.geometry.IGMLBindingToValueAdapter#wrapFromElement(org.w3c.dom.Element)
    */
+  @Override
   public Object wrapFromNode( final Node node ) throws Exception
   {
     final Unmarshaller unmarshaller = KalypsoOGC2xJAXBcontext.getContext().createUnmarshaller();

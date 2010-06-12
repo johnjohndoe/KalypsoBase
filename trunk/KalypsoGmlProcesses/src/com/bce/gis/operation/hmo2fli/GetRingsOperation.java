@@ -1,6 +1,5 @@
 package com.bce.gis.operation.hmo2fli;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
@@ -54,16 +53,15 @@ public class GetRingsOperation implements IGeoValueProvider
     ((STRtree) m_index).build();
   }
 
-  @SuppressWarnings("unchecked") //$NON-NLS-1$
   public final LinearRing[] getAllContaining( final Coordinate c )
   {
     final Vector<LinearRing> results = new Vector<LinearRing>();
 
-    final List envs = m_index.query( new Envelope( c ) );
+    final List< ? > envs = m_index.query( new Envelope( c ) );
 
-    for( final Iterator it = envs.iterator(); it.hasNext(); )
+    for( final Object name : envs )
     {
-      final LinearRing lr = (LinearRing) it.next();
+      final LinearRing lr = (LinearRing) name;
       final PointInRing pir = new SimplePointInRing( lr );
 
       if( pir.isInside( c ) )
@@ -73,6 +71,7 @@ public class GetRingsOperation implements IGeoValueProvider
     return results.toArray( new LinearRing[results.size()] );
   }
 
+  @Override
   public final double getValue( final Coordinate c )
   {
     final LinearRing[] rings = getAllContaining( c );

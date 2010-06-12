@@ -197,6 +197,7 @@ public class LegendElement_Impl implements LegendElement
    * @param label
    *            label of the <tt>LegendElement</tt>
    */
+  @Override
   public void setLabel( final String label )
   {
     this.m_label = label;
@@ -207,6 +208,7 @@ public class LegendElement_Impl implements LegendElement
    * 
    * @return label of the <tt>LegendElement</tt> or <tt>null</tt>
    */
+  @Override
   public String getLabel( )
   {
     return this.m_label;
@@ -218,6 +220,7 @@ public class LegendElement_Impl implements LegendElement
    * 
    * @param orientation
    */
+  @Override
   public void setLabelOrientation( final double orientation )
   {
     this.m_orientation = orientation;
@@ -229,6 +232,7 @@ public class LegendElement_Impl implements LegendElement
    * 
    * @return orientation of the label of the <tt>LegendElement</tt> in radians
    */
+  @Override
   public double getLabelOrientation( )
   {
     return this.m_orientation;
@@ -261,6 +265,7 @@ public class LegendElement_Impl implements LegendElement
    * 
    * @param labelPosition
    */
+  @Override
   public void setLabelPlacement( final int labelPosition )
   {
     this.m_labelPosition = labelPosition;
@@ -282,6 +287,7 @@ public class LegendElement_Impl implements LegendElement
    * 
    * @return coded placement of the label relative to the legend symbol
    */
+  @Override
   public int getLabelPlacement( )
   {
     return this.m_labelPosition;
@@ -292,6 +298,7 @@ public class LegendElement_Impl implements LegendElement
    * 
    * @param active
    */
+  @Override
   public void setActive( final boolean active )
   {
     this.m_active = active;
@@ -690,6 +697,7 @@ public class LegendElement_Impl implements LegendElement
   /**
    * exports the <tt>LegendElement</tt> as</tt> BufferedImage</tt>
    */
+  @Override
   public BufferedImage exportAsImage( ) throws LegendException
   {
     Debug.debugMethodBegin( "LegendElement_Impl", "exportAsImage" );

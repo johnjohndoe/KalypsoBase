@@ -70,6 +70,7 @@ public class DoubleDiffDoubleRaster extends AbstractGeoGrid implements IGeoGrid
   /**
    * @see org.kalypso.gis.doubleraster.DoubleRaster#getValue(int, int)
    */
+  @Override
   public double getValue( final int x, final int y ) throws GeoGridException
   {
     final Coordinate c = GeoGridUtilities.toCoordinate( this, x, y, null );
@@ -99,6 +100,7 @@ public class DoubleDiffDoubleRaster extends AbstractGeoGrid implements IGeoGrid
   /**
    * @see org.kalypso.gis.doubleraster.DoubleRaster#getSizeX()
    */
+  @Override
   public int getSizeX( ) throws GeoGridException
   {
     return m_raster.getSizeX();
@@ -107,6 +109,7 @@ public class DoubleDiffDoubleRaster extends AbstractGeoGrid implements IGeoGrid
   /**
    * @see org.kalypso.gis.doubleraster.DoubleRaster#getSizeY()
    */
+  @Override
   public int getSizeY( ) throws GeoGridException
   {
     return m_raster.getSizeY();
@@ -115,6 +118,7 @@ public class DoubleDiffDoubleRaster extends AbstractGeoGrid implements IGeoGrid
   /**
    * @see org.kalypso.grid.IGeoGrid#getMax()
    */
+  @Override
   public BigDecimal getMax( )
   {
     return null;
@@ -123,6 +127,7 @@ public class DoubleDiffDoubleRaster extends AbstractGeoGrid implements IGeoGrid
   /**
    * @see org.kalypso.grid.IGeoGrid#getMin()
    */
+  @Override
   public BigDecimal getMin( )
   {
     return null;
@@ -131,6 +136,7 @@ public class DoubleDiffDoubleRaster extends AbstractGeoGrid implements IGeoGrid
   /**
    * @see org.kalypso.grid.IGeoGrid#setMax(java.math.BigDecimal)
    */
+  @Override
   public void setMax( final BigDecimal maxValue )
   {
     // TODO Auto-generated method stub
@@ -140,6 +146,7 @@ public class DoubleDiffDoubleRaster extends AbstractGeoGrid implements IGeoGrid
   /**
    * @see org.kalypso.grid.IGeoGrid#setMin(java.math.BigDecimal)
    */
+  @Override
   public void setMin( final BigDecimal minValue )
   {
     // TODO Auto-generated method stub

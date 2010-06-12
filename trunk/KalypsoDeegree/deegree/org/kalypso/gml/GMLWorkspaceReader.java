@@ -77,6 +77,7 @@ public class GMLWorkspaceReader implements XMLReader
   /**
    * @see org.xml.sax.XMLReader#parse(org.xml.sax.InputSource)
    */
+  @Override
   public void parse( final InputSource input ) throws SAXException
   {
     if( input == null || !(input instanceof GMLWorkspaceInputSource) )
@@ -92,6 +93,7 @@ public class GMLWorkspaceReader implements XMLReader
     handler.endDocument();
   }
 
+  @Override
   public boolean getFeature( final String name )
   {
     return m_enabledFeatures.contains( name );
@@ -100,6 +102,7 @@ public class GMLWorkspaceReader implements XMLReader
   /**
    * @see org.xml.sax.XMLReader#setFeature(java.lang.String, boolean)
    */
+  @Override
   public void setFeature( final String name, final boolean value )
   {
     if( value )
@@ -111,6 +114,7 @@ public class GMLWorkspaceReader implements XMLReader
   /**
    * @see org.xml.sax.XMLReader#getProperty(java.lang.String)
    */
+  @Override
   public Object getProperty( final String name )
   {
     return m_propMap.get( name );
@@ -119,6 +123,7 @@ public class GMLWorkspaceReader implements XMLReader
   /**
    * @see org.xml.sax.XMLReader#setProperty(java.lang.String, java.lang.Object)
    */
+  @Override
   public void setProperty( final String name, final Object value )
   {
     m_propMap.put( name, value );
@@ -127,6 +132,7 @@ public class GMLWorkspaceReader implements XMLReader
   /**
    * @see org.xml.sax.XMLReader#setEntityResolver(org.xml.sax.EntityResolver)
    */
+  @Override
   public void setEntityResolver( final EntityResolver resolver )
   {
     m_entityResolver = resolver;
@@ -135,6 +141,7 @@ public class GMLWorkspaceReader implements XMLReader
   /**
    * @see org.xml.sax.XMLReader#getEntityResolver()
    */
+  @Override
   public EntityResolver getEntityResolver( )
   {
     return m_entityResolver;
@@ -143,6 +150,7 @@ public class GMLWorkspaceReader implements XMLReader
   /**
    * @see org.xml.sax.XMLReader#setDTDHandler(org.xml.sax.DTDHandler)
    */
+  @Override
   public void setDTDHandler( final DTDHandler handler )
   {
     m_dtdHandler = handler;
@@ -151,6 +159,7 @@ public class GMLWorkspaceReader implements XMLReader
   /**
    * @see org.xml.sax.XMLReader#getDTDHandler()
    */
+  @Override
   public DTDHandler getDTDHandler( )
   {
     return m_dtdHandler;
@@ -159,6 +168,7 @@ public class GMLWorkspaceReader implements XMLReader
   /**
    * @see org.xml.sax.XMLReader#setContentHandler(org.xml.sax.ContentHandler)
    */
+  @Override
   public void setContentHandler( final ContentHandler handler )
   {
     m_contentHandler = handler;
@@ -167,6 +177,7 @@ public class GMLWorkspaceReader implements XMLReader
   /**
    * @see org.xml.sax.XMLReader#getContentHandler()
    */
+  @Override
   public ContentHandler getContentHandler( )
   {
     return m_contentHandler;
@@ -175,6 +186,7 @@ public class GMLWorkspaceReader implements XMLReader
   /**
    * @see org.xml.sax.XMLReader#setErrorHandler(org.xml.sax.ErrorHandler)
    */
+  @Override
   public void setErrorHandler( final ErrorHandler handler )
   {
     m_errorHandler = handler;
@@ -183,6 +195,7 @@ public class GMLWorkspaceReader implements XMLReader
   /**
    * @see org.xml.sax.XMLReader#getErrorHandler()
    */
+  @Override
   public ErrorHandler getErrorHandler( )
   {
     return m_errorHandler;
@@ -191,6 +204,7 @@ public class GMLWorkspaceReader implements XMLReader
   /**
    * @see org.xml.sax.XMLReader#parse(java.lang.String)
    */
+  @Override
   public void parse( final String systemId )
   {
     throw new UnsupportedOperationException();

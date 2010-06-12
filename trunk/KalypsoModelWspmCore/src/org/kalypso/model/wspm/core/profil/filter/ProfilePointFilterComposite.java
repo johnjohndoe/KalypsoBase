@@ -152,6 +152,7 @@ public class ProfilePointFilterComposite extends ListSelectionComposite implemen
    * @see org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter#accept(org.kalypso.model.wspm.core.profil.IProfil,
    *      org.kalypso.observation.result.IRecord)
    */
+  @Override
   public boolean accept( final IProfil profil, final IRecord point )
   {
     final Object[] checkedElements = getCheckedElements();

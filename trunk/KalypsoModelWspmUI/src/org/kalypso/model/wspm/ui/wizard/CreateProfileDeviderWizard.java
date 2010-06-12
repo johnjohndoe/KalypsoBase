@@ -109,7 +109,7 @@ public class CreateProfileDeviderWizard extends Wizard
   {
     m_foundProfiles = foundProfiles;
 
-    setWindowTitle( Messages.getString("org.kalypso.model.wspm.ui.wizard.CreateProfileDeviderWizard.0") ); //$NON-NLS-1$
+    setWindowTitle( Messages.getString( "org.kalypso.model.wspm.ui.wizard.CreateProfileDeviderWizard.0" ) ); //$NON-NLS-1$
     setNeedsProgressMonitor( true );
     setDialogSettings( PluginUtilities.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), getClass().getName() ) );
   }
@@ -120,9 +120,9 @@ public class CreateProfileDeviderWizard extends Wizard
   @Override
   public void addPages( )
   {
-    m_profileChooserPage = new ArrayChooserPage( m_foundProfiles.foundProfiles, new Object[] {}, m_foundProfiles.selectedProfiles, 1, "profileFeaturesChooserPage", Messages.getString("org.kalypso.model.wspm.ui.wizard.CreateProfileDeviderWizard.2"), null ); //$NON-NLS-1$ //$NON-NLS-2$
+    m_profileChooserPage = new ArrayChooserPage( m_foundProfiles.foundProfiles, new Object[] {}, m_foundProfiles.selectedProfiles, 1, "profileFeaturesChooserPage", Messages.getString( "org.kalypso.model.wspm.ui.wizard.CreateProfileDeviderWizard.2" ), null ); //$NON-NLS-1$ //$NON-NLS-2$
     m_profileChooserPage.setLabelProvider( new GMLLabelProvider() );
-    m_profileChooserPage.setMessage( Messages.getString("org.kalypso.model.wspm.ui.wizard.CreateProfileDeviderWizard.3") ); //$NON-NLS-1$
+    m_profileChooserPage.setMessage( Messages.getString( "org.kalypso.model.wspm.ui.wizard.CreateProfileDeviderWizard.3" ) ); //$NON-NLS-1$
 
     m_deviderPage = new CreateProfileDeviderPage( m_foundProfiles.theme );
 
@@ -161,9 +161,10 @@ public class CreateProfileDeviderWizard extends Wizard
 
     final ICoreRunnableWithProgress runnable = new ICoreRunnableWithProgress()
     {
+      @Override
       public IStatus execute( final IProgressMonitor monitor ) throws InvocationTargetException
       {
-        monitor.beginTask( Messages.getString("org.kalypso.model.wspm.ui.wizard.CreateProfileDeviderWizard.4"), 1 + choosen.length ); //$NON-NLS-1$
+        monitor.beginTask( Messages.getString( "org.kalypso.model.wspm.ui.wizard.CreateProfileDeviderWizard.4" ), 1 + choosen.length ); //$NON-NLS-1$
 
         try
         {
@@ -189,7 +190,7 @@ public class CreateProfileDeviderWizard extends Wizard
     };
 
     final IStatus status = RunnableContextHelper.execute( getContainer(), false, true, runnable );
-    ErrorDialog.openError( getShell(), getWindowTitle(), Messages.getString("org.kalypso.model.wspm.ui.wizard.CreateProfileDeviderWizard.5"), status ); //$NON-NLS-1$
+    ErrorDialog.openError( getShell(), getWindowTitle(), Messages.getString( "org.kalypso.model.wspm.ui.wizard.CreateProfileDeviderWizard.5" ), status ); //$NON-NLS-1$
 
     return status.isOK();
   }
@@ -197,7 +198,7 @@ public class CreateProfileDeviderWizard extends Wizard
   @SuppressWarnings("unchecked")
   protected static FeatureChange[] createDevider( final Object[] profileFeatures, final FeatureList lineFeatures, final IPropertyType lineGeomProperty, final IComponent deviderType, final IProgressMonitor monitor )
   {
-    monitor.beginTask( Messages.getString("org.kalypso.model.wspm.ui.wizard.CreateProfileDeviderWizard.6"), profileFeatures.length ); //$NON-NLS-1$
+    monitor.beginTask( Messages.getString( "org.kalypso.model.wspm.ui.wizard.CreateProfileDeviderWizard.6" ), profileFeatures.length ); //$NON-NLS-1$
 
     final List<FeatureChange> changes = new ArrayList<FeatureChange>();
 
@@ -205,7 +206,7 @@ public class CreateProfileDeviderWizard extends Wizard
       try
       {
         final IProfileFeature profile = (IProfileFeature) object;
-        String crs = profile.getSrsName();
+        final String crs = profile.getSrsName();
         final GM_Curve curve = profile.getLine();
         if( curve == null )
           continue;
@@ -215,7 +216,7 @@ public class CreateProfileDeviderWizard extends Wizard
 
         // find intersectors with curve
         final GM_Envelope curveEnvelope = curve.getEnvelope();
-        final List lineIntersectors = lineFeatures.query( curveEnvelope, null );
+        final List< ? > lineIntersectors = lineFeatures.query( curveEnvelope, null );
         final List<Point> pointList = new ArrayList<Point>();
         for( final Object lineF : lineIntersectors )
         {
@@ -316,7 +317,7 @@ public class CreateProfileDeviderWizard extends Wizard
     for( final IProfilPointMarker marker : existingMarkers )
       profil.removePointMarker( marker );
 
-    IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profil.getType() );
+    final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profil.getType() );
 
     for( final IRecord markerPoint : pointMap.values() )
     {

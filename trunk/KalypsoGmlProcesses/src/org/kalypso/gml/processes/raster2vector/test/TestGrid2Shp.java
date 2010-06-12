@@ -95,7 +95,6 @@ import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
 import org.kalypsodeegree_impl.io.shpapi.ShapeConst;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.tools.GMLConstants;
-import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 import com.vividsolutions.jts.geom.GeometryFactory;
 

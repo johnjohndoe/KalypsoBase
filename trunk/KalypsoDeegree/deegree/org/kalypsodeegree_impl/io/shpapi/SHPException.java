@@ -47,6 +47,7 @@ public class SHPException extends Exception
     message = s;
   }
 
+  @Override
   public String toString()
   {
     return message + "\n" + getLocalizedMessage();

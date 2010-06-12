@@ -121,6 +121,7 @@ public class SHPMultiPoint implements ISHPGeometry
   /**
    * @see org.kalypsodeegree_impl.io.shpapi.SHPGeometry#getEnvelope()
    */
+  @Override
   public SHPEnvelope getEnvelope( )
   {
     return m_envelope;

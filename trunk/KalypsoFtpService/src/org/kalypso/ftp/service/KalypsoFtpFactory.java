@@ -96,8 +96,8 @@ public final class KalypsoFtpFactory
       final JAXBContext context = JaxbUtilities.createQuiet( ObjectFactory.class );
       final Unmarshaller unmarshaller = context.createUnmarshaller();
       final URL xmlConfigUrl = new URL( System.getProperty( IKalypsoFtpServiceConstants.FTP_CONFIGURATION_XML ) );
-      final JAXBElement<FtpServiceType> element = (JAXBElement<FtpServiceType>) unmarshaller.unmarshal( xmlConfigUrl );
-      final FtpServiceType service = element.getValue();
+      final JAXBElement< ? > element = (JAXBElement< ? >) unmarshaller.unmarshal( xmlConfigUrl );
+      final FtpServiceType service = (FtpServiceType) element.getValue();
 
       final FtpServerFactory serverFactory = new FtpServerFactory();
 

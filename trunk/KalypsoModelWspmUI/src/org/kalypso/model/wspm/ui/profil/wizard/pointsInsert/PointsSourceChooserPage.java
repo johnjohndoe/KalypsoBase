@@ -80,6 +80,7 @@ public class PointsSourceChooserPage extends WizardPage
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
    */
+  @Override
   public void createControl( final Composite parent )
   {
     final String sourceID = getDialogSettings().get( DLG_SETTINGS_SOURCE_ID );
@@ -109,6 +110,7 @@ public class PointsSourceChooserPage extends WizardPage
     comboViewer.setInput( m_sources );
     comboViewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
+      @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
         final IStructuredSelection selection = (IStructuredSelection) event.getSelection();

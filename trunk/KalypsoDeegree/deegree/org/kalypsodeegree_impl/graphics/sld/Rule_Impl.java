@@ -108,6 +108,7 @@ public class Rule_Impl implements Rule, Marshallable
    *
    * @return the name of the rule
    */
+  @Override
   public String getName( )
   {
     return m_name;
@@ -119,6 +120,7 @@ public class Rule_Impl implements Rule, Marshallable
    * @param name
    *            the name of the rule
    */
+  @Override
   public void setName( final String name )
   {
     m_name = name;
@@ -129,6 +131,7 @@ public class Rule_Impl implements Rule, Marshallable
    *
    * @return the title of the rule
    */
+  @Override
   public String getTitle( )
   {
     return m_title;
@@ -140,6 +143,7 @@ public class Rule_Impl implements Rule, Marshallable
    * @param title
    *            the title of the rule
    */
+  @Override
   public void setTitle( final String title )
   {
     m_title = title;
@@ -150,6 +154,7 @@ public class Rule_Impl implements Rule, Marshallable
    *
    * @return the abstract of the rule
    */
+  @Override
   public String getAbstract( )
   {
     return m_abstract;
@@ -161,6 +166,7 @@ public class Rule_Impl implements Rule, Marshallable
    * @param abstract_
    *            the abstract of the rule
    */
+  @Override
   public void setAbstract( final String abstract_ )
   {
     m_abstract = abstract_;
@@ -171,6 +177,7 @@ public class Rule_Impl implements Rule, Marshallable
    *
    * @return the legendGraphic of the rule
    */
+  @Override
   public LegendGraphic getLegendGraphic( )
   {
     return m_legendGraphic;
@@ -182,6 +189,7 @@ public class Rule_Impl implements Rule, Marshallable
    * @param legendGraphic
    *            the legendGraphic of the rule
    */
+  @Override
   public void setLegendGraphic( final LegendGraphic legendGraphic )
   {
     m_legendGraphic = legendGraphic;
@@ -193,6 +201,7 @@ public class Rule_Impl implements Rule, Marshallable
    *
    * @return the filter element
    */
+  @Override
   public Filter getFilter( )
   {
     return m_filter;
@@ -204,6 +213,7 @@ public class Rule_Impl implements Rule, Marshallable
    * @param filter
    *            the filter element
    */
+  @Override
   public void setFilter( final Filter filter )
   {
     m_filter = filter;
@@ -215,6 +225,7 @@ public class Rule_Impl implements Rule, Marshallable
    *
    * @return true if the rule has an elseFilter
    */
+  @Override
   public boolean hasElseFilter( )
   {
     return m_elseFilter;
@@ -226,6 +237,7 @@ public class Rule_Impl implements Rule, Marshallable
    * @param elseFilter
    *            an elseFilter
    */
+  @Override
   public void setElseFilter( final boolean elseFilter )
   {
     m_elseFilter = elseFilter;
@@ -238,6 +250,7 @@ public class Rule_Impl implements Rule, Marshallable
    *
    * @return the MinScaleDenominator for the rule
    */
+  @Override
   public double getMinScaleDenominator( )
   {
     return m_minScaleDenominator;
@@ -249,6 +262,7 @@ public class Rule_Impl implements Rule, Marshallable
    * @param minScaleDenominator
    *            the MinScaleDenominator for the rule
    */
+  @Override
   public void setMinScaleDenominator( final double minScaleDenominator )
   {
     m_minScaleDenominator = minScaleDenominator;
@@ -261,6 +275,7 @@ public class Rule_Impl implements Rule, Marshallable
    *
    * @return the MaxScaleDenominator for the rule
    */
+  @Override
   public double getMaxScaleDenominator( )
   {
     return m_maxScaleDenominator;
@@ -272,6 +287,7 @@ public class Rule_Impl implements Rule, Marshallable
    * @param maxScaleDenominator
    *            the MaxScaleDenominator for the rule
    */
+  @Override
   public void setMaxScaleDenominator( final double maxScaleDenominator )
   {
     m_maxScaleDenominator = maxScaleDenominator;
@@ -291,6 +307,7 @@ public class Rule_Impl implements Rule, Marshallable
    *
    * @return the Symbolizer for the rule
    */
+  @Override
   public Symbolizer[] getSymbolizers( )
   {
     return m_symbolizers.toArray( new Symbolizer[m_symbolizers.size()] );
@@ -302,6 +319,7 @@ public class Rule_Impl implements Rule, Marshallable
    * @param symbolizers
    *            symbolizers for the rule
    */
+  @Override
   public void setSymbolizers( final Symbolizer[] symbolizers )
   {
     m_symbolizers.clear();
@@ -321,6 +339,7 @@ public class Rule_Impl implements Rule, Marshallable
    * @param symbolizer
    *            symbolizer to add
    */
+  @Override
   public void addSymbolizer( final Symbolizer symbolizer )
   {
     if( symbolizer != null )
@@ -333,6 +352,7 @@ public class Rule_Impl implements Rule, Marshallable
    * @param symbolizer
    *            symbolizer to remove
    */
+  @Override
   public void removeSymbolizer( final Symbolizer symbolizer )
   {
     if( symbolizer != null )
@@ -347,6 +367,7 @@ public class Rule_Impl implements Rule, Marshallable
    *
    * @return xml representation of the Rule
    */
+  @Override
   public String exportAsXML( )
   {
     Debug.debugMethodBegin();

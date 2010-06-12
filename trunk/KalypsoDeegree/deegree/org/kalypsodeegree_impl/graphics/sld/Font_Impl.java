@@ -87,6 +87,7 @@ public class Font_Impl implements Font, Marshallable
    * @throws FilterEvaluationException
    *           if the evaluation fails
    */
+  @Override
   public String getFamily( Feature feature ) throws FilterEvaluationException
   {
     CssParameter cssParam = (CssParameter)cssParams.get( "font-family" );
@@ -106,6 +107,7 @@ public class Font_Impl implements Font, Marshallable
    * @param family
    *          font family to be set
    */
+  @Override
   public void setFamily( String family )
   {
     CssParameter fontFamily = StyleFactory.createCssParameter( "font-family", "" + family );
@@ -123,6 +125,7 @@ public class Font_Impl implements Font, Marshallable
    *           if the evaluation fails or the specified style is not one of the following: 'normal', 'italic' and
    *           'oblique'
    */
+  @Override
   public int getStyle( Feature feature ) throws FilterEvaluationException
   {
     CssParameter cssParam = (CssParameter)cssParams.get( "font-style" );
@@ -158,6 +161,7 @@ public class Font_Impl implements Font, Marshallable
    * @param style
    *          font-style to be set
    */
+  @Override
   public void setStyle( int style )
   {
     CssParameter fontStyle = StyleFactory.createCssParameter( "font-style", "" + style );
@@ -174,6 +178,7 @@ public class Font_Impl implements Font, Marshallable
    * @throws FilterEvaluationException
    *           if the evaluation fails or the specified weight is not one of the following: 'normal' and 'bold'
    */
+  @Override
   public int getWeight( Feature feature ) throws FilterEvaluationException
   {
     CssParameter cssParam = (CssParameter)cssParams.get( "font-weight" );
@@ -205,6 +210,7 @@ public class Font_Impl implements Font, Marshallable
    * @param weight
    *          font-weight to be set
    */
+  @Override
   public void setWeight( int weight )
   {
     CssParameter fontWeight = StyleFactory.createCssParameter( "font-weight", "" + weight );
@@ -222,6 +228,7 @@ public class Font_Impl implements Font, Marshallable
    *           if the evaluation fails or the value does not denote a valid number or the number is not greater or equal
    *           zero
    */
+  @Override
   public int getSize( Feature feature ) throws FilterEvaluationException
   {
     CssParameter cssParam = (CssParameter)cssParams.get( "font-size" );
@@ -257,6 +264,7 @@ public class Font_Impl implements Font, Marshallable
    * @param size
    *          font-size to be set
    */
+  @Override
   public void setSize( int size )
   {
     CssParameter fontSize = StyleFactory.createCssParameter( "font-size", "" + size );
@@ -273,6 +281,7 @@ public class Font_Impl implements Font, Marshallable
    * @throws FilterEvaluationException
    *           if the evaluation fails
    */
+  @Override
   public Color getColor( Feature feature ) throws FilterEvaluationException
   {
     CssParameter cssParam = (CssParameter)cssParams.get( "font-color" );
@@ -303,6 +312,7 @@ public class Font_Impl implements Font, Marshallable
    * @param color
    *          the font-color to be set
    */
+  @Override
   public void setColor( Color color )
   {
     String hex = StyleFactory.getColorAsHex( color );
@@ -315,6 +325,7 @@ public class Font_Impl implements Font, Marshallable
    * 
    * @return xml representation of the Font
    */
+  @Override
   public String exportAsXML()
   {
     Debug.debugMethodBegin();

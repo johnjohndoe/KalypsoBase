@@ -106,6 +106,7 @@ class GM_Position3D_Impl implements GM_Position, Serializable
   /**
    * returns the x-value of this point
    */
+  @Override
   public double getX( )
   {
     return m_x;
@@ -114,6 +115,7 @@ class GM_Position3D_Impl implements GM_Position, Serializable
   /**
    * returns the y-value of this point
    */
+  @Override
   public double getY( )
   {
     return m_y;
@@ -122,6 +124,7 @@ class GM_Position3D_Impl implements GM_Position, Serializable
   /**
    * returns the z-value of this point
    */
+  @Override
   public double getZ( )
   {
     return m_z;
@@ -139,6 +142,7 @@ class GM_Position3D_Impl implements GM_Position, Serializable
   /**
    * returns the position as a array the first field contains the x- the second field the y-value etc.
    */
+  @Override
   public double[] getAsArray( )
   {
     return new double[] { m_x, m_y, m_z };
@@ -147,6 +151,7 @@ class GM_Position3D_Impl implements GM_Position, Serializable
   /**
    * translate the point by the submitted values. the <code>dz</code>- value will be ignored.
    */
+  @Override
   public void translate( final double[] d )
   {
     if( d.length < 3 )
@@ -211,6 +216,7 @@ class GM_Position3D_Impl implements GM_Position, Serializable
   /**
    * @see org.kalypsodeegree.model.geometry.GM_Position#getDistance(org.kalypsodeegree.model.geometry.GM_Position)
    */
+  @Override
   public double getDistance( final GM_Position other )
   {
     final double dx = m_x - other.getX();
@@ -223,6 +229,7 @@ class GM_Position3D_Impl implements GM_Position, Serializable
   /**
    * @see org.kalypsodeegree.model.geometry.GM_Position#transform(org.deegree.crs.transformations.CRSTransformation)
    */
+  @Override
   public GM_Position transform( final CRSTransformation trans )
   {
     return TransformUtilities.transform( this, trans );

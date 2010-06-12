@@ -96,6 +96,7 @@ public abstract class GM_Object_Impl extends PlatformObject implements GM_Object
   /**
    * returns the spatial reference system of a geometry
    */
+  @Override
   public String getCoordinateSystem( )
   {
     return m_crs;
@@ -107,6 +108,7 @@ public abstract class GM_Object_Impl extends PlatformObject implements GM_Object
    * @param crs
    *          new spatial reference system
    */
+  @Override
   public void setCoordinateSystem( final String crs )
   {
     m_crs = crs;
@@ -127,6 +129,7 @@ public abstract class GM_Object_Impl extends PlatformObject implements GM_Object
    * Currently not implemented, always returns true<br>
    * TODO: decide if it should be implemented or be thrown away
    */
+  @Override
   public boolean isEmpty( )
   {
     return true;
@@ -135,6 +138,7 @@ public abstract class GM_Object_Impl extends PlatformObject implements GM_Object
   /**
    * returns the boundary of the surface as general boundary
    */
+  @Override
   public final GM_Boundary getBoundary( )
   {
     // only recalculate the boundary if null
@@ -169,6 +173,7 @@ public abstract class GM_Object_Impl extends PlatformObject implements GM_Object
   /**
    * dummy implementation of this method
    */
+  @Override
   public void translate( final double[] d )
   {
     invalidate();
@@ -189,6 +194,7 @@ public abstract class GM_Object_Impl extends PlatformObject implements GM_Object
    * </p>
    * dummy implementation
    */
+  @Override
   public double distance( final GM_Object gmo )
   {
     // ziemlicher hack, um die distance zu ermitteln, vermutlich sehr teuer (=langsam)
@@ -215,6 +221,7 @@ public abstract class GM_Object_Impl extends PlatformObject implements GM_Object
    * Since curves have no area they do not contribute to the average. <br>
    * TODO: check this comment; this seems not be always implemented like described...
    */
+  @Override
   public GM_Point getCentroid( )
   {
     if( m_centroid == null )
@@ -244,6 +251,7 @@ public abstract class GM_Object_Impl extends PlatformObject implements GM_Object
   /**
    * returns the bounding box / envelope of a geometry
    */
+  @Override
   public GM_Envelope getEnvelope( )
   {
     if( m_envelope == null )
@@ -278,6 +286,7 @@ public abstract class GM_Object_Impl extends PlatformObject implements GM_Object
    * 
    * @throws GM_Exception
    */
+  @Override
   public GM_Object getConvexHull( ) throws GM_Exception
   {
     // let JTS do this stuff (doemming)
@@ -298,6 +307,7 @@ public abstract class GM_Object_Impl extends PlatformObject implements GM_Object
    * </p>
    * dummy implementation
    */
+  @Override
   public GM_Object getBuffer( final double distance )
   {
     try
@@ -321,6 +331,7 @@ public abstract class GM_Object_Impl extends PlatformObject implements GM_Object
    *          the GM_Object to test (whether is is contained)
    * @return true if the given object is contained, else false
    */
+  @Override
   public boolean contains( final GM_Object that )
   {
     try
@@ -346,6 +357,7 @@ public abstract class GM_Object_Impl extends PlatformObject implements GM_Object
    *          GM_Position to test (whether is is contained)
    * @return true if the given object is contained, else false
    */
+  @Override
   public boolean contains( final GM_Position position )
   {
     return contains( new GM_Point_Impl( position, null ) );
@@ -360,6 +372,7 @@ public abstract class GM_Object_Impl extends PlatformObject implements GM_Object
    *          the GM_Object to intersect with
    * @return true if the objects intersects, else false
    */
+  @Override
   public boolean intersects( final GM_Object that )
   {
     try
@@ -384,6 +397,7 @@ public abstract class GM_Object_Impl extends PlatformObject implements GM_Object
    *          the GM_Object to unify
    * @return intersection or null, if computation failed
    */
+  @Override
   public GM_Object union( final GM_Object that )
   {
     GM_Object union = null;
@@ -417,6 +431,7 @@ public abstract class GM_Object_Impl extends PlatformObject implements GM_Object
    *          the GM_Object to intersect with
    * @return intersection or null, if it is empty (or computation failed)
    */
+  @Override
   public GM_Object intersection( final GM_Object that )
   {
     GM_Object intersection = null;
@@ -455,6 +470,7 @@ public abstract class GM_Object_Impl extends PlatformObject implements GM_Object
    *          the GM_Object to calculate the difference with
    * @return difference or null, if it is empty (or computation failed)
    */
+  @Override
   public GM_Object difference( final GM_Object that )
   {
     GM_Object difference = null;
@@ -532,6 +548,7 @@ public abstract class GM_Object_Impl extends PlatformObject implements GM_Object
   /*
    * provide optimized proximity queries within for a distance . calvin added on 10/21/2003
    */
+  @Override
   public boolean isWithinDistance( final GM_Object that, final double distance )
   {
     if( that == null )
@@ -571,6 +588,7 @@ public abstract class GM_Object_Impl extends PlatformObject implements GM_Object
   /**
    * @see org.kalypsodeegree.model.geometry.GM_Object#invalidate()
    */
+  @Override
   public void invalidate( )
   {
     m_boundary = null;

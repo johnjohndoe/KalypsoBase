@@ -80,6 +80,7 @@ class RemoteOWS_Impl implements RemoteOWS, Marshallable
    * 
    * @return the type of the services
    */
+  @Override
   public String getService()
   {
     return service;
@@ -90,6 +91,7 @@ class RemoteOWS_Impl implements RemoteOWS, Marshallable
    * @param service
    *          the type of the services
    */
+  @Override
   public void setService( String service )
   {
     this.service = service;
@@ -100,6 +102,7 @@ class RemoteOWS_Impl implements RemoteOWS, Marshallable
    * 
    * @return the adress of the ows as URL
    */
+  @Override
   public URL getOnlineResource()
   {
     return onlineResource;
@@ -110,6 +113,7 @@ class RemoteOWS_Impl implements RemoteOWS, Marshallable
    * @param onlineResource
    *          the adress of the ows as URL
    */
+  @Override
   public void setOnlineResource( URL onlineResource )
   {
     this.onlineResource = onlineResource;
@@ -120,6 +124,7 @@ class RemoteOWS_Impl implements RemoteOWS, Marshallable
    * 
    * @return xml representation of the RemoteOWS
    */
+  @Override
   public String exportAsXML()
   {
     Debug.debugMethodBegin();

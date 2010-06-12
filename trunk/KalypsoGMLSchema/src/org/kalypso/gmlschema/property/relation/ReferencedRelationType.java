@@ -78,6 +78,7 @@ public class ReferencedRelationType extends AbstractPropertyTypeFromElement impl
    * @see org.kalypso.gmlschema.property.relation.IRelationType#getTargetFeatureTypes(org.kalypso.gmlschema.GMLSchema,
    *      boolean)
    */
+  @Override
   public IFeatureType getTargetFeatureType( )
   {
     checkState();
@@ -89,6 +90,7 @@ public class ReferencedRelationType extends AbstractPropertyTypeFromElement impl
   /**
    * @see org.kalypso.gmlschema.property.relation.IRelationType#isInlineAble()
    */
+  @Override
   public boolean isInlineAble( )
   {
     checkState();
@@ -100,6 +102,7 @@ public class ReferencedRelationType extends AbstractPropertyTypeFromElement impl
   /**
    * @see org.kalypso.gmlschema.property.relation.IRelationType#isLinkAble()
    */
+  @Override
   public boolean isLinkAble( )
   {
     checkState();
@@ -111,6 +114,7 @@ public class ReferencedRelationType extends AbstractPropertyTypeFromElement impl
   /**
    * @see org.kalypso.gmlschema.basics.IInitialize#init(int)
    */
+  @Override
   public void init( final int initializeRun ) throws GMLSchemaException
   {
     // find referenced relation type, it should also be build by now
@@ -150,6 +154,7 @@ public class ReferencedRelationType extends AbstractPropertyTypeFromElement impl
   /**
    * @see org.kalypso.gmlschema.property.relation.IRelationType#getDocumentReferences()
    */
+  @Override
   public IDocumentReference[] getDocumentReferences( )
   {
     checkState();
@@ -160,6 +165,7 @@ public class ReferencedRelationType extends AbstractPropertyTypeFromElement impl
   /**
    * @see org.kalypso.gmlschema.property.IPropertyType#cloneForFeatureType(org.kalypso.gmlschema.feature.IFeatureType)
    */
+  @Override
   public IPropertyType cloneForFeatureType( final IFeatureType featureType )
   {
     return new ReferencedRelationType( getGMLSchema(), super.getElement(), getOccurs(), m_reference, featureType );

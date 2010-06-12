@@ -52,6 +52,7 @@ public abstract class AbstractValidatorRule implements IValidatorRule
   
   protected final String FMT_BREITE = "%.4f"; //$NON-NLS-1$
 
+  @Override
   public void setInitializationData( final IConfigurationElement config, final String propertyName, final Object data )
   {
     m_id = config.getAttribute( "id" ); //$NON-NLS-1$
@@ -59,16 +60,19 @@ public abstract class AbstractValidatorRule implements IValidatorRule
     m_description = config.getAttribute( "description" ); //$NON-NLS-1$
   }
 
+  @Override
   public String getID( )
   {
     return m_id;
   }
 
+  @Override
   public String getDescription( )
   {
     return m_description;
   }
 
+  @Override
   public String getType( )
   {
     return m_type;

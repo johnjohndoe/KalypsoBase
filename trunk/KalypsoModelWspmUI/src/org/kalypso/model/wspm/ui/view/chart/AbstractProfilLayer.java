@@ -142,6 +142,7 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
    * @see de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer#commitDrag(org.eclipse.swt.graphics.Point,
    *      de.openali.odysseus.chart.framework.model.layer.EditInfo)
    */
+  @Override
   public EditInfo commitDrag( final Point point, final EditInfo dragStartData )
   {
     final IComponent targetComponent = getTargetComponent();
@@ -159,6 +160,7 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
   /**
    * @see org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer#createLayerPanel()
    */
+  @Override
   public IProfilView createLayerPanel( )
   {
     // override this method
@@ -178,6 +180,7 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#dispose()
    */
+  @Override
   public void dispose( )
   {
     /**
@@ -191,6 +194,7 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
    *      de.openali.odysseus.chart.framework.model.layer.EditInfo)
    */
 
+  @Override
   public EditInfo drag( final Point newPos, final EditInfo dragStartData )
   {
     // override this method
@@ -200,6 +204,7 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
   /**
    * @see org.kalypso.model.wspm.tuhh.ui.chart.AbstractProfilLayer#executeClick(de.openali.odysseus.chart.framework.model.layer.EditInfo)
    */
+  @Override
   public void executeClick( final EditInfo clickInfo )
   {
     final Object data = clickInfo.m_data;
@@ -219,10 +224,12 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
    * @see org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer#executeDrop(org.eclipse.swt.graphics.Point,
    *      de.openali.odysseus.chart.framework.model.layer.EditInfo)
    */
+  @Override
   public void executeDrop( final Point point, final EditInfo dragStartData )
   {
   }
 
+  @Override
   public IComponent getDomainComponent( )
   {
     return getProfil() == null ? null : getProfil().hasPointProperty( m_domainComponent );
@@ -246,6 +253,7 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer#getHover(org.eclipse.swt.graphics.Point)
    */
+  @Override
   public EditInfo getHover( final Point pos )
   {
     if( !isVisible() || getProfil() == null )
@@ -348,11 +356,13 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
   /**
    * @see org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer#getProfil()
    */
+  @Override
   public IProfil getProfil( )
   {
     return m_profil;
   }
 
+  @Override
   public IComponent getTargetComponent( )
   {
     if( m_profil == null || m_targetPropertyIndex == -1 )
@@ -410,6 +420,7 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer#isLocked()
    */
+  @Override
   public boolean isLocked( )
   {
     return m_isLocked;
@@ -418,6 +429,7 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer#lockLayer(boolean)
    */
+  @Override
   public void lockLayer( final boolean isLocked )
   {
     m_isLocked = isLocked;
@@ -428,6 +440,7 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
    * @see org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer#onProfilChanged(org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint,
    *      org.kalypso.model.wspm.core.profil.IProfilChange[])
    */
+  @Override
   public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
     final IProfil profil = getProfil();
@@ -442,6 +455,7 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#paint(org.eclipse.swt.graphics.GC)
    */
+  @Override
   public void paint( final GC gc )
   {
     // override this method
@@ -450,6 +464,7 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
   /**
    * @see org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer#removeYourself()
    */
+  @Override
   public void removeYourself( )
   {
     // override this method
@@ -489,6 +504,7 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
   /**
    * @see org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer#setProfil(org.kalypso.model.wspm.core.profil.IProfil)
    */
+  @Override
   public void setProfil( final IProfil profil )
   {
     m_profil = profil;

@@ -44,8 +44,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Map.Entry;
+import java.util.Properties;
 
 import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
@@ -95,11 +95,13 @@ public final class FeatureHelper
 
   private static ITokenReplacer TR_FEATUREID = new ITokenReplacer()
   {
+    @Override
     public String replaceToken( final Object value, final String argument )
     {
       return ((Feature) value).getId();
     }
 
+    @Override
     public String getToken( )
     {
       return "id";
@@ -108,6 +110,7 @@ public final class FeatureHelper
 
   private static ITokenReplacer TR_PROPERTYVALUE = new ITokenReplacer()
   {
+    @Override
     public String replaceToken( final Object value, final String argument )
     {
       final Feature feature = (Feature) value;
@@ -132,6 +135,7 @@ public final class FeatureHelper
       return "" + property;
     }
 
+    @Override
     public String getToken( )
     {
       return "property";
@@ -140,6 +144,7 @@ public final class FeatureHelper
 
   private static ITokenReplacer TR_LISTPROPERTYVALUE = new ITokenReplacer()
   {
+    @Override
     public String replaceToken( final Object value, final String argument )
     {
       final Feature feature = (Feature) value;
@@ -164,6 +169,7 @@ public final class FeatureHelper
       return "" + propertyValue;
     }
 
+    @Override
     public String getToken( )
     {
       return "listProperty";

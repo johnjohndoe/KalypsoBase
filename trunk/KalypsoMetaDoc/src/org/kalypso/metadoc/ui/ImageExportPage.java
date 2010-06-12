@@ -112,6 +112,7 @@ public class ImageExportPage extends WizardPage implements IConfigurationListene
 
   private ISelectionChangedListener m_formatSelListener = new ISelectionChangedListener()
   {
+    @Override
     public void selectionChanged( final SelectionChangedEvent event )
     {
       updateConf();
@@ -166,6 +167,7 @@ public class ImageExportPage extends WizardPage implements IConfigurationListene
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
    */
+  @Override
   public void createControl( final Composite parent )
   {
     final Composite panel = new Composite( parent, SWT.NONE );
@@ -194,11 +196,13 @@ public class ImageExportPage extends WizardPage implements IConfigurationListene
 
     final FocusListener updateModifyListener = new FocusListener()
     {
+      @Override
       public void focusLost( FocusEvent e )
       {
         updateConf();
       }
 
+      @Override
       public void focusGained( FocusEvent e )
       {
         // only update when focus is lost
@@ -364,6 +368,7 @@ public class ImageExportPage extends WizardPage implements IConfigurationListene
    * @see org.kalypso.metadoc.configuration.IConfigurationListener#configurationChanged(org.apache.commons.configuration.Configuration,
    *      java.lang.String)
    */
+  @Override
   public void configurationChanged( final Configuration config, final String key )
   {
     final Control control = getControl();
@@ -375,6 +380,7 @@ public class ImageExportPage extends WizardPage implements IConfigurationListene
 
     display.asyncExec( new Runnable()
     {
+      @Override
       public void run( )
       {
         updateControls( key );

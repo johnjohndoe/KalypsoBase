@@ -49,28 +49,28 @@ import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.impl.common.JarHelper;
 import org.apache.xmlbeans.impl.values.XmlAnyTypeImpl;
 import org.apache.xmlbeans.impl.xb.xsdschema.All;
+import org.apache.xmlbeans.impl.xb.xsdschema.AnnotationDocument.Annotation;
+import org.apache.xmlbeans.impl.xb.xsdschema.ComplexContentDocument.ComplexContent;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexRestrictionType;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
+import org.apache.xmlbeans.impl.xb.xsdschema.DocumentationDocument.Documentation;
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.apache.xmlbeans.impl.xb.xsdschema.ExplicitGroup;
 import org.apache.xmlbeans.impl.xb.xsdschema.ExtensionType;
 import org.apache.xmlbeans.impl.xb.xsdschema.Group;
 import org.apache.xmlbeans.impl.xb.xsdschema.GroupRef;
+import org.apache.xmlbeans.impl.xb.xsdschema.ImportDocument.Import;
+import org.apache.xmlbeans.impl.xb.xsdschema.IncludeDocument.Include;
 import org.apache.xmlbeans.impl.xb.xsdschema.LocalComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.LocalElement;
 import org.apache.xmlbeans.impl.xb.xsdschema.LocalSimpleType;
 import org.apache.xmlbeans.impl.xb.xsdschema.NamedGroup;
+import org.apache.xmlbeans.impl.xb.xsdschema.RestrictionDocument.Restriction;
 import org.apache.xmlbeans.impl.xb.xsdschema.SchemaDocument;
+import org.apache.xmlbeans.impl.xb.xsdschema.SimpleContentDocument.SimpleContent;
 import org.apache.xmlbeans.impl.xb.xsdschema.SimpleExtensionType;
 import org.apache.xmlbeans.impl.xb.xsdschema.SimpleRestrictionType;
 import org.apache.xmlbeans.impl.xb.xsdschema.SimpleType;
-import org.apache.xmlbeans.impl.xb.xsdschema.AnnotationDocument.Annotation;
-import org.apache.xmlbeans.impl.xb.xsdschema.ComplexContentDocument.ComplexContent;
-import org.apache.xmlbeans.impl.xb.xsdschema.DocumentationDocument.Documentation;
-import org.apache.xmlbeans.impl.xb.xsdschema.ImportDocument.Import;
-import org.apache.xmlbeans.impl.xb.xsdschema.IncludeDocument.Include;
-import org.apache.xmlbeans.impl.xb.xsdschema.RestrictionDocument.Restriction;
-import org.apache.xmlbeans.impl.xb.xsdschema.SimpleContentDocument.SimpleContent;
 import org.apache.xmlbeans.impl.xb.xsdschema.UnionDocument.Union;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.xml.NS;
@@ -695,6 +695,7 @@ public class GMLSchemaUtilities
     final UrlResolver resolver = new UrlResolver();
     final IUrlResolver2 resolver2 = new IUrlResolver2()
     {
+      @Override
       public URL resolveURL( final String relativeOrAbsolute ) throws MalformedURLException
       {
         return resolver.resolveURL( schemaURL, relativeOrAbsolute );
@@ -763,6 +764,7 @@ public class GMLSchemaUtilities
 
         final IUrlResolver2 newResolver = new IUrlResolver2()
         {
+          @Override
           public URL resolveURL( final String relativeOrAbsolute ) throws MalformedURLException
           {
             return resolver.resolveURL( originalIncludeURL, relativeOrAbsolute );

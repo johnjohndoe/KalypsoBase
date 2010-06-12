@@ -102,16 +102,19 @@ public class SHPPolygon implements ISHPParts
     return "WKBPOLYGON" + " numRings: " + getNumParts();
   }
 
+  @Override
   public SHPEnvelope getEnvelope( )
   {
     return m_rings.getEnvelope();
   }
 
+  @Override
   public int getNumParts( )
   {
     return m_rings.getNumParts();
   }
 
+  @Override
   public int getNumPoints( )
   {
     return m_rings.getNumPoints();

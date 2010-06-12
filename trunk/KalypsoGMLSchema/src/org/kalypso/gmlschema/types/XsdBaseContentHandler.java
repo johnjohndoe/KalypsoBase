@@ -98,11 +98,13 @@ public class XsdBaseContentHandler implements ContentHandler
       m_buffer.delete( 0, m_buffer.length() );
   }
 
+  @Override
   public void startElement( final String uri, final String local, final String qname, final Attributes atts ) throws SAXException
   {
     end();
   }
 
+  @Override
   public void endElement( final String uri, final String local, final String qname ) throws SAXException
   {
     end();
@@ -128,41 +130,50 @@ public class XsdBaseContentHandler implements ContentHandler
     }
   }
 
+  @Override
   public void characters( final char[] ch, final int start, final int length )
   {
     m_buffer.append( ch, start, length );
   }
 
+  @Override
   public void ignorableWhitespace( final char[] ch, final int start, final int len )
   {
     m_buffer.append( ch, start, len );
   }
 
+  @Override
   public void processingInstruction( final String target, final String data )
   {
     m_buffer.append( "processingInstruction: " + target + " / " + data + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
   }
 
+  @Override
   public void startDocument( )
   {
   }
 
+  @Override
   public void endDocument( )
   {
   }
 
+  @Override
   public void startPrefixMapping( final String prefix, final String uri )
   {
   }
 
+  @Override
   public void endPrefixMapping( final String prefix )
   {
   }
 
+  @Override
   public void setDocumentLocator( final Locator locator )
   {
   }
 
+  @Override
   public void skippedEntity( final String name )
   {
     m_buffer.append( "skippedEntity: " + name + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$

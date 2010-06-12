@@ -75,6 +75,7 @@ public class FileExportTarget extends AbstractExportTarget
    * @see org.kalypso.metadoc.IExportTarget#commitDocument(org.kalypso.metadoc.IExportableObject,
    *      org.apache.commons.configuration.Configuration, org.eclipse.core.runtime.IProgressMonitor)
    */
+  @Override
   public IStatus commitDocument( final IExportableObject document, final Configuration conf, final IProgressMonitor monitor ) throws InvocationTargetException
   {
     monitor.beginTask( "Export von " + document.getPreferredDocumentName(), IProgressMonitor.UNKNOWN );
@@ -107,6 +108,7 @@ public class FileExportTarget extends AbstractExportTarget
   /**
    * @see org.kalypso.metadoc.IExportTarget#createWizardPages(IPublishingConfiguration)
    */
+  @Override
   public IWizardPage[] createWizardPages( final IPublishingConfiguration configuration )
   {
     final ImageDescriptor imgDesc = AbstractUIPlugin.imageDescriptorFromPlugin( KalypsoMetaDocPlugin.getId(), "icons/newfile_wiz.gif" );

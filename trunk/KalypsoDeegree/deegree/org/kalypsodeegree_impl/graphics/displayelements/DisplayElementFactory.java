@@ -303,6 +303,7 @@ public class DisplayElementFactory
 
     final IVisitorFactory<GM_Triangle> visitorFactory = new SurfacePatchVisitableDisplayElement.IVisitorFactory<GM_Triangle>()
     {
+      @Override
       public ISurfacePatchVisitor<GM_Triangle> createVisitor( final Graphics g, final GeoTransform projection, final IElevationColorModel model )
       {
         final UOM uom = symbolizer.getUom();
@@ -322,6 +323,7 @@ public class DisplayElementFactory
     final GM_Surface tin = (GM_Surface) geoProperty;
     final IVisitorFactory<GM_Polygon> visitorFactory = new SurfacePatchVisitableDisplayElement.IVisitorFactory<GM_Polygon>()
     {
+      @Override
       public ISurfacePatchVisitor<GM_Polygon> createVisitor( final Graphics g, final GeoTransform projection, final IElevationColorModel model )
       {
         final UOM uom = symbolizer.getUom();

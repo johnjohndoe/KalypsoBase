@@ -13,7 +13,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.List;
 
@@ -57,6 +56,7 @@ public class ConstraintDelaunayCalcJob implements ISimulation
   /**
    * @see org.kalypso.simulation.core.ISimulation#getSpezifikation()
    */
+  @Override
   public URL getSpezifikation( )
   {
     return getClass().getResource( CALCJOB_SPEC );
@@ -66,7 +66,7 @@ public class ConstraintDelaunayCalcJob implements ISimulation
    * @see org.kalypso.simulation.core.ISimulation#run(java.io.File, org.kalypso.simulation.core.ISimulationDataProvider,
    *      org.kalypso.simulation.core.ISimulationResultEater, org.kalypso.simulation.core.ISimulationMonitor)
    */
-  @SuppressWarnings("unchecked")
+  @Override
   public void run( final File tmpdir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException
   {
     final URL gmlURL = (URL) inputProvider.getInputForID( "BREAKLINES_GML" ); //$NON-NLS-1$
@@ -90,16 +90,16 @@ public class ConstraintDelaunayCalcJob implements ISimulation
 
       final LogHelper log = new LogHelper( pwSimuLog, monitor, System.out );
 
-      log.log( true, Messages.getString( "org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayCalcJob.8" , geometryXPath) ); //$NON-NLS-1$
+      log.log( true, Messages.getString( "org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayCalcJob.8", geometryXPath ) ); //$NON-NLS-1$
 
       // load gml
-      log.log( true, Messages.getString( "org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayCalcJob.9" , gmlURL )); //$NON-NLS-1$
+      log.log( true, Messages.getString( "org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayCalcJob.9", gmlURL ) ); //$NON-NLS-1$
 
       final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( gmlURL, null );
       final GMLXPath calcpath = new GMLXPath( geometryXPath, null );
 
       // get calculation via path
-      log.log( true, Messages.getString( "org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayCalcJob.10", geometryXPath) ); //$NON-NLS-1$
+      log.log( true, Messages.getString( "org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayCalcJob.10", geometryXPath ) ); //$NON-NLS-1$
 
       /* Retrieve list of GM_Curves from workspace */
       Object calcObject = GMLXPathUtilities.query( calcpath, workspace );
@@ -126,7 +126,7 @@ public class ConstraintDelaunayCalcJob implements ISimulation
       /* Write .poly file for triangle.exe */
       final File polyfile = new File( tmpdir, "input.poly" ); //$NON-NLS-1$
       strmPolyInput = new BufferedOutputStream( new FileOutputStream( polyfile ) );
-      final String crs = ConstraintDelaunayHelper.writePolyFileForLinestrings( strmPolyInput, (List) calcObject, pwSimuLog );
+      final String crs = ConstraintDelaunayHelper.writePolyFileForLinestrings( strmPolyInput, (List< ? >) calcObject, pwSimuLog );
       strmPolyInput.close();
 
       // prepare kernel logs (log and err)
@@ -138,7 +138,7 @@ public class ConstraintDelaunayCalcJob implements ISimulation
       strmKernelErr = new FileOutputStream( fleKernelErr );
 
       final URL resource = getClass().getResource( "resources/triangle.exe" ); //$NON-NLS-1$
-      FileUtils.copyURLToFile( resource, new File(tmpdir, "triangle.exe") ); //$NON-NLS-1$
+      FileUtils.copyURLToFile( resource, new File( tmpdir, "triangle.exe" ) ); //$NON-NLS-1$
 
       //final StringBuffer cmd = new StringBuffer( "cmd /c triangle.exe -c -p" ); //$NON-NLS-1$
       final StringBuffer cmd = new StringBuffer( "cmd /c triangle.exe -p" ); //$NON-NLS-1$
@@ -165,7 +165,7 @@ public class ConstraintDelaunayCalcJob implements ISimulation
       }
       catch( final Throwable e )
       {
-        log.log( false, Messages.getString( "org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayCalcJob.21" , e.getLocalizedMessage() )); //$NON-NLS-1$
+        log.log( false, Messages.getString( "org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayCalcJob.21", e.getLocalizedMessage() ) ); //$NON-NLS-1$
         log.log( e, Messages.getString( "org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayCalcJob.22" ) ); //$NON-NLS-1$
         monitor.setFinishInfo( IStatus.ERROR, Messages.getString( "org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayCalcJob.23" ) ); //$NON-NLS-1$
         return;
@@ -215,8 +215,7 @@ public class ConstraintDelaunayCalcJob implements ISimulation
     }
   }
 
-  @SuppressWarnings("unchecked")
-  private GMLWorkspace readElements( final BufferedReader nodeReader, final BufferedReader eleReader, final String crs ) throws InvocationTargetException, IOException, GM_Exception, GMLSchemaException
+  private GMLWorkspace readElements( final BufferedReader nodeReader, final BufferedReader eleReader, final String crs ) throws IOException, GM_Exception, GMLSchemaException
   {
     final GM_Position[] points = ConstraintDelaunayHelper.parseTriangleNodeOutput( nodeReader );
 
@@ -228,7 +227,7 @@ public class ConstraintDelaunayCalcJob implements ISimulation
 
     final List<GM_Surface<GM_SurfacePatch>> surfaces = ConstraintDelaunayHelper.parseTriangleElementOutput( eleReader, crs, points );
 
-    for( final GM_Surface surface : surfaces )
+    for( final GM_Surface< ? > surface : surfaces )
     {
       final Feature newFeature = FeatureHelper.addFeature( rootFeature, memberName, featureName );
       newFeature.setProperty( geomName, surface );

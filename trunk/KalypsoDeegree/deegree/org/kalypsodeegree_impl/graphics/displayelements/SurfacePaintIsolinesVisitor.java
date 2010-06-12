@@ -80,6 +80,7 @@ public class SurfacePaintIsolinesVisitor implements ISurfacePatchVisitor<GM_Tria
    * @see org.kalypsodeegree.model.geometry.ISurfacePatchVisitor#visit(org.kalypsodeegree.model.geometry.GM_SurfacePatch,
    *      double)
    */
+  @Override
   public boolean visit( final GM_Triangle triangle, final double elevationSample )
   {
     /* DEBUG: Paint the triangle. */

@@ -369,9 +369,8 @@ public class ChartView extends ViewPart implements IChartPart, IProfilListener, 
   /**
    * @see org.eclipse.ui.part.WorkbenchPart#getAdapter(java.lang.Class)
    */
-  @SuppressWarnings("unchecked")
   @Override
-  public Object getAdapter( final Class adapter )
+  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
   {
     if( ChartView.class.equals( adapter ) )
       return this;

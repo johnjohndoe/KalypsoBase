@@ -60,6 +60,7 @@ public class InsertPointsActionDelegate extends ActionDelegate implements IViewA
   /**
    * @see org.eclipse.ui.IViewActionDelegate#init(org.eclipse.ui.IViewPart)
    */
+  @Override
   public void init( final IViewPart view )
   {
     m_view = (TableView) view;

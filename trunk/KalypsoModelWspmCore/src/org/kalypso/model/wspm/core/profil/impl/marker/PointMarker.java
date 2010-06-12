@@ -73,6 +73,7 @@ public class PointMarker implements IProfilPointMarker
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilPointMarker#getId()
    */
+  @Override
   public IComponent getId( )
   {
     return m_type;
@@ -81,6 +82,7 @@ public class PointMarker implements IProfilPointMarker
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilPointMarker#getPoint()
    */
+  @Override
   public IRecord getPoint( )
   {
     return m_point;
@@ -89,6 +91,7 @@ public class PointMarker implements IProfilPointMarker
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilPointMarker#getValue()
    */
+  @Override
   public Object getValue( )
   {
     final TupleResult owner = m_point.getOwner();
@@ -97,11 +100,13 @@ public class PointMarker implements IProfilPointMarker
   }
 
   /* Interpreted ui values to obtain backward compability */
+  @Override
   public Object getIntepretedValue( )
   {
     return getValue();
   }
 
+  @Override
   public void setInterpretedValue( final Object value )
   {
     setValue( value );
@@ -110,6 +115,7 @@ public class PointMarker implements IProfilPointMarker
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilPointMarker#setPoint(org.kalypso.observation.result.IRecord)
    */
+  @Override
   public IRecord setPoint( final IRecord newPosition )
   {
     final IRecord oldPoint = m_point;
@@ -134,6 +140,7 @@ public class PointMarker implements IProfilPointMarker
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilPointMarker#setValue(java.lang.Object)
    */
+  @Override
   public void setValue( final Object value )
   {
     final TupleResult owner = m_point.getOwner();

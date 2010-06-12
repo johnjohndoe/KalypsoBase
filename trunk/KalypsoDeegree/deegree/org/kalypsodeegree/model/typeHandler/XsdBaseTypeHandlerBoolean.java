@@ -71,6 +71,7 @@ public class XsdBaseTypeHandlerBoolean extends XsdBaseTypeHandler<Boolean>
   /**
    * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
    */
+  @Override
   public int compare( final Boolean o1, final Boolean o2 )
   {
     if( (o1 == null) && (o2 == null) )

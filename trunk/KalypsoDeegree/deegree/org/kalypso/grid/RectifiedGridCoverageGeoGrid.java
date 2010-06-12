@@ -88,6 +88,7 @@ public class RectifiedGridCoverageGeoGrid implements IGeoGrid
   /**
    * @see org.kalypso.grid.IGeoGrid#getValue(int, int)
    */
+  @Override
   public final double getValue( final int x, final int y ) throws GeoGridException
   {
     final IGeoGrid grid = getGrid();
@@ -148,6 +149,7 @@ public class RectifiedGridCoverageGeoGrid implements IGeoGrid
   /**
    * @see org.kalypso.grid.IGeoGrid#getEnvelope()
    */
+  @Override
   public Envelope getEnvelope( ) throws GeoGridException
   {
     return GeoGridUtilities.toEnvelope( this );
@@ -156,6 +158,7 @@ public class RectifiedGridCoverageGeoGrid implements IGeoGrid
   /**
    * @see org.kalypso.grid.IGeoGrid#getOrigin()
    */
+  @Override
   public Coordinate getOrigin( )
   {
     return m_origin;
@@ -164,6 +167,7 @@ public class RectifiedGridCoverageGeoGrid implements IGeoGrid
   /**
    * @see org.kalypso.grid.IGeoGrid#getSizeX()
    */
+  @Override
   public int getSizeX( )
   {
     return m_sizeX;
@@ -172,6 +176,7 @@ public class RectifiedGridCoverageGeoGrid implements IGeoGrid
   /**
    * @see org.kalypso.grid.IGeoGrid#getSizeY()
    */
+  @Override
   public int getSizeY( )
   {
     return m_sizeY;
@@ -180,6 +185,7 @@ public class RectifiedGridCoverageGeoGrid implements IGeoGrid
   /**
    * @see org.kalypso.grid.IGeoGrid#getOffsetX()
    */
+  @Override
   public Coordinate getOffsetX( )
   {
     return m_offsetX;
@@ -188,6 +194,7 @@ public class RectifiedGridCoverageGeoGrid implements IGeoGrid
   /**
    * @see org.kalypso.grid.IGeoGrid#getOffsetY()
    */
+  @Override
   public Coordinate getOffsetY( )
   {
     return m_offsetY;
@@ -196,6 +203,7 @@ public class RectifiedGridCoverageGeoGrid implements IGeoGrid
   /**
    * @see org.kalypso.grid.IGeoGrid#dispose()
    */
+  @Override
   public void dispose( )
   {
     // do not dispose the grid, we access it via the weak-cache
@@ -206,6 +214,7 @@ public class RectifiedGridCoverageGeoGrid implements IGeoGrid
   /**
    * @see org.kalypso.grid.IGeoGrid#getValueChecked(int, int)
    */
+  @Override
   public double getValueChecked( final int x, final int y ) throws GeoGridException
   {
     if( (x < 0) || (x >= getSizeX()) || (y < 0) || (y >= getSizeY()) )
@@ -217,6 +226,7 @@ public class RectifiedGridCoverageGeoGrid implements IGeoGrid
   /**
    * @see org.kalypso.grid.IGeoGrid#getWalkingStrategy()
    */
+  @Override
   public IGeoWalkingStrategy getWalkingStrategy( ) throws GeoGridException
   {
     final IGeoGrid grid = getGrid();
@@ -229,6 +239,7 @@ public class RectifiedGridCoverageGeoGrid implements IGeoGrid
   /**
    * @see org.kalypso.grid.IGeoValueProvider#getValue(com.vividsolutions.jts.geom.Coordinate)
    */
+  @Override
   public double getValue( final Coordinate crd ) throws GeoGridException
   {
     final IGeoGrid grid = getGrid();
@@ -241,6 +252,7 @@ public class RectifiedGridCoverageGeoGrid implements IGeoGrid
   /**
    * @see org.kalypso.grid.IGeoGrid#getMax()
    */
+  @Override
   public BigDecimal getMax( ) throws GeoGridException
   {
     final IGeoGrid grid = getGrid();
@@ -253,6 +265,7 @@ public class RectifiedGridCoverageGeoGrid implements IGeoGrid
   /**
    * @see org.kalypso.grid.IGeoGrid#getMin()
    */
+  @Override
   public BigDecimal getMin( ) throws GeoGridException
   {
     final IGeoGrid grid = getGrid();
@@ -265,6 +278,7 @@ public class RectifiedGridCoverageGeoGrid implements IGeoGrid
   /**
    * @see org.kalypso.grid.IGeoGrid#setMax(java.math.BigDecimal)
    */
+  @Override
   public void setMax( final BigDecimal maxValue ) throws GeoGridException
   {
     final IGeoGrid grid = getGrid();
@@ -275,6 +289,7 @@ public class RectifiedGridCoverageGeoGrid implements IGeoGrid
   /**
    * @see org.kalypso.grid.IGeoGrid#setMin(java.math.BigDecimal)
    */
+  @Override
   public void setMin( final BigDecimal minValue ) throws GeoGridException
   {
     final IGeoGrid grid = getGrid();
@@ -285,6 +300,7 @@ public class RectifiedGridCoverageGeoGrid implements IGeoGrid
   /**
    * @see org.kalypso.grid.IGeoGrid#getCell(int, int, java.lang.String)
    */
+  @Override
   public GM_Surface< ? > getCell( final int x, final int y, final String targetCRS ) throws GeoGridException
   {
     final IGeoGrid grid = getGrid();
@@ -297,6 +313,7 @@ public class RectifiedGridCoverageGeoGrid implements IGeoGrid
   /**
    * @see org.kalypso.grid.IGeoGrid#getSourceCRS()
    */
+  @Override
   public String getSourceCRS( ) throws GeoGridException
   {
     final IGeoGrid grid = getGrid();
@@ -309,6 +326,7 @@ public class RectifiedGridCoverageGeoGrid implements IGeoGrid
   /**
    * @see org.kalypso.grid.IGeoGrid#getSurface(java.lang.String)
    */
+  @Override
   public GM_Surface< ? > getSurface( final String targetCRS ) throws GeoGridException
   {
     final IGeoGrid grid = getGrid();

@@ -70,6 +70,7 @@ public class PolygonColorMapEntry_Impl implements PolygonColorMapEntry
   /**
    * @see org.kalypsodeegree.graphics.sld.PolygonColorMapEntry#exportAsXML()
    */
+  @Override
   public String exportAsXML( )
   {
     final StringBuffer sb = new StringBuffer( 1000 );
@@ -101,11 +102,13 @@ public class PolygonColorMapEntry_Impl implements PolygonColorMapEntry
   /**
    * @see org.kalypsodeegree.graphics.sld.PolygonColorMapEntry#getFill()
    */
+  @Override
   public Fill getFill( )
   {
     return m_fill;
   }
 
+  @Override
   public Stroke getStroke( )
   {
     return m_stroke;
@@ -114,6 +117,7 @@ public class PolygonColorMapEntry_Impl implements PolygonColorMapEntry
   /**
    * @see org.kalypsodeegree.graphics.sld.PolygonColorMapEntry#getFrom()
    */
+  @Override
   public double getFrom( Feature feature )
   {
     String val = null;
@@ -135,6 +139,7 @@ public class PolygonColorMapEntry_Impl implements PolygonColorMapEntry
   /**
    * @see org.kalypsodeegree.graphics.sld.PolygonColorMapEntry#getLabel()
    */
+  @Override
   public String getLabel( Feature feature )
   {
     String val = null;
@@ -152,6 +157,7 @@ public class PolygonColorMapEntry_Impl implements PolygonColorMapEntry
   /**
    * @see org.kalypsodeegree.graphics.sld.PolygonColorMapEntry#getTo()
    */
+  @Override
   public double getTo( Feature feature )
   {
     String val = null;

@@ -60,6 +60,7 @@ public class DefaultWalkingStrategy implements IGeoWalkingStrategy
    * @see org.kalypso.grid.IGeoWalkingStrategy#walk(org.kalypso.grid.IGeoGrid, org.kalypso.grid.IGeoGridWalker,
    *      org.kalypso.grid.IGeoGridArea, org.eclipse.core.runtime.IProgressMonitor)
    */
+  @Override
   public Object walk( final IGeoGrid grid, final IGeoGridWalker pwo, final IGeoGridArea walkingArea, final IProgressMonitor monitor ) throws GeoGridException, OperationCanceledException
   {
     final int sizeX = grid.getSizeX();

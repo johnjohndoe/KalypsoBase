@@ -177,6 +177,7 @@ public class PropertyIsLikeOperation extends ComparisonOperation
   }
 
   /** Produces an indented XML representation of this object. */
+  @Override
   public StringBuffer toXML( )
   {
     StringBuffer sb = new StringBuffer( 500 );
@@ -194,6 +195,7 @@ public class PropertyIsLikeOperation extends ComparisonOperation
    *          that determines the property values
    * @return true, if the <tt>Literal</tt> matches the <tt>PropertyName</tt>'s value
    */
+  @Override
   public boolean evaluate( Feature feature )
   {
 
@@ -315,6 +317,7 @@ public class PropertyIsLikeOperation extends ComparisonOperation
    * @see org.kalypsodeegree.filterencoding.Operation#accept(org.kalypsodeegree.filterencoding.visitor.FilterVisitor,
    *      org.kalypsodeegree.filterencoding.Operation, int)
    */
+  @Override
   public void accept( FilterVisitor fv, Operation operation, int depth )
   {
     fv.visit( this );

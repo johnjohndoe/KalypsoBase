@@ -58,6 +58,7 @@ public final class PointPropertyRemove implements IProfilChange
 
   }
 
+  @Override
   public IProfilChange doChange( final ProfilChangeHint hint )
   {
     if( hint != null )
@@ -72,6 +73,7 @@ public final class PointPropertyRemove implements IProfilChange
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilChange#getObject()
    */
+  @Override
   public Object[] getObjects( )
   {
     return null;
@@ -80,6 +82,7 @@ public final class PointPropertyRemove implements IProfilChange
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilChange#getPointProperty()
    */
+  @Override
   public String getInfo( )
   {
     return m_property.toString();
@@ -88,6 +91,7 @@ public final class PointPropertyRemove implements IProfilChange
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilChange#getValue()
    */
+  @Override
   public Double getValue( )
   {
     return null;

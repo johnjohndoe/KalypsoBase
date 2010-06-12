@@ -219,6 +219,7 @@ public abstract class Symbolizer_Impl implements Symbolizer
    * 
    * @return the geometry of the symbolizer
    */
+  @Override
   public Geometry getGeometry( )
   {
     return m_geometry;
@@ -230,16 +231,19 @@ public abstract class Symbolizer_Impl implements Symbolizer
    * @param geometry
    *            the geometry of the symbolizer
    */
+  @Override
   public void setGeometry( final Geometry geometry )
   {
     this.m_geometry = geometry;
   }
 
+  @Override
   public void setUom( final UOM uom )
   {
     m_uom = uom;
   }
 
+  @Override
   public UOM getUom( )
   {
     return m_uom;
@@ -248,6 +252,7 @@ public abstract class Symbolizer_Impl implements Symbolizer
   /**
    * @return the MinScaleDenominator
    */
+  @Override
   public double getMinScaleDenominator( )
   {
     return m_minDenominator;
@@ -257,6 +262,7 @@ public abstract class Symbolizer_Impl implements Symbolizer
    * @param minDenominator
    *            the MinScaleDenominator
    */
+  @Override
   public void setMinScaleDenominator( final double minDenominator )
   {
     this.m_minDenominator = minDenominator;
@@ -265,6 +271,7 @@ public abstract class Symbolizer_Impl implements Symbolizer
   /**
    * @return the MaxScaleDenominator
    */
+  @Override
   public double getMaxScaleDenominator( )
   {
     return m_maxDenominator;
@@ -274,6 +281,7 @@ public abstract class Symbolizer_Impl implements Symbolizer
    * @param maxDenominator
    *            the MaxScaleDenominator
    */
+  @Override
   public void setMaxScaleDenominator( final double maxDenominator )
   {
     this.m_maxDenominator = maxDenominator;
@@ -284,6 +292,7 @@ public abstract class Symbolizer_Impl implements Symbolizer
    * 
    * @see org.kalypsodeegree.graphics.sld.Symbolizer#paintLegendGraphic(org.eclipse.swt.graphics.GC)
    */
+  @Override
   @SuppressWarnings("unused")
   public void paint( final GC gc, final Feature feature ) throws FilterEvaluationException
   {

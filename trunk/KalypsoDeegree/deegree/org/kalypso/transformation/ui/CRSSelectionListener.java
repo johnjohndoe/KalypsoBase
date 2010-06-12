@@ -57,6 +57,7 @@ public abstract class CRSSelectionListener implements ISelectionChangedListener
   /**
    * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
    */
+  @Override
   public final void selectionChanged( SelectionChangedEvent event )
   {
     /* Get the selection. */

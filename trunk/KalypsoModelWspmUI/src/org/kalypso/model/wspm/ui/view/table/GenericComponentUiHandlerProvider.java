@@ -81,6 +81,7 @@ public class GenericComponentUiHandlerProvider implements IComponentUiHandlerPro
   /**
    * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandlerProvider#createComponentHandler(org.kalypso.observation.result.TupleResult)
    */
+  @Override
   public Map<Integer, IComponentUiHandler> createComponentHandler( final TupleResult tupleResult )
   {
     Assert.isTrue( tupleResult == m_profile.getResult() );

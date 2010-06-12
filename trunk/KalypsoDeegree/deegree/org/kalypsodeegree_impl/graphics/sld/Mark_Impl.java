@@ -101,6 +101,7 @@ public class Mark_Impl implements Mark, Marshallable
    *
    * @return the WK-Name of the mark
    */
+  @Override
   public String getWellKnownName( )
   {
     return m_wellKnownName;
@@ -115,6 +116,7 @@ public class Mark_Impl implements Mark, Marshallable
    * @param wellKnownName
    *            the WK-Name of the mark
    */
+  @Override
   public void setWellKnownName( final String wellKnownName )
   {
     m_wellKnownName = wellKnownName;
@@ -127,6 +129,7 @@ public class Mark_Impl implements Mark, Marshallable
    *
    * @return the fill of the mark
    */
+  @Override
   public Fill getFill( )
   {
     return m_fill;
@@ -138,6 +141,7 @@ public class Mark_Impl implements Mark, Marshallable
    * @param fill
    *            the fill of the mark
    */
+  @Override
   public void setFill( final Fill fill )
   {
     m_fill = fill;
@@ -151,6 +155,7 @@ public class Mark_Impl implements Mark, Marshallable
    *
    * @return the stroke of the mark
    */
+  @Override
   public Stroke getStroke( )
   {
     return m_stroke;
@@ -162,6 +167,7 @@ public class Mark_Impl implements Mark, Marshallable
    * @param stroke
    *            the stroke of the mark
    */
+  @Override
   public void setStroke( final Stroke stroke )
   {
     m_stroke = stroke;
@@ -170,6 +176,7 @@ public class Mark_Impl implements Mark, Marshallable
   /**
    * @see org.kalypsodeegree.graphics.sld.Mark#getAsImage(org.kalypsodeegree.model.feature.Feature, int)
    */
+  @Override
   public BufferedImage getAsImage( final Feature feature, final int size ) throws FilterEvaluationException
   {
     if( m_image == null )
@@ -190,6 +197,7 @@ public class Mark_Impl implements Mark, Marshallable
    * @see org.kalypsodeegree.graphics.sld.Mark#paintAwt(java.awt.Graphics2D, org.kalypsodeegree.model.feature.Feature,
    *      int)
    */
+  @Override
   public void paintAwt( final Graphics2D g, final Feature feature, final int size ) throws FilterEvaluationException
   {
     // REMARK: create Stroke-Helper without uom and projection: so external graphics are not supported
@@ -218,6 +226,7 @@ public class Mark_Impl implements Mark, Marshallable
   /**
    * @see org.kalypsodeegree.graphics.sld.Mark#paint(org.kalypsodeegree.model.feature.Feature)
    */
+  @Override
   public void paint( final GC gc, final Feature feature ) throws FilterEvaluationException
   {
     final Resource[] strokeResources = Symbolizer_Impl.prepareGc( gc, m_stroke, feature );
@@ -546,6 +555,7 @@ public class Mark_Impl implements Mark, Marshallable
    *
    * @return xml representation of the Mark
    */
+  @Override
   public String exportAsXML( )
   {
     Debug.debugMethodBegin();

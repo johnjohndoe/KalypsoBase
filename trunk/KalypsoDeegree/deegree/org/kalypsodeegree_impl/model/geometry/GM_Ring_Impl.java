@@ -105,6 +105,7 @@ public class GM_Ring_Impl extends GM_OrientableCurve_Impl implements GM_Ring, Se
   /**
    * GM_Ring must be closed, so isCycle returns TRUE.
    */
+  @Override
   public boolean isCycle( )
   {
     return true;
@@ -113,6 +114,7 @@ public class GM_Ring_Impl extends GM_OrientableCurve_Impl implements GM_Ring, Se
   /**
    * GM_Ring is a PrimitiveBoundary, so isSimple returns TRUE.
    */
+  @Override
   public boolean isSimple( )
   {
     return true;
@@ -124,6 +126,7 @@ public class GM_Ring_Impl extends GM_OrientableCurve_Impl implements GM_Ring, Se
    * any of its pieces. Points are 0-dimensional, curves are 1-dimensional, surfaces are 2-dimensional, and solids are
    * 3-dimensional.
    */
+  @Override
   public int getDimension( )
   {
     return 1;
@@ -133,6 +136,7 @@ public class GM_Ring_Impl extends GM_OrientableCurve_Impl implements GM_Ring, Se
    * The operation "coordinateDimension" shall return the dimension of the coordinates that define this GM_Object, which
    * must be the same as the coordinate dimension of the coordinate reference system for this GM_Object.
    */
+  @Override
   public int getCoordinateDimension( )
   {
     return getPositions()[0].getCoordinateDimension();
@@ -141,6 +145,7 @@ public class GM_Ring_Impl extends GM_OrientableCurve_Impl implements GM_Ring, Se
   /**
    * gets the Ring as a Array of positions.
    */
+  @Override
   public GM_Position[] getPositions( )
   {
     if( getOrientation() == '-' )
@@ -183,6 +188,7 @@ public class GM_Ring_Impl extends GM_OrientableCurve_Impl implements GM_Ring, Se
   /**
    * returns the Ring as a CurveSegment
    */
+  @Override
   public GM_CurveSegment getAsCurveSegment( ) throws GM_Exception
   {
     return new GM_LineString_Impl( m_points, getCoordinateSystem() );
@@ -192,6 +198,7 @@ public class GM_Ring_Impl extends GM_OrientableCurve_Impl implements GM_Ring, Se
    * returns the CurveBoundary of the Ring. For a CurveBoundary is defines as the first and the last point of a Curve
    * the CurveBoundary of a Ring contains two indentical point (because a Ring is closed)
    */
+  @Override
   public GM_CurveBoundary getCurveBoundary( )
   {
     return (GM_CurveBoundary) getBoundary();
@@ -388,6 +395,7 @@ public class GM_Ring_Impl extends GM_OrientableCurve_Impl implements GM_Ring, Se
    * @see org.kalypsodeegree.model.geometry.GM_Object#transform(org.kalypsodeegree_impl.model.ct.MathTransform,
    *      org.opengis.cs.CS_CoordinateSystem)
    */
+  @Override
   public GM_Object transform( final CRSTransformation trans, final String targetOGCCS ) throws Exception
   {
     /* If the target is the same coordinate system, do not transform. */

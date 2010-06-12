@@ -67,6 +67,7 @@ public class SinglePointsSource extends AbstractPointsSource
   /**
    * @see org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.IPointsSource#getPoints()
    */
+  @Override
   public LinkedList<IRecord> getPoints( )
   {
     // ein einzelnen punkt interpolieren
@@ -82,6 +83,7 @@ public class SinglePointsSource extends AbstractPointsSource
 
   }
 
+  @Override
   public void saveState( final IDialogSettings settings )
   {
     // TODO Auto-generated method stub

@@ -66,6 +66,7 @@ public class ExportableLabelProvider extends LabelProvider implements IFontProvi
   /**
    * @see org.eclipse.jface.viewers.IFontProvider#getFont(java.lang.Object)
    */
+  @Override
   public Font getFont( Object element )
   {
     final ExportableTreeItem item = (ExportableTreeItem)element;
@@ -78,6 +79,7 @@ public class ExportableLabelProvider extends LabelProvider implements IFontProvi
   /**
    * @see org.eclipse.jface.viewers.IColorProvider#getForeground(java.lang.Object)
    */
+  @Override
   public Color getForeground( Object element )
   {
     final ExportableTreeItem item = (ExportableTreeItem)element;
@@ -90,6 +92,7 @@ public class ExportableLabelProvider extends LabelProvider implements IFontProvi
   /**
    * @see org.eclipse.jface.viewers.IColorProvider#getBackground(java.lang.Object)
    */
+  @Override
   public Color getBackground( Object element )
   {
     final ExportableTreeItem item = (ExportableTreeItem)element;

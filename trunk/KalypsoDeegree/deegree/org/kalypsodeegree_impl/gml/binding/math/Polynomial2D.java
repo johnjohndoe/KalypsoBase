@@ -61,6 +61,7 @@ public class Polynomial2D extends AbstractFeatureBinder implements IPolynomial2D
     super( polFeature, QNAME );
   }
 
+  @Override
   public PolynomialConfigState checkConsistency( )
   {
     return null;
@@ -95,11 +96,13 @@ public class Polynomial2D extends AbstractFeatureBinder implements IPolynomial2D
     return PolynomialConfigState.CONSISTENCY_OK;
   }
 
+  @Override
   public double evaluate( double inputX, double inputY )
   {
     throw new RuntimeException( "not supported" );
   }
 
+  @Override
   public double[] getCoefficients( ) throws IllegalFeatureState
   {
     Object coefs = getFeature().getProperty( QNAME_PROP_COEFFICIENTS );
@@ -119,26 +122,31 @@ public class Polynomial2D extends AbstractFeatureBinder implements IPolynomial2D
     }
   }
 
+  @Override
   public void setCefficients( double[] coefficients ) throws IllegalArgumentException
   {
 
   }
 
+  @Override
   public int getDegreeX( ) throws IllegalFeatureState
   {
     return getDegree( QNAME_PROP_DEGREEX );
   }
 
+  @Override
   public void setDegreeX( int degreeX )
   {
     setDegree( degreeX, QNAME_PROP_DEGREEX );
   }
 
+  @Override
   public int getDegreeY( ) throws IllegalFeatureState
   {
     return getDegree( QNAME_PROP_DEGREEY );
   }
 
+  @Override
   public void setDegreeY( int degreeY )
   {
     setDegree( degreeY, QNAME_PROP_DEGREEY );
@@ -176,6 +184,7 @@ public class Polynomial2D extends AbstractFeatureBinder implements IPolynomial2D
 
   }
 
+  @Override
   public void setPolynomParameters( int degreeX, int degreeY, double[] coefficients ) throws IllegalArgumentException
   {
     if( PolynomialConfigState.CONSISTENCY_OK != checkConsistency( degreeX, degreeY, coefficients ) )

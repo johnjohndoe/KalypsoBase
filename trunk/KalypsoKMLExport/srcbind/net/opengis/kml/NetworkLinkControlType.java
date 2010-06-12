@@ -10,6 +10,7 @@ package net.opengis.kml;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -327,7 +328,7 @@ public class NetworkLinkControlType {
      *     
      */
     public void setAbstractViewGroup(JAXBElement<? extends AbstractViewType> value) {
-        this.abstractViewGroup = ((JAXBElement<? extends AbstractViewType> ) value);
+        this.abstractViewGroup = (value);
     }
 
     /**

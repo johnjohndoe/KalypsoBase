@@ -60,6 +60,7 @@ public class PolyhedralSurfaceHandler implements IMarshallingTypeHandler2
   /**
    * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#cloneObject(java.lang.Object, java.lang.String)
    */
+  @Override
   public Object cloneObject( final Object objectToClone, final String gmlVersion ) throws CloneNotSupportedException
   {
     throw new CloneNotSupportedException();
@@ -68,6 +69,7 @@ public class PolyhedralSurfaceHandler implements IMarshallingTypeHandler2
   /**
    * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#getShortname()
    */
+  @Override
   public String getShortname( )
   {
     return QNAME_TYPE.getLocalPart();
@@ -77,6 +79,7 @@ public class PolyhedralSurfaceHandler implements IMarshallingTypeHandler2
    * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#marshal(javax.xml.namespace.QName, java.lang.Object,
    *      org.xml.sax.XMLReader, java.net.URL, java.lang.String)
    */
+  @Override
   @SuppressWarnings("unchecked")
   public void marshal( final Object value, final XMLReader reader, final URL context, final String gmlVersion ) throws SAXException
   {
@@ -88,6 +91,7 @@ public class PolyhedralSurfaceHandler implements IMarshallingTypeHandler2
   /**
    * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#parseType(java.lang.String)
    */
+  @Override
   public Object parseType( final String text )
   {
     throw new UnsupportedOperationException();
@@ -97,6 +101,7 @@ public class PolyhedralSurfaceHandler implements IMarshallingTypeHandler2
    * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#unmarshal(org.xml.sax.XMLReader, java.net.URL,
    *      org.kalypso.gmlschema.types.UnMarshallResultEater, java.lang.String)
    */
+  @Override
   public void unmarshal( final XMLReader xmlReader, final URL context, final UnmarshallResultEater marshalResultEater, final String gmlVersion )
   {
     throw new UnsupportedOperationException();
@@ -105,6 +110,7 @@ public class PolyhedralSurfaceHandler implements IMarshallingTypeHandler2
   /**
    * @see org.kalypso.gmlschema.types.ITypeHandler#getTypeName()
    */
+  @Override
   public QName getTypeName( )
   {
     return QNAME_TYPE;
@@ -113,6 +119,7 @@ public class PolyhedralSurfaceHandler implements IMarshallingTypeHandler2
   /**
    * @see org.kalypso.gmlschema.types.ITypeHandler#getValueClass()
    */
+  @Override
   public Class< ? > getValueClass( )
   {
     return GM_Surface.class;
@@ -121,6 +128,7 @@ public class PolyhedralSurfaceHandler implements IMarshallingTypeHandler2
   /**
    * @see org.kalypso.gmlschema.types.ITypeHandler#isGeometry()
    */
+  @Override
   public boolean isGeometry( )
   {
     return true;
@@ -131,6 +139,7 @@ public class PolyhedralSurfaceHandler implements IMarshallingTypeHandler2
    *      org.kalypso.gmlschema.types.UnmarshallResultEater, java.lang.String, java.lang.String, java.lang.String,
    *      org.xml.sax.Attributes)
    */
+  @Override
   public ContentHandler createContentHandler( final XMLReader xmlReader, final ContentHandler parentContentHandler, final UnmarshallResultEater resultEater )
   {
     return new PolyhedralSurfaceContentHandler( resultEater, parentContentHandler, xmlReader );

@@ -69,6 +69,7 @@ public class AbstractLayerStyleProvider implements ILayerStyleProvider
   /**
    * @see org.kalypso.model.wspm.ui.view.ILayerStyleProvider#getStyleFor(java.lang.String, java.lang.Class)
    */
+  @Override
   @SuppressWarnings("unchecked")
   public <T extends IStyle> T getStyleFor( final String id, final Class<T> defaultStyle )
   {

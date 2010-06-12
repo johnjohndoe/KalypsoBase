@@ -103,7 +103,7 @@ public class KMLExporter implements ICoreRunnableWithProgress
   private File createTmpDir( ) throws IOException
   {
     final URL urlTmpDir = new File( System.getProperty( "java.io.tmpdir" ) ).toURI().toURL(); //$NON-NLS-1$
-    
+
     Assert.isNotNull( urlTmpDir );
 
     /* delete old test dir */
@@ -120,9 +120,10 @@ public class KMLExporter implements ICoreRunnableWithProgress
 
   /*
    * (non-Javadoc)
-   *
-   * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
+   * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.
+   * IProgressMonitor)
    */
+  @Override
   public IStatus execute( final IProgressMonitor monitor )
   {
     try
@@ -138,7 +139,7 @@ public class KMLExporter implements ICoreRunnableWithProgress
 
       /* basic kml settings */
       GoogleEarthUtils.setMapBoundary( m_mapPanel.getBoundingBox(), mapModell.getCoordinatesSystem(), googleEarthFactory, documentType );
-      GoogleEarthUtils.setLookAt( m_mapPanel.getBoundingBox(), mapModell.getCoordinatesSystem(), googleEarthFactory, documentType );
+      GoogleEarthUtils.setLookAt( m_mapPanel.getBoundingBox(), mapModell.getCoordinatesSystem(), googleEarthFactory );
 
       documentType.setName( m_settings.getExportName() );
       documentType.setDescription( m_settings.getExportDescription() );
@@ -222,7 +223,7 @@ public class KMLExporter implements ICoreRunnableWithProgress
     /* "paint" inner themes */
     else if( theme instanceof IKalypsoFeatureTheme )
       try
-    {
+      {
         final FolderType folderType = factory.createFolderType();
         folderType.setName( theme.getName().getValue() );
         final IKalypsoFeatureTheme ft = (IKalypsoFeatureTheme) theme;
@@ -235,11 +236,11 @@ public class KMLExporter implements ICoreRunnableWithProgress
         painter.paint( delegate, new NullProgressMonitor() );
 
         myList.add( factory.createFolder( folderType ) );
-    }
-    catch( final CoreException e )
-    {
-      e.printStackTrace();
-    }
+      }
+      catch( final CoreException e )
+      {
+        e.printStackTrace();
+      }
 
   }
 }

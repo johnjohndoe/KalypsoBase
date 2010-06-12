@@ -74,10 +74,12 @@ public class KalypsoDeegreeExtensions
   /* Empty implementation which does nothing. */
   private static final IGmlWorkspaceListener INVALID_PROXY = new GmlWorkspaceListener()
   {
+    @Override
     public void init( final GMLWorkspace workspace )
     {
     }
 
+    @Override
     public void onModellChange( final ModellEvent modellEvent )
     {
     }

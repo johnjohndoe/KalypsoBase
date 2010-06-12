@@ -161,6 +161,7 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
    * any of its pieces. Points are 0-dimensional, curves are 1-dimensional, surfaces are 2-dimensional, and solids are
    * 3-dimensional.
    */
+  @Override
   public int getDimension( )
   {
     return 0;
@@ -170,6 +171,7 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
    * The operation "coordinateDimension" shall return the dimension of the coordinates that define this GM_Object, which
    * must be the same as the coordinate dimension of the coordinate reference system for this GM_Object.
    */
+  @Override
   public int getCoordinateDimension( )
   {
     return m_position.getCoordinateDimension();
@@ -201,6 +203,7 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
   /**
    * returns the x-value of this point
    */
+  @Override
   public double getX( )
   {
     return m_position.getX();
@@ -209,6 +212,7 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
   /**
    * returns the y-value of this point
    */
+  @Override
   public double getY( )
   {
     return m_position.getY();
@@ -217,6 +221,7 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
   /**
    * returns the y-value of this point
    */
+  @Override
   public double getZ( )
   {
     return m_position.getZ();
@@ -226,6 +231,7 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
    * returns the x- and y-value of the point as a two dimensional array the first field contains the x- the second field
    * the y-value.
    */
+  @Override
   public double[] getAsArray( )
   {
     return m_position.getAsArray();
@@ -241,6 +247,7 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
     invalidate();
   }
 
+  @Override
   public GM_Position getPosition( )
   {
     return m_position;
@@ -376,6 +383,7 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
    * @see org.kalypsodeegree.model.geometry.GM_Object#transform(org.deegree.crs.transformations.CRSTransformation,
    *      java.lang.String)
    */
+  @Override
   public GM_Object transform( final CRSTransformation trans, final String targetOGCCS ) throws Exception
   {
     /* If the target is the same coordinate system, do not transform. */

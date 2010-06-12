@@ -94,6 +94,7 @@ public class InsertPointsWizard extends Wizard
   {
     final IRunnableWithProgress runnable = new IRunnableWithProgress()
     {
+      @Override
       public void run( final IProgressMonitor monitor ) throws InvocationTargetException
       {
         final IPointsSource choosenSource = m_pointsSourceChooserPage.getChoosenSource();

@@ -69,6 +69,7 @@ public class I18nFeatureVisitor implements FeatureVisitor
   /**
    * @see org.kalypsodeegree.model.feature.FeatureVisitor#visit(org.kalypsodeegree.model.feature.Feature)
    */
+  @Override
   public boolean visit( Feature f )
   {
     IPropertyType[] properties = f.getFeatureType().getProperties();

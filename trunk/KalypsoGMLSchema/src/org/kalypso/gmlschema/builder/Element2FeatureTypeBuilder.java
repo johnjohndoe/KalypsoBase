@@ -57,6 +57,7 @@ public class Element2FeatureTypeBuilder extends AbstractBuilder
   /**
    * @see org.kalypso.gmlschema.builder.IBuilder#build(org.kalypso.gmlschema.GMLSchema, java.lang.Object)
    */
+  @Override
   public Object[] build( final GMLSchema gmlSchema, final Object elementObject ) throws GMLSchemaException
   {
     final ElementWithOccurs element = (ElementWithOccurs) elementObject;
@@ -86,6 +87,7 @@ public class Element2FeatureTypeBuilder extends AbstractBuilder
    * @see org.kalypso.gmlschema.builder.IBuilder#isBuilderFor(org.kalypso.gmlschema.GMLSchema, java.lang.Object,
    *      java.lang.String)
    */
+  @Override
   public boolean isBuilderFor( final GMLSchema gmlSchema, final Object object, final String namedPass ) throws GMLSchemaException
   {
     if( !(object instanceof ElementWithOccurs) )

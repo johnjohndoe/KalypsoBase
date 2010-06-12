@@ -144,6 +144,7 @@ class GM_Polygon_Impl extends GM_SurfacePatch_Impl implements GM_Polygon, Serial
    * a GM_Complex, the GM_Primitives do not intersect one another. In general, topologically structured data uses shared
    * geometric objects to capture intersection information.
    */
+  @Override
   public boolean intersects( final GM_Object gmo )
   {
     boolean inter = false;
@@ -192,6 +193,7 @@ class GM_Polygon_Impl extends GM_SurfacePatch_Impl implements GM_Polygon, Serial
   /**
    * The Boolean valued operation "contains" shall return TRUE if this GM_Object contains another GM_Object.
    */
+  @Override
   public boolean contains( final GM_Object gmo )
   {
     boolean contain = false;
@@ -247,6 +249,7 @@ class GM_Polygon_Impl extends GM_SurfacePatch_Impl implements GM_Polygon, Serial
    * @see org.kalypsodeegree.model.geometry.GM_SurfacePatch#transform(org.deegree.crs.transformations.CRSTransformation,
    *      java.lang.String)
    */
+  @Override
   public GM_SurfacePatch transform( final CRSTransformation trans, final String targetOGCCS ) throws Exception
   {
     /* If the target is the same coordinate system, do not transform. */

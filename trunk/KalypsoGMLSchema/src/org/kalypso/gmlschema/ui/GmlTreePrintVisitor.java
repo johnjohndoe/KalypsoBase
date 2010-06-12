@@ -60,6 +60,7 @@ implements ITreeContentProviderVisitor
     m_buffer = buffer;
   }
 
+  @Override
   public boolean visit( Object element, int indent )
   {
     final String space = StringUtils.repeat( ".  ", indent ); //$NON-NLS-1$

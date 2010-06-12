@@ -63,6 +63,7 @@ public class ProfileObjectEdit implements IProfilChange
    * @throws IllegalProfileOperationException
    * @see org.kalypso.model.wspm.core.profil.changes.AbstractChange#doChange(PlainProfil)
    */
+  @Override
   public IProfilChange doChange( final ProfilChangeHint hint )
   {
     if( hint != null )
@@ -76,6 +77,7 @@ public class ProfileObjectEdit implements IProfilChange
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilChange#getObject()
    */
+  @Override
   public Object[] getObjects( )
   {
     return new Object[] { m_object, m_property };
@@ -84,6 +86,7 @@ public class ProfileObjectEdit implements IProfilChange
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilChange#getPointProperty()
    */
+  @Override
   public String getInfo( )
   {
     return null;
@@ -92,6 +95,7 @@ public class ProfileObjectEdit implements IProfilChange
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilChange#getValue()
    */
+  @Override
   public Double getValue( )
   {
     return null;

@@ -128,6 +128,7 @@ public class AddRectifiedGridCoveragesWizard extends Wizard
       final ICoverageCollection coverageCollection = m_coverages;
       final ICoreRunnableWithProgress operation = new ICoreRunnableWithProgress()
       {
+        @Override
         public IStatus execute( final IProgressMonitor monitor ) throws CoreException
         {
           final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString("org.kalypso.gml.ui.wizard.grid.AddRectifiedGridCoveragesWizard.5"), selectedFiles.length ); //$NON-NLS-1$

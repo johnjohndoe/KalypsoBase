@@ -48,6 +48,7 @@ public class RelationType2ComplexTypeBuilder implements IBuilder
   /**
    * @see org.kalypso.gmlschema.builder.IBuilder#build(org.kalypso.gmlschema.GMLSchema, java.lang.Object)
    */
+  @Override
   public Object[] build( final GMLSchema gmlSchema, final Object relationTypeObject ) throws GMLSchemaException
   {
     final QualifiedElement qe = (QualifiedElement) relationTypeObject;
@@ -62,6 +63,7 @@ public class RelationType2ComplexTypeBuilder implements IBuilder
    * @see org.kalypso.gmlschema.builder.IBuilder#isBuilderFor(org.kalypso.gmlschema.GMLSchema, java.lang.Object,
    *      java.lang.String)
    */
+  @Override
   public boolean isBuilderFor( final GMLSchema gmlSchema, final Object object, final String namedPass )
   {
     return object instanceof IRelationType;
@@ -70,6 +72,7 @@ public class RelationType2ComplexTypeBuilder implements IBuilder
   /**
    * @see org.kalypso.gmlschema.builder.IBuilder#replaces(org.kalypso.gmlschema.builder.IBuilder)
    */
+  @Override
   public boolean replaces( final IBuilder other )
   {
     return false;

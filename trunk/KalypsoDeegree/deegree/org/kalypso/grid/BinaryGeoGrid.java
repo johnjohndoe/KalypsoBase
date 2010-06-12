@@ -274,6 +274,7 @@ public class BinaryGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
   /**
    * @see org.kalypso.gis.doubleraster.grid.DoubleGrid#getSizeX()
    */
+  @Override
   public int getSizeX( )
   {
     return m_sizeX;
@@ -282,6 +283,7 @@ public class BinaryGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
   /**
    * @see org.kalypso.gis.doubleraster.grid.DoubleGrid#getSizeY()
    */
+  @Override
   public int getSizeY( )
   {
     return m_sizeY;
@@ -290,6 +292,7 @@ public class BinaryGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
   /**
    * @see org.kalypso.gis.doubleraster.grid.DoubleGrid#getValue(int, int)
    */
+  @Override
   public double getValue( final int x, final int y ) throws GeoGridException
   {
     if( m_randomAccessFile == null )
@@ -321,6 +324,7 @@ public class BinaryGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
    *           If the grid is not opened for write access.
    * @see org.kalypso.gis.doubleraster.grid.DoubleGrid#getValue(int, int)
    */
+  @Override
   public void setValue( final int x, final int y, final double value ) throws GeoGridException
   {
     try
@@ -399,6 +403,7 @@ public class BinaryGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
   /**
    * Returns the minimum of all values of this grid.
    */
+  @Override
   public BigDecimal getMin( )
   {
     return m_min;
@@ -407,6 +412,7 @@ public class BinaryGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
   /**
    * Returns the maximum of all values of this grid.
    */
+  @Override
   public BigDecimal getMax( )
   {
     return m_max;
@@ -432,6 +438,7 @@ public class BinaryGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
    * @throws IOException
    *           If the grid is not opened for write access.
    */
+  @Override
   public void setStatistically( final BigDecimal min, final BigDecimal max ) throws GeoGridException
   {
     try
@@ -453,6 +460,7 @@ public class BinaryGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
   /**
    * @see org.kalypso.grid.IWriteableGeoGrid#setMax(java.math.BigDecimal)
    */
+  @Override
   public void setMax( final BigDecimal max )
   {
     if( max != null )
@@ -462,6 +470,7 @@ public class BinaryGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
   /**
    * @see org.kalypso.grid.IWriteableGeoGrid#setMin(java.math.BigDecimal)
    */
+  @Override
   public void setMin( final BigDecimal min )
   {
     if( min != null )
@@ -471,6 +480,7 @@ public class BinaryGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
   /**
    * @see org.kalypso.grid.IWriteableGeoGrid#saveStatistically()
    */
+  @Override
   public void saveStatistically( ) throws GeoGridException
   {
     if( m_min != null && m_max != null )

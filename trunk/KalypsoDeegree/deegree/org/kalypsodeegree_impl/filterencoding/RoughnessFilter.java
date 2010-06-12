@@ -46,7 +46,6 @@ import org.kalypsodeegree.filterencoding.Filter;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.sld.Rule;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree_impl.filterencoding.AbstractFilter;
 
 /**
  * @author barbarins, ig

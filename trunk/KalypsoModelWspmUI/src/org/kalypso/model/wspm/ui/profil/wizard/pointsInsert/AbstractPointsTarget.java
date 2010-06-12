@@ -56,11 +56,13 @@ public abstract class AbstractPointsTarget implements IPointsTarget
   /**
    * @see org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.IPointsSource#getLabel()
    */
+  @Override
   public final String getLabel( )
   {
     return m_label;
   }
 
+  @Override
   public final String getDescription( )
   {
     return m_description;
@@ -69,6 +71,7 @@ public abstract class AbstractPointsTarget implements IPointsTarget
   /**
    * @see org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.IPointsSource#getID()
    */
+  @Override
   public final String getID( )
   {
     return m_id;
@@ -84,6 +87,7 @@ public abstract class AbstractPointsTarget implements IPointsTarget
    * @see org.eclipse.core.runtime.IExecutableExtension#setInitializationData(org.eclipse.core.runtime.IConfigurationElement,
    *      java.lang.String, java.lang.Object)
    */
+  @Override
   public final void setInitializationData( final IConfigurationElement config, final String propertyName, final Object data )
   {
     m_id = config.getAttribute( "id" ); //$NON-NLS-1$

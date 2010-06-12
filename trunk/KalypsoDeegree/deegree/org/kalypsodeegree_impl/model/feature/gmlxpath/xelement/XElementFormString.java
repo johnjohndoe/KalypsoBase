@@ -55,6 +55,7 @@ public class XElementFormString implements IXElement
   /**
    * @see org.kalypsodeegree_impl.model.feature.xpath.IXElement#evaluate(java.lang.Object, boolean)
    */
+  @Override
   public Object evaluate( Object context, boolean featureTypeLevel )
   {
     return m_string;

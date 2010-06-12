@@ -69,6 +69,7 @@ public class SplitSortContainer
      * @see org.kalypsodeegree_impl.model.sort.SplitSortContainer.Visitor#visit(java.lang.Object,
      *      com.vividsolutions.jts.geom.Envelope)
      */
+    @Override
     public void visit( final Object item, final Envelope env )
     {
       if( env != null )

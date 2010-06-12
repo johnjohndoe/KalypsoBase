@@ -232,6 +232,7 @@ public class TypeHandlerUtilities
   {
     final JAXBContextProvider jaxbContextProvider = new JAXBContextProvider()
     {
+      @Override
       public JAXBContext getJaxBContextForGMLVersion( final String gmlVersion )
       {
         if( (gmlVersion == null) || gmlVersion.startsWith( "2" ) )

@@ -80,6 +80,7 @@ public class XsdBaseTypeHandlerDirectory extends XsdBaseTypeHandler<File>
   /**
    * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
    */
+  @Override
   public int compare( final File o1, final File o2 )
   {
     if( (o1 == null) && (o2 == null) )

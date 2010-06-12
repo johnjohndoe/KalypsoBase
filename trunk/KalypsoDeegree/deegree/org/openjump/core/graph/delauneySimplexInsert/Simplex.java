@@ -70,6 +70,7 @@ class Simplex extends AbstractSet implements Set {
      * String representation.
      * @return the String representation of this Simplex
      */
+    @Override
     public String toString () {
         if (!moreInfo) return "Simplex" + idNumber;
         return "Simplex" + idNumber + super.toString();
@@ -135,6 +136,7 @@ class Simplex extends AbstractSet implements Set {
     /**
      * @return Iterator for Simplex's vertices.
      */
+    @Override
     public Iterator iterator () {
         return this.vertices.iterator();
     }
@@ -142,6 +144,7 @@ class Simplex extends AbstractSet implements Set {
     /**
      * @return the size (# of vertices) of this Simplex
      */
+    @Override
     public int size () {
         return this.vertices.size();
     }
@@ -149,6 +152,7 @@ class Simplex extends AbstractSet implements Set {
     /**
      * @return the hashCode of this Simplex
      */
+    @Override
     public int hashCode () {
         return (int)(idNumber^(idNumber>>>32));
     }
@@ -157,6 +161,7 @@ class Simplex extends AbstractSet implements Set {
      * We want to allow for different simplices that share the same vertex set.
      * @return true for equal Simplices
      */
+    @Override
     public boolean equals (Object o) {
         return (this == o);
     }

@@ -74,6 +74,7 @@ public class Layer_Impl implements Layer
    * 
    * @return the name of the layer
    */
+  @Override
   public String getName( )
   {
     return name;
@@ -85,6 +86,7 @@ public class Layer_Impl implements Layer
    * @param name
    *            the name of the layer
    */
+  @Override
   public void setName( String name )
   {
     this.name = name;
@@ -97,6 +99,7 @@ public class Layer_Impl implements Layer
    * 
    * @return the LayerFeatureConstraints
    */
+  @Override
   public LayerFeatureConstraints getLayerFeatureConstraints( )
   {
     return layerFeatureConstraints;
@@ -108,6 +111,7 @@ public class Layer_Impl implements Layer
    * @param layerFeatureConstraints
    *            the LayerFeatureConstraints
    */
+  @Override
   public void setLayerFeatureConstraints( LayerFeatureConstraints layerFeatureConstraints )
   {
     this.layerFeatureConstraints = layerFeatureConstraints;
@@ -122,6 +126,7 @@ public class Layer_Impl implements Layer
    * 
    * @return the Styles of the Layer as ArrayList
    */
+  @Override
   public Style[] getStyles( )
   {
     return (Style[]) styles.toArray( new Style[styles.size()] );
@@ -130,6 +135,7 @@ public class Layer_Impl implements Layer
   /**
    * @see org.kalypsodeegree.graphics.sld.Layer#getStyle()
    */
+  @Override
   public Style getStyle( String styleName )
   {
     for( int i = 0; i < styles.size(); i++ )
@@ -146,6 +152,7 @@ public class Layer_Impl implements Layer
    * @param styles
    *            the styles for the layer as Array
    */
+  @Override
   public void setStyles( Style[] styles )
   {
     this.styles.clear();
@@ -164,6 +171,7 @@ public class Layer_Impl implements Layer
    * @param style
    *            a style to add
    */
+  @Override
   public void addStyle( Style style )
   {
     styles.add( style );
@@ -174,6 +182,7 @@ public class Layer_Impl implements Layer
    * @param style
    *            a style to remove
    */
+  @Override
   public void removeStyle( Style style )
   {
     styles.remove( styles.indexOf( style ) );
@@ -184,6 +193,7 @@ public class Layer_Impl implements Layer
    * 
    * @return the layer as String
    */
+  @Override
   public String toString( )
   {
     String ret = getClass().getName() + "\n";

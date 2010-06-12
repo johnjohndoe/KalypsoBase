@@ -147,6 +147,7 @@ public class SelectProfileDialog extends TitleAreaDialog
     viewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
 
+      @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
         final StructuredSelection selection = (StructuredSelection) viewer.getSelection();

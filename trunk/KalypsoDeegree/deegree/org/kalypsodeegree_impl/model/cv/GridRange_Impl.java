@@ -63,6 +63,7 @@ public class GridRange_Impl implements GridRange
    * The valid maximum exclusive grid coordinate. The sequence contains a maximum value for each dimension of the grid
    * coverage.
    */
+  @Override
   public double[] getHigh( )
   {
     return m_high;
@@ -72,6 +73,7 @@ public class GridRange_Impl implements GridRange
    * The valid minimum inclusive grid coordinate. The sequence contains a minimum value for each dimension of the grid
    * coverage. The lowest valid grid coordinate is zero.
    */
+  @Override
   public double[] getLow( )
   {
     return m_low;

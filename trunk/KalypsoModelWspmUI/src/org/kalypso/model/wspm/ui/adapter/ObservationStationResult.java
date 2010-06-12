@@ -75,6 +75,7 @@ public class ObservationStationResult implements IStationResult
   /**
    * @see org.kalypso.model.wspm.core.result.IStationResult#getName()
    */
+  @Override
   public String getName( )
   {
     // REMARK: we do not create an IObservation here in order
@@ -85,6 +86,7 @@ public class ObservationStationResult implements IStationResult
   /**
    * @see org.kalypso.model.wspm.core.result.IStationResult#getComponents()
    */
+  @Override
   public String[] getComponentIds( )
   {
     checkIdMap();
@@ -121,6 +123,7 @@ public class ObservationStationResult implements IStationResult
   /**
    * @see org.kalypso.model.wspm.core.result.IStationResult#getComponentName(java.lang.String)
    */
+  @Override
   public String getComponentName( final String componentId )
   {
     checkIdMap();
@@ -133,6 +136,7 @@ public class ObservationStationResult implements IStationResult
   /**
    * @see org.kalypso.model.wspm.core.result.IStationResult#getValue(org.kalypso.observation.result.IComponent)
    */
+  @Override
   public Number getComponentValue( final String componentId )
   {
     checkIdMap();

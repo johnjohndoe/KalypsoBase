@@ -59,6 +59,7 @@ public class PointMarkerEdit implements IProfilChange
    * @throws IllegalProfileOperationException
    * @see org.kalypso.model.wspm.core.profil.changes.AbstractChange#doChange(PlainProfil)
    */
+  @Override
   public IProfilChange doChange( final ProfilChangeHint hint )
   {
     if( hint != null )
@@ -73,6 +74,7 @@ public class PointMarkerEdit implements IProfilChange
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilChange#getObject()
    */
+  @Override
   public Object[] getObjects( )
   {
     return new Object[] { m_pointMarker, m_newValue };
@@ -81,6 +83,7 @@ public class PointMarkerEdit implements IProfilChange
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilChange#getPointProperty()
    */
+  @Override
   public String getInfo( )
   {
     return m_pointMarker.getId().getId();
@@ -89,6 +92,7 @@ public class PointMarkerEdit implements IProfilChange
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilChange#getValue()
    */
+  @Override
   public Double getValue( )
   {
 

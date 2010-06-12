@@ -120,6 +120,7 @@ public class WorldToScreenTransform implements GeoTransform
    * @param rect
    *          is the boundary of the source geometry.
    */
+  @Override
   public void setSourceRect( final GM_Envelope rect )
   {
     if( rect == null )
@@ -148,6 +149,7 @@ public class WorldToScreenTransform implements GeoTransform
    * @param sourceCoordinateSystem
    *          The coordinate system (source system) of the map.
    */
+  @Override
   public void setSourceRect( double xMin, double yMin, double xMax, double yMax, final String sourceCoordinateSystem )
   {
     double dum = 0;
@@ -169,6 +171,7 @@ public class WorldToScreenTransform implements GeoTransform
     setSourceRect( GeometryFactory.createGM_Envelope( xMin, yMin, xMax, yMax, sourceCoordinateSystem ) );
   }
 
+  @Override
   public GM_Envelope getSourceRect( )
   {
     return m_sourceRect;
@@ -180,6 +183,7 @@ public class WorldToScreenTransform implements GeoTransform
    * @param rect
    *          is the boundary of the destination rectangle (for example a region on the screen)
    */
+  @Override
   public void setDestRect( final GM_Envelope rect )
   {
     if( rect == null )
@@ -207,6 +211,7 @@ public class WorldToScreenTransform implements GeoTransform
    * @param destCoordinateSystem
    *          The coordinate system (destination system) of the map.
    */
+  @Override
   public void setDestRect( double xMin, double yMin, double xMax, double yMax, final String destCoordinateSystem )
   {
     double dum = 0;
@@ -235,6 +240,7 @@ public class WorldToScreenTransform implements GeoTransform
    *          , x-coordinate of a point in the source coordinate system.
    * @return the x-coordinate of the submitted value in the destination coordinate system.
    */
+  @Override
   public double getDestX( final double xsource )
   {
     return m_destRect.getMinX() + (xsource - m_sourceRect.getMinX()) * m_qx;
@@ -247,6 +253,7 @@ public class WorldToScreenTransform implements GeoTransform
    *          , y-coordinate of a point in the source coordinate system.
    * @return the y-coordinate of the submitted value in the destination coordinate system.
    */
+  @Override
   public double getDestY( final double ysource )
   {
     return m_destRect.getMinY() + m_destRect.getHeight() - (ysource - m_sourceRect.getMinY())* m_qy;
@@ -260,6 +267,7 @@ public class WorldToScreenTransform implements GeoTransform
    *          in the source coordinate system.
    * @return the location of the submitted point in the destination coordinate system.
    */
+  @Override
   public GM_Position getDestPoint( final GM_Position point )
   {
     final double x = getDestX( point.getX() );
@@ -274,6 +282,7 @@ public class WorldToScreenTransform implements GeoTransform
    *          , x-coordinate of a point in the destination coordinate system.
    * @return the x-coordinate of the submitted value in the source coordinate system.
    */
+  @Override
   public double getSourceX( final double xdest )
   {
     return (xdest - m_destRect.getMin().getX()) / m_qx + m_sourceRect.getMin().getX();
@@ -286,6 +295,7 @@ public class WorldToScreenTransform implements GeoTransform
    *          , y-coordinate of a point in the destination coordinate system.
    * @return the y-coordinate of the submitted value in the source coordinate system.
    */
+  @Override
   public double getSourceY( final double ydest )
   {
     return (m_destRect.getHeight() - (ydest - m_destRect.getMin().getY())) / m_qy + m_sourceRect.getMin().getY();
@@ -299,6 +309,7 @@ public class WorldToScreenTransform implements GeoTransform
    *          in the destination coordinate system.
    * @return the location of the submitted point in the source coordinate system.
    */
+  @Override
   public GM_Position getSourcePoint( final GM_Position point )
   {
     final double x = getSourceX( point.getX() );
@@ -306,11 +317,13 @@ public class WorldToScreenTransform implements GeoTransform
     return GeometryFactory.createGM_Position( x, y );
   }
 
+  @Override
   public double getDestWidth( )
   {
     return m_destRect.getWidth();
   }
 
+  @Override
   public double getDestHeight( )
   {
     return m_destRect.getHeight();
@@ -337,6 +350,7 @@ public class WorldToScreenTransform implements GeoTransform
    *
    * @return scale of the map
    */
+  @Override
   public double getScale( )
   {
     final GM_Envelope box = getWgs84SorceRect();

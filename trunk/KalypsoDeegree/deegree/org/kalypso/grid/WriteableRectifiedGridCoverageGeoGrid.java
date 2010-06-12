@@ -58,6 +58,7 @@ public class WriteableRectifiedGridCoverageGeoGrid extends RectifiedGridCoverage
   /**
    * @see org.kalypso.grid.IWriteableGeoGrid#saveStatistically()
    */
+  @Override
   public void saveStatistically( ) throws GeoGridException
   {
     final IWriteableGeoGrid grid = (IWriteableGeoGrid) getGrid();
@@ -70,6 +71,7 @@ public class WriteableRectifiedGridCoverageGeoGrid extends RectifiedGridCoverage
   /**
    * @see org.kalypso.grid.IWriteableGeoGrid#setStatistically(java.math.BigDecimal, java.math.BigDecimal)
    */
+  @Override
   public void setStatistically( final BigDecimal min, final BigDecimal max ) throws GeoGridException
   {
     final IWriteableGeoGrid grid = (IWriteableGeoGrid) getGrid();
@@ -82,6 +84,7 @@ public class WriteableRectifiedGridCoverageGeoGrid extends RectifiedGridCoverage
   /**
    * @see org.kalypso.grid.IWriteableGeoGrid#setValue(int, int, double)
    */
+  @Override
   public void setValue( final int x, final int y, final double value ) throws GeoGridException
   {
     final IWriteableGeoGrid grid = (IWriteableGeoGrid) getGrid();

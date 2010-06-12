@@ -16,6 +16,7 @@ public class StationResult implements IStationResult
     m_results = results;
   }
 
+  @Override
   public String getName( )
   {
     return m_name;
@@ -24,6 +25,7 @@ public class StationResult implements IStationResult
   /**
    * @see org.kalypso.model.wspm.core.result.IStationResult#getComponentIds()
    */
+  @Override
   public String[] getComponentIds( )
   {
     return m_results.keySet().toArray( new String[m_results.size()] );
@@ -32,6 +34,7 @@ public class StationResult implements IStationResult
   /**
    * @see org.kalypso.model.wspm.core.result.IStationResult#getComponentName(java.lang.String)
    */
+  @Override
   public String getComponentName( final String componentId )
   {
     return componentId;
@@ -40,6 +43,7 @@ public class StationResult implements IStationResult
   /**
    * @see org.kalypso.model.wspm.core.result.IStationResult#getComponentValue(java.lang.String)
    */
+  @Override
   public Double getComponentValue( final String componentId )
   {
     return m_results.get( componentId );

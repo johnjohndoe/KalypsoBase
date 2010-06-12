@@ -77,6 +77,7 @@ public class PageGoogleExport extends WizardPage implements IKMLExportSettings
    * 
    * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
    */
+  @Override
   public void createControl( final Composite parent )
   {
     setPageComplete( false );
@@ -94,6 +95,7 @@ public class PageGoogleExport extends WizardPage implements IKMLExportSettings
 
     tName.addModifyListener( new ModifyListener()
     {
+      @Override
       public void modifyText( final ModifyEvent e )
       {
         m_name = tName.getText();
@@ -111,6 +113,7 @@ public class PageGoogleExport extends WizardPage implements IKMLExportSettings
 
     tDescription.addModifyListener( new ModifyListener()
     {
+      @Override
       public void modifyText( final ModifyEvent e )
       {
         m_description = tDescription.getText();
@@ -129,6 +132,7 @@ public class PageGoogleExport extends WizardPage implements IKMLExportSettings
 
       fc.addFileChangedListener( new FileChooserGroup.FileChangedListener()
       {
+        @Override
         public void fileChanged( final File file )
         {
           m_file = file;
@@ -141,16 +145,19 @@ public class PageGoogleExport extends WizardPage implements IKMLExportSettings
     checkPageCompleted();
   }
 
+  @Override
   public String getExportDescription( )
   {
     return m_description;
   }
 
+  @Override
   public File getExportFile( )
   {
     return m_file;
   }
 
+  @Override
   public String getExportName( )
   {
     return m_name;

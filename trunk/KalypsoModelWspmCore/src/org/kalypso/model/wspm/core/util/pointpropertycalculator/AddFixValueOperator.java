@@ -54,6 +54,7 @@ import org.kalypso.observation.result.TupleResult;
  */
 public class AddFixValueOperator implements IPointPropertyCalculator
 {
+  @Override
   public void calculate( final Double operand, final IComponent[] properties, final Collection<IRecord> points )
   {
     for( final IRecord point : points )
