@@ -160,11 +160,13 @@ public class AddSymbolizerPanel
     m_geometryCombo.setLayoutData( geometryComboData );
     m_geometryCombo.addSelectionListener( new SelectionListener()
     {
+      @Override
       public void widgetSelected( final SelectionEvent e )
       {
         updateSymbolizerCombo();
       }
 
+      @Override
       public void widgetDefaultSelected( final SelectionEvent e )
       {
         updateSymbolizerCombo();
@@ -190,16 +192,19 @@ public class AddSymbolizerPanel
     symbolizerAddButton.setToolTipText( MessageBundle.STYLE_EDITOR_ADD );
     symbolizerAddButton.addMouseListener( new MouseListener()
     {
+      @Override
       public void mouseDoubleClick( final MouseEvent e )
       {
         fire();
       }
 
+      @Override
       public void mouseDown( final MouseEvent e )
       {
         mouseDoubleClick( e );
       }
 
+      @Override
       public void mouseUp( final MouseEvent e )
       {
         // nothing

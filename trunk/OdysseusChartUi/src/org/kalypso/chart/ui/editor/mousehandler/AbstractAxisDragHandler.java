@@ -89,6 +89,7 @@ public abstract class AbstractAxisDragHandler implements IAxisDragHandler
   /**
    * @see org.eclipse.swt.events.MouseListener#mouseDoubleClick(org.eclipse.swt.events.MouseEvent)
    */
+  @Override
   public void mouseDoubleClick( MouseEvent e )
   {
     // TODO Auto-generated method stub
@@ -98,6 +99,7 @@ public abstract class AbstractAxisDragHandler implements IAxisDragHandler
   /**
    * @see org.eclipse.swt.events.MouseListener#mouseDown(org.eclipse.swt.events.MouseEvent)
    */
+  @Override
   public void mouseDown( final MouseEvent e )
   {
     m_mouseDragStart = getPos( e );
@@ -137,6 +139,7 @@ public abstract class AbstractAxisDragHandler implements IAxisDragHandler
     return (AxisCanvas) e.getSource();
   }
 
+  @Override
   public void keyPressed( KeyEvent e )
   {
     if( e.keyCode == SWT.ALT )
@@ -145,6 +148,7 @@ public abstract class AbstractAxisDragHandler implements IAxisDragHandler
     }
   }
 
+  @Override
   public void keyReleased( KeyEvent e )
   {
     if( e.keyCode == SWT.ALT )

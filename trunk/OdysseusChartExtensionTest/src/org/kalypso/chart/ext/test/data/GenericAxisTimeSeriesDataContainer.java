@@ -45,7 +45,6 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.SimpleTimeZone;
 
-
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.ComparableDataRange;
 
@@ -101,7 +100,8 @@ public class GenericAxisTimeSeriesDataContainer implements IListDataContainer<Ca
   /**
    * @see org.kalypso.chart.framework.model.data.IDataContainer#close()
    */
-  public void close( )
+  @Override
+public void close( )
   {
 
   }
@@ -109,7 +109,8 @@ public class GenericAxisTimeSeriesDataContainer implements IListDataContainer<Ca
   /**
    * @see org.kalypso.chart.framework.model.data.IDataContainer#getDomainRange()
    */
-  public IDataRange<Calendar> getDomainRange( )
+  @Override
+public IDataRange<Calendar> getDomainRange( )
   {
     return m_domainRange;
   }
@@ -117,7 +118,8 @@ public class GenericAxisTimeSeriesDataContainer implements IListDataContainer<Ca
   /**
    * @see org.kalypso.chart.framework.model.data.IDataContainer#getTargetRange()
    */
-  public IDataRange<Number> getTargetRange( )
+  @Override
+public IDataRange<Number> getTargetRange( )
   {
     return m_targetRange;
   }
@@ -125,7 +127,8 @@ public class GenericAxisTimeSeriesDataContainer implements IListDataContainer<Ca
   /**
    * @see org.kalypso.chart.framework.model.data.IDataContainer#isOpen()
    */
-  public boolean isOpen( )
+  @Override
+public boolean isOpen( )
   {
     return true;
   }
@@ -133,18 +136,21 @@ public class GenericAxisTimeSeriesDataContainer implements IListDataContainer<Ca
   /**
    * @see org.kalypso.chart.framework.model.data.IDataContainer#open()
    */
-  public void open( )
+  @Override
+public void open( )
   {
     // TODO Auto-generated method stub
 
   }
 
-  public List<Number> getTargetValues( )
+  @Override
+public List<Number> getTargetValues( )
   {
     return m_targetData;
   }
 
-  public List<Calendar> getDomainValues( )
+  @Override
+public List<Calendar> getDomainValues( )
   {
     return m_domainData;
   }

@@ -137,6 +137,7 @@ class PropertyIsBetweenComposite extends AbstractFilterComposite
     propViewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
 
+      @Override
       public void selectionChanged( SelectionChangedEvent event )
       {
         final Object firstElement = ((IStructuredSelection) event.getSelection()).getFirstElement();
@@ -164,6 +165,7 @@ class PropertyIsBetweenComposite extends AbstractFilterComposite
       m_lowerBText.setText( ((Literal) lB).getValue() );
     m_lowerBText.addModifyListener( new ModifyListener()
     {
+      @Override
       public void modifyText( ModifyEvent e )
       {
         m_lowerBTextModified = true;
@@ -211,6 +213,7 @@ class PropertyIsBetweenComposite extends AbstractFilterComposite
     m_upperBText.addModifyListener( new ModifyListener()
     {
 
+      @Override
       public void modifyText( ModifyEvent e )
       {
         m_upperBtextModified = true;

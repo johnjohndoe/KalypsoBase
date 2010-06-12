@@ -165,6 +165,7 @@ public class FeatureTemplateView extends ViewPart
     {
       workbench.getDisplay().asyncExec( new Runnable()
       {
+        @Override
         @SuppressWarnings("synthetic-access")//$NON-NLS-1$
         public void run( )
         {

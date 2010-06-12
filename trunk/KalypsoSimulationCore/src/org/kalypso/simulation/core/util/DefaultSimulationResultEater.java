@@ -67,6 +67,7 @@ public class DefaultSimulationResultEater implements ISimulationResultEater
   /**
    * @see org.kalypso.simulation.core.ISimulationResultEater#addResult(java.lang.String, java.lang.Object)
    */
+  @Override
   public void addResult( final String id, final Object result )
   {
     m_results.put( id, result );

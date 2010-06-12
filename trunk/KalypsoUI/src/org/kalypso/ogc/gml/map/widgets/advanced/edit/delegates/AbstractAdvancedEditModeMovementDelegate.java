@@ -44,8 +44,8 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.NotImplementedException;
@@ -54,13 +54,13 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.map.widgets.advanced.edit.AdvancedEditWidgetHelper;
+import org.kalypso.ogc.gml.map.widgets.advanced.edit.AdvancedEditWidgetHelper.DIRECTION;
 import org.kalypso.ogc.gml.map.widgets.advanced.edit.AdvancedEditWidgetResult;
 import org.kalypso.ogc.gml.map.widgets.advanced.edit.IAdvancedEditWidget;
 import org.kalypso.ogc.gml.map.widgets.advanced.edit.IAdvancedEditWidgetDataProvider;
 import org.kalypso.ogc.gml.map.widgets.advanced.edit.IAdvancedEditWidgetDelegate;
 import org.kalypso.ogc.gml.map.widgets.advanced.edit.IAdvancedEditWidgetResult;
 import org.kalypso.ogc.gml.map.widgets.advanced.edit.IAdvancedEditWidgetSnappedPoint;
-import org.kalypso.ogc.gml.map.widgets.advanced.edit.AdvancedEditWidgetHelper.DIRECTION;
 import org.kalypso.ogc.gml.map.widgets.advanced.utils.GeometryPainter;
 import org.kalypsodeegree.model.feature.Feature;
 

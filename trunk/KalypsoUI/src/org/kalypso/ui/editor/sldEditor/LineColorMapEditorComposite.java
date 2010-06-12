@@ -329,6 +329,7 @@ public class LineColorMapEditorComposite extends Composite
 
     fromEntryComposite.addModifyListener( new ILineColorMapEntryModifyListener()
     {
+      @Override
       public void onEntryChanged( final Object source, final LineColorMapEntry entry )
       {
         updateColorMap();

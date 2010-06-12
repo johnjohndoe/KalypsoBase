@@ -228,6 +228,7 @@ public class RuleTabItem
 
     editSymbolizerPanel.addPanelListener( new PanelListener()
     {
+      @Override
       public void valueChanged( final PanelEvent event )
       {
         final int action = ((EditSymbolizerPanel) event.getSource()).getAction();
@@ -301,6 +302,7 @@ public class RuleTabItem
 
     addSymbolizerPanel.addPanelListener( new PanelListener()
     {
+      @Override
       public void valueChanged( final PanelEvent event )
       {
         final Symbolizer symbolizer = ((AddSymbolizerPanel) event.getSource()).getSelection();
@@ -323,6 +325,7 @@ public class RuleTabItem
     button.setText( MessageBundle.STYLE_EDITOR_EDIT_FILTER );
     button.addSelectionListener( new SelectionListener()
     {
+      @Override
       public void widgetSelected( final SelectionEvent e )
       {
         final Filter oldFilter = m_rule.getFilter();
@@ -351,6 +354,7 @@ public class RuleTabItem
         }
       }
 
+      @Override
       public void widgetDefaultSelected( final SelectionEvent e )
       {
         widgetSelected( e );

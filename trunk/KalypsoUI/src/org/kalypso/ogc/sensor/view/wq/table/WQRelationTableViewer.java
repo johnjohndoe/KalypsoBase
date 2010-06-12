@@ -99,11 +99,13 @@ public class WQRelationTableViewer extends AbstractViewer
 
     m_combo.addSelectionListener( new SelectionListener()
     {
+      @Override
       public void widgetSelected( final SelectionEvent e )
       {
         comboSelected( combo );
       }
 
+      @Override
       public void widgetDefaultSelected( final SelectionEvent e )
       {
         // empty

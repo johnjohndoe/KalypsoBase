@@ -94,6 +94,7 @@ public class StatusLabelProvider extends LabelProvider implements ITableLabelPro
   /**
    * @see org.kalypso.gml.ui.jface.FeatureWrapperLabelProvider#getColumnImage(java.lang.Object, int)
    */
+  @Override
   @SuppressWarnings("restriction")//$NON-NLS-1$
   public Image getColumnImage( final Object element, final int columnIndex )
   {
@@ -128,6 +129,7 @@ public class StatusLabelProvider extends LabelProvider implements ITableLabelPro
   /**
    * @see org.kalypso.gml.ui.jface.FeatureWrapperLabelProvider#getColumnText(java.lang.Object, int)
    */
+  @Override
   public String getColumnText( final Object element, final int columnIndex )
   {
     final IStatus status = statusForElement( element );

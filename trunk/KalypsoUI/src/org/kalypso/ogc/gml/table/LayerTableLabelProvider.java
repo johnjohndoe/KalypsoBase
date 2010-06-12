@@ -68,6 +68,7 @@ public class LayerTableLabelProvider implements ITableLabelProvider, IColorProvi
   /**
    * @see org.eclipse.jface.viewers.IBaseLabelProvider#dispose()
    */
+  @Override
   public void dispose( )
   {
     // nothing to dispose
@@ -76,6 +77,7 @@ public class LayerTableLabelProvider implements ITableLabelProvider, IColorProvi
   /**
    * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang.Object, int)
    */
+  @Override
   public Image getColumnImage( final Object element, final int columnIndex )
   {
     // Extrawurscht, wenn Tabelle leer, da trotzdem mit index 0 aufgerufen wird
@@ -93,6 +95,7 @@ public class LayerTableLabelProvider implements ITableLabelProvider, IColorProvi
   /**
    * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.lang.Object, int)
    */
+  @Override
   public String getColumnText( final Object element, final int columnIndex )
   {
     // Extrawurscht, wenn Tabelle leer, da trotzdem mit index 0 aufgerufen wird
@@ -117,6 +120,7 @@ public class LayerTableLabelProvider implements ITableLabelProvider, IColorProvi
   /**
    * @see org.eclipse.jface.viewers.IBaseLabelProvider#addListener(org.eclipse.jface.viewers.ILabelProviderListener)
    */
+  @Override
   public void addListener( final ILabelProviderListener listener )
   {
     // TODO Listener informieren, wenn sich der Wert eines Features geändert
@@ -126,6 +130,7 @@ public class LayerTableLabelProvider implements ITableLabelProvider, IColorProvi
   /**
    * @see org.eclipse.jface.viewers.IBaseLabelProvider#isLabelProperty(java.lang.Object, java.lang.String)
    */
+  @Override
   public boolean isLabelProperty( final Object element, final String property )
   {
     return true;
@@ -134,6 +139,7 @@ public class LayerTableLabelProvider implements ITableLabelProvider, IColorProvi
   /**
    * @see org.eclipse.jface.viewers.IBaseLabelProvider#removeListener(org.eclipse.jface.viewers.ILabelProviderListener)
    */
+  @Override
   public void removeListener( final ILabelProviderListener listener )
   {
     // TODO
@@ -142,6 +148,7 @@ public class LayerTableLabelProvider implements ITableLabelProvider, IColorProvi
   /**
    * @see org.eclipse.jface.viewers.IColorProvider#getForeground(java.lang.Object)
    */
+  @Override
   public Color getForeground( final Object element )
   {
     return null;
@@ -150,6 +157,7 @@ public class LayerTableLabelProvider implements ITableLabelProvider, IColorProvi
   /**
    * @see org.eclipse.jface.viewers.IColorProvider#getBackground(java.lang.Object)
    */
+  @Override
   public Color getBackground( final Object element )
   {
 // if( element instanceof Feature )

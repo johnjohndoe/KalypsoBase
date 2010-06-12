@@ -1,8 +1,8 @@
 package de.openali.odysseus.service.ows.exception;
 
 import net.opengis.ows.ExceptionReportDocument;
-import net.opengis.ows.ExceptionType;
 import net.opengis.ows.ExceptionReportDocument.ExceptionReport;
+import net.opengis.ows.ExceptionType;
 
 public class OWSException extends Exception
 {

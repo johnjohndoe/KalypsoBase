@@ -195,6 +195,7 @@ public class ObservationChart extends JFreeChart implements IObsViewEventListene
   /**
    * @see org.kalypso.ogc.sensor.template.IObsViewEventListener#onObsViewChanged(org.kalypso.ogc.sensor.template.ObsViewEvent)
    */
+  @Override
   public void onObsViewChanged( final ObsViewEvent evt )
   {
     final CatchRunnable runnable = new CatchRunnable()
@@ -268,6 +269,7 @@ public class ObservationChart extends JFreeChart implements IObsViewEventListene
   /**
    * @see org.kalypso.ogc.sensor.template.IObsViewEventListener#onPrintObsView(org.kalypso.ogc.sensor.template.ObsViewEvent)
    */
+  @Override
   public final void onPrintObsView( final ObsViewEvent evt )
   {
     // use the ChartPanel to print

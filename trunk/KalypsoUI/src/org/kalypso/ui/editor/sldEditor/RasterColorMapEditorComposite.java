@@ -145,6 +145,7 @@ public abstract class RasterColorMapEditorComposite extends Composite
     fromEntryComposite.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     fromEntryComposite.addModifyListener( new IColorMapEntryModifyListener()
     {
+      @Override
       public void onEntryChanged( final Object source, final ColorMapEntry entry )
       {
         colorMapChanged();
@@ -155,6 +156,7 @@ public abstract class RasterColorMapEditorComposite extends Composite
     toEntryComposite.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     toEntryComposite.addModifyListener( new IColorMapEntryModifyListener()
     {
+      @Override
       public void onEntryChanged( final Object source, final ColorMapEntry entry )
       {
         colorMapChanged();
@@ -273,6 +275,7 @@ public abstract class RasterColorMapEditorComposite extends Composite
 
     minValueText.addFocusListener( new FocusListener()
     {
+      @Override
       @SuppressWarnings("synthetic-access")
       public void focusGained( final FocusEvent e )
       {
@@ -281,6 +284,7 @@ public abstract class RasterColorMapEditorComposite extends Composite
           m_minValue = value;
       }
 
+      @Override
       @SuppressWarnings("synthetic-access")
       public void focusLost( final FocusEvent e )
       {
@@ -295,6 +299,7 @@ public abstract class RasterColorMapEditorComposite extends Composite
 
     minValueText.addModifyListener( new ModifyListener()
     {
+      @Override
       @SuppressWarnings("synthetic-access")
       public void modifyText( final ModifyEvent e )
       {
@@ -332,6 +337,7 @@ public abstract class RasterColorMapEditorComposite extends Composite
 
     maxValueText.addFocusListener( new FocusListener()
     {
+      @Override
       @SuppressWarnings("synthetic-access")
       public void focusGained( final FocusEvent e )
       {
@@ -340,6 +346,7 @@ public abstract class RasterColorMapEditorComposite extends Composite
           m_maxValue = value;
       }
 
+      @Override
       @SuppressWarnings("synthetic-access")
       public void focusLost( final FocusEvent e )
       {
@@ -354,6 +361,7 @@ public abstract class RasterColorMapEditorComposite extends Composite
 
     maxValueText.addModifyListener( new ModifyListener()
     {
+      @Override
       @SuppressWarnings("synthetic-access")
       public void modifyText( final ModifyEvent e )
       {
@@ -405,6 +413,7 @@ public abstract class RasterColorMapEditorComposite extends Composite
 
     stepWidthText.addFocusListener( new FocusListener()
     {
+      @Override
       @SuppressWarnings("synthetic-access")
       public void focusGained( final FocusEvent e )
       {
@@ -413,6 +422,7 @@ public abstract class RasterColorMapEditorComposite extends Composite
           m_stepWidth = value;
       }
 
+      @Override
       @SuppressWarnings("synthetic-access")
       public void focusLost( final FocusEvent e )
       {
@@ -427,6 +437,7 @@ public abstract class RasterColorMapEditorComposite extends Composite
 
     stepWidthText.addModifyListener( new ModifyListener()
     {
+      @Override
       @SuppressWarnings("synthetic-access")
       public void modifyText( final ModifyEvent e )
       {

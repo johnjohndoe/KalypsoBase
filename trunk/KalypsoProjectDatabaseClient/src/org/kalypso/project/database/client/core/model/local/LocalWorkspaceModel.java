@@ -104,6 +104,7 @@ public class LocalWorkspaceModel implements ILocalWorkspaceModel
     m_listener.remove( listener );
   }
 
+  @Override
   public ILocalProject[] getProjects( )
   {
     return m_projects.toArray( new ILocalProject[] {} );

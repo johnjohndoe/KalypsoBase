@@ -160,6 +160,7 @@ public class RulePatternInputPanel
     okButton.setToolTipText( MessageBundle.STYLE_EDITOR_OK );
     okButton.addMouseListener( new MouseListener()
     {
+      @Override
       public void mouseDoubleClick( MouseEvent e )
       {
         try
@@ -218,11 +219,13 @@ public class RulePatternInputPanel
         }
       }
 
+      @Override
       public void mouseDown( MouseEvent e )
       {
         mouseDoubleClick( e );
       }
 
+      @Override
       public void mouseUp( MouseEvent e )
       {
       // nothing

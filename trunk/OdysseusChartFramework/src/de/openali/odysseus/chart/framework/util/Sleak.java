@@ -62,7 +62,8 @@ public class Sleak
 		list = new List(shell, SWT.BORDER | SWT.V_SCROLL);
 		list.addListener(SWT.Selection, new Listener()
 		{
-			public void handleEvent(Event event)
+			@Override
+      public void handleEvent(Event event)
 			{
 				refreshObject();
 			}
@@ -71,7 +72,8 @@ public class Sleak
 		canvas = new Canvas(shell, SWT.BORDER);
 		canvas.addListener(SWT.Paint, new Listener()
 		{
-			public void handleEvent(Event event)
+			@Override
+      public void handleEvent(Event event)
 			{
 				paintCanvas(event);
 			}
@@ -80,7 +82,8 @@ public class Sleak
 		check.setText("Stack");
 		check.addListener(SWT.Selection, new Listener()
 		{
-			public void handleEvent(Event e)
+			@Override
+      public void handleEvent(Event e)
 			{
 				toggleStackTrace();
 			}
@@ -89,7 +92,8 @@ public class Sleak
 		start.setText("Snap");
 		start.addListener(SWT.Selection, new Listener()
 		{
-			public void handleEvent(Event event)
+			@Override
+      public void handleEvent(Event event)
 			{
 				refreshAll();
 			}
@@ -98,7 +102,8 @@ public class Sleak
 		stop.setText("Diff");
 		stop.addListener(SWT.Selection, new Listener()
 		{
-			public void handleEvent(Event event)
+			@Override
+      public void handleEvent(Event event)
 			{
 				refreshDifference();
 			}
@@ -107,7 +112,8 @@ public class Sleak
 		label.setText("0 object(s)");
 		shell.addListener(SWT.Resize, new Listener()
 		{
-			public void handleEvent(Event e)
+			@Override
+      public void handleEvent(Event e)
 			{
 				layout();
 			}

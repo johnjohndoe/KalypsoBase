@@ -57,10 +57,12 @@ public class DummyDataOperator<T> implements IDataOperator<T>
   /**
    * @see de.openali.odysseus.chart.framework.model.data.IDataOperator#getComparator()
    */
+  @Override
   public Comparator<T> getComparator( )
   {
     return new Comparator<T>()
     {
+      @Override
       public int compare( T o1, T o2 )
       {
         return 0;
@@ -72,6 +74,7 @@ public class DummyDataOperator<T> implements IDataOperator<T>
   /**
    * @see de.openali.odysseus.chart.framework.model.data.IDataOperator#getFormat(de.openali.odysseus.chart.framework.model.data.IDataRange)
    */
+  @Override
   public Format getFormat( IDataRange<Number> range )
   {
     return new Format()
@@ -94,6 +97,7 @@ public class DummyDataOperator<T> implements IDataOperator<T>
   /**
    * @see de.openali.odysseus.chart.framework.model.data.IDataOperator#logicalToNumeric(java.lang.Object)
    */
+  @Override
   public Number logicalToNumeric( T logVal )
   {
     return Double.NaN;
@@ -102,6 +106,7 @@ public class DummyDataOperator<T> implements IDataOperator<T>
   /**
    * @see de.openali.odysseus.chart.framework.model.data.IDataOperator#numericToLogical(java.lang.Number)
    */
+  @Override
   public T numericToLogical( Number numVal )
   {
     return null;
@@ -110,6 +115,7 @@ public class DummyDataOperator<T> implements IDataOperator<T>
   /**
    * @see de.openali.odysseus.chart.framework.model.data.IStringDataConverter#logicalToString(java.lang.Object)
    */
+  @Override
   public String logicalToString( T value )
   {
     return "";
@@ -118,6 +124,7 @@ public class DummyDataOperator<T> implements IDataOperator<T>
   /**
    * @see de.openali.odysseus.chart.framework.model.data.IStringParser#getFormatHint()
    */
+  @Override
   public String getFormatHint( )
   {
     return "no hint - this is a dummy implementation";
@@ -126,6 +133,7 @@ public class DummyDataOperator<T> implements IDataOperator<T>
   /**
    * @see de.openali.odysseus.chart.framework.model.data.IStringParser#stringToLogical(java.lang.String)
    */
+  @Override
   public T stringToLogical( String value )
   {
     return null;

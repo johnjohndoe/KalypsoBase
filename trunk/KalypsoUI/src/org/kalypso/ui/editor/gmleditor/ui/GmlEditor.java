@@ -127,6 +127,7 @@ public class GmlEditor extends AbstractEditorPart implements IEditorPart, IComma
 
       getEditorSite().getShell().getDisplay().asyncExec( new Runnable()
       {
+        @Override
         public void run( )
         {
           try
@@ -192,6 +193,7 @@ public class GmlEditor extends AbstractEditorPart implements IEditorPart, IComma
     menuManager.setRemoveAllWhenShown( true );
     menuManager.addMenuListener( new IMenuListener()
     {
+      @Override
       public void menuAboutToShow( final IMenuManager manager )
       {
         handleMenuAboutToShow( manager );

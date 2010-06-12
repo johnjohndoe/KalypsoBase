@@ -70,6 +70,7 @@ public class AddRelationCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#isUndoable()
    */
+  @Override
   public boolean isUndoable( )
   {
     return true;
@@ -78,6 +79,7 @@ public class AddRelationCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#process()
    */
+  @Override
   public void process( ) throws Exception
   {
     final GMLWorkspace workspace = m_srcFE.getWorkspace();
@@ -89,6 +91,7 @@ public class AddRelationCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#redo()
    */
+  @Override
   public void redo( ) throws Exception
   {
     process();
@@ -97,6 +100,7 @@ public class AddRelationCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#undo()
    */
+  @Override
   public void undo( ) throws Exception
   {
     if( m_linkFeature == null )
@@ -110,6 +114,7 @@ public class AddRelationCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#getDescription()
    */
+  @Override
   public String getDescription( )
   {
     return null;

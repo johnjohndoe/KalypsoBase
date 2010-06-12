@@ -77,6 +77,7 @@ public class PointFeatureDialog implements IFeatureDialog
   /**
    * @see org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog#open(org.eclipse.swt.widgets.Shell)
    */
+  @Override
   public int open( final Shell shell )
   {
     final GM_Point point = (GM_Point) m_feature.getProperty( m_ftp );
@@ -117,6 +118,7 @@ public class PointFeatureDialog implements IFeatureDialog
   /**
    * @see org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog#collectChanges(java.util.Collection)
    */
+  @Override
   public void collectChanges( final Collection<FeatureChange> c )
   {
     if( c != null && m_change != null )
@@ -126,6 +128,7 @@ public class PointFeatureDialog implements IFeatureDialog
   /**
    * @see org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog#getLabel()
    */
+  @Override
   public String getLabel( )
   {
     return Messages.getString( "org.kalypso.ogc.gml.featureview.dialog.PointFeatureDialog.values" ); //$NON-NLS-1$

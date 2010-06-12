@@ -150,6 +150,7 @@ public class SWTDayChooser extends Composite
         addKeyListener(this);
 
         addDisposeListener(new DisposeListener() {
+            @Override
             public void widgetDisposed(DisposeEvent event) {
                 otherMonthColor.dispose();
             }
@@ -283,6 +284,7 @@ public class SWTDayChooser extends Composite
     /* (non-Javadoc)
      * @see org.eclipse.swt.events.MouseListener#mouseDown(org.eclipse.swt.events.MouseEvent)
      */
+    @Override
     public void mouseDown(MouseEvent event) {
         if (event.button == 1) { // Left click
             setFocus();
@@ -297,18 +299,21 @@ public class SWTDayChooser extends Composite
     /* (non-Javadoc)
      * @see org.eclipse.swt.events.MouseListener#mouseDoubleClick(org.eclipse.swt.events.MouseEvent)
      */
+    @Override
     public void mouseDoubleClick(MouseEvent event) {
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.swt.events.MouseListener#mouseUp(org.eclipse.swt.events.MouseEvent)
      */
+    @Override
     public void mouseUp(MouseEvent event) {
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.swt.events.FocusListener#focusGained(org.eclipse.swt.events.FocusEvent)
      */
+    @Override
     public void focusGained(FocusEvent event) {
         DayControl selectedDay = getSelectedDayControl();
         selectedDay.setBackground(getSelectionBackgroundColor());
@@ -318,6 +323,7 @@ public class SWTDayChooser extends Composite
     /* (non-Javadoc)
      * @see org.eclipse.swt.events.FocusListener#focusLost(org.eclipse.swt.events.FocusEvent)
      */
+    @Override
     public void focusLost(FocusEvent event) {
         DayControl selectedDay = getSelectedDayControl();
         selectedDay.setBackground(getSelectionBackgroundColor());
@@ -327,6 +333,7 @@ public class SWTDayChooser extends Composite
     /* (non-Javadoc)
      * @see org.eclipse.swt.events.TraverseListener#keyTraversed(org.eclipse.swt.events.TraverseEvent)
      */
+    @Override
     public void keyTraversed(TraverseEvent event) {
         switch (event.detail) {
             case SWT.TRAVERSE_ARROW_PREVIOUS:
@@ -345,6 +352,7 @@ public class SWTDayChooser extends Composite
     /* (non-Javadoc)
      * @see org.eclipse.swt.events.KeyListener#keyPressed(org.eclipse.swt.events.KeyEvent)
      */
+    @Override
     public void keyPressed(KeyEvent event) {
         switch (event.keyCode) {
             case SWT.ARROW_LEFT:
@@ -376,6 +384,7 @@ public class SWTDayChooser extends Composite
     /* (non-Javadoc)
      * @see org.eclipse.swt.events.KeyListener#keyReleased(org.eclipse.swt.events.KeyEvent)
      */
+    @Override
     public void keyReleased(KeyEvent event) {
     }
 
@@ -438,6 +447,7 @@ public class SWTDayChooser extends Composite
     /* (non-Javadoc)
      * @see org.eclipse.swt.widgets.Control#isFocusControl()
      */
+    @Override
     public boolean isFocusControl() {
         for (Control control = getDisplay().getFocusControl(); control != null; control = control.getParent()) {
             if (control == this) {
@@ -483,6 +493,7 @@ public class SWTDayChooser extends Composite
     /* (non-Javadoc)
      * @see org.eclipse.swt.widgets.Control#setFont(org.eclipse.swt.graphics.Font)
      */
+    @Override
     public void setFont(Font font) {
         super.setFont(font);
 
@@ -542,6 +553,7 @@ public class SWTDayChooser extends Composite
         /* (non-Javadoc)
          * @see org.eclipse.swt.widgets.Control#setFont(org.eclipse.swt.graphics.Font)
          */
+        @Override
         public void setFont(Font font) {
             super.setFont(font);
             filler.setFont(font);
@@ -551,6 +563,7 @@ public class SWTDayChooser extends Composite
         /* (non-Javadoc)
          * @see org.eclipse.swt.widgets.Control#setBackground(org.eclipse.swt.graphics.Color)
          */
+        @Override
         public void setBackground(Color color) {
             filler.setBackground(color);
             label.setBackground(color);
@@ -559,6 +572,7 @@ public class SWTDayChooser extends Composite
         /* (non-Javadoc)
          * @see org.eclipse.swt.widgets.Control#setForeground(org.eclipse.swt.graphics.Color)
          */
+        @Override
         public void setForeground(Color color) {
             label.setForeground(color);
         }
@@ -570,6 +584,7 @@ public class SWTDayChooser extends Composite
         /* (non-Javadoc)
          * @see org.eclipse.swt.widgets.Listener#handleEvent(org.eclipse.swt.widgets.Event)
          */
+        @Override
         public void handleEvent(Event event) {
             notifyListeners(event.type, event);
         }
@@ -583,6 +598,7 @@ public class SWTDayChooser extends Composite
         /* (non-Javadoc)
          * @see org.eclipse.swt.widgets.Control#computeSize(int, int, boolean)
          */
+        @Override
         public Point computeSize(int wHint, int hHint, boolean changed) {
             if (wHint == SWT.DEFAULT) {
                 GC gc = new GC(this);
@@ -596,6 +612,7 @@ public class SWTDayChooser extends Composite
         /* (non-Javadoc)
          * @see org.eclipse.swt.widgets.Widget#checkSubclass()
          */
+        @Override
         protected void checkSubclass() {
         }
     }

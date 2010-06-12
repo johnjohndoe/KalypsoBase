@@ -92,6 +92,7 @@ public abstract class AbstractComponentUiHandler implements IComponentUiHandler
   /**
    * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#getIdentity()
    */
+  @Override
   public String getIdentity( )
   {
     return ObjectUtils.identityToString( this );
@@ -105,6 +106,7 @@ public abstract class AbstractComponentUiHandler implements IComponentUiHandler
   /**
    * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#getStringRepresentation(org.kalypso.observation.result.IRecord)
    */
+  @Override
   public String getStringRepresentation( final IRecord record )
   {
 
@@ -125,6 +127,7 @@ public abstract class AbstractComponentUiHandler implements IComponentUiHandler
   /**
    * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#getImage(org.kalypso.observation.result.IRecord)
    */
+  @Override
   public Image getImage( final IRecord record )
   {
     return null;
@@ -133,6 +136,7 @@ public abstract class AbstractComponentUiHandler implements IComponentUiHandler
   /**
    * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#isEditable()
    */
+  @Override
   public boolean isEditable( )
   {
     return m_editable;
@@ -141,6 +145,7 @@ public abstract class AbstractComponentUiHandler implements IComponentUiHandler
   /**
    * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#isResizeable()
    */
+  @Override
   public boolean isResizeable( )
   {
     return m_resizeable;
@@ -149,16 +154,19 @@ public abstract class AbstractComponentUiHandler implements IComponentUiHandler
   /**
    * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#isMoveable()
    */
+  @Override
   public boolean isMoveable( )
   {
     return m_moveable;
   }
 
+  @Override
   public int getColumnStyle( )
   {
     return m_columnStyle;
   }
 
+  @Override
   public int getColumnWidth( )
   {
     return m_columnWidth;
@@ -167,6 +175,7 @@ public abstract class AbstractComponentUiHandler implements IComponentUiHandler
   /**
    * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#getColumnWidthPercent()
    */
+  @Override
   public int getColumnWidthPercent( )
   {
     return m_columnWidthPercent;
@@ -190,6 +199,7 @@ public abstract class AbstractComponentUiHandler implements IComponentUiHandler
   /**
    * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#getColumnLabel()
    */
+  @Override
   public String getColumnLabel( )
   {
     return m_columnLabel;

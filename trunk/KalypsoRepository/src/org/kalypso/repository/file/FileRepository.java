@@ -102,6 +102,7 @@ public class FileRepository extends AbstractRepository
   /**
    * @see org.kalypso.repository.IRepositoryItem#getChildren()
    */
+  @Override
   public IRepositoryItem[] getChildren( )
   {
     return createItem( m_root ).getChildren();
@@ -110,6 +111,7 @@ public class FileRepository extends AbstractRepository
   /**
    * @see org.kalypso.repository.IRepositoryItem#hasChildren()
    */
+  @Override
   public boolean hasChildren( )
   {
     return m_root.isDirectory();
@@ -134,6 +136,7 @@ public class FileRepository extends AbstractRepository
   /**
    * @see org.kalypso.repository.IRepository#reload()
    */
+  @Override
   public void reload( )
   {
     fireRepositoryStructureChanged();
@@ -142,6 +145,7 @@ public class FileRepository extends AbstractRepository
   /**
    * @see org.kalypso.repository.IRepository#findItem(java.lang.String)
    */
+  @Override
   public IRepositoryItem findItem( final String id )
   {
     // both lowercase to be sure comparison is done homogeneously
@@ -177,9 +181,8 @@ public class FileRepository extends AbstractRepository
   /**
    * @see org.kalypso.repository.AbstractRepository#getAdapter(java.lang.Class)
    */
-  @SuppressWarnings("unchecked")
   @Override
-  public Object getAdapter( final Class anotherClass )
+  public Object getAdapter( @SuppressWarnings("rawtypes") final Class anotherClass )
   {
     if( File.class.equals( anotherClass ) )
       return m_root;
@@ -211,13 +214,12 @@ public class FileRepository extends AbstractRepository
    * @see org.kalypso.repository.IRepositoryItem#hasAdapter(java.lang.Class)
    */
   @Override
-  public boolean hasAdapter( final Class adapter )
+  public boolean hasAdapter( final Class< ? > adapter )
   {
     if( getAdapter( adapter ) == null )
       return false;
 
     return true;
   }
-
 
 }

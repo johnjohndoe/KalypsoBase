@@ -113,6 +113,7 @@ public class SimulationInfo implements Serializable, ISimulationMonitor
   /**
    * @see org.kalypso.services.calculation.job.ICalcMonitor#getProgress()
    */
+  @Override
   public int getProgress( )
   {
     return m_progress;
@@ -126,6 +127,7 @@ public class SimulationInfo implements Serializable, ISimulationMonitor
   /**
    * @see org.kalypso.services.calculation.job.ICalcMonitor#getMessage()
    */
+  @Override
   public String getMessage( )
   {
     return m_message;
@@ -141,6 +143,7 @@ public class SimulationInfo implements Serializable, ISimulationMonitor
     m_id = string;
   }
 
+  @Override
   public void setProgress( final int i )
   {
     m_progress = i;
@@ -154,6 +157,7 @@ public class SimulationInfo implements Serializable, ISimulationMonitor
   /**
    * @see org.kalypso.services.calculation.job.ICalcMonitor#setMessage(java.lang.String)
    */
+  @Override
   public void setMessage( final String message )
   {
     m_message = message;
@@ -172,6 +176,7 @@ public class SimulationInfo implements Serializable, ISimulationMonitor
   /**
    * @see org.kalypso.services.calculation.job.ICalcMonitor#cancel()
    */
+  @Override
   public void cancel( )
   {
     m_state = ISimulationConstants.STATE.CANCELED;
@@ -180,11 +185,13 @@ public class SimulationInfo implements Serializable, ISimulationMonitor
   /**
    * @see org.kalypso.services.calculation.job.ICalcMonitor#isCanceled()
    */
+  @Override
   public boolean isCanceled( )
   {
     return m_state == ISimulationConstants.STATE.CANCELED;
   }
 
+  @Override
   public String getFinishText( )
   {
     return m_finishText;
@@ -198,6 +205,7 @@ public class SimulationInfo implements Serializable, ISimulationMonitor
   /**
    * @see org.kalypso.services.calculation.job.ICalcMonitor#setFinishInfo(int, java.lang.String)
    */
+  @Override
   public void setFinishInfo( final int status, final String text )
   {
     setFinishStatus( status );
@@ -209,6 +217,7 @@ public class SimulationInfo implements Serializable, ISimulationMonitor
     m_status = status;
   }
 
+  @Override
   public int getFinishStatus( )
   {
     return m_status;

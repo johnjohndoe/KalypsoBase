@@ -55,6 +55,7 @@ public class ObsTemplateLauncher implements IEditorLauncher
   /**
    * @see org.eclipse.ui.IEditorLauncher#open(org.eclipse.core.runtime.IPath)
    */
+  @Override
   public void open( final IPath filePath )
   {
     final IOFileFilter ottFilter = FileFilterUtils.suffixFileFilter( ".ott" ); //$NON-NLS-1$

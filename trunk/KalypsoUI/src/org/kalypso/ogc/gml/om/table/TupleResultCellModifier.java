@@ -55,12 +55,14 @@ public class TupleResultCellModifier implements ICellModifier
     m_contentProvider = contentProvider;
   }
 
+  @Override
   public boolean canModify( final Object element, final String handlerId )
   {
     final IComponentUiHandler handler = m_contentProvider.getHandler( handlerId );
     return handler.isEditable();
   }
 
+  @Override
   public Object getValue( final Object element, final String handlerId )
   {
     final IRecord record = (IRecord) element;
@@ -69,6 +71,7 @@ public class TupleResultCellModifier implements ICellModifier
     return handler.doGetValue( record );
   }
 
+  @Override
   public void modify( final Object element, final String property, final Object value )
   {
     IRecord record;

@@ -55,9 +55,9 @@ import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyle;
-import de.openali.odysseus.chart.framework.model.style.ITextStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyleConstants.FONTSTYLE;
 import de.openali.odysseus.chart.framework.model.style.IStyleConstants.FONTWEIGHT;
+import de.openali.odysseus.chart.framework.model.style.ITextStyle;
 import de.openali.odysseus.chart.framework.model.style.impl.ColorFill;
 import de.openali.odysseus.chart.framework.model.style.impl.ImageFill;
 import de.openali.odysseus.chart.framework.model.style.impl.ImageMarker;
@@ -74,8 +74,8 @@ import de.openali.odysseus.chartconfig.x020.PointStyleType;
 import de.openali.odysseus.chartconfig.x020.PointType;
 import de.openali.odysseus.chartconfig.x020.PolygonMarkerType;
 import de.openali.odysseus.chartconfig.x020.StrokeType;
-import de.openali.odysseus.chartconfig.x020.TextStyleType;
 import de.openali.odysseus.chartconfig.x020.StylesDocument.Styles;
+import de.openali.odysseus.chartconfig.x020.TextStyleType;
 
 /**
  * @author alibu
@@ -198,7 +198,6 @@ public class StyleFactory
     return style;
   }
 
-  @SuppressWarnings("unchecked")
   public static ILineStyle createLineStyle( final LineStyleType lst )
   {
     final ILineStyle style = StyleUtils.getDefaultLineStyle();
@@ -228,7 +227,7 @@ public class StyleFactory
 
     if( lst.isSetDashArray1() )
     {
-      final List dashArray1 = lst.getDashArray1();
+      final List< ? > dashArray1 = lst.getDashArray1();
       dashArray = new float[dashArray1.size()];
       for( int i = 0; i < dashArray.length; i++ )
       {
@@ -253,10 +252,8 @@ public class StyleFactory
    * elements); their equivalent elements had to be declared as groups in XML Schema, so they aren't related to each
    * other
    */
-  @SuppressWarnings("unchecked")
   public static void setStrokeAttributes( final ILineStyle style, final StrokeType st )
   {
-
     // visible
     if( st.isSetIsVisible() )
     {
@@ -278,7 +275,7 @@ public class StyleFactory
 
     if( st.isSetDashArray1() )
     {
-      final List dashArray1 = st.getDashArray1();
+      final List< ? > dashArray1 = st.getDashArray1();
       dashArray = new float[dashArray1.size()];
       for( int i = 0; i < dashArray.length; i++ )
       {

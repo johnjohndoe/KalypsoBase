@@ -159,6 +159,7 @@ public class StrokeEditorComposite extends Composite
 
     this.addDisposeListener( new DisposeListener()
     {
+      @Override
       public void widgetDisposed( final DisposeEvent e )
       {
         disposeControl();
@@ -214,6 +215,7 @@ public class StrokeEditorComposite extends Composite
     // selection listener
     lineTypeCombo.addSelectionChangedListener( new ISelectionChangedListener()
     {
+      @Override
       @SuppressWarnings("synthetic-access") //$NON-NLS-1$
       public void selectionChanged( final SelectionChangedEvent event )
       {

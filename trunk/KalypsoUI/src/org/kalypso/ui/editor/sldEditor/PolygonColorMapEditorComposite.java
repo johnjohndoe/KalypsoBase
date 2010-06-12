@@ -169,6 +169,7 @@ public abstract class PolygonColorMapEditorComposite extends Composite
     fromEntryComposite.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     fromEntryComposite.addModifyListener( new IPolygonColorMapEntryModifyListener()
     {
+      @Override
       public void onEntryChanged( final Object source, final PolygonColorMapEntry entry )
       {
         colorMapChanged();
@@ -179,6 +180,7 @@ public abstract class PolygonColorMapEditorComposite extends Composite
     toEntryComposite.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     toEntryComposite.addModifyListener( new IPolygonColorMapEntryModifyListener()
     {
+      @Override
       public void onEntryChanged( final Object source, final PolygonColorMapEntry entry )
       {
         colorMapChanged();
@@ -273,6 +275,7 @@ public abstract class PolygonColorMapEditorComposite extends Composite
 
     minValueText.addFocusListener( new FocusListener()
     {
+      @Override
       @SuppressWarnings("synthetic-access")//$NON-NLS-1$
       public void focusGained( final FocusEvent e )
       {
@@ -281,6 +284,7 @@ public abstract class PolygonColorMapEditorComposite extends Composite
           m_minValue = value;
       }
 
+      @Override
       @SuppressWarnings("synthetic-access")//$NON-NLS-1$
       public void focusLost( final FocusEvent e )
       {
@@ -295,6 +299,7 @@ public abstract class PolygonColorMapEditorComposite extends Composite
 
     minValueText.addModifyListener( new ModifyListener()
     {
+      @Override
       @SuppressWarnings("synthetic-access")//$NON-NLS-1$
       public void modifyText( final ModifyEvent e )
       {
@@ -332,6 +337,7 @@ public abstract class PolygonColorMapEditorComposite extends Composite
 
     maxValueText.addFocusListener( new FocusListener()
     {
+      @Override
       @SuppressWarnings("synthetic-access")//$NON-NLS-1$
       public void focusGained( final FocusEvent e )
       {
@@ -340,6 +346,7 @@ public abstract class PolygonColorMapEditorComposite extends Composite
           m_maxValue = value;
       }
 
+      @Override
       @SuppressWarnings("synthetic-access")//$NON-NLS-1$
       public void focusLost( final FocusEvent e )
       {
@@ -354,6 +361,7 @@ public abstract class PolygonColorMapEditorComposite extends Composite
 
     maxValueText.addModifyListener( new ModifyListener()
     {
+      @Override
       @SuppressWarnings("synthetic-access")//$NON-NLS-1$
       public void modifyText( final ModifyEvent e )
       {
@@ -391,6 +399,7 @@ public abstract class PolygonColorMapEditorComposite extends Composite
 
     stepWidthText.addFocusListener( new FocusListener()
     {
+      @Override
       @SuppressWarnings("synthetic-access")//$NON-NLS-1$
       public void focusGained( final FocusEvent e )
       {
@@ -399,6 +408,7 @@ public abstract class PolygonColorMapEditorComposite extends Composite
           m_stepWidth = value;
       }
 
+      @Override
       @SuppressWarnings("synthetic-access")//$NON-NLS-1$
       public void focusLost( final FocusEvent e )
       {
@@ -413,6 +423,7 @@ public abstract class PolygonColorMapEditorComposite extends Composite
 
     stepWidthText.addModifyListener( new ModifyListener()
     {
+      @Override
       @SuppressWarnings("synthetic-access")//$NON-NLS-1$
       public void modifyText( final ModifyEvent e )
       {

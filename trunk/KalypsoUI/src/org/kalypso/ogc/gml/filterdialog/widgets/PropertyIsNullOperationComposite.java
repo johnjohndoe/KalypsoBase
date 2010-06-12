@@ -105,6 +105,7 @@ class PropertyIsNullOperationComposite extends AbstractFilterComposite
     m_propViewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
 
+      @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
         final Object firstElement = ((IStructuredSelection) event.getSelection()).getFirstElement();

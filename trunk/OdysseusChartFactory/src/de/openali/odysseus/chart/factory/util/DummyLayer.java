@@ -91,6 +91,7 @@ public class DummyLayer implements IChartLayer
   /**
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#getDescription()
    */
+  @Override
   public String getDescription( )
   {
     return m_description;
@@ -110,6 +111,7 @@ public class DummyLayer implements IChartLayer
   /**
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#getTitle()
    */
+  @Override
   public String getTitle( )
   {
     return m_title;
@@ -118,6 +120,7 @@ public class DummyLayer implements IChartLayer
   /**
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#getId()
    */
+  @Override
   public String getId( )
   {
     return m_id;
@@ -137,6 +140,7 @@ public class DummyLayer implements IChartLayer
   /**
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#getVisibility()
    */
+  @Override
   public boolean isVisible( )
   {
     return m_isVisible;
@@ -145,6 +149,7 @@ public class DummyLayer implements IChartLayer
   /**
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#isActive()
    */
+  @Override
   public boolean isActive( )
   {
     return m_isActive;
@@ -153,6 +158,7 @@ public class DummyLayer implements IChartLayer
   /**
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#isActive()
    */
+  @Override
   public void setActive( final boolean isActive )
   {
     m_isActive = isActive;
@@ -161,6 +167,7 @@ public class DummyLayer implements IChartLayer
   /**
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#setDescription(java.lang.String)
    */
+  @Override
   public void setDescription( final String description )
   {
     m_description = description;
@@ -169,6 +176,7 @@ public class DummyLayer implements IChartLayer
   /**
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#setTitle(java.lang.String)
    */
+  @Override
   public void setTitle( final String title )
   {
     m_title = title;
@@ -177,6 +185,7 @@ public class DummyLayer implements IChartLayer
   /**
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#setID(java.lang.String)
    */
+  @Override
   public void setId( final String id )
   {
     m_id = id;
@@ -185,19 +194,18 @@ public class DummyLayer implements IChartLayer
   /**
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#setVisibility(boolean)
    */
+  @Override
   public void setVisible( final boolean isVisible )
   {
     m_isVisible = isVisible;
     m_handler.fireLayerVisibilityChanged( this );
   }
 
-  @SuppressWarnings("unchecked")
   public IDataContainer getDataContainer( )
   {
     return null;
   }
 
-  @SuppressWarnings("unchecked")
   public void setDataContainer( @SuppressWarnings("unused") final IDataContainer data )
   {
     // nothing to do;
@@ -206,6 +214,7 @@ public class DummyLayer implements IChartLayer
   /**
    * @see org.kalypso.chart.framework.model.layer.IChartLayer#setData()
    */
+  @Override
   public void setData( final String id, final Object data )
   {
     m_data.put( id, data );
@@ -214,16 +223,19 @@ public class DummyLayer implements IChartLayer
   /**
    * @see org.kalypso.chart.framework.model.layer.IChartLayer#getData()
    */
+  @Override
   public Object getData( final String id )
   {
     return m_data.get( id );
   }
 
+  @Override
   public void addListener( final ILayerEventListener l )
   {
     m_handler.addListener( l );
   }
 
+  @Override
   public void removeListener( final ILayerEventListener l )
   {
     m_handler.removeListener( l );
@@ -249,6 +261,7 @@ public class DummyLayer implements IChartLayer
   /**
    * @see org.kalypso.chart.framework.model.layer.IChartLayer#paint(org.eclipse.swt.graphics.GC)
    */
+  @Override
   public void paint( final GC gc )
   {
     // TODO Auto-generated method stub
@@ -258,6 +271,7 @@ public class DummyLayer implements IChartLayer
   /**
    * @see org.kalypso.chart.framework.model.layer.IChartLayer#getDomainRange()
    */
+  @Override
   public IDataRange<Number> getDomainRange( )
   {
     return null;
@@ -266,6 +280,7 @@ public class DummyLayer implements IChartLayer
   /**
    * @see org.kalypso.chart.framework.model.layer.IChartLayer#getTargetRange()
    */
+  @Override
   public IDataRange<Number> getTargetRange( )
   {
     return null;
@@ -274,6 +289,7 @@ public class DummyLayer implements IChartLayer
   /**
    * @see org.kalypso.chart.framework.model.layer.IChartLayer#getCoordinateMapper()
    */
+  @Override
   public ICoordinateMapper getCoordinateMapper( )
   {
     return m_coordinateMapper;
@@ -282,6 +298,7 @@ public class DummyLayer implements IChartLayer
   /**
    * @see org.kalypso.chart.framework.model.layer.IChartLayer#setCoordinateMapper(org.kalypso.chart.framework.model.mapper.ICoordinateMapper)
    */
+  @Override
   public void setCoordinateMapper( final ICoordinateMapper coordinateMapper )
   {
     m_coordinateMapper = coordinateMapper;
@@ -295,6 +312,7 @@ public class DummyLayer implements IChartLayer
   /**
    * @see org.kalypso.chart.framework.model.layer.IChartLayer#init()
    */
+  @Override
   public void init( )
   {
     // nothing to do
@@ -303,6 +321,7 @@ public class DummyLayer implements IChartLayer
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#dispose()
    */
+  @Override
   public void dispose( )
   {
     // nothing to do
@@ -311,20 +330,20 @@ public class DummyLayer implements IChartLayer
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getLegendEntries(org.eclipse.swt.graphics.Point)
    */
+  @Override
   public ILegendEntry[] getLegendEntries( )
   {
-    final LegendEntry le = new LegendEntry(this, m_description)
+    final LegendEntry le = new LegendEntry( this, m_description )
     {
 
-      
       @Override
       public void paintSymbol( final GC gc, final Point size )
       {
-        //nothing to do
+        // nothing to do
       }
-      
+
     };
-    return new ILegendEntry[]{le};
+    return new ILegendEntry[] { le };
   }
 
   /**

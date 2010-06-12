@@ -151,6 +151,7 @@ public class PointSymbolizerLayout extends AbstractSymbolizerLayout
     final SliderPanel graphicSizePanel = new SliderPanel( graphicDetails, MessageBundle.STYLE_EDITOR_SIZE, 1, 15, 1, SliderPanel.INTEGER, graphic.getSize( null ) );
     graphicSizePanel.addPanelListener( new PanelListener()
     {
+      @Override
       public void valueChanged( final PanelEvent event )
       {
         final double size = ((SliderPanel) event.getSource()).getSelection();
@@ -176,6 +177,7 @@ public class PointSymbolizerLayout extends AbstractSymbolizerLayout
     final SliderPanel rotationPanel = new SliderPanel( graphicDetails, MessageBundle.STYLE_EDITOR_ROTATION, 0, 360, 15, SliderPanel.INTEGER, graphic.getRotation( null ) * 180 );
     rotationPanel.addPanelListener( new PanelListener()
     {
+      @Override
       public void valueChanged( final PanelEvent event )
       {
         final double rotation = ((SliderPanel) event.getSource()).getSelection();
@@ -187,6 +189,7 @@ public class PointSymbolizerLayout extends AbstractSymbolizerLayout
     final ConfigurePointSymbolizerPanel configurePointSymbolizerPanel = new ConfigurePointSymbolizerPanel( graphicDetails, objects.length );
     configurePointSymbolizerPanel.addPanelListener( new PanelListener()
     {
+      @Override
       public void valueChanged( final PanelEvent event )
       {
         final int action = ((ConfigurePointSymbolizerPanel) event.getSource()).getAction();
@@ -321,6 +324,7 @@ public class PointSymbolizerLayout extends AbstractSymbolizerLayout
       final ComboPanel wellKnownNameComboBox = new WellKnownNameComboPanel( group, MessageBundle.STYLE_EDITOR_TYPE, mark.getWellKnownName() );
       wellKnownNameComboBox.addPanelListener( new PanelListener()
       {
+        @Override
         public void valueChanged( final PanelEvent event )
         {
           final int index = ((ComboPanel) event.getSource()).getSelection();
@@ -337,6 +341,7 @@ public class PointSymbolizerLayout extends AbstractSymbolizerLayout
       final ColorChooserPanel fillColorChooserPanel = new ColorChooserPanel( group, MessageBundle.STYLE_EDITOR_FILL_COLOR, markFill.getFill( null ) );
       fillColorChooserPanel.addColorChooserListener( new PanelListener()
       {
+        @Override
         public void valueChanged( final PanelEvent event )
         {
           final Color color = ((ColorChooserPanel) event.getSource()).getColor();
@@ -348,6 +353,7 @@ public class PointSymbolizerLayout extends AbstractSymbolizerLayout
       final SliderPanel fillOpacityPanel = new SliderPanel( group, MessageBundle.STYLE_EDITOR_FILL_OPACITY, 0, 1, 1, SliderPanel.DECIMAL, markFill.getOpacity( null ) );
       fillOpacityPanel.addPanelListener( new PanelListener()
       {
+        @Override
         public void valueChanged( final PanelEvent event )
         {
           final double opacity = ((SliderPanel) event.getSource()).getSelection();
@@ -364,6 +370,7 @@ public class PointSymbolizerLayout extends AbstractSymbolizerLayout
       final ColorChooserPanel strokeColorChooserPanel = new ColorChooserPanel( group, MessageBundle.STYLE_EDITOR_COLOR, markStroke.getStroke( null ) );
       strokeColorChooserPanel.addColorChooserListener( new PanelListener()
       {
+        @Override
         public void valueChanged( final PanelEvent event )
         {
           final Color color = ((ColorChooserPanel) event.getSource()).getColor();
@@ -389,6 +396,7 @@ public class PointSymbolizerLayout extends AbstractSymbolizerLayout
       final SliderPanel strokeOpacityPanel = new SliderPanel( group, MessageBundle.STYLE_EDITOR_OPACITY, 0, 1, 1, SliderPanel.DECIMAL, markStroke.getOpacity( null ) );
       strokeOpacityPanel.addPanelListener( new PanelListener()
       {
+        @Override
         public void valueChanged( final PanelEvent event )
         {
           final double opacity = ((SliderPanel) event.getSource()).getSelection();
@@ -408,6 +416,7 @@ public class PointSymbolizerLayout extends AbstractSymbolizerLayout
         urlInputPanel = new UrlInputPanel( group, MessageBundle.STYLE_EDITOR_URL, onlineResourceURL );
         urlInputPanel.addPanelListener( new PanelListener()
         {
+          @Override
           public void valueChanged( final PanelEvent event )
           {
             final URL url = ((UrlInputPanel) event.getSource()).getURL();

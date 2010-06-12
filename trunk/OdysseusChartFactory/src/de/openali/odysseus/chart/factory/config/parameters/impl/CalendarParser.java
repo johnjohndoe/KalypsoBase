@@ -38,6 +38,7 @@ public class CalendarParser implements IStringParser<Calendar>
   /**
    * @see org.kalypso.chart.framework.model.data.IStringParser#stringToLogical(java.lang.String)
    */
+  @Override
   public Calendar stringToLogical( String value ) throws MalformedValueException
   {
     // erst mal versuchen, ein korrektes Datum zu parsen
@@ -153,6 +154,7 @@ public class CalendarParser implements IStringParser<Calendar>
     return cal;
   }
 
+  @Override
   public String getFormatHint( )
   {
     return m_formatHint;

@@ -33,7 +33,8 @@ public class ColoredTestBarLayer extends AbstractBarLayer
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#paint(org.eclipse.swt.graphics.GC,
    *      org.eclipse.swt.graphics.Device)
    */
-  @SuppressWarnings("unchecked")
+  @Override
+@SuppressWarnings("unchecked")
   public void paint( final GC gc )
   {
     final AbstractDomainIntervalValueData dataContainer = getDataContainer();
@@ -92,7 +93,8 @@ public class ColoredTestBarLayer extends AbstractBarLayer
     return m_data;
   }
 
-  public IDataRange<Number> getTargetRange( )
+  @Override
+public IDataRange<Number> getTargetRange( )
   {
     // muss als minimalen Wert 0 zurückgeben, weil die Bars bis dahin laufen
     final IDataRange targetRange = getDataContainer().getTargetRange();
@@ -108,7 +110,8 @@ public class ColoredTestBarLayer extends AbstractBarLayer
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getDomainRange()
    */
-  public IDataRange<Number> getDomainRange( )
+  @Override
+public IDataRange<Number> getDomainRange( )
   {
     // TODO Auto-generated method stub
     return null;

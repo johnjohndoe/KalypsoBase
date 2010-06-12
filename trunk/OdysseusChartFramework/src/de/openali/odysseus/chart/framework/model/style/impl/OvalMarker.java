@@ -6,6 +6,7 @@ import org.eclipse.swt.graphics.Point;
 public class OvalMarker extends AbstractMarker
 {
 
+  @Override
   public void paint( GC gc, Point p, int width, int height, boolean drawForeground, boolean drawBackground )
   {
     if( drawBackground )
@@ -14,6 +15,7 @@ public class OvalMarker extends AbstractMarker
       gc.drawOval( p.x, p.y, width, height );
   }
 
+  @Override
   public OvalMarker copy( )
   {
     return new OvalMarker();

@@ -73,6 +73,7 @@ public class KalypsoWMSEntityResolver implements EntityResolver
   /**
    * @see org.xml.sax.EntityResolver#resolveEntity(java.lang.String, java.lang.String)
    */
+  @Override
   public InputSource resolveEntity( String publicId, String systemId ) throws IOException
   {
     String path = m_entities.get( systemId );

@@ -85,6 +85,7 @@ public abstract class AbstractCopyObservationSource implements ICopyObservationS
     m_sources = sources;
   }
 
+  @Override
   public final ObservationSource[] getObservationSources( final Feature feature ) throws MalformedURLException, SensorException
   {
     final List<ObservationSource> sources = new ArrayList<ObservationSource>();

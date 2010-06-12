@@ -175,6 +175,7 @@ public class MapCoordinateStatusLineItem extends WorkbenchWindowControlContribut
     /* Add some listeners. */
     m_composite.addDisposeListener( new DisposeListener()
     {
+      @Override
       public void widgetDisposed( final DisposeEvent e )
       {
         m_adapterListener.dispose();
@@ -238,6 +239,7 @@ public class MapCoordinateStatusLineItem extends WorkbenchWindowControlContribut
    * @see org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater#setAdapter(org.eclipse.ui.IWorkbenchPart,
    *      java.lang.Object)
    */
+  @Override
   public void setAdapter( final IWorkbenchPart part, final IMapPanel adapter )
   {
     if( !m_composite.isDisposed() )
@@ -256,6 +258,7 @@ public class MapCoordinateStatusLineItem extends WorkbenchWindowControlContribut
    * @see org.kalypso.ogc.gml.map.listeners.IMapPanelListener#onExtentChanged(org.kalypso.ogc.gml.map.MapPanel,
    *      org.kalypsodeegree.model.geometry.GM_Envelope, org.kalypsodeegree.model.geometry.GM_Envelope)
    */
+  @Override
   public void onExtentChanged( final IMapPanel source, final GM_Envelope oldExtent, final GM_Envelope newExtent )
   {
   }
@@ -264,6 +267,7 @@ public class MapCoordinateStatusLineItem extends WorkbenchWindowControlContribut
    * @see org.kalypso.ogc.gml.map.listeners.IMapPanelListener#onMapModelChanged(org.kalypso.ogc.gml.map.MapPanel,
    *      org.kalypso.ogc.gml.mapmodel.IMapModell, org.kalypso.ogc.gml.mapmodel.IMapModell)
    */
+  @Override
   public void onMapModelChanged( final IMapPanel source, final IMapModell oldModel, final IMapModell newModel )
   {
   }
@@ -272,6 +276,7 @@ public class MapCoordinateStatusLineItem extends WorkbenchWindowControlContribut
    * @see org.kalypso.ogc.gml.map.listeners.IMapPanelListener#onMessageChanged(org.kalypso.ogc.gml.map.MapPanel,
    *      java.lang.String)
    */
+  @Override
   public void onMessageChanged( final IMapPanel source, final String message )
   {
   }
@@ -279,6 +284,7 @@ public class MapCoordinateStatusLineItem extends WorkbenchWindowControlContribut
   /**
    * @see org.kalypso.ogc.gml.map.listeners.IMapPanelListener#onStatusChanged(org.kalypso.ogc.gml.map.IMapPanel)
    */
+  @Override
   public void onStatusChanged( final IMapPanel source )
   {
   }
@@ -287,6 +293,7 @@ public class MapCoordinateStatusLineItem extends WorkbenchWindowControlContribut
    * @see org.kalypso.ogc.gml.map.listeners.IMapPanelListener#onMouseMoveEvent(org.kalypso.ogc.gml.map.IMapPanel,
    *      org.kalypsodeegree.model.geometry.GM_Point, int, int)
    */
+  @Override
   public void onMouseMoveEvent( final IMapPanel source, final GM_Point gmPoint, final int mousex, final int mousey )
   {
     if( m_updateLabelJob != null )

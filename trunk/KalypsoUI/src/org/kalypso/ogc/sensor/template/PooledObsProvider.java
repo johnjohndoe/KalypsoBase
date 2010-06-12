@@ -87,6 +87,7 @@ public final class PooledObsProvider implements IObsProvider, IPoolListener
     m_pool.addPoolListener( this, key );
   }
 
+  @Override
   public void dispose( )
   {
     m_isDisposed = true;
@@ -94,6 +95,7 @@ public final class PooledObsProvider implements IObsProvider, IPoolListener
     m_pool.removePoolListener( this );
   }
 
+  @Override
   public IObservation getObservation( )
   {
     return m_observation;
@@ -104,6 +106,7 @@ public final class PooledObsProvider implements IObsProvider, IPoolListener
    * 
    * @see org.kalypso.util.pool.IPoolListener#objectInvalid(org.kalypso.util.pool.IPoolableObjectType, java.lang.Object)
    */
+  @Override
   public void objectInvalid( final IPoolableObjectType key, final Object oldValue )
   {
     if( key == m_key )
@@ -116,6 +119,7 @@ public final class PooledObsProvider implements IObsProvider, IPoolListener
    * @see org.kalypso.util.pool.IPoolListener#objectLoaded(org.kalypso.util.pool.IPoolableObjectType, java.lang.Object,
    *      org.eclipse.core.runtime.IStatus)
    */
+  @Override
   public final void objectLoaded( final IPoolableObjectType key, final Object newValue, final IStatus status )
   {
     if( !m_isDisposed )
@@ -144,6 +148,7 @@ public final class PooledObsProvider implements IObsProvider, IPoolListener
   /**
    * @see org.kalypso.ogc.sensor.template.IObsProvider#addListener(org.kalypso.ogc.sensor.template.IObsProviderListener)
    */
+  @Override
   public void addListener( final IObsProviderListener l )
   {
     m_listeners.add( l );
@@ -152,6 +157,7 @@ public final class PooledObsProvider implements IObsProvider, IPoolListener
   /**
    * @see org.kalypso.ogc.sensor.template.IObsProvider#removeListener(org.kalypso.ogc.sensor.template.IObsProviderListener)
    */
+  @Override
   public void removeListener( final IObsProviderListener l )
   {
     m_listeners.remove( l );
@@ -160,6 +166,7 @@ public final class PooledObsProvider implements IObsProvider, IPoolListener
   /**
    * @see org.kalypso.ogc.sensor.template.IObsProvider#getArguments()
    */
+  @Override
   public IRequest getArguments( )
   {
     return m_args;
@@ -168,6 +175,7 @@ public final class PooledObsProvider implements IObsProvider, IPoolListener
   /**
    * @see org.kalypso.ogc.sensor.template.IObsProvider#copy()
    */
+  @Override
   public IObsProvider copy( )
   {
     return new PooledObsProvider( m_key, m_args, m_observation );
@@ -176,6 +184,7 @@ public final class PooledObsProvider implements IObsProvider, IPoolListener
   /**
    * @see org.kalypso.util.pool.IPoolListener#isDisposed()
    */
+  @Override
   public boolean isDisposed( )
   {
     return m_isDisposed;
@@ -184,6 +193,7 @@ public final class PooledObsProvider implements IObsProvider, IPoolListener
   /**
    * @see org.kalypso.util.pool.IPoolListener#dirtyChanged(org.kalypso.util.pool.IPoolableObjectType, boolean)
    */
+  @Override
   public void dirtyChanged( final IPoolableObjectType key, final boolean isDirty )
   {
     // TODO Auto-generated method stub

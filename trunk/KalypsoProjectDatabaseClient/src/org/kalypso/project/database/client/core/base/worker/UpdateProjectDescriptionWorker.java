@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.client.core.base.worker;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -58,9 +57,8 @@ import org.kalypso.project.database.sei.IProjectDatabase;
 public class UpdateProjectDescriptionWorker implements ICoreRunnableWithProgress
 {
   private final IRemoteProject m_handler;
+
   private final String m_description;
-
-
 
   public UpdateProjectDescriptionWorker( final IRemoteProject handler, final String description )
   {
@@ -72,11 +70,11 @@ public class UpdateProjectDescriptionWorker implements ICoreRunnableWithProgress
    * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  public IStatus execute( final IProgressMonitor monitor ) throws CoreException
+  public IStatus execute( final IProgressMonitor monitor )
   {
     final IProjectDatabase service = KalypsoProjectDatabaseClient.getService();
     service.setProjectDescription( m_handler.getBean(), m_description );
-    
+
     return Status.OK_STATUS;
   }
 }

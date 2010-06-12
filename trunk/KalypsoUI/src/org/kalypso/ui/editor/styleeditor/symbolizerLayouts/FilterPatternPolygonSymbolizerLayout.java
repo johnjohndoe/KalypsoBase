@@ -122,6 +122,7 @@ public class FilterPatternPolygonSymbolizerLayout extends AbstractSymbolizerLayo
 
       colorPalettePanel.addColorPalettePanelListener( new PanelListener()
       {
+        @Override
         public void valueChanged( final PanelEvent event )
         {
           final Color[] colorArray = colorPalettePanel.getColorPalette();

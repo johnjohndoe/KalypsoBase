@@ -95,6 +95,7 @@ public class SpinnerFeatureControl extends AbstractFeatureControl
   /**
    * @see org.kalypso.ogc.gml.featureview.control.IFeatureControl#addModifyListener(org.eclipse.swt.events.ModifyListener)
    */
+  @Override
   public void addModifyListener( final ModifyListener l )
   {
     m_modlistener.add( l );
@@ -103,6 +104,7 @@ public class SpinnerFeatureControl extends AbstractFeatureControl
   /**
    * @see org.kalypso.ogc.gml.featureview.control.IFeatureControl#createControl(org.eclipse.swt.widgets.Composite, int)
    */
+  @Override
   public Spinner createControl( final Composite parent, final int style )
   {
     m_spinner = new Spinner( parent, style );
@@ -139,12 +141,14 @@ public class SpinnerFeatureControl extends AbstractFeatureControl
 
     m_spinner.addSelectionListener( new SelectionListener()
     {
+      @Override
       public void widgetSelected( final SelectionEvent e )
       {
         fireFeatureChange( getChanges() );
         fireModified();
       }
 
+      @Override
       public void widgetDefaultSelected( final SelectionEvent e )
       {
         fireFeatureChange( getChanges() );
@@ -194,6 +198,7 @@ public class SpinnerFeatureControl extends AbstractFeatureControl
   /**
    * @see org.kalypso.ogc.gml.featureview.control.IFeatureControl#isValid()
    */
+  @Override
   public boolean isValid( )
   {
 
@@ -204,6 +209,7 @@ public class SpinnerFeatureControl extends AbstractFeatureControl
   /**
    * @see org.kalypso.ogc.gml.featureview.control.IFeatureControl#removeModifyListener(org.eclipse.swt.events.ModifyListener)
    */
+  @Override
   public void removeModifyListener( final ModifyListener l )
   {
     m_modlistener.remove( l );
@@ -212,6 +218,7 @@ public class SpinnerFeatureControl extends AbstractFeatureControl
   /**
    * @see org.kalypso.ogc.gml.featureview.control.IFeatureControl#updateControl()
    */
+  @Override
   public void updateControl( )
   {
     if( m_spinner == null || m_spinner.isDisposed() )

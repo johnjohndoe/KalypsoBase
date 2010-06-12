@@ -59,6 +59,7 @@ public interface IFeatureControl
 
   void setFeature( Feature feature );
 
+  @Override
   /**
    * Render this control as string
    * 

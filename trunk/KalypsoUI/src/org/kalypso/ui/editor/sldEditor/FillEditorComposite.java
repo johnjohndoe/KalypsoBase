@@ -242,6 +242,7 @@ public class FillEditorComposite extends Composite
     // selection listener
     fillTypeCombo.addSelectionChangedListener( new ISelectionChangedListener()
     {
+      @Override
       @SuppressWarnings("synthetic-access") //$NON-NLS-1$
       public void selectionChanged( final SelectionChangedEvent event )
       {
@@ -337,6 +338,7 @@ public class FillEditorComposite extends Composite
 
     this.addDisposeListener( new DisposeListener()
     {
+      @Override
       public void widgetDisposed( final DisposeEvent e )
       {
         disposeControl();

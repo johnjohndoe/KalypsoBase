@@ -42,23 +42,15 @@ package org.kalypso.service.unittests;
 
 import java.io.InputStream;
 import java.net.URL;
-import java.util.LinkedList;
-import java.util.List;
-
-import net.opengeospatial.ows.CodeType;
-import net.opengeospatial.wps.DescribeProcess;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.junit.Test;
 import org.kalypso.commons.net.ProxyUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.service.wps.internal.KalypsoServiceWPSDebug;
-import org.kalypso.service.wps.utils.MarshallUtilities;
-import org.kalypso.service.wps.utils.WPSUtilities;
-import org.kalypso.service.wps.utils.WPSUtilities.WPS_VERSION;
-import org.kalypso.service.wps.utils.ogc.WPS040ObjectFactoryUtilities;
 
 /**
  * This unit test should help verifying, if the client can send a certificate to a server, which requests client-side
@@ -68,10 +60,10 @@ import org.kalypso.service.wps.utils.ogc.WPS040ObjectFactoryUtilities;
  */
 public class CertificateAuthentication
 {
-  /**
-   * To get the process description for the send mail simulation.
-   */
-  private static final String IDENTIFIER = "SendMailV1.0";
+// /**
+// * To get the process description for the send mail simulation.
+// */
+// private static final String IDENTIFIER = "SendMailV1.0";
 
   /**
    * The service URL.
@@ -90,7 +82,7 @@ public class CertificateAuthentication
     System.setProperty( "http.proxyPort", "8080" );
 
     /* Create the client. */
-    HttpClient client = ProxyUtilities.getConfiguredHttpClient( 10000, new URL( SERVICE_URL ), 0 );
+    final HttpClient client = ProxyUtilities.getConfiguredHttpClient( 10000, new URL( SERVICE_URL ), 0 );
 
     /* Either like this ... */
     // File clientCert = new File( "C:/Albert/Temp/Projekte/InformDSS/Zertifikate/Client/keystore.jks" );
@@ -106,7 +98,7 @@ public class CertificateAuthentication
     System.setProperty( "javax.net.ssl.trustStorePassword", "key4ssl" );
 
     /* Build the method. */
-    GetMethod get = new GetMethod( "https://informdss.bafg.de/svn/repos/projects/Tutorial/.settings/org.eclipse.core.resources.prefs" );
+    final GetMethod get = new GetMethod( "https://informdss.bafg.de/svn/repos/projects/Tutorial/.settings/org.eclipse.core.resources.prefs" );
 
     /* Let the method handle the authentication, if any. */
     get.setDoAuthentication( true );
@@ -114,7 +106,7 @@ public class CertificateAuthentication
     /* Execute the method. */
     KalypsoServiceWPSDebug.DEBUG.printf( "Asking for a directory listing ...\n" );
 
-    int status = client.executeMethod( get );
+    final int status = client.executeMethod( get );
 
     /* Handle the response. */
     KalypsoServiceWPSDebug.DEBUG.printf( "Status code: " + String.valueOf( status ) + "\n" );
@@ -122,26 +114,27 @@ public class CertificateAuthentication
     if( status != 200 )
       throw new CoreException( StatusUtilities.createErrorStatus( "Request failed! The server responded :" + String.valueOf( status ) ) );
 
-    InputStream is = get.getResponseBodyAsStream();
+    final InputStream is = get.getResponseBodyAsStream();
     if( is != null )
     {
       /* Print the response. */
-      KalypsoServiceWPSDebug.DEBUG.printf( MarshallUtilities.fromInputStream( is ) + "\n" );
+      KalypsoServiceWPSDebug.DEBUG.printf( IOUtils.toString( is ) + "\n" );
     }
 
-    if( true )
-      return;
-
-    /* Build the describe process request. */
-    List<CodeType> identifier = new LinkedList<CodeType>();
-    identifier.add( WPS040ObjectFactoryUtilities.buildCodeType( "", IDENTIFIER ) );
-    DescribeProcess describeProcess = WPS040ObjectFactoryUtilities.buildDescribeProcess( identifier );
-
-    /* Send the request. */
-    KalypsoServiceWPSDebug.DEBUG.printf( "Asking for a process describtion ...\n" );
-    String describeProcessResponse = WPSUtilities.send( MarshallUtilities.marshall( describeProcess, WPS_VERSION.V040 ), SERVICE_URL );
-
-    /* Handle the response. */
-    KalypsoServiceWPSDebug.DEBUG.printf( "Response:\n" + describeProcessResponse + "\n" );
+// if( true )
+// return;
+//
+// /* Build the describe process request. */
+// List<CodeType> identifier = new LinkedList<CodeType>();
+// identifier.add( WPS040ObjectFactoryUtilities.buildCodeType( "", IDENTIFIER ) );
+// DescribeProcess describeProcess = WPS040ObjectFactoryUtilities.buildDescribeProcess( identifier );
+//
+// /* Send the request. */
+// KalypsoServiceWPSDebug.DEBUG.printf( "Asking for a process describtion ...\n" );
+// String describeProcessResponse = WPSUtilities.send( MarshallUtilities.marshall( describeProcess, WPS_VERSION.V040 ),
+// SERVICE_URL );
+//
+// /* Handle the response. */
+// KalypsoServiceWPSDebug.DEBUG.printf( "Response:\n" + describeProcessResponse + "\n" );
   }
 }

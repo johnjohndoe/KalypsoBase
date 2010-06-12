@@ -257,6 +257,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
   /**
    * @see org.eclipse.jface.util.IPropertyChangeListener#propertyChange(org.eclipse.jface.util.PropertyChangeEvent)
    */
+  @Override
   public void propertyChange( final PropertyChangeEvent event )
   {
   }

@@ -74,6 +74,7 @@ public class DragZoomInHandler implements IChartDragHandler
   /**
    * @see org.eclipse.swt.events.MouseListener#mouseDoubleClick(org.eclipse.swt.events.MouseEvent)
    */
+  @Override
   public void mouseDoubleClick( final MouseEvent e )
   {
 
@@ -82,6 +83,7 @@ public class DragZoomInHandler implements IChartDragHandler
   /**
    * @see org.eclipse.swt.events.MouseListener#mouseDown(org.eclipse.swt.events.MouseEvent)
    */
+  @Override
   public void mouseDown( final MouseEvent e )
   {
     m_mouseDragRect = new Rectangle( e.x, e.y, 0, 0 );
@@ -90,6 +92,7 @@ public class DragZoomInHandler implements IChartDragHandler
   /**
    * @see org.eclipse.swt.events.MouseListener#mouseUp(org.eclipse.swt.events.MouseEvent)
    */
+  @Override
   public void mouseUp( final MouseEvent e )
   {
     if( m_mouseDragRect == null )
@@ -115,6 +118,7 @@ public class DragZoomInHandler implements IChartDragHandler
   /**
    * @see org.eclipse.swt.events.MouseMoveListener#mouseMove(org.eclipse.swt.events.MouseEvent)
    */
+  @Override
   public void mouseMove( final MouseEvent e )
   {
     if( m_mouseDragRect != null )
@@ -136,6 +140,7 @@ public class DragZoomInHandler implements IChartDragHandler
   /**
    * @see org.kalypso.chart.framework.view.IChartDragHandler#getCursor()
    */
+  @Override
   public Cursor getCursor( )
   {
     return Display.getDefault().getSystemCursor( SWT.CURSOR_CROSS );

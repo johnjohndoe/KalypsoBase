@@ -42,8 +42,8 @@ package org.kalypso.services.observation.client.repository;
 
 import java.io.Serializable;
 
-import org.kalypso.repository.IWriteableRepositoryItem;
 import org.kalypso.repository.IRepository;
+import org.kalypso.repository.IWriteableRepositoryItem;
 import org.kalypso.repository.RepositoryException;
 import org.kalypso.services.observation.KalypsoServiceObsActivator;
 import org.kalypso.services.observation.sei.IObservationService;

@@ -73,6 +73,7 @@ public class GrafikEditorLauncher implements IEditorLauncher
   /**
    * @see org.eclipse.ui.IEditorLauncher#open(org.eclipse.core.runtime.IPath)
    */
+  @Override
   public void open( final IPath path )
   {
     final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();

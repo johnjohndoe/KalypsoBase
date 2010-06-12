@@ -60,19 +60,18 @@ import de.renew.workflow.connector.WorkflowConnectorPlugin;
  * 
  * @author Stefan Kurzbach
  */
-@SuppressWarnings("unchecked")
-public abstract class CaseHandlingProjectNature implements IProjectNature, ICaseManagerListener
+public abstract class CaseHandlingProjectNature<T extends ICase> implements IProjectNature, ICaseManagerListener<T>
 {
-  private ICaseManager m_caseManager;
+  private ICaseManager<T> m_caseManager;
 
   private IProject m_project;
 
   /**
    * Creates a specific case manager for this project
    */
-  protected abstract ICaseManager createCaseManager( final IProject project ) throws CoreException;
+  protected abstract ICaseManager<T> createCaseManager( final IProject project ) throws CoreException;
 
-  public ICaseManager getCaseManager( ) throws CoreException
+  public ICaseManager<T> getCaseManager( ) throws CoreException
   {
     if( m_caseManager == null )
     {
@@ -85,6 +84,7 @@ public abstract class CaseHandlingProjectNature implements IProjectNature, ICase
   /**
    * @see org.eclipse.core.resources.IProjectNature#configure()
    */
+  @Override
   @SuppressWarnings("unused")
   public void configure( ) throws CoreException
   {
@@ -94,6 +94,7 @@ public abstract class CaseHandlingProjectNature implements IProjectNature, ICase
   /**
    * @see org.eclipse.core.resources.IProjectNature#deconfigure()
    */
+  @Override
   public void deconfigure( )
   {
     // does nothing by default
@@ -102,6 +103,7 @@ public abstract class CaseHandlingProjectNature implements IProjectNature, ICase
   /**
    * @see org.eclipse.core.resources.IProjectNature#getProject()
    */
+  @Override
   public IProject getProject( )
   {
     return m_project;
@@ -110,6 +112,7 @@ public abstract class CaseHandlingProjectNature implements IProjectNature, ICase
   /**
    * @see org.eclipse.core.resources.IProjectNature#setProject(org.eclipse.core.resources.IProject)
    */
+  @Override
   public void setProject( final IProject project )
   {
     this.m_project = project;
@@ -126,6 +129,7 @@ public abstract class CaseHandlingProjectNature implements IProjectNature, ICase
   /**
    * @see de.renew.workflow.connector.context.ICaseManagerListener#caseAdded(de.renew.workflow.cases.Case)
    */
+  @Override
   public void caseAdded( final ICase caze )
   {
     final IFolder newFolder = m_project.getFolder( getRelativeProjectPath( caze ) );
@@ -146,6 +150,7 @@ public abstract class CaseHandlingProjectNature implements IProjectNature, ICase
     }
   }
 
+  @Override
   public void caseRemoved( final ICase caze )
   {
     final IFolder folder = m_project.getFolder( getRelativeProjectPath( caze ) );

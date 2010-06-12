@@ -51,11 +51,11 @@ import net.opengeospatial.ows.ExceptionReport;
 import net.opengeospatial.ows.ExceptionType;
 import net.opengeospatial.wps.Execute;
 import net.opengeospatial.wps.ExecuteResponseType;
+import net.opengeospatial.wps.ExecuteResponseType.ProcessOutputs;
 import net.opengeospatial.wps.IOValueType;
 import net.opengeospatial.wps.ProcessFailedType;
 import net.opengeospatial.wps.ProcessStartedType;
 import net.opengeospatial.wps.StatusType;
-import net.opengeospatial.wps.ExecuteResponseType.ProcessOutputs;
 
 import org.apache.commons.vfs.FileObject;
 import org.eclipse.core.runtime.CoreException;
@@ -68,8 +68,8 @@ import org.kalypso.service.wps.utils.WPSUtilities;
 import org.kalypso.service.wps.utils.WPSUtilities.WPS_VERSION;
 import org.kalypso.service.wps.utils.ogc.ExecuteMediator;
 import org.kalypso.service.wps.utils.ogc.WPS040ObjectFactoryUtilities;
-import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.simulation.core.ISimulationConstants.STATE;
+import org.kalypso.simulation.core.SimulationException;
 
 /**
  * Manages the started simulation in backgrounds.

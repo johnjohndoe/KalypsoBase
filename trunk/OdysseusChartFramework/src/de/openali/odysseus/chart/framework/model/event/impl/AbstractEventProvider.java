@@ -56,6 +56,7 @@ public abstract class AbstractEventProvider<T> implements IEventProvider<T>
   /**
    * @see de.openali.odysseus.chart.framework.model.event.IEventProvider#addListener(java.lang.Object)
    */
+  @Override
   public final void addListener( T listener )
   {
     m_listeners.add( listener );
@@ -64,6 +65,7 @@ public abstract class AbstractEventProvider<T> implements IEventProvider<T>
   /**
    * @see de.openali.odysseus.chart.framework.model.event.IEventProvider#removeListener(java.lang.Object)
    */
+  @Override
   public final void removeListener( T listener )
   {
     m_listeners.remove( listener );

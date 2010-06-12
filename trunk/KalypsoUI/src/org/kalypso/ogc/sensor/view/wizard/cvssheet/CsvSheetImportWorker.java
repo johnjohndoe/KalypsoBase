@@ -135,6 +135,7 @@ public class CsvSheetImportWorker implements ICoreRunnableWithProgress
   /**
    * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
    */
+  @Override
   public IStatus execute( final IProgressMonitor monitor )
   {
     try

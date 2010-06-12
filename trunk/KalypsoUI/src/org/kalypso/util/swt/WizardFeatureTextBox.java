@@ -62,7 +62,6 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.gmlschema.annotation.IAnnotation;
-import org.kalypso.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -166,6 +165,7 @@ public class WizardFeatureTextBox
     m_textBox.addModifyListener( new ModifyListener()
     {
 
+      @Override
       public void modifyText( final ModifyEvent e )
       {
         m_text = m_textBox.getText();

@@ -283,6 +283,7 @@ public class ObservationTableModel extends AbstractTableModel implements IObserv
   /**
    * @see javax.swing.table.TableModel#getColumnCount()
    */
+  @Override
   public int getColumnCount( )
   {
     synchronized( m_columns )
@@ -297,6 +298,7 @@ public class ObservationTableModel extends AbstractTableModel implements IObserv
   /**
    * @see javax.swing.table.TableModel#getRowCount()
    */
+  @Override
   public int getRowCount( )
   {
     return m_sharedModel.size();
@@ -305,6 +307,7 @@ public class ObservationTableModel extends AbstractTableModel implements IObserv
   /**
    * @see javax.swing.table.TableModel#getValueAt(int, int)
    */
+  @Override
   public Object getValueAt( final int rowIndex, final int columnIndex )
   {
     synchronized( m_columns )
@@ -476,6 +479,7 @@ public class ObservationTableModel extends AbstractTableModel implements IObserv
    * 
    * @return rendering rules or empty array if no rules found.
    */
+  @Override
   public RenderingRule[] findRules( final int row, final int column )
   {
     synchronized( m_columns )
@@ -570,6 +574,7 @@ public class ObservationTableModel extends AbstractTableModel implements IObserv
    * @return adequate instance of NumberFormat
    * @see org.kalypso.ogc.sensor.timeseries.TimeserieUtils#getNumberFormatFor(String)
    */
+  @Override
   public NumberFormat getNumberFormat( final int column )
   {
     synchronized( m_columns )
@@ -588,6 +593,7 @@ public class ObservationTableModel extends AbstractTableModel implements IObserv
   {
     public final static ColOrderNameComparator INSTANCE = new ColOrderNameComparator();
 
+    @Override
     public int compare( final TableViewColumn col1, final TableViewColumn col2 )
     {
       return col1.getName().compareTo( col2.getName() );
@@ -603,6 +609,7 @@ public class ObservationTableModel extends AbstractTableModel implements IObserv
   {
     public final static ColOrderIndexComparator INSTANCE = new ColOrderIndexComparator();
 
+    @Override
     public int compare( final TableViewColumn col1, final TableViewColumn col2 )
     {
       return col1.getPosition() - col2.getPosition();

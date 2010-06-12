@@ -63,6 +63,7 @@ public class ResourceFileDialog implements IFeatureDialog
     m_ftp = ftp;
   }
 
+  @Override
   public int open( Shell shell )
   {
     final GMLWorkspace workspace = m_feature.getWorkspace();
@@ -101,12 +102,14 @@ public class ResourceFileDialog implements IFeatureDialog
   /**
    * @see org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog#collectChanges(java.util.Collection)
    */
+  @Override
   public void collectChanges( final Collection<FeatureChange> c )
   {
     if( c != null && m_change != null )
       c.add( m_change );
   }
 
+  @Override
   public String getLabel( )
   {
     String label = Messages.getString("org.kalypso.ogc.gml.featureview.dialog.ResourceFileDialog.choose"); //$NON-NLS-1$

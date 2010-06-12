@@ -63,6 +63,7 @@ public class CopyFeatureCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#isUndoable()
    */
+  @Override
   public boolean isUndoable()
   {
     return true;
@@ -71,6 +72,7 @@ public class CopyFeatureCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#process()
    */
+  @Override
   public void process() throws Exception
   {
     copyFeature();
@@ -79,6 +81,7 @@ public class CopyFeatureCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#redo()
    */
+  @Override
   public void redo() throws Exception
   {
     copyFeature();
@@ -87,6 +90,7 @@ public class CopyFeatureCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#undo()
    */
+  @Override
   public void undo() throws Exception
   {
     m_clipboard.setClipboardFeature( null );
@@ -95,6 +99,7 @@ public class CopyFeatureCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#getDescription()
    */
+  @Override
   public String getDescription()
   {
     return Messages.getString("org.kalypso.ui.editor.gmleditor.util.command.CopyFeatureCommand.0"); //$NON-NLS-1$

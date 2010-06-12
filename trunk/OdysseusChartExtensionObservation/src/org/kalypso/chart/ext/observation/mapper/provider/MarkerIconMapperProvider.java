@@ -62,6 +62,7 @@ public class MarkerIconMapperProvider extends AbstractMapperProvider
   /**
    * @see de.openali.odysseus.chart.factory.provider.IMapperProvider#getMapper()
    */
+  @Override
   public IRetinalMapper getMapper( ) throws ConfigurationException
   {
     LinkedHashMap<String, ImageDescriptor> string2Image = new LinkedHashMap<String, ImageDescriptor>();

@@ -88,6 +88,7 @@ public class ChangeThemePropertiesCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#isUndoable()
    */
+  @Override
   public boolean isUndoable()
   {
     return true;
@@ -96,6 +97,7 @@ public class ChangeThemePropertiesCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#process()
    */
+  @Override
   public void process() throws Exception
   {
     m_curve.setName( m_name );
@@ -108,6 +110,7 @@ public class ChangeThemePropertiesCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#redo()
    */
+  @Override
   public void redo() throws Exception
   {
     process();
@@ -116,6 +119,7 @@ public class ChangeThemePropertiesCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#undo()
    */
+  @Override
   public void undo() throws Exception
   {
     m_curve.setName( m_oldName );
@@ -128,6 +132,7 @@ public class ChangeThemePropertiesCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#getDescription()
    */
+  @Override
   public String getDescription()
   {
     return Messages.getString("org.kalypso.ogc.sensor.commands.ChangeThemePropertiesCommand.0"); //$NON-NLS-1$

@@ -62,6 +62,7 @@ public abstract class AbstractKalypsoModulePage implements IKalypsoModulePage
     m_module = module;
   }
 
+  @Override
   public IKalypsoModule getModule( )
   {
     return m_module;

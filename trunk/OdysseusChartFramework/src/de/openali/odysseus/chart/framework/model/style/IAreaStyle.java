@@ -11,6 +11,7 @@ public interface IAreaStyle extends IStyle
 
   public ILineStyle getStroke( );
 
+  @Override
   public IAreaStyle copy( );
 
 }

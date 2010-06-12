@@ -57,6 +57,7 @@ public class ChartPartListener implements IPartListener2
   /**
    * @see org.eclipse.ui.IPartListener2#partActivated(org.eclipse.ui.IWorkbenchPartReference)
    */
+  @Override
   public void partActivated( final IWorkbenchPartReference partRef )
   {
     final IWorkbenchPart part = partRef.getPart( false );
@@ -68,6 +69,7 @@ public class ChartPartListener implements IPartListener2
   /**
    * @see org.eclipse.ui.IPartListener2#partBroughtToTop(org.eclipse.ui.IWorkbenchPartReference)
    */
+  @Override
   public void partBroughtToTop( final IWorkbenchPartReference partRef )
   {
     // nothing to do
@@ -77,6 +79,7 @@ public class ChartPartListener implements IPartListener2
   /**
    * @see org.eclipse.ui.IPartListener2#partClosed(org.eclipse.ui.IWorkbenchPartReference)
    */
+  @Override
   public void partClosed( final IWorkbenchPartReference partRef )
   {
     // nothing to do
@@ -86,6 +89,7 @@ public class ChartPartListener implements IPartListener2
   /**
    * @see org.eclipse.ui.IPartListener2#partDeactivated(org.eclipse.ui.IWorkbenchPartReference)
    */
+  @Override
   public void partDeactivated( final IWorkbenchPartReference partRef )
   {
     // nothing to do
@@ -95,6 +99,7 @@ public class ChartPartListener implements IPartListener2
   /**
    * @see org.eclipse.ui.IPartListener2#partHidden(org.eclipse.ui.IWorkbenchPartReference)
    */
+  @Override
   public void partHidden( final IWorkbenchPartReference partRef )
   {
     // nothing to do
@@ -104,6 +109,7 @@ public class ChartPartListener implements IPartListener2
   /**
    * @see org.eclipse.ui.IPartListener2#partInputChanged(org.eclipse.ui.IWorkbenchPartReference)
    */
+  @Override
   public void partInputChanged( final IWorkbenchPartReference partRef )
   {
     // nothing to do
@@ -112,6 +118,7 @@ public class ChartPartListener implements IPartListener2
   /**
    * @see org.eclipse.ui.IPartListener2#partOpened(org.eclipse.ui.IWorkbenchPartReference)
    */
+  @Override
   public void partOpened( final IWorkbenchPartReference partRef )
   {
     // nothing to do
@@ -121,6 +128,7 @@ public class ChartPartListener implements IPartListener2
   /**
    * @see org.eclipse.ui.IPartListener2#partVisible(org.eclipse.ui.IWorkbenchPartReference)
    */
+  @Override
   public void partVisible( final IWorkbenchPartReference partRef )
   {
     // nothing to do

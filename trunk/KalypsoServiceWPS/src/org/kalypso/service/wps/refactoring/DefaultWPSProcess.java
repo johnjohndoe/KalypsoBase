@@ -58,17 +58,17 @@ import net.opengeospatial.wps.DataInputsType;
 import net.opengeospatial.wps.Execute;
 import net.opengeospatial.wps.ExecuteResponseType;
 import net.opengeospatial.wps.IOValueType;
+import net.opengeospatial.wps.IOValueType.ComplexValueReference;
 import net.opengeospatial.wps.InputDescriptionType;
 import net.opengeospatial.wps.LiteralInputType;
 import net.opengeospatial.wps.LiteralValueType;
 import net.opengeospatial.wps.OutputDefinitionsType;
 import net.opengeospatial.wps.ProcessDescriptionType;
+import net.opengeospatial.wps.ProcessDescriptionType.DataInputs;
 import net.opengeospatial.wps.ProcessFailedType;
 import net.opengeospatial.wps.ProcessStartedType;
 import net.opengeospatial.wps.StatusType;
 import net.opengeospatial.wps.SupportedComplexDataType;
-import net.opengeospatial.wps.IOValueType.ComplexValueReference;
-import net.opengeospatial.wps.ProcessDescriptionType.DataInputs;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.NotImplementedException;
@@ -162,7 +162,7 @@ public class DefaultWPSProcess implements IWPSProcess
       if( WPSRequest.SERVICE_LOCAL.equals( m_serviceEndpoint ) )
       {
         final ProcessDescriptionMediator processDescriptionMediator = new ProcessDescriptionMediator( WPS_VERSION.V040 );
-        m_processDescription = (ProcessDescriptionType) processDescriptionMediator.getProcessDescription( m_identifier );
+        m_processDescription = processDescriptionMediator.getProcessDescription( m_identifier );
       }
       else
       {
@@ -180,6 +180,7 @@ public class DefaultWPSProcess implements IWPSProcess
     return m_processDescription;
   }
 
+  @Override
   public synchronized ProcessStatus getProcessStatus( )
   {
     if( m_executionResponse == null )
@@ -538,6 +539,7 @@ public class DefaultWPSProcess implements IWPSProcess
   /**
    * @see org.kalypso.service.wps.client.IWPSProcess#getExecuteResponse()
    */
+  @Override
   public synchronized ExecuteResponseType getExecuteResponse( ) throws CoreException
   {
     switch( getProcessStatus() )

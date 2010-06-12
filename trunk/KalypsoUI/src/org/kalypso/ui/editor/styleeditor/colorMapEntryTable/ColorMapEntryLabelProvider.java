@@ -57,6 +57,7 @@ public class ColorMapEntryLabelProvider extends LabelProvider implements ITableL
   /**
    * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.lang.Object, int)
    */
+  @Override
   public String getColumnText( final Object element, final int columnIndex )
   {
     String result = ""; //$NON-NLS-1$
@@ -84,6 +85,7 @@ public class ColorMapEntryLabelProvider extends LabelProvider implements ITableL
   /**
    * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang.Object, int)
    */
+  @Override
   public Image getColumnImage( final Object element, final int columnIndex )
   {
     Image image = null;

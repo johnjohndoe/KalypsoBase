@@ -94,6 +94,7 @@ public abstract class AbstractFilterComposite extends Composite implements IErro
   /**
    * @see org.kalypso.ogc.gml.filterdialog.dialog.IErrorMessageReciever#setErrorMessage(java.lang.String)
    */
+  @Override
   public void setErrorMessage( final String message )
   {
     m_errorMessageReciever.setErrorMessage( message );
@@ -103,6 +104,7 @@ public abstract class AbstractFilterComposite extends Composite implements IErro
   /**
    * @see org.kalypso.ogc.gml.filterdialog.dialog.IErrorMessageReciever#getErrorMessageReciever()
    */
+  @Override
   public IErrorMessageReciever getErrorMessageReciever( )
   {
     return m_errorMessageReciever;
@@ -140,6 +142,7 @@ public abstract class AbstractFilterComposite extends Composite implements IErro
     /**
      * @see org.eclipse.jface.dialogs.IInputValidator#isValid(java.lang.String)
      */
+    @Override
     public String isValid( final String newText )
     {
       final Class clazz = i_ftp.getValueClass();

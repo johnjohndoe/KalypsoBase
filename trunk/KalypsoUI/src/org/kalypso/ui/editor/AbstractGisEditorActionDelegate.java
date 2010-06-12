@@ -69,6 +69,7 @@ public abstract class AbstractGisEditorActionDelegate implements IEditorActionDe
    * @see org.eclipse.ui.IEditorActionDelegate#setActiveEditor(org.eclipse.jface.action.IAction,
    *      org.eclipse.ui.IEditorPart)
    */
+  @Override
   public void setActiveEditor( final IAction action, final IEditorPart targetEditor )
   {
     setActivePart( action, targetEditor );
@@ -77,6 +78,7 @@ public abstract class AbstractGisEditorActionDelegate implements IEditorActionDe
   /**
    * @see org.eclipse.ui.IViewActionDelegate#init(org.eclipse.ui.IViewPart)
    */
+  @Override
   public void init( final IViewPart view )
   {
     setActivePart( null, view );
@@ -117,6 +119,7 @@ public abstract class AbstractGisEditorActionDelegate implements IEditorActionDe
    * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
    *      org.eclipse.jface.viewers.ISelection)
    */
+  @Override
   public void selectionChanged( final IAction action, final ISelection selection )
   {
     m_selection = selection;
@@ -144,6 +147,7 @@ public abstract class AbstractGisEditorActionDelegate implements IEditorActionDe
   /**
    * @see org.kalypsodeegree.model.feature.event.ModellEventListener#onModellChange(org.kalypsodeegree.model.feature.event.ModellEvent)
    */
+  @Override
   public void onModellChange( final ModellEvent modellEvent )
   {
     if( m_action != null )
@@ -155,6 +159,7 @@ public abstract class AbstractGisEditorActionDelegate implements IEditorActionDe
   /**
    * @see org.eclipse.ui.IActionDelegate2#init(org.eclipse.jface.action.IAction)
    */
+  @Override
   public void init( final IAction action )
   {
     m_action = action;
@@ -164,6 +169,7 @@ public abstract class AbstractGisEditorActionDelegate implements IEditorActionDe
   /**
    * @see org.eclipse.ui.IActionDelegate2#runWithEvent(org.eclipse.jface.action.IAction, org.eclipse.swt.widgets.Event)
    */
+  @Override
   public void runWithEvent( final IAction action, final Event event )
   {
     run( action );
@@ -172,6 +178,7 @@ public abstract class AbstractGisEditorActionDelegate implements IEditorActionDe
   /**
    * @see org.eclipse.ui.IActionDelegate2#dispose()
    */
+  @Override
   public void dispose( )
   {
     m_part = null;

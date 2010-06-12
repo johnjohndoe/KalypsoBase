@@ -125,10 +125,11 @@ public class DummyConnector implements IWorkflowConnector
   }
 
   /**
-   * @see de.renew.workflow.connector.context.IActiveScenarioChangeListener#activeScenarioChanged(de.renew.workflow.connector.cases.CaseHandlingProjectNature, de.renew.workflow.connector.cases.ICase)
+   * @see de.renew.workflow.connector.context.IActiveScenarioChangeListener#activeScenarioChanged(de.renew.workflow.connector.cases.CaseHandlingProjectNature,
+   *      de.renew.workflow.connector.cases.ICase)
    */
   @Override
-  public void activeScenarioChanged( final CaseHandlingProjectNature newProject, final ICase caze )
+  public void activeScenarioChanged( final CaseHandlingProjectNature<ICase> newProject, final ICase caze )
   {
   }
 

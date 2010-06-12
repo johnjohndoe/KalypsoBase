@@ -172,6 +172,7 @@ public abstract class AbstractLineLayer extends AbstractChartLayer implements IT
     return entries.toArray( new ILegendEntry[] {} );
   }
 
+  @Override
   public void dispose( )
   {
 

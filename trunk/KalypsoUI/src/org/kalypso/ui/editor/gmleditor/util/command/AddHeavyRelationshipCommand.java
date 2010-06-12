@@ -87,6 +87,7 @@ public class AddHeavyRelationshipCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#isUndoable()
    */
+  @Override
   public boolean isUndoable( )
   {
     return true;
@@ -95,6 +96,7 @@ public class AddHeavyRelationshipCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#process()
    */
+  @Override
   public void process( ) throws Exception
   {
     // create relation feature
@@ -116,6 +118,7 @@ public class AddHeavyRelationshipCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#redo()
    */
+  @Override
   public void redo( ) throws Exception
   {
     process();
@@ -124,6 +127,7 @@ public class AddHeavyRelationshipCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#undo()
    */
+  @Override
   public void undo( ) throws Exception
   {
     // remove second link
@@ -153,6 +157,7 @@ public class AddHeavyRelationshipCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#getDescription()
    */
+  @Override
   public String getDescription( )
   {
     return Messages.getString("org.kalypso.ui.editor.gmleditor.util.command.AddHeavyRelationshipCommand.0"); //$NON-NLS-1$

@@ -61,17 +61,14 @@ import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 
 /**
- * 
  * Equal to TupleResultLineLayer in data visualization, but works directly with TupleResult data instead of using a
  * TupleResultDataContainer (which copies the TupleResult data). This class is intended to be used if the original data
  * can change during the layer life cycle.<br>
  * <br>
- * 
  * <B>ATTENTION:</B> This has not been tested yet. (Don't use it and blame me if it responds sluggish.) Also, it will
  * crash if the TupleResult contains Components which are not subclasses of the types Number or Calendar.
  * 
  * @author burtscher1
- * 
  */
 public class RealTupleResultLineLayer extends AbstractLineLayer
 {
@@ -90,7 +87,7 @@ public class RealTupleResultLineLayer extends AbstractLineLayer
 
   private IDataRange<Number> m_domainRange;
 
-  public RealTupleResultLineLayer( TupleResult data, String domainComponentId, String targetComponentId, ILineStyle lineStyle, IPointStyle pointStyle )
+  public RealTupleResultLineLayer( final TupleResult data, final String domainComponentId, final String targetComponentId, final ILineStyle lineStyle, final IPointStyle pointStyle )
   {
     super( lineStyle, pointStyle );
     m_data = data;
@@ -98,8 +95,8 @@ public class RealTupleResultLineLayer extends AbstractLineLayer
     m_targetComponentId = targetComponentId;
 
     // find components
-    IComponent[] components = m_data.getComponents();
-    for( IComponent component : components )
+    final IComponent[] components = m_data.getComponents();
+    for( final IComponent component : components )
       if( component.getId().equals( m_domainComponentId ) )
         m_domainComponent = component;
       else if( component.getId().equals( m_targetComponentId ) )
@@ -112,6 +109,7 @@ public class RealTupleResultLineLayer extends AbstractLineLayer
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getDomainRange()
    */
+  @Override
   public IDataRange<Number> getDomainRange( )
   {
     if( m_isInited )
@@ -126,6 +124,7 @@ public class RealTupleResultLineLayer extends AbstractLineLayer
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getTargetRange()
    */
+  @Override
   public IDataRange<Number> getTargetRange( )
   {
     if( m_isInited )
@@ -140,39 +139,39 @@ public class RealTupleResultLineLayer extends AbstractLineLayer
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#paint(org.eclipse.swt.graphics.GC)
    */
+  @Override
   @SuppressWarnings("deprecation")
-  public void paint( GC gc )
+  public void paint( final GC gc )
   {
-    List<Point> path = new ArrayList<Point>();
+    final List<Point> path = new ArrayList<Point>();
 
     if( m_isInited )
       for( int i = 0; i < m_data.size(); i++ )
       {
-        IRecord record = m_data.get( i );
+        final IRecord record = m_data.get( i );
         path.add( getCoordinateMapper().logicalToScreen( record.getValue( m_domainComponent ), record.getValue( m_targetComponent ) ) );
       }
 
-    PolylineFigure polylineFigure = getPolylineFigure();
+    final PolylineFigure polylineFigure = getPolylineFigure();
     polylineFigure.setPoints( path.toArray( new Point[] {} ) );
     polylineFigure.paint( gc );
 
-    PointFigure pointFigure = getPointFigure();
+    final PointFigure pointFigure = getPointFigure();
     pointFigure.setPoints( path.toArray( new Point[] {} ) );
     pointFigure.paint( gc );
 
   }
 
-  @SuppressWarnings( { "unchecked", "deprecation" })
-  private static IDataRange<Number> getRange( TupleResult data, IComponent comp, IAxis axis )
+  private static IDataRange<Number> getRange( final TupleResult data, final IComponent comp, final IAxis axis )
   {
-    int size = data.size();
+    final int size = data.size();
     Object value = null;
     IDataOperator op = null;
     double min = Double.MAX_VALUE;
     double max = -Double.MAX_VALUE;
     for( int i = 0; i < size; i++ )
     {
-      IRecord record = data.get( i );
+      final IRecord record = data.get( i );
       value = record.getValue( comp );
 
       // Beim ersten Mal: abfragen

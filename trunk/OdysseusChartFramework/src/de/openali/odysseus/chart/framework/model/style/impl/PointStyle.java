@@ -34,6 +34,7 @@ public class PointStyle extends AbstractStyle implements IPointStyle
     setFillVisible( isFillVisible );
   }
 
+  @Override
   public void setFillVisible( boolean isFillVisible )
   {
     m_showFill = isFillVisible;
@@ -45,6 +46,7 @@ public class PointStyle extends AbstractStyle implements IPointStyle
    * de.openali.odysseus.chart.framework.impl.model.style.IPointStyle#setOutline(de.openali.odysseus.chart.framework
    * .impl.model.style.ILineStyle)
    */
+  @Override
   public void setStroke( ILineStyle stroke )
   {
     m_stroke = stroke;
@@ -54,6 +56,7 @@ public class PointStyle extends AbstractStyle implements IPointStyle
    * (non-Javadoc)
    * @see de.openali.odysseus.chart.framework.impl.model.style.IPointStyle#setWidth(int)
    */
+  @Override
   public void setWidth( int width )
   {
     m_width = width;
@@ -63,6 +66,7 @@ public class PointStyle extends AbstractStyle implements IPointStyle
    * (non-Javadoc)
    * @see de.openali.odysseus.chart.framework.impl.model.style.IPointStyle#setHeight(int)
    */
+  @Override
   public void setHeight( int height )
   {
     m_height = height;
@@ -72,6 +76,7 @@ public class PointStyle extends AbstractStyle implements IPointStyle
    * (non-Javadoc)
    * @see de.openali.odysseus.chart.framework.impl.model.style.IPointStyle#getWidth()
    */
+  @Override
   public int getWidth( )
   {
     return m_width;
@@ -81,6 +86,7 @@ public class PointStyle extends AbstractStyle implements IPointStyle
    * (non-Javadoc)
    * @see de.openali.odysseus.chart.framework.impl.model.style.IPointStyle#getHeight()
    */
+  @Override
   public int getHeight( )
   {
     return m_height;
@@ -90,6 +96,7 @@ public class PointStyle extends AbstractStyle implements IPointStyle
    * (non-Javadoc)
    * @see de.openali.odysseus.chart.framework.impl.model.style.IPointStyle#setInlineColor(org.eclipse.swt.graphics.RGB)
    */
+  @Override
   public void setInlineColor( RGB rgb )
   {
     m_inlineRGB = rgb;
@@ -101,6 +108,7 @@ public class PointStyle extends AbstractStyle implements IPointStyle
    * de.openali.odysseus.chart.framework.impl.model.style.IPointStyle#setMarker(de.openali.odysseus.chart.framework.
    * model.style.IMarker)
    */
+  @Override
   public void setMarker( IMarker marker )
   {
     m_marker = marker;
@@ -110,11 +118,13 @@ public class PointStyle extends AbstractStyle implements IPointStyle
    * (non-Javadoc)
    * @see de.openali.odysseus.chart.framework.impl.model.style.IPointStyle#getMarker()
    */
+  @Override
   public IMarker getMarker( )
   {
     return m_marker;
   }
 
+  @Override
   public void apply( GC gc )
   {
     m_stroke.apply( gc );
@@ -130,16 +140,19 @@ public class PointStyle extends AbstractStyle implements IPointStyle
 
   }
 
+  @Override
   public RGB getInlineColor( )
   {
     return m_inlineRGB;
   }
 
+  @Override
   public ILineStyle getStroke( )
   {
     return m_stroke;
   }
 
+  @Override
   public IPointStyle copy( )
   {
     return new PointStyle( getStroke().copy(), getWidth(), getHeight(), getAlpha(), getInlineColor(), isFillVisible(), getMarker().copy(), isVisible() );
@@ -148,6 +161,7 @@ public class PointStyle extends AbstractStyle implements IPointStyle
   /**
    * @see de.openali.odysseus.chart.framework.model.style.IPointStyle#isFillVisible()
    */
+  @Override
   public boolean isFillVisible( )
   {
     return m_showFill;

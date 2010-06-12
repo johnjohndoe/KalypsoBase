@@ -114,6 +114,7 @@ public class ExportTableWizard extends Wizard
 
     final IRunnableWithProgress runnable = new IRunnableWithProgress()
     {
+      @Override
       public void run( IProgressMonitor monitor ) throws InvocationTargetException
       {
         try

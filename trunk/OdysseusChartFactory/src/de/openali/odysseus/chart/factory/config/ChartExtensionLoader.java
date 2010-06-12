@@ -216,6 +216,7 @@ public class ChartExtensionLoader implements IExtensionLoader
   /**
    * @see de.openali.odysseus.chart.factory.config.IExtensionLoader#getExtension(java.lang.Class, java.lang.String)
    */
+  @Override
   @SuppressWarnings("unchecked")
   public <T> T getExtension( Class<T> extensionClass, String id )
   {

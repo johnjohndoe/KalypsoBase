@@ -78,6 +78,7 @@ public class WMSImageProvider extends AbstractDeegreeImageProvider
   /**
    * @see org.kalypso.ogc.gml.map.themes.provider.IKalypsoImageProvider#getLabel()
    */
+  @Override
   public String getLabel( )
   {
     return Messages.getString("org.kalypso.ogc.gml.wms.loader.images.WMSImageProvider.6") + getService(); //$NON-NLS-1$

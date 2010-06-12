@@ -68,6 +68,7 @@ public class FileItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#getName()
    */
+  @Override
   public String getName( )
   {
     return m_file.getName();
@@ -76,6 +77,7 @@ public class FileItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#getParent()
    */
+  @Override
   public IRepositoryItem getParent( )
   {
     return m_rep.createItem( m_file.getParentFile() );
@@ -84,6 +86,7 @@ public class FileItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#getChildren()
    */
+  @Override
   public IRepositoryItem[] getChildren( )
   {
     final File[] files = m_file.listFiles( m_rep.getFilter() );
@@ -112,6 +115,7 @@ public class FileItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#hasChildren()
    */
+  @Override
   public boolean hasChildren( )
   {
     return m_file.isDirectory();
@@ -126,8 +130,8 @@ public class FileItem implements IRepositoryItem
   /**
    * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
    */
-  @SuppressWarnings("unchecked")
-  public Object getAdapter( final Class anotherClass )
+  @Override
+  public Object getAdapter( @SuppressWarnings("rawtypes") final Class anotherClass )
   {
     if( anotherClass == File.class )
       return m_file;
@@ -138,6 +142,7 @@ public class FileItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#getRepository()
    */
+  @Override
   public IRepository getRepository( )
   {
     return m_rep;
@@ -148,6 +153,7 @@ public class FileItem implements IRepositoryItem
    * 
    * @see org.kalypso.repository.IRepositoryItem#getIdentifier()
    */
+  @Override
   public String getIdentifier( )
   {
     return m_rep.getIdentifier() + ":/" + FileUtilities.getRelativePathTo( m_rep.m_root, m_file ).replace( '\\', '/' ); //$NON-NLS-1$
@@ -175,9 +181,9 @@ public class FileItem implements IRepositoryItem
    * @see org.kalypso.repository.IRepositoryItem#hasAdapter(java.lang.Class)
    */
   @Override
-  public boolean hasAdapter( final Class adapter )
+  public boolean hasAdapter( final Class< ? > adapter )
   {
-    Object object = getAdapter( adapter );
+    final Object object = getAdapter( adapter );
     if( object == null )
       return false;
 

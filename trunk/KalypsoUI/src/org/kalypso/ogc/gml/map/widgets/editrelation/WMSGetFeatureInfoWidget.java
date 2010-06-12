@@ -211,6 +211,7 @@ public class WMSGetFeatureInfoWidget extends AbstractWidget implements IWidgetWi
       /**
        * @see org.kalypso.ogc.gml.IGetFeatureInfoResultProcessor#write(java.lang.String)
        */
+      @Override
       public void write( final String message )
       {
         final Double x1 = pointOfInterest == null ? null : new Double( pointOfInterest.getX() );
@@ -246,6 +247,7 @@ public class WMSGetFeatureInfoWidget extends AbstractWidget implements IWidgetWi
         {
           m_textInfo.getDisplay().asyncExec( new Runnable()
           {
+            @Override
             public void run( )
             {
               if( m_textInfo != null && !m_textInfo.isDisposed() )
@@ -269,6 +271,7 @@ public class WMSGetFeatureInfoWidget extends AbstractWidget implements IWidgetWi
       final KalypsoWMSTheme wmsTheme = (KalypsoWMSTheme) activeTheme;
       m_formatCombo.getDisplay().asyncExec( new Runnable()
       {
+        @Override
         public void run( )
         {
           try
@@ -292,6 +295,7 @@ public class WMSGetFeatureInfoWidget extends AbstractWidget implements IWidgetWi
   /**
    * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#disposeControl()
    */
+  @Override
   public void disposeControl( )
   {
     if( m_topLevel != null && !m_topLevel.isDisposed() )
@@ -311,6 +315,7 @@ public class WMSGetFeatureInfoWidget extends AbstractWidget implements IWidgetWi
   /**
    * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#createControl(org.eclipse.swt.widgets.Composite)
    */
+  @Override
   public Control createControl( final Composite parent, final FormToolkit toolkit )
   {
     m_topLevel = toolkit.createComposite( parent, SWT.NONE );

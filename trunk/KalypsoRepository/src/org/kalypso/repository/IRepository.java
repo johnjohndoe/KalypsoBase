@@ -65,6 +65,7 @@ public interface IRepository extends IRepositoryItem
   /**
    * @return name of the repository
    */
+  @Override
   public String getName( );
 
   /**

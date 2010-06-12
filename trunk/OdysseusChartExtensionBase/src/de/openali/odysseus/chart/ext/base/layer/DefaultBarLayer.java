@@ -18,7 +18,6 @@ import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
  */
 public class DefaultBarLayer extends AbstractBarLayer
 {
-
   private final AbstractDomainIntervalValueData m_data;
 
   public DefaultBarLayer( final AbstractDomainIntervalValueData data, final IAreaStyle areaStyle )
@@ -31,6 +30,7 @@ public class DefaultBarLayer extends AbstractBarLayer
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#paint(org.eclipse.swt.graphics.GC,
    *      org.eclipse.swt.graphics.Device)
    */
+  @Override
   @SuppressWarnings("unchecked")
   public void paint( final GC gc )
   {
@@ -82,6 +82,7 @@ public class DefaultBarLayer extends AbstractBarLayer
     return m_data;
   }
 
+  @Override
   public IDataRange<Number> getTargetRange( )
   {
     // muss als minimalen Wert 0 zurückgeben, weil die Bars bis dahin laufen
@@ -93,6 +94,7 @@ public class DefaultBarLayer extends AbstractBarLayer
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getDomainRange()
    */
+  @Override
   @SuppressWarnings("unchecked")
   public IDataRange<Number> getDomainRange( )
   {

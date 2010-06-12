@@ -144,6 +144,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
       /* Update the text. */
       display.asyncExec( new Runnable()
       {
+        @Override
         public void run( )
         {
           m_statusBar.setText( message );
@@ -259,6 +260,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
       {
         SwingUtilities.invokeLater( new Runnable()
         {
+          @Override
           public void run( )
           {
             ((Component) mapPanel).requestFocusInWindow();
@@ -382,6 +384,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     {
       control.getDisplay().asyncExec( new Runnable()
       {
+        @Override
         public void run( )
         {
           if( !control.isDisposed() )
@@ -490,6 +493,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
   /**
    * @see org.kalypso.ogc.gml.mapmodel.IMapPanelProvider#getMapPanel()
    */
+  @Override
   public IMapPanel getMapPanel( )
   {
     return m_mapPanel;
@@ -534,6 +538,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
   /**
    * @see org.kalypso.metadoc.IExportableObjectFactory#createExportableObjects(org.apache.commons.configuration.Configuration)
    */
+  @Override
   public IExportableObject[] createExportableObjects( final Configuration conf )
   {
     return new IExportableObject[] { new ExportableMap( getMapPanel(), conf.getInt( ImageExportPage.CONF_IMAGE_WIDTH, 640 ), conf.getInt( ImageExportPage.CONF_IMAGE_HEIGHT, 480 ), conf.getString( ImageExportPage.CONF_IMAGE_FORMAT, "png" ) ) }; //$NON-NLS-1$
@@ -543,6 +548,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
    * @see org.kalypso.metadoc.IExportableObjectFactory#createWizardPages(org.kalypso.metadoc.configuration.IPublishingConfiguration,
    *      ImageDescriptor)
    */
+  @Override
   public IWizardPage[] createWizardPages( final IPublishingConfiguration configuration, final ImageDescriptor defaultImage )
   {
     final ImageDescriptor imgDesc = AbstractUIPlugin.imageDescriptorFromPlugin( KalypsoGisPlugin.getId(), "icons/util/img_props.gif" ); //$NON-NLS-1$

@@ -155,16 +155,19 @@ public class SliderPanel
     slider.setMaximum( max + slider.getThumb() );
     slider.addMouseListener( new MouseListener()
     {
+      @Override
       public void mouseDoubleClick( MouseEvent e )
       {
       // nothing
       }
 
+      @Override
       public void mouseDown( MouseEvent e )
       {
       // nothing
       }
 
+      @Override
       public void mouseUp( MouseEvent e )
       {
         setSelection( ( getSlider().getSelection() ) / 100.00 );
@@ -173,6 +176,7 @@ public class SliderPanel
     } );
     slider.addSelectionListener( new SelectionListener()
     {
+      @Override
       public void widgetSelected( SelectionEvent e )
       {
         if( getFormat() == INTEGER )
@@ -181,6 +185,7 @@ public class SliderPanel
           setSelection( ( ( (Slider)e.getSource() ).getSelection() ) / 100.0 );
       }
 
+      @Override
       public void widgetDefaultSelected( SelectionEvent e )
       {
         widgetSelected( e );

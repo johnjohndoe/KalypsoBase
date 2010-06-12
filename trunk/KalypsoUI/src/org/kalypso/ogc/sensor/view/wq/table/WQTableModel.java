@@ -74,6 +74,7 @@ public class WQTableModel extends AbstractTableModel implements TableModel
   /**
    * @see javax.swing.table.TableModel#getColumnCount()
    */
+  @Override
   public int getColumnCount( )
   {
     return 11;
@@ -106,6 +107,7 @@ public class WQTableModel extends AbstractTableModel implements TableModel
   /**
    * @see javax.swing.table.TableModel#getRowCount()
    */
+  @Override
   public int getRowCount( )
   {
     return m_Q.length / 10 + (m_Q.length % 10 == 0 ? 0 : 1) + 1;
@@ -114,6 +116,7 @@ public class WQTableModel extends AbstractTableModel implements TableModel
   /**
    * @see javax.swing.table.TableModel#getValueAt(int, int)
    */
+  @Override
   public Object getValueAt( final int rowIndex, final int columnIndex )
   {
     if( columnIndex == 0 )

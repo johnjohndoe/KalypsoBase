@@ -37,6 +37,7 @@ public class KalypsoOpenFilterDialogActionDelegate extends AbstractGisEditorActi
 
   IStructuredSelection m_ftSelection = null;
 
+  @Override
   public void run( final IAction action )
   {
     Object sGeomOp = null;
@@ -118,6 +119,7 @@ public class KalypsoOpenFilterDialogActionDelegate extends AbstractGisEditorActi
         final Display display = part.getSite().getShell().getDisplay();
         display.syncExec( new Runnable()
         {
+          @Override
           public void run( )
           {
             m_ftSelection = (IStructuredSelection) page.getSelection();

@@ -120,6 +120,7 @@ public class StyleEditorViewPart extends ViewPart implements ISelectionChangedLi
   /**
    * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
    */
+  @Override
   public void selectionChanged( final SelectionChangedEvent event )
   {
     final Object o = ((IStructuredSelection) event.getSelection()).getFirstElement();

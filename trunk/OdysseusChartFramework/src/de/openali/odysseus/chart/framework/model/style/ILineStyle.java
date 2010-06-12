@@ -33,6 +33,7 @@ public interface ILineStyle extends IStyle
 
   public int getMiterLimit( );
 
+  @Override
   public ILineStyle copy( );
 
 }

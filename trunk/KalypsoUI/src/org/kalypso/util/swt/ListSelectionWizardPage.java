@@ -106,6 +106,7 @@ public class ListSelectionWizardPage extends WizardPage
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
    */
+  @Override
   public void createControl( final Composite parent )
   {
     final Composite composite = new Composite( parent, SWT.NONE );
@@ -126,6 +127,7 @@ public class ListSelectionWizardPage extends WizardPage
 
     m_listSelectionPanel.addCheckStateListener( new ICheckStateListener()
     {
+      @Override
       public void checkStateChanged( final CheckStateChangedEvent event )
       {
         handleCheckStateChanged();

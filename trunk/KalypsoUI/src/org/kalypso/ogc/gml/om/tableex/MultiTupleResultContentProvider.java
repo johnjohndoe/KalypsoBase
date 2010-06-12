@@ -67,6 +67,7 @@ public class MultiTupleResultContentProvider implements IStructuredContentProvid
   /**
    * @see org.eclipse.jface.viewers.IContentProvider#dispose()
    */
+  @Override
   public void dispose( )
   {
     if( m_model != null )
@@ -81,6 +82,7 @@ public class MultiTupleResultContentProvider implements IStructuredContentProvid
    * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object,
    *      java.lang.Object)
    */
+  @Override
   public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
   {
     m_tableViewer = ((DefaultTableViewer) viewer);
@@ -106,6 +108,7 @@ public class MultiTupleResultContentProvider implements IStructuredContentProvid
   /**
    * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
    */
+  @Override
   public Object[] getElements( final Object inputElement )
   {
     return m_model.getRowKeySet().toArray();
@@ -114,6 +117,7 @@ public class MultiTupleResultContentProvider implements IStructuredContentProvid
   /**
    * @see org.kalypso.commons.tuple.event.ITupleModelListener#onValueChanged(java.lang.Object, R, C)
    */
+  @Override
   public void onValueChanged( final Object value, final MTRMRow rowKey, final MTRMColumn columnKey )
   {
     m_tableViewer.update( m_model, null );
@@ -122,6 +126,7 @@ public class MultiTupleResultContentProvider implements IStructuredContentProvid
   /**
    * @see org.kalypso.commons.tuple.event.ITupleModelListener#onRowAdded(R)
    */
+  @Override
   public void onRowAdded( final MTRMRow rowKey )
   {
     m_tableViewer.refresh();
@@ -130,6 +135,7 @@ public class MultiTupleResultContentProvider implements IStructuredContentProvid
   /**
    * @see org.kalypso.commons.tuple.event.ITupleModelListener#onRowRemoved(R)
    */
+  @Override
   public void onRowRemoved( final MTRMRow rowKey )
   {
     m_tableViewer.refresh();
@@ -138,6 +144,7 @@ public class MultiTupleResultContentProvider implements IStructuredContentProvid
   /**
    * @see org.kalypso.commons.tuple.event.ITupleModelListener#onColumnAdded(C)
    */
+  @Override
   public void onColumnAdded( final MTRMColumn col )
   {
     m_tableViewer.addColumn( col.getKeyName(), col.toString(), 100, -1, true );
@@ -147,6 +154,7 @@ public class MultiTupleResultContentProvider implements IStructuredContentProvid
   /**
    * @see org.kalypso.commons.tuple.event.ITupleModelListener#onColumnRemoved(C)
    */
+  @Override
   public void onColumnRemoved( final MTRMColumn columnKey )
   {
     m_tableViewer.refresh();

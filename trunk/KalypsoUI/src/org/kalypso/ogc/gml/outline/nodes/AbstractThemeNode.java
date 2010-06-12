@@ -99,11 +99,13 @@ abstract class AbstractThemeNode<T> implements IThemeNode
     m_element = element;
   }
 
+  @Override
   public void dispose( )
   {
     disposeChildren();
   }
 
+  @Override
   public void clear( )
   {
     disposeChildren();
@@ -119,6 +121,7 @@ abstract class AbstractThemeNode<T> implements IThemeNode
     m_childNodes = null;
   }
 
+  @Override
   public T getElement( )
   {
     return m_element;
@@ -167,6 +170,7 @@ abstract class AbstractThemeNode<T> implements IThemeNode
     return null;
   }
 
+  @Override
   public ImageDescriptor getImageDescriptor( )
   {
     final IThemeNode[] children = getChildren();

@@ -68,6 +68,7 @@ public class HeavyRelationType implements org.kalypso.ogc.gml.map.widgets.editre
    * @see org.kalypso.ogc.gml.map.widgets.editrelation.IRelationType#fitsTypes(org.kalypsodeegree.model.feature.IFeatureType,
    *      org.kalypsodeegree.model.feature.IFeatureType)
    */
+  @Override
   public boolean fitsTypes( IFeatureType f1, IFeatureType f2 )
   {
     if( f1 == null || f2 == null )
@@ -79,6 +80,7 @@ public class HeavyRelationType implements org.kalypso.ogc.gml.map.widgets.editre
    * @see org.kalypso.ogc.gml.map.widgets.editrelation.IRelationType#getFitProblems(org.kalypsodeegree.model.feature.GMLWorkspace,
    *      org.kalypsodeegree.model.feature.Feature, org.kalypsodeegree.model.feature.Feature, boolean)
    */
+  @Override
   public String getFitProblems( GMLWorkspace workspace, Feature f1, Feature f2, boolean isAddMode )
   {
     FindExistingHeavyRelationsFeatureVisitor visitor = new FindExistingHeavyRelationsFeatureVisitor( workspace, this );
@@ -95,6 +97,7 @@ public class HeavyRelationType implements org.kalypso.ogc.gml.map.widgets.editre
   /**
    * @see org.kalypso.ogc.gml.map.widgets.editrelation.IRelationType#getDestFT()
    */
+  @Override
   public IFeatureType getDestFT( )
   {
     return m_relationType2.getDestFT();
@@ -103,6 +106,7 @@ public class HeavyRelationType implements org.kalypso.ogc.gml.map.widgets.editre
   /**
    * @see org.kalypso.ogc.gml.map.widgets.editrelation.IRelationType#getSrcFT()
    */
+  @Override
   public IFeatureType getSrcFT( )
   {
     return m_relationType1.getSrcFT();

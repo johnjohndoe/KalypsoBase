@@ -68,6 +68,7 @@ public class RelationType implements org.kalypso.ogc.gml.map.widgets.editrelatio
     m_link = link;
   }
 
+  @Override
   public boolean fitsTypes( final IFeatureType f1, final IFeatureType f2 )
   {
     if( f1 == null || f2 == null )
@@ -75,6 +76,7 @@ public class RelationType implements org.kalypso.ogc.gml.map.widgets.editrelatio
     return f1 == m_srcFT && f2 == m_destFT;
   }
 
+  @Override
   public String getFitProblems( final GMLWorkspace workspace, final Feature f1, final Feature f2, boolean isAddMode )
   {
 
@@ -150,6 +152,7 @@ public class RelationType implements org.kalypso.ogc.gml.map.widgets.editrelatio
     return m_srcFT.getAnnotation().getLabel() + " > " + m_destFT.getAnnotation().getLabel(); //$NON-NLS-1$
   }
 
+  @Override
   public IFeatureType getDestFT( )
   {
     return m_destFT;
@@ -160,6 +163,7 @@ public class RelationType implements org.kalypso.ogc.gml.map.widgets.editrelatio
     return m_link;
   }
 
+  @Override
   public IFeatureType getSrcFT( )
   {
     return m_srcFT;

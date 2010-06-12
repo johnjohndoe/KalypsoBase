@@ -20,8 +20,8 @@ import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.chart.ui.editor.ui.SafeSaveDialog;
 import org.kalypso.chart.ui.i18n.Messages;
 
-import de.openali.odysseus.chart.framework.model.style.ITextStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyleConstants.FONTWEIGHT;
+import de.openali.odysseus.chart.framework.model.style.ITextStyle;
 import de.openali.odysseus.chart.framework.util.StyleUtils;
 import de.openali.odysseus.chart.framework.util.img.ChartImageFactory;
 import de.openali.odysseus.chart.framework.util.img.SimpleLegendImageFactory;
@@ -38,6 +38,7 @@ public class ChartAndLegendExportHandler extends AbstractHandler
    * 
    * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
+  @Override
   public Object execute( final ExecutionEvent event )
   {
 

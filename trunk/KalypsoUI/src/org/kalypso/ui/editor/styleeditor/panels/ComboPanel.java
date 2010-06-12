@@ -117,12 +117,14 @@ public abstract class ComboPanel
 
     comboBox.addSelectionListener( new SelectionListener()
     {
+      @Override
       public void widgetSelected( SelectionEvent e )
       {
         selection_index = ( (Combo)e.getSource() ).getSelectionIndex();
         fire();
       }
 
+      @Override
       public void widgetDefaultSelected( SelectionEvent e )
       {
         widgetSelected( e );

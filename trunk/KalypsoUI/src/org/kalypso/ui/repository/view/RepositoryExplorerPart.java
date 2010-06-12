@@ -189,6 +189,7 @@ public class RepositoryExplorerPart extends ViewPart implements ISelectionProvid
   /**
    * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
    */
+  @Override
   public void selectionChanged( final SelectionChangedEvent event )
   {
     if( (m_propsPage != null) && !m_propsPage.getControl().isDisposed() )
@@ -304,6 +305,7 @@ public class RepositoryExplorerPart extends ViewPart implements ISelectionProvid
   /**
    * @see org.eclipse.jface.viewers.ISelectionProvider#getSelection()
    */
+  @Override
   public ISelection getSelection( )
   {
     return m_chooser.getSelection();
@@ -312,6 +314,7 @@ public class RepositoryExplorerPart extends ViewPart implements ISelectionProvid
   /**
    * @see org.eclipse.jface.viewers.ISelectionProvider#setSelection(org.eclipse.jface.viewers.ISelection)
    */
+  @Override
   public void setSelection( final ISelection selection )
   {
     m_chooser.setSelection( selection );
@@ -320,6 +323,7 @@ public class RepositoryExplorerPart extends ViewPart implements ISelectionProvid
   /**
    * @see org.eclipse.jface.viewers.ISelectionProvider#addSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
    */
+  @Override
   public void addSelectionChangedListener( final ISelectionChangedListener listener )
   {
     if( m_chooser != null )
@@ -329,6 +333,7 @@ public class RepositoryExplorerPart extends ViewPart implements ISelectionProvid
   /**
    * @see org.eclipse.jface.viewers.ISelectionProvider#removeSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
    */
+  @Override
   public void removeSelectionChangedListener( final ISelectionChangedListener listener )
   {
     if( m_chooser != null )

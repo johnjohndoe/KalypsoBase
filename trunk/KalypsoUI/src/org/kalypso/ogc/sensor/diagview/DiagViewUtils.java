@@ -44,7 +44,6 @@ import java.awt.BasicStroke;
 import java.awt.Stroke;
 import java.io.BufferedWriter;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.net.URL;
@@ -52,8 +51,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.TimeZone;
 import java.util.Map.Entry;
+import java.util.TimeZone;
 import java.util.logging.Logger;
 
 import javax.xml.bind.JAXBContext;
@@ -78,13 +77,13 @@ import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.template.obsdiagview.ObjectFactory;
 import org.kalypso.template.obsdiagview.Obsdiagview;
+import org.kalypso.template.obsdiagview.Obsdiagview.Legend;
 import org.kalypso.template.obsdiagview.TypeAxis;
 import org.kalypso.template.obsdiagview.TypeAxisMapping;
 import org.kalypso.template.obsdiagview.TypeCurve;
 import org.kalypso.template.obsdiagview.TypeDirection;
 import org.kalypso.template.obsdiagview.TypeObservation;
 import org.kalypso.template.obsdiagview.TypePosition;
-import org.kalypso.template.obsdiagview.Obsdiagview.Legend;
 import org.xml.sax.InputSource;
 
 /**

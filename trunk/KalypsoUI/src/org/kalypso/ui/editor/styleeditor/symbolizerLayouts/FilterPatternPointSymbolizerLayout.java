@@ -122,6 +122,7 @@ public class FilterPatternPointSymbolizerLayout extends AbstractSymbolizerLayout
     }
     wellKnownNameComboBox.addPanelListener( new PanelListener()
     {
+      @Override
       public void valueChanged( final PanelEvent event )
       {
         final int index = ((ComboPanel) event.getSource()).getSelection();
@@ -153,6 +154,7 @@ public class FilterPatternPointSymbolizerLayout extends AbstractSymbolizerLayout
     }
     graphicSizePanel.addPanelListener( new PanelListener()
     {
+      @Override
       public void valueChanged( final PanelEvent event )
       {
         final double size = ((SliderPanel) event.getSource()).getSelection();
@@ -204,6 +206,7 @@ public class FilterPatternPointSymbolizerLayout extends AbstractSymbolizerLayout
 
       m_colorPalettePanel.addColorPalettePanelListener( new PanelListener()
       {
+        @Override
         public void valueChanged( final PanelEvent event )
         {
           final Color[] colorArray = m_colorPalettePanel.getColorPalette();

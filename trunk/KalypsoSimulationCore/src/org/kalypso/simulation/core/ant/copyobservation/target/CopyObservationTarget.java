@@ -64,6 +64,7 @@ public class CopyObservationTarget extends AbstractObservationTarget implements 
     m_targetobservation = targetobservation;
   }
 
+  @Override
   public final String getTargetHref( final Feature f ) throws CoreException
   {
     final TimeseriesLinkType targetlink = getTargetLink( f );

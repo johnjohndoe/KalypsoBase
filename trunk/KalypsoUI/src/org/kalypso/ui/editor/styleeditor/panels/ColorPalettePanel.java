@@ -154,6 +154,7 @@ public class ColorPalettePanel
 
     comboBox.addPanelListener( new PanelListener()
     {
+      @Override
       public void valueChanged( PanelEvent event )
       {
         switch( getComboBox().getSelection() )
@@ -206,6 +207,7 @@ public class ColorPalettePanel
 
     colorPallete.addColorPaletterListener( new PanelListener()
     {
+      @Override
       public void valueChanged( PanelEvent event )
       {
         // changes allowed only to customize selection

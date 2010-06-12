@@ -95,6 +95,7 @@ public class FeatureTypeSelectionPage extends WizardPage implements ISelectionCh
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
    */
+  @Override
   public void createControl( final Composite parent )
   {
     m_viewer = new ListViewer( parent, SWT.SINGLE | SWT.V_SCROLL | SWT.H_SCROLL );
@@ -152,6 +153,7 @@ public class FeatureTypeSelectionPage extends WizardPage implements ISelectionCh
 
     final ICoreRunnableWithProgress runnable = new ICoreRunnableWithProgress()
     {
+      @Override
       public IStatus execute( final IProgressMonitor monitor ) throws InvocationTargetException
       {
         try
@@ -185,6 +187,7 @@ public class FeatureTypeSelectionPage extends WizardPage implements ISelectionCh
   /**
    * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
    */
+  @Override
   public void selectionChanged( final SelectionChangedEvent event )
   {
     final IStructuredSelection selection = (IStructuredSelection) event.getSelection();

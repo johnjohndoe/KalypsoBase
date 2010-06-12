@@ -56,6 +56,7 @@ public class ObservationPropertySourceProvider implements IPropertySourceProvide
   /**
    * @see org.eclipse.ui.views.properties.IPropertySourceProvider#getPropertySource(java.lang.Object)
    */
+  @Override
   public IPropertySource getPropertySource( Object object )
   {
     if( object instanceof IAdaptable )

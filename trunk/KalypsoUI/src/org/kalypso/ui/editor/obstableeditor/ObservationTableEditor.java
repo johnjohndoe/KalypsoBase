@@ -175,6 +175,7 @@ public class ObservationTableEditor extends AbstractObservationEditor implements
   /**
    * @see org.kalypso.metadoc.IExportableObjectFactory#createExportableObjects(org.apache.commons.configuration.Configuration)
    */
+  @Override
   public IExportableObject[] createExportableObjects( final Configuration configuration )
   {
     final ExportableObservationTable exportable = new ExportableObservationTable( m_table, getTitle(), Messages.getString( "org.kalypso.ui.editor.obstableeditor.ObservationTableEditor.0" ), getTitle(), null ); //$NON-NLS-1$
@@ -185,6 +186,7 @@ public class ObservationTableEditor extends AbstractObservationEditor implements
    * @see org.kalypso.metadoc.IExportableObjectFactory#createWizardPages(org.kalypso.metadoc.configuration.IPublishingConfiguration,
    *      ImageDescriptor)
    */
+  @Override
   public IWizardPage[] createWizardPages( final IPublishingConfiguration configuration, final ImageDescriptor defaultImage )
   {
     return new IWizardPage[0];

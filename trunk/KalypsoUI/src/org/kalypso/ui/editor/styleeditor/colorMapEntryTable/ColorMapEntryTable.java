@@ -42,10 +42,10 @@ package org.kalypso.ui.editor.styleeditor.colorMapEntryTable;
 
 import java.awt.Color;
 import java.util.Arrays;
+import java.util.Map.Entry;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.Vector;
-import java.util.Map.Entry;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.CellEditor;
@@ -237,6 +237,7 @@ public class ColorMapEntryTable
 
     new VerifyListener()
     {
+      @Override
       public void verifyText( final VerifyEvent e )
       {
         if( e.text.matches( fINTEGER_FIELD ) || e.text.matches( fFLOATING_POINT_FIELD ) )
@@ -255,6 +256,7 @@ public class ColorMapEntryTable
 
     new VerifyListener()
     {
+      @Override
       public void verifyText( final VerifyEvent e )
       {
         if( e.text.matches( fNON_NEGATIVE_INTEGER_FIELD ) || e.text.matches( fNON_NEGATIVE_FLOATING_POINT_FIELD ) )
@@ -273,6 +275,7 @@ public class ColorMapEntryTable
 
   class ColorMapEntryContentProvider implements IStructuredContentProvider, IColorMapEntryViewer
   {
+    @Override
     public void inputChanged( final Viewer v, final Object oldInput, final Object newInput )
     {
       if( newInput != null )
@@ -281,27 +284,32 @@ public class ColorMapEntryTable
         ((ColorMapEntryList) oldInput).removeChangeListener( this );
     }
 
+    @Override
     public void dispose( )
     {
       m_colorMapEntryList.removeChangeListener( this );
     }
 
     // Return the colorMapEntries as an array of Objects
+    @Override
     public Object[] getElements( final Object parent )
     {
       return m_colorMapEntryList.getColorMapEntries().toArray();
     }
 
+    @Override
     public void addColorMapEntry( final ColorMapEntry colorMapEntry )
     {
       tableViewer.add( colorMapEntry );
     }
 
+    @Override
     public void removeColorMapEntry( final ColorMapEntry colorMapEntry )
     {
       tableViewer.remove( colorMapEntry );
     }
 
+    @Override
     public void updateColorMapEntry( final ColorMapEntry colorMapEntry )
     {
       tableViewer.update( colorMapEntry, null );

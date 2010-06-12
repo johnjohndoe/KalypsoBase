@@ -15,6 +15,7 @@ public class ObsTemplateContentProvider implements ITreeContentProvider
   /**
    * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
    */
+  @Override
   public Object[] getChildren( Object parentElement )
   {
     if( parentElement instanceof ObsView )
@@ -26,6 +27,7 @@ public class ObsTemplateContentProvider implements ITreeContentProvider
   /**
    * @see org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.Object)
    */
+  @Override
   public Object getParent( Object element )
   {
     if( element instanceof ObsViewItem )
@@ -37,6 +39,7 @@ public class ObsTemplateContentProvider implements ITreeContentProvider
   /**
    * @see org.eclipse.jface.viewers.ITreeContentProvider#hasChildren(java.lang.Object)
    */
+  @Override
   public boolean hasChildren( Object element )
   {
     return ( element instanceof ObsView ) && ( (ObsView)element ).getItems().length > 0;
@@ -45,6 +48,7 @@ public class ObsTemplateContentProvider implements ITreeContentProvider
   /**
    * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
    */
+  @Override
   public Object[] getElements( Object inputElement )
   {
     if( inputElement instanceof ObsView )
@@ -57,6 +61,7 @@ public class ObsTemplateContentProvider implements ITreeContentProvider
    * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object,
    *      java.lang.Object)
    */
+  @Override
   public void inputChanged( Viewer viewer, Object oldInput, Object newInput )
   {
   // empty
@@ -65,6 +70,7 @@ public class ObsTemplateContentProvider implements ITreeContentProvider
   /**
    * @see org.eclipse.jface.viewers.IContentProvider#dispose()
    */
+  @Override
   public void dispose()
   {
   // empty

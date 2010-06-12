@@ -106,6 +106,7 @@ public abstract class ObsViewItem implements IObsProviderListener, IObservationL
     return m_view;
   }
 
+  @Override
   public boolean isShown( )
   {
     return m_shown;
@@ -124,6 +125,7 @@ public abstract class ObsViewItem implements IObsProviderListener, IObservationL
   /**
    * @see org.kalypso.ogc.sensor.template.IObsProviderListener#obsProviderChanged()
    */
+  @Override
   public void obsProviderChanged( )
   {
     if( m_observation != null )
@@ -141,6 +143,7 @@ public abstract class ObsViewItem implements IObsProviderListener, IObservationL
    * @see org.kalypso.ogc.sensor.IObservationListener#observationChanged(org.kalypso.ogc.sensor.IObservation,
    *      java.lang.Object)
    */
+  @Override
   public void observationChanged( final IObservation obs, final Object source )
   {
     m_view.refreshItemData( this, source );

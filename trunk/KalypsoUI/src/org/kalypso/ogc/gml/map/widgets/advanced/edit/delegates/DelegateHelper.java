@@ -41,8 +41,8 @@
 package org.kalypso.ogc.gml.map.widgets.advanced.edit.delegates;
 
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.kalypso.ogc.gml.map.widgets.advanced.edit.IAdvancedEditWidgetGeometry;
 import org.kalypsodeegree.model.feature.Feature;

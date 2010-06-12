@@ -156,6 +156,7 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
     }
   }
 
+  @Override
   public void setName( final I10nString name )
   {
     m_modell.setName( name );

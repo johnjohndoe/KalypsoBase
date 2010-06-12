@@ -57,6 +57,7 @@ public class LocalSimulationFactory implements ISimulationFactory
   /**
    * @see org.kalypso.services.calculation.service.impl.ICalcJobFactory#getSupportedTypes()
    */
+  @Override
   public String[] getSupportedTypes( )
   {
     return KalypsoSimulationCoreExtensions.getRegisteredTypeIDs();
@@ -65,6 +66,7 @@ public class LocalSimulationFactory implements ISimulationFactory
   /**
    * @see org.kalypso.services.calculation.service.impl.ICalcJobFactory#createJob(java.lang.String)
    */
+  @Override
   public ISimulation createJob( final String typeID ) throws SimulationException
   {
     try

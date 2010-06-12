@@ -114,6 +114,7 @@ public class ObservationTableView extends ViewPart implements IFeatureSelectionL
   /**
    * @see org.kalypso.ogc.gml.selection.IFeatureSelectionListener#selectionChanged(org.kalypso.ogc.gml.selection.IFeatureSelection)
    */
+  @Override
   public void selectionChanged( final IFeatureSelection selection )
   {
     m_viewer.setInput( null );

@@ -170,11 +170,13 @@ public class ObservationViewerDialog extends Dialog
     {
       final SelectionListener removeListener = new SelectionListener()
       {
+        @Override
         public void widgetSelected( final SelectionEvent e )
         {
           setInput( null );
         }
 
+        @Override
         public void widgetDefaultSelected( final SelectionEvent e )
         {
           // TODO Auto-generated method stub
@@ -186,6 +188,7 @@ public class ObservationViewerDialog extends Dialog
     {
       final SelectionListener newListener = new SelectionListener()
       {
+        @Override
         public void widgetSelected( final SelectionEvent e )
         {
           final AxisRangeDialog dialog = new AxisRangeDialog( getShell(), getAxisTypes()[0] );
@@ -211,6 +214,7 @@ public class ObservationViewerDialog extends Dialog
           }
         }
 
+        @Override
         public void widgetDefaultSelected( final SelectionEvent e )
         {
           // TODO Auto-generated method stub
@@ -224,6 +228,7 @@ public class ObservationViewerDialog extends Dialog
     {
       final SelectionListener newListener = new SelectionListener()
       {
+        @Override
         public void widgetSelected( final SelectionEvent e )
         {
           final String name = Messages.getString( "org.kalypso.ogc.sensor.view.ObservationViewerDialog.5" ); //$NON-NLS-1$
@@ -247,6 +252,7 @@ public class ObservationViewerDialog extends Dialog
           setInput( new SimpleObservation( null, null, name, true, new MetadataList(), axis, model ) );
         }
 
+        @Override
         public void widgetDefaultSelected( final SelectionEvent e )
         {
           // TODO Auto-generated method stub
@@ -258,6 +264,7 @@ public class ObservationViewerDialog extends Dialog
     {
       final SelectionListener exelImportListener = new SelectionListener()
       {
+        @Override
         public void widgetSelected( final SelectionEvent e )
         {
           final Clipboard clipboard = new Clipboard( getShell().getDisplay() );
@@ -273,6 +280,7 @@ public class ObservationViewerDialog extends Dialog
           clipboard.dispose();
         }
 
+        @Override
         public void widgetDefaultSelected( final SelectionEvent e )
         {
           // TODO Auto-generated method stub
@@ -284,6 +292,7 @@ public class ObservationViewerDialog extends Dialog
     {
       final SelectionListener exelExportListener = new SelectionListener()
       {
+        @Override
         public void widgetSelected( final SelectionEvent e )
         {
           final Clipboard clipboard = new Clipboard( getShell().getDisplay() );
@@ -303,6 +312,7 @@ public class ObservationViewerDialog extends Dialog
           clipboard.dispose();
         }
 
+        @Override
         public void widgetDefaultSelected( final SelectionEvent e )
         {
           // TODO Auto-generated method stub

@@ -78,6 +78,7 @@ public class UserStyleNode extends KalypsoStyleNode<IKalypsoUserStyle>
     return style.getFeatureTypeStyles();
   }
 
+  @Override
   public String getLabel( )
   {
     final IKalypsoUserStyle userStyle = getStyle();

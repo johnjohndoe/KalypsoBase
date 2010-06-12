@@ -2,8 +2,8 @@ package org.kalypso.chart.ext.observation.layer.provider;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.kalypso.chart.ext.observation.layer.BranchLayer;
 import org.kalypso.observation.IObservation;
@@ -22,6 +22,7 @@ import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 
 public class BranchLayerProvider extends AbstractLayerProvider
 {
+  @Override
   public BranchLayer getLayer( final URL context ) throws ConfigurationException
   {
     final String href = getParameterContainer().getParameterValue( "href", null );

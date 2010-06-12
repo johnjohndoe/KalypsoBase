@@ -47,6 +47,8 @@ import java.util.Map;
 import net.opengeospatial.wps.DataInputsType;
 import net.opengeospatial.wps.IOValueType;
 
+import org.apache.commons.lang.NotImplementedException;
+
 /**
  * @author kurzbach
  */
@@ -108,6 +110,9 @@ public class ExecuteMediator extends AbstractWPSMediator<net.opengis.wps._1_0.Ex
           inputList.put( identifier, value );
         }
         break;
+
+      case V100:
+        throw new NotImplementedException();
     }
     return inputList;
   }

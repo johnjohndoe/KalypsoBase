@@ -106,6 +106,7 @@ public class Handle implements IHandle
   /**
    * @see org.kalypso.informdss.manager.util.widgets.providers.handles.IHandle#isSelectable()
    */
+  @Override
   public boolean isSelectable( Point p, GeoTransform projection )
   {
     final int x = (int) projection.getDestX( m_position.getX() );
@@ -123,6 +124,7 @@ public class Handle implements IHandle
   /**
    * @see org.kalypso.informdss.manager.util.widgets.providers.handles.IHandle#paint(java.awt.Graphics)
    */
+  @Override
   public void paint( Graphics g, GeoTransform projection, Point startPoint, Point currentPoint )
   {
     /* Calculate the coordinates for the map. */
@@ -153,6 +155,7 @@ public class Handle implements IHandle
   /**
    * @see org.kalypso.informdss.manager.util.widgets.providers.handles.IHandle#setActive(boolean)
    */
+  @Override
   public void setActive( boolean active )
   {
     m_active = active;
@@ -161,6 +164,7 @@ public class Handle implements IHandle
   /**
    * @see org.kalypso.informdss.manager.util.widgets.providers.handles.IHandle#isActive()
    */
+  @Override
   public boolean isActive( )
   {
     return m_active;
@@ -169,6 +173,7 @@ public class Handle implements IHandle
   /**
    * @see org.kalypso.informdss.manager.util.widgets.providers.handles.IHandle#getFeature()
    */
+  @Override
   public Feature getFeature( )
   {
     return m_feature;
@@ -177,6 +182,7 @@ public class Handle implements IHandle
   /**
    * @see org.kalypso.informdss.manager.util.widgets.providers.handles.IHandle#getValuePropertyType()
    */
+  @Override
   public IValuePropertyType getValuePropertyType( )
   {
     return m_vpt;
@@ -185,6 +191,7 @@ public class Handle implements IHandle
   /**
    * @see org.kalypso.informdss.manager.util.widgets.providers.handles.IHandle#getPosition()
    */
+  @Override
   public GM_Position getPosition( )
   {
     return m_position;

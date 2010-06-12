@@ -23,6 +23,7 @@ public class GenericNumberTickCalculator implements ITickCalculator
    * @param minDisplayInterval
    *          interval division should stop when intervals become smaller than this value
    */
+  @Override
   public Number[] calcTicks( final GC gc, final IAxis axis, final Number minDisplayInterval, final Point ticklabelSize )
   {
     final IDataRange<Number> range = axis.getNumericRange();

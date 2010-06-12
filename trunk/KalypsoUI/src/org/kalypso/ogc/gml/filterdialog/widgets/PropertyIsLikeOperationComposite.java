@@ -139,6 +139,7 @@ class PropertyIsLikeOperationComposite extends AbstractFilterComposite
     m_propViewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
 
+      @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
         final Object firstElement = ((IStructuredSelection) event.getSelection()).getFirstElement();
@@ -160,11 +161,13 @@ class PropertyIsLikeOperationComposite extends AbstractFilterComposite
     m_secondRowText.addFocusListener( new FocusListener()
     {
 
+      @Override
       public void focusGained( final FocusEvent e )
       {
         // do nothing
       }
 
+      @Override
       public void focusLost( final FocusEvent e )
       {
         final IStructuredSelection selection = (IStructuredSelection) m_propViewer.getSelection();

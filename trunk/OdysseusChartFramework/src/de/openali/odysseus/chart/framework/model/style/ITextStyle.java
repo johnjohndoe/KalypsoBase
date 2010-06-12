@@ -20,6 +20,7 @@ public interface ITextStyle extends IStyle
 
   public void setHeight( int size );
 
+  @Override
   public ITextStyle copy( );
 
   public FONTWEIGHT getWeight( );

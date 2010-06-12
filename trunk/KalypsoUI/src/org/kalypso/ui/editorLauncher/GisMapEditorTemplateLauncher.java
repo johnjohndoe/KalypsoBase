@@ -81,6 +81,7 @@ public class GisMapEditorTemplateLauncher implements IDefaultTemplateLauncher
   /**
    * @see org.kalypso.ui.editorLauncher.IDefaultTemplateLauncher#getFilename()
    */
+  @Override
   public String getFilename( )
   {
     return "<Standard Kartenansicht>.gmt"; //$NON-NLS-1$
@@ -89,6 +90,7 @@ public class GisMapEditorTemplateLauncher implements IDefaultTemplateLauncher
   /**
    * @see org.kalypso.ui.editorLauncher.IDefaultTemplateLauncher#getEditor()
    */
+  @Override
   public IEditorDescriptor getEditor( )
   {
     final IWorkbench workbench = PlatformUI.getWorkbench();
@@ -99,6 +101,7 @@ public class GisMapEditorTemplateLauncher implements IDefaultTemplateLauncher
   /**
    * @see org.kalypso.ui.editorLauncher.IDefaultTemplateLauncher#createInput(org.eclipse.core.resources.IFile)
    */
+  @Override
   public IEditorInput createInput( final IFile file ) throws CoreException
   {
     final org.kalypso.template.gismapview.ObjectFactory gisMapFactory = new org.kalypso.template.gismapview.ObjectFactory();

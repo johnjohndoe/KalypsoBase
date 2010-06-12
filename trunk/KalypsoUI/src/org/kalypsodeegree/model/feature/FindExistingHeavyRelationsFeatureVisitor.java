@@ -76,6 +76,7 @@ public class FindExistingHeavyRelationsFeatureVisitor implements FeatureVisitor
   /**
    * @see org.kalypsodeegree.model.feature.FeatureVisitor#visit(org.kalypsodeegree.model.feature.Feature)
    */
+  @Override
   public boolean visit( Feature srcFE )
   {
     if( srcFE.getFeatureType() != m_relation.getSrcFT() )

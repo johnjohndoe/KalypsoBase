@@ -17,6 +17,7 @@ public interface IStyleConstants
       m_swtValue = swtValue;
     }
 
+    @Override
     public int toSWT( )
     {
       return m_swtValue;
@@ -36,6 +37,7 @@ public interface IStyleConstants
       m_swtValue = swtValue;
     }
 
+    @Override
     public int toSWT( )
     {
       return m_swtValue;
@@ -54,6 +56,7 @@ public interface IStyleConstants
       m_swtValue = swtValue;
     }
 
+    @Override
     public int toSWT( )
     {
       return m_swtValue;
@@ -72,6 +75,7 @@ public interface IStyleConstants
       m_swtValue = swtValue;
     }
 
+    @Override
     public int toSWT( )
     {
       return m_swtValue;

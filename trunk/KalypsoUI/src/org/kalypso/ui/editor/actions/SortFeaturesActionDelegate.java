@@ -87,6 +87,7 @@ public class SortFeaturesActionDelegate extends ActionDelegate implements IObjec
    * @see org.eclipse.ui.IObjectActionDelegate#setActivePart(org.eclipse.jface.action.IAction,
    *      org.eclipse.ui.IWorkbenchPart)
    */
+  @Override
   public void setActivePart( final IAction action, final IWorkbenchPart targetPart )
   {
   }

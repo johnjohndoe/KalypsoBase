@@ -267,6 +267,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
    *      org.kalypsodeegree.graphics.transformation.GeoTransform, java.lang.Boolean,
    *      org.eclipse.core.runtime.IProgressMonitor)
    */
+  @Override
   public IStatus paint( final Graphics g, final GeoTransform p, final Boolean selected, final IProgressMonitor monitor )
   {
     if( m_theme != null )
@@ -285,6 +286,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
   /**
    * @see org.kalypso.ogc.gml.ITemplateTheme#saveFeatures(org.eclipse.core.runtime.IProgressMonitor)
    */
+  @Override
   public void saveFeatures( final IProgressMonitor monitor ) throws CoreException
   {
     try
@@ -303,6 +305,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
    * @see org.kalypso.commons.command.ICommandTarget#postCommand(org.kalypso.commons.command.ICommand,
    *      java.lang.Runnable)
    */
+  @Override
   public void postCommand( final ICommand command, final Runnable runnable )
   {
     m_commandTarget.postCommand( command, runnable );
@@ -311,6 +314,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#getBoundingBox()
    */
+  @Override
   public GM_Envelope getFullExtent( )
   {
     if( m_theme != null )
@@ -373,6 +377,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
    * @see org.kalypso.util.pool.IPoolListener#objectLoaded(org.kalypso.util.pool.IPoolableObjectType, java.lang.Object,
    *      org.eclipse.core.runtime.IStatus)
    */
+  @Override
   public void objectLoaded( final IPoolableObjectType key, final Object newValue, final IStatus status )
   {
     if( KeyComparator.getInstance().compare( key, m_layerKey ) == 0 )
@@ -495,6 +500,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
     final CatalogSLD styleCatalog = KalypsoCorePlugin.getDefault().getSLDCatalog();
     final IUrlResolver2 resolver = new IUrlResolver2()
     {
+      @Override
       public URL resolveURL( final String href ) throws MalformedURLException
       {
         return UrlResolverSingleton.resolveUrl( context, href );
@@ -555,6 +561,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
   /**
    * @see org.kalypso.util.pool.IPoolListener#objectInvalid(org.kalypso.util.pool.IPoolableObjectType, java.lang.Object)
    */
+  @Override
   public void objectInvalid( final IPoolableObjectType key, final Object oldValue )
   {
     if( KeyComparator.getInstance().compare( key, m_layerKey ) == 0 )
@@ -573,6 +580,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
   /**
    * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#getWorkspace()
    */
+  @Override
   public CommandableWorkspace getWorkspace( )
   {
     if( m_theme != null )
@@ -583,6 +591,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
   /**
    * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#getFeatureType()
    */
+  @Override
   public IFeatureType getFeatureType( )
   {
     if( m_theme != null )
@@ -593,6 +602,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
   /**
    * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#getFeaturePath()
    */
+  @Override
   public String getFeaturePath( )
   {
     if( m_theme != null )
@@ -603,6 +613,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
   /**
    * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#addStyle(org.kalypso.ogc.gml.KalypsoUserStyle)
    */
+  @Override
   public void addStyle( final IKalypsoStyle style )
   {
     style.addStyleListener( this );
@@ -614,6 +625,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
   /**
    * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#removeStyle(org.kalypso.ogc.gml.KalypsoUserStyle)
    */
+  @Override
   public void removeStyle( final IKalypsoStyle style )
   {
     if( m_theme != null )
@@ -624,6 +636,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
   /**
    * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#getStyles()
    */
+  @Override
   public IKalypsoStyle[] getStyles( )
   {
     if( m_theme != null )
@@ -634,6 +647,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
   /**
    * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#getFeatureList()
    */
+  @Override
   public FeatureList getFeatureList( )
   {
     if( m_theme != null )
@@ -644,6 +658,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
   /**
    * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#getSchedulingRule()
    */
+  @Override
   public ISchedulingRule getSchedulingRule( )
   {
     return m_commandTarget.getSchedulingRule();
@@ -652,6 +667,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
   /**
    * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#getFeatureListVisible(org.kalypsodeegree.model.geometry.GM_Envelope)
    */
+  @Override
   public FeatureList getFeatureListVisible( final GM_Envelope env )
   {
     if( m_theme != null )
@@ -680,11 +696,13 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
   /**
    * @see org.kalypso.util.pool.IPoolListener#isDisposed()
    */
+  @Override
   public boolean isDisposed( )
   {
     return m_disposed;
   }
 
+  @Override
   public IFeatureSelectionManager getSelectionManager( )
   {
     return m_selectionManager;
@@ -693,6 +711,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
   /**
    * @see org.kalypso.util.pool.IPoolListener#dirtyChanged(org.kalypso.util.pool.IPoolableObjectType, boolean)
    */
+  @Override
   public void dirtyChanged( final IPoolableObjectType key, final boolean isDirty )
   {
     // TODO Change label, showing if dirty or not
@@ -896,6 +915,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
   /**
    * @see org.kalypso.ogc.gml.IKalypsoStyleListener#styleChanged(org.kalypso.ogc.gml.KalypsoUserStyle)
    */
+  @Override
   public void styleChanged( )
   {
     fireStatusChanged( this );

@@ -188,6 +188,7 @@ public class ObservationDiagramEditor extends AbstractObservationEditor implemen
   /**
    * @see org.kalypso.metadoc.IExportableObjectFactory#createExportableObjects(org.apache.commons.configuration.Configuration)
    */
+  @Override
   public IExportableObject[] createExportableObjects( final Configuration conf )
   {
     return new IExportableObject[]
@@ -200,6 +201,7 @@ public class ObservationDiagramEditor extends AbstractObservationEditor implemen
   /**
    * @see org.kalypso.metadoc.IExportableObjectFactory#createWizardPages(IPublishingConfiguration, ImageDescriptor)
    */
+  @Override
   public IWizardPage[] createWizardPages( final IPublishingConfiguration configuration, final ImageDescriptor defaultImage )
   {
     final ImageDescriptor imgDesc = AbstractUIPlugin.imageDescriptorFromPlugin( KalypsoGisPlugin.getId(),

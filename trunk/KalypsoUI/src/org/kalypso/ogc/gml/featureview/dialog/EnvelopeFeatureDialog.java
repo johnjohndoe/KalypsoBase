@@ -73,6 +73,7 @@ public class EnvelopeFeatureDialog implements IFeatureDialog
   /**
    * @see org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog#open(org.eclipse.swt.widgets.Shell)
    */
+  @Override
   public int open( Shell shell )
   {
     GM_Envelope envelope = (GM_Envelope) m_feature.getProperty( m_ftp );
@@ -101,6 +102,7 @@ public class EnvelopeFeatureDialog implements IFeatureDialog
   /**
    * @see org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog#collectChanges(java.util.Collection)
    */
+  @Override
   public void collectChanges( Collection<FeatureChange> c )
   {
     if( c != null && m_change != null )
@@ -110,6 +112,7 @@ public class EnvelopeFeatureDialog implements IFeatureDialog
   /**
    * @see org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog#getLabel()
    */
+  @Override
   public String getLabel( )
   {
     return Messages.getString( "org.kalypso.ogc.gml.featureview.dialog.EnvelopeFeatureDialog.editvalues" ); //$NON-NLS-1$

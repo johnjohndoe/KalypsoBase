@@ -10,5 +10,5 @@ import de.renew.workflow.connector.cases.ICase;
  */
 public interface IActiveScenarioChangeListener<T extends ICase>
 {
-  void activeScenarioChanged( final CaseHandlingProjectNature newProject, final T caze );
+  void activeScenarioChanged( final CaseHandlingProjectNature<T> newProject, final T caze );
 }

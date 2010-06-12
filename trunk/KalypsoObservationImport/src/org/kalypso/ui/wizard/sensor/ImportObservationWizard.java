@@ -91,6 +91,7 @@ public class ImportObservationWizard extends Wizard implements IImportWizard
    * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
    *      org.eclipse.jface.viewers.IStructuredSelection)
    */
+  @Override
   public void init( final IWorkbench workbench, final IStructuredSelection currentSelection )
   {
     m_selection = currentSelection;

@@ -79,6 +79,7 @@ public class WorkflowSystem implements IWorkflowSystem, IPreferenceChangeListene
   /**
    * @see org.kalypso.afgui.model.IWorkflowSystem#getCurrentWorkFlow()
    */
+  @Override
   public IWorkflow getCurrentWorkflow( )
   {
     return m_currentWorkflow;
@@ -87,6 +88,7 @@ public class WorkflowSystem implements IWorkflowSystem, IPreferenceChangeListene
   /**
    * @see org.eclipse.core.runtime.preferences.IEclipsePreferences.IPreferenceChangeListener#preferenceChange(org.eclipse.core.runtime.preferences.IEclipsePreferences.PreferenceChangeEvent)
    */
+  @Override
   public void preferenceChange( final PreferenceChangeEvent event )
   {
     // This event is not generated when the settings file is manually edited,

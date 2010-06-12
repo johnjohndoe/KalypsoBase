@@ -74,6 +74,7 @@ public class FeatureTypeStyleNode extends KalypsoStyleNode<FeatureTypeStyle>
     return getElement().getRules();
   }
 
+  @Override
   public String getLabel( )
   {
     final String label = getElement().getTitle();

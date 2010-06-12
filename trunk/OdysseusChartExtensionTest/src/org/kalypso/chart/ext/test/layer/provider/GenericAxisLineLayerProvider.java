@@ -24,7 +24,8 @@ public class GenericAxisLineLayerProvider extends AbstractLayerProvider
   /**
    * @see org.kalypso.swtchart.chart.layer.ILayerProvider#getLayer(java.net.URL)
    */
-  public IChartLayer getLayer( final URL context )
+  @Override
+public IChartLayer getLayer( final URL context )
   {
     return new GenericAxisLineLayer( getDataContainer(), getStyleSet().getStyle( ROLE_LINE_STYLE, ILineStyle.class ), getStyleSet().getStyle( ROLE_POINT_STYLE, IPointStyle.class ) );
   }

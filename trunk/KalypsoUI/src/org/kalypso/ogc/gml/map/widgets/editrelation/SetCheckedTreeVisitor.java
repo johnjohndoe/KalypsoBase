@@ -56,6 +56,7 @@ public class SetCheckedTreeVisitor implements ITreeVisitor
     // nothing
   }
 
+  @Override
   public boolean visit( Object element, ITreeContentProvider contentProvider )
   {
     if( contentProvider instanceof EditRelationOptionsContentProvider )

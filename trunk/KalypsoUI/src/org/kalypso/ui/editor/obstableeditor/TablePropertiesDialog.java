@@ -107,6 +107,7 @@ public class TablePropertiesDialog extends TitleAreaDialog
 
     cmbTz.addModifyListener( new ModifyListener()
     {
+      @Override
       public void modifyText( final ModifyEvent e )
       {
         handleTimeZoneChanged( cmbTz );

@@ -86,6 +86,7 @@ public class Gml3PointGuiTypeHandler extends LabelProvider implements IGuiTypeHa
    * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#createFeatureDialog(org.kalypsodeegree.model.feature.Feature,
    *      org.kalypso.gmlschema.property.IPropertyType)
    */
+  @Override
   public IFeatureDialog createFeatureDialog( final Feature feature, final IPropertyType ftp )
   {
     return new PointFeatureDialog( feature, (IValuePropertyType) ftp );
@@ -95,6 +96,7 @@ public class Gml3PointGuiTypeHandler extends LabelProvider implements IGuiTypeHa
    * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#createFeatureviewControl(javax.xml.namespace.QName,
    *      org.kalypso.template.featureview.ObjectFactory)
    */
+  @Override
   public JAXBElement< ? extends ControlType> createFeatureviewControl( final IPropertyType property, final ObjectFactory factory )
   {
     // // if we get a ClassCastException here, something is very wrong
@@ -149,6 +151,7 @@ public class Gml3PointGuiTypeHandler extends LabelProvider implements IGuiTypeHa
    *      org.kalypso.ogc.gml.selection.IFeatureSelectionManager,
    *      org.kalypso.ogc.gml.featureview.IFeatureChangeListener, java.lang.String)
    */
+  @Override
   public IFeatureModifier createFeatureModifier( final IPropertyType ftp, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl, final String format )
   {
     // if we get a ClassCastExxception here, something is very wrong
@@ -165,6 +168,7 @@ public class Gml3PointGuiTypeHandler extends LabelProvider implements IGuiTypeHa
   /**
    * @see org.kalypso.gmlschema.types.ITypeHandler#getValueClass()
    */
+  @Override
   public Class< ? > getValueClass( )
   {
     return GM_Point.class;
@@ -173,6 +177,7 @@ public class Gml3PointGuiTypeHandler extends LabelProvider implements IGuiTypeHa
   /**
    * @see org.kalypso.gmlschema.types.ITypeHandler#getTypeName()
    */
+  @Override
   public QName getTypeName( )
   {
     /* This corresponds to the qname, it in defined in GMLConstants. */
@@ -182,6 +187,7 @@ public class Gml3PointGuiTypeHandler extends LabelProvider implements IGuiTypeHa
   /**
    * @see org.kalypso.gmlschema.types.ITypeHandler#isGeometry()
    */
+  @Override
   public boolean isGeometry( )
   {
     return false;
@@ -212,6 +218,7 @@ public class Gml3PointGuiTypeHandler extends LabelProvider implements IGuiTypeHa
   /**
    * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#fromText(java.lang.String)
    */
+  @Override
   public Object parseText( final String text, final String formatHint )
   {
     /* Erstellen des Points. */

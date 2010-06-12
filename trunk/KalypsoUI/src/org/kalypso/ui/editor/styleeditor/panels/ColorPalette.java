@@ -118,6 +118,7 @@ public class ColorPalette
           ( (ComplexFilter)getRuleCollection().get( i ).getFilter() ).getOperation() );
       box.addPanelListener( new PanelListener()
       {
+        @Override
         public void valueChanged( PanelEvent event )
         {
           filterPatternDialog.setColor( ( (ColorBox)event.getSource() ).getColor() );

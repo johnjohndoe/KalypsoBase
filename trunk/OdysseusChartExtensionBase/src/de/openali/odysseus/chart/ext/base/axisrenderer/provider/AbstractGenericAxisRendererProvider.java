@@ -69,6 +69,7 @@ public abstract class AbstractGenericAxisRendererProvider extends AbstractAxisRe
   /**
    * @see de.openali.odysseus.chart.factory.provider.IAxisRendererProvider#getAxisRenderer()
    */
+  @Override
   public final IAxisRenderer getAxisRenderer( )
   {
 

@@ -51,6 +51,7 @@ public class DragEditHandler implements IChartDragHandler
   /**
    * @see org.eclipse.swt.events.MouseListener#mouseDoubleClick(org.eclipse.swt.events.MouseEvent)
    */
+  @Override
   public void mouseDoubleClick( final MouseEvent e )
   {
   }
@@ -58,6 +59,7 @@ public class DragEditHandler implements IChartDragHandler
   /**
    * @see org.eclipse.swt.events.MouseListener#mouseDown(org.eclipse.swt.events.MouseEvent)
    */
+  @Override
   public void mouseDown( final MouseEvent e )
   {
     m_clickInfo = m_chart.getPlot().getTooltipInfo();
@@ -84,6 +86,7 @@ public class DragEditHandler implements IChartDragHandler
   /**
    * @see org.eclipse.swt.events.MouseListener#mouseUp(org.eclipse.swt.events.MouseEvent)
    */
+  @Override
   public void mouseUp( final MouseEvent e )
   {
     if( m_editInfo != null )
@@ -114,6 +117,7 @@ public class DragEditHandler implements IChartDragHandler
   /**
    * @see org.eclipse.swt.events.MouseMoveListener#mouseMove(org.eclipse.swt.events.MouseEvent)
    */
+  @Override
   public void mouseMove( final MouseEvent e )
   {
     final PlotCanvas plot = m_chart.getPlot();
@@ -142,6 +146,7 @@ public class DragEditHandler implements IChartDragHandler
   /**
    * @see org.kalypso.chart.framework.view.IChartDragHandler#getCursor()
    */
+  @Override
   public Cursor getCursor( )
   {
     return null;

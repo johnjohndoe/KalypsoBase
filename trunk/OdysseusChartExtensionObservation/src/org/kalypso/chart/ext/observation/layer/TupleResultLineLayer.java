@@ -127,6 +127,7 @@ public class TupleResultLineLayer extends AbstractLineLayer
   }
  
  
+  @Override
   @SuppressWarnings("unchecked")
   public void paint( final GC gc )
   {
@@ -172,6 +173,7 @@ public class TupleResultLineLayer extends AbstractLineLayer
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getDomainRange()
    */
+  @Override
   public IDataRange<Number> getDomainRange( )
   {
     if( m_data == null )
@@ -191,6 +193,7 @@ public class TupleResultLineLayer extends AbstractLineLayer
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getTargetRange()
    */
+  @Override
   public IDataRange<Number> getTargetRange( )
   {
     if( m_data == null )

@@ -287,6 +287,7 @@ public abstract class AbstractCreateGeometryWidget extends AbstractWidget
     final Display display = PlatformUI.getWorkbench().getDisplay();
     display.asyncExec( new Runnable()
     {
+      @Override
       public void run( )
       {
         try

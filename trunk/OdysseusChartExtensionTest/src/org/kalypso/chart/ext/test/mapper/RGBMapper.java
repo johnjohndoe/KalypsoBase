@@ -81,7 +81,8 @@ public class RGBMapper extends AbstractRetinalMapper
    * @see de.openali.odysseus.chart.framework.model.mapper.IRetinalMapper#numericToScreen(java.lang.Number,
    *      de.openali.odysseus.chart.framework.model.style.IStyle)
    */
-  public IStyle numericToScreen( Number value, IStyle bluePrintStlye )
+  @Override
+public IStyle numericToScreen( Number value, IStyle bluePrintStlye )
   {
     RGB rgb = m_rgbMap.get( value );
     // Falls der Wert nicht gemappt werden kann, dann wird ein unsichtbarer Style zurückgegeben

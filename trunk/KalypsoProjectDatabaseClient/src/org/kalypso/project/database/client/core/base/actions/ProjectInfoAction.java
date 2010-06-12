@@ -84,8 +84,9 @@ public class ProjectInfoAction implements IProjectAction
     final ImageHyperlink link = toolkit.createImageHyperlink( body, SWT.NULL );
     link.setLayoutData( new GridData( GridData.FILL, GridData.FILL, false, false ) );
     link.setImage( IMG_INFO );
-    link.setToolTipText( Messages.getString("org.kalypso.project.database.client.core.base.actions.ProjectInfoAction.1") ); //$NON-NLS-1$
+    link.setToolTipText( Messages.getString( "org.kalypso.project.database.client.core.base.actions.ProjectInfoAction.1" ) ); //$NON-NLS-1$
 
+    final IProjectDatabaseUiLocker locker = m_locker;
     link.addHyperlinkListener( new HyperlinkAdapter()
     {
       /**
@@ -96,7 +97,7 @@ public class ProjectInfoAction implements IProjectAction
       {
         if( m_handler instanceof IRemoteProject )
         {
-          final RemoteInfoDialog dialog = new RemoteInfoDialog( (IRemoteProject) m_handler, link.getShell(), m_locker, true );
+          final RemoteInfoDialog dialog = new RemoteInfoDialog( (IRemoteProject) m_handler, link.getShell(), locker, true );
           dialog.open();
         }
         else if( m_handler instanceof ILocalProject )

@@ -41,9 +41,9 @@
 package org.kalypso.ogc.gml.filterdialog.widgets;
 
 import java.util.HashMap;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.Map.Entry;
 
 import javax.xml.namespace.QName;
 
@@ -178,6 +178,7 @@ class SpatialComposite extends AbstractFilterComposite
     m_propViewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
 
+      @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
         final Object firstElement = ((IStructuredSelection) event.getSelection()).getFirstElement();

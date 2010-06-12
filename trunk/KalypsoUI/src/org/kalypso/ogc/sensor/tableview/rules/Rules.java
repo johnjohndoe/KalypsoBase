@@ -74,11 +74,13 @@ public class Rules implements ITableViewRules
     m_rules.addAll( Arrays.asList( rules ) );
   }
 
+  @Override
   public void addRule( final RenderingRule rule )
   {
     m_rules.add( rule );
   }
 
+  @Override
   public void removeRule( final RenderingRule rule )
   {
     m_rules.remove( rule );
@@ -87,6 +89,7 @@ public class Rules implements ITableViewRules
   /**
    * @see org.kalypso.ogc.sensor.tableview.rules.ITableViewRules#findRules(int)
    */
+  @Override
   public RenderingRule[] findRules( int mask )
   {
     return findRules( new Integer( mask ) );
@@ -95,6 +98,7 @@ public class Rules implements ITableViewRules
   /**
    * @see org.kalypso.ogc.sensor.tableview.rules.ITableViewRules#findRules(java.lang.Integer)
    */
+  @Override
   public RenderingRule[] findRules( final Number mask ) throws NoSuchElementException
   {
     RenderingRule[] r = m_map.get( mask );
@@ -121,6 +125,7 @@ public class Rules implements ITableViewRules
   /**
    * @see org.kalypso.ogc.sensor.tableview.rules.ITableViewRules#isEmpty()
    */
+  @Override
   public boolean isEmpty( )
   {
     return m_rules.size() == 0;
@@ -129,6 +134,7 @@ public class Rules implements ITableViewRules
   /**
    * @see org.kalypso.ogc.sensor.tableview.rules.ITableViewRules#getRules()
    */
+  @Override
   public List getRules( )
   {
     return m_rules;
@@ -137,6 +143,7 @@ public class Rules implements ITableViewRules
   /**
    * @see org.kalypso.ogc.sensor.tableview.rules.ITableViewRules#removeAllRules()
    */
+  @Override
   public void removeAllRules( )
   {
     m_rules.clear();
@@ -154,6 +161,7 @@ public class Rules implements ITableViewRules
   /**
    * @see org.kalypso.ogc.sensor.tableview.rules.ITableViewRules#cloneRules()
    */
+  @Override
   public ITableViewRules cloneRules()
   {
     final Rules rules = new Rules();

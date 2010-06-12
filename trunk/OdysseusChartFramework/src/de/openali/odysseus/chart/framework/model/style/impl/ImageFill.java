@@ -66,6 +66,7 @@ public class ImageFill implements IFill
   /**
    * @see de.openali.odysseus.chart.framework.model.style.IFill#apply(org.eclipse.swt.graphics.GC)
    */
+  @Override
   public void apply( GC gc )
   {
     Pattern p = OdysseusChartFrameworkPlugin.getDefault().getPatternRegistry().getResource( gc.getDevice(), m_id ).getTarget();
@@ -75,11 +76,13 @@ public class ImageFill implements IFill
   /**
    * @see de.openali.odysseus.chart.framework.model.style.IFill#dispose()
    */
+  @Override
   public void dispose( )
   {
 
   }
 
+  @Override
   public ImageFill copy( )
   {
     return new ImageFill( m_id );

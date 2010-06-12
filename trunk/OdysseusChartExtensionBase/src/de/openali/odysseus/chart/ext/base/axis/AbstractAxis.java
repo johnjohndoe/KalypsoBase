@@ -36,11 +36,13 @@ public abstract class AbstractAxis extends AbstractMapper implements IAxis
     m_dataClass = dataClass;
   }
 
+  @Override
   public boolean isVisible( )
   {
     return m_visible;
   }
 
+  @Override
   public void setVisible( boolean visible )
   {
     if( visible == m_visible )
@@ -52,11 +54,13 @@ public abstract class AbstractAxis extends AbstractMapper implements IAxis
   /**
    * @see org.kalypso.chart.framework.axis.IAxis#getLabel()
    */
+  @Override
   public String getLabel( )
   {
     return m_label;
   }
 
+  @Override
   public void setLabel( String label )
   {
     if( !getLabel().equals( label ) )
@@ -69,6 +73,7 @@ public abstract class AbstractAxis extends AbstractMapper implements IAxis
   /**
    * @see org.kalypso.chart.framework.axis.IAxis#getPosition()
    */
+  @Override
   public POSITION getPosition( )
   {
     return m_pos;
@@ -77,11 +82,13 @@ public abstract class AbstractAxis extends AbstractMapper implements IAxis
   /**
    * @see org.kalypso.chart.framework.axis.IAxis#getDirection()
    */
+  @Override
   public DIRECTION getDirection( )
   {
     return m_dir;
   }
 
+  @Override
   public void setDirection( DIRECTION dir )
   {
     m_dir = dir;
@@ -90,6 +97,7 @@ public abstract class AbstractAxis extends AbstractMapper implements IAxis
   /**
    * @see org.kalypso.chart.framework.axis.IAxis#isInverted()
    */
+  @Override
   public boolean isInverted( )
   {
     return getDirection() == DIRECTION.NEGATIVE;
@@ -115,16 +123,19 @@ public abstract class AbstractAxis extends AbstractMapper implements IAxis
     getEventHandler().fireMapperChanged( this );
   }
 
+  @Override
   public IAxisAdjustment getPreferredAdjustment( )
   {
     return m_preferredAdjustment;
   }
 
+  @Override
   public void setPreferredAdjustment( IAxisAdjustment adj )
   {
     m_preferredAdjustment = adj;
   }
 
+  @Override
   public Class< ? > getDataClass( )
   {
     return m_dataClass;

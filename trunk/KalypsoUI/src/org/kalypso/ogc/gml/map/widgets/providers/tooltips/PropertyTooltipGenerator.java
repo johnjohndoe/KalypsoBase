@@ -67,6 +67,7 @@ public class PropertyTooltipGenerator implements ITooltipGenerator
   /**
    * @see org.kalypso.ogc.gml.map.widgets.providers.tooltips.ITooltipGenerator#generate(java.lang.Object)
    */
+  @Override
   public String generate( Object object )
   {
     /* We know, that it must be a feature, we get here. */

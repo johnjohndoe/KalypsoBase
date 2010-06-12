@@ -643,6 +643,7 @@ public class GrafikLauncher
       return strDate;
     }
 
+    @Override
     public int compareTo( final Object o )
     {
       return strDate.compareTo( ((XLine) o).strDate );

@@ -119,6 +119,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#getFullExtent()
    */
+  @Override
   public GM_Envelope getFullExtent( )
   {
     if( m_maxEnvLocalSRS == null )
@@ -132,6 +133,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
    *      org.kalypsodeegree.graphics.transformation.GeoTransform, java.lang.Boolean,
    *      org.eclipse.core.runtime.IProgressMonitor)
    */
+  @Override
   public IStatus paint( final Graphics g, final GeoTransform p, final Boolean selected, final IProgressMonitor monitor )
   {
     /* The image can not be selected. */

@@ -60,6 +60,7 @@ public class KalypsoGuiTypeHandlerFactory implements ITypeHandlerFactory<IGuiTyp
   /**
    * @see org.kalypso.gmlschema.types.ITypeHandlerFactory#registerTypeHandlers(org.kalypso.gmlschema.types.ITypeRegistry)
    */
+  @Override
   public void registerTypeHandlers( final ITypeRegistry<IGuiTypeHandler> guiRegistry )
   {
     try

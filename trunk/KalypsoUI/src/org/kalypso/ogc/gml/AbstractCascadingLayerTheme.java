@@ -165,6 +165,7 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
   /**
    * @see org.kalypso.ogc.gml.mapmodel.IMapModell#accept(org.kalypso.ogc.gml.mapmodel.IKalypsoThemeVisitor, int)
    */
+  @Override
   public void accept( final IKalypsoThemeVisitor visitor, final int depth_infinite )
   {
     m_innerMapModel.accept( visitor, depth_infinite );
@@ -174,6 +175,7 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
    * @see org.kalypso.ogc.gml.mapmodel.IMapModell#accept(org.kalypso.ogc.gml.mapmodel.IKalypsoThemeVisitor, int,
    *      org.kalypso.ogc.gml.IKalypsoTheme)
    */
+  @Override
   public void accept( final IKalypsoThemeVisitor visitor, final int depth_infinite, final IKalypsoTheme theme )
   {
     m_innerMapModel.accept( visitor, depth_infinite, theme );
@@ -183,6 +185,7 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
    * @param theme
    * @see org.kalypso.ogc.gml.mapmodel.IMapModell#activateTheme(org.kalypso.ogc.gml.IKalypsoTheme)
    */
+  @Override
   public void activateTheme( final IKalypsoTheme theme )
   {
     m_innerMapModel.activateTheme( theme );
@@ -191,6 +194,7 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
   /**
    * @see org.kalypso.ogc.gml.mapmodel.IMapModell#addMapModelListener(org.kalypso.ogc.gml.mapmodel.IMapModellListener)
    */
+  @Override
   public void addMapModelListener( final IMapModellListener l )
   {
     m_innerMapModel.addMapModelListener( l );
@@ -200,16 +204,19 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
    * @param theme
    * @see org.kalypso.ogc.gml.mapmodel.IMapModell#addTheme(org.kalypso.ogc.gml.IKalypsoTheme)
    */
+  @Override
   public void addTheme( final IKalypsoTheme theme )
   {
     m_innerMapModel.addTheme( theme );
   }
 
+  @Override
   public IKalypsoTheme addLayer( final StyledLayerType layer ) throws CoreException
   {
     return m_innerMapModel.addLayer( layer );
   }
 
+  @Override
   public IKalypsoTheme insertLayer( final StyledLayerType layer, final int position ) throws Exception
   {
     return m_innerMapModel.insertLayer( layer, position );
@@ -228,6 +235,7 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
    * @return
    * @see org.kalypso.ogc.gml.mapmodel.IMapModell#getActiveTheme()
    */
+  @Override
   public IKalypsoTheme getActiveTheme( )
   {
     return m_innerMapModel.getActiveTheme();
@@ -237,6 +245,7 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
    * @return
    * @see org.kalypso.ogc.gml.mapmodel.IMapModell#getAllThemes()
    */
+  @Override
   public IKalypsoTheme[] getAllThemes( )
   {
     return m_innerMapModel.getAllThemes();
@@ -245,6 +254,7 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
   /**
    * @see org.kalypso.ogc.gml.mapmodel.IMapModell#getCoordinatesSystem()
    */
+  @Override
   public String getCoordinatesSystem( )
   {
     throw new NotImplementedException();
@@ -253,6 +263,7 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#getBoundingBox()
    */
+  @Override
   public GM_Envelope getFullExtent( )
   {
     if( getInnerMapModel() != null )
@@ -265,6 +276,7 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
    * @return
    * @see org.kalypso.ogc.gml.mapmodel.IMapModell#getFullExtentBoundingBox()
    */
+  @Override
   public GM_Envelope getFullExtentBoundingBox( )
   {
     return m_innerMapModel.getFullExtentBoundingBox();
@@ -288,6 +300,7 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
    * @return
    * @see org.kalypso.ogc.gml.mapmodel.IMapModell#getProject()
    */
+  @Override
   public IProject getProject( )
   {
     return m_innerMapModel.getProject();
@@ -298,6 +311,7 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
    * 
    * @see org.kalypso.ogc.gml.mapmodel.IMapModell#getThemeParent(org.kalypso.ogc.gml.IKalypsoTheme)
    */
+  @Override
   public Object getThemeParent( final IKalypsoTheme theme )
   {
     // do not delegate to inner model, this would be wrong.
@@ -317,6 +331,7 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
    * @return
    * @see org.kalypso.ogc.gml.mapmodel.IMapModell#getThemeSize()
    */
+  @Override
   public int getThemeSize( )
   {
     return m_innerMapModel.getThemeSize();
@@ -340,6 +355,7 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
   /**
    * @see org.kalypso.ogc.gml.mapmodel.IMapModell#insertTheme(org.kalypso.ogc.gml.IKalypsoTheme, int)
    */
+  @Override
   public void insertTheme( final IKalypsoTheme theme, final int position )
   {
     m_innerMapModel.insertTheme( theme, position );
@@ -348,6 +364,7 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
   /**
    * @see org.kalypso.ogc.gml.mapmodel.IMapModell#internalActivate(org.kalypso.ogc.gml.IKalypsoTheme)
    */
+  @Override
   public void internalActivate( final IKalypsoTheme theme )
   {
     m_innerMapModel.internalActivate( theme );
@@ -358,6 +375,7 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
    * @return
    * @see org.kalypso.ogc.gml.mapmodel.IMapModell#isThemeActivated(org.kalypso.ogc.gml.IKalypsoTheme)
    */
+  @Override
   public boolean isThemeActivated( final IKalypsoTheme theme )
   {
     return m_innerMapModel.isThemeActivated( theme );
@@ -367,6 +385,7 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
    * @param theme
    * @see org.kalypso.ogc.gml.mapmodel.IMapModell#moveDown(org.kalypso.ogc.gml.IKalypsoTheme)
    */
+  @Override
   public void moveDown( final IKalypsoTheme theme )
   {
     m_innerMapModel.moveDown( theme );
@@ -375,6 +394,7 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
   /**
    * @see org.kalypso.ogc.gml.mapmodel.IMapModell#moveUp(org.kalypso.ogc.gml.IKalypsoTheme)
    */
+  @Override
   public void moveUp( final IKalypsoTheme theme )
   {
     m_innerMapModel.moveUp( theme );
@@ -384,6 +404,7 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
    * @see org.kalypso.ogc.gml.mapmodel.IMapModell#paint(java.awt.Graphics,
    *      org.kalypsodeegree.graphics.transformation.GeoTransform, org.eclipse.core.runtime.IProgressMonitor)
    */
+  @Override
   public IStatus paint( final Graphics g, final GeoTransform p, final IProgressMonitor monitor )
   {
     return paint( g, p, null, monitor );
@@ -394,6 +415,7 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
    *      org.kalypsodeegree.graphics.transformation.GeoTransform, java.lang.Boolean,
    *      org.eclipse.core.runtime.IProgressMonitor)
    */
+  @Override
   public IStatus paint( final Graphics g, final GeoTransform p, final Boolean selected, final IProgressMonitor monitor )
   {
     if( m_innerMapModel == null )
@@ -405,6 +427,7 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
   /**
    * @see org.kalypso.ogc.gml.mapmodel.IMapModell#removeMapModelListener(org.kalypso.ogc.gml.mapmodel.IMapModellListener)
    */
+  @Override
   public void removeMapModelListener( final IMapModellListener l )
   {
     m_innerMapModel.removeMapModelListener( l );
@@ -414,6 +437,7 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
    * @param theme
    * @see org.kalypso.ogc.gml.mapmodel.IMapModell#removeTheme(org.kalypso.ogc.gml.IKalypsoTheme)
    */
+  @Override
   public void removeTheme( final IKalypsoTheme theme )
   {
     m_innerMapModel.removeTheme( theme );
@@ -422,6 +446,7 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
   /**
    * @see org.kalypso.ogc.gml.ITemplateTheme#saveFeatures(org.eclipse.core.runtime.IProgressMonitor)
    */
+  @Override
   public void saveFeatures( final IProgressMonitor monitor ) throws CoreException
   {
     if( getInnerMapModel() != null )
@@ -446,6 +471,7 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
    * @see org.kalypso.ogc.gml.mapmodel.IMapModell#swapThemes(org.kalypso.ogc.gml.IKalypsoTheme,
    *      org.kalypso.ogc.gml.IKalypsoTheme)
    */
+  @Override
   public void swapThemes( final IKalypsoTheme theme1, final IKalypsoTheme theme2 )
   {
     m_innerMapModel.swapThemes( theme1, theme2 );

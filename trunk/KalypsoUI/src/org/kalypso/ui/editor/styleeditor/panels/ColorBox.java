@@ -98,16 +98,19 @@ public class ColorBox
 
     composite.addMouseListener( new MouseListener()
     {
+      @Override
       public void mouseDoubleClick( MouseEvent e )
       {
         fire();
       }
 
+      @Override
       public void mouseDown( MouseEvent e )
       {
         mouseDoubleClick( e );
       }
 
+      @Override
       public void mouseUp( MouseEvent e )
       {
       // nothing
@@ -116,16 +119,19 @@ public class ColorBox
     } );
     fillColorImageInner.addMouseListener( new MouseListener()
     {
+      @Override
       public void mouseDoubleClick( MouseEvent e )
       {
         fire();
       }
 
+      @Override
       public void mouseDown( MouseEvent e )
       {
         mouseDoubleClick( e );
       }
 
+      @Override
       public void mouseUp( MouseEvent e )
       {
       // nothing

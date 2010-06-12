@@ -17,6 +17,7 @@ public class PanActionDelegate extends ActionDelegate implements IEditorActionDe
 
   private IEditorPart m_targetEditor;
 
+  @Override
   public void setActiveEditor( IAction action, IEditorPart targetEditor )
   {
     m_targetEditor = targetEditor;

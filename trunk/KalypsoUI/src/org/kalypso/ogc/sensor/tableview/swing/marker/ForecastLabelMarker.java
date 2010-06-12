@@ -74,6 +74,7 @@ public class ForecastLabelMarker implements ILabelMarker
   /**
    * @see org.kalypso.ogc.sensor.tableview.swing.marker.ILabelMarker#validates(java.lang.Object)
    */
+  @Override
   public boolean validates( final Object value )
   {
     if( !( value instanceof Date ) )
@@ -87,6 +88,7 @@ public class ForecastLabelMarker implements ILabelMarker
   /**
    * @see org.kalypso.ogc.sensor.tableview.swing.marker.ILabelMarker#apply(javax.swing.JLabel)
    */
+  @Override
   public void apply( final JLabel label )
   {
     label.setBackground( FORECAST_BG );
@@ -97,6 +99,7 @@ public class ForecastLabelMarker implements ILabelMarker
   /**
    * @see org.kalypso.ogc.sensor.tableview.swing.marker.ILabelMarker#reset(javax.swing.JLabel)
    */
+  @Override
   public void reset( JLabel label )
   {
     label.setBackground( m_defaultBackground );
@@ -107,6 +110,7 @@ public class ForecastLabelMarker implements ILabelMarker
   /**
    * @see java.lang.Comparable#compareTo(java.lang.Object)
    */
+  @Override
   public int compareTo( Object o )
   {
     if( !( o instanceof ForecastLabelMarker ) )

@@ -57,6 +57,7 @@ public class FeatureRemoveActionDelegate implements IActionDelegate2
   /**
    * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
    */
+  @Override
   public void run( final IAction action )
   {
     // runWithEvent is used instead
@@ -66,6 +67,7 @@ public class FeatureRemoveActionDelegate implements IActionDelegate2
    * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
    *      org.eclipse.jface.viewers.ISelection)
    */
+  @Override
   public void selectionChanged( final IAction action, final ISelection selection )
   {
     action.setEnabled( false );
@@ -89,6 +91,7 @@ public class FeatureRemoveActionDelegate implements IActionDelegate2
   /**
    * @see org.eclipse.ui.IActionDelegate2#dispose()
    */
+  @Override
   public void dispose( )
   {
     // nothing to do?
@@ -97,6 +100,7 @@ public class FeatureRemoveActionDelegate implements IActionDelegate2
   /**
    * @see org.eclipse.ui.IActionDelegate2#init(org.eclipse.jface.action.IAction)
    */
+  @Override
   public void init( final IAction action )
   {
   }
@@ -104,6 +108,7 @@ public class FeatureRemoveActionDelegate implements IActionDelegate2
   /**
    * @see org.eclipse.ui.IActionDelegate2#runWithEvent(org.eclipse.jface.action.IAction, org.eclipse.swt.widgets.Event)
    */
+  @Override
   public void runWithEvent( final IAction action, final Event event )
   {
     /* We are in the ui-thread so we get a shell here. */

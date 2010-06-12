@@ -70,6 +70,7 @@ public class FailureService implements ISimulationService
   /**
    * @see org.kalypso.simulation.core.ISimulationService#getSchemaValidity(java.lang.String)
    */
+  @Override
   public long getSchemaValidity( String namespace ) throws SimulationException
   {
     throw m_se;
@@ -78,6 +79,7 @@ public class FailureService implements ISimulationService
   /**
    * @see org.kalypso.simulation.core.ISimulationService#getSupportedSchemata()
    */
+  @Override
   public String[] getSupportedSchemata( ) throws SimulationException
   {
     throw m_se;
@@ -86,6 +88,7 @@ public class FailureService implements ISimulationService
   /**
    * @see org.kalypso.simulation.core.ISimulationService#getSchema(java.lang.String)
    */
+  @Override
   public DataHandler getSchema( String namespace ) throws SimulationException
   {
     throw m_se;
@@ -94,6 +97,7 @@ public class FailureService implements ISimulationService
   /**
    * @see org.kalypso.simulation.core.ISimulationService#getJobTypes()
    */
+  @Override
   public String[] getJobTypes( ) throws SimulationException
   {
     throw m_se;
@@ -102,6 +106,7 @@ public class FailureService implements ISimulationService
   /**
    * @see org.kalypso.simulation.core.ISimulationService#getRequiredInput(java.lang.String)
    */
+  @Override
   public SimulationDescription[] getRequiredInput( String typeID ) throws SimulationException
   {
     throw m_se;
@@ -110,6 +115,7 @@ public class FailureService implements ISimulationService
   /**
    * @see org.kalypso.simulation.core.ISimulationService#getDeliveringResults(java.lang.String)
    */
+  @Override
   public SimulationDescription[] getDeliveringResults( String typeID ) throws SimulationException
   {
     throw m_se;
@@ -118,6 +124,7 @@ public class FailureService implements ISimulationService
   /**
    * @see org.kalypso.simulation.core.ISimulationService#getJobs()
    */
+  @Override
   public SimulationInfo[] getJobs( ) throws SimulationException
   {
     throw m_se;
@@ -126,6 +133,7 @@ public class FailureService implements ISimulationService
   /**
    * @see org.kalypso.simulation.core.ISimulationService#getJob(java.lang.String)
    */
+  @Override
   public SimulationInfo getJob( String jobID ) throws SimulationException
   {
     throw m_se;
@@ -136,6 +144,7 @@ public class FailureService implements ISimulationService
    *      javax.activation.DataHandler, org.kalypso.simulation.core.SimulationDataPath[],
    *      org.kalypso.simulation.core.SimulationDataPath[])
    */
+  @Override
   public SimulationInfo startJob( String typeID, String description, DataHandler zipHandler, SimulationDataPath[] input, SimulationDataPath[] output ) throws SimulationException
   {
     throw m_se;
@@ -144,6 +153,7 @@ public class FailureService implements ISimulationService
   /**
    * @see org.kalypso.simulation.core.ISimulationService#cancelJob(java.lang.String)
    */
+  @Override
   public void cancelJob( String jobID ) throws SimulationException
   {
     throw m_se;
@@ -153,6 +163,7 @@ public class FailureService implements ISimulationService
   /**
    * @see org.kalypso.simulation.core.ISimulationService#transferCurrentResults(java.lang.String)
    */
+  @Override
   public void transferCurrentResults( final File targetFolder, final String jobID ) throws SimulationException
   {
     throw m_se;
@@ -161,6 +172,7 @@ public class FailureService implements ISimulationService
   /**
    * @see org.kalypso.simulation.core.ISimulationService#getCurrentResults(java.lang.String)
    */
+  @Override
   public String[] getCurrentResults( String jobID ) throws SimulationException
   {
     throw m_se;
@@ -169,6 +181,7 @@ public class FailureService implements ISimulationService
   /**
    * @see org.kalypso.simulation.core.ISimulationService#disposeJob(java.lang.String)
    */
+  @Override
   public void disposeJob( String jobID ) throws SimulationException
   {
     throw m_se;

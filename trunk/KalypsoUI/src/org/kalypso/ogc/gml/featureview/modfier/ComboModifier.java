@@ -96,6 +96,7 @@ public class ComboModifier implements IFeatureModifier
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#getValue(org.kalypsodeegree.model.feature.Feature)
    */
+  @Override
   public Object getValue( final Feature f )
   {
     return f.getProperty( m_vpt );
@@ -105,6 +106,7 @@ public class ComboModifier implements IFeatureModifier
    * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#parseInput(org.kalypsodeegree.model.feature.Feature,
    *      java.lang.Object)
    */
+  @Override
   public Object parseInput( final Feature f, final Object value )
   {
     return value;
@@ -113,6 +115,7 @@ public class ComboModifier implements IFeatureModifier
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#createCellEditor(org.eclipse.swt.widgets.Composite)
    */
+  @Override
   public CellEditor createCellEditor( final Composite parent )
   {
     final Map<Object, String> comboEntries = m_comboEntries;
@@ -163,6 +166,7 @@ public class ComboModifier implements IFeatureModifier
   /**
    * @see org.eclipse.jface.viewers.ICellEditorValidator#isValid(java.lang.Object)
    */
+  @Override
   public String isValid( final Object value )
   {
     return null; // null means vaild
@@ -171,6 +175,7 @@ public class ComboModifier implements IFeatureModifier
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#getFeatureTypeProperty()
    */
+  @Override
   public IPropertyType getFeatureTypeProperty( )
   {
     return m_vpt;
@@ -179,6 +184,7 @@ public class ComboModifier implements IFeatureModifier
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#getLabel(org.kalypsodeegree.model.feature.Feature)
    */
+  @Override
   public String getLabel( final Feature f )
   {
     // TODO: GUITypeHandler konsequent einsetzen
@@ -195,6 +201,7 @@ public class ComboModifier implements IFeatureModifier
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#getImage(org.kalypsodeegree.model.feature.Feature)
    */
+  @Override
   public Image getImage( final Feature f )
   {
     // Todo: button image
@@ -204,6 +211,7 @@ public class ComboModifier implements IFeatureModifier
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#dispose()
    */
+  @Override
   public void dispose( )
   {
     // nichts zu tun
@@ -212,6 +220,7 @@ public class ComboModifier implements IFeatureModifier
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#equals(java.lang.Object, java.lang.Object)
    */
+  @Override
   public boolean equals( final Object newData, final Object oldData )
   {
     return newData.equals( oldData );

@@ -143,6 +143,7 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
    * @see org.kalypso.ogc.gml.wms.provider.images.IKalypsoImageProvider#init(java.lang.String, java.lang.String[],
    *      java.lang.String[], java.lang.String, java.lang.String)
    */
+  @Override
   public void init( final String themeName, final String[] layers, final String[] styles, final String service, final String localSRS )
   {
     m_themeName = themeName;
@@ -159,6 +160,7 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
    * @see org.kalypso.ogc.gml.wms.provider.IKalypsoImageProvider#getImage(int, int,
    *      org.kalypsodeegree.model.geometry.GM_Envelope)
    */
+  @Override
   public Image getImage( final int width, final int height, final GM_Envelope bbox ) throws CoreException
   {
     /* Initialize the remote WMS, if it is not already done. */
@@ -170,6 +172,7 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
   /**
    * @see org.kalypso.ogc.gml.wms.provider.IKalypsoLegendProvider#getLegendGraphic(org.eclipse.swt.graphics.Font)
    */
+  @Override
   public org.eclipse.swt.graphics.Image getLegendGraphic( final Font font ) throws CoreException
   {
     /* Initialize the remote WMS, if it is not already done. */
@@ -260,6 +263,7 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
   /**
    * @see org.kalypso.ogc.gml.map.themes.provider.IKalypsoImageProvider#getFullExtent()
    */
+  @Override
   public GM_Envelope getFullExtent( )
   {
     try
@@ -314,6 +318,7 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
   /**
    * @see org.kalypso.ogc.gml.wms.provider.IKalypsoImageProvider#getLoader()
    */
+  @Override
   public ICapabilitiesLoader getLoader( )
   {
     return m_loader;

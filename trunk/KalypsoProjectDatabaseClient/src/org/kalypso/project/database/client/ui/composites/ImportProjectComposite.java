@@ -116,6 +116,7 @@ public class ImportProjectComposite extends Composite
         dialog.addPageChangedListener( new IPageChangedListener()
         {
 
+          @Override
           public void pageChanged( final PageChangedEvent event )
           {
             final Object page = event.getSelectedPage();

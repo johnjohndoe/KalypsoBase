@@ -115,6 +115,7 @@ public class CommitPrognoseFeatureVisitor extends AbstractMonitoredFeatureVisito
   /**
    * @see org.kalypsodeegree.model.feature.FeatureVisitor#visit(org.kalypsodeegree.model.feature.Feature)
    */
+  @Override
   public final boolean visit( final Feature f )
   {
     m_stati.add( work( f ) );

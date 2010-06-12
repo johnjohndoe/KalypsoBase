@@ -78,6 +78,7 @@ public class GMLSchemaSelectionPage extends WizardPage implements ISelectionChan
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
    */
+  @Override
   public void createControl( Composite parent )
   {
     m_viewer = new ListViewer( parent, SWT.SINGLE | SWT.V_SCROLL | SWT.H_SCROLL );
@@ -103,6 +104,7 @@ public class GMLSchemaSelectionPage extends WizardPage implements ISelectionChan
   /**
    * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
    */
+  @Override
   public void selectionChanged( final SelectionChangedEvent event )
   {
     final IStructuredSelection selection = (IStructuredSelection) event.getSelection();

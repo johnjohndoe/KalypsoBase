@@ -49,6 +49,7 @@ import de.openali.odysseus.chart.framework.model.event.IChartModelEventListener;
 public abstract class AbstractChartModelEventListener implements IChartModelEventListener
 {
 
+  @Override
   public void onModelChanged( )
   {
     //implement if needed

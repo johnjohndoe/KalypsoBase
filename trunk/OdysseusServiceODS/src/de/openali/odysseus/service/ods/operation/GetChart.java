@@ -36,7 +36,8 @@ public class GetChart extends AbstractODSDisplayOperation implements Runnable
    * @throws OWSException
    * @see java.lang.Runnable#run()
    */
-  public void run( )
+  @Override
+public void run( )
   {
     Logger.logInfo( Logger.TOPIC_LOG_GENERAL, "Accessing servlet: GetChart" );
 

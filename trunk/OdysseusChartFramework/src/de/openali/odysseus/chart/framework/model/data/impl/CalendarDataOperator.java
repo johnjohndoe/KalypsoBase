@@ -49,6 +49,7 @@ public class CalendarDataOperator extends AbstractDataOperator<Calendar>
     return new ComparableDataRange<Calendar>( new Calendar[] { numericToLogical( Math.min( min, max ) ), numericToLogical( Math.max( min, max ) ) } );
   }
 
+  @Override
   public Long logicalToNumeric( Calendar logVal )
   {
     if( logVal != null )
@@ -56,6 +57,7 @@ public class CalendarDataOperator extends AbstractDataOperator<Calendar>
     return null;
   }
 
+  @Override
   public Calendar numericToLogical( Number numVal )
   {
     if( numVal == null )
@@ -69,6 +71,7 @@ public class CalendarDataOperator extends AbstractDataOperator<Calendar>
     return cal;
   }
 
+  @Override
   public String logicalToString( Calendar value )
   {
     final SimpleDateFormat sdf = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss" );
@@ -76,6 +79,7 @@ public class CalendarDataOperator extends AbstractDataOperator<Calendar>
     return sdf.format( value.getTime() );
   }
 
+  @Override
   public String getFormatHint( )
   {
     return "yyyy-MM-dd (HH:mm)";
@@ -107,6 +111,7 @@ public class CalendarDataOperator extends AbstractDataOperator<Calendar>
   /**
    * @see org.kalypso.chart.framework.model.data.IDataOperator#getFormat(org.kalypso.chart.framework.model.data.IDataRange)
    */
+  @Override
   public Format getFormat( IDataRange<Number> range )
   {
     return m_dateFormat;
@@ -115,6 +120,7 @@ public class CalendarDataOperator extends AbstractDataOperator<Calendar>
   /**
    * TODO: This is a copy of CalendarStringParser; rewrite String2Calendar mapping using xml data types
    */
+  @Override
   public Calendar stringToLogical( String value ) throws MalformedValueException
   {
     if( value == null )

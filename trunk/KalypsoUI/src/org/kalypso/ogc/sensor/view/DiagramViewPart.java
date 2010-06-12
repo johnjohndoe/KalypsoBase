@@ -143,6 +143,7 @@ public class DiagramViewPart extends ViewPart implements ISelectionChangedListen
   /**
    * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
    */
+  @Override
   public void selectionChanged( final SelectionChangedEvent event )
   {
     // always remove items first (we don't know which selection we get)
@@ -179,6 +180,7 @@ public class DiagramViewPart extends ViewPart implements ISelectionChangedListen
   /**
    * @see org.eclipse.ui.IPartListener#partActivated(org.eclipse.ui.IWorkbenchPart)
    */
+  @Override
   public void partActivated( final IWorkbenchPart part )
   {
     if( part != null && part instanceof RepositoryExplorerPart )
@@ -188,6 +190,7 @@ public class DiagramViewPart extends ViewPart implements ISelectionChangedListen
   /**
    * @see org.eclipse.ui.IPartListener#partBroughtToTop(org.eclipse.ui.IWorkbenchPart)
    */
+  @Override
   public void partBroughtToTop( final IWorkbenchPart part )
   {
     // nada
@@ -196,6 +199,7 @@ public class DiagramViewPart extends ViewPart implements ISelectionChangedListen
   /**
    * @see org.eclipse.ui.IPartListener#partClosed(org.eclipse.ui.IWorkbenchPart)
    */
+  @Override
   public void partClosed( final IWorkbenchPart part )
   {
     if( part != null && part instanceof RepositoryExplorerPart )
@@ -205,6 +209,7 @@ public class DiagramViewPart extends ViewPart implements ISelectionChangedListen
   /**
    * @see org.eclipse.ui.IPartListener#partDeactivated(org.eclipse.ui.IWorkbenchPart)
    */
+  @Override
   public void partDeactivated( final IWorkbenchPart part )
   {
     if( part != null && part instanceof RepositoryExplorerPart )
@@ -214,6 +219,7 @@ public class DiagramViewPart extends ViewPart implements ISelectionChangedListen
   /**
    * @see org.eclipse.ui.IPartListener#partOpened(org.eclipse.ui.IWorkbenchPart)
    */
+  @Override
   public void partOpened( final IWorkbenchPart part )
   {
     // Siehe partActivated...

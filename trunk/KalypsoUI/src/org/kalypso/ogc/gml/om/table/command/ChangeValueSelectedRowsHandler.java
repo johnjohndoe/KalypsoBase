@@ -57,6 +57,7 @@ public class ChangeValueSelectedRowsHandler extends AbstractHandler
   /**
    * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
+  @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     final TableViewer viewer = ToolbarCommandUtils.findTableViewer( event );

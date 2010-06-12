@@ -38,7 +38,7 @@ public class EditableLineLayer extends AbstractLineLayer implements IEditableCha
 
   private final EditableTestDataContainer m_data;
 
-  public EditableLineLayer( EditableTestDataContainer dataContainer, ILineStyle lineStyle, IPointStyle pointStyle )
+  public EditableLineLayer( final EditableTestDataContainer dataContainer, final ILineStyle lineStyle, final IPointStyle pointStyle )
   {
     super( lineStyle, pointStyle );
     m_data = dataContainer;
@@ -83,7 +83,7 @@ public class EditableLineLayer extends AbstractLineLayer implements IEditableCha
   @Override
   public void init( )
   {
-    EditableTestDataContainer data = getDataContainer();
+    final EditableTestDataContainer data = getDataContainer();
     if( data != null )
     {
       data.open();
@@ -98,24 +98,23 @@ public class EditableLineLayer extends AbstractLineLayer implements IEditableCha
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#paint(org.eclipse.swt.graphics.GC,
    *      org.eclipse.swt.graphics.Device)
    */
-  @SuppressWarnings("unchecked")
-  public void paint( GC gc )
+  @Override
+  public void paint( final GC gc )
   {
-
     final ArrayList<Point> path = new ArrayList<Point>();
-    IAxis domAxis = getDomainAxis();
-    IAxis tarAxis = getTargetAxis();
-    IDataOperator dopDom = domAxis.getDataOperator( m_domainData.get( 0 ).getClass() );
-    IDataOperator dopTar = tarAxis.getDataOperator( m_targetData.get( 0 ).getClass() );
+    final IAxis domAxis = getDomainAxis();
+    final IAxis tarAxis = getTargetAxis();
+    final IDataOperator dopDom = domAxis.getDataOperator( m_domainData.get( 0 ).getClass() );
+    final IDataOperator dopTar = tarAxis.getDataOperator( m_targetData.get( 0 ).getClass() );
 
-    Comparator comp = dopDom.getComparator();
+    final Comparator comp = dopDom.getComparator();
 
     for( int i = 0; i < m_domainData.size(); i++ )
     {
-      IDataRange<Number> domRange = getDomainAxis().getNumericRange();
+      final IDataRange<Number> domRange = getDomainAxis().getNumericRange();
 
-      Number min = domRange.getMin();
-      Number max = domRange.getMax();
+      final Number min = domRange.getMin();
+      final Number max = domRange.getMax();
 
       final Number domVal = dopDom.logicalToNumeric( m_domainData.get( i ) );
       boolean setPoint = false;
@@ -124,14 +123,14 @@ public class EditableLineLayer extends AbstractLineLayer implements IEditableCha
       else // kleiner als min: Nachfolger muss >= min sein
       if( (comp.compare( domVal, min ) <= 0) && (i < m_domainData.size() - 1) )
       {
-        Object next = m_domainData.get( i + 1 );
+        final Object next = m_domainData.get( i + 1 );
         if( comp.compare( next, min ) >= 0 )
           setPoint = true;
       }
       // größer als max: Vorgänger muss <= max sein
       else if( (comp.compare( domVal, max ) >= 0) && (i > 0) )
       {
-        Object prev = m_domainData.get( i - 1 );
+        final Object prev = m_domainData.get( i - 1 );
         if( comp.compare( prev, max ) <= 0 )
           setPoint = true;
         else
@@ -144,9 +143,9 @@ public class EditableLineLayer extends AbstractLineLayer implements IEditableCha
         final Number targetVal = dopTar.logicalToNumeric( m_targetData.get( i ) );
         final int domScreen = domAxis.numericToScreen( domVal );
         final int valScreen = tarAxis.numericToScreen( targetVal );
-        ORIENTATION ori = getDomainAxis().getPosition().getOrientation();
-        Point unOri = new Point( domScreen, valScreen );
-        Point p = new Point( ori.getX( unOri ), ori.getY( unOri ) );
+        final ORIENTATION ori = getDomainAxis().getPosition().getOrientation();
+        final Point unOri = new Point( domScreen, valScreen );
+        final Point p = new Point( ori.getX( unOri ), ori.getY( unOri ) );
         path.add( p );
       }
     }
@@ -157,14 +156,15 @@ public class EditableLineLayer extends AbstractLineLayer implements IEditableCha
   /**
    * @see org.kalypso.chart.framework.model.layer.IEditableChartLayer#getEditInfo(org.eclipse.swt.graphics.Point)
    */
+  @Override
   @SuppressWarnings("unchecked")
-  public EditInfo getHover( Point p )
+  public EditInfo getHover( final Point p )
   {
     // Umrechnen von screen nach logisch
     // TODO: im Moment wird von domain = horizontal und target = vertkal ausgegangen
-    int tolerance = 4;
-    IAxis domainAxis = getDomainAxis();
-    IAxis targetAxis = getTargetAxis();
+    final int tolerance = 4;
+    final IAxis domainAxis = getDomainAxis();
+    final IAxis targetAxis = getTargetAxis();
 
     int domPos;
     int tarPos;
@@ -179,13 +179,13 @@ public class EditableLineLayer extends AbstractLineLayer implements IEditableCha
       tarPos = p.x;
     }
 
-    Number domainVal1 = domainAxis.screenToNumeric( domPos - tolerance );
-    Number domainVal2 = domainAxis.screenToNumeric( domPos + tolerance );
-    Number targetVal1 = targetAxis.screenToNumeric( tarPos + tolerance );
-    Number targetVal2 = targetAxis.screenToNumeric( tarPos - tolerance );
+    final Number domainVal1 = domainAxis.screenToNumeric( domPos - tolerance );
+    final Number domainVal2 = domainAxis.screenToNumeric( domPos + tolerance );
+    final Number targetVal1 = targetAxis.screenToNumeric( tarPos + tolerance );
+    final Number targetVal2 = targetAxis.screenToNumeric( tarPos - tolerance );
 
-    Comparator ct = getTargetAxis().getDataOperator( domainVal1.getClass() ).getComparator();
-    Comparator cd = getDomainAxis().getDataOperator( targetVal1.getClass() ).getComparator();
+    final Comparator ct = getTargetAxis().getDataOperator( domainVal1.getClass() ).getComparator();
+    final Comparator cd = getDomainAxis().getDataOperator( targetVal1.getClass() ).getComparator();
 
     // Jetzt rausfinden, welches der größere und welcher der kleinere Wert ist und entsprechend zuweisen
     Object domainValMin;
@@ -217,14 +217,14 @@ public class EditableLineLayer extends AbstractLineLayer implements IEditableCha
     // herausfinden, ob der Punkt IN DER NAEHE eines Datenpunktes liegt
     for( int i = 0; i < m_domainData.size(); i++ )
     {
-      Object domainVal = m_domainData.get( i );
+      final Object domainVal = m_domainData.get( i );
       // Abbrechen, wenn wir über die Domain-Range raus sind
       if( cd.compare( domainVal, domainValMax ) > 0 )
         break;
 
       if( cd.compare( domainVal, domainValMin ) >= 0 )
       {
-        Object targetVal = m_targetData.get( i );
+        final Object targetVal = m_targetData.get( i );
         if( (ct.compare( targetVal, targetValMin ) >= 0) && (ct.compare( targetVal, targetValMax ) <= 0) )
           return createEditInfo( p, i, false );
       }
@@ -238,22 +238,23 @@ public class EditableLineLayer extends AbstractLineLayer implements IEditableCha
    * @see org.kalypso.chart.framework.model.layer.IEditableChartLayer#edit(org.eclipse.swt.graphics.Point,
    *      java.lang.Object)
    */
-  public EditInfo drag( Point point, EditInfo editInfo )
+  @Override
+  public EditInfo drag( final Point point, final EditInfo editInfo )
   {
     if( editInfo != null )
     {
-      int pos = (Integer) editInfo.m_data;
+      final int pos = (Integer) editInfo.m_data;
 
       // m_targetData.set( pos, newTarVal );
       // getEventHandler().fireLayerContentChanged( this );
-      boolean isHorizontal = getDomainAxis().getPosition().getOrientation().equals( ORIENTATION.HORIZONTAL ) ? true : false;
+      final boolean isHorizontal = getDomainAxis().getPosition().getOrientation().equals( ORIENTATION.HORIZONTAL ) ? true : false;
       Point editPoint;
       if( isHorizontal )
         editPoint = new Point( editInfo.m_pos.x, point.y );
       else
         editPoint = new Point( point.x, editInfo.m_pos.y );
 
-      EditInfo newEditInfo = createEditInfo( editPoint, pos, true );
+      final EditInfo newEditInfo = createEditInfo( editPoint, pos, true );
       return newEditInfo;
     }
     return null;
@@ -269,15 +270,15 @@ public class EditableLineLayer extends AbstractLineLayer implements IEditableCha
    *          position of edited / hovered data in data set
    */
   @SuppressWarnings("unchecked")
-  private <T_domain, T_target> EditInfo createEditInfo( Point mousePos, int pos, boolean isDragging )
+  private <T_domain, T_target> EditInfo createEditInfo( final Point mousePos, final int pos, final boolean isDragging )
   {
-    EditableTestDataContainer dc = getDataContainer();
-    T_domain domainVal = (T_domain) dc.getDomainValues().get( pos );
+    final EditableTestDataContainer dc = getDataContainer();
+    final T_domain domainVal = (T_domain) dc.getDomainValues().get( pos );
     final T_target targetVal;
     if( isDragging )
     {
       // Der Domain-Wert soll bleiben, der Target-Wert kann verändert werden
-      boolean isHorizontal = getDomainAxis().getPosition().getOrientation().equals( ORIENTATION.HORIZONTAL ) ? true : false;
+      final boolean isHorizontal = getDomainAxis().getPosition().getOrientation().equals( ORIENTATION.HORIZONTAL ) ? true : false;
       if( isHorizontal )
         targetVal = (T_target) getTargetAxis().screenToNumeric( mousePos.y );
       else
@@ -288,36 +289,36 @@ public class EditableLineLayer extends AbstractLineLayer implements IEditableCha
 
     if( (domainVal != null) && (targetVal != null) )
     {
-      IAxis domainAxis = getDomainAxis();
-      IAxis targetAxis = getTargetAxis();
-      IDataOperator<T_domain> dopDomain = domainAxis.getDataOperator( (Class<T_domain>) domainVal.getClass() );
-      IDataOperator<T_target> dopTarget = targetAxis.getDataOperator( (Class<T_target>) targetVal.getClass() );
-      Number domainValNum = dopDomain.logicalToNumeric( domainVal );
-      Number targetValNum = dopTarget.logicalToNumeric( targetVal );
+      final IAxis domainAxis = getDomainAxis();
+      final IAxis targetAxis = getTargetAxis();
+      final IDataOperator<T_domain> dopDomain = domainAxis.getDataOperator( (Class<T_domain>) domainVal.getClass() );
+      final IDataOperator<T_target> dopTarget = targetAxis.getDataOperator( (Class<T_target>) targetVal.getClass() );
+      final Number domainValNum = dopDomain.logicalToNumeric( domainVal );
+      final Number targetValNum = dopTarget.logicalToNumeric( targetVal );
 
       /*
        * Punkt des "Handles" ausrechnen - evtl. kann man hier auch den eingangspunkt verwenden; (wahrscheinlich aber
        * nicht, weil sich sonst der handle verschiebt)
        */
-      Point editPos = getCoordinateMapper().numericToScreen( domainValNum, targetValNum );
+      final Point editPos = getCoordinateMapper().numericToScreen( domainValNum, targetValNum );
 
       // Aktiver Punkt
-      T_domain dataDomainVal = (T_domain) dc.getDomainValues().get( pos );
-      T_target dataTargetVal = (T_target) dc.getTargetValues().get( pos );
+      final T_domain dataDomainVal = (T_domain) dc.getDomainValues().get( pos );
+      final T_target dataTargetVal = (T_target) dc.getTargetValues().get( pos );
 
       // Punkt davor
-      T_domain preDomainVal = (T_domain) dc.getDomainValues().get( pos - 1 );
-      T_target preTargetVal = (T_target) dc.getTargetValues().get( pos - 1 );
+      final T_domain preDomainVal = (T_domain) dc.getDomainValues().get( pos - 1 );
+      final T_target preTargetVal = (T_target) dc.getTargetValues().get( pos - 1 );
       // Punkt danach
-      T_domain postDomainVal = (T_domain) dc.getDomainValues().get( pos + 1 );
-      T_target postTargetVal = (T_target) dc.getTargetValues().get( pos + 1 );
+      final T_domain postDomainVal = (T_domain) dc.getDomainValues().get( pos + 1 );
+      final T_target postTargetVal = (T_target) dc.getTargetValues().get( pos + 1 );
 
-      Number dataDomainValNum = dopDomain.logicalToNumeric( dataDomainVal );
-      Number dataTargetValNum = dopTarget.logicalToNumeric( dataTargetVal );
-      Number preDomainValNum = dopDomain.logicalToNumeric( preDomainVal );
-      Number preTargetValNum = dopTarget.logicalToNumeric( preTargetVal );
-      Number postDomainValNum = dopDomain.logicalToNumeric( postDomainVal );
-      Number postTargetValNum = dopTarget.logicalToNumeric( postTargetVal );
+      final Number dataDomainValNum = dopDomain.logicalToNumeric( dataDomainVal );
+      final Number dataTargetValNum = dopTarget.logicalToNumeric( dataTargetVal );
+      final Number preDomainValNum = dopDomain.logicalToNumeric( preDomainVal );
+      final Number preTargetValNum = dopTarget.logicalToNumeric( preTargetVal );
+      final Number postDomainValNum = dopDomain.logicalToNumeric( postDomainVal );
+      final Number postTargetValNum = dopTarget.logicalToNumeric( postTargetVal );
 
       Point dataPos = null;
       if( (dataDomainValNum != null) && (dataTargetValNum != null) )
@@ -329,8 +330,8 @@ public class EditableLineLayer extends AbstractLineLayer implements IEditableCha
       if( (postDomainValNum != null) && (postTargetValNum != null) )
         postDataPos = getCoordinateMapper().numericToScreen( postDomainValNum, postTargetValNum );
 
-      Point[] editPoints = new Point[] { preDataPos, editPos, postDataPos };
-      Point[] hoverPoints = new Point[] { preDataPos, dataPos, postDataPos };
+      final Point[] editPoints = new Point[] { preDataPos, editPos, postDataPos };
+      final Point[] hoverPoints = new Point[] { preDataPos, dataPos, postDataPos };
 
       IPaintable editPaintable = null;
       IPaintable hoverPaintable = null;
@@ -340,14 +341,14 @@ public class EditableLineLayer extends AbstractLineLayer implements IEditableCha
         editPaintable = getEditPaintable( editPoints );
 
       // text für ToolTip
-      String domainValStr = domainAxis.getDataOperator( (Class<T_domain>) domainVal.getClass() ).getFormat( domainAxis.getNumericRange() ).format( domainVal );
-      String targetValStr = targetAxis.getDataOperator( (Class<T_target>) targetVal.getClass() ).getFormat( targetAxis.getNumericRange() ).format( targetVal );
-      String editText = getId() + "\n" + domainAxis.getLabel() + ":\t" + domainValStr + "\n" + targetAxis.getLabel() + ":\t" + targetValStr;
+      final String domainValStr = domainAxis.getDataOperator( (Class<T_domain>) domainVal.getClass() ).getFormat( domainAxis.getNumericRange() ).format( domainVal );
+      final String targetValStr = targetAxis.getDataOperator( (Class<T_target>) targetVal.getClass() ).getFormat( targetAxis.getNumericRange() ).format( targetVal );
+      final String editText = getId() + "\n" + domainAxis.getLabel() + ":\t" + domainValStr + "\n" + targetAxis.getLabel() + ":\t" + targetValStr;
 
       // übergibt nur die position des Datensatzes, der geändert wird
-      Object editData = pos;
+      final Object editData = pos;
 
-      EditInfo info = new EditInfo( this, hoverPaintable, editPaintable, editData, editText, mousePos );
+      final EditInfo info = new EditInfo( this, hoverPaintable, editPaintable, editData, editText, mousePos );
 
       // falls der Punkt in den Daten vorhanden ist, dann eine Info zurückgeben
       return info;
@@ -359,10 +360,11 @@ public class EditableLineLayer extends AbstractLineLayer implements IEditableCha
    * @see de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer#commitDrag(org.eclipse.swt.graphics.Point,
    *      de.openali.odysseus.chart.framework.model.layer.EditInfo)
    */
-  public EditInfo commitDrag( Point point, EditInfo dragStartData )
+  @Override
+  public EditInfo commitDrag( final Point point, final EditInfo dragStartData )
   {
-    boolean isHorizontal = getDomainAxis().getPosition().getOrientation().equals( ORIENTATION.HORIZONTAL ) ? true : false;
-    int pos = (Integer) dragStartData.m_data;
+    final boolean isHorizontal = getDomainAxis().getPosition().getOrientation().equals( ORIENTATION.HORIZONTAL ) ? true : false;
+    final int pos = (Integer) dragStartData.m_data;
     // Der Domain-Wert soll bleiben, der Target-Wert kann verändert werden
     Number newTarVal;
     if( isHorizontal )
@@ -375,7 +377,7 @@ public class EditableLineLayer extends AbstractLineLayer implements IEditableCha
     return null;
   }
 
-  public IPaintable getEditPaintable( Point[] points )
+  public IPaintable getEditPaintable( final Point[] points )
   {
     if( m_editPointFigure == null )
     {
@@ -401,7 +403,7 @@ public class EditableLineLayer extends AbstractLineLayer implements IEditableCha
     return m_editPaintable;
   }
 
-  private IPaintable getHoverPaintable( Point[] points )
+  private IPaintable getHoverPaintable( final Point[] points )
   {
     if( m_hoverPointFigure == null )
     {
@@ -430,9 +432,9 @@ public class EditableLineLayer extends AbstractLineLayer implements IEditableCha
     m_hoverLineFigure.setPoints( points );
 
     // Rechteck um Punkt
-    int width = 10;
-    Point mid = points[1];
-    Point[] rectPoints = new Point[4];
+    final int width = 10;
+    final Point mid = points[1];
+    final Point[] rectPoints = new Point[4];
     rectPoints[0] = new Point( mid.x - width, mid.y - width );
     rectPoints[1] = new Point( mid.x - width, mid.y + width );
     rectPoints[2] = new Point( mid.x + width, mid.y + width );
@@ -449,14 +451,15 @@ public class EditableLineLayer extends AbstractLineLayer implements IEditableCha
   /**
    * @see org.kalypso.chart.framework.model.layer.IChartLayer#getDomainRange()
    */
+  @Override
   @SuppressWarnings("unchecked")
   public IDataRange<Number> getDomainRange( )
   {
-    IDataRange logRange = getDataContainer().getDomainRange();
-    Object min = logRange.getMin();
+    final IDataRange logRange = getDataContainer().getDomainRange();
+    final Object min = logRange.getMin();
     if( min != null )
     {
-      IDataOperator dop = getDomainAxis().getDataOperator( min.getClass() );
+      final IDataOperator dop = getDomainAxis().getDataOperator( min.getClass() );
       return new ComparableDataRange<Number>( new Number[] { dop.logicalToNumeric( min ), dop.logicalToNumeric( logRange.getMax() ) } );
     }
     return null;
@@ -465,14 +468,15 @@ public class EditableLineLayer extends AbstractLineLayer implements IEditableCha
   /**
    * @see org.kalypso.chart.framework.model.layer.IChartLayer#getTargetRange()
    */
+  @Override
   @SuppressWarnings("unchecked")
   public IDataRange<Number> getTargetRange( )
   {
-    IDataRange logRange = getDataContainer().getTargetRange();
-    Object min = logRange.getMin();
+    final IDataRange logRange = getDataContainer().getTargetRange();
+    final Object min = logRange.getMin();
     if( min != null )
     {
-      IDataOperator dop = getDomainAxis().getDataOperator( min.getClass() );
+      final IDataOperator dop = getDomainAxis().getDataOperator( min.getClass() );
       return new ComparableDataRange<Number>( new Number[] { dop.logicalToNumeric( min ), dop.logicalToNumeric( logRange.getMax() ) } );
     }
     return null;
@@ -498,7 +502,7 @@ public class EditableLineLayer extends AbstractLineLayer implements IEditableCha
    * @see de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer#lockLayer(boolean)
    */
   @Override
-  public void lockLayer( boolean isLocked )
+  public void lockLayer( final boolean isLocked )
   {
     m_isLocked = isLocked;
 

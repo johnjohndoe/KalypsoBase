@@ -29,6 +29,7 @@ public class NewFeatureHandler extends AbstractHandler implements IHandler
 
   private static final QName GML_LOCATION = new QName( "http://www.opengis.net/gml", "location" ); //$NON-NLS-1$ //$NON-NLS-2$
 
+  @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     final String parameterFeatureType = event.getParameter( PARAMETER_FEATURE_TYPE );

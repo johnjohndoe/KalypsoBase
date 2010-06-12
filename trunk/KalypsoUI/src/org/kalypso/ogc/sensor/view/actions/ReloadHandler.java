@@ -68,6 +68,7 @@ public class ReloadHandler extends AbstractHandler
   /**
    * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
+  @Override
   public Object execute( final ExecutionEvent event )
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
@@ -81,6 +82,7 @@ public class ReloadHandler extends AbstractHandler
 
     final IRunnableWithProgress runnable = new IRunnableWithProgress()
     {
+      @Override
       public void run( final IProgressMonitor monitor ) throws InvocationTargetException
       {
         monitor.beginTask( Messages.getString("org.kalypso.ogc.sensor.view.actions.ReloadHandler.0"), 1 ); //$NON-NLS-1$

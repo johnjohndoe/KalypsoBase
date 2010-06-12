@@ -65,7 +65,8 @@ public class DefaultDoubleLineLayer extends AbstractLineLayer
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#paint(org.eclipse.swt.graphics.GC,
    *      org.eclipse.swt.graphics.Device)
    */
-  public void paint( GC gc )
+  @Override
+public void paint( GC gc )
   {
     final ITabularDataContainer<Double, Double> dataContainer = getDataContainer();
     if( dataContainer != null )
@@ -150,12 +151,14 @@ public class DefaultDoubleLineLayer extends AbstractLineLayer
     return m_data;
   }
 
-  public IDataRange<Number> getDomainRange( )
+  @Override
+public IDataRange<Number> getDomainRange( )
   {
     return new ComparableDataRange<Number>( getDataContainer().getDomainValues() );
   }
 
-  public IDataRange<Number> getTargetRange( )
+  @Override
+public IDataRange<Number> getTargetRange( )
   {
     return new ComparableDataRange<Number>( getDataContainer().getTargetValues() );
   }

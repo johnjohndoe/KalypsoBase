@@ -347,6 +347,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
     validateFilterButton.setText( MessageBundle.STYLE_EDITOR_FILTER_VALIDATE );
     validateFilterButton.addSelectionListener( new SelectionListener()
     {
+      @Override
       public void widgetSelected( final SelectionEvent e )
       {
         final Object[] children = ((FilterDialogTreeNode) getMRoot().getChildren()[0]).getChildren();
@@ -411,6 +412,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
         }
       }
 
+      @Override
       public void widgetDefaultSelected( final SelectionEvent e )
       {
         widgetSelected( e );
@@ -841,6 +843,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
    * 
    * @see org.eclipse.swt.events.SelectionListener#widgetSelected(org.eclipse.swt.events.SelectionEvent)
    */
+  @Override
   public void selectionChanged( final SelectionChangedEvent event )
   {
     final TableTreeViewer ttv = (TableTreeViewer) event.getSource();
@@ -1035,6 +1038,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
     menuMgr.setRemoveAllWhenShown( true );
     menuMgr.addMenuListener( new IMenuListener()
     {
+      @Override
       public void menuAboutToShow( final IMenuManager manager )
       {
         manager.add( new MenuAction( MessageBundle.STYLE_EDITOR_DELETE ) );
@@ -1099,6 +1103,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
     geomMapButton.addSelectionListener( new SelectionListener()
     {
 
+      @Override
       public void widgetSelected( final SelectionEvent e )
       {
         final Object o = e.widget;
@@ -1111,6 +1116,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
         }
       }
 
+      @Override
       public void widgetDefaultSelected( final SelectionEvent e )
       {
         widgetSelected( e );
@@ -1124,6 +1130,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
     geomFileButton.addSelectionListener( new SelectionListener()
     {
 
+      @Override
       public void widgetSelected( final SelectionEvent e )
       {
         final Object o = e.widget;
@@ -1149,6 +1156,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
         }
       }
 
+      @Override
       public void widgetDefaultSelected( final SelectionEvent e )
       {
         widgetSelected( e );
@@ -1169,6 +1177,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
       addButton.setEnabled( false );
     addButton.addSelectionListener( new SelectionListener()
     {
+      @Override
       public void widgetSelected( final SelectionEvent e )
       {
         AbstractData addata = null;
@@ -1208,6 +1217,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
         }
       }
 
+      @Override
       public void widgetDefaultSelected( final SelectionEvent e )
       {
         widgetSelected( e );
@@ -1254,6 +1264,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
     addButton.setText( MessageBundle.STYLE_EDITOR_SET );
     addButton.addSelectionListener( new SelectionListener()
     {
+      @Override
       public void widgetSelected( final SelectionEvent e )
       {
         final FeatureIDData fiddata = new FeatureIDData();
@@ -1277,6 +1288,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
         }
       }
 
+      @Override
       public void widgetDefaultSelected( final SelectionEvent e )
       {
         widgetSelected( e );
@@ -1334,6 +1346,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
       addButton.setEnabled( false );
     addButton.addSelectionListener( new SelectionListener()
     {
+      @Override
       public void widgetSelected( final SelectionEvent e )
       {
         final NullComparisonData ncdata = new NullComparisonData();
@@ -1357,6 +1370,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
         }
       }
 
+      @Override
       public void widgetDefaultSelected( final SelectionEvent e )
       {
         widgetSelected( e );
@@ -1468,6 +1482,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
       addButton.setEnabled( false );
     addButton.addSelectionListener( new SelectionListener()
     {
+      @Override
       public void widgetSelected( final SelectionEvent e )
       {
         AbstractData addata = null;
@@ -1511,6 +1526,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
         }
       }
 
+      @Override
       public void widgetDefaultSelected( final SelectionEvent e )
       {
         widgetSelected( e );
@@ -1586,6 +1602,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
       addButton.setEnabled( false );
     addButton.addSelectionListener( new SelectionListener()
     {
+      @Override
       public void widgetSelected( final SelectionEvent e )
       {
         final LikeComparisonData lcdata = new LikeComparisonData();
@@ -1612,6 +1629,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
         }
       }
 
+      @Override
       public void widgetDefaultSelected( final SelectionEvent e )
       {
         widgetSelected( e );
@@ -1715,6 +1733,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
       addButton.setEnabled( false );
     addButton.addSelectionListener( new SelectionListener()
     {
+      @Override
       public void widgetSelected( final SelectionEvent e )
       {
         final BetweenComparisonData bcdata = new BetweenComparisonData();
@@ -1745,6 +1764,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
         }
       }
 
+      @Override
       public void widgetDefaultSelected( final SelectionEvent e )
       {
         widgetSelected( e );
@@ -1774,6 +1794,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
     logicalButton.setToolTipText( MessageBundle.STYLE_EDITOR_ADD );
     logicalButton.addMouseListener( new MouseListener()
     {
+      @Override
       public void mouseDoubleClick( final MouseEvent e )
       {
         final FilterDialogTreeNode childNode = new FilterDialogTreeNode( getLogicalCombo().getSelectionName( getLogicalCombo().getSelection() ), FilterDialogTreeNode.LOGICAL_NODE_TYPE );
@@ -1785,11 +1806,13 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
         setFilterInvalid();
       }
 
+      @Override
       public void mouseDown( final MouseEvent e )
       {
         mouseDoubleClick( e );
       }
 
+      @Override
       public void mouseUp( final MouseEvent e )
       {
         // nothing
@@ -1805,6 +1828,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
     compButton.setToolTipText( MessageBundle.STYLE_EDITOR_ADD );
     compButton.addMouseListener( new MouseListener()
     {
+      @Override
       public void mouseDoubleClick( final MouseEvent e )
       {
         final FilterDialogTreeNode childNode = new FilterDialogTreeNode( getComparisonCombo().getSelectionName( getComparisonCombo().getSelection() ), FilterDialogTreeNode.COMPARISON_NODE_TYPE );
@@ -1816,11 +1840,13 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
         setFilterInvalid();
       }
 
+      @Override
       public void mouseDown( final MouseEvent e )
       {
         mouseDoubleClick( e );
       }
 
+      @Override
       public void mouseUp( final MouseEvent e )
       {
         // nothing
@@ -1836,6 +1862,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
     spatialButton.setToolTipText( MessageBundle.STYLE_EDITOR_ADD );
     spatialButton.addMouseListener( new MouseListener()
     {
+      @Override
       public void mouseDoubleClick( final MouseEvent e )
       {
         final FilterDialogTreeNode childNode = new FilterDialogTreeNode( getSpatialCombo().getSelectionName( getSpatialCombo().getSelection() ), FilterDialogTreeNode.SPATIAL_NODE_TYPE );
@@ -1847,11 +1874,13 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
         setFilterInvalid();
       }
 
+      @Override
       public void mouseDown( final MouseEvent e )
       {
         mouseDoubleClick( e );
       }
 
+      @Override
       public void mouseUp( final MouseEvent e )
       {
         // nothing
@@ -1866,6 +1895,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
     featureIdButton.setToolTipText( MessageBundle.STYLE_EDITOR_ADD );
     featureIdButton.addMouseListener( new MouseListener()
     {
+      @Override
       public void mouseDoubleClick( final MouseEvent e )
       {
         final FilterDialogTreeNode childNode = new FilterDialogTreeNode( "FT_ID", FilterDialogTreeNode.FEATUREID_NODE_TYPE ); //$NON-NLS-1$
@@ -1877,11 +1907,13 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
         setFilterInvalid();
       }
 
+      @Override
       public void mouseDown( final MouseEvent e )
       {
         mouseDoubleClick( e );
       }
 
+      @Override
       public void mouseUp( final MouseEvent e )
       {
         // nothing
@@ -1907,6 +1939,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
     elseFilterButton.setToolTipText( MessageBundle.STYLE_EDITOR_ADD );
     elseFilterButton.addMouseListener( new MouseListener()
     {
+      @Override
       public void mouseDoubleClick( final MouseEvent e )
       {
         final FilterDialogTreeNode childNode = new FilterDialogTreeNode( "ElseFilter", FilterDialogTreeNode.ELSEFILTER_TYPE ); //$NON-NLS-1$
@@ -1918,11 +1951,13 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
         setFilterInvalid();
       }
 
+      @Override
       public void mouseDown( final MouseEvent e )
       {
         mouseDoubleClick( e );
       }
 
+      @Override
       public void mouseUp( final MouseEvent e )
       {
         // nothing

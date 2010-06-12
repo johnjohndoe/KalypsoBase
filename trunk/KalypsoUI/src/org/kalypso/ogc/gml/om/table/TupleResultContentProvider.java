@@ -45,8 +45,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -115,6 +115,7 @@ public class TupleResultContentProvider implements IStructuredContentProvider, I
   /**
    * @see org.eclipse.jface.viewers.IContentProvider#dispose()
    */
+  @Override
   public void dispose( )
   {
     // empty
@@ -124,6 +125,7 @@ public class TupleResultContentProvider implements IStructuredContentProvider, I
    * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object,
    *      java.lang.Object)
    */
+  @Override
   public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
   {
     final DefaultTableViewer tableViewer = (DefaultTableViewer) viewer;
@@ -193,6 +195,7 @@ public class TupleResultContentProvider implements IStructuredContentProvider, I
   /**
    * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
    */
+  @Override
   public Object[] getElements( final Object inputElement )
   {
     if( (inputElement != null) && (inputElement instanceof TupleResult) )
@@ -213,6 +216,7 @@ public class TupleResultContentProvider implements IStructuredContentProvider, I
   /**
    * @see org.kalypso.observation.result.ITupleResultChangedListener#valuesChanged(org.kalypso.observation.result.ITupleResultChangedListener.ValueChange[])
    */
+  @Override
   public void valuesChanged( final ValueChange[] changes )
   {
     if( m_result == null )
@@ -241,6 +245,7 @@ public class TupleResultContentProvider implements IStructuredContentProvider, I
    * @see org.kalypso.observation.result.ITupleResultChangedListener#recordsChanged(org.kalypso.observation.result.IRecord[],
    *      org.kalypso.observation.result.ITupleResultChangedListener.TYPE)
    */
+  @Override
   public void recordsChanged( final IRecord[] records, final TYPE type )
   {
     // TODO: Performance optimization needed for lots of single changes...
@@ -250,6 +255,7 @@ public class TupleResultContentProvider implements IStructuredContentProvider, I
     if( !control.isDisposed() )
       control.getDisplay().asyncExec( new Runnable()
       {
+        @Override
         public void run( )
         {
           if( !control.isDisposed() )
@@ -291,6 +297,7 @@ public class TupleResultContentProvider implements IStructuredContentProvider, I
    * @see org.kalypso.observation.result.ITupleResultChangedListener#componentsChanged(org.kalypso.observation.result.IComponent[],
    *      org.kalypso.observation.result.ITupleResultChangedListener.TYPE)
    */
+  @Override
   public void componentsChanged( final IComponent[] components, final TYPE type )
   {
     m_updateColumnsJob.cancel();

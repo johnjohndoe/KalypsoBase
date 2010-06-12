@@ -68,6 +68,7 @@ public class GMLContentProvider implements ITreeContentProvider
 {
   private final ModellEventListener m_workspaceListener = new ModellEventListener()
   {
+    @Override
     public void onModellChange( final ModellEvent modellEvent )
     {
       handleModelChanged( modellEvent );
@@ -120,6 +121,7 @@ public class GMLContentProvider implements ITreeContentProvider
    * 
    * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
    */
+  @Override
   public Object[] getChildren( final Object parentElement )
   {
     if( m_workspace == null )
@@ -205,6 +207,7 @@ public class GMLContentProvider implements ITreeContentProvider
   /**
    * @see org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.Object)
    */
+  @Override
   public Object getParent( final Object element )
   {
     /* search is orderd from fast to slow */
@@ -259,6 +262,7 @@ public class GMLContentProvider implements ITreeContentProvider
   /**
    * @see org.eclipse.jface.viewers.ITreeContentProvider#hasChildren(java.lang.Object)
    */
+  @Override
   public boolean hasChildren( final Object element )
   {
     if( element == null )
@@ -271,6 +275,7 @@ public class GMLContentProvider implements ITreeContentProvider
   /**
    * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
    */
+  @Override
   public Object[] getElements( final Object inputElement )
   {
     if( m_workspace == null )
@@ -326,6 +331,7 @@ public class GMLContentProvider implements ITreeContentProvider
   /**
    * @see org.eclipse.jface.viewers.IContentProvider#dispose()
    */
+  @Override
   public void dispose( )
   {
     if( m_workspace != null )
@@ -339,6 +345,7 @@ public class GMLContentProvider implements ITreeContentProvider
    * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object,
    *      java.lang.Object)
    */
+  @Override
   public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
   {
     m_viewer = (TreeViewer) viewer;
@@ -488,6 +495,7 @@ public class GMLContentProvider implements ITreeContentProvider
         // REMARK: must be sync, if not we get a racing condition with handleGlobalSelection
         control.getDisplay().syncExec( new Runnable()
         {
+          @Override
           public void run( )
           {
             // This does not work nicely. In order to refresh the tree in a nice way,
@@ -514,6 +522,7 @@ public class GMLContentProvider implements ITreeContentProvider
       if( control != null && !control.isDisposed() )
         control.getDisplay().asyncExec( new Runnable()
         {
+          @Override
           public void run( )
           {
             if( !control.isDisposed() )

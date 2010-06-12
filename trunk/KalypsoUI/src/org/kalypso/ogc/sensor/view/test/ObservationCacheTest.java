@@ -63,6 +63,7 @@ public class ObservationCacheTest extends TestCase
 
   private static class FooAdaptable implements IAdaptable
   {
+    @Override
     public Object getAdapter( Class anotherClass )
     {
       if( anotherClass == IObservation.class )

@@ -110,6 +110,7 @@ public class ThemePropertyPage extends PropertyPage implements IWorkbenchPropert
     nameText.setText( theme.getLabel() );
     nameText.addModifyListener( new ModifyListener()
     {
+      @Override
       public void modifyText( final ModifyEvent e )
       {
         final String name = nameText.getText();

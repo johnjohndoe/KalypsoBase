@@ -14,6 +14,7 @@ import org.kalypso.chart.ui.editor.mousehandler.DragZoomInHandler;
 
 public class ZoomInHandler extends AbstractHandler implements IElementUpdater
 {
+  @Override
   public Object execute( final ExecutionEvent event )
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
@@ -35,8 +36,8 @@ public class ZoomInHandler extends AbstractHandler implements IElementUpdater
   /**
    * @see org.eclipse.ui.commands.IElementUpdater#updateElement(org.eclipse.ui.menus.UIElement, java.util.Map)
    */
-  @SuppressWarnings("unchecked")
-  public void updateElement( final UIElement element, final Map parameters )
+  @Override
+  public void updateElement( final UIElement element, @SuppressWarnings("rawtypes") final Map parameters )
   {
     ElementUpdateHelper.updateElement( element, parameters, DragZoomInHandler.class );
   }

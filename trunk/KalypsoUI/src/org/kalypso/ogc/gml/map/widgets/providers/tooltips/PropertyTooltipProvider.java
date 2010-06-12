@@ -100,6 +100,7 @@ public class PropertyTooltipProvider implements ITooltipProvider
    * @see org.kalypso.ogc.gml.map.widgets.providers.tooltips.ITooltipProvider#getTooltip(org.kalypso.ogc.gml.map.IMapPanel,
    *      org.eclipse.swt.graphics.Rectangle)
    */
+  @Override
   public String getTooltip( final IMapPanel mapPanel, final Rectangle rectangle )
   {
     final EasyFeatureWrapper[] wrappers = m_featuresProvider.getFeatures( mapPanel );
@@ -115,6 +116,7 @@ public class PropertyTooltipProvider implements ITooltipProvider
    * @see org.kalypso.ogc.gml.map.widgets.providers.tooltips.ITooltipProvider#paintTooltip(java.awt.Graphics,
    *      java.awt.Point, java.lang.String)
    */
+  @Override
   public void paintTooltip( final Graphics g, final Point p, final String tooltip )
   {
     final Rectangle2D rectangle = g.getFontMetrics().getStringBounds( tooltip, g );

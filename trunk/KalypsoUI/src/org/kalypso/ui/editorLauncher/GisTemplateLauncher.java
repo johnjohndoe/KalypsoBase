@@ -53,6 +53,7 @@ public class GisTemplateLauncher implements IEditorLauncher
   /**
    * @see org.eclipse.ui.IEditorLauncher#open(org.eclipse.core.runtime.IPath)
    */
+  @Override
   public void open( final IPath filePath )
   {
     final IOFileFilter gttFilter = FileFilterUtils.suffixFileFilter( ".gmt" ); //$NON-NLS-1$

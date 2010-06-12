@@ -65,6 +65,7 @@ public class DefaultComponentUiHandlerProvider implements IComponentUiHandlerPro
   /**
    * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandlerProvider#createComponentHandler(org.kalypso.observation.result.TupleResult)
    */
+  @Override
   public Map<Integer, IComponentUiHandler> createComponentHandler( final TupleResult tupleResult )
   {
     final Map<Integer, IComponentUiHandler> result = new LinkedHashMap<Integer, IComponentUiHandler>();

@@ -14,6 +14,7 @@ public class AxisPositionParser implements IStringParser<POSITION>
   /**
    * @see org.kalypso.chart.framework.model.data.IStringParser#stringToLogical(java.lang.String)
    */
+  @Override
   public POSITION stringToLogical( String value )
   {
     POSITION pos = POSITION.BOTTOM;
@@ -31,6 +32,7 @@ public class AxisPositionParser implements IStringParser<POSITION>
   /**
    * @see org.kalypso.chart.framework.model.data.IStringParser#getFormatHint()
    */
+  @Override
   public String getFormatHint( )
   {
     return m_formatHint;

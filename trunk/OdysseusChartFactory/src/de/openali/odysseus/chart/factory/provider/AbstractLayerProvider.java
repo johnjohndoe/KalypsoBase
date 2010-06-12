@@ -23,6 +23,7 @@ public abstract class AbstractLayerProvider extends AbstractChartComponentProvid
    *      java.lang.String, de.openali.odysseus.chart.factory.config.parameters.IParameterContainer, java.net.URL,
    *      java.lang.String, java.lang.String, java.util.Map, de.openali.odysseus.chart.framework.model.style.IStyleSet)
    */
+  @Override
   public void init( IChartModel model, String id, IParameterContainer parameters, URL context, String domainAxisId, String targetAxisId, Map<String, String> mapperMap, IStyleSet styleSet )
   {
     super.init( model, id, parameters, context );

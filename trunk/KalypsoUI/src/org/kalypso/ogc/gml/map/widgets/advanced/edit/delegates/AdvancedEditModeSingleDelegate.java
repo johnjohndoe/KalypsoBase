@@ -75,6 +75,7 @@ public class AdvancedEditModeSingleDelegate extends AbstractAdvancedEditModeMove
     super( widget, provider );
   }
 
+  @Override
   public void paint( final Graphics g )
   {
     final GM_Point gmp = getWidget().getCurrentGmPoint();
@@ -179,6 +180,7 @@ public class AdvancedEditModeSingleDelegate extends AbstractAdvancedEditModeMove
     return Messages.getString("org.kalypso.ogc.gml.map.widgets.advanced.edit.delegates.AdvancedEditModeSingleDelegate.0"); //$NON-NLS-1$
   }
 
+  @Override
   public double getRange( )
   {
     final double width = getWidget().getIMapPanel().getBoundingBox().getWidth();

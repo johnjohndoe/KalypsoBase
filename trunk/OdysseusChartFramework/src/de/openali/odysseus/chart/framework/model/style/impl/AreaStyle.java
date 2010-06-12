@@ -26,6 +26,7 @@ public class AreaStyle extends AbstractStyle implements IAreaStyle
    * @param style
    *          template style
    */
+  @Override
   public IAreaStyle copy( )
   {
     return new AreaStyle( getFill().copy(), getAlpha(), getStroke().copy(), isVisible() );
@@ -37,11 +38,13 @@ public class AreaStyle extends AbstractStyle implements IAreaStyle
    * de.openali.odysseus.chart.framework.impl.model.style.IAreaStyle#setOutline(de.openali.odysseus.chart.framework.
    * impl.model.style.ILineStyle)
    */
+  @Override
   public void setStroke( final ILineStyle stroke )
   {
     m_stroke = stroke;
   }
 
+  @Override
   public void apply( final GC gc )
   {
     if( m_stroke != null )
@@ -54,16 +57,19 @@ public class AreaStyle extends AbstractStyle implements IAreaStyle
       m_fill.apply( gc );
   }
 
+  @Override
   public void setFill( final IFill fill )
   {
     m_fill = fill;
   }
 
+  @Override
   public IFill getFill( )
   {
     return m_fill;
   }
 
+  @Override
   public ILineStyle getStroke( )
   {
     return m_stroke;

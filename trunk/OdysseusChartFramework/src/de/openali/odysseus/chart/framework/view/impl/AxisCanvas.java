@@ -19,8 +19,8 @@ import org.eclipse.swt.widgets.Display;
 
 import de.openali.odysseus.chart.framework.model.event.IMapperEventListener;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
-import de.openali.odysseus.chart.framework.model.mapper.IMapper;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
+import de.openali.odysseus.chart.framework.model.mapper.IMapper;
 import de.openali.odysseus.chart.framework.model.mapper.component.IAxisComponent;
 import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
 
@@ -41,12 +41,12 @@ public class AxisCanvas extends Canvas implements IAxisComponent
 
   private Point m_dragInterval;
 
-  private Point m_panOffset = new Point( 0, 0 );
+  private final Point m_panOffset = new Point( 0, 0 );
 
-  private IMapperEventListener m_axisListener = new IMapperEventListener()
+  private final IMapperEventListener m_axisListener = new IMapperEventListener()
   {
     @Override
-    public void onMapperChanged( IMapper mapper )
+    public void onMapperChanged( final IMapper mapper )
     {
       final Object data = getLayoutData();
       if( data != null && data instanceof GridData )
@@ -65,7 +65,7 @@ public class AxisCanvas extends Canvas implements IAxisComponent
     {
 
       @Override
-      public void paintControl( PaintEvent e )
+      public void paintControl( final PaintEvent e )
       {
         paint( e.gc );
       }
@@ -74,7 +74,7 @@ public class AxisCanvas extends Canvas implements IAxisComponent
     addControlListener( new ControlAdapter()
     {
       @Override
-      public void controlResized( ControlEvent e )
+      public void controlResized( final ControlEvent e )
       {
         handleControlResized();
       }
@@ -83,7 +83,7 @@ public class AxisCanvas extends Canvas implements IAxisComponent
     addDisposeListener( new DisposeListener()
     {
       @Override
-      public void widgetDisposed( DisposeEvent e )
+      public void widgetDisposed( final DisposeEvent e )
       {
         dispose();
       }
@@ -177,11 +177,11 @@ public class AxisCanvas extends Canvas implements IAxisComponent
     paintDrag( gc, b );
   }
 
-  private void paintDrag( GC gc, Rectangle bounds2 )
+  private void paintDrag( final GC gc, final Rectangle bounds2 )
   {
     if( m_dragInterval != null )
     {
-      Color bg = gc.getBackground();
+      final Color bg = gc.getBackground();
       gc.setBackground( Display.getDefault().getSystemColor( SWT.COLOR_BLACK ) );
 
       int x;
@@ -204,7 +204,7 @@ public class AxisCanvas extends Canvas implements IAxisComponent
         height = Math.abs( m_dragInterval.x - m_dragInterval.y );
       }
 
-      Rectangle rect = new Rectangle( x, y, width, height );
+      final Rectangle rect = new Rectangle( x, y, width, height );
       gc.setAlpha( 100 );
       gc.fillRectangle( rect );
       gc.setAlpha( 255 );
@@ -262,7 +262,7 @@ public class AxisCanvas extends Canvas implements IAxisComponent
   /**
    * does nothing right now as theres an error displaying the drag intervall
    */
-  public void setDragInterval( int y1, int y2 )
+  public void setDragInterval( final int y1, final int y2 )
   {
     if( y1 == -1 || y2 == -1 )
     {
@@ -275,27 +275,27 @@ public class AxisCanvas extends Canvas implements IAxisComponent
     redraw();
   }
 
-  public void setPanOffsetInterval( Point offset )
+  public void setPanOffsetInterval( @SuppressWarnings("unused") final Point offset )
   {
     // TODO: check callers
-    if( true )
-    {
-      return;
-    }
-
-    m_panOffset = offset;
-    redraw();
+// if( true )
+// {
+// return;
+// }
+//
+// m_panOffset = offset;
+// redraw();
   }
 
   @Override
-  public void setSize( Point size )
+  public void setSize( final Point size )
   {
     super.setSize( size );
     setAxisHeight();
   }
 
   @Override
-  public void setSize( int width, int height )
+  public void setSize( final int width, final int height )
   {
     super.setSize( width, height );
     setAxisHeight();

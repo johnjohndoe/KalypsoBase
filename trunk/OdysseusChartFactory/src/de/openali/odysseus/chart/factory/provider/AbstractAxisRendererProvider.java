@@ -11,6 +11,7 @@ public abstract class AbstractAxisRendererProvider extends AbstractChartComponen
 
   private IStyleSet m_styleSet;
 
+  @Override
   public void init( IChartModel model, String id, IParameterContainer parameters, URL context, IStyleSet styleSet )
   {
     super.init( model, id, parameters, context );

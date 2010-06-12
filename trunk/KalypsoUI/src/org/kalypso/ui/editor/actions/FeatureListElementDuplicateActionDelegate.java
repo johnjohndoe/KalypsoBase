@@ -80,6 +80,7 @@ public class FeatureListElementDuplicateActionDelegate implements IObjectActionD
    * @see org.eclipse.ui.IObjectActionDelegate#setActivePart(org.eclipse.jface.action.IAction,
    *      org.eclipse.ui.IWorkbenchPart)
    */
+  @Override
   public void setActivePart( final IAction action, final IWorkbenchPart targetPart )
   {
     m_targetPart = targetPart;
@@ -88,6 +89,7 @@ public class FeatureListElementDuplicateActionDelegate implements IObjectActionD
   /**
    * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
    */
+  @Override
   public void run( final IAction action )
   {
     if( m_selectedFeature == null )
@@ -127,6 +129,7 @@ public class FeatureListElementDuplicateActionDelegate implements IObjectActionD
    * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
    *      org.eclipse.jface.viewers.ISelection)
    */
+  @Override
   public void selectionChanged( final IAction action, final ISelection selection )
   {
     m_selection = null;

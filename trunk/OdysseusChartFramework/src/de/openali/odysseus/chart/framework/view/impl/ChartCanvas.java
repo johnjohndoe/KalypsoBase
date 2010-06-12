@@ -220,6 +220,7 @@ public class ChartCanvas extends Canvas implements PaintListener, IChartViewer
     return m_model;
   }
 
+  @Override
   public IChartModel getChartModel( )
   {
     return m_model;

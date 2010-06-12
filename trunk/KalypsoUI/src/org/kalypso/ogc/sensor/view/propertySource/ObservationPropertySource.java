@@ -65,6 +65,7 @@ public class ObservationPropertySource implements IPropertySource
   /**
    * @see org.eclipse.ui.views.properties.IPropertySource#getEditableValue()
    */
+  @Override
   public Object getEditableValue()
   {
     if( m_observation == null )
@@ -75,6 +76,7 @@ public class ObservationPropertySource implements IPropertySource
   /**
    * @see org.eclipse.ui.views.properties.IPropertySource#getPropertyDescriptors()
    */
+  @Override
   public IPropertyDescriptor[] getPropertyDescriptors()
   {
     if( m_descriptors == null && m_observation != null )
@@ -99,6 +101,7 @@ public class ObservationPropertySource implements IPropertySource
   /**
    * @see org.eclipse.ui.views.properties.IPropertySource#getPropertyValue(java.lang.Object)
    */
+  @Override
   public Object getPropertyValue( Object id )
   {
     if( m_observation == null )
@@ -109,6 +112,7 @@ public class ObservationPropertySource implements IPropertySource
   /**
    * @see org.eclipse.ui.views.properties.IPropertySource#isPropertySet(java.lang.Object)
    */
+  @Override
   public boolean isPropertySet( Object id )
   {
     // not relevant
@@ -118,6 +122,7 @@ public class ObservationPropertySource implements IPropertySource
   /**
    * @see org.eclipse.ui.views.properties.IPropertySource#resetPropertyValue(java.lang.Object)
    */
+  @Override
   public void resetPropertyValue( Object id )
   {
   // not relevant
@@ -126,6 +131,7 @@ public class ObservationPropertySource implements IPropertySource
   /**
    * @see org.eclipse.ui.views.properties.IPropertySource#setPropertyValue(java.lang.Object, java.lang.Object)
    */
+  @Override
   public void setPropertyValue( Object id, Object value )
   {
   // not relevant

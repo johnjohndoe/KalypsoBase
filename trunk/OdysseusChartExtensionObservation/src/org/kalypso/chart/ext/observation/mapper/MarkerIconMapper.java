@@ -79,6 +79,7 @@ public class MarkerIconMapper extends AbstractRetinalMapper
    * @see de.openali.odysseus.chart.framework.model.mapper.IRetinalMapper#numericToScreen(java.lang.Number,
    *      de.openali.odysseus.chart.framework.model.style.IStyle)
    */
+  @Override
   public IStyle numericToScreen( Number value, IStyle bluePrintStlye )
   {
     if( m_mapping.get( value ) != null )

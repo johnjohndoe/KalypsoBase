@@ -8,8 +8,8 @@ public class CaseAdapterFactory implements IAdapterFactory
 {
   private final CaseTreeContentAdapter m_caseTreeContentAdapter = new CaseTreeContentAdapter();
 
-  @SuppressWarnings("unchecked")
-  public Object getAdapter( final Object adaptableObject, final Class adapterType )
+  @Override
+  public Object getAdapter( final Object adaptableObject, @SuppressWarnings("rawtypes") final Class adapterType )
   {
     if( adapterType == IWorkbenchAdapter.class || adapterType == IWorkbenchAdapter2.class )
     {
@@ -18,6 +18,7 @@ public class CaseAdapterFactory implements IAdapterFactory
     return null;
   }
 
+  @Override
   public Class< ? >[] getAdapterList( )
   {
     return new Class[] { IWorkbenchAdapter.class, IWorkbenchAdapter2.class };

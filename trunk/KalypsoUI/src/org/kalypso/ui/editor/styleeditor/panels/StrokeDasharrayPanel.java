@@ -163,6 +163,7 @@ public class StrokeDasharrayPanel
 
     okButton.addMouseListener( new MouseListener()
     {
+      @Override
       public void mouseDoubleClick( MouseEvent e )
       {
         Float lineFloat = null;
@@ -190,11 +191,13 @@ public class StrokeDasharrayPanel
         }
       }
 
+      @Override
       public void mouseDown( MouseEvent e )
       {
         mouseDoubleClick( e );
       }
 
+      @Override
       public void mouseUp( MouseEvent e )
       {
       // nothing

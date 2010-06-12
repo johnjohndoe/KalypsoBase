@@ -32,6 +32,7 @@ public class DefaultLineLayer extends AbstractLineLayer
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#paint(org.eclipse.swt.graphics.GC,
    *      org.eclipse.swt.graphics.Device)
    */
+  @Override
   public void paint( GC gc )
   {
     final ITabularDataContainer dataContainer = getDataContainer();
@@ -115,6 +116,7 @@ public class DefaultLineLayer extends AbstractLineLayer
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getDomainRange()
    */
+  @Override
   @SuppressWarnings("unchecked")
   public IDataRange<Number> getDomainRange( )
   {
@@ -127,6 +129,7 @@ public class DefaultLineLayer extends AbstractLineLayer
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getTargetRange()
    */
+  @Override
   @SuppressWarnings("unchecked")
   public IDataRange<Number> getTargetRange( )
   {

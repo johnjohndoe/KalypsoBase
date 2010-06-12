@@ -58,6 +58,7 @@ public class RGBParser implements IStringParser<RGB>
   /**
    * @see de.openali.odysseus.chart.framework.model.data.IStringParser#getFormatHint()
    */
+  @Override
   public String getFormatHint( )
   {
     return "String containing 6 hex values";
@@ -66,6 +67,7 @@ public class RGBParser implements IStringParser<RGB>
   /**
    * @see de.openali.odysseus.chart.framework.model.data.IStringParser#stringToLogical(java.lang.String)
    */
+  @Override
   public RGB stringToLogical( final String value ) throws MalformedValueException
   {
     if( value.length() != 6 )

@@ -53,6 +53,7 @@ public class EditFeature implements IActionDelegate
   /**
    * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
    */
+  @Override
   public void run( IAction action )
   {
    if( m_selection!= null && action.isEnabled() )
@@ -77,6 +78,7 @@ public class EditFeature implements IActionDelegate
    * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
    *      org.eclipse.jface.viewers.ISelection)
    */
+  @Override
   public void selectionChanged( IAction action, ISelection selection )
   {
     action.setEnabled( false );

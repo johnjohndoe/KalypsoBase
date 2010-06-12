@@ -195,6 +195,7 @@ public class EditDiagCurveDialog extends TitleAreaDialog
     // hook-listeners
     nameText.addModifyListener( new ModifyListener()
     {
+      @Override
       public void modifyText( ModifyEvent e )
       {
         handleNameTextModified( nameText );
@@ -217,6 +218,7 @@ public class EditDiagCurveDialog extends TitleAreaDialog
 
     colorButton.addDisposeListener( new DisposeListener()
     {
+      @Override
       public void widgetDisposed( DisposeEvent e )
       {
         if( colorButton.getImage() != null )
@@ -253,6 +255,7 @@ public class EditDiagCurveDialog extends TitleAreaDialog
 
     dashCombo.addSelectionChangedListener( new ISelectionChangedListener()
     {
+      @Override
       public void selectionChanged( SelectionChangedEvent event )
       {
         handleTypeSelectionChanged( (IStructuredSelection) event.getSelection() );

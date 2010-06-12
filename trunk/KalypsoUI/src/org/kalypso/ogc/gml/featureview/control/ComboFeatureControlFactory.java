@@ -62,10 +62,10 @@ import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.featureview.control.comparators.IViewerComparator;
 import org.kalypso.ogc.gml.featureview.control.filters.IViewerFilter;
 import org.kalypso.template.featureview.Combo;
-import org.kalypso.template.featureview.ControlType;
 import org.kalypso.template.featureview.Combo.Entry;
 import org.kalypso.template.featureview.Combo.Filter;
 import org.kalypso.template.featureview.Combo.Sorter;
+import org.kalypso.template.featureview.ControlType;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.feature.Feature;
 

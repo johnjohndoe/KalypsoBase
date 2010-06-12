@@ -106,6 +106,7 @@ public class GenericCommandActionDelegate implements IWorkbenchWindowActionDeleg
   /**
    * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#dispose()
    */
+  @Override
   public void dispose( )
   {
     if( m_parameterizedCommand != null )
@@ -121,6 +122,7 @@ public class GenericCommandActionDelegate implements IWorkbenchWindowActionDeleg
    * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
    *      org.eclipse.jface.viewers.ISelection)
    */
+  @Override
   public void selectionChanged( final IAction action, final ISelection selection )
   {
     // we don't care, handlers get their selection from the
@@ -133,6 +135,7 @@ public class GenericCommandActionDelegate implements IWorkbenchWindowActionDeleg
    * @see org.eclipse.core.runtime.IExecutableExtension#setInitializationData(org.eclipse.core.runtime.IConfigurationElement,
    *      java.lang.String, java.lang.Object)
    */
+  @Override
   @SuppressWarnings( { "unchecked", "unused" })
   public void setInitializationData( final IConfigurationElement config, final String propertyName, final Object data ) throws CoreException
   {
@@ -150,6 +153,7 @@ public class GenericCommandActionDelegate implements IWorkbenchWindowActionDeleg
   /**
    * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#init(org.eclipse.ui.IWorkbenchWindow)
    */
+  @Override
   public void init( final IWorkbenchWindow window )
   {
     if( m_handlerService != null )
@@ -172,6 +176,7 @@ public class GenericCommandActionDelegate implements IWorkbenchWindowActionDeleg
   /**
    * @see org.eclipse.ui.IViewActionDelegate#init(org.eclipse.ui.IViewPart)
    */
+  @Override
   public void init( final IViewPart view )
   {
     m_actionBars = view.getViewSite().getActionBars();
@@ -182,6 +187,7 @@ public class GenericCommandActionDelegate implements IWorkbenchWindowActionDeleg
    * @see org.eclipse.ui.IEditorActionDelegate#setActiveEditor(org.eclipse.jface.action.IAction,
    *      org.eclipse.ui.IEditorPart)
    */
+  @Override
   public void setActiveEditor( final IAction action, final IEditorPart targetEditor )
   {
     if( targetEditor != null )
@@ -198,6 +204,7 @@ public class GenericCommandActionDelegate implements IWorkbenchWindowActionDeleg
    * @see org.eclipse.ui.IObjectActionDelegate#setActivePart(org.eclipse.jface.action.IAction,
    *      org.eclipse.ui.IWorkbenchPart)
    */
+  @Override
   public void setActivePart( final IAction action, final IWorkbenchPart targetPart )
   {
     if( targetPart != null )
@@ -210,6 +217,7 @@ public class GenericCommandActionDelegate implements IWorkbenchWindowActionDeleg
   /**
    * @see org.eclipse.core.commands.ICommandListener#commandChanged(org.eclipse.core.commands.CommandEvent)
    */
+  @Override
   public void commandChanged( final CommandEvent commandEvent )
   {
     updateActionState();
@@ -218,6 +226,7 @@ public class GenericCommandActionDelegate implements IWorkbenchWindowActionDeleg
   /**
    * @see org.eclipse.ui.IActionDelegate2#init(org.eclipse.jface.action.IAction)
    */
+  @Override
   public void init( final IAction action )
   {
     m_action = action;
@@ -227,6 +236,7 @@ public class GenericCommandActionDelegate implements IWorkbenchWindowActionDeleg
   /**
    * @see org.eclipse.ui.IActionDelegate2#runWithEvent(org.eclipse.jface.action.IAction, org.eclipse.swt.widgets.Event)
    */
+  @Override
   public void runWithEvent( final IAction action, final Event event )
   {
     /* Do not run for unchecked radio-buttons */
@@ -256,6 +266,7 @@ public class GenericCommandActionDelegate implements IWorkbenchWindowActionDeleg
   /**
    * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
    */
+  @Override
   public void run( final IAction action )
   {
     throw new UnsupportedOperationException();

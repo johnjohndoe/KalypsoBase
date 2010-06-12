@@ -61,6 +61,7 @@ public class ShowDescriptionStatusLineItem extends StatusLineContributionItem
 {
   private final ISelectionChangedListener m_listener = new ISelectionChangedListener()
   {
+    @Override
     public void selectionChanged( final SelectionChangedEvent event )
     {
       final ISelection selection = event.getSelection();

@@ -110,6 +110,7 @@ public class FilterPatternLineSymbolizerLayout extends AbstractSymbolizerLayout
     }
     strokeWidthPanel.addPanelListener( new PanelListener()
     {
+      @Override
       public void valueChanged( final PanelEvent event )
       {
         final double width = ((SliderPanel) event.getSource()).getSelection();
@@ -153,6 +154,7 @@ public class FilterPatternLineSymbolizerLayout extends AbstractSymbolizerLayout
 
       m_colorPalettePanel.addColorPalettePanelListener( new PanelListener()
       {
+        @Override
         public void valueChanged( final PanelEvent event )
         {
           final Color[] colorArray = m_colorPalettePanel.getColorPalette();

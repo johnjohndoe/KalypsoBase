@@ -77,6 +77,7 @@ public class FeatureBatchEditActionDelegate implements IActionDelegate
   /**
    * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
    */
+  @Override
   public void run( final IAction action )
   {
     final Shell shell = Display.getCurrent().getActiveShell();
@@ -109,6 +110,7 @@ public class FeatureBatchEditActionDelegate implements IActionDelegate
    * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
    *      org.eclipse.jface.viewers.ISelection)
    */
+  @Override
   public void selectionChanged( final IAction action, final ISelection selection )
   {
     m_focusedValue = Double.NaN;

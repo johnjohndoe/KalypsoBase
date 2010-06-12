@@ -106,6 +106,7 @@ public class ObservationServiceRepository extends AbstractRepository implements 
   /**
    * @see org.kalypso.repository.IRepositoryItem#hasChildren()
    */
+  @Override
   public final boolean hasChildren( ) throws RepositoryException
   {
     try
@@ -121,6 +122,7 @@ public class ObservationServiceRepository extends AbstractRepository implements 
   /**
    * @see org.kalypso.repository.IRepositoryItem#getChildren()
    */
+  @Override
   public final IRepositoryItem[] getChildren( ) throws RepositoryException
   {
     try
@@ -155,6 +157,7 @@ public class ObservationServiceRepository extends AbstractRepository implements 
   /**
    * @see org.kalypso.repository.IRepository#reload()
    */
+  @Override
   public final void reload( ) throws RepositoryException
   {
     try
@@ -170,6 +173,7 @@ public class ObservationServiceRepository extends AbstractRepository implements 
   /**
    * @see org.kalypso.repository.IRepository#findItem(java.lang.String)
    */
+  @Override
   public final IRepositoryItem findItem( final String identifier ) throws RepositoryException
   {
     final ItemBean bean = getService().findItem( getServiceId( identifier ) );

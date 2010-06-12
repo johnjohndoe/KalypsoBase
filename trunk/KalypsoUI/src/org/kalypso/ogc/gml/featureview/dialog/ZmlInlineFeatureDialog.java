@@ -66,6 +66,7 @@ public class ZmlInlineFeatureDialog implements IFeatureDialog
   /**
    * @see org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog#open(org.eclipse.swt.widgets.Shell)
    */
+  @Override
   public int open( final Shell shell )
   {
     ZmlInlineTypeHandler inlineTypeHandler = null;
@@ -107,6 +108,7 @@ public class ZmlInlineFeatureDialog implements IFeatureDialog
   /**
    * @see org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog#collectChanges(java.util.Collection)
    */
+  @Override
   public void collectChanges( final Collection<FeatureChange> c )
   {
     if( m_change != null )
@@ -116,6 +118,7 @@ public class ZmlInlineFeatureDialog implements IFeatureDialog
   /**
    * @see org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog#getLabel()
    */
+  @Override
   public String getLabel( )
   {
     return Messages.getString("org.kalypso.ogc.gml.featureview.dialog.ZmlInlineFeatureDialog.diagram"); //$NON-NLS-1$

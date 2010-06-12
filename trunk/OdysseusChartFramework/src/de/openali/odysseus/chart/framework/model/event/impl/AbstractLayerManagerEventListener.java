@@ -52,6 +52,7 @@ public abstract class AbstractLayerManagerEventListener implements ILayerManager
   /**
    * @see de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener#onActivLayerChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
    */
+  @Override
   public void onActivLayerChanged( IChartLayer layer )
   {
     // not implemented - override in subclass if needed
@@ -61,6 +62,7 @@ public abstract class AbstractLayerManagerEventListener implements ILayerManager
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.ILayerManagerEventListener#onLayerAdded(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
    */
+  @Override
   public void onLayerAdded( IChartLayer layer )
   {
     // not implemented - override in subclass if needed
@@ -70,6 +72,7 @@ public abstract class AbstractLayerManagerEventListener implements ILayerManager
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.ILayerManagerEventListener#onLayerRemoved(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
    */
+  @Override
   public void onLayerRemoved( IChartLayer layer )
   {
     // not implemented - override in subclass if needed
@@ -79,6 +82,7 @@ public abstract class AbstractLayerManagerEventListener implements ILayerManager
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.ILayerManagerEventListener#onLayerVisibilityChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
    */
+  @Override
   public void onLayerVisibilityChanged( IChartLayer layer )
   {
     // not implemented - override in subclass if needed
@@ -88,6 +92,7 @@ public abstract class AbstractLayerManagerEventListener implements ILayerManager
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.ILayerManagerEventListener#onLayerMoved(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
    */
+  @Override
   public void onLayerMoved( IChartLayer layer )
   {
     // not implemented - override in subclass if needed
@@ -96,6 +101,7 @@ public abstract class AbstractLayerManagerEventListener implements ILayerManager
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.ILayerManagerEventListener#onLayerContentChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
    */
+  @Override
   public void onLayerContentChanged( IChartLayer layer )
   {
     // not implemented - override in subclass if needed

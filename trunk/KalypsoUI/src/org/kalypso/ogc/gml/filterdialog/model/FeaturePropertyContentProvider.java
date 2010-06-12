@@ -61,6 +61,7 @@ public class FeaturePropertyContentProvider implements IStructuredContentProvide
   /**
    * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
    */
+  @Override
   public Object[] getElements( Object inputElement )
   {
     if( inputElement instanceof Feature )
@@ -73,6 +74,7 @@ public class FeaturePropertyContentProvider implements IStructuredContentProvide
   /**
    * @see org.eclipse.jface.viewers.IContentProvider#dispose()
    */
+  @Override
   public void dispose( )
   {
     m_viewer = null;
@@ -84,6 +86,7 @@ public class FeaturePropertyContentProvider implements IStructuredContentProvide
    * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object,
    *      java.lang.Object)
    */
+  @Override
   public void inputChanged( Viewer viewer, Object oldInput, Object newInput )
   {
     m_viewer = (ComboViewer) viewer;

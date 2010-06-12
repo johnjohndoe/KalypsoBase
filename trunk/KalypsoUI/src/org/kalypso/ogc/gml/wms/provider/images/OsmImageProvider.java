@@ -120,6 +120,7 @@ public class OsmImageProvider implements IKalypsoImageProvider
   /**
    * @see org.kalypso.ogc.gml.wms.provider.images.IKalypsoImageProvider#getLoader()
    */
+  @Override
   public ICapabilitiesLoader getLoader( )
   {
     return null;

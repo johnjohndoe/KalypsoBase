@@ -58,6 +58,7 @@ public class DummyLayerProvider extends AbstractLayerProvider
   /**
    * @see org.kalypso.chart.factory.provider.ILayerProvider#getLayer(java.net.URL)
    */
+  @Override
   public IChartLayer getLayer( URL context )
   {
     return new DummyLayer();

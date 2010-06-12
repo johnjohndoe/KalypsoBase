@@ -215,11 +215,13 @@ public class ProjectDatabaseModel implements IProjectDatabaseModel, ILocalWorksp
     }
   }
 
+  @Override
   public void addListener( final IProjectDatabaseListener listener )
   {
     m_listener.add( listener );
   }
 
+  @Override
   public void addRemoteListener( final IRemoteProjectsListener listener )
   {
     if( m_remote != null )
@@ -228,6 +230,7 @@ public class ProjectDatabaseModel implements IProjectDatabaseModel, ILocalWorksp
     }
   }
 
+  @Override
   public void removeRemoteListener( final IRemoteProjectsListener listener )
   {
     if( m_remote != null )
@@ -236,11 +239,13 @@ public class ProjectDatabaseModel implements IProjectDatabaseModel, ILocalWorksp
     }
   }
 
+  @Override
   public void removeListener( final IProjectDatabaseListener listener )
   {
     m_listener.remove( listener );
   }
 
+  @Override
   public IProjectHandler[] getProjects( final IProjectDatabaseFilter filter )
   {
     final Set<IProjectHandler> myProjects = new HashSet<IProjectHandler>();
@@ -257,6 +262,7 @@ public class ProjectDatabaseModel implements IProjectDatabaseModel, ILocalWorksp
     return myProjects.toArray( new IProjectHandler[] {} );
   }
 
+  @Override
   public void setRemoteProjectsDirty( )
   {
     if( m_remote != null )
@@ -265,6 +271,7 @@ public class ProjectDatabaseModel implements IProjectDatabaseModel, ILocalWorksp
     }
   }
 
+  @Override
   public IStatus getRemoteConnectionState( )
   {
     if( m_remote != null )

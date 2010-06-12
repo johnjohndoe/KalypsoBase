@@ -71,6 +71,7 @@ public class WQPairTuppleModel extends AbstractTuppleModel
   /**
    * @see org.kalypso.ogc.sensor.ITuppleModel#getCount()
    */
+  @Override
   public int getCount( )
   {
     return m_pairs.length;
@@ -79,6 +80,7 @@ public class WQPairTuppleModel extends AbstractTuppleModel
   /**
    * @see org.kalypso.ogc.sensor.ITuppleModel#getElement(int, org.kalypso.ogc.sensor.IAxis)
    */
+  @Override
   public Object getElement( int index, IAxis axis ) throws SensorException
   {
     int pos = getPositionFor( axis );
@@ -103,6 +105,7 @@ public class WQPairTuppleModel extends AbstractTuppleModel
   /**
    * @see org.kalypso.ogc.sensor.ITuppleModel#setElement(int, java.lang.Object, org.kalypso.ogc.sensor.IAxis)
    */
+  @Override
   public void setElement( int index, Object element, IAxis axis ) throws SensorException
   {
     throw new SensorException( Messages.getString("org.kalypso.ogc.sensor.view.wq.diagram.WQPairTuppleModel.0") ); //$NON-NLS-1$
@@ -111,6 +114,7 @@ public class WQPairTuppleModel extends AbstractTuppleModel
   /**
    * @see org.kalypso.ogc.sensor.ITuppleModel#indexOf(java.lang.Object, org.kalypso.ogc.sensor.IAxis)
    */
+  @Override
   public int indexOf( Object element, IAxis axis ) throws SensorException
   {
     if( getPositionFor( axis ) == 0 )

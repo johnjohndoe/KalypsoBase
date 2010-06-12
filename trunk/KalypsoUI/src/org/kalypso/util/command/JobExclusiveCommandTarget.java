@@ -111,6 +111,7 @@ public class JobExclusiveCommandTarget implements ICommandTarget, ICommandManage
    * @see org.kalypso.commons.command.ICommandTarget#postCommand(org.kalypso.commons.command.ICommand,
    *      java.lang.Runnable)
    */
+  @Override
   public void postCommand( final ICommand command, final Runnable runnable )
   {
     if( m_commandManager == null )
@@ -123,6 +124,7 @@ public class JobExclusiveCommandTarget implements ICommandTarget, ICommandManage
       final Runnable dirtyRunnable = m_dirtyRunnable;
       final Runnable combinedRunnable = new Runnable()
       {
+        @Override
         public void run( )
         {
           if( dirtyRunnable != null )
@@ -140,6 +142,7 @@ public class JobExclusiveCommandTarget implements ICommandTarget, ICommandManage
   /**
    * @see org.kalypso.commons.command.ICommandManagerListener#onCommandManagerChanged(org.kalypso.commons.command.ICommandManager)
    */
+  @Override
   public void onCommandManagerChanged( final ICommandManager source )
   {
     if( source != null && source == m_commandManager && source.isDirty() && m_dirtyRunnable != null )

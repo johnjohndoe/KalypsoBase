@@ -70,6 +70,7 @@ public class DefaultHandlesProvider implements IHandlesProvider
    * @see org.kalypso.informdss.manager.util.widgets.providers.IHandlesProvider#collectHandles(org.kalypsodeegree.model.feature.Feature,
    *      int)
    */
+  @Override
   public List<IHandle> collectHandles( Feature feature, int radius )
   {
     /* Create a new list for the handles. */

@@ -65,7 +65,7 @@ import de.renew.workflow.connector.cases.ICase;
 /**
  * @author Stefan Kurzbach
  */
-public class ScenarioHandlingProjectNature extends CaseHandlingProjectNature
+public class ScenarioHandlingProjectNature extends CaseHandlingProjectNature<IScenario>
 {
   public final static String ID = "org.kalypso.afgui.ScenarioHandlingProjectNature"; //$NON-NLS-1$
 
@@ -130,13 +130,12 @@ public class ScenarioHandlingProjectNature extends CaseHandlingProjectNature
    * @see org.kalypso.kalypso1d2d.pjt.CaseHandlingProjectNature#scenarioAdded(de.renew.workflow.cases.Case)
    */
   @Override
-  public void caseAdded( final ICase caze )
+  public void caseAdded( final IScenario scenario )
   {
-    super.caseAdded( caze );
-    final IPath projectPath = getRelativeProjectPath( caze );
+    super.caseAdded( scenario );
+    final IPath projectPath = getRelativeProjectPath( scenario );
     final IFolder newFolder = getProject().getFolder( projectPath );
 
-    final IScenario scenario = (IScenario) caze;
     final IScenario parentScenario = scenario.getParentScenario();
     // if( parentScenario == null )
     // {
@@ -211,7 +210,7 @@ public class ScenarioHandlingProjectNature extends CaseHandlingProjectNature
       {
         final Shell activeShell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
         final IStatus status = e.getStatus();
-        ErrorDialog.openError( activeShell, Messages.getString("org.kalypso.afgui.ScenarioHandlingProjectNature.1"), Messages.getString("org.kalypso.afgui.ScenarioHandlingProjectNature.2"), status ); //$NON-NLS-1$ //$NON-NLS-2$
+        ErrorDialog.openError( activeShell, Messages.getString( "org.kalypso.afgui.ScenarioHandlingProjectNature.1" ), Messages.getString( "org.kalypso.afgui.ScenarioHandlingProjectNature.2" ), status ); //$NON-NLS-1$ //$NON-NLS-2$
         KalypsoAFGUIFrameworkPlugin.getDefault().getLog().log( status );
       }
     }

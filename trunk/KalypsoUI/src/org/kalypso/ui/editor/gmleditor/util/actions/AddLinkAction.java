@@ -166,11 +166,13 @@ public class AddLinkAction extends Action
       }
       featureList.addSelectionListener( new SelectionListener()
       {
+        @Override
         public void widgetSelected( final SelectionEvent e )
         {
           listSelections = ((List) e.getSource()).getSelection();
         }
 
+        @Override
         public void widgetDefaultSelected( final SelectionEvent e )
         {// nothing
         }

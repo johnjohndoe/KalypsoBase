@@ -44,26 +44,31 @@ public interface IAxisConstants
       m_applySwitsh = applySwitsch;
     }
 
+    @Override
     public int toInt( )
     {
       return m_applySwitsh ? -1 : 1;
     }
 
+    @Override
     public double getX( final Point2D point )
     {
       return m_applySwitsh ? point.getY() : point.getX();
     }
 
+    @Override
     public double getY( final Point2D point )
     {
       return m_applySwitsh ? point.getX() : point.getY();
     }
 
+    @Override
     public int getX( final Point point )
     {
       return m_applySwitsh ? point.y : point.x;
     }
 
+    @Override
     public int getY( final Point point )
     {
       return m_applySwitsh ? point.x : point.y;

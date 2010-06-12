@@ -42,8 +42,6 @@ package de.renew.workflow.contexts;
 
 import org.eclipse.core.commands.IHandler;
 
-import de.renew.workflow.contexts.ContextType;
-
 /**
  * An instance of {@link IContextHandlerFactory} can create context handlers for certain subclasses of
  * {@link ContextType}. These handlers do something to enable the context in the workbench.
