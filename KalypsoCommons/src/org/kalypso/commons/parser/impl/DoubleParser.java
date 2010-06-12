@@ -45,16 +45,17 @@ import org.kalypso.commons.parser.ParserException;
 
 /**
  * Ein Parser für Double und Float Objekte.
- *
+ * 
  * @author schlienger
  */
 public class DoubleParser extends AbstractParser
 {
+  private final String m_format;//$NON-NLS-1$
 
   /**
    * Default constructor: calls DoubleParser( "" )
    */
-  public DoubleParser()
+  public DoubleParser( )
   {
     this( "" ); //$NON-NLS-1$
   }
@@ -66,9 +67,7 @@ public class DoubleParser extends AbstractParser
    */
   public DoubleParser( final String format )
   {
-
-    format.getClass();
-    //
+    m_format = format;
   }
 
   /**
@@ -84,9 +83,9 @@ public class DoubleParser extends AbstractParser
    * @see org.kalypso.commons.parser.IParser#getFormat()
    */
   @Override
-  public String getFormat()
+  public String getFormat( )
   {
-    return ""; //$NON-NLS-1$
+    return m_format;
   }
 
   /**
@@ -120,8 +119,8 @@ public class DoubleParser extends AbstractParser
   @Override
   public int compare( final Object value1, final Object value2 )
   {
-    final double n1 = ( (Number)value1 ).doubleValue();
-    final double n2 = ( (Number)value2 ).doubleValue();
+    final double n1 = ((Number) value1).doubleValue();
+    final double n2 = ((Number) value2).doubleValue();
 
     return Double.compare( n1, n2 );
   }
