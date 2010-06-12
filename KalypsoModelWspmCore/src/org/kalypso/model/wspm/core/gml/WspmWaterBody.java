@@ -74,11 +74,19 @@ public class WspmWaterBody extends Feature_Impl implements IWspmConstants, IProf
     super( parent, parentRelation, ft, id, propValues );
   }
 
-  public IProfileFeature createNewProfile( ) throws GMLSchemaException
+  public IProfileFeature createNewProfile( )
   {
-    final Feature profile = FeatureHelper.addFeature( this, QNAME_PROP_PROFILEMEMBER, IProfileFeature.QNAME_PROFILE );
-    if( profile instanceof IProfileFeature )
-      return (IProfileFeature) profile;
+    try
+    {
+      final Feature profile = FeatureHelper.addFeature( this, QNAME_PROP_PROFILEMEMBER, IProfileFeature.QNAME_PROFILE );
+      if( profile instanceof IProfileFeature )
+        return (IProfileFeature) profile;
+    }
+    catch( final GMLSchemaException e )
+    {
+      // should never happen
+      e.printStackTrace();
+    }
 
     throw new IllegalStateException();
   }

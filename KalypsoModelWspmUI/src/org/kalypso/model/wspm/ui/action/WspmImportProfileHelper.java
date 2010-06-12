@@ -44,15 +44,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.command.ICommand;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
@@ -107,7 +103,6 @@ public class WspmImportProfileHelper
           {
             final IProfileFeature gmlProfile = m_water.createNewProfile();
 
-            // TODO: set coordinate system
             if( crs != null )
               gmlProfile.setSrsName( crs );
             else
@@ -117,12 +112,6 @@ public class WspmImportProfileHelper
 
             newFeatureList.add( gmlProfile );
           }
-        }
-        catch( final GMLSchemaException e )
-        {
-          // should never happen, just log
-          final IStatus status = StatusUtilities.statusFromThrowable( e );
-          KalypsoModelWspmUIPlugin.getDefault().getLog().log( status );
         }
         finally
         {
