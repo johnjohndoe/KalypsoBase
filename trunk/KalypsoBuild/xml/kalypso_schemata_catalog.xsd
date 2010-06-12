@@ -3,8 +3,8 @@
          "http://www.oasis-open.org/committees/entity/release/1.0/catalog.dtd">
 <catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="public">
 
-	<uri name="featureview.template.kalypso.org" uri="platform:/resource/KalypsoCore/etc/schemas/template/featureview.xsd" />
+    <nextCatalog catalog="platform:/resource/KalypsoCore/etc/schemas/catalog.xml"/>
 
-	<uri name="http://www.sourceforge.net/projects/kalypsobase/layout" uri="platform:/resource/KalypsoHwvCore/etc/schemes/ui/layout.xsd" />
-
+    <nextCatalog catalog="platform:/resource/KalypsoHwvCore/etc/schemes/catalog.xml"/>
+    
 </catalog>
