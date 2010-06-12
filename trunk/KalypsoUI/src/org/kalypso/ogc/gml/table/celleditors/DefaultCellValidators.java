@@ -45,6 +45,8 @@ import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.i18n.Messages;
 
 /**
+ * TODO: hook into a more general validation framework
+ * 
  * @author Gernot Belger
  */
 public class DefaultCellValidators
@@ -60,6 +62,7 @@ public class DefaultCellValidators
     /**
      * @see org.eclipse.jface.viewers.ICellEditorValidator#isValid(java.lang.Object)
      */
+    @Override
     public String isValid( final Object value )
     {
       try
@@ -70,7 +73,7 @@ public class DefaultCellValidators
       }
       catch( final NumberFormatException nfe )
       {
-        return Messages.getString("org.kalypso.ogc.gml.table.celleditors.DefaultCellValidators.0"); //$NON-NLS-1$
+        return Messages.getString( "org.kalypso.ogc.gml.table.celleditors.DefaultCellValidators.0" ); //$NON-NLS-1$
       }
     }
   }
@@ -80,6 +83,7 @@ public class DefaultCellValidators
     /**
      * @see org.eclipse.jface.viewers.ICellEditorValidator#isValid(java.lang.Object)
      */
+    @Override
     public String isValid( final Object value )
     {
       try
@@ -97,7 +101,7 @@ public class DefaultCellValidators
       }
       catch( final NumberFormatException nfe )
       {
-        return Messages.getString("org.kalypso.ogc.gml.table.celleditors.DefaultCellValidators.1"); //$NON-NLS-1$
+        return Messages.getString( "org.kalypso.ogc.gml.table.celleditors.DefaultCellValidators.1" ); //$NON-NLS-1$
       }
     }
   }
@@ -107,6 +111,7 @@ public class DefaultCellValidators
     /**
      * @see org.eclipse.jface.viewers.ICellEditorValidator#isValid(java.lang.Object)
      */
+    @Override
     public String isValid( final Object value )
     {
       try
@@ -124,7 +129,7 @@ public class DefaultCellValidators
       }
       catch( final NumberFormatException nfe )
       {
-        return Messages.getString("org.kalypso.ogc.gml.table.celleditors.DefaultCellValidators.2"); //$NON-NLS-1$
+        return Messages.getString( "org.kalypso.ogc.gml.table.celleditors.DefaultCellValidators.2" ); //$NON-NLS-1$
       }
     }
   }
