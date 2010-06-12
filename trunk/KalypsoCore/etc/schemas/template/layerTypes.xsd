@@ -53,7 +53,7 @@
               <xs:complexContent>
                 <xs:extension base="xlinkext:SimpleLinkType">
                   <xs:attribute name="linktype" type="xs:string" use="optional" />
-                  <xs:attribute name="style" type="xs:string" use="required">
+                  <xs:attribute name="style" type="xs:string" use="optional">
                     <xs:annotation>
                       <xs:documentation>Name of the referenced UserStyle. @Deprecated: use 'featureTypeStyle' instead.</xs:documentation>
                     </xs:annotation>
