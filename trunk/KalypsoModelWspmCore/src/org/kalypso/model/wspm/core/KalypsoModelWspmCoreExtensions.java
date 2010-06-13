@@ -99,12 +99,12 @@ public class KalypsoModelWspmCoreExtensions
 
   public static final Map<String, String> getProfilSinks( )
   {
-    final Map<String, IConfigurationElement> sinks = getSinksOrSources( "sink" );
+    final Map<String, IConfigurationElement> sinks = getSinksOrSources( "sink" ); //$NON-NLS-1$
     final Map<String, String> sinkMap = new HashMap<String, String>( sinks.size() );
     for( final String key : sinks.keySet() )
     {
       final IConfigurationElement sink = sinks.get( key );
-      sinkMap.put( key, sink.getAttribute( "name" ) );
+      sinkMap.put( key, sink.getAttribute( "name" ) ); //$NON-NLS-1$
     }
     return sinkMap;
   }

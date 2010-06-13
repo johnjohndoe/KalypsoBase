@@ -61,7 +61,7 @@ public class SimplifyProfileWizard extends ManipulateProfileWizard
   {
     super( profileSelection, "Please select the profiles that will simplified." );
 
-    m_simplifyPage = new SimplifyProfilePage( "simplifyPage" );
+    m_simplifyPage = new SimplifyProfilePage( "simplifyPage" ); //$NON-NLS-1$
 
     addPage( m_simplifyPage );
   }

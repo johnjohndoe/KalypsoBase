@@ -111,7 +111,7 @@ public class ProfilePointWrapper extends AbstractRecordWrapper implements IRecor
   @Override
   public String toString( )
   {
-    return String.format( "%.2f, %.2f", getBreite(), getHoehe() );
+    return String.format( "%.2f, %.2f", getBreite(), getHoehe() ); //$NON-NLS-1$
   }
 
 }
