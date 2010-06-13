@@ -84,10 +84,9 @@ import org.w3c.dom.Element;
  */
 public class PropertyIsInstanceOfOperation extends ComparisonOperation
 {
+  private final PropertyName m_propertyName;
 
-  private final PropertyName propertyName;
-
-  private final QualifiedName typeName;
+  private final QualifiedName m_typeName;
 
   private static NamespaceContext nsContext = CommonNamespaces.getNamespaceContext();
 
@@ -100,8 +99,8 @@ public class PropertyIsInstanceOfOperation extends ComparisonOperation
   public PropertyIsInstanceOfOperation( final PropertyName propertyName, final QualifiedName typeName )
   {
     super( OperationDefines.PROPERTYISINSTANCEOF );
-    this.propertyName = propertyName;
-    this.typeName = typeName;
+    this.m_propertyName = propertyName;
+    this.m_typeName = typeName;
   }
 
   /**
@@ -112,8 +111,8 @@ public class PropertyIsInstanceOfOperation extends ComparisonOperation
   {
     final StringBuffer sb = new StringBuffer();
     sb.append( "<deegreeogc:" ).append( getOperatorName() ).append( " xmlns:deegreeogc=\"http://www.deegree.org/ogc\">" );
-    sb.append( propertyName.toXML() );
-    sb.append( "<ogc:Literal>" ).append( typeName.getPrefixedName() ).append( "</ogc:Literal>" );
+    sb.append( m_propertyName.toXML() );
+    sb.append( "<ogc:Literal>" ).append( m_typeName.getPrefixedName() ).append( "</ogc:Literal>" );
     sb.append( "</deegreeogc:" ).append( getOperatorName() ).append( ">" );
     return sb;
   }
@@ -128,17 +127,16 @@ public class PropertyIsInstanceOfOperation extends ComparisonOperation
    *           if the evaluation fails
    */
   @Override
-  @SuppressWarnings("deprecation")
   public boolean evaluate( final Feature feature ) throws FilterEvaluationException
   {
     boolean equals = false;
 
-    final Object propertyValue = propertyName.evaluate( feature );
+    final Object propertyValue = m_propertyName.evaluate( feature );
 
     if( propertyValue instanceof Feature )
-      return GMLSchemaUtilities.substitutes( ((Feature) propertyValue).getFeatureType(), new QName( typeName.getNamespace().toString(), typeName.getLocalName() ) );
-    
-    final String localName = this.typeName.getLocalName();
+      return GMLSchemaUtilities.substitutes( ((Feature) propertyValue).getFeatureType(), new QName( m_typeName.getNamespace().toString(), m_typeName.getLocalName() ) );
+
+    final String localName = this.m_typeName.getLocalName();
     if( "Point".equals( localName ) )
     {
       equals = propertyValue instanceof GM_Point || propertyValue instanceof GM_MultiPoint;
@@ -153,7 +151,7 @@ public class PropertyIsInstanceOfOperation extends ComparisonOperation
     }
     else
     {
-      final String msg = "Error evaluating PropertyIsInstanceOf operation: " + this.typeName + " is not a supported type to check for.";
+      final String msg = "Error evaluating PropertyIsInstanceOf operation: " + this.m_typeName + " is not a supported type to check for.";
       throw new FilterEvaluationException( msg );
     }
 
@@ -200,7 +198,7 @@ public class PropertyIsInstanceOfOperation extends ComparisonOperation
    */
   public PropertyName getPropertyName( )
   {
-    return propertyName;
+    return m_propertyName;
   }
 
   /**

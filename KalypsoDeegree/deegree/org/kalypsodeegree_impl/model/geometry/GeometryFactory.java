@@ -883,7 +883,7 @@ final public class GeometryFactory
   /**
    * creates a GM_MultiSurface
    */
-  public static GM_MultiSurface createGM_MultiSurface( final GM_Surface<GM_SurfacePatch>[] surfaces, final String crs )
+  public static GM_MultiSurface createGM_MultiSurface( final GM_Surface< ? >[] surfaces, final String crs )
   {
     return new GM_MultiSurface_Impl( surfaces, crs );
   }

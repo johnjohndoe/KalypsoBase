@@ -203,6 +203,21 @@
 				</visibleWhen>
 			</command>		
 		</menuContribution>
+		<menuContribution locationURI="menu:org.kalypso.ui.menus.mapMenu?before=widgetAdditions">
+			<command commandId="org.kalypso.ogc.gml.map.CoverageManagementCommand" style="radio" tooltip="%org.kalypso.ogc.gml.map.CoverageManagementCommand.description">
+				<visibleWhen checkEnabled="false">
+					<and>
+						<with variable="activeEditorId">
+							<equals value="org.kalypso.ui.editor.mapeditor.GisMapEditor" />
+						</with>
+						<!--reference definitionId="mapContext" /-->
+						<with variable="activeMapPanel">
+							<test property="org.kalypso.ui.test.map.activeTheme.qname" value="{http://www.opengis.net/gml}_Coverage" />
+						</with>
+					</and>
+				</visibleWhen>
+			</command>		
+		</menuContribution>
 	</extension>
 
     <extension point="org.eclipse.core.expressions.propertyTesters">

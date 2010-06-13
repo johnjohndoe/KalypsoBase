@@ -44,14 +44,12 @@ import java.net.URL;
 
 import org.kalypso.chart.ext.test.layer.TortenLayer;
 
-import de.openali.odysseus.chart.factory.config.exception.ConfigurationException;
 import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
 import de.openali.odysseus.chart.framework.model.data.IDataContainer;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 
 /**
  * @author alibu
- * 
  */
 public class TortenLayerProvider extends AbstractLayerProvider
 {
@@ -60,17 +58,17 @@ public class TortenLayerProvider extends AbstractLayerProvider
    * @see org.kalypso.chart.factory.provider.ILayerProvider#getLayer(java.net.URL)
    */
   @Override
-public IChartLayer getLayer( URL context )
+  public IChartLayer getLayer( final URL context )
   {
-    String pices = getParameterContainer().getParameterValue( "pieces", "12" );
-    int pieces = Integer.parseInt( pices );
+    final String pices = getParameterContainer().getParameterValue( "pieces", "12" );
+    final int pieces = Integer.parseInt( pices );
     return new TortenLayer( pieces );
   }
 
   /**
    * @see org.kalypso.chart.factory.provider.ILayerProvider#getDataContainer()
    */
-  public IDataContainer getDataContainer( ) throws ConfigurationException
+  public IDataContainer getDataContainer( )
   {
     return null;
   }

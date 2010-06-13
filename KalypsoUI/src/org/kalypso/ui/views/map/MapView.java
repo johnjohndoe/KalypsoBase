@@ -105,7 +105,7 @@ public class MapView extends AbstractMapPart implements IViewPart
   @Override
   public void saveState( final IMemento memento )
   {
-    IStorageEditorInput input = getEditorInput();
+    final IStorageEditorInput input = getEditorInput();
     if( !(input instanceof IFileEditorInput) )
       return;
 
@@ -145,9 +145,8 @@ public class MapView extends AbstractMapPart implements IViewPart
     super.dispose();
   }
 
-  @SuppressWarnings("unchecked")
   @Override
-  public Object getAdapter( final Class adapter )
+  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
   {
     if( IContentOutlinePage.class.equals( adapter ) )
     {

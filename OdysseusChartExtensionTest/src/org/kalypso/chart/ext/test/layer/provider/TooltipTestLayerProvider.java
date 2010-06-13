@@ -44,7 +44,6 @@ import java.net.URL;
 
 import org.kalypso.chart.ext.test.layer.TooltipTestLayer;
 
-import de.openali.odysseus.chart.factory.config.exception.ConfigurationException;
 import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 
@@ -58,7 +57,7 @@ public class TooltipTestLayerProvider extends AbstractLayerProvider
    * @see de.openali.odysseus.chart.factory.provider.ILayerProvider#getLayer(java.net.URL)
    */
   @Override
-  public IChartLayer getLayer( URL context ) throws ConfigurationException
+  public IChartLayer getLayer( final URL context )
   {
     return new TooltipTestLayer();
   }

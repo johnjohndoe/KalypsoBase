@@ -54,6 +54,8 @@ import org.xml.sax.XMLReader;
  * @author Gernot Belger
  * @author Felipe Maximino
  */
+@SuppressWarnings("unused")
+// needed, as we need to define all the SaxParseExceptions
 public class DelegatingContentHandler implements ContentHandler
 {
   protected ContentHandler m_delegate;

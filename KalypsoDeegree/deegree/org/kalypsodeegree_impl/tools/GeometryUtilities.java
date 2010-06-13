@@ -134,8 +134,7 @@ public class GeometryUtilities
     return GeometryFactory.createGM_Point( newPos, p1.getCoordinateSystem() );
   }
 
-  @SuppressWarnings("unchecked")
-  public static double calcAngleToSurface( final GM_Surface surface, final GM_Point point )
+  public static double calcAngleToSurface( final GM_Surface< ? > surface, final GM_Point point )
   {
     final double r = surface.distance( point );
     double min = r;
@@ -164,8 +163,7 @@ public class GeometryUtilities
    *          numer of maximal interations
    * @return point that is somewhere on the surface (e.g. can act as label point)
    */
-  @SuppressWarnings("unchecked")
-  public static GM_Point guessPointOnSurface( final GM_Surface surface, GM_Point pointGuess, int tries )
+  public static GM_Point guessPointOnSurface( final GM_Surface< ? > surface, GM_Point pointGuess, int tries )
   {
     if( surface == null )
       return null;
@@ -210,8 +208,7 @@ public class GeometryUtilities
     return guessPointOnSurface( surface, createGM_PositionAtCenter( p1, p2 ), tries );
   }
 
-  @SuppressWarnings("unchecked")
-  private static GM_Point calcFarestPointOnSurfaceInDirection( final GM_Surface surface, final GM_Point pOnSurface, final double angle, final double max, int tries )
+  private static GM_Point calcFarestPointOnSurfaceInDirection( final GM_Surface< ? > surface, final GM_Point pOnSurface, final double angle, final double max, int tries )
   {
     final GM_Point point = createPointFrom( pOnSurface, angle, max );
     if( surface.contains( point ) )
@@ -294,16 +291,15 @@ public class GeometryUtilities
     return GeometryFactory.createGM_Point( x, y, centroid.getCoordinateSystem() );
   }
 
-  @SuppressWarnings("unchecked")
   public static double calcArea( final GM_Object geom )
   {
     if( geom instanceof GM_Surface )
-      return ((GM_Surface) geom).getArea();
+      return ((GM_Surface< ? >) geom).getArea();
     else if( geom instanceof GM_MultiSurface )
     {
       double area = 0;
-      final GM_Surface[] allSurfaces = ((GM_MultiSurface) geom).getAllSurfaces();
-      for( final GM_Surface element : allSurfaces )
+      final GM_Surface< ? >[] allSurfaces = ((GM_MultiSurface) geom).getAllSurfaces();
+      for( final GM_Surface< ? > element : allSurfaces )
         area += calcArea( element );
       return area;
     }
@@ -318,11 +314,10 @@ public class GeometryUtilities
     return 0d;
   }
 
-  @SuppressWarnings("unchecked")
   public static boolean isInside( final GM_Object a, final GM_Object b )
   {
     if( a instanceof GM_Surface && b instanceof GM_Surface )
-      return a.contains( guessPointOnSurface( (GM_Surface) b, b.getCentroid(), 3 ) );
+      return a.contains( guessPointOnSurface( (GM_Surface< ? >) b, b.getCentroid(), 3 ) );
     // return a.contains(b);
     if( a instanceof GM_MultiSurface )
       return isInside( ((GM_MultiSurface) a).getAllSurfaces()[0], b );
@@ -581,13 +576,13 @@ public class GeometryUtilities
   @SuppressWarnings("unchecked")
   public static GM_MultiSurface ensureIsMultiPolygon( final GM_Object geomToCheck ) throws GM_Exception
   {
-    final Class< ? extends GM_Object> class1 = geomToCheck.getClass();
     if( geomToCheck == null )
       return null;
-    else if( getMultiPolygonClass().isAssignableFrom( class1 ) )
+    final Class< ? extends GM_Object> class1 = geomToCheck.getClass();
+    if( getMultiPolygonClass().isAssignableFrom( class1 ) )
       return (GM_MultiSurface) geomToCheck;
     else if( getPolygonClass().isAssignableFrom( class1 ) )
-      return GeometryFactory.createGM_MultiSurface( new GM_Surface[] { (GM_Surface) geomToCheck }, ((GM_Surface) geomToCheck).getCoordinateSystem() );
+      return GeometryFactory.createGM_MultiSurface( new GM_Surface[] { (GM_Surface< ? >) geomToCheck }, ((GM_Surface< ? >) geomToCheck).getCoordinateSystem() );
     else
       throw new GM_Exception( "This geometry can not be a MultiPolygon..." );
   }

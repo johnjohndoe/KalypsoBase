@@ -53,8 +53,6 @@ import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.FontMetrics;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
@@ -64,7 +62,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Label;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.i18n.Messages;
@@ -91,20 +88,20 @@ public class ChecklistOfLinksFeatureControl extends AbstractFeatureControl imple
 
   private final Set<ModifyListener> m_modifyListeners = new HashSet<ModifyListener>();
 
-  private final boolean m_showSelectButtons;
+// private final boolean m_showSelectButtons;
 
   private CheckboxTableViewer m_linkChecklist;
 
   public ChecklistOfLinksFeatureControl( final Feature feature, final IPropertyType ftp, final boolean showSelectButtons )
   {
     super( feature, ftp );
-    m_showSelectButtons = showSelectButtons;
+// m_showSelectButtons = showSelectButtons;
   }
 
   public ChecklistOfLinksFeatureControl( final IPropertyType pt, final boolean showSelectButtons )
   {
     super( pt );
-    m_showSelectButtons = showSelectButtons;
+// m_showSelectButtons = showSelectButtons;
   }
 
   /**
@@ -159,11 +156,11 @@ public class ChecklistOfLinksFeatureControl extends AbstractFeatureControl imple
     m_linkChecklist.setLabelProvider( new GMLLabelProvider() );
 
     // TODO: we never show the buttons, as they do not work properly yet
-    if( m_showSelectButtons && false )
-    {
-      final Composite buttonPanel = createSelectButtons( fontMetrics, panel, m_linkChecklist );
-      buttonPanel.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
-    }
+// if( m_showSelectButtons && false )
+// {
+// final Composite buttonPanel = createSelectButtons( fontMetrics, panel, m_linkChecklist );
+// buttonPanel.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
+// }
 
     m_linkChecklist.addCheckStateListener( new ICheckStateListener()
     {
@@ -179,43 +176,44 @@ public class ChecklistOfLinksFeatureControl extends AbstractFeatureControl imple
     return panel;
   }
 
-  private Composite createSelectButtons( final FontMetrics fontMetrics, final Composite panel, final CheckboxTableViewer checkList )
-  {
-    final Composite buttonPanel = new Composite( panel, SWT.NONE );
-    final GridLayout layout = new GridLayout();
-    layout.numColumns = 1;
-    layout.marginWidth = 0;
-    layout.horizontalSpacing = Dialog.convertHorizontalDLUsToPixels( fontMetrics, IDialogConstants.HORIZONTAL_SPACING );
-    buttonPanel.setLayout( layout );
-
-    /* Glue, to force butons to the right */
-    final Label label = new Label( buttonPanel, SWT.NONE );
-    label.setLayoutData( new GridData( SWT.FILL, SWT.LEFT, true, false ) );
-
-    // TODO: the stuff below does not work yet, as the modell is not changed....
-
-    final Button selectButton = createButton( buttonPanel, IDialogConstants.SELECT_ALL_ID, "", fontMetrics ); //$NON-NLS-1$
-    selectButton.addSelectionListener( new SelectionAdapter()
-    {
-      @Override
-      public void widgetSelected( final SelectionEvent e )
-      {
-        checkList.setAllChecked( true );
-      }
-    } );
-
-    final Button deselectButton = createButton( buttonPanel, IDialogConstants.DESELECT_ALL_ID, "", fontMetrics ); //$NON-NLS-1$
-    deselectButton.addSelectionListener( new SelectionAdapter()
-    {
-      @Override
-      public void widgetSelected( final SelectionEvent e )
-      {
-        checkList.setAllChecked( false );
-      }
-    } );
-
-    return buttonPanel;
-  }
+// private Composite createSelectButtons( final FontMetrics fontMetrics, final Composite panel, final
+// CheckboxTableViewer checkList )
+// {
+// final Composite buttonPanel = new Composite( panel, SWT.NONE );
+// final GridLayout layout = new GridLayout();
+// layout.numColumns = 1;
+// layout.marginWidth = 0;
+// layout.horizontalSpacing = Dialog.convertHorizontalDLUsToPixels( fontMetrics, IDialogConstants.HORIZONTAL_SPACING );
+// buttonPanel.setLayout( layout );
+//
+// /* Glue, to force butons to the right */
+// final Label label = new Label( buttonPanel, SWT.NONE );
+// label.setLayoutData( new GridData( SWT.FILL, SWT.LEFT, true, false ) );
+//
+// // TODO: the stuff below does not work yet, as the modell is not changed....
+//
+//    final Button selectButton = createButton( buttonPanel, IDialogConstants.SELECT_ALL_ID, "", fontMetrics ); //$NON-NLS-1$
+// selectButton.addSelectionListener( new SelectionAdapter()
+// {
+// @Override
+// public void widgetSelected( final SelectionEvent e )
+// {
+// checkList.setAllChecked( true );
+// }
+// } );
+//
+//    final Button deselectButton = createButton( buttonPanel, IDialogConstants.DESELECT_ALL_ID, "", fontMetrics ); //$NON-NLS-1$
+// deselectButton.addSelectionListener( new SelectionAdapter()
+// {
+// @Override
+// public void widgetSelected( final SelectionEvent e )
+// {
+// checkList.setAllChecked( false );
+// }
+// } );
+//
+// return buttonPanel;
+// }
 
   /**
    * @see org.kalypso.ogc.gml.featureview.control.IFeatureControl#updateControl()
@@ -249,19 +247,19 @@ public class ChecklistOfLinksFeatureControl extends AbstractFeatureControl imple
    * The <code>Dialog</code> implementation of this framework method creates a standard push button, registers it for
    * selection events including button presses, and registers default buttons with its shell. The button id is stored as
    * the button's client data. If the button id is <code>IDialogConstants.CANCEL_ID</code>, the new button will be
-   * accessible from <code>getCancelButton()</code>. If the button id is <code>IDialogConstants.OK_ID</code>, the
-   * new button will be accesible from <code>getOKButton()</code>. Note that the parent's layout is assumed to be a
+   * accessible from <code>getCancelButton()</code>. If the button id is <code>IDialogConstants.OK_ID</code>, the new
+   * button will be accesible from <code>getOKButton()</code>. Note that the parent's layout is assumed to be a
    * <code>GridLayout</code> and the number of columns in this layout is incremented. Subclasses may override.
    * </p>
    * 
    * @param parent
-   *            the parent composite
+   *          the parent composite
    * @param id
-   *            the id of the button (see <code>IDialogConstants.*_ID</code> constants for standard dialog button ids)
+   *          the id of the button (see <code>IDialogConstants.*_ID</code> constants for standard dialog button ids)
    * @param label
-   *            the label from the button
+   *          the label from the button
    * @param defaultButton
-   *            <code>true</code> if the button is to be the default button, and <code>false</code> otherwise
+   *          <code>true</code> if the button is to be the default button, and <code>false</code> otherwise
    * @return the new button
    * @see #getCancelButton
    * @see #getOKButton()
@@ -291,7 +289,7 @@ public class ChecklistOfLinksFeatureControl extends AbstractFeatureControl imple
     final FeatureList listOfLinks = (FeatureList) feature.getProperty( rt );
 
     final Object checkedElement = event.getElement();
-    final CompositeCommand compositeCommand = new CompositeCommand(Messages.getString("org.kalypso.ogc.gml.featureview.control.ChecklistOfLinksFeatureControl.0")) ; //$NON-NLS-1$
+    final CompositeCommand compositeCommand = new CompositeCommand( Messages.getString( "org.kalypso.ogc.gml.featureview.control.ChecklistOfLinksFeatureControl.0" ) ); //$NON-NLS-1$
     if( event.getChecked() )
     {
       // TODO: implement case for external features

@@ -84,7 +84,6 @@ public class HandlesFactory
     return collector;
   }
 
-  @SuppressWarnings("unchecked")//$NON-NLS-1$
   private static void createHandles( final Feature feature, final IValuePropertyType propType, final GM_Object geometry, final List<Handle> collector, final GM_Envelope envelope )
   {
     if( geometry instanceof GM_Point )
@@ -92,7 +91,7 @@ public class HandlesFactory
     else if( geometry instanceof GM_Curve )
       createCurveHandles( feature, propType, (GM_Curve) geometry, collector, envelope );
     else if( geometry instanceof GM_Surface )
-      createSurfaceHandles( feature, propType, (GM_Surface) geometry, collector, envelope );
+      createSurfaceHandles( feature, propType, (GM_Surface< ? >) geometry, collector, envelope );
   }
 
   private static void createPointHandles( final Feature feature, final IValuePropertyType propType, final GM_Point point, final List<Handle> collector, final GM_Envelope envelope )
@@ -118,8 +117,7 @@ public class HandlesFactory
 
   }
 
-  @SuppressWarnings("unchecked")//$NON-NLS-1$
-  private static void createSurfaceHandles( final Feature feature, final IValuePropertyType propType, final GM_Surface surface, final List<Handle> collector, final GM_Envelope envelope )
+  private static void createSurfaceHandles( final Feature feature, final IValuePropertyType propType, final GM_Surface< ? > surface, final List<Handle> collector, final GM_Envelope envelope )
   {
     final GM_SurfaceBoundary surfaceBoundary = surface.getSurfaceBoundary();
     if( surfaceBoundary == null )
@@ -149,7 +147,7 @@ public class HandlesFactory
     {
       if( envelope.contains( position ) )
       {
-        // GM_Position 'equals' operation compares coordinates, it is not strict object equality! 
+        // GM_Position 'equals' operation compares coordinates, it is not strict object equality!
         if( !pos.contains( position ) )
         {
           collector.add( new Handle( feature, propType, position ) );

@@ -402,9 +402,8 @@ class GM_Surface_Impl<T extends GM_SurfacePatch> extends GM_OrientableSurface_Im
   /**
    * @see org.kalypsodeegree_impl.model.geometry.GM_Primitive_Impl#getAdapter(java.lang.Class)
    */
-  @SuppressWarnings("unchecked")
   @Override
-  public Object getAdapter( final Class adapter )
+  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
   {
     if( adapter == GM_SurfacePatch[].class )
     {
@@ -728,13 +727,13 @@ class GM_Surface_Impl<T extends GM_SurfacePatch> extends GM_OrientableSurface_Im
    * @see java.util.List#toArray(T[])
    */
   @Override
+  @SuppressWarnings("unchecked")
   public <S> S[] toArray( final S[] a )
   {
     final S[] r = a.length >= 1 ? a : (S[]) java.lang.reflect.Array.newInstance( a.getClass().getComponentType(), 1 );
 
     r[0] = (S) m_patch;
     return r;
-// return m_list.toArray( a );
   }
 
   /**

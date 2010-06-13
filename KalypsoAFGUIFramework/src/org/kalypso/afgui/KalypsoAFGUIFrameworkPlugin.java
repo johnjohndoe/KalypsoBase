@@ -67,7 +67,7 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
   private final IActiveScenarioChangeListener<IScenario> m_activeContextChangeListener = new IActiveScenarioChangeListener<IScenario>()
   {
     @Override
-    public void activeScenarioChanged( final CaseHandlingProjectNature newProject, final IScenario caze )
+    public void activeScenarioChanged( final CaseHandlingProjectNature<IScenario> newProject, final IScenario caze )
     {
       handleScenarioChanged( newProject, caze );
     }
@@ -155,7 +155,6 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
         final IEvaluationService evalService = (IEvaluationService) workbench.getService( IEvaluationService.class );
         evalService.addSourceProvider( m_szenarioSourceProvider );
 
-
         new WorkspaceJob( "" ) //$NON-NLS-1$
         {
           @Override
@@ -229,7 +228,7 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
 
   /**
    * Returns the shared instance
-   *
+   * 
    * @return the shared instance
    */
   public static KalypsoAFGUIFrameworkPlugin getDefault( )
@@ -239,7 +238,7 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
 
   /**
    * Returns an image descriptor for the image file at the given plug-in relative path
-   *
+   * 
    * @param path
    *          the path
    * @return the image descriptor
@@ -266,7 +265,7 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
     m_activeWorkContext = null;
   }
 
-  protected void handleScenarioChanged( final CaseHandlingProjectNature nature, final IScenario caze )
+  protected void handleScenarioChanged( final CaseHandlingProjectNature<IScenario> nature, final IScenario caze )
   {
     // First initialize the context (and loading of all the models); else the default task does not work
     // REMARK: normally, this should be done inside the scenario framework (for example at the activeWorkContext)
@@ -278,7 +277,7 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
     final ITask defaultTask = workflow == null ? null : workflow.getDefaultTask();
     if( defaultTask != null )
     {
-      final UIJob job = new UIJob( Messages.getString("org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin.1") + nature.getProject().getName() + " - " + caze.getName() ) //$NON-NLS-1$ //$NON-NLS-2$
+      final UIJob job = new UIJob( Messages.getString( "org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin.1" ) + nature.getProject().getName() + " - " + caze.getName() ) //$NON-NLS-1$ //$NON-NLS-2$
       {
         @Override
         public IStatus runInUIThread( final IProgressMonitor monitor )

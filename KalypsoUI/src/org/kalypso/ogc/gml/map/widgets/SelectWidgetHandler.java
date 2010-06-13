@@ -88,7 +88,7 @@ public class SelectWidgetHandler extends AbstractHandler implements IHandler, IE
     final IWidget widget = getWidgetFromBundle( pluginParameter, widgetParameter );
     if( widget == null )
     {
-      final String msg =  Messages.getString( "org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler.6" , pluginParameter, widgetParameter ); //$NON-NLS-1$
+      final String msg = Messages.getString( "org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler.6", pluginParameter, widgetParameter ); //$NON-NLS-1$
       final IStatus status = StatusUtilities.createWarningStatus( msg );
       KalypsoGisPlugin.getDefault().getLog().log( status );
       return status;
@@ -218,7 +218,7 @@ public class SelectWidgetHandler extends AbstractHandler implements IHandler, IE
   @Override
   public void setInitializationData( final IConfigurationElement config, final String propertyName, final Object data )
   {
-    if( data != null && data instanceof Map<?,?> )
+    if( data != null && data instanceof Map< ? , ? > )
     {
       final Map< ? , ? > parameterMap = (Map< ? , ? >) data;
       m_pluginIdFromExtension = (String) parameterMap.get( PARAM_PLUGIN_ID );
@@ -235,8 +235,7 @@ public class SelectWidgetHandler extends AbstractHandler implements IHandler, IE
    * @see org.eclipse.ui.commands.IElementUpdater#updateElement(org.eclipse.ui.menus.UIElement, java.util.Map)
    */
   @Override
-  @SuppressWarnings("unchecked")
-  public void updateElement( final UIElement element, final Map parameters )
+  public void updateElement( final UIElement element, @SuppressWarnings("rawtypes") final Map parameters )
   {
     // TODO: icon and toolti should only be set once, but updateElement is called often
     // Is this icon/tooltip stuff still in use?
@@ -252,7 +251,7 @@ public class SelectWidgetHandler extends AbstractHandler implements IHandler, IE
 
     final IHandlerService handlerService = (IHandlerService) element.getServiceLocator().getService( IHandlerService.class );
     final IEvaluationContext context = handlerService.getCurrentState();
-    
+
     final IMapPanel mapPanel = MapHandlerUtils.getMapPanel( context );
 
     if( mapPanel != null )
@@ -270,7 +269,7 @@ public class SelectWidgetHandler extends AbstractHandler implements IHandler, IE
       else
         element.setChecked( false );
     }
-    
+
   }
- 
+
 }

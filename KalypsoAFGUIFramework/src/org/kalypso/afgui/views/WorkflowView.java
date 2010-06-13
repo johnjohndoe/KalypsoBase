@@ -50,7 +50,7 @@ public class WorkflowView extends ViewPart
      * @see org.kalypso.kalypso1d2d.pjt.IActiveContextChangeListener#activeProjectChanged(org.eclipse.core.resources.IProject)
      */
     @Override
-    public void activeScenarioChanged( final CaseHandlingProjectNature newProject, final IScenario scenario )
+    public void activeScenarioChanged( final CaseHandlingProjectNature<IScenario> newProject, final IScenario scenario )
     {
       handleScenarioChanged( newProject, scenario );
     }
@@ -66,21 +66,21 @@ public class WorkflowView extends ViewPart
     handleScenarioChanged( m_activeWorkContext.getCurrentProject(), m_activeWorkContext.getCurrentCase() );
   }
 
-  protected void handleScenarioChanged( final CaseHandlingProjectNature newProject, final IScenario scenario )
+  protected void handleScenarioChanged( final CaseHandlingProjectNature<IScenario> newProject, final IScenario scenario )
   {
     final String projectName = newProject == null ? null : newProject.getProject().getName();
 
     final String contentDescription;
     if( scenario == null || newProject == null )
     {
-      contentDescription = Messages.getString("org.kalypso.afgui.views.WorkflowView.0"); //$NON-NLS-1$
+      contentDescription = Messages.getString( "org.kalypso.afgui.views.WorkflowView.0" ); //$NON-NLS-1$
     }
     else
     {
-      contentDescription = Messages.getString("org.kalypso.afgui.views.WorkflowView.1") + projectName; //$NON-NLS-1$
+      contentDescription = Messages.getString( "org.kalypso.afgui.views.WorkflowView.1" ) + projectName; //$NON-NLS-1$
     }
 
-    final UIJob job = new UIJob( Messages.getString("org.kalypso.afgui.views.WorkflowView.2") ) //$NON-NLS-1$
+    final UIJob job = new UIJob( Messages.getString( "org.kalypso.afgui.views.WorkflowView.2" ) ) //$NON-NLS-1$
     {
       @SuppressWarnings("synthetic-access")
       @Override

@@ -40,7 +40,6 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Object;
-import org.kalypsodeegree_impl.io.shpapi.ShapeConst;
 import org.kalypsodeegree_impl.model.geometry.GM_TriangulatedSurface_Impl;
 
 /**
@@ -56,7 +55,7 @@ public class TriangulatedSurfaceMultiPartShapeDataProvider implements IShapeData
 {
   private Feature[] m_features;
 
-  private byte m_shapeConstant;
+  private final byte m_shapeConstant;
 
   private final IValuePropertyType m_geometryPropertyType;
 
@@ -81,7 +80,7 @@ public class TriangulatedSurfaceMultiPartShapeDataProvider implements IShapeData
   /**
    * @see org.kalypsodeegree_impl.io.shpapi.IShapeDataProvider#getFeature(int)
    */
-  public Feature getFeature( int index )
+  public Feature getFeature( final int index )
   {
     return m_features[index];
 
@@ -127,17 +126,9 @@ public class TriangulatedSurfaceMultiPartShapeDataProvider implements IShapeData
    * @see org.kalypsodeegree_impl.io.shpapi.IShapeDataProvider#setFeatures(org.kalypsodeegree.model.feature.Feature[])
    */
   @Override
-  public void setFeatures( Feature[] features )
+  public void setFeatures( final Feature[] features )
   {
     m_features = features;
-  }
-
-  /**
-   * @see org.kalypsodeegree_impl.io.shpapi.IShapeDataProvider#setOutputShapeConstant(byte)
-   */
-  public void setOutputShapeConstant( byte shapeConstant )
-  {
-    m_shapeConstant = ShapeConst.SHAPE_TYPE_POLYGONZ;
   }
 
   /**
@@ -154,7 +145,7 @@ public class TriangulatedSurfaceMultiPartShapeDataProvider implements IShapeData
    *      org.kalypso.gmlschema.property.IPropertyType)
    */
   @Override
-  public Object getFeatureProperty( int featureIndex, IPropertyType propertyType )
+  public Object getFeatureProperty( final int featureIndex, final IPropertyType propertyType )
   {
     return m_features[0].getProperty( propertyType );
   }

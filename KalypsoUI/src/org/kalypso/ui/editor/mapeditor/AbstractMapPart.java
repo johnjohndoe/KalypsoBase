@@ -502,9 +502,8 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
   /**
    * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
    */
-  @SuppressWarnings("unchecked")
   @Override
-  public Object getAdapter( final Class adapter )
+  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
   {
     if( IExportableObjectFactory.class.equals( adapter ) )
       return this;

@@ -103,8 +103,6 @@ public class RuleTabItemBuilder
 
   private final IFeatureType m_featureType;
 
-  private final int m_focusedRuleItem = -1;
-
   private final RuleFilterCollection m_rulePatternCollection;
 
   private final List<IPropertyType> m_numericFeatureTypePropertylist;
@@ -243,8 +241,6 @@ public class RuleTabItemBuilder
         new RulePatternTabItem( m_toolkit, m_ruleTabFolder, m_style, m_fts, m_featureType, m_rulePatternCollection, m_numericFeatureTypePropertylist ).drawPatternRule( (RuleCollection) ruleObject, j );
     }
 
-    if( m_focusedRuleItem != -1 )
-      m_ruleTabFolder.setSelection( m_focusedRuleItem );
     if( filteredRules.size() == 0 )
       m_ruleTabFolder.setVisible( false );
 
@@ -263,7 +259,7 @@ public class RuleTabItemBuilder
     m_ruleTabFolder.setSelection( index );
   }
 
-  private final IAction m_addRuleAction = new Action( Messages.getString("org.kalypso.ui.editor.styleeditor.RuleTabItemBuilder.0"), ImageProvider.IMAGE_STYLEEDITOR_ADD_RULE ) //$NON-NLS-1$
+  private final IAction m_addRuleAction = new Action( Messages.getString( "org.kalypso.ui.editor.styleeditor.RuleTabItemBuilder.0" ), ImageProvider.IMAGE_STYLEEDITOR_ADD_RULE ) //$NON-NLS-1$
   {
     // ADD_RULE
     /**
@@ -276,7 +272,7 @@ public class RuleTabItemBuilder
     }
   };
 
-  private final IAction m_removeRuleAction = new Action( Messages.getString("org.kalypso.ui.editor.styleeditor.RuleTabItemBuilder.1"), ImageProvider.IMAGE_STYLEEDITOR_REMOVE ) //$NON-NLS-1$
+  private final IAction m_removeRuleAction = new Action( Messages.getString( "org.kalypso.ui.editor.styleeditor.RuleTabItemBuilder.1" ), ImageProvider.IMAGE_STYLEEDITOR_REMOVE ) //$NON-NLS-1$
   {
     // REM_RULE
     /**
@@ -289,7 +285,7 @@ public class RuleTabItemBuilder
     }
   };
 
-  private final IAction m_addPatternAction = new Action( Messages.getString("org.kalypso.ui.editor.styleeditor.RuleTabItemBuilder.2"), ImageProvider.IMAGE_STYLEEDITOR_ADD_RULE_PATTERN ) //$NON-NLS-1$
+  private final IAction m_addPatternAction = new Action( Messages.getString( "org.kalypso.ui.editor.styleeditor.RuleTabItemBuilder.2" ), ImageProvider.IMAGE_STYLEEDITOR_ADD_RULE_PATTERN ) //$NON-NLS-1$
   {
     // ADD_PATTERN_RULE
     /**
@@ -302,7 +298,7 @@ public class RuleTabItemBuilder
     }
   };
 
-  private final IAction m_backwardAction = new Action( Messages.getString("org.kalypso.ui.editor.styleeditor.RuleTabItemBuilder.3"), ImageProvider.IMAGE_STYLEEDITOR_BACKWARD ) //$NON-NLS-1$
+  private final IAction m_backwardAction = new Action( Messages.getString( "org.kalypso.ui.editor.styleeditor.RuleTabItemBuilder.3" ), ImageProvider.IMAGE_STYLEEDITOR_BACKWARD ) //$NON-NLS-1$
   {
     // BAK_RULE
     /**
@@ -315,7 +311,7 @@ public class RuleTabItemBuilder
     }
   };
 
-  private final IAction m_forwardAction = new Action( Messages.getString("org.kalypso.ui.editor.styleeditor.RuleTabItemBuilder.4"), ImageProvider.IMAGE_STYLEEDITOR_FORWARD ) //$NON-NLS-1$
+  private final IAction m_forwardAction = new Action( Messages.getString( "org.kalypso.ui.editor.styleeditor.RuleTabItemBuilder.4" ), ImageProvider.IMAGE_STYLEEDITOR_FORWARD ) //$NON-NLS-1$
   {
     // FOR_RULE
     /**

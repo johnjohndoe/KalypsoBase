@@ -475,6 +475,7 @@ public class DTriangulationForJTS
       for( int i = 0; i < positions.length; i++ )
       {
         GM_Position position = positions[i];
+        // FIXME: somethings wrong here....
         for( final GM_Position element : ring )
         {
           final GM_Position ringPos = ring[i];

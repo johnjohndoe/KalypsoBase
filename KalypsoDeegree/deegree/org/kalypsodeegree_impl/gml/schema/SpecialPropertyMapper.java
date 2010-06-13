@@ -63,8 +63,8 @@ public class SpecialPropertyMapper
       @Override
       public Object map( final Object srcObject )
       {
-        final GM_Surface surface = (GM_Surface) srcObject;
-        final GM_Surface[] surfaces = new GM_Surface[] { surface };
+        final GM_Surface< ? > surface = (GM_Surface< ? >) srcObject;
+        final GM_Surface< ? >[] surfaces = new GM_Surface[] { surface };
         return GeometryFactory.createGM_MultiSurface( surfaces, surface.getCoordinateSystem() );
       }
     } );
@@ -73,7 +73,7 @@ public class SpecialPropertyMapper
       @Override
       public Object map( final Object srcObject )
       {
-        final GM_Surface[] surfaces = new GM_Surface[] { ((GM_MultiSurface) srcObject).getSurfaceAt( 0 ) };
+        final GM_Surface< ? >[] surfaces = new GM_Surface[] { ((GM_MultiSurface) srcObject).getSurfaceAt( 0 ) };
         return surfaces[0];
       }
     } );
@@ -101,7 +101,7 @@ public class SpecialPropertyMapper
       @Override
       public Object map( final Object srcObject )
       {
-        return new Double( ((String) srcObject).trim().replace( ',','.' ) );
+        return new Double( ((String) srcObject).trim().replace( ',', '.' ) );
       }
     } );
 
@@ -271,7 +271,6 @@ public class SpecialPropertyMapper
 
   private SpecialPropertyMapper( )
   {
-
     // TODO Auto-generated constructor stub
   }
 
@@ -306,7 +305,7 @@ public class SpecialPropertyMapper
    * @param targetClass
    * @param doCastNull
    * @param mustClone
-   *            TODO mustClone not supported yet
+   *          TODO mustClone not supported yet
    * @return castedObject
    * @throws Exception
    */
@@ -316,8 +315,8 @@ public class SpecialPropertyMapper
       throw new ClassCastException( "will not cast <null>" );
     if( value == null )
       return null;
-    final Class ty = value.getClass();
-    final Class t2 = targetClass;
+    final Class< ? > ty = value.getClass();
+    final Class< ? > t2 = targetClass;
     if( !isValidMapping( ty, t2 ) )
       throw new ClassCastException( "can not cast " + ty + " to " + t2 );
     return map( ty, t2, value );
@@ -325,22 +324,22 @@ public class SpecialPropertyMapper
 
   private abstract class SpecialMapper
   {
-    private final Class m_srcType;
+    private final Class< ? > m_srcType;
 
-    private final Class m_targetType;
+    private final Class< ? > m_targetType;
 
-    public SpecialMapper( final Class srcType, final Class targetType )
+    public SpecialMapper( final Class< ? > srcType, final Class< ? > targetType )
     {
       m_srcType = srcType;
       m_targetType = targetType;
     }
 
-    public Class getSrcType( )
+    public Class< ? > getSrcType( )
     {
       return m_srcType;
     }
 
-    public Class getTargetType( )
+    public Class< ? > getTargetType( )
     {
       return m_targetType;
     }

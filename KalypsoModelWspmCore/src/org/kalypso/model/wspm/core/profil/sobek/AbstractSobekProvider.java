@@ -91,26 +91,23 @@ public abstract class AbstractSobekProvider
     try
     {
       /* Get the profiles. */
-      IProfileFeature[] profiles = getProfiles();
+      final IProfileFeature[] profiles = getProfiles();
 
       /* Monitor. */
       monitor.beginTask( "Converting profiles...", profiles.length * 100 );
       monitor.subTask( "Converting profiles..." );
 
       /* Memory for the results. */
-      List<SobekProfile> results = new ArrayList<SobekProfile>();
+      final List<SobekProfile> results = new ArrayList<SobekProfile>();
 
-      for( int i = 0; i < profiles.length; i++ )
+      for( final IProfileFeature profileFeature : profiles )
       {
         /* Monitor. */
         if( monitor.isCanceled() )
           throw new CoreException( new Status( IStatus.CANCEL, KalypsoModelWspmCorePlugin.getID(), "The operation was canceled by the user..." ) );
 
-        /* Get the profile. */
-        IProfileFeature profileFeature = profiles[i];
-
         /* Convert the profile into a sobek profile. */
-        SobekProfile sobekProfile = convertProfile( profileFeature );
+        final SobekProfile sobekProfile = convertProfile( profileFeature );
 
         /* Add to the results. */
         results.add( sobekProfile );

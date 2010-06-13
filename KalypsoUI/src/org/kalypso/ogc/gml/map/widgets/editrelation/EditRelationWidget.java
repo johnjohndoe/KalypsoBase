@@ -101,7 +101,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  * featuretheme can be selected <br>
  * Constraints from gml-application schemas are supported. TODO use check icons that indicate mixed child status <br>
  * TODO support removing relations <br>
- *
+ * 
  * @author doemming
  */
 public class EditRelationWidget extends AbstractWidget implements IWidgetWithOptions
@@ -401,7 +401,7 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
             }
           };
 
-          final String msg = Messages.getString( "org.kalypso.ogc.gml.map.widgets.editrelation.EditRelationWidget.6", fitList.size() );; //$NON-NLS-1$
+          final String msg = Messages.getString( "org.kalypso.ogc.gml.map.widgets.editrelation.EditRelationWidget.6", fitList.size() ); //$NON-NLS-1$
           final ListSelectionDialog dialog = new ListSelectionDialog( m_topLevel.getShell(), fitList, cProvider, m_labelProvider, msg );
           dialog.setInitialSelections( new Object[] { fitList.get( 0 ) } );
           dialog.setBlockOnOpen( true );

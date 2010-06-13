@@ -72,10 +72,11 @@ public class FeatureCommonsAdapterFactory implements IAdapterFactory
      * @param cls
      * @return
      * @throws IllegalArgumentException
-     *             if
-     *             <ul>
-     *             <li/>feature or cls is null <li/>feature cannot be converted
-     *             </ul>
+     *           if
+     *           <ul>
+     *           <li/>feature or cls is null
+     *           <li/>feature cannot be converted
+     *           </ul>
      */
     public Object constructAdapter( final Feature feature, final Class< ? > cls ) throws IllegalArgumentException;
   }
@@ -86,8 +87,7 @@ public class FeatureCommonsAdapterFactory implements IAdapterFactory
    * @see org.eclipse.core.runtime.IAdapterFactory#getAdapter(java.lang.Object, java.lang.Class)
    */
   @Override
-  @SuppressWarnings("unchecked")
-  public Object getAdapter( final Object adaptableObject, final Class adapterType )
+  public Object getAdapter( final Object adaptableObject, @SuppressWarnings("rawtypes") final Class adapterType )
   {
     if( !(adaptableObject instanceof Feature) )
       throw new IllegalArgumentException( "Adapter Factory for feature only but" + " get to adapt:" + adaptableObject );

@@ -541,30 +541,7 @@
 
 <extension point="org.eclipse.ui.menus">
     <menuContribution
-          locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">
-       <toolbar
-             id="org.kalypso.model.wspm.ui.toolbars.ProfileToolbar">
-         <command
-               commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateProfileFromDEM"
-               icon="icons/elcl16/profil_from_dem.gif"
-               style="radio"
-               tooltip="%org.kalypso.model.wspm.ui.view.legend.CreateProfileFromDEM">
-            <visibleWhen checkEnabled="false">
-                <and>
-                    <with variable="activeEditorId">
-                        <equals value="org.kalypso.ui.editor.mapeditor.GisMapEditor" />
-                    </with>
-                    <!--reference definitionId="mapContext" /-->
-                    <with variable="activeMapPanel">
-                        <test property="org.kalypso.ui.test.map.activeTheme.qname" value="{org.kalypso.model.wspmprofile}Profile" />
-                    </with>
-                </and>
-            </visibleWhen>
-         </command>
-       </toolbar>
-    </menuContribution>
-    <menuContribution
-          locationURI="popup:org.eclipse.ui.popup.any?after=additions">
+          locationURI="popup:org.eclipse.ui.popup.any?after=widgets">
        <menu
              icon="icons/etool16/profileChange.gif"
              id="org.kalypso.model.wspm.ui.profileChange"

@@ -73,8 +73,7 @@ public abstract class AbstractProfilesHandler extends AbstractHandler
     if( !profileSelection.hasProfiles() )
     {
       final String title = getTitle();
-      final String errorMessage = getErrorMessage();
-      final String message = errorMessage == null ? Messages.getString("org.kalypso.model.wspm.ui.action.AbstractProfilesHandler_0") : errorMessage; //$NON-NLS-1$
+      final String message = Messages.getString( "org.kalypso.model.wspm.ui.action.AbstractProfilesHandler_0" ); //$NON-NLS-1$
       MessageDialog.openWarning( shell, title, message ); //$NON-NLS-1$ //$NON-NLS-2$
       return null;
     }
@@ -98,10 +97,4 @@ public abstract class AbstractProfilesHandler extends AbstractHandler
   protected abstract String getTitle( );
 
   protected abstract IWizard createWizard( final ProfileSelection profileSelection );
-
-  /**
-   * @deprecated We should always show the same error message here
-   */
-  @Deprecated
-  protected abstract String getErrorMessage( );
 }

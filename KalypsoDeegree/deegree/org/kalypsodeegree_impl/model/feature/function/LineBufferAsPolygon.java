@@ -62,28 +62,28 @@ import com.vividsolutions.jts.geom.LineString;
  * @author thuel2
  * @param lineProperty
  * @param widthProperty
- *            can also be a constant double value
+ *          can also be a constant double value
  * @param widthFactorProperty
- *            can also be a constant double value, defaults to 1
+ *          can also be a constant double value, defaults to 1
  * @param offsetProperty
- *            can also be a constant double value, defaults to 0
+ *          can also be a constant double value, defaults to 0
  * @param endCapStyleProperty
- *            can also be a constant integer value, defaults to 2 (CAP_BUTT)
- *            <ul>
- *            <li>1 (CAP_ROUND)</li>
- *            <li>2 (CAP_BUTT)</li>
- *            <li>3 (CAP_SQUARE)</li>
- *            </ul>
+ *          can also be a constant integer value, defaults to 2 (CAP_BUTT)
+ *          <ul>
+ *          <li>1 (CAP_ROUND)</li>
+ *          <li>2 (CAP_BUTT)</li>
+ *          <li>3 (CAP_SQUARE)</li>
+ *          </ul>
  * @param quadrantSegmentsProperty
- *            the number of line segments used to represent a quadrant of a circle; can also be a constant integer
- *            value, defaults to 5
+ *          the number of line segments used to represent a quadrant of a circle; can also be a constant integer value,
+ *          defaults to 5
  * @param userCanSetPolyIfLineIsNullProperty
- *            can also be a constant boolean, defaults to false <br>
- *            setValue(...) will return
- *            <ul>
- *            <li>valueToSet if true and lineProperty is null</li>
- *            <li>null else</li>
- *            </ul>
+ *          can also be a constant boolean, defaults to false <br>
+ *          setValue(...) will return
+ *          <ul>
+ *          <li>valueToSet if true and lineProperty is null</li>
+ *          <li>null else</li>
+ *          </ul>
  */
 public class LineBufferAsPolygon extends FeaturePropertyFunction
 {
@@ -199,7 +199,12 @@ public class LineBufferAsPolygon extends FeaturePropertyFunction
       }
       final Object obj = GMLXPathUtilities.query( path, workspace );
 
-      if( !(obj instanceof Number) )
+      if( (obj instanceof Number) )
+      {
+        final Number widthNumber = (Number) obj;
+        widthValue = widthNumber.doubleValue();
+      }
+      else
       {
         try
         {
@@ -210,13 +215,6 @@ public class LineBufferAsPolygon extends FeaturePropertyFunction
         {
           widthValue = 0.0;
         }
-      }
-      else
-      {
-        final Number widthNumber = (Number) obj;
-        if( widthNumber == null )
-          return null;
-        widthValue = widthNumber.doubleValue();
       }
     }
     catch( final GMLXPathException e )

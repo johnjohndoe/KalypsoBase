@@ -183,9 +183,8 @@ final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_Mu
   /**
    * @see org.kalypsodeegree_impl.model.geometry.GM_Primitive_Impl#getAdapter(java.lang.Class)
    */
-  @SuppressWarnings("unchecked")
   @Override
-  public Object getAdapter( final Class adapter )
+  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
   {
     if( adapter == GM_SurfacePatch[].class )
     {
@@ -333,10 +332,10 @@ final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_Mu
     if( coordinateSystem == null || coordinateSystem.equalsIgnoreCase( targetOGCCS ) )
       return this;
 
-    final GM_Surface<GM_SurfacePatch>[] surfaces = new GM_Surface[getSize()];
+    final GM_Surface< ? >[] surfaces = new GM_Surface[getSize()];
 
     for( int i = 0; i < getSize(); i++ )
-      surfaces[i] = (GM_Surface<GM_SurfacePatch>) getSurfaceAt( i ).transform( trans, targetOGCCS );
+      surfaces[i] = (GM_Surface< ? >) getSurfaceAt( i ).transform( trans, targetOGCCS );
 
     return GeometryFactory.createGM_MultiSurface( surfaces, targetOGCCS );
   }

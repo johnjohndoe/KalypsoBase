@@ -101,7 +101,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
    * merges this aggregation with another one
    * 
    * @exception GM_Exception
-   *                a GM_Exception will be thrown if the submitted isn't the same type as the recieving one.
+   *              a GM_Exception will be thrown if the submitted isn't the same type as the recieving one.
    */
   @Override
   public void merge( final GM_Aggregate aggregate ) throws GM_Exception
@@ -135,9 +135,9 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
    * larger then getSize() - 1 or smaller then 0 or gmo equals null an exception will be thrown.
    * 
    * @param gmo
-   *            GM_Object to insert.
+   *          GM_Object to insert.
    * @param index
-   *            position where to insert the new GM_Object
+   *          position where to insert the new GM_Object
    */
   @Override
   public void insertObjectAt( final GM_Object gmo, final int index ) throws GM_Exception
@@ -162,9 +162,9 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
    * removed. if index is larger then getSize() - 1 or smaller then 0 or gmo equals null an exception will be thrown.
    * 
    * @param gmo
-   *            GM_Object to set.
+   *          GM_Object to set.
    * @param index
-   *            position where to set the new GM_Object
+   *          position where to set the new GM_Object
    */
   @Override
   public void setObjectAt( final GM_Object gmo, final int index ) throws GM_Exception
@@ -303,7 +303,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
    * sets the spatial reference system
    * 
    * @param crs
-   *            new spatial reference system
+   *          new spatial reference system
    */
   @Override
   public void setCoordinateSystem( final String crs )
@@ -346,14 +346,14 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
   {
     if( other == this )
       return true;
-    
+
     if( !super.equals( other ) || !(other instanceof GM_Aggregate_Impl) )
       return false;
-    
+
     // envelope was not valid
     if( !ObjectUtils.equals( getEnvelope(), ((GM_Object) other).getEnvelope() ) )
       return false;
-    
+
     if( getSize() != ((GM_Aggregate) other).getSize() )
       return false;
 
@@ -430,9 +430,8 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
   /**
    * @see org.kalypsodeegree_impl.model.geometry.GM_Object_Impl#getAdapter(java.lang.Class)
    */
-  @SuppressWarnings("unchecked")
   @Override
-  public Object getAdapter( final Class adapter )
+  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
   {
     /* An array of GM_xxx adapts to the array of its adapters. */
     final Class< ? > componentType = adapter.getComponentType();

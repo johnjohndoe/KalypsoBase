@@ -600,9 +600,8 @@ public abstract class GM_Object_Impl extends PlatformObject implements GM_Object
   /**
    * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
    */
-  @SuppressWarnings("unchecked")
   @Override
-  public Object getAdapter( final Class adapter )
+  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
   {
     if( adapter == this.getClass() )
       return this;

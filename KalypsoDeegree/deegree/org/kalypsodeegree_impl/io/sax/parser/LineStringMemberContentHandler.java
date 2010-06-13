@@ -47,45 +47,45 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
 /**
- * A content handler for gml:lineStringMember property.
- * 
- * NOTE: Deprecated with GML 3.0 and included only for backwards compatibility with GML 2.0. Use "curveMember" instead.
+ * A content handler for gml:lineStringMember property. NOTE: Deprecated with GML 3.0 and included only for backwards
+ * compatibility with GML 2.0. Use "curveMember" instead.
  * 
  * @author Felipe Maximino
- *
  */
 public class LineStringMemberContentHandler extends GMLElementContentHandler implements ICurveHandler
-{ 
+{
   public static final String ELEMENT_LINE_STRING_MEMBER = "lineStringMember";
-  
+
   private final ICurveHandler m_curveHandler;
 
-  public LineStringMemberContentHandler( XMLReader xmlReader, ICurveHandler curveHandler, String defaultSrs )
+  public LineStringMemberContentHandler( final XMLReader xmlReader, final ICurveHandler curveHandler, final String defaultSrs )
   {
     super( NS.GML3, ELEMENT_LINE_STRING_MEMBER, xmlReader, defaultSrs, curveHandler );
-    
+
     m_curveHandler = curveHandler;
   }
 
   /**
-   * @see org.kalypsodeegree_impl.io.sax.parser.GMLElementContentHandler#doEndElement(java.lang.String, java.lang.String, java.lang.String)
+   * @see org.kalypsodeegree_impl.io.sax.parser.GMLElementContentHandler#doEndElement(java.lang.String,
+   *      java.lang.String, java.lang.String)
    */
   @Override
-  protected void doEndElement( String uri, String localName, String name ) throws SAXException
-  {    
+  protected void doEndElement( final String uri, final String localName, final String name )
+  {
     // nothing to do
-  }    
+  }
 
   /**
-   * @see org.kalypsodeegree_impl.io.sax.parser.GMLElementContentHandler#handleUnexpectedEndElement(java.lang.String, java.lang.String, java.lang.String)
+   * @see org.kalypsodeegree_impl.io.sax.parser.GMLElementContentHandler#handleUnexpectedEndElement(java.lang.String,
+   *      java.lang.String, java.lang.String)
    */
   @Override
-  public void handleUnexpectedEndElement( String uri, String localName, String name ) throws SAXException
+  public void handleUnexpectedEndElement( final String uri, final String localName, final String name ) throws SAXException
   {
-    GMLElementContentHandler parentContentHandler = (GMLElementContentHandler)m_parentContentHandler;
-    
+    final GMLElementContentHandler parentContentHandler = (GMLElementContentHandler) m_parentContentHandler;
+
     // this property may have 0 occurences
-    if( localName.equals( parentContentHandler.m_localName )  )
+    if( localName.equals( parentContentHandler.m_localName ) )
     {
       endDelegation();
       parentContentHandler.endElement( uri, localName, name );
@@ -97,20 +97,21 @@ public class LineStringMemberContentHandler extends GMLElementContentHandler imp
   }
 
   /**
-   * @see org.kalypsodeegree_impl.io.sax.parser.GMLElementContentHandler#doStartElement(java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
+   * @see org.kalypsodeegree_impl.io.sax.parser.GMLElementContentHandler#doStartElement(java.lang.String,
+   *      java.lang.String, java.lang.String, org.xml.sax.Attributes)
    */
   @Override
-  protected void doStartElement( String uri, String localName, String name, Attributes atts ) throws SAXException
+  protected void doStartElement( final String uri, final String localName, final String name, final Attributes atts )
   {
-    setDelegate( new LineStringContentHandler( this, m_defaultSrs, m_xmlReader ) );    
+    setDelegate( new LineStringContentHandler( this, m_defaultSrs, m_xmlReader ) );
   }
 
   /**
    * @see org.kalypso.gmlschema.types.IGMLElementHandler#handle(java.lang.Object)
    */
   @Override
-  public void handle( GM_Curve element ) throws SAXException
+  public void handle( final GM_Curve element ) throws SAXException
   {
-    m_curveHandler.handle( element );    
+    m_curveHandler.handle( element );
   }
 }

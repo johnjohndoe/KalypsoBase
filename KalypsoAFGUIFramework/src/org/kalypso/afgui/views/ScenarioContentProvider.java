@@ -198,7 +198,7 @@ public class ScenarioContentProvider extends WorkbenchContentProvider implements
    *      de.renew.workflow.cases.Case)
    */
   @Override
-  public void activeScenarioChanged( final CaseHandlingProjectNature newProject, final IScenario caze )
+  public void activeScenarioChanged( final CaseHandlingProjectNature<IScenario> newProject, final IScenario caze )
   {
     refreshViewer( null );
   }

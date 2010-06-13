@@ -56,7 +56,7 @@ import org.kalypso.util.command.CommandJob;
 /**
  * Implementation of UndoRedeDelegate (@see org.kalypso.ui.editor.mapeditor.actiondelegates.UndoRedoDelegate.java) as
  * command handler
- *
+ * 
  * @author burtscher1
  */
 public abstract class UndoRedoHandler extends AbstractHandler
@@ -113,7 +113,6 @@ public abstract class UndoRedoHandler extends AbstractHandler
    */
   protected void refreshAction( )
   {
-
     final IWorkbenchPart activePart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart();
     if( activePart == null )
       return;

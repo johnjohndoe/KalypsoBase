@@ -51,8 +51,7 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  */
 public class EditFeatureGeometryWidget extends AbstractFeatureGeometeryWidget
 {
-  @SuppressWarnings("unchecked")
-  private final Class m_apreferedGeometryClass;
+  private final Class< ? > m_apreferedGeometryClass;
 
   /**
    * The feature which should be edited.
@@ -66,12 +65,11 @@ public class EditFeatureGeometryWidget extends AbstractFeatureGeometeryWidget
 
   /**
    * @param workspace
-   *            set to null, if not used (if feature is not set, this param has no effect!).
+   *          set to null, if not used (if feature is not set, this param has no effect!).
    * @param feature
-   *            set to null, if not used (if used, the workspace has to be set!).
+   *          set to null, if not used (if used, the workspace has to be set!).
    */
-  @SuppressWarnings("unchecked")
-  public EditFeatureGeometryWidget( final String name, final String toolTip, final CommandableWorkspace workspace, final Feature feature, final Class geometryClass )
+  public EditFeatureGeometryWidget( final String name, final String toolTip, final CommandableWorkspace workspace, final Feature feature, final Class< ? > geometryClass )
   {
     super( name, toolTip );
 
@@ -114,7 +112,6 @@ public class EditFeatureGeometryWidget extends AbstractFeatureGeometeryWidget
        * handled in the new way.
        */
       final IValuePropertyType geometryProperty = GeometryUtilities.findGeometryProperty( m_feature.getFeatureType(), m_apreferedGeometryClass );
-      // TODO
       return new FeatureToEdit( m_workspace, m_feature, geometryProperty );
     }
   }
@@ -136,9 +133,8 @@ public class EditFeatureGeometryWidget extends AbstractFeatureGeometeryWidget
   /**
    * @see org.kalypso.ogc.gml.map.widgets.AbstractCreateGeometeryWidget#getGeometryClass()
    */
-  @SuppressWarnings("unchecked")
   @Override
-  protected Class getGeometryClass( )
+  protected Class< ? > getGeometryClass( )
   {
     final FeatureToEdit featureToEdit = (FeatureToEdit) getFeatureToEdit();
 

@@ -94,7 +94,7 @@ public class ScenarioHelper
     return findRootScenario( parentScenario );
   }
 
-  public static IWorkflow findWorkflow( final IScenario scenario, final CaseHandlingProjectNature newProject )
+  public static IWorkflow findWorkflow( final IScenario scenario, final CaseHandlingProjectNature<IScenario> newProject )
   {
     try
     {

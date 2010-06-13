@@ -50,7 +50,6 @@ import org.kalypso.core.util.pool.KeyInfo;
 import org.kalypso.core.util.pool.PoolableObjectType;
 import org.kalypso.core.util.pool.ResourcePool;
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.AbstractFeatureSelection;
@@ -594,16 +593,6 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
     public CommandableWorkspace getWorkspace( final Feature feature )
     {
       return m_workspace;
-    }
-
-    public Feature getParentFeature( final Feature feature )
-    {
-      return feature.getOwner();
-    }
-
-    public IRelationType getParentFeatureProperty( final Feature feature )
-    {
-      return feature.getParentRelation();
     }
 
     /**

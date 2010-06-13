@@ -61,11 +61,4 @@ public class PropertyEditHandler extends AbstractProfilesHandler
   {
     return Messages.getString( "org.kalypso.model.wspm.ui.action.PropertyEditActionDelegate.0" ); //$NON-NLS-1$
   }
-
-  @Override
-  protected String getErrorMessage( )
-  {
-    return Messages.getString( "org.kalypso.model.wspm.ui.action.PropertyEditActionDelegate.1" ); //$NON-NLS-1$
-  }
-
 }
