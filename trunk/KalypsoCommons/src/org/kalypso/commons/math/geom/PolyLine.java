@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.NoSuchElementException;
 import java.util.Vector;
 
-import org.kalypso.commons.i18n.Messages;
+import org.kalypso.commons.internal.i18n.Messages;
 import org.kalypso.commons.math.LinearEquation;
 import org.kalypso.commons.math.Range;
 import org.kalypso.contribs.java.util.DoubleComparator;

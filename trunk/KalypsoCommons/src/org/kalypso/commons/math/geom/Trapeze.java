@@ -6,7 +6,7 @@ package org.kalypso.commons.math.geom;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 
-import org.kalypso.commons.i18n.Messages;
+import org.kalypso.commons.internal.i18n.Messages;
 import org.kalypso.commons.math.LinearEquation;
 import org.kalypso.commons.math.LinearEquation.SameXValuesException;
 

@@ -35,7 +35,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import org.apache.commons.io.IOUtils;
-import org.kalypso.commons.i18n.Messages;
+import org.kalypso.commons.internal.i18n.Messages;
 import org.kalypso.commons.process.internal.StreamStreamer;
 import org.kalypso.contribs.java.lang.ICancelable;
 

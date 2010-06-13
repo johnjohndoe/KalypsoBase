@@ -4,7 +4,7 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.JTable;
 
-import org.kalypso.commons.i18n.Messages;
+import org.kalypso.commons.internal.i18n.Messages;
 
 /**
  * SetAllAction

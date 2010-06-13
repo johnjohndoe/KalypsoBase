@@ -42,7 +42,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.i18n.ITranslator;
-import org.kalypso.commons.i18n.Messages;
+import org.kalypso.commons.internal.i18n.Messages;
 import org.kalypso.commons.process.IProcess;
 import org.kalypso.commons.process.IProcessFactory;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;

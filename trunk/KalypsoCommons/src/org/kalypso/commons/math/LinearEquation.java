@@ -43,7 +43,7 @@ package org.kalypso.commons.math;
 import java.awt.geom.Point2D;
 import java.util.NoSuchElementException;
 
-import org.kalypso.commons.i18n.Messages;
+import org.kalypso.commons.internal.i18n.Messages;
 
 /**
  * represents a linear equation such as Y = aX + b

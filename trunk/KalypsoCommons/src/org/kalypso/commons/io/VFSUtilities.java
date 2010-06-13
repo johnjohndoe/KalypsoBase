@@ -75,7 +75,7 @@ import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.kalypso.commons.KalypsoCommonsDebug;
-import org.kalypso.commons.i18n.Messages;
+import org.kalypso.commons.internal.i18n.Messages;
 import org.kalypso.commons.net.ProxyUtilities;
 import org.kalypso.contribs.eclipse.core.net.Proxy;
 

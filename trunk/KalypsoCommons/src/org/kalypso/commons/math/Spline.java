@@ -1,6 +1,6 @@
 package org.kalypso.commons.math;
 
-import org.kalypso.commons.i18n.Messages;
+import org.kalypso.commons.internal.i18n.Messages;
 
 /**
  * Represents a Spline. Interpolation can be performed using eval().<br>
