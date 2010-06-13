@@ -48,6 +48,7 @@ import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
@@ -178,65 +179,61 @@ public class JTSUtilities
    *          The distance at which the point should be placed on the line.
    * @return The newly created point on the line or null, if something was wrong.
    */
-  public static Point pointOnLine( final LineString lineJTS, double distance )
+  public static Point pointOnLine( final LineString lineJTS, final double distance )
   {
-    final double length = lineJTS.getLength();
-    if( distance < 0 || distance > length )
+    final Coordinate crd = posOnLine( lineJTS, distance );
+    final GeometryFactory factory = new GeometryFactory( lineJTS.getPrecisionModel(), lineJTS.getSRID() );
+    return factory.createPoint( crd );
+  }
+
+  /**
+   * This function calculates a specific position on a line.
+   * 
+   * @param lineJTS
+   *          The line string on which the point has to be.
+   * @param distanceOnLine
+   *          The distance at which the point should be placed on the line.
+   * @return The newly created position on the line or null, if something was wrong.
+   */
+  public static Coordinate posOnLine( final LineString line, final double distanceOnLine )
+  {
+    final LineSegment segment = findSegmentInLine( line, distanceOnLine );
+    if( segment == null )
       return null;
-
-    final int numPoints = lineJTS.getNumPoints();
-    if( numPoints == 0 )
-      return null;
-
-    /* Only loop until the point before the last point. */
-    LineString line = null;
-    for( int i = 0; i < numPoints - 1; i++ )
-    {
-      final Point startPoint = lineJTS.getPointN( i );
-      final Point endPoint = lineJTS.getPointN( i + 1 );
-
-      final GeometryFactory factory = new GeometryFactory( lineJTS.getPrecisionModel(), lineJTS.getSRID() );
-      line = factory.createLineString( new Coordinate[] { new Coordinate( startPoint.getCoordinate() ), new Coordinate( endPoint.getCoordinate() ) } );
-      final double lineLength = line.getLength();
-      if( distance - lineLength < 0 )
-        break;
-
-      distance -= lineLength;
-    }
 
     /* Now calculate the rest of the line. */
-    final double max = line.getLength();
-    final Point startPoint = line.getStartPoint();
-    final Point endPoint = line.getEndPoint();
+    final double max = segment.getLength();
+    final Coordinate startPoint = segment.p0;
+    final Coordinate endPoint = segment.p1;
 
     try
     {
       /* If the two X koords are equal, take one of them for the new point. */
-      double x = startPoint.getX();
-      if( Double.compare( startPoint.getX(), endPoint.getX() ) != 0 )
+      double x = startPoint.x;
+      if( Double.compare( startPoint.x, endPoint.x ) != 0 )
       {
-        final LinearEquation computeX = new LinearEquation( startPoint.getX(), 0, endPoint.getX(), max );
-        x = computeX.computeX( distance );
+        final LinearEquation computeX = new LinearEquation( startPoint.x, 0, endPoint.x, max );
+        x = computeX.computeX( distanceOnLine );
       }
 
       /* If the two Y koords are equal, take one of them for the new point. */
-      double y = startPoint.getY();
-      if( Double.compare( startPoint.getY(), endPoint.getY() ) != 0 )
+      double y = startPoint.y;
+      if( Double.compare( startPoint.y, endPoint.y ) != 0 )
       {
-        final LinearEquation computeY = new LinearEquation( startPoint.getY(), 0, endPoint.getY(), max );
-        y = computeY.computeX( distance );
+        final LinearEquation computeY = new LinearEquation( startPoint.y, 0, endPoint.y, max );
+        y = computeY.computeX( distanceOnLine );
       }
 
       /* If the two Z koords are equal, take one of them for the new point. */
-      double zStart = startPoint.getCoordinate().z;
-      final double zEnd = endPoint.getCoordinate().z;
+      double zStart = startPoint.z;
+      final double zEnd = endPoint.z;
 
       if( zStart != Double.NaN && zEnd != Double.NaN )
       {
         if( Double.compare( zStart, zEnd ) != 0 )
         {
           final LinearEquation computeZ = new LinearEquation( zStart, 0, zEnd, max );
-          zStart = computeZ.computeX( distance );
+          zStart = computeZ.computeX( distanceOnLine );
         }
       }
       else
@@ -244,14 +241,38 @@ public class JTSUtilities
         zStart = Double.NaN;
       }
 
-      final GeometryFactory factory = new GeometryFactory( lineJTS.getPrecisionModel(), lineJTS.getSRID() );
-      final Point pointJTS = factory.createPoint( new Coordinate( x, y, zStart ) );
-
-      return pointJTS;
+      return new Coordinate( x, y, zStart );
     }
     catch( final SameXValuesException e )
     {
       e.printStackTrace();
+    }
+
+    return null;
+  }
+
+  private static LineSegment findSegmentInLine( final LineString line, final double distanceOnLine )
+  {
+    final double length = line.getLength();
+    if( distanceOnLine < 0 || distanceOnLine > length )
+      return null;
+
+    final int numPoints = line.getNumPoints();
+    if( numPoints == 0 )
+      return null;
+
+    double remainingDistance = distanceOnLine;
+    for( int i = 0; i < numPoints - 1; i++ )
+    {
+      final Point startPoint = line.getPointN( i );
+      final Point endPoint = line.getPointN( i + 1 );
+
+      final double distance = endPoint.distance( startPoint );
+
+      if( remainingDistance - distance < 0 )
+        return new LineSegment( new Coordinate( startPoint.getCoordinate() ), new Coordinate( endPoint.getCoordinate() ) );
+
+      remainingDistance -= distance;
     }
 
     return null;
@@ -807,46 +828,47 @@ public class JTSUtilities
   }
 
   /**
-   * This function calculates points every x meter on the line.
+   * This function calculates points every x meter on the line. Also all real points of the line are added to the
+   * result.
    * 
    * @param curve
    *          The curve with original points.
-   * @param size
+   * @param distance
    *          the definition at what length along the curve a point should be inserted.
-   * @return A map containing the distance as key and the points as value (original and new points).
+   * @return The coordinates of the calculated points on the line.
    */
-  public static TreeMap<Double, Point> calculatePointsOnLine( final LineString curve, final double size )
+  public static Coordinate[] calculatePointsOnLine( final LineString curve, final double distance )
   {
     /* The length of the line. */
     final double length = curve.getLength();
 
     /* Memory for the new points. */
-    final TreeMap<Double, Point> points = new TreeMap<Double, Point>();
+    final SortedMap<Double, Coordinate> points = new TreeMap<Double, Coordinate>();
 
-    double currentLength = size;
+    double currentLength = distance;
 
     /* If there is only 1 meter, the start- and end point have to suffice. */
     while( currentLength < length )
     {
       /* Create a new point. */
-      final Point pointOnLine = pointOnLine( curve, currentLength );
+      final Coordinate posOnLine = posOnLine( curve, currentLength );
 
       /* Add the found point to the map. */
-      points.put( currentLength, pointOnLine );
+      points.put( currentLength, posOnLine );
 
       /* Increase the used length by x meter. */
-      currentLength = currentLength + size;
+      currentLength = currentLength + distance;
     }
 
     /* Add the points of the line. */
     for( int i = 0; i < curve.getNumPoints(); i++ )
     {
       final Point point = curve.getPointN( i );
-      final Double distance = pointDistanceOnLine( curve, point );
-      points.put( distance, point );
+      final Double distanceOnLine = pointDistanceOnLine( curve, point );
+      points.put( distanceOnLine, point.getCoordinate() );
     }
 
-    return points;
+    return points.values().toArray( new Coordinate[points.size()] );
   }
 
   /**

@@ -60,11 +60,43 @@ import org.eclipse.swt.graphics.GC;
  */
 public class ToolTipRenderer
 {
-  public static final Color DEFAULT_TEXT_COLOR = Color.BLACK;
-
   public static final Color DEFAULT_BORDER_COLOR = Color.DARK_GRAY;
 
+  public static final Color DEFAULT_TEXT_COLOR = Color.BLACK;
+
+  public static final Color DEFAULT_TEXT_COLOR_WARNING = Color.BLACK;
+
+  public static final Color DEFAULT_TEXT_COLOR_ERROR = Color.WHITE;
+
   public static final Color DEFAULT_BACKGROUND_COLOR = new Color( 1f, 1f, 0.6f, 0.90f );
+
+  public static final Color DEFAULT_BACKGROUND_COLOR_WARNING = new Color( 1f, 1f, 0.6f, 0.90f );
+
+  public static final Color DEFAULT_BACKGROUND_COLOR_ERROR = Color.RED;
+
+  public static final ToolTipRenderer createStandardTooltip( )
+  {
+    final ToolTipRenderer toolTipRenderer = new ToolTipRenderer();
+    toolTipRenderer.setTextColor( DEFAULT_TEXT_COLOR );
+    toolTipRenderer.setBackgroundColor( DEFAULT_BACKGROUND_COLOR );
+    return toolTipRenderer;
+  }
+
+  public static final ToolTipRenderer createWarningTooltip( )
+  {
+    final ToolTipRenderer toolTipRenderer = new ToolTipRenderer();
+    toolTipRenderer.setTextColor( DEFAULT_TEXT_COLOR_WARNING );
+    toolTipRenderer.setBackgroundColor( DEFAULT_BACKGROUND_COLOR_WARNING );
+    return toolTipRenderer;
+  }
+
+  public static final ToolTipRenderer createErrorTooltip( )
+  {
+    final ToolTipRenderer toolTipRenderer = new ToolTipRenderer();
+    toolTipRenderer.setTextColor( DEFAULT_TEXT_COLOR_ERROR );
+    toolTipRenderer.setBackgroundColor( DEFAULT_BACKGROUND_COLOR_ERROR );
+    return toolTipRenderer;
+  }
 
   public static final Point DEFAULT_OFFSET = new Point( 2, 2 );
 
@@ -159,7 +191,7 @@ public class ToolTipRenderer
     }
 
     /* draw outer rectangle */
-    ((Graphics2D)g).setStroke( new BasicStroke( 1.0f ) );
+    ((Graphics2D) g).setStroke( new BasicStroke( 1.0f ) );
     g.setColor( m_backgroundColor );
     g.fillRect( basePoint.x, basePoint.y, outlineWidth, outlineHeight );
 

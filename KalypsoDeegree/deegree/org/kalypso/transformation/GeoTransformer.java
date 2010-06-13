@@ -67,6 +67,8 @@ import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
+import com.vividsolutions.jts.geom.Coordinate;
+
 /**
  * Class for transforming deegree geometries to new coordinate reference systems.
  * 
@@ -214,5 +216,12 @@ public class GeoTransformer
       return patch;
 
     return (GM_SurfacePatch) patch.transform( getTransformation( cs ), m_target );
+  }
+
+  public Coordinate transform( final Coordinate coordinate, final String sourceCrs ) throws Exception
+  {
+    final GM_Position pos = GeometryFactory.createGM_Position( coordinate.x, coordinate.y, coordinate.z );
+    final GM_Position transformedPosition = transformPosition( pos, sourceCrs );
+    return new Coordinate( transformedPosition.getX(), transformedPosition.getY(), transformedPosition.getZ() );
   }
 }

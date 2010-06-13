@@ -166,7 +166,7 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  */
 public class CoverageManagementWidget extends AbstractWidget implements IWidgetWithOptions
 {
-  private static final IKalypsoThemePredicate COVERAGE_PREDICATE = new IKalypsoThemePredicate()
+  public static final IKalypsoThemePredicate COVERAGE_PREDICATE = new IKalypsoThemePredicate()
   {
     @Override
     public boolean decide( final IKalypsoTheme theme )
