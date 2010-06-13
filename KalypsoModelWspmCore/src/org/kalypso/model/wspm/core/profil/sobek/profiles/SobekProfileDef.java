@@ -62,77 +62,77 @@ public class SobekProfileDef
    * <strong>NOTE:</strong><br>
    * This id is referenced from a line in the file 'profile.dat'.
    */
-  private String m_id;
+  private final String m_id;
 
   /**
    * The name of the cross section definition.
    */
-  private String m_nm;
+  private final String m_nm;
 
   /**
    * The type of the cross section (0=table).
    */
-  private int m_ty;
+  private final int m_ty;
 
   /**
    * The width of the main channel.
    */
-  private BigDecimal m_wm;
+  private final BigDecimal m_wm;
 
   /**
    * The width of the floodplain 1 (used in River profile only, else value = 0).
    */
-  private BigDecimal m_w1;
+  private final BigDecimal m_w1;
 
   /**
    * The width of the floodplain 2 (used in River profile only, else value = 0).
    */
-  private BigDecimal m_w2;
+  private final BigDecimal m_w2;
 
   /**
    * The sediment transport width (not in SOBEK Urban/Rural). Default 0. Only important for module sediment/morfology.
    */
-  private BigDecimal m_sw;
+  private final BigDecimal m_sw;
 
   /**
    * The data for the heights of a tabulated sobek profile.
    */
-  private List<SobekProfileHeight> m_profileHeights;
+  private final List<SobekProfileHeight> m_profileHeights;
 
   /**
    * Summer dike (1 = active, 0 = not active) (in River profile only).
    */
-  private int m_dk;
+  private final int m_dk;
 
   /**
    * The dike crest level (in River profile only).
    */
-  private BigDecimal m_dc;
+  private final BigDecimal m_dc;
 
   /**
    * The floodplain base level behind the dike (in River profile only).
    */
-  private BigDecimal m_db;
+  private final BigDecimal m_db;
 
   /**
    * The flow area behind the dike (in River profile only).
    */
-  private BigDecimal m_df;
+  private final BigDecimal m_df;
 
   /**
    * The total area behind the dike (in River profile only).
    */
-  private BigDecimal m_dt;
+  private final BigDecimal m_dt;
 
   /**
    * The ground layer depth (meter relative to bed level).
    */
-  private BigDecimal m_gl;
+  private final BigDecimal m_gl;
 
   /**
    * The ground layer to be used within hydraulics calculation (1) or not (0).
    */
-  private int m_gu;
+  private final int m_gu;
 
   /**
    * The constructor.
@@ -166,7 +166,7 @@ public class SobekProfileDef
    * @param gu
    *          The ground layer to be used within hydraulics calculation (1) or not (0).
    */
-  public SobekProfileDef( String id, String nm, BigDecimal wm, BigDecimal w1, BigDecimal w2, BigDecimal sw, int dk, BigDecimal dc, BigDecimal db, BigDecimal df, BigDecimal dt, BigDecimal gl, int gu )
+  public SobekProfileDef( final String id, final String nm, final BigDecimal wm, final BigDecimal w1, final BigDecimal w2, final BigDecimal sw, final int dk, final BigDecimal dc, final BigDecimal db, final BigDecimal df, final BigDecimal dt, final BigDecimal gl, final int gu )
   {
     m_id = id;
     m_nm = nm;
@@ -350,7 +350,7 @@ public class SobekProfileDef
 
     // TODO Further checks...
 
-    return new Status( IStatus.OK, KalypsoModelWspmCorePlugin.getID(), "OK" );
+    return Status.OK_STATUS;
   }
 
   /**
@@ -360,23 +360,23 @@ public class SobekProfileDef
   public String toString( )
   {
     /* Create a string builder. */
-    StringBuilder line = new StringBuilder();
+    final StringBuilder line = new StringBuilder();
 
     /* Build the block. */
-    line.append( String.format( Locale.PRC, "CRDS id '%s' nm '%s' ty %d wm %.2f w1 %.2f w2 %.2f sw %.2f lt lw%n", m_id, m_nm, m_ty, m_wm, m_w1, m_w2, m_sw ) );
-    line.append( String.format( Locale.PRC, "TBLE%n" ) );
+    line.append( String.format( Locale.PRC, "CRDS id '%s' nm '%s' ty %d wm %.2f w1 %.2f w2 %.2f sw %.2f lt lw%n", m_id, m_nm, m_ty, m_wm, m_w1, m_w2, m_sw ) ); //$NON-NLS-1$
+    line.append( String.format( Locale.PRC, "TBLE%n" ) ); //$NON-NLS-1$
     for( int i = 0; i < m_profileHeights.size(); i++ )
     {
-      SobekProfileHeight profileHeight = m_profileHeights.get( i );
-      BigDecimal height = profileHeight.getHeight();
-      BigDecimal fullWidth = profileHeight.getFullWidth();
-      BigDecimal flowWidth = profileHeight.getFlowWidth();
-      line.append( String.format( Locale.PRC, "%.2f %.2f %.2f <%n", height, fullWidth, flowWidth ) );
+      final SobekProfileHeight profileHeight = m_profileHeights.get( i );
+      final BigDecimal height = profileHeight.getHeight();
+      final BigDecimal fullWidth = profileHeight.getFullWidth();
+      final BigDecimal flowWidth = profileHeight.getFlowWidth();
+      line.append( String.format( Locale.PRC, "%.2f %.2f %.2f <%n", height, fullWidth, flowWidth ) ); //$NON-NLS-1$
     }
-    line.append( String.format( Locale.PRC, "tble%n" ) );
-    line.append( String.format( Locale.PRC, "dk %d dc %.2f db %.2f df %.2f dt %.2f%n", m_dk, m_dc, m_db, m_df, m_dt ) );
-    line.append( String.format( Locale.PRC, "gl %.2f gu %d%n", m_gl, m_gu ) );
-    line.append( String.format( Locale.PRC, "crds" ) );
+    line.append( String.format( Locale.PRC, "tble%n" ) ); //$NON-NLS-1$
+    line.append( String.format( Locale.PRC, "dk %d dc %.2f db %.2f df %.2f dt %.2f%n", m_dk, m_dc, m_db, m_df, m_dt ) ); //$NON-NLS-1$
+    line.append( String.format( Locale.PRC, "gl %.2f gu %d%n", m_gl, m_gu ) ); //$NON-NLS-1$
+    line.append( String.format( Locale.PRC, "crds" ) ); //$NON-NLS-1$
 
     return line.toString();
   }

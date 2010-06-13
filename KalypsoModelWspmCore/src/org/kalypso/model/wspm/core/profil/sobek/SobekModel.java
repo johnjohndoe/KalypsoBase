@@ -79,7 +79,7 @@ public class SobekModel
    * @param profile
    *          The profile, to add.
    */
-  public void addProfile( SobekProfile profile )
+  public void addProfile( final SobekProfile profile )
   {
     if( m_profiles.contains( profile ) )
       return;
@@ -94,7 +94,7 @@ public class SobekModel
    *          The index of the profile, to remove.
    * @return The removed profile or null, if the index was out of range.
    */
-  public SobekProfile removeProfile( int index )
+  public SobekProfile removeProfile( final int index )
   {
     if( index < 0 || index >= m_profiles.size() )
       return null;
@@ -109,7 +109,7 @@ public class SobekModel
    *          The index of the profile.
    * @return The profile or null, if the index was out of range.
    */
-  public SobekProfile getProfile( int index )
+  public SobekProfile getProfile( final int index )
   {
     if( index < 0 || index >= m_profiles.size() )
       return null;
@@ -135,21 +135,21 @@ public class SobekModel
    * @param monitor
    *          A progress monitor.
    */
-  public void initFrom( AbstractSobekProvider provider, IProgressMonitor monitor ) throws Exception
+  public void initFrom( final AbstractSobekProvider provider, final IProgressMonitor monitor ) throws Exception
   {
     if( provider == null )
-      throw new IllegalArgumentException( "Argument 'provider' is missing..." );
+      throw new IllegalArgumentException( "Argument 'provider' is missing..." ); //$NON-NLS-1$
 
     /* Clear all old profiles. */
     /* If an error occurs later on, this model will be definitly empty. */
     m_profiles = new ArrayList<SobekProfile>();
 
     /* Get the profiles. */
-    SobekProfile[] profiles = provider.getSobekProfiles( monitor );
+    final SobekProfile[] profiles = provider.getSobekProfiles( monitor );
 
     /* Now add the new profiles. */
-    for( int i = 0; i < profiles.length; i++ )
-      m_profiles.add( profiles[i] );
+    for( final SobekProfile profile : profiles )
+      m_profiles.add( profile );
   }
 
   /**
@@ -158,7 +158,7 @@ public class SobekModel
    * @param destinationFolder
    *          The destination folder.
    */
-  public void writeTo( File destinationFolder ) throws Exception
+  public void writeTo( final File destinationFolder ) throws Exception
   {
     /* The buffered writers. */
     BufferedWriter datWriter = null;
@@ -167,14 +167,14 @@ public class SobekModel
     try
     {
       /* Create the file handle for the file profile.dat. */
-      File datFile = new File( destinationFolder, "profile.dat" );
+      final File datFile = new File( destinationFolder, "profile.dat" ); //$NON-NLS-1$
       if( datFile.exists() )
-        throw new Exception( String.format( "The file '%s', does exist already...", datFile.getAbsolutePath() ) );
+        throw new Exception( String.format( "The file '%s' already exists...", datFile.getAbsolutePath() ) );
 
       /* Create the file handle for the file profile.def. */
-      File defFile = new File( destinationFolder, "profile.def" );
+      final File defFile = new File( destinationFolder, "profile.def" ); //$NON-NLS-1$
       if( defFile.exists() )
-        throw new Exception( String.format( "The file '%s', does exist already...", defFile.getAbsolutePath() ) );
+        throw new Exception( String.format( "The file '%s' already exists...", defFile.getAbsolutePath() ) );
 
       /* Create the buffered writers. */
       datWriter = new BufferedWriter( new FileWriter( datFile ) );
@@ -183,16 +183,16 @@ public class SobekModel
       for( int i = 0; i < m_profiles.size(); i++ )
       {
         /* Get the profile. */
-        SobekProfile profile = m_profiles.get( i );
+        final SobekProfile profile = m_profiles.get( i );
 
         /* Validate the profile. */
-        IStatus status = profile.validate();
+        final IStatus status = profile.validate();
         if( !status.isOK() )
           throw new CoreException( status );
 
         /* Serialize the data of the profile. */
-        String profileDat = profile.serializeProfileDat();
-        String profileDef = profile.serializeProfileDef();
+        final String profileDat = profile.serializeProfileDat();
+        final String profileDef = profile.serializeProfileDef();
 
         /* Write the data of the profiles to the files. */
         datWriter.write( profileDat );
@@ -203,7 +203,7 @@ public class SobekModel
         defWriter.newLine();
       }
     }
-    catch( Exception ex )
+    catch( final Exception ex )
     {
       throw ex;
     }

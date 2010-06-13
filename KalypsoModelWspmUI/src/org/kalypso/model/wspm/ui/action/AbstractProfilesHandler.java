@@ -52,6 +52,7 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
+import org.kalypso.model.wspm.ui.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -73,7 +74,7 @@ public abstract class AbstractProfilesHandler extends AbstractHandler
     {
       final String title = getTitle();
       final String errorMessage = getErrorMessage();
-      final String message = errorMessage == null ? "No profiles found in selection. Please select one or more profiles." : errorMessage;
+      final String message = errorMessage == null ? Messages.getString("org.kalypso.model.wspm.ui.action.AbstractProfilesHandler_0") : errorMessage; //$NON-NLS-1$
       MessageDialog.openWarning( shell, title, message ); //$NON-NLS-1$ //$NON-NLS-2$
       return null;
     }

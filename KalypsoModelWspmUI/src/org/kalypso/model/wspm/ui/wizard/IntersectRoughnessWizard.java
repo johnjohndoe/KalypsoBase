@@ -103,7 +103,7 @@ public class IntersectRoughnessWizard extends Wizard
   public void addPages( )
   {
     final String msg = Messages.getString( "org.kalypso.model.wspm.ui.wizard.IntersectRoughnessWizard.2" ); //$NON-NLS-1$
-    final String title = Messages.getString( "org.kalypso.model.wspm.ui.wizard.IntersectRoughnessWizard.1" );
+    final String title = Messages.getString( "org.kalypso.model.wspm.ui.wizard.IntersectRoughnessWizard.1" ); //$NON-NLS-1$
     m_profileChooserPage = new ProfilesChooserPage( msg, m_foundProfiles.foundProfiles, null, m_foundProfiles.selectedProfiles, 1, false );
     m_profileChooserPage.setTitle( title );
 

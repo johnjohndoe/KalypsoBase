@@ -111,7 +111,7 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
 
     IComponent target = profil.getPointProperties()[targetPropertyIndex];
     // FIXME: the component is not a good id! Imagine several layers on the same component
-    return target == null ? "" + targetPropertyIndex : target.getId();
+    return target == null ? "" + targetPropertyIndex : target.getId(); //$NON-NLS-1$
   }
 
   public AbstractProfilLayer( final String id, final IProfil profil, final int targetPropertyIndex, final ILayerStyleProvider styleProvider )
