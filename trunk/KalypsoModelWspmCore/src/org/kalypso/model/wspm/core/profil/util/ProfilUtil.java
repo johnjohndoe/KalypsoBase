@@ -73,6 +73,7 @@ import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.LineString;
@@ -943,6 +944,12 @@ public class ProfilUtil
     }
     return GeometryFactory.createGM_Curve( pos, crs );
 
+  }
+
+  public static IProfil convertLinestringToEmptyProfile( final GM_Curve curve, final String profileType ) throws GM_Exception
+  {
+    final LineString jtsCurve = (LineString) JTSAdapter.export( curve );
+    return convertLinestringToEmptyProfile( jtsCurve, profileType );
   }
 
   /**

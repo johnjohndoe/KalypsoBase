@@ -46,6 +46,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.runtime.Assert;
 import org.kalypso.grid.GeoGridException;
 import org.kalypso.grid.GeoGridUtilities;
 import org.kalypso.grid.GeoGridUtilities.Interpolation;
@@ -129,37 +130,44 @@ public class CoverageProfile
    */
   public IProfil createProfile( final GM_Curve curve ) throws Exception
   {
-    /* Convert to a JTS geometry. */
-    final LineString jtsCurve = (LineString) JTSAdapter.export( curve );
+    /* STEP 1: Extract point from the line gridSize / 8 */
+    final Coordinate[] pointsZ = extractPoints( curve );
 
-    final double gridSize = getGridOffset();
-    if( Double.isNaN( gridSize ) )
-      throw new IllegalStateException( "No grids available" );
-
-    /* STEP 1: Add the points every gridSize / 8 to the profile. */
-
-    /* Add every 1/8 raster size a point. */
-    final Coordinate[] points = JTSUtilities.calculatePointsOnLine( jtsCurve, gridSize / 8 );
-    final Coordinate[] pointsZ = extractZ( points, curve.getCoordinateSystem() );
     if( pointsZ == null )
-      return ProfilUtil.convertLinestringToEmptyProfile( jtsCurve, m_profileType );
+      return ProfilUtil.convertLinestringToEmptyProfile( curve, m_profileType );
 
     /* STEP 2: Compute the width and height for each point of the new line. */
     /* STEP 3: Create the new profile. */
     final IProfil profile = calculatePointsAndCreateProfile( pointsZ, curve.getCoordinateSystem() );
-
     if( profile.getPoints().length == 0 )
-    {
-      /* in this case the curve does not intersect the grid (all z-values of the points of the curve are NaN) */
-      return ProfilUtil.convertLinestringToEmptyProfile( jtsCurve, m_profileType );
-    }
-    else
-    {
-      /* STEP 4: Thin the profile. */
-      simplifyProfile( profile, 0.10 );
-    }
+      return ProfilUtil.convertLinestringToEmptyProfile( curve, m_profileType );
+
+    /* STEP 4: Thin the profile. */
+    simplifyProfile( profile, 0.10 );
 
     return profile;
+  }
+
+  public Coordinate[] extractPoints( final GM_Curve curve )
+  {
+    try
+    {
+      /* Convert to a JTS geometry. */
+      final LineString jtsCurve = (LineString) JTSAdapter.export( curve );
+
+      final double gridSize = getGridOffset();
+      if( Double.isNaN( gridSize ) )
+        throw new IllegalStateException( "No grids available" );
+
+      /* Add every 1/8 raster size a point. */
+      final Coordinate[] points = JTSUtilities.calculatePointsOnLine( jtsCurve, gridSize / 8 );
+      return extractZ( points, curve.getCoordinateSystem() );
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+      return null;
+    }
   }
 
   /**
@@ -258,6 +266,28 @@ public class CoverageProfile
     final IProfil profile = ProfilFactory.createProfil( m_profileType );
     profile.setProperty( IWspmConstants.PROFIL_PROPERTY_CRS, crsOfPoints );
 
+    // TODO: check: we calculate the 'breite' by just adding up the distances between the points, is this always OK?
+    double breite = 0.0;
+    Coordinate lastCrd = null;
+
+    for( final Coordinate coordinate : points )
+    {
+      final IRecord profilePoint = createPoint( profile, coordinate, breite );
+
+      /* Add the new point to the profile. */
+      profile.addPoint( profilePoint );
+
+      if( lastCrd != null )
+        breite += coordinate.distance( lastCrd );
+
+      lastCrd = coordinate;
+    }
+
+    return profile;
+  }
+
+  private IRecord createPoint( final IProfil profile, final Coordinate coordinate, final double breite )
+  {
     /* The needed components. */
     final IComponent cRechtswert = profile.getPointPropertyFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
     final IComponent cHochwert = profile.getPointPropertyFor( IWspmConstants.POINT_PROPERTY_HOCHWERT );
@@ -284,40 +314,25 @@ public class CoverageProfile
     final int iHoehe = profile.indexOfProperty( cHoehe );
     final int iRauheit = profile.indexOfProperty( cRauheit );
 
-    // TODO: check: we calculate the 'breite' by just adding up the distances between the points, is this always OK?
-    double breite = 0.0;
-    Coordinate lastCrd = null;
+    /* All necessary values. */
+    final Double rechtswert = coordinate.x;
+    final Double hochwert = coordinate.y;
+    final Double hoehe = coordinate.z;
+    final Object rauheit = cRauheit.getDefaultValue();
 
-    for( final Coordinate coordinate : points )
-    {
-      /* All necessary values. */
-      final Double rechtswert = coordinate.x;
-      final Double hochwert = coordinate.y;
-      final Double hoehe = coordinate.z;
-      final Object rauheit = cRauheit.getDefaultValue();
+    /* Create a new profile point. */
+    final IRecord profilePoint = profile.createProfilPoint();
 
-      /* Create a new profile point. */
-      final IRecord profilePoint = profile.createProfilPoint();
+    /* Add geo values. */
+    profilePoint.setValue( iRechtswert, rechtswert );
+    profilePoint.setValue( iHochwert, hochwert );
 
-      /* Add geo values. */
-      profilePoint.setValue( iRechtswert, rechtswert );
-      profilePoint.setValue( iHochwert, hochwert );
+    /* Add length section values. */
+    profilePoint.setValue( iBreite, breite );
+    profilePoint.setValue( iHoehe, hoehe );
+    profilePoint.setValue( iRauheit, rauheit );
 
-      /* Add length section values. */
-      profilePoint.setValue( iBreite, breite );
-      profilePoint.setValue( iHoehe, hoehe );
-      profilePoint.setValue( iRauheit, rauheit );
-
-      /* Add the new point to the profile. */
-      profile.addPoint( profilePoint );
-
-      if( lastCrd != null )
-        breite += coordinate.distance( lastCrd );
-
-      lastCrd = coordinate;
-    }
-
-    return profile;
+    return profilePoint;
   }
 
   /**
@@ -338,5 +353,45 @@ public class CoverageProfile
     /* Perform the changes. */
     for( final IProfilChange profilChange : removeChanges )
       profilChange.doChange( null );
+  }
+
+  /**
+   * Inserts new points into an existing profile.<br/>
+   * 
+   * @param insertSign
+   *          If -1, new points are inserted at the beginning of the profile, 'width' goes into negative direction.
+   *          Else, points are inserted at the end of the profile with ascending width.
+   */
+  public void insertPoints( final IProfil profile, final int insertSign, final Coordinate[] newPoints )
+  {
+    Assert.isTrue( insertSign == 1 || insertSign == -1 );
+
+    final int insertPositition = insertSign < 0 ? 0 : profile.getPoints().length - 1;
+
+    final IRecord point = profile.getPoint( insertPositition );
+    final int iBreite = profile.indexOfProperty( IWspmConstants.POINT_PROPERTY_BREITE );
+    double breite = (Double) point.getValue( iBreite );
+
+    int currentPosition = insertPositition;
+
+    Coordinate lastCrd = null;
+    for( final Coordinate coordinate : newPoints )
+    {
+      if( insertSign >= 0 )
+        currentPosition++;
+      if( lastCrd != null )
+      {
+        final double distance = lastCrd.distance( coordinate );
+        if( insertSign < 0 )
+          breite -= distance;
+        else
+          breite += distance;
+
+        final IRecord newPoint = createPoint( profile, coordinate, breite );
+        profile.add( currentPosition, newPoint );
+      }
+
+      lastCrd = coordinate;
+    }
   }
 }
