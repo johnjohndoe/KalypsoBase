@@ -255,6 +255,6 @@ public class LineGeometryBuilder implements IGeometryBuilder
 
   public int getPointCount( )
   {
-    return m_cnt_points;
+    return m_points.size();
   }
 }

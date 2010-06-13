@@ -52,6 +52,8 @@ import org.kalypso.observation.result.TupleResult;
  */
 public interface IProfil extends IObservation<TupleResult>
 {
+  public void add( final int index, final IRecord point );
+
   /**
    * @return true
    *         <p>

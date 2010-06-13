@@ -42,7 +42,14 @@ public final class FeatureThemePaintable implements IStylePaintable
   @Override
   public void paint( final DisplayElement displayElement, final IProgressMonitor paintMonitor ) throws CoreException
   {
-    displayElement.paint( m_graphics, m_p, paintMonitor );
+    try
+    {
+      displayElement.paint( m_graphics, m_p, paintMonitor );
+    }
+    catch( final Throwable e )
+    {
+      e.printStackTrace();
+    }
 
     // DEBUG output to show feature envelope: TODO: put into tracing option
     // final GM_Envelope envelope = displayElement.getFeature().getEnvelope();
