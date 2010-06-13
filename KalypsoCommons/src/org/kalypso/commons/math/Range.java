@@ -3,7 +3,7 @@ package org.kalypso.commons.math;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 
-import org.kalypso.commons.i18n.Messages;
+import org.kalypso.commons.internal.i18n.Messages;
 import org.kalypso.contribs.java.util.Arrays;
 
 /**

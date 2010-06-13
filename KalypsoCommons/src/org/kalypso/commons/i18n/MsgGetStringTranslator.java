@@ -53,6 +53,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.osgi.util.NLS;
+import org.kalypso.commons.internal.i18n.Messages;
 import org.kalypso.contribs.java.JavaApiContributionsPlugin;
 import org.osgi.framework.Bundle;
 import org.w3c.dom.Element;

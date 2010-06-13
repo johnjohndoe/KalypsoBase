@@ -48,6 +48,7 @@ import java.util.ResourceBundle;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
+import org.kalypso.commons.internal.i18n.Messages;
 import org.w3c.dom.Element;
 
 /**
