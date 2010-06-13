@@ -457,9 +457,8 @@ public abstract class AbstractEditorPart extends WorkbenchPart implements IResou
   /**
    * @see org.eclipse.ui.part.WorkbenchPart#getAdapter(java.lang.Class)
    */
-  @SuppressWarnings("unchecked")
   @Override
-  public Object getAdapter( final Class adapter )
+  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
   {
     if( adapter == ICommandTarget.class )
       return m_commandTarget;

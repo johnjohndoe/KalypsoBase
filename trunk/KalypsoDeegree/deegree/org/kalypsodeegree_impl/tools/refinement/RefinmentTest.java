@@ -40,7 +40,7 @@ public class RefinmentTest extends TestCase
     final GM_SurfacePatch patch = GeometryFactory.createGM_SurfacePatch( exterior, interior, crs );
 
     final GM_Surface<GM_SurfacePatch> surface = GeometryFactory.createGM_Surface( patch );
-    final GM_Surface[] surfaces = new GM_Surface[] { surface };
+    final GM_Surface< ? >[] surfaces = new GM_Surface[] { surface };
 
     final GM_MultiSurface multiSurface = GeometryFactory.createGM_MultiSurface( surfaces, crs );
 
@@ -61,72 +61,72 @@ public class RefinmentTest extends TestCase
     {
       if( object instanceof GM_Surface )
       {
-        final GM_Surface<GM_SurfacePatch> surface1 = (GM_Surface<GM_SurfacePatch>) object;
-        for( final GM_SurfacePatch surfacePatch : surface1 )
-        {
-          final GM_Position[] ring = surfacePatch.getExteriorRing();
-          for( final GM_Position element : ring )
-          {
-//            System.out.format( "ring # %d", i );
-//            System.out.format( "%9.2f %9.2f %9.2f \n", ring[i].getX(), ring[i].getY(), ring[i].getZ() );
-          }
-        }
+// final GM_Surface<GM_SurfacePatch> surface1 = (GM_Surface<GM_SurfacePatch>) object;
+// for( final GM_SurfacePatch surfacePatch : surface1 )
+// {
+// final GM_Position[] ring = surfacePatch.getExteriorRing();
+// for( final GM_Position element : ring )
+// {
+// System.out.format( "ring # %d", i );
+// System.out.format( "%9.2f %9.2f %9.2f \n", ring[i].getX(), ring[i].getY(), ring[i].getZ() );
+// }
+// }
+// }
       }
-    }
-    /* test curve 2 */
-    final GM_Position[] curvePositions2 = new GM_Position[2];
-    curvePositions2[0] = GeometryFactory.createGM_Position( 0, 0, 0 );
-    curvePositions2[1] = GeometryFactory.createGM_Position( 2, 2, 0 );
+      /* test curve 2 */
+      final GM_Position[] curvePositions2 = new GM_Position[2];
+      curvePositions2[0] = GeometryFactory.createGM_Position( 0, 0, 0 );
+      curvePositions2[1] = GeometryFactory.createGM_Position( 2, 2, 0 );
 
 // System.out.format( "curve2\n" );
 
-    final GM_Curve curve2 = GeometryFactory.createGM_Curve( curvePositions2, crs );
+// final GM_Curve curve2 = GeometryFactory.createGM_Curve( curvePositions2, crs );
+//
+// final GM_Object[] doRefine2 = refinement.doRefine( multiSurfaces, curve2 );
+//
+// for( final GM_Object object : doRefine2 )
+// {
+// if( object instanceof GM_Surface )
+// {
+// final GM_Surface<GM_SurfacePatch> surface2 = (GM_Surface<GM_SurfacePatch>) object;
+// for( final GM_SurfacePatch surfacePatch : surface2 )
+// {
+// final GM_Position[] ring = surfacePatch.getExteriorRing();
+// for( final GM_Position element : ring )
+// {
+// System.out.format( "ring # %d", i );
+// System.out.format( "%9.2f %9.2f %9.2f \n", ring[i].getX(), ring[i].getY(), ring[i].getZ() );
+// }
+// }
+// }
+// }
 
-    final GM_Object[] doRefine2 = refinement.doRefine( multiSurfaces, curve2 );
-
-    for( final GM_Object object : doRefine2 )
-    {
-      if( object instanceof GM_Surface )
-      {
-        final GM_Surface<GM_SurfacePatch> surface2 = (GM_Surface<GM_SurfacePatch>) object;
-        for( final GM_SurfacePatch surfacePatch : surface2 )
-        {
-          final GM_Position[] ring = surfacePatch.getExteriorRing();
-          for( final GM_Position element : ring )
-          {
-//            System.out.format( "ring # %d", i );
-//            System.out.format( "%9.2f %9.2f %9.2f \n", ring[i].getX(), ring[i].getY(), ring[i].getZ() );
-          }
-        }
-      }
-    }
-
-    /* test curve 3 */
-    final GM_Position[] curvePositions3 = new GM_Position[2];
-    curvePositions3[0] = GeometryFactory.createGM_Position( 0, 0, 0 );
-    curvePositions3[1] = GeometryFactory.createGM_Position( 0, 1, 0 );
+      /* test curve 3 */
+      final GM_Position[] curvePositions3 = new GM_Position[2];
+      curvePositions3[0] = GeometryFactory.createGM_Position( 0, 0, 0 );
+      curvePositions3[1] = GeometryFactory.createGM_Position( 0, 1, 0 );
 
 // System.out.format( "curve3\n" );
 
-    final GM_Curve curve3 = GeometryFactory.createGM_Curve( curvePositions3, crs );
+// final GM_Curve curve3 = GeometryFactory.createGM_Curve( curvePositions3, crs );
 
-    final GM_Object[] doRefine3 = refinement.doRefine( multiSurfaces, curve3 );
-
-    for( final GM_Object object : doRefine3 )
-    {
-      if( object instanceof GM_Surface )
-      {
-        final GM_Surface<GM_SurfacePatch> surface3 = (GM_Surface<GM_SurfacePatch>) object;
-        for( final GM_SurfacePatch surfacePatch : surface3 )
-        {
-          final GM_Position[] ring = surfacePatch.getExteriorRing();
-          for( final GM_Position element : ring )
-          {
-//            System.out.format( "pos # %d:  ", i );
-//            System.out.format( "%9.2f %9.2f %9.2f \n", ring[i].getX(), ring[i].getY(), ring[i].getZ() );
-          }
-        }
-      }
+// final GM_Object[] doRefine3 = refinement.doRefine( multiSurfaces, curve3 );
+//
+// for( final GM_Object object : doRefine3 )
+// {
+// if( object instanceof GM_Surface )
+// {
+// final GM_Surface<GM_SurfacePatch> surface3 = (GM_Surface<GM_SurfacePatch>) object;
+// for( final GM_SurfacePatch surfacePatch : surface3 )
+// {
+// final GM_Position[] ring = surfacePatch.getExteriorRing();
+// for( final GM_Position element : ring )
+// {
+// System.out.format( "pos # %d:  ", i );
+// System.out.format( "%9.2f %9.2f %9.2f \n", ring[i].getX(), ring[i].getY(), ring[i].getZ() );
+// }
+// }
+// }
     }
     /* test curve 4 */
     final GM_Position[] curvePositions4 = new GM_Position[2];
@@ -153,27 +153,28 @@ public class RefinmentTest extends TestCase
             // split again
             // right now: simple polygon triangulation
             // make a polygon from the curves (polygon must be oriented ccw)
-            final GM_Surface<GM_SurfacePatch>[] triangulatedPolygon = RefinementUtils.triangulatePolygon( crs, ring );
-            for( final GM_Surface<GM_SurfacePatch> triangle : triangulatedPolygon )
-            {
-              for( final GM_SurfacePatch trianglePatches : triangle )
-              {
-                final GM_Position[] trianglePoses = trianglePatches.getExteriorRing();
-                for( final GM_Position trianglePose : trianglePoses )
-                {
-//                  System.out.format( "pos # %d:  ", i );
-//                  System.out.format( "%9.2f %9.2f %9.2f \n", trianglePoses[i].getX(), trianglePoses[i].getY(), trianglePoses[i].getZ() );
-                }
-              }
-            }
+// final GM_Surface<GM_SurfacePatch>[] triangulatedPolygon = RefinementUtils.triangulatePolygon( crs, ring );
+// for( final GM_Surface<GM_SurfacePatch> triangle : triangulatedPolygon )
+// {
+// for( final GM_SurfacePatch trianglePatches : triangle )
+// {
+// final GM_Position[] trianglePoses = trianglePatches.getExteriorRing();
+// for( final GM_Position trianglePose : trianglePoses )
+// {
+// System.out.format( "pos # %d:  ", i );
+// System.out.format( "%9.2f %9.2f %9.2f \n", trianglePoses[i].getX(), trianglePoses[i].getY(), trianglePoses[i].getZ()
+// );
+// }
+// }
+// }
           }
           else
           {
-            for( final GM_Position element : ring )
-            {
-//              System.out.format( "pos # %d:  ", i );
-//              System.out.format( "%9.2f %9.2f %9.2f \n", ring[i].getX(), ring[i].getY(), ring[i].getZ() );
-            }
+// for( final GM_Position element : ring )
+// {
+// System.out.format( "pos # %d:  ", i );
+// System.out.format( "%9.2f %9.2f %9.2f \n", ring[i].getX(), ring[i].getY(), ring[i].getZ() );
+// }
           }
         }
       }
@@ -185,26 +186,26 @@ public class RefinmentTest extends TestCase
 
 // System.out.format( "curve5\n" );
 
-    final GM_Curve curve5 = GeometryFactory.createGM_Curve( curvePositions5, crs );
-
-    final GM_Object[] doRefine5 = refinement.doRefine( multiSurfaces, curve5 );
-
-    for( final GM_Object object : doRefine5 )
-    {
-      if( object instanceof GM_Surface )
-      {
-        final GM_Surface<GM_SurfacePatch> surface5 = (GM_Surface<GM_SurfacePatch>) object;
-        for( final GM_SurfacePatch surfacePatch : surface5 )
-        {
-          final GM_Position[] ring = surfacePatch.getExteriorRing();
-          for( final GM_Position element : ring )
-          {
-//            System.out.format( "pos # %d:  ", i );
-//            System.out.format( "%9.2f %9.2f %9.2f \n", ring[i].getX(), ring[i].getY(), ring[i].getZ() );
-          }
-        }
-      }
-    }
+// final GM_Curve curve5 = GeometryFactory.createGM_Curve( curvePositions5, crs );
+//
+// final GM_Object[] doRefine5 = refinement.doRefine( multiSurfaces, curve5 );
+//
+// for( final GM_Object object : doRefine5 )
+// {
+// if( object instanceof GM_Surface )
+// {
+// final GM_Surface<GM_SurfacePatch> surface5 = (GM_Surface<GM_SurfacePatch>) object;
+// for( final GM_SurfacePatch surfacePatch : surface5 )
+// {
+// final GM_Position[] ring = surfacePatch.getExteriorRing();
+// for( final GM_Position element : ring )
+// {
+// System.out.format( "pos # %d:  ", i );
+// System.out.format( "%9.2f %9.2f %9.2f \n", ring[i].getX(), ring[i].getY(), ring[i].getZ() );
+// }
+// }
+// }
+// }
 
   }
 

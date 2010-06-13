@@ -52,7 +52,6 @@ import javax.xml.bind.Marshaller;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IMenuListener;
@@ -158,10 +157,11 @@ public class GisTableEditor extends AbstractEditorPart implements IEditorPart, I
   }
 
   /**
-   * @see org.kalypso.ui.editor.AbstractEditorPart#doSaveInternal(org.eclipse.core.runtime.IProgressMonitor, org.eclipse.core.resources.IFile)
+   * @see org.kalypso.ui.editor.AbstractEditorPart#doSaveInternal(org.eclipse.core.runtime.IProgressMonitor,
+   *      org.eclipse.core.resources.IFile)
    */
   @Override
-  protected void doSaveInternal( final IProgressMonitor monitor, final IFile file ) throws CoreException
+  protected void doSaveInternal( final IProgressMonitor monitor, final IFile file )
   {
     if( m_layerTable == null )
       return;
@@ -223,11 +223,11 @@ public class GisTableEditor extends AbstractEditorPart implements IEditorPart, I
         appendSpaltenActions( manager );
       }
     } );
-    
+
     getEditorSite().registerContextMenu( menuManager, m_layerTable, false );
     getSite().setSelectionProvider( getLayerTable() );
     m_layerTable.setMenu( menuManager );
-    
+
     try
     {
       final IFile inputFile = ((IFileEditorInput) getEditorInput()).getFile();
@@ -312,7 +312,7 @@ public class GisTableEditor extends AbstractEditorPart implements IEditorPart, I
    * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
    */
   @Override
-  public Object getAdapter( final Class adapter )
+  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
   {
     if( adapter == IExportableObjectFactory.class )
       return this;

@@ -45,7 +45,6 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoTheme;
@@ -53,7 +52,7 @@ import org.kalypso.ogc.gml.map.handlers.MapHandlerUtils;
 
 /**
  * Opens the property dialog for a {@link org.kalypso.ogc.gml.IKalypsoTheme}.
- *
+ * 
  * @author Gernot Belger
  */
 public class AddNodeHandler extends AbstractHandler
@@ -65,15 +64,13 @@ public class AddNodeHandler extends AbstractHandler
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
-    final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
     final ISelection selection = (ISelection) context.getVariable( ISources.ACTIVE_CURRENT_SELECTION_NAME );
     final IKalypsoTheme[] selectedThemes = MapHandlerUtils.getSelectedThemes( selection );
 
     if( selectedThemes.length != 1 )
-      throw new ExecutionException( Messages.getString("org.kalypso.ogc.gml.outline.handler.NodePropertiesHandler.0") ); //$NON-NLS-1$
+      throw new ExecutionException( Messages.getString( "org.kalypso.ogc.gml.outline.handler.NodePropertiesHandler.0" ) ); //$NON-NLS-1$
 
     // TODO: implement
-
 
     return null;
   }

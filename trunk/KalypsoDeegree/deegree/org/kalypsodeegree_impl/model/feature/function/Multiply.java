@@ -60,18 +60,19 @@ public class Multiply extends FeaturePropertyFunction
 {
 
   private Map<String, String> m_properties;
+
   private String[] m_fractionDigitsXPathSegs;
 
   /**
    * @see org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction#init(java.util.Map)
    */
   @Override
-  public void init( Map<String, String> properties )
+  public void init( final Map<String, String> properties )
   {
     m_properties = properties;
     final String fracDigitsProp = properties.get( "fractionDigitsProperty" );
     m_properties.remove( "fractionDigitsProperty" );
-    
+
     if( fracDigitsProp == null )
       m_fractionDigitsXPathSegs = null;
     else
@@ -83,14 +84,14 @@ public class Multiply extends FeaturePropertyFunction
    *      org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
    */
   @Override
-  public Object getValue( Feature feature, IPropertyType pt, Object currentValue )
+  public Object getValue( final Feature feature, final IPropertyType pt, final Object currentValue )
   {
 
     final GMLWorkspace workspace = feature.getWorkspace();
 
     double multResult = 1.0;
     Object objNumber = null;
-    for( String property : m_properties.values() )
+    for( final String property : m_properties.values() )
     {
       if( property == null )
         return null;
@@ -99,17 +100,17 @@ public class Multiply extends FeaturePropertyFunction
       {
         multResult = multResult * Double.parseDouble( property );
       }
-      catch( NumberFormatException numForE )
+      catch( final NumberFormatException numForE )
       {
         try
         {
           GMLXPath path = new GMLXPath( feature );
           final String[] xPathSegs = property.split( "/" );
-          for( int i = 0; i < xPathSegs.length; i++ )
+          for( final String xPathSeg : xPathSegs )
           {
-            if( xPathSegs[i] != null )
+            if( xPathSeg != null )
             {
-              path = new GMLXPath( path, QName.valueOf( xPathSegs[i] ) );
+              path = new GMLXPath( path, QName.valueOf( xPathSeg ) );
             }
           }
 
@@ -119,15 +120,13 @@ public class Multiply extends FeaturePropertyFunction
 
           multResult = multResult * ((Number) objNumber).doubleValue();
         }
-        catch( GMLXPathException e )
+        catch( final GMLXPathException e )
         {
           e.printStackTrace();
           return null;
         }
       }
     }
-  
-    
 
     if( m_fractionDigitsXPathSegs == null )
       return multResult;
@@ -146,7 +145,12 @@ public class Multiply extends FeaturePropertyFunction
         }
         final Object obj = GMLXPathUtilities.query( path, workspace );
 
-        if( !(obj instanceof Number) )
+        if( (obj instanceof Number) )
+        {
+          final Number fractionDigitNumber = (Number) obj;
+          fractionDigitsCount = fractionDigitNumber.intValue();
+        }
+        else
         {
           try
           {
@@ -158,13 +162,6 @@ public class Multiply extends FeaturePropertyFunction
             fractionDigitsCount = 0;
           }
         }
-        else
-        {
-          final Number fractionDigitNumber = (Number) obj;
-          if( fractionDigitNumber == null )
-            return null;
-          fractionDigitsCount = fractionDigitNumber.intValue();
-        }
       }
       catch( final GMLXPathException e )
       {
@@ -172,8 +169,8 @@ public class Multiply extends FeaturePropertyFunction
         return null;
       }
 
-      BigDecimal bd = new BigDecimal(multResult);
-      bd = bd.setScale(fractionDigitsCount,BigDecimal.ROUND_UP);
+      BigDecimal bd = new BigDecimal( multResult );
+      bd = bd.setScale( fractionDigitsCount, BigDecimal.ROUND_UP );
 
       return bd.doubleValue();
     }
@@ -184,7 +181,7 @@ public class Multiply extends FeaturePropertyFunction
    *      org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
    */
   @Override
-  public Object setValue( Feature feature, IPropertyType pt, Object valueToSet )
+  public Object setValue( final Feature feature, final IPropertyType pt, final Object valueToSet )
   {
     // value can't be set by the user
     return null;

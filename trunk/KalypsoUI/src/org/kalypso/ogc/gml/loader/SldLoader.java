@@ -246,16 +246,15 @@ public class SldLoader extends AbstractLoader
         final URL styleURL = m_urlResolver.resolveURL( context, source );
 
         sldFile = ResourceUtilities.findFileFromURL( styleURL );
+        if( sldFile == null )
+          throw new LoaderException( Messages.getString( "org.kalypso.ogc.gml.loader.SldLoader.6" ) + styleURL ); //$NON-NLS-1$
 
         final String charset = sldFile.getCharset();
 
         final String sldXML = marshallable.exportAsXML();
         final String sldXMLwithHeader = "<?xml version=\"1.0\" encoding=\"" + charset + "\"?>" + sldXML; //$NON-NLS-1$ //$NON-NLS-2$
 
-        if( sldFile == null )
-          throw new LoaderException( Messages.getString( "org.kalypso.ogc.gml.loader.SldLoader.6" ) + styleURL ); //$NON-NLS-1$
-
-          sldFile.setContents( new StringInputStream( sldXMLwithHeader, charset ), true, false, monitor );
+        sldFile.setContents( new StringInputStream( sldXMLwithHeader, charset ), true, false, monitor );
       }
       catch( final MalformedURLException e )
       {

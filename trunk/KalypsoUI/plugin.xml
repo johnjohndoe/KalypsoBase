@@ -403,6 +403,10 @@
 				<command commandId="org.kalypso.ogc.gml.map.WMSGetFeatureInfoCommand" label="%org.kalypso.ui.editor.mapeditor.actiondelegates.WMSGetfeatureInfoWidgetDelegate.label" style="radio" tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.WMSGetfeatureInfoWidgetDelegate.tooltip" />
 				-->
 				<dynamic class="org.kalypso.ogc.gml.map.widgets.newfeature.NewFeatureToolbarContribution" id="org.kalypso.gis.newFeature.menuContribution" />
+				<separator name="widgetAdditions" visible="false">
+					<!-- Additional widgets (especially those which's visibility depends on a certain layer/datatype) should be
+					added before this separator  -->
+				</separator>
 				<separator name="klickNavigation" visible="true" />
 				<command commandId="org.kalypso.ogc.gml.map.FullExtentCommand" style="push" />
 				<command commandId="org.kalypso.ogc.gml.map.ZoomToActiveLayerCommand" label="%org.kalypso.ui.editor.mapeditor.actiondelegates.ZoomToActiveLayerDelegate.label" style="push" tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.ZoomToActiveLayerDelegate.tooltip" />

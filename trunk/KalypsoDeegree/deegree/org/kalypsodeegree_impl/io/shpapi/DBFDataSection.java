@@ -170,7 +170,7 @@ public class DBFDataSection
           {
             // todo: performance: would probably be better to create the format-string only once
 
-            final StringBuffer pattern = new StringBuffer( );
+            final StringBuffer pattern = new StringBuffer();
             pattern.append( '%' );
 
             pattern.append( fieldLength );
@@ -222,7 +222,7 @@ public class DBFDataSection
 
   }
 
-  private void writeEntry( final ByteContainer datasec, final int offset, final int length, final byte[] b, final byte fillByte ) throws DBaseException
+  private void writeEntry( final ByteContainer datasec, final int offset, final int length, final byte[] b, final byte fillByte )
   {
 // if( b.length > length )
 // throw new DBaseException( "Entry contains too many characters " + new String( b ) );

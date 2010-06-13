@@ -57,7 +57,7 @@ public abstract class PageFile
    * 
    * @return int - Dimension
    */
-  public int getDimension()
+  public int getDimension( )
   {
     return m_dimension;
   }
@@ -67,7 +67,7 @@ public abstract class PageFile
    * 
    * @return int - minimale Beladung
    */
-  public int getMinimum()
+  public int getMinimum( )
   {
     return m_minimum;
   }
@@ -77,7 +77,7 @@ public abstract class PageFile
    * 
    * @return int - Kapazität
    */
-  public int getCapacity()
+  public int getCapacity( )
   {
     return m_capacity;
   }
@@ -121,11 +121,12 @@ public abstract class PageFile
    *          Kapazität der Knoten
    * @throws PageFileException
    */
-  public void initialize( int dimension, int capacity ) throws PageFileException 
+  @SuppressWarnings("unused")
+  public void initialize( final int dimension, final int capacity ) throws PageFileException
   {
     this.m_dimension = dimension;
     this.m_capacity = capacity;
-    this.m_minimum = (int)Math.round( ( capacity - 1 ) * 0.5 );
+    this.m_minimum = (int) Math.round( (capacity - 1) * 0.5 );
 
     if( this.m_minimum < 2 )
     {
@@ -136,5 +137,5 @@ public abstract class PageFile
   /**
    * Closes the pagefile and frees the underlying recourses.
    */
-  public abstract void close() throws PageFileException;
+  public abstract void close( ) throws PageFileException;
 }

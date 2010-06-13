@@ -40,8 +40,6 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Object;
-import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree_impl.io.shpapi.ShapeConst;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
@@ -57,9 +55,7 @@ public class SurfacePolygonZShapeDataProvider implements IShapeDataProvider
 {
   private Feature[] m_features;
 
-  private byte m_shapeConstant;
-
-  private GM_Surface m_surface;
+  private final byte m_shapeConstant;
 
   private final int m_length;
 
@@ -72,15 +68,7 @@ public class SurfacePolygonZShapeDataProvider implements IShapeDataProvider
 
     m_geometryPropertyType = features[0].getFeatureType().getDefaultGeometryProperty();
 
-    // get the GM_Objects in order to get the number of patches
-    final GM_Object geom = (GM_Object) features[0].getProperty( getGeometryPropertyType() );
-    if( geom instanceof GM_Surface )
-    {
-      m_surface = (GM_Surface) geom;
-    }
-
     m_length = m_features.length;
-
   }
 
   /**
@@ -151,22 +139,12 @@ public class SurfacePolygonZShapeDataProvider implements IShapeDataProvider
   }
 
   /**
-   * @see org.kalypsodeegree_impl.io.shpapi.IShapeDataProvider#setOutputShapeConstant(byte)
-   */
-  public void setOutputShapeConstant( final byte shapeConstant )
-  {
-    m_shapeConstant = ShapeConst.SHAPE_TYPE_POLYGONZ;
-  }
-
-  /**
    * @see org.kalypsodeegree_impl.io.shpapi.IShapeDataProvider#getGeometry(int)
    */
   @Override
   public GM_Object getGeometry( final int index )
   {
-    final GM_Object geom = (GM_Object) m_features[index].getProperty( getGeometryPropertyType() );
-    return geom;
-
+    return (GM_Object) m_features[index].getProperty( getGeometryPropertyType() );
   }
 
   /**

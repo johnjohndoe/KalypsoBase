@@ -289,9 +289,8 @@ public class SelectNextFeatureHandler extends AbstractHandler implements IElemen
   /**
    * @see org.eclipse.ui.commands.IElementUpdater#updateElement(org.eclipse.ui.menus.UIElement, java.util.Map)
    */
-  @SuppressWarnings("unchecked")
   @Override
-  public void updateElement( final UIElement element, final Map parameters )
+  public void updateElement( final UIElement element, @SuppressWarnings("rawtypes") final Map parameters )
   {
     // Sttange: normally the framework should automatically call setEnabled, as
     final IHandlerService handlerService = (IHandlerService) element.getServiceLocator().getService( IHandlerService.class );

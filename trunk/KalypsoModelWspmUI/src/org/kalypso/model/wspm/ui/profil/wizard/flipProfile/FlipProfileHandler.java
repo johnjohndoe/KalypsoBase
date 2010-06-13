@@ -67,14 +67,4 @@ public class FlipProfileHandler extends AbstractProfilesHandler
   {
     return new FlipProfileWizard( profileSelection );
   }
-
-  /**
-   * @see org.kalypso.model.wspm.ui.action.AbstractProfilesHandler#getErrorMessage()
-   */
-  @Override
-  protected String getErrorMessage( )
-  {
-    return Messages.getString( "org.kalypso.model.wspm.ui.action.FlipProfileActionDelegate.1" );//$NON-NLS-1$ 
-  }
-
 }

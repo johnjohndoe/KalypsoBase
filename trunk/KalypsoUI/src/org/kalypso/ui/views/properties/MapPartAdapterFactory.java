@@ -50,7 +50,7 @@ import org.kalypso.ui.editor.mapeditor.AbstractMapPart;
  * Some adapterTypes (like {@link MapPanel}) are exposed via this factory (instead of directly using
  * {@link AbstractMapPart#getAdapter(Class)}, because the expression frameworks 'adapt'-element does only recognise
  * types handled via adapter factories.
- *
+ * 
  * @author Gernot Belger
  */
 public class MapPartAdapterFactory implements IAdapterFactory
@@ -59,8 +59,7 @@ public class MapPartAdapterFactory implements IAdapterFactory
    * @see org.eclipse.core.runtime.IAdapterFactory#getAdapter(java.lang.Object, java.lang.Class)
    */
   @Override
-  @SuppressWarnings("unchecked")
-  public Object getAdapter( final Object adaptableObject, final Class adapterType )
+  public Object getAdapter( final Object adaptableObject, @SuppressWarnings("rawtypes") final Class adapterType )
   {
     if( !(adaptableObject instanceof AbstractMapPart) )
       return null;
@@ -77,8 +76,7 @@ public class MapPartAdapterFactory implements IAdapterFactory
    * @see org.eclipse.core.runtime.IAdapterFactory#getAdapterList()
    */
   @Override
-  @SuppressWarnings("unchecked")
-  public Class[] getAdapterList( )
+  public Class< ? >[] getAdapterList( )
   {
     return new Class[] { IMapPanel.class };
   }

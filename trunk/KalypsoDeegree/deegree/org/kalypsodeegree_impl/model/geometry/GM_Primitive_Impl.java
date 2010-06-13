@@ -66,9 +66,8 @@ abstract class GM_Primitive_Impl extends GM_Object_Impl implements GM_Primitive,
   /**
    * @see org.kalypsodeegree_impl.model.geometry.GM_Object_Impl#getAdapter(java.lang.Class)
    */
-  @SuppressWarnings("unchecked")
   @Override
-  public Object getAdapter( final Class adapter )
+  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
   {
     /* A primitive adapts to the array of itself adapted to the desired class. */
     final Class< ? > componentType = adapter.getComponentType();

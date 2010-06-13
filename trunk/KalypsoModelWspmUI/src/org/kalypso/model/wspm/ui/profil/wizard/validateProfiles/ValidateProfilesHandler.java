@@ -67,14 +67,4 @@ public class ValidateProfilesHandler extends AbstractProfilesHandler
   {
     return new ValidateProfilesWizard( profileSelection );
   }
-
-  /**
-   * @see org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.AbstractProfilesHandler#getErrorMessage()
-   */
-  @Override
-  protected String getErrorMessage( )
-  {
-    return Messages.getString( "org.kalypso.model.wspm.ui.action.ValidateProfilesActionDelegate.1" ); //$NON-NLS-1$
-  }
-
 }

@@ -65,7 +65,8 @@ public class GmlEditor extends AbstractEditorPart implements IEditorPart, IComma
   }
 
   /**
-   * @see org.kalypso.ui.editor.AbstractEditorPart#doSaveInternal(org.eclipse.core.runtime.IProgressMonitor, org.eclipse.core.resources.IFile)
+   * @see org.kalypso.ui.editor.AbstractEditorPart#doSaveInternal(org.eclipse.core.runtime.IProgressMonitor,
+   *      org.eclipse.core.resources.IFile)
    */
   @Override
   protected void doSaveInternal( final IProgressMonitor monitor, final IFile file ) throws CoreException
@@ -110,7 +111,7 @@ public class GmlEditor extends AbstractEditorPart implements IEditorPart, IComma
   @Override
   protected void loadInternal( final IProgressMonitor monitor, final IStorageEditorInput input ) throws Exception
   {
-    monitor.beginTask( Messages.getString("org.kalypso.ui.editor.gmleditor.ui.GmlEditor.1"), 1000 ); //$NON-NLS-1$
+    monitor.beginTask( Messages.getString( "org.kalypso.ui.editor.gmleditor.ui.GmlEditor.1" ), 1000 ); //$NON-NLS-1$
     try
     {
       final IStorage storage = input.getStorage();
@@ -147,19 +148,19 @@ public class GmlEditor extends AbstractEditorPart implements IEditorPart, IComma
     {
       e.printStackTrace();
 
-      throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.ui.editor.gmleditor.ui.GmlEditor.2") ) ); //$NON-NLS-1$
+      throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.ui.editor.gmleditor.ui.GmlEditor.2" ) ) ); //$NON-NLS-1$
     }
     catch( final UnsupportedEncodingException e )
     {
       e.printStackTrace();
 
-      throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.ui.editor.gmleditor.ui.GmlEditor.3") ) ); //$NON-NLS-1$
+      throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.ui.editor.gmleditor.ui.GmlEditor.3" ) ) ); //$NON-NLS-1$
     }
     catch( final CoreException e )
     {
       e.printStackTrace();
 
-      throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.ui.editor.gmleditor.ui.GmlEditor.4") ) ); //$NON-NLS-1$
+      throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.ui.editor.gmleditor.ui.GmlEditor.4" ) ) ); //$NON-NLS-1$
     }
     finally
     {
@@ -213,23 +214,22 @@ public class GmlEditor extends AbstractEditorPart implements IEditorPart, IComma
   {
     final IStructuredSelection selection = (IStructuredSelection) m_viewer.getSelection();
     final IFeatureSelectionManager selectionManager = m_viewer.getSelectionManager();
-    
+
     final CommandableWorkspace workspace = m_viewer.getWorkspace();
-    final NewFeatureScope scope = NewFeatureScope.createFromTreeSelection( workspace, selection, selectionManager ); 
-      
+    final NewFeatureScope scope = NewFeatureScope.createFromTreeSelection( workspace, selection, selectionManager );
+
     if( scope != null )
       manager.add( scope.createMenu() );
 
     // add additions seperator: if not, eclipse whines
     manager.add( new Separator( IWorkbenchActionConstants.MB_ADDITIONS ) );
   }
-  
+
   /**
    * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
    */
-  @SuppressWarnings("unchecked")
   @Override
-  public Object getAdapter( final Class adapter )
+  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
   {
     if( adapter == IPostSelectionProvider.class )
       return m_viewer;

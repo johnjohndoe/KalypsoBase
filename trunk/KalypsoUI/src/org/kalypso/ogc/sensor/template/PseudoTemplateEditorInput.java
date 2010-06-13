@@ -135,8 +135,7 @@ public class PseudoTemplateEditorInput implements IFileEditorInput
    * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
    */
   @Override
-  @SuppressWarnings("unchecked")
-  public Object getAdapter( final Class adapter )
+  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
   {
     return null;
   }

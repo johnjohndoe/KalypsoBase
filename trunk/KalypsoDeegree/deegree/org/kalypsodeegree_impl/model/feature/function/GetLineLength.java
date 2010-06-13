@@ -61,13 +61,13 @@ public class GetLineLength extends FeaturePropertyFunction
 
   /**
    * @param fractionDigitsProperty
-   *            determines the count of decimal places (optional) <br>
-   *            accepts GMLXPathes <br>
-   *            and constant values (double) for this property
+   *          determines the count of decimal places (optional) <br>
+   *          accepts GMLXPathes <br>
+   *          and constant values (double) for this property
    * @see org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction#init(java.util.Map)
    */
   @Override
-  public void init( Map<String, String> properties )
+  public void init( final Map<String, String> properties )
   {
     final String lineProp = properties.get( "lineProperty" );
     final String fracDigitsProp = properties.get( "fractionDigitsProperty" );
@@ -92,7 +92,7 @@ public class GetLineLength extends FeaturePropertyFunction
    *      org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
    */
   @Override
-  public Object getValue( Feature feature, IPropertyType pt, Object currentValue )
+  public Object getValue( final Feature feature, final IPropertyType pt, final Object currentValue )
   {
     if( m_lineName == null )
       return null;
@@ -129,7 +129,12 @@ public class GetLineLength extends FeaturePropertyFunction
         final GMLWorkspace workspace = feature.getWorkspace();
         final Object obj = GMLXPathUtilities.query( path, workspace );
 
-        if( !(obj instanceof Number) )
+        if( (obj instanceof Number) )
+        {
+          final Number fractionDigitNumber = (Number) obj;
+          fractionDigitsCount = fractionDigitNumber.intValue();
+        }
+        else
         {
           try
           {
@@ -140,13 +145,6 @@ public class GetLineLength extends FeaturePropertyFunction
           {
             fractionDigitsCount = 0;
           }
-        }
-        else
-        {
-          final Number fractionDigitNumber = (Number) obj;
-          if( fractionDigitNumber == null )
-            return null;
-          fractionDigitsCount = fractionDigitNumber.intValue();
         }
       }
       catch( final GMLXPathException e )
@@ -168,7 +166,7 @@ public class GetLineLength extends FeaturePropertyFunction
    *      org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
    */
   @Override
-  public Object setValue( Feature feature, IPropertyType pt, Object valueToSet )
+  public Object setValue( final Feature feature, final IPropertyType pt, final Object valueToSet )
   {
     // value can't be set by the user
     return null;

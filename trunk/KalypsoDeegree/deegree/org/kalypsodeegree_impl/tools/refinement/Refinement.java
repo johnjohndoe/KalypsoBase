@@ -20,7 +20,6 @@ public class Refinement
 
   private static final double MAX_DISTANCE = .000001;
 
-  @SuppressWarnings({ "rawtypes", "unchecked" })
   public GM_Object[] doRefine( final GM_MultiSurface[] inputSurfaces, final GM_Object inputGeom ) throws GM_Exception
   {
     if( inputGeom instanceof GM_Curve )
@@ -29,7 +28,7 @@ public class Refinement
     }
     else if( inputGeom instanceof GM_Surface )
     {
-      return doRefineSurface( inputSurfaces, (GM_Surface<GM_SurfacePatch>) inputGeom );
+      return doRefineSurface( inputSurfaces, (GM_Surface< ? >) inputGeom );
     }
     else
     {
@@ -37,7 +36,7 @@ public class Refinement
     }
   }
 
-  private GM_Object[] doRefineSurface( final GM_MultiSurface[] inputSurfaces, final GM_Surface<GM_SurfacePatch> inputSurface ) throws GM_Exception
+  private GM_Object[] doRefineSurface( final GM_MultiSurface[] inputSurfaces, final GM_Surface< ? > inputSurface ) throws GM_Exception
   {
     final GM_Position[] exteriorRing = inputSurface.get( 0 ).getExteriorRing();
     final GM_Curve curve = GeometryFactory.createGM_Curve( exteriorRing, inputSurface.getCoordinateSystem() );
@@ -54,9 +53,9 @@ public class Refinement
       final GM_LineString lineString = inputCurve.getAsLineString();
       final GM_Surface<GM_SurfacePatch> surface = GeometryFactory.createGM_Surface( lineString.getPositions(), null, inputCurve.getCoordinateSystem() );
       GM_Object remainingSurface = surface;
-      for( GM_MultiSurface multiSurface : inputSurfaces )
+      for( final GM_MultiSurface multiSurface : inputSurfaces )
       {
-        for( GM_Surface< ? > gm_SurfacePatch : multiSurface.getAllSurfaces() )
+        for( final GM_Surface< ? > gm_SurfacePatch : multiSurface.getAllSurfaces() )
         {
           remainingSurface = remainingSurface.difference( gm_SurfacePatch );
         }
@@ -64,7 +63,7 @@ public class Refinement
       if( remainingSurface instanceof GM_MultiSurface )
       {
         final GM_Surface< ? >[] allSurfaces = ((GM_MultiSurface) remainingSurface).getAllSurfaces();
-        for( GM_Surface< ? > gm_Surface : allSurfaces )
+        for( final GM_Surface< ? > gm_Surface : allSurfaces )
           list.add( gm_Surface );
       }
       else if( remainingSurface instanceof GM_Surface )
@@ -74,10 +73,8 @@ public class Refinement
     }
 
     /* consider each surface */
-    for( int i = 0; i < inputSurfaces.length; i++ )
+    for( final GM_MultiSurface polygonSurface : inputSurfaces )
     {
-      final GM_MultiSurface polygonSurface = inputSurfaces[i];
-
       final GM_Object[] objects = polygonSurface.getAll();
       for( final GM_Object object : objects )
       {
@@ -107,9 +104,8 @@ public class Refinement
               final GM_MultiPoint multiPoint = (GM_MultiPoint) intersection;
               final GM_Point[] points = multiPoint.getAllPoints();
 
-              for( int j = 0; j < points.length; j++ )
+              for( final GM_Point point : points )
               {
-                final GM_Point point = points[j];
                 if( Double.isNaN( point.getZ() ) )
                   pointList.add( RefinementUtils.interpolateZ( point, exterior ) );
                 else
@@ -127,8 +123,8 @@ public class Refinement
                   poses[j] = intersectionPoints[j].getPosition();
 
                 final GM_Surface[] surfaces = RefinementUtils.splitSurfacePatch( surfacePatch, poses );
-                for( int j = 0; j < surfaces.length; j++ )
-                  list.add( surfaces[j] );
+                for( final GM_Surface surface2 : surfaces )
+                  list.add( surface2 );
               }
               else
               {
@@ -193,8 +189,8 @@ public class Refinement
                 poses[j] = intersectionPoints[j].getPosition();
 
               final GM_Surface[] surfaces = RefinementUtils.splitSurfacePatch( surfacePatch, poses );
-              for( int j = 0; j < surfaces.length; j++ )
-                list.add( surfaces[j] );
+              for( final GM_Surface surface2 : surfaces )
+                list.add( surface2 );
             }
           }
         }

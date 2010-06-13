@@ -43,7 +43,6 @@ package org.kalypso.model.wspm.ui.profil.wizard.simplify;
 import org.eclipse.jface.wizard.IWizard;
 import org.kalypso.model.wspm.ui.action.AbstractProfilesHandler;
 import org.kalypso.model.wspm.ui.action.ProfileSelection;
-import org.kalypso.model.wspm.ui.i18n.Messages;
 
 /**
  * @author kimwerner
@@ -56,7 +55,7 @@ public class SimplifyProfileHandler extends AbstractProfilesHandler
   @Override
   protected String getTitle( )
   {
-    return "Simplify"; 
+    return "Simplify";
   }
 
   /**
@@ -67,14 +66,4 @@ public class SimplifyProfileHandler extends AbstractProfilesHandler
   {
     return new SimplifyProfileWizard( profileSelection );
   }
-
-  /**
-   * @see org.kalypso.model.wspm.ui.action.AbstractProfilesHandler#getErrorMessage()
-   */
-  @Override
-  protected String getErrorMessage( )
-  {
-    return Messages.getString( "org.kalypso.model.wspm.ui.action.FlipProfileActionDelegate.1" );//$NON-NLS-1$ 
-  }
-
 }

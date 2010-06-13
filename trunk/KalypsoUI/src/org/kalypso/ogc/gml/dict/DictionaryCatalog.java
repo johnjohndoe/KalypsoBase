@@ -90,7 +90,7 @@ public class DictionaryCatalog
         return null;
 
       final URL location = resolveUrn( urn );
-      if( urn == null )
+      if( location == null )
         return null;
 
       // load gml from url
@@ -143,7 +143,7 @@ public class DictionaryCatalog
     final DictionaryEntry dictEntry = m_featureMap.get( entry );
     if( dictEntry == null )
     {
-      final IStatus status = StatusUtilities.createWarningStatus( Messages.getString("org.kalypso.ogc.gml.dict.DictionaryCatalog.11", entry )); //$NON-NLS-1$
+      final IStatus status = StatusUtilities.createWarningStatus( Messages.getString( "org.kalypso.ogc.gml.dict.DictionaryCatalog.11", entry ) ); //$NON-NLS-1$
       KalypsoGisPlugin.getDefault().getLog().log( status );
       return;
     }

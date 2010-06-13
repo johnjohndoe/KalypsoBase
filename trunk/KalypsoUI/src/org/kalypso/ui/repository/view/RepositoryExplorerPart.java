@@ -97,9 +97,8 @@ public class RepositoryExplorerPart extends ViewPart implements ISelectionProvid
   /**
    * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
    */
-  @SuppressWarnings("unchecked") 
   @Override
-  public Object getAdapter( final Class adapter )
+  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
   {
     if( adapter.equals( IPropertySheetPage.class ) )
     {
@@ -253,7 +252,7 @@ public class RepositoryExplorerPart extends ViewPart implements ISelectionProvid
    * Restores the state of the receiver to the state described in the specified memento.
    * 
    * @param memento
-   *            the memento
+   *          the memento
    */
   private void restoreState( final IMemento memento )
   {
@@ -277,7 +276,7 @@ public class RepositoryExplorerPart extends ViewPart implements ISelectionProvid
           if( item != null )
           {
             // TODO: dirty! always use extension mechanism to instantiate repositories
-            final IRepository rep = item.getFactory( ).createRepository();
+            final IRepository rep = item.getFactory().createRepository();
 
             final IMemento propsMem = element.getChild( RepositoryExplorerPart.TAG_REPOSITORY_PROPS );
             if( propsMem != null )

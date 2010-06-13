@@ -77,18 +77,18 @@ public class FeatureThemePropertyPage extends PropertyPage implements IWorkbench
   @Override
   protected Control createContents( final Composite parent )
   {
-    /* Get the theme. */
-    final GisTemplateFeatureTheme theme = getTheme();
-    final IPoolableObjectType layerKey = theme.getLayerKey();
-
     final Composite composite = new Composite( parent, SWT.NONE );
     composite.setLayout( new GridLayout( 2, false ) );
 
+    /* Get the theme. */
+    final GisTemplateFeatureTheme theme = getTheme();
     if( theme == null )
     {
       // todo: show some error message
       return composite;
     }
+
+    final IPoolableObjectType layerKey = theme.getLayerKey();
 
     final String themeLocation = layerKey.getLocation();
     final String themeType = layerKey.getType();
@@ -170,7 +170,6 @@ public class FeatureThemePropertyPage extends PropertyPage implements IWorkbench
     ftypeText.setLayoutData( ftypeData );
     ftypeText.setText( featureType.getQName().toString() );
 
-
     /* Hide things, that make no sense for shapes */
     if( themeType.equals( "shape" ) ) //$NON-NLS-1$
     {
@@ -182,7 +181,6 @@ public class FeatureThemePropertyPage extends PropertyPage implements IWorkbench
 
     return composite;
   }
-
 
   /**
    * This function returns the theme.

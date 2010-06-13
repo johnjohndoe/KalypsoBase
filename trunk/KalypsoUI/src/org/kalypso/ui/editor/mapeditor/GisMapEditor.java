@@ -61,9 +61,8 @@ public class GisMapEditor extends AbstractMapPart implements IEditorPart
 
   private static final String OUTLINE_URI_POPUP = "popup:org.kalypso.map.outline.GisMapEditor"; //$NON-NLS-1$
 
-  @SuppressWarnings("unchecked")
   @Override
-  public Object getAdapter( final Class adapter )
+  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
   {
     if( IContentOutlinePage.class.equals( adapter ) )
     {
