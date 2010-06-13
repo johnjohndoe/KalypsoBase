@@ -45,8 +45,8 @@ import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
- * This class is a geometry builder for a MultiSurface. Currently it only supports building MultiSurfaces with a
- * single Surface geometry.
+ * This class is a geometry builder for a MultiSurface. Currently it only supports building MultiSurfaces with a single
+ * Surface geometry.
  * 
  * @author kurzbach
  */
@@ -56,10 +56,10 @@ public class MultiPolygonGeometryBuilder extends PolygonGeometryBuilder implemen
    * The constructor.
    * 
    * @param cnt_points
-   *            If > 2 the the geometry will be finished, if the count of points is reached. If <= 2 no rule regarding
-   *            the count of the points will apply, except, that a polygon needs at least 3 points for being created.
+   *          If > 2 the the geometry will be finished, if the count of points is reached. If <= 2 no rule regarding the
+   *          count of the points will apply, except, that a polygon needs at least 3 points for being created.
    * @param targetCrs
-   *            The target coordinate system.
+   *          The target coordinate system.
    */
   public MultiPolygonGeometryBuilder( final int cnt_points, final String targetCrs, final IGeometryBuilderExtensionProvider extender )
   {
@@ -70,10 +70,10 @@ public class MultiPolygonGeometryBuilder extends PolygonGeometryBuilder implemen
    * The constructor.
    * 
    * @param cnt_points
-   *            If > 2 the the geometry will be finished, if the count of points is reached. If <= 2 no rule regarding
-   *            the count of the points will apply, except, that a polygon needs at least 3 points for beeing created.
+   *          If > 2 the the geometry will be finished, if the count of points is reached. If <= 2 no rule regarding the
+   *          count of the points will apply, except, that a polygon needs at least 3 points for beeing created.
    * @param targetCrs
-   *            The target coordinate system.
+   *          The target coordinate system.
    */
   public MultiPolygonGeometryBuilder( final int cnt_points, final String targetCrs )
   {
@@ -83,11 +83,10 @@ public class MultiPolygonGeometryBuilder extends PolygonGeometryBuilder implemen
   /**
    * @see org.kalypso.informdss.manager.util.widgets.IGeometryBuilder#finish()
    */
-  @SuppressWarnings("unchecked")
   @Override
   public GM_Object finish( ) throws Exception
   {
-    final GM_Surface result = (GM_Surface) super.finish();
+    final GM_Surface< ? > result = (GM_Surface< ? >) super.finish();
     if( result != null )
     {
       return GeometryFactory.createGM_MultiSurface( new GM_Surface[] { result }, result.getCoordinateSystem() );

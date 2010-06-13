@@ -69,6 +69,7 @@ import com.vividsolutions.jts.geom.PrecisionModel;
  * Please note that the generated deegree-objects use null as
  * <tt>CS_CoordinateSystem</tt>!
  * <p>
+ * 
  * @author <a href="mailto:mschneider@lat-lon.de">Markus Schneider</a>
  * @version $Revision$ $Date$
  */
@@ -96,10 +97,10 @@ public class JTSAdapter
    * <p>
    * 
    * @param gmObject
-   *            the object to be converted
+   *          the object to be converted
    * @return the corresponding JTS- <tt>Geometry</tt> object
    * @throws GM_Exception
-   *             if type unsupported or conversion failed
+   *           if type unsupported or conversion failed
    */
   public static Geometry export( final GM_Object gmObject ) throws GM_Exception
   {
@@ -195,7 +196,7 @@ public class JTSAdapter
    * <p>
    * 
    * @param gmPoint
-   *            point to be converted
+   *          point to be converted
    * @return the corresponding <tt>Point</tt> object
    */
   private static Point export( final GM_Point gmPoint )
@@ -225,7 +226,7 @@ public class JTSAdapter
    * <p>
    * 
    * @param gmMultiPoint
-   *            multipoint to be converted
+   *          multipoint to be converted
    * @return the corresponding <tt>MultiPoint</tt> object
    */
   private static MultiPoint export( final GM_MultiPoint gmMultiPoint )
@@ -244,7 +245,7 @@ public class JTSAdapter
    * <p>
    * 
    * @param curve
-   *            <tt>GM_Curve</tt> to be converted
+   *          <tt>GM_Curve</tt> to be converted
    * @return the corresponding <tt>LineString</tt> object
    * @throws GM_Exception
    */
@@ -265,7 +266,7 @@ public class JTSAdapter
    * <p>
    * 
    * @param multi
-   *            <tt>GM_MultiCurve</tt> to be converted
+   *          <tt>GM_MultiCurve</tt> to be converted
    * @return the corresponding <tt>MultiLineString</tt> object
    * @throws GM_Exception
    */
@@ -286,7 +287,7 @@ public class JTSAdapter
    * <p>
    * 
    * @param positions
-   *            an array of <tt>GM_Position</tt> s
+   *          an array of <tt>GM_Position</tt> s
    * @return the corresponding <tt>LinearRing</tt> object
    */
   private static LinearRing exportAsRing( final GM_Position[] positions )
@@ -310,7 +311,7 @@ public class JTSAdapter
    * <p>
    * 
    * @param surface
-   *            a <tt>GM_Surface</tt>
+   *          a <tt>GM_Surface</tt>
    * @return the corresponding <tt>Polygon</tt> object
    */
   private static Polygon export( final GM_Surface< ? > surface )
@@ -336,7 +337,7 @@ public class JTSAdapter
    * <p>
    * 
    * @param msurface
-   *            a <tt>GM_MultiSurface</tt>
+   *          a <tt>GM_MultiSurface</tt>
    * @return the corresponding <tt>MultiPolygon</tt> object
    */
   private static MultiPolygon export( final GM_MultiSurface msurface )
@@ -356,7 +357,7 @@ public class JTSAdapter
    * <p>
    * 
    * @param multi
-   *            a <tt>GM_MultiPrimtive</tt>
+   *          a <tt>GM_MultiPrimtive</tt>
    * @return the corresponding <tt>GeometryCollection</tt> object
    * @throws GM_Exception
    */
@@ -377,7 +378,7 @@ public class JTSAdapter
    * <p>
    * 
    * @param point
-   *            a <tt>Point</tt> object
+   *          a <tt>Point</tt> object
    * @return the corresponding <tt>GM_Point</tt>
    */
   private static GM_Point wrap( final Point point, final String crs )
@@ -394,7 +395,7 @@ public class JTSAdapter
    * <p>
    * 
    * @param multi
-   *            a <tt>MultiPoint</tt> object
+   *          a <tt>MultiPoint</tt> object
    * @return the corresponding <tt>GM_MultiPoint</tt>
    */
   private static GM_MultiPoint wrap( final MultiPoint multi, final String crs )
@@ -412,7 +413,7 @@ public class JTSAdapter
    * <p>
    * 
    * @param line
-   *            a <tt>LineString</tt> object
+   *          a <tt>LineString</tt> object
    * @return the corresponding <tt>GM_Curve</tt>
    * @throws GM_Exception
    */
@@ -430,7 +431,7 @@ public class JTSAdapter
    * <p>
    * 
    * @param multi
-   *            a <tt>MultiLineString</tt> object
+   *          a <tt>MultiLineString</tt> object
    * @return the corresponding <tt>GM_MultiCurve</tt>
    * @throws GM_Exception
    */
@@ -449,7 +450,7 @@ public class JTSAdapter
    * <p>
    * 
    * @param polygon
-   *            a <tt>Polygon</tt>
+   *          a <tt>Polygon</tt>
    * @return the corresponding <tt>GM_Surface</tt> object
    * @throws GM_Exception
    */
@@ -472,7 +473,7 @@ public class JTSAdapter
    * <p>
    * 
    * @param multiPolygon
-   *            a <tt>MultiPolygon</tt>
+   *          a <tt>MultiPolygon</tt>
    * @return the corresponding <tt>GM_MultiSurface</tt> object
    * @throws GM_Exception
    */
@@ -491,7 +492,7 @@ public class JTSAdapter
    * <p>
    * 
    * @param collection
-   *            a <tt>GeometryCollection</tt>
+   *          a <tt>GeometryCollection</tt>
    * @return the corresponding <tt>GM_MultiPrimitive</tt> object
    * @throws GM_Exception
    */
@@ -510,7 +511,7 @@ public class JTSAdapter
    * <p>
    * 
    * @param line
-   *            a <tt>LineString</tt> object
+   *          a <tt>LineString</tt> object
    * @return the corresponding array of <tt>GM_Position</tt> s
    */
   private static GM_Position[] createGMPositions( final LineString line )

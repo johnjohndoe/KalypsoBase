@@ -40,10 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.gml.coverages;
 
-import java.util.Iterator;
-import java.util.Map.Entry;
-import java.util.TreeMap;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
+import org.kalypso.grid.GeoGridException;
 import org.kalypso.grid.GeoGridUtilities;
 import org.kalypso.grid.GeoGridUtilities.Interpolation;
 import org.kalypso.grid.IGeoGrid;
@@ -57,15 +60,19 @@ import org.kalypso.model.wspm.core.profil.util.DouglasPeuckerHelper;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
+import org.kalypso.transformation.GeoTransformer;
 import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
+import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.geom.Point;
 
 /**
+ * TODO: split this one up into two helpers: 1) extract points from grids 2) create profile from a coordinate array.<br>
  * This class should help handling coverages and profiles.
  * 
  * @author Holger Albert
@@ -73,28 +80,27 @@ import com.vividsolutions.jts.geom.Point;
  */
 public class CoverageProfile
 {
-  /**
-   * The coverage.
-   */
-  private ICoverage m_coverage;
+  private final Map<ICoverage, IGeoGrid> m_grids = new HashMap<ICoverage, IGeoGrid>();
+
+  private final String m_profileType;
+
+  private final ICoverageCollection m_coverages;
 
   /**
-   * The profile type.
+   * @param profileType
+   *          The profile type, which should be created.
    */
-  private String m_type;
-
-  /**
-   * The constructor.
-   * 
-   * @param coverage
-   *            The coverage.
-   * @param type
-   *            The profile type, which should be created.
-   */
-  public CoverageProfile( final ICoverage coverage, final String type )
+  public CoverageProfile( final ICoverageCollection coverages, final String profileType )
   {
-    m_coverage = coverage;
-    m_type = type;
+    m_coverages = coverages;
+    m_profileType = profileType;
+  }
+
+  public void dispose( )
+  {
+    final Collection<IGeoGrid> values = m_grids.values();
+    for( final IGeoGrid grid : values )
+      grid.dispose();
   }
 
   /**
@@ -111,15 +117,14 @@ public class CoverageProfile
    * <ol>
    * <li>Adds points to the geometry, depending on the size of the grid cell (1/8 grid cell size).</li>
    * <li>Computes the width and height for each point.</li>
-   * <li>Create a profile with each point and its width and height (only points with elevation are being considered!)
-   * </li>
-   * <li>The new profile is thinned by Douglas Peucker.</li>
+   * <li>Create a profile with each point and its width and height (only points with elevation are being considered!)</li>
+   * <li>The new profile is simplified by Douglas Peucker.</li>
    * </ol>
    * <br>
-   * If you want to thin the profile, use the result and the function {@link #thinProfile(IProfil)}.
+   * If you want to simplify the profile, use the result and the function {@link #thinProfile(IProfil)}.
    * 
    * @param curve
-   *            The curve, which represents the geometry on the map of the profile.
+   *          The curve, which represents the geometry on the map of the profile.
    * @return The new profile.
    */
   public IProfil createProfile( final GM_Curve curve ) throws Exception
@@ -127,57 +132,131 @@ public class CoverageProfile
     /* Convert to a JTS geometry. */
     final LineString jtsCurve = (LineString) JTSAdapter.export( curve );
 
-    if( m_coverage == null )
+    final double gridSize = getGridOffset();
+    if( Double.isNaN( gridSize ) )
+      throw new IllegalStateException( "No grids available" );
+
+    /* STEP 1: Add the points every gridSize / 8 to the profile. */
+
+    /* Add every 1/8 raster size a point. */
+    final Coordinate[] points = JTSUtilities.calculatePointsOnLine( jtsCurve, gridSize / 8 );
+    final Coordinate[] pointsZ = extractZ( points, curve.getCoordinateSystem() );
+    if( pointsZ == null )
+      return ProfilUtil.convertLinestringToEmptyProfile( jtsCurve, m_profileType );
+
+    /* STEP 2: Compute the width and height for each point of the new line. */
+    /* STEP 3: Create the new profile. */
+    final IProfil profile = calculatePointsAndCreateProfile( pointsZ, curve.getCoordinateSystem() );
+
+    if( profile.getPoints().length == 0 )
     {
-      return ProfilUtil.convertLinestringToEmptyProfile( jtsCurve, m_type );
+      /* in this case the curve does not intersect the grid (all z-values of the points of the curve are NaN) */
+      return ProfilUtil.convertLinestringToEmptyProfile( jtsCurve, m_profileType );
     }
     else
     {
-      final IGeoGrid grid = GeoGridUtilities.toGrid( m_coverage );
-      final double x = grid.getOffsetX().x;
-
-      /* STEP 1: Add the points every 1m to the profile. */
-
-      /* Add every 1/8 raster size a point. */
-      final TreeMap<Double, Point> points = JTSUtilities.calculatePointsOnLine( jtsCurve, x / 8 );
-
-      /* STEP 2: Compute the width and height for each point of the new line. */
-      /* STEP 3: Create the new profile. */
-      final IProfil profile = calculatePointsAndCreateProfile( grid, points, curve.getCoordinateSystem() );
-
-      if( profile.getPoints().length == 0 )
-      {
-        /* in this case the curve does not intersect the grid (all z-values of the points of the curve are NaN) */
-        return ProfilUtil.convertLinestringToEmptyProfile( jtsCurve, m_type );
-      }
-      else
-      {
-        /* STEP 4: Thin the profile. */
-        thinProfile( profile, 0.10 );
-      }
-
-      if( grid != null )
-        grid.dispose();
-
-      return profile;
+      /* STEP 4: Thin the profile. */
+      simplifyProfile( profile, 0.10 );
     }
+
+    return profile;
+  }
+
+  /**
+   * This function extracts z-values from a coverage collection.<br>
+   * Position that are not covered by the grids are ignored.
+   */
+  private Coordinate[] extractZ( final Coordinate[] crds, final String crsOfCrds )
+  {
+    try
+    {
+      final Collection<Coordinate> result = new ArrayList<Coordinate>( crds.length );
+
+      final String gridCrds = getGridCrs();
+      if( gridCrds == null )
+        return null;
+
+      final GeoTransformer geoTransformer = new GeoTransformer( gridCrds );
+
+      for( final Coordinate coordinate : crds )
+      {
+        final Coordinate gridCoordinate = geoTransformer.transform( coordinate, crsOfCrds );
+        final double value = findValue( gridCoordinate );
+
+        if( !Double.isNaN( value ) )
+          result.add( new Coordinate( coordinate.x, coordinate.y, value ) );
+      }
+
+      return result.toArray( new Coordinate[result.size()] );
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+      return null;
+    }
+  }
+
+  private double findValue( final Coordinate gridCoordinate ) throws GeoGridException
+  {
+    final GM_Position pos = GeometryFactory.createGM_Position( gridCoordinate.x, gridCoordinate.y );
+    final List<ICoverage> foundCoverages = m_coverages.query( pos );
+
+    for( final ICoverage coverage : foundCoverages )
+    {
+      final IGeoGrid grid = getGrid( coverage );
+      /* Get the interpolated value with the coordinate in the coordinate system of the grid. */
+      final double value = GeoGridUtilities.getValue( grid, gridCoordinate, Interpolation.bilinear );
+      if( !Double.isNaN( value ) )
+        return value;
+    }
+
+    return Double.NaN;
+  }
+
+  // TODO: check: we take the crs of the first grid, is this always OK?
+  private String getGridCrs( ) throws GeoGridException
+  {
+    if( m_coverages.size() == 0 )
+      return null;
+
+    final ICoverage coverage = m_coverages.get( 0 );
+    final IGeoGrid grid = getGrid( coverage );
+    return grid.getSourceCRS();
+  }
+
+  // TODO: check: we take the offset of the first grid, is this always OK?
+  private double getGridOffset( ) throws GeoGridException
+  {
+    if( m_coverages.size() == 0 )
+      return Double.NaN;
+
+    final ICoverage coverage = m_coverages.get( 0 );
+    final IGeoGrid grid = getGrid( coverage );
+    return grid.getOffsetX().x;
+  }
+
+  private IGeoGrid getGrid( final ICoverage coverage )
+  {
+    if( !m_grids.containsKey( coverage ) )
+      m_grids.put( coverage, GeoGridUtilities.toGrid( coverage ) );
+
+    return m_grids.get( coverage );
   }
 
   /**
    * This function calculates the points for the profile and creates the new profile.
    * 
-   * @param grid
-   *            The grid.
    * @param points
-   *            All points of the new geo line.
+   *          All points of the new geo line.
    * @param csOfPoints
-   *            The coordinate system of the points.
+   *          The coordinate system of the points.
    * @return The new profile.
    */
-  private IProfil calculatePointsAndCreateProfile( final IGeoGrid grid, final TreeMap<Double, Point> points, final String csOfPoints ) throws Exception
+  private IProfil calculatePointsAndCreateProfile( final Coordinate[] points, final String crsOfPoints ) throws Exception
   {
     /* Create the new profile. */
-    final IProfil profile = ProfilFactory.createProfil( m_type );
+    final IProfil profile = ProfilFactory.createProfil( m_profileType );
+    profile.setProperty( IWspmConstants.PROFIL_PROPERTY_CRS, crsOfPoints );
 
     /* The needed components. */
     final IComponent cRechtswert = profile.getPointPropertyFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
@@ -205,32 +284,17 @@ public class CoverageProfile
     final int iHoehe = profile.indexOfProperty( cHoehe );
     final int iRauheit = profile.indexOfProperty( cRauheit );
 
-    /* Iterate over all points in the curve. */
-    final Iterator<Entry<Double, Point>> iterator = points.entrySet().iterator();
-    while( iterator.hasNext() )
+    // TODO: check: we calculate the 'breite' by just adding up the distances between the points, is this always OK?
+    double breite = 0.0;
+    Coordinate lastCrd = null;
+
+    for( final Coordinate coordinate : points )
     {
-      /* Get the current entry set. */
-      final Entry<Double, Point> entry = iterator.next();
-
-      final Double distance = entry.getKey();
-      final Point point = entry.getValue();
-
-      /* Get grid value. */
-      final Coordinate coordinate = point.getCoordinate();
-
-      /* Transform the coordinate into the CS of the grid. */
-      final Coordinate transformedCoordinate = GeoGridUtilities.transformCoordinate( grid, coordinate, csOfPoints );
-      /* Get the interpolated value with the coordinate in the coordinate system of the grid. */
-      final double value = GeoGridUtilities.getValue( grid, transformedCoordinate, Interpolation.bilinear );
-      if( Double.isNaN( value ) )
-        continue;
-
       /* All necessary values. */
-      final double rechtswert = coordinate.x;
-      final double hochwert = coordinate.y;
-      final double breite = distance;
-      final double hoehe = value;
-      final double rauheit = 0.1f;
+      final Double rechtswert = coordinate.x;
+      final Double hochwert = coordinate.y;
+      final Double hoehe = coordinate.z;
+      final Object rauheit = cRauheit.getDefaultValue();
 
       /* Create a new profile point. */
       final IRecord profilePoint = profile.createProfilPoint();
@@ -246,6 +310,11 @@ public class CoverageProfile
 
       /* Add the new point to the profile. */
       profile.addPoint( profilePoint );
+
+      if( lastCrd != null )
+        breite += coordinate.distance( lastCrd );
+
+      lastCrd = coordinate;
     }
 
     return profile;
@@ -255,11 +324,11 @@ public class CoverageProfile
    * This function thins the profile and removes uneccessary points. It uses the Douglas Peucker algorythm.
    * 
    * @param profile
-   *            The profile, which should be thinned.
+   *          The profile, which should be thinned.
    * @param allowedDistance
-   *            The allowed distance [m].
+   *          The allowed distance [m].
    */
-  private void thinProfile( final IProfil profile, final double allowedDistance ) throws IllegalProfileOperationException
+  private void simplifyProfile( final IProfil profile, final double allowedDistance ) throws IllegalProfileOperationException
   {
     /* Get the profile changes. */
     final IProfilChange[] removeChanges = DouglasPeuckerHelper.reduce( allowedDistance, profile.getPoints(), profile );
@@ -269,47 +338,5 @@ public class CoverageProfile
     /* Perform the changes. */
     for( final IProfilChange profilChange : removeChanges )
       profilChange.doChange( null );
-  }
-
-  /**
-   * This function returns the coverage.
-   * 
-   * @return The coverage.
-   */
-  public ICoverage getCoverage( )
-  {
-    return m_coverage;
-  }
-
-  /**
-   * This function sets the coverage.
-   * 
-   * @param coverage
-   *            The coverage.
-   */
-  public void setCoverage( final ICoverage coverage )
-  {
-    m_coverage = coverage;
-  }
-
-  /**
-   * This function returns the profile type..
-   * 
-   * @return The profile type.
-   */
-  public String getType( )
-  {
-    return m_type;
-  }
-
-  /**
-   * This function sets the profile type.
-   * 
-   * @param type
-   *            The profile type.
-   */
-  public void setType( final String type )
-  {
-    m_type = type;
   }
 }
