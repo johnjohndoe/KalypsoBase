@@ -41,8 +41,6 @@
 package org.kalypso.ogc.gml.map.widgets.advanced.utils;
 
 import java.awt.Graphics;
-import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -53,17 +51,15 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.java.net.IUrlResolver2;
-import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
+import org.kalypsodeegree.graphics.displayelements.IncompatibleGeometryTypeException;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
+import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
-import org.kalypsodeegree.xml.XMLTools;
 import org.kalypsodeegree_impl.graphics.displayelements.DisplayElementFactory;
 import org.kalypsodeegree_impl.graphics.sld.SLDFactory;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
-import org.w3c.dom.Document;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
@@ -74,7 +70,9 @@ import com.vividsolutions.jts.geom.Point;
  */
 public class SLDPainter
 {
-  Map<URL, Symbolizer> m_symbolizerMap = new HashMap<URL, Symbolizer>();
+  private static final String PAINTING_SLD_FAILED = "Painting sld failed.";
+
+  private final Map<URL, Symbolizer> m_symbolizerMap = new HashMap<URL, Symbolizer>();
 
   private final GeoTransform m_projection;
 
@@ -115,36 +113,34 @@ public class SLDPainter
 
   public void paint( final Graphics g, final URL sld, final Geometry geometry ) throws CoreException
   {
+    try
+    {
+      final GM_Object gmo = JTSAdapter.wrap( geometry, m_crs );
+      paint( g, sld, gmo );
+    }
+    catch( final GM_Exception e )
+    {
+      throw new CoreException( StatusUtilities.createErrorStatus( PAINTING_SLD_FAILED, e ) );
+    }
+  }
+
+  private void paint( final Graphics g, final URL sld, final GM_Object gmo ) throws CoreException
+  {
     Symbolizer symbolizer = m_symbolizerMap.get( sld );
     if( symbolizer == null )
     {
       try
       {
-        final InputStream inputStream = sld.openStream();
-        final Document document = XMLTools.parse( inputStream );
-        inputStream.close();
-
-        final IUrlResolver2 resolver = new IUrlResolver2()
-        {
-
-          @Override
-          public URL resolveURL( final String relativeOrAbsolute ) throws MalformedURLException
-          {
-            return UrlResolverSingleton.resolveUrl( sld, relativeOrAbsolute );
-          }
-        };
-
-        symbolizer = SLDFactory.createSymbolizer( resolver, document.getDocumentElement(), 0.0, Double.MAX_VALUE );
+        symbolizer = SLDFactory.createSymbolizer( sld );
         m_symbolizerMap.put( sld, symbolizer );
       }
-      catch( final Exception e )
+      catch( final CoreException e )
       {
-        throw new CoreException( StatusUtilities.createErrorStatus( "Painting sld failed.", e ) );
+        throw new CoreException( StatusUtilities.createErrorStatus( PAINTING_SLD_FAILED, e ) );
       }
     }
 
-    paint( g, symbolizer, geometry );
-
+    paint( g, symbolizer, gmo );
   }
 
   public void paint( final Graphics g, final Symbolizer symbolizer, final Geometry geometry ) throws CoreException
@@ -152,13 +148,24 @@ public class SLDPainter
     try
     {
       final GM_Object gmo = JTSAdapter.wrap( geometry, m_crs );
-
-      final DisplayElement lde = DisplayElementFactory.buildDisplayElement( null, symbolizer, gmo );
-      lde.paint( g, m_projection, new NullProgressMonitor() );
+      paint( g, symbolizer, gmo );
     }
     catch( final Exception e )
     {
-      throw new CoreException( StatusUtilities.createErrorStatus( "Painting sld failed.", e ) );
+      throw new CoreException( StatusUtilities.createErrorStatus( PAINTING_SLD_FAILED, e ) );
+    }
+  }
+
+  public void paint( final Graphics g, final Symbolizer symbolizer, final GM_Object gmo ) throws CoreException
+  {
+    try
+    {
+      final DisplayElement lde = DisplayElementFactory.buildDisplayElement( null, symbolizer, gmo );
+      lde.paint( g, m_projection, new NullProgressMonitor() );
+    }
+    catch( final IncompatibleGeometryTypeException e )
+    {
+      throw new CoreException( StatusUtilities.createErrorStatus( PAINTING_SLD_FAILED, e ) );
     }
   }
 

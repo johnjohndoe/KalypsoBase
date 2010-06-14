@@ -62,8 +62,13 @@ import ogc2.www.opengis.net.sld.ObjectFactory;
 
 import org.apache.commons.io.IOUtils;
 import org.deegree.ogcbase.CommonNamespaces;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver2;
+import org.kalypso.contribs.java.net.UrlResolverSingleton;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.filterencoding.Expression;
 import org.kalypsodeegree.filterencoding.Filter;
 import org.kalypsodeegree.filterencoding.Operation;
@@ -1282,6 +1287,41 @@ public class SLDFactory
 
     final Symbolizer[] symbolizers = symbolizerList.toArray( new Symbolizer[symbolizerList.size()] );
     return StyleFactory.createRule( symbolizers, name, title, abstract_, legendGraphic, filter, isAnElseFilter, min, max );
+  }
+
+  /**
+   * Reads a symbolizer from
+   */
+  public static Symbolizer createSymbolizer( final URL location ) throws CoreException
+  {
+    InputStream inputStream = null;
+
+    try
+    {
+      inputStream = location.openStream();
+      final Document document = XMLTools.parse( inputStream );
+      inputStream.close();
+
+      final IUrlResolver2 resolver = new IUrlResolver2()
+      {
+        @Override
+        public URL resolveURL( final String relativeOrAbsolute ) throws MalformedURLException
+        {
+          return UrlResolverSingleton.resolveUrl( location, relativeOrAbsolute );
+        }
+      };
+
+      return SLDFactory.createSymbolizer( resolver, document.getDocumentElement(), 0.0, Double.MAX_VALUE );
+    }
+    catch( final Exception e )
+    {
+      final IStatus status = new Status( IStatus.ERROR, KalypsoDeegreePlugin.getID(), "Failed to load symbolizer", e );
+      throw new CoreException( status );
+    }
+    finally
+    {
+      IOUtils.closeQuietly( inputStream );
+    }
   }
 
   public static Symbolizer createSymbolizer( final IUrlResolver2 urlResolver, final Element symbolizerElement, final double min, final double max ) throws XMLParsingException

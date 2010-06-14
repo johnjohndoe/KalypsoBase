@@ -75,7 +75,7 @@ class XYCurveSerie extends Series
 
   private transient IAxis m_statusAxis = null;
 
-  private final boolean m_showLegend = true;
+// private final boolean m_showLegend = true;
 
   /**
    * Constructor. Fetches the values (ITuppleModel).
@@ -91,8 +91,7 @@ class XYCurveSerie extends Series
    *          the IDiagramAxis mapped to yAxis
    * @throws SensorException
    */
-  public XYCurveSerie( final DiagViewCurve curve, final IAxis xAxis, final IAxis yAxis, final DiagramAxis xDiagAxis,
-      final DiagramAxis yDiagAxis ) throws SensorException
+  public XYCurveSerie( final DiagViewCurve curve, final IAxis xAxis, final IAxis yAxis, final DiagramAxis xDiagAxis, final DiagramAxis yDiagAxis ) throws SensorException
   {
     super( curve.getName() );
 
@@ -106,7 +105,7 @@ class XYCurveSerie extends Series
 
     final IObservation obs = m_curve.getObservation();
     if( obs == null )
-      logger.warning( Messages.getString("org.kalypso.ogc.sensor.diagview.jfreechart.XYCurveSerie.0") + m_curve.getName() ); //$NON-NLS-1$
+      logger.warning( Messages.getString( "org.kalypso.ogc.sensor.diagview.jfreechart.XYCurveSerie.0" ) + m_curve.getName() ); //$NON-NLS-1$
     else
     {
       m_values = obs.getValues( m_curve.getArguments() );
@@ -123,21 +122,21 @@ class XYCurveSerie extends Series
         }
       }
       else
-        logger.warning( Messages.getString("org.kalypso.ogc.sensor.diagview.jfreechart.XYCurveSerie.1") + obs ); //$NON-NLS-1$
+        logger.warning( Messages.getString( "org.kalypso.ogc.sensor.diagview.jfreechart.XYCurveSerie.1" ) + obs ); //$NON-NLS-1$
     }
   }
 
-  public DiagramAxis getXDiagAxis()
+  public DiagramAxis getXDiagAxis( )
   {
     return m_xDiagAxis;
   }
 
-  public DiagramAxis getYDiagAxis()
+  public DiagramAxis getYDiagAxis( )
   {
     return m_yDiagAxis;
   }
 
-  public int getItemCount() throws SensorException
+  public int getItemCount( ) throws SensorException
   {
     return m_values == null ? 0 : m_values.getCount();
   }
@@ -147,9 +146,9 @@ class XYCurveSerie extends Series
     final Object obj = m_values.getElement( item, m_xAxis );
 
     if( obj instanceof Number )
-      return (Number)obj;
+      return (Number) obj;
     else if( obj instanceof Date )
-      return new Double( ( (Date)obj ).getTime() );
+      return new Double( ((Date) obj).getTime() );
 
     return null;
   }
@@ -159,14 +158,14 @@ class XYCurveSerie extends Series
     final Object obj = m_values.getElement( item, m_yAxis );
 
     if( obj instanceof Number )
-      return (Number)obj;
+      return (Number) obj;
 
     if( obj instanceof Boolean )
     {
-      final Boolean b = (Boolean)obj;
+      final Boolean b = (Boolean) obj;
       return b.booleanValue() ? new Integer( 1 ) : new Integer( 0 );
     }
-    
+
     return null;
   }
 
@@ -181,7 +180,7 @@ class XYCurveSerie extends Series
     final Object obj = m_values.getElement( item, m_statusAxis );
 
     if( obj instanceof Number )
-      return (Number)obj;
+      return (Number) obj;
 
     return null;
   }
