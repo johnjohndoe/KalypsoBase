@@ -1,27 +1,3 @@
-package org.kalypso.ui.wizard.raster;
-
-import java.lang.reflect.InvocationTargetException;
-
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.dialogs.ErrorDialog;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.ui.IWorkbench;
-import org.kalypso.commons.command.ICommandTarget;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
-import org.kalypso.ogc.gml.IKalypsoLayerModell;
-import org.kalypso.ui.ImageProvider;
-import org.kalypso.ui.KalypsoAddLayerPlugin;
-import org.kalypso.ui.action.AddThemeCommand;
-import org.kalypso.ui.i18n.Messages;
-import org.kalypso.ui.wizard.IKalypsoDataImportWizard;
-
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -63,6 +39,30 @@ import org.kalypso.ui.wizard.IKalypsoDataImportWizard;
  *
  *  ---------------------------------------------------------------------------*/
 
+package org.kalypso.ui.wizard.raster;
+
+import java.lang.reflect.InvocationTargetException;
+
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.ui.IWorkbench;
+import org.kalypso.commons.command.ICommandTarget;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
+import org.kalypso.ogc.gml.IKalypsoLayerModell;
+import org.kalypso.ui.ImageProvider;
+import org.kalypso.ui.KalypsoAddLayerPlugin;
+import org.kalypso.ui.action.AddThemeCommand;
+import org.kalypso.ui.i18n.Messages;
+import org.kalypso.ui.wizard.IKalypsoDataImportWizard;
+
 public class ImportRasterSourceWizard extends Wizard implements IKalypsoDataImportWizard
 {
   private ICommandTarget m_outlineviewer;
@@ -91,7 +91,7 @@ public class ImportRasterSourceWizard extends Wizard implements IKalypsoDataImpo
   @Override
   public void addPages( )
   {
-    m_page = new ImportRasterSourceWizardPage( "Add RasterDataModel", Messages.getString("org.kalypso.ui.wizard.raster.ImportRasterSourceWizard.0"), ImageProvider.IMAGE_KALYPSO_ICON_BIG ); //$NON-NLS-1$ //$NON-NLS-2$
+    m_page = new ImportRasterSourceWizardPage( "Add RasterDataModel", Messages.getString( "org.kalypso.ui.wizard.raster.ImportRasterSourceWizard.0" ), ImageProvider.IMAGE_KALYPSO_ICON_BIG ); //$NON-NLS-1$ //$NON-NLS-2$
     if( m_project != null )
       m_page.setProject( m_project );
     addPage( m_page );
@@ -124,13 +124,15 @@ public class ImportRasterSourceWizard extends Wizard implements IKalypsoDataImpo
           // - find all properties pointing to a grid
 
           if( mapModell == null )
-            return StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.ui.wizard.raster.ImportRasterSourceWizard.1") ); //$NON-NLS-1$
+            return StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.ui.wizard.raster.ImportRasterSourceWizard.1" ) ); //$NON-NLS-1$
 
           final String themeName = filePath.lastSegment();
           final String type = "gml"; //$NON-NLS-1$
           final String featurePath = ""; //$NON-NLS-1$
           final AddThemeCommand command = new AddThemeCommand( mapModell, themeName, type, featurePath, source );
-          command.addStyle( styleName, stylePath );
+
+          if( stylePath != null )
+            command.addStyle( styleName, stylePath );
           outlineviewer.postCommand( command, null );
         }
         catch( final Throwable t )
@@ -145,7 +147,7 @@ public class ImportRasterSourceWizard extends Wizard implements IKalypsoDataImpo
 
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, operation );
     KalypsoAddLayerPlugin.getDefault().getLog().log( status );
-    ErrorDialog.openError( getShell(), getWindowTitle(), Messages.getString("org.kalypso.ui.wizard.raster.ImportRasterSourceWizard.2"), status ); //$NON-NLS-1$
+    ErrorDialog.openError( getShell(), getWindowTitle(), Messages.getString( "org.kalypso.ui.wizard.raster.ImportRasterSourceWizard.2" ), status ); //$NON-NLS-1$
 
     return status.isOK();
   }
