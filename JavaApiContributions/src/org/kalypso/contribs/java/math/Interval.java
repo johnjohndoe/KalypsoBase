@@ -50,12 +50,12 @@ public class Interval
   /**
    * The minimum value of the interval.
    */
-  private final double m_min;
+  private double m_min;
 
   /**
    * The maximum value of the interval.
    */
-  private final double m_max;
+  private double m_max;
 
   /**
    * The constructor.
@@ -71,7 +71,7 @@ public class Interval
    * @param interval
    *          The values will be copied from this interval.
    */
-  public Interval( final Interval interval )
+  public Interval( Interval interval )
   {
     this( interval.getMin(), interval.getMax() );
   }
@@ -84,14 +84,11 @@ public class Interval
    * @param max
    *          The maximum value of the interval.
    */
-  public Interval( final double min, final double max )
+  public Interval( double min, double max )
   {
-    if( min <= max )
-    {
-      m_min = min;
-      m_max = max;
-    }
-    else
+    m_min = min;
+    m_max = max;
+    if( min > max )
     {
       m_min = max;
       m_max = min;
@@ -128,12 +125,28 @@ public class Interval
     return m_max - m_min;
   }
 
-  public boolean overlaps( final Interval interval )
+  /**
+   * This function returns true, if the given interval overlaps this interval.
+   * 
+   * @param interval
+   *          Another interval.
+   * @return True, if the given interval overlaps this interval.
+   */
+  public boolean overlaps( Interval interval )
   {
     return overlaps( interval.getMin(), interval.getMax() );
   }
 
-  public boolean overlaps( final double min, final double max )
+  /**
+   * This function returns true, if the interval determined by the given values overlaps this interval.
+   * 
+   * @param min
+   *          Another minimum value.
+   * @param max
+   *          Another maximum value.
+   * @return True, if the interval determined by the given values overlaps this interval.
+   */
+  public boolean overlaps( double min, double max )
   {
     if( m_min > max || m_max < min )
       return false;
@@ -141,22 +154,54 @@ public class Interval
     return true;
   }
 
-  public boolean contains( final Interval interval )
+  /**
+   * This function returns true, if the given interval is contained within this interval.
+   * 
+   * @param interval
+   *          Another interval.
+   * @return True, if the given interval is contained within this interval.
+   */
+  public boolean contains( Interval interval )
   {
     return contains( interval.getMin(), interval.getMax() );
   }
 
-  public boolean contains( final double min, final double max )
+  /**
+   * This function returns true, if the interval determined by the given values is contained within this interval.
+   * 
+   * @param min
+   *          Another minimum value.
+   * @param max
+   *          Another maximum value.
+   * @return True, if the interval determined by the given values is contained within this interval.
+   */
+  public boolean contains( double min, double max )
   {
     return (min >= m_min && max <= m_max);
   }
 
-  public Interval[] difference( final Interval interval )
+  /**
+   * This function calculates the difference between the given interval and this interval.
+   * 
+   * @param interval
+   *          Another interval.
+   * @return The difference between the given interval and this interval.
+   */
+  public Interval[] difference( Interval interval )
   {
     return difference( interval.getMin(), interval.getMax() );
   }
 
-  public Interval[] difference( final double min, final double max )
+  /**
+   * This function calculates the difference between the interval determined by the given values and this interval.
+   * 
+   * @param min
+   *          Another minimum value.
+   * @param max
+   *          Another maximum value.
+   * @return The difference between the interval determined by the given values and this interval.
+   */
+  public Interval[] difference( double min, double max )
   {
     /* Only if this and the given interval overlaps each other in one way, we can do the difference operation. */
     if( !overlaps( min, max ) )
@@ -187,9 +232,14 @@ public class Interval
     throw new IllegalStateException( "Wrong state doing the difference operation..." );
   }
 
+  /**
+   * This function returns true, if both points of the interval are 0.0.
+   * 
+   * @return True, if both points of the interval are 0.0.
+   */
   public boolean isEmptyInterval( )
   {
-    if( getWidth() == 0.0 )
+    if( m_min == 0.0 && m_max == 0.0 )
       return true;
 
     return false;

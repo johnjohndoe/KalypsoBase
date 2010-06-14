@@ -54,12 +54,12 @@ public class SobekProfile
   /**
    * The data for the file 'profile.dat'.
    */
-  private final SobekProfileDat m_profileDat;
+  private SobekProfileDat m_profileDat;
 
   /**
    * The data for the file 'profile.def'.
    */
-  private final SobekProfileDef m_profileDef;
+  private SobekProfileDef m_profileDef;
 
   /**
    * The constructor.
@@ -69,7 +69,7 @@ public class SobekProfile
    * @param profileDef
    *          The data for the file 'profile.def'.
    */
-  public SobekProfile( final SobekProfileDat profileDat, final SobekProfileDef profileDef )
+  public SobekProfile( SobekProfileDat profileDat, SobekProfileDef profileDef )
   {
     m_profileDat = profileDat;
     m_profileDef = profileDef;
@@ -83,22 +83,22 @@ public class SobekProfile
     if( m_profileDef == null )
       return new Status( IStatus.ERROR, KalypsoModelWspmCorePlugin.getID(), "No data for the file 'profile.def' available..." );
 
-    final IStatus statusDat = m_profileDat.validate();
+    IStatus statusDat = m_profileDat.validate();
     if( !statusDat.isOK() )
       return statusDat;
 
-    final IStatus statusDef = m_profileDef.validate();
+    IStatus statusDef = m_profileDef.validate();
     if( !statusDef.isOK() )
       return statusDef;
 
-    final String di = m_profileDat.getDi();
-    final String id = m_profileDef.getId();
+    String di = m_profileDat.getDi();
+    String id = m_profileDef.getId();
     if( !di.equals( id ) )
       return new Status( IStatus.ERROR, KalypsoModelWspmCorePlugin.getID(), "The ids of the cross section definition does not match..." );
 
     // TODO Further checks...
 
-    return Status.OK_STATUS;
+    return new Status( IStatus.OK, KalypsoModelWspmCorePlugin.getID(), "OK" );
   }
 
   /**

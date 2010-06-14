@@ -82,7 +82,7 @@ public abstract class AbstractSobekProvider
    *          A progress monitor.
    * @return The sobek profiles.
    */
-  public SobekProfile[] getSobekProfiles( IProgressMonitor monitor ) throws CoreException
+  public SobekProfile[] getSobekProfiles( IProgressMonitor monitor ) throws Exception
   {
     /* Monitor. */
     if( monitor == null )
@@ -91,23 +91,26 @@ public abstract class AbstractSobekProvider
     try
     {
       /* Get the profiles. */
-      final IProfileFeature[] profiles = getProfiles();
+      IProfileFeature[] profiles = getProfiles();
 
       /* Monitor. */
       monitor.beginTask( "Converting profiles...", profiles.length * 100 );
       monitor.subTask( "Converting profiles..." );
 
       /* Memory for the results. */
-      final List<SobekProfile> results = new ArrayList<SobekProfile>();
+      List<SobekProfile> results = new ArrayList<SobekProfile>();
 
-      for( final IProfileFeature profileFeature : profiles )
+      for( int i = 0; i < profiles.length; i++ )
       {
         /* Monitor. */
         if( monitor.isCanceled() )
           throw new CoreException( new Status( IStatus.CANCEL, KalypsoModelWspmCorePlugin.getID(), "The operation was canceled by the user..." ) );
 
+        /* Get the profile. */
+        IProfileFeature profileFeature = profiles[i];
+
         /* Convert the profile into a sobek profile. */
-        final SobekProfile sobekProfile = convertProfile( profileFeature );
+        SobekProfile sobekProfile = convertProfile( profileFeature );
 
         /* Add to the results. */
         results.add( sobekProfile );
@@ -132,5 +135,5 @@ public abstract class AbstractSobekProvider
    *          The profile.
    * @return The sobek profile.
    */
-  protected abstract SobekProfile convertProfile( IProfileFeature profile );
+  protected abstract SobekProfile convertProfile( IProfileFeature profile ) throws Exception;
 }

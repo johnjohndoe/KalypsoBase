@@ -60,7 +60,7 @@ public class SobekProfileDat
   /**
    * The id of the cross section location.
    */
-  private final String m_id;
+  private String m_id;
 
   /**
    * The id of the cross section definition.<br>
@@ -68,12 +68,12 @@ public class SobekProfileDat
    * <strong>NOTE:</strong><br>
    * This id maps to a data block in the file 'profile.def'.
    */
-  private final String m_di;
+  private String m_di;
 
   /**
    * The reference level 1.
    */
-  private final BigDecimal m_rl;
+  private BigDecimal m_rl;
 
   /**
    * The reference level 2.<br>
@@ -81,7 +81,7 @@ public class SobekProfileDat
    * <strong>NOTE:</strong><br>
    * Optional
    */
-  private final BigDecimal m_ll;
+  private BigDecimal m_ll;
 
   /**
    * The surface level right.<br>
@@ -89,7 +89,7 @@ public class SobekProfileDat
    * <strong>NOTE:</strong><br>
    * Optional
    */
-  private final BigDecimal m_rs;
+  private BigDecimal m_rs;
 
   /**
    * The surface level left.<br>
@@ -97,7 +97,7 @@ public class SobekProfileDat
    * <strong>NOTE:</strong><br>
    * Optional
    */
-  private final BigDecimal m_ls;
+  private BigDecimal m_ls;
 
   /**
    * The constructor.
@@ -116,7 +116,7 @@ public class SobekProfileDat
    * @param ls
    *          The surface level left. <strong>NOTE:</strong> Optional
    */
-  public SobekProfileDat( final String id, final String di, final BigDecimal rl, final BigDecimal ll, final BigDecimal rs, final BigDecimal ls )
+  public SobekProfileDat( String id, String di, BigDecimal rl, BigDecimal ll, BigDecimal rs, BigDecimal ls )
   {
     m_id = id;
     m_di = di;
@@ -211,7 +211,7 @@ public class SobekProfileDat
 
     // TODO Further checks...
 
-    return Status.OK_STATUS;
+    return new Status( IStatus.OK, KalypsoModelWspmCorePlugin.getID(), "OK" );
   }
 
   /**
@@ -221,18 +221,18 @@ public class SobekProfileDat
   public String toString( )
   {
     /* Create a string builder. */
-    final StringBuilder line = new StringBuilder();
+    StringBuilder line = new StringBuilder();
 
     /* Build the line. */
-    line.append( String.format( Locale.PRC, "CRSN id '%s' di '%s' rl %.2f ", m_id, m_di, m_rl ) ); //$NON-NLS-1$
+    line.append( String.format( Locale.PRC, "CRSN id '%s' di '%s' rl %.2f ", m_id, m_di, m_rl ) );
     if( m_ll != null )
-      line.append( String.format( Locale.PRC, "ll %.2f ", m_ll ) ); //$NON-NLS-1$
+      line.append( String.format( Locale.PRC, "ll %.2f ", m_ll ) );
     if( m_rs != null )
-      line.append( String.format( Locale.PRC, "rs %.2f ", m_rs ) ); //$NON-NLS-1$
+      line.append( String.format( Locale.PRC, "rs %.2f ", m_rs ) );
     if( m_ls != null )
-      line.append( String.format( Locale.PRC, "ls %.2f ", m_ls ) ); //$NON-NLS-1$
+      line.append( String.format( Locale.PRC, "ls %.2f ", m_ls ) );
 
-    line.append( String.format( Locale.PRC, "crsn" ) ); //$NON-NLS-1$
+    line.append( String.format( Locale.PRC, "crsn" ) );
 
     return line.toString();
   }
