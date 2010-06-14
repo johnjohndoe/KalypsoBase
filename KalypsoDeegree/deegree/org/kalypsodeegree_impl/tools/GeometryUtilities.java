@@ -573,7 +573,6 @@ public class GeometryUtilities
    * @exception a
    *              GM_Exception is thrown when a the geomToCheck can not be wrapped in a multi polygon.
    */
-  @SuppressWarnings("unchecked")
   public static GM_MultiSurface ensureIsMultiPolygon( final GM_Object geomToCheck ) throws GM_Exception
   {
     if( geomToCheck == null )

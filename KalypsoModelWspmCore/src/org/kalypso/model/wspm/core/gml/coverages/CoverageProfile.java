@@ -40,33 +40,17 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.gml.coverages;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.eclipse.core.runtime.Assert;
-import org.kalypso.grid.GeoGridException;
-import org.kalypso.grid.GeoGridUtilities;
-import org.kalypso.grid.GeoGridUtilities.Interpolation;
-import org.kalypso.grid.IGeoGrid;
-import org.kalypso.jts.JTSUtilities;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IllegalProfileOperationException;
 import org.kalypso.model.wspm.core.profil.ProfilFactory;
 import org.kalypso.model.wspm.core.profil.util.DouglasPeuckerHelper;
-import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
-import org.kalypso.transformation.GeoTransformer;
 import org.kalypsodeegree.model.geometry.GM_Curve;
-import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
-import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
-import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Coordinate;
@@ -81,29 +65,6 @@ import com.vividsolutions.jts.geom.LineString;
  */
 public class CoverageProfile
 {
-  private final Map<ICoverage, IGeoGrid> m_grids = new HashMap<ICoverage, IGeoGrid>();
-
-  private final String m_profileType;
-
-  private final ICoverageCollection m_coverages;
-
-  /**
-   * @param profileType
-   *          The profile type, which should be created.
-   */
-  public CoverageProfile( final ICoverageCollection coverages, final String profileType )
-  {
-    m_coverages = coverages;
-    m_profileType = profileType;
-  }
-
-  public void dispose( )
-  {
-    final Collection<IGeoGrid> values = m_grids.values();
-    for( final IGeoGrid grid : values )
-      grid.dispose();
-  }
-
   /**
    * This function creates a new profile.<br>
    * <br>
@@ -128,127 +89,19 @@ public class CoverageProfile
    *          The curve, which represents the geometry on the map of the profile.
    * @return The new profile.
    */
-  public IProfil createProfile( final GM_Curve curve ) throws Exception
+  public static IProfil createProfile( final String profileType, final Coordinate[] pointsZ, final String crsOfCrds, final double simplifyDistance ) throws Exception
   {
-    /* STEP 1: Extract point from the line gridSize / 8 */
-    final Coordinate[] pointsZ = extractPoints( curve );
-
-    if( pointsZ == null )
-      return ProfilUtil.convertLinestringToEmptyProfile( curve, m_profileType );
-
     /* STEP 2: Compute the width and height for each point of the new line. */
     /* STEP 3: Create the new profile. */
-    final IProfil profile = calculatePointsAndCreateProfile( pointsZ, curve.getCoordinateSystem() );
-    if( profile.getPoints().length == 0 )
-      return ProfilUtil.convertLinestringToEmptyProfile( curve, m_profileType );
+    final IProfil profile = calculatePointsAndCreateProfile( profileType, pointsZ, crsOfCrds );
+    final int length = profile.getPoints().length;
+    if( length == 0 )
+      return profile;
 
     /* STEP 4: Thin the profile. */
-    simplifyProfile( profile, 0.10 );
+    simplifyProfile( profile, simplifyDistance, 0, length - 1 );
 
     return profile;
-  }
-
-  public Coordinate[] extractPoints( final GM_Curve curve )
-  {
-    try
-    {
-      /* Convert to a JTS geometry. */
-      final LineString jtsCurve = (LineString) JTSAdapter.export( curve );
-
-      final double gridSize = getGridOffset();
-      if( Double.isNaN( gridSize ) )
-        throw new IllegalStateException( "No grids available" );
-
-      /* Add every 1/8 raster size a point. */
-      final Coordinate[] points = JTSUtilities.calculatePointsOnLine( jtsCurve, gridSize / 8 );
-      return extractZ( points, curve.getCoordinateSystem() );
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-      return null;
-    }
-  }
-
-  /**
-   * This function extracts z-values from a coverage collection.<br>
-   * Position that are not covered by the grids are ignored.
-   */
-  private Coordinate[] extractZ( final Coordinate[] crds, final String crsOfCrds )
-  {
-    try
-    {
-      final Collection<Coordinate> result = new ArrayList<Coordinate>( crds.length );
-
-      final String gridCrds = getGridCrs();
-      if( gridCrds == null )
-        return null;
-
-      final GeoTransformer geoTransformer = new GeoTransformer( gridCrds );
-
-      for( final Coordinate coordinate : crds )
-      {
-        final Coordinate gridCoordinate = geoTransformer.transform( coordinate, crsOfCrds );
-        final double value = findValue( gridCoordinate );
-
-        if( !Double.isNaN( value ) )
-          result.add( new Coordinate( coordinate.x, coordinate.y, value ) );
-      }
-
-      return result.toArray( new Coordinate[result.size()] );
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-      return null;
-    }
-  }
-
-  private double findValue( final Coordinate gridCoordinate ) throws GeoGridException
-  {
-    final GM_Position pos = GeometryFactory.createGM_Position( gridCoordinate.x, gridCoordinate.y );
-    final List<ICoverage> foundCoverages = m_coverages.query( pos );
-
-    for( final ICoverage coverage : foundCoverages )
-    {
-      final IGeoGrid grid = getGrid( coverage );
-      /* Get the interpolated value with the coordinate in the coordinate system of the grid. */
-      final double value = GeoGridUtilities.getValue( grid, gridCoordinate, Interpolation.bilinear );
-      if( !Double.isNaN( value ) )
-        return value;
-    }
-
-    return Double.NaN;
-  }
-
-  // TODO: check: we take the crs of the first grid, is this always OK?
-  private String getGridCrs( ) throws GeoGridException
-  {
-    if( m_coverages.size() == 0 )
-      return null;
-
-    final ICoverage coverage = m_coverages.get( 0 );
-    final IGeoGrid grid = getGrid( coverage );
-    return grid.getSourceCRS();
-  }
-
-  // TODO: check: we take the offset of the first grid, is this always OK?
-  private double getGridOffset( ) throws GeoGridException
-  {
-    if( m_coverages.size() == 0 )
-      return Double.NaN;
-
-    final ICoverage coverage = m_coverages.get( 0 );
-    final IGeoGrid grid = getGrid( coverage );
-    return grid.getOffsetX().x;
-  }
-
-  private IGeoGrid getGrid( final ICoverage coverage )
-  {
-    if( !m_grids.containsKey( coverage ) )
-      m_grids.put( coverage, GeoGridUtilities.toGrid( coverage ) );
-
-    return m_grids.get( coverage );
   }
 
   /**
@@ -260,10 +113,10 @@ public class CoverageProfile
    *          The coordinate system of the points.
    * @return The new profile.
    */
-  private IProfil calculatePointsAndCreateProfile( final Coordinate[] points, final String crsOfPoints ) throws Exception
+  private static IProfil calculatePointsAndCreateProfile( final String profileType, final Coordinate[] points, final String crsOfPoints ) throws Exception
   {
     /* Create the new profile. */
-    final IProfil profile = ProfilFactory.createProfil( m_profileType );
+    final IProfil profile = ProfilFactory.createProfil( profileType );
     profile.setProperty( IWspmConstants.PROFIL_PROPERTY_CRS, crsOfPoints );
 
     // TODO: check: we calculate the 'breite' by just adding up the distances between the points, is this always OK?
@@ -286,7 +139,7 @@ public class CoverageProfile
     return profile;
   }
 
-  private IRecord createPoint( final IProfil profile, final Coordinate coordinate, final double breite )
+  private static IRecord createPoint( final IProfil profile, final Coordinate coordinate, final double breite )
   {
     /* The needed components. */
     final IComponent cRechtswert = profile.getPointPropertyFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
@@ -317,7 +170,7 @@ public class CoverageProfile
     /* All necessary values. */
     final Double rechtswert = coordinate.x;
     final Double hochwert = coordinate.y;
-    final Double hoehe = coordinate.z;
+    final Double hoehe = Double.isNaN( coordinate.z ) ? 0.0 : coordinate.z;
     final Object rauheit = cRauheit.getDefaultValue();
 
     /* Create a new profile point. */
@@ -343,10 +196,12 @@ public class CoverageProfile
    * @param allowedDistance
    *          The allowed distance [m].
    */
-  private void simplifyProfile( final IProfil profile, final double allowedDistance ) throws IllegalProfileOperationException
+  private static void simplifyProfile( final IProfil profile, final double allowedDistance, final int startPoint, final int endPoint ) throws IllegalProfileOperationException
   {
     /* Get the profile changes. */
-    final IProfilChange[] removeChanges = DouglasPeuckerHelper.reduce( allowedDistance, profile.getPoints(), profile );
+    final IRecord[] pointsToSimplify = profile.getPoints( startPoint, endPoint );
+
+    final IProfilChange[] removeChanges = DouglasPeuckerHelper.reduce( allowedDistance, pointsToSimplify, profile );
     if( removeChanges.length == 0 )
       return;
 
@@ -362,7 +217,7 @@ public class CoverageProfile
    *          If -1, new points are inserted at the beginning of the profile, 'width' goes into negative direction.
    *          Else, points are inserted at the end of the profile with ascending width.
    */
-  public void insertPoints( final IProfil profile, final int insertSign, final Coordinate[] newPoints )
+  public static void insertPoints( final IProfil profile, final int insertSign, final Coordinate[] newPoints )
   {
     Assert.isTrue( insertSign == 1 || insertSign == -1 );
 
@@ -388,10 +243,91 @@ public class CoverageProfile
           breite += distance;
 
         final IRecord newPoint = createPoint( profile, coordinate, breite );
-        profile.add( currentPosition, newPoint );
+        if( insertSign > 0 )
+          profile.addPoint( newPoint );
+        else
+          profile.addPoint( currentPosition, newPoint );
       }
 
       lastCrd = coordinate;
     }
+  }
+
+  public static IProfil convertLinestringToEmptyProfile( final GM_Curve curve, final String profileType ) throws GM_Exception
+  {
+    final LineString jtsCurve = (LineString) JTSAdapter.export( curve );
+    return convertLinestringToEmptyProfile( jtsCurve, profileType );
+  }
+
+  /**
+   * creates a profile from {@link LineString} with '0.0' as z-values.
+   */
+  public static IProfil convertLinestringToEmptyProfile( final LineString jtsCurve, final String type )
+  {
+    if( jtsCurve == null )
+      return null;
+
+    /* Create the new profile. */
+    final IProfil profile = ProfilFactory.createProfil( type );
+
+    double breite = 0.0;
+
+    for( int i = 0; i < jtsCurve.getNumPoints(); i++ )
+    {
+      final Coordinate coordinate = jtsCurve.getCoordinateN( i );
+
+      final IRecord newPoint = createPoint( profile, coordinate, breite );
+
+      /* calculate breite */
+      if( i > 0 )
+      {
+        final double distance = coordinate.distance( jtsCurve.getCoordinateN( i - 1 ) );
+        breite += distance;
+      }
+
+      profile.addPoint( newPoint );
+    }
+
+    return profile;
+  }
+
+  /**
+   * creates a profile from an array of Coordinate's with '0.0' as z-values.
+   */
+  public static IProfil convertLinestringToEmptyProfile( final Coordinate[] points, final String type )
+  {
+    /* Create the new profile. */
+    final IProfil profile = ProfilFactory.createProfil( type );
+
+    double breite = 0.0;
+
+    for( int i = 0; i < points.length; i++ )
+    {
+      final Coordinate coordinate = points[i];
+
+      final IRecord newPoint = createPoint( profile, coordinate, breite );
+
+      /* calculate breite */
+      if( i > 0 )
+      {
+        final double distance = coordinate.distance( points[i - 1] );
+        breite += distance;
+      }
+
+      profile.addPoint( newPoint );
+    }
+
+    return profile;
+  }
+
+  public static void extendPoints( final IProfil profil, final int insertSign, final Coordinate[] simplifiedCords, final double simplifyDistance ) throws IllegalProfileOperationException
+  {
+    CoverageProfile.insertPoints( profil, insertSign, simplifiedCords );
+
+    final int length = profil.getPoints().length;
+    final int start = insertSign == -1 ? 0 : length - simplifiedCords.length;
+    final int end = insertSign == -1 ? simplifiedCords.length : length;
+
+    simplifyProfile( profil, simplifyDistance, start, end - 1 );
   }
 }
