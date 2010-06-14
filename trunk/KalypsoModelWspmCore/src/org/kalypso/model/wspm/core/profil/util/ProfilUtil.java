@@ -64,7 +64,6 @@ import org.kalypso.model.wspm.core.i18n.Messages;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
-import org.kalypso.model.wspm.core.profil.ProfilFactory;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
@@ -73,10 +72,6 @@ import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
-
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.LineString;
 
 /**
  * @author kimwerner
@@ -944,67 +939,6 @@ public class ProfilUtil
     }
     return GeometryFactory.createGM_Curve( pos, crs );
 
-  }
-
-  public static IProfil convertLinestringToEmptyProfile( final GM_Curve curve, final String profileType ) throws GM_Exception
-  {
-    final LineString jtsCurve = (LineString) JTSAdapter.export( curve );
-    return convertLinestringToEmptyProfile( jtsCurve, profileType );
-  }
-
-  /**
-   * creates a profile from {@link LineString} with '0.0' as z-values.
-   */
-  public static IProfil convertLinestringToEmptyProfile( final LineString jtsCurve, final String type )
-  {
-    // create a profile only with the digitized points and with 0.0 as z-value
-    /* Create the new profile. */
-    final IProfil digitizedProfile = ProfilFactory.createProfil( type );
-
-    /* The needed components. */
-    final int iRechtswert = digitizedProfile.indexOfProperty( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
-    final int iHochwert = digitizedProfile.indexOfProperty( IWspmConstants.POINT_PROPERTY_HOCHWERT );
-    final int iBreite = digitizedProfile.indexOfProperty( IWspmConstants.POINT_PROPERTY_BREITE );
-    final int iHoehe = digitizedProfile.indexOfProperty( IWspmConstants.POINT_PROPERTY_HOEHE );
-
-    if( jtsCurve == null )
-      return null;
-
-    double breite = 0.0;
-
-    for( int i = 0; i < jtsCurve.getNumPoints(); i++ )
-    {
-      final Coordinate coordinate = jtsCurve.getCoordinateN( i );
-
-      final double rechtswert = coordinate.x;
-      final double hochwert = coordinate.y;
-
-      /* calculate breite */
-      double distance = 0;
-      if( i > 0 )
-        distance = coordinate.distance( jtsCurve.getCoordinateN( i - 1 ) );
-
-      breite = breite + distance;
-
-      /* elevation is set to 0.0 */
-      final double hoehe = 0.0;
-
-      /* Create a new profile point. */
-      final IRecord profilePoint = digitizedProfile.createProfilPoint();
-
-      /* Add geo values. */
-      profilePoint.setValue( iRechtswert, rechtswert );
-      profilePoint.setValue( iHochwert, hochwert );
-
-      /* Add length section values. */
-      profilePoint.setValue( iBreite, breite );
-      profilePoint.setValue( iHoehe, hoehe );
-
-      /* Add the new point to the profile. */
-      digitizedProfile.addPoint( profilePoint );
-    }
-
-    return digitizedProfile;
   }
 
   public static Double[] getDoubleValuesFor( final IProfil profil, final IComponent pointProperty )

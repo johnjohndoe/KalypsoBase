@@ -46,6 +46,10 @@ public final class FeatureThemePaintable implements IStylePaintable
     {
       displayElement.paint( m_graphics, m_p, paintMonitor );
     }
+    catch( final CoreException e )
+    {
+      throw e;
+    }
     catch( final Throwable e )
     {
       e.printStackTrace();

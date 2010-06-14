@@ -49,6 +49,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
@@ -107,7 +108,11 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider impl
     if( m_provider != null )
     {
       m_provider.addSelectionChangedListener( this );
-      selectionChanged( new SelectionChangedEvent( m_provider, m_provider.getSelection() ) );
+      final ISelection selection = m_provider.getSelection();
+      if( selection == null )
+        selectionChanged( new SelectionChangedEvent( m_provider, StructuredSelection.EMPTY ) );
+      else
+        selectionChanged( new SelectionChangedEvent( m_provider, selection ) );
     }
   }
 

@@ -197,7 +197,31 @@ public class JTSUtilities
    */
   public static Coordinate posOnLine( final LineString line, final double distanceOnLine )
   {
-    final LineSegment segment = findSegmentInLine( line, distanceOnLine );
+    final double length = line.getLength();
+    if( distanceOnLine < 0 || distanceOnLine > length )
+      return null;
+
+    final int numPoints = line.getNumPoints();
+    if( numPoints == 0 )
+      return null;
+
+    /* Only loop until the point before the last point. */
+    /* The remaining distance will be the remaining distance on the found line segment */
+    double remainingDistance = distanceOnLine;
+    LineSegment segment = null;
+    for( int i = 0; i < numPoints - 1; i++ )
+    {
+      final Point startPoint = line.getPointN( i );
+      final Point endPoint = line.getPointN( i + 1 );
+
+      segment = new LineSegment( new Coordinate( startPoint.getCoordinate() ), new Coordinate( endPoint.getCoordinate() ) );
+      final double lineLength = segment.getLength();
+      if( remainingDistance - lineLength < 0 )
+        break;
+
+      remainingDistance -= lineLength;
+    }
+
     if( segment == null )
       return null;
 
@@ -206,52 +230,37 @@ public class JTSUtilities
     final Coordinate startPoint = segment.p0;
     final Coordinate endPoint = segment.p1;
 
-    try
-    {
-      /* If the two X koords are equal, take one of them for the new point. */
-      double x = startPoint.x;
-      if( Double.compare( startPoint.x, endPoint.x ) != 0 )
-      {
-        final LinearEquation computeX = new LinearEquation( startPoint.x, 0, endPoint.x, max );
-        x = computeX.computeX( distanceOnLine );
-      }
-
-      /* If the two Y koords are equal, take one of them for the new point. */
-      double y = startPoint.y;
-      if( Double.compare( startPoint.y, endPoint.y ) != 0 )
-      {
-        final LinearEquation computeY = new LinearEquation( startPoint.y, 0, endPoint.y, max );
-        y = computeY.computeX( distanceOnLine );
-      }
-
-      /* If the two Z koords are equal, take one of them for the new point. */
-      double zStart = startPoint.z;
-      final double zEnd = endPoint.z;
-
-      if( zStart != Double.NaN && zEnd != Double.NaN )
-      {
-        if( Double.compare( zStart, zEnd ) != 0 )
-        {
-          final LinearEquation computeZ = new LinearEquation( zStart, 0, zEnd, max );
-          zStart = computeZ.computeX( distanceOnLine );
-        }
-      }
-      else
-      {
-        zStart = Double.NaN;
-      }
-
-      return new Coordinate( x, y, zStart );
-    }
-    catch( final SameXValuesException e )
-    {
-      e.printStackTrace();
-    }
-
-    return null;
+    /* If the two X koords are equal, take one of them for the new point. */
+    final double x = interpolateX( startPoint.x, endPoint.x, 0, max, remainingDistance );
+    final double y = interpolateX( startPoint.y, endPoint.y, 0, max, remainingDistance );
+    final double z = interpolateX( startPoint.z, endPoint.z, 0, max, remainingDistance );
+    return new Coordinate( x, y, z );
   }
 
-  private static LineSegment findSegmentInLine( final LineString line, final double distanceOnLine )
+  private static double interpolateX( final double x1, final double x2, final int y1, final double y2, final double y )
+  {
+    if( Double.isNaN( x1 ) || Double.isNaN( x2 ) )
+      return Double.NaN;
+
+    if( Double.compare( x1, x2 ) == 0 )
+      return x1;
+    else
+    {
+      try
+      {
+        final LinearEquation computeX = new LinearEquation( x1, y1, x2, y2 );
+        return computeX.computeX( y );
+      }
+      catch( final SameXValuesException e )
+      {
+        // should never happen, has we tests this explicitly
+        e.printStackTrace();
+        return x1;
+      }
+    }
+  }
+
+  public static LineSegment findSegmentInLine( final LineString line, final double distanceOnLine )
   {
     final double length = line.getLength();
     if( distanceOnLine < 0 || distanceOnLine > length )
@@ -261,18 +270,17 @@ public class JTSUtilities
     if( numPoints == 0 )
       return null;
 
-    double remainingDistance = distanceOnLine;
+    double currentDistance = 0;
     for( int i = 0; i < numPoints - 1; i++ )
     {
       final Point startPoint = line.getPointN( i );
       final Point endPoint = line.getPointN( i + 1 );
 
       final double distance = endPoint.distance( startPoint );
+      currentDistance += distance;
 
-      if( remainingDistance - distance < 0 )
+      if( distanceOnLine < currentDistance )
         return new LineSegment( new Coordinate( startPoint.getCoordinate() ), new Coordinate( endPoint.getCoordinate() ) );
-
-      remainingDistance -= distance;
     }
 
     return null;
@@ -857,10 +865,11 @@ public class JTSUtilities
       points.put( currentLength, posOnLine );
 
       /* Increase the used length by x meter. */
-      currentLength = currentLength + distance;
+      currentLength += distance;
     }
 
     /* Add the points of the line. */
+    final double x = 0;
     for( int i = 0; i < curve.getNumPoints(); i++ )
     {
       final Point point = curve.getPointN( i );
