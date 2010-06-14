@@ -19,6 +19,7 @@ Bundle-ActivationPolicy: lazy
 Export-Package: org.kalypso.model.wspm.ui,
  org.kalypso.model.wspm.ui.action,
  org.kalypso.model.wspm.ui.adapter,
+ org.kalypso.model.wspm.ui.dialog.compare,
  org.kalypso.model.wspm.ui.featureview,
  org.kalypso.model.wspm.ui.preferences,
  org.kalypso.model.wspm.ui.product,
