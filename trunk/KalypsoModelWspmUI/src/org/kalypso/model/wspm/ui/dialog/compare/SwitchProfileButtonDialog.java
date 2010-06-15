@@ -161,7 +161,7 @@ public class SwitchProfileButtonDialog extends Composite
     final IProfil profil = m_chartView.getProfil();
     final double station = profil.getStation();
 
-    final String msg = String.format( "Profil %.2f km (%d / %d)", station, getIndex() + 1, m_profiles.length );
+    final String msg = String.format( "Profil %.3f km (%d / %d)", station, getIndex() + 1, m_profiles.length );
     return msg;
   }
 
