@@ -49,6 +49,7 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.util.WspmProfileHelper;
 import org.kalypso.observation.result.IRecord;
+import org.kalypso.observation.result.TupleResult;
 
 /**
  * @author Dirk Kuch
@@ -132,7 +133,7 @@ public class ProfileWrapper
       {
         between.add( wrapper );
       }
-      else if( includeVertexPoints && breite == min || breite == max )
+      else if( includeVertexPoints && (breite == min || breite == max) )
       {
         between.add( wrapper );
       }
@@ -152,6 +153,19 @@ public class ProfileWrapper
     }
 
     return wrappers.toArray( new ProfilePointMarkerWrapper[] {} );
+  }
+
+  public ProfilePointWrapper[] getPoints( )
+  {
+    final List<ProfilePointWrapper> wrappers = new ArrayList<ProfilePointWrapper>();
+
+    final TupleResult result = m_profile.getResult();
+    for( final IRecord record : result )
+    {
+      wrappers.add( new ProfilePointWrapper( record ) );
+    }
+
+    return wrappers.toArray( new ProfilePointWrapper[] {} );
   }
 
 }
