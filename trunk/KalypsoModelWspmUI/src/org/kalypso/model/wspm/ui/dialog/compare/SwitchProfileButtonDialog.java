@@ -148,6 +148,7 @@ public class SwitchProfileButtonDialog extends Composite
       ChartUtilities.maximize( chart.getChartModel() );
 
     m_label.setText( getProfileLabel() );
+    this.layout();
   }
 
   protected int getIndex( )
