@@ -541,7 +541,7 @@
 
 <extension point="org.eclipse.ui.menus">
     <menuContribution
-          locationURI="popup:org.eclipse.ui.popup.any?after=widgets">
+          locationURI="popup:org.eclipse.ui.popup.any?after=additions">
        <menu
              icon="icons/etool16/profileChange.gif"
              id="org.kalypso.model.wspm.ui.profileChange"
