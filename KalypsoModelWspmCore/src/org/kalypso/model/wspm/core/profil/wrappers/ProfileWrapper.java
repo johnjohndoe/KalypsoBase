@@ -110,10 +110,51 @@ public class ProfileWrapper
     final IRecord add = m_profile.createProfilPoint();
     final ProfilePointWrapper addWrapper = new ProfilePointWrapper( add );
     addWrapper.setBreite( width );
-    addWrapper.setHoehe( base.getHoehe() );
+    addWrapper.setHoehe( getHoehe( width ) );
 
     final IRecord added = WspmProfileHelper.addRecordByWidth( m_profile, add );
     return new ProfilePointWrapper( added );
+  }
+
+  private double getHoehe( final Double width )
+  {
+    final ProfilePointWrapper before = findPointBefore( width );
+    final ProfilePointWrapper after = findPointAfter( width );
+
+    final double deltaH = after.getHoehe() - before.getHoehe();
+    final double distanceDeltaH = Math.abs( before.getBreite() - after.getBreite() );
+
+    final double distance = Math.abs( before.getBreite() - width );
+    final double hoehe = deltaH / distanceDeltaH * distance;
+
+    return before.getHoehe() + hoehe;
+  }
+
+  private ProfilePointWrapper findPointAfter( final Double width )
+  {
+    ProfilePointWrapper before = null;
+    final ProfilePointWrapper[] points = getPoints();
+    for( final ProfilePointWrapper point : points )
+    {
+      if( point.getBreite() < width )
+        before = point;
+      else
+        return before;
+    }
+
+    return null;
+  }
+
+  private ProfilePointWrapper findPointBefore( final Double width )
+  {
+    final ProfilePointWrapper[] points = getPoints();
+    for( final ProfilePointWrapper point : points )
+    {
+      if( point.getBreite() > width )
+        return point;
+    }
+
+    return null;
   }
 
   public ProfilePointWrapper[] findPointsBetween( final Double p1, final Double p2, final boolean includeVertexPoints )
