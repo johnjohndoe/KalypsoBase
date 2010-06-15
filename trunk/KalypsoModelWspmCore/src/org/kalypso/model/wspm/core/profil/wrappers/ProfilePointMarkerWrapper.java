@@ -122,4 +122,5 @@ public class ProfilePointMarkerWrapper extends ProfilePointWrapper implements IP
   {
     m_marker.setInterpretedValue( value );
   }
+
 }

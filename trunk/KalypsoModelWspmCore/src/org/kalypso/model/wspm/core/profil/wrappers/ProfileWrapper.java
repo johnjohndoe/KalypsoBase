@@ -72,7 +72,7 @@ public class ProfileWrapper
     return true;
   }
 
-  private ProfilePointWrapper findPoint( final Double width )
+  public ProfilePointWrapper findPoint( final Double width )
   {
     final IRecord[] points = m_profile.getPoints();
     for( final IRecord point : points )
@@ -237,4 +237,5 @@ public class ProfileWrapper
     return new ProfilePointWrapper( result.get( result.size() - 1 ) );
 
   }
+
 }
