@@ -168,4 +168,32 @@ public class ProfileWrapper
     return wrappers.toArray( new ProfilePointWrapper[] {} );
   }
 
+  /**
+   * @see java.lang.Object#toString()
+   */
+  @Override
+  public String toString( )
+  {
+    return String.format( "Profile %.3f km", m_profile.getStation() );
+  }
+
+  public ProfilePointWrapper getFirstPoint( )
+  {
+    final TupleResult result = m_profile.getResult();
+    if( result.isEmpty() )
+      return null;
+
+    return new ProfilePointWrapper( result.get( 0 ) );
+
+  }
+
+  public ProfilePointWrapper getLastPoint( )
+  {
+    final TupleResult result = m_profile.getResult();
+    if( result.isEmpty() )
+      return null;
+
+    return new ProfilePointWrapper( result.get( result.size() - 1 ) );
+
+  }
 }
