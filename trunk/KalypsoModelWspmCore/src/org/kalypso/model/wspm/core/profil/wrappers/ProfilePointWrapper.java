@@ -111,7 +111,35 @@ public class ProfilePointWrapper extends AbstractRecordWrapper implements IRecor
   @Override
   public String toString( )
   {
-    return String.format( "%.2f, %.2f", getBreite(), getHoehe() ); //$NON-NLS-1$
+    return String.format( "[%.2f, %.2f]", getBreite(), getHoehe() ); //$NON-NLS-1$
+  }
+
+  public void setKsValue( final Double ksValue )
+  {
+    final int index = findComponent( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS );
+    if( index < 0 )
+      return;
+
+    getRecord().setValue( index, ksValue );
+  }
+
+  public void setKstValue( final Double kstValue )
+  {
+    final int index = findComponent( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST );
+    if( index < 0 )
+      return;
+
+    getRecord().setValue( index, kstValue );
+  }
+
+  public double getKsValue( )
+  {
+    return ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS, this );
+  }
+
+  public double getKstValue( )
+  {
+    return ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST, this );
   }
 
 }
