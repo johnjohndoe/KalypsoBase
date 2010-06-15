@@ -41,31 +41,37 @@
 
 package org.kalypso.ui.wizard.raster;
 
-import java.lang.reflect.InvocationTargetException;
+import java.net.URL;
 
+import org.apache.commons.io.FilenameUtils;
+import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.dialogs.WizardNewFileCreationPage;
 import org.kalypso.commons.command.ICommandTarget;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.ogc.gml.IKalypsoLayerModell;
-import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoAddLayerPlugin;
-import org.kalypso.ui.action.AddThemeCommand;
 import org.kalypso.ui.i18n.Messages;
 import org.kalypso.ui.wizard.IKalypsoDataImportWizard;
 
 public class ImportRasterSourceWizard extends Wizard implements IKalypsoDataImportWizard
 {
-  private ICommandTarget m_outlineviewer;
+  private ICommandTarget m_commandTarget;
 
   private ImportRasterSourceWizardPage m_page;
 
@@ -73,10 +79,9 @@ public class ImportRasterSourceWizard extends Wizard implements IKalypsoDataImpo
 
   private IKalypsoLayerModell m_mapModel;
 
-  public ImportRasterSourceWizard( )
-  {
-    super();
-  }
+  private WizardNewFileCreationPage m_gmlFilePage;
+
+  private IFile m_mapFile;
 
   /**
    * @see org.kalypso.ui.wizard.IKalypsoDataImportWizard#setMapModel(org.kalypso.ogc.gml.IKalypsoLayerModell)
@@ -84,18 +89,32 @@ public class ImportRasterSourceWizard extends Wizard implements IKalypsoDataImpo
   @Override
   public void setMapModel( final IKalypsoLayerModell modell )
   {
+    Assert.isTrue( modell != null );
+
     m_mapModel = modell;
     m_project = m_mapModel.getProject();
+
+    final URL context = m_mapModel.getContext();
+    m_mapFile = ResourceUtilities.findFileFromURL( context );
   }
 
   @Override
   public void addPages( )
   {
-    m_page = new ImportRasterSourceWizardPage( "Add RasterDataModel", Messages.getString( "org.kalypso.ui.wizard.raster.ImportRasterSourceWizard.0" ), ImageProvider.IMAGE_KALYPSO_ICON_BIG ); //$NON-NLS-1$ //$NON-NLS-2$
+    final IContainer mapContainer = m_mapFile == null ? null : m_mapFile.getParent();
+    final IStructuredSelection selection = mapContainer == null ? StructuredSelection.EMPTY : new StructuredSelection( mapContainer );
+
+    m_gmlFilePage = new WizardNewFileCreationPage( "gmlFile", selection );
+    m_gmlFilePage.setFileExtension( "gml" );
+    m_gmlFilePage.setAllowExistingResources( true );
+    m_gmlFilePage.setTitle( "Coverage Data File" );
+    m_gmlFilePage.setDescription( "Please choose where to store the data file containing the grid coverages. You may also enter an existing filename." );
+    addPage( m_gmlFilePage );
+
+    m_page = new ImportRasterSourceWizardPage( "Add RasterDataModel" ); //$NON-NLS-1$ 
     if( m_project != null )
       m_page.setProject( m_project );
     addPage( m_page );
-
   }
 
   /**
@@ -104,46 +123,14 @@ public class ImportRasterSourceWizard extends Wizard implements IKalypsoDataImpo
   @Override
   public boolean performFinish( )
   {
-    final IPath filePath = m_page.getFilePath();
-    final boolean useDefaultStyle = m_page.checkDefaultStyle();
-    final IKalypsoLayerModell mapModell = m_mapModel;
-    final String source = getRelativeProjectPath( filePath );
-    final String stylePath = useDefaultStyle ? null : getRelativeProjectPath( m_page.getStylePath() );
-    final String styleName = useDefaultStyle ? null : m_page.getStyleName();
+    final IFile coverageFile = getGmlFile();
 
-    final ICommandTarget outlineviewer = m_outlineviewer;
-    final ICoreRunnableWithProgress operation = new ICoreRunnableWithProgress()
-    {
-      @Override
-      public IStatus execute( final IProgressMonitor monitor ) throws InvocationTargetException
-      {
-        try
-        {
-          // TODO: analyse gml in order to set featurePath
-          // - is root feature a grid
-          // - find all properties pointing to a grid
+    final IFile styleFile = getSldFile( coverageFile );
+    final boolean generateDefaultStyle = m_page.checkDefaultStyle();
+    final String styleName = generateDefaultStyle ? null : m_page.getStyleName();
 
-          if( mapModell == null )
-            return StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.ui.wizard.raster.ImportRasterSourceWizard.1" ) ); //$NON-NLS-1$
-
-          final String themeName = filePath.lastSegment();
-          final String type = "gml"; //$NON-NLS-1$
-          final String featurePath = ""; //$NON-NLS-1$
-          final AddThemeCommand command = new AddThemeCommand( mapModell, themeName, type, featurePath, source );
-
-          if( stylePath != null )
-            command.addStyle( styleName, stylePath );
-          outlineviewer.postCommand( command, null );
-        }
-        catch( final Throwable t )
-        {
-          throw new InvocationTargetException( t );
-        }
-
-        return Status.OK_STATUS;
-
-      }
-    };
+    final ICommandTarget outlineviewer = m_commandTarget;
+    final ICoreRunnableWithProgress operation = new ImportRasterOperation( coverageFile, styleFile, styleName, outlineviewer, m_mapModel );
 
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, operation );
     KalypsoAddLayerPlugin.getDefault().getLog().log( status );
@@ -152,9 +139,31 @@ public class ImportRasterSourceWizard extends Wizard implements IKalypsoDataImpo
     return status.isOK();
   }
 
-  private String getRelativeProjectPath( final IPath path )
+  private IFile getSldFile( final IFile coverageFile )
   {
-    return "project:/" + path.removeFirstSegments( 1 ).toString(); //$NON-NLS-1$
+    final boolean useDefaultStyle = m_page.checkDefaultStyle();
+    if( useDefaultStyle )
+    {
+      final String gmlName = coverageFile.getName().toString();
+      final String basicName = FilenameUtils.removeExtension( gmlName );
+      final String sldName = basicName + ".sld";
+      return coverageFile.getParent().getFile( new Path( sldName ) );
+    }
+
+    final IPath stylePath = m_page.getStylePath();
+    return coverageFile.getWorkspace().getRoot().getFile( stylePath );
+  }
+
+  private IFile getGmlFile( )
+  {
+    final IPath containerFullPath = m_gmlFilePage.getContainerFullPath();
+    String fileName = m_gmlFilePage.getFileName();
+    if( !FilenameUtils.isExtension( fileName.toLowerCase(), "gml" ) )
+      fileName += ".gml";
+
+    final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+    final IFolder folder = root.getFolder( containerFullPath );
+    return folder.getFile( fileName );
   }
 
   /**
@@ -163,7 +172,7 @@ public class ImportRasterSourceWizard extends Wizard implements IKalypsoDataImpo
   @Override
   public void setCommandTarget( final ICommandTarget commandTarget )
   {
-    m_outlineviewer = commandTarget;
+    m_commandTarget = commandTarget;
   }
 
   /**
@@ -173,6 +182,5 @@ public class ImportRasterSourceWizard extends Wizard implements IKalypsoDataImpo
   @Override
   public void init( final IWorkbench workbench, final IStructuredSelection selection )
   {
-    // nothing
   }
 }

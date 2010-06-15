@@ -37,10 +37,8 @@ import org.eclipse.ui.internal.ide.IDEWorkbenchMessages;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.eclipse.ui.part.DrillDownComposite;
 
-@SuppressWarnings("restriction")
 public class ResourceSelectionGroup extends Composite
 {
-
   private final Listener m_listener;
 
   private final boolean m_allowNewResourceName;
@@ -68,12 +66,12 @@ public class ResourceSelectionGroup extends Composite
   /*
    * übernommen von ContainerSelectionGroup und leicht verändert @author peiler
    */
-  public ResourceSelectionGroup( Composite parent, Listener listener, boolean allowNewContainerName, String message, boolean showClosedProjects, String[] allowedResourceExtensions, IContainer inputContainer )
+  public ResourceSelectionGroup( final Composite parent, final Listener listener, final boolean allowNewContainerName, final String message, final boolean showClosedProjects, final String[] allowedResourceExtensions, final IContainer inputContainer )
   {
     this( parent, listener, allowNewContainerName, message, showClosedProjects, SIZING_SELECTION_PANE_HEIGHT, allowedResourceExtensions, inputContainer );
   }
 
-  ResourceSelectionGroup( Composite parent, Listener listener, boolean allowNewResourceName, String message, boolean showClosedProjects, int heightHint, String[] allowedResourceExtensions, IContainer inputContainer )
+  ResourceSelectionGroup( final Composite parent, final Listener listener, final boolean allowNewResourceName, final String message, final boolean showClosedProjects, final int heightHint, final String[] allowedResourceExtensions, final IContainer inputContainer )
   {
     super( parent, SWT.NONE );
     m_listener = listener;
@@ -89,12 +87,12 @@ public class ResourceSelectionGroup extends Composite
       createContents( DEFAULT_MSG_SELECT_ONLY, heightHint );
   }
 
-  public void addViewerFilter( ViewerFilter filter )
+  public void addViewerFilter( final ViewerFilter filter )
   {
     treeViewer.addFilter( filter );
   }
 
-  public void resourceSelectionChanged( IResource resource )
+  public void resourceSelectionChanged( final IResource resource )
   {
     selectedResource = resource;
 
@@ -110,11 +108,11 @@ public class ResourceSelectionGroup extends Composite
     fireEvent( SWT.Selection );
   }
 
-  void fireEvent( int type )
+  void fireEvent( final int type )
   {
     if( m_listener != null )
     {
-      Event changeEvent = new Event();
+      final Event changeEvent = new Event();
       changeEvent.type = type;
       changeEvent.widget = this;
       m_listener.handleEvent( changeEvent );
@@ -124,7 +122,7 @@ public class ResourceSelectionGroup extends Composite
   /**
    * Creates the contents of the composite.
    */
-  public void createContents( String message )
+  public void createContents( final String message )
   {
     createContents( message, SIZING_SELECTION_PANE_HEIGHT );
   }
@@ -135,14 +133,14 @@ public class ResourceSelectionGroup extends Composite
    * @param heightHint
    *          height hint for the drill down composite
    */
-  public void createContents( String message, int heightHint )
+  public void createContents( final String message, final int heightHint )
   {
-    GridLayout layout = new GridLayout();
+    final GridLayout layout = new GridLayout();
     layout.marginWidth = 0;
     setLayout( layout );
     setLayoutData( new GridData( GridData.FILL_BOTH ) );
 
-    Label label = new Label( this, SWT.WRAP );
+    final Label label = new Label( this, SWT.WRAP );
     label.setText( message );
     label.setFont( this.getFont() );
 
@@ -164,11 +162,11 @@ public class ResourceSelectionGroup extends Composite
     Dialog.applyDialogFont( this );
   }
 
-  protected void createTreeViewer( int heightHint )
+  protected void createTreeViewer( final int heightHint )
   {
     // Create drill down.
-    DrillDownComposite drillDown = new DrillDownComposite( this, SWT.BORDER );
-    GridData spec = new GridData( GridData.VERTICAL_ALIGN_FILL | GridData.HORIZONTAL_ALIGN_FILL | GridData.GRAB_HORIZONTAL | GridData.GRAB_VERTICAL );
+    final DrillDownComposite drillDown = new DrillDownComposite( this, SWT.BORDER );
+    final GridData spec = new GridData( GridData.VERTICAL_ALIGN_FILL | GridData.HORIZONTAL_ALIGN_FILL | GridData.GRAB_HORIZONTAL | GridData.GRAB_VERTICAL );
     spec.widthHint = SIZING_SELECTION_PANE_WIDTH;
     spec.heightHint = heightHint;
     drillDown.setLayoutData( spec );
@@ -176,7 +174,7 @@ public class ResourceSelectionGroup extends Composite
     // Create tree viewer inside drill down.
     treeViewer = new TreeViewer( drillDown, SWT.NONE );
     drillDown.setChildTree( treeViewer );
-    ResourceContentProvider cp = new ResourceContentProvider( m_allowedResourceExtensions );
+    final ResourceContentProvider cp = new ResourceContentProvider( m_allowedResourceExtensions );
     cp.showClosedProjects( m_showClosedProjects );
     treeViewer.setContentProvider( cp );
     treeViewer.setLabelProvider( WorkbenchLabelProvider.getDecoratingWorkbenchLabelProvider() );
@@ -184,9 +182,9 @@ public class ResourceSelectionGroup extends Composite
     treeViewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
       @Override
-      public void selectionChanged( SelectionChangedEvent event )
+      public void selectionChanged( final SelectionChangedEvent event )
       {
-        IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+        final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
         resourceSelectionChanged( (IResource) selection.getFirstElement() ); // allow
         // null
       }
@@ -194,12 +192,12 @@ public class ResourceSelectionGroup extends Composite
     treeViewer.addDoubleClickListener( new IDoubleClickListener()
     {
       @Override
-      public void doubleClick( DoubleClickEvent event )
+      public void doubleClick( final DoubleClickEvent event )
       {
-        ISelection selection = event.getSelection();
+        final ISelection selection = event.getSelection();
         if( selection instanceof IStructuredSelection )
         {
-          Object item = ((IStructuredSelection) selection).getFirstElement();
+          final Object item = ((IStructuredSelection) selection).getFirstElement();
           if( treeViewer.getExpandedState( item ) )
             treeViewer.collapseToLevel( item, 1 );
           else
@@ -219,7 +217,7 @@ public class ResourceSelectionGroup extends Composite
     IPath resourcePath = null;
     if( m_allowNewResourceName )
     {
-      String pathName = resourceNameField.getText();
+      final String pathName = resourceNameField.getText();
       if( pathName == null || pathName.length() < 1 )
       {
         // nothing
@@ -256,7 +254,7 @@ public class ResourceSelectionGroup extends Composite
   /**
    * Sets the selected existing container.
    */
-  public void setSelectedResource( IResource resource )
+  public void setSelectedResource( final IResource resource )
   {
     selectedResource = resource;
 
