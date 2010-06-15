@@ -34,7 +34,7 @@ public class ImportGridHandler extends AbstractHandler implements IHandler
 
     final ICoverageCollection cc = findCoverageCollection( firstElement );
     if( cc == null )
-      throw new ExecutionException( Messages.getString("org.kalypso.gml.ui.handler.ImportGridHandler0"), null ); //$NON-NLS-1$
+      throw new ExecutionException( Messages.getString( "org.kalypso.gml.ui.handler.ImportGridHandler0" ), null ); //$NON-NLS-1$
 
     // Choose target folder
     final URL gmlContext = cc.getFeature().getWorkspace().getContext();
@@ -58,7 +58,5 @@ public class ImportGridHandler extends AbstractHandler implements IHandler
 
     return null;
   }
-
-
 
 }

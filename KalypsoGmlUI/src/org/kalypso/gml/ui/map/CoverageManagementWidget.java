@@ -44,6 +44,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -53,6 +54,8 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 import org.apache.commons.lang.math.Range;
+import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -98,6 +101,7 @@ import org.jfree.util.ObjectUtils;
 import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
@@ -146,6 +150,7 @@ import org.kalypsodeegree.graphics.sld.SldHelper;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -1129,7 +1134,10 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     final Runnable refreshRunnable = m_refreshCoverageViewerRunnable;
 
     final Shell shell = event.display.getActiveShell();
-    final AddRectifiedGridCoveragesWizard wizard = new AddRectifiedGridCoveragesWizard( coverages, m_gridFolder, m_allowUserChangeGridFolder );
+
+    final IContainer gridFolder = determineGridFolder();
+
+    final AddRectifiedGridCoveragesWizard wizard = new AddRectifiedGridCoveragesWizard( coverages, gridFolder, m_allowUserChangeGridFolder );
     final WizardDialog wizardDialog = new WizardDialog( shell, wizard );
     if( wizardDialog.open() != Window.OK )
       return;
@@ -1171,6 +1179,37 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
     final IStatus status = ProgressUtilities.busyCursorWhile( operation );
     ErrorDialog.openError( shell, Messages.getString( "org.kalypso.gml.ui.map.CoverageManagementWidget.11" ), Messages.getString( "org.kalypso.gml.ui.map.CoverageManagementWidget.19" ), status ); //$NON-NLS-1$ //$NON-NLS-2$
+  }
+
+  private IContainer determineGridFolder( )
+  {
+    if( m_gridFolder != null )
+      return m_gridFolder;
+
+    if( m_allowUserChangeGridFolder == false )
+      return null;
+
+    if( m_theme == null )
+      return null;
+
+    final FeatureList featureList = m_theme.getFeatureList();
+    if( featureList == null )
+      return null;
+
+    final Feature parentFeature = featureList.getParentFeature();
+    if( parentFeature == null )
+      return null;
+
+    final GMLWorkspace workspace = parentFeature.getWorkspace();
+    if( workspace == null )
+      return null;
+
+    final URL context = workspace.getContext();
+    final IFile themeDataFile = ResourceUtilities.findFileFromURL( context );
+    if( themeDataFile != null )
+      return themeDataFile.getParent();
+
+    return null;
   }
 
   private void handleCoveragesAdded( final ICoverage[] newCoverages )
