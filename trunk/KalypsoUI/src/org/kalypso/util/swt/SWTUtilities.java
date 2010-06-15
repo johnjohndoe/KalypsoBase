@@ -48,6 +48,8 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 
 /**
  * @author doemming
@@ -119,7 +121,6 @@ public final class SWTUtilities
     GRID_DATA_MAP.putAll( SWT_MAP );
   }
 
-
   public static int createStyleFromString( final String key )
   {
     return SWTUtilities.createStyleFromString( SWT_MAP, key );
@@ -169,6 +170,25 @@ public final class SWTUtilities
     tmpGC.dispose();
     tmpImage.dispose();
     return textExtent;
+  }
+
+  /**
+   * Enables/disables all controls in a hirarchy of controls.<br>
+   * Composite are not disabled (but their chidlren are), so we still get mouse events on them.
+   */
+  public static void enableControlNoComposites( final Control control, final boolean enabled )
+  {
+    if( control instanceof Composite )
+    {
+      final Control[] children = ((Composite) control).getChildren();
+      for( final Control child : children )
+        enableControlNoComposites( child, enabled );
+    }
+
+    // NICE+TRICKY: only disable non-composite, so we can still select the entry by just clicking into the group
+    // see the mouse listener stuff above
+    if( !(control instanceof Composite) )
+      control.setEnabled( enabled );
   }
 
 }
