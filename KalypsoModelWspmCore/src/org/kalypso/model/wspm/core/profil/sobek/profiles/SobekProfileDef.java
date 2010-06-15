@@ -364,7 +364,7 @@ public class SobekProfileDef
     StringBuilder line = new StringBuilder();
 
     /* Build the block. */
-    line.append( String.format( Locale.PRC, "CRDS id '%s' nm '%s' ty %d wm %.2f w1 %.2f w2 %.2f sw %.2f gl %.2f gu %d%n lt lw%n", m_id, m_nm, m_ty, m_wm, m_w1, m_w2, m_sw, m_gl, m_gu ) );
+    line.append( String.format( Locale.PRC, "CRDS id '%s' nm '%s' ty %d wm %.2f w1 %.2f w2 %.2f sw %.2f gl %.2f gu %d lt lw%n", m_id, m_nm, m_ty, m_wm, m_w1, m_w2, m_sw, m_gl, m_gu ) );
     line.append( String.format( Locale.PRC, "TBLE%n" ) );
     for( int i = 0; i < m_profileHeights.size(); i++ )
     {
