@@ -5,17 +5,17 @@
       version="2.2.0.qualifier"
       provider-name="kalypso.sourceforge.net">
 
-   <description url="http://www.example.com/description">
+   <description url="">
       This feature contains the german translation plug-ins of those eclipse plug-ins, Kalypso depends on.
 
 An extra feature was needed, as Kalypso only needs a subset of Eclipse Platform, but the official babel feature contain all its fragments.
    </description>
 
-   <copyright url="http://www.example.com/copyright">
+   <copyright url="">
       [Enter Copyright Description here.]
    </copyright>
 
-   <license url="http://www.example.com/license">
+   <license url="">
       [Enter License Description here.]
    </license>
 
@@ -55,22 +55,6 @@ An extra feature was needed, as Kalypso only needs a subset of Eclipse Platform,
          id="org.eclipse.compare.core.nl_de"
          download-size="2421"
          install-size="2421"
-         version="3.6.0.v20100515043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.compare.examples.nl_de"
-         download-size="2402"
-         install-size="2402"
-         version="3.6.0.v20100515043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.compare.examples.xml.nl_de"
-         download-size="3596"
-         install-size="3596"
          version="3.6.0.v20100515043401"
          fragment="true"
          unpack="false"/>
@@ -311,14 +295,6 @@ An extra feature was needed, as Kalypso only needs a subset of Eclipse Platform,
          id="org.eclipse.debug.core.nl_de"
          download-size="7158"
          install-size="7158"
-         version="3.6.0.v20100515043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.debug.examples.ui.nl_de"
-         download-size="2379"
-         install-size="2379"
          version="3.6.0.v20100515043401"
          fragment="true"
          unpack="false"/>
@@ -804,14 +780,6 @@ An extra feature was needed, as Kalypso only needs a subset of Eclipse Platform,
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.jface.examples.databinding.nl_de"
-         download-size="1406"
-         install-size="1406"
-         version="3.6.0.v20100515043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.jface.nl_de"
          download-size="6330"
          install-size="6330"
@@ -956,14 +924,6 @@ An extra feature was needed, as Kalypso only needs a subset of Eclipse Platform,
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.sdk.examples.nl_de"
-         download-size="1719"
-         install-size="1719"
-         version="3.6.0.v20100515043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.sdk.nl_de"
          download-size="2747"
          install-size="2747"
@@ -996,70 +956,6 @@ An extra feature was needed, as Kalypso only needs a subset of Eclipse Platform,
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.swt.examples.browser.demos.nl_de"
-         download-size="2146"
-         install-size="2146"
-         version="3.6.0.v20100515043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.swt.examples.browser.nl_de"
-         download-size="2096"
-         install-size="2096"
-         version="3.6.0.v20100515043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.swt.examples.controls.nl_de"
-         download-size="2129"
-         install-size="2129"
-         version="3.6.0.v20100515043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.swt.examples.launcher.nl_de"
-         download-size="2468"
-         install-size="2468"
-         version="3.6.0.v20100515043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.swt.examples.layouts.nl_de"
-         download-size="2115"
-         install-size="2115"
-         version="3.6.0.v20100515043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.swt.examples.nl_de"
-         download-size="19280"
-         install-size="19280"
-         version="3.6.0.v20100515043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.swt.examples.ole.win32.nl_de"
-         download-size="2554"
-         install-size="2554"
-         version="3.6.0.v20100515043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.swt.examples.paint.nl_de"
-         download-size="2290"
-         install-size="2290"
-         version="3.6.0.v20100515043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.swt.nl_de"
          download-size="2880"
          install-size="2880"
@@ -1087,14 +983,6 @@ An extra feature was needed, as Kalypso only needs a subset of Eclipse Platform,
          id="org.eclipse.team.core.nl_de"
          download-size="4545"
          install-size="4545"
-         version="3.6.0.v20100515043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.team.examples.filesystem.nl_de"
-         download-size="3364"
-         install-size="3364"
          version="3.6.0.v20100515043401"
          fragment="true"
          unpack="false"/>
@@ -1159,70 +1047,6 @@ An extra feature was needed, as Kalypso only needs a subset of Eclipse Platform,
          id="org.eclipse.ui.editors.tests.nl_de"
          download-size="1403"
          install-size="1403"
-         version="3.6.0.v20100515043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.ui.examples.contributions.nl_de"
-         download-size="3324"
-         install-size="3324"
-         version="3.6.0.v20100515043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.ui.examples.fieldassist.nl_de"
-         download-size="3756"
-         install-size="3756"
-         version="3.6.0.v20100515043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.ui.examples.javaeditor.nl_de"
-         download-size="3829"
-         install-size="3829"
-         version="3.6.0.v20100515043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.ui.examples.multipageeditor.nl_de"
-         download-size="2447"
-         install-size="2447"
-         version="3.6.0.v20100515043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.ui.examples.propertysheet.nl_de"
-         download-size="3341"
-         install-size="3341"
-         version="3.6.0.v20100515043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.ui.examples.readmetool.nl_de"
-         download-size="4484"
-         install-size="4484"
-         version="3.6.0.v20100515043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.ui.examples.undo.nl_de"
-         download-size="2923"
-         install-size="2923"
-         version="3.6.0.v20100515043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.ui.examples.views.properties.tabbed.article.nl_de"
-         download-size="1496"
-         install-size="1496"
          version="3.6.0.v20100515043401"
          fragment="true"
          unpack="false"/>
