@@ -47,9 +47,16 @@ import java.util.TreeSet;
 
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
+import org.kalypso.model.wspm.core.util.WspmGeometryUtilities;
 import org.kalypso.model.wspm.core.util.WspmProfileHelper;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
+import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
+
+import com.vividsolutions.jts.geom.LineString;
 
 /**
  * @author Dirk Kuch
@@ -236,6 +243,21 @@ public class ProfileWrapper
 
     return new ProfilePointWrapper( result.get( result.size() - 1 ) );
 
+  }
+
+  public LineString getGeometry( ) throws GM_Exception
+  {
+    final String crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
+
+    final GM_Curve profileCurve = WspmGeometryUtilities.createProfileSegment( m_profile, crs, null );
+    final LineString profileLineString = (LineString) JTSAdapter.export( profileCurve );
+
+    return profileLineString;
+  }
+
+  public IProfil getProfile( )
+  {
+    return m_profile;
   }
 
 }
