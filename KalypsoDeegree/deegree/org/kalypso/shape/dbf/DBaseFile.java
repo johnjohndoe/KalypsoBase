@@ -42,8 +42,7 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.charset.Charset;
 
-import junit.framework.Assert;
-
+import org.eclipse.core.runtime.Assert;
 import org.kalypso.shape.FileMode;
 
 /**
@@ -161,7 +160,7 @@ public class DBaseFile
     fields.writeRecord( os, data, m_charset );
     out.flush();
 
-    Assert.assertEquals( recordLength, out.size() );
+    Assert.isTrue( recordLength == out.size() );
 
     return out.toByteArray();
   }
