@@ -198,6 +198,11 @@ public class SobekProfileDat
     return m_ls;
   }
 
+  /**
+   * This function validates the contained data.
+   * 
+   * @return A status.
+   */
   public IStatus validate( )
   {
     if( m_id == null || m_id.length() == 0 )
@@ -209,16 +214,15 @@ public class SobekProfileDat
     if( m_rl == null )
       return new Status( IStatus.ERROR, KalypsoModelWspmCorePlugin.getID(), "The reference level 1 is mandatory..." );
 
-    // TODO Further checks...
-
     return new Status( IStatus.OK, KalypsoModelWspmCorePlugin.getID(), "OK" );
   }
 
   /**
-   * @see java.lang.Object#toString()
+   * This function serializes the data for the file 'profile.dat'.
+   * 
+   * @return The data for the file 'profile.dat'.
    */
-  @Override
-  public String toString( )
+  public String serialize( )
   {
     /* Create a string builder. */
     StringBuilder line = new StringBuilder();

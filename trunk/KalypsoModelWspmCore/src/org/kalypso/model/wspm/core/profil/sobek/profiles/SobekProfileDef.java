@@ -41,6 +41,7 @@
 package org.kalypso.model.wspm.core.profil.sobek.profiles;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -341,6 +342,11 @@ public class SobekProfileDef
     return m_gu;
   }
 
+  /**
+   * This function validates the contained data.
+   * 
+   * @return A status.
+   */
   public IStatus validate( )
   {
     if( m_id == null || m_id.length() == 0 )
@@ -349,36 +355,122 @@ public class SobekProfileDef
     if( m_nm == null || m_nm.length() == 0 )
       return new Status( IStatus.ERROR, KalypsoModelWspmCorePlugin.getID(), "The name of the cross section definition is mandatory..." );
 
-    // TODO Further checks...
-
     return new Status( IStatus.OK, KalypsoModelWspmCorePlugin.getID(), "OK" );
   }
 
   /**
-   * @see java.lang.Object#toString()
+   * This function serializes the data for the file 'profile.def'.
+   * 
+   * @return The data for the file 'profile.def'.
    */
-  @Override
-  public String toString( )
+  public String serialize( )
+  {
+    /* Create warnings for each sobek profile height. */
+    List<SobekProfileWarning> profileWarnings = new ArrayList<SobekProfileWarning>();
+
+    /* Check all heights, full widths and flow widths. */
+    double lastHeight = -1.0;
+    double lastFullWidth = -1.0;
+    double lastFlowWidth = -1.0;
+    for( int i = 0; i < m_profileHeights.size(); i++ )
+    {
+      /* Get the sobek profile height. */
+      SobekProfileHeight profileHeight = m_profileHeights.get( i );
+
+      /* Create a sobek profile warning. */
+      /* It will be empty. */
+      SobekProfileWarning profileWarning = new SobekProfileWarning();
+
+      /* Get the values. */
+      double height = profileHeight.getHeight().doubleValue();
+      double fullWidth = profileHeight.getFullWidth().doubleValue();
+      double flowWidth = profileHeight.getFlowWidth().doubleValue();
+
+      /* Create a warning. */
+      if( height < lastHeight || fullWidth < lastFullWidth || flowWidth < lastFlowWidth )
+        profileWarning.addWarning( String.format( Locale.PRC, "Check current line with previous line: %f>=%f %f>=%f %f>=%f", height, lastHeight, fullWidth, lastFullWidth, flowWidth, lastFlowWidth ) );
+
+      /* Create a warning. */
+      if( fullWidth < flowWidth )
+        profileWarning.addWarning( String.format( Locale.PRC, "Flow width (%f) is larger than full width (%f)", flowWidth, fullWidth ) );
+
+      /* Store the warning. */
+      profileWarnings.add( profileWarning );
+
+      /* The current values will be the used for comparison in the next loop. */
+      lastHeight = height;
+      lastFullWidth = fullWidth;
+      lastFlowWidth = flowWidth;
+    }
+
+    BigDecimal w2 = m_w2;
+    double width = m_wm.doubleValue() + m_w1.doubleValue() + m_w2.doubleValue();
+    double diff = width - lastFlowWidth;
+    if( Math.abs( diff ) > 0.0001 )
+    {
+      /* Adjust the width of the flood plain 2. */
+      w2 = new BigDecimal( lastFlowWidth - (m_wm.doubleValue() + m_w1.doubleValue()) );
+
+      /* Add a warning in the last sobek profile warning. */
+      SobekProfileWarning profileWarning = profileWarnings.get( profileWarnings.size() - 1 );
+      profileWarning.addWarning( String.format( Locale.PRC, "Adjusted w2 (now %f) because: wm + w1 + w2 (%f) != flow width (%f)", w2, width, lastFlowWidth ) );
+    }
+
+    /* Create a string builder. */
+    StringBuilder line = new StringBuilder();
+
+    /* Serialize. */
+    line.append( serializeCrdsStart( m_id, m_nm, m_ty, m_wm, m_w1, w2, m_sw, m_gl, m_gu ) );
+    line.append( serializeTable( m_profileHeights, profileWarnings ) );
+    line.append( serializeDikes( m_dk, m_dc, m_db, m_df, m_dt ) );
+    line.append( serializeCrdsEnd() );
+
+    return line.toString();
+  }
+
+  private String serializeCrdsStart( String id, String nm, int ty, BigDecimal wm, BigDecimal w1, BigDecimal w2, BigDecimal sw, BigDecimal gl, int gu )
+  {
+    return String.format( Locale.PRC, "CRDS id '%s' nm '%s' ty %d wm %.2f w1 %.2f w2 %.2f sw %.2f gl %.2f gu %d lt lw%n", id, nm, ty, wm, w1, w2, sw, gl, gu );
+  }
+
+  private String serializeTable( List<SobekProfileHeight> profileHeights, List<SobekProfileWarning> profileWarnings )
   {
     /* Create a string builder. */
     StringBuilder line = new StringBuilder();
 
-    /* Build the block. */
-    line.append( String.format( Locale.PRC, "CRDS id '%s' nm '%s' ty %d wm %.2f w1 %.2f w2 %.2f sw %.2f gl %.2f gu %d lt lw%n", m_id, m_nm, m_ty, m_wm, m_w1, m_w2, m_sw, m_gl, m_gu ) );
+    /* Build the table. */
     line.append( String.format( Locale.PRC, "TBLE%n" ) );
-    for( int i = 0; i < m_profileHeights.size(); i++ )
+
+    /* Iterate through the sobek profile heights. */
+    for( int i = 0; i < profileHeights.size(); i++ )
     {
-      SobekProfileHeight profileHeight = m_profileHeights.get( i );
+      /* Get the elements. */
+      SobekProfileHeight profileHeight = profileHeights.get( i );
+      SobekProfileWarning profileWarning = profileWarnings.get( i );
+
+      /* Get the values. */
       BigDecimal height = profileHeight.getHeight();
       BigDecimal fullWidth = profileHeight.getFullWidth();
       BigDecimal flowWidth = profileHeight.getFlowWidth();
-      line.append( String.format( Locale.PRC, "%.2f %.2f %.2f <%n", height, fullWidth, flowWidth ) );
+      String warning = profileWarning.serialize();
+
+      /* Add the line. */
+      line.append( String.format( Locale.PRC, "%.2f %.2f %.2f <%s%n", height, fullWidth, flowWidth, warning ) );
     }
+
+    /* Finish the table. */
     line.append( String.format( Locale.PRC, "tble%n" ) );
-    line.append( String.format( Locale.PRC, "dk %d dc %.2f db %.2f df %.2f dt %.2f%n", m_dk, m_dc, m_db, m_df, m_dt ) );
-    // line.append( String.format( Locale.PRC, "gl %.2f gu %d%n", m_gl, m_gu ) );
-    line.append( String.format( Locale.PRC, "crds" ) );
 
     return line.toString();
+  }
+
+  private String serializeDikes( int dk, BigDecimal dc, BigDecimal db, BigDecimal df, BigDecimal dt )
+  {
+    return String.format( Locale.PRC, "dk %d dc %.2f db %.2f df %.2f dt %.2f%n", dk, dc, db, df, dt );
+  }
+
+  private String serializeCrdsEnd( )
+  {
+    return String.format( Locale.PRC, "crds" );
   }
 }

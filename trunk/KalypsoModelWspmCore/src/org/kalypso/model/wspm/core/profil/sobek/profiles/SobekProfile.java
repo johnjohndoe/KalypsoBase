@@ -96,8 +96,6 @@ public class SobekProfile
     if( !di.equals( id ) )
       return new Status( IStatus.ERROR, KalypsoModelWspmCorePlugin.getID(), "The ids of the cross section definition does not match..." );
 
-    // TODO Further checks...
-
     return new Status( IStatus.OK, KalypsoModelWspmCorePlugin.getID(), "OK" );
   }
 
@@ -108,7 +106,7 @@ public class SobekProfile
    */
   public String serializeProfileDat( )
   {
-    return m_profileDat.toString();
+    return m_profileDat.serialize();
   }
 
   /**
@@ -118,6 +116,6 @@ public class SobekProfile
    */
   public String serializeProfileDef( )
   {
-    return m_profileDef.toString();
+    return m_profileDef.serialize();
   }
 }
