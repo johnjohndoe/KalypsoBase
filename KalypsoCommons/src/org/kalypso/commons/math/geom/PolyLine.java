@@ -10,14 +10,12 @@ import org.kalypso.commons.math.LinearEquation;
 import org.kalypso.commons.math.Range;
 import org.kalypso.contribs.java.util.DoubleComparator;
 
-
 /**
- * Represents a curve made of lines, each of them being connected together, except (but it can also
- * be the case) for the first and the last lines.
+ * Represents a curve made of lines, each of them being connected together, except (but it can also be the case) for the
+ * first and the last lines.
  * <p>
- * NOTE: the class is currently under redesign, points are stored as Point2D and also as
- * coordinates. This is maybe not the best solution. But it allows us to perform some operations
- * more rapidly.
+ * NOTE: the class is currently under redesign, points are stored as Point2D and also as coordinates. This is maybe not
+ * the best solution. But it allows us to perform some operations more rapidly.
  * </p>
  * 
  * @author schlienger
@@ -176,9 +174,8 @@ public class PolyLine
   }
 
   /**
-   * Shortens this polyline and returns new one. It only takes the values in the given range of the
-   * X Axis. If from and/or to is/are not present (Double.NaN), it computes the missing points and
-   * insert them into the new line.
+   * Shortens this polyline and returns new one. It only takes the values in the given range of the X Axis. If from
+   * and/or to is/are not present (Double.NaN), it computes the missing points and insert them into the new line.
    * 
    * @param from
    * @param to
@@ -246,11 +243,12 @@ public class PolyLine
   }
 
   /**
-   * return the Y for a given X. Interpolation is done when:<br> - no point.X is found that equals
-   * this X and<br> - X is not bigger than all point.X
+   * return the Y for a given X. Interpolation is done when:<br>
+   * - no point.X is found that equals this X and<br>
+   * - X is not bigger than all point.X
    * 
-   * @param X -
-   *          for which to find a Y
+   * @param X
+   *          - for which to find a Y
    * @return - either existing Y or linear interpolated Y
    */
   public double getYFor( double X )
@@ -259,15 +257,14 @@ public class PolyLine
   }
 
   /**
-   * Gibt Y Wert an einer bestimmten Stelle der PolyLine zurück. Der Wert wir linear zwischen zwei
-   * Stützpunkten interpoliert. Funktioniert nur, wenn x-Wert austeigend sortiert.
+   * Gibt Y Wert an einer bestimmten Stelle der PolyLine zurück. Der Wert wir linear zwischen zwei Stützpunkten
+   * interpoliert. Funktioniert nur, wenn x-Wert austeigend sortiert.
    * 
    * @param X
    *          Für diesen x Wert wird der y-Wert gesucht
    * @param bExtrapol
-   *          Für Punkte ausserhalb der Polylinie: falls true wird der Rand aus den beiden
-   *          letzten/ersten Punkten extrapoliert, bei false wird die PolyLine wagerecht mit der
-   *          Höhe des ersten/letzten Punktes fortgesetzt.
+   *          Für Punkte ausserhalb der Polylinie: falls true wird der Rand aus den beiden letzten/ersten Punkten
+   *          extrapoliert, bei false wird die PolyLine wagerecht mit der Höhe des ersten/letzten Punktes fortgesetzt.
    * @return Interpoliert y-Wert für X
    */
   public double getYFor( double X, boolean bExtrapol )
@@ -317,8 +314,8 @@ public class PolyLine
   }
 
   /**
-   * UGLY: same method as getYFor(), but returns a Point2D instead. This code could be ameliorated
-   * by mergin both methods.
+   * UGLY: same method as getYFor(), but returns a Point2D instead. This code could be ameliorated by mergin both
+   * methods.
    * 
    * @param X
    * @param bExtrapol
@@ -374,8 +371,7 @@ public class PolyLine
   /**
    * @see PolyLine#area(double[], PolyLine, PolyLine, double, double, int)
    */
-  public static double area( final PolyLine p1, final PolyLine p2, final double from,
-      final double to, final int mode )
+  public static double area( final PolyLine p1, final PolyLine p2, final double from, final double to, final int mode )
   {
     return area( p1.shorten( from, to ), p2.shorten( from, to ), mode );
   }
@@ -384,8 +380,8 @@ public class PolyLine
    * Computes the area between two polyline
    * 
    * @param xe
-   *          [null allowed] the refined X-coords of both p1 and p2, need to be sorted. When null is
-   *          given, then xe is computed internally
+   *          [null allowed] the refined X-coords of both p1 and p2, need to be sorted. When null is given, then xe is
+   *          computed internally
    * @param p1
    * @param p2
    * @param mode
@@ -397,7 +393,7 @@ public class PolyLine
   {
     // mode verification
     if( (mode != OVER) && (mode != UNDER) && (mode != ALL) )
-      throw new IllegalArgumentException( Messages.getString("org.kalypso.commons.math.geom.PolyLine.0") ); //$NON-NLS-1$
+      throw new IllegalArgumentException( Messages.getString( "org.kalypso.commons.math.geom.PolyLine.0" ) ); //$NON-NLS-1$
 
     // if no refined coordinates are given, we compute them here
     double[] xe = PolyLine.refinePolylines( p1, p2 );
@@ -405,11 +401,11 @@ public class PolyLine
     xe = org.kalypso.contribs.java.util.Arrays.removeDupicates( xe, p1.m_delta );
 
     // trapeze and points used to compute area
-    Trapeze trap = new Trapeze();
-    Point2D pt11 = new Point2D.Double();
-    Point2D pt12 = new Point2D.Double();
-    Point2D pt21 = new Point2D.Double();
-    Point2D pt22 = new Point2D.Double();
+// Trapeze trap = new Trapeze();
+// Point2D pt11 = new Point2D.Double();
+// Point2D pt12 = new Point2D.Double();
+// Point2D pt21 = new Point2D.Double();
+// Point2D pt22 = new Point2D.Double();
 
     double area = 0;
 
@@ -432,18 +428,14 @@ public class PolyLine
       // ( ( y21 - y22 ) >= -Y_PREC ) ) ||
       // ( ( mode == UNDER ) && ( ( y12 - y11 ) >= -Y_PREC ) &&
       // ( ( y22 - y21 ) >= -Y_PREC ) ) || ( mode == ALL ) )
-      if( ((mode == OVER) && (dc.compare( y11, y12 ) >= 0) && (dc.compare( y21, y22 ) >= 0))
-          || ((mode == UNDER) && (dc.compare( y12, y11 ) >= 0) && (dc.compare( y22, y21 ) >= 0))
-          || (mode == ALL) )
+      if( ((mode == OVER) && (dc.compare( y11, y12 ) >= 0) && (dc.compare( y21, y22 ) >= 0)) || ((mode == UNDER) && (dc.compare( y12, y11 ) >= 0) && (dc.compare( y22, y21 ) >= 0)) || (mode == ALL) )
       {
-        pt11.setLocation( x1, y11 );
-        pt12.setLocation( x1, y12 );
+        Point2D pt11 = new Point2D.Double( x1, y11 );
+        Point2D pt12 = new Point2D.Double( x1, y12 );
+        Point2D pt21 = new Point2D.Double( x2, y21 );
+        Point2D pt22 = new Point2D.Double( x2, y22 );
 
-        pt21.setLocation( x2, y21 );
-        pt22.setLocation( x2, y22 );
-
-        trap.setPoints( pt11, pt12, pt21, pt22 );
-
+        Trapeze trap = new Trapeze( pt11, pt12, pt21, pt22 );
         area += trap.area();
       }
     }
@@ -489,8 +481,7 @@ public class PolyLine
       }
 
       int startJ = Math.max( 0, Math.abs( Arrays.binarySearch( other.m_x, x11 ) ) - 2 );
-      int stopJ = Math
-          .min( other.m_x.length, Math.abs( Arrays.binarySearch( other.m_x, x12 ) ) + 2 );
+      int stopJ = Math.min( other.m_x.length, Math.abs( Arrays.binarySearch( other.m_x, x12 ) ) + 2 );
 
       for( int j = startJ; j < (stopJ - 1); j++ )
       {
@@ -524,8 +515,8 @@ public class PolyLine
   }
 
   /**
-   * Returns the intersections (PolyLines) where pOther intersects pMaster. Only the intersections
-   * of pOther that correspond to mode in regard to pMaster will be returned.
+   * Returns the intersections (PolyLines) where pOther intersects pMaster. Only the intersections of pOther that
+   * correspond to mode in regard to pMaster will be returned.
    * 
    * @param pMaster
    * @param pOther
@@ -554,12 +545,11 @@ public class PolyLine
     if( ints.length == 0 )
     {
       /*
-       * no intersection points, let check the position of the Y-coord for one valid point and
-       * decide whether or not to build polygone
+       * no intersection points, let check the position of the Y-coord for one valid point and decide whether or not to
+       * build polygone
        */
       if( isModeVerified( mode, pMaster, pOther ) )
-        return new PolyLine[]
-        { pOther };
+        return new PolyLine[] { pOther };
 
       return new PolyLine[0];
     }
@@ -616,9 +606,8 @@ public class PolyLine
   }
 
   /**
-   * builds the necessary polygones to represent the area between the two polylines. Depending on
-   * the mode, it might either use all the points of the polylines or just the ones that correspond
-   * to the Y-coord positioning.
+   * builds the necessary polygones to represent the area between the two polylines. Depending on the mode, it might
+   * either use all the points of the polylines or just the ones that correspond to the Y-coord positioning.
    * 
    * @param p1
    *          the first polyline
@@ -635,8 +624,7 @@ public class PolyLine
   {
     if( mode == PolyLine.ALL )
 
-      return new PolyGone[]
-      { buildPolyGone( p1, p2 ) };
+      return new PolyGone[] { buildPolyGone( p1, p2 ) };
 
     else if( (mode == PolyLine.OVER) || (mode == PolyLine.UNDER) )
     {
@@ -648,12 +636,11 @@ public class PolyLine
       if( xis.length == 0 )
       {
         /*
-         * no intersection points, let check the position of the Y-coord for one valid point and
-         * decide whether or not to build polygone
+         * no intersection points, let check the position of the Y-coord for one valid point and decide whether or not
+         * to build polygone
          */
         if( isModeVerified( mode, p1, p2 ) )
-          return new PolyGone[]
-          { buildPolyGone( p1, p2 ) };
+          return new PolyGone[] { buildPolyGone( p1, p2 ) };
 
         return new PolyGone[0];
       }
@@ -690,7 +677,7 @@ public class PolyLine
       return vPols.toArray( new PolyGone[vPols.size()] );
     }
     else
-      throw new IllegalArgumentException( Messages.getString("org.kalypso.commons.math.geom.PolyLine.1") ); //$NON-NLS-1$
+      throw new IllegalArgumentException( Messages.getString( "org.kalypso.commons.math.geom.PolyLine.1" ) ); //$NON-NLS-1$
   }
 
   /**
@@ -712,8 +699,8 @@ public class PolyLine
   }
 
   /**
-   * Tells if the polyline placement mode is verified according to the given polylines.
-   * Pre-condition: the given polylines should not intersect themselves.
+   * Tells if the polyline placement mode is verified according to the given polylines. Pre-condition: the given
+   * polylines should not intersect themselves.
    * 
    * @param mode
    * @param p1
@@ -737,8 +724,7 @@ public class PolyLine
       double y1 = p1.getYFor( xs[i] );
       double y2 = p2.getYFor( xs[i] );
 
-      if( (mode == ALL) || ((mode == PolyLine.OVER) && (dc.compare( y1, y2 ) > 0))
-          || ((mode == PolyLine.UNDER) && (dc.compare( y1, y2 ) < 0)) )
+      if( (mode == ALL) || ((mode == PolyLine.OVER) && (dc.compare( y1, y2 ) > 0)) || ((mode == PolyLine.UNDER) && (dc.compare( y1, y2 ) < 0)) )
 
         return true;
     }
@@ -747,8 +733,7 @@ public class PolyLine
   }
 
   /**
-   * Tells if the mode is verified according to the placement of the given polylines, in the range
-   * from-to.<br>
+   * Tells if the mode is verified according to the placement of the given polylines, in the range from-to.<br>
    * 
    * @param mode
    * @param p1
@@ -757,8 +742,7 @@ public class PolyLine
    * @param xTo
    * @return
    */
-  private static boolean isModeVerified( int mode, PolyLine p1, PolyLine p2, double xFrom,
-      double xTo )
+  private static boolean isModeVerified( int mode, PolyLine p1, PolyLine p2, double xFrom, double xTo )
   {
     DoubleComparator dc = new DoubleComparator( p1.m_delta );
 
@@ -766,9 +750,9 @@ public class PolyLine
       return false;
 
     /*
-     * take a point somewhere in the middle of the current segment it is possible that this trick
-     * won't work all the time, for instance if y1 == y2 at x, then we will return false if mode ==
-     * OVER or UNDER. This could be improved, for instance by trying more that one x-coord.
+     * take a point somewhere in the middle of the current segment it is possible that this trick won't work all the
+     * time, for instance if y1 == y2 at x, then we will return false if mode == OVER or UNDER. This could be improved,
+     * for instance by trying more that one x-coord.
      */
     double x = ((xTo - xFrom) / 2) + xFrom;
 
@@ -776,8 +760,7 @@ public class PolyLine
     double y2 = p2.getYFor( x );
 
     // compare the points at this X-coordinate of both polylines
-    if( (mode == ALL) || ((mode == PolyLine.OVER) && (dc.compare( y1, y2 ) > 0))
-        || ((mode == PolyLine.UNDER) && (dc.compare( y1, y2 ) < 0)) )
+    if( (mode == ALL) || ((mode == PolyLine.OVER) && (dc.compare( y1, y2 ) > 0)) || ((mode == PolyLine.UNDER) && (dc.compare( y1, y2 ) < 0)) )
       return true;
 
     return false;
@@ -795,8 +778,8 @@ public class PolyLine
 
   /**
    * Tells whether the X-range of this polyline lies within the given range:<br>
-   * given.range.from &lt;= this.xrange.from &lt;= given.range.to given.range.from &lt;=
-   * this.xrange.to &lt;= given.range.to
+   * given.range.from &lt;= this.xrange.from &lt;= given.range.to given.range.from &lt;= this.xrange.to &lt;=
+   * given.range.to
    * 
    * @param xr
    * @return
@@ -807,8 +790,7 @@ public class PolyLine
   }
 
   /**
-   * Computes the length of the polyline. The length is the sum of the length of each segment that
-   * build this polyline: <br>
+   * Computes the length of the polyline. The length is the sum of the length of each segment that build this polyline: <br>
    * L = S1 + ... + Si + ... + Sn<br>
    * Si = length of segment i
    * 

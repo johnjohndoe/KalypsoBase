@@ -187,7 +187,7 @@ public class SobekModel
 
         /* Validate the profile. */
         IStatus status = profile.validate();
-        if( !status.isOK() )
+        if( status.getSeverity() > IStatus.WARNING )
           throw new CoreException( status );
 
         /* Serialize the data of the profile. */
