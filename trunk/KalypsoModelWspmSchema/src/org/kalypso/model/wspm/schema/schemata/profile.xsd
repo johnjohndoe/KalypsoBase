@@ -47,7 +47,9 @@
         Trapezen wird das Element member definiert. </documentation>
       <appinfo xmlns:kapp="org.kalypso.appinfo">
         <kapp:functionProperty kapp:functionId="org.kalypso.model.wspm.functionProperty.profileGeometry" kapp:property="prof:profileLocation" />
+        <!-- 
         <kapp:functionProperty kapp:functionId="org.kalypso.model.wspm.functionProperty.ProfileThroughputLocationCreator" kapp:property="prof:profileThroughputLocation" />
+         -->
       </appinfo>
     </annotation>
     <complexContent>
@@ -111,6 +113,7 @@
               </documentation>
             </annotation>
           </element>
+          <!-- 
           <element name="profileThroughputLocation" type="gml:LineStringPropertyType" minOccurs="0" maxOccurs="1">
             <annotation>
               <appinfo>This property is backed by the profile-observation.</appinfo>
@@ -126,6 +129,7 @@
               </documentation>
             </annotation>
           </element>
+           -->
           <element name="member" type="om:AbstractObservationPropertyType" minOccurs="0" maxOccurs="unbounded">
             <annotation>
               <documentation xml:lang="de"> Die Liste der zusätzliche Observationen: z.B. Durchlässe, Maulprofile, Kreise und Trapezen können hiermit abgebildet werden. </documentation>

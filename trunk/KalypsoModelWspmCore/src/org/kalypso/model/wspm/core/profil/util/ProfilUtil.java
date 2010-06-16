@@ -62,8 +62,10 @@ import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.i18n.Messages;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
+import org.kalypso.model.wspm.core.profil.IllegalProfileOperationException;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
@@ -1070,4 +1072,41 @@ public class ProfilUtil
   {
     return getValuesFor( profil.getPoints(), component, type );
   }
+
+  /**
+   * This function thins the profile and removes unnecessary points. It uses the Douglas Peucker algorithm.
+   * 
+   * @param profile
+   *          The profile, which should be simplified.
+   * @param allowedDistance
+   *          The allowed distance [m].
+   */
+  public static void simplifyProfile( final IProfil profile, final double allowedDistance ) throws IllegalProfileOperationException
+  {
+    /* Get the profile changes. */
+    final IRecord[] pointsToSimplify = profile.getPoints();
+
+    final IProfilChange[] removeChanges = DouglasPeuckerHelper.reduce( allowedDistance, pointsToSimplify, profile );
+    for( final IProfilChange profilChange : removeChanges )
+      profilChange.doChange( null );
+  }
+
+  /**
+   * This function thins the profile and removes unnecessary points. It uses the Douglas Peucker algorithm.
+   * 
+   * @param profile
+   *          The profile, which should be simplified.
+   * @param allowedDistance
+   *          The allowed distance [m].
+   */
+  public static void simplifyProfile( final IProfil profile, final double allowedDistance, final int startPoint, final int endPoint ) throws IllegalProfileOperationException
+  {
+    /* Get the profile changes. */
+    final IRecord[] pointsToSimplify = profile.getPoints( startPoint, endPoint );
+
+    final IProfilChange[] removeChanges = DouglasPeuckerHelper.reduce( allowedDistance, pointsToSimplify, profile );
+    for( final IProfilChange profilChange : removeChanges )
+      profilChange.doChange( null );
+  }
+
 }
