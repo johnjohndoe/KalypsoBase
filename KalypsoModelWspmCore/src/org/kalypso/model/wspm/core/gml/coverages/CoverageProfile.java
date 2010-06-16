@@ -40,15 +40,19 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.gml.coverages;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import org.eclipse.core.runtime.Assert;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IllegalProfileOperationException;
 import org.kalypso.model.wspm.core.profil.ProfilFactory;
-import org.kalypso.model.wspm.core.profil.util.DouglasPeuckerHelper;
+import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
+import org.kalypso.observation.result.TupleResult;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
@@ -98,8 +102,8 @@ public class CoverageProfile
     if( length == 0 )
       return profile;
 
-    /* STEP 4: Thin the profile. */
-    simplifyProfile( profile, simplifyDistance, 0, length - 1 );
+    /* STEP 4: Simplify the profile. */
+    ProfilUtil.simplifyProfile( profile, simplifyDistance );
 
     return profile;
   }
@@ -189,28 +193,6 @@ public class CoverageProfile
   }
 
   /**
-   * This function thins the profile and removes uneccessary points. It uses the Douglas Peucker algorythm.
-   * 
-   * @param profile
-   *          The profile, which should be thinned.
-   * @param allowedDistance
-   *          The allowed distance [m].
-   */
-  private static void simplifyProfile( final IProfil profile, final double allowedDistance, final int startPoint, final int endPoint ) throws IllegalProfileOperationException
-  {
-    /* Get the profile changes. */
-    final IRecord[] pointsToSimplify = profile.getPoints( startPoint, endPoint );
-
-    final IProfilChange[] removeChanges = DouglasPeuckerHelper.reduce( allowedDistance, pointsToSimplify, profile );
-    if( removeChanges.length == 0 )
-      return;
-
-    /* Perform the changes. */
-    for( final IProfilChange profilChange : removeChanges )
-      profilChange.doChange( null );
-  }
-
-  /**
    * Inserts new points into an existing profile.<br/>
    * 
    * @param insertSign
@@ -227,13 +209,11 @@ public class CoverageProfile
     final int iBreite = profile.indexOfProperty( IWspmConstants.POINT_PROPERTY_BREITE );
     double breite = (Double) point.getValue( iBreite );
 
-    int currentPosition = insertPositition;
+    final List<IRecord> newRecords = new ArrayList<IRecord>( newPoints.length );
 
     Coordinate lastCrd = null;
     for( final Coordinate coordinate : newPoints )
     {
-      if( insertSign >= 0 )
-        currentPosition++;
       if( lastCrd != null )
       {
         final double distance = lastCrd.distance( coordinate );
@@ -243,14 +223,20 @@ public class CoverageProfile
           breite += distance;
 
         final IRecord newPoint = createPoint( profile, coordinate, breite );
-        if( insertSign > 0 )
-          profile.addPoint( newPoint );
-        else
-          profile.addPoint( currentPosition, newPoint );
+        newRecords.add( newPoint );
       }
 
       lastCrd = coordinate;
     }
+
+    final TupleResult result = profile.getResult();
+    if( insertSign < 0 )
+    {
+      Collections.reverse( newRecords );
+      result.addAll( 0, newRecords );
+    }
+    else
+      result.addAll( newRecords );
   }
 
   public static IProfil convertLinestringToEmptyProfile( final GM_Curve curve, final String profileType ) throws GM_Exception
@@ -328,6 +314,6 @@ public class CoverageProfile
     final int start = insertSign == -1 ? 0 : length - simplifiedCords.length;
     final int end = insertSign == -1 ? simplifiedCords.length : length;
 
-    simplifyProfile( profil, simplifyDistance, start, end - 1 );
+    ProfilUtil.simplifyProfile( profil, simplifyDistance, start, end - 1 );
   }
 }
