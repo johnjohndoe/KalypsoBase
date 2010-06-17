@@ -160,7 +160,7 @@ public class DBFField
     output.write( bytes, 0, bytesToWrite );
 
     for( int j = bytesToWrite; j < m_fieldLength; j++ )
-      output.writeByte( (byte) 0 );
+      output.writeByte( (byte) 0x20 );
 
     return bytes;
   }
@@ -169,7 +169,9 @@ public class DBFField
   {
     final byte[] value = new byte[m_fieldLength];
     input.readFully( value );
-    return m_formatter.fromBytes( value, charset );
+    
+    final String asString = new String( value, charset ).trim();
+    return m_formatter.fromString( asString );
   }
 
   public static DBFField read( final DataInput input, final Charset charset ) throws IOException, DBaseException
