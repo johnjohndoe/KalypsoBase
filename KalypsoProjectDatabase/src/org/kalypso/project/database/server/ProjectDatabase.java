@@ -42,7 +42,6 @@ package org.kalypso.project.database.server;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -63,7 +62,6 @@ import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileSystemManager;
 import org.eclipse.core.runtime.IConfigurationElement;
-import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -90,37 +88,29 @@ public class ProjectDatabase implements IProjectDatabase
   {
     try
     {
-      AnnotationConfiguration configure;
 
       final String property = System.getProperty( IProjectDataBaseServerConstant.HIBERNATE_CONFIG_FILE );
       if( property != null && !"".equals( property.trim() ) ) //$NON-NLS-1$
       {
+        AnnotationConfiguration configure = null;
+
         try
         {
           final URL url = new URL( property );
           configure = new AnnotationConfiguration().configure( url );
-        }
-        catch( final HibernateException ex )
-        {
-          System.out.println( String.format( "Configuration error - couldn't find hibernate config file for KalypsoProjectData setup. location: %s", property ) ); //$NON-NLS-1$
-          System.out.println( String.format( "Starting KalypsoProjectDatabase with default configuration!" ) ); //$NON-NLS-1$
 
-          configure = new AnnotationConfiguration().configure();
+          configure.addAnnotatedClass( KalypsoProjectBean.class );
+          configure.addAnnotatedClass( KalypsoProjectBeanPrimaryKey.class );
+          m_factory = configure.buildSessionFactory();
         }
-        catch( final MalformedURLException ex )
+        catch( final Exception ex )
         {
-          System.out.println( String.format( "Configuration error - couldn't find hibernate config file for KalypsoProjectData setup. location: %s", property ) ); //$NON-NLS-1$
-          System.out.println( String.format( "Starting KalypsoProjectDatabase with default configuration!" ) ); //$NON-NLS-1$
+          final String msg = String.format( "Configuration error - couldn't find hibernate config file for KalypsoProjectData setup. location: %s\nStarting KalypsoProjectDatabase with default configuration!", property ); //$NON-NLS-1$
+          System.out.println( msg ); //$NON-NLS-1$
 
-          configure = new AnnotationConfiguration().configure();
+          KalypsoProjectDatabase.getDefault().getLog().log( StatusUtilities.createErrorStatus( msg, ex ) );
         }
       }
-      else
-        configure = new AnnotationConfiguration().configure();
-
-      configure.addAnnotatedClass( KalypsoProjectBean.class );
-      configure.addAnnotatedClass( KalypsoProjectBeanPrimaryKey.class );
-      m_factory = configure.buildSessionFactory();
     }
     catch( final Exception e )
     {
