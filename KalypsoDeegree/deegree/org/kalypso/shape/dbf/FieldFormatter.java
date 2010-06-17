@@ -87,5 +87,5 @@ abstract class FieldFormatter
     }
   }
 
-  public abstract Object fromBytes( byte[] bytes, Charset charset ) throws DBaseException;
+  public abstract Object fromString( String asString ) throws DBaseException;
 }

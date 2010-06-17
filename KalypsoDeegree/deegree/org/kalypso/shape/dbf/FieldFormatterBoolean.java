@@ -42,8 +42,6 @@ package org.kalypso.shape.dbf;
 
 import java.nio.charset.Charset;
 
-import org.eclipse.core.runtime.Assert;
-
 /**
  * @author Gernot Belger
  */
@@ -60,6 +58,8 @@ class FieldFormatterBoolean extends FieldFormatter
     super( null );
   }
 
+  
+  
   /**
    * @see org.kalypsodeegree_impl.io.shpapi.FieldFormatter#toBytes(java.lang.Object, java.nio.charset.Charset)
    */
@@ -81,14 +81,15 @@ class FieldFormatterBoolean extends FieldFormatter
   }
 
   /**
-   * @see org.kalypsodeegree_impl.io.shpapi.FieldFormatter#fromBytes(byte[], java.nio.charset.Charset)
+   * @see org.kalypso.shape.dbf.FieldFormatter#fromString(java.lang.String)
    */
   @Override
-  public Object fromBytes( final byte[] bytes, final Charset charset ) throws DBaseException
+  public Object fromString( final String asString ) throws DBaseException
   {
-    Assert.isTrue( bytes.length == 1 );
-
-    switch( bytes[0] )
+    if( asString == null || asString.isEmpty() )
+      return null;
+    
+    switch( asString.charAt( 0 ) )
     {
       case ' ':
         return null;
@@ -106,9 +107,8 @@ class FieldFormatterBoolean extends FieldFormatter
         return Boolean.TRUE;
 
       default:
-        throw new DBaseException( "Unable to parse boolean value: " + new String( bytes, charset ) );
+        throw new DBaseException( "Unable to parse boolean value: " + asString );
     }
-
   }
 
 }

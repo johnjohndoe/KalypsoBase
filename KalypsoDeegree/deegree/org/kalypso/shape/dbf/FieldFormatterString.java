@@ -42,8 +42,6 @@ package org.kalypso.shape.dbf;
 
 import java.nio.charset.Charset;
 
-import org.apache.commons.lang.ArrayUtils;
-
 /**
  * @author Gernot Belger
  */
@@ -70,14 +68,13 @@ class FieldFormatterString extends FieldFormatter
     return string.getBytes( charset );
   }
 
+  /**
+   * @see org.kalypso.shape.dbf.FieldFormatter#fromString(java.lang.String)
+   */
   @Override
-  public Object fromBytes( final byte[] bytes, final Charset charset )
+  public Object fromString( final String asString ) 
   {
-    final int indexOfNull = ArrayUtils.indexOf( bytes, (byte) 0 );
-    if( indexOfNull != -1 )
-      return new String( bytes, 0, indexOfNull, charset );
-
-    return new String( bytes, charset );
+    return asString;
   }
 
 }

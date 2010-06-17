@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.shape.dbf;
 
-import java.nio.charset.Charset;
 
 /**
  * @author Gernot Belger
@@ -78,12 +77,11 @@ class FieldFormatterNumber extends FieldFormatter
   }
 
   /**
-   * @see org.kalypsodeegree_impl.io.shpapi.FieldFormatter#fromBytes(byte[], java.nio.charset.Charset)
+   * @see org.kalypso.shape.dbf.FieldFormatter#fromString(java.lang.String)
    */
   @Override
-  public Object fromBytes( final byte[] bytes, final Charset charset ) throws DBaseException
+  public Object fromString( final String value ) throws DBaseException
   {
-    final String value = new String( bytes, charset ).trim();
     if( value.isEmpty() )
       return null;
 
