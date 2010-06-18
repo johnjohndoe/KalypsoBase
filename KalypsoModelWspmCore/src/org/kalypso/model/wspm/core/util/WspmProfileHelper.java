@@ -110,8 +110,13 @@ public class WspmProfileHelper
 
     for( final IRecord point : points )
     {
-      final double rechtsWert = (Double) point.getValue( iRechtswert );
-      final double hochWert = (Double) point.getValue( iHochwert );
+      final Object valueRechtswert = point.getValue( iRechtswert );
+      final Object valueHochwert = point.getValue( iHochwert );
+      if( valueRechtswert == null || valueHochwert == null )
+        continue;
+
+      final double rechtsWert = (Double) valueRechtswert;
+      final double hochWert = (Double) valueHochwert;
 
       if( rechtsWert > 0.0 || hochWert > 0.0 )
         /* Memorize the point, because it has a geo reference. */
