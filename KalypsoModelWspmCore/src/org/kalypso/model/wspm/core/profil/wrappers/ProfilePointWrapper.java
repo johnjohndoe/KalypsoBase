@@ -142,4 +142,30 @@ public class ProfilePointWrapper extends AbstractRecordWrapper implements IRecor
     return ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST, this );
   }
 
+  public void setBewuchsAx( final Double bewuchsAx )
+  {
+    final int index = findComponent( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX );
+    if( index < 0 )
+      return;
+
+    getRecord().setValue( index, bewuchsAx );
+  }
+
+  public void setBewuchsAy( final Double bewuchsAy )
+  {
+    final int index = findComponent( IWspmConstants.POINT_PROPERTY_BEWUCHS_AY );
+    if( index < 0 )
+      return;
+
+    getRecord().setValue( index, bewuchsAy );
+  }
+
+  public void setBewuchsDp( final Double bewuchsDp )
+  {
+    final int index = findComponent( IWspmConstants.POINT_PROPERTY_BEWUCHS_DP );
+    if( index < 0 )
+      return;
+
+    getRecord().setValue( index, bewuchsDp );
+  }
 }
