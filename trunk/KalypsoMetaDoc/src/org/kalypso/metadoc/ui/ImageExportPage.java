@@ -96,9 +96,9 @@ public class ImageExportPage extends WizardPage implements IConfigurationListene
 
   protected static final int SIZING_TEXT_FIELD_WIDTH = 100;
 
-  private final static String[] FORMATS = { "gif", "jpeg", "png" };
+  private final static String[] FORMATS = { /* "gif", */"jpeg", "png" };
 
-  private final static String[] EXTENSIONS = { ".gif", ".jpg", ".png" };
+  private final static String[] EXTENSIONS = { /* ".gif", */".jpg", ".png" };
 
   private final IPublishingConfiguration m_conf;
 
@@ -110,7 +110,7 @@ public class ImageExportPage extends WizardPage implements IConfigurationListene
 
   private ComboViewer m_combo;
 
-  private ISelectionChangedListener m_formatSelListener = new ISelectionChangedListener()
+  private final ISelectionChangedListener m_formatSelListener = new ISelectionChangedListener()
   {
     @Override
     public void selectionChanged( final SelectionChangedEvent event )
@@ -119,11 +119,11 @@ public class ImageExportPage extends WizardPage implements IConfigurationListene
     }
   };
 
-  private SelectionListener m_selectionListener = new SelectionAdapter()
+  private final SelectionListener m_selectionListener = new SelectionAdapter()
   {
 
     @Override
-    public void widgetSelected( SelectionEvent e )
+    public void widgetSelected( final SelectionEvent e )
     {
       updateConf();
     }
@@ -138,8 +138,8 @@ public class ImageExportPage extends WizardPage implements IConfigurationListene
   {
     this( conf, pageName, title, titleImage, 0 );
   }
-  
-  public ImageExportPage( final IPublishingConfiguration conf, final String pageName, final String title, final ImageDescriptor titleImage, double hintImageRatio )
+
+  public ImageExportPage( final IPublishingConfiguration conf, final String pageName, final String title, final ImageDescriptor titleImage, final double hintImageRatio )
   {
     super( pageName, title, titleImage );
 
@@ -197,13 +197,13 @@ public class ImageExportPage extends WizardPage implements IConfigurationListene
     final FocusListener updateModifyListener = new FocusListener()
     {
       @Override
-      public void focusLost( FocusEvent e )
+      public void focusLost( final FocusEvent e )
       {
         updateConf();
       }
 
       @Override
-      public void focusGained( FocusEvent e )
+      public void focusGained( final FocusEvent e )
       {
         // only update when focus is lost
 
@@ -249,7 +249,7 @@ public class ImageExportPage extends WizardPage implements IConfigurationListene
     final Label ratioLabel = new Label( optionsGroup, SWT.NONE );
     ratioLabel.setText( "Verhältnis beibehalten:" );
 
-    if( m_heigthToWithImageRatio > 0 )
+// if( m_heigthToWithImageRatio > 0 )
     {
       m_keepImageRatio = new Button( optionsGroup, SWT.CHECK );
       m_keepImageRatio.addSelectionListener( m_selectionListener );
@@ -279,7 +279,7 @@ public class ImageExportPage extends WizardPage implements IConfigurationListene
     if( indexOf != -1 )
       m_conf.setProperty( FileExportTarget.CONF_FILEEXPORT_EXTENSION, EXTENSIONS[indexOf] );
 
-    boolean selection = m_keepImageRatio.getSelection();
+    final boolean selection = m_keepImageRatio.getSelection();
     m_conf.setProperty( CONF_IMAGE_RATIO, selection );
     if( selection )
       msg = "";
@@ -315,10 +315,10 @@ public class ImageExportPage extends WizardPage implements IConfigurationListene
     }
     if( key.equals( CONF_IMAGE_RATIO ) || key == null )
     {
-      boolean selection = m_conf.getBoolean( CONF_IMAGE_RATIO );
+      final boolean selection = m_conf.getBoolean( CONF_IMAGE_RATIO );
       if( selection && m_keepImageRatio != null )
       {
-        Integer width = NumberUtils.parseQuietInteger( m_widthtext.getText() );
+        final Integer width = NumberUtils.parseQuietInteger( m_widthtext.getText() );
         m_heighttext.setText( String.valueOf( (int) (width.intValue() / m_heigthToWithImageRatio) ) );
       }
     }
