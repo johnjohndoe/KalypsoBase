@@ -65,8 +65,8 @@ import org.kalypso.ogc.sensor.template.IObsProvider;
 import org.kalypso.ogc.sensor.template.PlainObsProvider;
 import org.kalypso.ogc.sensor.template.PooledObsProvider;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
-import org.kalypso.template.obsdiagview.TypeAxisMapping;
 import org.kalypso.template.obsdiagview.TypeCurve;
+import org.kalypso.template.obsdiagview.TypeCurve.Mapping;
 import org.kalypso.template.obsdiagview.TypeObservation;
 import org.kalypso.ui.KalypsoGisPlugin;
 
@@ -99,12 +99,12 @@ public class DiagViewCurveXMLLoader extends PoolableObjectWaiter
 
     for( final TypeCurve tcurve : xmlObs.getCurve() )
     {
-      final List<TypeAxisMapping> tmaps = tcurve.getMapping();
+      final List<Mapping> tmaps = tcurve.getMapping();
       final List<AxisMapping> mappings = new ArrayList<AxisMapping>( tmaps.size() );
 
       boolean useThisCurve = true;
 
-      for( final TypeAxisMapping tmap : tmaps )
+      for( final Mapping tmap : tmaps )
       {
         try
         {

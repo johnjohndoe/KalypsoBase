@@ -68,7 +68,6 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.commons.java.util.StringUtilities;
 import org.kalypso.commons.xml.NS;
-import org.kalypso.commons.xml.NSPrefixProvider;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
@@ -82,14 +81,12 @@ import org.kalypso.template.obsdiagview.ObjectFactory;
 import org.kalypso.template.obsdiagview.Obsdiagview;
 import org.kalypso.template.obsdiagview.Obsdiagview.Legend;
 import org.kalypso.template.obsdiagview.TypeAxis;
-import org.kalypso.template.obsdiagview.TypeAxisMapping;
 import org.kalypso.template.obsdiagview.TypeCurve;
+import org.kalypso.template.obsdiagview.TypeCurve.Mapping;
 import org.kalypso.template.obsdiagview.TypeDirection;
 import org.kalypso.template.obsdiagview.TypeObservation;
 import org.kalypso.template.obsdiagview.TypePosition;
 import org.xml.sax.InputSource;
-
-import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
 
 /**
  * Observation Diagramm Template Handling made easy.
@@ -157,21 +154,6 @@ public class DiagViewUtils
     {
       IOUtils.closeQuietly( writer );
     }
-  }
-
-  private static NamespacePrefixMapper getNSPrefixMapper( )
-  {
-    return new NamespacePrefixMapper()
-    {
-      @Override
-      public String getPreferredPrefix( final String namespace, final String suggestion, final boolean required )
-      {
-        // never return null to avoid using of defaultnamespace witch leads to broken xml sometimes. see bug-description
-        // at methode createMarshaller()
-        final NSPrefixProvider nsProvider = NSPrefixProvider.getInstance();
-        return nsProvider.getPreferredPrefix( namespace, suggestion );
-      }
-    };
   }
 
   /**
@@ -305,12 +287,12 @@ public class DiagViewUtils
           }
         }
 
-        final List<TypeAxisMapping> xmlMappings = xmlCurve.getMapping();
+        final List<Mapping> xmlMappings = xmlCurve.getMapping();
 
         final AxisMapping[] mappings = curve.getMappings();
         for( final AxisMapping mapping : mappings )
         {
-          final TypeAxisMapping xmlMapping = ODT_OF.createTypeAxisMapping();
+          final Mapping xmlMapping = ODT_OF.createTypeCurveMapping();
           xmlMapping.setDiagramAxis( mapping.getDiagramAxis().getIdentifier() );
           xmlMapping.setObservationAxis( mapping.getObservationAxis().getName() );
 
