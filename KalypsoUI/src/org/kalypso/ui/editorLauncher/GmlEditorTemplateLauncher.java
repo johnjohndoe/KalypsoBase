@@ -55,6 +55,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.ui.IEditorDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorRegistry;
+import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.commons.bind.JaxbUtilities;
@@ -98,6 +99,11 @@ public class GmlEditorTemplateLauncher implements IDefaultTemplateLauncher
    */
   @Override
   public IEditorInput createInput( final IFile file ) throws CoreException
+  {
+    return createInputForGml( file );
+  }
+
+  public static IStorageEditorInput createInputForGml( final IFile file ) throws CoreException
   {
     final org.kalypso.template.gistreeview.ObjectFactory gisViewFact = new org.kalypso.template.gistreeview.ObjectFactory();
     final JAXBContext jc = JaxbUtilities.createQuiet( org.kalypso.template.gistreeview.ObjectFactory.class );

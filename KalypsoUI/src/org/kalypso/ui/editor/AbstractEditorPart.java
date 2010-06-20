@@ -309,8 +309,10 @@ public abstract class AbstractEditorPart extends WorkbenchPart implements IResou
     return true;
   }
 
-  public void setInput( final IStorageEditorInput input )
+  public void setInput( final IStorageEditorInput inp )
   {
+    final IStorageEditorInput input = tweakInput( inp );
+
     if( ObjectUtils.equals( input, m_editorInput ) )
       return;
 
@@ -332,6 +334,15 @@ public abstract class AbstractEditorPart extends WorkbenchPart implements IResou
     } );
 
     load( input );
+  }
+
+  /**
+   * Allows implementors to tweak the given input.<br/>
+   * Intended to be overwritten by implementors. Default implementation returns the given input unchanged.
+   */
+  protected IStorageEditorInput tweakInput( final IStorageEditorInput input )
+  {
+    return input;
   }
 
   protected final void load( final IStorageEditorInput input )

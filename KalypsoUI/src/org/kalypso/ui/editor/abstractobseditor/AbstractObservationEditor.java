@@ -42,11 +42,14 @@ package org.kalypso.ui.editor.abstractobseditor;
 
 import java.net.URL;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IStorage;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
@@ -60,6 +63,7 @@ import org.kalypso.ogc.sensor.tableview.TableViewUtils;
 import org.kalypso.ogc.sensor.template.IObsViewEventListener;
 import org.kalypso.ogc.sensor.template.ObsView;
 import org.kalypso.ogc.sensor.template.ObsViewEvent;
+import org.kalypso.ogc.sensor.template.PseudoTemplateEditorInput;
 import org.kalypso.ogc.sensor.template.TemplateStorage;
 import org.kalypso.template.obsdiagview.Obsdiagview;
 import org.kalypso.template.obstableview.Obstableview;
@@ -76,9 +80,12 @@ public abstract class AbstractObservationEditor extends AbstractEditorPart imple
 
   private ObservationEditorOutlinePage m_outline = null;
 
-  public AbstractObservationEditor( final ObsView view )
+  private final String m_extension;
+
+  public AbstractObservationEditor( final ObsView view, final String extension )
   {
     m_view = view;
+    m_extension = extension;
     m_view.addObsViewEventListener( this );
   }
 
@@ -106,6 +113,27 @@ public abstract class AbstractObservationEditor extends AbstractEditorPart imple
   public ObsView getView( )
   {
     return m_view;
+  }
+
+  /**
+   * @see org.kalypso.ui.editor.AbstractEditorPart#tweakInput(org.eclipse.ui.IStorageEditorInput)
+   */
+  @Override
+  protected IStorageEditorInput tweakInput( final IStorageEditorInput input )
+  {
+    if( input instanceof IFileEditorInput )
+    {
+      final IFile file = ((IFileEditorInput) input).getFile();
+      final String ext = file.getFileExtension();
+      if( "zml".equalsIgnoreCase( ext ) )//$NON-NLS-1$
+      {
+        final IPath projectRelativePath = file.getProjectRelativePath();
+        final TemplateStorage storage = new TemplateStorage( file, ResourceUtilities.createQuietURL( file ), "project:/" + projectRelativePath );
+        return new PseudoTemplateEditorInput( storage, m_extension );
+      }
+    }
+
+    return input;
   }
 
   /**
