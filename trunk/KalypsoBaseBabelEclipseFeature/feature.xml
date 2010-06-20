@@ -36,22 +36,6 @@ An extra feature was needed, as Kalypso only needs a subset of Eclipse Platform,
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.ant.tests.core.nl_de"
-         download-size="1865"
-         install-size="1865"
-         version="3.6.0.v20100515043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.ant.tests.ui.nl_de"
-         download-size="1640"
-         install-size="1640"
-         version="3.6.0.v20100515043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.compare.core.nl_de"
          download-size="2421"
          install-size="2421"
@@ -63,14 +47,6 @@ An extra feature was needed, as Kalypso only needs a subset of Eclipse Platform,
          id="org.eclipse.compare.nl_de"
          download-size="14275"
          install-size="14275"
-         version="3.6.0.v20100515043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.compare.tests.nl_de"
-         download-size="1665"
-         install-size="1665"
          version="3.6.0.v20100515043401"
          fragment="true"
          unpack="false"/>
@@ -148,14 +124,6 @@ An extra feature was needed, as Kalypso only needs a subset of Eclipse Platform,
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.core.expressions.tests.nl_de"
-         download-size="1416"
-         install-size="1416"
-         version="3.6.0.v20100515043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.core.externaltools.nl_de"
          download-size="4110"
          install-size="4110"
@@ -171,42 +139,11 @@ An extra feature was needed, as Kalypso only needs a subset of Eclipse Platform,
          fragment="true"
          unpack="false"/>
 
-   <plugin
-         id="org.eclipse.core.filebuffers.tests.nl_de"
-         download-size="1411"
-         install-size="1411"
-         version="3.6.0.v20100515043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.core.filesystem.aix.ppc.nl_de"
-         download-size="1376"
-         install-size="1376"
-         version="3.6.0.v20100515043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.core.filesystem.aix.ppc64.nl_de"
-         download-size="1378"
-         install-size="1378"
-         version="3.6.0.v20100515043401"
-         fragment="true"
-         unpack="false"/>
 
    <plugin
          id="org.eclipse.core.filesystem.nl_de"
          download-size="2994"
          install-size="2994"
-         version="3.6.0.v20100515043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.core.filesystem.solaris.sparcv9.nl_de"
-         download-size="1381"
-         install-size="1381"
          version="3.6.0.v20100515043401"
          fragment="true"
          unpack="false"/>
@@ -220,25 +157,9 @@ An extra feature was needed, as Kalypso only needs a subset of Eclipse Platform,
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.core.net.linux.x86.nl_de"
-         download-size="1402"
-         install-size="1402"
-         version="3.6.0.v20100515043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.core.net.nl_de"
          download-size="2261"
          install-size="2261"
-         version="3.6.0.v20100515043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.core.net.win32.x86.nl_de"
-         download-size="1403"
-         install-size="1403"
          version="3.6.0.v20100515043401"
          fragment="true"
          unpack="false"/>
@@ -276,14 +197,6 @@ An extra feature was needed, as Kalypso only needs a subset of Eclipse Platform,
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.core.tests.runtime.nl_de"
-         download-size="1379"
-         install-size="1379"
-         version="3.6.0.v20100515043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.core.variables.nl_de"
          download-size="2537"
          install-size="2537"
@@ -295,14 +208,6 @@ An extra feature was needed, as Kalypso only needs a subset of Eclipse Platform,
          id="org.eclipse.debug.core.nl_de"
          download-size="7158"
          install-size="7158"
-         version="3.6.0.v20100515043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.debug.tests.nl_de"
-         download-size="1365"
-         install-size="1365"
          version="3.6.0.v20100515043401"
          fragment="true"
          unpack="false"/>
@@ -324,25 +229,9 @@ An extra feature was needed, as Kalypso only needs a subset of Eclipse Platform,
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.equinox.cm.nl_de"
-         download-size="1390"
-         install-size="1390"
-         version="3.6.0.v20100515043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.equinox.common.nl_de"
          download-size="3185"
          install-size="3185"
-         version="3.6.0.v20100515043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.equinox.device.nl_de"
-         download-size="3065"
-         install-size="3065"
          version="3.6.0.v20100515043401"
          fragment="true"
          unpack="false"/>
@@ -364,30 +253,6 @@ An extra feature was needed, as Kalypso only needs a subset of Eclipse Platform,
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.equinox.http.jetty5.nl_de"
-         download-size="1444"
-         install-size="1444"
-         version="3.6.0.v20100515043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.equinox.http.jetty6.nl_de"
-         download-size="1444"
-         install-size="1444"
-         version="3.6.0.v20100515043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.equinox.http.nl_de"
-         download-size="4192"
-         install-size="4192"
-         version="3.6.0.v20100515043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.equinox.http.registry.nl_de"
          download-size="1432"
          install-size="1432"
@@ -399,22 +264,6 @@ An extra feature was needed, as Kalypso only needs a subset of Eclipse Platform,
          id="org.eclipse.equinox.http.servlet.nl_de"
          download-size="1373"
          install-size="1373"
-         version="3.6.0.v20100515043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.equinox.io.nl_de"
-         download-size="1365"
-         install-size="1365"
-         version="3.6.0.v20100515043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.equinox.ip.nl_de"
-         download-size="1365"
-         install-size="1365"
          version="3.6.0.v20100515043401"
          fragment="true"
          unpack="false"/>
@@ -435,146 +284,11 @@ An extra feature was needed, as Kalypso only needs a subset of Eclipse Platform,
          fragment="true"
          unpack="false"/>
 
-   <plugin
-         id="org.eclipse.equinox.launcher.carbon.macosx.nl_de"
-         download-size="1441"
-         install-size="1441"
-         version="3.6.0.v20100515043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.equinox.launcher.cocoa.macosx.nl_de"
-         download-size="1444"
-         install-size="1444"
-         version="3.6.0.v20100515043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.equinox.launcher.gtk.linux.ppc.nl_de"
-         download-size="1443"
-         install-size="1443"
-         version="3.6.0.v20100515043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.equinox.launcher.gtk.linux.ppc64.nl_de"
-         download-size="1415"
-         install-size="1415"
-         version="3.6.0.v20100515043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.equinox.launcher.gtk.linux.s390.nl_de"
-         download-size="1412"
-         install-size="1412"
-         version="3.6.0.v20100515043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.equinox.launcher.gtk.linux.s390x.nl_de"
-         download-size="1451"
-         install-size="1451"
-         version="3.6.0.v20100515043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.equinox.launcher.gtk.linux.x86.nl_de"
-         download-size="1445"
-         install-size="1445"
-         version="3.6.0.v20100515043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.equinox.launcher.gtk.solaris.sparc.nl_de"
-         download-size="1451"
-         install-size="1451"
-         version="3.6.0.v20100515043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.equinox.launcher.gtk.solaris.x86.nl_de"
-         download-size="1451"
-         install-size="1451"
-         version="3.6.0.v20100515043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.equinox.launcher.motif.aix.ppc.nl_de"
-         download-size="1443"
-         install-size="1443"
-         version="3.6.0.v20100515043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.equinox.launcher.motif.linux.x86.nl_de"
-         download-size="1415"
-         install-size="1415"
-         version="3.6.0.v20100515043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.equinox.launcher.motif.solaris.sparc.nl_de"
-         download-size="1464"
-         install-size="1464"
-         version="3.6.0.v20100515043401"
-         fragment="true"
-         unpack="false"/>
 
    <plugin
          id="org.eclipse.equinox.launcher.nl_de"
          download-size="1392"
          install-size="1392"
-         version="3.6.0.v20100515043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.equinox.launcher.win32.win32.ia64.nl_de"
-         download-size="1455"
-         install-size="1455"
-         version="3.6.0.v20100515043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.equinox.launcher.win32.win32.x86.nl_de"
-         download-size="1451"
-         install-size="1451"
-         version="3.6.0.v20100515043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.equinox.launcher.wpf.win32.x86.nl_de"
-         download-size="1450"
-         install-size="1450"
-         version="3.6.0.v20100515043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.equinox.log.nl_de"
-         download-size="1365"
-         install-size="1365"
-         version="3.6.0.v20100515043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.equinox.metatype.nl_de"
-         download-size="2802"
-         install-size="2802"
          version="3.6.0.v20100515043401"
          fragment="true"
          unpack="false"/>
@@ -612,33 +326,9 @@ An extra feature was needed, as Kalypso only needs a subset of Eclipse Platform,
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.equinox.transforms.xslt.nl_de"
-         download-size="1372"
-         install-size="1372"
-         version="3.6.0.v20100515043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.equinox.useradmin.nl_de"
-         download-size="3247"
-         install-size="3247"
-         version="3.6.0.v20100515043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.equinox.util.nl_de"
          download-size="1366"
          install-size="1366"
-         version="3.6.0.v20100515043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.equinox.wireadmin.nl_de"
-         download-size="1370"
-         install-size="1370"
          version="3.6.0.v20100515043401"
          fragment="true"
          unpack="false"/>
@@ -684,57 +374,9 @@ An extra feature was needed, as Kalypso only needs a subset of Eclipse Platform,
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.jdt.compiler.apt.tests.nl_de"
-         download-size="1406"
-         install-size="1406"
-         version="3.6.0.v20100515043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.jdt.compiler.tool.tests.nl_de"
-         download-size="1402"
-         install-size="1402"
-         version="3.6.0.v20100515043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.jdt.core.nl_de"
          download-size="29089"
          install-size="29089"
-         version="3.6.0.v20100515043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.jdt.core.tests.builder.nl_de"
-         download-size="1405"
-         install-size="1405"
-         version="3.6.0.v20100515043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.jdt.core.tests.compiler.nl_de"
-         download-size="1400"
-         install-size="1400"
-         version="3.6.0.v20100515043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.jdt.core.tests.model.nl_de"
-         download-size="14364"
-         install-size="14364"
-         version="3.6.0.v20100515043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.jdt.core.tests.performance.nl_de"
-         download-size="1404"
-         install-size="1404"
          version="3.6.0.v20100515043401"
          fragment="true"
          unpack="false"/>
@@ -748,25 +390,9 @@ An extra feature was needed, as Kalypso only needs a subset of Eclipse Platform,
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.jdt.launching.macosx.nl_de"
-         download-size="2555"
-         install-size="2555"
-         version="3.6.0.v20100515043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.jdt.launching.nl_de"
          download-size="7450"
          install-size="7450"
-         version="3.6.0.v20100515043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.jdt.launching.ui.macosx.nl_de"
-         download-size="3190"
-         install-size="3190"
          version="3.6.0.v20100515043401"
          fragment="true"
          unpack="false"/>
@@ -788,33 +414,9 @@ An extra feature was needed, as Kalypso only needs a subset of Eclipse Platform,
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.jface.tests.databinding.conformance.nl_de"
-         download-size="1426"
-         install-size="1426"
-         version="3.6.0.v20100515043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.jface.tests.databinding.nl_de"
-         download-size="1400"
-         install-size="1400"
-         version="3.6.0.v20100515043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.jface.text.nl_de"
          download-size="12712"
          install-size="12712"
-         version="3.6.0.v20100515043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.jface.text.tests.nl_de"
-         download-size="1409"
-         install-size="1409"
          version="3.6.0.v20100515043401"
          fragment="true"
          unpack="false"/>
@@ -844,25 +446,9 @@ An extra feature was needed, as Kalypso only needs a subset of Eclipse Platform,
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.ltk.core.refactoring.tests.nl_de"
-         download-size="1483"
-         install-size="1483"
-         version="3.6.0.v20100515043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.ltk.ui.refactoring.nl_de"
          download-size="8556"
          install-size="8556"
-         version="3.6.0.v20100515043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.ltk.ui.refactoring.tests.nl_de"
-         download-size="1416"
-         install-size="1416"
          version="3.6.0.v20100515043401"
          fragment="true"
          unpack="false"/>
@@ -916,25 +502,9 @@ An extra feature was needed, as Kalypso only needs a subset of Eclipse Platform,
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.releng.tools.nl_de"
-         download-size="3688"
-         install-size="3688"
-         version="3.6.0.v20100515043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.sdk.nl_de"
          download-size="2747"
          install-size="2747"
-         version="3.6.0.v20100515043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.sdk.tests.nl_de"
-         download-size="1712"
-         install-size="1712"
          version="3.6.0.v20100515043401"
          fragment="true"
          unpack="false"/>
@@ -948,33 +518,9 @@ An extra feature was needed, as Kalypso only needs a subset of Eclipse Platform,
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.search.tests.nl_de"
-         download-size="1396"
-         install-size="1396"
-         version="3.6.0.v20100515043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.swt.nl_de"
          download-size="2880"
          install-size="2880"
-         version="3.6.0.v20100515043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.swt.tests.nl_de"
-         download-size="1377"
-         install-size="1377"
-         version="3.6.0.v20100515043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.swt.tools.nl_de"
-         download-size="1417"
-         install-size="1417"
          version="3.6.0.v20100515043401"
          fragment="true"
          unpack="false"/>
@@ -999,14 +545,6 @@ An extra feature was needed, as Kalypso only needs a subset of Eclipse Platform,
          id="org.eclipse.text.nl_de"
          download-size="4378"
          install-size="4378"
-         version="3.6.0.v20100515043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.text.tests.nl_de"
-         download-size="1399"
-         install-size="1399"
          version="3.6.0.v20100515043401"
          fragment="true"
          unpack="false"/>
@@ -1039,14 +577,6 @@ An extra feature was needed, as Kalypso only needs a subset of Eclipse Platform,
          id="org.eclipse.ui.editors.nl_de"
          download-size="14114"
          install-size="14114"
-         version="3.6.0.v20100515043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.ui.editors.tests.nl_de"
-         download-size="1403"
-         install-size="1403"
          version="3.6.0.v20100515043401"
          fragment="true"
          unpack="false"/>
@@ -1140,22 +670,6 @@ An extra feature was needed, as Kalypso only needs a subset of Eclipse Platform,
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.ui.tests.navigator.nl_de"
-         download-size="1467"
-         install-size="1467"
-         version="3.6.0.v20100515043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.ui.tests.views.properties.tabbed.nl_de"
-         download-size="1550"
-         install-size="1550"
-         version="3.6.0.v20100515043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.ui.views.nl_de"
          download-size="3310"
          install-size="3310"
@@ -1188,14 +702,6 @@ An extra feature was needed, as Kalypso only needs a subset of Eclipse Platform,
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.ui.workbench.texteditor.tests.nl_de"
-         download-size="1422"
-         install-size="1422"
-         version="3.6.0.v20100515043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.update.configurator.nl_de"
          download-size="3526"
          install-size="3526"
@@ -1220,41 +726,9 @@ An extra feature was needed, as Kalypso only needs a subset of Eclipse Platform,
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.update.tests.core.nl_de"
-         download-size="2465"
-         install-size="2465"
-         version="3.6.0.v20100515043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.update.ui.nl_de"
          download-size="9632"
          install-size="9632"
-         version="3.6.0.v20100515043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="security.a.frag.a.nl_de"
-         download-size="1390"
-         install-size="1390"
-         version="3.6.0.v20100515043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="security.a.nl_de"
-         download-size="1377"
-         install-size="1377"
-         version="3.6.0.v20100515043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="test.flex.root.nl_de"
-         download-size="1367"
-         install-size="1367"
          version="3.6.0.v20100515043401"
          fragment="true"
          unpack="false"/>
