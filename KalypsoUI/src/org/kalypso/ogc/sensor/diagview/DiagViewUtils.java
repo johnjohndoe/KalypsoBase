@@ -48,6 +48,7 @@ import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -66,6 +67,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.commons.java.util.StringUtilities;
+import org.kalypso.commons.xml.NS;
+import org.kalypso.commons.xml.NSPrefixProvider;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
@@ -85,6 +88,8 @@ import org.kalypso.template.obsdiagview.TypeDirection;
 import org.kalypso.template.obsdiagview.TypeObservation;
 import org.kalypso.template.obsdiagview.TypePosition;
 import org.xml.sax.InputSource;
+
+import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
 
 /**
  * Observation Diagramm Template Handling made easy.
@@ -114,14 +119,20 @@ public class DiagViewUtils
   {
     try
     {
-      final Marshaller m = JaxbUtilities.createMarshaller( ODT_JC );
-      m.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
+      final Marshaller m = createMarshaller();
       m.marshal( xml, outDiag );
     }
     finally
     {
       IOUtils.closeQuietly( outDiag );
     }
+  }
+
+  protected static Marshaller createMarshaller( ) throws JAXBException
+  {
+    final Map<String, String> prefixMapping = new HashMap<String, String>();
+    prefixMapping.put( NS.KALYPSO_OBSVIEW, "" );
+    return JaxbUtilities.createMarshaller( ODT_JC, true, prefixMapping );
   }
 
   /**
@@ -131,15 +142,36 @@ public class DiagViewUtils
   {
     try
     {
-      final Marshaller m = JaxbUtilities.createMarshaller( ODT_JC );
-      m.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
-      m.setProperty( Marshaller.JAXB_ENCODING, writer.getEncoding() );
+
+      final Marshaller m = createMarshaller();
+      String encoding = writer.getEncoding();
+      // HACK: rename utf8 encoding, esle xml editor will not validate
+      if( "UTF8".equals( encoding ) )
+        encoding = "UTF-8";
+
+      m.setProperty( Marshaller.JAXB_ENCODING, encoding );
+
       m.marshal( tpl, writer );
     }
     finally
     {
       IOUtils.closeQuietly( writer );
     }
+  }
+
+  private static NamespacePrefixMapper getNSPrefixMapper( )
+  {
+    return new NamespacePrefixMapper()
+    {
+      @Override
+      public String getPreferredPrefix( final String namespace, final String suggestion, final boolean required )
+      {
+        // never return null to avoid using of defaultnamespace witch leads to broken xml sometimes. see bug-description
+        // at methode createMarshaller()
+        final NSPrefixProvider nsProvider = NSPrefixProvider.getInstance();
+        return nsProvider.getPreferredPrefix( namespace, suggestion );
+      }
+    };
   }
 
   /**
