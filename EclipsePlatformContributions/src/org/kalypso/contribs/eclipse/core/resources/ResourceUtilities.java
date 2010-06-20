@@ -49,7 +49,7 @@ import org.kalypso.contribs.eclipse.core.runtime.PathUtils;
 /**
  * ResourceUtilities
  * <p>
- *
+ * 
  * @author schlienger (14.06.2005)
  */
 @SuppressWarnings("restriction")
@@ -62,7 +62,7 @@ public class ResourceUtilities
 
   /**
    * Gibt den IFile-Handler zurück, falls die URL eine Platform Url denotiert
-   *
+   * 
    * @see PlatformURLResourceConnection
    */
   public static IFile findFileFromURL( final URL u )
@@ -109,7 +109,7 @@ public class ResourceUtilities
 
   /**
    * Resolves an absolute path (i.e. relative to IWorkspaceRoot) and returns its real location.
-   *
+   * 
    * @return A Java-File representing the resource, or null if file does not exists.
    */
   public static File makeFileFromPath( final IPath resource )
@@ -203,7 +203,7 @@ public class ResourceUtilities
   /**
    * Creates an URL given a resource. Uses the eclipse scheme defined in
    * PlatformURLResourceConnection.RESOURCE_URL_STRING.
-   *
+   * 
    * @see PlatformURLResourceConnection#RESOURCE_URL_STRING
    * @param resource
    * @return platform URL
@@ -220,8 +220,24 @@ public class ResourceUtilities
   }
 
   /**
+   * Same as {@link #createURL(IResource)}, but returns <code>null</code> in case of an exception.
+   */
+  public static URL createQuietURL( final IResource resource )
+  {
+    try
+    {
+      return createURL( resource );
+    }
+    catch( final MalformedURLException e )
+    {
+      e.printStackTrace();
+      return null;
+    }
+  }
+
+  /**
    * Creates the string representation of an URL given an IPath.
-   *
+   * 
    * @param path
    * @return platform URL
    */
@@ -232,7 +248,7 @@ public class ResourceUtilities
 
   /**
    * Tries to get the parent project of this container.
-   *
+   * 
    * @return the parent project of the start container or null if the container is the WorkspaceRoot or itself if start
    *         is a Project.
    */
@@ -252,7 +268,7 @@ public class ResourceUtilities
    * <br/>
    * First it tries to find the project and then iterates over all segments, getting the IFolder for it. At the last
    * segment, you get an IFile.
-   *
+   * 
    * @param path
    *          The path of the file. It must be relative to the workspace.
    * @return The Eclipse-File representing the path.
@@ -283,7 +299,7 @@ public class ResourceUtilities
 
   /**
    * Returns all children of the given container.
-   *
+   * 
    * @param depth
    *          See {@link org.eclipse.core.resources.IResource}
    */
@@ -298,7 +314,7 @@ public class ResourceUtilities
    * Returns all children of the given container.
    * <p>
    * If any exception is thrown, it is suppressed and an empty array of files is returned.
-   *
+   * 
    * @param depth
    *          See {@link org.eclipse.core.resources.IResource}
    */
@@ -321,7 +337,7 @@ public class ResourceUtilities
    * returned.
    * <p>
    * If any exception is thrown, it is suppressed and an empty array of files is returned.
-   *
+   * 
    * @param depth
    *          See {@link org.eclipse.core.resources.IResource}
    * @param extension
@@ -344,7 +360,7 @@ public class ResourceUtilities
 
   /**
    * check if the child file can be expressed as a relative path regarding to the given parent folder.
-   *
+   * 
    * @return The relative path (possibly using '..' notation, or <code>terrainModelFile#toFullPath</code> an absolute
    *         path if this is not possible.
    */
