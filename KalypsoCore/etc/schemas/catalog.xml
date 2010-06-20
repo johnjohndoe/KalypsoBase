@@ -5,6 +5,9 @@
 
   <uri name="util.gml.kalypso.org" uri="gml/gmlconvert.xsd" />
 
+  <uri name="http://www.w3.org/1999/xlink" uri="xlink/xlinks.xsd" />
+  <uri name="http://www.w3.org/1999/xlinkext" uri="xlink/xlinksext.xsd" />
+
   <uri name="featureview.template.kalypso.org" uri="template/featureview.xsd" />
   <uri name="gismapview.template.kalypso.org" uri="template/gismapview.xsd" />
   <uri name="gistableview.template.kalypso.org" uri="template/gistableview.xsd" />
