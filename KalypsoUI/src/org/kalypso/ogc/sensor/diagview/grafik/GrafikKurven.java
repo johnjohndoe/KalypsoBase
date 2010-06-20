@@ -42,7 +42,6 @@ package org.kalypso.ogc.sensor.diagview.grafik;
 
 import java.awt.Color;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
@@ -52,8 +51,8 @@ import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.diagview.grafik.GrafikAchsen.GrafikAchse;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
-import org.kalypso.template.obsdiagview.TypeAxisMapping;
 import org.kalypso.template.obsdiagview.TypeCurve;
+import org.kalypso.template.obsdiagview.TypeCurve.Mapping;
 
 /**
  * GrafikKurven
@@ -71,7 +70,7 @@ public class GrafikKurven
    * 
    * @param gAchsen
    */
-  public GrafikKurven( GrafikAchsen gAchsen )
+  public GrafikKurven( final GrafikAchsen gAchsen )
   {
     m_achsen = gAchsen;
   }
@@ -91,10 +90,10 @@ public class GrafikKurven
 
     IAxis axis = null;
 
-    final List tmList = tc.getMapping();
-    for( Iterator itm = tmList.iterator(); itm.hasNext(); )
+    final List<Mapping> tmList = tc.getMapping();
+    for( final Mapping mapping : tmList )
     {
-      final TypeAxisMapping tm = (TypeAxisMapping)itm.next();
+      final Mapping tm = mapping;
 
       final GrafikAchse ga = m_achsen.getFor( tm.getDiagramAxis() );
       if( ga != null )
@@ -109,21 +108,20 @@ public class GrafikKurven
     }
 
     return axis;
-    //      title = achse.getName() + " (" + title + ")";
+    // title = achse.getName() + " (" + title + ")";
   }
 
   /**
    * @return die Grafik Vorlage welche in der tpl-Datei geschrieben werden soll
    */
-  public String toVorlagentext()
+  public String toVorlagentext( )
   {
     final StringBuffer sb = new StringBuffer();
 
-    sb
-        .append( "/* <Nr>- <Dateiname> <sichtbar:J,N> <Diagr.typ:L,B,P,M,T> <y-Achse:1,2> <Kurventitel> [<Blocknummer>]\n" ); //$NON-NLS-1$
-    for( final Iterator it = m_kurven.iterator(); it.hasNext(); )
+    sb.append( "/* <Nr>- <Dateiname> <sichtbar:J,N> <Diagr.typ:L,B,P,M,T> <y-Achse:1,2> <Kurventitel> [<Blocknummer>]\n" ); //$NON-NLS-1$
+    for( final Object element : m_kurven )
     {
-      final GrafikKurve gk = (GrafikKurve)it.next();
+      final GrafikKurve gk = (GrafikKurve) element;
 
       sb.append( gk.getCurveSpec() ).append( '\n' );
     }
@@ -131,9 +129,9 @@ public class GrafikKurven
     sb.append( '\n' );
 
     sb.append( "/* KNr:  Farbe\tLTyp\tLBreite\tPTyp\n" ); //$NON-NLS-1$
-    for( final Iterator it = m_kurven.iterator(); it.hasNext(); )
+    for( final Object element : m_kurven )
     {
-      final GrafikKurve gk = (GrafikKurve)it.next();
+      final GrafikKurve gk = (GrafikKurve) element;
 
       sb.append( gk.getColorSpec() ).append( '\n' );
     }
@@ -206,7 +204,7 @@ public class GrafikKurven
 
     private final int m_color;
 
-    private String m_filename;
+    private final String m_filename;
 
     private final String m_shown;
 
@@ -214,7 +212,7 @@ public class GrafikKurven
 
     private String m_unit;
 
-    public GrafikKurve( String filename, String name, boolean shown, int color )
+    public GrafikKurve( final String filename, final String name, final boolean shown, final int color )
     {
       m_filename = filename;
       m_name = name;
@@ -261,7 +259,7 @@ public class GrafikKurven
     /**
      * @return the grafik color spec for this curve
      */
-    public String getColorSpec()
+    public String getColorSpec( )
     {
       final StringBuffer sb = new StringBuffer();
       sb.append( "K" ).append( m_nr ).append( ":\t" ).append( m_color ).append( "\t0\t1\t" ).append( m_axisNr ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -271,12 +269,12 @@ public class GrafikKurven
     /**
      * @return the grafik curve spec for this curve
      */
-    public String getCurveSpec()
+    public String getCurveSpec( )
     {
       final StringBuffer sb = new StringBuffer();
       sb.append( m_nr ).append( "- " ).append( m_filename ).append( " " ).append( m_shown ).append( " " ).append( //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-          m_type ).append( " " ).append( m_axisNr ).append( " " ).append( m_name ).append( " [" ).append( m_unit ) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-          .append( "]" ); //$NON-NLS-1$
+      m_type ).append( " " ).append( m_axisNr ).append( " " ).append( m_name ).append( " [" ).append( m_unit ) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      .append( "]" ); //$NON-NLS-1$
       return sb.toString();
     }
   }
