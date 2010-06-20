@@ -71,6 +71,8 @@ import org.kalypso.ui.editor.abstractobseditor.AbstractObservationEditor;
  */
 public class ObservationTableEditor extends AbstractObservationEditor implements IExportableObjectFactory
 {
+  public static final String EXTENSIN_OTT = ".ott"; //$NON-NLS-1$
+
   protected final ObservationTable m_table;
 
   private Composite m_swingContainer;
@@ -84,7 +86,7 @@ public class ObservationTableEditor extends AbstractObservationEditor implements
    */
   public ObservationTableEditor( )
   {
-    super( new TableView() );
+    super( new TableView(), EXTENSIN_OTT );
 
     m_table = new ObservationTable( (TableView) getView() );
   }

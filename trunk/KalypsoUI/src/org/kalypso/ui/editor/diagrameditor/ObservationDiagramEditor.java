@@ -80,6 +80,8 @@ import org.kalypso.ui.editor.abstractobseditor.AbstractObservationEditor;
  */
 public class ObservationDiagramEditor extends AbstractObservationEditor implements IExportableObjectFactory, IEditorPart
 {
+  public static final String EXTENSIN_ODT = ".odt"; //$NON-NLS-1$
+
   protected Frame m_diagFrame = null;
 
   protected ObservationChart m_obsChart = null;
@@ -88,7 +90,7 @@ public class ObservationDiagramEditor extends AbstractObservationEditor implemen
 
   public ObservationDiagramEditor( )
   {
-    super( new DiagView( true ) );
+    super( new DiagView( true ), EXTENSIN_ODT );
   }
 
   /**

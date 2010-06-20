@@ -31,6 +31,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
+import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.kalypso.commons.command.ICommandTarget;
@@ -42,6 +43,7 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ui.editor.AbstractEditorPart;
 import org.kalypso.ui.editor.actions.NewFeatureScope;
+import org.kalypso.ui.editorLauncher.GmlEditorTemplateLauncher;
 import org.kalypsodeegree.model.feature.event.ModellEventProvider;
 
 /**
@@ -49,6 +51,8 @@ import org.kalypsodeegree.model.feature.event.ModellEventProvider;
  */
 public class GmlEditor extends AbstractEditorPart implements IEditorPart, ICommandTarget
 {
+  public static final String EXTENSIN_GMV = ".gmv"; //$NON-NLS-1$
+
   public static final String ID = "org.kalypso.ui.editor.GmlEditor"; //$NON-NLS-1$
 
   private GmlTreeView m_viewer = null;
@@ -62,6 +66,32 @@ public class GmlEditor extends AbstractEditorPart implements IEditorPart, IComma
     // unregister site selection provider
     getSite().setSelectionProvider( null );
     super.dispose();
+  }
+
+  /**
+   * @see org.kalypso.ui.editor.AbstractEditorPart#tweakInput(org.eclipse.ui.IStorageEditorInput)
+   */
+  @Override
+  protected IStorageEditorInput tweakInput( final IStorageEditorInput input )
+  {
+    if( input instanceof IFileEditorInput )
+    {
+      final IFile file = ((IFileEditorInput) input).getFile();
+      final String ext = file.getFileExtension();
+      if( "gml".equalsIgnoreCase( ext ) || "shp".equalsIgnoreCase( ext ) )
+      {
+        try
+        {
+          return GmlEditorTemplateLauncher.createInputForGml( file );
+        }
+        catch( final CoreException e )
+        {
+          e.printStackTrace();
+        }
+      }
+    }
+
+    return input;
   }
 
   /**
