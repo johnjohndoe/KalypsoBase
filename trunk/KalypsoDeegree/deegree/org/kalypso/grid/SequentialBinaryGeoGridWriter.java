@@ -96,9 +96,16 @@ public class SequentialBinaryGeoGridWriter
     m_gridStream.write( lBuff, 0, 4 ); // Version number
   }
 
-  public void write( byte[] blockData, int bytesInBlock ) throws IOException
+  public void write( byte[] blockData, int items ) throws IOException
   {
-    m_gridStream.write( blockData, 0, bytesInBlock );
+    m_gridStream.write( blockData, 0, items * 4 );
+  }
+
+  public void write( final ParallelBinaryGridProcessorBean bean ) throws IOException
+  {
+    write( bean.m_blockData, bean.m_itemsInBlock );
+    setMax( bean.m_max );
+    setMin( bean.m_min );
   }
 
   public void close( ) throws IOException
@@ -111,6 +118,28 @@ public class SequentialBinaryGeoGridWriter
   public int getScale( )
   {
     return m_scale;
+  }
+
+  public void setValue( final double value, final int k, final ParallelBinaryGridProcessorBean bean )
+  {
+    int intVal;
+    if( Double.isNaN( value ) != true )
+    {
+      final BigDecimal scaled = BigDecimal.valueOf( value ).setScale( m_scale, BigDecimal.ROUND_HALF_UP );
+      intVal = scaled.unscaledValue().intValue();
+
+      final BigDecimal minmax = new BigDecimal( value ).setScale( 4, BigDecimal.ROUND_HALF_UP );
+
+      bean.m_min = bean.m_min.min( minmax );
+      bean.m_max = bean.m_max.max( minmax );
+    }
+    else
+    {
+      intVal = BinaryGeoGrid.NO_DATA;
+    }
+
+    // write the result back into the buffer
+    ByteUtils.writeBEInt( bean.m_blockData, k * 4, intVal );
   }
 
 }
