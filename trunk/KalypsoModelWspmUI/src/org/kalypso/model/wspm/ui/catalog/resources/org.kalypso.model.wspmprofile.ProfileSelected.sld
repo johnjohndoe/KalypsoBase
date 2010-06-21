@@ -36,7 +36,7 @@
 				<Stroke>
 					<CssParameter name="stroke">#000000</CssParameter>
 					<CssParameter name="stroke-width">1.0</CssParameter>
-					<CssParameter name="stroke-linejoin">miter</CssParameter>
+					<CssParameter name="stroke-linejoin">mitre</CssParameter>
 					<CssParameter name="stroke-opacity">0.0</CssParameter>
 					<CssParameter name="stroke-linecap">square</CssParameter>
 				</Stroke>
