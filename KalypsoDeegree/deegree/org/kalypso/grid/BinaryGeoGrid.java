@@ -168,7 +168,7 @@ public class BinaryGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
    * @param binFile
    *          If set, this file will be deleted on dispose
    */
-  private BinaryGeoGrid( final RandomAccessFile randomAccessFile, final File binFile, final Coordinate origin, final Coordinate offsetX, final Coordinate offsetY, final String sourceCRS ) throws IOException
+  protected BinaryGeoGrid( final RandomAccessFile randomAccessFile, final File binFile, final Coordinate origin, final Coordinate offsetX, final Coordinate offsetY, final String sourceCRS ) throws IOException
   {
     super( origin, offsetX, offsetY, sourceCRS );
 

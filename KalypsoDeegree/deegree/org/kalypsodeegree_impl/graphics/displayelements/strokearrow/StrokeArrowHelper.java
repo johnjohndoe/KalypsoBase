@@ -48,8 +48,6 @@ import org.kalypsodeegree.graphics.sld.Stroke;
 public class StrokeArrowHelper
 {
 
-  private static final String STROKE_WIDTH = "stroke-width";
-
   public enum ARROW_TYPE
   {
     eLine,
@@ -122,6 +120,8 @@ public class StrokeArrowHelper
     }
   }
 
+  public static final String STROKE_WIDTH = "stroke-width";
+  
   public static final String STROKE_ARROW_TYPE = "stroke-arrow-type";
 
   public static final String STROKE_ARROW_WIDGET = "stroke-arrow-widget";

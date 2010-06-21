@@ -36,7 +36,10 @@
 package org.kalypsodeegree_impl.tools;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.xml.namespace.QName;
 
@@ -63,6 +66,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Primitive;
 import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.geometry.GM_Envelope_Impl;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
@@ -1210,5 +1214,32 @@ public class GeometryUtilities
   public static GM_Point centroidFromRing( final GM_Position[] poses, final String crs )
   {
     return GeometryFactory.createGM_Point( centroidFromRing( poses ), crs );
+  }
+  
+  /**
+   * creates {@link GM_Triangle} with from given positions with Z value from according map field on error returns null
+   */
+  public static GM_Triangle createTriangleForBilinearInterpolation( final Map<GM_Point, Double> mapPositionsValues )
+  {
+    if( mapPositionsValues.size() > 3 )
+    {
+      return null;
+    }
+    try
+    {
+      List<GM_Position> lListPositionWithValues = new ArrayList<GM_Position>();
+      Set<GM_Point> lSetKeys = mapPositionsValues.keySet();
+      GM_Point gmPoint = null;
+      for( Iterator<GM_Point> iterator = lSetKeys.iterator(); iterator.hasNext(); )
+      {
+        gmPoint = iterator.next();
+        lListPositionWithValues.add( GeometryFactory.createGM_Position( gmPoint.getX(), gmPoint.getY(), mapPositionsValues.get( gmPoint ) ) );
+      }
+      return GeometryFactory.createGM_Triangle( lListPositionWithValues.get( 0 ), lListPositionWithValues.get( 1 ), lListPositionWithValues.get( 2 ), gmPoint.getCoordinateSystem() );
+    }
+    catch( Exception e )
+    {
+      return null;
+    }
   }
 }

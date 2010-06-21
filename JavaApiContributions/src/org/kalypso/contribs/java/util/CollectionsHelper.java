@@ -38,57 +38,32 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.service.wps.refactoring;
+package org.kalypso.contribs.java.util;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.opengeospatial.wps.ExecuteResponseType;
-
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-
 /**
- * @author kuch
+ * @author ig
  *
  */
-public interface IWPSProcess
+public class CollectionsHelper
 {
-  enum ProcessStatus
-  {
-    NONE,
-    ACCEPED,
-    STARTED,
-    SUCEEDED,
-    FAILED
+  private CollectionsHelper(){
   }
-
-  String getTitle( );
- 
-  String getStatusDescription( );
-
-  Integer getPercentCompleted( );
-
-  /**
-   * Commonly used system property for the location of the WPS endpoint. Not every WPS client might use this one.
-   */
-  public static final String SYSTEM_PROP_WPS_ENDPOINT = "org.kalypso.service.wps.service"; //$NON-NLS-1$
-
-  /**
-   * Starts the execution of this process.
-   */
-  void startProcess( Map<String, Object> inputs, List<String> outputs, IProgressMonitor monitor ) throws CoreException;
-
-  // TODO: return own interface instead of binding type in order to support different WPS versions
-  /**
-   * returns <code>null</code>, as long as this process has not yet been started.
-   */
-  ExecuteResponseType getExecuteResponse( ) throws CoreException;
   
-  ProcessStatus getProcessStatus( );
-  
-  Object[] getResult( String id );
-  
-  public IStatus cancelJob( );
+  public static <E, T> Map<E, T> joinListsToMap( final List<E> listKeys, final List<T> listValues )
+  {
+    if( listKeys == null || listValues == null || listKeys.size() != listValues.size() )
+    {
+      return null;
+    }
+    Map<E, T> lMapRes = new HashMap<E, T>();
+    for( int i = 0; i < listKeys.size(); i++ )
+    {
+      lMapRes.put( listKeys.get( i ), listValues.get( i ) );
+    }
+    return lMapRes;
+  }
 }

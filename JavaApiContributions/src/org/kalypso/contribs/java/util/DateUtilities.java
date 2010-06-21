@@ -155,4 +155,14 @@ public final class DateUtilities
   {
     return getDifferenceInHours( c1, c2 ) / 24.0;
   }
+
+  public static boolean isLeapYear( Calendar calendar )
+  {
+    boolean lBoolRes = false;
+    if( calendar != null && calendar.isSet( Calendar.YEAR ) ){
+      int lIntYear = calendar.get( Calendar.YEAR );
+      lBoolRes = ( (lIntYear % 4 == 0 && lIntYear % 100 != 0) || (lIntYear % 400 == 0) ) ? true : false;
+    }
+    return lBoolRes;
+  }
 }
