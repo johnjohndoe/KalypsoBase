@@ -508,21 +508,21 @@ public class GeoGridUtilities
     IWriteableGeoGrid outputGrid = null;
     try
     {
-      outputGrid = createWriteableGrid( mimeType, file, grid.getSizeX(), grid.getSizeY(), scale, grid.getOrigin(), grid.getOffsetX(), grid.getOffsetY(), grid.getSourceCRS(), false );
+// outputGrid = createWriteableGrid( mimeType, file, grid.getSizeX(), grid.getSizeY(), scale, grid.getOrigin(),
+      // grid.getOffsetX(), grid.getOffsetY(), grid.getSourceCRS(), false );
+      outputGrid = new BinaryGeoGridWriter( file.getAbsolutePath(), grid.getSizeX(), grid.getSizeY(), scale );
 
       ProgressUtilities.worked( monitor, 20 );
 
       final CopyGeoGridWalker walker = new CopyGeoGridWalker( outputGrid );
 
-      grid.getWalkingStrategy().walk( grid, walker, null, progress.newChild( 70 ) );
+      outputGrid.getWalkingStrategy().walk( grid, walker, null, progress.newChild( 70 ) );
 
       final BigDecimal min = walker.getMin();
       final BigDecimal max = walker.getMax();
 
       if( min != null && max != null )
         outputGrid.setStatistically( min, max );
-
-      outputGrid.dispose();
 
       /* create new coverage and fill domain/range */
       final ICoverage coverage = CoverageCollection.addCoverage( coverages, toGridDomain( grid ), filePath, mimeType );
@@ -538,10 +538,19 @@ public class GeoGridUtilities
       progress.done();
     }
   }
-  
-  
-  public static ICoverage addSequentialBinaryGridAsCoverage(final ICoverageCollection coverages, final IGeoGrid grid, final String filePath, final String mimeType, final IProgressMonitor monitor ) {
+
+  public static ICoverage addCoverage( final ICoverageCollection coverages, final SequentialBinaryGeoGridReader grid, final int scale, final File outputCoverageFile, final String filePath, final String mimeType, final IProgressMonitor monitor ) throws IOException, GeoGridException
+  {
     final SubMonitor progress = SubMonitor.convert( monitor, 100 );
+
+    // create the sequential grid writer
+    final SequentialBinaryGeoGridWriter outputGridWriter = new SequentialBinaryGeoGridWriter( outputCoverageFile.toString(), grid.getSizeX(), grid.getSizeY(), scale );
+    // create the parallelizer manager
+    ParallelBinaryGridProcessor manager = new ParallelBinaryGridProcessor( grid, outputGridWriter );
+    manager.calculate();
+    outputGridWriter.close();
+// IGeoGrid outputGrid = BinaryGeoGrid.openGrid( outputCoverageFile.toURI().toURL(), grid.getOrigin(),
+    // grid.getOffsetX(), grid.getOffsetY(), grid.getSourceCRS(), false );
 
     try
     {
@@ -549,11 +558,13 @@ public class GeoGridUtilities
       final ICoverage coverage = CoverageCollection.addCoverage( coverages, toGridDomain( grid ), filePath, mimeType );
       ProgressUtilities.worked( progress, 10 );
       return coverage;
-      
-    } catch (Exception e) {
+
+    }
+    catch( Exception e )
+    {
       e.printStackTrace();
     }
-    return null; 
+    return null;
   }
 
   /**

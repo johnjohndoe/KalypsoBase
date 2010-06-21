@@ -1,5 +1,3 @@
-package org.kalypso.grid;
-
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -7,7 +5,7 @@ package org.kalypso.grid;
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  DenickestraÃŸe 22
+ *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -40,23 +38,30 @@ package org.kalypso.grid;
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
+package org.kalypso.grid;
 
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.net.URL;
 
 import org.apache.commons.io.FileUtils;
 import org.deegree.model.spatialschema.ByteUtils;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 
+import com.vividsolutions.jts.geom.Coordinate;
+
 /**
  * @author barbarins
  */
-public abstract class SequentialBinaryGeoGridReader extends AbstractDelegatingGeoGrid
+public class BinaryGeoGridReader extends AbstractDelegatingGeoGrid
 {
-  protected static Integer BLOCK_SIZE = 1024 * 1024 / 2;
+  private static Integer BLOCK_SIZE = 1024 * 1024 / 2;
+
+  protected byte[] m_blockData;
 
   protected BufferedInputStream m_gridStream;
 
@@ -64,20 +69,17 @@ public abstract class SequentialBinaryGeoGridReader extends AbstractDelegatingGe
 
   private int m_linesTotal;
 
-  protected static int m_amountBlocks;
+  private int m_lineLen;
 
-  protected static int m_linesInBlock;
+  private int m_blockStart;
 
-  protected static int m_linesRead = 0;
+  private int m_blockEnd;
 
-  protected static long m_lineLen = 0;
+  private int m_linesInBlock;
 
-  public int getBlocksAmount( )
-  {
-    return m_amountBlocks;
-  }
+  private int m_amountBlocks;
 
-  public SequentialBinaryGeoGridReader( final IGeoGrid inputGrid, final URL pUrl ) throws IOException
+  public BinaryGeoGridReader( final IGeoGrid inputGrid, final URL pUrl ) throws IOException
   {
     super( inputGrid );
 
@@ -95,41 +97,36 @@ public abstract class SequentialBinaryGeoGridReader extends AbstractDelegatingGe
     read( lScaleBuff, 1 );
     m_scale = ByteUtils.readBEInt( lScaleBuff, 0 );
 
-    m_linesRead = 0;
-
     try
     {
       m_linesTotal = getSizeY();
-
-      long linesPerThread = m_linesTotal / 8;
       m_lineLen = getSizeX() * 4;
-
-      // block_size is set to "optimal" size of the buffer from start on
-      m_linesInBlock = (int) (BLOCK_SIZE / m_lineLen);
-
-      if( m_linesInBlock >= m_linesTotal )
-        m_linesInBlock = (int) linesPerThread;
-
-      if( m_linesInBlock == 0 )
-        m_linesInBlock = 1;
-
-      m_amountBlocks = m_linesTotal / m_linesInBlock;
-      if( m_linesTotal % m_linesInBlock != 0 )
-        m_amountBlocks++;
-
-      BLOCK_SIZE = m_linesInBlock * (int) m_lineLen;
-
     }
-    catch( Exception e )
+    catch( GeoGridException e )
     {
       e.printStackTrace();
     }
 
-  }
+    // block_size is set to "optimal" size of the buffer from start on
+    m_linesInBlock = (BLOCK_SIZE / m_lineLen);
 
-  public void read( byte[] blockData, int items ) throws IOException
-  {
-    m_gridStream.read( blockData, 0, items * 4 );
+    if( m_linesInBlock >= m_linesTotal )
+      m_linesInBlock = m_linesTotal;
+
+    if( m_linesInBlock == 0 )
+      m_linesInBlock = 1;
+
+    m_amountBlocks = m_linesTotal / m_linesInBlock;
+    if( m_linesTotal % m_linesInBlock != 0 )
+      m_amountBlocks++;
+
+    BLOCK_SIZE = m_linesInBlock * m_lineLen;
+
+    m_blockData = new byte[BLOCK_SIZE];
+
+    readNextBlock();
+    m_blockStart = 0;
+    m_blockEnd = m_linesInBlock - 1;
   }
 
   public int getScale( )
@@ -137,47 +134,82 @@ public abstract class SequentialBinaryGeoGridReader extends AbstractDelegatingGe
     return m_scale;
   }
 
-  public void close( ) throws IOException
+  public void close( )
   {
-    m_gridStream.close();
-  }
-
-  protected ParallelBinaryGridProcessorBean createNewBean( )
-  {
-    return new ParallelBinaryGridProcessorBean( BLOCK_SIZE );
-  }
-
-  public ParallelBinaryGridProcessorBean getNextBlock( )
-  {
-    if( m_linesRead >= m_linesTotal )
-    {
-      return null;
-    }
-
-    ParallelBinaryGridProcessorBean lBean = createNewBean();
-
-    if( (m_linesRead + m_linesInBlock) <= m_linesTotal )
-    {
-      lBean.m_itemsInBlock = (int) (m_linesInBlock * m_lineLen) / 4;
-    }
-    else
-    {
-      lBean.m_itemsInBlock = (int) ((m_linesTotal - m_linesRead) * m_lineLen) / 4;
-    }
-    lBean.m_startPosY = m_linesRead;
     try
     {
-      read( lBean.m_blockData, lBean.m_itemsInBlock );
+      m_gridStream.close();
     }
     catch( IOException e )
     {
       e.printStackTrace();
-      return null;
     }
-    m_linesRead += m_linesInBlock;
-    return lBean;
   }
 
-  public abstract double getValue( final int k, final ParallelBinaryGridProcessorBean bean );
+  @Override
+  public void dispose( )
+  {
+    super.dispose();
+    close();
+  }
+
+  private void read( byte[] blockData, int items ) throws IOException
+  {
+    m_gridStream.read( blockData, 0, items * 4 );
+  }
+
+  private void readNextBlock( )
+  {
+    try
+    {
+      m_gridStream.read( m_blockData, 0, BLOCK_SIZE );
+    }
+    catch( IOException e )
+    {
+      e.printStackTrace();
+    }
+
+    m_blockStart += m_linesInBlock;
+    m_blockEnd += m_linesInBlock;
+  }
+
+  @Override
+  public double getValue( final int x, final int y )
+  {
+    if( y < m_blockStart )
+      return Double.NaN;
+
+    while( y > m_blockEnd )
+    {
+      readNextBlock();
+    }
+
+    final int index = (y - m_blockStart) * (m_lineLen / 4) + x;
+    final int z = ByteUtils.readBEInt( m_blockData, index * 4 );
+
+    if( z == Integer.MIN_VALUE /* NO_DATA */)
+      return Double.NaN;
+
+    final BigDecimal decimal = new BigDecimal( BigInteger.valueOf( z ), m_scale );
+    final double value = decimal.doubleValue();
+
+    if( value <= 0.0 )
+      return Double.NaN;
+
+    return value;
+  }
+
+  @Override
+  public IGeoWalkingStrategy getWalkingStrategy( )
+  {
+    return new OptimizedGeoGridWalkingStrategy();
+  }
+
+  @Override
+  public double getValue( final Coordinate crd ) throws GeoGridException
+  {
+    final GeoGridCell cell = GeoGridUtilities.cellFromPosition( this, crd );
+    return getValue( cell.x, cell.y );
+  }
 
 }
