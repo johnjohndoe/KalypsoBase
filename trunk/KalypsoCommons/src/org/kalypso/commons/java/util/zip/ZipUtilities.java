@@ -48,17 +48,18 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
+import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.NullOutputStream;
 import org.apache.tools.ant.types.selectors.SelectorUtils;
-import org.apache.tools.zip.ZipFile;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
@@ -85,7 +86,7 @@ public class ZipUtilities
    * Unzips a stream into a directory using the apache zip classes.
    * 
    * @param zipStream
-   *            Is closed after this operation.
+   *          Is closed after this operation.
    */
   public static void unzipApache( final InputStream zipStream, final File targetDir, final boolean overwriteExisting, final String encoding ) throws IOException
   {
@@ -114,10 +115,10 @@ public class ZipUtilities
   /** Unzips a zip archive into a directory using the apache zip classes. */
   public static void unzipApache( final File zip, final File targetDir, final boolean overwriteExisting, final String encoding ) throws IOException
   {
-    ZipFile file = null;
+    org.apache.tools.zip.ZipFile file = null;
     try
     {
-      file = new ZipFile( zip, encoding );
+      file = new org.apache.tools.zip.ZipFile( zip, encoding );
 
       final Enumeration< ? > entries = file.getEntries();
       while( entries.hasMoreElements() )
@@ -228,7 +229,7 @@ public class ZipUtilities
    * unzips a zip-stream into a target dir.
    * 
    * @param overwriteExisting
-   *            if false, existing files will not be overwritten. Folders are always created.
+   *          if false, existing files will not be overwritten. Folders are always created.
    */
   public static void unzip( final InputStream inputStream, final File targetdir, final boolean overwriteExisting ) throws IOException
   {
@@ -270,12 +271,12 @@ public class ZipUtilities
    * Puts given files into a zip archive.
    * 
    * @param zipfile
-   *            Target file. will be created rep. overwritten.
+   *          Target file. will be created rep. overwritten.
    * @param files
-   *            The files to zip
+   *          The files to zip
    * @param basedir
-   *            If given (i.e. != null) zipentries are genereates as relativ to this basedir (alle files must be within
-   *            this dir). If null, alle ZipEntries are create with full path.
+   *          If given (i.e. != null) zipentries are genereates as relativ to this basedir (alle files must be within
+   *          this dir). If null, alle ZipEntries are create with full path.
    * @throws IOException
    */
   public static void zip( final File zipfile, final File[] files, final File basedir ) throws IOException
@@ -289,12 +290,12 @@ public class ZipUtilities
    * Puts given files into a zip archive stream.
    * 
    * @param out
-   *            Target output stream. will be created rep. overwritten.
+   *          Target output stream. will be created rep. overwritten.
    * @param files
-   *            The files to zip
+   *          The files to zip
    * @param basedir
-   *            If given (i.e. != null) zipentries are genereates as relativ to this basedir (alle files must be within
-   *            this dir). If null, alle ZipEntries are create with full path.
+   *          If given (i.e. != null) zipentries are genereates as relativ to this basedir (alle files must be within
+   *          this dir). If null, alle ZipEntries are create with full path.
    * @throws IOException
    */
   public static void zip( final OutputStream out, final File[] files, final File basedir ) throws IOException
@@ -318,9 +319,9 @@ public class ZipUtilities
 
   /**
    * @param zipfile
-   *            file to write
+   *          file to write
    * @param dir
-   *            dir to archive
+   *          dir to archive
    * @throws IOException
    */
   public static void zip( final File zipfile, final File dir ) throws IOException
@@ -351,7 +352,7 @@ public class ZipUtilities
    * Writes a single File into a Zip-Stream
    * 
    * @param pathname
-   *            The name of the zip entry (relative Path into zip archive).
+   *          The name of the zip entry (relative Path into zip archive).
    */
   public static void writeZipEntry( final ZipOutputStream zos, final File file, final String pathname ) throws IOException
   {
@@ -396,7 +397,7 @@ public class ZipUtilities
    */
   public static void unzip( final URL zipLocation, final IContainer targetContainer, final IProgressMonitor monitor ) throws CoreException
   {
-    monitor.beginTask( Messages.getString("org.kalypso.commons.java.util.zip.ZipUtilities.0") + targetContainer.getName(), 1100 ); //$NON-NLS-1$
+    monitor.beginTask( Messages.getString( "org.kalypso.commons.java.util.zip.ZipUtilities.0" ) + targetContainer.getName(), 1100 ); //$NON-NLS-1$
 
     final InputStream zipStream = null;
     try
@@ -406,7 +407,7 @@ public class ZipUtilities
       {
         if( targetContainer instanceof IFolder )
         {
-          monitor.subTask( Messages.getString("org.kalypso.commons.java.util.zip.ZipUtilities.1") + targetContainer.getName() ); //$NON-NLS-1$
+          monitor.subTask( Messages.getString( "org.kalypso.commons.java.util.zip.ZipUtilities.1" ) + targetContainer.getName() ); //$NON-NLS-1$
           ((IFolder) targetContainer).create( false, true, new SubProgressMonitor( monitor, 100 ) );
         }
         else
@@ -449,5 +450,53 @@ public class ZipUtilities
         monitor.done();
       }
     }
+  }
+
+  /**
+   * returns the {@link InputStream} for the first found file in the given zipped file
+   */
+  public static InputStream getInputStreamForFirstFile( final URL zipFileURL ) throws IOException
+  {
+    return getInputStreamForSingleFile( zipFileURL, null );
+  }
+
+  /**
+   * returns the {@link InputStream} for the file with given name in the given zipped file
+   */
+  public static InputStream getInputStreamForSingleFile( final URL zipFileURL, final String zippedFile ) throws IOException
+  {
+    ZipFile zf = null;
+    try
+    {
+      zf = new ZipFile( new File( zipFileURL.toURI() ) );
+    }
+    catch( URISyntaxException e )
+    {
+      e.printStackTrace();
+    }
+    catch( ZipException e )
+    {
+      e.printStackTrace();
+    }
+    catch( IOException e )
+    {
+      e.printStackTrace();
+    }
+    Enumeration< ? > entries = zf.entries();
+    ZipEntry ze;
+    while( entries.hasMoreElements() )
+    {
+      ze = (ZipEntry) entries.nextElement();
+      if( !ze.isDirectory() && (zippedFile == null || "".equals( zippedFile ) || zippedFile.equalsIgnoreCase( ze.getName() )) ) //$NON-NLS-1$
+      {
+        long size = ze.getSize();
+        if( size > 0 )
+        {
+          return zf.getInputStream( ze );
+        }
+      }
+    }
+
+    return null;
   }
 }

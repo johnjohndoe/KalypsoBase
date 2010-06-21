@@ -79,6 +79,7 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.IGMLSchema;
@@ -129,6 +130,8 @@ public class DefaultWPSProcess implements IWPSProcess
   private ExecuteResponseType m_executionResponse;
 
   private Map<String, Object[]> m_output = null;
+
+  private String m_jobId = "";
 
   /**
    * The constructor.
@@ -305,7 +308,7 @@ public class DefaultWPSProcess implements IWPSProcess
 
         final ExecuteMediator executeMediator = new ExecuteMediator( execute );
         final WPSSimulationInfo info = manager.startSimulation( executeMediator );
-
+        m_jobId = info.getId();
         /* Prepare the execute response. */
         final FileObject resultDir = manager.getResultDir( info.getId() );
         resultFile = resultDir.resolveFile( "executeResponse.xml" );
@@ -655,5 +658,30 @@ public class DefaultWPSProcess implements IWPSProcess
   {
     final Object[] objects = map.get( id );
     map.put( id, ArrayUtils.add( objects, value ) );
+  }
+
+  /**
+   * @see org.kalypso.service.wps.client.NonBlockingWPSRequest#cancelJob()
+   */
+  public IStatus cancelJob( )
+  {
+    if( WPSRequest.SERVICE_LOCAL.equals( m_serviceEndpoint ) && !"".equals( m_jobId ) )
+    {
+      final WPSSimulationManager instance = WPSSimulationManager.getInstance();
+      try
+      {
+        final WPSSimulationInfo job = instance.getJob( m_jobId );
+        job.cancel();
+        return Status.CANCEL_STATUS;
+      }
+      catch( final SimulationException e )
+      {
+        return StatusUtilities.statusFromThrowable( e, "Simulation could not be cancelled." );
+      }
+    }
+    else
+    {
+      return StatusUtilities.createErrorStatus( "Canceling only possible for running and local simulations." );
+    }
   }
 }

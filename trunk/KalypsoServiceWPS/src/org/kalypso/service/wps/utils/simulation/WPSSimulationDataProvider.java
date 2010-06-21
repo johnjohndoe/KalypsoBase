@@ -65,8 +65,12 @@ import net.opengeospatial.wps.IOValueType.ComplexValueReference;
 import net.opengeospatial.wps.LiteralValueType;
 
 import org.apache.commons.io.FileUtils;
+import org.eclipse.core.runtime.CoreException;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.xml.NS;
+import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.core.util.pool.PoolableObjectType;
+import org.kalypso.core.util.pool.ResourcePool;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
@@ -115,6 +119,33 @@ public class WPSSimulationDataProvider implements ISimulationDataProvider
   }
 
   /**
+   * checks if the requested object is already loaded,
+   * if yes, returns the object from the ResourcePool
+   * otherwise returns null 
+   * 
+   * should prevent the recreation of already loaded objects
+   * specially in case of local execution  
+   * 
+   * @param pInputURL - {@link URL} to the needed object
+   * 
+   * @return {@link Object}
+   *
+   */
+  private Object getInputFromPool( final URL pInputURL ){
+    final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
+    final PoolableObjectType key = new PoolableObjectType( "gml", pInputURL.toExternalForm(), pInputURL ); //$NON-NLS-1$
+    Object inputRes = null;
+    try
+    {
+      inputRes = pool.getObject( key );
+    }
+    catch( CoreException e )
+    {
+    }
+    return inputRes;
+  }
+  
+  /**
    * @see org.kalypso.simulation.core.ISimulationDataProvider#getInputForID(java.lang.String)
    */
   @Override
@@ -122,8 +153,8 @@ public class WPSSimulationDataProvider implements ISimulationDataProvider
   {
     final Object input = m_inputList.get( id );
     if( input == null )
-      throw new SimulationException( Messages.getString( "org.kalypso.service.wps.utils.simulation.WPSSimulationDataProvider.0", id ), null ); //$NON-NLS-1$
-
+      throw new SimulationException( Messages.getString("org.kalypso.service.wps.utils.simulation.WPSSimulationDataProvider.0", id), null ); //$NON-NLS-1$
+    
     if( input instanceof ComplexValueType )
       return parseComplexValue( (ComplexValueType) input );
     else if( input instanceof LiteralValueType )
@@ -163,7 +194,7 @@ public class WPSSimulationDataProvider implements ISimulationDataProvider
         }
         catch( final URISyntaxException e2 )
         {
-          throw new SimulationException( Messages.getString( "org.kalypso.service.wps.utils.simulation.WPSSimulationDataProvider.1" ), e2 ); //$NON-NLS-1$
+          throw new SimulationException( Messages.getString("org.kalypso.service.wps.utils.simulation.WPSSimulationDataProvider.1"), e2 ); //$NON-NLS-1$
         }
       }
     }
@@ -223,13 +254,13 @@ public class WPSSimulationDataProvider implements ISimulationDataProvider
         {
           return GmlSerializer.createGMLWorkspace( inputSource, null, null, null );
         }
-
+        
         final URL schemaLocationHint = new URL( schema );
         return GmlSerializer.createGMLWorkspace( inputSource, schemaLocationHint, null, null );
       }
       catch( final Exception e )
       {
-        throw new SimulationException( Messages.getString( "org.kalypso.service.wps.utils.simulation.WPSSimulationDataProvider.2" ), e ); //$NON-NLS-1$
+        throw new SimulationException( Messages.getString("org.kalypso.service.wps.utils.simulation.WPSSimulationDataProvider.2"), e ); //$NON-NLS-1$
       }
     }
     else
@@ -247,7 +278,7 @@ public class WPSSimulationDataProvider implements ISimulationDataProvider
       }
       catch( final IOException e )
       {
-        throw new SimulationException( Messages.getString( "org.kalypso.service.wps.utils.simulation.WPSSimulationDataProvider.3" ), e ); //$NON-NLS-1$
+        throw new SimulationException( Messages.getString("org.kalypso.service.wps.utils.simulation.WPSSimulationDataProvider.3"), e ); //$NON-NLS-1$
       }
     }
   }

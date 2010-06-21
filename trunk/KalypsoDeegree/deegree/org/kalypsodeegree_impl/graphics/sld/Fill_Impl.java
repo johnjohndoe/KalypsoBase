@@ -39,6 +39,8 @@ import java.awt.Color;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import org.kalypso.commons.KalypsoCommonsPlugin;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.sld.CssParameter;
 import org.kalypsodeegree.graphics.sld.Fill;
@@ -57,6 +59,7 @@ import org.kalypsodeegree_impl.tools.Debug;
  * @author <a href="mailto:mschneider@lat-lon.de">Markus Schneider </a>
  * @version $Revision$ $Date$
  */
+@SuppressWarnings("unchecked")
 public class Fill_Impl extends Drawing_Impl implements Fill, Marshallable
 {
 
@@ -71,9 +74,9 @@ public class Fill_Impl extends Drawing_Impl implements Fill, Marshallable
   /**
    * Constructs a new <tt>Fill_Impl</tt>.
    */
-  public Fill_Impl( HashMap cssParams, GraphicFill graphicFill )
+  public Fill_Impl( HashMap pCssParams, GraphicFill pGraphicFill )
   {
-    super( cssParams, graphicFill );
+    super( pCssParams, pGraphicFill );
   }
 
   /**
@@ -99,18 +102,19 @@ public class Fill_Impl extends Drawing_Impl implements Fill, Marshallable
 
       // EXTREMELY SLOW! used only for checking if string begins with ## 
       //cssParam.getValue( feature ).replaceAll("##", "#");
-
-      if (s.charAt( 0 ) == '#' && s.charAt( 1 ) == '#') 
-        s = s.substring( 1 );
-        
       try
       {
+        if (s.charAt( 0 ) == '#' && s.charAt( 1 ) == '#') 
+          s = s.substring( 1 );
         awtColor =  Color.decode( s );
       }
-      catch( NumberFormatException e )
+      catch( Exception e )
       {
-        throw new FilterEvaluationException( "Given value ('" + s + "') for CSS-Parameter 'fill' "
-            + "does not denote a valid color!" );
+        KalypsoCommonsPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e, "Given value ('" + s + "') for CSS-Parameter 'fill' "
+          + "does not denote a valid color!" ) );
+        return awtColor;
+//        throw new FilterEvaluationException( "Given value ('" + s + "') for CSS-Parameter 'fill' "
+//            + "does not denote a valid color!" );
       }
     }
 

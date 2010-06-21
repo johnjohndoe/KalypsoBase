@@ -453,7 +453,7 @@ public class FeatureView extends ViewPart implements ModellEventListener
 
   /**
    * @param force
-   *          if true, alwys reset this view, else, only if feature has really changed.
+   *          if true, always reset this view, else, only if feature has really changed.
    */
   protected void activateFeature( final Feature feature, final boolean force, final ISelection selection )
   {
@@ -478,13 +478,17 @@ public class FeatureView extends ViewPart implements ModellEventListener
           oldWorkspace.removeModellListener( FeatureView.this );
           getSite().setSelectionProvider( null );
         }
-
-        if( m_featureComposite != null )
-          m_featureComposite.disposeControl();
-        final Control scroller = creator.getScrolledComposite();
-        if( scroller != null )
-          scroller.dispose();
-
+        try{
+          if( m_featureComposite != null )
+            m_featureComposite.disposeControl();
+          final Control scroller = creator.getScrolledComposite();
+          if( scroller != null )
+            scroller.dispose();
+          }
+        catch (Exception e) {
+          //TODO: set real log output
+          System.out.println( "e: " + e );
+        }
         if( m_featureComposite == null )
           return Status.OK_STATUS;
 

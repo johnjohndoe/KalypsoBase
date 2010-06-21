@@ -41,6 +41,7 @@
 package org.kalypso.contribs.java.lang;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.NumberFormat;
 import java.text.ParseException;
 
@@ -210,4 +211,17 @@ public final class NumberUtils
     return decimal.subtract( decimal.ulp() );
   }
 
+  /**
+   * returns the rounded up to by sigFigs defined decimal positions double value from given double the setting of scale
+   * or using of {@link BigDecimal#round(MathContext)} with different scaled numbers gives not exact solution.
+   */
+  public static double getRoundedToSignificant( final Double value, final int sigFigs )
+  {
+    final long longValue = value.longValue();
+    BigDecimal bigDecimal = BigDecimal.valueOf( value );
+    final BigDecimal bigDecimalLong = BigDecimal.valueOf( longValue );
+    final BigDecimal bigDecimalFloat = bigDecimal.subtract( bigDecimalLong );
+    bigDecimal = bigDecimalFloat.setScale( sigFigs, RoundingMode.HALF_UP ).add( bigDecimalLong );
+    return bigDecimal.doubleValue();
+  }
 }

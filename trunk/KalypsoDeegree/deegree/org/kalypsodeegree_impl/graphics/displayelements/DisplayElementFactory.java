@@ -271,11 +271,11 @@ public class DisplayElementFactory
   private static Object findGeometryObject( final Feature feature, final Symbolizer symbolizer ) throws FilterEvaluationException, IncompatibleGeometryTypeException
   {
     // Does not work! Features with two geometries, that both get painted, will not be painted correctly.
-// final Object lGeometry = feature.getCachedGeometry();
-// if( lGeometry != null )
-// {
-// return lGeometry;
-// }
+    final Object lGeometry = feature.getCachedGeometry();
+    if( lGeometry != null )
+    {
+      return lGeometry;
+    }
 
     final Geometry geometry = symbolizer == null ? null : symbolizer.getGeometry();
     if( geometry == null )
@@ -285,7 +285,7 @@ public class DisplayElementFactory
     final Object value = propertyName.evaluate( feature );
     if( value == null || value instanceof GM_Object || value instanceof List )
     {
-// feature.setCachedGeometry( value );
+      feature.setCachedGeometry( value );
       return value;
     }
 

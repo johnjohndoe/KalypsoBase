@@ -47,6 +47,7 @@ import net.opengeospatial.wps.ExecuteResponseType;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 
 /**
  * @author kuch
@@ -88,4 +89,6 @@ public interface IWPSProcess
   ProcessStatus getProcessStatus( );
   
   Object[] getResult( String id );
+  
+  public IStatus cancelJob( );
 }
