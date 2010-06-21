@@ -194,7 +194,9 @@ class GM_Position_Impl implements GM_Position, Serializable
     int lIntHash = 17;
     lIntHash = 31 * lIntHash + ( int ) ( Double.doubleToLongBits( getX() ) ^ ( Double.doubleToLongBits( getX() ) >>> 32 ) );
     lIntHash = 31 * lIntHash + ( int ) ( Double.doubleToLongBits( getY() ) ^ ( Double.doubleToLongBits( getY() ) >>> 32 ) );
-    lIntHash = 31 * lIntHash +  ( int ) ( Double.doubleToLongBits( getZ() ) ^ ( Double.doubleToLongBits( getZ() ) >>> 32 ) );
+    double lDoubleZ = getZ();
+    if( lDoubleZ != Double.NaN )
+      lIntHash = 31 * lIntHash +  ( int ) ( Double.doubleToLongBits( lDoubleZ ) ^ ( Double.doubleToLongBits( lDoubleZ ) >>> 32 ) );
     return lIntHash;
   }
 

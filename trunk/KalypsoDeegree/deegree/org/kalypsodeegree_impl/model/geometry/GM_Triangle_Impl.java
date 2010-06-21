@@ -35,6 +35,8 @@
  */
 package org.kalypsodeegree_impl.model.geometry;
 
+import java.util.Arrays;
+
 import org.deegree.crs.transformations.CRSTransformation;
 import org.kalypso.jts.JTSUtilities;
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -198,6 +200,37 @@ public class GM_Triangle_Impl extends GM_Polygon_Impl implements GM_Triangle
     }
 
     throw new IllegalStateException();
+  }
+
+  /**
+   * @see java.lang.Object#hashCode()
+   */
+  @Override
+  public int hashCode( )
+  {
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + Arrays.hashCode( m_planarEquation );
+    return result;
+  }
+
+  /**
+   * @see java.lang.Object#equals(java.lang.Object)
+   */
+  @Override
+  public boolean equals( Object obj )
+  {
+    if( this == obj )
+      return true;
+    if( getClass() != obj.getClass() )
+      return false;
+    GM_Triangle_Impl other = (GM_Triangle_Impl) obj;
+    for( final GM_Position lPos: other.getExteriorRing() ){
+      if( !this.contains2( lPos ) ){
+        return false;
+      }
+    }
+    return true;
   }
   
   @Override
