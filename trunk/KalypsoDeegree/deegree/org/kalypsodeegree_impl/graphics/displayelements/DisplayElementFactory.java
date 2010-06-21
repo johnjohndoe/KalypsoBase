@@ -285,7 +285,7 @@ public class DisplayElementFactory
     final Object value = propertyName.evaluate( feature );
     if( value == null || value instanceof GM_Object || value instanceof List )
     {
-      feature.setCachedGeometry( value );
+//      feature.setCachedGeometry( value );
       return value;
     }
 
