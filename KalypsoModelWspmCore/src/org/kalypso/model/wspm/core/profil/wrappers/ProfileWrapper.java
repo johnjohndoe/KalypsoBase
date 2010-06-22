@@ -249,7 +249,7 @@ public class ProfileWrapper
   {
     final String crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
 
-    final GM_Curve profileCurve = WspmGeometryUtilities.createProfileSegment( m_profile, crs, null );
+    final GM_Curve profileCurve = WspmGeometryUtilities.createProfileSegment( m_profile, crs );
     final LineString profileLineString = (LineString) JTSAdapter.export( profileCurve );
 
     return profileLineString;
