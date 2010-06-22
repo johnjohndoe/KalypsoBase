@@ -37,18 +37,18 @@ public class ProfileFeatureBinding extends AbstractCachedFeature2 implements IPr
   private static final FeatureCacheDefinition CACHE_DEFINITION = new FeatureCacheDefinition();
   static
   {
-    CACHE_DEFINITION.addCachedProperty( QNAME_LINE, QNAME_SRS );
-    CACHE_DEFINITION.addCachedProperty( QNAME_LINE, QNAME_PROFILE );
-    CACHE_DEFINITION.addCachedProperty( QNAME_LINE, ObservationFeatureFactory.OM_RESULT );
-    CACHE_DEFINITION.addCachedProperty( QNAME_LINE, ObservationFeatureFactory.OM_RESULTDEFINITION );
+    CACHE_DEFINITION.addCachedProperty( QN_PROPERTY_LINE, QN_PROPERTY_SRS );
+    CACHE_DEFINITION.addCachedProperty( QN_PROPERTY_LINE, QN_TYPE );
+    CACHE_DEFINITION.addCachedProperty( QN_PROPERTY_LINE, ObservationFeatureFactory.OM_RESULT );
+    CACHE_DEFINITION.addCachedProperty( QN_PROPERTY_LINE, ObservationFeatureFactory.OM_RESULTDEFINITION );
 
     CACHE_DEFINITION.addCachedProperty( QNAME_PSEUDO_PROFILE, QN_NAME );
     CACHE_DEFINITION.addCachedProperty( QNAME_PSEUDO_PROFILE, QN_DESCRIPTION );
-    CACHE_DEFINITION.addCachedProperty( QNAME_PSEUDO_PROFILE, QNAME_SRS );
-    CACHE_DEFINITION.addCachedProperty( QNAME_PSEUDO_PROFILE, QNAME_PROFILE );
+    CACHE_DEFINITION.addCachedProperty( QNAME_PSEUDO_PROFILE, QN_PROPERTY_SRS );
+    CACHE_DEFINITION.addCachedProperty( QNAME_PSEUDO_PROFILE, QN_TYPE );
     CACHE_DEFINITION.addCachedProperty( QNAME_PSEUDO_PROFILE, ObservationFeatureFactory.OM_RESULT );
     CACHE_DEFINITION.addCachedProperty( QNAME_PSEUDO_PROFILE, ObservationFeatureFactory.OM_RESULTDEFINITION );
-    CACHE_DEFINITION.addCachedProperty( QNAME_PSEUDO_PROFILE, QNAME_OBS_MEMBERS );
+    CACHE_DEFINITION.addCachedProperty( QNAME_PSEUDO_PROFILE, QN_PROPERTY_OBS_MEMBERS );
   }
 
   public ProfileFeatureBinding( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
@@ -62,7 +62,7 @@ public class ProfileFeatureBinding extends AbstractCachedFeature2 implements IPr
     if( property == QNAME_PSEUDO_PROFILE )
       return createProfile();
 
-    if( property.equals( QNAME_LINE ) )
+    if( property.equals( QN_PROPERTY_LINE ) )
       return createProfileSegment( this, null );
 
     return super.recalculateProperty( property );
@@ -98,7 +98,7 @@ public class ProfileFeatureBinding extends AbstractCachedFeature2 implements IPr
   @Override
   public GM_Curve getLine( )
   {
-    return getProperty( QNAME_LINE, GM_Curve.class );
+    return getProperty( QN_PROPERTY_LINE, GM_Curve.class );
   }
 
   /**
@@ -116,7 +116,7 @@ public class ProfileFeatureBinding extends AbstractCachedFeature2 implements IPr
   @Override
   public String getSrsName( )
   {
-    return (String) getProperty( QNAME_SRS );
+    return (String) getProperty( QN_PROPERTY_SRS );
   }
 
   /**
@@ -158,7 +158,7 @@ public class ProfileFeatureBinding extends AbstractCachedFeature2 implements IPr
   @Override
   public void setSrsName( final String srsName )
   {
-    setProperty( QNAME_SRS, srsName );
+    setProperty( QN_PROPERTY_SRS, srsName );
     setEnvelopesUpdated();
   }
 
@@ -247,7 +247,7 @@ public class ProfileFeatureBinding extends AbstractCachedFeature2 implements IPr
   @SuppressWarnings("unchecked")
   private IObservation<TupleResult>[] getProfileObjects( )
   {
-    final List< ? > objects = (List< ? >) getProperty( QNAME_OBS_MEMBERS );
+    final List< ? > objects = (List< ? >) getProperty( QN_PROPERTY_OBS_MEMBERS );
     if( objects.size() == 0 )
       return new IObservation[] {};
 
@@ -271,7 +271,7 @@ public class ProfileFeatureBinding extends AbstractCachedFeature2 implements IPr
   {
     final IFeatureType featureType = getFeatureType();
     final IFeatureType ft = featureType.getGMLSchema().getFeatureType( Image.QNAME );
-    final IRelationType rt = (IRelationType) featureType.getProperty( QNAME_IMAGE_MEMBER );
+    final IRelationType rt = (IRelationType) featureType.getProperty( QN_PROPERTY_IMAGE_MEMBER );
     final Image imageFeature = (Image) getWorkspace().createFeature( this, rt, ft );
 
     try
