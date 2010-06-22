@@ -57,19 +57,19 @@ import org.kalypsodeegree_impl.gml.binding.commons.Image;
  */
 public interface IProfileFeature extends Feature, IFeatureWrapper2
 {
-  public final static QName QNAME_PROFILE = new QName( IWspmConstants.NS_WSPMPROF, "Profile" ); //$NON-NLS-1$
+  public final static QName QN_TYPE = new QName( IWspmConstants.NS_WSPMPROF, "Profile" ); //$NON-NLS-1$
 
-  public static final QName QNAME_STATION = new QName( IWspmConstants.NS_WSPMPROF, "station" ); //$NON-NLS-1$
+  public static final QName QN_PROPERTY_STATION = new QName( IWspmConstants.NS_WSPMPROF, "station" ); //$NON-NLS-1$
 
-  public static final QName QNAME_TYPE = new QName( IWspmConstants.NS_WSPMPROF, "type" ); //$NON-NLS-1$
+  public static final QName QN_PROPERTY_TYPE = new QName( IWspmConstants.NS_WSPMPROF, "type" ); //$NON-NLS-1$
 
-  public final static QName QNAME_LINE = new QName( IWspmConstants.NS_WSPMPROF, "profileLocation" ); //$NON-NLS-1$
+  public final static QName QN_PROPERTY_LINE = new QName( IWspmConstants.NS_WSPMPROF, "profileLocation" ); //$NON-NLS-1$
 
-  public static final QName QNAME_SRS = new QName( IWspmConstants.NS_WSPMPROF, "srsName" ); //$NON-NLS-1$
+  public static final QName QN_PROPERTY_SRS = new QName( IWspmConstants.NS_WSPMPROF, "srsName" ); //$NON-NLS-1$
 
-  public static final QName QNAME_OBS_MEMBERS = new QName( IWspmConstants.NS_WSPMPROF, "member" ); //$NON-NLS-1$
+  public static final QName QN_PROPERTY_OBS_MEMBERS = new QName( IWspmConstants.NS_WSPMPROF, "member" ); //$NON-NLS-1$
 
-  public static final QName QNAME_IMAGE_MEMBER = new QName( IWspmConstants.NS_WSPMPROF, "imageMember" ); //$NON-NLS-1$
+  public static final QName QN_PROPERTY_IMAGE_MEMBER = new QName( IWspmConstants.NS_WSPMPROF, "imageMember" ); //$NON-NLS-1$
 
   /**
    * The scale (i.e. fraction digits) for station values.
