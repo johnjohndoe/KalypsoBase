@@ -78,6 +78,11 @@ public class WspmGeometryUtilities
     }
   }
 
+  public static GM_Curve createProfileSegment( final IProfil profil, final String srsName )
+  {
+    return createProfileSegment( profil, srsName, null );
+  }
+
   public static GM_Curve createProfileSegment( final IProfil profil, String srsName, final String pointMarkerName )
   {
     try
