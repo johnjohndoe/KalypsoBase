@@ -44,6 +44,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.Assert;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
@@ -306,8 +307,15 @@ public class CoverageProfile
     return profile;
   }
 
+  /**
+   * @param insertSign
+   *          -1 points will be insert before, ...
+   */
   public static void extendPoints( final IProfil profil, final int insertSign, final Coordinate[] simplifiedCords, final double simplifyDistance ) throws IllegalProfileOperationException
   {
+    if( ArrayUtils.isEmpty( simplifiedCords ) )
+      return;
+
     CoverageProfile.insertPoints( profil, insertSign, simplifiedCords );
 
     final int length = profil.getPoints().length;

@@ -88,20 +88,25 @@ public class RichCoverageCollection
       grid.dispose();
   }
 
+  public Coordinate[] extractPoints( final LineString lineString, final String crs ) throws GeoGridException
+  {
+    final double gridSize = getGridOffset();
+    if( Double.isNaN( gridSize ) )
+      throw new IllegalStateException( "No grids available" );
+
+    /* Add every 1/8 raster size a point. */
+    final Coordinate[] points = JTSUtilities.calculatePointsOnLine( lineString, gridSize / 8 );
+
+    return extractZ( points, crs );
+  }
+
   public Coordinate[] extractPoints( final GM_Curve curve )
   {
     try
     {
       /* Convert to a JTS geometry. */
       final LineString jtsCurve = (LineString) JTSAdapter.export( curve );
-
-      final double gridSize = getGridOffset();
-      if( Double.isNaN( gridSize ) )
-        throw new IllegalStateException( "No grids available" );
-
-      /* Add every 1/8 raster size a point. */
-      final Coordinate[] points = JTSUtilities.calculatePointsOnLine( jtsCurve, gridSize / 8 );
-      return extractZ( points, curve.getCoordinateSystem() );
+      return extractPoints( jtsCurve, curve.getCoordinateSystem() );
     }
     catch( final Exception e )
     {
@@ -190,4 +195,5 @@ public class RichCoverageCollection
 
     return m_gridCache.get( coverage );
   }
+
 }
