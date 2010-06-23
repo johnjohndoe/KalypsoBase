@@ -903,7 +903,7 @@
 		<xsl:text>% --------------------------------------------&#10;</xsl:text>
 		<xsl:text>% Check for PDFLaTeX/LaTeX &#10;</xsl:text>
 		<xsl:text>% --------------------------------------------&#10;</xsl:text>
-		<xsl:text>\newif\ifpdf&#10;</xsl:text>
+		<xsl:text>\usepackage{ifpdf}&#10;</xsl:text>
 		<xsl:text>\ifx\pdfoutput\undefined&#10;</xsl:text>
 		<xsl:text>\pdffalse % we are not running PDFLaTeX&#10;</xsl:text>
 		<xsl:text>\else&#10;</xsl:text>
