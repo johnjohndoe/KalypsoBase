@@ -1407,4 +1407,43 @@ public class JTSUtilities
 
     return results;
   }
+
+  /**
+   * Implementation taken from the nofdp idss ProfileBuilder class
+   * 
+   * @return orthogonal line string to the corresponding curve line segment
+   */
+  public static LineString getOrthogonalVector( final LineString curve, final Point point )
+  {
+    if( curve.intersection( point.buffer( TOLERANCE ) ).isEmpty() )
+      return null;
+
+    final LineSegment segment = findLineSegment( curve, point );
+
+    /* Calculate the vector of the direction. */
+    final Coordinate c0 = segment.p0;
+    final Coordinate c1 = segment.p1;
+    final Coordinate dVector = new Coordinate( c1.x - c0.x, c1.y - c0.y );
+
+    /* Circle it for 90 deegree by exchanging the values x and y and making one negative. */
+    final Coordinate dVectorVertical = new Coordinate( -dVector.y, dVector.x );
+
+    /* Normalize it. */
+    final GeometryFactory factory = new GeometryFactory( curve.getPrecisionModel(), curve.getSRID() );
+    final Point dVectorNormalized = JTSUtilities.getNormalizedVector( factory.createPoint( dVectorVertical ) );
+
+    /* Now, the new points are calculated. */
+    final double vectorExtend = 10.0;
+
+    /* Increase its length (the normalized vector is showing into the left direction). */
+    final Coordinate dVectorLeft = new Coordinate( dVectorNormalized.getX() * vectorExtend, dVectorNormalized.getY() * vectorExtend );
+    final Coordinate movedPoint = new Coordinate( point.getX() + dVectorLeft.x, point.getY() + dVectorLeft.y );
+
+// /* Increase its length (the normalized vector is showing into the left direction, so we have to inverse it). */
+// final Coordinate dVectorRight = new Coordinate( -1 * dVectorNormalized.getX() * vectorExtend, -1 *
+// dVectorNormalized.getY() * vectorExtend );
+// Coordinate rightPoint = new Coordinate( point.getX() + dVectorRight.x, point.getY() + dVectorRight.y);
+
+    return JTSAdapter.jtsFactory.createLineString( new Coordinate[] { point.getCoordinate(), movedPoint } );
+  }
 }
