@@ -168,4 +168,21 @@ public class ProfilePointWrapper extends AbstractRecordWrapper implements IRecor
 
     getRecord().setValue( index, bewuchsDp );
   }
+
+  public void setRechtswert( final double x )
+  {
+    final int index = findComponent( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
+    if( index < 0 )
+      return;
+    getRecord().setValue( index, x );
+  }
+
+  public void setHochwert( final double y )
+  {
+    final int index = findComponent( IWspmConstants.POINT_PROPERTY_HOCHWERT );
+    if( index < 0 )
+      return;
+
+    getRecord().setValue( index, y );
+  }
 }
