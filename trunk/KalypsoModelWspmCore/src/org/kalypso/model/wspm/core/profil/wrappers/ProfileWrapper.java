@@ -41,10 +41,13 @@
 package org.kalypso.model.wspm.core.profil.wrappers;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.util.WspmGeometryUtilities;
@@ -64,11 +67,28 @@ import com.vividsolutions.jts.geom.LineString;
 public class ProfileWrapper
 {
 
+  public static final Comparator<ProfileWrapper> COMPARATOR = new Comparator<ProfileWrapper>()
+  {
+    @Override
+    public int compare( final ProfileWrapper p1, final ProfileWrapper p2 )
+    {
+      final double s1 = p1.getStation();
+      final double s2 = p2.getStation();
+
+      return Double.valueOf( s1 ).compareTo( Double.valueOf( s2 ) );
+    }
+  };
+
   private final IProfil m_profile;
 
   public ProfileWrapper( final IProfil profile )
   {
     m_profile = profile;
+  }
+
+  public double getStation( )
+  {
+    return m_profile.getStation();
   }
 
   public boolean hasPoint( final double width )
@@ -245,6 +265,36 @@ public class ProfileWrapper
   public IProfil getProfile( )
   {
     return m_profile;
+  }
+
+  /**
+   * @see java.lang.Object#equals(java.lang.Object)
+   */
+  @Override
+  public boolean equals( final Object obj )
+  {
+    if( obj instanceof ProfileWrapper )
+    {
+      final EqualsBuilder builder = new EqualsBuilder();
+      builder.append( getStation(), ((ProfileWrapper) obj).getStation() );
+
+      return builder.isEquals();
+    }
+
+    return super.equals( obj );
+  }
+
+  /**
+   * @see java.lang.Object#hashCode()
+   */
+  @Override
+  public int hashCode( )
+  {
+    final HashCodeBuilder builder = new HashCodeBuilder();
+    builder.append( getClass().getName() );
+    builder.append( getStation() );
+
+    return builder.toHashCode();
   }
 
 }
