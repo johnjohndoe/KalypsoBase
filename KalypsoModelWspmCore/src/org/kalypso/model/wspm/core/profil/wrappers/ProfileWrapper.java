@@ -98,22 +98,6 @@ public class ProfileWrapper
     if( hasPoint( width ) )
       return findPoint( width );
 
-    final IRecord[] points = m_profile.getPoints();
-    ProfilePointWrapper base = null;
-    for( final IRecord point : points )
-    {
-      final ProfilePointWrapper wrapper = new ProfilePointWrapper( point );
-      final double breite = wrapper.getBreite();
-
-      if( breite < width )
-        base = wrapper;
-      else
-        break;
-    }
-
-    if( base == null )
-      throw new IllegalStateException();
-
     final IRecord add = m_profile.createProfilPoint();
     final ProfilePointWrapper addWrapper = new ProfilePointWrapper( add );
     addWrapper.setBreite( width );
@@ -127,6 +111,9 @@ public class ProfileWrapper
   {
     final ProfilePointWrapper before = findPointBefore( width );
     final ProfilePointWrapper after = findPointAfter( width );
+
+    if( before == null || after == null )
+      return 0.0;
 
     final double deltaH = after.getHoehe() - before.getHoehe();
     final double distanceDeltaH = Math.abs( before.getBreite() - after.getBreite() );
