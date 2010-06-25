@@ -40,7 +40,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -183,7 +182,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
       return new Feature[] {};
     }
     final List<Feature> result = new ArrayList<Feature>();
-    final List linkList = (List) srcFeature.getProperty( linkProperty );
+    final List< ? > linkList = (List< ? >) srcFeature.getProperty( linkProperty );
 
     for( final Object linkValue : linkList )
     {
@@ -399,7 +398,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
             accept( fv, f, depth );
           }
           else if( value instanceof List )
-            accept( fv, (List) value, depth );
+            accept( fv, (List< ? >) value, depth );
           else if( value instanceof String && depth == FeatureVisitor.DEPTH_INFINITE_LINKS )
           {
             final Feature f = getFeature( (String) value );
@@ -415,12 +414,10 @@ public class GMLWorkspace_Impl implements GMLWorkspace
    *      java.util.List, int)
    */
   @Override
-  public void accept( final FeatureVisitor fv, final List features, final int depth )
+  public void accept( final FeatureVisitor fv, final List< ? > features, final int depth )
   {
-    for( final Iterator iter = features.iterator(); iter.hasNext(); )
+    for( final Object next : features )
     {
-      final Object next = iter.next();
-
       if( next instanceof String )
       {
         // ACHTUNG LINK!
@@ -531,7 +528,6 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     }
     catch( final Exception e )
     {
-      // TODO Auto-generated catch block
       e.printStackTrace();
       return null;
     }
@@ -639,7 +635,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
 
     if( prop instanceof List )
     {
-      final List list = (List) prop;
+      final List list = (List< ? >) prop;
       // when pos = -1 -> append to end of the list
       if( pos == -1 )
         list.add( newFeature );
@@ -669,7 +665,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
       throw new Exception( "can not set feature with maxoccurs > 1, use addFeatureAsComposition instead" );
     if( value == null | overwrite )
     {
-      // TODO check if value is allready a feature, then remove it from gmlworkspace
+      // TODO check if value is already a feature, then remove it from gmlworkspace
       parentFE.setProperty( linkProp, linkedFE );
       m_indexMap.put( linkedFE.getId(), linkedFE );
       // accept all subfeatures
@@ -693,7 +689,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     if( linkProp.isList() )
     {
       final int maxOccurs = linkProp.getMaxOccurs();
-      final List list = (List) srcFE.getProperty( linkProp );
+      final List list = (List< ? >) srcFE.getProperty( linkProp );
       if( list.size() < maxOccurs || maxOccurs == IPropertyType.UNBOUND_OCCURENCY )
         // when pos = -1 -> append to end of the list
         if( pos == -1 )
@@ -724,7 +720,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     {
       // TODO check remove existing correctly
       final int maxOccurs = linkProp.getMaxOccurs();
-      final List list = (List) srcFE.getProperty( linkProp );
+      final List list = (List< ? >) srcFE.getProperty( linkProp );
       if( list.size() < maxOccurs || maxOccurs == IPropertyType.UNBOUND_OCCURENCY )
       {
         if( pos >= 0 )
@@ -777,7 +773,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     final Object prop = parentFeature.getProperty( linkProp );
 
     if( linkProp.isList() )
-      return ((List) prop).remove( childFeatureId );
+      return ((List< ? >) prop).remove( childFeatureId );
 
     if( childFeatureId.equals( parentFeature.getProperty( linkProp ) ) )
     {
@@ -799,7 +795,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     final Object prop = parentFeature.getProperty( linkProp );
     if( linkProp.isList() )
     {
-      final List list = (List) prop;
+      final List< ? > list = (List< ? >) prop;
       result = list.remove( childFeature );
     }
     else
@@ -870,7 +866,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     if( linkProp.isList() )
     {
       // else must be a list
-      final List list = (List) value;
+      final List< ? > list = (List< ? >) value;
       // TODO: test for 0 does not suffice, test also if length < pos
       if( list.size() == 0 )
         return false;
@@ -912,7 +908,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
       return false;
     if( property instanceof List )
     {
-      final Object object = ((List) property).get( pos );
+      final Object object = ((List< ? >) property).get( pos );
       if( object instanceof Feature )
         return false;
       return !m_indexMap.containsKey( object );
