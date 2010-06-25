@@ -54,7 +54,10 @@
     <module name="MethodLength"/>
     <module name="ParameterNumber"/>
     <module name="EmptyForIteratorPad"/>
-    <module name="MethodParamPad"/>
+    <module name="MethodParamPad">
+      <property name="severity" value="ignore"/>
+      <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
+    </module>
     <module name="NoWhitespaceAfter">
       <property name="severity" value="ignore"/>
       <property name="tokens" value="BNOT,DEC,DOT,INC,LNOT,UNARY_MINUS,UNARY_PLUS"/>
@@ -67,6 +70,7 @@
     <module name="OperatorWrap"/>
     <module name="ParenPad">
       <property name="option" value="space"/>
+      <property name="tokens" value="CTOR_CALL,METHOD_CALL,SUPER_CTOR_CALL"/>
     </module>
     <module name="TypecastParenPad"/>
     <module name="WhitespaceAfter">
@@ -118,7 +122,10 @@
     </module>
     <module name="FinalClass"/>
     <module name="HideUtilityClassConstructor"/>
-    <module name="VisibilityModifier"/>
+    <module name="VisibilityModifier">
+      <property name="packageAllowed" value="true"/>
+      <property name="protectedAllowed" value="true"/>
+    </module>
     <module name="ArrayTypeStyle"/>
     <module name="FinalParameters"/>
     <module name="TodoComment">
