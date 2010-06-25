@@ -97,7 +97,7 @@ public class SHPPointz implements ISHPPoint
    */
   public SHPPointz( final GM_Position position )
   {
-    this( position.getX(), position.getY(), position.getZ(), 0.0 );
+    this( position.getX(), position.getY(), position.getZ(), Double.NaN );
   }
 
   @SuppressWarnings("hiding")
