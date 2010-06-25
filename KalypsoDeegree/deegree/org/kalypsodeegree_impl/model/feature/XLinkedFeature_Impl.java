@@ -101,7 +101,7 @@ public class XLinkedFeature_Impl extends PlatformObject implements Feature
     m_actuate = actuate;
 
     final String trimmed_href = href.trim();
-    
+
     final int indexOf = trimmed_href.indexOf( '#' );
     if( indexOf == -1 || indexOf == trimmed_href.length() - 1 )
     {
@@ -138,7 +138,7 @@ public class XLinkedFeature_Impl extends PlatformObject implements Feature
     if( linkedWorkspace == null )
       throw new IllegalStateException( String.format( "Could not resolve xlinked workspace: %s", m_uri ) );
 
-    final Feature feature = linkedWorkspace == null ? null : linkedWorkspace.getFeature( m_featureId);
+    final Feature feature = linkedWorkspace == null ? null : linkedWorkspace.getFeature( m_featureId );
     if( feature == null )
       throw new IllegalStateException( "No feature found at: " + m_uri + "#" + m_featureId );
 
@@ -570,7 +570,7 @@ public class XLinkedFeature_Impl extends PlatformObject implements Feature
 // public void setCachedGeometry( Object value )
 // {
 // m_Geometry = value;
-//    
+//
 // }
 //
 // /**
