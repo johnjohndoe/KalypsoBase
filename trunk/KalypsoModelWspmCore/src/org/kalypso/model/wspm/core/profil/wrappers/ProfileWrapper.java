@@ -297,4 +297,46 @@ public class ProfileWrapper
     return builder.toHashCode();
   }
 
+  public ProfilePointWrapper getNextPoint( final double breite )
+  {
+    final ProfilePointWrapper lastPoint = getLastPoint();
+    if( lastPoint == null )
+      return null;
+
+    if( breite == lastPoint.getBreite() )
+      return lastPoint;
+
+    final ProfilePointWrapper[] points = getPoints();
+    for( final ProfilePointWrapper point : points )
+    {
+      if( point.getBreite() > breite )
+        return point;
+    }
+
+    return null;
+  }
+
+  public ProfilePointWrapper getPreviousPoint( final double breite )
+  {
+    final ProfilePointWrapper firstPoint = getFirstPoint();
+    if( firstPoint == null )
+      return null;
+
+    if( breite == firstPoint.getBreite() )
+      return firstPoint;
+
+    ProfilePointWrapper last = null;
+
+    final ProfilePointWrapper[] points = getPoints();
+    for( final ProfilePointWrapper point : points )
+    {
+      if( point.getBreite() < breite )
+        last = point;
+      else if( point.getBreite() >= breite )
+        break;
+    }
+
+    return last;
+  }
+
 }
