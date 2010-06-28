@@ -853,9 +853,8 @@ public class JTSUtilities
     /* Memory for the new points. */
     final SortedMap<Double, Coordinate> points = new TreeMap<Double, Coordinate>();
 
-    double currentLength = distance;
-
     /* If there is only 1 meter, the start- and end point have to suffice. */
+    double currentLength = distance;
     while( currentLength < length )
     {
       /* Create a new point. */
@@ -869,7 +868,6 @@ public class JTSUtilities
     }
 
     /* Add the points of the line. */
-    final double x = 0;
     for( int i = 0; i < curve.getNumPoints(); i++ )
     {
       final Point point = curve.getPointN( i );
@@ -1430,7 +1428,7 @@ public class JTSUtilities
 
     /* Normalize it. */
     final GeometryFactory factory = new GeometryFactory( curve.getPrecisionModel(), curve.getSRID() );
-    final Point dVectorNormalized = JTSUtilities.getNormalizedVector( factory.createPoint( dVectorVertical ) );
+    final Point dVectorNormalized = getNormalizedVector( factory.createPoint( dVectorVertical ) );
 
     /* Now, the new points are calculated. */
     final double vectorExtend = 10.0;
@@ -1439,10 +1437,10 @@ public class JTSUtilities
     final Coordinate dVectorLeft = new Coordinate( dVectorNormalized.getX() * vectorExtend, dVectorNormalized.getY() * vectorExtend );
     final Coordinate movedPoint = new Coordinate( point.getX() + dVectorLeft.x, point.getY() + dVectorLeft.y );
 
-// /* Increase its length (the normalized vector is showing into the left direction, so we have to inverse it). */
-// final Coordinate dVectorRight = new Coordinate( -1 * dVectorNormalized.getX() * vectorExtend, -1 *
-// dVectorNormalized.getY() * vectorExtend );
-// Coordinate rightPoint = new Coordinate( point.getX() + dVectorRight.x, point.getY() + dVectorRight.y);
+    // /* Increase its length (the normalized vector is showing into the left direction, so we have to inverse it). */
+    // final Coordinate dVectorRight = new Coordinate( -1 * dVectorNormalized.getX() * vectorExtend, -1 *
+    // dVectorNormalized.getY() * vectorExtend );
+    // Coordinate rightPoint = new Coordinate( point.getX() + dVectorRight.x, point.getY() + dVectorRight.y);
 
     return JTSAdapter.jtsFactory.createLineString( new Coordinate[] { point.getCoordinate(), movedPoint } );
   }
