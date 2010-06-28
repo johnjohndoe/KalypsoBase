@@ -276,7 +276,7 @@ public class VFSUtilities
         if( overwrite || !destinationFile.exists() || destinationFile.getContent().getSize() != source.getContent().getSize() )
         {
           /* Copy file. */
-          KalypsoCommonsDebug.DEBUG.printf( "Copy file '%s' to '%s' ...%n", source.getName(), destinationFile.getName() ); //$NON-NLS-1$
+          KalypsoCommonsDebug.DEBUG.printf( "Copy file '%s' to '%s'...%n", source.getName(), destinationFile.getName() ); //$NON-NLS-1$
           FileUtil.copyContent( source, destinationFile );
           source.close();
         }
@@ -292,7 +292,7 @@ public class VFSUtilities
         /* If a certain amount (here 2) of retries was reached before, re-throw the error. */
         if( cnt >= 2 )
         {
-          KalypsoCommonsDebug.DEBUG.printf( "The second retry has failed, rethrowing the error ...%n" ); //$NON-NLS-1$
+          KalypsoCommonsDebug.DEBUG.printf( "The second retry has failed, rethrowing the error...%n" ); //$NON-NLS-1$
           throw e;
         }
 
@@ -340,7 +340,7 @@ public class VFSUtilities
     }
     else
     {
-      KalypsoCommonsDebug.DEBUG.printf( "Creating directory %s ...%", destination.getName() ); //$NON-NLS-1$
+      KalypsoCommonsDebug.DEBUG.printf( "Creating directory '%s'...%", destination.getName() ); //$NON-NLS-1$
       destination.createFolder();
     }
 
@@ -584,5 +584,31 @@ public class VFSUtilities
   public static void setCustomFileSystemManager( final IFileSystemManagerResolveDelegate delegate )
   {
     FILE_SYSTEM_MANAGER_DELEGATE = delegate;
+  }
+
+  /**
+   * This function closes the file object. It does not throw any exceptions. It calls {@link FileObject#close()} from
+   * the file object given.
+   * 
+   * @param toClose
+   *          The file object which should be closed. May be null or already closed.
+   */
+  public static void closeQuietly( FileObject toClose )
+  {
+    try
+    {
+      /* Close the file object, if it is not null. */
+      if( toClose != null )
+        toClose.close();
+    }
+    catch( FileSystemException ex )
+    {
+      /* If a file system exception is thrown, it was probably already closed. */
+    }
+    catch( Exception ex )
+    {
+      /* On other exceptions, do tell the developer on the console. */
+      ex.printStackTrace();
+    }
   }
 }
