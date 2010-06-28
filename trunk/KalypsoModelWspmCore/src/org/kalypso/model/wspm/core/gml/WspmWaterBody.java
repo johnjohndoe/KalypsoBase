@@ -78,7 +78,7 @@ public class WspmWaterBody extends Feature_Impl implements IWspmConstants, IProf
   {
     try
     {
-      final Feature profile = FeatureHelper.addFeature( this, QNAME_PROP_PROFILEMEMBER, IProfileFeature.QN_TYPE );
+      final Feature profile = FeatureHelper.addFeature( this, QNAME_PROP_PROFILEMEMBER, IProfileFeature.QN_PROFILE );
       if( profile instanceof IProfileFeature )
         return (IProfileFeature) profile;
     }
