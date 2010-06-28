@@ -57,7 +57,7 @@ import org.kalypsodeegree_impl.gml.binding.commons.Image;
  */
 public interface IProfileFeature extends Feature, IFeatureWrapper2
 {
-  public final static QName QN_TYPE = new QName( IWspmConstants.NS_WSPMPROF, "Profile" ); //$NON-NLS-1$
+  public final static QName QN_PROFILE = new QName( IWspmConstants.NS_WSPMPROF, "Profile" ); //$NON-NLS-1$
 
   public static final QName QN_PROPERTY_STATION = new QName( IWspmConstants.NS_WSPMPROF, "station" ); //$NON-NLS-1$
 
