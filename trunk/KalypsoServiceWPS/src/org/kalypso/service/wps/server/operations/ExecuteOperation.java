@@ -44,9 +44,10 @@ import java.io.InputStream;
 
 import javax.xml.bind.JAXBException;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.vfs.FileContent;
 import org.apache.commons.vfs.FileObject;
-import org.apache.commons.vfs.FileSystemException;
+import org.kalypso.commons.io.VFSUtilities;
 import org.kalypso.service.ogc.RequestBean;
 import org.kalypso.service.ogc.exception.OWSException;
 import org.kalypso.service.wps.internal.KalypsoServiceWPSDebug;
@@ -101,6 +102,7 @@ public class ExecuteOperation implements IOperation
 
     /* Prepare the execute response. */
     FileObject resultFile = null;
+    InputStream inputStream = null;
     try
     {
       final FileObject resultDir = manager.getResultDir( info.getId() );
@@ -114,8 +116,8 @@ public class ExecuteOperation implements IOperation
         time += delay;
       }
       final FileContent content = resultFile.getContent();
-      final InputStream inputStream = content.getInputStream();
-      final String responseXml = MarshallUtilities.fromInputStream( inputStream );
+      inputStream = content.getInputStream();
+      final String responseXml = IOUtils.toString( inputStream );
       response.append( responseXml );
     }
     catch( final Exception e )
@@ -124,15 +126,11 @@ public class ExecuteOperation implements IOperation
     }
     finally
     {
-      if( resultFile != null )
-        try
-        {
-          resultFile.close();
-        }
-        catch( final FileSystemException e )
-        {
-          // gobble
-        }
+      /* Close the file object. */
+      VFSUtilities.closeQuietly( resultFile );
+
+      /* Close the input stream. */
+      IOUtils.closeQuietly( inputStream );
     }
 
     return response;

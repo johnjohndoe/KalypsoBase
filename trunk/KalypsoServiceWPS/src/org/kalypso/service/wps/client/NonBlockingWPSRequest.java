@@ -625,7 +625,7 @@ public class NonBlockingWPSRequest
         try
         {
           inputStream = content.getInputStream();
-          final String xml = MarshallUtilities.fromInputStream( inputStream );
+          final String xml = IOUtils.toString( inputStream );
           if( xml != null && !"".equals( xml ) ) //$NON-NLS-1$
           {
             final Object object = MarshallUtilities.unmarshall( xml );

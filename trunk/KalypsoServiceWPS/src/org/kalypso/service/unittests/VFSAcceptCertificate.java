@@ -46,12 +46,12 @@ import java.io.InputStream;
 
 import junit.framework.Assert;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.vfs.FileObject;
 import org.junit.Test;
 import org.kalypso.commons.io.VFSUtilities;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.service.wps.internal.KalypsoServiceWPSDebug;
-import org.kalypso.service.wps.utils.MarshallUtilities;
 
 /**
  * This unittest should test a http connection, accepting every certificate.<br>
@@ -94,7 +94,7 @@ public class VFSAcceptCertificate
 
     Assert.assertNotNull( inputStream );
 
-    String content = MarshallUtilities.fromInputStream( inputStream );
+    String content = IOUtils.toString( inputStream );
 
     KalypsoServiceWPSDebug.DEBUG.printf( "Content:\n" );
     KalypsoServiceWPSDebug.DEBUG.printf( content + "\n" );

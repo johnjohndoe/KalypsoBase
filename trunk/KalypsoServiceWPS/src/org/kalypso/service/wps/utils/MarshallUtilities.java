@@ -57,7 +57,6 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathFactory;
 
-import org.apache.commons.io.IOUtils;
 import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.service.wps.utils.WPSUtilities.WPS_VERSION;
 import org.w3c.dom.Document;
@@ -200,22 +199,5 @@ public class MarshallUtilities
   public static InputStream getInputStream( final String text )
   {
     return new ByteArrayInputStream( text.getBytes() );
-  }
-
-  /**
-   * This function reads from an input stream and returns a string representation.
-   * 
-   * @param is
-   *          The input stream.
-   * @return The string.
-   * @deprecated Use {@link IOUtils#toString(InputStream )} instead;
-   */
-  @Deprecated
-  public static String fromInputStream( final InputStream is ) throws IOException
-  {
-    // default buffer size from IOUtils
-    final StringWriter buffer = new StringWriter( 1024 * 4 );
-    IOUtils.copy( is, buffer );
-    return buffer.toString();
   }
 }

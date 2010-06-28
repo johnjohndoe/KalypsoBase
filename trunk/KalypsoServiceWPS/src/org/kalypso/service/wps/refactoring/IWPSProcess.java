@@ -51,7 +51,6 @@ import org.eclipse.core.runtime.IStatus;
 
 /**
  * @author kuch
- *
  */
 public interface IWPSProcess
 {
@@ -64,31 +63,32 @@ public interface IWPSProcess
     FAILED
   }
 
-  String getTitle( );
- 
-  String getStatusDescription( );
-
-  Integer getPercentCompleted( );
-
   /**
    * Commonly used system property for the location of the WPS endpoint. Not every WPS client might use this one.
    */
   public static final String SYSTEM_PROP_WPS_ENDPOINT = "org.kalypso.service.wps.service"; //$NON-NLS-1$
 
+  public String getTitle( );
+
+  public String getStatusDescription( );
+
+  public Integer getPercentCompleted( );
+
   /**
    * Starts the execution of this process.
    */
-  void startProcess( Map<String, Object> inputs, List<String> outputs, IProgressMonitor monitor ) throws CoreException;
+  public void startProcess( Map<String, Object> inputs, List<String> outputs, IProgressMonitor monitor ) throws CoreException;
 
   // TODO: return own interface instead of binding type in order to support different WPS versions
+
   /**
-   * returns <code>null</code>, as long as this process has not yet been started.
+   * Returns <code>null</code>, as long as this process has not yet been started.
    */
-  ExecuteResponseType getExecuteResponse( ) throws CoreException;
-  
-  ProcessStatus getProcessStatus( );
-  
-  Object[] getResult( String id );
-  
+  public ExecuteResponseType getExecuteResponse( ) throws CoreException;
+
+  public ProcessStatus getProcessStatus( );
+
+  public Object[] getResult( String id );
+
   public IStatus cancelJob( );
 }
