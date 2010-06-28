@@ -407,7 +407,7 @@ public class DefaultWPSProcess implements IWPSProcess
     /* Supported complex data type. */
     final SupportedComplexDataType complexData = inputDescription.getComplexData();
     final LiteralInputType literalInput = inputDescription.getLiteralData();
-// final SupportedCRSsType boundingBoxInput = inputDescription.getBoundingBoxData();
+    // final SupportedCRSsType boundingBoxInput = inputDescription.getBoundingBoxData();
 
     if( complexData != null )
     {

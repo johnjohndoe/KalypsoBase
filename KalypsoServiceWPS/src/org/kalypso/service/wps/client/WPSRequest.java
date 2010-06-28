@@ -78,11 +78,9 @@ import org.kalypso.service.wps.utils.WPSUtilities;
  * Furthermore it has the ability to be canceled.<br>
  * 
  * @author Holger Albert
+ * @author Ilya
  * @deprecated currently working on a refactoring of the wps service see
  *             {@link org.kalypso.service.wps.refactoring.IWPSProcess}
- */
-/**
- * @author ilya
  */
 @Deprecated
 public class WPSRequest

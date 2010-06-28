@@ -466,7 +466,7 @@ public class WPSUtilities
         {
           final FileContent content = statusFile.getContent();
           inputStream = content.getInputStream();
-          final String xml = MarshallUtilities.fromInputStream( inputStream );
+          final String xml = IOUtils.toString( inputStream );
           if( xml == null || "".equals( xml ) ) //$NON-NLS-1$
             throw new IOException( Messages.getString( "org.kalypso.service.wps.utils.WPSUtilities.4" ) + statusFile.toString() ); //$NON-NLS-1$
 
