@@ -51,7 +51,7 @@ import org.deegree.model.crs.UnknownCRSException;
 
 /**
  * This is a factory for transformations, which uses the original one from Deegree 2, but caches the results.
- *
+ * 
  * @author Holger Albert
  */
 public class CachedTransformationFactory
@@ -64,12 +64,12 @@ public class CachedTransformationFactory
   /**
    * The delegate transformation factory.
    */
-  private TransformationFactory m_delegate;
+  private final TransformationFactory m_delegate;
 
   /**
    * The cache of all transformations, created so far.
    */
-  private Map<String, CRSTransformation> m_cachedTransformations;
+  private final Map<String, CRSTransformation> m_cachedTransformations;
 
   /**
    * The constructor.
@@ -82,7 +82,7 @@ public class CachedTransformationFactory
 
   /**
    * This function returns the instance of this factory.
-   *
+   * 
    * @return The instance of this factory.
    */
   public static CachedTransformationFactory getInstance( )
@@ -97,14 +97,14 @@ public class CachedTransformationFactory
    * Creates a transformation between two coordinate systems. This method will examine the coordinate systems in order
    * to construct a transformation between them. This method may fail if no path between the coordinate systems is
    * found.
-   *
+   * 
    * @param source
-   *            Input coordinate system name.
+   *          Input coordinate system name.
    * @param target
-   *            Output coordinate system name.
+   *          Output coordinate system name.
    * @return A coordinate transformation from <code>source</code> to <code>target</code>.
    */
-  public CRSTransformation createFromCoordinateSystems( String source, String target ) throws UnknownCRSException, TransformationException
+  public CRSTransformation createFromCoordinateSystems( final String source, final String target ) throws UnknownCRSException, TransformationException
   {
     return getCachedTransformation( source, target );
   }
@@ -112,14 +112,14 @@ public class CachedTransformationFactory
   /**
    * This function retrieves a transformation by a source name and target name of a coordinate system from the cache. If
    * it does not exist in the cache, it is created and put into the cache.
-   *
+   * 
    * @param source
-   *            Input coordinate system name.
+   *          Input coordinate system name.
    * @param target
-   *            Output coordinate system name.
+   *          Output coordinate system name.
    * @return The transformation.
    */
-  private CRSTransformation getCachedTransformation( String source, String target ) throws UnknownCRSException, TransformationException
+  private CRSTransformation getCachedTransformation( final String source, final String target ) throws UnknownCRSException, TransformationException
   {
     /* Try to get it from the cache. */
     CRSTransformation transformation = m_cachedTransformations.get( source + " " + target );
@@ -128,11 +128,11 @@ public class CachedTransformationFactory
     if( transformation == null )
     {
       /* Get an instance of the cached crs factory. */
-      CachedCRSFactory factory = CachedCRSFactory.getInstance();
+      final CachedCRSFactory factory = CachedCRSFactory.getInstance();
 
       /* Get the coordinate systems. */
-      CoordinateSystem sourceCoordinateSystem = factory.create( source );
-      CoordinateSystem targetCoordinateSystem = factory.create( target );
+      final CoordinateSystem sourceCoordinateSystem = factory.create( source );
+      final CoordinateSystem targetCoordinateSystem = factory.create( target );
 
       /* Create it ... */
       transformation = m_delegate.createFromCoordinateSystems( sourceCoordinateSystem.getCRS(), targetCoordinateSystem.getCRS() );
