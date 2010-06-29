@@ -354,4 +354,26 @@ public class ProfileWrapper
 
     return p.getCoordinate();
   }
+
+  public void remove( final ProfilePointWrapper... remove )
+  {
+    for( final ProfilePointWrapper wrapper : remove )
+    {
+      m_profile.removePoint( wrapper.getRecord() );
+    }
+  }
+
+  public double getLowestHeight( )
+  {
+    Double height = Double.MAX_VALUE;
+
+    final ProfilePointWrapper[] points = getPoints();
+    for( final ProfilePointWrapper point : points )
+    {
+      if( point.getHoehe() < height )
+        height = point.getHoehe();
+    }
+
+    return height;
+  }
 }
