@@ -50,6 +50,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.filefilter.WildcardFilter;
 import org.apache.commons.lang.ArrayUtils;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IProjectNature;
@@ -58,6 +59,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
@@ -98,7 +100,10 @@ public final class UnpackProjectTemplateOperation extends WorkspaceModifyOperati
       final File destinationDir = m_project.getLocation().toFile();
       unpackProjectData( m_dataLocation, destinationDir );
       ProgressUtilities.worked( progress, 40 );
+
       m_project.open( progress.newChild( 10 ) );
+
+      resetProjectName( newName );
 
       // IMPORTANT: As the project was already open once before, we need to refresh here, else
       // not all resources are up-to-date
@@ -131,6 +136,35 @@ public final class UnpackProjectTemplateOperation extends WorkspaceModifyOperati
   }
 
   /**
+   * REMARK: setting the project name to the project description actually does not work any more.<br>
+   * We resolve this by directly tweaking the .project file, which is not nice but works.
+   */
+  private void resetProjectName( final String newName ) throws CoreException
+  {
+    try
+    {
+      final IFile projectResource = m_project.getFile( ".project" );
+      final File projectFile = projectResource.getLocation().toFile();
+
+      final String projectEncoding = projectResource.getCharset();
+
+      final String projectContents = FileUtils.readFileToString( projectFile, projectEncoding );
+      final String nameTag = String.format( "<name>%s</name>", newName );
+      final String cleanedProjectContents = projectContents.replaceAll( "<name>.*</name>", nameTag );
+
+      FileUtils.writeStringToFile( projectFile, cleanedProjectContents, projectEncoding );
+
+      projectResource.refreshLocal( IResource.DEPTH_ONE, new NullProgressMonitor() );
+    }
+    catch( final IOException e )
+    {
+      final IStatus status = new Status( IStatus.ERROR, KalypsoAFGUIFrameworkPlugin.PLUGIN_ID, "Failed to write project name into .project file.", e );
+      throw new CoreException( status );
+    }
+
+  }
+
+  /**
    * Cleans the description of the freshly created project: reset the name and remove PDE-nature if it was configured.
    */
   private String[] cleanDescription( final String newName, final SubMonitor progress ) throws CoreException
@@ -143,9 +177,6 @@ public final class UnpackProjectTemplateOperation extends WorkspaceModifyOperati
     final String[] cleanedNatureIds = (String[]) ArrayUtils.removeElement( natureIds, NewProjectWizard.PDE_NATURE_ID );
     description.setNatureIds( cleanedNatureIds );
 
-    // HACK: in order to enforce the change, we also change the comment a bit, else
-    // the description does not recognise any change and the .project file does not get written
-    description.setComment( description.getComment() + " " ); //$NON-NLS-1$
     m_project.setDescription( description, IResource.FORCE /* | IResource.AVOID_NATURE_CONFIG */, progress.newChild( 10 ) );
     return cleanedNatureIds;
   }
