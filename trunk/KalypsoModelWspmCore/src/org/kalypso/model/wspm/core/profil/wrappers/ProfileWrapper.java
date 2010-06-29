@@ -57,9 +57,12 @@ import org.kalypso.observation.result.TupleResult;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
+import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.LineString;
+import com.vividsolutions.jts.geom.Point;
 
 /**
  * @author Dirk Kuch
@@ -339,4 +342,16 @@ public class ProfileWrapper
     return last;
   }
 
+  public GM_Point getPosition( final double breite ) throws Exception
+  {
+    return WspmProfileHelper.getGeoPosition( breite, m_profile );
+  }
+
+  public Coordinate getJtsPosition( final double breite ) throws Exception
+  {
+    final GM_Point point = getPosition( breite );
+    final Point p = (Point) JTSAdapter.export( point );
+
+    return p.getCoordinate();
+  }
 }
