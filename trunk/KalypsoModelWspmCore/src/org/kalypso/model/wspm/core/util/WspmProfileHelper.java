@@ -212,7 +212,7 @@ public class WspmProfileHelper
     if( gmPoint == null )
       return null;
 
-    if( gmPoint.getCoordinateSystem() == null )
+    if( gmPoint.getCoordinateSystem() == null || gmPoint.getCoordinateSystem().isEmpty() )
       return gmPoint;
 
     return (GM_Point) WspmGeometryUtilities.GEO_TRANSFORMER.transform( gmPoint );
