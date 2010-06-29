@@ -80,12 +80,12 @@ import com.vividsolutions.jts.operation.valid.TopologyValidationError;
  * 
  * @author Holger Albert
  */
-public class JTSUtilities
+public final class JTSUtilities
 {
   /**
    * The allowed tolerance.
    */
-  private static final double TOLERANCE = 10E-04;
+  public static final double TOLERANCE = 10E-04;
 
   /**
    * The constructor.
