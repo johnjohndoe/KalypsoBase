@@ -43,6 +43,7 @@ package org.kalypso.ogc.gml.featureview.control;
 import java.util.List;
 import java.util.Properties;
 
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -79,11 +80,8 @@ public class ExtensionFeatureControlFactory implements IFeatureControlFactory
     }
     catch( final CoreException ce )
     {
-      // FIXME: error handling should work in a more general way; i.e. let createFeatureControl throw the exception
-      return null;
-// final Label label = new Label( parent, SWT.NONE );
-// label.setText( ce.getStatus().getMessage() );
-// return label;
+      final String message = String.format( "%s%n%s", ce.getLocalizedMessage(), ExceptionUtils.getStackTrace( ce ) );
+      return new LabelFeatureControl( feature, pt, message );
     }
   }
 }
