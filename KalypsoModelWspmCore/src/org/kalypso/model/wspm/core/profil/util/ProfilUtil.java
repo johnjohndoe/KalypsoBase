@@ -49,6 +49,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.math.LinearEquation;
@@ -862,7 +863,6 @@ public class ProfilUtil
    */
   public static void croppProfile( final IProfil profile, final double start, final double end )
   {
-
     final TupleResult points = profile.getResult();
     final IRecord[] segment1 = getSegment( profile, start );
     final IRecord[] segment2 = getSegment( profile, end );
@@ -1071,6 +1071,56 @@ public class ProfilUtil
   public static Double[] getValuesFor( final IProfil profil, final String component, final Class<Double> type )
   {
     return getValuesFor( profil.getPoints(), component, type );
+  }
+
+  /**
+   * Gets all values of the given component and interpolates missing values by the help of the 'BREITE' component.<br>
+   * Works only for components with numeric values.
+   * 
+   * @return All values of the profile of the given component. The length of the array is equal to the number of
+   *         records.
+   */
+  public static Double[] getInterpolatedValues( final IProfil profil, final String component )
+  {
+    final Double[] widthValues = getValuesFor( profil, IWspmConstants.POINT_PROPERTY_BREITE, Double.class );
+    final Double[] componentValues = getValuesFor( profil, component, Double.class );
+
+    Assert.isTrue( widthValues.length == componentValues.length );
+
+    int lastValid = -1;
+    for( int i = 0; i < widthValues.length; i++ )
+    {
+      if( componentValues[i] != null )
+      {
+        if( lastValid != -1 )
+        {
+          try
+          {
+            final Double width1 = widthValues[lastValid];
+            final Double value1 = componentValues[lastValid];
+            final Double width2 = widthValues[i];
+            final Double value2 = componentValues[i];
+
+            if( width1 != null && width2 != null && value1 != null && value2 != null )
+            {
+              final LinearEquation linearEquation = new LinearEquation( width1, value1, width2, value2 );
+
+              /* Loop over all invalid values */
+              for( int j = lastValid + 1; j < i - 1; j++ )
+                componentValues[j] = linearEquation.computeY( widthValues[j] );
+            }
+          }
+          catch( final SameXValuesException e )
+          {
+            e.printStackTrace();
+          }
+        }
+
+        lastValid = i;
+      }
+    }
+
+    return componentValues;
   }
 
   /**

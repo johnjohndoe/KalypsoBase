@@ -299,9 +299,9 @@ public class WspmProfileHelper
   }
 
   /**
-   * Returns the corresponding value for an given width coordinate. iFf the width is outside of the profile points, the
-   * first / last value is returned. Else the value is obtained by linear interpolation between the adjacent profile
-   * points.
+   * Returns the corresponding value for an given width coordinate. if the width is outside the valid range of profile
+   * points, the first / last value is returned. Else the value is obtained by linear interpolation between the adjacent
+   * profile points.
    * 
    * @param width
    *          width coordinate
@@ -325,28 +325,34 @@ public class WspmProfileHelper
       return null;
 
     final int iBreite = profile.indexOfProperty( IWspmConstants.POINT_PROPERTY_BREITE );
-    for( int i = 0; i < points.length - 1; i++ )
+
+    Number lastValidWidth = null;
+    Number lastValidValue = null;
+
+    for( final IRecord record : points )
     {
-      /* We need a line string of the to neighbour points. */
-      final IRecord pointOne = points[i];
-      final IRecord pointTwo = points[i + 1];
+      final Object currentWidth = record.getValue( iBreite );
+      final Object currentValue = record.getValue( indexValueComponent );
 
-      final double widthOne = (Double) pointOne.getValue( iBreite );
-      final double widthTwo = (Double) pointTwo.getValue( iBreite );
-
-      /* searching for the right segment */
-      if( widthOne <= width & widthTwo >= width )
+      if( currentWidth instanceof Number && currentValue instanceof Number )
       {
-        final Object valueOne = pointOne.getValue( indexValueComponent );
-        final Object valueTwo = pointTwo.getValue( indexValueComponent );
-        if( valueOne instanceof Number && valueTwo instanceof Number )
+        if( lastValidWidth != null && lastValidValue != null )
         {
-          final double doubleOne = ((Number) valueOne).doubleValue();
-          final double doubleTwo = ((Number) valueTwo).doubleValue();
-          return (width - widthOne) * (doubleTwo - doubleOne) / (widthTwo - widthOne) + doubleOne;
+          /* We have two adjacent valid widths/values */
+          final double widthOne = lastValidWidth.doubleValue();
+          final double widthTwo = ((Number) currentWidth).doubleValue();
+
+          if( widthOne <= width & width <= widthTwo )
+          {
+            /* The width we are looking fore lies between the two adjacent widths -> interpolate */
+            final double valueOne = lastValidValue.doubleValue();
+            final double valueTwo = ((Number) currentValue).doubleValue();
+            return (width - widthOne) * (valueTwo - valueOne) / (widthTwo - widthOne) + valueOne;
+          }
         }
-        else
-          return null;
+
+        lastValidWidth = (Number) currentWidth;
+        lastValidValue = (Number) currentValue;
       }
     }
 
