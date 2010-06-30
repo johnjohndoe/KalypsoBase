@@ -58,7 +58,7 @@ public class CustomPropertyContentType implements IPropertyContentType
   public CustomPropertyContentType( final QName qname, final IMarshallingTypeHandler typeHandler )
   {
     Assert.isNotNull( typeHandler );
-    
+
     m_qname = qname;
     m_typeHandler = typeHandler;
   }
@@ -132,6 +132,15 @@ public class CustomPropertyContentType implements IPropertyContentType
   public IGMLSchema getGmlSchema( )
   {
     return null;
+  }
+
+  /**
+   * @see java.lang.Object#toString()
+   */
+  @Override
+  public String toString( )
+  {
+    return String.format( "%s: %s", getClass().getName(), m_qname );
   }
 
 }
