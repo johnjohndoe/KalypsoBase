@@ -41,6 +41,7 @@
 package org.kalypso.model.wspm.core.util;
 
 import java.util.LinkedList;
+import java.util.SortedSet;
 import java.util.TreeSet;
 
 import org.kalypso.commons.math.geom.PolyLine;
@@ -316,6 +317,27 @@ public class WspmProfileHelper
   }
 
   /**
+   * Same as {@link #interpolateValue(IProfil, double, String)} but for several values at once.
+   */
+  public static Double[] interpolateValues( final IProfil profile, final Double[] widths, final String valueComponent ) throws IndexOutOfBoundsException
+  {
+    final int indexValueComponent = profile.indexOfProperty( valueComponent );
+    return interpolateValues( profile, widths, indexValueComponent );
+  }
+
+  /**
+   * Same as {@link #interpolateValue(IProfil, double, int)} but for several values at once.
+   */
+  public static Double[] interpolateValues( final IProfil profile, final Double[] widths, final int indexValueComponent ) throws IndexOutOfBoundsException
+  {
+    final Double[] values = new Double[widths.length];
+    for( int i = 0; i < values.length; i++ )
+      values[i] = interpolateValue( profile, widths[i], indexValueComponent );
+
+    return values;
+  }
+
+  /**
    * Same as {@link #interpolateValue(IProfil, double, String)} but used the component index.
    */
   public static Double interpolateValue( final IProfil profile, final double width, final int indexValueComponent ) throws IndexOutOfBoundsException
@@ -375,6 +397,9 @@ public class WspmProfileHelper
    */
   public static GM_Point[] calculateWspPoints( final IProfil profil, final double wspHoehe )
   {
+    final Double[] intersections = calculateWspIntersections( profil, wspHoehe );
+
+    final IComponent cBreite = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_BREITE );
     final IComponent cHochwert = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_HOCHWERT );
     final IComponent cRechtswert = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
 
@@ -384,6 +409,30 @@ public class WspmProfileHelper
     if( cHochwert == null || cRechtswert == null )
       return new GM_Point[] {};
 
+    /* Same for RW and HW, but filter 0-values */
+    final PolyLine rwLine = createPolyline( profil, cBreite, cRechtswert );
+    final PolyLine hwLine = createPolyline( profil, cBreite, cHochwert );
+
+    final GM_Point[] poses = new GM_Point[intersections.length];
+    int count = 0;
+    for( final Double x : intersections )
+    {
+      final double rw = rwLine.getYFor( x, false );
+      final double hw = hwLine.getYFor( x, false );
+
+      final GM_Point point = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Point( rw, hw, wspHoehe, crs );
+
+      poses[count++] = point;
+    }
+
+    return poses;
+  }
+
+  /**
+   * calculates the waterlevel segments as pairs of x-coordinates.
+   */
+  public static Double[] calculateWspIntersections( final IProfil profil, final double wspHoehe )
+  {
     final IComponent cHoehe = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_HOEHE );
     final int iHoehe = profil.indexOfProperty( cHoehe );
     final IComponent cBreite = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_BREITE );
@@ -403,13 +452,10 @@ public class WspmProfileHelper
     final PolyLine wspLine = new PolyLine( new double[] { firstX, lastX }, new double[] { wspHoehe, wspHoehe }, 0.0001 );
     final PolyLine profilLine = new PolyLine( breiteValues, ProfilUtil.getDoubleValuesFor( profil, cHoehe ), 0.0001 );
 
-    /* Same for RW and HW, but filter 0-values */
-    final PolyLine rwLine = createPolyline( profil, cBreite, cRechtswert );
-    final PolyLine hwLine = createPolyline( profil, cBreite, cHochwert );
-
     final double[] intersectionXs = profilLine.intersect( wspLine );
 
-    final TreeSet<Double> intersections = new TreeSet<Double>();
+    final SortedSet<Double> intersections = new TreeSet<Double>();
+
     if( firstY < wspHoehe )
       intersections.add( new Double( firstX ) );
     for( final double d : intersectionXs )
@@ -417,19 +463,7 @@ public class WspmProfileHelper
     if( lastY < wspHoehe )
       intersections.add( new Double( lastX ) );
 
-    final GM_Point[] poses = new GM_Point[intersections.size()];
-    int count = 0;
-    for( final Double x : intersections )
-    {
-      final double rw = rwLine.getYFor( x, false );
-      final double hw = hwLine.getYFor( x, false );
-
-      final GM_Point point = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Point( rw, hw, wspHoehe, crs );
-
-      poses[count++] = point;
-    }
-
-    return poses;
+    return intersections.toArray( new Double[intersections.size()] );
   }
 
   private static PolyLine createPolyline( final IProfil profil, final IComponent xProperty, final IComponent yProperty )
