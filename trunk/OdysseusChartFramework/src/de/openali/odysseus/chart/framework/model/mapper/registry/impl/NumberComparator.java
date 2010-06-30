@@ -44,11 +44,9 @@ import java.util.Comparator;
 
 /**
  * @author burtscher1
- * 
  */
 public class NumberComparator implements Comparator<Number>
 {
-
   private final double m_delta;
 
   public NumberComparator( )
@@ -56,7 +54,7 @@ public class NumberComparator implements Comparator<Number>
     this( 0 );
   }
 
-  public NumberComparator( double delta )
+  public NumberComparator( final double delta )
   {
     m_delta = delta;
   }
@@ -65,10 +63,10 @@ public class NumberComparator implements Comparator<Number>
    * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
    */
   @Override
-  public int compare( Number o1, Number o2 )
+  public int compare( final Number o1, final Number o2 )
   {
-    double d1 = o1.doubleValue();
-    double d2 = o2.doubleValue();
+    final double d1 = o1.doubleValue();
+    final double d2 = o2.doubleValue();
     if( m_delta > 0 )
     {
       if( d1 < d2 )
