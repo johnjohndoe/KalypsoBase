@@ -183,7 +183,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
     public void themeAdded( final IMapModell source, final IKalypsoTheme theme )
     {
       if( theme.isVisible() )
-        invalidateMap();
+        setBoundingBox( getWishBox(), false, true );
 
       updateStatus();
     }
@@ -224,7 +224,6 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
     @Override
     public void themeStatusChanged( final IMapModell source, final IKalypsoTheme theme )
     {
-// invalidateMap();
     }
   };
 
@@ -260,6 +259,11 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
     addMouseWheelListener( m_widgetManager );
     addKeyListener( m_widgetManager );
     addComponentListener( this );
+  }
+
+  protected final GM_Envelope getWishBox( )
+  {
+    return m_wishBBox;
   }
 
   /**
@@ -345,9 +349,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
 
     m_size = size;
 
-    final GM_Envelope bbox = m_wishBBox != null ? m_wishBBox : m_boundingBox;
-    if( bbox != null )
-      setBoundingBox( bbox, false );
+    setBoundingBox( m_wishBBox, false );
   }
 
   /**
@@ -356,8 +358,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
   @Override
   public void componentShown( final ComponentEvent e )
   {
-    final GM_Envelope bbox = m_wishBBox != null ? m_wishBBox : m_boundingBox;
-    setBoundingBox( bbox, false );
+    setBoundingBox( m_wishBBox, false );
   }
 
   @Override
@@ -694,7 +695,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
     g.drawImage( buffer, 0, 0, null );
   }
 
-  private void paintBufferedMap( Graphics2D bufferGraphics, BufferPaintJob bufferPaintJob )
+  private void paintBufferedMap( final Graphics2D bufferGraphics, final BufferPaintJob bufferPaintJob )
   {
     final BufferedImage image = bufferPaintJob.getImage();
     if( image == null )
@@ -834,17 +835,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
       if( useHistory && m_wishBBox != null )
         m_extentHistory.push( m_wishBBox );
 
-      /* Adjust the new extent (using the wish bounding box). */
-      final double ratio = MapPanelUtilities.getRatio( this );
-      final GM_Envelope boundingBox = MapModellHelper.adjustBoundingBox( m_model, m_wishBBox, ratio );
-      m_boundingBox = boundingBox;
-      if( boundingBox != null )
-      {
-        KalypsoCoreDebug.MAP_PANEL.printf( "MinX: %d%n", boundingBox.getMin().getX() ); //$NON-NLS-1$
-        KalypsoCoreDebug.MAP_PANEL.printf( "MinY: %d%n", boundingBox.getMin().getY() ); //$NON-NLS-1$
-        KalypsoCoreDebug.MAP_PANEL.printf( "MaxX: %d%n", boundingBox.getMax().getX() ); //$NON-NLS-1$
-        KalypsoCoreDebug.MAP_PANEL.printf( "MaxY: %d%n", boundingBox.getMax().getY() ); //$NON-NLS-1$
-      }
+      m_boundingBox = determineBoundingBox();
     }
 
     if( invalidateMap )
@@ -856,6 +847,27 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
     }
     else
       repaintMap();
+  }
+
+  /**
+   * Determines the real bounding box from the current wish box.<br>
+   * If the wish box is currently null, we always maximise the map. This is specially nice for previously empty maps,
+   * and a new theme is added.
+   */
+  private GM_Envelope determineBoundingBox( )
+  {
+    /* Adjust the new extent (using the wish bounding box). */
+    final double ratio = MapPanelUtilities.getRatio( this );
+    final GM_Envelope boundingBox = MapModellHelper.adjustBoundingBox( m_model, m_wishBBox, ratio );
+    if( boundingBox != null )
+    {
+      KalypsoCoreDebug.MAP_PANEL.printf( "MinX: %d%n", boundingBox.getMin().getX() ); //$NON-NLS-1$
+      KalypsoCoreDebug.MAP_PANEL.printf( "MinY: %d%n", boundingBox.getMin().getY() ); //$NON-NLS-1$
+      KalypsoCoreDebug.MAP_PANEL.printf( "MaxX: %d%n", boundingBox.getMax().getX() ); //$NON-NLS-1$
+      KalypsoCoreDebug.MAP_PANEL.printf( "MaxY: %d%n", boundingBox.getMax().getY() ); //$NON-NLS-1$
+    }
+
+    return boundingBox;
   }
 
   /**
@@ -1103,7 +1115,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
       layer.dispose();
 
     if( lastVisibility )
-      invalidateMap();
+      setBoundingBox( m_wishBBox, false, true );
 
     updateStatus();
   }
