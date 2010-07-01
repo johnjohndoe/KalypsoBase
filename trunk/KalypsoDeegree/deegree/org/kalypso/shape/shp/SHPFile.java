@@ -83,6 +83,9 @@ public class SHPFile
 
   public static SHPFile create( final File file, final ShapeType shapeType ) throws IOException
   {
+    if( file.isFile() && file.exists() )
+      file.delete();
+
     final RandomAccessFile raf = new RandomAccessFile( file, "rw" );
 
     final ShapeHeader header = new ShapeHeader( ShapeHeader.SHAPE_FILE_HEADER_LENGTH, shapeType, null );
