@@ -80,6 +80,9 @@ public class DBaseFile
 
   public static DBaseFile create( final File file, final DBFField[] fields, final Charset charset ) throws IOException, DBaseException
   {
+    if( file.isFile() && file.exists() )
+      file.delete();
+
     final DBFHeader header = new DBFHeader( new DBFFields( fields ) );
 
     final RandomAccessFile rdbf = new RandomAccessFile( file, "rw" );
