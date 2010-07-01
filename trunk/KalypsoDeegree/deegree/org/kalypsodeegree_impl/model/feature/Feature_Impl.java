@@ -479,7 +479,7 @@ public class Feature_Impl extends PlatformObject implements Feature
     final IRelationType rt = getParentRelation();
     if( (rt != null) && rt.isList() )
     {
-      // rt relation type and this relation type can differ (differnt feature workspaces!)
+      // rt relation type and this relation type can differ (different feature workspaces!)
       final IRelationType relation = (IRelationType) parent.getFeatureType().getProperty( rt.getQName() );
       final FeatureList list = (FeatureList) parent.getProperty( relation );
       list.invalidate( this );
