@@ -49,6 +49,7 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 
 /**
@@ -88,7 +89,16 @@ public class AbstractCachedFeature2 extends Feature_Impl
   {
     final QName[] dirtyQName = m_cacheDefinition.getDirtyProperties( changedProperty );
     for( final QName dirtyName : dirtyQName )
+    {
       m_dirty.add( dirtyName );
+
+      final IPropertyType property = getFeatureType().getProperty( dirtyName );
+      if( property instanceof IValuePropertyType )
+      {
+        if( ((IValuePropertyType) property).isGeometry() )
+          setEnvelopesUpdated();
+      }
+    }
   }
 
   /**
