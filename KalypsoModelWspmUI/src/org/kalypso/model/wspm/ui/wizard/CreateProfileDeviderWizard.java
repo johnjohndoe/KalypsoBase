@@ -284,6 +284,7 @@ public class CreateProfileDeviderWizard extends Wizard
 
     final IRecord[] points = profil.getPoints();
     for( final IRecord profilPoint : points )
+    {
       try
       {
         final GM_Point pointGeom = ProfileCacherFeaturePropertyFunction.convertPoint( profil, profilPoint, crs );
@@ -312,6 +313,7 @@ public class CreateProfileDeviderWizard extends Wizard
         final IStatus status = StatusUtilities.statusFromThrowable( e );
         KalypsoModelWspmUIPlugin.getDefault().getLog().log( status );
       }
+    }
 
     final IProfilPointMarker[] existingMarkers = profil.getPointMarkerFor( markerType );
     for( final IProfilPointMarker marker : existingMarkers )
