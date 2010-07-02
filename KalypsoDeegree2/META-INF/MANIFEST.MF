@@ -341,16 +341,8 @@ Export-Package: com.vividsolutions.jts,
    org.deegree.model.table,
    org.deegree.framework.util,
    com.esri.sde.sdk.client",
- org.deegree.io.shpapi;version="2.1.0";
-  uses:="org.deegree.model.spatialschema,
-   org.deegree.model.feature,
-   org.deegree.model.feature.schema,
-   org.deegree.model.crs",
- org.deegree.io.shpapi.shape_new;version="2.1.0";
-  uses:="org.deegree.model.spatialschema,
-   org.deegree.model.feature,
-   com.vividsolutions.jts.geom,
-   org.deegree.io.dbaseapi",
+ org.deegree.io.shpapi;x-internal:=true,
+ org.deegree.io.shpapi.shape_new;x-internal:=true,
  org.deegree.io.util;version="2.1.0",
  org.deegree.model.coverage;version="2.1.0";
   uses:="org.deegree.datatypes.parameter,

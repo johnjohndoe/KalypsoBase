@@ -234,4 +234,19 @@ public class DBaseFile
 
     m_raf.seek( position );
   }
+
+  /**
+   * Returns the index (with regard to the array return by {@link #getFields()} of the field with a specfic name.
+   */
+  public int findFieldIndex( final String fieldName )
+  {
+    final DBFField[] fields = getFields();
+    for( int i = 0; i < fields.length; i++ )
+    {
+      if( fieldName.equals( fields[i].getName() ) )
+        return i;
+    }
+
+    return -1;
+  }
 }

@@ -84,7 +84,6 @@ public class SimpleShapeWriter
    * @param properties
    *          shape file properties, first property have to be the result property
    */
-  @SuppressWarnings("deprecation")
   public SimpleShapeWriter( final File file, final QName... properties )
   {
     m_file = file;

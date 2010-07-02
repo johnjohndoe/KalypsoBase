@@ -44,14 +44,10 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 
 /**
- * <p>
- * Decorater over any FeatureVisitor, but only visits features of a given type.
- * </p>
- * <p>
- * Comparisaon is by name of the given type
- * </p>
+ * Decorater over any FeatureVisitor, but only visits features of a given type.<br/>
+ * Comparisaon is by name of the given type<br/>
  * 
- * @author belger
+ * @author Gernot Belger
  */
 public class FeatureTypeVisitor implements FeatureVisitor
 {
@@ -107,7 +103,7 @@ public class FeatureTypeVisitor implements FeatureVisitor
     final IFeatureType featureType = f.getFeatureType();
     if( m_localTypename == featureType.getLocalQName() )
       return true;
-    
+
     if( m_acceptIfSubstituting )
       return GMLSchemaUtilities.substitutes( featureType, m_typename, m_localTypename );
 
