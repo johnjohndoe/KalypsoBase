@@ -79,12 +79,12 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  * 
  * @version 17.10.2001
  * @author Andreas Poth
+ * @deprecated Use {@link org.kalypso.shape.ShapeFile} instead.
  */
+@Deprecated
 public class ShapeFile
 {
-  public static final QName PROPERTY_FEATURE_MEMBER = new QName( DBaseFile.SHP_NAMESPACE_URI, "featureMember" ); //$NON-NLS-1$
-
-  public static final String GEOM = "GEOM";//$NON-NLS-1$
+  private static final String GEOM = "GEOM";//$NON-NLS-1$
 
   private final String m_filePath;
 
@@ -278,7 +278,7 @@ public class ShapeFile
       return null;
 
     return SHP2WKS.transform( crs, shpGeom );
-    
+
   }
 
   /**

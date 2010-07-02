@@ -43,11 +43,7 @@ package org.kalypso.ogc.gml.serialize;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.xml.namespace.QName;
 
@@ -64,14 +60,12 @@ import org.kalypso.gmlschema.GMLSchemaFactory;
 import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.io.shpapi.DBaseException;
 import org.kalypsodeegree_impl.io.shpapi.DBaseFile;
 import org.kalypsodeegree_impl.io.shpapi.ShapeFile;
 import org.kalypsodeegree_impl.io.shpapi.dataprovider.IShapeDataProvider;
@@ -83,35 +77,40 @@ import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
  * Helper-Klasse zum lesen und schreiben von GML <br>
  * TODO: Problem: reading/writing a shape will change the precision/size of the columns!
  * 
- * @author gernot
+ * @author Gernot Belger
  */
 public final class ShapeSerializer
 {
   /** The default charset of a shape (really the .dbf) is IBM850. */
   private static final String SHAPE_DEFAULT_CHARSET_IBM850 = "IBM850";
 
-  private static final String SHP_NAMESPACE_URI = DBaseFile.SHP_NAMESPACE_URI;
+  public static final String SHP_NAMESPACE_URI = DBaseFile.SHP_NAMESPACE_URI;
 
   private static final QName ROOT_FEATURETYPE = new QName( SHP_NAMESPACE_URI, "ShapeCollection" ); //$NON-NLS-1$
 
-  private static final QName PROPERTY_SHAPE_TYPE = new QName( SHP_NAMESPACE_URI, "ShapeType" ); //$NON-NLS-1$
-
-  public static final QName PROPERTY_FEATURE_MEMBER = ShapeFile.PROPERTY_FEATURE_MEMBER;
+  public static final QName PROPERTY_FEATURE_MEMBER = new QName( DBaseFile.SHP_NAMESPACE_URI, "featureMember" ); //$NON-NLS-1$
 
   private static final QName PROPERTY_NAME = new QName( SHP_NAMESPACE_URI, "name" ); //$NON-NLS-1$
 
   private static final QName PROPERTY_TYPE = new QName( SHP_NAMESPACE_URI, "type" ); //$NON-NLS-1$
 
+  public static final String PROPERTY_GEOM = "GEOM";//$NON-NLS-1$
+
   /**
    * Pseudo QNAME, placeholder for the gml-id to be written.
    */
-  public static final QName QNAME_GMLID = new QName( Gml2ShapeConverter.class.getName() + "gmlid" ); //$NON-NLS-1$
+  public static final QName QNAME_GMLID = new QName( ShapeSerializer.class.getName() + "gmlid" ); //$NON-NLS-1$
 
   private ShapeSerializer( )
   {
     // wird nicht instantiiert
   }
 
+  /**
+   * @deprecated Use {@link org.kalypso.shape.ShapeWriter} and {@link org.kalypso.shape.deegree.GenericShapeDataFactory}
+   *             instead.
+   */
+  @Deprecated
   public static void serialize( final GMLWorkspace workspace, final String filenameBase, IShapeDataProvider shapeDataProvider ) throws GmlSerializeException
   {
     final Feature rootFeature = workspace.getRootFeature();
@@ -135,221 +134,6 @@ public final class ShapeSerializer
       e.printStackTrace();
 
       throw new GmlSerializeException( Messages.getString( "org.kalypso.ogc.gml.serialize.ShapeSerializer.7" ), e ); //$NON-NLS-1$
-    }
-  }
-
-  /**
-   * Schreibt ein Array von Features in eine Shape-Datei. Dabei werden nicht einfach alle Properties geschrieben,
-   * sondern nur die über ein vorher festgelegt Mapping.
-   * 
-   * @param features
-   *          Properties dieser Features werden geschrieben.
-   * @param mapping
-   *          keys: Spaltennamen der Shape-Datei; Values: Property-Namen des Features
-   * @param geoName
-   *          Der Name der Property mit der Geometry
-   * @param filenameBase
-   *          Der Ausgabename für das Shape (.shp, .dbf, und. shx)
-   */
-  public static void serializeFeatures( final Feature[] features, final Map<String, String> mapping, final String geoName, final String filenameBase, StandardShapeDataProvider shapeDataProvider ) throws GmlSerializeException
-  {
-    if( features.length == 0 )
-      return;
-
-    final IFeatureType featureType = features[0].getFeatureType();
-    final IValuePropertyType geoPt = (IValuePropertyType) featureType.getProperty( geoName );
-
-    final IPropertyType[] ftps = new IPropertyType[mapping.size() + 1];
-    final IMarshallingTypeHandler typeHandler = geoPt.getTypeHandler();
-    final String namespace = featureType.getQName().getNamespaceURI();
-    final QName geomP = new QName( namespace, ShapeFile.GEOM );
-    ftps[0] = GMLSchemaFactory.createValuePropertyType( geomP, typeHandler, 0, 1, false );
-
-    int count = 1;
-    for( final Map.Entry<String, String> entry : mapping.entrySet() )
-    {
-      final IValuePropertyType ftp = (IValuePropertyType) featureType.getProperty( entry.getValue() );
-
-      // ftps[count] = FeatureFactory.createFeatureTypeProperty( (String) entry.getKey(), ftp.getValueClass(),
-      // ftp.isNullable() );
-      final IMarshallingTypeHandler typeHandler2 = ftp.getTypeHandler();
-      ftps[count] = GMLSchemaFactory.createValuePropertyType( new QName( SHP_NAMESPACE_URI, entry.getKey() ), typeHandler2, 1, 1, false );
-      count++;
-    }
-
-    // final IFeatureType shapeFeatureType = FeatureFactory.createFeatureType( "shapeType", null, ftps, occurs, occurs,
-    // null, new HashMap() );
-    final IFeatureType shapeFeatureType = GMLSchemaFactory.createFeatureType( PROPERTY_SHAPE_TYPE, ftps );
-
-    try
-    {
-      final Collection<Feature> shapeFeatures = new ArrayList<Feature>( features.length );
-      for( int i = 0; i < features.length; i++ )
-      {
-        final Feature kalypsoFeature = features[i];
-
-        final Object[] data = new Object[ftps.length];
-
-        data[0] = kalypsoFeature.getProperty( geoName );
-
-        int datacount = 1;
-        for( final Entry<String, String> entry : mapping.entrySet() )
-        {
-          data[datacount++] = kalypsoFeature.getProperty( entry.getValue() );
-        }
-
-        final Feature feature = FeatureFactory.createFeature( null, null, "" + i, shapeFeatureType, data ); //$NON-NLS-1$
-        shapeFeatures.add( feature );
-      }
-
-      final ShapeFile shapeFile = new ShapeFile( filenameBase, "rw" ); //$NON-NLS-1$
-
-      if( shapeDataProvider == null )
-      {
-        shapeDataProvider = new StandardShapeDataProvider( shapeFeatures.toArray( new Feature[shapeFeatures.size()] ) );
-      }
-      else
-      {
-        shapeDataProvider.setFeatures( shapeFeatures.toArray( new Feature[shapeFeatures.size()] ) );
-      }
-
-      shapeFile.writeShape( shapeDataProvider );
-
-      shapeFile.close();
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-
-      throw new GmlSerializeException( Messages.getString( "org.kalypso.ogc.gml.serialize.ShapeSerializer.10" ), e ); //$NON-NLS-1$
-    }
-  }
-
-  /**
-   * Schreibt ein Array von Features in eine Shape-Datei. Dabei werden nicht einfach alle Properties geschrieben,
-   * sondern nur die über ein vorher festgelegt Mapping.
-   * 
-   * @param features
-   *          Properties dieser Features werden geschrieben.
-   * @param mapping
-   *          keys: Spaltennamen der Shape-Datei; Values: Property-Namen des Features
-   * @param geoName
-   *          Der Name der Property mit der Geometry
-   * @param filenameBase
-   *          Der Ausgabename für das Shape (.shp, .dbf, und. shx)
-   */
-  public static void serializeFeatures( final Feature[] features, final Map<String, QName> mapping, final QName geomProperty, final String filenameBase, IShapeDataProvider shapeDataProvider ) throws GmlSerializeException
-  {
-    if( features.length == 0 )
-      throw new GmlSerializeException( Messages.getString( "org.kalypso.ogc.gml.serialize.ShapeSerializer.11" ) ); //$NON-NLS-1$
-
-    final IFeatureType featureType = features[0].getFeatureType();
-    QName geometryProperty = geomProperty;
-    IValuePropertyType geoPt = (IValuePropertyType) featureType.getProperty( geomProperty );
-
-    if( geoPt == null )
-    {
-      geoPt = featureType.getDefaultGeometryProperty();
-      geometryProperty = featureType.getDefaultGeometryProperty().getQName();
-    }
-    if( geoPt == null )
-      throw new GmlSerializeException(  Messages.getString( "org.kalypso.ogc.gml.serialize.ShapeSerializer.12" , geomProperty.toString(), featureType.getQName().toString() ) ); //$NON-NLS-1$
-
-    final IPropertyType[] ftps = new IPropertyType[mapping.size() + 1];
-    final IMarshallingTypeHandler geoTypeHandler = geoPt.getTypeHandler();
-    final String namespace = featureType.getQName().getNamespaceURI();
-    final QName geomP = new QName( namespace, ShapeFile.GEOM );
-    ftps[0] = GMLSchemaFactory.createValuePropertyType( geomP, geoTypeHandler, 0, 1, false );
-
-    int count = 1;
-    for( final Entry<String, QName> entry : mapping.entrySet() )
-    {
-      final QName qname = entry.getValue();
-
-      if( qname == ShapeSerializer.QNAME_GMLID )
-      {
-        /* If it is the pseudo gml-id qname, create a string-property */
-        final IMarshallingTypeHandler typeHandler = MarshallingTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForTypeName( XmlTypes.XS_STRING );
-        ftps[count] = GMLSchemaFactory.createValuePropertyType( new QName( SHP_NAMESPACE_URI, entry.getKey() ), typeHandler, 1, 1, false );
-      }
-      else
-      {
-        /* for each given value property create a corresponding type */
-        final IValuePropertyType ftp = (IValuePropertyType) featureType.getProperty( qname );
-        final IMarshallingTypeHandler typeHandler = ftp.getTypeHandler();
-        ftps[count] = GMLSchemaFactory.createValuePropertyType( new QName( SHP_NAMESPACE_URI, entry.getKey() ), typeHandler, 1, 1, false );
-      }
-      count++;
-    }
-
-    final IFeatureType shapeFeatureType = GMLSchemaFactory.createFeatureType( PROPERTY_SHAPE_TYPE, ftps );
-
-    try
-    {
-      final Collection<Feature> shapeFeatures = new ArrayList<Feature>( features.length );
-      for( int i = 0; i < features.length; i++ )
-      {
-        final Feature kalypsoFeature = features[i];
-
-        final Object[] data = new Object[ftps.length];
-
-        final IPropertyType geomPT = kalypsoFeature.getFeatureType().getProperty( geometryProperty );
-
-        final Object geom = kalypsoFeature.getProperty( geometryProperty );
-        if( geomPT.isList() )
-        {
-          // HACK: if geomProperty is a list property, we just take the first element
-          // as Shape does not support lists of geometries.
-          final List< ? > geomList = (List< ? >) geom;
-          if( !geomList.isEmpty() )
-          {
-            data[0] = geomList.get( 0 );
-          }
-        }
-        else
-        {
-          data[0] = geom;
-        }
-
-        int datacount = 1;
-        for( final Entry<String, QName> entry : mapping.entrySet() )
-        {
-          final QName qname = entry.getValue();
-          if( qname == ShapeSerializer.QNAME_GMLID )
-          {
-            data[datacount++] = kalypsoFeature.getId();
-          }
-          else
-          {
-            data[datacount++] = kalypsoFeature.getProperty( qname );
-          }
-        }
-
-        final Feature feature = FeatureFactory.createFeature( null, null, "" + i, shapeFeatureType, data ); //$NON-NLS-1$
-        shapeFeatures.add( feature );
-      }
-
-      final ShapeFile shapeFile = new ShapeFile( filenameBase, "rw" ); //$NON-NLS-1$
-
-      // if no dataProvider is set take the StandardProvider
-      if( shapeDataProvider == null )
-      {
-        shapeDataProvider = new StandardShapeDataProvider( shapeFeatures.toArray( new Feature[shapeFeatures.size()] ) );
-      }
-      else
-      {
-        shapeDataProvider.setFeatures( shapeFeatures.toArray( new Feature[shapeFeatures.size()] ) );
-      }
-
-      shapeFile.writeShape( shapeDataProvider );
-
-      shapeFile.close();
-    }
-    catch( final Throwable e )
-    {
-      e.printStackTrace();
-
-      throw new GmlSerializeException( Messages.getString( "org.kalypso.ogc.gml.serialize.ShapeSerializer.15" ) + e.getMessage(), e ); //$NON-NLS-1$
     }
   }
 
@@ -424,7 +208,7 @@ public final class ShapeSerializer
 
   public final static GMLWorkspace deserialize( final String fileBase, final String sourceCrs, final Charset charset, final IProgressMonitor monitor ) throws GmlSerializeException
   {
-    final String taskName = Messages.getString("org.kalypso.ogc.gml.serialize.ShapeSerializer.2", fileBase ); //$NON-NLS-1$
+    final String taskName = Messages.getString( "org.kalypso.ogc.gml.serialize.ShapeSerializer.2", fileBase ); //$NON-NLS-1$
     final SubMonitor moni = SubMonitor.convert( monitor, taskName, 100 );
 
     ShapeFile sf = null;
@@ -479,56 +263,6 @@ public final class ShapeSerializer
       }
 
       moni.done();
-    }
-  }
-
-  /** REMARK: we return a simple collection of features with no parent. Better we would return a GMLWorkspace. */
-  public static Collection<Feature> readFeaturesFromDbf( final String basename )
-  {
-    final Charset charset = getShapeDefaultCharset();
-
-    DBaseFile dbf = null;
-    try
-    {
-      // todo: zur Zeit gehen wird davon aus, dass der Typ immer '1' ist
-      // ist das immer so?
-      dbf = new DBaseFile( basename, 1, charset );
-
-      final int recordNum = dbf.getRecordNum();
-      final Collection<Feature> features = new ArrayList<Feature>( recordNum );
-      for( int i = 0; i < recordNum; i++ )
-      {
-        final Feature feature = dbf.getFRow( null, null, i + 1 );
-        features.add( feature );
-      }
-
-      return features;
-    }
-    catch( final IOException e )
-    {
-      e.printStackTrace();
-
-      return null;
-    }
-    catch( final DBaseException e )
-    {
-      e.printStackTrace();
-
-      return null;
-    }
-    finally
-    {
-      if( dbf != null )
-      {
-        try
-        {
-          dbf.close();
-        }
-        catch( final IOException e )
-        {
-          e.printStackTrace();
-        }
-      }
     }
   }
 
