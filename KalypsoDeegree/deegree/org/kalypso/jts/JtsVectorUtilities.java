@@ -55,14 +55,49 @@ public final class JtsVectorUtilities
 {
   private JtsVectorUtilities( )
   {
+  }
 
+  /**
+   * This function returns a vector of the line between this two points as point.
+   * 
+   * @param start
+   *          The start point of the line.
+   * @param end
+   *          The end point of the line.
+   * @return A vector of the line between this two points as point.
+   */
+  public static Point getVector( final Point start, final Point end )
+  {
+    final Coordinate coords = new Coordinate( start.getX() - end.getX(), start.getY() - end.getY() );
+    final GeometryFactory factory = new GeometryFactory( start.getPrecisionModel(), start.getSRID() );
+
+    return factory.createPoint( coords );
+  }
+
+  /**
+   * This function calculates a normalized vector.
+   * 
+   * @param vector
+   *          The vector to be normalized.
+   * @return The normalized vector.
+   */
+  public static Point getNormalizedVector( final Point vector )
+  {
+    final double x = vector.getX();
+    final double y = vector.getY();
+
+    /* The length of a vector is the sum of all elements with the power of two and than the square root of it. */
+    final double laenge = Math.sqrt( x * x + y * y );
+
+    final Coordinate coord = new Coordinate( x / laenge, y / laenge );
+    final GeometryFactory factory = new GeometryFactory( vector.getPrecisionModel(), vector.getSRID() );
+    return factory.createPoint( coord );
   }
 
   public static Point movePoint( final Point point, final LineString vector, final int direction, final double distance )
   {
-    // TODO Auto-generated method stub
-    final Point v = JTSUtilities.getVector( vector.getStartPoint(), vector.getEndPoint() );
-    final Point normalized = JTSUtilities.getNormalizedVector( v );
+    final Point v = getVector( vector.getStartPoint(), vector.getEndPoint() );
+    final Point normalized = getNormalizedVector( v );
 
     double mx;
     double my;
@@ -80,16 +115,6 @@ public final class JtsVectorUtilities
     final double mz = point.getCoordinate().z;
 
     return JTSAdapter.jtsFactory.createPoint( new Coordinate( mx, my, mz ) );
-  }
-
-  public static Point getVector( final Point start, final Point end )
-  {
-    return JTSUtilities.getVector( start, end );
-  }
-
-  public static Point getNormalizedVector( final Point vector )
-  {
-    return JTSUtilities.getNormalizedVector( vector );
   }
 
   /**
