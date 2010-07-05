@@ -51,7 +51,7 @@ import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.i18n.Messages;
-import org.kalypso.jts.JTSUtilities;
+import org.kalypso.jts.JtsVectorUtilities;
 import org.kalypso.ogc.gml.map.widgets.advanced.edit.AdvancedEditWidgetSnapper;
 import org.kalypso.ogc.gml.map.widgets.advanced.edit.IAdvancedEditWidget;
 import org.kalypso.ogc.gml.map.widgets.advanced.edit.IAdvancedEditWidgetDataProvider;
@@ -84,9 +84,9 @@ public class AdvancedEditModeSingleDelegate extends AbstractAdvancedEditModeMove
     try
     {
       final Point jtsPoint = (Point) JTSAdapter.export( gmp );
-      
+
       final IAdvancedEditWidgetSnappedPoint[] snappedPoints;
-      
+
       if( getWidget().isLeftMouseButtonPressed() )
       {
         snappedPoints = filterSnapPoints( getWidget().getSnappedPointsAtOrigin() );
@@ -118,7 +118,7 @@ public class AdvancedEditModeSingleDelegate extends AbstractAdvancedEditModeMove
         // drag & drop symbolization
         if( getWidget().getOriginPoint() != null )
         {
-          final Point vector = JTSUtilities.getVector( getWidget().getOriginPoint(), jtsPoint );
+          final Point vector = JtsVectorUtilities.getVector( getWidget().getOriginPoint(), jtsPoint );
 
           /* highlight moved snap points */
           final Set<Point> moved = new HashSet<Point>();
@@ -177,7 +177,7 @@ public class AdvancedEditModeSingleDelegate extends AbstractAdvancedEditModeMove
   @Override
   public String getToolTip( )
   {
-    return Messages.getString("org.kalypso.ogc.gml.map.widgets.advanced.edit.delegates.AdvancedEditModeSingleDelegate.0"); //$NON-NLS-1$
+    return Messages.getString( "org.kalypso.ogc.gml.map.widgets.advanced.edit.delegates.AdvancedEditModeSingleDelegate.0" ); //$NON-NLS-1$
   }
 
   @Override

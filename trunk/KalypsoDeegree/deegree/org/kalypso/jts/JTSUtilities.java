@@ -522,43 +522,6 @@ public final class JTSUtilities
   }
 
   /**
-   * Returns a vector of this line.
-   * 
-   * @param start
-   *          The start point of the line.
-   * @param end
-   *          The end point of the line.
-   * @return A vector of the line between this two points as point.
-   */
-  public static Point getVector( final Point start, final Point end )
-  {
-    final Coordinate coords = new Coordinate( start.getX() - end.getX(), start.getY() - end.getY() );
-    final GeometryFactory factory = new GeometryFactory( start.getPrecisionModel(), start.getSRID() );
-
-    return factory.createPoint( coords );
-  }
-
-  /**
-   * Calculates a normalized vector.
-   * 
-   * @param vector
-   *          The vector to be normalized.
-   * @return The normalized vector.
-   */
-  public static Point getNormalizedVector( final Point vector )
-  {
-    final double x = vector.getX();
-    final double y = vector.getY();
-
-    /* The length of a vector is the sum of all elements with the power of two and than the square root of it. */
-    final double laenge = Math.sqrt( x * x + y * y );
-
-    final Coordinate coord = new Coordinate( x / laenge, y / laenge );
-    final GeometryFactory factory = new GeometryFactory( vector.getPrecisionModel(), vector.getSRID() );
-    return factory.createPoint( coord );
-  }
-
-  /**
    * This function creates a line segment with the two given points, calculates the length of the line segment and
    * returns the length.
    * 
