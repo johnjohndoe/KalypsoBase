@@ -125,6 +125,8 @@ public interface IWspmConstants extends IWspmPhenomenonConstants
   /** Constant for coordinate-system of profile rw/hw. For example, it will be set by the GML-Profile converter. */
   public static final String PROFIL_PROPERTY_CRS = "COORDINATE_SYSTEM"; //$NON-NLS-1$
 
+  public static final String PROFIL_PROPERT_WATERBODY_SRC = "PROFIL_PROPERT_WATERBODY_SRC"; //$NON-NLS-1$
+
   // needed by IObservation Interface
   public static final String PROFIL_DESCRIPTION = NS_WSPMPROF + "_DESCRIPTION"; //$NON-NLS-1$
 

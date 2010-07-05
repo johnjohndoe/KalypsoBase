@@ -705,4 +705,16 @@ public abstract class AbstractProfil implements IProfil
     m_station = station;
   }
 
+  /**
+   * @see java.lang.Object#toString()
+   */
+  @Override
+  public String toString( )
+  {
+    final Double station = getStation();
+    if( station != null )
+      return String.format( "Profile %.3f km", station );
+
+    return super.toString();
+  }
 }

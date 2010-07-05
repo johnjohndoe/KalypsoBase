@@ -232,6 +232,14 @@ public class ProfileFeatureBinding extends AbstractCachedFeature2 implements IPr
     final String crs = getSrsName();
     profil.setProperty( IWspmConstants.PROFIL_PROPERTY_CRS, crs );
 
+    /* TODO - @hack - add flow direction to profile meta data */
+    final Feature parent = getParent();
+    if( parent instanceof WspmWaterBody )
+    {
+      final WspmWaterBody waterBody = (WspmWaterBody) parent;
+      profil.setProperty( IWspmConstants.PROFIL_PROPERT_WATERBODY_SRC, waterBody.getId() );
+    }
+
     /* building of profile */
     // REMARK: handle buildings before table, because the setBuilding method resets the
     // corresponding table properties.
