@@ -20,7 +20,7 @@ import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
 public class AxisImageFactory
 {
 
-  public static ImageData createAxisImageFromChart( ChartComposite chart, String axisId, Device dev, int width, int height )
+  public static ImageData createAxisImageFromChart( final ChartComposite chart, final String axisId, final Device dev, final int width, final int height )
   {
     chart.setPlotSize( width, height );
     chart.layout();
@@ -33,7 +33,7 @@ public class AxisImageFactory
     return createAxisImage( axisCanvas, dev );
   }
 
-  public static ImageData createAxisImageFromShell( Shell shell, ChartComposite chart, String axisId, Device dev, int width, int height )
+  public static ImageData createAxisImageFromShell( final Shell shell, final ChartComposite chart, final String axisId, final Device dev, final int width, final int height )
   {
     final IMapperRegistry mapperRegistry = chart.getChartModel().getMapperRegistry();
     final IAxis axis = mapperRegistry.getAxis( axisId );
@@ -61,7 +61,7 @@ public class AxisImageFactory
     return createAxisImage( axisCanvas, dev );
   }
 
-  public static ImageData createAxisImage( AxisCanvas axisCanvas, Device dev )
+  public static ImageData createAxisImage( final AxisCanvas axisCanvas, final Device dev )
   {
     final int axisWidth = axisCanvas.getBounds().width;
     final int axisHeight = axisCanvas.getBounds().height;

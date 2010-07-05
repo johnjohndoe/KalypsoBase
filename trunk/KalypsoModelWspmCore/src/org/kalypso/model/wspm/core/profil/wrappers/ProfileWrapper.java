@@ -41,7 +41,6 @@
 package org.kalypso.model.wspm.core.profil.wrappers;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -69,19 +68,6 @@ import com.vividsolutions.jts.geom.Point;
  */
 public class ProfileWrapper
 {
-
-  public static final Comparator<ProfileWrapper> COMPARATOR = new Comparator<ProfileWrapper>()
-  {
-    @Override
-    public int compare( final ProfileWrapper p1, final ProfileWrapper p2 )
-    {
-      final double s1 = p1.getStation();
-      final double s2 = p2.getStation();
-
-      return Double.valueOf( s1 ).compareTo( Double.valueOf( s2 ) );
-    }
-  };
-
   private final IProfil m_profile;
 
   public ProfileWrapper( final IProfil profile )
