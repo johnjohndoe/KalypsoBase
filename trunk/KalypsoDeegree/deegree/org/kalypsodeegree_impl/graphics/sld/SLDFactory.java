@@ -321,11 +321,11 @@ public class SLDFactory
     }
     catch( final IOException e )
     {
-      throw new XMLParsingException( "IOException encountered while parsing SLD-Document: " + e.getMessage() );
+      throw new XMLParsingException( "IOException encountered while parsing SLD-Document: " + e.getMessage(), e );
     }
     catch( final SAXException e )
     {
-      throw new XMLParsingException( "SAXException encountered while parsing SLD-Document: " + e.getMessage() );
+      throw new XMLParsingException( "SAXException encountered while parsing SLD-Document: " + e.getMessage(), e );
     }
   }
 

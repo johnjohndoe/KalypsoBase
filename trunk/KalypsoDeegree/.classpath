@@ -39,7 +39,6 @@
 	<classpathentry exported="true" kind="lib" path="lib/batik/lib/js.jar" sourcepath="KalypsoDeegreesrc.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/batik/lib/pdf-transcoder.jar" sourcepath="/KalypsoCommons/lib/commons-io-1.2-src.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/batik/lib/xalan-2.6.0.jar" sourcepath="KalypsoDeegreesrc.zip"/>
-	<classpathentry exported="true" kind="lib" path="lib/batik/lib/xerces_2_5_0.jar" sourcepath="KalypsoDeegreesrc.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/batik/lib/xml-apis-ext.jar" sourcepath="KalypsoDeegreesrc.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/batik/lib/xml-apis.jar" sourcepath="KalypsoDeegreesrc.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/batik/batik-rasterizer.jar" sourcepath="KalypsoDeegreesrc.zip"/>

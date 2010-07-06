@@ -75,11 +75,20 @@ import org.xml.sax.SAXException;
  */
 public class XMLTools
 {
-  private static final DocumentBuilderFactory DOCUMENT_FACTORY = DocumentBuilderFactory.newInstance();
+  private static DocumentBuilderFactory DOCUMENT_FACTORY;
   static
   {
-    DOCUMENT_FACTORY.setNamespaceAware( true );
-    DOCUMENT_FACTORY.setValidating( false );
+    try
+    {
+      DOCUMENT_FACTORY = DocumentBuilderFactory.newInstance();
+      DOCUMENT_FACTORY.setNamespaceAware( true );
+      DOCUMENT_FACTORY.setValidating( false );
+      DOCUMENT_FACTORY.setFeature( "http://apache.org/xml/features/allow-java-encodings", true );
+    }
+    catch( final Throwable e )
+    {
+      e.printStackTrace();
+    }
   }
 
   /**
@@ -696,15 +705,13 @@ public class XMLTools
     try
     {
       final DocumentBuilder parser = DOCUMENT_FACTORY.newDocumentBuilder();
-      final Document doc = parser.parse( new InputSource( is ) );
-
-      return doc;
+      return parser.parse( new InputSource( is ) );
     }
     catch( final ParserConfigurationException ex )
     {
       ex.printStackTrace();
 
-      throw new IOException( "Unable to initialize DocumentBuilder: " + ex.getMessage() );
+      throw new IOException( "Unable to initialize DocumentBuilder: " + ex.getMessage(), ex );
     }
   }
 
