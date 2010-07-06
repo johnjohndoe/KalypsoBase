@@ -38,54 +38,20 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.ui.dialog.compare;
+package org.kalypso.model.wspm.ui.view.chart;
 
-import org.eclipse.core.runtime.Assert;
-import org.eclipse.swt.widgets.Composite;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.ui.view.chart.IProfilChart;
 
-import de.openali.odysseus.chart.framework.util.ChartUtilities;
 import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
 
 /**
  * @author Dirk Kuch
  */
-public class CompareSwitchProfileButtonDialog extends SwitchProfileButtonDialog
+public interface IProfilChart
 {
-  private final ICompareProfileProvider m_provider;
+  IProfil getProfil( );
 
-  private final IProfilChart[] m_additionalViews;
+  ChartComposite getChart( );
 
-  public CompareSwitchProfileButtonDialog( final Composite parent, final IProfilChart base, final ICompareProfileProvider provider, final IProfilChart... additionalViews )
-  {
-    super( parent, base, provider.getBaseProfiles() );
-    m_provider = provider;
-    m_additionalViews = additionalViews;
-  }
-
-  /**
-   * @see org.kalypso.planer.client.aw.measures.wspm.altdeich.dialog.SwitchProfileButtonDialog#setProfile(org.kalypso.model.wspm.core.profil.IProfil)
-   */
-  @Override
-  protected void setProfile( final IProfil baseProfile )
-  {
-    super.setProfile( baseProfile );
-
-    final CompareProfileWrapper[] additional = m_provider.getAdditionalProfiles( baseProfile );
-    Assert.isTrue( additional.length == m_additionalViews.length );
-
-    for( int i = 0; i < additional.length; i++ )
-    {
-      final IProfilChart view = m_additionalViews[i];
-      final CompareProfileWrapper wrapper = additional[i];
-
-      view.setProfil( wrapper.getProfil() );
-
-      final ChartComposite chart = view.getChart();
-      if( chart != null )
-        ChartUtilities.maximize( chart.getChartModel() );
-    }
-  }
-
+  void setProfil( IProfil profile );
 }

@@ -224,7 +224,7 @@ public abstract class AbstractProfil implements IProfil
   @Override
   public void fireProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
-    if( changes == null || changes.length == 0 )
+    if( ArrayUtils.isEmpty( changes ) )
       return;
 
     final IProfilListener[] listeners = m_listeners.toArray( new IProfilListener[m_listeners.size()] );
@@ -675,6 +675,12 @@ public abstract class AbstractProfil implements IProfil
   public void setProperty( final Object key, final Object value )
   {
     m_additionalProfileSettings.put( key, value );
+
+// // TODO implement some meaningful change event
+// final ProfilChangeHint hint = new ProfilChangeHint();
+// hint.setObjectChanged();
+//
+// fireProfilChanged( hint, new IProfilChange[] { new EmptyChange() } );
   }
 
   /**

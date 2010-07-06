@@ -55,9 +55,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 
-import de.openali.odysseus.chart.framework.util.ChartUtilities;
-import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
-
 /**
  * @author Dirk Kuch
  */
@@ -107,24 +104,24 @@ public class CompareProfilesDialog extends TitleAreaDialog
 
     final CompareProfileWrapper baseWrapper = m_provider.getBaseProfile();
 
-    final CompareProfilesChartView baseChartView = createChartView( baseWrapper, body, toolkit );
+    final ProfileChart baseChartView = createChartView( baseWrapper, body, toolkit );
 
-    final List<CompareProfilesChartView> additionalChartViews = new ArrayList<CompareProfilesChartView>();
+    final List<ProfileChart> additionalChartViews = new ArrayList<ProfileChart>();
 
     final CompareProfileWrapper[] additional = m_provider.getAdditionalProfiles( baseWrapper.getProfil() );
     for( final CompareProfileWrapper ad : additional )
     {
-      final CompareProfilesChartView additionalView = createChartView( ad, body, toolkit );
+      final ProfileChart additionalView = createChartView( ad, body, toolkit );
       additionalChartViews.add( additionalView );
     }
 
-    final CompareSwitchProfileButtonDialog switchDialog = new CompareSwitchProfileButtonDialog( body, baseChartView, m_provider, additionalChartViews.toArray( new CompareProfilesChartView[] {} ) );
+    final CompareSwitchProfileButtonDialog switchDialog = new CompareSwitchProfileButtonDialog( body, baseChartView, m_provider, additionalChartViews.toArray( new ProfileChart[] {} ) );
     switchDialog.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
     return super.createDialogArea( parent );
   }
 
-  private CompareProfilesChartView createChartView( final CompareProfileWrapper wrapper, final Composite body, final FormToolkit toolkit )
+  private ProfileChart createChartView( final CompareProfileWrapper wrapper, final Composite body, final FormToolkit toolkit )
   {
     final Group group = new Group( body, SWT.NULL );
 
@@ -135,18 +132,12 @@ public class CompareProfilesDialog extends TitleAreaDialog
     group.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
     group.setText( wrapper.getLabel() );
 
-    final CompareProfilesChartView chartView = new CompareProfilesChartView( wrapper.getProfil(), wrapper.getLayerProvider() );
-    chartView.createControl( group );
-
-    chartView.setProfil( wrapper.getProfil() );
-
-    final ChartComposite chart = chartView.getChart();
-    if( chart != null )
-      ChartUtilities.maximize( chart.getChartModel() );
+    final ProfileChart chart = new ProfileChart( group, wrapper.getLayerProvider(), wrapper.getProfil() );
+    chart.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
 
     toolkit.adapt( group );
 
-    return chartView;
+    return chart;
   }
 
   @Override

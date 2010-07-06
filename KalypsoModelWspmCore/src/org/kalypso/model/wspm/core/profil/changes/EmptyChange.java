@@ -38,20 +38,54 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.ui.view.chart;
+package org.kalypso.model.wspm.core.profil.changes;
 
-import org.kalypso.model.wspm.core.profil.IProfil;
-
-import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
+import org.kalypso.model.wspm.core.profil.IProfilChange;
+import org.kalypso.model.wspm.core.profil.IllegalProfileOperationException;
 
 /**
+ * @author Kim Werner
  * @author Dirk Kuch
  */
-public interface IProfilChartView
+public class EmptyChange implements IProfilChange
 {
-  IProfil getProfil( );
 
-  ChartComposite getChart( );
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfilChange#doChange(org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint)
+   */
+  @Override
+  public IProfilChange doChange( final ProfilChangeHint hint ) throws IllegalProfileOperationException
+  {
+    hint.setPointPropertiesChanged();
 
-  void setProfil( IProfil profile );
+    return this;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfilChange#getObjects()
+   */
+  @Override
+  public Object[] getObjects( )
+  {
+    return new Object[] {};
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfilChange#getInfo()
+   */
+  @Override
+  public String getInfo( )
+  {
+    return "";
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfilChange#getValue()
+   */
+  @Override
+  public Double getValue( )
+  {
+    return Double.NaN;
+  }
+
 }

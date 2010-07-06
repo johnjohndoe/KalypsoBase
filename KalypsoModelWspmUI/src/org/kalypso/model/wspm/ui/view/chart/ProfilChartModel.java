@@ -65,18 +65,25 @@ public class ProfilChartModel extends ChartModel implements IProfilListener
 
   private IProfilLayerProvider m_layerProvider = null;
 
-  public ProfilChartModel( final IProfil profil, Object result )
+  public ProfilChartModel( final IProfilLayerProvider layerProvider, final IProfil profil, final Object result )
   {
     super();
+
+    m_layerProvider = layerProvider;
     m_profil = profil;
+
     if( m_profil == null )
       return;
 
-    m_layerProvider = KalypsoModelWspmUIExtensions.createProfilLayerProvider( profil.getType() );
     final IProfilChartLayer[] profileLayers = m_layerProvider.createLayers( profil, result );
     for( final IProfilChartLayer layer : profileLayers )
       getLayerManager().addLayer( layer );
     m_layerProvider.registerAxis( getMapperRegistry() );
+  }
+
+  public ProfilChartModel( final IProfil profil, final Object result )
+  {
+    this( KalypsoModelWspmUIExtensions.createProfilLayerProvider( profil.getType() ), profil, result );
   }
 
   public final void unregisterListener( )
@@ -105,7 +112,7 @@ public class ProfilChartModel extends ChartModel implements IProfilListener
    * @see org.kalypso.model.wspm.core.profil.IProfilListener#onProblemMarkerChanged(org.kalypso.model.wspm.core.profil.IProfil)
    */
   @Override
-  public void onProblemMarkerChanged( IProfil source )
+  public void onProblemMarkerChanged( final IProfil source )
   {
     if( source == getProfil() )
     {
@@ -119,7 +126,7 @@ public class ProfilChartModel extends ChartModel implements IProfilListener
    *      org.kalypso.model.wspm.core.profil.IProfilChange[])
    */
   @Override
-  public void onProfilChanged( ProfilChangeHint hint, IProfilChange[] changes )
+  public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
     if( hint.isPointPropertiesChanged() )
     {
@@ -142,6 +149,7 @@ public class ProfilChartModel extends ChartModel implements IProfilListener
         }
       }
     }
+
     else
     {
       for( final IChartLayer layer : getLayerManager().getLayers() )
