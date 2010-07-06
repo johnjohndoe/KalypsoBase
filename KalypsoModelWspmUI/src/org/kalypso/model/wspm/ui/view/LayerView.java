@@ -40,57 +40,34 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.view;
 
-import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.eclipse.ui.forms.widgets.ScrolledForm;
-import org.eclipse.ui.part.ViewPart;
-import org.kalypso.model.wspm.ui.i18n.Messages;
+import org.eclipse.ui.forms.widgets.Form;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
+import de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener;
+import de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
-import de.openali.odysseus.chart.framework.view.IChartView;
 
 /**
  * @author kimwerner
  */
-public class LayerView extends ViewPart
+public class LayerView extends AbstractChartModelView
 {
 
-  /**
-   * @see org.eclipse.ui.part.WorkbenchPart#setPartName(java.lang.String)
-   */
-  @Override
-  public void setPartName(final String title)
+  private Composite m_parent = null;
+
+  private final ILayerManagerEventListener m_layerManagerEventListener = new AbstractLayerManagerEventListener()
   {
-    super.setPartName( title );
-  }
-
-  private ScrolledForm m_form;
-
-  private FormToolkit m_toolkit;
-
-  /**
-   * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
-   */
-  @Override
-  public void createPartControl( final Composite parent )
-  {
-    m_toolkit = new FormToolkit( parent.getDisplay() );
-    m_form = m_toolkit.createScrolledForm( parent );
-    m_toolkit.decorateFormHeading( m_form.getForm() );
-    final GridLayout bodyLayout = new GridLayout();
-    bodyLayout.marginHeight = 0;
-    bodyLayout.marginWidth = 0;
-    m_form.getForm().getBody().setLayout( bodyLayout );
-    m_form.getForm().setText( "" ); //$NON-NLS-1$
-    m_form.getForm().setMessage( Messages.getString( "org.kalypso.model.wspm.ui.view.LayerView.0" ), IMessageProvider.INFORMATION ); //$NON-NLS-1$
-  }
+    @Override
+    public void onActivLayerChanged( IChartLayer layer )
+    {
+      updateControl();
+    }
+  };
 
   /**
    * @see org.eclipse.ui.part.WorkbenchPart#dispose()
@@ -98,24 +75,16 @@ public class LayerView extends ViewPart
   @Override
   public void dispose( )
   {
-    if( m_form != null )
-      m_form.dispose();
+    final ILayerManager lm = getChartModel() == null ? null : getChartModel().getLayerManager();
+    if( lm != null )
+      lm.removeListener( m_layerManagerEventListener );
+
     super.dispose();
   }
 
-  /**
-   * @see org.eclipse.ui.IWorkbenchPart#setFocus()
-   */
-  @Override
-  public void setFocus( )
+  private final IChartLayer getActiveLayer( )
   {
-    if( m_form != null && m_form.getBody() != null )
-      m_form.getBody().setFocus();
-  }
-
-  private final IChartLayer getActiveLayer( final IChartView chart )
-  {
-    final IChartModel model = chart == null ? null : chart.getChartModel();
+    final IChartModel model = getChartModel();
     final ILayerManager mngr = model == null ? null : model.getLayerManager();
     if( mngr != null )
     {
@@ -128,34 +97,62 @@ public class LayerView extends ViewPart
     return null;
   }
 
-  public final void updatePanel( final IChartView chart )
+  /**
+   * @see org.kalypso.model.wspm.ui.view.AbstractChartModelView#updateControl()
+   */
+  @Override
+  protected void updateControl( final Form form )
   {
-    final IChartLayer activeLayer = getActiveLayer( chart );
-    if( m_form == null || m_form.isDisposed() || m_form.getBody() == null )
+    if( m_parent == null || m_parent.isDisposed() )
       return;
-    for( final Control ctrl : m_form.getBody().getChildren() )
+    for( final Control ctrl : m_parent.getChildren() )
     {
       if( !ctrl.isDisposed() )
         ctrl.dispose();
     }
-    if( activeLayer != null )
-    {
-      m_form.getForm().setMessage( "", 0 ); //$NON-NLS-1$
-      m_form.getForm().setText( activeLayer.getTitle() );
-      final IProfilView panel = activeLayer instanceof IProfilChartLayer ? ((IProfilChartLayer) activeLayer).createLayerPanel() : null;
+    updatePartName( form, getChartModel() );
+    final IChartLayer activeLayer = getActiveLayer();
+    if( activeLayer == null )
+      return;
 
-      if( panel != null )
-      {
-        final Control control = panel.createControl( m_form.getForm().getBody(), m_toolkit );
-        control.setLayoutData( new GridData( GridData.FILL_BOTH ) );
-      }
-    }
-    else
+    final IProfilView panel = activeLayer instanceof IProfilChartLayer ? ((IProfilChartLayer) activeLayer).createLayerPanel() : null;
+
+    if( panel != null )
     {
-      m_form.getForm().setText( "" ); //$NON-NLS-1$
-      m_form.getForm().setMessage( Messages.getString( "org.kalypso.model.wspm.ui.view.LayerView.0" ), IMessageProvider.INFORMATION ); //$NON-NLS-1$
+      final Control control = panel.createControl( m_parent, getToolkit() );
+      control.setLayoutData( new GridData( GridData.FILL_BOTH ) );
+      m_parent.layout();
     }
-    m_form.reflow( true );
+
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.ui.view.AbstractChartModelView#createControl(org.eclipse.swt.widgets.Composite)
+   */
+  @Override
+  protected void createControl( Composite parent )
+  {
+
+    if( parent == null )
+      return;
+    m_parent = parent;
+    modelChanged( null );
+
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.ui.view.AbstractChartModelView#modelChanged(de.openali.odysseus.chart.framework.model.IChartModel)
+   */
+  @Override
+  protected void modelChanged( IChartModel oldModel )
+  {
+    final ILayerManager oldLm = oldModel == null ? null : oldModel.getLayerManager();
+    final ILayerManager lm = getChartModel() == null ? null : getChartModel().getLayerManager();
+    if( oldLm != null )
+      oldLm.removeListener( m_layerManagerEventListener );
+    if( lm != null )
+      lm.addListener( m_layerManagerEventListener );
+    updateControl();
   }
 
 }

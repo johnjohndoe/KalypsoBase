@@ -54,4 +54,6 @@ public interface IProfilProvider
   public void removeProfilProviderListener( final IProfilProviderListener l );
 
   public void dispose( );
+
+  public Object getResult( );
 }

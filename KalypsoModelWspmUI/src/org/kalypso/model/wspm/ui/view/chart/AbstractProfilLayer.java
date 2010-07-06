@@ -89,38 +89,46 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
 
   private IProfil m_profil;
 
-  private final int m_targetPropertyIndex;
+  private int m_targetPropIndex = -1;
 
-  public AbstractProfilLayer( final IProfil profil, final String targetRangeProperty, final ILayerStyleProvider styleProvider )
-  {
-    this( profil, profil.indexOfProperty( targetRangeProperty ), styleProvider );
-  }
+  private final String m_targetRangeProperty;
 
-  public AbstractProfilLayer( final IProfil profil, final int targetPropertyIndex, final ILayerStyleProvider styleProvider )
-  {
-    this( createId(profil, targetPropertyIndex), profil, targetPropertyIndex, styleProvider );
-  }
+// public AbstractProfilLayer( final IProfil profil, final String targetRangeProperty, final ILayerStyleProvider
+// styleProvider )
+// {
+// m_profil = profil;
+// m_targetRangeProperty = targetRangeProperty;
+// m_domainComponent = IWspmConstants.POINT_PROPERTY_BREITE;
+// setId( id );
+// createStyles( styleProvider, id );
+// }
 
-  private static String createId( IProfil profil, int targetPropertyIndex )
-  {
-    if( profil == null )
-      return null;
-    
-    if( targetPropertyIndex == -1 )
-      return null;
+// public AbstractProfilLayer( final IProfil profil, final int targetPropertyIndex, final ILayerStyleProvider
+// styleProvider )
+// {
+// this( createId( profil, targetPropertyIndex ), profil, targetPropertyIndex, styleProvider );
+// }
 
-    IComponent target = profil.getPointProperties()[targetPropertyIndex];
-    // FIXME: the component is not a good id! Imagine several layers on the same component
-    return target == null ? "" + targetPropertyIndex : target.getId(); //$NON-NLS-1$
-  }
+// private static String createId( IProfil profil, int targetPropertyIndex )
+// {
+// if( profil == null )
+// return null;
+//
+// if( targetPropertyIndex == -1 )
+// return null;
+//
+// IComponent target = profil.getPointProperties()[targetPropertyIndex];
+// // FIXME: the component is not a good id! Imagine several layers on the same component
+//    return target == null ? "" + targetPropertyIndex : target.getId(); //$NON-NLS-1$
+// }
 
-  public AbstractProfilLayer( final String id, final IProfil profil, final int targetPropertyIndex, final ILayerStyleProvider styleProvider )
+  public AbstractProfilLayer( final String id, final IProfil profil, final String targetRangeProperty, final ILayerStyleProvider styleProvider )
   {
     m_profil = profil;
-    m_targetPropertyIndex = targetPropertyIndex;
+    m_targetRangeProperty = targetRangeProperty;
     m_domainComponent = IWspmConstants.POINT_PROPERTY_BREITE;
     setId( id );
-    createStyles( styleProvider, id );
+    createStyles( styleProvider, targetRangeProperty );
   }
 
   private void createStyles( final ILayerStyleProvider styleProvider, final String id )
@@ -314,8 +322,19 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
   public Point2D getPoint2D( final IRecord point )
   {
     final Double x = ProfilUtil.getDoubleValueFor( m_domainComponent, point );
-    final Double y = ProfilUtil.getDoubleValueFor( m_targetPropertyIndex, point );
+    final Double y = ProfilUtil.getDoubleValueFor( getTargetPropertyIndex(), point );
     return new Point2D.Double( x, y );
+  }
+
+  protected final int getTargetPropertyIndex( )
+  {
+    if( m_targetPropIndex < 0 )
+    {
+      if( m_profil == null )
+        return -1;
+      m_targetPropIndex = m_profil.getResult().indexOfComponent( m_targetRangeProperty );
+    }
+    return m_targetPropIndex;
   }
 
   protected IPointStyle getPointStyle( )
@@ -365,10 +384,10 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
   @Override
   public IComponent getTargetComponent( )
   {
-    if( m_profil == null || m_targetPropertyIndex == -1 )
+    if( m_profil == null || getTargetPropertyIndex() == -1 )
       return null;
 
-    return m_profil.getPointProperties()[m_targetPropertyIndex];
+    return m_profil.getPointPropertyFor( m_targetRangeProperty );
   }
 
   /**
@@ -377,10 +396,11 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
   @Override
   public IDataRange<Number> getTargetRange( )
   {
-    if( getCoordinateMapper() == null || m_targetPropertyIndex == -1 )
+    final int targetPropertyIndex = getTargetPropertyIndex();
+    if( getCoordinateMapper() == null || targetPropertyIndex == -1 )
       return null;
-    final Double max = ProfilUtil.getMaxValueFor( getProfil(), m_targetPropertyIndex );
-    final Double min = ProfilUtil.getMinValueFor( getProfil(), m_targetPropertyIndex );
+    final Double max = ProfilUtil.getMaxValueFor( getProfil(), targetPropertyIndex );
+    final Double min = ProfilUtil.getMinValueFor( getProfil(), targetPropertyIndex );
     if( (min == null) || (max == null) )
       return null;
     if( Math.abs( min - max ) < 0.001 )
@@ -522,7 +542,7 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
   {
     final ICoordinateMapper cm = getCoordinateMapper();
     final Double x = ProfilUtil.getDoubleValueFor( m_domainComponent, point );
-    final Double y = ProfilUtil.getDoubleValueFor( m_targetPropertyIndex, point );
+    final Double y = ProfilUtil.getDoubleValueFor( getTargetPropertyIndex(), point );
     if( cm != null && x != null && y != null && !x.isNaN() && !y.isNaN() )
       return cm == null ? null : cm.numericToScreen( x, y );
     return null;

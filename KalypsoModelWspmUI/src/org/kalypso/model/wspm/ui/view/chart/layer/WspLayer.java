@@ -72,7 +72,7 @@ import de.openali.odysseus.chart.framework.model.mapper.IAxis;
  * @author Gernot Belger
  * @author Holger Albert
  */
-public abstract class WspLayer extends AbstractProfilLayer
+public class WspLayer extends AbstractProfilLayer
 {
   /**
    * The profile.
@@ -107,7 +107,7 @@ public abstract class WspLayer extends AbstractProfilLayer
    */
   public WspLayer( IProfil profile, String layerId, ILayerStyleProvider styleProvider, IWspLayerData data, boolean fill )
   {
-    super( layerId, profile, -1, styleProvider );
+    super( layerId, profile, "", styleProvider );
 
     m_profil = profile;
     m_data = data;
@@ -132,13 +132,13 @@ public abstract class WspLayer extends AbstractProfilLayer
         return;
 
       /* Get all active names. */
-      String[] activeNames = m_data.getActiveNames();
+      Object[] activeNames = m_data.getActiveNames();
 
       /* If nothing was ever activated, activate all. */
       if( activeNames == null )
       {
         /* Get all available names. */
-        String[] names = m_data.getNames();
+        Object[] names = m_data.getNames();
         if( names == null || names.length == 0 )
           return;
 
@@ -158,7 +158,7 @@ public abstract class WspLayer extends AbstractProfilLayer
       for( int i = 0; i < activeNames.length; i++ )
       {
         /* Get the active name. */
-        String activeName = activeNames[i];
+        Object activeName = activeNames[i];
 
         /* Search the value. */
         double value = m_data.searchValue( activeName, station );
@@ -194,7 +194,7 @@ public abstract class WspLayer extends AbstractProfilLayer
         return null;
 
       /* Get all active names. */
-      String[] activeNames = m_data.getActiveNames();
+      Object[] activeNames = m_data.getActiveNames();
 
       /* Nothing was ever activated or nothing is activated. */
       if( activeNames == null || activeNames.length == 0 )
@@ -220,7 +220,7 @@ public abstract class WspLayer extends AbstractProfilLayer
       for( int i = 0; i < activeNames.length; i++ )
       {
         /* Get the active name. */
-        String activeName = activeNames[i];
+        Object activeName = activeNames[i];
 
         /* Search the value. */
         double value = m_data.searchValue( activeName, station );

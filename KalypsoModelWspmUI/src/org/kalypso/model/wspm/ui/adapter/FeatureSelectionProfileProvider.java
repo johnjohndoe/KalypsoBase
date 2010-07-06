@@ -61,7 +61,6 @@ import org.kalypso.model.wspm.core.profil.IProfilListener;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.profil.AbstractProfilProvider;
-import org.kalypso.model.wspm.ui.profil.IProfilProvider;
 import org.kalypso.model.wspm.ui.profil.validation.ValidationProfilListener;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.ogc.gml.command.FeatureChange;
@@ -75,7 +74,7 @@ import org.kalypsodeegree.model.feature.event.ModellEventListener;
 /**
  * @author Gernot Belger
  */
-public class FeatureSelectionProfileProvider extends AbstractProfilProvider implements IProfilProvider, ISelectionChangedListener, IProfilListener, ModellEventListener
+public class FeatureSelectionProfileProvider extends AbstractProfilProvider implements ISelectionChangedListener, IProfilListener, ModellEventListener
 {
   /**
    * @see org.kalypso.model.wspm.ui.profil.IProfilProvider#getProfil()
@@ -100,6 +99,8 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider impl
   private boolean m_lockNextModelChange = false;
 
   private ValidationProfilListener m_profilValidator;
+
+  private Object m_result;
 
   public FeatureSelectionProfileProvider( final ISelectionProvider provider )
   {
@@ -195,8 +196,7 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider impl
     {
       try
       {
-        final IProfil profil = (m_feature).getProfil();
-        setProfile( profil, m_feature, m_workspace );
+        setProfile( m_feature, m_workspace, m_result );
       }
       catch( final Exception e )
       {
@@ -261,6 +261,7 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider impl
     final EasyFeatureWrapper[] features = fs.getAllFeatures();
 
     IProfileFeature profileMember = null;
+    Object result = null;
     try
     {
       for( final EasyFeatureWrapper eft : features )
@@ -270,8 +271,10 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider impl
         if( feature != null )
         {
           profileMember = ProfileFeatureProvider.findProfile( feature );
+
           if( profileMember != null )
           {
+            result = ProfileFeatureProvider.findResultNode( feature );
 
             // HACK: If type not set, force it to be the tuhh-profile. We need this, as tuhh-profile are created via
             // the gml-tree which knows nothing about profiles... Everyone else should create profile programatically
@@ -304,11 +307,10 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider impl
     final URL workspaceContext = workspace == null ? null : workspace.getContext();
     m_file = workspaceContext == null ? null : ResourceUtilities.findFileFromURL( workspaceContext );
 
-    final IProfil profile = profileMember.getProfil();
-    setProfile( profile, profileMember, workspace );
+    setProfile( profileMember, workspace, result );
   }
 
-  private void setProfile( final IProfil profil, final IProfileFeature feature, final CommandableWorkspace workspace )
+  private void setProfile( final IProfileFeature feature, final CommandableWorkspace workspace, Object result )
   {
     final IProfil oldProfile = m_profile;
 
@@ -316,8 +318,9 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider impl
 
     m_feature = feature;
     m_workspace = workspace;
+    m_result = result;
 
-    m_profile = profil;
+    m_profile = feature == null ? null : feature.getProfil();
 
     if( m_profile != null )
     {
@@ -357,6 +360,15 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider impl
       m_profile.removeProfilListener( this );
       m_profile = null;
     }
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.ui.profil.IProfilProvider#getResult()
+   */
+  @Override
+  public Object getResult( )
+  {
+    return m_result;
   }
 
 }

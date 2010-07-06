@@ -69,4 +69,18 @@ public class ProfileFeatureProvider
 
     return null;
   }
+
+  public static Object findResultNode( Feature feature )
+  {
+    final IProfileFeatureProvider[] profileFeatureProvider = KalypsoModelWspmCoreExtensions.getProfileFeatureProvider();
+    for( final IProfileFeatureProvider provider : profileFeatureProvider )
+    {
+      // FIXME: do not return an simple object
+      final Object result = provider.getResult( feature );
+      if( result != null )
+        return result;
+    }
+
+    return null;
+  }
 }

@@ -106,6 +106,7 @@ public class CompareProfilesDialog extends TitleAreaDialog
     body.setLayout( bodyLayout );
 
     final CompareProfileWrapper baseWrapper = m_provider.getBaseProfile();
+
     final CompareProfilesChartView baseChartView = createChartView( baseWrapper, body, toolkit );
 
     final List<CompareProfilesChartView> additionalChartViews = new ArrayList<CompareProfilesChartView>();

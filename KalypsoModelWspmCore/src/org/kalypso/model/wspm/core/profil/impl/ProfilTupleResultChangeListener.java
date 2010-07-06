@@ -47,7 +47,9 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.changes.PointMarkerSetPoint;
+import org.kalypso.model.wspm.core.profil.changes.PointPropertyAdd;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyEdit;
+import org.kalypso.model.wspm.core.profil.changes.PointPropertyRemove;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
@@ -77,12 +79,18 @@ public class ProfilTupleResultChangeListener implements ITupleResultChangedListe
   @Override
   public void componentsChanged( final IComponent[] components, final TYPE type )
   {
-    /*
-     * we only need a refresh here, so fire a "null-change"
-     */
     final ProfilChangeHint hint = new ProfilChangeHint();
     hint.setPointPropertiesChanged();
-    m_profil.fireProfilChanged( hint, new IProfilChange[] { null } );
+    final int l = components.length;
+    final IProfilChange[] changes = new IProfilChange[l];
+    for( int i = 0; i < l; i++ )
+    {
+      if( type == TYPE.ADDED )
+        changes[i] = new PointPropertyAdd( m_profil, components[i] );
+      else if( type == TYPE.REMOVED )
+        changes[i] = new PointPropertyRemove( m_profil, components[i] );
+    }
+    m_profil.fireProfilChanged( hint, changes );
 
   }
 
@@ -136,8 +144,8 @@ public class ProfilTupleResultChangeListener implements ITupleResultChangedListe
         }
         else
         {
-          profChanges.add(m_onMarkerMovedDelete);
-          profChanges.add( new PointMarkerSetPoint(marker,change.getRecord() ));
+          profChanges.add( m_onMarkerMovedDelete );
+          profChanges.add( new PointMarkerSetPoint( marker, change.getRecord() ) );
           m_onMarkerMovedDelete = null;
           hint.setPointValuesChanged();
           hint.setMarkerMoved();

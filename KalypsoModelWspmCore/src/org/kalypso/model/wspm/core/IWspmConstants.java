@@ -67,11 +67,13 @@ public interface IWspmConstants extends IWspmPhenomenonConstants
 
   public static final String POINT_PROPERTY = "urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#"; //$NON-NLS-1$
 
-  public static final String POINT_PROPERTY_BEWUCHS_AX = POINT_PROPERTY + "BEWUCHS_AX"; //$NON-NLS-1$
+  public static final String POINT_PROPERTY_BEWUCHS = POINT_PROPERTY + "BEWUCHS"; //$NON-NLS-1$
 
-  public static final String POINT_PROPERTY_BEWUCHS_AY = POINT_PROPERTY + "BEWUCHS_AY"; //$NON-NLS-1$
+  public static final String POINT_PROPERTY_BEWUCHS_AX = POINT_PROPERTY_BEWUCHS + "_AX"; //$NON-NLS-1$
 
-  public static final String POINT_PROPERTY_BEWUCHS_DP = POINT_PROPERTY + "BEWUCHS_DP"; //$NON-NLS-1$
+  public static final String POINT_PROPERTY_BEWUCHS_AY = POINT_PROPERTY_BEWUCHS + "_AY"; //$NON-NLS-1$
+
+  public static final String POINT_PROPERTY_BEWUCHS_DP = POINT_PROPERTY_BEWUCHS + "_DP"; //$NON-NLS-1$
 
   public static final String POINT_PROPERTY_BREITE = POINT_PROPERTY + "BREITE"; //$NON-NLS-1$
 
@@ -81,10 +83,12 @@ public interface IWspmConstants extends IWspmPhenomenonConstants
 
   public static final String POINT_PROPERTY_COMMENT = POINT_PROPERTY + "COMMENT"; //$NON-NLS-1$
 
-// Die Id im Dictionary bleibt "Rauheit" wird aber im IProfil als Typ "ks" interpretiert
-  public static final String POINT_PROPERTY_RAUHEIT_KS = POINT_PROPERTY + "RAUHEIT"; //$NON-NLS-1$
+  public static final String POINT_PROPERTY_RAUHEIT = POINT_PROPERTY + "RAUHEIT"; //$NON-NLS-1$
 
-  public static final String POINT_PROPERTY_RAUHEIT_KST = POINT_PROPERTY + "RAUHEIT_KST"; //$NON-NLS-1$
+// Die Id im Dictionary bleibt "Rauheit" wird aber im IProfil als Typ "ks" interpretiert
+  public static final String POINT_PROPERTY_RAUHEIT_KS = POINT_PROPERTY_RAUHEIT; //$NON-NLS-1$
+
+  public static final String POINT_PROPERTY_RAUHEIT_KST = POINT_PROPERTY_RAUHEIT + "_KST"; //$NON-NLS-1$
 
   public static final String POINT_PROPERTY_RECHTSWERT = POINT_PROPERTY + "RECHTSWERT"; //$NON-NLS-1$
 
@@ -124,6 +128,17 @@ public interface IWspmConstants extends IWspmPhenomenonConstants
 
   /** Constant for coordinate-system of profile rw/hw. For example, it will be set by the GML-Profile converter. */
   public static final String PROFIL_PROPERTY_CRS = "COORDINATE_SYSTEM"; //$NON-NLS-1$
+
+  /* Layer */
+  public static String PROFILE_LAYER = "org.kalypso.model.wspm.ui.view.chart.layer.LAYER_"; //$NON-NLS-1$
+
+  public static String LAYER_GEOKOORDINATEN = PROFILE_LAYER + "GEOKOORDINATEN"; //$NON-NLS-1$
+
+  public static String LAYER_GELAENDE = PROFILE_LAYER + "GELAENDE"; //$NON-NLS-1$
+
+  public static String LAYER_WASSERSPIEGEL = PROFILE_LAYER + "WASSERSPIEGEL"; //$NON-NLS-1$
+
+  public static String LAYER_WASSERSPIEGEL2D = PROFILE_LAYER + "WASSERPIEGEL2D"; //$NON-NLS-1$
 
   public static final String PROFIL_PROPERT_WATERBODY_SRC = "PROFIL_PROPERT_WATERBODY_SRC"; //$NON-NLS-1$
 

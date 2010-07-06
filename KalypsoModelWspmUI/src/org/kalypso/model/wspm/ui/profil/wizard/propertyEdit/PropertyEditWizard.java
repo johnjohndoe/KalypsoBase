@@ -55,7 +55,6 @@ import org.kalypso.model.wspm.core.gml.ProfileFeatureBinding;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
-import org.kalypso.model.wspm.core.profil.changes.TupleResultChange;
 import org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter;
 import org.kalypso.model.wspm.ui.action.ProfileSelection;
 import org.kalypso.model.wspm.ui.i18n.Messages;
@@ -180,7 +179,7 @@ public class PropertyEditWizard extends Wizard
 
     final ProfilChangeHint hint = new ProfilChangeHint();
     hint.setPointValuesChanged();
-    m_profile.fireProfilChanged( hint, new IProfilChange[] { new TupleResultChange() } );
+    m_profile.fireProfilChanged( hint, new IProfilChange[] { null } );
 
     return true;
   }

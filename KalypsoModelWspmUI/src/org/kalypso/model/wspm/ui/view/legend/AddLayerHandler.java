@@ -54,7 +54,10 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIExtensions;
 import org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider;
 import org.kalypso.model.wspm.ui.view.chart.LayerDescriptor;
-import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
+import org.kalypso.model.wspm.ui.view.chart.ProfilChartModel;
+
+import de.openali.odysseus.chart.framework.model.IChartModel;
+import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
 
 /**
  * @author kimwerner
@@ -71,9 +74,11 @@ public class AddLayerHandler extends AbstractHandler
 
     final IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
     final IViewPart view = activePage == null ? null : activePage.findView( "org.kalypso.model.wspm.ui.view.chart.ChartView" ); //$NON-NLS-1$
-    final Object chartPart = view == null ? null : view.getAdapter( IChartPart.class );
-    final ProfilChartView chartView = (chartPart != null && chartPart instanceof ProfilChartView) ? (ProfilChartView) chartPart : null;
-    final IProfil profil = chartView == null ? null : chartView.getProfil();
+    final IChartPart chartPart = view == null ? null : (IChartPart) view.getAdapter( IChartPart.class );
+    final ChartComposite chartComp = chartPart == null ? null : chartPart.getChartComposite();
+    final IChartModel chartModel = chartComp == null ? null : chartComp.getChartModel();
+    final ProfilChartModel profChartModel = chartModel instanceof ProfilChartModel ? (ProfilChartModel) chartModel : null;
+    final IProfil profil = profChartModel == null ? null : profChartModel.getProfil();
     if( profil == null )
     {
       return null;
@@ -86,7 +91,7 @@ public class AddLayerHandler extends AbstractHandler
       return null;
     }
 
-    final LayerDescriptor[] layerDescriptors = layerProvider.getAddableLayers( chartView );
+    final LayerDescriptor[] layerDescriptors = layerProvider.getAddableLayers( profChartModel );
 
     final ListDialog dialog = new ListDialog( null );
     dialog.setAddCancelButton( true );
@@ -114,7 +119,7 @@ public class AddLayerHandler extends AbstractHandler
     final LayerDescriptor layerToAdd = (LayerDescriptor) result[0];
     try
     {
-      layerProvider.addLayerToChart( chartView, layerToAdd.getId() );
+      layerProvider.addLayerToProfile( profChartModel.getProfil(), layerToAdd.getId() );
     }
     catch( final Exception e )
     {

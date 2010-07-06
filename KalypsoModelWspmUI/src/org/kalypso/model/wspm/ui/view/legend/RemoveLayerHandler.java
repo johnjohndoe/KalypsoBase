@@ -62,6 +62,7 @@ public class RemoveLayerHandler extends AbstractHandler
   {
     final IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
     final IViewPart view = activePage == null ? null : activePage.findView( "org.kalypso.model.wspm.ui.view.legend.LegendView" ); //$NON-NLS-1$
+
     final ChartEditorTreeOutlinePage legendView = view == null ? null : (ChartEditorTreeOutlinePage) view.getAdapter( ChartEditorTreeOutlinePage.class );
 
     if( legendView == null )
@@ -81,7 +82,7 @@ public class RemoveLayerHandler extends AbstractHandler
       }
       catch( final UnsupportedOperationException e )
       {
-        MessageDialog.openError( view.getViewSite().getShell(), Messages.getString("org.kalypso.model.wspm.ui.view.legend.RemoveLayerHandler.1"), e.getLocalizedMessage() ); //$NON-NLS-1$
+        MessageDialog.openError( view.getViewSite().getShell(), Messages.getString( "org.kalypso.model.wspm.ui.view.legend.RemoveLayerHandler.1" ), e.getLocalizedMessage() ); //$NON-NLS-1$
       }
     }
     return null;

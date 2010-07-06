@@ -70,25 +70,6 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
   private final ILayerManagerEventListener m_eventListener = new AbstractLayerManagerEventListener()
   {
     /**
-     * @see de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener#onActivLayerChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
-     */
-    @Override
-    public void onActivLayerChanged( final IChartLayer layer )
-    {
-      // if layer is deactivated do nothing
-      if( !layer.isActive() )
-        return;
-      if( !isActive() )
-        setActive( true );
-      for( final IChartLayer l : getLayerManager().getLayers() )
-      {
-        if( l != layer )
-          l.setActive( false );
-      }
-
-    }
-
-    /**
      * @see de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener#onLayerContentChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
      */
     @Override
@@ -124,7 +105,7 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
 
   public AbstractProfilTheme( final IProfil profil, final String id, final String title, final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm )
   {
-    super( profil, id, null );
+    super( id, profil, "", null );
     m_title = title;
     m_id = id;
     setCoordinateMapper( cm );

@@ -71,6 +71,7 @@ import org.kalypso.chart.ui.editor.mousehandler.AxisDragHandlerDelegate;
 import org.kalypso.chart.ui.editor.mousehandler.PlotDragHandlerDelegate;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
+import de.openali.odysseus.chart.framework.model.event.IChartModelEventListener;
 import de.openali.odysseus.chart.framework.model.impl.ChartModel;
 import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
 
@@ -233,25 +234,39 @@ public class ChartTabItem extends Composite implements IChartPart
     return m_axisDragHandlerDelegate;
   }
 
+  /**
+   * @see org.kalypso.chart.ui.IChartPart#getOutlinePage()
+   */
   @Override
-  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
+  public IContentOutlinePage getOutlinePage( )
   {
-    if( IContentOutlinePage.class.equals( adapter ) )
+    if( m_outlinePage == null && m_chartComposite != null )
     {
-      if( m_outlinePage == null )
-      {
-        if( m_chartComposite != null )
-        {
-          final IChartModel model = this.getChartComposite().getChartModel();
-          m_outlinePage = new ChartEditorTreeOutlinePage( model );
-        }
-
-        else
-          return null;
-      }
-      return m_outlinePage;
+      final IChartModel model = this.getChartComposite().getChartModel();
+      m_outlinePage = new ChartEditorTreeOutlinePage();
+      m_outlinePage.setModel( model );
     }
-    return null;
+    return m_outlinePage;
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.event.IEventProvider#addListener(java.lang.Object)
+   */
+  @Override
+  public void addListener( IChartModelEventListener listener )
+  {
+    // TODO Auto-generated method stub
+
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.event.IEventProvider#removeListener(java.lang.Object)
+   */
+  @Override
+  public void removeListener( IChartModelEventListener listener )
+  {
+    // TODO Auto-generated method stub
+
   }
 
 }

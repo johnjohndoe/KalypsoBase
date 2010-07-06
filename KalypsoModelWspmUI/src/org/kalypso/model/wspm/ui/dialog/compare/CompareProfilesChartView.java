@@ -45,29 +45,17 @@ import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.chart.ui.editor.mousehandler.AxisDragHandlerDelegate;
 import org.kalypso.chart.ui.editor.mousehandler.PlotDragHandlerDelegate;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartView;
 import org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider;
+import org.kalypso.model.wspm.ui.view.chart.ProfilChartModel;
 
-import de.openali.odysseus.chart.ext.base.axis.GenericLinearAxis;
-import de.openali.odysseus.chart.ext.base.axisrenderer.AxisRendererConfig;
-import de.openali.odysseus.chart.ext.base.axisrenderer.GenericAxisRenderer;
-import de.openali.odysseus.chart.ext.base.axisrenderer.GenericNumberTickCalculator;
-import de.openali.odysseus.chart.ext.base.axisrenderer.NumberLabelCreator;
-import de.openali.odysseus.chart.framework.model.IChartModel;
-import de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener;
-import de.openali.odysseus.chart.framework.model.impl.ChartModel;
-import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
+import de.openali.odysseus.chart.framework.model.event.IChartModelEventListener;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
-import de.openali.odysseus.chart.framework.model.mapper.IAxis;
-import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
-import de.openali.odysseus.chart.framework.model.mapper.impl.AxisAdjustment;
-import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
-import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
 import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
 
 /**
@@ -93,111 +81,79 @@ public class CompareProfilesChartView implements IChartPart, IProfilChartView
     m_layerProvider = provider;
   }
 
-  protected final void activeLayerChanged( final IChartLayer layer )
-  {
-    // if layer is deactivated do nothing
-    if( !layer.isActive() )
-      return;
-    // otherwise deactivate all others
-    for( final IChartLayer l : m_chartComposite.getChartModel().getLayerManager().getLayers() )
-    {
-      if( l != layer )
-        l.setActive( false );
-    }
-  }
+// protected final void activeLayerChanged( final IChartLayer layer )
+// {
+// // if layer is deactivated do nothing
+// if( !layer.isActive() )
+// return;
+// // otherwise deactivate all others
+// for( final IChartLayer l : m_chartComposite.getChartModel().getLayerManager().getLayers() )
+// {
+// if( l != layer )
+// l.setActive( false );
+// }
+// }
 
   public void updateLayer( )
   {
-    if( m_chartComposite == null )
+    if( m_chartComposite == null || m_chartComposite.isDisposed() )
       return;
+    m_chartComposite.setChartModel( new ProfilChartModel( m_profile, null ) );
+// final IChartModel chartModel = m_chartComposite.getChartModel();
+// if( chartModel == null )
+// return;
+// chartMode
+// if( chartModel instanceof ProfilChartModel )
+// ((ProfilChartModel) chartModel).setProfile( m_profile );
+// final IMapperRegistry mr = chartModel.getMapperRegistry();
+// final IAxis[] existingAxis = mr.getAxes();
+// if( existingAxis == null || existingAxis.length == 0 )
+// {
+//
+// final IAxis[] axis = m_layerProvider.registerAxis( mr );
+// if( axis.length > 0 )
+// m_layerProvider.registerAxisRenderer( mr );
+// else
+// {
+// /* Register default axis and axis renderer. */
+// setDefaultAxis( mr );
+// }
+// }
 
-    final IChartModel chartModel = m_chartComposite.getChartModel();
-    if( chartModel == null )
-      return;
-
-    final IMapperRegistry mr = chartModel.getMapperRegistry();
-    final IAxis[] existingAxis = mr.getAxes();
-    if( existingAxis == null || existingAxis.length == 0 )
-    {
-
-      final IAxis[] axis = m_layerProvider.registerAxis( mr );
-      if( axis.length > 0 )
-        m_layerProvider.registerAxisRenderer( mr );
-      else
-      {
-        /* Register default axis and axis renderer. */
-        setDefaultAxis( mr );
-      }
-    }
-
-    if( m_chartComposite != null && m_chartComposite.getChartModel() != null && m_chartComposite.getChartModel().getLayerManager() != null )
-    {
-      final ILayerManager lm = m_chartComposite.getChartModel().getLayerManager();
-
-      // remove layer
-      for( final IChartLayer layer : lm.getLayers() )
-        lm.removeLayer( layer );
-
-      // add layer
-      final IProfilChartLayer[] profileLayers = m_layerProvider.createLayers( new IProfilChartView()
-      {
-
-        @Override
-        public IProfil getProfil( )
-        {
-          return m_profile;
-        }
-
-        @Override
-        public ChartComposite getChart( )
-        {
-          return CompareProfilesChartView.this.getChart();
-        }
-
-        @Override
-        public void setProfil( final IProfil profile )
-        {
-        }
-      } );
-
-      for( final IProfilChartLayer layer : profileLayers )
-        lm.addLayer( layer );
-    }
-  }
-
-  private void setDefaultAxis( final IMapperRegistry mr )
-  {
-    final IAxis domainAxis = new GenericLinearAxis( "ID_AXIS_DOMAIN", POSITION.BOTTOM, null );//$NON-NLS-1$
-    final AxisAdjustment aaDom = new AxisAdjustment( 3, 94, 3 );
-    domainAxis.setPreferredAdjustment( aaDom );
-
-    final IAxis targetAxisLeft = new GenericLinearAxis( "ID_AXIS_LEFT", POSITION.LEFT, null );//$NON-NLS-1$
-    final AxisAdjustment aaLeft = new AxisAdjustment( 15, 75, 10 );
-    targetAxisLeft.setPreferredAdjustment( aaLeft );
-
-    final IAxis targetAxisRight = new GenericLinearAxis( "ID_AXIS_RIGHT", POSITION.RIGHT, null );//$NON-NLS-1$
-    final AxisAdjustment aaRight = new AxisAdjustment( 2, 40, 58 );
-    targetAxisRight.setPreferredAdjustment( aaRight );
-
-    domainAxis.setLabel( "[m]" ); //$NON-NLS-1$
-
-    targetAxisLeft.setLabel( "[m+NN]" ); //$NON-NLS-1$
-    targetAxisRight.setLabel( "[KS]" ); //$NON-NLS-1$
-
-    mr.addMapper( domainAxis );
-    mr.addMapper( targetAxisLeft );
-    mr.addMapper( targetAxisRight );
-
-    final AxisRendererConfig configDom = new AxisRendererConfig();
-    final IAxisRenderer aRendDom = new GenericAxisRenderer( "rendDom", new NumberLabelCreator( "%s" ), new GenericNumberTickCalculator(), configDom ); //$NON-NLS-1$ //$NON-NLS-2$
-
-    final AxisRendererConfig configLR = new AxisRendererConfig();
-    configLR.gap = 5;
-    final IAxisRenderer aRendLR = new GenericAxisRenderer( "rendLR", new NumberLabelCreator( "%s" ), new GenericNumberTickCalculator(), configLR ); //$NON-NLS-1$ //$NON-NLS-2$
-
-    mr.setRenderer( "ID_AXIS_DOMAIN", aRendDom );//$NON-NLS-1$
-    mr.setRenderer( "ID_AXIS_LEFT", aRendLR );//$NON-NLS-1$
-    mr.setRenderer( "ID_AXIS_RIGHT", aRendLR );//$NON-NLS-1$
+// if( m_chartComposite != null && m_chartComposite.getChartModel() != null &&
+// m_chartComposite.getChartModel().getLayerManager() != null )
+// {
+// final ILayerManager lm = m_chartComposite.getChartModel().getLayerManager();
+//
+// // remove layer
+// for( final IChartLayer layer : lm.getLayers() )
+// lm.removeLayer( layer );
+//
+// // add layer
+// final IProfilChartLayer[] profileLayers = m_layerProvider.createLayers( new IProfilChartView()
+// {
+//
+// @Override
+// public IProfil getProfil( )
+// {
+// return m_profile;
+// }
+//
+// @Override
+// public ChartComposite getChart( )
+// {
+// return CompareProfilesChartView.this.getChart();
+// }
+//
+// @Override
+// public void setProfil( final IProfil profile )
+// {
+// }
+// } );
+//
+// for( final IProfilChartLayer layer : profileLayers )
+// lm.addLayer( layer );
+// }
   }
 
   /**
@@ -206,35 +162,36 @@ public class CompareProfilesChartView implements IChartPart, IProfilChartView
    */
   public Control createControl( final Composite parent )
   {
-    m_chartComposite = new ChartComposite( parent, parent.getStyle(), new ChartModel(), new RGB( 255, 255, 255 ) );
+    m_chartComposite = new ChartComposite( parent, parent.getStyle(), new ProfilChartModel( m_profile, null ), new RGB( 255, 255, 255 ) );
     final GridData gD = new GridData( SWT.FILL, SWT.FILL, true, true );
     gD.exclude = true;
     m_chartComposite.setLayoutData( gD );
-    m_chartComposite.getChartModel().setHideUnusedAxes( true );
-
-    m_chartComposite.getChartModel().getLayerManager().addListener( new AbstractLayerManagerEventListener()
-    {
-      /**
-       * @see de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener#onActivLayerChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
-       */
-      @Override
-      public void onActivLayerChanged( final IChartLayer layer )
-      {
-        activeLayerChanged( layer );
-      }
-    } );
+// m_chartComposite.getChartModel().setHideUnusedAxes( true );
+//
+// m_chartComposite.getChartModel().getLayerManager().addListener( new AbstractLayerManagerEventListener()
+// {
+// /**
+// * @see
+// de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener#onActivLayerChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
+// */
+// @Override
+// public void onActivLayerChanged( final IChartLayer layer )
+// {
+// activeLayerChanged( layer );
+// }
+// } );
 
     m_plotDragHandler = new PlotDragHandlerDelegate( m_chartComposite );
     m_axisDragHandler = new AxisDragHandlerDelegate( m_chartComposite );
 
-    // remove all layers
-    final ILayerManager lm = m_chartComposite.getChartModel().getLayerManager();
-    for( final IChartLayer layer : lm.getLayers() )
-      lm.removeLayer( layer );
-
-    ((GridData) (m_chartComposite.getLayoutData())).exclude = false;
-
-    updateLayer();
+// // remove all layers
+// final ILayerManager lm = m_chartComposite.getChartModel().getLayerManager();
+// for( final IChartLayer layer : lm.getLayers() )
+// lm.removeLayer( layer );
+//
+// ((GridData) (m_chartComposite.getLayoutData())).exclude = false;
+//
+// updateLayer();
 
     return m_chartComposite;
   }
@@ -249,25 +206,6 @@ public class CompareProfilesChartView implements IChartPart, IProfilChartView
 
     if( m_plotDragHandler != null )
       m_plotDragHandler.dispose();
-  }
-
-  /**
-   * @see org.kalypso.chart.ui.IChartPart#getAdapter(java.lang.Class)
-   */
-  @Override
-  public Object getAdapter( final Class< ? > clazz )
-  {
-    if( IChartPart.class.equals( clazz ) )
-    {
-      return this;
-    }
-
-    return null;
-  }
-
-  public IAxis getAxis( final String id )
-  {
-    return m_chartComposite.getChartModel().getMapperRegistry().getAxis( id );
   }
 
   /**
@@ -304,20 +242,20 @@ public class CompareProfilesChartView implements IChartPart, IProfilChartView
     return m_plotDragHandler;
   }
 
-  protected void redrawChart( )
-  {
-    final ChartComposite chart = m_chartComposite;
-    if( (chart != null) && !chart.isDisposed() )
-      chart.getDisplay().syncExec( new Runnable()
-      {
-
-        @Override
-        public void run( )
-        {
-          chart.redraw();
-        }
-      } );
-  }
+// protected void redrawChart( )
+// {
+// final ChartComposite chart = m_chartComposite;
+// if( (chart != null) && !chart.isDisposed() )
+// chart.getDisplay().syncExec( new Runnable()
+// {
+//
+// @Override
+// public void run( )
+// {
+// chart.redraw();
+// }
+// } );
+// }
 
   /**
    * @see org.kalypso.model.wspm.ui.view.chart.IProfilChartView#getProfil()
@@ -345,9 +283,38 @@ public class CompareProfilesChartView implements IChartPart, IProfilChartView
     {
       if( m_chartComposite != null && !m_chartComposite.isDisposed() )
       {
-        ((GridData) (m_chartComposite.getLayoutData())).exclude = false;
         updateLayer();
       }
     }
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.event.IEventProvider#addListener(java.lang.Object)
+   */
+  @Override
+  public void addListener( IChartModelEventListener listener )
+  {
+    // TODO Auto-generated method stub
+
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.event.IEventProvider#removeListener(java.lang.Object)
+   */
+  @Override
+  public void removeListener( IChartModelEventListener listener )
+  {
+    // TODO Auto-generated method stub
+
+  }
+
+  /**
+   * @see org.kalypso.chart.ui.IChartPart#getOutlinePage()
+   */
+  @Override
+  public IContentOutlinePage getOutlinePage( )
+  {
+    // TODO Auto-generated method stub
+    return null;
   }
 }

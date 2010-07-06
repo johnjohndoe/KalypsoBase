@@ -55,10 +55,9 @@ public class ProfilChartEditorTreeContentProvider extends ChartEditorTreeContent
 {
   private final IExpandableChartLayer m_modelLayer;
 
-  public ProfilChartEditorTreeContentProvider( final IChartModel model )
+  public ProfilChartEditorTreeContentProvider( )
   {
-    super( model );
-
+    final IChartModel model = getModel();
     m_modelLayer = new AbstractExpandableLayer()
     {
       /**
@@ -67,7 +66,7 @@ public class ProfilChartEditorTreeContentProvider extends ChartEditorTreeContent
       @Override
       public String getTitle( )
       {
-        return getModel().getTitle();
+        return model.getTitle();
       }
 
       /**
@@ -76,7 +75,7 @@ public class ProfilChartEditorTreeContentProvider extends ChartEditorTreeContent
       @Override
       public ILayerManager getLayerManager( )
       {
-        return getModel().getLayerManager();
+        return model.getLayerManager();
       }
     };
 

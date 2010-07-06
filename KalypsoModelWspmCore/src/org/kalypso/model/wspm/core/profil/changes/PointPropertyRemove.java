@@ -85,7 +85,7 @@ public final class PointPropertyRemove implements IProfilChange
   @Override
   public String getInfo( )
   {
-    return m_property.toString();
+    return m_property.getId();
   }
 
   /**
