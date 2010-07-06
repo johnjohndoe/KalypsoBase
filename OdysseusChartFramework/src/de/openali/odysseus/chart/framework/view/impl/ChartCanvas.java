@@ -61,8 +61,9 @@ public class ChartCanvas extends Canvas implements PaintListener, IChartViewer
       Rectangle rect = m_axisBoundsMap.get( a );
       if( rect != null )
       {
-        IAxisRenderer ar = mr.getRenderer( a );
-        ar.paint( gc, a, rect );
+        IAxisRenderer ar = a.getRenderer();
+        if( ar != null )
+          ar.paint( gc, a, rect );
       }
     }
 
@@ -113,7 +114,11 @@ public class ChartCanvas extends Canvas implements PaintListener, IChartViewer
     {
       int w = 0;
       for( IAxis a : m_axisPosMap.get( p ) )
-        w += a.getRegistry().getRenderer( a ).getAxisWidth( a );
+      {
+        final IAxisRenderer renderer = a.getRenderer();
+        if( renderer != null )
+          w += renderer.getAxisWidth( a );
+      }
       spaceWidthMap.put( p, w );
     }
 
@@ -128,49 +133,65 @@ public class ChartCanvas extends Canvas implements PaintListener, IChartViewer
     int offset = 0;
     for( IAxis a : m_axisPosMap.get( POSITION.BOTTOM ) )
     {
-      int rHeight = a.getRegistry().getRenderer( a ).getAxisWidth( a );
-      int rWidth = width - spaceWidthMap.get( POSITION.LEFT ) - spaceWidthMap.get( POSITION.RIGHT );
-      int rX = spaceWidthMap.get( POSITION.LEFT );
-      int rY = height - spaceWidthMap.get( POSITION.BOTTOM ) + offset;
-      offset += rHeight;
-      m_axisBoundsMap.put( a, new Rectangle( rX, rY, rWidth, rHeight ) );
-      a.setScreenHeight( rWidth );
+      final IAxisRenderer renderer = a.getRenderer();
+      if( renderer != null )
+      {
+        int rHeight = renderer.getAxisWidth( a );
+        int rWidth = width - spaceWidthMap.get( POSITION.LEFT ) - spaceWidthMap.get( POSITION.RIGHT );
+        int rX = spaceWidthMap.get( POSITION.LEFT );
+        int rY = height - spaceWidthMap.get( POSITION.BOTTOM ) + offset;
+        offset += rHeight;
+        m_axisBoundsMap.put( a, new Rectangle( rX, rY, rWidth, rHeight ) );
+        a.setScreenHeight( rWidth );
+      }
     }
 
     offset = 0;
     for( IAxis a : m_axisPosMap.get( POSITION.LEFT ) )
     {
-      int rWidth = a.getRegistry().getRenderer( a ).getAxisWidth( a );
-      int rHeight = height - spaceWidthMap.get( POSITION.TOP ) - spaceWidthMap.get( POSITION.BOTTOM );
-      int rY = spaceWidthMap.get( POSITION.TOP );
-      int rX = offset;
-      offset += rWidth;
-      m_axisBoundsMap.put( a, new Rectangle( rX, rY, rWidth, rHeight ) );
-      a.setScreenHeight( rHeight );
+      final IAxisRenderer renderer = a.getRenderer();
+      if( renderer != null )
+      {
+        int rWidth = renderer.getAxisWidth( a );
+        int rHeight = height - spaceWidthMap.get( POSITION.TOP ) - spaceWidthMap.get( POSITION.BOTTOM );
+        int rY = spaceWidthMap.get( POSITION.TOP );
+        int rX = offset;
+        offset += rWidth;
+        m_axisBoundsMap.put( a, new Rectangle( rX, rY, rWidth, rHeight ) );
+        a.setScreenHeight( rHeight );
+      }
     }
 
     offset = 0;
     for( IAxis a : m_axisPosMap.get( POSITION.TOP ) )
     {
-      int rHeight = a.getRegistry().getRenderer( a ).getAxisWidth( a );
-      int rWidth = width - spaceWidthMap.get( POSITION.LEFT ) - spaceWidthMap.get( POSITION.RIGHT );
-      int rX = spaceWidthMap.get( POSITION.LEFT );
-      int rY = offset;
-      offset += rHeight;
-      m_axisBoundsMap.put( a, new Rectangle( rX, rY, rWidth, rHeight ) );
-      a.setScreenHeight( rWidth );
+      final IAxisRenderer renderer = a.getRenderer();
+      if( renderer != null )
+      {
+        int rHeight = renderer.getAxisWidth( a );
+        int rWidth = width - spaceWidthMap.get( POSITION.LEFT ) - spaceWidthMap.get( POSITION.RIGHT );
+        int rX = spaceWidthMap.get( POSITION.LEFT );
+        int rY = offset;
+        offset += rHeight;
+        m_axisBoundsMap.put( a, new Rectangle( rX, rY, rWidth, rHeight ) );
+        a.setScreenHeight( rWidth );
+      }
     }
 
     offset = 0;
     for( IAxis a : m_axisPosMap.get( POSITION.RIGHT ) )
     {
-      int rWidth = a.getRegistry().getRenderer( a ).getAxisWidth( a );
-      int rHeight = height - spaceWidthMap.get( POSITION.TOP ) - spaceWidthMap.get( POSITION.BOTTOM );
-      int rY = spaceWidthMap.get( POSITION.TOP );
-      int rX = width - spaceWidthMap.get( POSITION.RIGHT ) + offset;
-      offset += rWidth;
-      m_axisBoundsMap.put( a, new Rectangle( rX, rY, rWidth, rHeight ) );
-      a.setScreenHeight( rHeight );
+      final IAxisRenderer renderer = a.getRenderer();
+      if( renderer != null )
+      {
+        int rWidth = renderer.getAxisWidth( a );
+        int rHeight = height - spaceWidthMap.get( POSITION.TOP ) - spaceWidthMap.get( POSITION.BOTTOM );
+        int rY = spaceWidthMap.get( POSITION.TOP );
+        int rX = width - spaceWidthMap.get( POSITION.RIGHT ) + offset;
+        offset += rWidth;
+        m_axisBoundsMap.put( a, new Rectangle( rX, rY, rWidth, rHeight ) );
+        a.setScreenHeight( rHeight );
+      }
     }
   }
 

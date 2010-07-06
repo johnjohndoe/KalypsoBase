@@ -40,10 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package de.openali.odysseus.chart.framework.model.event;
 
+import de.openali.odysseus.chart.framework.model.IChartModel;
+
 /**
  * @author burtscher1
  */
 public interface IChartModelEventListener
 {
-  public void onModelChanged( );
+  public void onModelChanged(IChartModel oldModel, IChartModel newModel );
 }

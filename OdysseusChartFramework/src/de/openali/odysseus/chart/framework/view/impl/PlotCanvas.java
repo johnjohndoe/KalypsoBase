@@ -1,9 +1,9 @@
 package de.openali.odysseus.chart.framework.view.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
@@ -42,6 +42,8 @@ public class PlotCanvas extends Canvas implements PaintListener
 {
   private Image m_bufferImg = null;
 
+  private Image m_panImg = null;
+
   private ILayerManager m_layerManager;
 
   private EditInfo m_editInfo;
@@ -53,15 +55,20 @@ public class PlotCanvas extends Canvas implements PaintListener
   /**
    * offset by which panned Layers are moved
    */
-  private Point m_panOffset = new Point( 0, 0 );
+  private Point m_panOffset = null;
 
   private boolean m_isEditing = false;
 
   /**
    * Layers which are panned
    */
-  private final Set<IChartLayer> m_panLayers = new HashSet<IChartLayer>();
+  private final List<IChartLayer> m_panLayers = new ArrayList<IChartLayer>();
 
+  /**
+   * @param bufferLayers
+   *          if set to true, each layer is buffered on an individual image; set this to true if you plan to offer
+   *          panning of single layers in the chart front end
+   */
   public PlotCanvas( final Composite parent, final int style )
   {
     super( parent, style );
@@ -70,12 +77,11 @@ public class PlotCanvas extends Canvas implements PaintListener
     addControlListener( new ControlAdapter()
     {
       @Override
-      public void controlResized( final ControlEvent e )
+      public void controlResized( ControlEvent e )
       {
         disposeImages();
       }
     } );
-
     addDisposeListener( new DisposeListener()
     {
       @Override
@@ -93,8 +99,12 @@ public class PlotCanvas extends Canvas implements PaintListener
       m_bufferImg.dispose();
       m_bufferImg = null;
     }
-
-    for( final Image img : m_layerImageMap.values() )
+    if( m_panImg != null )
+    {
+      m_panImg.dispose();
+      m_panImg = null;
+    }
+    for( Image img : m_layerImageMap.values() )
       img.dispose();
     m_layerImageMap.clear();
   }
@@ -112,17 +122,17 @@ public class PlotCanvas extends Canvas implements PaintListener
    */
   public void invalidate( final IChartLayer[] layers )
   {
-    if( layers != null )
+    final IChartLayer[] layersToInvalidate = getLayersToInvalidate( layers );
+
+    for( final IChartLayer layer : layersToInvalidate )
     {
-      for( final IChartLayer layer : layers )
-      {
-        final Image image = m_layerImageMap.remove( layer );
-        if( image != null )
-          image.dispose();
-      }
+      final Image image = m_layerImageMap.get( layer );
+      if( (image != null) && !image.isDisposed() )
+        image.dispose();
+      m_layerImageMap.remove( layer );
     }
 
-    if( m_bufferImg != null )
+    if( (m_bufferImg != null) && !m_bufferImg.isDisposed() )
     {
       m_bufferImg.dispose();
       m_bufferImg = null;
@@ -130,6 +140,17 @@ public class PlotCanvas extends Canvas implements PaintListener
 
     if( !isDisposed() )
       redraw();
+  }
+
+  private IChartLayer[] getLayersToInvalidate( final IChartLayer[] layers )
+  {
+    if( layers != null )
+      return layers;
+
+    if( m_layerManager == null )
+      return new IChartLayer[0];
+
+    return m_layerManager.getLayers();
   }
 
   public boolean isDragging( )
@@ -144,7 +165,7 @@ public class PlotCanvas extends Canvas implements PaintListener
   }
 
   /**
-   * Renders the current plot into a newly created image and returns it.<br/>
+   ** Renders the current plot into a newly created image and returns it.<br/>
    * The caller is responsible to dispose the image.
    */
   public Image createImage( final IChartLayer[] layers, final Rectangle screen )
@@ -159,17 +180,14 @@ public class PlotCanvas extends Canvas implements PaintListener
     {
       for( final IChartLayer layer : layers )
       {
-        if( layer.isVisible() )
+        if( layer.isVisible() && !m_panLayers.contains( layer ) )
         {
           ChartUtilities.resetGC( buffGc );
           if( !m_layerImageMap.containsKey( layer ) )
             m_layerImageMap.put( layer, createLayerImage( buffGc.getDevice(), screen, layer ) );
 
           final Image image = m_layerImageMap.get( layer );
-          if( m_panLayers.contains( layer ) )
-            buffGc.drawImage( image, screen.x - m_panOffset.x, screen.y - m_panOffset.y );
-          else
-            buffGc.drawImage( image, 0, 0 );
+          buffGc.drawImage( image, 0, 0 );
         }
       }
     }
@@ -190,7 +208,7 @@ public class PlotCanvas extends Canvas implements PaintListener
     final Image image = new Image( Display.getDefault(), id );
     final GC gc = new GC( image );
 
-    // Hintergrund explizit malen - der wird später transparent gezeichnet
+    // Hintergrund explizit malen - der wird spÃ¤ter transparent gezeichnet
     final Color transparentColor = OdysseusChartFrameworkPlugin.getDefault().getColorRegistry().getResource( device, new RGB( 0xfe, 0xff, 0xff ) );
     gc.setBackground( transparentColor );
     gc.fillRectangle( screen );
@@ -229,20 +247,27 @@ public class PlotCanvas extends Canvas implements PaintListener
       return;
 
     final Rectangle screenArea = getClientArea();
-
     if( m_bufferImg == null )
       m_bufferImg = createImage( m_layerManager.getLayers(), screenArea );
-
-    // muss so sein, wenn mann den layerClip immer setzt, kommts beim
-    // dragRect zeichnen zu selstsamen effekten
-    // TODO: check
-// if( m_panLayers.isEmpty() )
-// gcw.drawImage( image, screen.x - m_panOffset.x, screen.y - m_panOffset.y );
-// else
     e.gc.drawImage( m_bufferImg, 0, 0 );
-
+    paintPannedLayer( e.gc );
     paintDragArea( e.gc );
     paintEditInfo( e.gc );
+  }
+
+  private void paintPannedLayer( final GC gcw )
+  {
+    if( m_panOffset == null )
+      return;
+
+    if( m_panImg == null )
+      m_panImg = createImage( m_panLayers.toArray( new IChartLayer[] {} ), getClientArea() );
+
+    for( final IChartLayer layer : m_panLayers )
+    {
+      final Image layerImage = m_layerImageMap.get( layer );
+      gcw.drawImage( layerImage, -m_panOffset.x, -m_panOffset.y );
+    }
   }
 
   private void paintDragArea( final GC gcw )
@@ -268,7 +293,6 @@ public class PlotCanvas extends Canvas implements PaintListener
   private void paintEditInfo( final GC gcw )
   {
     ChartUtilities.resetGC( gcw );
-
     if( m_editInfo == null )
       return;
 
@@ -284,10 +308,12 @@ public class PlotCanvas extends Canvas implements PaintListener
 
     final Rectangle screen = gcw.getClipping();
 
-    final String tooltiptext = m_editInfo.m_text;
+    String tooltiptext = m_editInfo.m_text;
     final Point mousePos = m_editInfo.m_pos;
     if( (tooltiptext != null) && (mousePos != null) )
     {
+      tooltiptext = tooltiptext.replace( '\r', ' ' );
+
       final int TOOLINSET = 3;
 
       final Font oldFont = gcw.getFont();
@@ -300,7 +326,7 @@ public class PlotCanvas extends Canvas implements PaintListener
       final Point toolsize = gcw.textExtent( tooltiptext );
 
       /*
-       * Positionieren der Tooltip-Box: der ideale Platz liegt rechts unter dem Mauszeiger. Wenn rechts nicht gen�gend
+       * Positionieren der Tooltip-Box: der ideale Platz liegt rechts unter dem Mauszeiger. Wenn rechts nicht genï¿½gend
        * Platz ist, dann wird er nach links verschoben. Der Startpunkt soll dabei immer im sichtbaren Bereich liegen.
        */
 
@@ -324,6 +350,7 @@ public class PlotCanvas extends Canvas implements PaintListener
       gcw.drawText( tooltiptext, toolx, tooly, true );
 
       gcw.setFont( oldFont );
+
     }
   }
 
@@ -338,9 +365,11 @@ public class PlotCanvas extends Canvas implements PaintListener
     m_isEditing = isEditing;
   }
 
-  public void setLayerManager( final ILayerManager layerManager )
+  public void setLayerManager( ILayerManager layerManager )
   {
     m_layerManager = layerManager;
+
+    disposeImages();
   }
 
   /**
@@ -351,17 +380,38 @@ public class PlotCanvas extends Canvas implements PaintListener
    * @param offset
    *          positive value moves buffer to right / down, negative value to left / up
    */
-  public void setPanOffset( final IChartLayer[] layers, final Point offset )
+  public void setPanOffset( IChartLayer[] layers, final Point offset )
   {
-    m_panOffset = offset;
-    if( layers != null )
+    // start pan
+    if( m_panOffset == null )
     {
-      for( final IChartLayer layer : layers )
+      for( IChartLayer layer : layers == null ? m_layerManager.getLayers() : layers )
         m_panLayers.add( layer );
-      invalidate( null );
+
+      if( m_bufferImg != null )
+      {
+        m_bufferImg.dispose();
+        m_bufferImg = null;
+      }
     }
-    else
+
+    // end pan
+    if( offset == null )
+    {
       m_panLayers.clear();
+      if( m_panImg != null )
+      {
+        m_panImg.dispose();
+        m_panImg = null;
+      }
+      if( m_bufferImg != null )
+      {
+        m_bufferImg.dispose();
+        m_bufferImg = null;
+      }
+    }
+
+    m_panOffset = offset;
 
     redraw();
   }
@@ -371,6 +421,7 @@ public class PlotCanvas extends Canvas implements PaintListener
     if( hoverInfo == null )
       m_editInfo = hoverInfo;
     m_editInfo = hoverInfo;
+
   }
 
 }

@@ -1,8 +1,13 @@
 package de.openali.odysseus.chart.ext.base.axis;
 
+import de.openali.odysseus.chart.ext.base.axisrenderer.AxisRendererConfig;
+import de.openali.odysseus.chart.ext.base.axisrenderer.GenericAxisRenderer;
+import de.openali.odysseus.chart.ext.base.axisrenderer.GenericNumberTickCalculator;
+import de.openali.odysseus.chart.ext.base.axisrenderer.NumberLabelCreator;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
+import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
 import de.openali.odysseus.chart.framework.util.ChartUtilities;
 
 /**
@@ -15,16 +20,21 @@ public class GenericLinearAxis extends AbstractAxis
 
   private IDataRange<Number> m_numericRange = new DataRange<Number>( null, null );
 
- 
-
- 
   private int m_height = 1;
+
+  public GenericLinearAxis( final String id, final POSITION pos, final Class< ? > clazz, final IAxisRenderer renderer )
+  {
+    super( id, pos, clazz, renderer );
+  }
 
   public GenericLinearAxis( final String id, final POSITION pos, final Class< ? > clazz )
   {
-    super( id, pos, clazz );
-    // set initial range, so we can prevent NPEs
-    // setNumericRange( new DataRange<Number>( 0, 1 ) );
+    super( id, pos, clazz, new GenericAxisRenderer( id + "_RENDERER", new NumberLabelCreator( "%s" ), new GenericNumberTickCalculator(), new AxisRendererConfig() ) ); //$NON-NLS-1$ //$NON-NLS-2$
+  }
+
+  public GenericLinearAxis( final String id, final POSITION pos )
+  {
+    super( id, pos, Number.class, new GenericAxisRenderer( id + "_RENDERER", new NumberLabelCreator( "%s" ), new GenericNumberTickCalculator(), new AxisRendererConfig() ) );//$NON-NLS-1$ //$NON-NLS-2$
   }
 
   public double numericToNormalized( final Number value )
@@ -84,7 +94,7 @@ public class GenericLinearAxis extends AbstractAxis
   public void setNumericRange( final IDataRange<Number> range )
   {
     m_numericRange = range;
-    getEventHandler().fireMapperChanged( this );
+    fireMapperChanged( this );
   }
 
   /**

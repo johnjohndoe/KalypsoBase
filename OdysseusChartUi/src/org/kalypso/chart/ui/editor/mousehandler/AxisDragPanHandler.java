@@ -46,11 +46,13 @@ import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
 
+import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.ComparableDataRange;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
+import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
 import de.openali.odysseus.chart.framework.view.impl.AxisCanvas;
 import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
 
@@ -63,14 +65,6 @@ public class AxisDragPanHandler extends AbstractAxisDragHandler
   public AxisDragPanHandler( ChartComposite chartComposite )
   {
     super( chartComposite );
-  }
-
-  /**
-   * @see org.kalypso.chart.ui.editor.mousehandler.IAxisDragHandler#setUseCurrentAxis(boolean)
-   */
-  public void setUseCurrentAxis( @SuppressWarnings("unused") boolean useCurrentAxis )
-  {
-
   }
 
   /**
@@ -88,48 +82,48 @@ public class AxisDragPanHandler extends AbstractAxisDragHandler
   @Override
   public void mouseUp( MouseEvent e )
   {
+    clearPanOffset();
     m_mouseDragEnd = getPos( e );
     double diff = m_mouseDragEnd - m_mouseDragStart;
     if( m_mouseDragStart != -1 && Math.abs( diff ) > 0 )
     {
-
       // // Zoom-Anzeige in AxisCanvas
       final AxisCanvas curAc = (AxisCanvas) e.getSource();
-// m_axes.get( curAc );
-      // final ORIENTATION ori = curAxis.getPosition().getOrientation();
 
       if( m_applyOnAllAxes )
       {
-// for( Entry<AxisCanvas, IAxis> entry : m_axes.entrySet() )
-// {
-// IAxis axis = entry.getValue();
         for( final IAxis axis : getAxis( getOrientation( curAc ) ) )
         {
-          // AchsenOffset zurücksetzen
-          // entry.getKey().setPanOffsetInterval( new Point( 0, 0 ) );
-          m_chartComposite.getAxisCanvas( axis ).setPanOffsetInterval( new Point( 0, 0 ) );
           panAxis( m_mouseDragStart, m_mouseDragEnd, axis );
         }
-        // }
-        // PlotOffset zurücksetzen
-        m_chartComposite.getPlot().setPanOffset( null, new Point( 0, 0 ) );
       }
       else
       {
-        // zugehörige Layer rausfinden
-        final IAxis curAxis = curAc.getAxis();
-        IChartLayer[] pannedLayers = m_chartComposite.getChartModel().getAxis2Layers().get( curAxis ).toArray( new IChartLayer[] {} );
-        m_chartComposite.getPlot().setPanOffset( pannedLayers, new Point( 0, 0 ) );
-
-        curAc.setPanOffsetInterval( new Point( 0, 0 ) );
-        panAxis( m_mouseDragStart, m_mouseDragEnd, curAxis );
+// // zugehörige Layer rausfinden
+// final IAxis curAxis = curAc.getAxis();
+// IChartLayer[] pannedLayers = m_chartComposite.getChartModel().getAxis2Layers().get( curAxis ).toArray( new
+// IChartLayer[] {} );
+        panAxis( m_mouseDragStart, m_mouseDragEnd, curAc.getAxis() );
 
       }
     }
-
     m_mouseDragStart = -1;
     m_mouseDragEnd = -1;
 
+  }
+
+  private final void clearPanOffset( )
+  {
+    m_chartComposite.getPlot().setPanOffset( null, null );
+    final IChartModel cm = m_chartComposite.getChartModel();
+    final IMapperRegistry mr = cm == null ? null : cm.getMapperRegistry();
+    final IAxis[] axes = mr == null ? new IAxis[] {} : mr.getAxes();
+    for( final IAxis axis : axes )
+    {
+      final AxisCanvas ac = m_chartComposite.getAxisCanvas( axis );
+      if( ac != null )
+        ac.setPanOffsetInterval( null );
+    }
   }
 
   private void panAxis( int startPos, int endPos, IAxis axis )
@@ -137,6 +131,8 @@ public class AxisDragPanHandler extends AbstractAxisDragHandler
     Number startNum = axis.screenToNumeric( startPos );
     Number endNum = axis.screenToNumeric( endPos );
     double diff = startNum.doubleValue() - endNum.doubleValue();
+    if( Double.isNaN( diff ) )
+      return;
     IDataRange<Number> oldRange = axis.getNumericRange();
     Number newMin = oldRange.getMin().doubleValue() + diff;
     Number newMax = oldRange.getMax().doubleValue() + diff;
@@ -161,15 +157,10 @@ public class AxisDragPanHandler extends AbstractAxisDragHandler
         hasStarted = true;
         // // Zoom-Anzeige in AxisCanvas
         final AxisCanvas curAc = (AxisCanvas) e.getSource();
-// m_axes.get( curAc );
         final ORIENTATION ori = getOrientation( curAc );
 
         if( m_applyOnAllAxes )
         {
-// for( AxisCanvas ac : m_axes.keySet() )
-// {
-// if( m_axes.get( ac ).getPosition().getOrientation().equals( ori ) )
-// {
           for( final IAxis axis : getAxis( ori ) )
           {
             if( ori.equals( ORIENTATION.HORIZONTAL ) )
@@ -180,11 +171,11 @@ public class AxisDragPanHandler extends AbstractAxisDragHandler
 
           if( ori.equals( ORIENTATION.HORIZONTAL ) )
           {
-            m_chartComposite.getPlot().setPanOffset( null, new Point( m_mouseDragStart - e.x, 0 ) );
+            m_chartComposite.getPlot().setPanOffset( m_chartComposite.getChartModel().getLayerManager().getLayers(), new Point( m_mouseDragStart - e.x, 0 ) );
           }
           else
           {
-            m_chartComposite.getPlot().setPanOffset( null, new Point( 0, m_mouseDragStart - e.y ) );
+            m_chartComposite.getPlot().setPanOffset( m_chartComposite.getChartModel().getLayerManager().getLayers(), new Point( 0, m_mouseDragStart - e.y ) );
           }
 
         }

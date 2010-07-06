@@ -46,9 +46,9 @@ import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
 
+import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
-import de.openali.odysseus.chart.framework.model.mapper.component.IAxisComponent;
 import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
 import de.openali.odysseus.chart.framework.view.IChartDragHandler;
 import de.openali.odysseus.chart.framework.view.impl.AxisCanvas;
@@ -66,6 +66,20 @@ public class DragPanHandler implements IChartDragHandler
   public DragPanHandler( final ChartComposite chartComposite )
   {
     m_chartComposite = chartComposite;
+  }
+
+  private final void clearPanOffset( )
+  {
+    m_chartComposite.getPlot().setPanOffset( null, null );
+    final IChartModel cm = m_chartComposite.getChartModel();
+    final IMapperRegistry mr = cm == null ? null : cm.getMapperRegistry();
+    final IAxis[] axes = mr == null ? new IAxis[] {} : mr.getAxes();
+    for( final IAxis axis : axes )
+    {
+      final AxisCanvas ac = m_chartComposite.getAxisCanvas( axis );
+      if( ac != null )
+        ac.setPanOffsetInterval( null );
+    }
   }
 
   /**
@@ -92,9 +106,7 @@ public class DragPanHandler implements IChartDragHandler
   @Override
   public void mouseUp( final MouseEvent e )
   {
-    // pan offset zurücksetzen
-    m_chartComposite.getPlot().setPanOffset( null, new Point( 0, 0 ) );
-    setAxisPanOffset( 0, 0, 0, 0 );
+    clearPanOffset();
 
     // dann pannen
     if( m_start != null )
@@ -116,7 +128,6 @@ public class DragPanHandler implements IChartDragHandler
     {
       m_chartComposite.getPlot().setPanOffset( null, new Point( m_start.x - e.x, m_start.y - e.y ) );
       setAxisPanOffset( m_start.x, e.x, m_start.y, e.y );
-
     }
   }
 
@@ -135,21 +146,19 @@ public class DragPanHandler implements IChartDragHandler
     IAxis[] axes = mapperRegistry.getAxes();
     for( IAxis axis : axes )
     {
-      IAxisComponent component = m_chartComposite.getAxisCanvas( axis );
-      if( component != null && component instanceof AxisCanvas )
+      final AxisCanvas ac = m_chartComposite.getAxisCanvas( axis );
+      if( ac == null )
+        continue;
+
+      if( axis.getPosition().getOrientation().equals( ORIENTATION.HORIZONTAL ) )
       {
-        AxisCanvas ac = (AxisCanvas) component;
-        if( axis.getPosition().getOrientation().equals( ORIENTATION.HORIZONTAL ) )
-        {
-          ac.setPanOffsetInterval( new Point( panXStart, panXEnd ) );
-        }
-        else
-        {
-          ac.setPanOffsetInterval( new Point( panYStart, panYEnd ) );
-        }
+        ac.setPanOffsetInterval( new Point( panXEnd - panXStart, 0 ) );
+      }
+      else
+      {
+        ac.setPanOffsetInterval( new Point( 0, panYEnd - panYStart ) );
       }
     }
-
   }
 
 }

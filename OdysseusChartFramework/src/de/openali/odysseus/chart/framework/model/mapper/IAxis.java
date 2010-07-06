@@ -3,6 +3,7 @@ package de.openali.odysseus.chart.framework.model.mapper;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.DIRECTION;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
+import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
 
 /**
  * An axis is a mapper which maps a number to a position. Axes use a logical and a numerical data range; the numerical
@@ -94,5 +95,12 @@ public interface IAxis extends IMapper
    * @return class of data type which is intended by this axis
    */
   public Class< ? > getDataClass( );
+
+  /**
+   * @return The Renderer for this Axis, if any (maybe null)
+   */
+  public IAxisRenderer getRenderer( );
+
+  public void setRenderer( final IAxisRenderer axisRenderer );
 
 }

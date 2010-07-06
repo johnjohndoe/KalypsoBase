@@ -168,6 +168,17 @@ public class ChartFactory
       Logger.logError( Logger.TOPIC_LOG_GENERAL, "AxisFactory: given axis is NULL." );
   }
 
+  private final static IAxisRenderer findRenderer( final IAxis[] axes, final String rendererID )
+  {
+    for( final IAxis axis : axes )
+    {
+      final IAxisRenderer renderer = axis.getRenderer();
+      if( renderer != null && renderer.getId().equals( rendererID ) )
+        return renderer;
+    }
+    return null;
+  }
+
   /**
    * creates a concrete IAxis-Implementation from an AbstractAxisType derived from a ChartConfiguration, sets the
    * corresponding renderer and adds both to a given Chart
@@ -198,7 +209,7 @@ public class ChartFactory
               valueList = axisType.getStringRange().getValueSet().getValueArray();
             ap.init( model, id, pc, context, dataClass, axisPosition, valueList );
             final IAxis axis = ap.getAxis();
-            axis.setRegistry( mr );
+            // axis.setRegistry( mr );
             // Provider in Element setzen - fürs speichern benötigt
             axis.setData( ChartFactory.AXIS_PROVIDER_KEY, ap );
             // save configuration type so it can be used for saving to chartfile
@@ -212,15 +223,17 @@ public class ChartFactory
 
             // Renderer nur erzeugen, wenn es noch keinen für die
             // Achse gibt
-            if( mr.getRenderer( axis ) == null )
+
+            if( axis.getRenderer() == null )
             {
-              IAxisRenderer axisRenderer = mr.getRenderer( axisType.getRendererRef().getRef() );
+              final ReferencingType rendererRef = axisType.getRendererRef();
+              IAxisRenderer axisRenderer = findRenderer( mr.getAxes(), rendererRef.getRef() );
               // schon vorhanden => einfach zuweisen
               if( axisRenderer != null )
-                mr.setRenderer( axis.getId(), axisRenderer );
+                axis.setRenderer( axisRenderer );
               else
               {
-                final ReferencingType rendererRef = axisType.getRendererRef();
+
                 final AxisRendererType rendererType = (AxisRendererType) rr.resolveReference( rendererRef.getRef() );
                 if( rendererType != null )
                 {
@@ -233,10 +246,11 @@ public class ChartFactory
                   try
                   {
                     axisRenderer = arp.getAxisRenderer();
-                    mr.setRenderer( axis.getId(), axisRenderer );
                     axisRenderer.setData( ChartFactory.AXISRENDERER_PROVIDER_KEY, arp );
                     // save configuration type so it can be used for saving to chartfile
                     axisRenderer.setData( CONFIGURATION_TYPE_KEY, rendererType );
+
+                    axis.setRenderer( axisRenderer );
                   }
                   catch( final ConfigurationException e )
                   {

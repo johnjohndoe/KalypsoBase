@@ -75,6 +75,7 @@ import de.openali.odysseus.chart.factory.config.ChartExtensionLoader;
 import de.openali.odysseus.chart.factory.config.ChartFactory;
 import de.openali.odysseus.chart.factory.config.IExtensionLoader;
 import de.openali.odysseus.chart.framework.model.IChartModel;
+import de.openali.odysseus.chart.framework.model.event.IChartModelEventListener;
 import de.openali.odysseus.chart.framework.model.impl.ChartModel;
 import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
 import de.openali.odysseus.chartconfig.x020.ChartType;
@@ -267,6 +268,22 @@ public class ChartView extends ViewPart implements IChartPart, ISelectionListene
     }
   }
 
+  /**
+   * @see org.kalypso.chart.ui.IChartPart#getOutlinePage()
+   */
+  @Override
+  public IContentOutlinePage getOutlinePage( )
+  {
+    if( m_outlinePage == null )
+    {
+      final IChartModel model = this.getChartComposite().getChartModel();
+      m_outlinePage = new ChartEditorTreeOutlinePage();
+      m_outlinePage.setModel( model );
+    }
+
+    return m_outlinePage;
+  }
+
   @Override
   public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
   {
@@ -285,13 +302,7 @@ public class ChartView extends ViewPart implements IChartPart, ISelectionListene
 
     if( IContentOutlinePage.class.equals( adapter ) )
     {
-      if( m_outlinePage == null )
-      {
-        final IChartModel model = this.getChartComposite().getChartModel();
-        m_outlinePage = new ChartEditorTreeOutlinePage( model );
-      }
-
-      return m_outlinePage;
+      return getOutlinePage();
     }
     return super.getAdapter( adapter );
   }
@@ -353,4 +364,25 @@ public class ChartView extends ViewPart implements IChartPart, ISelectionListene
       }
     }
   }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.event.IEventProvider#addListener(java.lang.Object)
+   */
+  @Override
+  public void addListener( IChartModelEventListener listener )
+  {
+    // TODO Auto-generated method stub
+
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.event.IEventProvider#removeListener(java.lang.Object)
+   */
+  @Override
+  public void removeListener( IChartModelEventListener listener )
+  {
+    // TODO Auto-generated method stub
+
+  }
+
 }

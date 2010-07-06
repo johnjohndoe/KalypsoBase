@@ -9,7 +9,6 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
-import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants;
 import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
@@ -21,9 +20,18 @@ import de.openali.odysseus.chart.framework.util.StyleUtils;
  */
 public abstract class AbstractGenericAxisRenderer implements IAxisRenderer
 {
-  // private final int m_tickLength;
 
-  // private final int m_gap;
+// /**
+// * @see
+// de.openali.odysseus.chart.framework.model.event.IMapperEventListener#onMapperChanged(de.openali.odysseus.chart.framework.model.mapper.IMapper)
+// */
+// @Override
+// public void onMapperChanged( IMapper mapper )
+// {
+// if( mapper instanceof IAxis )
+// invalidateTicks( (IAxis) mapper );
+//
+// }
 
   private final Insets m_labelInsets;
 
@@ -31,14 +39,12 @@ public abstract class AbstractGenericAxisRenderer implements IAxisRenderer
 
   private final String m_id;
 
-  // private final int m_borderSize;
-
   /**
    * Hashmap to store arbitrary key value pairs
    */
   private final Map<String, Object> m_data = new HashMap<String, Object>();
 
-  private final Map<IAxis, Number[]> m_tickMap = new HashMap<IAxis, Number[]>();
+  // private final Map<IAxis, Number[]> m_tickMap = new HashMap<IAxis, Number[]>();
 
   private ILineStyle m_axisLineStyle;
 
@@ -115,16 +121,16 @@ public abstract class AbstractGenericAxisRenderer implements IAxisRenderer
     return m_tickLabelInsets;
   }
 
-  public void setTickMapElement( final IAxis axis, final Number[] ticks )
-  {
-    m_tickMap.put( axis, ticks );
-  }
-
-  protected Number[] getTickMapElement( final IAxis axis )
-  {
-    final Number[] tickMap = m_tickMap.get( axis );
-    return tickMap;
-  }
+// public void setTickMapElement( final IAxis axis, final Number[] ticks )
+// {
+// m_tickMap.put( axis, ticks );
+// }
+//
+// protected Number[] getTickMapElement( final IAxis axis )
+// {
+// final Number[] tickMap = m_tickMap.get( axis );
+// return tickMap;
+// }
 
   /**
    * @see org.kalypso.chart.framework.model.layer.IChartLayer#setData()
@@ -150,11 +156,11 @@ public abstract class AbstractGenericAxisRenderer implements IAxisRenderer
     return m_id;
   }
 
-  @Override
-  public void invalidateTicks( final IAxis axis )
-  {
-    m_tickMap.put( axis, null );
-  }
+// @Override
+// public void invalidateTicks( final IAxis axis )
+// {
+// m_tickMap.put( axis, null );
+// }
 
   @Override
   public void dispose( )

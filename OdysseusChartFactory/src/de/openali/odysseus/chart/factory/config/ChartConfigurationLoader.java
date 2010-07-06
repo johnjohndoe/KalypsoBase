@@ -20,6 +20,7 @@ import org.w3c.dom.NodeList;
 
 import de.openali.odysseus.chart.factory.util.IReferenceResolver;
 import de.openali.odysseus.chart.framework.logging.impl.Logger;
+import de.openali.odysseus.chart.framework.util.IOUtils;
 import de.openali.odysseus.chartconfig.x020.AbstractStyleType;
 import de.openali.odysseus.chartconfig.x020.AreaStyleDocument;
 import de.openali.odysseus.chartconfig.x020.AreaStyleType;
@@ -90,17 +91,14 @@ public class ChartConfigurationLoader implements IReferenceResolver
       is = new BufferedInputStream( configFile.getContents() );
       m_document = ChartConfigurationDocument.Factory.parse( is );
     }
+    catch( final ExceptionInInitializerError e )
+    {
+      e.printStackTrace();
+      throw new IOException( e.getLocalizedMessage(), e );
+    }
     finally
     {
-      try
-      {
-        if( is != null )
-          is.close();
-      }
-      catch( final IOException e )
-      {
-        // wird ignoriert
-      }
+      IOUtils.closeQuietly( is );
     }
   }
 

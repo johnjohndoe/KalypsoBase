@@ -46,7 +46,7 @@ import de.openali.odysseus.chart.factory.config.ChartFactory;
 import de.openali.odysseus.chart.factory.config.IExtensionLoader;
 import de.openali.odysseus.chart.factory.config.exception.ConfigurationException;
 import de.openali.odysseus.chart.framework.model.IChartModel;
-import de.openali.odysseus.chart.framework.model.event.impl.AbstractChartModelEventListener;
+import de.openali.odysseus.chart.framework.model.event.IChartModelEventListener;
 import de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener;
 import de.openali.odysseus.chart.framework.model.event.impl.AbstractMapperRegistryEventListener;
 import de.openali.odysseus.chart.framework.model.impl.ChartModel;
@@ -348,18 +348,18 @@ public class ChartEditor extends EditorPart implements IChartPart
           };
           m_chartModel.getLayerManager().addListener( layerManagerListener );
 
-          final AbstractChartModelEventListener chartModelEventListener = new AbstractChartModelEventListener()
-          {
-            /**
-             * @see org.kalypso.chart.framework.model.event.impl.AbstractChartModelEventListener#onModelChanged()
-             */
-            @Override
-            public void onModelChanged( )
-            {
-              setDirty( true );
-            }
-          };
-          m_chartModel.addListener( chartModelEventListener );
+// final AbstractChartModelEventListener chartModelEventListener = new AbstractChartModelEventListener()
+// {
+// /**
+// * @see org.kalypso.chart.framework.model.event.impl.AbstractChartModelEventListener#onModelChanged()
+// */
+// @Override
+// public void onModelChanged(IChartModel oldModel, IChartModel newModel )
+// {
+// setDirty( true );
+// }
+// };
+// m_chartModel.addListener( chartModelEventListener );
 
           try
           {
@@ -487,6 +487,22 @@ public class ChartEditor extends EditorPart implements IChartPart
   }
 
   /**
+   * @see org.kalypso.chart.ui.IChartPart#getOutlinePage()
+   */
+  @Override
+  public IContentOutlinePage getOutlinePage( )
+  {
+    if( m_outlinePage == null && this.getChartComposite() != null )
+    {
+      final IChartModel model = this.getChartComposite().getChartModel();
+      m_outlinePage = new ChartEditorTreeOutlinePage();
+      m_outlinePage.setModel( model );
+    }
+
+    return m_outlinePage;
+  }
+
+  /**
    * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
    */
   @Override
@@ -494,13 +510,7 @@ public class ChartEditor extends EditorPart implements IChartPart
   {
     if( IContentOutlinePage.class.equals( adapter ) )
     {
-      if( m_outlinePage == null && this.getChartComposite() != null )
-      {
-        final IChartModel model = this.getChartComposite().getChartModel();
-        m_outlinePage = new ChartEditorTreeOutlinePage( model );
-      }
-
-      return m_outlinePage;
+      getOutlinePage();
     }
 
     if( ChartComposite.class.equals( adapter ) )
@@ -547,6 +557,26 @@ public class ChartEditor extends EditorPart implements IChartPart
 
     m_dirty = dirty;
     firePropertyChange( PROP_DIRTY );
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.event.IEventProvider#addListener(java.lang.Object)
+   */
+  @Override
+  public void addListener( IChartModelEventListener listener )
+  {
+    // TODO Auto-generated method stub
+
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.event.IEventProvider#removeListener(java.lang.Object)
+   */
+  @Override
+  public void removeListener( IChartModelEventListener listener )
+  {
+    // TODO Auto-generated method stub
+
   }
 
 }

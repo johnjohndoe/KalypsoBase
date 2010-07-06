@@ -47,9 +47,8 @@ import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
 
 /**
  * @author burtscher1
- * 
  */
-public class AxisDragZoomOutHandler extends AxisDragZoomInHandler
+public class AxisDragZoomOutHandler extends AxisDragZoomHandler
 {
 
   public AxisDragZoomOutHandler( ChartComposite chartComposite )
@@ -57,7 +56,6 @@ public class AxisDragZoomOutHandler extends AxisDragZoomInHandler
     super( chartComposite );
   }
 
-  @SuppressWarnings("unchecked")
   @Override
   public void performZoomAction( IAxis axis )
   {
@@ -110,7 +108,7 @@ public class AxisDragZoomOutHandler extends AxisDragZoomInHandler
       double newFrom = oldmin - ((Math.abs( from - oldmin ) / oldrange) * newrange);
       double newTo = oldmax + ((Math.abs( to - oldmax ) / oldrange) * newrange);
 
-      axis.setNumericRange( new ComparableDataRange( new Number[] { new Double( newFrom ), new Double( newTo ) } ) );
+      axis.setNumericRange( new ComparableDataRange<Number>( new Number[] { new Double( newFrom ), new Double( newTo ) } ) );
     }
   }
 

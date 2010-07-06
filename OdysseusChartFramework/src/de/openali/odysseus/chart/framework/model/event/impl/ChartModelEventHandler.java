@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package de.openali.odysseus.chart.framework.model.event.impl;
 
+import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.event.IChartModelEventListener;
 
 /**
@@ -47,9 +48,9 @@ import de.openali.odysseus.chart.framework.model.event.IChartModelEventListener;
  */
 public class ChartModelEventHandler extends AbstractEventProvider<IChartModelEventListener>
 {
-  public void fireModelChanged( )
+  public void fireModelChanged( IChartModel oldModel, IChartModel newModel )
   {
     for( final IChartModelEventListener l : getListeners() )
-      l.onModelChanged();
+      l.onModelChanged( oldModel, newModel );
   }
 }

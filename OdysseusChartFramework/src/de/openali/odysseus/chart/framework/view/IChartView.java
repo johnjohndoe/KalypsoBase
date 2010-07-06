@@ -41,20 +41,13 @@
 package de.openali.odysseus.chart.framework.view;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
+import de.openali.odysseus.chart.framework.model.event.IChartModelEventListener;
+import de.openali.odysseus.chart.framework.model.event.IEventProvider;
 
 /**
  * @author alibu
  */
-public interface IChartView
+public interface IChartView extends IEventProvider<IChartModelEventListener>
 {
-
-  public void setChartModel( IChartModel model );
-
   public IChartModel getChartModel( );
-
-// TODO get rid of this, the Control implementation is never overwritten
-// public void setSize( Point size );
-
-// public Point getSize( );
-
 }

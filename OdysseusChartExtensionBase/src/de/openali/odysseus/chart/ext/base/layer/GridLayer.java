@@ -76,7 +76,7 @@ public class GridLayer extends AbstractChartLayer
     // von links nach rechts zeichnen
     if( (m_orientation == GridOrientation.BOTH) || (m_orientation == GridOrientation.HORIZONTAL) )
     {
-      final Number[] vTicks = vAxis.getRegistry().getRenderer( vAxis ).getTicks( vAxis );
+      final Number[] vTicks = vAxis.getRenderer().getTicks( vAxis, gc );
       final IDataRange<Number> hRange = hAxis.getNumericRange();
       final int xfrom = hAxis.numericToScreen( hRange.getMin() );
       final int xto = hAxis.numericToScreen( hRange.getMax() );
@@ -93,7 +93,7 @@ public class GridLayer extends AbstractChartLayer
     // von unten nach oben zeichnen
     if( (m_orientation == GridOrientation.BOTH) || (m_orientation == GridOrientation.VERTICAL) )
     {
-      final Number[] hTicks = hAxis.getRegistry().getRenderer( hAxis ).getTicks( hAxis );
+      final Number[] hTicks = hAxis.getRenderer().getTicks( hAxis, gc );
       final IDataRange<Number> vRange = vAxis.getNumericRange();
       final int yfrom = vAxis.numericToScreen( vRange.getMin() );
       final int yto = vAxis.numericToScreen( vRange.getMax() );

@@ -5,14 +5,12 @@ import java.util.Map;
 
 import org.eclipse.swt.graphics.Point;
 
-import de.openali.odysseus.chart.framework.model.event.IChartModelEventListener;
-import de.openali.odysseus.chart.framework.model.event.IEventProvider;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
 
-public interface IChartModel extends IEventProvider<IChartModelEventListener>
+public interface IChartModel
 {
 
   public IMapperRegistry getMapperRegistry( );
@@ -25,10 +23,11 @@ public interface IChartModel extends IEventProvider<IChartModelEventListener>
 
   /**
    * @param b
-   *            if true, axes in the AxisRegistry which are not used by any layer are hidden; if false, all axes are
-   *            shown
+   *          if true, axes in the AxisRegistry which are not used by any layer are hidden; if false, all axes are shown
    */
   public void setHideUnusedAxes( boolean b );
+
+  public boolean isHideUnusedAxes( );
 
   /**
    * When called, all given axes set their DataRange so all ther layers data can be shown

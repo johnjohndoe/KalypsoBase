@@ -9,7 +9,6 @@ import de.openali.odysseus.chart.framework.model.event.IMapperRegistryEventListe
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants;
 import de.openali.odysseus.chart.framework.model.mapper.IMapper;
-import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
 
 /**
  * @author alibu Interface describing a container for the chart axes; used to ensure that only one axis is present for
@@ -43,22 +42,22 @@ public interface IMapperRegistry extends IEventProvider<IMapperRegistryEventList
    *         axis. If no renderer is found for that axis, it looks up the renderer based on the dataClass of the axis.
    *         If still no renderer is found, it tries to find a renderer for a super class of the axis dataClass.
    */
-  public IAxisRenderer getRenderer( IAxis axis );
+  // public IAxisRenderer getRenderer( IAxis axis );
 
   /**
    * checks if a renderer with the given id is available in the registry and returns it oder null otherwise
    */
-  public IAxisRenderer getRenderer( String id );
+  // public IAxisRenderer getRenderer( String id );
 
-  /**
-   * sets the AxisRenderer for a particular axis, identified by - guess what - the axis' identifier
-   */
-  public void setRenderer( String identifier, IAxisRenderer renderer );
-
-  /**
-   * removes the renderer for a particular axis
-   */
-  public void unsetRenderer( String identifier );
+// /**
+// * sets the AxisRenderer for a particular axis, identified by - guess what - the axis' identifier
+// */
+// public void setRenderer( String identifier, IAxisRenderer renderer );
+//
+// /**
+// * removes the renderer for a particular axis
+// */
+// public void unsetRenderer( String identifier );
 
   /**
    * @return the AxisComponent of the given axis or null if there isn't any

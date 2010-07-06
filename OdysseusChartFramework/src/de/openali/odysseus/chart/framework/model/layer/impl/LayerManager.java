@@ -25,6 +25,8 @@ public class LayerManager implements ILayerManager
   @Override
   public void addLayer( final IChartLayer layer )
   {
+    if( layer == null )
+      return;
     m_layers.add( layer );
     registerLayer( layer );
 
