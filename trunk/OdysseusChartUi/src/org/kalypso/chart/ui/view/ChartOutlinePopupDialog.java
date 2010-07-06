@@ -47,7 +47,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.chart.ui.KalypsoChartUiPlugin;
 import org.kalypso.chart.ui.editor.ChartEditorTreeOutlinePage;
@@ -55,7 +54,6 @@ import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 
 /**
  * @author burtscher1
- * 
  */
 public class ChartOutlinePopupDialog extends PopupDialog
 {
@@ -78,7 +76,7 @@ public class ChartOutlinePopupDialog extends PopupDialog
     {
       final Composite da = (Composite) super.createDialogArea( parent );
       da.setLayout( new GridLayout( 1, true ) );
-      final ChartEditorTreeOutlinePage cop = (ChartEditorTreeOutlinePage) m_chartPart.getAdapter( IContentOutlinePage.class );
+      final ChartEditorTreeOutlinePage cop = (ChartEditorTreeOutlinePage) m_chartPart.getOutlinePage();
       cop.createControl( da );
 
       setTitleText( m_chartPart.getChartComposite().getChartModel().getTitle() );

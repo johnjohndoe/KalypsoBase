@@ -3,7 +3,6 @@ package de.openali.odysseus.chart.framework.model.mapper;
 import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.event.IEventProvider;
 import de.openali.odysseus.chart.framework.model.event.IMapperEventListener;
-import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
 
 /**
  * @author burtscher
@@ -15,9 +14,9 @@ public interface IMapper extends IEventProvider<IMapperEventListener>
    */
   public String getId( );
 
-  public void setRegistry( IMapperRegistry mapperRegistry );
+  // public void setRegistry( IMapperRegistry mapperRegistry );
 
-  public IMapperRegistry getRegistry( );
+  // public IMapperRegistry getRegistry( );
 
   /**
    * method to store arbitrary data objects;

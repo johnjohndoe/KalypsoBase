@@ -19,11 +19,19 @@ import de.openali.odysseus.chart.framework.view.impl.PlotCanvas;
  */
 public class ChartImageFactory
 {
+
+  public enum IMAGE_TYPE
+  {
+    PNG,
+    JPG,
+    GIF
+  }
+
   /**
    * @param transparency
    *          RGB to which the transparency-color should be set; transparency will not be used if RGB is null
    */
-  public static ImageData createChartImage( final ChartComposite chart, final Device dev, final int width, final int height )
+  public static ImageData createChartImage( ChartComposite chart, Device dev, int width, int height )
   {
     chart.setSize( new Point( width, height ) );
     chart.redraw();
@@ -34,43 +42,59 @@ public class ChartImageFactory
 
     gcw.drawLine( 0, 0, 100, 100 );
 
+    // Image tmpImg = new Image( dev, width, height );
+    // GC tmpGc = new GC( tmpImg );
+
+    // tmpGc.setBackground( dev.getSystemColor( SWT.COLOR_YELLOW ) );
+    // tmpGc.fillRectangle( 0, 0, tmpImg.getBounds().width, tmpImg.getBounds().height );
+
     // img mit weiï¿½em Hintergrund versehen
     gcw.setBackground( dev.getSystemColor( SWT.COLOR_WHITE ) );
     gcw.fillRectangle( 0, 0, width, height );
 
     // Plot zeichnen
     final PlotCanvas plotCanvas = chart.getPlot();
-    final Image tmpImg = plotCanvas.createImage( chart.getChartModel().getLayerManager().getLayers(), img.getBounds() );
+    Image tmpImg = plotCanvas.createImage( chart.getChartModel().getLayerManager().getLayers(), img.getBounds() );
     gcw.drawImage( tmpImg, 0, 0, plotCanvas.getBounds().width, plotCanvas.getBounds().height, plotCanvas.getBounds().x, plotCanvas.getBounds().y, plotCanvas.getBounds().width, plotCanvas.getBounds().height );
     tmpImg.dispose();
 
     final IMapperRegistry ar = chart.getChartModel().getMapperRegistry();
+// final Map<IAxis, IAxisComponent> components = ar.getAxesToComponentsMap();
+// final Set<Entry<IAxis, IAxisComponent>> acs = components.entrySet();
+// for( final Entry<IAxis, IAxisComponent> ac : acs )
+// {
     for( final IAxis axis : ar.getAxes() )
     {
+      final IAxisRenderer rend = axis.getRenderer();
+      if( rend == null )
+        continue;
+      // final IAxis axis = ac.getKey();
       // Casten, damit man auf die Component-Eigenschaften zugreifen kann
       final AxisCanvas comp = chart.getAxisCanvas( axis );// (AxisCanvas) ac.getValue();
-      final IAxisRenderer rend = ar.getRenderer( axis ); // axis.getRgetRenderer();
+// final IAxis axis = ac.getKey();
+// // Casten, damit man auf die Component-Eigenschaften zugreifen kann
+// final AxisCanvas comp = (AxisCanvas) ac.getValue();
 
-      final Image tempImg = new Image( dev, width, height );
+      // Wenn man den GC nicht neu erzeugt, werden die AChsen nicht
+      // gezeichnet, sondern nochmal das Chart
+      // Zusätzlich muss das Image disposed werden, weil sonst noch
+      // Teile des Plot in die AxisSpaces gezeichnet werden
 
-      final GC tempGc = new GC( tempImg );
+      tmpImg = new Image( dev, width, height );
+      GC tmpGc = new GC( tmpImg );
       // den Renderer in den TmpGC-Zeichnen lassen
-      rend.paint( tempGc, axis, comp.getBounds() );
-
+      rend.paint( tmpGc, axis, comp.getBounds() );
       /*
-       * ...und ins Endbild kopieren; dabei muss berücksichtigt werden, dass die Components in 2 Ebenen Tiefe liegen -
-       * zur Position muss noch die der Eltern addiert werden // TODO: paint directly in gcw (set an affine
-       * transformation). Will probably be faster!
+       * ...und ins Endbild kopieren; dabei muss berï¿½cksichtigt werden, dass die Components in 2 Ebenen Tiefe liegen -
+       * zur Position muss noch die der Eltern addiert werden
        */
-      gcw.drawImage( tempImg, comp.getBounds().x, comp.getBounds().y, comp.getBounds().width, comp.getBounds().height, comp.getParent().getBounds().x + comp.getBounds().x, comp.getParent().getBounds().y
+      gcw.drawImage( tmpImg, comp.getBounds().x, comp.getBounds().y, comp.getBounds().width, comp.getBounds().height, comp.getParent().getBounds().x + comp.getBounds().x, comp.getParent().getBounds().y
           + comp.getBounds().y, comp.getBounds().width, comp.getBounds().height );
 
-      tempGc.dispose();
-      tempImg.dispose();
+      tmpGc.dispose();
+      tmpImg.dispose();
     }
-
     gcw.dispose();
-
     final ImageData id = img.getImageData();
 
     img.dispose();

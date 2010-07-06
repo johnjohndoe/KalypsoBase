@@ -8,14 +8,14 @@ import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 /**
  * @author alibu Interface used to render an IAxis object into an IAxisComponent
  */
-public interface IAxisRenderer
+public interface IAxisRenderer // extends IMapperEventListener
 {
   /**
    * calculates axis values for which label and tick will be shown
    * 
    * @return Collection of tick-values
    */
-  public Number[] getTicks( IAxis axis );
+  public Number[] getTicks( IAxis axis, GC gc );
 
   /**
    * draws the IAxis-Representation into the given GC;
@@ -43,7 +43,7 @@ public interface IAxisRenderer
    */
   public String getId( );
 
-  public void invalidateTicks( IAxis axis );
+  // public void invalidateTicks( IAxis axis );
 
   public void dispose( );
 

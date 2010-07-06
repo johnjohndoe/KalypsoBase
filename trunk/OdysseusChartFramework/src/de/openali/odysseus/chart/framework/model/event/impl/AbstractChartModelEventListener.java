@@ -40,18 +40,17 @@
  *  ---------------------------------------------------------------------------*/
 package de.openali.odysseus.chart.framework.model.event.impl;
 
+import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.event.IChartModelEventListener;
 
 /**
  * @author burtscher1
- *
  */
 public abstract class AbstractChartModelEventListener implements IChartModelEventListener
 {
+  public void onModelChanged( IChartModel oldModel, IChartModel newModel )
 
-  @Override
-  public void onModelChanged( )
   {
-    //implement if needed
+    // implement if needed
   }
 }

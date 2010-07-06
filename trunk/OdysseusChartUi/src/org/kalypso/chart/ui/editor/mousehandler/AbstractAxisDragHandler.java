@@ -64,26 +64,11 @@ public abstract class AbstractAxisDragHandler implements IAxisDragHandler
 
   protected int m_mouseDragEnd = -1;
 
-  // protected final Map<AxisCanvas, IAxis> m_axes = new HashMap<AxisCanvas, IAxis>();
-
   protected boolean m_applyOnAllAxes = false;
 
   public AbstractAxisDragHandler( final ChartComposite chartComposite )
   {
     m_chartComposite = chartComposite;
-
-    // zugehörige Achsen rausfinden
-// final IMapperRegistry reg = m_chartComposite.getChartModel().getMapperRegistry();
-// final IAxis[] axes = reg.getAxes();
-// for( final IAxis axis : axes )
-// {
-// final IAxisComponent component = reg.getComponent( axis );
-// if( component != null )
-// {
-// final AxisCanvas ac = (AxisCanvas) component;
-// m_axes.put( ac, axis );
-// }
-// }
   }
 
   /**

@@ -40,23 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.chart.ui.editor.mousehandler;
 
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.graphics.Cursor;
-import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.widgets.Display;
-
 import de.openali.odysseus.chart.framework.logging.impl.Logger;
 import de.openali.odysseus.chart.framework.model.data.impl.ComparableDataRange;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
-import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
-import de.openali.odysseus.chart.framework.view.impl.AxisCanvas;
 import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
 
 /**
  * @author burtscher1
  */
-public class AxisDragZoomInHandler extends AbstractAxisDragHandler
+public class AxisDragZoomInHandler extends AxisDragZoomHandler
 {
 
   public AxisDragZoomInHandler( ChartComposite chartComposite )
@@ -64,115 +56,9 @@ public class AxisDragZoomInHandler extends AbstractAxisDragHandler
     super( chartComposite );
   }
 
-  /**
-   * @see org.kalypso.chart.framework.view.IChartDragHandler#getCursor()
-   */
   @Override
-  public Cursor getCursor( )
-  {
-    return Display.getDefault().getSystemCursor( SWT.CURSOR_CROSS );
-  }
-
-  /**
-   * @see org.eclipse.swt.events.MouseListener#mouseUp(org.eclipse.swt.events.MouseEvent)
-   */
-  @Override
-  public void mouseUp( MouseEvent e )
-  {
-    if( m_mouseDragStart == -1 )
-      return;
-    m_mouseDragEnd = getPos( e );
-
-    // nur anwenden, wenn die Maus mind. 5 Pixel bewegt wurde
-    int diff = Math.abs( m_mouseDragEnd - m_mouseDragStart );
-
-    // Zoom-Anzeige in AxisCanvas
-    final AxisCanvas curAc = (AxisCanvas) e.getSource();
-
-    final ORIENTATION ori = getOrientation( curAc );// curAxis.getPosition().getOrientation();
-
-    if( m_applyOnAllAxes )
-    {
-// for( final Entry<AxisCanvas, IAxis> entry : m_axes.entrySet() )
-// {
-// IAxis axis = entry.getValue();
-// if( axis.getPosition().getOrientation().equals( ori ) )
-// {
-      for( final IAxis axis : getAxis( ori ) )
-      {
-        if( diff > 5 )
-        {
-          performZoomAction( axis );
-        }
-        m_chartComposite.getAxisCanvas( axis ).setDragInterval( 0, 0 );
-      }
-    }
-
-    else
-    {
-      final IAxis curAxis = curAc.getAxis();// m_axes.get( curAc );
-      if( diff > 5 )
-      {
-        performZoomAction( curAxis );
-      }
-      curAc.setDragInterval( 0, 0 );
-    }
-
-    // zurücksetzen
-    m_mouseDragStart = -1;
-    m_mouseDragEnd = -1;
-    m_chartComposite.getPlot().setDragArea( null );
-
-  }
-
-  /**
-   * @see org.eclipse.swt.events.MouseMoveListener#mouseMove(org.eclipse.swt.events.MouseEvent)
-   */
-  @Override
-  public void mouseMove( MouseEvent e )
-  {
-
-    if( m_mouseDragStart != -1 )
-    {
-      m_mouseDragEnd = getPos( e );
-      // Zoom-Anzeige in AxisCanvas
-      final AxisCanvas curAc = (AxisCanvas) e.getSource();
-      // final IAxis curAxis = m_axes.get( curAc );
-      final ORIENTATION ori = getOrientation( curAc );// curAxis.getPosition().getOrientation();
-
-      // zoom-Rechteck im Plot
-      Rectangle dragArea;
-      final Rectangle plotBounds = m_chartComposite.getPlot().getBounds();
-      if( ori == ORIENTATION.HORIZONTAL )
-        dragArea = new Rectangle( Math.min( m_mouseDragStart, m_mouseDragEnd ), 0, Math.abs( m_mouseDragStart - m_mouseDragEnd ), plotBounds.height );
-      else
-        dragArea = new Rectangle( 0, Math.min( m_mouseDragStart, m_mouseDragEnd ), plotBounds.width, Math.abs( m_mouseDragStart - m_mouseDragEnd ) );
-      m_chartComposite.getPlot().setDragArea( dragArea );
-
-      if( m_applyOnAllAxes )
-      {
-        // zoom-Rechteck im AxisCanvas
-// for( final AxisCanvas ac : m_axes.keySet() )
-// {
-// final IAxis axis = m_axes.get( ac );
-// if( axis.getPosition().getOrientation().equals( ori ) )
-// {
-        for( final IAxis axis : getAxis( ori ) )
-          m_chartComposite.getAxisCanvas( axis ).setDragInterval( m_mouseDragStart, m_mouseDragEnd );
-      }
-
-      else
-      {
-        curAc.setDragInterval( m_mouseDragStart, m_mouseDragEnd );
-      }
-
-    }
-
-  }
-
   protected void performZoomAction( IAxis axis )
   {
-
     final Number numDragStart = axis.screenToNumeric( m_mouseDragStart );
     final Number numDragEnd = axis.screenToNumeric( m_mouseDragEnd );
     Logger.logInfo( Logger.TOPIC_LOG_AXIS, "Zooming from " + m_mouseDragStart + " (" + numDragStart + ") to " + m_mouseDragEnd + " (" + numDragEnd + ")" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$

@@ -95,14 +95,6 @@ public class NumberDataOperator extends AbstractDataOperator<Number>
 
   }
 
-  /**
-   * @see org.kalypso.chart.framework.model.data.IDataOperator#getDefaultRange()
-   */
-  public IDataRange<Number> getDefaultRange( )
-  {
-    return new ComparableDataRange<Number>( new Double[] { 0.0, 1.0 } );
-  }
-
   @Override
   public Format getFormat( final IDataRange<Number> range )
   {

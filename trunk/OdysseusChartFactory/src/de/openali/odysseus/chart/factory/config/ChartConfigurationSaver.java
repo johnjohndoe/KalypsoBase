@@ -102,8 +102,7 @@ public class ChartConfigurationSaver
    */
   private static Map<String, AxisType> extractAxes( final IMapperRegistry registry )
   {
-    
-   
+
     final Map<String, AxisType> axisTypes = new HashMap<String, AxisType>();
     final IAxis[] axes = registry.getAxes();
     for( final IAxis axis : axes )
@@ -113,7 +112,7 @@ public class ChartConfigurationSaver
       {
 
         // only set new range
-        //TODO: Die Achsen schreiben ihre range nur in die .kod wenn das Element vorher schon angelegt war
+        // TODO: Die Achsen schreiben ihre range nur in die .kod wenn das Element vorher schon angelegt war
         if( at.isSetDateRange() )
         {
           final IDataOperator<Calendar> dop = axis.getDataOperator( Calendar.class );
@@ -156,7 +155,7 @@ public class ChartConfigurationSaver
     final IAxis[] axes = registry.getAxes();
     for( final IAxis axis : axes )
     {
-      final IAxisRenderer renderer = registry.getRenderer( axis );
+      final IAxisRenderer renderer = axis.getRenderer();
       if( renderer != null )
       {
         final AxisRendererType art = (AxisRendererType) renderer.getData( ChartFactory.CONFIGURATION_TYPE_KEY );

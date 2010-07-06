@@ -10,9 +10,7 @@ import org.eclipse.swt.graphics.Point;
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.ComparableDataRange;
-import de.openali.odysseus.chart.framework.model.event.IChartModelEventListener;
 import de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener;
-import de.openali.odysseus.chart.framework.model.event.impl.ChartModelEventHandler;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.model.layer.impl.LayerManager;
@@ -26,11 +24,11 @@ import de.openali.odysseus.chart.framework.util.ChartUtilities;
 
 public class ChartModel implements IChartModel
 {
-  private boolean m_hideUnusedAxes = false;
+  private boolean m_hideUnusedAxes = true;
 
   private final IMapperRegistry m_mapperRegistry = new MapperRegistry();
 
-  /** axis --> List of layers */
+// /** axis --> List of layers */
   private final Map<IAxis, List<IChartLayer>> m_axis2Layers = new HashMap<IAxis, List<IChartLayer>>();
 
   private final ILayerManager m_manager = new LayerManager();
@@ -39,8 +37,6 @@ public class ChartModel implements IChartModel
    * if set to true, all axes are sized automatically to fit all data into a layer
    */
   private boolean m_autoscale = false;
-
-  private final ChartModelEventHandler m_eventHandler;
 
   private String m_id = "";
 
@@ -52,6 +48,21 @@ public class ChartModel implements IChartModel
   {
     final AbstractLayerManagerEventListener m_layerMana = new AbstractLayerManagerEventListener()
     {
+      /**
+       * @see de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener#onActivLayerChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
+       */
+      @Override
+      public void onActivLayerChanged( IChartLayer layer )
+      {
+        if( !layer.isActive() )
+          return;
+        for( final IChartLayer cl : getLayerManager().getLayers() )
+        {
+          if( cl != layer && cl.isActive() )
+            cl.setActive( false );
+        }
+      }
+
       /*
        * (non-Javadoc)
        * @see
@@ -77,8 +88,6 @@ public class ChartModel implements IChartModel
 
     };
     m_manager.addListener( m_layerMana );
-
-    m_eventHandler = new ChartModelEventHandler();
   }
 
   /**
@@ -92,8 +101,10 @@ public class ChartModel implements IChartModel
     final ICoordinateMapper cm = layer.getCoordinateMapper();
     if( cm == null )
       return;
-    List<IChartLayer> domList = m_axis2Layers.get( cm.getDomainAxis() );
-    List<IChartLayer> valList = m_axis2Layers.get( cm.getTargetAxis() );
+    final IAxis domAxis = cm.getDomainAxis();
+    final IAxis valAxis = cm.getTargetAxis();
+    List<IChartLayer> domList = m_axis2Layers.get( domAxis );
+    List<IChartLayer> valList = m_axis2Layers.get( valAxis );
 
     if( bAdding )
     {
@@ -131,7 +142,11 @@ public class ChartModel implements IChartModel
       }
 
     }
-
+    if( m_hideUnusedAxes )
+    {
+      domAxis.setVisible( domList.size() > 0 );
+      valAxis.setVisible( valList.size() > 0 );
+    }
     if( m_autoscale )
     {
       autoscale( new IAxis[] { cm.getDomainAxis(), layer.getCoordinateMapper().getTargetAxis() } );
@@ -327,27 +342,8 @@ public class ChartModel implements IChartModel
    */
   public void maximize( )
   {
-    final IAxis[] axes = getMapperRegistry().getAxes();
-    autoscale( axes );
+    autoscale( null );
     // ModelChangedEvent werfen, damit Composite das Model neu zeichnet
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.framework.model.event.IEventProvider#addListener(java.lang.Object)
-   */
-  @Override
-  public void addListener( final IChartModelEventListener listener )
-  {
-    m_eventHandler.addListener( listener );
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.framework.model.event.IEventProvider#removeListener(java.lang.Object)
-   */
-  @Override
-  public void removeListener( final IChartModelEventListener listener )
-  {
-    m_eventHandler.removeListener( listener );
   }
 
   /**
@@ -455,7 +451,7 @@ public class ChartModel implements IChartModel
         axis.setNumericRange( new ComparableDataRange<Number>( new Number[] { from, to } ) );
       }
     }
-    m_eventHandler.fireModelChanged();
+    // m_eventHandler.fireModelChanged();
   }
 
   /**
@@ -526,9 +522,9 @@ public class ChartModel implements IChartModel
   @Override
   public void panTo( final Point start, final Point end )
   {
-    if( start.equals( end ))
+    if( start.equals( end ) )
       return;
-    
+
     final IAxis[] axes = getMapperRegistry().getAxes();
     for( final IAxis axis : axes )
     {
@@ -548,6 +544,8 @@ public class ChartModel implements IChartModel
         startNum = axis.screenToNumeric( start.y );
       }
       final double diff = startNum.doubleValue() - nowNum.doubleValue();
+      if( Double.isNaN( diff ) )
+        continue;
       final IDataRange<Number> initRange = axis.getNumericRange();
       newmin = initRange.getMin().doubleValue() + diff;
       newmax = initRange.getMax().doubleValue() + diff;
@@ -556,6 +554,15 @@ public class ChartModel implements IChartModel
       axis.setNumericRange( newRange );
     }
 
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.IChartModel#isHideUnusedAxes()
+   */
+  @Override
+  public boolean isHideUnusedAxes( )
+  {
+    return m_hideUnusedAxes;
   }
 
 }

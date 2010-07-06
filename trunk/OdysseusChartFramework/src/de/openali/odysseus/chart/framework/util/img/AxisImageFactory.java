@@ -1,10 +1,10 @@
 package de.openali.odysseus.chart.framework.util.img;
 
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Shell;
 
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
@@ -38,8 +38,9 @@ public class AxisImageFactory
     final IMapperRegistry mapperRegistry = chart.getChartModel().getMapperRegistry();
     final IAxis axis = mapperRegistry.getAxis( axisId );
     final AxisCanvas axisCanvas = chart.getAxisCanvas( axis );
-    final IAxisRenderer axisRenderer = mapperRegistry.getRenderer( axis );
-    final int axisWidth = axisRenderer.getAxisWidth( axis );
+    final IAxisRenderer axisRenderer = axis.getRenderer();
+
+    final int axisWidth = axisRenderer == null ? 1 : axisRenderer.getAxisWidth( axis );
     int canvasHeight = 0;
     int canvasWidth = 0;
 
@@ -56,6 +57,10 @@ public class AxisImageFactory
 
     axisCanvas.setSize( canvasWidth, canvasHeight );
 
+    if( axisRenderer == null )
+    {
+      System.out.println( "no Axis Renderer found for " + axis.getId() + " -> size set to 1" );
+    }
     System.out.println( shell.getBounds() );
     System.out.println( axisCanvas.getBounds() );
     return createAxisImage( axisCanvas, dev );
@@ -63,34 +68,36 @@ public class AxisImageFactory
 
   public static ImageData createAxisImage( final AxisCanvas axisCanvas, final Device dev )
   {
-    final int axisWidth = axisCanvas.getBounds().width;
-    final int axisHeight = axisCanvas.getBounds().height;
+    final Rectangle bounds = axisCanvas.getBounds();
+// final int axisWidth = axisCanvas.getBounds().width;
+// final int axisHeight = axisCanvas.getBounds().height;
 
-    final Image img = new Image( dev, axisWidth, axisHeight );
+    final Image img = new Image( dev, bounds.width, bounds.height );
 
     final GC gcw = new GC( img );
-    Image tmpImg = new Image( dev, axisWidth, axisHeight );
-    final GC tmpGc = new GC( tmpImg );
-
-    tmpGc.setBackground( dev.getSystemColor( SWT.COLOR_YELLOW ) );
-    tmpGc.fillRectangle( 0, 0, axisWidth, axisHeight );
-
-    // img mit wei�em Hintergrund versehen
-    gcw.setBackground( dev.getSystemColor( SWT.COLOR_WHITE ) );
-    gcw.fillRectangle( 0, 0, axisWidth, axisHeight );
+// Image tmpImg = new Image( dev, axisWidth, axisHeight );
+// final GC tmpGc = new GC( tmpImg );
+//
+// tmpGc.setBackground( dev.getSystemColor( SWT.COLOR_YELLOW ) );
+// tmpGc.fillRectangle( 0, 0, axisWidth, axisHeight );
+//
+// // img mit wei�em Hintergrund versehen
+// gcw.setBackground( dev.getSystemColor( SWT.COLOR_WHITE ) );
+// gcw.fillRectangle( 0, 0, axisWidth, axisHeight );
 
     // Axis zeichnen
-    tmpImg = axisCanvas.paintBuffered( tmpGc, img.getBounds(), null );
-    gcw.drawImage( tmpImg, 0, 0 );
-    gcw.drawImage( tmpImg, 0, 0 );
+// tmpImg = axisCanvas.paintBuffered( tmpGc, img.getBounds(), null );
+    final Image axisImg = axisCanvas.createBufferImage( bounds );
+    gcw.drawImage( axisImg, 0, 0 );
+    axisImg.dispose();
+    // gcw.drawImage( tmpImg, 0, 0 );
 
-    gcw.dispose();
-    tmpGc.dispose();
-    tmpImg.dispose();
+// tmpGc.dispose();
+// tmpImg.dispose();
 
     final ImageData id = img.getImageData();
-
     img.dispose();
+    gcw.dispose();
     return id;
   }
 }
