@@ -61,17 +61,17 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
 
   protected byte[] m_blockData;
 
-  private BufferedOutputStream m_gridStream;
+  private final BufferedOutputStream m_gridStream;
 
   private BigDecimal m_max;
 
   private BigDecimal m_min;
 
-  private int m_scale;
+  private final int m_scale;
 
-  private int m_linesTotal;
+  private final int m_linesTotal;
 
-  private int m_lineLen;
+  private final int m_lineLen;
 
   private int m_blockStart;
 
@@ -81,13 +81,13 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
 
   private int m_amountBlocks;
 
-  private int m_sizeX;
+  private final int m_sizeX;
 
-  private int m_sizeY;
+  private final int m_sizeY;
 
   private int m_itemsInBlock;
 
-  public BinaryGeoGridWriter( String outputCoverageFileName, final int sizeX, final int sizeY, final int scale ) throws IOException
+  public BinaryGeoGridWriter( final String outputCoverageFileName, final int sizeX, final int sizeY, final int scale ) throws IOException
   {
     // init values
     m_min = BigDecimal.valueOf( Double.MAX_VALUE );
@@ -135,21 +135,21 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
 
   }
 
-  
-  public void setMax( BigDecimal max )
+  @Override
+  public void setMax( final BigDecimal max )
   {
     m_max = m_max.max( max );
   }
 
-  
-  public void setMin( BigDecimal min )
+  @Override
+  public void setMin( final BigDecimal min )
   {
     m_min = m_min.min( min );
   }
 
-  public final void writeInt( int v ) throws IOException
+  public final void writeInt( final int v ) throws IOException
   {
-    byte[] lBuff = new byte[4];
+    final byte[] lBuff = new byte[4];
 
     ByteUtils.writeBEInt( lBuff, 0, v );
     m_gridStream.write( lBuff, 0, 4 ); // Version number
@@ -168,7 +168,7 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
       writeInt( m_max.setScale( m_scale, BigDecimal.ROUND_HALF_UP ).unscaledValue().intValue() );
       m_gridStream.close();
     }
-    catch( IOException e )
+    catch( final IOException e )
     {
       e.printStackTrace();
     }
@@ -179,12 +179,12 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
     return m_scale;
   }
 
-  public void write( byte[] blockData, int items ) throws IOException
+  public void write( final byte[] blockData, final int items ) throws IOException
   {
     m_gridStream.write( blockData, 0, items * 4 );
   }
 
-  private void writeNaN( byte[] blockData, int items )
+  private void writeNaN( final byte[] blockData, final int items )
   {
     for( int i = 0; i < items * 4; i += 4 )
       // write the result back into the buffer
@@ -197,7 +197,7 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
     {
       write( m_blockData, m_itemsInBlock );
     }
-    catch( IOException e )
+    catch( final IOException e )
     {
       e.printStackTrace();
     }
@@ -209,7 +209,7 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
     writeNaN( m_blockData, m_itemsInBlock );
   }
 
-  
+  @Override
   public void setValue( final int x, final int y, final double value )
   {
     if( y < m_blockStart )
@@ -242,18 +242,19 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
     ByteUtils.writeBEInt( m_blockData, index * 4, intVal );
   }
 
-  
+  @Override
   public void dispose( )
   {
     close();
   }
 
+  @Override
   public double getValue( final int x, final int y )
   {
     throw new NotImplementedException();
   }
 
-  
+  @Override
   public IGeoWalkingStrategy getWalkingStrategy( )
   {
     return new OptimizedGeoGridWalkingStrategy();
@@ -262,7 +263,8 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
   /**
    * @see org.kalypso.grid.IGeoGrid#getMax()
    */
-  
+
+  @Override
   public BigDecimal getMax( )
   {
     return m_max;
@@ -271,7 +273,8 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
   /**
    * @see org.kalypso.grid.IGeoGrid#getMin()
    */
-  
+
+  @Override
   public BigDecimal getMin( )
   {
     return m_min;
@@ -280,7 +283,8 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
   /**
    * @see org.kalypso.grid.IGeoGrid#getSizeX()
    */
-  
+
+  @Override
   public int getSizeX( )
   {
     return m_sizeX;
@@ -289,7 +293,8 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
   /**
    * @see org.kalypso.grid.IGeoGrid#getSizeY()
    */
-  
+
+  @Override
   public int getSizeY( )
   {
     return m_sizeY;
@@ -298,8 +303,9 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
   /**
    * @see org.kalypso.grid.IWriteableGeoGrid#saveStatistically()
    */
-  
-  public void saveStatistically( ) throws GeoGridException
+
+  @Override
+  public void saveStatistically( )
   {
     // TODO Auto-generated method stub
 
@@ -308,8 +314,9 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
   /**
    * @see org.kalypso.grid.IWriteableGeoGrid#setStatistically(java.math.BigDecimal, java.math.BigDecimal)
    */
-  
-  public void setStatistically( BigDecimal min, BigDecimal max ) throws GeoGridException
+
+  @Override
+  public void setStatistically( final BigDecimal min, final BigDecimal max )
   {
     // TODO Auto-generated method stub
     close();
@@ -318,8 +325,9 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
   /**
    * @see org.kalypso.grid.IGeoGrid#getCell(int, int, java.lang.String)
    */
-  
-  public GM_Surface< ? > getCell( int x, int y, String targetCRS ) throws GeoGridException
+
+  @Override
+  public GM_Surface< ? > getCell( final int x, final int y, final String targetCRS )
   {
     // TODO Auto-generated method stub
     return null;
@@ -328,8 +336,9 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
   /**
    * @see org.kalypso.grid.IGeoGrid#getEnvelope()
    */
-  
-  public Envelope getEnvelope( ) throws GeoGridException
+
+  @Override
+  public Envelope getEnvelope( )
   {
     // TODO Auto-generated method stub
     return null;
@@ -338,8 +347,9 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
   /**
    * @see org.kalypso.grid.IGeoGrid#getOffsetX()
    */
-  
-  public Coordinate getOffsetX( ) throws GeoGridException
+
+  @Override
+  public Coordinate getOffsetX( )
   {
     // TODO Auto-generated method stub
     return null;
@@ -348,8 +358,9 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
   /**
    * @see org.kalypso.grid.IGeoGrid#getOffsetY()
    */
-  
-  public Coordinate getOffsetY( ) throws GeoGridException
+
+  @Override
+  public Coordinate getOffsetY( )
   {
     // TODO Auto-generated method stub
     return null;
@@ -358,8 +369,9 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
   /**
    * @see org.kalypso.grid.IGeoGrid#getOrigin()
    */
-  
-  public Coordinate getOrigin( ) throws GeoGridException
+
+  @Override
+  public Coordinate getOrigin( )
   {
     // TODO Auto-generated method stub
     return null;
@@ -368,8 +380,9 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
   /**
    * @see org.kalypso.grid.IGeoGrid#getSourceCRS()
    */
-  
-  public String getSourceCRS( ) throws GeoGridException
+
+  @Override
+  public String getSourceCRS( )
   {
     // TODO Auto-generated method stub
     return null;
@@ -378,8 +391,8 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
   /**
    * @see org.kalypso.grid.IGeoGrid#getSurface(java.lang.String)
    */
-  
-  public GM_Surface< ? > getSurface( String targetCRS ) throws GeoGridException
+  @Override
+  public GM_Surface< ? > getSurface( final String targetCRS )
   {
     // TODO Auto-generated method stub
     return null;
@@ -388,8 +401,9 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
   /**
    * @see org.kalypso.grid.IGeoGrid#getValueChecked(int, int)
    */
-  
-  public double getValueChecked( int x, int y )
+
+  @Override
+  public double getValueChecked( final int x, final int y )
   {
     throw new NotImplementedException();
   }
@@ -397,8 +411,9 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
   /**
    * @see org.kalypso.grid.IGeoValueProvider#getValue(com.vividsolutions.jts.geom.Coordinate)
    */
-  
-  public double getValue( Coordinate crd )
+
+  @Override
+  public double getValue( final Coordinate crd )
   {
     throw new NotImplementedException();
   }

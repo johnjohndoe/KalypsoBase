@@ -42,14 +42,11 @@ package org.kalypso.grid;
 
 import java.math.BigDecimal;
 
-import org.kalypsodeegree.model.geometry.GM_Position;
-
 /**
  * @author barbarins
  */
 public class ParallelBinaryGridProcessorBean
 {
-
   public ParallelBinaryGridProcessorBean( final int BLOCK_SIZE )
   {
     m_blockData = new byte[BLOCK_SIZE];
