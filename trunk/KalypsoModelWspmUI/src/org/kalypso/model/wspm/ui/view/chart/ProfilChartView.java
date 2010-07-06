@@ -49,6 +49,7 @@ import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.chart.ui.editor.mousehandler.AxisDragHandlerDelegate;
 import org.kalypso.chart.ui.editor.mousehandler.PlotDragHandlerDelegate;
@@ -67,6 +68,7 @@ import de.openali.odysseus.chart.ext.base.axisrenderer.GenericAxisRenderer;
 import de.openali.odysseus.chart.ext.base.axisrenderer.GenericNumberTickCalculator;
 import de.openali.odysseus.chart.ext.base.axisrenderer.NumberLabelCreator;
 import de.openali.odysseus.chart.framework.model.IChartModel;
+import de.openali.odysseus.chart.framework.model.event.IChartModelEventListener;
 import de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener;
 import de.openali.odysseus.chart.framework.model.impl.ChartModel;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
@@ -117,15 +119,22 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
 
   private void setDefaultAxis( final IMapperRegistry mr )
   {
-    final IAxis domainAxis = new GenericLinearAxis( "ID_AXIS_DOMAIN", POSITION.BOTTOM, null );//$NON-NLS-1$
+    final AxisRendererConfig configDom = new AxisRendererConfig();
+    final IAxisRenderer aRendDom = new GenericAxisRenderer( "rendDom", new NumberLabelCreator( "%s" ), new GenericNumberTickCalculator(), configDom ); //$NON-NLS-1$ //$NON-NLS-2$
+
+    final AxisRendererConfig configLR = new AxisRendererConfig();
+    configLR.gap = 5;
+    final IAxisRenderer aRendLR = new GenericAxisRenderer( "rendLR", new NumberLabelCreator( "%s" ), new GenericNumberTickCalculator(), configLR ); //$NON-NLS-1$ //$NON-NLS-2$
+
+    final IAxis domainAxis = new GenericLinearAxis( "ID_AXIS_DOMAIN", POSITION.BOTTOM, null, aRendDom );//$NON-NLS-1$
     final AxisAdjustment aaDom = new AxisAdjustment( 3, 94, 3 );
     domainAxis.setPreferredAdjustment( aaDom );
 
-    final IAxis targetAxisLeft = new GenericLinearAxis( "ID_AXIS_LEFT", POSITION.LEFT, null );//$NON-NLS-1$
+    final IAxis targetAxisLeft = new GenericLinearAxis( "ID_AXIS_LEFT", POSITION.LEFT, null, aRendLR );//$NON-NLS-1$
     final AxisAdjustment aaLeft = new AxisAdjustment( 15, 75, 10 );
     targetAxisLeft.setPreferredAdjustment( aaLeft );
 
-    final IAxis targetAxisRight = new GenericLinearAxis( "ID_AXIS_RIGHT", POSITION.RIGHT, null );//$NON-NLS-1$
+    final IAxis targetAxisRight = new GenericLinearAxis( "ID_AXIS_RIGHT", POSITION.RIGHT, null, aRendLR );//$NON-NLS-1$
     final AxisAdjustment aaRight = new AxisAdjustment( 2, 40, 58 );
     targetAxisRight.setPreferredAdjustment( aaRight );
 
@@ -137,17 +146,6 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
     mr.addMapper( domainAxis );
     mr.addMapper( targetAxisLeft );
     mr.addMapper( targetAxisRight );
-
-    final AxisRendererConfig configDom = new AxisRendererConfig();
-    final IAxisRenderer aRendDom = new GenericAxisRenderer( "rendDom", new NumberLabelCreator( "%s" ), new GenericNumberTickCalculator(), configDom ); //$NON-NLS-1$ //$NON-NLS-2$
-
-    final AxisRendererConfig configLR = new AxisRendererConfig();
-    configLR.gap = 5;
-    final IAxisRenderer aRendLR = new GenericAxisRenderer( "rendLR", new NumberLabelCreator( "%s" ), new GenericNumberTickCalculator(), configLR ); //$NON-NLS-1$ //$NON-NLS-2$
-
-    mr.setRenderer( "ID_AXIS_DOMAIN", aRendDom );//$NON-NLS-1$
-    mr.setRenderer( "ID_AXIS_LEFT", aRendLR );//$NON-NLS-1$
-    mr.setRenderer( "ID_AXIS_RIGHT", aRendLR );//$NON-NLS-1$
   }
 
   /**
@@ -305,20 +303,6 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
       mngr.getLayers()[0].setActive( true );
       activeLayerChanged( mngr.getLayers()[0] );
     }
-  }
-
-  /**
-   * @see org.kalypso.chart.ui.IChartPart#getAdapter(java.lang.Class)
-   */
-  @Override
-  public Object getAdapter( final Class< ? > clazz )
-  {
-    if( IChartPart.class.equals( clazz ) )
-    {
-      return this;
-    }
-
-    return null;
   }
 
   public IAxis getAxis( final String id )
@@ -513,14 +497,15 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
     final IAxis[] existingAxis = mr.getAxes();
     if( existingAxis == null || existingAxis.length == 0 )
     {
+// /* Register default axis and axis renderer. */
       final IAxis[] axis = m_layerProvider.registerAxis( mr );
-      if( axis.length > 0 )
-        m_layerProvider.registerAxisRenderer( mr );
-      else
-      {
-        /* Register default axis and axis renderer. */
-        setDefaultAxis( mr );
-      }
+// if( axis.length > 0 )
+// m_layerProvider.registerAxisRenderer( mr );
+// else
+// {
+// /* Register default axis and axis renderer. */
+// setDefaultAxis( mr );
+// }
     }
 
     if( m_chartComposite != null && m_chartComposite.getChartModel() != null && m_chartComposite.getChartModel().getLayerManager() != null )
@@ -539,7 +524,7 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
       // add layer
       if( m_profile != null )
       {
-        final IProfilChartLayer[] profileLayers = m_layerProvider.createLayers( this );
+        final IProfilChartLayer[] profileLayers = m_layerProvider.createLayers( m_profile, null );
         for( final IProfilChartLayer layer : profileLayers )
           lm.addLayer( layer );
       }
@@ -551,5 +536,35 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
 // m_chartComposite.getPlot().invalidate( lm.getLayers() );
     }
 
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.event.IEventProvider#addListener(java.lang.Object)
+   */
+  @Override
+  public void addListener( IChartModelEventListener listener )
+  {
+    // TODO Auto-generated method stub
+
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.event.IEventProvider#removeListener(java.lang.Object)
+   */
+  @Override
+  public void removeListener( IChartModelEventListener listener )
+  {
+    // TODO Auto-generated method stub
+
+  }
+
+  /**
+   * @see org.kalypso.chart.ui.IChartPart#getOutlinePage()
+   */
+  @Override
+  public IContentOutlinePage getOutlinePage( )
+  {
+    // TODO Auto-generated method stub
+    return null;
   }
 }

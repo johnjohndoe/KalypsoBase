@@ -54,7 +54,7 @@ public class TupleResultChange implements IProfilChange
   @Override
   public IProfilChange doChange( final ProfilChangeHint hint )
   {
-    hint.setPointsChanged();
+    hint.setPointPropertiesChanged();
 
     return this;
   }
@@ -65,7 +65,7 @@ public class TupleResultChange implements IProfilChange
   @Override
   public String getInfo( )
   {
-    return ""; //$NON-NLS-1$
+    return "";
   }
 
   /**

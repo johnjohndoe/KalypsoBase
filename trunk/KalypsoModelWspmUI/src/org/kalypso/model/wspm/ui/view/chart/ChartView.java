@@ -57,6 +57,7 @@ import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.UIJob;
+import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.chart.ui.editor.commandhandler.ChartHandlerUtilities;
 import org.kalypso.chart.ui.editor.mousehandler.AxisDragHandlerDelegate;
@@ -72,6 +73,7 @@ import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.profil.IProfilProvider;
 import org.kalypso.model.wspm.ui.profil.IProfilProviderListener;
 
+import de.openali.odysseus.chart.framework.model.event.IChartModelEventListener;
 import de.openali.odysseus.chart.framework.util.ChartUtilities;
 import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
 
@@ -367,6 +369,16 @@ public class ChartView extends ViewPart implements IChartPart, IProfilListener, 
   }
 
   /**
+   * @see org.kalypso.chart.ui.IChartPart#getOutlinePage()
+   */
+  @Override
+  public IContentOutlinePage getOutlinePage( )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  /**
    * @see org.eclipse.ui.part.WorkbenchPart#getAdapter(java.lang.Class)
    */
   @Override
@@ -417,6 +429,26 @@ public class ChartView extends ViewPart implements IChartPart, IProfilListener, 
   public ProfilChartView getProfilChartView( )
   {
     return m_chart;
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.event.IEventProvider#addListener(java.lang.Object)
+   */
+  @Override
+  public void addListener( IChartModelEventListener listener )
+  {
+    // TODO Auto-generated method stub
+
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.event.IEventProvider#removeListener(java.lang.Object)
+   */
+  @Override
+  public void removeListener( IChartModelEventListener listener )
+  {
+    // TODO Auto-generated method stub
+
   }
 
 }

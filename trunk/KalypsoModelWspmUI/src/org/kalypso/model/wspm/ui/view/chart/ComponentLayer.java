@@ -49,6 +49,6 @@ public class ComponentLayer extends AbstractProfilLayer
 {
   public ComponentLayer( final IProfil profil, final String targetRangeProperty )
   {
-    super( profil, targetRangeProperty, null );
+    super( targetRangeProperty, profil, targetRangeProperty, null );
   }
 }

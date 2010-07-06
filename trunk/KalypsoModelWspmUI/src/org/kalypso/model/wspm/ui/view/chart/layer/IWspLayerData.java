@@ -54,14 +54,14 @@ public interface IWspLayerData
    * 
    * @return The names.
    */
-  public String[] getNames( ) throws Exception;
+  public Object[] getNames( ) throws Exception;
 
   /**
    * This function returns the active names.
    * 
    * @return The active names.
    */
-  public String[] getActiveNames( ) throws Exception;
+  public Object[] getActiveNames( ) throws Exception;
 
   /**
    * This function activates the given names.
@@ -69,7 +69,7 @@ public interface IWspLayerData
    * @param names
    *          The names to be activated.
    */
-  public void activateNames( String[] names ) throws Exception;
+  public void activateNames( Object[] names ) throws Exception;
 
   /**
    * This function tries to find a value for the given name and station.
@@ -80,5 +80,5 @@ public interface IWspLayerData
    *          The station.
    * @return The value for the given name and station or Double.NaN.
    */
-  public double searchValue( String name, BigDecimal station ) throws Exception;
+  public double searchValue( Object name, BigDecimal station ) throws Exception;
 }

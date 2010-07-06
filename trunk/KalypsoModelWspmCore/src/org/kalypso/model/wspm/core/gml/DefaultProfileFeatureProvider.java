@@ -40,10 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.gml;
 
-import javax.xml.namespace.QName;
-
 import org.kalypso.gmlschema.GMLSchemaUtilities;
-import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -57,9 +54,18 @@ public class DefaultProfileFeatureProvider implements IProfileFeatureProvider
   @Override
   public IProfileFeature getProfile( final Feature feature )
   {
-    if( GMLSchemaUtilities.substitutes( feature.getFeatureType(), new QName( IWspmConstants.NS_WSPMPROF, "Profile" ) ) ) //$NON-NLS-1$
+    if( GMLSchemaUtilities.substitutes( feature.getFeatureType(), IProfileFeature.QN_PROFILE ) )
       return (IProfileFeature) feature;
 
+    return null;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.gml.IProfileFeatureProvider#getResult(org.kalypsodeegree.model.feature.Feature)
+   */
+  @Override
+  public Object getResult( Feature feature )
+  {
     return null;
   }
 

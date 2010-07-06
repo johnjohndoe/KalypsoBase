@@ -86,7 +86,7 @@
               name="%org.kalypso.model.wspm.ui.view.table.TableView"/>
         <view
               category="org.kalypso.model.wspm.profil.view.category"
-              class="org.kalypso.model.wspm.ui.view.chart.ChartView"
+              class="org.kalypso.model.wspm.ui.view.chart.TuhhProfilChartView"
               icon="icons/eview16/profil_table.gif"
               id="org.kalypso.model.wspm.ui.view.chart.ChartView"
               name="%org.kalypso.model.wspm.ui.view.chart.ChartView"/>
@@ -386,6 +386,13 @@
                   commandId="org.kalypso.chart.ui.commands.edit"
                   style="radio">
             </command>
+            <command
+                  commandId="org.kalypso.model.wspm.ui.commands.WspLayerLegendCommand"
+                  style="push">
+               <visibleWhen
+                     checkEnabled="true">
+               </visibleWhen>
+            </command>
             <separator
                   name="additions"
                   visible="false">
@@ -649,6 +656,27 @@
                definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
          </reference>
       </enabledWhen>
+   </handler>
+</extension>
+<extension point="org.eclipse.ui.commands">
+   <command
+        categoryId="org.kalypso.chart.ui.commands.category"
+        id="org.kalypso.model.wspm.ui.commands.WspLayerLegendCommand"
+        name="%org.kalypso.model.wspm.ui.commands.WspLayerLegendCommand.name" description="%org.kalypso.model.wspm.ui.commands.WspLayerLegendCommand.description">
+  </command>
+</extension>
+<extension
+      point="org.eclipse.ui.commandImages">
+   <image
+         commandId="org.kalypso.model.wspm.ui.commands.WspLayerLegendCommand"
+         icon="icons/etool16/wspLayerCommand.gif">
+   </image>
+</extension>
+<extension
+      point="org.eclipse.ui.handlers">
+   <handler
+         class="org.kalypso.model.wspm.ui.view.chart.layer.WspLegendHandler"
+         commandId="org.kalypso.model.wspm.ui.commands.WspLayerLegendCommand">
    </handler>
 </extension>
 

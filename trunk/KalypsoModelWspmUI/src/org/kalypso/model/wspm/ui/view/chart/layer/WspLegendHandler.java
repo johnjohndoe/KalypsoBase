@@ -51,12 +51,13 @@ import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartSite;
+import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.model.wspm.ui.i18n.Messages;
-import org.kalypso.model.wspm.ui.view.chart.ChartView;
-import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
 
+import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
+import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
 
 /**
  * This handler opens the wsp legend.
@@ -65,13 +66,6 @@ import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
  */
 public class WspLegendHandler extends AbstractHandler
 {
-  /**
-   * The constructor.
-   */
-  public WspLegendHandler( )
-  {
-  }
-
   /**
    * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
@@ -97,19 +91,22 @@ public class WspLegendHandler extends AbstractHandler
       throw new ExecutionException( Messages.getString( "org.kalypso.model.wspm.ui.view.chart.layer.WspLegendHandler.2" ) ); //$NON-NLS-1$
 
     /* This handler only works with the chart view. */
-    if( !(part instanceof ChartView) )
+    if( !(part instanceof IChartPart) )
       throw new ExecutionException( Messages.getString( "org.kalypso.model.wspm.ui.view.chart.layer.WspLegendHandler.3" ) ); //$NON-NLS-1$
 
     /* Cast. */
-    ChartView chartView = (ChartView) part;
+    final IChartPart chartView = (IChartPart) part;
 
-    /* Get the profile chart view. */
-    ProfilChartView profileChartView = chartView.getProfilChartView();
-    if( profileChartView == null )
+    final ChartComposite chartComposite = chartView.getChartComposite();
+    if( chartComposite == null )
       throw new ExecutionException( Messages.getString( "org.kalypso.model.wspm.ui.view.chart.layer.WspLegendHandler.4" ) ); //$NON-NLS-1$
 
     /* Get the layer manager. */
-    ILayerManager layerManager = profileChartView.getChartComposite().getChartModel().getLayerManager();
+    final IChartModel chartModel = chartComposite.getChartModel();
+    if( chartModel == null )
+      throw new ExecutionException( Messages.getString( "org.kalypso.model.wspm.ui.view.chart.layer.WspLegendHandler.4" ) ); //$NON-NLS-1$
+
+    ILayerManager layerManager = chartModel.getLayerManager();
 
     /* The wsp layer. */
     WspLayer wspLayer = null;

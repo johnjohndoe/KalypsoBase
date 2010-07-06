@@ -65,7 +65,7 @@ import org.kalypso.model.wspm.ui.i18n.Messages;
 /**
  * The wsp legend popup dialog.
  * 
- *@author Holger Albert
+ * @author Holger Albert
  */
 public class WspLegendPopupDialog extends PopupDialog
 {
@@ -113,7 +113,7 @@ public class WspLegendPopupDialog extends PopupDialog
       }
 
       /* Get all available names. */
-      String[] names = data.getNames();
+      Object[] names = data.getNames();
       if( names == null || names.length == 0 )
       {
         setInfoText( Messages.getString( "org.kalypso.model.wspm.ui.view.chart.layer.WspLegendPopupDialog.4" ) ); //$NON-NLS-1$
@@ -131,7 +131,7 @@ public class WspLegendPopupDialog extends PopupDialog
       treeViewer.setInput( names );
 
       /* Get all active names. */
-      String[] activeNames = data.getActiveNames();
+      Object[] activeNames = data.getActiveNames();
 
       /* Set the selection. */
       /* If it is null, nothing was ever activated. */
@@ -184,7 +184,7 @@ public class WspLegendPopupDialog extends PopupDialog
       KalypsoModelWspmUIPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, KalypsoModelWspmUIPlugin.ID, ex.getLocalizedMessage(), ex ) );
 
       /* Show the error message to the user. */
-      setInfoText(  Messages.getString( "org.kalypso.model.wspm.ui.view.chart.layer.WspLegendPopupDialog.6" , ex.getLocalizedMessage() ) ); //$NON-NLS-1$
+      setInfoText( Messages.getString( "org.kalypso.model.wspm.ui.view.chart.layer.WspLegendPopupDialog.6", ex.getLocalizedMessage() ) ); //$NON-NLS-1$
 
       return main;
     }
