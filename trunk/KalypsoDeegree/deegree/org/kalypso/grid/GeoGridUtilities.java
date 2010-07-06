@@ -509,7 +509,9 @@ public class GeoGridUtilities
     try
     {
 // outputGrid = createWriteableGrid( mimeType, file, grid.getSizeX(), grid.getSizeY(), scale, grid.getOrigin(),
-      // grid.getOffsetX(), grid.getOffsetY(), grid.getSourceCRS(), false );
+// grid.getOffsetX(), grid.getOffsetY(), grid.getSourceCRS(), false );
+
+      // FIXME: please comment! Why are we using this specialized implementation here and not the other one?
       outputGrid = new BinaryGeoGridWriter( file.getAbsolutePath(), grid.getSizeX(), grid.getSizeY(), scale );
 
       ProgressUtilities.worked( monitor, 20 );
@@ -546,11 +548,11 @@ public class GeoGridUtilities
     // create the sequential grid writer
     final SequentialBinaryGeoGridWriter outputGridWriter = new SequentialBinaryGeoGridWriter( outputCoverageFile.toString(), grid.getSizeX(), grid.getSizeY(), scale );
     // create the parallelizer manager
-    ParallelBinaryGridProcessor manager = new ParallelBinaryGridProcessor( grid, outputGridWriter );
+    final ParallelBinaryGridProcessor manager = new ParallelBinaryGridProcessor( grid, outputGridWriter );
     manager.calculate();
     outputGridWriter.close();
 // IGeoGrid outputGrid = BinaryGeoGrid.openGrid( outputCoverageFile.toURI().toURL(), grid.getOrigin(),
-    // grid.getOffsetX(), grid.getOffsetY(), grid.getSourceCRS(), false );
+// grid.getOffsetX(), grid.getOffsetY(), grid.getSourceCRS(), false );
 
     try
     {
@@ -560,7 +562,7 @@ public class GeoGridUtilities
       return coverage;
 
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
     }
@@ -657,8 +659,7 @@ public class GeoGridUtilities
   private static RectifiedGridDomain toGridDomain( final IGeoGrid grid ) throws Exception
   {
     final Point jtsOrigin = JTSAdapter.jtsFactory.createPoint( grid.getOrigin() );
-    final GM_Point gmOrigin = (GM_Point) JTSAdapter.wrap( jtsOrigin );
-    gmOrigin.setCoordinateSystem( grid.getSourceCRS() );
+    final GM_Point gmOrigin = (GM_Point) JTSAdapter.wrap( jtsOrigin, grid.getSourceCRS() );
 
     final Coordinate jtsOffsetX = grid.getOffsetX();
     final Coordinate jtsOffsetY = grid.getOffsetY();
