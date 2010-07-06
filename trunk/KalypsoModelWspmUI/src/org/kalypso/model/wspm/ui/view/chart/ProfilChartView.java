@@ -85,7 +85,7 @@ import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
  * @author belger
  * @author kimwerner
  */
-public class ProfilChartView implements IChartPart, IProfilListener, IProfilChartView
+public class ProfilChartView implements IChartPart, IProfilListener, IProfilChart
 {
   private AxisDragHandlerDelegate m_axisDragHandler;
 
@@ -156,7 +156,7 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
   {
     m_chartComposite = new ChartComposite( parent, parent.getStyle(), new ChartModel(), new RGB( 255, 255, 255 ) );
     final GridData gD = new GridData( SWT.FILL, SWT.FILL, true, true );
-    gD.exclude = true;
+// gD.exclude = true;
     m_chartComposite.setLayoutData( gD );
     m_chartComposite.getChartModel().setHideUnusedAxes( true );
 
@@ -542,7 +542,7 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
    * @see de.openali.odysseus.chart.framework.model.event.IEventProvider#addListener(java.lang.Object)
    */
   @Override
-  public void addListener( IChartModelEventListener listener )
+  public void addListener( final IChartModelEventListener listener )
   {
     // TODO Auto-generated method stub
 
@@ -552,7 +552,7 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
    * @see de.openali.odysseus.chart.framework.model.event.IEventProvider#removeListener(java.lang.Object)
    */
   @Override
-  public void removeListener( IChartModelEventListener listener )
+  public void removeListener( final IChartModelEventListener listener )
   {
     // TODO Auto-generated method stub
 

@@ -43,7 +43,7 @@ package org.kalypso.model.wspm.ui.dialog.compare;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.ui.view.chart.IProfilChartView;
+import org.kalypso.model.wspm.ui.view.chart.IProfilChart;
 
 import de.openali.odysseus.chart.framework.util.ChartUtilities;
 import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
@@ -55,9 +55,9 @@ public class CompareSwitchProfileButtonDialog extends SwitchProfileButtonDialog
 {
   private final ICompareProfileProvider m_provider;
 
-  private final IProfilChartView[] m_additionalViews;
+  private final IProfilChart[] m_additionalViews;
 
-  public CompareSwitchProfileButtonDialog( final Composite parent, final IProfilChartView base, final ICompareProfileProvider provider, final IProfilChartView... additionalViews )
+  public CompareSwitchProfileButtonDialog( final Composite parent, final IProfilChart base, final ICompareProfileProvider provider, final IProfilChart... additionalViews )
   {
     super( parent, base, provider.getBaseProfiles() );
     m_provider = provider;
@@ -77,7 +77,7 @@ public class CompareSwitchProfileButtonDialog extends SwitchProfileButtonDialog
 
     for( int i = 0; i < additional.length; i++ )
     {
-      final IProfilChartView view = m_additionalViews[i];
+      final IProfilChart view = m_additionalViews[i];
       final CompareProfileWrapper wrapper = additional[i];
 
       view.setProfil( wrapper.getProfil() );

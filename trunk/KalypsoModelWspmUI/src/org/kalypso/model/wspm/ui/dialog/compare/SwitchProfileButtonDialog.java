@@ -53,7 +53,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.ui.view.chart.IProfilChartView;
+import org.kalypso.model.wspm.ui.view.chart.IProfilChart;
 
 import de.openali.odysseus.chart.framework.util.ChartUtilities;
 import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
@@ -65,13 +65,13 @@ public class SwitchProfileButtonDialog extends Composite
 {
   private static final Font TXT_BOLD = new Font( Display.getDefault(), "Tahoma", 8, SWT.BOLD ); //$NON-NLS-1$
 
-  protected final IProfilChartView m_chartView;
+  protected final IProfilChart m_chartView;
 
   protected final IProfil[] m_profiles;
 
   private Label m_label;
 
-  public SwitchProfileButtonDialog( final Composite parent, final IProfilChartView chartView, final IProfil[] profiles )
+  public SwitchProfileButtonDialog( final Composite parent, final IProfilChart chartView, final IProfil[] profiles )
   {
     super( parent, SWT.NULL );
     m_chartView = chartView;
