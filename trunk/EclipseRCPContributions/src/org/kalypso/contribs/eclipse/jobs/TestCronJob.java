@@ -56,7 +56,7 @@ public class TestCronJob extends CronJob
    */
   public TestCronJob( )
   {
-    System.out.println( "Cron job was created ..." );
+    System.out.println( "Cron job was created..." );
   }
 
   /**
@@ -65,7 +65,7 @@ public class TestCronJob extends CronJob
   @Override
   public long getRescheduleDelay( )
   {
-    System.out.println( "Requested reschedule delay for job (" + getName() + "), which is 5000 ms ..." );
+    System.out.println( "Requested reschedule delay for job (" + getName() + "), which is 5000 ms..." );
 
     return 5000;
   }
@@ -76,7 +76,7 @@ public class TestCronJob extends CronJob
   @Override
   public long getScheduleDelay( )
   {
-    System.out.println( "Requested schedule delay for job (" + getName() + "), which is 0 ..." );
+    System.out.println( "Requested schedule delay for job (" + getName() + "), which is 0..." );
 
     return 0;
   }
@@ -88,9 +88,9 @@ public class TestCronJob extends CronJob
   protected IStatus run( IProgressMonitor monitor )
   {
     /* Monitor. */
-    monitor.beginTask( "Testing ...", 100 );
+    monitor.beginTask( "Testing...", 100 );
 
-    System.out.println( "The job (" + getName() + ") is executing ..." );
+    System.out.println( "The job (" + getName() + ") is executing..." );
 
     /* Monitor. */
     monitor.worked( 50 );

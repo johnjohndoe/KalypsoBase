@@ -85,7 +85,7 @@ public class CronJobChangeListener extends JobChangeAdapter
     /* Log. */
     if( Debug.CRON_JOB.isEnabled() )
     {
-      EclipseRCPContributionsPlugin.getDefault().getLog().log( StatusUtilities.createInfoStatus( String.format( "The cron job ('%s') has finished execution ...", name ) ) );
+      EclipseRCPContributionsPlugin.getDefault().getLog().log( StatusUtilities.createInfoStatus( String.format( "The cron job ('%s') has finished execution...", name ) ) );
       EclipseRCPContributionsPlugin.getDefault().getLog().log( cronJob.getResult() );
     }
 
@@ -94,7 +94,7 @@ public class CronJobChangeListener extends JobChangeAdapter
     {
       /* Log. */
       if( Debug.CRON_JOB.isEnabled() )
-        EclipseRCPContributionsPlugin.getDefault().getLog().log( StatusUtilities.createInfoStatus( String.format( "The cron job ('%s') will be deactivated ...", name ) ) );
+        EclipseRCPContributionsPlugin.getDefault().getLog().log( StatusUtilities.createInfoStatus( String.format( "The cron job ('%s') will be deactivated...", name ) ) );
 
       /* Remove myself as listener. */
       job.removeJobChangeListener( this );
@@ -104,7 +104,7 @@ public class CronJobChangeListener extends JobChangeAdapter
 
     /* Log. */
     if( Debug.CRON_JOB.isEnabled() )
-      EclipseRCPContributionsPlugin.getDefault().getLog().log( StatusUtilities.createInfoStatus( String.format( "The cron job ('%s') will stay activated with a reschedule delay of %d ms (mutex used: %s) ...", name, rescheduleDelay, mutexString ) ) );
+      EclipseRCPContributionsPlugin.getDefault().getLog().log( StatusUtilities.createInfoStatus( String.format( "The cron job ('%s') will stay activated with a reschedule delay of %d ms (mutex used: %s)...", name, rescheduleDelay, mutexString ) ) );
 
     /* Schedule (leave myself as listener). */
     job.schedule( rescheduleDelay );
