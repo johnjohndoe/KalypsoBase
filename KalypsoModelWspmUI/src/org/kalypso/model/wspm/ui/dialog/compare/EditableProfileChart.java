@@ -50,7 +50,7 @@ import org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider;
 import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class EditableProfileChart extends ProfileChart
 {
