@@ -185,4 +185,5 @@ public class ProfilePointWrapper extends AbstractRecordWrapper implements IRecor
 
     getRecord().setValue( index, y );
   }
+
 }

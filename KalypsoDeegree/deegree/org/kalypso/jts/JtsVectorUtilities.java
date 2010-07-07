@@ -68,10 +68,16 @@ public final class JtsVectorUtilities
    */
   public static Point getVector( final Point start, final Point end )
   {
-    final Coordinate coords = new Coordinate( start.getX() - end.getX(), start.getY() - end.getY() );
-    final GeometryFactory factory = new GeometryFactory( start.getPrecisionModel(), start.getSRID() );
+    final Coordinate vector = getVector( start.getCoordinate(), end.getCoordinate() );
 
-    return factory.createPoint( coords );
+    return JTSAdapter.jtsFactory.createPoint( vector );
+  }
+
+  public static Coordinate getVector( final Coordinate start, final Coordinate end )
+  {
+    final Coordinate vector = new Coordinate( start.x - end.x, start.y - end.y );
+
+    return vector;
   }
 
   /**
@@ -83,33 +89,44 @@ public final class JtsVectorUtilities
    */
   public static Point getNormalizedVector( final Point vector )
   {
-    final double x = vector.getX();
-    final double y = vector.getY();
+    final Coordinate normalized = getNormalizedVector( vector.getCoordinate() );
+    return JTSAdapter.jtsFactory.createPoint( normalized );
 
+  }
+
+  public static Coordinate getNormalizedVector( final Coordinate vector )
+  {
     /* The length of a vector is the sum of all elements with the power of two and than the square root of it. */
-    final double laenge = Math.sqrt( x * x + y * y );
+    final double laenge = Math.sqrt( vector.x * vector.x + vector.y * vector.y );
 
-    final Coordinate coord = new Coordinate( x / laenge, y / laenge );
-    final GeometryFactory factory = new GeometryFactory( vector.getPrecisionModel(), vector.getSRID() );
-    return factory.createPoint( coord );
+    final Coordinate normalized = new Coordinate( vector.x / laenge, vector.y / laenge );
+    return normalized;
   }
 
   public static Point movePoint( final Point point, final LineString vector, final int direction, final double distance )
   {
-    final Point v = getVector( vector.getStartPoint(), vector.getEndPoint() );
-    final Point normalized = getNormalizedVector( v );
+    final Coordinate v = getVector( vector.getStartPoint().getCoordinate(), vector.getEndPoint().getCoordinate() );
+
+    return movePoint( point, v, direction, distance );
+
+  }
+
+  public static Point movePoint( final Point point, final Coordinate vector, final int direction, final double distance )
+  {
+
+    final Coordinate normalized = getNormalizedVector( vector );
 
     double mx;
     double my;
     if( direction < 0 )
     {
-      mx = point.getX() - normalized.getX() * distance;
-      my = point.getY() - normalized.getY() * distance;
+      mx = point.getX() - normalized.x * distance;
+      my = point.getY() - normalized.y * distance;
     }
     else
     {
-      mx = point.getX() + normalized.getX() * distance;
-      my = point.getY() + normalized.getY() * distance;
+      mx = point.getX() + normalized.x * distance;
+      my = point.getY() + normalized.y * distance;
     }
 
     final double mz = point.getCoordinate().z;
@@ -122,7 +139,7 @@ public final class JtsVectorUtilities
    * 
    * @return orthogonal line string to the corresponding curve line segment
    */
-  public static LineString getOrthogonalVector( final LineString curve, final Point point )
+  public static Coordinate getOrthogonalVector( final LineString curve, final Point point )
   {
     if( curve.intersection( point.buffer( JTSUtilities.TOLERANCE ) ).isEmpty() )
       return null;
@@ -153,6 +170,6 @@ public final class JtsVectorUtilities
     // dVectorNormalized.getY() * vectorExtend );
     // Coordinate rightPoint = new Coordinate( point.getX() + dVectorRight.x, point.getY() + dVectorRight.y);
 
-    return JTSAdapter.jtsFactory.createLineString( new Coordinate[] { point.getCoordinate(), movedPoint } );
+    return getVector( point.getCoordinate(), movedPoint );
   }
 }

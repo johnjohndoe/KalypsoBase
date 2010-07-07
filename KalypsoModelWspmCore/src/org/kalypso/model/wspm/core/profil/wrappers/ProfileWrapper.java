@@ -45,8 +45,10 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.kalypso.jts.JTSUtilities;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.util.WspmGeometryUtilities;
@@ -361,5 +363,29 @@ public class ProfileWrapper
     }
 
     return height;
+  }
+
+  public double getWidth( final Point point ) throws GM_Exception
+  {
+    final double jtsDistance = JTSUtilities.pointDistanceOnLine( getGeometry(), point );
+    final double width = getFirstPoint().getBreite() + jtsDistance;
+
+    return width;
+  }
+
+  public ProfilePointMarkerWrapper[] getPointMarkers( final ProfilePointWrapper point )
+  {
+    final IProfilPointMarker[] markers = m_profile.getPointMarkerFor( point.getRecord() );
+    if( ArrayUtils.isEmpty( markers ) )
+      return new ProfilePointMarkerWrapper[] {};
+
+    final List<ProfilePointMarkerWrapper> myMarkers = new ArrayList<ProfilePointMarkerWrapper>();
+
+    for( final IProfilPointMarker marker : markers )
+    {
+      myMarkers.add( new ProfilePointMarkerWrapper( marker ) );
+    }
+
+    return myMarkers.toArray( new ProfilePointMarkerWrapper[] {} );
   }
 }

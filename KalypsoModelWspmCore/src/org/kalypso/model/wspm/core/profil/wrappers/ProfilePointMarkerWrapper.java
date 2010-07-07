@@ -87,6 +87,14 @@ public class ProfilePointMarkerWrapper extends ProfilePointWrapper implements IP
   }
 
   /**
+   * @see org.kalypso.model.wspm.core.profil.IProfilPointMarker#setPoint(org.kalypso.observation.result.IRecord)
+   */
+  public void setPoint( final ProfilePointWrapper wrapper )
+  {
+    m_marker.setPoint( wrapper.getRecord() );
+  }
+
+  /**
    * @see org.kalypso.model.wspm.core.profil.IProfilPointMarker#setValue(java.lang.Object)
    */
   @Override
