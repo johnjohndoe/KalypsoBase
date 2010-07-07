@@ -43,7 +43,6 @@ package org.kalypso.jts;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineSegment;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Point;
@@ -134,18 +133,8 @@ public final class JtsVectorUtilities
     return JTSAdapter.jtsFactory.createPoint( new Coordinate( mx, my, mz ) );
   }
 
-  /**
-   * Implementation taken from the nofdp idss ProfileBuilder class
-   * 
-   * @return orthogonal line string to the corresponding curve line segment
-   */
-  public static Coordinate getOrthogonalVector( final LineString curve, final Point point )
+  public static Coordinate getOrthogonalVector( final LineSegment segment, final Point point )
   {
-    if( curve.intersection( point.buffer( JTSUtilities.TOLERANCE ) ).isEmpty() )
-      return null;
-
-    final LineSegment segment = JTSUtilities.findLineSegment( curve, point );
-
     /* Calculate the vector of the direction. */
     final Coordinate c0 = segment.p0;
     final Coordinate c1 = segment.p1;
@@ -155,8 +144,7 @@ public final class JtsVectorUtilities
     final Coordinate dVectorVertical = new Coordinate( -dVector.y, dVector.x );
 
     /* Normalize it. */
-    final GeometryFactory factory = new GeometryFactory( curve.getPrecisionModel(), curve.getSRID() );
-    final Point dVectorNormalized = getNormalizedVector( factory.createPoint( dVectorVertical ) );
+    final Point dVectorNormalized = getNormalizedVector( JTSAdapter.jtsFactory.createPoint( dVectorVertical ) );
 
     /* Now, the new points are calculated. */
     final double vectorExtend = 10.0;
@@ -165,11 +153,26 @@ public final class JtsVectorUtilities
     final Coordinate dVectorLeft = new Coordinate( dVectorNormalized.getX() * vectorExtend, dVectorNormalized.getY() * vectorExtend );
     final Coordinate movedPoint = new Coordinate( point.getX() + dVectorLeft.x, point.getY() + dVectorLeft.y );
 
-    // /* Increase its length (the normalized vector is showing into the left direction, so we have to inverse it). */
-    // final Coordinate dVectorRight = new Coordinate( -1 * dVectorNormalized.getX() * vectorExtend, -1 *
-    // dVectorNormalized.getY() * vectorExtend );
-    // Coordinate rightPoint = new Coordinate( point.getX() + dVectorRight.x, point.getY() + dVectorRight.y);
-
     return getVector( point.getCoordinate(), movedPoint );
+  }
+
+  /**
+   * Implementation taken from the nofdp idss ProfileBuilder class
+   * 
+   * @return orthogonal line string to the corresponding curve line segment
+   */
+  public static Coordinate getOrthogonalVector( final LineString curve, final Point point )
+  {
+    if( curve.intersection( point.buffer( 10E-03 ) ).isEmpty() )
+      return null;
+
+    final LineSegment segment = JTSUtilities.findLineSegment( curve, point );
+
+    return getOrthogonalVector( segment, point );
+  }
+
+  public static Coordinate getInverse( final Coordinate vector )
+  {
+    return new Coordinate( vector.x * -1, vector.y * -1 );
   }
 }

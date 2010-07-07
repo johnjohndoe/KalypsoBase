@@ -167,7 +167,6 @@ public class ProfileChart extends Composite implements IProfilChart
     m_profile = profile;
     if( m_profile == null )
     {
-// ((GridData) (m_chartComposite.getLayoutData())).exclude = true;
       final ILayerManager lm = m_chartComposite.getChartModel().getLayerManager();
       lm.dispose();
     }
