@@ -181,7 +181,7 @@ public class CronJobUtilities
   {
     /* Is it a cron job? */
     if( !(job instanceof CronJob) )
-      return StatusUtilities.createWarningStatus( "The job ('" + job.getName() + "') should not be activated, because it is no cron job ..." );
+      return StatusUtilities.createWarningStatus( "The job ('" + job.getName() + "') should not be activated, because it is no cron job..." );
 
     /* Cast. */
     final CronJob cronJob = (CronJob) job;
@@ -194,7 +194,7 @@ public class CronJobUtilities
 
     /* This cron job should not be started. */
     if( scheduleDelay < 0 )
-      return StatusUtilities.createWarningStatus( "The cron job ('" + name + "') should not be activated, due to a negative schedule delay ..." );
+      return StatusUtilities.createWarningStatus( "The cron job ('" + name + "') should not be activated, due to a negative schedule delay..." );
 
     /* Get the job manager. */
     final IJobManager jobManager = CronJob.getJobManager();
@@ -212,7 +212,7 @@ public class CronJobUtilities
 
       /* If our cron job is already running, ignore it. */
       if( runningCronJob.getIdentifier().equals( identifier ) )
-        return StatusUtilities.createWarningStatus( "The cron job ('" + name + "') should not be activated, because a cron job with its id is already activated ..." );
+        return StatusUtilities.createWarningStatus( "The cron job ('" + name + "') should not be activated, because a cron job with its id is already activated..." );
     }
 
     /* Okay, he can be started. */
@@ -224,7 +224,7 @@ public class CronJobUtilities
     /* Finally start it. */
     cronJob.schedule( scheduleDelay );
 
-    return StatusUtilities.createInfoStatus( String.format( "The cron job ('%s') was activated with a schedule delay of %d ms (mutex used: %s) ...", name, scheduleDelay, mutexString ) );
+    return StatusUtilities.createInfoStatus( String.format( "The cron job ('%s') was activated with a schedule delay of %d ms (mutex used: %s)...", name, scheduleDelay, mutexString ) );
   }
 
   /**
