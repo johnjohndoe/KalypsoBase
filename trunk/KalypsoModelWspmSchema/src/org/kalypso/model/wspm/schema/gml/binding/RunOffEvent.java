@@ -143,7 +143,7 @@ public class RunOffEvent extends Feature_Impl implements IRunOffEvent
   @Override
   public WspmWaterBody getParent( )
   {
-    return getParent();
+    return (WspmWaterBody) super.getParent();
   }
 
   @Override
