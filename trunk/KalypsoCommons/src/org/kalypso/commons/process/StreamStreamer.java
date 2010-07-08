@@ -1,4 +1,4 @@
-package org.kalypso.commons.process.internal;
+package org.kalypso.commons.process;
 
 import java.io.IOException;
 import java.io.InputStream;

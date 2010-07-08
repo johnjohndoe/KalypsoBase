@@ -60,6 +60,7 @@ import org.kalypso.commons.KalypsoCommonsPlugin;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.process.IProcess;
 import org.kalypso.commons.process.ProcessTimeoutException;
+import org.kalypso.commons.process.StreamStreamer;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.lang.ICancelable;
 
