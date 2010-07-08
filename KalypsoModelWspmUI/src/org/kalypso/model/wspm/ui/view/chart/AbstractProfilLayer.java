@@ -387,7 +387,8 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     if( m_profil == null || getTargetPropertyIndex() == -1 )
       return null;
 
-    return m_profil.getPointPropertyFor( m_targetRangeProperty );
+    final int indexOfProperty = m_profil.indexOfProperty( m_targetRangeProperty );
+    return m_profil.getResult().getComponent( indexOfProperty );
   }
 
   /**
