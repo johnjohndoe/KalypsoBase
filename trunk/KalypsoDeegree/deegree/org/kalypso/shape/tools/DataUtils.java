@@ -43,6 +43,7 @@ package org.kalypso.shape.tools;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
+import java.nio.charset.Charset;
 
 import org.kalypsodeegree.model.geometry.ByteUtils;
 
@@ -54,6 +55,13 @@ public final class DataUtils
   private DataUtils( )
   {
     throw new UnsupportedOperationException();
+  }
+
+  public static String readString( final DataInput input, final int numberBytes, final Charset charset ) throws IOException
+  {
+    final byte[] b = new byte[numberBytes];
+    input.readFully( b );
+    return new String( b, charset );
   }
 
   public static int readLEShort( final DataInput raf ) throws IOException
