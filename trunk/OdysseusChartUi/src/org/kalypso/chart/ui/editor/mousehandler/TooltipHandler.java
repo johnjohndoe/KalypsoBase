@@ -7,6 +7,7 @@ import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.MouseMoveListener;
 import org.eclipse.swt.graphics.Point;
 
+import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.ITooltipChartLayer;
 import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
@@ -52,7 +53,11 @@ public class TooltipHandler extends MouseAdapter implements MouseListener, Mouse
     {
       final Point point = new Point( e.x, e.y );
 
-      final ITooltipChartLayer[] tooltipLayers = m_chart.getChartModel().getLayerManager().getTooltipLayers();
+      final IChartModel chartModel = m_chart.getChartModel();
+      if( chartModel == null )
+        return;
+
+      final ITooltipChartLayer[] tooltipLayers = chartModel.getLayerManager().getTooltipLayers();
       // Array umdrehen, damit die oberen Layer zuerst befragt werden
       ArrayUtils.reverse( tooltipLayers );
 
