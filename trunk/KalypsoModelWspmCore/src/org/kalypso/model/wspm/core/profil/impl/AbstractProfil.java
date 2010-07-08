@@ -403,6 +403,8 @@ public abstract class AbstractProfil implements IProfil
   }
 
   /**
+   * CREATES A NEW POINT PROPERTY.
+   * 
    * @return a pointProperty from PointPropertyProvider, see
    *         {@code IProfilPointPropertyProvider#getPointProperty(String)}
    *         <p>
