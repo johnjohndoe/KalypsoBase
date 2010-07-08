@@ -65,7 +65,6 @@ import org.kalypso.chart.ui.KalypsoChartUiPlugin;
 import org.kalypso.chart.ui.editor.ChartEditorTreeOutlinePage;
 import org.kalypso.chart.ui.editor.mousehandler.AxisDragHandlerDelegate;
 import org.kalypso.chart.ui.editor.mousehandler.PlotDragHandlerDelegate;
-import org.kalypso.chart.ui.editor.mousehandler.TooltipHandler;
 import org.kalypso.chart.ui.i18n.Messages;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -77,6 +76,7 @@ import de.openali.odysseus.chart.factory.config.IExtensionLoader;
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.event.IChartModelEventListener;
 import de.openali.odysseus.chart.framework.model.impl.ChartModel;
+import de.openali.odysseus.chart.framework.view.TooltipHandler;
 import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
 import de.openali.odysseus.chartconfig.x020.ChartType;
 
@@ -195,9 +195,6 @@ public class ChartView extends ViewPart implements IChartPart, ISelectionListene
           m_plotDragHandler = new PlotDragHandlerDelegate( m_chartComposite );
           m_axisDragHandler = new AxisDragHandlerDelegate( m_chartComposite );
 
-          // TooltipHandler setzen - meldet sich selbst an
-          m_tooltipHandler = new TooltipHandler( m_chartComposite );
-
           // Titel der View setzen
           setPartName( m_chartModel.getTitle() );
 
@@ -247,16 +244,6 @@ public class ChartView extends ViewPart implements IChartPart, ISelectionListene
   public void dispose( )
   {
     super.dispose();
-
-    if( m_axisDragHandler != null )
-    {
-      m_axisDragHandler.dispose();
-    }
-
-    if( m_plotDragHandler != null )
-    {
-      m_plotDragHandler.dispose();
-    }
 
     if( m_tooltipHandler != null )
     {

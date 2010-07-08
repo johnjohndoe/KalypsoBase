@@ -46,119 +46,50 @@ import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
 
-import de.openali.odysseus.chart.framework.model.IChartModel;
-import de.openali.odysseus.chart.framework.model.mapper.IAxis;
-import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
-import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
-import de.openali.odysseus.chart.framework.view.IChartDragHandler;
-import de.openali.odysseus.chart.framework.view.impl.AxisCanvas;
+import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
 
 /**
  * @author burtscher1
  */
-public class DragPanHandler implements IChartDragHandler
+public class DragPanHandler extends AbstractChartDragHandler
 {
-  private Point m_start = null;
-
-  private final ChartComposite m_chartComposite;
 
   public DragPanHandler( final ChartComposite chartComposite )
   {
-    m_chartComposite = chartComposite;
-  }
-
-  private final void clearPanOffset( )
-  {
-    m_chartComposite.getPlot().setPanOffset( null, null );
-    final IChartModel cm = m_chartComposite.getChartModel();
-    final IMapperRegistry mr = cm == null ? null : cm.getMapperRegistry();
-    final IAxis[] axes = mr == null ? new IAxis[] {} : mr.getAxes();
-    for( final IAxis axis : axes )
-    {
-      final AxisCanvas ac = m_chartComposite.getAxisCanvas( axis );
-      if( ac != null )
-        ac.setPanOffsetInterval( null );
-    }
-  }
-
-  /**
-   * @see org.eclipse.swt.events.MouseListener#mouseDoubleClick(org.eclipse.swt.events.MouseEvent)
-   */
-  @Override
-  public void mouseDoubleClick( final MouseEvent e )
-  {
-    m_start = null;
-  }
-
-  /**
-   * @see org.eclipse.swt.events.MouseListener#mouseDown(org.eclipse.swt.events.MouseEvent)
-   */
-  @Override
-  public void mouseDown( final MouseEvent e )
-  {
-    m_start = new Point( e.x, e.y );
-  }
-
-  /**
-   * @see org.eclipse.swt.events.MouseListener#mouseUp(org.eclipse.swt.events.MouseEvent)
-   */
-  @Override
-  public void mouseUp( final MouseEvent e )
-  {
-    clearPanOffset();
-
-    // dann pannen
-    if( m_start != null )
-    {
-      m_chartComposite.getChartModel().panTo( m_start, new Point( e.x, e.y ) );
-    }
-
-    // dann pan resetten
-    m_start = null;
-  }
-
-  /**
-   * @see org.eclipse.swt.events.MouseMoveListener#mouseMove(org.eclipse.swt.events.MouseEvent)
-   */
-  @Override
-  public void mouseMove( final MouseEvent e )
-  {
-    if( m_start != null )
-    {
-      m_chartComposite.getPlot().setPanOffset( null, new Point( m_start.x - e.x, m_start.y - e.y ) );
-      setAxisPanOffset( m_start.x, e.x, m_start.y, e.y );
-    }
+    super( chartComposite, 5 );
   }
 
   /**
    * @see org.kalypso.chart.framework.view.IChartDragHandler#getCursor()
    */
   @Override
-  public Cursor getCursor( )
+  public Cursor getCursor(final MouseEvent e   )
   {
     return Display.getDefault().getSystemCursor( SWT.CURSOR_SIZEALL );
   }
 
-  private void setAxisPanOffset( int panXStart, int panXEnd, int panYStart, int panYEnd )
+  /**
+   * @see org.kalypso.chart.ui.editor.mousehandler.AbstractChartDragHandler#doMouseUpAction(org.eclipse.swt.graphics.Point,
+   *      de.openali.odysseus.chart.framework.model.layer.EditInfo)
+   */
+  @Override
+  public void doMouseUpAction( Point start, EditInfo editInfo )
   {
-    IMapperRegistry mapperRegistry = m_chartComposite.getChartModel().getMapperRegistry();
-    IAxis[] axes = mapperRegistry.getAxes();
-    for( IAxis axis : axes )
-    {
-      final AxisCanvas ac = m_chartComposite.getAxisCanvas( axis );
-      if( ac == null )
-        continue;
+    getChart().clearPanOffset();
+    if( start != null )
+      getChart().getChartModel().panTo( start, editInfo.m_pos );
 
-      if( axis.getPosition().getOrientation().equals( ORIENTATION.HORIZONTAL ) )
-      {
-        ac.setPanOffsetInterval( new Point( panXEnd - panXStart, 0 ) );
-      }
-      else
-      {
-        ac.setPanOffsetInterval( new Point( 0, panYEnd - panYStart ) );
-      }
-    }
+  }
+
+  /**
+   * @see org.kalypso.chart.ui.editor.mousehandler.AbstractChartDragHandler#doMouseMoveAction(org.eclipse.swt.graphics.Point,
+   *      de.openali.odysseus.chart.framework.model.layer.EditInfo)
+   */
+  @Override
+  public void doMouseMoveAction( Point start, EditInfo editInfo )
+  {
+    getChart().setPlotPanOffset( start, editInfo.m_pos );
   }
 
 }

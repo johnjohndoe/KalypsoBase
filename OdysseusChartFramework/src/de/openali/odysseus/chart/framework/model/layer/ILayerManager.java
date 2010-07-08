@@ -16,7 +16,7 @@ public interface ILayerManager extends IEventProvider<ILayerManagerEventListener
 
   public void removeLayer( IChartLayer layer );
 
-  public void dispose( );
+ // public void dispose( );
 
   /**
    * Hiermit wird der Befehl zum Schliessen des LayerManagers erteilt; in der Implementation sollen alle selbst

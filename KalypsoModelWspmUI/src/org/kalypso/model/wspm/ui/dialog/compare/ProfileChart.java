@@ -97,7 +97,7 @@ public class ProfileChart extends Composite implements IProfilChart
 
   private void bootstrap( )
   {
-    m_chartComposite = new ChartComposite( this, this.getStyle(), getChartModel(), BACKGROUND_RGB );
+    m_chartComposite = new ChartComposite( this, this.getStyle(), null, BACKGROUND_RGB );
     m_chartComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     m_plotDragHandler = new PlotDragHandlerDelegate( m_chartComposite );
@@ -111,18 +111,19 @@ public class ProfileChart extends Composite implements IProfilChart
   {
     if( m_chartComposite == null || m_chartComposite.isDisposed() )
       return;
+    final IProfil oldProfile = m_chartmodel == null ? null : m_chartmodel.getProfil();
 
-    ChartUtilities.maximize( getChartModel() );
+    if( m_profile == oldProfile )
+      return;
+    if( oldProfile != null )
+      oldProfile.removeProfilListener( m_chartmodel );
+    m_chartmodel = new ProfilChartModel( m_layerProvider, m_profile, null );
+    if( m_profile != null )
+      m_profile.addProfilListener( m_chartmodel );
 
-    m_chartComposite.setChartModel( getChartModel() );
-  }
+    m_chartmodel.autoscale( null );
+    m_chartComposite.setChartModel( m_chartmodel );
 
-  private ProfilChartModel getChartModel( )
-  {
-    if( m_chartmodel == null || m_chartmodel.getProfil() != m_profile )
-      m_chartmodel = new ProfilChartModel( m_layerProvider, m_profile, null );
-
-    return m_chartmodel;
   }
 
   /**
@@ -136,11 +137,8 @@ public class ProfileChart extends Composite implements IProfilChart
     if( (m_chartComposite != null) && !m_chartComposite.isDisposed() )
       m_chartComposite.dispose();
 
-    if( m_axisDragHandler != null )
-      m_axisDragHandler.dispose();
-
-    if( m_plotDragHandler != null )
-      m_plotDragHandler.dispose();
+    if( m_profile != null )
+      m_profile.removeProfilListener( m_chartmodel );
   }
 
   @Override
@@ -165,18 +163,9 @@ public class ProfileChart extends Composite implements IProfilChart
       return;
 
     m_profile = profile;
-    if( m_profile == null )
-    {
-      final ILayerManager lm = m_chartComposite.getChartModel().getLayerManager();
-      lm.dispose();
-    }
-    else
-    {
-      if( m_chartComposite != null && !m_chartComposite.isDisposed() )
-      {
-        update();
-      }
-    }
+
+    update();
+
   }
 
 }

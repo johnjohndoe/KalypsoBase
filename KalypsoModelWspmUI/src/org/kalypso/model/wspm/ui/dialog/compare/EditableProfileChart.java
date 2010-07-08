@@ -43,10 +43,10 @@ package org.kalypso.model.wspm.ui.dialog.compare;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.chart.ui.editor.mousehandler.DragEditHandler;
 import org.kalypso.chart.ui.editor.mousehandler.PlotDragHandlerDelegate;
-import org.kalypso.chart.ui.editor.mousehandler.TooltipHandler;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider;
 
+import de.openali.odysseus.chart.framework.view.TooltipHandler;
 import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
 
 /**
@@ -73,7 +73,6 @@ public class EditableProfileChart extends ProfileChart
   {
     final ChartComposite chart = getChart();
 
-    new TooltipHandler( chart );
     final DragEditHandler dragEditHandler = new DragEditHandler( chart );
 
     final PlotDragHandlerDelegate handler = new PlotDragHandlerDelegate( chart );

@@ -212,15 +212,6 @@ public class ChartTabItem extends Composite implements IChartPart
     final ICommandService cmdService = (ICommandService) PlatformUI.getWorkbench().getService( ICommandService.class );
     cmdService.removeExecutionListener( m_executionListener );
 
-    if( m_plotDragHandlerDelegate != null )
-    {
-      m_plotDragHandlerDelegate.dispose();
-    }
-    if( m_axisDragHandlerDelegate != null )
-    {
-      m_axisDragHandlerDelegate.dispose();
-    }
-
     if( m_chartComposite != null && !m_chartComposite.isDisposed() )
       m_chartComposite.dispose();
   }

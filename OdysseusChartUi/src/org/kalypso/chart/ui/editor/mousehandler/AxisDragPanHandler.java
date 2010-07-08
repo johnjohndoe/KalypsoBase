@@ -46,18 +46,14 @@ import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
 
-import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.ComparableDataRange;
-import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
-import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
-import de.openali.odysseus.chart.framework.view.impl.AxisCanvas;
 import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
 
 /**
- * @author burtscher1
+ * @author kimwerner
  */
 public class AxisDragPanHandler extends AbstractAxisDragHandler
 {
@@ -68,69 +64,58 @@ public class AxisDragPanHandler extends AbstractAxisDragHandler
   }
 
   /**
-   * @see org.kalypso.chart.framework.view.IChartDragHandler#getCursor()
+   * @see org.kalypso.chart.ui.editor.mousehandler.AbstractAxisDragHandler#doMouseMoveAction(org.eclipse.swt.graphics.Point,
+   *      org.eclipse.swt.graphics.Point, de.openali.odysseus.chart.framework.model.mapper.IAxis[])
    */
   @Override
-  public Cursor getCursor( )
+  void doMouseMoveAction( Point start, Point end, IAxis[] axes )
   {
-    return Display.getDefault().getSystemCursor( SWT.CURSOR_SIZEALL );
+
+    getChartComposite().setAxisPanOffset( start, end, axes );
+    getChartComposite().setPlotPanOffset( end, start );
   }
 
   /**
-   * @see org.eclipse.swt.events.MouseListener#mouseUp(org.eclipse.swt.events.MouseEvent)
+   * @see org.kalypso.chart.ui.editor.mousehandler.AbstractAxisDragHandler#doMouseUpAction(org.eclipse.swt.graphics.Point,
+   *      org.eclipse.swt.graphics.Point, de.openali.odysseus.chart.framework.model.mapper.IAxis[])
    */
   @Override
-  public void mouseUp( MouseEvent e )
+  void doMouseUpAction( Point start, Point end, IAxis[] axes )
   {
-    clearPanOffset();
-    m_mouseDragEnd = getPos( e );
-    double diff = m_mouseDragEnd - m_mouseDragStart;
-    if( m_mouseDragStart != -1 && Math.abs( diff ) > 0 )
+    getChartComposite().clearPanOffset();
+    if( axes.length > 0 )
     {
-      // // Zoom-Anzeige in AxisCanvas
-      final AxisCanvas curAc = (AxisCanvas) e.getSource();
-
-      if( m_applyOnAllAxes )
+      final int startI;
+      final int endI;
+      if( axes[0].getPosition().getOrientation().equals( ORIENTATION.HORIZONTAL ) )
       {
-        for( final IAxis axis : getAxis( getOrientation( curAc ) ) )
-        {
-          panAxis( m_mouseDragStart, m_mouseDragEnd, axis );
-        }
+        startI = start.x;
+        endI = end.x;
       }
       else
       {
-// // zugehörige Layer rausfinden
-// final IAxis curAxis = curAc.getAxis();
-// IChartLayer[] pannedLayers = m_chartComposite.getChartModel().getAxis2Layers().get( curAxis ).toArray( new
-// IChartLayer[] {} );
-        panAxis( m_mouseDragStart, m_mouseDragEnd, curAc.getAxis() );
-
+        startI = start.y;
+        endI = end.y;
       }
+      for( final IAxis axis : axes )
+        panAxis( startI, endI, axis );
     }
-    m_mouseDragStart = -1;
-    m_mouseDragEnd = -1;
-
   }
 
-  private final void clearPanOffset( )
+  /**
+   * @see org.kalypso.chart.framework.view.IChartDragHandler#getCursor()
+   */
+  @Override
+  public Cursor getCursor(final MouseEvent e  )
   {
-    m_chartComposite.getPlot().setPanOffset( null, null );
-    final IChartModel cm = m_chartComposite.getChartModel();
-    final IMapperRegistry mr = cm == null ? null : cm.getMapperRegistry();
-    final IAxis[] axes = mr == null ? new IAxis[] {} : mr.getAxes();
-    for( final IAxis axis : axes )
-    {
-      final AxisCanvas ac = m_chartComposite.getAxisCanvas( axis );
-      if( ac != null )
-        ac.setPanOffsetInterval( null );
-    }
+    return Display.getDefault().getSystemCursor( SWT.CURSOR_SIZEALL );
   }
 
   private void panAxis( int startPos, int endPos, IAxis axis )
   {
     Number startNum = axis.screenToNumeric( startPos );
     Number endNum = axis.screenToNumeric( endPos );
-    double diff = startNum.doubleValue() - endNum.doubleValue();
+    double diff = startNum.doubleValue() -endNum.doubleValue() ;
     if( Double.isNaN( diff ) )
       return;
     IDataRange<Number> oldRange = axis.getNumericRange();
@@ -139,71 +124,4 @@ public class AxisDragPanHandler extends AbstractAxisDragHandler
     axis.setNumericRange( new ComparableDataRange<Number>( new Number[] { newMin, newMax } ) );
   }
 
-  /**
-   * @see org.eclipse.swt.events.MouseMoveListener#mouseMove(org.eclipse.swt.events.MouseEvent)
-   */
-  @Override
-  public void mouseMove( MouseEvent e )
-  {
-    if( m_mouseDragStart != -1 )
-    {
-      m_mouseDragEnd = getPos( e );
-      int diff = m_mouseDragEnd - m_mouseDragStart;
-      boolean hasStarted = true;
-      // mindestens 5 Pixel Bewegung - sonst wird nichts ausgeführt; nach dem ersten Überschreiten der 5-Pixel-Grenze
-      // dürfen auch kleinere Abstände gewählt werden
-      if( Math.abs( diff ) > 5 || hasStarted )
-      {
-        hasStarted = true;
-        // // Zoom-Anzeige in AxisCanvas
-        final AxisCanvas curAc = (AxisCanvas) e.getSource();
-        final ORIENTATION ori = getOrientation( curAc );
-
-        if( m_applyOnAllAxes )
-        {
-          for( final IAxis axis : getAxis( ori ) )
-          {
-            if( ori.equals( ORIENTATION.HORIZONTAL ) )
-              m_chartComposite.getAxisCanvas( axis ).setPanOffsetInterval( new Point( diff, 0 ) );
-            else
-              m_chartComposite.getAxisCanvas( axis ).setPanOffsetInterval( new Point( 0, diff ) );
-          }
-
-          if( ori.equals( ORIENTATION.HORIZONTAL ) )
-          {
-            m_chartComposite.getPlot().setPanOffset( m_chartComposite.getChartModel().getLayerManager().getLayers(), new Point( m_mouseDragStart - e.x, 0 ) );
-          }
-          else
-          {
-            m_chartComposite.getPlot().setPanOffset( m_chartComposite.getChartModel().getLayerManager().getLayers(), new Point( 0, m_mouseDragStart - e.y ) );
-          }
-
-        }
-        else
-        {
-          final IAxis curAxis = curAc.getAxis();
-          // AxisCanvas verschieben
-          if( ori.equals( ORIENTATION.HORIZONTAL ) )
-            curAc.setPanOffsetInterval( new Point( diff, 0 ) );
-          else
-            curAc.setPanOffsetInterval( new Point( 0, diff ) );
-
-          // zugehörige Layer rausfinden
-          IChartLayer[] pannedLayers = m_chartComposite.getChartModel().getAxis2Layers().get( curAxis ).toArray( new IChartLayer[] {} );
-
-          if( ori.equals( ORIENTATION.HORIZONTAL ) )
-          {
-            m_chartComposite.getPlot().setPanOffset( pannedLayers, new Point( m_mouseDragStart - e.x, 0 ) );
-          }
-          else
-          {
-            m_chartComposite.getPlot().setPanOffset( pannedLayers, new Point( 0, m_mouseDragStart - e.y ) );
-          }
-
-        }
-
-      }
-    }
-
-  }
 }

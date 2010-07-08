@@ -57,7 +57,7 @@ public class PlotCanvas extends Canvas implements PaintListener
    */
   private Point m_panOffset = null;
 
-  private boolean m_isEditing = false;
+// private boolean m_isEditing = false;
 
   /**
    * Layers which are panned
@@ -159,10 +159,10 @@ public class PlotCanvas extends Canvas implements PaintListener
     return false;
   }
 
-  public boolean isEditing( )
-  {
-    return m_isEditing;
-  }
+//  public boolean isEditing( )
+//  {
+//    return m_isEditing;
+//  }
 
   /**
    ** Renders the current plot into a newly created image and returns it.<br/>
@@ -360,10 +360,10 @@ public class PlotCanvas extends Canvas implements PaintListener
     redraw();
   }
 
-  public void setIsEditing( final boolean isEditing )
-  {
-    m_isEditing = isEditing;
-  }
+//  public void setIsEditing( final boolean isEditing )
+//  {
+//    m_isEditing = isEditing;
+//  }
 
   public void setLayerManager( ILayerManager layerManager )
   {

@@ -186,25 +186,7 @@ public class LayerManager implements ILayerManager
     return (IEditableChartLayer[]) editLayers.toArray( new IEditableChartLayer[] {} );
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.ILayerManager#dispose()
-   */
-  @Override
-  public void dispose( )
-  {
-    // dispose layers
-    for( final IChartLayer layer : getLayers() )
-    {
-      // TODO: this stinks! very dangerous and bug prone.
-      // Fire events in the dispose method is no good idea!
-      // Problem now: the chart-model listens to the event and removes this layer from
-      // its maps.... Solution: the layer manager MUST be managed by the chart model
-      // or the chart-model itself just contains the list of layers.
-      // m_layers.remove( layer );
-      removeLayer( layer );
-      layer.dispose();
-    }
-  }
+ 
 
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.ILayerManager#getTooltipLayers()

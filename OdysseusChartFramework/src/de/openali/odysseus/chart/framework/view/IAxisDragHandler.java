@@ -38,11 +38,10 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.chart.ui.editor.mousehandler;
+package de.openali.odysseus.chart.framework.view;
 
 import org.eclipse.swt.events.KeyListener;
 
-import de.openali.odysseus.chart.framework.view.IChartDragHandler;
 
 /**
  * @author burtscher1

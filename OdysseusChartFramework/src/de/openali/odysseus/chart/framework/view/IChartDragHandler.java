@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package de.openali.odysseus.chart.framework.view;
 
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.MouseMoveListener;
 import org.eclipse.swt.graphics.Cursor;
@@ -49,5 +50,6 @@ import org.eclipse.swt.graphics.Cursor;
  */
 public interface IChartDragHandler extends MouseListener, MouseMoveListener
 {
-  public Cursor getCursor( );
+  public Cursor getCursor( final MouseEvent e );
+
 }
