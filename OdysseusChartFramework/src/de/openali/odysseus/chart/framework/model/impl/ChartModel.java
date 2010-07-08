@@ -52,7 +52,7 @@ public class ChartModel implements IChartModel
        * @see de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener#onActivLayerChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
        */
       @Override
-      public void onActivLayerChanged( IChartLayer layer )
+      public void onActivLayerChanged( final IChartLayer layer )
       {
         if( !layer.isActive() )
           return;
@@ -502,21 +502,27 @@ public class ChartModel implements IChartModel
 
       if( from != Double.NaN && to != Double.NaN )
       {
+        final double mouserange = Math.abs( from - to );
+
         final IDataRange<Number> numericRange = axis.getNumericRange();
 
-        final double oldmin = numericRange.getMin().doubleValue();
-        final double oldmax = numericRange.getMax().doubleValue();
-        final double oldrange = Math.abs( oldmin - oldmax );
-        final double mouserange = Math.abs( from - to );
-        final double newrange = (oldrange / mouserange) * oldrange;
+        final Number min = numericRange.getMin();
+        final Number max = numericRange.getMax();
 
-        final double newFrom = oldmin - ((Math.abs( from - oldmin ) / oldrange) * newrange);
-        final double newTo = oldmax + ((Math.abs( to - oldmax ) / oldrange) * newrange);
+        if( min != null && max != null )
+        {
+          final double oldmin = min.doubleValue();
+          final double oldmax = max.doubleValue();
+          final double oldrange = Math.abs( oldmin - oldmax );
+          final double newrange = (oldrange / mouserange) * oldrange;
 
-        axis.setNumericRange( new ComparableDataRange<Number>( new Number[] { new Double( newFrom ), new Double( newTo ) } ) );
+          final double newFrom = oldmin - ((Math.abs( from - oldmin ) / oldrange) * newrange);
+          final double newTo = oldmax + ((Math.abs( to - oldmax ) / oldrange) * newrange);
+
+          axis.setNumericRange( new ComparableDataRange<Number>( new Number[] { new Double( newFrom ), new Double( newTo ) } ) );
+        }
       }
     }
-
   }
 
   @Override
