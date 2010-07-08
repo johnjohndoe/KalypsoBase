@@ -46,6 +46,7 @@ import java.net.URL;
 import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
 
+import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -80,6 +81,8 @@ public class ImageFeatureControl extends AbstractFeatureControl
   private final ISchedulingRule m_mutex = new MutexRule();
 
   private ImageCanvas m_imgCanvas;
+
+  private URL m_imageUrl;
 
   private static final QName QNAME_STRING = new QName( XMLConstants.W3C_XPATH_DATATYPE_NS_URI, "string" ); //$NON-NLS-1$
 
@@ -172,7 +175,7 @@ public class ImageFeatureControl extends AbstractFeatureControl
 
     // must be a string property
     final String imgPath = getImagePath();
-    
+
     final String error = loadImage( imgPath );
     if( error != null )
       setImage( StatusComposite.getStatusImage( IStatus.WARNING ), error, false );
@@ -209,8 +212,7 @@ public class ImageFeatureControl extends AbstractFeatureControl
       final GMLWorkspace workspace = getFeature().getWorkspace();
       final URL context = workspace.getContext();
       final URL url = new URL( context, imgPath );
-
-      startImageJob( url );
+      updateImageUrl( url );
       return null;
     }
     catch( final MalformedURLException e )
@@ -219,6 +221,17 @@ public class ImageFeatureControl extends AbstractFeatureControl
 
       return Messages.getString( "org.kalypso.ogc.gml.featureview.control.ImageFeatureControl.5" ) + imgPath; //$NON-NLS-1$
     }
+  }
+
+  private void updateImageUrl( final URL url )
+  {
+    if( ObjectUtils.equals( m_imageUrl, url ) )
+      return;
+
+    System.out.println( "Setting image: " + url );
+
+    m_imageUrl = url;
+    startImageJob( url );
   }
 
   private void startImageJob( final URL url )
