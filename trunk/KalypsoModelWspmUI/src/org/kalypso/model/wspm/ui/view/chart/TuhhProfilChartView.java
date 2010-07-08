@@ -62,7 +62,6 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.chart.ui.editor.mousehandler.AxisDragHandlerDelegate;
 import org.kalypso.chart.ui.editor.mousehandler.PlotDragHandlerDelegate;
-import org.kalypso.chart.ui.editor.mousehandler.TooltipHandler;
 import org.kalypso.contribs.eclipse.ui.partlistener.AdapterPartListener;
 import org.kalypso.contribs.eclipse.ui.partlistener.EditorFirstAdapterFinder;
 import org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater;
@@ -78,6 +77,7 @@ import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.IExpandableChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.view.IChartView;
+import de.openali.odysseus.chart.framework.view.TooltipHandler;
 import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
 
 /**
@@ -105,6 +105,8 @@ public class TuhhProfilChartView extends ViewPart implements IChartPart, IProfil
   private FormToolkit m_toolkit;
 
   private Form m_form;
+  
+  private IProfil m_profile=null;
 
   @Override
   public void init( final IViewSite site ) throws PartInitException
@@ -159,19 +161,21 @@ public class TuhhProfilChartView extends ViewPart implements IChartPart, IProfil
   {
     setPartNames( Messages.getString( "org.kalypso.model.wspm.ui.view.AbstractProfilViewPart_1" ), Messages.getString( "org.kalypso.model.wspm.ui.view.AbstractProfilViewPart_2" ) ); //$NON-NLS-1$ //$NON-NLS-2$
     Object result = provider.getResult();
-    final ProfilChartModel newModel = newProfile == null ? null : new ProfilChartModel( newProfile, result );
     final IChartModel oldModel = m_chartComposite.getChartModel();
+    if (m_profile!=null&&oldModel instanceof ProfilChartModel)
+      m_profile.removeProfilListener( (ProfilChartModel)oldModel );
+    final ProfilChartModel newModel = newProfile == null ? null : new ProfilChartModel( newProfile, result );
+
 
     String activeLayerId = null;
     List<Object> positions = null;
     final HashMap<String, Boolean> visibility = new HashMap<String, Boolean>();
 
-    if( oldModel != null && oldModel instanceof ProfilChartModel )
+    if( oldModel != null )
     {
       activeLayerId = saveStateActive( oldModel.getLayerManager() );
       saveStateVisible( oldModel.getLayerManager(), visibility );
       positions = saveStatePosition( oldModel.getLayerManager() );
-      ((ProfilChartModel) oldModel).unregisterListener();
     }
 
     if( newModel == null )
@@ -186,7 +190,7 @@ public class TuhhProfilChartView extends ViewPart implements IChartPart, IProfil
       restoreStateVisible( newModel.getLayerManager(), visibility );
       m_form.setMessage( null );
       setPartNames( String.format( "Station km %10.4f", newProfile.getStation() ), Messages.getString( "org.kalypso.model.wspm.ui.view.AbstractProfilViewPart_2" ) ); //$NON-NLS-1$
-      newModel.registerListener();
+      newProfile.addProfilListener( newModel );
       newModel.maximize();
     }
 
@@ -356,8 +360,7 @@ public class TuhhProfilChartView extends ViewPart implements IChartPart, IProfil
       m_chartComposite = new ChartComposite( m_form.getBody(), parent.getStyle(), null, new RGB( 255, 255, 255 ) );
       m_axisDragHandler = new AxisDragHandlerDelegate( m_chartComposite );
       m_plotDragHandler = new PlotDragHandlerDelegate( m_chartComposite );
-      new TooltipHandler( m_chartComposite );
-
+ 
     }
     return m_chartComposite;
   }

@@ -57,7 +57,7 @@ public class AxisDragZoomOutHandler extends AxisDragZoomHandler
   }
 
   @Override
-  public void performZoomAction( IAxis axis )
+  public void performZoomAction( final int start, final int end, final IAxis axis )
   {
     double from = Double.NaN;
     double to = Double.NaN;
@@ -68,13 +68,13 @@ public class AxisDragZoomOutHandler extends AxisDragZoomHandler
         switch( axis.getDirection() )
         {
           case POSITIVE:
-            from = axis.screenToNumeric( Math.min( m_mouseDragStart, m_mouseDragEnd ) ).doubleValue();
-            to = axis.screenToNumeric( Math.max( m_mouseDragStart, m_mouseDragEnd ) ).doubleValue();
+            from = axis.screenToNumeric( Math.min( start, end ) ).doubleValue();
+            to = axis.screenToNumeric( Math.max( start, end ) ).doubleValue();
             break;
 
           case NEGATIVE:
-            from = axis.screenToNumeric( Math.max( m_mouseDragStart, m_mouseDragEnd ) ).doubleValue();
-            to = axis.screenToNumeric( Math.min( m_mouseDragStart, m_mouseDragEnd ) ).doubleValue();
+            from = axis.screenToNumeric( Math.max( start, end ) ).doubleValue();
+            to = axis.screenToNumeric( Math.min( start, end ) ).doubleValue();
             break;
         }
         break;
@@ -83,13 +83,13 @@ public class AxisDragZoomOutHandler extends AxisDragZoomHandler
         switch( axis.getDirection() )
         {
           case POSITIVE:
-            from = axis.screenToNumeric( Math.max( m_mouseDragStart, m_mouseDragEnd ) ).doubleValue();
-            to = axis.screenToNumeric( Math.min( m_mouseDragStart, m_mouseDragEnd ) ).doubleValue();
+            from = axis.screenToNumeric( Math.max( start, end ) ).doubleValue();
+            to = axis.screenToNumeric( Math.min( start, end ) ).doubleValue();
             break;
 
           case NEGATIVE:
-            from = axis.screenToNumeric( Math.min( m_mouseDragStart, m_mouseDragEnd ) ).doubleValue();
-            to = axis.screenToNumeric( Math.max( m_mouseDragStart, m_mouseDragEnd ) ).doubleValue();
+            from = axis.screenToNumeric( Math.min( start, end ) ).doubleValue();
+            to = axis.screenToNumeric( Math.max( start, end ) ).doubleValue();
             break;
         }
         break;

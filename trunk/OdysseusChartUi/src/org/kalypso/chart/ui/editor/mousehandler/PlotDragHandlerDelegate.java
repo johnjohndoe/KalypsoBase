@@ -40,18 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.chart.ui.editor.mousehandler;
 
-import org.eclipse.swt.SWT;
-
 import de.openali.odysseus.chart.framework.view.IChartDragHandler;
 import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
-import de.openali.odysseus.chart.framework.view.impl.PlotCanvas;
 
 /**
- * 
  * delegate to manage handlers for mouse dragging; only one handler is active at a time
  * 
  * @author burtscher1
- * 
  */
 public class PlotDragHandlerDelegate
 {
@@ -67,36 +62,14 @@ public class PlotDragHandlerDelegate
   public void setActiveHandler( final IChartDragHandler handler )
   {
 
-    PlotCanvas plot = m_chartComposite.getPlot();
-    if( m_handler != null )
-    {
-      plot.removeMouseListener( m_handler );
-      plot.removeMouseMoveListener( m_handler );
-    }
+    m_chartComposite.removePlotHandler( m_handler );
     m_handler = handler;
+    m_chartComposite.addPlotHandler( m_handler );
 
-    if( handler == null )
-      plot.setCursor( plot.getDisplay().getSystemCursor( SWT.CURSOR_ARROW ) );
-    else
-    {
-      plot.addMouseListener( handler );
-      plot.addMouseMoveListener( handler );
-      plot.setCursor( handler.getCursor() );
-    }
   }
 
   public IChartDragHandler getActiveHandler( )
   {
     return m_handler;
-  }
-
-  public void dispose( )
-  {
-    PlotCanvas plot = m_chartComposite.getPlot();
-    if( m_handler != null && plot != null && !plot.isDisposed() )
-    {
-      plot.removeMouseListener( m_handler );
-      plot.removeMouseMoveListener( m_handler );
-    }
   }
 }

@@ -51,10 +51,10 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.ISources;
 import org.kalypso.chart.ui.editor.commandhandler.ChartHandlerUtilities;
-import org.kalypso.chart.ui.editor.mousehandler.IAxisDragHandler;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIImages;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
 
+import de.openali.odysseus.chart.framework.view.IAxisDragHandler;
 import de.openali.odysseus.chart.framework.view.IChartDragHandler;
 
 public enum ProfilChartActionsEnum

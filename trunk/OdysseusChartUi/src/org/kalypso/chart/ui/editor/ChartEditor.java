@@ -34,7 +34,6 @@ import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.chart.ui.KalypsoChartUiPlugin;
 import org.kalypso.chart.ui.editor.mousehandler.AxisDragHandlerDelegate;
 import org.kalypso.chart.ui.editor.mousehandler.PlotDragHandlerDelegate;
-import org.kalypso.chart.ui.editor.mousehandler.TooltipHandler;
 import org.kalypso.chart.ui.i18n.Messages;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -54,6 +53,7 @@ import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IMapper;
 import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
+import de.openali.odysseus.chart.framework.view.TooltipHandler;
 import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
 import de.openali.odysseus.chartconfig.x020.AxisDateRangeType;
 import de.openali.odysseus.chartconfig.x020.AxisDurationRangeType;
@@ -153,15 +153,6 @@ public class ChartEditor extends EditorPart implements IChartPart
     {
       m_outlinePage.dispose();
       m_outlinePage = null;
-    }
-
-    if( m_plotDragHandler != null )
-    {
-      m_plotDragHandler.dispose();
-    }
-    if( m_axisDragHandler != null )
-    {
-      m_axisDragHandler.dispose();
     }
 
     if( m_chartComposite != null )
@@ -438,9 +429,6 @@ public class ChartEditor extends EditorPart implements IChartPart
             }
             m_chartModel.autoscale( autoscaledAxes.toArray( new IAxis[] {} ) );
 
-            // TooltipHandler - meldet sich selbst an
-            new TooltipHandler( m_chartComposite );
-
             // Name des Parts
             setPartName( m_chartModel.getTitle() );
 
@@ -510,7 +498,7 @@ public class ChartEditor extends EditorPart implements IChartPart
   {
     if( IContentOutlinePage.class.equals( adapter ) )
     {
-      getOutlinePage();
+      return getOutlinePage();
     }
 
     if( ChartComposite.class.equals( adapter ) )

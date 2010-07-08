@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.chart.ui.editor.mousehandler;
 
-import de.openali.odysseus.chart.framework.logging.impl.Logger;
 import de.openali.odysseus.chart.framework.model.data.impl.ComparableDataRange;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
@@ -57,13 +56,11 @@ public class AxisDragZoomInHandler extends AxisDragZoomHandler
   }
 
   @Override
-  protected void performZoomAction( IAxis axis )
+  protected void performZoomAction( final int start, final int end, IAxis axis )
   {
-    final Number numDragStart = axis.screenToNumeric( m_mouseDragStart );
-    final Number numDragEnd = axis.screenToNumeric( m_mouseDragEnd );
-    Logger.logInfo( Logger.TOPIC_LOG_AXIS, "Zooming from " + m_mouseDragStart + " (" + numDragStart + ") to " + m_mouseDragEnd + " (" + numDragEnd + ")" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+    final Number numDragStart = axis.screenToNumeric( start );
+    final Number numDragEnd = axis.screenToNumeric( end );
     axis.setNumericRange( new ComparableDataRange<Number>( new Number[] { numDragStart, numDragEnd } ) );
-
   }
 
 }

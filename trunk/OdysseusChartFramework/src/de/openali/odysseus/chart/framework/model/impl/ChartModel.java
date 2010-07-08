@@ -549,7 +549,7 @@ public class ChartModel implements IChartModel
         nowNum = axis.screenToNumeric( end.y );
         startNum = axis.screenToNumeric( start.y );
       }
-      final double diff = startNum.doubleValue() - nowNum.doubleValue();
+      final double diff =  nowNum.doubleValue()-startNum.doubleValue() ;
       if( Double.isNaN( diff ) )
         continue;
       final IDataRange<Number> initRange = axis.getNumericRange();

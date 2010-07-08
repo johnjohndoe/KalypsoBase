@@ -172,7 +172,7 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
       }
     } );
 
-    new ProfilClickHandler( m_chartComposite );
+   // new ProfilClickHandler( m_chartComposite );
 
     m_plotDragHandler = new PlotDragHandlerDelegate( m_chartComposite );
     m_axisDragHandler = new AxisDragHandlerDelegate( m_chartComposite );
@@ -186,12 +186,6 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
   {
     if( (m_chartComposite != null) && !m_chartComposite.isDisposed() )
       m_chartComposite.dispose();
-
-    if( m_axisDragHandler != null )
-      m_axisDragHandler.dispose();
-
-    if( m_plotDragHandler != null )
-      m_plotDragHandler.dispose();
   }
 
   private void fireProfilChanged( final IProfil old )
@@ -459,8 +453,6 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
       ((GridData) (m_chartComposite.getLayoutData())).exclude = true;
       m_chartComposite.getChartModel().setTitle( "<No Profile Selected>" ); //$NON-NLS-1$
 
-      final ILayerManager lm = m_chartComposite.getChartModel().getLayerManager();
-      lm.dispose();
     }
     else
     {

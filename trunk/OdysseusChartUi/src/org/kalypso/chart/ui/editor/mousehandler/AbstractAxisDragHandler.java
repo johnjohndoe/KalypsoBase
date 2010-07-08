@@ -46,82 +46,95 @@ import java.util.List;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.graphics.Cursor;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.widgets.Control;
 
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
+import de.openali.odysseus.chart.framework.view.IAxisDragHandler;
 import de.openali.odysseus.chart.framework.view.impl.AxisCanvas;
 import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
 
 /**
- * @author burtscher1
+ * @author kimwerner
  */
 public abstract class AbstractAxisDragHandler implements IAxisDragHandler
 {
 
-  protected final ChartComposite m_chartComposite;
+  private final ChartComposite m_chartComposite;
 
-  protected int m_mouseDragStart = -1;
+  private Point m_mouseDragStart = null;
 
-  protected int m_mouseDragEnd = -1;
+  private boolean m_isDragging = false;
 
-  protected boolean m_applyOnAllAxes = false;
+  private boolean m_applyOnAllAxes = false;
+
+  private IAxis[] m_axes = new IAxis[] {};
+
+  private final int m_trashHold;
+
+  private Cursor m_cursor = null;
 
   public AbstractAxisDragHandler( final ChartComposite chartComposite )
   {
+    this( chartComposite, 5 );
+  }
+
+  public AbstractAxisDragHandler( final ChartComposite chartComposite, final int trashHold )
+  {
     m_chartComposite = chartComposite;
+    m_trashHold = trashHold;
   }
 
-  /**
-   * @see org.eclipse.swt.events.MouseListener#mouseDoubleClick(org.eclipse.swt.events.MouseEvent)
-   */
-  @Override
-  public void mouseDoubleClick( MouseEvent e )
-  {
-    // TODO Auto-generated method stub
+  abstract void doMouseMoveAction( final Point start, final Point end, final IAxis[] axes );
 
-  }
+  abstract void doMouseUpAction( final Point start, final Point end, final IAxis[] axes );
 
-  /**
-   * @see org.eclipse.swt.events.MouseListener#mouseDown(org.eclipse.swt.events.MouseEvent)
-   */
-  @Override
-  public void mouseDown( final MouseEvent e )
+  protected final IAxis[] getInvolvedAxis( final IAxis axis )
   {
-    m_mouseDragStart = getPos( e );
-  }
-
-  protected final ORIENTATION getOrientation( final AxisCanvas ac )
-  {
-    return ac.getAxis().getPosition().getOrientation();
-  }
-
-  protected int getPos( final MouseEvent e )
-  {
-    if( getOrientation( getEventSource( e ) ).equals( ORIENTATION.HORIZONTAL ) )
-    {
-      return e.x;
-    }
-    else
-    {
-      return e.y;
-    }
-  }
-
-  protected final IAxis[] getAxis( final ORIENTATION ori )
-  {
+    if( !isApplyOnAllAxes() )
+      return new IAxis[] { axis };
+    final ORIENTATION ori = axis.getPosition().getOrientation();
     final List<IAxis> axisList = new ArrayList<IAxis>();
 
-    for( final IAxis axis : m_chartComposite.getChartModel().getMapperRegistry().getAxes() )
-      if( axis.getPosition().getOrientation().equals( ori ) )
-
+    for( final IAxis ax : m_chartComposite.getChartModel().getMapperRegistry().getAxes() )
+      if( ax.getPosition().getOrientation().equals( ori ) )
         axisList.add( axis );
 
     return axisList.toArray( new IAxis[] {} );
   }
 
-  protected AxisCanvas getEventSource( final MouseEvent e )
+  public ChartComposite getChartComposite( )
   {
-    return (AxisCanvas) e.getSource();
+    return m_chartComposite;
+  }
+
+  private final void setCursor( final MouseEvent e )
+  {
+    final Cursor cursor = getCursor( e );
+    if( cursor == null )
+      return;
+    if( e.getSource() instanceof Control )
+    {
+
+      if( cursor == m_cursor )
+        return;
+      m_cursor = cursor;
+      ((Control) e.getSource()).setCursor( cursor );
+    }
+  }
+
+  private IAxis getEventSource( final MouseEvent e )
+  {
+    if( e.getSource() instanceof AxisCanvas )
+      return ((AxisCanvas) e.getSource()).getAxis();
+    return null;
+  }
+
+  public boolean isApplyOnAllAxes( )
+  {
+    return m_applyOnAllAxes;
   }
 
   @Override
@@ -140,5 +153,73 @@ public abstract class AbstractAxisDragHandler implements IAxisDragHandler
     {
       m_applyOnAllAxes = false;
     }
+  }
+
+  /**
+   * @see org.eclipse.swt.events.MouseListener#mouseDoubleClick(org.eclipse.swt.events.MouseEvent)
+   */
+  @Override
+  public void mouseDoubleClick( MouseEvent e )
+  {
+    // TODO Auto-generated method stub
+
+  }
+
+  /**
+   * @see org.eclipse.swt.events.MouseListener#mouseDown(org.eclipse.swt.events.MouseEvent)
+   */
+  @Override
+  public void mouseDown( final MouseEvent e )
+  {
+    m_mouseDragStart = new Point( e.x, e.y );
+    final IAxis axis = getEventSource( e );
+    if( axis != null )
+      m_axes = getInvolvedAxis( axis );
+  }
+
+  /**
+   * @see org.eclipse.swt.events.MouseListener#mouseUp(org.eclipse.swt.events.MouseEvent)
+   */
+  @Override
+  public void mouseUp( MouseEvent e )
+  {
+    try
+    {
+      doMouseUpAction( m_mouseDragStart, new Point( e.x, e.y ), m_axes );
+    }
+
+    finally
+    {
+      m_mouseDragStart = null;
+      m_axes = new IAxis[] {};
+      m_isDragging = false;
+    }
+
+  }
+
+  /**
+   * @see org.eclipse.swt.events.MouseMoveListener#mouseMove(org.eclipse.swt.events.MouseEvent)
+   */
+  @Override
+  public void mouseMove( MouseEvent e )
+  {
+    setCursor( e );
+    if( m_isDragging )
+      doMouseMoveAction( m_mouseDragStart, new Point( e.x, e.y ), m_axes );
+    else
+      m_isDragging = verifyTrashHold( e.x, e.y );
+
+  }
+
+  private boolean verifyTrashHold( int x, int y )
+  {
+    if( m_mouseDragStart == null )
+      return false;
+    return Math.abs( x - m_mouseDragStart.x ) > m_trashHold || Math.abs( y - m_mouseDragStart.y ) > m_trashHold;
+  }
+
+  protected void setApplyOnAllAxes( boolean applyOnAllAxes )
+  {
+    m_applyOnAllAxes = applyOnAllAxes;
   }
 }

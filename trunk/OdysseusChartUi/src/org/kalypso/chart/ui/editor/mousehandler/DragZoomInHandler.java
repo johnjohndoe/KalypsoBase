@@ -47,53 +47,38 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
 
-import de.openali.odysseus.chart.framework.view.IChartDragHandler;
+import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
-import de.openali.odysseus.chart.framework.view.impl.PlotCanvas;
 
 /**
  * @author Gernot Belger
  * @author burtscher1
  */
-public class DragZoomInHandler implements IChartDragHandler
+public class DragZoomInHandler extends AbstractChartDragHandler
 {
   private Rectangle m_mouseDragRect = null;
 
-  private final ChartComposite m_chartComposite;
-
-  private final PlotCanvas m_plot;
-
-  int m_pressedKey = -1;
-
   public DragZoomInHandler( final ChartComposite chartComposite )
   {
-    m_chartComposite = chartComposite;
-    m_plot = m_chartComposite.getPlot();
+    super( chartComposite, 5 );
+
   }
 
   /**
-   * @see org.eclipse.swt.events.MouseListener#mouseDoubleClick(org.eclipse.swt.events.MouseEvent)
+   * @see org.kalypso.chart.framework.view.IChartDragHandler#getCursor()
    */
   @Override
-  public void mouseDoubleClick( final MouseEvent e )
+  public Cursor getCursor( final MouseEvent e )
   {
-
+    return Display.getDefault().getSystemCursor( SWT.CURSOR_CROSS );
   }
 
   /**
-   * @see org.eclipse.swt.events.MouseListener#mouseDown(org.eclipse.swt.events.MouseEvent)
+   * @see org.kalypso.chart.ui.editor.mousehandler.AbstractChartDragHandler#doMouseUpAction(org.eclipse.swt.graphics.Point,
+   *      de.openali.odysseus.chart.framework.model.layer.EditInfo)
    */
   @Override
-  public void mouseDown( final MouseEvent e )
-  {
-    m_mouseDragRect = new Rectangle( e.x, e.y, 0, 0 );
-  }
-
-  /**
-   * @see org.eclipse.swt.events.MouseListener#mouseUp(org.eclipse.swt.events.MouseEvent)
-   */
-  @Override
-  public void mouseUp( final MouseEvent e )
+  public void doMouseUpAction( Point start, EditInfo editInfo )
   {
     if( m_mouseDragRect == null )
       return;
@@ -104,46 +89,38 @@ public class DragZoomInHandler implements IChartDragHandler
       final int endX = m_mouseDragRect.x + m_mouseDragRect.width;
       final int endY = m_mouseDragRect.y + m_mouseDragRect.height;
 
-      if( Math.abs( m_mouseDragRect.width ) > 5 && Math.abs( m_mouseDragRect.height ) > 5 )
-        m_chartComposite.getChartModel().zoomIn( new Point( m_mouseDragRect.x, m_mouseDragRect.y ), new Point( endX, endY ) );
+      getChart().getChartModel().zoomIn( new Point( m_mouseDragRect.x, m_mouseDragRect.y ), new Point( endX, endY ) );
 
     }
     finally
     {
       m_mouseDragRect = null;
-      m_plot.setDragArea( m_mouseDragRect );
+      getChart().setDragArea( m_mouseDragRect );
     }
   }
 
   /**
-   * @see org.eclipse.swt.events.MouseMoveListener#mouseMove(org.eclipse.swt.events.MouseEvent)
+   * @see org.kalypso.chart.ui.editor.mousehandler.AbstractChartDragHandler#doMouseMoveAction(org.eclipse.swt.graphics.Point,
+   *      de.openali.odysseus.chart.framework.model.layer.EditInfo)
    */
   @Override
-  public void mouseMove( final MouseEvent e )
+  public void doMouseMoveAction( Point start, EditInfo editInfo )
   {
-    if( m_mouseDragRect != null )
-    {
-      final int newwidth = e.x - m_mouseDragRect.x;
-      final int newheight = e.y - m_mouseDragRect.y;
+    if( m_mouseDragRect == null )
+      m_mouseDragRect = new Rectangle( start.x, start.y, 0, 0 );
 
-      if( newwidth == m_mouseDragRect.width && newheight == m_mouseDragRect.height )
-        return;
+    final Point p = editInfo.m_pos;
+    final int newwidth = p.x - m_mouseDragRect.x;
+    final int newheight = p.y - m_mouseDragRect.y;
 
-      m_mouseDragRect.width = newwidth;
-      m_mouseDragRect.height = newheight;
-      // zoom-Rechteck
-      m_plot.setDragArea( m_mouseDragRect );
+    if( newwidth == m_mouseDragRect.width && newheight == m_mouseDragRect.height )
+      return;
 
-    }
-  }
+    m_mouseDragRect.width = newwidth;
+    m_mouseDragRect.height = newheight;
+    // zoom-Rechteck
+    getChart().setDragArea( m_mouseDragRect );
 
-  /**
-   * @see org.kalypso.chart.framework.view.IChartDragHandler#getCursor()
-   */
-  @Override
-  public Cursor getCursor( )
-  {
-    return Display.getDefault().getSystemCursor( SWT.CURSOR_CROSS );
   }
 
 }

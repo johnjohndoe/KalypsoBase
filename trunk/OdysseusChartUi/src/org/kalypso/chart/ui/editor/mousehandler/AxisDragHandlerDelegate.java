@@ -48,6 +48,7 @@ import org.eclipse.swt.SWT;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.component.IAxisComponent;
 import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
+import de.openali.odysseus.chart.framework.view.IAxisDragHandler;
 import de.openali.odysseus.chart.framework.view.IChartDragHandler;
 import de.openali.odysseus.chart.framework.view.impl.AxisCanvas;
 import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
@@ -70,73 +71,13 @@ public class AxisDragHandlerDelegate
 
   public void setActiveHandler( final IAxisDragHandler handler )
   {
-    if( m_handler != null )
-    {
-      for( AxisCanvas ac : getAxesMap().keySet() )
-      {
-        ac.removeMouseListener( m_handler );
-        ac.removeMouseMoveListener( m_handler );
-        ac.removeKeyListener( m_handler );
-      }
-
-    }
+    m_chartComposite.removeAxisHandler( m_handler );
     m_handler = handler;
-
-    for( AxisCanvas ac : getAxesMap().keySet() )
-    {
-      if( handler == null )
-      {
-        ac.setCursor( ac.getDisplay().getSystemCursor( SWT.CURSOR_ARROW ) );
-      }
-      else
-      {
-        ac.setCursor( m_handler.getCursor() );
-        ac.addMouseListener( m_handler );
-        ac.addMouseMoveListener( m_handler );
-        ac.addKeyListener( m_handler );
-      }
-    }
-
+    m_chartComposite.addAxisHandler( handler );
   }
 
   public IChartDragHandler getActiveHandler( )
   {
     return m_handler;
-  }
-
-  public void dispose( )
-  {
-    if( m_handler != null )
-    {
-      for( final AxisCanvas ac : getAxesMap().keySet() )
-      {
-        if( !ac.isDisposed() )
-        {
-          ac.removeMouseListener( m_handler );
-          ac.removeMouseMoveListener( m_handler );
-          ac.removeKeyListener( m_handler );
-        }
-      }
-    }
-  }
-
-  /**
-   * this needs to be called each time axes are needed, as it might be that no axes exist at initialisation time
-   */
-  private Map<AxisCanvas, IAxis> getAxesMap( )
-  {
-    Map<AxisCanvas, IAxis> axesMap = new HashMap<AxisCanvas, IAxis>();
-    final IMapperRegistry reg = m_chartComposite.getChartModel().getMapperRegistry();
-    final IAxis[] axes = reg.getAxes();
-    for( final IAxis axis : axes )
-    {
-      final IAxisComponent component = m_chartComposite.getAxisCanvas( axis );
-      if( component != null )
-      {
-        final AxisCanvas ac = (AxisCanvas) component;
-        axesMap.put( ac, axis );
-      }
-    }
-    return axesMap;
   }
 }
