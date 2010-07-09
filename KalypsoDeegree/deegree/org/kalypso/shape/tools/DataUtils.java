@@ -154,4 +154,15 @@ public final class DataUtils
   {
     return Double.longBitsToDouble( readLELong( input ) );
   }
+
+  /**
+   * Transforms an unsigned byte to a short. method.
+   */
+  public static short fixByte( final byte b )
+  {
+    if( b < 0 )
+      return (short) (b + 256);
+
+    return b;
+  }
 }

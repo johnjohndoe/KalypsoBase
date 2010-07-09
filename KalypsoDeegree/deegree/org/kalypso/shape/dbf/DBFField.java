@@ -42,6 +42,8 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 
+import org.kalypso.shape.tools.DataUtils;
+
 /**
  * Class representing a field descriptor of a dBase III/IV file <br>
  * Original Author: Andreas Poth
@@ -169,7 +171,7 @@ public class DBFField
   {
     final byte[] value = new byte[m_fieldLength];
     input.readFully( value );
-    
+
     final String asString = new String( value, charset ).trim();
     return m_formatter.fromString( asString );
   }
@@ -188,25 +190,13 @@ public class DBFField
     input.skipBytes( 4 );
 
     // get field length and precision
-    final short fieldLength = fixByte( input.readByte() );
-    final short decimalCount = fixByte( input.readByte() );
+    final short fieldLength = DataUtils.fixByte( input.readByte() );
+    final short decimalCount = DataUtils.fixByte( input.readByte() );
 
     input.skipBytes( 14 );
 
     final FieldType fieldType = FieldType.valueOf( "" + columnType );
     return new DBFField( columnName, fieldType, fieldLength, decimalCount );
-  }
-
-  /**
-   * method: private fixByte (byte b)<BR>
-   * bytes are signed; let's fix them...
-   */
-  private static short fixByte( final byte b )
-  {
-    if( b < 0 )
-      return (short) (b + 256);
-
-    return b;
   }
 
   // HACK: we truncate names at '0' bytes. It is however unclear, if this is according to the specification.

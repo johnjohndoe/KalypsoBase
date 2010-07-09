@@ -40,26 +40,22 @@ package org.kalypsodeegree.model.geometry;
  * Utilities for reading and writing the components of binary files.
  * 
  * @author Tom Mitchell <tmitchell@bbn.com>
- * @version $Revision$ $Date$ modified
- * 
- * <B>Last changes <B>: <BR>
- * 25.11.1999 ap: memory allocation dynaminized <BR>
- * 17.01.2000 ap: method SHPPoint readPoint(byte[] b, int off) modified <BR>
- * 17.01.2000 ap: method SHPEnvelope readBox(byte[] b, int off) modified <BR>
- * 17.01.2000 ap: method writePoint(..) modified <BR>
- * 25.01.2000 ap: method writeBELong(..) added <BR>
- * 25.01.2000 ap: method writeBEDouble(..) added <BR>
- * 25.01.2000 ap: method readBELong(..) added <BR>
- * 25.01.2000 ap: method readBEDouble(..) added <BR>
- * 22.04.2000 ap: method readBEShort(byte[] b, int off) added <BR>
- * 22.04.2000 ap: method readLEShort(byte[] b, int off) added <BR>
- * 22.04.2000 ap: method writeBEShort(byte[] b, int off) added <BR>
- * 22.04.2000 ap: method writeLEShort(byte[] b, int off) added <BR>
- * 
- * <p>
- * ----------------------------------------------------------------------------
- * </p>
- * 
+ * @version $Revision$ $Date$ modified <B>Last changes <B>: <BR>
+ *          25.11.1999 ap: memory allocation dynaminized <BR>
+ *          17.01.2000 ap: method SHPPoint readPoint(byte[] b, int off) modified <BR>
+ *          17.01.2000 ap: method SHPEnvelope readBox(byte[] b, int off) modified <BR>
+ *          17.01.2000 ap: method writePoint(..) modified <BR>
+ *          25.01.2000 ap: method writeBELong(..) added <BR>
+ *          25.01.2000 ap: method writeBEDouble(..) added <BR>
+ *          25.01.2000 ap: method readBELong(..) added <BR>
+ *          25.01.2000 ap: method readBEDouble(..) added <BR>
+ *          22.04.2000 ap: method readBEShort(byte[] b, int off) added <BR>
+ *          22.04.2000 ap: method readLEShort(byte[] b, int off) added <BR>
+ *          22.04.2000 ap: method writeBEShort(byte[] b, int off) added <BR>
+ *          22.04.2000 ap: method writeLEShort(byte[] b, int off) added <BR>
+ *          <p>
+ *          ----------------------------------------------------------------------------
+ *          </p>
  * @author Andreas Poth
  * @version $Revision$ $Date$
  *          <p>
@@ -76,14 +72,12 @@ public class ByteUtils
    *          the raw data buffer
    * @param off
    *          the offset into the buffer where the int resides
-   * @return the int read from the buffer at the offset location
-   * 
-   * not tested!
+   * @return the int read from the buffer at the offset location not tested!
    */
   public static int readBEShort( final byte[] b, final int off )
   {
 
-    return ( ( ( b[off + 0] & 0xff ) << 8 ) | ( ( b[off + 1] & 0xff ) ) );
+    return (((b[off + 0] & 0xff) << 8) | ((b[off + 1] & 0xff)));
 
   }
 
@@ -95,15 +89,11 @@ public class ByteUtils
    *          the raw data buffer
    * @param off
    *          the offset into the buffer where the int resides
-   * @return the int read from the buffer at the offset location
-   * 
-   * not tested!
+   * @return the int read from the buffer at the offset location not tested!
    */
   public static int readLEShort( final byte[] b, final int off )
   {
-
-    return ( ( ( b[off + 1] & 0xff ) << 8 ) | ( ( b[off + 0] & 0xff ) ) );
-
+    return (((b[off + 1] & 0xff) << 8) | ((b[off + 0] & 0xff)));
   }
 
   /**
@@ -118,7 +108,7 @@ public class ByteUtils
   public static int readBEInt( final byte[] b, final int off )
   {
 
-    return ( ( ( b[off + 0] & 0xff ) << 24 ) | ( ( b[off + 1] & 0xff ) << 16 ) | ( ( b[off + 2] & 0xff ) << 8 ) | ( ( b[off + 3] & 0xff ) ) );
+    return (((b[off + 0] & 0xff) << 24) | ((b[off + 1] & 0xff) << 16) | ((b[off + 2] & 0xff) << 8) | ((b[off + 3] & 0xff)));
 
   }
 
@@ -133,7 +123,7 @@ public class ByteUtils
    */
   public static int readLEInt( final byte[] b, final int off )
   {
-    return ( ( ( b[off + 3] & 0xff ) << 24 ) | ( ( b[off + 2] & 0xff ) << 16 ) | ( ( b[off + 1] & 0xff ) << 8 ) | ( ( b[off + 0] & 0xff ) ) );
+    return (((b[off + 3] & 0xff) << 24) | ((b[off + 2] & 0xff) << 16) | ((b[off + 1] & 0xff) << 8) | ((b[off + 0] & 0xff)));
   }
 
   /**
@@ -148,9 +138,8 @@ public class ByteUtils
    */
   public static long readLELong( final byte[] b, final int off )
   {
-    return ( ( ( b[off + 0] & 0xffL ) ) | ( ( b[off + 1] & 0xffL ) << 8 ) | ( ( b[off + 2] & 0xffL ) << 16 )
-        | ( ( b[off + 3] & 0xffL ) << 24 ) | ( ( b[off + 4] & 0xffL ) << 32 ) | ( ( b[off + 5] & 0xffL ) << 40 )
-        | ( ( b[off + 6] & 0xffL ) << 48 ) | ( ( b[off + 7] & 0xffL ) << 56 ) );
+    return (((b[off + 0] & 0xffL)) | ((b[off + 1] & 0xffL) << 8) | ((b[off + 2] & 0xffL) << 16) | ((b[off + 3] & 0xffL) << 24) | ((b[off + 4] & 0xffL) << 32) | ((b[off + 5] & 0xffL) << 40)
+        | ((b[off + 6] & 0xffL) << 48) | ((b[off + 7] & 0xffL) << 56));
   }
 
   /**
@@ -166,9 +155,8 @@ public class ByteUtils
   public static long readBELong( final byte[] b, final int off )
   {
 
-    return ( ( ( b[off + 7] & 0xffL ) ) | ( ( b[off + 6] & 0xffL ) << 8 ) | ( ( b[off + 5] & 0xffL ) << 16 )
-        | ( ( b[off + 4] & 0xffL ) << 24 ) | ( ( b[off + 3] & 0xffL ) << 32 ) | ( ( b[off + 2] & 0xffL ) << 40 )
-        | ( ( b[off + 1] & 0xffL ) << 48 ) | ( ( b[off + 0] & 0xffL ) << 56 ) );
+    return (((b[off + 7] & 0xffL)) | ((b[off + 6] & 0xffL) << 8) | ((b[off + 5] & 0xffL) << 16) | ((b[off + 4] & 0xffL) << 24) | ((b[off + 3] & 0xffL) << 32) | ((b[off + 2] & 0xffL) << 40)
+        | ((b[off + 1] & 0xffL) << 48) | ((b[off + 0] & 0xffL) << 56));
 
   }
 
@@ -245,14 +233,12 @@ public class ByteUtils
    *          the offset into the buffer where writing should occur
    * @param val
    *          the short to write
-   * @return the number of bytes written
-   * 
-   * not tested!
+   * @return the number of bytes written not tested!
    */
   public static int writeBEShort( final byte[] b, final int off, final int val )
   {
-    b[off + 0] = (byte)( ( val >> 8 ) & 0xff );
-    b[off + 1] = (byte)( ( val ) & 0xff );
+    b[off + 0] = (byte) ((val >> 8) & 0xff);
+    b[off + 1] = (byte) ((val) & 0xff);
 
     return 2;
 
@@ -268,15 +254,13 @@ public class ByteUtils
    *          the offset into the buffer where writing should occur
    * @param val
    *          the short to write
-   * @return the number of bytes written
-   * 
-   * not tested!
+   * @return the number of bytes written not tested!
    */
   public static int writeLEShort( final byte[] b, final int off, final int val )
   {
 
-    b[off + 0] = (byte)( ( val ) & 0xff );
-    b[off + 1] = (byte)( ( val >> 8 ) & 0xff );
+    b[off + 0] = (byte) ((val) & 0xff);
+    b[off + 1] = (byte) ((val >> 8) & 0xff);
 
     return 2;
 
@@ -297,10 +281,10 @@ public class ByteUtils
   public static int writeBEInt( final byte[] b, final int off, final int val )
   {
 
-    b[off + 0] = (byte)( ( val >> 24 ) & 0xff );
-    b[off + 1] = (byte)( ( val >> 16 ) & 0xff );
-    b[off + 2] = (byte)( ( val >> 8 ) & 0xff );
-    b[off + 3] = (byte)( ( val ) & 0xff );
+    b[off + 0] = (byte) ((val >> 24) & 0xff);
+    b[off + 1] = (byte) ((val >> 16) & 0xff);
+    b[off + 2] = (byte) ((val >> 8) & 0xff);
+    b[off + 3] = (byte) ((val) & 0xff);
 
     return 4;
 
@@ -320,10 +304,10 @@ public class ByteUtils
    */
   public static int writeLEInt( final byte[] b, final int off, final int val )
   {
-    b[off + 0] = (byte)( ( val ) & 0xff );
-    b[off + 1] = (byte)( ( val >> 8 ) & 0xff );
-    b[off + 2] = (byte)( ( val >> 16 ) & 0xff );
-    b[off + 3] = (byte)( ( val >> 24 ) & 0xff );
+    b[off + 0] = (byte) ((val) & 0xff);
+    b[off + 1] = (byte) ((val >> 8) & 0xff);
+    b[off + 2] = (byte) ((val >> 16) & 0xff);
+    b[off + 3] = (byte) ((val >> 24) & 0xff);
 
     return 4;
 
@@ -343,14 +327,14 @@ public class ByteUtils
    */
   public static int writeLELong( final byte[] b, final int off, final long val )
   {
-    b[off + 0] = (byte)( ( val ) & 0xff );
-    b[off + 1] = (byte)( ( val >> 8 ) & 0xff );
-    b[off + 2] = (byte)( ( val >> 16 ) & 0xff );
-    b[off + 3] = (byte)( ( val >> 24 ) & 0xff );
-    b[off + 4] = (byte)( ( val >> 32 ) & 0xff );
-    b[off + 5] = (byte)( ( val >> 40 ) & 0xff );
-    b[off + 6] = (byte)( ( val >> 48 ) & 0xff );
-    b[off + 7] = (byte)( ( val >> 56 ) & 0xff );
+    b[off + 0] = (byte) ((val) & 0xff);
+    b[off + 1] = (byte) ((val >> 8) & 0xff);
+    b[off + 2] = (byte) ((val >> 16) & 0xff);
+    b[off + 3] = (byte) ((val >> 24) & 0xff);
+    b[off + 4] = (byte) ((val >> 32) & 0xff);
+    b[off + 5] = (byte) ((val >> 40) & 0xff);
+    b[off + 6] = (byte) ((val >> 48) & 0xff);
+    b[off + 7] = (byte) ((val >> 56) & 0xff);
 
     return 8;
   }
@@ -370,14 +354,14 @@ public class ByteUtils
   public static int writeBELong( final byte[] b, final int off, final long val )
   {
 
-    b[off + 0] = (byte)( ( val >> 56 ) & 0xff );
-    b[off + 1] = (byte)( ( val >> 48 ) & 0xff );
-    b[off + 2] = (byte)( ( val >> 40 ) & 0xff );
-    b[off + 3] = (byte)( ( val >> 32 ) & 0xff );
-    b[off + 4] = (byte)( ( val >> 24 ) & 0xff );
-    b[off + 5] = (byte)( ( val >> 16 ) & 0xff );
-    b[off + 6] = (byte)( ( val >> 8 ) & 0xff );
-    b[off + 7] = (byte)( ( val ) & 0xff );
+    b[off + 0] = (byte) ((val >> 56) & 0xff);
+    b[off + 1] = (byte) ((val >> 48) & 0xff);
+    b[off + 2] = (byte) ((val >> 40) & 0xff);
+    b[off + 3] = (byte) ((val >> 32) & 0xff);
+    b[off + 4] = (byte) ((val >> 24) & 0xff);
+    b[off + 5] = (byte) ((val >> 16) & 0xff);
+    b[off + 6] = (byte) ((val >> 8) & 0xff);
+    b[off + 7] = (byte) ((val) & 0xff);
 
     return 8;
 
