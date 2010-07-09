@@ -96,7 +96,7 @@ public class SLDPainter
       }
       catch( final Exception e )
       {
-        final String msg = String.format( "Painting coordinate (x=%d, y=%d) failed", coordinate.x, coordinate.y );
+        final String msg = String.format( "Painting coordinate (x=%.2f, y=%.2f) failed", coordinate.x, coordinate.y );
         StatusUtilities.createErrorStatus( msg, e );
       }
     }
