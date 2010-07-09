@@ -132,12 +132,12 @@ public class ProfilePointWrapper extends AbstractRecordWrapper implements IRecor
     getRecord().setValue( index, kstValue );
   }
 
-  public double getKsValue( )
+  public Double getKsValue( )
   {
     return ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS, this );
   }
 
-  public double getKstValue( )
+  public Double getKstValue( )
   {
     return ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST, this );
   }
