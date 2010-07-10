@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package de.openali.odysseus.chart.framework.model.layer;
 
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Point;
 
 /**
@@ -50,7 +51,7 @@ public interface IEditableChartLayer extends ITooltipChartLayer
 
   public EditInfo drag( Point newPos, EditInfo dragStartData );
 
-  public EditInfo commitDrag( Point point, EditInfo dragStartData );
+  public EditInfo commitDrag(Point point, EditInfo dragStartData );
 
   /**
    * deny editing for this layer

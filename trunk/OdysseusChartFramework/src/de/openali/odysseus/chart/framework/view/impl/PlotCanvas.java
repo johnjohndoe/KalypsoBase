@@ -139,7 +139,9 @@ public class PlotCanvas extends Canvas implements PaintListener
     }
 
     if( !isDisposed() )
+    {
       redraw();
+    }
   }
 
   private IChartLayer[] getLayersToInvalidate( final IChartLayer[] layers )
@@ -159,28 +161,28 @@ public class PlotCanvas extends Canvas implements PaintListener
     return false;
   }
 
-//  public boolean isEditing( )
-//  {
-//    return m_isEditing;
-//  }
+// public boolean isEditing( )
+// {
+// return m_isEditing;
+// }
 
   /**
    ** Renders the current plot into a newly created image and returns it.<br/>
    * The caller is responsible to dispose the image.
    */
-  public Image createImage( final IChartLayer[] layers, final Rectangle screen )
+  public Image createImage( Device device, final IChartLayer[] layers, final Rectangle screen )
   {
     if( layers == null )
       return null;
 
-    final Image bufferImage = new Image( Display.getDefault(), screen.width, screen.height );
+    final Image bufferImage = new Image( getDisplay(), screen.width, screen.height );
 
     final GC buffGc = new GC( bufferImage );
     try
     {
       for( final IChartLayer layer : layers )
       {
-        if( layer.isVisible() && !m_panLayers.contains( layer ) )
+        if( layer.isVisible() )
         {
           ChartUtilities.resetGC( buffGc );
           if( !m_layerImageMap.containsKey( layer ) )
@@ -205,10 +207,10 @@ public class PlotCanvas extends Canvas implements PaintListener
 
     id.transparentPixel = 0xfffffe;
 
-    final Image image = new Image( Display.getDefault(), id );
+    final Image image = new Image( device, id );
     final GC gc = new GC( image );
 
-    // Hintergrund explizit malen - der wird spÃ¤ter transparent gezeichnet
+    // Hintergrund explizit malen - der wird später transparent gezeichnet
     final Color transparentColor = OdysseusChartFrameworkPlugin.getDefault().getColorRegistry().getResource( device, new RGB( 0xfe, 0xff, 0xff ) );
     gc.setBackground( transparentColor );
     gc.fillRectangle( screen );
@@ -237,7 +239,7 @@ public class PlotCanvas extends Canvas implements PaintListener
 
   /**
    * @see org.eclipse.swt.events.PaintListener#paintControl(org.eclipse.swt.events.PaintEvent) Draws all layers if a
-   *      PaintEvent is thrown; only exeption: if the PaintEvent is thrown by a MouseDrag-Action, a buffered plot image
+   *      PaintEvent is thrown; only exception: if the PaintEvent is thrown by a MouseDrag-Action, a buffered plot image
    *      is used
    */
   @Override
@@ -248,11 +250,28 @@ public class PlotCanvas extends Canvas implements PaintListener
 
     final Rectangle screenArea = getClientArea();
     if( m_bufferImg == null )
-      m_bufferImg = createImage( m_layerManager.getLayers(), screenArea );
+    {
+
+      m_bufferImg = createImage( e.gc.getDevice(), getNotPannedLayers(), screenArea );
+    }
     e.gc.drawImage( m_bufferImg, 0, 0 );
     paintPannedLayer( e.gc );
     paintDragArea( e.gc );
     paintEditInfo( e.gc );
+  }
+
+  private final IChartLayer[] getNotPannedLayers( )
+  {
+    IChartLayer[] layers = m_layerManager.getLayers();
+    if( m_panLayers.size() == 0 )
+      return layers;
+    final List<IChartLayer> rest = new ArrayList<IChartLayer>();
+    for( final IChartLayer layer : layers )
+    {
+      if( !m_panLayers.contains( layer ) )
+        rest.add( layer );
+    }
+    return rest.toArray( new IChartLayer[] {} );
   }
 
   private void paintPannedLayer( final GC gcw )
@@ -261,13 +280,8 @@ public class PlotCanvas extends Canvas implements PaintListener
       return;
 
     if( m_panImg == null )
-      m_panImg = createImage( m_panLayers.toArray( new IChartLayer[] {} ), getClientArea() );
-
-    for( final IChartLayer layer : m_panLayers )
-    {
-      final Image layerImage = m_layerImageMap.get( layer );
-      gcw.drawImage( layerImage, -m_panOffset.x, -m_panOffset.y );
-    }
+      m_panImg = createImage( gcw.getDevice(), m_panLayers.toArray( new IChartLayer[] {} ), getClientArea() );
+    gcw.drawImage( m_panImg, -m_panOffset.x, -m_panOffset.y );
   }
 
   private void paintDragArea( final GC gcw )
@@ -278,8 +292,14 @@ public class PlotCanvas extends Canvas implements PaintListener
       gcw.setLineWidth( 1 );
       gcw.setForeground( gcw.getDevice().getSystemColor( SWT.COLOR_BLACK ) );
 
+// final int w = m_dragArea.width == -1 ? getBounds().width : m_dragArea.width;
+// final int h = m_dragArea.height == -1 ? getBounds().height : m_dragArea.height;
+// final int x = m_dragArea.x == -1 ? 0 : m_dragArea.width;
+// final int y = m_dragArea.y == -1 ? 0 : m_dragArea.height;
+
       gcw.setBackground( gcw.getDevice().getSystemColor( SWT.COLOR_BLUE ) );
-      final Rectangle r = RectangleUtils.createNormalizedRectangle( m_dragArea );
+      final Rectangle r = RectangleUtils.createNormalizedRectangle( m_dragArea );// new Rectangle( x, y, w, h ) );
+
       // TODO: SWT-Bug mit drawFocus (wird nicht immer gezeichnet),
       // irgendwann mal wieder �berpr�fen
       gcw.setAlpha( 50 );
@@ -360,10 +380,10 @@ public class PlotCanvas extends Canvas implements PaintListener
     redraw();
   }
 
-//  public void setIsEditing( final boolean isEditing )
-//  {
-//    m_isEditing = isEditing;
-//  }
+// public void setIsEditing( final boolean isEditing )
+// {
+// m_isEditing = isEditing;
+// }
 
   public void setLayerManager( ILayerManager layerManager )
   {

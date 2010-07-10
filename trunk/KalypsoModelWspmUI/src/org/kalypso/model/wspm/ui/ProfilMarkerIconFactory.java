@@ -62,22 +62,22 @@ public class ProfilMarkerIconFactory
 
     final Image image = imageRegistry.get( markers[0] );
 
-    GC gc = new GC( sourceImage);
-//    try
-//    {final Color c = new Color(sourceImage.getDevice(),255,0,0);
-//      gc.setForeground(c);
-//      gc.drawLine( 2,2,8,8);
-      RGB[] bs = image.getImageData().getRGBs();
-      RGB rgb = bs[1];
-      Color c = new Color(Display.getDefault(), rgb);
-      gc.setForeground(c);
-      gc.drawLine( 2,2,8,8);
-      //gc.drawImage( image, 6, 0 );
-//   }
-//    finally
-//    {
- gc.dispose();
-//    }
+    GC gc = new GC( sourceImage );
+// try
+// {final Color c = new Color(sourceImage.getDevice(),255,0,0);
+// gc.setForeground(c);
+// gc.drawLine( 2,2,8,8);
+    RGB[] bs = image.getImageData().getRGBs();
+    RGB rgb = bs[1];
+    Color c = new Color( Display.getCurrent() != null ? Display.getCurrent() : Display.getDefault(), rgb );
+    gc.setForeground( c );
+    gc.drawLine( 2, 2, 8, 8 );
+    // gc.drawImage( image, 6, 0 );
+// }
+// finally
+// {
+    gc.dispose();
+// }
     return sourceImage;
   }
 }

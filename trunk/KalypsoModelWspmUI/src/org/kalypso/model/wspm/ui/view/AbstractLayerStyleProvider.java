@@ -50,7 +50,13 @@ import de.openali.odysseus.chart.framework.util.StyleUtils;
  */
 public class AbstractLayerStyleProvider implements ILayerStyleProvider
 {
-  private HashMap<String, IStyle> m_styles = null;
+
+  public AbstractLayerStyleProvider( )
+  {
+    createStyles();
+  }
+
+  private HashMap<String, IStyle> m_styles = new HashMap<String, IStyle>();
 
   protected void createStyles( )
   {
@@ -59,10 +65,6 @@ public class AbstractLayerStyleProvider implements ILayerStyleProvider
 
   final protected void addStyle( final String id, final IStyle style )
   {
-    if( m_styles == null )
-    {
-      m_styles = new HashMap<String, IStyle>();
-    }
     m_styles.put( id, style );
   }
 
@@ -73,12 +75,6 @@ public class AbstractLayerStyleProvider implements ILayerStyleProvider
   @SuppressWarnings("unchecked")
   public <T extends IStyle> T getStyleFor( final String id, final Class<T> defaultStyle )
   {
-    if( m_styles == null )
-    {
-      m_styles = new HashMap<String, IStyle>();
-      // EVIL: internal recursion, würg!
-      createStyles();
-    }
     final IStyle style = m_styles.get( id );
     if( (style != null) )
       return (T) style;

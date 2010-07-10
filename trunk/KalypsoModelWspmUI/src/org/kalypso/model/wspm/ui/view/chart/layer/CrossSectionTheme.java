@@ -56,7 +56,7 @@ import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
  */
 public class CrossSectionTheme extends AbstractProfilTheme
 {
-  public static final String TITLE = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.CrossSectionTheme.0" ); //$NON-NLS-1$
+  public static final String TITLE = Messages.getString( "org.kalypso.model.wspm.ui.view.chart.CrossSectionTheme.0" ); //$NON-NLS-1$
 
   public CrossSectionTheme( final IProfil profil, final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm )
   {

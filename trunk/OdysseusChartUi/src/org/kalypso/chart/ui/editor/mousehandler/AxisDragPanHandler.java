@@ -108,7 +108,7 @@ public class AxisDragPanHandler extends AbstractAxisDragHandler
   @Override
   public Cursor getCursor(final MouseEvent e  )
   {
-    return Display.getDefault().getSystemCursor( SWT.CURSOR_SIZEALL );
+    return e.display.getSystemCursor( SWT.CURSOR_SIZEALL );
   }
 
   private void panAxis( int startPos, int endPos, IAxis axis )

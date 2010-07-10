@@ -54,7 +54,7 @@ public class ChartImageFactory
 
     // Plot zeichnen
     final PlotCanvas plotCanvas = chart.getPlot();
-    Image tmpImg = plotCanvas.createImage( chart.getChartModel().getLayerManager().getLayers(), img.getBounds() );
+    Image tmpImg = plotCanvas.createImage( plotCanvas.getDisplay(), chart.getChartModel().getLayerManager().getLayers(), img.getBounds() );
     gcw.drawImage( tmpImg, 0, 0, plotCanvas.getBounds().width, plotCanvas.getBounds().height, plotCanvas.getBounds().x, plotCanvas.getBounds().y, plotCanvas.getBounds().width, plotCanvas.getBounds().height );
     tmpImg.dispose();
 

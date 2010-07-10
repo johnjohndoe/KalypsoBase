@@ -116,6 +116,9 @@ public class CoordinateMapper implements ICoordinateMapper
   @Override
   public IPair<Number, Number> screenToNumeric( Point screenValue )
   {
+    if( screenValue == null )
+      return null;
+
     int domainScreen = getDomainAxis().getPosition().getOrientation().equals( ORIENTATION.HORIZONTAL ) ? screenValue.x : screenValue.y;
     int targetScreen = getTargetAxis().getPosition().getOrientation().equals( ORIENTATION.HORIZONTAL ) ? screenValue.x : screenValue.y;
 
@@ -123,5 +126,4 @@ public class CoordinateMapper implements ICoordinateMapper
     Number targetNum = getTargetAxis().screenToNumeric( targetScreen );
     return new Pair<Number, Number>( domainNum, targetNum );
   }
-
 }

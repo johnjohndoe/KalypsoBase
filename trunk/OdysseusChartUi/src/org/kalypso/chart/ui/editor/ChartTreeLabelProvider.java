@@ -51,7 +51,6 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.PlatformUI;
 import org.kalypso.chart.ui.i18n.Messages;
 
 import de.openali.odysseus.chart.factory.util.DummyLayer;
@@ -88,12 +87,12 @@ public class ChartTreeLabelProvider extends LabelProvider implements ITableLabel
 
   private void clearImages( )
   {
-    final Image[] layerImages =  m_layerImages.values().toArray( new Image[m_layerImages.size()] );
+    final Image[] layerImages = m_layerImages.values().toArray( new Image[m_layerImages.size()] );
     m_layerImages.clear();
     for( final Image img : layerImages )
       img.dispose();
 
-    final Image[] legendEntryImages =  m_legendEntryImages.values().toArray( new Image[m_legendEntryImages.size()] );
+    final Image[] legendEntryImages = m_legendEntryImages.values().toArray( new Image[m_legendEntryImages.size()] );
     m_legendEntryImages.clear();
     for( final Image img : legendEntryImages )
       img.dispose();
@@ -108,7 +107,7 @@ public class ChartTreeLabelProvider extends LabelProvider implements ITableLabel
     // Falls das Layer nicht erzeugt werden konnte sollte das in der Legende ersichtlich sein
     if( element instanceof DummyLayer )
     {
-      return Messages.getString("org.kalypso.chart.ui.editor.ChartTreeLabelProvider.0") + ((IChartLayer) element).getTitle() + "'"; //$NON-NLS-1$ //$NON-NLS-2$
+      return Messages.getString( "org.kalypso.chart.ui.editor.ChartTreeLabelProvider.0" ) + ((IChartLayer) element).getTitle() + "'"; //$NON-NLS-1$ //$NON-NLS-2$
     }
     else if( element instanceof IChartLayer )
     {
@@ -128,7 +127,7 @@ public class ChartTreeLabelProvider extends LabelProvider implements ITableLabel
   @Override
   public Image getImage( final Object element )
   {
-    final Display display = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().getDisplay();
+    final Display display = Display.getCurrent() != null ? Display.getCurrent() : Display.getDefault();
 
     if( element instanceof IChartLayer )
     {
@@ -156,8 +155,8 @@ public class ChartTreeLabelProvider extends LabelProvider implements ITableLabel
         final Image img = new Image( display, m_defaultIconSize.x, m_defaultIconSize.y );
         final GC gc = new GC( img );
         gc.setAntialias( SWT.ON );
-        gc.setForeground( Display.getDefault().getSystemColor( SWT.COLOR_GRAY ) );
-        gc.setBackground( Display.getDefault().getSystemColor( SWT.COLOR_BLUE ) );
+        gc.setForeground( display.getSystemColor( SWT.COLOR_GRAY ) );
+        gc.setBackground( display.getSystemColor( SWT.COLOR_BLUE ) );
         final int width = m_defaultIconSize.x;
         final int height = m_defaultIconSize.y;
 
@@ -190,7 +189,7 @@ public class ChartTreeLabelProvider extends LabelProvider implements ITableLabel
         gc.fillPolygon( path1 );
         gc.setAlpha( 255 );
 
-        gc.setForeground( Display.getDefault().getSystemColor( SWT.COLOR_BLACK ) );
+        gc.setForeground(display.getSystemColor( SWT.COLOR_BLACK ) );
         gc.setLineWidth( 3 );
         gc.drawLine( width - 9, 5, width - 1, 5 );
         gc.drawLine( width - 5, 1, width - 5, 9 );
@@ -250,11 +249,11 @@ public class ChartTreeLabelProvider extends LabelProvider implements ITableLabel
 
   public void clearLayer( IChartLayer layer )
   {
-    final Image layerImage =  m_layerImages.remove( layer );
+    final Image layerImage = m_layerImages.remove( layer );
     if( layerImage != null )
       layerImage.dispose();
-    
-    final Image legendImage =  m_legendEntryImages.remove( layer );
+
+    final Image legendImage = m_legendEntryImages.remove( layer );
     if( legendImage != null )
       legendImage.dispose();
   }

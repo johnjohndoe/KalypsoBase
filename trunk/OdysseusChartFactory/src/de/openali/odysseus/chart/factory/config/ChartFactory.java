@@ -224,40 +224,44 @@ public class ChartFactory
             // Renderer nur erzeugen, wenn es noch keinen für die
             // Achse gibt
 
-            if( axis.getRenderer() == null )
+            // Hack due old kod-files with this malformed renderer-id still exists
+            // if(rendererID.equals( "TODO: KIM id mit test mittendrin austauschen" ))
+            final ReferencingType rendererRef = axisType.getRendererRef();
+            IAxisRenderer axisRenderer = findRenderer( mr.getAxes(), rendererRef.getRef() );
+
+            if( axisRenderer != null )
             {
-              final ReferencingType rendererRef = axisType.getRendererRef();
-              IAxisRenderer axisRenderer = findRenderer( mr.getAxes(), rendererRef.getRef() );
+
               // schon vorhanden => einfach zuweisen
-              if( axisRenderer != null )
-                axis.setRenderer( axisRenderer );
-              else
+              axis.setRenderer( axisRenderer );
+            }
+            else
+            {
+              final AxisRendererType rendererType = (AxisRendererType) rr.resolveReference( rendererRef.getRef() );
+              if( rendererType != null )
               {
 
-                final AxisRendererType rendererType = (AxisRendererType) rr.resolveReference( rendererRef.getRef() );
-                if( rendererType != null )
+                final String arpId = rendererType.getProvider().getEpid();
+                final IAxisRendererProvider arp = extLoader.getExtension( IAxisRendererProvider.class, arpId );
+                final String rid = rendererType.getId();
+                final IStyleSet styleSet = createStyleSet( rendererType.getStyles(), context );
+                final IParameterContainer rpc = createParameterContainer( rid, rendererType.getProvider() );
+                arp.init( model, rid, rpc, context, styleSet );
+                try
                 {
-                  final String arpId = rendererType.getProvider().getEpid();
-                  final IAxisRendererProvider arp = extLoader.getExtension( IAxisRendererProvider.class, arpId );
-                  final String rid = rendererType.getId();
-                  final IStyleSet styleSet = createStyleSet( rendererType.getStyles(), context );
-                  final IParameterContainer rpc = createParameterContainer( rid, rendererType.getProvider() );
-                  arp.init( model, rid, rpc, context, styleSet );
-                  try
-                  {
-                    axisRenderer = arp.getAxisRenderer();
-                    axisRenderer.setData( ChartFactory.AXISRENDERER_PROVIDER_KEY, arp );
-                    // save configuration type so it can be used for saving to chartfile
-                    axisRenderer.setData( CONFIGURATION_TYPE_KEY, rendererType );
+                  axisRenderer = arp.getAxisRenderer();
+                  axisRenderer.setData( ChartFactory.AXISRENDERER_PROVIDER_KEY, arp );
+                  // save configuration type so it can be used for saving to chartfile
+                  axisRenderer.setData( CONFIGURATION_TYPE_KEY, rendererType );
 
-                    axis.setRenderer( axisRenderer );
-                  }
-                  catch( final ConfigurationException e )
-                  {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                  }
+                  axis.setRenderer( axisRenderer );
                 }
+                catch( final ConfigurationException e )
+                {
+                  // TODO Auto-generated catch block
+                  e.printStackTrace();
+                }
+
               }
             }
           }

@@ -56,7 +56,6 @@ import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
  */
 public class DragZoomInHandler extends AbstractChartDragHandler
 {
-  private Rectangle m_mouseDragRect = null;
 
   public DragZoomInHandler( final ChartComposite chartComposite )
   {
@@ -70,7 +69,7 @@ public class DragZoomInHandler extends AbstractChartDragHandler
   @Override
   public Cursor getCursor( final MouseEvent e )
   {
-    return Display.getDefault().getSystemCursor( SWT.CURSOR_CROSS );
+    return e.display.getSystemCursor( SWT.CURSOR_CROSS );
   }
 
   /**
@@ -78,24 +77,16 @@ public class DragZoomInHandler extends AbstractChartDragHandler
    *      de.openali.odysseus.chart.framework.model.layer.EditInfo)
    */
   @Override
-  public void doMouseUpAction( Point start, EditInfo editInfo )
+  public void doMouseUpAction( Point end, EditInfo editInfo )
   {
-    if( m_mouseDragRect == null )
-      return;
 
     try
     {
-      // Wenn nach rechts unten gezogen wurde, wird reingezoomt
-      final int endX = m_mouseDragRect.x + m_mouseDragRect.width;
-      final int endY = m_mouseDragRect.y + m_mouseDragRect.height;
-
-      getChart().getChartModel().zoomIn( new Point( m_mouseDragRect.x, m_mouseDragRect.y ), new Point( endX, endY ) );
-
+      getChart().getChartModel().zoomIn( editInfo.m_pos, end );
     }
     finally
     {
-      m_mouseDragRect = null;
-      getChart().setDragArea( m_mouseDragRect );
+      getChart().setDragArea( null );
     }
   }
 
@@ -104,23 +95,9 @@ public class DragZoomInHandler extends AbstractChartDragHandler
    *      de.openali.odysseus.chart.framework.model.layer.EditInfo)
    */
   @Override
-  public void doMouseMoveAction( Point start, EditInfo editInfo )
+  public void doMouseMoveAction( final Point end, final EditInfo editInfo )
   {
-    if( m_mouseDragRect == null )
-      m_mouseDragRect = new Rectangle( start.x, start.y, 0, 0 );
-
-    final Point p = editInfo.m_pos;
-    final int newwidth = p.x - m_mouseDragRect.x;
-    final int newheight = p.y - m_mouseDragRect.y;
-
-    if( newwidth == m_mouseDragRect.width && newheight == m_mouseDragRect.height )
-      return;
-
-    m_mouseDragRect.width = newwidth;
-    m_mouseDragRect.height = newheight;
-    // zoom-Rechteck
-    getChart().setDragArea( m_mouseDragRect );
-
+    getChart().setDragArea( new Rectangle( editInfo.m_pos.x, editInfo.m_pos.y, end.x - editInfo.m_pos.x, end.y - editInfo.m_pos.y ) );
   }
 
 }

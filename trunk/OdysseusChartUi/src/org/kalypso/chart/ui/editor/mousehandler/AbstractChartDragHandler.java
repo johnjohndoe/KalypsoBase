@@ -112,9 +112,9 @@ public abstract class AbstractChartDragHandler implements IChartDragHandler
     }
   }
 
-  abstract public void doMouseUpAction( final Point start, final EditInfo editInfo );
+  abstract public void doMouseUpAction( final Point end, final EditInfo editInfo );
 
-  abstract public void doMouseMoveAction( final Point start, final EditInfo editInfo );
+  abstract public void doMouseMoveAction( final Point end, final EditInfo editInfo );
 
   /**
    * @see org.eclipse.swt.events.MouseMoveListener#mouseMove(org.eclipse.swt.events.MouseEvent)

@@ -55,7 +55,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
@@ -173,6 +173,8 @@ public class ValidateProfilesWizard extends Wizard
     final URL workspaceContext = m_workspace.getContext();
     final IFile resource = workspaceContext == null ? null : ResourceUtilities.findFileFromURL( workspaceContext );
 
+    final Shell shell = getShell();
+
     final ICoreRunnableWithProgress m_validateJob = new ICoreRunnableWithProgress()
     {
       @Override
@@ -220,7 +222,6 @@ public class ValidateProfilesWizard extends Wizard
                 ((IValidatorRule) rule).validate( profiles[i], collector );
               }
               final IMarker[] markers = collector.getMarkers();
-
               for( final IMarker marker : markers )
               {
                 final String quickFixRes = marker.getAttribute( IValidatorMarkerCollector.MARKER_ATTRIBUTE_QUICK_FIX_RESOLUTIONS, null );
@@ -244,12 +245,12 @@ public class ValidateProfilesWizard extends Wizard
                           final IProfil prof = profiles[i];
                           if( uiResult == null )
                           {
-                            Display.getDefault().syncExec( new Runnable()
+                            shell.getDisplay().syncExec( new Runnable()
                             {
                               @Override
                               public void run( )
                               {
-                                uiResults.put( quickFix.getClass().getName(), mr.getUIresult( getShell(), prof ) );
+                                uiResults.put( quickFix.getClass().getName(), mr.getUIresult( shell, prof ) );
                               }
                             } );
 
@@ -262,9 +263,6 @@ public class ValidateProfilesWizard extends Wizard
                     if( resolved )
                     {
                       marker.delete();
-                      // for( final FeatureChange change : ProfileFeatureFactory.toFeatureAsChanges( profiles[i],
-                      // (Feature) profilFeatures[i] ) )
-                      // featureChanges.add( change );
                     }
                   }
                 }
@@ -282,12 +280,12 @@ public class ValidateProfilesWizard extends Wizard
         return Status.OK_STATUS;
       }
     };
-    Display.getDefault().asyncExec( new Runnable()
+    shell.getDisplay().asyncExec( new Runnable()
     {
       @Override
       public void run( )
       {
-        RunnableContextHelper.execute( new ProgressMonitorDialog( getShell() ), true, true, m_validateJob );
+        RunnableContextHelper.execute( new ProgressMonitorDialog( shell ), true, true, m_validateJob );
 
         try
         {

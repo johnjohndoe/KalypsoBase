@@ -56,11 +56,14 @@ public class AxisDragZoomInHandler extends AxisDragZoomHandler
   }
 
   @Override
-  protected void performZoomAction( final int start, final int end, IAxis axis )
+  protected void performZoomAction( final int start, final int end, IAxis[] axes )
   {
-    final Number numDragStart = axis.screenToNumeric( start );
-    final Number numDragEnd = axis.screenToNumeric( end );
-    axis.setNumericRange( new ComparableDataRange<Number>( new Number[] { numDragStart, numDragEnd } ) );
+    for( final IAxis axis : axes )
+    {
+      final Number numDragStart = axis.screenToNumeric( start );
+      final Number numDragEnd = axis.screenToNumeric( end );
+      axis.setNumericRange( new ComparableDataRange<Number>( new Number[] { numDragStart, numDragEnd } ) );
+    }
   }
 
 }

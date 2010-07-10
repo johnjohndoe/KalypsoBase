@@ -127,10 +127,8 @@ public class ProfileChart extends Composite implements IProfilChart
   }
 
   /**
-   * @see org.kalypso.model.wspm.ui.view.IProfilView#createControl(org.eclipse.swt.widgets.Composite,
-   *      org.eclipse.ui.forms.widgets.FormToolkit)
+   * @see org.eclipse.swt.widgets.Widget#dispose()
    */
-
   @Override
   public void dispose( )
   {

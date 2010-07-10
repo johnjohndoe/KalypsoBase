@@ -42,6 +42,7 @@ package org.kalypso.model.wspm.ui.view.chart;
 
 import java.awt.geom.Point2D;
 
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
@@ -128,7 +129,7 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     m_targetRangeProperty = targetRangeProperty;
     m_domainComponent = IWspmConstants.POINT_PROPERTY_BREITE;
     setId( id );
-    createStyles( styleProvider, targetRangeProperty );
+    createStyles( styleProvider, id );
   }
 
   private void createStyles( final ILayerStyleProvider styleProvider, final String id )
@@ -151,7 +152,7 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
    *      de.openali.odysseus.chart.framework.model.layer.EditInfo)
    */
   @Override
-  public EditInfo commitDrag( final Point point, final EditInfo dragStartData )
+  public EditInfo commitDrag(final Point point, final EditInfo dragStartData )
   {
     final IComponent targetComponent = getTargetComponent();
     if( targetComponent != null )

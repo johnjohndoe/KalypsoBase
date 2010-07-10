@@ -254,7 +254,7 @@ public class ChartView extends ViewPart implements IChartPart, IProfilListener, 
       return;
 
     createContent( parent );
-    parent.layout();
+    parent.layout(true,true);
   }
 
   /**

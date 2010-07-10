@@ -4,8 +4,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.widgets.Canvas;
-import org.eclipse.swt.widgets.Display;
 
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer;
@@ -49,9 +47,9 @@ public class DragEditHandler extends AbstractChartDragHandler
   public Cursor getCursor( final MouseEvent e )
   {
     if( canSnap( new Point( e.x, e.y ) )||m_layer!=null )
-      return Display.getDefault().getSystemCursor( SWT.CURSOR_HAND ) ;
+      return e.display.getSystemCursor( SWT.CURSOR_HAND ) ;
 
-     return  Display.getDefault().getSystemCursor( SWT.CURSOR_ARROW );
+     return  e.display.getSystemCursor( SWT.CURSOR_ARROW );
   }
 
   /**
