@@ -33,7 +33,7 @@ public class ChartUtilities
   }
 
   /**
-   * sets the given GC to an initial state - this methosd should be called before any chart painting action is processed
+   * sets the given GC to an initial state - this methods should be called before any chart painting action is processed
    */
   public static void resetGC( final GC gc )
   {

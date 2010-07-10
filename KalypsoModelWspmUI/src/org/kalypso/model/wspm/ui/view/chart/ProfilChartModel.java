@@ -74,11 +74,10 @@ public class ProfilChartModel extends ChartModel implements IProfilListener
 
     if( m_profil == null )
       return;
-
+    m_layerProvider.registerAxis( getMapperRegistry() );
     final IProfilChartLayer[] profileLayers = m_layerProvider.createLayers( profil, result );
     for( final IProfilChartLayer layer : profileLayers )
       getLayerManager().addLayer( layer );
-    m_layerProvider.registerAxis( getMapperRegistry() );
   }
 
   public ProfilChartModel( final IProfil profil, final Object result )

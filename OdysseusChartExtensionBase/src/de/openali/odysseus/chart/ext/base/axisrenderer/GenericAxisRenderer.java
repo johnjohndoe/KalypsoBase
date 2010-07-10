@@ -373,42 +373,12 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
     gc.drawLine( x1, y1, x2, y2 );
   }
 
-// /**
-// * @see
-// org.kalypso.chart.framework.model.mapper.renderer.IAxisRenderer#getTicks(org.kalypso.chart.framework.model.mapper.IAxis)
-// */
-// @Override
-// public Number[] getTicks( IAxis axis )
-// {
-// Number[] tickMapElement = getTickMapElement( axis );
-// // wenn null, dann muss es neu erzeugt werden
-// if( tickMapElement == null )
-// {
-// Image img = new Image( Display.getDefault(), 1, 1 );
-// GC gc = new GC( img );
-//
-// getTicks( axis, gc );
-//
-// gc.dispose();
-// img.dispose();
-// tickMapElement = getTickMapElement( axis );
-// }
-// return tickMapElement;
-// }
-
+  @Override
   public Number[] getTicks( IAxis axis, GC gc )
   {
-// Number[] tickMapElement = getTickMapElement( axis );
-//
-// // wenn null, dann muss es neu erzeugt werden
-// if( tickMapElement == null )
-// {
     Point tickLabelSize = calcTickLabelSize( gc, axis );
     Number[] ticks = m_tickCalculator.calcTicks( gc, axis, m_minTickInterval, tickLabelSize );
-// setTickMapElement( axis, ticks );
-// tickMapElement = getTickMapElement( axis );
-// }
-    return ticks;// tickMapElement;
+    return ticks;
   }
 
   /**

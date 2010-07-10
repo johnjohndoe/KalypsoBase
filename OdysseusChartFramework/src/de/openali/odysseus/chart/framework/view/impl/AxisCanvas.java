@@ -149,7 +149,7 @@ public class AxisCanvas extends Canvas implements IAxisComponent, PaintListener
     if( m_dragInterval != null )
     {
       Color bg = gc.getBackground();
-      gc.setBackground( Display.getDefault().getSystemColor( SWT.COLOR_BLACK ) );
+      gc.setBackground( getDisplay().getSystemColor( SWT.COLOR_BLACK ) );
 
       int x;
       int y;
@@ -182,7 +182,7 @@ public class AxisCanvas extends Canvas implements IAxisComponent, PaintListener
 
   public final Image createBufferImage( final Rectangle bounds )
   {
-    final Image bufferImg = new Image( Display.getDefault(), bounds.width, bounds.height );
+    final Image bufferImg = new Image( getDisplay(), bounds.width, bounds.height );
     final GC buffGc = new GC( bufferImg );
     ChartUtilities.resetGC( buffGc );
     try
@@ -210,9 +210,7 @@ public class AxisCanvas extends Canvas implements IAxisComponent, PaintListener
     }
   }
 
-  /**
-   * does nothing right now as theres an error displaying the drag intervall
-   */
+ 
   public void setDragInterval( int y1, int y2 )
   {
     if( y1 == -1 || y2 == -1 )
@@ -232,19 +230,19 @@ public class AxisCanvas extends Canvas implements IAxisComponent, PaintListener
     redraw();
   }
 
-  @Override
-  public void setSize( Point size )
-  {
-    super.setSize( size );
-    setAxisHeight( new Rectangle( 0, 0, size.x, size.y ) );
-  }
-
-  @Override
-  public void setSize( int width, int height )
-  {
-    super.setSize( width, height );
-    setAxisHeight( new Rectangle( 0, 0, width, height ) );
-  }
+//  @Override
+//  public void setSize( Point size )
+//  {
+//// super.setSize( size );
+//// setAxisHeight( new Rectangle( 0, 0, size.x, size.y ) );
+//  }
+//
+//  @Override
+//  public void setSize( int width, int height )
+//  {
+//    // super.setSize( width, height );
+//    // setAxisHeight( new Rectangle( 0, 0, width, height ) );
+//  }
 
   private void setAxisHeight( final Rectangle bounds )
   {
@@ -267,7 +265,6 @@ public class AxisCanvas extends Canvas implements IAxisComponent, PaintListener
   {
     final Rectangle bounds = getClientArea();
     setAxisHeight( bounds );
-// final Rectangle b = new Rectangle( 0, 0, bounds.width, bounds.height );
     if( m_bufferImage == null )
       m_bufferImage = createBufferImage( bounds );
     if( m_panOffset == null )

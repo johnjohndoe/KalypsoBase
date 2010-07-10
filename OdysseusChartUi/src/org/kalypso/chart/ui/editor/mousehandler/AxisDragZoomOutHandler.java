@@ -57,59 +57,61 @@ public class AxisDragZoomOutHandler extends AxisDragZoomHandler
   }
 
   @Override
-  public void performZoomAction( final int start, final int end, final IAxis axis )
+  public void performZoomAction( final int start, final int end, final IAxis[] axes )
   {
-    double from = Double.NaN;
-    double to = Double.NaN;
-
-    switch( axis.getPosition().getOrientation() )
+    for( final IAxis axis : axes )
     {
-      case HORIZONTAL:
-        switch( axis.getDirection() )
-        {
-          case POSITIVE:
-            from = axis.screenToNumeric( Math.min( start, end ) ).doubleValue();
-            to = axis.screenToNumeric( Math.max( start, end ) ).doubleValue();
-            break;
+      double from = Double.NaN;
+      double to = Double.NaN;
 
-          case NEGATIVE:
-            from = axis.screenToNumeric( Math.max( start, end ) ).doubleValue();
-            to = axis.screenToNumeric( Math.min( start, end ) ).doubleValue();
-            break;
-        }
-        break;
+      switch( axis.getPosition().getOrientation() )
+      {
+        case HORIZONTAL:
+          switch( axis.getDirection() )
+          {
+            case POSITIVE:
+              from = axis.screenToNumeric( Math.min( start, end ) ).doubleValue();
+              to = axis.screenToNumeric( Math.max( start, end ) ).doubleValue();
+              break;
 
-      case VERTICAL:
-        switch( axis.getDirection() )
-        {
-          case POSITIVE:
-            from = axis.screenToNumeric( Math.max( start, end ) ).doubleValue();
-            to = axis.screenToNumeric( Math.min( start, end ) ).doubleValue();
-            break;
+            case NEGATIVE:
+              from = axis.screenToNumeric( Math.max( start, end ) ).doubleValue();
+              to = axis.screenToNumeric( Math.min( start, end ) ).doubleValue();
+              break;
+          }
+          break;
 
-          case NEGATIVE:
-            from = axis.screenToNumeric( Math.min( start, end ) ).doubleValue();
-            to = axis.screenToNumeric( Math.max( start, end ) ).doubleValue();
-            break;
-        }
-        break;
-    }
+        case VERTICAL:
+          switch( axis.getDirection() )
+          {
+            case POSITIVE:
+              from = axis.screenToNumeric( Math.max( start, end ) ).doubleValue();
+              to = axis.screenToNumeric( Math.min( start, end ) ).doubleValue();
+              break;
 
-    if( from != Double.NaN && to != Double.NaN )
-    {
-      IDataRange<Number> numericRange = axis.getNumericRange();
+            case NEGATIVE:
+              from = axis.screenToNumeric( Math.min( start, end ) ).doubleValue();
+              to = axis.screenToNumeric( Math.max( start, end ) ).doubleValue();
+              break;
+          }
+          break;
+      }
 
-      double oldmin = numericRange.getMin().doubleValue();
-      double oldmax = numericRange.getMax().doubleValue();
-      double oldrange = Math.abs( oldmin - oldmax );
-      double mouserange = Math.abs( from - to );
-      double newrange = (oldrange / mouserange) * oldrange;
+      if( from != Double.NaN && to != Double.NaN )
+      {
+        IDataRange<Number> numericRange = axis.getNumericRange();
 
-      double newFrom = oldmin - ((Math.abs( from - oldmin ) / oldrange) * newrange);
-      double newTo = oldmax + ((Math.abs( to - oldmax ) / oldrange) * newrange);
+        double oldmin = numericRange.getMin().doubleValue();
+        double oldmax = numericRange.getMax().doubleValue();
+        double oldrange = Math.abs( oldmin - oldmax );
+        double mouserange = Math.abs( from - to );
+        double newrange = (oldrange / mouserange) * oldrange;
 
-      axis.setNumericRange( new ComparableDataRange<Number>( new Number[] { new Double( newFrom ), new Double( newTo ) } ) );
+        double newFrom = oldmin - ((Math.abs( from - oldmin ) / oldrange) * newrange);
+        double newTo = oldmax + ((Math.abs( to - oldmax ) / oldrange) * newrange);
+
+        axis.setNumericRange( new ComparableDataRange<Number>( new Number[] { new Double( newFrom ), new Double( newTo ) } ) );
+      }
     }
   }
-
 }

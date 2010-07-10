@@ -66,7 +66,7 @@ public class DragPanHandler extends AbstractChartDragHandler
   @Override
   public Cursor getCursor(final MouseEvent e   )
   {
-    return Display.getDefault().getSystemCursor( SWT.CURSOR_SIZEALL );
+    return e.display.getSystemCursor( SWT.CURSOR_SIZEALL );
   }
 
   /**

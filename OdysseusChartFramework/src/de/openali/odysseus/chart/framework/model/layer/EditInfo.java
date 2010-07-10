@@ -1,5 +1,6 @@
 package de.openali.odysseus.chart.framework.model.layer;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 
 import de.openali.odysseus.chart.framework.model.figure.IPaintable;
@@ -21,6 +22,8 @@ public class EditInfo
   public Point m_pos;
 
   public String m_text;
+  
+  public int m_mouseButton;
 
   public EditInfo( final ITooltipChartLayer editLayer, final IPaintable hoverFigure, final IPaintable editFigure, final Object editData, final String editText, final Point mousePos )
   {
@@ -30,6 +33,7 @@ public class EditInfo
     m_data = editData;
     m_text = editText;
     m_pos = mousePos;
+    m_mouseButton=SWT.NONE;;
   }
 
   public EditInfo( final EditInfo copyInfo )
@@ -40,5 +44,6 @@ public class EditInfo
     m_data = copyInfo.m_data;
     m_text = copyInfo.m_text;
     m_pos = copyInfo.m_pos;
+    m_mouseButton= copyInfo.m_mouseButton;
   }
 }

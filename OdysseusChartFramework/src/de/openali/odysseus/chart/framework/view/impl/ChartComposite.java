@@ -149,15 +149,15 @@ public class ChartComposite extends Canvas
 
   public final void drawPlotImage( final GC gc, final Rectangle rect )
   {
-    final Image tmpImg = m_plot.createImage( getChartModel().getLayerManager().getLayers(), rect );
+    final Image tmpImg = m_plot.createImage( gc.getDevice(), getChartModel().getLayerManager().getLayers(), rect );
     gc.drawImage( tmpImg, 0, 0, m_plot.getBounds().width, m_plot.getBounds().height, m_plot.getBounds().x, m_plot.getBounds().y, m_plot.getBounds().width, m_plot.getBounds().height );
     tmpImg.dispose();
   }
 
-  public final Image createAxisImage( final Rectangle rect )
-  {
-    return m_plot.createImage( getChartModel().getLayerManager().getLayers(), rect );
-  }
+// public final Image createAxisImage( final Rectangle rect )
+// {
+// return m_plot.createImage( getChartModel().getLayerManager().getLayers(), rect );
+// }
 
   private final AbstractMapperRegistryEventListener m_mapperListener = new AbstractMapperRegistryEventListener()
   {
@@ -339,7 +339,8 @@ public class ChartComposite extends Canvas
     lbl33.setSize( 0, 0 );
     lbl33.setVisible( false );
   }
-@ Deprecated
+
+  @Deprecated
   public PlotCanvas getPlot( )
   {
     return m_plot;
@@ -349,7 +350,8 @@ public class ChartComposite extends Canvas
   {
     return m_model;
   }
-@Deprecated
+
+  @Deprecated
   public final AxisCanvas getAxisCanvas( final IAxis axis )
   {
     final Composite axisPlace = m_axisPlaces.get( axis.getPosition() );
@@ -388,6 +390,33 @@ public class ChartComposite extends Canvas
     }
   }
 
+  public void setAxisZoomOffset( final Point start, final Point end, IAxis[] axes )
+  {
+    int startZ = -1;
+    int endZ = -1;
+
+    for( IAxis axis : axes )
+    {
+      final AxisCanvas ac = getAxisCanvas( axis );
+      if( ac == null )
+        continue;
+      if( start != null && end != null )
+      {
+        if( axis.getPosition().getOrientation().equals( ORIENTATION.HORIZONTAL ) )
+        {
+          startZ = start.x;
+          endZ = end.x;
+        }
+        else
+        {
+          startZ = start.y;
+          endZ = end.y;
+        }
+      }
+      ac.setDragInterval( startZ, endZ );
+    }
+  }
+
   public final void removeAxisHandler( final IAxisDragHandler handler )
   {
 
@@ -418,6 +447,16 @@ public class ChartComposite extends Canvas
   public final void setDragArea( final Rectangle dragArea )
   {
     m_plot.setDragArea( dragArea );
+//    if( dragArea == null )
+//    {
+//      m_plot.setDragArea( null );
+//    }
+//    else
+//    {
+//      final int w = dragArea.width < 0 ? m_plot.getBounds().width : dragArea.width;
+//      final int h = dragArea.height < 0 ? m_plot.getBounds().height : dragArea.height;
+//      m_plot.setDragArea( new Rectangle( dragArea.x, dragArea.y, w, h ) );
+//    }
   }
 
   public final void addAxisHandler( final IAxisDragHandler handler )
@@ -459,6 +498,20 @@ public class ChartComposite extends Canvas
       final AxisCanvas ac = getAxisCanvas( axis );
       if( ac != null )
         ac.setPanOffsetInterval( null );
+    }
+  }
+
+  public final void clearZoomOffset( )
+  {
+    getPlot().setDragArea( null );
+    final IChartModel cm = getChartModel();
+    final IMapperRegistry mr = cm == null ? null : cm.getMapperRegistry();
+    final IAxis[] axes = mr == null ? new IAxis[] {} : mr.getAxes();
+    for( final IAxis axis : axes )
+    {
+      final AxisCanvas ac = getAxisCanvas( axis );
+      if( ac != null )
+        ac.setDragInterval( -1, -1 );
     }
   }
 
@@ -585,7 +638,7 @@ public class ChartComposite extends Canvas
     return layerManager == null ? new IChartLayer[] {} : m_model.getLayerManager().getLayers();
   }
 
-  final void invalidatePlotCanvas( final IChartLayer[] layers )
+  private final void invalidatePlotCanvas( final IChartLayer[] layers )
   {
     if( isDisposed() )
       return;

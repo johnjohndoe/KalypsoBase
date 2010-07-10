@@ -1,6 +1,8 @@
 package de.openali.odysseus.chart.framework.view;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
@@ -21,6 +23,7 @@ import de.openali.odysseus.chart.framework.view.impl.PlotCanvas;
  */
 public class TooltipHandler extends MouseAdapter implements MouseListener, MouseMoveListener
 {
+
   /**
    * @see org.eclipse.swt.events.MouseAdapter#mouseDown(org.eclipse.swt.events.MouseEvent)
    */
@@ -28,6 +31,7 @@ public class TooltipHandler extends MouseAdapter implements MouseListener, Mouse
   public void mouseDown( MouseEvent e )
   {
     m_mouseDown = true;
+
   }
 
   /**
@@ -37,8 +41,10 @@ public class TooltipHandler extends MouseAdapter implements MouseListener, Mouse
   public void mouseUp( MouseEvent e )
   {
     m_mouseDown = false;
+
     if( m_info != null )
     {
+      m_info.m_mouseButton = e.button;
       final ITooltipChartLayer layer = m_info.m_layer;
       if( layer instanceof IEditableChartLayer )
         ((IEditableChartLayer) layer).commitDrag( m_info.m_pos, m_info );
@@ -60,6 +66,7 @@ public class TooltipHandler extends MouseAdapter implements MouseListener, Mouse
     m_chart = chart;
     m_plot.addMouseListener( this );
     m_plot.addMouseMoveListener( this );
+
   }
 
   public void dispose( )
@@ -68,6 +75,7 @@ public class TooltipHandler extends MouseAdapter implements MouseListener, Mouse
     {
       m_plot.removeMouseListener( this );
       m_plot.removeMouseMoveListener( this );
+
     }
   }
 
@@ -78,6 +86,7 @@ public class TooltipHandler extends MouseAdapter implements MouseListener, Mouse
   public void mouseMove( final MouseEvent e )
   {
 
+// TODO: Try MouseEvent.stateMask to indicate mousebuttons
     if( !m_mouseDown )
     {
       final IChartModel model = m_chart.getChartModel();

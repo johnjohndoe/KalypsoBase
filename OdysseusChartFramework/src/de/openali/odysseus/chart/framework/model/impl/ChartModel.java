@@ -412,7 +412,8 @@ public class ChartModel implements IChartModel
     {
       Number from = null;
       Number to = null;
-
+      if( start == null || end == null )
+        continue;
       switch( axis.getPosition().getOrientation() )
       {
         case HORIZONTAL:
@@ -549,7 +550,7 @@ public class ChartModel implements IChartModel
         nowNum = axis.screenToNumeric( end.y );
         startNum = axis.screenToNumeric( start.y );
       }
-      final double diff =  nowNum.doubleValue()-startNum.doubleValue() ;
+      final double diff = nowNum.doubleValue() - startNum.doubleValue();
       if( Double.isNaN( diff ) )
         continue;
       final IDataRange<Number> initRange = axis.getNumericRange();

@@ -93,6 +93,8 @@ public class GenericLinearAxis extends AbstractAxis
   @Override
   public void setNumericRange( final IDataRange<Number> range )
   {
+    if( range.getMax() == m_numericRange.getMax() && range.getMin() == m_numericRange.getMin() )
+      return;
     m_numericRange = range;
     fireMapperChanged( this );
   }
@@ -165,7 +167,10 @@ public class GenericLinearAxis extends AbstractAxis
   @Override
   public void setScreenHeight( int height )
   {
+    if( m_height == height )
+      return;
     m_height = height;
+    fireMapperChanged( this );
   }
 
 }

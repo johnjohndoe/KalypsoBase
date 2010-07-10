@@ -246,7 +246,7 @@ public class ChartEditor extends EditorPart implements IChartPart
   @Override
   public void createPartControl( final Composite parent )
   {
-    m_composite = new Composite( parent, SWT.NONE );
+    m_composite = new Composite( parent, SWT.FILL );
     m_composite.setLayout( new FillLayout() );
 
     final boolean isDirty = m_dirty;
@@ -339,19 +339,6 @@ public class ChartEditor extends EditorPart implements IChartPart
           };
           m_chartModel.getLayerManager().addListener( layerManagerListener );
 
-// final AbstractChartModelEventListener chartModelEventListener = new AbstractChartModelEventListener()
-// {
-// /**
-// * @see org.kalypso.chart.framework.model.event.impl.AbstractChartModelEventListener#onModelChanged()
-// */
-// @Override
-// public void onModelChanged(IChartModel oldModel, IChartModel newModel )
-// {
-// setDirty( true );
-// }
-// };
-// m_chartModel.addListener( chartModelEventListener );
-
           try
           {
             m_chartConfigurationLoader = new ChartConfigurationLoader( file );
@@ -379,14 +366,13 @@ public class ChartEditor extends EditorPart implements IChartPart
             // TODO Auto-generated catch block
             e.printStackTrace();
           }
-
+          final List<IAxis> autoscaledAxes = new ArrayList<IAxis>();
           if( m_chartModel != null )
           {
             m_chartComposite = new ChartComposite( m_composite, SWT.BORDER, m_chartModel, new RGB( 255, 255, 255 ) );
 
             // Wenn die Achsenintervalle nicht in der Konfigurationsdatei gesetzt sind, muss ge-autorange-t werden
             final AxisType[] axisArray = m_chartType.getMappers().getAxisArray();
-            final List<IAxis> autoscaledAxes = new ArrayList<IAxis>();
             final IMapperRegistry mapperRegistry = m_chartModel.getMapperRegistry();
             for( final AxisType axisType : axisArray )
             {
@@ -427,7 +413,6 @@ public class ChartEditor extends EditorPart implements IChartPart
                 autoscaledAxes.add( mapperRegistry.getAxis( axisType.getId() ) );
               }
             }
-            m_chartModel.autoscale( autoscaledAxes.toArray( new IAxis[] {} ) );
 
             // Name des Parts
             setPartName( m_chartModel.getTitle() );
@@ -440,6 +425,8 @@ public class ChartEditor extends EditorPart implements IChartPart
             final ChartPartListener chartPartListener = new ChartPartListener();
             getSite().getPage().addPartListener( chartPartListener );
 
+            m_composite.layout();
+            m_chartModel.autoscale( autoscaledAxes.toArray( new IAxis[] {} ) );
           }
           // else: TODO: what?
         }
@@ -450,8 +437,7 @@ public class ChartEditor extends EditorPart implements IChartPart
         }
       }
     }
-    m_composite.layout();
-
+    m_composite.layout( true, true );
     if( m_outlinePage != null )
     {
       m_outlinePage.updateControl();

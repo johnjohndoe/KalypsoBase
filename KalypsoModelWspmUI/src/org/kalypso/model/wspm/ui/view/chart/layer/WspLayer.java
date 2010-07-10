@@ -65,6 +65,7 @@ import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
+import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 
 /**
  * Displays constant wsp lines in the cross section.
@@ -262,8 +263,10 @@ public class WspLayer extends AbstractProfilLayer
   private void paint( GC gc, double height )
   {
     Rectangle clipping = gc.getClipping();
-
-    Point location = getCoordinateMapper().numericToScreen( 0.0, height );
+    final ICoordinateMapper cm = getCoordinateMapper();
+    if( cm == null )
+      return;
+    Point location = cm.numericToScreen( 0.0, height );
 
     Region clipreg = new Region();
     int[] points = getPoints();
