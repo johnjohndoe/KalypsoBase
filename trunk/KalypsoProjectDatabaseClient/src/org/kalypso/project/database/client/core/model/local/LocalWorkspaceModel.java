@@ -3,6 +3,7 @@ package org.kalypso.project.database.client.core.model.local;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.TreeSet;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResourceChangeEvent;
@@ -13,6 +14,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.kalypso.project.database.client.core.model.interfaces.ILocalWorkspaceModel;
 import org.kalypso.project.database.client.extension.database.IProjectDatabaseFilter;
 import org.kalypso.project.database.client.extension.database.handlers.ILocalProject;
+import org.kalypso.project.database.client.extension.database.handlers.IProjectHandler;
 import org.kalypso.project.database.client.extension.database.handlers.implementation.LocalProjectHandler;
 
 /**
@@ -75,7 +77,7 @@ public class LocalWorkspaceModel implements ILocalWorkspaceModel
 
   protected final void update( )
   {
-    m_projects = new HashSet<ILocalProject>();
+    m_projects = new TreeSet<ILocalProject>( IProjectHandler.COMPARATOR );
 
     final IWorkspace workspace = ResourcesPlugin.getWorkspace();
     workspace.addResourceChangeListener( RESOURCE_LISTENER );

@@ -52,6 +52,7 @@ import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
+import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
 import org.kalypso.project.database.client.core.ProjectDataBaseController;
@@ -80,7 +81,7 @@ public class ManageRemoteProjects extends Composite implements IRemoteProjectsLi
 
   private final FormToolkit m_toolkit;
 
-  private Composite m_body;
+  private ScrolledForm m_body;
 
   public ManageRemoteProjects( final FormToolkit toolkit, final Composite parent, final String type )
   {
@@ -123,15 +124,17 @@ public class ManageRemoteProjects extends Composite implements IRemoteProjectsLi
       m_body = null;
     }
 
-    m_body = m_toolkit.createComposite( this );
-    m_body.setLayout( new GridLayout( 3, false ) );
+    m_body = m_toolkit.createScrolledForm( this );
     m_body.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
+
+    final Composite body = m_body.getBody();
+    body.setLayout( new GridLayout( 3, false ) );
 
     final IProjectDatabase service = KalypsoProjectDatabaseClient.getService();
     final KalypsoProjectBean[] heads = service.getProjectHeads( m_type );
     for( final KalypsoProjectBean head : heads )
     {
-      final ImageHyperlink link = m_toolkit.createImageHyperlink( m_body, SWT.NULL );
+      final ImageHyperlink link = m_toolkit.createImageHyperlink( body, SWT.NULL );
       link.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
       link.setText( head.getName() );
       link.setImage( IMG_REMOTE_PROJECT );
@@ -141,10 +144,10 @@ public class ManageRemoteProjects extends Composite implements IRemoteProjectsLi
       link.setUnderlined( false );
 
       // project locked in database?!?
-      if( head.isProjectLockedForEditing() )
+      if( head.hasEditLock() )
       {
-        final ImageHyperlink lnkReleaseLock = m_toolkit.createImageHyperlink( m_body, SWT.NULL );
-        lnkReleaseLock.setToolTipText( Messages.getString("org.kalypso.project.database.client.ui.management.ManageRemoteProjects.3") ); //$NON-NLS-1$
+        final ImageHyperlink lnkReleaseLock = m_toolkit.createImageHyperlink( body, SWT.NULL );
+        lnkReleaseLock.setToolTipText( Messages.getString( "org.kalypso.project.database.client.ui.management.ManageRemoteProjects.3" ) ); //$NON-NLS-1$
         lnkReleaseLock.setImage( IMG_UNLOCK );
 
         lnkReleaseLock.addHyperlinkListener( new HyperlinkAdapter()
@@ -162,15 +165,13 @@ public class ManageRemoteProjects extends Composite implements IRemoteProjectsLi
       }
       else
       {
-        m_toolkit.createImageHyperlink( m_body, SWT.NULL ).setEnabled( false ); // spacer
+        m_toolkit.createImageHyperlink( body, SWT.NULL ).setEnabled( false ); // spacer
       }
 
-      
-      final ImageHyperlink lnkDeleteAll = m_toolkit.createImageHyperlink( m_body, SWT.NULL );
-      lnkDeleteAll.setToolTipText( Messages.getString("org.kalypso.project.database.client.ui.management.ManageRemoteProjects.4") ); //$NON-NLS-1$
+      final ImageHyperlink lnkDeleteAll = m_toolkit.createImageHyperlink( body, SWT.NULL );
+      lnkDeleteAll.setToolTipText( Messages.getString( "org.kalypso.project.database.client.ui.management.ManageRemoteProjects.4" ) ); //$NON-NLS-1$
       lnkDeleteAll.setImage( IMG_DELETE );
 
-      
       final KalypsoProjectBean[] versions = KalypsoProjectBeanHelper.getSortedBeans( head );
 
       lnkDeleteAll.addHyperlinkListener( new HyperlinkAdapter()
@@ -187,16 +188,16 @@ public class ManageRemoteProjects extends Composite implements IRemoteProjectsLi
 
       for( final KalypsoProjectBean version : versions )
       {
-        final String text =  Messages.getString("org.kalypso.project.database.client.ui.management.ManageRemoteProjects.5", version.getProjectVersion() ); //$NON-NLS-1$
+        final String text = Messages.getString( "org.kalypso.project.database.client.ui.management.ManageRemoteProjects.5", version.getProjectVersion() ); //$NON-NLS-1$
 
-        final ImageHyperlink linkVersion = m_toolkit.createImageHyperlink( m_body, SWT.NULL );
+        final ImageHyperlink linkVersion = m_toolkit.createImageHyperlink( body, SWT.NULL );
         linkVersion.setLayoutData( new GridData( GridData.END, GridData.FILL, true, false, 2, 0 ) );
         linkVersion.setText( text );
         linkVersion.setEnabled( false );
         linkVersion.setUnderlined( false );
 
-        final ImageHyperlink lnkDeleteVersion = m_toolkit.createImageHyperlink( m_body, SWT.NULL );
-        lnkDeleteVersion.setToolTipText( Messages.getString("org.kalypso.project.database.client.ui.management.ManageRemoteProjects.6", text ) ); //$NON-NLS-1$
+        final ImageHyperlink lnkDeleteVersion = m_toolkit.createImageHyperlink( body, SWT.NULL );
+        lnkDeleteVersion.setToolTipText( Messages.getString( "org.kalypso.project.database.client.ui.management.ManageRemoteProjects.6", text ) ); //$NON-NLS-1$
         lnkDeleteVersion.setImage( IMG_DELETE );
 
         lnkDeleteVersion.addHyperlinkListener( new HyperlinkAdapter()
@@ -216,8 +217,11 @@ public class ManageRemoteProjects extends Composite implements IRemoteProjectsLi
         } );
       }
 
-      m_toolkit.createLabel( m_body, "" ).setLayoutData( new GridData( GridData.FILL, GridData.FILL, false, false, 3, 0 ) ); //$NON-NLS-1$
+      m_toolkit.createLabel( body, "" ).setLayoutData( new GridData( GridData.FILL, GridData.FILL, false, false, 3, 0 ) ); //$NON-NLS-1$
     }
+
+    body.layout();
+    m_body.reflow( true );
 
     m_toolkit.adapt( this );
     this.layout();

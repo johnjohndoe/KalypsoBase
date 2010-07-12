@@ -40,12 +40,22 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.client.extension.database.handlers;
 
+import java.util.Comparator;
 
 /**
  * @author Dirk Kuch
  */
 public interface IProjectHandler
 {
+  Comparator<IProjectHandler> COMPARATOR = new Comparator<IProjectHandler>()
+  {
+    @Override
+    public int compare( final IProjectHandler o1, final IProjectHandler o2 )
+    {
+      return o1.getName().compareTo( o2.getName() );
+    }
+  };
+
   /**
    * @return "label" name of project
    */

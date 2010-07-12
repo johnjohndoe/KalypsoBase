@@ -43,6 +43,7 @@ package org.kalypso.project.database.client.core.model;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.TreeSet;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.resources.IProject;
@@ -75,7 +76,7 @@ public class ProjectDatabaseModel implements IProjectDatabaseModel, ILocalWorksp
 
   private RemoteWorkspaceModel m_remote = null;
 
-  private Set<IProjectHandler> m_projects = null;
+  private final Set<IProjectHandler> m_projects = new TreeSet<IProjectHandler>( IProjectHandler.COMPARATOR );
 
   private final Set<IProjectDatabaseListener> m_listener = new LinkedHashSet<IProjectDatabaseListener>();
 
@@ -113,8 +114,6 @@ public class ProjectDatabaseModel implements IProjectDatabaseModel, ILocalWorksp
 
   synchronized private void buildProjectList( )
   {
-    m_projects = new HashSet<IProjectHandler>();
-
     final ILocalProject[] local = m_local.getProjects();
     IRemoteProject[] remote = new IRemoteProject[] {};
 
@@ -152,34 +151,12 @@ public class ProjectDatabaseModel implements IProjectDatabaseModel, ILocalWorksp
     {
       m_projects.add( r );
     }
-
-// /* clean up */
-// final Collection<AbstractProjectHandler> collection = projects.values();
-// for( final AbstractProjectHandler handler : collection )
-// {
-
-// if( handler.isLocal() && handler.isLocalRemoteProject() )
-// {
-// /* reset false remote preferences */
-// final IRemoteProjectPreferences preferences = handler.getRemotePreferences();
-//
-// if( preferences.isOnServer() && !handler.isRemote() )
-// {
-// preferences.setIsOnServer( false );
-// }
-//
-// if( !preferences.isOnServer() && handler.isRemote() )
-// {
-// preferences.setIsOnServer( true );
-// }
-// }
-
   }
 
   @Override
   public synchronized IProjectHandler[] getProjects( )
   {
-    if( m_projects == null )
+    if( m_projects.isEmpty() )
     {
       buildProjectList();
     }

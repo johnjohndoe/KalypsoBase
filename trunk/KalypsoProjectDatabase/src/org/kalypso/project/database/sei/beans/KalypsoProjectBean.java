@@ -147,7 +147,7 @@ public class KalypsoProjectBean implements Comparable<KalypsoProjectBean>
     return m_editLockDate;
   }
 
-  public Boolean isProjectLockedForEditing( )
+  public Boolean hasEditLock( )
   {
     final String ticket = getEditLockTicket();
     if( ticket == null || "".equals( ticket.trim() ) ) //$NON-NLS-1$
