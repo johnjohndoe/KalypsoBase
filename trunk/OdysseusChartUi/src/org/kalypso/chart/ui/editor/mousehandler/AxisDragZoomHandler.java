@@ -80,9 +80,9 @@ public class AxisDragZoomHandler extends AbstractAxisDragHandler
   {
     getChartComposite().setAxisZoomOffset( start, end, axes );
     if( axes[0].getPosition().getOrientation().equals( ORIENTATION.HORIZONTAL ) )
-      getChartComposite().setDragArea( new Rectangle( start.x, 0, Math.abs( end.x - start.x ), -1 ) );
+      getChartComposite().setDragArea( new Rectangle( start.x, 0, end.x - start.x, Integer.MAX_VALUE ) );
     else
-      getChartComposite().setDragArea( new Rectangle( 0, start.y, -1, Math.abs( end.y - start.y ) ) );
+      getChartComposite().setDragArea( new Rectangle( 0, start.y, Integer.MAX_VALUE, end.y - start.y ) );
 
   }
 

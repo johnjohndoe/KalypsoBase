@@ -70,9 +70,14 @@ public class AxisDragPanHandler extends AbstractAxisDragHandler
   @Override
   void doMouseMoveAction( Point start, Point end, IAxis[] axes )
   {
+    if( axes == null || axes.length == 0 )
+      return;
 
     getChartComposite().setAxisPanOffset( start, end, axes );
-    getChartComposite().setPlotPanOffset( end, start );
+    if( axes[0].getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
+      getChartComposite().setPlotPanOffset(axes, new Point( end.x, 0 ), new Point( start.x, 0 ) );
+    else
+      getChartComposite().setPlotPanOffset(axes, new Point( 0, end.y ), new Point( 0, start.y ) );
   }
 
   /**
@@ -106,7 +111,7 @@ public class AxisDragPanHandler extends AbstractAxisDragHandler
    * @see org.kalypso.chart.framework.view.IChartDragHandler#getCursor()
    */
   @Override
-  public Cursor getCursor(final MouseEvent e  )
+  public Cursor getCursor( final MouseEvent e )
   {
     return e.display.getSystemCursor( SWT.CURSOR_SIZEALL );
   }
@@ -115,7 +120,7 @@ public class AxisDragPanHandler extends AbstractAxisDragHandler
   {
     Number startNum = axis.screenToNumeric( startPos );
     Number endNum = axis.screenToNumeric( endPos );
-    double diff = startNum.doubleValue() -endNum.doubleValue() ;
+    double diff = startNum.doubleValue() - endNum.doubleValue();
     if( Double.isNaN( diff ) )
       return;
     IDataRange<Number> oldRange = axis.getNumericRange();
