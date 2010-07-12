@@ -210,7 +210,6 @@ public class AxisCanvas extends Canvas implements IAxisComponent, PaintListener
     }
   }
 
- 
   public void setDragInterval( int y1, int y2 )
   {
     if( y1 == -1 || y2 == -1 )
@@ -227,22 +226,23 @@ public class AxisCanvas extends Canvas implements IAxisComponent, PaintListener
   public void setPanOffsetInterval( Point offset )
   {
     m_panOffset = offset;
-    redraw();
+    if( offset != null )
+      redraw();
   }
 
-//  @Override
-//  public void setSize( Point size )
-//  {
-//// super.setSize( size );
-//// setAxisHeight( new Rectangle( 0, 0, size.x, size.y ) );
-//  }
+// @Override
+// public void setSize( Point size )
+// {
+// // super.setSize( size );
+// // setAxisHeight( new Rectangle( 0, 0, size.x, size.y ) );
+// }
 //
-//  @Override
-//  public void setSize( int width, int height )
-//  {
-//    // super.setSize( width, height );
-//    // setAxisHeight( new Rectangle( 0, 0, width, height ) );
-//  }
+// @Override
+// public void setSize( int width, int height )
+// {
+// // super.setSize( width, height );
+// // setAxisHeight( new Rectangle( 0, 0, width, height ) );
+// }
 
   private void setAxisHeight( final Rectangle bounds )
   {
