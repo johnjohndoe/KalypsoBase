@@ -447,16 +447,16 @@ public class ChartComposite extends Canvas
   public final void setDragArea( final Rectangle dragArea )
   {
     m_plot.setDragArea( dragArea );
-//    if( dragArea == null )
-//    {
-//      m_plot.setDragArea( null );
-//    }
-//    else
-//    {
-//      final int w = dragArea.width < 0 ? m_plot.getBounds().width : dragArea.width;
-//      final int h = dragArea.height < 0 ? m_plot.getBounds().height : dragArea.height;
-//      m_plot.setDragArea( new Rectangle( dragArea.x, dragArea.y, w, h ) );
-//    }
+    if( dragArea == null )
+    {
+      m_plot.setDragArea( null );
+    }
+    else
+    {
+      final int w = dragArea.width < 0 ? m_plot.getBounds().width : dragArea.width;
+      final int h = dragArea.height < 0 ? m_plot.getBounds().height : dragArea.height;
+      m_plot.setDragArea( new Rectangle( dragArea.x, dragArea.y, w, h ) );
+    }
   }
 
   public final void addAxisHandler( final IAxisDragHandler handler )
@@ -646,6 +646,6 @@ public class ChartComposite extends Canvas
     m_invalidateChartJob.cancel();
     // TODO: invalidate only layers with changes
     // m_invalidateChartJob.addLayer( getLayers( layers ) );
-    m_invalidateChartJob.schedule( 100 );
+    m_invalidateChartJob.schedule( 50 );
   }
 }

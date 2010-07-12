@@ -433,7 +433,8 @@ public class PlotCanvas extends Canvas implements PaintListener
 
     m_panOffset = offset;
 
-    redraw();
+    if( offset != null )
+      redraw();
   }
 
   public void setTooltipInfo( final EditInfo hoverInfo )
