@@ -321,12 +321,12 @@ public class ProjectDatabase implements IProjectDatabase
         return null;
 
       final KalypsoProjectBean project = getProject( projectUnixName );
-      if( !project.isProjectLockedForEditing() )
+      if( !project.hasEditLock() )
         throw new IllegalStateException( "Updating edit lock of projects failed." ); //$NON-NLS-1$
 
       final KalypsoProjectBean[] children = project.getChildren();
       for( final KalypsoProjectBean child : children )
-        if( !child.isProjectLockedForEditing() )
+        if( !child.hasEditLock() )
           throw new IllegalStateException( "Updating edit lock of projects failed." ); //$NON-NLS-1$
 
       return ticket;
@@ -350,12 +350,12 @@ public class ProjectDatabase implements IProjectDatabase
       myTx.commit();
 
       final KalypsoProjectBean project = getProject( projectUnixName );
-      if( project.isProjectLockedForEditing() )
+      if( project.hasEditLock() )
         return false;
 
       final KalypsoProjectBean[] children = project.getChildren();
       for( final KalypsoProjectBean child : children )
-        if( child.isProjectLockedForEditing() )
+        if( child.hasEditLock() )
           return false;
 
       return true;

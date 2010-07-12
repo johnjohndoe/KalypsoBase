@@ -93,7 +93,7 @@ public class TranscendenceUiHandler implements IProjectUiHandler
   {
     if( m_module.getDatabaseSettings().hasManagedDirtyState() )
     {
-      final Boolean remoteLocked = m_handler.getBean().isProjectLockedForEditing();
+      final Boolean remoteLocked = m_handler.getBean().hasEditLock();
       final boolean localLocked = m_handler.isLocked();
       if( remoteLocked && !localLocked )
         return new EmptyProjectAction();

@@ -140,7 +140,7 @@ public class ProjectOpenAction implements IProjectAction
         else
         {
           final boolean localLock = remotePreferences.isLocked();
-          final Boolean serverLock = transcendence.getBean().isProjectLockedForEditing();
+          final Boolean serverLock = transcendence.getBean().hasEditLock();
           if( localLock )
             m_type = OPEN_TYPE.eTranscendenceWriteable;
           else if( serverLock )

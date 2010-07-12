@@ -143,7 +143,7 @@ public class TranscendenceProjectHandler extends AbstractProjectHandler implemen
   @Override
   public boolean isEditable( )
   {
-    if( getBean().isProjectLockedForEditing() )
+    if( getBean().hasEditLock() )
       return false;
 
     return true;
