@@ -365,9 +365,25 @@ public class ChartComposite extends Canvas
     return null;
   }
 
-  public final void setPlotPanOffset( final Point start, final Point end )
+  private final IChartLayer[] getLayer( final IAxis[] axes )
   {
-    getPlot().setPanOffset( null, new Point( end.x - start.x, end.y - start.y ) );
+    if( getChartModel() == null )
+      return new IChartLayer[] {};
+    if( axes == null )
+      return getLayers( null );
+    final List<IChartLayer> layers = new ArrayList<IChartLayer>();
+    for( final IAxis axis : axes )
+    {
+      layers.addAll( getChartModel().getAxis2Layers().get( axis ) );
+    }
+
+    return layers.toArray( new IChartLayer[] {} );
+
+  }
+
+  public final void setPlotPanOffset( final IAxis[] axes, final Point start, final Point end )
+  {
+    getPlot().setPanOffset( getLayer( axes ), new Point( end.x - start.x, end.y - start.y ) );
   }
 
   public void setAxisPanOffset( final Point start, final Point end, IAxis[] axes )
@@ -453,8 +469,8 @@ public class ChartComposite extends Canvas
     }
     else
     {
-      final int w = dragArea.width < 0 ? m_plot.getBounds().width : dragArea.width;
-      final int h = dragArea.height < 0 ? m_plot.getBounds().height : dragArea.height;
+      final int w = dragArea.width == Integer.MAX_VALUE ? m_plot.getBounds().width : dragArea.width;
+      final int h = dragArea.height == Integer.MAX_VALUE ? m_plot.getBounds().height : dragArea.height;
       m_plot.setDragArea( new Rectangle( dragArea.x, dragArea.y, w, h ) );
     }
   }

@@ -89,7 +89,7 @@ public class DragPanHandler extends AbstractChartDragHandler
   @Override
   public void doMouseMoveAction( Point start, EditInfo editInfo )
   {
-    getChart().setPlotPanOffset( start, editInfo.m_pos );
+    getChart().setPlotPanOffset(null, start, editInfo.m_pos );
   }
 
 }
