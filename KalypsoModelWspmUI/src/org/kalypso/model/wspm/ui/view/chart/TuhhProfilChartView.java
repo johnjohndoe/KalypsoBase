@@ -159,6 +159,9 @@ public class TuhhProfilChartView extends ViewPart implements IChartPart, IProfil
   public void onProfilProviderChanged( final IProfilProvider provider, final IProfil oldProfile, final IProfil newProfile )
   {
     setPartNames( Messages.getString( "org.kalypso.model.wspm.ui.view.AbstractProfilViewPart_1" ), Messages.getString( "org.kalypso.model.wspm.ui.view.AbstractProfilViewPart_2" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    if( m_chartComposite == null )
+      return;
+
     final IChartModel oldModel = m_chartComposite.getChartModel();
     if( m_profile != null && oldModel instanceof ProfilChartModel )
       m_profile.removeProfilListener( (ProfilChartModel) oldModel );
