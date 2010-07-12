@@ -183,12 +183,12 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
     return m_dataSetScope;
   }
 
-  public void addScenarioDataListener( final IScenarioDataListener listener )
+  public synchronized void addScenarioDataListener( final IScenarioDataListener listener )
   {
     m_controller.add( listener );
   }
 
-  public void removeScenarioDataListener( final IScenarioDataListener listener )
+  public synchronized void removeScenarioDataListener( final IScenarioDataListener listener )
   {
     m_controller.remove( listener );
   }
@@ -206,21 +206,26 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
     /* Release current models && reset state */
     reset();
 
-    if( scenario != null )
+    synchronized( scenario )
     {
-      final IProject project = scenario.getProject();
-      final ProjectScope projectScope = new ProjectScope( project );
-      final IEclipsePreferences afguiNode = projectScope.getNode( "org.kalypso.afgui" ); //$NON-NLS-1$
-      m_dataSetScope = afguiNode == null ? null : afguiNode.get( Messages.getString( "org.kalypso.afgui.scenarios.SzenarioDataProvider.3" ), null ); //$NON-NLS-1$
+      if( scenario != null )
+      {
+        final IProject project = scenario.getProject();
+        final ProjectScope projectScope = new ProjectScope( project );
+        final IEclipsePreferences afguiNode = projectScope.getNode( "org.kalypso.afgui" ); //$NON-NLS-1$
+        m_dataSetScope = afguiNode == null ? null : afguiNode.get( Messages.getString( "org.kalypso.afgui.scenarios.SzenarioDataProvider.3" ), null ); //$NON-NLS-1$
+      }
+
+      m_scenario = (IScenario) scenario;
     }
 
-    m_scenario = (IScenario) scenario;
     fireCazeChanged( m_scenario );
 
     if( scenario == null || m_dataSetScope == null )
       return;
 
     final String dataSetScope = m_dataSetScope;
+
     final Job job = new Job( Messages.getString( "org.kalypso.afgui.scenarios.SzenarioDataProvider.4" ) ) //$NON-NLS-1$
     {
       /**
@@ -264,7 +269,6 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
                 {
                   resetKeyForProject( dataFolder, id, wrapperClass, gmlLocation );
                 }
-
               }
               catch( final CoreException e )
               {
@@ -273,6 +277,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
             }
           }
         }
+
         return StatusUtilities.createStatus( statusList, Messages.getString( "org.kalypso.afgui.scenarios.SzenarioDataProvider.5" ) ); //$NON-NLS-1$
       }
 
@@ -321,7 +326,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
     }
   }
 
-  private void fireCazeChanged( final IScenario scenario )
+  private synchronized void fireCazeChanged( final IScenario scenario )
   {
     for( final IScenarioDataListener listener : m_controller )
     {
@@ -553,7 +558,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
   @Override
   @SuppressWarnings("deprecation")
   @Deprecated
-  public void saveModel( final Class< ? extends IModel> modelClass, final IProgressMonitor monitor ) throws CoreException
+  public synchronized void saveModel( final Class< ? extends IModel> modelClass, final IProgressMonitor monitor ) throws CoreException
   {
     saveModel( modelClass.getName(), monitor );
   }
@@ -563,7 +568,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
    *      org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  public void saveModel( final String id, final IProgressMonitor monitor ) throws CoreException
+  public synchronized void saveModel( final String id, final IProgressMonitor monitor ) throws CoreException
   {
     final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.afgui.scenarios.SzenarioDataProvider.14" ) + id + Messages.getString( "org.kalypso.afgui.scenarios.SzenarioDataProvider.15" ), 110 ); //$NON-NLS-1$ //$NON-NLS-2$
 
@@ -600,7 +605,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
    * @see de.renew.workflow.connector.cases.ICaseDataProvider#saveModel(org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  public void saveModel( final IProgressMonitor monitor ) throws CoreException
+  public synchronized void saveModel( final IProgressMonitor monitor ) throws CoreException
   {
     final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.afgui.scenarios.SzenarioDataProvider.16" ), m_keyMap.size() * 100 ); //$NON-NLS-1$
     try
@@ -678,7 +683,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
    * the pool, regardless of the success of that operation. throws {@link IllegalArgumentException} If the given data id
    * is not known.
    */
-  public boolean isLoaded( final String id )
+  public synchronized boolean isLoaded( final String id )
   {
     final KeyPoolListener keyPoolListener = getKeyPoolListener( id );
     if( keyPoolListener == null )
