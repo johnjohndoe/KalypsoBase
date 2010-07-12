@@ -103,7 +103,7 @@ public class WspmWaterBody extends Feature_Impl implements IWspmConstants, IProf
 
   public void setDirectionUpstreams( final boolean directionIsUpstream )
   {
-    setProperty( new QName( NS_WSPM, "isDirectionUpstream" ), new Boolean( directionIsUpstream ) ); //$NON-NLS-1$
+    setProperty( new QName( NS_WSPM, "isDirectionUpstream" ), Boolean.valueOf( directionIsUpstream ) ); //$NON-NLS-1$
   }
 
   public Feature createRunOffEvent( ) throws GMLSchemaException

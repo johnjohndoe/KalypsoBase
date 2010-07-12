@@ -262,7 +262,7 @@ public class WspmProfileHelper
       final Double hochWertTwo = (Double) tempPointTwo.getValue( iHochwert );
 
       /* find the right segment with the neighboring points */
-      if( widthValueOne < width & widthValueTwo > width )
+      if( widthValueOne < width && widthValueTwo > width )
       {
         /* calculate the georeference */
         final double deltaOne = width - widthValueOne;
@@ -637,7 +637,7 @@ public class WspmProfileHelper
         profile.getResult().add( i, record );
         return record;
       }
-      else if( width == rw )
+      else if( width.equals( rw ) )
         throw new IllegalStateException();
     }
 

@@ -148,20 +148,20 @@ public class ProfileFeatureFactory implements IWspmConstants
       final FeatureChange[] obsChanges = ObservationFeatureFactory.toFeatureAsChanges( profile, binding );
       Collections.addAll( changes, obsChanges );
 
-      /* Building */
+      /* Profile Objects (for example buildings) */
       final QName memberQName = new QName( IWspmConstants.NS_WSPMPROF, "member" ); //$NON-NLS-1$
       final IRelationType buildingRT = (IRelationType) binding.getFeatureType().getProperty( memberQName );
-      final FeatureList buildingList = FeatureFactory.createFeatureList( binding, buildingRT, new Feature[] {} );
+      final FeatureList profileObjects = FeatureFactory.createFeatureList( binding, buildingRT, new Feature[] {} );
 
       final IProfileObject[] buildings = profile.getProfileObjects();
       for( final IProfileObject profileObject : buildings )
       {
-        final IFeatureType buildingType = binding.getFeatureType().getGMLSchema().getFeatureType( new QName( NS.OM, "Observation" ) ); //$NON-NLS-1$
-        final IRelationType buildingParentRelation = buildingList.getParentFeatureTypeProperty();
-        final Feature buildingFeature = binding.getWorkspace().createFeature( binding, buildingParentRelation, buildingType );
-        buildingList.add( buildingFeature );
-        final IObservation<TupleResult> buildingObs = ProfileFeatureFactory.observationFromBuilding( profileObject, buildingFeature );
-        final FeatureChange[] featureAsChanges = ObservationFeatureFactory.toFeatureAsChanges( buildingObs, buildingFeature );
+        final IFeatureType profileObjectType = binding.getFeatureType().getGMLSchema().getFeatureType( new QName( NS.OM, "Observation" ) ); //$NON-NLS-1$
+        final IRelationType profileObjectParentRelation = profileObjects.getParentFeatureTypeProperty();
+        final Feature profileObjectFeature = binding.getWorkspace().createFeature( binding, profileObjectParentRelation, profileObjectType );
+        profileObjects.add( profileObjectFeature );
+        final IObservation<TupleResult> buildingObs = ProfileFeatureFactory.observationFromBuilding( profileObject, profileObjectFeature );
+        final FeatureChange[] featureAsChanges = ObservationFeatureFactory.toFeatureAsChanges( buildingObs, profileObjectFeature );
 
         Collections.addAll( changes, featureAsChanges );
       }
@@ -169,8 +169,8 @@ public class ProfileFeatureFactory implements IWspmConstants
       /* Always to set the building, even if null */
       // At the moment, we do not look into the building. Always cange the property if we have any building
       final List< ? > oldBuildingList = (List< ? >) binding.getProperty( buildingRT );
-      if( !oldBuildingList.isEmpty() || !buildingList.isEmpty() )
-        changes.add( new FeatureChange( binding, buildingRT, buildingList ) );
+      if( !oldBuildingList.isEmpty() || !profileObjects.isEmpty() )
+        changes.add( new FeatureChange( binding, buildingRT, profileObjects ) );
     }
     catch( final Exception e )
     {
@@ -200,7 +200,7 @@ public class ProfileFeatureFactory implements IWspmConstants
       final String name = profile.getName();
       final String description = profile.getComment();
       final String srs = ObjectUtils.toString( profile.getProperty( IWspmConstants.PROFIL_PROPERTY_CRS ) );
-      changes.add( new FeatureChange( targetFeature, featureType.getProperty( ProfileFeatureBinding.QN_PROPERTY_SRS ), srs ) );
+      changes.add( new FeatureChange( targetFeature, featureType.getProperty( IProfileFeature.QN_PROPERTY_SRS ), srs ) );
 
       final List<String> namelist = new ArrayList<String>();
       namelist.add( name );
@@ -224,26 +224,28 @@ public class ProfileFeatureFactory implements IWspmConstants
       final FeatureChange[] obsChanges = ObservationFeatureFactory.toFeatureAsChanges( profile, targetFeature );
       Collections.addAll( changes, obsChanges );
 
-      /* Building */
+      /* Profile Objects */
       final QName memberQName = new QName( IWspmConstants.NS_WSPMPROF, "member" ); //$NON-NLS-1$
-      final IRelationType buildingRT = (IRelationType) featureType.getProperty( memberQName );
-      final FeatureList buildingList = FeatureFactory.createFeatureList( targetFeature, buildingRT, new Feature[] {} );
+      final IRelationType profileObjectsRelationType = (IRelationType) featureType.getProperty( memberQName );
+      final FeatureList profileObjectList = FeatureFactory.createFeatureList( targetFeature, profileObjectsRelationType, new Feature[] {} );
 
-      final IProfileObject[] buildings = profile.getProfileObjects();
-      for( final IProfileObject profileObject : buildings )
+      final IFeatureType profileObjectType = featureType.getGMLSchema().getFeatureType( new QName( NS.OM, "Observation" ) ); //$NON-NLS-1$
+      final IRelationType profileObjectParentRelation = profileObjectList.getParentFeatureTypeProperty();
+
+      final IProfileObject[] profileObjects = profile.getProfileObjects();
+      for( final IProfileObject profileObject : profileObjects )
       {
-        final IFeatureType buildingType = featureType.getGMLSchema().getFeatureType( new QName( NS.OM, "Observation" ) ); //$NON-NLS-1$
-        final IRelationType buildingParentRelation = buildingList.getParentFeatureTypeProperty();
-        final Feature buildingFeature = targetFeature.getWorkspace().createFeature( targetFeature, buildingParentRelation, buildingType );
-        buildingList.add( buildingFeature );
-        final IObservation<TupleResult> buildingObs = ProfileFeatureFactory.observationFromBuilding( profileObject, buildingFeature );
-        final FeatureChange[] featureAsChanges = ObservationFeatureFactory.toFeatureAsChanges( buildingObs, buildingFeature );
+        final Feature profileObjectFeature = targetFeature.getWorkspace().createFeature( targetFeature, profileObjectParentRelation, profileObjectType );
+        profileObjectList.add( profileObjectFeature );
+
+        final IObservation<TupleResult> profileObjectObservation = ProfileFeatureFactory.observationFromBuilding( profileObject, profileObjectFeature );
+        final FeatureChange[] featureAsChanges = ObservationFeatureFactory.toFeatureAsChanges( profileObjectObservation, profileObjectFeature );
 
         Collections.addAll( changes, featureAsChanges );
       }
 
       /* Always to set the building, even if null */
-      changes.add( new FeatureChange( targetFeature, buildingRT, buildingList ) );
+      changes.add( new FeatureChange( targetFeature, profileObjectsRelationType, profileObjectList ) );
     }
     catch( final Exception e )
     {

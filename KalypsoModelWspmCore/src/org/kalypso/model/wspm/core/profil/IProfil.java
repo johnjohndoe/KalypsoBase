@@ -168,6 +168,11 @@ public interface IProfil extends IObservation<TupleResult>
   public IProfileObject[] getProfileObjects( );
 
   /**
+   * @return the current building(Tuhh) or other kind of ProfileObject, maybe null
+   */
+  public IProfileObject[] getProfileObjects( Class< ? > clazz );
+
+  /**
    * @param key
    * @return the value from internal HashMap<Object,Object>
    */

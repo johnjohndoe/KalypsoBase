@@ -454,11 +454,29 @@ public abstract class AbstractProfil implements IProfil
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfil#getProfileObject()
    */
-  // FIXME: separate profile objects from general profile-properties.
   @Override
   public IProfileObject[] getProfileObjects( )
   {
     return m_profileObjects.toArray( new IProfileObject[] {} );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfil#getProfileObject()
+   */
+  @Override
+  public IProfileObject[] getProfileObjects( final Class< ? > clazz )
+  {
+    final List<IProfileObject> objects = new ArrayList<IProfileObject>();
+    for( final IProfileObject object : m_profileObjects )
+    {
+      /** TODO *grummel* find a better instance of check */
+      if( object.getClass().equals( clazz ) )
+        objects.add( object );
+      else if( object.getClass().getSuperclass().equals( clazz ) )
+        objects.add( object );
+    }
+
+    return objects.toArray( new IProfileObject[] {} );
   }
 
   /**
