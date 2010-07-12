@@ -77,7 +77,6 @@ import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.IExpandableChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.view.IChartView;
-import de.openali.odysseus.chart.framework.view.TooltipHandler;
 import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
 
 /**
@@ -105,8 +104,8 @@ public class TuhhProfilChartView extends ViewPart implements IChartPart, IProfil
   private FormToolkit m_toolkit;
 
   private Form m_form;
-  
-  private IProfil m_profile=null;
+
+  private IProfil m_profile = null;
 
   @Override
   public void init( final IViewSite site ) throws PartInitException
@@ -126,13 +125,13 @@ public class TuhhProfilChartView extends ViewPart implements IChartPart, IProfil
     }
 
     if( m_provider != null )
-    {
       m_provider.removeProfilProviderListener( this );
-      m_provider = null;
-    }
+
     m_provider = adapter;
     if( m_provider != null )
       m_provider.addProfilProviderListener( this );
+
+    onProfilProviderChanged( m_provider, null, m_provider == null ? null : m_provider.getProfil() );
   }
 
   /**
@@ -160,12 +159,11 @@ public class TuhhProfilChartView extends ViewPart implements IChartPart, IProfil
   public void onProfilProviderChanged( final IProfilProvider provider, final IProfil oldProfile, final IProfil newProfile )
   {
     setPartNames( Messages.getString( "org.kalypso.model.wspm.ui.view.AbstractProfilViewPart_1" ), Messages.getString( "org.kalypso.model.wspm.ui.view.AbstractProfilViewPart_2" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-    Object result = provider.getResult();
     final IChartModel oldModel = m_chartComposite.getChartModel();
-    if (m_profile!=null&&oldModel instanceof ProfilChartModel)
-      m_profile.removeProfilListener( (ProfilChartModel)oldModel );
-    final ProfilChartModel newModel = newProfile == null ? null : new ProfilChartModel( newProfile, result );
-
+    if( m_profile != null && oldModel instanceof ProfilChartModel )
+      m_profile.removeProfilListener( (ProfilChartModel) oldModel );
+    m_profile = newProfile;
+    final ProfilChartModel newModel = newProfile == null ? null : new ProfilChartModel( newProfile, provider.getResult() );
 
     String activeLayerId = null;
     List<Object> positions = null;
@@ -360,7 +358,7 @@ public class TuhhProfilChartView extends ViewPart implements IChartPart, IProfil
       m_chartComposite = new ChartComposite( m_form.getBody(), parent.getStyle(), null, new RGB( 255, 255, 255 ) );
       m_axisDragHandler = new AxisDragHandlerDelegate( m_chartComposite );
       m_plotDragHandler = new PlotDragHandlerDelegate( m_chartComposite );
- 
+
     }
     return m_chartComposite;
   }
