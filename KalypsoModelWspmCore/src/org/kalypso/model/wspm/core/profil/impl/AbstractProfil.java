@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil.impl;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -464,19 +465,20 @@ public abstract class AbstractProfil implements IProfil
    * @see org.kalypso.model.wspm.core.profil.IProfil#getProfileObject()
    */
   @Override
-  public IProfileObject[] getProfileObjects( final Class< ? > clazz )
+  public <T extends IProfileObject> T[] getProfileObjects( final Class<T> clazz )
   {
-    final List<IProfileObject> objects = new ArrayList<IProfileObject>();
+    final List<T> objects = new ArrayList<T>();
     for( final IProfileObject object : m_profileObjects )
     {
-      /** TODO *grummel* find a better instance of check */
-      if( object.getClass().equals( clazz ) )
-        objects.add( object );
-      else if( object.getClass().getSuperclass().equals( clazz ) )
-        objects.add( object );
+      if( clazz.isInstance( object ) )
+        objects.add( (T) object );
     }
 
-    return objects.toArray( new IProfileObject[] {} );
+    final T[] array = (T[]) Array.newInstance( clazz, objects.size() );
+    for( int i = 0; i < objects.size(); i++ )
+      array[i] = objects.get( i );
+
+    return array;
   }
 
   /**
