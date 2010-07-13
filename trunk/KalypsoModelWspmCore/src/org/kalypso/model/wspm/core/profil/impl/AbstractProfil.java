@@ -474,11 +474,7 @@ public abstract class AbstractProfil implements IProfil
         objects.add( (T) object );
     }
 
-    final T[] array = (T[]) Array.newInstance( clazz, objects.size() );
-    for( int i = 0; i < objects.size(); i++ )
-      array[i] = objects.get( i );
-
-    return array;
+    return objects.toArray( (T[]) Array.newInstance( clazz, objects.size() ) );
   }
 
   /**
