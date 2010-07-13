@@ -42,7 +42,10 @@ package org.kalypso.model.wspm.core.profil.changes;
 
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
+import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.IRecord;
+import org.kalypso.observation.result.TupleResult;
 
 public class ProfileObjectEdit implements IProfilChange
 {
@@ -69,9 +72,22 @@ public class ProfileObjectEdit implements IProfilChange
     if( hint != null )
       hint.setObjectDataChanged();
 
-    final Object oldValue = m_object.getValue( m_property );
-    m_object.setValue( m_property, m_newValue );
-    return new ProfileObjectEdit( m_object, m_property, oldValue );
+    // FIXME at the moment we can only one value of the profile object tuple result
+    final IObservation<TupleResult> observation = m_object.getObservation();
+    final TupleResult result = observation.getResult();
+
+    if( result.size() > 0 )
+    {
+      final IRecord record = result.get( 0 );
+
+      final Object oldValue = record.getValue( m_property );
+      record.setValue( m_property, m_newValue );
+
+      return new ProfileObjectEdit( m_object, m_property, oldValue );
+    }
+
+    return null;
+
   }
 
   /**

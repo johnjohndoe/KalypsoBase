@@ -223,7 +223,7 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider impl
         if( hint.isObjectChanged() || hint.isObjectDataChanged() || hint.isMarkerDataChanged() || hint.isMarkerMoved() || hint.isPointPropertiesChanged() || hint.isPointsChanged()
             || hint.isPointValuesChanged() || hint.isProfilPropertyChanged() )
         {
-          final FeatureChange[] featureChanges = ProfileFeatureFactory.getFeatureChanges( m_profile, m_feature );
+          final FeatureChange[] featureChanges = ProfileFeatureFactory.toFeatureAsChanges( m_profile, m_feature );
 
           final ChangeFeaturesCommand command = new ChangeFeaturesCommand( m_feature.getWorkspace(), featureChanges );
           m_lockNextModelChange = true;
@@ -310,7 +310,7 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider impl
     setProfile( profileMember, workspace, result );
   }
 
-  private void setProfile( final IProfileFeature feature, final CommandableWorkspace workspace, Object result )
+  private void setProfile( final IProfileFeature feature, final CommandableWorkspace workspace, final Object result )
   {
     final IProfil oldProfile = m_profile;
 
