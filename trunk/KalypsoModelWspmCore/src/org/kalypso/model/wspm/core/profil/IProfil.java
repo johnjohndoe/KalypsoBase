@@ -90,8 +90,6 @@ public interface IProfil extends IObservation<TupleResult>
 
   public void removeProfilListener( final IProfilListener pl );
 
-  public void createProfileObjects( IObservation<TupleResult>[] profileObjects );
-
   /**
    * @return a valid profilPoint, addable to this profile
    * @see #addPoint(IRecord)

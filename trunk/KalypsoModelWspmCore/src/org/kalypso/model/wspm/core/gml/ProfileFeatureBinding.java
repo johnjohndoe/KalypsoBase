@@ -14,7 +14,9 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.ProfilFactory;
+import org.kalypso.model.wspm.core.profil.ProfileObjectFactory;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.core.util.WspmGeometryUtilities;
 import org.kalypso.observation.IObservation;
@@ -240,13 +242,15 @@ public class ProfileFeatureBinding extends AbstractCachedFeature2 implements IPr
       profil.setProperty( IWspmConstants.PROFIL_PROPERT_WATERBODY_SRC, waterBody.getId() );
     }
 
-    /* building of profile */
+    /* profile objects of profile */
     // REMARK: handle buildings before table, because the setBuilding method resets the
     // corresponding table properties.
     final IObservation<TupleResult>[] profileObjects = getProfileObjects();
-    if( profileObjects.length > 0 )
+    for( final IObservation<TupleResult> obs : profileObjects )
     {
-      profil.createProfileObjects( profileObjects );
+      final IProfileObject profileObject = ProfileObjectFactory.createProfileObject( profil, obs );
+      if( profileObject != null )
+        profil.addProfileObjects( profileObject );
     }
 
     return profil;
