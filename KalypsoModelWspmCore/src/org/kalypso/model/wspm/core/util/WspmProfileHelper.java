@@ -478,14 +478,20 @@ public class WspmProfileHelper
     int count = 0;
     for( final IRecord point : points )
     {
-      final double x = (Double) point.getValue( xIndex );
-      final double y = (Double) point.getValue( yIndex );
+      final Object valueX = point.getValue( xIndex );
+      final Object valueY = point.getValue( yIndex );
 
-      if( Math.abs( y ) > dy )
+      if( valueX instanceof Number && valueY instanceof Number )
       {
-        xValues[count] = x;
-        yValues[count] = y;
-        count++;
+        final double x = ((Number) valueX).doubleValue();
+        final double y = ((Number) valueY).doubleValue();
+
+        if( Math.abs( y ) > dy )
+        {
+          xValues[count] = x;
+          yValues[count] = y;
+          count++;
+        }
       }
     }
 
