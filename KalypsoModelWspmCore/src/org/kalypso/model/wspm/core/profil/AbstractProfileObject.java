@@ -54,6 +54,27 @@ import org.kalypso.observation.result.TupleResult;
  */
 public abstract class AbstractProfileObject implements IProfileObject
 {
+  private final IProfil m_profile;
+
+  private final IObservation<TupleResult> m_observation;
+
+  protected AbstractProfileObject( final IProfil profile, final IObservation<TupleResult> observation )
+  {
+    m_profile = profile;
+    m_observation = observation;
+  }
+
+  protected IProfil getProfile( )
+  {
+    return m_profile;
+  }
+
+  @Override
+  public IObservation<TupleResult> getObservation( )
+  {
+    return m_observation;
+  }
+
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfileObject#getObjectProperty(java.lang.String)
    */
@@ -71,35 +92,17 @@ public abstract class AbstractProfileObject implements IProfileObject
     return null;
   }
 
-  protected IProfil m_profil;
-
-  protected IObservation<TupleResult> m_observation;
-
-  protected void init( final IProfil profil, final IObservation<TupleResult> observation )
+  protected void init( )
   {
-
-    m_profil = profil;
-    m_observation = observation;
-
     for( final String id : getProfileProperties() )
     {
-
-      final IComponent property = profil.getPointPropertyFor( id );
-      if( !profil.hasPointProperty( property ) )
-        profil.addPointProperty( property );
+      final IComponent property = m_profile.getPointPropertyFor( id );
+      if( !m_profile.hasPointProperty( property ) )
+        m_profile.addPointProperty( property );
     }
   }
 
   protected abstract String[] getProfileProperties( );
-
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfileObject#getObservation()
-   */
-  @Override
-  public IObservation<TupleResult> getObservation( )
-  {
-    return m_observation;
-  }
 
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfileObject#getObjectProperties()
@@ -119,7 +122,7 @@ public abstract class AbstractProfileObject implements IProfileObject
     final List<IComponent> myProperties = new ArrayList<IComponent>();
     for( final String id : getProfileProperties() )
     {
-      final IComponent component = m_profil.hasPointProperty( id );
+      final IComponent component = m_profile.hasPointProperty( id );
       if( component != null )
         myProperties.add( component );
     }
@@ -127,7 +130,7 @@ public abstract class AbstractProfileObject implements IProfileObject
 
   }
 
-  protected IComponent createObjectProperty( final String id )
+  protected static IComponent createObjectProperty( final String id )
   {
     return ProfilUtil.getFeatureComponent( id );
   }

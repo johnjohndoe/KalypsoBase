@@ -48,7 +48,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
@@ -66,7 +65,6 @@ import org.kalypso.model.wspm.core.profil.MarkerIndex;
 import org.kalypso.model.wspm.core.profil.changes.ActiveObjectEdit;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.impl.marker.PointMarker;
-import org.kalypso.observation.IObservation;
 import org.kalypso.observation.phenomenon.IPhenomenon;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
@@ -181,19 +179,6 @@ public abstract class AbstractProfil implements IProfil
   public void addProfilListener( final IProfilListener pl )
   {
     m_listeners.add( pl );
-  }
-
-  /**
-   * @see 
-   *      org.kalypso.model.wspm.core.profil.IProfil#createProfileObjects(org.kalypso.observation.IObservation<org.kalypso
-   *      .observation.result.TupleResult>[]) override this method if you have got the
-   *      org.kalypso.model.wspm.core.profil.IProfileObjectProvider for your m_type
-   */
-  @Override
-  public void createProfileObjects( final IObservation<TupleResult>[] profileObjects )
-  {
-    throw new NotImplementedException();
-
   }
 
   /**

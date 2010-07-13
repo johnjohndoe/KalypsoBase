@@ -16,6 +16,7 @@ import org.kalypso.model.wspm.core.gml.IProfileFeatureProvider;
 import org.kalypso.model.wspm.core.i18n.Messages;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider;
 import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
+import org.kalypso.model.wspm.core.profil.IProfileObjectProvider;
 import org.kalypso.model.wspm.core.profil.ProfileType;
 import org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter;
 import org.kalypso.model.wspm.core.profil.reparator.IProfilMarkerResolution;
@@ -32,6 +33,8 @@ public class KalypsoModelWspmCoreExtensions
   private static Map<String, List<IProfilPointMarkerProvider>> THE_MARKER_PROVIDER_MAP = null;
 
   private static Map<String, ProfileType> THE_PROFILE_TYPE_MAP = null;
+
+  private static Map<String, IProfileObjectProvider> PROFILE_OBJECT_PROVIDER = null;
 
 // private static Map<String, List<IProfileObjectProvider>> THE_OBJECT_PROVIDER_MAP = null;
 
@@ -343,4 +346,42 @@ public class KalypsoModelWspmCoreExtensions
 
     return THE_PROFILE_TYPE_MAP;
   }
+
+  public static IProfileObjectProvider getProfileObjectProvider( final String providerId )
+  {
+    final Map<String, IProfileObjectProvider> map = getProfileObjectProviders();
+    final IProfileObjectProvider provider = map.get( providerId );
+
+    return provider;
+  }
+
+  private static synchronized Map<String, IProfileObjectProvider> getProfileObjectProviders( )
+  {
+    if( PROFILE_OBJECT_PROVIDER != null )
+      return PROFILE_OBJECT_PROVIDER;
+
+    // TODO: hashing this map is not robust against registry changes; listen to extension registry and clear the map if
+    // necessary
+    PROFILE_OBJECT_PROVIDER = new HashMap<String, IProfileObjectProvider>();
+
+    final IExtensionRegistry registry = Platform.getExtensionRegistry();
+    final IConfigurationElement[] propertyProvider = registry.getConfigurationElementsFor( "org.kalypso.model.wspm.core.profileObjectProvider" ); //$NON-NLS-1$
+    for( final IConfigurationElement configurationElement : propertyProvider )
+    {
+      try
+      {
+        final String id = configurationElement.getAttribute( "id" ); //$NON-NLS-1$
+        final IProfileObjectProvider provider = (IProfileObjectProvider) configurationElement.createExecutableExtension( "provider" ); //$NON-NLS-1$
+
+        PROFILE_OBJECT_PROVIDER.put( id, provider );
+      }
+      catch( final CoreException e )
+      {
+        KalypsoModelWspmCorePlugin.getDefault().getLog().log( e.getStatus() );
+      }
+    }
+
+    return PROFILE_OBJECT_PROVIDER;
+  }
+
 }
