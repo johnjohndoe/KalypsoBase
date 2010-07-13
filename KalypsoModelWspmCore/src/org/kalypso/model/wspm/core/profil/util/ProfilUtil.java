@@ -50,8 +50,6 @@ import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.math.LinearEquation;
 import org.kalypso.commons.math.LinearEquation.SameXValuesException;
 import org.kalypso.contribs.java.util.Arrays;
@@ -59,13 +57,11 @@ import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.deegree.binding.gml.Definition;
 import org.kalypso.deegree.binding.gml.Dictionary;
 import org.kalypso.model.wspm.core.IWspmConstants;
-import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.i18n.Messages;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
-import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.IllegalProfileOperationException;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
@@ -182,27 +178,6 @@ public class ProfilUtil
       return ((Number) oValue).doubleValue();
 
     return Double.NaN;
-  }
-
-  public static double getDoubleValueFor( final String componentID, final IProfileObject building )
-  {
-    final IComponent property = building.getObjectProperty( componentID );
-
-    try
-    {
-      final Object value = building.getValue( property );
-      if( value == null )
-        return Double.NaN;
-      if( value instanceof Double )
-        return (Double) value;
-      return Double.NaN;
-    }
-    catch( final IllegalArgumentException e )
-    {
-      KalypsoModelWspmCorePlugin.getDefault().getLog().log( new Status( IStatus.ERROR, componentID, e.getLocalizedMessage(), null ) );
-      return Double.NaN;
-    }
-
   }
 
   public final static boolean RangeIsConstantNumberFor( final IRecord start, final IRecord end, final IComponent component )
