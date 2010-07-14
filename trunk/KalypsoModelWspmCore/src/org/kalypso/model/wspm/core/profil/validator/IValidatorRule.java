@@ -44,7 +44,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IExecutableExtension;
 import org.kalypso.model.wspm.core.profil.IProfil;
 
-
 public interface IValidatorRule extends IExecutableExtension
 {
   /**
@@ -52,12 +51,11 @@ public interface IValidatorRule extends IExecutableExtension
    * 
    * @throws CoreException
    */
-  public void validate( final IProfil profil, final IValidatorMarkerCollector helper )
-      throws CoreException;
-  
-  public String getID();
-  
-  public String getDescription();
-  
-  public String getType();
+  void validate( final IProfil profil, final IValidatorMarkerCollector helper ) throws CoreException;
+
+  String getID( );
+
+  String getDescription( );
+
+  String getType( );
 }
