@@ -57,7 +57,7 @@ public interface IProfilPointMarker
 
   /**
    * @param newPosition
-   *            new profile point
+   *          new profile point
    * @return returns old mapped profile point
    */
   IRecord setPoint( IRecord newPosition );
@@ -67,8 +67,8 @@ public interface IProfilPointMarker
   Object getValue( );
 
   /* Interpreted ui values to obtain backward compability */
-  public Object getIntepretedValue( );
+  Object getIntepretedValue( );
 
-  public void setInterpretedValue( Object value );
+  void setInterpretedValue( Object value );
 
 }
