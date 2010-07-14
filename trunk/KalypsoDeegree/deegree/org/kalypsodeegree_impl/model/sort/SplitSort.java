@@ -68,6 +68,9 @@ public class SplitSort implements FeatureList
 {
   private final List<Object> m_items = new ArrayList<Object>();
 
+  /** Invalid objects, will be placed into the index when it is accessed next time. */
+  private final List<Object> m_invalidObjects = new LinkedList<Object>();
+
   private final Feature m_parentFeature;
 
   private final IRelationType m_parentFeatureTypeProperty;
@@ -157,6 +160,18 @@ public class SplitSort implements FeatureList
           m_index.insert( env, item );
         }
       }
+    }
+
+    /* Add previously invalid objects into index */
+    synchronized( this )
+    {
+      for( final Object item : m_invalidObjects )
+      {
+        final Envelope envelope = getEnvelope( item );
+        m_index.insert( envelope, item );
+      }
+
+      m_invalidObjects.clear();
     }
   }
 
@@ -355,7 +370,8 @@ public class SplitSort implements FeatureList
     {
       final Object removedItem = m_items.remove( index );
       if( m_index != null )
-    	// FIXME: We remove with null envelope here, else we would break the synchronized code by calling getEnvelope() here
+        // FIXME: We remove with null envelope here, else we would break the synchronized code by calling getEnvelope()
+// here
         m_index.remove( null, removedItem );
       return removedItem;
     }
@@ -498,7 +514,8 @@ public class SplitSort implements FeatureList
   }
 
   /**
-   *  SLOW: TODO: better comment, make deprecated in interface! FAST TODO: check the comments
+   * SLOW: TODO: better comment, make deprecated in interface! FAST TODO: check the comments
+   * 
    * @see java.util.List#removeAll(java.util.Collection)
    */
   @Override
@@ -516,12 +533,12 @@ public class SplitSort implements FeatureList
       }
       result = m_items.removeAll( c );
     }
-    
+
     // VERY SLOW! removes elements from ArrayList one by one
     // which causes re-creation and copying of the whole array every time
-//    boolean result = false;
-//    for( final Object object : c )
-//      result |= remove( object );
+// boolean result = false;
+// for( final Object object : c )
+// result |= remove( object );
 
     return result;
   }
@@ -703,10 +720,13 @@ public class SplitSort implements FeatureList
     {
       if( m_index != null )
       {
-        final Envelope envelope = getEnvelope( o );
         m_index.remove( null, o );
 
-        m_index.insert( envelope, o );
+        // TODO: not nice: invalidating the object immediately causes the envelope to be recalulated
+        // This causes problems with cached geometries...
+        // It would be better, to put the element into a serparate list, and put them into
+        // the index when it is accessed
+        m_invalidObjects.add( o );
       }
     }
   }
