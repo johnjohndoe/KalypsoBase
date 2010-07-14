@@ -45,9 +45,6 @@ import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.TupleResult;
 
 /**
- * HACK: WSPM Buildings always consists of one IRecord-Set in TupleResult - so we have only getValue(comp) and
- * setValue(comp)
- * 
  * @author kimwerner
  */
 public interface IProfileObject
@@ -55,17 +52,17 @@ public interface IProfileObject
   /**
    * @return the ProfilePointProperties used by this Object
    */
-  public IComponent[] getPointProperties( );
+  IComponent[] getPointProperties( );
 
   /**
    * @return the keys this Object held as a key,value
    * @see getValueFor(key)
    */
-  public IComponent[] getObjectProperties( );
+  IComponent[] getObjectProperties( );
 
-  public IObservation<TupleResult> getObservation( );
+  IObservation<TupleResult> getObservation( );
 
-  public String getId( );
+  String getId( );
 
-  public IComponent getObjectProperty( final String componentId );
+  IComponent getObjectProperty( final String componentId );
 }
