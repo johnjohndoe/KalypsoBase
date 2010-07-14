@@ -170,9 +170,6 @@ public class ImageFeatureControl extends AbstractFeatureControl
   @Override
   public void updateControl( )
   {
-    final Image waitingImage = KalypsoGisPlugin.getImageProvider().getImage( ImageProvider.DESCRIPTORS.WAIT_LOADING_OBJ );
-    setImage( waitingImage, "Loading...", false );
-
     // must be a string property
     final String imgPath = getImagePath();
 
@@ -225,10 +222,10 @@ public class ImageFeatureControl extends AbstractFeatureControl
 
   private void updateImageUrl( final URL url )
   {
+//    System.out.println( "Update image: " + url );
+
     if( ObjectUtils.equals( m_imageUrl, url ) )
       return;
-
-    System.out.println( "Setting image: " + url );
 
     m_imageUrl = url;
     startImageJob( url );
@@ -241,6 +238,9 @@ public class ImageFeatureControl extends AbstractFeatureControl
       @Override
       protected IStatus run( final IProgressMonitor monitor )
       {
+        final Image waitingImage = KalypsoGisPlugin.getImageProvider().getImage( ImageProvider.DESCRIPTORS.WAIT_LOADING_OBJ );
+        setImageInUIJob( waitingImage, "Loading...", false );
+
         final ImageDescriptor imgDesc = ImageDescriptor.createFromURL( url );
         final Image image = imgDesc.createImage( false );
         if( image == null )
@@ -255,6 +255,7 @@ public class ImageFeatureControl extends AbstractFeatureControl
         return Status.OK_STATUS;
       }
     };
+
     loadImageJob.setRule( m_mutex );
     loadImageJob.setSystem( true );
     loadImageJob.schedule();
