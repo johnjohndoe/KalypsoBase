@@ -49,7 +49,6 @@ import org.kalypso.observation.result.IRecord;
  */
 public class ProfilePointMarkerWrapper extends ProfilePointWrapper implements IProfilPointMarker
 {
-
   private final IProfilPointMarker m_marker;
 
   public ProfilePointMarkerWrapper( final IProfilPointMarker marker )
