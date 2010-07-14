@@ -288,6 +288,9 @@ public class CreateProfileDeviderWizard extends Wizard
       try
       {
         final GM_Point pointGeom = ProfileCacherFeaturePropertyFunction.convertPoint( profil, profilPoint, crs );
+        if( pointGeom == null )
+          continue;
+
         final Point geoPoint = (Point) JTSAdapter.export( pointGeom );
 
         for( final Point p : intersectionPoints )

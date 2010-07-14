@@ -40,6 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.wizard;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.xml.namespace.QName;
 
 import org.eclipse.jface.dialogs.IDialogSettings;
@@ -62,6 +67,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
+import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IPropertyTypeFilter;
@@ -101,24 +107,34 @@ public class CreateProfileDeviderPage extends WizardPage implements IUpdateable,
 
   public CreateProfileDeviderPage( final IKalypsoFeatureTheme profileTheme )
   {
-    super( "createProfileDeviderPage", Messages.getString("org.kalypso.model.wspm.ui.wizard.CreateProfileDeviderPage.3"), null ); //$NON-NLS-1$ //$NON-NLS-2$
+    super( "createProfileDeviderPage", Messages.getString( "org.kalypso.model.wspm.ui.wizard.CreateProfileDeviderPage.3" ), null ); //$NON-NLS-1$ //$NON-NLS-2$
 
     m_profileTheme = profileTheme;
 
-    setMessage( Messages.getString("org.kalypso.model.wspm.ui.wizard.CreateProfileDeviderPage.4") ); //$NON-NLS-1$
+    setMessage( Messages.getString( "org.kalypso.model.wspm.ui.wizard.CreateProfileDeviderPage.4" ) ); //$NON-NLS-1$
+
+    final Set<QName> validGeomProperties = new HashSet<QName>();
+    validGeomProperties.add( GMLConstants.QN_LINE_STRING );
+    validGeomProperties.add( GMLConstants.QN_MULTI_LINE_STRING );
+    validGeomProperties.add( GMLConstants.QN_CURVE );
+    validGeomProperties.add( GMLConstants.QN_MULTI_CURVE );
+    validGeomProperties.add( GMLConstants.QN_POLYGON );
+    validGeomProperties.add( GMLConstants.QN_MULTI_POLYGON );
 
     final IPropertyTypeFilter geoFilter = new IPropertyTypeFilter()
     {
       @Override
       public boolean accept( final IPropertyType pt )
       {
-        if( pt instanceof IValuePropertyType )
-        {
-          final QName valueQName = ((IValuePropertyType) pt).getValueQName();
-          return valueQName.equals( GMLConstants.QN_LINE_STRING ) || valueQName.equals( GMLConstants.QN_POLYGON ) || valueQName.equals( GMLConstants.QN_MULTI_LINE_STRING )
-              || valueQName.equals( GMLConstants.QN_MULTI_POLYGON );
-        }
-        return false;
+        if( !(pt instanceof IValuePropertyType) )
+          return false;
+
+        final IValuePropertyType pt2 = (IValuePropertyType) pt;
+        if( !pt2.isGeometry() )
+          return false;
+
+        final QName valueQName = pt2.getValueQName();
+        return validGeomProperties.contains( valueQName );
       }
     };
 
@@ -141,12 +157,12 @@ public class CreateProfileDeviderPage extends WizardPage implements IUpdateable,
     m_themeGroup.setDialogSettings( getDialogSettings() );
     final Group themeGroup = m_themeGroup.createControl( composite );
     themeGroup.setLayoutData( new GridData( SWT.FILL, SWT.BEGINNING, true, false ) );
-    themeGroup.setText( Messages.getString("org.kalypso.model.wspm.ui.wizard.CreateProfileDeviderPage.6") ); //$NON-NLS-1$
+    themeGroup.setText( Messages.getString( "org.kalypso.model.wspm.ui.wizard.CreateProfileDeviderPage.6" ) ); //$NON-NLS-1$
 
     /* Devider Group */
     final Group deviderGroup = createDeviderGroup( composite );
     deviderGroup.setLayoutData( new GridData( SWT.FILL, SWT.BEGINNING, true, false ) );
-    deviderGroup.setText( Messages.getString("org.kalypso.model.wspm.ui.wizard.CreateProfileDeviderPage.7") ); //$NON-NLS-1$
+    deviderGroup.setText( Messages.getString( "org.kalypso.model.wspm.ui.wizard.CreateProfileDeviderPage.7" ) ); //$NON-NLS-1$
 
     /* Options */
     createOptions( composite );
@@ -157,8 +173,8 @@ public class CreateProfileDeviderPage extends WizardPage implements IUpdateable,
   private void createOptions( final Composite composite )
   {
     final Button deleteExistingCheckbox = new Button( composite, SWT.CHECK );
-    deleteExistingCheckbox.setText( Messages.getString("org.kalypso.model.wspm.ui.wizard.CreateProfileDeviderPage.8") ); //$NON-NLS-1$
-    deleteExistingCheckbox.setToolTipText( Messages.getString("org.kalypso.model.wspm.ui.wizard.CreateProfileDeviderPage.9") ); //$NON-NLS-1$
+    deleteExistingCheckbox.setText( Messages.getString( "org.kalypso.model.wspm.ui.wizard.CreateProfileDeviderPage.8" ) ); //$NON-NLS-1$
+    deleteExistingCheckbox.setToolTipText( Messages.getString( "org.kalypso.model.wspm.ui.wizard.CreateProfileDeviderPage.9" ) ); //$NON-NLS-1$
     deleteExistingCheckbox.addSelectionListener( new SelectionAdapter()
     {
       /**
@@ -223,10 +239,12 @@ public class CreateProfileDeviderPage extends WizardPage implements IUpdateable,
     final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( type );
 
     final String[] markerTypes = provider.getPointProperties();
-    final IComponent[] markerComponents = new IComponent[markerTypes.length];
-    for( int i = 0; i < markerTypes.length; i++ )
-      markerComponents[i] = provider.getPointProperty( markerTypes[i] );
-
+    final Collection<IComponent> markerComponents = new ArrayList<IComponent>( markerTypes.length );
+    for( final String markerType : markerTypes )
+    {
+      if( provider.isMarker( markerType ) )
+        markerComponents.add( provider.getPointProperty( markerType ) );
+    }
     viewer.setInput( markerComponents );
 
     viewer.addSelectionChangedListener( new ISelectionChangedListener()
@@ -240,20 +258,31 @@ public class CreateProfileDeviderPage extends WizardPage implements IUpdateable,
       }
     } );
 
+    final IStructuredSelection initialSelection = getInitialSelection( markerComponents );
+    viewer.setSelection( initialSelection );
+
+    return group;
+  }
+
+  protected IStructuredSelection getInitialSelection( final Collection<IComponent> markerComponents )
+  {
     final IDialogSettings dialogSettings = getDialogSettings();
-    StructuredSelection deviderSelection = new StructuredSelection( markerComponents[0] );
-    if( dialogSettings != null )
+    if( dialogSettings == null )
+    {
+      if( markerComponents.size() > 0 )
+        return new StructuredSelection( markerComponents.iterator().next() );
+    }
+    else
     {
       final String typeName = dialogSettings.get( SETTINGS_DEVIDER );
       for( final IComponent component : markerComponents )
       {
         if( component.getId().equals( typeName ) )
-          deviderSelection = new StructuredSelection( component );
+          return new StructuredSelection( component );
       }
     }
-    viewer.setSelection( deviderSelection );
 
-    return group;
+    return StructuredSelection.EMPTY;
   }
 
   protected void handleDeviderChanged( final IComponent type )
@@ -301,11 +330,11 @@ public class CreateProfileDeviderPage extends WizardPage implements IUpdateable,
     setPageComplete( pageComplete );
 
     if( polygoneTheme == null )
-      setErrorMessage( Messages.getString("org.kalypso.model.wspm.ui.wizard.CreateProfileDeviderPage.11") ); //$NON-NLS-1$
+      setErrorMessage( Messages.getString( "org.kalypso.model.wspm.ui.wizard.CreateProfileDeviderPage.11" ) ); //$NON-NLS-1$
     else
     {
       setErrorMessage( null );
-      setMessage( Messages.getString("org.kalypso.model.wspm.ui.wizard.CreateProfileDeviderPage.12") ); //$NON-NLS-1$
+      setMessage( Messages.getString( "org.kalypso.model.wspm.ui.wizard.CreateProfileDeviderPage.12" ) ); //$NON-NLS-1$
     }
   }
 
@@ -321,6 +350,9 @@ public class CreateProfileDeviderPage extends WizardPage implements IUpdateable,
       final IFeatureType featureType = featureTheme.getFeatureType();
       if( featureType != null )
       {
+        if( GMLSchemaUtilities.substitutes( featureType, IProfileFeature.QN_PROFILE ) )
+          return false;
+
         final IPropertyType[] polygoneProperties = PropertyUtils.filterProperties( featureType, m_geoPd.filter );
         if( polygoneProperties.length > 0 )
           return true;
