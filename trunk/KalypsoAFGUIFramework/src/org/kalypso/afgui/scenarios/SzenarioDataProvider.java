@@ -9,8 +9,10 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.resources.IContainer;
@@ -68,11 +70,11 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
   {
     private final IPoolableObjectType m_key;
 
-    private final List<IScenarioDataListener> m_controller;
+    private final Set<IScenarioDataListener> m_controller;
 
     private final Class< ? extends IModel> m_modelClass;
 
-    public KeyPoolListener( final IPoolableObjectType key, final List<IScenarioDataListener> controller, final Class< ? extends IModel> modelClass )
+    public KeyPoolListener( final IPoolableObjectType key, final Set<IScenarioDataListener> controller, final Class< ? extends IModel> modelClass )
     {
       m_key = key;
       m_controller = controller;
@@ -169,7 +171,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
    */
   protected final Map<String, KeyPoolListener> m_keyMap = new HashMap<String, KeyPoolListener>();
 
-  private final List<IScenarioDataListener> m_controller = new ArrayList<IScenarioDataListener>();
+  private final Set<IScenarioDataListener> m_controller = new LinkedHashSet<IScenarioDataListener>();
 
   private IScenario m_scenario = null;
 
@@ -220,7 +222,11 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
     }
 
     fireCazeChanged( m_scenario );
+    setDataScope( m_scenario );
+  }
 
+  private void setDataScope( final IScenario scenario )
+  {
     if( scenario == null || m_dataSetScope == null )
       return;
 
@@ -260,7 +266,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
                 final String gmlLocation = entry.getModelPath();
 
                 /* @hack resolve "gloabal" gml file from parent scenario. */
-                final IFolder dataFolder = resolveFolder( (IScenario) scenario, gmlLocation );
+                final IFolder dataFolder = resolveFolder( scenario, gmlLocation );
                 if( dataFolder == null )
                 {
                   resetKeyForProject( scenario.getFolder(), id, wrapperClass, gmlLocation );
