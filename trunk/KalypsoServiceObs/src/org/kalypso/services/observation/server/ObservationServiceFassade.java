@@ -427,7 +427,7 @@ public class ObservationServiceFassade implements IObservationService, IDisposab
   @Override
   public final ItemBean findItem( final String id ) throws RepositoryException
   {
-    final IRepositoryItem item = m_repository.findItem( id );
+    final IRepositoryItem item = RepositoryUtils.findEquivalentItem( m_repository, id );
     if( item != null )
     {
       final Boolean modifyable = item instanceof IWriteableRepositoryItem;

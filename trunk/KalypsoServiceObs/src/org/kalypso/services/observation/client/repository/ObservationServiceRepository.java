@@ -80,12 +80,27 @@ public class ObservationServiceRepository extends AbstractRepository implements 
       throw new RepositoryException( "Could not find Repository Service" ); //$NON-NLS-1$
   }
 
+  /**
+   * @param id
+   *          differ between those kind of id's: <br>
+   *          kalypso-ocs:datastore://repos_id (Sachsen) and <br>
+   *          kalypso-ocs://repos_id (Sachsen-Anhalt)
+   */
   private String getServiceId( final String id ) throws RepositoryException
   {
-    if( !id.startsWith( ID_COLON ) )
-      throw new RepositoryException( String.format( "Unknown repository item id '%s'", id ) );
+    final String[] parts = id.split( "\\:" );
 
-    return id.substring( ID_COLON.length() );
+    // case: kalypso-ocs:datastore://repos_id
+    if( parts.length > 2 )
+    {
+      if( !id.startsWith( ID_COLON ) )
+        throw new RepositoryException( String.format( "Unknown repository item id '%s'", id ) );
+
+      return id.substring( ID_COLON.length() );
+    }
+    // case: kalypso-ocs://repos_id
+    else
+      return id;
   }
 
   private IObservationService getService( )
