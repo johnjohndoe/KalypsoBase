@@ -139,7 +139,6 @@ An extra feature was needed, as Kalypso only needs a subset of Eclipse Platform,
          fragment="true"
          unpack="false"/>
 
-
    <plugin
          id="org.eclipse.core.filesystem.nl_de"
          download-size="2994"
@@ -283,7 +282,6 @@ An extra feature was needed, as Kalypso only needs a subset of Eclipse Platform,
          version="0.0.0"
          fragment="true"
          unpack="false"/>
-
 
    <plugin
          id="org.eclipse.equinox.launcher.nl_de"
@@ -497,14 +495,6 @@ An extra feature was needed, as Kalypso only needs a subset of Eclipse Platform,
          id="org.eclipse.rcp.nl_de"
          download-size="1697"
          install-size="1697"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.sdk.nl_de"
-         download-size="2747"
-         install-size="2747"
          version="0.0.0"
          fragment="true"
          unpack="false"/>

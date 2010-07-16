@@ -7,7 +7,7 @@
       plugin="org.kalypso.base"
       image="kalypso_128.jpg">
 
-   <description>
+   <description url="http://www.sourceforge.net/projects/kalypsobase">
       %Feature.description
    </description>
 
@@ -21,8 +21,7 @@
 
    <includes
          id="org.eclipse.platform"
-         version="0.0.0"
-         search-location="both"/>
+         version="0.0.0"/>
 
    <includes
          id="org.kalypso.babel.nls_eclipse"
@@ -321,12 +320,6 @@
          install-size="0"
          version="0.0.0"
          unpack="false"/>
-
-   <plugin
-         id="org.eclipse.sdk"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
 
    <plugin
          id="org.kalypso.model.wspm.core"
