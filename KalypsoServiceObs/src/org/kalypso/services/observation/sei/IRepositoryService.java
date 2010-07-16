@@ -59,33 +59,34 @@ public interface IRepositoryService
    * @return true if the given parent has children.
    * @throws RemoteException
    */
-  public boolean hasChildren( final ItemBean parent ) throws RepositoryException;
+  boolean hasChildren( final ItemBean parent ) throws RepositoryException;
 
   /**
    * @param parent
    * @return the children of the given item (parent node). Returns an empty array when the parent has no children.
    * @throws RemoteException
    */
-  public ItemBean[] getChildren( final ItemBean parent ) throws RepositoryException;
+  ItemBean[] getChildren( final ItemBean parent ) throws RepositoryException;
 
   /**
    * @param id
    * @return ItemBean if found, else null.
    * @throws RemoteException
    */
-  public ItemBean findItem( final String id ) throws RepositoryException;
-  
-  public void makeItem( String identifier ) throws RepositoryException;
+  ItemBean findItem( final String id ) throws RepositoryException;
 
-  public void deleteItem( String identifier ) throws RepositoryException;
-  
-  public void setItemData( String identifier, Object serializable ) throws RepositoryException;
+  void makeItem( String identifier ) throws RepositoryException;
 
-  public void setItemName( String identifier, String name ) throws RepositoryException;
+  void deleteItem( String identifier ) throws RepositoryException;
+
+  void setItemData( String identifier, Object serializable ) throws RepositoryException;
+
+  void setItemName( String identifier, String name ) throws RepositoryException;
+
   /**
    * Forces the refresh of the remote repository.
    * 
    * @throws RemoteException
    */
-  public void reload() throws RepositoryException;
+  void reload( ) throws RepositoryException;
 }
