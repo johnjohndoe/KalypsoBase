@@ -136,14 +136,5 @@ public abstract class AbstractComponent implements IComponent
   {
     final String id = getId();
     return id.hashCode();
-// final QName valueTypeName = getValueTypeName();
-
-    // FIXME: equals is only using 'id', so we only use id for hashCode now... check if this always works....
-    // btw: valueTypeName should be alsways identical if we are using a component with the same id...
-// final HashCodeBuilder builder = new HashCodeBuilder();
-// builder.append( getId() );
-// builder.append( getValueTypeName() );
-//
-// return builder.toHashCode();
   }
 }
