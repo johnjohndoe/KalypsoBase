@@ -70,6 +70,10 @@ import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 
 public final class UnpackProjectTemplateOperation extends WorkspaceModifyOperation
 {
+  private static final String FILE_ABOUT_HTML = "about.html";
+
+  private static final String FILE_PROJECT = ".project";
+
   private final URL m_dataLocation;
 
   private final IProject m_project;
@@ -143,7 +147,7 @@ public final class UnpackProjectTemplateOperation extends WorkspaceModifyOperati
   {
     try
     {
-      final IFile projectResource = m_project.getFile( ".project" );
+      final IFile projectResource = m_project.getFile( FILE_PROJECT );
       final File projectFile = projectResource.getLocation().toFile();
 
       final String projectEncoding = projectResource.getCharset();
@@ -161,7 +165,6 @@ public final class UnpackProjectTemplateOperation extends WorkspaceModifyOperati
       final IStatus status = new Status( IStatus.ERROR, KalypsoAFGUIFrameworkPlugin.PLUGIN_ID, "Failed to write project name into .project file.", e );
       throw new CoreException( status );
     }
-
   }
 
   /**
@@ -245,5 +248,8 @@ public final class UnpackProjectTemplateOperation extends WorkspaceModifyOperati
       for( final File file : propertyFiles )
         file.delete();
     }
+
+    /* Purge the code licence, we only want it in the sources */
+    new File( destinationDir, FILE_ABOUT_HTML ).delete();
   }
 }
