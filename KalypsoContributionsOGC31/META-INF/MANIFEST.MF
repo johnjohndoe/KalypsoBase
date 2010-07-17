@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoOGCContributions Plug-in
 Bundle-SymbolicName: org.kalypso.contribs.ogc31; singleton:=true
 Bundle-Version: 2.2.0.qualifier
-Bundle-Vendor: kalypso.sourceforge.net
+Bundle-Vendor: kalypsobase.sourceforge.net
 Require-Bundle: org.junit;resolution:=optional,
  org.kalypso.commons;bundle-version="0.0.1"
 Bundle-ActivationPolicy: lazy

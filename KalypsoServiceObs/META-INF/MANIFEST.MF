@@ -4,7 +4,7 @@ Bundle-Name: KalypsoServiceObs
 Bundle-SymbolicName: org.kalypso.services.observation;singleton:=true
 Bundle-Version: 2.2.0.qualifier
 Bundle-Localization: plugin
-Bundle-Vendor: kalypso.sourceforge.net
+Bundle-Vendor: kalypsobase.sourceforge.net
 Require-Bundle: org.kalypso.contribs.java,
  org.kalypso.commons,
  org.kalypso.core,

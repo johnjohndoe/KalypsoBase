@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoDebugServlet Plug-in
 Bundle-SymbolicName: org.kalypso.debug.servlet;singleton:=true
 Bundle-Version: 2.2.0.qualifier
-Bundle-Vendor: kalypso.org
+Bundle-Vendor: kalypsobase.sourceforge.net
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.equinox.http.registry
 Bundle-ActivationPolicy: lazy

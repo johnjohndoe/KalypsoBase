@@ -4,7 +4,7 @@ Bundle-Name: KalypsoProjectDatabase Plug-in
 Bundle-SymbolicName: org.kalypso.project.database;singleton:=true
 Bundle-Version: 2.2.0.qualifier
 Bundle-Activator: org.kalypso.project.database.KalypsoProjectDatabase
-Bundle-Vendor: kalypso.sourceforge.net
+Bundle-Vendor: kalypsobase.sourceforge.net
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.equinox.http.registry,
  javax.servlet;bundle-version="2.4.0",

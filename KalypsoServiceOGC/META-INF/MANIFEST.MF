@@ -14,5 +14,5 @@ Export-Package: net.opengeospatial.ows,
  org.kalypso.service.ogc.interceptor
 Import-Package: javax.servlet,
  javax.servlet.http
-Bundle-Vendor: kalypso.sourceforge.net
+Bundle-Vendor: kalypsobase.sourceforge.net
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

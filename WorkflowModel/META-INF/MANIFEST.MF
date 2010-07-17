@@ -14,5 +14,5 @@ Export-Package: de.renew.workflow.base,
  de.renew.workflow.cases,
  de.renew.workflow.contexts
 Bundle-Activator: de.renew.workflow.base.WorkflowModelPlugin
-Bundle-Vendor: kalypso.sourceforge.net
+Bundle-Vendor: kalypsobase.sourceforge.net
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

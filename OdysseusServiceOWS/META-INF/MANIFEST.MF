@@ -14,5 +14,5 @@ Export-Package: de.openali.odysseus.service.ows.exception,
  de.openali.odysseus.service.ows.extension,
  de.openali.odysseus.service.ows.metadata,
  de.openali.odysseus.service.ows.request
-Bundle-Vendor: kalypso.sourceforge.net
+Bundle-Vendor: kalypsobase.sourceforge.net
 

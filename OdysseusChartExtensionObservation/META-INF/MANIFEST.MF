@@ -10,5 +10,5 @@ Export-Package: org.kalypso.chart.ext.observation.data,
  org.kalypso.chart.ext.observation.layer.provider,
  org.kalypso.chart.ext.observation.mapper,
  org.kalypso.chart.ext.observation.mapper.provider
-Bundle-Vendor: kalypso.sourceforge.net
+Bundle-Vendor: kalypsobase.sourceforge.net
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
