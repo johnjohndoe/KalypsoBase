@@ -61,7 +61,6 @@ import org.xml.sax.XMLReader;
  */
 public class LineStringContentHandlerTest extends TestCase
 {
-
   private final SAXParserFactory m_saxFactory = SAXParserFactory.newInstance();
   
   private static final GM_Position POSITION1 = GeometryFactory.createGM_Position( 0.0, 0.1, 0.2);

@@ -50,7 +50,7 @@ public interface AdapterBindingToValue
    *          the favored geometry class to return or <code>null</code> for default behaviour
    * @return a GM_Object or a GM_Envelope
    */
-  public Object wrapFromBinding( final Object bindingGeometry, final Class favoredGeometryClass ) throws GM_Exception;
+  public Object wrapFromBinding( final Object bindingGeometry, final Class<?> favoredGeometryClass ) throws GM_Exception;
 
   /**
    * @return a GM_Object or a GM_Envelope
