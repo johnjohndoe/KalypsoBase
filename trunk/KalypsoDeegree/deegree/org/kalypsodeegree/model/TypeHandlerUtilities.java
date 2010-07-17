@@ -251,23 +251,29 @@ public class TypeHandlerUtilities
     registry.registerTypeHandler( new GM_EnvelopeBindingTypeHandler( jaxbContextProvider, new QName( NS.GML3, "BoundingShapeType" ), GM_Envelope.class, false ) );
 
     // Geometries
+    // TODO: probably not needed, as soon as all geometries are parsed with sax: these are just properties pointing to a gm_object
     registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GMLConstants.QN_GEOMETRY, GMLConstants.QN_GEOMETRY, GM_Object.class, true ) );
+    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GMLConstants.QN_LOCATION, GMLConstants.QN_LOCATION, GM_Object.class, true ) );
+
+    // TODO: imeplements as sax handlers
+    // TODO: in adapter supported, but not yet implemented:
+    // - MultiSurface from MultiSurfaceTye
+    // - Surface from SurfaceTye
+    // - Surface from PolygonTye
     registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GMLConstants.QN_SURFACE, GMLConstants.QN_SURFACE, GM_Surface.class, true ) );
     registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GMLConstants.QN_POLYGON, GMLConstants.QN_POLYGON, GM_Surface.class, true ) );
-    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GMLConstants.QN_CURVE, GMLConstants.QN_CURVE, GM_Curve.class, true ) );
-    
-    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GMLConstants.QN_MULTI_CURVE, GMLConstants.QN_MULTI_CURVE, GM_MultiCurve.class, true ) );
     registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GMLConstants.QN_MULTI_POLYGON, GMLConstants.QN_MULTI_POLYGON, GM_MultiSurface.class, true ) );
-    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GMLConstants.QN_LOCATION, GMLConstants.QN_LOCATION, GM_Object.class, true ) );
     
-    //registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GMLConstants.QN_MULTI_LINE_STRING, GMLConstants.QN_MULTI_LINE_STRING, GM_MultiCurve.class, true ) );
-    //registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GMLConstants.QN_POINT, GMLConstants.QN_POINT, GM_Point.class, true ) );
-    //registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GMLConstants.QN_MULTI_POINT, GMLConstants.QN_MULTI_POINT, GM_MultiPoint.class, true ) );
-    //registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GMLConstants.QN_LINE_STRING, GMLConstants.QN_LINE_STRING, GM_Curve.class, true ) );
-    registry.registerTypeHandler( new MultiLineStringHandler() );
-    registry.registerTypeHandler( new LineStringHandler() );
-    registry.registerTypeHandler( new MultiPointHandler() );
+    // TODO: 'Curve' and 'MultiCurve' commented out, because we believe it did not work anyways...
+//    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GMLConstants.QN_CURVE, GMLConstants.QN_CURVE, GM_Curve.class, true ) );
+//    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GMLConstants.QN_MULTI_CURVE, GMLConstants.QN_MULTI_CURVE, GM_MultiCurve.class, true ) );
+        
     registry.registerTypeHandler( new PointHandler() );
+    registry.registerTypeHandler( new MultiPointHandler() );
+
+    registry.registerTypeHandler( new LineStringHandler() );
+    registry.registerTypeHandler( new MultiLineStringHandler() );
+    
     registry.registerTypeHandler( new TriangulatedSurfaceHandler() );
     registry.registerTypeHandler( new PolyhedralSurfaceHandler() );
     

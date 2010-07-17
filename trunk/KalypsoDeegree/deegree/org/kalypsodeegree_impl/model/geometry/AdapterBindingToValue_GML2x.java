@@ -124,7 +124,7 @@ public class AdapterBindingToValue_GML2x implements AdapterBindingToValue
   {
     final String co = getCS_CoordinateSystem( cs, multiPolygonType );
     final List<JAXBElement< ? extends GeometryAssociationType>> geometryMember = multiPolygonType.getGeometryMember();
-    final GM_Surface[] surfaces = new GM_Surface[geometryMember.size()];
+    final GM_Surface<?>[] surfaces = new GM_Surface[geometryMember.size()];
 
     int i = 0;
     for( final JAXBElement< ? extends GeometryAssociationType> element : geometryMember )
@@ -138,7 +138,7 @@ public class AdapterBindingToValue_GML2x implements AdapterBindingToValue
     return GeometryFactory.createGM_MultiSurface( surfaces, co );
   }
 
-  private GM_Surface createGM_Surface( final PolygonType polygonType, final String cs ) throws GM_Exception
+  private GM_Surface<?> createGM_Surface( final PolygonType polygonType, final String cs ) throws GM_Exception
   {
     final String co = getCS_CoordinateSystem( cs, polygonType );
     // outer...
@@ -279,14 +279,14 @@ public class AdapterBindingToValue_GML2x implements AdapterBindingToValue
    * @see org.kalypsodeegree_impl.model.geometry.IGMLBindingToValueAdapter#wrapFromBinding(java.lang.Object)
    */
   @Override
-  public Object wrapFromBinding( final Object bindingGeometry, final Class geometryClass ) throws GM_Exception
+  public Object wrapFromBinding( final Object bindingGeometry, final Class<?> geometryClass ) throws GM_Exception
   {
     if( bindingGeometry == null )
       return null;
+    
     if( bindingGeometry instanceof JAXBElement )
-    {
-      return wrapFromBinding( ((JAXBElement) bindingGeometry).getValue(), geometryClass );
-    }
+      return wrapFromBinding( ((JAXBElement<?>) bindingGeometry).getValue(), geometryClass );
+
     if( bindingGeometry instanceof AbstractGeometryType )
     {
       final AbstractGeometryType bindingTypeObject = (AbstractGeometryType) bindingGeometry;
@@ -296,12 +296,12 @@ public class AdapterBindingToValue_GML2x implements AdapterBindingToValue
 
       if( bindingTypeObject instanceof PolygonType )
       {
-        final GM_Surface surface = createGM_Surface( (PolygonType) bindingTypeObject, cs );
+        final GM_Surface<?> surface = createGM_Surface( (PolygonType) bindingTypeObject, cs );
         // if multisurface is expected but surface is provided, then we create a multisurface with this surface
         // inside.
         if( geometryClass == GeometryUtilities.getMultiPolygonClass() )
         {
-          final GM_Surface[] surfaces = new GM_Surface[] { surface };
+          final GM_Surface<?>[] surfaces = new GM_Surface[] { surface };
           return GeometryFactory.createGM_MultiSurface( surfaces, cs );
         }
         return surface;
@@ -309,10 +309,13 @@ public class AdapterBindingToValue_GML2x implements AdapterBindingToValue
 
       if( bindingTypeObject instanceof LineStringType )
         return createGM_LineString( (LineStringType) bindingTypeObject, cs );
+      
       if( bindingTypeObject instanceof MultiPolygonType )
         return createGM_MultiSurface( (MultiPolygonType) bindingTypeObject, cs );
+      
       if( bindingTypeObject instanceof MultiLineStringType )
         return createGM_MultiLineString( (MultiLineStringType) bindingTypeObject, cs );
+      
       if( bindingTypeObject instanceof MultiPointType )
         return createGM_MultiPoint( (MultiPointType) bindingTypeObject, cs );
     }

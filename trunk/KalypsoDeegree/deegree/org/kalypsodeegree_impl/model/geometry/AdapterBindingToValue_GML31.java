@@ -218,16 +218,16 @@ public class AdapterBindingToValue_GML31 implements AdapterBindingToValue
   {
     final String co = getCS_CoordinateSystem( cs, type );
     final List<PolygonPropertyType> polygonMember = type.getPolygonMember();
+    
     final GM_Surface<GM_SurfacePatch>[] surfaces = new GM_Surface[polygonMember.size()];
-    final Iterator<PolygonPropertyType> iterator = polygonMember.iterator();
     int i = 0;
-    while( iterator.hasNext() )
+    for( PolygonPropertyType polygonPropertyType : polygonMember )
     {
-      final PolygonPropertyType polyPropType = iterator.next();
-      final PolygonType polyType = polyPropType.getPolygon();
+      final PolygonType polyType = polygonPropertyType.getPolygon();
       surfaces[i] = createGM_Surface( polyType, co );
       i++;
     }
+    
     return GeometryFactory.createGM_MultiSurface( surfaces, co );
   }
 
@@ -491,51 +491,54 @@ public class AdapterBindingToValue_GML31 implements AdapterBindingToValue
    * @see org.kalypsodeegree_impl.model.geometry.IGMLBindingToValueAdapter#wrapFromBinding(java.lang.Object)
    */
   @Override
-  public Object wrapFromBinding( final Object bindingGeometry, final Class geometryClass ) throws GM_Exception
+  public Object wrapFromBinding( final Object bindingGeometry, final Class<?> geometryClass ) throws GM_Exception
   {
     if( bindingGeometry == null )
       return null;
-    else if( bindingGeometry instanceof JAXBElement )
-    {
-      return wrapFromBinding( ((JAXBElement) bindingGeometry).getValue(), geometryClass );
-    }
-    else if( bindingGeometry instanceof AbstractGeometryType )
+    
+    if( bindingGeometry instanceof JAXBElement )
+      return wrapFromBinding( ((JAXBElement<?>) bindingGeometry).getValue(), geometryClass );
+
+    if( bindingGeometry instanceof AbstractGeometryType )
     {
       final AbstractGeometryType bindingTypeObject = (AbstractGeometryType) bindingGeometry;
       final String cs = getCS_CoordinateSystem( null, bindingTypeObject );
+      
       if( bindingTypeObject instanceof PointType )
         return createGM_Point( (PointType) bindingTypeObject, cs );
-      else if( bindingTypeObject instanceof PolygonType )
+      
+      if( bindingTypeObject instanceof PolygonType )
       {
-        final GM_Surface surface = createGM_Surface( (PolygonType) bindingTypeObject, cs );
+        final GM_Surface<?> surface = createGM_Surface( (PolygonType) bindingTypeObject, cs );
         if( geometryClass == GeometryUtilities.getMultiPolygonClass() )
         {
-          final GM_Surface[] surfaces = new GM_Surface[] { surface };
+          final GM_Surface<?>[] surfaces = new GM_Surface[] { surface };
           return GeometryFactory.createGM_MultiSurface( surfaces, cs );
         }
         return surface;
       }
-      else if( bindingTypeObject instanceof SurfaceType )
-      {
-        final GM_Surface surface = createGM_Surface( (SurfaceType) bindingTypeObject, cs );
+      
+      if( bindingTypeObject instanceof SurfaceType )
+        return createGM_Surface( (SurfaceType) bindingTypeObject, cs );
 
-        return surface;
-      }
-      else if( bindingTypeObject instanceof LineStringType )
+      if( bindingTypeObject instanceof LineStringType )
         return createGM_LineString( (LineStringType) bindingTypeObject, cs );
-      else if( bindingTypeObject instanceof MultiPolygonType )
+      
+      if( bindingTypeObject instanceof MultiPolygonType )
         return createGM_MultiSurface( (MultiPolygonType) bindingTypeObject, cs );
-      else if( bindingTypeObject instanceof MultiLineStringType )
+      
+      if( bindingTypeObject instanceof MultiLineStringType )
         return createGM_MultiLineString( (MultiLineStringType) bindingTypeObject, cs );
-      else if( bindingTypeObject instanceof MultiPointType )
+      
+      if( bindingTypeObject instanceof MultiPointType )
         return createGM_MultiPoint( (MultiPointType) bindingTypeObject, cs );
-      else if( bindingTypeObject instanceof MultiSurfaceType )
+      
+      if( bindingTypeObject instanceof MultiSurfaceType )
         return createGM_MultiSurface( (MultiSurfaceType) bindingTypeObject, cs );
     }
-    else if( bindingGeometry instanceof EnvelopeType )
-    {
+    
+    if( bindingGeometry instanceof EnvelopeType )
       return createGM_Envelope( (EnvelopeType) bindingGeometry );
-    }
 
     throw new UnsupportedOperationException( bindingGeometry.getClass().getName() + " is not supported" );
   }
