@@ -6,7 +6,7 @@ Bundle-Version: 2.2.0.qualifier
 Bundle-ClassPath: lib/jargs.jar,
  .
 Bundle-Activator: org.kalypso.gml.processes.KalypsoGmlProcessesPlugin
-Bundle-Vendor: kalypso.sourceforge.net
+Bundle-Vendor: kalypsobase.sourceforge.net
 Require-Bundle: org.kalypso.simulation.core;visibility:=reexport,
  org.kalypso.deegree,
  org.kalypso.core,

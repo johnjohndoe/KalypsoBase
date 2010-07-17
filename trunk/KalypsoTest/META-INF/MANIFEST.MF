@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoTest
 Bundle-SymbolicName: org.kalypso.test
 Bundle-Version: 1.0.0
-Bundle-Vendor: kalypso.sourceforge.net
+Bundle-Vendor: kalypsobase.sourceforge.net
 Require-Bundle: org.junit4;bundle-version="4.5.0";resolution:=optional,
  org.kalypso.contribs.eclipseplatform,
  org.kalypso.contribs.eclipsercp,

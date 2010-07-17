@@ -4,7 +4,7 @@ Bundle-Name: KaylpsoAddLayer
 Bundle-SymbolicName: org.kalypso.ui.addlayer; singleton:=true
 Bundle-Version: 2.2.0.qualifier
 Bundle-Activator: org.kalypso.ui.KalypsoAddLayerPlugin
-Bundle-Vendor: kalypso.sourceforge.net
+Bundle-Vendor: kalypsobase.sourceforge.net
 Bundle-Localization: plugin
 Export-Package: org.kalypso.ui,
  org.kalypso.ui.action,

@@ -17,3 +17,4 @@ Bundle-ClassPath: lib/apache/mina/ftplet-api-1.0.4.jar,
 Export-Package: org.kalypso.ftp.service,
  org.kalypso.ftp.service.ftplet,
  org.kalypso.ftp.service.schema
+Bundle-Vendor: kalypsobase.sourceforge.net

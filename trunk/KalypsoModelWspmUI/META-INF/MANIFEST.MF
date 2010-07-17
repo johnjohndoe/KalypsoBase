@@ -4,7 +4,7 @@ Bundle-Name: %Bundle-Name.0
 Bundle-SymbolicName: org.kalypso.model.wspm.ui;singleton:=true
 Bundle-Version: 2.2.0.qualifier
 Bundle-Activator: org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin
-Bundle-Vendor: kalypso.sourceforge.net
+Bundle-Vendor: kalypsobase.sourceforge.net
 Bundle-Localization: plugin
 Require-Bundle: org.kalypso.ui,
  org.kalypso.featureview,

@@ -30,7 +30,7 @@ Bundle-ClassPath: .,
  lib/jaxb_2_1_7/jsr173_1.0_api.jar,
  lib/opencsv/opencsv-2.0.jar
 Bundle-Activator: org.kalypso.commons.KalypsoCommonsPlugin
-Bundle-Vendor: kalypso.sourceforge.net
+Bundle-Vendor: kalypsobase.sourceforge.net
 Bundle-Localization: plugin
 Export-Package: au.com.bytecode.opencsv,
  com.sun.xml.bind.marshaller,

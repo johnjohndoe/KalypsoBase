@@ -4,7 +4,7 @@ Bundle-Name: EclipsePlatformContributions Plug-in
 Bundle-SymbolicName: org.kalypso.contribs.eclipseplatform; singleton:=true
 Bundle-Version: 2.2.0.qualifier
 Bundle-Activator: org.kalypso.contribs.eclipse.EclipsePlatformContributionsPlugin
-Bundle-Vendor: kalypso.sourceforge.net
+Bundle-Vendor: kalypsobase.sourceforge.net
 Bundle-Localization: plugin
 Export-Package: org.kalypso.contribs.eclipse,
  org.kalypso.contribs.eclipse.compare,

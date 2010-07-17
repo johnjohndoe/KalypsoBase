@@ -4,7 +4,7 @@ Bundle-Name: KalypsoModelWspmSchema Plug-in
 Bundle-SymbolicName: org.kalypso.model.wspm.schema; singleton:=true
 Bundle-Version: 2.2.0.qualifier
 Bundle-Activator: org.kalypso.model.wspm.schema.KalypsoModelWspmSchemaPlugin
-Bundle-Vendor: kalypso.sourceforge.net
+Bundle-Vendor: kalypsobase.sourceforge.net
 Require-Bundle: org.kalypso.core;visibility:=reexport,
  org.kalypso.model.wspm.core;visibility:=reexport
 Bundle-ActivationPolicy: lazy

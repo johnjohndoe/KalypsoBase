@@ -4,7 +4,7 @@ Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: de.openali.odysseus.chart.ui;singleton:=true
 Bundle-Version: 2.2.0.qualifier
 Bundle-Activator: org.kalypso.chart.ui.KalypsoChartUiPlugin
-Bundle-Vendor: %Bundle-Vendor
+Bundle-Vendor: kalypsobase.sourceforge.net
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,

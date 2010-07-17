@@ -11,3 +11,4 @@ Bundle-Localization: plugin
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: org.kalypso.kml.export.KalypsoKMLPlugin
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-Vendor: kalypsobase.sourceforge.net
