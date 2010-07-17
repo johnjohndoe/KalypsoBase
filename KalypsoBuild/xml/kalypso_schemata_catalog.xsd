@@ -3,6 +3,7 @@
          "http://www.oasis-open.org/committees/entity/release/1.0/catalog.dtd">
 <catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="public">
 
+    <nextCatalog catalog="platform:/resource/KalypsoContributionsOGC31/src/org/kalypso/contribs/ogc31/schemata/catalog.xml"/>
     <nextCatalog catalog="platform:/resource/KalypsoCore/etc/schemas/catalog.xml"/>
 
     <nextCatalog catalog="platform:/resource/KalypsoHwvCore/etc/schemes/catalog.xml"/>
