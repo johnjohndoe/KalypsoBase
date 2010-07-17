@@ -6,4 +6,4 @@ Bundle-Localization: plugin
 Bundle-Version: 2.2.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.eclipse.ui.ide.application;bundle-version="1.0.0"
-Bundle-Vendor: %Plugin.providerName
+Bundle-Vendor: kalypsobase.sourceforge.net

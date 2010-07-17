@@ -2,21 +2,20 @@
 <feature
       id="org.kalypso.babel.nls_eclipse"
       label="KalypsoBaseBabelEclipseFeature"
-      version="2.2.0.qualifier"
-      provider-name="kalypso.sourceforge.net">
+      version="2.3.0.qualifier"
+      provider-name="kalypso.sourceforge.net"
+      plugin="org.kalypso.base">
 
-   <description url="">
-      This feature contains the german translation plug-ins of those eclipse plug-ins, Kalypso depends on.
-
-An extra feature was needed, as Kalypso only needs a subset of Eclipse Platform, but the official babel feature contain all its fragments.
+   <description url="http://www.sourceforge.net/projects/kalypsobase">
+      %Feature.description
    </description>
 
-   <copyright url="">
-      [Enter Copyright Description here.]
+   <copyright>
+      %Feature.copyright
    </copyright>
 
-   <license url="">
-      [Enter License Description here.]
+   <license url="%Feature.licenseURL">
+      %Feature.license
    </license>
 
    <plugin
