@@ -54,6 +54,7 @@ import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
 import org.kalypso.model.wspm.ui.view.IProfilView;
+import org.kalypso.observation.result.ComponentUtilities;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 
@@ -430,7 +431,8 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     try
     {
       final Point2D p = getPoint2D( point );
-      return String.format( TOOLTIP_FORMAT, new Object[] { getDomainComponent().getName(), p.getX(), getTargetComponent().getName(), p.getY(), getTargetComponent().getUnit() } );
+      return String.format( TOOLTIP_FORMAT, new Object[] { getDomainComponent().getName(), p.getX(), getTargetComponent().getName(), p.getY(),
+          ComponentUtilities.getComponentUnitLabel( getTargetComponent() ) } );
     }
     catch( final RuntimeException e )
     {

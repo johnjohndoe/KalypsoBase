@@ -606,7 +606,9 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
   public Color getColor( final double value )
   {
     if( value < m_min )
-      return null;
+      // return null;
+      // WRONG!! There is no minimum, as "quantity" defines the upper boundary value!
+      return m_colors.length > 0 ? m_colors[0] : null;
 
     if( value > m_max )
       return null;
