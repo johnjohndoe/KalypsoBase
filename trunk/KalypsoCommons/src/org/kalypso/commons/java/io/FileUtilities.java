@@ -683,6 +683,10 @@ public class FileUtilities
     final FileObject destDir = vfsManager.toFileObject( dest );
 
     final FileObject[] findFiles = source.findFiles( new AllFileSelector() );
+    // Might happen, if source does not exists... shouldn't we check this?
+    if( findFiles == null )
+      return;
+
     for( final FileObject fileObject : findFiles )
     {
       if( FileType.FILE.equals( fileObject.getType() ) )

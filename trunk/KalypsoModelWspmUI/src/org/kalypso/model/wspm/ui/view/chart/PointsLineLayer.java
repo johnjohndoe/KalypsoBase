@@ -52,6 +52,7 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
+import org.kalypso.observation.result.ComponentUtilities;
 import org.kalypso.observation.result.IRecord;
 
 import de.openali.odysseus.chart.framework.model.figure.IPaintable;
@@ -110,8 +111,7 @@ public class PointsLineLayer extends AbstractProfilLayer
 
     final Point2D point = toNumeric( newPoint );
     return new EditInfo( this, null, dragFigure, dragStartData.m_data, String.format( TOOLTIP_FORMAT, new Object[] { getDomainComponent().getName(), point.getX(), getTargetComponent().getName(),
-        point.getY(), getTargetComponent().getUnit() } ), dragStartData.m_pos );
-
+        point.getY(), ComponentUtilities.getComponentUnitLabel( getTargetComponent() ) } ), dragStartData.m_pos );
   }
 
   /**
