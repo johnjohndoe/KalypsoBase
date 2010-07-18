@@ -208,7 +208,8 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
     /* Release current models && reset state */
     reset();
 
-    synchronized( scenario )
+    // FIXME: this synchronized block is dubious! Probably, reset should be synchronized as well...
+    synchronized( this )
     {
       if( scenario != null )
       {
