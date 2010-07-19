@@ -57,9 +57,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer
   {
     final IPreferenceStore store = KalypsoModelWspmUIPlugin.getDefault().getPreferenceStore();
     store.setDefault( PreferenceConstants.P_ALLWAYSOPENTABLE, true );
-
     store.setDefault( PreferenceConstants.P_VALIDATE_PROFILE, true );
-
     store.setDefault( PreferenceConstants.P_VALIDATE_RULES_TO_EXCLUDE, "" ); //$NON-NLS-1$
   }
 }

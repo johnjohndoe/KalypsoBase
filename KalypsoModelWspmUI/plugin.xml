@@ -8,14 +8,6 @@
    <extension-point id="profilPointPropertyUiHandlerProvider" name="profilPointPropertyUiHandlerProvider" schema="schema/profilPointPropertyUiHandlerProvider.exsd"/>
    <extension-point id="chartProvider" name="chartProvider" schema="schema/chartProvider.exsd"/>
 
-        <extension
-           point="org.eclipse.ui.preferencePages">
-        <page
-              class="org.kalypso.model.wspm.ui.preferences.TablePreferencePage"
-              category="com.bce.profil.eclipse.preferences.ProfileditorPreferencePage"
-              name="%page.name.0"
-              id="org.kalypso.model.wspm.ui.preferences.TablePreferencePage"/>
-     </extension>
 
         <extension
            point="org.eclipse.core.runtime.preferences">
@@ -103,14 +95,21 @@
    <extension
            point="org.eclipse.ui.preferencePages">
         <page
-              class="org.kalypso.model.wspm.ui.preferences.ProfileditorPreferencePage"
-              name="%org.kalypso.model.wspm.ui.preferences.ProfileditorPreferencePage"
-              id="org.kalypso.model.wspm.ui.preferences.ProfileditorPreferencePage"/>
+              category="org.kalypso.ui.preferences.KalypsoPreferencePage"
+              class="org.kalypso.model.wspm.ui.preferences.KalypsoWspmPreferencePage"
+              id="org.kalypso.model.wspm.ui.preferences.KalypsoWspmPreferencePage"
+              name="%org.kalypso.model.wspm.ui.preferences.KalypsoWspmPreferencePage"/>
         <page
-              category="org.kalypso.model.wspm.ui.preferences.ProfileditorPreferencePage"
+              category="org.kalypso.model.wspm.ui.preferences.KalypsoWspmPreferencePage"
               class="org.kalypso.model.wspm.ui.preferences.ValidatorPreferencePage"
               id="org.kalypso.model.wspm.ui.preferences.ValidatorPreferencePage"
               name="%org.kalypso.model.wspm.ui.preferences.ValidatorPreferencePage"/>
+        <page
+              category="org.kalypso.model.wspm.ui.preferences.KalypsoWspmPreferencePage"
+              class="org.kalypso.model.wspm.ui.preferences.TablePreferencePage"
+              id="org.kalypso.model.wspm.ui.preferences.TablePreferencePage"
+              name="%page.name.0">
+        </page>
      </extension>
      <extension
            point="org.kalypso.model.wspm.ui.profilPointsSource">
