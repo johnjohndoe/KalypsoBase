@@ -11,8 +11,13 @@
 		<initializer class="org.kalypso.ui.preferences.KalypsoPreferenceInitializer"/>
 	</extension>
 	<extension id="preferencePages" name="preferencePages" point="org.eclipse.ui.preferencePages">
-		<page class="org.kalypso.ui.preferences.KalypsoPreferencePage" id="org.kalypso.ui.preferences.KalypsoPreferencePage" name="%org.kalypso.ui.preferences.KalypsoPreferencePage"/>
-		<page category="org.kalypso.ui.preferences.KalypsoPreferencePage" class="org.kalypso.ui.preferences.KalypsoScreenshotPreferencePage" id="org.kalypso.ui.preferncePages.Screenshot" name="%page.name.0"/>
+		<page class="org.eclipse.ui.internal.dialogs.EmptyPreferencePage" id="org.kalypso.ui.preferences.KalypsoPreferencePage" name="%org.kalypso.ui.preferences.KalypsoPreferencePage"/>
+  <page
+        category="org.kalypso.ui.preferences.KalypsoPreferencePage"
+        class="org.kalypso.ui.preferences.KalypsoGeneralPreferencePage"
+        id="org.kalypso.ui.preferences.KalypsoGeneralPreferencePage"
+        name="%org.kalypso.ui.preferences.KalypsoGeneralPreferencePage">
+  </page>
 	</extension>
 	<extension id="editors" name="editors" point="org.eclipse.ui.editors">
 		<editor class="org.kalypso.ui.editor.mapeditor.GisMapEditor" icon="icons/kalypso_gmt.gif" default="true"  name="%org.kalypso.ui.editor.mapeditor.GisMapEditor" id="org.kalypso.ui.editor.mapeditor.GisMapEditor" extensions="gmt">
@@ -1061,7 +1066,7 @@
 		<handler class="org.kalypso.ogc.gml.map.handlers.ZoomToSelectedFeatures" commandId="org.kalypso.ogc.gml.map.ZoomToSelectedFeaturesCommand"/>
 		<handler class="org.kalypso.ogc.gml.map.handlers.ZoomToSelectedFeaturesByLayer" commandId="org.kalypso.ogc.gml.map.ZoomToSelectedFeaturesByLayerCommand"/>
 		<handler class="org.kalypso.ogc.gml.map.handlers.PanToSelectedFeature" commandId="org.kalypso.ogc.gml.map.PanToSelectedFeatureCommand"/>
-		<handler class="org.kalypso.ogc.gml.map.handlers.MapScreenShotHandler" commandId="org.kalypso.ogc.gml.map.Screenshot"/>
+		<handler class="org.kalypso.ogc.gml.map.handlers.ScreenshotHandler" commandId="org.kalypso.ogc.gml.map.Screenshot"/>
 		<handler class="org.kalypso.ogc.gml.map.handlers.FullExtentHandler" commandId="org.kalypso.ogc.gml.map.FullExtentCommand"/>
 		<handler commandId="org.kalypso.ogc.gml.map.ThemeInfoCommand">
 			<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">

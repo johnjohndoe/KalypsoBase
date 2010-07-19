@@ -44,15 +44,12 @@ import java.util.Arrays;
 import java.util.TimeZone;
 
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
-import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.kalypso.contribs.eclipse.jface.preference.ComboStringFieldEditor;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.preferences.IKalypsoCorePreferences;
 import org.kalypso.i18n.Messages;
-import org.kalypso.preferences.IKalypsoDeegreePreferences;
-import org.kalypsodeegree.KalypsoDeegreePlugin;
 
 /**
  * This class represents a preference page that is contributed to the Preferences dialog. By subclassing
@@ -62,17 +59,15 @@ import org.kalypsodeegree.KalypsoDeegreePlugin;
  * This page is used to modify preferences only. They are stored in the preference store that belongs to the main
  * plug-in class. That way, preferences can be accessed directly via the preference store.
  */
-public class KalypsoPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage
+public class KalypsoGeneralPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage
 {
-  private StringFieldEditor m_sfeCrs;
-
   private ComboStringFieldEditor m_timeZoneFieldEditor;
 
-  public KalypsoPreferencePage( )
+  public KalypsoGeneralPreferencePage( )
   {
     super( GRID );
-    setPreferenceStore( KalypsoDeegreePlugin.getDefault().getPreferenceStore() );
-    setDescription( Messages.getString( "org.kalypso.ui.preferences.KalypsoPreferencePage.0" ) ); //$NON-NLS-1$
+    setPreferenceStore( KalypsoCorePlugin.getDefault().getPreferenceStore() );
+    setDescription( Messages.getString( "org.kalypso.ui.preferences.KalypsoGeneralPreferencePage.0" ) ); //$NON-NLS-1$
   }
 
   /**
@@ -82,17 +77,13 @@ public class KalypsoPreferencePage extends FieldEditorPreferencePage implements 
   @Override
   public void createFieldEditors( )
   {
-    m_sfeCrs = new StringFieldEditor( IKalypsoDeegreePreferences.DEFAULT_CRS_SETTING, Messages.getString( "org.kalypso.ui.preferences.KalypsoPreferencePage.1" ), getFieldEditorParent() ); //$NON-NLS-1$
-    addField( m_sfeCrs );
-    m_sfeCrs.getLabelControl( getFieldEditorParent() ).setToolTipText( "" ); // TODO tooltip angeben //$NON-NLS-1$
-
     // fetch list of timezone names and sort it
     final String[] ids = TimeZone.getAvailableIDs();
     Arrays.sort( ids );
 
     m_timeZoneFieldEditor = new ComboStringFieldEditor( IKalypsoCorePreferences.DISPLAY_TIMEZONE, //
-    Messages.getString( "org.kalypso.ui.preferences.KalypsoPreferencePage.3" ),//$NON-NLS-1$
-    Messages.getString( "org.kalypso.ui.preferences.KalypsoPreferencePage.4" ), getFieldEditorParent(), false, ids );//$NON-NLS-1$
+    Messages.getString( "org.kalypso.ui.preferences.KalypsoGeneralPreferencePage.3" ),//$NON-NLS-1$
+    Messages.getString( "org.kalypso.ui.preferences.KalypsoGeneralPreferencePage.4" ), getFieldEditorParent(), false, ids );//$NON-NLS-1$
     addField( m_timeZoneFieldEditor );
   }
 
@@ -104,9 +95,6 @@ public class KalypsoPreferencePage extends FieldEditorPreferencePage implements 
   {
     super.initialize();
 
-    m_sfeCrs.setPreferenceStore( KalypsoDeegreePlugin.getDefault().getPreferenceStore() );
-    m_sfeCrs.load();
-
     m_timeZoneFieldEditor.setPreferenceStore( KalypsoCorePlugin.getDefault().getPreferenceStore() );
     m_timeZoneFieldEditor.load();
   }
@@ -117,7 +105,6 @@ public class KalypsoPreferencePage extends FieldEditorPreferencePage implements 
   @Override
   public void init( final IWorkbench workbench )
   {
-    // empty
   }
 
   /**
@@ -128,9 +115,8 @@ public class KalypsoPreferencePage extends FieldEditorPreferencePage implements 
   {
     final boolean result = super.performOk();
 
-    // even if on shutdown the preferences are saved, we save them in case of a
-    // platfrom crash
-    KalypsoDeegreePlugin.getDefault().savePluginPreferences();
+    // even if on shutdown the preferences are saved, we save them in case of a platfrom crash
+    KalypsoCorePlugin.getDefault().savePluginPreferences();
 
     return result;
   }

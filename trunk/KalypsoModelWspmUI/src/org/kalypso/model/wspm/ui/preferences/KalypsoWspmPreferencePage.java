@@ -45,29 +45,30 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 
-
 /**
- * This class represents a preference page that is contributed to the
- * Preferences dialog. By subclassing <samp>FieldEditorPreferencePage </samp>,
- * we can use the field support built into JFace that allows us to create a page
- * that is small and knows how to save, restore and apply itself.
+ * This class represents a preference page that is contributed to the Preferences dialog. By subclassing
+ * <samp>FieldEditorPreferencePage </samp>, we can use the field support built into JFace that allows us to create a
+ * page that is small and knows how to save, restore and apply itself.
  * <p>
- * This page is used to modify preferences only. They are stored in the
- * preference store that belongs to the main plug-in class. That way,
- * preferences can be accessed directly via the preference store.
+ * This page is used to modify preferences only. They are stored in the preference store that belongs to the main
+ * plug-in class. That way, preferences can be accessed directly via the preference store.
  */
-public class ProfileditorPreferencePage extends FieldEditorPreferencePage
-    implements IWorkbenchPreferencePage
+public class KalypsoWspmPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage
 {
-
-  public ProfileditorPreferencePage( )
+  /**
+   * The constructor.
+   */
+  public KalypsoWspmPreferencePage( )
   {
     super( GRID );
+
     setPreferenceStore( KalypsoModelWspmUIPlugin.getDefault().getPreferenceStore() );
-    
-    setDescription( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.preferences.ProfileditorPreferencePage.0") ); //$NON-NLS-1$
+    setDescription( org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.preferences.KalypsoWspmPreferencePage.0" ) ); //$NON-NLS-1$
   }
 
+  /**
+   * @see org.eclipse.jface.preference.FieldEditorPreferencePage#createFieldEditors()
+   */
   @Override
   public void createFieldEditors( )
   {
@@ -79,6 +80,5 @@ public class ProfileditorPreferencePage extends FieldEditorPreferencePage
   @Override
   public void init( IWorkbench workbench )
   {
-    // nix zu tun
   }
 }

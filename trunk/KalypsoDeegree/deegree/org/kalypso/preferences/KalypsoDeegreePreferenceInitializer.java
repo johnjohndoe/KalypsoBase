@@ -41,6 +41,8 @@
 package org.kalypso.preferences;
 
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
+import org.eclipse.core.runtime.preferences.DefaultScope;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 
 /**
@@ -56,7 +58,14 @@ public class KalypsoDeegreePreferenceInitializer extends AbstractPreferenceIniti
   @Override
   public void initializeDefaultPreferences( )
   {
-    KalypsoDeegreePlugin.getDefault().getPluginPreferences().setDefault( IKalypsoDeegreePreferences.AVAILABLE_CRS_SETTING, IKalypsoDeegreePreferences.AVAILABLE_CRS_VALUE );
-    KalypsoDeegreePlugin.getDefault().getPluginPreferences().setDefault( IKalypsoDeegreePreferences.DEFAULT_CRS_SETTING, IKalypsoDeegreePreferences.DEFAULT_CRS_VALUE );
+    /* Get the default scope. */
+    DefaultScope defaultScope = new DefaultScope();
+
+    /* Get the node for the plugin. */
+    IEclipsePreferences defaultNode = defaultScope.getNode( KalypsoDeegreePlugin.getID() );
+
+    /* Put the defaults. */
+    defaultNode.put( IKalypsoDeegreePreferences.AVAILABLE_CRS_SETTING, IKalypsoDeegreePreferences.AVAILABLE_CRS_VALUE );
+    defaultNode.put( IKalypsoDeegreePreferences.DEFAULT_CRS_SETTING, IKalypsoDeegreePreferences.DEFAULT_CRS_VALUE );
   }
 }
