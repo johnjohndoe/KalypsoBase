@@ -550,6 +550,9 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     // HACK: use featureThemeInfo from KalypsoUI as a default. This is needed, because this feature info the
     // featureType-properties mechanisms from KalypsoUI in order find a registered featureThemeInfo for the current
     // qname
+
+    // TODO: we should use the feature type to determine a default infoId!
+
     final IKalypsoThemeInfo defaultFeatureThemeInfo = KalypsoCoreExtensions.createThemeInfo( "org.kalypso.ui.featureThemeInfo.default", this ); //$NON-NLS-1$
     if( defaultFeatureThemeInfo != null )
       return defaultFeatureThemeInfo;
