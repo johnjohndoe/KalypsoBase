@@ -90,7 +90,7 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
 import org.w3c.dom.Node;
 
 /**
- * factory class to wrap from binding geometries to GM_Object geometries and visa versa
+ * Factory class to wrap from binding geometries to GM_Object geometries and visa versa
  * 
  * @author doemming
  */
@@ -218,16 +218,16 @@ public class AdapterBindingToValue_GML31 implements AdapterBindingToValue
   {
     final String co = getCS_CoordinateSystem( cs, type );
     final List<PolygonPropertyType> polygonMember = type.getPolygonMember();
-    
+
     final GM_Surface<GM_SurfacePatch>[] surfaces = new GM_Surface[polygonMember.size()];
     int i = 0;
-    for( PolygonPropertyType polygonPropertyType : polygonMember )
+    for( final PolygonPropertyType polygonPropertyType : polygonMember )
     {
       final PolygonType polyType = polygonPropertyType.getPolygon();
       surfaces[i] = createGM_Surface( polyType, co );
       i++;
     }
-    
+
     return GeometryFactory.createGM_MultiSurface( surfaces, co );
   }
 
@@ -495,7 +495,7 @@ public class AdapterBindingToValue_GML31 implements AdapterBindingToValue
   {
     if( bindingGeometry == null )
       return null;
-    
+
     if( bindingGeometry instanceof JAXBElement )
       return wrapFromBinding( ((JAXBElement<?>) bindingGeometry).getValue(), geometryClass );
 
@@ -503,10 +503,10 @@ public class AdapterBindingToValue_GML31 implements AdapterBindingToValue
     {
       final AbstractGeometryType bindingTypeObject = (AbstractGeometryType) bindingGeometry;
       final String cs = getCS_CoordinateSystem( null, bindingTypeObject );
-      
+
       if( bindingTypeObject instanceof PointType )
         return createGM_Point( (PointType) bindingTypeObject, cs );
-      
+
       if( bindingTypeObject instanceof PolygonType )
       {
         final GM_Surface<?> surface = createGM_Surface( (PolygonType) bindingTypeObject, cs );
@@ -517,26 +517,26 @@ public class AdapterBindingToValue_GML31 implements AdapterBindingToValue
         }
         return surface;
       }
-      
+
       if( bindingTypeObject instanceof SurfaceType )
         return createGM_Surface( (SurfaceType) bindingTypeObject, cs );
 
       if( bindingTypeObject instanceof LineStringType )
         return createGM_LineString( (LineStringType) bindingTypeObject, cs );
-      
+
       if( bindingTypeObject instanceof MultiPolygonType )
         return createGM_MultiSurface( (MultiPolygonType) bindingTypeObject, cs );
-      
+
       if( bindingTypeObject instanceof MultiLineStringType )
         return createGM_MultiLineString( (MultiLineStringType) bindingTypeObject, cs );
-      
+
       if( bindingTypeObject instanceof MultiPointType )
         return createGM_MultiPoint( (MultiPointType) bindingTypeObject, cs );
-      
+
       if( bindingTypeObject instanceof MultiSurfaceType )
         return createGM_MultiSurface( (MultiSurfaceType) bindingTypeObject, cs );
     }
-    
+
     if( bindingGeometry instanceof EnvelopeType )
       return createGM_Envelope( (EnvelopeType) bindingGeometry );
 

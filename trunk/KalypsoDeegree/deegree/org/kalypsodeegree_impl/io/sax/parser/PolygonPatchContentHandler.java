@@ -63,41 +63,37 @@ public class PolygonPatchContentHandler extends GMLElementContentHandler impleme
   public static final String ELEMENT_POLYGON_PATCH = "PolygonPatch";
 
   private final IPolygonHandler m_polygonHandler;
-  
+
   private GM_Ring m_ring;
 
   public PolygonPatchContentHandler( final IPolygonHandler polygonHandler, final String defaultSrs, final XMLReader xmlReader )
   { 
     super( NS.GML3, ELEMENT_POLYGON_PATCH, xmlReader, defaultSrs, polygonHandler );
-    
+
     m_polygonHandler = polygonHandler;
   }  
-  
+
   /**
    * @see org.kalypsodeegree_impl.io.sax.GMLElementContentHandler#doEndElement(java.lang.String, java.lang.String, java.lang.String)
    */
   @Override
-  protected void doEndElement( String uri, String localName, String name ) throws SAXException
+  protected void doEndElement( final String uri, final String localName, final String name ) throws SAXException
   {
     if( m_ring == null)
-    {
       throw new SAXParseException( "Polygon contains no valid exterior.", m_locator );
-    }
-    
+
     if( m_ring.getPositions().length < 4 )
-    {
       throw new SAXParseException( "Polygon contains no enough coordinates.", m_locator );
-    }
-    
+
     final String crs = m_ring.getCoordinateSystem(); 
-    
+
     try
     {
       final GM_Polygon polygon = (GM_Polygon) GeometryFactory.createGM_SurfacePatch( m_ring, null, crs );
       m_ring = null;
       m_polygonHandler.handle( polygon );
     }
-    catch( GM_Exception e )
+    catch( final GM_Exception e )
     {
       e.printStackTrace();
 
@@ -109,18 +105,19 @@ public class PolygonPatchContentHandler extends GMLElementContentHandler impleme
    * @see org.kalypsodeegree_impl.io.sax.GMLElementContentHandler#doStartElement(java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
    */
   @Override
-  protected void doStartElement( String uri, String localName, String name, Attributes atts )
+  protected void doStartElement( final String uri, final String localName, final String name, final Attributes atts )
   {
-    ExteriorContentHandler exteriorContentHandler = new ExteriorContentHandler( this, m_defaultSrs, m_xmlReader );
+    // FIXME: Eeek! We need to support interior rings as well!
+    final ExteriorContentHandler exteriorContentHandler = new ExteriorContentHandler( this, m_defaultSrs, m_xmlReader );
     exteriorContentHandler.setElementMinOccurs( 0 );
     setDelegate( exteriorContentHandler );    
   }
-  
+
   /**
    * @see org.kalypsodeegree_impl.io.sax.IRingHandler#handleRing(org.kalypsodeegree.model.geometry.GM_Ring)
    */
   @Override
-  public void handle( GM_Ring ring )
+  public void handle( final GM_Ring ring )
   {
     m_ring = ring;
   }
