@@ -211,7 +211,7 @@
        point="org.eclipse.core.contenttype.contentTypes">
     <file-association
           content-type="org.eclipse.core.runtime.xml"
-          file-extensions="gml,gmt,gmv,gft,gtt,gmc,ott,odt,zml">
+          file-extensions="gml,gmt,gmv,gft,gtt,gmc,ott,odt,zml,sld">
     </file-association>
  </extension>
 
