@@ -59,7 +59,7 @@ import org.kalypso.observation.result.IRecord;
  * @author Holger Albert
  * @author Thomas Jung
  */
-public class DouglasPeuckerHelper
+public final class DouglasPeuckerHelper
 {
   private static final class ProfileSegmentData
   {
@@ -158,6 +158,10 @@ public class DouglasPeuckerHelper
    */
   public static IRecord[] reducePoints( final IRecord[] points, final IRecord[] pointsToKeep, final double allowedDistance )
   {
+    /* Cannot reduce 2 or less points */
+    if( points.length <= 2 )
+      return new IRecord[0];
+
     /* Reduce segment wise. */
     final Set<IRecord> pointsToKeepList = new HashSet<IRecord>( Arrays.asList( pointsToKeep ) );
     final List<IRecord> pointsToRemove = new ArrayList<IRecord>( points.length - 2 );

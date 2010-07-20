@@ -449,6 +449,7 @@ public abstract class AbstractProfil implements IProfil
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfil#getProfileObject()
    */
+  @SuppressWarnings("unchecked")
   @Override
   public <T extends IProfileObject> T[] getProfileObjects( final Class<T> clazz )
   {

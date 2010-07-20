@@ -48,11 +48,11 @@ import org.kalypso.observation.result.IRecord;
  */
 public interface IProfilePointFilter
 {
-  public String getId( );
+  String getId( );
 
-  public String getName( );
+  String getName( );
 
-  public String getDescription( );
+  String getDescription( );
 
-  public boolean accept( final IProfil profil, final IRecord point );
+  boolean accept( final IProfil profil, final IRecord point );
 }

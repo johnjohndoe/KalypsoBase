@@ -41,7 +41,6 @@
 package org.kalypso.model.wspm.core.profil.changes;
 
 import org.kalypso.model.wspm.core.profil.IProfilChange;
-import org.kalypso.model.wspm.core.profil.IllegalProfileOperationException;
 
 /**
  * @author Kim Werner
@@ -49,12 +48,11 @@ import org.kalypso.model.wspm.core.profil.IllegalProfileOperationException;
  */
 public class EmptyChange implements IProfilChange
 {
-
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilChange#doChange(org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint)
    */
   @Override
-  public IProfilChange doChange( final ProfilChangeHint hint ) throws IllegalProfileOperationException
+  public IProfilChange doChange( final ProfilChangeHint hint )
   {
     hint.setPointPropertiesChanged();
 
