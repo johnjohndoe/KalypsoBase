@@ -71,7 +71,7 @@ public class ProfilePointFilterComposite extends ListSelectionComposite implemen
   // Some commonly used i10n strings
   public static final String STR_GROUP_TEXT = Messages.getString( "org.kalypso.model.wspm.core.profil.filter.ProfilePointFilterComposite.0" ); //$NON-NLS-1$
 
-  private final static String SETTINGS_FILTER_IDS = "settings.filters.ids"; //$NON-NLS-1$
+  private static final String SETTINGS_FILTER_IDS = "settings.filters.ids"; //$NON-NLS-1$
 
   private static ILabelProvider LABEL_PROVIDER = new ProfilePointFilterLabelProvider();
 

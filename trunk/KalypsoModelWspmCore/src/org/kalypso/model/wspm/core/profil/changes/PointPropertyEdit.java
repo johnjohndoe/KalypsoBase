@@ -65,7 +65,7 @@ public final class PointPropertyEdit implements IProfilChange
     m_points = p;
     m_property = property;
     m_newValues = new Object[p.length];
-    Arrays.fill(m_newValues,newValue );
+    Arrays.fill( m_newValues, newValue );
   }
   public PointPropertyEdit( final IRecord[] points, final IComponent property, final Object[] newValues )
   {
@@ -95,7 +95,7 @@ public final class PointPropertyEdit implements IProfilChange
       oldValues[i] = point.getValue( index );
       point.setValue( index, i < m_newValues.length ? m_newValues[i] : Double.NaN,i < m_points.length-1 );
     }
-   
+
     return new PointPropertyEdit( m_points, m_property, oldValues );
   }
 
