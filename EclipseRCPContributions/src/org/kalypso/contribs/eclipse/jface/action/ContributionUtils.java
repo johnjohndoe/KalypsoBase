@@ -84,7 +84,8 @@ public class ContributionUtils
   {
     final ContributionManager conMgr = findContributionManager( contirbutionManager );
     final IMenuService menuService = (IMenuService) serviceLocator.getService( IMenuService.class );
-    menuService.populateContributionManager( conMgr, uri );
+    if( menuService != null )
+      menuService.populateContributionManager( conMgr, uri );
   }
 
   /**
