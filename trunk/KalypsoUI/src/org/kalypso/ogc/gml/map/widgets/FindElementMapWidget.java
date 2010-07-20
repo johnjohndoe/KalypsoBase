@@ -44,6 +44,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -186,6 +187,7 @@ public class FindElementMapWidget extends AbstractWidget implements IWidgetWithO
     m_mapPanel = getMapPanel();
     if( outlineView == null )
     {
+      m_themesAct = Arrays.asList( m_mapPanel.getMapModell().getAllThemes() );
       m_mapPanel.setMessage( Messages.getString( "org.kalypso.ogc.gml.map.widgets.FindElementMapWidget.1" ) ); //$NON-NLS-1$
       return;
     }
@@ -577,6 +579,8 @@ public class FindElementMapWidget extends AbstractWidget implements IWidgetWithO
     }
     else
     {
+      if( m_feature == null )
+        return;
       final GM_Object[] geometries = m_feature.getGeometryPropertyValues();
 
       if( geometries.length == 0 )
@@ -780,32 +784,33 @@ public class FindElementMapWidget extends AbstractWidget implements IWidgetWithO
   protected void doSearchOperation( )
   {
     m_boolIsSimple = checkInputs();
-    for( final IKalypsoTheme lTheme : m_themesAct )
-    {
-      if( lTheme instanceof IKalypsoCascadingTheme )
+    if( m_themesAct != null )
+      for( final IKalypsoTheme lTheme : m_themesAct )
       {
-        IKalypsoCascadingTheme lThemes = (IKalypsoCascadingTheme) lTheme;
-        for( int i = 0; i < lThemes.getAllThemes().length; i++ )
+        if( lTheme instanceof IKalypsoCascadingTheme )
         {
-          try
+          IKalypsoCascadingTheme lThemes = (IKalypsoCascadingTheme) lTheme;
+          for( int i = 0; i < lThemes.getAllThemes().length; i++ )
           {
-            findInTheme( lThemes.getAllThemes()[i] );
-          }
-          catch( Exception e )
-          {
-          }
+            try
+            {
+              findInTheme( lThemes.getAllThemes()[i] );
+            }
+            catch( Exception e )
+            {
+            }
 
+            if( m_boolFound && m_boolIsSimple )
+              break;
+          }
+        }
+        else
+        {
+          findInTheme( lTheme );
           if( m_boolFound && m_boolIsSimple )
             break;
         }
       }
-      else
-      {
-        findInTheme( lTheme );
-        if( m_boolFound && m_boolIsSimple )
-          break;
-      }
-    }
     try
     {
       showFound();
