@@ -68,13 +68,12 @@ public class PolyhedralSurfaceContentHandler extends GMLElementContentHandler im
   
   private final UnmarshallResultEater m_resultEater;
     
-  
-  public PolyhedralSurfaceContentHandler( final UnmarshallResultEater resultEater, XMLReader xmlReader )
+  public PolyhedralSurfaceContentHandler( final UnmarshallResultEater resultEater, final XMLReader xmlReader )
   {
     this( resultEater, null, xmlReader );
   }
   
-  public PolyhedralSurfaceContentHandler( UnmarshallResultEater resultEater, ContentHandler parentContentHandler, XMLReader xmlReader )
+  public PolyhedralSurfaceContentHandler( final UnmarshallResultEater resultEater, final ContentHandler parentContentHandler, final XMLReader xmlReader )
   {
     super( NS.GML3, ELEMENT_POLYHEDRAL_SURFACE, xmlReader, parentContentHandler );
 
@@ -88,7 +87,7 @@ public class PolyhedralSurfaceContentHandler extends GMLElementContentHandler im
    * @see org.kalypsodeegree_impl.io.sax.GMLElementContentHandler#doEndElement(java.lang.String, java.lang.String, java.lang.String)
    */
   @Override
-  protected void doEndElement( String uri, String localName, String name ) throws SAXException
+  protected void doEndElement( final String uri, final String localName, final String name ) throws SAXException
   {
     try
     { 
@@ -112,7 +111,7 @@ public class PolyhedralSurfaceContentHandler extends GMLElementContentHandler im
    * @see org.kalypsodeegree_impl.io.sax.parser.GMLElementContentHandler#handleUnexpectedEndElement(java.lang.String, java.lang.String, java.lang.String)
    */
   @Override
-  public void handleUnexpectedEndElement( String uri, String localName, String name ) throws SAXException
+  public void handleUnexpectedEndElement( final String uri, final String localName, final String name ) throws SAXException
   {
     // maybe the property was expecting a triangulated surface, but it was empty */
     if( m_polyhedralSurface == null )
@@ -131,7 +130,7 @@ public class PolyhedralSurfaceContentHandler extends GMLElementContentHandler im
    * @see org.kalypsodeegree_impl.io.sax.GMLElementContentHandler#doStartElement(java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
    */
   @Override
-  protected void doStartElement( String uri, String localName, String name, Attributes atts )
+  protected void doStartElement( final String uri, final String localName, final String name, final Attributes atts )
   {
     m_crs = ContentHandlerUtils.parseSrsFromAttributes( atts, null );
     setDelegate(  new PolygonPatchesContentHandler( this, m_crs, m_xmlReader )  );

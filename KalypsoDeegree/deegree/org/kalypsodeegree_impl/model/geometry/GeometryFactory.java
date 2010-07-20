@@ -393,8 +393,8 @@ final public class GeometryFactory
    */
   public static GM_Surface<GM_SurfacePatch> createGM_Surface( final GM_Position[] exteriorRing, final GM_Position[][] interiorRings, final String crs ) throws GM_Exception
   {
-    final GM_SurfacePatch sp = new GM_Polygon_Impl( exteriorRing, interiorRings, crs );
-    return GeometryFactory.createGM_Surface( sp );
+    final GM_Polygon sp = new GM_Polygon_Impl( exteriorRing, interiorRings, crs );
+    return createGM_Surface( sp );
   }
 
   /**

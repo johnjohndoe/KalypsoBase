@@ -161,7 +161,7 @@ class GM_Polygon_Impl extends GM_SurfacePatch_Impl implements GM_Polygon, Serial
       }
       else if( gmo instanceof GM_Surface )
       {
-        inter = LinearIntersects.intersects( (GM_Surface) gmo, new GM_Surface_Impl( this ) );
+        inter = LinearIntersects.intersects( (GM_Surface<?>) gmo, new GM_Surface_Impl( this ) );
       }
       else if( gmo instanceof GM_Aggregate )
       {
@@ -212,7 +212,7 @@ class GM_Polygon_Impl extends GM_SurfacePatch_Impl implements GM_Polygon, Serial
       }
       else if( gmo instanceof GM_Surface )
       {
-        contain = LinearContains.contains( new GM_Surface_Impl( this ), (GM_Surface) gmo );
+        contain = LinearContains.contains( new GM_Surface_Impl( this ), (GM_Surface< ? >) gmo );
       }
       else if( gmo instanceof GM_Aggregate )
       {

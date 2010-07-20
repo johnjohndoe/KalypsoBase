@@ -47,7 +47,6 @@ package org.kalypsodeegree.model.geometry;
  * @version $Revision$ $Date$
  *          <p>
  */
-
 public interface GM_Polygon extends GM_SurfacePatch
 {
 
