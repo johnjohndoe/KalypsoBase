@@ -730,4 +730,9 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
         return false;
     }
   }
+  
+  @Override
+  public String toString(){
+    return "Active data set scope: [ " + m_dataSetScope + " ]";
+  }
 }
