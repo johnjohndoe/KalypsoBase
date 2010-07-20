@@ -271,6 +271,7 @@
 		<command categoryId="org.kalypso.ogc.gml.map.category" id="org.kalypso.ogc.gml.map.EditRelationsCommand" name="%org.kalypso.ui.editor.mapeditor.actiondelegates.EditRelationsWidgetDelegate.label" />
 		<command categoryId="org.kalypso.ogc.gml.map.category" id="org.kalypso.ogc.gml.map.WMSGetFeatureInfoCommand" name="%org.kalypso.ui.editor.mapeditor.actiondelegates.WMSGetfeatureInfoWidgetDelegate.label" />
 		<command categoryId="org.kalypso.ogc.gml.map.category" id="org.kalypso.ogc.gml.map.MeasureMapCommand" name="%org.kalypso.ogc.gml.map.MeasureMapCommand.label" description="%org.kalypso.ogc.gml.map.MeasureMapCommand.tooltip"/>
+		<command categoryId="org.kalypso.ogc.gml.map.category" id="org.kalypso.ogc.gml.map.FindElementMapCommand" name="%org.kalypso.ogc.gml.map.FindElementMapCommand.label" description="%org.kalypso.ogc.gml.map.FindElementMapCommand.tooltip"/>
 		<command categoryId="org.kalypso.ogc.gml.map.category" id="org.kalypso.ogc.gml.map.SelectFeatureCommand" name="%org.kalypso.ui.editor.mapeditor.actiondelegates.SelectWidgetDelegate.label" />
 		<command categoryId="org.kalypso.ogc.gml.map.category" id="org.kalypso.ogc.gml.map.SelectSingleFeatureCommand" name="%org.kalypso.ogc.gml.map.SelectSingleFeatureCommand.label" description="%org.kalypso.ogc.gml.map.SelectSingleFeatureCommand.description" />
 		<command categoryId="org.kalypso.ogc.gml.map.category" id="org.kalypso.ogc.gml.map.SaveThemeCommand" name="%org.kalypso.ui.editor.mapeditor.actiondelegates.SaveThemeDelegate.label" />
@@ -370,6 +371,7 @@
 			<command commandId="org.kalypso.ogc.gml.map.PanToCommand" label="%org.kalypso.ui.editor.mapeditor.actiondelegates.PanToWidgetDelegate.label" style="radio" tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.PanToWidgetDelegate.tooltip" />
 			<command commandId="org.kalypso.ogc.gml.map.ThemeInfoCommand" style="radio" />
 			<command commandId="org.kalypso.ogc.gml.map.MeasureMapCommand" style="radio"/>
+			<command commandId="org.kalypso.ogc.gml.map.FindElementMapCommand" style="radio"/>
 			<separator name="actions" visible="true" />
 			<command commandId="org.kalypso.ogc.gml.map.FullExtentCommand" style="push" />
 			<command commandId="org.kalypso.ogc.gml.map.ZoomToActiveLayerCommand" style="push" />
@@ -403,6 +405,7 @@
 				<command commandId="org.kalypso.ogc.gml.map.PanToCommand" label="%org.kalypso.ui.editor.mapeditor.actiondelegates.PanToWidgetDelegate.label" style="radio" tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.PanToWidgetDelegate.tooltip" />
 				<command commandId="org.kalypso.ogc.gml.map.SelectFeatureCommand" label="%org.kalypso.ui.editor.mapeditor.actiondelegates.SelectWidgetDelegate.label" style="radio" tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.SelectWidgetDelegate.tooltip" />
 				<command commandId="org.kalypso.ogc.gml.map.MeasureMapCommand" style="radio" />
+				<command commandId="org.kalypso.ogc.gml.map.FindElementMapCommand" style="radio" />
 				<command commandId="org.kalypso.ogc.gml.map.EditRelationsCommand" label="%org.kalypso.ui.editor.mapeditor.actiondelegates.EditRelationsWidgetDelegate.label" style="radio" tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.EditRelationsWidgetDelegate.tooltip" />
 				<!-- Does not work any more...
 				<command commandId="org.kalypso.ogc.gml.map.WMSGetFeatureInfoCommand" label="%org.kalypso.ui.editor.mapeditor.actiondelegates.WMSGetfeatureInfoWidgetDelegate.label" style="radio" tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.WMSGetfeatureInfoWidgetDelegate.tooltip" />
@@ -614,6 +617,7 @@
 		<image commandId="org.kalypso.ogc.gml.map.EditRelationsCommand" disabledIcon="icons/map/edit_relation_gray.gif" icon="icons/map/edit_relation.gif" />
 		<image commandId="org.kalypso.ogc.gml.map.WMSGetFeatureInfoCommand" disabledIcon="icons/map/wmsInfo_gray.gif" icon="icons/map/wmsInfo.gif" />
 		<image commandId="org.kalypso.ogc.gml.map.MeasureMapCommand" disabledIcon="icons/map/measureTool_gray.gif" icon="icons/map/measureTool.gif" />
+		<image commandId="org.kalypso.ogc.gml.map.FindElementMapCommand" disabledIcon="icons/map/earth_search_gray.gif" icon="icons/map/earth_search.gif" />
 		<image commandId="org.kalypso.ogc.gml.map.SelectFeatureCommand" icon="icons/map/select_feature.gif" />
 		<image commandId="org.kalypso.ogc.gml.map.SelectSingleFeatureCommand" icon="icons/map/select_feature.gif" />
 		<image commandId="org.kalypso.ogc.gml.map.SaveThemeCommand" disabledIcon="icons/map/save_edit_disabled.gif" icon="icons/feature/save_GML.gif" />
@@ -932,6 +936,13 @@
 						</with>
 					</visibleWhen>
 				</command>
+				<command commandId="org.kalypso.ogc.gml.map.FindElementMapCommand" style="radio">
+					<visibleWhen checkEnabled="false">
+						<with variable="activeEditorId">
+							<equals value="org.kalypso.ui.editor.mapeditor.GisMapEditor" />
+						</with>
+					</visibleWhen>
+				</command>
 				<command commandId="org.kalypso.ogc.gml.map.EditRelationsCommand" label="%org.kalypso.ui.editor.mapeditor.actiondelegates.EditRelationsWidgetDelegate.label" style="radio" tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.EditRelationsWidgetDelegate.tooltip">
 					<visibleWhen checkEnabled="false">
 						<with variable="activeEditorId">
@@ -1150,6 +1161,11 @@
 		<handler commandId="org.kalypso.ogc.gml.map.MeasureMapCommand">
 			<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
 				<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" value="org.kalypso.ogc.gml.map.widgets.MeasureMapWidget" />
+			</class>
+		</handler>
+		<handler commandId="org.kalypso.ogc.gml.map.FindElementMapCommand">
+			<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+				<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" value="org.kalypso.ogc.gml.map.widgets.FindElementMapWidget" />
 			</class>
 		</handler>
 		<handler commandId="org.kalypso.ogc.gml.map.SelectFeatureCommand">
