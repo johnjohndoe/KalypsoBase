@@ -51,6 +51,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
@@ -181,7 +182,7 @@ public class TuhhProfilChartView extends ViewPart implements IChartPart, IProfil
     if( newModel == null )
     {
       setPartNames( Messages.getString( "org.kalypso.model.wspm.ui.view.AbstractProfilViewPart_1" ), Messages.getString( "org.kalypso.model.wspm.ui.view.AbstractProfilViewPart_2" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-      m_form.setMessage( Messages.getString( "org.kalypso.model.wspm.ui.view.chart.ChartView.0" ), IMessageProvider.INFORMATION ); //$NON-NLS-1$
+      setFormMessage( Messages.getString( "org.kalypso.model.wspm.ui.view.chart.ChartView.0" ), IMessageProvider.INFORMATION ); //$NON-NLS-1$
     }
     else
     {
@@ -196,6 +197,28 @@ public class TuhhProfilChartView extends ViewPart implements IChartPart, IProfil
 
     m_chartComposite.setChartModel( newModel );
     m_chartModelEventHandler.fireModelChanged( oldModel, newModel );
+  }
+
+  private void setFormMessage( final String message, final int type )
+  {
+    if( m_form.isDisposed() )
+      return;
+
+    final Display display = m_form.getDisplay();
+    if( display.isDisposed() )
+      return;
+
+    final Form form = m_form;
+    final Runnable runnable = new Runnable()
+    {
+      @Override
+      public void run( )
+      {
+        if( !form.isDisposed() )
+          form.setMessage( message, type );
+      }
+    };
+    display.syncExec( runnable );
   }
 
   private void setPartNames( final String partName, final String tooltip )
@@ -433,7 +456,7 @@ public class TuhhProfilChartView extends ViewPart implements IChartPart, IProfil
    * @see de.openali.odysseus.chart.framework.model.event.IEventProvider#addListener(java.lang.Object)
    */
   @Override
-  public void addListener( IChartModelEventListener listener )
+  public void addListener( final IChartModelEventListener listener )
   {
     m_chartModelEventHandler.addListener( listener );
 
@@ -443,7 +466,7 @@ public class TuhhProfilChartView extends ViewPart implements IChartPart, IProfil
    * @see de.openali.odysseus.chart.framework.model.event.IEventProvider#removeListener(java.lang.Object)
    */
   @Override
-  public void removeListener( IChartModelEventListener listener )
+  public void removeListener( final IChartModelEventListener listener )
   {
     m_chartModelEventHandler.removeListener( listener );
 
