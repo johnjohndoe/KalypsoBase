@@ -41,8 +41,10 @@
 package org.kalypso.model.wspm.ui.view.legend;
 
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.Form;
 import org.kalypso.chart.ui.editor.ChartEditorTreeOutlinePage;
+import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 import org.kalypso.model.wspm.ui.view.AbstractChartModelView;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
@@ -61,7 +63,7 @@ import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
  */
 public class LegendView extends AbstractChartModelView
 {
-  private ChartEditorTreeOutlinePage m_chartlegend = new ChartEditorTreeOutlinePage();
+  private final ChartEditorTreeOutlinePage m_chartlegend = new ChartEditorTreeOutlinePage();
 
   @Override
   public final void createControl( final Composite parent )
@@ -130,9 +132,20 @@ public class LegendView extends AbstractChartModelView
    * @see org.kalypso.model.wspm.ui.view.AbstractChartModelView#modelChanged(de.openali.odysseus.chart.framework.model.IChartModel)
    */
   @Override
-  protected void modelChanged( IChartModel oldModel )
+  protected void modelChanged( final IChartModel oldModel )
   {
-    updateControl();
+    final Runnable runnable = new Runnable()
+    {
+      @SuppressWarnings("synthetic-access")
+      @Override
+      public void run( )
+      {
+        updateControl();
+      }
+    };
+
+    final Control control = m_chartlegend.getControl();
+    ControlUtils.asyncExec( control, runnable );
   }
 
 }
