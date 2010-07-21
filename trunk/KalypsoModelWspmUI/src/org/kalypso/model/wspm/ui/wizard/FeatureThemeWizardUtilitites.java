@@ -40,82 +40,38 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.wizard;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.Iterator;
 
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.outline.nodes.FeatureThemeNode;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * Helper class for wizards on {@link IKalypsoFeatureTheme}s.
  * 
  * @author Gernot Belger
  */
-public class FeatureThemeWizardUtilitites
+public final class FeatureThemeWizardUtilitites
 {
   private FeatureThemeWizardUtilitites( )
   {
-    // helper class, don't instantiate
+    throw new UnsupportedOperationException( "helper class, don't instantiate" );
   }
 
-  public static class FOUND_PROFILES
+  public static IKalypsoFeatureTheme findTheme( final ISelection selection )
   {
-    public IKalypsoFeatureTheme theme;
+    if( !(selection instanceof IStructuredSelection) )
+      return null;
 
-    public Feature[] foundProfiles;
+    final IStructuredSelection structSel = (IStructuredSelection) selection;
 
-    public Feature[] selectedProfiles;
-  }
-
-  /**
-   * Returns the profile-features from the first feature-theme in the selection.
-   * 
-   * @return null, if no theme was found. returnValue[0]: all found profile; returnValue[1]: all found selectedProfiles
-   */
-  public static FOUND_PROFILES getProfileFeaturesFromThemeSelection( final ISelection selection )
-  {
-    /* retrieve selected profiles, abort if none */
-    if( selection instanceof IStructuredSelection )
+    for( final Iterator< ? > iterator = structSel.iterator(); iterator.hasNext(); )
     {
-      for( final Object selectedObject : ((IStructuredSelection) selection).toList() )
-      {
-        final IKalypsoFeatureTheme theme = searchTheme( selectedObject );
-        if( theme != null )
-        {
-          final List<Feature> foundProfiles = new ArrayList<Feature>();
-          final List<Feature> selectedProfiles = new ArrayList<Feature>( foundProfiles );
-          final Set<Object> selectedFeatures = new HashSet<Object>( theme.getSelectionManager().toList() );
-
-          final FeatureList featureList = theme.getFeatureList();
-          for( final Object object : featureList )
-          {
-            final IProfileFeature profile = (IProfileFeature) FeatureHelper.getFeature( theme.getWorkspace(), object );
-            if( profile != null )
-            {
-              foundProfiles.add( profile );
-
-              if( selectedFeatures.contains( profile ) )
-                selectedProfiles.add( profile );
-            }
-          }
-
-          final FOUND_PROFILES found_profiles = new FOUND_PROFILES();
-
-          found_profiles.theme = theme;
-          found_profiles.foundProfiles = foundProfiles.toArray( new Feature[foundProfiles.size()] );
-          found_profiles.selectedProfiles = selectedProfiles.toArray( new Feature[selectedProfiles.size()] );
-
-          return found_profiles;
-        }
-      }
+      final Object element = iterator.next();
+      final IKalypsoFeatureTheme theme = searchTheme( element );
+      if( theme != null )
+        return theme;
     }
 
     return null;
@@ -127,9 +83,13 @@ public class FeatureThemeWizardUtilitites
       return (IKalypsoFeatureTheme) selectedObject;
 
     if( selectedObject instanceof FeatureThemeNode )
-      return (IKalypsoFeatureTheme) ((FeatureThemeNode) selectedObject).getTheme();
+    {
+      final FeatureThemeNode sdvölknölisfdbvöklf = (FeatureThemeNode) selectedObject;
+      return sdvölknölisfdbvöklf.getTheme();
+    }
 
     return null;
   }
+
 
 }

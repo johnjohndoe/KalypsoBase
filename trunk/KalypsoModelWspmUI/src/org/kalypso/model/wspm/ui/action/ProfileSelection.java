@@ -72,6 +72,8 @@ public class ProfileSelection
 
   private Feature m_container = null;
 
+  private FeatureList m_containingList = null;
+
   private final ISelection m_selection;
 
   public ProfileSelection( final ISelection selection )
@@ -129,12 +131,15 @@ public class ProfileSelection
   {
     m_selectedProfiles.add( profile );
 
-    final IRelationType rt = (profile).getParentRelation();
-    final Feature container = (profile).getOwner();
+    final IRelationType rt = profile.getParentRelation();
+    final Feature container = profile.getOwner();
     m_container = container;
     if( rt.isList() )
     {
       final FeatureList sisters = (FeatureList) container.getProperty( rt );
+
+      m_containingList = sisters;
+
       for( final Object sister : sisters )
       {
         if( sister instanceof IProfileFeature )
@@ -213,5 +218,10 @@ public class ProfileSelection
   public Feature getContainer( )
   {
     return m_container;
+  }
+
+  public FeatureList getContainingList( )
+  {
+    return m_containingList;
   }
 }

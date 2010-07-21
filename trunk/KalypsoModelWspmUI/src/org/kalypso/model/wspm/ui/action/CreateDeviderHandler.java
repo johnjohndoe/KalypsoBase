@@ -52,7 +52,7 @@ import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.wizard.CreateProfileDeviderWizard;
 import org.kalypso.model.wspm.ui.wizard.FeatureThemeWizardUtilitites;
-import org.kalypso.model.wspm.ui.wizard.FeatureThemeWizardUtilitites.FOUND_PROFILES;
+import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 
 /**
  * @author Gernot Belger
@@ -70,15 +70,15 @@ public class CreateDeviderHandler extends AbstractHandler
     final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
 
     /* retrieve selected profiles, abort if none */
-    final FOUND_PROFILES foundProfiles = FeatureThemeWizardUtilitites.getProfileFeaturesFromThemeSelection( selection );
-
-    if( foundProfiles == null || foundProfiles.foundProfiles.length == 0 )
+    final IKalypsoFeatureTheme theme = FeatureThemeWizardUtilitites.findTheme( selection );
+    final ProfileSelection profileSelection = new ProfileSelection( selection );
+    if( theme == null || !profileSelection.hasProfiles() )
     {
       MessageDialog.openWarning( shell, Messages.getString( "org.kalypso.model.wspm.ui.action.CreateDeviderMapThemeAction.0" ), Messages.getString( "org.kalypso.model.wspm.ui.action.CreateDeviderMapThemeAction.1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
       return null;
     }
 
-    final IWizard intersectWizard = new CreateProfileDeviderWizard( foundProfiles );
+    final IWizard intersectWizard = new CreateProfileDeviderWizard( theme, profileSelection );
 
     /* show intersection wizard */
     final WizardDialog2 dialog = new WizardDialog2( shell, intersectWizard );

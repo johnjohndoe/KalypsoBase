@@ -65,7 +65,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Label;
 import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -83,7 +82,6 @@ import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.IKalypsoThemeFilter;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.tools.GMLConstants;
 
 /**
@@ -93,7 +91,7 @@ public class CreateProfileDeviderPage extends WizardPage implements IUpdateable,
 {
   private static final String SETTINGS_DEVIDER = "settings.devider.type"; //$NON-NLS-1$
 
-  private static final String SETTINGS_DELETE_EXISTING = "settings.delete.existing"; //$NON-NLS-1$
+  private static final String SETTINGS_USE_EXISTING = "settings.use.existing"; //$NON-NLS-1$
 
   private final ThemeAndPropertyChooserGroup m_themeGroup;
 
@@ -101,15 +99,18 @@ public class CreateProfileDeviderPage extends WizardPage implements IUpdateable,
 
   private IComponent m_deviderType = null;
 
-  private boolean m_deleteExisting = false;
+  private boolean m_useExisting = false;
 
   private final IKalypsoFeatureTheme m_profileTheme;
 
-  public CreateProfileDeviderPage( final IKalypsoFeatureTheme profileTheme )
+  private final String m_profileType;
+
+  public CreateProfileDeviderPage( final IKalypsoFeatureTheme profileTheme, final String profileType )
   {
     super( "createProfileDeviderPage", Messages.getString( "org.kalypso.model.wspm.ui.wizard.CreateProfileDeviderPage.3" ), null ); //$NON-NLS-1$ //$NON-NLS-2$
 
     m_profileTheme = profileTheme;
+    m_profileType = profileType;
 
     setMessage( Messages.getString( "org.kalypso.model.wspm.ui.wizard.CreateProfileDeviderPage.4" ) ); //$NON-NLS-1$
 
@@ -162,7 +163,6 @@ public class CreateProfileDeviderPage extends WizardPage implements IUpdateable,
     /* Devider Group */
     final Group deviderGroup = createDeviderGroup( composite );
     deviderGroup.setLayoutData( new GridData( SWT.FILL, SWT.BEGINNING, true, false ) );
-    deviderGroup.setText( Messages.getString( "org.kalypso.model.wspm.ui.wizard.CreateProfileDeviderPage.7" ) ); //$NON-NLS-1$
 
     /* Options */
     createOptions( composite );
@@ -172,10 +172,10 @@ public class CreateProfileDeviderPage extends WizardPage implements IUpdateable,
 
   private void createOptions( final Composite composite )
   {
-    final Button deleteExistingCheckbox = new Button( composite, SWT.CHECK );
-    deleteExistingCheckbox.setText( Messages.getString( "org.kalypso.model.wspm.ui.wizard.CreateProfileDeviderPage.8" ) ); //$NON-NLS-1$
-    deleteExistingCheckbox.setToolTipText( Messages.getString( "org.kalypso.model.wspm.ui.wizard.CreateProfileDeviderPage.9" ) ); //$NON-NLS-1$
-    deleteExistingCheckbox.addSelectionListener( new SelectionAdapter()
+    final Button useExistingCheckbox = new Button( composite, SWT.CHECK );
+    useExistingCheckbox.setText( Messages.getString( "org.kalypso.model.wspm.ui.wizard.CreateProfileDeviderPage.8" ) ); //$NON-NLS-1$
+    useExistingCheckbox.setToolTipText( Messages.getString( "org.kalypso.model.wspm.ui.wizard.CreateProfileDeviderPage.9" ) ); //$NON-NLS-1$
+    useExistingCheckbox.addSelectionListener( new SelectionAdapter()
     {
       /**
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
@@ -183,39 +183,39 @@ public class CreateProfileDeviderPage extends WizardPage implements IUpdateable,
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
-        handleDeleteExistingChanged( deleteExistingCheckbox.getSelection() );
+        handleKeepExistingChanged( useExistingCheckbox.getSelection() );
       }
     } );
 
     final IDialogSettings dialogSettings = getDialogSettings();
     if( dialogSettings != null )
     {
-      final boolean deleteExisting = dialogSettings.getBoolean( SETTINGS_DELETE_EXISTING );
-      deleteExistingCheckbox.setSelection( deleteExisting );
-      m_deleteExisting = deleteExisting;
+      final boolean useExisting = dialogSettings.getBoolean( SETTINGS_USE_EXISTING );
+      useExistingCheckbox.setSelection( useExisting );
+      m_useExisting = useExisting;
     }
   }
 
-  protected void handleDeleteExistingChanged( final boolean deleteExisting )
+  protected void handleKeepExistingChanged( final boolean useExisting )
   {
-    if( m_deleteExisting == deleteExisting )
+    if( m_useExisting == useExisting )
       return;
 
-    m_deleteExisting = deleteExisting;
+    m_useExisting = useExisting;
 
     final IDialogSettings dialogSettings = getDialogSettings();
     if( dialogSettings != null )
-      dialogSettings.put( SETTINGS_DELETE_EXISTING, deleteExisting );
+      dialogSettings.put( SETTINGS_USE_EXISTING, useExisting );
   }
 
   private Group createDeviderGroup( final Composite composite )
   {
     final Group group = new Group( composite, SWT.NONE );
-    group.setLayout( new GridLayout( 2, false ) );
-
-    new Label( group, SWT.NONE ).setText( "&Art:" ); //$NON-NLS-1$
+    group.setLayout( new GridLayout( 1, false ) );
+    group.setText( Messages.getString( "org.kalypso.model.wspm.ui.wizard.CreateProfileDeviderPage.7" ) ); //$NON-NLS-1$
 
     final ComboViewer viewer = new ComboViewer( group, SWT.READ_ONLY | SWT.DROP_DOWN );
+    viewer.getControl().setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     viewer.setContentProvider( new ArrayContentProvider() );
     viewer.setLabelProvider( new LabelProvider()
     {
@@ -231,12 +231,7 @@ public class CreateProfileDeviderPage extends WizardPage implements IUpdateable,
     } );
     viewer.setSorter( new ViewerSorter() );
 
-    final Object object = m_profileTheme.getFeatureList().get( 0 );
-
-    final IProfileFeature profile = (IProfileFeature) FeatureHelper.getFeature( m_profileTheme.getWorkspace(), object );
-    final String type = profile.getProfil().getType();
-
-    final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( type );
+    final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( m_profileType );
 
     final String[] markerTypes = provider.getPointProperties();
     final Collection<IComponent> markerComponents = new ArrayList<IComponent>( markerTypes.length );
@@ -367,4 +362,8 @@ public class CreateProfileDeviderPage extends WizardPage implements IUpdateable,
     return m_deviderType;
   }
 
+  public boolean isUseExisting( )
+  {
+    return m_useExisting;
+  }
 }
