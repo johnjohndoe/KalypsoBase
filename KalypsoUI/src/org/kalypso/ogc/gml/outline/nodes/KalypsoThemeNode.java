@@ -119,7 +119,7 @@ public class KalypsoThemeNode<T extends IKalypsoTheme> extends AbstractThemeNode
    * @see org.kalypso.ogc.gml.IKalypsoThemeProvider#getTheme()
    */
   @Override
-  public IKalypsoTheme getTheme( )
+  public T getTheme( )
   {
     return getElement();
   }

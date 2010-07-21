@@ -59,9 +59,9 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
  */
 public class WspmWaterBody extends Feature_Impl implements IWspmConstants, IProfileSelectionProvider
 {
-  public final static QName QNAME = new QName( NS_WSPM, "WaterBody" ); //$NON-NLS-1$
+  public static final QName QNAME = new QName( NS_WSPM, "WaterBody" ); //$NON-NLS-1$
 
-  public final static QName QNAME_WSP_FIX_MEMBER = new QName( NS_WSPM, "waterlevelFixationMember" ); //$NON-NLS-1$
+  public static final QName QNAME_WSP_FIX_MEMBER = new QName( NS_WSPM, "waterlevelFixationMember" ); //$NON-NLS-1$
 
   public static final QName QNAME_REACH_MEMBER = new QName( NS_WSPM, "reachMember" ); //$NON-NLS-1$
 

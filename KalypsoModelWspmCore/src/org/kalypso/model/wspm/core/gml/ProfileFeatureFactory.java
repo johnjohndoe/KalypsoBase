@@ -67,13 +67,13 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  * 
  * @author Gernot Belger
  */
-public class ProfileFeatureFactory implements IWspmConstants
+public final class ProfileFeatureFactory implements IWspmConstants
 {
   public static final QName QNAME_STATION = new QName( IWspmConstants.NS_WSPMPROF, "station" ); //$NON-NLS-1$
 
   public static final QName QNAME_TYPE = new QName( IWspmConstants.NS_WSPMPROF, "type" ); //$NON-NLS-1$
 
-  public final static QName QN_PROF_PROFILE = new QName( IWspmConstants.NS_WSPMPROF, "Profile" ); //$NON-NLS-1$
+  public static final QName QN_PROF_PROFILE = new QName( IWspmConstants.NS_WSPMPROF, "Profile" ); //$NON-NLS-1$
 
   public static final String DICT_COMP_PROFILE_PREFIX = "urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#"; //$NON-NLS-1$
 

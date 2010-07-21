@@ -52,7 +52,7 @@ import org.kalypso.observation.result.TupleResult;
  */
 public interface IProfil extends IObservation<TupleResult>
 {
-  public void addPoint( final int index, final IRecord point );
+  void addPoint( final int index, final IRecord point );
 
   /**
    * @return true
@@ -60,18 +60,18 @@ public interface IProfil extends IObservation<TupleResult>
    *         adds a new Record at the end of this Observation and copies the values of the Components existing in both
    *         records
    */
-  public boolean addPoint( final IRecord point );
+  boolean addPoint( final IRecord point );
 
   /**
    * @param pointProperty
    */
-  public void addPointProperty( final IComponent pointProperty );
+  void addPointProperty( final IComponent pointProperty );
 
-  public void addPointProperty( final IComponent pointProperty, final Object defaultValue );
+  void addPointProperty( final IComponent pointProperty, final Object defaultValue );
 
-  public IComponent getPointPropertyFor( final String propertyID );
+  IComponent getPointPropertyFor( final String propertyID );
 
-  public void addPointProperty( final IComponent pointProperty, final IComponent initialValues );
+  void addPointProperty( final IComponent pointProperty, final IComponent initialValues );
 
   /**
    * remove the current ProfileObject and adds the given ProfileObject
@@ -80,103 +80,103 @@ public interface IProfil extends IObservation<TupleResult>
    * @param building
    *          must not be null, in this case use removeProfileObject()
    */
-  public IProfileObject[] addProfileObjects( final IProfileObject... profileObjects );
+  IProfileObject[] addProfileObjects( final IProfileObject... profileObjects );
 
-  public void addProfilListener( final IProfilListener pl );
+  void addProfilListener( final IProfilListener pl );
 
-  public boolean isPointMarker( final String propertyID );
+  boolean isPointMarker( final String propertyID );
 
-  public void fireProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes );
+  void fireProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes );
 
-  public void removeProfilListener( final IProfilListener pl );
+  void removeProfilListener( final IProfilListener pl );
 
   /**
    * @return a valid profilPoint, addable to this profile
    * @see #addPoint(IRecord)
    */
-  public IRecord createProfilPoint( );
+  IRecord createProfilPoint( );
 
-  public IProfilPointMarker createPointMarker( final String markerID, IRecord point );
+  IProfilPointMarker createPointMarker( final String markerID, IRecord point );
 
   /**
    * @return the active Point.
    */
-  public IRecord getActivePoint( );
+  IRecord getActivePoint( );
 
   /**
    * @return the active Pointproperty.
    */
-  public IComponent getActiveProperty( );
+  IComponent getActiveProperty( );
 
   /**
    * @return something stored in the profile as Strings
    */
-  public String getComment( );
+  String getComment( );
 
-  public IRecord[] getMarkedPoints( );
-
-  /**
-   * Gets all PointMarker of the given type in this profile.
-   */
-  public IProfilPointMarker[] getPointMarkerFor( IComponent pointMarker );
+  IRecord[] getMarkedPoints( );
 
   /**
    * Gets all PointMarker of the given type in this profile.
    */
-  public IProfilPointMarker[] getPointMarkerFor( String pointMarkerID );
+  IProfilPointMarker[] getPointMarkerFor( IComponent pointMarker );
+
+  /**
+   * Gets all PointMarker of the given type in this profile.
+   */
+  IProfilPointMarker[] getPointMarkerFor( String pointMarkerID );
 
   /**
    * Gets all markers for this record.
    */
-  public IProfilPointMarker[] getPointMarkerFor( IRecord record );
+  IProfilPointMarker[] getPointMarkerFor( IRecord record );
 
   /**
    * @return all Marker-Types stored in This profile, NOT all available Marker-Types registered for this
    *         {@link #getType()}
    * @see org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider
    */
-  public IComponent[] getPointMarkerTypes( );
+  IComponent[] getPointMarkerTypes( );
 
-  public int indexOfPoint( final IRecord point );
+  int indexOfPoint( final IRecord point );
 
-  public int indexOfProperty( final IComponent pointProperty );
+  int indexOfProperty( final IComponent pointProperty );
 
-  public int indexOfProperty( final String id );
+  int indexOfProperty( final String id );
 
-  public IRecord getPoint( final int index );
+  IRecord getPoint( final int index );
 
   /**
    * @return include both , startPoint and endPoint
    */
-  public IRecord[] getPoints( final int startPoint, final int endPoint );
+  IRecord[] getPoints( final int startPoint, final int endPoint );
 
   /**
    * @return all PointProperties used by this profile
    */
-  public IComponent[] getPointProperties( );
+  IComponent[] getPointProperties( );
 
   /**
    * @return Points of profile
    */
-  public IRecord[] getPoints( );
+  IRecord[] getPoints( );
 
   /**
    * @return the current building(Tuhh) or other kind of ProfileObject, maybe null
    */
-  public IProfileObject[] getProfileObjects( );
+  IProfileObject[] getProfileObjects( );
 
   /**
    * @return the current building(Tuhh) or other kind of ProfileObject, maybe null
    */
-  public <T extends IProfileObject> T[] getProfileObjects( Class<T> clazz );
+  <T extends IProfileObject> T[] getProfileObjects( Class<T> clazz );
 
   /**
    * @param key
    * @return the value from internal HashMap<Object,Object>
    */
-  public Object getProperty( Object key );
+  Object getProperty( Object key );
 
-  public double getStation( );
+  double getStation( );
 
   /**
    * Returns the type of the profile.
@@ -188,13 +188,13 @@ public interface IProfil extends IObservation<TupleResult>
    * <li>Validation (which rules are applied)</li>
    * </ul>
    */
-  public String getType( );
+  String getType( );
 
   /**
    * @return true if the profile contains the property
    * @see org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider to get addable properties
    */
-  public boolean hasPointProperty( final IComponent property );
+  boolean hasPointProperty( final IComponent property );
 
   /**
    * @return the FIRST component with the given Id, if the profile contains the property otherwise null
@@ -202,55 +202,54 @@ public interface IProfil extends IObservation<TupleResult>
    * @see #hasPointProperty(IComponent)
    * @see org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider to get addable properties
    */
-  public IComponent hasPointProperty( final String propertyId );
+  IComponent hasPointProperty( final String propertyId );
 
-  public boolean removePoint( final IRecord point );
+  boolean removePoint( final IRecord point );
 
   /*
    * obsolete - point markers will be automatically set by their own setValue() implementation (value will be directly
    * added to observation, and so the point marker is registered)
    */
-// public Object addPointMarker( IProfilPointMarker marker );
-  public Object removePointMarker( IProfilPointMarker devider );
+  Object removePointMarker( IProfilPointMarker devider );
 
   /**
    * @param pointProperty
    *          to remove
    * @return false if the pointProperty is not used in this profile
    */
-  public boolean removePointProperty( final IComponent pointProperty );
+  boolean removePointProperty( final IComponent pointProperty );
 
-  public boolean removeProfileObject( IProfileObject profileObject );
+  boolean removeProfileObject( IProfileObject profileObject );
 
   /**
    * @param key
    *          removes the key and its value from the profiles internal HashMap<Object,Object>
    */
-  public Object removeProperty( final Object key );
+  Object removeProperty( final Object key );
 
-  public void setActivePoint( final IRecord point );
+  void setActivePoint( final IRecord point );
 
-  public void setActivePointProperty( final IComponent activeProperty );
+  void setActivePointProperty( final IComponent activeProperty );
 
-  public void setComment( final String comment );
+  void setComment( final String comment );
 
   /**
    * @param key
    * @param value
    *          saves any (key,value-Object) in the profiles internal HashMap
    */
-  public void setProperty( final Object key, final Object value );
+  void setProperty( final Object key, final Object value );
 
-  public void setStation( final double station );
+  void setStation( final double station );
 
   /**
    * Returns the current problem markers, if any, attached to this profile.
    */
-  public MarkerIndex getProblemMarker( );
+  MarkerIndex getProblemMarker( );
 
   /**
    * Sets the current problem markers of this profile.<br>
    * A profile event is fired upon this action.
    */
-  public void setProblemMarker( IMarker[] markers );
+  void setProblemMarker( IMarker[] markers );
 }

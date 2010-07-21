@@ -115,10 +115,7 @@ public abstract class AbstractSelectWidget extends AbstractWidget
       m_endPoint = p;
 
     // TODO: check if this repaint is really necessary
-    final IMapPanel panel = getMapPanel();
-    if( panel != null )
-      panel.repaintMap();
-
+    repaintMap();
   }
 
   @Override
@@ -146,7 +143,7 @@ public abstract class AbstractSelectWidget extends AbstractWidget
       m_endPoint = null;
 
       /* Always repaint, maybe the selection has not changed, then we dont get any repaint from the selection manager */
-      getMapPanel().repaintMap();
+      repaintMap();
     }
   }
 
@@ -272,7 +269,7 @@ public abstract class AbstractSelectWidget extends AbstractWidget
         changeSelection( listFe, (IKalypsoFeatureTheme) activeTheme, selectionManager, selectionMode );
       }
       else
-      // dragged
+        // dragged
       {
         final double g2x = transform.getSourceX( endPoint.getX() );
         final double g2y = transform.getSourceY( endPoint.getY() );
