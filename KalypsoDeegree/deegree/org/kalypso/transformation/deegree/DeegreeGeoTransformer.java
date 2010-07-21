@@ -43,6 +43,7 @@ package org.kalypso.transformation.deegree;
 import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
@@ -57,7 +58,7 @@ public class DeegreeGeoTransformer implements IGeoTransformer
   /**
    * The coordinate system, into which the transformations should be done.
    */
-  private String m_targetCRS;
+  private final String m_targetCRS;
 
   /**
    * The constructor.
@@ -65,7 +66,7 @@ public class DeegreeGeoTransformer implements IGeoTransformer
    * @param targetCRS
    *          The coordinate system, into which the transformations should be done.
    */
-  public DeegreeGeoTransformer( String targetCRS )
+  public DeegreeGeoTransformer( final String targetCRS )
   {
     m_targetCRS = targetCRS;
   }
@@ -84,7 +85,7 @@ public class DeegreeGeoTransformer implements IGeoTransformer
    *      java.lang.String)
    */
   @Override
-  public GM_Position transform( GM_Position position, String sourceCRS ) throws Exception
+  public GM_Position transform( final GM_Position position, final String sourceCRS ) throws Exception
   {
     if( position == null )
       return null;
@@ -95,37 +96,41 @@ public class DeegreeGeoTransformer implements IGeoTransformer
     return DeegreeTransformUtilities.transform( position, sourceCRS, m_targetCRS );
   }
 
+
   /**
    * @see org.kalypso.transformation.transformer.IGeoTransformer#transform(org.kalypsodeegree.model.geometry.GM_Object)
    */
   @Override
-  public GM_Object transform( GM_Object geometry ) throws Exception
+  public GM_Object transform( final GM_Object geometry ) throws Exception
   {
     if( geometry == null )
       return null;
 
-    String sourceCRS = geometry.getCoordinateSystem();
+    final String sourceCRS = geometry.getCoordinateSystem();
     if( sourceCRS == null || sourceCRS.equalsIgnoreCase( m_targetCRS ) )
       return geometry;
 
-    return geometry.transform( m_targetCRS );
+    if( geometry instanceof GM_Point )
+      return DeegreeTransformUtilities.transform( ((GM_Point) geometry), sourceCRS, m_targetCRS );
+    else
+      return geometry.transform( m_targetCRS );
   }
 
   /**
    * @see org.kalypso.transformation.transformer.IGeoTransformer#transform(org.kalypsodeegree.model.geometry.GM_Envelope)
    */
   @Override
-  public GM_Envelope transform( GM_Envelope envelope ) throws Exception
+  public GM_Envelope transform( final GM_Envelope envelope ) throws Exception
   {
     if( envelope == null )
       return null;
 
-    String sourceCRS = envelope.getCoordinateSystem();
+    final String sourceCRS = envelope.getCoordinateSystem();
     if( sourceCRS == null || sourceCRS.equalsIgnoreCase( m_targetCRS ) )
       return envelope;
 
-    GM_Position min = transform( envelope.getMin(), sourceCRS );
-    GM_Position max = transform( envelope.getMax(), sourceCRS );
+    final GM_Position min = transform( envelope.getMin(), sourceCRS );
+    final GM_Position max = transform( envelope.getMax(), sourceCRS );
 
     return GeometryFactory.createGM_Envelope( min, max, m_targetCRS );
   }
@@ -134,12 +139,12 @@ public class DeegreeGeoTransformer implements IGeoTransformer
    * @see org.kalypso.transformation.transformer.IGeoTransformer#transform(org.kalypsodeegree.model.geometry.GM_SurfacePatch)
    */
   @Override
-  public GM_SurfacePatch transform( GM_SurfacePatch surfacePatch ) throws Exception
+  public GM_SurfacePatch transform( final GM_SurfacePatch surfacePatch ) throws Exception
   {
     if( surfacePatch == null )
       return null;
 
-    String sourceCRS = surfacePatch.getCoordinateSystem();
+    final String sourceCRS = surfacePatch.getCoordinateSystem();
     if( sourceCRS == null || sourceCRS.equalsIgnoreCase( m_targetCRS ) )
       return surfacePatch;
 
