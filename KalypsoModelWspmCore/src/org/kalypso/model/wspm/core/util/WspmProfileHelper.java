@@ -44,6 +44,7 @@ import java.util.LinkedList;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import org.apache.commons.lang.ObjectUtils;
 import org.kalypso.commons.math.geom.PolyLine;
 import org.kalypso.jts.JTSUtilities;
 import org.kalypso.model.wspm.core.IWspmConstants;
@@ -53,10 +54,9 @@ import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
-import org.kalypso.transformation.transformer.GeoTransformerFactory;
-import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Coordinate;
@@ -67,13 +67,71 @@ import com.vividsolutions.jts.geom.Point;
 /**
  * @author Holger Albert, Thomas Jung , kimwerner TODO: merge / check this class with {@link ProfilUtil}
  */
-public class WspmProfileHelper
+public final class WspmProfileHelper
 {
+  private WspmProfileHelper( )
+  {
+    throw new UnsupportedOperationException( "Helper class, do not instantiate" );
+  }
+
   public static final double FUZZINESS = 0.005; // Inaccuracies profile of points
 
+  /**
+   * Returns the width position of a geo point projected on a profile.
+   * <p>
+   * It works with the following steps:<br />
+   * <ol>
+   * <li>The profile points with a geo reference are stored. All points without a geo reference are ignored.</li>
+   * <li>With these points, single line segments are build (using Rechtswert and Hochwert).</li>
+   * <li>The geo point is transformed into the coordinate system of the profiles.</li>
+   * <li>It is checked for each segment, which distance the geo point has to them.</li>
+   * <li>The points of the segment with the lowest distance will be used for projection.</li>
+   * </ol>
+   * </p>
+   * 
+   * @param point
+   *          The geo point, must be in the same coordinate system as the profile is. It does not have to lie on the
+   *          profile.
+   * @param profile
+   *          The profile
+   * @return The width (X-Direction) of the geo point projected on the profile.
+   */
+  public static Double getWidthPosition( final Point point, final IProfil profile ) throws Exception
+  {
+    final String srs = WspmProfileHelper.getCoordinateSystem( profile );
+
+    final GM_Point p = (GM_Point) JTSAdapter.wrap( point, srs );
+
+    return getWidthPosition( p, profile, srs );
+  }
+
+  /**
+   * Same as {@link #getWidthPosition(Point, IProfil)}, but uses a {@link GM_Point} instead.<br>
+   * The point is automatically transformed to the right coordinate system.
+   */
+  public static Double getWidthPosition( final GM_Point point, final IProfil profile ) throws Exception
+  {
+    final String srs = WspmProfileHelper.getCoordinateSystem( profile );
+
+    final GM_Point pointInProfileCrs = (GM_Point) point.transform( srs );
+    return getWidthPosition( pointInProfileCrs, profile, srs );
+  }
+
+  /**
+   * Returns the coordinate system of the profile.
+   */
+  private static String getCoordinateSystem( final IProfil profile )
+  {
+    return ObjectUtils.toString( profile.getProperty( IWspmConstants.PROFIL_PROPERTY_CRS ) );
+  }
+
+  /**
+   * @deprecated Use {@link #getWidthPosition(Point, IProfil)} instead.
+   */
+  @Deprecated
   public static Double getWidthPosition( final Point point, final IProfil profile, final String srsName ) throws Exception
   {
-    final GM_Point p = (GM_Point) JTSAdapter.wrap( point );
+    final GM_Point p = (GM_Point) JTSAdapter.wrap( point, srsName );
 
     return getWidthPosition( p, profile, srsName );
   }
@@ -99,8 +157,10 @@ public class WspmProfileHelper
    *          The coordinate system, in which the profile lies (or null, but this can behave strange, since it assumes
    *          one).
    * @return The width (X-Direction) of the geo point projected on the profile.
+   * @deprecated Use {@link #getWidthPosition(Point, IProfil)} instead.
    */
-  public static Double getWidthPosition( final GM_Point geoPoint, final IProfil profile, String srsName ) throws Exception
+  @Deprecated
+  public static Double getWidthPosition( final GM_Point geoPoint, final IProfil profile, final String srsName ) throws Exception
   {
     /* List for storing points of the profile, which have a geo reference. */
     final LinkedList<IRecord> geoReferencedPoints = new LinkedList<IRecord>();
@@ -132,14 +192,16 @@ public class WspmProfileHelper
     // END OF FINDING GEOREFERENCED POINTS
 
     /* It is assumed that all points and values share the same coordinate system. */
+    final String crs;
     if( srsName == null )
-      srsName = TimeserieUtils.getCoordinateSystemNameForGkr( Double.toString( (Double) geoReferencedPoints.get( 0 ).getValue( iRechtswert ) ) );
+      crs = TimeserieUtils.getCoordinateSystemNameForGkr( Double.toString( (Double) geoReferencedPoints.get( 0 ).getValue( iRechtswert ) ) );
+    else
+      crs = srsName;
 
     final String kalypsoCrs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
 
     /* Transform geo point into the coord-system of the line. */
-    final IGeoTransformer transformer = GeoTransformerFactory.getGeoTransformer( kalypsoCrs );
-    final GM_Point transformedGeoPoint = (GM_Point) transformer.transform( geoPoint );
+    final GM_Point transformedGeoPoint = (GM_Point) geoPoint.transform( kalypsoCrs );
     final Geometry comparePoint = JTSAdapter.export( transformedGeoPoint );
 
     double distance = Double.MAX_VALUE;
@@ -160,12 +222,12 @@ public class WspmProfileHelper
       final double hochWertTwo = (Double) tempPointTwo.getValue( iHochwert );
 
       /* Geo-Projection */
-      final GM_Point geoPointOne = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Point( rechtsWertOne, hochWertOne, srsName );
-      final GM_Point geoPointTwo = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Point( rechtsWertTwo, hochWertTwo, srsName );
+      final GM_Point geoPointOne = GeometryFactory.createGM_Point( rechtsWertOne, hochWertOne, crs );
+      final GM_Point geoPointTwo = GeometryFactory.createGM_Point( rechtsWertTwo, hochWertTwo, crs );
 
       /* Build the line segment. */
-      final Coordinate geoCoordOne = JTSAdapter.export( transformer.transform( geoPointOne ).getCentroid().getPosition() );
-      final Coordinate geoCoordTwo = JTSAdapter.export( transformer.transform( geoPointTwo ).getCentroid().getPosition() );
+      final Coordinate geoCoordOne = JTSAdapter.export( geoPointOne.transform( kalypsoCrs ).getCentroid().getPosition() );
+      final Coordinate geoCoordTwo = JTSAdapter.export( geoPointTwo.transform( kalypsoCrs ).getCentroid().getPosition() );
       final LineSegment geoSegment = new LineSegment( geoCoordOne, geoCoordTwo );
 
       /* Calculate the distance of the geo point to the line. */
@@ -660,5 +722,48 @@ public class WspmProfileHelper
   public static IRecord addRecordByWidth( final IProfil profile, final IRecord record )
   {
     return addRecordByWidth( profile, record, false );
+  }
+
+  /**
+   * Returns the profile point with the lowest height.
+   * 
+   * @return The index of the point with the smallest height value. Returns <code>-1</code> if no such point can be
+   *         determined.
+   */
+  public static int findLowestPointIndex( final IProfil profile )
+  {
+    double minHeight = Double.MAX_VALUE;
+    int minIndex = -1;
+
+    final int iHeight = profile.indexOfProperty( IWspmConstants.POINT_PROPERTY_HOEHE );
+    final IRecord[] records = profile.getPoints();
+    for( int i = 0; i < records.length; i++ )
+    {
+      final IRecord point = records[i];
+      final Object heightValue = point.getValue( iHeight );
+      if( heightValue instanceof Number )
+      {
+        final double height = ((Number) heightValue).doubleValue();
+        if( height < minHeight )
+        {
+          minHeight = height;
+          minIndex = i;
+        }
+      }
+    }
+
+    return minIndex;
+  }
+
+  /**
+   * Returns the profile point with the lowest height.
+   */
+  public static IRecord findLowestPoint( final IProfil profile )
+  {
+    final int index = findLowestPointIndex( profile );
+    if( index == -1 )
+      return null;
+
+    return profile.getPoint( index );
   }
 }

@@ -51,8 +51,8 @@ import org.eclipse.ui.ISources;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.wizard.FeatureThemeWizardUtilitites;
-import org.kalypso.model.wspm.ui.wizard.FeatureThemeWizardUtilitites.FOUND_PROFILES;
 import org.kalypso.model.wspm.ui.wizard.IntersectRoughnessWizard;
+import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 
 /**
  * @author Gernot Belger
@@ -70,14 +70,15 @@ public class IntersectRoughnessHandler extends AbstractHandler
     final IStructuredSelection selection = (IStructuredSelection) context.getVariable( ISources.ACTIVE_CURRENT_SELECTION_NAME );
 
     /* retrieve selected profiles, abort if none */
-    final FOUND_PROFILES foundProfiles = FeatureThemeWizardUtilitites.getProfileFeaturesFromThemeSelection( selection );
-    if( foundProfiles == null || foundProfiles.foundProfiles.length == 0 )
+    final IKalypsoFeatureTheme theme = FeatureThemeWizardUtilitites.findTheme( selection );
+    final ProfileSelection profileSelection = new ProfileSelection( selection );
+    if( theme == null || !profileSelection.hasProfiles() )
     {
       MessageDialog.openWarning( shell, Messages.getString( "org.kalypso.model.wspm.ui.action.IntersectRoughnessMapThemeAction.0" ), org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.action.IntersectRoughnessMapThemeAction.1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
       return null;
     }
 
-    final IWizard intersectWizard = new IntersectRoughnessWizard( foundProfiles );
+    final IWizard intersectWizard = new IntersectRoughnessWizard( theme, profileSelection );
 
     /* show intersection wizard */
     final WizardDialog2 dialog = new WizardDialog2( shell, intersectWizard );

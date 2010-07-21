@@ -54,7 +54,6 @@ import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.wizard.Wizard;
 import org.kalypso.commons.command.ICommand;
-import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
@@ -64,9 +63,10 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.model.wspm.core.gml.assignment.AssignmentBinder;
 import org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
+import org.kalypso.model.wspm.ui.action.ProfileSelection;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.profil.wizard.ProfilesChooserPage;
-import org.kalypso.model.wspm.ui.wizard.FeatureThemeWizardUtilitites.FOUND_PROFILES;
+import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
@@ -85,16 +85,20 @@ public class IntersectRoughnessWizard extends Wizard
 
   private IntersectRoughnessPage m_roughnessIntersectPage;
 
-  private final FOUND_PROFILES m_foundProfiles;
+  private final ProfileSelection m_profileSelection;
 
-  public IntersectRoughnessWizard( final FOUND_PROFILES foundProfiles )
+  private final IKalypsoFeatureTheme m_theme;
+
+  public IntersectRoughnessWizard( final IKalypsoFeatureTheme theme, final ProfileSelection profileSelection )
   {
-    m_foundProfiles = foundProfiles;
+    m_theme = theme;
+    m_profileSelection = profileSelection;
 
     setWindowTitle( org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.wizard.IntersectRoughnessWizard.0" ) ); //$NON-NLS-1$
     setNeedsProgressMonitor( true );
     setDialogSettings( PluginUtilities.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), getClass().getName() ) );
   }
+
 
   /**
    * @see org.eclipse.jface.wizard.Wizard#addPages()
@@ -104,10 +108,11 @@ public class IntersectRoughnessWizard extends Wizard
   {
     final String msg = Messages.getString( "org.kalypso.model.wspm.ui.wizard.IntersectRoughnessWizard.2" ); //$NON-NLS-1$
     final String title = Messages.getString( "org.kalypso.model.wspm.ui.wizard.IntersectRoughnessWizard.1" ); //$NON-NLS-1$
-    m_profileChooserPage = new ProfilesChooserPage( msg, m_foundProfiles.foundProfiles, null, m_foundProfiles.selectedProfiles, 1, false );
+
+    m_profileChooserPage = new ProfilesChooserPage( msg, m_profileSelection, false );
     m_profileChooserPage.setTitle( title );
 
-    m_roughnessIntersectPage = new IntersectRoughnessPage( m_foundProfiles.theme.getMapModell() );
+    m_roughnessIntersectPage = new IntersectRoughnessPage( m_theme.getMapModell() );
 
     addPage( m_profileChooserPage );
     addPage( m_roughnessIntersectPage );
@@ -142,8 +147,7 @@ public class IntersectRoughnessWizard extends Wizard
     final IPath assignmentPath = m_roughnessIntersectPage.getAssignmentPath();
     final IProfilePointFilter pointFilters = m_roughnessIntersectPage.getSelectedPointFilter();
 
-    final ICommandTarget target = m_foundProfiles.theme;
-
+    final IKalypsoFeatureTheme theme = m_theme;
     final ICoreRunnableWithProgress runnable = new ICoreRunnableWithProgress()
     {
       @Override
@@ -169,7 +173,7 @@ public class IntersectRoughnessWizard extends Wizard
           {
             final GMLWorkspace gmlworkspace = changes[0].getFeature().getWorkspace();
             final ICommand command = new ChangeFeaturesCommand( gmlworkspace, changes );
-            target.postCommand( command, null );
+            theme.postCommand( command, null );
           }
         }
         catch( final Exception e )
