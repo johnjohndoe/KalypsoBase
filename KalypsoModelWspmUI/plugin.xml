@@ -529,8 +529,9 @@
 				<and>
 					<count value="1"/>
 					<iterate ifEmpty="false" operator="and">
-						<test property="org.kalypso.ui.test.theme.qname" value="{org.kalypso.model.wspmprofile}Profile"/>
+						<test property="org.kalypso.ui.test.theme.isFeatureTheme"/>
 					</iterate>
+			        <test property="org.kalypso.model.wspm.ui.hasProfileSelection"/>
 				</and>
 			</with>
 		</definition>
