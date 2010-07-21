@@ -158,7 +158,7 @@ public class PooledXLinkFeatureProvider extends AbstractXLinkFeatureProvider imp
           int timer = 0;
           while( timer < 1000 )
           {
-            int state = info.getState();
+            final int state = info.getState();
             if( state != Job.WAITING )
               break;
 
@@ -187,10 +187,12 @@ public class PooledXLinkFeatureProvider extends AbstractXLinkFeatureProvider imp
   public void objectLoaded( final IPoolableObjectType key, final Object newValue, final IStatus status )
   {
     if( KeyComparator.getInstance().compare( key, m_key ) == 0 )
+    {
       if( status.isOK() )
         m_workspace = (GMLWorkspace) newValue;
       else
         m_workspace = null;
+    }
   }
 
   /**
