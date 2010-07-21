@@ -40,12 +40,8 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.command;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.core.i18n.Messages;
-import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
@@ -74,7 +70,6 @@ public class ChangeFeaturesCommand implements ICommand
 
       final Object oldValue = change.getFeature().getProperty( change.getProperty() );
       m_oldChanges[i] = new FeatureChange( change.getFeature(), change.getProperty(), oldValue );
-// System.out.println("FC prop: " + change.getProperty());
     }
   }
 
@@ -125,16 +120,16 @@ public class ChangeFeaturesCommand implements ICommand
   @Override
   public String getDescription( )
   {
-    return Messages.getString("org.kalypso.ogc.gml.command.ChangeFeaturesCommand.0"); //$NON-NLS-1$
+    return Messages.getString( "org.kalypso.ogc.gml.command.ChangeFeaturesCommand.0" ); //$NON-NLS-1$
   }
 
   protected void applyChanges( final FeatureChange[] changes )
   {
-    final Set<Feature> changedFeaturesList = new HashSet<Feature>();
+// final Set<Feature> changedFeaturesList = new HashSet<Feature>();
     for( final FeatureChange change : changes )
     {
       change.getFeature().setProperty( change.getProperty(), change.getNewValue() );
-      changedFeaturesList.add( change.getFeature() );
+// changedFeaturesList.add( change.getFeature() );
     }
 
     if( m_workspace != null )
