@@ -1,0 +1,69 @@
+  <crs:projectedCRS>
+    <crs:id>EPSG:10002</crs:id>
+    <crs:id>URN:OGC:DEF:CRS:EPSG::10002</crs:id>
+    <crs:id>HTTP://WWW.OPENGIS.NET/GML/SRS/EPSG.XML#10002</crs:id>
+    <crs:id>URN:OPENGIS:DEF:CRS:EPSG::10002</crs:id>
+    <crs:name>DWD (RADOLAN)</crs:name>
+    <crs:version>2010-7-12T14:00</crs:version>
+    <crs:areaOfUse>Unknown</crs:areaOfUse>
+    <crs:Axis>
+      <crs:name>x</crs:name>
+      <crs:units>metre</crs:units>
+      <crs:axisOrientation>east</crs:axisOrientation>
+    </crs:Axis>
+    <crs:Axis>
+      <crs:name>y</crs:name>
+      <crs:units>metre</crs:units>
+      <crs:axisOrientation>north</crs:axisOrientation>
+    </crs:Axis>
+    <crs:axisOrder>x, y</crs:axisOrder>
+    <crs:units>metre</crs:units>
+    <crs:usedGeographicCRS>GEO_CRS_10002</crs:usedGeographicCRS>
+    <crs:usedProjection>PROJECTION_10002</crs:usedProjection>
+  </crs:projectedCRS>
+  <crs:geographicCRS>
+    <crs:id>GEO_CRS_10002</crs:id>
+    <crs:name>Proj4 defined Geographic CRS</crs:name>
+    <crs:version>2008-1-16T9:49</crs:version>
+    <crs:description>Inserted by BCE: Used by projected crs with id: 10002</crs:description>
+    <crs:areaOfUse>Unknown</crs:areaOfUse>
+    <crs:Axis>
+      <crs:name>longitude</crs:name>
+      <crs:units>degree</crs:units>
+      <crs:axisOrientation>east</crs:axisOrientation>
+    </crs:Axis>
+    <crs:Axis>
+      <crs:name>latitude</crs:name>
+      <crs:units>degree</crs:units>
+      <crs:axisOrientation>north</crs:axisOrientation>
+    </crs:Axis>
+    <crs:axisOrder>longitude, latitude</crs:axisOrder>
+    <crs:usedDatum>EPSG:10012</crs:usedDatum>
+  </crs:geographicCRS>
+  <crs:geodeticDatum>
+    <crs:id>EPSG:10012</crs:id>
+    <crs:name>RADOLAN Datum</crs:name>
+    <crs:usedEllipsoid>EPSG:10112</crs:usedEllipsoid>
+    <crs:usedPrimeMeridian>EPSG:8901</crs:usedPrimeMeridian>
+    <crs:usedWGS84ConversionInfo>PROJ4_NO_CONVERSION_INFO</crs:usedWGS84ConversionInfo>
+  </crs:geodeticDatum>
+  <crs:ellipsoid>
+    <crs:id>EPSG:10112</crs:id>
+    <crs:name>RADOLAN Radius</crs:name>
+    <crs:semiMajorAxis>6370040.0</crs:semiMajorAxis>
+    <crs:inverseFlatting>0.0</crs:inverseFlatting>
+    <crs:units>metre</crs:units>
+  </crs:ellipsoid>
+  <crs:stereographicAzimuthal>
+    <crs:id>PROJECTION_10002</crs:id>
+    <crs:name>North Pole Stereographic</crs:name>
+    <crs:version>2008-1-16T9:49</crs:version>
+    <crs:description>Inserted by BCE</crs:description>
+    <crs:areaOfUse>Unknown</crs:areaOfUse>
+    <crs:latitudeOfNaturalOrigin inDegrees="true">90.0</crs:latitudeOfNaturalOrigin>
+    <crs:longitudeOfNaturalOrigin inDegrees="true">10.0</crs:longitudeOfNaturalOrigin>
+    <crs:scaleFactor>1.0</crs:scaleFactor>
+    <crs:falseEasting>0.0</crs:falseEasting>
+    <crs:falseNorthing>0.0</crs:falseNorthing>
+    <crs:trueScaleLatitude inDegrees="true">60.0</crs:trueScaleLatitude>
+  </crs:stereographicAzimuthal>
