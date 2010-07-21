@@ -50,7 +50,10 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
+import org.eclipse.core.runtime.Assert;
+import org.eclipse.jface.dialogs.IDialogSettings;
 import org.kalypso.commons.command.ICommandTarget;
+import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -66,10 +69,13 @@ import org.kalypso.ogc.gml.map.widgets.builders.PolygonGeometryBuilder;
 import org.kalypso.ogc.gml.map.widgets.builders.RectangleGeometryBuilder;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.ogc.gml.mapmodel.IMapModellListener;
+import org.kalypso.ogc.gml.mapmodel.MapModellAdapter;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ogc.gml.util.MapUtils;
 import org.kalypso.ogc.gml.widgets.AbstractWidget;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -98,6 +104,8 @@ public class SelectFeatureWidget extends AbstractWidget
 {
   public static final int GRAB_RADIUS = 20;
 
+  private static final String SETTINGS_MODE = "selectionMode";
+
   private IGeometryBuilder m_geometryBuilder;
 
   private IKalypsoFeatureTheme[] m_themes;
@@ -119,6 +127,17 @@ public class SelectFeatureWidget extends AbstractWidget
   private Point m_currentPoint;
 
   private boolean m_intersectMode;
+
+  private final IMapModellListener m_mapModelListener = new MapModellAdapter()
+  {
+    @Override
+    public void themeActivated( final IMapModell source, final IKalypsoTheme previouslyActive, final IKalypsoTheme nowActive )
+    {
+      reinit();
+    }
+  };
+
+  private int m_currentMode = 0;
 
   /**
    * @param qnamesToSelect
@@ -142,15 +161,44 @@ public class SelectFeatureWidget extends AbstractWidget
   {
     super.activate( commandPoster, mapPanel );
 
+    final IMapModell mapModell = mapPanel.getMapModell();
+    if( mapModell != null )
+      mapModell.addMapModelListener( m_mapModelListener );
+
     reinit();
   }
 
-  private void reinit( )
+  /**
+   * @see org.kalypso.ogc.gml.widgets.AbstractWidget#finish()
+   */
+  @Override
+  public void finish( )
+  {
+    final IMapPanel mapPanel = getMapPanel();
+    final IMapModell model = mapPanel == null ? null : mapPanel.getMapModell();
+    if( model != null )
+      model.removeMapModelListener( m_mapModelListener );
+
+    super.finish();
+  }
+
+  protected void reinit( )
   {
     // default: selection by Rectangle
-    // TODO: get from outside
-    if( m_geometryBuilder == null )
-      m_geometryBuilder = new RectangleGeometryBuilder( getMapPanel().getMapModell().getCoordinatesSystem() );
+
+    final IDialogSettings settings = getSettings();
+    if( settings != null )
+    {
+      try
+      {
+        m_currentMode = settings.getInt( SETTINGS_MODE );
+      }
+      catch( final NumberFormatException ignored )
+      {
+      }
+    }
+
+    m_geometryBuilder = createGeometryBuilder();
 
     m_themes = null;
     m_hoverFeature = null;
@@ -165,7 +213,11 @@ public class SelectFeatureWidget extends AbstractWidget
       m_themes = new IKalypsoFeatureTheme[1];
       m_themes[0] = (IKalypsoFeatureTheme) activeTheme;
     }
+  }
 
+  private IDialogSettings getSettings( )
+  {
+    return PluginUtilities.getDialogSettings( KalypsoGisPlugin.getDefault(), getClass().getName() );
   }
 
   /**
@@ -352,24 +404,24 @@ public class SelectFeatureWidget extends AbstractWidget
         m_addMode = true;
         break;
 
-      // "STRG": Toggle mode
+        // "STRG": Toggle mode
       case KeyEvent.VK_CONTROL:
         m_toggleMode = true;
         break;
 
-      // "ALT": switch between intersect / contains mode
+        // "ALT": switch between intersect / contains mode
       case KeyEvent.VK_ALT:
         m_intersectMode = true;
         break;
 
-      // "SPACE": switch between polygon / rect mode
+        // "SPACE": switch between polygon / rect mode
       case KeyEvent.VK_SPACE:
-        changeGeometryBuilder( mapPanel );
+        changeGeometryBuilder();
         break;
-      // "ESC": deselection
+        // "ESC": deselection
       case KeyEvent.VK_ESCAPE:
         m_geometryBuilder.reset();
-        final IFeatureSelectionManager selectionManager = getMapPanel().getSelectionManager();
+        final IFeatureSelectionManager selectionManager = mapPanel.getSelectionManager();
         selectionManager.clear();
         break;
     }
@@ -394,14 +446,33 @@ public class SelectFeatureWidget extends AbstractWidget
     super.keyReleased( e );
   }
 
-  private void changeGeometryBuilder( final IMapPanel mapPanel )
+  private void changeGeometryBuilder( )
   {
-    if( m_geometryBuilder instanceof RectangleGeometryBuilder )
-      m_geometryBuilder = new PolygonGeometryBuilder( 0, mapPanel.getMapModell().getCoordinatesSystem() );
-    else if( m_geometryBuilder instanceof PolygonGeometryBuilder )
-      m_geometryBuilder = new PointGeometryBuilder( mapPanel.getMapModell().getCoordinatesSystem() );
-    else
-      m_geometryBuilder = new RectangleGeometryBuilder( mapPanel.getMapModell().getCoordinatesSystem() );
+    m_currentMode = (m_currentMode + 1) % 3;
+    final IDialogSettings settings = getSettings();
+    if( settings != null )
+      settings.put( SETTINGS_MODE, m_currentMode );
+
+    m_geometryBuilder = createGeometryBuilder();
+  }
+
+  private IGeometryBuilder createGeometryBuilder( )
+  {
+    final IMapPanel mapPanel = getMapPanel();
+    Assert.isNotNull( mapPanel );
+    final String crs = mapPanel.getMapModell().getCoordinatesSystem();
+
+    switch( m_currentMode )
+    {
+      case 0:
+        return new RectangleGeometryBuilder( crs );
+
+      case 1:
+        return new PolygonGeometryBuilder( 0, crs );
+
+      default:
+        return new PointGeometryBuilder( crs );
+    }
   }
 
   /**
