@@ -90,7 +90,7 @@ public class ProfileWrapper
     return true;
   }
 
-  public ProfilePointWrapper findPoint( final Double width )
+  public ProfilePointWrapper findPoint( final double width )
   {
     final IRecord[] points = m_profile.getPoints();
     for( final IRecord point : points )
@@ -135,6 +135,9 @@ public class ProfileWrapper
     return before.getHoehe() + hoehe;
   }
 
+  /**
+   * TODO obselete? use getNextPoint()
+   */
   private ProfilePointWrapper findPointAfter( final Double width )
   {
     ProfilePointWrapper before = null;
@@ -150,6 +153,9 @@ public class ProfileWrapper
     return null;
   }
 
+  /**
+   * TODO obselete? use getPreviousPoint()
+   */
   private ProfilePointWrapper findPointBefore( final Double width )
   {
     final ProfilePointWrapper[] points = getPoints();
