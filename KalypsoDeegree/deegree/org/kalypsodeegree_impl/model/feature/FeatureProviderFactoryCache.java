@@ -57,7 +57,7 @@ public class FeatureProviderFactoryCache
     m_factory = factory;
   }
 
-  public void dispose( )
+  public synchronized void dispose( )
   {
     for( final IFeatureProvider provider : m_providers.values() )
       provider.dispose();
@@ -68,7 +68,7 @@ public class FeatureProviderFactoryCache
     return m_factory;
   }
 
-  public IFeatureProvider getFeatureProvider( final GMLWorkspace context, final String urn )
+  public synchronized IFeatureProvider getFeatureProvider( final GMLWorkspace context, final String urn )
   {
     if( m_providers.containsKey( urn ) )
       return m_providers.get( urn );
