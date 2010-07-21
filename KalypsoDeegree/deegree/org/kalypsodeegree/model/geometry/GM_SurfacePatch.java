@@ -36,8 +36,6 @@
 
 package org.kalypsodeegree.model.geometry;
 
-import org.deegree.crs.transformations.CRSTransformation;
-
 /**
  * Defining the iso geometry <code>GM_SurfacePatch</code> which is used for building surfaces. A surface patch is made
  * of one exterior ring and 0..n interior rings. By definition there can't be a surface patch with no exterior ring. A
@@ -91,7 +89,11 @@ public interface GM_SurfacePatch extends GM_GenericSurface
   public double getArea( );
 
   /**
-   * handles the geo-coordinate-transformation for a {@link GM_Object}
+   * This function transforms the surface patch.
+   * 
+   * @param targetCRS
+   *          The target coordinate system.
+   * @return The transformed surface patch.
    */
-  public GM_GenericSurface transform( final CRSTransformation trans, final String targetOGCCS ) throws Exception;
+  public GM_GenericSurface transform( final String targetCRS ) throws Exception;
 }

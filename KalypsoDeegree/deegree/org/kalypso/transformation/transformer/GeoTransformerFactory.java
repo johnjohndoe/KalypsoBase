@@ -38,35 +38,34 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.transformation.ui;
+package org.kalypso.transformation.transformer;
 
-import org.eclipse.jface.dialogs.IInputValidator;
-import org.kalypso.i18n.Messages;
-import org.kalypso.transformation.CRSHelper;
+import org.kalypso.transformation.deegree.DeegreeGeoTransformer;
 
 /**
- * This validator makes sure a existing coordinate system is selected.
+ * This factory returns geo transformers.
  * 
  * @author Holger Albert
  */
-public class CRSInputValidator implements IInputValidator
+public class GeoTransformerFactory
 {
   /**
    * The constructor.
    */
-  public CRSInputValidator( )
+  private GeoTransformerFactory( )
   {
   }
 
   /**
-   * @see org.eclipse.jface.dialogs.IInputValidator#isValid(java.lang.String)
+   * This function returns the geo transformer with the given coordinate system as target coordinate system.
+   * 
+   * @param targetCRS
+   *          The target coordinate system.
+   * @return The geo transformer.
    */
-  @Override
-  public String isValid( String newText )
+  public static IGeoTransformer getGeoTransformer( String targetCRS )
   {
-    if( !CRSHelper.isKnownCRS( newText ) )
-      return String.format( Messages.getString( "org.kalypso.transformation.ui.CRSInputValidator.0" ), newText ); //$NON-NLS-1$
-
-    return null;
+    // TODO Returning the deegree transformer for now...
+    return new DeegreeGeoTransformer( targetCRS );
   }
 }

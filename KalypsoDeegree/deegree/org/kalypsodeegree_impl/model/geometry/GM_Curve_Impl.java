@@ -40,7 +40,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.deegree.crs.transformations.CRSTransformation;
 import org.kalypsodeegree.model.geometry.GM_Boundary;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_CurveBoundary;
@@ -52,7 +51,6 @@ import org.kalypsodeegree.model.geometry.GM_LineString;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree_impl.tools.Debug;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
@@ -716,18 +714,15 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
   }
 
   /**
-   * @see org.kalypsodeegree.model.geometry.GM_Object#transform(org.deegree.crs.transformations.CRSTransformation,
-   *      java.lang.String)
+   * @see org.kalypsodeegree.model.geometry.GM_Object#transform(java.lang.String)
    */
   @Override
-  public GM_Object transform( final CRSTransformation trans, final String targetOGCCS ) throws Exception
+  public GM_Object transform( final String targetCRS ) throws Exception
   {
     /* If the target is the same coordinate system, do not transform. */
-    final String coordinateSystem = getCoordinateSystem();
-    if( coordinateSystem == null || coordinateSystem.equalsIgnoreCase( targetOGCCS ) )
+    final String sourceCRS = getCoordinateSystem();
+    if( sourceCRS == null || sourceCRS.equalsIgnoreCase( targetCRS ) )
       return this;
-
-    Debug.debugMethodBegin( this, "transformCurve" );
 
     final GM_CurveSegment[] newcus = new GM_CurveSegment[getNumberOfCurveSegments()];
 
@@ -740,14 +735,11 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
       final GM_Position[] newpos = new GM_Position[pos.length];
 
       for( int j = 0; j < pos.length; j++ )
-        newpos[j] = pos[j].transform( trans );
+        newpos[j] = pos[j].transform( sourceCRS, targetCRS );
 
-      newcus[i] = GeometryFactory.createGM_CurveSegment( newpos, targetOGCCS );
+      newcus[i] = GeometryFactory.createGM_CurveSegment( newpos, targetCRS );
     }
 
-    Debug.debugMethodEnd();
     return GeometryFactory.createGM_Curve( newcus );
-
   }
-
 }

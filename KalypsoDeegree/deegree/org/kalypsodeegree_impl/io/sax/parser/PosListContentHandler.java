@@ -43,7 +43,6 @@ package org.kalypsodeegree_impl.io.sax.parser;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.deegree.model.crs.UnknownCRSException;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.transformation.CRSHelper;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -62,29 +61,29 @@ import org.xml.sax.XMLReader;
 public class PosListContentHandler extends GMLElementContentHandler
 {
   public static final String ELEMENT_POSLIST = "posList";
-  
+
   private StringBuffer m_coordBuffer = new StringBuffer();
 
   private String m_srs;
-  
+
   private Integer m_srsDimension;
-  
+
   private Integer m_count;
-  
+
   private Integer m_checkedCrsDimension;
-  
+
   private IPositionHandler m_positionHandler;
-  
+
   public PosListContentHandler( final ContentHandler parentContentHandler, final IControlPointHandler positionHandler, final String defaultSrs, final XMLReader xmlReader )
   {
     super( NS.GML3, ELEMENT_POSLIST, xmlReader, defaultSrs, parentContentHandler );
-    m_positionHandler = ( IPositionHandler ) positionHandler;
+    m_positionHandler = (IPositionHandler) positionHandler;
   }
 
   @Override
   public void doStartElement( final String uri, final String localName, final String name, final Attributes attributes )
-  { 
-     m_checkedCrsDimension = checkCRSAndGetCRSDimension( attributes );
+  {
+    m_checkedCrsDimension = checkCRSAndGetCRSDimension( attributes );
   }
 
   /**
@@ -92,112 +91,105 @@ public class PosListContentHandler extends GMLElementContentHandler
    */
   @Override
   public void doEndElement( final String uri, final String localName, final String name ) throws SAXException
-  { 
+  {
     final GM_Position[] posList = endPosList();
 
     m_positionHandler.handle( posList, m_srs );
   }
 
   /**
-   * checks if there is a proper srsName and srsDimension set for this posList.
-   * Returns the dimension of the CRS
+   * checks if there is a proper srsName and srsDimension set for this posList. Returns the dimension of the CRS
    */
   private Integer checkCRSAndGetCRSDimension( final Attributes attributes )
   {
     m_srs = ContentHandlerUtils.parseSrsFromAttributes( attributes, m_defaultSrs );
     m_srsDimension = ContentHandlerUtils.parseSrsDimensionFromAttributes( attributes );
     m_count = ContentHandlerUtils.parseCountFromAttributes( attributes );
-    
+
     Integer dimension = findDimension();
-    
+
     /* if it's still null, we use a default value: 2 */
-    if( dimension == null)
+    if( dimension == null )
     {
       dimension = 2;
     }
-    
+
     return dimension;
   }
-  
+
   /**
    * Simple heuristic to get the dimension of the posList element
    */
-  private Integer findDimension()
+  private Integer findDimension( )
   {
-    try
+    if( m_srsDimension == null )
     {
-      if( m_srsDimension == null )
+      if( m_srs != null )
       {
-        if ( m_srs != null)
-        {
-          return CRSHelper.getDimension( m_srs );
-        }
-        else if ( m_defaultSrs != null )
-        {
-          return CRSHelper.getDimension( m_defaultSrs );
-        }
+        return CRSHelper.getDimension( m_srs );
       }
-      else
+      else if( m_defaultSrs != null )
       {
-        return m_srsDimension;
+        return CRSHelper.getDimension( m_defaultSrs );
       }
     }
-    catch( UnknownCRSException e )
+    else
     {
-      e.printStackTrace();
+      return m_srsDimension;
     }
-    
+
     return null;
   }
-  
+
   private GM_Position[] endPosList( ) throws SAXParseException
   {
     final String coordsString = m_coordBuffer == null ? "" : m_coordBuffer.toString().trim();
-    m_coordBuffer = null;    
-    
-    final List<Double> doubles = ContentHandlerUtils.parseDoublesString( coordsString );  
-    
+    m_coordBuffer = null;
+
+    final List<Double> doubles = ContentHandlerUtils.parseDoublesString( coordsString );
+
     final int coordsSize = doubles.size();
-    
+
     verifyCoordsSize( coordsSize, coordsString );
-    
-    return createPositions(doubles, coordsSize);    
+
+    return createPositions( doubles, coordsSize );
   }
-  
+
   private void verifyCoordsSize( final int coordsSize, final String coordsString ) throws SAXParseException
-  { 
-    if ( coordsSize % m_checkedCrsDimension != 0)
+  {
+    if( coordsSize % m_checkedCrsDimension != 0 )
     {
-      throw new SAXParseException( "The number of coords in posList( " + coordsSize +" ) element doesn't respect the srsDimension attribute: " + m_checkedCrsDimension + " in " + coordsString, m_locator );
+      throw new SAXParseException( "The number of coords in posList( " + coordsSize + " ) element doesn't respect the srsDimension attribute: " + m_checkedCrsDimension + " in " + coordsString, m_locator );
     }
 
-    if (m_count != null && coordsSize != m_count )
+    if( m_count != null && coordsSize != m_count )
     {
-      throw new SAXParseException( "The number of coords in posList ( " + coordsSize +" ) element doesn't respect the count attribute: " + m_count + " in " + coordsString, m_locator );
+      throw new SAXParseException( "The number of coords in posList ( " + coordsSize + " ) element doesn't respect the count attribute: " + m_count + " in " + coordsString, m_locator );
     }
   }
-  
+
   private GM_Position[] createPositions( final List<Double> doubles, final int coordsSize )
-  { 
+  {
     List<GM_Position> positions = new ArrayList<GM_Position>( coordsSize );
-    if( m_checkedCrsDimension == 2)
+    if( m_checkedCrsDimension == 2 )
     {
-      for( int i = 0; i < coordsSize;)
-      { 
+      for( int i = 0; i < coordsSize; )
+      {
         positions.add( GeometryFactory.createGM_Position( doubles.get( i++ ), doubles.get( i++ ) ) );
       }
     }
-    else // dimension = 3
+    else
+    // dimension = 3
     {
-      for( int i = 0; i < coordsSize;)
-      { 
+      for( int i = 0; i < coordsSize; )
+      {
         positions.add( GeometryFactory.createGM_Position( doubles.get( i++ ), doubles.get( i++ ), doubles.get( i++ ) ) );
       }
     }
-    
+
     return positions.toArray( new GM_Position[positions.size()] );
   }
-  
+
   /**
    * @see org.xml.sax.helpers.DefaultHandler#characters(char[], int, int)
    */

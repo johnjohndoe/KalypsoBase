@@ -47,7 +47,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.kalypso.transformation.GeoTransformer;
+import org.kalypso.transformation.transformer.GeoTransformerFactory;
+import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
@@ -82,7 +83,7 @@ public class RectangleGeometryBuilder implements IGeometryBuilder
    * The constructor.
    * 
    * @param targetCrs
-   *            The target coordinate system.
+   *          The target coordinate system.
    */
   public RectangleGeometryBuilder( final String targetCrs, final IGeometryBuilderExtensionProvider extender )
   {
@@ -157,7 +158,7 @@ public class RectangleGeometryBuilder implements IGeometryBuilder
 
     if( m_startPoint != null && m_endPoint != null )
     {
-      final GeoTransformer transformer = new GeoTransformer( m_crs );
+      final IGeoTransformer transformer = GeoTransformerFactory.getGeoTransformer( m_crs );
 
       /* convert the two points into four */
       final GM_Position[] poses = new GM_Position[4];

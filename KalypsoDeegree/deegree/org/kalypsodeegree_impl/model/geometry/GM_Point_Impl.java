@@ -38,9 +38,9 @@ package org.kalypsodeegree_impl.model.geometry;
 import java.io.Serializable;
 
 import org.apache.commons.lang.NotImplementedException;
-import org.deegree.crs.transformations.CRSTransformation;
 import org.eclipse.core.runtime.Assert;
-import org.kalypso.transformation.TransformUtilities;
+import org.kalypso.transformation.transformer.GeoTransformerFactory;
+import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypsodeegree.model.geometry.GM_Aggregate;
 import org.kalypsodeegree.model.geometry.GM_Boundary;
 import org.kalypsodeegree.model.geometry.GM_Curve;
@@ -380,17 +380,17 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
   }
 
   /**
-   * @see org.kalypsodeegree.model.geometry.GM_Object#transform(org.deegree.crs.transformations.CRSTransformation,
-   *      java.lang.String)
+   * @see org.kalypsodeegree.model.geometry.GM_Object#transform(java.lang.String)
    */
   @Override
-  public GM_Object transform( final CRSTransformation trans, final String targetOGCCS ) throws Exception
+  public GM_Object transform( final String targetCRS ) throws Exception
   {
     /* If the target is the same coordinate system, do not transform. */
-    final String coordinateSystem = getCoordinateSystem();
-    if( coordinateSystem == null || coordinateSystem.equalsIgnoreCase( targetOGCCS ) )
+    final String sourceCRS = getCoordinateSystem();
+    if( sourceCRS == null || sourceCRS.equalsIgnoreCase( targetCRS ) )
       return this;
 
-    return TransformUtilities.transform( this, trans );
+    IGeoTransformer geoTransformer = GeoTransformerFactory.getGeoTransformer( targetCRS );
+    return geoTransformer.transform( this );
   }
 }

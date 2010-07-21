@@ -13,7 +13,8 @@ import net.opengis.kml.PolygonType;
 
 import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.kml.export.utils.GoogleEarthUtils;
-import org.kalypso.transformation.GeoTransformer;
+import org.kalypso.transformation.transformer.GeoTransformerFactory;
+import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -38,7 +39,7 @@ public class ConverterSurface
     if( gmo.size() > 1 )
       throw new NotImplementedException();
 
-    final GeoTransformer transformer = new GeoTransformer( GoogleEarthUtils.GOOGLE_EARTH_CS );
+    final IGeoTransformer transformer = GeoTransformerFactory.getGeoTransformer( GoogleEarthUtils.GOOGLE_EARTH_CS );
 
     for( int i = 0; i < gmo.size(); i++ )
     {

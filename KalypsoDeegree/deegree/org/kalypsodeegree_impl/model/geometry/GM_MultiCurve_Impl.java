@@ -37,7 +37,6 @@ package org.kalypsodeegree_impl.model.geometry;
 
 import java.io.Serializable;
 
-import org.deegree.crs.transformations.CRSTransformation;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_CurveSegment;
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -275,21 +274,20 @@ final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
   }
 
   /**
-   * @see org.kalypsodeegree.model.geometry.GM_Object#transform(org.deegree.crs.transformations.CRSTransformation,
-   *      java.lang.String)
+   * @see org.kalypsodeegree.model.geometry.GM_Object#transform(java.lang.String)
    */
   @Override
-  public GM_Object transform( final CRSTransformation trans, final String targetOGCCS ) throws Exception
+  public GM_Object transform( final String targetCRS ) throws Exception
   {
     /* If the target is the same coordinate system, do not transform. */
-    final String coordinateSystem = getCoordinateSystem();
-    if( coordinateSystem == null || coordinateSystem.equalsIgnoreCase( targetOGCCS ) )
+    final String sourceCRS = getCoordinateSystem();
+    if( sourceCRS == null || sourceCRS.equalsIgnoreCase( targetCRS ) )
       return this;
 
     final GM_Curve[] curves = new GM_Curve[getSize()];
 
     for( int i = 0; i < getSize(); i++ )
-      curves[i] = (GM_Curve) getCurveAt( i ).transform( trans, targetOGCCS );
+      curves[i] = (GM_Curve) getCurveAt( i ).transform( targetCRS );
 
     return GeometryFactory.createGM_MultiCurve( curves );
   }

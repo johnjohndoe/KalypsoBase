@@ -10,7 +10,8 @@ import net.opengis.kml.ObjectFactory;
 import net.opengis.kml.PointType;
 
 import org.kalypso.kml.export.utils.GoogleEarthUtils;
-import org.kalypso.transformation.GeoTransformer;
+import org.kalypso.transformation.transformer.GeoTransformerFactory;
+import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
@@ -30,7 +31,7 @@ public class ConverterPoint
   {
     final PointType pointType = factory.createPointType();
 
-    final GeoTransformer transformer = new GeoTransformer( GoogleEarthUtils.GOOGLE_EARTH_CS );
+    final IGeoTransformer transformer = GeoTransformerFactory.getGeoTransformer( GoogleEarthUtils.GOOGLE_EARTH_CS );
     final GM_Point kmlPoint = (GM_Point) transformer.transform( gmo );
 
     final List<String> coordinates = pointType.getCoordinates();

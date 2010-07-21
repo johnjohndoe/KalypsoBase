@@ -47,7 +47,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.kalypso.transformation.GeoTransformer;
+import org.kalypso.transformation.transformer.GeoTransformerFactory;
+import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
@@ -163,7 +164,7 @@ public class LineGeometryBuilder implements IGeometryBuilder
 
     if( (m_points.size() > 1) && ((m_cnt_points == m_points.size()) || (m_cnt_points <= 1)) )
     {
-      final GeoTransformer transformer = new GeoTransformer( m_crs );
+      final IGeoTransformer transformer = GeoTransformerFactory.getGeoTransformer( m_crs );
 
       final GM_Position[] poses = new GM_Position[m_points.size()];
       for( int i = 0; i < poses.length; i++ )

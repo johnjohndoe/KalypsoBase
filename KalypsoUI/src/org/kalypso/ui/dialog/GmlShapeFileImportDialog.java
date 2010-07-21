@@ -491,7 +491,7 @@ public class GmlShapeFileImportDialog extends Dialog
 
   private void availableCoordinateSystems( final Combo checkCRS )
   {
-    checkCRS.setItems( CRSHelper.getAllNames().toArray( new String[] {} ) );
+    checkCRS.setItems( CRSHelper.getAllNames() );
   }
 
   protected KalypsoResourceSelectionDialog createResourceDialog( final String[] fileResourceExtensions )

@@ -41,7 +41,8 @@ import java.util.Map;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.transformation.GeoTransformer;
+import org.kalypso.transformation.transformer.GeoTransformerFactory;
+import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
@@ -56,7 +57,7 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  */
 public class TransformVisitor implements FeatureVisitor
 {
-  private GeoTransformer m_transformer;
+  private IGeoTransformer m_transformer;
 
   /** feature -> exception */
   private final Map<Feature, Throwable> m_exceptions = new HashMap<Feature, Throwable>();
@@ -65,7 +66,7 @@ public class TransformVisitor implements FeatureVisitor
   {
     try
     {
-      m_transformer = new GeoTransformer( targetCRS );
+      m_transformer = GeoTransformerFactory.getGeoTransformer( targetCRS );
     }
     catch( final Exception e )
     {
@@ -120,7 +121,6 @@ public class TransformVisitor implements FeatureVisitor
 
     if( (f instanceof Feature_Impl) && ((Feature_Impl) f).isFunctionProperty( ftp ) )
       return false;
-
 
     if( !GeometryUtilities.isGeometry( ftp ) )
       return false;

@@ -6,7 +6,8 @@ import net.opengis.kml.LookAtType;
 import net.opengis.kml.ObjectFactory;
 import net.opengis.kml.RegionType;
 
-import org.kalypso.transformation.GeoTransformer;
+import org.kalypso.transformation.transformer.GeoTransformerFactory;
+import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -32,7 +33,7 @@ public class GoogleEarthUtils
   public static void setLookAt( final GM_Envelope boundingBox, final String coordinatesSystem, final ObjectFactory factory ) throws Exception
   {
     // set look at to the middle of bounding box
-    final GeoTransformer transformer = new GeoTransformer( GoogleEarthUtils.GOOGLE_EARTH_CS );
+    final IGeoTransformer transformer = GeoTransformerFactory.getGeoTransformer( GoogleEarthUtils.GOOGLE_EARTH_CS );
 
     final GM_Position min = boundingBox.getMin();
 
@@ -59,7 +60,7 @@ public class GoogleEarthUtils
   public static void setMapBoundary( final GM_Envelope boundingBox, final String srcCRS, final ObjectFactory factory, final DocumentType documentType ) throws Exception
   {
 
-    final GeoTransformer transformer = new GeoTransformer( GoogleEarthUtils.GOOGLE_EARTH_CS );
+    final IGeoTransformer transformer = GeoTransformerFactory.getGeoTransformer( GoogleEarthUtils.GOOGLE_EARTH_CS );
 
     final GM_Position min = boundingBox.getMin();
     final GM_Position max = boundingBox.getMax();

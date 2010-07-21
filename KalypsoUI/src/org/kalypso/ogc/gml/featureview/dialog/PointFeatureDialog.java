@@ -48,7 +48,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.command.FeatureChange;
-import org.kalypso.transformation.GeoTransformer;
+import org.kalypso.transformation.transformer.GeoTransformerFactory;
+import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -94,11 +95,11 @@ public class PointFeatureDialog implements IFeatureDialog
       final GM_Position newPos = GeometryFactory.createGM_Position( values );
       final String newCrs = dialog.getCS_CoordinateSystem();
 
-      final GeoTransformer geoTransformer = new GeoTransformer( kalypsoCrs );
+      final IGeoTransformer geoTransformer = GeoTransformerFactory.getGeoTransformer( kalypsoCrs );
       try
       {
         // REMARK: enw geometries MUST always be created in the current Kalypso coordinate system
-        final GM_Position newPosTransformed = geoTransformer.transformPosition( newPos, newCrs );
+        final GM_Position newPosTransformed = geoTransformer.transform( newPos, newCrs );
         final GM_Point newPoint = GeometryFactory.createGM_Point( newPosTransformed, kalypsoCrs );
 
         m_change = new FeatureChange( m_feature, m_ftp, newPoint );

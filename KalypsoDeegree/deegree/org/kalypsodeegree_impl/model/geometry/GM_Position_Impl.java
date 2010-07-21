@@ -37,9 +37,9 @@ package org.kalypsodeegree_impl.model.geometry;
 
 import java.io.Serializable;
 
-import org.deegree.crs.transformations.CRSTransformation;
 import org.eclipse.core.runtime.Assert;
-import org.kalypso.transformation.TransformUtilities;
+import org.kalypso.transformation.transformer.GeoTransformerFactory;
+import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypsodeegree.model.geometry.GM_Position;
 
 /**
@@ -48,7 +48,7 @@ import org.kalypsodeegree.model.geometry.GM_Position;
  * <p>
  * -----------------------------------------------------------------------
  * </p>
- *
+ * 
  * @version
  * @author Andreas Poth
  *         <p>
@@ -70,7 +70,7 @@ class GM_Position_Impl implements GM_Position, Serializable
 
   /**
    * constructor
-   *
+   * 
    * @param x
    *          x-value of the point
    * @param y
@@ -83,7 +83,7 @@ class GM_Position_Impl implements GM_Position, Serializable
 
   /**
    * constructor
-   *
+   * 
    * @param x
    *          x-value of the point
    * @param y
@@ -188,15 +188,16 @@ class GM_Position_Impl implements GM_Position, Serializable
 
     return false;
   }
-  
+
   @Override
-  public int hashCode(){
+  public int hashCode( )
+  {
     int lIntHash = 17;
-    lIntHash = 31 * lIntHash + ( int ) ( Double.doubleToLongBits( getX() ) ^ ( Double.doubleToLongBits( getX() ) >>> 32 ) );
-    lIntHash = 31 * lIntHash + ( int ) ( Double.doubleToLongBits( getY() ) ^ ( Double.doubleToLongBits( getY() ) >>> 32 ) );
+    lIntHash = 31 * lIntHash + (int) (Double.doubleToLongBits( getX() ) ^ (Double.doubleToLongBits( getX() ) >>> 32));
+    lIntHash = 31 * lIntHash + (int) (Double.doubleToLongBits( getY() ) ^ (Double.doubleToLongBits( getY() ) >>> 32));
     double lDoubleZ = getZ();
     if( lDoubleZ != Double.NaN )
-      lIntHash = 31 * lIntHash +  ( int ) ( Double.doubleToLongBits( lDoubleZ ) ^ ( Double.doubleToLongBits( lDoubleZ ) >>> 32 ) );
+      lIntHash = 31 * lIntHash + (int) (Double.doubleToLongBits( lDoubleZ ) ^ (Double.doubleToLongBits( lDoubleZ ) >>> 32));
     return lIntHash;
   }
 
@@ -249,11 +250,12 @@ class GM_Position_Impl implements GM_Position, Serializable
   }
 
   /**
-   * @see org.kalypsodeegree.model.geometry.GM_Position#transform(org.deegree.crs.transformations.CRSTransformation)
+   * @see org.kalypsodeegree.model.geometry.GM_Position#transform(java.lang.String, java.lang.String)
    */
   @Override
-  public GM_Position transform( final CRSTransformation trans )
+  public GM_Position transform( final String sourceCRS, final String targetCRS ) throws Exception
   {
-    return TransformUtilities.transform( this, trans );
+    IGeoTransformer geoTransformer = GeoTransformerFactory.getGeoTransformer( targetCRS );
+    return geoTransformer.transform( this, sourceCRS );
   }
 }

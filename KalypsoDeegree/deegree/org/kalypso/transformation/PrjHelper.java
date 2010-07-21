@@ -46,7 +46,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.apache.commons.io.FileUtils;
-import org.deegree.model.crs.UnknownCRSException;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -62,9 +61,9 @@ import org.kalypsodeegree.KalypsoDeegreePlugin;
  */
 public final class PrjHelper
 {
-  private static final String PRJ_EXTENSION = ".prj";//$NON-NLS-1$
+  private static final String PRJ_EXTENSION = ".prj"; //$NON-NLS-1$
 
-  private static final String PRJ_CACHE_DIR = "prjCache";//$NON-NLS-1$
+  private static final String PRJ_CACHE_DIR = "prjCache"; //$NON-NLS-1$
 
   private PrjHelper( )
   {
@@ -97,10 +96,6 @@ public final class PrjHelper
       FileUtils.copyFile( cachedPrjFile, destination );
     }
     catch( final CoreException e )
-    {
-      throw throwFetchPrj( coordinateSystem, e );
-    }
-    catch( final UnknownCRSException e )
     {
       throw throwFetchPrj( coordinateSystem, e );
     }

@@ -38,7 +38,6 @@ package org.kalypsodeegree_impl.model.geometry;
 import java.io.Serializable;
 
 import org.apache.commons.lang.NotImplementedException;
-import org.deegree.crs.transformations.CRSTransformation;
 import org.kalypsodeegree.model.geometry.GM_Aggregate;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_MultiPrimitive;
@@ -140,11 +139,10 @@ class GM_MultiPrimitive_Impl extends GM_Aggregate_Impl implements GM_MultiPrimit
   }
 
   /**
-   * @see org.kalypsodeegree.model.geometry.GM_Object#transform(org.deegree.crs.transformations.CRSTransformation,
-   *      java.lang.String)
+   * @see org.kalypsodeegree.model.geometry.GM_Object#transform(java.lang.String)
    */
   @Override
-  public GM_Object transform( final CRSTransformation trans, final String targetOGCCS ) throws Exception
+  public GM_Object transform( final String targetCRS ) throws Exception
   {
     throw new UnsupportedOperationException();
   }

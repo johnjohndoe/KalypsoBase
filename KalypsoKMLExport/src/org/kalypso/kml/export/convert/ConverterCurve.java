@@ -10,7 +10,8 @@ import net.opengis.kml.LineStringType;
 import net.opengis.kml.ObjectFactory;
 
 import org.kalypso.kml.export.utils.GoogleEarthUtils;
-import org.kalypso.transformation.GeoTransformer;
+import org.kalypso.transformation.transformer.GeoTransformerFactory;
+import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_LineString;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -34,7 +35,7 @@ public class ConverterCurve
     final LineStringType lineStringType = factory.createLineStringType();
     final List<String> coordinates = lineStringType.getCoordinates();
 
-    final GeoTransformer transformer = new GeoTransformer( GoogleEarthUtils.GOOGLE_EARTH_CS );
+    final IGeoTransformer transformer = GeoTransformerFactory.getGeoTransformer( GoogleEarthUtils.GOOGLE_EARTH_CS );
 
     final GM_LineString lineString = curve.getAsLineString();
     final GM_Position[] positions = lineString.getPositions();

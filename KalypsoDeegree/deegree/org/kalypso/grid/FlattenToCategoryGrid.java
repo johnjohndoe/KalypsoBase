@@ -42,9 +42,8 @@ package org.kalypso.grid;
 
 import java.math.BigDecimal;
 
-import org.deegree.crs.transformations.CRSTransformation;
-import org.kalypso.transformation.CachedTransformationFactory;
-import org.kalypso.transformation.TransformUtilities;
+import org.kalypso.transformation.transformer.GeoTransformerFactory;
+import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
@@ -59,7 +58,7 @@ import com.vividsolutions.jts.geom.Point;
  * can be created. In addition a geometry can be set for which the values shall be created, in order to fasten up
  * generation of the grid. <BR>
  * the last category overwrites all others. HINT for nofdp: zuletzt ist oft
- *
+ * 
  * @author Thomas Jung
  */
 public class FlattenToCategoryGrid extends AbstractGeoGrid implements IGeoGrid
@@ -126,8 +125,9 @@ public class FlattenToCategoryGrid extends AbstractGeoGrid implements IGeoGrid
               final GM_Position positionAt = JTSAdapter.wrap( crd );
 
               /* Transform query position into the crs of the current grid. */
-              final CRSTransformation transformation = CachedTransformationFactory.getInstance().createFromCoordinateSystems( this.getSourceCRS(), grid.getSourceCRS() );
-              final GM_Position position = TransformUtilities.transform( positionAt, transformation );
+              IGeoTransformer geoTransformer = GeoTransformerFactory.getGeoTransformer( grid.getSourceCRS() );
+              final GM_Position position = geoTransformer.transform( positionAt, this.getSourceCRS() );
+
               final double gridValue = grid.getValue( JTSAdapter.export( position ) );
 
               // only if there is a value for a new gird, overwrite the old value

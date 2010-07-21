@@ -41,7 +41,8 @@ import java.awt.geom.AffineTransform;
 
 import javax.media.jai.TiledImage;
 
-import org.kalypso.transformation.GeoTransformer;
+import org.kalypso.transformation.transformer.GeoTransformerFactory;
+import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.coverage.GridRange;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -73,15 +74,15 @@ public class TransformationUtilities
    * context g.
    * 
    * @param remoteImage
-   *            Image to be transformed.
+   *          Image to be transformed.
    * @param sourceEnvelope
-   *            Bounding box of the remoteMap.
+   *          Bounding box of the remoteMap.
    * @param localCrs
-   *            Target coordinate system.
+   *          Target coordinate system.
    * @param worldToScreenTransformation
-   *            Transformation from target coordinate system to pixel unites.
+   *          Transformation from target coordinate system to pixel unites.
    * @param g
-   *            Graphics context to draw the transformed image to.
+   *          Graphics context to draw the transformed image to.
    * @throws Exception
    */
   public static void transformImage( TiledImage remoteImage, GM_Envelope sourceEnvelope, String targetCrs, GeoTransform worldToScreenTransformation, Graphics g ) throws Exception
@@ -104,16 +105,16 @@ public class TransformationUtilities
    * Transforms.
    * 
    * @param g2d
-   *            Empty graphics context.
+   *          Empty graphics context.
    * @param projection
-   *            World to screen projection (passed from MapPanel).
+   *          World to screen projection (passed from MapPanel).
    * @param rasterImage
-   *            Image from server.
+   *          Image from server.
    * @param gridDomain
-   *            Image domain from server with geospatial ( real world ) context. CS from server and Envelope from server
-   *            (all layers).
+   *          Image domain from server with geospatial ( real world ) context. CS from server and Envelope from server
+   *          (all layers).
    * @param targetCS
-   *            Target coordinate system (local CS from client).
+   *          Target coordinate system (local CS from client).
    */
   private static void internalTransformation( Graphics2D g2d, GeoTransform projection, TiledImage rasterImage, RectifiedGridDomain gridDomain, String targetCS ) throws Exception
   {
@@ -126,7 +127,7 @@ public class TransformationUtilities
     GM_Surface< ? > destScreenSurface;
     if( !targetCS.equals( gridDomain.getOrigin( null ).getCoordinateSystem() ) )
     {
-      GeoTransformer geoTrans1 = new GeoTransformer( gridDomain.getOrigin( null ).getCoordinateSystem() );
+      IGeoTransformer geoTrans1 = GeoTransformerFactory.getGeoTransformer( gridDomain.getOrigin( null ).getCoordinateSystem() );
       destScreenSurface = (GM_Surface< ? >) geoTrans1.transform( sourceScreenSurface );
     }
     else

@@ -53,7 +53,8 @@ import org.kalypso.shape.geometry.SHPPolyLine;
 import org.kalypso.shape.geometry.SHPPolyLinez;
 import org.kalypso.shape.geometry.SHPPolygon;
 import org.kalypso.shape.geometry.SHPPolygonz;
-import org.kalypso.transformation.GeoTransformer;
+import org.kalypso.transformation.transformer.GeoTransformerFactory;
+import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_CurveSegment;
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -73,12 +74,12 @@ public class GM_Object2Shape
 {
   private final ShapeType m_shapeType;
 
-  private final GeoTransformer m_transformer;
+  private final IGeoTransformer m_transformer;
 
   public GM_Object2Shape( final ShapeType shapeType, final String coordinateSystem )
   {
     m_shapeType = shapeType;
-    m_transformer = new GeoTransformer( coordinateSystem );
+    m_transformer = GeoTransformerFactory.getGeoTransformer( coordinateSystem );
   }
 
   public ISHPGeometry convert( final GM_Object geom ) throws ShapeDataException

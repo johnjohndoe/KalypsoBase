@@ -38,35 +38,36 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.transformation.ui;
-
-import org.eclipse.jface.dialogs.IInputValidator;
-import org.kalypso.i18n.Messages;
-import org.kalypso.transformation.CRSHelper;
+package org.kalypso.transformation.ui.listener;
 
 /**
- * This validator makes sure a existing coordinate system is selected.
+ * A listener which get notified, if the structure in the list of the {@link #AvailableCRSPanel} has changed.
  * 
  * @author Holger Albert
  */
-public class CRSInputValidator implements IInputValidator
+public interface IAvailableCRSPanelListener
 {
   /**
-   * The constructor.
+   * This function gets called, if the coordinate systems were initialized.
+   * 
+   * @param codes
+   *          The list of codes of the coordinate systems.
    */
-  public CRSInputValidator( )
-  {
-  }
+  public void coordinateSystemsInitialized( String[] codes );
 
   /**
-   * @see org.eclipse.jface.dialogs.IInputValidator#isValid(java.lang.String)
+   * This function gets called, if a coordinate system was added.
+   * 
+   * @param code
+   *          The code of the coordinate system.
    */
-  @Override
-  public String isValid( String newText )
-  {
-    if( !CRSHelper.isKnownCRS( newText ) )
-      return String.format( Messages.getString( "org.kalypso.transformation.ui.CRSInputValidator.0" ), newText ); //$NON-NLS-1$
+  public void coordinateSystemAdded( String code );
 
-    return null;
-  }
+  /**
+   * This function gets called, if a coordinate system was removed.
+   * 
+   * @param code
+   *          The code of the coordinate system.
+   */
+  public void coordinateSystemRemoved( String code );
 }

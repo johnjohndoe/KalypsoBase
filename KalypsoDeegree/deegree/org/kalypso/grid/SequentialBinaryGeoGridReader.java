@@ -178,6 +178,6 @@ public abstract class SequentialBinaryGeoGridReader extends AbstractDelegatingGe
     return lBean;
   }
 
-  public abstract double getValue( final int k, final ParallelBinaryGridProcessorBean bean );
+  public abstract double getValue( final int k, final ParallelBinaryGridProcessorBean bean ) throws GeoGridException, Exception;
 
 }

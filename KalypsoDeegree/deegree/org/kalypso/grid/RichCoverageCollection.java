@@ -48,7 +48,8 @@ import java.util.Map;
 
 import org.kalypso.grid.GeoGridUtilities.Interpolation;
 import org.kalypso.jts.JTSUtilities;
-import org.kalypso.transformation.GeoTransformer;
+import org.kalypso.transformation.transformer.GeoTransformerFactory;
+import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
@@ -129,11 +130,13 @@ public class RichCoverageCollection
       if( gridCrds == null )
         return null;
 
-      final GeoTransformer geoTransformer = new GeoTransformer( gridCrds );
+      final IGeoTransformer geoTransformer = GeoTransformerFactory.getGeoTransformer( gridCrds );
 
       for( final Coordinate coordinate : crds )
       {
-        final Coordinate gridCoordinate = geoTransformer.transform( coordinate, crsOfCrds );
+        final GM_Position pos = GeometryFactory.createGM_Position( coordinate.x, coordinate.y, coordinate.z );
+        final GM_Position transformedPosition = geoTransformer.transform( pos, crsOfCrds );
+        final Coordinate gridCoordinate = new Coordinate( transformedPosition.getX(), transformedPosition.getY(), transformedPosition.getZ() );
         final double value = findValue( gridCoordinate );
 
         if( !Double.isNaN( value ) )
@@ -195,5 +198,4 @@ public class RichCoverageCollection
 
     return m_gridCache.get( coverage );
   }
-
 }

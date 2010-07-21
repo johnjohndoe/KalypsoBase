@@ -41,9 +41,7 @@
 package org.kalypso.transformation.ui;
 
 import java.util.HashMap;
-import java.util.List;
 
-import org.deegree.model.crs.CoordinateSystem;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -52,6 +50,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.i18n.Messages;
 import org.kalypso.transformation.CRSHelper;
+import org.kalypso.transformation.crs.ICoordinateSystem;
 
 /**
  * This job initializes the coordinate systems.
@@ -61,28 +60,28 @@ import org.kalypso.transformation.CRSHelper;
 public class CRSInitializeJob extends Job
 {
   /**
-   * The names of the coordinate systems, to initialize.
+   * The codes of the coordinate systems, to initialize.
    */
-  private List<String> m_names;
+  private String[] m_codes;
 
   /**
    * A hash of the coordinate systems.
    */
-  private HashMap<String, CoordinateSystem> m_coordHash;
+  private HashMap<String, ICoordinateSystem> m_coordHash;
 
   /**
    * The constructor.
    * 
    * @param name
    *          The name of the job.
-   * @param names
-   *          The names of the coordinate systems, to initialize.
+   * @param codes
+   *          The codes of the coordinate systems, to initialize.
    */
-  public CRSInitializeJob( String name, List<String> names )
+  public CRSInitializeJob( String name, String[] codes )
   {
     super( name );
 
-    m_names = names;
+    m_codes = codes;
     m_coordHash = null;
   }
 
@@ -103,7 +102,7 @@ public class CRSInitializeJob extends Job
       monitor.subTask( Messages.getString( "org.kalypso.transformation.ui.CRSInitializeJob.1" ) ); //$NON-NLS-1$
 
       /* This function may take a long time, because it is calling internally another long running function. */
-      HashMap<String, CoordinateSystem> coordHash = CRSHelper.getCoordHash( m_names );
+      HashMap<String, ICoordinateSystem> coordHash = CRSHelper.getCoordHash( m_codes );
 
       /* Monitor. */
       monitor.worked( 50 );
@@ -129,21 +128,11 @@ public class CRSInitializeJob extends Job
   }
 
   /**
-   * This function returns the names used, to initialize the coordinate systems.
-   * 
-   * @return The names used, to initialize the coordinate systems.
-   */
-  public List<String> getNames( )
-  {
-    return m_names;
-  }
-
-  /**
    * This function returns the hash of the coordinate systems.
    * 
    * @return The hash of the coordinate systems.
    */
-  public HashMap<String, CoordinateSystem> getCoordHash( )
+  public HashMap<String, ICoordinateSystem> getCoordHash( )
   {
     return m_coordHash;
   }

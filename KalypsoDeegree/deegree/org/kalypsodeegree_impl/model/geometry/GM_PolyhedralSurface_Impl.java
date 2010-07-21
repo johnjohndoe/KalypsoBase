@@ -43,8 +43,6 @@ import java.util.List;
 import java.util.ListIterator;
 
 import org.apache.commons.lang.NotImplementedException;
-import org.deegree.crs.transformations.CRSTransformation;
-import org.deegree.model.crs.UnknownCRSException;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -66,7 +64,6 @@ import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfaceBoundary;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree.model.geometry.ISurfacePatchVisitor;
-import org.kalypsodeegree_impl.tools.Debug;
 
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.index.ItemVisitor;
@@ -464,16 +461,7 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
   @Override
   public int getCoordinateDimension( )
   {
-    try
-    {
-      return CRSHelper.getDimension( getCoordinateSystem() );
-    }
-    catch( final UnknownCRSException e )
-    {
-      // TODO How to deal with this error? What to return?
-      e.printStackTrace();
-      return 0;
-    }
+    return CRSHelper.getDimension( getCoordinateSystem() );
   }
 
   /**
@@ -645,29 +633,23 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
   }
 
   /**
-   * @see org.kalypsodeegree.model.geometry.GM_Object#transform(org.deegree.crs.transformations.CRSTransformation,
-   *      java.lang.String)
+   * @see org.kalypsodeegree.model.geometry.GM_Object#transform(java.lang.String)
    */
   @Override
   @SuppressWarnings("unchecked")
-  public GM_Object transform( final CRSTransformation trans, final String targetOGCCS ) throws Exception
+  public GM_Object transform( final String targetCRS ) throws Exception
   {
     /* If the target is the same coordinate system, do not transform. */
-    final String coordinateSystem = getCoordinateSystem();
-    if( coordinateSystem == null || coordinateSystem.equalsIgnoreCase( targetOGCCS ) )
+    final String sourceCRS = getCoordinateSystem();
+    if( sourceCRS == null || sourceCRS.equalsIgnoreCase( targetCRS ) )
       return this;
-
-    Debug.debugMethodBegin( this, "transformTriangulatedSurface" );
 
     final int cnt = size();
     final T[] polygons = (T[]) new GM_Polygon[cnt];
 
     for( int i = 0; i < cnt; i++ )
-    {
-      polygons[i] = (T) get( i ).transform( trans, targetOGCCS );
-    }
+      polygons[i] = (T) get( i ).transform( targetCRS );
 
-    Debug.debugMethodEnd();
-    return GeometryFactory.createGM_PolyhedralSurface( polygons, targetOGCCS );
+    return GeometryFactory.createGM_PolyhedralSurface( polygons, targetCRS );
   }
 }

@@ -42,7 +42,8 @@ package org.kalypsodeegree.graphics.transformation;
 
 import java.awt.Rectangle;
 
-import org.kalypso.transformation.GeoTransformer;
+import org.kalypso.transformation.transformer.GeoTransformerFactory;
+import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -52,7 +53,7 @@ import org.kalypsodeegree.model.geometry.GM_Position;
  * Introduced in otder not to change the {@link org.kalypso.transformation.GeoTransformer} interface.<br>
  * These helper methods should probably be added to the {@link org.kalypso.transformation.GeoTransformer} once it is
  * refactored.
- *
+ * 
  * @author Gernot Belger
  */
 public class GeoTransformUtils
@@ -96,7 +97,7 @@ public class GeoTransformUtils
   {
     try
     {
-      final GeoTransformer transformer = new GeoTransformer( targetSrs );
+      final IGeoTransformer transformer = GeoTransformerFactory.getGeoTransformer( targetSrs );
       return transformer.transform( geo );
     }
     catch( final Exception e )

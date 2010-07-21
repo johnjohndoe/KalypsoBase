@@ -38,35 +38,40 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.transformation.ui;
-
-import org.eclipse.jface.dialogs.IInputValidator;
-import org.kalypso.i18n.Messages;
-import org.kalypso.transformation.CRSHelper;
+package org.kalypso.transformation.crs;
 
 /**
- * This validator makes sure a existing coordinate system is selected.
+ * This interface provides functions for handling coordinate systems.
  * 
  * @author Holger Albert
  */
-public class CRSInputValidator implements IInputValidator
+public interface ICoordinateSystem
 {
   /**
-   * The constructor.
+   * This function returns the code of the coordinate system (e.g. 'EPSG:31467').
+   * 
+   * @return The code for the coordinate system (e.g. 'EPSG:31467').
    */
-  public CRSInputValidator( )
-  {
-  }
+  public String getCode( );
 
   /**
-   * @see org.eclipse.jface.dialogs.IInputValidator#isValid(java.lang.String)
+   * This function returns the name of the coordinate system (e.g. 'DHDN / Gauss-Kruger zone 3').
+   * 
+   * @return The name for the coordinate system (e.g. 'DHDN / Gauss-Kruger zone 3').
    */
-  @Override
-  public String isValid( String newText )
-  {
-    if( !CRSHelper.isKnownCRS( newText ) )
-      return String.format( Messages.getString( "org.kalypso.transformation.ui.CRSInputValidator.0" ), newText ); //$NON-NLS-1$
+  public String getName( );
 
-    return null;
-  }
+  /**
+   * This function returns the dimension of the coordinate system.
+   * 
+   * @return The dimension for the coordinate system.
+   */
+  public int getDimension( );
+
+  /**
+   * This function returns true, if the coordinate system is valid.
+   * 
+   * @return True, if the coordinate system is valid.
+   */
+  public boolean isValid( );
 }

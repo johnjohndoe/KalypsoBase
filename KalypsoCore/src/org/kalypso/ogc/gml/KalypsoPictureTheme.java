@@ -44,7 +44,8 @@ import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.template.types.ObjectFactory;
 import org.kalypso.template.types.StyledLayerType;
-import org.kalypso.transformation.GeoTransformer;
+import org.kalypso.transformation.transformer.GeoTransformerFactory;
+import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -125,8 +126,8 @@ abstract public class KalypsoPictureTheme extends AbstractKalypsoTheme
     {
       final GM_Envelope gmEnvelope = m_domain.getGM_Envelope( m_domain.getCoordinateSystem() );
       final String kalypsoCrs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
-      final GeoTransformer geoTransformer = new GeoTransformer( kalypsoCrs );
-      return geoTransformer.transformEnvelope( gmEnvelope );
+      final IGeoTransformer geoTransformer = GeoTransformerFactory.getGeoTransformer( kalypsoCrs );
+      return geoTransformer.transform( gmEnvelope );
     }
     catch( final Exception e2 )
     {

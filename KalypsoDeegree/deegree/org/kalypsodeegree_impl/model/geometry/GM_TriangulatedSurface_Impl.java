@@ -38,7 +38,6 @@ package org.kalypsodeegree_impl.model.geometry;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.deegree.crs.transformations.CRSTransformation;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -124,22 +123,21 @@ public class GM_TriangulatedSurface_Impl extends GM_PolyhedralSurface_Impl<GM_Tr
   /**
    * Must override, else the wrong type is created.
    * 
-   * @see org.kalypsodeegree.model.geometry.GM_Object#transform(org.deegree.crs.transformations.CRSTransformation,
-   *      java.lang.String)
+   * @see org.kalypsodeegree_impl.model.geometry.GM_PolyhedralSurface_Impl#transform(java.lang.String)
    */
   @Override
-  public GM_Object transform( final CRSTransformation trans, final String targetOGCCS ) throws Exception
+  public GM_Object transform( final String targetCRS ) throws Exception
   {
     /* If the target is the same coordinate system, do not transform. */
-    final String coordinateSystem = getCoordinateSystem();
-    if( coordinateSystem == null || coordinateSystem.equalsIgnoreCase( targetOGCCS ) )
+    final String sourceCRS = getCoordinateSystem();
+    if( sourceCRS == null || sourceCRS.equalsIgnoreCase( targetCRS ) )
       return this;
 
     final int cnt = size();
     final GM_Triangle[] triangles = new GM_Triangle[cnt];
     for( int i = 0; i < cnt; i++ )
-      triangles[i] = (GM_Triangle) get( i ).transform( trans, targetOGCCS );
+      triangles[i] = (GM_Triangle) get( i ).transform( targetCRS );
 
-    return GeometryFactory.createGM_TriangulatedSurface( triangles, targetOGCCS );
+    return GeometryFactory.createGM_TriangulatedSurface( triangles, targetCRS );
   }
 }

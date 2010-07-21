@@ -37,8 +37,8 @@ package org.kalypsodeegree_impl.model.geometry;
 
 import java.io.Serializable;
 
-import org.deegree.crs.transformations.CRSTransformation;
-import org.kalypso.transformation.TransformUtilities;
+import org.kalypso.transformation.transformer.GeoTransformerFactory;
+import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypsodeegree.model.geometry.GM_Position;
 
 /**
@@ -218,8 +218,9 @@ class GM_Position2D_Impl implements GM_Position, Serializable
    * @see org.kalypsodeegree.model.geometry.GM_Position#transform(org.deegree.crs.transformations.CRSTransformation)
    */
   @Override
-  public GM_Position transform( final CRSTransformation trans )
+  public GM_Position transform( final String sourceCRS, final String targetCRS ) throws Exception
   {
-    return TransformUtilities.transform( this, trans );
+    IGeoTransformer geoTransformer = GeoTransformerFactory.getGeoTransformer( targetCRS );
+    return geoTransformer.transform( this, sourceCRS );
   }
 }
