@@ -81,7 +81,7 @@ public final class DouglasPeuckerHelper
       distance = maxSegmentDistance();
     }
 
-    private final double maxSegmentDistance( )
+    private double maxSegmentDistance( )
     {
       double maxDistance = Double.NEGATIVE_INFINITY;
       final int deltaIndex = endInd - startInd;

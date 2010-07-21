@@ -450,7 +450,7 @@ public class DouglasPeuckerDialog extends TitleAreaDialog
     final IRecord[] points = m_provider.getPoints();
 
     /* Get the profile changes. */
-    IProfilChange[] removeChanges = DouglasPeuckerHelper.reduce( allowedDistance, points, m_profile );
+    final IProfilChange[] removeChanges = DouglasPeuckerHelper.reduce( allowedDistance, points, m_profile );
     if( removeChanges.length == 0 )
       return StatusUtilities.createOkStatus( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.DouglasPeuckerDialog.12") ); //$NON-NLS-1$
 

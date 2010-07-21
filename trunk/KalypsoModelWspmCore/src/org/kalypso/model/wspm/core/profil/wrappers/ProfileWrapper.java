@@ -90,6 +90,9 @@ public class ProfileWrapper
     return true;
   }
 
+  /**
+   * Returns the point with exactly the same width value as the given one.
+   */
   public ProfilePointWrapper findPoint( final double width )
   {
     final IRecord[] points = m_profile.getPoints();
@@ -373,6 +376,8 @@ public class ProfileWrapper
 
   public double getWidth( final Point point ) throws GM_Exception
   {
+    // TODO: dangerous: widht/rw/hw are not alwayws related!
+    // TODO: maybe delegate to WspProfileHelper#getWidthPosition
     final double jtsDistance = JTSUtilities.pointDistanceOnLine( getGeometry(), point );
     final double width = getFirstPoint().getBreite() + jtsDistance;
 

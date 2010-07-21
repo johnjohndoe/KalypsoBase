@@ -45,8 +45,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.StringTokenizer;
 
 import org.apache.commons.io.IOUtils;
@@ -70,8 +70,12 @@ import com.vividsolutions.jts.geom.Point;
  * 
  * @author Dirk Kuch
  */
-public class ImportTrippleHelper
+public final class ImportTrippleHelper
 {
+  private ImportTrippleHelper( )
+  {
+    throw new UnsupportedOperationException();
+  }
   /**
    * imports the profile trippel data and converts it into IProfils
    * 
@@ -201,7 +205,6 @@ public class ImportTrippleHelper
    */
   private static void storeProfile( final IProfil profile, final List<IRecord> profilPointList, final double station, final List<IProfil> profiles )
   {
-
     for( final IRecord point : profilPointList )
       profile.addPoint( point );
 
@@ -222,12 +225,8 @@ public class ImportTrippleHelper
    */
   private static boolean createProfilePoint( final IRecord point, final List<IRecord> profilPointList, final StringTokenizer tokenizer )
   {
-    final double x;
-    final double y;
-    final double z;
     /* observation of profile */
-
-    final HashMap<String, IComponent> components = ProfilUtil.getComponentsFromRecord( point );
+    final Map<String, IComponent> components = ProfilUtil.getComponentsFromRecord( point );
 
     final IComponent cRechtswert = components.get( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
     final IComponent cHochwert = components.get( IWspmConstants.POINT_PROPERTY_HOCHWERT );
@@ -242,8 +241,7 @@ public class ImportTrippleHelper
 
     if( tokenizer.hasMoreElements() )
     {
-      x = Double.parseDouble( tokenizer.nextToken() );
-
+      final double x = Double.parseDouble( tokenizer.nextToken() );
       point.setValue( iRechtswert, x );
     }
     else
@@ -251,7 +249,7 @@ public class ImportTrippleHelper
 
     if( tokenizer.hasMoreElements() )
     {
-      y = Double.parseDouble( tokenizer.nextToken() );
+      final double y = Double.parseDouble( tokenizer.nextToken() );
       point.setValue( iHochwert, y );
     }
     else
@@ -259,7 +257,7 @@ public class ImportTrippleHelper
 
     if( tokenizer.hasMoreElements() )
     {
-      z = Double.parseDouble( tokenizer.nextToken() );
+      final double z = Double.parseDouble( tokenizer.nextToken() );
       point.setValue( iHoehe, z );
     }
     else
