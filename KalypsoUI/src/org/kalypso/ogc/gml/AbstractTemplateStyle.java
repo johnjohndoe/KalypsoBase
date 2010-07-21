@@ -210,7 +210,6 @@ public abstract class AbstractTemplateStyle implements IKalypsoStyle, Marshallab
   @Override
   public void dirtyChanged( final IPoolableObjectType key, final boolean isDirty )
   {
-    setDirty( isDirty );
   }
 
   private String findLabel( )
