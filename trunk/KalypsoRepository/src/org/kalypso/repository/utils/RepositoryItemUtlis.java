@@ -303,7 +303,7 @@ public final class RepositoryItemUtlis
   /**
    * @return parameter from identifier
    */
-  private static String getParameterType( final String identifier )
+  public static String getParameterType( final String identifier )
   {
     final String[] parts = identifier.split( "\\." );
     if( parts.length < PARAMETER_START_BORDER )
