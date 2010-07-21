@@ -109,7 +109,7 @@ public class ImageProvider
   // public static final ImageDescriptor IMAGE_MAPVIEW_OUTLINE_UP = id( "icons/full/elcl16/prev_nav.gif" );
   // public static final ImageDescriptor IMAGE_MAPVIEW_OUTLINE_DOWN = id( "icons/full/elcl16/next_nav.gif" );
   public static final ImageDescriptor IMAGE_MAPVIEW_OUTLINE_REMOVE = ImageProvider.id( "icons/full/elcl16/remove.gif" ); //$NON-NLS-1$
-  
+
   public static final ImageDescriptor IMAGE_OBSVIEW_CURVE_PROPERTIES = ImageProvider.id( "icons/full/elcl16/obsviewCurveProperties.gif" ); //$NON-NLS-1$
 
   // public static final ImageDescriptor IMAGE_MAPVIEW_OUTLINE_ADD = id( "icons/full/elcl16/newpack_wiz.gif" );
@@ -127,6 +127,8 @@ public class ImageProvider
   public static final ImageDescriptor IMAGE_ZML_REPOSITORY = ImageProvider.id( "icons/repository/repository_rep.gif" ); //$NON-NLS-1$
 
   public static final ImageDescriptor IMAGE_ZML_REPOSITORY_ITEM = ImageProvider.id( "icons/repository/repository_item.gif" ); //$NON-NLS-1$
+
+  public static final ImageDescriptor IMAGE_ZML_VIRTUAL_REPOSITORY_ITEM = ImageProvider.id( "icons/repository/virtual_repository_item.gif" ); //$NON-NLS-1$
 
 // public static final ImageDescriptor IMAGE_ZML_REPOSITORY_ADD = ImageProvider.id(
 // "icons/repository/repository_add.gif" );

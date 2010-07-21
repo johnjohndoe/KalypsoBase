@@ -46,6 +46,7 @@ import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.repository.RepositoryException;
+import org.kalypso.repository.utils.RepositoryItemUtils;
 import org.kalypso.ui.ImageProvider;
 
 /**
@@ -55,12 +56,13 @@ import org.kalypso.ui.ImageProvider;
  */
 public class RepositoryLabelProvider extends LabelProvider
 {
-  private static final Image IMG_FOLDER = PlatformUI.getWorkbench().getSharedImages().getImage(
-      ISharedImages.IMG_OBJ_FOLDER );
+  private static final Image IMG_FOLDER = PlatformUI.getWorkbench().getSharedImages().getImage( ISharedImages.IMG_OBJ_FOLDER );
 
-  private final Image IMG_ITEM = ImageProvider.IMAGE_ZML_REPOSITORY_ITEM.createImage();
+  private static final Image IMG_ITEM = ImageProvider.IMAGE_ZML_REPOSITORY_ITEM.createImage();
 
-  private final Image IMG_REPOSITORY = ImageProvider.IMAGE_ZML_REPOSITORY.createImage();
+  private static final Image IMG_VIRTUAL_ITEM = ImageProvider.IMAGE_ZML_VIRTUAL_REPOSITORY_ITEM.createImage();
+
+  private static final Image IMG_REPOSITORY = ImageProvider.IMAGE_ZML_REPOSITORY.createImage();
 
   /**
    * @see org.eclipse.jface.viewers.LabelProvider#getImage(java.lang.Object)
@@ -70,17 +72,23 @@ public class RepositoryLabelProvider extends LabelProvider
   {
     if( element instanceof IRepositoryItem )
     {
-      final IRepositoryItem item = (IRepositoryItem)element;
 
       try
       {
-        if( item.getParent() == null )
-          return IMG_REPOSITORY;
+        final IRepositoryItem item = (IRepositoryItem) element;
+        if( RepositoryItemUtils.isVirtual( item.getIdentifier() ) )
+        {
+          if( item.hasChildren() )
+            return IMG_FOLDER;
 
-        if( item.hasChildren() )
+          return IMG_VIRTUAL_ITEM;
+        }
+        else if( item.hasChildren() )
           return IMG_FOLDER;
+        else if( item.getParent() == null )
+          return IMG_REPOSITORY;
       }
-      catch( RepositoryException e )
+      catch( final RepositoryException e )
       {
         e.printStackTrace();
       }

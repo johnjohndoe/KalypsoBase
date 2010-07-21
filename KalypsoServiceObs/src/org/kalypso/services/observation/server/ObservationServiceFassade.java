@@ -75,7 +75,7 @@ import org.kalypso.repository.RepositoryException;
 import org.kalypso.repository.conf.RepositoryConfigUtils;
 import org.kalypso.repository.conf.RepositoryFactoryConfig;
 import org.kalypso.repository.factory.IRepositoryFactory;
-import org.kalypso.repository.utils.RepositoryItemUtlis;
+import org.kalypso.repository.utils.RepositoryItemUtils;
 import org.kalypso.repository.utils.RepositoryUtils;
 import org.kalypso.services.observation.KalypsoServiceObsActivator;
 import org.kalypso.services.observation.ObservationServiceUtils;
@@ -447,7 +447,7 @@ public class ObservationServiceFassade implements IObservationService, IDisposab
     if( m_repository instanceof IModifyableRepository )
     {
       final IModifyableRepository modifyable = (IModifyableRepository) m_repository;
-      modifyable.makeItem( RepositoryItemUtlis.replaceIdentifier( itemIdentifier, modifyable.getIdentifier() ) );
+      modifyable.makeItem( RepositoryItemUtils.replaceIdentifier( itemIdentifier, modifyable.getIdentifier() ) );
     }
   }
 
@@ -460,7 +460,7 @@ public class ObservationServiceFassade implements IObservationService, IDisposab
     if( m_repository instanceof IModifyableRepository )
     {
       final IModifyableRepository modifyable = (IModifyableRepository) m_repository;
-      modifyable.deleteItem( RepositoryItemUtlis.replaceIdentifier( identifier, modifyable.getIdentifier() ) );
+      modifyable.deleteItem( RepositoryItemUtils.replaceIdentifier( identifier, modifyable.getIdentifier() ) );
     }
   }
 

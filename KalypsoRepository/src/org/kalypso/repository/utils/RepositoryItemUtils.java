@@ -51,7 +51,7 @@ import org.kalypso.repository.RepositoryException;
 /**
  * @author Dirk Kuch
  */
-public final class RepositoryItemUtlis
+public final class RepositoryItemUtils
 {
   private static final int PARAMETER_START_BORDER = 4;
 
@@ -59,7 +59,7 @@ public final class RepositoryItemUtlis
 
   public static final int ZRXP_PRIORITY_ITEM_OFFSET = 10;
 
-  private RepositoryItemUtlis( )
+  private RepositoryItemUtils( )
   {
 
   }
@@ -316,5 +316,10 @@ public final class RepositoryItemUtlis
     }
 
     return StringUtilities.chomp( parameter.toString() );
+  }
+
+  public static boolean isVirtual( final String identifier )
+  {
+    return identifier.toLowerCase().contains( ".virtuell." ); //$NON-NLS-N$
   }
 }
