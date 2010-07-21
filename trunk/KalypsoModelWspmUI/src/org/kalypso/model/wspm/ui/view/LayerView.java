@@ -44,6 +44,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.Form;
+import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
@@ -63,7 +64,7 @@ public class LayerView extends AbstractChartModelView
   private final ILayerManagerEventListener m_layerManagerEventListener = new AbstractLayerManagerEventListener()
   {
     @Override
-    public void onActivLayerChanged( IChartLayer layer )
+    public void onActivLayerChanged( final IChartLayer layer )
     {
       updateControl();
     }
@@ -123,28 +124,25 @@ public class LayerView extends AbstractChartModelView
       control.setLayoutData( new GridData( GridData.FILL_BOTH ) );
       m_parent.layout();
     }
-
   }
 
   /**
    * @see org.kalypso.model.wspm.ui.view.AbstractChartModelView#createControl(org.eclipse.swt.widgets.Composite)
    */
   @Override
-  protected void createControl( Composite parent )
+  protected void createControl( final Composite parent )
   {
-
     if( parent == null )
       return;
     m_parent = parent;
     modelChanged( null );
-
   }
 
   /**
    * @see org.kalypso.model.wspm.ui.view.AbstractChartModelView#modelChanged(de.openali.odysseus.chart.framework.model.IChartModel)
    */
   @Override
-  protected void modelChanged( IChartModel oldModel )
+  protected void modelChanged( final IChartModel oldModel )
   {
     final ILayerManager oldLm = oldModel == null ? null : oldModel.getLayerManager();
     final ILayerManager lm = getChartModel() == null ? null : getChartModel().getLayerManager();
@@ -152,7 +150,17 @@ public class LayerView extends AbstractChartModelView
       oldLm.removeListener( m_layerManagerEventListener );
     if( lm != null )
       lm.addListener( m_layerManagerEventListener );
-    updateControl();
+
+    final Runnable runnable = new Runnable()
+    {
+      @Override
+      public void run( )
+      {
+        updateControl();
+      }
+    };
+
+    ControlUtils.asyncExec( m_parent, runnable );
   }
 
 }

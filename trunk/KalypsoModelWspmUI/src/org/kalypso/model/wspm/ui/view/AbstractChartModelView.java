@@ -166,9 +166,12 @@ public abstract class AbstractChartModelView extends ViewPart implements IAdapte
    *      de.openali.odysseus.chart.framework.model.IChartModel)
    */
   @Override
-  public void onModelChanged( IChartModel oldModel, IChartModel newModel )
+  public void onModelChanged( final IChartModel oldModel, final IChartModel newModel )
   {
     m_chartModel = newModel;
+
+    // FIXME: throws InvalidThreadAccess if not invoked from SWT-Thread, this is not good!
+
     modelChanged( oldModel );
   }
 
@@ -207,16 +210,18 @@ public abstract class AbstractChartModelView extends ViewPart implements IAdapte
     }
   }
 
-  public void setForm( Form form )
+  public void setForm( final Form form )
   {
     m_form = form;
   }
 
+  /** Must be called in SWT thread */
   protected final void updateControl( )
   {
     updateControl( m_form );
   }
 
+  /** Must be called in SWT thread */
   protected abstract void updateControl( final Form form );
 
   protected final void updatePartName( final Form form, final IChartModel model )

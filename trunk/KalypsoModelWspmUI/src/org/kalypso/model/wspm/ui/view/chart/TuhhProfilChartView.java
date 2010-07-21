@@ -189,14 +189,38 @@ public class TuhhProfilChartView extends ViewPart implements IChartPart, IProfil
       restoreStateActive( newModel.getLayerManager(), activeLayerId );
       restoreStatePosition( newModel.getLayerManager(), positions );
       restoreStateVisible( newModel.getLayerManager(), visibility );
-      m_form.setMessage( null );
+      setFormMessage( null, IMessageProvider.NONE );
       setPartNames( String.format( "Station km %10.4f", newProfile.getStation() ), Messages.getString( "org.kalypso.model.wspm.ui.view.AbstractProfilViewPart_2" ) ); //$NON-NLS-1$
       newProfile.addProfilListener( newModel );
       newModel.maximize();
     }
 
-    m_chartComposite.setChartModel( newModel );
-    m_chartModelEventHandler.fireModelChanged( oldModel, newModel );
+    setChartModel( oldModel, newModel );
+  }
+
+  private void setChartModel( final IChartModel oldModel, final ProfilChartModel newModel )
+  {
+    final ChartComposite chartComposite = m_chartComposite;
+    final ChartModelEventHandler chartModelEventHandler = m_chartModelEventHandler;
+    if( chartComposite != null && !chartComposite.isDisposed() )
+    {
+      final Display display = chartComposite.getDisplay();
+      if( !display.isDisposed() )
+      {
+        final Runnable runnable = new Runnable()
+        {
+          @Override
+          public void run( )
+          {
+            if( !chartComposite.isDisposed() )
+              chartComposite.setChartModel( newModel );
+            chartModelEventHandler.fireModelChanged( oldModel, newModel );
+          }
+        };
+        display.syncExec( runnable );
+      }
+    }
+
   }
 
   private void setFormMessage( final String message, final int type )
