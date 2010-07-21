@@ -38,7 +38,6 @@ package org.kalypsodeegree_impl.model.geometry;
 import java.io.Serializable;
 import java.util.Arrays;
 
-import org.deegree.crs.transformations.CRSTransformation;
 import org.kalypsodeegree.model.geometry.GM_Aggregate;
 import org.kalypsodeegree.model.geometry.GM_Boundary;
 import org.kalypsodeegree.model.geometry.GM_Curve;
@@ -53,7 +52,6 @@ import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Ring;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
-import org.kalypsodeegree_impl.tools.Debug;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
@@ -208,7 +206,7 @@ public class GM_Ring_Impl extends GM_OrientableCurve_Impl implements GM_Ring, Se
    * checks if this curve segment is completly equal to the submitted geometry
    * 
    * @param other
-   *            object to compare to
+   *          object to compare to
    */
   @Override
   public boolean equals( final Object other )
@@ -392,26 +390,21 @@ public class GM_Ring_Impl extends GM_OrientableCurve_Impl implements GM_Ring, Se
   }
 
   /**
-   * @see org.kalypsodeegree.model.geometry.GM_Object#transform(org.kalypsodeegree_impl.model.ct.MathTransform,
-   *      org.opengis.cs.CS_CoordinateSystem)
+   * @see org.kalypsodeegree.model.geometry.GM_Object#transform(java.lang.String)
    */
   @Override
-  public GM_Object transform( final CRSTransformation trans, final String targetOGCCS ) throws Exception
+  public GM_Object transform( final String targetCRS ) throws Exception
   {
     /* If the target is the same coordinate system, do not transform. */
-    final String coordinateSystem = getCoordinateSystem();
-    if( coordinateSystem == null || coordinateSystem.equalsIgnoreCase( targetOGCCS ) )
+    final String sourceCRS = getCoordinateSystem();
+    if( sourceCRS == null || sourceCRS.equalsIgnoreCase( targetCRS ) )
       return this;
-
-    Debug.debugMethodBegin( this, "transformRing" );
 
     final GM_Position[] pos = getPositions();
     final GM_Position[] transPos = new GM_Position[pos.length];
     for( int i = 0; i < pos.length; i++ )
-      transPos[i] = pos[i].transform( trans );
+      transPos[i] = pos[i].transform( sourceCRS, targetCRS );
 
-    Debug.debugMethodEnd();
-    return GeometryFactory.createGM_Ring( transPos, targetOGCCS );
-
+    return GeometryFactory.createGM_Ring( transPos, targetCRS );
   }
 }

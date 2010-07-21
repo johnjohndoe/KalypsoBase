@@ -43,7 +43,8 @@ package org.kalypso.ogc.gml.map.widgets.builders;
 import java.awt.Graphics;
 import java.awt.Point;
 
-import org.kalypso.transformation.GeoTransformer;
+import org.kalypso.transformation.transformer.GeoTransformerFactory;
+import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -64,7 +65,7 @@ public class PointGeometryBuilder implements IGeometryBuilder
 
   /**
    * @param targetCrs
-   *            The target coordinate system.
+   *          The target coordinate system.
    */
   public PointGeometryBuilder( final String targetCrs )
   {
@@ -91,7 +92,7 @@ public class PointGeometryBuilder implements IGeometryBuilder
     if( m_result != null )
       return m_result;
 
-    final GeoTransformer transformer = new GeoTransformer( m_crs );
+    final IGeoTransformer transformer = GeoTransformerFactory.getGeoTransformer( m_crs );
 
     final GM_Point transformedPoint = (GM_Point) transformer.transform( m_point );
 

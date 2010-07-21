@@ -67,7 +67,8 @@ import org.kalypso.grid.GeoGridUtilities;
 import org.kalypso.grid.GeoGridUtilities.Interpolation;
 import org.kalypso.grid.IGeoGrid;
 import org.kalypso.grid.RectifiedGridCoverageGeoGrid;
-import org.kalypso.transformation.GeoTransformer;
+import org.kalypso.transformation.transformer.GeoTransformerFactory;
+import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
 import org.kalypsodeegree.graphics.displayelements.IncompatibleGeometryTypeException;
@@ -284,7 +285,7 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
    */
   private void paintPixelwise( final Graphics2D g, final IGeoGrid grid, final GeoTransform projection, final String targetCRS, final Envelope env, final double cellPixelWidthX, final double cellPixelWidthY, final GeoGridUtilities.Interpolation interpolation, final IProgressMonitor monitor ) throws GeoGridException, CoreException
   {
-    final GeoTransformer geoTransformer = new GeoTransformer( grid.getSourceCRS() );
+    final IGeoTransformer geoTransformer = GeoTransformerFactory.getGeoTransformer( grid.getSourceCRS() );
 
     // Always +/- 1 in order to avoid gaps due to rounding errors
     // cells outside the grid will not be painted, as we get Double.NaN here
@@ -314,7 +315,7 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
     }
   }
 
-  private void paintTile( final Graphics2D g, final IGeoGrid grid, final GeoTransform projection, final String targetCRS, final GeoTransformer geoTransformer, final GeoGridUtilities.Interpolation interpolation, final int screenXfrom, final int screenYfrom, final int screenWidth, final int screenHeight, final double cellPixelWidthX, final double cellPixelWidthY, final IProgressMonitor monitor ) throws GeoGridException, CoreException
+  private void paintTile( final Graphics2D g, final IGeoGrid grid, final GeoTransform projection, final String targetCRS, final IGeoTransformer geoTransformer, final GeoGridUtilities.Interpolation interpolation, final int screenXfrom, final int screenYfrom, final int screenWidth, final int screenHeight, final double cellPixelWidthX, final double cellPixelWidthY, final IProgressMonitor monitor ) throws GeoGridException, CoreException
   {
     try
     {
@@ -406,7 +407,7 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
       return Double.NaN;
 
     // First Slope ...
-    final double x = z * // 
+    final double x = z * //
         (values[i - 1][j - 1] + values[i - 1][j] + values[i - 1][j] + values[i - 1][j + 1] - values[i + 1][j - 1] - values[i + 1][j] - values[i + 1][j] - values[i + 1][j + 1]) //
         / (8.0 * xres * scale);
 
@@ -430,7 +431,7 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
     return cang;
   }
 
-  private double[][] getValues( final IGeoGrid grid, final GeoTransform projection, final String targetCRS, final GeoTransformer geoTransformer, final GeoGridUtilities.Interpolation interpolation, final int screenXfrom, final int screenYfrom, final int screenWidth, final int screenHeight ) throws GeoGridException, CoreException
+  private double[][] getValues( final IGeoGrid grid, final GeoTransform projection, final String targetCRS, final IGeoTransformer geoTransformer, final GeoGridUtilities.Interpolation interpolation, final int screenXfrom, final int screenYfrom, final int screenWidth, final int screenHeight ) throws GeoGridException, CoreException
   {
     try
     {
@@ -446,7 +447,7 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
           final GM_Position position = GeometryFactory.createGM_Position( geoX, geoY );
 
           /* Transform to grid's target crs */
-          final GM_Position transformedPosition = geoTransformer.transformPosition( position, targetCRS );
+          final GM_Position transformedPosition = geoTransformer.transform( position, targetCRS );
           final Coordinate transformedCrd = JTSAdapter.export( transformedPosition );
           // TODO: still too slow, if cellsize bigger than the ratsersize
           values[y][x] = GeoGridUtilities.getValue( grid, transformedCrd, interpolation );
@@ -745,7 +746,7 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
             final GM_Point centerPoint = GeometryFactory.createGM_Point( coordinate.x, coordinate.y, grid.getSourceCRS() );
 
             /* Transform it to the target coordinate system. */
-            final GeoTransformer geo = new GeoTransformer( targetCRS );
+            final IGeoTransformer geo = GeoTransformerFactory.getGeoTransformer( targetCRS );
             final GM_Object transformedCenterPoint = geo.transform( centerPoint );
 
             /* Draw the center point. */

@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.transformation;
+package org.kalypso.transformation.deegree;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -54,7 +54,7 @@ import org.deegree.model.crs.UnknownCRSException;
  * 
  * @author Holger Albert
  */
-public class CachedTransformationFactory
+class CachedTransformationFactory
 {
   /**
    * The instance of this cached transformation factory.

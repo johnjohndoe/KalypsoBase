@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.io.sax.marshaller;
 
-import org.deegree.model.crs.UnknownCRSException;
 import org.kalypso.transformation.CRSHelper;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
@@ -56,26 +55,18 @@ public class MarshallerUtils implements IMashallerConstants
   {
     final AttributesImpl atts = new AttributesImpl();
     atts.addAttribute( "", "srsName", "srsName", "CDATA", crs );
-    
+
     return atts;
   }
-  
+
   public static AttributesImpl createCrsAttributesWSrsDimension( final String crs ) throws SAXException
   {
     AttributesImpl atts = createCrsAttributes( crs );
-    try
-    {
-      atts.addAttribute( "", "srsDimension", "srsDimension", "CDATA", "" + CRSHelper.getDimension( crs ) );
-    }
-    catch( UnknownCRSException e )
-    {
-      throw new SAXException( e );
-    }
-    
+    atts.addAttribute( "", "srsDimension", "srsDimension", "CDATA", "" + CRSHelper.getDimension( crs ) );
+
     return atts;
   }
-  
-  
+
   public static String getQName( String tag )
   {
     return QNAME_GML + tag;

@@ -38,38 +38,34 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.transformation.ui;
+package org.kalypso.transformation.crs;
 
-import java.util.List;
+import org.kalypso.transformation.deegree.DeegreeCoordinateSystem;
 
 /**
- * A listener which get notified, if the structure in the list of the {@link #AvailableCRSPanel} has changed.
+ * This factory returns coordinate systems.
  * 
  * @author Holger Albert
  */
-public interface IAvailableCRSPanelListener
+public class CoordinateSystemFactory
 {
   /**
-   * This function gets called, if the coordinate systems were initialized.
-   * 
-   * @param names
-   *            The list of names of the coordinate systems.
+   * The constructor.
    */
-  public void coordinateSystemsInitialized( List<String> names );
+  private CoordinateSystemFactory( )
+  {
+  }
 
   /**
-   * This function gets called, if a coordinate system was added.
+   * This function returns the coordinate system for the given code.
    * 
-   * @param name
-   *            The name of the coordinate system.
+   * @param code
+   *          The code of the coordinate system.
+   * @return The coordinate system.
    */
-  public void coordinateSystemAdded( String name );
-
-  /**
-   * This function gets called, if a coordinate system was removed.
-   * 
-   * @param name
-   *            The name of the coordinate system.
-   */
-  public void coordinateSystemRemoved( String name );
+  public static ICoordinateSystem getCoordinateSystem( String code )
+  {
+    // TODO Returning the deegree coordinate system for now...
+    return new DeegreeCoordinateSystem( code );
+  }
 }

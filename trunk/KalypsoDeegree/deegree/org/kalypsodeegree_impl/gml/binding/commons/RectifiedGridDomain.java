@@ -38,7 +38,8 @@ package org.kalypsodeegree_impl.gml.binding.commons;
 import javax.xml.namespace.QName;
 
 import org.kalypso.commons.xml.NS;
-import org.kalypso.transformation.GeoTransformer;
+import org.kalypso.transformation.transformer.GeoTransformerFactory;
+import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypsodeegree.model.coverage.GridRange;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -147,7 +148,7 @@ public class RectifiedGridDomain
     if( originCrs == null || cs == null || originCrs.equals( cs ) )
       return surface;
 
-    final GeoTransformer geoTrans = new GeoTransformer( cs );
+    final IGeoTransformer geoTrans = GeoTransformerFactory.getGeoTransformer( cs );
     return (GM_Surface<GM_SurfacePatch>) geoTrans.transform( surface );
   }
 
@@ -161,7 +162,7 @@ public class RectifiedGridDomain
     if( (cs == null) || m_origin.getCoordinateSystem().equals( cs ) )
       return m_origin;
 
-    final GeoTransformer geoTrans = new GeoTransformer( cs );
+    final IGeoTransformer geoTrans = GeoTransformerFactory.getGeoTransformer( cs );
     return (GM_Point) geoTrans.transform( m_origin );
   }
 
@@ -232,7 +233,7 @@ public class RectifiedGridDomain
     if( originCrs == null || cs == null || originCrs.equals( cs ) )
       return m_rasterBoundaryAsSurface.getEnvelope();
 
-    final GeoTransformer geoTrans = new GeoTransformer( cs );
+    final IGeoTransformer geoTrans = GeoTransformerFactory.getGeoTransformer( cs );
     return geoTrans.transform( m_rasterBoundaryAsSurface ).getEnvelope();
   }
 

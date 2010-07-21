@@ -70,7 +70,8 @@ import org.kalypso.contribs.java.util.Arrays;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.wms.deegree.document.KalypsoWMSCapabilitiesDocument;
 import org.kalypso.ogc.gml.wms.loader.ICapabilitiesLoader;
-import org.kalypso.transformation.GeoTransformer;
+import org.kalypso.transformation.transformer.GeoTransformerFactory;
+import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.graphics.transformation.GeoTransformUtils;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -78,7 +79,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * This class provides functions for dealing with the WMS client from degree.
- *
+ * 
  * @author Holger Albert
  */
 public class DeegreeWMSUtilities
@@ -92,7 +93,7 @@ public class DeegreeWMSUtilities
 
   /**
    * This function should load the capabilites for the given service.
-   *
+   * 
    * @param loader
    *          This loader will load the capabilities.
    * @param monitor
@@ -136,7 +137,7 @@ public class DeegreeWMSUtilities
 
   /**
    * This function creates the get feature info request.
-   *
+   * 
    * @param capabilities
    *          The wms capabilities.
    * @param layers
@@ -171,7 +172,7 @@ public class DeegreeWMSUtilities
 
   /**
    * This function creates the get map request.
-   *
+   * 
    * @param capabilities
    *          The wms capabilities.
    * @param negotiatedSRS
@@ -215,8 +216,9 @@ public class DeegreeWMSUtilities
       wmsParameter.put( "HEIGHT", "" + height ); //$NON-NLS-1$ //$NON-NLS-2$
       wmsParameter.put( "SRS", negotiatedSRS ); //$NON-NLS-1$
 
-      final GeoTransformer gt = new GeoTransformer( negotiatedSRS );
-      final GM_Envelope targetEnvRemoteSRS = gt.transformEnvelope( requestedEnvLocalSRS, localSRS );
+      final IGeoTransformer gt = GeoTransformerFactory.getGeoTransformer( negotiatedSRS );
+      GM_Envelope requestedEnvLocalCRS = GeometryFactory.createGM_Envelope( requestedEnvLocalSRS.getMinX(), requestedEnvLocalSRS.getMinY(), requestedEnvLocalSRS.getMaxX(), requestedEnvLocalSRS.getMaxY(), localSRS );
+      final GM_Envelope targetEnvRemoteSRS = gt.transform( requestedEnvLocalCRS );
 
       if( targetEnvRemoteSRS.getMax().getX() - targetEnvRemoteSRS.getMin().getX() <= 0 )
         throw new Exception( "invalid bbox" ); //$NON-NLS-1$
@@ -246,7 +248,7 @@ public class DeegreeWMSUtilities
 
   /**
    * This function prepares the request parameter.
-   *
+   * 
    * @param capabilities
    *          The wms capabilities.
    * @param name
@@ -307,7 +309,7 @@ public class DeegreeWMSUtilities
 
   /**
    * Tries to find the operation.
-   *
+   * 
    * @param capabilities
    *          The wms capabilities.
    * @param name
@@ -329,7 +331,7 @@ public class DeegreeWMSUtilities
    * This method tries to find a common spatial reference system (srs) for a given set of layers. If all layers
    * coorespond to the local crs the local crs is returned, otherwise the srs of the top layer is returned and the
    * client must choose one to transform it to the local coordinate system
-   *
+   * 
    * @param localCRS
    *          The local spatial reference system.
    * @param capabilities
@@ -353,7 +355,7 @@ public class DeegreeWMSUtilities
 
   /**
    * This method tries to match the local coordinate system to a given layer selection.
-   *
+   * 
    * @param topLayer
    *          The top layer of the layer structur of a web map service.
    * @param layerSelection
@@ -385,7 +387,7 @@ public class DeegreeWMSUtilities
    * This method collects all layers (or the specified layers) from the top layer of a WMSCapabilites document. If the
    * parameter layerSeletion is empty or null the method collects all layers, otherwise returns all layers with the same
    * name as in the layerSelection.
-   *
+   * 
    * @param collector
    *          The set that collects the layers found.
    * @param layer
@@ -412,7 +414,7 @@ public class DeegreeWMSUtilities
 
   /**
    * This method checks an array of Strings for a given String to match.
-   *
+   * 
    * @param array
    *          Strings to check for a match.
    * @param toMatch
@@ -438,7 +440,7 @@ public class DeegreeWMSUtilities
    */
   public static GM_Envelope getMaxExtent( final String[] layers, final WMSCapabilities capabilites, final String srs ) throws Exception
   {
-    final GeoTransformer geoTransformer = new GeoTransformer( srs );
+    final IGeoTransformer geoTransformer = GeoTransformerFactory.getGeoTransformer( srs );
 
     final Layer topLayer = capabilites.getLayer();
     final HashSet<Layer> layerCollector = new HashSet<Layer>();
@@ -451,7 +453,7 @@ public class DeegreeWMSUtilities
       final GM_Envelope layerEnv = findEnvelope( layer, srs );
       if( layerEnv != null )
       {
-        final GM_Envelope envTransformed = geoTransformer.transformEnvelope( layerEnv );
+        final GM_Envelope envTransformed = geoTransformer.transform( layerEnv );
         resultEnvelope = resultEnvelope == null ? envTransformed : resultEnvelope.getMerged( envTransformed );
       }
     }
@@ -460,7 +462,7 @@ public class DeegreeWMSUtilities
       return resultEnvelope;
 
     final GM_Envelope topEnvelope = findEnvelope( topLayer, srs );
-    return geoTransformer.transformEnvelope( topEnvelope );
+    return geoTransformer.transform( topEnvelope );
   }
 
   private static GM_Envelope findEnvelope( final Layer layer, final String srs )
@@ -488,7 +490,7 @@ public class DeegreeWMSUtilities
 
   /**
    * This method collects all layers from a capabilites document.
-   *
+   * 
    * @param capabilites
    *          WMS capabilites document.
    * @param set
@@ -509,7 +511,7 @@ public class DeegreeWMSUtilities
 
   /**
    * This function converts an envelope to a string representation.
-   *
+   * 
    * @param envelope
    *          The envelope.
    * @return The string representation of the envelope.

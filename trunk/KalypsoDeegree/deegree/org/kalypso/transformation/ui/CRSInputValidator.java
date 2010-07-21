@@ -45,7 +45,7 @@ import org.kalypso.i18n.Messages;
 import org.kalypso.transformation.CRSHelper;
 
 /**
- * This validator makes sure an existing coordinate system is selected.
+ * This validator makes sure a existing coordinate system is selected.
  * 
  * @author Holger Albert
  */

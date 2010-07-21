@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.transformation;
+package org.kalypso.transformation.deegree;
 
 import java.util.ArrayList;
 
@@ -48,90 +48,57 @@ import org.deegree.crs.components.Unit;
 import org.deegree.crs.coordinatesystems.CoordinateSystem;
 import org.deegree.crs.projections.ProjectionUtils;
 import org.deegree.crs.transformations.CRSTransformation;
-import org.kalypsodeegree.KalypsoDeegreePlugin;
+import org.kalypso.transformation.Debug;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.osgi.framework.Bundle;
-import org.osgi.framework.BundleContext;
 
 /**
  * This class provides some functions for the GeoTransformer.
  * 
  * @author Holger Albert
  */
-public class TransformUtilities
+public class DeegreeTransformUtilities
 {
   /**
    * The constructor.
    */
-  private TransformUtilities( )
+  private DeegreeTransformUtilities( )
   {
-  }
-
-  /**
-   * This function will check a SystemProperty, if a transformation of geographic data should be done.<br>
-   * The default value is always true (e.g. in the case, the property is not set or set to true).<br>
-   * Only if the property is set to false, this function returns false.
-   * 
-   * @return True, if a transformation should be done, false otherwise.
-   */
-  public static boolean shouldTransform( )
-  {
-    String transform = getTransformProperty();
-    if( (transform != null) && (transform.equalsIgnoreCase( "false" )) )
-    {
-      Debug.TRANSFORM.printf( "Should not transform ...\n" );
-      return false;
-    }
-
-    Debug.TRANSFORM.printf( "Should transform ...\n" );
-    return true;
-  }
-
-  /**
-   * This function will return the string of the SystemProperty 'org.kalypso.kalypsodegree.transform'.
-   * 
-   * @return The value property or null.
-   */
-  private static String getTransformProperty( )
-  {
-    Bundle bundle = KalypsoDeegreePlugin.getDefault().getBundle();
-    BundleContext bundleContext = bundle.getBundleContext();
-    return bundleContext.getProperty( "org.kalypso.kalypsodegree.transform" );
   }
 
   /**
    * This function transformes a point.
    * 
-   * @param geo
+   * @param point
    *          The point, which should be transformed.
-   * @param trans
-   *          The transformation.
+   * @param sourceCRS
+   *          The coordinate system of the source.
+   * @param targetCRS
+   *          The coordinate system of the target.
    * @return The transformed point.
    */
-  public static GM_Point transform( GM_Point geo, CRSTransformation trans )
+  public static GM_Point transform( GM_Point point, String sourceCRS, String targetCRS ) throws Exception
   {
-    /* If the flag is set to false, no transformation is allowed. */
-    if( shouldTransform() == false )
-      return geo;
+    /* If the coordinate systems are the same, do not transform. */
+    if( sourceCRS == null || sourceCRS.equalsIgnoreCase( targetCRS ) )
+      return point;
+
+    /* Get the transformation. */
+    CRSTransformation transformation = getTransformation( sourceCRS, targetCRS );
 
     /* Get the coordinate systems. */
-    CoordinateSystem sourceCRS = trans.getSourceCRS();
-    CoordinateSystem targetCRS = trans.getTargetCRS();
-
-    /* If the coordinate systems are the same, do not transform. */
-    if( sourceCRS.getIdAndName().equals( targetCRS.getIdAndName() ) )
-      return geo;
+    CoordinateSystem sourceCoordinateSystem = transformation.getSourceCRS();
+    CoordinateSystem targetCoordinateSystem = transformation.getTargetCRS();
 
     /* Debug. */
-    Debug.TRANSFORM.printf( "POINT: %s to %s\n", sourceCRS.getIdentifier(), targetCRS.getIdentifier() );
+    Debug.TRANSFORM.printf( "POINT: %s to %s\n", sourceCoordinateSystem.getIdentifier(), targetCoordinateSystem.getIdentifier() );
 
     /* Normalize points to fit in -180:180 and -90:90 if they are in degrees. */
-    double geoX = geo.getX();
-    double geoY = geo.getY();
-    double geoZ = geo.getZ();
-    if( sourceCRS.getUnits().equals( Unit.RADIAN ) )
+    double geoX = point.getX();
+    double geoY = point.getY();
+    double geoZ = point.getZ();
+    if( sourceCoordinateSystem.getUnits().equals( Unit.RADIAN ) )
     {
       geoX = ProjectionUtils.normalizeLongitude( Math.toRadians( geoX ) );
       geoY = ProjectionUtils.normalizeLatitude( Math.toRadians( geoY ) );
@@ -139,10 +106,10 @@ public class TransformUtilities
 
     /* Transform. */
     Point3d coords = new Point3d( geoX, geoY, geoZ );
-    Point3d newCoords = trans.doTransform( coords );
+    Point3d newCoords = transformation.doTransform( coords );
 
     /* Convert back to degrees, if necessary. */
-    if( targetCRS.getUnits().equals( Unit.RADIAN ) )
+    if( targetCoordinateSystem.getUnits().equals( Unit.RADIAN ) )
     {
       newCoords.x = Math.toDegrees( newCoords.x );
       newCoords.y = Math.toDegrees( newCoords.y );
@@ -152,7 +119,7 @@ public class TransformUtilities
     // We only have to check if the z value was transformed because of a 3d transformation
     // (therefore the check for dimensions)
     // We either put the old z value or the transformed value
-    return GeometryFactory.createGM_Point( newCoords.x, newCoords.y, (targetCRS.getDimension() == 3) ? newCoords.z : geo.getZ(), targetCRS.getIdentifier() );
+    return GeometryFactory.createGM_Point( newCoords.x, newCoords.y, (targetCoordinateSystem.getDimension() == 3) ? newCoords.z : point.getZ(), targetCoordinateSystem.getIdentifier() );
   }
 
   /**
@@ -160,36 +127,33 @@ public class TransformUtilities
    * 
    * @param pos
    *          The position, which should be transformed.
-   * @param trans
-   *          The transformation.
+   * @param sourceCRS
+   *          The coordinate system of the source.
+   * @param targetCRS
+   *          The coordinate system of the target.
    * @return The transformed position.
    */
-  public static GM_Position transform( GM_Position pos, CRSTransformation trans )
+  public static GM_Position transform( GM_Position pos, String sourceCRS, String targetCRS ) throws Exception
   {
-    /* If the flag is set to false, no transformation is allowed. */
-    if( shouldTransform() == false )
+    /* If the coordinate systems are the same, do not transform. */
+    if( sourceCRS == null || sourceCRS.equalsIgnoreCase( targetCRS ) )
       return pos;
+
+    /* Get the transformation. */
+    CRSTransformation transformation = getTransformation( sourceCRS, targetCRS );
 
     /* Get the coordinate systems. */
-    CoordinateSystem sourceCRS = trans.getSourceCRS();
-    CoordinateSystem targetCRS = trans.getTargetCRS();
-
-    /* If the coordinate systems are the same, do not transform. */
-    if( sourceCRS.equals( targetCRS ) )
-      return pos;
-
-    // TODO: check: why did we use getIdAndName instead of equals?
-    // if( sourceCRS.getIdAndName().equals( targetCRS.getIdAndName() ) )
-    // return pos;
+    CoordinateSystem sourceCoordinateSystem = transformation.getSourceCRS();
+    CoordinateSystem targetCoordinateSystem = transformation.getTargetCRS();
 
     /* Debug. */
-    Debug.TRANSFORM.printf( "POS: %s to %s\n", sourceCRS.getIdentifier(), targetCRS.getIdentifier() );
+    Debug.TRANSFORM.printf( "POS: %s to %s\n", sourceCoordinateSystem.getIdentifier(), targetCoordinateSystem.getIdentifier() );
 
     /* Normalize points to fit in -180:180 and -90:90 if they are in degrees. */
     double geoX = pos.getX();
     double geoY = pos.getY();
     double geoZ = pos.getZ();
-    if( sourceCRS.getUnits().equals( Unit.RADIAN ) )
+    if( sourceCoordinateSystem.getUnits().equals( Unit.RADIAN ) )
     {
       geoX = ProjectionUtils.normalizeLongitude( Math.toRadians( geoX ) );
       geoY = ProjectionUtils.normalizeLatitude( Math.toRadians( geoY ) );
@@ -197,10 +161,10 @@ public class TransformUtilities
 
     /* Transform. */
     Point3d coords = new Point3d( geoX, geoY, geoZ );
-    Point3d newCoords = trans.doTransform( coords );
+    Point3d newCoords = transformation.doTransform( coords );
 
     /* Convert back to degrees, if necessary. */
-    if( targetCRS.getUnits().equals( Unit.RADIAN ) )
+    if( targetCoordinateSystem.getUnits().equals( Unit.RADIAN ) )
     {
       newCoords.x = Math.toDegrees( newCoords.x );
       newCoords.y = Math.toDegrees( newCoords.y );
@@ -210,26 +174,44 @@ public class TransformUtilities
     // We only have to check if the z value was transformed because of a 3d transformation
     // (therefore the check for dimensions)
     // We either put the old z value or the transformed value
-    return GeometryFactory.createGM_Position( newCoords.x, newCoords.y, (targetCRS.getDimension() == 3) ? newCoords.z : pos.getZ() );
+    return GeometryFactory.createGM_Position( newCoords.x, newCoords.y, (targetCoordinateSystem.getDimension() == 3) ? newCoords.z : pos.getZ() );
   }
 
   /**
-   * This function transforms an array of positions.<br>
-   * It uses the function {@link #transform(GM_Position, CRSTransformation)} for each position.
+   * This function transforms an array of positions.
    * 
    * @param pos
    *          The array of positions.
-   * @param trans
-   *          The transformation.
+   * @param sourceCRS
+   *          The coordinate system of the source.
+   * @param targetCRS
+   *          The coordinate system of the target.
    * @return The array of transformed positions.
    */
-  public static GM_Position[] transform( GM_Position[] pos, CRSTransformation trans )
+  public static GM_Position[] transform( GM_Position[] pos, String sourceCRS, String targetCRS ) throws Exception
   {
     ArrayList<GM_Position> newPos = new ArrayList<GM_Position>();
 
     for( GM_Position po : pos )
-      newPos.add( transform( po, trans ) );
+      newPos.add( transform( po, sourceCRS, targetCRS ) );
 
     return newPos.toArray( new GM_Position[] {} );
+  }
+
+  /**
+   * This function returns a transformation for a source coordinate system.
+   * 
+   * @param sourceCRS
+   *          The source coordinate system.
+   * @param targetCRS
+   *          The coordinate system, into which the transformations should be done.
+   * @return The transformation from the source coordinate system to the GeoTransformers target coordinate system.
+   */
+  private static CRSTransformation getTransformation( String sourceCRS, String targetCRS ) throws Exception
+  {
+    CachedTransformationFactory transformationFactory = CachedTransformationFactory.getInstance();
+    CRSTransformation transformation = transformationFactory.createFromCoordinateSystems( sourceCRS, targetCRS );
+
+    return transformation;
   }
 }

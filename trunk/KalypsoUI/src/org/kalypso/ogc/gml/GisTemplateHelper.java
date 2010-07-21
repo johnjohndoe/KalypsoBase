@@ -91,7 +91,8 @@ import org.kalypso.template.gistreeview.Gistreeview;
 import org.kalypso.template.types.ExtentType;
 import org.kalypso.template.types.StyledLayerType;
 import org.kalypso.transformation.CRSHelper;
-import org.kalypso.transformation.GeoTransformer;
+import org.kalypso.transformation.transformer.GeoTransformerFactory;
+import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.filterencoding.Filter;
 import org.kalypsodeegree.filterencoding.FilterConstructionException;
@@ -291,8 +292,8 @@ public final class GisTemplateHelper
         if( (orgSRSName != null) && !orgSRSName.equals( targetSRS ) )
         {
           // if srs attribute exists and it is not the target srs we have to convert it
-          final GeoTransformer transformer = new GeoTransformer( targetSRS );
-          return transformer.transformEnvelope( env );
+          final IGeoTransformer transformer = GeoTransformerFactory.getGeoTransformer( targetSRS );
+          return transformer.transform( env );
         }
       }
       catch( final Exception e )
@@ -338,7 +339,7 @@ public final class GisTemplateHelper
       final GM_Surface< ? > bboxAsSurface = GeometryFactory.createGM_Surface( envelope, crsName );
       if( targetCS != null )
       {
-        final GeoTransformer transformer = new GeoTransformer( targetCS );
+        final IGeoTransformer transformer = GeoTransformerFactory.getGeoTransformer( targetCS );
         return (GM_Surface< ? >) transformer.transform( bboxAsSurface );
       }
 

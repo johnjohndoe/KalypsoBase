@@ -39,7 +39,6 @@ import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.deegree.crs.transformations.CRSTransformation;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
@@ -321,22 +320,21 @@ final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_Mu
   }
 
   /**
-   * @see org.kalypsodeegree.model.geometry.GM_Object#transform(org.kalypsodeegree_impl.model.ct.MathTransform,
-   *      org.opengis.cs.CS_CoordinateSystem)
+   * @see org.kalypsodeegree_impl.model.geometry.GM_MultiPrimitive_Impl#transform(java.lang.String)
    */
   @Override
-  public GM_Object transform( final CRSTransformation trans, final String targetOGCCS ) throws Exception
+  public GM_Object transform( final String targetCRS ) throws Exception
   {
     /* If the target is the same coordinate system, do not transform. */
-    final String coordinateSystem = getCoordinateSystem();
-    if( coordinateSystem == null || coordinateSystem.equalsIgnoreCase( targetOGCCS ) )
+    final String sourceCRS = getCoordinateSystem();
+    if( sourceCRS == null || sourceCRS.equalsIgnoreCase( targetCRS ) )
       return this;
 
     final GM_Surface< ? >[] surfaces = new GM_Surface[getSize()];
 
     for( int i = 0; i < getSize(); i++ )
-      surfaces[i] = (GM_Surface< ? >) getSurfaceAt( i ).transform( trans, targetOGCCS );
+      surfaces[i] = (GM_Surface< ? >) getSurfaceAt( i ).transform( targetCRS );
 
-    return GeometryFactory.createGM_MultiSurface( surfaces, targetOGCCS );
+    return GeometryFactory.createGM_MultiSurface( surfaces, targetCRS );
   }
 }

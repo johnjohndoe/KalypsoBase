@@ -63,7 +63,8 @@ import org.kalypso.template.featureview.GridDataType;
 import org.kalypso.template.featureview.GridLayout;
 import org.kalypso.template.featureview.ObjectFactory;
 import org.kalypso.template.featureview.Text;
-import org.kalypso.transformation.GeoTransformer;
+import org.kalypso.transformation.transformer.GeoTransformerFactory;
+import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -73,7 +74,7 @@ import org.kalypsodeegree_impl.tools.GMLConstants;
 
 /**
  * Gui type handler for gml:envelopes's.
- *
+ * 
  * @author Holger Albert
  */
 public class Gml3PointGuiTypeHandler extends LabelProvider implements IGuiTypeHandler
@@ -285,7 +286,7 @@ public class Gml3PointGuiTypeHandler extends LabelProvider implements IGuiTypeHa
     {
       // REMARK: all geometries in memory MUST have the Kalypso CRS, we do transform,
       // regardlesss what the user has entered
-      final GeoTransformer geoTransformer = new GeoTransformer( kalypsoCrs );
+      final IGeoTransformer geoTransformer = GeoTransformerFactory.getGeoTransformer( kalypsoCrs );
       return geoTransformer.transform( point );
     }
     catch( final Exception e )

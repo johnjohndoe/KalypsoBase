@@ -38,11 +38,11 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.transformation.ui;
+package org.kalypso.transformation.ui.provider;
 
-import org.deegree.model.crs.CoordinateSystem;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
+import org.kalypso.transformation.crs.ICoordinateSystem;
 
 /**
  * A label provider for coordinate systems.
@@ -82,18 +82,18 @@ public class CRSLabelProvider extends LabelProvider
   @Override
   public String getText( Object element )
   {
-    if( element instanceof CoordinateSystem )
+    if( element instanceof ICoordinateSystem )
     {
-      CoordinateSystem crs = (CoordinateSystem) element;
+      ICoordinateSystem coordinateSystem = (ICoordinateSystem) element;
 
-      String name = crs.getCRS().getName();
-      if( name == null )
-        return crs.getCRS().getIdentifier();
+      String name = coordinateSystem.getName();
+      if( name == null || name.length() == 0 )
+        return coordinateSystem.getCode();
 
       if( !m_showCode )
         return name;
 
-      return name + " (" + crs.getCRS().getIdentifier() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+      return name + " (" + coordinateSystem.getCode() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     return super.getText( element );

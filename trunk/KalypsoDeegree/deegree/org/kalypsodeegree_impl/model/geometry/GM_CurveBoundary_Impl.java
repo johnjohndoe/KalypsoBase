@@ -37,7 +37,6 @@ package org.kalypsodeegree_impl.model.geometry;
 
 import java.io.Serializable;
 
-import org.deegree.crs.transformations.CRSTransformation;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_CurveBoundary;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -135,7 +134,7 @@ class GM_CurveBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Curv
    * checks if this curve is completly equal to the submitted geometry
    * 
    * @param other
-   *            object to compare to
+   *          object to compare to
    */
   @Override
   public boolean equals( final Object other )
@@ -253,21 +252,19 @@ class GM_CurveBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Curv
   }
 
   /**
-   * @see org.kalypsodeegree.model.geometry.GM_Object#transform(org.deegree.crs.transformations.CRSTransformation,
-   *      java.lang.String)
+   * @see org.kalypsodeegree.model.geometry.GM_Object#transform(java.lang.String)
    */
   @Override
-  public GM_Object transform( final CRSTransformation trans, final String targetOGCCS ) throws Exception
+  public GM_Object transform( final String targetCRS ) throws Exception
   {
     /* If the target is the same coordinate system, do not transform. */
-    final String coordinateSystem = getCoordinateSystem();
-    if( coordinateSystem == null || coordinateSystem.equalsIgnoreCase( targetOGCCS ) )
+    final String sourceCRS = getCoordinateSystem();
+    if( sourceCRS == null || sourceCRS.equalsIgnoreCase( targetCRS ) )
       return this;
 
-    final GM_Position transStartPos = getStartPoint().transform( trans );
-    final GM_Position transEndPos = getEndPoint().transform( trans );
+    final GM_Position transStartPos = getStartPoint().transform( sourceCRS, targetCRS );
+    final GM_Position transEndPos = getEndPoint().transform( sourceCRS, targetCRS );
 
-    return new GM_CurveBoundary_Impl( targetOGCCS, transStartPos, transEndPos );
+    return new GM_CurveBoundary_Impl( targetCRS, transStartPos, transEndPos );
   }
-
 }

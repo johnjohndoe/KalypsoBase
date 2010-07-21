@@ -41,12 +41,10 @@
 package org.kalypso.transformation.ui;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-import org.deegree.model.crs.CoordinateSystem;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -80,7 +78,10 @@ import org.eclipse.ui.progress.UIJob;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.i18n.Messages;
 import org.kalypso.transformation.CRSHelper;
-import org.kalypso.transformation.CachedCRSFactory;
+import org.kalypso.transformation.crs.CoordinateSystemFactory;
+import org.kalypso.transformation.crs.ICoordinateSystem;
+import org.kalypso.transformation.ui.listener.IAvailableCRSPanelListener;
+import org.kalypso.transformation.ui.provider.CRSLabelProvider;
 
 /**
  * This class represents a panel with elements for managing the coordinate systems.
@@ -102,7 +103,7 @@ public class AvailableCRSPanel extends Composite implements IJobChangeListener
   /**
    * A hash of the displayed coordinate systems.
    */
-  protected HashMap<String, CoordinateSystem> m_coordHash;
+  protected HashMap<String, ICoordinateSystem> m_coordHash;
 
   /**
    * The construtor.
@@ -113,7 +114,7 @@ public class AvailableCRSPanel extends Composite implements IJobChangeListener
 
     m_listener = new ArrayList<IAvailableCRSPanelListener>();
     m_viewer = null;
-    m_coordHash = new HashMap<String, CoordinateSystem>();
+    m_coordHash = new HashMap<String, ICoordinateSystem>();
 
     /* Create the controls. */
     createControls();
@@ -165,15 +166,16 @@ public class AvailableCRSPanel extends Composite implements IJobChangeListener
       @Override
       public void selectionChanged( SelectionChangedEvent event )
       {
-        /* Get the name of the selected coordinate system. */
+        /* Get the code of the selected coordinate system. */
         String selectedCRS = getSelectedCRS();
         if( selectedCRS == null )
         {
+          /* Modify the tooltip. */
           imageLabel.setToolTipText( "" ); //$NON-NLS-1$
           return;
         }
 
-        /* Get the hashed coordinate system. */
+        /* Modify the tooltip. */
         imageLabel.setToolTipText( CRSHelper.getTooltipText( selectedCRS ) );
       }
     } );
@@ -248,15 +250,15 @@ public class AvailableCRSPanel extends Composite implements IJobChangeListener
   /**
    * This function sets the available coordinate systems.
    * 
-   * @param preferenceNames
-   *          An array of names from coordinate systems. Make sure, they are ; seperated.
+   * @param preferenceCodes
+   *          An array of codes from coordinate systems. Make sure, they are ; seperated.
    */
-  public void setAvailableCoordinateSystems( String preferenceNames )
+  public void setAvailableCoordinateSystems( String preferenceCodes )
   {
     if( m_viewer == null || m_viewer.getControl().isDisposed() )
       return;
 
-    if( preferenceNames == null || preferenceNames.length() == 0 )
+    if( preferenceCodes == null || preferenceCodes.length() == 0 )
     {
       m_coordHash.clear();
       m_viewer.setInput( null );
@@ -266,14 +268,11 @@ public class AvailableCRSPanel extends Composite implements IJobChangeListener
     /* Disable. */
     setEnabled( false );
 
-    /* The names of the coordinate systems as array. */
-    String[] namesArray = preferenceNames.split( ";" ); //$NON-NLS-1$
-
-    /* Get all coordinate system names. */
-    List<String> names = Arrays.asList( namesArray );
+    /* The codes of the coordinate systems as array. */
+    String[] codes = preferenceCodes.split( ";" ); //$NON-NLS-1$
 
     /* Start the job. */
-    CRSInitializeJob initCRSJob = new CRSInitializeJob( "CRSInitializeJob", names ); //$NON-NLS-1$
+    CRSInitializeJob initCRSJob = new CRSInitializeJob( "CRSInitializeJob", codes ); //$NON-NLS-1$
     initCRSJob.setSystem( true );
 
     /* Add myself as a listener. */
@@ -284,14 +283,14 @@ public class AvailableCRSPanel extends Composite implements IJobChangeListener
   }
 
   /**
-   * This function returns the names of all coordinate systems in the list and returns them as a ; seperated string.
+   * This function returns the codes of all coordinate systems in the list and returns them as a ; seperated string.
    * 
-   * @return The names of the coordinate systems in the list as a ; seperated string.
+   * @return The codes of the coordinate systems in the list as a ; seperated string.
    */
   public String getAvailableCoordinateSystems( )
   {
     /* Memory for the keys. */
-    String preferenceNames = ""; //$NON-NLS-1$
+    String preferenceCodes = ""; //$NON-NLS-1$
 
     /* Get the iterator for the keys. */
     Iterator<String> iterator = m_coordHash.keySet().iterator();
@@ -303,14 +302,14 @@ public class AvailableCRSPanel extends Composite implements IJobChangeListener
       String key = iterator.next();
 
       /* Add it to the string. */
-      preferenceNames = preferenceNames + key;
+      preferenceCodes = preferenceCodes + key;
 
-      /* Make sure, the names are ; seperated. */
+      /* Make sure, the codes are ; seperated. */
       if( iterator.hasNext() )
-        preferenceNames = preferenceNames + ";"; //$NON-NLS-1$
+        preferenceCodes = preferenceCodes + ";"; //$NON-NLS-1$
     }
 
-    return preferenceNames;
+    return preferenceCodes;
   }
 
   /**
@@ -323,26 +322,23 @@ public class AvailableCRSPanel extends Composite implements IJobChangeListener
   {
     if( m_viewer != null )
     {
-      CoordinateSystem coordinateSystem = m_coordHash.get( selectedCRS );
+      ICoordinateSystem coordinateSystem = m_coordHash.get( selectedCRS );
       if( coordinateSystem != null )
         m_viewer.setSelection( new StructuredSelection( coordinateSystem ) );
     }
   }
 
   /**
-   * This function returns the name of the selected coordinate system.
+   * This function returns the code of the selected coordinate system.
    * 
-   * @return The name of the selected coordinate system or null, if none is selected.
+   * @return The code of the selected coordinate system or null, if none is selected.
    */
   public String getSelectedCRS( )
   {
     /* Get the selection. */
     ISelection selection = m_viewer.getSelection();
 
-    /* The name of the crs, which will be told to the listeners. */
-    String selectedCRS = null;
-
-    /* If not empty and the right type, the name is set. */
+    /* If not empty and the right type, the code is returned. */
     if( !selection.isEmpty() && selection instanceof IStructuredSelection )
     {
       /* Cast. */
@@ -352,17 +348,17 @@ public class AvailableCRSPanel extends Composite implements IJobChangeListener
       Object selectedElement = structuredSelection.getFirstElement();
 
       /* Check type. */
-      if( selectedElement instanceof CoordinateSystem )
+      if( selectedElement instanceof ICoordinateSystem )
       {
         /* Cast. */
-        CoordinateSystem coordinateSystem = (CoordinateSystem) selectedElement;
+        ICoordinateSystem coordinateSystem = (ICoordinateSystem) selectedElement;
 
-        /* Set the name of the selected coordinate system. */
-        selectedCRS = coordinateSystem.getIdentifier();
+        /* Return the code of the selected coordinate system. */
+        return coordinateSystem.getCode();
       }
     }
 
-    return selectedCRS;
+    return null;
   }
 
   /**
@@ -414,12 +410,12 @@ public class AvailableCRSPanel extends Composite implements IJobChangeListener
   }
 
   /**
-   * This function informs listeners about the coordinate system, which was removed.
+   * This function informs listeners about the coordinate systems, being initialized.
    * 
-   * @param names
-   *          The list of names of the coordinate systems.
+   * @param codes
+   *          The list of codes of the coordinate systems.
    */
-  protected void fireCoordinateSystemsInitialized( List<String> names )
+  protected void fireCoordinateSystemsInitialized( String[] codes )
   {
     for( int i = 0; i < m_listener.size(); i++ )
     {
@@ -427,7 +423,7 @@ public class AvailableCRSPanel extends Composite implements IJobChangeListener
       IAvailableCRSPanelListener availableCRSPanelListener = m_listener.get( i );
 
       /* Notify it about the initializing. */
-      availableCRSPanelListener.coordinateSystemsInitialized( names );
+      availableCRSPanelListener.coordinateSystemsInitialized( codes );
     }
   }
 
@@ -442,7 +438,7 @@ public class AvailableCRSPanel extends Composite implements IJobChangeListener
       return;
 
     /* Get the selected coordinate system. */
-    CoordinateSystem coordinateSystem = m_coordHash.get( selectedCRS );
+    ICoordinateSystem coordinateSystem = m_coordHash.get( selectedCRS );
     if( coordinateSystem == null )
       return;
 
@@ -456,16 +452,16 @@ public class AvailableCRSPanel extends Composite implements IJobChangeListener
     m_viewer.setSelection( new StructuredSelection() );
 
     /* Tell listeners, that a structure change has occured. */
-    fireCoordinateSystemRemoved( coordinateSystem.getIdentifier() );
+    fireCoordinateSystemRemoved( coordinateSystem.getCode() );
   }
 
   /**
    * This function informs listeners about the coordinate system, which was removed.
    * 
-   * @param name
-   *          The name of the coordinate system.
+   * @param code
+   *          The code of the coordinate system.
    */
-  private void fireCoordinateSystemRemoved( String name )
+  private void fireCoordinateSystemRemoved( String code )
   {
     for( int i = 0; i < m_listener.size(); i++ )
     {
@@ -473,7 +469,7 @@ public class AvailableCRSPanel extends Composite implements IJobChangeListener
       IAvailableCRSPanelListener availableCRSPanelListener = m_listener.get( i );
 
       /* Notify it about the removal. */
-      availableCRSPanelListener.coordinateSystemRemoved( name );
+      availableCRSPanelListener.coordinateSystemRemoved( code );
     }
   }
 
@@ -494,13 +490,13 @@ public class AvailableCRSPanel extends Composite implements IJobChangeListener
         return;
 
       /* The entered coordinate system. */
-      String name = dialog.getValue();
+      String code = dialog.getValue();
 
-      /* Create it, the name should be already validated. */
-      CoordinateSystem coordinateSystem = CachedCRSFactory.getInstance().create( name );
+      /* Create it, the code should be already validated. */
+      ICoordinateSystem coordinateSystem = CoordinateSystemFactory.getCoordinateSystem( code );
 
       /* Actualize the hash. */
-      m_coordHash.put( coordinateSystem.getIdentifier(), coordinateSystem );
+      m_coordHash.put( coordinateSystem.getCode(), coordinateSystem );
 
       /* Add it to the viewer. */
       m_viewer.add( coordinateSystem );
@@ -509,7 +505,7 @@ public class AvailableCRSPanel extends Composite implements IJobChangeListener
       m_viewer.setSelection( new StructuredSelection( coordinateSystem ) );
 
       /* Tell listeners, that a structure change has occured. */
-      fireCoordinateSystemAdded( coordinateSystem.getIdentifier() );
+      fireCoordinateSystemAdded( coordinateSystem.getCode() );
     }
     catch( Exception ex )
     {
@@ -520,10 +516,10 @@ public class AvailableCRSPanel extends Composite implements IJobChangeListener
   /**
    * This function informs listeners about the coordinate system, which was added.
    * 
-   * @param name
-   *          The name of the coordinate system.
+   * @param code
+   *          The code of the coordinate system.
    */
-  private void fireCoordinateSystemAdded( String name )
+  private void fireCoordinateSystemAdded( String code )
   {
     for( int i = 0; i < m_listener.size(); i++ )
     {
@@ -531,7 +527,7 @@ public class AvailableCRSPanel extends Composite implements IJobChangeListener
       IAvailableCRSPanelListener availableCRSPanelListener = m_listener.get( i );
 
       /* Notify it about the addition. */
-      availableCRSPanelListener.coordinateSystemAdded( name );
+      availableCRSPanelListener.coordinateSystemAdded( code );
     }
   }
 
@@ -577,14 +573,6 @@ public class AvailableCRSPanel extends Composite implements IJobChangeListener
           /* Monitor. */
           monitor.beginTask( Messages.getString( "org.kalypso.transformation.ui.AvailableCRSPanel.14" ), 100 ); //$NON-NLS-1$
 
-          if( m_viewer == null || m_viewer.getControl().isDisposed() )
-          {
-            /* Monitor. */
-            monitor.worked( 100 );
-
-            return Status.OK_STATUS;
-          }
-
           /* Get the job. */
           Job job = event.getJob();
           if( !(job instanceof CRSInitializeJob) )
@@ -598,18 +586,33 @@ public class AvailableCRSPanel extends Composite implements IJobChangeListener
           /* Cast. */
           CRSInitializeJob initCRSJob = (CRSInitializeJob) job;
 
-          /* Get the used names to initialize the coordinate systems. */
-          List<String> names = initCRSJob.getNames();
+          /* If the viewer is already disposed, do nothing any more. */
+          if( m_viewer == null || m_viewer.getControl().isDisposed() )
+          {
+            /* Monitor. */
+            monitor.worked( 100 );
+
+            /* Remove myself as a listener. */
+            initCRSJob.removeJobChangeListener( AvailableCRSPanel.this );
+
+            return Status.OK_STATUS;
+          }
 
           /* Get the hash of them. */
-          m_coordHash = initCRSJob.getCoordHash();
-
-          /* Check if everything is in order. */
-          if( names == null || names.size() == 0 || m_coordHash == null || m_coordHash.size() == 0 )
+          HashMap<String, ICoordinateSystem> coordHash = initCRSJob.getCoordHash();
+          if( coordHash == null || coordHash.size() == 0 )
           {
-            /* Clear. */
+            /* Clear the hash. */
             m_coordHash.clear();
+
+            /* Set the input. */
             m_viewer.setInput( null );
+
+            /* Remove myself as a listener. */
+            initCRSJob.removeJobChangeListener( AvailableCRSPanel.this );
+
+            /* Enable. */
+            setEnabled( true );
 
             /* Monitor. */
             monitor.worked( 100 );
@@ -617,17 +620,20 @@ public class AvailableCRSPanel extends Composite implements IJobChangeListener
             return Status.OK_STATUS;
           }
 
-          /* Get all coordinate systems. */
-          List<CoordinateSystem> coordinateSystems = CRSHelper.getCRSListByNames( names );
+          /* Store the hash. */
+          m_coordHash = coordHash;
 
           /* Set the input. */
-          m_viewer.setInput( coordinateSystems );
+          m_viewer.setInput( coordHash.values().toArray( new ICoordinateSystem[] {} ) );
 
           /* Notify it about the initializing. */
-          fireCoordinateSystemsInitialized( names );
+          fireCoordinateSystemsInitialized( coordHash.keySet().toArray( new String[] {} ) );
 
           /* Remove myself as a listener. */
           initCRSJob.removeJobChangeListener( AvailableCRSPanel.this );
+
+          /* Enable. */
+          setEnabled( true );
 
           /* Monitor. */
           monitor.worked( 100 );
@@ -642,9 +648,6 @@ public class AvailableCRSPanel extends Composite implements IJobChangeListener
         }
         finally
         {
-          /* Enable. */
-          setEnabled( true );
-
           /* Monitor. */
           monitor.done();
         }

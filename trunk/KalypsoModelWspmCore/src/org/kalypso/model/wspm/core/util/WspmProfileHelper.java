@@ -53,7 +53,8 @@ import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
-import org.kalypso.transformation.GeoTransformer;
+import org.kalypso.transformation.transformer.GeoTransformerFactory;
+import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
@@ -137,7 +138,7 @@ public class WspmProfileHelper
     final String kalypsoCrs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
 
     /* Transform geo point into the coord-system of the line. */
-    final GeoTransformer transformer = new GeoTransformer( kalypsoCrs );
+    final IGeoTransformer transformer = GeoTransformerFactory.getGeoTransformer( kalypsoCrs );
     final GM_Point transformedGeoPoint = (GM_Point) transformer.transform( geoPoint );
     final Geometry comparePoint = JTSAdapter.export( transformedGeoPoint );
 

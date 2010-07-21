@@ -37,7 +37,6 @@ package org.kalypsodeegree_impl.model.geometry;
 
 import java.io.Serializable;
 
-import org.deegree.crs.transformations.CRSTransformation;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_MultiPoint;
 import org.kalypsodeegree.model.geometry.GM_Object;
@@ -240,21 +239,20 @@ final class GM_MultiPoint_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
   }
 
   /**
-   * @see org.kalypsodeegree_impl.model.geometry.GM_MultiPrimitive_Impl#transform(org.deegree.crs.transformations.CRSTransformation,
-   *      java.lang.String)
+   * @see org.kalypsodeegree.model.geometry.GM_Object#transform(java.lang.String)
    */
   @Override
-  public GM_Object transform( final CRSTransformation trans, final String targetOGCCS ) throws Exception
+  public GM_Object transform( final String targetCRS ) throws Exception
   {
     /* If the target is the same coordinate system, do not transform. */
-    final String coordinateSystem = getCoordinateSystem();
-    if( coordinateSystem == null || coordinateSystem.equalsIgnoreCase( targetOGCCS ) )
+    final String sourceCRS = getCoordinateSystem();
+    if( sourceCRS == null || sourceCRS.equalsIgnoreCase( targetCRS ) )
       return this;
 
     final GM_Point[] points = new GM_Point[getSize()];
 
     for( int i = 0; i < getSize(); i++ )
-      points[i] = (GM_Point) getPointAt( i ).transform( trans, targetOGCCS );
+      points[i] = (GM_Point) getPointAt( i ).transform( targetCRS );
 
     return GeometryFactory.createGM_MultiPoint( points );
   }

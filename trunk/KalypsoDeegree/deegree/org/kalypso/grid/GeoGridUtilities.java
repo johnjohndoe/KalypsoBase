@@ -51,7 +51,6 @@ import ogc31.www.opengis.net.gml.FileValueModelType;
 
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.math.Range;
-import org.deegree.crs.transformations.CRSTransformation;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
@@ -60,8 +59,8 @@ import org.kalypso.commons.math.LinearEquation.SameXValuesException;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.contribs.ogc31.KalypsoOGC31JAXBcontext;
 import org.kalypso.grid.areas.IGeoGridArea;
-import org.kalypso.transformation.CachedTransformationFactory;
-import org.kalypso.transformation.TransformUtilities;
+import org.kalypso.transformation.transformer.GeoTransformerFactory;
+import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.coverage.GridRange;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -285,7 +284,10 @@ public class GeoGridUtilities
       /* Transform it. */
       Assert.isNotNull( "The target coordinate system is not allowed to be null ...", targetCRS );
       if( grid.getSourceCRS() != null && (!grid.getSourceCRS().equals( targetCRS )) )
-        return (GM_Surface< ? >) surface.transform( CachedTransformationFactory.getInstance().createFromCoordinateSystems( grid.getSourceCRS(), targetCRS ), targetCRS );
+      {
+        IGeoTransformer geoTransformer = GeoTransformerFactory.getGeoTransformer( targetCRS );
+        return (GM_Surface< ? >) geoTransformer.transform( surface );
+      }
 
       return surface;
     }
@@ -343,7 +345,10 @@ public class GeoGridUtilities
       /* Transform it. */
       Assert.isNotNull( "The target coordinate system is not allowed to be null ...", targetCRS );
       if( grid.getSourceCRS() != null && (!grid.getSourceCRS().equals( targetCRS )) )
-        return (GM_Surface< ? >) surface.transform( CachedTransformationFactory.getInstance().createFromCoordinateSystems( grid.getSourceCRS(), targetCRS ), targetCRS );
+      {
+        IGeoTransformer geoTransformer = GeoTransformerFactory.getGeoTransformer( targetCRS );
+        return (GM_Surface< ? >) geoTransformer.transform( surface );
+      }
 
       return surface;
 
@@ -809,25 +814,25 @@ public class GeoGridUtilities
   }
 
   /**
-   * This function transforms the coordinate crd from its coordinate system to the grid coordinate system.
+   * This function transforms the coordinate from its coordinate system to the grid coordinate system.
    * 
    * @param grid
    *          The grid.
-   * @param crd
+   * @param coordinate
    *          The coordinate.
-   * @param positionCRS
-   *          The coordinate system of the position.
+   * @param coordinateCRS
+   *          The coordinate system of the coordinate.
    * @return The transformed coordinate.
    */
-  public static Coordinate transformCoordinate( final IGeoGrid grid, final Coordinate crd, final String positionCRS ) throws GeoGridException
+  public static Coordinate transformCoordinate( final IGeoGrid grid, final Coordinate coordinate, final String coordinateCRS ) throws GeoGridException
   {
     try
     {
-      if( grid.getSourceCRS() == null || positionCRS == null )
-        return crd;
+      if( grid.getSourceCRS() == null || coordinateCRS == null )
+        return coordinate;
 
-      final CRSTransformation transformation = CachedTransformationFactory.getInstance().createFromCoordinateSystems( positionCRS, grid.getSourceCRS() );
-      final GM_Position position = TransformUtilities.transform( JTSAdapter.wrap( crd ), transformation );
+      final IGeoTransformer geoTransformer = GeoTransformerFactory.getGeoTransformer( grid.getSourceCRS() );
+      final GM_Position position = geoTransformer.transform( JTSAdapter.wrap( coordinate ), coordinateCRS );
 
       return JTSAdapter.export( position );
     }

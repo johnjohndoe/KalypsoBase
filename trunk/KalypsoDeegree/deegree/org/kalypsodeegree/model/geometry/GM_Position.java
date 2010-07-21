@@ -35,15 +35,13 @@
  */
 package org.kalypsodeegree.model.geometry;
 
-import org.deegree.crs.transformations.CRSTransformation;
-
 /**
  * A sequence of decimals numbers which when written on a width are a sequence of coordinate positions. The width is
  * derived from the CRS or coordinate dimension of the container.
  * <p>
  * -----------------------------------------------------------------------
  * </p>
- *
+ * 
  * @version 5.6.2001
  * @author Andreas Poth
  *         <p>
@@ -73,7 +71,7 @@ public interface GM_Position
   public short getCoordinateDimension( );
 
   /**
-   * Disouraged!<br>
+   * Discouraged!<br>
    * returns the x- and y-value of the point as a two dimensional array the first field contains the x- the second field
    * the y-value.
    */
@@ -88,9 +86,15 @@ public interface GM_Position
   public double getDistance( GM_Position position );
 
   /**
-   * handles the geo-coordinate-transformation for a {@link GM_Object}
+   * This function transforms the position.
+   * 
+   * @param sourceCRS
+   *          The source coordinate system.
+   * @param targetCRS
+   *          The target coordinate system.
+   * @return The transformed position.
    */
-  public GM_Position transform( final CRSTransformation trans ) throws Exception;
+  public GM_Position transform( final String sourceCRS, final String targetCRS ) throws Exception;
 
   public Object clone( );
 }

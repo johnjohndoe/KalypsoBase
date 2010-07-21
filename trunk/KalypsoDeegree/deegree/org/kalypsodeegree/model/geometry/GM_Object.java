@@ -35,7 +35,6 @@
  */
 package org.kalypsodeegree.model.geometry;
 
-import org.deegree.crs.transformations.CRSTransformation;
 import org.eclipse.core.runtime.IAdaptable;
 
 /**
@@ -82,7 +81,7 @@ public interface GM_Object extends IAdaptable
    */
   String getCoordinateSystem( );
 
- /**
+  /**
    * returns true if no geometry values resp. points stored within the geometry.
    */
   boolean isEmpty( );
@@ -103,8 +102,8 @@ public interface GM_Object extends IAdaptable
 
   /**
    * translate a geometry by the submitted values. if the length of <tt>d</tt> is smaller then the dimension of the
-   * geometry only the first d.length'th coordinates will be translated. If the length of <tt>d</tt> is larger then
-   * the dimension of the geometry an ArrayIndexOutOfBoundExceptions raises.
+   * geometry only the first d.length'th coordinates will be translated. If the length of <tt>d</tt> is larger then the
+   * dimension of the geometry an ArrayIndexOutOfBoundExceptions raises.
    */
   void translate( double[] d );
 
@@ -185,8 +184,11 @@ public interface GM_Object extends IAdaptable
   public Object clone( ) throws CloneNotSupportedException;
 
   /**
-   * handles the geo-coordinate-transformation for a {@link GM_Object}
+   * This function transforms the geometry.
+   * 
+   * @param targetCRS
+   *          The target coordinate system.
+   * @return The transformed geometry.
    */
-  public GM_Object transform( final CRSTransformation trans, final String targetOGCCS ) throws Exception;
-
+  public GM_Object transform( final String targetCRS ) throws Exception;
 }

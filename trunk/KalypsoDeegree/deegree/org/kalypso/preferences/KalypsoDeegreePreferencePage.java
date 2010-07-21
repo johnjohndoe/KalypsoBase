@@ -40,9 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.preferences;
 
-import java.util.Arrays;
-import java.util.List;
-
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
@@ -61,7 +58,7 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.kalypso.i18n.Messages;
 import org.kalypso.transformation.ui.AvailableCRSPanel;
 import org.kalypso.transformation.ui.CRSSelectionPanel;
-import org.kalypso.transformation.ui.IAvailableCRSPanelListener;
+import org.kalypso.transformation.ui.listener.IAvailableCRSPanelListener;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.osgi.service.prefs.BackingStoreException;
 
@@ -176,10 +173,10 @@ public class KalypsoDeegreePreferencePage extends PreferencePage implements IWor
     m_availableCRSPanel.addAvailableCRSPanelListener( new IAvailableCRSPanelListener()
     {
       /**
-       * @see org.kalypso.transformation.ui.IAvailableCRSPanelListener#coordinateSystemsInitialized(java.util.List)
+       * @see org.kalypso.transformation.ui.IAvailableCRSPanelListener#coordinateSystemsInitialized(java.lang.String[])
        */
       @Override
-      public void coordinateSystemsInitialized( List<String> names )
+      public void coordinateSystemsInitialized( String[] codes )
       {
         /* Store the available coordinate systems. */
         storeCoordinateSystems();
@@ -189,7 +186,7 @@ public class KalypsoDeegreePreferencePage extends PreferencePage implements IWor
        * @see org.kalypso.transformation.ui.IAvailableCRSPanelListener#coordinateSystemAdded(java.lang.String)
        */
       @Override
-      public void coordinateSystemAdded( String name )
+      public void coordinateSystemAdded( String code )
       {
         /* Store the available coordinate systems. */
         storeCoordinateSystems();
@@ -199,7 +196,7 @@ public class KalypsoDeegreePreferencePage extends PreferencePage implements IWor
        * @see org.kalypso.transformation.ui.IAvailableCRSPanelListener#coordinateSystemRemoved(java.lang.String)
        */
       @Override
-      public void coordinateSystemRemoved( String name )
+      public void coordinateSystemRemoved( String code )
       {
         /* Store the available coordinate systems. */
         storeCoordinateSystems();
@@ -213,18 +210,12 @@ public class KalypsoDeegreePreferencePage extends PreferencePage implements IWor
         /* Store the available coordinate systems. */
         m_availableCoordinateSystems = m_availableCRSPanel.getAvailableCoordinateSystems();
 
-        List<String> names = null;
+        String[] codes = null;
         if( m_availableCoordinateSystems != null && m_availableCoordinateSystems.length() > 0 )
-        {
-          /* The names of the coordinate systems as array. */
-          String[] namesArray = m_availableCoordinateSystems.split( ";" ); //$NON-NLS-1$
-
-          /* Get all coordinate system names. */
-          names = Arrays.asList( namesArray );
-        }
+          codes = m_availableCoordinateSystems.split( ";" ); //$NON-NLS-1$
 
         /* Update the combo box of the crs selection panel. */
-        m_crsPanel.updateCoordinateSystemsCombo( names );
+        m_crsPanel.updateCoordinateSystemsCombo( codes );
 
         /* Validate the page. */
         validatePage();

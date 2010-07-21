@@ -36,7 +36,8 @@
 
 package org.kalypsodeegree_impl.graphics.transformation;
 
-import org.kalypso.transformation.GeoTransformer;
+import org.kalypso.transformation.transformer.GeoTransformerFactory;
+import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -46,7 +47,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  * the class <code>WorldToScreenTransform</code> implements <code>GeoTransformInterface</code> and defines a
  * transformation to a linear coordinat system with its orgin on top/left. this can be used for realising a screen
  * mapping of geometries.
- *
+ * 
  * @author Andreas Poth poth@lat-lon.de
  * @version 28.12.2000
  */
@@ -74,7 +75,7 @@ public class WorldToScreenTransform implements GeoTransform
 
   /**
    * Initialises the transformation rectangle using the submitted source- and destination rectangle.
-   *
+   * 
    * @param sourceRect
    *          is the boundary of the source geometry.
    * @param destRect
@@ -116,7 +117,7 @@ public class WorldToScreenTransform implements GeoTransform
 
   /**
    * sets the source rectangle
-   *
+   * 
    * @param rect
    *          is the boundary of the source geometry.
    */
@@ -137,7 +138,7 @@ public class WorldToScreenTransform implements GeoTransform
 
   /**
    * sets the source rectangle
-   *
+   * 
    * @param xMin
    *          minimum x-coordinate (source system) of the map.
    * @param yMin
@@ -179,7 +180,7 @@ public class WorldToScreenTransform implements GeoTransform
 
   /**
    * sets the destination rectangle.
-   *
+   * 
    * @param rect
    *          is the boundary of the destination rectangle (for example a region on the screen)
    */
@@ -199,7 +200,7 @@ public class WorldToScreenTransform implements GeoTransform
 
   /**
    * sets the destination rectangle
-   *
+   * 
    * @param xMin
    *          minimum x-coordinate (destination system) of the map.
    * @param yMin
@@ -235,7 +236,7 @@ public class WorldToScreenTransform implements GeoTransform
 
   /**
    * executes a coordinat transformation for the submitted x-coordinate of the source coordinat system.
-   *
+   * 
    * @param xsource
    *          , x-coordinate of a point in the source coordinate system.
    * @return the x-coordinate of the submitted value in the destination coordinate system.
@@ -248,7 +249,7 @@ public class WorldToScreenTransform implements GeoTransform
 
   /**
    * executes a coordinat transformation for the submitted y-coordinate of the source coordinat system.
-   *
+   * 
    * @param ysource
    *          , y-coordinate of a point in the source coordinate system.
    * @return the y-coordinate of the submitted value in the destination coordinate system.
@@ -256,13 +257,12 @@ public class WorldToScreenTransform implements GeoTransform
   @Override
   public double getDestY( final double ysource )
   {
-    return m_destRect.getMinY() + m_destRect.getHeight() - (ysource - m_sourceRect.getMinY())* m_qy;
+    return m_destRect.getMinY() + m_destRect.getHeight() - (ysource - m_sourceRect.getMinY()) * m_qy;
   }
-
 
   /**
    * executes a coordinate transformation for the submitted point of the source coordinat system.
-   *
+   * 
    * @param point
    *          in the source coordinate system.
    * @return the location of the submitted point in the destination coordinate system.
@@ -277,7 +277,7 @@ public class WorldToScreenTransform implements GeoTransform
 
   /**
    * executes a coordinate transformation for the submitted x-coordinate of the destination coordinate system.
-   *
+   * 
    * @param xdest
    *          , x-coordinate of a point in the destination coordinate system.
    * @return the x-coordinate of the submitted value in the source coordinate system.
@@ -304,7 +304,7 @@ public class WorldToScreenTransform implements GeoTransform
 
   /**
    * executes a coordinate transformation for the submitted point of the destination coordinate system.
-   *
+   * 
    * @param point
    *          in the destination coordinate system.
    * @return the location of the submitted point in the source coordinate system.
@@ -347,7 +347,7 @@ public class WorldToScreenTransform implements GeoTransform
 
   /**
    * Calculates the current scale (denominator) as defined in the OGC SLD 1.0.0 specification.
-   *
+   * 
    * @return scale of the map
    */
   @Override
@@ -387,8 +387,8 @@ public class WorldToScreenTransform implements GeoTransform
     try
     {
       // transform the bounding box of the request to EPSG:4326
-      final GeoTransformer transformer = new GeoTransformer( "EPSG:4326" ); //$NON-NLS-1$
-      return transformer.transformEnvelope( m_sourceRect );
+      final IGeoTransformer transformer = GeoTransformerFactory.getGeoTransformer( "EPSG:4326" ); //$NON-NLS-1$
+      return transformer.transform( m_sourceRect );
     }
     catch( final Exception e )
     {

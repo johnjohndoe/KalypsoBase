@@ -38,7 +38,8 @@ package org.kalypsodeegree.filterencoding.visitor;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.kalypso.transformation.GeoTransformer;
+import org.kalypso.transformation.transformer.GeoTransformerFactory;
+import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypsodeegree.filterencoding.Operation;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.filterencoding.SpatialOperation;
@@ -51,13 +52,13 @@ public class TransformSRSVisitor implements FilterVisitor
   /** operation -> exception */
   private final Map<Operation, Throwable> m_exceptions = new HashMap<Operation, Throwable>();
 
-  private GeoTransformer m_transformer;
+  private IGeoTransformer m_transformer;
 
   public TransformSRSVisitor( final String targetCRS )
   {
     try
     {
-      m_transformer = new GeoTransformer( targetCRS );
+      m_transformer = GeoTransformerFactory.getGeoTransformer( targetCRS );
     }
     catch( final Exception e )
     {

@@ -40,7 +40,6 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.deegree.crs.transformations.CRSTransformation;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
@@ -48,7 +47,6 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Ring;
 import org.kalypsodeegree.model.geometry.GM_SurfaceBoundary;
-import org.kalypsodeegree_impl.tools.Debug;
 
 /**
  * default implementation of the GM_SurfaceBoundary interface.
@@ -315,34 +313,27 @@ class GM_SurfaceBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Su
   }
 
   /**
-   * @see org.kalypsodeegree.model.geometry.GM_Object#transform(org.deegree.crs.transformations.CRSTransformation,
-   *      java.lang.String)
+   * @see org.kalypsodeegree.model.geometry.GM_Object#transform(java.lang.String)
    */
   @Override
-  public GM_Object transform( final CRSTransformation trans, final String targetOGCCS ) throws Exception
+  public GM_Object transform( final String targetCRS ) throws Exception
   {
     /* If the target is the same coordinate system, do not transform. */
-    final String coordinateSystem = getCoordinateSystem();
-    if( coordinateSystem == null || coordinateSystem.equalsIgnoreCase( targetOGCCS ) )
+    final String sourceCRS = getCoordinateSystem();
+    if( sourceCRS == null || sourceCRS.equalsIgnoreCase( targetCRS ) )
       return this;
-
-    Debug.debugMethodBegin( this, "transformSurface" );
 
     /* exterior ring */
     final GM_Ring ex = getExteriorRing();
-    final GM_Ring transEx = (GM_Ring) ex.transform( trans, targetOGCCS );
+    final GM_Ring transEx = (GM_Ring) ex.transform( targetCRS );
 
     /* interior rings */
     final GM_Ring[] in = getInteriorRings();
     final GM_Ring[] transIn = new GM_Ring[in.length];
 
     for( int j = 0; j < in.length; j++ )
-    {
-      transIn[j] = (GM_Ring) in[j].transform( trans, targetOGCCS );
-    }
+      transIn[j] = (GM_Ring) in[j].transform( targetCRS );
 
-    Debug.debugMethodEnd();
     return new GM_SurfaceBoundary_Impl( transEx, transIn );
-
   }
 }

@@ -37,7 +37,6 @@ package org.kalypsodeegree_impl.model.geometry;
 
 import java.util.Arrays;
 
-import org.deegree.crs.transformations.CRSTransformation;
 import org.kalypso.jts.JTSUtilities;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -118,7 +117,7 @@ public class GM_Triangle_Impl extends GM_Polygon_Impl implements GM_Triangle
   /**
    * Overwritten for better performance. <BR>
    * TODO: this method does not recognize, if the positions lies on an edge or a corner of the triangle.
-   *
+   * 
    * @see org.kalypsodeegree.model.geometry.GM_Triangle#contains(org.kalypsodeegree.model.geometry.GM_Position)
    */
   public boolean contains2( final GM_Position position )
@@ -166,21 +165,20 @@ public class GM_Triangle_Impl extends GM_Polygon_Impl implements GM_Triangle
   }
 
   /**
-   * @see org.kalypsodeegree_impl.model.geometry.GM_SurfacePatch_Impl#transform(org.deegree.crs.transformations.CRSTransformation,
-   *      java.lang.String)
+   * @see org.kalypsodeegree_impl.model.geometry.GM_Polygon_Impl#transform(java.lang.String)
    */
   @Override
-  public GM_SurfacePatch transform( final CRSTransformation trans, final String targetOGCCS ) throws Exception
+  public GM_SurfacePatch transform( final String targetCRS ) throws Exception
   {
     /* If the target is the same coordinate system, do not transform. */
-    final String coordinateSystem = getCoordinateSystem();
-    if( coordinateSystem == null || coordinateSystem.equalsIgnoreCase( targetOGCCS ) )
+    final String sourceCRS = getCoordinateSystem();
+    if( sourceCRS == null || sourceCRS.equalsIgnoreCase( targetCRS ) )
       return this;
 
     final GM_Ring exRing = GeometryFactory.createGM_Ring( getExteriorRing(), getCoordinateSystem() );
-    final GM_Ring transExRing = (GM_Ring) exRing.transform( trans, targetOGCCS );
+    final GM_Ring transExRing = (GM_Ring) exRing.transform( targetCRS );
     final GM_Position[] positions = transExRing.getPositions();
-    return GeometryFactory.createGM_Triangle( positions[0], positions[1], positions[2], targetOGCCS );
+    return GeometryFactory.createGM_Triangle( positions[0], positions[1], positions[2], targetCRS );
   }
 
   /**
@@ -225,17 +223,20 @@ public class GM_Triangle_Impl extends GM_Polygon_Impl implements GM_Triangle
     if( getClass() != obj.getClass() )
       return false;
     GM_Triangle_Impl other = (GM_Triangle_Impl) obj;
-    for( final GM_Position lPos: other.getExteriorRing() ){
-      if( !this.contains2( lPos ) ){
+    for( final GM_Position lPos : other.getExteriorRing() )
+    {
+      if( !this.contains2( lPos ) )
+      {
         return false;
       }
     }
     return true;
   }
-  
+
   @Override
-  public int getOrientation(){
+  public int getOrientation( )
+  {
     return orientation( getExteriorRing()[0], getExteriorRing()[1], getExteriorRing()[2] );
   }
-  
+
 }

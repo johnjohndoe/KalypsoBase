@@ -123,11 +123,23 @@ public class ParallelBinaryGridProcessor
         m_bean = m_manager.getNextDataset();
         if( m_bean == null )
           break;
-        operate();
+
+        try
+        {
+          operate();
+        }
+        catch( GeoGridException e )
+        {
+          e.printStackTrace();
+        }
+        catch( Exception e )
+        {
+          e.printStackTrace();
+        }
       }
     }
 
-    private final void operate( )
+    private final void operate( ) throws GeoGridException, Exception
     {
       for( int k = 0; k < m_bean.m_itemsInBlock; k++ )
       {

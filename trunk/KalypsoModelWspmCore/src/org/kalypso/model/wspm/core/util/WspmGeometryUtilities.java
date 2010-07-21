@@ -50,7 +50,8 @@ import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResultUtilities;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
-import org.kalypso.transformation.GeoTransformer;
+import org.kalypso.transformation.transformer.GeoTransformerFactory;
+import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -63,14 +64,14 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 public class WspmGeometryUtilities
 {
   // TODO: this is a general transformer to the Kalypso default crs; should be moved to a central place
-  public static GeoTransformer GEO_TRANSFORMER;
+  public static IGeoTransformer GEO_TRANSFORMER;
 
   static
   {
     try
     {
       final String targetCRS = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
-      GEO_TRANSFORMER = new GeoTransformer( targetCRS );
+      GEO_TRANSFORMER = GeoTransformerFactory.getGeoTransformer( targetCRS );
     }
     catch( final Exception e )
     {
@@ -183,7 +184,7 @@ public class WspmGeometryUtilities
     return pointFromRwHw( rw, hw, h, crsName, GEO_TRANSFORMER );
   }
 
-  public static GM_Point pointFromRwHw( final double rw, final double hw, final double h, String crsName, final GeoTransformer transformer ) throws Exception
+  public static GM_Point pointFromRwHw( final double rw, final double hw, final double h, String crsName, final IGeoTransformer transformer ) throws Exception
   {
     final GM_Position position = GeometryFactory.createGM_Position( rw, hw, h );
 
