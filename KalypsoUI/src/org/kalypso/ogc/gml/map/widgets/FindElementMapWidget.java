@@ -171,6 +171,8 @@ public class FindElementMapWidget extends AbstractWidget implements IWidgetWithO
 
   private String m_wildCChar = "*"; //$NON-NLS-1$
 
+  private int m_maxStrLen = 500;
+
   /**
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#activate(org.kalypso.commons.command.ICommandTarget,
    *      org.kalypso.ogc.gml.map.MapPanel)
@@ -331,7 +333,7 @@ public class FindElementMapWidget extends AbstractWidget implements IWidgetWithO
         if( lActFeature != null
             && (currentPoint.isWithinDistance( lActFeature.getDefaultGeometryPropertyValue(), 0.9 ) || lActFeature.getDefaultGeometryPropertyValue().contains( currentPoint.getPosition() )) )
         {
-          m_tooltip.setTooltip( getSimpleFeatureInfo( lActFeature, lActFeature.getFeatureType() ) );
+          m_tooltip.setTooltip( lActFeature.getId() + "\n" + getSimpleFeatureInfo( lActFeature, lActFeature.getFeatureType() ) ); //$NON-NLS-1$
           break;
         }
         else
@@ -368,8 +370,18 @@ public class FindElementMapWidget extends AbstractWidget implements IWidgetWithO
           {
             lStrPrefix = lPropType.getProperties()[i].getQName().getLocalPart() + ": "; //$NON-NLS-1$
           }
-          if( !"".equals( ("" + prop).trim() ) ) //$NON-NLS-1$ //$NON-NLS-2$
-            lStrInfo += lStrPrefix + prop + "\n"; //$NON-NLS-1$
+          String lPropTrim = ("" + prop).trim();
+          if( !"".equals( lPropTrim ) ) { //$NON-NLS-1$ //$NON-NLS-2$
+            if( lPropTrim.length() > m_maxStrLen )
+            {
+              lStrInfo += lStrPrefix + lPropTrim.substring( 0, m_maxStrLen ) + " ...\n"; //$NON-NLS-1$
+            }
+            else
+            {
+              lStrInfo += lStrPrefix + lPropTrim + "\n"; //$NON-NLS-1$
+            }
+          }
+
         }
       }
     }
@@ -386,10 +398,19 @@ public class FindElementMapWidget extends AbstractWidget implements IWidgetWithO
       for( int i = 0; i < featureList.size(); i++ )
       {
         Object prop = featureList.get( i );
-        lStrSuffix += prop + ", "; //$NON-NLS-1$
+        if( !"".equals( ("" + prop).trim() ) ) //$NON-NLS-1$ //$NON-NLS-2$
+          if( ("" + prop).trim().length() > m_maxStrLen ) //$NON-NLS-1$
+          {
+            lStrSuffix += ("" + prop).trim().substring( 0, m_maxStrLen ) + " ... , "; //$NON-NLS-1$ //$NON-NLS-2$
+          }
+          else
+          {
+            lStrSuffix += prop + ", "; //$NON-NLS-1$
+          }
       }
-      if( !"".equals( lStrSuffix.trim() ) ) //$NON-NLS-1$
+      if( !"".equals( lStrSuffix.trim() ) ) { //$NON-NLS-1$
         lStrInfo += lStrPrefix + lStrSuffix + "\n"; //$NON-NLS-1$
+      }
     }
     else if( featureObj != null )
     {
