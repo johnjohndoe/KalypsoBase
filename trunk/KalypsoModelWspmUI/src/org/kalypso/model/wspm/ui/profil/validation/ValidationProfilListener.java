@@ -49,6 +49,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.ui.progress.IProgressConstants;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
@@ -102,11 +103,14 @@ public class ValidationProfilListener implements IProfilListener
         }
         catch( final CoreException e )
         {
+          e.printStackTrace();
+
           return e.getStatus();
         }
       }
     };
     m_validateJob.setRule( file.getWorkspace().getRuleFactory().markerRule( file ) );
+    m_validateJob.setProperty( IProgressConstants.NO_IMMEDIATE_ERROR_PROMPT_PROPERTY, Boolean.TRUE );
 
     m_propertyListener = new IPropertyChangeListener()
     {
