@@ -124,11 +124,11 @@ public class FindElementMapWidget extends AbstractWidget implements IWidgetWithO
 {
   private final String m_defaultCrs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
 
-  private FindElementWidgetFace m_widgetFace;
+  private final FindElementWidgetFace m_widgetFace;
 
   protected boolean m_boolFound;
 
-  private Map<String, Feature> m_mapCacheFound;
+  private final Map<String, Feature> m_mapCacheFound;
 
   private final ToolTipRenderer m_tooltip = new ToolTipRenderer();
 
@@ -161,17 +161,17 @@ public class FindElementMapWidget extends AbstractWidget implements IWidgetWithO
 
   protected List<IKalypsoTheme> m_themesAct;
 
-  private QName m_resultIdQName = new QName( "http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults", "calcId" ); //$NON-NLS-1$  //$NON-NLS-2$
+  private final QName m_resultIdQName = new QName( "http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults", "calcId" ); //$NON-NLS-1$  //$NON-NLS-2$
 
-  private QName m_nameQName = new QName( NS.GML3, "name" ); //$NON-NLS-1$
+  private final QName m_nameQName = new QName( NS.GML3, "name" ); //$NON-NLS-1$
 
-  private int m_cacheSize = 1024;
+  private final int m_cacheSize = 1024;
 
   private boolean m_boolIsSimple = true;
 
-  private String m_wildCChar = "*"; //$NON-NLS-1$
+  private final String m_wildCChar = "*"; //$NON-NLS-1$
 
-  private int m_maxStrLen = 500;
+  private final int m_maxStrLen = 500;
 
   /**
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#activate(org.kalypso.commons.command.ICommandTarget,
@@ -210,6 +210,7 @@ public class FindElementMapWidget extends AbstractWidget implements IWidgetWithO
   /**
    * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#createControl(org.eclipse.swt.widgets.Composite)
    */
+  @Override
   public Control createControl( final Composite parent, final FormToolkit toolkit )
   {
     return m_widgetFace.createControl( parent );
@@ -218,6 +219,7 @@ public class FindElementMapWidget extends AbstractWidget implements IWidgetWithO
   /**
    * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#disposeControl()
    */
+  @Override
   public void disposeControl( )
   {
     if( m_widgetFace != null )
@@ -327,9 +329,9 @@ public class FindElementMapWidget extends AbstractWidget implements IWidgetWithO
   {
     if( m_featureList != null && m_featureList.size() > 0 )
     {
-      for( Iterator iterator = m_featureList.iterator(); iterator.hasNext(); )
+      for( final Object element : m_featureList )
       {
-        Feature lActFeature = (Feature) iterator.next();
+        final Feature lActFeature = (Feature) element;
         if( lActFeature != null
             && (currentPoint.isWithinDistance( lActFeature.getDefaultGeometryPropertyValue(), 0.9 ) || lActFeature.getDefaultGeometryPropertyValue().contains( currentPoint.getPosition() )) )
         {
@@ -353,12 +355,12 @@ public class FindElementMapWidget extends AbstractWidget implements IWidgetWithO
     String lStrInfo = ""; //$NON-NLS-1$
     if( featureObj instanceof Feature )
     {
-      Feature feature = (Feature) featureObj;
-      IFeatureType lPropType = (IFeatureType) featureType;
+      final Feature feature = (Feature) featureObj;
+      final IFeatureType lPropType = (IFeatureType) featureType;
 
       for( int i = 0; i < feature.getProperties().length; i++ )
       {
-        Object prop = feature.getProperties()[i];
+        final Object prop = feature.getProperties()[i];
         if( !(prop instanceof String) && prop instanceof List )
         {
           lStrInfo += getSimpleFeatureInfo( prop, featureType == null ? null : lPropType.getProperties()[i] ); //$NON-NLS-1$
@@ -370,7 +372,7 @@ public class FindElementMapWidget extends AbstractWidget implements IWidgetWithO
           {
             lStrPrefix = lPropType.getProperties()[i].getQName().getLocalPart() + ": "; //$NON-NLS-1$
           }
-          String lPropTrim = ("" + prop).trim();
+          final String lPropTrim = ("" + prop).trim();
           if( !"".equals( lPropTrim ) ) { //$NON-NLS-1$ //$NON-NLS-2$
             if( lPropTrim.length() > m_maxStrLen )
             {
@@ -387,17 +389,17 @@ public class FindElementMapWidget extends AbstractWidget implements IWidgetWithO
     }
     else if( featureObj instanceof List )
     {
-      List featureList = (List) featureObj;
+      final List featureList = (List) featureObj;
       String lStrSuffix = ""; //$NON-NLS-1$
       String lStrPrefix = ""; //$NON-NLS-1$
       if( featureType != null )
       {
-        IPropertyType propertyType = (IPropertyType) featureType;
+        final IPropertyType propertyType = (IPropertyType) featureType;
         lStrPrefix = propertyType.getQName().getLocalPart() + ": "; //$NON-NLS-1$
       }
       for( int i = 0; i < featureList.size(); i++ )
       {
-        Object prop = featureList.get( i );
+        final Object prop = featureList.get( i );
         if( !"".equals( ("" + prop).trim() ) ) //$NON-NLS-1$ //$NON-NLS-2$
           if( ("" + prop).trim().length() > m_maxStrLen ) //$NON-NLS-1$
           {
@@ -499,7 +501,7 @@ public class FindElementMapWidget extends AbstractWidget implements IWidgetWithO
       m_gmlId.setLayoutData( new GridData( SWT.FILL, SWT.BEGINNING, true, false ) );
       m_gmlId.addKeyListener( keyListnerEnter() );
 
-      boolean is1d2dModule = isIn1d2dModule();
+      final boolean is1d2dModule = isIn1d2dModule();
       if( is1d2dModule )
       {
         toolkit.createLabel( parent, Messages.getString( "org.kalypso.ogc.gml.map.widgets.FindElementMapWidget.7" ) ); //$NON-NLS-1$
@@ -543,7 +545,7 @@ public class FindElementMapWidget extends AbstractWidget implements IWidgetWithO
         }
         is1d2dModule = lTmp.contains( "kalypso1d2d" ); //$NON-NLS-1$
       }
-      catch( Exception e )
+      catch( final Exception e )
       {
       }
       return is1d2dModule;
@@ -555,12 +557,12 @@ public class FindElementMapWidget extends AbstractWidget implements IWidgetWithO
       {
 
         @Override
-        public void keyReleased( org.eclipse.swt.events.KeyEvent e )
+        public void keyReleased( final org.eclipse.swt.events.KeyEvent e )
         {
         }
 
         @Override
-        public void keyPressed( org.eclipse.swt.events.KeyEvent e )
+        public void keyPressed( final org.eclipse.swt.events.KeyEvent e )
         {
           if( e.keyCode == 16777296 || e.character == '\n' || e.character == '\r' ) // KeyEvent.VK_ENTER )
           {
@@ -631,14 +633,12 @@ public class FindElementMapWidget extends AbstractWidget implements IWidgetWithO
     if( m_feature == null )
       return;
 
-    for( Iterator<Feature> iterator = m_featureList.iterator(); iterator.hasNext(); )
+    for( final Feature element : m_featureList )
     {
-      Feature element = iterator.next();
-
       try
       {
-        GM_Object geometryObjectValue = element.getDefaultGeometryPropertyValue();
-        GM_Envelope envelope = geometryObjectValue.getEnvelope();
+        final GM_Object geometryObjectValue = element.getDefaultGeometryPropertyValue();
+        final GM_Envelope envelope = geometryObjectValue.getEnvelope();
         GM_Object geometryObjectToShow = null;
 
         double scaledFactor = getMapPanel().getCurrentScale();
@@ -699,7 +699,7 @@ public class FindElementMapWidget extends AbstractWidget implements IWidgetWithO
       {
         showFound();
       }
-      catch( ExecutionException e )
+      catch( final ExecutionException e )
       {
         e.printStackTrace();
       }
@@ -722,7 +722,7 @@ public class FindElementMapWidget extends AbstractWidget implements IWidgetWithO
       {
         lPropertyValue = lFeature.getProperty( propertyName );
       }
-      catch( Exception e )
+      catch( final Exception e )
       {
         continue;
       }
@@ -747,7 +747,7 @@ public class FindElementMapWidget extends AbstractWidget implements IWidgetWithO
     {
       return lFeature;
     }
-    for( Iterator<Feature> iterator = featureList.iterator(); iterator.hasNext(); )
+    for( final Iterator<Feature> iterator = featureList.iterator(); iterator.hasNext(); )
     {
       lFeature = iterator.next();
       if( checkEquals( lFeature.getId().toLowerCase(), gmlId ) )
@@ -774,12 +774,12 @@ public class FindElementMapWidget extends AbstractWidget implements IWidgetWithO
     {
       idPattern = idPattern.substring( 1 );
     }
-    StringTokenizer lStrTokenizer = new StringTokenizer( idPattern, m_wildCChar );
+    final StringTokenizer lStrTokenizer = new StringTokenizer( idPattern, m_wildCChar );
     String lStrRest = idToCheck;
     while( lStrTokenizer.hasMoreTokens() )
     {
-      String lStrToken = lStrTokenizer.nextToken();
-      int indexOfToken = lStrRest.indexOf( lStrToken );
+      final String lStrToken = lStrTokenizer.nextToken();
+      final int indexOfToken = lStrRest.indexOf( lStrToken );
       if( indexOfToken > -1 )
       {
         lStrRest = lStrRest.substring( indexOfToken + lStrToken.length() );
@@ -810,14 +810,14 @@ public class FindElementMapWidget extends AbstractWidget implements IWidgetWithO
       {
         if( lTheme instanceof IKalypsoCascadingTheme )
         {
-          IKalypsoCascadingTheme lThemes = (IKalypsoCascadingTheme) lTheme;
+          final IKalypsoCascadingTheme lThemes = (IKalypsoCascadingTheme) lTheme;
           for( int i = 0; i < lThemes.getAllThemes().length; i++ )
           {
             try
             {
               findInTheme( lThemes.getAllThemes()[i] );
             }
-            catch( Exception e )
+            catch( final Exception e )
             {
             }
 
@@ -836,7 +836,7 @@ public class FindElementMapWidget extends AbstractWidget implements IWidgetWithO
     {
       showFound();
     }
-    catch( ExecutionException e1 )
+    catch( final ExecutionException e1 )
     {
       e1.printStackTrace();
     }
@@ -900,8 +900,11 @@ public class FindElementMapWidget extends AbstractWidget implements IWidgetWithO
 
   private void findInTheme( final IKalypsoTheme lTheme )
   {
-    IKalypsoFeatureTheme lActTheme = (IKalypsoFeatureTheme) lTheme;
-    FeatureList featureList = lActTheme.getFeatureList();
-    m_boolFound = findFeature( featureList );
+    if( lTheme instanceof IKalypsoFeatureTheme )
+    {
+      final IKalypsoFeatureTheme lActTheme = (IKalypsoFeatureTheme) lTheme;
+      final FeatureList featureList = lActTheme.getFeatureList();
+      m_boolFound = findFeature( featureList );
+    }
   }
 }
