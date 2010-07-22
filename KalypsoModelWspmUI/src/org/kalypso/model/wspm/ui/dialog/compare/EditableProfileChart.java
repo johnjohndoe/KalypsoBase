@@ -46,7 +46,6 @@ import org.kalypso.chart.ui.editor.mousehandler.PlotDragHandlerDelegate;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider;
 
-import de.openali.odysseus.chart.framework.view.TooltipHandler;
 import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
 
 /**
@@ -54,17 +53,16 @@ import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
  */
 public class EditableProfileChart extends ProfileChart
 {
-
-  public EditableProfileChart( final Composite parent, final IProfil profile )
+  public EditableProfileChart( final Composite parent, final int style, final IProfil profile )
   {
-    super( parent, profile );
+    super( parent, style, profile );
 
     mkeEditable();
   }
 
-  public EditableProfileChart( final Composite parent, final IProfilLayerProvider provider, final IProfil profile )
+  public EditableProfileChart( final Composite parent, final int style, final IProfilLayerProvider provider, final IProfil profile )
   {
-    super( parent, provider, profile );
+    super( parent, style, provider, profile );
 
     mkeEditable();
   }
