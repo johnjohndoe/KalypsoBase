@@ -55,28 +55,28 @@ public interface IRepository extends IRepositoryItem
   /**
    * @return the classname of the factory that was used to create this repository
    */
-  public String getFactory( );
+  String getFactory( );
 
   /**
    * @return the configuration string used to create the repository
    */
-  public String getConfiguration( );
+  String getConfiguration( );
 
   /**
    * @return name of the repository
    */
   @Override
-  public String getName( );
+  String getName( );
 
   /**
    * @return display name of the repository
    */
-  public String getLabel( );
+  String getLabel( );
 
   /**
    * @return some description
    */
-  public String getDescription( );
+  String getDescription( );
 
   /**
    * Returns true when this repository is in readonly mode. What this really means, depends on the client
@@ -84,12 +84,12 @@ public interface IRepository extends IRepositoryItem
    * 
    * @return readonly flag
    */
-  public boolean isReadOnly( );
+  boolean isReadOnly( );
 
   /**
    * @return observations (data) of this repository is cached on client side?
    */
-  public boolean isCached( );
+  boolean isCached( );
 
   /**
    * Finds the item that has the given id.
@@ -98,7 +98,7 @@ public interface IRepository extends IRepositoryItem
    * @return item, or null if not found
    * @throws RepositoryException
    */
-  public IRepositoryItem findItem( final String id ) throws RepositoryException;
+  IRepositoryItem findItem( final String id ) throws RepositoryException;
 
   /**
    * Sets a property for this repository. Properties can be used internally, by the repository itself, or by its items.
@@ -106,7 +106,7 @@ public interface IRepository extends IRepositoryItem
    * @param name
    * @param value
    */
-  public void setProperty( final String name, final String value );
+  void setProperty( final String name, final String value );
 
   /**
    * Returns the value of the given property or null if not set yet.
@@ -114,7 +114,7 @@ public interface IRepository extends IRepositoryItem
    * @param name
    * @return property string
    */
-  public String getProperty( final String name );
+  String getProperty( final String name );
 
   /**
    * Returns the value of the given property, or defaultValue if no value is set yet.
@@ -123,41 +123,41 @@ public interface IRepository extends IRepositoryItem
    * @param defaultValue
    * @return property string
    */
-  public String getProperty( final String name, final String defaultValue );
+  String getProperty( final String name, final String defaultValue );
 
   /**
    * @return convenience method that returns the properties of this repository in the form of a Properties object.
    */
-  public Properties getProperties( );
+  Properties getProperties( );
 
   /**
    * Convenience method for settings a whole set of properties.
    * 
    * @param props
    */
-  public void setProperties( final Properties props );
+  void setProperties( final Properties props );
 
   /**
    * Forces the reload of the whole Repository structure.
    * 
    * @throws RepositoryException
    */
-  public void reload( ) throws RepositoryException;
+  void reload( ) throws RepositoryException;
 
   /**
    * Dumps the contents (structure and summary of items)
    */
-  public void dumpStructure( final Writer writer, final IProgressMonitor monitor ) throws InterruptedException, RepositoryException;
+  void dumpStructure( final Writer writer, final IProgressMonitor monitor ) throws InterruptedException, RepositoryException;
 
   /**
    * Clears potential resources
    */
-  public void dispose( );
+  void dispose( );
 
-  public void addRepositoryListener( final IRepositoryListener l );
+  void addRepositoryListener( final IRepositoryListener l );
 
-  public void removeRepositoryListener( final IRepositoryListener l );
+  void removeRepositoryListener( final IRepositoryListener l );
 
-  public void fireRepositoryStructureChanged( );
+  void fireRepositoryStructureChanged( );
 
 }
