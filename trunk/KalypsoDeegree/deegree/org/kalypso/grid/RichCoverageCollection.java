@@ -50,6 +50,7 @@ import org.kalypso.grid.GeoGridUtilities.Interpolation;
 import org.kalypso.jts.JTSUtilities;
 import org.kalypso.transformation.transformer.GeoTransformerFactory;
 import org.kalypso.transformation.transformer.IGeoTransformer;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
@@ -69,7 +70,11 @@ import com.vividsolutions.jts.geom.LineString;
  */
 public class RichCoverageCollection
 {
+  private static final int DISCRETISATION_FRACTION = 8;
+
   private final Map<ICoverage, IGeoGrid> m_gridCache = new HashMap<ICoverage, IGeoGrid>();
+
+  private final Map<ICoverage, IGeoTransformer> m_geoTransformer = new HashMap<ICoverage, IGeoTransformer>();
 
   private final ICoverageCollection m_coverages;
 
@@ -91,12 +96,12 @@ public class RichCoverageCollection
 
   public Coordinate[] extractPoints( final LineString lineString, final String crs ) throws GeoGridException
   {
-    final double gridSize = getGridOffset();
+    final double gridSize = getSmallestGridOffset();
     if( Double.isNaN( gridSize ) )
       throw new IllegalStateException( "No grids available" );
 
     /* Add every 1/8 raster size a point. */
-    final Coordinate[] points = JTSUtilities.calculatePointsOnLine( lineString, gridSize / 8 );
+    final Coordinate[] points = JTSUtilities.calculatePointsOnLine( lineString, gridSize / DISCRETISATION_FRACTION );
 
     return extractZ( points, crs );
   }
@@ -125,20 +130,9 @@ public class RichCoverageCollection
     try
     {
       final Collection<Coordinate> result = new ArrayList<Coordinate>( crds.length );
-
-      final String gridCrds = getGridCrs();
-      if( gridCrds == null )
-        return null;
-
-      final IGeoTransformer geoTransformer = GeoTransformerFactory.getGeoTransformer( gridCrds );
-
       for( final Coordinate coordinate : crds )
       {
-        final GM_Position pos = GeometryFactory.createGM_Position( coordinate.x, coordinate.y, coordinate.z );
-        final GM_Position transformedPosition = geoTransformer.transform( pos, crsOfCrds );
-        final Coordinate gridCoordinate = new Coordinate( transformedPosition.getX(), transformedPosition.getY(), transformedPosition.getZ() );
-        final double value = findValue( gridCoordinate );
-
+        final double value = findValue( coordinate, crsOfCrds );
         if( !Double.isNaN( value ) )
           result.add( new Coordinate( coordinate.x, coordinate.y, value ) );
       }
@@ -152,14 +146,21 @@ public class RichCoverageCollection
     }
   }
 
-  public double findValue( final Coordinate gridCoordinate ) throws GeoGridException
+  /**
+   * gridCoordinate: Must be in the Kalypso Coordinate System
+   */
+  public double findValue( final Coordinate coordinate, final String crsOfCrds ) throws GeoGridException
   {
-    final GM_Position pos = GeometryFactory.createGM_Position( gridCoordinate.x, gridCoordinate.y );
+    final GM_Position pos = GeometryFactory.createGM_Position( coordinate.x, coordinate.y );
     final List<ICoverage> foundCoverages = m_coverages.query( pos );
 
     for( final ICoverage coverage : foundCoverages )
     {
       final IGeoGrid grid = getGrid( coverage );
+
+      final IGeoTransformer transformer = getTransformer( coverage );
+      final Coordinate gridCoordinate = transformCoordinate( transformer, coordinate, crsOfCrds );
+
       /* Get the interpolated value with the coordinate in the coordinate system of the grid. */
       final double value = GeoGridUtilities.getValue( grid, gridCoordinate, Interpolation.bilinear );
       if( !Double.isNaN( value ) )
@@ -169,26 +170,61 @@ public class RichCoverageCollection
     return Double.NaN;
   }
 
-  // TODO: check: we take the crs of the first grid, is this always OK?
-  private String getGridCrs( ) throws GeoGridException
+  private IGeoTransformer getTransformer( final ICoverage coverage ) throws GeoGridException
   {
-    if( m_coverages.size() == 0 )
-      return null;
+    if( !m_geoTransformer.containsKey( coverage ) )
+    {
+      final IGeoGrid grid = getGrid( coverage );
+      final String gridCrs = grid.getSourceCRS();
+      final IGeoTransformer transformer = GeoTransformerFactory.getGeoTransformer( gridCrs );
+      m_geoTransformer.put( coverage, transformer );
+    }
 
-    final ICoverage coverage = m_coverages.get( 0 );
-    final IGeoGrid grid = getGrid( coverage );
-    return grid.getSourceCRS();
+    return m_geoTransformer.get( coverage );
   }
 
-  // TODO: check: we take the offset of the first grid, is this always OK?
-  private double getGridOffset( ) throws GeoGridException
+  private Coordinate transformCoordinate( final IGeoTransformer transformer, final Coordinate coordinate, final String crsOfCrds ) throws GeoGridException
+  {
+    try
+    {
+      final GM_Position pos = JTSAdapter.wrap( coordinate );
+      final GM_Position transformedPosition = transformer.transform( pos, crsOfCrds );
+      return JTSAdapter.export( transformedPosition );
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+      throw new GeoGridException( "Failed to transform coordinate to grid coordinate system.", e );
+    }
+  }
+
+  private double getSmallestGridOffset( ) throws GeoGridException
   {
     if( m_coverages.size() == 0 )
       return Double.NaN;
 
+    double minOffset = Double.MAX_VALUE;
+
+    for( final ICoverage coverage : m_coverages )
+    {
+      final IGeoGrid grid = getGrid( coverage );
+      final double offset = grid.getOffsetX().x;
+      minOffset = Math.min( minOffset, offset );
+    }
+
+    /* Now transform this length into Kalypso crs */
     final ICoverage coverage = m_coverages.get( 0 );
     final IGeoGrid grid = getGrid( coverage );
-    return grid.getOffsetX().x;
+    final Coordinate origin = grid.getOrigin();
+    final Coordinate origin1 = new Coordinate( origin.x + minOffset, origin.y );
+
+    final String kalypsoCrs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
+    final IGeoTransformer transformer = GeoTransformerFactory.getGeoTransformer( kalypsoCrs );
+
+    final Coordinate crd1 = transformCoordinate( transformer, origin, grid.getSourceCRS() );
+    final Coordinate crd2 = transformCoordinate( transformer, origin1, grid.getSourceCRS() );
+
+    return crd1.distance( crd2 );
   }
 
   private IGeoGrid getGrid( final ICoverage coverage )

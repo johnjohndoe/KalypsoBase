@@ -47,7 +47,7 @@ import org.kalypso.transformation.internal.DeegreeGeoTransformer;
  * 
  * @author Holger Albert
  */
-public class GeoTransformerFactory
+public final class GeoTransformerFactory
 {
   /**
    * The constructor.
@@ -63,7 +63,7 @@ public class GeoTransformerFactory
    *          The target coordinate system.
    * @return The geo transformer.
    */
-  public static IGeoTransformer getGeoTransformer( String targetCRS )
+  public static IGeoTransformer getGeoTransformer( final String targetCRS )
   {
     // TODO Returning the deegree transformer for now...
     return new DeegreeGeoTransformer( targetCRS );

@@ -94,7 +94,7 @@ import com.vividsolutions.jts.geom.Polygon;
  * 
  * @author Gernot Belger
  */
-public class GeoGridUtilities
+public final class GeoGridUtilities
 {
   private GeoGridUtilities( )
   {
@@ -285,7 +285,7 @@ public class GeoGridUtilities
       Assert.isNotNull( "The target coordinate system is not allowed to be null ...", targetCRS );
       if( grid.getSourceCRS() != null && (!grid.getSourceCRS().equals( targetCRS )) )
       {
-        IGeoTransformer geoTransformer = GeoTransformerFactory.getGeoTransformer( targetCRS );
+        final IGeoTransformer geoTransformer = GeoTransformerFactory.getGeoTransformer( targetCRS );
         return (GM_Surface< ? >) geoTransformer.transform( surface );
       }
 
@@ -346,7 +346,7 @@ public class GeoGridUtilities
       Assert.isNotNull( "The target coordinate system is not allowed to be null ...", targetCRS );
       if( grid.getSourceCRS() != null && (!grid.getSourceCRS().equals( targetCRS )) )
       {
-        IGeoTransformer geoTransformer = GeoTransformerFactory.getGeoTransformer( targetCRS );
+        final IGeoTransformer geoTransformer = GeoTransformerFactory.getGeoTransformer( targetCRS );
         return (GM_Surface< ? >) geoTransformer.transform( surface );
       }
 
@@ -870,7 +870,7 @@ public class GeoGridUtilities
    *          if true, the envelope results from an intersection of all coverages of the collections. If false, the
    *          envelope gets calculated by union of the several envelopes.
    */
-  public static Geometry getCommonGridEnvelopeForCollections( final ICoverageCollection[] collections, final boolean intersection ) throws Exception, GeoGridException, GM_Exception
+  public static Geometry getCommonGridEnvelopeForCollections( final ICoverageCollection[] collections, final boolean intersection ) throws Exception
   {
     Geometry globalEnv = null;
 
@@ -911,7 +911,7 @@ public class GeoGridUtilities
           unionGeom = unionGeom.union( geometry );
       }
 
-      if( intersection == true )
+      if( intersection )
       {
         if( globalEnv == null )
           globalEnv = unionGeom;
@@ -965,7 +965,7 @@ public class GeoGridUtilities
           unionGeom = unionGeom.union( geometry );
       }
 
-      if( intersection == true )
+      if( intersection )
       {
         if( globalGridSurfaceBoundary == null )
           globalGridSurfaceBoundary = unionGeom;
@@ -996,10 +996,10 @@ public class GeoGridUtilities
     final int numOfColumns = (int) Math.round( dX / minCellSizeX ) + 1;
     final int numOfRows = (int) Math.round( dY / minCellSizeY ) + 1;
 
-    final Double CornerY = originY + (numOfRows - 1) * minCellSizeY;
+    final Double cornerY = originY + (numOfRows - 1) * minCellSizeY;
 
     final String sourceCRS = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
-    final GM_Point gmOrigin = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Point( originX, CornerY, sourceCRS );
+    final GM_Point gmOrigin = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Point( originX, cornerY, sourceCRS );
 
     final Coordinate origin = JTSAdapter.export( gmOrigin ).getCoordinate();
     final Coordinate offsetX = new Coordinate( minCellSizeX, 0 );

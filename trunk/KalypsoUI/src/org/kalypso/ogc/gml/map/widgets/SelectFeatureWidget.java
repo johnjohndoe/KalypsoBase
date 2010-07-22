@@ -215,11 +215,6 @@ public class SelectFeatureWidget extends AbstractWidget
     }
   }
 
-  private IDialogSettings getSettings( )
-  {
-    return PluginUtilities.getDialogSettings( KalypsoGisPlugin.getDefault(), getClass().getName() );
-  }
-
   /**
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#moved(java.awt.Point)
    */
@@ -767,4 +762,10 @@ public class SelectFeatureWidget extends AbstractWidget
   {
     m_themes = themes;
   }
+
+  private IDialogSettings getSettings( )
+  {
+    return PluginUtilities.getDialogSettings( KalypsoGisPlugin.getDefault(), getClass().getName() );
+  }
+
 }
