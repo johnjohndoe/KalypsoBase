@@ -68,8 +68,13 @@ import com.vividsolutions.jts.geom.LineString;
  * @author Holger Albert
  * @author kimwerner
  */
-public class CoverageProfile
+public final class CoverageProfile
 {
+  private CoverageProfile( )
+  {
+    throw new UnsupportedOperationException( "Helper class, do not instantiate" );
+  }
+
   /**
    * This function creates a new profile.<br>
    * <br>
@@ -125,6 +130,7 @@ public class CoverageProfile
     profile.setProperty( IWspmConstants.PROFIL_PROPERTY_CRS, crsOfPoints );
 
     // TODO: check: we calculate the 'breite' by just adding up the distances between the points, is this always OK?
+    // FIXME: no! this at least depends on the coordinate system....!
     double breite = 0.0;
     Coordinate lastCrd = null;
 
@@ -136,7 +142,10 @@ public class CoverageProfile
       profile.addPoint( profilePoint );
 
       if( lastCrd != null )
+      {
+        // FIXME: this at least depends on the coordinate system. In WGS84 we get deegrees, but we always need [m]!
         breite += coordinate.distance( lastCrd );
+      }
 
       lastCrd = coordinate;
     }
