@@ -132,7 +132,7 @@ public class CompareProfilesDialog extends TitleAreaDialog
     group.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
     group.setText( wrapper.getLabel() );
 
-    final ProfileChart chart = new ProfileChart( group, wrapper.getLayerProvider(), wrapper.getProfil() );
+    final ProfileChart chart = new ProfileChart( group, SWT.NONE, wrapper.getLayerProvider(), wrapper.getProfil() );
     chart.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
 
     toolkit.adapt( group );

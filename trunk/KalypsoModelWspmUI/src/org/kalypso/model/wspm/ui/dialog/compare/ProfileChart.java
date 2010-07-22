@@ -53,8 +53,6 @@ import org.kalypso.model.wspm.ui.view.chart.IProfilChart;
 import org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartModel;
 
-import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
-import de.openali.odysseus.chart.framework.util.ChartUtilities;
 import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
 
 /**
@@ -78,14 +76,14 @@ public class ProfileChart extends Composite implements IProfilChart
 
   private ProfilChartModel m_chartmodel;
 
-  public ProfileChart( final Composite parent, final IProfil profile )
+  public ProfileChart( final Composite parent, final int style, final IProfil profile )
   {
-    this( parent, KalypsoModelWspmUIExtensions.createProfilLayerProvider( profile.getType() ), profile );
+    this( parent, style, KalypsoModelWspmUIExtensions.createProfilLayerProvider( profile.getType() ), profile );
   }
 
-  public ProfileChart( final Composite parent, final IProfilLayerProvider layerProvider, final IProfil profile )
+  public ProfileChart( final Composite parent, final int style, final IProfilLayerProvider layerProvider, final IProfil profile )
   {
-    super( parent, SWT.NULL );
+    super( parent, style );
 
     this.setLayout( new GridLayout() );
 
