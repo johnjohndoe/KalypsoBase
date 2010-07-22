@@ -69,8 +69,8 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.transformation.CRSHelper;
-import org.kalypso.transformation.ui.CRSSelectionListener;
 import org.kalypso.transformation.ui.CRSSelectionPanel;
+import org.kalypso.transformation.ui.listener.CRSSelectionListener;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 
 /**

@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.transformation.deegree;
+package org.kalypso.transformation.internal;
 
 import java.util.ArrayList;
 

@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.transformation.crs;
 
-import org.kalypso.transformation.deegree.DeegreeCoordinateSystem;
+import org.kalypso.transformation.internal.DeegreeCoordinateSystem;
 
 /**
  * This factory returns coordinate systems.

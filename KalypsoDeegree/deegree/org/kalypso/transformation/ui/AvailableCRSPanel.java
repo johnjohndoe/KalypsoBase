@@ -82,6 +82,7 @@ import org.kalypso.transformation.crs.CoordinateSystemFactory;
 import org.kalypso.transformation.crs.ICoordinateSystem;
 import org.kalypso.transformation.ui.listener.IAvailableCRSPanelListener;
 import org.kalypso.transformation.ui.provider.CRSLabelProvider;
+import org.kalypso.transformation.ui.validators.CRSInputValidator;
 
 /**
  * This class represents a panel with elements for managing the coordinate systems.

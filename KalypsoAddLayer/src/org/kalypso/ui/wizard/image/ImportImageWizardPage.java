@@ -66,8 +66,8 @@ import org.eclipse.swt.widgets.Text;
 import org.kalypso.contribs.eclipse.ui.dialogs.KalypsoResourceSelectionDialog;
 import org.kalypso.contribs.eclipse.ui.dialogs.ResourceSelectionValidator;
 import org.kalypso.transformation.CRSHelper;
-import org.kalypso.transformation.ui.CRSSelectionListener;
 import org.kalypso.transformation.ui.CRSSelectionPanel;
+import org.kalypso.transformation.ui.listener.CRSSelectionListener;
 import org.kalypso.ui.i18n.Messages;
 
 /**
