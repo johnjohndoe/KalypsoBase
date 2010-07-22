@@ -67,8 +67,8 @@ import org.eclipse.ui.dialogs.WizardNewFileCreationPage;
 import org.kalypso.gml.ui.i18n.Messages;
 import org.kalypso.grid.GridFileVerifier;
 import org.kalypso.grid.IGridMetaReader;
-import org.kalypso.transformation.ui.CRSSelectionListener;
 import org.kalypso.transformation.ui.CRSSelectionPanel;
+import org.kalypso.transformation.ui.listener.CRSSelectionListener;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
 

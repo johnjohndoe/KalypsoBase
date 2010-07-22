@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.transformation.ui;
+package org.kalypso.transformation.ui.validators;
 
 import org.eclipse.jface.dialogs.IInputValidator;
 import org.kalypso.i18n.Messages;
@@ -65,7 +65,7 @@ public class CRSInputValidator implements IInputValidator
   public String isValid( String newText )
   {
     if( !CRSHelper.isKnownCRS( newText ) )
-      return String.format( Messages.getString( "org.kalypso.transformation.ui.CRSInputValidator.0" ), newText ); //$NON-NLS-1$
+      return String.format( Messages.getString( "org.kalypso.transformation.ui.validators.CRSInputValidator.0" ), newText ); //$NON-NLS-1$
 
     return null;
   }

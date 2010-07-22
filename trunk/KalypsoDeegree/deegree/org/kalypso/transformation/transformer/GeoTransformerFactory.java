@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.transformation.transformer;
 
-import org.kalypso.transformation.deegree.DeegreeGeoTransformer;
+import org.kalypso.transformation.internal.DeegreeGeoTransformer;
 
 /**
  * This factory returns geo transformers.

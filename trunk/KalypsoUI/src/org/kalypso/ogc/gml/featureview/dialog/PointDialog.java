@@ -56,8 +56,8 @@ import org.eclipse.swt.widgets.Text;
 import org.kalypso.contribs.eclipse.swt.events.DoubleModifyListener;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.i18n.Messages;
-import org.kalypso.transformation.ui.CRSSelectionListener;
 import org.kalypso.transformation.ui.CRSSelectionPanel;
+import org.kalypso.transformation.ui.listener.CRSSelectionListener;
 
 /**
  * This class builds the dialog for the data input for the GM_Point.

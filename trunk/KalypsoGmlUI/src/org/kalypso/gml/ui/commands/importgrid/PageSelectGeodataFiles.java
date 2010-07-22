@@ -65,8 +65,8 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.ContainerSelectionDialog;
 import org.kalypso.gml.ui.i18n.Messages;
 import org.kalypso.grid.IGridMetaReader;
-import org.kalypso.transformation.ui.CRSSelectionListener;
 import org.kalypso.transformation.ui.CRSSelectionPanel;
+import org.kalypso.transformation.ui.listener.CRSSelectionListener;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 
 /**
