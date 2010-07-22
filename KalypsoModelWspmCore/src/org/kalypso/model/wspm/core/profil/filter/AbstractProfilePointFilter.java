@@ -110,6 +110,8 @@ public abstract class AbstractProfilePointFilter implements IProfilePointFilter,
     final int right = ArrayUtils.indexOf( points, rightPoint );
     final int index = ArrayUtils.indexOf( points, point );
 
+    if( left == right && index == right )
+      return true;
     if( left < right )
       return left <= index && index < right;
     else
