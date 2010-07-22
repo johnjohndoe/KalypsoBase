@@ -639,11 +639,11 @@ public class FindElementMapWidget extends AbstractWidget implements IWidgetWithO
       {
         final GM_Object geometryObjectValue = element.getDefaultGeometryPropertyValue();
         final GM_Envelope envelope = geometryObjectValue.getEnvelope();
-        GM_Object geometryObjectToShow = null;
+        GM_Object geometryObjectToShow = geometryObjectValue;
 
         double scaledFactor = getMapPanel().getCurrentScale();
 
-        if( envelope.getMaxX() == envelope.getMinX() && envelope.getMaxY() == envelope.getMinY() )
+        if( ( envelope.getMaxX() == envelope.getMinX() && envelope.getMaxY() == envelope.getMinY() ) )
         {
           scaledFactor *= 0.00093;
         }
@@ -654,12 +654,13 @@ public class FindElementMapWidget extends AbstractWidget implements IWidgetWithO
 
         geometryObjectToShow = geometryObjectValue.getBuffer( scaledFactor );
         final PolygonSymbolizer symb = new PolygonSymbolizer_Impl();
+        
         final Stroke stroke = new Stroke_Impl( new HashMap<Object, Object>(), null, null );
-        stroke.setWidth( 3 );
+        stroke.setWidth( 5 );
         stroke.setStroke( new Color( 255, 0, 0 ) );
         symb.setStroke( stroke );
 
-        final DisplayElement de = DisplayElementFactory.buildPolygonDisplayElement( m_feature, geometryObjectToShow.getConvexHull(), symb );
+        final DisplayElement de = DisplayElementFactory.buildPolygonDisplayElement( m_feature, geometryObjectToShow, symb );
         de.paint( g, getMapPanel().getProjection(), new NullProgressMonitor() );
       }
       catch( final Exception e )
