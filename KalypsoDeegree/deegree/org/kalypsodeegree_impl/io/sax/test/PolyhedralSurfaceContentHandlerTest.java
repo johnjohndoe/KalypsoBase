@@ -50,9 +50,9 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.kalypso.gmlschema.types.UnmarshallResultEater;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree.model.geometry.GM_PolyhedralSurface;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.io.sax.parser.PolyhedralSurfaceContentHandler;
-import org.kalypsodeegree_impl.model.geometry.GM_PolyhedralSurface_Impl;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -73,14 +73,14 @@ public class PolyhedralSurfaceContentHandlerTest extends Assert
   {
     for( int i = 0; i < 100; i++ )
     {
-      final GM_PolyhedralSurface_Impl<?> surface = readPolygons( new InputSource( PolyhedralSurfaceContentHandlerTest.class.getResourceAsStream( "resources/minPolyhedralSurface.gml" ) ) );
-      
+      final GM_PolyhedralSurface< ? > surface = readPolygons( new InputSource( PolyhedralSurfaceContentHandlerTest.class.getResourceAsStream( "resources/minPolyhedralSurface.gml" ) ) );
+
       assertSurface( surface );
     }    
 
   }
 
-  private void assertSurface( final GM_PolyhedralSurface_Impl<?> surface )
+  private void assertSurface( final GM_PolyhedralSurface< ? > surface )
   {
     assertEquals( 3, surface.size() );
 
@@ -103,7 +103,7 @@ public class PolyhedralSurfaceContentHandlerTest extends Assert
     assertEquals( CHECK_POS_1.getZ(), exteriorRing[3].getZ(), DELTA );
   }
 
-  private GM_PolyhedralSurface_Impl<?> readPolygons( final InputSource is ) throws IOException, ParserConfigurationException, SAXException
+  private GM_PolyhedralSurface< ? > readPolygons( final InputSource is ) throws IOException, ParserConfigurationException, SAXException
   {
     final SAXParserFactory saxFac = SAXParserFactory.newInstance();
     saxFac.setNamespaceAware( true );
@@ -114,21 +114,21 @@ public class PolyhedralSurfaceContentHandlerTest extends Assert
     final XMLReader xmlReader = saxParser.getXMLReader();
     xmlReader.setFeature( "http://xml.org/sax/features/namespace-prefixes", Boolean.TRUE ); //$NON-NLS-1$
 
-    final GM_PolyhedralSurface_Impl<?>[] result = new GM_PolyhedralSurface_Impl<?>[1];
+    final GM_PolyhedralSurface< ? >[] result = new GM_PolyhedralSurface< ? >[1];
     final UnmarshallResultEater resultEater = new UnmarshallResultEater()
     {
       @Override
       public void unmarshallSuccesful( final Object value )
       {
-        assertTrue( value instanceof GM_PolyhedralSurface_Impl<?> );
-        result[0] = (GM_PolyhedralSurface_Impl<?>) value;
+        assertTrue( value instanceof GM_PolyhedralSurface< ? > );
+        result[0] = (GM_PolyhedralSurface< ? >) value;
       }
     };
     final PolyhedralSurfaceContentHandler contentHandler = new PolyhedralSurfaceContentHandler( resultEater, xmlReader );
 
     xmlReader.setContentHandler( contentHandler );
     xmlReader.parse( is );
-    
+
     return result[0];
   }
 

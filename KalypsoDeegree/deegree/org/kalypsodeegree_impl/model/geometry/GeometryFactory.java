@@ -51,6 +51,7 @@ import org.kalypsodeegree.model.geometry.GM_MultiPoint;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree.model.geometry.GM_PolyhedralSurface;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Ring;
 import org.kalypsodeegree.model.geometry.GM_Surface;
@@ -1104,7 +1105,7 @@ final public class GeometryFactory
     return new GM_TriangulatedSurface_Impl( crs );
   }
 
-  public static GM_Surface<GM_Polygon> createGM_PolyhedralSurface( final String crs ) throws GM_Exception
+  public static GM_PolyhedralSurface<GM_Polygon> createGM_PolyhedralSurface( final String crs ) throws GM_Exception
   {
     return new GM_PolyhedralSurface_Impl<GM_Polygon>( crs );
   }
@@ -1161,9 +1162,9 @@ final public class GeometryFactory
     return new GM_TriangulatedSurface_Impl( triangles, crs );
   }
 
-  public static GM_Surface<GM_Polygon> createGM_PolyhedralSurface( final GM_Polygon[] polygons, final String crs ) throws GM_Exception
+  public static GM_PolyhedralSurface<GM_Polygon> createGM_PolyhedralSurface( final GM_Polygon[] polygons, final String crs ) throws GM_Exception
   {
-    final GM_Surface<GM_Polygon> triangulatedSurface = createGM_PolyhedralSurface( crs );
+    final GM_PolyhedralSurface<GM_Polygon> triangulatedSurface = createGM_PolyhedralSurface( crs );
 
     for( final GM_Polygon triangle : polygons )
       triangulatedSurface.add( triangle );

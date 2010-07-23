@@ -40,7 +40,7 @@ package org.kalypsodeegree.model.geometry;
  * 
  * @author Gernot Belger
  */
-public interface GM_TriangulatedSurface extends GM_Surface<GM_Triangle>
+public interface GM_TriangulatedSurface extends GM_PolyhedralSurface<GM_Triangle>
 {
   /**
    * Returns the value of the triangulated at the given position.
@@ -54,7 +54,7 @@ public interface GM_TriangulatedSurface extends GM_Surface<GM_Triangle>
    * @return The linearly interpolated z-value of the first triangle covering the position. <code>Double.NaN</code> if
    *         no covering triangle was found.
    */
-  public double getValue( final GM_Point location );
+  double getValue( GM_Point location );
 
   /**
    * Returns the value of the triangulated at the given position.
@@ -68,7 +68,7 @@ public interface GM_TriangulatedSurface extends GM_Surface<GM_Triangle>
    * @return The linearly interpolated z-value of the first triangle covering the position. <code>Double.NaN</code> if
    *         no covering triangle was found.
    */
-  public double getValue( GM_Position pos );
+  double getValue( GM_Position pos );
 
-  public GM_Triangle getTriangle( GM_Position pos );
+  GM_Triangle getTriangle( GM_Position pos );
 }
