@@ -42,7 +42,8 @@ import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.types.UnmarshallResultEater;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
-import org.kalypsodeegree_impl.model.geometry.GM_PolyhedralSurface_Impl;
+import org.kalypsodeegree.model.geometry.GM_PolyhedralSurface;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
@@ -59,26 +60,26 @@ import org.xml.sax.XMLReader;
 public class PolyhedralSurfaceContentHandler extends GMLElementContentHandler implements IPolygonHandler
 {
   private static final String ELEMENT_POLYHEDRAL_SURFACE = "PolyhedralSurface";
-  
+
   private List<GM_Polygon> m_polygons = null;
 
   private String m_crs;
-  
-  private GM_PolyhedralSurface_Impl<GM_Polygon> m_polyhedralSurface;
-  
+
+  private GM_PolyhedralSurface<GM_Polygon> m_polyhedralSurface;
+
   private final UnmarshallResultEater m_resultEater;
-    
+
   public PolyhedralSurfaceContentHandler( final UnmarshallResultEater resultEater, final XMLReader xmlReader )
   {
     this( resultEater, null, xmlReader );
   }
-  
+
   public PolyhedralSurfaceContentHandler( final UnmarshallResultEater resultEater, final ContentHandler parentContentHandler, final XMLReader xmlReader )
   {
     super( NS.GML3, ELEMENT_POLYHEDRAL_SURFACE, xmlReader, parentContentHandler );
 
     m_resultEater = resultEater;
-    
+
     m_polyhedralSurface = null;
   }
 
@@ -91,7 +92,8 @@ public class PolyhedralSurfaceContentHandler extends GMLElementContentHandler im
   {
     try
     { 
-      m_polyhedralSurface = new GM_PolyhedralSurface_Impl<GM_Polygon>( m_polygons, m_crs );
+      final GM_Polygon[] polygons = m_polygons.toArray( new GM_Polygon[m_polygons.size()] );
+      m_polyhedralSurface = GeometryFactory.createGM_PolyhedralSurface( polygons, m_crs );
     }
     catch( final GM_Exception e )
     {
@@ -103,10 +105,10 @@ public class PolyhedralSurfaceContentHandler extends GMLElementContentHandler im
     {
       m_polygons = null;
     }
-    
+
     m_resultEater.unmarshallSuccesful( m_polyhedralSurface );    
   }
-  
+
   /**
    * @see org.kalypsodeegree_impl.io.sax.parser.GMLElementContentHandler#handleUnexpectedEndElement(java.lang.String, java.lang.String, java.lang.String)
    */
@@ -124,8 +126,8 @@ public class PolyhedralSurfaceContentHandler extends GMLElementContentHandler im
       super.handleUnexpectedEndElement( uri, localName, name );
     }
   }
-  
-  
+
+
   /**
    * @see org.kalypsodeegree_impl.io.sax.GMLElementContentHandler#doStartElement(java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
    */
@@ -146,7 +148,7 @@ public class PolyhedralSurfaceContentHandler extends GMLElementContentHandler im
     {
       m_crs = polygon.getCoordinateSystem();
     }
-    
+
     if( m_polygons == null )
     {
       m_polygons = new ArrayList<GM_Polygon>();

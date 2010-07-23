@@ -41,6 +41,7 @@ import java.util.List;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_PolyhedralSurface;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
@@ -60,6 +61,12 @@ public class GM_TriangulatedSurface_Impl extends GM_PolyhedralSurface_Impl<GM_Tr
   public GM_TriangulatedSurface_Impl( final List<GM_Triangle> items, final String crs ) throws GM_Exception
   {
     super( items, crs );
+  }
+
+  @Override
+  protected GM_PolyhedralSurface<GM_Triangle> createCloneInstance( ) throws GM_Exception
+  {
+    return new GM_TriangulatedSurface_Impl( getCoordinateSystem() );
   }
 
   /**

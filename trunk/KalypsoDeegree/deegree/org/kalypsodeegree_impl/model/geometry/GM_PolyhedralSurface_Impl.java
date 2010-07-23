@@ -59,6 +59,7 @@ import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree.model.geometry.GM_PolyhedralSurface;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfaceBoundary;
@@ -73,7 +74,7 @@ import com.vividsolutions.jts.index.quadtree.Quadtree;
 /**
  * @author skurzbach
  */
-public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_OrientableSurface_Impl implements GM_Surface<T>
+public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_OrientableSurface_Impl implements GM_PolyhedralSurface<T>
 {
   protected SpatialIndex m_index = new Quadtree();
 
@@ -373,11 +374,9 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
   {
     try
     {
-      final GM_PolyhedralSurface_Impl<T> clone = new GM_PolyhedralSurface_Impl<T>( getCoordinateSystem() );
-
+      final GM_PolyhedralSurface<T> clone = createCloneInstance();
       for( final T polygon : this )
         clone.add( (T) polygon.clone() );
-
       return clone;
     }
     catch( final GM_Exception e )
@@ -386,6 +385,11 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
 
       throw new CloneNotSupportedException( e.getLocalizedMessage() );
     }
+  }
+
+  protected <S extends T> GM_PolyhedralSurface<T> createCloneInstance( ) throws GM_Exception
+  {
+    return new GM_PolyhedralSurface_Impl<T>( getCoordinateSystem() );
   }
 
   /**
@@ -467,9 +471,8 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
   /**
    * @see org.kalypsodeegree_impl.model.geometry.GM_Primitive_Impl#getAdapter(java.lang.Class)
    */
-  @SuppressWarnings("unchecked")
   @Override
-  public Object getAdapter( final Class adapter )
+  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
   {
     if( adapter == GM_SurfacePatch[].class || adapter == GM_Polygon[].class )
     {
@@ -481,6 +484,7 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
     {
       final List<GM_Point> pointList = new LinkedList<GM_Point>();
 
+      @SuppressWarnings("unchecked")
       final T[] polygons = (T[]) m_items.toArray( new GM_Polygon[m_items.size()] );
       for( final T polygon : polygons )
       {
@@ -515,11 +519,9 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
     {
       try
       {
-        final GM_Surface[] surfaces = new GM_Surface[m_items.size()];
+        final GM_Surface< ? >[] surfaces = new GM_Surface[m_items.size()];
         for( int i = 0; i < surfaces.length; i++ )
-        {
           surfaces[i] = GeometryFactory.createGM_Surface( m_items.get( i ) );
-        }
 
         return surfaces;
       }
