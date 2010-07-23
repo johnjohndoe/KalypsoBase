@@ -57,8 +57,6 @@ public class RectifiedGridCoverageBoundaryFunctionProperty extends FeatureProper
   @Override
   public void init( final Map<String, String> properties )
   {
-    // TODO Auto-generated method stub
-
   }
 
   /**
