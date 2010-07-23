@@ -295,5 +295,4 @@ public final class ShapeSerializer
       return defaultSrs;
     }
   }
-
 }

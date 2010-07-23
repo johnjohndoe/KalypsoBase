@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.transformation.transformer;
 
-import org.kalypso.transformation.internal.DeegreeGeoTransformer;
+import org.kalypso.transformation.internal.GeoToolsGeoTransformer;
 
 /**
  * This factory returns geo transformers.
@@ -65,7 +65,6 @@ public final class GeoTransformerFactory
    */
   public static IGeoTransformer getGeoTransformer( final String targetCRS )
   {
-    // TODO Returning the deegree transformer for now...
-    return new DeegreeGeoTransformer( targetCRS );
+    return new GeoToolsGeoTransformer( targetCRS );
   }
 }

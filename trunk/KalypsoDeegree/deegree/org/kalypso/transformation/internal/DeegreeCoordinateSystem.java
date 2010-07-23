@@ -100,7 +100,7 @@ public class DeegreeCoordinateSystem implements ICoordinateSystem
   public String getName( )
   {
     if( !m_initStatus.isOK() )
-      return null;
+      return m_initStatus.getMessage();
 
     return m_coordinateSystem.getCRS().getName();
   }
@@ -138,6 +138,8 @@ public class DeegreeCoordinateSystem implements ICoordinateSystem
     {
       /* In case it is asked often, it is better to used the cached crs factory. */
       CachedCRSFactory factory = CachedCRSFactory.getInstance();
+
+      /* Create the deegree coordinate system. */
       m_coordinateSystem = factory.create( code );
 
       /* Store OK. */

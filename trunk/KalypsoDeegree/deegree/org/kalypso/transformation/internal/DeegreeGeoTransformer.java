@@ -40,6 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.transformation.internal;
 
+import javax.vecmath.Point3d;
+
+import org.deegree.crs.components.Unit;
+import org.deegree.crs.coordinatesystems.CoordinateSystem;
+import org.deegree.crs.projections.ProjectionUtils;
+import org.deegree.crs.transformations.CRSTransformation;
+import org.kalypso.transformation.Debug;
 import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Object;
@@ -93,7 +100,7 @@ public class DeegreeGeoTransformer implements IGeoTransformer
     if( sourceCRS == null || sourceCRS.equalsIgnoreCase( m_targetCRS ) )
       return position;
 
-    return DeegreeTransformUtilities.transform( position, sourceCRS, m_targetCRS );
+    return transform( position, sourceCRS, m_targetCRS );
   }
 
   /**
@@ -110,7 +117,7 @@ public class DeegreeGeoTransformer implements IGeoTransformer
       return geometry;
 
     if( geometry instanceof GM_Point )
-      return DeegreeTransformUtilities.transform( ((GM_Point) geometry), sourceCRS, m_targetCRS );
+      return transform( ((GM_Point) geometry), sourceCRS, m_targetCRS );
 
     return geometry.transform( m_targetCRS );
   }
@@ -148,5 +155,132 @@ public class DeegreeGeoTransformer implements IGeoTransformer
       return surfacePatch;
 
     return (GM_SurfacePatch) surfacePatch.transform( m_targetCRS );
+  }
+
+  /**
+   * This function transformes a point.
+   * 
+   * @param point
+   *          The point, which should be transformed.
+   * @param sourceCRS
+   *          The coordinate system of the source.
+   * @param targetCRS
+   *          The coordinate system of the target.
+   * @return The transformed point.
+   */
+  private GM_Point transform( GM_Point point, String sourceCRS, String targetCRS ) throws Exception
+  {
+    /* If the coordinate systems are the same, do not transform. */
+    if( sourceCRS == null || sourceCRS.equalsIgnoreCase( targetCRS ) )
+      return point;
+
+    /* Get the transformation. */
+    CRSTransformation transformation = getTransformation( sourceCRS, targetCRS );
+
+    /* Get the coordinate systems. */
+    CoordinateSystem sourceCoordinateSystem = transformation.getSourceCRS();
+    CoordinateSystem targetCoordinateSystem = transformation.getTargetCRS();
+
+    /* Debug. */
+    Debug.TRANSFORM.printf( "POINT: %s to %s\n", sourceCoordinateSystem.getIdentifier(), targetCoordinateSystem.getIdentifier() );
+
+    /* Normalize points to fit in -180:180 and -90:90 if they are in degrees. */
+    double geoX = point.getX();
+    double geoY = point.getY();
+    double geoZ = point.getZ();
+    if( sourceCoordinateSystem.getUnits().equals( Unit.RADIAN ) )
+    {
+      geoX = ProjectionUtils.normalizeLongitude( Math.toRadians( geoX ) );
+      geoY = ProjectionUtils.normalizeLatitude( Math.toRadians( geoY ) );
+    }
+
+    /* Transform. */
+    Point3d coords = new Point3d( geoX, geoY, geoZ );
+    Point3d newCoords = transformation.doTransform( coords );
+
+    /* Convert back to degrees, if necessary. */
+    if( targetCoordinateSystem.getUnits().equals( Unit.RADIAN ) )
+    {
+      newCoords.x = Math.toDegrees( newCoords.x );
+      newCoords.y = Math.toDegrees( newCoords.y );
+    }
+
+    // REMARK: here we have to write a z-value in any case!
+    // We only have to check if the z value was transformed because of a 3d transformation
+    // (therefore the check for dimensions)
+    // We either put the old z value or the transformed value
+    return GeometryFactory.createGM_Point( newCoords.x, newCoords.y, (targetCoordinateSystem.getDimension() == 3) ? newCoords.z : point.getZ(), targetCoordinateSystem.getIdentifier() );
+  }
+
+  /**
+   * This function transforms a position.
+   * 
+   * @param pos
+   *          The position, which should be transformed.
+   * @param sourceCRS
+   *          The coordinate system of the source.
+   * @param targetCRS
+   *          The coordinate system of the target.
+   * @return The transformed position.
+   */
+  private GM_Position transform( GM_Position pos, String sourceCRS, String targetCRS ) throws Exception
+  {
+    /* If the coordinate systems are the same, do not transform. */
+    if( sourceCRS == null || sourceCRS.equalsIgnoreCase( targetCRS ) )
+      return pos;
+
+    /* Get the transformation. */
+    CRSTransformation transformation = getTransformation( sourceCRS, targetCRS );
+
+    /* Get the coordinate systems. */
+    CoordinateSystem sourceCoordinateSystem = transformation.getSourceCRS();
+    CoordinateSystem targetCoordinateSystem = transformation.getTargetCRS();
+
+    /* Debug. */
+    Debug.TRANSFORM.printf( "POS: %s to %s\n", sourceCoordinateSystem.getIdentifier(), targetCoordinateSystem.getIdentifier() );
+
+    /* Normalize points to fit in -180:180 and -90:90 if they are in degrees. */
+    double geoX = pos.getX();
+    double geoY = pos.getY();
+    double geoZ = pos.getZ();
+    if( sourceCoordinateSystem.getUnits().equals( Unit.RADIAN ) )
+    {
+      geoX = ProjectionUtils.normalizeLongitude( Math.toRadians( geoX ) );
+      geoY = ProjectionUtils.normalizeLatitude( Math.toRadians( geoY ) );
+    }
+
+    /* Transform. */
+    Point3d coords = new Point3d( geoX, geoY, geoZ );
+    Point3d newCoords = transformation.doTransform( coords );
+
+    /* Convert back to degrees, if necessary. */
+    if( targetCoordinateSystem.getUnits().equals( Unit.RADIAN ) )
+    {
+      newCoords.x = Math.toDegrees( newCoords.x );
+      newCoords.y = Math.toDegrees( newCoords.y );
+    }
+
+    // REMARK: here we have to write a z-value in any case!
+    // We only have to check if the z value was transformed because of a 3d transformation
+    // (therefore the check for dimensions)
+    // We either put the old z value or the transformed value
+    return GeometryFactory.createGM_Position( newCoords.x, newCoords.y, (targetCoordinateSystem.getDimension() == 3) ? newCoords.z : pos.getZ() );
+  }
+
+  /**
+   * This function returns a transformation for a source coordinate system.
+   * 
+   * @param sourceCRS
+   *          The source coordinate system.
+   * @param targetCRS
+   *          The coordinate system, into which the transformations should be done.
+   * @return The transformation from the source coordinate system to the GeoTransformers target coordinate system.
+   */
+  private CRSTransformation getTransformation( String sourceCRS, String targetCRS ) throws Exception
+  {
+    CachedTransformationFactory transformationFactory = CachedTransformationFactory.getInstance();
+    CRSTransformation transformation = transformationFactory.createFromCoordinateSystems( sourceCRS, targetCRS );
+
+    return transformation;
   }
 }
