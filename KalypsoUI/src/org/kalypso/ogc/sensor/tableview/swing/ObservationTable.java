@@ -205,6 +205,8 @@ public class ObservationTable extends Panel implements IObsViewEventListener
 
     add( m_scrollPane );
 
+    // TODO:m initially get observations from obsView
+
     // removed in this.dispose()
     m_view.addObsViewEventListener( this );
   }
