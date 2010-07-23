@@ -40,18 +40,19 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.transformation.internal;
 
-import org.deegree.model.crs.CoordinateSystem;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.geotools.referencing.CRS;
 import org.kalypso.transformation.crs.ICoordinateSystem;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
+import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
 /**
- * This coordinate system uses deegree.
+ * This coordinate system uses geo tools.
  * 
  * @author Holger Albert
  */
-public class DeegreeCoordinateSystem implements ICoordinateSystem
+public class GeoToolsCoordinateSystem implements ICoordinateSystem
 {
   /**
    * The code for the coordinate system (e.g. 'EPSG:31467').
@@ -59,9 +60,9 @@ public class DeegreeCoordinateSystem implements ICoordinateSystem
   private String m_code;
 
   /**
-   * The deegree coordinate system.
+   * The geo tools coordinate system.
    */
-  private CoordinateSystem m_coordinateSystem;
+  private CoordinateReferenceSystem m_coordinateSystem;
 
   /**
    * Not null, if this coordinate system was once initialized. It contains the error, if initializing was not
@@ -75,7 +76,7 @@ public class DeegreeCoordinateSystem implements ICoordinateSystem
    * @param code
    *          The code for the coordinate system (e.g. 'EPSG:31467').
    */
-  public DeegreeCoordinateSystem( String code )
+  public GeoToolsCoordinateSystem( String code )
   {
     m_code = code;
     m_coordinateSystem = null;
@@ -102,7 +103,7 @@ public class DeegreeCoordinateSystem implements ICoordinateSystem
     if( !m_initStatus.isOK() )
       return m_initStatus.getMessage();
 
-    return m_coordinateSystem.getCRS().getName();
+    return m_coordinateSystem.getName().getCode();
   }
 
   /**
@@ -114,7 +115,7 @@ public class DeegreeCoordinateSystem implements ICoordinateSystem
     if( !m_initStatus.isOK() )
       return -1;
 
-    return m_coordinateSystem.getDimension();
+    return m_coordinateSystem.getCoordinateSystem().getDimension();
   }
 
   /**
@@ -136,11 +137,8 @@ public class DeegreeCoordinateSystem implements ICoordinateSystem
   {
     try
     {
-      /* In case it is asked often, it is better to used the cached crs factory. */
-      CachedCRSFactory factory = CachedCRSFactory.getInstance();
-
-      /* Create the deegree coordinate system. */
-      m_coordinateSystem = factory.create( code );
+      /* Create the geo tools coordinate system. */
+      m_coordinateSystem = CRS.decode( code );
 
       /* Store OK. */
       m_initStatus = new Status( IStatus.OK, KalypsoDeegreePlugin.getID(), "OK" );

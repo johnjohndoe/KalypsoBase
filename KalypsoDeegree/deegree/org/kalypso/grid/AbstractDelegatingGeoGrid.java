@@ -91,6 +91,7 @@ public abstract class AbstractDelegatingGeoGrid implements IGeoGrid
    * @see m_disposeDelegate
    * @see org.kalypso.grid.IGeoGrid#dispose()
    */
+  @Override
   public void dispose( )
   {
     if( m_disposeDelegate )
@@ -100,6 +101,7 @@ public abstract class AbstractDelegatingGeoGrid implements IGeoGrid
   /**
    * @see org.kalypso.grid.IGeoGrid#getEnvelope()
    */
+  @Override
   public Envelope getEnvelope( ) throws GeoGridException
   {
     if( m_delegate == null )
@@ -111,6 +113,7 @@ public abstract class AbstractDelegatingGeoGrid implements IGeoGrid
   /**
    * @see org.kalypso.grid.IGeoGrid#getOffsetX()
    */
+  @Override
   public Coordinate getOffsetX( ) throws GeoGridException
   {
     if( m_delegate == null )
@@ -122,6 +125,7 @@ public abstract class AbstractDelegatingGeoGrid implements IGeoGrid
   /**
    * @see org.kalypso.grid.IGeoGrid#getOffsetY()
    */
+  @Override
   public Coordinate getOffsetY( ) throws GeoGridException
   {
     if( m_delegate == null )
@@ -133,6 +137,7 @@ public abstract class AbstractDelegatingGeoGrid implements IGeoGrid
   /**
    * @see org.kalypso.grid.IGeoGrid#getSourceCRS()
    */
+  @Override
   public String getSourceCRS( ) throws GeoGridException
   {
     if( m_delegate == null )
@@ -144,6 +149,7 @@ public abstract class AbstractDelegatingGeoGrid implements IGeoGrid
   /**
    * @see org.kalypso.grid.IGeoGrid#getOrigin()
    */
+  @Override
   public Coordinate getOrigin( ) throws GeoGridException
   {
     if( m_delegate == null )
@@ -155,6 +161,7 @@ public abstract class AbstractDelegatingGeoGrid implements IGeoGrid
   /**
    * @see org.kalypso.grid.IGeoGrid#getSizeX()
    */
+  @Override
   public int getSizeX( ) throws GeoGridException
   {
     if( m_delegate == null )
@@ -166,6 +173,7 @@ public abstract class AbstractDelegatingGeoGrid implements IGeoGrid
   /**
    * @see org.kalypso.grid.IGeoGrid#getSizeY()
    */
+  @Override
   public int getSizeY( ) throws GeoGridException
   {
     if( m_delegate == null )
@@ -177,6 +185,7 @@ public abstract class AbstractDelegatingGeoGrid implements IGeoGrid
   /**
    * @see org.kalypso.grid.IGeoGrid#getValue(int, int)
    */
+  @Override
   public double getValue( final int x, final int y ) throws GeoGridException
   {
     if( m_delegate == null )
@@ -188,6 +197,7 @@ public abstract class AbstractDelegatingGeoGrid implements IGeoGrid
   /**
    * @see org.kalypso.grid.IGeoValueProvider#getValue(com.vividsolutions.jts.geom.Coordinate)
    */
+  @Override
   public double getValue( final Coordinate crd ) throws GeoGridException
   {
     if( m_delegate == null )
@@ -199,6 +209,7 @@ public abstract class AbstractDelegatingGeoGrid implements IGeoGrid
   /**
    * @see org.kalypso.grid.IGeoGrid#getValueChecked(int, int)
    */
+  @Override
   public double getValueChecked( final int x, final int y ) throws GeoGridException
   {
     if( (x < 0) || (x >= getSizeX()) || (y < 0) || (y >= getSizeY()) )
@@ -210,6 +221,7 @@ public abstract class AbstractDelegatingGeoGrid implements IGeoGrid
   /**
    * @see org.kalypso.grid.IGeoGrid#getSurface(java.lang.String)
    */
+  @Override
   public GM_Surface< ? > getSurface( final String targetCRS ) throws GeoGridException
   {
     if( m_delegate == null )
@@ -221,6 +233,7 @@ public abstract class AbstractDelegatingGeoGrid implements IGeoGrid
   /**
    * @see org.kalypso.grid.IGeoGrid#getCell(int, int, java.lang.String)
    */
+  @Override
   public GM_Surface< ? > getCell( final int x, final int y, final String targetCRS ) throws GeoGridException
   {
     if( m_delegate == null )
@@ -232,6 +245,7 @@ public abstract class AbstractDelegatingGeoGrid implements IGeoGrid
   /**
    * @see org.kalypso.grid.IGeoGrid#getWalkingStrategy()
    */
+  @Override
   public IGeoWalkingStrategy getWalkingStrategy( ) throws GeoGridException
   {
     if( m_delegate == null )
@@ -243,6 +257,7 @@ public abstract class AbstractDelegatingGeoGrid implements IGeoGrid
   /**
    * @see org.kalypso.grid.IGeoGrid#getMin()
    */
+  @Override
   public BigDecimal getMin( ) throws GeoGridException
   {
     return m_delegate.getMin();
@@ -251,6 +266,7 @@ public abstract class AbstractDelegatingGeoGrid implements IGeoGrid
   /**
    * @see org.kalypso.grid.IGeoGrid#getMax()
    */
+  @Override
   public BigDecimal getMax( ) throws GeoGridException
   {
     return m_delegate.getMax();
@@ -259,6 +275,7 @@ public abstract class AbstractDelegatingGeoGrid implements IGeoGrid
   /**
    * @see org.kalypso.grid.IGeoGrid#getMin()
    */
+  @Override
   public void setMin( final BigDecimal minValue ) throws GeoGridException
   {
     m_delegate.setMin( minValue );
@@ -267,6 +284,7 @@ public abstract class AbstractDelegatingGeoGrid implements IGeoGrid
   /**
    * @see org.kalypso.grid.IGeoGrid#getMax()
    */
+  @Override
   public void setMax( final BigDecimal maxValue ) throws GeoGridException
   {
     m_delegate.setMax( maxValue );

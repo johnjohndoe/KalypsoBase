@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.transformation.crs;
 
-import org.kalypso.transformation.internal.DeegreeCoordinateSystem;
+import org.kalypso.transformation.internal.GeoToolsCoordinateSystem;
 
 /**
  * This factory returns coordinate systems.
@@ -65,7 +65,6 @@ public class CoordinateSystemFactory
    */
   public static ICoordinateSystem getCoordinateSystem( String code )
   {
-    // TODO Returning the deegree coordinate system for now...
-    return new DeegreeCoordinateSystem( code );
+    return new GeoToolsCoordinateSystem( code );
   }
 }
