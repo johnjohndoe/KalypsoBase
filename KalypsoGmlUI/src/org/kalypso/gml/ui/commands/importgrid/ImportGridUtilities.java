@@ -294,10 +294,34 @@ public class ImportGridUtilities
    */
   public static RectifiedGridDomain readDomain( final File gridFile, final String crs ) throws CoreException
   {
+    URL url;
     try
     {
-      final URL url = gridFile.toURI().toURL();
-
+      url = gridFile.toURI().toURL();
+    }
+    catch( final MalformedURLException e )
+    {
+      e.printStackTrace();
+      final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, Messages.getString("org.kalypso.gml.ui.wizard.grid.ImportGridUtilities.7"), e ); //$NON-NLS-1$
+      throw new CoreException( status );
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+      final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, Messages.getString("org.kalypso.gml.ui.wizard.grid.ImportGridUtilities.8"), e ); //$NON-NLS-1$
+      throw new CoreException( status );
+    }
+    return readDomain( url, crs );
+  }
+  
+  /**
+   * Reads the grid domain for a given grid file. Tries to determine its file-format (.asc, tif, etc.) and reads the
+   * world-information accoding to the format.
+   */
+  public static RectifiedGridDomain readDomain( final URL url, final String crs ) throws CoreException
+  {
+    try
+    {
       final IGridMetaReader reader = GridFileVerifier.getRasterMetaReader( url, crs );
 
       final IStatus valid = reader.isValid();
