@@ -56,13 +56,13 @@ import org.kalypso.ui.ImageProvider;
  */
 public class RepositoryLabelProvider extends LabelProvider
 {
-  private static final Image IMG_FOLDER = PlatformUI.getWorkbench().getSharedImages().getImage( ISharedImages.IMG_OBJ_FOLDER );
+  public static final Image IMG_FOLDER = PlatformUI.getWorkbench().getSharedImages().getImage( ISharedImages.IMG_OBJ_FOLDER );
 
-  private static final Image IMG_ITEM = ImageProvider.IMAGE_ZML_REPOSITORY_ITEM.createImage();
+  public static final Image IMG_ITEM = ImageProvider.IMAGE_ZML_REPOSITORY_ITEM.createImage();
 
-  private static final Image IMG_VIRTUAL_ITEM = ImageProvider.IMAGE_ZML_VIRTUAL_REPOSITORY_ITEM.createImage();
+  public static final Image IMG_VIRTUAL_ITEM = ImageProvider.IMAGE_ZML_VIRTUAL_REPOSITORY_ITEM.createImage();
 
-  private static final Image IMG_REPOSITORY = ImageProvider.IMAGE_ZML_REPOSITORY.createImage();
+  public static final Image IMG_REPOSITORY = ImageProvider.IMAGE_ZML_REPOSITORY.createImage();
 
   /**
    * @see org.eclipse.jface.viewers.LabelProvider#getImage(java.lang.Object)
