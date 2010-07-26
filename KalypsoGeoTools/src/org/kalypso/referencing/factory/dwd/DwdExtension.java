@@ -5,6 +5,12 @@ import java.net.URL;
 import org.geotools.factory.Hints;
 import org.geotools.referencing.factory.epsg.FactoryUsingWKT;
 
+/**
+ * Provides common {@linkplain CoordinateReferenceSystem Coordinate Reference Systems} not found in the standard EPSG
+ * database. Those CRS will be registered in {@code "EPSG"} name space.
+ * 
+ * @author Holger Albert
+ */
 public class DwdExtension extends FactoryUsingWKT
 {
   /**
