@@ -59,19 +59,6 @@ public final class RepositoryItemUtils
 
   public static final int ZRXP_PRIORITY_ITEM_OFFSET = 10;
 
-  private RepositoryItemUtils( )
-  {
-
-  }
-
-  public static boolean isModel( final IRepositoryItem item )
-  {
-    if( !item.getIdentifier().contains( "HVZ_Modelle_" ) )
-      return false;
-
-    return true;
-  }
-
   /**
    * Return only the item-id part of the full id. If id is null, it returns null.
    * 
@@ -91,23 +78,22 @@ public final class RepositoryItemUtils
     return fullId.substring( ix + 3 );
   }
 
-  public static String resolveDestinationId( final IRepositoryItem baseItem, final IRepository destinationRepository )
-  {
-    return replaceIdentifier( baseItem.getIdentifier(), destinationRepository.getIdentifier() );
-  }
-
   /**
-   * replace repository identifier in {@value itemIdentifier} with {@value repositoryIdentifier}
+   * @return parameter from identifier
    */
-  public static String replaceIdentifier( final String itemIdentifier, final String repositoryIdentifier )
+  public static String getParameterType( final String identifier )
   {
-    String base = repositoryIdentifier;
+    final String[] parts = identifier.split( "\\." );
+    if( parts.length < PARAMETER_START_BORDER )
+      return null;
 
-    final String repository = RepositoryUtils.getRepositoryId( itemIdentifier );
-    if( !base.endsWith( "://" ) ) //$NON-NLS-1$
-      base = String.format( "%s://", base ); //$NON-NLS-1$
+    final StringBuffer parameter = new StringBuffer();
+    for( int i = PARAMETER_START_BORDER - 1; i < parts.length; i++ )
+    {
+      parameter.append( parts[i] + "." );
+    }
 
-    return String.format( "%s%s", base, itemIdentifier.substring( repository.length() ) ); //$NON-NLS-1$
+    return StringUtilities.chomp( parameter.toString() );
   }
 
   /**
@@ -145,12 +131,23 @@ public final class RepositoryItemUtils
     return StringUtilities.chomp( parent );
   }
 
-  public static String resolveItemIdPart( final String identifier, final int qualified )
+  /**
+   * @return "plain" item id without "protocol" (the original source, like zml-proxy://, datastore://)
+   */
+  public static String getPlainId( final String identifier )
   {
-    final String[] parts = getQualifiedItemParts( identifier, qualified );
-    final String part = parts[parts.length - 1];
+    final String[] parts = identifier.split( "://" );
 
-    return getPlainId( part );
+    return parts[parts.length - 1];
+  }
+
+  /**
+   * @return "protocol" of the given item id (like 'zml-proxy', 'datastore')
+   */
+  public static String getProtocol( final String identifier )
+  {
+    final String[] parts = identifier.split( ":" );
+    return parts[0];
   }
 
   /**
@@ -180,101 +177,6 @@ public final class RepositoryItemUtils
     return partsQualified.toArray( new String[] {} );
   }
 
-  public static String resolveItemName( final IRepositoryItem item ) throws RepositoryException
-  {
-    if( item instanceof IRepository )
-      return item.getIdentifier();
-
-    String base = "";
-
-    final IRepositoryItem parent = item.getParent();
-    if( parent != null )
-      base += resolveItemName( parent );
-
-    if( base.endsWith( "/" ) || base.endsWith( "." ) )
-      base += item.getName();
-    else
-      base += "." + item.getName();
-
-    return base;
-  }
-
-  /**
-   * @return "plain" item id without "protocol" (the original source, like zml-proxy://, datastore://)
-   */
-  public static String getPlainId( final String identifier )
-  {
-    final String[] parts = identifier.split( "://" );
-
-    return parts[parts.length - 1];
-  }
-
-  public static boolean isRepositoryItem( final String identifier )
-  {
-    return identifier.contains( "://" );
-  }
-
-  /**
-   * @return "protocol" of the given item id (like 'zml-proxy', 'datastore')
-   */
-  public static String getProtocol( final String identifier )
-  {
-    final String[] parts = identifier.split( ":" );
-    return parts[0];
-  }
-
-  public static boolean isPrognose( final IRepositoryItem item )
-  {
-    final String identifier = item.getIdentifier();
-
-    /**
-     * the group has to be prognose, not the station value itselfs
-     */
-    final String[] parts = identifier.split( "\\." );
-    if( parts.length > 2 )
-    {
-      return parts[1].toLowerCase().contains( "_prog_" );
-    }
-
-    return false;
-  }
-
-  /**
-   * @return wiski://HVZ_Modelle_Elbe.Elbe_Prio_1 -> will return true
-   */
-  public static boolean isGroupItem( final IRepositoryItem item )
-  {
-    final String identifier = item.getIdentifier();
-    final String[] parts = identifier.split( "\\." );
-    if( parts.length == 2 )
-      return true;
-
-    return false;
-  }
-
-  /**
-   * @return wiski://HVZ_Modelle_Elbe.Elbe_Prio_1 -> will return true
-   */
-  public static boolean isModelItem( final IRepositoryItem item )
-  {
-    final String identifier = item.getIdentifier();
-    final String[] parts = identifier.split( "\\." );
-    if( parts.length == 1 )
-      return true;
-
-    return false;
-  }
-
-  public static boolean isZrxpItem( final String identifier )
-  {
-    return identifier.contains( ZRXP_ITEM_IDENTIFIER );
-  }
-
-  public static boolean isZrxpItem( final IRepositoryItem item )
-  {
-    return isZrxpItem( item.getIdentifier() );
-  }
-
   public static String getStationKennziffer( final IRepositoryItem item )
   {
     return getStationKennziffer( item.getIdentifier() );
@@ -285,6 +187,20 @@ public final class RepositoryItemUtils
     final String[] parts = identifier.split( "\\." );
     if( parts.length >= 3 )
       return parts[2];
+
+    return null;
+  }
+
+  public static String getModel( final IRepositoryItem item )
+  {
+    return getModel( item.getIdentifier() );
+  }
+
+  private static String getModel( final String identifier )
+  {
+    final String[] parts = identifier.split( "\\." );
+    if( parts.length >= 2 )
+      return parts[1];
 
     return null;
   }
@@ -306,21 +222,63 @@ public final class RepositoryItemUtils
   }
 
   /**
-   * @return parameter from identifier
+   * @return wiski://HVZ_Modelle_Elbe.Elbe_Prio_1 -> will return true
    */
-  public static String getParameterType( final String identifier )
+  public static boolean isGroupItem( final IRepositoryItem item )
   {
+    final String identifier = item.getIdentifier();
     final String[] parts = identifier.split( "\\." );
-    if( parts.length < PARAMETER_START_BORDER )
-      return null;
+    if( parts.length == 2 )
+      return true;
 
-    final StringBuffer parameter = new StringBuffer();
-    for( int i = PARAMETER_START_BORDER - 1; i < parts.length; i++ )
+    return false;
+  }
+
+  public static boolean isModel( final IRepositoryItem item )
+  {
+    if( !item.getIdentifier().contains( "HVZ_Modelle_" ) )
+      return false;
+
+    return true;
+  }
+
+  /**
+   * @return wiski://HVZ_Modelle_Elbe.Elbe_Prio_1 -> will return true
+   */
+  public static boolean isModelItem( final IRepositoryItem item )
+  {
+    final String identifier = item.getIdentifier();
+    final String[] parts = identifier.split( "\\." );
+    if( parts.length == 1 )
+      return true;
+
+    return false;
+  }
+
+  public static boolean isPlainId( final String identifier )
+  {
+    return !identifier.contains( "\\:" );
+  }
+
+  public static boolean isPrognose( final IRepositoryItem item )
+  {
+    final String identifier = item.getIdentifier();
+
+    /**
+     * the group has to be prognose, not the station value itselfs
+     */
+    final String[] parts = identifier.split( "\\." );
+    if( parts.length > 2 )
     {
-      parameter.append( parts[i] + "." );
+      return parts[1].toLowerCase().contains( "_prog_" );
     }
 
-    return StringUtilities.chomp( parameter.toString() );
+    return false;
+  }
+
+  public static boolean isRepositoryItem( final String identifier )
+  {
+    return identifier.contains( "://" );
   }
 
   public static boolean isVirtual( final String identifier )
@@ -328,9 +286,65 @@ public final class RepositoryItemUtils
     return identifier.toLowerCase().contains( ".virtuell." ); //$NON-NLS-N$
   }
 
-  public static boolean isPlainId( final String identifier )
+  public static boolean isZrxpItem( final IRepositoryItem item )
   {
-    return !identifier.contains( "\\:" );
+    return isZrxpItem( item.getIdentifier() );
+  }
+
+  public static boolean isZrxpItem( final String identifier )
+  {
+    return identifier.contains( ZRXP_ITEM_IDENTIFIER );
+  }
+
+  /**
+   * replace repository identifier in {@value itemIdentifier} with {@value repositoryIdentifier}
+   */
+  public static String replaceIdentifier( final String itemIdentifier, final String repositoryIdentifier )
+  {
+    String base = repositoryIdentifier;
+
+    final String repository = RepositoryUtils.getRepositoryId( itemIdentifier );
+    if( !base.endsWith( "://" ) ) //$NON-NLS-1$
+      base = String.format( "%s://", base ); //$NON-NLS-1$
+
+    return String.format( "%s%s", base, itemIdentifier.substring( repository.length() ) ); //$NON-NLS-1$
+  }
+
+  public static String resolveDestinationId( final IRepositoryItem baseItem, final IRepository destinationRepository )
+  {
+    return replaceIdentifier( baseItem.getIdentifier(), destinationRepository.getIdentifier() );
+  }
+
+  public static String resolveItemIdPart( final String identifier, final int qualified )
+  {
+    final String[] parts = getQualifiedItemParts( identifier, qualified );
+    final String part = parts[parts.length - 1];
+
+    return getPlainId( part );
+  }
+
+  public static String resolveItemName( final IRepositoryItem item ) throws RepositoryException
+  {
+    if( item instanceof IRepository )
+      return item.getIdentifier();
+
+    String base = "";
+
+    final IRepositoryItem parent = item.getParent();
+    if( parent != null )
+      base += resolveItemName( parent );
+
+    if( base.endsWith( "/" ) || base.endsWith( "." ) )
+      base += item.getName();
+    else
+      base += "." + item.getName();
+
+    return base;
+  }
+
+  private RepositoryItemUtils( )
+  {
+
   }
 
 }
