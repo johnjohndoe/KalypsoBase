@@ -275,6 +275,11 @@ public final class RepositoryItemUtils
     return isZrxpItem( item.getIdentifier() );
   }
 
+  public static String getStationKennziffer( final IRepositoryItem item )
+  {
+    return getStationKennziffer( item.getIdentifier() );
+  }
+
   public static String getStationKennziffer( final String identifier )
   {
     final String[] parts = identifier.split( "\\." );
@@ -322,4 +327,10 @@ public final class RepositoryItemUtils
   {
     return identifier.toLowerCase().contains( ".virtuell." ); //$NON-NLS-N$
   }
+
+  public static boolean isPlainId( final String identifier )
+  {
+    return !identifier.contains( "\\:" );
+  }
+
 }
