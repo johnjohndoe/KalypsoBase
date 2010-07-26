@@ -373,6 +373,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
   @Override
   public GM_Envelope getFullExtent( )
   {
+    // TODO: Very slow on large themes. We should cache the extent.
     final FeatureList visibleFeatures = getFeatureListVisible( null );
     if( visibleFeatures == null )
       return null;
