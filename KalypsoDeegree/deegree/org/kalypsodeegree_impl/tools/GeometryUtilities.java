@@ -743,6 +743,9 @@ public class GeometryUtilities
       {
         for( final QName geomQName : geomQNames )
         {
+          if( feature.getFeatureType().getProperty( geomQName ) == null )
+            continue;
+
           final Object property = feature.getProperty( geomQName );
           if( property instanceof GM_Object )
           {
