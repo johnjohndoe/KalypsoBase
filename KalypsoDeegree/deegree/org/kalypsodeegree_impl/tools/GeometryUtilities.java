@@ -725,6 +725,9 @@ public class GeometryUtilities
    */
   public static Feature findNearestFeature( final GM_Point point, final double grabDistance, final FeatureList modelList, final QName[] geomQNames, final QName[] allowedQNames )
   {
+    if( geomQNames == null )
+      return null;
+
     final GM_Envelope reqEnvelope = GeometryUtilities.grabEnvelopeFromDistance( point, grabDistance );
     final List< ? > foundElements = modelList.query( reqEnvelope, null );
 
@@ -1215,7 +1218,7 @@ public class GeometryUtilities
   {
     return GeometryFactory.createGM_Point( centroidFromRing( poses ), crs );
   }
-  
+
   /**
    * creates {@link GM_Triangle} with from given positions with Z value from according map field on error returns null
    */

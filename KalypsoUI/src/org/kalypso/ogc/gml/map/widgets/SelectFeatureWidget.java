@@ -58,6 +58,7 @@ import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
@@ -245,14 +246,12 @@ public class SelectFeatureWidget extends AbstractWidget
 
       if( m_geometryBuilder instanceof PointGeometryBuilder )
       {
-        /* Grab next feature */
+        /* Grab next feature. */
         final QName[] geomQNames = findGeomQName( theme, m_geomQName, IKalypsoFeatureTheme.PROPERTY_SELECTABLE_GEOMETRIES, null );
-
         final FeatureList visibleFeatures = theme.getFeatureListVisible( reqEnvelope );
 
+        /* Grab to the first feature that you can get. */
         m_hoverFeature = GeometryUtilities.findNearestFeature( currentPos, grabDistance, visibleFeatures, geomQNames, m_qnamesToSelect );
-
-        /* grab to the first feature that you can get */
         if( m_hoverFeature != null )
         {
           m_hoverTheme = theme;
@@ -399,21 +398,21 @@ public class SelectFeatureWidget extends AbstractWidget
         m_addMode = true;
         break;
 
-        // "STRG": Toggle mode
+      // "STRG": Toggle mode
       case KeyEvent.VK_CONTROL:
         m_toggleMode = true;
         break;
 
-        // "ALT": switch between intersect / contains mode
+      // "ALT": switch between intersect / contains mode
       case KeyEvent.VK_ALT:
         m_intersectMode = true;
         break;
 
-        // "SPACE": switch between polygon / rect mode
+      // "SPACE": switch between polygon / rect mode
       case KeyEvent.VK_SPACE:
         changeGeometryBuilder();
         break;
-        // "ESC": deselection
+      // "ESC": deselection
       case KeyEvent.VK_ESCAPE:
         m_geometryBuilder.reset();
         final IFeatureSelectionManager selectionManager = mapPanel.getSelectionManager();
@@ -565,56 +564,49 @@ public class SelectFeatureWidget extends AbstractWidget
   /**
    * Finds the geometry properties to select from.<br>
    * If a default type is specified, this will always be used.<br>
-   * Else, the all geometrie properties of the target type of the list will be taken.
+   * Else, all geometrie properties of the target type of the list will be taken.
    * 
    * @param propertyName
-   *          The property of the theme, that may provide the geometry qname
+   *          The property of the theme, that may provide the geometry qname.
    * @param feature
    *          The feature that provides the geometries. If <code>null</code>, the target feature type of the given theme
-   *          is analysed
+   *          is analysed.
    */
-  public static QName[] findGeomQName( final IKalypsoFeatureTheme theme, final QName defaultGeometrie, final String propertyName, final Feature feature )
+  public static QName[] findGeomQName( final IKalypsoFeatureTheme theme, final QName defaultGeometry, final String propertyName, final Feature feature )
   {
-    if( defaultGeometrie == null )
+    if( defaultGeometry != null )
+      return new QName[] { defaultGeometry };
+
+    // REMARK:
+    // If no geometry is defined in this widget, first search for the 'selectableGeometry' property of the theme.
+    final String selectionGeometries = theme.getProperty( propertyName, null );
+    if( selectionGeometries != null )
     {
-      // REMARK: if no geometry is defined in this widget, first search for the 'selectableGeometry' property of the
-      // theme.
-      try
-      {
-        final String selectionGeometries = theme.getProperty( propertyName, null );
-        if( selectionGeometries != null )
-        {
-          final String[] geomNames = selectionGeometries.split( "," );
-          final QName[] geomQNames = new QName[geomNames.length];
-          for( int i = 0; i < geomQNames.length; i++ )
-            geomQNames[i] = QName.valueOf( geomNames[i] );
-          return geomQNames;
-        }
-      }
-      catch( final Exception e )
-      {
-        e.printStackTrace();
-      }
+      final String[] geomNames = selectionGeometries.split( "," );
+      final QName[] geomQNames = new QName[geomNames.length];
+      for( int i = 0; i < geomQNames.length; i++ )
+        geomQNames[i] = QName.valueOf( geomNames[i] );
+
+      return geomQNames;
     }
 
-    final IFeatureType featureType;
-    if( feature == null )
-    {
-      // Else, use the geometries of the feature-lists target feature type
-      final FeatureList featureList = theme.getFeatureList();
-      featureType = featureList.getParentFeatureTypeProperty().getTargetFeatureType();
-    }
-    else
-      featureType = feature.getFeatureType();
+    // REMARK:
+    // If no geometry is defined in this widget, second search the feature type of the feature...
+    if( feature != null )
+      return findGeomQName( feature.getFeatureType() );
 
-    return findGeomQName( featureType, defaultGeometrie );
+    // REMARK:
+    // ...if not possiple, use the geometries of the feature-lists target feature type.
+    final FeatureList featureList = theme.getFeatureList();
+    final IRelationType parentFeatureTypeProperty = featureList.getParentFeatureTypeProperty();
+    if( parentFeatureTypeProperty == null )
+      return null;
+
+    return findGeomQName( parentFeatureTypeProperty.getTargetFeatureType() );
   }
 
-  public static QName[] findGeomQName( final IFeatureType targetFeatureType, final QName defaultGeometries )
+  public static QName[] findGeomQName( final IFeatureType targetFeatureType )
   {
-    if( defaultGeometries != null )
-      return new QName[] { defaultGeometries };
-
     final IValuePropertyType[] geomProperties = targetFeatureType.getAllGeomteryProperties();
     final QName[] result = new QName[geomProperties.length];
     for( int i = 0; i < geomProperties.length; i++ )
