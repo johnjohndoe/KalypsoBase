@@ -58,7 +58,6 @@ import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
  */
 public class LayerView extends AbstractChartModelView
 {
-
   private Composite m_parent = null;
 
   private final ILayerManagerEventListener m_layerManagerEventListener = new AbstractLayerManagerEventListener()
@@ -66,7 +65,16 @@ public class LayerView extends AbstractChartModelView
     @Override
     public void onActivLayerChanged( final IChartLayer layer )
     {
-      updateControl();
+      final Runnable runnable = new Runnable()
+      {
+        @Override
+        public void run( )
+        {
+          updateControl();
+        }
+      };
+
+      ControlUtils.syncExec( getParent(), runnable );
     }
   };
 
@@ -98,6 +106,11 @@ public class LayerView extends AbstractChartModelView
     return null;
   }
 
+  protected Composite getParent( )
+  {
+    return m_parent;
+  }
+
   /**
    * @see org.kalypso.model.wspm.ui.view.AbstractChartModelView#updateControl()
    */
@@ -106,11 +119,10 @@ public class LayerView extends AbstractChartModelView
   {
     if( m_parent == null || m_parent.isDisposed() )
       return;
+
     for( final Control ctrl : m_parent.getChildren() )
-    {
-      if( !ctrl.isDisposed() )
-        ctrl.dispose();
-    }
+      ctrl.dispose();
+
     updatePartName( form, getChartModel() );
     final IChartLayer activeLayer = getActiveLayer();
     if( activeLayer == null )
