@@ -69,8 +69,7 @@ public class CrossSectionTheme extends AbstractProfilTheme
   @Override
   public IProfilView createLayerPanel( )
   {
-    return null;// //return new GelaendePanel( getProfil(), getLayerManager().getLayerById(
-                // IWspmConstants.POINT_PROPERTY_HOEHE ) );
+    return new GelaendePanel( getProfil(), this );
   }
 
   /**
