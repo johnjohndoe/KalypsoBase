@@ -161,7 +161,6 @@ public class ProfileChart extends Composite implements IProfilChart
     m_profile = profile;
 
     update();
-
   }
 
 }
