@@ -58,6 +58,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
  */
 public class ElementsComposite extends Composite
 {
+
   private final FormToolkit m_toolkit;
 
   private Composite m_body;
