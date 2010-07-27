@@ -132,7 +132,7 @@ public class WspLegendPopupDialog extends PopupDialog
 
       treeViewer.setInput( treeInput );
 
-      treeViewer.expandAll();
+      treeViewer.expandToLevel( 2 );
 
       /* Get all active names. */
       final Object[] activeNames = data.getActiveElements();
