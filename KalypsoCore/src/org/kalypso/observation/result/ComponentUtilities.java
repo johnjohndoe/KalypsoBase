@@ -105,7 +105,7 @@ public final class ComponentUtilities
    * 
    * @author Dirk Kuch
    */
-  static public boolean restrictionContainsEnumeration( final IRestriction[] restrictions )
+  public static boolean restrictionContainsEnumeration( final IRestriction[] restrictions )
   {
     for( final IRestriction restriction : restrictions )
     {
@@ -162,14 +162,14 @@ public final class ComponentUtilities
 
     final String unitReference = component.getUnit();
     if( unitReference == null )
-      return null;
+      return "-"; //$NON-NLS-1$
 
     final String localRef = getLocalUnitReference( unitReference );
     if( "none".equals( localRef ) ) //$NON-NLS-1$
       return "-"; //$NON-NLS-1$
 
     if( localRef.isEmpty() )
-      return null;
+      return "-"; //$NON-NLS-1$
 
     return localRef;
   }
