@@ -43,118 +43,113 @@ package org.kalypso.model.wspm.ui.view.chart;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilListener;
-import org.kalypso.model.wspm.core.profil.changes.PointPropertyAdd;
-import org.kalypso.model.wspm.core.profil.changes.PointPropertyRemove;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIExtensions;
 
 import de.openali.odysseus.chart.framework.model.impl.ChartModel;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
+import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 
 /**
  * @author kimwerner
  */
-public class ProfilChartModel extends ChartModel implements IProfilListener
+public class ProfilChartModel extends ChartModel
 {
-  private final IProfil m_profil;
-
-  public IProfil getProfil( )
+  private final IProfilListener m_profilListener = new IProfilListener()
   {
-    return m_profil;
-  }
+    /**
+     * @see org.kalypso.model.wspm.core.profil.IProfilListener#onProblemMarkerChanged(org.kalypso.model.wspm.core.profil.IProfil)
+     */
+    @Override
+    public void onProblemMarkerChanged( final IProfil source )
+    {
+      // Todo: what?
+    }
+
+    /**
+     * @see org.kalypso.model.wspm.core.profil.IProfilListener#onProfilChanged(org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint,
+     *      org.kalypso.model.wspm.core.profil.IProfilChange[])
+     */
+    @Override
+    public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
+    {
+      if( hint.isObjectChanged() )
+        updateLayers();
+      else if( hint.isPointPropertiesChanged() )
+        handlePropertyOrBuildingChanged( changes );
+      else
+      {
+        for( final IChartLayer layer : getLayerManager().getLayers() )
+          ((IProfilChartLayer) layer).onProfilChanged( hint, changes );
+      }
+    }
+  };
+
+  private final IProfil m_profil;
 
   private IProfilLayerProvider m_layerProvider = null;
 
-  public ProfilChartModel( final IProfilLayerProvider layerProvider, final IProfil profil, final Object result )
-  {
-    super();
-
-    m_layerProvider = layerProvider;
-    m_profil = profil;
-
-    if( m_profil == null )
-      return;
-    m_layerProvider.registerAxis( getMapperRegistry() );
-    final IProfilChartLayer[] profileLayers = m_layerProvider.createLayers( profil, result );
-    for( final IProfilChartLayer layer : profileLayers )
-      getLayerManager().addLayer( layer );
-  }
+  private final Object m_result;
 
   public ProfilChartModel( final IProfil profil, final Object result )
   {
     this( KalypsoModelWspmUIExtensions.createProfilLayerProvider( profil.getType() ), profil, result );
   }
 
-  public final void unregisterListener( )
+  public ProfilChartModel( final IProfilLayerProvider layerProvider, final IProfil profil, final Object result )
   {
+    m_layerProvider = layerProvider;
+    m_profil = profil;
+    m_result = result;
+
     if( m_profil != null )
-      m_profil.removeProfilListener( this );
+    {
+      m_profil.addProfilListener( m_profilListener );
+
+      m_layerProvider.registerAxis( getMapperRegistry() );
+
+      updateLayers();
+    }
   }
 
-  public final void registerListener( )
+  /**
+   * Recreate all layers.
+   */
+  protected void updateLayers( )
+  {
+    final ILayerManager layerManager = getLayerManager();
+    layerManager.clear();
+
+    // FIXME: the order of layers should be preserved!
+
+    final IProfilChartLayer[] profileLayers = m_layerProvider.createLayers( m_profil, m_result );
+    for( final IProfilChartLayer layer : profileLayers )
+      layerManager.addLayer( layer );
+  }
+
+  public void dispose( )
   {
     if( m_profil != null )
-      m_profil.addProfilListener( this );
+      m_profil.removeProfilListener( m_profilListener );
   }
+
+  public IProfil getProfil( )
+  {
+    return m_profil;
+  }
+
 
   public final IProfilChartLayer getLayer( final String layerID )
   {
     final IChartLayer layer = getLayerManager().getLayerById( layerID );
-    if( layer != null && layer instanceof IProfilChartLayer )
+    if( layer instanceof IProfilChartLayer )
       return (IProfilChartLayer) layer;
 
-    else
-      return null;
+    return null;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfilListener#onProblemMarkerChanged(org.kalypso.model.wspm.core.profil.IProfil)
-   */
-  @Override
-  public void onProblemMarkerChanged( final IProfil source )
+  protected void handlePropertyOrBuildingChanged( final IProfilChange[] changes )
   {
-    if( source == getProfil() )
-    {
-// Todo: what?
-    }
-
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfilListener#onProfilChanged(org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint,
-   *      org.kalypso.model.wspm.core.profil.IProfilChange[])
-   */
-  @Override
-  public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
-  {
-    if( hint.isPointPropertiesChanged() )
-    {
-      for( final IProfilChange change : changes )
-      {
-        final LayerDescriptor layerDescriptor = m_layerProvider.getLayer( change == null ? null : change.getInfo() );
-
-        if( change instanceof PointPropertyRemove )
-        {
-          final IChartLayer layer = getLayerManager().getLayerById( layerDescriptor.getId() );
-          if( layer != null )
-            getLayerManager().removeLayer( layer );
-        }
-        else if( change instanceof PointPropertyAdd )
-        {
-          if( getLayerManager().getLayerById( layerDescriptor.getId() ) == null )
-          {
-            getLayerManager().addLayer( m_layerProvider.createLayer( getProfil(), layerDescriptor.getId() ) );
-          }
-        }
-      }
-    }
-
-    else
-    {
-      for( final IChartLayer layer : getLayerManager().getLayers() )
-      {
-        ((IProfilChartLayer) layer).onProfilChanged( hint, changes );
-      }
-    }
+    updateLayers();
   }
 }

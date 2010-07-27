@@ -66,9 +66,6 @@ import org.kalypso.contribs.eclipse.ui.partlistener.AdapterPartListener;
 import org.kalypso.contribs.eclipse.ui.partlistener.EditorFirstAdapterFinder;
 import org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilChange;
-import org.kalypso.model.wspm.core.profil.IProfilListener;
-import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.profil.IProfilProvider;
 import org.kalypso.model.wspm.ui.profil.IProfilProviderListener;
@@ -78,9 +75,12 @@ import de.openali.odysseus.chart.framework.util.ChartUtilities;
 import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
 
 /**
+ * FIXME: implementing all these listener-intefaces is not good style. Use inner classes instead! FIXME: this is a
+ * IViewPart, so call it Part!
+ * 
  * @author kimwerner
  */
-public class ChartView extends ViewPart implements IChartPart, IProfilListener, IProfilProviderListener, IAdapterEater<IProfilProvider>
+public class ChartView extends ViewPart implements IChartPart, IProfilProviderListener, IAdapterEater<IProfilProvider>
 {
   public static final String ID = "org.kalypso.model.wspm.ui.view.chart.ChartView"; //$NON-NLS-1$
 
@@ -343,29 +343,9 @@ public class ChartView extends ViewPart implements IChartPart, IProfilListener, 
     super.dispose();
   }
 
-  /**
-   * @see com.bce.eind.core.profil.IProfilListener#onProfilChanged(com.bce.eind.core.profil.changes.ProfilChangeHint,
-   *      com.bce.eind.core.profil.IProfilChange[])
-   */
-  @Override
-  public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
-  {
-    if( hint.isPointPropertiesChanged() )
-      m_chart.updateLayer();
-  }
-
   public ChartComposite getChart( )
   {
     return m_chart.getChartComposite();
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfilListener#onProblemMarkerChanged(org.kalypso.model.wspm.core.profil.IProfil)
-   */
-  @Override
-  public void onProblemMarkerChanged( final IProfil source )
-  {
-    //
   }
 
   /**
@@ -431,11 +411,13 @@ public class ChartView extends ViewPart implements IChartPart, IProfilListener, 
     return m_chart;
   }
 
+  // FIXME: not used but called! Remove?
+
   /**
    * @see de.openali.odysseus.chart.framework.model.event.IEventProvider#addListener(java.lang.Object)
    */
   @Override
-  public void addListener( IChartModelEventListener listener )
+  public void addListener( final IChartModelEventListener listener )
   {
     // TODO Auto-generated method stub
 
@@ -445,7 +427,7 @@ public class ChartView extends ViewPart implements IChartPart, IProfilListener, 
    * @see de.openali.odysseus.chart.framework.model.event.IEventProvider#removeListener(java.lang.Object)
    */
   @Override
-  public void removeListener( IChartModelEventListener listener )
+  public void removeListener( final IChartModelEventListener listener )
   {
     // TODO Auto-generated method stub
 

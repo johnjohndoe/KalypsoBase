@@ -64,17 +64,13 @@ public class ProfileChart extends Composite implements IProfilChart
 {
   private static final RGB BACKGROUND_RGB = new RGB( 255, 255, 255 );
 
-  private AxisDragHandlerDelegate m_axisDragHandler;
-
   private ChartComposite m_chartComposite = null;
-
-  private PlotDragHandlerDelegate m_plotDragHandler;
 
   protected IProfil m_profile;
 
   private final IProfilLayerProvider m_layerProvider;
 
-  private ProfilChartModel m_chartmodel;
+  private ProfilChartModel m_chartModel;
 
   public ProfileChart( final Composite parent, final int style, final IProfil profile )
   {
@@ -98,8 +94,8 @@ public class ProfileChart extends Composite implements IProfilChart
     m_chartComposite = new ChartComposite( this, this.getStyle(), null, BACKGROUND_RGB );
     m_chartComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
-    m_plotDragHandler = new PlotDragHandlerDelegate( m_chartComposite );
-    m_axisDragHandler = new AxisDragHandlerDelegate( m_chartComposite );
+    new PlotDragHandlerDelegate( m_chartComposite );
+    new AxisDragHandlerDelegate( m_chartComposite );
 
     update();
   }
@@ -109,19 +105,19 @@ public class ProfileChart extends Composite implements IProfilChart
   {
     if( m_chartComposite == null || m_chartComposite.isDisposed() )
       return;
-    final IProfil oldProfile = m_chartmodel == null ? null : m_chartmodel.getProfil();
+
+    final IProfil oldProfile = m_chartModel == null ? null : m_chartModel.getProfil();
 
     if( m_profile == oldProfile )
       return;
-    if( oldProfile != null )
-      oldProfile.removeProfilListener( m_chartmodel );
-    m_chartmodel = new ProfilChartModel( m_layerProvider, m_profile, null );
-    if( m_profile != null )
-      m_profile.addProfilListener( m_chartmodel );
 
-    m_chartmodel.autoscale( null );
-    m_chartComposite.setChartModel( m_chartmodel );
+    if( m_chartModel == null )
+      m_chartModel.dispose();
 
+    m_chartModel = new ProfilChartModel( m_layerProvider, m_profile, null );
+
+    m_chartModel.autoscale( null );
+    m_chartComposite.setChartModel( m_chartModel );
   }
 
   /**
@@ -130,11 +126,11 @@ public class ProfileChart extends Composite implements IProfilChart
   @Override
   public void dispose( )
   {
-    if( (m_chartComposite != null) && !m_chartComposite.isDisposed() )
+    if( m_chartComposite != null )
       m_chartComposite.dispose();
 
-    if( m_profile != null )
-      m_profile.removeProfilListener( m_chartmodel );
+    if( m_chartModel != null )
+      m_chartModel.dispose();
   }
 
   @Override

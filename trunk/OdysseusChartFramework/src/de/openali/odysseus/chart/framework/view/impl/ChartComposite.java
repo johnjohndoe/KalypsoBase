@@ -24,6 +24,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.progress.UIJob;
+import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 import org.kalypso.contribs.eclipse.swt.widgets.SizedComposite;
 
 import de.openali.odysseus.chart.framework.OdysseusChartFrameworkPlugin;
@@ -57,7 +58,7 @@ public class ChartComposite extends Canvas
 
   private final class InvalidateChartJob extends UIJob
   {
-    public InvalidateChartJob( String name )
+    public InvalidateChartJob( final String name )
     {
       super( name );
     }
@@ -66,7 +67,7 @@ public class ChartComposite extends Canvas
      * @see org.eclipse.ui.progress.UIJob#runInUIThread(org.eclipse.core.runtime.IProgressMonitor)
      */
     @Override
-    public IStatus runInUIThread( IProgressMonitor monitor )
+    public IStatus runInUIThread( final IProgressMonitor monitor )
     {
       // TODO: only invalidate if necessary
       // final IChartLayer[] layers = m_layer.toArray( new IChartLayer[] {} );
@@ -135,6 +136,7 @@ public class ChartComposite extends Canvas
     }
   };
 
+  // FIXME: please OBSERVE the correct order of methods/fields etc.!
   public final EditInfo getChartInfo( )
   {
     return getPlot() == null ? null : getPlot().getTooltipInfo();
@@ -153,11 +155,6 @@ public class ChartComposite extends Canvas
     gc.drawImage( tmpImg, 0, 0, m_plot.getBounds().width, m_plot.getBounds().height, m_plot.getBounds().x, m_plot.getBounds().y, m_plot.getBounds().width, m_plot.getBounds().height );
     tmpImg.dispose();
   }
-
-// public final Image createAxisImage( final Rectangle rect )
-// {
-// return m_plot.createImage( getChartModel().getLayerManager().getLayers(), rect );
-// }
 
   private final AbstractMapperRegistryEventListener m_mapperListener = new AbstractMapperRegistryEventListener()
   {
@@ -188,19 +185,20 @@ public class ChartComposite extends Canvas
         if( ac != null )
         {
           if( axis.isVisible() )
-            ac.redraw();
-          // else
-          // concurrentmodification exception
-          // removeAxisInternal( axis );
+          {
+            final Runnable runnable = new Runnable()
+            {
+              @Override
+              public void run( )
+              {
+                if( !ac.isDisposed() )
+                  ac.redraw();
+              }
+            };
+            ControlUtils.asyncExec( ac, runnable );
+          }
         }
-// else
-// {
-// if( axis.isVisible() )
-// // concurrentmodification exception
-// addAxisInternal( (IAxis) mapper );
-// else
-// return;// do nothing;
-// }
+
         final List<IChartLayer> list = m_model.getAxis2Layers().get( axis );
         if( list != null )
           invalidatePlotCanvas( list.toArray( new IChartLayer[] {} ) );
@@ -216,9 +214,7 @@ public class ChartComposite extends Canvas
     public void onMapperRemoved( final IMapper mapper )
     {
       if( mapper instanceof de.openali.odysseus.chart.framework.model.mapper.IAxis )
-      {
         removeAxisInternal( (IAxis) mapper );
-      }
     }
   };
 
@@ -233,13 +229,10 @@ public class ChartComposite extends Canvas
       @Override
       public void widgetDisposed( final DisposeEvent e )
       {
-        if( m_model != null )
-        {
-          unregisterListener();
-        }
-        m_tooltipHandler.dispose();
+        dispose();
       }
     } );
+
     setBackground( OdysseusChartFrameworkPlugin.getDefault().getColorRegistry().getResource( parent.getDisplay(), backgroundRGB ) );
     createControl();
     setChartModel( model );
@@ -251,6 +244,20 @@ public class ChartComposite extends Canvas
     final AxisCanvas ac = new AxisCanvas( axis, parent, SWT.DOUBLE_BUFFERED );
     ac.setBackground( getBackground() );
     return ac;
+  }
+
+  /**
+   * @see org.eclipse.swt.widgets.Widget#dispose()
+   */
+  @Override
+  public void dispose( )
+  {
+    unregisterListener();
+
+    if( m_tooltipHandler != null )
+      m_tooltipHandler.dispose();
+
+    super.dispose();
   }
 
   /**
@@ -351,13 +358,17 @@ public class ChartComposite extends Canvas
     return m_model;
   }
 
+  // FIXME: why deprecated: What should be used instead? Please comment with @deprecated tag in javadoc!
   @Deprecated
   public final AxisCanvas getAxisCanvas( final IAxis axis )
   {
-    final Composite axisPlace = m_axisPlaces.get( axis.getPosition() );
+    final POSITION position = axis.getPosition();
+    final Composite axisPlace = m_axisPlaces.get( position );
     if( axisPlace == null )
       return null;
-    for( final AxisCanvas ac : getAxisCanvas( axis.getPosition() ) )
+
+    final AxisCanvas[] axisCanvas = getAxisCanvas( position );
+    for( final AxisCanvas ac : axisCanvas )
     {
       if( ac.getAxis() == axis )
         return ac;
@@ -386,10 +397,10 @@ public class ChartComposite extends Canvas
     getPlot().setPanOffset( getLayer( axes ), new Point( end.x - start.x, end.y - start.y ) );
   }
 
-  public void setAxisPanOffset( final Point start, final Point end, IAxis[] axes )
+  public void setAxisPanOffset( final Point start, final Point end, final IAxis[] axes )
   {
 
-    for( IAxis axis : axes )
+    for( final IAxis axis : axes )
     {
       final AxisCanvas ac = getAxisCanvas( axis );
       if( ac == null )
@@ -406,12 +417,12 @@ public class ChartComposite extends Canvas
     }
   }
 
-  public void setAxisZoomOffset( final Point start, final Point end, IAxis[] axes )
+  public void setAxisZoomOffset( final Point start, final Point end, final IAxis[] axes )
   {
     int startZ = -1;
     int endZ = -1;
 
-    for( IAxis axis : axes )
+    for( final IAxis axis : axes )
     {
       final AxisCanvas ac = getAxisCanvas( axis );
       if( ac == null )
@@ -534,14 +545,30 @@ public class ChartComposite extends Canvas
   private final AxisCanvas[] getAxisCanvas( final POSITION position )
   {
     final Composite axisPlace = m_axisPlaces.get( position );
-    if( axisPlace == null || axisPlace.getChildren().length == 0 )
-      return new AxisCanvas[] {};
+    if( axisPlace == null )
+      return new AxisCanvas[0];
+
+    final Control[][] runnableResult = new Control[1][];
+
+    final Runnable runnable = new Runnable()
+    {
+      @Override
+      public void run( )
+      {
+        runnableResult[0] = axisPlace.getChildren();
+      }
+    };
+    ControlUtils.syncExec( axisPlace, runnable );
+
+    final Control[] children = runnableResult[0];
+
     final List<AxisCanvas> acList = new ArrayList<AxisCanvas>();
-    for( final Control comp : axisPlace.getChildren() )
+    for( final Control comp : children )
     {
       if( comp instanceof AxisCanvas )
         acList.add( (AxisCanvas) comp );
     }
+
     return acList.toArray( new AxisCanvas[] {} );
   }
 
@@ -553,6 +580,7 @@ public class ChartComposite extends Canvas
 
   protected final void removeAxisInternal( final IAxis axis )
   {
+
     final AxisCanvas ac = getAxisCanvas( axis );
     if( ac != null )
       ac.dispose();
@@ -641,6 +669,9 @@ public class ChartComposite extends Canvas
 
   protected final void unregisterListener( )
   {
+    if( m_model == null )
+      return;
+
     m_model.getLayerManager().removeListener( m_layerEventListener );
     m_model.getMapperRegistry().removeListener( m_mapperListener );
   }
@@ -654,7 +685,7 @@ public class ChartComposite extends Canvas
     return layerManager == null ? new IChartLayer[] {} : m_model.getLayerManager().getLayers();
   }
 
-  private final void invalidatePlotCanvas( final IChartLayer[] layers )
+  protected final void invalidatePlotCanvas( final IChartLayer[] layers )
   {
     if( isDisposed() )
       return;
