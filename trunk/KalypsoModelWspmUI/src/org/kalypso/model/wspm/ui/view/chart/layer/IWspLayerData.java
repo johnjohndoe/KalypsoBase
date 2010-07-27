@@ -42,6 +42,9 @@ package org.kalypso.model.wspm.ui.view.chart.layer;
 
 import java.math.BigDecimal;
 
+import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.jface.viewers.ITreeContentProvider;
+
 /**
  * This interface provides functions for data objects, for the {@link WspLayer}.
  * 
@@ -50,26 +53,24 @@ import java.math.BigDecimal;
 public interface IWspLayerData
 {
   /**
-   * This function returns the names.
-   * 
-   * @return The names.
+   * This function returns the input which will be given to the content provider.
    */
-  public Object[] getNames( ) throws Exception;
+  Object getInput( ) throws Exception;
 
   /**
-   * This function returns the active names.
+   * This function returns the active elements.
    * 
-   * @return The active names.
+   * @return The active elements.
    */
-  public Object[] getActiveNames( ) throws Exception;
+  Object[] getActiveElements( ) throws Exception;
 
   /**
-   * This function activates the given names.
+   * This function activates the given elements.
    * 
    * @param names
-   *          The names to be activated.
+   *          The elements to be activated.
    */
-  public void activateNames( Object[] names ) throws Exception;
+  void activateElements( Object[] elements ) throws Exception;
 
   /**
    * This function tries to find a value for the given name and station.
@@ -80,5 +81,18 @@ public interface IWspLayerData
    *          The station.
    * @return The value for the given name and station or Double.NaN.
    */
-  public double searchValue( Object name, BigDecimal station ) throws Exception;
+  double searchValue( Object element, BigDecimal station ) throws Exception;
+
+  /**
+   * Creates a label provider that is able to display the element returned by {@link #getAvailableElements()}.<br/>
+   * The caller is responsible to dispose the returned label provider.
+   */
+  ILabelProvider createLabelProvider( );
+
+  /**
+   * Create a content provider that is able to return the elements to be shown in a tree<br/>
+   * The array of elements returned by {@link #getAvailableElements()} will be given to the content provider as input
+   * element.
+   */
+  ITreeContentProvider createContentProvider( );
 }

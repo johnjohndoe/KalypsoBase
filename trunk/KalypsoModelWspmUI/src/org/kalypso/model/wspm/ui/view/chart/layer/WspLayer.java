@@ -44,12 +44,13 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.graphics.Region;
 import org.kalypso.model.wspm.core.IWspmConstants;
@@ -58,7 +59,7 @@ import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
-import org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer;
+import org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme;
 import org.kalypso.observation.result.IRecord;
 
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
@@ -66,6 +67,7 @@ import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
+import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 
 /**
  * Displays constant wsp lines in the cross section.
@@ -73,23 +75,25 @@ import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
  * @author Gernot Belger
  * @author Holger Albert
  */
-public class WspLayer extends AbstractProfilLayer
+public class WspLayer extends AbstractProfilTheme
 {
   /**
    * The profile.
    */
-  private IProfil m_profil;
+  private final IProfil m_profil;
 
   /**
    * The wsp layer data.
    */
-  private IWspLayerData m_data;
+  private final IWspLayerData m_data;
 
   /**
    * True, if the area below the wsp lines should be filled. If there are more than one wsp line, this option should be
    * false, because you could see only the most above line and its area.
    */
-  private boolean m_fill;
+  private final boolean m_fill;
+
+  private Color m_color;
 
   /**
    * The constructor.
@@ -106,9 +110,9 @@ public class WspLayer extends AbstractProfilLayer
    *          True, if the area below the wsp lines should be filled. If there are more than one wsp line, this option
    *          should be false, because you could see only the most above line and its area.
    */
-  public WspLayer( IProfil profile, String layerId, ILayerStyleProvider styleProvider, IWspLayerData data, boolean fill )
+  public WspLayer( final IProfil profile, final String layerId, final ILayerStyleProvider styleProvider, final IWspLayerData data, final boolean fill, final ICoordinateMapper mapper )
   {
-    super( layerId, profile, "", styleProvider );
+    super( profile, layerId, "Wasserspiegel", null, mapper, styleProvider );
 
     m_profil = profile;
     m_data = data;
@@ -116,11 +120,37 @@ public class WspLayer extends AbstractProfilLayer
   }
 
   /**
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#dispose()
+   */
+  @Override
+  public void dispose( )
+  {
+    if( m_color != null )
+      m_color.dispose();
+
+    super.dispose();
+  }
+
+  /**
    * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#paint(org.eclipse.swt.graphics.GC)
    */
   @Override
-  public void paint( GC gc )
+  public void paint( final GC gc )
   {
+    if( m_color == null )
+    {
+      final ILineStyle lineStyle = getLineStyle();
+      if( lineStyle != null )
+      {
+        final RGB rgb = lineStyle.getColor();
+        m_color = new Color( gc.getDevice(), rgb );
+      }
+    }
+
+    // HACK: we need to set the background color as we fill a clipped-rectangle in order to create the line
+    if( m_color != null )
+      gc.setBackground( m_color );
+
     try
     {
       /* No data. */
@@ -128,41 +158,21 @@ public class WspLayer extends AbstractProfilLayer
         return;
 
       /* Get the profile. */
-      IProfil profile = getProfil();
+      final IProfil profile = getProfil();
       if( profile == null )
         return;
 
       /* Get all active names. */
-      Object[] activeNames = m_data.getActiveNames();
-
-      /* If nothing was ever activated, activate all. */
-      if( activeNames == null )
-      {
-        /* Get all available names. */
-        Object[] names = m_data.getNames();
-        if( names == null || names.length == 0 )
-          return;
-
-        /* Activate all available names. */
-        m_data.activateNames( names );
-        activeNames = m_data.getActiveNames();
-      }
-
-      /* Nothing is activated. */
-      if( activeNames.length == 0 )
-        return;
+      final Object[] activeElements = m_data.getActiveElements();
 
       /* Get the station. */
-      BigDecimal station = ProfilUtil.stationToBigDecimal( profile.getStation() );
+      final BigDecimal station = ProfilUtil.stationToBigDecimal( profile.getStation() );
 
       /* Paint the values for the active names. */
-      for( int i = 0; i < activeNames.length; i++ )
+      for( final Object element : activeElements )
       {
-        /* Get the active name. */
-        Object activeName = activeNames[i];
-
         /* Search the value. */
-        double value = m_data.searchValue( activeName, station );
+        final double value = getValue( element, station );
         if( Double.isNaN( value ) )
           continue;
 
@@ -170,18 +180,23 @@ public class WspLayer extends AbstractProfilLayer
         paint( gc, value );
       }
     }
-    catch( Exception ex )
+    catch( final Exception ex )
     {
       /* Log the error message. */
       KalypsoModelWspmUIPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, KalypsoModelWspmUIPlugin.ID, ex.getLocalizedMessage(), ex ) );
     }
   }
 
+  private double getValue( final Object element, final BigDecimal station ) throws Exception
+  {
+    return m_data.searchValue( element, station );
+  }
+
   /**
    * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getHover(org.eclipse.swt.graphics.Point)
    */
   @Override
-  public EditInfo getHover( Point pos )
+  public EditInfo getHover( final Point pos )
   {
     try
     {
@@ -190,66 +205,75 @@ public class WspLayer extends AbstractProfilLayer
         return null;
 
       /* Get the profile. */
-      IProfil profile = getProfil();
+      final IProfil profile = getProfil();
       if( profile == null )
         return null;
 
       /* Get all active names. */
-      Object[] activeNames = m_data.getActiveNames();
+      final Object[] activeElements = m_data.getActiveElements();
 
       /* Nothing was ever activated or nothing is activated. */
-      if( activeNames == null || activeNames.length == 0 )
+      if( activeElements == null || activeElements.length == 0 )
         return null;
 
       /* Get the station. */
-      BigDecimal station = ProfilUtil.stationToBigDecimal( profile.getStation() );
+      final BigDecimal station = ProfilUtil.stationToBigDecimal( profile.getStation() );
 
       /* Get the domain axis. */
-      IAxis domainAxis = getDomainAxis();
+      final IAxis domainAxis = getDomainAxis();
 
       /* Get the range. */
-      IDataRange<Number> domainRange = domainAxis.getNumericRange();
+      final IDataRange<Number> domainRange = domainAxis.getNumericRange();
 
       /* The x positions. */
-      int x_start = domainAxis.numericToScreen( domainRange.getMin() );
-      int x_end = domainAxis.numericToScreen( domainRange.getMax() );
+      final int x_start = domainAxis.numericToScreen( domainRange.getMin() );
+      final int x_end = domainAxis.numericToScreen( domainRange.getMax() );
 
       /* Get the target axis. */
-      IAxis targetAxis = getTargetAxis();
+      final IAxis targetAxis = getTargetAxis();
 
       /* Search the values for the active names. */
-      for( int i = 0; i < activeNames.length; i++ )
+      for( final Object activeElement : activeElements )
       {
-        /* Get the active name. */
-        Object activeName = activeNames[i];
-
         /* Search the value. */
-        double value = m_data.searchValue( activeName, station );
+        final double value = getValue( activeElement, station );
         if( Double.isNaN( value ) )
           continue;
 
         /* The y position. */
-        int y = targetAxis.numericToScreen( value );
+        final int y = targetAxis.numericToScreen( value );
 
         if( pos.y >= y - 5 && pos.y <= y + 5 )
         {
           /* Create a full rectangle figure. */
-          PolylineFigure hoverFigure = new PolylineFigure();
+          final PolylineFigure hoverFigure = new PolylineFigure();
           hoverFigure.setStyle( getLineStyle_hover() );
           hoverFigure.setPoints( new Point[] { new Point( x_start, y ), new Point( x_end, y ) } );
 
-          return new EditInfo( this, hoverFigure, null, null, String.format( "%-12s %14s%n%-12s %10.2f [m]", Messages.getString( "org.kalypso.model.wspm.ui.view.chart.layer.WspLayer.1" ), activeName, Messages.getString( "org.kalypso.model.wspm.ui.view.chart.layer.WspLayer.2" ), value ), pos ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+          final String activeLabel = findActiveLabel( activeElement );
+          final String format = String.format( "%-12s %-14s%n%-12s %-10.2f [m]", Messages.getString( "org.kalypso.model.wspm.ui.view.chart.layer.WspLayer.1" ), activeLabel, Messages.getString( "org.kalypso.model.wspm.ui.view.chart.layer.WspLayer.2" ), value ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+          return new EditInfo( this, hoverFigure, null, null, format, pos );
         }
       }
 
       return null;
     }
-    catch( Exception ex )
+    catch( final Exception ex )
     {
       ex.printStackTrace();
 
       return null;
     }
+  }
+
+  private String findActiveLabel( final Object activeElement )
+  {
+    Assert.isNotNull( activeElement );
+
+    if( activeElement instanceof IWspLayerDataElement )
+      return ((IWspLayerDataElement) activeElement).getLabel();
+
+    return activeElement.toString();
   }
 
   /**
@@ -260,39 +284,33 @@ public class WspLayer extends AbstractProfilLayer
    * @param height
    *          The height of the wsp line.
    */
-  private void paint( GC gc, double height )
+  private void paint( final GC gc, final double height )
   {
-    Rectangle clipping = gc.getClipping();
+    final Rectangle clipping = gc.getClipping();
     final ICoordinateMapper cm = getCoordinateMapper();
     if( cm == null )
       return;
-    Point location = cm.numericToScreen( 0.0, height );
+    final Point location = cm.numericToScreen( 0.0, height );
 
-    Region clipreg = new Region();
-    int[] points = getPoints();
+    final Region clipreg = new Region();
+    final int[] points = getPoints();
 
     clipreg.add( points );
     clipreg.intersect( clipping );
 
-    Rectangle toprect = new Rectangle( clipping.x, location.y - 100000, clipping.width, 100000 );
+    final Rectangle toprect = new Rectangle( clipping.x, location.y - 100000, clipping.width, 100000 );
     clipreg.subtract( toprect );
 
     /* If not fill, ... */
     if( !m_fill )
     {
-      int linesize = 2;
-      Rectangle bottomrect = new Rectangle( clipping.x, location.y + linesize, clipping.width, 10000 );
+      final int linesize = 2;
+      final Rectangle bottomrect = new Rectangle( clipping.x, location.y + linesize, clipping.width, 10000 );
       clipreg.subtract( bottomrect );
     }
 
     gc.setClipping( clipreg );
-
-    Color oldColor = gc.getBackground();
-
-    gc.setBackground( gc.getDevice().getSystemColor( SWT.COLOR_BLUE ) );
     gc.fillRectangle( clipping );
-
-    gc.setBackground( oldColor );
     gc.setClipping( clipping );
   }
 
@@ -304,21 +322,21 @@ public class WspLayer extends AbstractProfilLayer
   private int[] getPoints( )
   {
     /* Create the polygon above the line of the cross section. */
-    List<Point> points = new ArrayList<Point>();
+    final List<Point> points = new ArrayList<Point>();
 
     /* Get the record (points) of the profile. */
-    IRecord[] ppoints = m_profil.getPoints();
+    final IRecord[] ppoints = m_profil.getPoints();
     for( int i = 0; i < ppoints.length; i++ )
     {
       /* Get the record. */
-      IRecord record = ppoints[i];
+      final IRecord record = ppoints[i];
 
       /* Get x and y from the record. */
-      Double x = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, record );
-      Double y = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, record );
+      final Double x = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, record );
+      final Double y = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, record );
 
       /* Convert to screen coordinates. */
-      Point point = getCoordinateMapper().numericToScreen( x, y );
+      final Point point = getCoordinateMapper().numericToScreen( x, y );
 
       if( i == 0 )
         points.add( new Point( point.x, -1000 ) );
@@ -330,14 +348,14 @@ public class WspLayer extends AbstractProfilLayer
     }
 
     /* The array for the screen coordinates. */
-    int[] ps = new int[points.size() * 2];
+    final int[] ps = new int[points.size() * 2];
 
     /* Add the screen coordinates to the array. */
     int count = 0;
     for( int i = 0; i < points.size(); i++ )
     {
       /* Get the screen coordinates. */
-      Point p = points.get( i );
+      final Point p = points.get( i );
 
       /* Add the screen coordinates to the array. */
       ps[count++] = p.x;

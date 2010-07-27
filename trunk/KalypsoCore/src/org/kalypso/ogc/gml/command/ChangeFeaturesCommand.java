@@ -125,12 +125,8 @@ public class ChangeFeaturesCommand implements ICommand
 
   protected void applyChanges( final FeatureChange[] changes )
   {
-// final Set<Feature> changedFeaturesList = new HashSet<Feature>();
     for( final FeatureChange change : changes )
-    {
       change.getFeature().setProperty( change.getProperty(), change.getNewValue() );
-// changedFeaturesList.add( change.getFeature() );
-    }
 
     if( m_workspace != null )
       m_workspace.fireModellEvent( new FeatureChangeModellEvent( m_workspace, changes ) );

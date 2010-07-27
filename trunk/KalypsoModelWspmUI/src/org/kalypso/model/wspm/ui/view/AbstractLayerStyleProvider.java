@@ -56,7 +56,7 @@ public class AbstractLayerStyleProvider implements ILayerStyleProvider
     createStyles();
   }
 
-  private HashMap<String, IStyle> m_styles = new HashMap<String, IStyle>();
+  private final HashMap<String, IStyle> m_styles = new HashMap<String, IStyle>();
 
   protected void createStyles( )
   {
@@ -71,17 +71,21 @@ public class AbstractLayerStyleProvider implements ILayerStyleProvider
   /**
    * @see org.kalypso.model.wspm.ui.view.ILayerStyleProvider#getStyleFor(java.lang.String, java.lang.Class)
    */
-  @Override
   @SuppressWarnings("unchecked")
+  @Override
   public <T extends IStyle> T getStyleFor( final String id, final Class<T> defaultStyle )
   {
     final IStyle style = m_styles.get( id );
-    if( (style != null) )
+    if( style != null )
       return (T) style;
-    final IStyle newStyle = defaultStyle == null ? null : StyleUtils.getDefaultStyle( defaultStyle );
+
+    if( defaultStyle == null )
+      return null;
+
+    final IStyle newStyle = StyleUtils.getDefaultStyle( defaultStyle );
     if( newStyle != null )
       m_styles.put( id, newStyle );
-    return (T) newStyle;
 
+    return defaultStyle.cast( newStyle );
   }
 }

@@ -59,37 +59,37 @@ public interface IComponent extends Comparator<Object>
    * Id or internal name of this component. For example if this component really was read from a dictionary, the id
    * should be the urn of the corresponding dictionary entry.
    */
-  public String getId( );
+  String getId( );
 
   /**
    * User-fired name of this component.
    */
-  public String getName( );
+  String getName( );
 
-  public String getDescription( );
+  String getDescription( );
 
-  public String getUnit( );
+  String getUnit( );
 
-  public String getFrame( );
+  String getFrame( );
 
-  public QName getValueTypeName( );
+  QName getValueTypeName( );
 
-  public Object getDefaultValue( );
+  Object getDefaultValue( );
 
-  public IRestriction[] getRestrictions( );
+  IRestriction[] getRestrictions( );
 
-  public IPhenomenon getPhenomenon( );
-  
+  IPhenomenon getPhenomenon( );
+
   /** 
    * @return a precision to compare numeric values
    */
-  public Double getPrecision();
+  Double getPrecision( );
 
   /** override equals. Component are equals if their name, description, valueTyleName and defaultValue are equals */
   @Override
-  public boolean equals( final Object object );
+  boolean equals( Object object );
 
   /** override hashCode according to equals */
   @Override
-  public int hashCode( );
+  int hashCode( );
 }
