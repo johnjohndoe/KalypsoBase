@@ -113,9 +113,9 @@ public abstract class AbstractProfilePointFilter implements IProfilePointFilter,
     if( left == right && index == right )
       return true;
     if( left < right )
-      return left <= index && index < right;
+      return left <= index && index <= right;
     else
-      return right <= index && index < left;
+      return right <= index && index <= left;
   }
 
 }
