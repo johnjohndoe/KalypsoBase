@@ -72,7 +72,7 @@ import org.kalypso.observation.result.ITupleResultChangedListener;
 import org.kalypso.observation.result.TupleResult;
 
 /**
- * Basisprofil with Events
+ * FIXME: event handling for all setters! Basisprofil with Events
  * 
  * @author kimwerner
  */
@@ -170,6 +170,8 @@ public abstract class AbstractProfil implements IProfil
   @Override
   public IProfileObject[] addProfileObjects( final IProfileObject... profileObjects )
   {
+    // FIXME: event handling!
+
     Collections.addAll( m_profileObjects, profileObjects );
 
     return m_profileObjects.toArray( new IProfileObject[] {} );
@@ -612,6 +614,7 @@ public abstract class AbstractProfil implements IProfil
   public void setActivePoint( final IRecord point )
   {
     m_activePoint = point;
+
     final ProfilChangeHint hint = new ProfilChangeHint();
     hint.setActivePointChanged();
     fireProfilChanged( hint, new IProfilChange[] { new ActiveObjectEdit( this, point, m_activePointProperty ) } );
@@ -712,6 +715,8 @@ public abstract class AbstractProfil implements IProfil
   @Override
   public void setStation( final double station )
   {
+    // FIXME: event handling
+
     m_station = station;
   }
 
