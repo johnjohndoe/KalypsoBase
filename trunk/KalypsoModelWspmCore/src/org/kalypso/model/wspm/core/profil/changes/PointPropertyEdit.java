@@ -100,30 +100,11 @@ public final class PointPropertyEdit implements IProfilChange
   }
 
   /**
-   * @see org.kalypso.model.wspm.core.profil.IProfilChange#getObject()
+   * @see java.lang.Object#toString()
    */
   @Override
-  public Object[] getObjects( )
-  {
-    return m_points;
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfilChange#getPointProperty()
-   */
-  @Override
-  public String getInfo( )
+  public String toString( )
   {
     return m_property.getId();
   }
-
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfilChange#getValue()
-   */
-  @Override
-  public Double getValue( )
-  {
-    return Double.NaN;
-  }
-
 }

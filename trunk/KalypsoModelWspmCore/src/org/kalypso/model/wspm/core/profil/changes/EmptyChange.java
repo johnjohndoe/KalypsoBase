@@ -58,32 +58,4 @@ public class EmptyChange implements IProfilChange
 
     return this;
   }
-
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfilChange#getObjects()
-   */
-  @Override
-  public Object[] getObjects( )
-  {
-    return new Object[] {};
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfilChange#getInfo()
-   */
-  @Override
-  public String getInfo( )
-  {
-    return "";
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfilChange#getValue()
-   */
-  @Override
-  public Double getValue( )
-  {
-    return Double.NaN;
-  }
-
 }

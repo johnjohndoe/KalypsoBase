@@ -49,20 +49,5 @@ public interface IProfilChange
    *            Themes , affected by this ProfilChange should be set true
    * @return the undo operation for this ProfilChange or {@code null} if not undoable
    */
-  public IProfilChange doChange( final ProfilChangeHint hint ) throws IllegalProfileOperationException;
-
-  /**
-   * @return something stored in this ProfilChange
-   */
-  public Object[] getObjects( );
-
-  /**
-   * @return a String stored in this ProfilChange
-   */
-  public String getInfo( );
-
-  /**
-   * @return a Double stored in this ProfilChange
-   */
-  public Double getValue( );
+  IProfilChange doChange( final ProfilChangeHint hint ) throws IllegalProfileOperationException;
 }

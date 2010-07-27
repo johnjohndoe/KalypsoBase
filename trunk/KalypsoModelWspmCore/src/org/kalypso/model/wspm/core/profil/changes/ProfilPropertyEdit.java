@@ -46,6 +46,7 @@ import org.kalypso.model.wspm.core.profil.IProfilChange;
 public final class ProfilPropertyEdit implements IProfilChange
 {
   private final IProfil m_profil;
+
   private final Object m_property;
 
   private final Object m_newValue;
@@ -64,40 +65,21 @@ public final class ProfilPropertyEdit implements IProfilChange
   @Override
   public IProfilChange doChange( final ProfilChangeHint hint )
   {
-    if (hint!=null) hint.setProfilPropertyChanged(true);
-    
-    final Object oldValue = m_profil.getProperty(m_property);
+    if( hint != null )
+      hint.setProfilPropertyChanged( true );
+
+    final Object oldValue = m_profil.getProperty( m_property );
     m_profil.setProperty( m_property, m_newValue );
 
     return new ProfilPropertyEdit( m_profil, m_property, oldValue );
   }
 
   /**
-   * @see org.kalypso.model.wspm.core.profil.IProfilChange#getObject()
+   * @see java.lang.Object#toString()
    */
   @Override
-  public Object[] getObjects( )
+  public String toString( )
   {
-    return new Object[]{m_property,m_newValue};
+    return m_property.toString();
   }
-
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfilChange#getPointProperty()
-   */
-  @Override
-  public String getInfo( )
-  {
-       return m_property.toString();
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfilChange#getValue()
-   */
-  @Override
-  public Double getValue( )
-  {
-     return null;
-  }
-
- 
 }

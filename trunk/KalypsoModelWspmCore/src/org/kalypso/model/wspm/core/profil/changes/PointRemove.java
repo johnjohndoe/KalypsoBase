@@ -47,6 +47,7 @@ import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IllegalProfileOperationException;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.observation.result.IRecord;
+
 /**
  * @author kimwerner
  */
@@ -59,12 +60,11 @@ public class PointRemove implements IProfilChange
 
   private IRecord m_pointBefore;
 
-
   public PointRemove( final IProfil profil, final IRecord point )
   {
     m_profil = profil;
     m_point = point;
-   }
+  }
 
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilChange#doChange()
@@ -83,35 +83,16 @@ public class PointRemove implements IProfilChange
     else
     {
       m_profil.setActivePoint( m_point );
-      throw new IllegalProfileOperationException( Messages.getString( "org.kalypso.model.wspm.core.profil.changes.PointRemove.1"), this ); //$NON-NLS-1$
+      throw new IllegalProfileOperationException( Messages.getString( "org.kalypso.model.wspm.core.profil.changes.PointRemove.1" ), this ); //$NON-NLS-1$
     }
   }
 
   /**
-   * @see org.kalypso.model.wspm.core.profil.IProfilChange#getObject()
+   * @see java.lang.Object#toString()
    */
   @Override
-  public Object[] getObjects( )
+  public String toString( )
   {
-    return new Object[] { m_point };
+    return Messages.getString( "org.kalypso.model.wspm.core.profil.changes.PointRemove.0", ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, m_point ) ); //$NON-NLS-1$
   }
-
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfilChange#getPointProperty()
-   */
-  @Override
-  public String getInfo( )
-  {
-    return   Messages.getString("org.kalypso.model.wspm.core.profil.changes.PointRemove.0", ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, m_point ) ); //$NON-NLS-1$
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfilChange#getValue()
-   */
-  @Override
-  public Double getValue( )
-  {
-    return null;
-  }
-
 }

@@ -72,31 +72,11 @@ public class PointMarkerEdit implements IProfilChange
   }
 
   /**
-   * @see org.kalypso.model.wspm.core.profil.IProfilChange#getObject()
+   * @see java.lang.Object#toString()
    */
   @Override
-  public Object[] getObjects( )
-  {
-    return new Object[] { m_pointMarker, m_newValue };
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfilChange#getPointProperty()
-   */
-  @Override
-  public String getInfo( )
+  public String toString( )
   {
     return m_pointMarker.getId().getId();
   }
-
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfilChange#getValue()
-   */
-  @Override
-  public Double getValue( )
-  {
-
-    return null;
-  }
-
 }
