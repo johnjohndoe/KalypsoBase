@@ -59,6 +59,10 @@ public final class RepositoryItemUtils
 
   public static final int ZRXP_PRIORITY_ITEM_OFFSET = 10;
 
+  private RepositoryItemUtils( )
+  {
+  }
+
   /**
    * Return only the item-id part of the full id. If id is null, it returns null.
    * 
@@ -340,11 +344,6 @@ public final class RepositoryItemUtils
       base += "." + item.getName();
 
     return base;
-  }
-
-  private RepositoryItemUtils( )
-  {
-
   }
 
 }
