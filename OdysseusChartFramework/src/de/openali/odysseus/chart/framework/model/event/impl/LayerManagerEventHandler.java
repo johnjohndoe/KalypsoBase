@@ -8,51 +8,52 @@ import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
  */
 public class LayerManagerEventHandler extends AbstractEventProvider<ILayerManagerEventListener>
 {
-
-	public void fireLayerAdded(final IChartLayer layer)
-	{
-		for (final ILayerManagerEventListener l : getListeners())
-		{
-			l.onLayerAdded(layer);
-		}
-	}
-	public void fireActiveLayerChanged(final IChartLayer layer)
+  public void fireLayerAdded( final IChartLayer layer )
+  {
+    for( final ILayerManagerEventListener l : getListeners() )
     {
-        for (final ILayerManagerEventListener l : getListeners())
-        {
-            l.onActivLayerChanged(layer);
-        }
+      l.onLayerAdded( layer );
     }
-	public void fireLayerRemoved(final IChartLayer layer)
-	{
-		for (final ILayerManagerEventListener l : getListeners())
-		{
-			l.onLayerRemoved(layer);
-		}
-	}
+  }
 
-	public void fireLayerMoved(final IChartLayer layer)
-	{
-		for (final ILayerManagerEventListener l : getListeners())
-		{
-			l.onLayerMoved(layer);
-		}
-	}
+  public void fireActiveLayerChanged( final IChartLayer layer )
+  {
+    for( final ILayerManagerEventListener l : getListeners() )
+    {
+      l.onActivLayerChanged( layer );
+    }
+  }
 
-	public void fireLayerVisibilityChanged(final IChartLayer layer)
-	{
-		for (final ILayerManagerEventListener l : getListeners())
-		{
-			l.onLayerVisibilityChanged(layer);
-		}
-	}
+  public void fireLayerRemoved( final IChartLayer layer )
+  {
+    for( final ILayerManagerEventListener l : getListeners() )
+    {
+      l.onLayerRemoved( layer );
+    }
+  }
 
-	public void fireLayerContentChanged(IChartLayer layer)
-	{
-		for (final ILayerManagerEventListener l : getListeners())
-		{
-			l.onLayerContentChanged(layer);
-		}
-	}
+  public void fireLayerMoved( final IChartLayer layer )
+  {
+    for( final ILayerManagerEventListener l : getListeners() )
+    {
+      l.onLayerMoved( layer );
+    }
+  }
+
+  public void fireLayerVisibilityChanged( final IChartLayer layer )
+  {
+    for( final ILayerManagerEventListener l : getListeners() )
+    {
+      l.onLayerVisibilityChanged( layer );
+    }
+  }
+
+  public void fireLayerContentChanged( final IChartLayer layer )
+  {
+    for( final ILayerManagerEventListener l : getListeners() )
+    {
+      l.onLayerContentChanged( layer );
+    }
+  }
 
 }

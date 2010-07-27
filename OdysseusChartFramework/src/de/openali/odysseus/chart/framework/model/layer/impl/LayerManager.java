@@ -14,6 +14,36 @@ import de.openali.odysseus.chart.framework.model.layer.ITooltipChartLayer;
 
 public class LayerManager implements ILayerManager
 {
+  private final ILayerEventListener m_layerListener = new AbstractLayerEventListener()
+  {
+    /**
+     * @see de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerEventListener#onActiveLayerChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
+     */
+    @Override
+    public void onActiveLayerChanged( final IChartLayer layer1 )
+    {
+      m_handler.fireActiveLayerChanged( layer1 );
+    }
+
+    /**
+     * @see de.openali.odysseus.chart.framework.impl.model.event.AbstractLayerEventListener#onLayerContentChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
+     */
+    @Override
+    public void onLayerContentChanged( final IChartLayer layer1 )
+    {
+      m_handler.fireLayerContentChanged( layer1 );
+    }
+
+    /**
+     * @see de.openali.odysseus.chart.framework.impl.model.event.AbstractLayerEventListener#onLayerVisibilityChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
+     */
+    @Override
+    public void onLayerVisibilityChanged( final IChartLayer layer1 )
+    {
+      m_handler.fireLayerVisibilityChanged( layer1 );
+    }
+  };
+
   /** my layers */
   private final List<IChartLayer> m_layers = new ArrayList<IChartLayer>();
 
@@ -28,43 +58,9 @@ public class LayerManager implements ILayerManager
     if( layer == null )
       return;
     m_layers.add( layer );
-    registerLayer( layer );
+    layer.addListener( m_layerListener );
 
     m_handler.fireLayerAdded( layer );
-  }
-
-  private void registerLayer( final IChartLayer layer )
-  {
-    final ILayerEventListener lel = new AbstractLayerEventListener()
-    {
-      /**
-       * @see de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerEventListener#onActiveLayerChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
-       */
-      @Override
-      public void onActiveLayerChanged( final IChartLayer layer1 )
-      {
-        m_handler.fireActiveLayerChanged( layer1 );
-      }
-
-      /**
-       * @see de.openali.odysseus.chart.framework.impl.model.event.AbstractLayerEventListener#onLayerContentChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
-       */
-      @Override
-      public void onLayerContentChanged( final IChartLayer layer1 )
-      {
-        m_handler.fireLayerContentChanged( layer1 );
-      }
-
-      /**
-       * @see de.openali.odysseus.chart.framework.impl.model.event.AbstractLayerEventListener#onLayerVisibilityChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
-       */
-      @Override
-      public void onLayerVisibilityChanged( final IChartLayer layer1 )
-      {
-        m_handler.fireLayerVisibilityChanged( layer1 );
-      }
-    };
-    layer.addListener( lel );
   }
 
   /**
@@ -74,7 +70,11 @@ public class LayerManager implements ILayerManager
   @Override
   public void removeLayer( final IChartLayer layer )
   {
+    layer.setActive( false );
+
     m_layers.remove( layer );
+    layer.removeListener( m_layerListener );
+
     m_handler.fireLayerRemoved( layer );
   }
 
@@ -93,7 +93,9 @@ public class LayerManager implements ILayerManager
   @Override
   public void clear( )
   {
-
+    final IChartLayer[] layers = m_layers.toArray( new IChartLayer[m_layers.size()] );
+    for( final IChartLayer next : layers )
+      removeLayer( next );
   }
 
   /**
@@ -122,9 +124,7 @@ public class LayerManager implements ILayerManager
     for( final IChartLayer layer : m_layers )
     {
       if( layer != null && layer.getId().equals( id ) )
-      {
         return layer;
-      }
     }
     return null;
   }
@@ -137,7 +137,7 @@ public class LayerManager implements ILayerManager
   public void addLayer( final IChartLayer layer, final int position )
   {
     m_layers.add( position, layer );
-    registerLayer( layer );
+    layer.addListener( m_layerListener );
     m_handler.fireLayerAdded( layer );
   }
 
@@ -148,14 +148,14 @@ public class LayerManager implements ILayerManager
   public int getLayerPosition( final IChartLayer layer )
   {
     int count = 0;
-    for( final IChartLayer l : m_layers )
+    for( final IChartLayer currentLayer : m_layers )
     {
-      if( layer == l )
-      {
+      if( layer == currentLayer )
         return count;
-      }
+
       count++;
     }
+
     return -1;
   }
 
@@ -172,21 +172,17 @@ public class LayerManager implements ILayerManager
    * @see de.openali.odysseus.chart.framework.model.layer.ILayerManager#getEditableLayers()
    */
   @Override
-  @SuppressWarnings({ "cast" })
   public IEditableChartLayer[] getEditableLayers( )
   {
     final List<IEditableChartLayer> editLayers = new ArrayList<IEditableChartLayer>();
     for( final IChartLayer layer : getLayers() )
     {
       if( layer instanceof IEditableChartLayer )
-      {
         editLayers.add( (IEditableChartLayer) layer );
-      }
     }
-    return (IEditableChartLayer[]) editLayers.toArray( new IEditableChartLayer[] {} );
-  }
 
- 
+    return editLayers.toArray( new IEditableChartLayer[] {} );
+  }
 
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.ILayerManager#getTooltipLayers()
@@ -198,9 +194,7 @@ public class LayerManager implements ILayerManager
     for( final IChartLayer layer : getLayers() )
     {
       if( layer instanceof ITooltipChartLayer )
-      {
         tooltipLayers.add( (ITooltipChartLayer) layer );
-      }
     }
     return tooltipLayers.toArray( new ITooltipChartLayer[] {} );
   }
