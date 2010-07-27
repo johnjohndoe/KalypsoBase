@@ -38,54 +38,16 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.ui.view;
-
-import java.util.HashMap;
-
-import de.openali.odysseus.chart.framework.model.style.IStyle;
-import de.openali.odysseus.chart.framework.util.StyleUtils;
+package org.kalypso.model.wspm.ui.view.chart.layer;
 
 /**
- * @author kimwerner
+ * Represents one waterlevel in the {@link WspLayer}.<br/>
+ * Implementors of this interface are possibly returned by {@link IWspLayerData}.
+ * 
+ * @author Gernot Belger
  */
-public class AbstractLayerStyleProvider implements ILayerStyleProvider
+public interface IWspLayerDataElement
 {
-
-  public AbstractLayerStyleProvider( )
-  {
-    createStyles();
-  }
-
-  private final HashMap<String, IStyle> m_styles = new HashMap<String, IStyle>();
-
-  protected void createStyles( )
-  {
-    // TODO: read styles from *.kod file or add Styles here
-  }
-
-  final protected void addStyle( final String id, final IStyle style )
-  {
-    m_styles.put( id, style );
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.ui.view.ILayerStyleProvider#getStyleFor(java.lang.String, java.lang.Class)
-   */
-  @SuppressWarnings("unchecked")
-  @Override
-  public <T extends IStyle> T getStyleFor( final String id, final Class<T> defaultStyle )
-  {
-    final IStyle style = m_styles.get( id );
-    if( style != null )
-      return (T) style;
-
-    if( defaultStyle == null )
-      return null;
-
-    final IStyle newStyle = StyleUtils.getDefaultStyle( defaultStyle );
-    if( newStyle != null )
-      m_styles.put( id, newStyle );
-
-    return defaultStyle.cast( newStyle );
-  }
+  /** The human readable name of this element which will will shown in the tooltip of the data provider */
+  String getLabel( );
 }

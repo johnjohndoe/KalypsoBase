@@ -46,6 +46,7 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.ui.i18n.Messages;
+import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
 import org.kalypso.observation.result.IComponent;
 
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
@@ -105,7 +106,13 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
 
   public AbstractProfilTheme( final IProfil profil, final String id, final String title, final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm )
   {
-    super( id, profil, "", null );
+    this( profil, id, title, chartLayers, cm, null );
+  }
+
+  public AbstractProfilTheme( final IProfil profil, final String id, final String title, final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm, final ILayerStyleProvider styleProvider )
+  {
+    super( id, profil, "", styleProvider );
+
     m_title = title;
     m_id = id;
     setCoordinateMapper( cm );

@@ -40,17 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.view.chart.layer;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.PopupDialog;
+import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.ICheckStateListener;
+import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -58,7 +56,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
-import org.kalypso.contribs.eclipse.jface.viewers.ArrayTreeContentProvider;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 
@@ -77,7 +74,7 @@ public class WspLegendPopupDialog extends PopupDialog
   /**
    * The constructor.
    */
-  public WspLegendPopupDialog( Shell parentShell, WspLayer wspLayer )
+  public WspLegendPopupDialog( final Shell parentShell, final WspLayer wspLayer )
   {
     super( parentShell, SWT.RESIZE, true, true, true, false, false, Messages.getString( "org.kalypso.model.wspm.ui.view.chart.layer.WspLegendPopupDialog.0" ), "" ); //$NON-NLS-1$ //$NON-NLS-2$
 
@@ -88,10 +85,10 @@ public class WspLegendPopupDialog extends PopupDialog
    * @see org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt.widgets.Composite)
    */
   @Override
-  protected Control createDialogArea( Composite parent )
+  protected Control createDialogArea( final Composite parent )
   {
     /* Create the main composite. */
-    Composite main = (Composite) super.createDialogArea( parent );
+    final Composite main = (Composite) super.createDialogArea( parent );
     main.setLayout( new GridLayout( 1, false ) );
     main.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
@@ -113,8 +110,8 @@ public class WspLegendPopupDialog extends PopupDialog
       }
 
       /* Get all available names. */
-      Object[] names = data.getNames();
-      if( names == null || names.length == 0 )
+      final Object treeInput = data.getInput();
+      if( treeInput == null )
       {
         setInfoText( Messages.getString( "org.kalypso.model.wspm.ui.view.chart.layer.WspLegendPopupDialog.4" ) ); //$NON-NLS-1$
         return main;
@@ -124,51 +121,44 @@ public class WspLegendPopupDialog extends PopupDialog
       setInfoText( Messages.getString( "org.kalypso.model.wspm.ui.view.chart.layer.WspLegendPopupDialog.5" ) ); //$NON-NLS-1$
 
       /* Create a tree viewer. */
-      CheckboxTreeViewer treeViewer = new CheckboxTreeViewer( main, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL );
+      final CheckboxTreeViewer treeViewer = new CheckboxTreeViewer( main, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL );
       treeViewer.getTree().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-      treeViewer.setContentProvider( new ArrayTreeContentProvider() );
-      treeViewer.setLabelProvider( new LabelProvider() );
-      treeViewer.setInput( names );
+
+      final ITreeContentProvider contentProvider = data.createContentProvider();
+      treeViewer.setContentProvider( contentProvider );
+
+      final ILabelProvider labelProvider = data.createLabelProvider();
+      treeViewer.setLabelProvider( labelProvider );
+
+      treeViewer.setInput( treeInput );
+
+      treeViewer.expandAll();
 
       /* Get all active names. */
-      Object[] activeNames = data.getActiveNames();
-
-      /* Set the selection. */
-      /* If it is null, nothing was ever activated. */
-      /* If it is an empty array, the user has deactivated all entries. */
-      /* In this cases, nothing should be selected. */
-      if( activeNames != null && activeNames.length > 0 )
+      final Object[] activeNames = data.getActiveElements();
+      if( activeNames != null )
         treeViewer.setCheckedElements( activeNames );
 
-      /* Add a selection changed listener. */
-      treeViewer.addSelectionChangedListener( new ISelectionChangedListener()
+      treeViewer.addCheckStateListener( new ICheckStateListener()
       {
-        /**
-         * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
-         */
         @Override
-        public void selectionChanged( SelectionChangedEvent event )
+        public void checkStateChanged( final CheckStateChangedEvent event )
         {
           try
           {
             /* Get the source. */
-            CheckboxTreeViewer source = (CheckboxTreeViewer) event.getSource();
+            final CheckboxTreeViewer source = treeViewer;
 
             /* Get the checked elements. */
-            Object[] checked = source.getCheckedElements();
-
-            /* The names, to be activated. */
-            List<String> toAdd = new ArrayList<String>();
-            for( int i = 0; i < checked.length; i++ )
-              toAdd.add( (String) checked[i] );
+            final Object[] checked = source.getCheckedElements();
 
             /* Activate the newly checked names. */
-            data.activateNames( toAdd.toArray( new String[] {} ) );
+            data.activateElements( checked );
 
             /* Refresh the layer. */
             m_wspLayer.getEventHandler().fireLayerContentChanged( m_wspLayer );
           }
-          catch( Exception ex )
+          catch( final Exception ex )
           {
             /* Log the error message. */
             KalypsoModelWspmUIPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, KalypsoModelWspmUIPlugin.ID, ex.getLocalizedMessage(), ex ) );
@@ -178,7 +168,7 @@ public class WspLegendPopupDialog extends PopupDialog
 
       return main;
     }
-    catch( Exception ex )
+    catch( final Exception ex )
     {
       /* Log the error message. */
       KalypsoModelWspmUIPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, KalypsoModelWspmUIPlugin.ID, ex.getLocalizedMessage(), ex ) );

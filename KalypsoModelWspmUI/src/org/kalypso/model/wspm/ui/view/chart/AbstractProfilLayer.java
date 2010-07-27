@@ -42,7 +42,6 @@ package org.kalypso.model.wspm.ui.view.chart;
 
 import java.awt.geom.Point2D;
 
-import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
@@ -79,9 +78,9 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
 
   private ILineStyle m_lineStyle = null;
 
-  private ILineStyle m_LineStyle_active = null;
+  private ILineStyle m_lineStyle_active = null;
 
-  private ILineStyle m_LineStyle_hover = null;
+  private ILineStyle m_lineStyle_hover = null;
 
   private IPointStyle m_pointStyle = null;
 
@@ -94,35 +93,6 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
   private int m_targetPropIndex = -1;
 
   private final String m_targetRangeProperty;
-
-// public AbstractProfilLayer( final IProfil profil, final String targetRangeProperty, final ILayerStyleProvider
-// styleProvider )
-// {
-// m_profil = profil;
-// m_targetRangeProperty = targetRangeProperty;
-// m_domainComponent = IWspmConstants.POINT_PROPERTY_BREITE;
-// setId( id );
-// createStyles( styleProvider, id );
-// }
-
-// public AbstractProfilLayer( final IProfil profil, final int targetPropertyIndex, final ILayerStyleProvider
-// styleProvider )
-// {
-// this( createId( profil, targetPropertyIndex ), profil, targetPropertyIndex, styleProvider );
-// }
-
-// private static String createId( IProfil profil, int targetPropertyIndex )
-// {
-// if( profil == null )
-// return null;
-//
-// if( targetPropertyIndex == -1 )
-// return null;
-//
-// IComponent target = profil.getPointProperties()[targetPropertyIndex];
-// // FIXME: the component is not a good id! Imagine several layers on the same component
-//    return target == null ? "" + targetPropertyIndex : target.getId(); //$NON-NLS-1$
-// }
 
   public AbstractProfilLayer( final String id, final IProfil profil, final String targetRangeProperty, final ILayerStyleProvider styleProvider )
   {
@@ -138,13 +108,17 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     if( styleProvider == null )
       return;
 
+    // TODO: stlyes should be fetched on demand!
+    // It is not guaranteed, that we need only one line style!
+
+    // FIXME: remove theses magic names
     m_lineStyle = styleProvider.getStyleFor( id + "_LINE", null ); //$NON-NLS-1$
     m_pointStyle = styleProvider.getStyleFor( id + "_POINT", null ); //$NON-NLS-1$
 
-    m_LineStyle_active = styleProvider.getStyleFor( id + "_LINE_ACTIVE", null ); //$NON-NLS-1$
+    m_lineStyle_active = styleProvider.getStyleFor( id + "_LINE_ACTIVE", null ); //$NON-NLS-1$
     m_pointStyle_active = styleProvider.getStyleFor( id + "_POINT_ACTIVE", null ); //$NON-NLS-1$
 
-    m_LineStyle_hover = styleProvider.getStyleFor( id + "_LINE_HOVER", null ); //$NON-NLS-1$
+    m_lineStyle_hover = styleProvider.getStyleFor( id + "_LINE_HOVER", null ); //$NON-NLS-1$
     m_pointStyle_hover = styleProvider.getStyleFor( id + "_POINT_HOVER", null ); //$NON-NLS-1$
   }
 
@@ -303,22 +277,22 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
 
   protected ILineStyle getLineStyle_active( )
   {
-    if( m_LineStyle_active == null )
+    if( m_lineStyle_active == null )
     {
-      m_LineStyle_active = getLineStyle().copy();
-      m_LineStyle_active.setColor( COLOR_ACTIVE );
+      m_lineStyle_active = getLineStyle().copy();
+      m_lineStyle_active.setColor( COLOR_ACTIVE );
     }
-    return m_LineStyle_active;
+    return m_lineStyle_active;
   }
 
   protected ILineStyle getLineStyle_hover( )
   {
-    if( m_LineStyle_hover == null )
+    if( m_lineStyle_hover == null )
     {
-      m_LineStyle_hover = getLineStyle().copy();
-      m_LineStyle_hover.setDash( 0F, HOVER_DASH );
+      m_lineStyle_hover = getLineStyle().copy();
+      m_lineStyle_hover.setDash( 0F, HOVER_DASH );
     }
-    return m_LineStyle_hover;
+    return m_lineStyle_hover;
   }
 
   public Point2D getPoint2D( final IRecord point )
@@ -502,12 +476,12 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
 
   public void setLineStyle_active( final ILineStyle lineStyle_active )
   {
-    m_LineStyle_active = lineStyle_active;
+    m_lineStyle_active = lineStyle_active;
   }
 
   public void setLineStyle_hover( final ILineStyle lineStyle_hover )
   {
-    m_LineStyle_hover = lineStyle_hover;
+    m_lineStyle_hover = lineStyle_hover;
   }
 
   public void setPointStyle( final IPointStyle pointStyle )
