@@ -47,15 +47,11 @@ import org.kalypso.model.wspm.core.profil.IProfilChange;
  */
 public class IllegalChange implements IProfilChange
 {
-
   private final String m_message;
 
-  private final IProfilChange m_change;
-
-  public IllegalChange( final String msg, final IProfilChange change )
+  public IllegalChange( final String msg )
   {
     m_message = msg;
-    m_change = change;
   }
 
   /**
@@ -64,37 +60,15 @@ public class IllegalChange implements IProfilChange
   @Override
   public IProfilChange doChange( final ProfilChangeHint hint )
   {
-    /**
-     * do nothing
-     */
     return null;
   }
 
   /**
-   * @see org.kalypso.model.wspm.core.profil.IProfilChange#getObject()
+   * @see java.lang.Object#toString()
    */
   @Override
-  public Object[] getObjects( )
-  {
-    return new IProfilChange[] { m_change };
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfilChange#getPointProperty()
-   */
-  @Override
-  public String getInfo( )
+  public String toString( )
   {
     return m_message;
   }
-
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfilChange#getValue()
-   */
-  @Override
-  public Double getValue( )
-  {
-    return null;
-  }
-
 }

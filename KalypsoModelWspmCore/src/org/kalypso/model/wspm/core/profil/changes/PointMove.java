@@ -57,7 +57,7 @@ public class PointMove implements IProfilChange
 
   private final List<IRecord> m_points = new ArrayList<IRecord>();
 
-  private int m_direction;
+  private final int m_direction;
 
   public PointMove( final IProfil profil, final IRecord point, final int direction )
   {
@@ -97,30 +97,11 @@ public class PointMove implements IProfilChange
   }
 
   /**
-   * @see org.kalypso.model.wspm.core.profil.IProfilChange#getObject()
+   * @see java.lang.Object#toString()
    */
   @Override
-  public Object[] getObjects( )
-  {
-    return m_points.toArray();
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfilChange#getPointProperty()
-   */
-  @Override
-  public String getInfo( )
+  public String toString( )
   {
     return Messages.getString( "org.kalypso.model.wspm.core.profil.changes.PointMove.0"); //$NON-NLS-1$
   }
-
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfilChange#getValue()
-   */
-  @Override
-  public Double getValue( )
-  {
-    return new Double( m_direction );
-  }
-
 }

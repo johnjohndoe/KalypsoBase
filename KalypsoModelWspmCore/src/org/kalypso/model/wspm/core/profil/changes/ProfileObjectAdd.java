@@ -40,25 +40,21 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil.changes;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 
-public class ProfileObjectSet implements IProfilChange
+public class ProfileObjectAdd implements IProfilChange
 {
   private final IProfil m_profil;
 
-  private final IProfileObject[] m_object;
+  private final IProfileObject[] m_objectsToAdd;
 
-  /**
-   * @param profil
-   * @param building
-   *          maybe null to remove building
-   */
-  public ProfileObjectSet( final IProfil profil, final IProfileObject[] profileObjects )
+  public ProfileObjectAdd( final IProfil profil, final IProfileObject... objectsToAdd )
   {
     m_profil = profil;
-    m_object = profileObjects;
+    m_objectsToAdd = objectsToAdd;
   }
 
   @Override
@@ -69,40 +65,10 @@ public class ProfileObjectSet implements IProfilChange
     if( hint != null )
       hint.setPointPropertiesChanged();
 
-    final IProfileObject[] oldObject = m_profil.getProfileObjects();
-    m_profil.addProfileObjects( m_object );
+    m_profil.addProfileObjects( m_objectsToAdd );
 
-    return new ProfileObjectSet( m_profil, oldObject );
+    final IProfileObject[] objectsToRemove = m_objectsToAdd;
+    ArrayUtils.reverse( objectsToRemove );
+    return new ProfileObjectRemove( m_profil, objectsToRemove );
   }
-
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfilChange#getObject()
-   * @deprecated Do not use!
-   */
-  @Override
-  @Deprecated
-  public Object[] getObjects( )
-  {
-    return new Object[] { m_object };
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfilChange#getPointProperty()
-   */
-  @Override
-  public String getInfo( )
-  {
-    return getClass().getName();
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfilChange#getValue()
-   */
-  @Override
-  public Double getValue( )
-  {
-
-    return null;
-  }
-
 }

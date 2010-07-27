@@ -89,32 +89,4 @@ public class ProfileObjectEdit implements IProfilChange
     return null;
 
   }
-
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfilChange#getObject()
-   */
-  @Override
-  public Object[] getObjects( )
-  {
-    return new Object[] { m_object, m_property };
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfilChange#getPointProperty()
-   */
-  @Override
-  public String getInfo( )
-  {
-    return null;
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfilChange#getValue()
-   */
-  @Override
-  public Double getValue( )
-  {
-    return null;
-  }
-
 }

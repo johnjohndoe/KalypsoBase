@@ -49,7 +49,6 @@ import org.kalypso.observation.result.IRecord;
 /**
  * @author kimwerner
  */
-
 public class PointAdd implements IProfilChange
 {
   private final IProfil m_profil;
@@ -79,7 +78,7 @@ public class PointAdd implements IProfilChange
     else if( m_pointBefore != null )
       pointToAdd = m_pointBefore.cloneRecord();
     if( pointToAdd == null )
-      return new IllegalChange( Messages.getString( "org.kalypso.model.wspm.core.profil.changes.PointAdd.0"), this ); //$NON-NLS-1$
+      return new IllegalChange( Messages.getString( "org.kalypso.model.wspm.core.profil.changes.PointAdd.0" ) ); //$NON-NLS-1$
 
     final IRecord[] points = m_profil.getPoints();
 
@@ -89,37 +88,10 @@ public class PointAdd implements IProfilChange
     {
       final int index = ArrayUtils.indexOf( points, m_pointBefore );
       if( index < 0 )
-        return new IllegalChange(  Messages.getString( "org.kalypso.model.wspm.core.profil.changes.PointAdd.0"), this ); //$NON-NLS-1$
+        return new IllegalChange( Messages.getString( "org.kalypso.model.wspm.core.profil.changes.PointAdd.0" ) ); //$NON-NLS-1$
 
       m_profil.getResult().add( index + 1, pointToAdd );
     }
     return new PointRemove( m_profil, pointToAdd );
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfilChange#getObject()
-   */
-  @Override
-  public Object[] getObjects( )
-  {
-    return new IRecord[] { m_point };
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfilChange#getPointProperty()
-   */
-  @Override
-  public String getInfo( )
-  {
-    return null;
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfilChange#getValue()
-   */
-  @Override
-  public Double getValue( )
-  {
-    return null;
   }
 }

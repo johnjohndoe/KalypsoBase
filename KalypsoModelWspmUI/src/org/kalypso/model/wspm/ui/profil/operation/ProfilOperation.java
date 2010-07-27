@@ -120,7 +120,7 @@ public final class ProfilOperation extends AbstractOperation
   }
 
   private IStatus doit( final IProgressMonitor monitor, @SuppressWarnings("unused")//$NON-NLS-1$
-  final IAdaptable info, final List<IProfilChange> undoChanges, final List<IProfilChange> changes )
+      final IAdaptable info, final List<IProfilChange> undoChanges, final List<IProfilChange> changes )
   {
     monitor.beginTask( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.profil.operation.ProfilOperation.0"), changes.size() ); //$NON-NLS-1$
     final ProfilChangeHint hint = new ProfilChangeHint();
@@ -130,10 +130,9 @@ public final class ProfilOperation extends AbstractOperation
       for( final IProfilChange change : changes )
       {
         final IProfilChange undoChange = change == null ? null : change.doChange( hint );
-        if( undoChange != null && undoChange instanceof IllegalChange )
-        {
-          throw new IllegalProfileOperationException( undoChange.getInfo(), change );
-        }
+        if( undoChange instanceof IllegalChange )
+          throw new IllegalProfileOperationException( undoChange.toString(), change );
+
         doneChanges.add( change );
         undoChanges.add( 0, undoChange );
         monitor.worked( 1 );
@@ -155,10 +154,10 @@ public final class ProfilOperation extends AbstractOperation
           if( !d.isDisposed() )
           {
             final IProfilChange change = e.getProfilChange();
-            if( change == null || change.getInfo() == null )
+            if( change == null )
               MessageDialog.openWarning( d.getActiveShell(), org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.profil.operation.ProfilOperation.1"), e.getMessage() ); //$NON-NLS-1$
             else
-              MessageDialog.openWarning( d.getActiveShell(), e.getMessage(), change.getInfo() );
+              MessageDialog.openWarning( d.getActiveShell(), e.getMessage(), change.toString() );
           }
         }
       } );
@@ -167,6 +166,7 @@ public final class ProfilOperation extends AbstractOperation
     {
       // auf jeden Fall monitor beenden und
       // einen fire auf allen changes absetzen (zuviel ist nicht schlimm)
+      // TODO: doch! fast jede aktion auf einem Profil feuert zwei events...!
       m_canUndo = undoChanges.size() > 0;
       monitor.done();
       m_profile.fireProfilChanged( hint, doneChanges.toArray( new IProfilChange[doneChanges.size()] ) );

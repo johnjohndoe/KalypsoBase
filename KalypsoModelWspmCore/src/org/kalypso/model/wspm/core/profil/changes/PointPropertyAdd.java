@@ -98,8 +98,8 @@ public final class PointPropertyAdd implements IProfilChange
       m_profil.addPointProperty( m_property ,m_values[0]);
     else
     {
-       m_profil.addPointProperty( m_property );
-       final int index = m_profil.getResult().indexOfComponent( m_property );
+      m_profil.addPointProperty( m_property );
+      final int index = m_profil.getResult().indexOfComponent( m_property );
       final IRecord[] points = m_profil.getPoints();
       if( m_values != null && points.length == m_values.length )
       {
@@ -112,30 +112,16 @@ public final class PointPropertyAdd implements IProfilChange
   }
 
   /**
-   * @see org.kalypso.model.wspm.core.profil.IProfilChange#getObject()
+   * @see java.lang.Object#toString()
    */
   @Override
-  public Object[] getObjects( )
-  {
-    return m_values;
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfilChange#getPointProperty()
-   */
-  @Override
-  public String getInfo( )
+  public String toString( )
   {
     return m_property.toString();
   }
 
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfilChange#getValue()
-   */
-  @Override
-  public Double getValue( )
+  public IComponent getComponent( )
   {
-    return null;
+    return m_property;
   }
-
 }
