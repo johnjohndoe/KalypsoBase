@@ -43,6 +43,7 @@ package org.kalypso.model.wspm.ui.view.chart;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.swt.SWT;
@@ -85,7 +86,6 @@ import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
  */
 public class TuhhProfilChartView extends ViewPart implements IChartPart, IProfilProviderListener, IAdapterEater<IProfilProvider>
 {
-
   public static final String ID = "org.kalypso.model.wspm.ui.view.chart.ChartView"; //$NON-NLS-1$
 
   private final AdapterPartListener<IProfilProvider> m_adapterPartListener = new AdapterPartListener<IProfilProvider>( IProfilProvider.class, this, new EditorFirstAdapterFinder<IProfilProvider>(), new EditorFirstAdapterFinder<IProfilProvider>() );
@@ -106,8 +106,6 @@ public class TuhhProfilChartView extends ViewPart implements IChartPart, IProfil
 
   private Form m_form;
 
-  private IProfil m_profile = null;
-
   @Override
   public void init( final IViewSite site ) throws PartInitException
   {
@@ -121,9 +119,7 @@ public class TuhhProfilChartView extends ViewPart implements IChartPart, IProfil
   public void setAdapter( final IWorkbenchPart part, final IProfilProvider adapter )
   {
     if( adapter == m_provider )
-    {
       return;
-    }
 
     if( m_provider != null )
       m_provider.removeProfilProviderListener( this );
@@ -162,15 +158,16 @@ public class TuhhProfilChartView extends ViewPart implements IChartPart, IProfil
     setPartNames( Messages.getString( "org.kalypso.model.wspm.ui.view.AbstractProfilViewPart_1" ), Messages.getString( "org.kalypso.model.wspm.ui.view.AbstractProfilViewPart_2" ) ); //$NON-NLS-1$ //$NON-NLS-2$
     if( m_chartComposite == null )
       return;
+
     final IChartModel oldModel = m_chartComposite.getChartModel();
-    if( m_profile != null && oldModel instanceof ProfilChartModel )
-      m_profile.removeProfilListener( (ProfilChartModel) oldModel );
-    m_profile = newProfile;
+    if( oldModel instanceof ProfilChartModel )
+      ((ProfilChartModel) oldModel).dispose();
+
     final ProfilChartModel newModel = newProfile == null ? null : new ProfilChartModel( newProfile, provider.getResult() );
 
     String activeLayerId = null;
     List<Object> positions = null;
-    final HashMap<String, Boolean> visibility = new HashMap<String, Boolean>();
+    final Map<String, Boolean> visibility = new HashMap<String, Boolean>();
 
     if( oldModel != null )
     {
@@ -191,7 +188,6 @@ public class TuhhProfilChartView extends ViewPart implements IChartPart, IProfil
       restoreStateVisible( newModel.getLayerManager(), visibility );
       setFormMessage( null, IMessageProvider.NONE );
       setPartNames( String.format( "Station km %10.4f", newProfile.getStation() ), Messages.getString( "org.kalypso.model.wspm.ui.view.AbstractProfilViewPart_2" ) ); //$NON-NLS-1$
-      newProfile.addProfilListener( newModel );
       newModel.maximize();
     }
 
@@ -275,7 +271,7 @@ public class TuhhProfilChartView extends ViewPart implements IChartPart, IProfil
     m_control.setFocus();
   }
 
-  private final void saveStateVisible( final ILayerManager mngr, final HashMap<String, Boolean> map )
+  private final void saveStateVisible( final ILayerManager mngr, final Map<String, Boolean> map )
   {
     for( final IChartLayer layer : mngr.getLayers() )
     {
@@ -314,7 +310,7 @@ public class TuhhProfilChartView extends ViewPart implements IChartPart, IProfil
     return ""; //$NON-NLS-1$
   }
 
-  private final void restoreStateVisible( final ILayerManager mngr, final HashMap<String, Boolean> map )
+  private final void restoreStateVisible( final ILayerManager mngr, final Map<String, Boolean> map )
   {
     for( final IChartLayer layer : mngr.getLayers() )
     {
@@ -339,15 +335,18 @@ public class TuhhProfilChartView extends ViewPart implements IChartPart, IProfil
     {
       if( o instanceof List )
       {
-        final List<Object> l = (ArrayList<Object>) o;
-        final Object id = l.get( 0 );
-        final IChartLayer layer = id == null ? null : mngr.getLayerById( id.toString() );
-        if( layer != null )
+        final List<Object> l = (List<Object>) o;
+        if( !l.isEmpty() )
         {
-          mngr.moveLayerToPosition( layer, pos++ );
-          if( layer instanceof IExpandableChartLayer )
+          final Object id = l.get( 0 );
+          final IChartLayer layer = id == null ? null : mngr.getLayerById( id.toString() );
+          if( layer != null )
           {
-            restoreStatePosition( ((IExpandableChartLayer) layer).getLayerManager(), l );
+            mngr.moveLayerToPosition( layer, pos++ );
+            if( layer instanceof IExpandableChartLayer )
+            {
+              restoreStatePosition( ((IExpandableChartLayer) layer).getLayerManager(), l );
+            }
           }
         }
       }
@@ -423,10 +422,20 @@ public class TuhhProfilChartView extends ViewPart implements IChartPart, IProfil
       m_provider.removeProfilProviderListener( this );
       m_provider = null;
     }
+
     if( m_adapterPartListener != null )
       m_adapterPartListener.dispose();
+
+    if( m_chartComposite != null )
+    {
+      final IChartModel chartModel = m_chartComposite.getChartModel();
+      if( chartModel instanceof ProfilChartModel )
+        ((ProfilChartModel) chartModel).dispose();
+    }
+
     if( m_form != null )
       m_form.dispose();
+
     m_form = null;
     m_chartComposite = null;
     m_toolkit = null;

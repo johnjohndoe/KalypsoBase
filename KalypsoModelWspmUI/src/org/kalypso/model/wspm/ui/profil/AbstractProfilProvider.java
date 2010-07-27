@@ -52,6 +52,8 @@ public abstract class AbstractProfilProvider implements IProfilProvider
 {
   private final List<IProfilProviderListener> m_listeners = new ArrayList<IProfilProviderListener>( 5 );
 
+  private IProfil m_profile = null;
+
   /**
    * @see com.bce.profil.ui.view.IProfilProvider2#addProfilProviderListener(com.bce.profil.ui.view.IProfilProviderListener)
    */
@@ -76,4 +78,21 @@ public abstract class AbstractProfilProvider implements IProfilProvider
     for( final IProfilProviderListener l : ls )
       l.onProfilProviderChanged( provider, oldProfile, newProfile );
   }
+
+  /**
+   * @see org.kalypso.model.wspm.ui.profil.IProfilProvider#getProfil()
+   */
+  @Override
+  public IProfil getProfil( )
+  {
+    return m_profile;
+  }
+
+  protected void setProfil( final IProfil oldProfile, final IProfil newProfile )
+  {
+    m_profile = newProfile;
+
+    fireOnProfilProviderChanged( this, oldProfile, newProfile );
+  }
+
 }

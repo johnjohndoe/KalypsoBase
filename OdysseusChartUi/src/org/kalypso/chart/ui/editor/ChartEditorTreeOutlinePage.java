@@ -101,7 +101,7 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
 
   private final class InvalidateOutlineJob extends UIJob
   {
-    public InvalidateOutlineJob( String name )
+    public InvalidateOutlineJob( final String name )
     {
       super( name );
     }
@@ -110,7 +110,7 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
      * @see org.eclipse.ui.progress.UIJob#runInUIThread(org.eclipse.core.runtime.IProgressMonitor)
      */
     @Override
-    public IStatus runInUIThread( IProgressMonitor monitor )
+    public IStatus runInUIThread( final IProgressMonitor monitor )
     {
       m_treeViewer.refresh();
       return Status.OK_STATUS;
@@ -203,7 +203,7 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
     {
 
       @Override
-      public boolean isChecked( Object element )
+      public boolean isChecked( final Object element )
       {
         if( element instanceof IChartLayer )
         {
@@ -213,7 +213,7 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
       }
 
       @Override
-      public boolean isGrayed( Object element )
+      public boolean isGrayed( final Object element )
       {
         // TODO Auto-generated method stub
         return false;
@@ -228,7 +228,7 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
     m_invalidateOutlineJob.schedule( 100 );
   }
 
-  public void setCheckStateProvider( ICheckStateProvider checkStateProvider )
+  public void setCheckStateProvider( final ICheckStateProvider checkStateProvider )
   {
     if( m_checkStateProvider != null )
     {
@@ -248,7 +248,7 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
       m_treeViewer.setInput( model );
   }
 
-  public void setModel( IChartModel model )
+  public void setModel( final IChartModel model )
   {
     removeListener();
     m_model = model;
@@ -321,10 +321,14 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
           // moved to its position
 
           if( targetLayer != null && targetLayer instanceof IChartLayer )
-            layerManager.moveLayerToPosition( draggedLayer, layerManager.getLayerPosition( (IChartLayer) targetLayer ) );
-          // or it was dropped at the end of the list, then it will be moved to the lowest position
+          {
+            final int layerPosition = layerManager.getLayerPosition( (IChartLayer) targetLayer );
+            if( layerPosition != -1 )
+              layerManager.moveLayerToPosition( draggedLayer, layerPosition );
+          }
           else
             layerManager.moveLayerToPosition( draggedLayer, 0 );
+
           return true;
         }
         return false;
