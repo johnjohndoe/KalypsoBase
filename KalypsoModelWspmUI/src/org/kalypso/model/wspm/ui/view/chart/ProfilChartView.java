@@ -172,7 +172,7 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
       }
     } );
 
-   // new ProfilClickHandler( m_chartComposite );
+    // new ProfilClickHandler( m_chartComposite );
 
     m_plotDragHandler = new PlotDragHandlerDelegate( m_chartComposite );
     m_axisDragHandler = new AxisDragHandlerDelegate( m_chartComposite );

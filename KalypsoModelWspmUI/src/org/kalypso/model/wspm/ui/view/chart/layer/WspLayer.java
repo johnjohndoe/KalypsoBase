@@ -65,9 +65,13 @@ import org.kalypso.observation.result.IRecord;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
+import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
+import de.openali.odysseus.chart.framework.model.layer.impl.LegendEntry;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
+import de.openali.odysseus.chart.framework.model.style.impl.LineStyle;
+import de.openali.odysseus.chart.framework.util.StyleUtils;
 
 /**
  * Displays constant wsp lines in the cross section.
@@ -77,6 +81,38 @@ import de.openali.odysseus.chart.framework.model.style.ILineStyle;
  */
 public class WspLayer extends AbstractProfilTheme
 {
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme#createLegendEntries()
+   */
+  @Override
+  public ILegendEntry[] createLegendEntries( )
+  {
+    // TODO: get Symbol from file
+    final LegendEntry le = new LegendEntry( this, getTitle() )
+    {
+      @Override
+      public void paintSymbol( final GC gc, final Point size )
+      {
+        final ILineStyle lineStyle = getLineStyle();
+        if( lineStyle == null )
+          return;
+        
+        final PolylineFigure rf = new PolylineFigure();
+
+        rf.setStyle( lineStyle );
+        rf.getStyle().setWidth( 2 );
+        rf.getStyle().setColor( lineStyle.getColor());
+        final int d = gc.getClipping().height / 3;
+        rf.setPoints( new Point[] { new Point( 1, d + 1 ), new Point( gc.getClipping().width - 1, d + 1 ) } );
+        rf.paint( gc );
+        rf.setPoints( new Point[] { new Point( 1, 2 * d ), new Point( gc.getClipping().width - 1, 2 * d ) } );
+        rf.paint( gc );
+      }
+    };
+
+    return new ILegendEntry[] { le };
+  }
+
   /**
    * The profile.
    */

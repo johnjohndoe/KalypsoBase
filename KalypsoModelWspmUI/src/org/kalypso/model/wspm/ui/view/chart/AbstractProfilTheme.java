@@ -168,7 +168,7 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
         for( final IChartLayer layer : getLayerManager().getLayers() )
         {
           final ILegendEntry[] les = layer.getLegendEntries();
-          if( les == null )
+          if( les == null || les.length==0)
             continue;
           for( final ILegendEntry l : les )
           {

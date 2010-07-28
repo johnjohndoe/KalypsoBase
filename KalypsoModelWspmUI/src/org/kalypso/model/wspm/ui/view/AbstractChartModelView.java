@@ -223,8 +223,12 @@ public abstract class AbstractChartModelView extends ViewPart implements IAdapte
 
   /** Must be called in SWT thread */
   protected abstract void updateControl( final Form form );
+  protected final void updatePartName( final Form form, final IChartModel model)
+  {
+    updatePartName(form,model,null);
+  }
 
-  protected final void updatePartName( final Form form, final IChartModel model )
+  protected final void updatePartName( final Form form, final IChartModel model,final String message  )
   {
     if( model == null )
     {
@@ -233,7 +237,7 @@ public abstract class AbstractChartModelView extends ViewPart implements IAdapte
     }
     else
     {
-      form.setMessage( null );
+      form.setMessage( message );
       setPartName( getStationName( model ) );
     }
   }

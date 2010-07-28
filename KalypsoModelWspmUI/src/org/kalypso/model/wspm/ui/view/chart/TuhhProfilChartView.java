@@ -147,6 +147,10 @@ public class TuhhProfilChartView extends ViewPart implements IChartPart, IProfil
       onProfilProviderChanged( m_provider, null, m_provider.getProfil() );
   }
 
+  protected ProfilChartModel createChartModel(final IProfilProvider provider,final IProfil newProfile  )
+  {
+    return new ProfilChartModel( newProfile, provider.getResult());
+  }
   /**
    * @see com.bce.profil.ui.view.IProfilProviderListener#onProfilProviderChanged(com.bce.eind.core.profil.IProfilEventManager,
    *      com.bce.eind.core.profil.IProfilEventManager, com.bce.profil.ui.view.ProfilViewData,
@@ -163,7 +167,7 @@ public class TuhhProfilChartView extends ViewPart implements IChartPart, IProfil
     if( oldModel instanceof ProfilChartModel )
       ((ProfilChartModel) oldModel).dispose();
 
-    final ProfilChartModel newModel = newProfile == null ? null : new ProfilChartModel( newProfile, provider.getResult() );
+    final ProfilChartModel newModel = newProfile == null ? null : createChartModel(provider,newProfile) ;
 
     String activeLayerId = null;
     List<Object> positions = null;

@@ -44,6 +44,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.Form;
 import org.kalypso.chart.ui.editor.ChartEditorTreeOutlinePage;
+import org.kalypso.chart.ui.editor.ChartTreeLabelProvider;
 import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 import org.kalypso.model.wspm.ui.view.AbstractChartModelView;
 
@@ -63,7 +64,7 @@ import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
  */
 public class LegendView extends AbstractChartModelView
 {
-  private final ChartEditorTreeOutlinePage m_chartlegend = new ChartEditorTreeOutlinePage();
+  private final ChartEditorTreeOutlinePage m_chartlegend = new ChartEditorTreeOutlinePage( new ProfilChartEditorTreeContentProvider(), new ChartTreeLabelProvider() );
 
   @Override
   public final void createControl( final Composite parent )

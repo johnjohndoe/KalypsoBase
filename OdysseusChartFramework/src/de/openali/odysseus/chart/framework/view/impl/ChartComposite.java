@@ -685,7 +685,7 @@ public class ChartComposite extends Canvas
     return layerManager == null ? new IChartLayer[] {} : m_model.getLayerManager().getLayers();
   }
 
-  protected final void invalidatePlotCanvas( final IChartLayer[] layers )
+  public final void invalidatePlotCanvas( final IChartLayer[] layers )
   {
     if( isDisposed() )
       return;

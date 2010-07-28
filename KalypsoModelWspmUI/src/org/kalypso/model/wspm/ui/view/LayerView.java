@@ -123,8 +123,8 @@ public class LayerView extends AbstractChartModelView
     for( final Control ctrl : m_parent.getChildren() )
       ctrl.dispose();
 
-    updatePartName( form, getChartModel() );
     final IChartLayer activeLayer = getActiveLayer();
+    updatePartName( form, getChartModel(), activeLayer == null ? null : activeLayer.getTitle() );
     if( activeLayer == null )
       return;
 
