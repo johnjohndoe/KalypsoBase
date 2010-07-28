@@ -30,17 +30,15 @@
 package org.kalypso.ogc.gml.typehandler;
 
 import java.io.StringReader;
-import java.io.StringWriter;
 
-import javax.xml.bind.Marshaller;
 import javax.xml.namespace.QName;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
-import org.kalypso.zml.Observation;
 import org.kalypsodeegree.model.typeHandler.XsdBaseTypeHandler;
 import org.xml.sax.InputSource;
 
@@ -68,12 +66,10 @@ public class ZmlInlineTypeHandler extends XsdBaseTypeHandler<IObservation>
   {
     try
     {
-      final StringWriter sw = new StringWriter();
-      final Observation xml = ZmlFactory.createXML( value, null, null );
-      final Marshaller marshaller = ZmlFactory.getMarshaller();
-      marshaller.marshal( xml, sw );
-      sw.close();
-      return sw.toString();
+      final ByteArrayOutputStream bos = new ByteArrayOutputStream();
+      ZmlFactory.writeToStream( value, bos, null );
+      bos.close();
+      return new String( bos.toByteArray() );
     }
     catch( final Exception e )
     {
@@ -147,27 +143,27 @@ public class ZmlInlineTypeHandler extends XsdBaseTypeHandler<IObservation>
   // TODO: these do NOT belong here!
   public interface TA extends IObservation
   {
-    final public static String[] axis = new String[] { TimeserieConstants.TYPE_HOURS, TimeserieConstants.TYPE_NORM };
+    String[] axis = new String[] { TimeserieConstants.TYPE_HOURS, TimeserieConstants.TYPE_NORM };
   }
 
   public interface WtKcLai extends IObservation
   {
-    final public static String[] axis = new String[] { TimeserieConstants.TYPE_DATE, TimeserieConstants.TYPE_LAI, TimeserieConstants.TYPE_WT, TimeserieConstants.TYPE_KC };
+    String[] axis = new String[] { TimeserieConstants.TYPE_DATE, TimeserieConstants.TYPE_LAI, TimeserieConstants.TYPE_WT, TimeserieConstants.TYPE_KC };
   }
 
   public interface WVQ extends IObservation
   {
-    final public static String[] axis = new String[] { TimeserieConstants.TYPE_NORMNULL, TimeserieConstants.TYPE_VOLUME, TimeserieConstants.TYPE_RUNOFF };
+    String[] axis = new String[] { TimeserieConstants.TYPE_NORMNULL, TimeserieConstants.TYPE_VOLUME, TimeserieConstants.TYPE_RUNOFF };
   }
 
   public interface TN extends IObservation
   {
-    final public static String[] axis = new String[] { TimeserieConstants.TYPE_MIN, TimeserieConstants.TYPE_RAINFALL };
+    String[] axis = new String[] { TimeserieConstants.TYPE_MIN, TimeserieConstants.TYPE_RAINFALL };
   }
 
   public interface QQ extends IObservation
   {
-    final public static String[] axis = new String[] { TimeserieConstants.TYPE_RUNOFF, TimeserieConstants.TYPE_RUNOFF_RHB };
+    String[] axis = new String[] { TimeserieConstants.TYPE_RUNOFF, TimeserieConstants.TYPE_RUNOFF_RHB };
   }
 
 }

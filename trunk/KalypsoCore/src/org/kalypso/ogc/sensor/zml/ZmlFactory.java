@@ -198,7 +198,7 @@ public final class ZmlFactory
    * 
    * @return parser factory
    */
-  public static synchronized ParserFactory getParserFactory( )
+  private static synchronized ParserFactory getParserFactory( )
   {
     if( PARSER_FACTORY == null )
       PARSER_FACTORY = new ParserFactory( getProperties(), ZmlFactory.class.getClassLoader() );
@@ -212,7 +212,7 @@ public final class ZmlFactory
    * 
    * @return the XSD-Type for the given Java-Class
    */
-  public static String getXSDTypeFor( final String className )
+  private static String getXSDTypeFor( final String className )
   {
     return getProperties().getProperty( className );
   }
@@ -344,23 +344,20 @@ public final class ZmlFactory
    */
   public static IObservation parseXML( final InputSource source, final String identifier, final URL context ) throws SensorException
   {
-    final Observation obs;
 
     try
     {
-      final Unmarshaller u = getUnmarshaller();
-
-      obs = (Observation) u.unmarshal( source );
+      final Unmarshaller u = JC.createUnmarshaller();
+      final Observation obs = (Observation) u.unmarshal( source );
+      return binding2Obs( obs, identifier, context );
     }
     catch( final JAXBException e )
     {
       throw new SensorException( e );
     }
-
-    return binding2Obs( obs, identifier, context );
   }
 
-  public static IObservation binding2Obs( final Observation obs, final String identifier, final URL context ) throws SensorException
+  private static IObservation binding2Obs( final Observation obs, final String identifier, final URL context ) throws SensorException
   {
     // metadata
     final MetadataList metadata = new MetadataList();
@@ -510,20 +507,14 @@ public final class ZmlFactory
   }
 
   /**
-   * Cover method of createXML( IObservation, IVariableArguments, TimeZone )
-   */
-  public static Observation createXML( final IObservation obs, final IRequest args ) throws FactoryException
-  {
-    return createXML( obs, args, null );
-  }
-
-  /**
    * Create an XML-Observation ready for marshalling.
    * 
    * @param timezone
    *          the timezone into which dates should be converted before serialized
+   * @deprecated Use one of the writeXXX methods.
    */
-  public static Observation createXML( final IObservation obs, final IRequest args, TimeZone timezone ) throws FactoryException
+  @Deprecated
+  public static Observation createXML( final IObservation obs, final IRequest args ) throws FactoryException
   {
     try
     {
@@ -563,8 +554,7 @@ public final class ZmlFactory
 
       Collections.sort( metadataList, METADATA_COMPERATOR );
 
-      if( timezone == null )
-        timezone = KalypsoCorePlugin.getDefault().getTimeZone();
+      final TimeZone timezone = KalypsoCorePlugin.getDefault().getTimeZone();
 
       // write timezone info into metadata
       final MetadataType mdType = OF.createMetadataType();
@@ -582,7 +572,7 @@ public final class ZmlFactory
       // sort axes, this is not needed from a xml view, but very usefull when comparing marshalled files (e.g.
       // Junit-Test)
       final TreeSet<IAxis> sortedAxis = new TreeSet<IAxis>( new Comparator<IAxis>()
-      {
+          {
         @Override
         public int compare( final IAxis a1, final IAxis a2 )
         {
@@ -604,7 +594,7 @@ public final class ZmlFactory
           }
           return type1.compareTo( type2 );
         }
-      } );
+          } );
 
       for( final IAxis axis : obs.getAxisList() )
         sortedAxis.add( axis );
@@ -699,7 +689,7 @@ public final class ZmlFactory
 
       buffer.append( elt ).append( ";" ); //$NON-NLS-1$
     }
-    
+
     return StringUtilities.chomp( buffer.toString() );
   }
 
@@ -715,17 +705,6 @@ public final class ZmlFactory
     marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
     marshaller.setProperty( "com.sun.xml.bind.namespacePrefixMapper", ZML_PREFIX_MAPPER );
     return marshaller;
-  }
-
-  /**
-   * @deprecated See {@link #getMarshaller()}. We should provide helper methods here to read from files, streams, etc.
-   */
-  @Deprecated
-  public static Unmarshaller getUnmarshaller( ) throws JAXBException
-  {
-    final Unmarshaller unmarshaller = JC.createUnmarshaller();
-
-    return unmarshaller;
   }
 
   /**
