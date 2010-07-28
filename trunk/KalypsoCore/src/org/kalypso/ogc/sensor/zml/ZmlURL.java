@@ -133,7 +133,7 @@ public final class ZmlURL
    */
   public static String insertQueryPart( final String href, final String queryPart )
   {
-    if( queryPart == null )
+    if( StringUtils.isBlank( queryPart ) )
       return href;
 
     String newHref = href;
