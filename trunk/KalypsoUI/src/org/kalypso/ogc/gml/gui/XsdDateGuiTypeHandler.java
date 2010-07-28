@@ -174,12 +174,11 @@ public class XsdDateGuiTypeHandler extends XsdBaseGuiTypeHandler
   @Override
   public String getText( final Object element )
   {
-    final XMLGregorianCalendar xmlCal = (XMLGregorianCalendar) element;
-    if( xmlCal == null )
+    Date date = DateUtilities.toDate( element );
+    if( date == null )
       return ""; //$NON-NLS-1$
 
-    final GregorianCalendar gc = xmlCal.toGregorianCalendar();
-    return m_df.format( gc.getTime() );
+    return m_df.format( date );
   }
 
   /**
