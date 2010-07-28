@@ -144,7 +144,7 @@ public class ObservationTable extends Panel implements IObsViewEventListener
     m_model = new ObservationTableModel();
     m_model.setRules( template.getRules() );
 
-    // date renderer with timezone
+    // date renderer with time zone
     m_dateRenderer = new DateTableCellRenderer();
 
     final TimeZone viewzone = template.getTimezone();
