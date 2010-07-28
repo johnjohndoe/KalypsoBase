@@ -55,35 +55,35 @@ public interface IObservation extends IObservationEventProvider
    * 
    * @return identifier
    */
-  public String getIdentifier( );
+  String getIdentifier( );
 
   /**
    * Returns the name of this Observation
    * 
    * @return name
    */
-  public String getName( );
+  String getName( );
 
   /**
    * Returns true if this observation is editable.
    * 
    * @return editable flag
    */
-  public boolean isEditable( );
+  boolean isEditable( );
 
   /**
    * Returns the list of Metadata.
    * 
    * @return metadata
    */
-  public MetadataList getMetadataList( );
+  MetadataList getMetadataList( );
 
   /**
    * Returns the list of axis
    * 
    * @return axes array
    */
-  public IAxis[] getAxisList( );
+  IAxis[] getAxisList( );
 
   /**
    * Returns the values resulting from the measurements this observation stands for.
@@ -94,7 +94,7 @@ public interface IObservation extends IObservationEventProvider
    * @return model
    * @throws SensorException
    */
-  public ITuppleModel getValues( final IRequest args ) throws SensorException;
+  ITuppleModel getValues( final IRequest args ) throws SensorException;
 
   /**
    * Sets the given values.
@@ -102,12 +102,12 @@ public interface IObservation extends IObservationEventProvider
    * @param values
    * @throws SensorException
    */
-  public void setValues( final ITuppleModel values ) throws SensorException;
+  void setValues( final ITuppleModel values ) throws SensorException;
 
   /**
    * Returns the localisation of the base file behind this observation
    * 
    * @return href
    */
-  public String getHref( );
+  String getHref( );
 }

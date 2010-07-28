@@ -51,7 +51,6 @@ package org.kalypso.ogc.sensor;
  * <li>the value of the key-property is identical</li>
  * <li>they have the same name (only if axes are KALYPSO-Status Axes)</li>
  * </ol>
- * 
  * Subclasses should extend AbstractAxis which already takes care of equals() and hashCode().
  * 
  * @author schlienger
@@ -61,22 +60,22 @@ public interface IAxis
   /**
    * @return the class of the data in this axis
    */
-  public Class<?> getDataClass();
+  Class< ? > getDataClass( );
 
   /**
    * @return the application dependent type of this axis
    */
-  public String getType();
+  String getType( );
 
   /**
    * @return the unit of this axis
    */
-  public String getUnit();
+  String getUnit( );
 
   /**
    * @return the name of this axis
    */
-  public String getName();
+  String getName( );
 
   /**
    * Returns true when this axis is part of the key of the TuppleModel. Key can be used to avoid duplicate entries in
@@ -84,7 +83,7 @@ public interface IAxis
    * 
    * @return boolean
    */
-  public boolean isKey();
+  boolean isKey( );
 
   /**
    * Returns true when this axis is persistable when saving the observation to some medium like a file. Some
@@ -94,5 +93,5 @@ public interface IAxis
    * 
    * @return boolean
    */
-  public boolean isPersistable();
+  boolean isPersistable( );
 }
