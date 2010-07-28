@@ -54,6 +54,8 @@ public interface IWspLayerData
 {
   /**
    * This function returns the input which will be given to the content provider.
+   * 
+   * @return The input.
    */
   Object getInput( ) throws Exception;
 
@@ -67,16 +69,16 @@ public interface IWspLayerData
   /**
    * This function activates the given elements.
    * 
-   * @param names
+   * @param elements
    *          The elements to be activated.
    */
   void activateElements( Object[] elements ) throws Exception;
 
   /**
-   * This function tries to find a value for the given name and station.
+   * This function tries to find a value for the given element and station.
    * 
-   * @param name
-   *          The name.
+   * @param element
+   *          The element.
    * @param station
    *          The station.
    * @return The value for the given name and station or Double.NaN.
