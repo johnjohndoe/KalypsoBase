@@ -118,12 +118,16 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
   }
 
   private final InvalidateOutlineJob m_invalidateOutlineJob = new InvalidateOutlineJob( "" );
+  public ChartEditorTreeOutlinePage()
+  {
+    this(new ChartEditorTreeContentProvider(),new ChartTreeLabelProvider());
+  }
 
-  public ChartEditorTreeOutlinePage( )
+  public ChartEditorTreeOutlinePage(final ChartEditorTreeContentProvider contentProvider,final ChartTreeLabelProvider labelProvider)
   {
 
-    m_contentProvider = new ChartEditorTreeContentProvider();
-    m_labelProvider = new ChartTreeLabelProvider();
+    m_contentProvider = contentProvider;
+    m_labelProvider = labelProvider;
     m_eventListener = new AbstractLayerManagerEventListener()
     {
       /**
