@@ -156,6 +156,25 @@ public final class DateUtilities
     return getDifferenceInHours( c1, c2 ) / 24.0;
   }
 
+
+  /**
+   * Supports {@link Date}, {@link Calendar}, {@link XMLGregorianCalendar}.
+   */
+  public static Date toDate( Object protoDate )
+  {
+    if( protoDate instanceof Date )
+      return (Date) protoDate;
+    
+    if( protoDate instanceof Calendar )
+      return ((Calendar) protoDate).getTime();
+    
+    if( protoDate instanceof XMLGregorianCalendar )
+      return toDate( (XMLGregorianCalendar)protoDate );
+    
+    return null;
+  }
+
+
   public static boolean isLeapYear( Calendar calendar )
   {
     boolean lBoolRes = false;
