@@ -45,6 +45,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import org.eclipse.core.runtime.Assert;
 import org.kalypso.contribs.java.util.CalendarIterator;
 import org.kalypso.contribs.java.util.CalendarUtilities;
 import org.kalypso.core.i18n.Messages;
@@ -184,7 +185,11 @@ public class IntervallTupplemodel extends AbstractTuppleModel
     // create empty model
     final IAxis[] axisList = getAxisList();
     final CalendarIterator iterator = new CalendarIterator( m_from, m_to, m_calendarField, m_amount );
-    final int rows = iterator.size() - 1;
+    int stepCount = iterator.size();
+
+    Assert.isTrue( stepCount > 0 , String.format( "Empty intervall tuple model. Check from (%s)/to(%s).", m_from, m_to ) );
+    
+    final int rows = stepCount - 1;
     final ITuppleModel intervallModel = createTuppleModell( axisList, rows );
 
     // default values
