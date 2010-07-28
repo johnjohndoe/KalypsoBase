@@ -47,13 +47,14 @@ import org.kalypso.ogc.sensor.ObservationConstants;
  * 
  * @author schlienger
  */
-public  interface TimeserieConstants extends ObservationConstants
+public interface TimeserieConstants extends ObservationConstants
 {
   /** Niederschlag */
   String TYPE_RAINFALL = "N"; //$NON-NLS-1$
 
   /** Abfluss */
   String TYPE_RUNOFF = "Q"; //$NON-NLS-1$
+
   public final static String TYPE_RUNOFF_RHB = "Qrhb"; //$NON-NLS-1$
 
   /** Wasserstand */
@@ -119,11 +120,10 @@ public  interface TimeserieConstants extends ObservationConstants
 
   String TYPE_PEGEL = "pegel"; //$NON-NLS-1$
 
-  public static final String TYPE_DESCRIPTION = "description"; //$NON-NLS-1$
+  String TYPE_DESCRIPTION = "description"; //$NON-NLS-1$
 
   /** virtual time series data source */
   String TYPE_DATA_SRC = "DATA_SRC"; //$NON-NLS-1$
-
 
   // METADATEN
   String MD_TIMEZONE = "Zeitzone"; //$NON-NLS-1$
@@ -174,7 +174,7 @@ public  interface TimeserieConstants extends ObservationConstants
   String MD_DATE_BEGIN = "Datum-Von"; //$NON-NLS-1$
 
   String MD_DATE_END = "Datum-Bis"; //$NON-NLS-1$
- 
+
   /** the forecast feature is used in some of the views to mark the forecast date-range */
   String FEATURE_FORECAST = "Vorhersage";
 
