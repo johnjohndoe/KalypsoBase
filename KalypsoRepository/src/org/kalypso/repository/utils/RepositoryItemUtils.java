@@ -238,14 +238,6 @@ public final class RepositoryItemUtils
     return false;
   }
 
-  public static boolean isModel( final IRepositoryItem item )
-  {
-    if( !item.getIdentifier().contains( "HVZ_Modelle_" ) )
-      return false;
-
-    return true;
-  }
-
   /**
    * @return wiski://HVZ_Modelle_Elbe.Elbe_Prio_1 -> will return true
    */
