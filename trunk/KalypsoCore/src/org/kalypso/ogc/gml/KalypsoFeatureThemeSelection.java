@@ -47,7 +47,6 @@ import java.util.List;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.AbstractFeatureSelection;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
@@ -59,10 +58,6 @@ import org.kalypsodeegree.model.feature.FeatureList;
 public final class KalypsoFeatureThemeSelection extends AbstractFeatureSelection
 {
   private final CommandableWorkspace m_workspace;
-
-  private final Feature m_parentFeature;
-
-  private final IRelationType m_parentPropertyName;
 
   private final IFeatureSelectionManager m_selectionManager;
 
@@ -78,10 +73,6 @@ public final class KalypsoFeatureThemeSelection extends AbstractFeatureSelection
     m_focusedFeature = focusedFeature;
     m_focusedProperty = focusedProperty;
     m_workspace = filterTheme.getWorkspace();
-    final FeatureList featureList = filterTheme.getFeatureList();
-    m_parentFeature = featureList == null ? null : featureList.getParentFeature();
-
-    m_parentPropertyName = featureList == null ? null : featureList.getParentFeatureTypeProperty();
   }
 
   /**
