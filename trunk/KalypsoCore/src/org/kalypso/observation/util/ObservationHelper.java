@@ -74,12 +74,11 @@ public final class ObservationHelper
       /* serialize observation to xml (atm we need only the metadata) */
       final IAxis[] axes = observation.getAxisList();
       final String href = observation.getHref();
-      final String identifier = observation.getIdentifier();
       final String name = observation.getName();
       final boolean editable = observation.isEditable();
       final MetadataList metadataList = observation.getMetadataList();
 
-      final SimpleObservation simple = new SimpleObservation( href, identifier, name, editable, metadataList, axes );
+      final SimpleObservation simple = new SimpleObservation( href, name, editable, metadataList, axes );
       ZmlFactory.writeToStream( simple, outputStream, null );
 
       return outputStream.toByteArray();
@@ -120,12 +119,11 @@ public final class ObservationHelper
   public static SimpleObservation getSimpleObservation( final SimpleTuppleModel model, final IObservation baseObservation )
   {
     final String href = baseObservation.getHref();
-    final String identifier = baseObservation.getIdentifier();
     final String name = baseObservation.getName();
     final boolean editable = baseObservation.isEditable();
     final MetadataList metadataList = baseObservation.getMetadataList();
 
-    return new SimpleObservation( href, identifier, name, editable, metadataList, model.getAxisList(), model );
+    return new SimpleObservation( href, name, editable, metadataList, model.getAxisList(), model );
   }
 
   public static IObservation parseFromByteArray( final byte[] buffer, final String repositoryItemId ) throws SensorException
@@ -133,10 +131,8 @@ public final class ObservationHelper
     final ByteArrayInputStream stream = new ByteArrayInputStream( buffer );
     try
     {
-    final InputSource source = new InputSource( stream );
-    final IObservation observation = ZmlFactory.parseXML( source, repositoryItemId, null );
-
-      return observation;
+      final InputSource source = new InputSource( stream );
+      return ZmlFactory.parseXML( source, null, repositoryItemId );
     }
     finally
     {

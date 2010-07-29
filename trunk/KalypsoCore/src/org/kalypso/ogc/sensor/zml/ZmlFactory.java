@@ -47,7 +47,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -69,6 +68,7 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -229,7 +229,7 @@ public final class ZmlFactory
    * @throws SensorException
    *           in case of parsing or creation problem
    */
-  public static IObservation parseXML( final URL url, final String identifier ) throws SensorException
+  public static IObservation parseXML( final URL url, final String href ) throws SensorException
   {
     final IObservation observation = fetchObservationFromRegisteredRepository( url );
     if( observation != null )
@@ -281,7 +281,7 @@ public final class ZmlFactory
       // url is given as an argument here (and not tmpUrl) in order not to
       // loose the query part we might have removed because of Eclipse's
       // url handling.
-      return parseXML( new InputSource( inputStream ), identifier, url );
+      return parseXML( new InputSource( inputStream ), url, href );
     }
     catch( final IOException e )
     {
@@ -337,19 +337,16 @@ public final class ZmlFactory
    * 
    * @param source
    *          contains the zml
-   * @param identifier
-   *          [optional] the identifier of the resulting observation
    * @param context
    *          [optional] the context of the source in order to resolve relative url
    */
-  public static IObservation parseXML( final InputSource source, final String identifier, final URL context ) throws SensorException
+  public static IObservation parseXML( final InputSource source, final URL context, final String href ) throws SensorException
   {
-
     try
     {
       final Unmarshaller u = JC.createUnmarshaller();
       final Observation obs = (Observation) u.unmarshal( source );
-      return binding2Obs( obs, identifier, context );
+      return binding2Obs( obs, context, href );
     }
     catch( final JAXBException e )
     {
@@ -357,7 +354,7 @@ public final class ZmlFactory
     }
   }
 
-  private static IObservation binding2Obs( final Observation obs, final String identifier, final URL context ) throws SensorException
+  private static IObservation binding2Obs( final Observation obs, final URL context, final String href ) throws SensorException
   {
     // metadata
     final MetadataList metadata = new MetadataList();
@@ -432,11 +429,10 @@ public final class ZmlFactory
 
     final ZmlTuppleModel model = new ZmlTuppleModel( valuesMap );
 
-    final String href = context != null ? context.toExternalForm() : ""; //$NON-NLS-1$
+    final SimpleObservation zmlObs = new SimpleObservation( href, obs.getName(), obs.isEditable(), metadata, model.getAxisList(), model );
 
-    final SimpleObservation zmlObs = new SimpleObservation( href, identifier, obs.getName(), obs.isEditable(), metadata, model.getAxisList(), model );
-
-    return decorateObservation( zmlObs, href, context );
+    final String contextStr = context != null ? context.toExternalForm() : ""; //$NON-NLS-1$
+    return decorateObservation( zmlObs, contextStr, context );
   }
 
   /**
@@ -492,7 +488,7 @@ public final class ZmlFactory
    * @throws MalformedURLException
    * @throws IOException
    */
-  private static IZmlValues createValues( final URL context, final AxisType axisType, final IParser parser, final String data ) throws ParserException, MalformedURLException, IOException
+  private static IZmlValues createValues( final URL context, final AxisType axisType, final IParser parser, final String data ) throws ParserException, IOException
   {
     final ValueArray va = axisType.getValueArray();
     if( va != null )
@@ -875,7 +871,7 @@ public final class ZmlFactory
       r++;
     }
     final ITuppleModel model = new SimpleTuppleModel( axis, values );
-    return new SimpleObservation( null, null, name, true, new MetadataList(), axis, model );
+    return new SimpleObservation( null, name, true, new MetadataList(), axis, model );
   }
 
   /**
@@ -929,6 +925,22 @@ public final class ZmlFactory
       }
     }
     return result.toString();
+  }
+
+  public static String writeToString( final IObservation value, final IRequest request )
+  {
+    try
+    {
+      final ByteArrayOutputStream bos = new ByteArrayOutputStream();
+      ZmlFactory.writeToStream( value, bos, request );
+      bos.close();
+      return new String( bos.toByteArray() );
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+      return e.toString();
+    }
   }
 
 }

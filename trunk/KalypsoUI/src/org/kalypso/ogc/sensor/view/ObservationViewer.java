@@ -457,7 +457,6 @@ public class ObservationViewer extends Composite
     if( obs != null && m_show )
     {
       m_mdViewer.setInput( new ObservationPropertySource( obs ) );
-      // @marc: warum gibt es fehler wenn obs==null ist, wie setzt man den input denn auf null ?
 
       final PlainObsProvider pop = new PlainObsProvider( obs, null );
 

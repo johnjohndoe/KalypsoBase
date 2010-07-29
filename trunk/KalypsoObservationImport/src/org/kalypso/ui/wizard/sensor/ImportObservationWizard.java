@@ -41,12 +41,7 @@
 package org.kalypso.ui.wizard.sensor;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
 import java.util.List;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Marshaller;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -54,7 +49,6 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IImportWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.ide.IDE;
-import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
@@ -67,13 +61,9 @@ import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.timeseries.wq.WQTuppleModel;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ui.wizard.sensor.i18n.Messages;
-import org.kalypso.zml.ObjectFactory;
-import org.kalypso.zml.Observation;
 
 public class ImportObservationWizard extends Wizard implements IImportWizard
 {
-  private final static JAXBContext zmlJC = JaxbUtilities.createQuiet( ObjectFactory.class );
-
   private ImportObservationSelectionWizardPage m_page1 = null;
 
   private IStructuredSelection m_selection;
@@ -217,23 +207,13 @@ public class ImportObservationWizard extends Wizard implements IImportWizard
             newTuppelModel.setElement( countSrc + i, tuppelModelTarget.getElement( i, element ), element );
       }
       final String href = ""; //$NON-NLS-1$
-      final String id = ""; //$NON-NLS-1$
       final String name = srcObservation.getName();
       final MetadataList metadata = new MetadataList();
       if( targetObservation != null && selection.isRetainMetadata() )
         metadata.putAll( targetObservation.getMetadataList() );
       metadata.putAll( srcObservation.getMetadataList() );
-      final IObservation newObservation = new SimpleObservation( href, id, name, false, metadata, axesNew, newTuppelModel );
-      final Observation type = ZmlFactory.createXML( newObservation, null );
-      // create new Observation...
-
-      final Marshaller marshaller =  JaxbUtilities.createMarshaller(zmlJC);
-      // use IResource
-      final FileOutputStream stream = new FileOutputStream( new File( fileTarget.getPath() ) );
-      final OutputStreamWriter writer = new OutputStreamWriter( stream, "UTF-8" ); //$NON-NLS-1$
-      marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
-      marshaller.marshal( type, writer );
-      writer.close();
+      final IObservation newObservation = new SimpleObservation( href, name, false, metadata, axesNew, newTuppelModel );
+      ZmlFactory.writeToFile( newObservation, fileTarget );
       // TODO refresh resources or use IResource
     }
     catch( final Exception e )

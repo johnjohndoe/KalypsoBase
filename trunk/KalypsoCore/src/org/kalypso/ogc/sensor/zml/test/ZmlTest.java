@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,21 +36,17 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.zml.test;
 
 import java.io.StringReader;
-import java.io.StringWriter;
 import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
-import javax.xml.bind.JAXBException;
-
 import junit.framework.TestCase;
 
-import org.kalypso.commons.factory.FactoryException;
 import org.kalypso.contribs.java.util.DoubleComparator;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -60,7 +56,6 @@ import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
-import org.kalypso.zml.Observation;
 import org.xml.sax.InputSource;
 
 /**
@@ -87,7 +82,6 @@ public class ZmlTest extends TestCase
 
       _testGetName( obs );
       _testGetAxisList( obs );
-      _testGetIdentifier( obs, obsID );
       _testGetMetadataList( obs );
       _testGetValues( obs );
       _testIsEditable( obs );
@@ -103,11 +97,6 @@ public class ZmlTest extends TestCase
   private void _testIsEditable( final IObservation obs )
   {
     assertTrue( obs.isEditable() );
-  }
-
-  private void _testGetIdentifier( final IObservation obs, final String obsID )
-  {
-    assertTrue( obs.getIdentifier().equals( obsID ) );
   }
 
   private void _testGetMetadataList( final IObservation obs )
@@ -214,24 +203,14 @@ public class ZmlTest extends TestCase
   /**
    * Tests the new mechanism ('data'-Element) for storing Metadata stuff
    */
-  public void testMetadataEx( ) throws SensorException, FactoryException, JAXBException
+  public void testMetadataEx( ) throws SensorException
   {
     final URL zmlURL = getClass().getResource( "resources/beispiel-metadata.zml" ); //$NON-NLS-1$
 
     final IObservation obs = ZmlFactory.parseXML( zmlURL, "beispiel-metadata.zml" ); //$NON-NLS-1$
+    final String xmlStr = ZmlFactory.writeToString( obs, null );
 
-    final Observation xml = ZmlFactory.createXML( obs, null );
-    final StringWriter writer = new StringWriter();
-    ZmlFactory.getMarshaller().marshal( xml, writer );
-
-    final String xmlStr = writer.toString();
-
-    System.out.println( xmlStr );
-
-    final IObservation obs2 = ZmlFactory.parseXML( new InputSource( new StringReader( xmlStr ) ), "fake-id", null ); //$NON-NLS-1$
-    final Observation xml2 = ZmlFactory.createXML( obs2, null );
-    final StringWriter writer2 = new StringWriter();
-    ZmlFactory.getMarshaller().marshal( xml2, writer2 );
-    System.out.println( writer2.toString() );
+    final IObservation obs2 = ZmlFactory.parseXML( new InputSource( new StringReader( xmlStr ) ), null, "fake-id" ); //$NON-NLS-1$
+    ZmlFactory.writeToStream( obs2, System.out, null );
   }
 }

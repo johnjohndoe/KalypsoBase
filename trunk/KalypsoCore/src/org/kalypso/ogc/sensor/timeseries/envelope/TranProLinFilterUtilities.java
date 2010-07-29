@@ -55,9 +55,9 @@ import org.kalypso.zml.filters.TranProLinFilterType;
 /**
  * @author doemming
  */
-public class TranProLinFilterUtilities
+public final class TranProLinFilterUtilities
 {
-  public static void transformAndWrite( final IObservation baseObservation, final Calendar dateBegin, final Calendar dateEnd, final double operandBegin, final double operandEnd, final String operator, final String axisTypes, int statusToMerge, final File resultFile, String sufix, final IRequest request ) throws SensorException, JAXBException, FactoryException, UnsupportedEncodingException, FileNotFoundException
+  public static void transformAndWrite( final IObservation baseObservation, final Calendar dateBegin, final Calendar dateEnd, final double operandBegin, final double operandEnd, final String operator, final String axisTypes, final int statusToMerge, final File resultFile, final String sufix, final IRequest request ) throws SensorException, JAXBException, FactoryException, UnsupportedEncodingException, FileNotFoundException
   {
     if( resultFile == null )
       return; // nothing to do

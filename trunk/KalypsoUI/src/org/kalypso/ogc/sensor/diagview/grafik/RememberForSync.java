@@ -107,8 +107,7 @@ final class RememberForSync
 
       zmlReader = new BufferedReader( new InputStreamReader( m_zmlFile.getContents(), m_zmlFile.getCharset() ) );
 
-      final IObservation obs = ZmlFactory.parseXML( new InputSource( zmlReader ), m_zmlFile.getName(), ResourceUtilities
-          .createURL( m_zmlFile ) );
+      final IObservation obs = ZmlFactory.parseXML( new InputSource( zmlReader ), ResourceUtilities.createURL( m_zmlFile ), m_zmlFile.getLocationURI().toString() );
       IOUtils.closeQuietly( zmlReader );
 
       final ITuppleModel values = obs.getValues( null );

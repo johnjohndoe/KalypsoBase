@@ -58,7 +58,7 @@ import org.kalypso.ogc.sensor.request.IRequest;
 
 /**
  * Default implementation of the <code>IObservation</code> interface.
- *
+ * 
  * @author schlienger
  */
 public class SimpleObservation implements IObservation
@@ -73,31 +73,28 @@ public class SimpleObservation implements IObservation
 
   private ITuppleModel m_tupples = null;
 
-  private final String m_identifier;
-
   private final ObservationEventAdapter m_evtPrv = new ObservationEventAdapter( this );
 
   private String m_href;
 
   public SimpleObservation( )
   {
-    this( "", "", "", false, new MetadataList(), new IAxis[0] ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    this( "", "", false, new MetadataList(), new IAxis[0] ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
   }
 
   public SimpleObservation( final IAxis[] axes )
   {
-    this( "", "", "", false, new MetadataList(), axes ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    this( "", "", false, new MetadataList(), axes ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
   }
 
-  public SimpleObservation( final String href, final String identifier, final String name, final boolean editable, final MetadataList metadata, final IAxis[] axes )
+  public SimpleObservation( final String href, final String name, final boolean editable, final MetadataList metadata, final IAxis[] axes )
   {
-    this( href, identifier, name, editable, metadata, axes, new SimpleTuppleModel( axes ) );
+    this( href, name, editable, metadata, axes, new SimpleTuppleModel( axes ) );
   }
 
-  public SimpleObservation( final String href, final String identifier, final String name, final boolean editable, final MetadataList metadata, final IAxis[] axes, final ITuppleModel model )
+  public SimpleObservation( final String href, final String name, final boolean editable, final MetadataList metadata, final IAxis[] axes, final ITuppleModel model )
   {
     m_href = href;
-    m_identifier = identifier;
     m_name = name;
     m_editable = editable;
     m_metadata = metadata;
@@ -153,7 +150,7 @@ public class SimpleObservation implements IObservation
   public ITuppleModel getValues( final IRequest request ) throws SensorException
   {
     if( m_tupples == null )
-      throw new SensorException( Messages.getString("org.kalypso.ogc.sensor.impl.SimpleObservation.6") ); //$NON-NLS-1$
+      throw new SensorException( Messages.getString( "org.kalypso.ogc.sensor.impl.SimpleObservation.6" ) ); //$NON-NLS-1$
 
     // TODO this leads to unsaved changes when a value is set because the underlying
     // (real) model isn't changed, just the copy of it (see setFrom and the calling
@@ -189,13 +186,13 @@ public class SimpleObservation implements IObservation
     {
       try
       {
-        final IAxis A = ObservationUtilities.findAxisByName( otherAxes, myA.getName() );
+        final IAxis axis = ObservationUtilities.findAxisByName( otherAxes, myA.getName() );
 
-        map.put( myA, A );
+        map.put( myA, axis );
       }
       catch( final NoSuchElementException e )
       {
-        throw new SensorException( Messages.getString("org.kalypso.ogc.sensor.impl.SimpleObservation.7") + toString(), e ); //$NON-NLS-1$
+        throw new SensorException( Messages.getString( "org.kalypso.ogc.sensor.impl.SimpleObservation.7" ) + toString(), e ); //$NON-NLS-1$
       }
     }
 
@@ -257,7 +254,7 @@ public class SimpleObservation implements IObservation
   /**
    * Helper: since we are adding tupples to our model, we need a way to be sure that this is possible. For now, we
    * simply copy the existing values in a SimpleTuppleModel which finally allows to add tupples as desired.
-   *
+   * 
    * @return a SimpleTuppleModel
    * @throws SensorException
    */
@@ -268,15 +265,6 @@ public class SimpleObservation implements IObservation
       m_tupples = new SimpleTuppleModel( m_tupples );
 
     return (SimpleTuppleModel) m_tupples;
-  }
-
-  /**
-   * @see org.kalypso.ogc.sensor.IObservation#getIdentifier()
-   */
-  @Override
-  public String getIdentifier( )
-  {
-    return m_identifier;
   }
 
   /**
@@ -317,9 +305,9 @@ public class SimpleObservation implements IObservation
 
   /**
    * Sets the href
-   *
+   * 
    * @param href
-   *            localisation of the observation when it comes from a zml file for instance.
+   *          localisation of the observation when it comes from a zml file for instance.
    */
   public void setHref( final String href )
   {
@@ -332,6 +320,6 @@ public class SimpleObservation implements IObservation
   @Override
   public String toString( )
   {
-    return Messages.getString("org.kalypso.ogc.sensor.impl.SimpleObservation.8") + m_name + Messages.getString("org.kalypso.ogc.sensor.impl.SimpleObservation.9") + m_identifier + Messages.getString("org.kalypso.ogc.sensor.impl.SimpleObservation.10") + m_href; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    return Messages.getString( "org.kalypso.ogc.sensor.impl.SimpleObservation.8" ) + m_name + Messages.getString( "org.kalypso.ogc.sensor.impl.SimpleObservation.10" ) + m_href; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
   }
 }

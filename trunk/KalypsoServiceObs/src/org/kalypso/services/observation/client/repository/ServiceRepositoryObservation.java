@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.services.observation.client.repository;
 
@@ -117,7 +117,7 @@ public class ServiceRepositoryObservation implements IObservation
       final DataBean db = m_srv.readData( href );
 
       ins = new BufferedInputStream( db.getDataHandler().getInputStream() );
-      final IObservation obs = ZmlFactory.parseXML( new InputSource( ins ), "", null ); //$NON-NLS-1$
+      final IObservation obs = ZmlFactory.parseXML( new InputSource( ins ), null, null ); //$NON-NLS-1$
       ins.close();
 
       m_srv.clearTempData( db.getId() );
@@ -132,12 +132,6 @@ public class ServiceRepositoryObservation implements IObservation
     {
       IOUtils.closeQuietly( ins );
     }
-  }
-
-  @Override
-  public final String getIdentifier( )
-  {
-    return ObservationServiceUtils.addServerSideId( m_ob.getId() );
   }
 
   @Override
@@ -245,6 +239,6 @@ public class ServiceRepositoryObservation implements IObservation
   @Override
   public final String getHref( )
   {
-    return getIdentifier();
+    return ObservationServiceUtils.addServerSideId( m_ob.getId() );
   }
 }

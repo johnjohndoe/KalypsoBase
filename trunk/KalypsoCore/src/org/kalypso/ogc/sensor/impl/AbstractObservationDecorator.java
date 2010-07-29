@@ -89,12 +89,6 @@ public class AbstractObservationDecorator implements IObservation
   }
 
   @Override
-  public String getIdentifier()
-  {
-    return m_obs.getIdentifier();
-  }
-
-  @Override
   public MetadataList getMetadataList()
   {
     return m_obs.getMetadataList();

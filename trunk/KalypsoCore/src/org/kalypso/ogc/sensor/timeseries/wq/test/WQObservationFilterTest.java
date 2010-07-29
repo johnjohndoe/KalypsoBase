@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.timeseries.wq.test;
 
@@ -71,7 +71,7 @@ public class WQObservationFilterTest extends TestCase
     {
       ins = WQObservationFilterTest.class.getResourceAsStream( "wq-test.zml" ); //$NON-NLS-1$
 
-      final IObservation obs = ZmlFactory.parseXML( new InputSource( ins ), "", null ); //$NON-NLS-1$
+      final IObservation obs = ZmlFactory.parseXML( new InputSource( ins ), null, null ); //$NON-NLS-1$
 
       final ITuppleModel wqValues = obs.getValues( null );
 
@@ -97,7 +97,7 @@ public class WQObservationFilterTest extends TestCase
     {
       ins = WQObservationFilterTest.class.getResourceAsStream( "wq-test2.zml" ); //$NON-NLS-1$
 
-      final IObservation obs = ZmlFactory.parseXML( new InputSource( ins ), "", null ); //$NON-NLS-1$
+      final IObservation obs = ZmlFactory.parseXML( new InputSource( ins ), null, null ); //$NON-NLS-1$
 
       final ITuppleModel values = obs.getValues( null );
 
@@ -118,7 +118,7 @@ public class WQObservationFilterTest extends TestCase
     {
       ins = WQObservationFilterTest.class.getResourceAsStream( "wq-test3.zml" ); //$NON-NLS-1$
 
-      final IObservation obs = ZmlFactory.parseXML( new InputSource( ins ), "", null ); //$NON-NLS-1$
+      final IObservation obs = ZmlFactory.parseXML( new InputSource( ins ), null, null ); //$NON-NLS-1$
 
       final ITuppleModel values = obs.getValues( null );
 
@@ -139,7 +139,7 @@ public class WQObservationFilterTest extends TestCase
     {
       ins = WQObservationFilterTest.class.getResourceAsStream( "wq-test4.zml" ); //$NON-NLS-1$
 
-      final IObservation obs = ZmlFactory.parseXML( new InputSource( ins ), "", null ); //$NON-NLS-1$
+      final IObservation obs = ZmlFactory.parseXML( new InputSource( ins ), null, null ); //$NON-NLS-1$
 
       final ITuppleModel values = obs.getValues( null );
 

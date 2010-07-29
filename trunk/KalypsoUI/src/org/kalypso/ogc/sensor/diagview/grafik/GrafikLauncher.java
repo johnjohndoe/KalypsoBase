@@ -406,7 +406,7 @@ public class GrafikLauncher
       try
       {
         ins = zmlFile.getContents();
-        obs = ZmlFactory.parseXML( new InputSource( ins ), zmlFile.toString(), context );
+        obs = ZmlFactory.parseXML( new InputSource( ins ), context, zmlFile.getLocationURI().toString() );
         ins.close();
 
         values = obs.getValues( null );

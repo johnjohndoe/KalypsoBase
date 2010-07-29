@@ -75,7 +75,7 @@ public class CopyLinkHandler extends AbstractHandler
         return null;
 
       final Clipboard clipboard = new Clipboard( shell.getDisplay() );
-      clipboard.setContents( new Object[] { obs.getIdentifier() }, new Transfer[] { TextTransfer.getInstance() } );
+      clipboard.setContents( new Object[] { obs.getHref() }, new Transfer[] { TextTransfer.getInstance() } );
       clipboard.dispose();
 
       return null;
