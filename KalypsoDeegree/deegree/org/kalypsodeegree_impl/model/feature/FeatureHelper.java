@@ -76,11 +76,13 @@ import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathException;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+import org.kalypsodeegree_impl.tools.GMLConstants;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
@@ -325,7 +327,7 @@ public final class FeatureHelper
     }
     catch( final Exception e )
     {
-      throw new IllegalArgumentException( "Typen der zugeordneten Properties sind unterschiedlich: '" + sourceProp + "' and '" + targetProp + "'" );
+      throw new IllegalArgumentException( "Typen der zugeordneten Properties sind unterschiedlich: '" + sourceProp + "' and '" + targetProp + "'", e );
     }
   }
 
@@ -340,6 +342,12 @@ public final class FeatureHelper
       final IValuePropertyType targetFTP = (IValuePropertyType) targetPT;
       if( sourceFTP.getValueQName().equals( targetFTP.getValueQName() ) )
         return cloneData( sourceFeature, targetFeature, sourcePT, sourceValue, gmlVersion );
+      else if( sourceFTP.isGeometry() && targetFTP.isGeometry() )
+      {
+        final GM_Object targetGeom = tryConvertGeometry( (GM_Object) sourceValue, targetFTP.getValueQName() );
+        if( targetGeom != null )
+          return targetGeom;
+      }
     }
 
     final String objectAsString = convertPropertyToString( sourceValue, sourcePT );
@@ -358,6 +366,21 @@ public final class FeatureHelper
     }
 
     throw new UnsupportedOperationException( String.format( "Unable to handle targetProperty '%s'", targetPT.getQName() ) );
+  }
+
+  private static GM_Object tryConvertGeometry( final GM_Object sourceGeom, final QName targetQName )
+  {
+    if( sourceGeom instanceof GM_MultiSurface )
+    {
+      final GM_MultiSurface multiSurface = (GM_MultiSurface) sourceGeom;
+      if( GMLConstants.QN_POLYGON.equals( targetQName ) || GMLConstants.QN_SURFACE.equals( targetQName ) )
+      {
+        if( multiSurface.getSize() > 0 )
+          return multiSurface.getObjectAt( 0 );
+      }
+    }
+
+    return null;
   }
 
   private static String convertPropertyToString( final Object sourceValue, final IPropertyType sourcePT )
