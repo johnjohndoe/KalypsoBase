@@ -153,10 +153,4 @@ public class AbstractObservationDecorator implements IObservation
   {
     return m_obs.getHref();
   }
-
-  @Override
-  public void clearListeners()
-  {
-    m_obs.clearListeners();
-  }
 }
