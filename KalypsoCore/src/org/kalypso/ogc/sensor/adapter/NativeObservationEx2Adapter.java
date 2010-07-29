@@ -109,8 +109,7 @@ public class NativeObservationEx2Adapter implements INativeObservationAdapter
     // create axis
     final IAxis[] axis = createAxis();
     final ITuppleModel tuppelModel = createTuppelModel( source, axis, continueWithErrors );
-    final SimpleObservation observation = new SimpleObservation( "href", "titel", false, metaDataList, axis, tuppelModel ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-    return observation;
+    return new SimpleObservation( "href", "titel", metaDataList, axis, tuppelModel ); //$NON-NLS-1$  //$NON-NLS-2$
   }
 
   private ITuppleModel createTuppelModel( final File source, final IAxis[] axis, final boolean continueWithErrors ) throws IOException

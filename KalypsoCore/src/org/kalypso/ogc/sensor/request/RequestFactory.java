@@ -136,7 +136,7 @@ public final class RequestFactory
         axes.add( KalypsoStatusUtils.createStatusAxisFor( axis, true ) );
     }
     // create observation instance
-    final SimpleObservation obs = new SimpleObservation( "", request.getName(), false, new MetadataList(), axes.toArray( new IAxis[axes.size()] ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    final SimpleObservation obs = new SimpleObservation( "", request.getName(), new MetadataList(), axes.toArray( new IAxis[axes.size()] ) ); //$NON-NLS-1$ //$NON-NLS-2$
     // update metadata
     final MetadataList mdl = obs.getMetadataList();
     mdl.setProperty( ObservationConstants.MD_NAME, request.getName() != null ? request.getName() : "<?>" ); //$NON-NLS-1$

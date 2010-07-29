@@ -216,6 +216,6 @@ public class CopyObservationFeatureVisitor extends AbstractMonitoredFeatureVisit
     final MetadataList metadataList = (MetadataList) baseObservation.getMetadataList().clone();
     final IAxis[] axes = baseObservation.getAxisList();
 
-    return new SimpleObservation( null, null, false, metadataList, axes, tuppleModel );
+    return new SimpleObservation( null, null, metadataList, axes, tuppleModel );
   }
 }

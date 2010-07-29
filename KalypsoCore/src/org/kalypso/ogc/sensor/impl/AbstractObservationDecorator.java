@@ -113,12 +113,6 @@ public class AbstractObservationDecorator implements IObservation
   }
 
   @Override
-  public boolean isEditable()
-  {
-    return m_obs.isEditable();
-  }
-
-  @Override
   public void removeListener( final IObservationListener listener )
   {
     m_obs.removeListener( listener );

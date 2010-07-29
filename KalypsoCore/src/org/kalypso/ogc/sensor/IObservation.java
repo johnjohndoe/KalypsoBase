@@ -57,13 +57,6 @@ public interface IObservation extends IObservationEventProvider
   String getName( );
 
   /**
-   * Returns true if this observation is editable.
-   * 
-   * @return editable flag
-   */
-  boolean isEditable( );
-
-  /**
    * Returns the list of Metadata.
    * 
    * @return metadata

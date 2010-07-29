@@ -75,10 +75,9 @@ public final class ObservationHelper
       final IAxis[] axes = observation.getAxisList();
       final String href = observation.getHref();
       final String name = observation.getName();
-      final boolean editable = observation.isEditable();
       final MetadataList metadataList = observation.getMetadataList();
 
-      final SimpleObservation simple = new SimpleObservation( href, name, editable, metadataList, axes );
+      final SimpleObservation simple = new SimpleObservation( href, name, metadataList, axes );
       ZmlFactory.writeToStream( simple, outputStream, null );
 
       return outputStream.toByteArray();
@@ -120,10 +119,9 @@ public final class ObservationHelper
   {
     final String href = baseObservation.getHref();
     final String name = baseObservation.getName();
-    final boolean editable = baseObservation.isEditable();
     final MetadataList metadataList = baseObservation.getMetadataList();
 
-    return new SimpleObservation( href, name, editable, metadataList, model.getAxisList(), model );
+    return new SimpleObservation( href, name, metadataList, model.getAxisList(), model );
   }
 
   public static IObservation parseFromByteArray( final byte[] buffer, final String repositoryItemId ) throws SensorException

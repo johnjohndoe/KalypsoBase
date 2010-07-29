@@ -128,8 +128,7 @@ public class NativeObservationDWDmdAdapter implements INativeObservationAdapter
     final ITuppleModel tuppelModel = createTuppelModel( source, axis, continueWithErrors );
     if( tuppelModel == null )
       return null;
-    final SimpleObservation observation = new SimpleObservation( "href", m_name, false, metaDataList, axis, tuppelModel ); //$NON-NLS-1$ //$NON-NLS-2$
-    return observation;
+    return new SimpleObservation( "href", m_name, metaDataList, axis, tuppelModel ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   private ITuppleModel createTuppelModel( final File source, final IAxis[] axis, boolean continueWithErrors ) throws IOException
