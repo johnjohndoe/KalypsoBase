@@ -82,12 +82,6 @@ public class ForecastTuppleModel extends AbstractTuppleModel
     Arrays.sort( models, new Comparator<ITuppleModel>()
     {
       @Override
-      public boolean equals( final Object obj )
-      {
-        return false;
-      }
-
-      @Override
       public int compare( final ITuppleModel t1, final ITuppleModel t2 )
       {
         final IAxis t1axis = ObservationUtilities.findAxisByClass( t1.getAxisList(), Date.class );
@@ -151,7 +145,7 @@ public class ForecastTuppleModel extends AbstractTuppleModel
             {
               if( map[colIx] > -1 )
               {
-                Object sourceValue = model.getElement( rowIx, modelAxes[map[colIx]] );
+                final Object sourceValue = model.getElement( rowIx, modelAxes[map[colIx]] );
                 targetTupple[colIx] = sourceValue;
               }
             }

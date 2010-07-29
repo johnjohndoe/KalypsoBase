@@ -182,15 +182,6 @@ public abstract class AbstractObservationFilter implements IObservationFilter
   }
 
   @Override
-  public void clearListeners()
-  {
-    if( m_obs == null )
-      throw new IllegalStateException( Messages.getString("org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter.13") ); //$NON-NLS-1$
-
-    m_obs.clearListeners();
-  }
-
-  @Override
   public void fireChangedEvent( final Object source )
   {
     if( m_obs == null )

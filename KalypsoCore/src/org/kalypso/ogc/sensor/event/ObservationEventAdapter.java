@@ -88,19 +88,10 @@ public class ObservationEventAdapter implements IObservationEventProvider
   public void fireChangedEvent( final Object source )
   {
     final Object[] listeners = m_listeners.toArray();
-    for( int i = 0; i < listeners.length; i++ )
+    for( final Object listener2 : listeners )
     {
-      final IObservationListener listener = (IObservationListener) listeners[i];
+      final IObservationListener listener = (IObservationListener) listener2;
       listener.observationChanged( m_obs, source );
     }
-  }
-
-  /**
-   * @see org.kalypso.ogc.sensor.IObservationEventProvider#clearListeners()
-   */
-  @Override
-  public void clearListeners( )
-  {
-    m_listeners.clear();
   }
 }

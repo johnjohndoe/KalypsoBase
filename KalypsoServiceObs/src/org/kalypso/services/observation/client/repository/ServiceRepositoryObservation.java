@@ -237,12 +237,6 @@ public class ServiceRepositoryObservation implements IObservation
   }
 
   @Override
-  public final void clearListeners( )
-  {
-    m_evtPrv.clearListeners();
-  }
-
-  @Override
   public final void fireChangedEvent( final Object source )
   {
     m_evtPrv.fireChangedEvent( source );

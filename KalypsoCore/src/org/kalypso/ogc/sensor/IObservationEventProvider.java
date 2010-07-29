@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor;
 
@@ -47,14 +47,12 @@ package org.kalypso.ogc.sensor;
  */
 public interface IObservationEventProvider
 {
-  public void addListener( final IObservationListener listener );
+  void addListener( IObservationListener listener );
 
-  public void removeListener( final IObservationListener listener );
+  void removeListener( IObservationListener listener );
 
   /**
    * @param source optional source of the event, can be null
    */
-  public void fireChangedEvent( final Object source );
-  
-  public void clearListeners();
+  void fireChangedEvent( Object source );
 }
