@@ -53,14 +53,14 @@ public class WQCurveFactory
 {
   private WQCurveFactory()
   {
-  // empty
+    // empty
   }
 
   public static IObservation createObservation( final WQTable table )
   {
     final WQPairTuppleModel model = new WQPairTuppleModel( table.getPairs() );
 
-    final SimpleObservation obs = new SimpleObservation( "", "", table.toString(), false, new MetadataList(), //$NON-NLS-1$ //$NON-NLS-2$
+    final SimpleObservation obs = new SimpleObservation( "", table.toString(), false, new MetadataList(), //$NON-NLS-1$ //$NON-NLS-2$
         model.getAxisList(), model );
 
     return obs;

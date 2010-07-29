@@ -202,7 +202,7 @@ public class ObservationViewerDialog extends Dialog
             final int rows = dialog.getCount();
 
             final Object[][] values = new Object[rows][axis.length];
-            final Iterator iterator = new ValueIterator( min, intervall, rows );
+            final Iterator< ? > iterator = new ValueIterator( min, intervall, rows );
             for( int row = 0; row < rows; row++ )
             {
               values[row][0] = iterator.next();
@@ -210,7 +210,7 @@ public class ObservationViewerDialog extends Dialog
                 values[row][ax] = dialog.getDefault();
             }
             final ITuppleModel model = new SimpleTuppleModel( axis, values );
-            setInput( new SimpleObservation( null, null, name, true, new MetadataList(), axis, model ) );
+            setInput( new SimpleObservation( null, name, true, new MetadataList(), axis, model ) );
           }
         }
 
@@ -241,7 +241,7 @@ public class ObservationViewerDialog extends Dialog
           final int months = 12;
 
           final Object[][] values = new Object[months][axis.length];
-          final Iterator iterator = new ValueIterator( min, intervall, months );
+          final Iterator< ? > iterator = new ValueIterator( min, intervall, months );
           for( int row = 0; row < months; row++ )
           {
             values[row][0] = iterator.next();
@@ -249,7 +249,7 @@ public class ObservationViewerDialog extends Dialog
               values[row][ax] = new Double( 0 );
           }
           final ITuppleModel model = new SimpleTuppleModel( axis, values );
-          setInput( new SimpleObservation( null, null, name, true, new MetadataList(), axis, model ) );
+          setInput( new SimpleObservation( null, name, true, new MetadataList(), axis, model ) );
         }
 
         @Override

@@ -54,7 +54,7 @@ import org.kalypso.ogc.sensor.request.IRequest;
 
 /**
  * AbstractObservationFilter
- *
+ * 
  * @author schlienger
  */
 public abstract class AbstractObservationFilter implements IObservationFilter
@@ -77,43 +77,34 @@ public abstract class AbstractObservationFilter implements IObservationFilter
   public boolean equals( final Object obj )
   {
     if( m_obs == null )
-      throw new IllegalStateException( Messages.getString("org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter.0") ); //$NON-NLS-1$
+      throw new IllegalStateException( Messages.getString( "org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter.0" ) ); //$NON-NLS-1$
 
     return m_obs.equals( obj );
   }
 
   @Override
-  public IAxis[] getAxisList()
+  public IAxis[] getAxisList( )
   {
     if( m_obs == null )
-      throw new IllegalStateException( Messages.getString("org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter.1") ); //$NON-NLS-1$
+      throw new IllegalStateException( Messages.getString( "org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter.1" ) ); //$NON-NLS-1$
 
     return m_obs.getAxisList();
   }
 
   @Override
-  public String getIdentifier()
+  public MetadataList getMetadataList( )
   {
     if( m_obs == null )
-      throw new IllegalStateException( Messages.getString("org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter.2") ); //$NON-NLS-1$
-
-    return m_obs.getIdentifier();
-  }
-
-  @Override
-  public MetadataList getMetadataList()
-  {
-    if( m_obs == null )
-      throw new IllegalStateException( Messages.getString("org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter.3") ); //$NON-NLS-1$
+      throw new IllegalStateException( Messages.getString( "org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter.3" ) ); //$NON-NLS-1$
 
     return m_obs.getMetadataList();
   }
 
   @Override
-  public String getName()
+  public String getName( )
   {
     if( m_obs == null )
-      throw new IllegalStateException( Messages.getString("org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter.4") ); //$NON-NLS-1$
+      throw new IllegalStateException( Messages.getString( "org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter.4" ) ); //$NON-NLS-1$
 
     return m_obs.getName();
   }
@@ -122,25 +113,25 @@ public abstract class AbstractObservationFilter implements IObservationFilter
   public ITuppleModel getValues( final IRequest args ) throws SensorException
   {
     if( m_obs == null )
-      throw new IllegalStateException( Messages.getString("org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter.6") ); //$NON-NLS-1$
+      throw new IllegalStateException( Messages.getString( "org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter.6" ) ); //$NON-NLS-1$
 
     return m_obs.getValues( args );
   }
 
   @Override
-  public int hashCode()
+  public int hashCode( )
   {
     if( m_obs == null )
-      throw new IllegalStateException( Messages.getString("org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter.7") ); //$NON-NLS-1$
+      throw new IllegalStateException( Messages.getString( "org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter.7" ) ); //$NON-NLS-1$
 
     return m_obs.hashCode();
   }
 
   @Override
-  public boolean isEditable()
+  public boolean isEditable( )
   {
     if( m_obs == null )
-      throw new IllegalStateException( Messages.getString("org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter.8") ); //$NON-NLS-1$
+      throw new IllegalStateException( Messages.getString( "org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter.8" ) ); //$NON-NLS-1$
 
     return m_obs.isEditable();
   }
@@ -149,7 +140,7 @@ public abstract class AbstractObservationFilter implements IObservationFilter
   public void setValues( final ITuppleModel values ) throws SensorException
   {
     if( m_obs == null )
-      throw new IllegalStateException( Messages.getString("org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter.9") ); //$NON-NLS-1$
+      throw new IllegalStateException( Messages.getString( "org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter.9" ) ); //$NON-NLS-1$
 
     m_obs.setValues( values );
   }
@@ -158,7 +149,7 @@ public abstract class AbstractObservationFilter implements IObservationFilter
   public String toString( )
   {
     if( m_obs == null )
-      throw new IllegalStateException( Messages.getString("org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter.10") ); //$NON-NLS-1$
+      throw new IllegalStateException( Messages.getString( "org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter.10" ) ); //$NON-NLS-1$
 
     return m_obs.toString();
   }
@@ -167,7 +158,7 @@ public abstract class AbstractObservationFilter implements IObservationFilter
   public void addListener( final IObservationListener listener )
   {
     if( m_obs == null )
-      throw new IllegalStateException( Messages.getString("org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter.11") ); //$NON-NLS-1$
+      throw new IllegalStateException( Messages.getString( "org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter.11" ) ); //$NON-NLS-1$
 
     m_obs.addListener( listener );
   }
@@ -176,7 +167,7 @@ public abstract class AbstractObservationFilter implements IObservationFilter
   public void removeListener( final IObservationListener listener )
   {
     if( m_obs == null )
-      throw new IllegalStateException( Messages.getString("org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter.12") ); //$NON-NLS-1$
+      throw new IllegalStateException( Messages.getString( "org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter.12" ) ); //$NON-NLS-1$
 
     m_obs.removeListener( listener );
   }
@@ -185,21 +176,21 @@ public abstract class AbstractObservationFilter implements IObservationFilter
   public void fireChangedEvent( final Object source )
   {
     if( m_obs == null )
-      throw new IllegalStateException( Messages.getString("org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter.14") ); //$NON-NLS-1$
+      throw new IllegalStateException( Messages.getString( "org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter.14" ) ); //$NON-NLS-1$
 
     m_obs.fireChangedEvent( source );
   }
 
   @Override
-  public String getHref()
+  public String getHref( )
   {
     if( m_obs == null )
-      throw new IllegalStateException( Messages.getString("org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter.15") ); //$NON-NLS-1$
+      throw new IllegalStateException( Messages.getString( "org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter.15" ) ); //$NON-NLS-1$
 
     return m_obs.getHref();
   }
 
-  protected IObservation getObservation()
+  protected IObservation getObservation( )
   {
     return m_obs;
   }

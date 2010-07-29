@@ -64,7 +64,7 @@ public final class CopyObservationHelper implements ICopyObservationMetaDataCons
   {
     final Map<String, String> map = new HashMap<String, String>();
 
-    final String reference = source.getObservation().getIdentifier();
+    final String reference = source.getObservation().getHref();
     final String filter = XMLUtilities.encapsulateInCDATA( source.getFilter() );
 
     final DateRange sourceDateRange = source.getDateRange();

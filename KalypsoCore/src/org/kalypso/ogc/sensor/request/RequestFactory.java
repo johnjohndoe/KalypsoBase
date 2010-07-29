@@ -61,11 +61,11 @@ import org.xml.sax.InputSource;
  * 
  * @author schlienger (25.05.2005)
  */
-public class RequestFactory
+public final class RequestFactory
 {
-  public final static ObjectFactory OF = new ObjectFactory();
+  public static final ObjectFactory OF = new ObjectFactory();
 
-  public static JAXBContext JC = JaxbUtilities.createQuiet( ObjectFactory.class );
+  public static final JAXBContext JC = JaxbUtilities.createQuiet( ObjectFactory.class );
 
   private RequestFactory( )
   {
@@ -136,11 +136,11 @@ public class RequestFactory
         axes.add( KalypsoStatusUtils.createStatusAxisFor( axis, true ) );
     }
     // create observation instance
-    final SimpleObservation obs = new SimpleObservation( "", "", request.getName(), false, new MetadataList(), axes.toArray( new IAxis[axes.size()] ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    final SimpleObservation obs = new SimpleObservation( "", request.getName(), false, new MetadataList(), axes.toArray( new IAxis[axes.size()] ) ); //$NON-NLS-1$ //$NON-NLS-2$
     // update metadata
     final MetadataList mdl = obs.getMetadataList();
     mdl.setProperty( ObservationConstants.MD_NAME, request.getName() != null ? request.getName() : "<?>" ); //$NON-NLS-1$
-    mdl.setProperty( ObservationConstants.MD_ORIGIN, Messages.getString("org.kalypso.ogc.sensor.request.RequestFactory.3") ); //$NON-NLS-1$
+    mdl.setProperty( ObservationConstants.MD_ORIGIN, Messages.getString( "org.kalypso.ogc.sensor.request.RequestFactory.3" ) ); //$NON-NLS-1$
     return obs;
   }
 
@@ -151,7 +151,7 @@ public class RequestFactory
   {
     final Request xmlReq = parseRequest( href );
     if( xmlReq == null )
-      throw new SensorException( Messages.getString("org.kalypso.ogc.sensor.request.RequestFactory.4") ); //$NON-NLS-1$
+      throw new SensorException( Messages.getString( "org.kalypso.ogc.sensor.request.RequestFactory.4" ) ); //$NON-NLS-1$
     return createDefaultObservation( xmlReq );
   }
 

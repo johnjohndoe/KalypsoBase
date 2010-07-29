@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  --------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor;
 
@@ -49,14 +49,6 @@ import org.kalypso.ogc.sensor.request.IRequest;
  */
 public interface IObservation extends IObservationEventProvider
 {
-  /**
-   * Returns the identifier of this Observation. The identifier can be used to uniquely identify the Observation within
-   * its repository.
-   * 
-   * @return identifier
-   */
-  String getIdentifier( );
-
   /**
    * Returns the name of this Observation
    * 
@@ -105,7 +97,8 @@ public interface IObservation extends IObservationEventProvider
   void setValues( final ITuppleModel values ) throws SensorException;
 
   /**
-   * Returns the localisation of the base file behind this observation
+   * Returns the localisation of the base file behind this observation.<br/>
+   * Also may serve as identifier.
    * 
    * @return href
    */

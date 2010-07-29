@@ -262,14 +262,8 @@ public class ObservationServiceFassade implements IObservationService, IDisposab
     final File file = m_mapDataId2File.get( dataId );
     if( file != null )
     {
-// final boolean b =
       file.delete();
-
-// if( !b )
-//        m_logger.warning( Messages.getString( "org.kalypso.services.observation.server.ObservationServiceDelegate.0", file.toString(), dataId ) ); //$NON-NLS-1$
     }
-// else
-//      m_logger.warning( Messages.getString( "org.kalypso.services.observation.server.ObservationServiceDelegate.1", dataId ) ); //$NON-NLS-1$
   }
 
   @Override
@@ -288,7 +282,7 @@ public class ObservationServiceFassade implements IObservationService, IDisposab
         throw e;
       }
 
-      final IObservation zml = ZmlFactory.parseXML( new InputSource( odb.getInputStream() ), obs.getIdentifier(), null );
+      final IObservation zml = ZmlFactory.parseXML( new InputSource( odb.getInputStream() ), null, obs.getHref() );
 
       synchronized( obs )
       {

@@ -256,12 +256,11 @@ public class CommitPrognoseFeatureVisitor extends AbstractMonitoredFeatureVisito
   {
     // leeres Request-Intervall, wir wollen final eigentlich nur die Metadaten+Achsen
     final String href = source.getHref();
-    final String identifier = source.getIdentifier();
     final String name = source.getName();
 
     final MetadataList targetMetadata = copyMetadata( source );
 
-    final SimpleObservation target = new SimpleObservation( href, identifier, name, true, targetMetadata, targetAxes );
+    final SimpleObservation target = new SimpleObservation( href, name, true, targetMetadata, targetAxes );
 
     final IAxis[] srcAxes = source.getAxisList();
 

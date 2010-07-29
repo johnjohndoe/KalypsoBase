@@ -40,7 +40,6 @@ import java.util.Iterator;
  */
 public class ValueIterator implements Iterator<Object>
 {
-
   private final Object m_start;
 
   private final int m_rows;
@@ -49,7 +48,7 @@ public class ValueIterator implements Iterator<Object>
 
   private final Object m_int;
 
-  public ValueIterator( Object start, Object intervall, int rows )
+  public ValueIterator( final Object start, final Object intervall, final int rows )
   {
     m_start = start;
     m_int = intervall;
@@ -80,7 +79,7 @@ public class ValueIterator implements Iterator<Object>
   @Override
   public Object next()
   {
-    int n = m_pos;
+    final int n = m_pos;
     m_pos++;
     if( m_start instanceof Double )
       return new Double( ( (Double)m_start ).doubleValue() + n * ( (Double)m_int ).doubleValue() );

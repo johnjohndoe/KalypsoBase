@@ -123,7 +123,7 @@ public class NativeObservationZrxAdapter implements INativeObservationAdapter
     final ITuppleModel tuppelModel = createTuppelModel( source, axis, continueWithErrors );
     if( tuppelModel == null )
       return null;
-    final SimpleObservation observation = new SimpleObservation( "href", "ID", m_SNAME, false, metaDataList, axis, tuppelModel ); //$NON-NLS-1$ //$NON-NLS-2$
+    final SimpleObservation observation = new SimpleObservation( "href", m_SNAME, false, metaDataList, axis, tuppelModel ); //$NON-NLS-1$ //$NON-NLS-2$
     return observation;
   }
 
@@ -157,7 +157,7 @@ public class NativeObservationZrxAdapter implements INativeObservationAdapter
             }
             catch( final Exception e )
             {
-              errorBuffer.append( Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationZrxAdapter.11") + reader.getLineNumber() + Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationZrxAdapter.12") + lineIn + "\"\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+              errorBuffer.append( Messages.getString( "org.kalypso.ogc.sensor.adapter.NativeObservationZrxAdapter.11" ) + reader.getLineNumber() + Messages.getString( "org.kalypso.ogc.sensor.adapter.NativeObservationZrxAdapter.12" ) + lineIn + "\"\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
               numberOfErrors++;
             }
           }
@@ -169,7 +169,7 @@ public class NativeObservationZrxAdapter implements INativeObservationAdapter
             }
             catch( final Exception e )
             {
-              errorBuffer.append( Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationZrxAdapter.14") + reader.getLineNumber() + Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationZrxAdapter.15") + lineIn + "\"\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+              errorBuffer.append( Messages.getString( "org.kalypso.ogc.sensor.adapter.NativeObservationZrxAdapter.14" ) + reader.getLineNumber() + Messages.getString( "org.kalypso.ogc.sensor.adapter.NativeObservationZrxAdapter.15" ) + lineIn + "\"\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
               numberOfErrors++;
             }
           }
@@ -179,7 +179,7 @@ public class NativeObservationZrxAdapter implements INativeObservationAdapter
           }
           catch( final Exception e )
           {
-            errorBuffer.append( Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationZrxAdapter.17") + reader.getLineNumber() + Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationZrxAdapter.18") + lineIn + "\"\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+            errorBuffer.append( Messages.getString( "org.kalypso.ogc.sensor.adapter.NativeObservationZrxAdapter.17" ) + reader.getLineNumber() + Messages.getString( "org.kalypso.ogc.sensor.adapter.NativeObservationZrxAdapter.18" ) + lineIn + "\"\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
             numberOfErrors++;
           }
           dateCollector.add( date );
@@ -196,14 +196,14 @@ public class NativeObservationZrxAdapter implements INativeObservationAdapter
           }
           else
           {
-            errorBuffer.append( Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationZrxAdapter.20") + reader.getLineNumber() + Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationZrxAdapter.21") + lineIn + "\"\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+            errorBuffer.append( Messages.getString( "org.kalypso.ogc.sensor.adapter.NativeObservationZrxAdapter.20" ) + reader.getLineNumber() + Messages.getString( "org.kalypso.ogc.sensor.adapter.NativeObservationZrxAdapter.21" ) + lineIn + "\"\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
             numberOfErrors++;
           }
         }
       }
       catch( final Exception e )
       {
-        errorBuffer.append( Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationZrxAdapter.23") + reader.getLineNumber() + Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationZrxAdapter.24") + e.getLocalizedMessage() + "\"\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        errorBuffer.append( Messages.getString( "org.kalypso.ogc.sensor.adapter.NativeObservationZrxAdapter.23" ) + reader.getLineNumber() + Messages.getString( "org.kalypso.ogc.sensor.adapter.NativeObservationZrxAdapter.24" ) + e.getLocalizedMessage() + "\"\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         numberOfErrors++;
       }
     }
@@ -211,8 +211,8 @@ public class NativeObservationZrxAdapter implements INativeObservationAdapter
     {
 
       final MessageBox messageBox = new MessageBox( null, SWT.ICON_QUESTION | SWT.YES | SWT.NO );
-      messageBox.setMessage( Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationZrxAdapter.26") ); //$NON-NLS-1$
-      messageBox.setText( Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationZrxAdapter.27") ); //$NON-NLS-1$
+      messageBox.setMessage( Messages.getString( "org.kalypso.ogc.sensor.adapter.NativeObservationZrxAdapter.26" ) ); //$NON-NLS-1$
+      messageBox.setText( Messages.getString( "org.kalypso.ogc.sensor.adapter.NativeObservationZrxAdapter.27" ) ); //$NON-NLS-1$
       if( messageBox.open() == SWT.NO )
         return null;
       else
@@ -242,7 +242,7 @@ public class NativeObservationZrxAdapter implements INativeObservationAdapter
   @Override
   public IAxis[] createAxis( )
   {
-    final IAxis dateAxis = new DefaultAxis( Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationZrxAdapter.28"), TimeserieConstants.TYPE_DATE, "", Date.class, true ); //$NON-NLS-1$ //$NON-NLS-2$
+    final IAxis dateAxis = new DefaultAxis( Messages.getString( "org.kalypso.ogc.sensor.adapter.NativeObservationZrxAdapter.28" ), TimeserieConstants.TYPE_DATE, "", Date.class, true ); //$NON-NLS-1$ //$NON-NLS-2$
     final IAxis valueAxis = new DefaultAxis( TimeserieUtils.getName( m_axisTypeValue ), m_axisTypeValue, TimeserieUtils.getUnit( m_axisTypeValue ), Double.class, false );
     final IAxis[] axis = new IAxis[] { dateAxis, valueAxis };
     return axis;

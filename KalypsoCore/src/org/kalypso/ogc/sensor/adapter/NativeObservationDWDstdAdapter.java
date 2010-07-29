@@ -111,7 +111,7 @@ public class NativeObservationDWDstdAdapter implements INativeObservationAdapter
     // create axis
     final IAxis[] axis = createAxis();
     final ITuppleModel tuppelModel = createTuppelModel( source, axis, continueWithErrors );
-    final SimpleObservation observation = new SimpleObservation( "href", "ID", m_titel, false, metaDataList, axis, tuppelModel ); //$NON-NLS-1$ //$NON-NLS-2$
+    final SimpleObservation observation = new SimpleObservation( "href", m_titel, false, metaDataList, axis, tuppelModel ); //$NON-NLS-1$ //$NON-NLS-2$
     return observation;
   }
 

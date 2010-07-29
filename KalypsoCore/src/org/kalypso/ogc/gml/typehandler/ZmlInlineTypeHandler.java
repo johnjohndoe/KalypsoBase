@@ -34,7 +34,6 @@ import java.io.StringReader;
 import javax.xml.namespace.QName;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
@@ -64,18 +63,7 @@ public class ZmlInlineTypeHandler extends XsdBaseTypeHandler<IObservation>
   @Override
   public String convertToXMLString( final IObservation value )
   {
-    try
-    {
-      final ByteArrayOutputStream bos = new ByteArrayOutputStream();
-      ZmlFactory.writeToStream( value, bos, null );
-      bos.close();
-      return new String( bos.toByteArray() );
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-      return e.toString();
-    }
+    return ZmlFactory.writeToString( value, null );
   }
 
   /**
@@ -90,7 +78,7 @@ public class ZmlInlineTypeHandler extends XsdBaseTypeHandler<IObservation>
     final StringReader reader = new StringReader( zmlStr.trim() );
     try
     {
-      final IObservation obs = ZmlFactory.parseXML( new InputSource( reader ), "null-id", null ); //$NON-NLS-1$
+      final IObservation obs = ZmlFactory.parseXML( new InputSource( reader ), null, "null-id" ); //$NON-NLS-1$
       reader.close();
       return obs;
     }

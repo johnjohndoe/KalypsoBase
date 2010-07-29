@@ -112,7 +112,7 @@ public class NativeObservationCSVAdapter implements INativeObservationAdapter
     // create axis
     final IAxis[] axis = createAxis();
     final ITuppleModel tuppelModel = createTuppelModel( source, axis, continueWithErrors );
-    final SimpleObservation observation = new SimpleObservation( "href", "ID", "titel", false, metaDataList, axis, tuppelModel ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    final SimpleObservation observation = new SimpleObservation( "href", "titel", false, metaDataList, axis, tuppelModel ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     return observation;
   }
 
