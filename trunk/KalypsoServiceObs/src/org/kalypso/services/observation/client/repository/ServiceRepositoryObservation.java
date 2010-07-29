@@ -140,20 +140,6 @@ public class ServiceRepositoryObservation implements IObservation
     return m_ob.getName();
   }
 
-  @Override
-  public final boolean isEditable( )
-  {
-    try
-    {
-      return getRemote( null ).isEditable();
-    }
-    catch( final SensorException e )
-    {
-      e.printStackTrace();
-      return false;
-    }
-  }
-
   /**
    * @see org.kalypso.ogc.sensor.IObservation#getMetadataList()
    */

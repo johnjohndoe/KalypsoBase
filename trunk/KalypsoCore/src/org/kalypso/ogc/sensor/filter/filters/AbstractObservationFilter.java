@@ -128,15 +128,6 @@ public abstract class AbstractObservationFilter implements IObservationFilter
   }
 
   @Override
-  public boolean isEditable( )
-  {
-    if( m_obs == null )
-      throw new IllegalStateException( Messages.getString( "org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter.8" ) ); //$NON-NLS-1$
-
-    return m_obs.isEditable();
-  }
-
-  @Override
   public void setValues( final ITuppleModel values ) throws SensorException
   {
     if( m_obs == null )

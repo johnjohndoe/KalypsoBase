@@ -84,7 +84,6 @@ public class ZmlTest extends TestCase
       _testGetAxisList( obs );
       _testGetMetadataList( obs );
       _testGetValues( obs );
-      _testIsEditable( obs );
       _testSetValues( obs );
     }
   }
@@ -92,11 +91,6 @@ public class ZmlTest extends TestCase
   private void _testGetName( final IObservation obs )
   {
     assertTrue( obs.getName().equals( "Eine Test-Observation" ) ); //$NON-NLS-1$
-  }
-
-  private void _testIsEditable( final IObservation obs )
-  {
-    assertTrue( obs.isEditable() );
   }
 
   private void _testGetMetadataList( final IObservation obs )

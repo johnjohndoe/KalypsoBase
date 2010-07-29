@@ -416,7 +416,6 @@ public class ObservationViewer extends Composite
     }
     else if( m_input instanceof String )
     {
-
       String href = (String) m_input;
       m_txtHref.setText( ZmlURL.getIdentifierPart( href ) );
 
@@ -460,7 +459,7 @@ public class ObservationViewer extends Composite
 
       final PlainObsProvider pop = new PlainObsProvider( obs, null );
 
-      final ItemData itd = new ObsView.ItemData( obs.isEditable(), null, null, true );
+      final ItemData itd = new ObsView.ItemData( false, null, null, true );
       m_diagView.addObservation( pop, ObservationTokenHelper.DEFAULT_ITEM_NAME, itd );
       m_tableView.addObservation( pop, ObservationTokenHelper.DEFAULT_ITEM_NAME, itd );
     }

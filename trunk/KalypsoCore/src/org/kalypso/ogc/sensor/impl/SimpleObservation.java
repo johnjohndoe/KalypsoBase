@@ -65,8 +65,6 @@ public class SimpleObservation implements IObservation
 {
   private String m_name;
 
-  private final boolean m_editable;
-
   private final MetadataList m_metadata;
 
   private final IAxis[] m_axes;
@@ -79,24 +77,23 @@ public class SimpleObservation implements IObservation
 
   public SimpleObservation( )
   {
-    this( "", "", false, new MetadataList(), new IAxis[0] ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    this( "", "", new MetadataList(), new IAxis[0] ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
   }
 
   public SimpleObservation( final IAxis[] axes )
   {
-    this( "", "", false, new MetadataList(), axes ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    this( "", "", new MetadataList(), axes ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
   }
 
-  public SimpleObservation( final String href, final String name, final boolean editable, final MetadataList metadata, final IAxis[] axes )
+  public SimpleObservation( final String href, final String name, final MetadataList metadata, final IAxis[] axes )
   {
-    this( href, name, editable, metadata, axes, new SimpleTuppleModel( axes ) );
+    this( href, name, metadata, axes, new SimpleTuppleModel( axes ) );
   }
 
-  public SimpleObservation( final String href, final String name, final boolean editable, final MetadataList metadata, final IAxis[] axes, final ITuppleModel model )
+  public SimpleObservation( final String href, final String name, final MetadataList metadata, final IAxis[] axes, final ITuppleModel model )
   {
     m_href = href;
     m_name = name;
-    m_editable = editable;
     m_metadata = metadata;
     m_axes = axes;
     m_tupples = model;
@@ -114,15 +111,6 @@ public class SimpleObservation implements IObservation
   public void setName( final String name )
   {
     m_name = name;
-  }
-
-  /**
-   * @see org.kalypso.ogc.sensor.IObservation#isEditable()
-   */
-  @Override
-  public boolean isEditable( )
-  {
-    return m_editable;
   }
 
   /**

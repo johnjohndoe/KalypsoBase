@@ -429,7 +429,7 @@ public final class ZmlFactory
 
     final ZmlTuppleModel model = new ZmlTuppleModel( valuesMap );
 
-    final SimpleObservation zmlObs = new SimpleObservation( href, obs.getName(), obs.isEditable(), metadata, model.getAxisList(), model );
+    final SimpleObservation zmlObs = new SimpleObservation( href, obs.getName(), metadata, model.getAxisList(), model );
 
     final String contextStr = context != null ? context.toExternalForm() : ""; //$NON-NLS-1$
     return decorateObservation( zmlObs, contextStr, context );
@@ -519,7 +519,6 @@ public final class ZmlFactory
 
       final Observation obsType = OF.createObservation();
       obsType.setName( obs.getName() );
-      obsType.setEditable( obs.isEditable() );
 
       final MetadataListType metadataListType = OF.createMetadataListType();
       obsType.setMetadataList( metadataListType );
@@ -871,7 +870,7 @@ public final class ZmlFactory
       r++;
     }
     final ITuppleModel model = new SimpleTuppleModel( axis, values );
-    return new SimpleObservation( null, name, true, new MetadataList(), axis, model );
+    return new SimpleObservation( null, name, new MetadataList(), axis, model );
   }
 
   /**

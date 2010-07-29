@@ -260,7 +260,7 @@ public class CommitPrognoseFeatureVisitor extends AbstractMonitoredFeatureVisito
 
     final MetadataList targetMetadata = copyMetadata( source );
 
-    final SimpleObservation target = new SimpleObservation( href, name, true, targetMetadata, targetAxes );
+    final SimpleObservation target = new SimpleObservation( href, name, targetMetadata, targetAxes );
 
     final IAxis[] srcAxes = source.getAxisList();
 
