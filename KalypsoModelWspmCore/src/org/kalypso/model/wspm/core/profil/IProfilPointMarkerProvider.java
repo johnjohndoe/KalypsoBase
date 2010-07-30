@@ -48,15 +48,13 @@ import org.eclipse.swt.graphics.RGB;
  */
 public interface IProfilPointMarkerProvider
 {
-
   /**
    * @return the icon for this markerId, used in the TableView, using context of background image
    */
-  public void drawMarker( final String[] markers, final GC gc );
+  void drawMarker( final String[] markers, final GC gc );
 
   /**
    * @return the color for this markerId, used in the TableView, ChartView
    */
-  public RGB getColorFor( final String marker );
-
+  RGB getColorFor( final String marker );
 }

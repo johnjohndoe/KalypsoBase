@@ -74,7 +74,7 @@ public interface IObservation extends IObservationEventProvider
    * Returns the values resulting from the measurements this observation stands for.
    * 
    * @param args
-   *          some client defined arguments that can be interpretated by the implementation. Implementors of this
+   *          some client defined arguments that can be interpreted by the implementation. Implementors of this
    *          interface can use this parameter, but they are not forced to do so.
    * @return model
    * @throws SensorException

@@ -48,7 +48,7 @@ import org.kalypso.ogc.sensor.IAxis;
  * 
  * @author schlienger
  */
-public final class DefaultAxis extends AbstractAxis implements IAxis
+public final class DefaultAxis extends AbstractAxis
 {
   private final String m_label;
 
