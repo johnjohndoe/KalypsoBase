@@ -49,7 +49,7 @@ import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
  * 
  * @author doemming
  */
-public class SimpleAxis extends AbstractAxis implements IAxis
+public class SimpleAxis extends AbstractAxis
 {
   private String m_type;
 
@@ -57,9 +57,9 @@ public class SimpleAxis extends AbstractAxis implements IAxis
 
   private final boolean m_isKey;
 
-  private boolean m_isPersistable;
+  private final boolean m_isPersistable;
 
-  public SimpleAxis( IAxis axis )
+  public SimpleAxis( final IAxis axis )
   {
     m_type = axis.getType();
     m_name = axis.getName();
@@ -75,7 +75,7 @@ public class SimpleAxis extends AbstractAxis implements IAxis
     return m_name;
   }
 
-  public void setName( String name )
+  public void setName( final String name )
   {
     m_name = name;
   }
@@ -104,7 +104,7 @@ public class SimpleAxis extends AbstractAxis implements IAxis
     return m_type;
   }
 
-  public void setType( String type )
+  public void setType( final String type )
   {
     m_type = type;
   }
