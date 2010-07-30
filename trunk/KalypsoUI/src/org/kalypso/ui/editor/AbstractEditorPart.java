@@ -317,7 +317,6 @@ public abstract class AbstractEditorPart extends WorkbenchPart implements IResou
       return;
 
     m_editorInput = input;
-    firePropertyChange( IEditorPart.PROP_INPUT );
 
     getSite().getShell().getDisplay().syncExec( new Runnable()
     {
@@ -325,6 +324,7 @@ public abstract class AbstractEditorPart extends WorkbenchPart implements IResou
       @SuppressWarnings("synthetic-access")
       public void run( )
       {
+        firePropertyChange( IEditorPart.PROP_INPUT );
         if( input == null )
           return;
 
