@@ -429,7 +429,7 @@ public final class ZmlFactory
 
     final ZmlTuppleModel model = new ZmlTuppleModel( valuesMap );
 
-    final SimpleObservation zmlObs = new SimpleObservation( href, obs.getName(), metadata, model.getAxisList(), model );
+    final SimpleObservation zmlObs = new SimpleObservation( href, obs.getName(), metadata, model );
 
     final String contextStr = context != null ? context.toExternalForm() : ""; //$NON-NLS-1$
     return decorateObservation( zmlObs, contextStr, context );
@@ -567,7 +567,7 @@ public final class ZmlFactory
       // sort axes, this is not needed from a xml view, but very usefull when comparing marshalled files (e.g.
       // Junit-Test)
       final TreeSet<IAxis> sortedAxis = new TreeSet<IAxis>( new Comparator<IAxis>()
-          {
+      {
         @Override
         public int compare( final IAxis a1, final IAxis a2 )
         {
@@ -589,7 +589,7 @@ public final class ZmlFactory
           }
           return type1.compareTo( type2 );
         }
-          } );
+      } );
 
       for( final IAxis axis : obs.getAxisList() )
         sortedAxis.add( axis );
@@ -870,7 +870,7 @@ public final class ZmlFactory
       r++;
     }
     final ITuppleModel model = new SimpleTuppleModel( axis, values );
-    return new SimpleObservation( null, name, new MetadataList(), axis, model );
+    return new SimpleObservation( null, name, new MetadataList(), model );
   }
 
   /**

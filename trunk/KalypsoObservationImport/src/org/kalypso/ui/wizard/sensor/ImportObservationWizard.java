@@ -74,7 +74,7 @@ public class ImportObservationWizard extends Wizard implements IImportWizard
   {
     setHelpAvailable( false );
     setNeedsProgressMonitor( false );
-    setWindowTitle( Messages.getString("org.kalypso.ui.wizard.sensor.ImportObservationWizard.0") ); //$NON-NLS-1$
+    setWindowTitle( Messages.getString( "org.kalypso.ui.wizard.sensor.ImportObservationWizard.0" ) ); //$NON-NLS-1$
   }
 
   /**
@@ -89,7 +89,7 @@ public class ImportObservationWizard extends Wizard implements IImportWizard
     if( !selectedResources.isEmpty() )
       m_selection = new StructuredSelection( selectedResources );
 
-    setWindowTitle( Messages.getString("org.kalypso.ui.wizard.sensor.ImportObservationWizard.1") ); //$NON-NLS-1$
+    setWindowTitle( Messages.getString( "org.kalypso.ui.wizard.sensor.ImportObservationWizard.1" ) ); //$NON-NLS-1$
     setNeedsProgressMonitor( true );
   }
 
@@ -100,9 +100,9 @@ public class ImportObservationWizard extends Wizard implements IImportWizard
   public void addPages( )
   {
     super.addPages();
-    m_page2 = new ImportObservationAxisMappingWizardPage( Messages.getString("org.kalypso.ui.wizard.sensor.ImportObservationWizard.2") ); //$NON-NLS-1$
+    m_page2 = new ImportObservationAxisMappingWizardPage( Messages.getString( "org.kalypso.ui.wizard.sensor.ImportObservationWizard.2" ) ); //$NON-NLS-1$
 
-    m_page1 = new ImportObservationSelectionWizardPage( Messages.getString("org.kalypso.ui.wizard.sensor.ImportObservationWizard.3") ); //$NON-NLS-1$
+    m_page1 = new ImportObservationSelectionWizardPage( Messages.getString( "org.kalypso.ui.wizard.sensor.ImportObservationWizard.3" ) ); //$NON-NLS-1$
     addPage( m_page1 );
     addPage( m_page2 );
 
@@ -212,7 +212,7 @@ public class ImportObservationWizard extends Wizard implements IImportWizard
       if( targetObservation != null && selection.isRetainMetadata() )
         metadata.putAll( targetObservation.getMetadataList() );
       metadata.putAll( srcObservation.getMetadataList() );
-      final IObservation newObservation = new SimpleObservation( href, name, metadata, axesNew, newTuppelModel );
+      final IObservation newObservation = new SimpleObservation( href, name, metadata, newTuppelModel );
       ZmlFactory.writeToFile( newObservation, fileTarget );
       // TODO refresh resources or use IResource
     }

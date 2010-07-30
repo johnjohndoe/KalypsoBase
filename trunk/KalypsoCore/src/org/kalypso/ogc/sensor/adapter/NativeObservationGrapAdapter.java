@@ -108,7 +108,7 @@ public class NativeObservationGrapAdapter implements INativeObservationAdapter
     // create axis
     final IAxis[] axis = createAxis();
     final ITuppleModel tuppelModel = createTuppelModel( source, axis, continueWithErrors );
-    final SimpleObservation observation = new SimpleObservation( "href", "titel", metaDataList, axis, tuppelModel ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    final SimpleObservation observation = new SimpleObservation( "href", "titel", metaDataList, tuppelModel ); //$NON-NLS-1$ //$NON-NLS-2$ 
     return observation;
   }
 
@@ -157,19 +157,19 @@ public class NativeObservationGrapAdapter implements INativeObservationAdapter
           }
           else
           {
-            errorBuffer.append( Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationGrapAdapter.14") + reader.getLineNumber() + Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationGrapAdapter.15") + lineIn + "\"\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+            errorBuffer.append( Messages.getString( "org.kalypso.ogc.sensor.adapter.NativeObservationGrapAdapter.14" ) + reader.getLineNumber() + Messages.getString( "org.kalypso.ogc.sensor.adapter.NativeObservationGrapAdapter.15" ) + lineIn + "\"\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
             numberOfErrors++;
           }
         }
         else
         {
-          errorBuffer.append( Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationGrapAdapter.17") + reader.getLineNumber() + Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationGrapAdapter.18") + lineIn + "\"\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+          errorBuffer.append( Messages.getString( "org.kalypso.ogc.sensor.adapter.NativeObservationGrapAdapter.17" ) + reader.getLineNumber() + Messages.getString( "org.kalypso.ogc.sensor.adapter.NativeObservationGrapAdapter.18" ) + lineIn + "\"\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
           numberOfErrors++;
         }
       }
       catch( final Exception e )
       {
-        errorBuffer.append( Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationGrapAdapter.20") + reader.getLineNumber() + Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationGrapAdapter.21") + e.getLocalizedMessage() + "\"\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        errorBuffer.append( Messages.getString( "org.kalypso.ogc.sensor.adapter.NativeObservationGrapAdapter.20" ) + reader.getLineNumber() + Messages.getString( "org.kalypso.ogc.sensor.adapter.NativeObservationGrapAdapter.21" ) + e.getLocalizedMessage() + "\"\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         numberOfErrors++;
       }
     }
@@ -196,7 +196,7 @@ public class NativeObservationGrapAdapter implements INativeObservationAdapter
   @Override
   public IAxis[] createAxis( )
   {
-    final IAxis dateAxis = new DefaultAxis( Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationGrapAdapter.23"), TimeserieConstants.TYPE_DATE, "", Date.class, true ); //$NON-NLS-1$ //$NON-NLS-2$
+    final IAxis dateAxis = new DefaultAxis( Messages.getString( "org.kalypso.ogc.sensor.adapter.NativeObservationGrapAdapter.23" ), TimeserieConstants.TYPE_DATE, "", Date.class, true ); //$NON-NLS-1$ //$NON-NLS-2$
     TimeserieUtils.getUnit( m_axisTypeValue );
     final IAxis valueAxis = new DefaultAxis( TimeserieUtils.getName( m_axisTypeValue ), m_axisTypeValue, TimeserieUtils.getUnit( m_axisTypeValue ), Double.class, false );
     final IAxis[] axis = new IAxis[] { dateAxis, valueAxis };

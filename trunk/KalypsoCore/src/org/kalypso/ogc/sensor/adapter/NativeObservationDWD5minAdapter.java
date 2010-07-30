@@ -127,7 +127,7 @@ public class NativeObservationDWD5minAdapter implements INativeObservationAdapte
     // create axis
     final IAxis[] axis = createAxis();
     final ITuppleModel tuppelModel = createTuppelModel( source, axis, continueWithErrors );
-    return new SimpleObservation( "href", "titel", metaDataList, axis, tuppelModel ); //$NON-NLS-1$ //$NON-NLS-2$
+    return new SimpleObservation( "href", "titel", metaDataList, tuppelModel ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   private ITuppleModel createTuppelModel( final File source, final IAxis[] axis, final boolean continueWithErrors ) throws IOException, ParseException
@@ -170,12 +170,12 @@ public class NativeObservationDWD5minAdapter implements INativeObservationAdapte
             }
             else
             {
-              System.out.println( Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationDWD5minAdapter.9") + startDateString + Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationDWD5minAdapter.10") + m_datePattern.toString() ); //$NON-NLS-1$ //$NON-NLS-2$
+              System.out.println( Messages.getString( "org.kalypso.ogc.sensor.adapter.NativeObservationDWD5minAdapter.9" ) + startDateString + Messages.getString( "org.kalypso.ogc.sensor.adapter.NativeObservationDWD5minAdapter.10" ) + m_datePattern.toString() ); //$NON-NLS-1$ //$NON-NLS-2$
             }
           }
           else
           {
-            errorBuffer.append( Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationDWD5minAdapter.11") + lineNumber + Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationDWD5minAdapter.12") + lineIn + Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationDWD5minAdapter.13") ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+            errorBuffer.append( Messages.getString( "org.kalypso.ogc.sensor.adapter.NativeObservationDWD5minAdapter.11" ) + lineNumber + Messages.getString( "org.kalypso.ogc.sensor.adapter.NativeObservationDWD5minAdapter.12" ) + lineIn + Messages.getString( "org.kalypso.ogc.sensor.adapter.NativeObservationDWD5minAdapter.13" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
             numberOfErrors++;
           }
           step++;
@@ -189,7 +189,7 @@ public class NativeObservationDWD5minAdapter implements INativeObservationAdapte
             // TODO: Write status
             if( value > 99.997 )
             {
-              System.out.println( Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationDWD5minAdapter.14") ); //$NON-NLS-1$
+              System.out.println( Messages.getString( "org.kalypso.ogc.sensor.adapter.NativeObservationDWD5minAdapter.14" ) ); //$NON-NLS-1$
               value = 0.0;
             }
             // Datenfilter für 0.0 - um Datenbank nicht mit unnötigen Werten zu füllen (Zur Zeit nicht verwendet, da
@@ -237,7 +237,7 @@ public class NativeObservationDWD5minAdapter implements INativeObservationAdapte
   @Override
   public IAxis[] createAxis( )
   {
-    final IAxis dateAxis = new DefaultAxis( Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationDWD5minAdapter.16"), TimeserieConstants.TYPE_DATE, "", Date.class, true ); //$NON-NLS-1$ //$NON-NLS-2$
+    final IAxis dateAxis = new DefaultAxis( Messages.getString( "org.kalypso.ogc.sensor.adapter.NativeObservationDWD5minAdapter.16" ), TimeserieConstants.TYPE_DATE, "", Date.class, true ); //$NON-NLS-1$ //$NON-NLS-2$
     TimeserieUtils.getUnit( m_axisTypeValue );
     final IAxis valueAxis = new DefaultAxis( TimeserieUtils.getName( m_axisTypeValue ), m_axisTypeValue, TimeserieUtils.getUnit( m_axisTypeValue ), Double.class, false );
     final IAxis[] axis = new IAxis[] { dateAxis, valueAxis };

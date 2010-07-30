@@ -704,4 +704,5 @@ public final class TimeserieUtils implements TimeserieConstants
   {
     return getProperties().getProperty( "AXISJFREECHARTCLASS_" + type, null ); //$NON-NLS-1$
   }
+
 }

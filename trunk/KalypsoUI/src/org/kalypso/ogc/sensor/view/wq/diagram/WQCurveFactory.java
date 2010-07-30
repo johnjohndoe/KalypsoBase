@@ -51,7 +51,7 @@ import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTable;
  */
 public final class WQCurveFactory
 {
-  private WQCurveFactory()
+  private WQCurveFactory( )
   {
     // empty
   }
@@ -59,9 +59,7 @@ public final class WQCurveFactory
   public static IObservation createObservation( final WQTable table )
   {
     final WQPairTuppleModel model = new WQPairTuppleModel( table.getPairs() );
-
-    final SimpleObservation obs = new SimpleObservation( "", table.toString(), new MetadataList(), //$NON-NLS-1$ 
-        model.getAxisList(), model );
+    final SimpleObservation obs = new SimpleObservation( "", table.toString(), new MetadataList(), model );//$NON-NLS-1$ 
 
     return obs;
   }
