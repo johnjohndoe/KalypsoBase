@@ -82,8 +82,9 @@ public class CheckFeaturePropertyHandler implements IFeaturePropertyHandler
         final Class< ? > valueClass = ((IValuePropertyType) pt).getTypeHandler().getValueClass();
         if( valueToSet != null && !valueClass.isAssignableFrom( valueToSet.getClass() ) )
         {
-          // KalypsoDeegreePlugin.getDefault().getLog().log( new Status( IStatus.WARNING, "org.kalypso.deegree", "Wrong type of value (" + valueToSet.getClass() + ") for qname: " + pt.getQName() ) );
-          // throw new IllegalArgumentException( "Wrong type of value (" + valueToSet.getClass() + ") for qname: " + pt.getQName() );
+          KalypsoDeegreePlugin.getDefault().getLog().log( new Status( IStatus.WARNING, "org.kalypso.deegree", "Wrong type of value (" + valueToSet.getClass() + ") for qname: " + pt.getQName() ) );
+          // throw new IllegalArgumentException( "Wrong type of value (" + valueToSet.getClass() + ") for qname: " +
+          // pt.getQName() );
         }
 
         // TODO: the type check should occur on the real value to set, that is after all other handlers
