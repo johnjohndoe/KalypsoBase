@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse.jface.viewers;
 
@@ -217,7 +217,14 @@ public class DefaultTableViewer extends TableViewer
 
   public String getProperty( final int columnIndex )
   {
-    final TableColumn column = getTable().getColumn( columnIndex );
+    final Table table = getTable();
+
+    /* Explicit check for the index, as the index might be invalid due race conditions on this table */
+    final TableColumn[] columns = table.getColumns();
+    if( columnIndex < 0 || columnIndex > columns.length - 1 )
+      return null;
+
+    final TableColumn column = columns[columnIndex];
     final Object property = column.getData( DefaultTableViewer.COLUMN_PROP_NAME );
     if( property == null )
       return null;
