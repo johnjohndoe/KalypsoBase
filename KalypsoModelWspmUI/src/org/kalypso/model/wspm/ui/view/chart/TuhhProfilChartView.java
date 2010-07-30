@@ -40,11 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.view.chart;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.RGB;
@@ -73,11 +68,9 @@ import org.kalypso.model.wspm.ui.profil.IProfilProvider;
 import org.kalypso.model.wspm.ui.profil.IProfilProviderListener;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
+import de.openali.odysseus.chart.framework.model.IChartModelState;
 import de.openali.odysseus.chart.framework.model.event.IChartModelEventListener;
 import de.openali.odysseus.chart.framework.model.event.impl.ChartModelEventHandler;
-import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
-import de.openali.odysseus.chart.framework.model.layer.IExpandableChartLayer;
-import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.view.IChartView;
 import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
 
@@ -147,10 +140,11 @@ public class TuhhProfilChartView extends ViewPart implements IChartPart, IProfil
       onProfilProviderChanged( m_provider, null, m_provider.getProfil() );
   }
 
-  protected ProfilChartModel createChartModel(final IProfilProvider provider,final IProfil newProfile  )
+  protected ProfilChartModel createChartModel( final IProfilProvider provider, final IProfil newProfile )
   {
-    return new ProfilChartModel( newProfile, provider.getResult());
+    return new ProfilChartModel( newProfile, provider.getResult() );
   }
+
   /**
    * @see com.bce.profil.ui.view.IProfilProviderListener#onProfilProviderChanged(com.bce.eind.core.profil.IProfilEventManager,
    *      com.bce.eind.core.profil.IProfilEventManager, com.bce.profil.ui.view.ProfilViewData,
@@ -167,18 +161,7 @@ public class TuhhProfilChartView extends ViewPart implements IChartPart, IProfil
     if( oldModel instanceof ProfilChartModel )
       ((ProfilChartModel) oldModel).dispose();
 
-    final ProfilChartModel newModel = newProfile == null ? null : createChartModel(provider,newProfile) ;
-
-    String activeLayerId = null;
-    List<Object> positions = null;
-    final Map<String, Boolean> visibility = new HashMap<String, Boolean>();
-
-    if( oldModel != null )
-    {
-      activeLayerId = saveStateActive( oldModel.getLayerManager() );
-      saveStateVisible( oldModel.getLayerManager(), visibility );
-      positions = saveStatePosition( oldModel.getLayerManager() );
-    }
+    final ProfilChartModel newModel = newProfile == null ? null : createChartModel( provider, newProfile );
 
     if( newModel == null )
     {
@@ -187,9 +170,11 @@ public class TuhhProfilChartView extends ViewPart implements IChartPart, IProfil
     }
     else
     {
-      restoreStateActive( newModel.getLayerManager(), activeLayerId );
-      restoreStatePosition( newModel.getLayerManager(), positions );
-      restoreStateVisible( newModel.getLayerManager(), visibility );
+      if( oldModel != null )
+      {
+        final IChartModelState state = oldModel.getState();
+        state.restoreState( newModel );
+      }
       setFormMessage( null, IMessageProvider.NONE );
       setPartNames( String.format( "Station km %10.4f", newProfile.getStation() ), Messages.getString( "org.kalypso.model.wspm.ui.view.AbstractProfilViewPart_2" ) ); //$NON-NLS-1$
       newModel.maximize();
@@ -273,112 +258,6 @@ public class TuhhProfilChartView extends ViewPart implements IChartPart, IProfil
   public void setFocus( )
   {
     m_control.setFocus();
-  }
-
-  private final void saveStateVisible( final ILayerManager mngr, final Map<String, Boolean> map )
-  {
-    for( final IChartLayer layer : mngr.getLayers() )
-    {
-      map.put( layer.getId(), layer.isVisible() );
-      if( layer instanceof IExpandableChartLayer )
-      {
-        saveStateVisible( ((IExpandableChartLayer) layer).getLayerManager(), map );
-      }
-    }
-  }
-
-  private final List<Object> saveStatePosition( final ILayerManager mngr )
-  {
-    final List<Object> list = new ArrayList<Object>();
-
-    for( final IChartLayer layer : mngr.getLayers() )
-    {
-      list.add( layer.getId() );
-      if( layer instanceof IExpandableChartLayer )
-      {
-        final List<Object> subList = saveStatePosition( ((IExpandableChartLayer) layer).getLayerManager() );
-        list.add( subList );
-      }
-    }
-
-    return list;
-  }
-
-  private final String saveStateActive( final ILayerManager mngr )
-  {
-    for( final IChartLayer layer : mngr.getLayers() )
-    {
-      if( layer.isActive() )
-        return layer.getId();
-    }
-    return ""; //$NON-NLS-1$
-  }
-
-  private final void restoreStateVisible( final ILayerManager mngr, final Map<String, Boolean> map )
-  {
-    for( final IChartLayer layer : mngr.getLayers() )
-    {
-      final Boolean visible = map.get( layer.getId() );
-      if( visible != null )
-        layer.setVisible( visible );
-      if( layer instanceof IExpandableChartLayer )
-      {
-        restoreStateVisible( ((IExpandableChartLayer) layer).getLayerManager(), map );
-      }
-    }
-  }
-
-  @SuppressWarnings("unchecked")
-  private final void restoreStatePosition( final ILayerManager mngr, final List<Object> list )
-  {
-    if( mngr == null || list == null )
-      return;
-
-    int pos = 0;
-    for( final Object o : list )
-    {
-      if( o instanceof List )
-      {
-        final List<Object> l = (List<Object>) o;
-        if( !l.isEmpty() )
-        {
-          final Object id = l.get( 0 );
-          final IChartLayer layer = id == null ? null : mngr.getLayerById( id.toString() );
-          if( layer != null )
-          {
-            mngr.moveLayerToPosition( layer, pos++ );
-            if( layer instanceof IExpandableChartLayer )
-            {
-              restoreStatePosition( ((IExpandableChartLayer) layer).getLayerManager(), l );
-            }
-          }
-        }
-      }
-      else
-      {
-        final IChartLayer layer = mngr.getLayerById( o.toString() );
-        if( layer != null )
-        {
-          mngr.moveLayerToPosition( layer, pos++ );
-        }
-      }
-    }
-  }
-
-  private final void restoreStateActive( final ILayerManager mngr, final String id )
-  {
-    final IChartLayer layer = mngr.getLayerById( id );
-    if( layer != null )
-    {
-      layer.setActive( true );
-      return;
-    }
-
-// old active Layer removed
-    if( mngr.getLayers().length > 0 )
-    {
-      mngr.getLayers()[0].setActive( true );
-    }
   }
 
   protected Composite getControl( )

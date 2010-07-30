@@ -46,6 +46,7 @@ import org.kalypso.model.wspm.core.profil.IProfilListener;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIExtensions;
 
+import de.openali.odysseus.chart.framework.model.IChartModelState;
 import de.openali.odysseus.chart.framework.model.impl.ChartModel;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
@@ -117,14 +118,14 @@ public class ProfilChartModel extends ChartModel
    */
   protected void updateLayers( )
   {
+    final IChartModelState state = this.getState();
+
     final ILayerManager layerManager = getLayerManager();
     layerManager.clear();
-
-    // FIXME: the order of layers should be preserved!
-
     final IProfilChartLayer[] profileLayers = m_layerProvider.createLayers( m_profil, m_result );
     for( final IProfilChartLayer layer : profileLayers )
       layerManager.addLayer( layer );
+    state.restoreState( this );
   }
 
   public void dispose( )
@@ -137,7 +138,6 @@ public class ProfilChartModel extends ChartModel
   {
     return m_profil;
   }
-
 
   public final IProfilChartLayer getLayer( final String layerID )
   {

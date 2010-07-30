@@ -10,6 +10,7 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.chart.ext.observation.data.TupleResultDomainValueData;
 import org.kalypso.contribs.eclipse.swt.graphics.RectangleUtils;
 import org.kalypso.observation.IObservation;
+import org.kalypso.observation.result.ComponentUtilities;
 import org.kalypso.observation.result.TupleResult;
 
 import de.openali.odysseus.chart.ext.base.layer.AbstractLineLayer;
@@ -209,10 +210,10 @@ public class TupleResultLineLayer extends AbstractLineLayer
     final TupleResult tr = m_data.getObservation().getResult();
     final int targetComponentIndex = tr.indexOfComponent( m_data.getTargetComponentName() );
     final int domainComponentIndex = tr.indexOfComponent( m_data.getDomainComponentName() );
-    final String targetComponentLabel = tr.getComponent( targetComponentIndex ).getName();
-    final String domainComponentLabel = tr.getComponent( domainComponentIndex ).getName();
-    final String targetComponentUnit = tr.getComponent( targetComponentIndex ).getUnit();
-    final String domainComponentUnit = tr.getComponent( domainComponentIndex ).getUnit();
+    final String targetComponentLabel = ComponentUtilities.getComponentLabel(tr.getComponent( targetComponentIndex ));
+    final String domainComponentLabel = ComponentUtilities.getComponentLabel(tr.getComponent( domainComponentIndex ));
+    final String targetComponentUnit = ComponentUtilities.getComponentUnitLabel( tr.getComponent( targetComponentIndex ));
+    final String domainComponentUnit = ComponentUtilities.getComponentUnitLabel( tr.getComponent( domainComponentIndex ));
     final Object y = tr.get( index ).getValue( targetComponentIndex );
     final Object x = tr.get( index ).getValue( domainComponentIndex );
 

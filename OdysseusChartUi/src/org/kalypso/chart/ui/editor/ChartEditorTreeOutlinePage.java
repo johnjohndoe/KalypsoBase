@@ -52,8 +52,10 @@ import org.eclipse.jface.viewers.ICheckStateProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.ITreeSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.ViewerDropAdapter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
@@ -118,12 +120,13 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
   }
 
   private final InvalidateOutlineJob m_invalidateOutlineJob = new InvalidateOutlineJob( "" );
-  public ChartEditorTreeOutlinePage()
+
+  public ChartEditorTreeOutlinePage( )
   {
-    this(new ChartEditorTreeContentProvider(),new ChartTreeLabelProvider());
+    this( new ChartEditorTreeContentProvider(), new ChartTreeLabelProvider() );
   }
 
-  public ChartEditorTreeOutlinePage(final ChartEditorTreeContentProvider contentProvider,final ChartTreeLabelProvider labelProvider)
+  public ChartEditorTreeOutlinePage( final ChartEditorTreeContentProvider contentProvider, final ChartTreeLabelProvider labelProvider )
   {
 
     m_contentProvider = contentProvider;
@@ -197,9 +200,10 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
       public void selectionChanged( final SelectionChangedEvent event )
       {
         final ISelection selection = event.getSelection();
-        final IStructuredSelection struct = (IStructuredSelection) selection;
-        final Object element = struct.getFirstElement();
-        if( element instanceof IChartLayer )
+        final ITreeSelection struct = (ITreeSelection) selection;
+        final TreePath path = struct.size() == 0 ? null : struct.getPaths()[0];
+        final Object element = path == null ? null : path.getFirstSegment();
+        if( element != null && element instanceof IChartLayer )
           ((IChartLayer) element).setActive( true );
       }
     };
@@ -511,7 +515,7 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
    */
   public void selectLayer( final IChartLayer layer )
   {
-    m_treeViewer.setExpandedElements( new Object[] { layer } );
+    //m_treeViewer.setExpandedElements( new Object[] { layer } );
     setSelection( new StructuredSelection( layer ) );
   }
 }

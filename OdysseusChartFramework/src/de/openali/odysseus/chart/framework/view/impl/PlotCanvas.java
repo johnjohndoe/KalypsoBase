@@ -25,7 +25,6 @@ import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.kalypso.contribs.eclipse.swt.graphics.RectangleUtils;
 
 import de.openali.odysseus.chart.framework.OdysseusChartFrameworkPlugin;
@@ -42,27 +41,15 @@ public class PlotCanvas extends Canvas implements PaintListener
 {
   private Image m_bufferImg = null;
 
-  private Image m_panImg = null;
-
   private ILayerManager m_layerManager;
 
   private EditInfo m_editInfo;
 
-  final Map<IChartLayer, Image> m_layerImageMap = new HashMap<IChartLayer, Image>();
+  private final Map<IChartLayer, Image> m_layerImageMap = new HashMap<IChartLayer, Image>();
+
+  private final Map<IChartLayer, Point> m_layerPanOffsets = new HashMap<IChartLayer, Point>();
 
   private Rectangle m_dragArea = null;
-
-  /**
-   * offset by which panned Layers are moved
-   */
-  private Point m_panOffset = null;
-
-// private boolean m_isEditing = false;
-
-  /**
-   * Layers which are panned
-   */
-  private final List<IChartLayer> m_panLayers = new ArrayList<IChartLayer>();
 
   /**
    * @param bufferLayers
@@ -99,11 +86,7 @@ public class PlotCanvas extends Canvas implements PaintListener
       m_bufferImg.dispose();
       m_bufferImg = null;
     }
-    if( m_panImg != null )
-    {
-      m_panImg.dispose();
-      m_panImg = null;
-    }
+
     for( Image img : m_layerImageMap.values() )
       img.dispose();
     m_layerImageMap.clear();
@@ -155,22 +138,11 @@ public class PlotCanvas extends Canvas implements PaintListener
     return m_layerManager.getLayers();
   }
 
-  public boolean isDragging( )
-  {
-    // TODO: Check callers
-    return false;
-  }
-
-// public boolean isEditing( )
-// {
-// return m_isEditing;
-// }
-
   /**
    ** Renders the current plot into a newly created image and returns it.<br/>
    * The caller is responsible to dispose the image.
    */
-  public Image createImage( Device device, final IChartLayer[] layers, final Rectangle screen )
+  public Image createImage( final IChartLayer[] layers, final Rectangle screen )
   {
     if( layers == null )
       return null;
@@ -189,7 +161,11 @@ public class PlotCanvas extends Canvas implements PaintListener
             m_layerImageMap.put( layer, createLayerImage( buffGc.getDevice(), screen, layer ) );
 
           final Image image = m_layerImageMap.get( layer );
-          buffGc.drawImage( image, 0, 0 );
+          Point point = m_layerPanOffsets.get( layer );
+          if( point != null )
+            buffGc.drawImage( image, -point.x, -point.y );
+          else
+            buffGc.drawImage( image, 0, 0 );
         }
       }
     }
@@ -251,37 +227,13 @@ public class PlotCanvas extends Canvas implements PaintListener
     final Rectangle screenArea = getClientArea();
     if( m_bufferImg == null )
     {
-
-      m_bufferImg = createImage( e.gc.getDevice(), getNotPannedLayers(), screenArea );
+      IChartLayer[] layers = m_layerManager.getLayers();
+      m_bufferImg = createImage( layers /* getNotPannedLayers() */, screenArea );
     }
+
     e.gc.drawImage( m_bufferImg, 0, 0 );
-    paintPannedLayer( e.gc );
     paintDragArea( e.gc );
     paintEditInfo( e.gc );
-  }
-
-  private final IChartLayer[] getNotPannedLayers( )
-  {
-    IChartLayer[] layers = m_layerManager.getLayers();
-    if( m_panLayers.size() == 0 )
-      return layers;
-    final List<IChartLayer> rest = new ArrayList<IChartLayer>();
-    for( final IChartLayer layer : layers )
-    {
-      if( !m_panLayers.contains( layer ) )
-        rest.add( layer );
-    }
-    return rest.toArray( new IChartLayer[] {} );
-  }
-
-  private void paintPannedLayer( final GC gcw )
-  {
-    if( m_panOffset == null )
-      return;
-
-    if( m_panImg == null )
-      m_panImg = createImage( gcw.getDevice(), m_panLayers.toArray( new IChartLayer[] {} ), getClientArea() );
-    gcw.drawImage( m_panImg, -m_panOffset.x, -m_panOffset.y );
   }
 
   private void paintDragArea( final GC gcw )
@@ -291,11 +243,6 @@ public class PlotCanvas extends Canvas implements PaintListener
     {
       gcw.setLineWidth( 1 );
       gcw.setForeground( gcw.getDevice().getSystemColor( SWT.COLOR_BLACK ) );
-
-// final int w = m_dragArea.width == -1 ? getBounds().width : m_dragArea.width;
-// final int h = m_dragArea.height == -1 ? getBounds().height : m_dragArea.height;
-// final int x = m_dragArea.x == -1 ? 0 : m_dragArea.width;
-// final int y = m_dragArea.y == -1 ? 0 : m_dragArea.height;
 
       gcw.setBackground( gcw.getDevice().getSystemColor( SWT.COLOR_BLUE ) );
       final Rectangle r = RectangleUtils.createNormalizedRectangle( m_dragArea );// new Rectangle( x, y, w, h ) );
@@ -349,7 +296,6 @@ public class PlotCanvas extends Canvas implements PaintListener
        * Positionieren der Tooltip-Box: der ideale Platz liegt rechts unter dem Mauszeiger. Wenn rechts nicht genï¿½gend
        * Platz ist, dann wird er nach links verschoben. Der Startpunkt soll dabei immer im sichtbaren Bereich liegen.
        */
-
       int toolx = mousePos.x + 3 + TOOLINSET;
       if( toolx + toolsize.x > screen.width )
       {
@@ -370,7 +316,6 @@ public class PlotCanvas extends Canvas implements PaintListener
       gcw.drawText( tooltiptext, toolx, tooly, true );
 
       gcw.setFont( oldFont );
-
     }
   }
 
@@ -379,11 +324,6 @@ public class PlotCanvas extends Canvas implements PaintListener
     m_dragArea = dragArea;
     redraw();
   }
-
-// public void setIsEditing( final boolean isEditing )
-// {
-// m_isEditing = isEditing;
-// }
 
   public void setLayerManager( ILayerManager layerManager )
   {
@@ -402,36 +342,15 @@ public class PlotCanvas extends Canvas implements PaintListener
    */
   public void setPanOffset( IChartLayer[] layers, final Point offset )
   {
-    // start pan
-    if( m_panOffset == null )
+    final IChartLayer[] layerToPan = layers == null ? m_layerManager.getLayers() : layers;
+    for( IChartLayer iChartLayer : layerToPan )
+      m_layerPanOffsets.put( iChartLayer, offset );
+    
+    if( m_bufferImg != null )
     {
-      for( IChartLayer layer : layers == null ? m_layerManager.getLayers() : layers )
-        m_panLayers.add( layer );
-
-      if( m_bufferImg != null )
-      {
-        m_bufferImg.dispose();
-        m_bufferImg = null;
-      }
+      m_bufferImg.dispose();
+      m_bufferImg = null;
     }
-
-    // end pan
-    if( offset == null )
-    {
-      m_panLayers.clear();
-      if( m_panImg != null )
-      {
-        m_panImg.dispose();
-        m_panImg = null;
-      }
-      if( m_bufferImg != null )
-      {
-        m_bufferImg.dispose();
-        m_bufferImg = null;
-      }
-    }
-
-    m_panOffset = offset;
 
     if( offset != null )
       redraw();
