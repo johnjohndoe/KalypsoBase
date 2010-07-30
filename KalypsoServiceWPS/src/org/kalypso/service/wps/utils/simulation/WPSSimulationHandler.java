@@ -263,18 +263,27 @@ public class WPSSimulationHandler extends Thread
     final FileObject resultFile = resultDir.resolveFile( "executeResponse.xml" ); //$NON-NLS-1$
     final String statusLocation = WPSUtilities.convertInternalToClient( resultFile.getURL().toExternalForm() );
 
-    ProcessOutputs processOutputs = null;
-    if( ioValues != null )
-      processOutputs = WPS040ObjectFactoryUtilities.buildExecuteResponseTypeProcessOutputs( ioValues );
+    try
+    {
+      ProcessOutputs processOutputs = null;
+      if( ioValues != null )
+        processOutputs = WPS040ObjectFactoryUtilities.buildExecuteResponseTypeProcessOutputs( ioValues );
 
-    final ExecuteResponseType value = WPS040ObjectFactoryUtilities.buildExecuteResponseType( m_execute.getIdentifier(), status, m_execute.getDataInputs(), m_execute.getOutputDefinitions(), processOutputs, statusLocation, WPSUtilities.WPS_VERSION.V040.toString() );
-    final JAXBElement<ExecuteResponseType> executeResponse = WPS040ObjectFactoryUtilities.buildExecuteResponse( value );
+      final ExecuteResponseType value = WPS040ObjectFactoryUtilities.buildExecuteResponseType( m_execute.getIdentifier(), status, m_execute.getDataInputs(), m_execute.getOutputDefinitions(), processOutputs, statusLocation, WPSUtilities.WPS_VERSION.V040.toString() );
+      final JAXBElement<ExecuteResponseType> executeResponse = WPS040ObjectFactoryUtilities.buildExecuteResponse( value );
 
-    /* Marshall it into one XML string. */
-    final String xml = MarshallUtilities.marshall( executeResponse, WPS_VERSION.V040 );
+      /* Marshall it into one XML string. */
+      final String xml = MarshallUtilities.marshall( executeResponse, WPS_VERSION.V040 );
 
-    /* Copy the execute response to this url. */
-    VFSUtilities.copyStringToFileObject( xml, resultFile );
+      /* Copy the execute response to this url. */
+      VFSUtilities.copyStringToFileObject( xml, resultFile );
+    } 
+    catch( Exception e )
+    {
+      e.printStackTrace();
+      //always close the result file
+//      resultFile.close();
+    }
     resultFile.close();
   }
 }
