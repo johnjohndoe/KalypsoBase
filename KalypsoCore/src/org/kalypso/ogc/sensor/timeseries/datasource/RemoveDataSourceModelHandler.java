@@ -38,85 +38,64 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.sensor.timeseries;
+package org.kalypso.ogc.sensor.timeseries.datasource;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
+import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
+import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 
 /**
  * @author Dirk Kuch
  */
-public final class AxisUtils implements TimeserieConstants
+public class RemoveDataSourceModelHandler extends AbstractDataSourceModelHandler
 {
-  private AxisUtils( )
+
+  /**
+   * don't use item.getAdapter(IObservation.class) -> because some implementation extends the underlying observation
+   */
+  public RemoveDataSourceModelHandler( final ITuppleModel model )
   {
+    super( model );
   }
 
-  public static boolean isDateAxis( final IAxis axis )
+  /**
+   * @return cloned observation extended by data source axis if no data source axis exists
+   */
+  public ITuppleModel remove( ) throws SensorException
   {
-    return isDateAxis( axis.getType() );
-  }
+    if( !hasDataSouceAxis() )
+      return getModel();
 
-  public static boolean isDateAxis( final String type )
-  {
-    return TYPE_DATE.equals( type );
-  }
+    final ITuppleModel baseModel = getModel();
+    final IAxis[] axes = getAxes( baseModel.getAxisList() );
 
-  public static boolean isValueAxis( final IAxis axis )
-  {
-    if( isDataSrcAxis( axis ) )
-      return false;
-    else if( isStatusAxis( axis ) )
-      return false;
-    else if( isDateAxis( axis ) )
-      return false;
-    else if( !axis.isPersistable() )
-      return false;
+    final SimpleTuppleModel model = new SimpleTuppleModel( axes );
 
-    // TODO so return true?
-    return true;
-  }
-
-  public static boolean isStatusAxis( final IAxis axis )
-  {
-    return isStatusAxis( axis.getType() );
-  }
-
-  public static boolean isStatusAxis( final String type )
-  {
-    return KalypsoStatusUtils.STATUS_AXIS_TYPE.equals( type );
-  }
-
-  public static boolean isDataSrcAxis( final IAxis axis )
-  {
-    return isDataSrcAxis( axis.getType() );
-  }
-
-  public static boolean isDataSrcAxis( final String type )
-  {
-    return TYPE_DATA_SRC.equals( type );
-  }
-
-  public static IAxis findValueAxis( final IAxis[] axes )
-  {
-    for( final IAxis axis : axes )
+    for( int i = 0; i < baseModel.getCount(); i++ )
     {
-      if( isValueAxis( axis ) )
-        return axis;
+      final Object[] data = new Object[axes.length];
+
+      for( final IAxis axis : axes )
+      {
+        final Object element = baseModel.getElement( i, axis );
+        data[model.getPositionFor( axis )] = element;
+      }
+
+      model.addTupple( data );
     }
 
-    return null;
+    return model;
   }
 
-  public static IAxis findDataSourceAxis( final IAxis[] axes )
+  private IAxis[] getAxes( final IAxis[] axes )
   {
-    for( final IAxis axis : axes )
-    {
-      if( isDataSrcAxis( axis ) )
-        return axis;
-    }
+    final IAxis axis = AxisUtils.findDataSourceAxis( axes );
+    if( axis != null )
+      return (IAxis[]) ArrayUtils.removeElement( axes, axis );
 
-    return null;
+    return axes;
   }
-
 }
