@@ -124,5 +124,4 @@ public class PropertyUtils
 
     return filtered.toArray( new IPropertyType[filtered.size()] );
   }
-
 }
