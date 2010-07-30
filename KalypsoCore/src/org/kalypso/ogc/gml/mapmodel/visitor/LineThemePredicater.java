@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.mapmodel.visitor;
 
+import java.util.Arrays;
+
 import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -54,7 +56,7 @@ import org.kalypsodeegree_impl.tools.GMLConstants;
  */
 public class LineThemePredicater implements IKalypsoThemePredicate
 {
-  private final QName[] m_QNames = new QName[] { GMLConstants.QN_MULTI_LINE_STRING, GMLConstants.QN_LINE_STRING };
+  private static final QName[] ACCEPTED_GEOMETRIES = new QName[] { GMLConstants.QN_MULTI_LINE_STRING, GMLConstants.QN_LINE_STRING };
 
   /**
    * @see org.kalypso.ogc.gml.mapmodel.IKalypsoThemePredicate#decide(org.kalypso.ogc.gml.IKalypsoTheme)
@@ -68,9 +70,9 @@ public class LineThemePredicater implements IKalypsoThemePredicate
       final IFeatureType featureType = fTheme.getFeatureType();
       if( featureType == null )
         return false;
-      final IValuePropertyType[] allGeomteryProperties = featureType.getAllGeomteryProperties();
-
-      if( allGeomteryProperties.length > 0 && allGeomteryProperties[0].getValueQName().equals( m_QNames[0] ) || allGeomteryProperties[0].getValueQName().equals( m_QNames[1] ) )
+      
+      final IValuePropertyType[] allGeomtryProperties = featureType.getAllGeomteryProperties();
+      if( allGeomtryProperties.length > 0 && Arrays.asList( ACCEPTED_GEOMETRIES ).contains( allGeomtryProperties[0].getValueQName() ) )
         return true;
     }
     return false;
