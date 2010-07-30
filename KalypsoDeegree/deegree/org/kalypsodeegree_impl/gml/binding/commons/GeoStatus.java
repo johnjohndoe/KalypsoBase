@@ -134,9 +134,8 @@ public class GeoStatus extends FeatureWrapperCollection<IGeoStatus> implements I
     {
       final IStatus status = StatusUtilities.statusFromThrowable( e );
       KalypsoDeegreePlugin.getDefault().getLog().log( status );
+      return null;
     }
-
-    return null;
   }
 
   /**
