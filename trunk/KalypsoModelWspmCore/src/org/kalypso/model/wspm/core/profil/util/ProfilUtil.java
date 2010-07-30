@@ -179,11 +179,18 @@ public final class ProfilUtil
 
   public static double getDoubleValueFor( final int componentIndex, final IRecord point )
   {
-    final Object oValue = point.getValue( componentIndex );
-    if( oValue instanceof Number )
-      return ((Number) oValue).doubleValue();
-
-    return Double.NaN;
+    try
+    {
+      final Object oValue = point.getValue( componentIndex );
+      if( oValue instanceof Number )
+        return ((Number) oValue).doubleValue();
+      return Double.NaN;
+    }
+    catch( IndexOutOfBoundsException e )
+    {
+      e.printStackTrace();
+      return Double.NaN;
+    }
   }
 
   public static boolean rangeIsConstantNumberFor( final IRecord start, final IRecord end, final IComponent component )

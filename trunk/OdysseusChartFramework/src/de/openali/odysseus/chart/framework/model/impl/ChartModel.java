@@ -8,6 +8,7 @@ import java.util.Map;
 import org.eclipse.swt.graphics.Point;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
+import de.openali.odysseus.chart.framework.model.IChartModelState;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.ComparableDataRange;
 import de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener;
@@ -28,7 +29,7 @@ public class ChartModel implements IChartModel
 
   private final IMapperRegistry m_mapperRegistry = new MapperRegistry();
 
-// /** axis --> List of layers */
+  // /** axis --> List of layers */
   private final Map<IAxis, List<IChartLayer>> m_axis2Layers = new HashMap<IAxis, List<IChartLayer>>();
 
   private final ILayerManager m_manager = new LayerManager();
@@ -88,145 +89,6 @@ public class ChartModel implements IChartModel
 
     };
     m_manager.addListener( m_layerMana );
-  }
-
-  /**
-   * adds layers to or removes layers from the chart
-   * 
-   * @param bAdding
-   *          if true, the layer will be added; if false, the layer will be removed
-   */
-  protected void updateAxisLayerMap( final IChartLayer layer, final boolean bAdding )
-  {
-    final ICoordinateMapper cm = layer.getCoordinateMapper();
-    if( cm == null )
-      return;
-    final IAxis domAxis = cm.getDomainAxis();
-    final IAxis valAxis = cm.getTargetAxis();
-    List<IChartLayer> domList = m_axis2Layers.get( domAxis );
-    List<IChartLayer> valList = m_axis2Layers.get( valAxis );
-
-    if( bAdding )
-    {
-      // mapping for domain axis
-      if( domList == null )
-      {
-        domList = new ArrayList<IChartLayer>();
-        final IAxis axis = cm.getDomainAxis();
-        m_axis2Layers.put( axis, domList );
-      }
-      domList.add( layer );
-
-      // mapping for value axis
-      if( valList == null )
-      {
-        valList = new ArrayList<IChartLayer>();
-        final IAxis axis = cm.getTargetAxis();
-        m_axis2Layers.put( axis, valList );
-      }
-      valList.add( layer );
-
-    }
-    else
-    {
-      // remove domain mapping
-      if( domList != null )
-      {
-        domList.remove( layer );
-      }
-
-      // remove value mapping
-      if( valList != null )
-      {
-        valList.remove( layer );
-      }
-
-    }
-    if( m_hideUnusedAxes )
-    {
-      domAxis.setVisible( domList.size() > 0 );
-      valAxis.setVisible( valList.size() > 0 );
-    }
-    if( m_autoscale )
-    {
-      autoscale( new IAxis[] { cm.getDomainAxis(), layer.getCoordinateMapper().getTargetAxis() } );
-    }
-
-  }
-
-  /*
-   * (non-Javadoc)
-   * @see org.kalypso.chart.framework.model.IChartModel#getAxisRegistry()
-   */
-  @Override
-  public IMapperRegistry getMapperRegistry( )
-  {
-    return m_mapperRegistry;
-  }
-
-  /*
-   * (non-Javadoc)
-   * @see org.kalypso.chart.framework.model.IChartModel#getLayerManager()
-   */
-  @Override
-  public ILayerManager getLayerManager( )
-  {
-    return m_manager;
-  }
-
-  /**
-   * @see org.kalypso.chart.framework.model.IChartModel#clear()
-   */
-  @Override
-  public void clear( )
-  {
-    m_axis2Layers.clear();
-    m_manager.clear();
-    m_mapperRegistry.clear();
-  }
-
-  /**
-   * @see org.kalypso.chart.framework.model.IChartModel#getAxis2Layers()
-   */
-  @Override
-  public Map<IAxis, List<IChartLayer>> getAxis2Layers( )
-  {
-    return m_axis2Layers;
-  }
-
-  /*
-   * (non-Javadoc)
-   * @see org.kalypso.chart.framework.model.IChartModel#setHideUnusedAxes(boolean)
-   */
-  @Override
-  public void setHideUnusedAxes( final boolean b )
-  {
-    if( b == m_hideUnusedAxes )
-      return;
-    m_hideUnusedAxes = b;
-    final IAxis[] axes = m_mapperRegistry.getAxes();
-
-    for( final IAxis axis : axes )
-    {
-      if( !m_hideUnusedAxes )
-      {
-        axis.setVisible( true );
-        continue;
-      }
-      final List<IChartLayer> list = m_axis2Layers.get( axis );
-      if( list == null )
-      {
-        axis.setVisible( false );
-        continue;
-      }
-      boolean visible = false;
-      for( final IChartLayer layer : list )
-      {
-        visible = visible | layer.isVisible();
-      }
-      axis.setVisible( visible );
-    }
-
   }
 
   /**
@@ -306,6 +168,64 @@ public class ChartModel implements IChartModel
   }
 
   /**
+   * @see org.kalypso.chart.framework.model.IChartModel#clear()
+   */
+  @Override
+  public void clear( )
+  {
+    m_axis2Layers.clear();
+    m_manager.clear();
+    m_mapperRegistry.clear();
+  }
+
+  /**
+   * @see org.kalypso.chart.framework.model.IChartModel#getAxis2Layers()
+   */
+  @Override
+  public Map<IAxis, List<IChartLayer>> getAxis2Layers( )
+  {
+    return m_axis2Layers;
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.IChartModel#getDescription()
+   */
+  @Override
+  public String getDescription( )
+  {
+    return m_description;
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.IChartModel#getId()
+   */
+  @Override
+  public String getId( )
+  {
+    return m_id;
+  }
+
+  /*
+   * (non-Javadoc)
+   * @see org.kalypso.chart.framework.model.IChartModel#getLayerManager()
+   */
+  @Override
+  public ILayerManager getLayerManager( )
+  {
+    return m_manager;
+  }
+
+  /*
+   * (non-Javadoc)
+   * @see org.kalypso.chart.framework.model.IChartModel#getAxisRegistry()
+   */
+  @Override
+  public IMapperRegistry getMapperRegistry( )
+  {
+    return m_mapperRegistry;
+  }
+
+  /**
    * @return DataRange of all domain or target data available in the given layer
    */
   private IDataRange<Number> getRangeFor( final IChartLayer layer, final IAxis axis )
@@ -317,6 +237,79 @@ public class ChartModel implements IChartModel
       return layer.getTargetRange();
 
     return null;
+
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.IChartModel#getState()
+   */
+  @Override
+  public IChartModelState getState( )
+  {
+    return new ChartModelState( getLayerManager() );
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.IChartModel#getTitle()
+   */
+  @Override
+  public String getTitle( )
+  {
+    return m_title;
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.IChartModel#isHideUnusedAxes()
+   */
+  @Override
+  public boolean isHideUnusedAxes( )
+  {
+    return m_hideUnusedAxes;
+  }
+
+  /**
+   * maximises the chart view - that means all the available data of all layers is shown
+   */
+  public void maximize( )
+  {
+    autoscale( null );
+    // ModelChangedEvent werfen, damit Composite das Model neu zeichnet
+  }
+
+  @Override
+  public void panTo( final Point start, final Point end )
+  {
+    if( start.equals( end ) )
+      return;
+
+    final IAxis[] axes = getMapperRegistry().getAxes();
+    for( final IAxis axis : axes )
+    {
+      double newmin = 0;
+      double newmax = 0;
+
+      Number nowNum;
+      Number startNum;
+      if( axis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
+      {
+        nowNum = axis.screenToNumeric( end.x );
+        startNum = axis.screenToNumeric( start.x );
+      }
+      else
+      {
+        nowNum = axis.screenToNumeric( end.y );
+        startNum = axis.screenToNumeric( start.y );
+      }
+      final double diff = nowNum.doubleValue() - startNum.doubleValue();
+      if( Double.isNaN( diff ) )
+        continue;
+      final IDataRange<Number> initRange = axis.getNumericRange();
+      newmin = initRange.getMin().doubleValue() + diff;
+      newmax = initRange.getMax().doubleValue() + diff;
+
+      final IDataRange<Number> newRange = new ComparableDataRange<Number>( new Number[] { new Double( newmin ), new Double( newmax ) } );
+      axis.setNumericRange( newRange );
+    }
 
   }
 
@@ -338,21 +331,47 @@ public class ChartModel implements IChartModel
   }
 
   /**
-   * maximises the chart view - that means all the available data of all layers is shown
-   */
-  public void maximize( )
-  {
-    autoscale( null );
-    // ModelChangedEvent werfen, damit Composite das Model neu zeichnet
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.framework.model.IChartModel#getId()
+   * @see de.openali.odysseus.chart.framework.model.IChartModel#setDescription(java.lang.String)
    */
   @Override
-  public String getId( )
+  public void setDescription( final String description )
   {
-    return m_id;
+    m_description = description;
+  }
+
+  /*
+   * (non-Javadoc)
+   * @see org.kalypso.chart.framework.model.IChartModel#setHideUnusedAxes(boolean)
+   */
+  @Override
+  public void setHideUnusedAxes( final boolean b )
+  {
+    if( b == m_hideUnusedAxes )
+      return;
+    m_hideUnusedAxes = b;
+    final IAxis[] axes = m_mapperRegistry.getAxes();
+
+    for( final IAxis axis : axes )
+    {
+      if( !m_hideUnusedAxes )
+      {
+        axis.setVisible( true );
+        continue;
+      }
+      final List<IChartLayer> list = m_axis2Layers.get( axis );
+      if( list == null )
+      {
+        axis.setVisible( false );
+        continue;
+      }
+      boolean visible = false;
+      for( final IChartLayer layer : list )
+      {
+        visible = visible | layer.isVisible();
+      }
+      axis.setVisible( visible );
+    }
+
   }
 
   /**
@@ -365,39 +384,76 @@ public class ChartModel implements IChartModel
   }
 
   /**
-   * @see de.openali.odysseus.chart.framework.model.IChartModel#getDescription()
-   */
-  @Override
-  public String getDescription( )
-  {
-    return m_description;
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.framework.model.IChartModel#getTitle()
-   */
-  @Override
-  public String getTitle( )
-  {
-    return m_title;
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.framework.model.IChartModel#setDescription(java.lang.String)
-   */
-  @Override
-  public void setDescription( final String description )
-  {
-    m_description = description;
-  }
-
-  /**
    * @see de.openali.odysseus.chart.framework.model.IChartModel#setTitle(java.lang.String)
    */
   @Override
   public void setTitle( final String title )
   {
     m_title = title;
+  }
+
+  /**
+   * adds layers to or removes layers from the chart
+   * 
+   * @param bAdding
+   *          if true, the layer will be added; if false, the layer will be removed
+   */
+  protected void updateAxisLayerMap( final IChartLayer layer, final boolean bAdding )
+  {
+    final ICoordinateMapper cm = layer.getCoordinateMapper();
+    if( cm == null )
+      return;
+    final IAxis domAxis = cm.getDomainAxis();
+    final IAxis valAxis = cm.getTargetAxis();
+    List<IChartLayer> domList = m_axis2Layers.get( domAxis );
+    List<IChartLayer> valList = m_axis2Layers.get( valAxis );
+
+    if( bAdding )
+    {
+      // mapping for domain axis
+      if( domList == null )
+      {
+        domList = new ArrayList<IChartLayer>();
+        final IAxis axis = cm.getDomainAxis();
+        m_axis2Layers.put( axis, domList );
+      }
+      domList.add( layer );
+
+      // mapping for value axis
+      if( valList == null )
+      {
+        valList = new ArrayList<IChartLayer>();
+        final IAxis axis = cm.getTargetAxis();
+        m_axis2Layers.put( axis, valList );
+      }
+      valList.add( layer );
+
+    }
+    else
+    {
+      // remove domain mapping
+      if( domList != null )
+      {
+        domList.remove( layer );
+      }
+
+      // remove value mapping
+      if( valList != null )
+      {
+        valList.remove( layer );
+      }
+
+    }
+    if( m_hideUnusedAxes )
+    {
+      domAxis.setVisible( domList.size() > 0 );
+      valAxis.setVisible( valList.size() > 0 );
+    }
+    if( m_autoscale )
+    {
+      autoscale( new IAxis[] { cm.getDomainAxis(), layer.getCoordinateMapper().getTargetAxis() } );
+    }
+
   }
 
   /**
@@ -524,52 +580,6 @@ public class ChartModel implements IChartModel
         }
       }
     }
-  }
-
-  @Override
-  public void panTo( final Point start, final Point end )
-  {
-    if( start.equals( end ) )
-      return;
-
-    final IAxis[] axes = getMapperRegistry().getAxes();
-    for( final IAxis axis : axes )
-    {
-      double newmin = 0;
-      double newmax = 0;
-
-      Number nowNum;
-      Number startNum;
-      if( axis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
-      {
-        nowNum = axis.screenToNumeric( end.x );
-        startNum = axis.screenToNumeric( start.x );
-      }
-      else
-      {
-        nowNum = axis.screenToNumeric( end.y );
-        startNum = axis.screenToNumeric( start.y );
-      }
-      final double diff = nowNum.doubleValue() - startNum.doubleValue();
-      if( Double.isNaN( diff ) )
-        continue;
-      final IDataRange<Number> initRange = axis.getNumericRange();
-      newmin = initRange.getMin().doubleValue() + diff;
-      newmax = initRange.getMax().doubleValue() + diff;
-
-      final IDataRange<Number> newRange = new ComparableDataRange<Number>( new Number[] { new Double( newmin ), new Double( newmax ) } );
-      axis.setNumericRange( newRange );
-    }
-
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.framework.model.IChartModel#isHideUnusedAxes()
-   */
-  @Override
-  public boolean isHideUnusedAxes( )
-  {
-    return m_hideUnusedAxes;
   }
 
 }

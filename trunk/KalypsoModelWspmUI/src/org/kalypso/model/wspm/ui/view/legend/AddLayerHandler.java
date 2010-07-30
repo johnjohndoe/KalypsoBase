@@ -52,6 +52,7 @@ import org.eclipse.ui.dialogs.ListDialog;
 import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIExtensions;
+import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider;
 import org.kalypso.model.wspm.ui.view.chart.LayerDescriptor;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartModel;
@@ -106,9 +107,8 @@ public class AddLayerHandler extends AbstractHandler
       }
     } );
     dialog.setInput( layerDescriptors );
-    // FIXME: always set message and title to dialogs!
-    dialog.setMessage( "" ); //$NON-NLS-1$
-    dialog.setTitle( "" ); //$NON-NLS-1$
+    dialog.setMessage( Messages.getString("org.kalypso.model.wspm.ui.view.legend.AddLayerHandler.0") ); //$NON-NLS-1$
+    dialog.setTitle( view.getTitle() ); //$NON-NLS-1$
 
     dialog.open();
 

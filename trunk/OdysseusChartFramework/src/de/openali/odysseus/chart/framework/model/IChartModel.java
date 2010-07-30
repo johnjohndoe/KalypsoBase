@@ -57,4 +57,6 @@ public interface IChartModel
 
   public void panTo( Point start, Point end );
 
+  public IChartModelState getState( );
+
 }

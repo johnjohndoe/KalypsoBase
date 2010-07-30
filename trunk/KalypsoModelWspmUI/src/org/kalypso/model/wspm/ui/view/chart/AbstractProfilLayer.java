@@ -127,7 +127,7 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
    *      de.openali.odysseus.chart.framework.model.layer.EditInfo)
    */
   @Override
-  public EditInfo commitDrag(final Point point, final EditInfo dragStartData )
+  public EditInfo commitDrag( final Point point, final EditInfo dragStartData )
   {
     final IComponent targetComponent = getTargetComponent();
     if( targetComponent != null )
@@ -364,9 +364,8 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
       return null;
 
     final int indexOfProperty = m_profil.indexOfProperty( m_targetRangeProperty );
-    if( indexOfProperty == -1 )
+    if( indexOfProperty < 0 )
       return null;
-
     return m_profil.getResult().getComponent( indexOfProperty );
   }
 

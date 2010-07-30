@@ -151,7 +151,7 @@ public class ChartComposite extends Canvas
 
   public final void drawPlotImage( final GC gc, final Rectangle rect )
   {
-    final Image tmpImg = m_plot.createImage( gc.getDevice(), getChartModel().getLayerManager().getLayers(), rect );
+    final Image tmpImg = m_plot.createImage( getChartModel().getLayerManager().getLayers(), rect );
     gc.drawImage( tmpImg, 0, 0, m_plot.getBounds().width, m_plot.getBounds().height, m_plot.getBounds().x, m_plot.getBounds().y, m_plot.getBounds().width, m_plot.getBounds().height );
     tmpImg.dispose();
   }
