@@ -459,7 +459,8 @@ public class WPSUtilities
 
       /* Try to read the status at least 3 times, before exiting. */
       Exception lastError = new Exception();
-      for( int i = 0; i < 3; i++ )
+      //TODO: timeout defined as approximately 3 seconds is in some how not always usable, set to 100. Better to set it from predefined properties.
+      for( int i = 0; i < 100; i++ )
       {
         InputStream inputStream = null;
         try
