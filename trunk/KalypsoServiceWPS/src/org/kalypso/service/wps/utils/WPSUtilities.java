@@ -459,8 +459,16 @@ public class WPSUtilities
 
       /* Try to read the status at least 3 times, before exiting. */
       Exception lastError = new Exception();
-      //TODO: timeout defined as approximately 3 seconds is in some how not always usable, set to 100. Better to set it from predefined properties.
-      for( int i = 0; i < 100; i++ )
+
+      // TODO: timeout defined as approximately 3 seconds is in some how not always usable, set to 100.
+      // Better to set it from predefined properties.
+
+      // Hi Ilya, I think you missunderstood the number here.
+      // It does not represent a timeout, but the number of times to try.
+      // The Thread.sleep( 1000 ) in case of an error is only the time to wait,
+      // before it is retried to read the execution response.
+      // I changed the value back to 3. Holger
+      for( int i = 0; i < 3; i++ )
       {
         InputStream inputStream = null;
         try
