@@ -55,7 +55,7 @@ public interface TimeserieConstants extends ObservationConstants
   /** Abfluss */
   String TYPE_RUNOFF = "Q"; //$NON-NLS-1$
 
-  public final static String TYPE_RUNOFF_RHB = "Qrhb"; //$NON-NLS-1$
+  String TYPE_RUNOFF_RHB = "Qrhb"; //$NON-NLS-1$
 
   /** Wasserstand */
   String TYPE_WATERLEVEL = "W"; //$NON-NLS-1$

@@ -53,7 +53,6 @@ import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.contribs.java.util.logging.ILogger;
 import org.kalypso.contribs.java.util.logging.LoggerUtilities;
-import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.MetadataList;
@@ -214,8 +213,7 @@ public class CopyObservationFeatureVisitor extends AbstractMonitoredFeatureVisit
 
     final IObservation baseObservation = sources[0].getObservation();
     final MetadataList metadataList = (MetadataList) baseObservation.getMetadataList().clone();
-    final IAxis[] axes = baseObservation.getAxisList();
 
-    return new SimpleObservation( null, null, metadataList, axes, tuppleModel );
+    return new SimpleObservation( null, null, metadataList, tuppleModel );
   }
 }

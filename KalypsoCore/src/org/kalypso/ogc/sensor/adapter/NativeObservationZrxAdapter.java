@@ -123,7 +123,7 @@ public class NativeObservationZrxAdapter implements INativeObservationAdapter
     final ITuppleModel tuppelModel = createTuppelModel( source, axis, continueWithErrors );
     if( tuppelModel == null )
       return null;
-    return new SimpleObservation( "href", m_SNAME, metaDataList, axis, tuppelModel );
+    return new SimpleObservation( "href", m_SNAME, metaDataList, tuppelModel ); //$NON-NLS-1$
   }
 
   private ITuppleModel createTuppelModel( final File source, final IAxis[] axis, boolean continueWithErrors ) throws IOException

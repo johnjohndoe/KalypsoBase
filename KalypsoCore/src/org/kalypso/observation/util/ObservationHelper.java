@@ -121,7 +121,7 @@ public final class ObservationHelper
     final String name = baseObservation.getName();
     final MetadataList metadataList = baseObservation.getMetadataList();
 
-    return new SimpleObservation( href, name, metadataList, model.getAxisList(), model );
+    return new SimpleObservation( href, name, metadataList, model );
   }
 
   public static IObservation parseFromByteArray( final byte[] buffer, final String repositoryItemId ) throws SensorException

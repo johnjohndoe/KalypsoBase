@@ -210,7 +210,7 @@ public class ObservationViewerDialog extends Dialog
                 values[row][ax] = dialog.getDefault();
             }
             final ITuppleModel model = new SimpleTuppleModel( axis, values );
-            setInput( new SimpleObservation( null, name, new MetadataList(), axis, model ) );
+            setInput( new SimpleObservation( null, name, new MetadataList(), model ) );
           }
         }
 
@@ -249,7 +249,7 @@ public class ObservationViewerDialog extends Dialog
               values[row][ax] = new Double( 0 );
           }
           final ITuppleModel model = new SimpleTuppleModel( axis, values );
-          setInput( new SimpleObservation( null, name, new MetadataList(), axis, model ) );
+          setInput( new SimpleObservation( null, name, new MetadataList(), model ) );
         }
 
         @Override

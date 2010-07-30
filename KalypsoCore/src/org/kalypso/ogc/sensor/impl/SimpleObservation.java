@@ -67,9 +67,7 @@ public class SimpleObservation implements IObservation
 
   private final MetadataList m_metadata;
 
-  private final IAxis[] m_axes;
-
-  private ITuppleModel m_tupples = null;
+  private ITuppleModel m_model = null;
 
   private final ObservationEventAdapter m_evtPrv = new ObservationEventAdapter( this );
 
@@ -87,16 +85,15 @@ public class SimpleObservation implements IObservation
 
   public SimpleObservation( final String href, final String name, final MetadataList metadata, final IAxis[] axes )
   {
-    this( href, name, metadata, axes, new SimpleTuppleModel( axes ) );
+    this( href, name, metadata, new SimpleTuppleModel( axes ) );
   }
 
-  public SimpleObservation( final String href, final String name, final MetadataList metadata, final IAxis[] axes, final ITuppleModel model )
+  public SimpleObservation( final String href, final String name, final MetadataList metadata, final ITuppleModel model )
   {
     m_href = href;
     m_name = name;
     m_metadata = metadata;
-    m_axes = axes;
-    m_tupples = model;
+    m_model = model;
   }
 
   /**
@@ -128,7 +125,7 @@ public class SimpleObservation implements IObservation
   @Override
   public IAxis[] getAxisList( )
   {
-    return m_axes;
+    return m_model.getAxisList();
   }
 
   /**
@@ -137,16 +134,16 @@ public class SimpleObservation implements IObservation
   @Override
   public ITuppleModel getValues( final IRequest request ) throws SensorException
   {
-    if( m_tupples == null )
+    if( m_model == null )
       throw new SensorException( Messages.getString( "org.kalypso.ogc.sensor.impl.SimpleObservation.6" ) ); //$NON-NLS-1$
 
     // TODO this leads to unsaved changes when a value is set because the underlying
     // (real) model isn't changed, just the copy of it (see setFrom and the calling
     // constructors in SimpleTuppleModel).
     if( (request != null) && (request.getDateRange() != null) )
-      return new SimpleTuppleModel( m_tupples, request.getDateRange() );
+      return new SimpleTuppleModel( m_model, request.getDateRange() );
 
-    return m_tupples;
+    return m_model;
   }
 
   /**
@@ -157,20 +154,20 @@ public class SimpleObservation implements IObservation
   {
     if( values == null )
     {
-      m_tupples = null;
+      m_model = new SimpleTuppleModel( m_model.getAxisList() );
       return;
     }
 
-    if( m_tupples == null )
+    if( m_model == null )
     {
-      m_tupples = values;
+      m_model = values;
       return;
     }
 
     final IAxis[] otherAxes = values.getAxisList();
-    final Map<IAxis, IAxis> map = new HashMap<IAxis, IAxis>( m_axes.length );
+    final Map<IAxis, IAxis> map = new HashMap<IAxis, IAxis>( getAxisList().length );
 
-    for( final IAxis myA : m_axes )
+    for( final IAxis myA : getAxisList() )
     {
       try
       {
@@ -184,7 +181,7 @@ public class SimpleObservation implements IObservation
       }
     }
 
-    final IAxis[] keys = ObservationUtilities.findAxesByKey( m_axes );
+    final IAxis[] keys = ObservationUtilities.findAxesByKey( getAxisList() );
 
     for( int i = 0; i < values.getCount(); i++ )
     {
@@ -194,7 +191,7 @@ public class SimpleObservation implements IObservation
       for( final IAxis key : keys )
       {
         final Object obj = values.getElement( i, map.get( key ) );
-        final int ix = m_tupples.indexOf( obj, key );
+        final int ix = m_model.indexOf( obj, key );
 
         if( (ix >= 0) && (ixPresent != -1) )
         {
@@ -215,7 +212,7 @@ public class SimpleObservation implements IObservation
           final IAxis oA = map.get( myA );
 
           final Object obj = values.getElement( i, oA );
-          m_tupples.setElement( ixPresent, obj, myA );
+          m_model.setElement( ixPresent, obj, myA );
         }
       }
       else
@@ -249,10 +246,10 @@ public class SimpleObservation implements IObservation
   private SimpleTuppleModel prepareForAdding( ) throws SensorException
   {
     // since we are adding
-    if( !(m_tupples instanceof SimpleTuppleModel) )
-      m_tupples = new SimpleTuppleModel( m_tupples );
+    if( !(m_model instanceof SimpleTuppleModel) )
+      m_model = new SimpleTuppleModel( m_model );
 
-    return (SimpleTuppleModel) m_tupples;
+    return (SimpleTuppleModel) m_model;
   }
 
   /**
