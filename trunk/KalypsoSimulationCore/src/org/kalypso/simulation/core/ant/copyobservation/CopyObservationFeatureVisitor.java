@@ -123,7 +123,7 @@ public class CopyObservationFeatureVisitor extends AbstractMonitoredFeatureVisit
       final IFile targetfile = getTargetResource( targetLocation );
       if( targetfile != null )
       {
-        // FIXKME: is this enough? What happens if the mkdir on the local file creates new folders?
+        // FIXME: is this enough? What happens if the mkdir on the local file creates new folders?
         targetfile.refreshLocal( DEPTH_INFINITE, null );
       }
     }

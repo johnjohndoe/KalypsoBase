@@ -46,30 +46,31 @@ import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 /**
  * @author Dirk Kuch
  */
-public class AxisUtils implements TimeserieConstants
+public final class AxisUtils implements TimeserieConstants
 {
+  private AxisUtils( )
+  {
+  }
+
   public static boolean isDateAxis( final IAxis axis )
   {
     return isDateAxis( axis.getType() );
   }
 
-  private static boolean isDateAxis( final String type )
+  public static boolean isDateAxis( final String type )
   {
     return TYPE_DATE.equals( type );
   }
 
   public static boolean isValueAxis( final IAxis axis )
   {
-    return isValueAxis( axis.getType() );
-  }
-
-  private static boolean isValueAxis( final String type )
-  {
-    if( isDataSrcAxis( type ) )
+    if( isDataSrcAxis( axis ) )
       return false;
-    else if( isStatusAxis( type ) )
+    else if( isStatusAxis( axis ) )
       return false;
-    else if( isDateAxis( type ) )
+    else if( isDateAxis( axis ) )
+      return false;
+    else if( !axis.isPersistable() )
       return false;
 
     // TODO so return true?
@@ -81,7 +82,7 @@ public class AxisUtils implements TimeserieConstants
     return isStatusAxis( axis.getType() );
   }
 
-  private static boolean isStatusAxis( final String type )
+  public static boolean isStatusAxis( final String type )
   {
     return KalypsoStatusUtils.STATUS_AXIS_TYPE.equals( type );
   }
@@ -91,8 +92,31 @@ public class AxisUtils implements TimeserieConstants
     return isDataSrcAxis( axis.getType() );
   }
 
-  private static boolean isDataSrcAxis( final String type )
+  public static boolean isDataSrcAxis( final String type )
   {
     return TYPE_DATA_SRC.equals( type );
   }
+
+  public static IAxis findValueAxis( final IAxis[] axes )
+  {
+    for( final IAxis axis : axes )
+    {
+      if( isValueAxis( axis ) )
+        return axis;
+    }
+
+    return null;
+  }
+
+  public static IAxis findDataSourceAxis( final IAxis[] axes )
+  {
+    for( final IAxis axis : axes )
+    {
+      if( isDataSrcAxis( axis ) )
+        return axis;
+    }
+
+    return null;
+  }
+
 }
