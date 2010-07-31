@@ -52,7 +52,6 @@ import org.kalypso.contribs.eclipse.core.runtime.PathUtils;
  * 
  * @author schlienger (14.06.2005)
  */
-@SuppressWarnings("restriction")
 public class ResourceUtilities
 {
   private ResourceUtilities( )
@@ -138,6 +137,7 @@ public class ResourceUtilities
     return ResourcesPlugin.getWorkspace().getRoot().getProject( projectName );
   }
 
+  @SuppressWarnings("restriction")
   public static IPath findPathFromURL( final URL u )
   {
     final String utostring = u.toString();
@@ -241,6 +241,7 @@ public class ResourceUtilities
    * @param path
    * @return platform URL
    */
+  @SuppressWarnings("restriction")
   public static String createURLSpec( final IPath path )
   {
     return PlatformURLResourceConnection.RESOURCE_URL_STRING + path.toString();
