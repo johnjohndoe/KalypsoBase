@@ -72,7 +72,7 @@ public final class TranProLinFilterUtilities
     filter.setAxisTypes( axisTypes );
     final StringWriter stringWriter = new StringWriter();
 
-    final Marshaller marshaller = JaxbUtilities.createMarshaller( FilterFactory.JC_FILTER );
+    final Marshaller marshaller = JaxbUtilities.createMarshaller( ZmlFactory.JC );
     marshaller.marshal( FilterFactory.OF_FILTER.createTranProLinFilter( filter ), stringWriter );
     final String string = XMLUtilities.removeXMLHeader( stringWriter.toString() );
     final String filterInline = XMLUtilities.prepareInLine( string );

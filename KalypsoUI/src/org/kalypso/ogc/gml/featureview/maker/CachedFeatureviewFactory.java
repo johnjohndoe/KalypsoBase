@@ -53,7 +53,7 @@ import javax.xml.namespace.QName;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.core.jaxb.TemplateUtilitites;
+import org.kalypso.core.jaxb.TemplateUtilities;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.template.featureview.Featuretemplate;
@@ -161,7 +161,7 @@ public class CachedFeatureviewFactory implements IFeatureviewFactory
 
     try
     {
-      final Unmarshaller unmarshaller = TemplateUtilitites.createFeatureviewUnmarshaller();
+      final Unmarshaller unmarshaller = TemplateUtilities.createFeatureviewUnmarshaller();
       Object unmarshal = unmarshaller.unmarshal( url );
       if( unmarshal instanceof JAXBElement< ? > )
         unmarshal = ((JAXBElement< ? >) unmarshal).getValue();

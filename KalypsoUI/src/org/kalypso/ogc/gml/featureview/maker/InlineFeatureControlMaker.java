@@ -44,7 +44,7 @@ import java.util.List;
 
 import javax.xml.bind.JAXBElement;
 
-import org.kalypso.core.jaxb.TemplateUtilitites;
+import org.kalypso.core.jaxb.TemplateUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -78,12 +78,12 @@ public class InlineFeatureControlMaker implements IControlMaker
     if( !(value instanceof Feature) )
       return false;
 
-    final SubcompositeType compo = TemplateUtilitites.OF_FEATUREVIEW.createSubcompositeType();
+    final SubcompositeType compo = TemplateUtilities.OF_FEATUREVIEW.createSubcompositeType();
     compo.setStyle( "SWT.NONE" ); //$NON-NLS-1$
     compo.setProperty( ftp.getQName() );
 
-    final GridDataType griddata = TemplateUtilitites.OF_FEATUREVIEW.createGridDataType();
-    final JAXBElement<GridDataType> jaxbgriddata = TemplateUtilitites.OF_FEATUREVIEW.createGridData( griddata );
+    final GridDataType griddata = TemplateUtilities.OF_FEATUREVIEW.createGridDataType();
+    final JAXBElement<GridDataType> jaxbgriddata = TemplateUtilities.OF_FEATUREVIEW.createGridData( griddata );
 
     griddata.setHorizontalAlignment( "SWT.FILL" ); //$NON-NLS-1$
     griddata.setVerticalAlignment( "SWT.FILL" ); //$NON-NLS-1$
@@ -93,29 +93,29 @@ public class InlineFeatureControlMaker implements IControlMaker
 
     compo.setLayoutData( jaxbgriddata );
 
-    final Group group = TemplateUtilitites.OF_FEATUREVIEW.createGroup();
+    final Group group = TemplateUtilities.OF_FEATUREVIEW.createGroup();
 
-    final GridDataType groupdata = TemplateUtilitites.OF_FEATUREVIEW.createGridDataType();
+    final GridDataType groupdata = TemplateUtilities.OF_FEATUREVIEW.createGridDataType();
     groupdata.setGrabExcessHorizontalSpace( true );
     groupdata.setGrabExcessVerticalSpace( true );
     groupdata.setHorizontalAlignment( "SWT.FILL" ); //$NON-NLS-1$
     groupdata.setVerticalAlignment( "SWT.FILL" ); //$NON-NLS-1$
     groupdata.setHorizontalSpan( ((GridLayout) parentLayout).getNumColumns() );
 
-    group.setLayoutData( TemplateUtilitites.OF_FEATUREVIEW.createGridData( groupdata ) );
+    group.setLayoutData( TemplateUtilities.OF_FEATUREVIEW.createGridData( groupdata ) );
     group.setStyle( "SWT.NONE" ); //$NON-NLS-1$
 
     group.setProperty( ftp.getQName() );
     
-    final GridLayout gridLayout = TemplateUtilitites.OF_FEATUREVIEW.createGridLayout();
+    final GridLayout gridLayout = TemplateUtilities.OF_FEATUREVIEW.createGridLayout();
     gridLayout.setNumColumns( 2 );
     gridLayout.setMarginWidth( 0 );
     gridLayout.setMarginHeight( 0 );
-    group.setLayout( TemplateUtilitites.OF_FEATUREVIEW.createGridLayout( gridLayout ) );
+    group.setLayout( TemplateUtilities.OF_FEATUREVIEW.createGridLayout( gridLayout ) );
 
-    group.getControl().add( TemplateUtilitites.OF_FEATUREVIEW.createSubcomposite( compo ) );
+    group.getControl().add( TemplateUtilities.OF_FEATUREVIEW.createSubcomposite( compo ) );
 
-    controlList.add( TemplateUtilitites.OF_FEATUREVIEW.createGroup( group ) );
+    controlList.add( TemplateUtilities.OF_FEATUREVIEW.createGroup( group ) );
 
     return true;
   }

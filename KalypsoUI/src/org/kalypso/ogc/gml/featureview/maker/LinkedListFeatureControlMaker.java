@@ -43,7 +43,7 @@ package org.kalypso.ogc.gml.featureview.maker;
 import javax.xml.bind.JAXBElement;
 import javax.xml.namespace.QName;
 
-import org.kalypso.core.jaxb.TemplateUtilitites;
+import org.kalypso.core.jaxb.TemplateUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -96,32 +96,32 @@ public class LinkedListFeatureControlMaker extends AbstractValueControlMaker
     final QName qname = rt.getQName();
 
     /* Create the UI components */
-    final GridDataType listData = TemplateUtilitites.OF_FEATUREVIEW.createGridDataType();
+    final GridDataType listData = TemplateUtilities.OF_FEATUREVIEW.createGridDataType();
     listData.setHorizontalAlignment( "GridData.FILL" ); //$NON-NLS-1$
     listData.setVerticalAlignment( "GridData.FILL" ); //$NON-NLS-1$
     listData.setGrabExcessHorizontalSpace( true );
 
-    final Extensioncontrol extensioncontrol = TemplateUtilitites.OF_FEATUREVIEW.createExtensioncontrol();
+    final Extensioncontrol extensioncontrol = TemplateUtilities.OF_FEATUREVIEW.createExtensioncontrol();
     extensioncontrol.setEnabled( true );
     extensioncontrol.setExtensionId( ChecklistOfLinksFeatureviewControlFactory.class.getName() );
-    extensioncontrol.setLayoutData( TemplateUtilitites.OF_FEATUREVIEW.createGridData( listData ) );
+    extensioncontrol.setLayoutData( TemplateUtilities.OF_FEATUREVIEW.createGridData( listData ) );
     extensioncontrol.setStyle( "SWT.NONE" ); //$NON-NLS-1$
     extensioncontrol.setVisible( true );
     extensioncontrol.setProperty( qname );
 
-    final Param selectParam = TemplateUtilitites.OF_FEATUREVIEW.createExtensioncontrolParam();
+    final Param selectParam = TemplateUtilities.OF_FEATUREVIEW.createExtensioncontrolParam();
     selectParam.setName( ChecklistOfLinksFeatureControl.PARAM_SELECT_BUTTONS );
     selectParam.setValue( Boolean.toString( m_showSelectButtons ) );
     extensioncontrol.getParam().add( selectParam );
 
-    final GridLayout groupLayout = TemplateUtilitites.OF_FEATUREVIEW.createGridLayout();
+    final GridLayout groupLayout = TemplateUtilities.OF_FEATUREVIEW.createGridLayout();
 
-    final Group group = TemplateUtilitites.OF_FEATUREVIEW.createGroup();
-    group.setLayout( TemplateUtilitites.OF_FEATUREVIEW.createGridLayout( groupLayout ) );
+    final Group group = TemplateUtilities.OF_FEATUREVIEW.createGroup();
+    group.setLayout( TemplateUtilities.OF_FEATUREVIEW.createGridLayout( groupLayout ) );
     group.setStyle( "SWT.NONE" ); //$NON-NLS-1$
 
-    group.getControl().add( TemplateUtilitites.OF_FEATUREVIEW.createExtensioncontrol( extensioncontrol ) );
+    group.getControl().add( TemplateUtilities.OF_FEATUREVIEW.createExtensioncontrol( extensioncontrol ) );
 
-    return TemplateUtilitites.OF_FEATUREVIEW.createGroup( group );
+    return TemplateUtilities.OF_FEATUREVIEW.createGroup( group );
   }
 }

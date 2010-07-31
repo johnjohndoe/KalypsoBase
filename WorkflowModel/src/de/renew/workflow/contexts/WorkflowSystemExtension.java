@@ -46,7 +46,6 @@ import java.util.Map;
 import java.util.ResourceBundle;
 
 import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -56,6 +55,7 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
+import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.commons.i18n.ResourceBundleUtils;
 import org.osgi.framework.Bundle;
 
@@ -70,11 +70,11 @@ import de.renew.workflow.base.impl.Workflow_Impl;
  */
 public class WorkflowSystemExtension
 {
+  public static final JAXBContext JC = JaxbUtilities.createQuiet( de.renew.workflow.base.ObjectFactory.class, de.renew.workflow.contexts.ObjectFactory.class, de.renew.workflow.cases.ObjectFactory.class );
+
   private static Map<String, IWorkflow> THE_WORKFLOW_MAP = null;
 
   private final static String WORKFLOW_SYSTEM_EXTENSION_POINT = "de.renew.workflow.model.workflowSystem";
-
-  private final static JAXBContext JC = createJAXBContext();
 
   public static IWorkflow getWorkflow( final String id )
   {
@@ -117,26 +117,13 @@ public class WorkflowSystemExtension
         {
           // in this moment logger is not available...
           e.printStackTrace();
-//          final IStatus status = new Status( Status.ERROR, "de.renew.workflow.model", "Failed to create workflowSystem extension for id: " + id, e );
-//          WorkflowModelPlugin.getInstance().getLog().log( status );
+          //          final IStatus status = new Status( Status.ERROR, "de.renew.workflow.model", "Failed to create workflowSystem extension for id: " + id, e );
+          //          WorkflowModelPlugin.getInstance().getLog().log( status );
         }
       }
     }
 
     return THE_WORKFLOW_MAP;
-  }
-
-  private static JAXBContext createJAXBContext( )
-  {
-    try
-    {
-      return JAXBContext.newInstance( de.renew.workflow.base.ObjectFactory.class, de.renew.workflow.contexts.ObjectFactory.class, de.renew.workflow.cases.ObjectFactory.class );
-    }
-    catch( final JAXBException e )
-    {
-      e.printStackTrace();
-      return null;
-    }
   }
 
   private static IWorkflow loadModel( final URL location ) throws CoreException

@@ -45,7 +45,7 @@ import java.util.List;
 import javax.xml.bind.JAXBElement;
 import javax.xml.namespace.QName;
 
-import org.kalypso.core.jaxb.TemplateUtilitites;
+import org.kalypso.core.jaxb.TemplateUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -93,10 +93,10 @@ public class LinkedFeatureControlMaker extends AbstractValueControlMaker
 
     final QName qname = rt.getQName();
 
-    final CompositeType composite = TemplateUtilitites.OF_FEATUREVIEW.createCompositeType();
+    final CompositeType composite = TemplateUtilities.OF_FEATUREVIEW.createCompositeType();
     final List<JAXBElement< ? extends ControlType>> control = composite.getControl();
 
-    final GridLayout layout = TemplateUtilitites.OF_FEATUREVIEW.createGridLayout();
+    final GridLayout layout = TemplateUtilities.OF_FEATUREVIEW.createGridLayout();
 
     /* If the button should be shown, make two columns, otherwise only one. */
     if( m_showButton )
@@ -106,7 +106,7 @@ public class LinkedFeatureControlMaker extends AbstractValueControlMaker
 
     layout.setMakeColumnsEqualWidth( false );
     layout.setMarginWidth( 1 );
-    composite.setLayout( TemplateUtilitites.OF_FEATUREVIEW.createGridLayout( layout ) );
+    composite.setLayout( TemplateUtilities.OF_FEATUREVIEW.createGridLayout( layout ) );
     composite.setStyle( "SWT.NONE" ); //$NON-NLS-1$
 
     griddata.setHorizontalAlignment( "GridData.FILL" ); //$NON-NLS-1$
@@ -118,31 +118,31 @@ public class LinkedFeatureControlMaker extends AbstractValueControlMaker
       griddata.setHorizontalSpan( 1 );
 
     // Text
-    final Combo combo = TemplateUtilitites.OF_FEATUREVIEW.createCombo();
+    final Combo combo = TemplateUtilities.OF_FEATUREVIEW.createCombo();
     combo.setStyle( "SWT.DROP_DOWN | SWT.READ_ONLY" ); //$NON-NLS-1$
     combo.setProperty( qname );
 
-    final GridDataType comboData = TemplateUtilitites.OF_FEATUREVIEW.createGridDataType();
+    final GridDataType comboData = TemplateUtilities.OF_FEATUREVIEW.createGridDataType();
     comboData.setHorizontalAlignment( "GridData.FILL" ); //$NON-NLS-1$
     comboData.setGrabExcessHorizontalSpace( true );
-    combo.setLayoutData( TemplateUtilitites.OF_FEATUREVIEW.createGridData( comboData ) );
+    combo.setLayoutData( TemplateUtilities.OF_FEATUREVIEW.createGridData( comboData ) );
 
-    control.add( TemplateUtilitites.OF_FEATUREVIEW.createCombo( combo ) );
+    control.add( TemplateUtilities.OF_FEATUREVIEW.createCombo( combo ) );
 
     // Knopf
     if( m_showButton )
     {
-      final Button button = TemplateUtilitites.OF_FEATUREVIEW.createButton();
-      final GridDataType buttonData = TemplateUtilitites.OF_FEATUREVIEW.createGridDataType();
+      final Button button = TemplateUtilities.OF_FEATUREVIEW.createButton();
+      final GridDataType buttonData = TemplateUtilities.OF_FEATUREVIEW.createGridDataType();
       button.setStyle( "SWT.PUSH" ); //$NON-NLS-1$
       button.setProperty( qname );
 
       buttonData.setHorizontalAlignment( "GridData.BEGINNING" ); //$NON-NLS-1$
-      button.setLayoutData( TemplateUtilitites.OF_FEATUREVIEW.createGridData( buttonData ) );
+      button.setLayoutData( TemplateUtilities.OF_FEATUREVIEW.createGridData( buttonData ) );
 
-      control.add( TemplateUtilitites.OF_FEATUREVIEW.createButton( button ) );
+      control.add( TemplateUtilities.OF_FEATUREVIEW.createButton( button ) );
     }
 
-    return TemplateUtilitites.OF_FEATUREVIEW.createComposite( composite );
+    return TemplateUtilities.OF_FEATUREVIEW.createComposite( composite );
   }
 }

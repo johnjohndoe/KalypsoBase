@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import javax.xml.bind.JAXBContext;
+
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectNature;
@@ -35,6 +37,8 @@ import de.renew.workflow.connector.cases.ICase;
  */
 public class ScenarioManager extends AbstractCaseManager<IScenario> implements IScenarioManager
 {
+  private static final JAXBContext JC_SCENARIO = JaxbUtilities.createQuiet( org.kalypso.afgui.scenarios.ObjectFactory.class, de.renew.workflow.cases.ObjectFactory.class );
+
   private static final Logger logger = Logger.getLogger( ScenarioManager.class.getName() );
 
   private static final boolean log = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.afgui/debug" ) ); //$NON-NLS-1$
@@ -60,7 +64,7 @@ public class ScenarioManager extends AbstractCaseManager<IScenario> implements I
    */
   public ScenarioManager( final IProject project ) throws CoreException
   {
-    super( project, JaxbUtilities.createQuiet( org.kalypso.afgui.scenarios.ObjectFactory.class, de.renew.workflow.cases.ObjectFactory.class ) );
+    super( project, JC_SCENARIO );
   }
 
   /**

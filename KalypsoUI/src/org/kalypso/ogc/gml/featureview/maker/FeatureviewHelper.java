@@ -44,7 +44,7 @@ import java.util.List;
 
 import javax.xml.bind.JAXBElement;
 
-import org.kalypso.core.jaxb.TemplateUtilitites;
+import org.kalypso.core.jaxb.TemplateUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.template.featureview.ControlType;
@@ -113,19 +113,19 @@ public class FeatureviewHelper implements IFeatureviewFactory
 
   private FeatureviewType getWithContent( final IFeatureType featureType, final Feature feature )
   {
-    final FeatureviewType featureview = TemplateUtilitites.OF_FEATUREVIEW.createFeatureviewType();
+    final FeatureviewType featureview = TemplateUtilities.OF_FEATUREVIEW.createFeatureviewType();
     featureview.setTypename( featureType.getQName() );
     featureview.setStyle( "SWT.NONE" ); //$NON-NLS-1$
 
-    final GridLayout gridLayout = TemplateUtilitites.OF_FEATUREVIEW.createGridLayout();
+    final GridLayout gridLayout = TemplateUtilities.OF_FEATUREVIEW.createGridLayout();
     gridLayout.setNumColumns( 4 );
-    featureview.setLayout( TemplateUtilitites.OF_FEATUREVIEW.createGridLayout( gridLayout ) );
-    final GridDataType griddata = TemplateUtilitites.OF_FEATUREVIEW.createGridDataType();
+    featureview.setLayout( TemplateUtilities.OF_FEATUREVIEW.createGridLayout( gridLayout ) );
+    final GridDataType griddata = TemplateUtilities.OF_FEATUREVIEW.createGridDataType();
     griddata.setGrabExcessHorizontalSpace( Boolean.TRUE );
     griddata.setGrabExcessVerticalSpace( Boolean.TRUE );
     griddata.setHorizontalAlignment( "GridData.FILL" ); //$NON-NLS-1$
     griddata.setVerticalAlignment( "GridData.FILL" ); //$NON-NLS-1$
-    featureview.setLayoutData( TemplateUtilitites.OF_FEATUREVIEW.createGridData( griddata ) );
+    featureview.setLayoutData( TemplateUtilities.OF_FEATUREVIEW.createGridData( griddata ) );
 
     /* REMARK: It is important that the maker is re-created each time. */
     /* As the makers sometimes do store state information. */
@@ -153,36 +153,36 @@ public class FeatureviewHelper implements IFeatureviewFactory
 
   private FeatureviewType getWithoutContent( )
   {
-    final FeatureviewType featureview = TemplateUtilitites.OF_FEATUREVIEW.createFeatureviewType();
+    final FeatureviewType featureview = TemplateUtilities.OF_FEATUREVIEW.createFeatureviewType();
     featureview.setTypename( null );
     featureview.setStyle( "SWT.NONE" ); //$NON-NLS-1$
 
-    final GridLayout gridLayout = TemplateUtilitites.OF_FEATUREVIEW.createGridLayout();
+    final GridLayout gridLayout = TemplateUtilities.OF_FEATUREVIEW.createGridLayout();
     gridLayout.setNumColumns( 1 );
-    featureview.setLayout( TemplateUtilitites.OF_FEATUREVIEW.createGridLayout( gridLayout ) );
-    final GridDataType griddata = TemplateUtilitites.OF_FEATUREVIEW.createGridDataType();
+    featureview.setLayout( TemplateUtilities.OF_FEATUREVIEW.createGridLayout( gridLayout ) );
+    final GridDataType griddata = TemplateUtilities.OF_FEATUREVIEW.createGridDataType();
     griddata.setGrabExcessHorizontalSpace( Boolean.TRUE );
     griddata.setGrabExcessVerticalSpace( Boolean.TRUE );
     griddata.setHorizontalAlignment( "GridData.FILL" ); //$NON-NLS-1$
     griddata.setVerticalAlignment( "GridData.FILL" ); //$NON-NLS-1$
-    featureview.setLayoutData( TemplateUtilitites.OF_FEATUREVIEW.createGridData( griddata ) );
+    featureview.setLayoutData( TemplateUtilities.OF_FEATUREVIEW.createGridData( griddata ) );
 
     /* Get the list of controls. */
     final List<JAXBElement< ? extends ControlType>> controlList = featureview.getControl();
 
     /* Create a label. */
-    final LabelType label = TemplateUtilitites.OF_FEATUREVIEW.createLabelType();
+    final LabelType label = TemplateUtilities.OF_FEATUREVIEW.createLabelType();
     label.setStyle( "SWT.NONE" ); //$NON-NLS-1$
     label.setText( "Kein Feature gefunden..." );
     label.setVisible( true );
 
-    final GridDataType labelGridData = TemplateUtilitites.OF_FEATUREVIEW.createGridDataType();
+    final GridDataType labelGridData = TemplateUtilities.OF_FEATUREVIEW.createGridDataType();
     labelGridData.setGrabExcessHorizontalSpace( true );
     labelGridData.setHorizontalAlignment( "GridData.BEGINNING" ); //$NON-NLS-1$
-    label.setLayoutData( TemplateUtilitites.OF_FEATUREVIEW.createGridData( labelGridData ) );
+    label.setLayoutData( TemplateUtilities.OF_FEATUREVIEW.createGridData( labelGridData ) );
 
     /* Add the label. */
-    controlList.add( TemplateUtilitites.OF_FEATUREVIEW.createLabel( label ) );
+    controlList.add( TemplateUtilities.OF_FEATUREVIEW.createLabel( label ) );
 
     return featureview;
   }

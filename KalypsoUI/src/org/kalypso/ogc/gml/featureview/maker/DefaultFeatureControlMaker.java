@@ -47,7 +47,7 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.namespace.QName;
 
 import org.kalypso.commons.xml.NS;
-import org.kalypso.core.jaxb.TemplateUtilitites;
+import org.kalypso.core.jaxb.TemplateUtilities;
 import org.kalypso.gmlschema.annotation.DefaultAnnotation;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -126,7 +126,7 @@ public class DefaultFeatureControlMaker extends AbstractValueControlMaker
     if( Feature.QN_DESCRIPTION.equals( qname ) )
     {
       // everything else will be edited in a text field
-      final Text editor = TemplateUtilitites.OF_FEATUREVIEW.createText();
+      final Text editor = TemplateUtilities.OF_FEATUREVIEW.createText();
 
       editor.setStyle( "SWT.MULTI | SWT.BORDER" ); //$NON-NLS-1$
       editor.setEditable( true );
@@ -139,13 +139,13 @@ public class DefaultFeatureControlMaker extends AbstractValueControlMaker
       griddata.setHeightHint( new Integer( 30 ) );
       griddata.setHorizontalSpan( 1 );
 
-      return TemplateUtilitites.OF_FEATUREVIEW.createText( editor );
+      return TemplateUtilities.OF_FEATUREVIEW.createText( editor );
     }
 
     if( Feature.QN_NAME.equals( qname ) )
     {
       // everything else will be edited in a text field
-      final Text editor = TemplateUtilitites.OF_FEATUREVIEW.createText();
+      final Text editor = TemplateUtilities.OF_FEATUREVIEW.createText();
       editor.setStyle( "SWT.BORDER" ); //$NON-NLS-1$
       editor.setEditable( true );
       editor.setProperty( qname );
@@ -154,7 +154,7 @@ public class DefaultFeatureControlMaker extends AbstractValueControlMaker
       griddata.setHorizontalAlignment( "GridData.FILL" ); //$NON-NLS-1$
       griddata.setHorizontalSpan( 1 );
 
-      return TemplateUtilitites.OF_FEATUREVIEW.createText( editor );
+      return TemplateUtilities.OF_FEATUREVIEW.createText( editor );
     }
 
     /* Else we are not responsible for this property. */

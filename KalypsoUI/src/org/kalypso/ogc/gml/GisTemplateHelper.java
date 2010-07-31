@@ -73,7 +73,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.core.jaxb.TemplateUtilitites;
+import org.kalypso.core.jaxb.TemplateUtilities;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.i18n.Messages;
@@ -240,7 +240,7 @@ public final class GisTemplateHelper
   // TODO: for all calling methods: close streams!
   public static final Gismapview loadGisMapView( final InputSource is ) throws JAXBException, SAXException, ParserConfigurationException, IOException
   {
-    final Unmarshaller unmarshaller = TemplateUtilitites.createGismapviewUnmarshaller();
+    final Unmarshaller unmarshaller = TemplateUtilities.createGismapviewUnmarshaller();
 
     // XInclude awareness
     final SAXParserFactory spf = SAXParserFactory.newInstance();
@@ -261,19 +261,19 @@ public final class GisTemplateHelper
 
   public static Gistableview loadGisTableview( final InputSource is ) throws JAXBException
   {
-    final Unmarshaller unmarshaller = TemplateUtilitites.JC_GISTABLEVIEW.createUnmarshaller();
+    final Unmarshaller unmarshaller = TemplateUtilities.JC_GISTABLEVIEW.createUnmarshaller();
     return (Gistableview) unmarshaller.unmarshal( is );
   }
 
   public static void saveGisMapView( final Gismapview modellTemplate, final OutputStream outStream, final String encoding ) throws JAXBException
   {
-    final Marshaller marshaller = TemplateUtilitites.createGismapviewMarshaller( encoding );
+    final Marshaller marshaller = TemplateUtilities.createGismapviewMarshaller( encoding );
     marshaller.marshal( modellTemplate, outStream );
   }
 
   public static void saveGisMapView( final Gismapview modellTemplate, final Writer writer, final String encoding ) throws JAXBException
   {
-    final Marshaller marshaller = TemplateUtilitites.createGismapviewMarshaller( encoding );
+    final Marshaller marshaller = TemplateUtilities.createGismapviewMarshaller( encoding );
     marshaller.marshal( modellTemplate, writer );
   }
 
@@ -355,8 +355,8 @@ public final class GisTemplateHelper
    */
   public static Gismapview createGisMapView( final Map<Feature, IRelationType> layersToCreate, final boolean strictType )
   {
-    final Gismapview gismapview = TemplateUtilitites.OF_GISMAPVIEW.createGismapview();
-    final Layers layers = TemplateUtilitites.OF_GISMAPVIEW.createGismapviewLayers();
+    final Gismapview gismapview = TemplateUtilities.OF_GISMAPVIEW.createGismapview();
+    final Layers layers = TemplateUtilities.OF_GISMAPVIEW.createGismapviewLayers();
     gismapview.setLayers( layers );
 
     final List<JAXBElement< ? extends StyledLayerType>> layer = layers.getLayer();
@@ -399,7 +399,7 @@ public final class GisTemplateHelper
       layerType.setVisible( true );
       layerType.setId( "ID_" + count++ ); //$NON-NLS-1$
 
-      final JAXBElement<StyledLayerType> layerElement = TemplateUtilitites.OF_GISMAPVIEW.createLayer( layerType );
+      final JAXBElement<StyledLayerType> layerElement = TemplateUtilities.OF_GISMAPVIEW.createLayer( layerType );
 
       layer.add( layerElement );
     }
@@ -420,7 +420,7 @@ public final class GisTemplateHelper
 
   public static final Gistreeview loadGisTreeView( final InputSource is ) throws JAXBException
   {
-    final Unmarshaller unmarshaller = TemplateUtilitites.JC_GISTREEVIEW.createUnmarshaller();
+    final Unmarshaller unmarshaller = TemplateUtilities.JC_GISTREEVIEW.createUnmarshaller();
     return (Gistreeview) unmarshaller.unmarshal( is );
   }
 
@@ -447,7 +447,7 @@ public final class GisTemplateHelper
 
       final CascadingLayerKalypsoTheme cascadingKalypsoTheme = ((CascadingLayerKalypsoTheme) theme);
       cascadingKalypsoTheme.fillLayerType( cascadingLayer, id, theme.isVisible(), srsName, monitor ); //$NON-NLS-1$
-      return TemplateUtilitites.OF_GISMAPVIEW.createCascadingLayer( cascadingLayer );
+      return TemplateUtilities.OF_GISMAPVIEW.createCascadingLayer( cascadingLayer );
     }
 
     final StyledLayerType layer = OF_TEMPLATE_TYPES.createStyledLayerType();
@@ -456,7 +456,7 @@ public final class GisTemplateHelper
     if( theme instanceof GisTemplateFeatureTheme )
     {
       ((GisTemplateFeatureTheme) theme).fillLayerType( layer, id, theme.isVisible() );//$NON-NLS-1$
-      return TemplateUtilitites.OF_GISMAPVIEW.createLayer( layer );
+      return TemplateUtilities.OF_GISMAPVIEW.createLayer( layer );
     }
     else if( theme instanceof KalypsoWMSTheme )
     {
@@ -477,12 +477,12 @@ public final class GisTemplateHelper
         layer.setLegendicon( extentFac.createStyledLayerTypeLegendicon( legendIcon ) );
 
       layer.setShowChildren( extentFac.createStyledLayerTypeShowChildren( abstractKalypsoTheme.shouldShowLegendChildren() ) );
-      return TemplateUtilitites.OF_GISMAPVIEW.createLayer( layer );
+      return TemplateUtilities.OF_GISMAPVIEW.createLayer( layer );
     }
     else if( theme instanceof KalypsoPictureTheme )
     {
       ((KalypsoPictureTheme) theme).fillLayerType( layer, id, theme.isVisible() ); //$NON-NLS-1$
-      return TemplateUtilitites.OF_GISMAPVIEW.createLayer( layer );
+      return TemplateUtilities.OF_GISMAPVIEW.createLayer( layer );
     }
     else if( theme instanceof CascadingKalypsoTheme )
     {
@@ -490,7 +490,7 @@ public final class GisTemplateHelper
       cascadingKalypsoTheme.fillLayerType( layer, id, theme.isVisible() ); //$NON-NLS-1$
 
       cascadingKalypsoTheme.createGismapTemplate( bbox, srsName, monitor );
-      return TemplateUtilitites.OF_GISMAPVIEW.createLayer( layer );
+      return TemplateUtilities.OF_GISMAPVIEW.createLayer( layer );
     }
     else if( theme instanceof KalypsoLegendTheme )
     {
@@ -510,7 +510,7 @@ public final class GisTemplateHelper
         layer.setLegendicon( extentFac.createStyledLayerTypeLegendicon( legendIcon ) );
 
       layer.setShowChildren( extentFac.createStyledLayerTypeShowChildren( abstractKalypsoTheme.shouldShowLegendChildren() ) );
-      return TemplateUtilitites.OF_GISMAPVIEW.createLayer( layer );
+      return TemplateUtilities.OF_GISMAPVIEW.createLayer( layer );
     }
     else if( theme instanceof KalypsoScaleTheme )
     {
@@ -527,7 +527,7 @@ public final class GisTemplateHelper
         layer.setLegendicon( extentFac.createStyledLayerTypeLegendicon( legendIcon ) );
 
       layer.setShowChildren( extentFac.createStyledLayerTypeShowChildren( abstractKalypsoTheme.shouldShowLegendChildren() ) );
-      return TemplateUtilitites.OF_GISMAPVIEW.createLayer( layer );
+      return TemplateUtilities.OF_GISMAPVIEW.createLayer( layer );
     }
     else
     {

@@ -5,7 +5,7 @@ import org.osgi.framework.BundleContext;
 
 public class KalypsoKMLPlugin extends Plugin
 {
-// The shared instance.
+  // The shared instance.
   private static KalypsoKMLPlugin plugin = null;
 
   /**
@@ -16,9 +16,6 @@ public class KalypsoKMLPlugin extends Plugin
     return KalypsoKMLPlugin.plugin;
   }
 
-  /**
-   *
-   */
   public KalypsoKMLPlugin( )
   {
     KalypsoKMLPlugin.plugin = this;

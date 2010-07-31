@@ -42,37 +42,21 @@ package de.renew.workflow.connector.cases;
 
 import java.util.List;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 
 import de.renew.workflow.cases.Case;
+import de.renew.workflow.contexts.WorkflowSystemExtension;
 
 /**
  * @author Stefan Kurzbach
  */
 public class SimpleCaseManager extends AbstractCaseManager<ICase> implements ICaseManager<ICase>
 {
-
   public SimpleCaseManager( final IProject project ) throws CoreException
   {
-    super( project, createJAXBContext() );
-  }
-
-  private static JAXBContext createJAXBContext( )
-  {
-    try
-    {
-      return JAXBContext.newInstance( de.renew.workflow.cases.ObjectFactory.class );
-    }
-    catch( final JAXBException e )
-    {
-      e.printStackTrace();
-      return null;
-    }
+    super( project, WorkflowSystemExtension.JC );
   }
 
   /**

@@ -74,12 +74,12 @@ public final class JaxbUtilities
 
   /**
    * Creates a {@link JAXBContext} for the given object factories.<br>
-   * This is a convienience method in order to avoid handling of the thrown {@link JAXBException} which will never come
+   * This is a convenience method in order to avoid handling of the thrown {@link JAXBException} which will never come
    * during normal execution.<br>
    * Additionally, it is vital to use this method, as it enforces the use of the right JAXB Version even if called from
    * an ant task (see comment in code).
    */
-  public static JAXBContext createQuiet( final Class< ? >... objectFactoryClasses )
+  public synchronized static JAXBContext createQuiet( final Class< ? >... objectFactoryClasses )
   {
     final DebugPerf stopWatch = DEBUG.createStopWatch( "Initializing JAXContext for classes:%n" ); //$NON-NLS-1$
     for( final Class< ? > clazz : objectFactoryClasses )

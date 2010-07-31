@@ -42,7 +42,7 @@ package org.kalypso.ogc.gml.featureview.maker;
 
 import javax.xml.bind.JAXBElement;
 
-import org.kalypso.core.jaxb.TemplateUtilitites;
+import org.kalypso.core.jaxb.TemplateUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.template.featureview.Button;
@@ -68,14 +68,14 @@ public class ButtonControlMaker extends AbstractValueControlMaker
   @Override
   protected JAXBElement< ? extends ControlType> createControlType( Feature feature, IFeatureType ft, final IPropertyType fpt, final GridDataType griddata )
   {
-    final Button button = TemplateUtilitites.OF_FEATUREVIEW.createButton();
+    final Button button = TemplateUtilities.OF_FEATUREVIEW.createButton();
     button.setStyle( "SWT.PUSH" ); //$NON-NLS-1$
     button.setProperty( fpt.getQName() );
 
     griddata.setHorizontalAlignment( "GridData.BEGINNING" ); //$NON-NLS-1$
     griddata.setHorizontalSpan( 2 );
 
-    return TemplateUtilitites.OF_FEATUREVIEW.createButton( button );
+    return TemplateUtilities.OF_FEATUREVIEW.createButton( button );
   }
 
 }

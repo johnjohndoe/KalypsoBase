@@ -45,7 +45,7 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.contribs.javax.xml.namespace.ListQName;
 import org.kalypso.contribs.javax.xml.namespace.MixedQName;
-import org.kalypso.core.jaxb.TemplateUtilitites;
+import org.kalypso.core.jaxb.TemplateUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
@@ -99,7 +99,7 @@ public class GuiHandlerControlMaker extends AbstractValueControlMaker
 
     final IGuiTypeHandler handler = GuiTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForTypeName( valueQName );
 
-    final JAXBElement< ? extends ControlType> controlElement = handler.createFeatureviewControl( pt, TemplateUtilitites.OF_FEATUREVIEW );
+    final JAXBElement< ? extends ControlType> controlElement = handler.createFeatureviewControl( pt, TemplateUtilities.OF_FEATUREVIEW );
     if( controlElement == null )
       return null;
 
