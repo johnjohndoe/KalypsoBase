@@ -44,7 +44,6 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.net.URL;
 
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 
 import junit.framework.TestCase;
@@ -52,6 +51,7 @@ import junit.framework.TestCase;
 import org.apache.commons.io.IOUtils;
 import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.ogc.sensor.filter.FilterFactory;
+import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.zml.filters.IntervallFilterType;
 import org.kalypso.zml.filters.ZmlFilterType;
 import org.w3._1999.xlinkext.SimpleLinkType;
@@ -74,8 +74,6 @@ public class IntervallFilterTest extends TestCase
       // TODO: probably the second filter factory will be forgotten everywhere
       // so move instantiation into central helper class and use it everywhere
 
-      final JAXBContext jc = FilterFactory.JC_FILTER;
-
       final ZmlFilterType zmlFilter = FilterFactory.OF_FILTER.createZmlFilterType();
       zmlFilter.setZml( xlink );
 
@@ -87,15 +85,15 @@ public class IntervallFilterTest extends TestCase
       intervallFilter.setDefaultValue( 12.9 );
       intervallFilter.setFilter( FilterFactory.OF_FILTER.createZmlFilter( zmlFilter ) );
       writer = new StringWriter();
-      final Marshaller marshaller = JaxbUtilities.createMarshaller( jc, true );
+      final Marshaller marshaller = JaxbUtilities.createMarshaller( ZmlFactory.JC, true );
       marshaller.marshal( FilterFactory.OF_FILTER.createIntervallFilter( intervallFilter ), writer );
       writer.close();
 //      final String string = XMLUtilities.removeXMLHeader( writer.toString() );
 //      final String filterInline = XMLUtilities.prepareInLine( string );
-      
+
       // REMARK: this is all crap! Many of the used characters in the filter are not allowed in
       // URLs. So any URL parser may change them or do something strange.
-      
+
       // The concrete problem here is, that the double '//' are removed by the URL-parser
       // So later, the filter will not be parsed correctly.
       // I have no idea how to fix this at the moment, so the test is commented out

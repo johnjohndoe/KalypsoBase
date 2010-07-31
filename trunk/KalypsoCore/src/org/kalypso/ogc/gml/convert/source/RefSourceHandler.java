@@ -4,13 +4,12 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
 
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
 import org.kalypso.contribs.java.net.IUrlResolver;
-import org.kalypso.gml.util.ObjectFactory;
+import org.kalypso.core.jaxb.TemplateUtilities;
 import org.kalypso.gml.util.Refsource;
 import org.kalypso.gml.util.SourceType;
 import org.kalypso.ogc.gml.convert.GmlConvertException;
@@ -49,8 +48,7 @@ public class RefSourceHandler implements ISourceHandler
     {
       final URL sourceURL = m_resolver.resolveURL( m_context, m_href );
 
-      final JAXBContext jc = JAXBContext.newInstance( ObjectFactory.class );
-      final Unmarshaller unmarshaller = jc.createUnmarshaller();
+      final Unmarshaller unmarshaller = TemplateUtilities.JC_GMC.createUnmarshaller();
       final JAXBElement< ? > sourceElement = (JAXBElement< ? >) unmarshaller.unmarshal( sourceURL );
       final SourceType source = (SourceType) sourceElement.getValue();
       return GmlConvertFactory.loadSource( m_resolver, sourceURL, source, m_externData );

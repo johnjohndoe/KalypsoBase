@@ -47,7 +47,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.namespace.QName;
 
-import org.kalypso.core.jaxb.TemplateUtilitites;
+import org.kalypso.core.jaxb.TemplateUtilities;
 import org.kalypso.template.featureview.FeatureviewType;
 
 /**
@@ -64,7 +64,7 @@ public class FeatureTypeFeatureviewCatalog extends FeatureTypeCatalog
     if( url == null )
       return null;
 
-    final Unmarshaller unmarshaller = TemplateUtilitites.createFeatureviewUnmarshaller();
+    final Unmarshaller unmarshaller = TemplateUtilities.createFeatureviewUnmarshaller();
     
     final JAXBElement<FeatureviewType> element = (JAXBElement<FeatureviewType>) unmarshaller.unmarshal( url );
     return element.getValue();

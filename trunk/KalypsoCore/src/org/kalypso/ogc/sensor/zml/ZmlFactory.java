@@ -142,7 +142,7 @@ public final class ZmlFactory
 
   public static final ObjectFactory OF = new ObjectFactory();
 
-  public static final JAXBContext JC = JaxbUtilities.createQuiet( ObjectFactory.class );
+  public static final JAXBContext JC = JaxbUtilities.createQuiet( org.kalypso.zml.filters.ObjectFactory.class, org.kalypso.wechmann.ObjectFactory.class, org.kalypso.zml.filters.valuecomp.ObjectFactory.class, org.kalypso.zml.ObjectFactory.class, org.w3._1999.xlinkext.ObjectFactory.class );
 
   private static ParserFactory PARSER_FACTORY = null;
 
@@ -567,7 +567,7 @@ public final class ZmlFactory
       // sort axes, this is not needed from a xml view, but very usefull when comparing marshalled files (e.g.
       // Junit-Test)
       final TreeSet<IAxis> sortedAxis = new TreeSet<IAxis>( new Comparator<IAxis>()
-      {
+          {
         @Override
         public int compare( final IAxis a1, final IAxis a2 )
         {
@@ -589,7 +589,7 @@ public final class ZmlFactory
           }
           return type1.compareTo( type2 );
         }
-      } );
+          } );
 
       for( final IAxis axis : obs.getAxisList() )
         sortedAxis.add( axis );

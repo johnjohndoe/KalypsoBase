@@ -62,7 +62,7 @@ import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.contribs.eclipse.core.resources.StringStorage;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.editorinput.StorageEditorInput;
-import org.kalypso.core.jaxb.TemplateUtilitites;
+import org.kalypso.core.jaxb.TemplateUtilities;
 import org.kalypso.i18n.Messages;
 import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.template.gismapview.Gismapview.Layers;
@@ -119,7 +119,7 @@ public class GisMapEditorTemplateLauncher implements IDefaultTemplateLauncher
       layer.setFeaturePath( "featureMember" ); //$NON-NLS-1$
 
       final Layers layers = gisMapFactory.createGismapviewLayers();
-      final JAXBElement<StyledLayerType> layerType = TemplateUtilitites.OF_GISMAPVIEW.createLayer( layer );
+      final JAXBElement<StyledLayerType> layerType = TemplateUtilities.OF_GISMAPVIEW.createLayer( layer );
 
       layers.getLayer().add( layerType );
       layers.setActive( layer );

@@ -29,6 +29,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
+import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.kml.export.KMLExportDelegate;
 import org.kalypso.kml.export.KMLThemeVisitor;
@@ -177,7 +178,7 @@ public class KMLExporter implements ICoreRunnableWithProgress
 
       /* marshalling */
       final File file = new File( tmpDir, "doc.kml" ); //$NON-NLS-1$
-      final JAXBContext jc = JAXBContext.newInstance( ObjectFactory.class );
+      final JAXBContext jc = JaxbUtilities.createQuiet( ObjectFactory.class );
       final Marshaller m = jc.createMarshaller();
       m.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
 
@@ -223,7 +224,7 @@ public class KMLExporter implements ICoreRunnableWithProgress
     /* "paint" inner themes */
     else if( theme instanceof IKalypsoFeatureTheme )
       try
-      {
+    {
         final FolderType folderType = factory.createFolderType();
         folderType.setName( theme.getName().getValue() );
         final IKalypsoFeatureTheme ft = (IKalypsoFeatureTheme) theme;
@@ -236,11 +237,11 @@ public class KMLExporter implements ICoreRunnableWithProgress
         painter.paint( delegate, new NullProgressMonitor() );
 
         myList.add( factory.createFolder( folderType ) );
-      }
-      catch( final CoreException e )
-      {
-        e.printStackTrace();
-      }
+    }
+    catch( final CoreException e )
+    {
+      e.printStackTrace();
+    }
 
   }
 }

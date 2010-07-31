@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.filter;
 
@@ -46,18 +46,17 @@ import java.io.StringReader;
 import java.net.URL;
 import java.util.Properties;
 
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Unmarshaller;
 
 import org.apache.commons.io.IOUtils;
-import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.commons.factory.ConfigurableCachableObjectFactory;
 import org.kalypso.commons.factory.FactoryException;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.sensor.zml.ZmlURLConstants;
 import org.kalypso.zml.filters.AbstractFilterType;
 import org.kalypso.zml.filters.ObjectFactory;
@@ -74,14 +73,7 @@ public class FilterFactory
 {
   private final ConfigurableCachableObjectFactory m_fact;
 
-  private static FilterFactory m_instance = null;
-
-  /** jaxb context for filter stuff */
-  public static final JAXBContext JC_FILTER = JaxbUtilities.createQuiet( //
-
-      ObjectFactory.class, org.kalypso.wechmann.ObjectFactory.class, org.kalypso.zml.filters.valuecomp.ObjectFactory.class, org.kalypso.zml.ObjectFactory.class, org.w3._1999.xlinkext.ObjectFactory.class
-
-  );
+  private static FilterFactory INSTANCE = null;
 
   /** jaxb object factory for filter stuff */
   public static final ObjectFactory OF_FILTER = new ObjectFactory();
@@ -115,9 +107,9 @@ public class FilterFactory
    */
   private static FilterFactory getInstance( )
   {
-    if( m_instance == null )
-      m_instance = new FilterFactory();
-    return m_instance;
+    if( INSTANCE == null )
+      INSTANCE = new FilterFactory();
+    return INSTANCE;
   }
 
   /**
@@ -147,9 +139,9 @@ public class FilterFactory
     final IObservation obsFilter;
     try
     {
-      final Unmarshaller unmarshaller = JC_FILTER.createUnmarshaller();
-      final JAXBElement<AbstractFilterType> value = (JAXBElement<AbstractFilterType>) unmarshaller.unmarshal( new InputSource( sr ) );
-      final AbstractFilterType af = value.getValue();
+      final Unmarshaller unmarshaller = ZmlFactory.JC.createUnmarshaller();
+      final JAXBElement< ? > value = (JAXBElement< ? >) unmarshaller.unmarshal( new InputSource( sr ) );
+      final AbstractFilterType af = (AbstractFilterType) value.getValue();
       sr.close();
       final IFilterCreator creator = getCreatorInstance( af );
       obsFilter = creator.createFilter( af, obs, context );
@@ -185,7 +177,7 @@ public class FilterFactory
       return null;
     final int i2 = strUrl.indexOf( ZmlURLConstants.TAG_FILTER2, i1 );
     if( i2 == -1 )
-      throw new SensorException( Messages.getString("org.kalypso.ogc.sensor.filter.FilterFactory.1") + strUrl ); //$NON-NLS-1$
+      throw new SensorException( Messages.getString( "org.kalypso.ogc.sensor.filter.FilterFactory.1" ) + strUrl ); //$NON-NLS-1$
     final String strFilterXml = strUrl.substring( i1 + ZmlURLConstants.TAG_FILTER1.length(), i2 );
     return strFilterXml;
   }
@@ -197,7 +189,7 @@ public class FilterFactory
   {
     try
     {
-      final AbstractFilterType af = (AbstractFilterType) JC_FILTER.createUnmarshaller().unmarshal( ins );
+      final AbstractFilterType af = (AbstractFilterType) ZmlFactory.JC.createUnmarshaller().unmarshal( ins );
       final IFilterCreator creator = getCreatorInstance( af );
       return creator.createFilter( af, null, context );
     }
@@ -214,8 +206,8 @@ public class FilterFactory
   {
     try
     {
-      final JAXBElement<AbstractFilterType> element = (JAXBElement<AbstractFilterType>) JC_FILTER.createUnmarshaller().unmarshal( ins );
-      final AbstractFilterType af = element.getValue();
+      final JAXBElement< ? > element = (JAXBElement< ? >) ZmlFactory.JC.createUnmarshaller().unmarshal( ins );
+      final AbstractFilterType af = (AbstractFilterType) element.getValue();
       final IFilterCreator creator = getCreatorInstance( af );
       return creator.createFilter( af, null, context );
     }

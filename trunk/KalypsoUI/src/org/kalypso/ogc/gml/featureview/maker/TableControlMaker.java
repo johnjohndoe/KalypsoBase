@@ -45,7 +45,7 @@ import java.util.List;
 import javax.xml.bind.JAXBElement;
 import javax.xml.namespace.QName;
 
-import org.kalypso.core.jaxb.TemplateUtilitites;
+import org.kalypso.core.jaxb.TemplateUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -90,12 +90,12 @@ public class TableControlMaker implements IControlMaker
 
     final GridLayout layout = (GridLayout) parentLayout;
 
-    final Table table = TemplateUtilitites.OF_FEATUREVIEW.createTable();
+    final Table table = TemplateUtilities.OF_FEATUREVIEW.createTable();
     table.setStyle( "SWT.NONE" ); //$NON-NLS-1$
     table.setProperty( propertyName );
 
-    final GridDataType griddata = TemplateUtilitites.OF_FEATUREVIEW.createGridDataType();
-    final JAXBElement<GridDataType> jaxbgriddata = TemplateUtilitites.OF_FEATUREVIEW.createGridData( griddata );
+    final GridDataType griddata = TemplateUtilities.OF_FEATUREVIEW.createGridDataType();
+    final JAXBElement<GridDataType> jaxbgriddata = TemplateUtilities.OF_FEATUREVIEW.createGridData( griddata );
 
     griddata.setHorizontalAlignment( "GridData.FILL" ); //$NON-NLS-1$
     griddata.setVerticalAlignment( "GridData.FILL" ); //$NON-NLS-1$
@@ -106,7 +106,7 @@ public class TableControlMaker implements IControlMaker
 
     table.setLayoutData( jaxbgriddata );
 
-    controlList.add( TemplateUtilitites.OF_FEATUREVIEW.createTable( table ) );
+    controlList.add( TemplateUtilities.OF_FEATUREVIEW.createTable( table ) );
 
     return true;
   }

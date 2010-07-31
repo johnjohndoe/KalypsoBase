@@ -43,7 +43,6 @@ package org.kalypso.core.jaxb;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
-import javax.xml.bind.PropertyException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.validation.Schema;
 
@@ -58,7 +57,7 @@ import org.kalypso.template.gismapview.ObjectFactory;
  *
  * @author Gernot Belger
  */
-public class TemplateUtilitites
+public final class TemplateUtilities
 {
   private static final String SCHEMA_PATH = "etc/schemas/template/"; //$NON-NLS-1$
 
@@ -80,8 +79,10 @@ public class TemplateUtilitites
 
   public static final org.kalypso.template.featureview.ObjectFactory OF_FEATUREVIEW = new org.kalypso.template.featureview.ObjectFactory();
 
+  /* .gmc */
+  public static final JAXBContext JC_GMC = JaxbUtilities.createQuiet( org.kalypso.gml.util.ObjectFactory.class );
 
-  private TemplateUtilitites( )
+  private TemplateUtilities( )
   {
     // do not instantiat, everything is static
   }
@@ -98,23 +99,23 @@ public class TemplateUtilitites
     return SCHEMA_CACHE.getSchema( "gismapview.xsd" ); //$NON-NLS-1$
   }
 
-  public static Marshaller createGismapviewMarshaller( final String encoding ) throws JAXBException, PropertyException
+  public static Marshaller createGismapviewMarshaller( final String encoding ) throws JAXBException
   {
-    final Marshaller marshaller = JaxbUtilities.createMarshaller( TemplateUtilitites.JC_GISMAPVIEW );
+    final Marshaller marshaller = JaxbUtilities.createMarshaller( TemplateUtilities.JC_GISMAPVIEW );
     marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
     marshaller.setProperty( Marshaller.JAXB_ENCODING, encoding );
 
     // REMARK: only validate in trace mode, because this lead often to errors
     // because the 'href' attribute of the styledLayers are anyURIs, but its values are often not.
     if( KalypsoCoreDebug.GISMAPVIEW_VALIDATE.isEnabled() )
-      marshaller.setSchema( TemplateUtilitites.getGismapviewSchema() );
+      marshaller.setSchema( TemplateUtilities.getGismapviewSchema() );
 
     return marshaller;
   }
 
   public static Unmarshaller createGismapviewUnmarshaller( ) throws JAXBException
   {
-    final Unmarshaller unmarshaller = TemplateUtilitites.JC_GISMAPVIEW.createUnmarshaller();
+    final Unmarshaller unmarshaller = TemplateUtilities.JC_GISMAPVIEW.createUnmarshaller();
 
     // REMARK: only validate in trace mode, because this lead often to errors
     // because the 'href' attribute of the styledLayers are anyURIs, but its values are often not.
@@ -129,7 +130,7 @@ public class TemplateUtilitites
     final Unmarshaller unmarshaller = JC_FEATUREVIEW.createUnmarshaller();
 
     if( KalypsoCoreDebug.FEATUREVIEW_VALIDATE.isEnabled() )
-      unmarshaller.setSchema( TemplateUtilitites.getFeatureviewSchema() );
+      unmarshaller.setSchema( TemplateUtilities.getFeatureviewSchema() );
 
     return unmarshaller;
   }

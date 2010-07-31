@@ -40,12 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.contribs.ogc31.test;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-
 import junit.framework.TestCase;
 
 import org.kalypso.commons.performance.TimeLogger;
+import org.kalypso.contribs.ogc31.KalypsoOGC31JAXBcontext;
 
 /**
  * Running: > 5400 ms
@@ -55,16 +53,12 @@ import org.kalypso.commons.performance.TimeLogger;
  */
 public class ContextPerfTest extends TestCase
 {
-  public void testContextInstatiation( ) throws JAXBException
+  public void testContextInstatiation( )
   {
     final TimeLogger logger = new TimeLogger( "Start loading JAXBContext" ); //$NON-NLS-1$
 
-    final Class< ? > CL_GML3 = ogc31.www.opengis.net.gml.ObjectFactory.class;
-    final Class< ? > CL_SWE = ogc31.www.opengis.net.swe.ObjectFactory.class;
-    final Class< ? > CL_GMD = ogc31.www.isotc211.org.gmd.ObjectFactory.class;
-    final Class< ? > CL_ST = au.csiro.seegrid.xml.st.ObjectFactory.class;
+    KalypsoOGC31JAXBcontext.getContext();
 
-    JAXBContext.newInstance( CL_GML3, CL_SWE, CL_GMD, CL_ST );
     logger.takeInterimTime();
     logger.printCurrentInterim( "JAXBContext was loaded" ); //$NON-NLS-1$
   }
