@@ -429,23 +429,28 @@ public class FileUtilities
     {
       if( base.lastIndexOf( "/" ) > -1 ) //$NON-NLS-1$
         base = base.substring( 0, base.lastIndexOf( "/" ) ); //$NON-NLS-1$
-      // base=base.replaceAll(File.separator+".+$","");
+
       final String difference = StringUtils.difference( base, absolute );
       if( difference == null || "".equals( difference ) ) //$NON-NLS-1$
         return null;
+
       final int index = absolute.indexOf( difference );
       if( index < 5 )
         return null;
+
       final String back = base.substring( index );
       // TODO change regExp to "everything except fileseparator"
       final String x = back.replaceAll( "([a-zA-Z0-9]|\\.|_)+", ".." ); //$NON-NLS-1$ //$NON-NLS-2$
       if( x.length() > 0 )
         return x + "/" + difference; //$NON-NLS-1$
+
       return difference;
     }
-    final String rel = absolute.length() == base.length() ? "" : absolute.substring( base.length() ); //$NON-NLS-1$
 
-    return rel;
+    if( absolute.length() == base.length() )
+      return "";
+
+    return absolute.substring( base.length() );
   }
 
   /**
@@ -852,11 +857,11 @@ public class FileUtilities
         inContentStream = new BufferedInputStream( file.getContent().getInputStream() );
       }
     }
-    catch( FileSystemException e )
+    catch( final FileSystemException e )
     {
       e.printStackTrace();
     }
-    catch( IOException e )
+    catch( final IOException e )
     {
       e.printStackTrace();
     }
@@ -891,7 +896,7 @@ public class FileUtilities
     }
     try
     {
-      FileSystemManagerWrapper vfsManager = VFSUtilities.getNewManager();
+      final FileSystemManagerWrapper vfsManager = VFSUtilities.getNewManager();
       final FileObject fileObjectIn = vfsManager.resolveFile( sourceFileURL.toExternalForm() );
       final FileObject fileObjectOut = vfsManager.resolveFile( outputDirURL.toExternalForm() );
       inStream = getInputStreamFromFileObject( fileObjectIn );
@@ -916,7 +921,7 @@ public class FileUtilities
       IOUtils.copy( inStream, outStream );
       return vfsManager.resolveFile( fileObjectOut, outputFile.getName() );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
     }
