@@ -79,14 +79,14 @@ public class ListSimpleTypeHandler implements ISimpleMarshallingTypeHandler<List
 
     final List<Object> list = new ArrayList<Object>();
 
-    StringTokenizer st = new StringTokenizer( xmlString );    
+    final StringTokenizer st = new StringTokenizer( xmlString );    
     while ( st.hasMoreTokens() )
     {
-      String token = st.nextToken();
+      final String token = st.nextToken();
       final Object object = m_baseTypeHandler.convertToJavaValue( token );
       list.add( object );  
     }
-    
+
     return list;
   }
 
@@ -143,17 +143,13 @@ public class ListSimpleTypeHandler implements ISimpleMarshallingTypeHandler<List
    *      java.net.URL, java.lang.String)
    */
   @Override
-  public void marshal( final Object value, final XMLReader xmlReader, final URL context, final String gmlVersion )
+  public void marshal( final Object value, final XMLReader reader, final URL context, final String gmlVersion )
   {
     throw new UnsupportedOperationException();
   }
 
-  /**
-   * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#unmarshal(org.xml.sax.XMLReader, java.net.URL,
-   *      org.kalypso.gmlschema.types.UnMarshallResultEater, java.lang.String)
-   */
   @Override
-  public void unmarshal( final XMLReader xmlReader, final URL context, final UnmarshallResultEater marshalResultEater, final String gmlVersion )
+  public void unmarshal( final XMLReader reader, final URL context, final UnmarshallResultEater marshalResultEater, final String gmlVersion )
   {
     throw new UnsupportedOperationException();
   }

@@ -55,13 +55,16 @@ public class PointSpecification implements IGeometrySpecification
    * @see org.kalypso.gmlschema.types.IGeometrySpecification#fillSpecifications(org.kalypso.gmlschema.types.GeometrySpecificationCatalog)
    */
   @Override
-  public void fillSpecifications( GeometrySpecificationCatalog specs )
+  public void fillSpecifications( final GeometrySpecificationCatalog specs )
   {
     /* gml:pos */
     specs.registerSpecificationForGeometry( new PosHandler() );
-    /* gml:coordinates - Deprecated with GML version 3.1.0 for coordinates with ordinate values that are numbers. Use "pos" instead */
+    /*
+     * gml:coordinates - Deprecated with GML version 3.1.0 for coordinates with ordinate values that are numbers. Use
+     * "pos" instead
+     */
     specs.registerSpecificationForGeometry( new CoordinatesHandler() );
-    /* gml:coord - Deprecated with GML version 3.0. Use "pos" instead. */ 
+    /* gml:coord - Deprecated with GML version 3.0. Use "pos" instead. */
     specs.registerSpecificationForGeometry( new CoordHandler() );
   }
 }

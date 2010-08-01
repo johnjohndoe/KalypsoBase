@@ -57,53 +57,53 @@ import org.xml.sax.XMLReader;
 public class LinearRingContentHandler extends GMLElementContentHandler implements IPositionHandler, ICoordinatesHandler
 {
   public static final String ELEMENT_LINEAR_RING = "LinearRing";
-  
+
   private final List<GM_Position> m_poses;
-  
+
   private final IRingHandler m_lineaRingHandler;
 
   private String m_srs;
 
-  public LinearRingContentHandler( final IRingHandler lineaRingHandler, final String defaultSrs, final XMLReader xmlReader )
+  public LinearRingContentHandler( final XMLReader reader, final IRingHandler lineaRingHandler, final String defaultSrs )
   {
-    super( NS.GML3, ELEMENT_LINEAR_RING, xmlReader, defaultSrs, lineaRingHandler );
-    
+    super( reader, NS.GML3, ELEMENT_LINEAR_RING, defaultSrs, lineaRingHandler );
+
     m_lineaRingHandler = lineaRingHandler;
-    m_poses = new ArrayList<GM_Position>( );
+    m_poses = new ArrayList<GM_Position>();
   }
 
   @Override
   public void doStartElement( final String uri, final String localName, final String name, final Attributes attributes ) throws SAXParseException
-  { 
+  {
     m_srs = ContentHandlerUtils.parseSrsFromAttributes( attributes, m_defaultSrs );
-    
-    GMLPropertyChoiceContentHandler choiceContentHandler = new GMLPropertyChoiceContentHandler( this, m_xmlReader, m_defaultSrs );
+
+    final GMLPropertyChoiceContentHandler choiceContentHandler = new GMLPropertyChoiceContentHandler( getXMLReader(), this, m_defaultSrs );
     choiceContentHandler.loadPropertiesFor( GMLConstants.QN_LINEAR_RING );
-    setDelegate( choiceContentHandler );
+    choiceContentHandler.activate();
   }
 
   @Override
   public void doEndElement( final String uri, final String localName, final String name ) throws SAXException
-  { 
+  {
     // a LinearRing is defined by four or more coordinate tuples
     if( m_poses.size() < 4 )
-      throw new SAXParseException( "A gml:LinearRing must contain at least 4 coordinates: " + m_poses.size(), m_locator );
-    
+      throwSAXParseException( "A gml:LinearRing must contain at least 4 coordinates: %s", +m_poses.size() );
+
     // the first and last coordinates must be coincident
     if( !m_poses.get( 0 ).equals( m_poses.get( m_poses.size() - 1 ) ) )
-      throw new SAXParseException( "The first and last coordinates of this gml:LinearRing must be coincident: " + m_poses.get(0) + "/" + m_poses.get(m_poses.size()-1), m_locator );
-    
-    final GM_Position[] poses = new GM_Position[m_poses.size()]; 
-    
+      throwSAXParseException( "The first and last coordinates of this gml:LinearRing must be coincident: %s/%s", m_poses.get( 0 ), m_poses.get( m_poses.size() - 1 ) );
+
+    final GM_Position[] poses = new GM_Position[m_poses.size()];
+
     int cnt = 0;
-    for( GM_Position pos : m_poses )
+    for( final GM_Position pos : m_poses )
     {
-      poses[cnt++] = pos;      
+      poses[cnt++] = pos;
     }
     m_poses.clear();
 
     try
-    { 
+    {
       final GM_Ring_Impl ring = GeometryFactory.createGM_Ring( poses, m_srs );
       m_lineaRingHandler.handle( ring );
     }
@@ -111,7 +111,7 @@ public class LinearRingContentHandler extends GMLElementContentHandler implement
     {
       e.printStackTrace();
 
-      throw new SAXParseException( "Failed to create ring", m_locator, e );
+      throwSAXParseException( e, "Failed to create ring" );
     }
   }
 
@@ -125,8 +125,8 @@ public class LinearRingContentHandler extends GMLElementContentHandler implement
     // TODO: should transform the pos if it is not in the same crs as myself
     if( m_srs == null )
       m_srs = srs;
-    
-    for(GM_Position pos : positions)
+
+    for( final GM_Position pos : positions )
     {
       m_poses.add( pos );
     }
@@ -136,25 +136,24 @@ public class LinearRingContentHandler extends GMLElementContentHandler implement
    * @see org.kalypsodeegree_impl.io.sax.parser.ICoordinatesHandler#handle(java.util.List<java.lang.Double>[])
    */
   @Override
-  public void handle( List<Double[]> element ) throws SAXParseException
+  public void handle( final List<Double[]> element ) throws SAXParseException
   {
-    for( Double[] tuple : element)
+    for( final Double[] tuple : element )
     {
       if( tuple.length < 2 )
-      {
-        throw new SAXParseException( "A position must have at least 2 coordinates.", m_locator );
-      }
-      
-      GM_Position position;      
+        throwSAXParseException( "A position must have at least 2 coordinates." );
+
+      GM_Position position;
       if( tuple.length == 2 )
       {
         position = GeometryFactory.createGM_Position( tuple[0], tuple[1] );
       }
-      else // >2
+      else
+        // >2
       {
         position = GeometryFactory.createGM_Position( tuple[0], tuple[1], tuple[2] );
-      }      
+      }
       m_poses.add( position );
-    }    
+    }
   }
 }

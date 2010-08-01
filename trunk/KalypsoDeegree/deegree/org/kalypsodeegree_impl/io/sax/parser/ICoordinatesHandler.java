@@ -50,5 +50,5 @@ import org.xml.sax.SAXParseException;
  */
 public interface ICoordinatesHandler extends IControlPointHandler
 {
-  public void handle( List<Double[]> element ) throws SAXParseException;
+  void handle( List<Double[]> element ) throws SAXParseException;
 }

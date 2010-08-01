@@ -51,11 +51,11 @@ import org.xml.sax.XMLReader;
  */
 public class TrianglePatchesMarshaller extends PatchesMarshaller<GM_Triangle>
 {
-  public final static String TAG_TRIANGLE_PATCHES = "trianglePatches";
+  public static final String TAG_TRIANGLE_PATCHES = "trianglePatches";
 
-  public TrianglePatchesMarshaller( final XMLReader xmlReader, final GM_Surface<GM_Triangle> surface )
+  public TrianglePatchesMarshaller( final XMLReader reader, final GM_Surface<GM_Triangle> surface )
   {
-    super( xmlReader, surface, TAG_TRIANGLE_PATCHES );
+    super( reader, surface, TAG_TRIANGLE_PATCHES );
   }
 
   /**
@@ -64,6 +64,6 @@ public class TrianglePatchesMarshaller extends PatchesMarshaller<GM_Triangle>
   @Override
   public void createPatchMarshaller( )
   {
-    m_surfacePatchMarshaller = new TriangleMarshaller( getXmlReader() );
+    m_surfacePatchMarshaller = new TriangleMarshaller( getXMLReader() );
   }
 }

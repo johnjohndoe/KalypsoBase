@@ -64,7 +64,7 @@ import org.xml.sax.XMLReader;
 public class GmlParsingTester extends TestCase
 {
   private final SAXParserFactory m_saxFactory = SAXParserFactory.newInstance();
-  
+
   /**
    * @see junit.framework.TestCase#setUp()
    */
@@ -102,16 +102,16 @@ public class GmlParsingTester extends TestCase
     // make namespace-prefxes visible to content handler
     // used to allow necessary schemas from gml document
 //    saxParser.setProperty( "http://xml.org/sax/features/namespace-prefixes", Boolean.TRUE );
-    final XMLReader xmlReader = saxParser.getXMLReader();
-    
+    final XMLReader reader = saxParser.getXMLReader();
+
     // TODO: also set an error handler here
     // TODO: use progress-monitors to show progress and let the user cancel parsing
 
-    final GMLorExceptionContentHandler exceptionHandler = new GMLorExceptionContentHandler( xmlReader, null, context, null );
-    xmlReader.setContentHandler( exceptionHandler );
+    final GMLorExceptionContentHandler exceptionHandler = new GMLorExceptionContentHandler( reader, null, context, null );
+    reader.setContentHandler( exceptionHandler );
 
     final InputSource inputSource = new InputSource( is );
-    xmlReader.parse( inputSource );
+    reader.parse( inputSource );
 
     return exceptionHandler.getWorkspace();
   }  

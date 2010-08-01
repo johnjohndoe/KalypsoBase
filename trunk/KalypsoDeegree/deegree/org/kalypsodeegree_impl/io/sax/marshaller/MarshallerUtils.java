@@ -41,7 +41,6 @@
 package org.kalypsodeegree_impl.io.sax.marshaller;
 
 import org.kalypso.transformation.CRSHelper;
-import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
 /**
@@ -49,8 +48,13 @@ import org.xml.sax.helpers.AttributesImpl;
  * 
  * @author Felipe Maximino
  */
-public class MarshallerUtils implements IMashallerConstants
+public final class MarshallerUtils implements IMashallerConstants
 {
+  private MarshallerUtils( )
+  {
+    throw new UnsupportedOperationException( "Helper class, do not instantiate" );
+  }
+
   public static AttributesImpl createCrsAttributes( final String crs )
   {
     final AttributesImpl atts = new AttributesImpl();
@@ -59,15 +63,15 @@ public class MarshallerUtils implements IMashallerConstants
     return atts;
   }
 
-  public static AttributesImpl createCrsAttributesWSrsDimension( final String crs ) throws SAXException
+  public static AttributesImpl createCrsAttributesWSrsDimension( final String crs )
   {
-    AttributesImpl atts = createCrsAttributes( crs );
+    final AttributesImpl atts = createCrsAttributes( crs );
     atts.addAttribute( "", "srsDimension", "srsDimension", "CDATA", "" + CRSHelper.getDimension( crs ) );
 
     return atts;
   }
 
-  public static String getQName( String tag )
+  public static String getQName( final String tag )
   {
     return QNAME_GML + tag;
   }

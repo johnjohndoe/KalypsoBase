@@ -53,11 +53,11 @@ import org.xml.sax.XMLReader;
  */
 public class MultiPointMarshaller extends GeometryMarshaller<GM_MultiPoint>
 {
-  public final static String TAG_MULTI_POINT = "MultiPoint";
+  public static final String TAG_MULTI_POINT = "MultiPoint";
 
-  public MultiPointMarshaller( final XMLReader xmlReader, final GM_MultiPoint multiPoint )
+  public MultiPointMarshaller( final XMLReader reader, final GM_MultiPoint multiPoint )
   {
-    super( xmlReader, TAG_MULTI_POINT, multiPoint );
+    super( reader, TAG_MULTI_POINT, multiPoint );
   }
 
   /**
@@ -66,7 +66,7 @@ public class MultiPointMarshaller extends GeometryMarshaller<GM_MultiPoint>
   @Override
   protected void doMarshall( ) throws SAXException
   {
-    final PointMemberMarshaller pointMemberMarshllaer = new PointMemberMarshaller( getXmlReader() );
+    final PointMemberMarshaller pointMemberMarshllaer = new PointMemberMarshaller( getXMLReader() );
 
     final GM_Point[] points = getMarshalledObject().getAllPoints();
     for( final GM_Point point : points )

@@ -39,13 +39,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.kalypso.commons.xml.NS;
+import org.kalypso.gmlschema.types.IGmlContentHandler;
 import org.kalypso.gmlschema.types.UnmarshallResultEater;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.xml.sax.Attributes;
-import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
@@ -57,7 +57,7 @@ import org.xml.sax.XMLReader;
  */
 public class TriangulatedSurfaceContentHandler extends GMLElementContentHandler implements ITriangleHandler
 {
-  public final static String ELEMENT_TRIANGULATED_SURFACE = "TriangulatedSurface";
+  public static final String ELEMENT_TRIANGULATED_SURFACE = "TriangulatedSurface";
 
   private String m_crs;
 
@@ -67,14 +67,14 @@ public class TriangulatedSurfaceContentHandler extends GMLElementContentHandler 
 
   private GM_TriangulatedSurface m_triangulatedSurface;
 
-  public TriangulatedSurfaceContentHandler( final UnmarshallResultEater resultEater, final XMLReader xmlReader )
+  public TriangulatedSurfaceContentHandler( final XMLReader reader, final UnmarshallResultEater resultEater )
   {
-    this( resultEater, null, xmlReader );
+    this( reader, resultEater, null );
   }
 
-  public TriangulatedSurfaceContentHandler( final UnmarshallResultEater resultEater, final ContentHandler parentContentHandler, final XMLReader xmlReader )
+  public TriangulatedSurfaceContentHandler( final XMLReader reader, final UnmarshallResultEater resultEater, final IGmlContentHandler parentContentHandler )
   {
-    super( NS.GML3, ELEMENT_TRIANGULATED_SURFACE, xmlReader, parentContentHandler );
+    super( reader, NS.GML3, ELEMENT_TRIANGULATED_SURFACE, parentContentHandler );
 
     m_resultEater = resultEater;
 
@@ -86,7 +86,7 @@ public class TriangulatedSurfaceContentHandler extends GMLElementContentHandler 
   public void doStartElement( final String uri, final String localName, final String name, final Attributes attributes )
   {
     m_crs = ContentHandlerUtils.parseSrsFromAttributes( attributes, null );
-    setDelegate( new TrianglePatchesContentHandler( this, m_crs, m_xmlReader ) );
+    new TrianglePatchesContentHandler( getXMLReader(), this, m_crs ).activate();
   }
 
   @Override
@@ -120,13 +120,11 @@ public class TriangulatedSurfaceContentHandler extends GMLElementContentHandler 
     // maybe the property was expecting a triangulated surface, but it was empty */
     if( m_triangulatedSurface == null )
     {
-      endDelegation();
-      m_parentContentHandler.endElement( uri, localName, name );
+      activateParent();
+      getParentContentHandler().endElement( uri, localName, name );
     }
     else
-    {
       super.handleUnexpectedEndElement( uri, localName, name );
-    }
   }
 
   /**
@@ -141,7 +139,7 @@ public class TriangulatedSurfaceContentHandler extends GMLElementContentHandler 
     if( m_triangles == null )
       m_triangles = new ArrayList<GM_Triangle>();
 
-    m_triangles.add( triangle );
-    // TODO: project triangles to my srs?
+      m_triangles.add( triangle );
+      // TODO: project triangles to my srs?
   }
 }

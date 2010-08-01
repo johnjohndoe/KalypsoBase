@@ -56,10 +56,10 @@ public class TriangulatedSurfaceMarshaller extends SurfaceMarshaller<GM_Triangle
 {
   private static final String TAG_TRIANGULATED_SURFACE = "TriangulatedSurface";
 
-  public TriangulatedSurfaceMarshaller( final XMLReader xmlReader, final GM_TriangulatedSurface surface )
+  public TriangulatedSurfaceMarshaller( final XMLReader reader, final GM_TriangulatedSurface surface )
   {
-    super( xmlReader, surface, TAG_TRIANGULATED_SURFACE );
-    m_patchesMarshaller = new TrianglePatchesMarshaller( xmlReader, surface );
+    super( reader, surface, TAG_TRIANGULATED_SURFACE );
+    m_patchesMarshaller = new TrianglePatchesMarshaller( reader, surface );
   }
 
   /**

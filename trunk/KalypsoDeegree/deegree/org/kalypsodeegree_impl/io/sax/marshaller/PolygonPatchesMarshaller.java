@@ -51,11 +51,11 @@ import org.xml.sax.XMLReader;
  */
 public class PolygonPatchesMarshaller extends PatchesMarshaller<GM_Polygon>
 {
-  public final static String TAG_POLYGON_PATCHES = "polygonPatches";
+  public static final String TAG_POLYGON_PATCHES = "polygonPatches";
 
-  public PolygonPatchesMarshaller( final XMLReader xmlReader, final GM_Surface<GM_Polygon> surface )
+  public PolygonPatchesMarshaller( final XMLReader reader, final GM_Surface<GM_Polygon> surface )
   {
-    super( xmlReader, surface, TAG_POLYGON_PATCHES );
+    super( reader, surface, TAG_POLYGON_PATCHES );
   }
 
   /**
@@ -64,6 +64,6 @@ public class PolygonPatchesMarshaller extends PatchesMarshaller<GM_Polygon>
   @Override
   public void createPatchMarshaller( )
   {
-    m_surfacePatchMarshaller = new PolygonPatchMarshaller( getXmlReader(), getMarshalledObject().getCoordinateSystem() );
+    m_surfacePatchMarshaller = new PolygonPatchMarshaller( getXMLReader(), getMarshalledObject().getCoordinateSystem() );
   }
 }

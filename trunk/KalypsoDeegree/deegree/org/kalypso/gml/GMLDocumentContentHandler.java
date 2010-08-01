@@ -46,14 +46,15 @@ import java.util.Map;
 import org.kalypso.gmlschema.GMLSchemaLoaderWithLocalCache;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.IGMLSchema;
+import org.kalypso.gmlschema.types.AbstractGmlContentHandler;
+import org.kalypso.gmlschema.types.IGmlContentHandler;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.io.sax.parser.DelegatingContentHandler;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.IFeatureProviderFactory;
 import org.xml.sax.Attributes;
-import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 
 /**
@@ -67,10 +68,8 @@ import org.xml.sax.XMLReader;
  * @author Gernot Belger
  * @author Felipe Maximino - Refactoring
  */
-public class GMLDocumentContentHandler extends DelegatingContentHandler implements IWorkspaceProvider
+public class GMLDocumentContentHandler extends AbstractGmlContentHandler implements IWorkspaceProvider, IFeatureHandler
 {
-  private final XMLReader m_xmlReader;
-
   private final URL m_schemaLocationHint;
 
   private final URL m_context;
@@ -82,27 +81,18 @@ public class GMLDocumentContentHandler extends DelegatingContentHandler implemen
   /** Schema of root feature */
   private IGMLSchema m_rootSchema;
 
-  public GMLDocumentContentHandler( final XMLReader xmlReader, final ContentHandler parentContentHandler, final URL schemaLocationHint, final URL context, final IFeatureProviderFactory providerFactory )
-  {
-    super( xmlReader, parentContentHandler );
+  private Feature m_rootFeature;
 
-    m_xmlReader = xmlReader;
+  public GMLDocumentContentHandler( final XMLReader reader, final IGmlContentHandler parentContentHandler, final URL schemaLocationHint, final URL context, final IFeatureProviderFactory providerFactory )
+  {
+    super( reader, parentContentHandler );
+
     m_schemaLocationHint = schemaLocationHint;
     m_context = context;
     m_providerFactory = providerFactory;
 
     m_schemaLocationString = null;
     m_rootSchema = null;
-  }
-
-  /**
-   * @see org.kalypsodeegree_impl.io.sax.parser.DelegatingContentHandler#endElement(java.lang.String, java.lang.String,
-   *      java.lang.String)
-   */
-  @Override
-  public void endElement( final String uri, final String localName, final String qName )
-  {
-    endDelegation();
   }
 
   /**
@@ -115,9 +105,31 @@ public class GMLDocumentContentHandler extends DelegatingContentHandler implemen
     final GMLSchemaLoaderWithLocalCache schemaLoader = new GMLSchemaLoaderWithLocalCache();
     loadDocumentSchema( schemaLoader, uri, atts );
 
-    delegate( new GMLContentHandler( m_xmlReader, this, m_context, schemaLoader ) );
-    m_delegate.startElement( uri, localName, qName, atts );
+    final FeatureContentHandler delegate = new FeatureContentHandler( getXMLReader(), this, schemaLoader, m_context );
+    delegate.activate();
+    delegate.startElement( uri, localName, qName, atts );
   }
+
+  /**
+   * @see org.kalypsodeegree_impl.io.sax.parser.DelegatingContentHandler#endElement(java.lang.String, java.lang.String,
+   *      java.lang.String)
+   */
+  @Override
+  public void endElement( final String uri, final String localName, final String qName ) throws SAXParseException
+  {
+    try
+    {
+      m_rootFeature = ((IRootFeatureProvider) getTopLevel()).getRootFeature();
+
+      activateParent();
+    }
+    catch( final GMLException e )
+    {
+      e.printStackTrace();
+      throwSAXParseException( e, "Failed to retreive root feature" );
+    }
+  }
+
 
   private void loadDocumentSchema( final GMLSchemaLoaderWithLocalCache schemaLoader, final String uri, final Attributes atts ) throws SAXException
   {
@@ -135,10 +147,14 @@ public class GMLDocumentContentHandler extends DelegatingContentHandler implemen
   }
 
   @Override
-  public GMLWorkspace getWorkspace( ) throws GMLException
+  public void handle( final Feature feature )
   {
-    final Feature rootFeature = ((IRootFeatureProvider) m_delegate).getRootFeature();
+    m_rootFeature = feature;
+  }
 
-    return FeatureFactory.createGMLWorkspace( m_rootSchema, rootFeature, m_context, m_schemaLocationString, m_providerFactory, null );
+  @Override
+  public GMLWorkspace getWorkspace( )
+  {
+    return FeatureFactory.createGMLWorkspace( m_rootSchema, m_rootFeature, m_context, m_schemaLocationString, m_providerFactory, null );
   }
 }

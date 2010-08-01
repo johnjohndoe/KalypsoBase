@@ -44,12 +44,12 @@ import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.org.xml.sax.AttributesUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.gmlschema.types.AbstractGmlContentHandler;
+import org.kalypso.gmlschema.types.IGmlContentHandler;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree_impl.io.sax.parser.DelegatingContentHandler;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 import org.xml.sax.Attributes;
-import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
@@ -59,16 +59,16 @@ import org.xml.sax.XMLReader;
  * @author Andreas von Doemming
  * @author Felipe Maximino - Refaktoring
  */
-public class XLinkedFeatureContentHandler extends DelegatingContentHandler
+public class XLinkedFeatureContentHandler extends AbstractGmlContentHandler
 {
   private final Feature m_scopeFeature;
-  
+
   private final IRelationType m_scopeProperty;
-  
-  public XLinkedFeatureContentHandler( final XMLReader xmlReader, final ContentHandler parentContentHandler, final Feature scopeFeature, final IRelationType scopeProperty )
+
+  public XLinkedFeatureContentHandler( final XMLReader reader, final IGmlContentHandler parentContentHandler, final Feature scopeFeature, final IRelationType scopeProperty )
   {
-    super( xmlReader, parentContentHandler );
-    
+    super( reader, parentContentHandler );
+
     m_scopeFeature = scopeFeature;
     m_scopeProperty = scopeProperty;
   }
@@ -77,10 +77,10 @@ public class XLinkedFeatureContentHandler extends DelegatingContentHandler
    * @see org.kalypsodeegree_impl.io.sax.parser.DelegatingContentHandler#endElement(java.lang.String, java.lang.String, java.lang.String)
    */
   @Override
-  public void endElement( String uri, String localName, String qName ) throws SAXException
+  public void endElement( final String uri, final String localName, final String qName ) throws SAXException
   {
-    endDelegation();
-    m_parentContentHandler.endElement( uri, localName, qName );    
+    activateParent();
+    getParentContentHandler().endElement( uri, localName, qName );
   }
 
   /**
@@ -90,7 +90,7 @@ public class XLinkedFeatureContentHandler extends DelegatingContentHandler
   public void startElement( final String uri, final String localName, final String qName, final Attributes atts )
   {
     final String href = AttributesUtilities.getAttributeValue( atts, NS.XLINK, "href", null );
-    
+
     // REMARK: for backwards compability, we still set the href as property-value
     // for internal links. This should be changed soon...
     if( href.startsWith( "#" ) )

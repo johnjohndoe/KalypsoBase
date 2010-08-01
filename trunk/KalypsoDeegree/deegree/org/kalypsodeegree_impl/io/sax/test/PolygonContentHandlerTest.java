@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.io.sax.test;
 
-import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
 import junit.framework.TestCase;
@@ -48,13 +47,10 @@ import junit.framework.TestCase;
 import org.apache.commons.lang.NotImplementedException;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.kalypso.gmlschema.types.UnmarshallResultEater;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.xml.sax.InputSource;
-import org.xml.sax.XMLReader;
 
 /**
  * @author Gernot Belger
@@ -131,29 +127,29 @@ public class PolygonContentHandlerTest extends TestCase
       assertEquals( expectedRing[i], ring[i] );
   }
 
-  private GM_Surface<GM_SurfacePatch> parsePolygon( final String source ) throws Exception
+  private GM_Surface<GM_SurfacePatch> parsePolygon( @SuppressWarnings("unused") final String source ) throws Exception
   {
-    final InputSource is = new InputSource( getClass().getResourceAsStream( source ) );
-
-    final SAXParser saxParser = m_saxFactory.newSAXParser();
-    final XMLReader xmlReader = saxParser.getXMLReader();
-
-    final Object[] result = new Object[1];
-    final UnmarshallResultEater resultEater = new UnmarshallResultEater()
-    {
-      @Override
-      public void unmarshallSuccesful( final Object value )
-      {
-        assertTrue( value instanceof GM_Surface );
-        result[0] = value;
-      }
-    };
+// final InputSource is = new InputSource( getClass().getResourceAsStream( source ) );
+//
+// final SAXParser saxParser = m_saxFactory.newSAXParser();
+// final XMLReader reader = saxParser.getXMLReader();
+//
+// final Object[] result = new Object[1];
+// final UnmarshallResultEater resultEater = new UnmarshallResultEater()
+// {
+// @Override
+// public void unmarshallSuccesful( final Object value )
+// {
+// assertTrue( value instanceof GM_Surface );
+// result[0] = value;
+// }
+// };
 
     // FIXME
     throw new NotImplementedException();
-// final PolygonContentHandler contentHandler = new PolygonContentHandler( resultEater, null, xmlReader );
-// xmlReader.setContentHandler( contentHandler );
-// xmlReader.parse( is );
+// final PolygonContentHandler contentHandler = new PolygonContentHandler( resultEater, null, XMLReader );
+// XMLReader.setContentHandler( contentHandler );
+// XMLReader.parse( is );
 //
 // return (GM_Surface<GM_SurfacePatch>) result[0];
   }

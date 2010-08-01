@@ -59,9 +59,9 @@ public abstract class SurfacePatchMarshaller<T extends GM_SurfacePatch> extends 
    */
   protected String m_surfaceCrs;
 
-  public SurfacePatchMarshaller( final XMLReader xmlReader, final String tag, final String surfaceCrs )
+  public SurfacePatchMarshaller( final XMLReader reader, final String tag, final String surfaceCrs )
   {
-    super( xmlReader, tag );
+    super( reader, tag );
     m_surfaceCrs = surfaceCrs;
   }
 
@@ -71,7 +71,7 @@ public abstract class SurfacePatchMarshaller<T extends GM_SurfacePatch> extends 
   @Override
   public void startMarshalling( ) throws SAXException
   {
-    final ContentHandler contentHandler = getXmlReader().getContentHandler();
+    final ContentHandler contentHandler = getXMLReader().getContentHandler();
     final String crsTri = getMarshalledObject().getCoordinateSystem();
 
     final AttributesImpl atts;

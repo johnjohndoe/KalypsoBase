@@ -57,14 +57,14 @@ public abstract class SurfaceMarshaller<T extends GM_SurfacePatch> extends Geome
 {
   protected PatchesMarshaller<T> m_patchesMarshaller;
 
-  public SurfaceMarshaller( final XMLReader xmlReader, final GM_Surface<T> surface, final String tag )
+  public SurfaceMarshaller( final XMLReader reader, final GM_Surface<T> surface, final String tag )
   {
-    super( xmlReader, tag, surface );
+    super( reader, tag, surface );
   }
 
   public void startMarshalling( final Attributes atts ) throws SAXException
   {
-    final ContentHandler contentHandler = getXmlReader().getContentHandler();
+    final ContentHandler contentHandler = getXMLReader().getContentHandler();
     contentHandler.startElement( NS.GML3, getTag(), getQName(), atts );
   }
 

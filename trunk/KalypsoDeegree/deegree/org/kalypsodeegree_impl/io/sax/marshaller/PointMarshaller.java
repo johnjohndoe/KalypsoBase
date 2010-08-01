@@ -59,16 +59,16 @@ public class PointMarshaller extends GeometryMarshaller<GM_Point>
 
   private final PosMarshaller m_posMarshaller;
 
-  public PointMarshaller( final XMLReader xmlReader )
+  public PointMarshaller( final XMLReader reader )
   {
-    this( xmlReader, null );
+    this( reader, null );
   }
 
-  public PointMarshaller( final XMLReader xmlReader, final GM_Point point )
+  public PointMarshaller( final XMLReader reader, final GM_Point point )
   {
-    super( xmlReader, TAG_POINT, point );
+    super( reader, TAG_POINT, point );
 
-    m_posMarshaller = new PosMarshaller( xmlReader );
+    m_posMarshaller = new PosMarshaller( reader );
   }
 
   /**

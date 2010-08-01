@@ -52,11 +52,11 @@ import org.xml.sax.XMLReader;
  */
 public class MultiLineStringMarshaller extends GeometryMarshaller<GM_MultiCurve>
 {
-  public final static String TAG_MULTI_LINE_STRING = "MultiLineString";
+  public static final String TAG_MULTI_LINE_STRING = "MultiLineString";
 
-  public MultiLineStringMarshaller( final XMLReader xmlReader, final GM_MultiCurve multiLineString )
+  public MultiLineStringMarshaller( final XMLReader reader, final GM_MultiCurve multiLineString )
   {
-    super( xmlReader, TAG_MULTI_LINE_STRING, multiLineString );
+    super( reader, TAG_MULTI_LINE_STRING, multiLineString );
   }
 
   /**
@@ -65,7 +65,7 @@ public class MultiLineStringMarshaller extends GeometryMarshaller<GM_MultiCurve>
   @Override
   protected void doMarshall( ) throws SAXException
   {
-    final LineStringMemberMarshaller lineStringMemberMarshaller = new LineStringMemberMarshaller( getXmlReader() );
+    final LineStringMemberMarshaller lineStringMemberMarshaller = new LineStringMemberMarshaller( getXMLReader() );
 
     final GM_Curve[] lineStrings = getMarshalledObject().getAllCurves();
     for( final GM_Curve lineString : lineStrings )

@@ -106,18 +106,18 @@ public class GenericBindingTypeHandler implements IMarshallingTypeHandler
   }
 
   @Override
-  public void marshal( final Object value, final XMLReader xmlReader, final URL context, final String gmlVersion ) throws SAXException
+  public void marshal( final Object value, final XMLReader reader, final URL context, final String gmlVersion ) throws SAXException
   {
     final JAXBElement<Object> jaxElement = JaxbUtilities.createJaxbElement( m_xmlTagQName, value );
-    marshal( jaxElement, xmlReader, gmlVersion );
+    marshal( jaxElement, reader, gmlVersion );
   }
 
-  protected <T> void marshal( final JAXBElement<T> element, final XMLReader xmlReader, final String gmlVersion ) throws SAXException
+  protected <T> void marshal( final JAXBElement<T> element, final XMLReader reader, final String gmlVersion ) throws SAXException
   {
     try
     {
       // memory to xml
-      final ContentHandler contentHandler = xmlReader.getContentHandler();
+      final ContentHandler contentHandler = reader.getContentHandler();
       final JAXBContext jaxbContext = m_jaxbContextProvider.getJaxBContextForGMLVersion( gmlVersion );
       final Marshaller marshaller = JaxbUtilities.createMarshaller( jaxbContext );
 
@@ -130,7 +130,7 @@ public class GenericBindingTypeHandler implements IMarshallingTypeHandler
   }
 
   @Override
-  public void unmarshal( final XMLReader xmlReader, final URL context, final UnmarshallResultEater marshalResultEater, final String gmlVersion ) throws TypeRegistryException
+  public void unmarshal( final XMLReader reader, final URL context, final UnmarshallResultEater marshalResultEater, final String gmlVersion ) throws TypeRegistryException
   {
     // xml to memory
     try
@@ -156,7 +156,7 @@ public class GenericBindingTypeHandler implements IMarshallingTypeHandler
       };
       final BindingUnmarshalingContentHandler tmpContentHandler = new BindingUnmarshalingContentHandler( unmarshallerHandler, provider, marshalResultEater, gmlVersion );
       tmpContentHandler.startDocument();
-      xmlReader.setContentHandler( tmpContentHandler );
+      reader.setContentHandler( tmpContentHandler );
     }
     catch( final Exception e )
     {

@@ -61,9 +61,9 @@ import org.xml.sax.SAXException;
  */
 public class GmlParsingTest extends GmlParsingTester
 {
-  public final static String NS_GMLTEST = "org.kalypso.deegree.gmlparsertest";
+  public static final String NS_GMLTEST = "org.kalypso.deegree.gmlparsertest";
 
-  public final static String NS_1D2D = "http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults";
+  public static final String NS_1D2D = "http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults";
 
   public void testEmptyGml( ) throws IOException, ParserConfigurationException, SAXException, GMLException
   {

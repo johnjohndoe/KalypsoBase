@@ -44,13 +44,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.kalypso.commons.xml.NS;
+import org.kalypso.gmlschema.types.IGmlContentHandler;
 import org.kalypso.gmlschema.types.UnmarshallResultEater;
 import org.kalypsodeegree.model.geometry.GM_MultiPoint;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.tools.GMLConstants;
 import org.xml.sax.Attributes;
-import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
@@ -64,70 +64,70 @@ import org.xml.sax.XMLReader;
 public class MultiPointContentHandler extends GMLElementContentHandler implements IPointHandler
 {
   public static final String ELEMENT_MULTI_POINT = "MultiPoint";
-  
+
   private final UnmarshallResultEater m_resultEater;
-  
+
   private GM_MultiPoint m_multiPoint;
-  
-  private IMultiPointHandler m_multiPointHandler;
-  
+
+  private final IMultiPointHandler m_multiPointHandler;
+
   private final List<GM_Point> m_points;
-  
+
   private Integer m_srsDimension;
 
   private String m_activeSrs;
-  
-  public MultiPointContentHandler( final UnmarshallResultEater resultEater, final ContentHandler parentContenthandler , final XMLReader xmlReader )
+
+  public MultiPointContentHandler( final XMLReader reader, final UnmarshallResultEater resultEater, final IGmlContentHandler parentContenthandler )
   {
-    this( null, resultEater, parentContenthandler, null, xmlReader );
+    this( reader, null, resultEater, parentContenthandler, null );
   }
-  
-  public MultiPointContentHandler( final IMultiPointHandler multiPointHandler, final String defaultSrs, final XMLReader xmlReader )
+
+  public MultiPointContentHandler( final XMLReader reader, final IMultiPointHandler multiPointHandler, final String defaultSrs )
   {
-    this( multiPointHandler, null, multiPointHandler, defaultSrs, xmlReader );
+    this( reader, multiPointHandler, null, multiPointHandler, defaultSrs );
   }
-  
-  private MultiPointContentHandler( final IMultiPointHandler multiPointHandler, final UnmarshallResultEater resultEater, final ContentHandler parentContentHandler, final String defaultSrs, final XMLReader xmlReader )
+
+  private MultiPointContentHandler( final XMLReader reader, final IMultiPointHandler multiPointHandler, final UnmarshallResultEater resultEater, final IGmlContentHandler parentContentHandler, final String defaultSrs )
   {
-    super( NS.GML3, ELEMENT_MULTI_POINT, xmlReader, defaultSrs, parentContentHandler );
+    super( reader, NS.GML3, ELEMENT_MULTI_POINT, defaultSrs, parentContentHandler );
 
     m_resultEater = resultEater;
     m_multiPointHandler = multiPointHandler;    
-    
+
     m_points = new ArrayList<GM_Point>();
     m_multiPoint = null;
   }  
-  
+
   /**
    * @see org.kalypsodeegree_impl.io.sax.parser.GMLElementContentHandler#doEndElement(java.lang.String, java.lang.String, java.lang.String)
    */
   @Override
-  protected void doEndElement( String uri, String localName, String name ) throws SAXException
+  protected void doEndElement( final String uri, final String localName, final String name ) throws SAXException
   {
     m_multiPoint = endMultiPoint();
-    
+
     if( m_resultEater != null )
     {
       m_resultEater.unmarshallSuccesful( m_multiPoint );
     }
-    
+
     if( m_multiPointHandler != null )
     {
       m_multiPointHandler.handle( m_multiPoint );
     }
   }
-  
+
   /**
    * @see org.kalypsodeegree_impl.io.sax.parser.GMLElementContentHandler#handleUnexpectedEndElement(java.lang.String, java.lang.String, java.lang.String)
    */
   @Override
-  public void handleUnexpectedEndElement( String uri, String localName, String name ) throws SAXException
+  public void handleUnexpectedEndElement( final String uri, final String localName, final String name ) throws SAXException
   {
     // maybe the property was expecting a triangulated surface, but it was empty */
     if( m_multiPoint == null )
     {
-      endDelegation();
-      m_parentContentHandler.endElement( uri, localName, name );
+      activateParent();
+      getParentContentHandler().endElement( uri, localName, name );
     }
     else
     {
@@ -137,17 +137,15 @@ public class MultiPointContentHandler extends GMLElementContentHandler implement
 
   private GM_MultiPoint endMultiPoint( ) throws SAXParseException
   {
-    int nPoints = m_points.size();
-    
+    final int nPoints = m_points.size();
+
     /* A MultiPoint is defined by one or more Points */
     if( !( nPoints >= 1 ) )
-    { 
-      throw new SAXParseException( "A gml:MultiPoint must contain one or more points!", m_locator );      
-    }
-    
-    GM_Point[] pointsArr = m_points.toArray( new GM_Point[nPoints] );
+      throwSAXParseException( "A gml:MultiPoint must contain one or more points!" );
+
+    final GM_Point[] pointsArr = m_points.toArray( new GM_Point[nPoints] );
     m_multiPoint = GeometryFactory.createGM_MultiPoint( pointsArr, m_activeSrs );
-    
+
     return m_multiPoint;
   }
 
@@ -155,12 +153,12 @@ public class MultiPointContentHandler extends GMLElementContentHandler implement
    * @see org.kalypsodeegree_impl.io.sax.parser.GMLElementContentHandler#doStartElement(java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
    */
   @Override
-  protected void doStartElement( String uri, String localName, String name, Attributes atts ) throws SAXParseException
+  protected void doStartElement( final String uri, final String localName, final String name, final Attributes atts ) throws SAXParseException
   { 
     m_activeSrs = ContentHandlerUtils.parseSrsFromAttributes( atts, m_defaultSrs );
     m_srsDimension = ContentHandlerUtils.parseSrsDimensionFromAttributes( atts );
-    
-    GMLPropertyChoiceContentHandler choiceContentHandler = new GMLPropertyChoiceContentHandler( this, m_xmlReader, m_activeSrs );
+
+    final GMLPropertyChoiceContentHandler choiceContentHandler = new GMLPropertyChoiceContentHandler( getXMLReader(), this, m_activeSrs );
     choiceContentHandler.loadPropertiesFor( GMLConstants.QN_MULTI_POINT );
     setDelegate( choiceContentHandler );
   }
@@ -169,12 +167,10 @@ public class MultiPointContentHandler extends GMLElementContentHandler implement
    * @see org.kalypsodeegree_impl.io.sax.parser.IGMLElementHandler#handle(java.lang.Object)
    */
   @Override
-  public void handle( GM_Point point ) throws SAXParseException
+  public void handle( final GM_Point point ) throws SAXParseException
   {
     if( m_srsDimension != null && point.getCoordinateDimension() != m_srsDimension )
-    {
-      throw new SAXParseException( "The point " + point.toString() +  "in this gml:MultiPoint does not have the number of coordinates specified in 'srsDimension': " + m_srsDimension, m_locator );
-    }
+      throwSAXParseException( "The point " + point.toString() + "in this gml:MultiPoint does not have the number of coordinates specified in 'srsDimension': " + m_srsDimension );
 
     m_points.add( point );        
   }

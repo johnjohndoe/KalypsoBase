@@ -48,5 +48,5 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public interface IWorkspaceProvider
 {
-  public GMLWorkspace getWorkspace() throws GMLException;
+  GMLWorkspace getWorkspace( );
 }

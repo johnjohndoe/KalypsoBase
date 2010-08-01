@@ -36,11 +36,10 @@
 package org.kalypsodeegree_impl.io.sax.parser;
 
 import org.kalypso.commons.xml.NS;
+import org.kalypso.gmlschema.types.IGmlContentHandler;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.xml.sax.Attributes;
-import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 
 /**
@@ -55,16 +54,16 @@ public class TrianglePatchesContentHandler extends GMLElementContentHandler impl
 
   private final ITriangleHandler m_triangleHandler;  
 
-  public TrianglePatchesContentHandler( final ITriangleHandler triangleHandler, final String defaultSrs, final XMLReader xmlReader )
+  public TrianglePatchesContentHandler( final XMLReader reader, final ITriangleHandler triangleHandler, final String defaultSrs )
   { 
-    super( NS.GML3, ELEMENT_TRIANGLE_PATCH, xmlReader, defaultSrs, triangleHandler );    
+    super( reader, NS.GML3, ELEMENT_TRIANGLE_PATCH, defaultSrs, triangleHandler );
     m_triangleHandler = triangleHandler;    
   }
 
   @Override
   protected void doStartElement( final String uri, final String localName, final String name, final Attributes attributes )
   {
-    setDelegate( new TriangleContentHandler( this, m_defaultSrs, m_xmlReader ) );
+    new TriangleContentHandler( getXMLReader(), this, m_defaultSrs ).activate();
   }
 
   /**
@@ -73,9 +72,9 @@ public class TrianglePatchesContentHandler extends GMLElementContentHandler impl
   @Override
   public void doEndElement( final String uri, final String localName, final String name )
   {
-    
+
   }
-  
+
   /**
    * @see org.kalypsodeegree_impl.io.sax.ITriangleHandler#handleTriangle(org.kalypsodeegree.model.geometry.GM_Triangle)
    */
@@ -84,17 +83,17 @@ public class TrianglePatchesContentHandler extends GMLElementContentHandler impl
   {
     m_triangleHandler.handle( triangle );
   }
-  
+
   @Override
   public void handleUnexpectedStartElement( final String uri, final String localName, final String name, final Attributes atts ) throws SAXException
   {
     if( localName.equals( TriangleContentHandler.ELEMENT_TRIANGLE ) )
     {
-      ContentHandler triangleContentHandler = new TriangleContentHandler( this, m_defaultSrs, m_xmlReader );
-      delegate( triangleContentHandler );    
+      final IGmlContentHandler triangleContentHandler = new TriangleContentHandler( getXMLReader(), this, m_defaultSrs );
+      triangleContentHandler.activate();
       triangleContentHandler.startElement( uri, localName, name, atts );        
     }
     else
-      throw new SAXParseException( String.format( "Unexpected start element: {%s}%s = %s - should be {%s}%s", uri, localName, name, NS.GML3, m_localName ), m_locator );
+      throwSAXParseException( "Unexpected start element: {%s}%s = %s - should be {%s}%s", uri, localName, name, NS.GML3, m_localName );
   }
 }

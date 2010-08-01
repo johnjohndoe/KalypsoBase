@@ -54,9 +54,9 @@ public abstract class PatchesMarshaller<T extends GM_SurfacePatch> extends Abstr
 {
   protected SurfacePatchMarshaller<T> m_surfacePatchMarshaller;
 
-  public PatchesMarshaller( final XMLReader xmlReader, final GM_Surface<T> surface, final String tag )
+  public PatchesMarshaller( final XMLReader reader, final GM_Surface<T> surface, final String tag )
   {
-    super( xmlReader, tag, surface );
+    super( reader, tag, surface );
     createPatchMarshaller();
   }
 

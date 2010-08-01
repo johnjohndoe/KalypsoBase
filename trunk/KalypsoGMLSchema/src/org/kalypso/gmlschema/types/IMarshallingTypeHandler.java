@@ -20,10 +20,10 @@ public interface IMarshallingTypeHandler extends ITypeHandler
    *            object to serialize, it must be instanceof {@link #getClassName()}.
    * @param propQName
    *            name of the propertynode, must be full prefixed !!
-   * @param xmlReader
-   *            The xmlReader to serialize to. Write into its {@link ContentHandler} to do so.
+   * @param XMLReader
+   *            The XMLReader to serialize to. Write into its {@link ContentHandler} to do so.
    */
-  public void marshal( final Object value, final XMLReader xmlReader, final URL context, final String gmlVersion ) throws SAXException;
+  public void marshal( final Object value, final XMLReader reader, final URL context, final String gmlVersion ) throws SAXException;
 
   /**
    * creates an object of type {@link #getClassName()}from node.
@@ -31,7 +31,7 @@ public interface IMarshallingTypeHandler extends ITypeHandler
    * @param context
    *            use this context for relative url
    */
-  public void unmarshal( final XMLReader xmlReader, final URL context, UnmarshallResultEater marshalResultEater, final String gmlVersion ) throws TypeRegistryException;
+  public void unmarshal( final XMLReader reader, final URL context, UnmarshallResultEater marshalResultEater, final String gmlVersion ) throws TypeRegistryException;
 
   /** Ein Kurzname des behandelten Typ, wird z.B: für Beschriftungen benutzt */
   public String getShortname( );

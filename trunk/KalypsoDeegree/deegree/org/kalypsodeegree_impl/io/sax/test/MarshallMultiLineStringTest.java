@@ -116,9 +116,9 @@ public class MarshallMultiLineStringTest extends TestCase
   private void marshallMultiLineString( final GM_MultiCurve multiLineString, final File temp ) throws Exception
   {
     final FileOutputStream os = new FileOutputStream( temp );
-    final XMLReader xmlReader = SaxParserTestUtils.createXMLReader( os );
-    final MultiLineStringMarshaller marshaller = new MultiLineStringMarshaller( xmlReader, multiLineString );
-    SaxParserTestUtils.marshallDocument( xmlReader, marshaller );
+    final XMLReader reader = SaxParserTestUtils.createXMLReader( os );
+    final MultiLineStringMarshaller marshaller = new MultiLineStringMarshaller( reader, multiLineString );
+    SaxParserTestUtils.marshallDocument( reader, marshaller );
     os.close();
   }
 }

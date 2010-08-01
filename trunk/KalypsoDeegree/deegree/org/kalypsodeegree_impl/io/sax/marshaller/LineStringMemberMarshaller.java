@@ -51,11 +51,11 @@ import org.xml.sax.XMLReader;
  */
 public class LineStringMemberMarshaller extends AbstractMarshaller<GM_Curve>
 {
-  public final static String TAG_LINE_STRING_MEMBER = "lineStringMember";
+  public static final String TAG_LINE_STRING_MEMBER = "lineStringMember";
 
-  public LineStringMemberMarshaller( final XMLReader xmlReader )
+  public LineStringMemberMarshaller( final XMLReader reader )
   {
-    super( xmlReader, TAG_LINE_STRING_MEMBER, null );
+    super( reader, TAG_LINE_STRING_MEMBER, null );
   }
 
   /**
@@ -64,7 +64,7 @@ public class LineStringMemberMarshaller extends AbstractMarshaller<GM_Curve>
   @Override
   protected void doMarshall( ) throws SAXException
   {
-    new LineStringMarshaller( getXmlReader(), getMarshalledObject() ).marshall();
+    new LineStringMarshaller( getXMLReader(), getMarshalledObject() ).marshall();
   }
 
   public void setLineString( final GM_Curve lineString )

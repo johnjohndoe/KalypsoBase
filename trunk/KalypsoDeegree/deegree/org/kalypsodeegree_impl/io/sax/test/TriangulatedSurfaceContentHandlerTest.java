@@ -148,8 +148,8 @@ public class TriangulatedSurfaceContentHandlerTest extends Assert
     final SAXParser saxParser = saxFac.newSAXParser();
     // make namespace-prefixes visible to content handler
     // used to allow necessary schemas from gml document
-    final XMLReader xmlReader = saxParser.getXMLReader();
-    xmlReader.setFeature( "http://xml.org/sax/features/namespace-prefixes", Boolean.TRUE ); //$NON-NLS-1$
+    final XMLReader reader = saxParser.getXMLReader();
+    reader.setFeature( "http://xml.org/sax/features/namespace-prefixes", Boolean.TRUE ); //$NON-NLS-1$
 
     final GM_TriangulatedSurface[] result = new GM_TriangulatedSurface[1];
     final UnmarshallResultEater resultEater = new UnmarshallResultEater()
@@ -162,10 +162,10 @@ public class TriangulatedSurfaceContentHandlerTest extends Assert
       }
     };
 
-    final TriangulatedSurfaceContentHandler contentHandler = new TriangulatedSurfaceContentHandler( resultEater, xmlReader );
+    final TriangulatedSurfaceContentHandler contentHandler = new TriangulatedSurfaceContentHandler( reader, resultEater );
 
-    xmlReader.setContentHandler( contentHandler );
-    xmlReader.parse( is );
+    reader.setContentHandler( contentHandler );
+    reader.parse( is );
 
     return result[0];
   }

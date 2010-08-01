@@ -47,9 +47,10 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
 import org.kalypso.gmlschema.property.IPropertyMarshallingTypeHandler;
+import org.kalypso.gmlschema.types.AbstractGmlContentHandler;
+import org.kalypso.gmlschema.types.IGmlContentHandler;
 import org.kalypso.gmlschema.types.IValueHandler;
 import org.xml.sax.Attributes;
-import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
@@ -61,17 +62,16 @@ import org.xml.sax.XMLReader;
  * 
  * @author Felipe Maximino
  */
-public class GMLPropertyChoiceContentHandler extends DelegatingContentHandler
+public class GMLPropertyChoiceContentHandler extends AbstractGmlContentHandler
 {
-  private final Map<QName, ContentHandler> m_registeredProperties;
+  private final Map<QName, IGmlContentHandler> m_registeredProperties = new HashMap<QName, IGmlContentHandler>();
 
   private final String m_defaultSrs;
 
-  public GMLPropertyChoiceContentHandler( final ContentHandler parentContentHandler, final XMLReader xmlReader, final String defaultSrs )
+  public GMLPropertyChoiceContentHandler( final XMLReader reader, final IGmlContentHandler parentContentHandler, final String defaultSrs )
   {
-    super( xmlReader, parentContentHandler );
+    super( reader, parentContentHandler );
 
-    m_registeredProperties = new HashMap<QName, ContentHandler>();
     m_defaultSrs = defaultSrs;
   }
 
@@ -79,10 +79,9 @@ public class GMLPropertyChoiceContentHandler extends DelegatingContentHandler
   public void endElement( final String uri, final String localName, final String name ) throws SAXException
   {
     final GMLElementContentHandler parentContentHandler = (GMLElementContentHandler) getParentContentHandler();
-
     if( parentContentHandler.getLocalName().equals( localName ) )
     {
-      endDelegation();
+      activateParent();
       parentContentHandler.endElement( uri, localName, name );
     }
   }
@@ -90,25 +89,23 @@ public class GMLPropertyChoiceContentHandler extends DelegatingContentHandler
   @Override
   public void startElement( final String uri, final String localName, final String name, final Attributes atts ) throws SAXException
   {
-    final ContentHandler delegate = findDelegate( new QName( uri, localName ) );
+    final IGmlContentHandler delegate = findDelegate( new QName( uri, localName ) );
 
     if( delegate != null )
     {
-      delegate( delegate );
+      delegate.activate();
       delegate.startElement( uri, localName, name, atts );
     }
     else
-    {
-      throw new SAXParseException( String.format( "Unexpected start element: %s - %s -  %s", uri, localName, name ), getLocator() );
-    }
+      throwSAXParseException( "Unexpected start element: %s - %s -  %s", uri, localName, name );
   }
 
-  private ContentHandler findDelegate( final QName qName )
+  private IGmlContentHandler findDelegate( final QName qName )
   {
     return m_registeredProperties.get( qName );
   }
 
-  private void registerProperty( final QName qName, final ContentHandler contentHandler )
+  private void registerProperty( final QName qName, final IGmlContentHandler contentHandler )
   {
     m_registeredProperties.put( qName, contentHandler );
   }
@@ -124,13 +121,15 @@ public class GMLPropertyChoiceContentHandler extends DelegatingContentHandler
 
       for( final IPropertyMarshallingTypeHandler handler : allowedProps )
       {
-        registerProperty( handler.getTypeName(), handler.createContentHandler( m_xmlReader, this, (IValueHandler) m_parentContentHandler, m_defaultSrs ) );
+        final XMLReader reader = getXMLReader();
+        final IValueHandler parentContentHandler = (IValueHandler) getParentContentHandler();
+        registerProperty( handler.getTypeName(), handler.createContentHandler( reader, this, parentContentHandler, m_defaultSrs ) );
       }
     }
     catch( final Exception e )
     {
       e.printStackTrace();
-      throw new SAXParseException( "Could not get properties for " + geometry.toString() + ": " + e.getMessage(), m_locator );
+      throwSAXParseException( "Could not get properties for %s: %s", geometry, e.getMessage() );
     }
   }
 }

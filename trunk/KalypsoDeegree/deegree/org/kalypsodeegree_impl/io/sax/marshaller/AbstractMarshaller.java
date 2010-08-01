@@ -52,7 +52,7 @@ import org.xml.sax.XMLReader;
  */
 public abstract class AbstractMarshaller<T extends Object> implements IMashallerConstants
 {
-  private final XMLReader m_xmlReader;
+  private final XMLReader m_reader;
 
   private final String m_tag;
 
@@ -60,14 +60,14 @@ public abstract class AbstractMarshaller<T extends Object> implements IMashaller
 
   private T m_marshalledObject;
 
-  public AbstractMarshaller( final XMLReader xmlReader, final String tag )
+  public AbstractMarshaller( final XMLReader reader, final String tag )
   {
-    this( xmlReader, tag, null );
+    this( reader, tag, null );
   }
 
-  public AbstractMarshaller( final XMLReader xmlReader, final String tag, final T object )
+  public AbstractMarshaller( final XMLReader reader, final String tag, final T object )
   {
-    m_xmlReader = xmlReader;
+    m_reader = reader;
     m_tag = tag;
     m_qName = MarshallerUtils.getQName( m_tag );
     m_marshalledObject = object;
@@ -83,9 +83,9 @@ public abstract class AbstractMarshaller<T extends Object> implements IMashaller
     m_marshalledObject = marshalledObject;
   }
 
-  protected XMLReader getXmlReader( )
+  protected XMLReader getXMLReader( )
   {
-    return m_xmlReader;
+    return m_reader;
   }
 
   protected String getTag( )
@@ -110,7 +110,7 @@ public abstract class AbstractMarshaller<T extends Object> implements IMashaller
 
   protected void startMarshalling( ) throws SAXException
   {
-    final ContentHandler contentHandler = m_xmlReader.getContentHandler();
+    final ContentHandler contentHandler = m_reader.getContentHandler();
     contentHandler.startElement( NS.GML3, m_tag, m_qName, EMPTY_ATTRIBUTES );
   }
 
@@ -118,7 +118,7 @@ public abstract class AbstractMarshaller<T extends Object> implements IMashaller
 
   protected void endMarshalling( ) throws SAXException
   {
-    final ContentHandler contentHandler = m_xmlReader.getContentHandler();
+    final ContentHandler contentHandler = m_reader.getContentHandler();
     contentHandler.endElement( NS.GML3, m_tag, m_qName );
   }
 }

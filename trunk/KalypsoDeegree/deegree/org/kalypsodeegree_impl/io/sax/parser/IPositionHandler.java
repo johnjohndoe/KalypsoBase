@@ -48,5 +48,5 @@ import org.xml.sax.SAXParseException;
  */
 public interface IPositionHandler extends IControlPointHandler
 {
-  public void handle( GM_Position[] element, String srs ) throws SAXParseException;
+  void handle( GM_Position[] element, String srs ) throws SAXParseException;
 }

@@ -58,9 +58,9 @@ public class LineStringMemberContentHandler extends GMLElementContentHandler imp
 
   private final ICurveHandler m_curveHandler;
 
-  public LineStringMemberContentHandler( final XMLReader xmlReader, final ICurveHandler curveHandler, final String defaultSrs )
+  public LineStringMemberContentHandler( final XMLReader reader, final ICurveHandler curveHandler, final String defaultSrs )
   {
-    super( NS.GML3, ELEMENT_LINE_STRING_MEMBER, xmlReader, defaultSrs, curveHandler );
+    super( reader, NS.GML3, ELEMENT_LINE_STRING_MEMBER, defaultSrs, curveHandler );
 
     m_curveHandler = curveHandler;
   }
@@ -82,18 +82,16 @@ public class LineStringMemberContentHandler extends GMLElementContentHandler imp
   @Override
   public void handleUnexpectedEndElement( final String uri, final String localName, final String name ) throws SAXException
   {
-    final GMLElementContentHandler parentContentHandler = (GMLElementContentHandler) m_parentContentHandler;
+    final GMLElementContentHandler parentContentHandler = (GMLElementContentHandler) getParentContentHandler();
 
     // this property may have 0 occurences
     if( localName.equals( parentContentHandler.m_localName ) )
     {
-      endDelegation();
+      activateParent();
       parentContentHandler.endElement( uri, localName, name );
     }
     else
-    {
       super.handleUnexpectedEndElement( uri, localName, name );
-    }
   }
 
   /**
@@ -103,7 +101,7 @@ public class LineStringMemberContentHandler extends GMLElementContentHandler imp
   @Override
   protected void doStartElement( final String uri, final String localName, final String name, final Attributes atts )
   {
-    setDelegate( new LineStringContentHandler( this, m_defaultSrs, m_xmlReader ) );
+    new LineStringContentHandler( getXMLReader(), this, m_defaultSrs ).activate();
   }
 
   /**
