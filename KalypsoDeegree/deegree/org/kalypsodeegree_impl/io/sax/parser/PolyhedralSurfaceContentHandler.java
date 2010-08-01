@@ -39,13 +39,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.kalypso.commons.xml.NS;
+import org.kalypso.gmlschema.types.IGmlContentHandler;
 import org.kalypso.gmlschema.types.UnmarshallResultEater;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree.model.geometry.GM_PolyhedralSurface;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.xml.sax.Attributes;
-import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
@@ -69,29 +69,29 @@ public class PolyhedralSurfaceContentHandler extends GMLElementContentHandler im
 
   private final UnmarshallResultEater m_resultEater;
 
-  public PolyhedralSurfaceContentHandler( final UnmarshallResultEater resultEater, final XMLReader xmlReader )
+  public PolyhedralSurfaceContentHandler( final XMLReader reader, final UnmarshallResultEater resultEater )
   {
-    this( resultEater, null, xmlReader );
+    this( reader, resultEater, null );
   }
 
-  public PolyhedralSurfaceContentHandler( final UnmarshallResultEater resultEater, final ContentHandler parentContentHandler, final XMLReader xmlReader )
+  public PolyhedralSurfaceContentHandler( final XMLReader reader, final UnmarshallResultEater resultEater, final IGmlContentHandler parentContentHandler )
   {
-    super( NS.GML3, ELEMENT_POLYHEDRAL_SURFACE, xmlReader, parentContentHandler );
+    super( reader, NS.GML3, ELEMENT_POLYHEDRAL_SURFACE, parentContentHandler );
 
     m_resultEater = resultEater;
 
     m_polyhedralSurface = null;
   }
 
-
   /**
-   * @see org.kalypsodeegree_impl.io.sax.GMLElementContentHandler#doEndElement(java.lang.String, java.lang.String, java.lang.String)
+   * @see org.kalypsodeegree_impl.io.sax.GMLElementContentHandler#doEndElement(java.lang.String, java.lang.String,
+   *      java.lang.String)
    */
   @Override
   protected void doEndElement( final String uri, final String localName, final String name ) throws SAXException
   {
     try
-    { 
+    {
       final GM_Polygon[] polygons = m_polygons.toArray( new GM_Polygon[m_polygons.size()] );
       m_polyhedralSurface = GeometryFactory.createGM_PolyhedralSurface( polygons, m_crs );
     }
@@ -106,11 +106,12 @@ public class PolyhedralSurfaceContentHandler extends GMLElementContentHandler im
       m_polygons = null;
     }
 
-    m_resultEater.unmarshallSuccesful( m_polyhedralSurface );    
+    m_resultEater.unmarshallSuccesful( m_polyhedralSurface );
   }
 
   /**
-   * @see org.kalypsodeegree_impl.io.sax.parser.GMLElementContentHandler#handleUnexpectedEndElement(java.lang.String, java.lang.String, java.lang.String)
+   * @see org.kalypsodeegree_impl.io.sax.parser.GMLElementContentHandler#handleUnexpectedEndElement(java.lang.String,
+   *      java.lang.String, java.lang.String)
    */
   @Override
   public void handleUnexpectedEndElement( final String uri, final String localName, final String name ) throws SAXException
@@ -118,8 +119,8 @@ public class PolyhedralSurfaceContentHandler extends GMLElementContentHandler im
     // maybe the property was expecting a triangulated surface, but it was empty */
     if( m_polyhedralSurface == null )
     {
-      endDelegation();
-      m_parentContentHandler.endElement( uri, localName, name );
+      activateParent();
+      getParentContentHandler().endElement( uri, localName, name );
     }
     else
     {
@@ -127,15 +128,15 @@ public class PolyhedralSurfaceContentHandler extends GMLElementContentHandler im
     }
   }
 
-
   /**
-   * @see org.kalypsodeegree_impl.io.sax.GMLElementContentHandler#doStartElement(java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
+   * @see org.kalypsodeegree_impl.io.sax.GMLElementContentHandler#doStartElement(java.lang.String, java.lang.String,
+   *      java.lang.String, org.xml.sax.Attributes)
    */
   @Override
   protected void doStartElement( final String uri, final String localName, final String name, final Attributes atts )
   {
     m_crs = ContentHandlerUtils.parseSrsFromAttributes( atts, null );
-    setDelegate(  new PolygonPatchesContentHandler( this, m_crs, m_xmlReader )  );
+    setDelegate( new PolygonPatchesContentHandler( getXMLReader(), this, m_crs ) );
   }
 
   /**
@@ -144,7 +145,7 @@ public class PolyhedralSurfaceContentHandler extends GMLElementContentHandler im
   @Override
   public void handle( final GM_Polygon polygon )
   {
-    if( m_crs ==  null)
+    if( m_crs == null )
     {
       m_crs = polygon.getCoordinateSystem();
     }

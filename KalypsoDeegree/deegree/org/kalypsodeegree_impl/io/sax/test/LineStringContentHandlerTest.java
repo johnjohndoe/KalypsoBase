@@ -62,16 +62,16 @@ import org.xml.sax.XMLReader;
 public class LineStringContentHandlerTest extends TestCase
 {
   private final SAXParserFactory m_saxFactory = SAXParserFactory.newInstance();
-  
+
   private static final GM_Position POSITION1 = GeometryFactory.createGM_Position( 0.0, 0.1, 0.2);
   private static final GM_Position POSITION2 = GeometryFactory.createGM_Position( 1.0, 1.1, 1.2);
   private static final GM_Position POSITION3 = GeometryFactory.createGM_Position( 2.0, 2.1, 2.2);
   private static final GM_Position POSITION4 = GeometryFactory.createGM_Position( 3.0, 3.1, 3.2);
 
   private static final String FEW_COORDINATES_MSG = "A gml:LineString must contain at least two positions!";
-  
+
   private static GM_Curve LINE_STRING;
-  
+
   /**
    * @see junit.framework.TestCase#setUp()
    */
@@ -80,11 +80,11 @@ public class LineStringContentHandlerTest extends TestCase
   {
     super.setUp();
     m_saxFactory.setNamespaceAware( true );
-    
-    GM_Position[] positions = new GM_Position[]{POSITION1, POSITION2, POSITION3, POSITION4 };
+
+    final GM_Position[] positions = new GM_Position[]{POSITION1, POSITION2, POSITION3, POSITION4 };
     LINE_STRING = GeometryFactory.createGM_Curve( positions, "EPSG:31467");
   }
-  
+
   /**
    * tests gml:LineString specified with gml:coordinates
    */
@@ -94,7 +94,7 @@ public class LineStringContentHandlerTest extends TestCase
     final GM_Curve lineString = parseLineString( "resources/lineString1.gml" );
     assertLineString( lineString );
   }
-  
+
   /**
    * tests gml:LineString specified with gml:coord elements
    */
@@ -104,7 +104,7 @@ public class LineStringContentHandlerTest extends TestCase
     final GM_Curve lineString = parseLineString( "resources/lineString2.gml" );
     assertLineString( lineString );
   }
-  
+
   /**
    * tests gml:LineString specified with gml:pos elements
    */
@@ -114,7 +114,7 @@ public class LineStringContentHandlerTest extends TestCase
     final GM_Curve lineString = parseLineString( "resources/lineString3.gml" );
     assertLineString( lineString );
   }
-  
+
   /**
    * tests gml:LineString specified with gml:posList
    */
@@ -124,7 +124,7 @@ public class LineStringContentHandlerTest extends TestCase
     final GM_Curve lineString = parseLineString( "resources/lineString4.gml" );
     assertLineString( lineString );
   }
-  
+
   /**
    * tests gml:LineString specified with too few coordinates.
    * should throw an excpetion
@@ -136,13 +136,13 @@ public class LineStringContentHandlerTest extends TestCase
     {
       parseLineString( "resources/lineString5.gml" );
     }
-    catch( SAXParseException e )
+    catch( final SAXParseException e )
     {
       assertEquals( FEW_COORDINATES_MSG, e.getMessage() );
     }
   }
-  
-  private void assertLineString( GM_Curve lineString )
+
+  private void assertLineString( final GM_Curve lineString )
   {
     assertEquals( LINE_STRING.getCoordinateSystem(), lineString.getCoordinateSystem() );
     assertEquals( LINE_STRING.getNumberOfCurveSegments(), lineString.getNumberOfCurveSegments() );
@@ -153,25 +153,25 @@ public class LineStringContentHandlerTest extends TestCase
   private GM_Curve parseLineString( final String source ) throws Exception
   {
     final InputSource is = new InputSource( getClass().getResourceAsStream( source ) );
-    
+
     final SAXParser saxParser = m_saxFactory.newSAXParser();
-    final XMLReader xmlReader = saxParser.getXMLReader();
-    
+    final XMLReader reader = saxParser.getXMLReader();
+
     final GM_Curve[] result = new GM_Curve[1];
-    UnmarshallResultEater resultEater = new UnmarshallResultEater()
+    final UnmarshallResultEater resultEater = new UnmarshallResultEater()
     {      
       @Override
-      public void unmarshallSuccesful( Object value )
+      public void unmarshallSuccesful( final Object value )
       {
         assertTrue( value instanceof GM_Curve );
         result[0] = (GM_Curve) value;
       }
     };
-    
-    LineStringContentHandler contentHandler = new LineStringContentHandler( resultEater, null, xmlReader );
-    xmlReader.setContentHandler( contentHandler );
-    xmlReader.parse( is );
-    
+
+    final LineStringContentHandler contentHandler = new LineStringContentHandler( reader, resultEater, null );
+    reader.setContentHandler( contentHandler );
+    reader.parse( is );
+
     return result[0];
   }
 }

@@ -56,9 +56,9 @@ public class PosListMarshaller extends AbstractMarshaller<GM_Position[]>
 {
   public static final String ELEMENT_POS_LIST = "posList";
 
-  public PosListMarshaller( final XMLReader xmlReader, final GM_Position[] posList )
+  public PosListMarshaller( final XMLReader reader, final GM_Position[] posList )
   {
-    super( xmlReader, ELEMENT_POS_LIST, posList );
+    super( reader, ELEMENT_POS_LIST, posList );
   }
 
   /**
@@ -73,7 +73,7 @@ public class PosListMarshaller extends AbstractMarshaller<GM_Position[]>
     final AttributesImpl atts = new AttributesImpl();
     atts.addAttribute( "", "srsDimension", "srsDimension", "decimal", String.valueOf( srsDimension ) );
 
-    final ContentHandler contentHandler = getXmlReader().getContentHandler();
+    final ContentHandler contentHandler = getXMLReader().getContentHandler();
     contentHandler.startElement( NS.GML3, getTag(), getQName(), atts );
   }
 
@@ -91,7 +91,7 @@ public class PosListMarshaller extends AbstractMarshaller<GM_Position[]>
 
   private void marshallPosition( final GM_Position pos ) throws SAXException
   {
-    final ContentHandler contentHandler = getXmlReader().getContentHandler();
+    final ContentHandler contentHandler = getXMLReader().getContentHandler();
 
     final double[] asArray = pos.getAsArray();
     for( final double d : asArray )

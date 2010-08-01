@@ -55,9 +55,9 @@ public class PolyhedralSurfaceMarshallerMy extends SurfaceMarshaller<GM_Polygon>
 {
   private static final String TAG_POLYHEDRAL_SURFACE = "PolyhedralSurface";
 
-  public PolyhedralSurfaceMarshallerMy( final XMLReader xmlReader, final GM_Surface<GM_Polygon> surface )
+  public PolyhedralSurfaceMarshallerMy( final XMLReader reader, final GM_Surface<GM_Polygon> surface )
   {
-    super( xmlReader, surface, TAG_POLYHEDRAL_SURFACE );
+    super( reader, surface, TAG_POLYHEDRAL_SURFACE );
   }
 
   /**
@@ -66,7 +66,7 @@ public class PolyhedralSurfaceMarshallerMy extends SurfaceMarshaller<GM_Polygon>
   @Override
   public void doMarshall( ) throws SAXException
   {
-    m_patchesMarshaller = new PolygonPatchesMarshaller( getXmlReader(), getMarshalledObject() );
+    m_patchesMarshaller = new PolygonPatchesMarshaller( getXMLReader(), getMarshalledObject() );
     m_patchesMarshaller.marshall();
   }
 }

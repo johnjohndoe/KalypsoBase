@@ -62,13 +62,13 @@ import org.xml.sax.XMLReader;
 public class MultiPointContentHandlerTest extends GmlParsingTester
 {
   private static double DELTA = 0.01;
-  
+
   private static final GM_Point POINT1 = GeometryFactory.createGM_Point( 0.0, 0.0, "EPSG:4267" );
-  
+
   private static final GM_Point POINT2 = GeometryFactory.createGM_Point( 1.0, 0.0, "EPSG:4267" );
-  
+
   private final SAXParserFactory m_saxFactory = SAXParserFactory.newInstance();
-  
+
   /**
    * tests a gml:MultiPoint specified with gml:pointMember properties
    */ 
@@ -78,7 +78,7 @@ public class MultiPointContentHandlerTest extends GmlParsingTester
     final GM_MultiPoint multiPoint = parseMultiPoint( "resources/multiPoint1.gml" );
     assertMultiPoint( multiPoint );
   }
-  
+
   /**
    * tests a gml:MultiPoint defined with both gml:pointMember and gml:pointMembers properties
    */
@@ -88,7 +88,7 @@ public class MultiPointContentHandlerTest extends GmlParsingTester
     final GM_MultiPoint multiPoint = parseMultiPoint( "resources/multiPoint2.gml" );
     assertMultiPoint( multiPoint );
   }
- 
+
   /**
    * tests a gml:MultiPoint defined with gml:pointMembers properties, but one of the points
    * has one coordinate more.
@@ -101,34 +101,34 @@ public class MultiPointContentHandlerTest extends GmlParsingTester
     {
       parseMultiPoint( "resources/multiPoint2.gml" );
     }
-    catch( SAXParseException e )
+    catch( final SAXParseException e )
     {
       assertTrue( e.getMessage().contains( "in this gml:MultiPoint does not have the number of coordinates specified in" ) );
     }    
   }
-  
+
   @Override
   protected void setUp() throws Exception
   {
     super.setUp();
     m_saxFactory.setNamespaceAware( true );    
   }
-  
-  private void assertMultiPoint( GM_MultiPoint multiPoint )
+
+  private void assertMultiPoint( final GM_MultiPoint multiPoint )
   {
     assertNotNull( multiPoint );
     assertEquals( multiPoint.getCoordinateSystem(), POINT1.getCoordinateSystem() );
-    
+
     assertEquals( 3, multiPoint.getAllPoints().length );
-    
-    GM_Point firstPoint = multiPoint.getPointAt( 0 );    
+
+    final GM_Point firstPoint = multiPoint.getPointAt( 0 );    
     assertTrue( POINT1.distance( firstPoint ) < DELTA );
-    
-    GM_Point lastPoint = multiPoint.getPointAt( 2 );    
+
+    final GM_Point lastPoint = multiPoint.getPointAt( 2 );    
     assertTrue( POINT2.distance( lastPoint ) < DELTA );   
   }
 
-  private GM_MultiPoint parseMultiPoint( String name ) throws Exception
+  private GM_MultiPoint parseMultiPoint( final String name ) throws Exception
   {
     final InputSource is = new InputSource( getClass().getResourceAsStream( name ) );
 
@@ -146,7 +146,7 @@ public class MultiPointContentHandlerTest extends GmlParsingTester
       }
     };
 
-    final ContentHandler contentHandler = new MultiPointContentHandler( resultEater, null, reader );
+    final ContentHandler contentHandler = new MultiPointContentHandler( reader, resultEater, null );
     reader.setContentHandler( contentHandler );
     reader.parse( is );
 

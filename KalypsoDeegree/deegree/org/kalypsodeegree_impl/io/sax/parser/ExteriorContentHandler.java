@@ -50,21 +50,20 @@ import org.xml.sax.XMLReader;
 public class ExteriorContentHandler extends GMLElementContentHandler implements IRingHandler
 {
   public static final String ELEMENT_EXTERIOR = "exterior";
-  
+
   /*
-   * xsd attribute 'minOccurs'. If it is 0, we should not always throw an exception
-   * if this element doesn't appear.
+   * xsd attribute 'minOccurs'. If it is 0, we should not always throw an exception if this element doesn't appear.
    * Default value it's 1.
    */
-  public int m_elementMinOccurs;
+  private int m_elementMinOccurs;
 
   private final IRingHandler m_exteriorHandler;
-  
+
   private GM_Ring m_ring;
-  
-  public ExteriorContentHandler( final IRingHandler exteriorHandler, final String defaultSrs, final XMLReader xmlReader )
+
+  public ExteriorContentHandler( final XMLReader reader, final IRingHandler exteriorHandler, final String defaultSrs )
   {
-    super( NS.GML3, ELEMENT_EXTERIOR, xmlReader, defaultSrs, exteriorHandler);
+    super( reader, NS.GML3, ELEMENT_EXTERIOR, defaultSrs, exteriorHandler );
 
     m_exteriorHandler = exteriorHandler;
     m_elementMinOccurs = 1;
@@ -72,8 +71,8 @@ public class ExteriorContentHandler extends GMLElementContentHandler implements 
 
   @Override
   protected void doStartElement( final String uri, final String localName, final String name, final Attributes attributes )
-  { 
-    setDelegate( new LinearRingContentHandler( this, m_defaultSrs, m_xmlReader ) );
+  {
+    new LinearRingContentHandler( getXMLReader(), this, m_defaultSrs ).activate();
   }
 
   /**
@@ -81,26 +80,26 @@ public class ExteriorContentHandler extends GMLElementContentHandler implements 
    */
   @Override
   public void doEndElement( final String uri, final String localName, final String name ) throws SAXException
-  { 
+  {
     m_exteriorHandler.handle( m_ring );
     m_ring = null;
   }
-  
+
   /**
-   * @see org.kalypsodeegree_impl.io.sax.GMLElementContentHandler#handleUnexpectedEndElement(java.lang.String, java.lang.String, java.lang.String)
+   * @see org.kalypsodeegree_impl.io.sax.GMLElementContentHandler#handleUnexpectedEndElement(java.lang.String,
+   *      java.lang.String, java.lang.String)
    */
   @Override
-  public void handleUnexpectedEndElement( String uri, String localName, String name ) throws SAXException
+  public void handleUnexpectedEndElement( final String uri, final String localName, final String name ) throws SAXException
   {
-    if( m_elementMinOccurs == 0 && localName.equals( ( ( GMLElementContentHandler ) m_parentContentHandler ).getLocalName() ) )
+    final GMLElementContentHandler parentContentHandler = (GMLElementContentHandler) getParentContentHandler();
+    if( m_elementMinOccurs == 0 && localName.equals( parentContentHandler.getLocalName() ) )
     {
-      endDelegation();
-      ( ( GMLElementContentHandler ) m_parentContentHandler ).endElement( uri, localName, name );
+      activateParent();
+      parentContentHandler.endElement( uri, localName, name );
     }
     else
-    {
       super.handleUnexpectedEndElement( uri, localName, name );
-    }
   }
 
   /**
@@ -109,10 +108,10 @@ public class ExteriorContentHandler extends GMLElementContentHandler implements 
   @Override
   public void handle( final GM_Ring ring )
   {
-    m_ring = ring;    
+    m_ring = ring;
   }
-  
-  public void setElementMinOccurs( int elementMinOccurs )
+
+  public void setElementMinOccurs( final int elementMinOccurs )
   {
     m_elementMinOccurs = elementMinOccurs;
   }

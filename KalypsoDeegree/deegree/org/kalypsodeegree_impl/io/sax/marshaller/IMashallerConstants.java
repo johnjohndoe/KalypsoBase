@@ -49,9 +49,9 @@ import org.xml.sax.helpers.AttributesImpl;
  */
 public interface IMashallerConstants
 {
-  public static final Attributes EMPTY_ATTRIBUTES = new AttributesImpl();
+  Attributes EMPTY_ATTRIBUTES = new AttributesImpl();
 
-  public static final char[] WHITESPACE = new char[] { ' ' };
-  
-  public static final String QNAME_GML = "gml:";
+  char[] WHITESPACE = new char[] { ' ' };
+
+  String QNAME_GML = "gml:";
 }

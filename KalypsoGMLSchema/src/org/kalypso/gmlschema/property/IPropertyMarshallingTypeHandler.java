@@ -41,8 +41,8 @@
 package org.kalypso.gmlschema.property;
 
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler2;
+import org.kalypso.gmlschema.types.IGmlContentHandler;
 import org.kalypso.gmlschema.types.IValueHandler;
-import org.xml.sax.ContentHandler;
 import org.xml.sax.XMLReader;
 
 /**
@@ -54,5 +54,5 @@ import org.xml.sax.XMLReader;
  */
 public interface IPropertyMarshallingTypeHandler extends IMarshallingTypeHandler2
 {
-  public ContentHandler createContentHandler( final XMLReader xmlReader, final ContentHandler parentContentHandler, final IValueHandler handler, final String defaultSrs );
+  public IGmlContentHandler createContentHandler( final XMLReader XMLReader, final IGmlContentHandler parentContentHandler, final IValueHandler handler, final String defaultSrs );
 }

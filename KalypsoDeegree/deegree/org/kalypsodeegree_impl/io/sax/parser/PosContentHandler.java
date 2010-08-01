@@ -38,10 +38,10 @@ package org.kalypsodeegree_impl.io.sax.parser;
 import java.util.List;
 
 import org.kalypso.commons.xml.NS;
+import org.kalypso.gmlschema.types.IGmlContentHandler;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.xml.sax.Attributes;
-import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
@@ -59,29 +59,29 @@ public class PosContentHandler extends GMLElementContentHandler
   private StringBuffer m_coordBuffer = new StringBuffer();
 
   private String m_srs;
-  
-  private IPositionHandler m_positionHandler;
-  
-  public PosContentHandler( final ContentHandler parentContentHandler, final IPositionHandler positionHandler, final String defaultSrs, final XMLReader xmlReader )
+
+  private final IPositionHandler m_positionHandler;
+
+  public PosContentHandler( final XMLReader reader, final IGmlContentHandler parentContentHandler, final IPositionHandler positionHandler, final String defaultSrs )
   {
-    super( NS.GML3, ELEMENT_POS, xmlReader, defaultSrs, parentContentHandler );
-    m_positionHandler =  positionHandler;    
+    super( reader, NS.GML3, ELEMENT_POS, defaultSrs, parentContentHandler );
+    m_positionHandler = positionHandler;
   }
 
   @Override
   public void doStartElement( final String uri, final String localName, final String name, final Attributes attributes )
   {
-    m_srs = ContentHandlerUtils.parseSrsFromAttributes( attributes, m_defaultSrs );      
+    m_srs = ContentHandlerUtils.parseSrsFromAttributes( attributes, m_defaultSrs );
   }
 
   @Override
   public void doEndElement( final String uri, final String localName, final String name ) throws SAXException
-  { 
+  {
     final GM_Position pos = endPos();
-    m_positionHandler.handle( new GM_Position[]{pos}, m_srs );
+    m_positionHandler.handle( new GM_Position[] { pos }, m_srs );
   }
 
-  private GM_Position endPos() throws SAXParseException
+  private GM_Position endPos( ) throws SAXParseException
   {
     final String coordsString = m_coordBuffer == null ? "" : m_coordBuffer.toString().trim();
     m_coordBuffer = null;
@@ -90,16 +90,17 @@ public class PosContentHandler extends GMLElementContentHandler
 // final int dimension = m_currentCrs.getDimension();
 // TODO: check against crs
     final int coordCount = doubles.size();
-    
+
     // HACK: as long as we have no variable sized coordinates, we have only the choice between dimension 2 or 3.
     if( coordCount >= 3 )
-    {  
+    {
       return GeometryFactory.createGM_Position( doubles.get( 0 ), doubles.get( 1 ), doubles.get( 2 ) );
     }
-    if( coordCount == 2 )
-      return GeometryFactory.createGM_Position( doubles.get( 0 ), doubles.get( 1 ) );
 
-    throw new SAXParseException( "Not enough coords in pos element: " + coordsString, m_locator );
+    if( coordCount != 2 )
+      throwSAXParseException( "Not enough coords in pos element: " + coordsString );
+
+    return GeometryFactory.createGM_Position( doubles.get( 0 ), doubles.get( 1 ) );
   }
 
   /**

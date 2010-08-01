@@ -51,11 +51,11 @@ import org.xml.sax.XMLReader;
  */
 public class LineStringMarshaller extends GeometryMarshaller<GM_Curve>
 {
-  public final static String TAG_LINE_STRING = "LineString";
+  public static final String TAG_LINE_STRING = "LineString";
 
-  public LineStringMarshaller( final XMLReader xmlReader, final GM_Curve lineString )
+  public LineStringMarshaller( final XMLReader reader, final GM_Curve lineString )
   {
-    super( xmlReader, TAG_LINE_STRING, lineString );
+    super( reader, TAG_LINE_STRING, lineString );
   }
 
   /**
@@ -66,7 +66,7 @@ public class LineStringMarshaller extends GeometryMarshaller<GM_Curve>
   {
     try
     {
-      new PosListMarshaller( getXmlReader(), getMarshalledObject().getAsLineString().getPositions() ).marshall();
+      new PosListMarshaller( getXMLReader(), getMarshalledObject().getAsLineString().getPositions() ).marshall();
     }
     catch( final GM_Exception e )
     {

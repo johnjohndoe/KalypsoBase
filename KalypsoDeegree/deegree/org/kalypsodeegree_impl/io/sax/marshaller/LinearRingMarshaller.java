@@ -51,11 +51,11 @@ import org.xml.sax.XMLReader;
  */
 public class LinearRingMarshaller extends AbstractMarshaller<GM_Position[]>
 {
-  public final static String TAG_LINEAR_RING = "LinearRing";
+  public static final String TAG_LINEAR_RING = "LinearRing";
 
-  public LinearRingMarshaller( final XMLReader xmlReader, final GM_Position[] ring )
+  public LinearRingMarshaller( final XMLReader reader, final GM_Position[] ring )
   {
-    super( xmlReader, TAG_LINEAR_RING, ring );
+    super( reader, TAG_LINEAR_RING, ring );
   }
 
   /**
@@ -64,7 +64,7 @@ public class LinearRingMarshaller extends AbstractMarshaller<GM_Position[]>
   @Override
   public void doMarshall( ) throws SAXException
   {
-    final PosMarshaller positionMarshaller = new PosMarshaller( getXmlReader() );
+    final PosMarshaller positionMarshaller = new PosMarshaller( getXMLReader() );
     for( final GM_Position position : getMarshalledObject() )
     {
       positionMarshaller.setPosition( position );

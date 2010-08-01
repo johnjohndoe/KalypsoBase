@@ -47,18 +47,16 @@ import org.kalypso.contribs.java.net.AbstractUrlCatalog;
 
 /**
  * @author felipe
- *
  */
 public class LineStringTestSchemaCatalog extends AbstractUrlCatalog
 {
   private static final String NS_TEST = "org.kalypso.deegree.gmlparsertest";
-  
-  
+
   /**
    * @see org.kalypso.contribs.java.net.AbstractUrlCatalog#fillCatalog(java.lang.Class, java.util.Map, java.util.Map)
    */
   @Override
-  protected void fillCatalog( Class< ? > myClass, Map<String, URL> catalog, Map<String, String> prefixes )
+  protected void fillCatalog( final Class< ? > myClass, final Map<String, URL> catalog, final Map<String, String> prefixes )
   {
     catalog.put( NS_TEST, myClass.getResource( "resources/lineStringTest.xsd" ) ); //$NON-NLS-1$
     prefixes.put( NS_TEST, "tst" ); //$NON-NLS-1$    

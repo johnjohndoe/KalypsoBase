@@ -52,12 +52,11 @@ import org.xml.sax.XMLReader;
  */
 public class ExteriorMarshaller extends AbstractMarshaller<GM_SurfacePatch>
 {
+  public static final String TAG_EXTERIOR = "exterior";
 
-  public final static String TAG_EXTERIOR = "exterior";
-
-  public ExteriorMarshaller( final XMLReader xmlReader, final GM_SurfacePatch triangle )
+  public ExteriorMarshaller( final XMLReader reader, final GM_SurfacePatch triangle )
   {
-    super( xmlReader, TAG_EXTERIOR, triangle );
+    super( reader, TAG_EXTERIOR, triangle );
   }
 
   /**
@@ -69,7 +68,7 @@ public class ExteriorMarshaller extends AbstractMarshaller<GM_SurfacePatch>
     final GM_Position[] exteriorRing = getMarshalledObject().getExteriorRing();
     if( exteriorRing.length != 0 )
     {
-      (new LinearRingMarshaller( getXmlReader(), exteriorRing )).marshall();
+      (new LinearRingMarshaller( getXMLReader(), exteriorRing )).marshall();
     }
   }
 }

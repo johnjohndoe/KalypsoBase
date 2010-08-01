@@ -69,9 +69,9 @@ public class MarshallGMMultiPointTest extends TestCase
     final GM_MultiPoint multiPoint = createMultiPoint();
 
     final FileOutputStream os = new FileOutputStream( temp );
-    final XMLReader xmlReader = SaxParserTestUtils.createXMLReader( os );
-    final MultiPointMarshaller marshaller = new MultiPointMarshaller( xmlReader, multiPoint );
-    SaxParserTestUtils.marshallDocument( xmlReader, marshaller );
+    final XMLReader reader = SaxParserTestUtils.createXMLReader( os );
+    final MultiPointMarshaller marshaller = new MultiPointMarshaller( reader, multiPoint );
+    SaxParserTestUtils.marshallDocument( reader, marshaller );
     os.close();
 
     final URL url = getClass().getResource( "resources/multiPointa.gml" );

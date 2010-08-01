@@ -52,14 +52,13 @@ import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.gmlschema.types.AbstractGmlContentHandler;
 import org.kalypso.gmlschema.types.UnmarshallResultEater;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree_impl.io.sax.parser.DelegatingContentHandler;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 
 /**
@@ -69,7 +68,7 @@ import org.xml.sax.XMLReader;
  * @author Andreas von Doemming
  * @author Felipe Maximino - Refaktoring
  */
-public class FeatureContentHandler extends DelegatingContentHandler implements UnmarshallResultEater, IPropertyHandler
+public class FeatureContentHandler extends AbstractGmlContentHandler implements UnmarshallResultEater, IPropertyHandler
 {
   private final URL m_context;
 
@@ -83,14 +82,14 @@ public class FeatureContentHandler extends DelegatingContentHandler implements U
 
   private final IFeatureHandler m_featureHandler;
 
-  public FeatureContentHandler( final XMLReader xmlReader, final IFeatureHandler parentContentHandler, final GMLSchemaLoaderWithLocalCache schemaLoader, final URL context )
+  public FeatureContentHandler( final XMLReader reader, final IFeatureHandler parentContentHandler, final GMLSchemaLoaderWithLocalCache schemaLoader, final URL context )
   {
-    this( xmlReader, parentContentHandler, schemaLoader, context, null, null );
+    this( reader, parentContentHandler, schemaLoader, context, null, null );
   }
 
-  public FeatureContentHandler( final XMLReader xmlReader, final IFeatureHandler featureHandler, final GMLSchemaLoaderWithLocalCache schemaLoader, final URL context, final IPropertyType scopeProperty, final Feature parentFeature )
+  public FeatureContentHandler( final XMLReader reader, final IFeatureHandler featureHandler, final GMLSchemaLoaderWithLocalCache schemaLoader, final URL context, final IPropertyType scopeProperty, final Feature parentFeature )
   {
-    super( xmlReader, featureHandler );
+    super( reader, featureHandler );
 
     m_context = context;
     m_schemaLoader = schemaLoader;
@@ -109,19 +108,17 @@ public class FeatureContentHandler extends DelegatingContentHandler implements U
   {
     if( m_scopeFeature == null )
     {
-      endDelegation();
-      m_parentContentHandler.endElement( uri, localName, qName );
+      activateParent();
+      getParentContentHandler().endElement( uri, localName, qName );
     }
     else if( QNameUtilities.equals( m_scopeFeature.getFeatureType().getQName(), uri, localName ) )
     {
       m_featureHandler.handle( m_scopeFeature );
-      endDelegation();
+      activateParent();
       m_scopeFeature = null;
     }
     else
-    {
-      throw new SAXParseException( String.format( "Unexpected end element: {%s}%s = %s - should be {%s}%s", uri, localName, qName, m_scopeFeature.getQualifiedName().getNamespaceURI(), m_scopeFeature.getQualifiedName().getLocalPart() ), m_locator );
-    }
+      throwSAXParseException( "Unexpected end element: {%s}%s = %s - should be {%s}%s", uri, localName, qName, m_scopeFeature.getQualifiedName().getNamespaceURI(), m_scopeFeature.getQualifiedName().getLocalPart() );
   }
 
   /**
@@ -137,12 +134,13 @@ public class FeatureContentHandler extends DelegatingContentHandler implements U
     if( m_scopeFeature == null )
     {
       startFeature( qname, atts );
-      delegate( new PropertyContentHandler( m_xmlReader, this, m_schemaLoader, m_context, m_scopeFeature ) );
+      new PropertyContentHandler( getXMLReader(), this, m_schemaLoader, m_context, m_scopeFeature ).activate();
     }
     else
     {
-      delegate( new PropertyContentHandler( m_xmlReader, this, m_schemaLoader, m_context, m_scopeFeature ) );
-      m_delegate.startElement( uri, localName, qName, atts );
+      final PropertyContentHandler propertyContentHandler = new PropertyContentHandler( getXMLReader(), this, m_schemaLoader, m_context, m_scopeFeature );
+      propertyContentHandler.activate();
+      propertyContentHandler.startElement( uri, localName, qName, atts );
     }
   }
 

@@ -43,7 +43,6 @@ import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 
 /**
@@ -59,30 +58,30 @@ public class TriangleContentHandler extends GMLElementContentHandler implements 
 
   private GM_Ring m_ring;
 
-  public TriangleContentHandler( final ITriangleHandler triangleHandler, final String defaultSrs, final XMLReader xmlReader )
+  public TriangleContentHandler( final XMLReader reader, final ITriangleHandler triangleHandler, final String defaultSrs )
   {
-    super( NS.GML3, ELEMENT_TRIANGLE, xmlReader, defaultSrs, triangleHandler  );
+    super( reader, NS.GML3, ELEMENT_TRIANGLE, defaultSrs, triangleHandler );
 
     m_triangleHandler = triangleHandler;
   }
-  
+
   @Override
   public void doStartElement( final String uri, final String localName, final String name, final Attributes attributes )
   {
-    setDelegate( new ExteriorContentHandler( this, m_defaultSrs, m_xmlReader ) );
+    new ExteriorContentHandler( getXMLReader(), this, m_defaultSrs ).activate();
   }
 
   @Override
   public void doEndElement( final String uri, final String localName, final String name ) throws SAXException
   { 
     if( m_ring == null )
-      throw new SAXParseException( "Triangle contains no valid exterior.", m_locator );
+      throwSAXParseException( "Triangle contains no valid exterior." );
 
     final GM_Position[] ring = m_ring.getPositions();
-    
+
     if( ring.length != 4 )
-      throw new SAXParseException( "Triangle must contain exactly 4 coordinates: " + ring.length, m_locator );
-    
+      throwSAXParseException( "Triangle must contain exactly 4 coordinates: %d", ring.length );
+
     final String srs = m_ring.getCoordinateSystem();
     m_ring = null;
 
@@ -95,7 +94,7 @@ public class TriangleContentHandler extends GMLElementContentHandler implements 
     {
       e.printStackTrace();
 
-      throw new SAXParseException( "Failed to create triangle", m_locator, e );
+      throwSAXParseException( e, "Failed to create triangle" );
     }
   }
 

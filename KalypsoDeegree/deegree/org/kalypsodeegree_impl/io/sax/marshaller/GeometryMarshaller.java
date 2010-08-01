@@ -56,9 +56,9 @@ import org.xml.sax.helpers.AttributesImpl;
  */
 public abstract class GeometryMarshaller<T extends GM_Object> extends AbstractMarshaller<T>
 {
-  public GeometryMarshaller( final XMLReader xmlReader, final String tag, final T object )
+  public GeometryMarshaller( final XMLReader reader, final String tag, final T object )
   {
-    super( xmlReader, tag, object );
+    super( reader, tag, object );
   }
 
   /**
@@ -77,7 +77,7 @@ public abstract class GeometryMarshaller<T extends GM_Object> extends AbstractMa
     }
     atts.addAttribute( "", "srsDimension", "srsDimension", "decimal", String.valueOf( srsDimension ) );
 
-    final ContentHandler contentHandler = getXmlReader().getContentHandler();
+    final ContentHandler contentHandler = getXMLReader().getContentHandler();
     contentHandler.startElement( NS.GML3, getTag(), getQName(), atts );
   }
 }

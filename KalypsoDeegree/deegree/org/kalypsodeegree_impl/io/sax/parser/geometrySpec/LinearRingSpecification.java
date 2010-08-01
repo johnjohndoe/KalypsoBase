@@ -57,7 +57,7 @@ public class LinearRingSpecification implements IGeometrySpecification
    * @see org.kalypso.gmlschema.types.IGeometrySpecification#fillSpecifications(org.kalypso.gmlschema.types.GeometrySpecificationCatalog)
    */
   @Override
-  public void fillSpecifications( GeometrySpecificationCatalog specs )
+  public void fillSpecifications( final GeometrySpecificationCatalog specs )
   { 
     // TODO: gml:pointProperty must also be supported
     /* gml:pos */

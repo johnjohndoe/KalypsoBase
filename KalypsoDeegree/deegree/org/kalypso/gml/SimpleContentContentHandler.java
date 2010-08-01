@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gml;
 
-import org.kalypsodeegree_impl.io.sax.parser.DelegatingContentHandler;
+import org.kalypso.gmlschema.types.AbstractGmlContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
@@ -50,36 +50,37 @@ import org.xml.sax.XMLReader;
  * @author Andreas von Doemming
  * @author Felipe Maximino - Refaktoring
  */
-public class SimpleContentContentHandler extends DelegatingContentHandler
-{ 
+public class SimpleContentContentHandler extends AbstractGmlContentHandler
+{
   private final ISimpleContentHandler m_simpleContentHandler;
-  
-  private StringBuffer m_simpleContent;
-  
-  public SimpleContentContentHandler( XMLReader xmlReader, ISimpleContentHandler simpleContentHandler )
+
+  private final StringBuffer m_simpleContent;
+
+  public SimpleContentContentHandler( final XMLReader reader, final ISimpleContentHandler simpleContentHandler )
   {
-    super( xmlReader, simpleContentHandler );
-    
+    super( reader, simpleContentHandler );
+
     m_simpleContentHandler = simpleContentHandler;
     m_simpleContent = new StringBuffer();
   }
 
   /**
-   * @see org.kalypsodeegree_impl.io.sax.parser.DelegatingContentHandler#endElement(java.lang.String, java.lang.String, java.lang.String)
+   * @see org.kalypsodeegree_impl.io.sax.parser.DelegatingContentHandler#endElement(java.lang.String, java.lang.String,
+   *      java.lang.String)
    */
   @Override
-  public void endElement( String uri, String localName, String qName ) throws SAXException
+  public void endElement( final String uri, final String localName, final String qName ) throws SAXException
   {
     m_simpleContentHandler.handle( m_simpleContent );
-    endDelegation();
-    m_parentContentHandler.endElement( uri, localName, qName );    
+    activateParent();
+    getTopLevel().endElement( uri, localName, qName );
   }
 
   /**
    * @see org.kalypsodeegree_impl.io.sax.parser.DelegatingContentHandler#characters(char[], int, int)
    */
   @Override
-  public void characters( char[] ch, int start, int length )
+  public void characters( final char[] ch, final int start, final int length )
   {
     m_simpleContent.append( ch, start, length );
   }
@@ -88,8 +89,8 @@ public class SimpleContentContentHandler extends DelegatingContentHandler
    * @see org.kalypsodeegree_impl.io.sax.parser.DelegatingContentHandler#ignorableWhitespace(char[], int, int)
    */
   @Override
-  public void ignorableWhitespace( char[] ch, int start, int length )
+  public void ignorableWhitespace( final char[] ch, final int start, final int length )
   {
     characters( ch, start, length );
-  }  
+  }
 }

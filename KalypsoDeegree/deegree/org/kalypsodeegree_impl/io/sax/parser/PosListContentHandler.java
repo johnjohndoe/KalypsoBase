@@ -44,11 +44,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.kalypso.commons.xml.NS;
+import org.kalypso.gmlschema.types.IGmlContentHandler;
 import org.kalypso.transformation.CRSHelper;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.xml.sax.Attributes;
-import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
@@ -72,11 +72,11 @@ public class PosListContentHandler extends GMLElementContentHandler
 
   private Integer m_checkedCrsDimension;
 
-  private IPositionHandler m_positionHandler;
+  private final IPositionHandler m_positionHandler;
 
-  public PosListContentHandler( final ContentHandler parentContentHandler, final IControlPointHandler positionHandler, final String defaultSrs, final XMLReader xmlReader )
+  public PosListContentHandler( final XMLReader reader, final IGmlContentHandler parentContentHandler, final IControlPointHandler positionHandler, final String defaultSrs )
   {
-    super( NS.GML3, ELEMENT_POSLIST, xmlReader, defaultSrs, parentContentHandler );
+    super( reader, NS.GML3, ELEMENT_POSLIST, defaultSrs, parentContentHandler );
     m_positionHandler = (IPositionHandler) positionHandler;
   }
 
@@ -158,19 +158,15 @@ public class PosListContentHandler extends GMLElementContentHandler
   private void verifyCoordsSize( final int coordsSize, final String coordsString ) throws SAXParseException
   {
     if( coordsSize % m_checkedCrsDimension != 0 )
-    {
-      throw new SAXParseException( "The number of coords in posList( " + coordsSize + " ) element doesn't respect the srsDimension attribute: " + m_checkedCrsDimension + " in " + coordsString, m_locator );
-    }
+      throwSAXParseException( "The number of coords in posList( " + coordsSize + " ) element doesn't respect the srsDimension attribute: " + m_checkedCrsDimension + " in " + coordsString );
 
     if( m_count != null && coordsSize != m_count )
-    {
-      throw new SAXParseException( "The number of coords in posList ( " + coordsSize + " ) element doesn't respect the count attribute: " + m_count + " in " + coordsString, m_locator );
-    }
+      throwSAXParseException( "The number of coords in posList ( " + coordsSize + " ) element doesn't respect the count attribute: " + m_count + " in " + coordsString );
   }
 
   private GM_Position[] createPositions( final List<Double> doubles, final int coordsSize )
   {
-    List<GM_Position> positions = new ArrayList<GM_Position>( coordsSize );
+    final List<GM_Position> positions = new ArrayList<GM_Position>( coordsSize );
     if( m_checkedCrsDimension == 2 )
     {
       for( int i = 0; i < coordsSize; )
@@ -179,7 +175,7 @@ public class PosListContentHandler extends GMLElementContentHandler
       }
     }
     else
-    // dimension = 3
+      // dimension = 3
     {
       for( int i = 0; i < coordsSize; )
       {

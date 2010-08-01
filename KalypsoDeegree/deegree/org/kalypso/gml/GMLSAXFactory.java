@@ -85,11 +85,11 @@ public class GMLSAXFactory
   /** Namespace -> prefix: Contains the namespaces, whose prefix was already registered in the content handler. */
   private final Map<String, String> m_usedPrefixes = new HashMap<String, String>();
 
-  private final XMLReader m_xmlReader;
+  private final XMLReader m_reader;
 
   private final QName m_xlinkQN;
 
-  private final String x_linkElementQname;
+  private final String m_xlinkElementQname;
 
   private final String m_gmlVersion;
 
@@ -97,21 +97,21 @@ public class GMLSAXFactory
    * @param idMap
    *          (existing-ID,new-ID) mapping for ids, replace all given Ids in GML (feature-ID and links)
    */
-  public GMLSAXFactory( final XMLReader xmlReader, final String gmlVersion ) throws SAXException
+  public GMLSAXFactory( final XMLReader reader, final String gmlVersion ) throws SAXException
   {
-    m_xmlReader = xmlReader;
+    m_reader = reader;
     m_gmlVersion = gmlVersion;
 
     // Initialise after handler is set
     m_xlinkQN = getPrefixedQName( new QName( NS.XLINK, "href" ) );
-    x_linkElementQname = m_xlinkQN.getPrefix() + ":" + m_xlinkQN.getLocalPart();
+    m_xlinkElementQname = m_xlinkQN.getPrefix() + ":" + m_xlinkQN.getLocalPart();
   }
 
   public void process( final GMLWorkspace workspace ) throws SAXException
   {
     final Feature rootFeature = workspace.getRootFeature();
 
-    final ContentHandler contentHandler = m_xmlReader.getContentHandler();
+    final ContentHandler contentHandler = m_reader.getContentHandler();
 
     // handle mandatory prefixes...
     contentHandler.startPrefixMapping( m_nsMapper.getPreferredPrefix( NS.GML2, null ), NS.GML2 );
@@ -178,7 +178,7 @@ public class GMLSAXFactory
     {
       // Create new prefix and register it
       prefix = m_nsMapper.getPreferredPrefix( uri, null );
-      m_xmlReader.getContentHandler().startPrefixMapping( prefix, uri );
+      m_reader.getContentHandler().startPrefixMapping( prefix, uri );
       m_usedPrefixes.put( uri, prefix );
     }
 
@@ -187,7 +187,7 @@ public class GMLSAXFactory
 
   private void processFeature( final Feature feature, final AttributesImpl a ) throws SAXException
   {
-    final ContentHandler contentHandler = m_xmlReader.getContentHandler();
+    final ContentHandler contentHandler = m_reader.getContentHandler();
 
     final IFeatureType featureType = feature.getFeatureType();
 
@@ -257,7 +257,7 @@ public class GMLSAXFactory
    */
   private void processProperty( final IPropertyType pt, final Object propertyValue ) throws SAXException
   {
-    final ContentHandler contentHandler = m_xmlReader.getContentHandler();
+    final ContentHandler contentHandler = m_reader.getContentHandler();
 
     final QName name = pt.getQName();
     final QName prefixedQName = getPrefixedQName( name );
@@ -302,7 +302,7 @@ public class GMLSAXFactory
         href = null;
 
       if( href != null )
-        atts.addAttribute( NS.XLINK, "href", x_linkElementQname, "CDATA", href );
+        atts.addAttribute( NS.XLINK, "href", m_xlinkElementQname, "CDATA", href );
     }
 
     return atts;
@@ -342,11 +342,11 @@ public class GMLSAXFactory
         // Maybe we register extensions for specific qnames?
         // TODO: also, it should be only done for String, i.e. in the XsdBaseTypeHandlerString
         final boolean doCData = prefixedQName.equals( new QName( NS.OM, "result" ) );
-        final LexicalHandler lexicalHandler = doCData ? (LexicalHandler) m_xmlReader.getProperty( "http://xml.org/sax/properties/lexical-handler" ) : null;
+        final LexicalHandler lexicalHandler = doCData ? (LexicalHandler) m_reader.getProperty( "http://xml.org/sax/properties/lexical-handler" ) : null;
         if( doCData )
           lexicalHandler.startCDATA();
 
-        m_xmlReader.getContentHandler().characters( xmlString.toCharArray(), 0, xmlString.length() );
+        m_reader.getContentHandler().characters( xmlString.toCharArray(), 0, xmlString.length() );
 
         if( doCData )
           lexicalHandler.endCDATA();
@@ -359,7 +359,7 @@ public class GMLSAXFactory
     {
       try
       {
-        th.marshal( propertyValue, m_xmlReader, null, m_gmlVersion );
+        th.marshal( propertyValue, m_reader, null, m_gmlVersion );
       }
       catch( final Exception e )
       {
@@ -368,7 +368,7 @@ public class GMLSAXFactory
         // TODO: we need an error handler! Else the user does not get any information about errors
 
         // TODO Distinguish between normal exceptions and SaxParseExpcetion
-        final ErrorHandler errorHandler = m_xmlReader.getErrorHandler();
+        final ErrorHandler errorHandler = m_reader.getErrorHandler();
         if( errorHandler == null )
           KalypsoDeegreePlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
         else

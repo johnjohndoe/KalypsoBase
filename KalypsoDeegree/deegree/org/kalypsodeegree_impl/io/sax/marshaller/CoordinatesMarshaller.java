@@ -72,14 +72,14 @@ public class CoordinatesMarshaller extends AbstractMarshaller<List<double[]>>
   /* decimal indicator */
   private String m_decimal;
 
-  public CoordinatesMarshaller( final XMLReader xmlReader )
+  public CoordinatesMarshaller( final XMLReader reader )
   {
-    this( xmlReader, null );
+    this( reader, null );
   }
 
-  public CoordinatesMarshaller( final XMLReader xmlReader, final List<double[]> coords )
+  public CoordinatesMarshaller( final XMLReader reader, final List<double[]> coords )
   {
-    super( xmlReader, TAG_COORDINATES, coords );
+    super( reader, TAG_COORDINATES, coords );
 
     /* separators initialized to default values */
     m_ts = ",";
@@ -95,7 +95,7 @@ public class CoordinatesMarshaller extends AbstractMarshaller<List<double[]>>
   {
     final Attributes atts = createCoordinatesDefaultAttributes();
 
-    final ContentHandler contentHandler = getXmlReader().getContentHandler();
+    final ContentHandler contentHandler = getXMLReader().getContentHandler();
     contentHandler.startElement( NS.GML3, getTag(), getQName(), atts );
   }
 
@@ -115,7 +115,7 @@ public class CoordinatesMarshaller extends AbstractMarshaller<List<double[]>>
   @Override
   public void doMarshall( ) throws SAXException
   {
-    final ContentHandler contentHandler = getXmlReader().getContentHandler();
+    final ContentHandler contentHandler = getXMLReader().getContentHandler();
 
     final int nTuples = getMarshalledObject().size();
     for( int i = 0; i < nTuples; i++ )

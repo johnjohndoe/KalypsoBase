@@ -53,14 +53,14 @@ public class PolygonPatchMarshaller extends SurfacePatchMarshaller<GM_Polygon>
 {
   private static final String TAG_POLYGON_PATCH = "PolygonPatch";
 
-  public PolygonPatchMarshaller( final XMLReader xmlReader )
+  public PolygonPatchMarshaller( final XMLReader reader )
   {
-    this( xmlReader, null );
+    this( reader, null );
   }
 
-  public PolygonPatchMarshaller( final XMLReader xmlReader, final String surfaceCrs )
+  public PolygonPatchMarshaller( final XMLReader reader, final String surfaceCrs )
   {
-    super( xmlReader, TAG_POLYGON_PATCH, surfaceCrs );
+    super( reader, TAG_POLYGON_PATCH, surfaceCrs );
   }
 
   /**
@@ -69,6 +69,6 @@ public class PolygonPatchMarshaller extends SurfacePatchMarshaller<GM_Polygon>
   @Override
   public void doMarshall( ) throws SAXException
   {
-    (new ExteriorMarshaller( getXmlReader(), getMarshalledObject() )).marshall();
+    (new ExteriorMarshaller( getXMLReader(), getMarshalledObject() )).marshall();
   }
 }

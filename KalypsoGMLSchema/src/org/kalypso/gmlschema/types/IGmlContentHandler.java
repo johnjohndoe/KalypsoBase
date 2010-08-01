@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestra√üe 22
+ *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,35 +38,24 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypsodeegree_impl.io.sax.marshaller;
+package org.kalypso.gmlschema.types;
 
-import org.kalypsodeegree.model.geometry.GM_Polygon;
-import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.Locator;
 
 /**
- * A marshaller for gml:PolyhedralSurfaces
+ * Content handlers that serve as parent content handler for the the {@link AbstractDelegatingContentHandler}
+ * implementations.
  * 
  * @author Gernot Belger
- * @author Felipe Maximino - Refaktoring
  */
-public class PolyhedralSurfaceMarshaller extends SurfaceMarshaller<GM_Polygon>
+public interface IGmlContentHandler extends ContentHandler
 {
-  private static final String TAG_POLYHEDRAL_SURFACE = "PolyhedralSurface";
+  void activate( );
 
-  public PolyhedralSurfaceMarshaller( final XMLReader reader, final GM_Surface<GM_Polygon> surface )
-  {
-    super( reader, surface, TAG_POLYHEDRAL_SURFACE );
-  }
+  void activateParent( );
 
-  /**
-   * @see org.kalypsodeegree_impl.io.sax.SurfaceMarshaller#doMarshall()
-   */
-  @Override
-  public void doMarshall( ) throws SAXException
-  {
-    m_patchesMarshaller = new PolygonPatchesMarshaller( getXMLReader(), getMarshalledObject() );
-    m_patchesMarshaller.marshall();
-  }
+  Locator getDocumentLocator( );
+
+  ContentHandler getTopLevel( );
 }

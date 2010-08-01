@@ -40,15 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gml;
 
-import org.xml.sax.ContentHandler;
+import org.kalypso.gmlschema.types.IGmlContentHandler;
 import org.xml.sax.SAXException;
-
 
 /**
  * @author Felipe Maximino
- *
  */
-public interface ISimpleContentHandler extends ContentHandler
+public interface ISimpleContentHandler extends IGmlContentHandler
 {
-  public void handle( StringBuffer simpleContent ) throws SAXException;
+  void handle( StringBuffer simpleContent ) throws SAXException;
 }

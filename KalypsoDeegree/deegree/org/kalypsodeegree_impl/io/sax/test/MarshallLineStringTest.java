@@ -70,9 +70,9 @@ public class MarshallLineStringTest extends TestCase
     final GM_Curve lineString = createLineString();
 
     final FileOutputStream os = new FileOutputStream( temp );
-    final XMLReader xmlReader = SaxParserTestUtils.createXMLReader( os );
-    final LineStringMarshaller marshaller = new LineStringMarshaller( xmlReader, lineString );
-    SaxParserTestUtils.marshallDocument( xmlReader, marshaller );
+    final XMLReader reader = SaxParserTestUtils.createXMLReader( os );
+    final LineStringMarshaller marshaller = new LineStringMarshaller( reader, lineString );
+    SaxParserTestUtils.marshallDocument( reader, marshaller );
     os.close();
 
     final URL url = getClass().getResource( "resources/lineString_marshall.gml" );

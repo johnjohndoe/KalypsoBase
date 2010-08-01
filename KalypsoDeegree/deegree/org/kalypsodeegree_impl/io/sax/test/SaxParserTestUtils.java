@@ -70,7 +70,7 @@ public final class SaxParserTestUtils
   /**
    * Create an XMLReader that writes all xml into the given {@link OutputStream}.
    */
-  public static final XMLReader createXMLReader( final OutputStream os ) throws SAXException
+  public static XMLReader createXMLReader( final OutputStream os ) throws SAXException
   {
     final ToXMLStream xmlStream = new ToXMLStream();
     xmlStream.setOutputStream( os );
@@ -80,10 +80,10 @@ public final class SaxParserTestUtils
     xmlStream.setIndentAmount( 1 );
     xmlStream.setEncoding( "UTF-8" );
 
-    final XMLReader xmlReader = XMLReaderFactory.createXMLReader();
-    xmlReader.setContentHandler( xmlStream );
+    final XMLReader reader = XMLReaderFactory.createXMLReader();
+    reader.setContentHandler( xmlStream );
 
-    return xmlReader;
+    return reader;
   }
 
   public static void marshallDocument( final XMLReader reader, final AbstractMarshaller< ? > marshaller ) throws SAXException
@@ -94,7 +94,7 @@ public final class SaxParserTestUtils
     contentHandler.endDocument();
   }
 
-  public static final void assertContentEquals( final File file, final URL fileExpected ) throws IOException
+  public static void assertContentEquals( final File file, final URL fileExpected ) throws IOException
   {
     final String actual = FileUtils.readFileToString( file, System.getProperty( "file.encoding" ) );
     final String expected = UrlUtilities.toString( fileExpected, System.getProperty( "file.encoding" ) );

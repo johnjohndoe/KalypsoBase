@@ -51,11 +51,11 @@ import org.xml.sax.XMLReader;
  */
 public class PointMemberMarshaller extends AbstractMarshaller<GM_Point>
 {
-  public final static String TAG_POINT_MEMBER = "pointMember";
+  public static final String TAG_POINT_MEMBER = "pointMember";
 
-  public PointMemberMarshaller( final XMLReader xmlReader )
+  public PointMemberMarshaller( final XMLReader reader )
   {
-    super( xmlReader, TAG_POINT_MEMBER, null );
+    super( reader, TAG_POINT_MEMBER, null );
   }
 
   /**
@@ -64,7 +64,7 @@ public class PointMemberMarshaller extends AbstractMarshaller<GM_Point>
   @Override
   protected void doMarshall( ) throws SAXException
   {
-    new PointMarshaller( getXmlReader(), getMarshalledObject() ).marshall();
+    new PointMarshaller( getXMLReader(), getMarshalledObject() ).marshall();
   }
 
   public void setMember( final GM_Point point )

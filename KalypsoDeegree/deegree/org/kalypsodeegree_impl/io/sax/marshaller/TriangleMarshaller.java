@@ -53,14 +53,14 @@ public class TriangleMarshaller extends SurfacePatchMarshaller<GM_Triangle>
 {
   private static final String TAG_TRIANGLE = "Triangle";
 
-  public TriangleMarshaller( final XMLReader xmlReader )
+  public TriangleMarshaller( final XMLReader reader )
   {
-    this( xmlReader, null );
+    this( reader, null );
   }
 
-  public TriangleMarshaller( final XMLReader xmlReader, final String surfaceCrs )
+  public TriangleMarshaller( final XMLReader reader, final String surfaceCrs )
   {
-    super( xmlReader, TAG_TRIANGLE, surfaceCrs );
+    super( reader, TAG_TRIANGLE, surfaceCrs );
   }
 
   /**
@@ -69,6 +69,6 @@ public class TriangleMarshaller extends SurfacePatchMarshaller<GM_Triangle>
   @Override
   public void doMarshall( ) throws SAXException
   {
-    (new ExteriorMarshaller( getXmlReader(), getMarshalledObject() )).marshall();
+    (new ExteriorMarshaller( getXMLReader(), getMarshalledObject() )).marshall();
   }
 }

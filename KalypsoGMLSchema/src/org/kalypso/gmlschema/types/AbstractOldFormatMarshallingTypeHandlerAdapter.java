@@ -112,7 +112,6 @@ public abstract class AbstractOldFormatMarshallingTypeHandlerAdapter implements 
       saxFac.setNamespaceAware( true );
       final SAXParser saxParser = saxFac.newSAXParser();
       final XMLReader xmlReader = saxParser.getXMLReader();
-
       xmlReader.setContentHandler( reader.getContentHandler() );
       xmlReader.parse( input );
     }
@@ -126,12 +125,8 @@ public abstract class AbstractOldFormatMarshallingTypeHandlerAdapter implements 
     }
   }
 
-  /**
-   * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#unmarshal(org.xml.sax.XMLReader,
-   *      org.kalypso.contribs.java.net.IUrlResolver, org.kalypso.gmlschema.types.MarshalResultEater)
-   */
   @Override
-  public void unmarshal( final XMLReader xmlReader, final URL context, final UnmarshallResultEater marshalResultEater, final String gmlVersion ) throws TypeRegistryException
+  public void unmarshal( final XMLReader reader, final URL context, final UnmarshallResultEater marshalResultEater, final String gmlVersion ) throws TypeRegistryException
   {
     // xml to memory
     try
@@ -163,7 +158,7 @@ public abstract class AbstractOldFormatMarshallingTypeHandlerAdapter implements 
       final Document document = m_builder.newDocument();
       final DOMConstructor domBuilderContentHandler = new DOMConstructor( document, eater );
       // simulate property-tag for dombuilder
-      xmlReader.setContentHandler( domBuilderContentHandler );
+      reader.setContentHandler( domBuilderContentHandler );
     }
     catch( final Exception e )
     {

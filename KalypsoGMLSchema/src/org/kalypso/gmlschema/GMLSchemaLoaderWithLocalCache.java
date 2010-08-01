@@ -270,8 +270,6 @@ public class GMLSchemaLoaderWithLocalCache
   public void setSchemaLocation( final Map<String, URL> schemaLocations )
   {
     if( schemaLocations != null )
-    {
       m_schemaLocations.putAll( schemaLocations );
-    }
   }
 }

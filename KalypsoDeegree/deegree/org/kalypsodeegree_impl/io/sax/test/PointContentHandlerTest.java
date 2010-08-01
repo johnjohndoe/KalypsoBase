@@ -57,176 +57,170 @@ import org.xml.sax.XMLReader;
 
 /**
  * @author Felipe Maximino
- *
  */
 public class PointContentHandlerTest extends TestCase
 {
   private static double DELTA = 0.01;
-  
-  private static final GM_Point point2D = GeometryFactory.createGM_Point( 0.0, 1.0, "EPSG:31467" );
-  private static final GM_Point point3D = GeometryFactory.createGM_Point( 0.0, 1.0, 2.0, "EPSG:31467" );
-  
+
+  private static final GM_Point POINT2D = GeometryFactory.createGM_Point( 0.0, 1.0, "EPSG:31467" );
+
+  private static final GM_Point POINT3D = GeometryFactory.createGM_Point( 0.0, 1.0, 2.0, "EPSG:31467" );
+
   private static final String ERROR_COORDINATES = "One point must have at least 2 coordinates and at most 3 coordinates!";
+
   private static final String ERROR_TUPLES = "One point must have exactly one tuple of coordinates.";
-  
+
   private final SAXParserFactory m_saxFactory = SAXParserFactory.newInstance();
-  
+
   @Override
-  protected void setUp() throws Exception
+  protected void setUp( ) throws Exception
   {
     super.setUp();
-    m_saxFactory.setNamespaceAware( true );    
+    m_saxFactory.setNamespaceAware( true );
   }
-  
+
   /**
    * tests a 3 dimensional GM_Point.
    */
   @Test
-  public void testPoint1() throws Exception
+  public void testPoint1( ) throws Exception
   {
     final GM_Point point = parsePoint( "resources/point1.gml" );
-    assertPoint( point, point3D );
+    assertPoint( point, POINT3D );
   }
-  
+
   /**
-   * tests a 3 dimensional GM_Point with actually only 2 coordinates.
-   * should throw an exception
+   * tests a 3 dimensional GM_Point with actually only 2 coordinates. should throw an exception
    */
   @Test
-  public void testPoint2() throws Exception
+  public void testPoint2( ) throws Exception
   {
     try
     {
       parsePoint( "resources/point2.gml" );
-    }catch( SAXParseException e )
+    }
+    catch( final SAXParseException e )
     {
       assertEquals( ERROR_COORDINATES, e.getMessage() );
     }
   }
-  
+
   /**
    * tests a 2 dimensional GM_point.
    */
   @Test
-  public void testPoint3() throws Exception
+  public void testPoint3( ) throws Exception
   {
     final GM_Point point = parsePoint( "resources/point3.gml" );
-    assertPoint( point, point2D );  
+    assertPoint( point, POINT2D );
   }
-  
+
   /**
-   * tests a 3 dimensional GM_Point with different coordinates, tuples
-   * and decimal separators
+   * tests a 3 dimensional GM_Point with different coordinates, tuples and decimal separators
    */
   @Test
-  public void testPoint4() throws Exception
+  public void testPoint4( ) throws Exception
   {
     final GM_Point point = parsePoint( "resources/point4.gml" );
-    assertPoint( point, point3D ); 
+    assertPoint( point, POINT3D );
   }
-  
+
   /**
-   * tests a 3 dimensional GM_Point with actually 2 tuples of coordinates.
-   * should throw an exception.
+   * tests a 3 dimensional GM_Point with actually 2 tuples of coordinates. should throw an exception.
    */
   @Test
-  public void testPoint5() throws Exception
+  public void testPoint5( ) throws Exception
   {
     try
     {
       parsePoint( "resources/point5.gml" );
-      fail("This should throw an exception");
-    } 
-    catch( SAXParseException e )
+      fail( "This should throw an exception" );
+    }
+    catch( final SAXParseException e )
     {
       assertEquals( ERROR_TUPLES, e.getMessage() );
     }
-    
+
   }
-  
+
   /**
    * test a 3 dimensional GM_Point with gml:coord element
    */
   @Test
-  public void testPoint6() throws Exception
+  public void testPoint6( ) throws Exception
   {
     final GM_Point point = parsePoint( "resources/point6.gml" );
-    assertPoint(point, point3D);
+    assertPoint( point, POINT3D );
   }
-  
+
   /**
    * test a 2 dimensional GM_Point with gml:coord element
    */
   @Test
-  public void testPoint7() throws Exception
+  public void testPoint7( ) throws Exception
   {
     final GM_Point point = parsePoint( "resources/point7.gml" );
-    assertPoint(point, point2D);
+    assertPoint( point, POINT2D );
   }
-  
+
   /**
-   * test a 2 dimensional GM_Point with gml:coord element,
-   * but only X set.
-   * should throw an exception.
+   * test a 2 dimensional GM_Point with gml:coord element, but only X set. should throw an exception.
    */
   @Test
-  public void testPoint8() throws Exception
+  public void testPoint8( ) throws Exception
   {
     try
     {
       parsePoint( "resources/point8.gml" );
-      fail("This should throw an exception");
+      fail( "This should throw an exception" );
     }
-    catch( SAXParseException e )
+    catch( final SAXParseException e )
     {
       assertEquals( ERROR_COORDINATES, e.getMessage() );
     }
   }
-  
+
   /**
-   * test a 3 dimensional GM_Point with gml:coord element,
-   * but the coordinates are set in the wrong order (X, Z, Y).
-   * 
+   * test a 3 dimensional GM_Point with gml:coord element, but the coordinates are set in the wrong order (X, Z, Y).
    * should throw an exception.
    */
-  @Test 
-  public void testPoint9() throws Exception
+  @Test
+  public void testPoint9( ) throws Exception
   {
     try
     {
       parsePoint( "resources/point9.gml" );
-      fail("This should throw an exception");
+      fail( "This should throw an exception" );
     }
-    catch( SAXParseException e )
+    catch( final SAXParseException e )
     {
       assertTrue( e.getMessage().startsWith( "Unexpected start element:" ) && e.getMessage().contains( "}Z" ) );
     }
   }
-  
+
   /**
    * test a 2 dimensional GM_Point with gml:pos element
    */
   @Test
-  public void testPoint10() throws Exception
+  public void testPoint10( ) throws Exception
   {
     final GM_Point point = parsePoint( "resources/point10.gml" );
-    assertPoint(point, point3D);
+    assertPoint( point, POINT3D );
   }
-  
-  
-  private void assertPoint( GM_Point parsed, GM_Point expected )
+
+  private void assertPoint( final GM_Point parsed, final GM_Point expected )
   {
     assertNotNull( parsed );
     assertEquals( expected.getCoordinateSystem(), parsed.getCoordinateSystem() );
     assertTrue( expected.distance( parsed ) < DELTA );
-    
+
     if( expected.getDimension() == 3 )
     {
       assertEquals( expected.getZ(), parsed.getZ(), DELTA );
     }
   }
 
-  private GM_Point parsePoint( String name ) throws Exception
+  private GM_Point parsePoint( final String name ) throws Exception
   {
     final InputSource is = new InputSource( getClass().getResourceAsStream( name ) );
 
@@ -244,7 +238,7 @@ public class PointContentHandlerTest extends TestCase
       }
     };
 
-    final ContentHandler contentHandler = new PointContentHandler( resultEater, null, reader );
+    final ContentHandler contentHandler = new PointContentHandler( reader, resultEater, null );
     reader.setContentHandler( contentHandler );
     reader.parse( is );
 

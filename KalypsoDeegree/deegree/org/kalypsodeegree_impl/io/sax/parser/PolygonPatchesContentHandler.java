@@ -41,11 +41,10 @@
 package org.kalypsodeegree_impl.io.sax.parser;
 
 import org.kalypso.commons.xml.NS;
+import org.kalypso.gmlschema.types.IGmlContentHandler;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.xml.sax.Attributes;
-import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 
 /**
@@ -60,49 +59,49 @@ public class PolygonPatchesContentHandler extends GMLElementContentHandler imple
 
   private final IPolygonHandler m_polygonHandler;  
 
-  public PolygonPatchesContentHandler( final IPolygonHandler polygonHandler, final String defaultSrs, final XMLReader xmlReader )
+  public PolygonPatchesContentHandler( final XMLReader reader, final IPolygonHandler polygonHandler, final String defaultSrs )
   { 
-    super( NS.GML3, ELEMENT_POLYGON_PATCHES, xmlReader, defaultSrs, polygonHandler );    
+    super( reader, NS.GML3, ELEMENT_POLYGON_PATCHES, defaultSrs, polygonHandler );
     m_polygonHandler = polygonHandler;    
   }
-  
+
   /**
    * @see org.kalypsodeegree_impl.io.sax.GMLElementContentHandler#doEndElement(java.lang.String, java.lang.String, java.lang.String)
    */
   @Override
-  protected void doEndElement( String uri, String localName, String name )
+  protected void doEndElement( final String uri, final String localName, final String name )
   { 
-    
+
   }
 
   /**
    * @see org.kalypsodeegree_impl.io.sax.GMLElementContentHandler#doStartElement(java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
    */
   @Override
-  protected void doStartElement( String uri, String localName, String name, Attributes atts )
+  protected void doStartElement( final String uri, final String localName, final String name, final Attributes atts )
   { 
-    setDelegate( new PolygonPatchContentHandler( this, m_defaultSrs, m_xmlReader ) );
+    new PolygonPatchContentHandler( getXMLReader(), this, m_defaultSrs ).activate();
   }
 
   /**
    * @see org.kalypsodeegree_impl.io.sax.IPolygonHandler#handlePolygon(org.kalypsodeegree.model.geometry.GM_Polygon)
    */
   @Override
-  public void handle( GM_Polygon polygon ) throws SAXException
+  public void handle( final GM_Polygon polygon ) throws SAXException
   {
     m_polygonHandler.handle( polygon );
   }
-  
+
   @Override
   public void handleUnexpectedStartElement( final String uri, final String localName, final String name, final Attributes atts ) throws SAXException
   {
     if( localName.equals( PolygonPatchContentHandler.ELEMENT_POLYGON_PATCH ) )
     {
-      ContentHandler polygonPatchContentHandler = new PolygonPatchContentHandler( this, m_defaultSrs, m_xmlReader );
-      delegate( polygonPatchContentHandler );    
+      final IGmlContentHandler polygonPatchContentHandler = new PolygonPatchContentHandler( getXMLReader(), this, m_defaultSrs );
+      polygonPatchContentHandler.activate();
       polygonPatchContentHandler.startElement( uri, localName, name, atts );        
     }
     else
-      throw new SAXParseException( String.format( "Unexpected start element: {%s}%s = %s - should be {%s}%s", uri, localName, name, NS.GML3, m_localName ), m_locator );
+      throwSAXParseException( "Unexpected start element: {%s}%s = %s - should be {%s}%s", uri, localName, name, NS.GML3, m_localName );
   }  
 }

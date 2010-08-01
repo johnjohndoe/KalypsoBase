@@ -40,14 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gmlschema.types;
 
-import org.xml.sax.ContentHandler;
-
 /**
- * 
  * @author Felipe Maximino
  *
  */
-public interface IValueHandler extends ContentHandler
+public interface IValueHandler extends IGmlContentHandler
 {
 
 }

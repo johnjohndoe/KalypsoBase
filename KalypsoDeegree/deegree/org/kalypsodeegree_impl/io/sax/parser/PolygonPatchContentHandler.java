@@ -47,7 +47,6 @@ import org.kalypsodeegree.model.geometry.GM_Ring;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 
 /**
@@ -66,26 +65,27 @@ public class PolygonPatchContentHandler extends GMLElementContentHandler impleme
 
   private GM_Ring m_ring;
 
-  public PolygonPatchContentHandler( final IPolygonHandler polygonHandler, final String defaultSrs, final XMLReader xmlReader )
+  public PolygonPatchContentHandler( final XMLReader reader, final IPolygonHandler polygonHandler, final String defaultSrs )
   { 
-    super( NS.GML3, ELEMENT_POLYGON_PATCH, xmlReader, defaultSrs, polygonHandler );
+    super( reader, NS.GML3, ELEMENT_POLYGON_PATCH, defaultSrs, polygonHandler );
 
     m_polygonHandler = polygonHandler;
   }  
 
   /**
-   * @see org.kalypsodeegree_impl.io.sax.GMLElementContentHandler#doEndElement(java.lang.String, java.lang.String, java.lang.String)
+   * @see org.kalypsodeegree_impl.io.sax.GMLElementContentHandler#doEndElement(java.lang.String, java.lang.String,
+   *      java.lang.String)
    */
   @Override
   protected void doEndElement( final String uri, final String localName, final String name ) throws SAXException
   {
-    if( m_ring == null)
-      throw new SAXParseException( "Polygon contains no valid exterior.", m_locator );
+    if( m_ring == null )
+      throwSAXParseException( "Polygon contains no valid exterior." );
 
     if( m_ring.getPositions().length < 4 )
-      throw new SAXParseException( "Polygon contains no enough coordinates.", m_locator );
+      throwSAXParseException( "Polygon contains no enough coordinates." );
 
-    final String crs = m_ring.getCoordinateSystem(); 
+    final String crs = m_ring.getCoordinateSystem();
 
     try
     {
@@ -97,20 +97,21 @@ public class PolygonPatchContentHandler extends GMLElementContentHandler impleme
     {
       e.printStackTrace();
 
-      throw new SAXParseException( "Failed to create polygon", m_locator, e );
-    }    
+      throwSAXParseException( e, "Failed to create polygon" );
+    }
   }
 
   /**
-   * @see org.kalypsodeegree_impl.io.sax.GMLElementContentHandler#doStartElement(java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
+   * @see org.kalypsodeegree_impl.io.sax.GMLElementContentHandler#doStartElement(java.lang.String, java.lang.String,
+   *      java.lang.String, org.xml.sax.Attributes)
    */
   @Override
   protected void doStartElement( final String uri, final String localName, final String name, final Attributes atts )
   {
     // FIXME: Eeek! We need to support interior rings as well!
-    final ExteriorContentHandler exteriorContentHandler = new ExteriorContentHandler( this, m_defaultSrs, m_xmlReader );
+    final ExteriorContentHandler exteriorContentHandler = new ExteriorContentHandler( getXMLReader(), this, m_defaultSrs );
     exteriorContentHandler.setElementMinOccurs( 0 );
-    setDelegate( exteriorContentHandler );    
+    exteriorContentHandler.activate();
   }
 
   /**

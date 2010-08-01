@@ -48,5 +48,5 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public interface IRootFeatureProvider
 {
-  public Feature getRootFeature() throws GMLException;
+  Feature getRootFeature( ) throws GMLException;
 }

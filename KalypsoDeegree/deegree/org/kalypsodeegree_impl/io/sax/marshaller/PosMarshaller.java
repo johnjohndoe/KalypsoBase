@@ -52,11 +52,11 @@ import org.xml.sax.XMLReader;
  */
 public class PosMarshaller extends AbstractMarshaller<GM_Position>
 {
-  public final static String TAG_POS = "pos";
+  public static final String TAG_POS = "pos";
 
-  public PosMarshaller( final XMLReader xmlReader )
+  public PosMarshaller( final XMLReader reader )
   {
-    super( xmlReader, TAG_POS );
+    super( reader, TAG_POS );
   }
 
   /**
@@ -65,7 +65,7 @@ public class PosMarshaller extends AbstractMarshaller<GM_Position>
   @Override
   public void doMarshall( ) throws SAXException
   {
-    final ContentHandler contentHandler = getXmlReader().getContentHandler();
+    final ContentHandler contentHandler = getXMLReader().getContentHandler();
 
     final double[] asArray = getMarshalledObject().getAsArray();
     for( int i = 0; i < asArray.length; i++ )

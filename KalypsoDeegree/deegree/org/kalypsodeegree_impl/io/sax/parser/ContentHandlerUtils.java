@@ -53,8 +53,13 @@ import org.xml.sax.Attributes;
  * @author Gernot Belger
  * @author Felipe Maximino
  */
-public class ContentHandlerUtils
+public final class ContentHandlerUtils
 {
+  private ContentHandlerUtils( )
+  {
+    throw new UnsupportedOperationException( "Helper class, do not instantiate" );
+  }
+
   private static String parseStringFromAttributes( final Attributes attributes, final String attribute, final String defaultValue )
   {
     final String value = AttributesUtilities.getAttributeValue( attributes, "", attribute, null );
@@ -63,40 +68,40 @@ public class ContentHandlerUtils
 
     return value;
   }
-  
-  
+
+
   /** Get srs from attributes, fallback to default crs */
   public static String parseSrsFromAttributes( final Attributes attributes, final String defaultSrs )
   {
     return parseStringFromAttributes( attributes, "srsName", defaultSrs );
   }
-    
+
   public static String parseCsFromAttributes( final Attributes attributes, final String defaultCs )
   {
     return parseStringFromAttributes( attributes, "cs", defaultCs );
   }
-  
+
   public static String parseTsFromAttributes( final Attributes attributes, final String defaultTs )
   {
     return parseStringFromAttributes( attributes, "ts", defaultTs );
   }
-  
+
   public static String parseDecimalFromAttributes( final Attributes attributes, final String defaultDecimal )
   {
     return parseStringFromAttributes( attributes, "decimal", defaultDecimal );
   }
-  
+
   public static Integer parseSrsDimensionFromAttributes( final Attributes attributes )
   { 
     return AttributesUtilities.getAttributeIntegerValue( attributes, "", "srsDimension", null );
   }
-  
+
   public static Integer parseCountFromAttributes( final Attributes attributes )
   {
     return AttributesUtilities.getAttributeIntegerValue( attributes, "", "count", null );
   }  
-  
-  public static List<Double> parseDoublesString( String text )
+
+  public static List<Double> parseDoublesString( final String text )
   { 
     final List<Double> doubles = new ArrayList<Double>();
 
@@ -107,7 +112,7 @@ public class ContentHandlerUtils
       final Double d = Double.valueOf( token );
       doubles.add( d );  
     }
-    
+
     return doubles;
   }
 }

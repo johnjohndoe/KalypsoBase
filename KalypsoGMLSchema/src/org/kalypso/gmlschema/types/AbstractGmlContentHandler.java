@@ -38,81 +38,98 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypsodeegree_impl.io.sax.parser;
+package org.kalypso.gmlschema.types;
 
+import org.eclipse.core.runtime.Assert;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
+import org.xml.sax.ErrorHandler;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 
 /**
  * A {@link ContentHandler} implementation used to delegate calls to a content handler to a child content handler that
  * parses a sub-element of the current scope. <br>
- * Subclasses should implement the blank methods to application-especific behavior.
+ * Subclasses should implement the blank methods to application-specific behavior.
  * 
  * @author Gernot Belger
  * @author Felipe Maximino
  */
-@SuppressWarnings("unused")
-// needed, as we need to define all the SaxParseExceptions
-public class DelegatingContentHandler implements ContentHandler
+public class AbstractGmlContentHandler implements IGmlContentHandler
 {
-  protected ContentHandler m_delegate;
+  /* This receiver always holds the currently active content handler */
+  private final XMLReader m_reader;
 
-  protected final XMLReader m_xmlReader;
+  private Locator m_locator;
 
-  protected Locator m_locator;
+  private final IGmlContentHandler m_parentContentHandler;
 
-  protected final ContentHandler m_parentContentHandler;
-
-  public DelegatingContentHandler( final XMLReader xmlReader, final ContentHandler parentContentHandler )
+  // FIXME: introduce interface for the abstract class
+  public AbstractGmlContentHandler( final XMLReader reader, final IGmlContentHandler parentContentHandler )
   {
-    m_xmlReader = xmlReader;
+    m_reader = reader;
     m_parentContentHandler = parentContentHandler;
   }
 
-  protected void setDelegate( final ContentHandler delegate )
-  {
-    m_delegate = delegate;
-
-    if( m_delegate != null )
-    {
-      m_delegate.setDocumentLocator( m_locator );
-    }
-  }
-
-  protected void delegate( )
-  {
-    if( m_delegate != null )
-    {
-      m_xmlReader.setContentHandler( m_delegate );
-    }
-  }
-
-  protected void delegate( final ContentHandler delegate )
-  {
-    setDelegate( delegate );
-    delegate();
-  }
-
-  public void endDelegation( )
-  {
-    if( m_parentContentHandler != null )
-    {
-      setDelegate( null );
-      m_xmlReader.setContentHandler( m_parentContentHandler );
-    }
-  }
-
-  public ContentHandler getDelegate( )
-  {
-    return m_delegate;
-  }
-
-  public Locator getLocator( )
+  @Override
+  public Locator getDocumentLocator( )
   {
     return m_locator;
+  }
+
+  protected void throwSAXParseException( final String msg, final Object... formatArguments ) throws SAXParseException
+  {
+    throw createSAXParseException( null, msg, formatArguments );
+  }
+
+  protected void throwSAXParseException( final Exception cause, final String msg, final Object... formatArguments ) throws SAXParseException
+  {
+    throw createSAXParseException( cause, msg, formatArguments );
+  }
+
+  protected void warnSAXParseException( final Exception cause, final String format, final Object... formatArguments ) throws SAXException
+  {
+    final SAXParseException exception = createSAXParseException( cause, format, formatArguments );
+    final ErrorHandler errorHandler = m_reader.getErrorHandler();
+    if( errorHandler != null )
+      errorHandler.warning( exception );
+  }
+
+  private SAXParseException createSAXParseException( final Exception cause, final String format, final Object... formatArguments )
+  {
+    final String messgae = String.format( format, formatArguments );
+    return new SAXParseException( messgae, m_locator, cause );
+  }
+
+  /**
+   * @see org.kalypsodeegree_impl.io.sax.parser.IParentContentHandler#getTopLevel()
+   */
+  @Override
+  public ContentHandler getTopLevel( )
+  {
+    return m_reader.getContentHandler();
+  }
+
+  @Override
+  public void activate( )
+  {
+    setDelegate( this );
+  }
+
+  @Override
+  public void activateParent( )
+  {
+    if( m_parentContentHandler != null )
+      setDelegate( m_parentContentHandler );
+  }
+
+  protected void setDelegate( final ContentHandler contentHandler )
+  {
+    Assert.isNotNull( contentHandler );
+
+    m_reader.setContentHandler( contentHandler );
   }
 
   /**
@@ -121,19 +138,15 @@ public class DelegatingContentHandler implements ContentHandler
   @Override
   public void setDocumentLocator( final Locator locator )
   {
-    /* We remember the document locator in order to set it to every new delegate. */
     m_locator = locator;
-
-    if( m_delegate != null )
-      m_delegate.setDocumentLocator( locator );
   }
 
-  public XMLReader getXmlReader( )
+  protected XMLReader getXMLReader( )
   {
-    return m_xmlReader;
+    return m_reader;
   }
 
-  public ContentHandler getParentContentHandler( )
+  protected ContentHandler getParentContentHandler( )
   {
     return m_parentContentHandler;
   }
@@ -142,6 +155,7 @@ public class DelegatingContentHandler implements ContentHandler
    * @see org.xml.sax.ContentHandler#characters(char[], int, int)
    */
   @Override
+  @SuppressWarnings("unused")
   public void characters( final char[] ch, final int start, final int length ) throws SAXException
   {
     // no op
@@ -151,6 +165,7 @@ public class DelegatingContentHandler implements ContentHandler
    * @see org.xml.sax.ContentHandler#endDocument()
    */
   @Override
+  @SuppressWarnings("unused")
   public void endDocument( ) throws SAXException
   {
     // no op
@@ -160,6 +175,7 @@ public class DelegatingContentHandler implements ContentHandler
    * @see org.xml.sax.ContentHandler#endElement(java.lang.String, java.lang.String, java.lang.String)
    */
   @Override
+  @SuppressWarnings("unused")
   public void endElement( final String uri, final String localName, final String qName ) throws SAXException
   {
     // endDelegation();
@@ -169,6 +185,7 @@ public class DelegatingContentHandler implements ContentHandler
    * @see org.xml.sax.ContentHandler#endPrefixMapping(java.lang.String)
    */
   @Override
+  @SuppressWarnings("unused")
   public void endPrefixMapping( final String prefix ) throws SAXException
   {
     // no op
@@ -178,6 +195,7 @@ public class DelegatingContentHandler implements ContentHandler
    * @see org.xml.sax.ContentHandler#ignorableWhitespace(char[], int, int)
    */
   @Override
+  @SuppressWarnings("unused")
   public void ignorableWhitespace( final char[] ch, final int start, final int length ) throws SAXException
   {
     // no op
@@ -187,6 +205,7 @@ public class DelegatingContentHandler implements ContentHandler
    * @see org.xml.sax.ContentHandler#processingInstruction(java.lang.String, java.lang.String)
    */
   @Override
+  @SuppressWarnings("unused")
   public void processingInstruction( final String target, final String data ) throws SAXException
   {
     // no op
@@ -196,6 +215,7 @@ public class DelegatingContentHandler implements ContentHandler
    * @see org.xml.sax.ContentHandler#skippedEntity(java.lang.String)
    */
   @Override
+  @SuppressWarnings("unused")
   public void skippedEntity( final String name ) throws SAXException
   {
     // no op
@@ -205,6 +225,7 @@ public class DelegatingContentHandler implements ContentHandler
    * @see org.xml.sax.ContentHandler#startDocument()
    */
   @Override
+  @SuppressWarnings("unused")
   public void startDocument( ) throws SAXException
   {
     // no op
@@ -215,15 +236,17 @@ public class DelegatingContentHandler implements ContentHandler
    *      org.xml.sax.Attributes)
    */
   @Override
+  @SuppressWarnings("unused")
   public void startElement( final String uri, final String localName, final String qName, final Attributes atts ) throws SAXException
   {
-    // delegate();
+    // no op
   }
 
   /**
    * @see org.xml.sax.ContentHandler#startPrefixMapping(java.lang.String, java.lang.String)
    */
   @Override
+  @SuppressWarnings("unused")
   public void startPrefixMapping( final String prefix, final String uri ) throws SAXException
   {
     // no op

@@ -99,10 +99,10 @@ public class MarshallGmTriangleTest
       transformer.setOutputProperty( "{http://xml.apache.org/xslt}indent-amount", "1" );
       transformer.setOutputProperty( OutputKeys.METHOD, "xml" ); //$NON-NLS-1$
 
-      final XMLReader xmlReader = XMLReaderFactory.createXMLReader();
-      xmlReader.setContentHandler( tHandler );
+      final XMLReader reader = XMLReaderFactory.createXMLReader();
+      reader.setContentHandler( tHandler );
 
-      final TriangulatedSurfaceMarshaller marshaller = new TriangulatedSurfaceMarshaller( xmlReader, null );
+      final TriangulatedSurfaceMarshaller marshaller = new TriangulatedSurfaceMarshaller( reader, null );
 
       // Write header
       tHandler.startDocument();

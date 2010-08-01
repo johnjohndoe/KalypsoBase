@@ -54,11 +54,11 @@ public class MultiPointSpecification implements IGeometrySpecification
    * @see org.kalypso.gmlschema.types.IGeometrySpecification#fillSpecifications(org.kalypso.gmlschema.types.GeometrySpecificationCatalog)
    */
   @Override
-  public void fillSpecifications( GeometrySpecificationCatalog specs )
-  { 
+  public void fillSpecifications( final GeometrySpecificationCatalog specs )
+  {
     /* gml:pointMember */
-    specs.registerSpecificationForGeometry( new PointMemberHandler() );   
-    /* gml:pointMembers*/
+    specs.registerSpecificationForGeometry( new PointMemberHandler() );
+    /* gml:pointMembers */
     specs.registerSpecificationForGeometry( new PointMembersHandler() );
   }
 }

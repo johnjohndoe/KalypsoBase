@@ -41,57 +41,57 @@
 package org.kalypsodeegree_impl.io.sax.parser;
 
 import org.kalypso.commons.xml.NS;
+import org.kalypso.gmlschema.types.AbstractGmlContentHandler;
+import org.kalypso.gmlschema.types.IGmlContentHandler;
 import org.xml.sax.Attributes;
-import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 
 /**
- * A {@link DelegatingContentHandler} implementation witch delegates all calls to a delegate and also some kind of sanity checks.<br>
+ * A {@link DelegatingContentHandler} implementation witch delegates all calls to a delegate and also some kind of
+ * sanity checks.<br>
  * Typically used to delegate calls to a content handler to a child content handler that parses a sub-element of the
- * current scope.
- * 
- * A GMLContentHandler has a 'localName' which is the name of the element to be parsed, e.g, "triangle". * 
+ * current scope. A GMLContentHandler has a 'localName' which is the name of the element to be parsed, e.g, "triangle".
+ * *
  * 
  * @author Gernot Belger
  * @author Felipe Maximino
  */
-public abstract class GMLElementContentHandler extends DelegatingContentHandler
+public abstract class GMLElementContentHandler extends AbstractGmlContentHandler
 {
   protected final String m_uri;
 
-  protected final String m_localName;  
-  
+  protected final String m_localName;
+
   protected String m_defaultSrs;
-  
-  public GMLElementContentHandler( final String uri, final String localName, final XMLReader xmlReader )
+
+  public GMLElementContentHandler( final XMLReader reader, final String uri, final String localName )
   {
-    this(uri, localName, xmlReader, null, null);
+    this( reader, uri, localName, null, null );
   }
-  
-  public GMLElementContentHandler( final String uri, final String localName, final XMLReader xmlReader, final ContentHandler parentContentHandler )
+
+  public GMLElementContentHandler( final XMLReader reader, final String uri, final String localName, final IGmlContentHandler parentContentHandler )
   {
-    this(uri, localName, xmlReader, null, parentContentHandler);
+    this( reader, uri, localName, null, parentContentHandler );
   }
-  
-  public GMLElementContentHandler( final String uri, final String localName, final XMLReader xmlReader, final String defaultSrs, final ContentHandler parentContentHandler )
+
+  public GMLElementContentHandler( final XMLReader reader, final String uri, final String localName, final String defaultSrs, final IGmlContentHandler parentContentHandler )
   {
-    super(xmlReader, parentContentHandler); 
-    
-    if(defaultSrs != null)
+    super( reader, parentContentHandler );
+
+    if( defaultSrs != null )
     {
       m_defaultSrs = defaultSrs;
-    }    
-    
+    }
+
     m_uri = uri;
     m_localName = localName;
-  }   
-    
+  }
+
   /**
-   * By default, this methods compares the incoming end xml tag with the expected tag (localName). If they match,
-   * the method {@link doEndElement} performs the specific actions. Otherwise, calls {@link HandleUnexpectedEndElement}, also
-   * to allow specific actions. 
+   * By default, this methods compares the incoming end xml tag with the expected tag (localName). If they match, the
+   * method {@link doEndElement} performs the specific actions. Otherwise, calls {@link HandleUnexpectedEndElement},
+   * also to allow specific actions.
    * 
    * @see org.xml.sax.ContentHandler#endElement(java.lang.String, java.lang.String, java.lang.String)
    */
@@ -99,29 +99,28 @@ public abstract class GMLElementContentHandler extends DelegatingContentHandler
   public void endElement( final String uri, final String localName, final String name ) throws SAXException
   {
     if( m_uri.equals( uri ) && m_localName.equals( localName ) )
-    { 
+    {
       doEndElement( uri, localName, name );
-      endDelegation();
+      activateParent();
     }
     else
     {
-      handleUnexpectedEndElement( uri, localName, name);
-    } 
+      handleUnexpectedEndElement( uri, localName, name );
+    }
   }
-  
+
   /**
-   * This method must be implemented by the subclasses to perform specific actions when the xml end tag matches
-   * this content handler 'localName'.
+   * This method must be implemented by the subclasses to perform specific actions when the xml end tag matches this
+   * content handler 'localName'.
    * 
    * @see org.xml.sax.ContentHandler#endElement(java.lang.String, java.lang.String, java.lang.String)
    */
   protected abstract void doEndElement( String uri, String localName, String name ) throws SAXException;
-  
+
   /**
-   * By default, this methods compares the incoming start xml tag with the expected tag (localName). If they match,
-   * the method {@link doStartElement} performs the specific actions. Otherwise, calls {@link HandleUnexpectedStartElement}, also
-   * to allow specific actions. 
-   * 
+   * By default, this methods compares the incoming start xml tag with the expected tag (localName). If they match, the
+   * method {@link doStartElement} performs the specific actions. Otherwise, calls {@link HandleUnexpectedStartElement},
+   * also to allow specific actions.
    * 
    * @see org.xml.sax.ContentHandler#startElement(java.lang.String, java.lang.String, java.lang.String,
    *      org.xml.sax.Attributes)
@@ -130,19 +129,16 @@ public abstract class GMLElementContentHandler extends DelegatingContentHandler
   public void startElement( final String uri, final String localName, final String name, final Attributes atts ) throws SAXException
   {
     if( m_uri.equals( uri ) && m_localName.equals( localName ) )
-    {
       doStartElement( uri, localName, name, atts );
-      delegate();
-    }
     else
-      handleUnexpectedStartElement( uri, localName, name, atts );      
+      handleUnexpectedStartElement( uri, localName, name, atts );
   }
-  
-  public String getLocalName()
+
+  public String getLocalName( )
   {
     return m_localName;
   }
-  
+
   public String getUri( )
   {
     return m_uri;
@@ -151,31 +147,30 @@ public abstract class GMLElementContentHandler extends DelegatingContentHandler
   public String getDefaultSrs( )
   {
     return m_defaultSrs;
-  }  
-  
+  }
+
   /**
-   * This method must be implemented by the subclasses to perform specific actions when the start xml tag matches
-   * this content handler 'localName'.
-   * 
-   * Inside this method, a {@link setDelegate} call must be done, otherwise, there will be no delegation.
+   * This method must be implemented by the subclasses to perform specific actions when the start xml tag matches this
+   * content handler 'localName'. Inside this method, a {@link setDelegate} call must be done, otherwise, there will be
+   * no delegation.
    * 
    * @see org.xml.sax.ContentHandler#endElement(java.lang.String, java.lang.String, java.lang.String)
    */
   protected abstract void doStartElement( final String uri, final String localName, final String name, final Attributes atts ) throws SAXException;
-  
+
   /*
-   * This is the default behavior for this method. Subclasses shall override this method to especific behavior.
-   */  
-  public void handleUnexpectedStartElement( final String uri, final String localName, final String name, final Attributes atts ) throws SAXException
+   * This is the default behavior for this method. Subclasses shall override this method to specific behavior.
+   */
+  public void handleUnexpectedStartElement( final String uri, final String localName, final String name, @SuppressWarnings("unused") final Attributes atts ) throws SAXException
   {
-    throw new SAXParseException( String.format( "Unexpected start element: {%s}%s = %s - should be {%s}%s", uri, localName, name, NS.GML3, m_localName ), m_locator );
+    throwSAXParseException( "Unexpected start element: {%s}%s = %s - should be {%s}%s", uri, localName, name, NS.GML3, m_localName );
   }
-  
+
   /*
-   * This is the default behavior for this method. Subclasses shall override this method to especific behavior.
-   */ 
+   * This is the default behavior for this method. Subclasses shall override this method to specific behavior.
+   */
   public void handleUnexpectedEndElement( final String uri, final String localName, final String name ) throws SAXException
   {
-    throw new SAXParseException( String.format( "Unexpected end element: {%s}%s = %s - should be {%s}%s", uri, localName, name, m_uri, m_localName ), m_locator );  
+    throwSAXParseException( "Unexpected end element: {%s}%s = %s - should be {%s}%s", uri, localName, name, m_uri, m_localName );
   }
 }

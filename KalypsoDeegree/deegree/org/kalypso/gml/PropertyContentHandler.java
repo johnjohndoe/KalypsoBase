@@ -52,12 +52,12 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.gmlschema.types.AbstractGmlContentHandler;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler2;
 import org.kalypso.gmlschema.types.ISimpleMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.UnmarshallResultEater;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree_impl.io.sax.parser.DelegatingContentHandler;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
@@ -70,7 +70,7 @@ import org.xml.sax.XMLReader;
  * @author Andreas von Doemming
  * @author Felipe Maximino - Refaktoring
  */
-public class PropertyContentHandler extends DelegatingContentHandler implements UnmarshallResultEater, IFeatureHandler, ISimpleContentHandler, IPropertyHandler
+public class PropertyContentHandler extends AbstractGmlContentHandler implements UnmarshallResultEater, IFeatureHandler, ISimpleContentHandler, IPropertyHandler
 {
   /* the feature that this property */
   private final Feature m_scopeFeature;
@@ -83,9 +83,9 @@ public class PropertyContentHandler extends DelegatingContentHandler implements 
 
   private IPropertyType m_scopeProperty;
 
-  public PropertyContentHandler( final XMLReader xmlReader, final IPropertyHandler propertyHandler, final GMLSchemaLoaderWithLocalCache schemaLoader, final URL context, final Feature parentFeature )
+  public PropertyContentHandler( final XMLReader reader, final IPropertyHandler propertyHandler, final GMLSchemaLoaderWithLocalCache schemaLoader, final URL context, final Feature parentFeature )
   {
-    super( xmlReader, propertyHandler );
+    super( reader, propertyHandler );
 
     m_scopeFeature = parentFeature;
     m_propertyHandler = propertyHandler;
@@ -105,17 +105,15 @@ public class PropertyContentHandler extends DelegatingContentHandler implements 
     if( m_scopeProperty != null && QNameUtilities.equals( m_scopeProperty.getQName(), uri, localName ) )
     {
       m_propertyHandler.setPropertyAsScope( null );
-      endDelegation();
+      activateParent();
     }
     else if( propertyHasAlreadyEnded() )
     {
-      endDelegation();
-      m_parentContentHandler.endElement( uri, localName, qName );
+      activateParent();
+      getParentContentHandler().endElement( uri, localName, qName );
     }
     else
-    {
-      throw new SAXParseException( String.format( "Unexpected end element: {%s}%s = %s - should be {%s}%s", uri, localName, qName, m_scopeProperty.getQName().getNamespaceURI(), m_scopeProperty.getQName().getLocalPart() ), m_locator );
-    }
+      throwSAXParseException( "Unexpected end element: {%s}%s = %s - should be {%s}%s", uri, localName, qName, m_scopeProperty.getQName().getNamespaceURI(), m_scopeProperty.getQName().getLocalPart() );
   }
 
   private boolean propertyHasAlreadyEnded( )
@@ -153,8 +151,9 @@ public class PropertyContentHandler extends DelegatingContentHandler implements 
     // that were wrong written, i.e, with gml properties inside another gml property.
     else
     {
-      delegate( new PropertyContentHandler( m_xmlReader, this, m_schemaLoader, m_context, m_scopeFeature ) );
-      m_delegate.startElement( uri, localName, qName, atts );
+      final PropertyContentHandler propertyContentHandler = new PropertyContentHandler( getXMLReader(), this, m_schemaLoader, m_context, m_scopeFeature );
+      propertyContentHandler.activate();
+      propertyContentHandler.startElement( uri, localName, qName, atts );
     }
   }
 
@@ -180,14 +179,13 @@ public class PropertyContentHandler extends DelegatingContentHandler implements 
 
   private void delegateToProperContentHandler( final IPropertyType pt, final String uri, final String localName, final String qName, final Attributes atts ) throws SAXException
   {
-
     if( pt instanceof IValuePropertyType )
     {
       final IValuePropertyType vpt = (IValuePropertyType) pt;
 
       if( vpt.getTypeHandler() instanceof ISimpleMarshallingTypeHandler )
       {
-        delegate( new SimpleContentContentHandler( m_xmlReader, this ) );
+        new SimpleContentContentHandler( getXMLReader(), this ).activate();
       }
       else
       {
@@ -203,19 +201,21 @@ public class PropertyContentHandler extends DelegatingContentHandler implements 
       throw new SAXException( "Unknown IPropertyType instance: " + pt );
   }
 
-  private void delegateToRelationTypeContentHandler( final String uri, final String localName, final String qName, final Attributes atts ) throws SAXException
+  private void delegateToRelationTypeContentHandler( final String uri, final String localName, final String qName, final Attributes atts )
   {
     final String href = AttributesUtilities.getAttributeValue( atts, NS.XLINK, "href", null );
 
-    if( href != null )// its a xlink
+    if( href != null )
     {
-      delegate( new XLinkedFeatureContentHandler( m_xmlReader, this, m_scopeFeature, (IRelationType) m_scopeProperty ) );
-      m_delegate.startElement( uri, localName, qName, atts );
+      // its a xlink
+      final XLinkedFeatureContentHandler xLinkedFeatureContentHandler = new XLinkedFeatureContentHandler( getXMLReader(), this, m_scopeFeature, (IRelationType) m_scopeProperty );
+      xLinkedFeatureContentHandler.activate();
+      xLinkedFeatureContentHandler.startElement( uri, localName, qName, atts );
     }
     else
-    // its another feature
     {
-      delegate( new FeatureContentHandler( m_xmlReader, this, m_schemaLoader, m_context, m_scopeProperty, m_scopeFeature ) );
+      // its another feature
+      new FeatureContentHandler( getXMLReader(), this, m_schemaLoader, m_context, m_scopeProperty, m_scopeFeature ).activate();
     }
   }
 
@@ -226,13 +226,14 @@ public class PropertyContentHandler extends DelegatingContentHandler implements 
     if( typeHandler instanceof IMarshallingTypeHandler2 )
     {
       final IMarshallingTypeHandler2 th2 = (IMarshallingTypeHandler2) typeHandler;
-      delegate( th2.createContentHandler( m_xmlReader, this, this ) );
+      th2.createContentHandler( getXMLReader(), this, this ).activate();
     }
     else
-    // else is a IMarshallingTypeHandler
     {
-      delegate( new ValuePropertyContentHandler( m_xmlReader, this, typeHandler, m_schemaLoader, m_scopeProperty, m_context ) );
-      m_delegate.startElement( uri, localName, qName, atts );
+      // else is a IMarshallingTypeHandler
+      final ValuePropertyContentHandler valuePropertyContentHandler = new ValuePropertyContentHandler( getXMLReader(), this, typeHandler, m_schemaLoader, m_scopeProperty, m_context );
+      valuePropertyContentHandler.activate();
+      valuePropertyContentHandler.startElement( uri, localName, qName, atts );
     }
   }
 
@@ -249,7 +250,7 @@ public class PropertyContentHandler extends DelegatingContentHandler implements 
    * @see org.kalypsodeegree_impl.io.sax.parser.IGMLElementHandler#handle(java.lang.Object)
    */
   @Override
-  public void handle( StringBuffer simpleContent ) throws SAXParseException
+  public void handle( final StringBuffer simpleContent ) throws SAXParseException
   {
     final IValuePropertyType valuePT = (IValuePropertyType) m_scopeProperty;
     final ISimpleMarshallingTypeHandler< ? > simpleHandler = (ISimpleMarshallingTypeHandler< ? >) valuePT.getTypeHandler();
@@ -263,12 +264,7 @@ public class PropertyContentHandler extends DelegatingContentHandler implements 
     catch( final Exception e )
     {
       e.printStackTrace();
-      final String msg = String.format( "Failed to parsed simple type. Content was '%s' for property '%s'", simpleString, m_scopeProperty.getQName() );
-      throw new SAXParseException( msg, getLocator(), e );
-    }
-    finally
-    {
-      simpleContent = null;
+      throwSAXParseException( e, "Failed to parsed simple type. Content was '%s' for property '%s'", simpleString, m_scopeProperty.getQName() );
     }
   }
 

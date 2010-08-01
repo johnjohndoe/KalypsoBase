@@ -41,12 +41,11 @@
 package org.kalypsodeegree_impl.io.sax.parser;
 
 import org.kalypso.commons.xml.NS;
+import org.kalypso.gmlschema.types.IGmlContentHandler;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.tools.GMLConstants;
 import org.xml.sax.Attributes;
-import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 
 /**
@@ -56,58 +55,60 @@ import org.xml.sax.XMLReader;
  */
 public class PointMembersContentHandler extends GMLElementContentHandler implements IPointHandler
 {
-  public static final String ELEMENT_POINT_MEMBERS = "pointMembers";  
-  
-  private final IPointHandler m_pointHandler;  
-  
-  public PointMembersContentHandler( ContentHandler parentContentHandler, IPointHandler pointHandler, String defaultSrs, XMLReader xmlReader )
+  public static final String ELEMENT_POINT_MEMBERS = "pointMembers";
+
+  private final IPointHandler m_pointHandler;
+
+  public PointMembersContentHandler( final XMLReader reader, final IGmlContentHandler parentContentHandler, final IPointHandler pointHandler, final String defaultSrs )
   {
-    super( NS.GML3, ELEMENT_POINT_MEMBERS, xmlReader, defaultSrs, parentContentHandler );
-    
+    super( reader, NS.GML3, ELEMENT_POINT_MEMBERS, defaultSrs, parentContentHandler );
+
     m_pointHandler = pointHandler;
   }
 
   /**
-   * @see org.kalypsodeegree_impl.io.sax.parser.GMLElementContentHandler#doEndElement(java.lang.String, java.lang.String, java.lang.String)
+   * @see org.kalypsodeegree_impl.io.sax.parser.GMLElementContentHandler#doEndElement(java.lang.String,
+   *      java.lang.String, java.lang.String)
    */
   @Override
-  protected void doEndElement( String uri, String localName, String name )
+  protected void doEndElement( final String uri, final String localName, final String name )
   {
-    
-  } 
+
+  }
 
   /**
-   * @see org.kalypsodeegree_impl.io.sax.parser.GMLElementContentHandler#doStartElement(java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
+   * @see org.kalypsodeegree_impl.io.sax.parser.GMLElementContentHandler#doStartElement(java.lang.String,
+   *      java.lang.String, java.lang.String, org.xml.sax.Attributes)
    */
   @Override
-  protected void doStartElement( String uri, String localName, String name, Attributes atts )
+  protected void doStartElement( final String uri, final String localName, final String name, final Attributes atts )
   {
-    setDelegate( new PointContentHandler(this, m_defaultSrs, m_xmlReader) );
+    setDelegate( new PointContentHandler( getXMLReader(), this, m_defaultSrs ) );
   }
-  
+
   /**
-   * @see org.kalypsodeegree_impl.io.sax.parser.GMLElementContentHandler#handleUnexpectedStartElement(java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
+   * @see org.kalypsodeegree_impl.io.sax.parser.GMLElementContentHandler#handleUnexpectedStartElement(java.lang.String,
+   *      java.lang.String, java.lang.String, org.xml.sax.Attributes)
    */
   @Override
-  public void handleUnexpectedStartElement( String uri, String localName, String name, Attributes atts ) throws SAXException
-  { 
+  public void handleUnexpectedStartElement( final String uri, final String localName, final String name, final Attributes atts ) throws SAXException
+  {
     /* a gml:pointMembers may accept more than one gml:Point */
     if( uri.equals( GMLConstants.QN_POINT.getNamespaceURI() ) && localName.equals( GMLConstants.QN_POINT.getLocalPart() ) )
     {
-      delegate( new PointContentHandler(this, m_defaultSrs, m_xmlReader) );
-      m_delegate.startElement( uri, localName, name, atts );
+      final PointContentHandler delegate = new PointContentHandler( getXMLReader(), this, m_defaultSrs );
+      delegate.activate();
+      delegate.startElement( uri, localName, name, atts );
     }
     else
-    {
-      throw new SAXParseException( String.format( "Unexpected start element: {%s}%s = %s - should be {%s}%s", uri, localName, name, NS.GML3, m_localName ), m_locator ); 
-    }
+      throwSAXParseException( "Unexpected start element: {%s}%s = %s - should be {%s}%s", uri, localName, name, NS.GML3, m_localName );
   }
 
   /**
    * @see org.kalypsodeegree_impl.io.sax.parser.IGMLElementHandler#handle(java.lang.Object)
    */
   @Override
-  public void handle( GM_Point element ) throws SAXException
+  public void handle( final GM_Point element ) throws SAXException
   {
     m_pointHandler.handle( element );
   }

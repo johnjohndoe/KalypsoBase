@@ -49,5 +49,5 @@ import org.xml.sax.SAXException;
  */
 public interface IGMLElementHandler<T> extends ContentHandler
 {
-  public void handle( T element ) throws SAXException;
+  void handle( T element ) throws SAXException;
 }

@@ -45,10 +45,11 @@ import java.net.URL;
 import javax.xml.namespace.QName;
 
 import org.kalypso.contribs.org.xml.sax.AppendingContentHandler;
+import org.kalypso.gmlschema.types.AbstractGmlContentHandler;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.io.sax.parser.DelegatingContentHandler;
 import org.kalypsodeegree_impl.model.feature.IFeatureProviderFactory;
 import org.xml.sax.Attributes;
+import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
@@ -62,27 +63,26 @@ import org.xml.sax.XMLReader;
  * </p>
  * 
  * @author Gernot Belger
- * @author Andreas von Dï¿½mming
+ * @author Andreas von Dömming
  * @author Felipe Maximino - Refaktoring
  */
-public class GMLorExceptionContentHandler extends DelegatingContentHandler
+public class GMLorExceptionContentHandler extends AbstractGmlContentHandler
 {
   // TODO: where to put this constant?
-  final QName QNAME_OWS_EXCEPTION_REPORT = new QName( "http://www.opengis.net/ows", "ExceptionReport" );
-  
-  private final XMLReader m_xmlReader;
-  
-  private final URL m_schemaLocationHint;
-  
-  private final URL m_context;
-  
-  private final IFeatureProviderFactory m_providerFactory;
-  
-  public GMLorExceptionContentHandler( final XMLReader xmlReader, final URL schemaLocationHint, final URL context, final IFeatureProviderFactory providerFactory )
-  {
-    super( xmlReader, null );
+  private static final QName QNAME_OWS_EXCEPTION_REPORT = new QName( "http://www.opengis.net/ows", "ExceptionReport" );
 
-    m_xmlReader = xmlReader;
+  private final URL m_schemaLocationHint;
+
+  private final URL m_context;
+
+  private final IFeatureProviderFactory m_providerFactory;
+
+  private ContentHandler m_innerHandler;
+
+  public GMLorExceptionContentHandler( final XMLReader reader, final URL schemaLocationHint, final URL context, final IFeatureProviderFactory providerFactory )
+  {
+    super( reader, null );
+
     m_schemaLocationHint = schemaLocationHint;
     m_context = context;
     m_providerFactory = providerFactory;
@@ -96,45 +96,37 @@ public class GMLorExceptionContentHandler extends DelegatingContentHandler
    */
   @Override
   public void startElement( final String uri, final String localName, final String qName, final Attributes atts ) throws SAXException
-  { 
+  {
+    m_innerHandler = createInnerHandler( uri, localName );
+    setDelegate( m_innerHandler );
+    m_innerHandler.startElement( uri, localName, qName, atts );
+  }
+
+  private ContentHandler createInnerHandler( final String uri, final String localName )
+  {
     // handle OGC Exceptions
     // Handle degree1 + deegree2 exepctions.
     // deegree1-service: ...Exception
     // deegree2-service: ServiceExceptionReport
     // TODO: we should test for the namespace, what happens if we ever have a gml with root element 'exception'?
     final QName eltQName = new QName( uri, localName );
-    if( localName.endsWith( "Exception" ) || localName.equals( "ServiceExceptionReport" ) )
-    {
-      delegate( new AppendingContentHandler( new StringBuffer() ) );
-    }
-    else if( eltQName.equals( QNAME_OWS_EXCEPTION_REPORT ) )
-    {
-      delegate( new AppendingContentHandler( new StringBuffer() ) );
-    }
-    else
-    { 
-      delegate( new GMLDocumentContentHandler( m_xmlReader, this, m_schemaLocationHint, m_context, m_providerFactory ) );
-      m_delegate.startElement( uri, localName, qName, atts );
-    }
-  }
+    if( localName.endsWith( "Exception" ) || "ServiceExceptionReport".equals( localName ) )
+      return new AppendingContentHandler( new StringBuffer() );
 
-  /**
-   * @see org.xml.sax.ContentHandler#endElement(java.lang.String, java.lang.String, java.lang.String)
-   */
-  @Override
-  public void endElement( final String uri, final String localName, final String qName )
-  {
-    endDelegation();
+    if( eltQName.equals( QNAME_OWS_EXCEPTION_REPORT ) )
+      return new AppendingContentHandler( new StringBuffer() );
+
+    return new GMLDocumentContentHandler( getXMLReader(), this, m_schemaLocationHint, m_context, m_providerFactory );
   }
 
   public GMLWorkspace getWorkspace( ) throws GMLException
   {
-    if( m_delegate instanceof AppendingContentHandler )
+    if( m_innerHandler instanceof AppendingContentHandler )
     {
-      final Appendable buffer = ((AppendingContentHandler) m_delegate).getAppendable();
+      final Appendable buffer = ((AppendingContentHandler) m_innerHandler).getAppendable();
       throw new GMLException( buffer.toString() );
     }
 
-    return ((IWorkspaceProvider) m_delegate).getWorkspace();
+    return ((IWorkspaceProvider) m_innerHandler).getWorkspace();
   }
 }

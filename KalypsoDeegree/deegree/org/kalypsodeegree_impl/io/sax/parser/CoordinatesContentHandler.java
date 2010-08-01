@@ -45,9 +45,9 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import org.kalypso.commons.xml.NS;
+import org.kalypso.gmlschema.types.IGmlContentHandler;
 import org.kalypsodeegree_impl.tools.GMLConstants;
 import org.xml.sax.Attributes;
-import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
@@ -66,24 +66,24 @@ import org.xml.sax.XMLReader;
 public class CoordinatesContentHandler extends GMLElementContentHandler
 {
   public static final String ELEMENT_COORDINATES = "coordinates";
-  
+
   private StringBuffer m_coordBuffer = new StringBuffer();
-  
-  private ICoordinatesHandler m_coordinatesHandler;
-  
+
+  private final ICoordinatesHandler m_coordinatesHandler;
+
   /* separator for coordinate values */ 
   private String m_cs;
-  
+
   /* tuples separator */
   private String m_ts;
-  
+
   /* decimal indicator */
   private String m_decimal;
-  
-  public CoordinatesContentHandler( ContentHandler parentContentHandler, ICoordinatesHandler coordinatesHandler, String defaultSrs, XMLReader xmlReader )
+
+  public CoordinatesContentHandler( final XMLReader reader, final IGmlContentHandler parentContentHandler, final ICoordinatesHandler coordinatesHandler, final String defaultSrs )
   {
-    super( NS.GML3, ELEMENT_COORDINATES, xmlReader, defaultSrs, parentContentHandler );
-    
+    super( reader, NS.GML3, ELEMENT_COORDINATES, defaultSrs, parentContentHandler );
+
     m_coordinatesHandler = coordinatesHandler;
   }
 
@@ -91,17 +91,17 @@ public class CoordinatesContentHandler extends GMLElementContentHandler
    * @see org.kalypsodeegree_impl.io.sax.parser.GMLElementContentHandler#doEndElement(java.lang.String, java.lang.String, java.lang.String)
    */
   @Override
-  protected void doEndElement( String uri, String localName, String name ) throws SAXException
+  protected void doEndElement( final String uri, final String localName, final String name ) throws SAXException
   {
-    List<Double[]> coordinates = endCoordinates();
+    final List<Double[]> coordinates = endCoordinates();
     m_coordinatesHandler.handle( coordinates );    
   }
-  
+
   /**
    * @see org.kalypsodeegree_impl.io.sax.parser.GMLElementContentHandler#doStartElement(java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
    */
   @Override
-  protected void doStartElement( String uri, String localName, String name, Attributes atts )
+  protected void doStartElement( final String uri, final String localName, final String name, final Attributes atts )
   {
     m_cs = ContentHandlerUtils.parseCsFromAttributes( atts, GMLConstants.DEFAULT_CS );
     m_ts = ContentHandlerUtils.parseTsFromAttributes( atts, GMLConstants.DEFAULT_TS );
@@ -111,28 +111,28 @@ public class CoordinatesContentHandler extends GMLElementContentHandler
   private List<Double[]> endCoordinates( )
   {
     String coordinatesString = m_coordBuffer == null ? "" : m_coordBuffer.toString(); 
-      
+
     /* if necessary, replace the decimal indicator to '.' to get a java value */
-    if( !m_decimal.equals( "." ) ) 
+    if( !".".equals( m_decimal ) )
     {
       coordinatesString = coordinatesString.replace( m_decimal, "." );
     }
-    
-    String[] tuples = separateTuples( coordinatesString );
-    
+
+    final String[] tuples = separateTuples( coordinatesString );
+
     /* List of tuples. each double is a Double array */
-    List<Double[]> coordinates = separateCoordinates( tuples );
-    
+    final List<Double[]> coordinates = separateCoordinates( tuples );
+
     return coordinates;
   }
 
-  private List<Double[]> separateCoordinates( String[] tuples )
+  private List<Double[]> separateCoordinates( final String[] tuples )
   {
-    List<Double[]> coordinates = new ArrayList<Double[]>();
-    for( String tuple : tuples )
+    final List<Double[]> coordinates = new ArrayList<Double[]>();
+    for( final String tuple : tuples )
     { 
       final StringTokenizer st = new StringTokenizer( tuple, m_cs );
-      Double[] tupleValue = new Double[st.countTokens()];
+      final Double[] tupleValue = new Double[st.countTokens()];
       int i = 0;
       while( st.hasMoreTokens() )
       { 
@@ -140,7 +140,7 @@ public class CoordinatesContentHandler extends GMLElementContentHandler
       }
       coordinates.add( tupleValue );
     } 
-    
+
     return coordinates;
   }
 
@@ -148,7 +148,7 @@ public class CoordinatesContentHandler extends GMLElementContentHandler
   { 
     final StringTokenizer st = new StringTokenizer( coordinatesString, m_ts );
 
-    String[] tuples = new String[st.countTokens()];
+    final String[] tuples = new String[st.countTokens()];
     int i = 0;
     while ( st.hasMoreTokens() ) 
     {

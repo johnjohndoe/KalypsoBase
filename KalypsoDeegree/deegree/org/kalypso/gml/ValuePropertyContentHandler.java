@@ -45,10 +45,10 @@ import java.net.URL;
 import org.kalypso.gmlschema.GMLSchemaLoaderWithLocalCache;
 import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.types.AbstractGmlContentHandler;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.TypeRegistryException;
 import org.kalypso.gmlschema.types.UnmarshallResultEater;
-import org.kalypsodeegree_impl.io.sax.parser.DelegatingContentHandler;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
@@ -64,7 +64,7 @@ import org.xml.sax.XMLReader;
  * @author Andreas von Doemming
  * @author Felipe Maximino - Refaktoring
  */
-public class ValuePropertyContentHandler extends DelegatingContentHandler implements UnmarshallResultEater
+public class ValuePropertyContentHandler extends AbstractGmlContentHandler implements UnmarshallResultEater
 {
   private final URL m_context;
 
@@ -76,9 +76,9 @@ public class ValuePropertyContentHandler extends DelegatingContentHandler implem
 
   private final IPropertyType m_scopeProperty;
 
-  public ValuePropertyContentHandler( final XMLReader xmlReader, final IFeatureHandler featureHandler, final IMarshallingTypeHandler typeHandler, final GMLSchemaLoaderWithLocalCache schemaLoader, final IPropertyType scopeProperty, final URL context )
+  public ValuePropertyContentHandler( final XMLReader reader, final IFeatureHandler featureHandler, final IMarshallingTypeHandler typeHandler, final GMLSchemaLoaderWithLocalCache schemaLoader, final IPropertyType scopeProperty, final URL context )
   {
-    super( xmlReader, featureHandler );
+    super( reader, featureHandler );
 
     m_featureHandler = featureHandler;
     m_schemaLoader = schemaLoader;
@@ -94,8 +94,8 @@ public class ValuePropertyContentHandler extends DelegatingContentHandler implem
   @Override
   public void endElement( final String uri, final String localName, final String qName ) throws SAXException
   {
-    endDelegation();
-    m_parentContentHandler.endElement( uri, localName, qName );
+    activateParent();
+    getParentContentHandler().endElement( uri, localName, qName );
   }
 
   /**
@@ -111,12 +111,12 @@ public class ValuePropertyContentHandler extends DelegatingContentHandler implem
       final String gmlVersion = schema.getGMLVersion();
 
       // TODO: we SHOULD provide here the full information to the handler: qname, att, ...
-      m_typeHandler.unmarshal( m_xmlReader, m_context, this, gmlVersion );
+      m_typeHandler.unmarshal( getXMLReader(), m_context, this, gmlVersion );
     }
     catch( final TypeRegistryException e )
     {
       e.printStackTrace();
-      m_xmlReader.getErrorHandler().warning( new SAXParseException( "Failed to unmarshall property value: ", getLocator(), e ) );
+      warnSAXParseException( e, "Failed to unmarshall property value: %s", qName );
     }
   }
 
@@ -129,11 +129,11 @@ public class ValuePropertyContentHandler extends DelegatingContentHandler implem
     try
     {
       ((UnmarshallResultEater) m_featureHandler).unmarshallSuccesful( value );
-      endDelegation();
+      activateParent();
     }
     catch( final SAXException e )
     {
-      throw new SAXParseException( String.format( "Unexpected end element: %s", m_scopeProperty.getQName() ), m_locator );
+      throwSAXParseException( "Unexpected end element: %s", m_scopeProperty.getQName() );
     }
   }
 }

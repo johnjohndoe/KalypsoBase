@@ -73,10 +73,10 @@ public class MarshallGMPointTest extends TestCase
     f.deleteOnExit();
 
     final BufferedOutputStream os = new BufferedOutputStream( new FileOutputStream( f ) );
-    final XMLReader xmlReader = SaxParserTestUtils.createXMLReader( os );
+    final XMLReader reader = SaxParserTestUtils.createXMLReader( os );
 
-    final PointMarshaller marshaller = new PointMarshaller( xmlReader, point2D );
-    SaxParserTestUtils.marshallDocument( xmlReader, marshaller );
+    final PointMarshaller marshaller = new PointMarshaller( reader, point2D );
+    SaxParserTestUtils.marshallDocument( reader, marshaller );
     os.close();
 
     final URL filePoint2D = getClass().getResource( "resources/pointb.gml" );
@@ -96,10 +96,10 @@ public class MarshallGMPointTest extends TestCase
     f.deleteOnExit();
 
     final BufferedOutputStream os = new BufferedOutputStream( new FileOutputStream( f ) );
-    final XMLReader xmlReader = SaxParserTestUtils.createXMLReader( os );
+    final XMLReader reader = SaxParserTestUtils.createXMLReader( os );
 
-    final PointMarshaller marshaller = new PointMarshaller( xmlReader, point3D );
-    SaxParserTestUtils.marshallDocument( xmlReader, marshaller );
+    final PointMarshaller marshaller = new PointMarshaller( reader, point3D );
+    SaxParserTestUtils.marshallDocument( reader, marshaller );
     os.close();
 
     final URL filePoint3D = getClass().getResource( "resources/pointa.gml" );
