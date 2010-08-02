@@ -72,7 +72,7 @@ public class AddDataSourceObservationHandler
       return m_observation;
 
     final AddDataSourceModelHandler handler = new AddDataSourceModelHandler( m_observation.getValues( null ) );
-    final ITuppleModel model = handler.getModel();
+    final ITuppleModel model = handler.extend();
 
     final DataSourceHandler dataSourceHandler = new DataSourceHandler( m_observation.getMetadataList() );
     dataSourceHandler.addDataSource( m_item );
