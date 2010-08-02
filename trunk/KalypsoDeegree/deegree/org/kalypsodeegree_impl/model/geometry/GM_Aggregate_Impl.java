@@ -169,7 +169,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
   @Override
   public void setObjectAt( final GM_Object gmo, final int index ) throws GM_Exception
   {
-    if( (index < 0) || (index > this.getSize() - 1) )
+    if( index < 0 )
     {
       throw new GM_Exception( "invalid index/position: " + index + " to set a geometry!" );
     }
@@ -179,7 +179,9 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
       throw new GM_Exception( "gmo == null. it isn't possible to set a value" + " that equals null!" );
     }
 
-    m_aggregate.set( index, gmo );
+   ((ArrayList<GM_Object>) m_aggregate).ensureCapacity( index + 1 );
+
+   ((ArrayList<GM_Object>) m_aggregate).add( index, gmo );
 
     invalidate();
   }
