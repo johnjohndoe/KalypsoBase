@@ -50,7 +50,7 @@ import org.kalypso.contribs.java.awt.ColorUtilities;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.diagview.grafik.GrafikAchsen.GrafikAchse;
-import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
+import org.kalypso.ogc.sensor.metadata.ITimeserieConstants;
 import org.kalypso.template.obsdiagview.TypeCurve;
 import org.kalypso.template.obsdiagview.TypeCurve.Mapping;
 
@@ -183,7 +183,7 @@ public class GrafikKurven
    */
   private static String toGrafikType( final String axisType )
   {
-    if( axisType.equals( TimeserieConstants.TYPE_RAINFALL ) )
+    if( axisType.equals( ITimeserieConstants.TYPE_RAINFALL ) )
       return "N"; //$NON-NLS-1$
 
     return "L"; //$NON-NLS-1$

@@ -36,7 +36,7 @@ import javax.xml.namespace.QName;
 import org.apache.commons.io.IOUtils;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
+import org.kalypso.ogc.sensor.metadata.ITimeserieConstants;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypsodeegree.model.typeHandler.XsdBaseTypeHandler;
 import org.xml.sax.InputSource;
@@ -131,27 +131,27 @@ public class ZmlInlineTypeHandler extends XsdBaseTypeHandler<IObservation>
   // TODO: these do NOT belong here!
   public interface TA extends IObservation
   {
-    String[] axis = new String[] { TimeserieConstants.TYPE_HOURS, TimeserieConstants.TYPE_NORM };
+    String[] axis = new String[] { ITimeserieConstants.TYPE_HOURS, ITimeserieConstants.TYPE_NORM };
   }
 
   public interface WtKcLai extends IObservation
   {
-    String[] axis = new String[] { TimeserieConstants.TYPE_DATE, TimeserieConstants.TYPE_LAI, TimeserieConstants.TYPE_WT, TimeserieConstants.TYPE_KC };
+    String[] axis = new String[] { ITimeserieConstants.TYPE_DATE, ITimeserieConstants.TYPE_LAI, ITimeserieConstants.TYPE_WT, ITimeserieConstants.TYPE_KC };
   }
 
   public interface WVQ extends IObservation
   {
-    String[] axis = new String[] { TimeserieConstants.TYPE_NORMNULL, TimeserieConstants.TYPE_VOLUME, TimeserieConstants.TYPE_RUNOFF };
+    String[] axis = new String[] { ITimeserieConstants.TYPE_NORMNULL, ITimeserieConstants.TYPE_VOLUME, ITimeserieConstants.TYPE_RUNOFF };
   }
 
   public interface TN extends IObservation
   {
-    String[] axis = new String[] { TimeserieConstants.TYPE_MIN, TimeserieConstants.TYPE_RAINFALL };
+    String[] axis = new String[] { ITimeserieConstants.TYPE_MIN, ITimeserieConstants.TYPE_RAINFALL };
   }
 
   public interface QQ extends IObservation
   {
-    String[] axis = new String[] { TimeserieConstants.TYPE_RUNOFF, TimeserieConstants.TYPE_RUNOFF_RHB };
+    String[] axis = new String[] { ITimeserieConstants.TYPE_RUNOFF, ITimeserieConstants.TYPE_RUNOFF_RHB };
   }
 
 }

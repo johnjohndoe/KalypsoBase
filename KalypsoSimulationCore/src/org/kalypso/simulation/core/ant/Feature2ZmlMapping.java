@@ -41,7 +41,7 @@
 package org.kalypso.simulation.core.ant;
 
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.MetadataList;
+import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 

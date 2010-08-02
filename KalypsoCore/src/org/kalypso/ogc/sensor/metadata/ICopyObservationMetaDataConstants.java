@@ -38,27 +38,20 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.sensor.timeseries;
-
+package org.kalypso.ogc.sensor.metadata;
 
 /**
  * @author Dirk Kuch
  */
-public interface IRepositoryConstants extends TimeserieConstants
+public interface ICopyObservationMetaDataConstants extends ITimeserieConstants
 {
-  String MD_PROPERTY_TIME_LEVEL = "Wiski_Aufloesung";
+  String MD_TIME_SERIES_PREFIX_COPY_OBS_VISITOR_SRC = "CopyObsVisitor_Src"; //$NON-NLS-1$
 
-  String MD_PROPERTY_DISTANCE = "Wiski_Distanz";
+  String MD_TIME_SERIES_SOURCE = MD_TIME_SERIES_PREFIX_COPY_OBS_VISITOR_SRC + "_Reference"; //$NON-NLS-1$
 
-  String MD_PROPERTY_DISTANCE_UNIT = "Wiski_Distanz_Einheit";
+  String MD_TIME_SERIES_FILTER = MD_TIME_SERIES_PREFIX_COPY_OBS_VISITOR_SRC + "_Filter"; //$NON-NLS-1$
 
-  String MD_PROPERTY_VALUE_TYPE = "Wiski_Einheiten_Art";
+  String MD_TIME_SERIES_SRC_DATE_RANGE_FROM = MD_TIME_SERIES_PREFIX_COPY_OBS_VISITOR_SRC + "_DateRange_From"; //$NON-NLS-1$
 
-  String MD_PROPERTY_KEEP_METADATA_PREFEX = "reload_keepMetaData";
-
-  /**
-   * position of the station id - 0 based<br>
-   * wiski://HVZ_Modelle_Elbe.Elbe_Prio_1.501060.Q
-   */
-  int STATION_ID_LOCATION = 2;
+  String MD_TIME_SERIES_SRC_DATE_RANGE_TO = MD_TIME_SERIES_PREFIX_COPY_OBS_VISITOR_SRC + "_DateRange_To"; //$NON-NLS-1$
 }

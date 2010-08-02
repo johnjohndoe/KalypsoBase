@@ -59,7 +59,7 @@ import org.kalypso.core.util.pool.IPoolableObjectType;
 import org.kalypso.core.util.pool.PoolableObjectType;
 import org.kalypso.core.util.pool.PoolableObjectWaiter;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
+import org.kalypso.ogc.sensor.metadata.ITimeserieConstants;
 
 /**
  * A kind of view over observations.
@@ -119,8 +119,8 @@ public abstract class ObsView implements IObsViewEventProvider
    */
   public ObsView( )
   {
-    m_enabledFeatures.add( TimeserieConstants.FEATURE_ALARMLEVEL );
-    m_enabledFeatures.add( TimeserieConstants.FEATURE_FORECAST );
+    m_enabledFeatures.add( ITimeserieConstants.FEATURE_ALARMLEVEL );
+    m_enabledFeatures.add( ITimeserieConstants.FEATURE_FORECAST );
   }
 
   public void dispose( )

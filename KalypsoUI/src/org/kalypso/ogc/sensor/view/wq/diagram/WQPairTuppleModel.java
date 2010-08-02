@@ -47,7 +47,7 @@ import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.AbstractTuppleModel;
-import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
+import org.kalypso.ogc.sensor.metadata.ITimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQPair;
 
@@ -61,7 +61,7 @@ public class WQPairTuppleModel extends AbstractTuppleModel
 
   public WQPairTuppleModel( final WQPair[] pairs )
   {
-    super( new IAxis[] { TimeserieUtils.createDefaulAxis( TimeserieConstants.TYPE_WATERLEVEL, true ), TimeserieUtils.createDefaulAxis( TimeserieConstants.TYPE_RUNOFF, false ) } );
+    super( new IAxis[] { TimeserieUtils.createDefaulAxis( ITimeserieConstants.TYPE_WATERLEVEL, true ), TimeserieUtils.createDefaulAxis( ITimeserieConstants.TYPE_RUNOFF, false ) } );
 
     m_pairs = pairs;
     m_W = new Double[pairs.length];

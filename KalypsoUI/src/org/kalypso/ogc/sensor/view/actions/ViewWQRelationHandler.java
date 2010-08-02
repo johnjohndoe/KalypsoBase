@@ -52,7 +52,7 @@ import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbenchPart;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
+import org.kalypso.ogc.sensor.metadata.ITimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.wq.WQException;
 import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTableFactory;
 import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTableSet;
@@ -80,7 +80,7 @@ public class ViewWQRelationHandler extends AbstractHandler
     if( obs == null )
       return Status.OK_STATUS;
 
-    final String propTable = obs.getMetadataList().getProperty( TimeserieConstants.MD_WQTABLE );
+    final String propTable = obs.getMetadataList().getProperty( ITimeserieConstants.MD_WQTABLE );
     if( propTable == null )
       return Status.OK_STATUS;
 

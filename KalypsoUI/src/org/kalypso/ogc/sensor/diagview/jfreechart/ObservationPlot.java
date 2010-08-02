@@ -87,8 +87,8 @@ import org.kalypso.ogc.sensor.diagview.DiagView;
 import org.kalypso.ogc.sensor.diagview.DiagViewCurve;
 import org.kalypso.ogc.sensor.diagview.DiagViewCurve.AlarmLevel;
 import org.kalypso.ogc.sensor.diagview.DiagramAxis;
+import org.kalypso.ogc.sensor.metadata.ITimeserieConstants;
 import org.kalypso.ogc.sensor.template.ObsViewItem;
-import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 
 /**
@@ -369,7 +369,7 @@ public class ObservationPlot extends XYPlot
   {
     final IObservation obs = curve.getObservation();
 
-    if( curve.getView().isFeatureEnabled( TimeserieConstants.FEATURE_FORECAST ) )
+    if( curve.getView().isFeatureEnabled( ITimeserieConstants.FEATURE_FORECAST ) )
     {
       // add a marker if the obs is a forecast
       final DateRange fr = TimeserieUtils.isTargetForecast( obs );
@@ -379,7 +379,7 @@ public class ObservationPlot extends XYPlot
         if( !m_markers.containsKey( begin ) )
         {
           final long end = fr.getTo().getTime();
-          final Marker marker = createMarker( begin.doubleValue(), end, "Vorhersage", TimeserieUtils.getColorForMD( TimeserieConstants.MD_VORHERSAGE ) );
+          final Marker marker = createMarker( begin.doubleValue(), end, "Vorhersage", TimeserieUtils.getColorForMD( ITimeserieConstants.MD_VORHERSAGE ) );
 
           addDomainMarker( marker, Layer.BACKGROUND );
 
@@ -615,10 +615,10 @@ public class ObservationPlot extends XYPlot
   private XYItemRenderer getRenderer( final String axisType )
   {
     // TODO: also overwrite bar renderer in order to hide legend
-    if( axisType.equals( TimeserieConstants.TYPE_RAINFALL ) )
+    if( axisType.equals( ITimeserieConstants.TYPE_RAINFALL ) )
       return new XYBarRenderer();
 
-    if( axisType.equals( TimeserieConstants.TYPE_POLDER_CONTROL ) )
+    if( axisType.equals( ITimeserieConstants.TYPE_POLDER_CONTROL ) )
       return new XYBarRenderer();
 
     return new XYCurveRenderer( StandardXYItemRenderer.LINES );

@@ -48,7 +48,7 @@ import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.contribs.java.xml.XMLUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.sensor.DateRange;
-import org.kalypso.ogc.sensor.timeseries.ICopyObservationMetaDataConstants;
+import org.kalypso.ogc.sensor.metadata.ICopyObservationMetaDataConstants;
 import org.kalypso.simulation.core.ant.copyobservation.source.ObservationSource;
 
 /**

@@ -48,5 +48,5 @@ package org.kalypso.repository;
  */
 public interface IRepositoryListener
 {
-  public void onRepositoryStructureChanged();
+  void onRepositoryStructureChanged( );
 }

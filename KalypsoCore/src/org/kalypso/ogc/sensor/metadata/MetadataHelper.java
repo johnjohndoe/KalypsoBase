@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.sensor.timeseries;
+package org.kalypso.ogc.sensor.metadata;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -49,12 +49,11 @@ import java.util.TimeZone;
 import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.sensor.DateRange;
-import org.kalypso.ogc.sensor.MetadataList;
 
 /**
  * @author Dirk Kuch
  */
-public class MetadataHelper implements IRepositoryConstants, ICopyObservationMetaDataConstants
+public class MetadataHelper implements ITimeserieConstants, ICopyObservationMetaDataConstants
 {
   private static SimpleDateFormat SDF = new SimpleDateFormat( "dd.MM.yyyy HH:mm:ss" );
 
@@ -130,12 +129,12 @@ public class MetadataHelper implements IRepositoryConstants, ICopyObservationMet
 
   public static String getWqTable( final MetadataList mdl )
   {
-    return mdl.getProperty( TimeserieConstants.MD_WQTABLE );
+    return mdl.getProperty( ITimeserieConstants.MD_WQTABLE );
   }
 
   public static void setWqTable( final MetadataList mdl, final String table )
   {
-    mdl.setProperty( TimeserieConstants.MD_WQTABLE, table );
+    mdl.setProperty( ITimeserieConstants.MD_WQTABLE, table );
   }
 
 }

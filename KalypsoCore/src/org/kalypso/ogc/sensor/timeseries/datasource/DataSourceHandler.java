@@ -44,8 +44,8 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.kalypso.ogc.sensor.MetadataList;
-import org.kalypso.ogc.sensor.timeseries.MetadataHelper;
+import org.kalypso.ogc.sensor.metadata.MetadataHelper;
+import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.repository.utils.RepositoryItemUtils;
 

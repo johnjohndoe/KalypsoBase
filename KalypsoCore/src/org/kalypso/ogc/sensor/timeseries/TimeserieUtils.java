@@ -76,11 +76,12 @@ import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.MetadataList;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
+import org.kalypso.ogc.sensor.metadata.MetadataList;
+import org.kalypso.ogc.sensor.metadata.ITimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.wq.IWQConverter;
 import org.kalypso.ogc.sensor.timeseries.wq.WQException;
 import org.kalypso.ogc.sensor.timeseries.wq.WQFactory;
@@ -91,7 +92,7 @@ import org.kalypsodeegree.KalypsoDeegreePlugin;
  * 
  * @author schlienger
  */
-public final class TimeserieUtils implements TimeserieConstants
+public final class TimeserieUtils implements ITimeserieConstants
 {
   public static final String[] TYPES_ALL;
 
@@ -282,13 +283,13 @@ public final class TimeserieUtils implements TimeserieConstants
     if( from != null )
     {
       final String fromStr = DateUtilities.printDateTime( from, timeZone );
-      obs.getMetadataList().setProperty( TimeserieConstants.MD_VORHERSAGE_START, fromStr ); //$NON-NLS-1$
+      obs.getMetadataList().setProperty( ITimeserieConstants.MD_VORHERSAGE_START, fromStr ); //$NON-NLS-1$
     }
 
     if( to != null )
     {
       final String toStr = DateUtilities.printDateTime( to, timeZone );
-      obs.getMetadataList().setProperty( TimeserieConstants.MD_VORHERSAGE_ENDE, toStr ); //$NON-NLS-1$
+      obs.getMetadataList().setProperty( ITimeserieConstants.MD_VORHERSAGE_ENDE, toStr ); //$NON-NLS-1$
     }
   }
 
@@ -314,13 +315,13 @@ public final class TimeserieUtils implements TimeserieConstants
     if( from != null )
     {
       final String fromStr = DateUtilities.printDateTime( from, timeZone );
-      obs.getMetadataList().setProperty( TimeserieConstants.MD_DATE_BEGIN, fromStr ); //$NON-NLS-1$
+      obs.getMetadataList().setProperty( ITimeserieConstants.MD_DATE_BEGIN, fromStr ); //$NON-NLS-1$
     }
 
     if( to != null )
     {
       final String toStr = DateUtilities.printDateTime( to, timeZone );
-      obs.getMetadataList().setProperty( TimeserieConstants.MD_DATE_END, toStr ); //$NON-NLS-1$
+      obs.getMetadataList().setProperty( ITimeserieConstants.MD_DATE_END, toStr ); //$NON-NLS-1$
     }
   }
 
@@ -340,8 +341,8 @@ public final class TimeserieUtils implements TimeserieConstants
 
     final MetadataList mdl = obs.getMetadataList();
 
-    final String forecastFrom = mdl.getProperty( TimeserieConstants.MD_VORHERSAGE_START );
-    final String forecastTo = mdl.getProperty( TimeserieConstants.MD_VORHERSAGE_ENDE );
+    final String forecastFrom = mdl.getProperty( ITimeserieConstants.MD_VORHERSAGE_START );
+    final String forecastTo = mdl.getProperty( ITimeserieConstants.MD_VORHERSAGE_ENDE );
     if( forecastFrom != null || forecastTo != null )
     {
       // new version: if one of the two is set, we assume that the zml is in new format
@@ -351,7 +352,7 @@ public final class TimeserieUtils implements TimeserieConstants
     }
 
     // Backwards compability: still try to parse old 'Vorhersage' metadata
-    final String range = mdl.getProperty( TimeserieConstants.MD_VORHERSAGE );
+    final String range = mdl.getProperty( ITimeserieConstants.MD_VORHERSAGE );
     if( range != null )
     {
       final String[] splits = range.split( ";" ); //$NON-NLS-1$
@@ -628,7 +629,7 @@ public final class TimeserieUtils implements TimeserieConstants
   public static IObservation createTestTimeserie( final String[] axisTypes, final int amountRows, final boolean allowNegativeValues ) throws SensorException
   {
     final IAxis[] axes = new IAxis[axisTypes.length + 1];
-    axes[0] = TimeserieUtils.createDefaulAxis( TimeserieConstants.TYPE_DATE, true );
+    axes[0] = TimeserieUtils.createDefaulAxis( ITimeserieConstants.TYPE_DATE, true );
     for( int i = 0; i < axisTypes.length; i++ )
       axes[i + 1] = TimeserieUtils.createDefaulAxis( axisTypes[i] );
 
@@ -682,12 +683,12 @@ public final class TimeserieUtils implements TimeserieConstants
    */
   public static Double convertAlarmLevel( final IObservation obs, final String axisType, final Double alarmLevel, final Date date ) throws SensorException, WQException
   {
-    if( axisType.equals( TimeserieConstants.TYPE_WATERLEVEL ) )
+    if( axisType.equals( ITimeserieConstants.TYPE_WATERLEVEL ) )
       return alarmLevel;
 
     final IWQConverter converter = WQFactory.createWQConverter( obs );
 
-    if( axisType.equals( TimeserieConstants.TYPE_RUNOFF ) || axisType.equals( TimeserieConstants.TYPE_VOLUME ) )
+    if( axisType.equals( ITimeserieConstants.TYPE_RUNOFF ) || axisType.equals( ITimeserieConstants.TYPE_VOLUME ) )
       return new Double( converter.computeQ( date, alarmLevel.doubleValue() ) );
 
     throw new WQException( Messages.getString( "org.kalypso.ogc.sensor.timeseries.TimeserieUtils.22" ) + axisType + Messages.getString( "org.kalypso.ogc.sensor.timeseries.TimeserieUtils.23" ) ); //$NON-NLS-1$ //$NON-NLS-2$

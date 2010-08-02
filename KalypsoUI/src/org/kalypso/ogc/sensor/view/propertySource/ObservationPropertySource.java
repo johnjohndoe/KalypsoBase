@@ -44,7 +44,7 @@ import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ui.views.properties.TextPropertyDescriptor;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.MetadataList;
+import org.kalypso.ogc.sensor.metadata.MetadataList;
 
 /**
  * PropertySource for the Metadata of an IObservation.
