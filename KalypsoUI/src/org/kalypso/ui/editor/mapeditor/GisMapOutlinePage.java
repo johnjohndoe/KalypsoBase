@@ -168,8 +168,9 @@ public class GisMapOutlinePage extends Page implements IContentOutlinePage, IPag
 
     m_popupMgr = new MenuManager( "#MapOutlineContextMenu" ); //$NON-NLS-1$
 
-    final Menu menu = m_popupMgr.createContextMenu( m_outlineViewer.getControl() );
-    m_outlineViewer.getControl().setMenu( menu );
+    final Control outlineControl = m_outlineViewer.getControl();
+    final Menu menu = m_popupMgr.createContextMenu( outlineControl );
+    outlineControl.setMenu( menu );
 
     // Refresh updateable element later, else they won't find this page
     final UIJob job = new UIJob( "Update outline action bars" ) //$NON-NLS-1$
@@ -177,8 +178,12 @@ public class GisMapOutlinePage extends Page implements IContentOutlinePage, IPag
       @Override
       public IStatus runInUIThread( final IProgressMonitor monitor )
       {
-        populateActionBars();
-        setCompact( true );
+        if( !outlineControl.isDisposed() )
+        {
+          populateActionBars();
+          setCompact( true );
+        }
+
         return Status.OK_STATUS;
       }
     };
@@ -385,7 +390,8 @@ public class GisMapOutlinePage extends Page implements IContentOutlinePage, IPag
 
   public void setCompact( final boolean compact )
   {
-    m_outlineViewer.setCompact( compact );
+    if( m_outlineViewer != null )
+      m_outlineViewer.setCompact( compact );
 
     final IPageSite site = getSite();
     if( site == null )
