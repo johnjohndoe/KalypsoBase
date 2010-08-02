@@ -94,9 +94,9 @@ import org.kalypso.ogc.sensor.filter.FilterFactory;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
-import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.metadata.IObservationConstants;
 import org.kalypso.ogc.sensor.metadata.ITimeserieConstants;
+import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.proxy.AutoProxyFactory;
 import org.kalypso.ogc.sensor.proxy.RequestObservationProxy;
 import org.kalypso.ogc.sensor.request.IRequest;
@@ -281,7 +281,7 @@ public final class ZmlFactory
       // url is given as an argument here (and not tmpUrl) in order not to
       // loose the query part we might have removed because of Eclipse's
       // url handling.
-      return parseXML( new InputSource( inputStream ), url, href );
+      return parseXML( new InputSource( inputStream ), url );
     }
     catch( final IOException e )
     {
@@ -340,13 +340,13 @@ public final class ZmlFactory
    * @param context
    *          [optional] the context of the source in order to resolve relative url
    */
-  public static IObservation parseXML( final InputSource source, final URL context, final String href ) throws SensorException
+  public static IObservation parseXML( final InputSource source, final URL context ) throws SensorException
   {
     try
     {
       final Unmarshaller u = JC.createUnmarshaller();
       final Observation obs = (Observation) u.unmarshal( source );
-      return binding2Obs( obs, context, href );
+      return binding2Obs( obs, context );
     }
     catch( final JAXBException e )
     {
@@ -354,7 +354,7 @@ public final class ZmlFactory
     }
   }
 
-  private static IObservation binding2Obs( final Observation obs, final URL context, final String href ) throws SensorException
+  private static IObservation binding2Obs( final Observation obs, final URL context ) throws SensorException
   {
     // metadata
     final MetadataList metadata = new MetadataList();
@@ -432,8 +432,7 @@ public final class ZmlFactory
     final String contextHref = context != null ? context.toExternalForm() : ""; //$NON-NLS-1$
     final SimpleObservation zmlObs = new SimpleObservation( contextHref, obs.getName(), metadata, model );
 
-    final String contextStr = context != null ? context.toExternalForm() : ""; //$NON-NLS-1$
-    return decorateObservation( zmlObs, contextStr, context );
+    return decorateObservation( zmlObs, contextHref, context );
   }
 
   /**

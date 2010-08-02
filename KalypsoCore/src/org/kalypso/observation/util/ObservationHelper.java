@@ -124,13 +124,13 @@ public final class ObservationHelper
     return new SimpleObservation( href, name, metadataList, model );
   }
 
-  public static IObservation parseFromByteArray( final byte[] buffer, final String repositoryItemId ) throws SensorException
+  public static IObservation parseFromByteArray( final byte[] buffer ) throws SensorException
   {
     final ByteArrayInputStream stream = new ByteArrayInputStream( buffer );
     try
     {
       final InputSource source = new InputSource( stream );
-      return ZmlFactory.parseXML( source, null, repositoryItemId );
+      return ZmlFactory.parseXML( source, null );
     }
     finally
     {
@@ -138,9 +138,9 @@ public final class ObservationHelper
     }
   }
 
-  public static IObservation clone( final IObservation observation, final String repositoryItemId ) throws SensorException
+  public static IObservation clone( final IObservation observation ) throws SensorException
   {
     final byte[] byteArray = ObservationHelper.flushToByteArray( observation );
-    return ObservationHelper.parseFromByteArray( byteArray, repositoryItemId );
+    return ObservationHelper.parseFromByteArray( byteArray );
   }
 }
