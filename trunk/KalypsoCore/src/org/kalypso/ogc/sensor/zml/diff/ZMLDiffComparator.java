@@ -66,8 +66,8 @@ public class ZMLDiffComparator implements IDiffComparator
     boolean result = false;
     final InputStream i1 = (InputStream) content;
     final InputStream i2 = (InputStream) content2;
-    final IObservation obs1 = ZmlFactory.parseXML( new InputSource( i1 ), null, "1" ); //$NON-NLS-1$
-    final IObservation obs2 = ZmlFactory.parseXML( new InputSource( i2 ), null, "2" ); //$NON-NLS-1$
+    final IObservation obs1 = ZmlFactory.parseXML( new InputSource( i1 ), null ); //$NON-NLS-1$
+    final IObservation obs2 = ZmlFactory.parseXML( new InputSource( i2 ), null ); //$NON-NLS-1$
     // result |= diffMetadata( logger, obs1.getMetadataList(), obs2.getMetadataList() );
     // result |= diffAxis( logger, obs1.getAxisList(), obs2.getAxisList() );
     logger.block();

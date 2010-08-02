@@ -117,7 +117,7 @@ public class ServiceRepositoryObservation implements IObservation
       final DataBean db = m_srv.readData( href );
 
       ins = new BufferedInputStream( db.getDataHandler().getInputStream() );
-      final IObservation obs = ZmlFactory.parseXML( new InputSource( ins ), null, null ); //$NON-NLS-1$
+      final IObservation obs = ZmlFactory.parseXML( new InputSource( ins ), null ); //$NON-NLS-1$
       ins.close();
 
       m_srv.clearTempData( db.getId() );

@@ -282,7 +282,7 @@ public class ObservationServiceFassade implements IObservationService, IDisposab
         throw e;
       }
 
-      final IObservation zml = ZmlFactory.parseXML( new InputSource( odb.getInputStream() ), null, obs.getHref() );
+      final IObservation zml = ZmlFactory.parseXML( new InputSource( odb.getInputStream() ), null );
 
       synchronized( obs )
       {

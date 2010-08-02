@@ -78,7 +78,7 @@ public class ZmlInlineTypeHandler extends XsdBaseTypeHandler<IObservation>
     final StringReader reader = new StringReader( zmlStr.trim() );
     try
     {
-      final IObservation obs = ZmlFactory.parseXML( new InputSource( reader ), null, "null-id" ); //$NON-NLS-1$
+      final IObservation obs = ZmlFactory.parseXML( new InputSource( reader ), null ); //$NON-NLS-1$
       reader.close();
       return obs;
     }

@@ -64,14 +64,14 @@ public class WQObservationFilterTest extends TestCase
    * 
    * @throws SensorException
    */
-  public void testGetValues() throws SensorException
+  public void testGetValues( ) throws SensorException
   {
     InputStream ins = null;
     try
     {
       ins = WQObservationFilterTest.class.getResourceAsStream( "wq-test.zml" ); //$NON-NLS-1$
 
-      final IObservation obs = ZmlFactory.parseXML( new InputSource( ins ), null, null ); //$NON-NLS-1$
+      final IObservation obs = ZmlFactory.parseXML( new InputSource( ins ), null ); //$NON-NLS-1$
 
       final ITuppleModel wqValues = obs.getValues( null );
 
@@ -90,14 +90,14 @@ public class WQObservationFilterTest extends TestCase
    * 
    * @throws SensorException
    */
-  public void testSchirgiswalde() throws SensorException
+  public void testSchirgiswalde( ) throws SensorException
   {
     InputStream ins = null;
     try
     {
       ins = WQObservationFilterTest.class.getResourceAsStream( "wq-test2.zml" ); //$NON-NLS-1$
 
-      final IObservation obs = ZmlFactory.parseXML( new InputSource( ins ), null, null ); //$NON-NLS-1$
+      final IObservation obs = ZmlFactory.parseXML( new InputSource( ins ), null ); //$NON-NLS-1$
 
       final ITuppleModel values = obs.getValues( null );
 
@@ -111,14 +111,14 @@ public class WQObservationFilterTest extends TestCase
     }
   }
 
-  public void testObsWithoutWQParam() throws SensorException
+  public void testObsWithoutWQParam( ) throws SensorException
   {
     InputStream ins = null;
     try
     {
       ins = WQObservationFilterTest.class.getResourceAsStream( "wq-test3.zml" ); //$NON-NLS-1$
 
-      final IObservation obs = ZmlFactory.parseXML( new InputSource( ins ), null, null ); //$NON-NLS-1$
+      final IObservation obs = ZmlFactory.parseXML( new InputSource( ins ), null ); //$NON-NLS-1$
 
       final ITuppleModel values = obs.getValues( null );
 
@@ -132,14 +132,14 @@ public class WQObservationFilterTest extends TestCase
     }
   }
 
-  public void testWQTable() throws SensorException
+  public void testWQTable( ) throws SensorException
   {
     InputStream ins = null;
     try
     {
       ins = WQObservationFilterTest.class.getResourceAsStream( "wq-test4.zml" ); //$NON-NLS-1$
 
-      final IObservation obs = ZmlFactory.parseXML( new InputSource( ins ), null, null ); //$NON-NLS-1$
+      final IObservation obs = ZmlFactory.parseXML( new InputSource( ins ), null ); //$NON-NLS-1$
 
       final ITuppleModel values = obs.getValues( null );
 

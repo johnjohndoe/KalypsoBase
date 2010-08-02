@@ -204,7 +204,7 @@ public class ZmlTest extends TestCase
     final IObservation obs = ZmlFactory.parseXML( zmlURL, "beispiel-metadata.zml" ); //$NON-NLS-1$
     final String xmlStr = ZmlFactory.writeToString( obs, null );
 
-    final IObservation obs2 = ZmlFactory.parseXML( new InputSource( new StringReader( xmlStr ) ), null, "fake-id" ); //$NON-NLS-1$
+    final IObservation obs2 = ZmlFactory.parseXML( new InputSource( new StringReader( xmlStr ) ), null ); //$NON-NLS-1$
     ZmlFactory.writeToStream( obs2, System.out, null );
   }
 }

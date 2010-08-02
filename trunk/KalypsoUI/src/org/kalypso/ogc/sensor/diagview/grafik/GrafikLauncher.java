@@ -91,8 +91,8 @@ import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.DiagView;
 import org.kalypso.ogc.sensor.diagview.DiagViewUtils;
-import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.metadata.ITimeserieConstants;
+import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.template.ObsView;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
@@ -406,7 +406,7 @@ public class GrafikLauncher
       try
       {
         ins = zmlFile.getContents();
-        obs = ZmlFactory.parseXML( new InputSource( ins ), context, zmlFile.getLocationURI().toString() );
+        obs = ZmlFactory.parseXML( new InputSource( ins ), context );
         ins.close();
 
         values = obs.getValues( null );
