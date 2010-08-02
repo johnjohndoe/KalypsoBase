@@ -45,12 +45,12 @@ import java.net.URL;
 import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.property.IPropertyMarshallingTypeHandler;
+import org.kalypso.gmlschema.types.IGmlContentHandler;
 import org.kalypso.gmlschema.types.IValueHandler;
 import org.kalypso.gmlschema.types.UnmarshallResultEater;
 import org.kalypsodeegree_impl.io.sax.parser.IPointHandler;
 import org.kalypsodeegree_impl.io.sax.parser.PointMembersContentHandler;
 import org.kalypsodeegree_impl.tools.GMLConstants;
-import org.xml.sax.ContentHandler;
 import org.xml.sax.XMLReader;
 
 /**
@@ -62,13 +62,13 @@ import org.xml.sax.XMLReader;
 public class PointMembersHandler implements IPropertyMarshallingTypeHandler
 {
   private static QName QNAME_TYPE = GMLConstants.QN_POINT_MEMBERS;
-  
+
   /**
    * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler2#createContentHandler(org.xml.sax.XMLReader, org.xml.sax.ContentHandler, org.kalypso.gmlschema.types.UnmarshallResultEater, java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
    * 
    */
   @Override
-  public ContentHandler createContentHandler( XMLReader xmlReader, ContentHandler parentContentHandler, UnmarshallResultEater resultEater )
+  public IGmlContentHandler createContentHandler( final XMLReader reader, final IGmlContentHandler parentContentHandler, final UnmarshallResultEater resultEater )
   {
     throw new UnsupportedOperationException();
   }
@@ -77,15 +77,15 @@ public class PointMembersHandler implements IPropertyMarshallingTypeHandler
    * @see org.kalypso.gmlschema.property.IPropertyMarshallingTypeHandler#createContentHandler(org.xml.sax.XMLReader, org.xml.sax.ContentHandler, org.kalypso.gmlschema.types.IPropertyValueHandler, java.lang.String)
    */
   @Override
-  public ContentHandler createContentHandler( XMLReader xmlReader, ContentHandler parentContentHandler, IValueHandler handler, String defaultSrs )
+  public IGmlContentHandler createContentHandler( final XMLReader reader, final IGmlContentHandler parentContentHandler, final IValueHandler handler, final String defaultSrs )
   { 
-    return new PointMembersContentHandler( parentContentHandler, (IPointHandler) handler, defaultSrs, xmlReader );
+    return new PointMembersContentHandler( reader, parentContentHandler, (IPointHandler) handler, defaultSrs );
   }
   /**
    * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#cloneObject(java.lang.Object, java.lang.String)
    */
   @Override
-  public Object cloneObject( Object objectToClone, String gmlVersion ) throws CloneNotSupportedException
+  public Object cloneObject( final Object objectToClone, final String gmlVersion ) throws CloneNotSupportedException
   {
     throw new CloneNotSupportedException();
   }
@@ -103,7 +103,7 @@ public class PointMembersHandler implements IPropertyMarshallingTypeHandler
    * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#marshal(java.lang.Object, org.xml.sax.XMLReader, java.net.URL, java.lang.String)
    */
   @Override
-  public void marshal( Object value, XMLReader xmlReader, URL context, String gmlVersion )
+  public void marshal( final Object value, final XMLReader reader, final URL context, final String gmlVersion )
   {
     throw new UnsupportedOperationException();
   }
@@ -112,7 +112,7 @@ public class PointMembersHandler implements IPropertyMarshallingTypeHandler
    * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#parseType(java.lang.String)
    */
   @Override
-  public Object parseType( String text )
+  public Object parseType( final String text )
   {
     return null;
   }
@@ -121,7 +121,7 @@ public class PointMembersHandler implements IPropertyMarshallingTypeHandler
    * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#unmarshal(org.xml.sax.XMLReader, java.net.URL, org.kalypso.gmlschema.types.UnmarshallResultEater, java.lang.String)
    */
   @Override
-  public void unmarshal( XMLReader xmlReader, URL context, UnmarshallResultEater marshalResultEater, String gmlVersion )
+  public void unmarshal( final XMLReader reader, final URL context, final UnmarshallResultEater marshalResultEater, final String gmlVersion )
   {
     throw new UnsupportedOperationException();    
   }

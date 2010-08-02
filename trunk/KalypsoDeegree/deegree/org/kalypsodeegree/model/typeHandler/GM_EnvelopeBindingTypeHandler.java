@@ -98,7 +98,7 @@ public class GM_EnvelopeBindingTypeHandler implements IMarshallingTypeHandler
    *      org.kalypso.contribs.java.net.IUrlResolver, org.kalypso.gmlschema.types.MarshalResultEater)
    */
   @Override
-  public void unmarshal( final XMLReader xmlReader, final URL context, final UnmarshallResultEater marshalResultEater, final String gmlVersion ) throws TypeRegistryException
+  public void unmarshal( final XMLReader reader, final URL context, final UnmarshallResultEater marshalResultEater, final String gmlVersion ) throws TypeRegistryException
   {
     final UnmarshallResultEater eater = new UnmarshallResultEater()
     {
@@ -142,7 +142,7 @@ public class GM_EnvelopeBindingTypeHandler implements IMarshallingTypeHandler
       };
       final BindingUnmarshalingContentHandler tmpContentHandler = new BindingUnmarshalingContentHandler( unmarshallerHandler, provider, eater, gmlVersion );
       tmpContentHandler.startDocument();
-      xmlReader.setContentHandler( tmpContentHandler );
+      reader.setContentHandler( tmpContentHandler );
     }
     catch( final Exception e )
     {

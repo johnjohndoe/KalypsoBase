@@ -71,7 +71,7 @@ public class GenericGM_ObjectBindingTypeHandler extends GenericBindingTypeHandle
    *      org.kalypso.contribs.java.net.IUrlResolver, org.kalypso.gmlschema.types.MarshalResultEater)
    */
   @Override
-  public void unmarshal( final XMLReader xmlReader, final URL context, final UnmarshallResultEater marshalResultEater, final String gmlVersion ) throws TypeRegistryException
+  public void unmarshal( final XMLReader reader, final URL context, final UnmarshallResultEater marshalResultEater, final String gmlVersion ) throws TypeRegistryException
   {
     final UnmarshallResultEater eater = new UnmarshallResultEater()
     {
@@ -112,7 +112,7 @@ public class GenericGM_ObjectBindingTypeHandler extends GenericBindingTypeHandle
       }
     };
 
-    super.unmarshal( xmlReader, context, eater, gmlVersion );
+    super.unmarshal( reader, context, eater, gmlVersion );
   }
 
   /**

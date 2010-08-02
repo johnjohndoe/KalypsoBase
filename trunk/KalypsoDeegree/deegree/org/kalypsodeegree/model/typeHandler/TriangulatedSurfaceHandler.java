@@ -41,11 +41,11 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler2;
+import org.kalypso.gmlschema.types.IGmlContentHandler;
 import org.kalypso.gmlschema.types.UnmarshallResultEater;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 import org.kalypsodeegree_impl.io.sax.marshaller.TriangulatedSurfaceMarshaller;
 import org.kalypsodeegree_impl.io.sax.parser.TriangulatedSurfaceContentHandler;
-import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
@@ -100,7 +100,7 @@ public class TriangulatedSurfaceHandler implements IMarshallingTypeHandler2
    *      org.kalypso.gmlschema.types.UnMarshallResultEater, java.lang.String)
    */
   @Override
-  public void unmarshal( final XMLReader xmlReader, final URL context, final UnmarshallResultEater marshalResultEater, final String gmlVersion )
+  public void unmarshal( final XMLReader reader, final URL context, final UnmarshallResultEater marshalResultEater, final String gmlVersion )
   {
     throw new UnsupportedOperationException();
   }
@@ -138,8 +138,8 @@ public class TriangulatedSurfaceHandler implements IMarshallingTypeHandler2
    *      org.xml.sax.Attributes)
    */
   @Override
-  public ContentHandler createContentHandler( final XMLReader xmlReader, final ContentHandler parentContentHandler, final UnmarshallResultEater resultEater )
+  public IGmlContentHandler createContentHandler( final XMLReader reader, final IGmlContentHandler parentContentHandler, final UnmarshallResultEater resultEater )
   {
-    return new TriangulatedSurfaceContentHandler(resultEater,  parentContentHandler, xmlReader );
+    return new TriangulatedSurfaceContentHandler( reader, resultEater, parentContentHandler );
   }
 }
