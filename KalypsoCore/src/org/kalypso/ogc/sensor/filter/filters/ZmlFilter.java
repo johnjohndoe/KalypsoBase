@@ -56,7 +56,7 @@ import org.kalypso.repository.RepositoryException;
 
 /**
  * ZmlFilter
- *
+ * 
  * @author schlienger
  */
 public final class ZmlFilter extends AbstractObservationFilter
@@ -104,7 +104,7 @@ public final class ZmlFilter extends AbstractObservationFilter
 
             if( item != null )
             {
-              setObservation( (IObservation)item.getAdapter( IObservation.class ) );
+              setObservation( (IObservation) item.getAdapter( IObservation.class ) );
 
               return;
             }
@@ -120,7 +120,7 @@ public final class ZmlFilter extends AbstractObservationFilter
       try
       {
         final URL sourceUrl = UrlResolverSingleton.resolveUrl( context, href );
-        final IObservation observation = ZmlFactory.parseXML( sourceUrl, href );
+        final IObservation observation = ZmlFactory.parseXML( sourceUrl );
 
         // override observation from abstract filter (super type)
         setObservation( observation );
@@ -137,7 +137,7 @@ public final class ZmlFilter extends AbstractObservationFilter
    * convenience for the server-side of Kalypso.
    * <p>
    * If the zml if found in one of the repositories, then there's no need to use the ZmlFactory.
-   *
+   * 
    * @param repositories
    *          [nullable]
    */

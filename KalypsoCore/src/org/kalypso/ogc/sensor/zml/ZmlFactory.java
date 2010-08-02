@@ -229,7 +229,7 @@ public final class ZmlFactory
    * @throws SensorException
    *           in case of parsing or creation problem
    */
-  public static IObservation parseXML( final URL url, final String href ) throws SensorException
+  public static IObservation parseXML( final URL url ) throws SensorException
   {
     final IObservation observation = fetchObservationFromRegisteredRepository( url );
     if( observation != null )

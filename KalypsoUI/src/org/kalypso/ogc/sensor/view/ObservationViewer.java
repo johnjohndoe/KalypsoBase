@@ -247,7 +247,7 @@ public class ObservationViewer extends Composite
 
                 final String href = FileUtilities.getRelativePathTo( url1.toExternalForm(), url2.toExternalForm() );
                 if( href == null )
-                  m_txtHref.setText( ""); //$NON-NLS-1$
+                  m_txtHref.setText( "" ); //$NON-NLS-1$
                 else
                   m_txtHref.setText( href.substring( 1 ) );
                 // refresh...
@@ -438,7 +438,7 @@ public class ObservationViewer extends Composite
       {
         try
         {
-          obs = ZmlFactory.parseXML( url, href );
+          obs = ZmlFactory.parseXML( url );
         }
         catch( final SensorException e1 )
         {

@@ -67,8 +67,7 @@ import org.kalypso.ui.wizard.sensor.i18n.Messages;
 /**
  * @author doemming
  */
-public class ImportObservationAxisMappingWizardPage extends WizardPage implements FocusListener,
-    ISelectionChangedListener
+public class ImportObservationAxisMappingWizardPage extends WizardPage implements FocusListener, ISelectionChangedListener
 {
   private Composite m_topLevel;
 
@@ -82,7 +81,7 @@ public class ImportObservationAxisMappingWizardPage extends WizardPage implement
   {
     super( pageName );
     setTitle( pageName );
-    setDescription( Messages.getString("org.kalypso.ui.wizard.sensor.ImportObservationAxisMappingWizardPage.0") ); //$NON-NLS-1$
+    setDescription( Messages.getString( "org.kalypso.ui.wizard.sensor.ImportObservationAxisMappingWizardPage.0" ) ); //$NON-NLS-1$
   }
 
   /**
@@ -100,13 +99,13 @@ public class ImportObservationAxisMappingWizardPage extends WizardPage implement
     m_topLevel.setLayout( gridLayout );
 
     final Label labelSource = new Label( m_topLevel, SWT.NONE );
-    labelSource.setText( Messages.getString("org.kalypso.ui.wizard.sensor.ImportObservationAxisMappingWizardPage.1") ); //$NON-NLS-1$
+    labelSource.setText( Messages.getString( "org.kalypso.ui.wizard.sensor.ImportObservationAxisMappingWizardPage.1" ) ); //$NON-NLS-1$
     GridData data = new GridData();
     data.horizontalAlignment = GridData.CENTER;
     labelSource.setLayoutData( data );
 
     final Label labelTarget = new Label( m_topLevel, SWT.NONE );
-    labelTarget.setText( Messages.getString("org.kalypso.ui.wizard.sensor.ImportObservationAxisMappingWizardPage.2") ); //$NON-NLS-1$
+    labelTarget.setText( Messages.getString( "org.kalypso.ui.wizard.sensor.ImportObservationAxisMappingWizardPage.2" ) ); //$NON-NLS-1$
     data = new GridData();
     data.horizontalAlignment = GridData.CENTER;
     labelTarget.setLayoutData( data );
@@ -115,7 +114,7 @@ public class ImportObservationAxisMappingWizardPage extends WizardPage implement
     validate();
   }
 
-  public void validate()
+  public void validate( )
   {
     // page is always complete
     getWizard().getContainer().updateButtons();
@@ -128,7 +127,7 @@ public class ImportObservationAxisMappingWizardPage extends WizardPage implement
   @Override
   public void focusGained( final FocusEvent e )
   {
-  //
+    //
   }
 
   /**
@@ -137,7 +136,7 @@ public class ImportObservationAxisMappingWizardPage extends WizardPage implement
   @Override
   public void focusLost( final FocusEvent e )
   {
-  //
+    //
   }
 
   /**
@@ -147,9 +146,9 @@ public class ImportObservationAxisMappingWizardPage extends WizardPage implement
   public void selectionChanged( final SelectionChangedEvent event )
   {
     final ISelection eventSelection = event.getSelection();
-    if( !( eventSelection instanceof ObservationImportSelection ) )
+    if( !(eventSelection instanceof ObservationImportSelection) )
       return;
-    final ObservationImportSelection selection = (ObservationImportSelection)eventSelection;
+    final ObservationImportSelection selection = (ObservationImportSelection) eventSelection;
     final INativeObservationAdapter nativeAdapter = selection.getNativeAdapter();
     if( nativeAdapter != m_nativeAdapter )
       m_nativeAdapter = nativeAdapter;
@@ -166,8 +165,8 @@ public class ImportObservationAxisMappingWizardPage extends WizardPage implement
       }
       catch( final Exception e )
       {
-        MessageDialog.openInformation( getShell(), Messages.getString("org.kalypso.ui.wizard.sensor.ImportObservationAxisMappingWizardPage.3"), //$NON-NLS-1$
-            Messages.getString("org.kalypso.ui.wizard.sensor.ImportObservationAxisMappingWizardPage.4") ); //$NON-NLS-1$
+        MessageDialog.openInformation( getShell(), Messages.getString( "org.kalypso.ui.wizard.sensor.ImportObservationAxisMappingWizardPage.3" ), //$NON-NLS-1$
+        Messages.getString( "org.kalypso.ui.wizard.sensor.ImportObservationAxisMappingWizardPage.4" ) ); //$NON-NLS-1$
       }
     }
 
@@ -207,11 +206,10 @@ public class ImportObservationAxisMappingWizardPage extends WizardPage implement
 
   /**
    * @throws SensorException
-   *
    */
   public IObservation getTargetObservation( final URL url ) throws SensorException
   {
-    final IObservation observation = ZmlFactory.parseXML( url, "targetFile" ); //$NON-NLS-1$
+    final IObservation observation = ZmlFactory.parseXML( url ); //$NON-NLS-1$
     return observation;
   }
 
@@ -219,7 +217,7 @@ public class ImportObservationAxisMappingWizardPage extends WizardPage implement
   {
     final int maxLines = axisLeft.length > axisRight.length ? axisLeft.length : axisRight.length;
     // apply count of widgets
-    while( !( maxLines == m_widgetLines.size() ) )
+    while( !(maxLines == m_widgetLines.size()) )
     {
       if( maxLines > m_widgetLines.size() )
       {
@@ -268,7 +266,6 @@ public class ImportObservationAxisMappingWizardPage extends WizardPage implement
     private final AxisWidget m_right;
 
     /*
-     *
      * @author doemming
      */
     public WidgetLine( final Composite parent )
@@ -288,18 +285,18 @@ public class ImportObservationAxisMappingWizardPage extends WizardPage implement
       m_right.setLayoutData( data );
     }
 
-    public AxisWidget getLeft()
+    public AxisWidget getLeft( )
     {
       return m_left;
     }
 
-    public AxisWidget getRight()
+    public AxisWidget getRight( )
     {
       return m_right;
     }
   }
 
-  public IAxis[] getAxisMappingSrc()
+  public IAxis[] getAxisMappingSrc( )
   {
     final List<IAxis> result = new ArrayList<IAxis>();
     for( int i = 0; i < m_widgetLines.size(); i++ )
@@ -315,7 +312,7 @@ public class ImportObservationAxisMappingWizardPage extends WizardPage implement
     return result.toArray( new IAxis[result.size()] );
   }
 
-  public IAxis[] getAxisMappingTarget()
+  public IAxis[] getAxisMappingTarget( )
   {
     final List<IAxis> result = new ArrayList<IAxis>();
     for( int i = 0; i < m_widgetLines.size(); i++ )

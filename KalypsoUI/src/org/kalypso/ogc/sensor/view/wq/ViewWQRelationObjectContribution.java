@@ -103,7 +103,7 @@ public class ViewWQRelationObjectContribution implements IObjectActionDelegate
       try
       {
         final URL url = ResourceUtilities.createURL( file );
-        final IObservation obs = ZmlFactory.parseXML( url, "" ); //$NON-NLS-1$
+        final IObservation obs = ZmlFactory.parseXML( url ); //$NON-NLS-1$
         obsName = obs.getName();
         wqTabelle = obs.getMetadataList().getProperty( ITimeserieConstants.MD_WQTABLE );
         wqWechmann = obs.getMetadataList().getProperty( ITimeserieConstants.MD_WQWECHMANN );
@@ -119,14 +119,14 @@ public class ViewWQRelationObjectContribution implements IObjectActionDelegate
 
     if( wqTabelle == null || wqTabelle.isEmpty() )
     {
-      String msg = Messages.getString("org.kalypso.ogc.sensor.view.wq.ViewWQRelationObjectContribution.2"); //$NON-NLS-1$
+      String msg = Messages.getString( "org.kalypso.ogc.sensor.view.wq.ViewWQRelationObjectContribution.2" ); //$NON-NLS-1$
       if( wqWechmann != null )
-        msg += Messages.getString("org.kalypso.ogc.sensor.view.wq.ViewWQRelationObjectContribution.3"); //$NON-NLS-1$
-      
+        msg += Messages.getString( "org.kalypso.ogc.sensor.view.wq.ViewWQRelationObjectContribution.3" ); //$NON-NLS-1$
+
       MessageDialog.openWarning( shell, action.getText(), msg );
       return;
     }
-    
+
     if( wqTabelle != null )
     {
       try

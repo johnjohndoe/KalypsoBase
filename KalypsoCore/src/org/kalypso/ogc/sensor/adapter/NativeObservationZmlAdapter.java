@@ -75,12 +75,12 @@ public class NativeObservationZmlAdapter implements INativeObservationAdapter
   @Override
   public IObservation createObservationFromSource( final File source ) throws Exception
   {
-    final IObservation parseXML = ZmlFactory.parseXML( source.toURL(), "ID" ); //$NON-NLS-1$
+    final IObservation parseXML = ZmlFactory.parseXML( source.toURL() ); //$NON-NLS-1$
     return parseXML;
   }
 
   @Override
-  public IObservation createObservationFromSource( final File source, TimeZone timeZone, final boolean continueWithErrors ) throws Exception
+  public IObservation createObservationFromSource( final File source, final TimeZone timeZone, final boolean continueWithErrors ) throws Exception
   {
     return createObservationFromSource( source );
   }

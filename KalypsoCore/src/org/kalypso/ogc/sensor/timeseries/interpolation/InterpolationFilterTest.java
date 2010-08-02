@@ -80,7 +80,7 @@ public class InterpolationFilterTest extends TestCase
     super.setUp();
 
     final URL url = InterpolationFilterTest.class.getResource( "InterpolationFilterTest.zml" ); //$NON-NLS-1$
-    m_obs = ZmlFactory.parseXML( url, "" ); //$NON-NLS-1$
+    m_obs = ZmlFactory.parseXML( url ); //$NON-NLS-1$
     assertNotNull( m_obs );
 
     m_dateAxis = ObservationUtilities.findAxisByClass( m_obs.getAxisList(), Date.class );
@@ -132,5 +132,5 @@ public class InterpolationFilterTest extends TestCase
     assertEquals( to, m.getElement( m.getCount() - 1, m_dateAxis ) );
     assertEquals( lastValue.doubleValue(), ((Number) m.getElement( m.getCount() - 1, m_valueAxis )).doubleValue(), 0.001 );
   }
- 
+
 }

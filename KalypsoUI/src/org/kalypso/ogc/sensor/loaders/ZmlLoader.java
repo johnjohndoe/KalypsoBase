@@ -63,7 +63,7 @@ import org.kalypso.zml.Observation;
 
 /**
  * A specific loader for ZML-Files. Loads <code>ZmlObservation</code> objects.
- *
+ * 
  * @author schlienger
  */
 public class ZmlLoader extends AbstractLoader
@@ -86,12 +86,12 @@ public class ZmlLoader extends AbstractLoader
 
       monitor.beginTask( Messages.getString( "org.kalypso.ogc.sensor.loaders.ZmlLoader.0" ) + url, IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
 
-      return ZmlFactory.parseXML( url, url.getFile() );
+      return ZmlFactory.parseXML( url );
     }
     catch( final Exception e ) // generic exception caught for simplicity
     {
 // e.printStackTrace();
-      // TODO wenn resource geloescht wurde, wird hier ein fehler geworfen
+// TODO wenn resource geloescht wurde, wird hier ein fehler geworfen
       throw new LoaderException( e );
     }
     finally

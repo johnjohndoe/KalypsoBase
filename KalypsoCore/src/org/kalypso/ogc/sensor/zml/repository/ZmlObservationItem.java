@@ -112,7 +112,7 @@ public class ZmlObservationItem extends FileItem
       if( m_zml == null && getRep().getFilter().accept( getFile() ) )
       {
         final File f = getFile();
-        m_zml = ZmlFactory.parseXML( f.toURI().toURL(), f.getAbsolutePath() );
+        m_zml = ZmlFactory.parseXML( f.toURI().toURL() );
       }
 
       return m_zml;

@@ -157,7 +157,7 @@ public class MapZmlMeta2FeatureVisitor extends AbstractMonitoredFeatureVisitor i
     try
     {
       final URL url = UrlResolverSingleton.getDefault().resolveURL( m_context, href );
-      final IObservation observation = ZmlFactory.parseXML( url, href );
+      final IObservation observation = ZmlFactory.parseXML( url );
       for( final Mapping mapping : m_mappings )
       {
         applyMapping( mapping, observation, f );
