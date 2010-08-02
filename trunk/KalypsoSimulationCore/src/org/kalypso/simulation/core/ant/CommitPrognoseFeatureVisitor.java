@@ -65,8 +65,8 @@ import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
-import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.metadata.ITimeserieConstants;
+import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
@@ -168,7 +168,7 @@ public class CommitPrognoseFeatureVisitor extends AbstractMonitoredFeatureVisito
     final IUrlResolver resolver = UrlResolverSingleton.getDefault();
 
     final URL urlRS = resolver.resolveURL( m_context, filteredSourceHref );
-    final IObservation source = ZmlFactory.parseXML( urlRS, filteredSourceHref );
+    final IObservation source = ZmlFactory.parseXML( urlRS );
 
     try
     {
@@ -234,7 +234,7 @@ public class CommitPrognoseFeatureVisitor extends AbstractMonitoredFeatureVisito
     // leeres Request-Intervall, wir wollen eigentlich nur die Metadaten+Achsen
     final String destRef = ZmlURL.insertRequest( targetHref, new ObservationRequest( new Date(), new Date() ) );
     final URL urlPG = UrlResolverSingleton.resolveUrl( m_context, destRef );
-    return ZmlFactory.parseXML( urlPG, destRef );
+    return ZmlFactory.parseXML( urlPG );
   }
 
   private String createFilteredSourceHref( final String sourceHref )

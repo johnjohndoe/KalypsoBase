@@ -78,7 +78,7 @@ public class ZmlTest extends TestCase
 
       final URL zmlURL = getClass().getResource( obsID );
 
-      final IObservation obs = ZmlFactory.parseXML( zmlURL, obsID );
+      final IObservation obs = ZmlFactory.parseXML( zmlURL );
 
       _testGetName( obs );
       _testGetAxisList( obs );
@@ -201,7 +201,7 @@ public class ZmlTest extends TestCase
   {
     final URL zmlURL = getClass().getResource( "resources/beispiel-metadata.zml" ); //$NON-NLS-1$
 
-    final IObservation obs = ZmlFactory.parseXML( zmlURL, "beispiel-metadata.zml" ); //$NON-NLS-1$
+    final IObservation obs = ZmlFactory.parseXML( zmlURL ); //$NON-NLS-1$
     final String xmlStr = ZmlFactory.writeToString( obs, null );
 
     final IObservation obs2 = ZmlFactory.parseXML( new InputSource( new StringReader( xmlStr ) ), null ); //$NON-NLS-1$

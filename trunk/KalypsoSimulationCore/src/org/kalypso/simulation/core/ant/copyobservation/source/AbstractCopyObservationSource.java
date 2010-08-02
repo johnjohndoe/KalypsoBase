@@ -119,7 +119,7 @@ public abstract class AbstractCopyObservationSource implements ICopyObservationS
 
     try
     {
-      return ZmlFactory.parseXML( sourceURL, feature == null ? null : feature.getId() );
+      return ZmlFactory.parseXML( sourceURL );
     }
     catch( final SensorException e )
     {

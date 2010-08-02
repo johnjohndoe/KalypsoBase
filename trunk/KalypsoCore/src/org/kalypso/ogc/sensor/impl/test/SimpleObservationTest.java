@@ -63,37 +63,37 @@ public class SimpleObservationTest extends TestCase
    * @see junit.framework.TestCase#setUp()
    */
   @Override
-  protected void setUp() throws Exception
+  protected void setUp( ) throws Exception
   {
     m_obs = getTestObservation();
   }
-  
-  public void testSetValues() throws SensorException
+
+  public void testSetValues( ) throws SensorException
   {
-    final ITuppleModel values = m_obs.getValues(null);
-    
+    final ITuppleModel values = m_obs.getValues( null );
+
     final SimpleObservation observation = new SimpleObservation( values.getAxisList() );
     observation.setValues( values );
   }
-  
-  public static IObservation getTestObservation() throws SensorException
+
+  public static IObservation getTestObservation( ) throws SensorException
   {
-    return ZmlFactory.parseXML( SimpleObservationTest.class.getResource( "test.zml" ), "" ); //$NON-NLS-1$ //$NON-NLS-2$
+    return ZmlFactory.parseXML( SimpleObservationTest.class.getResource( "test.zml" ) ); //$NON-NLS-1$ //$NON-NLS-2$
   }
-  
-  public void testAxis()
+
+  public void testAxis( )
   {
     final IAxis[] axes = m_obs.getAxisList();
-    
+
     final SimpleAxis axis = new SimpleAxis( axes[0] );
-    
+
     assertTrue( axes[0].equals( axis ) );
     assertFalse( axes[1].equals( axis ) );
-    
-    IAxis saxes1 = KalypsoStatusUtils.createStatusAxisFor( axes[0], false );
-    IAxis saxes2 = KalypsoStatusUtils.createStatusAxisFor( axes[1], false );
-    IAxis saxis = KalypsoStatusUtils.createStatusAxisFor( axis, false );
-    
+
+    final IAxis saxes1 = KalypsoStatusUtils.createStatusAxisFor( axes[0], false );
+    final IAxis saxes2 = KalypsoStatusUtils.createStatusAxisFor( axes[1], false );
+    final IAxis saxis = KalypsoStatusUtils.createStatusAxisFor( axis, false );
+
     assertTrue( saxes1.equals( saxis ) );
 
     assertFalse( saxes1.equals( saxes2 ) );

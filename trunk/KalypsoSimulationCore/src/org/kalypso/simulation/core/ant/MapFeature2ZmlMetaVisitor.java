@@ -142,7 +142,7 @@ public class MapFeature2ZmlMetaVisitor implements FeatureVisitor
   {
     try
     {
-      return ZmlFactory.parseXML( observationLocation, null );
+      return ZmlFactory.parseXML( observationLocation );
     }
     catch( final SensorException e )
     {

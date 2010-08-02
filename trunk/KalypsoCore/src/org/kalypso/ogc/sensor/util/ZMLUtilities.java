@@ -58,7 +58,7 @@ public class ZMLUtilities
 
   public static double getMax( final URL url, final String axisType, final IRequest request ) throws SensorException
   {
-    final IObservation observation = ZmlFactory.parseXML( url, "id" ); //$NON-NLS-1$
+    final IObservation observation = ZmlFactory.parseXML( url ); //$NON-NLS-1$
     final ITuppleModel tuppelModel = observation.getValues( request );
     final IAxis[] axisList = tuppelModel.getAxisList();
     final IAxis axis = ObservationUtilities.findAxisByType( axisList, axisType );
@@ -67,7 +67,7 @@ public class ZMLUtilities
     for( int i = 0; i < max; i++ )
     {
       final Double value = (Double) tuppelModel.getElement( i, axis );
-      double d = value.doubleValue();
+      final double d = value.doubleValue();
       if( i == 0 || d > maxValue )
         maxValue = d;
     }
