@@ -45,12 +45,12 @@ import java.net.URL;
 import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler2;
+import org.kalypso.gmlschema.types.IGmlContentHandler;
 import org.kalypso.gmlschema.types.UnmarshallResultEater;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.io.sax.marshaller.PointMarshaller;
 import org.kalypsodeegree_impl.io.sax.parser.PointContentHandler;
 import org.kalypsodeegree_impl.tools.GMLConstants;
-import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
@@ -66,16 +66,16 @@ public class PointHandler implements IMarshallingTypeHandler2
    * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler2#createContentHandler(org.xml.sax.XMLReader, org.xml.sax.ContentHandler, org.kalypso.gmlschema.types.UnmarshallResultEater, java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
    */
   @Override
-  public ContentHandler createContentHandler( XMLReader xmlReader, ContentHandler parentContentHandler, UnmarshallResultEater resultEater )
+  public IGmlContentHandler createContentHandler( final XMLReader reader, final IGmlContentHandler parentContentHandler, final UnmarshallResultEater resultEater )
   { 
-    return new PointContentHandler( resultEater, parentContentHandler, xmlReader );
+    return new PointContentHandler( reader, resultEater, parentContentHandler );
   }
 
   /**
    * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#cloneObject(java.lang.Object, java.lang.String)
    */
   @Override
-  public Object cloneObject( Object objectToClone, String gmlVersion ) throws CloneNotSupportedException
+  public Object cloneObject( final Object objectToClone, final String gmlVersion ) throws CloneNotSupportedException
   {
     throw new CloneNotSupportedException();
   }
@@ -93,16 +93,16 @@ public class PointHandler implements IMarshallingTypeHandler2
    * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#marshal(java.lang.Object, org.xml.sax.XMLReader, java.net.URL, java.lang.String)
    */
   @Override
-  public void marshal( Object value, XMLReader xmlReader, URL context, String gmlVersion ) throws SAXException
+  public void marshal( final Object value, final XMLReader reader, final URL context, final String gmlVersion ) throws SAXException
   {
-    new PointMarshaller( xmlReader, ( GM_Point ) value ).marshall( );
+    new PointMarshaller( reader, (GM_Point) value ).marshall();
   }
 
   /**
    * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#parseType(java.lang.String)
    */
   @Override
-  public Object parseType( String text )
+  public Object parseType( final String text )
   {
     throw new UnsupportedOperationException();
   }
@@ -111,7 +111,7 @@ public class PointHandler implements IMarshallingTypeHandler2
    * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#unmarshal(org.xml.sax.XMLReader, java.net.URL, org.kalypso.gmlschema.types.UnmarshallResultEater, java.lang.String)
    */
   @Override
-  public void unmarshal( XMLReader xmlReader, URL context, UnmarshallResultEater marshalResultEater, String gmlVersion )
+  public void unmarshal( final XMLReader reader, final URL context, final UnmarshallResultEater marshalResultEater, final String gmlVersion )
   {
     throw new UnsupportedOperationException();    
   }

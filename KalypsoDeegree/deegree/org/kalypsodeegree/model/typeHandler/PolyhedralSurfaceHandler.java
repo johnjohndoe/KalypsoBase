@@ -41,12 +41,12 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler2;
+import org.kalypso.gmlschema.types.IGmlContentHandler;
 import org.kalypso.gmlschema.types.UnmarshallResultEater;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.io.sax.marshaller.PolyhedralSurfaceMarshaller;
 import org.kalypsodeegree_impl.io.sax.parser.PolyhedralSurfaceContentHandler;
-import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
@@ -102,7 +102,7 @@ public class PolyhedralSurfaceHandler implements IMarshallingTypeHandler2
    *      org.kalypso.gmlschema.types.UnMarshallResultEater, java.lang.String)
    */
   @Override
-  public void unmarshal( final XMLReader xmlReader, final URL context, final UnmarshallResultEater marshalResultEater, final String gmlVersion )
+  public void unmarshal( final XMLReader reader, final URL context, final UnmarshallResultEater marshalResultEater, final String gmlVersion )
   {
     throw new UnsupportedOperationException();
   }
@@ -140,8 +140,8 @@ public class PolyhedralSurfaceHandler implements IMarshallingTypeHandler2
    *      org.xml.sax.Attributes)
    */
   @Override
-  public ContentHandler createContentHandler( final XMLReader xmlReader, final ContentHandler parentContentHandler, final UnmarshallResultEater resultEater )
+  public IGmlContentHandler createContentHandler( final XMLReader reader, final IGmlContentHandler parentContentHandler, final UnmarshallResultEater resultEater )
   {
-    return new PolyhedralSurfaceContentHandler( resultEater, parentContentHandler, xmlReader );
+    return new PolyhedralSurfaceContentHandler( reader, resultEater, parentContentHandler );
   }
 }

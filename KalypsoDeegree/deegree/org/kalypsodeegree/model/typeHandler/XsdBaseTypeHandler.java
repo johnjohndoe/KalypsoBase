@@ -92,7 +92,7 @@ public abstract class XsdBaseTypeHandler<T> implements ISimpleMarshallingTypeHan
    *      org.kalypso.contribs.java.net.IUrlResolver, org.kalypso.gmlschema.types.MarshalResultEater)
    */
   @Override
-  public void unmarshal( final XMLReader xmlReader, final URL context, final UnmarshallResultEater marshalResultEater, final String gmlVersion )
+  public void unmarshal( final XMLReader reader, final URL context, final UnmarshallResultEater marshalResultEater, final String gmlVersion )
   {
     throw new UnsupportedOperationException();
   }
@@ -119,7 +119,7 @@ public abstract class XsdBaseTypeHandler<T> implements ISimpleMarshallingTypeHan
     {
       if( objectToClone instanceof List )
       {
-        final List<T> list = (List<T>) objectToClone;
+        final List< ? > list = (List< ? >) objectToClone;
         final List<T> clonedList = new ArrayList<T>( list.size() );
         for( final Object listItem : list )
         {
