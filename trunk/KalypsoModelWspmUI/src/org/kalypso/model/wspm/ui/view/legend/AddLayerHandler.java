@@ -58,6 +58,7 @@ import org.kalypso.model.wspm.ui.view.chart.LayerDescriptor;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartModel;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
+import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
 
 /**

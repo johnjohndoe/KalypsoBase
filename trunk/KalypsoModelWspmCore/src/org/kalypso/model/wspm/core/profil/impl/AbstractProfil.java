@@ -64,6 +64,7 @@ import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.MarkerIndex;
 import org.kalypso.model.wspm.core.profil.changes.ActiveObjectEdit;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
+import org.kalypso.model.wspm.core.profil.changes.ProfileObjectAdd;
 import org.kalypso.model.wspm.core.profil.impl.marker.PointMarker;
 import org.kalypso.observation.phenomenon.IPhenomenon;
 import org.kalypso.observation.result.IComponent;
@@ -170,9 +171,11 @@ public abstract class AbstractProfil implements IProfil
   @Override
   public IProfileObject[] addProfileObjects( final IProfileObject... profileObjects )
   {
-    // FIXME: event handling!
 
     Collections.addAll( m_profileObjects, profileObjects );
+    final ProfilChangeHint hint = new ProfilChangeHint();
+    hint.setObjectChanged();
+    fireProfilChanged( hint, new IProfilChange[] { new ProfileObjectAdd( this, profileObjects ) } );
 
     return m_profileObjects.toArray( new IProfileObject[] {} );
   }

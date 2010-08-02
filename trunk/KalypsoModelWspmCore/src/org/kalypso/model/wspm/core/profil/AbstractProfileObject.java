@@ -40,9 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IComponent;
@@ -54,19 +51,21 @@ import org.kalypso.observation.result.TupleResult;
  */
 public abstract class AbstractProfileObject implements IProfileObject
 {
-  private final IProfil m_profile;
+  // private final IProfil m_profile;
 
   private final IObservation<TupleResult> m_observation;
 
-  protected AbstractProfileObject( final IProfil profile, final IObservation<TupleResult> observation )
+  protected AbstractProfileObject(final IObservation<TupleResult> observation )
   {
-    m_profile = profile;
+    // m_profile = profile;
     m_observation = observation;
   }
 
+  @Deprecated
   protected IProfil getProfile( )
   {
-    return m_profile;
+    return null;
+    // return m_profile;
   }
 
   @Override
@@ -91,15 +90,15 @@ public abstract class AbstractProfileObject implements IProfileObject
     }
     return null;
   }
-
+@Deprecated
   protected void init( )
   {
-    for( final String id : getProfileProperties() )
-    {
-      final IComponent property = m_profile.getPointPropertyFor( id );
-      if( !m_profile.hasPointProperty( property ) )
-        m_profile.addPointProperty( property );
-    }
+//    for( final String id : getProfileProperties() )
+//    {
+//      final IComponent property = m_profile.getPointPropertyFor( id );
+//      if( !m_profile.hasPointProperty( property ) )
+//        m_profile.addPointProperty( property );
+//    }
   }
 
   protected abstract String[] getProfileProperties( );
@@ -117,20 +116,22 @@ public abstract class AbstractProfileObject implements IProfileObject
    * @see org.kalypso.model.wspm.core.profil.IProfileObject#getPointProperties()
    */
   @Override
+  @Deprecated
   public IComponent[] getPointProperties( )
   {
-    final List<IComponent> myProperties = new ArrayList<IComponent>();
-    for( final String id : getProfileProperties() )
-    {
-      final IComponent component = m_profile.hasPointProperty( id );
-      if( component != null )
-        myProperties.add( component );
-    }
-    return myProperties.toArray( new IComponent[] {} );
+    return null;
+//    final List<IComponent> myProperties = new ArrayList<IComponent>();
+//    for( final String id : getProfileProperties() )
+//    {
+//      final IComponent component = m_profile.hasPointProperty( id );
+//      if( component != null )
+//        myProperties.add( component );
+//    }
+//    return myProperties.toArray( new IComponent[] {} );
 
   }
 
-  protected static IComponent createObjectProperty( final String id )
+  protected static IComponent getObjectComponent( final String id )
   {
     return ProfilUtil.getFeatureComponent( id );
   }
