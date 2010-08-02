@@ -38,17 +38,18 @@
  v.doemming@tuhh.de
 
  ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.ogc.sensor.timeseries;
-
-import org.kalypso.ogc.sensor.ObservationConstants;
+package org.kalypso.ogc.sensor.metadata;
 
 /**
  * Constants used within the sensor package.
  * 
  * @author schlienger
  */
-public interface TimeserieConstants extends ObservationConstants
+public interface ITimeserieConstants extends IObservationConstants
 {
+
+  String MD_PROPERTY_KEEP_METADATA_PREFEX = "reload_keepMetaData";
+
   /** the alarm-level feature used to show the alarm-levels in some views */
   String FEATURE_ALARMLEVEL = "Alarmstufen"; //$NON-NLS-1$
 

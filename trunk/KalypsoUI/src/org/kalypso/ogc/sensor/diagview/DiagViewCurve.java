@@ -45,10 +45,10 @@ import java.awt.Stroke;
 import java.util.Set;
 
 import org.kalypso.contribs.java.lang.NumberUtils;
-import org.kalypso.ogc.sensor.MetadataList;
+import org.kalypso.ogc.sensor.metadata.MetadataList;
+import org.kalypso.ogc.sensor.metadata.ITimeserieConstants;
 import org.kalypso.ogc.sensor.template.IObsProvider;
 import org.kalypso.ogc.sensor.template.ObsViewItem;
-import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 
 /**
@@ -108,14 +108,14 @@ public class DiagViewCurve extends ObsViewItem
     boolean hasWaterLevelAxis = false;
     for( final AxisMapping element : m_mappings )
     {
-      if( element.getObservationAxis().getType().equals( TimeserieConstants.TYPE_WATERLEVEL ) )
+      if( element.getObservationAxis().getType().equals( ITimeserieConstants.TYPE_WATERLEVEL ) )
       {
         hasWaterLevelAxis = true;
         break;
       }
     }
 
-    return hasWaterLevelAxis && getView().isFeatureEnabled( TimeserieConstants.FEATURE_ALARMLEVEL );
+    return hasWaterLevelAxis && getView().isFeatureEnabled( ITimeserieConstants.FEATURE_ALARMLEVEL );
   }
 
   /**

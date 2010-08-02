@@ -62,7 +62,7 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.SimpleAxis;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
-import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
+import org.kalypso.ogc.sensor.metadata.ITimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.ogc.sensor.timeseries.wq.WQException;
 import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTable;
@@ -100,16 +100,16 @@ public class CsvSheetImportWorker implements ICoreRunnableWithProgress
     final DECIMAL_NUMBER_SEPERATORS dSep = (DECIMAL_NUMBER_SEPERATORS) m_model.getValue( TSM_KEY.eCsvDecimalNumberSeperator );
 
     /* axis date */
-    final IAxis defaultDate = TimeserieUtils.createDefaulAxis( TimeserieConstants.TYPE_DATE, true );
+    final IAxis defaultDate = TimeserieUtils.createDefaulAxis( ITimeserieConstants.TYPE_DATE, true );
     final SimpleAxis simpleDateAxis = new SimpleAxis( defaultDate );
     simpleDateAxis.setName( "date" ); //$NON-NLS-1$
 
     /* axis values */
     final IAxis axisX;
     if( WQ_KIND.eW.equals( kind ) )
-      axisX = TimeserieUtils.createDefaulAxis( TimeserieConstants.TYPE_WATERLEVEL, false );
+      axisX = TimeserieUtils.createDefaulAxis( ITimeserieConstants.TYPE_WATERLEVEL, false );
     else if( WQ_KIND.eQ.equals( kind ) )
-      axisX = TimeserieUtils.createDefaulAxis( TimeserieConstants.TYPE_RUNOFF, false );
+      axisX = TimeserieUtils.createDefaulAxis( ITimeserieConstants.TYPE_RUNOFF, false );
     else
       throw new NotImplementedException();
 
@@ -217,7 +217,7 @@ public class CsvSheetImportWorker implements ICoreRunnableWithProgress
     final SimpleObservation simple = addTimeSeries( readerTimeSeries );
 
     /* meta data list */
-    final org.kalypso.ogc.sensor.MetadataList mdl = simple.getMetadataList();
+    final org.kalypso.ogc.sensor.metadata.MetadataList mdl = simple.getMetadataList();
 
     /*******************************************************************************************************************
      * PROCESS WQ CONNECTION

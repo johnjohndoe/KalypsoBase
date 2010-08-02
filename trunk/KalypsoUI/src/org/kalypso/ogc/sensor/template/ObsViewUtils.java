@@ -51,8 +51,8 @@ import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.PathUtils;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.ogc.sensor.IAxis;
+import org.kalypso.ogc.sensor.metadata.ITimeserieConstants;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
-import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 
 /**
  * Utility methods for working with ObsView objects
@@ -84,7 +84,7 @@ public final class ObsViewUtils
       for( int j = 0; j < axes.length; j++ )
       {
         final String axisType = axes[j].getType();
-        if( !onlyValueAxes || onlyValueAxes && !KalypsoStatusUtils.isStatusAxis( axes[j] ) && !TimeserieConstants.TYPE_DATE.equals( axisType ) )
+        if( !onlyValueAxes || onlyValueAxes && !KalypsoStatusUtils.isStatusAxis( axes[j] ) && !ITimeserieConstants.TYPE_DATE.equals( axisType ) )
           set.add( axisType );
       }
     }

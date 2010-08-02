@@ -38,25 +38,21 @@
  v.doemming@tuhh.de
  
  ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.ogc.sensor;
-
-import java.util.Properties;
+package org.kalypso.ogc.sensor.metadata;
 
 /**
- * Metadata for Observations.
+ * ObservationConstants
  * 
  * @author schlienger
  */
-public class MetadataList extends Properties
+public interface IObservationConstants
 {
-  public MetadataList( )
-  {
-    super();
-  }
+  /** Name of the observation */
+  String MD_NAME = "Name"; //$NON-NLS-1$
 
-  /** Sets the given properties as default values. Doesn't mean 'putAll'! */
-  public MetadataList( final Properties arg0 )
-  {
-    super( arg0 );
-  }
+  /** Description of the observation */
+  String MD_DESCRIPTION = "Beschreibung";//$NON-NLS-1$ 
+
+  /** Some information about the Origin of the observation */
+  String MD_ORIGIN = "Entstehung"; //$NON-NLS-1$
 }

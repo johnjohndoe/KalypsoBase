@@ -86,15 +86,15 @@ import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IAxisRange;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
-import org.kalypso.ogc.sensor.MetadataList;
 import org.kalypso.ogc.sensor.ObservationTokenHelper;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.DiagView;
 import org.kalypso.ogc.sensor.diagview.DiagViewUtils;
+import org.kalypso.ogc.sensor.metadata.MetadataList;
+import org.kalypso.ogc.sensor.metadata.ITimeserieConstants;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.template.ObsView;
-import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.template.obsdiagview.Obsdiagview;
@@ -514,7 +514,7 @@ public class GrafikLauncher
       // W-axis
       try
       {
-        ObservationUtilities.findAxisByType( displayedAxes.toArray( new IAxis[displayedAxes.size()] ), TimeserieConstants.TYPE_WATERLEVEL );
+        ObservationUtilities.findAxisByType( displayedAxes.toArray( new IAxis[displayedAxes.size()] ), ITimeserieConstants.TYPE_WATERLEVEL );
 
         final MetadataList mdl = obs.getMetadataList();
         final String[] mds = TimeserieUtils.findOutMDAlarmLevel( obs );

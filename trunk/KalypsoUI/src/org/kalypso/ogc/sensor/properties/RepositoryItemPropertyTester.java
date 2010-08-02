@@ -42,7 +42,7 @@ package org.kalypso.ogc.sensor.properties;
 
 import org.eclipse.core.expressions.PropertyTester;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
+import org.kalypso.ogc.sensor.metadata.ITimeserieConstants;
 import org.kalypso.repository.IRepositoryItem;
 
 /**
@@ -77,7 +77,7 @@ public class RepositoryItemPropertyTester extends PropertyTester
     if( obs == null )
       return false;
     
-    final String propTable = obs.getMetadataList().getProperty( TimeserieConstants.MD_WQTABLE );
+    final String propTable = obs.getMetadataList().getProperty( ITimeserieConstants.MD_WQTABLE );
     if( propTable == null )
       return false;
 

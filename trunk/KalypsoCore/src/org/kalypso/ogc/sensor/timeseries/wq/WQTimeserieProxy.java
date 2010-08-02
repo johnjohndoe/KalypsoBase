@@ -50,9 +50,9 @@ import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.AbstractObservationDecorator;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
+import org.kalypso.ogc.sensor.metadata.ITimeserieConstants;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
-import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 
 /**
@@ -115,7 +115,7 @@ public class WQTimeserieProxy extends AbstractObservationDecorator
     for( int i = 0; i < axes.length; i++ )
       m_axes[i] = axes[i];
 
-    m_dateAxis = ObservationUtilities.findAxisByType( axes, TimeserieConstants.TYPE_DATE );
+    m_dateAxis = ObservationUtilities.findAxisByType( axes, ITimeserieConstants.TYPE_DATE );
 
     final String name = TimeserieUtils.getName( m_proxyAxisType );
     final String unit = TimeserieUtils.getUnit( m_proxyAxisType );

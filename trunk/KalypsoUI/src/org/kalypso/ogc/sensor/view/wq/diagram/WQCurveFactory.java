@@ -42,8 +42,8 @@
 package org.kalypso.ogc.sensor.view.wq.diagram;
 
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.MetadataList;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
+import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTable;
 
 /**

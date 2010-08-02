@@ -55,7 +55,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
+import org.kalypso.ogc.sensor.metadata.ITimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTableFactory;
 import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTableSet;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
@@ -105,8 +105,8 @@ public class ViewWQRelationObjectContribution implements IObjectActionDelegate
         final URL url = ResourceUtilities.createURL( file );
         final IObservation obs = ZmlFactory.parseXML( url, "" ); //$NON-NLS-1$
         obsName = obs.getName();
-        wqTabelle = obs.getMetadataList().getProperty( TimeserieConstants.MD_WQTABLE );
-        wqWechmann = obs.getMetadataList().getProperty( TimeserieConstants.MD_WQWECHMANN );
+        wqTabelle = obs.getMetadataList().getProperty( ITimeserieConstants.MD_WQTABLE );
+        wqWechmann = obs.getMetadataList().getProperty( ITimeserieConstants.MD_WQWECHMANN );
         action.setEnabled( wqTabelle != null && !wqTabelle.isEmpty() );
       }
       catch( final Exception ignored )

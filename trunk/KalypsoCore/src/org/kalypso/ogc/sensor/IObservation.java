@@ -40,6 +40,7 @@
  --------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor;
 
+import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.request.IRequest;
 
 /**

@@ -43,8 +43,9 @@ package org.kalypso.ogc.sensor;
 
 import org.apache.commons.configuration.Configuration;
 import org.kalypso.metadoc.configuration.ConfigurationUtils;
+import org.kalypso.ogc.sensor.metadata.MetadataList;
+import org.kalypso.ogc.sensor.metadata.ITimeserieConstants;
 import org.kalypso.ogc.sensor.template.ObsViewItem;
-import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 
 /**
  * Extends metadata destinated for the metadoc service with information that it gets from an observation
@@ -84,8 +85,8 @@ public class MetadataExtenderWithObservation
 
     // currently we only take this property, but the thing
     // could easily be extended with more
-    final String kennz = md.getProperty( TimeserieConstants.MD_KENNZIFFER );
+    final String kennz = md.getProperty( ITimeserieConstants.MD_KENNZIFFER );
     
-    ConfigurationUtils.addPropertyDistinct( metadata, TimeserieConstants.MD_KENNZIFFER, kennz );
+    ConfigurationUtils.addPropertyDistinct( metadata, ITimeserieConstants.MD_KENNZIFFER, kennz );
   }
 }
