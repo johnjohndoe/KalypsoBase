@@ -603,6 +603,8 @@
 		<image commandId="org.kalypso.ogc.gml.map.MoveRightCommand" icon="icons/map/moveright.gif" />
 		<image commandId="org.kalypso.ogc.gml.map.FullExtentCommand" icon="icons/map/maximize2.gif" />
 		<image commandId="org.kalypso.ogc.gml.map.ZoomToActiveLayerCommand" icon="icons/map/zoomactivelayer2.gif" />
+		<image commandId="org.kalypso.ogc.gml.map.ZoomToSelectedFeaturesCommand" icon="icons/map/zoomToSelectedFeatures.gif" />
+		<image commandId="org.kalypso.ogc.gml.map.PanToSelectedFeatureCommand" icon="icons/map/panToSelectedFeatures.gif" />
 		<image commandId="org.kalypso.ogc.gml.map.ExtentHistoryPrevCommand" icon="icons/map/extentHistoryPrev.gif" />
 		<image commandId="org.kalypso.ogc.gml.map.ExtentHistoryNextCommand" icon="icons/map/extentHistoryNext.gif" />
 		<image commandId="org.kalypso.ogc.gml.map.ZoomInByRectCommand" icon="icons/map/zoomin.gif" />
