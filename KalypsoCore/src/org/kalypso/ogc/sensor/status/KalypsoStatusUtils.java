@@ -60,7 +60,7 @@ import org.kalypso.ogc.sensor.impl.DefaultAxis;
  * 
  * @author schlienger
  */
-public class KalypsoStatusUtils
+public final class KalypsoStatusUtils
 {
   private static final String STATUS_AXIS_LABELPREFIX = "_kalypso_status_"; //$NON-NLS-1$
 
@@ -122,10 +122,10 @@ public class KalypsoStatusUtils
    * @throws IllegalArgumentException
    *           if given axis is already a status axis
    */
-  public static IAxis createStatusAxisFor( final IAxis axis, final boolean persistable ) throws IllegalArgumentException
+  public static IAxis createStatusAxisFor( final IAxis axis, final boolean persistable )
   {
     if( isStatusAxis( axis ) )
-      throw new IllegalArgumentException( "Axis " + axis + Messages.getString("org.kalypso.ogc.sensor.status.KalypsoStatusUtils.12") ); //$NON-NLS-1$ //$NON-NLS-2$
+      throw new IllegalArgumentException( "Axis " + axis + Messages.getString( "org.kalypso.ogc.sensor.status.KalypsoStatusUtils.12" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
     return new DefaultAxis( STATUS_AXIS_LABELPREFIX + axis.getName(), STATUS_AXIS_TYPE, STATUS_AXIS_UNIT, STATUS_AXIS_DATACLASS, false, persistable );
   }
@@ -185,7 +185,7 @@ public class KalypsoStatusUtils
         return axe;
     }
 
-    throw new NoSuchElementException( Messages.getString("org.kalypso.ogc.sensor.status.KalypsoStatusUtils.13") ); //$NON-NLS-1$
+    throw new NoSuchElementException( Messages.getString( "org.kalypso.ogc.sensor.status.KalypsoStatusUtils.13" ) ); //$NON-NLS-1$
   }
 
   /**
@@ -202,7 +202,7 @@ public class KalypsoStatusUtils
         return axe;
     }
 
-    throw new NoSuchElementException( Messages.getString("org.kalypso.ogc.sensor.status.KalypsoStatusUtils.14") + axis ); //$NON-NLS-1$
+    throw new NoSuchElementException( Messages.getString( "org.kalypso.ogc.sensor.status.KalypsoStatusUtils.14" ) + axis ); //$NON-NLS-1$
   }
 
   /**
@@ -282,7 +282,7 @@ public class KalypsoStatusUtils
     }
 
     if( list.size() == 0 )
-      throw new NoSuchElementException( Messages.getString("org.kalypso.ogc.sensor.status.KalypsoStatusUtils.15") + desired ); //$NON-NLS-1$
+      throw new NoSuchElementException( Messages.getString( "org.kalypso.ogc.sensor.status.KalypsoStatusUtils.15" ) + desired ); //$NON-NLS-1$
 
     return list.toArray( new IAxis[list.size()] );
   }
@@ -292,8 +292,7 @@ public class KalypsoStatusUtils
    * 
    * @see KalypsoStatusUtils#findAxesByClass(IAxis[], Class, boolean)
    */
-  public static IAxis[] findAxesByClasses( final IAxis[] axes, final Class<?>[] desired, final boolean excludeStatusAxes )
-  throws NoSuchElementException
+  public static IAxis[] findAxesByClasses( final IAxis[] axes, final Class< ? >[] desired, final boolean excludeStatusAxes ) throws NoSuchElementException
   {
     final List<IAxis> list = new ArrayList<IAxis>( axes == null ? 0 : axes.length );
 
@@ -336,7 +335,7 @@ public class KalypsoStatusUtils
       }
     }
 
-    throw new NoSuchElementException( Messages.getString("org.kalypso.ogc.sensor.status.KalypsoStatusUtils.16") + desired ); //$NON-NLS-1$
+    throw new NoSuchElementException( Messages.getString( "org.kalypso.ogc.sensor.status.KalypsoStatusUtils.16" ) + desired ); //$NON-NLS-1$
   }
 
   /**
@@ -420,19 +419,19 @@ public class KalypsoStatusUtils
   public static String getTooltipFor( final int mask )
   {
     if( checkMask( mask, KalypsoStati.BIT_CHECK ) )
-      return Messages.getString("org.kalypso.ogc.sensor.status.KalypsoStatusUtils.21"); //$NON-NLS-1$
+      return Messages.getString( "org.kalypso.ogc.sensor.status.KalypsoStatusUtils.21" ); //$NON-NLS-1$
 
     if( checkMask( mask, KalypsoStati.BIT_REQUIRED ) )
-      return Messages.getString("org.kalypso.ogc.sensor.status.KalypsoStatusUtils.22"); //$NON-NLS-1$
+      return Messages.getString( "org.kalypso.ogc.sensor.status.KalypsoStatusUtils.22" ); //$NON-NLS-1$
 
     if( checkMask( mask, KalypsoStati.BIT_USER_MODIFIED ) )
-      return Messages.getString("org.kalypso.ogc.sensor.status.KalypsoStatusUtils.23"); //$NON-NLS-1$
+      return Messages.getString( "org.kalypso.ogc.sensor.status.KalypsoStatusUtils.23" ); //$NON-NLS-1$
 
     if( checkMask( mask, KalypsoStati.BIT_DERIVATION_ERROR ) )
-      return Messages.getString("org.kalypso.ogc.sensor.status.KalypsoStatusUtils.24"); //$NON-NLS-1$
+      return Messages.getString( "org.kalypso.ogc.sensor.status.KalypsoStatusUtils.24" ); //$NON-NLS-1$
 
     if( checkMask( mask, KalypsoStati.BIT_DERIVATED ) )
-      return Messages.getString("org.kalypso.ogc.sensor.status.KalypsoStatusUtils.25"); //$NON-NLS-1$
+      return Messages.getString( "org.kalypso.ogc.sensor.status.KalypsoStatusUtils.25" ); //$NON-NLS-1$
 
     return null;
   }
@@ -499,6 +498,7 @@ public class KalypsoStatusUtils
    * Get the combined status for the given axis.<br>
    * If the axis has no corresponding status axis, BIT_OK is returned.<br>
    * Else, the or'ed value of all stati is returned.
+   * 
    * @throws SensorException
    */
   public static int getStatus( final ITupleModel values, final IAxis axis ) throws SensorException
@@ -511,7 +511,7 @@ public class KalypsoStatusUtils
 
     for( int i = 0; i < values.getCount(); i++ )
     {
-      final int status = ( (Number)values.getElement( i, statusAxis ) ).intValue();
+      final int status = ((Number) values.getElement( i, statusAxis )).intValue();
       mergedStatus |= status;
     }
 
