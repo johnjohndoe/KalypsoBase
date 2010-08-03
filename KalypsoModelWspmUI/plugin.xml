@@ -477,35 +477,27 @@
                commandId="org.kalypso.model.wspm.ui.command.profile.flip"
                icon="icons/obj16/flipProfile.gif">
          </image>
-         <image 
-               commandId="org.kalypso.model.wspm.ui.command.profile.simplify"
-               icon="TODO">
-         </image>
       </extension>
      
     <!-- Commands for the map outline -->
 	<extension point="org.eclipse.ui.commands">
-		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.map.outline.command.WspmCreateDevider" name="%org.kalypso.model.wspm.ui.action.CreateDeviderMapThemeAction"  description="%org.kalypso.model.wspm.ui.action.CreateDeviderMapThemeAction.description"/>
-		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.map.outline.command.WspmIntersectRoughnessMap" name="%org.kalypso.model.wspm.ui.action.IntersectRoughnessMapThemeAction"  description="%org.kalypso.model.wspm.ui.action.IntersectRoughnessMapThemeAction.description"/>
+		<category id="org.kalypso.mode.wspm.ui.profile.commands" name="WSPM profile commands"/>
+		<command categoryId="org.kalypso.mode.wspm.ui.profile.commands" id="org.kalypso.ui.map.outline.command.WspmCreateDevider" name="%org.kalypso.model.wspm.ui.action.CreateDeviderMapThemeAction"  description="%org.kalypso.model.wspm.ui.action.CreateDeviderMapThemeAction.description"/>
+		<command categoryId="org.kalypso.mode.wspm.ui.profile.commands" id="org.kalypso.ui.map.outline.command.WspmIntersectRoughnessMap" name="%org.kalypso.model.wspm.ui.action.IntersectRoughnessMapThemeAction"  description="%org.kalypso.model.wspm.ui.action.IntersectRoughnessMapThemeAction.description"/>
 		  <command
 		        description="%org.kalypso.model.wspm.ui.action.PropertyEditAction.description"
 		        id="org.kalypso.model.wspm.ui.command.profile.editProperties"
 		        name="%org.kalypso.model.wspm.ui.action.PropertyEditAction">
 		  </command>
-		  <command
+		  <command categoryId="org.kalypso.mode.wspm.ui.profile.commands"
 		        description="%org.kalypso.model.wspm.ui.action.ValidateProfilesAction.description"
 		        id="org.kalypso.model.wspm.ui.command.profile.validate"
 		        name="%org.kalypso.model.wspm.ui.action.ValidateProfilesAction">
 		  </command>
-		  <command
+		  <command categoryId="org.kalypso.mode.wspm.ui.profile.commands"
 		        description="%org.kalypso.model.wspm.ui.action.FlipProfileAction.description"
 		        id="org.kalypso.model.wspm.ui.command.profile.flip"
 		        name="%org.kalypso.model.wspm.ui.action.FlipProfileAction">
-		  </command>
-		  <command
-		        description="Simplify profile by removing unimportant points"
-		        id="org.kalypso.model.wspm.ui.command.profile.simplify"
-		        name="Simplify">
 		  </command>
 	</extension>
 
@@ -595,13 +587,6 @@
                    checkEnabled="true">
              </visibleWhen>
           </command>
-          <command
-                commandId="org.kalypso.model.wspm.ui.command.profile.simplify"
-                style="push">
-             <visibleWhen
-                   checkEnabled="true">
-             </visibleWhen>
-          </command>
           <separator
                 name="additions"
                 visible="false">
@@ -642,15 +627,6 @@
    <handler
          class="org.kalypso.model.wspm.ui.profil.wizard.flipProfile.FlipProfileHandler"
          commandId="org.kalypso.model.wspm.ui.command.profile.flip">
-      <enabledWhen>
-         <reference
-               definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
-         </reference>
-      </enabledWhen>
-   </handler>
-   <handler
-         class="org.kalypso.model.wspm.ui.profil.wizard.simplify.SimplifyProfileHandler"
-         commandId="org.kalypso.model.wspm.ui.command.profile.simplify">
       <enabledWhen>
          <reference
                definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
