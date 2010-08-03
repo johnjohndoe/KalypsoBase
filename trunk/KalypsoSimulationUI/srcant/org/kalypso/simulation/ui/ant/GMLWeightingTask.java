@@ -58,6 +58,7 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.filter.FilterFactory;
+import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.simulation.ui.ant.util.CopyObservationMappingHelper;
 import org.kalypso.zml.filters.AbstractFilterType;
 import org.kalypso.zml.filters.InterpolationFilterType;
@@ -128,7 +129,7 @@ public class GMLWeightingTask extends Task
    * @see org.apache.tools.ant.Task#execute()
    */
   @Override
-  public void execute( ) throws BuildException
+  public void execute( ) 
   {
     try
     {
@@ -140,6 +141,7 @@ public class GMLWeightingTask extends Task
         /**
          * @see org.kalypso.contribs.java.util.logging.ILogger#log(java.util.logging.Level, int, java.lang.String)
          */
+        @Override
         public void log( final Level level, final int msgCode, final String message )
         {
           final String outString = LoggerUtilities.formatLogStylish( level, msgCode, message );
@@ -157,7 +159,7 @@ public class GMLWeightingTask extends Task
 
       final IUrlResolver urlResolver = UrlResolverSingleton.getDefault();
       // create needed factories
-      final Marshaller marshaller = JaxbUtilities.createMarshaller( FilterFactory.JC_FILTER, true );
+      final Marshaller marshaller = JaxbUtilities.createMarshaller( ZmlFactory.JC, true );
 
       final org.w3._1999.xlinkext.ObjectFactory linkFac = new org.w3._1999.xlinkext.ObjectFactory();
 
@@ -264,7 +266,7 @@ public class GMLWeightingTask extends Task
               final String strFilterXml = FilterFactory.getFilterPart( m_sourceFilter );
 
               final StringReader sr = new StringReader( strFilterXml );
-              final Unmarshaller unmarshaller = FilterFactory.JC_FILTER.createUnmarshaller();
+              final Unmarshaller unmarshaller = ZmlFactory.JC.createUnmarshaller();
               final JAXBElement<AbstractFilterType> af = (JAXBElement<AbstractFilterType>) unmarshaller.unmarshal( new InputSource( sr ) );
               filter.setFilter( af );
 
