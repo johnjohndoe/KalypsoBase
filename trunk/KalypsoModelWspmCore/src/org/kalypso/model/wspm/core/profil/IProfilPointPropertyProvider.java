@@ -51,38 +51,39 @@ public interface IProfilPointPropertyProvider
   /**
    * creates a new empty IProfil object - builders are registered over extension points
    */
-  public IProfil createProfil( );
+  IProfil createProfil( );
 
   /**
    * create a new IProfil object, takes given Observation as profile data
    */
-  public IProfil createProfil( TupleResult observation );
+  IProfil createProfil( TupleResult observation );
 
   /**
+   * FIXME: not used any more: either remove or use
+   * 
    * @return all PointPropertyIds handled by this provider NOTE: the natural order in this Array is the initial
    *         columnsort used in the tableview
    */
-  public String[] getPointProperties( );
+  String[] getPointProperties( );
 
-  public IComponent getPointProperty( String propertyId );
+  IComponent getPointProperty( String propertyId );
 
   /**
    * @return true if the provider supports the propertyId
    */
-  public boolean providesPointProperty( final String property );
+  boolean providesPointProperty( final String property );
 
   /**
    * Check, if a given {@link TupleResult} is valid according to this profile type.
    */
-  public void checkComponents( TupleResult result ) throws IllegalArgumentException;
+  void checkComponents( TupleResult result );
 
   /**
    * markers maybe handled different in special cases (p.e. UI)
    */
-  public boolean isMarker( final String markerID );
+  boolean isMarker( final String markerID );
   /**
    * Returns the default value for the given propertyID
    */
-  public Object getDefaultValue( final String propertyID);
-  
+  Object getDefaultValue( final String propertyID );
 }

@@ -100,15 +100,17 @@ public abstract class AbstractPointPropertyProvider implements IProfilPointPrope
   @Override
   public boolean providesPointProperty( final String property )
   {
+    // FIXME: why has this been set to true?
     return true;
 // return m_properties.contains( property );
   }
 
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider#checkComponents(org.kalypso.observation.result.TupleResult)
+   * @throws IllegalArgumentException
    */
   @Override
-  public void checkComponents( final TupleResult result ) throws IllegalArgumentException
+  public void checkComponents( final TupleResult result )
   {
     final IComponent[] components = result.getComponents();
     for( final IComponent component : components )
