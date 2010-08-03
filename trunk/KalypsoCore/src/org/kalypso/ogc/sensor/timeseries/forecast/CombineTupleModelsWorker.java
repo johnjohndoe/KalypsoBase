@@ -113,6 +113,7 @@ public class CombineTupleModelsWorker implements ICoreRunnableWithProgress
               data[baseIndex] = value;
             }
           }
+          /** fallback if no source axis exists */
           else
           {
             data = new Object[srcAxes.length + 1];

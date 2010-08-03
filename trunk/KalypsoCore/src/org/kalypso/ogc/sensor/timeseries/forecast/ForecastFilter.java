@@ -61,7 +61,7 @@ public class ForecastFilter extends AbstractObservationFilter
    * @see org.kalypso.ogc.sensor.filter.IObservationFilter#initFilter(java.lang.Object,
    *      org.kalypso.ogc.sensor.IObservation, java.net.URL)
    */
-  public void initFilter( IObservation[] conf, IObservation baseObs, final URL context ) throws SensorException
+  public void initFilter( final IObservation[] conf, final IObservation baseObs, final URL context ) throws SensorException
   {
     super.initFilter( conf, baseObs, context );
 
@@ -75,7 +75,7 @@ public class ForecastFilter extends AbstractObservationFilter
    *          forecastfilter should expect <code>null</code> here.
    */
   @Override
-  public ITupleModel getValues( IRequest args ) throws SensorException
+  public ITupleModel getValues( final IRequest args ) throws SensorException
   {
     final ITupleModel models[] = new ITupleModel[m_obsArray.length];
 
