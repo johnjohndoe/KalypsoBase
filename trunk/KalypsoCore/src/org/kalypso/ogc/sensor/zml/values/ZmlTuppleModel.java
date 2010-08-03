@@ -45,14 +45,14 @@ import java.util.Map;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.impl.AbstractTuppleModel;
+import org.kalypso.ogc.sensor.impl.AbstractTupleModel;
 
 /**
  * A specific TuppleModel that can deal with values coming from Zml-Files.
  * 
  * @author schlienger
  */
-public class ZmlTuppleModel extends AbstractTuppleModel
+public class ZmlTuppleModel extends AbstractTupleModel
 {
   private final Map<IAxis, IZmlValues> m_valuesMap;
 

@@ -60,11 +60,11 @@ import org.kalypso.observation.util.ObservationHelper;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
-import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
+import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
 import org.kalypso.ogc.sensor.metadata.ITimeserieConstants;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.request.IRequest;
@@ -265,7 +265,7 @@ public class CommitPrognoseFeatureVisitor extends AbstractMonitoredFeatureVisito
     final IAxis[] srcAxes = source.getAxisList();
 
     final IRequest request = getRequest();
-    final ITuppleModel values = source.getValues( request );
+    final ITupleModel values = source.getValues( request );
     if( values == null )
       return null;
 
@@ -290,7 +290,7 @@ public class CommitPrognoseFeatureVisitor extends AbstractMonitoredFeatureVisito
     if( map.size() == 0 || values.getCount() == 0 )
       return null;
 
-    final SimpleTuppleModel model = new SimpleTuppleModel( targetAxes );
+    final SimpleTupleModel model = new SimpleTupleModel( targetAxes );
     for( int i = 0; i < values.getCount(); i++ )
     {
       final Object[] tupple = new Object[targetAxes.length];

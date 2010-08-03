@@ -45,7 +45,7 @@ import java.util.NoSuchElementException;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.AbstractObservationDecorator;
@@ -86,7 +86,7 @@ public class WQTimeserieProxy extends AbstractObservationDecorator
 
   private IRequest m_cachedArgs = null;
 
-  private ITuppleModel m_cachedModel = null;
+  private ITupleModel m_cachedModel = null;
 
   /**
    * Constructor
@@ -155,7 +155,7 @@ public class WQTimeserieProxy extends AbstractObservationDecorator
    * @see org.kalypso.ogc.sensor.IObservation#getValues(org.kalypso.ogc.sensor.request.IRequest)
    */
   @Override
-  public ITuppleModel getValues( final IRequest args ) throws SensorException
+  public ITupleModel getValues( final IRequest args ) throws SensorException
   {
     if( m_cachedModel != null && (m_cachedArgs == null && args == null || (m_cachedArgs != null && m_cachedArgs.equals( args ))) )
       return m_cachedModel;
@@ -179,7 +179,7 @@ public class WQTimeserieProxy extends AbstractObservationDecorator
    * @see org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter#setValues(org.kalypso.ogc.sensor.ITuppleModel)
    */
   @Override
-  public void setValues( final ITuppleModel values ) throws SensorException
+  public void setValues( final ITupleModel values ) throws SensorException
   {
     super.setValues( WQTuppleModel.reverse( values, m_obs.getAxisList() ) );
   }

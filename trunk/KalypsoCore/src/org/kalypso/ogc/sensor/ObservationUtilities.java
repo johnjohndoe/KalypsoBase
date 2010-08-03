@@ -53,7 +53,6 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.ObjectUtils;
 import org.kalypso.commons.factory.FactoryException;
 import org.kalypso.commons.java.lang.MathUtils;
 import org.kalypso.commons.parser.IParser;
@@ -289,7 +288,7 @@ public class ObservationUtilities
    *          string separator between elements
    * @return simple string representation of the given model
    */
-  public static String dump( final ITuppleModel model, final String sep ) throws SensorException
+  public static String dump( final ITupleModel model, final String sep ) throws SensorException
   {
     final StringWriter writer = new StringWriter();
 
@@ -308,7 +307,7 @@ public class ObservationUtilities
   /**
    * Dumps the contents of the model into a writer. Caller must close the writer.
    */
-  public static void dump( final ITuppleModel model, final String sep, final Writer writer ) throws SensorException
+  public static void dump( final ITupleModel model, final String sep, final Writer writer ) throws SensorException
   {
     // do not use the same array because of the sort
     final IAxis[] axes = new ArrayList<IAxis>( Arrays.asList( model.getAxisList() ) ).toArray( new IAxis[0] );
@@ -380,7 +379,7 @@ public class ObservationUtilities
    * 
    * @return string representation of the given line (tupple)
    */
-  public static String dump( final ITuppleModel model, final String sep, final int index, final boolean excludeStatusAxes ) throws SensorException
+  public static String dump( final ITupleModel model, final String sep, final int index, final boolean excludeStatusAxes ) throws SensorException
   {
     IAxis[] axes = model.getAxisList();
 
@@ -425,7 +424,6 @@ public class ObservationUtilities
     return sb.toString();
   }
 
-
   /**
    * Returns the given row. Creates a new array containing the references to the values in the tuppleModel for that row
    * and these columns
@@ -436,7 +434,7 @@ public class ObservationUtilities
    *          columns for which objects will be taken
    * @throws SensorException
    */
-  public static Object[] getElements( final ITuppleModel tuppleModel, final int row, final IAxis[] axisList ) throws SensorException
+  public static Object[] getElements( final ITupleModel tuppleModel, final int row, final IAxis[] axisList ) throws SensorException
   {
     final Object[] result = new Object[axisList.length];
     for( int i = 0; i < axisList.length; i++ )
@@ -449,7 +447,7 @@ public class ObservationUtilities
    * 
    * @return Map <Object, Integer>: value to its index
    */
-  public static Map<Object, Integer> hashValues( final ITuppleModel tuples, final IAxis axis ) throws SensorException
+  public static Map<Object, Integer> hashValues( final ITupleModel tuples, final IAxis axis ) throws SensorException
   {
     final Map<Object, Integer> result = new HashMap<Object, Integer>();
 
@@ -491,47 +489,6 @@ public class ObservationUtilities
   }
 
   /**
-   * @return array of positions, position of -1 means not mapable
-   */
-  public static int[] getAxisMapping( final IAxis[] compareAxes, final IAxis[] testAxes )
-  {
-    final int[] result = new int[compareAxes.length];
-    for( int i = 0; i < compareAxes.length; i++ )
-    {
-      result[i] = findBestFitPos( compareAxes[i], testAxes );
-    }
-    return result;
-  }
-
-  /**
-   * @param compareAxis
-   * @param testAxes
-   * @return position of best fit, else <code>-1</code> if not fit
-   */
-  private static int findBestFitPos( final IAxis compareAxis, final IAxis[] testAxes )
-  {
-    int resultPos = -1;
-    int maxHits = -1;
-    for( int i = 0; i < testAxes.length; i++ )
-    {
-      int hits = 0;
-      if( !ObjectUtils.equals( testAxes[i].getType(), compareAxis.getType() ) || !ObjectUtils.equals( testAxes[i].getDataClass(), compareAxis.getDataClass() ) )
-        continue;
-      hits++;
-      if( ObjectUtils.equals( testAxes[i].getUnit(), compareAxis.getUnit() ) )
-        hits++;
-      if( ObjectUtils.equals( testAxes[i].getName(), compareAxis.getName() ) )
-        hits++;
-      if( hits > maxHits )
-      {
-        resultPos = i;
-        maxHits = hits;
-      }
-    }
-    return resultPos;
-  }
-
-  /**
    * @param tuppleModel
    * @param dateAxis
    *          must be key axis (sorted)
@@ -541,7 +498,7 @@ public class ObservationUtilities
    * @return index next to date
    * @throws SensorException
    */
-  public static int findNextIndexForDate( final ITuppleModel tuppleModel, final IAxis dateAxis, final Date date, int minIndex, int maxIndex ) throws SensorException
+  public static int findNextIndexForDate( final ITupleModel tuppleModel, final IAxis dateAxis, final Date date, int minIndex, int maxIndex ) throws SensorException
   {
     if( minIndex > maxIndex )
     {
@@ -586,7 +543,7 @@ public class ObservationUtilities
    * @return index before date
    * @throws SensorException
    */
-  public static int findIndexBeforeDate( final ITuppleModel tuppleModel, final IAxis dateAxis, final Date date, final int minIndex, final int maxIndex ) throws SensorException
+  public static int findIndexBeforeDate( final ITupleModel tuppleModel, final IAxis dateAxis, final Date date, final int minIndex, final int maxIndex ) throws SensorException
   {
     final int index = findNextIndexForDate( tuppleModel, dateAxis, date, minIndex, maxIndex );
     final Date rowDate = (Date) tuppleModel.getElement( index, dateAxis );
@@ -595,7 +552,7 @@ public class ObservationUtilities
     return index - 1;
   }
 
-  public static double getInterpolatedValueAt( final ITuppleModel tuppelModel, final IAxis dateAxis, final IAxis valueAxis, final Date date ) throws SensorException
+  public static double getInterpolatedValueAt( final ITupleModel tuppelModel, final IAxis dateAxis, final IAxis valueAxis, final Date date ) throws SensorException
   {
     int index = ObservationUtilities.findIndexBeforeDate( tuppelModel, dateAxis, date, 0, tuppelModel.getCount() );
     // check range
@@ -617,7 +574,7 @@ public class ObservationUtilities
    *          If <code>null</code>, request the values from the baseObservation with a <code>null</code> request.
    * @throws SensorException
    */
-  public static ITuppleModel requestBuffered( final IObservation baseObservation, final DateRange dateRange, final int bufferField, final int bufferAmount ) throws SensorException
+  public static ITupleModel requestBuffered( final IObservation baseObservation, final DateRange dateRange, final int bufferField, final int bufferAmount ) throws SensorException
   {
 
     if( dateRange == null )

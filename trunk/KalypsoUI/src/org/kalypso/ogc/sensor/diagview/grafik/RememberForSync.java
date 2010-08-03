@@ -20,7 +20,7 @@ import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
@@ -110,7 +110,7 @@ final class RememberForSync
       final IObservation obs = ZmlFactory.parseXML( new InputSource( zmlReader ), ResourceUtilities.createURL( m_zmlFile ) );
       IOUtils.closeQuietly( zmlReader );
 
-      final ITuppleModel values = obs.getValues( null );
+      final ITupleModel values = obs.getValues( null );
 
       final IAxis[] axes = obs.getAxisList();
 

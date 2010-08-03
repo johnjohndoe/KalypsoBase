@@ -41,7 +41,7 @@
 package org.kalypso.ogc.sensor.timeseries.datasource;
 
 import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 
 /**
@@ -49,14 +49,14 @@ import org.kalypso.ogc.sensor.timeseries.AxisUtils;
  */
 public abstract class AbstractDataSourceModelHandler
 {
-  private final ITuppleModel m_model;
+  private final ITupleModel m_model;
 
-  public AbstractDataSourceModelHandler( final ITuppleModel model )
+  public AbstractDataSourceModelHandler( final ITupleModel model )
   {
     m_model = model;
   }
 
-  protected ITuppleModel getModel( )
+  protected ITupleModel getModel( )
   {
     return m_model;
   }

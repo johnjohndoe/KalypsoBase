@@ -42,7 +42,7 @@ package org.kalypso.ogc.sensor.timeseries.datasource;
 
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
@@ -72,7 +72,7 @@ public class AddDataSourceObservationHandler
       return m_observation;
 
     final AddDataSourceModelHandler handler = new AddDataSourceModelHandler( m_observation.getValues( null ) );
-    final ITuppleModel model = handler.extend();
+    final ITupleModel model = handler.extend();
 
     final DataSourceHandler dataSourceHandler = new DataSourceHandler( m_observation.getMetadataList() );
     dataSourceHandler.addDataSource( m_item );

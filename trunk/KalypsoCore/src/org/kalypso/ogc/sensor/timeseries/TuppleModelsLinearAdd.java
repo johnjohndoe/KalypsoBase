@@ -44,10 +44,10 @@ import java.util.Date;
 
 import org.eclipse.core.runtime.Assert;
 import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
+import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 
 /**
@@ -88,18 +88,18 @@ public class TuppleModelsLinearAdd
    * @return A new combined tupple model. ATTENTION: Make sure your axes of the observation are in the same order as the
    *         axes of this tupple model. DATE, VALUE and STATUS.
    */
-  public ITuppleModel addWeighted( final ITuppleModel[] tuppleModels, final double[] weights ) throws SensorException
+  public ITupleModel addWeighted( final ITupleModel[] tuppleModels, final double[] weights ) throws SensorException
   {
     Assert.isLegal( tuppleModels.length > 0 );
     Assert.isLegal( tuppleModels.length == weights.length );
 
-    final ITuppleModel firstTuppleModel = tuppleModels[0];
+    final ITupleModel firstTuppleModel = tuppleModels[0];
 
     /* Sanity check and gather value axes */
     final IAxis[] valueAxes = new IAxis[tuppleModels.length];
     for( int i = 0; i < tuppleModels.length; i++ )
     {
-      final ITuppleModel values = tuppleModels[i];
+      final ITupleModel values = tuppleModels[i];
       if( values.getCount() != firstTuppleModel.getCount() )
         throw new SensorException( "The observations in the list must have a equal number of elements ..." );
 
@@ -110,7 +110,7 @@ public class TuppleModelsLinearAdd
     /* Create a new observation using the given targetAxes. */
     /* The other observations should have the same type of axes. */
     final IAxis[] targetAxes = new IAxis[] { m_targetDateAxis, m_targetValueAxis, m_targetStatusAxis };
-    final SimpleTuppleModel combinedTuppleModel = new SimpleTuppleModel( targetAxes );
+    final SimpleTupleModel combinedTuppleModel = new SimpleTupleModel( targetAxes );
     final int combinedDatePosition = 0;
     final int combinedValuePosition = 1;
     final int combinedStatusPosition = 2;
@@ -126,7 +126,7 @@ public class TuppleModelsLinearAdd
           continue;
 
         /* Get the values of the observation. */
-        final ITuppleModel tuppleModel = tuppleModels[j];
+        final ITupleModel tuppleModel = tuppleModels[j];
 
         /* Get the rainfall axis. */
         /* The date will be taken later from the first observation. */

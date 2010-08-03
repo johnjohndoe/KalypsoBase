@@ -79,9 +79,9 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
-import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
-import org.kalypso.ogc.sensor.metadata.MetadataList;
+import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
 import org.kalypso.ogc.sensor.metadata.ITimeserieConstants;
+import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.timeseries.wq.IWQConverter;
 import org.kalypso.ogc.sensor.timeseries.wq.WQException;
 import org.kalypso.ogc.sensor.timeseries.wq.WQFactory;
@@ -259,70 +259,6 @@ public final class TimeserieUtils implements ITimeserieConstants
       }
     }
     return CONFIG;
-  }
-
-  /**
-   * Sets the 'forecast' metadata of the given observation using the given date range. If from or to are null, does
-   * nothing.
-   */
-  public static void setTargetForecast( final IObservation obs, final DateRange range )
-  {
-    if( range == null )
-      return;
-
-    setTargetForecast( obs, range.getFrom(), range.getTo() );
-  }
-
-  /**
-   * Sets the 'forecast' metadata of the given observation using the given date range. If from or to are null, does
-   * nothing.
-   */
-  public static void setTargetForecast( final IObservation obs, final Date from, final Date to )
-  {
-    final TimeZone timeZone = KalypsoCorePlugin.getDefault().getTimeZone();
-    if( from != null )
-    {
-      final String fromStr = DateUtilities.printDateTime( from, timeZone );
-      obs.getMetadataList().setProperty( ITimeserieConstants.MD_VORHERSAGE_START, fromStr ); //$NON-NLS-1$
-    }
-
-    if( to != null )
-    {
-      final String toStr = DateUtilities.printDateTime( to, timeZone );
-      obs.getMetadataList().setProperty( ITimeserieConstants.MD_VORHERSAGE_ENDE, toStr ); //$NON-NLS-1$
-    }
-  }
-
-  /**
-   * Sets the 'forecast' metadata of the given observation using the given date range. If from or to are null, does
-   * nothing.
-   */
-  public static void setTargetDateRange( final IObservation obs, final DateRange range )
-  {
-    if( range == null )
-      return;
-
-    setTargetDateRange( obs, range.getFrom(), range.getTo() );
-  }
-
-  /**
-   * Sets the 'forecast' metadata of the given observation using the given date range. If from or to are null, does
-   * nothing.
-   */
-  public static void setTargetDateRange( final IObservation obs, final Date from, final Date to )
-  {
-    final TimeZone timeZone = KalypsoCorePlugin.getDefault().getTimeZone();
-    if( from != null )
-    {
-      final String fromStr = DateUtilities.printDateTime( from, timeZone );
-      obs.getMetadataList().setProperty( ITimeserieConstants.MD_DATE_BEGIN, fromStr ); //$NON-NLS-1$
-    }
-
-    if( to != null )
-    {
-      final String toStr = DateUtilities.printDateTime( to, timeZone );
-      obs.getMetadataList().setProperty( ITimeserieConstants.MD_DATE_END, toStr ); //$NON-NLS-1$
-    }
   }
 
   /**
@@ -634,7 +570,7 @@ public final class TimeserieUtils implements ITimeserieConstants
       axes[i + 1] = TimeserieUtils.createDefaulAxis( axisTypes[i] );
 
     final SimpleObservation obs = new SimpleObservation( axes );
-    final SimpleTuppleModel model = new SimpleTuppleModel( axes );
+    final SimpleTupleModel model = new SimpleTupleModel( axes );
 
     final Calendar cal = Calendar.getInstance();
     for( int i = 0; i < amountRows; i++ )

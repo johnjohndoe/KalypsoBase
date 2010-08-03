@@ -56,7 +56,7 @@ import org.kalypso.contribs.java.util.logging.ILogger;
 import org.kalypso.contribs.java.util.logging.LoggerUtilities;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
@@ -181,8 +181,8 @@ public class MergeObservationFeatureVisitor implements FeatureVisitor
     final IAxis[] sourceAxes = sourceObs.getAxisList();
     final IAxis[] targetAxes = targetObs.getAxisList();
 
-    final ITuppleModel sourceTuples = sourceObs.getValues( null );
-    final ITuppleModel targetTuples = targetObs.getValues( null );
+    final ITupleModel sourceTuples = sourceObs.getValues( null );
+    final ITupleModel targetTuples = targetObs.getValues( null );
 
     final Map<IAxis[], IAxis[]> axisMap = mapAxes( sourceAxes, targetAxes );
 

@@ -44,7 +44,7 @@ import java.net.URL;
 
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.request.IRequest;
@@ -59,7 +59,7 @@ public class ZMLUtilities
   public static double getMax( final URL url, final String axisType, final IRequest request ) throws SensorException
   {
     final IObservation observation = ZmlFactory.parseXML( url ); //$NON-NLS-1$
-    final ITuppleModel tuppelModel = observation.getValues( request );
+    final ITupleModel tuppelModel = observation.getValues( request );
     final IAxis[] axisList = tuppelModel.getAxisList();
     final IAxis axis = ObservationUtilities.findAxisByType( axisList, axisType );
     final int max = tuppelModel.getCount();

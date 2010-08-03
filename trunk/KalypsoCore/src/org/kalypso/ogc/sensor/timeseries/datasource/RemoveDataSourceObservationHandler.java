@@ -42,7 +42,7 @@ package org.kalypso.ogc.sensor.timeseries.datasource;
 
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
@@ -69,7 +69,7 @@ public class RemoveDataSourceObservationHandler
       return m_observation;
 
     final RemoveDataSourceModelHandler handler = new RemoveDataSourceModelHandler( m_observation.getValues( null ) );
-    final ITuppleModel model = handler.remove();
+    final ITupleModel model = handler.remove();
 
     final DataSourceHandler dataSourceHandler = new DataSourceHandler( m_observation.getMetadataList() );
     dataSourceHandler.removeAllDataSources();

@@ -49,7 +49,7 @@ import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
-import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
+import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
@@ -115,7 +115,7 @@ public final class ObservationHelper
     return new ObservationRequest( from.getTime(), to.getTime() );
   }
 
-  public static SimpleObservation getSimpleObservation( final SimpleTuppleModel model, final IObservation baseObservation )
+  public static SimpleObservation getSimpleObservation( final SimpleTupleModel model, final IObservation baseObservation )
   {
     final String href = baseObservation.getHref();
     final String name = baseObservation.getName();

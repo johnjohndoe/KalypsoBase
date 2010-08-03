@@ -47,7 +47,7 @@ import org.kalypso.contribs.java.util.logging.LoggerUtilities;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.metadata.IObservationConstants;
@@ -64,18 +64,18 @@ public class KalypsoProtocolWriter
   // not to be instanciated
   }
 
-  public static void analyseValues( final IObservation observation, final ITuppleModel model, final ILogger logger )
+  public static void analyseValues( final IObservation observation, final ITupleModel model, final ILogger logger )
       throws SensorException
   {
     analyseValues( new IObservation[]
-    { observation }, new ITuppleModel[]
+    { observation }, new ITupleModel[]
     { model }, logger );
   }
 
   /**
    * Analyses the given tupple models and reports possible errors (according to status of tupples).
    */
-  public static void analyseValues( final IObservation[] observations, final ITuppleModel[] models, final ILogger logger )
+  public static void analyseValues( final IObservation[] observations, final ITupleModel[] models, final ILogger logger )
       throws SensorException
   {
     if( observations.length != models.length )
@@ -85,7 +85,7 @@ public class KalypsoProtocolWriter
 
     for( int i = 0; i < models.length; i++ )
     {
-      final ITuppleModel tuppleModel = models[i];
+      final ITupleModel tuppleModel = models[i];
       final IAxis[] statusAxes = KalypsoStatusUtils.findStatusAxes( tuppleModel.getAxisList() );
       final int[] mergedStati = new int[statusAxes.length];
       for( int iAxes = 0; iAxes < mergedStati.length; iAxes++ )

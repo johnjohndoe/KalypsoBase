@@ -49,7 +49,7 @@ import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.IObservationListener;
-import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.event.ObservationEventAdapter;
@@ -67,7 +67,7 @@ public class SimpleObservation implements IObservation
 
   private final MetadataList m_metadata;
 
-  private ITuppleModel m_model = null;
+  private ITupleModel m_model = null;
 
   private final ObservationEventAdapter m_evtPrv = new ObservationEventAdapter( this );
 
@@ -85,10 +85,10 @@ public class SimpleObservation implements IObservation
 
   public SimpleObservation( final String href, final String name, final MetadataList metadata, final IAxis[] axes )
   {
-    this( href, name, metadata, new SimpleTuppleModel( axes ) );
+    this( href, name, metadata, new SimpleTupleModel( axes ) );
   }
 
-  public SimpleObservation( final String href, final String name, final MetadataList metadata, final ITuppleModel model )
+  public SimpleObservation( final String href, final String name, final MetadataList metadata, final ITupleModel model )
   {
     m_href = href;
     m_name = name;
@@ -132,7 +132,7 @@ public class SimpleObservation implements IObservation
    * @see org.kalypso.ogc.sensor.IObservation#getValues(org.kalypso.ogc.sensor.request.IRequest)
    */
   @Override
-  public ITuppleModel getValues( final IRequest request ) throws SensorException
+  public ITupleModel getValues( final IRequest request ) throws SensorException
   {
     if( m_model == null )
       throw new SensorException( Messages.getString( "org.kalypso.ogc.sensor.impl.SimpleObservation.6" ) ); //$NON-NLS-1$
@@ -141,7 +141,7 @@ public class SimpleObservation implements IObservation
     // (real) model isn't changed, just the copy of it (see setFrom and the calling
     // constructors in SimpleTuppleModel).
     if( (request != null) && (request.getDateRange() != null) )
-      return new SimpleTuppleModel( m_model, request.getDateRange() );
+      return new SimpleTupleModel( m_model, request.getDateRange() );
 
     return m_model;
   }
@@ -150,11 +150,11 @@ public class SimpleObservation implements IObservation
    * @see org.kalypso.ogc.sensor.IObservation#setValues(org.kalypso.ogc.sensor.ITuppleModel)
    */
   @Override
-  public void setValues( final ITuppleModel values ) throws SensorException
+  public void setValues( final ITupleModel values ) throws SensorException
   {
     if( values == null )
     {
-      m_model = new SimpleTuppleModel( m_model.getAxisList() );
+      m_model = new SimpleTupleModel( m_model.getAxisList() );
       return;
     }
 
@@ -221,7 +221,7 @@ public class SimpleObservation implements IObservation
 
         final Object[] tupple = new Object[kset.size()];
 
-        final SimpleTuppleModel stm = prepareForAdding();
+        final SimpleTupleModel stm = prepareForAdding();
 
         for( final IAxis myA : kset )
         {
@@ -243,13 +243,13 @@ public class SimpleObservation implements IObservation
    * @return a SimpleTuppleModel
    * @throws SensorException
    */
-  private SimpleTuppleModel prepareForAdding( ) throws SensorException
+  private SimpleTupleModel prepareForAdding( ) throws SensorException
   {
     // since we are adding
-    if( !(m_model instanceof SimpleTuppleModel) )
-      m_model = new SimpleTuppleModel( m_model );
+    if( !(m_model instanceof SimpleTupleModel) )
+      m_model = new SimpleTupleModel( m_model );
 
-    return (SimpleTuppleModel) m_model;
+    return (SimpleTupleModel) m_model;
   }
 
   /**

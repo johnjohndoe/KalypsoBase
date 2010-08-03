@@ -41,7 +41,7 @@
 package org.kalypso.ogc.sensor.proxy;
 
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.AbstractObservationDecorator;
 import org.kalypso.ogc.sensor.request.IRequest;
@@ -66,7 +66,7 @@ public class RequestObservationProxy extends AbstractObservationDecorator implem
    * @see org.kalypso.ogc.sensor.IObservation#getValues(org.kalypso.ogc.sensor.request.IRequest)
    */
   @Override
-  public ITuppleModel getValues( IRequest args ) throws SensorException
+  public ITupleModel getValues( IRequest args ) throws SensorException
   {
     if( args == null )
       args = m_args;

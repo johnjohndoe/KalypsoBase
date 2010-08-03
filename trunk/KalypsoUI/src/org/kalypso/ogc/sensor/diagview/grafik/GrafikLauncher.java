@@ -85,7 +85,7 @@ import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IAxisRange;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.ObservationTokenHelper;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
@@ -401,7 +401,7 @@ public class GrafikLauncher
       }
 
       final IObservation obs;
-      final ITuppleModel values;
+      final ITupleModel values;
       InputStream ins = null;
       try
       {
@@ -562,7 +562,7 @@ public class GrafikLauncher
   /**
    * Converts a zml file to a dat file that the grafik tool can load.
    */
-  private static IStatus zml2dat( final ITuppleModel values, final IFile datFile, final IAxis dateAxis, final IAxis axis, final IProgressMonitor monitor ) throws CoreException
+  private static IStatus zml2dat( final ITupleModel values, final IFile datFile, final IAxis dateAxis, final IAxis axis, final IProgressMonitor monitor ) throws CoreException
   {
     final SetContentHelper sch = new SetContentHelper( Messages.getString( "org.kalypso.ogc.sensor.diagview.grafik.GrafikLauncher.45" ) ) //$NON-NLS-1$
     {

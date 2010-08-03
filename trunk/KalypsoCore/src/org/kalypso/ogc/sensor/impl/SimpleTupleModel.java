@@ -49,7 +49,7 @@ import java.util.logging.Logger;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 
@@ -58,12 +58,12 @@ import org.kalypso.ogc.sensor.SensorException;
  * 
  * @author Marc Schlienger
  */
-public class SimpleTuppleModel extends AbstractTuppleModel
+public class SimpleTupleModel extends AbstractTupleModel
 {
   /**
    * An empty tupple model.
    */
-  public static final ITuppleModel EMPTY_TUPPLEMODEL = new SimpleTuppleModel( new IAxis[0] );
+  public static final ITupleModel EMPTY_TUPPLEMODEL = new SimpleTupleModel( new IAxis[0] );
 
   /**
    * The list of tupples.
@@ -76,7 +76,7 @@ public class SimpleTuppleModel extends AbstractTuppleModel
    * @param axes
    *          A list of axes.
    */
-  public SimpleTuppleModel( final List<IAxis> axes )
+  public SimpleTupleModel( final List<IAxis> axes )
   {
     this( axes.toArray( new IAxis[axes.size()] ) );
   }
@@ -87,7 +87,7 @@ public class SimpleTuppleModel extends AbstractTuppleModel
    * @param axes
    *          An array of axes.
    */
-  public SimpleTuppleModel( final IAxis[] axes )
+  public SimpleTupleModel( final IAxis[] axes )
   {
     this( axes, new Object[0][axes.length] );
   }
@@ -98,7 +98,7 @@ public class SimpleTuppleModel extends AbstractTuppleModel
    * @param copyTupples
    *          A model. Its data will be copied.
    */
-  public SimpleTuppleModel( final ITuppleModel copyTupples ) throws SensorException
+  public SimpleTupleModel( final ITupleModel copyTupples ) throws SensorException
   {
     super( copyTupples.getAxisList() );
 
@@ -115,7 +115,7 @@ public class SimpleTuppleModel extends AbstractTuppleModel
    * @param dra
    *          The date range is used to limit the values that are returned by the given model.
    */
-  public SimpleTuppleModel( final ITuppleModel copyTupples, final DateRange dra ) throws SensorException
+  public SimpleTupleModel( final ITupleModel copyTupples, final DateRange dra ) throws SensorException
   {
     super( copyTupples.getAxisList() );
 
@@ -132,7 +132,7 @@ public class SimpleTuppleModel extends AbstractTuppleModel
    * @param values
    *          The values.
    */
-  public SimpleTuppleModel( final IAxis[] axes, final Object[][] values )
+  public SimpleTupleModel( final IAxis[] axes, final Object[][] values )
   {
     super( axes );
 
@@ -169,7 +169,7 @@ public class SimpleTuppleModel extends AbstractTuppleModel
   {
     // TODO For debug purposes! Once problem with "null" is solved remove?
     if( element == null )
-      Logger.getLogger( SimpleTuppleModel.class.getName() ).warning( Messages.getString( "org.kalypso.ogc.sensor.impl.SimpleTuppleModel.0" ) + index + Messages.getString( "org.kalypso.ogc.sensor.impl.SimpleTuppleModel.1" ) + axis ); //$NON-NLS-1$ //$NON-NLS-2$
+      Logger.getLogger( SimpleTupleModel.class.getName() ).warning( Messages.getString( "org.kalypso.ogc.sensor.impl.SimpleTuppleModel.0" ) + index + Messages.getString( "org.kalypso.ogc.sensor.impl.SimpleTuppleModel.1" ) + axis ); //$NON-NLS-1$ //$NON-NLS-2$
 
     Object[] row = m_tupples.get( index );
     int columnIndex = getPositionFor( axis );
@@ -225,7 +225,7 @@ public class SimpleTuppleModel extends AbstractTuppleModel
    * @param copyTupples
    *          The model, which data will be copied.
    */
-  private void setFrom( final ITuppleModel copyTupples ) throws SensorException
+  private void setFrom( final ITupleModel copyTupples ) throws SensorException
   {
     IAxis[] axes = getAxisList();
 
@@ -253,7 +253,7 @@ public class SimpleTuppleModel extends AbstractTuppleModel
    * @param dra
    *          The date range is used to limit the values that are returned by the given model.
    */
-  private void setFrom( final ITuppleModel copyTupples, final DateRange dra ) throws SensorException
+  private void setFrom( final ITupleModel copyTupples, final DateRange dra ) throws SensorException
   {
     IAxis[] axes = getAxisList();
 

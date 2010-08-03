@@ -80,7 +80,7 @@ public interface IObservation extends IObservationEventProvider
    * @return model
    * @throws SensorException
    */
-  ITuppleModel getValues( final IRequest args ) throws SensorException;
+  ITupleModel getValues( final IRequest args ) throws SensorException;
 
   /**
    * Sets the given values.
@@ -88,7 +88,7 @@ public interface IObservation extends IObservationEventProvider
    * @param values
    * @throws SensorException
    */
-  void setValues( final ITuppleModel values ) throws SensorException;
+  void setValues( final ITupleModel values ) throws SensorException;
 
   /**
    * Returns the localisation of the base file behind this observation.<br/>

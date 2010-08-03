@@ -53,10 +53,10 @@ import org.kalypso.contribs.java.util.ValueIterator;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
-import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
+import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
@@ -209,7 +209,7 @@ public class ObservationViewerDialog extends Dialog
               for( int ax = 1; ax < axis.length; ax++ )
                 values[row][ax] = dialog.getDefault();
             }
-            final ITuppleModel model = new SimpleTuppleModel( axis, values );
+            final ITupleModel model = new SimpleTupleModel( axis, values );
             setInput( new SimpleObservation( null, name, new MetadataList(), model ) );
           }
         }
@@ -248,7 +248,7 @@ public class ObservationViewerDialog extends Dialog
             for( int ax = 1; ax < axis.length; ax++ )
               values[row][ax] = new Double( 0 );
           }
-          final ITuppleModel model = new SimpleTuppleModel( axis, values );
+          final ITupleModel model = new SimpleTupleModel( axis, values );
           setInput( new SimpleObservation( null, name, new MetadataList(), model ) );
         }
 

@@ -50,10 +50,10 @@ import junit.framework.TestCase;
 import org.kalypso.contribs.java.util.DoubleComparator;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
+import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.xml.sax.InputSource;
@@ -113,7 +113,7 @@ public class ZmlTest extends TestCase
 
   private void _testGetValues( final IObservation obs ) throws SensorException, ParseException
   {
-    final ITuppleModel values = obs.getValues( null );
+    final ITupleModel values = obs.getValues( null );
     assertNotNull( values );
 
     assertEquals( values.getCount(), 21 );
@@ -151,7 +151,7 @@ public class ZmlTest extends TestCase
     final IAxis vAxis2 = ObservationUtilities.findAxisByName( axes, "Pegel2" ); //$NON-NLS-1$
     assertNotNull( vAxis2 );
 
-    final SimpleTuppleModel m = new SimpleTuppleModel( obs.getAxisList() );
+    final SimpleTupleModel m = new SimpleTupleModel( obs.getAxisList() );
 
     final Object[] t1 = new Object[3];
     t1[m.getPositionFor( dateAxis )] = df.parse( "20.01.2004" ); //$NON-NLS-1$
@@ -173,7 +173,7 @@ public class ZmlTest extends TestCase
 
     obs.setValues( m );
 
-    final ITuppleModel values = obs.getValues( null );
+    final ITupleModel values = obs.getValues( null );
     assertNotNull( values );
 
     assertEquals( values.getCount(), 22 );

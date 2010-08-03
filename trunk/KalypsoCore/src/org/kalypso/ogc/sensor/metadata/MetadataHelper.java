@@ -40,9 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.metadata;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Set;
 import java.util.TimeZone;
 
@@ -55,6 +57,13 @@ import org.kalypso.ogc.sensor.DateRange;
  */
 public class MetadataHelper implements ITimeserieConstants, ICopyObservationMetaDataConstants
 {
+  /** default date format used within some of the timeseries dependent properties */
+  /** @deprecated Should not be used any more. We use xs:dateTime format now for printing times into zml files. */
+  @Deprecated
+  private static final DateFormat FORECAST_DF = DateFormat.getDateTimeInstance( DateFormat.DEFAULT, DateFormat.DEFAULT, Locale.GERMANY );
+
+// private static final DateFormat FORECAST_DF = new SimpleDateFormat( "dd.MM.yyyy HH:mm:ss", Locale.GERMANY );
+
   private static SimpleDateFormat SDF = new SimpleDateFormat( "dd.MM.yyyy HH:mm:ss" );
 
   public static final transient String WQ_TABLE = "WQ-Tabelle";
@@ -135,6 +144,70 @@ public class MetadataHelper implements ITimeserieConstants, ICopyObservationMeta
   public static void setWqTable( final MetadataList mdl, final String table )
   {
     mdl.setProperty( ITimeserieConstants.MD_WQTABLE, table );
+  }
+
+  /**
+   * Sets the 'forecast' metadata of the given observation using the given date range. If from or to are null, does
+   * nothing.
+   */
+  public static void setTargetForecast( final MetadataList metadata, final DateRange range )
+  {
+    if( range == null )
+      return;
+
+    setTargetForecast( metadata, range.getFrom(), range.getTo() );
+  }
+
+  /**
+   * Sets the 'forecast' metadata of the given observation using the given date range. If from or to are null, does
+   * nothing.
+   */
+  public static void setTargetForecast( final MetadataList metadata, final Date from, final Date to )
+  {
+    final TimeZone timeZone = KalypsoCorePlugin.getDefault().getTimeZone();
+    if( from != null )
+    {
+      final String fromStr = DateUtilities.printDateTime( from, timeZone );
+      metadata.setProperty( ITimeserieConstants.MD_VORHERSAGE_START, fromStr ); //$NON-NLS-1$
+    }
+
+    if( to != null )
+    {
+      final String toStr = DateUtilities.printDateTime( to, timeZone );
+      metadata.setProperty( ITimeserieConstants.MD_VORHERSAGE_ENDE, toStr ); //$NON-NLS-1$
+    }
+  }
+
+  /**
+   * Sets the 'forecast' metadata of the given observation using the given date range. If from or to are null, does
+   * nothing.
+   */
+  public static void setTargetDateRange( final MetadataList metadata, final DateRange range )
+  {
+    if( range == null )
+      return;
+
+    setTargetDateRange( metadata, range.getFrom(), range.getTo() );
+  }
+
+  /**
+   * Sets the 'forecast' metadata of the given observation using the given date range. If from or to are null, does
+   * nothing.
+   */
+  public static void setTargetDateRange( final MetadataList metadata, final Date from, final Date to )
+  {
+    final TimeZone timeZone = KalypsoCorePlugin.getDefault().getTimeZone();
+    if( from != null )
+    {
+      final String fromStr = DateUtilities.printDateTime( from, timeZone );
+      metadata.setProperty( ITimeserieConstants.MD_DATE_BEGIN, fromStr ); //$NON-NLS-1$
+    }
+
+    if( to != null )
+    {
+      final String toStr = DateUtilities.printDateTime( to, timeZone );
+      metadata.setProperty( ITimeserieConstants.MD_DATE_END, toStr ); //$NON-NLS-1$
+    }
   }
 
 }

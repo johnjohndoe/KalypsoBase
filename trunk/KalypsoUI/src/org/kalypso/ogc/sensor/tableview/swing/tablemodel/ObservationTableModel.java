@@ -61,7 +61,7 @@ import org.apache.commons.lang.ObjectUtils;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
@@ -186,7 +186,7 @@ public class ObservationTableModel extends AbstractTableModel implements IObserv
         // tableColumn.setPreferredWidth( col.getWidth() );
       }
 
-      final ITuppleModel tupModel = obs.getValues( col.getArguments() );
+      final ITupleModel tupModel = obs.getValues( col.getArguments() );
 
       // fill shared column values
       for( int r = 0; r < tupModel.getCount(); r++ )
@@ -322,7 +322,7 @@ public class ObservationTableModel extends AbstractTableModel implements IObserv
         try
         {
           final TableViewColumn col = m_columns.get( columnIndex - 1 );
-          final ITuppleModel values = col.getObservation().getValues( col.getArguments() );
+          final ITupleModel values = col.getObservation().getValues( col.getArguments() );
           final int ix = values.indexOf( key, col.getKeyAxis() );
           if( ix != -1 )
             return values.getElement( ix, col.getAxis() );
@@ -404,7 +404,7 @@ public class ObservationTableModel extends AbstractTableModel implements IObserv
 
       try
       {
-        final ITuppleModel values = col.getObservation().getValues( col.getArguments() );
+        final ITupleModel values = col.getObservation().getValues( col.getArguments() );
         final Object key = m_sharedModel.toArray()[rowIndex];
         final int ix = values.indexOf( key, col.getKeyAxis() );
         if( ix != -1 )
@@ -496,7 +496,7 @@ public class ObservationTableModel extends AbstractTableModel implements IObserv
       try
       {// FIXME: this will reload the timeserie on every step....!
         // FIXME: col.getTupleModel()!
-        final ITuppleModel values = col.getObservation().getValues( col.getArguments() );
+        final ITupleModel values = col.getObservation().getValues( col.getArguments() );
         final Object key = m_sharedModel.toArray()[row];
         final int ix = values.indexOf( key, col.getKeyAxis() );
         if( ix != -1 )

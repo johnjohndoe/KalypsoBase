@@ -48,7 +48,7 @@ import org.kalypso.contribs.java.util.CalendarUtilities;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.request.IRequest;
@@ -114,7 +114,7 @@ public class IntervallFilter extends AbstractObservationFilter
   }
 
   @Override
-  public ITuppleModel getValues( final IRequest request ) throws SensorException
+  public ITupleModel getValues( final IRequest request ) throws SensorException
   {
     final DateRange dateRange = request == null ? null : request.getDateRange();
 
@@ -127,14 +127,14 @@ public class IntervallFilter extends AbstractObservationFilter
     // FIX: we just make the request a big bigger in order to get a new first value
     // HACK: we always use DAY, so that work fine only up to timeseries of DAY-quality.
     // Maybe there should be one day a mean to determine, which is the right amount.
-    final ITuppleModel values = ObservationUtilities.requestBuffered( m_baseobservation, dateRange, Calendar.DAY_OF_MONTH, 2 );
+    final ITupleModel values = ObservationUtilities.requestBuffered( m_baseobservation, dateRange, Calendar.DAY_OF_MONTH, 2 );
 
     return new IntervallTupplemodel( m_mode, m_calendarField, m_amount, m_startCalendarValue, m_startCalendarField,
         values, from, to, m_defaultValue, m_defaultStatus );
   }
 
   @Override
-  public void setValues( final ITuppleModel values )
+  public void setValues( final ITupleModel values )
   {
     throw new UnsupportedOperationException( getClass().getName() + Messages.getString("org.kalypso.ogc.sensor.filter.filters.IntervallFilter.2") ); //$NON-NLS-1$
   }

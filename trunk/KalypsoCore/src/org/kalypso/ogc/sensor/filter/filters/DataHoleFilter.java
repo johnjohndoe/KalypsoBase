@@ -44,7 +44,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.request.IRequest;
@@ -77,9 +77,9 @@ public class DataHoleFilter extends AbstractObservationFilter
    * @see org.kalypso.ogc.sensor.IObservation#getValues(org.kalypso.ogc.sensor.request.IRequest)
    */
   @Override
-  public ITuppleModel getValues( final IRequest args ) throws SensorException
+  public ITupleModel getValues( final IRequest args ) throws SensorException
   {
-    final ITuppleModel values = super.getValues( args );
+    final ITupleModel values = super.getValues( args );
     final IAxis[] valueAxes = KalypsoStatusUtils.findAxesByClass( values.getAxisList(), Number.class, true );
 
     for( int index = 0; index < values.getCount(); index++ )
