@@ -31,11 +31,14 @@ package org.kalypso.ogc.gml.featureview.dialog;
 
 import java.util.Collection;
 
+import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
+import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.sensor.view.ObservationViewerDialog;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.zml.obslink.ObjectFactory;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
@@ -65,7 +68,10 @@ public class TimeserieLinkFeatureDialog implements IFeatureDialog
   @Override
   public int open( final Shell shell )
   {
-    ObservationViewerDialog dialog = new ObservationViewerDialog( shell );
+    final ObservationViewerDialog dialog = new ObservationViewerDialog( shell );
+    final IDialogSettings dialogSettings = PluginUtilities.getDialogSettings( KalypsoGisPlugin.getDefault(), getClass().getName() );
+    dialog.setDialogSettings( dialogSettings );
+
     final TimeseriesLinkType tslink = (TimeseriesLinkType) m_feature.getProperty( m_ftp );
     dialog.setContext( m_feature.getWorkspace().getContext() );
     dialog.setInput( tslink == null ? "" : tslink.getHref() ); //$NON-NLS-1$

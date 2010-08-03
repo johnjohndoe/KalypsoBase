@@ -33,14 +33,17 @@ import java.util.Collection;
 
 import javax.xml.namespace.QName;
 
+import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
+import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.types.ITypeHandler;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.typehandler.ZmlInlineTypeHandler;
 import org.kalypso.ogc.sensor.view.ObservationViewerDialog;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -48,15 +51,15 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class ZmlInlineFeatureDialog implements IFeatureDialog
 {
-  private Feature m_feature;
+  private final Feature m_feature;
 
-  private IPropertyType m_ftp;
+  private final IPropertyType m_ftp;
 
   private FeatureChange m_change = null;
 
   private static ITypeHandler m_typeHandler;
 
-  public ZmlInlineFeatureDialog( Feature feature, IPropertyType ftp, ITypeHandler handler )
+  public ZmlInlineFeatureDialog( final Feature feature, final IPropertyType ftp, final ITypeHandler handler )
   {
     m_feature = feature;
     m_ftp = ftp;
@@ -69,39 +72,43 @@ public class ZmlInlineFeatureDialog implements IFeatureDialog
   @Override
   public int open( final Shell shell )
   {
-    ZmlInlineTypeHandler inlineTypeHandler = null;
-    ObservationViewerDialog dialog = null;
-    // Dies ist ein hack!
+    m_change = null;
+
+    if( !(m_typeHandler instanceof ZmlInlineTypeHandler) )
+      return Window.CANCEL;
+
+    final ZmlInlineTypeHandler inlineTypeHandler = (ZmlInlineTypeHandler) m_typeHandler;
+    final QName typeName = inlineTypeHandler.getTypeName();
+
+    // Dies ist ein hässlicher hack!
     // TODO Definition eines Extension points für den ObservationViewerDialog damit für jeden TypeHandler
     // der Dialog configuriert werden kann, oder ist dies hier anders gedacht ?? CK
     // Extension Point müsste z.B. im eine Methode wie newObservation(Shell parent) im Interface haben
     // die eine IObservation zurück gibt
-    if( m_typeHandler instanceof ZmlInlineTypeHandler )
+    final int buttonControls;
+    if( !(typeName.getLocalPart().equals( "ZmlInlineIdealKcWtLaiType" )) ) //$NON-NLS-1$
     {
-      inlineTypeHandler = (ZmlInlineTypeHandler) m_typeHandler;
-      final QName typeName = inlineTypeHandler.getTypeName();
-
-      if( !(typeName.getLocalPart().equals( "ZmlInlineIdealKcWtLaiType" )) ) //$NON-NLS-1$
-        dialog = new ObservationViewerDialog( shell, false, true, true, ObservationViewerDialog.BUTTON_NEW | ObservationViewerDialog.BUTTON_REMOVE | ObservationViewerDialog.BUTTON_EXEL_IMPORT
-            | ObservationViewerDialog.BUTTON_EXEL_EXPORT, inlineTypeHandler.getAxisTypes() );
-      else
-      {
-        dialog = new ObservationViewerDialog( shell, false, true, true, ObservationViewerDialog.BUTTON_NEW_IDEAL_LANDUSE | ObservationViewerDialog.BUTTON_REMOVE
-            | ObservationViewerDialog.BUTTON_EXEL_IMPORT | ObservationViewerDialog.BUTTON_EXEL_EXPORT, inlineTypeHandler.getAxisTypes() );
-      }
+      buttonControls = ObservationViewerDialog.BUTTON_NEW | ObservationViewerDialog.BUTTON_REMOVE | ObservationViewerDialog.BUTTON_EXEL_IMPORT | ObservationViewerDialog.BUTTON_EXEL_EXPORT;
     }
+    else
+    {
+      buttonControls = ObservationViewerDialog.BUTTON_NEW_IDEAL_LANDUSE | ObservationViewerDialog.BUTTON_REMOVE | ObservationViewerDialog.BUTTON_EXEL_IMPORT
+      | ObservationViewerDialog.BUTTON_EXEL_EXPORT;
+    }
+
+    final ObservationViewerDialog dialog = new ObservationViewerDialog( shell, false, buttonControls, inlineTypeHandler.getAxisTypes() );
+    final IDialogSettings dialogSettings = PluginUtilities.getDialogSettings( KalypsoGisPlugin.getDefault(), getClass().getName() );
+    dialog.setDialogSettings( dialogSettings );
 
     final Object o = m_feature.getProperty( m_ftp );
     dialog.setInput( o );
-    int open = dialog.open();
-    FeatureChange fChange = null;
-    if( open == Window.OK )
-    {
-      final Object newValue = dialog.getInput();
-      fChange = new FeatureChange( m_feature, m_ftp, newValue );
-    }
-    // TODO: implement real cancel
-    m_change = fChange;
+
+    final int open = dialog.open();
+    if( !(open == Window.OK) )
+      return open;
+
+    final Object newValue = dialog.getInput();
+    m_change = new FeatureChange( m_feature, m_ftp, newValue );
     return open;
   }
 

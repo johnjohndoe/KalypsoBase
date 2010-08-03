@@ -37,6 +37,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.Clipboard;
@@ -44,10 +45,12 @@ import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
+import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.ui.controls.ButtonControl;
 import org.kalypso.contribs.java.util.ValueIterator;
 import org.kalypso.i18n.Messages;
@@ -75,10 +78,6 @@ public class ObservationViewerDialog extends Dialog
 
   private final boolean m_withHeader;
 
-  private final boolean m_withMetaDataTable;
-
-  private final boolean m_withChart;
-
   private final int m_buttonControls;
 
   // button types are bitmask !
@@ -94,30 +93,30 @@ public class ObservationViewerDialog extends Dialog
 
   public static final int BUTTON_EXEL_EXPORT = 8;
 
+  private static final String SETTINGS_BOUNDS = "dialogBounds";
+
+  private static final String SETTINGS_VIEWER = "observationViewer";
+
   private final String[] m_axisTypes;
 
   protected Object m_input = null;
 
-  public ObservationViewerDialog( final Shell parent, final boolean withHeaderForm, final boolean withMetaDataAndTable, final boolean withChart, final int buttonControls, final String[] axisTypes )
+  private IDialogSettings m_settings;
+
+  public ObservationViewerDialog( final Shell parent, final boolean withHeaderForm, final int buttonControls, final String[] axisTypes )
   {
     super( parent );
+
     setShellStyle( getShellStyle() | SWT.RESIZE );
+
     m_withHeader = withHeaderForm;
-    m_withMetaDataTable = withMetaDataAndTable;
-    m_withChart = withChart;
     m_buttonControls = buttonControls;
     m_axisTypes = axisTypes;
   }
 
   public ObservationViewerDialog( final Shell parent )
   {
-    super( parent );
-    setShellStyle( getShellStyle() | SWT.RESIZE );
-    m_withHeader = true;
-    m_withMetaDataTable = true;
-    m_withChart = true;
-    m_buttonControls = NO_BUTTON;
-    m_axisTypes = null;
+    this( parent, true, NO_BUTTON, null );
   }
 
   /**
@@ -130,7 +129,10 @@ public class ObservationViewerDialog extends Dialog
     // composite.setLayout( new FillLayout() );
     composite.setLayout( new GridLayout() );
 
-    m_viewer = new ObservationViewer( composite, SWT.NONE, m_withHeader, m_withChart, m_withMetaDataTable, createButtonControls() );
+    final IDialogSettings viewerSettings = PluginUtilities.getSection( m_settings, SETTINGS_VIEWER );
+    m_viewer = new ObservationViewer( composite, SWT.NONE, m_withHeader, createButtonControls(), viewerSettings );
+    m_viewer.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+
     updateViewer();
     // TODO label
     getShell().setText( Messages.getString( "org.kalypso.ogc.sensor.view.ObservationViewerDialog.0" ) ); //$NON-NLS-1$
@@ -336,6 +338,20 @@ public class ObservationViewerDialog extends Dialog
   protected final String[] getAxisTypes( )
   {
     return m_axisTypes;
+  }
+
+  /**
+   * @see org.eclipse.jface.dialogs.Dialog#getDialogBoundsSettings()
+   */
+  @Override
+  protected IDialogSettings getDialogBoundsSettings( )
+  {
+    return PluginUtilities.getSection( m_settings, SETTINGS_BOUNDS );
+  }
+
+  public void setDialogSettings( final IDialogSettings settings )
+  {
+    m_settings = settings;
   }
 
 }
