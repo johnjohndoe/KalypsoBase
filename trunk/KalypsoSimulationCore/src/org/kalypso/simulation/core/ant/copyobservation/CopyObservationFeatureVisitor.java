@@ -63,6 +63,7 @@ import org.kalypso.ogc.sensor.metadata.MetadataHelper;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
+import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHandler;
 import org.kalypso.ogc.sensor.timeseries.forecast.MultipleTupleModel;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.simulation.core.ant.AbstractMonitoredFeatureVisitor;
@@ -114,13 +115,15 @@ public class CopyObservationFeatureVisitor extends AbstractMonitoredFeatureVisit
       final URL targetLocation = UrlResolverSingleton.getDefault().resolveURL( m_target.getContext(), targetHref );
       final File targetFile = getTargetFile( targetLocation );
 
-      final ITupleModel combined = combineSources( sources );
+      final ITupleModel[] srcModels = getSourceModels( sources );
+
+      final MultipleTupleModel model = new MultipleTupleModel( srcModels );
 
       final MetadataList metaData = getMetaData( sources );
       updateMetaData( metaData, sources );
       udpateMetaData( metaData, feature );
 
-      final SimpleObservation result = new SimpleObservation( null, null, metaData, combined );
+      final SimpleObservation result = new SimpleObservation( null, null, metaData, model );
 
       final IRequest request = new ObservationRequest( m_target.getTargetDateRange() );
       writeTargetObservation( targetFile, result, request );
@@ -136,22 +139,28 @@ public class CopyObservationFeatureVisitor extends AbstractMonitoredFeatureVisit
     return true;
   }
 
-  /** FIXME: clean implementation of getMetaData */
   private MetadataList getMetaData( final ObservationSource[] sources )
   {
+    if( ArrayUtils.isEmpty( sources ) )
+      return new MetadataList();
+
+    final MetadataList metadata = sources[0].getObservation().getMetadataList();
+    final DataSourceHandler handler = new DataSourceHandler( metadata );
+    handler.removeAllDataSources();
+
     for( final ObservationSource source : sources )
     {
-      /** grummel: first observation defines meta data of combined observation */
-      return source.getObservation().getMetadataList();
+      final IObservation observation = source.getObservation();
+      handler.addDataSource( observation.getHref(), "unknown" );
     }
 
-    return new MetadataList();
+    return metadata;
   }
 
-  private ITupleModel combineSources( final ObservationSource[] sources ) throws SensorException
+  private ITupleModel[] getSourceModels( final ObservationSource[] sources ) throws SensorException
   {
     if( ArrayUtils.isEmpty( sources ) )
-      return null;
+      return new ITupleModel[] {};
 
     final List<ITupleModel> models = new ArrayList<ITupleModel>();
     for( final ObservationSource source : sources )
@@ -162,10 +171,7 @@ public class CopyObservationFeatureVisitor extends AbstractMonitoredFeatureVisit
       models.add( observation.getValues( request ) );
     }
 
-    final MultipleTupleModel tupleModel = new MultipleTupleModel( models.toArray( new ITupleModel[] {} ) );
-
-    return tupleModel;
-
+    return models.toArray( new ITupleModel[] {} );
   }
 
   private void refreshWorkspace( final URL targetLocation )
