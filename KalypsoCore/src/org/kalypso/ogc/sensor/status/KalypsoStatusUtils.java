@@ -51,7 +51,7 @@ import javax.swing.ImageIcon;
 
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
 
@@ -501,7 +501,7 @@ public class KalypsoStatusUtils
    * Else, the or'ed value of all stati is returned.
    * @throws SensorException
    */
-  public static int getStatus( final ITuppleModel values, final IAxis axis ) throws SensorException
+  public static int getStatus( final ITupleModel values, final IAxis axis ) throws SensorException
   {
     int mergedStatus = KalypsoStati.BIT_OK;
 
@@ -523,7 +523,7 @@ public class KalypsoStatusUtils
    * 
    * @throws SensorException
    */
-  public static int countStatus( final ITuppleModel values, final IAxis axis, final int mask ) throws SensorException
+  public static int countStatus( final ITupleModel values, final IAxis axis, final int mask ) throws SensorException
   {
     final IAxis statusAxis = KalypsoStatusUtils.findStatusAxisFor( values.getAxisList(), axis );
     int count = 0;

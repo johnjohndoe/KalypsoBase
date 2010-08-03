@@ -58,10 +58,10 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
-import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
+import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.metadata.ITimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
@@ -110,11 +110,11 @@ public class NativeObservationDWDstdAdapter implements INativeObservationAdapter
     m_dwdSTDDateFormat.setTimeZone( timeZone );
     // create axis
     final IAxis[] axis = createAxis();
-    final ITuppleModel tuppelModel = createTuppelModel( source, axis, continueWithErrors );
+    final ITupleModel tuppelModel = createTuppelModel( source, axis, continueWithErrors );
     return new SimpleObservation( "href", m_titel, metaDataList, tuppelModel ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
-  private ITuppleModel createTuppelModel( final File source, final IAxis[] axis, final boolean continueWithErrors ) throws IOException
+  private ITupleModel createTuppelModel( final File source, final IAxis[] axis, final boolean continueWithErrors ) throws IOException
   {
     final int MAX_NO_OF_ERRORS = 30;
     int numberOfErrors = 0;
@@ -186,7 +186,7 @@ public class NativeObservationDWDstdAdapter implements INativeObservationAdapter
     }
     // TODO handle error
     System.out.println( errorBuffer.toString() );
-    return new SimpleTuppleModel( axis, tupelData );
+    return new SimpleTupleModel( axis, tupelData );
   }
 
   @Override

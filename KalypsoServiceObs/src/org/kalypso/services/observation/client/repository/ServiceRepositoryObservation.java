@@ -50,7 +50,7 @@ import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.IObservationListener;
-import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.cache.ObservationCache;
 import org.kalypso.ogc.sensor.event.ObservationEventAdapter;
@@ -179,9 +179,9 @@ public class ServiceRepositoryObservation implements IObservation
    * @see org.kalypso.ogc.sensor.IObservation#getValues(org.kalypso.ogc.sensor.request.IRequest)
    */
   @Override
-  public final synchronized ITuppleModel getValues( final IRequest args ) throws SensorException
+  public final synchronized ITupleModel getValues( final IRequest args ) throws SensorException
   {
-    ITuppleModel values = ObservationCache.getInstance().getValues( this );
+    ITupleModel values = ObservationCache.getInstance().getValues( this );
 
     if( values == null )
     {
@@ -199,7 +199,7 @@ public class ServiceRepositoryObservation implements IObservation
    */
   @Override
   @Deprecated
-  public final void setValues( final ITuppleModel values )
+  public final void setValues( final ITupleModel values )
   {
     throw new NotImplementedException( "Not used anymore. Use repository#setData instead" );
   }

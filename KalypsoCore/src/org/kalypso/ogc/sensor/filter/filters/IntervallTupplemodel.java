@@ -51,11 +51,11 @@ import org.kalypso.contribs.java.util.CalendarUtilities;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IAxisRange;
-import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.impl.AbstractTuppleModel;
-import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
+import org.kalypso.ogc.sensor.impl.AbstractTupleModel;
+import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
 import org.kalypso.ogc.sensor.metadata.ITimeserieConstants;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
@@ -63,7 +63,7 @@ import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 /**
  * @author doemming
  */
-public class IntervallTupplemodel extends AbstractTuppleModel
+public class IntervallTupplemodel extends AbstractTupleModel
 {
   private static final int TODO_NOTHING = 0;
 
@@ -73,7 +73,7 @@ public class IntervallTupplemodel extends AbstractTuppleModel
 
   private static final int TODO_FINISHED = 3;
 
-  private final ITuppleModel m_srcModel;
+  private final ITupleModel m_srcModel;
 
   private final int m_mode;
 
@@ -91,13 +91,13 @@ public class IntervallTupplemodel extends AbstractTuppleModel
 
   private final Calendar m_to;
 
-  private final ITuppleModel m_intervallModel;
+  private final ITupleModel m_intervallModel;
 
   private final double m_defaultValue;
 
   private final int m_defaultStatus;
 
-  public IntervallTupplemodel( final int mode, final int calendarField, final int amount, final int startCalendarValue, final String startCalendarField, final ITuppleModel srcModel, final Date from, final Date to, final double defaultValue, final int defaultStatus ) throws SensorException
+  public IntervallTupplemodel( final int mode, final int calendarField, final int amount, final int startCalendarValue, final String startCalendarField, final ITupleModel srcModel, final Date from, final Date to, final double defaultValue, final int defaultStatus ) throws SensorException
   {
     super( srcModel.getAxisList() );
     m_mode = mode;
@@ -163,12 +163,12 @@ public class IntervallTupplemodel extends AbstractTuppleModel
     return null;
   }
 
-  private static IAxisRange getSourceModelRange( final ITuppleModel srcModel, final IAxis dateAxis ) throws SensorException
+  private static IAxisRange getSourceModelRange( final ITupleModel srcModel, final IAxis dateAxis ) throws SensorException
   {
     return srcModel.getRangeFor( dateAxis );
   }
 
-  private ITuppleModel initModell( final IAxis[] axisList, final String startCalendarField, final int startCalendarValue ) throws SensorException
+  private ITupleModel initModell( final IAxis[] axisList, final String startCalendarField, final int startCalendarValue ) throws SensorException
   {
     if( m_from == null || m_to == null )
       return createTuppleModell( axisList, 0 );
@@ -180,7 +180,7 @@ public class IntervallTupplemodel extends AbstractTuppleModel
     return doInitModell();
   }
 
-  private ITuppleModel doInitModell( ) throws SensorException
+  private ITupleModel doInitModell( ) throws SensorException
   {
     // create empty model
     final IAxis[] axisList = getAxisList();
@@ -190,7 +190,7 @@ public class IntervallTupplemodel extends AbstractTuppleModel
     Assert.isTrue( stepCount > 0 , String.format( "Empty intervall tuple model. Check from (%s)/to(%s).", m_from, m_to ) );
     
     final int rows = stepCount - 1;
-    final ITuppleModel intervallModel = createTuppleModell( axisList, rows );
+    final ITupleModel intervallModel = createTuppleModell( axisList, rows );
 
     // default values
     final int[] defaultStatus = new int[m_statusAxis.length];
@@ -374,13 +374,13 @@ public class IntervallTupplemodel extends AbstractTuppleModel
     return intervallModel;
   }
 
-  private SimpleTuppleModel createTuppleModell( final IAxis[] axisList, final int rows )
+  private SimpleTupleModel createTuppleModell( final IAxis[] axisList, final int rows )
   {
-    return new SimpleTuppleModel( axisList, new Object[rows][axisList.length] );
+    return new SimpleTupleModel( axisList, new Object[rows][axisList.length] );
   }
 
   // accept values for result
-  private void updateModelfromIntervall( final ITuppleModel model, final int targetRow, final Intervall targetIntervall ) throws SensorException
+  private void updateModelfromIntervall( final ITupleModel model, final int targetRow, final Intervall targetIntervall ) throws SensorException
   {
     final Calendar cal = targetIntervall.getEnd();
     final int[] status = targetIntervall.getStatus();

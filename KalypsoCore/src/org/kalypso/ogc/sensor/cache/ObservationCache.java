@@ -42,7 +42,7 @@ package org.kalypso.ogc.sensor.cache;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.ITupleModel;
 import org.shiftone.cache.Cache;
 import org.shiftone.cache.policy.lfu.LfuCacheFactory;
 
@@ -111,15 +111,15 @@ public class ObservationCache
     }
   }
 
-  public ITuppleModel getValues( final IObservation obs )
+  public ITupleModel getValues( final IObservation obs )
   {
     synchronized( m_cache )
     {
-      return (ITuppleModel)m_cache.getObject( obs );
+      return (ITupleModel)m_cache.getObject( obs );
     }
   }
 
-  public void addValues( final IObservation obs, final ITuppleModel values )
+  public void addValues( final IObservation obs, final ITupleModel values )
   {
     synchronized( m_cache )
     {

@@ -44,7 +44,7 @@ import java.net.URL;
 
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.zml.filters.NOperationFilterType;
@@ -100,9 +100,9 @@ public class NOperationFilter extends AbstractObservationFilter
   }
 
   @Override
-  public ITuppleModel getValues( final IRequest args ) throws SensorException
+  public ITupleModel getValues( final IRequest args ) throws SensorException
   {
-    final ITuppleModel models[] = new ITuppleModel[m_innerObservations.length];
+    final ITupleModel models[] = new ITupleModel[m_innerObservations.length];
     for( int i = 0; i < models.length; i++ )
       models[i] = m_innerObservations[i].getValues( args );
 
@@ -110,7 +110,7 @@ public class NOperationFilter extends AbstractObservationFilter
   }
 
   @Override
-  public void setValues( final ITuppleModel values )
+  public void setValues( final ITupleModel values )
   {
     throw new UnsupportedOperationException( getClass().getName() + Messages.getString( "org.kalypso.ogc.sensor.filter.filters.NOperationFilter.6" ) ); //$NON-NLS-1$
   }

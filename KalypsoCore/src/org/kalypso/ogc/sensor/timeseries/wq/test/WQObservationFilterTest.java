@@ -46,7 +46,7 @@ import junit.framework.TestCase;
 
 import org.apache.commons.io.IOUtils;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
@@ -73,7 +73,7 @@ public class WQObservationFilterTest extends TestCase
 
       final IObservation obs = ZmlFactory.parseXML( new InputSource( ins ), null ); //$NON-NLS-1$
 
-      final ITuppleModel wqValues = obs.getValues( null );
+      final ITupleModel wqValues = obs.getValues( null );
 
       assertNotNull( wqValues );
 
@@ -99,7 +99,7 @@ public class WQObservationFilterTest extends TestCase
 
       final IObservation obs = ZmlFactory.parseXML( new InputSource( ins ), null ); //$NON-NLS-1$
 
-      final ITuppleModel values = obs.getValues( null );
+      final ITupleModel values = obs.getValues( null );
 
       assertNotNull( values );
 
@@ -120,7 +120,7 @@ public class WQObservationFilterTest extends TestCase
 
       final IObservation obs = ZmlFactory.parseXML( new InputSource( ins ), null ); //$NON-NLS-1$
 
-      final ITuppleModel values = obs.getValues( null );
+      final ITupleModel values = obs.getValues( null );
 
       assertNotNull( values );
 
@@ -141,7 +141,7 @@ public class WQObservationFilterTest extends TestCase
 
       final IObservation obs = ZmlFactory.parseXML( new InputSource( ins ), null ); //$NON-NLS-1$
 
-      final ITuppleModel values = obs.getValues( null );
+      final ITupleModel values = obs.getValues( null );
 
       assertNotNull( values );
 

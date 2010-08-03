@@ -45,7 +45,7 @@ package org.kalypso.ogc.sensor;
  * 
  * @author schlienger
  */
-public interface ITuppleModel
+public interface ITupleModel
 {
   /**
    * @return axis list for which this model delivers elements

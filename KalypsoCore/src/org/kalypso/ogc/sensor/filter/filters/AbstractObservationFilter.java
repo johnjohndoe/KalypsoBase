@@ -46,7 +46,7 @@ import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.IObservationListener;
-import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.filter.IObservationFilter;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
@@ -110,7 +110,7 @@ public abstract class AbstractObservationFilter implements IObservationFilter
   }
 
   @Override
-  public ITuppleModel getValues( final IRequest args ) throws SensorException
+  public ITupleModel getValues( final IRequest args ) throws SensorException
   {
     if( m_obs == null )
       throw new IllegalStateException( Messages.getString( "org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter.6" ) ); //$NON-NLS-1$
@@ -128,7 +128,7 @@ public abstract class AbstractObservationFilter implements IObservationFilter
   }
 
   @Override
-  public void setValues( final ITuppleModel values ) throws SensorException
+  public void setValues( final ITupleModel values ) throws SensorException
   {
     if( m_obs == null )
       throw new IllegalStateException( Messages.getString( "org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter.9" ) ); //$NON-NLS-1$

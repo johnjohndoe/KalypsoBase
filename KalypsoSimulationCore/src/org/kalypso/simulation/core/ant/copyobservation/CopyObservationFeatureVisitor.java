@@ -48,20 +48,22 @@ import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.logging.Level;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.CoreException;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.contribs.java.util.logging.ILogger;
 import org.kalypso.contribs.java.util.logging.LoggerUtilities;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
+import org.kalypso.ogc.sensor.metadata.MetadataHelper;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
-import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
-import org.kalypso.ogc.sensor.timeseries.forecast.ForecastTuppleModel;
+import org.kalypso.ogc.sensor.timeseries.forecast.MultipleTupleModel;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.simulation.core.ant.AbstractMonitoredFeatureVisitor;
 import org.kalypso.simulation.core.ant.copyobservation.source.ObservationSource;
@@ -110,31 +112,79 @@ public class CopyObservationFeatureVisitor extends AbstractMonitoredFeatureVisit
       final ObservationSource[] sources = m_sources.getObservationSources( feature );
 
       final URL targetLocation = UrlResolverSingleton.getDefault().resolveURL( m_target.getContext(), targetHref );
-
       final File targetFile = getTargetFile( targetLocation );
 
-      final IObservation resultObs = combineResultObservation( sources );
-      updateMetaData( resultObs, sources );
-      udpateMetaData( resultObs, feature );
+      final ITupleModel combined = combineSources( sources );
+
+      final MetadataList metaData = getMetaData( sources );
+      updateMetaData( metaData, sources );
+      udpateMetaData( metaData, feature );
+
+      final SimpleObservation result = new SimpleObservation( null, null, metaData, combined );
 
       final IRequest request = new ObservationRequest( m_target.getTargetDateRange() );
-      writeTargetObservation( targetFile, resultObs, request );
+      writeTargetObservation( targetFile, result, request );
 
-      final IFile targetfile = getTargetResource( targetLocation );
-      if( targetfile != null )
-      {
-        // FIXME: is this enough? What happens if the mkdir on the local file creates new folders?
-        targetfile.refreshLocal( DEPTH_INFINITE, null );
-      }
+      refreshWorkspace( targetLocation );
     }
     catch( final Exception e )
     {
       e.printStackTrace();
-
       m_logger.log( Level.WARNING, LoggerUtilities.CODE_SHOW_DETAILS, Messages.getString( "org.kalypso.ogc.util.CopyObservationFeatureVisitor.3" ) + feature == null ? "" : feature.getId() + "\t" + e.getLocalizedMessage() );//$NON-NLS-1$ //$NON-NLS-2$ $NON-NLS-2$
     }
 
     return true;
+  }
+
+  /** FIXME: clean implementation of getMetaData */
+  private MetadataList getMetaData( final ObservationSource[] sources )
+  {
+    for( final ObservationSource source : sources )
+    {
+      /** grummel: first observation defines meta data of combined observation */
+      return source.getObservation().getMetadataList();
+    }
+
+    return new MetadataList();
+  }
+
+  private ITupleModel combineSources( final ObservationSource[] sources ) throws SensorException
+  {
+    if( ArrayUtils.isEmpty( sources ) )
+      return null;
+
+    final List<ITupleModel> models = new ArrayList<ITupleModel>();
+    for( final ObservationSource source : sources )
+    {
+      final IObservation observation = source.getObservation();
+      final ObservationRequest request = new ObservationRequest( source.getDateRange() );
+
+      models.add( observation.getValues( request ) );
+    }
+
+    final MultipleTupleModel tupleModel = new MultipleTupleModel( models.toArray( new ITupleModel[] {} ) );
+
+    return tupleModel;
+
+  }
+
+  private void refreshWorkspace( final URL targetLocation )
+  {
+    try
+    {
+      final IFile iTarget = getTargetResource( targetLocation );
+      if( iTarget != null )
+      {
+        // FIXME: is this enough? What happens if the mkdir on the local file creates new folders?
+        iTarget.refreshLocal( DEPTH_INFINITE, null );
+      }
+    }
+    catch( final CoreException e )
+    {
+      e.printStackTrace();
+      m_logger.log( Level.WARNING, LoggerUtilities.CODE_SHOW_DETAILS, "refreshing local workspace failed" );
+    }
+
   }
 
   private File getTargetFile( final URL targetLocation )
@@ -161,59 +211,30 @@ public class CopyObservationFeatureVisitor extends AbstractMonitoredFeatureVisit
     ZmlFactory.writeToFile( resultObs, file, request );
   }
 
-  private void udpateMetaData( final IObservation resultObs, final Feature feature )
+  private void udpateMetaData( final MetadataList metadata, final Feature feature )
   {
-    if( feature == null )
-      return;
-
-    // put additional metadata that we got from outside
-    final MetadataList mdl = resultObs.getMetadataList();
-
     for( final Entry<Object, Object> element : m_metadata.entrySet() )
     {
       final Entry<Object, Object> entry = element;
       final String metaValue = FeatureHelper.tokenReplace( feature, (String) entry.getValue() );
       final String metaKey = (String) entry.getKey();
-      mdl.put( metaKey, metaValue );
+      metadata.put( metaKey, metaValue );
     }
   }
 
-  private void updateMetaData( final IObservation resultObs, final ObservationSource[] sources )
+  private void updateMetaData( final MetadataList metadata, final ObservationSource[] sources )
   {
     /* set forecast metadata, might be used in diagram for instance to mark the forecast range */
-    TimeserieUtils.setTargetForecast( resultObs, m_target.getTargetForecastDateRange() );
-    TimeserieUtils.setTargetDateRange( resultObs, m_target.getTargetDateRange() );
+    MetadataHelper.setTargetForecast( metadata, m_target.getTargetForecastDateRange() );
+    MetadataHelper.setTargetDateRange( metadata, m_target.getTargetDateRange() );
 
     // put additional metadata that we got from outside
-    final MetadataList mdl = resultObs.getMetadataList();
-
     int count = 0;
     for( final ObservationSource source : sources )
     {
-      mdl.putAll( CopyObservationHelper.getSourceMetadataSettings( source, count ) );
+      metadata.putAll( CopyObservationHelper.getSourceMetadataSettings( source, count ) );
       count++;
     }
   }
 
-  private IObservation combineResultObservation( final ObservationSource[] sources ) throws SensorException
-  {
-    final List<ITuppleModel> models = new ArrayList<ITuppleModel>();
-    for( final ObservationSource source : sources )
-    {
-      final IObservation observation = source.getObservation();
-      final ObservationRequest request = new ObservationRequest( source.getDateRange() );
-
-      models.add( observation.getValues( request ) );
-    }
-
-    if( models.size() == 0 )
-      return null;
-
-    final ForecastTuppleModel tuppleModel = new ForecastTuppleModel( models.toArray( new ITuppleModel[] {} ) );
-
-    final IObservation baseObservation = sources[0].getObservation();
-    final MetadataList metadataList = (MetadataList) baseObservation.getMetadataList().clone();
-
-    return new SimpleObservation( null, null, metadataList, tuppleModel );
-  }
 }

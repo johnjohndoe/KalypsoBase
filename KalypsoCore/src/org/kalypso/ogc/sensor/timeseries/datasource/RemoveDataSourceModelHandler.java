@@ -42,9 +42,9 @@ package org.kalypso.ogc.sensor.timeseries.datasource;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
+import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 
 /**
@@ -56,7 +56,7 @@ public class RemoveDataSourceModelHandler extends AbstractDataSourceModelHandler
   /**
    * don't use item.getAdapter(IObservation.class) -> because some implementation extends the underlying observation
    */
-  public RemoveDataSourceModelHandler( final ITuppleModel model )
+  public RemoveDataSourceModelHandler( final ITupleModel model )
   {
     super( model );
   }
@@ -64,15 +64,15 @@ public class RemoveDataSourceModelHandler extends AbstractDataSourceModelHandler
   /**
    * @return cloned observation extended by data source axis if no data source axis exists
    */
-  public ITuppleModel remove( ) throws SensorException
+  public ITupleModel remove( ) throws SensorException
   {
     if( !hasDataSouceAxis() )
       return getModel();
 
-    final ITuppleModel baseModel = getModel();
+    final ITupleModel baseModel = getModel();
     final IAxis[] axes = getAxes( baseModel.getAxisList() );
 
-    final SimpleTuppleModel model = new SimpleTuppleModel( axes );
+    final SimpleTupleModel model = new SimpleTupleModel( axes );
 
     for( int i = 0; i < baseModel.getCount(); i++ )
     {

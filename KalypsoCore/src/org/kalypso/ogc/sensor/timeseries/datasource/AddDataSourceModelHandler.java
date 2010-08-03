@@ -42,10 +42,10 @@ package org.kalypso.ogc.sensor.timeseries.datasource;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
-import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
+import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
 import org.kalypso.ogc.sensor.metadata.ITimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 
@@ -54,7 +54,7 @@ import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
  */
 public class AddDataSourceModelHandler extends AbstractDataSourceModelHandler
 {
-  public AddDataSourceModelHandler( final ITuppleModel model )
+  public AddDataSourceModelHandler( final ITupleModel model )
   {
     super( model );
   }
@@ -62,18 +62,18 @@ public class AddDataSourceModelHandler extends AbstractDataSourceModelHandler
   /**
    * @return cloned observation extended by data source axis if no data source axis exists
    */
-  public ITuppleModel extend( ) throws SensorException
+  public ITupleModel extend( ) throws SensorException
   {
     if( hasDataSouceAxis() )
       return getModel();
 
     final DefaultAxis dataSourceAxis = new DefaultAxis( TimeserieUtils.getName( ITimeserieConstants.TYPE_DATA_SRC ), ITimeserieConstants.TYPE_DATA_SRC, "", Integer.class, false );
 
-    final ITuppleModel baseModel = getModel();
+    final ITupleModel baseModel = getModel();
     IAxis[] baseAxes = baseModel.getAxisList();
     baseAxes = (IAxis[]) ArrayUtils.add( baseAxes, dataSourceAxis );
 
-    final SimpleTuppleModel model = new SimpleTuppleModel( baseAxes );
+    final SimpleTupleModel model = new SimpleTupleModel( baseAxes );
     final int dataSourceIndex = ArrayUtils.indexOf( baseAxes, dataSourceAxis );
 
     for( int i = 0; i < baseModel.getCount(); i++ )

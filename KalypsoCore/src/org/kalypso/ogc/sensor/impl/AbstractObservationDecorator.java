@@ -43,7 +43,7 @@ package org.kalypso.ogc.sensor.impl;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.IObservationListener;
-import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.request.IRequest;
@@ -101,7 +101,7 @@ public class AbstractObservationDecorator implements IObservation
   }
 
   @Override
-  public ITuppleModel getValues( final IRequest args ) throws SensorException
+  public ITupleModel getValues( final IRequest args ) throws SensorException
   {
     return m_obs.getValues( args );
   }
@@ -125,7 +125,7 @@ public class AbstractObservationDecorator implements IObservation
   }
 
   @Override
-  public void setValues( final ITuppleModel values ) throws SensorException
+  public void setValues( final ITupleModel values ) throws SensorException
   {
     m_obs.setValues( values );
   }

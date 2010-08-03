@@ -48,11 +48,11 @@ import org.kalypso.commons.math.LinearEquation.SameXValuesException;
 import org.kalypso.commons.parser.IParser;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter;
-import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
+import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
@@ -118,7 +118,7 @@ public class InterpolationFilter extends AbstractObservationFilter
    * @see org.kalypso.ogc.sensor.IObservation#getValues(org.kalypso.ogc.sensor.request.IRequest)
    */
   @Override
-  public ITuppleModel getValues( final IRequest request ) throws SensorException
+  public ITupleModel getValues( final IRequest request ) throws SensorException
   {
     final DateRange dr = request == null ? null : request.getDateRange();
 
@@ -128,7 +128,7 @@ public class InterpolationFilter extends AbstractObservationFilter
     // FIX: we just make the request a big bigger in order to get a new first value
     // HACK: we always use DAY, so that work fine only up to timeseries of DAY-quality.
     // Maybe there should be one day a mean to determine, which is the right amount.
-    final ITuppleModel values = ObservationUtilities.requestBuffered( getObservation(), dr, Calendar.DAY_OF_MONTH, 2 );
+    final ITupleModel values = ObservationUtilities.requestBuffered( getObservation(), dr, Calendar.DAY_OF_MONTH, 2 );
 
     final IAxis dateAxis = ObservationUtilities.findAxisByClass( values.getAxisList(), Date.class );
     final IAxis[] valueAxes = ObservationUtilities.findAxesByClasses( values.getAxisList(), new Class[]
@@ -137,7 +137,7 @@ public class InterpolationFilter extends AbstractObservationFilter
         Boolean.class } );
     final Object[] defaultValues = parseDefaultValues( valueAxes );
 
-    final SimpleTuppleModel intModel = new SimpleTuppleModel( values.getAxisList() );
+    final SimpleTupleModel intModel = new SimpleTupleModel( values.getAxisList() );
 
     final Calendar cal = Calendar.getInstance();
 
@@ -341,7 +341,7 @@ public class InterpolationFilter extends AbstractObservationFilter
    * Fill the model with default values
    */
   private void fillWithDefault( final IAxis dateAxis, final IAxis[] valueAxes, final Object[] defaultValues,
-      final SimpleTuppleModel intModel, final Calendar cal ) throws SensorException
+      final SimpleTupleModel intModel, final Calendar cal ) throws SensorException
   {
     fillWithDefault( dateAxis, valueAxes, defaultValues, intModel, cal, null );
   }
@@ -353,7 +353,7 @@ public class InterpolationFilter extends AbstractObservationFilter
    *          if not null, the values from this tupple are used instead of the default one
    */
   private void fillWithDefault( final IAxis dateAxis, final IAxis[] valueAxes, final Object[] defaultValues,
-      final SimpleTuppleModel intModel, final Calendar cal, Object[] masterTupple ) throws SensorException
+      final SimpleTupleModel intModel, final Calendar cal, Object[] masterTupple ) throws SensorException
   {
     final Object[] tupple;
 

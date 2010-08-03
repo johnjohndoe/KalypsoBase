@@ -45,7 +45,7 @@ import junit.framework.TestCase;
 
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.SimpleAxis;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
@@ -70,7 +70,7 @@ public class SimpleObservationTest extends TestCase
 
   public void testSetValues( ) throws SensorException
   {
-    final ITuppleModel values = m_obs.getValues( null );
+    final ITupleModel values = m_obs.getValues( null );
 
     final SimpleObservation observation = new SimpleObservation( values.getAxisList() );
     observation.setValues( values );

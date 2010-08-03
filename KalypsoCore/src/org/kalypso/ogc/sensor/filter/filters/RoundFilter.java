@@ -48,10 +48,10 @@ import java.util.Date;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
+import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
 import org.kalypso.ogc.sensor.proxy.AutoProxyFactory;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
@@ -111,7 +111,7 @@ public class RoundFilter extends AbstractObservationFilter
   }
 
   @Override
-  public ITuppleModel getValues( final IRequest request ) throws SensorException
+  public ITupleModel getValues( final IRequest request ) throws SensorException
   {
     final Date from;
     final Date to;
@@ -148,7 +148,7 @@ public class RoundFilter extends AbstractObservationFilter
 
     final IObservation proxiedObservation = AutoProxyFactory.getInstance().proxyObservation(m_baseobservation);
 
-    final ITuppleModel values = proxiedObservation.getValues( bufferedRequest );
+    final ITupleModel values = proxiedObservation.getValues( bufferedRequest );
 
     // get all non-virtual Double-Axises
     final IAxis axis = ObservationUtilities.findAxisByTypeNoEx( values.getAxisList(), m_type );
@@ -169,14 +169,14 @@ public class RoundFilter extends AbstractObservationFilter
         }
       }
 
-    final ITuppleModel orgValues = m_baseobservation.getValues( bufferedRequest );
+    final ITupleModel orgValues = m_baseobservation.getValues( bufferedRequest );
 
-    final SimpleTuppleModel simpleTuppleModel = new SimpleTuppleModel( orgValues );
+    final SimpleTupleModel simpleTuppleModel = new SimpleTupleModel( orgValues );
     return simpleTuppleModel;
   }
 
   @Override
-  public void setValues( final ITuppleModel values )
+  public void setValues( final ITupleModel values )
   {
     throw new UnsupportedOperationException( getClass().getName() + Messages.getString("org.kalypso.ogc.sensor.filter.filters.RoundFilter.2") ); //$NON-NLS-1$
   }

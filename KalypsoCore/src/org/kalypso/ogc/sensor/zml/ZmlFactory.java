@@ -87,13 +87,13 @@ import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.filter.FilterFactory;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
-import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
+import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
 import org.kalypso.ogc.sensor.metadata.IObservationConstants;
 import org.kalypso.ogc.sensor.metadata.ITimeserieConstants;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
@@ -515,7 +515,7 @@ public final class ZmlFactory
     try
     {
       // first of all fetch values
-      final ITuppleModel values = obs.getValues( args );
+      final ITupleModel values = obs.getValues( args );
 
       final Observation obsType = OF.createObservation();
       obsType.setName( obs.getName() );
@@ -633,7 +633,7 @@ public final class ZmlFactory
   /**
    * @return string that contains the serialized values
    */
-  private static String buildValueString( final ITuppleModel model, final IAxis axis, final TimeZone timezone ) throws SensorException
+  private static String buildValueString( final ITupleModel model, final IAxis axis, final TimeZone timezone ) throws SensorException
   {
     if( model.getCount() == 0 )
       return "";
@@ -648,7 +648,7 @@ public final class ZmlFactory
       throw new IllegalArgumentException( Messages.getString( "org.kalypso.ogc.sensor.zml.ZmlFactory.21" ) ); //$NON-NLS-1$
   }
 
-  private static String buildStringAxis( final ITuppleModel model, final IAxis axis ) throws SensorException
+  private static String buildStringAxis( final ITupleModel model, final IAxis axis ) throws SensorException
   {
     final StringBuffer buffer = new StringBuffer();
 
@@ -658,7 +658,7 @@ public final class ZmlFactory
     return StringUtilities.chomp( buffer.toString() );
   }
 
-  private static String buildStringDateAxis( final ITuppleModel model, final IAxis axis, final TimeZone timezone ) throws SensorException
+  private static String buildStringDateAxis( final ITupleModel model, final IAxis axis, final TimeZone timezone ) throws SensorException
   {
     final StringBuffer buffer = new StringBuffer();
     final DateParser dateParser = XmlTypes.getDateParser( timezone );
@@ -672,7 +672,7 @@ public final class ZmlFactory
   /**
    * Uses the default toString() method of the elements
    */
-  private static String buildStringNumberAxis( final ITuppleModel model, final IAxis axis ) throws SensorException
+  private static String buildStringNumberAxis( final ITupleModel model, final IAxis axis ) throws SensorException
   {
     final StringBuffer buffer = new StringBuffer();
 
@@ -869,7 +869,7 @@ public final class ZmlFactory
       values[r] = iter.next();
       r++;
     }
-    final ITuppleModel model = new SimpleTuppleModel( axis, values );
+    final ITupleModel model = new SimpleTupleModel( axis, values );
     return new SimpleObservation( null, name, new MetadataList(), model );
   }
 
@@ -883,7 +883,7 @@ public final class ZmlFactory
   public static String createClipboardStringFrom( final IObservation observation, final IRequest request ) throws SensorException
   {
     final StringBuffer result = new StringBuffer();
-    final ITuppleModel values = observation.getValues( request );
+    final ITupleModel values = observation.getValues( request );
     final IAxis[] axes = values.getAxisList();
     final int count = values.getCount();
     // actually just the first key axis is relevant in our case

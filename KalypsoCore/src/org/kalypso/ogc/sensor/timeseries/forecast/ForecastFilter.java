@@ -43,7 +43,7 @@ package org.kalypso.ogc.sensor.timeseries.forecast;
 import java.net.URL;
 
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter;
 import org.kalypso.ogc.sensor.request.IRequest;
@@ -75,13 +75,13 @@ public class ForecastFilter extends AbstractObservationFilter
    *          forecastfilter should expect <code>null</code> here.
    */
   @Override
-  public ITuppleModel getValues( IRequest args ) throws SensorException
+  public ITupleModel getValues( IRequest args ) throws SensorException
   {
-    final ITuppleModel models[] = new ITuppleModel[m_obsArray.length];
+    final ITupleModel models[] = new ITupleModel[m_obsArray.length];
 
     for( int i = 0; i < models.length; i++ )
       models[i] = m_obsArray[i].getValues( args );
 
-    return new ForecastTuppleModel( models );
+    return new MultipleTupleModel( models );
   }
 }

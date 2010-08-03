@@ -53,11 +53,11 @@ import org.kalypso.commons.math.MathOperationFactory;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter;
-import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
+import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
 import org.kalypso.ogc.sensor.metadata.ITimeserieConstants;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
@@ -108,9 +108,9 @@ public class TranProLinFilter extends AbstractObservationFilter
    * @see org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter#getValues(org.kalypso.ogc.sensor.request.IRequest)
    */
   @Override
-  public ITuppleModel getValues( final IRequest args ) throws SensorException
+  public ITupleModel getValues( final IRequest args ) throws SensorException
   {
-    final ITuppleModel outerSource = super.getValues( args );
+    final ITupleModel outerSource = super.getValues( args );
 
     final int outerSourceCount = outerSource.getCount();
     if( outerSourceCount == 0 )
@@ -191,7 +191,7 @@ public class TranProLinFilter extends AbstractObservationFilter
       for( int row = sourceIndexBegin; row < sourceIndexEnd + 1; row++ )
         targetDates[row] = (Date) outerSource.getElement( row, dateAxis );
 
-      final ITuppleModel innerSource;
+      final ITupleModel innerSource;
       // find inner source to initialize inner target model
       if( outerSource instanceof WQTuppleModel )
       {
@@ -203,10 +203,10 @@ public class TranProLinFilter extends AbstractObservationFilter
 
       // initialize inner target
       final Object[][] vallues = createValueArray( targetDates, innerSource.getAxisList().length, innerSource.getPositionFor( dateAxis ) );
-      final SimpleTuppleModel innerTarget = new SimpleTuppleModel( innerSource.getAxisList(), vallues );
+      final SimpleTupleModel innerTarget = new SimpleTupleModel( innerSource.getAxisList(), vallues );
 
       // initialize outer target
-      final ITuppleModel outerTarget;
+      final ITupleModel outerTarget;
       if( outerSource instanceof WQTuppleModel )
       {
         final WQTuppleModel wqTuppleModel = (WQTuppleModel) outerSource;
@@ -247,9 +247,9 @@ public class TranProLinFilter extends AbstractObservationFilter
    * @param outerTarget
    * @throws SensorException
    */
-  private void performTransformation( final ITuppleModel outerSource, final IAxis dateAxis, Date dateBegin,
+  private void performTransformation( final ITupleModel outerSource, final IAxis dateAxis, Date dateBegin,
       Date dateEnd, final int sourceIndexBegin, final int sourceIndexEnd, final IAxis[] axesStatus,
-      final IAxis[] axesCopy, final IAxis[] axesTransform, final ITuppleModel outerTarget ) throws SensorException
+      final IAxis[] axesCopy, final IAxis[] axesTransform, final ITupleModel outerTarget ) throws SensorException
   {
     final long distTime = dateEnd.getTime() - dateBegin.getTime();
     final double deltaOperand = m_operandEnd - m_operandBegin;

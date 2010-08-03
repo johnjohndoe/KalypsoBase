@@ -49,10 +49,10 @@ import java.util.Vector;
 
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.filter.filters.valuecomp.IValueComp;
-import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
+import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
 import org.kalypso.ogc.sensor.request.IRequest;
 
 /**
@@ -84,12 +84,12 @@ public class ValueFilter extends AbstractObservationFilter
    * @see org.kalypso.ogc.sensor.IObservation#getValues(org.kalypso.ogc.sensor.request.IRequest)
    */
   @Override
-  public ITuppleModel getValues( final IRequest args ) throws SensorException
+  public ITupleModel getValues( final IRequest args ) throws SensorException
   {
-    final ITuppleModel values = super.getValues( args );
+    final ITupleModel values = super.getValues( args );
     final IAxis[] axes = values.getAxisList();
 
-    final SimpleTuppleModel newValues = new SimpleTuppleModel( axes );
+    final SimpleTupleModel newValues = new SimpleTupleModel( axes );
 
     for( int i = 0; i < values.getCount(); i++ )
     {

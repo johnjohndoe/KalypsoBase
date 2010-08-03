@@ -48,7 +48,7 @@ import org.jfree.data.general.Series;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.DiagViewCurve;
 import org.kalypso.ogc.sensor.diagview.DiagramAxis;
@@ -71,7 +71,7 @@ class XYCurveSerie extends Series
 
   private final transient DiagViewCurve m_curve;
 
-  private transient ITuppleModel m_values = null;
+  private transient ITupleModel m_values = null;
 
   private transient IAxis m_statusAxis = null;
 

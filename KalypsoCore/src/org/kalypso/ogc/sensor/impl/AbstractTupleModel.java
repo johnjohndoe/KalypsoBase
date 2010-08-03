@@ -47,7 +47,7 @@ import org.kalypso.contribs.java.util.DoubleComparator;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IAxisRange;
-import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
 
 /**
@@ -60,14 +60,14 @@ import org.kalypso.ogc.sensor.SensorException;
  * 
  * @author schlienger
  */
-public abstract class AbstractTuppleModel implements ITuppleModel
+public abstract class AbstractTupleModel implements ITupleModel
 {
-  /** maps an axis to its position in this tupple model */
+  /** maps an axis to its position in this tuple model */
   private final Map<IAxis, Integer> m_axes2pos = new HashMap<IAxis, Integer>();
 
   private final IAxis[] m_axes;
 
-  public AbstractTuppleModel( final IAxis[] axes )
+  public AbstractTupleModel( final IAxis[] axes )
   {
     for( int ia = 0; ia < axes.length; ia++ )
       mapAxisToPos( axes[ia], ia );
@@ -91,7 +91,7 @@ public abstract class AbstractTuppleModel implements ITuppleModel
   public int getPositionFor( final IAxis axis ) throws SensorException
   {
     if( !m_axes2pos.containsKey( axis ) )
-      throw new SensorException( Messages.getString("org.kalypso.ogc.sensor.impl.AbstractTuppleModel.0") + axis ); //$NON-NLS-1$
+      throw new SensorException( Messages.getString( "org.kalypso.ogc.sensor.impl.AbstractTuppleModel.0" ) + axis ); //$NON-NLS-1$
 
     return m_axes2pos.get( axis ).intValue();
   }
@@ -150,8 +150,8 @@ public abstract class AbstractTuppleModel implements ITuppleModel
 
       // else we assume that the order is already correct
       // and simply take the first and the last element
-      Object begin = getElement( 0, axis );
-      Object end = getElement( getCount() - 1, axis );
+      final Object begin = getElement( 0, axis );
+      final Object end = getElement( getCount() - 1, axis );
 
       return new DefaultAxisRange( begin, end );
     }

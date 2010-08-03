@@ -44,23 +44,23 @@ import java.util.Date;
 
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.impl.AbstractTuppleModel;
+import org.kalypso.ogc.sensor.impl.AbstractTupleModel;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 
 /**
  * @author doemming
  */
-public class NOperationTupplemodel extends AbstractTuppleModel
+public class NOperationTupplemodel extends AbstractTupleModel
 {
   private final int m_operation;
 
-  private final ITuppleModel[] m_baseModels;
+  private final ITupleModel[] m_baseModels;
 
-  public NOperationTupplemodel( final ITuppleModel[] models, final int operation )
+  public NOperationTupplemodel( final ITupleModel[] models, final int operation )
   {
     super( models[0].getAxisList() );
 
@@ -101,7 +101,7 @@ public class NOperationTupplemodel extends AbstractTuppleModel
       double value = ((Number) m_baseModels[0].getElement( index, a )).doubleValue();
       for( int i = 1; i < m_baseModels.length; i++ )
       {
-        final ITuppleModel model = m_baseModels[i];
+        final ITupleModel model = m_baseModels[i];
         if( index >= model.getCount() )
           continue;
 

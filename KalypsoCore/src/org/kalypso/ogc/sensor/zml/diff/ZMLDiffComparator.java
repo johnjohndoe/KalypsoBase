@@ -37,7 +37,7 @@ import org.kalypso.commons.diff.IDiffLogger;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
@@ -97,8 +97,8 @@ public class ZMLDiffComparator implements IDiffComparator
     final IAxis valueAxis1 = ObservationUtilities.findAxisByClass( axes1, Double.class );
     final IAxis valueAxis2 = ObservationUtilities.findAxisByClass( axes2, Double.class );
 
-    final ITuppleModel values1 = obs1.getValues( null );
-    final ITuppleModel values2 = obs2.getValues( null );
+    final ITupleModel values1 = obs1.getValues( null );
+    final ITupleModel values2 = obs2.getValues( null );
     final int max1 = values1.getCount();
     final int max2 = values2.getCount();
     if( max1 != max2 )

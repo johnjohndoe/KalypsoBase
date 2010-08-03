@@ -45,10 +45,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.impl.AbstractTuppleModel;
-import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
+import org.kalypso.ogc.sensor.impl.AbstractTupleModel;
+import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 
@@ -58,11 +58,11 @@ import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
  * 
  * @author schlienger
  */
-public class WQTuppleModel extends AbstractTuppleModel
+public class WQTuppleModel extends AbstractTupleModel
 {
   private final static Double ZERO = new Double( 0 );
 
-  private final ITuppleModel m_model;
+  private final ITupleModel m_model;
 
   private final IAxis m_dateAxis;
 
@@ -113,7 +113,7 @@ public class WQTuppleModel extends AbstractTuppleModel
    * @param destAxisPos
    *          position of the axis in the array
    */
-  public WQTuppleModel( final ITuppleModel model, final IAxis[] axes, final IAxis dateAxis, final IAxis srcAxis, final IAxis srcStatusAxis, final IAxis destAxis, final IAxis destStatusAxis, final IWQConverter converter, final int destAxisPos, final int destStatusAxisPos )
+  public WQTuppleModel( final ITupleModel model, final IAxis[] axes, final IAxis dateAxis, final IAxis srcAxis, final IAxis srcStatusAxis, final IAxis destAxis, final IAxis destStatusAxis, final IWQConverter converter, final int destAxisPos, final int destStatusAxisPos )
   {
     super( axes );
 
@@ -358,9 +358,9 @@ public class WQTuppleModel extends AbstractTuppleModel
    * 
    * @throws SensorException
    */
-  public static ITuppleModel reverse( final ITuppleModel values, final IAxis[] axes ) throws SensorException
+  public static ITupleModel reverse( final ITupleModel values, final IAxis[] axes ) throws SensorException
   {
-    final SimpleTuppleModel stm = new SimpleTuppleModel( axes );
+    final SimpleTupleModel stm = new SimpleTupleModel( axes );
 
     for( int i = 0; i < values.getCount(); i++ )
     {
@@ -385,7 +385,7 @@ public class WQTuppleModel extends AbstractTuppleModel
   /**
    * @return the base model
    */
-  public ITuppleModel getBaseModel( )
+  public ITupleModel getBaseModel( )
   {
     return m_model;
   }

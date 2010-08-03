@@ -61,7 +61,7 @@ import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.SimpleAxis;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
-import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
+import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
 import org.kalypso.ogc.sensor.metadata.ITimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.ogc.sensor.timeseries.wq.WQException;
@@ -115,7 +115,7 @@ public class CsvSheetImportWorker implements ICoreRunnableWithProgress
 
     final SimpleAxis simpleDataAxis = new SimpleAxis( axisX );
 
-    final SimpleTuppleModel simpleModel = new SimpleTuppleModel( new IAxis[] { simpleDateAxis, simpleDataAxis } );
+    final SimpleTupleModel simpleModel = new SimpleTupleModel( new IAxis[] { simpleDateAxis, simpleDataAxis } );
 
     String[] nextLine;
     while( (nextLine = readerTimeSeries.readNext()) != null )
