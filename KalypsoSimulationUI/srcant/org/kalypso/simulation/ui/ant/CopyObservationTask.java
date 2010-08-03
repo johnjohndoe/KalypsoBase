@@ -61,6 +61,7 @@ import org.kalypso.simulation.core.ant.copyobservation.source.FeatureCopyObserva
 import org.kalypso.simulation.core.ant.copyobservation.source.Source;
 import org.kalypso.simulation.core.ant.copyobservation.target.CopyObservationTargetFactory;
 import org.kalypso.simulation.core.ant.copyobservation.target.ICopyObservationTarget;
+import org.kalypso.simulation.ui.ant.AbstractFeatureVisitorTask;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 
 /**
@@ -134,7 +135,7 @@ public class CopyObservationTask extends AbstractFeatureVisitorTask
    */
   @Override
   public final FeatureVisitor createVisitor( final URL context, final ILogger logger )
-  { 
+  {
     final DateRange forecastRange = DateRange.createDateRangeOrNull( parseDateTime( m_forecastFrom ), parseDateTime( m_forecastTo ) );
     final DateRange targetRange = DateRange.createDateRangeOrNull( parseDateTime( m_targetFrom ), parseDateTime( m_targetTo ) );
 
@@ -185,7 +186,6 @@ public class CopyObservationTask extends AbstractFeatureVisitorTask
 
     m_metadata.setProperty( metadata.getName(), metadata.getValue() );
   }
-
 
   public final String getForecastFrom( )
   {
@@ -273,4 +273,3 @@ public class CopyObservationTask extends AbstractFeatureVisitorTask
     m_targetObservationDir = targetObservationDir;
   }
 }
-

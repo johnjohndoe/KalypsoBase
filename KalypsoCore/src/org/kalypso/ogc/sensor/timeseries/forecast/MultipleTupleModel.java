@@ -44,13 +44,17 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.AbstractTupleModel;
-import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
+import org.kalypso.ogc.sensor.impl.DefaultAxis;
+import org.kalypso.ogc.sensor.metadata.ITimeserieConstants;
+import org.kalypso.ogc.sensor.timeseries.AxisUtils;
+import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 
 /**
  * A multiple tuple model which consists of different combined sub models <br>
@@ -67,7 +71,7 @@ import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
  */
 public class MultipleTupleModel extends AbstractTupleModel
 {
-  private final SimpleTupleModel m_model;
+  private final ITupleModel m_model;
 
   private static final Comparator<ITupleModel> COMPARATOR = new Comparator<ITupleModel>()
   {
@@ -114,7 +118,7 @@ public class MultipleTupleModel extends AbstractTupleModel
     }
   };
 
-  public MultipleTupleModel( final ITupleModel[] models ) throws SensorException
+  public MultipleTupleModel( final ITupleModel[] models )
   {
     super( getAxisList( models ) );
 
@@ -131,8 +135,15 @@ public class MultipleTupleModel extends AbstractTupleModel
   {
     for( final ITupleModel model : models )
     {
-      // TODO: *grmml* first model defines axes of result model?
-      return model.getAxisList();
+      // *grmml* first model defines axes of result model?
+      final IAxis[] axes = model.getAxisList();
+      if( AxisUtils.findDataSourceAxis( axes ) == null )
+      {
+        final DefaultAxis dataSourceAxis = new DefaultAxis( TimeserieUtils.getName( ITimeserieConstants.TYPE_DATA_SRC ), ITimeserieConstants.TYPE_DATA_SRC, "", Integer.class, false );
+        return (IAxis[]) ArrayUtils.add( axes, dataSourceAxis );
+      }
+
+      return axes;
     }
 
     return new IAxis[] {};
@@ -142,7 +153,7 @@ public class MultipleTupleModel extends AbstractTupleModel
    * @see org.kalypso.ogc.sensor.ITuppleModel#getCount()
    */
   @Override
-  public int getCount( )
+  public int getCount( ) throws SensorException
   {
     return m_model.getCount();
   }

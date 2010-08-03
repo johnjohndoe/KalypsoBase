@@ -40,18 +40,21 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.timeseries.forecast;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.java.util.DateUtilities;
-import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
+import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 
 /**
  * combines multiple ITupleModels to one result model.
@@ -79,6 +82,8 @@ public class CombineTupleModelsWorker implements ICoreRunnableWithProgress
   @Override
   public IStatus execute( final IProgressMonitor monitor )
   {
+    final List<IStatus> statis = new ArrayList<IStatus>();
+
     Date lastDate = DateUtilities.getMinimum();
 
     for( final ITupleModel model : m_models )
@@ -96,29 +101,49 @@ public class CombineTupleModelsWorker implements ICoreRunnableWithProgress
           if( current.before( lastDate ) )
             continue;
 
-          final Object[] data = new Object[srcAxes.length];
-
-          for( final IAxis srcAxis : srcAxes )
+          Object[] data;
+          if( AxisUtils.findDataSourceAxis( srcAxes ) != null )
           {
-            final Object value = model.getElement( index, srcAxis );
-            data[mapping.getBaseIndex( srcAxis )] = value;
+            data = new Object[srcAxes.length];
+
+            for( final IAxis srcAxis : srcAxes )
+            {
+              final Object value = model.getElement( index, srcAxis );
+              final int baseIndex = mapping.getBaseIndex( srcAxis );
+              data[baseIndex] = value;
+            }
+          }
+          else
+          {
+            data = new Object[srcAxes.length + 1];
+
+            for( final IAxis srcAxis : srcAxes )
+            {
+              final Object value = model.getElement( index, srcAxis );
+              final int baseIndex = mapping.getBaseIndex( srcAxis );
+              data[baseIndex] = value;
+            }
+
+            final IAxis dataSourceAxis = mapping.getDataSourceAxis();
+            final int baseIndex = mapping.getBaseIndex( dataSourceAxis );
+            data[baseIndex] = ArrayUtils.indexOf( m_models, model ); // hack
           }
 
           m_result.addTupple( data );
           lastDate = current;
         }
+
       }
       catch( final Throwable t )
       {
-        KalypsoCorePlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( t ) );
+        statis.add( StatusUtilities.createWarningStatus( "Adding tuple failed.", t ) );
       }
-
     }
 
-    return null;
+    return StatusUtilities.createStatus( statis, "Combing tuple models." );
   }
 
-  public SimpleTupleModel getCombinedModel( )
+  public ITupleModel getCombinedModel( )
   {
     return m_result;
   }

@@ -160,6 +160,7 @@ public abstract class AbstractFeatureVisitorTask extends Task implements IErrorH
     m_depth = depth;
   }
 
+  @Override
   public synchronized ILogger getLogger( )
   {
     if( m_logger == null )
@@ -270,6 +271,7 @@ public abstract class AbstractFeatureVisitorTask extends Task implements IErrorH
     }
   }
 
+  @Override
   public String getVisitorTaskDescription( )
   {
     final String taskDescription = getDescription();
@@ -291,9 +293,6 @@ public abstract class AbstractFeatureVisitorTask extends Task implements IErrorH
     final String message = StatusUtilities.messageFromStatus( status );
     throw new BuildException( message, status.getException() );
   }
-
- 
-
 
   /**
    * REMARK: It is NOT possible to put this inner class into an own .class file (at least not inside the plugin code)
@@ -319,6 +318,7 @@ public abstract class AbstractFeatureVisitorTask extends Task implements IErrorH
       /**
        * @see org.kalypso.contribs.java.util.logging.ILogger#log(java.util.logging.Level, int, java.lang.String)
        */
+      @Override
       public void log( final Level level, final int msgCode, final String message )
       {
         final String outString = LoggerUtilities.formatLogStylish( level, msgCode, message );
@@ -334,6 +334,7 @@ public abstract class AbstractFeatureVisitorTask extends Task implements IErrorH
    * @param visitor
    *          The visitor previously created by {@link #createVisitor(URL, IUrlResolver, ILogger, IProgressMonitor)}.
    */
+  @Override
   public IStatus statusFromVisitor( final FeatureVisitor visitor )
   {
     return Status.OK_STATUS;

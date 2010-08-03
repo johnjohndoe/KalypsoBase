@@ -47,6 +47,7 @@ import java.util.Set;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.ogc.sensor.IAxis;
+import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 
 /**
  * @author Dirk Kuch
@@ -56,7 +57,6 @@ public class AxisMapping
   /** map<baseAxis, axis> */
   private final Map<IAxis, IAxis> m_mapping = new HashMap<IAxis, IAxis>();
 
-  // TODO index
   private final IAxis[] m_baseAxes;
 
   /**
@@ -114,7 +114,12 @@ public class AxisMapping
         return ArrayUtils.indexOf( m_baseAxes, entry.getKey() );
     }
 
-    return -1;
+    return ArrayUtils.indexOf( m_baseAxes, srcAxis );
+  }
+
+  public IAxis getDataSourceAxis( )
+  {
+    return AxisUtils.findDataSourceAxis( m_baseAxes );
   }
 
 }
