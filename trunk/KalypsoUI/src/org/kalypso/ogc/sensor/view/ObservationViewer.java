@@ -37,10 +37,13 @@ import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.SelectionEvent;
@@ -49,6 +52,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
@@ -81,6 +85,12 @@ import org.kalypso.ogc.sensor.zml.ZmlURL;
  */
 public class ObservationViewer extends Composite
 {
+  private static final String SETTINGS_WEIGHTS_HEADER = "weightsHeader";
+
+  private static final String SETTINGS_WEIGHTS_BOTTOM = "weightsBottom";
+
+  private static final String SETTINGS_WEIGHTS_MAIN = "weightsMain";
+
   private Label m_lblObs;
 
   protected Text m_txtHref;
@@ -88,8 +98,6 @@ public class ObservationViewer extends Composite
   protected Text m_txtFilter;
 
   protected Text m_txtRange;
-
-// private Button m_btnSelectObs;
 
   private Button m_btnSelectObsLocal;
 
@@ -113,67 +121,101 @@ public class ObservationViewer extends Composite
 
   private boolean m_show = true;
 
-  public ObservationViewer( final Composite parent, final int style )
-  {
-    this( parent, style, true, true, true, new ButtonControl[0] );
-  }
+  private final IDialogSettings m_settings;
 
-  public ObservationViewer( final Composite parent, final int style, final boolean header, final boolean chart, final boolean metaDataTable, final ButtonControl[] buttonControls )
+  public ObservationViewer( final Composite parent, final int style, final boolean header, final ButtonControl[] buttonControls, final IDialogSettings settings )
   {
     super( parent, style );
+    m_settings = settings;
 
-    createControl( header, metaDataTable, chart, buttonControls );
+    createControl( header, buttonControls );
   }
 
-  private void createControl( final boolean withHeader, final boolean withMetaAndTable, final boolean withChart, final ButtonControl[] buttonControls )
+  private void createControl( final boolean withHeader, final ButtonControl[] buttonControls )
   {
     final GridLayout gridLayout = new GridLayout( 1, false );
     setLayout( gridLayout );
-    setLayoutData( new GridData( GridData.FILL_BOTH ) );
 
-    final SashForm main = new SashForm( this, SWT.VERTICAL );
+    final Composite main = new Composite( this, SWT.NONE );
+    main.setLayout( new GridLayout() );
+
     main.setLayoutData( new GridData( GridData.FILL_BOTH ) );
     if( withHeader )
     {
-      createHeaderForm( main );
+      final Control headerForm = createHeaderForm( main );
+      headerForm.setLayoutData( new GridData( SWT.FILL, SWT.BEGINNING, true, false ) );
+
       m_show = false;
     }
-    else
-      new Label( main, SWT.NONE );
-    createControlsForm( main, buttonControls );
+
+    if( buttonControls.length > 0 )
+    {
+      final Control controlsForm = createControlsForm( main, buttonControls );
+      controlsForm.setLayoutData( new GridData( SWT.FILL, SWT.BEGINNING, true, false ) );
+    }
 
     final SashForm bottom = new SashForm( main, SWT.HORIZONTAL );
     bottom.setLayoutData( new GridData( GridData.FILL_BOTH ) );
-    if( withMetaAndTable )
-      createMetadataAndTableForm( bottom );
-    else
-      new Label( bottom, SWT.NONE );
 
-    if( withChart )
-      createDiagramForm( bottom );
-    else
-      new Label( bottom, SWT.NONE );
+    createMetadataAndTableForm( bottom );
+    createDiagramForm( bottom );
 
-    if( withHeader )
+    final int[] bottomWeights = getWeightsFromSettings( new int[] { 1, 3 }, SETTINGS_WEIGHTS_BOTTOM );
+    bottom.setWeights( bottomWeights );
+
+    addWeightsListener( bottom, SETTINGS_WEIGHTS_BOTTOM );
+  }
+
+  private void addWeightsListener( final SashForm form, final String settings )
+  {
+    final IDialogSettings dialogSettings = m_settings;
+
+    form.addDisposeListener( new DisposeListener()
     {
-      main.setWeights( new int[] { 1, 0, 5 } );
-    }
-    else
-    {
-      main.setWeights( new int[] { 0, 1, 5 } );
+      @Override
+      public void widgetDisposed( final DisposeEvent e )
+      {
+        if( dialogSettings == null )
+          return;
 
+        final int[] weights = form.getWeights();
+        final String[] array = new String[weights.length];
+        for( int i = 0; i < array.length; i++ )
+          array[i] = Integer.toString( weights[i] );
+
+        dialogSettings.put( settings, array );
+      }
+    } );
+  }
+
+  private int[] getWeightsFromSettings( final int[] defaultWeights, final String section )
+  {
+    if( m_settings == null )
+      return defaultWeights;
+
+    final String[] array = m_settings.getArray( section );
+    if( array == null || array.length != defaultWeights.length )
+      return defaultWeights;
+
+    final int[] weights = new int[defaultWeights.length];
+    try
+    {
+      for( int i = 0; i < weights.length; i++ )
+        weights[i] = Integer.parseInt( array[i] );
+      return weights;
     }
-    if( withMetaAndTable )
-      bottom.setWeights( new int[] { 1, 3 } );
-    else
-      bottom.setWeights( new int[] { 0, 4 } );
+    catch( final NumberFormatException e )
+    {
+      e.printStackTrace();
+      return defaultWeights;
+    }
   }
 
   /**
    * @param parent
    * @param buttonControls
    */
-  private void createControlsForm( final Composite parent, final ButtonControl[] buttonControls )
+  private Control createControlsForm( final Composite parent, final ButtonControl[] buttonControls )
   {
     final Group group = new Group( parent, SWT.NONE );
     group.setLayout( new GridLayout( buttonControls.length, false ) );
@@ -186,9 +228,11 @@ public class ObservationViewer extends Composite
       button.addSelectionListener( control.getSelectionListener() );
       button.setLayoutData( new GridData( GridData.VERTICAL_ALIGN_BEGINNING ) );
     }
+
+    return group;
   }
 
-  private void createHeaderForm( final Composite parent )
+  private Control createHeaderForm( final Composite parent )
   {
     final Group header = new Group( parent, SWT.NONE );
     header.setLayout( new GridLayout( 4, false ) );
@@ -198,7 +242,7 @@ public class ObservationViewer extends Composite
     m_lblObs.setText( Messages.getString( "org.kalypso.ogc.sensor.view.ObservationViewer.0" ) ); //$NON-NLS-1$
     m_lblObs.setLayoutData( new GridData( GridData.VERTICAL_ALIGN_BEGINNING ) );
 
-    m_txtHref = new Text( header, SWT.MULTI | SWT.WRAP );
+    m_txtHref = new Text( header, SWT.BORDER | SWT.MULTI | SWT.WRAP );
     m_txtHref.setSize( 400, m_txtHref.getSize().y );
     m_txtHref.setLayoutData( new GridData( GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL | GridData.GRAB_VERTICAL ) );
 
@@ -337,6 +381,8 @@ public class ObservationViewer extends Composite
         // nothing
       }
     } );
+
+    return header;
   }
 
   private void createDiagramForm( final Composite parent )
@@ -372,7 +418,9 @@ public class ObservationViewer extends Composite
     vFrame.setVisible( true );
     vFrame.add( m_table );
 
-    form.setWeights( new int[] { 2, 5 } );
+    final int[] mainWeights = getWeightsFromSettings( new int[] { 2, 5 }, SETTINGS_WEIGHTS_MAIN );
+    form.setWeights( mainWeights );
+    addWeightsListener( form, SETTINGS_WEIGHTS_MAIN );    
   }
 
   /**
@@ -459,7 +507,7 @@ public class ObservationViewer extends Composite
 
       final PlainObsProvider pop = new PlainObsProvider( obs, null );
 
-      final ItemData itd = new ObsView.ItemData( false, null, null, true );
+      final ItemData itd = new ObsView.ItemData( true, null, null, true );
       m_diagView.addObservation( pop, ObservationTokenHelper.DEFAULT_ITEM_NAME, itd );
       m_tableView.addObservation( pop, ObservationTokenHelper.DEFAULT_ITEM_NAME, itd );
     }
