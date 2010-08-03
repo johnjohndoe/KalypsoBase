@@ -76,45 +76,35 @@ public class MultipleTupleModel extends AbstractTupleModel
   private static final Comparator<ITupleModel> COMPARATOR = new Comparator<ITupleModel>()
   {
     @Override
-    public int compare( final ITupleModel t1, final ITupleModel t2 )
+    public int compare( final ITupleModel model1, final ITupleModel model2 )
     {
-      final IAxis dateAxis1 = ObservationUtilities.findAxisByClass( t1.getAxisList(), Date.class );
-      final IAxis dateAxis2 = ObservationUtilities.findAxisByClass( t2.getAxisList(), Date.class );
+      final Date date1 = getDate( model1 );
+      final Date date2 = getDate( model2 );
 
-      Date date1 = null;
-      Date date2 = null;
-
-      boolean statusDate1 = false;
-      boolean statusDate2 = false;
-      try
-      {
-        date1 = (Date) t1.getElement( 0, dateAxis1 );
-        if( date1 != null )
-          statusDate1 = true;
-      }
-      catch( final Throwable t )
-      {
-        // do nothing
-      }
-      try
-      {
-        date2 = (Date) t2.getElement( 0, dateAxis2 );
-        if( date2 != null )
-          statusDate2 = true;
-      }
-      catch( final Throwable t )
-      {
-        // do nothing
-      }
-
-      if( !statusDate1 && statusDate2 )
+      if( date1 == null && date2 != null )
         return -1;
-      if( !statusDate1 && !statusDate2 )
-        return 0;
-      if( statusDate1 && !statusDate2 )
+      else if( date1 != null && date2 == null )
         return 1;
+      else if( date1 == null && date2 == null )
+        return 0;
 
       return date1.compareTo( date2 );
+    }
+
+    private Date getDate( final ITupleModel model )
+    {
+      try
+      {
+        final IAxis dateAxis = ObservationUtilities.findAxisByClass( model.getAxisList(), Date.class );
+
+        return (Date) model.getElement( 0, dateAxis );
+      }
+      catch( final Throwable t )
+      {
+        // do nothing
+      }
+
+      return null;
     }
   };
 
