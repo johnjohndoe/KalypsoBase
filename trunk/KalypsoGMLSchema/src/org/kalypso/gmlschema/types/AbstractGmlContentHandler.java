@@ -40,7 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gmlschema.types;
 
+import java.util.Enumeration;
+import java.util.Properties;
+
+import javax.xml.namespace.NamespaceContext;
+
 import org.eclipse.core.runtime.Assert;
+import org.kalypso.contribs.javax.xml.namespace.NamespaceContextImpl;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.ErrorHandler;
@@ -66,11 +72,41 @@ public class AbstractGmlContentHandler implements IGmlContentHandler
 
   private final IGmlContentHandler m_parentContentHandler;
 
+  private Properties m_prefixMapping;
+
   // FIXME: introduce interface for the abstract class
   public AbstractGmlContentHandler( final XMLReader reader, final IGmlContentHandler parentContentHandler )
   {
     m_reader = reader;
     m_parentContentHandler = parentContentHandler;
+    if( parentContentHandler instanceof AbstractGmlContentHandler )
+      m_prefixMapping = new Properties( ((AbstractGmlContentHandler) parentContentHandler).getPrefixMapping() );
+    else
+      m_prefixMapping = new Properties();
+  }
+
+  protected Properties getPrefixMapping( )
+  {
+    return m_prefixMapping;
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.types.IGmlContentHandler#getNamespaceContext()
+   */
+  @Override
+  public NamespaceContext getNamespaceContext( )
+  {
+    final NamespaceContextImpl namespaceContext = new NamespaceContextImpl();
+
+    final Enumeration< ? > prefixes = m_prefixMapping.propertyNames();
+    while( prefixes.hasMoreElements() )
+    {
+      final String prefix = (String) prefixes.nextElement();
+      final String namespace = m_prefixMapping.getProperty( prefix );
+      namespaceContext.put( prefix, namespace );
+    }
+
+    return namespaceContext;
   }
 
   @Override
@@ -184,11 +220,11 @@ public class AbstractGmlContentHandler implements IGmlContentHandler
   /**
    * @see org.xml.sax.ContentHandler#endPrefixMapping(java.lang.String)
    */
-  @Override
   @SuppressWarnings("unused")
+  @Override
   public void endPrefixMapping( final String prefix ) throws SAXException
   {
-    // no op
+    m_prefixMapping.remove( prefix );
   }
 
   /**
@@ -245,10 +281,10 @@ public class AbstractGmlContentHandler implements IGmlContentHandler
   /**
    * @see org.xml.sax.ContentHandler#startPrefixMapping(java.lang.String, java.lang.String)
    */
-  @Override
   @SuppressWarnings("unused")
+  @Override
   public void startPrefixMapping( final String prefix, final String uri ) throws SAXException
   {
-    // no op
+    m_prefixMapping.setProperty( prefix, uri );
   }
 }

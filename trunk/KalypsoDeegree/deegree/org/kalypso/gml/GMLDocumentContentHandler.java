@@ -43,6 +43,8 @@ package org.kalypso.gml;
 import java.net.URL;
 import java.util.Map;
 
+import javax.xml.namespace.NamespaceContext;
+
 import org.kalypso.gmlschema.GMLSchemaLoaderWithLocalCache;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.IGMLSchema;
@@ -155,6 +157,7 @@ public class GMLDocumentContentHandler extends AbstractGmlContentHandler impleme
   @Override
   public GMLWorkspace getWorkspace( )
   {
-    return FeatureFactory.createGMLWorkspace( m_rootSchema, m_rootFeature, m_context, m_schemaLocationString, m_providerFactory, null );
+    final NamespaceContext nameSpaceContext = getNamespaceContext();
+    return FeatureFactory.createGMLWorkspace( m_rootSchema, m_rootFeature, m_context, m_schemaLocationString, m_providerFactory, nameSpaceContext );
   }
 }

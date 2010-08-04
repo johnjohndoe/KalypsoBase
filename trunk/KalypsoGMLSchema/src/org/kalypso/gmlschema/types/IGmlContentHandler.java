@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gmlschema.types;
 
+import javax.xml.namespace.NamespaceContext;
+
 import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
 
@@ -58,4 +60,9 @@ public interface IGmlContentHandler extends ContentHandler
   Locator getDocumentLocator( );
 
   ContentHandler getTopLevel( );
+
+  /**
+   * Returns a snapshot of the current prefix mapping as {@link NamespaceContext}.
+   */
+  NamespaceContext getNamespaceContext( );
 }
