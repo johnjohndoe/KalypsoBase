@@ -43,7 +43,7 @@ package org.kalypso.simulation.core.ant.copyobservation;
 import java.net.MalformedURLException;
 
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.simulation.core.ant.copyobservation.source.ObservationSource;
+import org.kalypso.ogc.sensor.timeseries.merged.ObservationSource;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**

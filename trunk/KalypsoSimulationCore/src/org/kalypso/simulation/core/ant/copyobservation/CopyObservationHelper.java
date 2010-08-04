@@ -49,7 +49,8 @@ import org.kalypso.contribs.java.xml.XMLUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.metadata.ICopyObservationMetaDataConstants;
-import org.kalypso.simulation.core.ant.copyobservation.source.ObservationSource;
+import org.kalypso.ogc.sensor.metadata.MetadataList;
+import org.kalypso.ogc.sensor.timeseries.merged.ObservationSource;
 
 /**
  * @author Dirk Kuch
@@ -60,7 +61,18 @@ public final class CopyObservationHelper implements ICopyObservationMetaDataCons
   {
   }
 
-  public static Map<String, String> getSourceMetadataSettings( final ObservationSource source, final int count )
+  public static void setCopyObservationSources( final MetadataList metadata, final ObservationSource[] sources )
+  {
+    for( int i = 0; i < sources.length; i++ )
+    {
+      final ObservationSource source = sources[i];
+      final Map<String, String> srcSettings = getSourceMetadataSettings( source, i );
+
+      metadata.putAll( srcSettings );
+    }
+  }
+
+  private static Map<String, String> getSourceMetadataSettings( final ObservationSource source, final int count )
   {
     final Map<String, String> map = new HashMap<String, String>();
 
@@ -110,4 +122,5 @@ public final class CopyObservationHelper implements ICopyObservationMetaDataCons
   {
     return base + "_" + count.toString();
   }
+
 }

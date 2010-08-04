@@ -120,4 +120,14 @@ public final class AxisUtils implements ITimeserieConstants
     return null;
   }
 
+  public static IAxis findDateAxis( final IAxis[] axes )
+  {
+    for( final IAxis axis : axes )
+    {
+      if( isDateAxis( axis ) )
+        return axis;
+    }
+    return null;
+  }
+
 }

@@ -38,81 +38,49 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.simulation.core.ant.copyobservation.source;
+package org.kalypso.ogc.sensor.timeseries.merged;
 
 import java.util.Date;
 
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.util.DateUtilities;
-import org.kalypso.ogc.sensor.DateRange;
+import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.ogc.sensor.IAxis;
+import org.kalypso.ogc.sensor.ITupleModel;
+import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 
-public class Source
+/**
+ * @author Dirk Kuch
+ */
+public class LastDateObservationMergeStrategy implements IObservationMergeStrategy
 {
-  private String m_property;
+  private Date m_lastDate = DateUtilities.getMinimum();
 
-  private Date m_from;
-
-  private Date m_to;
-
-  private String m_filter;
-
-  public Source( )
+  /**
+   * @see org.kalypso.ogc.sensor.timeseries.merged.IObservationMergeStrategy#process(org.kalypso.ogc.sensor.ITupleModel,
+   *      int, org.kalypso.ogc.sensor.IAxis[])
+   */
+  @Override
+  public boolean process( final ITupleModel model, final int index, final IAxis[] axes )
   {
-  }
-
-  public Source( final String property, final DateRange daterange, final String filter )
-  {
-    m_property = property;
-    if( daterange != null )
+    try
     {
-      m_from = daterange.getFrom();
-      m_to = daterange.getTo();
+      final IAxis dateAxis = AxisUtils.findDateAxis( axes );
+      if( dateAxis == null )
+        return false;
+
+      final Date date = (Date) model.getElement( index, dateAxis );
+      if( m_lastDate.before( date ) )
+      {
+        m_lastDate = date;
+        return true;
+      }
     }
-    m_filter = filter;
-  }
+    catch( final Throwable t )
+    {
+      KalypsoCorePlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( t ) );
+    }
 
-  public final String getProperty( )
-  {
-    return m_property;
+    return false;
   }
-
-  public final void setProperty( final String prop )
-  {
-    this.m_property = prop;
-  }
-
-  public final Date getFrom( )
-  {
-    return m_from;
-  }
-
-  public final void setFrom( final String lfrom )
-  {
-    m_from = DateUtilities.parseDateTime( lfrom );
-  }
-
-  public final Date getTo( )
-  {
-    return m_to;
-  }
-
-  public final void setTo( final String lto )
-  {
-    m_to = DateUtilities.parseDateTime( lto );
-  }
-
-  public final String getFilter( )
-  {
-    return m_filter;
-  }
-
-  public final void setFilter( final String filt )
-  {
-    this.m_filter = filt;
-  }
-
-  public final DateRange getDateRange( )
-  {
-    return DateRange.createDateRangeOrNull( m_from, m_to );
-  }
-
 }

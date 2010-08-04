@@ -135,9 +135,16 @@ public class DataSourceHandler
     return count;
   }
 
-  public String getDataSourceItem( final int pos )
+  public String getDataSourceIdentifier( final int pos )
   {
     final String header = MetadataHelper.getCountedHeaderItem( IDataSourceItem.MD_DATA_SOURCE_ITEM, pos );
+
+    return m_metadata.getProperty( header );
+  }
+
+  public String getDataSourceRepository( final int pos )
+  {
+    final String header = MetadataHelper.getCountedHeaderItem( IDataSourceItem.MD_DATA_SOURCE_ITEM_REPOSITORY, pos );
 
     return m_metadata.getProperty( header );
   }

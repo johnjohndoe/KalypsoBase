@@ -38,8 +38,9 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.simulation.core.ant.copyobservation.source;
+package org.kalypso.ogc.sensor.timeseries.merged;
 
+import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IObservation;
 
 /**
@@ -51,7 +52,14 @@ public final class ObservationSource extends Source
 
   public ObservationSource( final Source source, final IObservation observation )
   {
-    super( source.getProperty(), source.getDateRange(), source.getFilter() );
+    this( source.getProperty(), source.getDateRange(), source.getFilter(), observation );
+
+  }
+
+  public ObservationSource( final String property, final DateRange dateRange, final String filter, final IObservation observation )
+  {
+    super( property, dateRange, filter );
+
     m_observation = observation;
   }
 

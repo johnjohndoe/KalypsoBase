@@ -42,13 +42,9 @@ package org.kalypso.simulation.core.ant.copyobservation;
 
 import java.io.File;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map.Entry;
-import java.util.Properties;
 import java.util.logging.Level;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
@@ -56,18 +52,16 @@ import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.contribs.java.util.logging.ILogger;
 import org.kalypso.contribs.java.util.logging.LoggerUtilities;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.metadata.MetadataHelper;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
-import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHandler;
-import org.kalypso.ogc.sensor.timeseries.forecast.MultipleTupleModel;
+import org.kalypso.ogc.sensor.timeseries.datasource.IDataSourceItem;
+import org.kalypso.ogc.sensor.timeseries.merged.MergedObservation;
+import org.kalypso.ogc.sensor.timeseries.merged.ObservationSource;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.simulation.core.ant.AbstractMonitoredFeatureVisitor;
-import org.kalypso.simulation.core.ant.copyobservation.source.ObservationSource;
 import org.kalypso.simulation.core.ant.copyobservation.target.ICopyObservationTarget;
 import org.kalypso.simulation.core.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
@@ -76,12 +70,13 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * @author Gernot Belger
+ * @author Dirk Kuch
  */
 public class CopyObservationFeatureVisitor extends AbstractMonitoredFeatureVisitor implements FeatureVisitor
 {
   private final ILogger m_logger;
 
-  private final Properties m_metadata;
+  private final MetadataList m_metadata;
 
   private final ICopyObservationTarget m_target;
 
@@ -91,7 +86,7 @@ public class CopyObservationFeatureVisitor extends AbstractMonitoredFeatureVisit
    * @param metadata
    *          All entries will be added to the target observation
    */
-  public CopyObservationFeatureVisitor( final ICopyObservationSource source, final ICopyObservationTarget target, final Properties metadata, final ILogger logger )
+  public CopyObservationFeatureVisitor( final ICopyObservationSource source, final ICopyObservationTarget target, final MetadataList metadata, final ILogger logger )
   {
     m_sources = source;
     m_target = target;
@@ -115,15 +110,12 @@ public class CopyObservationFeatureVisitor extends AbstractMonitoredFeatureVisit
       final URL targetLocation = UrlResolverSingleton.getDefault().resolveURL( m_target.getContext(), targetHref );
       final File targetFile = getTargetFile( targetLocation );
 
-      final ITupleModel[] srcModels = getSourceModels( sources );
+      final MergedObservation result = new MergedObservation( targetLocation.toString(), sources );
 
-      final MultipleTupleModel model = new MultipleTupleModel( srcModels );
+      final MetadataList metadata = result.getMetadataList();
+      updateMetaData( metadata, feature );
 
-      final MetadataList metaData = getMetaData( sources );
-      updateMetaData( metaData, sources );
-      udpateMetaData( metaData, feature );
-
-      final SimpleObservation result = new SimpleObservation( null, null, metaData, model );
+      CopyObservationHelper.setCopyObservationSources( metadata, sources );
 
       final IRequest request = new ObservationRequest( m_target.getTargetDateRange() );
       writeTargetObservation( targetFile, result, request );
@@ -137,41 +129,6 @@ public class CopyObservationFeatureVisitor extends AbstractMonitoredFeatureVisit
     }
 
     return true;
-  }
-
-  private MetadataList getMetaData( final ObservationSource[] sources )
-  {
-    if( ArrayUtils.isEmpty( sources ) )
-      return new MetadataList();
-
-    final MetadataList metadata = sources[0].getObservation().getMetadataList();
-    final DataSourceHandler handler = new DataSourceHandler( metadata );
-    handler.removeAllDataSources();
-
-    for( final ObservationSource source : sources )
-    {
-      final IObservation observation = source.getObservation();
-      handler.addDataSource( observation.getHref(), "unknown" );
-    }
-
-    return metadata;
-  }
-
-  private ITupleModel[] getSourceModels( final ObservationSource[] sources ) throws SensorException
-  {
-    if( ArrayUtils.isEmpty( sources ) )
-      return new ITupleModel[] {};
-
-    final List<ITupleModel> models = new ArrayList<ITupleModel>();
-    for( final ObservationSource source : sources )
-    {
-      final IObservation observation = source.getObservation();
-      final ObservationRequest request = new ObservationRequest( source.getDateRange() );
-
-      models.add( observation.getValues( request ) );
-    }
-
-    return models.toArray( new ITupleModel[] {} );
   }
 
   private void refreshWorkspace( final URL targetLocation )
@@ -217,30 +174,25 @@ public class CopyObservationFeatureVisitor extends AbstractMonitoredFeatureVisit
     ZmlFactory.writeToFile( resultObs, file, request );
   }
 
-  private void udpateMetaData( final MetadataList metadata, final Feature feature )
+  private void updateMetaData( final MetadataList metadata, final Feature feature )
   {
-    for( final Entry<Object, Object> element : m_metadata.entrySet() )
+
+    for( final Entry<Object, Object> entry : m_metadata.entrySet() )
     {
-      final Entry<Object, Object> entry = element;
-      final String metaValue = FeatureHelper.tokenReplace( feature, (String) entry.getValue() );
+      /* don't overwrite data source entries! */
       final String metaKey = (String) entry.getKey();
+      if( metaKey.startsWith( IDataSourceItem.MD_DATA_SOURCE_ITEM ) )
+        continue;
+      else if( metaKey.startsWith( IDataSourceItem.MD_DATA_SOURCE_ITEM_REPOSITORY ) )
+        continue;
+
+      final String metaValue = FeatureHelper.tokenReplace( feature, (String) entry.getValue() );
       metadata.put( metaKey, metaValue );
     }
-  }
 
-  private void updateMetaData( final MetadataList metadata, final ObservationSource[] sources )
-  {
-    /* set forecast metadata, might be used in diagram for instance to mark the forecast range */
+    /* set forecast meta data, might be used in diagram for instance to mark the forecast range */
     MetadataHelper.setTargetForecast( metadata, m_target.getTargetForecastDateRange() );
     MetadataHelper.setTargetDateRange( metadata, m_target.getTargetDateRange() );
-
-    // put additional metadata that we got from outside
-    int count = 0;
-    for( final ObservationSource source : sources )
-    {
-      metadata.putAll( CopyObservationHelper.getSourceMetadataSettings( source, count ) );
-      count++;
-    }
   }
 
 }
