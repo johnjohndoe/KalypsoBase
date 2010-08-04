@@ -66,11 +66,10 @@ public class CopyObservationNATarget extends AbstractObservationTarget implement
 
   private final File m_targetobservationDir;
 
-
   public CopyObservationNATarget( final URL context, final File targetobservationDir, final DateRange targetRange, final DateRange forecastRange )
   {
     super( context, targetRange, forecastRange );
-    
+
     m_targetobservationDir = targetobservationDir;
   }
 
@@ -82,7 +81,7 @@ public class CopyObservationNATarget extends AbstractObservationTarget implement
     {
       throw new CoreException( StatusUtilities.createWarningStatus( Messages.getString( "org.kalypso.ogc.util.CopyObservationFeatureVisitor.1" ) + f.getId() ) );//$NON-NLS-1$
     }
-    
+
     // remove query part if present, href is also used as file name here!
     final String href = ZmlURL.getIdentifierPart( targetlink.getHref() );
     return href;
@@ -90,19 +89,19 @@ public class CopyObservationNATarget extends AbstractObservationTarget implement
 
   private TimeseriesLinkType getTargetLink( final Feature f )
   {
-      // FIXME: this dirty shit was made only for KalypsoNA: must be removed!!!
-      String name = (String) f.getProperty( "name" ); //$NON-NLS-1$
-      if( name == null || name.length() < 1 )
-        name = f.getId();
-      if( name == null || name.length() < 1 )
-        name = "generated"; //$NON-NLS-1$
-      final File file = getValidFile( name, 0 );
-      final TimeseriesLinkType link = OF.createTimeseriesLinkType();
+    // FIXME: this dirty shit was made only for KalypsoNA: must be removed!!!
+    String name = (String) f.getProperty( "name" ); //$NON-NLS-1$
+    if( name == null || name.length() < 1 )
+      name = f.getId();
+    if( name == null || name.length() < 1 )
+      name = "generated"; //$NON-NLS-1$
+    final File file = getValidFile( name, 0 );
+    final TimeseriesLinkType link = OF.createTimeseriesLinkType();
     final IFile contextIFile = ResourceUtilities.findFileFromURL( getContext() );
-      final File contextFile = contextIFile.getLocation().toFile();
-      final String relativePathTo = FileUtilities.getRelativePathTo( contextFile, file );
-      link.setHref( relativePathTo );
-      return link;
+    final File contextFile = contextIFile.getLocation().toFile();
+    final String relativePathTo = FileUtilities.getRelativePathTo( contextFile, file );
+    link.setHref( relativePathTo );
+    return link;
   }
 
   private File getValidFile( final String name, final int index )
