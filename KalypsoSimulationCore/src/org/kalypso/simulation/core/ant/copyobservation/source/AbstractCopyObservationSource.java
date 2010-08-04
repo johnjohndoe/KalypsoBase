@@ -94,7 +94,8 @@ public abstract class AbstractCopyObservationSource implements ICopyObservationS
     for( final Source source : m_sources )
     {
       final IObservation observation = getObservation( feature, source );
-      sources.add( new ObservationSource( source, observation ) );
+      if( observation != null )
+        sources.add( new ObservationSource( source, observation ) );
     }
 
     return sources.toArray( new ObservationSource[] {} );
@@ -107,6 +108,9 @@ public abstract class AbstractCopyObservationSource implements ICopyObservationS
   private IObservation getObservation( final Feature feature, final Source source ) throws MalformedURLException, SensorException
   {
     final String sourceHref = getSourceLinkHref( feature, source );
+    if( sourceHref == null )
+      return null;
+
     final String hrefWithFilter = ZmlURL.insertQueryPart( sourceHref, source.getFilter() );
 
     // filter variable might also contain request spec
