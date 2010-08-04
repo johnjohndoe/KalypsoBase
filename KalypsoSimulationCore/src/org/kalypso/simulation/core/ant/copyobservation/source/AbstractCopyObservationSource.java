@@ -54,6 +54,8 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.filter.FilterFactory;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.request.RequestFactory;
+import org.kalypso.ogc.sensor.timeseries.merged.ObservationSource;
+import org.kalypso.ogc.sensor.timeseries.merged.Source;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
 import org.kalypso.simulation.core.KalypsoSimulationCorePlugin;

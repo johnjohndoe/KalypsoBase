@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.sensor.timeseries.forecast;
+package org.kalypso.ogc.sensor.timeseries.merged;
 
 import java.util.HashMap;
 import java.util.Map;

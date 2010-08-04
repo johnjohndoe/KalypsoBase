@@ -66,5 +66,5 @@ public interface IObservationFilter extends IObservation
    *          [nullable] the context to use when resolving a zml-url. This argument is optional.
    * @throws SensorException
    */
-  public void initFilter( final Object conf, final IObservation obs, final URL context ) throws SensorException;
+  void initFilter( final Object conf, final IObservation obs, final URL context ) throws SensorException;
 }

@@ -38,18 +38,15 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.simulation.core.ant.copyobservation;
+package org.kalypso.ogc.sensor.timeseries.merged;
 
-import java.net.MalformedURLException;
-
-import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.timeseries.merged.ObservationSource;
-import org.kalypsodeegree.model.feature.Feature;
+import org.kalypso.ogc.sensor.IAxis;
+import org.kalypso.ogc.sensor.ITupleModel;
 
 /**
  * @author Dirk Kuch
  */
-public interface ICopyObservationSource
+public interface IObservationMergeStrategy
 {
-  ObservationSource[] getObservationSources( Feature feature ) throws MalformedURLException, SensorException;
+  boolean process( ITupleModel model, int index, IAxis[] axes );
 }

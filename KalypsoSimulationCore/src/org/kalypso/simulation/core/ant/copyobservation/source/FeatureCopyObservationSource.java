@@ -43,6 +43,7 @@ package org.kalypso.simulation.core.ant.copyobservation.source;
 import java.net.URL;
 import java.util.Properties;
 
+import org.kalypso.ogc.sensor.timeseries.merged.Source;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;

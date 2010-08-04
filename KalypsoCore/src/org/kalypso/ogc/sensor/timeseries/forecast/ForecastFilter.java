@@ -41,12 +41,18 @@
 package org.kalypso.ogc.sensor.timeseries.forecast;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter;
 import org.kalypso.ogc.sensor.request.IRequest;
+import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
+import org.kalypso.ogc.sensor.timeseries.merged.MergedObservation;
+import org.kalypso.ogc.sensor.timeseries.merged.ObservationSource;
 
 /**
  * MergeFilter
@@ -55,17 +61,17 @@ import org.kalypso.ogc.sensor.request.IRequest;
  */
 public class ForecastFilter extends AbstractObservationFilter
 {
-  private IObservation[] m_obsArray = null;
+  private IObservation[] m_observations = null;
 
   /**
    * @see org.kalypso.ogc.sensor.filter.IObservationFilter#initFilter(java.lang.Object,
    *      org.kalypso.ogc.sensor.IObservation, java.net.URL)
    */
-  public void initFilter( final IObservation[] conf, final IObservation baseObs, final URL context ) throws SensorException
+  public void initFilter( final IObservation[] observations, final IObservation baseObs, final URL context ) throws SensorException
   {
-    super.initFilter( conf, baseObs, context );
+    super.initFilter( observations, baseObs, context );
 
-    m_obsArray = conf;
+    m_observations = observations;
   }
 
   /**
@@ -77,11 +83,14 @@ public class ForecastFilter extends AbstractObservationFilter
   @Override
   public ITupleModel getValues( final IRequest args ) throws SensorException
   {
-    final ITupleModel models[] = new ITupleModel[m_obsArray.length];
+    final List<ObservationSource> sources = new ArrayList<ObservationSource>();
+    final DateRange daterange = TimeserieUtils.getDateRange( args );
+    for( final IObservation observation : m_observations )
+    {
+      sources.add( new ObservationSource( null, daterange, null, observation ) );
+    }
 
-    for( int i = 0; i < models.length; i++ )
-      models[i] = m_obsArray[i].getValues( args );
-
-    return new MultipleTupleModel( models );
+    final MergedObservation observation = new MergedObservation( getHref(), sources.toArray( new ObservationSource[] {} ) );
+    return observation.getValues( args );
   }
 }

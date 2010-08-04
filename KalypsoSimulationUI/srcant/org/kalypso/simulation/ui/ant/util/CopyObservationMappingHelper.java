@@ -30,7 +30,6 @@
 package org.kalypso.simulation.ui.ant.util;
 
 import java.net.URL;
-import java.util.Properties;
 
 import javax.xml.namespace.QName;
 
@@ -42,11 +41,12 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.sensor.DateRange;
+import org.kalypso.ogc.sensor.metadata.MetadataList;
+import org.kalypso.ogc.sensor.timeseries.merged.Source;
 import org.kalypso.ogc.sensor.zml.ZmlURLConstants;
 import org.kalypso.simulation.core.ant.copyobservation.CopyObservationFeatureVisitor;
 import org.kalypso.simulation.core.ant.copyobservation.ICopyObservationSource;
 import org.kalypso.simulation.core.ant.copyobservation.source.FeatureCopyObservationSource;
-import org.kalypso.simulation.core.ant.copyobservation.source.Source;
 import org.kalypso.simulation.core.ant.copyobservation.target.CopyObservationTargetFactory;
 import org.kalypso.simulation.core.ant.copyobservation.target.ICopyObservationTarget;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
@@ -158,7 +158,7 @@ public class CopyObservationMappingHelper
     final ICopyObservationTarget timeSeriesLink = CopyObservationTargetFactory.getLink( srcContext, RESULT_TS_OUT_PROP.getLocalPart(), null, completeRange, forecastRange );
     final ICopyObservationSource source = new FeatureCopyObservationSource( srcContext, sources, null );
 
-    final CopyObservationFeatureVisitor visitor = new CopyObservationFeatureVisitor( source, timeSeriesLink, new Properties(), logger );
+    final CopyObservationFeatureVisitor visitor = new CopyObservationFeatureVisitor( source, timeSeriesLink, new MetadataList(), logger );
     workspace.accept( visitor, RESULT_LIST_PROP.getLocalPart(), 1 );
   }
 }

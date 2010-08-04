@@ -45,7 +45,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Properties;
 
 import org.apache.tools.ant.Project;
 import org.eclipse.core.runtime.IStatus;
@@ -55,13 +54,13 @@ import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
 import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.contribs.java.util.logging.ILogger;
 import org.kalypso.ogc.sensor.DateRange;
+import org.kalypso.ogc.sensor.metadata.MetadataList;
+import org.kalypso.ogc.sensor.timeseries.merged.Source;
 import org.kalypso.simulation.core.ant.copyobservation.CopyObservationFeatureVisitor;
 import org.kalypso.simulation.core.ant.copyobservation.ICopyObservationSource;
 import org.kalypso.simulation.core.ant.copyobservation.source.FeatureCopyObservationSource;
-import org.kalypso.simulation.core.ant.copyobservation.source.Source;
 import org.kalypso.simulation.core.ant.copyobservation.target.CopyObservationTargetFactory;
 import org.kalypso.simulation.core.ant.copyobservation.target.ICopyObservationTarget;
-import org.kalypso.simulation.ui.ant.AbstractFeatureVisitorTask;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 
 /**
@@ -122,7 +121,7 @@ public class CopyObservationTask extends AbstractFeatureVisitorTask
   /**
    * List of metadata-properties and values to set to the target observation
    */
-  private final Properties m_metadata = new Properties();
+  private final MetadataList m_metadata = new MetadataList();
 
   public CopyObservationTask( )
   {
@@ -258,6 +257,7 @@ public class CopyObservationTask extends AbstractFeatureVisitorTask
    * @see org.kalypso.contribs.eclipse.jface.operation.IErrorHandler#handleError(org.eclipse.swt.widgets.Shell,
    *      org.eclipse.core.runtime.IStatus)
    */
+  @Override
   public final void handleError( final Shell shell, final IStatus status )
   {
     ErrorDialog.openError( shell, ClassUtilities.getOnlyClassName( getClass() ), "Fehler beim Kopieren der Zeitreihen", status );

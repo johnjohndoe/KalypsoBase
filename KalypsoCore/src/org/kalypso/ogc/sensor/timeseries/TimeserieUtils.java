@@ -82,6 +82,7 @@ import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
 import org.kalypso.ogc.sensor.metadata.ITimeserieConstants;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
+import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.timeseries.wq.IWQConverter;
 import org.kalypso.ogc.sensor.timeseries.wq.WQException;
 import org.kalypso.ogc.sensor.timeseries.wq.WQFactory;
@@ -640,6 +641,14 @@ public final class TimeserieUtils implements ITimeserieConstants
   public static String getAxisClassFor( final String type )
   {
     return getProperties().getProperty( "AXISJFREECHARTCLASS_" + type, null ); //$NON-NLS-1$
+  }
+
+  public static DateRange getDateRange( final IRequest args )
+  {
+    if( args == null )
+      return new DateRange();
+
+    return args.getDateRange();
   }
 
 }
