@@ -59,11 +59,10 @@ import org.kalypsodeegree.model.feature.FeatureVisitor;
  * <li>der Quellwert innerhalb des Zielzeitraums liegt</li>
  * <li></li>
  * </ul>
- *
  * <code>
  *   <kalypso.mergeObservation gml="${project.url}/.model/observationConf/OmbrometerMapping.gml" featurePath="mappingMember" sourceContext="${calc.merge.url}" targetContext="${calc.url}" observationProperty="outObservationLink"/>
  * </code>
- *
+ * 
  * @author belger
  */
 public class MergeObservationTask extends AbstractFeatureVisitorTask
@@ -78,7 +77,7 @@ public class MergeObservationTask extends AbstractFeatureVisitorTask
    */
   private String m_observationProperty;
 
-  public MergeObservationTask()
+  public MergeObservationTask( )
   {
     super( false );
   }
@@ -106,11 +105,11 @@ public class MergeObservationTask extends AbstractFeatureVisitorTask
   /**
    * @see org.kalypso.contribs.eclipse.jface.operation.IErrorHandler#handleError(org.eclipse.swt.widgets.Shell,
    *      org.eclipse.core.runtime.IStatus)
-   */ 
+   */
+  @Override
   public final void handleError( final Shell shell, final IStatus status )
   {
-    ErrorDialog.openError( shell, ClassUtilities.getOnlyClassName( getClass() ), "Fehler beim Kopieren der Zeitreihen",
-        status );
+    ErrorDialog.openError( shell, ClassUtilities.getOnlyClassName( getClass() ), "Fehler beim Kopieren der Zeitreihen", status );
   }
 
 }

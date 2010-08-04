@@ -74,7 +74,7 @@ import com.vividsolutions.jts.geom.Polygon;
 
 /**
  * Ein Task, welcher anhand von Thiessen Polygonen und Einzugsgebieten die Gewichtungsfaktoren ermittelt.
- *
+ * 
  * @author Gernot Belger
  */
 public class ThiessenWeightTask extends Task
@@ -144,13 +144,14 @@ public class ThiessenWeightTask extends Task
   }
 
   @Override
-  public void execute() throws BuildException
+  public void execute( ) throws BuildException
   {
     try
     {
       final Project antProject = getProject();
       final ILogger logger = new ILogger()
       {
+        @Override
         public void log( final Level level, final int msgCode, final String message )
         {
           final String outString = LoggerUtilities.formatLogStylish( level, msgCode, message );
@@ -220,8 +221,7 @@ public class ThiessenWeightTask extends Task
     }
   }
 
-  private void calculateWeights( final Feature areaFeature, final Feature[] thiessenFeatures,
-      final IFeatureType rainfallWeightFT, final ILogger logger ) throws GM_Exception
+  private void calculateWeights( final Feature areaFeature, final Feature[] thiessenFeatures, final IFeatureType rainfallWeightFT, final ILogger logger ) throws GM_Exception
   {
     logger.log( Level.INFO, LoggerUtilities.CODE_NONE, "Berechne Faktoren für: " + areaFeature.getProperty( "name" ) );
 
@@ -229,8 +229,8 @@ public class ThiessenWeightTask extends Task
     if( areaPT == null )
       throw new BuildException( "Keine Property mit gefunden mit Namen: " + m_areaPropertyPath );
 
-    final GM_Object areaGeom = (GM_Object)areaFeature.getProperty( m_areaPropertyPath );
-    final Polygon areaPolygon = areaGeom == null ? null : (Polygon)JTSAdapter.export( areaGeom );
+    final GM_Object areaGeom = (GM_Object) areaFeature.getProperty( m_areaPropertyPath );
+    final Polygon areaPolygon = areaGeom == null ? null : (Polygon) JTSAdapter.export( areaGeom );
 
     for( final Feature thiessenFeature : thiessenFeatures )
     {
@@ -238,30 +238,27 @@ public class ThiessenWeightTask extends Task
       if( thiessenPT == null )
         throw new BuildException( "Keine Property mit gefunden mit Namen: " + m_thiessenPropertyPath );
 
-      final GM_Object thiessenGeom = (GM_Object)thiessenFeature.getProperty( m_thiessenPropertyPath );
-      final Polygon thiessenPolygon = thiessenGeom == null ? null : (Polygon)JTSAdapter.export( thiessenGeom );
+      final GM_Object thiessenGeom = (GM_Object) thiessenFeature.getProperty( m_thiessenPropertyPath );
+      final Polygon thiessenPolygon = thiessenGeom == null ? null : (Polygon) JTSAdapter.export( thiessenGeom );
 
       final BigDecimal factor = calcWeight( areaPolygon, thiessenPolygon );
 
-      logger.log( Level.FINE, LoggerUtilities.CODE_NONE, "\tOmbrometer '" + thiessenFeature.getProperty( "name" )
-          + "' Faktor: " + factor );
+      logger.log( Level.FINE, LoggerUtilities.CODE_NONE, "\tOmbrometer '" + thiessenFeature.getProperty( "name" ) + "' Faktor: " + factor );
 
       if( factor.compareTo( BIG_ZERO ) > 0 )
         createWeight( areaFeature, thiessenFeature, rainfallWeightFT, factor );
     }
   }
 
-  private void createWeight( final Feature areaFeature, final Feature thiessenFeature,
-      final IFeatureType rainfallWeightFT, final BigDecimal factor )
+  private void createWeight( final Feature areaFeature, final Feature thiessenFeature, final IFeatureType rainfallWeightFT, final BigDecimal factor )
   {
-    final FeatureList weights = (FeatureList)areaFeature.getProperty( m_weightPropertyPath );
+    final FeatureList weights = (FeatureList) areaFeature.getProperty( m_weightPropertyPath );
 
     final Feature weightFeature = FeatureFactory.createFeature( weights.getParentFeature(), weights.getParentFeatureTypeProperty(), "weight", rainfallWeightFT, false );
 
     final IPropertyType weightPT = areaFeature.getFeatureType().getProperty( m_weightPropertyPath );
     if( weightPT == null )
       throw new BuildException( "Keine Property mit gefunden mit Namen: " + m_weightPropertyPath );
-
 
     weights.add( weightFeature );
 

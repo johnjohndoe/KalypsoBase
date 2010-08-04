@@ -53,7 +53,6 @@ import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.contribs.java.util.logging.ILogger;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.simulation.core.ant.CommitPrognoseFeatureVisitor;
-import org.kalypso.simulation.ui.ant.AbstractFeatureVisitorTask;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 
@@ -141,6 +140,7 @@ public class CommitObservationsTask extends AbstractFeatureVisitorTask
    * @see org.kalypso.contribs.eclipse.jface.operation.IErrorHandler#handleError(org.eclipse.swt.widgets.Shell,
    *      org.eclipse.core.runtime.IStatus)
    */
+  @Override
   public final void handleError( final Shell shell, final IStatus status )
   {
     ErrorDialog.openError( shell, ClassUtilities.getOnlyClassName( getClass() ), "Fehler beim Zurückschreiben der Zeitreihen", status );

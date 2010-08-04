@@ -61,11 +61,11 @@ import org.kalypso.contribs.java.util.logging.LoggerUtilities;
 
 /**
  * Loads (ant-)properties from a gml.
- *
+ * 
  * <pre>
  *  <kalypso.getFileTask sourceDir="C:\MyDataDir" targetFile="C:\MyFiles\data.file" resultProperty="getFileResult"/>
  * </pre>
- *
+ * 
  * @author Gernot Belger
  */
 public class GetFileTask extends Task
@@ -76,7 +76,7 @@ public class GetFileTask extends Task
 
     private String m_pattern;
 
-    public String getDescription()
+    public String getDescription( )
     {
       return m_description;
     }
@@ -86,7 +86,7 @@ public class GetFileTask extends Task
       m_description = description;
     }
 
-    public String getPattern()
+    public String getPattern( )
     {
       return m_pattern;
     }
@@ -109,7 +109,7 @@ public class GetFileTask extends Task
 
   private String m_resultProperty;
 
-  public File getTargetFile()
+  public File getTargetFile( )
   {
     return m_targetFile;
   }
@@ -119,7 +119,7 @@ public class GetFileTask extends Task
     m_targetFile = targetFile;
   }
 
-  public File getSourceDir()
+  public File getSourceDir( )
   {
     return m_sourceDir;
   }
@@ -129,7 +129,7 @@ public class GetFileTask extends Task
     m_sourceDir = sourceDir;
   }
 
-  public String getResultProperty()
+  public String getResultProperty( )
   {
     return m_resultProperty;
   }
@@ -139,7 +139,7 @@ public class GetFileTask extends Task
     m_resultProperty = resultProperty;
   }
 
-  public FileFilter createFileFilter()
+  public FileFilter createFileFilter( )
   {
     final FileFilter ff = new FileFilter();
     m_filters.add( ff );
@@ -150,7 +150,7 @@ public class GetFileTask extends Task
    * @see org.apache.tools.ant.Task#execute()
    */
   @Override
-  public void execute() throws BuildException
+  public void execute( ) throws BuildException
   {
     final Project antProject = getProject();
     final ILogger logger = new ILogger()
@@ -158,6 +158,7 @@ public class GetFileTask extends Task
       /**
        * @see org.kalypso.contribs.java.util.logging.ILogger#log(java.util.logging.Level, int, java.lang.String)
        */
+      @Override
       public void log( final Level level, final int msgCode, final String message )
       {
         final String outString = LoggerUtilities.formatLogStylish( level, msgCode, message );
@@ -186,7 +187,8 @@ public class GetFileTask extends Task
     final Display display = PlatformUI.getWorkbench().getDisplay();
     display.syncExec( new Runnable()
     {
-      public void run()
+      @Override
+      public void run( )
       {
         resultFile[0] = askForFile( display );
       }
@@ -195,8 +197,7 @@ public class GetFileTask extends Task
     if( resultFile[0] == null )
     {
       logger.log( Level.INFO, LoggerUtilities.CODE_NEW_MSGBOX, msgTitle );
-      logger.log( Level.INFO, LoggerUtilities.CODE_SHOW_MSGBOX,
-          "Abbruch durch den Benutzer" );
+      logger.log( Level.INFO, LoggerUtilities.CODE_SHOW_MSGBOX, "Abbruch durch den Benutzer" );
       return;
     }
 
@@ -210,8 +211,7 @@ public class GetFileTask extends Task
       logger.log( Level.INFO, LoggerUtilities.CODE_NEW_MSGBOX, msgTitle );
       logger.log( Level.INFO, LoggerUtilities.CODE_SHOW_DETAILS, "Quelle: " + resultFile[0].getAbsolutePath() );
       logger.log( Level.INFO, LoggerUtilities.CODE_SHOW_DETAILS, "Ziel: " + m_targetFile );
-      logger.log( Level.SEVERE, LoggerUtilities.CODE_SHOW_MSGBOX, "Fehler beim Kopieren der Datei: "
-          + e.getLocalizedMessage() );
+      logger.log( Level.SEVERE, LoggerUtilities.CODE_SHOW_MSGBOX, "Fehler beim Kopieren der Datei: " + e.getLocalizedMessage() );
       return;
     }
 
@@ -240,14 +240,14 @@ public class GetFileTask extends Task
 
   private Shell findShell( final Display display )
   {
-    final String shellTitle = JFaceResources.getString("ProgressMonitorDialog.title");
+    final String shellTitle = JFaceResources.getString( "ProgressMonitorDialog.title" );
 
     final Shell[] shells = display.getShells();
     // HACK: we are looking for a progress monitor here...
     // Hopefully thing work also for the next eclipse versions...
     for( final Shell shell : shells )
     {
-      if( shell.getText().equals(shellTitle))
+      if( shell.getText().equals( shellTitle ) )
         return shell;
     }
 

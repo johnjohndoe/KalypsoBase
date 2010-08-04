@@ -85,7 +85,7 @@ public class PropertyReplaceTask extends Task
    * @see org.apache.tools.ant.Task#execute()
    */
   @Override
-  public void execute() throws BuildException
+  public void execute( ) throws BuildException
   {
     final String newValue = m_value.replaceAll( m_regex, m_replacement );
     m_propertyAdder.addProperty( m_name, newValue, null );

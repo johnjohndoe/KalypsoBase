@@ -51,51 +51,54 @@ import org.kalypso.contribs.java.util.logging.ILogger;
 import org.kalypso.simulation.core.ant.MapZmlMeta2FeatureVisitor;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
+
 /**
  * Reads data from a zml (linked into the visited features) and puts it as property into the same feature.
  * 
  * @see org.kalypso.ogc.util.MapZmlMeta2FeatureVisitor
- * 
  * @author belger
  */
 public class MapZmlMeta2FeatureTask extends AbstractFeatureVisitorTask
 {
   /** FeatureProperty which holds the Zml-Link */
   private GMLXPath m_zmlLink;
-  
-  /** List of mappings to perform */
-  private  final List<MapZmlMeta2FeatureVisitor.Mapping> m_mappings = new ArrayList<MapZmlMeta2FeatureVisitor.Mapping>( 5 );
 
-  public MapZmlMeta2FeatureTask(  )
+  /** List of mappings to perform */
+  private final List<MapZmlMeta2FeatureVisitor.Mapping> m_mappings = new ArrayList<MapZmlMeta2FeatureVisitor.Mapping>( 5 );
+
+  public MapZmlMeta2FeatureTask( )
   {
     super( true );
   }
-  
+
   public final void setZmlLink( final String zmlLink )
   {
     m_zmlLink = new GMLXPath( zmlLink, null );
   }
-  
+
   public final void addConfiguredMapping( final MapZmlMeta2FeatureVisitor.Mapping mapping )
   {
-    m_mappings.add( mapping ); 
+    m_mappings.add( mapping );
   }
-  
+
   /**
-   * @see org.kalypso.ant.AbstractFeatureVisitorTask#createVisitor(java.net.URL, org.kalypso.contribs.java.net.IUrlResolver, org.kalypso.contribs.java.util.logging.ILogger, org.eclipse.core.runtime.IProgressMonitor)
+   * @see org.kalypso.ant.AbstractFeatureVisitorTask#createVisitor(java.net.URL,
+   *      org.kalypso.contribs.java.net.IUrlResolver, org.kalypso.contribs.java.util.logging.ILogger,
+   *      org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
   public final FeatureVisitor createVisitor( final URL context, final ILogger logger )
   {
     return new MapZmlMeta2FeatureVisitor( context, m_zmlLink, m_mappings.toArray( new MapZmlMeta2FeatureVisitor.Mapping[m_mappings.size()] ) );
   }
- 
+
   /**
    * @see org.kalypso.contribs.eclipse.jface.operation.IErrorHandler#handleError(org.eclipse.swt.widgets.Shell,
    *      org.eclipse.core.runtime.IStatus)
    */
+  @Override
   public void handleError( final Shell shell, final IStatus status )
   {
-    ErrorDialog.openError(shell, "MapZmlMeta2Feature", "Fehler beim Erzeugen der Feature-Properties.", status );
+    ErrorDialog.openError( shell, "MapZmlMeta2Feature", "Fehler beim Erzeugen der Feature-Properties.", status );
   }
 }

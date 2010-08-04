@@ -80,7 +80,7 @@ import org.xml.sax.InputSource;
  * f(i): factor <br>
  * ZMLin(i): input timeseries <br>
  * the parameters are given by a gml model and some configuration strings (featurepath and property names)
- *
+ * 
  * @author doemming
  */
 public class GMLWeightingTask extends Task
@@ -129,7 +129,7 @@ public class GMLWeightingTask extends Task
    * @see org.apache.tools.ant.Task#execute()
    */
   @Override
-  public void execute( ) 
+  public void execute( )
   {
     try
     {
