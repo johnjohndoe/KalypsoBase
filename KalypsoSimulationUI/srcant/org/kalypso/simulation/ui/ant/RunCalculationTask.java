@@ -66,7 +66,7 @@ import org.kalypso.simulation.ui.calccase.ModelNature;
 
 /**
  * This ant task starts the calculation of a kalypso calcCase.
- *
+ * 
  * @author belger
  */
 public class RunCalculationTask extends Task
@@ -121,7 +121,7 @@ public class RunCalculationTask extends Task
 
     final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
     final IResource member = root.findMember( Path.fromPortableString( m_calcCasePath ) );
-    if( !(member instanceof  IContainer) )
+    if( !(member instanceof IContainer) )
       throw new BuildException( "calcCaseFolder not found: " + m_calcCaseFolder );
 
     m_calcCaseFolder = (IContainer) member;
@@ -155,7 +155,7 @@ public class RunCalculationTask extends Task
     {
       final IWorkbench workbench = PlatformUI.getWorkbench();
       // REMARK: getActiveWorkbenchWindow return null here, because we are not in the display thread
-      // so we just take the shell from the first window, this is ok in most cases  
+      // so we just take the shell from the first window, this is ok in most cases
       final IWorkbenchWindow window = workbench.getWorkbenchWindows()[0];
       final Shell shell = window == null ? null : window.getShell();
       if( !status.isOK() )
@@ -173,6 +173,7 @@ public class RunCalculationTask extends Task
   {
     shell.getDisplay().syncExec( new Runnable()
     {
+      @Override
       public void run( )
       {
         ErrorDialog.openError( shell, "Modellrechnung", "Modellrechnung wurde durchgeführt", status, IStatus.ERROR | IStatus.WARNING | IStatus.INFO | IStatus.CANCEL | IStatus.OK );

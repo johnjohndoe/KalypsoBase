@@ -51,7 +51,7 @@ import org.apache.tools.ant.Task;
 
 /**
  * This task allows to set mutliple properties depending on the result of comparing two strings.
- *
+ * 
  * @author belger
  */
 public class MultiEqualsTask extends Task
@@ -82,21 +82,24 @@ public class MultiEqualsTask extends Task
       m_valueThen = valueThen;
     }
 
-    public String getName()
+    public String getName( )
     {
       return m_name;
     }
-    public String getValueElse()
+
+    public String getValueElse( )
     {
       return m_valueElse;
     }
-    public String getValueThen()
+
+    public String getValueThen( )
     {
       return m_valueThen;
     }
   }
 
   private String m_arg1;
+
   private String m_arg2;
 
   private final List<PropertyToSet> m_properties = new ArrayList<PropertyToSet>( 5 );
@@ -126,7 +129,7 @@ public class MultiEqualsTask extends Task
    * @see org.apache.tools.ant.Task#execute()
    */
   @Override
-  public void execute() throws BuildException
+  public void execute( ) throws BuildException
   {
     if( m_arg1 == null )
       throw new BuildException( "arg1 was never set" );
@@ -147,14 +150,14 @@ public class MultiEqualsTask extends Task
 
   /**
    * Actually add the given property/value to the project after writing a log message.
-   *
+   * 
    * @note: Taken from {@link XmlProperty}in Ant.
    */
   private void addProperty( final String name, String value, final String id )
   {
     String msg = name + ":" + value;
     if( id != null )
-      msg += ( "(id=" + id + ")" );
+      msg += ("(id=" + id + ")");
 
     log( msg, Project.MSG_DEBUG );
 

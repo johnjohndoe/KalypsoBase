@@ -52,18 +52,18 @@ import org.kalypso.simulation.core.ant.DateFeature2ZmlMapping;
 import org.kalypso.simulation.core.ant.Feature2ZmlMapping;
 import org.kalypso.simulation.core.ant.MapFeature2ZmlMetaVisitor;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
+
 /**
  * Reads data from a zml (linked into the visited features) and puts it as property into the same feature.
  * 
  * @see org.kalypso.ogc.util.MapZmlMeta2FeatureVisitor
- * 
  * @author belger
  */
 public class MapFeature2ZmlMetaTask extends AbstractFeatureVisitorTask
 {
   /** FeatureProperty which holds the Zml-Link */
   private String m_zmlLink;
-  
+
   /** List of mappings to perform */
   private final List<Feature2ZmlMapping> m_mappings = new ArrayList<Feature2ZmlMapping>( 5 );
 
@@ -71,24 +71,26 @@ public class MapFeature2ZmlMetaTask extends AbstractFeatureVisitorTask
   {
     super( false );
   }
-  
+
   public final void setZmlLink( final String zmlLink )
   {
     m_zmlLink = zmlLink;
   }
-  
+
   public final void addConfiguredMapping( final Feature2ZmlMapping mapping )
   {
-    m_mappings.add( mapping ); 
+    m_mappings.add( mapping );
   }
 
   public final void addConfiguredDateMapping( final DateFeature2ZmlMapping mapping )
   {
     m_mappings.add( mapping );
   }
-  
+
   /**
-   * @see org.kalypso.ant.AbstractFeatureVisitorTask#createVisitor(java.net.URL, org.kalypso.contribs.java.net.IUrlResolver, org.kalypso.contribs.java.util.logging.ILogger, org.eclipse.core.runtime.IProgressMonitor)
+   * @see org.kalypso.ant.AbstractFeatureVisitorTask#createVisitor(java.net.URL,
+   *      org.kalypso.contribs.java.net.IUrlResolver, org.kalypso.contribs.java.util.logging.ILogger,
+   *      org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
   public final FeatureVisitor createVisitor( final URL context, final ILogger logger )
@@ -100,6 +102,7 @@ public class MapFeature2ZmlMetaTask extends AbstractFeatureVisitorTask
    * @see org.kalypso.contribs.eclipse.jface.operation.IErrorHandler#handleError(org.eclipse.swt.widgets.Shell,
    *      org.eclipse.core.runtime.IStatus)
    */
+  @Override
   public void handleError( final Shell shell, final IStatus status )
   {
     ErrorDialog.openError( shell, "MapFeature2ZmlMeta", "Fehler beim Erzeugen der ZML-Metadaten.", status );

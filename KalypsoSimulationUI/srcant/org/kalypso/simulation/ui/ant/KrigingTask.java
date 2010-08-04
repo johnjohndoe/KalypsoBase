@@ -77,7 +77,7 @@ import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
  * eine andere Property des Features) zu schreiben. <code>
  * TODO
  * </code>
- *
+ * 
  * @author doemming
  */
 

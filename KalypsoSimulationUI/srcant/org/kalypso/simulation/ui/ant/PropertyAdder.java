@@ -48,12 +48,13 @@ import org.apache.tools.ant.Task;
 
 /**
  * Helper class to add properties within an ant task.
- *
+ * 
  * @author belger
  */
 public class PropertyAdder
 {
   private final Map<String, String> m_addedAttributes = new HashMap<String, String>();
+
   private final Task m_task;
 
   public PropertyAdder( final Task task )
@@ -70,10 +71,10 @@ public class PropertyAdder
   {
     String msg = name + ":" + value;
     if( id != null )
-      msg += ( "(id=" + id + ")" );
+      msg += ("(id=" + id + ")");
 
     final Project project = m_task.getProject();
-    if(project!=null)
+    if( project != null )
       project.log( msg, Project.MSG_DEBUG );
 
     if( m_addedAttributes.containsKey( name ) )
