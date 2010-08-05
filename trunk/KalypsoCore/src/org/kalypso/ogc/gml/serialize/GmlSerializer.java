@@ -238,6 +238,14 @@ public final class GmlSerializer
    */
   public static GMLWorkspace createGMLWorkspace( final URL gmlURL, final IFeatureProviderFactory factory, final IProgressMonitor monitor ) throws Exception
   {
+    return createGMLWorkspace( gmlURL, null, factory, monitor );
+  }
+  
+  /**
+   * @param context If set, this context is used instead of the gmlUrl where the workspace is loaded from.
+   */
+  public static GMLWorkspace createGMLWorkspace( final URL gmlURL, final URL context, final IFeatureProviderFactory factory, final IProgressMonitor monitor ) throws Exception
+  {
     InputStream is = null;
     InputStream urlStream = null;
     InputStream bis = null;
@@ -266,7 +274,9 @@ public final class GmlSerializer
         is = bis;
       }
 
-      final GMLWorkspace workspace = createGMLWorkspace( new InputSource( is ), null, gmlURL, factory );
+      final URL usedContext = context == null ? gmlURL : context;
+      
+      final GMLWorkspace workspace = createGMLWorkspace( new InputSource( is ), null, usedContext, factory );
       is.close();
       return workspace;
     }
