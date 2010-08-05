@@ -1,8 +1,8 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: KalypsoRepository
+Bundle-Name: KalypsoRepository Plug-in
 Bundle-SymbolicName: org.kalypso.repository; singleton:=true
-Bundle-Version: 2.2.0.qualifier
+Bundle-Version: 2.3.0.qualifier
 Bundle-Vendor: kalypsobase.sourceforge.net
 Export-Package: org.kalypso.repository,
  org.kalypso.repository.conf,

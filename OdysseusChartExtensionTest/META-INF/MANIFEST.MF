@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: OdysseusChartExtensionTest Plug-in
 Bundle-SymbolicName: de.openali.odysseus.chart.ext.test;singleton:=true
-Bundle-Version: 2.2.0.qualifier
+Bundle-Version: 2.3.0.qualifier
 Require-Bundle: de.openali.odysseus.chart.ext.base
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: org.kalypso.chart.ext.test.Activator

@@ -1,8 +1,8 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: ObservationImport
+Bundle-Name: KalypsoObservationImport Plug-in
 Bundle-SymbolicName: org.kalypso.ui.observationimport; singleton:=true
-Bundle-Version: 2.2.0.qualifier
+Bundle-Version: 2.3.0.qualifier
 Bundle-Vendor: kalypsobase.sourceforge.net
 Bundle-Localization: plugin
 Export-Package: org.kalypso.ui.wizard.sensor
