@@ -43,7 +43,6 @@ package org.kalypso.model.wspm.ui.view;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.forms.widgets.Form;
 import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 
@@ -56,7 +55,7 @@ import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 /**
  * @author kimwerner
  */
-public class LayerView extends AbstractChartModelView
+public class LayerViewPart extends AbstractChartModelViewPart
 {
   private Composite m_parent = null;
 
@@ -115,7 +114,7 @@ public class LayerView extends AbstractChartModelView
    * @see org.kalypso.model.wspm.ui.view.AbstractChartModelView#updateControl()
    */
   @Override
-  protected void updateControl( final Form form )
+  protected void updateControl( )//final Form form )
   {
     if( m_parent == null || m_parent.isDisposed() )
       return;
@@ -124,7 +123,7 @@ public class LayerView extends AbstractChartModelView
       ctrl.dispose();
 
     final IChartLayer activeLayer = getActiveLayer();
-    updatePartName( form, getChartModel(), activeLayer == null ? null : activeLayer.getTitle() );
+    updatePartName( getChartModel(), activeLayer == null ? null : activeLayer.getTitle() );
     if( activeLayer == null )
       return;
 

@@ -58,16 +58,16 @@
         <view
               allowMultiple="false"
               category="org.kalypso.model.wspm.profil.view.category"
-              class="org.kalypso.model.wspm.ui.view.legend.LegendView"
+              class="org.kalypso.model.wspm.ui.view.legend.LegendViewPart"
               icon="icons/eview16/profil_legend.gif"
-              id="org.kalypso.model.wspm.ui.view.legend.LegendView"
+              id="org.kalypso.model.wspm.ui.view.legend.LegendViewPart"
               name="%org.kalypso.model.wspm.ui.view.legend.LegendView"/>
         <view
               allowMultiple="false"
               category="org.kalypso.model.wspm.profil.view.category"
-              class="org.kalypso.model.wspm.ui.view.LayerView"
+              class="org.kalypso.model.wspm.ui.view.LayerViewPart"
               icon="icons/eview16/profil_panel.gif"
-              id="org.kalypso.model.wspm.ui.view.LayerView"
+              id="org.kalypso.model.wspm.ui.view.LayerViewPart"
               name="%org.kalypso.model.wspm.ui.view.LayerView"/>
         <view
               allowMultiple="false"
@@ -405,7 +405,7 @@
             </separator>
          </menuContribution>
          <menuContribution
-               locationURI="toolbar:org.kalypso.model.wspm.ui.view.legend.LegendView">
+               locationURI="toolbar:org.kalypso.model.wspm.ui.view.legend.LegendViewPart">
             <command
                   commandId="org.kalypso.model.wspm.ui.view.legend.addlayer"
                   style="push">

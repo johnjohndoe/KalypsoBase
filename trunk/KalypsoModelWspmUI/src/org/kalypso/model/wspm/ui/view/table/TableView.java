@@ -120,6 +120,8 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
 
   protected Composite m_outlineContainer;
 
+  private String m_registeredName;
+
   private final static int MAX_OUTLINE_HEIGHT = 70;
 
   protected final UIJob m_markerRefreshJob = new UIJob( Messages.getString( "org.kalypso.model.wspm.ui.view.table.TableView.0" ) ) //$NON-NLS-1$
@@ -186,7 +188,7 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
   public void init( final IViewSite site ) throws PartInitException
   {
     super.init( site );
-
+    m_registeredName = site.getRegisteredName();
     m_profilProviderListener.init( site.getPage() );
 
     m_menuManager = new MenuManager();
@@ -346,7 +348,7 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
     if( (m_profile == null) )
     {
       m_form.setMessage( Messages.getString( "org.kalypso.model.wspm.ui.view.table.TableView.2" ), IMessageProvider.INFORMATION ); //$NON-NLS-1$
-
+      this.setPartName( m_registeredName );
       final GridData tableGrid = (GridData) m_view.getTable().getLayoutData();
       tableGrid.exclude = true;
 

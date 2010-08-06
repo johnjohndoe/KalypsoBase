@@ -47,10 +47,11 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.part.ViewPart;
 import org.kalypso.chart.ui.IChartPart;
+import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 import org.kalypso.contribs.eclipse.ui.partlistener.AdapterPartListener;
 import org.kalypso.contribs.eclipse.ui.partlistener.EditorFirstAdapterFinder;
 import org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater;
@@ -65,17 +66,19 @@ import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
 /**
  * @author kimwerner
  */
-public abstract class AbstractChartModelView extends ViewPart implements IAdapterEater<IChartPart>, IChartModelEventListener
+public abstract class AbstractChartModelViewPart extends ViewPart implements IAdapterEater<IChartPart>, IChartModelEventListener
 {
   private final AdapterPartListener<IChartPart> m_chartProviderListener = new AdapterPartListener<IChartPart>( IChartPart.class, this, EditorFirstAdapterFinder.<IChartPart> instance(), EditorFirstAdapterFinder.<IChartPart> instance() );
 
-  private Form m_form;
+  private ScrolledForm m_form;
 
   private FormToolkit m_toolkit;
 
   private IChartPart m_chartPart;
 
   private IChartModel m_chartModel;
+  
+  private String m_registeredName;
 
   protected abstract void createControl( final Composite parent );
 
@@ -86,8 +89,8 @@ public abstract class AbstractChartModelView extends ViewPart implements IAdapte
   public void createPartControl( final Composite parent )
   {
     m_toolkit = new FormToolkit( parent.getDisplay() );
-    m_form = m_toolkit.createForm( parent );
-    m_toolkit.decorateFormHeading( m_form );
+    m_form = m_toolkit.createScrolledForm( parent );
+    m_toolkit.decorateFormHeading( m_form.getForm() );
 
     final GridLayout bodyLayout = new GridLayout();
     bodyLayout.marginHeight = 0;
@@ -97,7 +100,7 @@ public abstract class AbstractChartModelView extends ViewPart implements IAdapte
 
     createControl( m_form.getBody() );
 
-    updateControl( m_form );
+    updateControl();
   }
 
   /**
@@ -155,8 +158,8 @@ public abstract class AbstractChartModelView extends ViewPart implements IAdapte
   {
     super.init( site );
     m_chartProviderListener.init( site.getPage() );
-
-    updateControl( m_form );
+    m_registeredName=site.getRegisteredName();
+    updateControl();
   }
 
   protected abstract void modelChanged( final IChartModel oldModel );
@@ -170,9 +173,17 @@ public abstract class AbstractChartModelView extends ViewPart implements IAdapte
   {
     m_chartModel = newModel;
 
-    // FIXME: throws InvalidThreadAccess if not invoked from SWT-Thread, this is not good!
+    final Runnable runnable = new Runnable()
+    {
+      @Override
+      public void run( )
+      {
+        modelChanged( oldModel );
+      }
+    };
 
-    modelChanged( oldModel );
+    ControlUtils.asyncExec( m_form, runnable );
+
   }
 
   /**
@@ -193,7 +204,7 @@ public abstract class AbstractChartModelView extends ViewPart implements IAdapte
       final ChartComposite chart = adapter.getChartComposite();
       m_chartModel = chart == null ? null : chart.getChartModel();
     }
-    updateControl( m_form );
+    updateControl();
   }
 
   /**
@@ -210,34 +221,26 @@ public abstract class AbstractChartModelView extends ViewPart implements IAdapte
     }
   }
 
-  public void setForm( final Form form )
-  {
-    m_form = form;
-  }
-
   /** Must be called in SWT thread */
-  protected final void updateControl( )
+  protected abstract void updateControl( );
+
+  protected final void updatePartName( final IChartModel model )
   {
-    updateControl( m_form );
+    updatePartName( model, null );
   }
 
-  /** Must be called in SWT thread */
-  protected abstract void updateControl( final Form form );
-  protected final void updatePartName( final Form form, final IChartModel model)
+  protected final void updatePartName( final IChartModel model, final String message )
   {
-    updatePartName(form,model,null);
-  }
-
-  protected final void updatePartName( final Form form, final IChartModel model,final String message  )
-  {
+    if( m_form == null )
+      return;
     if( model == null )
     {
-      form.setMessage( Messages.getString( "org.kalypso.model.wspm.ui.view.legend.LegendView.2" ), IMessageProvider.INFORMATION ); //$NON-NLS-1$
-      setPartName( getPartName() );
+      m_form.setMessage( Messages.getString( "org.kalypso.model.wspm.ui.view.legend.LegendView.2" ), IMessageProvider.INFORMATION ); //$NON-NLS-1$
+      setPartName( m_registeredName );
     }
     else
     {
-      form.setMessage( message );
+      m_form.getForm().setMessage( message );
       setPartName( getStationName( model ) );
     }
   }

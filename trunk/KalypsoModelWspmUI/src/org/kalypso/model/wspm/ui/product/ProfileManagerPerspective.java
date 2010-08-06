@@ -2,9 +2,9 @@ package org.kalypso.model.wspm.ui.product;
 
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
-import org.kalypso.model.wspm.ui.view.LayerView;
+import org.kalypso.model.wspm.ui.view.LayerViewPart;
 import org.kalypso.model.wspm.ui.view.chart.TuhhProfilChartView;
-import org.kalypso.model.wspm.ui.view.legend.LegendView;
+import org.kalypso.model.wspm.ui.view.legend.LegendViewPart;
 import org.kalypso.model.wspm.ui.view.table.TableView;
 
 /**
@@ -29,16 +29,16 @@ public class ProfileManagerPerspective implements IPerspectiveFactory
     layout.addView( TuhhProfilChartView.ID, IPageLayout.BOTTOM, 0.66f, TableView.class.getName() );
     layout.addPlaceholder( IPageLayout.ID_PROBLEM_VIEW, IPageLayout.TOP, 0.25f, TableView.class.getName() );
 
-    layout.addView( LegendView.class.getName(), IPageLayout.BOTTOM, 0.66f, IPageLayout.ID_EDITOR_AREA );
-    layout.addView( LayerView.class.getName(), IPageLayout.RIGHT, 0.5f, LegendView.class.getName() );
+    layout.addView( LegendViewPart.class.getName(), IPageLayout.BOTTOM, 0.66f, IPageLayout.ID_EDITOR_AREA );
+    layout.addView( LayerViewPart.class.getName(), IPageLayout.RIGHT, 0.5f, LegendViewPart.class.getName() );
 
     layout.addPlaceholder( IPageLayout.ID_RES_NAV, IPageLayout.LEFT, 0.25f, IPageLayout.ID_EDITOR_AREA );
 
     /* Shortcuts */
     layout.addPerspectiveShortcut( WspmPerspectiveFactory.ID );
 
-    layout.addShowViewShortcut( LegendView.class.getName() );
-    layout.addShowViewShortcut( LayerView.class.getName() );
+    layout.addShowViewShortcut( LegendViewPart.class.getName() );
+    layout.addShowViewShortcut( LayerViewPart.class.getName() );
     layout.addShowViewShortcut( TableView.class.getName() );
     layout.addShowViewShortcut( TuhhProfilChartView.ID );
     layout.addShowViewShortcut( IPageLayout.ID_PROBLEM_VIEW );

@@ -14,7 +14,6 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 
 import de.openali.odysseus.chart.framework.model.event.IMapperEventListener;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
@@ -41,7 +40,7 @@ public class AxisCanvas extends Canvas implements IAxisComponent, PaintListener
 
   private Point m_panOffset = null;
 
-  private IMapperEventListener m_axisListener = new IMapperEventListener()
+  private final IMapperEventListener m_axisListener = new IMapperEventListener()
   {
     @Override
     public void onMapperChanged( IMapper mapper )
@@ -89,16 +88,6 @@ public class AxisCanvas extends Canvas implements IAxisComponent, PaintListener
   {
     return m_axis;
   }
-
-// protected void handleControlResized( )
-// {
-// setAxisHeight();
-// if( m_bufferImage != null )
-// {
-// m_bufferImage.dispose();
-// m_bufferImage = null;
-// }
-// }
 
   /**
    * @see org.eclipse.swt.widgets.Widget#dispose()
@@ -229,20 +218,6 @@ public class AxisCanvas extends Canvas implements IAxisComponent, PaintListener
     if( offset != null )
       redraw();
   }
-
-// @Override
-// public void setSize( Point size )
-// {
-// // super.setSize( size );
-// // setAxisHeight( new Rectangle( 0, 0, size.x, size.y ) );
-// }
-//
-// @Override
-// public void setSize( int width, int height )
-// {
-// // super.setSize( width, height );
-// // setAxisHeight( new Rectangle( 0, 0, width, height ) );
-// }
 
   private void setAxisHeight( final Rectangle bounds )
   {
