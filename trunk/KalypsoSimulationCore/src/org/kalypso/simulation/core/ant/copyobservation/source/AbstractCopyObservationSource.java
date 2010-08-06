@@ -134,7 +134,7 @@ public abstract class AbstractCopyObservationSource implements ICopyObservationS
         throw new SensorException( Messages.getString( "org.kalypso.ogc.util.CopyObservationFeatureVisitor.10" ) + hrefWithFilterAndRange, e );//$NON-NLS-1$
 
       // obs could not be created, use the request now
-      final String message = String.format( "Abruf von '%s' fehlgeschlagen. Erzeuge syntetische Zeitreihe.", sourceHref );
+      final String message = String.format( "Abruf von '%s' fehlgeschlagen. Erzeuge synthetische Zeitreihe.", sourceHref );
       KalypsoSimulationCorePlugin.getDefault().getLog().log( StatusUtilities.createWarningStatus( message ) );
       final IObservation synteticObservation = RequestFactory.createDefaultObservation( requestType );
       return FilterFactory.createFilterFrom( source.getFilter(), synteticObservation, null );
