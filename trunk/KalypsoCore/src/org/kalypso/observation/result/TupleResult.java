@@ -89,7 +89,7 @@ public class TupleResult implements List<IRecord>
     @Override
     public int compare( final IRecord o1, final IRecord o2 )
     {
-      IComponent[] sortComponents = getSortComponents();
+      final IComponent[] sortComponents = getSortComponents();
       for( final IComponent component : sortComponents )
       {
         final int index = indexOfComponent( component );
@@ -189,7 +189,7 @@ public class TupleResult implements List<IRecord>
    */
   /* default */void sort( )
   {
-    if( m_isSorted == true )
+    if( m_isSorted )
       return;
 
     if( m_sortComponents.size() == 0 )
@@ -214,6 +214,11 @@ public class TupleResult implements List<IRecord>
   public void setInterpolationHandler( final IInterpolationHandler handler )
   {
     m_interpolationHandler = handler;
+  }
+
+  public IInterpolationHandler getInterpolationHandler( )
+  {
+    return m_interpolationHandler;
   }
 
   public boolean doInterpolation( final TupleResult result, final IRecord record, final int index, final Double distance )
