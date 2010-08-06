@@ -57,7 +57,7 @@ public interface IKalypsoStyle extends INamedStyleElement
 
   boolean isUsedForSelection( );
 
-  public String getLabel( );
+  String getLabel( );
 
   String resolveI18nString( String label );
 
