@@ -124,7 +124,7 @@ public class WspmGeometryUtilities
           hw = (Double) point.getValue( compHochwert );
 
           /* We assume here that we have a GAUSS-KRUEGER crs in a profile. */
-          if( StringUtils.isBlank( srsName ) )
+          if( StringUtils.isBlank( srsName ) && rw != null )
             srsName = TimeserieUtils.getCoordinateSystemNameForGkr( Double.toString( rw ) );
         }
         else
