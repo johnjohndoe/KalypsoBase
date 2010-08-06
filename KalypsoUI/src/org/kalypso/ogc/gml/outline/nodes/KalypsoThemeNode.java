@@ -101,7 +101,7 @@ public class KalypsoThemeNode<T extends IKalypsoTheme> extends AbstractThemeNode
 
   protected void handleStatusChanged( )
   {
-    updateViewer( new IThemeNode[] { KalypsoThemeNode.this } );
+    refreshViewer( KalypsoThemeNode.this );
   }
 
   @Override

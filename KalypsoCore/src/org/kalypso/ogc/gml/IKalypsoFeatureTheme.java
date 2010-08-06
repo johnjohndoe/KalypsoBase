@@ -60,7 +60,7 @@ public interface IKalypsoFeatureTheme extends IKalypsoTheme, ICommandTarget
    * 
    * @see QName#toString()
    */
-  public final static String PROPERTY_SELECTABLE_GEOMETRIES = "selectableGeometries"; //$NON-NLS-1$
+  String PROPERTY_SELECTABLE_GEOMETRIES = "selectableGeometries"; //$NON-NLS-1$
 
   /**
    * (Comma separated) qnames of the properties that shall be painted when hovering over a feature in this theme.<br>
@@ -68,25 +68,25 @@ public interface IKalypsoFeatureTheme extends IKalypsoTheme, ICommandTarget
    * 
    * @see QName#toString()
    */
-  public final static String PROPERTY_HOVER_GEOMETRIES = "hoverGeometries"; //$NON-NLS-1$
+  String PROPERTY_HOVER_GEOMETRIES = "hoverGeometries"; //$NON-NLS-1$
 
-  public CommandableWorkspace getWorkspace( );
+  CommandableWorkspace getWorkspace( );
 
-  public ISchedulingRule getSchedulingRule( );
+  ISchedulingRule getSchedulingRule( );
 
-  public IFeatureType getFeatureType( );
+  IFeatureType getFeatureType( );
 
-  public String getFeaturePath();
+  String getFeaturePath( );
 
-  public void addStyle( final IKalypsoStyle style );
+  void addStyle( IKalypsoStyle style );
 
-  public void removeStyle( final IKalypsoStyle style );
+  void removeStyle( IKalypsoStyle style );
 
-  public IKalypsoStyle[] getStyles( );
+  IKalypsoStyle[] getStyles( );
 
-  public FeatureList getFeatureList( );
+  FeatureList getFeatureList( );
 
-  public FeatureList getFeatureListVisible( final GM_Envelope env );
+  FeatureList getFeatureListVisible( GM_Envelope env );
 
-  public IFeatureSelectionManager getSelectionManager( );
+  IFeatureSelectionManager getSelectionManager( );
 }
