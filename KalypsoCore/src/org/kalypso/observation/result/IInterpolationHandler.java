@@ -41,14 +41,14 @@
 package org.kalypso.observation.result;
 
 /**
- * @author kimwerner
- */
-
-/**
- * @return true if interpolation(calculate this row between position index and index+1 with distance [percent value])succeed
+ * @return true if interpolation(calculate this row between position index and index+1 with distance [percent
+ *         value])succeed
  * @throws ArithmeticException
+ * @authorkimwerner
  */
 public interface IInterpolationHandler
 {
-  public boolean doInterpolation( final TupleResult result, final IRecord record, final int index, final double distance )throws ArithmeticException;
+  String getInterpolationComponent( );
+
+  boolean doInterpolation( TupleResult result, IRecord record, int index, double distance ) throws ArithmeticException;
 }
