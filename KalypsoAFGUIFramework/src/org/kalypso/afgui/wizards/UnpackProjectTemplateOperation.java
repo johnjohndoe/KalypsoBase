@@ -123,9 +123,12 @@ public final class UnpackProjectTemplateOperation extends WorkspaceModifyOperati
     }
     catch( final CoreException t )
     {
-      // If anything went wrong, clean up the project
-      progress.setWorkRemaining( 10 );
-      m_project.delete( true, progress );
+      if( t.getStatus().matches( IStatus.ERROR ) )
+      {
+        // If anything went wrong, clean up the project
+        progress.setWorkRemaining( 10 );
+        m_project.delete( true, progress );
+      }
 
       throw t;
     }
