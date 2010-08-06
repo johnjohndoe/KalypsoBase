@@ -36,8 +36,6 @@
 package org.kalypsodeegree_impl.model.feature;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.xml.namespace.QName;
@@ -199,36 +197,6 @@ public class Feature_Impl extends PlatformObject implements Feature
     setEnvelopesUpdated();
   }
 
-  private synchronized Object trimValues( final Object value )
-  {
-    if( value instanceof String )
-    {
-      return ((String) value).trim();
-    }
-    else if( value instanceof Collection< ? > && ((Collection< ? >) value).size() > 0 )
-    {
-
-      List<Object> lListToAdd = new ArrayList<Object>();
-
-      for( Iterator< ? > iterator = ((Collection< ? >) value).iterator(); iterator.hasNext(); )
-      {
-        Object v = iterator.next();
-        if( v instanceof String )
-        {
-          String newV = ((String) v).trim();
-          v = newV;
-        }
-        lListToAdd.add( v );
-      }
-      ((Collection< ? >) value).clear();
-      ((Collection) value).addAll( lListToAdd );
-
-      return value;
-    }
-
-    return value;
-  }
-
   /**
    * @see org.kalypsodeegree.model.feature.Feature#setProperty(java.lang.String, java.lang.Object)
    */
@@ -244,14 +212,6 @@ public class Feature_Impl extends PlatformObject implements Feature
     {
       final IFeaturePropertyHandler fsh = getPropertyHandler();
 
-      // if( Feature.QN_NAME.equals( pt.getQName() ) )
-      // {
-      // m_properties[pos] = fsh.setValue( this, pt, trimValues( value ) );
-      // }
-      // else
-      // {
-      // m_properties[pos] = fsh.setValue( this, pt, value );
-      // }
       m_properties[pos] = fsh.setValue( this, pt, value );
 
       if( fsh.invalidateEnvelope( pt ) )
