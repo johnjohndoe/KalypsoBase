@@ -62,7 +62,7 @@ import org.kalypso.model.wspm.core.profil.ProfilFactory;
  * 
  * @author Gernot Belger
  */
-public class ProfilSerializerUtilitites
+public final class ProfilSerializerUtilitites
 {
   private ProfilSerializerUtilitites( )
   {
