@@ -265,9 +265,12 @@ public class NewProjectWizard extends BasicNewProjectResourceWizard implements I
         }
         catch( final CoreException t )
         {
-          // If anything went wrong, clean up the project
-          progress.setWorkRemaining( 10 );
-          project.delete( true, progress );
+          // If we have a real error, clean up the project
+          if( t.getStatus().matches( IStatus.ERROR ) )
+          {
+            progress.setWorkRemaining( 10 );
+            project.delete( true, progress );
+          }
 
           throw t;
         }
