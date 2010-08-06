@@ -49,13 +49,6 @@ import de.openali.odysseus.chart.framework.view.TooltipHandler;
  */
 public class ChartComposite extends Canvas
 {
-  /** axis pos --> axis placeholder */
-  protected final Map<POSITION, Composite> m_axisPlaces = new HashMap<POSITION, Composite>();
-
-  protected PlotCanvas m_plot;
-
-  protected IChartModel m_model;
-
   private final class InvalidateChartJob extends UIJob
   {
     public InvalidateChartJob( final String name )
@@ -76,6 +69,13 @@ public class ChartComposite extends Canvas
       return Status.OK_STATUS;
     }
   }
+
+  /** axis pos --> axis placeholder */
+  protected final Map<POSITION, Composite> m_axisPlaces = new HashMap<POSITION, Composite>();
+
+  protected PlotCanvas m_plot;
+
+  protected IChartModel m_model;
 
   private final InvalidateChartJob m_invalidateChartJob = new InvalidateChartJob( "" );
 
@@ -135,26 +135,6 @@ public class ChartComposite extends Canvas
       invalidatePlotCanvas( new IChartLayer[] { layer } );
     }
   };
-
-  // FIXME: please OBSERVE the correct order of methods/fields etc.!
-  public final EditInfo getChartInfo( )
-  {
-    return getPlot() == null ? null : getPlot().getTooltipInfo();
-  }
-
-  public final void setChartInfo( final EditInfo editInfo )
-  {
-    if( getPlot() == null )
-      return;
-    getPlot().setTooltipInfo( editInfo );
-  }
-
-  public final void drawPlotImage( final GC gc, final Rectangle rect )
-  {
-    final Image tmpImg = m_plot.createImage( getChartModel().getLayerManager().getLayers(), rect );
-    gc.drawImage( tmpImg, 0, 0, m_plot.getBounds().width, m_plot.getBounds().height, m_plot.getBounds().x, m_plot.getBounds().y, m_plot.getBounds().width, m_plot.getBounds().height );
-    tmpImg.dispose();
-  }
 
   private final AbstractMapperRegistryEventListener m_mapperListener = new AbstractMapperRegistryEventListener()
   {
@@ -238,6 +218,35 @@ public class ChartComposite extends Canvas
     setChartModel( model );
   }
 
+  private final void addAllAxis( )
+  {
+    final IMapperRegistry mr = m_model.getMapperRegistry();
+    if( mr == null )
+      return;
+    final IAxis[] axes = mr == null ? new IAxis[] {} : mr.getAxes();
+    for( final IAxis axis : axes )
+      addAxisInternal( axis );
+  }
+
+  public final void addAxisHandler( final IAxisDragHandler handler )
+  {
+    final IMapperRegistry mr = getChartModel() == null ? null : getChartModel().getMapperRegistry();
+    if( mr == null )
+
+      return;
+
+    for( final IAxis axis : mr.getAxes() )
+    {
+      final AxisCanvas ac = getAxisCanvas( axis );
+      if( handler != null )
+      {
+        ac.addMouseListener( handler );
+        ac.addMouseMoveListener( handler );
+        ac.addKeyListener( handler );
+      }
+    }
+  }
+
   protected final AxisCanvas addAxisInternal( final IAxis axis )
   {
     final Composite parent = m_axisPlaces.get( axis.getPosition() );
@@ -246,18 +255,44 @@ public class ChartComposite extends Canvas
     return ac;
   }
 
-  /**
-   * @see org.eclipse.swt.widgets.Widget#dispose()
-   */
-  @Override
-  public void dispose( )
+  public final void addPlotHandler( final IChartDragHandler handler )
   {
-    unregisterListener();
+    if( handler == null )
+      m_plot.setCursor( m_plot.getDisplay().getSystemCursor( SWT.CURSOR_ARROW ) );
+    else
+    {
+      m_plot.addMouseListener( handler );
+      m_plot.addMouseMoveListener( handler );
+    }
 
-    if( m_tooltipHandler != null )
-      m_tooltipHandler.dispose();
+  }
 
-    super.dispose();
+  public final void clearPanOffset( )
+  {
+    getPlot().setPanOffset( null, null );
+    final IChartModel cm = getChartModel();
+    final IMapperRegistry mr = cm == null ? null : cm.getMapperRegistry();
+    final IAxis[] axes = mr == null ? new IAxis[] {} : mr.getAxes();
+    for( final IAxis axis : axes )
+    {
+      final AxisCanvas ac = getAxisCanvas( axis );
+      if( ac != null )
+        ac.setPanOffsetInterval( null );
+    }
+  }
+
+  public final void clearZoomOffset( )
+  {
+    getPlot().setDragArea( null );
+    final IChartModel cm = getChartModel();
+    final IMapperRegistry mr = cm == null ? null : cm.getMapperRegistry();
+    final IAxis[] axes = mr == null ? new IAxis[] {} : mr.getAxes();
+    for( final IAxis axis : axes )
+    {
+      final AxisCanvas ac = getAxisCanvas( axis );
+      if( ac != null )
+        ac.setDragInterval( -1, -1 );
+    }
   }
 
   /**
@@ -347,15 +382,25 @@ public class ChartComposite extends Canvas
     lbl33.setVisible( false );
   }
 
-  @Deprecated
-  public PlotCanvas getPlot( )
+  /**
+   * @see org.eclipse.swt.widgets.Widget#dispose()
+   */
+  @Override
+  public void dispose( )
   {
-    return m_plot;
+    unregisterListener();
+
+    if( m_tooltipHandler != null )
+      m_tooltipHandler.dispose();
+
+    super.dispose();
   }
 
-  public IChartModel getChartModel( )
+  public final void drawPlotImage( final GC gc, final Rectangle rect )
   {
-    return m_model;
+    final Image tmpImg = m_plot.createImage( getChartModel().getLayerManager().getLayers(), rect );
+    gc.drawImage( tmpImg, 0, 0, m_plot.getBounds().width, m_plot.getBounds().height, m_plot.getBounds().x, m_plot.getBounds().y, m_plot.getBounds().width, m_plot.getBounds().height );
+    tmpImg.dispose();
   }
 
   // FIXME: why deprecated: What should be used instead? Please comment with @deprecated tag in javadoc!
@@ -376,6 +421,47 @@ public class ChartComposite extends Canvas
     return null;
   }
 
+  private final AxisCanvas[] getAxisCanvas( final POSITION position )
+  {
+    final Composite axisPlace = m_axisPlaces.get( position );
+    if( axisPlace == null )
+      return new AxisCanvas[0];
+
+    final Control[][] runnableResult = new Control[1][];
+
+    final Runnable runnable = new Runnable()
+    {
+      @Override
+      public void run( )
+      {
+        runnableResult[0] = axisPlace.getChildren();
+      }
+    };
+    ControlUtils.syncExec( axisPlace, runnable );
+
+    final Control[] children = runnableResult[0];
+
+    final List<AxisCanvas> acList = new ArrayList<AxisCanvas>();
+    for( final Control comp : children )
+    {
+      if( comp instanceof AxisCanvas )
+        acList.add( (AxisCanvas) comp );
+    }
+
+    return acList.toArray( new AxisCanvas[] {} );
+  }
+
+  // FIXME: please OBSERVE the correct order of methods/fields etc.!
+  public final EditInfo getChartInfo( )
+  {
+    return getPlot() == null ? null : getPlot().getTooltipInfo();
+  }
+
+  public IChartModel getChartModel( )
+  {
+    return m_model;
+  }
+
   private final IChartLayer[] getLayer( final IAxis[] axes )
   {
     if( getChartModel() == null )
@@ -392,9 +478,78 @@ public class ChartComposite extends Canvas
 
   }
 
-  public final void setPlotPanOffset( final IAxis[] axes, final Point start, final Point end )
+  private final IChartLayer[] getLayers( final IChartLayer[] layers )
   {
-    getPlot().setPanOffset( getLayer( axes ), new Point( end.x - start.x, end.y - start.y ) );
+    if( layers != null )
+      return layers;
+    final ILayerManager layerManager = m_model == null ? null : m_model.getLayerManager();
+
+    return layerManager == null ? new IChartLayer[] {} : m_model.getLayerManager().getLayers();
+  }
+
+  @Deprecated
+  public PlotCanvas getPlot( )
+  {
+    return m_plot;
+  }
+
+  public final void invalidatePlotCanvas( final IChartLayer[] layers )
+  {
+    if( isDisposed() )
+      return;
+
+    m_invalidateChartJob.cancel();
+    // TODO: invalidate only layers with changes
+    // m_invalidateChartJob.addLayer( getLayers( layers ) );
+    m_invalidateChartJob.schedule( 50 );
+  }
+
+  private final void registerListener( )
+  {
+    m_model.getLayerManager().addListener( m_layerEventListener );
+    m_model.getMapperRegistry().addListener( m_mapperListener );
+  }
+
+  private final void removeAllAxis( )
+  {
+    final IMapperRegistry mr = m_model.getMapperRegistry();
+    if( mr == null )
+      return;
+    final IAxis[] axes = mr == null ? new IAxis[] {} : mr.getAxes();
+    for( final IAxis axis : axes )
+      removeAxisInternal( axis );
+  }
+
+  public final void removeAxisHandler( final IAxisDragHandler handler )
+  {
+
+    final IMapperRegistry mr = getChartModel() == null ? null : getChartModel().getMapperRegistry();
+    if( handler == null || mr == null )
+      return;
+    for( final IAxis axis : mr.getAxes() )
+    {
+      final AxisCanvas ac = getAxisCanvas( axis );
+      ac.removeMouseListener( handler );
+      ac.removeMouseMoveListener( handler );
+      ac.removeKeyListener( handler );
+    }
+  }
+
+  protected final void removeAxisInternal( final IAxis axis )
+  {
+
+    final AxisCanvas ac = getAxisCanvas( axis );
+    if( ac != null )
+      ac.dispose();
+  }
+
+  public final void removePlotHandler( final IChartDragHandler handler )
+  {
+    if( handler != null )
+    {
+      m_plot.removeMouseListener( handler );
+      m_plot.removeMouseMoveListener( handler );
+    }
   }
 
   public void setAxisPanOffset( final Point start, final Point end, final IAxis[] axes )
@@ -444,166 +599,11 @@ public class ChartComposite extends Canvas
     }
   }
 
-  public final void removeAxisHandler( final IAxisDragHandler handler )
+  public final void setChartInfo( final EditInfo editInfo )
   {
-
-    final IMapperRegistry mr = getChartModel() == null ? null : getChartModel().getMapperRegistry();
-    if( handler == null || mr == null )
+    if( getPlot() == null )
       return;
-    for( final IAxis axis : mr.getAxes() )
-    {
-      final AxisCanvas ac = getAxisCanvas( axis );
-      ac.removeMouseListener( handler );
-      ac.removeMouseMoveListener( handler );
-      ac.removeKeyListener( handler );
-    }
-  }
-
-  public final void addPlotHandler( final IChartDragHandler handler )
-  {
-    if( handler == null )
-      m_plot.setCursor( m_plot.getDisplay().getSystemCursor( SWT.CURSOR_ARROW ) );
-    else
-    {
-      m_plot.addMouseListener( handler );
-      m_plot.addMouseMoveListener( handler );
-    }
-
-  }
-
-  public final void setDragArea( final Rectangle dragArea )
-  {
-    m_plot.setDragArea( dragArea );
-    if( dragArea == null )
-    {
-      m_plot.setDragArea( null );
-    }
-    else
-    {
-      final int w = dragArea.width == Integer.MAX_VALUE ? m_plot.getBounds().width : dragArea.width;
-      final int h = dragArea.height == Integer.MAX_VALUE ? m_plot.getBounds().height : dragArea.height;
-      m_plot.setDragArea( new Rectangle( dragArea.x, dragArea.y, w, h ) );
-    }
-  }
-
-  public final void addAxisHandler( final IAxisDragHandler handler )
-  {
-    final IMapperRegistry mr = getChartModel() == null ? null : getChartModel().getMapperRegistry();
-    if( mr == null )
-
-      return;
-
-    for( final IAxis axis : mr.getAxes() )
-    {
-      final AxisCanvas ac = getAxisCanvas( axis );
-      if( handler != null )
-      {
-        ac.addMouseListener( handler );
-        ac.addMouseMoveListener( handler );
-        ac.addKeyListener( handler );
-      }
-    }
-  }
-
-  public final void removePlotHandler( final IChartDragHandler handler )
-  {
-    if( handler != null )
-    {
-      m_plot.removeMouseListener( handler );
-      m_plot.removeMouseMoveListener( handler );
-    }
-  }
-
-  public final void clearPanOffset( )
-  {
-    getPlot().setPanOffset( null, null );
-    final IChartModel cm = getChartModel();
-    final IMapperRegistry mr = cm == null ? null : cm.getMapperRegistry();
-    final IAxis[] axes = mr == null ? new IAxis[] {} : mr.getAxes();
-    for( final IAxis axis : axes )
-    {
-      final AxisCanvas ac = getAxisCanvas( axis );
-      if( ac != null )
-        ac.setPanOffsetInterval( null );
-    }
-  }
-
-  public final void clearZoomOffset( )
-  {
-    getPlot().setDragArea( null );
-    final IChartModel cm = getChartModel();
-    final IMapperRegistry mr = cm == null ? null : cm.getMapperRegistry();
-    final IAxis[] axes = mr == null ? new IAxis[] {} : mr.getAxes();
-    for( final IAxis axis : axes )
-    {
-      final AxisCanvas ac = getAxisCanvas( axis );
-      if( ac != null )
-        ac.setDragInterval( -1, -1 );
-    }
-  }
-
-  private final AxisCanvas[] getAxisCanvas( final POSITION position )
-  {
-    final Composite axisPlace = m_axisPlaces.get( position );
-    if( axisPlace == null )
-      return new AxisCanvas[0];
-
-    final Control[][] runnableResult = new Control[1][];
-
-    final Runnable runnable = new Runnable()
-    {
-      @Override
-      public void run( )
-      {
-        runnableResult[0] = axisPlace.getChildren();
-      }
-    };
-    ControlUtils.syncExec( axisPlace, runnable );
-
-    final Control[] children = runnableResult[0];
-
-    final List<AxisCanvas> acList = new ArrayList<AxisCanvas>();
-    for( final Control comp : children )
-    {
-      if( comp instanceof AxisCanvas )
-        acList.add( (AxisCanvas) comp );
-    }
-
-    return acList.toArray( new AxisCanvas[] {} );
-  }
-
-  private final void registerListener( )
-  {
-    m_model.getLayerManager().addListener( m_layerEventListener );
-    m_model.getMapperRegistry().addListener( m_mapperListener );
-  }
-
-  protected final void removeAxisInternal( final IAxis axis )
-  {
-
-    final AxisCanvas ac = getAxisCanvas( axis );
-    if( ac != null )
-      ac.dispose();
-  }
-
-  private final void addAllAxis( )
-  {
-    final IMapperRegistry mr = m_model.getMapperRegistry();
-    if( mr == null )
-      return;
-    final IAxis[] axes = mr == null ? new IAxis[] {} : mr.getAxes();
-    for( final IAxis axis : axes )
-      addAxisInternal( axis );
-  }
-
-  private final void removeAllAxis( )
-  {
-    final IMapperRegistry mr = m_model.getMapperRegistry();
-    if( mr == null )
-      return;
-    final IAxis[] axes = mr == null ? new IAxis[] {} : mr.getAxes();
-    for( final IAxis axis : axes )
-      removeAxisInternal( axis );
+    getPlot().setTooltipInfo( editInfo );
   }
 
   public void setChartModel( final IChartModel model )
@@ -627,6 +627,26 @@ public class ChartComposite extends Canvas
     }
     layout( true, true );
 
+  }
+
+  public final void setDragArea( final Rectangle dragArea )
+  {
+    m_plot.setDragArea( dragArea );
+    if( dragArea == null )
+    {
+      m_plot.setDragArea( null );
+    }
+    else
+    {
+      final int w = dragArea.width == Integer.MAX_VALUE ? m_plot.getBounds().width : dragArea.width;
+      final int h = dragArea.height == Integer.MAX_VALUE ? m_plot.getBounds().height : dragArea.height;
+      m_plot.setDragArea( new Rectangle( dragArea.x, dragArea.y, w, h ) );
+    }
+  }
+
+  public final void setPlotPanOffset( final IAxis[] axes, final Point start, final Point end )
+  {
+    getPlot().setPanOffset( getLayer( axes ), new Point( end.x - start.x, end.y - start.y ) );
   }
 
   /**
@@ -674,25 +694,5 @@ public class ChartComposite extends Canvas
 
     m_model.getLayerManager().removeListener( m_layerEventListener );
     m_model.getMapperRegistry().removeListener( m_mapperListener );
-  }
-
-  private final IChartLayer[] getLayers( final IChartLayer[] layers )
-  {
-    if( layers != null )
-      return layers;
-    final ILayerManager layerManager = m_model == null ? null : m_model.getLayerManager();
-
-    return layerManager == null ? new IChartLayer[] {} : m_model.getLayerManager().getLayers();
-  }
-
-  public final void invalidatePlotCanvas( final IChartLayer[] layers )
-  {
-    if( isDisposed() )
-      return;
-
-    m_invalidateChartJob.cancel();
-    // TODO: invalidate only layers with changes
-    // m_invalidateChartJob.addLayer( getLayers( layers ) );
-    m_invalidateChartJob.schedule( 50 );
   }
 }

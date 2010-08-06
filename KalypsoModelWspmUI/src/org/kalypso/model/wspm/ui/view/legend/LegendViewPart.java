@@ -42,11 +42,10 @@ package org.kalypso.model.wspm.ui.view.legend;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.forms.widgets.Form;
 import org.kalypso.chart.ui.editor.ChartEditorTreeOutlinePage;
 import org.kalypso.chart.ui.editor.ChartTreeLabelProvider;
 import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
-import org.kalypso.model.wspm.ui.view.AbstractChartModelView;
+import org.kalypso.model.wspm.ui.view.AbstractChartModelViewPart;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
@@ -62,7 +61,7 @@ import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
  * @author Gernot Belger
  * @author kimwerner
  */
-public class LegendView extends AbstractChartModelView
+public class LegendViewPart extends AbstractChartModelViewPart
 {
   private final ChartEditorTreeOutlinePage m_chartlegend = new ChartEditorTreeOutlinePage( new ProfilChartEditorTreeContentProvider(), new ChartTreeLabelProvider() );
 
@@ -83,20 +82,6 @@ public class LegendView extends AbstractChartModelView
     return super.getAdapter( adapter );
   }
 
-// public void showLayerProperties( )
-// {
-// // just open layer view
-// try
-// {
-//      getSite().getPage().showView( "org.kalypso.model.wspm.ui.view.LayerView" ); //$NON-NLS-1$
-// }
-// catch( final PartInitException ex )
-// {
-//      ErrorDialog.openError( getSite().getShell(), Messages.getString( "org.kalypso.model.wspm.ui.view.legend.LegendView.0" ), org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.view.legend.LegendView.1" ), ex.getStatus() ); //$NON-NLS-1$ //$NON-NLS-2$
-// KalypsoModelWspmUIPlugin.getDefault().getLog().log( ex.getStatus() );
-// }
-// }
-
   private final void setSelectedLayer( final IChartModel model )
   {
     final ILayerManager lm = model == null ? null : model.getLayerManager();
@@ -114,19 +99,15 @@ public class LegendView extends AbstractChartModelView
   }
 
   @Override
-  public void updateControl( final Form form )
+  public void updateControl( )
   {
 
-    if( form == null || form.isDisposed() || m_chartlegend == null )
+    if( m_chartlegend == null )
       return;
     final IChartModel model = getChartModel();
     m_chartlegend.setModel( model );
-    updatePartName( form, model );
+    updatePartName( model );
     setSelectedLayer( model );
-
-    // m_chartlegend.updateControl();
-    form.layout();
-
   }
 
   /**
@@ -137,7 +118,6 @@ public class LegendView extends AbstractChartModelView
   {
     final Runnable runnable = new Runnable()
     {
-      @SuppressWarnings("synthetic-access")
       @Override
       public void run( )
       {

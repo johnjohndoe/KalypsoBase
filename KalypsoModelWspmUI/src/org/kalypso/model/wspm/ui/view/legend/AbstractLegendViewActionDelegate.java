@@ -52,12 +52,12 @@ public abstract class AbstractLegendViewActionDelegate implements IViewActionDel
 {
   private IStructuredSelection m_selection;
 
-  private LegendView m_view;
+  private LegendViewPart m_view;
 
   @Override
   public final void init( final IViewPart view )
   {
-    m_view = (LegendView) view;
+    m_view = (LegendViewPart) view;
   }
 
   protected final void handleError( final String msg )
@@ -73,7 +73,7 @@ public abstract class AbstractLegendViewActionDelegate implements IViewActionDel
     m_selection = (IStructuredSelection) selection;
   }
 
-  protected final LegendView getView( )
+  protected final LegendViewPart getView( )
   {
     return m_view;
   }
