@@ -460,7 +460,7 @@ public final class KalypsoStatusUtils
     if( checkMask( mask, KalypsoStati.BIT_DERIVATED ) )
       return COLOR_LIGHTYELLOW;
 
-    // customisation possible in the near future...
+    // Customization possible in the near future...
     return null;
   }
 
@@ -480,7 +480,9 @@ public final class KalypsoStatusUtils
   {
     int status = 0;
     for( final int element : stati )
+    {
       status |= element;
+    }
 
     return status & KalypsoStati.MASK_ARITHMETIC;
   }
@@ -519,7 +521,7 @@ public final class KalypsoStatusUtils
   }
 
   /**
-   * Counts the occurrency of a given status bit.
+   * Counts the occurrence of a given status bit.
    * 
    * @throws SensorException
    */

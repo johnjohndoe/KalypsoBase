@@ -121,10 +121,10 @@ public class InterpolationFilter extends AbstractObservationFilter
     final DateRange dr = request == null ? null : request.getDateRange();
 
     // BUGIFX: fixes the problem with the first value:
-    // the first value was always ignored, because the intervall
+    // the first value was always ignored, because the interval
     // filter cannot handle the first value of the source observation
     // FIX: we just make the request a big bigger in order to get a new first value
-    // HACK: we always use DAY, so that work fine only up to timeseries of DAY-quality.
+    // HACK: we always use DAY, so that work fine only up to time series of DAY-quality.
     // Maybe there should be one day a mean to determine, which is the right amount.
     final ITupleModel values = ObservationUtilities.requestBuffered( getObservation(), dr, Calendar.DAY_OF_MONTH, 2 );
 
@@ -167,7 +167,7 @@ public class InterpolationFilter extends AbstractObservationFilter
 
       int startIx = 0;
 
-      // do we need to fill before the begining of the base model?
+      // do we need to fill before the beginning of the base model?
       if( dr != null && m_fill )
       {
         cal.setTime( dr.getFrom() );
@@ -348,7 +348,7 @@ public class InterpolationFilter extends AbstractObservationFilter
    * Fills the model with default values
    * 
    * @param masterTupple
-   *          if not null, the values from this tupple are used instead of the default one
+   *          if not null, the values from this tuple are used instead of the default one
    */
   private void fillWithDefault( final IAxis dateAxis, final IAxis[] valueAxes, final Object[] defaultValues, final SimpleTupleModel intModel, final Calendar cal, final Object[] masterTupple ) throws SensorException
   {
