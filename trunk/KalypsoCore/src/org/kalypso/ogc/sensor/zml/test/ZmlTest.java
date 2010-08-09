@@ -157,19 +157,19 @@ public class ZmlTest extends TestCase
     t1[m.getPositionFor( dateAxis )] = m_df.parse( "20.01.2004" ); //$NON-NLS-1$
     t1[m.getPositionFor( vAxis1 )] = new Double( 44 );
     t1[m.getPositionFor( vAxis2 )] = new Double( 11 );
-    m.addTupple( t1 );
+    m.addTuple( t1 );
 
     final Object[] t2 = new Object[3];
     t2[m.getPositionFor( dateAxis )] = m_df.parse( "21.01.2004" ); //$NON-NLS-1$
     t2[m.getPositionFor( vAxis1 )] = new Double( 55 );
     t2[m.getPositionFor( vAxis2 )] = new Double( 22 );
-    m.addTupple( t2 );
+    m.addTuple( t2 );
 
     final Object[] t3 = new Object[3];
     t3[m.getPositionFor( dateAxis )] = m_df.parse( "22.01.2004" ); //$NON-NLS-1$
     t3[m.getPositionFor( vAxis1 )] = new Double( 66 );
     t3[m.getPositionFor( vAxis2 )] = new Double( 33 );
-    m.addTupple( t3 );
+    m.addTuple( t3 );
 
     obs.setValues( m );
 

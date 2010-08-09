@@ -157,7 +157,7 @@ public class TuppleModelsLinearAdd
       values[combinedStatusPosition] = new Integer( KalypsoStati.BIT_OK );
 
       /* Add a new row. */
-      combinedTuppleModel.addTupple( values );
+      combinedTuppleModel.addTuple( values );
     }
 
     return combinedTuppleModel;

@@ -591,7 +591,7 @@ public final class TimeserieUtils implements ITimeserieConstants
           tupple[j] = new Double( Math.random() * 100 );
       }
 
-      model.addTupple( tupple );
+      model.addTuple( tupple );
 
       cal.add( Calendar.DAY_OF_YEAR, 1 );
     }
