@@ -157,6 +157,8 @@ public abstract class AbstractChartModelViewPart extends ViewPart implements IAd
   public void init( final IViewSite site ) throws PartInitException
   {
     super.init( site );
+    if (site==null)
+      return;
     m_chartProviderListener.init( site.getPage() );
     m_registeredName=site.getRegisteredName();
     updateControl();
