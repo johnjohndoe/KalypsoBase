@@ -54,13 +54,13 @@ import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 /**
  * @author doemming
  */
-public class NOperationTupplemodel extends AbstractTupleModel
+public class NOperationTuplemodel extends AbstractTupleModel
 {
   private final int m_operation;
 
   private final ITupleModel[] m_baseModels;
 
-  public NOperationTupplemodel( final ITupleModel[] models, final int operation )
+  public NOperationTuplemodel( final ITupleModel[] models, final int operation )
   {
     super( models[0].getAxisList() );
 

@@ -49,37 +49,33 @@ import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.metadata.IObservationConstants;
+import org.kalypso.ogc.sensor.metadata.MetadataList;
 
 /**
  * KalypsoProcolHelper analyses observations' values and produces a kind of protocol.
  * 
  * @author schlienger
  */
-public class KalypsoProtocolWriter
+public final class KalypsoProtocolWriter
 {
-  private KalypsoProtocolWriter()
+  private KalypsoProtocolWriter( )
   {
-  // not to be instanciated
+    // not to be instanciated
   }
 
-  public static void analyseValues( final IObservation observation, final ITupleModel model, final ILogger logger )
-      throws SensorException
+  public static void analyseValues( final IObservation observation, final ITupleModel model, final ILogger logger ) throws SensorException
   {
-    analyseValues( new IObservation[]
-    { observation }, new ITupleModel[]
-    { model }, logger );
+    analyseValues( new IObservation[] { observation }, new ITupleModel[] { model }, logger );
   }
 
   /**
    * Analyses the given tupple models and reports possible errors (according to status of tupples).
    */
-  public static void analyseValues( final IObservation[] observations, final ITupleModel[] models, final ILogger logger )
-      throws SensorException
+  public static void analyseValues( final IObservation[] observations, final ITupleModel[] models, final ILogger logger ) throws SensorException
   {
     if( observations.length != models.length )
-      throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.sensor.status.KalypsoProtocolWriter.1") ); //$NON-NLS-1$
+      throw new IllegalArgumentException( Messages.getString( "org.kalypso.ogc.sensor.status.KalypsoProtocolWriter.1" ) ); //$NON-NLS-1$
 
     final StringBuffer bf = new StringBuffer();
 
@@ -102,7 +98,7 @@ public class KalypsoProtocolWriter
           for( int iAxes = 0; iAxes < statusAxes.length; iAxes++ )
           {
             final IAxis axis = statusAxes[iAxes];
-            final Number nb = (Number)tuppleModel.getElement( ix, axis );
+            final Number nb = (Number) tuppleModel.getElement( ix, axis );
             final int statusValue = nb == null ? 0 : nb.intValue();
 
             mergedStati[iAxes] = mergedStati[iAxes] | statusValue;
@@ -118,7 +114,7 @@ public class KalypsoProtocolWriter
           final String obsName = observation.getName();
           final String type = KalypsoStatusUtils.getAxisLabelFor( axis );
 
-          final StringBuffer sb = new StringBuffer( Messages.getString("org.kalypso.ogc.sensor.status.KalypsoProtocolWriter.0") ); //$NON-NLS-1$
+          final StringBuffer sb = new StringBuffer( Messages.getString( "org.kalypso.ogc.sensor.status.KalypsoProtocolWriter.0" ) ); //$NON-NLS-1$
           sb.append( obsName );
 
           final String desc = metadataList.getProperty( IObservationConstants.MD_DESCRIPTION, "" ); //$NON-NLS-1$
@@ -127,7 +123,7 @@ public class KalypsoProtocolWriter
             // desc += " aus " + observations[i].getMetadataList().getProperty( ObservationConstants.MD_ORIGIN,
             // "<unbekannt>" );
             sb.append( " (" ); //$NON-NLS-1$
-            sb.append( desc ); 
+            sb.append( desc );
             sb.append( ")" );//$NON-NLS-1$
           }
 
@@ -138,10 +134,9 @@ public class KalypsoProtocolWriter
           final String message = sb.toString();
 
           if( axis.isPersistable() && KalypsoStatusUtils.checkMask( mergedStati[iAxes], KalypsoStati.BIT_CHECK ) )
-            logger.log( Level.FINE, LoggerUtilities.CODE_SHOW_DETAILS, message + Messages.getString("org.kalypso.ogc.sensor.status.KalypsoProtocolWriter.3") ); //$NON-NLS-1$
-          else if( !axis.isPersistable()
-              && KalypsoStatusUtils.checkMask( mergedStati[iAxes], KalypsoStati.BIT_DERIVATION_ERROR ) )
-            logger.log( Level.FINE, LoggerUtilities.CODE_SHOW_DETAILS, message + Messages.getString("org.kalypso.ogc.sensor.status.KalypsoProtocolWriter.2") ); //$NON-NLS-1$
+            logger.log( Level.FINE, LoggerUtilities.CODE_SHOW_DETAILS, message + Messages.getString( "org.kalypso.ogc.sensor.status.KalypsoProtocolWriter.3" ) ); //$NON-NLS-1$
+          else if( !axis.isPersistable() && KalypsoStatusUtils.checkMask( mergedStati[iAxes], KalypsoStati.BIT_DERIVATION_ERROR ) )
+            logger.log( Level.FINE, LoggerUtilities.CODE_SHOW_DETAILS, message + Messages.getString( "org.kalypso.ogc.sensor.status.KalypsoProtocolWriter.2" ) ); //$NON-NLS-1$
         }
 
       }

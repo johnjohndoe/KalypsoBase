@@ -58,7 +58,7 @@ public class BufferedTile extends BufferPaintJob
 {
   private final GeoTransform m_world2screen;
 
-  public BufferedTile( final IPaintable paintable, final GeoTransform world2screen, ImageCache imageCache )
+  public BufferedTile( final IPaintable paintable, final GeoTransform world2screen, final ImageCache imageCache )
   {
     super( paintable, imageCache );
     m_world2screen = world2screen;

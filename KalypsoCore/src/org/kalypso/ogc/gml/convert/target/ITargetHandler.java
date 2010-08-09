@@ -8,5 +8,5 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public interface ITargetHandler
 {
-  public void saveWorkspace( final GMLWorkspace workspace ) throws GmlConvertException;
+  void saveWorkspace( final GMLWorkspace workspace ) throws GmlConvertException;
 }

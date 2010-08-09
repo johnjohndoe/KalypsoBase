@@ -66,26 +66,25 @@ import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQPair;
 public class AtTable
 {
   private static final Pattern PATTERN_SECOND_LINE = Pattern.compile( "(\\d+).*\\((\\w),(\\w)\\)", //$NON-NLS-1$
-      Pattern.CASE_INSENSITIVE );
+  Pattern.CASE_INSENSITIVE );
 
-  private String m_name;
+  private final String m_name;
 
-  private int m_elbaNr;
+  private final int m_elbaNr;
 
-  private BigDecimal m_min;
+  private final BigDecimal m_min;
 
-  private BigDecimal m_max;
+  private final BigDecimal m_max;
 
-  private String m_typeFrom;
+  private final String m_typeFrom;
 
-  private String m_typeTo;
+  private final String m_typeTo;
 
   private final WQPair[] m_values;
 
   private final Date m_validity;
 
-  public AtTable( String name, int elbaNr, BigDecimal min, BigDecimal max, String typeFrom, String typeTo,
-      Date validity, WQPair[] values )
+  public AtTable( final String name, final int elbaNr, final BigDecimal min, final BigDecimal max, final String typeFrom, final String typeTo, final Date validity, final WQPair[] values )
   {
     m_name = name;
     m_elbaNr = elbaNr;
@@ -97,47 +96,47 @@ public class AtTable
     m_values = values;
   }
 
-  public BigDecimal getMax()
+  public BigDecimal getMax( )
   {
     return m_max;
   }
 
-  public BigDecimal getMin()
+  public BigDecimal getMin( )
   {
     return m_min;
   }
 
-  public String getName()
+  public String getName( )
   {
     return m_name;
   }
 
-  public int getElbaNr()
+  public int getElbaNr( )
   {
     return m_elbaNr;
   }
 
-  public String getTypeFrom()
+  public String getTypeFrom( )
   {
     return m_typeFrom;
   }
 
-  public String getTypeTo()
+  public String getTypeTo( )
   {
     return m_typeTo;
   }
 
-  public int getSize()
+  public int getSize( )
   {
     return m_values.length;
   }
 
-  public WQPair[] getValues()
+  public WQPair[] getValues( )
   {
     return m_values;
   }
 
-  public Date getValidity()
+  public Date getValidity( )
   {
     return m_validity;
   }
@@ -169,7 +168,6 @@ public class AtTable
    * Reads a .at file from an InpuStream into a WQTableSet.
    * 
    * @throws IOException
-   * 
    * @throws IOException
    */
   private static AtTable readAt( final InputStream is ) throws IOException
@@ -178,14 +176,14 @@ public class AtTable
 
     final String firstLine = reader.readLine();
     if( firstLine == null )
-      throw new IOException( Messages.getString("org.kalypso.ogc.sensor.timeseries.wq.at.AtTable.1") ); //$NON-NLS-1$
+      throw new IOException( Messages.getString( "org.kalypso.ogc.sensor.timeseries.wq.at.AtTable.1" ) ); //$NON-NLS-1$
     final String secondLine = reader.readLine();
     if( secondLine == null )
-      throw new IOException( Messages.getString("org.kalypso.ogc.sensor.timeseries.wq.at.AtTable.2") ); //$NON-NLS-1$
+      throw new IOException( Messages.getString( "org.kalypso.ogc.sensor.timeseries.wq.at.AtTable.2" ) ); //$NON-NLS-1$
 
     final Matcher matcher = PATTERN_SECOND_LINE.matcher( secondLine );
     if( !matcher.matches() )
-      throw new IOException( Messages.getString("org.kalypso.ogc.sensor.timeseries.wq.at.AtTable.3", secondLine) ); //$NON-NLS-1$ 
+      throw new IOException( Messages.getString( "org.kalypso.ogc.sensor.timeseries.wq.at.AtTable.3", secondLine ) ); //$NON-NLS-1$ 
 
     final int size = Integer.parseInt( matcher.group( 1 ) );
     final String typeFrom = matcher.group( 2 );
@@ -211,7 +209,7 @@ public class AtTable
 
       final String[] strings = line.trim().split( "\\s+" ); //$NON-NLS-1$
       if( strings.length != 2 )
-        throw new IOException( Messages.getString("org.kalypso.ogc.sensor.timeseries.wq.at.AtTable.6", reader.getLineNumber() , line )); //$NON-NLS-1$
+        throw new IOException( Messages.getString( "org.kalypso.ogc.sensor.timeseries.wq.at.AtTable.6", reader.getLineNumber(), line ) ); //$NON-NLS-1$
 
       try
       {
@@ -220,9 +218,9 @@ public class AtTable
 
         wqList.add( new WQPair( w, q ) );
       }
-      catch( NumberFormatException e )
+      catch( final NumberFormatException e )
       {
-        throw new IOException( Messages.getString("org.kalypso.ogc.sensor.timeseries.wq.at.AtTable.8", reader.getLineNumber(),line )); //$NON-NLS-1$
+        throw new IOException( Messages.getString( "org.kalypso.ogc.sensor.timeseries.wq.at.AtTable.8", reader.getLineNumber(), line ) ); //$NON-NLS-1$
       }
     }
 

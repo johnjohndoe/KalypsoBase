@@ -53,7 +53,7 @@ import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 /**
  * @author doemming
  */
-public class OperationTupplemodel extends AbstractTupleModel
+public class OperationTuplemodel extends AbstractTupleModel
 {
   private final double m_operand;
 
@@ -61,7 +61,7 @@ public class OperationTupplemodel extends AbstractTupleModel
 
   private final ITupleModel m_baseModel;
 
-  public OperationTupplemodel( double operand, int operation, ITupleModel baseModel )
+  public OperationTuplemodel( final double operand, final int operation, final ITupleModel baseModel )
   {
     super( baseModel.getAxisList() );
 
@@ -89,19 +89,19 @@ public class OperationTupplemodel extends AbstractTupleModel
   }
 
   @Override
-  public Object getElement( int index, IAxis axis ) throws SensorException
+  public Object getElement( final int index, final IAxis axis ) throws SensorException
   {
-    IAxis a = ObservationUtilities.findAxisByName( m_baseModel.getAxisList(), axis.getName() );
+    final IAxis a = ObservationUtilities.findAxisByName( m_baseModel.getAxisList(), axis.getName() );
     if( index >= m_baseModel.getCount() )
       return null;
 
-    Object object = m_baseModel.getElement( index, a );
+    final Object object = m_baseModel.getElement( index, a );
     if( object == null || object instanceof Date || KalypsoStatusUtils.isStatusAxis( axis ) )
       return object;
-    
+
     if( object instanceof Number ) // let it be a Number here so we can handle integers and such
     {
-      double value = ((Number) object).doubleValue();
+      final double value = ((Number) object).doubleValue();
       switch( m_operation )
       {
         case OperationFilter.OPERATION_PLUS:
@@ -114,24 +114,24 @@ public class OperationTupplemodel extends AbstractTupleModel
           return new Double( value / m_operand );
       }
     }
-    
+
     throw new UnsupportedOperationException( getClass().getName() + Messages.getString( "org.kalypso.ogc.sensor.filter.filters.OperationTupplemodel.0" ) //$NON-NLS-1$
         + object.getClass().getName() + Messages.getString( "org.kalypso.ogc.sensor.filter.filters.OperationTupplemodel.1" ) ); //$NON-NLS-1$
   }
 
   @Override
-  public void setElement( int index, Object element, IAxis axis )
+  public void setElement( final int index, final Object element, final IAxis axis )
   {
     throw new UnsupportedOperationException( getClass().getName() + Messages.getString( "org.kalypso.ogc.sensor.filter.filters.OperationTupplemodel.2" ) ); //$NON-NLS-1$
     // TODO support it
   }
 
   @Override
-  public int indexOf( Object element, IAxis axis ) throws SensorException
+  public int indexOf( final Object element, final IAxis axis ) throws SensorException
   {
     if( element instanceof Date )
       return m_baseModel.indexOf( element, axis );
-    
+
     throw new UnsupportedOperationException( getClass().getName() + Messages.getString( "org.kalypso.ogc.sensor.filter.filters.OperationTupplemodel.3" ) //$NON-NLS-1$
         + axis.getName() + Messages.getString( "org.kalypso.ogc.sensor.filter.filters.OperationTupplemodel.4" ) ); //$NON-NLS-1$
     // TODO support it

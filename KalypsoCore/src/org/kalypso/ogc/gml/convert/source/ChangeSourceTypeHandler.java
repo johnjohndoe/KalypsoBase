@@ -75,8 +75,7 @@ public class ChangeSourceTypeHandler implements ISourceHandler
 
   private final DisposeHelper m_disposer = new DisposeHelper();
 
-  public ChangeSourceTypeHandler( final IUrlResolver resolver, final URL context, final ChangeSourceType type,
-      final Map< ? , ? > externData )
+  public ChangeSourceTypeHandler( final IUrlResolver resolver, final URL context, final ChangeSourceType type, final Map< ? , ? > externData )
   {
     m_resolver = resolver;
     m_context = context;
@@ -88,24 +87,22 @@ public class ChangeSourceTypeHandler implements ISourceHandler
    * @see org.kalypso.ogc.gml.convert.source.ISourceHandler#getWorkspace()
    */
   @Override
-  public GMLWorkspace getWorkspace() throws GmlConvertException
+  public GMLWorkspace getWorkspace( ) throws GmlConvertException
   {
     try
     {
-      final GMLWorkspace inputGML = GmlConvertFactory.loadSource( m_resolver, m_context, m_type.getSource().getValue(),
-          m_externData );
+      final GMLWorkspace inputGML = GmlConvertFactory.loadSource( m_resolver, m_context, m_type.getSource().getValue(), m_externData );
       applyVisitors( inputGML, m_type.getVisitor() );
       m_disposer.dispose();
       return inputGML;
     }
     catch( final ClassUtilityException e )
     {
-      throw new GmlConvertException( Messages.getString("org.kalypso.ogc.gml.convert.source.ChangeSourceTypeHandler.0"), e ); //$NON-NLS-1$
+      throw new GmlConvertException( Messages.getString( "org.kalypso.ogc.gml.convert.source.ChangeSourceTypeHandler.0" ), e ); //$NON-NLS-1$
     }
   }
 
-  private void applyVisitors( final GMLWorkspace inputGML, final List<Visitor> propertyList ) throws ClassUtilityException,
-      GmlConvertException
+  private void applyVisitors( final GMLWorkspace inputGML, final List<Visitor> propertyList ) throws ClassUtilityException, GmlConvertException
   {
     for( final Visitor visitor2 : propertyList )
     {
@@ -123,15 +120,13 @@ public class ChangeSourceTypeHandler implements ISourceHandler
     }
   }
 
-  private FeatureVisitor createVisitor( final String visitorClass, final String visitorID, final Properties arguments )
-      throws ClassUtilityException, GmlConvertException
+  private FeatureVisitor createVisitor( final String visitorClass, final String visitorID, final Properties arguments ) throws ClassUtilityException, GmlConvertException
   {
     if( visitorClass != null )
     {
       final ClassLoader classLoader = getClass().getClassLoader();
 
-      return (FeatureVisitor)ClassUtilities.newInstance( visitorClass, FeatureVisitor.class, classLoader, new Object[]
-      { arguments } );
+      return (FeatureVisitor) ClassUtilities.newInstance( visitorClass, FeatureVisitor.class, classLoader, new Object[] { arguments } );
     }
     else if( visitorID != null )
     {
@@ -149,7 +144,7 @@ public class ChangeSourceTypeHandler implements ISourceHandler
       }
     }
 
-    throw new GmlConvertException( Messages.getString("org.kalypso.ogc.gml.convert.source.ChangeSourceTypeHandler.2") ); //$NON-NLS-1$
+    throw new GmlConvertException( Messages.getString( "org.kalypso.ogc.gml.convert.source.ChangeSourceTypeHandler.2" ) ); //$NON-NLS-1$
   }
 
   private Properties createArguments( final List<Argument> argumentList )

@@ -54,14 +54,14 @@ public interface IWFSLayer
    * 
    * @return qName
    */
-  public QName getQName( );
+  QName getQName( );
 
   /**
    * Returns the title of this layer.
    * 
    * @return title as String
    */
-  public String getTitle( );
+  String getTitle( );
 
   /**
    * Returns the IFeatureType of this layer.
@@ -69,12 +69,12 @@ public interface IWFSLayer
    * @return featureType
    */
 
-  public IFeatureType getFeatureType( );
+  IFeatureType getFeatureType( );
 
   /**
    * Returns the coordinate system of this layer
    * 
    * @return crs
    */
-  public String getSRS( );
+  String getSRS( );
 }

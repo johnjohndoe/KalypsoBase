@@ -57,7 +57,7 @@ import org.kalypso.ogc.sensor.request.IRequest;
 
 /**
  * ValueFilter
- *
+ * 
  * @author schlienger
  */
 public class ValueFilter extends AbstractObservationFilter

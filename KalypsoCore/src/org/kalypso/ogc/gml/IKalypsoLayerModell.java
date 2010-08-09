@@ -47,15 +47,16 @@ import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.template.types.StyledLayerType;
 
 /**
- * {@link IMapModell}s which implement additional methods to add {@link org.deegree.graphics.sld.StyledLayerDescriptor}s.
- *
+ * {@link IMapModell}s which implement additional methods to add {@link org.deegree.graphics.sld.StyledLayerDescriptor}
+ * s.
+ * 
  * @author Gernot Belger
  */
 public interface IKalypsoLayerModell extends IMapModell
 {
-  public IKalypsoTheme addLayer( final StyledLayerType layer ) throws CoreException;
+  IKalypsoTheme addLayer( final StyledLayerType layer ) throws CoreException;
 
-  public IKalypsoTheme insertLayer( final StyledLayerType layer, final int position ) throws Exception;
+  IKalypsoTheme insertLayer( final StyledLayerType layer, final int position ) throws Exception;
 
-  public URL getContext( );
+  URL getContext( );
 }

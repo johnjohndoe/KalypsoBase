@@ -17,7 +17,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public class ShpSourceHandler implements ISourceHandler
 {
-  private String m_href;
+  private final String m_href;
 
   private final URL m_context;
 
@@ -52,7 +52,7 @@ public class ShpSourceHandler implements ISourceHandler
     }
     catch( final Exception e )
     {
-      throw new GmlConvertException( Messages.getString("org.kalypso.ogc.gml.convert.source.ShpSourceHandler.0") + m_href, e ); //$NON-NLS-1$
+      throw new GmlConvertException( Messages.getString( "org.kalypso.ogc.gml.convert.source.ShpSourceHandler.0" ) + m_href, e ); //$NON-NLS-1$
     }
   }
 

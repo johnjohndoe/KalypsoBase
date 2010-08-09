@@ -50,5 +50,5 @@ import org.kalypso.ogc.sensor.SensorException;
  */
 public interface IProxyFactory
 {
-  public IObservation proxyObservation( final IObservation obs ) throws SensorException;
+  IObservation proxyObservation( final IObservation obs ) throws SensorException;
 }

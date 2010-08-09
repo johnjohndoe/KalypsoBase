@@ -105,14 +105,14 @@ public class VirtualRepository extends AbstractRepository
     }
   }
 
-  private final void buildRepository( ) throws JAXBException, FileNotFoundException
+  private void buildRepository( ) throws JAXBException, FileNotFoundException
   {
     final InputSource specSource = new InputSource( new FileInputStream( new File( m_location ) ) );
     final VirtualRepositoryType vrt = (VirtualRepositoryType) JC.createUnmarshaller().unmarshal( specSource );
     m_children = buildStructure( null, vrt.getLevel() ).toArray( new IRepositoryItem[0] );
   }
 
-  private final List<IRepositoryItem> buildStructure( final VirtualRepositoryItem parent, final List<LevelType> levels )
+  private List<IRepositoryItem> buildStructure( final VirtualRepositoryItem parent, final List<LevelType> levels )
   {
     final List<IRepositoryItem> rItems = new ArrayList<IRepositoryItem>( levels.size() );
     for( final LevelType level : levels )
@@ -128,7 +128,7 @@ public class VirtualRepository extends AbstractRepository
     return rItems;
   }
 
-  private final List<IRepositoryItem> buildItems( final VirtualRepositoryItem parent, final List<ItemType> items )
+  private List<IRepositoryItem> buildItems( final VirtualRepositoryItem parent, final List<ItemType> items )
   {
     final List<IRepositoryItem> rItems = new ArrayList<IRepositoryItem>( items.size() );
     for( final ItemType item : items )
@@ -189,7 +189,6 @@ public class VirtualRepository extends AbstractRepository
     }
   }
 
-
   /**
    * @see org.kalypso.repository.IRepositoryItem#hasChildren()
    */
@@ -207,7 +206,5 @@ public class VirtualRepository extends AbstractRepository
   {
     return m_children;
   }
-
-
 
 }

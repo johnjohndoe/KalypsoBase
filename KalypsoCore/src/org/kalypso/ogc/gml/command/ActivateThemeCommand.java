@@ -67,7 +67,7 @@ public class ActivateThemeCommand implements ICommand
    * @see org.kalypso.commons.command.ICommand#isUndoable()
    */
   @Override
-  public boolean isUndoable()
+  public boolean isUndoable( )
   {
     return true;
   }
@@ -76,7 +76,7 @@ public class ActivateThemeCommand implements ICommand
    * @see org.kalypso.commons.command.ICommand#process()
    */
   @Override
-  public void process() throws Exception
+  public void process( ) throws Exception
   {
     m_mapModell.activateTheme( m_newActive );
   }
@@ -85,7 +85,7 @@ public class ActivateThemeCommand implements ICommand
    * @see org.kalypso.commons.command.ICommand#redo()
    */
   @Override
-  public void redo() throws Exception
+  public void redo( ) throws Exception
   {
     m_mapModell.activateTheme( m_newActive );
   }
@@ -94,7 +94,7 @@ public class ActivateThemeCommand implements ICommand
    * @see org.kalypso.commons.command.ICommand#undo()
    */
   @Override
-  public void undo() throws Exception
+  public void undo( ) throws Exception
   {
     m_mapModell.activateTheme( m_oldActive );
   }
@@ -103,9 +103,9 @@ public class ActivateThemeCommand implements ICommand
    * @see org.kalypso.commons.command.ICommand#getDescription()
    */
   @Override
-  public String getDescription()
+  public String getDescription( )
   {
-    return Messages.getString("org.kalypso.ogc.gml.command.ActivateThemeCommand.0"); //$NON-NLS-1$
+    return Messages.getString( "org.kalypso.ogc.gml.command.ActivateThemeCommand.0" ); //$NON-NLS-1$
   }
 
 }

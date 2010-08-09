@@ -75,7 +75,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
 {
   private static interface IListenerRunnable
   {
-    public void visit( final IKalypsoThemeListener l );
+    void visit( final IKalypsoThemeListener l );
   }
 
   protected static final Object[] EMPTY_CHILDREN = new Object[] {};

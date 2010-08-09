@@ -55,10 +55,10 @@ import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQPair;
  */
 public class TestAtTable extends TestCase
 {
-  public void testReadAt() throws IOException
+  public void testReadAt( ) throws IOException
   {
-    URL atLocation = getClass().getResource( "resources/test.at" ); //$NON-NLS-1$
-    AtTable table = AtTable.readAt( atLocation );
+    final URL atLocation = getClass().getResource( "resources/test.at" ); //$NON-NLS-1$
+    final AtTable table = AtTable.readAt( atLocation );
 
     assertEquals( "BDUE  Elba-Nr.: 12 Wmin:   130.0 Wmax:   900.0", table.getName() ); //$NON-NLS-1$
     assertEquals( 79, table.getSize() );

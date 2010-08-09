@@ -50,7 +50,7 @@ public class GmlTargetHandler implements ITargetHandler
     }
     catch( final Exception e )
     {
-      throw new GmlConvertException( Messages.getString("org.kalypso.ogc.gml.convert.target.GmlTargetHandler.0"), e ); //$NON-NLS-1$
+      throw new GmlConvertException( Messages.getString( "org.kalypso.ogc.gml.convert.target.GmlTargetHandler.0" ), e ); //$NON-NLS-1$
     }
     finally
     {

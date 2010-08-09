@@ -101,7 +101,7 @@ public class FeatureThemeInfo implements IKalypsoThemeInfo, IKalypsoFeatureTheme
     m_theme = (IKalypsoFeatureTheme) theme;
 
     m_noHitString = props.getProperty( "noFeatureMsg", "-" ); //$NON-NLS-1$ $NON-NLS-2$
-    m_format = props.getProperty( "format" ); //$NON-NLS-1$
+    m_format = props.getProperty( "m_format" ); //$NON-NLS-1$
     final String geomStr = props.getProperty( "geometry" ); //$NON-NLS-1$
     m_geom = geomStr == null ? null : QName.valueOf( geomStr );
   }

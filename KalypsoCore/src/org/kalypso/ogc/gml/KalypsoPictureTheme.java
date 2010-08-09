@@ -59,7 +59,7 @@ import org.kalypsodeegree_impl.tools.TransformationUtilities;
  * 
  * @author kuepfer (20.05.2005)
  */
-abstract public class KalypsoPictureTheme extends AbstractKalypsoTheme
+public abstract class KalypsoPictureTheme extends AbstractKalypsoTheme
 {
   // TODO: use tracing instead
   private static final Logger LOGGER = Logger.getLogger( KalypsoPictureTheme.class.getName() );

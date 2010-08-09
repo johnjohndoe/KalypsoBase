@@ -48,23 +48,23 @@ public class XMLStringUtilities
   /**
    * must return <code>null</code> if not present
    */
-  public static String getXMLPart( String text, String xmlTag )
+  public static String getXMLPart( final String text, final String xmlTag )
   {
     if( text == null )
       return null;
     if( xmlTag == null )
       return null;
-    int pos1 = text.indexOf( xmlTag );
+    final int pos1 = text.indexOf( xmlTag );
     if( pos1 < 0 )
       return null;
-    int pos2 = text.indexOf( xmlTag + ">", pos1 + 1 ); //$NON-NLS-1$
+    final int pos2 = text.indexOf( xmlTag + ">", pos1 + 1 ); //$NON-NLS-1$
     if( pos2 < 0 )
       return null;
-    int bPos1 = getBefore( text, "<", pos1 ); //$NON-NLS-1$
+    final int bPos1 = getBefore( text, "<", pos1 ); //$NON-NLS-1$
     if( bPos1 < 0 )
       return null;
 
-    int bPos2 = getAfter( text, ">", pos2 ); //$NON-NLS-1$
+    final int bPos2 = getAfter( text, ">", pos2 ); //$NON-NLS-1$
     if( bPos2 < 0 )
       return null;
 
@@ -77,12 +77,12 @@ public class XMLStringUtilities
     return null;
   }
 
-  private static boolean isValid( String space )
+  private static boolean isValid( final String space )
   {
     return !space.matches( ".*(<|>).*" ); //$NON-NLS-1$
   }
 
-  private static int getAfter( String text, String pattern, int pos )
+  private static int getAfter( final String text, final String pattern, final int pos )
   {
     for( int result = pos; result <= text.length(); result++ )
     {
@@ -93,7 +93,7 @@ public class XMLStringUtilities
     return -1;
   }
 
-  private static int getBefore( String text, String pattern, int pos )
+  private static int getBefore( final String text, final String pattern, final int pos )
   {
     for( int result = pos; result >= 0; result-- )
     {

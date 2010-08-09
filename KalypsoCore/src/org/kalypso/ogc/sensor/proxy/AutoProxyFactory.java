@@ -45,8 +45,8 @@ import java.io.StringReader;
 import org.kalypso.binding.ratingtable.RatingTableList;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.metadata.ITimeserieConstants;
+import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.timeseries.wq.WQTimeserieProxy;
 import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTableFactory;
 import org.xml.sax.InputSource;
@@ -56,9 +56,9 @@ import org.xml.sax.InputSource;
  * 
  * @author schlienger
  */
-public class AutoProxyFactory implements IProxyFactory
+public final class AutoProxyFactory implements IProxyFactory
 {
-  private static AutoProxyFactory m_instance = null;
+  private static AutoProxyFactory INSTANCE = null;
 
   private AutoProxyFactory( )
   {
@@ -95,7 +95,7 @@ public class AutoProxyFactory implements IProxyFactory
 
     if( wq.length() > 0 )
     {
-      StringReader sr = new StringReader( wq );
+      final StringReader sr = new StringReader( wq );
       try
       {
         final RatingTableList tableList;
@@ -195,9 +195,9 @@ public class AutoProxyFactory implements IProxyFactory
    */
   public static AutoProxyFactory getInstance( )
   {
-    if( m_instance == null )
-      m_instance = new AutoProxyFactory();
+    if( INSTANCE == null )
+      INSTANCE = new AutoProxyFactory();
 
-    return m_instance;
+    return INSTANCE;
   }
 }

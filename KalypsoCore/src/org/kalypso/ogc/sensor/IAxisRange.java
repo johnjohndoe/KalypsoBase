@@ -47,7 +47,7 @@ package org.kalypso.ogc.sensor;
  */
 public interface IAxisRange
 {
-  public Object getLower();
+  Object getLower( );
 
-  public Object getUpper();
+  Object getUpper( );
 }

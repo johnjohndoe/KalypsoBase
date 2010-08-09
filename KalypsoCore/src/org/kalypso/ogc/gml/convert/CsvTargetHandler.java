@@ -80,7 +80,7 @@ public class CsvTargetHandler implements ITargetHandler
         ((FeatureList) featureFromPath).accept( visitor );
       }
       else
-        throw new GmlConvertException( Messages.getString("org.kalypso.ogc.gml.convert.CsvTargetHandler.0") + featurePath ); //$NON-NLS-1$
+        throw new GmlConvertException( Messages.getString( "org.kalypso.ogc.gml.convert.CsvTargetHandler.0" ) + featurePath ); //$NON-NLS-1$
     }
     catch( final GmlConvertException gce )
     {
@@ -88,7 +88,7 @@ public class CsvTargetHandler implements ITargetHandler
     }
     catch( final Exception e )
     {
-      throw new GmlConvertException( Messages.getString("org.kalypso.ogc.gml.convert.CsvTargetHandler.1"), e ); //$NON-NLS-1$
+      throw new GmlConvertException( Messages.getString( "org.kalypso.ogc.gml.convert.CsvTargetHandler.1" ), e ); //$NON-NLS-1$
     }
     finally
     {

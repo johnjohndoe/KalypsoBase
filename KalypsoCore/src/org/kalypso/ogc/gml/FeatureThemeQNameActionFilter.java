@@ -52,7 +52,7 @@ import org.kalypso.gmlschema.feature.IFeatureType;
  */
 public class FeatureThemeQNameActionFilter implements IActionFilterEx
 {
-  public final static String ATTR_QNAME = "featureThemeQname"; //$NON-NLS-1$
+  public static final String ATTR_QNAME = "featureThemeQname"; //$NON-NLS-1$
 
   /**
    * @see org.kalypso.contribs.eclipse.ui.actionfilters.IActionFilterEx#getNames()

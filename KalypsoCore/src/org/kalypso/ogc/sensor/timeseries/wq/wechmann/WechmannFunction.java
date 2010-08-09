@@ -63,11 +63,11 @@ import org.kalypso.ogc.sensor.timeseries.wq.WQException;
  * 
  * @author schlienger
  */
-public class WechmannFunction
+public final class WechmannFunction
 {
-  private WechmannFunction()
+  private WechmannFunction( )
   {
-  // not to be instanciated
+    // not to be instanciated
   }
 
   /**
@@ -85,7 +85,8 @@ public class WechmannFunction
    * Q = exp( ln( K1 ) + ln( W - W1 ) * K2 )
    * </pre>
    * 
-   * @throws WQException if (W - W1) < 0
+   * @throws WQException
+   *           if (W - W1) < 0
    */
   public static final double computeQ( final double LNK1, final double W, final double W1, final double K2 ) throws WQException
   {
@@ -115,14 +116,13 @@ public class WechmannFunction
    * @throws WQException
    *           when (K2 = 0) or (Q < 0)
    */
-  public static final double computeW( final double W1, final double Q, final double LNK1, final double K2 )
-      throws WQException
+  public static final double computeW( final double W1, final double Q, final double LNK1, final double K2 ) throws WQException
   {
     if( K2 == 0 )
-      throw new WQException( Messages.getString("org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannFunction.1") ); //$NON-NLS-1$
+      throw new WQException( Messages.getString( "org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannFunction.1" ) ); //$NON-NLS-1$
     if( Q < 0 )
-      throw new WQException( Messages.getString("org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannFunction.2") ); //$NON-NLS-1$
+      throw new WQException( Messages.getString( "org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannFunction.2" ) ); //$NON-NLS-1$
 
-    return W1 + Math.exp( ( Math.log( Q ) - LNK1 ) / K2 );
+    return W1 + Math.exp( (Math.log( Q ) - LNK1) / K2 );
   }
 }

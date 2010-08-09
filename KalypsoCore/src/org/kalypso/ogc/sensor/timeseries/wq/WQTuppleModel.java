@@ -60,7 +60,7 @@ import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
  */
 public class WQTuppleModel extends AbstractTupleModel
 {
-  private final static Double ZERO = new Double( 0 );
+  private static final Double ZERO = new Double( 0 );
 
   private final ITupleModel m_model;
 
@@ -203,21 +203,21 @@ public class WQTuppleModel extends AbstractTupleModel
           status = KalypsoStati.STATUS_DERIVATION_ERROR;
         }
 
-        //        // TODO: remove if still everything works fine
-        //        if( type.equals( TimeserieConstants.TYPE_WATERLEVEL ) )
-        //        {
-        //          final double q = number.doubleValue();
-        //          value = new Double( m_converter.computeW( d, q ) );
-        //        }
-        //        else
-        //        {
-        //          final double w = number.doubleValue();
-        //          double q = m_converter.computeQ( d, w );
+        // // TODO: remove if still everything works fine
+        // if( type.equals( TimeserieConstants.TYPE_WATERLEVEL ) )
+        // {
+        // final double q = number.doubleValue();
+        // value = new Double( m_converter.computeW( d, q ) );
+        // }
+        // else
+        // {
+        // final double w = number.doubleValue();
+        // double q = m_converter.computeQ( d, w );
         //
-        //          value = new Double( q );
-        //        }
+        // value = new Double( q );
+        // }
         //
-        //        status = KalypsoStati.STATUS_DERIVATED;
+        // status = KalypsoStati.STATUS_DERIVATED;
       }
       catch( final WQException e )
       {
@@ -272,18 +272,18 @@ public class WQTuppleModel extends AbstractTupleModel
           status = KalypsoStati.STATUS_CHECK;
         }
 
-        //        if( type.equals( TimeserieConstants.TYPE_WATERLEVEL ) )
-        //        {
-        //          final double w = ( (Number)element ).doubleValue();
-        //          value = new Double( m_converter.computeQ( d, w ) );
-        //        }
-        //        else
-        //        {
-        //          final double q = ( (Number)element ).doubleValue();
-        //          value = new Double( m_converter.computeW( d, q ) );
-        //        }
+        // if( type.equals( TimeserieConstants.TYPE_WATERLEVEL ) )
+        // {
+        // final double w = ( (Number)element ).doubleValue();
+        // value = new Double( m_converter.computeQ( d, w ) );
+        // }
+        // else
+        // {
+        // final double q = ( (Number)element ).doubleValue();
+        // value = new Double( m_converter.computeW( d, q ) );
+        // }
         //
-        //        status = KalypsoStati.STATUS_USERMOD;
+        // status = KalypsoStati.STATUS_USERMOD;
       }
       catch( final WQException e )
       {
@@ -390,12 +390,12 @@ public class WQTuppleModel extends AbstractTupleModel
     return m_model;
   }
 
-  public int getDestAxisPos()
+  public int getDestAxisPos( )
   {
     return m_destAxisPos;
   }
 
-  public int getDestStatusAxisPos()
+  public int getDestStatusAxisPos( )
   {
     return m_destStatusAxisPos;
   }

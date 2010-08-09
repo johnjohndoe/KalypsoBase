@@ -71,7 +71,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureFactory;
  * GMLWorkspace container used by the LayerTableViewer. Implements {@link IKalypsoTheme} as this was used as a hack when
  * first implementing the LayerTableViewer. Should be refaktored as soon as we refaktor the LayerTableViewer.<br>
  * Copy/Pasted from the old {@link IKalypsoFeatureTheme}, in order to more easily refaktor that one.
- *
+ * 
  * @author Gernot Belger
  */
 public class KalypsoTableFeatureTheme extends AbstractKalypsoTheme implements IKalypsoFeatureTheme, ModellEventListener, IKalypsoStyleListener
@@ -116,7 +116,7 @@ public class KalypsoTableFeatureTheme extends AbstractKalypsoTheme implements IK
       // Should'nt we throw an exception here?
       m_featureList = null;
       m_featureType = null;
-      setStatus( StatusUtilities.createStatus( IStatus.WARNING, Messages.getString("org.kalypso.ogc.gml.KalypsoTableFeatureTheme.0") + featurePath, null ) ); //$NON-NLS-1$
+      setStatus( StatusUtilities.createStatus( IStatus.WARNING, Messages.getString( "org.kalypso.ogc.gml.KalypsoTableFeatureTheme.0" ) + featurePath, null ) ); //$NON-NLS-1$
     }
 
     m_workspace.addModellListener( this );

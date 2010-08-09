@@ -54,15 +54,15 @@ import org.kalypso.zml.filters.OperationFilterType;
  */
 public class OperationFilter extends AbstractObservationFilter
 {
-  public final static int OPERATION_UNKNOWN = 0;
+  public static final int OPERATION_UNKNOWN = 0;
 
-  public final static int OPERATION_PLUS = 1;
+  public static final int OPERATION_PLUS = 1;
 
-  public final static int OPERATION_MINUS = 2;
+  public static final int OPERATION_MINUS = 2;
 
-  public final static int OPERATION_MAL = 3;
+  public static final int OPERATION_MAL = 3;
 
-  public final static int OPERATION_DURCH = 4;
+  public static final int OPERATION_DURCH = 4;
 
   private IObservation m_baseobservation = null;
 
@@ -74,13 +74,13 @@ public class OperationFilter extends AbstractObservationFilter
   {
     m_operand = Double.parseDouble( filter.getOperand() );
     final String operator = filter.getOperator();
-    if( operator.equals( "+" ) ) //$NON-NLS-1$
+    if( "+".equals( operator ) ) //$NON-NLS-1$
       m_operation = OPERATION_PLUS;
-    else if( operator.equals( "-" ) ) //$NON-NLS-1$
+    else if( "-".equals( operator ) ) //$NON-NLS-1$
       m_operation = OPERATION_MINUS;
-    else if( operator.equals( "*" ) ) //$NON-NLS-1$
+    else if( "*".equals( operator ) ) //$NON-NLS-1$
       m_operation = OPERATION_MAL;
-    else if( operator.equals( "/" ) ) //$NON-NLS-1$
+    else if( "/".equals( operator ) ) //$NON-NLS-1$
       m_operation = OPERATION_DURCH;
     else
       throw new IllegalArgumentException( Messages.getString( "org.kalypso.ogc.sensor.filter.filters.OperationFilter.4" ) + operator + Messages.getString( "org.kalypso.ogc.sensor.filter.filters.OperationFilter.5" ) ); //$NON-NLS-1$ //$NON-NLS-2$
@@ -106,7 +106,7 @@ public class OperationFilter extends AbstractObservationFilter
   @Override
   public ITupleModel getValues( final IRequest args ) throws SensorException
   {
-    return new OperationTupplemodel( m_operand, m_operation, m_baseobservation.getValues( args ) );
+    return new OperationTuplemodel( m_operand, m_operation, m_baseobservation.getValues( args ) );
   }
 
   /*

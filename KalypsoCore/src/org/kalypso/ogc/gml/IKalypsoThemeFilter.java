@@ -47,5 +47,5 @@ package org.kalypso.ogc.gml;
  */
 public interface IKalypsoThemeFilter
 {
-  public boolean accept( final IKalypsoTheme theme );
+  boolean accept( final IKalypsoTheme theme );
 }

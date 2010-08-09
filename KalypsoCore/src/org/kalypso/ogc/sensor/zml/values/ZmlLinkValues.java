@@ -44,7 +44,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Hashtable;
 import java.util.Map;
@@ -67,7 +66,7 @@ public class ZmlLinkValues implements IZmlValues
   /**
    * value of the href link that specifies that the zml values are stored in the data element
    */
-  public final static String DATA_REF = "#data"; //$NON-NLS-1$
+  public static final String DATA_REF = "#data"; //$NON-NLS-1$
 
   private final AbstractCSV m_csv;
 
@@ -81,18 +80,18 @@ public class ZmlLinkValues implements IZmlValues
    * Constructor
    * 
    * @param vl
-   *            binding type
+   *          binding type
    * @param parser
-   *            configured values parser
+   *          configured values parser
    * @param context
-   *            context into which original file was loaded
+   *          context into which original file was loaded
    * @param data
-   *            [optional] contains the values in a block format within CDATA tags if the values are linked
-   *            ZML-internally. This will be used if Href is not specified, is empty, or contains "#data"
+   *          [optional] contains the values in a block format within CDATA tags if the values are linked
+   *          ZML-internally. This will be used if Href is not specified, is empty, or contains "#data"
    * @throws MalformedURLException
    * @throws IOException
    */
-  public ZmlLinkValues( final ValueLink vl, final IParser parser, final URL context, final String data ) throws MalformedURLException, IOException
+  public ZmlLinkValues( final ValueLink vl, final IParser parser, final URL context, final String data ) throws IOException
   {
     m_parser = parser;
     // index begins with 0 internally
@@ -119,7 +118,7 @@ public class ZmlLinkValues implements IZmlValues
    * @see org.kalypso.ogc.sensor.zml.values.IZmlValues#getElement(int)
    */
   @Override
-  public Object getElement( int index ) throws SensorException
+  public Object getElement( final int index ) throws SensorException
   {
     try
     {
@@ -131,7 +130,7 @@ public class ZmlLinkValues implements IZmlValues
       m_helper.put( obj, new Integer( index ) );
       return obj;
     }
-    catch( ParserException e )
+    catch( final ParserException e )
     {
       throw new SensorException( e );
     }
@@ -141,7 +140,7 @@ public class ZmlLinkValues implements IZmlValues
    * @see org.kalypso.ogc.sensor.zml.values.IZmlValues#setElement(int, java.lang.Object)
    */
   @Override
-  public void setElement( int index, Object element ) throws SensorException
+  public void setElement( final int index, final Object element ) throws SensorException
   {
     // tricky: set it in our map-helper (Siehe this.indexOf() )
     m_helper.put( element, new Integer( index ) );
@@ -150,7 +149,7 @@ public class ZmlLinkValues implements IZmlValues
       // set it in CSV
       m_csv.setItem( index, m_column, m_parser.toString( element ) );
     }
-    catch( ParserException e )
+    catch( final ParserException e )
     {
       throw new SensorException( e );
     }
@@ -171,7 +170,7 @@ public class ZmlLinkValues implements IZmlValues
   @Override
   public int indexOf( final Object obj ) throws SensorException
   {
-    Integer iobj = m_helper.get( obj );
+    final Integer iobj = m_helper.get( obj );
     if( iobj == null )
     {
       // tricky: go through the items serially to find it

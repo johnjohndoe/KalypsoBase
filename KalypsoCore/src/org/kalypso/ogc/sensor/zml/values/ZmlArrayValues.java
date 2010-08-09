@@ -71,7 +71,7 @@ public class ZmlArrayValues implements IZmlValues
    * @see org.kalypso.ogc.sensor.zml.values.IZmlValues#getElement(int)
    */
   @Override
-  public Object getElement( int index )
+  public Object getElement( final int index )
   {
     return m_values.get( index );
   }
@@ -80,7 +80,7 @@ public class ZmlArrayValues implements IZmlValues
    * @see org.kalypso.ogc.sensor.zml.values.IZmlValues#setElement(int, java.lang.Object)
    */
   @Override
-  public void setElement( int index, Object element )
+  public void setElement( final int index, final Object element )
   {
     m_values.set( index, element );
   }

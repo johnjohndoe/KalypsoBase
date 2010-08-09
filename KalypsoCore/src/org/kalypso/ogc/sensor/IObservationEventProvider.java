@@ -52,7 +52,8 @@ public interface IObservationEventProvider
   void removeListener( IObservationListener listener );
 
   /**
-   * @param source optional source of the event, can be null
+   * @param source
+   *          optional source of the event, can be null
    */
   void fireChangedEvent( Object source );
 }

@@ -81,7 +81,7 @@ public class TranProLinFilter extends AbstractObservationFilter
 
   private final int m_statusToMerge;
 
-  private IMathOperation m_operation;
+  private final IMathOperation m_operation;
 
   private final String m_axisTypes;
 
@@ -101,7 +101,7 @@ public class TranProLinFilter extends AbstractObservationFilter
     m_axisTypes = axisTypes;
     m_operation = MathOperationFactory.createMathOperation( operator );
     if( dateBegin != null && dateEnd != null && (dateBegin.after( dateEnd ) || dateBegin.equals( dateEnd )) )
-      throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.sensor.timeseries.envelope.TranProLinFilter.0") + dateBegin + " - " + dateEnd ); //$NON-NLS-1$ //$NON-NLS-2$
+      throw new IllegalArgumentException( Messages.getString( "org.kalypso.ogc.sensor.timeseries.envelope.TranProLinFilter.0" ) + dateBegin + " - " + dateEnd ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**
@@ -122,8 +122,8 @@ public class TranProLinFilter extends AbstractObservationFilter
     {
       final IAxis dateAxis = ObservationUtilities.findAxisByClass( axes, Date.class );
 
-      //      Date dateBegin = m_dateBegin;
-      //      Date dateEnd = m_dateEnd;
+      // Date dateBegin = m_dateBegin;
+      // Date dateEnd = m_dateEnd;
 
       // Always use request/full range for the target
       Date targetBegin = null;
@@ -146,23 +146,21 @@ public class TranProLinFilter extends AbstractObservationFilter
       }
       // try to assume from base tuppel model if needed
       if( targetBegin == null )
-        targetBegin = (Date)outerSource.getElement( 0, dateAxis );
+        targetBegin = (Date) outerSource.getElement( 0, dateAxis );
       if( targetEnd == null )
-        targetEnd = (Date)outerSource.getElement( outerSourceCount - 1, dateAxis );
+        targetEnd = (Date) outerSource.getElement( outerSourceCount - 1, dateAxis );
 
       if( transformBegin == null )
         transformBegin = targetBegin;
       if( transformEnd == null )
         transformEnd = targetEnd;
 
-      final int sourceIndexBegin = ObservationUtilities.findNextIndexForDate( outerSource, dateAxis, targetBegin, 0,
-          outerSourceCount );
-      final int sourceIndexEnd = ObservationUtilities.findNextIndexForDate( outerSource, dateAxis, targetEnd,
-          sourceIndexBegin, outerSourceCount );
+      final int sourceIndexBegin = ObservationUtilities.findNextIndexForDate( outerSource, dateAxis, targetBegin, 0, outerSourceCount );
+      final int sourceIndexEnd = ObservationUtilities.findNextIndexForDate( outerSource, dateAxis, targetEnd, sourceIndexBegin, outerSourceCount );
 
       if( sourceIndexEnd > outerSourceCount - 1 )
       {
-        System.out.println( Messages.getString("org.kalypso.ogc.sensor.timeseries.envelope.TranProLinFilter.2") ); //$NON-NLS-1$
+        System.out.println( Messages.getString( "org.kalypso.ogc.sensor.timeseries.envelope.TranProLinFilter.2" ) ); //$NON-NLS-1$
       }
 
       final int targetMaxRows = sourceIndexEnd - sourceIndexBegin + 1;
@@ -210,15 +208,12 @@ public class TranProLinFilter extends AbstractObservationFilter
       if( outerSource instanceof WQTuppleModel )
       {
         final WQTuppleModel wqTuppleModel = (WQTuppleModel) outerSource;
-        outerTarget = new WQTuppleModel( innerTarget, axes, dateAxis, wqTuppleModel.getSrcAxis(), wqTuppleModel
-            .getSrcStatusAxis(), wqTuppleModel.getDestAxis(), wqTuppleModel.getDestStatusAxis(), wqTuppleModel
-            .getConverter(), wqTuppleModel.getDestAxisPos(), wqTuppleModel.getDestStatusAxisPos() );
+        outerTarget = new WQTuppleModel( innerTarget, axes, dateAxis, wqTuppleModel.getSrcAxis(), wqTuppleModel.getSrcStatusAxis(), wqTuppleModel.getDestAxis(), wqTuppleModel.getDestStatusAxis(), wqTuppleModel.getConverter(), wqTuppleModel.getDestAxisPos(), wqTuppleModel.getDestStatusAxisPos() );
       }
       else
         outerTarget = innerTarget;
 
-      performTransformation( outerSource, dateAxis, transformBegin, transformEnd, sourceIndexBegin, sourceIndexEnd,
-          axesStatus, axesCopy, axesTransform, outerTarget );
+      performTransformation( outerSource, dateAxis, transformBegin, transformEnd, sourceIndexBegin, sourceIndexEnd, axesStatus, axesCopy, axesTransform, outerTarget );
 
       return outerTarget;
     }
@@ -229,7 +224,7 @@ public class TranProLinFilter extends AbstractObservationFilter
 
       e.printStackTrace();
       final Logger logger = Logger.getLogger( getClass().getName() );
-      logger.log( Level.WARNING, Messages.getString("org.kalypso.ogc.sensor.timeseries.envelope.TranProLinFilter.1"), e ); //$NON-NLS-1$
+      logger.log( Level.WARNING, Messages.getString( "org.kalypso.ogc.sensor.timeseries.envelope.TranProLinFilter.1" ), e ); //$NON-NLS-1$
       return outerSource;
     }
   }
@@ -247,9 +242,7 @@ public class TranProLinFilter extends AbstractObservationFilter
    * @param outerTarget
    * @throws SensorException
    */
-  private void performTransformation( final ITupleModel outerSource, final IAxis dateAxis, Date dateBegin,
-      Date dateEnd, final int sourceIndexBegin, final int sourceIndexEnd, final IAxis[] axesStatus,
-      final IAxis[] axesCopy, final IAxis[] axesTransform, final ITupleModel outerTarget ) throws SensorException
+  private void performTransformation( final ITupleModel outerSource, final IAxis dateAxis, final Date dateBegin, final Date dateEnd, final int sourceIndexBegin, final int sourceIndexEnd, final IAxis[] axesStatus, final IAxis[] axesCopy, final IAxis[] axesTransform, final ITupleModel outerTarget ) throws SensorException
   {
     final long distTime = dateEnd.getTime() - dateBegin.getTime();
     final double deltaOperand = m_operandEnd - m_operandBegin;
@@ -270,27 +263,26 @@ public class TranProLinFilter extends AbstractObservationFilter
       for( int t = 0; t < axesStatus.length; t++ )
       {
         final IAxis axis = axesStatus[t];
-        final Number oldValue = (Number)outerSource.getElement( sourceRow, axis );
-        final Number newValue = new Integer( KalypsoStatusUtils
-            .performArithmetic( oldValue.intValue(), m_statusToMerge ) );
+        final Number oldValue = (Number) outerSource.getElement( sourceRow, axis );
+        final Number newValue = new Integer( KalypsoStatusUtils.performArithmetic( oldValue.intValue(), m_statusToMerge ) );
         outerTarget.setElement( targetRow, newValue, axis );
       }
 
-      //transform: important to set transformed last, as there may be dependencies to other axes
+      // transform: important to set transformed last, as there may be dependencies to other axes
       // (e.g. WQ-Transformation)
       // TODO: why are we copying generated values at all? We shouldn't do it then there is no problem
 
-      final Date date = (Date)outerSource.getElement( sourceRow, dateAxis );
+      final Date date = (Date) outerSource.getElement( sourceRow, dateAxis );
 
       final long hereTime = date.getTime() - dateBegin.getTime();
-      final double hereCoeff = m_operandBegin + deltaOperand * ( (double)hereTime / (double)distTime );
+      final double hereCoeff = m_operandBegin + deltaOperand * ((double) hereTime / (double) distTime);
 
       for( int t = 0; t < axesTransform.length; t++ )
       {
         final IAxis axis = axesTransform[t];
         final String type = axis.getType();
 
-        final double currentValue = ( (Number)outerSource.getElement( sourceRow, axis ) ).doubleValue();
+        final double currentValue = ((Number) outerSource.getElement( sourceRow, axis )).doubleValue();
         final double changedValue;
 
         // We do only transform within the specified interval
@@ -298,10 +290,7 @@ public class TranProLinFilter extends AbstractObservationFilter
           changedValue = currentValue;
         else
         {
-          final double[] operands = new double[]
-          {
-              currentValue,
-              hereCoeff };
+          final double[] operands = new double[] { currentValue, hereCoeff };
 
           changedValue = m_operation.calculate( operands );
         }
@@ -327,7 +316,6 @@ public class TranProLinFilter extends AbstractObservationFilter
     return value;
   }
 
-
   /**
    * creates a nw ojectarray filled with <code>null</code> values and the given dates
    * 
@@ -341,7 +329,7 @@ public class TranProLinFilter extends AbstractObservationFilter
     final Object[][] result = new Object[targetDates.length][columns];
     for( int row = 0; row < targetDates.length; row++ )
     {
-      Object[] objects = result[row];
+      final Object[] objects = result[row];
       Arrays.fill( objects, null );
       result[row][positionForDate] = targetDates[row];
     }

@@ -75,7 +75,7 @@ public class NativeObservationZmlAdapter implements INativeObservationAdapter
   @Override
   public IObservation createObservationFromSource( final File source ) throws Exception
   {
-    final IObservation parseXML = ZmlFactory.parseXML( source.toURL() ); //$NON-NLS-1$
+    final IObservation parseXML = ZmlFactory.parseXML( source.toURI().toURL() ); //$NON-NLS-1$
     return parseXML;
   }
 
