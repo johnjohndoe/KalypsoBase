@@ -55,7 +55,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 /**
  * Implements {@link org.eclipse.ui.model.IWorkbenchAdapter} in order to provider nice labels/images, ..... Does NOT
  * implement {@link org.eclipse.ui.model.IWorkbenchAdapter2}. Fonts, and so on are decided outside of the theme scope.
- *
+ * 
  * @author Katharina <a href="mailto:k.lupp@web.de>Katharina Lupp </a>
  */
 public interface IKalypsoTheme extends IAdaptable
@@ -63,102 +63,102 @@ public interface IKalypsoTheme extends IAdaptable
   /**
    * Name of the property which determines if the user is allowed to deleted this theme.
    */
-  public final static String PROPERTY_DELETEABLE = "deleteable"; //$NON-NLS-1$
+  final static String PROPERTY_DELETEABLE = "deleteable"; //$NON-NLS-1$
 
   /**
    * Name of the property which determines the id of the IKalypsoThemeInfo for this theme.
    */
-  public final static String PROPERTY_THEME_INFO_ID = "themeInfoId"; //$NON-NLS-1$
+  final static String PROPERTY_THEME_INFO_ID = "themeInfoId"; //$NON-NLS-1$
 
   /**
    * * Adds a listener to the list of listeners. Has no effect if the same listeners is already registered.
    */
-  public void addKalypsoThemeListener( final IKalypsoThemeListener listener );
+  void addKalypsoThemeListener( final IKalypsoThemeListener listener );
 
   /**
    * Removes a listener from the list of listeners. Has no effect if the listeners is not registered.
    */
-  public void removeKalypsoThemeListener( final IKalypsoThemeListener listener );
+  void removeKalypsoThemeListener( final IKalypsoThemeListener listener );
 
-  public void dispose( );
+  void dispose( );
 
   URL getContext( );
 
-  public ImageDescriptor getDefaultIcon( );
+  ImageDescriptor getDefaultIcon( );
 
   /**
    * Paints the theme to the given graphics context<br/>
-   *
+   * 
    * @throws CoreException
    *           REAMRK: Implementors should additionally set the status object internally, if an exception occurs in
    *           order to show the problem in the outline.
    */
-  public IStatus paint( final Graphics g, final GeoTransform world2screen, final Boolean selected, final IProgressMonitor monitor );
+  IStatus paint( final Graphics g, final GeoTransform world2screen, final Boolean selected, final IProgressMonitor monitor );
 
   /**
    * returns the name of the layer
    */
-  public I10nString getName( );
+  I10nString getName( );
 
   /**
    * Returns the label of this label, in the current locale.<br/>
    * No status texts are added here<br/>
    */
-  public String getLabel( );
+  String getLabel( );
 
-  public String getType( );
+  String getType( );
 
-  public void setName( final I10nString name );
+  void setName( final I10nString name );
 
   String getLegendIcon( );
 
-  public boolean shouldShowLegendChildren( );
+  boolean shouldShowLegendChildren( );
 
   void setLegendIcon( String legendIcon, URL context );
 
   /**
    * Returns the full extent bounding box for the theme.
    */
-  public GM_Envelope getFullExtent( );
+  GM_Envelope getFullExtent( );
 
-  public IMapModell getMapModell( );
+  IMapModell getMapModell( );
 
   /**
    * Returns the context id that this theme represents.
    */
-  public String getTypeContext( );
+  String getTypeContext( );
 
   /**
    * This function should return true, if the theme has tried to load the image, data, etc. once. Regardless if it was
    * successful or not. I.e. in case of a WMS it would return true, if the theme connected to the WMS and the connection
    * was finished. It does not matter if it could successfully retrieve the image or not.
-   *
+   * 
    * @return <code>true</code>, if the first loading try has finished
    */
-  public boolean isLoaded( );
+  boolean isLoaded( );
 
-  public IStatus getStatus( );
+  IStatus getStatus( );
 
-  public boolean isVisible( );
+  boolean isVisible( );
 
-  public void setVisible( final boolean visible );
+  void setVisible( final boolean visible );
 
   /**
    * Retrieves the indicated property from this theme.
    * <p>
    * The name of the property should be one of the <code>PROPERTY_</code> constants of this interface.
    * </p>
-   *
+   * 
    * @param defaultValue
-   *            If the property is not set, use this default value.
+   *          If the property is not set, use this default value.
    * @throws IllegalArgumentException
-   *             If the given property name is unknown.
+   *           If the given property name is unknown.
    */
-  public String getProperty( final String name, final String defaultValue );
+  String getProperty( final String name, final String defaultValue );
 
   /**
    * Sets the given property of this theme.<br>
    * The name of the property should be one of the <code>PROPERTY_</code> constants of this interface.
    */
-  public void setProperty( final String name, final String value );
+  void setProperty( final String name, final String value );
 }

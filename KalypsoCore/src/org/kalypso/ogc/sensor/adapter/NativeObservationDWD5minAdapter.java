@@ -62,8 +62,8 @@ import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
-import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.metadata.ITimeserieConstants;
+import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 
 /**
@@ -91,9 +91,11 @@ public class NativeObservationDWD5minAdapter implements INativeObservationAdapte
 
   private DateFormat m_dateFormat;
 
-  private final static int SEARCH_BLOCK_HEADER = 0;
+  private static final int SEARCH_BLOCK_HEADER = 0;
 
-  private final static int SEARCH_VALUES = 1;
+  private static final int SEARCH_VALUES = 1;
+
+  private static final int MAX_NO_OF_ERRORS = 30;
 
   /**
    * @see org.eclipse.core.runtime.IExecutableExtension#setInitializationData(org.eclipse.core.runtime.IConfigurationElement,
@@ -132,7 +134,6 @@ public class NativeObservationDWD5minAdapter implements INativeObservationAdapte
 
   private ITupleModel createTuppelModel( final File source, final IAxis[] axis, final boolean continueWithErrors ) throws IOException, ParseException
   {
-    final int MAX_NO_OF_ERRORS = 30;
     int numberOfErrors = 0;
 
     final StringBuffer errorBuffer = new StringBuffer();
@@ -160,8 +161,8 @@ public class NativeObservationDWD5minAdapter implements INativeObservationAdapte
           {
             // String DWDID = matcher.group( 1 );
             final String startDateString = matcher.group( 2 );
-            final Pattern m_datePattern = Pattern.compile( "([0-9]{2})([0-9]{2})([0-9]{2})" ); //$NON-NLS-1$
-            final Matcher dateMatcher = m_datePattern.matcher( startDateString );
+            final Pattern datePattern = Pattern.compile( "([0-9]{2})([0-9]{2})([0-9]{2})" ); //$NON-NLS-1$
+            final Matcher dateMatcher = datePattern.matcher( startDateString );
             if( dateMatcher.matches() )
             {
               // System.out.println( "Startdatum Header:" + startDateString );
@@ -170,7 +171,7 @@ public class NativeObservationDWD5minAdapter implements INativeObservationAdapte
             }
             else
             {
-              System.out.println( Messages.getString( "org.kalypso.ogc.sensor.adapter.NativeObservationDWD5minAdapter.9" ) + startDateString + Messages.getString( "org.kalypso.ogc.sensor.adapter.NativeObservationDWD5minAdapter.10" ) + m_datePattern.toString() ); //$NON-NLS-1$ //$NON-NLS-2$
+              System.out.println( Messages.getString( "org.kalypso.ogc.sensor.adapter.NativeObservationDWD5minAdapter.9" ) + startDateString + Messages.getString( "org.kalypso.ogc.sensor.adapter.NativeObservationDWD5minAdapter.10" ) + datePattern.toString() ); //$NON-NLS-1$ //$NON-NLS-2$
             }
           }
           else

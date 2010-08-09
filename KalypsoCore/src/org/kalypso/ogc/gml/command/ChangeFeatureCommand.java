@@ -110,7 +110,7 @@ public class ChangeFeatureCommand implements ICommand
   @Override
   public String getDescription( )
   {
-    return Messages.getString("org.kalypso.ogc.gml.command.ChangeFeatureCommand.0"); //$NON-NLS-1$
+    return Messages.getString( "org.kalypso.ogc.gml.command.ChangeFeatureCommand.0" ); //$NON-NLS-1$
   }
 
   protected void applyChanges( final Object valueToSet )

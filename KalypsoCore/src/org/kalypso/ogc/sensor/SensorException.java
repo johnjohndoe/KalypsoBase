@@ -47,22 +47,22 @@ package org.kalypso.ogc.sensor;
  */
 public class SensorException extends Exception
 {
-  public SensorException()
+  public SensorException( )
   {
     super();
   }
 
-  public SensorException( String message )
+  public SensorException( final String message )
   {
     super( message );
   }
 
-  public SensorException( Throwable cause )
+  public SensorException( final Throwable cause )
   {
     super( cause );
   }
 
-  public SensorException( String message, Throwable cause )
+  public SensorException( final String message, final Throwable cause )
   {
     super( message, cause );
   }

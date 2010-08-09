@@ -62,8 +62,8 @@ import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
-import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.metadata.ITimeserieConstants;
+import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 
 /**
@@ -73,13 +73,15 @@ public class NativeObservationDWDstdAdapter implements INativeObservationAdapter
 {
   private final DateFormat m_dwdSTDDateFormat = new SimpleDateFormat( "yyyyMMdd" ); //$NON-NLS-1$
 
-  public static Pattern m_dwdSTDPattern = Pattern.compile( "\\s\\s\\s\\s([0-9]{5})([0-9]{4}[0-9]{2}[0-9]{2})(.+?)" ); //$NON-NLS-1$
+  public static Pattern DWD_STD_PATTERN = Pattern.compile( "\\s\\s\\s\\s([0-9]{5})([0-9]{4}[0-9]{2}[0-9]{2})(.+?)" ); //$NON-NLS-1$
 
   private String m_title;
 
   private String m_axisTypeValue;
 
   private String m_titel;
+
+  private static final int MAX_NO_OF_ERRORS = 30;
 
   /**
    * @see org.eclipse.core.runtime.IExecutableExtension#setInitializationData(org.eclipse.core.runtime.IConfigurationElement,
@@ -116,7 +118,7 @@ public class NativeObservationDWDstdAdapter implements INativeObservationAdapter
 
   private ITupleModel createTuppelModel( final File source, final IAxis[] axis, final boolean continueWithErrors ) throws IOException
   {
-    final int MAX_NO_OF_ERRORS = 30;
+
     int numberOfErrors = 0;
 
     final StringBuffer errorBuffer = new StringBuffer();
@@ -131,7 +133,7 @@ public class NativeObservationDWDstdAdapter implements INativeObservationAdapter
         return null;
       try
       {
-        final Matcher matcher = m_dwdSTDPattern.matcher( lineIn );
+        final Matcher matcher = DWD_STD_PATTERN.matcher( lineIn );
         if( matcher.matches() )
         {
           Date date = null;

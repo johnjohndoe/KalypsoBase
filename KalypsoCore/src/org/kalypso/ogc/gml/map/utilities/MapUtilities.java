@@ -62,10 +62,10 @@ import com.vividsolutions.jts.geom.Polygon;
 
 /**
  * Utility class for map operations.
- *
+ * 
  * @author Holger Albert
  */
-public class MapUtilities
+public final class MapUtilities
 {
   private MapUtilities( )
   {
@@ -73,7 +73,7 @@ public class MapUtilities
 
   /**
    * Snaps the given AWT-Point to a given geometry, if it lies into a specified radius.
-   *
+   * 
    * @param mapPanel
    *          The MapPanel of the map.
    * @param p
@@ -97,7 +97,7 @@ public class MapUtilities
 
   /**
    * Snaps the given GM_Point to a given geometry, if it lies into a specified radius.
-   *
+   * 
    * @param mapPanel
    *          The MapPanel of the map.
    * @param point
@@ -137,27 +137,27 @@ public class MapUtilities
     if( geometryJTS instanceof com.vividsolutions.jts.geom.Point )
     {
       final com.vividsolutions.jts.geom.Point snapPoint = SnapUtilities.snapPoint( pointJTS );
-     return snapPoint;
+      return snapPoint;
     }
     else if( geometryJTS instanceof LineString )
     {
       final com.vividsolutions.jts.geom.Point snapPoint = SnapUtilities.snapLine( (LineString) geometryJTS, pointBuffer, type );
-      
+
       return snapPoint;
     }
     else if( geometryJTS instanceof Polygon )
     {
       final com.vividsolutions.jts.geom.Point snapPoint = SnapUtilities.snapPolygon( (Polygon) geometryJTS, pointBuffer, type );
-     
+
       return snapPoint;
     }
-    
+
     return null;
   }
 
   /**
    * This method transforms the AWT-Point to a GM_Point.
-   *
+   * 
    * @param mapPanel
    *          The MapPanel of the map.
    * @param p
@@ -187,7 +187,7 @@ public class MapUtilities
 
   /**
    * This method transforms the GM_Point to an AWT-Point.
-   *
+   * 
    * @param mapPanel
    *          The MapPanel of the map.
    * @param p
@@ -223,7 +223,7 @@ public class MapUtilities
 
   /**
    * This function transforms a distance in pixel to the world distance.
-   *
+   * 
    * @param mapPanel
    *          The MapPanel of the map.
    * @param reference
@@ -243,7 +243,7 @@ public class MapUtilities
 
   /**
    * This function transforms a distance in pixel to the world distance.
-   *
+   * 
    * @param mapPanel
    *          The MapPanel of the map.
    * @param distancePx
@@ -260,7 +260,7 @@ public class MapUtilities
 
   /**
    * This function sets the map scale, if different from the given map panel.
-   *
+   * 
    * @param scale
    *          The new map scale.
    */
@@ -303,6 +303,5 @@ public class MapUtilities
     /* Set the new extent. */
     mapPanel.setBoundingBox( newExtent );
   }
-
 
 }

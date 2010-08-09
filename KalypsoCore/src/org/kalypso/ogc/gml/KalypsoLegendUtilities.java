@@ -44,8 +44,12 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
 /**
  * @author doemming
  */
-public class KalypsoLegendUtilities
+public final class KalypsoLegendUtilities
 {
+  private KalypsoLegendUtilities( )
+  {
+  }
+
   private static GM_Object DEFAULT_POINT = GeometryFactory.createGM_Point( 0.5, 0.5, null );
 
   private static GM_Position[] DEFAULT_LINEPOSITIONS = new GM_Position[] { GeometryFactory.createGM_Position( 0.00, 0.3 ), GeometryFactory.createGM_Position( 0.33, 0.7 ),
@@ -86,7 +90,7 @@ public class KalypsoLegendUtilities
    * e.g. all numeric properties will turn to a string (with annotation) </b>
    * 
    * @param legendFeature
-   *            feature to update with legend properties
+   *          feature to update with legend properties
    */
   public static void updatePropertiesForLegend( final Feature legendFeature )
   {

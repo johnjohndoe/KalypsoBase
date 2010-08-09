@@ -63,8 +63,8 @@ import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
-import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.metadata.ITimeserieConstants;
+import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 
 /**
@@ -74,11 +74,11 @@ public class NativeObservationDWDmdAdapter implements INativeObservationAdapter
 {
   private final DateFormat m_dwdMDDateFormat = new SimpleDateFormat( "ddMMyyyyHHmmss" ); //$NON-NLS-1$
 
-  public static Pattern m_dwdMDfirstHeaderPattern = Pattern.compile( "[\\d]{5}[\\d\\w\\s]{15}(.{30}).+?" ); //$NON-NLS-1$
+  public static Pattern DWD_MD_FIRST_HEADER_PATTERN = Pattern.compile( "[\\d]{5}[\\d\\w\\s]{15}(.{30}).+?" ); //$NON-NLS-1$
 
-  public static Pattern m_dwdMDsecondHeaderPattern = Pattern.compile( ".{20}(.{5}).{4}([0-9]{1}).{28}(.{5}).+?" ); //$NON-NLS-1$
+  public static Pattern DWD_MD_SECOND_HEADER_PATTERN = Pattern.compile( ".{20}(.{5}).{4}([0-9]{1}).{28}(.{5}).+?" ); //$NON-NLS-1$
 
-  public static Pattern m_dwdMDDataPattern = Pattern.compile( "([0-9]{5})([\\s\\d]{2}[\\s\\d]{2}[0-9]{4}[\\d\\s]{2}[\\d\\s]{2}[\\s\\d]{2})(.{1})(.+?)" ); //$NON-NLS-1$
+  public static Pattern DWD_MD_DATA_PATTERN = Pattern.compile( "([0-9]{5})([\\s\\d]{2}[\\s\\d]{2}[0-9]{4}[\\d\\s]{2}[\\d\\s]{2}[\\s\\d]{2})(.{1})(.+?)" ); //$NON-NLS-1$
 
   private String m_title;
 
@@ -92,9 +92,11 @@ public class NativeObservationDWDmdAdapter implements INativeObservationAdapter
 
   private int m_div;
 
-  private final static int SEARCH_BLOCK_HEADER = 0;
+  private static final int SEARCH_BLOCK_HEADER = 0;
 
-  private final static int SEARCH_VALUES = 1;
+  private static final int SEARCH_VALUES = 1;
+
+  private static final int MAX_NO_OF_ERRORS = 30;
 
   /**
    * @see org.eclipse.core.runtime.IExecutableExtension#setInitializationData(org.eclipse.core.runtime.IConfigurationElement,
@@ -133,7 +135,7 @@ public class NativeObservationDWDmdAdapter implements INativeObservationAdapter
 
   private ITupleModel createTuppelModel( final File source, final IAxis[] axis, boolean continueWithErrors ) throws IOException
   {
-    final int MAX_NO_OF_ERRORS = 30;
+
     int numberOfErrors = 0;
 
     final StringBuffer errorBuffer = new StringBuffer();
@@ -150,12 +152,12 @@ public class NativeObservationDWDmdAdapter implements INativeObservationAdapter
       switch( step )
       {
         case SEARCH_BLOCK_HEADER:
-          Matcher matcher = m_dwdMDfirstHeaderPattern.matcher( lineIn );
+          Matcher matcher = DWD_MD_FIRST_HEADER_PATTERN.matcher( lineIn );
           if( matcher.matches() )
           {
             m_name = matcher.group( 1 ).trim();
             lineIn = reader.readLine();
-            matcher = m_dwdMDsecondHeaderPattern.matcher( lineIn );
+            matcher = DWD_MD_SECOND_HEADER_PATTERN.matcher( lineIn );
             if( matcher.matches() )
             {
               m_intervall = Integer.parseInt( matcher.group( 1 ).trim() ) * 60 * 1000;
@@ -179,7 +181,7 @@ public class NativeObservationDWDmdAdapter implements INativeObservationAdapter
           step++;
           break;
         case SEARCH_VALUES:
-          matcher = m_dwdMDDataPattern.matcher( lineIn );
+          matcher = DWD_MD_DATA_PATTERN.matcher( lineIn );
           if( matcher.matches() )
           {
             Date date = null;
@@ -196,7 +198,7 @@ public class NativeObservationDWDmdAdapter implements INativeObservationAdapter
             try
             {
               final String label = matcher.group( 3 ).trim();
-              if( label.equals( "" ) ) //$NON-NLS-1$
+              if( "".equals( label ) ) //$NON-NLS-1$
               {
                 valueLine = matcher.group( 4 );
                 final long startDate = date.getTime();
@@ -210,7 +212,7 @@ public class NativeObservationDWDmdAdapter implements INativeObservationAdapter
                 }
               }
               // No precipitation the whole day (24 hours * 12 values = 288 values)
-              else if( label.equals( "N" ) ) //$NON-NLS-1$
+              else if( "N".equals( label ) ) //$NON-NLS-1$
               {
                 final Double value = 0.0;
                 final long startDate = date.getTime();
@@ -221,7 +223,7 @@ public class NativeObservationDWDmdAdapter implements INativeObservationAdapter
                   dateCollector.add( valueDate );
                 }
               }
-              else if( label.equals( "A" ) ) //$NON-NLS-1$
+              else if( "A".equals( label ) ) //$NON-NLS-1$
               {
                 final Double value = 9999.0;
                 final long startDate = date.getTime();
@@ -232,7 +234,7 @@ public class NativeObservationDWDmdAdapter implements INativeObservationAdapter
                   dateCollector.add( valueDate );
                 }
               }
-              else if( label.equals( "E" ) ) //$NON-NLS-1$
+              else if( "E".equals( label ) ) //$NON-NLS-1$
               {
                 // do nothing
               }

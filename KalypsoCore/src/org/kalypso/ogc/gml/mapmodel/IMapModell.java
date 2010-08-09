@@ -60,90 +60,90 @@ public interface IMapModell
   /**
    * Adds a listener to the list of listeners. Has no effect if the same listeners is already registered.
    */
-  public void addMapModelListener( final IMapModellListener l );
+  void addMapModelListener( final IMapModellListener l );
 
   /**
    * Removes a listener from the list of listeners. Has no effect if the listeners is not registered.
    */
-  public void removeMapModelListener( final IMapModellListener l );
+  void removeMapModelListener( final IMapModellListener l );
 
   /** dispose off all themes! */
-  public void dispose( );
+  void dispose( );
 
-  public void activateTheme( final IKalypsoTheme theme );
+  void activateTheme( final IKalypsoTheme theme );
 
-  public IKalypsoTheme getActiveTheme( );
+  IKalypsoTheme getActiveTheme( );
 
-  public void addTheme( final IKalypsoTheme theme );
+  void addTheme( final IKalypsoTheme theme );
 
-  public void insertTheme( final IKalypsoTheme theme, final int position );
+  void insertTheme( final IKalypsoTheme theme, final int position );
 
   /**
    * Gets all themes of this model. Does NOT recurse into cascaded themes.
    */
-  public IKalypsoTheme[] getAllThemes( );
+  IKalypsoTheme[] getAllThemes( );
 
   /**
    * This function returns the name of the coordinate system used.
-   *
+   * 
    * @return The name of the coordinate system.
    */
-  public String getCoordinatesSystem( );
+  String getCoordinatesSystem( );
 
   /**
    * Directly paints all themes contained inside this model. <br>
    * Blocks until all themes are painted. .
    */
-  public IStatus paint( final Graphics g, final GeoTransform p, final IProgressMonitor monitor );
+  IStatus paint( final Graphics g, final GeoTransform p, final IProgressMonitor monitor );
 
-  public IKalypsoTheme getTheme( final int pos );
+  IKalypsoTheme getTheme( final int pos );
 
-  public int getThemeSize( );
+  int getThemeSize( );
 
-  public boolean isThemeActivated( final IKalypsoTheme theme );
+  boolean isThemeActivated( final IKalypsoTheme theme );
 
-  public void moveDown( IKalypsoTheme theme );
+  void moveDown( IKalypsoTheme theme );
 
-  public void moveUp( IKalypsoTheme theme );
+  void moveUp( IKalypsoTheme theme );
 
-  public void removeTheme( final IKalypsoTheme theme );
+  void removeTheme( final IKalypsoTheme theme );
 
-  public void swapThemes( IKalypsoTheme theme1, IKalypsoTheme theme2 );
+  void swapThemes( IKalypsoTheme theme1, IKalypsoTheme theme2 );
 
-  public GM_Envelope getFullExtentBoundingBox( );
+  GM_Envelope getFullExtentBoundingBox( );
 
-  public IProject getProject( );
+  IProject getProject( );
 
-  public void accept( final IKalypsoThemeVisitor visitor, int depth );
+  void accept( final IKalypsoThemeVisitor visitor, int depth );
 
   /**
    * Iterates through all themes of this modell, starting at the given theme.
-   *
+   * 
    * @see #accept(KalypsoThemeVisitor, int).
    */
-  public void accept( final IKalypsoThemeVisitor visitor, final int depth, final IKalypsoTheme theme );
+  void accept( final IKalypsoThemeVisitor visitor, final int depth, final IKalypsoTheme theme );
 
-  public void setName( final I10nString name );
+  void setName( final I10nString name );
 
-  public I10nString getName( );
+  I10nString getName( );
 
   // HACK In order to have nice parents for outline tree even for cascading themes, we something like this...
-  public Object getThemeParent( final IKalypsoTheme theme );
+  Object getThemeParent( final IKalypsoTheme theme );
 
   /**
    * Internal method for setting the active theme.
    * <p>
    * This method is not intended to be called from outside of {@link IMapModell} implementations.
    */
-  public void internalActivate( IKalypsoTheme theme );
+  void internalActivate( IKalypsoTheme theme );
 
   /**
    * Check if this map modell is still beeing filled with themes.<br>
    * Implementors must ensure, that this flag becomes eventually <code>true</code> (even if there are errors while
    * loading).
-   *
+   * 
    * @return <code>false</code> if this map modell is under construction (for example if many theme are about to be
    *         added in the near future...)
    */
-  public boolean isLoaded( );
+  boolean isLoaded( );
 }

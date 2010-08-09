@@ -61,8 +61,8 @@ import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
-import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.metadata.ITimeserieConstants;
+import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 
 /**
@@ -72,11 +72,13 @@ public class NativeObservationGrapAdapter implements INativeObservationAdapter
 {
   private final DateFormat m_grapDateFormat = new SimpleDateFormat( "dd MM yyyy HH mm ss" ); //$NON-NLS-1$
 
-  public static Pattern m_grapPattern = Pattern.compile( "([0-9]{1,2}.+?[0-9]{1,2}.+?[0-9]{2,4}.+?[0-9]{1,2}.+?[0-9]{1,2}.[0-9 ]{1,2})(.*-?[0-9\\.]+)" ); //$NON-NLS-1$
+  public static Pattern GRAP_PATTERN = Pattern.compile( "([0-9]{1,2}.+?[0-9]{1,2}.+?[0-9]{2,4}.+?[0-9]{1,2}.+?[0-9]{1,2}.[0-9 ]{1,2})(.*-?[0-9\\.]+)" ); //$NON-NLS-1$
 
   private String m_title;
 
   private String m_axisTypeValue;
+
+  private final int MAX_NO_OF_ERRORS = 30;
 
   /**
    * @see org.eclipse.core.runtime.IExecutableExtension#setInitializationData(org.eclipse.core.runtime.IConfigurationElement,
@@ -114,7 +116,7 @@ public class NativeObservationGrapAdapter implements INativeObservationAdapter
 
   private ITupleModel createTuppelModel( final File source, final IAxis[] axis, final boolean continueWithErrors ) throws IOException
   {
-    final int MAX_NO_OF_ERRORS = 30;
+
     int numberOfErrors = 0;
 
     final StringBuffer errorBuffer = new StringBuffer();
@@ -129,15 +131,15 @@ public class NativeObservationGrapAdapter implements INativeObservationAdapter
         return null;
       try
       {
-        final Matcher matcher = m_grapPattern.matcher( lineIn );
+        final Matcher matcher = GRAP_PATTERN.matcher( lineIn );
         if( matcher.matches() )
         {
           final String dateString = matcher.group( 1 );
           final Double value = new Double( matcher.group( 2 ) );
 
           final String formatedDate = dateString.replaceAll( "[:\\.]", " " ); //$NON-NLS-1$ //$NON-NLS-2$
-          final Pattern m_datePattern = Pattern.compile( "([0-9 ]{2}) ([0-9 ]{2}) ([0-9]{4}) ([0-9 ]{2}) ([0-9 ]{2}) ([0-9 ]{2})" ); //$NON-NLS-1$
-          final Matcher dateMatcher = m_datePattern.matcher( formatedDate );
+          final Pattern datePattern = Pattern.compile( "([0-9 ]{2}) ([0-9 ]{2}) ([0-9]{4}) ([0-9 ]{2}) ([0-9 ]{2}) ([0-9 ]{2})" ); //$NON-NLS-1$
+          final Matcher dateMatcher = datePattern.matcher( formatedDate );
           if( dateMatcher.matches() )
           {
             final StringBuffer buffer = new StringBuffer();

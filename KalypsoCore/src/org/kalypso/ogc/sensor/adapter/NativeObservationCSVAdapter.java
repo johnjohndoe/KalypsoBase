@@ -61,8 +61,8 @@ import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
-import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.metadata.ITimeserieConstants;
+import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 
 /**
@@ -76,7 +76,9 @@ public class NativeObservationCSVAdapter implements INativeObservationAdapter
   // public static Pattern m_csvPattern = Pattern
   // .compile( "([0-9]{1,2}.+?[0-9]{1,2}.+?[0-9]{2,4}.+?[0-9]{1,2}.+?[0-9]{1,2}).+?([0-9\\.]+)" );
 
-  public static Pattern m_csvPattern = Pattern.compile( "([0-9]{1,2}.+?[0-9]{1,2}.+?[0-9]{2,4}.+?[0-9]{1,2}.+?[0-9]{1,2}).+?([0-9]+\\,+?[0-9]+)" ); //$NON-NLS-1$
+  public static Pattern CSV_PATTERN = Pattern.compile( "([0-9]{1,2}.+?[0-9]{1,2}.+?[0-9]{2,4}.+?[0-9]{1,2}.+?[0-9]{1,2}).+?([0-9]+\\,+?[0-9]+)" ); //$NON-NLS-1$
+
+  private static final int MAX_NO_OF_ERRORS = 30;
 
   private String m_title;
 
@@ -118,7 +120,7 @@ public class NativeObservationCSVAdapter implements INativeObservationAdapter
 
   private ITupleModel createTuppelModel( final File source, final IAxis[] axis, final boolean continueWithErrors ) throws IOException
   {
-    final int MAX_NO_OF_ERRORS = 30;
+
     int numberOfErrors = 0;
 
     final StringBuffer errorBuffer = new StringBuffer();
@@ -133,7 +135,7 @@ public class NativeObservationCSVAdapter implements INativeObservationAdapter
         return null;
       try
       {
-        final Matcher matcher = m_csvPattern.matcher( lineIn );
+        final Matcher matcher = CSV_PATTERN.matcher( lineIn );
         if( matcher.matches() )
         {
           final String dateString = matcher.group( 1 );
@@ -144,8 +146,8 @@ public class NativeObservationCSVAdapter implements INativeObservationAdapter
           // Double value = new Double( matcher.group( 2 ) );
 
           final String formatedDate = dateString.replaceAll( "[:;\\.]", " " ); //$NON-NLS-1$ //$NON-NLS-2$
-          final Pattern m_datePattern = Pattern.compile( "([0-9 ]{2}) ([0-9 ]{2}) ([0-9]{4}) ([0-9 ]{2}) ([0-9 ]{2})" ); //$NON-NLS-1$
-          final Matcher dateMatcher = m_datePattern.matcher( formatedDate );
+          final Pattern datePattern = Pattern.compile( "([0-9 ]{2}) ([0-9 ]{2}) ([0-9]{4}) ([0-9 ]{2}) ([0-9 ]{2})" ); //$NON-NLS-1$
+          final Matcher dateMatcher = datePattern.matcher( formatedDate );
           if( dateMatcher.matches() )
           {
             final StringBuffer buffer = new StringBuffer();

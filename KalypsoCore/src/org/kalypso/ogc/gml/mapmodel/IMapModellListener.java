@@ -51,47 +51,47 @@ public interface IMapModellListener
 {
   /**
    * @param source
-   *            The map modell where the event occured.
+   *          The map modell where the event occured.
    * @param theme
-   *            The newly added theme.
+   *          The newly added theme.
    */
-  public void themeAdded( final IMapModell source, final IKalypsoTheme theme );
+  void themeAdded( final IMapModell source, final IKalypsoTheme theme );
 
   /**
    * @param source
-   *            The map modell where the event occured.
+   *          The map modell where the event occured.
    * @param theme
-   *            The removed theme.
+   *          The removed theme.
    */
-  public void themeRemoved( final IMapModell source, final IKalypsoTheme theme, boolean lastVisibility );
+  void themeRemoved( final IMapModell source, final IKalypsoTheme theme, boolean lastVisibility );
 
   /**
    * @param source
-   *            The map modell where the event occured.
+   *          The map modell where the event occured.
    * @param theme
-   *            The activated theme.
+   *          The activated theme.
    */
-  public void themeActivated( final IMapModell source, final IKalypsoTheme previouslyActive, final IKalypsoTheme nowActive );
+  void themeActivated( final IMapModell source, final IKalypsoTheme previouslyActive, final IKalypsoTheme nowActive );
 
   /**
    * This event occurs, if the order of themes changes.
    * 
    * @param source
-   *            The map modell where the event occured.
+   *          The map modell where the event occured.
    */
-  public void themeOrderChanged( final IMapModell source );
+  void themeOrderChanged( final IMapModell source );
 
-  public void themeContextChanged( final IMapModell source, final IKalypsoTheme theme );
+  void themeContextChanged( final IMapModell source, final IKalypsoTheme theme );
 
   /**
    * @param source
-   *            The map modell where the event occured.
+   *          The map modell where the event occured.
    * @param theme
-   *            The changed theme.
+   *          The changed theme.
    * @param visibility
-   *            The new visibility of the theme.
+   *          The new visibility of the theme.
    */
-  public void themeVisibilityChanged( final IMapModell source, final IKalypsoTheme theme, final boolean visibility );
+  void themeVisibilityChanged( final IMapModell source, final IKalypsoTheme theme, final boolean visibility );
 
-  public void themeStatusChanged( final IMapModell source, final IKalypsoTheme theme );
+  void themeStatusChanged( final IMapModell source, final IKalypsoTheme theme );
 }

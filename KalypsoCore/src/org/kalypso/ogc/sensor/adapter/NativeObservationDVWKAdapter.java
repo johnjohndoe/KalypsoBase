@@ -62,9 +62,9 @@ import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
-import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.metadata.IObservationConstants;
 import org.kalypso.ogc.sensor.metadata.ITimeserieConstants;
+import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 
 /**
@@ -72,15 +72,17 @@ import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
  */
 public class NativeObservationDVWKAdapter implements INativeObservationAdapter
 {
-  public static Pattern m_patternLine = Pattern.compile( "[A-Za-z0-9]{4}\\s([0-9\\s]{10})\\s*([0-9]{1,2})\\s*([0-9]{1,2})([A-Za-z\\s]{1})(.*)" ); //$NON-NLS-1$
+  public static final Pattern PATTERN_LINE = Pattern.compile( "[A-Za-z0-9]{4}\\s([0-9\\s]{10})\\s*([0-9]{1,2})\\s*([0-9]{1,2})([A-Za-z\\s]{1})(.*)" ); //$NON-NLS-1$
 
-  public static Pattern m_subPatternData = Pattern.compile( "\\s*([0-9]{1,5})\\s*([0-9]{1,5})\\s*([0-9]{1,5})\\s*([0-9]{1,5})\\s*([0-9]{1,5})\\s*([0-9]{1,5})\\s*([0-9]{1,5})\\s*([0-9]{1,5})\\s*([0-9]{1,5})\\s*([0-9]{1,5})\\s*([0-9]{1,5})\\s*([0-9]{1,5})" ); //$NON-NLS-1$
+  public static final Pattern SUB_PATTERN_DATA = Pattern.compile( "\\s*([0-9]{1,5})\\s*([0-9]{1,5})\\s*([0-9]{1,5})\\s*([0-9]{1,5})\\s*([0-9]{1,5})\\s*([0-9]{1,5})\\s*([0-9]{1,5})\\s*([0-9]{1,5})\\s*([0-9]{1,5})\\s*([0-9]{1,5})\\s*([0-9]{1,5})\\s*([0-9]{1,5})" ); //$NON-NLS-1$
+
+  private static final int MAX_NO_OF_ERRORS = 30;
 
   private String m_title;
 
   private String m_axisTypeValue;
 
-  private final String m_SNAME = "titel"; //$NON-NLS-1$
+  private final String m_sname = "titel"; //$NON-NLS-1$
 
   private TimeZone m_timeZone;
 
@@ -118,12 +120,12 @@ public class NativeObservationDVWKAdapter implements INativeObservationAdapter
     final ITupleModel tuppelModel = createTuppelModel( source, axis, continueWithErrors );
     if( tuppelModel == null )
       return null;
-    return new SimpleObservation( "href", m_SNAME, metaDataList, tuppelModel ); //$NON-NLS-1$ //$NON-NLS-2$
+    return new SimpleObservation( "href", m_sname, metaDataList, tuppelModel ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   private ITupleModel createTuppelModel( final File source, final IAxis[] axis, boolean continueWithErrors ) throws IOException
   {
-    final int MAX_NO_OF_ERRORS = 30;
+
     int numberOfErrors = 0;
 
     final StringBuffer errorBuffer = new StringBuffer();
@@ -140,11 +142,11 @@ public class NativeObservationDVWKAdapter implements INativeObservationAdapter
       try
       {
 
-        final Matcher matcher = m_patternLine.matcher( lineIn );
+        final Matcher matcher = PATTERN_LINE.matcher( lineIn );
         if( matcher.matches() )
         {
           // end of file?
-          if( matcher.group( 4 ).equals( "E" ) ) //$NON-NLS-1$
+          if( "E".equals( matcher.group( 4 ) ) ) //$NON-NLS-1$
             break;
 
           final String dateTime = matcher.group( 1 );
@@ -172,7 +174,7 @@ public class NativeObservationDVWKAdapter implements INativeObservationAdapter
           }
 
           // data line
-          if( matcher.group( 4 ).equals( "N" ) ) //$NON-NLS-1$
+          if( "N".equals( matcher.group( 4 ) ) ) //$NON-NLS-1$
           {
             // TODO check if this is means all zeros for the whole day
             // or just for this hour,
@@ -192,7 +194,7 @@ public class NativeObservationDVWKAdapter implements INativeObservationAdapter
           else
           {
             previousNlineCalendar = null;
-            final Matcher dataMatcher = m_subPatternData.matcher( matcher.group( 5 ) );
+            final Matcher dataMatcher = SUB_PATTERN_DATA.matcher( matcher.group( 5 ) );
             if( dataMatcher.matches() )
             {
               for( int i = 1; i < 13; i++ )

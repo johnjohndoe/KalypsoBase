@@ -53,88 +53,87 @@ import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 
 /**
  * @author felipe maximino
- *
  */
 public class GmlTriSurface2HmoConverter extends Gml2HmoConverter
 {
   /* maps a GM_Triangle to its GM_Position's */
-  private List<int[]> trianglesPositionsMap;
-  
+  private final List<int[]> m_trianglesPositionsMap;
+
   /* not repeated GM_Positions */
-  private List<GM_Position> uniquePositions;
-  
+  private final List<GM_Position> m_uniquePositions;
+
   /* to control which 'position' is already and where in the list */
-  private Map<GM_Position, Integer> isOnIndex;
-    
-  
+  private final Map<GM_Position, Integer> m_isOnIndex;
+
   public GmlTriSurface2HmoConverter( final GM_TriangulatedSurface geometry )
   {
-    trianglesPositionsMap = new ArrayList<int[]>( geometry.size() );
-    uniquePositions = new ArrayList<GM_Position>();
-    isOnIndex = new HashMap<GM_Position, Integer>();  
-    
-    addsGeometry(geometry); 
+    m_trianglesPositionsMap = new ArrayList<int[]>( geometry.size() );
+    m_uniquePositions = new ArrayList<GM_Position>();
+    m_isOnIndex = new HashMap<GM_Position, Integer>();
+
+    addsGeometry( geometry );
   }
-  
+
   public void addsGeometry( final GM_TriangulatedSurface geometry )
-  { 
-    for( final GM_Triangle triangle : geometry )
-    { 
-      /* reference to the positions of this triangle */
-      int[] posReferences = new int[3]; 
-      
-      int count = 0;
-      /* iterates through each triangle positions, but the last
-       * that is the same as the first 
-       */      
-      final GM_Position[] positions = triangle.getExteriorRing();      
-      for(int i = 0; i < positions.length - 1; i++) 
-      { 
-        GM_Position pos = positions[ i ];
-        Integer isOn = isOnIndex.get( pos );
-        
-        /* the position is not repeated */
-        if(  isOn == null )
-        {             
-          uniquePositions.add( pos ); 
-          isOn = uniquePositions.size();
-          isOnIndex.put( pos, isOn);
-        }        
-        posReferences[ count++ ] = isOn;      
-      }
-      
-      trianglesPositionsMap.add( posReferences );
-    }
-  }  
-  
-  @Override
-  public void writeHmo( final File hmoBaseFile) throws GmlSerializeException 
   {
-    if(uniquePositions.isEmpty())
+    for( final GM_Triangle triangle : geometry )
+    {
+      /* reference to the positions of this triangle */
+      final int[] posReferences = new int[3];
+
+      int count = 0;
+      /*
+       * iterates through each triangle positions, but the last that is the same as the first
+       */
+      final GM_Position[] positions = triangle.getExteriorRing();
+      for( int i = 0; i < positions.length - 1; i++ )
+      {
+        final GM_Position pos = positions[i];
+        Integer isOn = m_isOnIndex.get( pos );
+
+        /* the position is not repeated */
+        if( isOn == null )
+        {
+          m_uniquePositions.add( pos );
+          isOn = m_uniquePositions.size();
+          m_isOnIndex.put( pos, isOn );
+        }
+        posReferences[count++] = isOn;
+      }
+
+      m_trianglesPositionsMap.add( posReferences );
+    }
+  }
+
+  @Override
+  public void writeHmo( final File hmoBaseFile ) throws GmlSerializeException
+  {
+    if( m_uniquePositions.isEmpty() )
     {
       throw new GmlSerializeException( Messages.getString( "org.kalypso.ogc.gml.serialize.HMOSerializer.11" ) );
-    }    
+    }
 
-    HMOSerializer hmoSerializer = new HMOSerializer( hmoBaseFile ); 
-    writePoints(hmoSerializer);
-    writeTriangles(hmoSerializer);
+    final HMOSerializer hmoSerializer = new HMOSerializer( hmoBaseFile );
+    writePoints( hmoSerializer );
+    writeTriangles( hmoSerializer );
     hmoSerializer.finish();
-  }  
-  
-  public void writePoints(HMOSerializer serializer)
-  {
-    int count = 1;
-    for(final GM_Position pos : uniquePositions)
-    {
-      serializer.formatPoint(count++, pos.getX(), pos.getY(), pos.getZ());
-    }  
   }
-  
-  public void writeTriangles(HMOSerializer serializer)
+
+  public void writePoints( final HMOSerializer serializer )
   {
     int count = 1;
-    for( final int[] ref : trianglesPositionsMap ) {      
-      serializer.formatTriangle(count++, ref[0], ref[1], ref[2]);
-    }  
+    for( final GM_Position pos : m_uniquePositions )
+    {
+      serializer.formatPoint( count++, pos.getX(), pos.getY(), pos.getZ() );
+    }
+  }
+
+  public void writeTriangles( final HMOSerializer serializer )
+  {
+    int count = 1;
+    for( final int[] ref : m_trianglesPositionsMap )
+    {
+      serializer.formatTriangle( count++, ref[0], ref[1], ref[2] );
+    }
   }
 }

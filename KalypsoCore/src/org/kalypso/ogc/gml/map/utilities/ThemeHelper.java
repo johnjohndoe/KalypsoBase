@@ -49,21 +49,21 @@ import org.kalypso.ogc.gml.IKalypsoTheme;
 /**
  * @author Dirk Kuch
  */
-public class ThemeHelper
+public final class ThemeHelper
 {
 
   /**
    * @param propertyID
-   *            {@link org.kalypso.template.types.StyledLayerType.Property}.name
+   *          {@link org.kalypso.template.types.StyledLayerType.Property}.name
    * @param propertyValue
-   *            {@link org.kalypso.template.types.StyledLayerType.Property}.value
+   *          {@link org.kalypso.template.types.StyledLayerType.Property}.value
    */
   public static IKalypsoTheme[] getThemeByProperty( final IKalypsoTheme[] themes, final String propertyID, final String propertyValue )
   {
     return getThemeByProperties( themes, propertyID, new String[] { propertyValue } );
   }
 
-  public static IKalypsoTheme[] getThemeByProperties( IKalypsoTheme[] themes, String themeId, String[] validThemes )
+  public static IKalypsoTheme[] getThemeByProperties( final IKalypsoTheme[] themes, final String themeId, final String[] validThemes )
   {
     final Set<IKalypsoTheme> myThemes = new LinkedHashSet<IKalypsoTheme>();
 

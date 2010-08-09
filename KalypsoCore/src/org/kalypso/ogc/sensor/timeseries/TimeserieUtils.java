@@ -456,7 +456,7 @@ public final class TimeserieUtils implements ITimeserieConstants
     if( nf != null )
       return nf;
 
-    if( format.equals( "%d" ) ) //$NON-NLS-1$
+    if( "%d".equals( format ) ) //$NON-NLS-1$
     {
       final NumberFormat wf = NumberFormat.getIntegerInstance();
       wf.setGroupingUsed( false );
@@ -528,7 +528,9 @@ public final class TimeserieUtils implements ITimeserieConstants
     {
       axisList.add( TimeserieUtils.createDefaulAxis( axisTypes[0], firstWithKey ) );
       for( int i = 1; i < axisTypes.length; i++ )
+      {
         axisList.add( TimeserieUtils.createDefaulAxis( axisTypes[i], false ) );
+      }
     }
     return axisList.toArray( new IAxis[axisList.size()] );
   }
@@ -568,7 +570,9 @@ public final class TimeserieUtils implements ITimeserieConstants
     final IAxis[] axes = new IAxis[axisTypes.length + 1];
     axes[0] = TimeserieUtils.createDefaulAxis( ITimeserieConstants.TYPE_DATE, true );
     for( int i = 0; i < axisTypes.length; i++ )
+    {
       axes[i + 1] = TimeserieUtils.createDefaulAxis( axisTypes[i] );
+    }
 
     final SimpleObservation obs = new SimpleObservation( axes );
     final SimpleTupleModel model = new SimpleTupleModel( axes );

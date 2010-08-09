@@ -53,8 +53,13 @@ import org.kalypsodeegree.model.feature.Feature;
 /**
  * @author Gernot Belger
  */
-public class StylePainterFactory
+public final class StylePainterFactory
 {
+  private StylePainterFactory( )
+  {
+
+  }
+
   /**
    * @param userStyleName
    *          Only used for an ugly hack. Should be removed. Save to give <code>null</code>.

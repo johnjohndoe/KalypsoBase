@@ -57,7 +57,7 @@ import org.kalypsodeegree.model.feature.FeatureList;
  * 
  * @author skurzbach
  */
-@SuppressWarnings("unchecked") //$NON-NLS-1$
+@SuppressWarnings("unchecked")//$NON-NLS-1$
 public class RelativeFeatureChangeTest extends TestCase
 {
   private static final int COMMAND_COUNT = 5;
@@ -80,16 +80,16 @@ public class RelativeFeatureChangeTest extends TestCase
     final URL modelFile = getClass().getResource( "resources/testFeature.gml" ); //$NON-NLS-1$
     m_workspace = new CommandableWorkspace( GmlSerializer.createGMLWorkspace( modelFile, null ) );
 
-    final Feature m_feature = m_workspace.getRootFeature();
-    final FeatureList featureList = (FeatureList) m_feature.getProperty( m_feature.getFeatureType().getProperties()[0] );
+    final Feature feature = m_workspace.getRootFeature();
+    final FeatureList featureList = (FeatureList) feature.getProperty( feature.getFeatureType().getProperties()[0] );
 
     m_original = (Feature) featureList.first();
-    for( int i = 0; i < COMMAND_COUNT; i++ )
-    {
-      // FIXME
-// m_result[i] = (Feature) featureList.get( i + 1 );
-// m_changes[i] = new ArrayList<FeatureChange>();
-    }
+// for( int i = 0; i < COMMAND_COUNT; i++ )
+// {
+// // FIXME
+// // m_result[i] = (Feature) featureList.get( i + 1 );
+// // m_changes[i] = new ArrayList<FeatureChange>();
+// }
 
     m_originalProperties = m_original.getFeatureType().getProperties();
 

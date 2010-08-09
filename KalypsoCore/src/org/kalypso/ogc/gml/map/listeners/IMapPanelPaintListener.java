@@ -47,5 +47,5 @@ import java.awt.Graphics;
  */
 public interface IMapPanelPaintListener
 {
-  public void paint( final Graphics g );
+  void paint( final Graphics g );
 }

@@ -56,7 +56,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  * 
  * @author Gernot
  */
-public class MapPanelUtilities
+public final class MapPanelUtilities
 {
   private MapPanelUtilities( )
   {

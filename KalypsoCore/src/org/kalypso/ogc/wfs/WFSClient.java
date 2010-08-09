@@ -69,17 +69,17 @@ public class WFSClient
 
   public static final String URL_PARAM_SERVICE_DEFAULT = "WFS"; //$NON-NLS-1$
 
-  public static final String URL_PARAM_REQUEST = "REQUEST"; //$NON-NLS-1$
+  public static final String URL_PARAM_REQUEST = "REQUEST"; //$NON-NLS-1$ 
 
   private static final String PARAM_DESCRIBE_FEATURE_TYPE_NAMESPACE = "NAMESPACE"; //$NON-NLS-1$
 
   private static final String PARAM_DESCRIBE_FEATURE_TYPE_TYPENAME = "TYPENAME"; //$NON-NLS-1$
 
-  public static String PARAM_DESCRIBE_FEATURE_TYPE_FORMAT = "OUTPUTFORMAT"; //$NON-NLS-1$
+  public static final String PARAM_DESCRIBE_FEATURE_TYPE_FORMAT = "OUTPUTFORMAT"; //$NON-NLS-1$
 
   private static final String OUTPUT_FORMAT = "text/xml; subtype=gml/3.1.1"; //$NON-NLS-1$
 
-  public static String PARAM_DESCRIBE_FEATURE_TYPE_FORMAT_DEFAULT;
+  private static String PARAM_DESCRIBE_FEATURE_TYPE_FORMAT_DEFAULT;
   {
     try
     {
@@ -175,7 +175,7 @@ public class WFSClient
     {
       final String serviceName = params.get( URL_PARAM_SERVICE );
       if( !URL_PARAM_SERVICE_DEFAULT.equals( serviceName ) )
-        throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.wfs.WFSClient.0", serviceName) ); //$NON-NLS-1$
+        throw new IllegalArgumentException( Messages.getString( "org.kalypso.ogc.wfs.WFSClient.0", serviceName ) ); //$NON-NLS-1$
     }
     else
     {
@@ -187,7 +187,7 @@ public class WFSClient
     {
       final String version = params.get( URL_PARAM_VERSION );
       if( !URL_PARAM_VERSION_DEFAULT.equals( version ) )
-        throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.wfs.WFSClient.4", version )); //$NON-NLS-1$
+        throw new IllegalArgumentException( Messages.getString( "org.kalypso.ogc.wfs.WFSClient.4", version ) ); //$NON-NLS-1$
     }
     else
     {
@@ -199,7 +199,7 @@ public class WFSClient
     {
       final String request = params.get( URL_PARAM_REQUEST );
       if( !OPERATION_GET_CAPABILITIES.equals( request ) )
-        throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.wfs.WFSClient.5", request )); //$NON-NLS-1$
+        throw new IllegalArgumentException( Messages.getString( "org.kalypso.ogc.wfs.WFSClient.5", request ) ); //$NON-NLS-1$
     }
     else
     {
@@ -330,7 +330,7 @@ public class WFSClient
     final WFSFeatureType featureType = getFeatureType( name );
     final URL describeUrl = findGetOperationURL( WFSClient.OPERATION_DESCRIBE_FEATURE_TYPE );
     if( describeUrl == null )
-      throw new IllegalStateException( Messages.getString("org.kalypso.ogc.wfs.WFSClient.6", WFSClient.OPERATION_DESCRIBE_FEATURE_TYPE )); //$NON-NLS-1$
+      throw new IllegalStateException( Messages.getString( "org.kalypso.ogc.wfs.WFSClient.6", WFSClient.OPERATION_DESCRIBE_FEATURE_TYPE ) ); //$NON-NLS-1$
 
     final QualifiedName qname = featureType.getName();
 
@@ -466,7 +466,7 @@ public class WFSClient
     final WFSFeatureType featureType = getFeatureType( name );
     final URL describeUrl = findGetOperationURL( WFSClient.OPERATION_DESCRIBE_FEATURE_TYPE );
     if( describeUrl == null )
-      throw new IllegalStateException( Messages.getString("org.kalypso.ogc.wfs.WFSClient.8") + WFSClient.OPERATION_DESCRIBE_FEATURE_TYPE ); //$NON-NLS-1$
+      throw new IllegalStateException( Messages.getString( "org.kalypso.ogc.wfs.WFSClient.8" ) + WFSClient.OPERATION_DESCRIBE_FEATURE_TYPE ); //$NON-NLS-1$
 
     final QualifiedName qname = featureType.getName();
 

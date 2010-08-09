@@ -74,7 +74,8 @@ class FeatureThemePainter implements IStylePainter
   }
 
   /**
-   * @see org.kalypso.ogc.gml.painter.IStylePainter#paint(org.kalypso.ogc.gml.IPaintDelegate, org.eclipse.core.runtime.IProgressMonitor)
+   * @see org.kalypso.ogc.gml.painter.IStylePainter#paint(org.kalypso.ogc.gml.IPaintDelegate,
+   *      org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
   public void paint( final IStylePaintable paintable, final IProgressMonitor monitor ) throws CoreException

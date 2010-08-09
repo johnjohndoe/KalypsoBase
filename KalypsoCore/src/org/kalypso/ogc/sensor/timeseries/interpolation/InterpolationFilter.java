@@ -79,13 +79,13 @@ public class InterpolationFilter extends AbstractObservationFilter
 
   private final Integer m_defaultStatus;
 
-  private boolean m_fillLastWithValid;
+  private final boolean m_fillLastWithValid;
 
   /**
    * Constructor.
    * 
    * @param calendarField
-   *          which field of the date will be used for steping through the timeserie
+   *          which field of the date will be used for stepping through the time series
    * @param amount
    *          amount of time for the step
    * @param forceFill
@@ -95,10 +95,9 @@ public class InterpolationFilter extends AbstractObservationFilter
    * @param defaultStatus
    *          value of the default status when base status is absent or when status-interpolation cannot be proceeded
    * @param fillLastWithValid
-   *          when true, the last tupples of the model get the last valid tupple from the original, not the default one
+   *          when true, the last tuples of the model get the last valid tuple from the original, not the default one
    */
-  public InterpolationFilter( final int calendarField, final int amount, final boolean forceFill,
-      final String defaultValue, final int defaultStatus, final boolean fillLastWithValid )
+  public InterpolationFilter( final int calendarField, final int amount, final boolean forceFill, final String defaultValue, final int defaultStatus, final boolean fillLastWithValid )
   {
     m_calField = calendarField;
     m_amount = amount;
@@ -108,8 +107,7 @@ public class InterpolationFilter extends AbstractObservationFilter
     m_defValue = defaultValue;
   }
 
-  public InterpolationFilter( final int calendarField, final int amount, final boolean forceFill,
-      final String defaultValue, final int defaultStatus )
+  public InterpolationFilter( final int calendarField, final int amount, final boolean forceFill, final String defaultValue, final int defaultStatus )
   {
     this( calendarField, amount, forceFill, defaultValue, defaultStatus, false );
   }
@@ -131,10 +129,7 @@ public class InterpolationFilter extends AbstractObservationFilter
     final ITupleModel values = ObservationUtilities.requestBuffered( getObservation(), dr, Calendar.DAY_OF_MONTH, 2 );
 
     final IAxis dateAxis = ObservationUtilities.findAxisByClass( values.getAxisList(), Date.class );
-    final IAxis[] valueAxes = ObservationUtilities.findAxesByClasses( values.getAxisList(), new Class[]
-    {
-        Number.class,
-        Boolean.class } );
+    final IAxis[] valueAxes = ObservationUtilities.findAxesByClasses( values.getAxisList(), new Class[] { Number.class, Boolean.class } );
     final Object[] defaultValues = parseDefaultValues( valueAxes );
 
     final SimpleTupleModel intModel = new SimpleTupleModel( values.getAxisList() );
@@ -153,7 +148,9 @@ public class InterpolationFilter extends AbstractObservationFilter
         cal.setTime( dr.getFrom() );
 
         while( cal.getTime().compareTo( dr.getTo() ) <= 0 )
+        {
           fillWithDefault( dateAxis, valueAxes, defaultValues, intModel, cal );
+        }
 
         return intModel;
       }
@@ -161,7 +158,7 @@ public class InterpolationFilter extends AbstractObservationFilter
 
     if( values.getCount() != 0 )
     {
-      final Date begin = (Date)values.getElement( 0, dateAxis );
+      final Date begin = (Date) values.getElement( 0, dateAxis );
 
       Date d1 = null;
       Date d2 = null;
@@ -178,7 +175,7 @@ public class InterpolationFilter extends AbstractObservationFilter
 
         for( int i = 0; i < valueAxes.length; i++ )
         {
-          final Number nb = (Number)values.getElement( startIx, valueAxes[i] );
+          final Number nb = (Number) values.getElement( startIx, valueAxes[i] );
           v1[intModel.getPositionFor( valueAxes[i] )] = nb.doubleValue();
         }
 
@@ -197,7 +194,7 @@ public class InterpolationFilter extends AbstractObservationFilter
 
         for( int i = 0; i < valueAxes.length; i++ )
         {
-          final Number nb = (Number)values.getElement( startIx, valueAxes[i] );
+          final Number nb = (Number) values.getElement( startIx, valueAxes[i] );
 
           final int pos = intModel.getPositionFor( valueAxes[i] );
           tupple[pos] = nb;
@@ -217,11 +214,11 @@ public class InterpolationFilter extends AbstractObservationFilter
 
       for( int ix = startIx; ix < values.getCount(); ix++ )
       {
-        d2 = (Date)values.getElement( ix, dateAxis );
+        d2 = (Date) values.getElement( ix, dateAxis );
 
         for( int ia = 0; ia < valueAxes.length; ia++ )
         {
-          final Number nb = (Number)values.getElement( ix, valueAxes[ia] );
+          final Number nb = (Number) values.getElement( ix, valueAxes[ia] );
           v2[intModel.getPositionFor( valueAxes[ia] )] = nb.doubleValue();
         }
 
@@ -246,12 +243,12 @@ public class InterpolationFilter extends AbstractObservationFilter
             {
               // BUGFIX: do not interpolate, if we have the exact date
               if( linearStart == ms )
-                tupple[pos] = new Integer( (int)valStart );
+                tupple[pos] = new Integer( (int) valStart );
               else if( linearStop == ms )
-                tupple[pos] = new Integer( (int)valStop );
+                tupple[pos] = new Integer( (int) valStop );
               else
                 // this is the status axis: no interpolation
-                tupple[pos] = new Integer( KalypsoStatusUtils.performInterpolation( (int)valStart, (int)valStop ) );
+                tupple[pos] = new Integer( KalypsoStatusUtils.performInterpolation( (int) valStart, (int) valStop ) );
             }
             else
             {
@@ -269,7 +266,7 @@ public class InterpolationFilter extends AbstractObservationFilter
                   tupple[pos] = new Double( eq.computeY( ms ) );
                 }
               }
-              catch( SameXValuesException e )
+              catch( final SameXValuesException e )
               {
                 tupple[pos] = new Double( valStart );
               }
@@ -308,7 +305,9 @@ public class InterpolationFilter extends AbstractObservationFilter
       }
 
       while( cal.getTime().compareTo( dr.getTo() ) <= 0 )
+      {
         fillWithDefault( dateAxis, valueAxes, defaultValues, intModel, cal, lastValidTupple );
+      }
     }
 
     return intModel;
@@ -325,7 +324,7 @@ public class InterpolationFilter extends AbstractObservationFilter
           defaultValues[i] = m_defaultStatus;
         else
         {
-          final IParser parser = ZmlFactory.createParser(valueAxes[i]);
+          final IParser parser = ZmlFactory.createParser( valueAxes[i] );
           defaultValues[i] = parser.parse( m_defValue );
         }
       }
@@ -340,8 +339,7 @@ public class InterpolationFilter extends AbstractObservationFilter
   /**
    * Fill the model with default values
    */
-  private void fillWithDefault( final IAxis dateAxis, final IAxis[] valueAxes, final Object[] defaultValues,
-      final SimpleTupleModel intModel, final Calendar cal ) throws SensorException
+  private void fillWithDefault( final IAxis dateAxis, final IAxis[] valueAxes, final Object[] defaultValues, final SimpleTupleModel intModel, final Calendar cal ) throws SensorException
   {
     fillWithDefault( dateAxis, valueAxes, defaultValues, intModel, cal, null );
   }
@@ -352,8 +350,7 @@ public class InterpolationFilter extends AbstractObservationFilter
    * @param masterTupple
    *          if not null, the values from this tupple are used instead of the default one
    */
-  private void fillWithDefault( final IAxis dateAxis, final IAxis[] valueAxes, final Object[] defaultValues,
-      final SimpleTupleModel intModel, final Calendar cal, Object[] masterTupple ) throws SensorException
+  private void fillWithDefault( final IAxis dateAxis, final IAxis[] valueAxes, final Object[] defaultValues, final SimpleTupleModel intModel, final Calendar cal, final Object[] masterTupple ) throws SensorException
   {
     final Object[] tupple;
 

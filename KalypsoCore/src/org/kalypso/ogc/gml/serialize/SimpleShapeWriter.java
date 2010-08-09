@@ -64,7 +64,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureFactory;
  */
 public class SimpleShapeWriter
 {
-  List<IValuePropertyType> typeHandlers = new ArrayList<IValuePropertyType>();
+  List<IValuePropertyType> m_typeHandlers = new ArrayList<IValuePropertyType>();
 
   private final File m_file;
 
@@ -76,7 +76,7 @@ public class SimpleShapeWriter
 
   private final IFeatureType m_shapeFT;
 
-  private int ROWS = 0;
+  private int m_rows = 0;
 
   /**
    * @param file
@@ -98,10 +98,10 @@ public class SimpleShapeWriter
     for( final QName property : properties )
     {
       final IMarshallingTypeHandler typeHandler = typeRegistry.getTypeHandlerForTypeName( property );
-      typeHandlers.add( GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", String.valueOf( count++ ) ), typeHandler, 1, 1, false ) ); //$NON-NLS-1$
+      m_typeHandlers.add( GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", String.valueOf( count++ ) ), typeHandler, 1, 1, false ) ); //$NON-NLS-1$
     }
 
-    m_shapeFT = GMLSchemaFactory.createFeatureType( shapeTypeQName, typeHandlers.toArray( new IPropertyType[] {} ) );
+    m_shapeFT = GMLSchemaFactory.createFeatureType( shapeTypeQName, m_typeHandlers.toArray( new IPropertyType[] {} ) );
 
     m_shapeRootFeature = ShapeSerializer.createWorkspaceRootFeature( m_shapeFT, ShapeConst.SHAPE_TYPE_POINT );
     m_workspace = m_shapeRootFeature.getWorkspace();
@@ -114,7 +114,7 @@ public class SimpleShapeWriter
    */
   public void add( final Object... objects ) throws Exception
   {
-    final Feature feature = FeatureFactory.createFeature( m_shapeRootFeature, m_shapeParentRelation, "FeatureID" + ++ROWS, m_shapeFT, objects ); //$NON-NLS-1$
+    final Feature feature = FeatureFactory.createFeature( m_shapeRootFeature, m_shapeParentRelation, "FeatureID" + ++m_rows, m_shapeFT, objects ); //$NON-NLS-1$
     m_workspace.addFeatureAsComposition( m_shapeRootFeature, m_shapeParentRelation, -1, feature );
   }
 

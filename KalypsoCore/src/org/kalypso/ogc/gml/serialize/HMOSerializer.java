@@ -48,32 +48,33 @@ import org.kalypso.core.i18n.Messages;
 
 /**
  * @author felipe maximino
- *
  */
 public class HMOSerializer
-{  
+{
   private Formatter m_formatter;
-  private File m_hmoFile;
-  
-  public HMOSerializer( File hmoFile ) throws GmlSerializeException 
+
+  private final File m_hmoFile;
+
+  public HMOSerializer( final File hmoFile ) throws GmlSerializeException
   {
     m_hmoFile = hmoFile;
     init();
   }
-  
-  public void init() throws GmlSerializeException
+
+  public void init( ) throws GmlSerializeException
   {
-    if(m_hmoFile.exists())
+    if( m_hmoFile.exists() )
     {
       m_hmoFile.delete();
     }
-    
+
     m_formatter = null;
     try
     {
       m_formatter = new Formatter( m_hmoFile );
     }
-    catch (FileNotFoundException e) {
+    catch( final FileNotFoundException e )
+    {
       if( m_formatter != null )
       {
         finish();
@@ -81,21 +82,20 @@ public class HMOSerializer
       throw new GmlSerializeException( Messages.getString( "org.kalypso.ogc.gml.serialize.HMOSerializer.15" ) + e.getMessage(), e ); //$NON-NLS-1$
     }
   }
-  
-  public void formatPoint ( int id, double x, double y, double z)
+
+  public void formatPoint( final int id, final double x, final double y, final double z )
   {
     m_formatter.format( "P:%10d%20.7f%20.7f%20.7f%n", id, x, y, z );
   }
-  
-  public void finish()
-  { 
+
+  public void finish( )
+  {
     m_formatter.flush();
     m_formatter.close();
   }
 
-
-  public void formatTriangle( int i, int nodeID1, int nodeID2, int nodeID3 )
+  public void formatTriangle( final int i, final int nodeID1, final int nodeID2, final int nodeID3 )
   {
-    m_formatter.format( "D:%10d%10d%10d%10d%n", i, nodeID1, nodeID2, nodeID3 );    
+    m_formatter.format( "D:%10d%10d%10d%10d%n", i, nodeID1, nodeID2, nodeID3 );
   }
 }

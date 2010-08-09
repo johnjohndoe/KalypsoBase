@@ -67,7 +67,7 @@ import org.kalypso.ogc.sensor.zml.ZmlFactory;
  * 
  * @author schlienger
  */
-public class ObservationUtilities
+public final class ObservationUtilities
 {
   private static final String MSG_ERROR_NOAXISTYPE = "Keine Achse gefunden vom Typ:"; //$NON-NLS-1$
 

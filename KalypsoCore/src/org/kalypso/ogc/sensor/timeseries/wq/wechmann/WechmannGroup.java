@@ -92,7 +92,7 @@ public class WechmannGroup implements IWQConverter
       i = -i - 2;
 
     if( i < 0 )
-      throw new WQException( Messages.getString("org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannGroup.0") ); //$NON-NLS-1$
+      throw new WQException( Messages.getString( "org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannGroup.0" ) ); //$NON-NLS-1$
 
     return m_map.get( dates[i] );
   }
@@ -101,7 +101,7 @@ public class WechmannGroup implements IWQConverter
    * @see org.kalypso.ogc.sensor.timeseries.wq.IWQConverter#computeW(java.util.Date, double)
    */
   @Override
-  public double computeW( Date date, double Q ) throws WQException
+  public double computeW( final Date date, final double Q ) throws WQException
   {
     final WechmannParams params = getFor( date ).getForQ( Q );
     return WechmannFunction.computeW( params, Q );
@@ -109,15 +109,16 @@ public class WechmannGroup implements IWQConverter
 
   /**
    * Returns 0.0, if W is too big for current validity
+   * 
    * @see org.kalypso.ogc.sensor.timeseries.wq.IWQConverter#computeQ(java.util.Date, double)
    */
   @Override
-  public double computeQ( Date date, double W ) throws WQException
+  public double computeQ( final Date date, final double W ) throws WQException
   {
     final WechmannParams params = getFor( date ).getForW( W );
     if( params == null )
       return 0.0;
-    
+
     return WechmannFunction.computeQ( params, W );
   }
 
@@ -125,7 +126,7 @@ public class WechmannGroup implements IWQConverter
    * @see org.kalypso.ogc.sensor.timeseries.wq.IWQConverter#getFromType()
    */
   @Override
-  public String getFromType()
+  public String getFromType( )
   {
     // HARDCODED: Wechman always converts from W to Q?
     return ITimeserieConstants.TYPE_WATERLEVEL;
@@ -135,7 +136,7 @@ public class WechmannGroup implements IWQConverter
    * @see org.kalypso.ogc.sensor.timeseries.wq.IWQConverter#getToType()
    */
   @Override
-  public String getToType()
+  public String getToType( )
   {
     // HARDCODED: Wechman always converts from W to Q?
     return ITimeserieConstants.TYPE_RUNOFF;

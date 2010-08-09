@@ -47,5 +47,5 @@ import org.kalypso.ogc.gml.IKalypsoTheme;
  */
 public interface IKalypsoThemePredicate
 {
-  public boolean decide( final IKalypsoTheme theme );
+  boolean decide( final IKalypsoTheme theme );
 }

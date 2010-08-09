@@ -46,9 +46,8 @@ import org.kalypsodeegree.model.typeHandler.XsdBaseTypeHandler;
  * Implementation-class of extensions of the extension-point org.kalypso.core.componentHandler.
  * 
  * @author Gernot Belger
- *
  */
 public interface IComponentHandler
 {
-  public XsdBaseTypeHandler getTypeHandler( );
+  XsdBaseTypeHandler getTypeHandler( );
 }

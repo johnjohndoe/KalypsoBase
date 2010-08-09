@@ -92,7 +92,7 @@ public final class ShapeSerializer
 
   private static final QName PROPERTY_NAME = new QName( SHP_NAMESPACE_URI, "name" ); //$NON-NLS-1$
 
-  private static final QName PROPERTY_TYPE = new QName( SHP_NAMESPACE_URI, "type" ); //$NON-NLS-1$
+  private static final QName PROPERTY_TYPE = new QName( SHP_NAMESPACE_URI, "type" ); //$NON-NLS-1$ 
 
   public static final String PROPERTY_GEOM = "GEOM";//$NON-NLS-1$
 
@@ -137,7 +137,7 @@ public final class ShapeSerializer
     }
   }
 
-  public final static Feature createWorkspaceRootFeature( final IFeatureType featureType, final int shapeFileType )
+  public static Feature createWorkspaceRootFeature( final IFeatureType featureType, final int shapeFileType )
   {
     final IGMLSchema schema = featureType.getGMLSchema();
     final IFeatureType[] featureTypes = schema.getAllFeatureTypes();
@@ -178,12 +178,12 @@ public final class ShapeSerializer
   /**
    * Same as {@link #deserialize(String, String, new NullProgressMonitor())}
    */
-  public final static GMLWorkspace deserialize( final String fileBase, final String sourceCrs ) throws GmlSerializeException
+  public static GMLWorkspace deserialize( final String fileBase, final String sourceCrs ) throws GmlSerializeException
   {
     return deserialize( fileBase, sourceCrs, new NullProgressMonitor() );
   }
 
-  public final static GMLWorkspace deserialize( final String fileBase, final String sourceCrs, final IProgressMonitor monitor ) throws GmlSerializeException
+  public static GMLWorkspace deserialize( final String fileBase, final String sourceCrs, final IProgressMonitor monitor ) throws GmlSerializeException
   {
     final Charset charset = getShapeDefaultCharset();
     return deserialize( fileBase, sourceCrs, charset, monitor );
@@ -206,7 +206,7 @@ public final class ShapeSerializer
     return Charset.defaultCharset();
   }
 
-  public final static GMLWorkspace deserialize( final String fileBase, final String sourceCrs, final Charset charset, final IProgressMonitor monitor ) throws GmlSerializeException
+  public static GMLWorkspace deserialize( final String fileBase, final String sourceCrs, final Charset charset, final IProgressMonitor monitor ) throws GmlSerializeException
   {
     final String taskName = Messages.getString( "org.kalypso.ogc.gml.serialize.ShapeSerializer.2", fileBase ); //$NON-NLS-1$
     final SubMonitor moni = SubMonitor.convert( monitor, taskName, 100 );
