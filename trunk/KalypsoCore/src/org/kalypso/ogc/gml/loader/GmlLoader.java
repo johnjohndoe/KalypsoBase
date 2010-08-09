@@ -82,7 +82,7 @@ import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
 
 /**
  * Lädt einen GMLWorkspace aus einem GML
- *
+ * 
  * @author Belger
  */
 public class GmlLoader extends WorkspaceLoader
@@ -129,14 +129,14 @@ public class GmlLoader extends WorkspaceLoader
       }
 
       /* Adapting if necessary */
-      moni.subTask( Messages.getString("org.kalypso.ogc.gml.loader.GmlLoader.0") ); //$NON-NLS-1$
+      moni.subTask( Messages.getString( "org.kalypso.ogc.gml.loader.GmlLoader.0" ) ); //$NON-NLS-1$
       final IResource gmlFile = getResources( key )[0];
       final GMLWorkspace adaptedWorkspace = adaptWorkspace( key, moni.newChild( 80 ), resultList, gmlWorkspace, gmlFile );
 
       /* Hook for Loader stuff */
       final CommandableWorkspace workspace = new CommandableWorkspace( adaptedWorkspace );
 
-      setStatus( StatusUtilities.createStatus( resultList, Messages.getString( "org.kalypso.ogc.gml.loader.GmlLoader.9" , gmlURL.toExternalForm() ) ) ); //$NON-NLS-1$
+      setStatus( StatusUtilities.createStatus( resultList, Messages.getString( "org.kalypso.ogc.gml.loader.GmlLoader.9", gmlURL.toExternalForm() ) ) ); //$NON-NLS-1$
 
       ProgressUtilities.done( moni );
 
@@ -220,7 +220,7 @@ public class GmlLoader extends WorkspaceLoader
     {
       try
       {
-        resultList.add( StatusUtilities.createInfoStatus(Messages.getString( "org.kalypso.ogc.gml.loader.GmlLoader.13" , gmlFile.getName(), currentTry.toOSString() ) ) ); //$NON-NLS-1$
+        resultList.add( StatusUtilities.createInfoStatus( Messages.getString( "org.kalypso.ogc.gml.loader.GmlLoader.13", gmlFile.getName(), currentTry.toOSString() ) ) ); //$NON-NLS-1$
         gmlFile.copy( currentTry, false, monitor );
       }
       catch( final CoreException e )
@@ -284,7 +284,8 @@ public class GmlLoader extends WorkspaceLoader
   private void saveWorkspaceToFile( final GMLWorkspace workspace, final IFile file ) throws CoreException
   {
     // FIXME: this is not robust enough against problems when saving (data loss possible).
-    // Possible solution: always write to temporary file (next to real file); after that rename to real file and refresh local.
+    // Possible solution: always write to temporary file (next to real file); after that rename to real file and refresh
+// local.
     // However we have to check if that works in a robust way.
     final SetContentHelper thread = new SetContentHelper()
     {

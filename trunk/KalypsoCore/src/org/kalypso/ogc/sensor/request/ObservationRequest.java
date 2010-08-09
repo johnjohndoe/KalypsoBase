@@ -55,7 +55,7 @@ import org.kalypso.zml.request.Request;
  */
 public class ObservationRequest implements IRequest
 {
-  private final static String[] EMPTY_STRING_ARRAY = new String[0];
+  private static final String[] EMPTY_STRING_ARRAY = new String[0];
 
   private final DateRange m_dateRange;
 
@@ -65,7 +65,7 @@ public class ObservationRequest implements IRequest
 
   private final String[] m_axisTypesWithStatus;
 
-  public ObservationRequest()
+  public ObservationRequest( )
   {
     this( null );
   }
@@ -85,8 +85,7 @@ public class ObservationRequest implements IRequest
     this( null, name, axisTypes, axisTypesWithStatus );
   }
 
-  public ObservationRequest( final DateRange dr, final String name, final String[] axisTypes,
-      final String[] axisTypesWithStatus )
+  public ObservationRequest( final DateRange dr, final String name, final String[] axisTypes, final String[] axisTypesWithStatus )
   {
     m_dateRange = dr;
     m_name = name;
@@ -98,7 +97,7 @@ public class ObservationRequest implements IRequest
    * @see org.kalypso.ogc.sensor.request.IRequest#getDateRange()
    */
   @Override
-  public DateRange getDateRange()
+  public DateRange getDateRange( )
   {
     return m_dateRange;
   }
@@ -107,7 +106,7 @@ public class ObservationRequest implements IRequest
    * @see org.kalypso.ogc.sensor.request.IRequest#getName()
    */
   @Override
-  public String getName()
+  public String getName( )
   {
     return m_name;
   }
@@ -116,7 +115,7 @@ public class ObservationRequest implements IRequest
    * @see org.kalypso.ogc.sensor.request.IRequest#getAxisTypes()
    */
   @Override
-  public String[] getAxisTypes()
+  public String[] getAxisTypes( )
   {
     return m_axisTypes;
   }
@@ -125,7 +124,7 @@ public class ObservationRequest implements IRequest
    * @see org.kalypso.ogc.sensor.request.IRequest#getAxisTypesWithStatus()
    */
   @Override
-  public String[] getAxisTypesWithStatus()
+  public String[] getAxisTypesWithStatus( )
   {
     return m_axisTypesWithStatus;
   }
@@ -134,21 +133,21 @@ public class ObservationRequest implements IRequest
    * @see org.kalypso.ogc.sensor.request.IRequest#toString()
    */
   @Override
-  public String toString()
+  public String toString( )
   {
     final StringBuffer bf = new StringBuffer();
 
     if( m_dateRange != null )
-      bf.append( Messages.getString("org.kalypso.ogc.sensor.request.ObservationRequest.0") ).append( m_dateRange.toString() ).append( "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
+      bf.append( Messages.getString( "org.kalypso.ogc.sensor.request.ObservationRequest.0" ) ).append( m_dateRange.toString() ).append( "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
 
     if( m_name != null )
-      bf.append( Messages.getString("org.kalypso.ogc.sensor.request.ObservationRequest.2") ).append( m_name ).append( "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
+      bf.append( Messages.getString( "org.kalypso.ogc.sensor.request.ObservationRequest.2" ) ).append( m_name ).append( "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
 
     if( m_axisTypes.length > 0 )
-      bf.append( Messages.getString("org.kalypso.ogc.sensor.request.ObservationRequest.4") ).append( StringUtils.join( m_axisTypes, ',') ).append( "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
+      bf.append( Messages.getString( "org.kalypso.ogc.sensor.request.ObservationRequest.4" ) ).append( StringUtils.join( m_axisTypes, ',' ) ).append( "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
 
     if( m_axisTypesWithStatus.length > 0 )
-      bf.append( Messages.getString("org.kalypso.ogc.sensor.request.ObservationRequest.6") ).append( StringUtils.join( m_axisTypesWithStatus, ',') ).append( "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
+      bf.append( Messages.getString( "org.kalypso.ogc.sensor.request.ObservationRequest.6" ) ).append( StringUtils.join( m_axisTypesWithStatus, ',' ) ).append( "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
 
     return bf.toString();
   }
@@ -178,8 +177,8 @@ public class ObservationRequest implements IRequest
     else
       axisTypesWithStatus = StringUtils.split( requestType.getStatusAxes(), ',' );
 
-    final String name = requestType.getName() != null ? requestType.getName() : Messages.getString("org.kalypso.ogc.sensor.request.ObservationRequest.8"); //$NON-NLS-1$
-    
+    final String name = requestType.getName() != null ? requestType.getName() : Messages.getString( "org.kalypso.ogc.sensor.request.ObservationRequest.8" ); //$NON-NLS-1$
+
     return new ObservationRequest( dr, name, axisTypes, axisTypesWithStatus );
   }
 }

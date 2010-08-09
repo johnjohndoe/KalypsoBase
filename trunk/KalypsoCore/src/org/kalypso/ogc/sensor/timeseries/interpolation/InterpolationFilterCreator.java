@@ -62,23 +62,21 @@ import org.kalypso.zml.filters.InterpolationFilterType;
 public class InterpolationFilterCreator implements IFilterCreator
 {
   @Override
-  public IObservationFilter createFilter( AbstractFilterType aft, IObservation baseObs, final URL context )
-      throws SensorException
+  public IObservationFilter createFilter( final AbstractFilterType aft, final IObservation baseObs, final URL context ) throws SensorException
   {
-    if( !( aft instanceof InterpolationFilterType ) )
-      throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.sensor.timeseries.interpolation.InterpolationFilterCreator.0") + InterpolationFilterType.class.getName() ); //$NON-NLS-1$
+    if( !(aft instanceof InterpolationFilterType) )
+      throw new IllegalArgumentException( Messages.getString( "org.kalypso.ogc.sensor.timeseries.interpolation.InterpolationFilterCreator.0" ) + InterpolationFilterType.class.getName() ); //$NON-NLS-1$
 
-    final InterpolationFilterType ft = (InterpolationFilterType)aft;
+    final InterpolationFilterType ft = (InterpolationFilterType) aft;
 
     final JAXBElement< ? extends AbstractFilterType> innerFilter = ft.getFilter();
     final AbstractFilterType innerFilterValue = innerFilter == null ? null : innerFilter.getValue();
-    
+
     final IObservation filteredObs = FilterCreatorHelper.resolveFilter( innerFilterValue, baseObs, context );
 
     final String defaultValue = ft.getDefaultValue();
-    
-    final InterpolationFilter filter = new InterpolationFilter( CalendarUtilities.getCalendarField( ft
-        .getCalendarField() ), ft.getAmount(), ft.isForceFill(), defaultValue, ft.getDefaultStatus(), ft.isFillLastWithValid() );
+
+    final InterpolationFilter filter = new InterpolationFilter( CalendarUtilities.getCalendarField( ft.getCalendarField() ), ft.getAmount(), ft.isForceFill(), defaultValue, ft.getDefaultStatus(), ft.isFillLastWithValid() );
     filter.initFilter( null, filteredObs, context );
 
     return filter;

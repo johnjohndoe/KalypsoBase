@@ -32,7 +32,7 @@ public class GmlSourceHandler implements ISourceHandler
    * @see org.kalypso.ogc.gml.convert.source.ISourceHandler#getWorkspace()
    */
   @Override
-  public GMLWorkspace getWorkspace() throws GmlConvertException
+  public GMLWorkspace getWorkspace( ) throws GmlConvertException
   {
     try
     {
@@ -41,7 +41,7 @@ public class GmlSourceHandler implements ISourceHandler
     }
     catch( final Exception e )
     {
-      throw new GmlConvertException( Messages.getString("org.kalypso.ogc.gml.convert.source.GmlSourceHandler.0") + m_href, e ); //$NON-NLS-1$
+      throw new GmlConvertException( Messages.getString( "org.kalypso.ogc.gml.convert.source.GmlSourceHandler.0" ) + m_href, e ); //$NON-NLS-1$
     }
   }
 

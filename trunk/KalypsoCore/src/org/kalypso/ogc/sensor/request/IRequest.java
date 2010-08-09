@@ -49,14 +49,14 @@ import org.kalypso.ogc.sensor.DateRange;
  */
 public interface IRequest
 {
-  public DateRange getDateRange();
+  DateRange getDateRange( );
 
-  public String getName();
+  String getName( );
 
-  public String[] getAxisTypes();
+  String[] getAxisTypes( );
 
-  public String[] getAxisTypesWithStatus();
-  
+  String[] getAxisTypesWithStatus( );
+
   @Override
-  public String toString();
+  String toString( );
 }

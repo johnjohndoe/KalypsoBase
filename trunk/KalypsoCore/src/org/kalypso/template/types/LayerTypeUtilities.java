@@ -53,7 +53,7 @@ import org.kalypso.core.i18n.Messages;
  * 
  * @author bce
  */
-@SuppressWarnings("restriction") //$NON-NLS-1$
+@SuppressWarnings("restriction")//$NON-NLS-1$
 public class LayerTypeUtilities
 {
   public static void initLayerType( final LayerType layer, final IFile file ) throws CoreException
@@ -77,7 +77,7 @@ public class LayerTypeUtilities
       href = projectURL + projectRelativePath.removeFileExtension();
     }
     else
-      throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.template.types.LayerTypeUtilities.8") + fileext ) ); //$NON-NLS-1$
+      throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.template.types.LayerTypeUtilities.8" ) + fileext ) ); //$NON-NLS-1$
 
     layer.setId( file.getName() );
     layer.setFeaturePath( "" ); //$NON-NLS-1$

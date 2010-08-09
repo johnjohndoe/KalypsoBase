@@ -61,7 +61,7 @@ public class HeadlessVirtualRepositoryFactory extends AbstractRepositoryFactory
    * @see org.kalypso.repository.factory.IRepositoryFactory#configureRepository()
    */
   @Override
-  public boolean configureRepository()
+  public boolean configureRepository( )
   {
     return true;
   }
@@ -72,10 +72,10 @@ public class HeadlessVirtualRepositoryFactory extends AbstractRepositoryFactory
    * @see org.kalypso.repository.factory.IRepositoryFactory#createRepository()
    */
   @Override
-  public IRepository createRepository() throws RepositoryException
+  public IRepository createRepository( ) throws RepositoryException
   {
     if( getConfiguration() == null )
-      throw new RepositoryException( Messages.getString("org.kalypso.repository.virtual.HeadlessVirtualRepositoryFactory.0") ); //$NON-NLS-1$
+      throw new RepositoryException( Messages.getString( "org.kalypso.repository.virtual.HeadlessVirtualRepositoryFactory.0" ) ); //$NON-NLS-1$
 
     return new VirtualRepository( getClass().getName(), getRepositoryName(), getConfiguration(), isReadOnly(), isCached() );
   }

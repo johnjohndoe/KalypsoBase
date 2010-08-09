@@ -103,6 +103,6 @@ public class ChangeExtentCommand implements ICommand
   @Override
   public String getDescription( )
   {
-    return Messages.getString("org.kalypso.ogc.gml.command.ChangeExtentCommand.0"); //$NON-NLS-1$
+    return Messages.getString( "org.kalypso.ogc.gml.command.ChangeExtentCommand.0" ); //$NON-NLS-1$
   }
 }

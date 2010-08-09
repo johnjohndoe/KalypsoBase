@@ -80,7 +80,7 @@ public abstract class AbstractValueComp implements IValueComp
    * @see org.kalypso.ogc.sensor.filter.filters.valuecomp.IValueComp#getAxis()
    */
   @Override
-  public IAxis getAxis()
+  public IAxis getAxis( )
   {
     return m_axis;
   }
@@ -89,13 +89,13 @@ public abstract class AbstractValueComp implements IValueComp
    * @see org.kalypso.ogc.sensor.filter.filters.valuecomp.IValueComp#validates(java.lang.Object)
    */
   @Override
-  public boolean validates( Object element )
+  public boolean validates( final Object element )
   {
     try
     {
       return internalValidates( element );
     }
-    catch( ParserException e )
+    catch( final ParserException e )
     {
       e.printStackTrace();
 
@@ -107,7 +107,6 @@ public abstract class AbstractValueComp implements IValueComp
    * @param element
    * @return true if comparison validates
    * @throws ParserException
-   * 
    * @see org.kalypso.ogc.sensor.filter.filters.valuecomp.IValueComp#validates(java.lang.Object)
    */
   protected abstract boolean internalValidates( Object element ) throws ParserException;

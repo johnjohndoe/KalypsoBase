@@ -59,7 +59,7 @@ public class FilterFactoryTest extends TestCase
   private InputStream m_ins;
 
   @Override
-  protected void setUp() throws Exception
+  protected void setUp( ) throws Exception
   {
     super.setUp();
 
@@ -73,9 +73,9 @@ public class FilterFactoryTest extends TestCase
     m_ins.close();
   }
 
-  public void testCreateFilter() throws SensorException
+  public void testCreateFilter( ) throws SensorException
   {
-    IObservation obs = FilterFactory.createFilter( m_ins, getClass().getResource("filter.xml") ); //$NON-NLS-1$
+    final IObservation obs = FilterFactory.createFilter( m_ins, getClass().getResource( "filter.xml" ) ); //$NON-NLS-1$
     assertTrue( obs instanceof DataHoleFilter );
   }
 }

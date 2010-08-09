@@ -8,5 +8,5 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public interface ISourceHandler
 {
-  public GMLWorkspace getWorkspace() throws GmlConvertException;
+  GMLWorkspace getWorkspace( ) throws GmlConvertException;
 }

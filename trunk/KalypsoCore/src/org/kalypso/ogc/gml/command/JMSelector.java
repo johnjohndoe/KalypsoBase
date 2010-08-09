@@ -135,8 +135,8 @@ public class JMSelector
       catch( final Exception err )
       {
         System.out.println( err.getMessage() );
-        System.out.println( Messages.getString("org.kalypso.ogc.gml.command.JMSelector.0") ); //$NON-NLS-1$
-        System.out.println( Messages.getString("org.kalypso.ogc.gml.command.JMSelector.1") ); //$NON-NLS-1$
+        System.out.println( Messages.getString( "org.kalypso.ogc.gml.command.JMSelector.0" ) ); //$NON-NLS-1$
+        System.out.println( Messages.getString( "org.kalypso.ogc.gml.command.JMSelector.1" ) ); //$NON-NLS-1$
         resultList.addAll( select( position, 0.0001d, list, false ) );
       }
     }

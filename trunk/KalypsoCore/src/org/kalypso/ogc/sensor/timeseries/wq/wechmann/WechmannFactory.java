@@ -81,7 +81,6 @@ import org.xml.sax.InputSource;
  *      			...
  *      		&lt;/set&gt;
  * </pre>
- * 
  * <p>
  * The attribute validity is optional, if no attribute is provided, it takes the minimum Date that is delivered by the
  * <code>DateUtilities.getMinimum()</code> method.
@@ -90,9 +89,9 @@ import org.xml.sax.InputSource;
  */
 public class WechmannFactory
 {
-  private final static org.kalypso.wechmann.ObjectFactory OF_WECHMANN = new org.kalypso.wechmann.ObjectFactory();
+  private static final org.kalypso.wechmann.ObjectFactory OF_WECHMANN = new org.kalypso.wechmann.ObjectFactory();
 
-  private final static JAXBContext JC_WECHMANN = JaxbUtilities.createQuiet( org.kalypso.wechmann.ObjectFactory.class );
+  private static final JAXBContext JC_WECHMANN = JaxbUtilities.createQuiet( org.kalypso.wechmann.ObjectFactory.class );
 
   private WechmannFactory( )
   {
@@ -114,7 +113,7 @@ public class WechmannFactory
       final Wechmann wm = (Wechmann) unm.unmarshal( ins );
       final WechmannSet[] sets = new WechmannSet[wm.getSet().size()];
       int i = 0;
-      for( Iterator<XMLWechmannSet> it = wm.getSet().iterator(); it.hasNext(); )
+      for( final Iterator<XMLWechmannSet> it = wm.getSet().iterator(); it.hasNext(); )
       {
         final XMLWechmannSet wset = it.next();
         final WechmannParams[] wparams = new WechmannParams[wset.getParams().size()];
@@ -145,7 +144,7 @@ public class WechmannFactory
       }
       return new WechmannGroup( sets );
     }
-    catch( Exception e ) // generic exception caught for simplicity
+    catch( final Exception e ) // generic exception caught for simplicity
     {
       throw new WQException( e );
     }
@@ -194,7 +193,7 @@ public class WechmannFactory
       marshaller.marshal( wt, writer );
       return writer.toString();
     }
-    catch( JAXBException e )
+    catch( final JAXBException e )
     {
       throw new WQException( e );
     }

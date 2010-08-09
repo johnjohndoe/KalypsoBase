@@ -41,8 +41,7 @@ public class FeaturemappingSourceHandler implements ISourceHandler
 
   private final Map< ? , ? > m_externData;
 
-  public FeaturemappingSourceHandler( final IUrlResolver resolver, final URL context,
-      final FeaturemappingSourceType source, final Map< ? , ? > externData )
+  public FeaturemappingSourceHandler( final IUrlResolver resolver, final URL context, final FeaturemappingSourceType source, final Map< ? , ? > externData )
   {
     m_resolver = resolver;
     m_context = context;
@@ -55,18 +54,16 @@ public class FeaturemappingSourceHandler implements ISourceHandler
    * @see org.kalypso.ogc.gml.convert.source.ISourceHandler#getWorkspace()
    */
   @Override
-  public GMLWorkspace getWorkspace() throws GmlConvertException
+  public GMLWorkspace getWorkspace( ) throws GmlConvertException
   {
-    final List<JAXBElement<? extends SourceType>> sourceList = m_source.getSource();
+    final List<JAXBElement< ? extends SourceType>> sourceList = m_source.getSource();
 
     // XSD schreibt vor, dass es genau 2 sources gibt
     Assert.isTrue( sourceList.size() == 2 );
-    final GMLWorkspace firstGML = GmlConvertFactory.loadSource( m_resolver, m_context, sourceList.get( 0 ).getValue(),
-        m_externData );
-    final GMLWorkspace secondGML = GmlConvertFactory.loadSource( m_resolver, m_context, sourceList.get( 1 ).getValue(),
-        m_externData );
+    final GMLWorkspace firstGML = GmlConvertFactory.loadSource( m_resolver, m_context, sourceList.get( 0 ).getValue(), m_externData );
+    final GMLWorkspace secondGML = GmlConvertFactory.loadSource( m_resolver, m_context, sourceList.get( 1 ).getValue(), m_externData );
 
-    final List<JAXBElement<? extends MappingType>> mappingList = m_source.getMapping();
+    final List<JAXBElement< ? extends MappingType>> mappingList = m_source.getMapping();
     for( final JAXBElement< ? extends MappingType> name : mappingList )
     {
       final MappingType mapping = name.getValue();
@@ -100,7 +97,7 @@ public class FeaturemappingSourceHandler implements ISourceHandler
       final Object anyType = mapping.getFilter();
       if( anyType == null )
         return null;
-      
+
       return AbstractFilter.buildFromAnyType( anyType );
     }
     catch( final FilterConstructionException e )
@@ -118,27 +115,23 @@ public class FeaturemappingSourceHandler implements ISourceHandler
     return properties;
   }
 
-  private FeatureVisitor createVisitorAndFilter( final MappingType mapping, final FeatureList toFeatures,
-      final IFeatureType toFeatureType, final String fromID, final String toID, final Properties properties )
-  throws GmlConvertException
+  private FeatureVisitor createVisitorAndFilter( final MappingType mapping, final FeatureList toFeatures, final IFeatureType toFeatureType, final String fromID, final String toID, final Properties properties ) throws GmlConvertException
   {
     final Filter filter = readFilter( mapping );
-    
+
     final FeatureVisitor visitor = createVisitor( mapping, toFeatures, toFeatureType, fromID, toID, properties );
-    
+
     if( filter == null )
-        return visitor;
-    
+      return visitor;
+
     return new FilteredFeatureVisitor( visitor, filter );
   }
 
-  private FeatureVisitor createVisitor( final MappingType mapping, final FeatureList toFeatures,
-      final IFeatureType toFeatureType, final String fromID, final String toID, final Properties properties )
-      throws GmlConvertException
+  private FeatureVisitor createVisitor( final MappingType mapping, final FeatureList toFeatures, final IFeatureType toFeatureType, final String fromID, final String toID, final Properties properties ) throws GmlConvertException
   {
     if( mapping instanceof AddFeaturesMappingType )
     {
-      final AddFeaturesMappingType addType = (AddFeaturesMappingType)mapping;
+      final AddFeaturesMappingType addType = (AddFeaturesMappingType) mapping;
       final String handleExisting = addType.getHandleExisting().value();
       final String fID = addType.getFid();
       final String targetFeatureType = addType.getTargetFeatureType();
@@ -147,15 +140,15 @@ public class FeaturemappingSourceHandler implements ISourceHandler
     else if( mapping instanceof ChangeFeaturesMappingType )
       return new ChangeFeaturesFromFeaturelist( toFeatures, properties, fromID, toID );
     else
-      throw new GmlConvertException( Messages.getString("org.kalypso.ogc.gml.convert.source.FeaturemappingSourceHandler.0") + mapping.getClass().getName() ); //$NON-NLS-1$
+      throw new GmlConvertException( Messages.getString( "org.kalypso.ogc.gml.convert.source.FeaturemappingSourceHandler.0" ) + mapping.getClass().getName() ); //$NON-NLS-1$
   }
 
   private FeatureList getFeatureList( final GMLWorkspace workspace, final String path ) throws GmlConvertException
   {
     final Object featureFromPath = workspace.getFeatureFromPath( path );
     if( featureFromPath instanceof FeatureList )
-      return (FeatureList)featureFromPath;
+      return (FeatureList) featureFromPath;
 
-    throw new GmlConvertException( Messages.getString("org.kalypso.ogc.gml.convert.source.FeaturemappingSourceHandler.1") + path ); //$NON-NLS-1$
+    throw new GmlConvertException( Messages.getString( "org.kalypso.ogc.gml.convert.source.FeaturemappingSourceHandler.1" ) + path ); //$NON-NLS-1$
   }
 }

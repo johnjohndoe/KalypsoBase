@@ -48,5 +48,5 @@ import org.eclipse.core.runtime.IProgressMonitor;
  */
 public interface IKalypsoSaveableTheme
 {
-  public void saveFeatures( final IProgressMonitor monitor ) throws CoreException;
+  void saveFeatures( final IProgressMonitor monitor ) throws CoreException;
 }

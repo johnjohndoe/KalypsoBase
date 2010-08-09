@@ -63,7 +63,7 @@ import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 /**
  * @author doemming
  */
-public class IntervallTupplemodel extends AbstractTupleModel
+public class IntervallTuplemodel extends AbstractTupleModel
 {
   private static final int TODO_NOTHING = 0;
 
@@ -97,7 +97,7 @@ public class IntervallTupplemodel extends AbstractTupleModel
 
   private final int m_defaultStatus;
 
-  public IntervallTupplemodel( final int mode, final int calendarField, final int amount, final int startCalendarValue, final String startCalendarField, final ITupleModel srcModel, final Date from, final Date to, final double defaultValue, final int defaultStatus ) throws SensorException
+  public IntervallTuplemodel( final int mode, final int calendarField, final int amount, final int startCalendarValue, final String startCalendarField, final ITupleModel srcModel, final Date from, final Date to, final double defaultValue, final int defaultStatus ) throws SensorException
   {
     super( srcModel.getAxisList() );
     m_mode = mode;
@@ -185,10 +185,10 @@ public class IntervallTupplemodel extends AbstractTupleModel
     // create empty model
     final IAxis[] axisList = getAxisList();
     final CalendarIterator iterator = new CalendarIterator( m_from, m_to, m_calendarField, m_amount );
-    int stepCount = iterator.size();
+    final int stepCount = iterator.size();
 
-    Assert.isTrue( stepCount > 0 , String.format( "Empty intervall tuple model. Check from (%s)/to(%s).", m_from, m_to ) );
-    
+    Assert.isTrue( stepCount > 0, String.format( "Empty intervall tuple model. Check from (%s)/to(%s).", m_from, m_to ) );
+
     final int rows = stepCount - 1;
     final ITupleModel intervallModel = createTuppleModell( axisList, rows );
 
@@ -211,7 +211,7 @@ public class IntervallTupplemodel extends AbstractTupleModel
       newStatus[i] = KalypsoStati.BIT_OK;
 
     // initialize target
-    Calendar targetCal_last = iterator.next(); // TODO hasnext ?
+    Calendar lastTargetCalendar = iterator.next(); // TODO hasnext ?
     int targetRow = 0;
     Intervall targetIntervall = null;
 
@@ -229,12 +229,12 @@ public class IntervallTupplemodel extends AbstractTupleModel
       firstSrcCal = m_from;
 
     // initialize source
-    Calendar srcCal_last = targetCal_last;
+    Calendar lastSrcCalendar = lastTargetCalendar;
 
     // BUGFIX: handle case when source start before from
     // Before this fix, this lead to a endless loop
-    if( firstSrcCal.before( srcCal_last ) )
-      srcCal_last = firstSrcCal;
+    if( firstSrcCal.before( lastSrcCalendar ) )
+      lastSrcCalendar = firstSrcCal;
 
     // fill initial row
     // final Intervall initialIntervall = new Intervall( m_from, m_from, defaultStatus, defaultValues );
@@ -248,7 +248,7 @@ public class IntervallTupplemodel extends AbstractTupleModel
       if( srcIntervall == null || todo == TODO_GOTO_NEXT_SRC )
       {
         // calculate the end of a sourceintervall with given distance
-        final Calendar srcCalIntervallEnd = (Calendar) srcCal_last.clone();
+        final Calendar srcCalIntervallEnd = (Calendar) lastSrcCalendar.clone();
         srcCalIntervallEnd.add( m_calendarField, m_amount );
 
         // if we are after the source timeseries
@@ -256,9 +256,9 @@ public class IntervallTupplemodel extends AbstractTupleModel
         {
           // generate defaults
           // create dummy intervall
-          srcIntervall = new Intervall( srcCal_last, srcCalIntervallEnd, defaultStatus, defaultValues );
+          srcIntervall = new Intervall( lastSrcCalendar, srcCalIntervallEnd, defaultStatus, defaultValues );
 
-          srcCal_last = srcIntervall.getEnd();
+          lastSrcCalendar = srcIntervall.getEnd();
           // TODO m_to, defaults
           todo = TODO_NOTHING;
           continue;
@@ -276,15 +276,15 @@ public class IntervallTupplemodel extends AbstractTupleModel
           srcValues[i] = (Double) srcValuesObjects[i];
         srcIntervall = null;
 
-        if( !srcCal_last.after( srcCal ) )
+        if( !lastSrcCalendar.after( srcCal ) )
         {
           // we need next source intervall
 
           if( srcCalIntervallEnd.before( firstSrcCal ) )
           {
             // we are before the source timeseries
-            srcIntervall = new Intervall( srcCal_last, srcCalIntervallEnd, defaultStatus, defaultValues );
-            srcCal_last = srcCalIntervallEnd;
+            srcIntervall = new Intervall( lastSrcCalendar, srcCalIntervallEnd, defaultStatus, defaultValues );
+            lastSrcCalendar = srcCalIntervallEnd;
           }
           else
           // we are inside source timeseries
@@ -292,7 +292,7 @@ public class IntervallTupplemodel extends AbstractTupleModel
             switch( m_mode )
             {
               case IntervallFilter.MODE_INTENSITY:
-                srcIntervall = new Intervall( srcCal_last, srcCal, srcStati, srcValues );
+                srcIntervall = new Intervall( lastSrcCalendar, srcCal, srcStati, srcValues );
                 break;
               default:
                 // (IntervallFilter.MODE_SUM) as length of first interval is undefined, we ignore first value
@@ -301,10 +301,10 @@ public class IntervallTupplemodel extends AbstractTupleModel
                 // Bugfix: we use it nevertheless, as it works ok if intervalls are equal;
                 // also, always no warning produces problems elsewhere
 // if( srcRow > 0 )
-                srcIntervall = new Intervall( srcCal_last, srcCal, srcStati, srcValues );
+                srcIntervall = new Intervall( lastSrcCalendar, srcCal, srcStati, srcValues );
                 break;
             }
-            srcCal_last = srcCal;
+            lastSrcCalendar = srcCal;
             srcRow++;
           }
         }
@@ -324,11 +324,11 @@ public class IntervallTupplemodel extends AbstractTupleModel
           continue;
         }
         final Calendar cal = iterator.next();
-        if( targetCal_last.before( cal ) )
-          targetIntervall = new Intervall( targetCal_last, cal, newStatus, newValues );
+        if( lastTargetCalendar.before( cal ) )
+          targetIntervall = new Intervall( lastTargetCalendar, cal, newStatus, newValues );
         else
           targetIntervall = null;
-        targetCal_last = cal;
+        lastTargetCalendar = cal;
         todo = TODO_NOTHING;
       }
       // check validity of intervalls
@@ -387,9 +387,14 @@ public class IntervallTupplemodel extends AbstractTupleModel
     final double[] value = targetIntervall.getValue();
     model.setElement( targetRow, cal.getTime(), m_dateAxis );
     for( int i = 0; i < m_statusAxis.length; i++ )
+    {
       model.setElement( targetRow, new Integer( status[i] ), m_statusAxis[i] );
+    }
+
     for( int i = 0; i < m_valueAxis.length; i++ )
+    {
       model.setElement( targetRow, new Double( value[i] ), m_valueAxis[i] );
+    }
   }
 
   private static Calendar createCalendar( final Date date )

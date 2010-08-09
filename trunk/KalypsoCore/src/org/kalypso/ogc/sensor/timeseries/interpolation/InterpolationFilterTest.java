@@ -66,7 +66,7 @@ import org.kalypso.ogc.sensor.zml.ZmlFactory;
  */
 public class InterpolationFilterTest extends TestCase
 {
-  private final static SimpleDateFormat sdf = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" ); //$NON-NLS-1$
+  private static final SimpleDateFormat SDF = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" ); //$NON-NLS-1$
 
   private IObservation m_obs;
 
@@ -94,21 +94,21 @@ public class InterpolationFilterTest extends TestCase
     final InterpolationFilter filter = new InterpolationFilter( Calendar.HOUR_OF_DAY, 1, true, "0", 0, true ); //$NON-NLS-1$
     filter.initFilter( null, m_obs, null );
 
-    sdf.setTimeZone( TimeZone.getTimeZone( "UTC" ) ); //$NON-NLS-1$
+    SDF.setTimeZone( TimeZone.getTimeZone( "UTC" ) ); //$NON-NLS-1$
 
     // test with same date-range
     final ITupleModel m1 = filter.getValues( null );
-    verifyTuppleModel( m1, sdf.parse( "2004-11-23 13:00:00" ), sdf.parse( "2004-11-25 13:00:00" ), new Double( 60.0 ), new Double( 37.0 ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    verifyTuppleModel( m1, SDF.parse( "2004-11-23 13:00:00" ), SDF.parse( "2004-11-25 13:00:00" ), new Double( 60.0 ), new Double( 37.0 ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
     // test with bigger date-range
-    final Date from2 = sdf.parse( "2004-11-23 10:00:00" ); //$NON-NLS-1$
-    final Date to2 = sdf.parse( "2004-11-25 17:00:00" ); //$NON-NLS-1$
+    final Date from2 = SDF.parse( "2004-11-23 10:00:00" ); //$NON-NLS-1$
+    final Date to2 = SDF.parse( "2004-11-25 17:00:00" ); //$NON-NLS-1$
     final ITupleModel m2 = filter.getValues( new ObservationRequest( new DateRange( from2, to2 ) ) );
     verifyTuppleModel( m2, from2, to2, new Double( 0 ), new Double( 37.0 ) );
 
     // test with smaller date-range
-    final Date from3 = sdf.parse( "2004-11-23 19:00:00" ); //$NON-NLS-1$
-    final Date to3 = sdf.parse( "2004-11-25 11:00:00" ); //$NON-NLS-1$
+    final Date from3 = SDF.parse( "2004-11-23 19:00:00" ); //$NON-NLS-1$
+    final Date to3 = SDF.parse( "2004-11-25 11:00:00" ); //$NON-NLS-1$
     final ITupleModel m3 = filter.getValues( new ObservationRequest( new DateRange( from3, to3 ) ) );
     verifyTuppleModel( m3, from3, to3, new Double( 55 ), new Double( 37.0 ) );
   }

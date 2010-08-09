@@ -63,7 +63,7 @@ public class Handle
 
   private final IValuePropertyType m_propType;
 
-  public Handle( final Feature feature, IValuePropertyType propType, GM_Position position )
+  public Handle( final Feature feature, final IValuePropertyType propType, final GM_Position position )
   {
     m_feature = feature;
     m_propType = propType;
@@ -75,12 +75,12 @@ public class Handle
     return m_position;
   }
 
-  public void paint( final Graphics g, final GeoTransform projection, final int boxRadiusDrawnHandle, final int gisRadiusTopology, int mask )
+  public void paint( final Graphics g, final GeoTransform projection, final int boxRadiusDrawnHandle, final int gisRadiusTopology, final int mask )
   {
     paint( g, projection, boxRadiusDrawnHandle, gisRadiusTopology, 0, 0, mask );
   }
 
-  public void paint( final Graphics g, final GeoTransform projection, final int boxRadiusDrawnHandle, final int gisRadiusTopology, final int dx, final int dy, int mask )
+  public void paint( final Graphics g, final GeoTransform projection, final int boxRadiusDrawnHandle, final int gisRadiusTopology, final int dx, final int dy, final int mask )
   {
     final int x = (int) projection.getDestX( m_position.getX() );
     final int y = (int) projection.getDestY( m_position.getY() );

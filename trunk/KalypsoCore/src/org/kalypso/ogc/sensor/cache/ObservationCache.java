@@ -53,23 +53,23 @@ import org.shiftone.cache.policy.lfu.LfuCacheFactory;
  */
 public class ObservationCache
 {
-  private static ObservationCache m_instance = null;
+  private static ObservationCache INSTANCE = null;
 
-  public static ObservationCache getInstance()
+  public static ObservationCache getInstance( )
   {
-    if( m_instance == null )
+    if( INSTANCE == null )
     {
-      //    timeout of 4 minutes and cache size of 200
-      m_instance = new ObservationCache( 1000 * 60 * 4, 200 );
+      // timeout of 4 minutes and cache size of 200
+      INSTANCE = new ObservationCache( 1000 * 60 * 4, 200 );
     }
 
-    return m_instance;
+    return INSTANCE;
   }
 
-  public static void clearCache()
+  public static void clearCache( )
   {
-    if( m_instance != null )
-      m_instance.clear();
+    if( INSTANCE != null )
+      INSTANCE.clear();
   }
 
   /** our cache */
@@ -85,7 +85,7 @@ public class ObservationCache
   {
     synchronized( m_cache )
     {
-      IObservation obs = (IObservation)m_cache.getObject( adapt );
+      IObservation obs = (IObservation) m_cache.getObject( adapt );
 
       if( obs == null )
       {
@@ -115,7 +115,7 @@ public class ObservationCache
   {
     synchronized( m_cache )
     {
-      return (ITupleModel)m_cache.getObject( obs );
+      return (ITupleModel) m_cache.getObject( obs );
     }
   }
 
@@ -127,7 +127,7 @@ public class ObservationCache
     }
   }
 
-  private void clear()
+  private void clear( )
   {
     synchronized( m_cache )
     {

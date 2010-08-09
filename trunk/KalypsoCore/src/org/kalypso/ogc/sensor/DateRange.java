@@ -158,7 +158,9 @@ public class DateRange implements Comparable<DateRange>
    * 
    * <pre>
    *   [now - pastDays, now]
-   * </pre>. If pastDays == 0, then the range is null.
+   * </pre>
+   * 
+   * . If pastDays == 0, then the range is null.
    * 
    * @return new argument or null if pastDays is 0
    */
@@ -187,11 +189,11 @@ public class DateRange implements Comparable<DateRange>
     if( other == null )
       return 1;
 
-    int cmp = this.m_from.compareTo( other.m_from );
+    int cmp = m_from.compareTo( other.m_from );
     if( cmp != 0 )
       return cmp;
 
-    cmp = this.m_to.compareTo( other.m_to );
+    cmp = m_to.compareTo( other.m_to );
     return cmp;
   }
 

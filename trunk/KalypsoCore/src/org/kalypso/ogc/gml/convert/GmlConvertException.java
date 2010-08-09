@@ -5,22 +5,22 @@ package org.kalypso.ogc.gml.convert;
  */
 public class GmlConvertException extends Exception
 {
-  public GmlConvertException()
+  public GmlConvertException( )
   {
     super();
   }
 
-  public GmlConvertException( String message )
+  public GmlConvertException( final String message )
   {
     super( message );
   }
 
-  public GmlConvertException( Throwable cause )
+  public GmlConvertException( final Throwable cause )
   {
     super( cause );
   }
 
-  public GmlConvertException( String message, Throwable cause )
+  public GmlConvertException( final String message, final Throwable cause )
   {
     super( message, cause );
   }

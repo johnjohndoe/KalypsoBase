@@ -123,7 +123,7 @@ public class ShapeLoader extends WorkspaceLoader
         sourceFile = new File( sourceURL.getPath() );
       else
       {
-        moni.subTask( Messages.getString("org.kalypso.ogc.gml.loader.ShapeLoader.0") ); //$NON-NLS-1$
+        moni.subTask( Messages.getString( "org.kalypso.ogc.gml.loader.ShapeLoader.0" ) ); //$NON-NLS-1$
 
         /* If everything else fails, we copy the resources to local files */
         sourceFile = File.createTempFile( "shapeLocalizedFiled", "" ); //$NON-NLS-1$ //$NON-NLS-2$

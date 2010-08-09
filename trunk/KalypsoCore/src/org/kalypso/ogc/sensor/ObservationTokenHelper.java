@@ -40,7 +40,6 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor;
 
-
 /**
  * Utility methods for working with ObsView objects
  * 

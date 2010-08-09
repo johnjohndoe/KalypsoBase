@@ -40,7 +40,6 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.timeseries.wq.wechmann;
 
-
 /**
  * Wechmann Parameters
  * 
@@ -74,7 +73,7 @@ public final class WechmannParams
    * Creates the parameters with a WGR value of Double.MAX_VALUE. Use this constructor when the WGR value is not
    * defined, thus the parameters are valid for all possible W values.
    */
-  public WechmannParams( final double W1, final double LNK1, final double K2 ) 
+  public WechmannParams( final double W1, final double LNK1, final double K2 )
   {
     this( W1, LNK1, K2, Double.MAX_VALUE );
   }
@@ -90,9 +89,8 @@ public final class WechmannParams
    *          Konstante
    * @param WGR
    *          obere Wasserstandsgrenze in cm
-   *  
    */
-  public WechmannParams( final double W1, final double LNK1, final double K2, final double WGR ) 
+  public WechmannParams( final double W1, final double LNK1, final double K2, final double WGR )
   {
     m_W1 = W1;
     m_LNK1 = LNK1;
@@ -113,7 +111,7 @@ public final class WechmannParams
   /**
    * @return K2
    */
-  public double getK2()
+  public double getK2( )
   {
     return m_K2;
   }
@@ -121,7 +119,7 @@ public final class WechmannParams
   /**
    * @return LN(K1)
    */
-  public double getLNK1()
+  public double getLNK1( )
   {
     return m_LNK1;
   }
@@ -129,7 +127,7 @@ public final class WechmannParams
   /**
    * @return W1
    */
-  public double getW1()
+  public double getW1( )
   {
     return m_W1;
   }
@@ -137,7 +135,7 @@ public final class WechmannParams
   /**
    * @return WGR
    */
-  public double getWGR()
+  public double getWGR( )
   {
     return m_WGR;
   }
@@ -145,7 +143,7 @@ public final class WechmannParams
   /**
    * @return true if WGR was defined once object was constructed
    */
-  public boolean hasWGR()
+  public boolean hasWGR( )
   {
     return Double.compare( m_WGR, Double.MAX_VALUE ) != 0;
   }
@@ -153,7 +151,7 @@ public final class WechmannParams
   /**
    * @return the corresponding Q-value to the WGR
    */
-  public double getQ4WGR()
+  public double getQ4WGR( )
   {
     return m_Q4WGR;
   }

@@ -59,9 +59,9 @@ import org.kalypso.zml.filters.IntervallFilterType;
  */
 public class IntervallFilter extends AbstractObservationFilter
 {
-  public final static int MODE_INTENSITY = 0;
+  public static final int MODE_INTENSITY = 0;
 
-  public final static int MODE_SUM = 1;
+  public static final int MODE_SUM = 1;
 
   private IObservation m_baseobservation = null;
 
@@ -129,13 +129,12 @@ public class IntervallFilter extends AbstractObservationFilter
     // Maybe there should be one day a mean to determine, which is the right amount.
     final ITupleModel values = ObservationUtilities.requestBuffered( m_baseobservation, dateRange, Calendar.DAY_OF_MONTH, 2 );
 
-    return new IntervallTupplemodel( m_mode, m_calendarField, m_amount, m_startCalendarValue, m_startCalendarField,
-        values, from, to, m_defaultValue, m_defaultStatus );
+    return new IntervallTuplemodel( m_mode, m_calendarField, m_amount, m_startCalendarValue, m_startCalendarField, values, from, to, m_defaultValue, m_defaultStatus );
   }
 
   @Override
   public void setValues( final ITupleModel values )
   {
-    throw new UnsupportedOperationException( getClass().getName() + Messages.getString("org.kalypso.ogc.sensor.filter.filters.IntervallFilter.2") ); //$NON-NLS-1$
+    throw new UnsupportedOperationException( getClass().getName() + Messages.getString( "org.kalypso.ogc.sensor.filter.filters.IntervallFilter.2" ) ); //$NON-NLS-1$
   }
 }
