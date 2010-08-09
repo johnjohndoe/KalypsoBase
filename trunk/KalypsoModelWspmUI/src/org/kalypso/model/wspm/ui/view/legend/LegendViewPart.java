@@ -102,7 +102,7 @@ public class LegendViewPart extends AbstractChartModelViewPart
   public void updateControl( )
   {
 
-    if( m_chartlegend == null )
+    if( m_chartlegend == null)
       return;
     final IChartModel model = getChartModel();
     m_chartlegend.setModel( model );

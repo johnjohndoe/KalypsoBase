@@ -61,7 +61,7 @@ public class RemoveLayerHandler extends AbstractHandler
   public Object execute( ExecutionEvent event )
   {
     final IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-    final IViewPart view = activePage == null ? null : activePage.findView( "org.kalypso.model.wspm.ui.view.legend.LegendView" ); //$NON-NLS-1$
+    final IViewPart view = activePage == null ? null : activePage.findView( "org.kalypso.model.wspm.ui.view.legend.LegendViewPart" ); //$NON-NLS-1$
 
     final ChartEditorTreeOutlinePage legendView = view == null ? null : (ChartEditorTreeOutlinePage) view.getAdapter( ChartEditorTreeOutlinePage.class );
 

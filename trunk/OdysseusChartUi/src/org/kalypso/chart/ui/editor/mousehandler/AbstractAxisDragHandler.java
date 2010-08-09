@@ -207,11 +207,11 @@ public abstract class AbstractAxisDragHandler implements IAxisDragHandler
     if( m_isDragging )
       doMouseMoveAction( m_mouseDragStart, new Point( e.x, e.y ), m_axes );
     else
-      m_isDragging = verifyTrashHold( e.x, e.y );
+      m_isDragging = verifyTrashold( e.x, e.y );
 
   }
 
-  private boolean verifyTrashHold( int x, int y )
+  private boolean verifyTrashold( int x, int y )
   {
     if( m_mouseDragStart == null )
       return false;

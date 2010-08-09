@@ -252,7 +252,7 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
 
   private void setInput( final IChartModel model )
   {
-    if( m_treeViewer != null && !m_treeViewer.getControl().isDisposed() )
+    if( m_treeViewer != null && m_treeViewer.getControl() != null && !m_treeViewer.getControl().isDisposed() )
       m_treeViewer.setInput( model );
   }
 
@@ -498,7 +498,8 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
   @Override
   public void setSelection( final ISelection selection )
   {
-    m_treeViewer.setSelection( selection );
+    if( m_treeViewer != null )
+      m_treeViewer.setSelection( selection );
   }
 
   public void updateControl( )
