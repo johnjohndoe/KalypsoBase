@@ -71,9 +71,9 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  * 
  * @author Gernot Belger
  */
-public class MapModellHelper
+public final class MapModellHelper
 {
-  public MapModellHelper( )
+  private MapModellHelper( )
   {
     throw new UnsupportedOperationException( Messages.getString( "org.kalypso.ogc.gml.mapmodel.MapModellHelper.0" ) ); //$NON-NLS-1$
   }
@@ -263,14 +263,14 @@ public class MapModellHelper
   /**
    * Finds all themes with the given theme property from the map model.
    * 
-   *@param depth
+   * @param depth
    *          One of the {@link IKalypsoThemeVisitor#DEPTH_} constants.
    * @param mapModell
    *          This model is searched
    * @param themeProperty
    *          This where this property is set are found
    */
-  public static final IKalypsoTheme[] findThemeByProperty( final IMapModell mapModell, final String themeProperty, final int depth )
+  public static IKalypsoTheme[] findThemeByProperty( final IMapModell mapModell, final String themeProperty, final int depth )
   {
     final IKalypsoThemePredicate predicate = new IKalypsoThemePredicate()
     {

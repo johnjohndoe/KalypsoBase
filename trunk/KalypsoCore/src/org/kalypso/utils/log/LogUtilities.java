@@ -48,7 +48,7 @@ import org.eclipse.core.runtime.IStatus;
  * 
  * @author Holger Albert
  */
-public class LogUtilities
+public final class LogUtilities
 {
   /**
    * The constructor.
@@ -65,7 +65,7 @@ public class LogUtilities
    * @param status
    *          The status to log.
    */
-  public static void logQuietly( ILog log, IStatus status )
+  public static void logQuietly( final ILog log, final IStatus status )
   {
     if( log == null )
       return;

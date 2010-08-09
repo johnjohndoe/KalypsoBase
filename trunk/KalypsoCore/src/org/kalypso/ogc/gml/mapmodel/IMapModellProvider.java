@@ -45,5 +45,5 @@ package org.kalypso.ogc.gml.mapmodel;
  */
 public interface IMapModellProvider
 {
-  public IMapModell getMapModell();
+  IMapModell getMapModell( );
 }

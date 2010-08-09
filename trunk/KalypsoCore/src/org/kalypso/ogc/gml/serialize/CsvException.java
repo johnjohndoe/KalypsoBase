@@ -5,22 +5,22 @@ package org.kalypso.ogc.gml.serialize;
  */
 public class CsvException extends Exception
 {
-  public CsvException()
+  public CsvException( )
   {
     super();
   }
 
-  public CsvException( String message )
+  public CsvException( final String message )
   {
     super( message );
   }
 
-  public CsvException( Throwable cause )
+  public CsvException( final Throwable cause )
   {
     super( cause );
   }
 
-  public CsvException( String message, Throwable cause )
+  public CsvException( final String message, final Throwable cause )
   {
     super( message, cause );
   }

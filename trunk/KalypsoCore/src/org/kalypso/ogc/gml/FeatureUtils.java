@@ -63,12 +63,16 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
 /**
- * useful feature utilities used by nofdp idss
+ * some basic feature utils
  * 
  * @author Dirk Kuch
  */
-public class FeatureUtils
+public final class FeatureUtils
 {
+  private FeatureUtils( )
+  {
+  }
+
   public static String chopGeoDataSetName( final String name )
   {
     final String[] chomp = new String[] { ".sld", ".gml", ".asc", ".shp", ".tif" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
@@ -190,7 +194,7 @@ public class FeatureUtils
 
     return changes.toArray( new FeatureChange[] {} );
   }
-  
+
   public static FeatureChange[] getAsFeatureChange( final Feature feature, final QName qname, final Object value )
   {
     final Map<QName, Object> map = new HashMap<QName, Object>();
@@ -198,7 +202,6 @@ public class FeatureUtils
 
     return getAsFeatureChange( feature, map );
   }
-  
 
   public static void updateProperty( final CommandableWorkspace workspace, final Feature feature, final QName qname, final Object value ) throws Exception
   {
@@ -244,8 +247,7 @@ public class FeatureUtils
 
     return change;
   }
-  
-  
+
   @Deprecated
   /*
    * ATTENTION: each time a new commandable workspace is returned, so you can't see that an workspace is dirty!

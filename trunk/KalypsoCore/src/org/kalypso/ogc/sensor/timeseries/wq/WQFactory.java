@@ -47,8 +47,8 @@ import org.apache.commons.lang.StringUtils;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.metadata.ITimeserieConstants;
+import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannFactory;
 import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTableFactory;
 import org.xml.sax.InputSource;
@@ -56,11 +56,11 @@ import org.xml.sax.InputSource;
 /**
  * @author schlienger
  */
-public class WQFactory
+public final class WQFactory
 {
-  private WQFactory()
+  private WQFactory( )
   {
-  // empty
+    // empty
   }
 
   /**
@@ -88,7 +88,7 @@ public class WQFactory
         return WQTableFactory.parse( new InputSource( new StringReader( wqtable ) ) );
       }
 
-      throw new IllegalStateException( Messages.getString("org.kalypso.ogc.sensor.timeseries.wq.WQFactory.0") ); //$NON-NLS-1$
+      throw new IllegalStateException( Messages.getString( "org.kalypso.ogc.sensor.timeseries.wq.WQFactory.0" ) ); //$NON-NLS-1$
     }
     catch( final WQException e )
     {

@@ -493,7 +493,7 @@ public class MapModell implements IMapModell
 
   private static interface IListenerRunnable
   {
-    public void visit( final IMapModellListener l );
+    void visit( final IMapModellListener l );
   }
 
   /**
@@ -543,7 +543,7 @@ public class MapModell implements IMapModell
 
   protected void fireThemeActivated( final IKalypsoTheme previouslyActive, final IKalypsoTheme activeTheme )
   {
-    KalypsoCoreDebug.MAP_MODELL.printf( Messages.getString( "org.kalypso.ogc.gml.mapmodel.MapModell.0" , previouslyActive, activeTheme )); //$NON-NLS-1$
+    KalypsoCoreDebug.MAP_MODELL.printf( Messages.getString( "org.kalypso.ogc.gml.mapmodel.MapModell.0", previouslyActive, activeTheme ) ); //$NON-NLS-1$
 
     acceptListenersRunnable( new IListenerRunnable()
     {

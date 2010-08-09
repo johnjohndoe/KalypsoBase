@@ -91,7 +91,7 @@ public interface IWidget
    * @deprecated Do not use: widget must use only left button
    */
   @Deprecated
-  public void rightReleased( final Point p );
+  void rightReleased( final Point p );
 
   /**
    * @deprecated Do not use: widget must use only left button

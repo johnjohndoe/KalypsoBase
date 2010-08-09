@@ -41,11 +41,10 @@ v.doemming@tuhh.de
 
 package org.kalypso.ogc.gml.selection;
 
-
 /**
  * @author belger
  */
 public interface IFeatureSelectionListener
 {
-  public void selectionChanged( final IFeatureSelection selection );
+  void selectionChanged( final IFeatureSelection selection );
 }

@@ -47,27 +47,27 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
  * This interface provides a set of functions for listeners, that should be notified in special events of the mapPanel.
- *
+ * 
  * @author Holger Albert
  */
 public interface IMapPanelListener
 {
-  public void onExtentChanged( final IMapPanel source, final GM_Envelope oldExtent, final GM_Envelope newExtent );
+  void onExtentChanged( final IMapPanel source, final GM_Envelope oldExtent, final GM_Envelope newExtent );
 
-  public void onMapModelChanged( final IMapPanel source, final IMapModell oldModel, final IMapModell newModel );
+  void onMapModelChanged( final IMapPanel source, final IMapModell oldModel, final IMapModell newModel );
 
   /**
    * This function is invoked from the mapPanel, in cases its message has changed.
-   *
+   * 
    * @param message
-   *            The new message, which is set in the mapPanel.
+   *          The new message, which is set in the mapPanel.
    */
-  public void onMessageChanged( final IMapPanel source, final String message );
+  void onMessageChanged( final IMapPanel source, final String message );
 
-  public void onStatusChanged( final IMapPanel source );
+  void onStatusChanged( final IMapPanel source );
 
   // REMARK: we are using mouseX and mouseY (instead of some point) in order to be independent of the window toolkit
   // Should be changed as soon as we totally switch so SWT
-  public void onMouseMoveEvent( final IMapPanel source, GM_Point gmPoint, final int mouseX, int mouseY );
+  void onMouseMoveEvent( final IMapPanel source, GM_Point gmPoint, final int mouseX, int mouseY );
 
 }

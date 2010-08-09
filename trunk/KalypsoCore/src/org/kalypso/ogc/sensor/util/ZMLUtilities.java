@@ -53,8 +53,11 @@ import org.kalypso.ogc.sensor.zml.ZmlFactory;
 /**
  * @author doemming
  */
-public class ZMLUtilities
+public final class ZMLUtilities
 {
+  private ZMLUtilities( )
+  {
+  }
 
   public static double getMax( final URL url, final String axisType, final IRequest request ) throws SensorException
   {

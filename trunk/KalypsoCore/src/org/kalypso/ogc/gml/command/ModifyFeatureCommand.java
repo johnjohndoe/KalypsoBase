@@ -57,7 +57,7 @@ import org.kalypsodeegree_impl.model.feature.visitors.CloneFeatureVisitor;
 
 /**
  * TODO: please comment
- *
+ * 
  * @author belger
  */
 public class ModifyFeatureCommand implements ICommand
@@ -73,9 +73,9 @@ public class ModifyFeatureCommand implements ICommand
   /**
    * @param workspace
    * @param targetFeatures
-   *            features to modify
+   *          features to modify
    */
-  public ModifyFeatureCommand( final GMLWorkspace workspace, final Feature srcFeature, final IPropertyType[] ftps, final Feature targetFeatures[] )
+  public ModifyFeatureCommand( final GMLWorkspace workspace, final Feature srcFeature, final IPropertyType[] ftps, final Feature[] targetFeatures )
   {
     m_workspace = workspace;
     m_ftps = ftps;
@@ -210,6 +210,6 @@ public class ModifyFeatureCommand implements ICommand
   @Override
   public String getDescription( )
   {
-    return Messages.getString("org.kalypso.ogc.gml.command.ModifyFeatureCommand.0"); //$NON-NLS-1$
+    return Messages.getString( "org.kalypso.ogc.gml.command.ModifyFeatureCommand.0" ); //$NON-NLS-1$
   }
 }

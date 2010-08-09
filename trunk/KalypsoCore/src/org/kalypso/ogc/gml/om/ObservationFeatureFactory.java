@@ -274,7 +274,9 @@ public class ObservationFeatureFactory implements IAdapterFactory
     final XsdBaseTypeHandler< ? >[] typeHandlers = new XsdBaseTypeHandler[components.length];
 
     for( int i = 0; i < components.length; i++ )
+    {
       typeHandlers[i] = ObservationFeatureFactory.typeHanderForComponent( components[i] );
+    }
 
     return typeHandlers;
   }
@@ -351,7 +353,9 @@ public class ObservationFeatureFactory implements IAdapterFactory
   {
     final FeatureChange[] changes = ObservationFeatureFactory.toFeatureAsChanges( source, targetObsFeature );
     for( final FeatureChange change : changes )
+    {
       change.getFeature().setProperty( change.getProperty(), change.getNewValue() );
+    }
   }
 
   public static FeatureChange[] toFeatureAsChanges( final IObservation<TupleResult> source, final Feature targetObsFeature )

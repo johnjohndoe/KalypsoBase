@@ -63,9 +63,9 @@ import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
-import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.metadata.IObservationConstants;
 import org.kalypso.ogc.sensor.metadata.ITimeserieConstants;
+import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 
 /**
@@ -77,17 +77,19 @@ public class NativeObservationZrxAdapter implements INativeObservationAdapter
 
   private final DateFormat m_zrxDateFormatSec = new SimpleDateFormat( "yyyyMMddHHmmss" ); //$NON-NLS-1$
 
-  public static Pattern m_zrxHeaderPattern = Pattern.compile( "#.*" ); //$NON-NLS-1$
+  private static Pattern ZRX_HEADER_PATTERN = Pattern.compile( "#.*" ); //$NON-NLS-1$
 
-  public static Pattern m_zrxDataPattern = Pattern.compile( "([0-9]{12,14})\\s+(-??[0-9]+(.[0-9]*))\\s*" ); //$NON-NLS-1$
+  private static Pattern ZRX_DATA_PATTERN = Pattern.compile( "([0-9]{12,14})\\s+(-??[0-9]+(.[0-9]*))\\s*" ); //$NON-NLS-1$
 
-  public static Pattern m_zrxSNAMEPattern = Pattern.compile( "(#\\S*SNAME)(\\w+)(\\|\\*\\|\\S*)" ); //$NON-NLS-1$
+  private static Pattern ZRX_SNAME_PATTERN = Pattern.compile( "(#\\S*SNAME)(\\w+)(\\|\\*\\|\\S*)" ); //$NON-NLS-1$
 
   private String m_title;
 
   private String m_axisTypeValue;
 
-  private String m_SNAME = "titel"; //$NON-NLS-1$
+  private String m_sName = "titel"; //$NON-NLS-1$
+
+  private static final int MAX_NO_OF_ERRORS = 30;
 
   /**
    * @see org.eclipse.core.runtime.IExecutableExtension#setInitializationData(org.eclipse.core.runtime.IConfigurationElement,
@@ -123,12 +125,12 @@ public class NativeObservationZrxAdapter implements INativeObservationAdapter
     final ITupleModel tuppelModel = createTuppelModel( source, axis, continueWithErrors );
     if( tuppelModel == null )
       return null;
-    return new SimpleObservation( "href", m_SNAME, metaDataList, tuppelModel ); //$NON-NLS-1$
+    return new SimpleObservation( "href", m_sName, metaDataList, tuppelModel ); //$NON-NLS-1$
   }
 
   private ITupleModel createTuppelModel( final File source, final IAxis[] axis, boolean continueWithErrors ) throws IOException
   {
-    final int MAX_NO_OF_ERRORS = 30;
+
     int numberOfErrors = 0;
 
     final StringBuffer errorBuffer = new StringBuffer();
@@ -143,7 +145,7 @@ public class NativeObservationZrxAdapter implements INativeObservationAdapter
         return null;
       try
       {
-        Matcher matcher = m_zrxDataPattern.matcher( lineIn );
+        Matcher matcher = ZRX_DATA_PATTERN.matcher( lineIn );
         if( matcher.matches() )
         {
           Date date = null;
@@ -186,12 +188,12 @@ public class NativeObservationZrxAdapter implements INativeObservationAdapter
         }
         else
         {
-          matcher = m_zrxHeaderPattern.matcher( lineIn );
+          matcher = ZRX_HEADER_PATTERN.matcher( lineIn );
           if( matcher.matches() )
           {
-            matcher = m_zrxSNAMEPattern.matcher( lineIn );
+            matcher = ZRX_SNAME_PATTERN.matcher( lineIn );
             if( matcher.matches() )
-              m_SNAME = matcher.group( 2 );
+              m_sName = matcher.group( 2 );
           }
           else
           {

@@ -129,7 +129,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
 
   private static interface IListenerRunnable
   {
-    public void visit( final IMapPanelListener l );
+    void visit( final IMapPanelListener l );
   }
 
   private static final long serialVersionUID = 1L;

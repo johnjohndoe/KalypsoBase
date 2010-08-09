@@ -53,7 +53,7 @@ import org.xml.sax.SAXException;
  * Ugo Taddei<br>
  * Changes:<br>
  * Holger Albert
- *
+ * 
  * @author <a href="mailto:taddei@lat-lon.de">Ugo Taddei</a>
  * @deprecated Do not use anymore, use {@link WFSClient} instead. Used only by Gazetteer stuff; remove when gazetter is
  *             refaktored.
@@ -62,7 +62,7 @@ import org.xml.sax.SAXException;
 @Deprecated
 public class WFService
 {
-  public static String WFS_PREFIX = "wfs"; //$NON-NLS-1$
+  public static final String WFS_PREFIX = "wfs"; //$NON-NLS-1$
 
   private String m_wfsURL;
 
@@ -108,12 +108,12 @@ public class WFService
     }
     catch( final MalformedURLException e )
     {
-      System.out.println( Messages.getString("org.kalypso.ogc.wfs.WFService.2") + e.getLocalizedMessage() ); //$NON-NLS-1$
+      System.out.println( Messages.getString( "org.kalypso.ogc.wfs.WFService.2" ) + e.getLocalizedMessage() ); //$NON-NLS-1$
       throw e;
     }
     catch( final IOException e )
     {
-      System.out.println( Messages.getString("org.kalypso.ogc.wfs.WFService.3") + this.m_wfsURL + Messages.getString("org.kalypso.ogc.wfs.WFService.4") + e.getLocalizedMessage() ); //$NON-NLS-1$ //$NON-NLS-2$
+      System.out.println( Messages.getString( "org.kalypso.ogc.wfs.WFService.3" ) + this.m_wfsURL + Messages.getString( "org.kalypso.ogc.wfs.WFService.4" ) + e.getLocalizedMessage() ); //$NON-NLS-1$ //$NON-NLS-2$
       throw e;
     }
     catch( final SAXException e )
@@ -127,7 +127,7 @@ public class WFService
     }
     catch( final InvalidCapabilitiesException e )
     {
-      System.out.println( Messages.getString("org.kalypso.ogc.wfs.WFService.5") + e.getLocalizedMessage() ); //$NON-NLS-1$
+      System.out.println( Messages.getString( "org.kalypso.ogc.wfs.WFService.5" ) + e.getLocalizedMessage() ); //$NON-NLS-1$
       throw e;
     }
   }
@@ -152,9 +152,9 @@ public class WFService
 
   /**
    * Gets a document containing a valid description feature type (schema; XSD). Code adapted from deegree viewer
-   *
+   * 
    * @param featureType
-   *            the feature type whose description should be returned
+   *          the feature type whose description should be returned
    * @return an XSD containing the type description
    * @throws Exception
    */
@@ -168,7 +168,7 @@ public class WFService
     {
       for( int i = 0; i < ops.length && m_descrFtUrl == null; i++ )
       {
-        if( ops[i].getName().equals( "DescribeFeatureType" ) ) //$NON-NLS-1$
+        if( "DescribeFeatureType".equals( ops[i].getName() ) ) //$NON-NLS-1$
         {
           final DCPType[] dcps = ops[i].getDCPs();
           if( dcps.length > 0 )
@@ -186,7 +186,7 @@ public class WFService
     }
 
     if( m_descrFtUrl == null )
-      throw new RuntimeException( Messages.getString("org.kalypso.ogc.wfs.WFService.7") ); //$NON-NLS-1$
+      throw new RuntimeException( Messages.getString( "org.kalypso.ogc.wfs.WFService.7" ) ); //$NON-NLS-1$
 
     final QualifiedName ft = getQualiNameByFeatureTypeName( featureType );
     String format = null;
@@ -200,11 +200,11 @@ public class WFService
     }
 
     final String serverReq = "SERVICE=WFS&REQUEST=DescribeFeatureType&version=1.1.0&OUTPUTFORMAT=" + format + "&TYPENAME=" + featureType + "&NAMESPACE=xmlns(" + ft.getPrefix() + "=" + ft.getNamespace() //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-    + ")"; //$NON-NLS-1$
+        + ")"; //$NON-NLS-1$
 
     final String httpProtocolMethod = isGet ? "HTTP_GET" : "HTTP_POST"; //$NON-NLS-1$ //$NON-NLS-2$
 
-    System.out.println( Messages.getString("org.kalypso.ogc.wfs.WFService.17") + httpProtocolMethod + Messages.getString("org.kalypso.ogc.wfs.WFService.18") + m_descrFtUrl + serverReq ); //$NON-NLS-1$ //$NON-NLS-2$
+    System.out.println( Messages.getString( "org.kalypso.ogc.wfs.WFService.17" ) + httpProtocolMethod + Messages.getString( "org.kalypso.ogc.wfs.WFService.18" ) + m_descrFtUrl + serverReq ); //$NON-NLS-1$ //$NON-NLS-2$
 
     final HttpMethod httpMethod = createHttpMethod( httpProtocolMethod );// new GetMethod( serverUrl );
 
@@ -231,17 +231,18 @@ public class WFService
     }
     catch( final Exception e )
     {
-      final String mesg = Messages.getString("org.kalypso.ogc.wfs.WFService.19"); //$NON-NLS-1$
-      System.out.println( mesg + Messages.getString("org.kalypso.ogc.wfs.WFService.20") + featureType + Messages.getString("org.kalypso.ogc.wfs.WFService.21") + uri + Messages.getString("org.kalypso.ogc.wfs.WFService.22") + m_descrFtUrl + "?" + serverReq ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+      final String mesg = Messages.getString( "org.kalypso.ogc.wfs.WFService.19" ); //$NON-NLS-1$
+      System.out.println( mesg
+          + Messages.getString( "org.kalypso.ogc.wfs.WFService.20" ) + featureType + Messages.getString( "org.kalypso.ogc.wfs.WFService.21" ) + uri + Messages.getString( "org.kalypso.ogc.wfs.WFService.22" ) + m_descrFtUrl + "?" + serverReq ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
       throw new Exception( mesg, e );
     }
   }
 
   /**
    * Creates an String[] containing the attributes of a given feature type
-   *
+   * 
    * @param featureTypeName
-   *            the name of the feature type
+   *          the name of the feature type
    * @throws Exception
    */
   private void createSchemaForFeatureType( final QName featureTypeName ) throws Exception
@@ -259,7 +260,7 @@ public class WFService
 
   /**
    * guess which property might be "the" geometry property
-   *
+   * 
    * @param propNames
    * @return
    */
@@ -283,7 +284,7 @@ public class WFService
   public void setWfsURL( final String wfsURL )
   {
     if( wfsURL == null || "".equals( wfsURL ) ) //$NON-NLS-1$
-      throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.wfs.WFService.25") ); //$NON-NLS-1$
+      throw new IllegalArgumentException( Messages.getString( "org.kalypso.ogc.wfs.WFService.25" ) ); //$NON-NLS-1$
 
     this.m_wfsURL = wfsURL;
   }
@@ -354,7 +355,7 @@ public class WFService
     }
 
     if( m_getFeatureUrl == null )
-      throw new RuntimeException( Messages.getString("org.kalypso.ogc.wfs.WFService.27") ); //$NON-NLS-1$
+      throw new RuntimeException( Messages.getString( "org.kalypso.ogc.wfs.WFService.27" ) ); //$NON-NLS-1$
 
     return m_getFeatureUrl;
   }
@@ -392,14 +393,14 @@ public class WFService
     else if( "HTTP_POST".equals( methodName ) ) //$NON-NLS-1$
       httpMethod = new PostMethod();
     else
-      throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.wfs.WFService.30") ); //$NON-NLS-1$
+      throw new IllegalArgumentException( Messages.getString( "org.kalypso.ogc.wfs.WFService.30" ) ); //$NON-NLS-1$
 
     return httpMethod;
   }
 
   /**
    * This function returns the capabilities of the service.
-   *
+   * 
    * @return The wfs capabilities.
    */
   public WFSCapabilities getCapabilities( )
@@ -409,7 +410,7 @@ public class WFService
 
   /**
    * This function returns all filter capabilities operations for the wfs.
-   *
+   * 
    * @raturn All filter capabilities operations.
    */
   public String[] getAllFilterCapabilitesOperations( )
@@ -437,7 +438,7 @@ public class WFService
 
   /**
    * This function creates a gml workspace from a get feature request.
-   *
+   * 
    * @param featureTypeToLoad
    * @param targetCRS
    * @param filter
@@ -485,7 +486,7 @@ public class WFService
 
   /**
    * This function builds a GetFeature request XML.
-   *
+   * 
    * @param wfsCaps
    * @param ftQName
    * @param filter
@@ -540,7 +541,7 @@ public class WFService
     {
       for( int i = 0; i < ops.length && m_descrFtUrl == null; i++ )
       {
-        if( ops[i].getName().equals( "DescribeFeatureType" ) ) //$NON-NLS-1$
+        if( "DescribeFeatureType".equals( ops[i].getName() ) ) //$NON-NLS-1$
         {
           final DCPType[] dcps = ops[i].getDCPs();
           if( dcps.length > 0 )
@@ -553,7 +554,7 @@ public class WFService
     }
 
     if( m_descrFtUrl == null )
-      throw new RuntimeException( Messages.getString("org.kalypso.ogc.wfs.WFService.55") ); //$NON-NLS-1$
+      throw new RuntimeException( Messages.getString( "org.kalypso.ogc.wfs.WFService.55" ) ); //$NON-NLS-1$
 
     final QualifiedName ft = getQualiNameByFeatureTypeName( featureType );
     String format = null;
@@ -567,14 +568,14 @@ public class WFService
     }
 
     final String serverReq = "SERVICE=WFS&REQUEST=DescribeFeatureType&version=1.1.0&OUTPUTFORMAT=" + format + "&TYPENAME=" + featureType + "&NAMESPACE=xmlns(" + ft.getPrefix() + "=" + ft.getNamespace() //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-    + ")"; //$NON-NLS-1$
+        + ")"; //$NON-NLS-1$
 
     return new URL( m_descrFtUrl + "?" + serverReq ); //$NON-NLS-1$
   }
 
   /**
    * This function returns the layer of the wfs.
-   *
+   * 
    * @return The layer of the wfs.
    */
   public IWFSLayer[] getLayer( )

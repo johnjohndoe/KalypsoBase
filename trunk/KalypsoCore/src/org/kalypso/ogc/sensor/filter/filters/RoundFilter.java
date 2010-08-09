@@ -99,7 +99,7 @@ public class RoundFilter extends AbstractObservationFilter
     else if( "ROUND_UP".equals( mode ) ) //$NON-NLS-1$
       return BigDecimal.ROUND_UP;
 
-    throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.sensor.filter.filters.RoundFilter.0") + mode ); //$NON-NLS-1$
+    throw new IllegalArgumentException( Messages.getString( "org.kalypso.ogc.sensor.filter.filters.RoundFilter.0" ) + mode ); //$NON-NLS-1$
   }
 
   @Override
@@ -146,28 +146,28 @@ public class RoundFilter extends AbstractObservationFilter
       bufferedRequest = null;
     }
 
-    final IObservation proxiedObservation = AutoProxyFactory.getInstance().proxyObservation(m_baseobservation);
+    final IObservation proxiedObservation = AutoProxyFactory.getInstance().proxyObservation( m_baseobservation );
 
     final ITupleModel values = proxiedObservation.getValues( bufferedRequest );
 
     // get all non-virtual Double-Axises
     final IAxis axis = ObservationUtilities.findAxisByTypeNoEx( values.getAxisList(), m_type );
     if( axis == null )
-      throw new SensorException( Messages.getString("org.kalypso.ogc.sensor.filter.filters.RoundFilter.1") + m_type ); //$NON-NLS-1$
+      throw new SensorException( Messages.getString( "org.kalypso.ogc.sensor.filter.filters.RoundFilter.1" ) + m_type ); //$NON-NLS-1$
 
-      final int valueCount = values.getCount();
-      for( int j = 0; j < valueCount; j++ )
+    final int valueCount = values.getCount();
+    for( int j = 0; j < valueCount; j++ )
+    {
+      final Double value = (Double) values.getElement( j, axis );
+      if( value != null && !value.isNaN() )
       {
-        final Double value = (Double)values.getElement( j, axis );
-        if( value != null && !value.isNaN() )
-        {
-          final double factoredValue = value.doubleValue() / m_factor;
-          final BigDecimal decimal = new BigDecimal( factoredValue );
-          final BigDecimal roundedDecimal = decimal.setScale( 0, m_mode );
-          final double newValue = roundedDecimal.doubleValue() * m_factor;
-          values.setElement( j, new Double( newValue ), axis );
-        }
+        final double factoredValue = value.doubleValue() / m_factor;
+        final BigDecimal decimal = new BigDecimal( factoredValue );
+        final BigDecimal roundedDecimal = decimal.setScale( 0, m_mode );
+        final double newValue = roundedDecimal.doubleValue() * m_factor;
+        values.setElement( j, new Double( newValue ), axis );
       }
+    }
 
     final ITupleModel orgValues = m_baseobservation.getValues( bufferedRequest );
 
@@ -178,6 +178,6 @@ public class RoundFilter extends AbstractObservationFilter
   @Override
   public void setValues( final ITupleModel values )
   {
-    throw new UnsupportedOperationException( getClass().getName() + Messages.getString("org.kalypso.ogc.sensor.filter.filters.RoundFilter.2") ); //$NON-NLS-1$
+    throw new UnsupportedOperationException( getClass().getName() + Messages.getString( "org.kalypso.ogc.sensor.filter.filters.RoundFilter.2" ) ); //$NON-NLS-1$
   }
 }

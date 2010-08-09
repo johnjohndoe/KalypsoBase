@@ -74,8 +74,8 @@ public class RelativeFeatureChange extends FeatureChange
    * @param propertyType
    *          the property of the feature to change
    * @param operator
-   *          one of +, -, *, / and the empty string, which denotes that <code>value</code> is a constant that should
-   *          be set to the property
+   *          one of +, -, *, / and the empty string, which denotes that <code>value</code> is a constant that should be
+   *          set to the property
    * @param value
    *          the operand
    */
@@ -95,11 +95,11 @@ public class RelativeFeatureChange extends FeatureChange
     final IValuePropertyType propertyType = (IValuePropertyType) getProperty();
     final Class< ? > valueClass = propertyType.getValueClass();
     if( !Number.class.isAssignableFrom( valueClass ) )
-      throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.gml.command.RelativeFeatureChange.11") + valueClass ); //$NON-NLS-1$
-    
+      throw new IllegalArgumentException( Messages.getString( "org.kalypso.ogc.gml.command.RelativeFeatureChange.11" ) + valueClass ); //$NON-NLS-1$
+
     final Feature feature = getFeature();
 
-    if( "".equals( m_operator ) ) //$NON-NLS-1$
+    if( "".equals( m_operator ) ) //$NON-NLS-1$ 
       return m_operand;
 
     if( "=".equals( m_operator ) ) //$NON-NLS-1$
@@ -107,21 +107,21 @@ public class RelativeFeatureChange extends FeatureChange
 
     final Number numericProperty = (Number) feature.getProperty( getProperty() );
     if( numericProperty == null )
-      throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.gml.command.RelativeFeatureChange.11") + " null" ); //$NON-NLS-1$ //$NON-NLS-2$
+      throw new IllegalArgumentException( Messages.getString( "org.kalypso.ogc.gml.command.RelativeFeatureChange.11" ) + " null" ); //$NON-NLS-1$ //$NON-NLS-2$
 
     if( "+".equals( m_operator ) ) //$NON-NLS-1$
       return calculate( numericProperty, m_operand, "add" ); //$NON-NLS-1$
-    
+
     if( "-".equals( m_operator ) ) //$NON-NLS-1$
       return calculate( numericProperty, m_operand, "subtract" ); //$NON-NLS-1$
-    
+
     if( "*".equals( m_operator ) ) //$NON-NLS-1$
       return calculate( numericProperty, m_operand, "multiply" ); //$NON-NLS-1$
 
     if( "/".equals( m_operator ) ) //$NON-NLS-1$
       return calculate( numericProperty, m_operand, "divide" ); //$NON-NLS-1$
 
-    throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.gml.command.RelativeFeatureChange.10") ); //$NON-NLS-1$
+    throw new IllegalArgumentException( Messages.getString( "org.kalypso.ogc.gml.command.RelativeFeatureChange.10" ) ); //$NON-NLS-1$
   }
 
   /**
@@ -144,7 +144,7 @@ public class RelativeFeatureChange extends FeatureChange
       }
       catch( final Exception e )
       {
-        throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.gml.command.RelativeFeatureChange.13") + secondOperand + Messages.getString("org.kalypso.ogc.gml.command.RelativeFeatureChange.14") + bigTypesMethodName + Messages.getString("org.kalypso.ogc.gml.command.RelativeFeatureChange.15") + firstOperand, e ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        throw new IllegalArgumentException( Messages.getString( "org.kalypso.ogc.gml.command.RelativeFeatureChange.13" ) + secondOperand + Messages.getString( "org.kalypso.ogc.gml.command.RelativeFeatureChange.14" ) + bigTypesMethodName + Messages.getString( "org.kalypso.ogc.gml.command.RelativeFeatureChange.15" ) + firstOperand, e ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
       }
       if( firstOperand instanceof BigInteger )
       {
@@ -166,19 +166,19 @@ public class RelativeFeatureChange extends FeatureChange
   }
 
   /**
-   * Tries to construct an Object of class <code>type</code> using its constructor that takes a String argument. Such
-   * a constructor exists for all subtypes of {@link Number} in the java library, i.e. the primitive wrapper types
-   * {@link Byte}, {@link Double}, {@link Float}, {@link Integer}, {@link Long}, {@link Short} and the big number
-   * types {@link java.math.BigInteger} and {@link java.math.BigDecimal}. Both the double value and the double value
-   * cast as a long are tried. If both strings are not of an appropriate format, a {@link NumberFormatException} will be
-   * thrown. If any other error occurs, an {@link IllegalArgumentException} will be thrown.
+   * Tries to construct an Object of class <code>type</code> using its constructor that takes a String argument. Such a
+   * constructor exists for all subtypes of {@link Number} in the java library, i.e. the primitive wrapper types
+   * {@link Byte}, {@link Double}, {@link Float}, {@link Integer}, {@link Long}, {@link Short} and the big number types
+   * {@link java.math.BigInteger} and {@link java.math.BigDecimal}. Both the double value and the double value cast as a
+   * long are tried. If both strings are not of an appropriate format, a {@link NumberFormatException} will be thrown.
+   * If any other error occurs, an {@link IllegalArgumentException} will be thrown.
    */
-  private <T extends Number> Number castDoubleAsType( final Class<? extends Number> type, final double doubleValue ) throws NumberFormatException
+  private <T extends Number> Number castDoubleAsType( final Class< ? extends Number> type, final double doubleValue ) throws NumberFormatException
   {
     Number result;
     try
     {
-      final Constructor<? extends Number> stringConstructor = type.getConstructor( String.class );
+      final Constructor< ? extends Number> stringConstructor = type.getConstructor( String.class );
       try
       {
         result = stringConstructor.newInstance( "" + doubleValue ); //$NON-NLS-1$
@@ -191,17 +191,17 @@ public class RelativeFeatureChange extends FeatureChange
     catch( final InvocationTargetException e )
     {
       // the underlying constructor has probably thrown a NumberFormatException
-      final NumberFormatException newException = new NumberFormatException( Messages.getString("org.kalypso.ogc.gml.command.RelativeFeatureChange.18") + doubleValue + Messages.getString("org.kalypso.ogc.gml.command.RelativeFeatureChange.19") + type.getClass().getName() ); //$NON-NLS-1$ //$NON-NLS-2$
+      final NumberFormatException newException = new NumberFormatException( Messages.getString( "org.kalypso.ogc.gml.command.RelativeFeatureChange.18" ) + doubleValue + Messages.getString( "org.kalypso.ogc.gml.command.RelativeFeatureChange.19" ) + type.getClass().getName() ); //$NON-NLS-1$ //$NON-NLS-2$
       newException.initCause( e );
       throw newException;
     }
     catch( final Exception e )
     {
-      throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.gml.command.RelativeFeatureChange.20") + doubleValue + Messages.getString("org.kalypso.ogc.gml.command.RelativeFeatureChange.21") + type.getClass().getName(), e ); //$NON-NLS-1$ //$NON-NLS-2$
+      throw new IllegalArgumentException( Messages.getString( "org.kalypso.ogc.gml.command.RelativeFeatureChange.20" ) + doubleValue + Messages.getString( "org.kalypso.ogc.gml.command.RelativeFeatureChange.21" ) + type.getClass().getName(), e ); //$NON-NLS-1$ //$NON-NLS-2$
     }
     return result;
   }
-  
+
   /**
    * checks if the property type is a {@link org.kalypso.gmlschema.property.IValuePropertyType} and can be cast as
    * {@link Number}

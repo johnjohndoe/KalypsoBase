@@ -47,5 +47,5 @@ import org.kalypso.ogc.gml.map.IMapPanel;
  */
 public interface IMapPanelProvider
 {
-  public IMapPanel getMapPanel();
+  IMapPanel getMapPanel( );
 }

@@ -79,9 +79,9 @@ public class ModifyFeatureGeometryCommand implements ICommand
   /**
    * @param workspace
    * @param targetFeatures
-   *            features to modify
+   *          features to modify
    */
-  public ModifyFeatureGeometryCommand( final GMLWorkspace workspace, final List<Handle> handles, final double translation[] )
+  public ModifyFeatureGeometryCommand( final GMLWorkspace workspace, final List<Handle> handles, final double[] translation )
   {
     m_workspace = workspace;
     m_handles = handles;
@@ -117,10 +117,10 @@ public class ModifyFeatureGeometryCommand implements ICommand
     final Map<List<Object>, Map<GM_Position, GM_Position>> handleHash = new HashMap<List<Object>, Map<GM_Position, GM_Position>>();
     for( final Handle handle : m_handles )
     {
-      final List<Object> key = new ArrayList<Object>(  );
+      final List<Object> key = new ArrayList<Object>();
       key.add( handle.getFeature() );
       key.add( handle.getPropertyType() );
-      
+
       if( !handleHash.containsKey( key ) )
       {
         // REMARK: we must use a IdentityHashMap (sadly, there is no such set) in order
@@ -150,10 +150,10 @@ public class ModifyFeatureGeometryCommand implements ICommand
 
       // Second, invalidate this property
       /* Reset the geometry value in order to invalidate the feature's envelope */
-      final Feature feature = (Feature) key.get(0);
-      final IValuePropertyType propertyType = (IValuePropertyType) key.get(1);
+      final Feature feature = (Feature) key.get( 0 );
+      final IValuePropertyType propertyType = (IValuePropertyType) key.get( 1 );
       final GM_Object value = (GM_Object) feature.getProperty( propertyType );
-      
+
       value.invalidate();
       feature.setProperty( propertyType, value );
 
@@ -208,7 +208,7 @@ public class ModifyFeatureGeometryCommand implements ICommand
   @Override
   public String getDescription( )
   {
-    return Messages.getString("org.kalypso.ogc.gml.command.ModifyFeatureGeometryCommand.0"); //$NON-NLS-1$
+    return Messages.getString( "org.kalypso.ogc.gml.command.ModifyFeatureGeometryCommand.0" ); //$NON-NLS-1$
   }
 
   /**

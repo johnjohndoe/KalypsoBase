@@ -97,7 +97,7 @@ public class SelectionMapLayer implements IMapLayer
   @Override
   public String getLabel( )
   {
-    return Messages.getString("org.kalypso.ogc.gml.map.layer.SelectionMapLayer.0"); //$NON-NLS-1$
+    return Messages.getString( "org.kalypso.ogc.gml.map.layer.SelectionMapLayer.0" ); //$NON-NLS-1$
   }
 
   /**

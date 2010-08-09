@@ -52,15 +52,15 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * Generiert TimeseriesLinks in einem Features anhand von String-Patterns.
- * 
  * <p>
  * Unterstützte Variablen für das Pattern:
  * </p>
  * <ul>
  * <li>${fid} Feature-ID</li>
- * <li>${fidOnlyDigits} Same as ${fid}, but all non-digits are pruned. </li>
- * <li>${property:<name>} Will be replaced with the String-Version of the property with name in the current feature. </li>
- * <li><${wiski_sim:link_property} Erstellt die Href anhand der Href der angegebenen Property. Diese wird nach dem Wiski-Simulations Pattern abgeändert. </li>
+ * <li>${fidOnlyDigits} Same as ${fid}, but all non-digits are pruned.</li>
+ * <li>${property:<name>} Will be replaced with the String-Version of the property with name in the current feature.</li>
+ * <li><${wiski_sim:link_property} Erstellt die Href anhand der Href der angegebenen Property. Diese wird nach dem
+ * Wiski-Simulations Pattern abgeändert.</li>
  * </ul>
  * 
  * @author belger
@@ -68,6 +68,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 public class TimeseriesLinkGenerateVisitor implements FeatureVisitor
 {
   private static final String WISKI_SIM_PATTERN = "${wiski_sim:"; //$NON-NLS-1$
+
   private final ObjectFactory m_linkFactory = new ObjectFactory();
 
   private final String m_hrefPattern;
@@ -79,7 +80,7 @@ public class TimeseriesLinkGenerateVisitor implements FeatureVisitor
    */
   public TimeseriesLinkGenerateVisitor( final Properties properties )
   {
-    this( properties.getProperty( "link", Messages.getString("org.kalypso.ogc.gml.convert.source.visitors.TimeseriesLinkGenerateVisitor.2") ), properties.getProperty( "href", "" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+    this( properties.getProperty( "link", Messages.getString( "org.kalypso.ogc.gml.convert.source.visitors.TimeseriesLinkGenerateVisitor.2" ) ), properties.getProperty( "href", "" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
   }
 
   public TimeseriesLinkGenerateVisitor( final String propertyName, final String hrefPattern )
@@ -95,10 +96,10 @@ public class TimeseriesLinkGenerateVisitor implements FeatureVisitor
   public boolean visit( final Feature f )
   {
     final String href = applyPatterns( f );
-    
+
     final TimeseriesLinkType link = m_linkFactory.createTimeseriesLinkType();
     link.setHref( href );
-    final IPropertyType pt = FeatureHelper.getPT(f,m_propertyName);
+    final IPropertyType pt = FeatureHelper.getPT( f, m_propertyName );
     f.setProperty( pt, link );
 
     return true;
@@ -108,15 +109,15 @@ public class TimeseriesLinkGenerateVisitor implements FeatureVisitor
   {
     // hrefPattern durch angaben ersetzen
     String href = m_hrefPattern;
-    
+
     // Feature ID
     final String fid = f.getId();
     final String fidOnlyDigits = fid.replaceAll( "\\D", "" ); //$NON-NLS-1$ //$NON-NLS-2$
-    
+
     href = href.replaceAll( "\\Q${fid}\\E", fid ); //$NON-NLS-1$
     href = href.replaceAll( "\\Q${fidOnlyDigits}\\E", fidOnlyDigits ); //$NON-NLS-1$
     href = replaceProperties( f, href );
-    
+
     // wiski pattern
     href = applyWiskiSim( href, f );
 
@@ -133,50 +134,50 @@ public class TimeseriesLinkGenerateVisitor implements FeatureVisitor
       final int start = newHref.indexOf( PROPERTY );
       if( start == -1 )
         break;
-      
+
       final int stop = newHref.indexOf( '}', start + PROPERTY.length() + 1 );
       if( stop == -1 )
         break;
-      
+
       final String name = newHref.substring( start + PROPERTY.length() + 1, stop );
       final Object value = f.getProperty( name );
       final String replacement = value == null ? "<null>" : value.toString(); //$NON-NLS-1$
       newHref = newHref.substring( 0, start ) + replacement + newHref.substring( stop + 1 );
     }
-    
+
     return newHref;
   }
 
   private String applyWiskiSim( final String href, final Feature f )
   {
     String result = href;
-    
+
     int index;
-    while( ( index = result.indexOf( WISKI_SIM_PATTERN ) ) != -1 )
+    while( (index = result.indexOf( WISKI_SIM_PATTERN )) != -1 )
     {
       final int index2 = result.indexOf( "}", index + 1 ); //$NON-NLS-1$
       if( index2 == -1 )
-        throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.gml.convert.source.visitors.TimeseriesLinkGenerateVisitor.12") + WISKI_SIM_PATTERN + Messages.getString("org.kalypso.ogc.gml.convert.source.visitors.TimeseriesLinkGenerateVisitor.13") ); //$NON-NLS-1$ //$NON-NLS-2$
+        throw new IllegalArgumentException( Messages.getString( "org.kalypso.ogc.gml.convert.source.visitors.TimeseriesLinkGenerateVisitor.12" ) + WISKI_SIM_PATTERN + Messages.getString( "org.kalypso.ogc.gml.convert.source.visitors.TimeseriesLinkGenerateVisitor.13" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
       final String propertyName = result.substring( index + WISKI_SIM_PATTERN.length(), index2 );
       final Object property = f.getProperty( propertyName );
-      
+
       final String simId;
-      
+
       if( property == null )
         simId = ""; //$NON-NLS-1$
-      else if( !( property instanceof TimeseriesLinkType ) )
-        throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.gml.convert.source.visitors.TimeseriesLinkGenerateVisitor.15") + propertyName ); //$NON-NLS-1$
+      else if( !(property instanceof TimeseriesLinkType) )
+        throw new IllegalArgumentException( Messages.getString( "org.kalypso.ogc.gml.convert.source.visitors.TimeseriesLinkGenerateVisitor.15" ) + propertyName ); //$NON-NLS-1$
       else
       {
-        final TimeseriesLinkType link = (TimeseriesLinkType)property;
+        final TimeseriesLinkType link = (TimeseriesLinkType) property;
         final String oldHref = link.getHref();
         simId = makeWiskiSimHref( oldHref );
       }
-      
+
       result = result.substring( 0, index ) + simId + result.substring( index2 + 1 );
     }
-    
+
     return result;
   }
 
@@ -186,10 +187,10 @@ public class TimeseriesLinkGenerateVisitor implements FeatureVisitor
     final int lastPoint = href.lastIndexOf( '.' );
     if( lastPoint == -1 )
       return ""; //$NON-NLS-1$
-    
+
     final String name = href.substring( 0, lastPoint );
     final String tail = href.substring( lastPoint );
-    
+
     return name + ".Sim" + tail; //$NON-NLS-1$
   }
 }

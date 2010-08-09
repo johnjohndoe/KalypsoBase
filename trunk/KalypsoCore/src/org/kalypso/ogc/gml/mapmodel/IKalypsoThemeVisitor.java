@@ -44,15 +44,14 @@ import org.kalypso.ogc.gml.IKalypsoTheme;
 
 /**
  * @author Thomas Jung
- *
  */
 public interface IKalypsoThemeVisitor
 {
   /** Do not recurse, visit all top-level themes. */
-  public final static int DEPTH_ZERO = 0;
+  final static int DEPTH_ZERO = 0;
 
   /** Recursevly visit sub-themes of cascading themes. */
-  public final static int DEPTH_INFINITE = 1;
+  final static int DEPTH_INFINITE = 1;
 
-  public boolean visit( final IKalypsoTheme theme );
+  boolean visit( final IKalypsoTheme theme );
 }

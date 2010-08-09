@@ -54,27 +54,27 @@ public class Intervall
 
   // |--other--|
   // |-----this------|
-  final public static int STATUS_INTERSECTION_NONE_BEFORE = 0;
+  public static final int STATUS_INTERSECTION_NONE_BEFORE = 0;
 
   // |--other--|
   // |-----this------|
-  final public static int STATUS_INTERSECTION_NONE_AFTER = 15;
+  public static final int STATUS_INTERSECTION_NONE_AFTER = 15;
 
   // |--other--|
   // |-----this------|
-  final public static int STATUS_INTERSECTION_START = 4;
+  public static final int STATUS_INTERSECTION_START = 4;
 
   // |--other--|
   // |-----this------|
-  final public static int STATUS_INTERSECTION_END = 7;
+  public static final int STATUS_INTERSECTION_END = 7;
 
   // |--other--|
   // |-----this------|
-  final public static int STATUS_INTERSECTION_INSIDE = 5;
+  public static final int STATUS_INTERSECTION_INSIDE = 5;
 
   // |--------other---------|
   // |-----this------|
-  final public static int STATUS_INTERSECTION_ARROUND = 6;
+  public static final int STATUS_INTERSECTION_ARROUND = 6;
 
   final Calendar m_start;
 
@@ -197,14 +197,18 @@ public class Intervall
     final double factor = calcFactorIntersect( result, mode );
 
     for( int i = 0; i < values.length; i++ )
+    {
       intervallValues[i] = factor * values[i];
+    }
 
     final int[] status = getStatus();
     /* Bugfix: empty intervals never get a status */
     if( result.getDurationInMillis() == 0 )
     {
       for( int i = 0; i < status.length; i++ )
+      {
         status[i] = KalypsoStati.BIT_OK;
+      }
     }
     result.setStatus( status );
 
@@ -216,9 +220,14 @@ public class Intervall
   {
     final double factor = calcFactorMerge( other, mode );
     for( int i = 0; i < other.getValue().length; i++ )
+    {
       m_value[i] += factor * other.getValue()[i];
+    }
+
     for( int i = 0; i < other.getStatus().length; i++ )
+    {
       m_status[i] |= other.getStatus()[i];
+    }
   }
 
   private double calcFactorIntersect( final Intervall other, final int mode )
@@ -226,14 +235,13 @@ public class Intervall
     switch( mode )
     {
       case IntervallFilter.MODE_SUM:
-      {
         /* If target interval length is 0; factor is 0 (the empty sum) */
         final long durationInMillis = getDurationInMillis();
         if( durationInMillis == 0 )
           return 0d;
 
         return (double) other.getDurationInMillis() / (double) durationInMillis;
-      }
+
       case IntervallFilter.MODE_INTENSITY:
       default:
         return 1d;
@@ -256,21 +264,27 @@ public class Intervall
   public String toString( )
   {
     final StringBuffer result = new StringBuffer();
-    result.append( Messages.getString("org.kalypso.ogc.sensor.filter.filters.Intervall.0") + m_start.getTime().toString() + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
-    result.append( Messages.getString("org.kalypso.ogc.sensor.filter.filters.Intervall.2") + m_end.getTime().toString() + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
-    result.append( Messages.getString("org.kalypso.ogc.sensor.filter.filters.Intervall.4") + getDurationInMillis() + Messages.getString("org.kalypso.ogc.sensor.filter.filters.Intervall.5") ); //$NON-NLS-1$ //$NON-NLS-2$
+    result.append( Messages.getString( "org.kalypso.ogc.sensor.filter.filters.Intervall.0" ) + m_start.getTime().toString() + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
+    result.append( Messages.getString( "org.kalypso.ogc.sensor.filter.filters.Intervall.2" ) + m_end.getTime().toString() + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
+    result.append( Messages.getString( "org.kalypso.ogc.sensor.filter.filters.Intervall.4" ) + getDurationInMillis() + Messages.getString( "org.kalypso.ogc.sensor.filter.filters.Intervall.5" ) ); //$NON-NLS-1$ //$NON-NLS-2$
     if( m_value != null )
     {
-      result.append( Messages.getString("org.kalypso.ogc.sensor.filter.filters.Intervall.6") ); //$NON-NLS-1$
+      result.append( Messages.getString( "org.kalypso.ogc.sensor.filter.filters.Intervall.6" ) ); //$NON-NLS-1$
       for( final double element : m_value )
+      {
         result.append( "  " + element ); //$NON-NLS-1$
+      }
+
       result.append( "\n" ); //$NON-NLS-1$
     }
     if( m_status != null )
     {
-      result.append( Messages.getString("org.kalypso.ogc.sensor.filter.filters.Intervall.9") ); //$NON-NLS-1$
-      for( final int m_statu : m_status )
-        result.append( "  " + m_statu ); //$NON-NLS-1$
+      result.append( Messages.getString( "org.kalypso.ogc.sensor.filter.filters.Intervall.9" ) ); //$NON-NLS-1$
+      for( final int status : m_status )
+      {
+        result.append( "  " + status ); //$NON-NLS-1$
+      }
+
       result.append( "\n" ); //$NON-NLS-1$
     }
     return result.toString();

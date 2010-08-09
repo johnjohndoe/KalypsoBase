@@ -45,8 +45,13 @@ import org.xml.sax.InputSource;
  * 
  * @author doemming
  */
-public class CloneUtilities
+public final class CloneUtilities
 {
+  private CloneUtilities( )
+  {
+
+  }
+
   /**
    * clones a object that has a marshaller and unmarshaller
    * 
@@ -67,7 +72,7 @@ public class CloneUtilities
 
     // unmarshall it
     final Unmarshaller unmarshaller = jc.createUnmarshaller();
-    StringReader reader = new StringReader( tmpBuffer.toString() );
+    final StringReader reader = new StringReader( tmpBuffer.toString() );
     final InputSource source = new InputSource( reader );
     return unmarshaller.unmarshal( source );
   }

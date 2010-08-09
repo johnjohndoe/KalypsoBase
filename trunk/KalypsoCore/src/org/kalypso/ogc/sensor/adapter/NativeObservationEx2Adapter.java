@@ -62,8 +62,8 @@ import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
-import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.metadata.ITimeserieConstants;
+import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 
 /**
@@ -73,11 +73,13 @@ public class NativeObservationEx2Adapter implements INativeObservationAdapter
 {
   private final DateFormat m_ex2DateFormat = new SimpleDateFormat( "dd MM yyyy HH" ); //$NON-NLS-1$
 
-  public static Pattern m_ex2Pattern = Pattern.compile( "([0-9]{1,2}.+?[0-9]{1,2}.+?[0-9]{2,4}.+?[0-9]{1,2}).+?([-]?[0-9\\.]+)" ); //$NON-NLS-1$
+  public static Pattern EX_2_PATTERN = Pattern.compile( "([0-9]{1,2}.+?[0-9]{1,2}.+?[0-9]{2,4}.+?[0-9]{1,2}).+?([-]?[0-9\\.]+)" ); //$NON-NLS-1$
 
   private String m_title;
 
   private String m_axisTypeValue;
+
+  private final int MAX_NO_OF_ERRORS = 30;
 
   /**
    * @see org.eclipse.core.runtime.IExecutableExtension#setInitializationData(org.eclipse.core.runtime.IConfigurationElement,
@@ -114,7 +116,7 @@ public class NativeObservationEx2Adapter implements INativeObservationAdapter
 
   private ITupleModel createTuppelModel( final File source, final IAxis[] axis, final boolean continueWithErrors ) throws IOException
   {
-    final int MAX_NO_OF_ERRORS = 30;
+
     int numberOfErrors = 0;
 
     final StringBuffer errorBuffer = new StringBuffer();
@@ -129,7 +131,7 @@ public class NativeObservationEx2Adapter implements INativeObservationAdapter
         return null;
       try
       {
-        final Matcher matcher = m_ex2Pattern.matcher( lineIn );
+        final Matcher matcher = EX_2_PATTERN.matcher( lineIn );
         if( matcher.matches() )
         {
           final String dateString = matcher.group( 1 );

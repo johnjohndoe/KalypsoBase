@@ -46,18 +46,16 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.core.i18n.Messages;
 
 /**
- * @author felipe maximino
- *
- * an abstract GML to HMO converter
+ * @author felipe maximino an abstract GML to HMO converter
  */
 public abstract class Gml2HmoConverter
-{ 
-  public void writeHmo( final File hmoBaseFile, final IProgressMonitor monitor ) throws Exception 
+{
+  public void writeHmo( final File hmoBaseFile, final IProgressMonitor monitor ) throws Exception
   {
-    monitor.beginTask( Messages.getString("org.kalypso.ogc.gml.serialize.Gml2HmoConverter.1"), 2 ); //$NON-NLS-1$
+    monitor.beginTask( Messages.getString( "org.kalypso.ogc.gml.serialize.Gml2HmoConverter.1" ), 2 ); //$NON-NLS-1$
     writeHmo( hmoBaseFile );
     monitor.done();
   }
-  
+
   public abstract void writeHmo( final File hmoBaseFile ) throws Exception;
 }

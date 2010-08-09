@@ -47,8 +47,8 @@ import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 
 /**
- * This class is for testing properties of {@link IKalypsoFeatureTheme}. Supported properties are:
- * <li> feature type (including substitution) </li>
+ * This class is for testing properties of {@link IKalypsoFeatureTheme}. Supported properties are: <li>feature type
+ * (including substitution)</li>
  * 
  * @author Stefan Kurzbach
  */

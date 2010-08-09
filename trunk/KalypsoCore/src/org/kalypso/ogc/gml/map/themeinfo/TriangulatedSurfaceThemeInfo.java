@@ -76,14 +76,14 @@ public class TriangulatedSurfaceThemeInfo implements IKalypsoThemeInfo
    * .<br>
    * Defaults to <code>Wert: %.2f</code>.
    */
-  public final static String PROP_FORMAT = "format"; //$NON-NLS-1$
+  public static final String PROP_FORMAT = "m_format"; //$NON-NLS-1$
 
   /**
    * Value of the property which indicates the name of the featue-property containing the triangulated surface geometry.<br>
    * Must be a qname of the form {namespace}localPart.<br>
    * If not set, the first property of type gml:TriangulatedSurface will be used.
    */
-  public final static String PROP_GEOMETRY = "geometry"; //$NON-NLS-1$
+  public static final String PROP_GEOMETRY = "geometry"; //$NON-NLS-1$
 
   private IKalypsoFeatureTheme m_theme;
 

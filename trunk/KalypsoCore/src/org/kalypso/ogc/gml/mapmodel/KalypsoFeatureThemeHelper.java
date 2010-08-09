@@ -50,8 +50,12 @@ import org.kalypsodeegree.model.feature.FeatureVisitor;
 /**
  * @author Thomas Jung
  */
-public class KalypsoFeatureThemeHelper
+public final class KalypsoFeatureThemeHelper
 {
+  private KalypsoFeatureThemeHelper( )
+  {
+  }
+
   /**
    * Gets the linestring themes in the Kalypso theme list
    */

@@ -59,8 +59,12 @@ import org.kalypsodeegree.model.geometry.GM_Object;
  * 
  * @author belger
  */
-public class FeatureSelectionHelper
+public final class FeatureSelectionHelper
 {
+  private FeatureSelectionHelper( )
+  {
+  }
+
   /** Return all features contained in the selection */
   public static Feature[] getFeatures( final IFeatureSelection selection )
   {
