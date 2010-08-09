@@ -91,7 +91,7 @@ public class AddDataSourceModelHandler extends AbstractDataSourceModelHandler
        */
       data[dataSourceIndex] = 0;
 
-      model.addTupple( data );
+      model.addTuple( data );
     }
 
     return model;

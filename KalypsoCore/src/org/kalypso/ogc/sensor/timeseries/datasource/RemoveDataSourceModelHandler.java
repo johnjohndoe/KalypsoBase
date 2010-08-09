@@ -84,7 +84,7 @@ public class RemoveDataSourceModelHandler extends AbstractDataSourceModelHandler
         data[model.getPositionFor( axis )] = element;
       }
 
-      model.addTupple( data );
+      model.addTuple( data );
     }
 
     return model;

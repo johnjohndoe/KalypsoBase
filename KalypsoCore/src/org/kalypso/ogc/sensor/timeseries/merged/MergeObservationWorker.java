@@ -160,7 +160,7 @@ public class MergeObservationWorker implements ICoreRunnableWithProgress
 
         for( final Object[] values : data )
         {
-          baseModel.addTupple( values );
+          baseModel.addTuple( values );
         }
       }
       catch( final Throwable t )

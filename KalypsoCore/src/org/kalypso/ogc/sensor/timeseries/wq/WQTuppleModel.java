@@ -371,7 +371,7 @@ public class WQTuppleModel extends AbstractTupleModel
       for( int j = 0; j < axes.length; j++ )
         tupple[stm.getPositionFor( axes[j] )] = values.getElement( i, axes[j] );
 
-      stm.addTupple( tupple );
+      stm.addTuple( tupple );
     }
 
     return stm;

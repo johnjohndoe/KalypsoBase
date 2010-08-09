@@ -229,7 +229,7 @@ public class SimpleObservation implements IObservation
           tupple[stm.getPositionFor( myA )] = obj;
         }
 
-        stm.addTupple( tupple );
+        stm.addTuple( tupple );
       }
     }
 

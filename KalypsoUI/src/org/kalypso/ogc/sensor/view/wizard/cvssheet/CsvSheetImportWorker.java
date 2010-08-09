@@ -123,7 +123,7 @@ public class CsvSheetImportWorker implements ICoreRunnableWithProgress
       final String rDate = nextLine[0];
       final String rValue = nextLine[1];
 
-      simpleModel.addTupple( new Object[] { dateFormat.parse( rDate ), new Double( rValue.replaceAll( dSep.getRegEx(), "." ) ) } ); //$NON-NLS-1$
+      simpleModel.addTuple( new Object[] { dateFormat.parse( rDate ), new Double( rValue.replaceAll( dSep.getRegEx(), "." ) ) } ); //$NON-NLS-1$
     }
 
     final SimpleObservation simple = new SimpleObservation( new IAxis[] { simpleDateAxis, simpleDataAxis } );

@@ -302,7 +302,7 @@ public class CommitPrognoseFeatureVisitor extends AbstractMonitoredFeatureVisito
           tupple[j] = values.getElement( i, srcAxis );
       }
 
-      model.addTupple( tupple );
+      model.addTuple( tupple );
     }
 
     target.setValues( model );
