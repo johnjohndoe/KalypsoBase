@@ -217,7 +217,7 @@ public class SimpleTupleModel extends AbstractTupleModel
    * @param tupple
    *          The 'row' to be added.
    */
-  public void addTupple( final Vector<Object> tupple )
+  public void addTuple( final Vector<Object> tupple )
   {
     addTuple( tupple.toArray( new Object[] {} ) );
   }
