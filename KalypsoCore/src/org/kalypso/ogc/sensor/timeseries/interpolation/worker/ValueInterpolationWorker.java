@@ -93,11 +93,7 @@ public class ValueInterpolationWorker extends AbstractInterpolationWorker
 
     try
     {
-      final IAxis dateAxis = getDateAxis();
       final IAxis[] valueAxes = getValueAxes();
-
-      final Object[] defaultValues = parseDefaultValues( valueAxes );
-
       final Calendar calendar = Calendar.getInstance();
 
       final LocalCalculationStack stack = new LocalCalculationStack( valueAxes.length );
@@ -107,39 +103,13 @@ public class ValueInterpolationWorker extends AbstractInterpolationWorker
 
       for( int index = 1; index < getBaseModel().getCount(); index++ )
       {
-        interpolate( stack, calendar, index );
+        setInterpolationValues( stack, calendar, index );
 
         stack.d1 = stack.d2;
         System.arraycopy( stack.v2, 0, stack.v1, 0, stack.v2.length );
       }
 
-      // do we need to fill after the end of the base model?
-      if( getDateRange() != null && isFilled() )
-      {
-        // optionally remember the last interpolated values in order
-        // to fill them till the end of the new model
-        Object[] lastValidTupple = null;
-        if( isLastFilledWithValid() && getInterpolatedModel().getCount() > 0 )
-        {
-          final int pos = getInterpolatedModel().getCount() - 1;
-
-          lastValidTupple = new Object[valueAxes.length + 1];
-          lastValidTupple[getInterpolatedModel().getPositionFor( dateAxis )] = getInterpolatedModel().getElement( pos, dateAxis );
-          for( int i = 0; i < valueAxes.length; i++ )
-          {
-            if( KalypsoStatusUtils.isStatusAxis( valueAxes[i] ) )
-              lastValidTupple[getInterpolatedModel().getPositionFor( valueAxes[i] )] = getDefaultStatus();
-            else
-              lastValidTupple[getInterpolatedModel().getPositionFor( valueAxes[i] )] = getInterpolatedModel().getElement( pos, valueAxes[i] );
-          }
-        }
-
-        while( calendar.getTime().compareTo( getDateRange().getTo() ) <= 0 )
-        {
-          fillWithDefault( dateAxis, valueAxes, defaultValues, calendar, lastValidTupple );
-        }
-      }
-
+      setEndValues( calendar );
     }
     catch( final SensorException e )
     {
@@ -149,7 +119,42 @@ public class ValueInterpolationWorker extends AbstractInterpolationWorker
     return StatusUtilities.createStatus( statis, "Interpolating values" );
   }
 
-  private void interpolate( final LocalCalculationStack stack, final Calendar calendar, final int index ) throws SensorException
+  private void setEndValues( final Calendar calendar ) throws SensorException
+  {
+    final IAxis dateAxis = getDateAxis();
+    final IAxis[] valueAxes = getValueAxes();
+
+    final Object[] defaultValues = parseDefaultValues( valueAxes );
+
+    // do we need to fill after the end of the base model?
+    if( getDateRange() != null && isFilled() )
+    {
+      // optionally remember the last interpolated values in order
+      // to fill them till the end of the new model
+      Object[] lastValidTupple = null;
+      if( isLastFilledWithValid() && getInterpolatedModel().getCount() > 0 )
+      {
+        final int pos = getInterpolatedModel().getCount() - 1;
+
+        lastValidTupple = new Object[valueAxes.length + 1];
+        lastValidTupple[getInterpolatedModel().getPositionFor( dateAxis )] = getInterpolatedModel().getElement( pos, dateAxis );
+        for( int i = 0; i < valueAxes.length; i++ )
+        {
+          if( KalypsoStatusUtils.isStatusAxis( valueAxes[i] ) )
+            lastValidTupple[getInterpolatedModel().getPositionFor( valueAxes[i] )] = getDefaultStatus();
+          else
+            lastValidTupple[getInterpolatedModel().getPositionFor( valueAxes[i] )] = getInterpolatedModel().getElement( pos, valueAxes[i] );
+        }
+      }
+
+      while( calendar.getTime().compareTo( getDateRange().getTo() ) <= 0 )
+      {
+        fillWithDefault( dateAxis, valueAxes, defaultValues, calendar, lastValidTupple );
+      }
+    }
+  }
+
+  private void setInterpolationValues( final LocalCalculationStack stack, final Calendar calendar, final int index ) throws SensorException
   {
     final IAxis dateAxis = getDateAxis();
     final IAxis[] valueAxes = getValueAxes();
@@ -268,7 +273,6 @@ public class ValueInterpolationWorker extends AbstractInterpolationWorker
       stack.d1 = calendar.getTime();
       nextStep( calendar );
     }
-
   }
 
 }
