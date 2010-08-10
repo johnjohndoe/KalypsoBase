@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.sensor.timeseries.interpolation;
+package org.kalypso.ogc.sensor.timeseries.interpolation.worker;
 
 import org.kalypso.ogc.sensor.IObservation;
 

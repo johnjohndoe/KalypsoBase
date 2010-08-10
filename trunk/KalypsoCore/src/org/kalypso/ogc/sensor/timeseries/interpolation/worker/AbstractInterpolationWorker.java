@@ -38,9 +38,10 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.sensor.timeseries.interpolation;
+package org.kalypso.ogc.sensor.timeseries.interpolation.worker;
 
 import java.util.Calendar;
+import java.util.Date;
 
 import org.kalypso.commons.parser.IParser;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
@@ -69,7 +70,7 @@ public abstract class AbstractInterpolationWorker implements ICoreRunnableWithPr
   /**
    * the interpolated result model
    */
-  private ITupleModel m_interpolated;
+  private final SimpleTupleModel m_interpolated;
 
   private final IInterpolationFilter m_filter;
 
@@ -78,6 +79,7 @@ public abstract class AbstractInterpolationWorker implements ICoreRunnableWithPr
     m_filter = filter;
     m_baseModel = baseModel;
     m_dateRange = dateRange;
+    m_interpolated = new SimpleTupleModel( getBaseModel().getAxisList() );
   }
 
   protected ITupleModel getBaseModel( )
@@ -120,12 +122,7 @@ public abstract class AbstractInterpolationWorker implements ICoreRunnableWithPr
     return new ValueInterpolationWorker( filter, values, dateRange );
   }
 
-  protected void setInterpolatedModel( final ITupleModel interpolated )
-  {
-    m_interpolated = interpolated;
-  }
-
-  public ITupleModel getInterpolatedModel( )
+  public SimpleTupleModel getInterpolatedModel( )
   {
     return m_interpolated;
   }
@@ -133,6 +130,20 @@ public abstract class AbstractInterpolationWorker implements ICoreRunnableWithPr
   protected Integer getDefaultStatus( )
   {
     return m_filter.getDefaultStatus();
+  }
+
+  protected IAxis getDateAxis( )
+  {
+    final IAxis[] axes = getBaseModel().getAxisList();
+
+    return ObservationUtilities.findAxisByClass( axes, Date.class );
+  }
+
+  protected IAxis[] getValueAxes( )
+  {
+    final IAxis[] axes = getBaseModel().getAxisList();
+
+    return ObservationUtilities.findAxesByClasses( axes, new Class[] { Number.class, Boolean.class } );
   }
 
   protected Object[] parseDefaultValues( final IAxis[] valueAxes ) throws SensorException
@@ -161,9 +172,9 @@ public abstract class AbstractInterpolationWorker implements ICoreRunnableWithPr
   /**
    * Fill the model with default values
    */
-  protected void fillWithDefault( final IAxis dateAxis, final IAxis[] valueAxes, final Object[] defaultValues, final SimpleTupleModel intModel, final Calendar cal ) throws SensorException
+  protected void fillWithDefault( final IAxis dateAxis, final IAxis[] valueAxes, final Object[] defaultValues, final Calendar cal ) throws SensorException
   {
-    fillWithDefault( dateAxis, valueAxes, defaultValues, intModel, cal, null );
+    fillWithDefault( dateAxis, valueAxes, defaultValues, cal, null );
   }
 
   /**
@@ -172,29 +183,29 @@ public abstract class AbstractInterpolationWorker implements ICoreRunnableWithPr
    * @param masterTupple
    *          if not null, the values from this tuple are used instead of the default one
    */
-  protected void fillWithDefault( final IAxis dateAxis, final IAxis[] valueAxes, final Object[] defaultValues, final SimpleTupleModel intModel, final Calendar cal, final Object[] masterTupple ) throws SensorException
+  protected void fillWithDefault( final IAxis dateAxis, final IAxis[] valueAxes, final Object[] defaultValues, final Calendar cal, final Object[] masterTupple ) throws SensorException
   {
     final Object[] tupple;
 
     if( masterTupple == null )
     {
       tupple = new Object[valueAxes.length + 1];
-      tupple[intModel.getPositionFor( dateAxis )] = cal.getTime();
+      tupple[getInterpolatedModel().getPositionFor( dateAxis )] = cal.getTime();
 
       for( int i = 0; i < valueAxes.length; i++ )
       {
         final IAxis axis = valueAxes[i];
-        final int pos = intModel.getPositionFor( axis );
+        final int pos = getInterpolatedModel().getPositionFor( axis );
         tupple[pos] = defaultValues[i];
       }
     }
     else
     {
       tupple = masterTupple.clone();
-      tupple[intModel.getPositionFor( dateAxis )] = cal.getTime();
+      tupple[getInterpolatedModel().getPositionFor( dateAxis )] = cal.getTime();
     }
 
-    intModel.addTuple( tupple );
+    getInterpolatedModel().addTuple( tupple );
     nextStep( cal );
   }
 

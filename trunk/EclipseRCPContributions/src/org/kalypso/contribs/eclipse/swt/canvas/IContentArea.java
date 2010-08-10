@@ -56,7 +56,7 @@ public interface IContentArea extends MouseListener
 {
   void draw( PaintEvent e );
 
-  public Point getContentAreaAnchorPoint( );
+  Point getContentAreaAnchorPoint( );
 
   Rectangle getBoundingBox( );
 
@@ -64,17 +64,17 @@ public interface IContentArea extends MouseListener
 
   String getTooltip( );
 
-  public void setImage( final Image image );
+  void setImage( final Image image );
 
-  public void setDisabledImage( final Image image );
+  void setDisabledImage( final Image image );
 
-  public void setHoverImage( final Image image );
+  void setHoverImage( final Image image );
 
-  public void setText( final String text, final Font textFont, final Color textColor, final int textPosition );
+  void setText( final String text, final Font textFont, final Color textColor, final int textPosition );
 
-  public void setEnabled( boolean state );
+  void setEnabled( boolean state );
 
-  public boolean isEnabled( );
+  boolean isEnabled( );
 
   /**
    * @return hover state changed?
