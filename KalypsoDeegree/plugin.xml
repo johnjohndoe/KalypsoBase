@@ -221,4 +221,12 @@
       	class="org.kalypsodeegree_impl.io.sax.parser.geometrySpec.LineStringSpecification">
       </GeometrySpecification>
    </extension>
+   <extension
+         point="org.eclipse.wst.xml.core.catalogContributions">
+      <catalogContribution>
+         <nextCatalog
+               catalog="deegree/org/kalypsodeegree_impl/gml/schema/schemata/catalog.xml">
+         </nextCatalog>
+      </catalogContribution>
+   </extension>
 </plugin>
