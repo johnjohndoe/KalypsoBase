@@ -942,24 +942,34 @@ public class FileUtilities
   public static FileObject uncompressFileContent( final URL sourceFileURL, final URL outputDirURL, final String compressKind )
   {
     if( compressKind == null || "".equals( compressKind ) )
-    {
       return proceedFileCompressOperation( sourceFileURL, outputDirURL, compressKind, false );
-    }
-    else
+
+    return proceedFileCompressOperation( sourceFileURL, outputDirURL, compressKind, true );
+  }
+
+  /**
+   * Checks if the contents of a url can be accessed.<br/>
+   * 
+   * @param location
+   *          The url to check.
+   * @return <code>true</code>, if a stream on the location can pe opened.
+   */
+  public static boolean checkIsAccessible( final URL location )
+  {
+    InputStream is = null;
+    try
     {
-      return proceedFileCompressOperation( sourceFileURL, outputDirURL, compressKind, true );
+      is = location.openStream();
+      return true;
+    }
+    catch( final IOException e )
+    {
+      return false;
+    }
+    finally
+    {
+      IOUtils.closeQuietly( is );
     }
   }
 
-//  public static FileObject makeFileObjectFromFile( final File pFile )
-//  {
-//    try
-//    {
-//      return VFSUtilities.getNewManager().resolveFile( pFile.toURI().toASCIIString() );
-//    }
-//    catch( FileSystemException e )
-//    {
-//      return null;
-//    }
-//  }
 }
