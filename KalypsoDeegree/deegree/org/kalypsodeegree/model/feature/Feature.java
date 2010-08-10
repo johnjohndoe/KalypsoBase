@@ -50,36 +50,36 @@ import org.kalypsodeegree.model.geometry.GM_Object;
  */
 public interface Feature extends BaseFeature, Deegree2Feature
 {
-  public static final QName QN_NAME = new QName( NS.GML3, "name" );
+  QName QN_NAME = new QName( NS.GML3, "name" );
 
-  public static final QName QN_DESCRIPTION = new QName( NS.GML3, "description" );
+  QName QN_DESCRIPTION = new QName( NS.GML3, "description" );
 
   /** QName of gml's gml:_Feature */
-  public final static QName QNAME_FEATURE = new QName( NS.GML3, "_Feature" );
+  QName QNAME_FEATURE = new QName( NS.GML3, "_Feature" );
 
   /** Returns the gml:name property of the bound feature. */
-  public String getName( );
+  String getName( );
 
   /** Sets the gml:name property */
-  public void setName( final String name );
+  void setName( String name );
 
 // Defined in Deegree2Feature
 // /** Returns the gml:description property of the bound feature. */
 // public String getDescription( );
 
   /** Sets the gml_description property */
-  public void setDescription( final String desc );
+  void setDescription( String desc );
 
   /**
    * Return the gml:location property of the bound feature.<br>
    * REMARK: gml:location is deprecated in the GML3-Schema.
    */
-  public GM_Object getLocation( );
+  GM_Object getLocation( );
 
   /**
    * Sets the gml:location property to the bound feature.<br>
    * REMARK: gml:location is deprecated in the GML3-Schema.
    */
-  public void setLocation( final GM_Object location );
+  void setLocation( final GM_Object location );
 
 }

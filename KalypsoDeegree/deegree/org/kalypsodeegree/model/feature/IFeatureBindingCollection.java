@@ -69,13 +69,13 @@ public interface IFeatureBindingCollection<FWCls extends Feature> extends List<F
    *           <li/>the type is not adaptable to the class {@link FWCls}
    *           </ul>
    */
-  public FWCls addNew( final QName newChildType );
+  FWCls addNew( QName newChildType );
 
-  public <T extends FWCls> T addNew( final QName newChildType, final Class<T> classToAdapt );
+  <T extends FWCls> T addNew( QName newChildType, Class<T> classToAdapt );
 
-  public FWCls addNew( final QName newChildType, final String newFeatureId );
+  FWCls addNew( QName newChildType, String newFeatureId );
 
-  public <T extends FWCls> T addNew( final QName newChildType, final String newFeatureId, final Class<T> classToAdapt );
+  <T extends FWCls> T addNew( QName newChildType, String newFeatureId, Class<T> classToAdapt );
 
   /**
    * Creates and Adds a new element of the specified type into the feature collection at the specified position
@@ -96,7 +96,7 @@ public interface IFeatureBindingCollection<FWCls extends Feature> extends List<F
    * @throws IndexOutOfBoundsException
    *           if the index is out of range (index &lt; 0 || index &gt; size()).
    */
-  public <T extends FWCls> T addNew( final int index, final QName newChildType, final Class<T> classToAdapt );
+  <T extends FWCls> T addNew( int index, QName newChildType, Class<T> classToAdapt );
 
   /**
    * Add this feature as reference to this list
@@ -107,7 +107,7 @@ public interface IFeatureBindingCollection<FWCls extends Feature> extends List<F
    * @throws IllegalArgumentException
    *           if the argument toAdd is null
    */
-  public boolean addRef( FWCls toAdd ) throws IllegalArgumentException;
+  boolean addRef( FWCls toAdd ) throws IllegalArgumentException;
 
   /**
    * Answer all feature wrappers overlapping the selected zone
@@ -128,7 +128,7 @@ public interface IFeatureBindingCollection<FWCls extends Feature> extends List<F
    * @return a list of feature overlapping the given surface
    * @throws {@link IllegalArgumentException} if selectionSurface is null
    */
-  public List<FWCls> query( final GM_Surface< ? extends GM_SurfacePatch> selectionSurface, final QName qname, final boolean containedOnly );
+  List<FWCls> query( GM_Surface< ? extends GM_SurfacePatch> selectionSurface, QName qname, boolean containedOnly );
 
   /**
    * Answer all feature wrappers overlaping the given envelope
@@ -138,7 +138,7 @@ public interface IFeatureBindingCollection<FWCls extends Feature> extends List<F
    * @return a list of feature overlaping the given surface
    * @thorws {@link IllegalArgumentException} if envelope is null
    */
-  public List<FWCls> query( final GM_Envelope envelope );
+  List<FWCls> query( final GM_Envelope envelope );
 
   /**
    * Answer all feature wrappers containing the given position
@@ -148,22 +148,22 @@ public interface IFeatureBindingCollection<FWCls extends Feature> extends List<F
    * @return a list of feature overlaping the given surface
    * @throws {@link IllegalArgumentException} if position is null
    */
-  public List<FWCls> query( final GM_Position position );
+  List<FWCls> query( final GM_Position position );
 
   /**
    * Returns the combined bounding box off all contained objects.
    */
-  public GM_Envelope getBoundingBox( );
+  GM_Envelope getBoundingBox( );
 
   /**
    * To get the number of object of the specified class in this collection.
    * 
    * @return an int representing the number of object of the sepecified class in this collection
    */
-  public int countFeatureWrappers( Class< ? > wrapperClass );
+  int countFeatureWrappers( Class< ? > wrapperClass );
 
   /**
    * Clones the given object as member into this list
    */
-  public void cloneInto( final FWCls toClone ) throws Exception;
+  void cloneInto( FWCls toClone ) throws Exception;
 }

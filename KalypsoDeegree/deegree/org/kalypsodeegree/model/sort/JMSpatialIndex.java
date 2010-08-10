@@ -44,12 +44,12 @@ import org.kalypsodeegree.model.geometry.GM_Position;
 
 public interface JMSpatialIndex<T>
 {
-  public List<T> query( final GM_Envelope env, final List<T> result );
+  List<T> query( GM_Envelope env, List<T> result );
 
-  public List<T> query( final GM_Position env, final List<T> result );
+  List<T> query( GM_Position env, List<T> result );
 
   /** Invalidate the spatial index. The next time one of the 'query' methods is called, a resort is made. */
-  public void invalidate( );
+  void invalidate( );
 
   /**
    * Invalidate the spatial index. The next time one of the 'query' methods is called, a resort is made.
@@ -57,10 +57,10 @@ public interface JMSpatialIndex<T>
    * @param o
    *            Only this object is invalid. Implementors may use this information to improve the resort performance.
    */
-  public void invalidate( final Object o );
+  void invalidate( Object o );
 
   /** Paints the internal representation of the geo-index. Used for debugging purposes. */
-  public void paint( final Graphics g, final GeoTransform geoTransform );
+  void paint( Graphics g, GeoTransform geoTransform );
 
-  public GM_Envelope getBoundingBox( );
+  GM_Envelope getBoundingBox( );
 }
