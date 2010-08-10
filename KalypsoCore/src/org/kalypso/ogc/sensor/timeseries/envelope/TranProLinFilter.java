@@ -58,7 +58,7 @@ import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter;
 import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
-import org.kalypso.ogc.sensor.metadata.ITimeserieConstants;
+import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.timeseries.wq.WQTuppleModel;
@@ -310,7 +310,7 @@ public class TranProLinFilter extends AbstractObservationFilter
   private double checkValue( final String axisType, final double value )
   {
     // Prohibit negative value for runoff
-    if( ITimeserieConstants.TYPE_RUNOFF.equals( axisType ) )
+    if( ITimeseriesConstants.TYPE_RUNOFF.equals( axisType ) )
       return Math.max( 0.0, value );
 
     return value;

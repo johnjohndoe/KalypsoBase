@@ -65,7 +65,7 @@ import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
-import org.kalypso.ogc.sensor.metadata.ITimeserieConstants;
+import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
@@ -316,8 +316,8 @@ public class CommitPrognoseFeatureVisitor extends AbstractMonitoredFeatureVisito
     final MetadataList targetMetadata = new MetadataList();
     targetMetadata.putAll( metadataList );
 
-    targetMetadata.remove( ITimeserieConstants.MD_WQTABLE );
-    targetMetadata.remove( ITimeserieConstants.MD_WQWECHMANN );
+    targetMetadata.remove( ITimeseriesConstants.MD_WQTABLE );
+    targetMetadata.remove( ITimeseriesConstants.MD_WQWECHMANN );
     return targetMetadata;
   }
 

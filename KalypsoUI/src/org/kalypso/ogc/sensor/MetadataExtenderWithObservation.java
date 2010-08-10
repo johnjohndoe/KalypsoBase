@@ -44,7 +44,7 @@ package org.kalypso.ogc.sensor;
 import org.apache.commons.configuration.Configuration;
 import org.kalypso.metadoc.configuration.ConfigurationUtils;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
-import org.kalypso.ogc.sensor.metadata.ITimeserieConstants;
+import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.template.ObsViewItem;
 
 /**
@@ -85,8 +85,8 @@ public class MetadataExtenderWithObservation
 
     // currently we only take this property, but the thing
     // could easily be extended with more
-    final String kennz = md.getProperty( ITimeserieConstants.MD_KENNZIFFER );
+    final String kennz = md.getProperty( ITimeseriesConstants.MD_KENNZIFFER );
     
-    ConfigurationUtils.addPropertyDistinct( metadata, ITimeserieConstants.MD_KENNZIFFER, kennz );
+    ConfigurationUtils.addPropertyDistinct( metadata, ITimeseriesConstants.MD_KENNZIFFER, kennz );
   }
 }

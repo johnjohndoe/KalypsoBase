@@ -55,7 +55,7 @@ import org.kalypso.ogc.sensor.DateRange;
 /**
  * @author Dirk Kuch
  */
-public class MetadataHelper implements ITimeserieConstants, ICopyObservationMetaDataConstants
+public class MetadataHelper implements ITimeseriesConstants, ICopyObservationMetaDataConstants
 {
   /** default date format used within some of the timeseries dependent properties */
   /** @deprecated Should not be used any more. We use xs:dateTime format now for printing times into zml files. */
@@ -138,12 +138,12 @@ public class MetadataHelper implements ITimeserieConstants, ICopyObservationMeta
 
   public static String getWqTable( final MetadataList mdl )
   {
-    return mdl.getProperty( ITimeserieConstants.MD_WQTABLE );
+    return mdl.getProperty( ITimeseriesConstants.MD_WQTABLE );
   }
 
   public static void setWqTable( final MetadataList mdl, final String table )
   {
-    mdl.setProperty( ITimeserieConstants.MD_WQTABLE, table );
+    mdl.setProperty( ITimeseriesConstants.MD_WQTABLE, table );
   }
 
   /**
@@ -168,13 +168,13 @@ public class MetadataHelper implements ITimeserieConstants, ICopyObservationMeta
     if( from != null )
     {
       final String fromStr = DateUtilities.printDateTime( from, timeZone );
-      metadata.setProperty( ITimeserieConstants.MD_VORHERSAGE_START, fromStr ); //$NON-NLS-1$
+      metadata.setProperty( ITimeseriesConstants.MD_VORHERSAGE_START, fromStr ); //$NON-NLS-1$
     }
 
     if( to != null )
     {
       final String toStr = DateUtilities.printDateTime( to, timeZone );
-      metadata.setProperty( ITimeserieConstants.MD_VORHERSAGE_ENDE, toStr ); //$NON-NLS-1$
+      metadata.setProperty( ITimeseriesConstants.MD_VORHERSAGE_ENDE, toStr ); //$NON-NLS-1$
     }
   }
 
@@ -200,13 +200,13 @@ public class MetadataHelper implements ITimeserieConstants, ICopyObservationMeta
     if( from != null )
     {
       final String fromStr = DateUtilities.printDateTime( from, timeZone );
-      metadata.setProperty( ITimeserieConstants.MD_DATE_BEGIN, fromStr ); //$NON-NLS-1$
+      metadata.setProperty( ITimeseriesConstants.MD_DATE_BEGIN, fromStr ); //$NON-NLS-1$
     }
 
     if( to != null )
     {
       final String toStr = DateUtilities.printDateTime( to, timeZone );
-      metadata.setProperty( ITimeserieConstants.MD_DATE_END, toStr ); //$NON-NLS-1$
+      metadata.setProperty( ITimeseriesConstants.MD_DATE_END, toStr ); //$NON-NLS-1$
     }
   }
 

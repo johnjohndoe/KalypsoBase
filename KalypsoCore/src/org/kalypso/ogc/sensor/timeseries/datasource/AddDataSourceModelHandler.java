@@ -46,7 +46,7 @@ import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
 import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
-import org.kalypso.ogc.sensor.metadata.ITimeserieConstants;
+import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 
 /**
@@ -67,7 +67,7 @@ public class AddDataSourceModelHandler extends AbstractDataSourceModelHandler
     if( hasDataSouceAxis() )
       return getModel();
 
-    final DefaultAxis dataSourceAxis = new DefaultAxis( TimeserieUtils.getName( ITimeserieConstants.TYPE_DATA_SRC ), ITimeserieConstants.TYPE_DATA_SRC, "", Integer.class, false );
+    final DefaultAxis dataSourceAxis = new DefaultAxis( ITimeseriesConstants.TYPE_DATA_SRC, ITimeseriesConstants.TYPE_DATA_SRC, "", Integer.class, false );
 
     final ITupleModel baseModel = getModel();
     IAxis[] baseAxes = baseModel.getAxisList();

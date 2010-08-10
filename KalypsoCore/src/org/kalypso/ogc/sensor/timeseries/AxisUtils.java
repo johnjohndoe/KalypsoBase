@@ -41,13 +41,13 @@
 package org.kalypso.ogc.sensor.timeseries;
 
 import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.ogc.sensor.metadata.ITimeserieConstants;
+import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 
 /**
  * @author Dirk Kuch
  */
-public final class AxisUtils implements ITimeserieConstants
+public final class AxisUtils implements ITimeseriesConstants
 {
   private AxisUtils( )
   {

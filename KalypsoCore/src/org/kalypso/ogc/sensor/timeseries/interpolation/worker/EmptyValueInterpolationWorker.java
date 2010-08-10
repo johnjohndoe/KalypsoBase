@@ -42,7 +42,6 @@ package org.kalypso.ogc.sensor.timeseries.interpolation.worker;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -52,7 +51,6 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITupleModel;
-import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 
 /**
@@ -85,14 +83,14 @@ public class EmptyValueInterpolationWorker extends AbstractInterpolationWorker i
           final Calendar calendar = Calendar.getInstance();
           calendar.setTime( getDateRange().getFrom() );
 
-          final IAxis[] axes = getBaseModel().getAxisList();
-          final IAxis dateAxis = ObservationUtilities.findAxisByClass( axes, Date.class );
-          final IAxis[] valueAxes = ObservationUtilities.findAxesByClasses( axes, new Class[] { Number.class, Boolean.class } );
+          final IAxis dateAxis = getDateAxis();
+          final IAxis dataSourceAxis = getDataSourceAxis();
+          final IAxis[] valueAxes = getValueAxes();
           final Object[] defaultValues = parseDefaultValues( valueAxes );
 
           while( calendar.getTime().compareTo( getDateRange().getTo() ) <= 0 )
           {
-            fillWithDefault( dateAxis, valueAxes, defaultValues, calendar );
+            fillWithDefault( dateAxis, dataSourceAxis, valueAxes, defaultValues, calendar );
           }
         }
         catch( final SensorException e )
