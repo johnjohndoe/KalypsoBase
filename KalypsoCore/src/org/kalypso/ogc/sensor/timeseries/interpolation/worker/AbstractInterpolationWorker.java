@@ -204,7 +204,8 @@ public abstract class AbstractInterpolationWorker implements ICoreRunnableWithPr
   protected Integer getDataSourceIndex( )
   {
     final DataSourceHandler handler = new DataSourceHandler( m_filter.getMetaDataList() );
-    final int index = handler.addDataSource( InterpolationFilter.class.getName(), InterpolationFilter.class.getName() );
+    final String src = String.format( "filter://%s", InterpolationFilter.class.getName() );
+    final int index = handler.addDataSource( src, src );
 
     return index;
   }
