@@ -46,6 +46,7 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter;
+import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.timeseries.interpolation.worker.AbstractInterpolationWorker;
 import org.kalypso.ogc.sensor.timeseries.interpolation.worker.IInterpolationFilter;
@@ -184,6 +185,15 @@ public class InterpolationFilter extends AbstractObservationFilter implements II
   public boolean isLastFilledWithValid( )
   {
     return m_fillLastWithValid;
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.timeseries.interpolation.worker.IInterpolationFilter#getMetaData()
+   */
+  @Override
+  public MetadataList getMetaDataList( )
+  {
+    return super.getMetadataList();
   }
 
 }

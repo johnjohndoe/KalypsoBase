@@ -64,7 +64,7 @@ import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHandler;
 
 /**
- * merges multiple observation sources to one result observation.
+ * merges multiple observation sources to one single result observation.
  * 
  * @author Dirk Kuch
  */
