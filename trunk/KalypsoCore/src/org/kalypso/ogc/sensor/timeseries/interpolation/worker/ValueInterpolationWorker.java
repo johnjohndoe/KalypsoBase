@@ -54,6 +54,7 @@ import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 
 /**
@@ -122,6 +123,7 @@ public class ValueInterpolationWorker extends AbstractInterpolationWorker
   private void setEndValues( final Calendar calendar ) throws SensorException
   {
     final IAxis dateAxis = getDateAxis();
+    final IAxis dataSourceAxis = getDataSourceAxis();
     final IAxis[] valueAxes = getValueAxes();
 
     final Object[] defaultValues = parseDefaultValues( valueAxes );
@@ -149,7 +151,7 @@ public class ValueInterpolationWorker extends AbstractInterpolationWorker
 
       while( calendar.getTime().compareTo( getDateRange().getTo() ) <= 0 )
       {
-        fillWithDefault( dateAxis, valueAxes, defaultValues, calendar, lastValidTupple );
+        fillWithDefault( dateAxis, dataSourceAxis, valueAxes, defaultValues, calendar, lastValidTupple );
       }
     }
   }
@@ -229,8 +231,12 @@ public class ValueInterpolationWorker extends AbstractInterpolationWorker
 
   private void setStartValue( final LocalCalculationStack stack, final Calendar calendar ) throws SensorException
   {
+    final SimpleTupleModel interpolated = getInterpolatedModel();
+
     final IAxis dateAxis = getDateAxis();
+    final IAxis dataSourceAxis = getDataSourceAxis();
     final IAxis[] valueAxes = getValueAxes();
+
     final Object[] defaultValues = parseDefaultValues( valueAxes );
 
     final Date begin = (Date) getBaseModel().getElement( 0, dateAxis );
@@ -242,33 +248,36 @@ public class ValueInterpolationWorker extends AbstractInterpolationWorker
 
       for( int i = 0; i < valueAxes.length; i++ )
       {
-        final Number nb = (Number) getBaseModel().getElement( 0, valueAxes[i] );
-        stack.v1[getInterpolatedModel().getPositionFor( valueAxes[i] )] = nb.doubleValue();
+        final Number number = (Number) getBaseModel().getElement( 0, valueAxes[i] );
+        final int position = interpolated.getPositionFor( valueAxes[i] );
+
+        stack.v1[position] = number.doubleValue();
       }
 
       while( calendar.getTime().compareTo( begin ) < 0 )
       {
         stack.d1 = calendar.getTime();
-        fillWithDefault( dateAxis, valueAxes, defaultValues, calendar );
+        fillWithDefault( dateAxis, dataSourceAxis, valueAxes, defaultValues, calendar );
       }
     }
     else
     {
       calendar.setTime( begin );
 
-      final Object[] tupple = new Object[valueAxes.length + 1];
-      tupple[getInterpolatedModel().getPositionFor( dateAxis )] = calendar.getTime();
+      final Object[] tuple = new Object[valueAxes.length + 1];
+      tuple[interpolated.getPositionFor( dateAxis )] = calendar.getTime();
 
       for( int i = 0; i < valueAxes.length; i++ )
       {
-        final Number nb = (Number) getBaseModel().getElement( 0, valueAxes[i] );
+        final Number number = (Number) getBaseModel().getElement( 0, valueAxes[i] );
 
-        final int pos = getInterpolatedModel().getPositionFor( valueAxes[i] );
-        tupple[pos] = nb;
-        stack.v1[pos] = nb.doubleValue();
+        final int position = interpolated.getPositionFor( valueAxes[i] );
+        tuple[position] = number;
+
+        stack.v1[position] = number.doubleValue();
       }
 
-      getInterpolatedModel().addTuple( tupple );
+      interpolated.addTuple( tuple );
 
       stack.d1 = calendar.getTime();
       nextStep( calendar );

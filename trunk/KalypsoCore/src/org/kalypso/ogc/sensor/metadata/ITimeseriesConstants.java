@@ -45,7 +45,7 @@ package org.kalypso.ogc.sensor.metadata;
  * 
  * @author schlienger
  */
-public interface ITimeserieConstants extends IObservationConstants
+public interface ITimeseriesConstants extends IObservationConstants
 {
 
   String MD_PROPERTY_KEEP_METADATA_PREFEX = "reload_keepMetaData";

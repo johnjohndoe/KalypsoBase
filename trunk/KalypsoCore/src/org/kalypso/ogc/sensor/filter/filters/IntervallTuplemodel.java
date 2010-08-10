@@ -56,7 +56,7 @@ import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.AbstractTupleModel;
 import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
-import org.kalypso.ogc.sensor.metadata.ITimeserieConstants;
+import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 
@@ -109,7 +109,7 @@ public class IntervallTuplemodel extends AbstractTupleModel
 
     // check axis
     final IAxis[] axisList = getAxisList();
-    m_dateAxis = ObservationUtilities.findAxisByType( axisList, ITimeserieConstants.TYPE_DATE );
+    m_dateAxis = ObservationUtilities.findAxisByType( axisList, ITimeseriesConstants.TYPE_DATE );
     m_statusAxis = KalypsoStatusUtils.findStatusAxes( axisList );
     m_valueAxis = findValueAxes( axisList );
 

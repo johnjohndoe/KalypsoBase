@@ -43,7 +43,7 @@ package org.kalypso.ogc.sensor.metadata;
 /**
  * @author Dirk Kuch
  */
-public interface ICopyObservationMetaDataConstants extends ITimeserieConstants
+public interface ICopyObservationMetaDataConstants extends ITimeseriesConstants
 {
   String MD_TIME_SERIES_PREFIX_COPY_OBS_VISITOR_SRC = "CopyObsVisitor_Src"; //$NON-NLS-1$
 

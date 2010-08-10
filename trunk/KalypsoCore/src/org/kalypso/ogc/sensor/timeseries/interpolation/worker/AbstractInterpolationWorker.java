@@ -53,6 +53,7 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
+import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 
 /**
@@ -142,8 +143,16 @@ public abstract class AbstractInterpolationWorker implements ICoreRunnableWithPr
   protected IAxis[] getValueAxes( )
   {
     final IAxis[] axes = getBaseModel().getAxisList();
+    final IAxis[] valueAxes = ObservationUtilities.findAxesByClasses( axes, new Class[] { Number.class, Boolean.class } );
 
-    return ObservationUtilities.findAxesByClasses( axes, new Class[] { Number.class, Boolean.class } );
+    return valueAxes;
+  }
+
+  protected IAxis getDataSourceAxis( )
+  {
+    final IAxis[] axes = getBaseModel().getAxisList();
+
+    return AxisUtils.findDataSourceAxis( axes );
   }
 
   protected Object[] parseDefaultValues( final IAxis[] valueAxes ) throws SensorException
@@ -172,9 +181,9 @@ public abstract class AbstractInterpolationWorker implements ICoreRunnableWithPr
   /**
    * Fill the model with default values
    */
-  protected void fillWithDefault( final IAxis dateAxis, final IAxis[] valueAxes, final Object[] defaultValues, final Calendar cal ) throws SensorException
+  protected void fillWithDefault( final IAxis dateAxis, final IAxis dataSourceAxis, final IAxis[] valueAxes, final Object[] defaultValues, final Calendar cal ) throws SensorException
   {
-    fillWithDefault( dateAxis, valueAxes, defaultValues, cal, null );
+    fillWithDefault( dateAxis, dataSourceAxis, valueAxes, defaultValues, cal, null );
   }
 
   /**
@@ -183,7 +192,7 @@ public abstract class AbstractInterpolationWorker implements ICoreRunnableWithPr
    * @param masterTupple
    *          if not null, the values from this tuple are used instead of the default one
    */
-  protected void fillWithDefault( final IAxis dateAxis, final IAxis[] valueAxes, final Object[] defaultValues, final Calendar cal, final Object[] masterTupple ) throws SensorException
+  protected void fillWithDefault( final IAxis dateAxis, final IAxis dataSourceAxis, final IAxis[] valueAxes, final Object[] defaultValues, final Calendar cal, final Object[] masterTupple ) throws SensorException
   {
     final Object[] tupple;
 

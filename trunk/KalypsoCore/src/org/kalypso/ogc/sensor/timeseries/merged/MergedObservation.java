@@ -46,11 +46,10 @@ import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.impl.AbstractObservationDecorator;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
-import org.kalypso.ogc.sensor.metadata.ITimeserieConstants;
+import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.metadata.MetadataHelper;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
-import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHandler;
 
 /**
@@ -104,7 +103,7 @@ public class MergedObservation extends AbstractObservationDecorator implements I
       final IAxis[] axes = observation.getAxisList();
       if( AxisUtils.findDataSourceAxis( axes ) == null )
       {
-        final DefaultAxis dataSourceAxis = new DefaultAxis( TimeserieUtils.getName( ITimeserieConstants.TYPE_DATA_SRC ), ITimeserieConstants.TYPE_DATA_SRC, "", Integer.class, false );
+        final DefaultAxis dataSourceAxis = new DefaultAxis( ITimeseriesConstants.TYPE_DATA_SRC, ITimeseriesConstants.TYPE_DATA_SRC, "", Integer.class, false );
         return (IAxis[]) ArrayUtils.add( axes, dataSourceAxis );
       }
 

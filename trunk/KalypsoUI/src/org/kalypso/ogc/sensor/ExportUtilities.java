@@ -44,7 +44,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.kalypso.ogc.sensor.metadata.MetadataList;
-import org.kalypso.ogc.sensor.metadata.ITimeserieConstants;
+import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.template.ObsViewItem;
 
 /**
@@ -86,7 +86,7 @@ public class ExportUtilities
           /* Get the metadata list. */
           final MetadataList md = observation.getMetadataList();
           /* Get the station. */
-          final String kennz = md.getProperty( ITimeserieConstants.MD_KENNZIFFER );
+          final String kennz = md.getProperty( ITimeseriesConstants.MD_KENNZIFFER );
           if( kennz != null && !stations.contains( kennz ) )
             stations.add( kennz );
         }

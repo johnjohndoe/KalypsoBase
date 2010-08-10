@@ -45,7 +45,7 @@ import java.io.StringReader;
 import org.kalypso.binding.ratingtable.RatingTableList;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.metadata.ITimeserieConstants;
+import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.timeseries.wq.WQTimeserieProxy;
 import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTableFactory;
@@ -91,7 +91,7 @@ public final class AutoProxyFactory implements IProxyFactory
   {
     final MetadataList mdl = obs.getMetadataList();
 
-    final String wq = mdl.getProperty( ITimeserieConstants.MD_WQTABLE, "" ); //$NON-NLS-1$
+    final String wq = mdl.getProperty( ITimeseriesConstants.MD_WQTABLE, "" ); //$NON-NLS-1$
 
     if( wq.length() > 0 )
     {
@@ -147,7 +147,7 @@ public final class AutoProxyFactory implements IProxyFactory
   {
     final MetadataList mdl = obs.getMetadataList();
 
-    final String wq = mdl.getProperty( ITimeserieConstants.MD_WQWECHMANN, "" ); //$NON-NLS-1$
+    final String wq = mdl.getProperty( ITimeseriesConstants.MD_WQWECHMANN, "" ); //$NON-NLS-1$
 
     if( wq.length() > 0 )
     {
@@ -156,9 +156,9 @@ public final class AutoProxyFactory implements IProxyFactory
       final IAxis[] axes = obs.getAxisList();
       for( int i = 0; i < axes.length; i++ )
       {
-        if( axes[i].getType().equals( ITimeserieConstants.TYPE_RUNOFF ) )
+        if( axes[i].getType().equals( ITimeseriesConstants.TYPE_RUNOFF ) )
           foundQ = true;
-        else if( axes[i].getType().equals( ITimeserieConstants.TYPE_WATERLEVEL ) )
+        else if( axes[i].getType().equals( ITimeseriesConstants.TYPE_WATERLEVEL ) )
           foundW = true;
       }
 
@@ -172,13 +172,13 @@ public final class AutoProxyFactory implements IProxyFactory
 
       if( foundW )
       {
-        source = ITimeserieConstants.TYPE_WATERLEVEL;
-        dest = ITimeserieConstants.TYPE_RUNOFF;
+        source = ITimeseriesConstants.TYPE_WATERLEVEL;
+        dest = ITimeseriesConstants.TYPE_RUNOFF;
       }
       else
       {
-        source = ITimeserieConstants.TYPE_RUNOFF;
-        dest = ITimeserieConstants.TYPE_WATERLEVEL;
+        source = ITimeseriesConstants.TYPE_RUNOFF;
+        dest = ITimeseriesConstants.TYPE_WATERLEVEL;
       }
 
       // now that we have wq-params and that we know the type of the

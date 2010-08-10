@@ -95,7 +95,7 @@ import org.kalypso.ogc.sensor.impl.DefaultAxis;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
 import org.kalypso.ogc.sensor.metadata.IObservationConstants;
-import org.kalypso.ogc.sensor.metadata.ITimeserieConstants;
+import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.proxy.AutoProxyFactory;
 import org.kalypso.ogc.sensor.proxy.RequestObservationProxy;
@@ -372,7 +372,7 @@ public final class ZmlFactory
           value = md.getData().replaceAll( XMLUtilities.CDATA_BEGIN_REGEX, "" ).replaceAll( XMLUtilities.CDATA_END_REGEX, "" ); //$NON-NLS-1$ //$NON-NLS-2$
         else
           value = ""; //$NON-NLS-1$
-        if( md.getName().equals( ITimeserieConstants.MD_TIMEZONE ) && md.getValue().length() > 0 )
+        if( md.getName().equals( ITimeseriesConstants.MD_TIMEZONE ) && md.getValue().length() > 0 )
           timeZone = TimeZone.getTimeZone( md.getValue() );
         metadata.put( md.getName(), value );
       }
@@ -411,7 +411,7 @@ public final class ZmlFactory
           if( timeZone != null )
             ((DateParser) parser).setTimezone( timeZone );
 
-          final String tzString = metadata.getProperty( ITimeserieConstants.MD_TIMEZONE, "UTC" ); //$NON-NLS-1$
+          final String tzString = metadata.getProperty( ITimeseriesConstants.MD_TIMEZONE, "UTC" ); //$NON-NLS-1$
           ((DateParser) parser).setTimezone( TimeZone.getTimeZone( tzString ) );
         }
 
@@ -553,12 +553,12 @@ public final class ZmlFactory
 
       // write timezone info into metadata
       final MetadataType mdType = OF.createMetadataType();
-      mdType.setName( ITimeserieConstants.MD_TIMEZONE );
+      mdType.setName( ITimeseriesConstants.MD_TIMEZONE );
       mdType.setValue( timezone.getID() );
       // Check, if value already exists and remove first
       for( final Iterator<MetadataType> iterator = metadataList.iterator(); iterator.hasNext(); )
       {
-        if( iterator.next().getName().equals( ITimeserieConstants.MD_TIMEZONE ) )
+        if( iterator.next().getName().equals( ITimeseriesConstants.MD_TIMEZONE ) )
           iterator.remove();
       }
       metadataList.add( mdType );

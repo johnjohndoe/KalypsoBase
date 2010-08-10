@@ -72,7 +72,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.metadata.ITimeserieConstants;
+import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.template.ObsView;
 import org.kalypso.ogc.sensor.template.ObsViewItem;
 import org.kalypso.ogc.sensor.template.ObsViewUtils;
@@ -330,43 +330,43 @@ public class DiagViewUtils
 
     // TODO: move this stuff into config.properties as everything else
 
-    if( axisType.equals( ITimeserieConstants.TYPE_DATE ) )
+    if( axisType.equals( ITimeseriesConstants.TYPE_DATE ) )
       return new DiagramAxis( axisType, "date", null, unit, direction, position, false ); //$NON-NLS-1$
 
-    if( axisType.equals( ITimeserieConstants.TYPE_HOURS ) )
+    if( axisType.equals( ITimeseriesConstants.TYPE_HOURS ) )
       return new DiagramAxis( axisType, "double", label, unit, direction, position, false ); //$NON-NLS-1$
 
-    if( axisType.equals( ITimeserieConstants.TYPE_WATERLEVEL ) )
+    if( axisType.equals( ITimeseriesConstants.TYPE_WATERLEVEL ) )
       return new DiagramAxis( axisType, "double", label, unit, direction, position, false ); //$NON-NLS-1$
 
-    if( axisType.equals( ITimeserieConstants.TYPE_NORMNULL ) )
+    if( axisType.equals( ITimeseriesConstants.TYPE_NORMNULL ) )
       return new DiagramAxis( axisType, "double", label, unit, direction, position, false ); //$NON-NLS-1$
 
-    if( axisType.equals( ITimeserieConstants.TYPE_RUNOFF ) )
+    if( axisType.equals( ITimeseriesConstants.TYPE_RUNOFF ) )
       return new DiagramAxis( axisType, "double", label, unit, direction, position, false ); //$NON-NLS-1$
 
-    if( axisType.equals( ITimeserieConstants.TYPE_RUNOFF_RHB ) )
+    if( axisType.equals( ITimeseriesConstants.TYPE_RUNOFF_RHB ) )
       return new DiagramAxis( axisType, "double", label, unit, direction, position, false ); //$NON-NLS-1$
 
-    if( axisType.equals( ITimeserieConstants.TYPE_VOLUME ) )
+    if( axisType.equals( ITimeseriesConstants.TYPE_VOLUME ) )
       return new DiagramAxis( axisType, "double", label, unit, direction, position, false ); //$NON-NLS-1$
 
-    if( axisType.equals( ITimeserieConstants.TYPE_NORM ) )
+    if( axisType.equals( ITimeseriesConstants.TYPE_NORM ) )
       return new DiagramAxis( axisType, "double", label, unit, direction, position, false ); //$NON-NLS-1$
 
-    if( axisType.equals( ITimeserieConstants.TYPE_POLDER_CONTROL ) )
+    if( axisType.equals( ITimeseriesConstants.TYPE_POLDER_CONTROL ) )
       return new DiagramAxis( axisType, "boolean", label, unit, direction, position, false ); //$NON-NLS-1$
 
     position = isKey == true ? DiagramAxis.POSITION_BOTTOM : DiagramAxis.POSITION_RIGHT;
 
-    if( axisType.equals( ITimeserieConstants.TYPE_RAINFALL ) )
+    if( axisType.equals( ITimeseriesConstants.TYPE_RAINFALL ) )
       return new DiagramAxis( axisType, "double", label, unit, direction, position, true, null, TimeserieUtils //$NON-NLS-1$
       .getTopMargin( axisType ) ); //$NON-NLS-1$
 
-    if( axisType.equals( ITimeserieConstants.TYPE_TEMPERATURE ) )
+    if( axisType.equals( ITimeseriesConstants.TYPE_TEMPERATURE ) )
       return new DiagramAxis( axisType, "double", label, unit, direction, position, false ); //$NON-NLS-1$
 
-    if( axisType.equals( ITimeserieConstants.TYPE_EVAPORATION ) )
+    if( axisType.equals( ITimeseriesConstants.TYPE_EVAPORATION ) )
       return new DiagramAxis( axisType, "double", label, unit, direction, position, false ); //$NON-NLS-1$
 
     position = isKey == true ? DiagramAxis.POSITION_BOTTOM : DiagramAxis.POSITION_LEFT;
