@@ -54,6 +54,8 @@ import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
 
 /**
+ * "Interpolates" / fills an empty observation
+ * 
  * @author Dirk Kuch
  */
 public class EmptyValueInterpolationWorker extends AbstractInterpolationWorker implements ICoreRunnableWithProgress
@@ -84,13 +86,12 @@ public class EmptyValueInterpolationWorker extends AbstractInterpolationWorker i
           calendar.setTime( getDateRange().getFrom() );
 
           final IAxis dateAxis = getDateAxis();
-          final IAxis dataSourceAxis = getDataSourceAxis();
           final IAxis[] valueAxes = getValueAxes();
           final Object[] defaultValues = parseDefaultValues( valueAxes );
 
           while( calendar.getTime().compareTo( getDateRange().getTo() ) <= 0 )
           {
-            fillWithDefault( dateAxis, dataSourceAxis, valueAxes, defaultValues, calendar );
+            fillWithDefault( dateAxis, valueAxes, defaultValues, calendar );
           }
         }
         catch( final SensorException e )

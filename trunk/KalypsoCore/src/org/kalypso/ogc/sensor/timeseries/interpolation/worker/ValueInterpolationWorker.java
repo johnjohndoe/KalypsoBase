@@ -123,35 +123,36 @@ public class ValueInterpolationWorker extends AbstractInterpolationWorker
   private void setEndValues( final Calendar calendar ) throws SensorException
   {
     final IAxis dateAxis = getDateAxis();
-    final IAxis dataSourceAxis = getDataSourceAxis();
     final IAxis[] valueAxes = getValueAxes();
-
-    final Object[] defaultValues = parseDefaultValues( valueAxes );
 
     // do we need to fill after the end of the base model?
     if( getDateRange() != null && isFilled() )
     {
       // optionally remember the last interpolated values in order
       // to fill them till the end of the new model
-      Object[] lastValidTupple = null;
+      Object[] lastValidTuple = null;
       if( isLastFilledWithValid() && getInterpolatedModel().getCount() > 0 )
       {
-        final int pos = getInterpolatedModel().getCount() - 1;
+        final int position = getInterpolatedModel().getCount() - 1;
 
-        lastValidTupple = new Object[valueAxes.length + 1];
-        lastValidTupple[getInterpolatedModel().getPositionFor( dateAxis )] = getInterpolatedModel().getElement( pos, dateAxis );
+        lastValidTuple = new Object[valueAxes.length + 1];
+        final int datePosition = getInterpolatedModel().getPositionFor( dateAxis );
+        lastValidTuple[datePosition] = getInterpolatedModel().getElement( position, dateAxis );
+
         for( int i = 0; i < valueAxes.length; i++ )
         {
+          final int valuePosition = getInterpolatedModel().getPositionFor( valueAxes[i] );
+
           if( KalypsoStatusUtils.isStatusAxis( valueAxes[i] ) )
-            lastValidTupple[getInterpolatedModel().getPositionFor( valueAxes[i] )] = getDefaultStatus();
+            lastValidTuple[valuePosition] = getDefaultStatus();
           else
-            lastValidTupple[getInterpolatedModel().getPositionFor( valueAxes[i] )] = getInterpolatedModel().getElement( pos, valueAxes[i] );
+            lastValidTuple[valuePosition] = getInterpolatedModel().getElement( position, valueAxes[i] );
         }
       }
 
       while( calendar.getTime().compareTo( getDateRange().getTo() ) <= 0 )
       {
-        fillWithDefault( dateAxis, dataSourceAxis, valueAxes, defaultValues, calendar, lastValidTupple );
+        appendTuple( lastValidTuple, calendar );
       }
     }
   }
@@ -168,36 +169,48 @@ public class ValueInterpolationWorker extends AbstractInterpolationWorker
     for( int ia = 0; ia < valueAxes.length; ia++ )
     {
       final Number nb = (Number) getBaseModel().getElement( index, valueAxes[ia] );
-      stack.v2[getInterpolatedModel().getPositionFor( valueAxes[ia] )] = nb.doubleValue();
+      final int valuePosition = getInterpolatedModel().getPositionFor( valueAxes[ia] );
+
+      stack.v2[valuePosition] = nb.doubleValue();
     }
 
     while( calendar.getTime().compareTo( stack.d2 ) <= 0 )
     {
       final long ms = calendar.getTimeInMillis();
 
+      final int datePosition = getInterpolatedModel().getPositionFor( dateAxis );
+
       final Object[] tuple = new Object[valueAxes.length + 1];
-      tuple[getInterpolatedModel().getPositionFor( dateAxis )] = calendar.getTime();
+      tuple[datePosition] = calendar.getTime();
+
+      boolean interpolated = false;
 
       for( int ia = 0; ia < valueAxes.length; ia++ )
       {
-        final int pos = getInterpolatedModel().getPositionFor( valueAxes[ia] );
+        final IAxis valueAxis = valueAxes[ia];
 
-        final double valStart = stack.v1[pos];
-        final double valStop = stack.v2[pos];
+        final int position = getInterpolatedModel().getPositionFor( valueAxis );
+
+        final double valStart = stack.v1[position];
+        final double valStop = stack.v2[position];
 
         final long linearStart = stack.d1.getTime();
         final long linearStop = stack.d2.getTime();
 
-        if( KalypsoStatusUtils.isStatusAxis( valueAxes[ia] ) )
+        if( KalypsoStatusUtils.isStatusAxis( valueAxis ) )
         {
           // BUGFIX: do not interpolate, if we have the exact date
           if( linearStart == ms )
-            tuple[pos] = new Integer( (int) valStart );
+            tuple[position] = new Integer( (int) valStart );
           else if( linearStop == ms )
-            tuple[pos] = new Integer( (int) valStop );
+            tuple[position] = new Integer( (int) valStop );
           else
+          {
             // this is the status axis: no interpolation
-            tuple[pos] = new Integer( KalypsoStatusUtils.performInterpolation( (int) valStart, (int) valStop ) );
+            tuple[position] = new Integer( KalypsoStatusUtils.performInterpolation( (int) valStart, (int) valStop ) );
+
+            interpolated = true;
+          }
         }
         else
         {
@@ -206,22 +219,25 @@ public class ValueInterpolationWorker extends AbstractInterpolationWorker
           {
             // BUGFIX: do not interpolate, if we have the exact date
             if( linearStart == ms )
-              tuple[pos] = new Double( valStart );
+              tuple[position] = new Double( valStart );
             else if( linearStop == ms )
-              tuple[pos] = new Double( valStop );
+              tuple[position] = new Double( valStop );
             else
             {
               eq.setPoints( linearStart, valStart, linearStop, valStop );
-              tuple[pos] = new Double( eq.computeY( ms ) );
+              tuple[position] = new Double( eq.computeY( ms ) );
+
+              interpolated = true;
             }
           }
           catch( final SameXValuesException e )
           {
-            tuple[pos] = new Double( valStart );
+            tuple[position] = new Double( valStart );
           }
         }
       }
 
+      updateDataSource( tuple, interpolated );
       getInterpolatedModel().addTuple( tuple );
 
       nextStep( calendar );
@@ -229,12 +245,20 @@ public class ValueInterpolationWorker extends AbstractInterpolationWorker
 
   }
 
+  private void updateDataSource( final Object[] tuple, final boolean interpolated ) throws SensorException
+  {
+    if( !interpolated )
+      return;
+
+    final int position = getInterpolatedModel().getPositionFor( getDataSourceAxis() );
+    tuple[position] = getDataSourceIndex();
+  }
+
   private void setStartValue( final LocalCalculationStack stack, final Calendar calendar ) throws SensorException
   {
     final SimpleTupleModel interpolated = getInterpolatedModel();
 
     final IAxis dateAxis = getDateAxis();
-    final IAxis dataSourceAxis = getDataSourceAxis();
     final IAxis[] valueAxes = getValueAxes();
 
     final Object[] defaultValues = parseDefaultValues( valueAxes );
@@ -248,6 +272,7 @@ public class ValueInterpolationWorker extends AbstractInterpolationWorker
 
       for( int i = 0; i < valueAxes.length; i++ )
       {
+        // keep original data_src!
         final Number number = (Number) getBaseModel().getElement( 0, valueAxes[i] );
         final int position = interpolated.getPositionFor( valueAxes[i] );
 
@@ -257,7 +282,7 @@ public class ValueInterpolationWorker extends AbstractInterpolationWorker
       while( calendar.getTime().compareTo( begin ) < 0 )
       {
         stack.d1 = calendar.getTime();
-        fillWithDefault( dateAxis, dataSourceAxis, valueAxes, defaultValues, calendar );
+        fillWithDefault( dateAxis, valueAxes, defaultValues, calendar );
       }
     }
     else

@@ -54,6 +54,8 @@ import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
+import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHandler;
+import org.kalypso.ogc.sensor.timeseries.interpolation.InterpolationFilter;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 
 /**
@@ -80,7 +82,9 @@ public abstract class AbstractInterpolationWorker implements ICoreRunnableWithPr
     m_filter = filter;
     m_baseModel = baseModel;
     m_dateRange = dateRange;
+
     m_interpolated = new SimpleTupleModel( getBaseModel().getAxisList() );
+
   }
 
   protected ITupleModel getBaseModel( )
@@ -140,6 +144,9 @@ public abstract class AbstractInterpolationWorker implements ICoreRunnableWithPr
     return ObservationUtilities.findAxisByClass( axes, Date.class );
   }
 
+  /**
+   * @return all axes type of Number.class and Boolean.class. Remember: DATA_SRC is type of Number.class!
+   */
   protected IAxis[] getValueAxes( )
   {
     final IAxis[] axes = getBaseModel().getAxisList();
@@ -178,12 +185,28 @@ public abstract class AbstractInterpolationWorker implements ICoreRunnableWithPr
     return defaultValues;
   }
 
-  /**
-   * Fill the model with default values
-   */
-  protected void fillWithDefault( final IAxis dateAxis, final IAxis dataSourceAxis, final IAxis[] valueAxes, final Object[] defaultValues, final Calendar cal ) throws SensorException
+  protected void appendTuple( final Object[] tuple, final Calendar calendar ) throws SensorException
   {
-    fillWithDefault( dateAxis, dataSourceAxis, valueAxes, defaultValues, cal, null );
+    final IAxis dateAxis = getDateAxis();
+    final IAxis dataSourceAxis = getDataSourceAxis();
+
+    final int datePosition = getInterpolatedModel().getPositionFor( dateAxis );
+    final int dataSrcPosition = getInterpolatedModel().getPositionFor( dataSourceAxis );
+
+    final Object[] add = tuple.clone();
+    add[datePosition] = calendar.getTime();
+    add[dataSrcPosition] = getDataSourceIndex();
+
+    getInterpolatedModel().addTuple( add );
+    nextStep( calendar );
+  }
+
+  protected Integer getDataSourceIndex( )
+  {
+    final DataSourceHandler handler = new DataSourceHandler( m_filter.getMetaDataList() );
+    final int index = handler.addDataSource( InterpolationFilter.class.getName(), InterpolationFilter.class.getName() );
+
+    return index;
   }
 
   /**
@@ -192,30 +215,34 @@ public abstract class AbstractInterpolationWorker implements ICoreRunnableWithPr
    * @param masterTupple
    *          if not null, the values from this tuple are used instead of the default one
    */
-  protected void fillWithDefault( final IAxis dateAxis, final IAxis dataSourceAxis, final IAxis[] valueAxes, final Object[] defaultValues, final Calendar cal, final Object[] masterTupple ) throws SensorException
+  protected void fillWithDefault( final IAxis dateAxis, final IAxis[] valueAxes, final Object[] defaultValues, final Calendar calendar ) throws SensorException
   {
-    final Object[] tupple;
+    final Object[] tuple;
 
-    if( masterTupple == null )
+    tuple = new Object[valueAxes.length + 1];
+    tuple[getInterpolatedModel().getPositionFor( dateAxis )] = calendar.getTime();
+
+    for( int index = 0; index < valueAxes.length; index++ )
     {
-      tupple = new Object[valueAxes.length + 1];
-      tupple[getInterpolatedModel().getPositionFor( dateAxis )] = cal.getTime();
+      final IAxis axis = valueAxes[index];
+      final int position = getInterpolatedModel().getPositionFor( axis );
 
-      for( int i = 0; i < valueAxes.length; i++ )
+      // update data source reference to interpolation filter
+      if( AxisUtils.isDataSrcAxis( axis ) )
       {
-        final IAxis axis = valueAxes[i];
-        final int pos = getInterpolatedModel().getPositionFor( axis );
-        tupple[pos] = defaultValues[i];
+        final Integer dataSourceValue = getDataSourceIndex();
+        tuple[position] = dataSourceValue;
       }
-    }
-    else
-    {
-      tupple = masterTupple.clone();
-      tupple[getInterpolatedModel().getPositionFor( dateAxis )] = cal.getTime();
+      else
+      {
+
+        tuple[position] = defaultValues[index];
+      }
+
     }
 
-    getInterpolatedModel().addTuple( tupple );
-    nextStep( cal );
+    getInterpolatedModel().addTuple( tuple );
+    nextStep( calendar );
   }
 
   protected void nextStep( final Calendar calendar )

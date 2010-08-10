@@ -41,6 +41,7 @@
 package org.kalypso.ogc.sensor.timeseries.interpolation.worker;
 
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.metadata.MetadataList;
 
 /**
  * @author Dirk Kuch
@@ -60,5 +61,7 @@ public interface IInterpolationFilter
   int getCalendarAmnount( );
 
   boolean isLastFilledWithValid( );
+
+  MetadataList getMetaDataList( );
 
 }
