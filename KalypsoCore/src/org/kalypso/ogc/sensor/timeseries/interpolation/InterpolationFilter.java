@@ -47,6 +47,8 @@ import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter;
 import org.kalypso.ogc.sensor.request.IRequest;
+import org.kalypso.ogc.sensor.timeseries.interpolation.worker.AbstractInterpolationWorker;
+import org.kalypso.ogc.sensor.timeseries.interpolation.worker.IInterpolationFilter;
 
 /**
  * InterpolationFilter. This is a simple yet tricky interpolation filter. It steps through the time and eventually
@@ -128,7 +130,6 @@ public class InterpolationFilter extends AbstractObservationFilter implements II
     {
       throw new SensorException( "Creating interpolated model failed." );
     }
-
   }
 
   /**

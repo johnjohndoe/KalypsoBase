@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.sensor.timeseries.interpolation;
+package org.kalypso.ogc.sensor.timeseries.interpolation.worker;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -54,7 +54,6 @@ import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
 
 /**
  * @author Dirk Kuch
@@ -78,9 +77,6 @@ public class EmptyValueInterpolationWorker extends AbstractInterpolationWorker i
     // no values, and fill is not set, so return
     if( isFilled() )
     {
-      final IAxis[] axes = getBaseModel().getAxisList();
-
-      final SimpleTupleModel interpolated = new SimpleTupleModel( axes );
 
       if( getDateRange() != null )
       {
@@ -89,13 +85,14 @@ public class EmptyValueInterpolationWorker extends AbstractInterpolationWorker i
           final Calendar calendar = Calendar.getInstance();
           calendar.setTime( getDateRange().getFrom() );
 
+          final IAxis[] axes = getBaseModel().getAxisList();
           final IAxis dateAxis = ObservationUtilities.findAxisByClass( axes, Date.class );
           final IAxis[] valueAxes = ObservationUtilities.findAxesByClasses( axes, new Class[] { Number.class, Boolean.class } );
           final Object[] defaultValues = parseDefaultValues( valueAxes );
 
           while( calendar.getTime().compareTo( getDateRange().getTo() ) <= 0 )
           {
-            fillWithDefault( dateAxis, valueAxes, defaultValues, interpolated, calendar );
+            fillWithDefault( dateAxis, valueAxes, defaultValues, calendar );
           }
         }
         catch( final SensorException e )
@@ -104,12 +101,6 @@ public class EmptyValueInterpolationWorker extends AbstractInterpolationWorker i
           statis.add( StatusUtilities.createErrorStatus( msg, e ) );
         }
       }
-
-      setInterpolatedModel( interpolated );
-    }
-    else
-    {
-      setInterpolatedModel( getBaseModel() );
     }
 
     return StatusUtilities.createStatus( statis, "Interpolating values" );

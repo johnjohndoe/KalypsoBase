@@ -187,7 +187,7 @@ public abstract class DefaultContentArea implements IContentArea
    * @see org.kalypso.contribs.eclipse.swt.canvas.IContentArea#getContentAreaAnchorPoint()
    */
   @Override
-  abstract public Point getContentAreaAnchorPoint( );
+  public abstract Point getContentAreaAnchorPoint( );
 
   @Override
   public void setImage( final Image image )
@@ -222,8 +222,8 @@ public abstract class DefaultContentArea implements IContentArea
   {
     m_mouseAdapter = mouseAdapter;
   }
-  
-  public void setTooltip( String tooltip )
+
+  public void setTooltip( final String tooltip )
   {
     m_tooltip = tooltip;
   }
