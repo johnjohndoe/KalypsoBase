@@ -115,6 +115,15 @@ public class MetadataHelper implements ITimeseriesConstants, ICopyObservationMet
     return item + "_" + Integer.valueOf( number ).toString();
   }
 
+  public static Integer getCount( final String parameter )
+  {
+    final String[] parts = parameter.split( "_" );
+    if( parts.length < 2 )
+      return -1;
+
+    return Integer.valueOf( parts[parts.length - 1] );
+  }
+
   public static final void setLastUpdated( final MetadataList mdl )
   {
     final TimeZone timeZone = KalypsoCorePlugin.getDefault().getTimeZone();

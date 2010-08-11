@@ -263,7 +263,7 @@ public class ValueInterpolationWorker extends AbstractInterpolationWorker
 
     final Object[] defaultValues = parseDefaultValues( valueAxes );
 
-    final Date begin = (Date) getBaseModel().getElement( 0, dateAxis );
+    final Date timeSeriesStart = (Date) getBaseModel().getElement( 0, dateAxis );
 
     if( getDateRange() != null && isFilled() )
     {
@@ -279,7 +279,7 @@ public class ValueInterpolationWorker extends AbstractInterpolationWorker
         stack.v1[position] = number.doubleValue();
       }
 
-      while( calendar.getTime().compareTo( begin ) < 0 )
+      while( calendar.getTime().compareTo( timeSeriesStart ) < 0 )
       {
         stack.d1 = calendar.getTime();
         fillWithDefault( dateAxis, valueAxes, defaultValues, calendar );
@@ -287,7 +287,7 @@ public class ValueInterpolationWorker extends AbstractInterpolationWorker
     }
     else
     {
-      calendar.setTime( begin );
+      calendar.setTime( timeSeriesStart );
 
       final Object[] tuple = new Object[valueAxes.length + 1];
       tuple[interpolated.getPositionFor( dateAxis )] = calendar.getTime();
