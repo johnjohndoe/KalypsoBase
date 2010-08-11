@@ -55,4 +55,6 @@ public interface IProfilePointFilter
   String getDescription( );
 
   boolean accept( final IProfil profil, final IRecord point );
+
+  String getUsageHint( );
 }

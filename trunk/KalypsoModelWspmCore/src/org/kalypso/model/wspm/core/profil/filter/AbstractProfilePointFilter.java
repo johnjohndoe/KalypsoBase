@@ -58,6 +58,8 @@ public abstract class AbstractProfilePointFilter implements IProfilePointFilter,
 
   private String m_description;
 
+  private String m_usageHint;
+
   /**
    * @see org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter#getId()
    */
@@ -86,6 +88,15 @@ public abstract class AbstractProfilePointFilter implements IProfilePointFilter,
   }
 
   /**
+   * @see org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter#getUsageHint()
+   */
+  @Override
+  public String getUsageHint( )
+  {
+    return m_usageHint;
+  }
+
+  /**
    * @see org.eclipse.core.runtime.IExecutableExtension#setInitializationData(org.eclipse.core.runtime.IConfigurationElement,
    *      java.lang.String, java.lang.Object)
    */
@@ -95,6 +106,7 @@ public abstract class AbstractProfilePointFilter implements IProfilePointFilter,
     m_id = config.getAttribute( "id" ); //$NON-NLS-1$
     m_name = config.getAttribute( "name" ); //$NON-NLS-1$
     m_description = config.getAttribute( "description" ); //$NON-NLS-1$
+    m_usageHint = config.getAttribute( "usageHint" ); //$NON-NLS-1$
   }
 
   protected boolean isBetweenMarkers( final IProfil profil, final IRecord point, final IProfilPointMarker leftMarker, final IProfilPointMarker rightMarker )
@@ -106,16 +118,18 @@ public abstract class AbstractProfilePointFilter implements IProfilePointFilter,
     final IRecord leftPoint = leftMarker == null ? points[0] : leftMarker.getPoint();
     final IRecord rightPoint = rightMarker == null ? points[points.length - 1] : rightMarker.getPoint();
 
-    final int left = ArrayUtils.indexOf( points, leftPoint );
-    final int right = ArrayUtils.indexOf( points, rightPoint );
+    final int leftPointIndex = ArrayUtils.indexOf( points, leftPoint );
+    final int rightPointIndex = ArrayUtils.indexOf( points, rightPoint );
+
     final int index = ArrayUtils.indexOf( points, point );
+
+    final int left = Math.min( leftPointIndex, rightPointIndex );
+    final int right = Math.max( leftPointIndex, rightPointIndex );
 
     if( left == right && index == right )
       return true;
-    if( left < right )
-      return left <= index && index <= right;
-    else
-      return right <= index && index <= left;
+
+    return left <= index && index < right;
   }
 
 }

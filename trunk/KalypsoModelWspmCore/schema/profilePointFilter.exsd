@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- Schema file written by PDE -->
-<schema targetNamespace="org.kalypso.model.wspm.core">
+<schema targetNamespace="org.kalypso.model.wspm.core" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
       <appInfo>
          <meta.schema plugin="org.kalypso.model.wspm.core" id="profilePointFilter" name="profilePointFilter"/>
@@ -11,6 +11,11 @@
    </annotation>
 
    <element name="extension">
+      <annotation>
+         <appInfo>
+            <meta.element />
+         </appInfo>
+      </annotation>
       <complexType>
          <sequence>
             <element ref="filter" minOccurs="1" maxOccurs="unbounded"/>
@@ -45,7 +50,7 @@
    <element name="filter">
       <annotation>
          <appInfo>
-            <meta.element labelAttribute="name" translatable="true"/>
+            <meta.element labelAttribute="name"/>
          </appInfo>
       </annotation>
       <complexType>
@@ -81,6 +86,14 @@
                <appInfo>
                   <meta.attribute kind="java" basedOn="org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter"/>
                </appInfo>
+            </annotation>
+         </attribute>
+         <attribute name="usageHint" type="string">
+            <annotation>
+               <documentation>
+                  Comma separated list of hints where this filter may be used. Optional, defaults to the empty string. If empty, this filter should be used everywhere.
+If non-empty, this filter will only be used if this is specially requested.
+               </documentation>
             </annotation>
          </attribute>
       </complexType>
@@ -122,13 +135,5 @@
       </documentation>
    </annotation>
 
-   <annotation>
-      <appInfo>
-         <meta.section type="copyright"/>
-      </appInfo>
-      <documentation>
-         
-      </documentation>
-   </annotation>
 
 </schema>

@@ -43,7 +43,7 @@
  * Created on 31.01.2005
  *  
  */
-package org.kalypso.model.wspm.ui.wizard;
+package org.kalypso.model.wspm.ui.profil.wizard.importProfile;
 
 import java.io.File;
 
