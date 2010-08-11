@@ -105,12 +105,18 @@ public class Interval
   {
     m_start = start;
     m_end = end;
+
     m_status = new int[status.length];
     for( int i = 0; i < status.length; i++ )
+    {
       m_status[i] = status[i].intValue();
+    }
+
     m_value = new double[values.length];
     for( int i = 0; i < values.length; i++ )
+    {
       m_value[i] = values[i].doubleValue();
+    }
   }
 
   public Calendar getEnd( )
@@ -192,7 +198,7 @@ public class Interval
       default:
         return null;
     }
-    // calculate intervall values;
+    // calculate interval values;
     final double[] values = getValue();
     final double[] intervallValues = new double[values.length];
     final double factor = calcFactorIntersect( result, mode );

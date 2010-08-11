@@ -84,7 +84,6 @@ public abstract class AbstractInterpolationWorker implements ICoreRunnableWithPr
     m_dateRange = dateRange;
 
     m_interpolated = new SimpleTupleModel( getBaseModel().getAxisList() );
-
   }
 
   protected ITupleModel getBaseModel( )
