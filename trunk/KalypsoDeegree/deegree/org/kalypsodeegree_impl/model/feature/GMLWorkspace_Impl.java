@@ -302,8 +302,6 @@ public class GMLWorkspace_Impl implements GMLWorkspace
         result.add( element );
     }
 
-    // final IFeatureType[] substiFTs =
-    // GMLHelper.getResolveSubstitutionGroup( linkSrcFeatureType, getFeatureTypes() );
     final IFeatureType[] substiFTs = GMLSchemaUtilities.getSubstituts( linkSrcFeatureType, m_schema, false, true );
 
     for( final IFeatureType element : substiFTs )
