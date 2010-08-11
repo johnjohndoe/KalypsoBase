@@ -71,4 +71,9 @@ public class IntervalModelAxes
     return AxisUtils.findStatusAxes( m_axes );
   }
 
+  public IAxis getDataSourcesAxes( )
+  {
+    return AxisUtils.findDataSourceAxis( m_axes );
+  }
+
 }

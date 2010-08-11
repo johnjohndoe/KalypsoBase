@@ -56,20 +56,21 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.filter.filters.interval.IntervalFilter.MODE;
 import org.kalypso.ogc.sensor.impl.AbstractTupleModel;
 import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
+import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
+import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHandler;
 
 /**
  * @author doemming
  */
 public class IntervalTuplemodel extends AbstractTupleModel
 {
-  private static final int TODO_NOTHING = 0;
-
-  private static final int TODO_GOTO_NEXT_TARGET = 1;
-
-  private static final int TODO_GOTO_NEXT_SRC = 2;
-
-  private static final int TODO_FINISHED = 3;
+  protected enum TODO
+  {
+    eNothing,
+    eGoToNextTarget,
+    eGoToNextSource;
+  }
 
   private final ITupleModel m_srcModel;
 
@@ -81,20 +82,23 @@ public class IntervalTuplemodel extends AbstractTupleModel
 
   private final ITupleModel m_intervallModel;
 
-  private final double m_defaultValue;
+  protected final double m_defaultValue;
 
-  private final int m_defaultStatus;
+  protected final int m_defaultStatus;
 
   private final IntervalCalendar m_calendar;
 
   private final IntervalModelAxes m_axes;
 
-  public IntervalTuplemodel( final MODE mode, final IntervalCalendar calendar, final ITupleModel srcModel, final Date from, final Date to, final double defaultValue, final int defaultStatus ) throws SensorException
+  private final MetadataList m_metadata;
+
+  public IntervalTuplemodel( final MODE mode, final IntervalCalendar calendar, final MetadataList metadata, final ITupleModel srcModel, final Date from, final Date to, final double defaultValue, final int defaultStatus ) throws SensorException
   {
     super( srcModel.getAxisList() );
 
     m_mode = mode;
     m_calendar = calendar;
+    m_metadata = metadata;
     m_srcModel = srcModel;
     m_defaultValue = defaultValue;
     m_defaultStatus = defaultStatus;
@@ -151,7 +155,30 @@ public class IntervalTuplemodel extends AbstractTupleModel
 
   protected class LocalCalculationStack
   {
+    public LocalCalculationStack( final IAxis[] valueAxes, final IAxis[] statusAxes )
+    {
+      defaultValues = new double[valueAxes.length];
+      defaultStatus = new int[statusAxes.length];
 
+      Arrays.fill( defaultValues, m_defaultValue );
+      Arrays.fill( defaultStatus, m_defaultStatus );
+    }
+
+    public Calendar lastTargetCalendar = null;
+
+    public Calendar lastSrcCalendar = null;
+
+    public Interval targetIntervall = null;
+
+    public int targetRow = 0;
+
+    public Interval srcIntervall = null;
+
+    public int srcRow = 0;
+
+    public final double[] defaultValues;
+
+    public final int[] defaultStatus;
   }
 
   private ITupleModel doInitModell( ) throws SensorException
@@ -166,104 +193,86 @@ public class IntervalTuplemodel extends AbstractTupleModel
     final int rows = stepCount - 1;
     final ITupleModel intervallModel = createTuppleModell( axisList, rows );
 
-    // defaults
-    final IAxis[] valueAxes = m_axes.getValueAxes();
-    final IAxis[] statusAxes = m_axes.getStatusAxes();
-
-    final double[] defaultValues = new double[valueAxes.length];
-    final int[] defaultStatus = new int[statusAxes.length];
-
-    Arrays.fill( defaultValues, m_defaultValue );
-    Arrays.fill( defaultStatus, m_defaultStatus );
+    final LocalCalculationStack stack = new LocalCalculationStack( m_axes.getValueAxes(), m_axes.getStatusAxes() );
 
     // new Values
-    final double[] newValues = new double[valueAxes.length];
+    final double[] newValues = new double[stack.defaultValues.length];
     Arrays.fill( newValues, 0d );
 
-    final int[] newStatus = new int[statusAxes.length];
+    final int[] newStatus = new int[stack.defaultStatus.length];
     Arrays.fill( newStatus, KalypsoStati.BIT_OK );
 
     // initialize target
-    Calendar lastTargetCalendar = iterator.next(); // TODO hasNext() ?
-    int targetRow = 0;
-    Interval targetIntervall = null;
-
-    int srcRow = 0;
-    Interval srcIntervall = null;
+    stack.lastTargetCalendar = iterator.next(); // TODO hasNext() ?
 
     // initialize values
-    final Calendar firstSrcCal;
-    // check if source time series is empty
     final int srcMaxRows = m_srcModel.getCount();
-    if( srcMaxRows != 0 ) // not empty
-      firstSrcCal = createCalendar( (Date) m_srcModel.getElement( 0, m_axes.getDateAxis() ) );
-    else
-      // if empty, we pretend that it begins at requested range
-      firstSrcCal = m_from;
+
+    final Calendar firstSrcCal = getFirstSrcCalendar( srcMaxRows );
 
     // initialize source
-    Calendar lastSrcCalendar = lastTargetCalendar;
+    stack.lastSrcCalendar = stack.lastTargetCalendar;
 
     // BUGFIX: handle case when source start before from
     // Before this fix, this lead to a endless loop
-    if( firstSrcCal.before( lastSrcCalendar ) )
-      lastSrcCalendar = firstSrcCal;
+    if( firstSrcCal.before( stack.lastSrcCalendar ) )
+      stack.lastSrcCalendar = firstSrcCal;
 
     // fill initial row
     // final Interval initialIntervall = new Interval( m_from, m_from, defaultStatus, defaultValues );
     // updateModelfromintervall( m_intervallModel, targetRow, initialIntervall );
     // targetRow++;
     // doemming: removed last 3 rows to avoid generating beginning "0" value.
-    int todo = TODO_NOTHING;
-    while( todo != TODO_FINISHED )
+
+    TODO todo = TODO.eNothing;
+    while( true )
     {
       // set next source interval
-      if( srcIntervall == null || todo == TODO_GOTO_NEXT_SRC )
+      if( stack.srcIntervall == null || TODO.eGoToNextSource.equals( todo ) )
       {
-
         // calculate the end of a source interval with given distance
-        final Calendar srcCalIntervallEnd = (Calendar) lastSrcCalendar.clone();
+        final Calendar srcCalIntervallEnd = (Calendar) stack.lastSrcCalendar.clone();
         srcCalIntervallEnd.add( m_calendar.getCalendarField(), m_calendar.getAmount() );
 
         // if we are after the source time series
-        if( srcRow >= srcMaxRows )
+        if( stack.srcRow >= srcMaxRows )
         {
           // generate defaults
           // create dummy interval
-          srcIntervall = new Interval( lastSrcCalendar, srcCalIntervallEnd, defaultStatus, defaultValues );
+          stack.srcIntervall = new Interval( stack.lastSrcCalendar, srcCalIntervallEnd, stack.defaultStatus, stack.defaultValues );
 
-          lastSrcCalendar = srcIntervall.getEnd();
+          stack.lastSrcCalendar = stack.srcIntervall.getEnd();
           // TODO m_to, defaults
-          todo = TODO_NOTHING;
+          todo = TODO.eNothing;
           continue;
         }
 
         // read current values from source time series
-        final Calendar srcCal = createCalendar( (Date) m_srcModel.getElement( srcRow, m_axes.getDateAxis() ) );
-        final Object[] srcStatusValues = ObservationUtilities.getElements( m_srcModel, srcRow, statusAxes );
+        final Calendar srcCal = createCalendar( (Date) m_srcModel.getElement( stack.srcRow, m_axes.getDateAxis() ) );
+        final Object[] srcStatusValues = ObservationUtilities.getElements( m_srcModel, stack.srcRow, m_axes.getStatusAxes() );
         final Integer[] srcStati = new Integer[srcStatusValues.length];
         for( int i = 0; i < srcStatusValues.length; i++ )
         {
           srcStati[i] = new Integer( ((Number) srcStatusValues[i]).intValue() );
         }
 
-        final Object[] srcValuesObjects = ObservationUtilities.getElements( m_srcModel, srcRow, valueAxes );
+        final Object[] srcValuesObjects = ObservationUtilities.getElements( m_srcModel, stack.srcRow, m_axes.getValueAxes() );
         final Double[] srcValues = new Double[srcValuesObjects.length];
         for( int i = 0; i < srcValuesObjects.length; i++ )
         {
           srcValues[i] = (Double) srcValuesObjects[i];
         }
-        srcIntervall = null;
+        stack.srcIntervall = null;
 
-        if( !lastSrcCalendar.after( srcCal ) )
+        if( !stack.lastSrcCalendar.after( srcCal ) )
         {
           // we need next source interval
 
           if( srcCalIntervallEnd.before( firstSrcCal ) )
           {
             // we are before the source time series
-            srcIntervall = new Interval( lastSrcCalendar, srcCalIntervallEnd, defaultStatus, defaultValues );
-            lastSrcCalendar = srcCalIntervallEnd;
+            stack.srcIntervall = new Interval( stack.lastSrcCalendar, srcCalIntervallEnd, stack.defaultStatus, stack.defaultValues );
+            stack.lastSrcCalendar = srcCalIntervallEnd;
           }
           else
           // we are inside source time series
@@ -271,7 +280,7 @@ public class IntervalTuplemodel extends AbstractTupleModel
             switch( m_mode )
             {
               case eIntensity:
-                srcIntervall = new Interval( lastSrcCalendar, srcCal, srcStati, srcValues );
+                stack.srcIntervall = new Interval( stack.lastSrcCalendar, srcCal, srcStati, srcValues );
                 break;
               default:
                 // (IntervallFilter.MODE_SUM) as length of first interval is undefined, we ignore first value
@@ -280,77 +289,84 @@ public class IntervalTuplemodel extends AbstractTupleModel
                 // bugfix: we use it nevertheless, as it works OK if intervals are equal;
                 // also, always no warning produces problems elsewhere
 // if( srcRow > 0 )
-                srcIntervall = new Interval( lastSrcCalendar, srcCal, srcStati, srcValues );
+                stack.srcIntervall = new Interval( stack.lastSrcCalendar, srcCal, srcStati, srcValues );
                 break;
             }
-            lastSrcCalendar = srcCal;
-            srcRow++;
+            stack.lastSrcCalendar = srcCal;
+            stack.srcRow++;
           }
         }
-        todo = TODO_NOTHING;
+        todo = TODO.eNothing;
       }
       // next target interval
-      if( targetIntervall == null || todo == TODO_GOTO_NEXT_TARGET )
+      if( stack.targetIntervall == null || todo == TODO.eGoToNextTarget )
       {
-        if( targetIntervall != null )
+        if( stack.targetIntervall != null )
         {
-          updateModelfromIntervall( intervallModel, targetRow, targetIntervall );
-          targetRow++;
+          updateModelfromIntervall( intervallModel, stack.targetRow, stack.targetIntervall );
+          stack.targetRow++;
         }
         if( !iterator.hasNext() )
         {
-          todo = TODO_FINISHED;
-          continue;
+          return intervallModel;
         }
         final Calendar cal = iterator.next();
-        if( lastTargetCalendar.before( cal ) )
-          targetIntervall = new Interval( lastTargetCalendar, cal, newStatus, newValues );
+        if( stack.lastTargetCalendar.before( cal ) )
+          stack.targetIntervall = new Interval( stack.lastTargetCalendar, cal, newStatus, newValues );
         else
-          targetIntervall = null;
-        lastTargetCalendar = cal;
-        todo = TODO_NOTHING;
+          stack.targetIntervall = null;
+        stack.lastTargetCalendar = cal;
+        todo = TODO.eNothing;
       }
       // check validity of intervals
-      if( srcIntervall == null )
+      if( stack.srcIntervall == null )
       {
-        todo = TODO_GOTO_NEXT_SRC;
+        todo = TODO.eGoToNextSource;
         continue;
       }
-      if( targetIntervall == null )
+      if( stack.targetIntervall == null )
       {
-        todo = TODO_GOTO_NEXT_TARGET;
+        todo = TODO.eGoToNextTarget;
         continue;
       }
       // compute intersection interval
-      final int matrix = srcIntervall.calcIntersectionMatrix( targetIntervall );
+      final int matrix = stack.srcIntervall.calcIntersectionMatrix( stack.targetIntervall );
       Interval intersection = null;
       if( matrix != Interval.STATUS_INTERSECTION_NONE_BEFORE && matrix != Interval.STATUS_INTERSECTION_NONE_AFTER )
-        intersection = srcIntervall.getIntersection( targetIntervall, m_mode );
+        intersection = stack.srcIntervall.getIntersection( stack.targetIntervall, m_mode );
 
       switch( matrix )
       {
         case Interval.STATUS_INTERSECTION_NONE_BEFORE:
-          todo = TODO_GOTO_NEXT_TARGET;
+          todo = TODO.eGoToNextTarget;
           break;
         case Interval.STATUS_INTERSECTION_NONE_AFTER:
-          todo = TODO_GOTO_NEXT_SRC;
+          todo = TODO.eGoToNextSource;
           break;
         case Interval.STATUS_INTERSECTION_START:
         case Interval.STATUS_INTERSECTION_INSIDE:
-          targetIntervall.merge( intersection, m_mode );
-          todo = TODO_GOTO_NEXT_TARGET;
+          stack.targetIntervall.merge( intersection, m_mode );
+          todo = TODO.eGoToNextTarget;
           break;
         case Interval.STATUS_INTERSECTION_END:
         case Interval.STATUS_INTERSECTION_ARROUND:
-          targetIntervall.merge( intersection, m_mode );
-          todo = TODO_GOTO_NEXT_SRC;
+          stack.targetIntervall.merge( intersection, m_mode );
+          todo = TODO.eGoToNextSource;
           break;
         default:
           break;
       }
     }
+  }
 
-    return intervallModel;
+  private Calendar getFirstSrcCalendar( final int srcMaxRows ) throws SensorException
+  {
+    // check if source time series is empty
+    if( srcMaxRows != 0 ) // not empty
+      return createCalendar( (Date) m_srcModel.getElement( 0, m_axes.getDateAxis() ) );
+    else
+      // if empty, we pretend that it begins at requested range
+      return m_from;
   }
 
   private SimpleTupleModel createTuppleModell( final IAxis[] axisList, final int rows )
@@ -378,6 +394,17 @@ public class IntervalTuplemodel extends AbstractTupleModel
     {
       model.setElement( targetRow, new Double( value[i] ), valueAxes[i] );
     }
+
+    // FIXME original value or adjusted value?!?
+    final IAxis dataSourcesAxes = m_axes.getDataSourcesAxes();
+    final Integer index = getDataSourceIndex();
+    model.setElement( targetRow, index, dataSourcesAxes );
+  }
+
+  private Integer getDataSourceIndex( )
+  {
+    final DataSourceHandler handler = new DataSourceHandler( m_metadata );
+    return handler.addDataSource( IntervalFilter.class.getName(), IntervalFilter.class.getName() );
   }
 
   private static Calendar createCalendar( final Date date )
