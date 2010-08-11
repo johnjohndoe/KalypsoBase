@@ -54,8 +54,12 @@ import org.kalypso.core.i18n.Messages;
  * @author bce
  */
 @SuppressWarnings("restriction")//$NON-NLS-1$
-public class LayerTypeUtilities
+public final class LayerTypeUtilities
 {
+  private LayerTypeUtilities( )
+  {
+  }
+
   public static void initLayerType( final LayerType layer, final IFile file ) throws CoreException
   {
     final IPath projectRelativePath = file.getProjectRelativePath();
