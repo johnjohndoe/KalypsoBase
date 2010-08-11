@@ -40,10 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.timeseries.datasource;
 
-import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
+import java.util.TreeMap;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.ogc.sensor.metadata.MetadataHelper;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.repository.IRepositoryItem;
@@ -84,30 +85,38 @@ public class DataSourceHandler
   {
     final String plainIdentifier = RepositoryItemUtils.getPlainId( identifier );
 
-    final String[] sources = getDataSources();
-    for( final String source : sources )
+    final Map<Integer, String> dataSourceIndex = getDataSources();
+    final Set<Entry<Integer, String>> entries = dataSourceIndex.entrySet();
+
+    for( final Entry<Integer, String> entry : entries )
     {
-      final String plainSource = RepositoryItemUtils.getPlainId( source );
+      final String plainSource = RepositoryItemUtils.getPlainId( entry.getValue() );
 
       if( plainIdentifier.equalsIgnoreCase( plainSource ) )
-        return ArrayUtils.indexOf( sources, source );
+        return entry.getKey();
     }
 
     return -1;
   }
 
-  public synchronized String[] getDataSources( )
+  /**
+   * @return map<src item index, src item identifier>
+   */
+  public synchronized Map<Integer, String> getDataSources( )
   {
-    final Set<String> sources = new LinkedHashSet<String>();
+    final Map<Integer, String> sources = new TreeMap<Integer, String>();
 
     for( final Object key : m_metadata.keySet() )
     {
       final String header = (String) key;
       if( header.startsWith( IDataSourceItem.MD_DATA_SOURCE_ITEM ) )
-        sources.add( m_metadata.getProperty( header ) );
+      {
+        final Integer count = MetadataHelper.getCount( header );
+        sources.put( count, m_metadata.getProperty( header ) );
+      }
     }
 
-    return sources.toArray( new String[] {} );
+    return sources;
   }
 
   public synchronized int addDataSource( final IRepositoryItem item )
@@ -120,7 +129,7 @@ public class DataSourceHandler
     if( hasDataSource( identifier ) )
       return getDataSourceIndex( identifier );
 
-    int count = getDataSources().length;
+    int count = getDataSources().size(); // append new items at the end of the list!
     while( m_metadata.getProperty( MetadataHelper.getCountedHeaderItem( IDataSourceItem.MD_DATA_SOURCE_ITEM, count ) ) != null )
     {
       count++;
