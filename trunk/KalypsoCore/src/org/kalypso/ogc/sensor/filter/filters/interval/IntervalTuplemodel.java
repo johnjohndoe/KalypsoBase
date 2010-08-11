@@ -38,9 +38,10 @@
  v.doemming@tuhh.de
 
  ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.ogc.sensor.filter.filters;
+package org.kalypso.ogc.sensor.filter.filters.interval;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -54,6 +55,7 @@ import org.kalypso.ogc.sensor.IAxisRange;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.filter.filters.interval.IntervalFilter.MODE;
 import org.kalypso.ogc.sensor.impl.AbstractTupleModel;
 import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
@@ -63,7 +65,7 @@ import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 /**
  * @author doemming
  */
-public class IntervallTuplemodel extends AbstractTupleModel
+public class IntervalTuplemodel extends AbstractTupleModel
 {
   private static final int TODO_NOTHING = 0;
 
@@ -75,17 +77,13 @@ public class IntervallTuplemodel extends AbstractTupleModel
 
   private final ITupleModel m_srcModel;
 
-  private final int m_mode;
+  private final MODE m_mode;
 
   private final IAxis[] m_valueAxis;
 
   private final IAxis m_dateAxis;
 
   private final IAxis[] m_statusAxis;
-
-  private final int m_calendarField;
-
-  private final int m_amount;
 
   private final Calendar m_from;
 
@@ -97,12 +95,14 @@ public class IntervallTuplemodel extends AbstractTupleModel
 
   private final int m_defaultStatus;
 
-  public IntervallTuplemodel( final int mode, final int calendarField, final int amount, final int startCalendarValue, final String startCalendarField, final ITupleModel srcModel, final Date from, final Date to, final double defaultValue, final int defaultStatus ) throws SensorException
+  private final IntervalCalendar m_calendar;
+
+  public IntervalTuplemodel( final MODE mode, final IntervalCalendar calendar, final ITupleModel srcModel, final Date from, final Date to, final double defaultValue, final int defaultStatus ) throws SensorException
   {
     super( srcModel.getAxisList() );
+
     m_mode = mode;
-    m_calendarField = calendarField;
-    m_amount = amount;
+    m_calendar = calendar;
     m_srcModel = srcModel;
     m_defaultValue = defaultValue;
     m_defaultStatus = defaultStatus;
@@ -118,7 +118,7 @@ public class IntervallTuplemodel extends AbstractTupleModel
     m_from = initFrom( from, sourceModelRange );
     m_to = initTo( to, sourceModelRange );
 
-    m_intervallModel = initModell( axisList, startCalendarField, startCalendarValue );
+    m_intervallModel = initModell( axisList );
   }
 
   private IAxis[] findValueAxes( final IAxis[] axisList )
@@ -168,14 +168,15 @@ public class IntervallTuplemodel extends AbstractTupleModel
     return srcModel.getRangeFor( dateAxis );
   }
 
-  private ITupleModel initModell( final IAxis[] axisList, final String startCalendarField, final int startCalendarValue ) throws SensorException
+  private ITupleModel initModell( final IAxis[] axisList ) throws SensorException
   {
     if( m_from == null || m_to == null )
       return createTuppleModell( axisList, 0 );
 
     // correct from
-    if( startCalendarField != null && startCalendarField.length() > 0 )
-      m_from.set( CalendarUtilities.getCalendarField( startCalendarField ), startCalendarValue );
+    final String startCalendarField = m_calendar.getStartCalendarField();
+    if( startCalendarField != null && !startCalendarField.trim().isEmpty() )
+      m_from.set( CalendarUtilities.getCalendarField( startCalendarField ), m_calendar.getStartCalendarValue() );
 
     return doInitModell();
   }
@@ -184,7 +185,7 @@ public class IntervallTuplemodel extends AbstractTupleModel
   {
     // create empty model
     final IAxis[] axisList = getAxisList();
-    final CalendarIterator iterator = new CalendarIterator( m_from, m_to, m_calendarField, m_amount );
+    final CalendarIterator iterator = new CalendarIterator( m_from, m_to, m_calendar.getCalendarField(), m_calendar.getAmount() );
     final int stepCount = iterator.size();
 
     Assert.isTrue( stepCount > 0, String.format( "Empty intervall tuple model. Check from (%s)/to(%s).", m_from, m_to ) );
@@ -192,35 +193,30 @@ public class IntervallTuplemodel extends AbstractTupleModel
     final int rows = stepCount - 1;
     final ITupleModel intervallModel = createTuppleModell( axisList, rows );
 
-    // default values
-    final int[] defaultStatus = new int[m_statusAxis.length];
-    for( int i = 0; i < defaultStatus.length; i++ )
-      defaultStatus[i] = m_defaultStatus;
-
+    // defaults
     final double[] defaultValues = new double[m_valueAxis.length];
-    for( int i = 0; i < defaultValues.length; i++ )
-      defaultValues[i] = m_defaultValue;
+    final int[] defaultStatus = new int[m_statusAxis.length];
+    Arrays.fill( defaultValues, m_defaultValue );
+    Arrays.fill( defaultStatus, m_defaultStatus );
 
     // new Values
     final double[] newValues = new double[m_valueAxis.length];
-    for( int i = 0; i < newValues.length; i++ )
-      newValues[i] = 0d;
+    Arrays.fill( newValues, 0d );
 
     final int[] newStatus = new int[m_statusAxis.length];
-    for( int i = 0; i < newStatus.length; i++ )
-      newStatus[i] = KalypsoStati.BIT_OK;
+    Arrays.fill( newStatus, KalypsoStati.BIT_OK );
 
     // initialize target
-    Calendar lastTargetCalendar = iterator.next(); // TODO hasnext ?
+    Calendar lastTargetCalendar = iterator.next(); // TODO hasNext() ?
     int targetRow = 0;
-    Intervall targetIntervall = null;
+    Interval targetIntervall = null;
 
     int srcRow = 0;
-    Intervall srcIntervall = null;
+    Interval srcIntervall = null;
 
     // initialize values
     final Calendar firstSrcCal;
-    // check if source timeseries is empty
+    // check if source time series is empty
     final int srcMaxRows = m_srcModel.getCount();
     if( srcMaxRows != 0 ) // not empty
       firstSrcCal = createCalendar( (Date) m_srcModel.getElement( 0, m_dateAxis ) );
@@ -237,7 +233,7 @@ public class IntervallTuplemodel extends AbstractTupleModel
       lastSrcCalendar = firstSrcCal;
 
     // fill initial row
-    // final Intervall initialIntervall = new Intervall( m_from, m_from, defaultStatus, defaultValues );
+    // final Interval initialIntervall = new Interval( m_from, m_from, defaultStatus, defaultValues );
     // updateModelfromintervall( m_intervallModel, targetRow, initialIntervall );
     // targetRow++;
     // doemming: removed last 3 rows to avoid generating beginning "0" value.
@@ -247,33 +243,37 @@ public class IntervallTuplemodel extends AbstractTupleModel
       // set next source intervall
       if( srcIntervall == null || todo == TODO_GOTO_NEXT_SRC )
       {
-        // calculate the end of a sourceintervall with given distance
+        // calculate the end of a source interval with given distance
         final Calendar srcCalIntervallEnd = (Calendar) lastSrcCalendar.clone();
-        srcCalIntervallEnd.add( m_calendarField, m_amount );
+        srcCalIntervallEnd.add( m_calendar.getCalendarField(), m_calendar.getAmount() );
 
-        // if we are after the source timeseries
+        // if we are after the source time series
         if( srcRow >= srcMaxRows )
         {
           // generate defaults
-          // create dummy intervall
-          srcIntervall = new Intervall( lastSrcCalendar, srcCalIntervallEnd, defaultStatus, defaultValues );
+          // create dummy interval
+          srcIntervall = new Interval( lastSrcCalendar, srcCalIntervallEnd, defaultStatus, defaultValues );
 
           lastSrcCalendar = srcIntervall.getEnd();
           // TODO m_to, defaults
           todo = TODO_NOTHING;
           continue;
         }
-        // read current values from source timeserie
+        // read current values from source time serie
         final Calendar srcCal = createCalendar( (Date) m_srcModel.getElement( srcRow, m_dateAxis ) );
         final Object[] srcStatusValues = ObservationUtilities.getElements( m_srcModel, srcRow, m_statusAxis );
         final Integer[] srcStati = new Integer[srcStatusValues.length];
         for( int i = 0; i < srcStatusValues.length; i++ )
+        {
           srcStati[i] = new Integer( ((Number) srcStatusValues[i]).intValue() );
+        }
 
         final Object[] srcValuesObjects = ObservationUtilities.getElements( m_srcModel, srcRow, m_valueAxis );
         final Double[] srcValues = new Double[srcValuesObjects.length];
         for( int i = 0; i < srcValuesObjects.length; i++ )
+        {
           srcValues[i] = (Double) srcValuesObjects[i];
+        }
         srcIntervall = null;
 
         if( !lastSrcCalendar.after( srcCal ) )
@@ -283,7 +283,7 @@ public class IntervallTuplemodel extends AbstractTupleModel
           if( srcCalIntervallEnd.before( firstSrcCal ) )
           {
             // we are before the source timeseries
-            srcIntervall = new Intervall( lastSrcCalendar, srcCalIntervallEnd, defaultStatus, defaultValues );
+            srcIntervall = new Interval( lastSrcCalendar, srcCalIntervallEnd, defaultStatus, defaultValues );
             lastSrcCalendar = srcCalIntervallEnd;
           }
           else
@@ -291,17 +291,17 @@ public class IntervallTuplemodel extends AbstractTupleModel
           {
             switch( m_mode )
             {
-              case IntervallFilter.MODE_INTENSITY:
-                srcIntervall = new Intervall( lastSrcCalendar, srcCal, srcStati, srcValues );
+              case eIntensity:
+                srcIntervall = new Interval( lastSrcCalendar, srcCal, srcStati, srcValues );
                 break;
               default:
                 // (IntervallFilter.MODE_SUM) as length of first interval is undefined, we ignore first value
-                // TODO solve: for whitch intervall is the first value valid ?
+                // TODO solve: for which interval is the first value valid ?
                 // there is no definition :-(
-                // Bugfix: we use it nevertheless, as it works ok if intervalls are equal;
+                // bugfix: we use it nevertheless, as it works OK if intervals are equal;
                 // also, always no warning produces problems elsewhere
 // if( srcRow > 0 )
-                srcIntervall = new Intervall( lastSrcCalendar, srcCal, srcStati, srcValues );
+                srcIntervall = new Interval( lastSrcCalendar, srcCal, srcStati, srcValues );
                 break;
             }
             lastSrcCalendar = srcCal;
@@ -325,7 +325,7 @@ public class IntervallTuplemodel extends AbstractTupleModel
         }
         final Calendar cal = iterator.next();
         if( lastTargetCalendar.before( cal ) )
-          targetIntervall = new Intervall( lastTargetCalendar, cal, newStatus, newValues );
+          targetIntervall = new Interval( lastTargetCalendar, cal, newStatus, newValues );
         else
           targetIntervall = null;
         lastTargetCalendar = cal;
@@ -344,25 +344,25 @@ public class IntervallTuplemodel extends AbstractTupleModel
       }
       // compute intersection intervall
       final int matrix = srcIntervall.calcIntersectionMatrix( targetIntervall );
-      Intervall intersection = null;
-      if( matrix != Intervall.STATUS_INTERSECTION_NONE_BEFORE && matrix != Intervall.STATUS_INTERSECTION_NONE_AFTER )
+      Interval intersection = null;
+      if( matrix != Interval.STATUS_INTERSECTION_NONE_BEFORE && matrix != Interval.STATUS_INTERSECTION_NONE_AFTER )
         intersection = srcIntervall.getIntersection( targetIntervall, m_mode );
 
       switch( matrix )
       {
-        case Intervall.STATUS_INTERSECTION_NONE_BEFORE:
+        case Interval.STATUS_INTERSECTION_NONE_BEFORE:
           todo = TODO_GOTO_NEXT_TARGET;
           break;
-        case Intervall.STATUS_INTERSECTION_NONE_AFTER:
+        case Interval.STATUS_INTERSECTION_NONE_AFTER:
           todo = TODO_GOTO_NEXT_SRC;
           break;
-        case Intervall.STATUS_INTERSECTION_START:
-        case Intervall.STATUS_INTERSECTION_INSIDE:
+        case Interval.STATUS_INTERSECTION_START:
+        case Interval.STATUS_INTERSECTION_INSIDE:
           targetIntervall.merge( intersection, m_mode );
           todo = TODO_GOTO_NEXT_TARGET;
           break;
-        case Intervall.STATUS_INTERSECTION_END:
-        case Intervall.STATUS_INTERSECTION_ARROUND:
+        case Interval.STATUS_INTERSECTION_END:
+        case Interval.STATUS_INTERSECTION_ARROUND:
           targetIntervall.merge( intersection, m_mode );
           todo = TODO_GOTO_NEXT_SRC;
           break;
@@ -380,7 +380,7 @@ public class IntervallTuplemodel extends AbstractTupleModel
   }
 
   // accept values for result
-  private void updateModelfromIntervall( final ITupleModel model, final int targetRow, final Intervall targetIntervall ) throws SensorException
+  private void updateModelfromIntervall( final ITupleModel model, final int targetRow, final Interval targetIntervall ) throws SensorException
   {
     final Calendar cal = targetIntervall.getEnd();
     final int[] status = targetIntervall.getStatus();

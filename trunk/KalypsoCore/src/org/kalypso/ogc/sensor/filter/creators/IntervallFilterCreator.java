@@ -48,7 +48,7 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.filter.IFilterCreator;
 import org.kalypso.ogc.sensor.filter.IObservationFilter;
-import org.kalypso.ogc.sensor.filter.filters.IntervallFilter;
+import org.kalypso.ogc.sensor.filter.filters.interval.IntervalFilter;
 import org.kalypso.zml.filters.AbstractFilterType;
 import org.kalypso.zml.filters.IntervallFilterType;
 
@@ -58,7 +58,7 @@ public class IntervallFilterCreator implements IFilterCreator
   public IObservationFilter createFilter( final AbstractFilterType aft, final IObservation baseObs, final URL context ) throws SensorException
   {
     final IntervallFilterType filter = (IntervallFilterType) aft;
-    final IntervallFilter intervallFilter = new IntervallFilter( filter );
+    final IntervalFilter intervallFilter = new IntervalFilter( filter );
 
     final JAXBElement< ? extends AbstractFilterType> filter2 = filter.getFilter();
 

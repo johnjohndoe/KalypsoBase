@@ -38,72 +38,69 @@
  v.doemming@tuhh.de
 
  ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.ogc.sensor.filter.filters;
+package org.kalypso.ogc.sensor.filter.filters.interval;
 
 import java.net.URL;
 import java.util.Calendar;
 import java.util.Date;
 
-import org.kalypso.contribs.java.util.CalendarUtilities;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.zml.filters.IntervallFilterType;
 
 /**
  * @author doemming
  */
-public class IntervallFilter extends AbstractObservationFilter
+public class IntervalFilter extends AbstractObservationFilter
 {
-  public static final int MODE_INTENSITY = 0;
+  public enum MODE
+  {
+    eIntensity,
+    eSum;
 
-  public static final int MODE_SUM = 1;
+    public static MODE getMode( final IntervallFilterType filter )
+    {
+      final String mode = filter.getMode();
+      if( "sum".equalsIgnoreCase( mode ) ) //$NON-NLS-1$
+        return eSum;
+
+      return eIntensity;
+    }
+
+// public static final int MODE_INTENSITY = 0;
+//
+// public static final int MODE_SUM = 1;
+
+  }
 
   private IObservation m_baseobservation = null;
 
-  private final int m_mode;
-
-  private final int m_calendarField;
-
-  private final int m_amount;
-
-  private final String m_startCalendarField;
-
-  private final int m_startCalendarValue;
+  private final MODE m_mode;
 
   private final double m_defaultValue;
 
   private final int m_defaultStatus;
 
-  public IntervallFilter( final int mode, final int defaultStatus, final double defaultValue, final int calendarField, final int amount, final String startCalendarField, final int startCalendarValue )
+  private final IntervalCalendar m_calendar;
+
+  public IntervalFilter( final MODE mode, final int defaultStatus, final double defaultValue, final IntervalCalendar calendar )
   {
     m_mode = mode;
     m_defaultStatus = defaultStatus;
     m_defaultValue = defaultValue;
-    m_calendarField = calendarField;
-    m_amount = amount;
-    m_startCalendarField = startCalendarField;
-    m_startCalendarValue = startCalendarValue;
+
+    m_calendar = calendar;
   }
 
-  public IntervallFilter( final IntervallFilterType filter )
+  public IntervalFilter( final IntervallFilterType filter )
   {
-    this( getMode( filter ), filter.getDefaultStatus(), filter.getDefaultValue(), CalendarUtilities.getCalendarField( filter.getCalendarField() ), filter.getAmount(), filter.getStartCalendarfield(), filter.getStartCalendarvalue() );
-  }
-
-  private static int getMode( final IntervallFilterType filter )
-  {
-    final String mode = filter.getMode();
-    if( "intensity".equalsIgnoreCase( mode ) ) //$NON-NLS-1$
-      return MODE_INTENSITY;
-    else if( "sum".equalsIgnoreCase( mode ) ) //$NON-NLS-1$
-      return MODE_SUM;
-
-    return MODE_INTENSITY; // default is intensity
+    this( MODE.getMode( filter ), filter.getDefaultStatus(), filter.getDefaultValue(), new IntervalCalendar( filter ) );
   }
 
   @Override
@@ -125,11 +122,11 @@ public class IntervallFilter extends AbstractObservationFilter
     // the first value was always ignored, because the interval
     // filter cannot handle the first value of the source observation
     // FIX: we just make the request a big bigger in order to get a new first value
-    // HACK: we always use DAY, so that work fine only up to timeseries of DAY-quality.
+    // HACK: we always use DAY, so that work fine only up to time series of DAY-quality.
     // Maybe there should be one day a mean to determine, which is the right amount.
     final ITupleModel values = ObservationUtilities.requestBuffered( m_baseobservation, dateRange, Calendar.DAY_OF_MONTH, 2 );
 
-    return new IntervallTuplemodel( m_mode, m_calendarField, m_amount, m_startCalendarValue, m_startCalendarField, values, from, to, m_defaultValue, m_defaultStatus );
+    return new IntervalTuplemodel( m_mode, m_calendar, values, from, to, m_defaultValue, m_defaultStatus );
   }
 
   @Override

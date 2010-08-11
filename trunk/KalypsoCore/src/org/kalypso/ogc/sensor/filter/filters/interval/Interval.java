@@ -38,17 +38,18 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.sensor.filter.filters;
+package org.kalypso.ogc.sensor.filter.filters.interval;
 
 import java.util.Calendar;
 
 import org.kalypso.core.i18n.Messages;
+import org.kalypso.ogc.sensor.filter.filters.interval.IntervalFilter.MODE;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 
 /**
  * @author doemming
  */
-public class Intervall
+public class Interval
 {
   // DO NOT CHANGE NUMBERING
 
@@ -84,7 +85,7 @@ public class Intervall
 
   private double[] m_value;
 
-  public Intervall( final Calendar start, final Calendar end, final int[] status, final double[] value )
+  public Interval( final Calendar start, final Calendar end, final int[] status, final double[] value )
   {
     m_start = (Calendar) start.clone();
     m_end = (Calendar) end.clone();
@@ -92,7 +93,7 @@ public class Intervall
     m_value = value.clone();
   }
 
-  public Intervall( final Calendar start, final Calendar end )
+  public Interval( final Calendar start, final Calendar end )
   {
     m_start = (Calendar) start.clone();
     m_end = (Calendar) end.clone();
@@ -100,7 +101,7 @@ public class Intervall
     m_value = null;
   }
 
-  public Intervall( final Calendar start, final Calendar end, final Integer[] status, final Double[] values )
+  public Interval( final Calendar start, final Calendar end, final Integer[] status, final Double[] values )
   {
     m_start = start;
     m_end = end;
@@ -147,7 +148,7 @@ public class Intervall
     return m_end.getTimeInMillis() - m_start.getTimeInMillis();
   }
 
-  public int calcIntersectionMatrix( final Intervall other )
+  public int calcIntersectionMatrix( final Interval other )
   {
     int result = 0;
     if( getStart().before( other.getStart() ) )
@@ -161,29 +162,29 @@ public class Intervall
     return result;
   }
 
-  public boolean intersects( final Intervall other )
+  public boolean intersects( final Interval other )
   {
     final int matrix = calcIntersectionMatrix( other );
     return !(matrix == STATUS_INTERSECTION_NONE_AFTER || matrix == STATUS_INTERSECTION_NONE_BEFORE);
   }
 
-  public Intervall getIntersection( final Intervall other, final int mode )
+  public Interval getIntersection( final Interval other, final MODE mode )
   {
-    final Intervall result;
+    final Interval result;
     final int matrix = calcIntersectionMatrix( other );
     switch( matrix )
     {
       case STATUS_INTERSECTION_START:
-        result = new Intervall( getStart(), other.getEnd() );
+        result = new Interval( getStart(), other.getEnd() );
         break;
       case STATUS_INTERSECTION_END:
-        result = new Intervall( other.getStart(), getEnd() );
+        result = new Interval( other.getStart(), getEnd() );
         break;
       case STATUS_INTERSECTION_INSIDE:
-        result = new Intervall( other.getStart(), other.getEnd() );
+        result = new Interval( other.getStart(), other.getEnd() );
         break;
       case STATUS_INTERSECTION_ARROUND:
-        result = new Intervall( getStart(), getEnd() );
+        result = new Interval( getStart(), getEnd() );
         break;
       case STATUS_INTERSECTION_NONE_BEFORE:
       case STATUS_INTERSECTION_NONE_AFTER:
@@ -216,7 +217,7 @@ public class Intervall
     return result;
   }
 
-  public void merge( final Intervall other, final int mode )
+  public void merge( final Interval other, final MODE mode )
   {
     final double factor = calcFactorMerge( other, mode );
     for( int i = 0; i < other.getValue().length; i++ )
@@ -230,11 +231,11 @@ public class Intervall
     }
   }
 
-  private double calcFactorIntersect( final Intervall other, final int mode )
+  private double calcFactorIntersect( final Interval other, final MODE mode )
   {
     switch( mode )
     {
-      case IntervallFilter.MODE_SUM:
+      case eSum:
         /* If target interval length is 0; factor is 0 (the empty sum) */
         final long durationInMillis = getDurationInMillis();
         if( durationInMillis == 0 )
@@ -242,19 +243,19 @@ public class Intervall
 
         return (double) other.getDurationInMillis() / (double) durationInMillis;
 
-      case IntervallFilter.MODE_INTENSITY:
+      case eIntensity:
       default:
         return 1d;
     }
   }
 
-  private double calcFactorMerge( final Intervall other, final int mode )
+  private double calcFactorMerge( final Interval other, final MODE mode )
   {
     switch( mode )
     {
-      case IntervallFilter.MODE_SUM:
+      case eSum:
         return 1d;
-      case IntervallFilter.MODE_INTENSITY:
+      case eIntensity:
       default:
         return (double) other.getDurationInMillis() / (double) getDurationInMillis();
     }
