@@ -397,8 +397,12 @@ public class IntervalTuplemodel extends AbstractTupleModel
 
     // FIXME original value or adjusted value?!?
     final IAxis dataSourcesAxes = m_axes.getDataSourcesAxes();
-    final Integer index = getDataSourceIndex();
-    model.setElement( targetRow, index, dataSourcesAxes );
+    if( dataSourcesAxes != null )
+    {
+      final Integer index = getDataSourceIndex();
+      model.setElement( targetRow, index, dataSourcesAxes );
+    }
+
   }
 
   private Integer getDataSourceIndex( )
