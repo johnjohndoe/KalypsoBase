@@ -111,7 +111,7 @@ public class ProfileChart extends Composite implements IProfilChart
     if( m_profile == oldProfile )
       return;
 
-    if( m_chartModel == null )
+    if( m_chartModel != null )
       m_chartModel.dispose();
 
     m_chartModel = new ProfilChartModel( m_layerProvider, m_profile, null );
