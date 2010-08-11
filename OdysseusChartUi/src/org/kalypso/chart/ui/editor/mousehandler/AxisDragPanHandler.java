@@ -44,7 +44,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.widgets.Display;
 
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.ComparableDataRange;
@@ -58,7 +57,7 @@ import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
 public class AxisDragPanHandler extends AbstractAxisDragHandler
 {
 
-  public AxisDragPanHandler( ChartComposite chartComposite )
+  public AxisDragPanHandler( final ChartComposite chartComposite )
   {
     super( chartComposite );
   }
@@ -68,7 +67,7 @@ public class AxisDragPanHandler extends AbstractAxisDragHandler
    *      org.eclipse.swt.graphics.Point, de.openali.odysseus.chart.framework.model.mapper.IAxis[])
    */
   @Override
-  void doMouseMoveAction( Point start, Point end, IAxis[] axes )
+  void doMouseMoveAction( final Point start, final Point end, final IAxis[] axes )
   {
     if( axes == null || axes.length == 0 )
       return;
@@ -85,7 +84,7 @@ public class AxisDragPanHandler extends AbstractAxisDragHandler
    *      org.eclipse.swt.graphics.Point, de.openali.odysseus.chart.framework.model.mapper.IAxis[])
    */
   @Override
-  void doMouseUpAction( Point start, Point end, IAxis[] axes )
+  void doMouseUpAction( final Point start, final Point end, final IAxis[] axes )
   {
     getChartComposite().clearPanOffset();
     if( axes.length > 0 )
@@ -116,16 +115,16 @@ public class AxisDragPanHandler extends AbstractAxisDragHandler
     return e.display.getSystemCursor( SWT.CURSOR_SIZEALL );
   }
 
-  private void panAxis( int startPos, int endPos, IAxis axis )
+  private void panAxis( final int startPos, final int endPos, final IAxis axis )
   {
-    Number startNum = axis.screenToNumeric( startPos );
-    Number endNum = axis.screenToNumeric( endPos );
-    double diff = startNum.doubleValue() - endNum.doubleValue();
+    final Number startNum = axis.screenToNumeric( startPos );
+    final Number endNum = axis.screenToNumeric( endPos );
+    final double diff = startNum.doubleValue() - endNum.doubleValue();
     if( Double.isNaN( diff ) )
       return;
-    IDataRange<Number> oldRange = axis.getNumericRange();
-    Number newMin = oldRange.getMin().doubleValue() + diff;
-    Number newMax = oldRange.getMax().doubleValue() + diff;
+    final IDataRange<Number> oldRange = axis.getNumericRange();
+    final Number newMin = oldRange.getMin().doubleValue() + diff;
+    final Number newMax = oldRange.getMax().doubleValue() + diff;
     axis.setNumericRange( new ComparableDataRange<Number>( new Number[] { newMin, newMax } ) );
   }
 

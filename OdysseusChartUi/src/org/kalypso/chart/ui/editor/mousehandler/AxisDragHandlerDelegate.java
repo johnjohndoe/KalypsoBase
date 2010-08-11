@@ -40,17 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.chart.ui.editor.mousehandler;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.eclipse.swt.SWT;
-
-import de.openali.odysseus.chart.framework.model.mapper.IAxis;
-import de.openali.odysseus.chart.framework.model.mapper.component.IAxisComponent;
-import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
 import de.openali.odysseus.chart.framework.view.IAxisDragHandler;
 import de.openali.odysseus.chart.framework.view.IChartDragHandler;
-import de.openali.odysseus.chart.framework.view.impl.AxisCanvas;
 import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
 
 /**

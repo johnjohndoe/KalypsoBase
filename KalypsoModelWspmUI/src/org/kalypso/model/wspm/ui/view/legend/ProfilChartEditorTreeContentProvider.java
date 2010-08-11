@@ -43,10 +43,7 @@ package org.kalypso.model.wspm.ui.view.legend;
 import org.kalypso.chart.ui.editor.ChartEditorTreeContentProvider;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme;
 
-import de.openali.odysseus.chart.ext.base.layer.AbstractExpandableLayer;
 import de.openali.odysseus.chart.framework.model.IChartModel;
-import de.openali.odysseus.chart.framework.model.layer.IExpandableChartLayer;
-import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 
 /**
  * @author kimwerner
