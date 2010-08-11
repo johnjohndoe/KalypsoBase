@@ -203,8 +203,20 @@ public class MergeObservationWorker implements ICoreRunnableWithProgress
           {
             final Integer srcIndex = (Integer) srcModel.getElement( index, srcAxis );
 
-            final String identifier = srcMetaDataHandler.getDataSourceIdentifier( srcIndex );
-            final String repository = srcMetaDataHandler.getDataSourceRepository( srcIndex );
+            // FIXME hack remove
+            final String identifier;
+            final String repository;
+
+            if( srcIndex == null )
+            {
+              identifier = "n/a";
+              repository = "n/a";
+            }
+            else
+            {
+              identifier = srcMetaDataHandler.getDataSourceIdentifier( srcIndex );
+              repository = srcMetaDataHandler.getDataSourceRepository( srcIndex );
+            }
 
             final Integer destIndex = destMetaDataHandler.addDataSource( identifier, repository );
             values[baseIndex] = destIndex;

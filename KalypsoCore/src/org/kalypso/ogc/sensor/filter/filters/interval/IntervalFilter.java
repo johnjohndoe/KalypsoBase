@@ -72,11 +72,6 @@ public class IntervalFilter extends AbstractObservationFilter
 
       return eIntensity;
     }
-
-// public static final int MODE_INTENSITY = 0;
-//
-// public static final int MODE_SUM = 1;
-
   }
 
   private IObservation m_baseobservation = null;
