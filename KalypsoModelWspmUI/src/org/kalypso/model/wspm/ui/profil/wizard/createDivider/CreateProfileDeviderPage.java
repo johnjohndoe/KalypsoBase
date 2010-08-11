@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.ui.wizard;
+package org.kalypso.model.wspm.ui.profil.wizard.createDivider;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -76,7 +76,8 @@ import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
 import org.kalypso.model.wspm.ui.i18n.Messages;
-import org.kalypso.model.wspm.ui.wizard.ThemeAndPropertyChooserGroup.PropertyDescriptor;
+import org.kalypso.model.wspm.ui.profil.wizard.utils.ThemeAndPropertyChooserGroup;
+import org.kalypso.model.wspm.ui.profil.wizard.utils.ThemeAndPropertyChooserGroup.PropertyDescriptor;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;

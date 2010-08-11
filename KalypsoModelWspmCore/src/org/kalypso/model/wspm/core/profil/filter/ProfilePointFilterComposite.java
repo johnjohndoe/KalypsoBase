@@ -79,19 +79,34 @@ public class ProfilePointFilterComposite extends ListSelectionComposite implemen
 
   private IDialogSettings m_dialogSettings;
 
+  private final String m_usageHint;
+
   /**
-   * Same as {@link ProfileFilterComposite#ProfileFilterComposite(new ArrayContentProvider(), ILabelProvider)}
+   * Same as {@link ProfileFilterComposite#ProfileFilterComposite(new ArrayContentProvider(), LABEL_PROVIDER, null)}
    */
   public ProfilePointFilterComposite( )
   {
-    this( new ArrayContentProvider(), LABEL_PROVIDER );
+    this( new ArrayContentProvider(), LABEL_PROVIDER, null );
   }
 
-  public ProfilePointFilterComposite( final IStructuredContentProvider contentProvider, final ILabelProvider labelProvider )
+  /**
+   * Same as {@link ProfileFilterComposite#ProfileFilterComposite(new ArrayContentProvider(), ILabelProvider)}
+   */
+  public ProfilePointFilterComposite( final String useageHint )
+  {
+    this( new ArrayContentProvider(), LABEL_PROVIDER, useageHint );
+  }
+
+  /**
+   * 
+   */
+  private ProfilePointFilterComposite( final IStructuredContentProvider contentProvider, final ILabelProvider labelProvider, final String usageHint )
   {
     super( contentProvider, labelProvider );
 
-    final IProfilePointFilter[] filters = KalypsoModelWspmCoreExtensions.getProfilePointFilters();
+    m_usageHint = usageHint;
+
+    final IProfilePointFilter[] filters = KalypsoModelWspmCoreExtensions.getProfilePointFilters( usageHint );
     m_filters.addAll( Arrays.asList( filters ) );
   }
 
@@ -180,6 +195,15 @@ public class ProfilePointFilterComposite extends ListSelectionComposite implemen
       setCheckedFilters( idArray );
     }
 
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter#getUsageHint()
+   */
+  @Override
+  public String getUsageHint( )
+  {
+    return m_usageHint;
   }
 
   /**

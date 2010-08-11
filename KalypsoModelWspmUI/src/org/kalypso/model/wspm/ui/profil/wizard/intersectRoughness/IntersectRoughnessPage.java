@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.ui.wizard;
+package org.kalypso.model.wspm.ui.profil.wizard.intersectRoughness;
 
 import javax.xml.namespace.QName;
 
@@ -70,7 +70,9 @@ import org.kalypso.gmlschema.property.PropertyUtils;
 import org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter;
 import org.kalypso.model.wspm.core.profil.filter.ProfilePointFilterComposite;
 import org.kalypso.model.wspm.ui.i18n.Messages;
-import org.kalypso.model.wspm.ui.wizard.ThemeAndPropertyChooserGroup.PropertyDescriptor;
+import org.kalypso.model.wspm.ui.profil.wizard.utils.IWspmWizardConstants;
+import org.kalypso.model.wspm.ui.profil.wizard.utils.ThemeAndPropertyChooserGroup;
+import org.kalypso.model.wspm.ui.profil.wizard.utils.ThemeAndPropertyChooserGroup.PropertyDescriptor;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.IKalypsoThemeFilter;
@@ -93,7 +95,7 @@ public class IntersectRoughnessPage extends WizardPage implements IUpdateable, I
 
   private final PropertyDescriptor m_valuePd;
 
-  private final ProfilePointFilterComposite m_filterChooser = new ProfilePointFilterComposite();
+  private final ProfilePointFilterComposite m_filterChooser = new ProfilePointFilterComposite( IWspmWizardConstants.FILTER_USAGE_SECTION );
 
   public IntersectRoughnessPage( final IMapModell modell )
   {

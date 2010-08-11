@@ -116,4 +116,13 @@ public class TableSelectionProfilePointFilter implements IProfilePointFilter
     return "Selection";
   }
 
+  /**
+   * @see org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter#getUsageHint()
+   */
+  @Override
+  public String getUsageHint( )
+  {
+    return "tableSelection"; //$NON-NLS-1$
+  }
+
 }

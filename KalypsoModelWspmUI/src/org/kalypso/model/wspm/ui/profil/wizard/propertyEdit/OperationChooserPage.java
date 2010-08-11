@@ -78,6 +78,7 @@ import org.kalypso.model.wspm.core.profil.filter.ProfilePointFilterComposite;
 import org.kalypso.model.wspm.core.util.pointpropertycalculator.IPointPropertyCalculator;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.i18n.Messages;
+import org.kalypso.model.wspm.ui.profil.wizard.utils.IWspmWizardConstants;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 
@@ -110,7 +111,7 @@ public class OperationChooserPage extends WizardPage
 
   private Double m_value = Double.NaN;
 
-  private final ProfilePointFilterComposite m_filterChooser = new ProfilePointFilterComposite();
+  private final ProfilePointFilterComposite m_filterChooser = new ProfilePointFilterComposite( IWspmWizardConstants.FILTER_USAGE_SECTION );
 
   public OperationChooserPage( final String title )
   {

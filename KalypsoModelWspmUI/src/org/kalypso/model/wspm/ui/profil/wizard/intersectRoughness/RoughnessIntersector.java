@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.ui.wizard;
+package org.kalypso.model.wspm.ui.profil.wizard.intersectRoughness;
 
 import java.util.ArrayList;
 import java.util.Collections;

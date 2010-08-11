@@ -6,14 +6,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Platform;
 import org.kalypso.model.wspm.core.gml.IProfileFeatureProvider;
-import org.kalypso.model.wspm.core.i18n.Messages;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider;
 import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.IProfileObjectProvider;
@@ -24,19 +24,22 @@ import org.kalypso.model.wspm.core.profil.serializer.IProfilSink;
 import org.kalypso.model.wspm.core.profil.serializer.IProfilSource;
 
 /** Helper class to read extension points of this plugin. */
-public class KalypsoModelWspmCoreExtensions
+public final class KalypsoModelWspmCoreExtensions
 {
+  private KalypsoModelWspmCoreExtensions( )
+  {
+    throw new UnsupportedOperationException( "Helper class, do not instantiate" );
+  }
+
   private static IProfileFeatureProvider[] PROFILE_FEATURE_PROVIDER = null;
 
-  private static IProfilePointFilter[] PROFILE_POINT_FILTER = null;
+  private static IProfilePointFilter[] PROFILE_POINT_FILTERS = null;
 
   private static Map<String, List<IProfilPointMarkerProvider>> THE_MARKER_PROVIDER_MAP = null;
 
   private static Map<String, ProfileType> THE_PROFILE_TYPE_MAP = null;
 
   private static Map<String, IProfileObjectProvider> PROFILE_OBJECT_PROVIDER = null;
-
-// private static Map<String, List<IProfileObjectProvider>> THE_OBJECT_PROVIDER_MAP = null;
 
   public static IProfilMarkerResolution[] createReparatorRules( )
   {
@@ -56,20 +59,22 @@ public class KalypsoModelWspmCoreExtensions
       catch( final CoreException e )
       {
         e.printStackTrace();
+        final IStatus status = e.getStatus();
+        KalypsoModelWspmCorePlugin.getDefault().getLog().log( status );
 
-        stati.add( e.getStatus() );
+        stati.add( status );
       }
     }
 
-    if( stati.size() > 0 )
-    {
-      final IStatus[] childrens = stati.toArray( new IStatus[stati.size()] );
-      final IStatus status = new MultiStatus( KalypsoModelWspmCorePlugin.getID(), 0, childrens, Messages.getString( "org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions.0" ), null ); //$NON-NLS-1$
-      if( status != null )
-      {
-        // TODO: what to do whith this status?
-      }
-    }
+// if( stati.size() > 0 )
+// {
+// final IStatus[] childrens = stati.toArray( new IStatus[stati.size()] );
+//      final IStatus status = new MultiStatus( KalypsoModelWspmCorePlugin.getID(), 0, childrens, Messages.getString( "org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions.0" ), null ); //$NON-NLS-1$
+// if( status != null )
+// {
+// // TODO: what to do whith this status?
+// }
+// }
 
     return reparators.toArray( new IProfilMarkerResolution[reparators.size()] );
   }
@@ -100,7 +105,7 @@ public class KalypsoModelWspmCoreExtensions
     return null;
   }
 
-  public static final Map<String, String> getProfilSinks( )
+  public static Map<String, String> getProfilSinks( )
   {
     final Map<String, IConfigurationElement> sinks = getSinksOrSources( "sink" ); //$NON-NLS-1$
     final Map<String, String> sinkMap = new HashMap<String, String>( sinks.size() );
@@ -156,7 +161,7 @@ public class KalypsoModelWspmCoreExtensions
     return map;
   }
 
-  public synchronized static IProfileFeatureProvider[] getProfileFeatureProvider( )
+  public static synchronized IProfileFeatureProvider[] getProfileFeatureProvider( )
   {
     if( PROFILE_FEATURE_PROVIDER != null )
       return PROFILE_FEATURE_PROVIDER;
@@ -182,11 +187,42 @@ public class KalypsoModelWspmCoreExtensions
     return PROFILE_FEATURE_PROVIDER;
   }
 
-  public static IProfilePointFilter[] getProfilePointFilters( )
+  public static synchronized IProfilePointFilter[] getProfilePointFilters( final String usageHint )
   {
-    if( PROFILE_POINT_FILTER != null )
-      return PROFILE_POINT_FILTER;
+    if( PROFILE_POINT_FILTERS == null )
+      PROFILE_POINT_FILTERS = readProfileFilters();
 
+    return restrictFilterByUsage( PROFILE_POINT_FILTERS, usageHint );
+  }
+
+  private static IProfilePointFilter[] restrictFilterByUsage( final IProfilePointFilter[] filters, final String usageHint )
+  {
+    final Collection<IProfilePointFilter> restrictedFilters = new ArrayList<IProfilePointFilter>( filters.length );
+
+    for( final IProfilePointFilter filter : filters )
+    {
+      final String filterUsage = filter.getUsageHint();
+
+      /* Blank usage: filter should be used everywhere*/
+      if( StringUtils.isBlank( filterUsage ))
+        restrictedFilters.add( filter );
+      else
+      {
+        /*
+         * Else, filters hint must contain the given hint to be added. I.e. if usageHint is empty, all filters with non
+         * -empty hint are removed.
+         */
+        final String[] usages = filterUsage.split( "," );
+        if( ArrayUtils.contains( usages, usageHint ) )
+          restrictedFilters.add( filter );
+      }
+    }
+
+    return restrictedFilters.toArray( new IProfilePointFilter[restrictedFilters.size()] );
+  }
+
+  private static IProfilePointFilter[] readProfileFilters( )
+  {
     final IExtensionRegistry registry = Platform.getExtensionRegistry();
     final IConfigurationElement[] elements = registry.getConfigurationElementsFor( "org.kalypso.model.wspm.core.profilePointFilter" ); //$NON-NLS-1$
 
@@ -203,9 +239,7 @@ public class KalypsoModelWspmCoreExtensions
       }
     }
 
-    PROFILE_POINT_FILTER = filter.toArray( new IProfilePointFilter[filter.size()] );
-
-    return PROFILE_POINT_FILTER;
+    return filter.toArray( new IProfilePointFilter[filter.size()] );
   }
 
   public static IProfilPointMarkerProvider getMarkerProviders( final String profilType )

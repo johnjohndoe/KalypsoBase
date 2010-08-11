@@ -50,8 +50,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.model.wspm.ui.i18n.Messages;
-import org.kalypso.model.wspm.ui.wizard.FeatureThemeWizardUtilitites;
-import org.kalypso.model.wspm.ui.wizard.IntersectRoughnessWizard;
+import org.kalypso.model.wspm.ui.profil.wizard.intersectRoughness.IntersectRoughnessWizard;
+import org.kalypso.model.wspm.ui.profil.wizard.utils.FeatureThemeWizardUtilitites;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 
 /**
