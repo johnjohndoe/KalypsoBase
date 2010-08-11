@@ -53,7 +53,6 @@ import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IMapper;
 import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
-import de.openali.odysseus.chart.framework.view.TooltipHandler;
 import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
 import de.openali.odysseus.chartconfig.x020.AxisDateRangeType;
 import de.openali.odysseus.chartconfig.x020.AxisDurationRangeType;
@@ -537,7 +536,7 @@ public class ChartEditor extends EditorPart implements IChartPart
    * @see de.openali.odysseus.chart.framework.model.event.IEventProvider#addListener(java.lang.Object)
    */
   @Override
-  public void addListener( IChartModelEventListener listener )
+  public void addListener( final IChartModelEventListener listener )
   {
     // TODO Auto-generated method stub
 
@@ -547,7 +546,7 @@ public class ChartEditor extends EditorPart implements IChartPart
    * @see de.openali.odysseus.chart.framework.model.event.IEventProvider#removeListener(java.lang.Object)
    */
   @Override
-  public void removeListener( IChartModelEventListener listener )
+  public void removeListener( final IChartModelEventListener listener )
   {
     // TODO Auto-generated method stub
 

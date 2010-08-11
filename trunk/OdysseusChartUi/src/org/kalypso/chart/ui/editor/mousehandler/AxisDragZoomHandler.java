@@ -56,8 +56,7 @@ import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
  */
 public class AxisDragZoomHandler extends AbstractAxisDragHandler
 {
-
-  public AxisDragZoomHandler( ChartComposite chartComposite )
+  public AxisDragZoomHandler( final ChartComposite chartComposite )
   {
     super( chartComposite );
   }
@@ -76,7 +75,7 @@ public class AxisDragZoomHandler extends AbstractAxisDragHandler
    *      org.eclipse.swt.graphics.Point, de.openali.odysseus.chart.framework.model.mapper.IAxis[])
    */
   @Override
-  void doMouseMoveAction( Point start, Point end, IAxis[] axes )
+  void doMouseMoveAction( final Point start, final Point end, final IAxis[] axes )
   {
     getChartComposite().setAxisZoomOffset( start, end, axes );
     if( axes[0].getPosition().getOrientation().equals( ORIENTATION.HORIZONTAL ) )
@@ -91,7 +90,7 @@ public class AxisDragZoomHandler extends AbstractAxisDragHandler
    *      org.eclipse.swt.graphics.Point, de.openali.odysseus.chart.framework.model.mapper.IAxis[])
    */
   @Override
-  void doMouseUpAction( Point start, Point end, IAxis[] axes )
+  void doMouseUpAction( final Point start, final Point end, final IAxis[] axes )
   {
     getChartComposite().clearZoomOffset();
     if( axes.length > 0 )
@@ -112,7 +111,6 @@ public class AxisDragZoomHandler extends AbstractAxisDragHandler
     }
   }
 
-// overrride
   protected void performZoomAction( final int start, final int end, final IAxis[] axes )
   {
     throw new NotImplementedException();

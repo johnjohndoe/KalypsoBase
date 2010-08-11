@@ -45,7 +45,6 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.widgets.Display;
 
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
@@ -76,7 +75,7 @@ public class DragZoomOutHandler extends AbstractChartDragHandler
    *      de.openali.odysseus.chart.framework.model.layer.EditInfo)
    */
   @Override
-  public void doMouseUpAction( Point end, EditInfo editInfo )
+  public void doMouseUpAction( final Point end, final EditInfo editInfo )
   {
 
     try

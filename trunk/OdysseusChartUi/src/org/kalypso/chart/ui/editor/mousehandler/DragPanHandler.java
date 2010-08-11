@@ -44,7 +44,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.widgets.Display;
 
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
@@ -54,7 +53,6 @@ import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
  */
 public class DragPanHandler extends AbstractChartDragHandler
 {
-
   public DragPanHandler( final ChartComposite chartComposite )
   {
     super( chartComposite, 5 );
@@ -74,7 +72,7 @@ public class DragPanHandler extends AbstractChartDragHandler
    *      de.openali.odysseus.chart.framework.model.layer.EditInfo)
    */
   @Override
-  public void doMouseUpAction( Point start, EditInfo editInfo )
+  public void doMouseUpAction( final Point start, final EditInfo editInfo )
   {
     getChart().clearPanOffset();
     if( start != null )
@@ -87,7 +85,7 @@ public class DragPanHandler extends AbstractChartDragHandler
    *      de.openali.odysseus.chart.framework.model.layer.EditInfo)
    */
   @Override
-  public void doMouseMoveAction( Point start, EditInfo editInfo )
+  public void doMouseMoveAction( final Point start, final EditInfo editInfo )
   {
     getChart().setPlotPanOffset(null, start, editInfo.m_pos );
   }
