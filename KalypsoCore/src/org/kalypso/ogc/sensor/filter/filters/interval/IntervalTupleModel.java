@@ -208,19 +208,23 @@ public class IntervalTupleModel extends AbstractTupleModel
         case Interval.STATUS_INTERSECTION_NONE_BEFORE:
           instruction = PROCESSING_INSTRUCTION.eGoToNextTarget;
           break;
+
         case Interval.STATUS_INTERSECTION_NONE_AFTER:
           instruction = PROCESSING_INSTRUCTION.eGoToNextSource;
           break;
+
         case Interval.STATUS_INTERSECTION_START:
         case Interval.STATUS_INTERSECTION_INSIDE:
           stack.targetInterval.merge( intersection, m_mode );
           instruction = PROCESSING_INSTRUCTION.eGoToNextTarget;
           break;
+
         case Interval.STATUS_INTERSECTION_END:
         case Interval.STATUS_INTERSECTION_ARROUND:
           stack.targetInterval.merge( intersection, m_mode );
           instruction = PROCESSING_INSTRUCTION.eGoToNextSource;
           break;
+
         default:
           break;
       }
@@ -242,8 +246,7 @@ public class IntervalTupleModel extends AbstractTupleModel
     }
     final Calendar cal = iterator.next();
     if( stack.lastTargetCalendar.before( cal ) )
-      // TODO: hier quelle "unbekannt" setzen
-      stack.targetInterval = new Interval( stack.lastTargetCalendar, cal, stack.getPlainValues(), stack.getPlainStatis() );
+      stack.targetInterval = new Interval( stack.lastTargetCalendar, cal, stack.getPlainValues(), stack.getPlainStatis(), stack.getPlainSources() );
     else
       stack.targetInterval = null;
     stack.lastTargetCalendar = cal;
@@ -264,7 +267,7 @@ public class IntervalTupleModel extends AbstractTupleModel
     {
       // generate defaults
       // create dummy interval
-      stack.srcInterval = new Interval( stack.lastSrcCalendar, srcCalIntervallEnd, stack.defaultValues, stack.defaultStatis );
+      stack.srcInterval = new Interval( stack.lastSrcCalendar, srcCalIntervallEnd, stack.defaultValues, stack.defaultStatis, stack.getPlainSources() );
 
       stack.lastSrcCalendar = stack.srcInterval.getEnd();
       // TODO m_to, defaults
@@ -280,22 +283,18 @@ public class IntervalTupleModel extends AbstractTupleModel
       srcStati[i] = new Integer( ((Number) srcStatusValues[i]).intValue() );
     }
 
-    final Object[] srcValuesObjects = ObservationUtilities.getElements( m_srcModel, stack.srcRow, m_axes.getValueAxes() );
-    final Double[] srcValues = new Double[srcValuesObjects.length];
-    for( int i = 0; i < srcValuesObjects.length; i++ )
-    {
-      srcValues[i] = (Double) srcValuesObjects[i];
-    }
+    final Double[] srcValues = getSourceValues( stack.srcRow );
+    final String[] dataSources = getDataSources( stack.srcRow );
+
     stack.srcInterval = null;
 
     if( !stack.lastSrcCalendar.after( srcCal ) )
     {
       // we need next source interval
-
       if( srcCalIntervallEnd.before( firstSrcCal ) )
       {
         // we are before the source time series
-        stack.srcInterval = new Interval( stack.lastSrcCalendar, srcCalIntervallEnd, stack.defaultValues, stack.defaultStatis );
+        stack.srcInterval = new Interval( stack.lastSrcCalendar, srcCalIntervallEnd, stack.defaultValues, stack.defaultStatis, stack.getPlainSources() );
         stack.lastSrcCalendar = srcCalIntervallEnd;
       }
       else
@@ -304,7 +303,7 @@ public class IntervalTupleModel extends AbstractTupleModel
         switch( m_mode )
         {
           case eIntensity:
-            stack.srcInterval = new Interval( stack.lastSrcCalendar, srcCal, srcValues, srcStati );
+            stack.srcInterval = new Interval( stack.lastSrcCalendar, srcCal, srcValues, srcStati, dataSources );
             break;
           default:
             // (IntervallFilter.MODE_SUM) as length of first interval is undefined, we ignore first value
@@ -313,7 +312,7 @@ public class IntervalTupleModel extends AbstractTupleModel
             // bugfix: we use it nevertheless, as it works OK if intervals are equal;
             // also, always no warning produces problems elsewhere
 // if( srcRow > 0 )
-            stack.srcInterval = new Interval( stack.lastSrcCalendar, srcCal, srcValues, srcStati );
+            stack.srcInterval = new Interval( stack.lastSrcCalendar, srcCal, srcValues, srcStati, dataSources );
             break;
         }
         stack.lastSrcCalendar = srcCal;
@@ -322,6 +321,35 @@ public class IntervalTupleModel extends AbstractTupleModel
     }
 
     return PROCESSING_INSTRUCTION.eNothing;
+  }
+
+  private String[] getDataSources( final int index ) throws SensorException
+  {
+    final DataSourceHandler handler = new DataSourceHandler( m_metadata );
+
+    final Object[] srcDataSourceObjects = ObservationUtilities.getElements( m_srcModel, index, m_axes.getDataSourcesAxes() );
+    final String[] srcDataSources = new String[srcDataSourceObjects.length];
+
+    for( int i = 0; i < srcDataSourceObjects.length; i++ )
+    {
+      final Number srcIndex = (Number) srcDataSourceObjects[i];
+      srcDataSources[i] = handler.getDataSourceIdentifier( srcIndex.intValue() );
+    }
+
+    return srcDataSources;
+  }
+
+  private Double[] getSourceValues( final int index ) throws SensorException
+  {
+    final Object[] srcValuesObjects = ObservationUtilities.getElements( m_srcModel, index, m_axes.getValueAxes() );
+
+    final Double[] srcValues = new Double[srcValuesObjects.length];
+    for( int i = 0; i < srcValuesObjects.length; i++ )
+    {
+      srcValues[i] = (Double) srcValuesObjects[i];
+    }
+
+    return srcValues;
   }
 
   private Calendar getFirstSrcCalendar( final int srcMaxRows ) throws SensorException
@@ -340,15 +368,18 @@ public class IntervalTupleModel extends AbstractTupleModel
   }
 
   // accept values for result
-  private void updateModelfromIntervall( final ITupleModel model, final int targetRow, final Interval targetIntervall ) throws SensorException
+  private void updateModelfromIntervall( final ITupleModel model, final int targetRow, final Interval targetInterval ) throws SensorException
   {
-    final Calendar cal = targetIntervall.getEnd();
-    final int[] status = targetIntervall.getStatus();
-    final double[] value = targetIntervall.getValue();
+    final Calendar cal = targetInterval.getEnd();
+    final int[] status = targetInterval.getStatus();
+    final double[] value = targetInterval.getValue();
+    final String[] sources = targetInterval.getSources();
+
     model.setElement( targetRow, cal.getTime(), m_axes.getDateAxis() );
 
     final IAxis[] statusAxes = m_axes.getStatusAxes();
     final IAxis[] valueAxes = m_axes.getValueAxes();
+    final IAxis[] dataSourceAxes = m_axes.getDataSourcesAxes();
 
     for( int i = 0; i < statusAxes.length; i++ )
     {
@@ -360,20 +391,12 @@ public class IntervalTupleModel extends AbstractTupleModel
       model.setElement( targetRow, new Double( value[i] ), valueAxes[i] );
     }
 
-    // FIXME original value or adjusted value?!?
-    final IAxis dataSourcesAxes = m_axes.getDataSourcesAxes();
-    if( dataSourcesAxes != null )
-    {
-      final Integer index = getDataSourceIndex();
-      model.setElement( targetRow, index, dataSourcesAxes );
-    }
-
-  }
-
-  private Integer getDataSourceIndex( )
-  {
     final DataSourceHandler handler = new DataSourceHandler( m_metadata );
-    return handler.addDataSource( IntervalFilter.class.getName(), IntervalFilter.class.getName() );
+    for( int i = 0; i < dataSourceAxes.length; i++ )
+    {
+      final int dataSource = handler.addDataSource( sources[i], sources[i] );
+      model.setElement( targetRow, Integer.valueOf( dataSource ), dataSourceAxes[i] );
+    }
   }
 
   private static Calendar createCalendar( final Date date )

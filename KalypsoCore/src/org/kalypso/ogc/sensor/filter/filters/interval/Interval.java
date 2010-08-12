@@ -41,10 +41,16 @@
 package org.kalypso.ogc.sensor.filter.filters.interval;
 
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
+import org.kalypso.commons.java.util.StringUtilities;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.filter.filters.interval.IntervalFilter.MODE;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
+import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHelper;
+import org.kalypso.ogc.sensor.timeseries.datasource.IDataSourceItem;
 
 /**
  * @author doemming
@@ -111,8 +117,11 @@ public class Interval
 
   private double[] m_value;
 
-  public Interval( final Calendar start, final Calendar end, final double[] value, final int[] status )
+  private String[] m_sources;
+
+  public Interval( final Calendar start, final Calendar end, final double[] value, final int[] status, final String[] sources )
   {
+    m_sources = sources;
     m_start = (Calendar) start.clone();
     m_end = (Calendar) end.clone();
     m_status = status.clone();
@@ -125,9 +134,10 @@ public class Interval
     m_end = (Calendar) end.clone();
     m_status = null;
     m_value = null;
+    m_sources = null;
   }
 
-  public Interval( final Calendar start, final Calendar end, final Double[] values, final Integer[] status )
+  public Interval( final Calendar start, final Calendar end, final Double[] values, final Integer[] status, final String[] sources )
   {
     m_start = start;
     m_end = end;
@@ -143,6 +153,8 @@ public class Interval
     {
       m_value[i] = values[i].doubleValue();
     }
+
+    m_sources = sources;
   }
 
   public Calendar getEnd( )
@@ -168,6 +180,11 @@ public class Interval
   public double[] getValue( )
   {
     return m_value.clone();
+  }
+
+  public String[] getSources( )
+  {
+    return m_sources.clone();
   }
 
   public void setValue( final double[] value )
@@ -209,32 +226,36 @@ public class Interval
       case STATUS_INTERSECTION_START:
         result = new Interval( getStart(), other.getEnd() );
         break;
+
       case STATUS_INTERSECTION_END:
         result = new Interval( other.getStart(), getEnd() );
         break;
+
       case STATUS_INTERSECTION_INSIDE:
         result = new Interval( other.getStart(), other.getEnd() );
         break;
+
       case STATUS_INTERSECTION_ARROUND:
         result = new Interval( getStart(), getEnd() );
         break;
+
       case STATUS_INTERSECTION_NONE_BEFORE:
       case STATUS_INTERSECTION_NONE_AFTER:
         return null;
       default:
         return null;
     }
+
     // calculate interval values;
     final double[] values = getValue();
-    final double[] intervallValues = new double[values.length];
     final double factor = calcFactorIntersect( result, mode );
-
-    // Faktor != 1: "verschmiert?source=Prio_X"
 
     for( int i = 0; i < values.length; i++ )
     {
-      intervallValues[i] = factor * values[i];
+      values[i] = factor * values[i];
     }
+
+    result.setValue( values );
 
     final int[] status = getStatus();
     /* Bugfix: empty intervals never get a status */
@@ -245,12 +266,30 @@ public class Interval
         status[i] = KalypsoStati.BIT_OK;
       }
     }
+
     result.setStatus( status );
 
-    // TODO: einfach quelle in neues intervall kopieren
+    final String[] sources = getSources();
+    for( int i = 0; i < sources.length; i++ )
+    {
+      final String source = sources[i];
 
-    result.setValue( intervallValues );
+      /* Faktor != 1: "verschmiert?source=Prio_X" */
+      if( factor != 1.0 )
+      {
+        final String reference = String.format( "filter://%s?source_1=%s", IntervalFilter.class.getName(), source );
+        sources[i] = reference;
+      }
+    }
+
+    result.setSources( sources );
+
     return result;
+  }
+
+  private void setSources( final String[] sources )
+  {
+    m_sources = sources.clone();
   }
 
   public void merge( final Interval other, final MODE mode )
@@ -266,11 +305,44 @@ public class Interval
       m_status[i] |= other.getStatus()[i];
     }
 
-    // TODO how to merge quelle?
+    final String[] otherSources = other.getSources();
+    for( int i = 0; i < otherSources.length; i++ )
+    {
+      final String reference = mergeSourceReference( m_sources[i], otherSources[i] );
+      m_sources[i] = reference;
+    }
 
+  }
+
+  private String mergeSourceReference( final String base, final String other )
+  {
     // - wenn undefiniert: quelle kopieren
-    // - wenn schon definiert: "verschimiert": nach Raute kombinieren
+    // - wenn schon definiert: "verschimiert": nach ? kombinieren
 
+    if( IDataSourceItem.SOURCE_UNKNOWN.equalsIgnoreCase( base ) )
+      return other;
+    else if( base.startsWith( "filter://" ) )
+    {
+      final Set<String> sources = new LinkedHashSet<String>();
+      Collections.addAll( sources, DataSourceHelper.getSources( base ) );
+
+      if( other.startsWith( "filter://" ) )
+        Collections.addAll( sources, DataSourceHelper.getSources( other ) );
+      else if( !IDataSourceItem.SOURCE_UNKNOWN.equals( other ) )
+        sources.add( other );
+
+      String reference = String.format( "filter://%s?", IntervalFilter.class.getName() );
+      final String[] sourceArray = sources.toArray( new String[] {} );
+
+      for( int i = 0; i < sourceArray.length; i++ )
+      {
+        reference += String.format( "source_%d=%s", i, sourceArray[i] );
+      }
+
+      return StringUtilities.chomp( reference );
+    }
+
+    throw new IllegalStateException();
   }
 
   private double calcFactorIntersect( final Interval other, final MODE mode )

@@ -157,4 +157,16 @@ public final class AxisUtils implements ITimeseriesConstants
     return valueAxes.toArray( new IAxis[] {} );
   }
 
+  public static IAxis[] findDataSourceAxes( final IAxis[] axes )
+  {
+    final List<IAxis> dataSourceAxes = new ArrayList<IAxis>();
+    for( final IAxis axis : axes )
+    {
+      if( isDataSrcAxis( axis ) )
+        dataSourceAxes.add( axis );
+    }
+
+    return dataSourceAxes.toArray( new IAxis[] {} );
+  }
+
 }

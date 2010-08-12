@@ -38,42 +38,38 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.sensor.filter.filters.interval;
+package org.kalypso.ogc.sensor.timeseries.datasource;
 
-import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.ogc.sensor.timeseries.AxisUtils;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Dirk Kuch
  */
-public class IntervalModelAxes
+public class DataSourceHelper
 {
 
-  private final IAxis[] m_axes;
-
-  public IntervalModelAxes( final IAxis[] axes )
+  /**
+   * @param reference
+   *          filter://smeFilterClass?source_1=blub&source_2=blub2&...
+   * @return [blub, blub2]
+   */
+  public static String[] getSources( final String reference )
   {
-    m_axes = axes;
-  }
+    final String[] referenceParts = reference.split( "\\?" );
+    if( referenceParts.length != 2 )
+      return new String[] {};
 
-  public IAxis getDateAxis( )
-  {
-    return AxisUtils.findDateAxis( m_axes );
-  }
+    final List<String> sources = new ArrayList<String>();
 
-  public IAxis[] getValueAxes( )
-  {
-    return AxisUtils.findValueAxes( m_axes );
-  }
+    final String[] parts = referenceParts[1].split( "\\&" );
+    for( final String part : parts )
+    {
+      final String[] sourceParts = part.split( "\\=" );
+      sources.add( sourceParts[1] );
+    }
 
-  public IAxis[] getStatusAxes( )
-  {
-    return AxisUtils.findStatusAxes( m_axes );
-  }
-
-  public IAxis[] getDataSourcesAxes( )
-  {
-    return AxisUtils.findDataSourceAxes( m_axes );
+    return sources.toArray( new String[] {} );
   }
 
 }
