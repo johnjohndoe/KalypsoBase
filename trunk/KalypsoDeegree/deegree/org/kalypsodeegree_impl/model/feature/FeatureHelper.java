@@ -943,24 +943,25 @@ public final class FeatureHelper
     final IRelationType property = (IRelationType) feature.getFeatureType().getProperty( qname );
     final Object value = feature.getProperty( property );
 
-    if( (value instanceof XLinkedFeature_Impl) && (followXLinks == true) )
+    if( value == null )
+        return null;
+    
+    if( value instanceof XLinkedFeature_Impl && followXLinks )
       return ((XLinkedFeature_Impl) value).getFeature();
 
     if( value instanceof Feature )
       return (Feature) value;
-    else /* Its a local link inside a xlinked-feature */
+
     if( feature instanceof XLinkedFeature_Impl )
     {
+      /* Its a local link inside a xlinked-feature */
       final XLinkedFeature_Impl xlinkedFeature = (XLinkedFeature_Impl) feature;
       final String href = xlinkedFeature.getUri() + "#" + value;
       return new XLinkedFeature_Impl( feature, property, property.getTargetFeatureType(), href, "", "", "", "", "" );
     }
-    else if( value == null )
-      return null;
-    else
-      /* A normal local link inside the same workspace */
-      return feature.getWorkspace().getFeature( (String) value );
-
+    
+    /* A normal local link inside the same workspace */
+    return feature.getWorkspace().getFeature( (String) value );
   }
 
   /**
