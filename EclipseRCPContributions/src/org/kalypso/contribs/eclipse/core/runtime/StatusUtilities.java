@@ -280,7 +280,9 @@ public final class StatusUtilities
 
   /**
    * Creates an error-status with given message and null throwable.
+   * @deprecated: Do not use! It is just too often misused... (using exception as argument does not add the exception into the status!). Use {@link Status#Status(int, String, String)} instead.
    */
+  @Deprecated
   public static IStatus createErrorStatus( final String errorMessage, final Object... args )
   {
     return createStatus( IStatus.ERROR, String.format( errorMessage, args ), null );
