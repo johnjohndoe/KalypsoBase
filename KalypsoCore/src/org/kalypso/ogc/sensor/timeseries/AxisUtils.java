@@ -136,7 +136,6 @@ public final class AxisUtils implements ITimeseriesConstants
   public static IAxis[] findStatusAxes( final IAxis[] axes )
   {
     final List<IAxis> statusAxes = new ArrayList<IAxis>();
-
     for( final IAxis axis : axes )
     {
       if( isStatusAxis( axis ) )
@@ -149,7 +148,6 @@ public final class AxisUtils implements ITimeseriesConstants
   public static IAxis[] findValueAxes( final IAxis[] axes )
   {
     final List<IAxis> valueAxes = new ArrayList<IAxis>();
-
     for( final IAxis axis : axes )
     {
       if( isValueAxis( axis ) )

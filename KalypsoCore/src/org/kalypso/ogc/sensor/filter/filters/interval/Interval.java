@@ -51,30 +51,56 @@ import org.kalypso.ogc.sensor.status.KalypsoStati;
  */
 public class Interval
 {
-  // DO NOT CHANGE NUMBERING
+  /**
+   * IMPORTANT: do not change numbering of statuses
+   */
 
-  // |--other--|
-  // |-----this------|
+  /**
+   * <pre>
+   *      |--other--|
+   *                      |-----this------|
+   * </pre>
+   */
   public static final int STATUS_INTERSECTION_NONE_BEFORE = 0;
 
-  // |--other--|
-  // |-----this------|
+  /**
+   * <pre>
+   *                             |--other--|
+   *  |-----this------|
+   * </pre>
+   */
   public static final int STATUS_INTERSECTION_NONE_AFTER = 15;
 
-  // |--other--|
-  // |-----this------|
+  /**
+   * <pre>
+   *  |--other--|
+   *  |-----this------|
+   * </pre>
+   */
   public static final int STATUS_INTERSECTION_START = 4;
 
-  // |--other--|
-  // |-----this------|
+  /**
+   * <pre>
+   *                  |--other--|
+   *  |-----this------|
+   * </pre>
+   */
   public static final int STATUS_INTERSECTION_END = 7;
 
-  // |--other--|
-  // |-----this------|
+  /**
+   * <pre>
+   *          |--other--|
+   *  |-----this------|
+   * </pre>
+   */
   public static final int STATUS_INTERSECTION_INSIDE = 5;
 
-  // |--------other---------|
-  // |-----this------|
+  /**
+   * <pre>
+   *   |--------other---------|
+   *  |-----this------|
+   * </pre>
+   */
   public static final int STATUS_INTERSECTION_ARROUND = 6;
 
   final Calendar m_start;
@@ -85,7 +111,7 @@ public class Interval
 
   private double[] m_value;
 
-  public Interval( final Calendar start, final Calendar end, final int[] status, final double[] value )
+  public Interval( final Calendar start, final Calendar end, final double[] value, final int[] status )
   {
     m_start = (Calendar) start.clone();
     m_end = (Calendar) end.clone();
@@ -93,7 +119,7 @@ public class Interval
     m_value = value.clone();
   }
 
-  public Interval( final Calendar start, final Calendar end )
+  private Interval( final Calendar start, final Calendar end )
   {
     m_start = (Calendar) start.clone();
     m_end = (Calendar) end.clone();
@@ -101,7 +127,7 @@ public class Interval
     m_value = null;
   }
 
-  public Interval( final Calendar start, final Calendar end, final Integer[] status, final Double[] values )
+  public Interval( final Calendar start, final Calendar end, final Double[] values, final Integer[] status )
   {
     m_start = start;
     m_end = end;
@@ -203,6 +229,8 @@ public class Interval
     final double[] intervallValues = new double[values.length];
     final double factor = calcFactorIntersect( result, mode );
 
+    // Faktor != 1: "verschmiert?source=Prio_X"
+
     for( int i = 0; i < values.length; i++ )
     {
       intervallValues[i] = factor * values[i];
@@ -218,6 +246,8 @@ public class Interval
       }
     }
     result.setStatus( status );
+
+    // TODO: einfach quelle in neues intervall kopieren
 
     result.setValue( intervallValues );
     return result;
@@ -235,6 +265,12 @@ public class Interval
     {
       m_status[i] |= other.getStatus()[i];
     }
+
+    // TODO how to merge quelle?
+
+    // - wenn undefiniert: quelle kopieren
+    // - wenn schon definiert: "verschimiert": nach Raute kombinieren
+
   }
 
   private double calcFactorIntersect( final Interval other, final MODE mode )
