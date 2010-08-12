@@ -102,7 +102,10 @@ public class TypeHandlerUtilities
   {
     try
     {
-      final DatatypeFactory dataTypeFactory = DatatypeFactory.newInstance();
+      // FIXE/HACK: force to use the jdk-implementation of DataFactory, else the one in org.apache.xerces is used.
+      // If we do not do this, two different implementations of XMLGregorianCalendar will be used, which will cause exceptions when comparaing them (this is a xerces bug...)
+      final DatatypeFactory dataTypeFactory = DatatypeFactory.newInstance( "com.sun.org.apache.xerces.internal.jaxp.datatype.DatatypeFactoryImpl", TypeHandlerUtilities.class.getClassLoader() );
+      // final DatatypeFactory dataTypeFactory = DatatypeFactory.newInstance();
 
       // <element name="gMonthDay" type="gMonthDay" />
       // <element name="gDay" type="gDay" />
