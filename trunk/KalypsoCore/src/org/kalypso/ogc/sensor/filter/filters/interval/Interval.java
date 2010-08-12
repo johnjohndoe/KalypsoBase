@@ -45,7 +45,6 @@ import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import org.kalypso.commons.java.util.StringUtilities;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.filter.filters.interval.IntervalFilter.MODE;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
@@ -336,11 +335,8 @@ public class Interval
 
       for( int i = 0; i < sourceArray.length; i++ )
       {
-        reference += String.format( "source_%d=%s", i, sourceArray[i] );
+        reference += String.format( "source_%d=%s&", i, sourceArray[i] );
       }
-
-      if( reference.endsWith( "&" ) )
-        return StringUtilities.chomp( reference );
 
       return reference;
     }
