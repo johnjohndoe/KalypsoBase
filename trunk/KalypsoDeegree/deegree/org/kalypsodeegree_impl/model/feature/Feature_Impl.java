@@ -595,7 +595,7 @@ public class Feature_Impl extends PlatformObject implements Feature
    * @see org.eclipse.core.runtime.PlatformObject#getAdapter(java.lang.Class)
    */
   @Override
-  public Object getAdapter( final Class adapter )
+  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
   {
     /*
      * Small performance tweak and also works for new directly instantiated features when not registered with adapter
