@@ -190,11 +190,16 @@ public abstract class AbstractInterpolationWorker implements ICoreRunnableWithPr
     final IAxis dataSourceAxis = getDataSourceAxis();
 
     final int datePosition = getInterpolatedModel().getPositionFor( dateAxis );
-    final int dataSrcPosition = getInterpolatedModel().getPositionFor( dataSourceAxis );
 
     final Object[] add = tuple.clone();
     add[datePosition] = calendar.getTime();
-    add[dataSrcPosition] = getDataSourceIndex();
+
+    // FIXME: what to do, if data source is null ?!
+    if( dataSourceAxis != null )
+    {
+      final int dataSrcPosition = getInterpolatedModel().getPositionFor( dataSourceAxis );
+      add[dataSrcPosition] = getDataSourceIndex();
+    }
 
     getInterpolatedModel().addTuple( add );
     nextStep( calendar );

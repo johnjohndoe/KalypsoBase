@@ -47,9 +47,11 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.math.LinearEquation;
 import org.kalypso.commons.math.LinearEquation.SameXValuesException;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITupleModel;
@@ -114,7 +116,7 @@ public class ValueInterpolationWorker extends AbstractInterpolationWorker
     }
     catch( final SensorException e )
     {
-      statis.add( StatusUtilities.createErrorStatus( "Interpolating values failed", e ) );
+      statis.add( new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), 0, "Interpolating values failed", e ) );
     }
 
     return StatusUtilities.createStatus( statis, "Interpolating values" );
@@ -150,6 +152,11 @@ public class ValueInterpolationWorker extends AbstractInterpolationWorker
         }
       }
 
+      // FIXME: what happens if lastValidTuple == null
+      if( lastValidTuple == null )
+        return;
+
+      // FIXME: compare date with Date.before !
       while( calendar.getTime().compareTo( getDateRange().getTo() ) <= 0 )
       {
         appendTuple( lastValidTuple, calendar );
@@ -250,7 +257,12 @@ public class ValueInterpolationWorker extends AbstractInterpolationWorker
     if( !interpolated )
       return;
 
-    final int position = getInterpolatedModel().getPositionFor( getDataSourceAxis() );
+    // FIXME: what happens if dataSource is null?
+    IAxis dataSourceAxis = getDataSourceAxis();
+    if( dataSourceAxis == null )
+      return;
+
+    final int position = getInterpolatedModel().getPositionFor( dataSourceAxis );
     tuple[position] = getDataSourceIndex();
   }
 
