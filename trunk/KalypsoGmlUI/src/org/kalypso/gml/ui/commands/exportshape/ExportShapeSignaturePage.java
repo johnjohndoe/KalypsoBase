@@ -153,7 +153,6 @@ public class ExportShapeSignaturePage extends WizardPage
     final TableViewer tableViewer = new TableViewer( group, SWT.BORDER );
 
     tableViewer.setContentProvider( new ArrayContentProvider() );
-    tableViewer.setLabelProvider( new ViewerColumLabelProvider( tableViewer ) );
 
     final TableViewerColumn nameColumn = new TableViewerColumn( tableViewer, SWT.LEFT );
 
