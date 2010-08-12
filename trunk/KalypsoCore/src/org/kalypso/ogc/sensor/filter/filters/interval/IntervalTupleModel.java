@@ -280,7 +280,7 @@ public class IntervalTupleModel extends AbstractTupleModel
     final Integer[] srcStati = new Integer[srcStatusValues.length];
     for( int i = 0; i < srcStatusValues.length; i++ )
     {
-      srcStati[i] = new Integer( ((Number) srcStatusValues[i]).intValue() );
+      srcStati[i] = Integer.valueOf( ((Number) srcStatusValues[i]).intValue() );
     }
 
     final Double[] srcValues = getSourceValues( stack.srcRow );
@@ -383,7 +383,7 @@ public class IntervalTupleModel extends AbstractTupleModel
 
     for( int i = 0; i < statusAxes.length; i++ )
     {
-      model.setElement( targetRow, new Integer( status[i] ), statusAxes[i] );
+      model.setElement( targetRow, Integer.valueOf( status[i] ), statusAxes[i] );
     }
 
     for( int i = 0; i < valueAxes.length; i++ )

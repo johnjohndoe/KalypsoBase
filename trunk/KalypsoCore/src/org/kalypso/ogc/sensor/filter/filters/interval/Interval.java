@@ -45,6 +45,7 @@ import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import org.kalypso.commons.java.util.StringUtilities;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.filter.filters.interval.IntervalFilter.MODE;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
@@ -330,15 +331,16 @@ public class Interval
       else if( !IDataSourceItem.SOURCE_UNKNOWN.equals( other ) )
         sources.add( other );
 
-      String reference = String.format( "filter://%s?", IntervalFilter.class.getName() );
-      final String[] sourceArray = sources.toArray( new String[] {} );
+      final StringBuffer buffer = new StringBuffer();
+      buffer.append( String.format( "filter://%s?", IntervalFilter.class.getName() ) );
 
+      final String[] sourceArray = sources.toArray( new String[] {} );
       for( int i = 0; i < sourceArray.length; i++ )
       {
-        reference += String.format( "source_%d=%s&", i, sourceArray[i] );
+        buffer.append( String.format( "source_%d=%s&", i, sourceArray[i] ) );
       }
 
-      return reference;
+      return StringUtilities.chomp( buffer.toString() );
     }
 
     throw new IllegalStateException();

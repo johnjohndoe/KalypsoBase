@@ -136,7 +136,7 @@ public class NOperationTuplemodel extends AbstractTupleModel
         return null;
 
       final int value = KalypsoStati.BIT_OK;
-      return new Integer( value );
+      return Integer.valueOf( value );
     }
 
     throw new UnsupportedOperationException( getClass().getName() + Messages.getString( "org.kalypso.ogc.sensor.filter.filters.NOperationTupplemodel.0" ) //$NON-NLS-1$
