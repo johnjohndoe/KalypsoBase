@@ -123,13 +123,17 @@ public class InterpolationFilter extends AbstractObservationFilter implements II
       final AbstractInterpolationWorker worker = AbstractInterpolationWorker.createWorker( this, request );
       final IStatus status = worker.execute( new NullProgressMonitor() );
       if( !status.isOK() )
-        throw new SensorException( "Interpolating values failed." );
+        throw new SensorException( status.getMessage(), status.getException() );
 
       return worker.getInterpolatedModel();
     }
+    catch( SensorException se )
+    {
+      throw se;
+    }
     catch( final Exception ex )
     {
-      throw new SensorException( "Creating interpolated model failed." );
+      throw new SensorException( "Creating interpolated model failed.", ex );
     }
   }
 
