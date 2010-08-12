@@ -66,10 +66,12 @@ public class DataSourceHelper
     for( final String part : parts )
     {
       final String[] sourceParts = part.split( "\\=" );
-      sources.add( sourceParts[1] );
+      if( sourceParts.length == 1 )
+        sources.add( IDataSourceItem.SOURCE_UNKNOWN );
+      else
+        sources.add( sourceParts[1] );
     }
 
     return sources.toArray( new String[] {} );
   }
-
 }
