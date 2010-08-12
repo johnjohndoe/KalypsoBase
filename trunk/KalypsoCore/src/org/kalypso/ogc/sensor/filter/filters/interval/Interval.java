@@ -343,7 +343,9 @@ public class Interval
       return StringUtilities.chomp( buffer.toString() );
     }
 
-    throw new IllegalStateException();
+    // FIXME: actually got a file url to the real underlying file here
+    return base;
+// throw new IllegalStateException();
   }
 
   private double calcFactorIntersect( final Interval other, final MODE mode )
