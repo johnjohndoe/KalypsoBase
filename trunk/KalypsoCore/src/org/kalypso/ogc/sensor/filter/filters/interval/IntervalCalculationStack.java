@@ -45,12 +45,14 @@ import java.util.Calendar;
 
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
+import org.kalypso.ogc.sensor.timeseries.datasource.IDataSourceItem;
 
 /**
  * @author Dirk Kuch
  */
 public class IntervalCalculationStack
 {
+
   protected enum PROCESSING_INSTRUCTION
   {
     eNothing,
@@ -113,5 +115,13 @@ public class IntervalCalculationStack
     Arrays.fill( values, 0d );
 
     return values;
+  }
+
+  public String[] getPlainSources( )
+  {
+    final String[] sources = new String[defaultValues.length];
+    Arrays.fill( sources, IDataSourceItem.SOURCE_UNKNOWN );
+
+    return sources;
   }
 }
