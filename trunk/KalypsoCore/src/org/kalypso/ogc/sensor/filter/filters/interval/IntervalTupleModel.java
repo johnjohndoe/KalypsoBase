@@ -62,7 +62,7 @@ import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHandler;
 /**
  * @author doemming
  */
-public class IntervalTupleModel2 extends AbstractTupleModel
+public class IntervalTupleModel extends AbstractTupleModel
 {
 
   private final ITupleModel m_srcModel;
@@ -85,7 +85,7 @@ public class IntervalTupleModel2 extends AbstractTupleModel
 
   private final MetadataList m_metadata;
 
-  public IntervalTupleModel2( final MODE mode, final IntervalCalendar calendar, final MetadataList metadata, final ITupleModel srcModel, final Date from, final Date to, final double defaultValue, final int defaultStatus ) throws SensorException
+  public IntervalTupleModel( final MODE mode, final IntervalCalendar calendar, final MetadataList metadata, final ITupleModel srcModel, final Date from, final Date to, final double defaultValue, final int defaultStatus ) throws SensorException
   {
     super( srcModel.getAxisList() );
 
