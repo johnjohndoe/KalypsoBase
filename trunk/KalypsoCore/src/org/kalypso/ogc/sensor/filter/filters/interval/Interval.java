@@ -339,7 +339,10 @@ public class Interval
         reference += String.format( "source_%d=%s", i, sourceArray[i] );
       }
 
-      return StringUtilities.chomp( reference );
+      if( reference.endsWith( "&" ) )
+        return StringUtilities.chomp( reference );
+
+      return reference;
     }
 
     throw new IllegalStateException();
