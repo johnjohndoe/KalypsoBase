@@ -178,7 +178,7 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
       m_tmpDir.delete();
   }
 
-  private void clearCache( )
+  private synchronized void clearCache( )
   {
     m_mapBeanId2Item.clear();
     m_mapItem2Bean.clear();
@@ -186,13 +186,21 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
     m_repositoryBeans = null;
 
     // dispose repositories
-    for( final Object element : m_repositories )
-      ((IRepository) element).dispose();
+    final IRepository[] repositories = m_repositories.toArray( new IRepository[] {} );
+    for( final IRepository repository : repositories )
+    {
+      repository.dispose();
+    }
+
     m_repositories.clear();
 
     // clear temp files
-    for( final Object element : m_mapDataId2File.values() )
-      ((File) element).delete();
+    final File[] files = m_mapDataId2File.values().toArray( new File[] {} );
+    for( final File file : files )
+    {
+      FileUtilities.deleteQuitly( file );
+    }
+
     m_mapDataId2File.clear();
 
     ZmlFilter.configureFor( null );

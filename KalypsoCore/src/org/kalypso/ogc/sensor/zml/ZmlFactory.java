@@ -103,6 +103,7 @@ import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.request.RequestFactory;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
+import org.kalypso.ogc.sensor.timeseries.datasource.AddDataSourceObservationHandler;
 import org.kalypso.ogc.sensor.zml.values.IZmlValues;
 import org.kalypso.ogc.sensor.zml.values.ZmlArrayValues;
 import org.kalypso.ogc.sensor.zml.values.ZmlLinkValues;
@@ -432,7 +433,8 @@ public final class ZmlFactory
     final String contextHref = context != null ? context.toExternalForm() : ""; //$NON-NLS-1$
     final SimpleObservation zmlObs = new SimpleObservation( contextHref, obs.getName(), metadata, model );
 
-    return decorateObservation( zmlObs, contextHref, context );
+    final AddDataSourceObservationHandler handler = new AddDataSourceObservationHandler( zmlObs.getHref(), zmlObs.getHref(), zmlObs );
+    return decorateObservation( handler.extend(), contextHref, context );
   }
 
   /**

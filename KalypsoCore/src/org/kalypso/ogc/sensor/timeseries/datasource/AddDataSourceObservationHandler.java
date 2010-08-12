@@ -53,13 +53,22 @@ import org.kalypso.repository.IRepositoryItem;
  */
 public class AddDataSourceObservationHandler
 {
-  private final IRepositoryItem m_item;
 
   private final IObservation m_observation;
 
+  private final String m_itemIdentifier;
+
+  private final String m_repositoryId;
+
   public AddDataSourceObservationHandler( final IRepositoryItem item, final IObservation observation )
   {
-    m_item = item;
+    this( item.getIdentifier(), item.getRepository().getName(), observation );
+  }
+
+  public AddDataSourceObservationHandler( final String itemIdentifier, final String repositoryId, final IObservation observation )
+  {
+    m_itemIdentifier = itemIdentifier;
+    m_repositoryId = repositoryId;
     m_observation = observation;
   }
 
@@ -75,7 +84,7 @@ public class AddDataSourceObservationHandler
     final ITupleModel model = handler.extend();
 
     final DataSourceHandler dataSourceHandler = new DataSourceHandler( m_observation.getMetadataList() );
-    dataSourceHandler.addDataSource( m_item );
+    dataSourceHandler.addDataSource( m_itemIdentifier, m_repositoryId );
 
     return new SimpleObservation( m_observation.getHref(), m_observation.getName(), m_observation.getMetadataList(), model );
   }
