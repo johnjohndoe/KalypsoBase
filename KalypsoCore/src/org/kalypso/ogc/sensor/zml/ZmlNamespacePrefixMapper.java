@@ -59,6 +59,9 @@ public class ZmlNamespacePrefixMapper extends NamespacePrefixMapper
     if( "zml.kalypso.org".equals( namespaceUri ) )
       return "";
 
+    if( "filters.zml.kalypso.org".equals( namespaceUri ) )
+      return "filters";
+
     return suggestion;
   }
 }
