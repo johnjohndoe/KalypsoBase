@@ -62,17 +62,17 @@ public class IntervalCalculationStack
 
     public boolean isGoToNextSource( )
     {
-      return PROCESSING_INSTRUCTION.eGoToNextSource.equals( valueOf( name() ) );
+      return PROCESSING_INSTRUCTION.eGoToNextSource == this;
     }
 
     public boolean isGoToNextTarget( )
     {
-      return PROCESSING_INSTRUCTION.eGoToNextTarget.equals( valueOf( name() ) );
+      return PROCESSING_INSTRUCTION.eGoToNextTarget == this;
     }
 
     public boolean isFinished( )
     {
-      return PROCESSING_INSTRUCTION.eFinished.equals( valueOf( name() ) );
+      return PROCESSING_INSTRUCTION.eFinished == this;
     }
   }
 
