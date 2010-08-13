@@ -90,6 +90,7 @@ import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Object;
@@ -112,7 +113,7 @@ import com.vividsolutions.jts.geom.GeometryFactory;
  * This test extracts demo input data (grid) from resources and converts them into shape files. <br>
  * <br>
  * Run this test as plug-in test.
- *
+ * 
  * @author Thomas Jung
  */
 public class TestInundationFrequenciesGrid2Shp extends TestCase
@@ -158,10 +159,10 @@ public class TestInundationFrequenciesGrid2Shp extends TestCase
     for( int i = 0; i < collections.length; i++ )
     {
       final ICoverageCollection collection = collections[i];
-
-      for( int j = 0; j < collection.size(); j++ )
+      IFeatureBindingCollection<ICoverage> coverages = collection.getCoverages();
+      for( int j = 0; j < coverages.size(); j++ )
       {
-        final ICoverage coverage = collection.get( j );
+        final ICoverage coverage = coverages.get( j );
         final IGeoGrid grid = GeoGridUtilities.toGrid( coverage );
 
         gridCategories[i].addGeoGrid( grid );
@@ -365,15 +366,15 @@ public class TestInundationFrequenciesGrid2Shp extends TestCase
       final RectifiedGridDomain gridDomain = importAsBinaryRaster( file.getLocation().toFile(), dstRasterFile, "EPSG:31467", new NullProgressMonitor() );
 
       final IFeatureType ft = covCollWorkspace.getGMLSchema().getFeatureType( RectifiedGridCoverage.QNAME );
-      final IRelationType parentRelation = (IRelationType) covColl.getFeature().getFeatureType().getProperty( CoverageCollection.QNAME_PROP_COVERAGE_MEMBER );
-      final Feature coverageFeature = covCollWorkspace.createFeature( covColl.getFeature(), parentRelation, ft );
-      final RectifiedGridCoverage coverage = new RectifiedGridCoverage( coverageFeature );
+      final IRelationType parentRelation = (IRelationType) covColl.getFeatureType().getProperty( CoverageCollection.QNAME_PROP_COVERAGE_MEMBER );
+      final Feature coverageFeature = covCollWorkspace.createFeature( covColl, parentRelation, ft );
+      final RectifiedGridCoverage coverage = (RectifiedGridCoverage) coverageFeature;
 
       final FileType rangeSetFile = KalypsoOGC31JAXBcontext.GML3_FAC.createFileType();
       rangeSetFile.setFileName( binFileName );
       rangeSetFile.setMimeType( "image/bin" ); //$NON-NLS-1$
 
-      covColl.add( coverage );
+      covColl.getCoverages().add( coverage );
       coverage.setRangeSet( rangeSetFile );
       coverage.setGridDomain( gridDomain );
       coverage.setName( binFileName );

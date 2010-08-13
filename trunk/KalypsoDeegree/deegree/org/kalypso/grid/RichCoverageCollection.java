@@ -51,6 +51,7 @@ import org.kalypso.jts.JTSUtilities;
 import org.kalypso.transformation.transformer.GeoTransformerFactory;
 import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
@@ -152,7 +153,7 @@ public class RichCoverageCollection
   public double findValue( final Coordinate coordinate, final String crsOfCrds ) throws GeoGridException
   {
     final GM_Position pos = GeometryFactory.createGM_Position( coordinate.x, coordinate.y );
-    final List<ICoverage> foundCoverages = m_coverages.query( pos );
+    final List<ICoverage> foundCoverages = m_coverages.getCoverages().query( pos );
 
     for( final ICoverage coverage : foundCoverages )
     {
@@ -200,12 +201,13 @@ public class RichCoverageCollection
 
   private double getSmallestGridOffset( ) throws GeoGridException
   {
-    if( m_coverages.size() == 0 )
+    IFeatureBindingCollection<ICoverage> coverages = m_coverages.getCoverages();
+    if( coverages.size() == 0 )
       return Double.NaN;
 
     double minOffset = Double.MAX_VALUE;
 
-    for( final ICoverage coverage : m_coverages )
+    for( final ICoverage coverage : coverages )
     {
       final IGeoGrid grid = getGrid( coverage );
       final double offset = grid.getOffsetX().x;
@@ -213,7 +215,7 @@ public class RichCoverageCollection
     }
 
     /* Now transform this length into Kalypso crs */
-    final ICoverage coverage = m_coverages.get( 0 );
+    final ICoverage coverage = coverages.get( 0 );
     final IGeoGrid grid = getGrid( coverage );
     final Coordinate origin = grid.getOrigin();
     final Coordinate origin1 = new Coordinate( origin.x + minOffset, origin.y );

@@ -86,7 +86,7 @@ public class CoverageManagementHelper
   public static IStatus deleteGridFile( final ICoverage coverageToDelete )
   {
     final RectifiedGridCoverage coverage = (RectifiedGridCoverage) coverageToDelete;
-    final Feature feature = coverage.getFeature();
+    final Feature feature = coverage;
     final GMLWorkspace workspace = feature.getWorkspace();
 
     final Object rangeSet = coverage.getRangeSet();
@@ -111,12 +111,12 @@ public class CoverageManagementHelper
     catch( final MalformedURLException e )
     {
       e.printStackTrace();
-      return StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.gml.ui.map.CoverageManagementHelper0") ); //$NON-NLS-1$
+      return StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.gml.ui.map.CoverageManagementHelper0" ) ); //$NON-NLS-1$
     }
     catch( final CoreException e )
     {
       e.printStackTrace();
-      return StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.gml.ui.map.CoverageManagementHelper0") ); //$NON-NLS-1$
+      return StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.gml.ui.map.CoverageManagementHelper0" ) ); //$NON-NLS-1$
     }
 
     return Status.OK_STATUS;

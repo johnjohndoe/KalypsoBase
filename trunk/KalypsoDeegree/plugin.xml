@@ -203,6 +203,17 @@
       </feature>
    </extension>
    <extension
+         point="org.kalypso.deegree.featureBinding">
+      <feature
+            class="org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridCoverage"
+            qname="{http://www.opengis.net/gml}RectifiedGridCoverage">
+      </feature>
+      <feature
+            class="org.kalypsodeegree_impl.gml.binding.commons.CoverageCollection"
+            qname="{org.kalypso.gml.common.coverage}CoverageCollection">
+      </feature>
+   </extension>
+   <extension
          point="org.kalypso.gmlschema.geometrySpecification">
       <GeometrySpecification
       	qName="{http://www.opengis.net/gml}LinearRing"

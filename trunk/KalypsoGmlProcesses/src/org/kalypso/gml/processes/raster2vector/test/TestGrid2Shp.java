@@ -103,7 +103,7 @@ import com.vividsolutions.jts.geom.GeometryFactory;
  * This test extracts demo input data (grid) from resources and converts them into shape files. <br>
  * <br>
  * Run this test as plug-in test.
- *
+ * 
  * @author Thomas Jung
  */
 public class TestGrid2Shp extends TestCase
@@ -245,16 +245,16 @@ public class TestGrid2Shp extends TestCase
     final Feature rootFeature = covCollWorkspace.getRootFeature();
     final ICoverageCollection covColl = (ICoverageCollection) rootFeature.getAdapter( ICoverageCollection.class );
 
-    final IRelationType parentRelation = (IRelationType) covColl.getFeature().getFeatureType().getProperty( CoverageCollection.QNAME_PROP_COVERAGE_MEMBER );
-    final Feature coverageFeature = covCollWorkspace.createFeature( covColl.getFeature(), parentRelation, ft );
-    final RectifiedGridCoverage coverage = new RectifiedGridCoverage( coverageFeature );
-    covColl.add( coverage );
+    final IRelationType parentRelation = (IRelationType) covColl.getFeatureType().getProperty( CoverageCollection.QNAME_PROP_COVERAGE_MEMBER );
+    final Feature coverageFeature = covCollWorkspace.createFeature( covColl, parentRelation, ft );
+    final RectifiedGridCoverage coverage = (RectifiedGridCoverage) coverageFeature;
+    covColl.getCoverages().add( coverage );
 
     final FileType rangeSetFile = KalypsoOGC31JAXBcontext.GML3_FAC.createFileType();
     rangeSetFile.setFileName( binFileName );
     rangeSetFile.setMimeType( "image/bin" ); //$NON-NLS-1$
 
-    covColl.add( coverage );
+    covColl.getCoverages().add( coverage );
     coverage.setRangeSet( rangeSetFile );
     coverage.setGridDomain( gridDomain );
     coverage.setName( binFileName );

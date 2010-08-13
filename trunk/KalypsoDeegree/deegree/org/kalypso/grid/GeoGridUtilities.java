@@ -63,6 +63,7 @@ import org.kalypso.transformation.transformer.GeoTransformerFactory;
 import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.coverage.GridRange;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
@@ -366,7 +367,7 @@ public final class GeoGridUtilities
   public static IGeoGrid toGrid( final ICoverage coverage )
   {
     // REMARK: at the moment, only RectifiedGridCoverages are supported
-    return new RectifiedGridCoverageGeoGrid( coverage.getFeature() );
+    return new RectifiedGridCoverageGeoGrid( coverage );
   }
 
   /**
@@ -376,7 +377,7 @@ public final class GeoGridUtilities
   public static IWriteableGeoGrid toWriteableGrid( final ICoverage coverage ) throws Exception
   {
     // REMARK: at the moment, only RectifiedGridCoverages are supported
-    return new WriteableRectifiedGridCoverageGeoGrid( coverage.getFeature(), null );
+    return new WriteableRectifiedGridCoverageGeoGrid( coverage, null );
   }
 
   /**
@@ -400,11 +401,12 @@ public final class GeoGridUtilities
    */
   public static void walkCoverages( final ICoverageCollection coverages, final IGeoGridWalker walker, final IGeoGridArea walkingArea, final IProgressMonitor monitor ) throws Exception
   {
-    monitor.beginTask( "Visiting coverages", coverages.size() );
+    IFeatureBindingCollection<ICoverage> coveragesList = coverages.getCoverages();
+    monitor.beginTask( "Visiting coverages", coveragesList.size() );
 
     try
     {
-      for( final ICoverage coverage : coverages )
+      for( final ICoverage coverage : coveragesList )
       {
         final IGeoGrid grid = GeoGridUtilities.toGrid( coverage );
 
@@ -796,7 +798,8 @@ public final class GeoGridUtilities
     BigDecimal minValue = new BigDecimal( Double.MAX_VALUE ).setScale( 4, BigDecimal.ROUND_HALF_UP );
     BigDecimal maxValue = new BigDecimal( -Double.MAX_VALUE ).setScale( 4, BigDecimal.ROUND_HALF_UP );
 
-    for( final ICoverage coverage : covCollection )
+    IFeatureBindingCollection<ICoverage> coverages = covCollection.getCoverages();
+    for( final ICoverage coverage : coverages )
     {
       final IGeoGrid grid = GeoGridUtilities.toGrid( coverage );
 
@@ -877,9 +880,10 @@ public final class GeoGridUtilities
     for( final ICoverageCollection collection : collections )
     {
       Geometry unionGeom = null;
-      for( int j = 0; j < collection.size(); j++ )
+      IFeatureBindingCollection<ICoverage> coverages = collection.getCoverages();
+      for( int j = 0; j < coverages.size(); j++ )
       {
-        final ICoverage coverage = collection.get( j );
+        final ICoverage coverage = coverages.get( j );
         final IGeoGrid grid = GeoGridUtilities.toGrid( coverage );
         final Envelope envelope = grid.getEnvelope();
 

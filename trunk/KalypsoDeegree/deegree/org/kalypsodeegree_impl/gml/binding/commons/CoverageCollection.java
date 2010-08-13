@@ -42,25 +42,40 @@ import ogc31.www.opengis.net.gml.FileValueModelType;
 
 import org.kalypso.contribs.ogc31.KalypsoOGC31JAXBcontext;
 import org.kalypso.gmlschema.GMLSchemaException;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
+import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 import org.kalypsodeegree_impl.model.feature.IFeatureProviderFactory;
 
 /**
  * @author Gernot Belger
  */
-public class CoverageCollection extends FeatureWrapperCollection<ICoverage> implements ICoverageCollection
+public class CoverageCollection extends Feature_Impl implements ICoverageCollection
 {
-  /** Creates a new workspace with this collection as root feature. */
-  public CoverageCollection( final URL context, final IFeatureProviderFactory providerFactory ) throws GMLSchemaException
+  private IFeatureBindingCollection<ICoverage> m_coverages = null;
+
+  public static ICoverageCollection createCoverageCollection( final URL context, final IFeatureProviderFactory providerFactory ) throws GMLSchemaException
   {
-    this( FeatureFactory.createGMLWorkspace( ICoverageCollection.QNAME, context, providerFactory ).getRootFeature() );
+    GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( ICoverageCollection.QNAME, context, providerFactory );
+    return (ICoverageCollection) workspace.getRootFeature();
   }
 
-  public CoverageCollection( final Feature featureCol )
+  public CoverageCollection( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
-    super( featureCol, ICoverage.class, CoverageCollection.QNAME_PROP_COVERAGE_MEMBER );
+    super( parent, parentRelation, ft, id, propValues );
+  }
+
+  @Override
+  public synchronized IFeatureBindingCollection<ICoverage> getCoverages( )
+  {
+    if( m_coverages == null )
+      m_coverages = new FeatureBindingCollection<ICoverage>( this, ICoverage.class, QNAME_PROP_COVERAGE_MEMBER );
+
+    return m_coverages;
   }
 
   public static ICoverage addCoverage( final ICoverageCollection coverages, final RectifiedGridDomain domain, final String externalResource, final String mimeType )
@@ -72,13 +87,13 @@ public class CoverageCollection extends FeatureWrapperCollection<ICoverage> impl
     rangeSetFile.setMimeType( mimeType );
     rangeSetFile.setFileStructure( FileValueModelType.RECORD_INTERLEAVED );
 
-    final RectifiedGridCoverage coverage = (RectifiedGridCoverage) coverages.addNew( RectifiedGridCoverage.QNAME );
+    final RectifiedGridCoverage coverage = (RectifiedGridCoverage) coverages.getCoverages().addNew( RectifiedGridCoverage.QNAME );
 
     coverage.setDescription( "Imported via Kalypso" );
     coverage.setGridDomain( domain );
     coverage.setRangeSet( rangeSetFile );
 
-    coverage.getFeature().setEnvelopesUpdated();
+    coverage.setEnvelopesUpdated();
 
     return coverage;
   }

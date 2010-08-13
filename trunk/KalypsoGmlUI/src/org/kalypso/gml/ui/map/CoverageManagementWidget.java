@@ -151,6 +151,7 @@ import org.kalypsodeegree.graphics.sld.Symbolizer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -408,9 +409,16 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
         {
           if( !coverageViewer.getControl().isDisposed() )
           {
-            coverageViewer.setInput( coverages );
-            if( coverages != null && coverages.size() > 0 )
-              coverageViewer.setSelection( new StructuredSelection( coverages.get( 0 ) ), true );
+            if( coverages == null )
+            {
+              coverageViewer.setInput( null );
+              return;
+            }
+
+            IFeatureBindingCollection<ICoverage> coverageList = coverages.getCoverages();
+            coverageViewer.setInput( coverageList );
+            if( coverageList != null && coverageList.size() > 0 )
+              coverageViewer.setSelection( new StructuredSelection( coverageList.get( 0 ) ), true );
           }
         }
       } );
@@ -562,8 +570,9 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
     initializeThemeCombo();
 
-    if( m_coverages != null && m_coverages.size() > 0 )
-      m_coverageViewer.setSelection( new StructuredSelection( m_coverages.get( 0 ) ) );
+    IFeatureBindingCollection<ICoverage> coverages = m_coverages == null ? null : m_coverages.getCoverages();
+    if( coverages != null && coverages.size() > 0 )
+      m_coverageViewer.setSelection( new StructuredSelection( coverages.get( 0 ) ) );
 
     final Point size = panel.computeSize( SWT.DEFAULT, SWT.DEFAULT );
     panel.setSize( size );
@@ -679,7 +688,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
     if( m_selectedCoverage != null )
     {
-      featureComposite.setFeature( m_selectedCoverage.getFeature() );
+      featureComposite.setFeature( m_selectedCoverage );
       featureComposite.createControl( coverageInfoGroup, SWT.NONE );
       parent.layout( true, true );
     }
@@ -695,7 +704,8 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
   private void updateButtons( )
   {
     /* Let actions update themselves */
-    final ICoverage[] allCoverages = m_coverages == null ? null : m_coverages.toArray( new ICoverage[m_coverages.size()] );
+    IFeatureBindingCollection<ICoverage> coverages = m_coverages == null ? null : m_coverages.getCoverages();
+    final ICoverage[] allCoverages = coverages == null ? null : coverages.toArray( new ICoverage[coverages.size()] );
     final ICoverage[] selectedCoverages = m_selectedCoverage == null ? new ICoverage[0] : new ICoverage[] { m_selectedCoverage };
     for( final CoverageManagementAction action : m_actions )
     {
@@ -815,7 +825,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
       final Collection<ColorMapEntry> values = input.values();
       final ColorMapEntry[] entries = values.toArray( new ColorMapEntry[values.size()] );
 
-      final Range minMax = GeoGridUtilities.calculateRange( m_coverages );
+      final Range minMax = GeoGridUtilities.calculateRange( m_coverages.getCoverages() );
       final BigDecimal min = (BigDecimal) minMax.getMinimumNumber();
       final BigDecimal max = (BigDecimal) minMax.getMaximumNumber();
 
@@ -1113,9 +1123,9 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     if( m_selectedCoverage == null )
       return;
 
-    final Feature parentFeature = m_coverages.getFeature();
+    final Feature parentFeature = m_coverages;
     final IPropertyType pt = parentFeature.getFeatureType().getProperty( ICoverageCollection.QNAME_PROP_COVERAGE_MEMBER );
-    final Feature coverageFeature = m_selectedCoverage.getFeature();
+    final Feature coverageFeature = m_selectedCoverage;
 
     final List< ? > featureList = (List< ? >) parentFeature.getProperty( pt );
     final int newIndex = featureList.indexOf( coverageFeature ) + step;
@@ -1226,7 +1236,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     if( colorMap.isEmpty() )
     {
       /* IN order to show anything to the user, create a default colour map, if no colours have been defined yet */
-      final Range minMax = GeoGridUtilities.calculateRange( m_coverages );
+      final Range minMax = GeoGridUtilities.calculateRange( m_coverages.getCoverages() );
       final BigDecimal min = (BigDecimal) minMax.getMinimumNumber();
       final BigDecimal max = (BigDecimal) minMax.getMaximumNumber();
       final BigDecimal stepWidth = new BigDecimal( 0.1 );
@@ -1269,7 +1279,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
           final CommandableWorkspace workspace = theme.getWorkspace();
 
           /* Delete coverage from collection */
-          final Feature coverageFeature = selectedCoverage.getFeature();
+          final Feature coverageFeature = selectedCoverage;
 
           final DeleteFeatureCommand command = new DeleteFeatureCommand( coverageFeature );
           theme.postCommand( command, refreshRunnable );
@@ -1324,7 +1334,8 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
         return coverage.getName();
       }
     } );
-    viewer.setInput( m_coverages );
+    if( m_coverages != null )
+      viewer.setInput( m_coverages.getCoverages() );
   }
 
   /**

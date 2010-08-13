@@ -50,7 +50,10 @@ import org.kalypsodeegree.model.geometry.GM_Object;
  * Abstract helper class to implement 'binding' classes for specific feature (types).
  * 
  * @author Gernot Belger
+ * @deprecated Directly extend {@link org.kalypsodeegree_impl.model.feature.Feature_Impl} instead and register the
+ *             binding class with the <code>org.kalypso.deegree.featureBinding</code> extension-point.
  */
+@Deprecated
 public abstract class AbstractFeatureBinder implements IFeatureWrapper2
 {
   private final Feature m_featureToBind;
@@ -182,7 +185,7 @@ public abstract class AbstractFeatureBinder implements IFeatureWrapper2
    * feature given the property {@link QName}
    * 
    * @param propertyQName
-   *            the {@link QName} of the property to get.
+   *          the {@link QName} of the property to get.
    */
   @SuppressWarnings("unchecked")
   protected <T> T getProperty( final QName propertyQName, final Class<T> propClass )
