@@ -147,10 +147,14 @@ public abstract class RelationContentType implements IRelationContentType, IInit
         m_ftRelationTarget = result.get( 0 );
 
         /* Determine if linked objects are allowed */
+
+        // FIXME: we should rather just look for xlink:href attribute. In order to do that, we need to gather all
+        // attributes on this type
         final AttributeGroupRef[] attributeGroups = getAttributeGroups();
         for( final AttributeGroupRef ag : attributeGroups )
         {
           final QName ref = ag.getRef();
+
           // TODO: what about gml2, probably it is different there? Maybe just look for xlink:href
           if( ref != null && QNameUtilities.equals( ref, NS.GML3, "AssociationAttributeGroup" ) ) //$NON-NLS-1$
             m_linkable = true;
@@ -177,7 +181,7 @@ public abstract class RelationContentType implements IRelationContentType, IInit
         }
 
       }
-        break;
+      break;
     }
   }
 
