@@ -166,7 +166,7 @@ public class MergeObservationWorker implements ICoreRunnableWithProgress
       catch( final Throwable t )
       {
         final String msg = String.format( "Merging observation \"%s\" failed", srcObservation.getHref() );
-        statis.add( StatusUtilities.createErrorStatus( msg, t ) );
+        statis.add( StatusUtilities.createStatus( IStatus.ERROR, msg, t ) );
       }
     }
 

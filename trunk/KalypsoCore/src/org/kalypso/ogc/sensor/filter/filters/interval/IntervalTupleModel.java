@@ -283,34 +283,40 @@ public class IntervalTupleModel extends AbstractTupleModel
       srcStati[i] = Integer.valueOf( ((Number) srcStatusValues[i]).intValue() );
     }
 
-    final Double[] srcValues = getSourceValues( stack.srcRow );
-    final String[] dataSources = getDataSources( stack.srcRow );
-
     stack.srcInterval = null;
 
     if( !stack.lastSrcCalendar.after( srcCal ) )
     {
-      // we need next source interval
+      /* we need next source interval */
       if( srcCalIntervallEnd.before( firstSrcCal ) )
       {
         // we are before the source time series
         stack.srcInterval = new Interval( stack.lastSrcCalendar, srcCalIntervallEnd, stack.defaultValues, stack.defaultStatis, stack.getPlainSources() );
         stack.lastSrcCalendar = srcCalIntervallEnd;
       }
+      /* we are inside source time series */
       else
-      // we are inside source time series
       {
+        final Double[] srcValues = getSourceValues( stack.srcRow );
+        final String[] dataSources = getDataSources( stack.srcRow );
+
         switch( m_mode )
         {
           case eIntensity:
             stack.srcInterval = new Interval( stack.lastSrcCalendar, srcCal, srcValues, srcStati, dataSources );
             break;
           default:
-            // (IntervallFilter.MODE_SUM) as length of first interval is undefined, we ignore first value
-            // TODO solve: for which interval is the first value valid ?
-            // there is no definition :-(
-            // bugfix: we use it nevertheless, as it works OK if intervals are equal;
-            // also, always no warning produces problems elsewhere
+            /* (IntervallFilter.MODE_SUM) as length of first interval is undefined, we ignore first value */
+
+            /*
+             * bugfix: we use it nevertheless, as it works OK if intervals are equal; also, always no warning produces
+             * problems elsewhere
+             */
+
+            /*
+             * TODO solve: for which interval is the first value valid ? there is no definition :-(
+             */
+
 // if( srcRow > 0 )
             stack.srcInterval = new Interval( stack.lastSrcCalendar, srcCal, srcValues, srcStati, dataSources );
             break;
@@ -433,8 +439,8 @@ public class IntervalTupleModel extends AbstractTupleModel
   @Override
   public void setElement( final int index, final Object element, final IAxis axis )
   {
-    throw new UnsupportedOperationException( getClass().getName() + Messages.getString( "org.kalypso.ogc.sensor.filter.filters.IntervallTupplemodel.0" ) ); //$NON-NLS-1$
     // TODO support it
+    throw new UnsupportedOperationException( getClass().getName() + Messages.getString( "org.kalypso.ogc.sensor.filter.filters.IntervallTupplemodel.0" ) ); //$NON-NLS-1$
   }
 
   @Override

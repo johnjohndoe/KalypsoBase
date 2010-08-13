@@ -107,7 +107,7 @@ import org.kalypso.ogc.sensor.timeseries.datasource.AddDataSourceObservationHand
 import org.kalypso.ogc.sensor.zml.values.IZmlValues;
 import org.kalypso.ogc.sensor.zml.values.ZmlArrayValues;
 import org.kalypso.ogc.sensor.zml.values.ZmlLinkValues;
-import org.kalypso.ogc.sensor.zml.values.ZmlTuppleModel;
+import org.kalypso.ogc.sensor.zml.values.ZmlTupleModel;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.repository.RepositoryException;
@@ -428,7 +428,7 @@ public final class ZmlFactory
       valuesMap.put( axis, values );
     }
 
-    final ZmlTuppleModel model = new ZmlTuppleModel( valuesMap );
+    final ZmlTupleModel model = new ZmlTupleModel( valuesMap );
 
     final String contextHref = context != null ? context.toExternalForm() : ""; //$NON-NLS-1$
     final SimpleObservation zmlObs = new SimpleObservation( contextHref, obs.getName(), metadata, model );

@@ -52,7 +52,7 @@ import org.kalypso.ogc.sensor.impl.AbstractTupleModel;
  * 
  * @author schlienger
  */
-public class ZmlTuppleModel extends AbstractTupleModel
+public class ZmlTupleModel extends AbstractTupleModel
 {
   private final Map<IAxis, IZmlValues> m_valuesMap;
 
@@ -61,7 +61,7 @@ public class ZmlTuppleModel extends AbstractTupleModel
    * 
    * @param valuesMap
    */
-  public ZmlTuppleModel( final Map<IAxis, IZmlValues> valuesMap )
+  public ZmlTupleModel( final Map<IAxis, IZmlValues> valuesMap )
   {
     super( valuesMap.keySet().toArray( new IAxis[0] ) );
 
