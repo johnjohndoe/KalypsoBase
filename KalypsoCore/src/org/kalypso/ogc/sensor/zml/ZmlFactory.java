@@ -103,7 +103,6 @@ import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.request.RequestFactory;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
-import org.kalypso.ogc.sensor.timeseries.datasource.AddDataSourceObservationHandler;
 import org.kalypso.ogc.sensor.zml.values.IZmlValues;
 import org.kalypso.ogc.sensor.zml.values.ZmlArrayValues;
 import org.kalypso.ogc.sensor.zml.values.ZmlLinkValues;
@@ -433,8 +432,7 @@ public final class ZmlFactory
     final String contextHref = context != null ? context.toExternalForm() : ""; //$NON-NLS-1$
     final SimpleObservation zmlObs = new SimpleObservation( contextHref, obs.getName(), metadata, model );
 
-    final AddDataSourceObservationHandler handler = new AddDataSourceObservationHandler( zmlObs.getHref(), zmlObs.getHref(), zmlObs );
-    return decorateObservation( handler.extend(), contextHref, context );
+    return decorateObservation( zmlObs, contextHref, context );
   }
 
   /**
@@ -445,10 +443,10 @@ public final class ZmlFactory
    * <li>an auto-proxy possibility (for example: WQ-Metadata)
    * </ol>
    */
-  public static IObservation decorateObservation( final IObservation zmlObs, final String href, final URL context ) throws SensorException
+  public static IObservation decorateObservation( final IObservation observation, final String href, final URL context ) throws SensorException
   {
     // tricky: maybe make a filtered observation out of this one
-    final IObservation filteredObs = FilterFactory.createFilterFrom( href, zmlObs, context );
+    final IObservation filteredObs = FilterFactory.createFilterFrom( href, observation, context );
 
     // tricky: check if a proxy has been specified in the url
     final IObservation proxyObs = createProxyFrom( href, filteredObs );

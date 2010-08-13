@@ -244,11 +244,13 @@ public class IntervalTupleModel extends AbstractTupleModel
     {
       return PROCESSING_INSTRUCTION.eFinished;
     }
+
     final Calendar cal = iterator.next();
     if( stack.lastTargetCalendar.before( cal ) )
       stack.targetInterval = new Interval( stack.lastTargetCalendar, cal, stack.getPlainValues(), stack.getPlainStatis(), stack.getPlainSources() );
     else
       stack.targetInterval = null;
+
     stack.lastTargetCalendar = cal;
 
     return PROCESSING_INSTRUCTION.eNothing;

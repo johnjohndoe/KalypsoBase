@@ -142,6 +142,27 @@ public final class RepositoryItemUtils
   {
     final String[] parts = identifier.split( "://" );
 
+    /**
+     * sometime an identifier looks like:<br/>
+     * <br/>
+     * filter://org.kalypso.ogc.sensor.filter.filters.interval.IntervalFilter?source_0=
+     * datastore://HVZ_Modelle_Saale.Saale_Prio_1.41524.N
+     */
+    if( parts.length > 2 )
+    {
+      final StringBuffer plain = new StringBuffer();
+
+      for( int i = 0; i < parts.length; i++ )
+      {
+        if( i == parts.length - 1 )
+          plain.append( parts[i] + "://" );
+        else
+          plain.append( parts[i] + "://" );
+      }
+
+      return plain.toString();
+    }
+
     return parts[parts.length - 1];
   }
 
