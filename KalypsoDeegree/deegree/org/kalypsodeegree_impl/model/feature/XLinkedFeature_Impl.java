@@ -89,6 +89,11 @@ public class XLinkedFeature_Impl extends PlatformObject implements Feature
 
 // private Object m_Geometry = null;
 
+  public XLinkedFeature_Impl( final Feature parentFeature, final IRelationType parentRelation, final IFeatureType featureType, final String href )
+  {
+    this( parentFeature, parentRelation, featureType, href, null, null, null, null, null );
+  }
+
   public XLinkedFeature_Impl( final Feature parentFeature, final IRelationType parentRelation, final IFeatureType featureType, final String href, final String role, final String arcrole, final String title, final String show, final String actuate )
   {
     m_parentFeature = parentFeature;

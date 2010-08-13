@@ -81,5 +81,4 @@ public interface Feature extends BaseFeature, Deegree2Feature
    * REMARK: gml:location is deprecated in the GML3-Schema.
    */
   void setLocation( final GM_Object location );
-
 }
