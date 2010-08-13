@@ -654,13 +654,16 @@ public class GMLWorkspace_Impl implements GMLWorkspace
    * @throws Exception
    * @see org.kalypsodeegree.model.feature.GMLWorkspace#setFeatureAsComposition(org.kalypsodeegree.model.feature.Feature,
    *      java.lang.String, org.kalypsodeegree.model.feature.Feature, boolean)
+   * @deprecated Should not be used any more. Does not handle external xlinks correctly.
    */
   @Override
+  @Deprecated
   public void setFeatureAsComposition( final Feature parentFE, final IRelationType linkProp, final Feature linkedFE, final boolean overwrite ) throws Exception
   {
     final Object value = parentFE.getProperty( linkProp );
     if( linkProp.isList() )
       throw new Exception( "can not set feature with maxoccurs > 1, use addFeatureAsComposition instead" );
+
     if( value == null | overwrite )
     {
       // TODO check if value is already a feature, then remove it from gmlworkspace
@@ -710,8 +713,10 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   /**
    * @see org.kalypsodeegree.model.feature.GMLWorkspace#addFeatureAsAggregation(org.kalypsodeegree.model.feature.Feature,
    *      java.lang.String, int, java.lang.String)
+   * @deprecated Should not be used any more. Does not handle external xlinks correctly.
    */
   @Override
+  @Deprecated
   public void setFeatureAsAggregation( final Feature srcFE, final IRelationType linkProp, final int pos, final String featureID ) throws Exception
   {
     if( linkProp.isList() )

@@ -37,6 +37,7 @@ package org.kalypsodeegree_impl.model.feature;
 
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
+import java.net.URL;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -944,8 +945,8 @@ public final class FeatureHelper
     final Object value = feature.getProperty( property );
 
     if( value == null )
-        return null;
-    
+      return null;
+
     if( value instanceof XLinkedFeature_Impl && followXLinks )
       return ((XLinkedFeature_Impl) value).getFeature();
 
@@ -959,7 +960,7 @@ public final class FeatureHelper
       final String href = xlinkedFeature.getUri() + "#" + value;
       return new XLinkedFeature_Impl( feature, property, property.getTargetFeatureType(), href, "", "", "", "", "" );
     }
-    
+
     /* A normal local link inside the same workspace */
     return feature.getWorkspace().getFeature( (String) value );
   }
@@ -1013,34 +1014,6 @@ public final class FeatureHelper
     final Feature wrappedFeature = featureWrapper.getFeature();
     final T resolvedLink = FeatureHelper.resolveLink( wrappedFeature, propertyQName, adapterTargetClass );
     return resolvedLink;
-  }
-
-  /**
-   * set a workspace local link between 2 feature wrappers; i.e. the object feature is set as property with the given
-   * name of the subject feature.<br/>
-   * <b>Note that no check is made to assert whether the property exists or is not a list feature</b>
-   * 
-   * @param subjectFeature
-   *          the feature wrapper whose property is to be set
-   * @param propertyQName
-   *          the q-name denoting the property type
-   * @param objectFeature
-   *          the feature to set as property
-   * @throws IllegalArgumentException
-   *           if subjectFeature or property q-name is null
-   */
-  public static final <T> void setLocalLink( final IFeatureWrapper2 subjectFeature, final QName propertyQName, final IFeatureWrapper2 objectFeature )
-  {
-    if( (subjectFeature == null) || (propertyQName == null) )
-    {
-      final String message = String.format( "Argument subjectFeature and propertyName " + "must not be null:" + "\n\tsubjectFeature=%s" + "propertyName=%s", subjectFeature, objectFeature );
-      throw new IllegalArgumentException( message );
-    }
-
-    // get object id
-    final String objectID = (objectFeature != null) ? objectFeature.getGmlID() : null;
-    final Feature subjWF = subjectFeature.getFeature();
-    subjWF.setProperty( propertyQName, objectID );
   }
 
   public static void addChild( final Feature parentFE, final IRelationType rt, final Feature childFE )
@@ -1278,6 +1251,49 @@ public final class FeatureHelper
     }
 
     return featureMap;
+  }
+
+  /**
+   * Sets a link to a feature (<code>targetFeature</code>) inside another feature (<code>sourceFeature</code>) as a
+   * property.<br/>
+   * If the parent workspaces of the two features are the same, an internal link (#&lt;id&gt;) is created.<br/>
+   * Else, an external xlink is created. In this case, the context of the target workspace must be non <code>null</code>
+   * 
+   * @throws IllegalArgumentException
+   *           If the property argument is not suitable for a link (not an {@link IRelationType}). If the
+   *           targetWorksapce has not a suitable context for the link.
+   */
+  public static void setAsLink( final Feature sourceFeature, final QName property, final Feature targetFeature )
+  {
+    Assert.isNotNull( sourceFeature );
+
+    final IPropertyType propertyType = sourceFeature.getFeatureType().getProperty( property );
+    if( !(propertyType instanceof IRelationType) )
+      throw new IllegalArgumentException( String.format( "Unable to set a link to property %s. It is not a relation.", property ) );
+
+    if( targetFeature == null )
+      sourceFeature.setProperty( propertyType, null );
+
+    final GMLWorkspace sourceWorkspace = sourceFeature.getWorkspace();
+    final GMLWorkspace targetWorkspace = targetFeature.getWorkspace();
+
+    final IRelationType sourceRelation = (IRelationType) propertyType;
+    final String targetID = targetFeature.getId();
+    final IFeatureType targetFeatureType = targetFeature.getFeatureType();
+
+    if( sourceWorkspace == targetWorkspace )
+      sourceFeature.setProperty( sourceRelation, targetID );
+    else
+    {
+      final URL targetContext = targetWorkspace.getContext();
+      if( targetContext == null )
+        throw new IllegalArgumentException( String.format( "Unable to set a link to property %s. Workspace of target feature has no context.", property ) );
+
+      final String uri = targetContext.toExternalForm();
+      final String href = String.format( "%s#%s", uri, targetID );
+      final Feature link = new XLinkedFeature_Impl( sourceFeature, sourceRelation, targetFeatureType, href );
+      sourceFeature.setProperty( propertyType, link );
+    }
   }
 
   public static Object createLinkToID( final String id, final Feature parentFeature, final IRelationType parentRelation, final IFeatureType ft )
