@@ -607,6 +607,15 @@ public class Feature_Impl extends PlatformObject implements Feature
     return super.getAdapter( adapter );
   }
 
+  protected double getDoubleProperty( final QName property, final double defaultValue )
+  {
+    final Double value = getProperty( property, Double.class );
+    if( value == null )
+      return defaultValue;
+
+    return value.doubleValue();
+  }
+
 // /**
 // * @see org.kalypsodeegree.model.feature.BaseFeature#setGeometry(java.lang.Object)
 // */
@@ -626,5 +635,6 @@ public class Feature_Impl extends PlatformObject implements Feature
 // {
 // return m_geometry;
 // }
+
 
 }

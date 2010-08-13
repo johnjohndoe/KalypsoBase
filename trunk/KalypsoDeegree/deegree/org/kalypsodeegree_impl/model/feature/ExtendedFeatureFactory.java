@@ -56,7 +56,7 @@ import org.osgi.framework.Bundle;
  * 
  * @author Dirk Kuch
  */
-public class ExtendedFeatureFactory
+public final class ExtendedFeatureFactory
 {
   private static ExtendedFeatureFactory SINGELTON = null;
 
