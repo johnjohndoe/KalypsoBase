@@ -90,6 +90,7 @@ public class RelationContentTypeFromRestriction extends RelationContentType
         m_attributeGroupArray = complexType.getAttributeGroupArray();
         break;
     }
+
     super.init( initializeRun );
   }
 
