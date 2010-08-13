@@ -70,7 +70,9 @@ public abstract class AbstractTupleModel implements ITupleModel
   public AbstractTupleModel( final IAxis[] axes )
   {
     for( int ia = 0; ia < axes.length; ia++ )
+    {
       mapAxisToPos( axes[ia], ia );
+    }
 
     m_axes = axes;
   }

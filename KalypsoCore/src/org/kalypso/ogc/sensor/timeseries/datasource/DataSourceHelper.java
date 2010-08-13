@@ -46,8 +46,11 @@ import java.util.List;
 /**
  * @author Dirk Kuch
  */
-public class DataSourceHelper
+public final class DataSourceHelper
 {
+  private DataSourceHelper( )
+  {
+  }
 
   /**
    * @param reference
