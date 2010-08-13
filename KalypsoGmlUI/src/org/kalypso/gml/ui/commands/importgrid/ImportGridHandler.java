@@ -37,7 +37,7 @@ public class ImportGridHandler extends AbstractHandler implements IHandler
       throw new ExecutionException( Messages.getString( "org.kalypso.gml.ui.handler.ImportGridHandler0" ), null ); //$NON-NLS-1$
 
     // Choose target folder
-    final URL gmlContext = cc.getFeature().getWorkspace().getContext();
+    final URL gmlContext = cc.getWorkspace().getContext();
     final IFile gmlFile = ResourceUtilities.findFileFromURL( gmlContext );
     final IContainer gmlFolder = gmlFile == null ? null : gmlFile.getParent();
 

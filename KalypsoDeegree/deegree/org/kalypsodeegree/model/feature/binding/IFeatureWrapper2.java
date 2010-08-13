@@ -43,7 +43,10 @@ import org.kalypsodeegree.model.geometry.GM_Object;
  * TODO: rename and implement the {@link Feature}-Interface.
  * 
  * @author Gernot Belger
+ * @deprecated Directly extend {@link org.kalypsodeegree_impl.model.feature.Feature_Impl} instead and register the
+ *             binding class with the <code>org.kalypso.deegree.featureBinding</code> extension-point.
  */
+@Deprecated
 public interface IFeatureWrapper2
 {
   /** Returns the id of the bound feature. */

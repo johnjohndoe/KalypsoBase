@@ -58,12 +58,13 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.gml.ui.KalypsoGmlUIPlugin;
 import org.kalypso.gml.ui.i18n.Messages;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 
 /**
  * Dieser Wizard dient dazu, (mehrere) Rasterdateien in eine bestehende GML-Datei zu imporiteren.
- *
+ * 
  * @author Gernot Belger
  */
 public class AddRectifiedGridCoveragesWizard extends Wizard
@@ -95,7 +96,7 @@ public class AddRectifiedGridCoveragesWizard extends Wizard
     setDialogSettings( settings );
     setNeedsProgressMonitor( true );
 
-    setWindowTitle( Messages.getString("org.kalypso.gml.ui.wizard.grid.AddRectifiedGridCoveragesWizard.1") ); //$NON-NLS-1$
+    setWindowTitle( Messages.getString( "org.kalypso.gml.ui.wizard.grid.AddRectifiedGridCoveragesWizard.1" ) ); //$NON-NLS-1$
   }
 
   /**
@@ -105,8 +106,8 @@ public class AddRectifiedGridCoveragesWizard extends Wizard
   public void addPages( )
   {
     m_pageSelect = new PageSelectGeodataFiles( "pageSelect", m_gridFolder, m_allowUserChangeGridFolder ); //$NON-NLS-1$
-    m_pageSelect.setTitle( Messages.getString("org.kalypso.gml.ui.wizard.grid.AddRectifiedGridCoveragesWizard.0") ); //$NON-NLS-1$
-    m_pageSelect.setDescription( Messages.getString("org.kalypso.gml.ui.wizard.grid.AddRectifiedGridCoveragesWizard.4") ); //$NON-NLS-1$
+    m_pageSelect.setTitle( Messages.getString( "org.kalypso.gml.ui.wizard.grid.AddRectifiedGridCoveragesWizard.0" ) ); //$NON-NLS-1$
+    m_pageSelect.setDescription( Messages.getString( "org.kalypso.gml.ui.wizard.grid.AddRectifiedGridCoveragesWizard.4" ) ); //$NON-NLS-1$
 
     addPage( m_pageSelect );
 
@@ -131,20 +132,21 @@ public class AddRectifiedGridCoveragesWizard extends Wizard
         @Override
         public IStatus execute( final IProgressMonitor monitor ) throws CoreException
         {
-          final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString("org.kalypso.gml.ui.wizard.grid.AddRectifiedGridCoveragesWizard.5"), selectedFiles.length ); //$NON-NLS-1$
+          final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.gml.ui.wizard.grid.AddRectifiedGridCoveragesWizard.5" ), selectedFiles.length ); //$NON-NLS-1$
 
           final Collection<ICoverage> newCoverages = new ArrayList<ICoverage>( selectedFiles.length );
           for( final File gridFile : selectedFiles )
             newCoverages.add( ImportGridUtilities.importGrid( coverageCollection, gridFile, gridFile.getName(), crs, gridFolder, null, progress.newChild( 1, SubMonitor.SUPPRESS_NONE ) ) );
 
-          setCoverages( coverageCollection.toArray( new ICoverage[coverageCollection.size()] ) );
+          IFeatureBindingCollection<ICoverage> coverages = coverageCollection.getCoverages();
+          setCoverages( coverages.toArray( new ICoverage[coverages.size()] ) );
 
           return Status.OK_STATUS;
         }
       };
 
       final IStatus status = RunnableContextHelper.execute( getContainer(), true, true, operation );
-      ErrorDialog.openError( getShell(), getWindowTitle(), Messages.getString("org.kalypso.gml.ui.wizard.grid.AddRectifiedGridCoveragesWizard.6"), status, IStatus.INFO | IStatus.WARNING | IStatus.ERROR ); //$NON-NLS-1$
+      ErrorDialog.openError( getShell(), getWindowTitle(), Messages.getString( "org.kalypso.gml.ui.wizard.grid.AddRectifiedGridCoveragesWizard.6" ), status, IStatus.INFO | IStatus.WARNING | IStatus.ERROR ); //$NON-NLS-1$
       return status.isOK();
     }
     catch( final Exception e )

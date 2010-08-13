@@ -68,7 +68,7 @@ public class RectifiedGridCoverageBoundaryFunctionProperty extends FeatureProper
   {
     try
     {
-      final RectifiedGridCoverage rgc = new RectifiedGridCoverage( feature );
+      final RectifiedGridCoverage rgc = (RectifiedGridCoverage) feature;
       final RectifiedGridDomain rgDomain = rgc.getGridDomain();
       if( rgDomain == null )
         return null;

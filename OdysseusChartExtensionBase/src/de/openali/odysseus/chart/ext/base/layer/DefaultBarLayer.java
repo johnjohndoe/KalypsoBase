@@ -50,6 +50,8 @@ public class DefaultBarLayer extends AbstractBarLayer
 
       final IDataOperator dopDomain = getCoordinateMapper().getDomainAxis().getDataOperator( domainStartComponent[0].getClass() );
       final IDataOperator dopTarget = getCoordinateMapper().getTargetAxis().getDataOperator( targetComponent[0].getClass() );
+      if( dopDomain == null || dopTarget == null )
+        return;
 
       final ICoordinateMapper cm = getCoordinateMapper();
 
@@ -88,6 +90,9 @@ public class DefaultBarLayer extends AbstractBarLayer
     // muss als minimalen Wert 0 zurückgeben, weil die Bars bis dahin laufen
     final IDataRange targetRange = getDataContainer().getTargetRange();
     final IDataOperator dop = getTargetAxis().getDataOperator( getTargetAxis().getDataClass() );
+    if( dop == null )
+      return null;
+
     return new DataRange<Number>( 0, dop.logicalToNumeric( targetRange.getMax() ) );
   }
 

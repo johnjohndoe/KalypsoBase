@@ -38,16 +38,19 @@ package org.kalypsodeegree_impl.gml.binding.commons;
 import javax.xml.namespace.QName;
 
 import org.kalypso.commons.xml.NS;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
  * Represents a collection of gml:coverage's
  * 
  * @author Gernot Belger
  */
-public interface ICoverageCollection extends IFeatureWrapperCollection<ICoverage>
+public interface ICoverageCollection extends Feature
 {
-  public static final QName QNAME = new QName( NS.COMMON_COVERAGE, "CoverageCollection" );
+  QName QNAME = new QName( NS.COMMON_COVERAGE, "CoverageCollection" );
 
-  public static final QName QNAME_PROP_COVERAGE_MEMBER = new QName( NS.COMMON_COVERAGE, "coverageMember" );
+  QName QNAME_PROP_COVERAGE_MEMBER = new QName( NS.COMMON_COVERAGE, "coverageMember" );
+
+  IFeatureBindingCollection<ICoverage> getCoverages( );
 }

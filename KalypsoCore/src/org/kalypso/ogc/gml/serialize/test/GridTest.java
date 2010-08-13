@@ -52,6 +52,7 @@ import org.kalypso.grid.GeoGridUtilities;
 import org.kalypso.grid.IGeoGrid;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
@@ -75,7 +76,8 @@ public class GridTest extends TestCase
     final GMLWorkspace outputWorkspace = FeatureFactory.createGMLWorkspace( ICoverageCollection.QNAME, tmpFile.toURI().toURL(), null );
     final ICoverageCollection outputCoverages = (ICoverageCollection) outputWorkspace.getRootFeature().getAdapter( ICoverageCollection.class );
 
-    for( final ICoverage inputCoverage : inputCoverages )
+    IFeatureBindingCollection<ICoverage> coverages = inputCoverages.getCoverages();
+    for( final ICoverage inputCoverage : coverages )
     {
       final IGeoGrid inputGrid = GeoGridUtilities.toGrid( inputCoverage );
 

@@ -40,15 +40,20 @@ import javax.xml.namespace.QName;
 import ogc31.www.opengis.net.gml.FileType;
 
 import org.kalypso.commons.xml.NS;
-import org.kalypsodeegree.model.feature.Feature;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.transformation.transformer.GeoTransformerFactory;
+import org.kalypso.transformation.transformer.IGeoTransformer;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
  * TODO: add setters/getters for the coverage-function
  * 
  * @author Dejan Antanaskovic, Gernot Belger
  */
-public class RectifiedGridCoverage extends AbstractFeatureBinder implements ICoverage
+public class RectifiedGridCoverage extends Feature_Impl implements ICoverage
 {
   public static final QName QNAME = new QName( NS.GML3, "RectifiedGridCoverage" );
 
@@ -58,9 +63,9 @@ public class RectifiedGridCoverage extends AbstractFeatureBinder implements ICov
 
   private static final QName QNAME_PROP_BOUNDED_BY = new QName( NS.GML3, "boundedBy" );
 
-  public RectifiedGridCoverage( final Feature feature )
+  public RectifiedGridCoverage( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
   {
-    super( feature, RectifiedGridCoverage.QNAME );
+    super( parent, parentRelation, ft, id, propValues );
   }
 
   public static String getNameStatic( )
@@ -73,25 +78,24 @@ public class RectifiedGridCoverage extends AbstractFeatureBinder implements ICov
    */
   public RectifiedGridDomain getGridDomain( )
   {
-    return (RectifiedGridDomain) getFeature().getProperty( RectifiedGridCoverage.QNAME_PROP_GRID_DOMAIN );
+    return getProperty( RectifiedGridCoverage.QNAME_PROP_GRID_DOMAIN, RectifiedGridDomain.class );
   }
 
   /**
    * Sets the grid domain, also updates the boundedBy property.
    * 
    * @param gridDomain
-   *            The gridDomain to set.
+   *          The gridDomain to set.
    */
   public void setGridDomain( final RectifiedGridDomain gridDomain )
   {
-    final Feature feature = getFeature();
-    feature.setProperty( RectifiedGridCoverage.QNAME_PROP_GRID_DOMAIN, gridDomain );
+    setProperty( RectifiedGridCoverage.QNAME_PROP_GRID_DOMAIN, gridDomain );
 
     try
     {
-      final GM_Envelope envelope = gridDomain.getGM_Envelope( gridDomain.getCoordinateSystem() );
-      feature.setProperty( QNAME_PROP_BOUNDED_BY, envelope );
-      feature.setEnvelopesUpdated();
+      final GM_Envelope envelope = gridDomain.getGM_Envelope( KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
+      setProperty( QNAME_PROP_BOUNDED_BY, envelope );
+      setEnvelopesUpdated();
     }
     catch( final Exception e )
     {
@@ -104,7 +108,7 @@ public class RectifiedGridCoverage extends AbstractFeatureBinder implements ICov
    */
   public Object getRangeSet( )
   {
-    return getFeature().getProperty( RectifiedGridCoverage.QNAME_PROP_RANGE_SET );
+    return getProperty( RectifiedGridCoverage.QNAME_PROP_RANGE_SET );
   }
 
   /**
@@ -116,7 +120,7 @@ public class RectifiedGridCoverage extends AbstractFeatureBinder implements ICov
     if( !(rangeSet instanceof FileType) )
       throw new IllegalArgumentException();
 
-    getFeature().setProperty( RectifiedGridCoverage.QNAME_PROP_RANGE_SET, rangeSet );
+    setProperty( RectifiedGridCoverage.QNAME_PROP_RANGE_SET, rangeSet );
   }
 
   /**
@@ -125,6 +129,16 @@ public class RectifiedGridCoverage extends AbstractFeatureBinder implements ICov
   @Override
   public GM_Envelope getEnvelope( )
   {
-    return (GM_Envelope) getFeature().getProperty( QNAME_PROP_BOUNDED_BY );
+    try
+    {
+      GM_Envelope property = getProperty( QNAME_PROP_BOUNDED_BY, GM_Envelope.class );
+      IGeoTransformer geoTransformer = GeoTransformerFactory.getGeoTransformer( KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
+      return geoTransformer.transform( property );
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+      return null;
+    }
   }
 }

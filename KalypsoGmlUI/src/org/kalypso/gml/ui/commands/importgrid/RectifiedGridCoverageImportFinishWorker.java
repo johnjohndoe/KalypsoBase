@@ -68,7 +68,7 @@ import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
 
 /**
  * extracted from RectifiedGridCoverageImportWizard
- *
+ * 
  * @author Dirk Kuch
  */
 public class RectifiedGridCoverageImportFinishWorker implements ICoreRunnableWithProgress
@@ -103,22 +103,22 @@ public class RectifiedGridCoverageImportFinishWorker implements ICoreRunnableWit
   @Override
   public IStatus execute( final IProgressMonitor monitor ) throws InvocationTargetException, CoreException
   {
-    final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString("org.kalypso.gml.ui.wizard.grid.RectifiedGridCoverageImportFinishWorker.0"), 100 ); //$NON-NLS-1$
+    final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.gml.ui.wizard.grid.RectifiedGridCoverageImportFinishWorker.0" ), 100 ); //$NON-NLS-1$
 
     final File convertedGridFile = null;
     try
     {
-      monitor.subTask( Messages.getString("org.kalypso.gml.ui.wizard.grid.RectifiedGridCoverageImportFinishWorker.1") ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString( "org.kalypso.gml.ui.wizard.grid.RectifiedGridCoverageImportFinishWorker.1" ) ); //$NON-NLS-1$
 
       final IContainer container = m_gmlFile == null ? null : m_gmlFile.getParent();
-      final ICoverageCollection coverages = m_coverages == null ? new CoverageCollection( ResourceUtilities.createURL( container ), null ) : m_coverages;
+      final ICoverageCollection coverages = m_coverages == null ? CoverageCollection.createCoverageCollection( ResourceUtilities.createURL( container ), null ) : m_coverages;
 
       m_newCoverage = ImportGridUtilities.importGrid( coverages, m_inputGridFile, m_inputGridFile.getName(), m_sourceCRS, m_outputGridFolder, m_domain, monitor );
 
       /* Fire model event */
-      final Feature coveragesFeature = coverages.getFeature();
+      final Feature coveragesFeature = coverages;
       final GMLWorkspace workspace = coveragesFeature.getWorkspace();
-      workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, coveragesFeature, m_newCoverage.getFeature(), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+      workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, coveragesFeature, m_newCoverage, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
 
       saveGmlWorkspace( coverages, progress.newChild( 20 ) );
 
@@ -149,7 +149,7 @@ public class RectifiedGridCoverageImportFinishWorker implements ICoreRunnableWit
     final SubMonitor progress = SubMonitor.convert( monitor, 1 + 10 );
 
     // Save the gml workspace
-    final Feature coveragesFeature = coverages.getFeature();
+    final Feature coveragesFeature = coverages;
     if( m_coverages == null ) // do not save if coverages already exists
     {
       final SetContentHelper contentHelper = new SetContentHelper()

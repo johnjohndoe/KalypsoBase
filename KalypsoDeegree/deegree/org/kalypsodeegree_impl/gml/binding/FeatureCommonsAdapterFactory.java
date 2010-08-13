@@ -42,13 +42,9 @@ import java.util.Map;
 import org.eclipse.core.runtime.IAdapterFactory;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree_impl.gml.binding.commons.CoverageCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.GeoStatus;
-import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
-import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.IGeoStatus;
 import org.kalypsodeegree_impl.gml.binding.commons.IStatusCollection;
-import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridCoverage;
 import org.kalypsodeegree_impl.gml.binding.commons.StatusCollection;
 import org.kalypsodeegree_impl.gml.binding.math.IPolynomial1D;
 import org.kalypsodeegree_impl.gml.binding.math.IPolynomial2D;
@@ -157,32 +153,6 @@ public class FeatureCommonsAdapterFactory implements IAdapterFactory
       }
     } );
 
-    // Coverages
-    cMap.put( ICoverageCollection.class, new AdapterConstructor()
-    {
-      @Override
-      public Object constructAdapter( final Feature feature, final Class< ? > cls ) throws IllegalArgumentException
-      {
-        if( GMLSchemaUtilities.substitutes( feature.getFeatureType(), ICoverageCollection.QNAME ) )
-          return new CoverageCollection( feature );
-
-        return null;
-      }
-    } );
-
-    cMap.put( ICoverage.class, new AdapterConstructor()
-    {
-      @Override
-      public Object constructAdapter( final Feature feature, final Class< ? > cls ) throws IllegalArgumentException
-      {
-        if( GMLSchemaUtilities.substitutes( feature.getFeatureType(), ICoverage.QNAME ) )
-          return new RectifiedGridCoverage( feature );
-
-        return null;
-      }
-    } );
-
     return Collections.unmodifiableMap( cMap );
   }
-
 }

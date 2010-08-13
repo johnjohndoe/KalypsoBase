@@ -64,6 +64,7 @@ import org.kalypso.template.types.StyledLayerType;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridCoverage;
@@ -87,10 +88,11 @@ public class KalypsoPictureThemeGml extends KalypsoPictureTheme
       final Feature fRoot = workspace.getRootFeature();
 
       m_coverages = (ICoverageCollection) fRoot.getAdapter( ICoverageCollection.class );
-      if( m_coverages.size() != 1 )
+      IFeatureBindingCollection<ICoverage> coverages = m_coverages.getCoverages();
+      if( coverages.size() != 1 )
         throw new NotImplementedException( Messages.getString( "org.kalypso.ogc.gml.KalypsoPictureThemeGml.0" ) ); //$NON-NLS-1$
 
-      for( final ICoverage coverage : m_coverages )
+      for( final ICoverage coverage : coverages )
       {
         final RectifiedGridCoverage coverage2 = (RectifiedGridCoverage) coverage;
 
@@ -122,7 +124,8 @@ public class KalypsoPictureThemeGml extends KalypsoPictureTheme
     {
       try
       {
-        for( final ICoverage coverage : m_coverages )
+        IFeatureBindingCollection<ICoverage> coverages = m_coverages.getCoverages();
+        for( final ICoverage coverage : coverages )
         {
           final RectifiedGridCoverage coverage2 = (RectifiedGridCoverage) coverage;
 
