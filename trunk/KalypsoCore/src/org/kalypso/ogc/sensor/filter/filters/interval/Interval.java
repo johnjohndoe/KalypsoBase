@@ -277,7 +277,7 @@ public class Interval
       /* Faktor != 1: "verschmiert?source=Prio_X" */
       if( factor != 1.0 )
       {
-        final String reference = String.format( "filter://%s?source_1=%s", IntervalFilter.class.getName(), source );
+        final String reference = String.format( "filter://%s?source_0=%s", IntervalFilter.class.getName(), source );
         sources[i] = reference;
       }
     }
@@ -294,6 +294,8 @@ public class Interval
 
   public void merge( final Interval other, final MODE mode )
   {
+    final boolean empty = isEmpty();
+
     final double factor = calcFactorMerge( other, mode );
     for( int i = 0; i < other.getValue().length; i++ )
     {
@@ -308,44 +310,64 @@ public class Interval
     final String[] otherSources = other.getSources();
     for( int i = 0; i < otherSources.length; i++ )
     {
-      final String reference = mergeSourceReference( m_sources[i], otherSources[i] );
+      final String reference = mergeSourceReference( m_sources[i], otherSources[i], empty );
       m_sources[i] = reference;
     }
 
   }
 
-  private String mergeSourceReference( final String base, final String other )
+  private boolean isEmpty( )
+  {
+    for( final double value : m_value )
+    {
+      if( value != 0.0 )
+        return false;
+    }
+
+    return true;
+  }
+
+  /**
+   * @param empty
+   *          if values has been empty, take source reference of other
+   */
+  private String mergeSourceReference( final String base, final String other, final boolean empty )
   {
     // - wenn undefiniert: quelle kopieren
     // - wenn schon definiert: "verschimiert": nach ? kombinieren
-
     if( IDataSourceItem.SOURCE_UNKNOWN.equalsIgnoreCase( base ) )
       return other;
     else if( base.startsWith( "filter://" ) )
     {
       final Set<String> sources = new LinkedHashSet<String>();
-      Collections.addAll( sources, DataSourceHelper.getSources( base ) );
+      if( !empty )
+        Collections.addAll( sources, DataSourceHelper.getSources( base ) );
 
       if( other.startsWith( "filter://" ) )
         Collections.addAll( sources, DataSourceHelper.getSources( other ) );
       else if( !IDataSourceItem.SOURCE_UNKNOWN.equals( other ) )
         sources.add( other );
 
-      final StringBuffer buffer = new StringBuffer();
-      buffer.append( String.format( "filter://%s?", IntervalFilter.class.getName() ) );
-
-      final String[] sourceArray = sources.toArray( new String[] {} );
-      for( int i = 0; i < sourceArray.length; i++ )
+      if( sources.isEmpty() )
       {
-        buffer.append( String.format( "source_%d=%s&", i, sourceArray[i] ) );
+        String.format( "filter://%s?source_0=%s", IntervalFilter.class.getName(), IDataSourceItem.SOURCE_UNKNOWN );
       }
+      else
+      {
+        final StringBuffer buffer = new StringBuffer();
+        buffer.append( String.format( "filter://%s?", IntervalFilter.class.getName() ) );
 
-      return StringUtilities.chomp( buffer.toString() );
+        final String[] sourceArray = sources.toArray( new String[] {} );
+        for( int i = 0; i < sourceArray.length; i++ )
+        {
+          buffer.append( String.format( "source_%d=%s&", i, sourceArray[i] ) );
+        }
+
+        return StringUtilities.chomp( buffer.toString() );
+      }
     }
 
-    // FIXME: actually got a file url to the real underlying file here
     return base;
-// throw new IllegalStateException();
   }
 
   private double calcFactorIntersect( final Interval other, final MODE mode )
