@@ -286,7 +286,6 @@ public final class StringUtilities
    */
   public static String chop( final String s )
   {
-    // s.replaceAll("\\s\$", "")
     return s.trim();
   }
 
@@ -304,6 +303,18 @@ public final class StringUtilities
       return false;
 
     return s1.equalsIgnoreCase( s2 );
+  }
 
+  /**
+   * Fast splitting of a string using apache commons.<br/>
+   * Also maxes performance by checking if the separator is really only a char.
+   */
+  public static String[] splitValue( final String value, final String separator )
+  {
+    /* For max performance, we prefer the character-split */
+    if( separator.length() == 1 )
+      return StringUtils.split( value, separator.charAt( 0 ) );
+
+    return StringUtils.split( value, separator );
   }
 }
