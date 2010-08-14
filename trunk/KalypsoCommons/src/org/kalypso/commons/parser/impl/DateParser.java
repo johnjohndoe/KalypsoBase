@@ -40,11 +40,13 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.commons.parser.impl;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.kalypso.commons.parser.AbstractParser;
 import org.kalypso.commons.parser.ParserException;
 
@@ -55,7 +57,7 @@ import org.kalypso.commons.parser.ParserException;
  */
 public class DateParser extends AbstractParser
 {
-  private final SimpleDateFormat m_df;
+  private DateTimeFormatter m_df;
 
   private final String m_format;
 
@@ -77,9 +79,9 @@ public class DateParser extends AbstractParser
     m_format = format;
 
     if( format.length() == 0 )
-      m_df = new SimpleDateFormat();
+      m_df = DateTimeFormat.forStyle( "SS" );
     else
-      m_df = new SimpleDateFormat( format );
+      m_df = DateTimeFormat.forPattern( m_format );
   }
 
   /**
@@ -109,9 +111,10 @@ public class DateParser extends AbstractParser
   {
     try
     {
-      return m_df.parse( text );
+      final DateTime dateTime = m_df.parseDateTime( text );
+      return dateTime.toDate();
     }
-    catch( final ParseException e )
+    catch( final IllegalArgumentException e )
     {
       throw new ParserException( e );
     }
@@ -123,7 +126,7 @@ public class DateParser extends AbstractParser
   @Override
   public String toStringInternal( final Object obj )
   {
-    return m_df.format( obj );
+    return m_df.print( new DateTime( obj ) );
   }
 
   /**
@@ -140,9 +143,12 @@ public class DateParser extends AbstractParser
 
   public void setTimezone( final TimeZone tz )
   {
-    if( tz != null )
-      m_df.setTimeZone( tz );
+    if( tz == null )
+      m_df = m_df.withZone( DateTimeZone.getDefault() );
     else
-      m_df.setTimeZone( TimeZone.getDefault() );
+    {
+      final DateTimeZone zone = DateTimeZone.forTimeZone( tz );
+      m_df = m_df.withZone( zone );
+    }
   }
 }
