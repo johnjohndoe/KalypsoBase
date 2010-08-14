@@ -121,22 +121,20 @@ public class Interval
 
   public Interval( final Calendar start, final Calendar end, final double[] value, final int[] status, final String[] sources )
   {
-    m_sources = sources;
     m_start = (Calendar) start.clone();
     m_end = (Calendar) end.clone();
-    m_status = status.clone();
-    m_value = value.clone();
+    m_status = status == null ? null : status.clone();
+    m_value = value == null ? null : value.clone();
+    m_sources = sources;
   }
 
   private Interval( final Calendar start, final Calendar end )
   {
-    m_start = (Calendar) start.clone();
-    m_end = (Calendar) end.clone();
-    m_status = null;
-    m_value = null;
-    m_sources = null;
+    this( start, end, (double[]) null, (int[]) null, null );
   }
 
+  // FIME: why do we have a Double/Integer constructor at all? The entries are not checked for null, so we could just
+  // use primitive arrays
   public Interval( final Calendar start, final Calendar end, final Double[] values, final Integer[] status, final String[] sources )
   {
     m_start = start;
@@ -144,15 +142,11 @@ public class Interval
 
     m_status = new int[status.length];
     for( int i = 0; i < status.length; i++ )
-    {
       m_status[i] = status[i].intValue();
-    }
 
     m_value = new double[values.length];
     for( int i = 0; i < values.length; i++ )
-    {
       m_value[i] = values[i].doubleValue();
-    }
 
     m_sources = sources;
   }
@@ -199,14 +193,16 @@ public class Interval
 
   public int calcIntersectionMatrix( final Interval other )
   {
+    // REMARK: not using getters for start/end as cloning the calendars is a performance hot spot of this class.
+
     int result = 0;
-    if( getStart().before( other.getStart() ) )
+    if( m_start.before( other.m_start ) )
       result |= 1;
-    if( getEnd().before( other.getEnd() ) )
+    if( m_end.before( other.m_end ) )
       result |= 2;
-    if( getStart().before( other.getEnd() ) )
+    if( m_start.before( other.m_end ) )
       result |= 4;
-    if( getEnd().before( other.getStart() ) )
+    if( m_end.before( other.m_start ) )
       result |= 8;
     return result;
   }
@@ -223,20 +219,22 @@ public class Interval
     final int matrix = calcIntersectionMatrix( other );
     switch( matrix )
     {
+      // REMARK: not using getters for start/end as cloning the calendars is a performance hot spot of this class.
+
       case STATUS_INTERSECTION_START:
-        result = new Interval( getStart(), other.getEnd() );
+        result = new Interval( m_start, other.m_end );
         break;
 
       case STATUS_INTERSECTION_END:
-        result = new Interval( other.getStart(), getEnd() );
+        result = new Interval( other.m_start, m_end );
         break;
 
       case STATUS_INTERSECTION_INSIDE:
-        result = new Interval( other.getStart(), other.getEnd() );
+        result = new Interval( other.m_start, other.m_end );
         break;
 
       case STATUS_INTERSECTION_ARROUND:
-        result = new Interval( getStart(), getEnd() );
+        result = new Interval( m_start, m_end );
         break;
 
       case STATUS_INTERSECTION_NONE_BEFORE:
