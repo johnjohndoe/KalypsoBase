@@ -40,7 +40,6 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.StringTokenizer;
 
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Unmarshaller;
@@ -74,6 +73,7 @@ import ogc31.www.opengis.net.gml.SurfaceType;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.NotImplementedException;
+import org.kalypso.commons.java.util.StringUtilities;
 import org.kalypso.contribs.ogc31.KalypsoOGC31JAXBcontext;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.geometry.GM_Curve;
@@ -452,30 +452,29 @@ public class AdapterBindingToValue_GML31 implements AdapterBindingToValue
     throw new UnsupportedOperationException( "Not supported: " + pointOrPos );
   }
 
-  private GM_Position[] createGM_Positions( final CoordinatesType coordinates )
+  private static GM_Position[] createGM_Positions( final CoordinatesType coordinates )
   {
     final String coordinateSepearator = coordinates.getCs();
     final String tuppleSeparator = coordinates.getTs();
     final String decimal = coordinates.getDecimal();
     final String value = coordinates.getValue();
-    final List<GM_Position> result = new ArrayList<GM_Position>();
-    final StringTokenizer tuppleTokenizer = new StringTokenizer( value, tuppleSeparator, false );
-    while( tuppleTokenizer.hasMoreTokens() )
+
+    final String[] tupples = StringUtilities.splitString( value, tuppleSeparator );
+    final GM_Position[] result = new GM_Position[tupples.length];
+
+    for( int i = 0; i < result.length; i++ )
     {
-      final String tupple = tuppleTokenizer.nextToken();
-      final StringTokenizer coordinatesTokenizer = new StringTokenizer( tupple, coordinateSepearator, false );
-      final double pos[] = new double[coordinatesTokenizer.countTokens()];
-      int i = 0;
-      while( coordinatesTokenizer.hasMoreTokens() )
+      final String[] coordinateSplit = StringUtilities.splitString( tupples[i], coordinateSepearator );
+      final double[] pos = new double[coordinateSplit.length];
+      for( int j = 0; j < pos.length; j++ )
       {
-        final String coordinate = coordinatesTokenizer.nextToken();
-        // TODO: only replace, if decimal != '.'; optimize performance: use char's (test for length of deicmal == 1)?
-        pos[i] = Double.parseDouble( coordinate.replace( decimal, "." ) ); // FIXME: possible performance problem
-        i++;
+        final String coordinate = StringUtilities.replaceString( coordinateSplit[i], decimal, "." );
+        pos[i] = Double.parseDouble( coordinate );
       }
-      result.add( GeometryFactory.createGM_Position( pos ) );
+      result[i] = GeometryFactory.createGM_Position( pos );
     }
-    return result.toArray( new GM_Position[result.size()] );
+
+    return result;
   }
 
   private String getCS_CoordinateSystem( final String defaultCS, final AbstractGeometryType geom )

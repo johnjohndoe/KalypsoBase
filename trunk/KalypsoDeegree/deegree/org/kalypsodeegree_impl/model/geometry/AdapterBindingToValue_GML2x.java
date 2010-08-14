@@ -36,9 +36,7 @@
 package org.kalypsodeegree_impl.model.geometry;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.StringTokenizer;
 
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Unmarshaller;
@@ -58,6 +56,7 @@ import ogc2.www.opengis.net.gml.ObjectFactory;
 import ogc2.www.opengis.net.gml.PointType;
 import ogc2.www.opengis.net.gml.PolygonType;
 
+import org.kalypso.commons.java.util.StringUtilities;
 import org.kalypso.contribs.ogc2x.KalypsoOGC2xJAXBcontext;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.geometry.GM_Curve;
@@ -229,31 +228,29 @@ public class AdapterBindingToValue_GML2x implements AdapterBindingToValue
     return GeometryFactory.createGM_Position( x, y, z.doubleValue() );
   }
 
-  private GM_Position[] createGM_Positions( final CoordinatesType coordinates )
+  private static GM_Position[] createGM_Positions( final CoordinatesType coordinates )
   {
     final String coordinateSepearator = coordinates.getCs();
     final String tuppleSeparator = coordinates.getTs();
     final String decimal = coordinates.getDecimal();
     final String value = coordinates.getValue();
-    if( !".".equals( decimal ) )
-      throw new UnsupportedOperationException(); // TODO
-    final List<GM_Position> result = new ArrayList<GM_Position>();
-    final StringTokenizer tuppleTokenizer = new StringTokenizer( value, tuppleSeparator, false );
-    while( tuppleTokenizer.hasMoreTokens() )
+
+    final String[] tupples = StringUtilities.splitString( value, tuppleSeparator );
+    final GM_Position[] result = new GM_Position[tupples.length];
+
+    for( int i = 0; i < result.length; i++ )
     {
-      final String tupple = tuppleTokenizer.nextToken();
-      final StringTokenizer coordinatesTokenizer = new StringTokenizer( tupple, coordinateSepearator, false );
-      final double pos[] = new double[coordinatesTokenizer.countTokens()];
-      int i = 0;
-      while( coordinatesTokenizer.hasMoreTokens() )
+      final String[] coordinateSplit = StringUtilities.splitString( tupples[i], coordinateSepearator );
+      final double[] pos = new double[coordinateSplit.length];
+      for( int j = 0; j < pos.length; j++ )
       {
-        final String coordinate = coordinatesTokenizer.nextToken();
-        pos[i] = Double.parseDouble( coordinate );
-        i++;
+        final String coordinate = StringUtilities.replaceString( coordinateSplit[j], decimal, "." );
+        pos[j] = Double.parseDouble( coordinate );
       }
-      result.add( GeometryFactory.createGM_Position( pos ) );
+      result[i] = GeometryFactory.createGM_Position( pos );
     }
-    return result.toArray( new GM_Position[result.size()] );
+
+    return result;
   }
 
   private String getCS_CoordinateSystem( final String defaultCS, final AbstractGeometryType geom )
@@ -283,7 +280,7 @@ public class AdapterBindingToValue_GML2x implements AdapterBindingToValue
   {
     if( bindingGeometry == null )
       return null;
-    
+
     if( bindingGeometry instanceof JAXBElement )
       return wrapFromBinding( ((JAXBElement<?>) bindingGeometry).getValue(), geometryClass );
 
@@ -309,13 +306,13 @@ public class AdapterBindingToValue_GML2x implements AdapterBindingToValue
 
       if( bindingTypeObject instanceof LineStringType )
         return createGM_LineString( (LineStringType) bindingTypeObject, cs );
-      
+
       if( bindingTypeObject instanceof MultiPolygonType )
         return createGM_MultiSurface( (MultiPolygonType) bindingTypeObject, cs );
-      
+
       if( bindingTypeObject instanceof MultiLineStringType )
         return createGM_MultiLineString( (MultiLineStringType) bindingTypeObject, cs );
-      
+
       if( bindingTypeObject instanceof MultiPointType )
         return createGM_MultiPoint( (MultiPointType) bindingTypeObject, cs );
     }
