@@ -40,15 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.commons.compare;
 
-import java.io.File;
-
-import org.eclipse.compare.ITypedElement;
 import org.eclipse.compare.structuremergeviewer.Differencer;
 import org.eclipse.compare.structuremergeviewer.ICompareInput;
 import org.eclipse.compare.structuremergeviewer.IDiffContainer;
 import org.eclipse.compare.structuremergeviewer.IDiffElement;
-import org.kalypso.commons.junit.FileAssert;
-import org.kalypso.contribs.eclipse.compare.FileStructureComparator;
 
 /**
  * Utilities for <code>org.eclipse.compare</code> stuff.
@@ -62,7 +57,7 @@ public final class CompareUtils
     throw new UnsupportedOperationException( "Helper class, do not instantiate" );
   }
 
-  public static void dumpDiffElement( final IDiffElement element, final int intendation )
+  public static void dumpDiffElement( final IDiffElement element, final int intendation, final IElementDumper elementDumper )
   {
     for( int i = 0; i < intendation; i++ )
       System.out.print( " " );
@@ -72,35 +67,18 @@ public final class CompareUtils
     final String diffDump = String.format( "%s %s: %s", directionLabel, changeLabel, element.getName() );
     System.out.println( diffDump );
 
-    fileCompare( element );
+    if( element instanceof ICompareInput && elementDumper != null )
+    {
+      if( (element.getKind() & Differencer.CHANGE_TYPE_MASK) == Differencer.CHANGE )
+        elementDumper.dumpElement( (ICompareInput) element );
+    }
 
     if( element instanceof IDiffContainer )
     {
       final IDiffContainer container = (IDiffContainer) element;
       final IDiffElement[] children = container.getChildren();
       for( final IDiffElement child : children )
-        dumpDiffElement( child, intendation + 1 );
-    }
-  }
-
-  private static void fileCompare( final IDiffElement element )
-  {
-    if( (element.getKind() & Differencer.CHANGE_TYPE_MASK) != Differencer.CHANGE )
-      return;
-
-    if( !(element instanceof ICompareInput) )
-      return;
-
-    final ICompareInput input = (ICompareInput) element;
-    final ITypedElement left = input.getLeft();
-    final ITypedElement right = input.getRight();
-
-    if( left instanceof FileStructureComparator && right instanceof FileStructureComparator )
-    {
-      final File leftFile = ((FileStructureComparator) left).getFile();
-      final File rightFile = ((FileStructureComparator) right).getFile();
-      if( leftFile.isFile() && rightFile.isFile() )
-        FileAssert.assertFileContentEquals( leftFile, rightFile );
+        dumpDiffElement( child, intendation + 1, elementDumper );
     }
   }
 
