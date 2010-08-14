@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,14 +36,14 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.zml.values;
 
 import java.util.List;
-import java.util.StringTokenizer;
 import java.util.Vector;
 
+import org.kalypso.commons.java.util.StringUtilities;
 import org.kalypso.commons.parser.IParser;
 import org.kalypso.commons.parser.ParserException;
 import org.kalypso.zml.AxisType.ValueArray;
@@ -57,11 +57,13 @@ public class ZmlArrayValues implements IZmlValues
 
   public ZmlArrayValues( final ValueArray va, final IParser parser ) throws ParserException
   {
-    final StringTokenizer stok = new StringTokenizer( va.getValue(), va.getSeparator() );
-    m_values = new Vector<Object>( stok.countTokens() );
-    while( stok.hasMoreElements() )
+    final String value = va.getValue();
+    final String separator = va.getSeparator();
+    final String[] tokens = StringUtilities.splitValue( value, separator );
+
+    m_values = new Vector<Object>( tokens.length );
+    for( final String token : tokens )
     {
-      final String token = stok.nextToken();
       final Object obj = parser.parse( token );
       m_values.add( obj );
     }
