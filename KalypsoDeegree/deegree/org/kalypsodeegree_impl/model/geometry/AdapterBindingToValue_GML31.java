@@ -468,8 +468,8 @@ public class AdapterBindingToValue_GML31 implements AdapterBindingToValue
       final double[] pos = new double[coordinateSplit.length];
       for( int j = 0; j < pos.length; j++ )
       {
-        final String coordinate = StringUtilities.replaceString( coordinateSplit[i], decimal, "." );
-        pos[i] = Double.parseDouble( coordinate );
+        final String coordinate = StringUtilities.replaceString( coordinateSplit[j], decimal, "." );
+        pos[j] = Double.parseDouble( coordinate );
       }
       result[i] = GeometryFactory.createGM_Position( pos );
     }
