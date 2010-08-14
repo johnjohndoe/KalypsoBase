@@ -309,7 +309,7 @@ public final class StringUtilities
    * Fast splitting of a string using apache commons.<br/>
    * Also maxes performance by checking if the separator is really only a char.
    */
-  public static String[] splitValue( final String value, final String separator )
+  public static String[] splitString( final String value, final String separator )
   {
     /* For max performance, we prefer the character-split */
     if( separator.length() == 1 )
@@ -317,4 +317,13 @@ public final class StringUtilities
 
     return StringUtils.split( value, separator );
   }
+
+  public static String replaceString( final String string, final String oldString, final String newString )
+  {
+    if( oldString.length() == 1 && newString.length() == 1 )
+      return string.replace( oldString.charAt( 0 ), newString.charAt( 0 ) );
+
+    return string.replace( oldString, newString );
+  }
+
 }
