@@ -29,7 +29,8 @@ Bundle-ClassPath: .,
  lib/commons-net-ftp-2.0.jar,
  lib/xml-commons-resolver-1.2.jar,
  lib/commons-httpclient-3.1.jar,
- lib/commons-net-2.0.jar
+ lib/commons-net-2.0.jar,
+ lib/joda-time/joda-time-1.6.1.jar
 Bundle-Activator: org.kalypso.commons.KalypsoCommonsPlugin
 Bundle-Vendor: kalypsobase.sourceforge.net
 Bundle-Localization: plugin
