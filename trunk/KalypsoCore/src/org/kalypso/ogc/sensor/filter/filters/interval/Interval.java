@@ -279,7 +279,9 @@ public class Interval
       /* Faktor != 1: "verschmiert?source=Prio_X" */
       if( factor != 1.0 )
       {
-        final String reference = String.format( "filter://%s?source_0=%s&verschmiert=true", IntervalFilter.class.getName(), source );
+        // FIXME
+        // &verschmiert=true
+        final String reference = String.format( "filter://%s?source_0=%s", IntervalFilter.class.getName(), source );
         sources[i] = reference;
       }
     }
