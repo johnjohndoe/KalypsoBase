@@ -142,11 +142,15 @@ public class Interval
 
     m_status = new int[status.length];
     for( int i = 0; i < status.length; i++ )
+    {
       m_status[i] = status[i].intValue();
+    }
 
     m_value = new double[values.length];
     for( int i = 0; i < values.length; i++ )
+    {
       m_value[i] = values[i].doubleValue();
+    }
 
     m_sources = sources;
   }
@@ -275,7 +279,7 @@ public class Interval
       /* Faktor != 1: "verschmiert?source=Prio_X" */
       if( factor != 1.0 )
       {
-        final String reference = String.format( "filter://%s?source_0=%s", IntervalFilter.class.getName(), source );
+        final String reference = String.format( "filter://%s?source_0=%s&verschmiert=true", IntervalFilter.class.getName(), source );
         sources[i] = reference;
       }
     }
