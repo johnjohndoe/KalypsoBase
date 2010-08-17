@@ -41,9 +41,11 @@
 package org.kalypso.ogc.sensor.filter.filters.interval;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.commons.java.util.StringUtilities;
 import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHelper;
 import org.kalypso.ogc.sensor.timeseries.datasource.IDataSourceItem;
@@ -53,31 +55,39 @@ import org.kalypso.ogc.sensor.timeseries.datasource.IDataSourceItem;
  */
 public final class IntervalSourceHandler
 {
-  private IntervalSourceHandler( )
+  public IntervalSourceHandler( )
   {
 
   }
 
   public static void intersectSources( final String[] sources, final double factor )
   {
-    int srcIndex = 0;
+
     for( int i = 0; i < sources.length; i++ )
     {
-      final String source = sources[i];
 
       /* Faktor != 1: "verschmiert?source=Prio_X" */
       if( factor != 1.0 )
       {
-        // FIXME
-        // &verschmiert=true
-        final String[] srcs = DataSourceHelper.getSources( source );
+        final String[] srcs = DataSourceHelper.getSources( sources[i] );
 
         final StringBuffer buffer = new StringBuffer();
         buffer.append( String.format( "filter://%s?", IntervalFilter.class.getName() ) );
 
-        for( final String src : srcs )
+        if( !ArrayUtils.isEmpty( srcs ) )
         {
-          buffer.append( String.format( "source_%d=%s&", srcIndex++, src ) );
+          for( int srcIndex = 0; srcIndex < srcs.length; srcIndex++ )
+          {
+            final String src = srcs[srcIndex];
+            buffer.append( String.format( "source_%d=%s&", srcIndex, src ) );
+          }
+
+          // mergedSources=...,n-1,n
+          buffer.append( String.format( "%s=", DataSourceHelper.MERGED_SOURCES_ID ) );
+          for( int srcIndex = 0; srcIndex < srcs.length; srcIndex++ )
+          {
+            buffer.append( String.format( "%d,", srcIndex ) );
+          }
         }
 
         sources[i] = StringUtilities.chomp( buffer.toString() );
@@ -87,10 +97,28 @@ public final class IntervalSourceHandler
 
   public static void mergeSources( final String[] baseSources, final String[] otherSources, final boolean baseSourceWasEmpty )
   {
+
+    final Set<String> merged = new HashSet<String>();
+
+    /** collect merged sources */
+    for( final String source : baseSources )
+    {
+      Collections.addAll( merged, DataSourceHelper.getMergedSources( source ) );
+    }
+    for( final String source : otherSources )
+    {
+      Collections.addAll( merged, DataSourceHelper.getMergedSources( source ) );
+    }
+
     for( int i = 0; i < otherSources.length; i++ )
     {
       final String reference = mergeSourceReference( baseSources[i], otherSources[i], baseSourceWasEmpty );
-      baseSources[i] = reference;
+
+      // append mergedSources references
+      if( !merged.isEmpty() )
+        baseSources[i] = DataSourceHelper.appendMergedSourcesReference( reference, merged.toArray( new String[] {} ) );
+      else
+        baseSources[i] = reference;
     }
   }
 

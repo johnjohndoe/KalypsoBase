@@ -42,12 +42,21 @@ package org.kalypso.ogc.sensor.timeseries.datasource;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
+
+import org.apache.commons.lang.ArrayUtils;
+import org.kalypso.commons.java.util.StringUtilities;
 
 /**
+ * Helper code for multiple data source references - lke: filter://smeFilterClass?source_1=blub&source_2=blub2&...
+ * 
  * @author Dirk Kuch
  */
 public final class DataSourceHelper
 {
+  public static final String MERGED_SOURCES_ID = "mergedSources";
+
   private DataSourceHelper( )
   {
   }
@@ -68,6 +77,9 @@ public final class DataSourceHelper
     final String[] parts = referenceParts[1].split( "\\&" );
     for( final String part : parts )
     {
+      if( part.contains( MERGED_SOURCES_ID ) )
+        continue;
+
       final String[] sourceParts = part.split( "\\=" );
       if( sourceParts.length == 1 )
         sources.add( IDataSourceItem.SOURCE_UNKNOWN );
@@ -76,5 +88,136 @@ public final class DataSourceHelper
     }
 
     return sources.toArray( new String[] {} );
+  }
+
+  /**
+   * @return merged sources (filter://smeFilterClass?source_1=blub&source_2=blub2&mergedSources=1,2)
+   */
+  public static String[] getMergedSources( final String reference )
+  {
+    final String[] referenceParts = reference.split( "\\?" );
+    if( referenceParts.length != 2 )
+      return new String[] {};
+
+    final Integer[] sources = findMergedSourceIds( reference );
+
+    final List<String> merged = new ArrayList<String>();
+    final String[] parts = referenceParts[1].split( "\\&" );
+
+    for( final String part : parts )
+    {
+      if( part.contains( MERGED_SOURCES_ID ) )
+        continue;
+
+      final String[] sourceParts = part.split( "\\=" );
+      if( sourceParts.length != 2 )
+        continue;
+
+      final String sourceReference = sourceParts[0];
+      final String sourceLetter = sourceReference.substring( sourceReference.lastIndexOf( '_' ) + 1 );
+
+      final Integer index = Integer.valueOf( sourceLetter );
+      if( ArrayUtils.contains( sources, index ) )
+        merged.add( sourceParts[1] );
+    }
+
+    return merged.toArray( new String[] {} );
+  }
+
+  /**
+   * @return mergedSource ids
+   */
+  private static Integer[] findMergedSourceIds( final String reference )
+  {
+    final String[] referenceParts = reference.split( "\\?" );
+    if( referenceParts.length != 2 )
+      return new Integer[] {};
+
+    final String[] parts = referenceParts[1].split( "\\&" );
+    for( final String part : parts )
+    {
+      if( part.contains( MERGED_SOURCES_ID ) )
+      {
+        final String[] idParts = part.split( "=" );
+        if( referenceParts.length != 2 )
+          return new Integer[] {};
+
+        final List<Integer> ids = new ArrayList<Integer>();
+
+        final String[] numbers = idParts[1].split( "," );
+        for( final String number : numbers )
+        {
+          ids.add( Integer.valueOf( number ) );
+        }
+
+        return ids.toArray( new Integer[] {} );
+      }
+
+    }
+
+    return new Integer[] {};
+  }
+
+  /**
+   * @return extended reference by &mergedSources=x,y,z tag
+   */
+  public static String appendMergedSourcesReference( final String reference, final String[] mergedSources )
+  {
+    final String[] sources = getSources( reference );
+    final Set<Integer> merged = new TreeSet<Integer>();
+
+    for( final String source : sources )
+    {
+      if( ArrayUtils.contains( mergedSources, source ) )
+      {
+        final int index = findSourceIndex( reference, source );
+        if( index != -1 )
+          merged.add( index );
+      }
+    }
+
+    if( merged.isEmpty() )
+      return reference;
+
+    final StringBuffer buffer = new StringBuffer( String.format( "%s&%s=", reference, MERGED_SOURCES_ID ) );
+
+    final Integer[] indexes = merged.toArray( new Integer[] {} );
+    for( final Integer index : indexes )
+    {
+      buffer.append( String.format( "%d,", index ) );
+    }
+
+    return StringUtilities.chomp( buffer.toString() );
+  }
+
+  /**
+   * @return source index of an source
+   */
+  private static int findSourceIndex( final String reference, final String source )
+  {
+    final String[] referenceParts = reference.split( "\\?" );
+    if( referenceParts.length != 2 )
+      return -1;
+
+    final String[] parts = referenceParts[1].split( "\\&" );
+    for( final String part : parts )
+    {
+      if( part.contains( MERGED_SOURCES_ID ) )
+        continue;
+
+      final String[] sourceParts = part.split( "\\=" );
+      if( sourceParts.length == 1 )
+        continue;
+      else if( source.equals( sourceParts[1] ) )
+      {
+        final String sourceReference = sourceParts[0];
+        final String sourceLetter = sourceReference.substring( sourceReference.lastIndexOf( '_' ) + 1 );
+
+        return Integer.valueOf( sourceLetter );
+      }
+
+    }
+
+    return -1;
   }
 }

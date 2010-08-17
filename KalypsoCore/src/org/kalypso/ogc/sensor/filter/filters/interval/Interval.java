@@ -41,16 +41,10 @@
 package org.kalypso.ogc.sensor.filter.filters.interval;
 
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
-import org.kalypso.commons.java.util.StringUtilities;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.filter.filters.interval.IntervalFilter.MODE;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
-import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHelper;
-import org.kalypso.ogc.sensor.timeseries.datasource.IDataSourceItem;
 
 /**
  * @author doemming
@@ -272,30 +266,7 @@ public class Interval
     result.setStatus( status );
 
     final String[] sources = getSources();
-    for( int i = 0; i < sources.length; i++ )
-    {
-      final String source = sources[i];
-
-      /* Faktor != 1: "verschmiert?source=Prio_X" */
-      if( factor != 1.0 )
-      {
-        // FIXME
-        // &verschmiert=true
-        final String[] srcs = DataSourceHelper.getSources( source );
-
-        final StringBuffer buffer = new StringBuffer();
-        buffer.append( String.format( "filter://%s?", IntervalFilter.class.getName() ) );
-        for( int srcIndex = 0; srcIndex < srcs.length; srcIndex++ )
-        {
-          final String src = srcs[srcIndex];
-
-          buffer.append( String.format( "source_%d=%s&", srcIndex, src ) );
-        }
-
-        sources[i] = StringUtilities.chomp( buffer.toString() );
-      }
-    }
-
+    IntervalSourceHandler.intersectSources( sources, factor );
     result.setSources( sources );
 
     return result;
@@ -321,12 +292,7 @@ public class Interval
       m_status[i] |= other.getStatus()[i];
     }
 
-    final String[] otherSources = other.getSources();
-    for( int i = 0; i < otherSources.length; i++ )
-    {
-      final String reference = mergeSourceReference( m_sources[i], otherSources[i], empty );
-      m_sources[i] = reference;
-    }
+    IntervalSourceHandler.mergeSources( m_sources, other.getSources(), empty );
   }
 
   private boolean isEmpty( )
@@ -340,51 +306,6 @@ public class Interval
     return true;
   }
 
-  /**
-   * @param srcFieldWasEmpty
-   *          if values has been empty, take source reference of other
-   */
-  private String mergeSourceReference( final String base, final String other, final boolean srcFieldWasEmpty )
-  {
-    // - wenn undefiniert: quelle kopieren
-    // - wenn schon definiert: "verschimiert": nach ? kombinieren
-    if( IDataSourceItem.SOURCE_UNKNOWN.equalsIgnoreCase( base ) )
-      return other;
-    else if( base.startsWith( "filter://" ) )
-    {
-      final Set<String> sources = new LinkedHashSet<String>();
-
-      if( !srcFieldWasEmpty )
-        Collections.addAll( sources, DataSourceHelper.getSources( base ) );
-
-      if( other.startsWith( "filter://" ) )
-        Collections.addAll( sources, DataSourceHelper.getSources( other ) );
-      else if( !IDataSourceItem.SOURCE_UNKNOWN.equals( other ) )
-        sources.add( other );
-
-      if( sources.isEmpty() )
-      {
-        return String.format( "filter://%s?source_0=%s", IntervalFilter.class.getName(), IDataSourceItem.SOURCE_UNKNOWN );
-      }
-      else
-      {
-        final StringBuffer buffer = new StringBuffer();
-        buffer.append( String.format( "filter://%s?", IntervalFilter.class.getName() ) );
-
-        final String[] sourceArray = sources.toArray( new String[] {} );
-        for( int i = 0; i < sourceArray.length; i++ )
-        {
-          buffer.append( String.format( "source_%d=%s&", i, sourceArray[i] ) );
-        }
-
-        final String source = StringUtilities.chomp( buffer.toString() );
-        return source;
-      }
-    }
-
-    return base;
-  }
-
   private double calcFactorIntersect( final Interval other, final MODE mode )
   {
     switch( mode )
@@ -393,7 +314,7 @@ public class Interval
         /* If target interval length is 0; factor is 0 (the empty sum) */
         final long durationInMillis = getDurationInMillis();
         if( durationInMillis == 0 )
-          return 0d;
+          return 0.0;
 
         return (double) other.getDurationInMillis() / (double) durationInMillis;
 
@@ -408,7 +329,7 @@ public class Interval
     switch( mode )
     {
       case eSum:
-        return 1d;
+        return 1.0;
       case eIntensity:
       default:
         return (double) other.getDurationInMillis() / (double) getDurationInMillis();
