@@ -48,6 +48,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.progress.IProgressService;
 import org.kalypso.contribs.eclipse.EclipseRCPContributionsPlugin;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.CoreRunnableWrapper;
@@ -58,7 +59,7 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
  *
  * @author Gernot Belger
  */
-public class ProgressUtilities
+public final class ProgressUtilities
 {
   private ProgressUtilities( )
   {
@@ -93,9 +94,25 @@ public class ProgressUtilities
 
   public static IStatus busyCursorWhile( final IRunnableWithProgress runnable, final String errorMessage )
   {
+    return busyCursorWhile( PlatformUI.getWorkbench().getProgressService(), runnable, errorMessage );
+  }
+
+  public static IStatus busyCursorWhile( final IProgressService service, final ICoreRunnableWithProgress operation, final String errorMessage )
+  {
+    final CoreRunnableWrapper runnable = new CoreRunnableWrapper( operation );
+
+    final IStatus status = busyCursorWhile( service, runnable, errorMessage );
+    if( !status.isOK() )
+      return status;
+
+    return runnable.getStatus();
+  }
+
+  public static IStatus busyCursorWhile( final IProgressService service, final IRunnableWithProgress runnable, final String errorMessage )
+  {
     try
     {
-      PlatformUI.getWorkbench().getProgressService().busyCursorWhile( runnable );
+      service.busyCursorWhile( runnable );
       return Status.OK_STATUS;
     }
     catch( final InvocationTargetException e )
