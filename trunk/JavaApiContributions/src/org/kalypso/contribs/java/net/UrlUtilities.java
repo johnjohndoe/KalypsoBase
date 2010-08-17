@@ -240,4 +240,5 @@ public class UrlUtilities implements IUrlResolver
 
     return new URL( newUrlString );
   }
+
 }
