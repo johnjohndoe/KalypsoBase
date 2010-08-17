@@ -90,7 +90,8 @@ public final class IntervalSourceHandler
           }
         }
 
-        sources[i] = StringUtilities.chomp( buffer.toString() );
+        final String reference = StringUtilities.chomp( buffer.toString() );
+        sources[i] = reference;
       }
     }
   }

@@ -179,12 +179,34 @@ public final class DataSourceHelper
     if( merged.isEmpty() )
       return reference;
 
-    final StringBuffer buffer = new StringBuffer( String.format( "%s&%s=", reference, MERGED_SOURCES_ID ) );
+    final StringBuffer buffer = new StringBuffer( String.format( "%s&%s=", removeMergedSourcesReference( reference ), MERGED_SOURCES_ID ) );
 
     final Integer[] indexes = merged.toArray( new Integer[] {} );
     for( final Integer index : indexes )
     {
       buffer.append( String.format( "%d,", index ) );
+    }
+
+    return StringUtilities.chomp( buffer.toString() );
+  }
+
+  private static String removeMergedSourcesReference( final String reference )
+  {
+    if( !reference.contains( MERGED_SOURCES_ID ) )
+      return reference;
+
+    final String[] referenceParts = reference.split( "\\?" );
+    if( referenceParts.length != 2 )
+      return reference;
+
+    final StringBuffer buffer = new StringBuffer();
+    buffer.append( String.format( "%s?", referenceParts[0] ) );
+
+    final String[] sources = getSources( reference );
+    for( int i = 0; i < sources.length; i++ )
+    {
+      final String source = sources[i];
+      buffer.append( String.format( "source_%d=%s&", i, source ) );
     }
 
     return StringUtilities.chomp( buffer.toString() );
