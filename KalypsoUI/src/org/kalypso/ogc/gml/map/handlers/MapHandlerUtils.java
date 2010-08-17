@@ -48,6 +48,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import javax.xml.namespace.QName;
+
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.IAdaptable;
@@ -68,6 +70,8 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
+import org.kalypso.gmlschema.GMLSchemaUtilities;
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
@@ -391,5 +395,43 @@ public class MapHandlerUtils
     System.arraycopy( filterExtensions, 0, result, 0, filterExtensions.length );
     result[filterExtensions.length] = "*.*"; //$NON-NLS-1$
     return result;
+  }
+
+  /**
+   * Returns the first feature theme in the selection that has features of the given kind.
+   */
+  public static IKalypsoFeatureTheme findSelectedTheme( final IStructuredSelection selection, final QName featureQName )
+  {
+    final Object[] elements = selection.toArray();
+    for( final Object element : elements )
+    {
+      final IKalypsoFeatureTheme theme = toFeatureTheme( element );
+      if( theme != null )
+      {
+        final IFeatureType featureType = theme.getFeatureType();
+        if( featureType != null )
+        {
+          if( GMLSchemaUtilities.substitutes( featureType, featureQName ) )
+            return theme;
+        }
+      }
+    }
+
+    return null;
+  }
+
+  private static IKalypsoFeatureTheme toFeatureTheme( final Object element )
+  {
+    if( element instanceof IKalypsoFeatureTheme )
+      return (IKalypsoFeatureTheme) element;
+
+    if( element instanceof IKalypsoThemeProvider )
+    {
+      final IKalypsoTheme theme = ((IKalypsoThemeProvider) element).getTheme();
+      if( theme instanceof IKalypsoFeatureTheme )
+        return (IKalypsoFeatureTheme) theme;
+    }
+
+    return null;
   }
 }
