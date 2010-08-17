@@ -51,15 +51,9 @@ package org.kalypsodeegree.model.geometry;
 public interface GM_MultiSurface extends GM_MultiPrimitive
 {
   /**
-   * @link aggregation
-   * @clientCardinality 0..*
-   */
-  /* #GM_Surface lnkGM_Surface; */
-
-  /**
    * adds an GM_Surface to the aggregation
    */
-  public void addSurface( GM_Surface< ? > gms );
+  void addSurface( GM_Surface< ? > gms );
 
   /**
    * inserts a GM_Surface in the aggregation. all elements with an index equal or larger index will be moved. if index
@@ -70,7 +64,7 @@ public interface GM_MultiSurface extends GM_MultiPrimitive
    * @param index
    *            position where to insert the new GM_Surface
    */
-  public void insertSurfaceAt( GM_Surface< ? > gms, int index ) throws GM_Exception;
+  void insertSurfaceAt( GM_Surface< ? > gms, int index ) throws GM_Exception;
 
   /**
    * sets the submitted GM_Surface at the submitted index. the element at the position <code>index</code> will be
@@ -81,14 +75,14 @@ public interface GM_MultiSurface extends GM_MultiPrimitive
    * @param index
    *            position where to set the new GM_Surface
    */
-  public void setSurfaceAt( GM_Surface< ? > gms, int index ) throws GM_Exception;
+  void setSurfaceAt( GM_Surface< ? > gms, int index ) throws GM_Exception;
 
   /**
    * removes the submitted GM_Surface from the aggregation
    * 
    * @return the removed GM_Surface
    */
-  public GM_Surface< ? > removeSurface( GM_Surface< ? > gms );
+  GM_Surface< ? > removeSurface( GM_Surface< ? > gms );
 
   /**
    * removes the GM_Surface at the submitted index from the aggregation. if index is larger then getSize() - 1 or
@@ -96,16 +90,17 @@ public interface GM_MultiSurface extends GM_MultiPrimitive
    * 
    * @return the removed GM_Surface
    */
-  public GM_Surface< ? > removeSurfaceAt( int index ) throws GM_Exception;
+  GM_Surface< ? > removeSurfaceAt( int index ) throws GM_Exception;
 
   /**
    * returns the GM_Surface at the submitted index.
    */
-  public GM_Surface< ? > getSurfaceAt( int index );
+  GM_Surface< ? > getSurfaceAt( int index );
 
   /**
    * returns all GM_Surfaces as array
    */
-  public GM_Surface< ? >[] getAllSurfaces( );
+  GM_Surface< ? >[] getAllSurfaces( );
 
+  double getArea( );
 }

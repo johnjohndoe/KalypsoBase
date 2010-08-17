@@ -51,15 +51,13 @@ package org.kalypsodeegree.model.geometry;
 
 public interface GM_MultiPrimitive extends GM_Aggregate
 {
-
   /**
    * returns the GM_Primitive at the submitted index.
    */
-  public GM_Primitive getPrimitiveAt( int index );
+  GM_Primitive getPrimitiveAt( int index );
 
   /**
    * returns all GM_Primitives as array
    */
-  public GM_Primitive[] getAllPrimitives();
-
+  GM_Primitive[] getAllPrimitives( );
 }

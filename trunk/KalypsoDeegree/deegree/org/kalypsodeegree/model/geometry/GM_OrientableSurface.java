@@ -51,10 +51,8 @@ package org.kalypsodeegree.model.geometry;
 
 public interface GM_OrientableSurface extends GM_OrientablePrimitive
 {
-
   /**
    * returns the boundary of the surface
    */
   GM_SurfaceBoundary getSurfaceBoundary();
-
 }
