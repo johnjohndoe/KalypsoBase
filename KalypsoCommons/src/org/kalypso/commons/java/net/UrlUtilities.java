@@ -149,4 +149,29 @@ public class UrlUtilities
       return connection.getContentEncoding();
     }
   }
+
+  /**
+   * Checks if the contents of a url can be accessed.<br/>
+   * 
+   * @param location
+   *          The url to check.
+   * @return <code>true</code>, if a stream on the location can pe opened.
+   */
+  public static boolean checkIsAccessible( final URL location )
+  {
+    InputStream is = null;
+    try
+    {
+      is = location.openStream();
+      return true;
+    }
+    catch( final IOException e )
+    {
+      return false;
+    }
+    finally
+    {
+      IOUtils.closeQuietly( is );
+    }
+  }
 }
