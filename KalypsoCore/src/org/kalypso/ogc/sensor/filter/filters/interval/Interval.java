@@ -281,8 +281,18 @@ public class Interval
       {
         // FIXME
         // &verschmiert=true
-        final String reference = String.format( "filter://%s?source_0=%s", IntervalFilter.class.getName(), source );
-        sources[i] = reference;
+        final String[] srcs = DataSourceHelper.getSources( source );
+
+        final StringBuffer buffer = new StringBuffer();
+        buffer.append( String.format( "filter://%s?", IntervalFilter.class.getName() ) );
+        for( int srcIndex = 0; srcIndex < srcs.length; srcIndex++ )
+        {
+          final String src = srcs[srcIndex];
+
+          buffer.append( String.format( "source_%d=%s&", srcIndex, src ) );
+        }
+
+        sources[i] = StringUtilities.chomp( buffer.toString() );
       }
     }
 
@@ -317,7 +327,6 @@ public class Interval
       final String reference = mergeSourceReference( m_sources[i], otherSources[i], empty );
       m_sources[i] = reference;
     }
-
   }
 
   private boolean isEmpty( )
@@ -332,10 +341,10 @@ public class Interval
   }
 
   /**
-   * @param empty
+   * @param srcFieldWasEmpty
    *          if values has been empty, take source reference of other
    */
-  private String mergeSourceReference( final String base, final String other, final boolean empty )
+  private String mergeSourceReference( final String base, final String other, final boolean srcFieldWasEmpty )
   {
     // - wenn undefiniert: quelle kopieren
     // - wenn schon definiert: "verschimiert": nach ? kombinieren
@@ -344,7 +353,8 @@ public class Interval
     else if( base.startsWith( "filter://" ) )
     {
       final Set<String> sources = new LinkedHashSet<String>();
-      if( !empty )
+
+      if( !srcFieldWasEmpty )
         Collections.addAll( sources, DataSourceHelper.getSources( base ) );
 
       if( other.startsWith( "filter://" ) )
@@ -354,7 +364,7 @@ public class Interval
 
       if( sources.isEmpty() )
       {
-        String.format( "filter://%s?source_0=%s", IntervalFilter.class.getName(), IDataSourceItem.SOURCE_UNKNOWN );
+        return String.format( "filter://%s?source_0=%s", IntervalFilter.class.getName(), IDataSourceItem.SOURCE_UNKNOWN );
       }
       else
       {
@@ -367,7 +377,8 @@ public class Interval
           buffer.append( String.format( "source_%d=%s&", i, sourceArray[i] ) );
         }
 
-        return StringUtilities.chomp( buffer.toString() );
+        final String source = StringUtilities.chomp( buffer.toString() );
+        return source;
       }
     }
 
