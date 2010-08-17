@@ -61,6 +61,7 @@ import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHandler;
 
 /**
  * @author doemming
+ * @author Dirk Kuch
  */
 public class IntervalTupleModel extends AbstractTupleModel
 {
