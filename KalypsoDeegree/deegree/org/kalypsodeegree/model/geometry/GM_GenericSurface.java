@@ -69,8 +69,8 @@ public interface GM_GenericSurface
   /**
    * @see GM_Object#invalidate()
    */
-  public void invalidate( );
+  void invalidate( );
 
-  public Object clone( ) throws CloneNotSupportedException;
+  Object clone( ) throws CloneNotSupportedException;
 
 }
