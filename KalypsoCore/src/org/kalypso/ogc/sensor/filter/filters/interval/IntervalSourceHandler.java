@@ -55,7 +55,11 @@ import org.kalypso.ogc.sensor.timeseries.datasource.IDataSourceItem;
  */
 public final class IntervalSourceHandler
 {
-  public IntervalSourceHandler( )
+  public static final String SOURCE_EXTENDED = "source://extended";
+
+  public static final String SOURCE_INITIAL_VALUE = "source://initialValue";
+
+  private IntervalSourceHandler( )
   {
 
   }
@@ -130,8 +134,8 @@ public final class IntervalSourceHandler
   private static String mergeSourceReference( final String base, final String other, final boolean baseSourceWasEmpty )
   {
     // - wenn undefiniert: quelle kopieren
-    // - wenn schon definiert: "verschimiert": nach ? kombinieren
-    if( IDataSourceItem.SOURCE_UNKNOWN.equalsIgnoreCase( base ) )
+    // - wenn schon definiert: "verschmiert": nach ? kombinieren
+    if( IDataSourceItem.SOURCE_UNKNOWN.equalsIgnoreCase( base ) || IntervalSourceHandler.SOURCE_INITIAL_VALUE.equalsIgnoreCase( base ) )
       return other;
     else if( base.startsWith( "filter://" ) )
     {
@@ -142,12 +146,12 @@ public final class IntervalSourceHandler
 
       if( other.startsWith( "filter://" ) )
         Collections.addAll( sources, DataSourceHelper.getSources( other ) );
-      else if( !IDataSourceItem.SOURCE_UNKNOWN.equals( other ) )
+      else if( !IDataSourceItem.SOURCE_UNKNOWN.equals( other ) || !IntervalSourceHandler.SOURCE_INITIAL_VALUE.equals( other ) )
         sources.add( other );
 
       if( sources.isEmpty() )
       {
-        return String.format( "filter://%s?source_0=%s", IntervalFilter.class.getName(), IDataSourceItem.SOURCE_UNKNOWN );
+        return String.format( "filter://%s?source_0=%s", IntervalFilter.class.getName(), SOURCE_EXTENDED );
       }
       else
       {
