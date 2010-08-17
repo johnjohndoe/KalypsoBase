@@ -156,14 +156,17 @@ public interface IFeatureBindingCollection<FWCls extends Feature> extends List<F
   GM_Envelope getBoundingBox( );
 
   /**
-   * To get the number of object of the specified class in this collection.
-   * 
-   * @return an int representing the number of object of the sepecified class in this collection
-   */
-  int countFeatureWrappers( Class< ? > wrapperClass );
-
-  /**
    * Clones the given object as member into this list
    */
   void cloneInto( FWCls toClone ) throws Exception;
+
+  /**
+   * Get the parent feature of this list.
+   */
+  Feature getParentFeature( );
+
+  /**
+   * Gets the underlying feature list.
+   */
+  FeatureList getFeatureList( );
 }

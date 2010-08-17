@@ -1155,19 +1155,20 @@ public final class FeatureHelper
     return null;
   }
 
-  @SuppressWarnings("unchecked")
-  public static final <T> T getFeature( final GMLWorkspace workspace, final Object linkOrFeature, final Class<T> targetAdapterClass )
+  public static <T> T getFeature( final GMLWorkspace workspace, final Object linkOrFeature, final Class<T> targetAdapterClass )
   {
-    if( (workspace == null) || (linkOrFeature == null) || (targetAdapterClass == null) )
+    if( workspace == null || linkOrFeature == null || targetAdapterClass == null )
     {
       final String message = null;
       throw new IllegalArgumentException( message );
     }
+
     final Feature feature = FeatureHelper.getFeature( workspace, linkOrFeature );
     if( feature == null )
       return null;
-    else
-      return (T) feature.getAdapter( targetAdapterClass );
+
+    final Object adapter = feature.getAdapter( targetAdapterClass );
+    return targetAdapterClass.cast( adapter );
   }
 
   /**
