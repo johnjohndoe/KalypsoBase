@@ -45,7 +45,6 @@ import java.util.Calendar;
 
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
-import org.kalypso.ogc.sensor.timeseries.datasource.IDataSourceItem;
 
 /**
  * @author Dirk Kuch
@@ -120,7 +119,7 @@ public class IntervalCalculationStack
   public String[] getPlainSources( )
   {
     final String[] sources = new String[defaultValues.length];
-    Arrays.fill( sources, IDataSourceItem.SOURCE_UNKNOWN );
+    Arrays.fill( sources, IntervalSourceHandler.SOURCE_INITIAL_VALUE );
 
     return sources;
   }
