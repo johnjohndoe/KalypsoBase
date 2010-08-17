@@ -64,9 +64,9 @@ import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_MultiSurface, Serializable
 {
   /** Use serialVersionUID for interoperability. */
-  private final static long serialVersionUID = -6471121873087659850L;
+  private static final long serialVersionUID = -6471121873087659850L;
 
-  private double area = 0;
+  private double m_area = 0.0;
 
   /**
    * Creates a new GM_MultiSurface_Impl object.
@@ -239,7 +239,7 @@ final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_Mu
   @Override
   protected GM_Point calculateCentroid( )
   {
-    area = 0;
+    m_area = 0;
 
     if( getSize() == 0 )
       return EMPTY_CENTROID;
@@ -253,7 +253,7 @@ final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_Mu
     for( int i = 0; i < getSize(); i++ )
     {
       final double a = getSurfaceAt( i ).getArea();
-      area = area + a;
+      m_area = m_area + a;
 
       final double[] pos = getSurfaceAt( i ).getCentroid().getAsArray();
 
@@ -265,7 +265,7 @@ final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_Mu
 
     for( int j = 0; j < cnt; j++ )
     {
-      cen[j] = cen[j] / area;
+      cen[j] = cen[j] / m_area;
     }
 
     return GeometryFactory.createGM_Point( GeometryFactory.createGM_Position( cen ), getCoordinateSystem() );
@@ -274,12 +274,13 @@ final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_Mu
   /**
    * returns the area of the multi surface. this is calculate as the sum of all containing surface areas.
    */
+  @Override
   public double getArea( )
   {
     // TODO: Still a bit hacky: centroid and area are calculated at the same moment;
     // we just make sure that the centroid is recalculated by calling getCentroid
     getCentroid();
-    return area;
+    return m_area;
   }
 
   /**
