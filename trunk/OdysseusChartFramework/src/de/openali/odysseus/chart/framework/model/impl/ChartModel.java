@@ -179,6 +179,16 @@ public class ChartModel implements IChartModel
   }
 
   /**
+   * @see de.openali.odysseus.chart.framework.model.IChartModel#dispose()
+   */
+  @Override
+  public void dispose( )
+  {
+    // nothing to dispose
+    
+  }
+
+  /**
    * @see org.kalypso.chart.framework.model.IChartModel#getAxis2Layers()
    */
   @Override

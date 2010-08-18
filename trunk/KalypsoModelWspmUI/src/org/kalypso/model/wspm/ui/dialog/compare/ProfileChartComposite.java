@@ -40,10 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.dialog.compare;
 
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.RGB;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.chart.ui.editor.mousehandler.AxisDragHandlerDelegate;
 import org.kalypso.chart.ui.editor.mousehandler.PlotDragHandlerDelegate;
@@ -53,6 +50,7 @@ import org.kalypso.model.wspm.ui.view.chart.IProfilChart;
 import org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartModel;
 
+import de.openali.odysseus.chart.framework.model.IChartModelState;
 import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
 
 /**
@@ -60,64 +58,38 @@ import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
  * @author kimwerner
  * @author Dirk Kuch
  */
-public class ProfileChart extends Composite implements IProfilChart
+public class ProfileChartComposite extends ChartComposite implements IProfilChart
 {
   private static final RGB BACKGROUND_RGB = new RGB( 255, 255, 255 );
 
-  private ChartComposite m_chartComposite = null;
+  private IProfilLayerProvider m_profilLayerProvider = null;
 
-  protected IProfil m_profile;
-
-  private final IProfilLayerProvider m_layerProvider;
-
-  private ProfilChartModel m_chartModel;
-
-  public ProfileChart( final Composite parent, final int style, final IProfil profile )
+  protected IProfilLayerProvider getProfilLayerProvider( final IProfil profile )
   {
-    this( parent, style, KalypsoModelWspmUIExtensions.createProfilLayerProvider( profile.getType() ), profile );
+    if( m_profilLayerProvider != null )
+      return m_profilLayerProvider;
+    if( profile != null )
+    {
+      m_profilLayerProvider = KalypsoModelWspmUIExtensions.createProfilLayerProvider( profile.getType() );
+    }
+    else if( getProfil() != null )
+    {
+      m_profilLayerProvider = KalypsoModelWspmUIExtensions.createProfilLayerProvider( getProfil().getType() );
+    }
+    return m_profilLayerProvider;
   }
 
-  public ProfileChart( final Composite parent, final int style, final IProfilLayerProvider layerProvider, final IProfil profile )
+  private ProfilChartModel m_profilChartModel = null;
+
+  public ProfileChartComposite( final Composite parent, final int style, final IProfilLayerProvider layerProvider, final IProfil profile )
   {
-    super( parent, style );
 
-    this.setLayout( new GridLayout() );
+    super( parent, style, null, BACKGROUND_RGB );
+    m_profilLayerProvider = layerProvider;
+    new PlotDragHandlerDelegate( this );
+    new AxisDragHandlerDelegate( this );
 
-    m_layerProvider = layerProvider;
-    m_profile = profile;
-
-    bootstrap();
-  }
-
-  private void bootstrap( )
-  {
-    m_chartComposite = new ChartComposite( this, this.getStyle(), null, BACKGROUND_RGB );
-    m_chartComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-
-    new PlotDragHandlerDelegate( m_chartComposite );
-    new AxisDragHandlerDelegate( m_chartComposite );
-
-    update();
-  }
-
-  @Override
-  public void update( )
-  {
-    if( m_chartComposite == null || m_chartComposite.isDisposed() )
-      return;
-
-    final IProfil oldProfile = m_chartModel == null ? null : m_chartModel.getProfil();
-
-    if( m_profile == oldProfile )
-      return;
-
-    if( m_chartModel != null )
-      m_chartModel.dispose();
-
-    m_chartModel = new ProfilChartModel( m_layerProvider, m_profile, null );
-
-    m_chartModel.autoscale( null );
-    m_chartComposite.setChartModel( m_chartModel );
+    invalidate( profile, null );
   }
 
   /**
@@ -126,17 +98,19 @@ public class ProfileChart extends Composite implements IProfilChart
   @Override
   public void dispose( )
   {
-    if( m_chartComposite != null )
-      m_chartComposite.dispose();
 
-    if( m_chartModel != null )
-      m_chartModel.dispose();
+    if( m_profilChartModel != null )
+      m_profilChartModel.dispose();
+    super.dispose();
   }
 
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.IProfilChart#getChart()
+   */
   @Override
   public ChartComposite getChart( )
   {
-    return m_chartComposite;
+    return this;
   }
 
   /**
@@ -145,18 +119,35 @@ public class ProfileChart extends Composite implements IProfilChart
   @Override
   public IProfil getProfil( )
   {
-    return m_profile;
+    return m_profilChartModel == null ? null : m_profilChartModel.getProfil();
+  }
+
+  public void invalidate( final IProfil profile, final Object result )
+  {
+    if( isDisposed() )
+      return;
+
+    final IProfil oldProfile = m_profilChartModel == null ? null : m_profilChartModel.getProfil();
+
+    if( profile != null && profile == oldProfile )
+      return;
+
+    final IChartModelState state = m_profilChartModel == null ? null : m_profilChartModel.getState();
+    if( m_profilChartModel != null )
+      m_profilChartModel.dispose();
+
+    m_profilChartModel = new ProfilChartModel( getProfilLayerProvider( profile ), profile, result );
+    if( state != null )
+      state.restoreState( m_profilChartModel );
+    // TODO: don't autoscale, restore zoom instead
+    m_profilChartModel.autoscale( null );
+    setChartModel( m_profilChartModel );
   }
 
   @Override
-  public synchronized void setProfil( final IProfil profile )
+  public synchronized void setProfil( final IProfil profile, final Object result )
   {
-    if( m_profile == profile )
-      return;
-
-    m_profile = profile;
-
-    update();
+    invalidate( profile, result );
   }
 
 }

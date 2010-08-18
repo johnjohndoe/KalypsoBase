@@ -211,7 +211,7 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider impl
 
     final IProfileFeature profile = profileAndResults.getProfile();
 
-    // Check if this is the current feature, if true, do not set the profile agin
+    // Check if this is the current feature, if true, do not set the profile again
     if( ObjectUtils.equals( m_feature, profile ) )
       return;
 

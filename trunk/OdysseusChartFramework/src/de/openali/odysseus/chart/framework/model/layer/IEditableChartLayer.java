@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package de.openali.odysseus.chart.framework.model.layer;
 
-import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Point;
 
 /**

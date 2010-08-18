@@ -52,7 +52,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionDelegate;
 import org.kalypso.model.wspm.ui.product.ProfileManagerPerspective;
-import org.kalypso.model.wspm.ui.view.chart.TuhhProfilChartView;
+import org.kalypso.model.wspm.ui.view.chart.ProfilChartViewPart;
 
 /**
  * @author Gernot Belger
@@ -84,7 +84,7 @@ public class ShowProfileAction extends ActionDelegate
         activePage.setPerspective( finalPersp );
 
       /* Make sure that the diagram view is visible. */
-      activePage.showView( TuhhProfilChartView.ID );
+      activePage.showView( ProfilChartViewPart.ID );
     }
     catch( final PartInitException e )
     {

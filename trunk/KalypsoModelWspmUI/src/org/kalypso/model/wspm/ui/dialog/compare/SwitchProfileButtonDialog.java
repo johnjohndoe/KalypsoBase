@@ -142,7 +142,7 @@ public class SwitchProfileButtonDialog extends Composite
 
   protected void setProfile( final IProfil profile )
   {
-    m_chartView.setProfil( profile );
+    m_chartView.setProfil( profile,null );
 
     final ChartComposite chart = m_chartView.getChart();
     if( chart != null )

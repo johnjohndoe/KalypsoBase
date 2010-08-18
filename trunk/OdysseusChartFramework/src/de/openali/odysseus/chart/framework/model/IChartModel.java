@@ -20,6 +20,8 @@ public interface IChartModel
   public void clear( );
 
   public Map<IAxis, List<IChartLayer>> getAxis2Layers( );
+  
+  public void dispose();
 
   /**
    * @param b
