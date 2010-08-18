@@ -107,6 +107,9 @@ public class StringStorage implements IEncodedStorage, IPersistableElement
   @Override
   public String getName( )
   {
+    if( m_path == null )
+      return "<Unknown>";
+    
     return m_path.lastSegment();
   }
 

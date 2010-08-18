@@ -2,8 +2,10 @@ package org.kalypso.model.wspm.ui.action;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.xml.bind.JAXBException;
@@ -43,6 +45,7 @@ import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement;
 import org.kalypso.ui.editor.mapeditor.GisMapEditor;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 public class CreateProfileMapAction extends ActionDelegate
 {
@@ -109,7 +112,7 @@ public class CreateProfileMapAction extends ActionDelegate
             return Status.OK_STATUS;
 
           final String storageName = title == null ? "<unbekannt>.gmt" : title + ".gmt"; //$NON-NLS-1$ //$NON-NLS-2$
-          final IPath storagePath = guessPath( activePart, storageName );
+          final IPath storagePath = guessPath( activePart, storageName, selectedProfiles );
 
           final IWorkbenchPartSite activeSite = activePart.getSite();
           final IWorkbenchPage page = activeSite.getPage();
@@ -136,7 +139,7 @@ public class CreateProfileMapAction extends ActionDelegate
     uijob.schedule();
   }
 
-  static IPath guessPath( final IWorkbenchPart part, final String storageName ) throws CoreException
+  static IPath guessPath( final IWorkbenchPart part, final String storageName, Map<Feature, IRelationType> selectedProfiles ) throws CoreException
   {
     if( part instanceof IEditorPart )
     {
@@ -149,6 +152,22 @@ public class CreateProfileMapAction extends ActionDelegate
         {
           final IPath parentPath = fullPath.removeLastSegments( 1 );
           return parentPath.append( storageName );
+        }
+      }
+    }
+    
+    Set<Entry<Feature, IRelationType>> entrySet = selectedProfiles.entrySet();
+    for( Entry<Feature, IRelationType> entry : entrySet )
+    {
+      Feature feature = entry.getKey();
+      GMLWorkspace workspace = feature.getWorkspace();
+      if( workspace != null )
+      {
+        URL context = workspace.getContext();
+        if( context != null )
+        {
+          
+          
         }
       }
     }

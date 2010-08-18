@@ -49,8 +49,7 @@ Require-Bundle: org.junit4;resolution:=optional,
  org.kalypso.contribs.ogc2x,
  org.kalypso.contribs.ogc31,
  org.kalypso.deegree2;visibility:=reexport,
- org.kalypso.geotools;visibility:=reexport,
- org.eclipse.wst.xml.core;resolution:=optional
+ org.kalypso.geotools;visibility:=reexport
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: org.kalypsodeegree.KalypsoDeegreePlugin
 Export-Package: com.sun.media.jai.codec,

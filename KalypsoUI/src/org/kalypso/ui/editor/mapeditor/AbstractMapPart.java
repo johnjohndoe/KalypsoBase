@@ -332,8 +332,8 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
       if( input instanceof IFileEditorInput )
       {
         final IFile file = ((IFileEditorInput) input).getFile();
-        context = ResourceUtilities.createURL( file );
-        project = file.getProject();
+        context = file == null ? null : ResourceUtilities.createURL( file );
+        project = file == null ? null :  file.getProject();
       }
       else
       {

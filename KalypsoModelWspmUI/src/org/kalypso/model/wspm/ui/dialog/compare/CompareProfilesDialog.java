@@ -104,24 +104,24 @@ public class CompareProfilesDialog extends TitleAreaDialog
 
     final CompareProfileWrapper baseWrapper = m_provider.getBaseProfile();
 
-    final ProfileChart baseChartView = createChartView( baseWrapper, body, toolkit );
+    final ProfileChartComposite baseChartView = createChartView( baseWrapper, body, toolkit );
 
-    final List<ProfileChart> additionalChartViews = new ArrayList<ProfileChart>();
+    final List<ProfileChartComposite> additionalChartViews = new ArrayList<ProfileChartComposite>();
 
     final CompareProfileWrapper[] additional = m_provider.getAdditionalProfiles( baseWrapper.getProfil() );
     for( final CompareProfileWrapper ad : additional )
     {
-      final ProfileChart additionalView = createChartView( ad, body, toolkit );
+      final ProfileChartComposite additionalView = createChartView( ad, body, toolkit );
       additionalChartViews.add( additionalView );
     }
 
-    final CompareSwitchProfileButtonDialog switchDialog = new CompareSwitchProfileButtonDialog( body, baseChartView, m_provider, additionalChartViews.toArray( new ProfileChart[] {} ) );
+    final CompareSwitchProfileButtonDialog switchDialog = new CompareSwitchProfileButtonDialog( body, baseChartView, m_provider, additionalChartViews.toArray( new ProfileChartComposite[] {} ) );
     switchDialog.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
     return super.createDialogArea( parent );
   }
 
-  private ProfileChart createChartView( final CompareProfileWrapper wrapper, final Composite body, final FormToolkit toolkit )
+  private ProfileChartComposite createChartView( final CompareProfileWrapper wrapper, final Composite body, final FormToolkit toolkit )
   {
     final Group group = new Group( body, SWT.NULL );
 
@@ -132,7 +132,7 @@ public class CompareProfilesDialog extends TitleAreaDialog
     group.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
     group.setText( wrapper.getLabel() );
 
-    final ProfileChart chart = new ProfileChart( group, SWT.NONE, wrapper.getLayerProvider(), wrapper.getProfil() );
+    final ProfileChartComposite chart = new ProfileChartComposite( group, SWT.NONE, wrapper.getLayerProvider(), wrapper.getProfil() );
     chart.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
 
     toolkit.adapt( group );

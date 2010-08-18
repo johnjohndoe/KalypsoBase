@@ -78,7 +78,7 @@
               name="%org.kalypso.model.wspm.ui.view.table.TableView"/>
         <view
               category="org.kalypso.model.wspm.profil.view.category"
-              class="org.kalypso.model.wspm.ui.view.chart.TuhhProfilChartView"
+              class="org.kalypso.model.wspm.ui.view.chart.ProfilChartViewPart"
               icon="icons/eview16/profil_table.gif"
               id="org.kalypso.model.wspm.ui.view.chart.ChartView"
               name="%org.kalypso.model.wspm.ui.view.chart.ChartView"/>

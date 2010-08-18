@@ -90,7 +90,11 @@ public class StorageEditorInput implements IFileEditorInput
   {
     final IWorkspace workspace = ResourcesPlugin.getWorkspace();
     final IWorkspaceRoot root = workspace.getRoot();
-    return root.getFile( m_storage.getFullPath() );
+    IPath fullPath = m_storage.getFullPath();
+    if( fullPath == null )
+      return null;
+    
+    return root.getFile( fullPath );
   }
 
   /**
@@ -99,7 +103,11 @@ public class StorageEditorInput implements IFileEditorInput
   @Override
   public boolean exists( )
   {
-    return getFile().exists();
+    IFile file = getFile();
+    if( file == null )
+      return false;
+    
+    return file.exists();
   }
 
   /**

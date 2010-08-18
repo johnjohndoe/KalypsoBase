@@ -88,13 +88,19 @@ public class ProfilChartModel extends ChartModel
 
   private final IProfil m_profil;
 
-  private IProfilLayerProvider m_layerProvider = null;
+  private IProfilLayerProvider m_layerProvider;
 
   private final Object m_result;
 
-  public ProfilChartModel( final IProfil profil, final Object result )
+  protected IProfilLayerProvider getProfilLayerProvider( )
   {
-    this( KalypsoModelWspmUIExtensions.createProfilLayerProvider( profil.getType() ), profil, result );
+    if( m_layerProvider != null )
+      return m_layerProvider;
+    if( getProfil() != null )
+    {
+      m_layerProvider = KalypsoModelWspmUIExtensions.createProfilLayerProvider( getProfil().getType() );
+    }
+    return m_layerProvider;
   }
 
   public ProfilChartModel( final IProfilLayerProvider layerProvider, final IProfil profil, final Object result )
@@ -103,7 +109,7 @@ public class ProfilChartModel extends ChartModel
     m_profil = profil;
     m_result = result;
 
-    if( m_profil != null )
+    if( m_profil != null && m_layerProvider != null )
     {
       m_profil.addProfilListener( m_profilListener );
 
@@ -113,30 +119,11 @@ public class ProfilChartModel extends ChartModel
     }
   }
 
-  /**
-   * Recreate all layers.
-   */
-  protected void updateLayers( )
-  {
-    final IChartModelState state = this.getState();
-
-    final ILayerManager layerManager = getLayerManager();
-    layerManager.clear();
-    final IProfilChartLayer[] profileLayers = m_layerProvider.createLayers( m_profil, m_result );
-    for( final IProfilChartLayer layer : profileLayers )
-      layerManager.addLayer( layer );
-    state.restoreState( this );
-  }
-
+  @Override
   public void dispose( )
   {
     if( m_profil != null )
       m_profil.removeProfilListener( m_profilListener );
-  }
-
-  public IProfil getProfil( )
-  {
-    return m_profil;
   }
 
   public final IProfilChartLayer getLayer( final String layerID )
@@ -148,8 +135,31 @@ public class ProfilChartModel extends ChartModel
     return null;
   }
 
+  public IProfil getProfil( )
+  {
+    return m_profil;
+  }
+
   protected void handlePropertyOrBuildingChanged( final IProfilChange[] changes )
   {
     updateLayers();
+  }
+
+  /**
+   * Recreate all layers.
+   */
+  protected void updateLayers( )
+  {
+    final IChartModelState state = this.getState();
+
+    final ILayerManager layerManager = getLayerManager();
+    layerManager.clear();
+    final IProfilLayerProvider lp = getProfilLayerProvider();
+    if( lp == null )
+      return;
+    final IProfilChartLayer[] profileLayers = lp.createLayers( m_profil, m_result );
+    for( final IProfilChartLayer layer : profileLayers )
+      layerManager.addLayer( layer );
+    state.restoreState( this );
   }
 }

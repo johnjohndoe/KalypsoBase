@@ -154,25 +154,29 @@ public abstract class AbstractEditorPart extends WorkbenchPart implements IResou
   /**
    * @see org.eclipse.ui.part.EditorPart#doSave(org.eclipse.core.runtime.IProgressMonitor)
    */
-  public final synchronized void doSave( final IProgressMonitor monitor )
+  public final void doSave( final IProgressMonitor monitor )
   {
     final IEditorInput eInput = getEditorInput();
     if( eInput == null )
       return;
 
-    if( !(eInput instanceof IFileEditorInput) )
+    final IFile file = findfile( eInput );
+    if( file == null )
     {
       // If input is not a file, allow user to save as
       doSaveAs();
       return;
     }
 
-    final IFileEditorInput input = (IFileEditorInput) eInput;
     try
     {
-      setSaving( true );
-      doSaveInternal( monitor, input.getFile() );
-      m_commandTarget.resetDirty();
+      synchronized( this )
+      {
+        setSaving( true );
+        doSaveInternal( monitor, file );
+        m_commandTarget.resetDirty();
+      }
+
       fireDirty();
     }
     catch( final CoreException e )
@@ -185,6 +189,17 @@ public abstract class AbstractEditorPart extends WorkbenchPart implements IResou
     {
       setSaving( false );
     }
+  }
+
+  private IFile findfile( IEditorInput eInput )
+  {
+    if( eInput instanceof IFileEditorInput )
+    {
+      final IFileEditorInput input = (IFileEditorInput) eInput;
+      return input.getFile();
+    }
+
+    return null;
   }
 
   protected abstract void doSaveInternal( final IProgressMonitor monitor, final IFile file ) throws CoreException;
@@ -387,6 +402,8 @@ public abstract class AbstractEditorPart extends WorkbenchPart implements IResou
       return;
 
     final IFile file = ((IFileEditorInput) editorInput).getFile();
+    if( file == null )
+      return;
 
     final IResourceDelta rootDelta = event.getDelta();
     final IResourceDelta fileDelta = rootDelta.findMember( file.getFullPath() );

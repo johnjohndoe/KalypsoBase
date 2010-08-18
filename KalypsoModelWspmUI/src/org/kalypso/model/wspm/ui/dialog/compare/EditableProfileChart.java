@@ -51,14 +51,8 @@ import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
 /**
  * @author Dirk Kuch
  */
-public class EditableProfileChart extends ProfileChart
+public class EditableProfileChart extends ProfileChartComposite
 {
-  public EditableProfileChart( final Composite parent, final int style, final IProfil profile )
-  {
-    super( parent, style, profile );
-
-    mkeEditable();
-  }
 
   public EditableProfileChart( final Composite parent, final int style, final IProfilLayerProvider provider, final IProfil profile )
   {

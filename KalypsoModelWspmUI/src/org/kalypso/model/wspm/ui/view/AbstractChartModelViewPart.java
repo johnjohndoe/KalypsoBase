@@ -66,7 +66,7 @@ import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
 /**
  * @author kimwerner
  */
-public abstract class AbstractChartModelViewPart extends ViewPart implements IAdapterEater<IChartPart>, IChartModelEventListener
+public abstract class AbstractChartModelViewPart extends ViewPart implements IAdapterEater<IChartPart>, IChartModelEventListener, IChartModelView
 {
   private final AdapterPartListener<IChartPart> m_chartProviderListener = new AdapterPartListener<IChartPart>( IChartPart.class, this, EditorFirstAdapterFinder.<IChartPart> instance(), EditorFirstAdapterFinder.<IChartPart> instance() );
 
@@ -77,7 +77,7 @@ public abstract class AbstractChartModelViewPart extends ViewPart implements IAd
   private IChartPart m_chartPart;
 
   private IChartModel m_chartModel;
-  
+
   private String m_registeredName;
 
   protected abstract void createControl( final Composite parent );
@@ -132,6 +132,7 @@ public abstract class AbstractChartModelViewPart extends ViewPart implements IAd
     return super.getAdapter( adapter );
   }
 
+  @Override
   public IChartModel getChartModel( )
   {
     return m_chartModel;
@@ -157,10 +158,10 @@ public abstract class AbstractChartModelViewPart extends ViewPart implements IAd
   public void init( final IViewSite site ) throws PartInitException
   {
     super.init( site );
-    if (site==null)
+    if( site == null )
       return;
     m_chartProviderListener.init( site.getPage() );
-    m_registeredName=site.getRegisteredName();
+    m_registeredName = site.getRegisteredName();
     updateControl();
   }
 
@@ -237,8 +238,8 @@ public abstract class AbstractChartModelViewPart extends ViewPart implements IAd
       return;
     if( model == null )
     {
-      m_form.setMessage( Messages.getString( "org.kalypso.model.wspm.ui.view.legend.LegendView.2" ), IMessageProvider.INFORMATION ); //$NON-NLS-1$
       setPartName( m_registeredName );
+      m_form.setMessage( Messages.getString( "org.kalypso.model.wspm.ui.view.legend.LegendView.2" ), IMessageProvider.INFORMATION ); //$NON-NLS-1$
     }
     else
     {
