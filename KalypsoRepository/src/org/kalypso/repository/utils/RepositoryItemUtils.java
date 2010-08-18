@@ -43,6 +43,7 @@ package org.kalypso.repository.utils;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.commons.java.util.StringUtilities;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryItem;
@@ -223,9 +224,11 @@ public final class RepositoryItemUtils
 
   private static String getModel( final String identifier )
   {
-    final String[] parts = identifier.split( "\\." );
-    if( parts.length >= 2 )
-      return parts[1];
+    final String[] parts = getPlainId( identifier ).split( "\\." );
+    if( !ArrayUtils.isEmpty( parts ) )
+    {
+      return parts[0];
+    }
 
     return null;
   }
@@ -357,6 +360,34 @@ public final class RepositoryItemUtils
       base += "." + item.getName();
 
     return base;
+  }
+
+  /**
+   * @param parameterUrlParts
+   *          assumption an identifier of a parameter consists of 'x' parts
+   */
+  public static boolean isParameterItem( final IRepositoryItem item, final int parameterUrlParts ) throws RepositoryException
+  {
+    if( isVirtual( item ) )
+    {
+      final String identifier = item.getIdentifier();
+      final String[] parts = identifier.split( "\\." );
+
+      return parts.length == parameterUrlParts;
+    }
+
+    if( !ArrayUtils.isEmpty( item.getChildren() ) )
+      return false;
+
+    final String identifier = item.getIdentifier();
+    final String[] parts = identifier.split( "\\." );
+
+    return parts.length == parameterUrlParts;
+  }
+
+  public static boolean isVirtual( final IRepositoryItem item )
+  {
+    return isVirtual( item.getIdentifier() );
   }
 
 }
