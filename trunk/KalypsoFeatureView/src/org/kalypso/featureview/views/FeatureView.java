@@ -478,15 +478,17 @@ public class FeatureView extends ViewPart implements ModellEventListener
           oldWorkspace.removeModellListener( FeatureView.this );
           getSite().setSelectionProvider( null );
         }
-        try{
+        try
+        {
           if( m_featureComposite != null )
             m_featureComposite.disposeControl();
           final Control scroller = creator.getScrolledComposite();
           if( scroller != null )
             scroller.dispose();
-          }
-        catch (Exception e) {
-          //TODO: set real log output
+        }
+        catch( final Exception e )
+        {
+          // TODO: set real log output
           System.out.println( "e: " + e );
         }
         if( m_featureComposite == null )

@@ -40,59 +40,31 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.gmleditor.ui;
 
-import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IStatusLineManager;
-import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.actions.ActionContext;
-import org.eclipse.ui.part.EditorActionBarContributor;
-import org.kalypso.i18n.Messages;
+import org.kalypso.ui.editor.AbstractEditorActionBarContributor;
 import org.kalypso.ui.editor.actions.FeatureSelectionActionGroup;
+import org.kalypso.ui.editor.actions.NewFeatureManagedMenu;
+import org.kalypso.ui.editor.actions.SelectionManagedMenu;
 
 /**
  * Contributes to the actions bars of the {@link org.kalypso.ui.editor.gmleditor.GmlEditor}.
  * 
  * @author Gernot Belger
  */
-public class GmlEditorActionBarContributor extends EditorActionBarContributor
+public class GmlEditorActionBarContributor extends AbstractEditorActionBarContributor
 {
-  private final FeatureSelectionActionGroup m_featureSelectionActionGroup = new FeatureSelectionActionGroup()
-  {
-    /**
-     * @see org.kalypso.ui.editor.actions.FeatureSelectionActionGroup#createSubMenuManager(org.eclipse.jface.action.IMenuManager)
-     */
-    @Override
-    protected IMenuManager createSubMenuManager( final IMenuManager menuManager )
-    {
-      final IMenuManager manager = menuManager.findMenuUsingPath( "org.kalypso.ui.editors.treeeditor.menu" ); //$NON-NLS-1$
-      if( manager == null )
-        return null;
+  private final FeatureSelectionActionGroup m_featureSelectionActionGroup = new FeatureSelectionActionGroup();
 
-      manager.remove( "selectionMenuManager" ); //$NON-NLS-1$
+  private final SelectionManagedMenu m_selectionManagedMenu = new SelectionManagedMenu( "org.kalypso.ui.editors.treeeditor.menu" ); //$NON-NLS-1$
 
-      final IMenuManager newSmm = new MenuManager( Messages.getString("org.kalypso.ui.editor.gmleditor.ui.GmlEditorActionBarContributor.2"), "selectionMenuManager" ); //$NON-NLS-1$ //$NON-NLS-2$
-      manager.appendToGroup( "selection", newSmm ); //$NON-NLS-1$
-      return newSmm;
-    }
-  };
-
-  private final ISelectionChangedListener m_selectionListener = new ISelectionChangedListener()
-  {
-    @Override
-    public void selectionChanged( final SelectionChangedEvent event )
-    {
-      handleSelectionChanged( event.getSelectionProvider() );
-    }
-  };
+  private final NewFeatureManagedMenu m_newFeatureManagedMenu = new NewFeatureManagedMenu( "org.kalypso.ui.editors.treeeditor.menu" ); //$NON-NLS-1$
 
   private ShowDescriptionStatusLineItem m_statusLineItem;
-
-  private IEditorPart m_targetEditor;
 
   /**
    * @see org.eclipse.ui.part.EditorActionBarContributor#init(org.eclipse.ui.IActionBars)
@@ -102,6 +74,11 @@ public class GmlEditorActionBarContributor extends EditorActionBarContributor
   {
     super.init( bars );
 
+    m_newFeatureManagedMenu.setGroupName( "selection" );
+    m_selectionManagedMenu.setGroupName( "selection" );
+
+    m_featureSelectionActionGroup.addManagedMenu( m_selectionManagedMenu );
+    m_featureSelectionActionGroup.addManagedMenu( m_newFeatureManagedMenu );
     m_featureSelectionActionGroup.setContext( new ActionContext( StructuredSelection.EMPTY ) );
     m_featureSelectionActionGroup.fillActionBars( bars );
   }
@@ -112,14 +89,8 @@ public class GmlEditorActionBarContributor extends EditorActionBarContributor
   @Override
   public void dispose( )
   {
-    if( m_targetEditor != null )
-    {
-      final ISelectionProvider selectionProvider = m_targetEditor.getSite().getSelectionProvider();
-      if( selectionProvider != null )
-        selectionProvider.removeSelectionChangedListener( m_selectionListener );
-    }
-
     m_featureSelectionActionGroup.dispose();
+    m_selectionManagedMenu.disposeMenu();
 
     super.dispose();
   }
@@ -140,22 +111,9 @@ public class GmlEditorActionBarContributor extends EditorActionBarContributor
   @Override
   public void setActiveEditor( final IEditorPart targetEditor )
   {
-    if( m_targetEditor != null )
-    {
-      final ISelectionProvider selectionProvider = m_targetEditor.getSite().getSelectionProvider();
-      if( selectionProvider != null )
-        selectionProvider.removeSelectionChangedListener( m_selectionListener );
-    }
+    super.setActiveEditor( targetEditor );
 
-    m_targetEditor = targetEditor;
-    m_featureSelectionActionGroup.setPart( m_targetEditor );
-
-    if( m_targetEditor != null )
-    {
-      final ISelectionProvider selectionProvider = m_targetEditor.getSite().getSelectionProvider();
-      if( selectionProvider != null )
-        selectionProvider.addSelectionChangedListener( m_selectionListener );
-    }
+    m_featureSelectionActionGroup.setPart( targetEditor );
 
     if( m_statusLineItem != null )
       m_statusLineItem.setActiveEditor( targetEditor );
@@ -163,7 +121,8 @@ public class GmlEditorActionBarContributor extends EditorActionBarContributor
     m_featureSelectionActionGroup.updateActionBars();
   }
 
-  protected void handleSelectionChanged( final ISelectionProvider provider )
+  @Override
+  protected void handleEditorSelectionChanged( final ISelectionProvider provider )
   {
     m_featureSelectionActionGroup.getContext().setSelection( provider.getSelection() );
     m_featureSelectionActionGroup.updateActionBars();

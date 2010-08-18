@@ -40,27 +40,24 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.actions;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.action.Separator;
-import org.eclipse.jface.action.SubMenuManager;
 import org.eclipse.jface.action.SubToolBarManager;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.ui.IActionBars;
-import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.actions.ActionContext;
 import org.eclipse.ui.actions.ActionGroup;
 import org.eclipse.ui.internal.ObjectActionContributorManager;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ogc.gml.selection.IFeatureSelection;
-import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 
 /**
  * This action group is used to show actions depending on a selected feature.
@@ -69,13 +66,12 @@ import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
  * 
  * @author Gernot Belger
  */
-@SuppressWarnings("restriction") //$NON-NLS-1$
 public class FeatureSelectionActionGroup extends ActionGroup
 {
   private final ISelectionProvider m_provider = new ISelectionProvider()
   {
     @Override
-    public void addSelectionChangedListener( ISelectionChangedListener listener )
+    public void addSelectionChangedListener( final ISelectionChangedListener listener )
     {
     }
 
@@ -87,7 +83,7 @@ public class FeatureSelectionActionGroup extends ActionGroup
     }
 
     @Override
-    public void removeSelectionChangedListener( ISelectionChangedListener listener )
+    public void removeSelectionChangedListener( final ISelectionChangedListener listener )
     {
     }
 
@@ -97,17 +93,25 @@ public class FeatureSelectionActionGroup extends ActionGroup
     }
   };
 
+  private final List<IManagedMenu> m_managedMenues = new ArrayList<IManagedMenu>();
+
   private SubToolBarManager m_toolbarSubManager;
 
   private IWorkbenchPart m_part = null;
 
-  private IMenuManager m_menuSubManager;
-
   private IActionBars m_actionBars;
+
+  public void addManagedMenu( final IManagedMenu menu )
+  {
+    m_managedMenues.add( menu );
+  }
 
   public void setPart( final IWorkbenchPart part )
   {
     m_part = part;
+
+    for( final IManagedMenu managedMenu : m_managedMenues )
+      managedMenu.setPart( part );
   }
 
   /**
@@ -118,6 +122,18 @@ public class FeatureSelectionActionGroup extends ActionGroup
   {
     /* Just remember the action bars. The real business is done in update action bars */
     m_actionBars = actionBars;
+
+    createSubMenues();
+  }
+
+  private void createSubMenues( )
+  {
+    final IMenuManager menuManager = m_actionBars.getMenuManager();
+    if( menuManager == null )
+      return;
+
+    for( final IManagedMenu managedMenu : m_managedMenues )
+      managedMenu.createSubMenu( menuManager );
   }
 
   /**
@@ -132,38 +148,14 @@ public class FeatureSelectionActionGroup extends ActionGroup
 
   private void updateMenu( )
   {
-    if( m_menuSubManager == null )
-      m_menuSubManager = createSubMenuManager( m_actionBars.getMenuManager() );
-
-    if( m_menuSubManager == null )
-      return;
-
-    m_menuSubManager.removeAll();
-
     if( m_part == null )
       return;
 
-    addNewSubMenu( m_menuSubManager );
-    ObjectActionContributorManager.getManager().contributeObjectActions( m_part, m_menuSubManager, m_provider );
-  }
+    /* Maybe menu was not yet available when fillActionBars was called, retry now. */
+    createSubMenues();
 
-  private void addNewSubMenu( final IMenuManager manager )
-  {
-    final ISelection selection = getContext().getSelection();
-    if( !(selection instanceof IFeatureSelection) )
-      return;
-
-    final IFeatureSelection fs = (IFeatureSelection) selection;
-    final IFeatureSelectionManager selectionManager = fs.getSelectionManager();
-
-    // HACK: we know this works, as this must be the TreeFeatureSelection here
-    CommandableWorkspace workspace = fs.getWorkspace( null );
-    
-    final NewFeatureScope scope = NewFeatureScope.createFromTreeSelection( workspace, fs, selectionManager ); 
-    manager.add( scope.createMenu() );
-
-    // add additions separator: if not, eclipse whines
-    manager.add( new Separator( IWorkbenchActionConstants.MB_ADDITIONS ) );
+    for( final IManagedMenu managedMenu : m_managedMenues )
+      managedMenu.updateMenu();
   }
 
   private void updateToolbar( )
@@ -178,6 +170,8 @@ public class FeatureSelectionActionGroup extends ActionGroup
 
     if( m_part == null )
       return;
+
+    // TODO: also refaktor in external class
 
     /* first, fill the actions into a fake manager */
     final IMenuManager fakeManager = new MenuManager();
@@ -221,35 +215,13 @@ public class FeatureSelectionActionGroup extends ActionGroup
   @Override
   public void dispose( )
   {
+    m_managedMenues.clear();
+
     if( m_toolbarSubManager != null )
     {
       m_toolbarSubManager.disposeManager();
       m_toolbarSubManager = null;
     }
-
-    if( m_menuSubManager != null )
-    {
-      m_menuSubManager.dispose();
-      if( m_menuSubManager instanceof SubMenuManager )
-        ((SubMenuManager) m_menuSubManager).disposeManager();
-
-      m_menuSubManager = null;
-    }
-  }
-
-  /**
-   * Creates the sub-menu where the selection-dependent contribution items are added.
-   * <p>
-   * Default implementation just returns null, so no additional menu-items are shown.
-   * </p>
-   * <p>
-   * Intended to be overwritten by clients.
-   * </p>
-   */
-  @SuppressWarnings("unused") //$NON-NLS-1$
-  protected IMenuManager createSubMenuManager( final IMenuManager menuManager )
-  {
-    return null;
   }
 
   /**
@@ -267,5 +239,4 @@ public class FeatureSelectionActionGroup extends ActionGroup
     subToolBarManager.setVisible( true );
     return subToolBarManager;
   }
-
 }
