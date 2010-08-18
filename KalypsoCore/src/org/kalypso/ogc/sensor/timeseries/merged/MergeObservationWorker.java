@@ -62,6 +62,7 @@ import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHandler;
+import org.kalypso.ogc.sensor.timeseries.datasource.IDataSourceItem;
 
 /**
  * merges multiple observation sources to one single result observation.
@@ -76,7 +77,6 @@ public class MergeObservationWorker implements ICoreRunnableWithProgress
     @Override
     public int compare( final ObservationSource source1, final ObservationSource source2 )
     {
-
       final Date date1 = getDate( source1 );
       final Date date2 = getDate( source2 );
 
@@ -155,7 +155,7 @@ public class MergeObservationWorker implements ICoreRunnableWithProgress
         }
         else
         {
-          data = getFromSourceData( srcObservation.getMetadataList(), srcModel );
+          data = getFromSourceData( srcObservation, srcModel );
         }
 
         for( final Object[] values : data )
@@ -175,14 +175,14 @@ public class MergeObservationWorker implements ICoreRunnableWithProgress
     return StatusUtilities.createStatus( statis, "Combing tuple models." );
   }
 
-  private Object[][] getFromSourceData( final MetadataList srcMetadata, final ITupleModel srcModel ) throws SensorException
+  private Object[][] getFromSourceData( final IObservation srcObservation, final ITupleModel srcModel ) throws SensorException
   {
     final List<Object[]> data = new ArrayList<Object[]>();
 
     final AxisMapping mapping = new AxisMapping( m_axes, srcModel.getAxisList() );
     final IAxis[] srcAxes = mapping.getSourceAxes();
 
-    final DataSourceHandler srcMetaDataHandler = new DataSourceHandler( srcMetadata );
+    final DataSourceHandler srcMetaDataHandler = new DataSourceHandler( srcObservation.getMetadataList() );
     final DataSourceHandler destMetaDataHandler = new DataSourceHandler( m_metadata );
 
     for( int index = 0; index < srcModel.getCount(); index++ )
@@ -203,14 +203,16 @@ public class MergeObservationWorker implements ICoreRunnableWithProgress
           {
             final Integer srcIndex = (Integer) srcModel.getElement( index, srcAxis );
 
-            // FIXME hack remove
             final String identifier;
             final String repository;
 
             if( srcIndex == null )
             {
-              identifier = "n/a";
-              repository = "n/a";
+              /** *grml* fallback - this should never happen! */
+              identifier = IDataSourceItem.SOURCE_UNKNOWN;
+              repository = IDataSourceItem.SOURCE_UNKNOWN;
+
+              System.out.println( String.format( "Fallback: %s - found missing source reference.\nSource observation href: %s", this.getClass().getName(), srcObservation.getHref() ) );
             }
             else
             {

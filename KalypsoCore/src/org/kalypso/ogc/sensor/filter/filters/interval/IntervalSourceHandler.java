@@ -102,7 +102,6 @@ public final class IntervalSourceHandler
 
   public static void mergeSources( final String[] baseSources, final String[] otherSources, final boolean baseSourceWasEmpty )
   {
-
     final Set<String> merged = new HashSet<String>();
 
     /** collect merged sources */
