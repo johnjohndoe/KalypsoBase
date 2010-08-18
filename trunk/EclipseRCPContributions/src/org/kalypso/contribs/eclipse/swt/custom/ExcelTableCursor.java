@@ -100,7 +100,8 @@ public class ExcelTableCursor extends TableCursor
       final boolean allowLeftRight = !(e.widget instanceof Text);
 
       // handle cursor moving
-      int dx = 0, dy = 0;
+      int dx = 0;
+      int dy = 0;
 
       if( e.keyCode == SWT.ARROW_LEFT && allowLeftRight )
         dx = -1;
@@ -357,6 +358,7 @@ public class ExcelTableCursor extends TableCursor
     table.addKeyListener( m_tableKeyListener );
     table.addFocusListener( m_tableFocusListener );
     table.addMouseListener( m_tableMouseListener );
+
     viewer.addSelectionChangedListener( m_tableSelectionListener );
 
     // BUGFIX: always invalidate self if table was redrawn. Fixes: if a row was deleted/added,
@@ -401,6 +403,7 @@ public class ExcelTableCursor extends TableCursor
 
     final TableItem row = getRow();
     final int widgetCol = getColumn();
+
     // change background color when cell is not editable
     final boolean canModify = checkCanModify( row, widgetCol );
     setBackground( canModify ? getCanEditColor() : getCannotEditColor() );
@@ -409,6 +412,8 @@ public class ExcelTableCursor extends TableCursor
     {
       final Table table = (Table) getParent();
       table.setSelection( new TableItem[] { row } );
+      // TODO: sometimes the selection event already has been sent, so we now send it a second time.
+      table.notifyListeners( SWT.Selection, null );
     }
   }
 
