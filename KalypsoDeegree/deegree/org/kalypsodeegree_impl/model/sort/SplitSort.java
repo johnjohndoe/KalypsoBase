@@ -612,17 +612,15 @@ public class SplitSort implements FeatureList
   @Override
   public Object set( final int index, final Object newItem )
   {
-    final Envelope newEnv = getEnvelope( newItem );
-
     synchronized( this )
     {
       final Object oldItem = m_items.set( index, newItem );
-      if( m_index != null )
-      {
-        // remove with null envelope, in order not to break the synchronization code by calling getEnvelope
-        m_index.remove( null, oldItem );
-        m_index.insert( newEnv, newItem );
-      }
+
+      // We cannot just remove the old item from the list,
+      // else we get problems if the element is contained multiple times
+      // This happens especially on the swap operation
+      invalidate();
+
       return oldItem;
     }
   }
