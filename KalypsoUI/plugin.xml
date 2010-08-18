@@ -60,6 +60,7 @@
 				<groupMarker name="tabelle"></groupMarker>
 				<separator name="spalten"></separator>
 				<separator name="edit"></separator>
+				<separator name="selection" />
 			</menu>
 			<menu label="%org.kalypso.ui.editors.tableeditor.columnmenu" path="org.kalypso.ui.editors.tableeditor.menu/spalten" id="org.kalypso.ui.editors.tableeditor.columnmenu">
 				<separator name="spaltenMenu"></separator>

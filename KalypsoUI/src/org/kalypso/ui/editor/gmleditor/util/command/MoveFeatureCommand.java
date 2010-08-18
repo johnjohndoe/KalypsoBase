@@ -40,7 +40,6 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.gmleditor.util.command;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -140,8 +139,6 @@ public class MoveFeatureCommand implements ICommand
 
     Collections.swap( list, currentIndex, newIndex );
 
-    final List<Feature> feList = new ArrayList<Feature>();
-    feList.add( m_parentFeature );
     final GMLWorkspace workspace = m_parentFeature.getWorkspace();
     workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, m_parentFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_MOVE ) );
   }

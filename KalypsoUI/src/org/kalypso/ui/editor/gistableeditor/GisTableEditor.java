@@ -72,6 +72,7 @@ import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
@@ -150,8 +151,12 @@ public class GisTableEditor extends AbstractEditorPart implements IEditorPart, I
   @Override
   public void dispose( )
   {
-    getSite().setSelectionProvider( this );
-    m_layerTable.dispose();
+    final IWorkbenchPartSite site = getSite();
+    if( site != null )
+      site.setSelectionProvider( this );
+
+    if( m_layerTable != null )
+      m_layerTable.dispose();
 
     super.dispose();
   }
@@ -217,10 +222,7 @@ public class GisTableEditor extends AbstractEditorPart implements IEditorPart, I
       @Override
       public void menuAboutToShow( final IMenuManager manager )
       {
-        manager.add( new GroupMarker( IWorkbenchActionConstants.MB_ADDITIONS ) );
-        manager.add( new Separator() );
-        // mgr.add(selectAllAction);
-        appendSpaltenActions( manager );
+        handleContextMenuAboutToShow( manager );
       }
     } );
 
@@ -240,6 +242,23 @@ public class GisTableEditor extends AbstractEditorPart implements IEditorPart, I
     {
       e.printStackTrace();
     }
+  }
+
+  protected void handleContextMenuAboutToShow( final IMenuManager manager )
+  {
+    appendNewFeatureActions( manager );
+    manager.add( new GroupMarker( IWorkbenchActionConstants.MB_ADDITIONS ) );
+    manager.add( new Separator() );
+    // mgr.add(selectAllAction);
+    appendSpaltenActions( manager );
+  }
+
+  private void appendNewFeatureActions( final IMenuManager manager )
+  {
+    final IMenuManager newFeatureMenu = new MenuManager( Messages.getString( "org.kalypso.ui.editor.actions.FeatureActionUtilities.7" ) );
+    manager.add( newFeatureMenu );
+    GisTableEditorActionBarContributor.fillNewFeatureMenu( newFeatureMenu, this );
+
   }
 
   @Override
@@ -344,5 +363,13 @@ public class GisTableEditor extends AbstractEditorPart implements IEditorPart, I
     final IWizardPage page = new ExportTableOptionsPage( "optionPage", Messages.getString( "org.kalypso.ui.editor.gistableeditor.GisTableEditor.6" ), ImageProvider.IMAGE_UTIL_BERICHT_WIZ ); //$NON-NLS-1$ //$NON-NLS-2$
 
     return new IWizardPage[] { page };
+  }
+
+  public IKalypsoFeatureTheme getFeatureTheme( )
+  {
+    if( m_layerTable == null )
+      return null;
+
+    return m_layerTable.getTheme();
   }
 }

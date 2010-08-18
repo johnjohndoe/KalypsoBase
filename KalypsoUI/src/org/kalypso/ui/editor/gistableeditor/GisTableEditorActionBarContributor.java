@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,37 +36,62 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.gistableeditor;
 
 import org.eclipse.jface.action.IContributionItem;
+import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionProvider;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.actions.ActionContext;
 import org.eclipse.ui.actions.ActionFactory;
-import org.eclipse.ui.part.EditorActionBarContributor;
 import org.kalypso.contribs.eclipse.ui.actions.RetargetActionManager;
 import org.kalypso.contribs.eclipse.ui.actions.RetargetActionManager.RetargetInfo;
+import org.kalypso.i18n.Messages;
 import org.kalypso.metadoc.IExportTargetModes;
 import org.kalypso.metadoc.ui.ExportAction;
 import org.kalypso.metadoc.ui.ExportActionContributor;
+import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ogc.gml.selection.IFeatureSelection;
+import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
+import org.kalypso.ui.editor.AbstractEditorActionBarContributor;
+import org.kalypso.ui.editor.actions.FeatureSelectionActionGroup;
+import org.kalypso.ui.editor.actions.NewFeatureScope;
+import org.kalypso.ui.editor.actions.SelectionManagedMenu;
 import org.kalypso.ui.editor.gistableeditor.actions.CopyEditorPartAction;
 import org.kalypso.ui.editor.gistableeditor.actions.PasteEditorPartAction;
+import org.kalypsodeegree.model.feature.FeatureList;
 
 /**
- * @author belger
+ * @author Gernot Belger
  */
-public class GisTableEditorActionBarContributor extends EditorActionBarContributor
+public class GisTableEditorActionBarContributor extends AbstractEditorActionBarContributor
 {
+  private static final String GIS_TABLE_MENU_ID = "org.kalypso.ui.editors.tableeditor.menu";
+
+  private static final String GROUP_SELECTION = "selection";//$NON-NLS-1$
+
+  private static final String NEW_FEATURE_MENU = "newFeatureMenu";//$NON-NLS-1$
+
   private static final String M_SPALTEN = "spaltenSubMenu"; //$NON-NLS-1$
+
+  private final FeatureSelectionActionGroup m_featureSelectionActionGroup = new FeatureSelectionActionGroup();
 
   private ExportAction[] m_exportActions = null;
 
-  private RetargetActionManager m_retargetManager = new RetargetActionManager();
+  private final RetargetActionManager m_retargetManager = new RetargetActionManager();
+
+  private final SelectionManagedMenu m_selectionManagedMenu = new SelectionManagedMenu( GIS_TABLE_MENU_ID ); //$NON-NLS-1$
 
   public GisTableEditorActionBarContributor( )
   {
@@ -85,11 +110,18 @@ public class GisTableEditorActionBarContributor extends EditorActionBarContribut
   @Override
   public void init( final IActionBars bars )
   {
-    bars.getGlobalActionHandler( M_SPALTEN );
+    m_selectionManagedMenu.setGroupName( GROUP_SELECTION );
+
+    m_featureSelectionActionGroup.addManagedMenu( m_selectionManagedMenu );
+    m_featureSelectionActionGroup.setContext( new ActionContext( StructuredSelection.EMPTY ) );
+    m_featureSelectionActionGroup.fillActionBars( bars );
 
     final IWorkbenchPage page = getPage();
 
     m_retargetManager.registerGlobalActionHandlers( bars );
+
+    final IMenuManager gisTableMenuManager = bars.getMenuManager().findMenuUsingPath( GIS_TABLE_MENU_ID );
+    createNewMenu( gisTableMenuManager );
 
     bars.updateActionBars();
 
@@ -102,6 +134,54 @@ public class GisTableEditorActionBarContributor extends EditorActionBarContribut
     super.init( bars );
   }
 
+  private void createNewMenu( final IMenuManager menuManager )
+  {
+    if( menuManager == null )
+      return;
+
+    final IContributionItem existingMenu = menuManager.find( NEW_FEATURE_MENU );
+    if( existingMenu != null )
+      return;
+
+    final MenuManager newFeatureMenu = new MenuManager( Messages.getString( "org.kalypso.ui.editor.actions.FeatureActionUtilities.7" ), NEW_FEATURE_MENU );
+    menuManager.appendToGroup( GROUP_SELECTION, newFeatureMenu );
+    newFeatureMenu.setRemoveAllWhenShown( true );
+    newFeatureMenu.addMenuListener( new IMenuListener()
+    {
+      @Override
+      public void menuAboutToShow( final IMenuManager manager )
+      {
+        fillNewFeatureMenu( manager, getActiveEditor() );
+      }
+    } );
+  }
+
+  static void fillNewFeatureMenu( final IMenuManager newFeatureMenu, final IEditorPart activeEditor )
+  {
+    // TODO: quite hacky how we access all these stuff.....
+    if( !(activeEditor instanceof GisTableEditor) )
+      return;
+
+    final GisTableEditor tableEditor = (GisTableEditor) activeEditor;
+    final IKalypsoFeatureTheme theme = tableEditor.getFeatureTheme();
+    final FeatureList featureList = theme.getFeatureList();
+
+    final ISelectionProvider selectionProvider = tableEditor.getSite().getSelectionProvider();
+    final ISelection selection = selectionProvider.getSelection();
+    if( !(selection instanceof IFeatureSelection) )
+      return;
+
+    final IFeatureSelection fs = (IFeatureSelection) selection;
+    final IFeatureSelectionManager selectionManager = fs.getSelectionManager();
+
+    // HACK: we know this works, as this must be the TreeFeatureSelection here
+    final CommandableWorkspace workspace = fs.getWorkspace( null );
+
+    final NewFeatureScope scope = new NewFeatureScope( workspace, featureList, selectionManager );
+    NewFeatureScope.createFromTreeSelection( workspace, fs, selectionManager );
+    scope.addMenuItems( newFeatureMenu );
+  };
+
   /**
    * @see org.eclipse.ui.part.EditorActionBarContributor#dispose()
    */
@@ -112,6 +192,9 @@ public class GisTableEditorActionBarContributor extends EditorActionBarContribut
     final IActionBars bars = getActionBars();
     if( page != null )
       m_retargetManager.disposeActions( bars, page );
+
+    m_featureSelectionActionGroup.dispose();
+    m_selectionManagedMenu.disposeMenu();
 
     bars.updateActionBars();
 
@@ -131,30 +214,35 @@ public class GisTableEditorActionBarContributor extends EditorActionBarContribut
     if( m_exportActions == null )
       m_exportActions = ExportActionContributor.contributeActions( targetEditor, "org.kalypso.ui.editors.tableeditor.menu/tabelle", "edit", IExportTargetModes.MODE_EXPERT ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    for( int i = 0; i < m_exportActions.length; i++ )
-      m_exportActions[i].setActivePart( targetEditor );
+    for( final ExportAction m_exportAction : m_exportActions )
+      m_exportAction.setActivePart( targetEditor );
 
-    // TODO ExportActionContributor.contributeAction macht auch schon sowas.
-    // könnte man daraus eine Helper-Klasse schreiben?
+    m_featureSelectionActionGroup.setPart( targetEditor );
+
     if( targetEditor != null )
     {
       final IMenuManager menuManager = getActionBars().getMenuManager();
-      final IMenuManager tableMenu = menuManager.findMenuUsingPath( "org.kalypso.ui.editors.tableeditor.menu" ); //$NON-NLS-1$
+      final IMenuManager tableMenu = menuManager.findMenuUsingPath( GIS_TABLE_MENU_ID ); //$NON-NLS-1$
       if( tableMenu != null )
       {
+        createNewMenu( tableMenu );
+
+        // TODO: strange: what does that do?
         final IContributionItem oldItem = tableMenu.remove( M_SPALTEN );
         if( oldItem != null )
           oldItem.dispose();
-
-        // MenuManager manager = new MenuManager("spalten1");
-        // GisTableEditor gisTableEditor = ( (GisTableEditor)targetEditor );
-        //
-        // final MenuManager menuMgr = new MenuManager( "Spalten", M_SPALTEN );
-        // gisTableEditor.createSpaltenMenu( menuMgr );
-        // spaltenMenu.add( new Action( "Hallo" ) { /* dummy item, damit das
-        // Menu überhaupt eingebaut wird */} );
-        // tableMenu.appendToGroup( "spalten", spaltenMenu );
       }
     }
+
+    m_featureSelectionActionGroup.updateActionBars();
+
   }
+
+  @Override
+  protected void handleEditorSelectionChanged( final ISelectionProvider provider )
+  {
+    m_featureSelectionActionGroup.getContext().setSelection( provider.getSelection() );
+    m_featureSelectionActionGroup.updateActionBars();
+  }
+
 }

@@ -130,7 +130,7 @@ public class NewFeatureScope
     return newMenuManager;
   }
 
-  private void addMenuItems( final IMenuManager newMenuManager )
+  public void addMenuItems( final IMenuManager newMenuManager )
   {
     if( !isValid() )
       return;
