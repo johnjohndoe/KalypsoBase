@@ -317,9 +317,7 @@ public final class GmlSerializer
   {
     TimeLogger perfLogger = null;
     if( KalypsoCoreDebug.PERF_SERIALIZE_GML.isEnabled() )
-    {
       perfLogger = new TimeLogger( Messages.getString( "org.kalypso.ogc.gml.serialize.GmlSerializer.7" ) ); //$NON-NLS-1$
-    }
 
     final IFeatureProviderFactory providerFactory = factory == null ? DEFAULT_FACTORY : factory;
     final XMLReader xmlReader = createXMLReader();

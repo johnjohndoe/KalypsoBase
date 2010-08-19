@@ -147,7 +147,20 @@ public abstract class FileChooserDelegateFile implements IFileChooserDelegate
   private String getFileName( final File currentFile )
   {
     if( currentFile == null )
-      return "";
+    {
+      final String[] filterExtensions = getFilterExtensions();
+      if( filterExtensions.length == 0 )
+        return "";
+
+      final String ext = filterExtensions[0];
+      if( ext.equals( "*.*" ) )
+        return "";
+
+      if( ext.startsWith( "*" ) )
+        return ext;
+
+      return "*" + ext;
+    }
 
     return currentFile.getName();
   }

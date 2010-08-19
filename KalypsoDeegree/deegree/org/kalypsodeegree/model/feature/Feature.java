@@ -50,12 +50,14 @@ import org.kalypsodeegree.model.geometry.GM_Object;
  */
 public interface Feature extends BaseFeature, Deegree2Feature
 {
-  QName QN_NAME = new QName( NS.GML3, "name" );
+  QName QN_NAME = new QName( NS.GML3, "name" ); //$NON-NLS-1$
 
-  QName QN_DESCRIPTION = new QName( NS.GML3, "description" );
+  QName QN_DESCRIPTION = new QName( NS.GML3, "description" ); //$NON-NLS-1$
+
+  QName QN_BOUNDED_BY = new QName( NS.GML3, "boundedBy" ); //$NON-NLS-1$
 
   /** QName of gml's gml:_Feature */
-  QName QNAME_FEATURE = new QName( NS.GML3, "_Feature" );
+  QName QNAME_FEATURE = new QName( NS.GML3, "_Feature" ); //$NON-NLS-1$
 
   /** Returns the gml:name property of the bound feature. */
   String getName( );

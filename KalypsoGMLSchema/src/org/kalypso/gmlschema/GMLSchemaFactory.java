@@ -192,7 +192,7 @@ public class GMLSchemaFactory
       // we must decide for the first schema, which gml version it is
       // if we have no appinfo, default to gml2?
 
-      version = parsedGmlVersion == null ? "3.1.1" : parsedGmlVersion; //$NON-NLS-1$
+      version = parsedGmlVersion == null ? IGMLSchema.VERSION_GML3_1_1 : parsedGmlVersion; //$NON-NLS-1$
     }
     else
       version = gmlVersion;
