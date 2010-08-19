@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry exported="true" kind="lib" path="lib/opencsv/opencsv-2.2.jar" sourcepath="lib/opencsv/opencsv-2.2.src.zip"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="src" path="src"/>
@@ -13,7 +14,6 @@
 	<classpathentry exported="true" kind="lib" path="lib/jaxb_2_1_7/jaxb-xjc.jar" sourcepath="lib/jaxb_2_1_7/jaxb-xjc.src.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/jaxb_2_1_7/jaxb1-impl.jar" sourcepath="KalypsoCommonssrc.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/jaxb_2_1_7/jsr173_1.0_api.jar" sourcepath="KalypsoCommonssrc.zip"/>
-	<classpathentry exported="true" kind="lib" path="lib/opencsv/opencsv-2.0.jar" sourcepath="lib/opencsv/opencsv-2.0_source.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/commons-codec-1.4.jar" sourcepath="lib/commons-codec-1.4-sources.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/commons-collections-3.2.1.jar" sourcepath="lib/commons-collections-3.2.1-sources.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/commons-io-1.4.jar" sourcepath="lib/commons-io-1.4-sources.jar"/>
