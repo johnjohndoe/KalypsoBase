@@ -49,9 +49,9 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.kalypso.contribs.eclipse.swt.layout.LayoutHelper;
 
 /**
  * @author Dirk Kuch
@@ -93,9 +93,7 @@ public class ElementsComposite extends Composite
     m_selectedPage = selectedPage;
     m_style = style;
 
-    final GridLayout layout = new GridLayout();
-    layout.marginWidth = 0;
-    this.setLayout( layout );
+    this.setLayout( LayoutHelper.createGridLayout() );
 
     update();
   }
@@ -134,9 +132,8 @@ public class ElementsComposite extends Composite
     }
 
     m_body = m_toolkit.createComposite( this );
-    final GridLayout layout = new GridLayout();
-    layout.marginWidth = 0;
-    m_body.setLayout( layout );
+
+    m_body.setLayout( LayoutHelper.createGridLayout() );
     m_body.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
 
     if( m_pages.length > 1 && m_style != SWT.BOTTOM )
@@ -199,6 +196,5 @@ public class ElementsComposite extends Composite
         update();
       }
     } );
-
   }
 }
