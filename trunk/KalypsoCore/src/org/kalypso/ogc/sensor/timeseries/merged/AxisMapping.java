@@ -57,20 +57,20 @@ public class AxisMapping
   /** map<baseAxis, axis> */
   private final Map<IAxis, IAxis> m_mapping = new HashMap<IAxis, IAxis>();
 
-  private final IAxis[] m_baseAxes;
+  private final IAxis[] m_destinationAxes;
 
   /**
    * maps axes to base result model axes
    * 
-   * @param baseAxes
+   * @param destinationAxes
    *          are the axes of the destination tuple model
    * @param axes
    *          map axes to result model baseAxes
    */
-  public AxisMapping( final IAxis[] baseAxes, final IAxis[] axes )
+  public AxisMapping( final IAxis[] destinationAxes, final IAxis[] axes )
   {
-    m_baseAxes = baseAxes;
-    for( final IAxis base : baseAxes )
+    m_destinationAxes = destinationAxes;
+    for( final IAxis base : destinationAxes )
     {
       final IAxis fitting = find( base, axes );
       if( fitting == null )
@@ -105,21 +105,34 @@ public class AxisMapping
     return m_mapping.values().toArray( new IAxis[] {} );
   }
 
-  public int getBaseIndex( final IAxis srcAxis )
+  public int getDestinationIndex( final IAxis srcAxis )
   {
     final Set<Entry<IAxis, IAxis>> entries = m_mapping.entrySet();
     for( final Entry<IAxis, IAxis> entry : entries )
     {
       if( entry.getValue().equals( srcAxis ) )
-        return ArrayUtils.indexOf( m_baseAxes, entry.getKey() );
+        return ArrayUtils.indexOf( m_destinationAxes, entry.getKey() );
     }
 
-    return ArrayUtils.indexOf( m_baseAxes, srcAxis );
+    return ArrayUtils.indexOf( m_destinationAxes, srcAxis );
+  }
+
+  public IAxis getDestinationAxis( final IAxis srcAxis )
+  {
+    final Set<Entry<IAxis, IAxis>> entries = m_mapping.entrySet();
+    for( final Entry<IAxis, IAxis> entry : entries )
+    {
+      final IAxis destAxis = entry.getValue();
+      if( destAxis.equals( srcAxis ) )
+        return destAxis;
+    }
+
+    return null;
   }
 
   public IAxis getDataSourceAxis( )
   {
-    return AxisUtils.findDataSourceAxis( m_baseAxes );
+    return AxisUtils.findDataSourceAxis( m_destinationAxes );
   }
 
 }
