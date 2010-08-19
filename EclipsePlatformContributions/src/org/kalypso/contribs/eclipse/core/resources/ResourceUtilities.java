@@ -52,11 +52,11 @@ import org.kalypso.contribs.eclipse.core.runtime.PathUtils;
  * 
  * @author schlienger (14.06.2005)
  */
-public class ResourceUtilities
+public final class ResourceUtilities
 {
   private ResourceUtilities( )
   {
-    // do not instanciate
+    // do not instantiate
   }
 
   /**
