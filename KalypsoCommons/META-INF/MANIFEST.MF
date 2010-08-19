@@ -13,7 +13,6 @@ Bundle-ClassPath: .,
  lib/jaxb_2_1_7/jaxb-xjc.jar,
  lib/jaxb_2_1_7/jaxb1-impl.jar,
  lib/jaxb_2_1_7/jsr173_1.0_api.jar,
- lib/opencsv/opencsv-2.0.jar,
  lib/commons-codec-1.4.jar,
  lib/commons-collections-3.2.1.jar,
  lib/commons-io-1.4.jar,
@@ -30,7 +29,8 @@ Bundle-ClassPath: .,
  lib/xmlbeans-2.5/xbean_xpath.jar,
  lib/xmlbeans-2.5/xbean.jar,
  lib/xmlbeans-2.5/xmlbeans-qname.jar,
- lib/xmlbeans-2.5/xmlpublic.jar
+ lib/xmlbeans-2.5/xmlpublic.jar,
+ lib/opencsv/opencsv-2.2.jar
 Bundle-Activator: org.kalypso.commons.KalypsoCommonsPlugin
 Bundle-Vendor: kalypsobase.sourceforge.net
 Bundle-Localization: plugin
