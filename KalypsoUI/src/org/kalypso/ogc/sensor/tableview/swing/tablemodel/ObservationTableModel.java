@@ -426,7 +426,7 @@ public class ObservationTableModel extends AbstractTableModel implements IObserv
             if( statusAxis != null )
               model.setElement( ix, KalypsoStati.STATUS_USERMOD, statusAxis );
 
-            changeDataSource( observation, model, ix, IDataSourceItem.SOURCE_UNKNOWN );
+            changeDataSource( observation, model, ix, IDataSourceItem.SOURCE_MANUAL_CHANGED );
 
             // then set value
             model.setElement( ix, changedValue, valueAxis );
