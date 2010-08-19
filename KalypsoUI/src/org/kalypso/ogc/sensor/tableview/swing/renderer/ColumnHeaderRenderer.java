@@ -151,7 +151,7 @@ public class ColumnHeaderRenderer implements TableCellRenderer
       final TableViewColumn tvc = (TableViewColumn) element;
       final IObservation observation = tvc.getObservation();
       final IRequest arguments = tvc.getArguments();
-      final IAxis valueAxis = tvc.getAxis();
+      final IAxis valueAxis = tvc.getValueAxis();
       final ITupleModel values = observation.getValues( arguments );
 
       final int mergedStatus = KalypsoStatusUtils.getStatus( values, valueAxis );
@@ -180,7 +180,7 @@ public class ColumnHeaderRenderer implements TableCellRenderer
         return null;
 
       final IRequest arguments = tvc.getArguments();
-      final IAxis valueAxis = tvc.getAxis();
+      final IAxis valueAxis = tvc.getValueAxis();
       final ITupleModel values = observation.getValues( arguments );
 
       final int mergedStatus = KalypsoStatusUtils.getStatus( values, valueAxis );
@@ -202,7 +202,7 @@ public class ColumnHeaderRenderer implements TableCellRenderer
     final TableViewColumn tvc = (TableViewColumn) element;
 
     final IObservation observation = tvc.getObservation();
-    final IAxis valueAxis = tvc.getAxis();
+    final IAxis valueAxis = tvc.getValueAxis();
 
     final StringBuffer msg = new StringBuffer();
     msg.append( Messages.getString( "org.kalypso.ogc.sensor.tableview.swing.renderer.ColumnHeaderRenderer.4" ) ); //$NON-NLS-1$

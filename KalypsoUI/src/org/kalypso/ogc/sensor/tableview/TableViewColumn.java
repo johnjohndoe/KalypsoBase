@@ -142,7 +142,7 @@ public class TableViewColumn extends ObsViewItem
     return m_valueAxis.getDataClass();
   }
 
-  public IAxis getAxis( )
+  public IAxis getValueAxis( )
   {
     return m_valueAxis;
   }

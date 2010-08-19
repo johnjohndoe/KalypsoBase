@@ -70,10 +70,13 @@ import org.kalypso.ogc.sensor.tableview.TableViewColumn;
 import org.kalypso.ogc.sensor.tableview.rules.ITableViewRules;
 import org.kalypso.ogc.sensor.tableview.rules.RenderingRule;
 import org.kalypso.ogc.sensor.tableview.rules.RulesFactory;
+import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
+import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHandler;
+import org.kalypso.ogc.sensor.timeseries.datasource.IDataSourceItem;
 
 /**
- * TableModel das mit IObservation benutzt werden kann. Kann in eine JTable benutzt werden.
+ * table model which handles an IObservation. Can be used by JTable
  * <p>
  * Changes made in the table are directly reflected into the observations models.
  * 
@@ -139,7 +142,7 @@ public class ObservationTableModel extends AbstractTableModel implements IObserv
   }
 
   /**
-   * Adds a column to this tablemodel at the given position
+   * Adds a column to this table model at the given position
    */
   private void addColumn( final TableViewColumn col, final int pos ) throws SensorException
   {
@@ -168,7 +171,7 @@ public class ObservationTableModel extends AbstractTableModel implements IObserv
 
       // values of observation of the column
       final IObservation obs = col.getObservation();
-      final IAxis axis = col.getAxis();
+      final IAxis axis = col.getValueAxis();
       if( obs == null || axis == null )
         return;
 
@@ -237,7 +240,7 @@ public class ObservationTableModel extends AbstractTableModel implements IObserv
       if( m_columns.size() == 0 )
         return null;
 
-      if( columnIndex == 0 )
+      if( isDateColumn( columnIndex ) )
         return m_sharedAxis;
 
       return (m_columns.get( columnIndex - 1 ));
@@ -255,7 +258,7 @@ public class ObservationTableModel extends AbstractTableModel implements IObserv
       if( m_columns.size() == 0 )
         return String.class;
 
-      if( columnIndex == 0 )
+      if( isDateColumn( columnIndex ) )
         return m_sharedAxis.getDataClass();
 
       return m_columns.get( columnIndex - 1 ).getColumnClass();
@@ -273,7 +276,7 @@ public class ObservationTableModel extends AbstractTableModel implements IObserv
       if( m_columns.size() == 0 )
         return Messages.getString( "org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel.2" ); //$NON-NLS-1$
 
-      if( columnIndex == 0 )
+      if( isDateColumn( columnIndex ) )
         return m_sharedAxis.getName();
 
       return m_columns.get( columnIndex - 1 ).getName();
@@ -316,7 +319,7 @@ public class ObservationTableModel extends AbstractTableModel implements IObserv
       {
         final Object key = m_sharedModel.toArray()[rowIndex];
 
-        if( columnIndex == 0 )
+        if( isDateColumn( columnIndex ) )
           return key;
 
         try
@@ -325,7 +328,7 @@ public class ObservationTableModel extends AbstractTableModel implements IObserv
           final ITupleModel values = col.getObservation().getValues( col.getArguments() );
           final int ix = values.indexOf( key, col.getKeyAxis() );
           if( ix != -1 )
-            return values.getElement( ix, col.getAxis() );
+            return values.getElement( ix, col.getValueAxis() );
 
           return null;
         }
@@ -357,7 +360,7 @@ public class ObservationTableModel extends AbstractTableModel implements IObserv
   {
     synchronized( m_columns )
     {
-      if( columnIndex == 0 )
+      if( isDateColumn( columnIndex ) )
         return false;
 
       return m_columns.get( columnIndex - 1 ).isEditable();
@@ -383,46 +386,50 @@ public class ObservationTableModel extends AbstractTableModel implements IObserv
    * @see javax.swing.table.AbstractTableModel#setValueAt(java.lang.Object, int, int)
    */
   @Override
-  public void setValueAt( final Object aValue, final int rowIndex, final int columnIndex )
+  public void setValueAt( final Object changedValue, final int rowIndex, final int columnIndex )
   {
     synchronized( m_columns )
     {
-      // TRICKY: if value is null, do nothing (NOTE: the DoubleCellEditor used
-      // within our ObservationTable returns null when editing has been cancelled
-      // and in our case this means: don't modify the status)
-      if( aValue == null )
+      /*
+       * TRICKY: if value is null, do nothing (NOTE: the DoubleCellEditor used within our ObservationTable returns null
+       * when editing has been canceled and in our case this means: don't modify the status)
+       */
+      if( changedValue == null )
         return;
-
-      // date column is not editable!
-      if( columnIndex == 0 )
+      /* date column is not editable! */
+      else if( isDateColumn( columnIndex ) )
         return;
-
-      if( !isEditable( columnIndex - 1 ) )
+      else if( !isEditable( columnIndex - 1 ) )
         throw new IllegalStateException( "Trying to edit uneditable column" );
 
       final TableViewColumn col = m_columns.get( columnIndex - 1 );
 
       try
       {
-        final ITupleModel values = col.getObservation().getValues( col.getArguments() );
+        final IObservation observation = col.getObservation();
+
+        // request argument must be null - otherwise we are editing an different model and so the changes will get lost
+        final ITupleModel model = observation.getValues( null );
         final Object key = m_sharedModel.toArray()[rowIndex];
-        final int ix = values.indexOf( key, col.getKeyAxis() );
+        final int ix = model.indexOf( key, col.getKeyAxis() );
         if( ix != -1 )
         {
-          final IAxis valueAxis = col.getAxis();
-          final IAxis statusAxis = getStatusAxis( col.getObservation(), valueAxis );
+          final IAxis valueAxis = col.getValueAxis();
+          final IAxis statusAxis = getStatusAxis( observation, valueAxis );
 
-          final Object oldValue = values.getElement( ix, valueAxis );
-          if( !checkValuesEqual( aValue, oldValue ) )
+          final Object oldValue = model.getElement( ix, valueAxis );
+          if( !checkValuesEqual( changedValue, oldValue ) )
           {
             /* Only change value if really something has happened */
 
-            // first set status (may be overriden)
+            // first set status (may be overwritten)
             if( statusAxis != null )
-              values.setElement( ix, KalypsoStati.STATUS_USERMOD, statusAxis );
+              model.setElement( ix, KalypsoStati.STATUS_USERMOD, statusAxis );
+
+            changeDataSource( observation, model, ix, IDataSourceItem.SOURCE_UNKNOWN );
 
             // then set value
-            values.setElement( ix, aValue, valueAxis );
+            model.setElement( ix, changedValue, valueAxis );
 
             col.setDirty( true, this );
           }
@@ -436,6 +443,23 @@ public class ObservationTableModel extends AbstractTableModel implements IObserv
         throw new IllegalStateException( e.getLocalizedMessage() );
       }
     }
+  }
+
+  private void changeDataSource( final IObservation observation, final ITupleModel model, final int index, final String source ) throws SensorException
+  {
+    final IAxis dataSourceAxis = AxisUtils.findDataSourceAxis( model.getAxisList() );
+    if( dataSourceAxis == null )
+      return; // we didn't want to change the model
+
+    final DataSourceHandler handler = new DataSourceHandler( observation.getMetadataList() );
+    final int dataSourceIndex = handler.addDataSource( source, source );
+
+    model.setElement( index, Integer.valueOf( dataSourceIndex ), dataSourceAxis );
+  }
+
+  private boolean isDateColumn( final int columnIndex )
+  {
+    return columnIndex == 0;
   }
 
   /**
@@ -495,13 +519,13 @@ public class ObservationTableModel extends AbstractTableModel implements IObserv
       final TableViewColumn col = m_columns.get( column );
       try
       {// FIXME: this will reload the timeserie on every step....!
-        // FIXME: col.getTupleModel()!
+       // FIXME: col.getTupleModel()!
         final ITupleModel values = col.getObservation().getValues( col.getArguments() );
         final Object key = m_sharedModel.toArray()[row];
         final int ix = values.indexOf( key, col.getKeyAxis() );
         if( ix != -1 )
         {
-          final IAxis statusAxis = getStatusAxis( col.getObservation(), col.getAxis() );
+          final IAxis statusAxis = getStatusAxis( col.getObservation(), col.getValueAxis() );
           if( statusAxis != null )
           {
             final Number status = (Number) values.getElement( ix, statusAxis );

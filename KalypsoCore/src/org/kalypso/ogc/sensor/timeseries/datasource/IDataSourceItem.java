@@ -50,4 +50,6 @@ public interface IDataSourceItem
   String MD_DATA_SOURCE_ITEM_REPOSITORY = "Datenabruf_Repository_Quelle";
 
   String SOURCE_UNKNOWN = "source://unknown";
+
+  String SOURCE_MANUAL_CHANGED = "source://manual.changed";
 }
