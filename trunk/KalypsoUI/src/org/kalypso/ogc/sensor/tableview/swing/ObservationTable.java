@@ -51,6 +51,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.NumberFormat;
 import java.util.Date;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import java.util.TimeZone;
 
 import javax.swing.BoxLayout;
@@ -209,6 +211,24 @@ public class ObservationTable extends Panel implements IObsViewEventListener
 
     // removed in this.dispose()
     m_view.addObsViewEventListener( this );
+  }
+
+  /**
+   * @return for more robustness we prefer to handle selected rows by their unique date instead of an obscure table row
+   *         index!
+   */
+  public Date[] getSelectedEntries( )
+  {
+    final Set<Date> dates = new LinkedHashSet<Date>();
+
+    final int[] selectedRows = m_table.getSelectedRows();
+    for( final int row : selectedRows )
+    {
+      final Date date = (Date) m_model.getValueAt( row, 0 );
+      dates.add( date );
+    }
+
+    return dates.toArray( new Date[] {} );
   }
 
   private void addPopupMenu( final JTableHeader header )
