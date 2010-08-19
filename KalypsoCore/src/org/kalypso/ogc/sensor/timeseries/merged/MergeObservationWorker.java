@@ -196,7 +196,7 @@ public class MergeObservationWorker implements ICoreRunnableWithProgress
 
         for( final IAxis srcAxis : srcAxes )
         {
-          final int baseIndex = mapping.getBaseIndex( srcAxis );
+          final int baseIndex = mapping.getDestinationIndex( srcAxis );
 
           /* adjust data src informations (add to metadata) */
           if( AxisUtils.isDataSrcAxis( srcAxis ) )
@@ -250,7 +250,7 @@ public class MergeObservationWorker implements ICoreRunnableWithProgress
 
     final DataSourceHandler handler = new DataSourceHandler( m_metadata );
     final int dataSourceIndex = handler.addDataSource( href, href );
-    final int dataSourceValueIndex = mapping.getBaseIndex( mapping.getDataSourceAxis() );
+    final int dataSourceValueIndex = mapping.getDestinationIndex( mapping.getDataSourceAxis() );
 
     for( int index = 0; index < srcModel.getCount(); index++ )
     {
@@ -264,7 +264,7 @@ public class MergeObservationWorker implements ICoreRunnableWithProgress
         for( final IAxis srcAxis : srcAxes )
         {
           final Object value = srcModel.getElement( index, srcAxis );
-          final int baseIndex = mapping.getBaseIndex( srcAxis );
+          final int baseIndex = mapping.getDestinationIndex( srcAxis );
           values[baseIndex] = value;
         }
 
