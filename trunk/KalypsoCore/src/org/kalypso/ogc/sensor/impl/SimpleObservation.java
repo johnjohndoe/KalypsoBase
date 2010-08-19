@@ -307,4 +307,5 @@ public class SimpleObservation implements IObservation
   {
     return Messages.getString( "org.kalypso.ogc.sensor.impl.SimpleObservation.8" ) + m_name + Messages.getString( "org.kalypso.ogc.sensor.impl.SimpleObservation.10" ) + m_href; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
   }
+
 }
