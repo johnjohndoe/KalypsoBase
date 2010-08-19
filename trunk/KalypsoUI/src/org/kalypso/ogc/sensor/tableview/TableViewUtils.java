@@ -264,7 +264,7 @@ public final class TableViewUtils
 
         colCount++;
         final TypeColumn xmlCol = OTT_OF.createTypeColumn();
-        xmlCol.setAxis( col.getAxis().getName() );
+        xmlCol.setAxis( col.getValueAxis().getName() );
         xmlCol.setEditable( col.isEditable() );
         xmlCol.setId( "c" + String.valueOf( colCount ) ); //$NON-NLS-1$
         xmlCol.setName( col.getName() );
