@@ -139,9 +139,7 @@ public class GMLSchemaLoaderWithLocalCache
   private GMLSchema loadSchemaFromCatalog( final String gmlVersion, final URL schemaLocation )
   {
     final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
-    final GMLSchema schema = schemaCatalog.getSchema( gmlVersion, schemaLocation );
-
-    return schema;
+    return schemaCatalog.getSchema( gmlVersion, schemaLocation );
   }
 
   private GMLSchema loadSchemaFromCatalog( final String namespace, final String gmlVersion, final URL schemaLocation ) throws GMLSchemaException

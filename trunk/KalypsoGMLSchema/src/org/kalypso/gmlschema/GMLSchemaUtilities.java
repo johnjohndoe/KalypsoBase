@@ -275,7 +275,7 @@ public class GMLSchemaUtilities
     final String name = complexType.getName();
 
     // 1. check if it is a named type
-    // propably a typehanlder exists for this
+    // propably a typehandler exists for this
     if( name != null )
     {
       final QName typeQName = new QName( gmlSchema.getTargetNamespace(), name );
@@ -1150,11 +1150,16 @@ public class GMLSchemaUtilities
    */
   public static IFeatureType getFeatureTypeQuiet( final QName qname )
   {
+    final IGMLSchema schema = getSchemaQuiet( qname.getNamespaceURI() );
+    return schema.getFeatureType( qname );
+  }
+
+  public static IGMLSchema getSchemaQuiet( final String namespaceURI )
+  {
     try
     {
       final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
-      final GMLSchema schema = schemaCatalog.getSchema( qname.getNamespaceURI(), (String) null );
-      return schema.getFeatureType( qname );
+      return schemaCatalog.getSchema( namespaceURI, (String) null );
     }
     catch( final GMLSchemaException e )
     {
