@@ -1,8 +1,6 @@
 package de.openali.odysseus.chart.framework.view;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
@@ -28,7 +26,7 @@ public class TooltipHandler extends MouseAdapter implements MouseListener, Mouse
    * @see org.eclipse.swt.events.MouseAdapter#mouseDown(org.eclipse.swt.events.MouseEvent)
    */
   @Override
-  public void mouseDown( MouseEvent e )
+  public void mouseDown( final MouseEvent e )
   {
     m_mouseDown = true;
 
@@ -38,7 +36,7 @@ public class TooltipHandler extends MouseAdapter implements MouseListener, Mouse
    * @see org.eclipse.swt.events.MouseAdapter#mouseUp(org.eclipse.swt.events.MouseEvent)
    */
   @Override
-  public void mouseUp( MouseEvent e )
+  public void mouseUp( final MouseEvent e )
   {
     m_mouseDown = false;
 

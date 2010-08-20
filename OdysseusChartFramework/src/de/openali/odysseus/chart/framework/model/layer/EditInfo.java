@@ -22,7 +22,7 @@ public class EditInfo
   public Point m_pos;
 
   public String m_text;
-  
+
   public int m_mouseButton;
 
   public EditInfo( final ITooltipChartLayer editLayer, final IPaintable hoverFigure, final IPaintable editFigure, final Object editData, final String editText, final Point mousePos )
@@ -33,7 +33,7 @@ public class EditInfo
     m_data = editData;
     m_text = editText;
     m_pos = mousePos;
-    m_mouseButton=SWT.NONE;;
+    m_mouseButton = SWT.NONE;
   }
 
   public EditInfo( final EditInfo copyInfo )
