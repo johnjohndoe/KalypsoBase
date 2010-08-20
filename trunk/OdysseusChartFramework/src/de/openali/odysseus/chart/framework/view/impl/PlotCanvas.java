@@ -1,8 +1,6 @@
 package de.openali.odysseus.chart.framework.view.impl;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.eclipse.jface.resource.JFaceResources;
@@ -64,7 +62,7 @@ public class PlotCanvas extends Canvas implements PaintListener
     addControlListener( new ControlAdapter()
     {
       @Override
-      public void controlResized( ControlEvent e )
+      public void controlResized( final ControlEvent e )
       {
         disposeImages();
       }
@@ -87,7 +85,7 @@ public class PlotCanvas extends Canvas implements PaintListener
       m_bufferImg = null;
     }
 
-    for( Image img : m_layerImageMap.values() )
+    for( final Image img : m_layerImageMap.values() )
       img.dispose();
     m_layerImageMap.clear();
   }
@@ -161,7 +159,7 @@ public class PlotCanvas extends Canvas implements PaintListener
             m_layerImageMap.put( layer, createLayerImage( buffGc.getDevice(), screen, layer ) );
 
           final Image image = m_layerImageMap.get( layer );
-          Point point = m_layerPanOffsets.get( layer );
+          final Point point = m_layerPanOffsets.get( layer );
           if( point != null )
             buffGc.drawImage( image, -point.x, -point.y );
           else
@@ -227,7 +225,7 @@ public class PlotCanvas extends Canvas implements PaintListener
     final Rectangle screenArea = getClientArea();
     if( m_bufferImg == null )
     {
-      IChartLayer[] layers = m_layerManager.getLayers();
+      final IChartLayer[] layers = m_layerManager.getLayers();
       m_bufferImg = createImage( layers /* getNotPannedLayers() */, screenArea );
     }
 
@@ -325,7 +323,7 @@ public class PlotCanvas extends Canvas implements PaintListener
     redraw();
   }
 
-  public void setLayerManager( ILayerManager layerManager )
+  public void setLayerManager( final ILayerManager layerManager )
   {
     m_layerManager = layerManager;
 
@@ -340,12 +338,12 @@ public class PlotCanvas extends Canvas implements PaintListener
    * @param offset
    *          positive value moves buffer to right / down, negative value to left / up
    */
-  public void setPanOffset( IChartLayer[] layers, final Point offset )
+  public void setPanOffset( final IChartLayer[] layers, final Point offset )
   {
     final IChartLayer[] layerToPan = layers == null ? m_layerManager.getLayers() : layers;
-    for( IChartLayer iChartLayer : layerToPan )
+    for( final IChartLayer iChartLayer : layerToPan )
       m_layerPanOffsets.put( iChartLayer, offset );
-    
+
     if( m_bufferImg != null )
     {
       m_bufferImg.dispose();
