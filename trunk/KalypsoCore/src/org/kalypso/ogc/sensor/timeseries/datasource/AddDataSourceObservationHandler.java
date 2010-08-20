@@ -53,7 +53,6 @@ import org.kalypso.repository.IRepositoryItem;
  */
 public class AddDataSourceObservationHandler
 {
-
   private final IObservation m_observation;
 
   private final String m_itemIdentifier;
@@ -79,6 +78,9 @@ public class AddDataSourceObservationHandler
   {
     if( hasDataSouceAxis() )
       return m_observation;
+
+    // FIXME: this must be changed! On each access to the observation, a big request is sent. This makes
+    // the timeseris brwoser not useable any more!
 
     final AddDataSourceModelHandler handler = new AddDataSourceModelHandler( m_observation.getValues( null ) );
     final ITupleModel model = handler.extend();
