@@ -403,7 +403,7 @@ public class IntervalTupleModel extends AbstractTupleModel
     final DataSourceHandler handler = new DataSourceHandler( m_metadata );
     for( int i = 0; i < dataSourceAxes.length; i++ )
     {
-      final int dataSource = handler.addDataSource( sources[i], sources[i] );
+      final int dataSource = handler.addDataSource( sources[i], String.format( "filter://%s", IntervalFilter.class.getName() ) );
       model.setElement( targetRow, Integer.valueOf( dataSource ), dataSourceAxes[i] );
     }
   }
