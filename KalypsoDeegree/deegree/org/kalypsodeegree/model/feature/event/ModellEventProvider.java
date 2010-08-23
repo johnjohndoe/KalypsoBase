@@ -40,11 +40,11 @@ package org.kalypsodeegree.model.feature.event;
  */
 public interface ModellEventProvider
 {
-  public void addModellListener( final ModellEventListener listener );
+  void addModellListener( ModellEventListener listener );
 
-  public void removeModellListener( final ModellEventListener listener );
+  void removeModellListener( ModellEventListener listener );
 
-  public void fireModellEvent( final ModellEvent event );
+  void fireModellEvent( ModellEvent event );
 
-  public void dispose( );
+  void dispose( );
 }
