@@ -60,10 +60,10 @@ import org.kalypso.i18n.Messages;
 import org.kalypso.metadoc.IExportTargetModes;
 import org.kalypso.metadoc.ui.ExportAction;
 import org.kalypso.metadoc.ui.ExportActionContributor;
-import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
+import org.kalypso.ogc.gml.table.ILayerTableInput;
 import org.kalypso.ui.editor.AbstractEditorActionBarContributor;
 import org.kalypso.ui.editor.actions.FeatureSelectionActionGroup;
 import org.kalypso.ui.editor.actions.NewFeatureScope;
@@ -163,8 +163,13 @@ public class GisTableEditorActionBarContributor extends AbstractEditorActionBarC
       return;
 
     final GisTableEditor tableEditor = (GisTableEditor) activeEditor;
-    final IKalypsoFeatureTheme theme = tableEditor.getFeatureTheme();
-    final FeatureList featureList = theme.getFeatureList();
+    final ILayerTableInput tableInput = tableEditor.getTableInput();
+    if( tableInput == null )
+      return;
+
+    final FeatureList featureList = tableInput.getFeatureList();
+    if( featureList == null )
+      return;
 
     final ISelectionProvider selectionProvider = tableEditor.getSite().getSelectionProvider();
     final ISelection selection = selectionProvider.getSelection();
@@ -180,7 +185,7 @@ public class GisTableEditorActionBarContributor extends AbstractEditorActionBarC
     final NewFeatureScope scope = new NewFeatureScope( workspace, featureList, selectionManager );
     NewFeatureScope.createFromTreeSelection( workspace, fs, selectionManager );
     scope.addMenuItems( newFeatureMenu );
-  };
+  }
 
   /**
    * @see org.eclipse.ui.part.EditorActionBarContributor#dispose()

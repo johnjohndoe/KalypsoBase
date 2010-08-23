@@ -252,10 +252,11 @@ public final class GisTemplateHelper
     return (Gismapview) unmarshaller.getUnmarshallerHandler().getResult();
   }
 
-  public static Gistableview loadGisTableview( final IFile file ) throws CoreException, JAXBException
+  public static Gistableview loadGisTableview( final IStorage storage ) throws CoreException, JAXBException
   {
-    final InputSource is = new InputSource( file.getContents() );
-    is.setEncoding( file.getCharset() );
+    final InputSource is = new InputSource( storage.getContents() );
+    if( storage instanceof IEncodedStorage )
+      is.setEncoding( ((IEncodedStorage) storage).getCharset() );
     return GisTemplateHelper.loadGisTableview( is );
   }
 
@@ -287,7 +288,7 @@ public final class GisTemplateHelper
     final String orgSRSName = extent.getSrs();
     if( orgSRSName != null )
       try
-      {
+    {
         final String targetSRS = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
         if( (orgSRSName != null) && !orgSRSName.equals( targetSRS ) )
         {
@@ -295,12 +296,12 @@ public final class GisTemplateHelper
           final IGeoTransformer transformer = GeoTransformerFactory.getGeoTransformer( targetSRS );
           return transformer.transform( env );
         }
-      }
-      catch( final Exception e )
-      {
-        // we just print the error, but asume that we can return an envelope that is not converted
-        e.printStackTrace();
-      }
+    }
+    catch( final Exception e )
+    {
+      // we just print the error, but asume that we can return an envelope that is not converted
+      e.printStackTrace();
+    }
     return env;
   }
 

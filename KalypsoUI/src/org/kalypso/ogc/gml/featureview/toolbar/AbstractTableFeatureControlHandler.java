@@ -46,7 +46,7 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.kalypso.ogc.gml.featureview.control.AbstractToolbarFeatureControl;
-import org.kalypso.ogc.gml.featureview.control.TableFeatureContol;
+import org.kalypso.ogc.gml.featureview.control.TableFeatureControl;
 import org.kalypso.ogc.gml.om.table.command.ToolbarCommandUtils;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 
@@ -56,14 +56,14 @@ import org.kalypso.ogc.gml.selection.IFeatureSelection;
 public abstract class AbstractTableFeatureControlHandler extends AbstractHandler
 {
 
-  protected TableFeatureContol getFeatureControl( final ExecutionEvent event ) throws ExecutionException
+  protected TableFeatureControl getFeatureControl( final ExecutionEvent event ) throws ExecutionException
   {
     /* feature control */
     final AbstractToolbarFeatureControl control = ToolbarCommandUtils.findFeatureControl( event );
-    if( !(control instanceof TableFeatureContol) )
+    if( !(control instanceof TableFeatureControl) )
       throw new ExecutionException( "Couldn't find TableFeatureControl" ); //$NON-NLS-1$
 
-    return (TableFeatureContol) control;
+    return (TableFeatureControl) control;
   }
 
   protected IFeatureSelection getSelection( final ExecutionEvent event ) throws ExecutionException

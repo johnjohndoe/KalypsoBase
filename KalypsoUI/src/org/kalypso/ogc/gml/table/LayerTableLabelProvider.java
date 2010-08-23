@@ -40,8 +40,8 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.table;
 
+import org.eclipse.jface.viewers.BaseLabelProvider;
 import org.eclipse.jface.viewers.IColorProvider;
-import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
@@ -53,7 +53,7 @@ import org.kalypsodeegree.model.feature.Feature;
 /**
  * @author Belger
  */
-public class LayerTableLabelProvider implements ITableLabelProvider, IColorProvider
+public class LayerTableLabelProvider extends BaseLabelProvider implements ITableLabelProvider, IColorProvider
 {
   private final LayerTableViewer m_viewer;
 
@@ -63,15 +63,6 @@ public class LayerTableLabelProvider implements ITableLabelProvider, IColorProvi
   {
     m_viewer = layerTable;
     m_noSelectionColor = m_viewer.getControl().getBackground();
-  }
-
-  /**
-   * @see org.eclipse.jface.viewers.IBaseLabelProvider#dispose()
-   */
-  @Override
-  public void dispose( )
-  {
-    // nothing to dispose
   }
 
   /**
@@ -87,9 +78,10 @@ public class LayerTableLabelProvider implements ITableLabelProvider, IColorProvi
     final Feature feature = (Feature) element;
 
     final IFeatureModifier modifier = m_viewer.getModifier( columnIndex );
+    if( modifier == null )
+      return null;
 
-    final Image image = modifier == null ? null : modifier.getImage( feature );
-    return image;
+    return modifier.getImage( feature );
   }
 
   /**
@@ -100,7 +92,12 @@ public class LayerTableLabelProvider implements ITableLabelProvider, IColorProvi
   {
     // Extrawurscht, wenn Tabelle leer, da trotzdem mit index 0 aufgerufen wird
     if( m_viewer.getColumnCount() == 0 )
+    {
+      if( element instanceof String )
+        return (String) element;
+
       return ""; //$NON-NLS-1$
+    }
 
     final Feature feature = (Feature) element;
 
@@ -112,37 +109,9 @@ public class LayerTableLabelProvider implements ITableLabelProvider, IColorProvi
     final IPropertyType realPt = feature.getFeatureType().getProperty( pt.getQName() );
     if( realPt == null )
       return Messages.getString("org.kalypso.ogc.gml.table.LayerTableLabelProvider.0"); //$NON-NLS-1$
-    
+
     final String label = modifier.getLabel( feature );
     return label == null ? "" : label; //$NON-NLS-1$
-  }
-
-  /**
-   * @see org.eclipse.jface.viewers.IBaseLabelProvider#addListener(org.eclipse.jface.viewers.ILabelProviderListener)
-   */
-  @Override
-  public void addListener( final ILabelProviderListener listener )
-  {
-    // TODO Listener informieren, wenn sich der Wert eines Features geändert
-    // hat?
-  }
-
-  /**
-   * @see org.eclipse.jface.viewers.IBaseLabelProvider#isLabelProperty(java.lang.Object, java.lang.String)
-   */
-  @Override
-  public boolean isLabelProperty( final Object element, final String property )
-  {
-    return true;
-  }
-
-  /**
-   * @see org.eclipse.jface.viewers.IBaseLabelProvider#removeListener(org.eclipse.jface.viewers.ILabelProviderListener)
-   */
-  @Override
-  public void removeListener( final ILabelProviderListener listener )
-  {
-    // TODO
   }
 
   /**

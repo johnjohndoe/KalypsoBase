@@ -42,8 +42,9 @@ package org.kalypso.ui.editor.gistableeditor.actions;
 
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
-import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ogc.gml.table.ILayerTableInput;
+import org.kalypso.ogc.gml.table.LayerTableViewer;
 import org.kalypso.ui.editor.AbstractGisEditorActionDelegate;
 import org.kalypso.ui.editor.gistableeditor.GisTableEditor;
 import org.kalypso.ui.editor.mapeditor.WidgetActionPart;
@@ -78,13 +79,14 @@ public class UndoRedoDelegate extends AbstractGisEditorActionDelegate implements
     if( editor == null )
       return;
 
-    final IKalypsoFeatureTheme theme = editor.getLayerTable().getTheme();
+    final LayerTableViewer layerTable = editor.getLayerTable();
+    final ILayerTableInput input = layerTable.getInput();
 
-    final CommandableWorkspace workspace = theme.getWorkspace();
+    final CommandableWorkspace workspace = input.getWorkspace();
 
     if( (m_undo && workspace.canUndo()) || (!m_undo && workspace.canRedo()) )
       // TODO: this cannot work: null command not supported!
-      new CommandJob( null, workspace, theme.getSchedulingRule(), null, m_undo ? CommandJob.UNDO : CommandJob.REDO );
+      new CommandJob( null, workspace, null, null, m_undo ? CommandJob.UNDO : CommandJob.REDO );
 
     refreshAction( action, getSelection() );
   }
@@ -103,10 +105,10 @@ public class UndoRedoDelegate extends AbstractGisEditorActionDelegate implements
     final GisTableEditor editor = (GisTableEditor) part.getPart();
     if( editor != null )
     {
-      final IKalypsoFeatureTheme theme = editor.getLayerTable().getTheme();
-      if( theme != null )
+      final ILayerTableInput input = editor.getLayerTable().getInput();
+      if( input != null )
       {
-        final CommandableWorkspace workspace = theme.getWorkspace();
+        final CommandableWorkspace workspace = input.getWorkspace();
         if( workspace != null )
           bEnabled = m_undo ? workspace.canUndo() : workspace.canRedo();
       }
