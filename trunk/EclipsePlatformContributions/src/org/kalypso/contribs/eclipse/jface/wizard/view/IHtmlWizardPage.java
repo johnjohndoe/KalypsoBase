@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse.jface.wizard.view;
 
@@ -52,5 +52,5 @@ import org.eclipse.jface.wizard.IWizardPage;
 public interface IHtmlWizardPage extends IWizardPage
 {
   /** A URL to a html document. */
-  public URL getHtmlURL();
+  URL getHtmlURL( );
 }
