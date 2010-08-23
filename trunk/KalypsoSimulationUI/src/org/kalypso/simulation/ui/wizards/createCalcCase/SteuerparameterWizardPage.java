@@ -168,6 +168,9 @@ public class SteuerparameterWizardPage extends WizardPage
     // SPEICHERN
     final IFile controlFile = folder.getFile( ModelNature.CONTROL_NAME );
 
+    if( m_workspace == null )
+      return;
+
     final GMLWorkspace workspace = m_workspace;
     final SetContentHelper thread = new SetContentHelper()
     {
