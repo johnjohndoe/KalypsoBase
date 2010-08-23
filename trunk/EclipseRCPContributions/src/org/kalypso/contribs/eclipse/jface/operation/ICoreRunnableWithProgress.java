@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse.jface.operation;
 
@@ -51,5 +51,5 @@ import org.eclipse.core.runtime.IStatus;
  */
 public interface ICoreRunnableWithProgress
 {
-  public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException, InterruptedException;
+  IStatus execute( IProgressMonitor monitor ) throws CoreException, InvocationTargetException, InterruptedException;
 }
