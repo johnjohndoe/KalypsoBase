@@ -51,6 +51,8 @@ import org.apache.commons.lang.exception.ExceptionUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.graphics.Color;
@@ -213,6 +215,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
   {
     final FeatureviewType view = m_featureviewFactory.get( ft, getFeature() );
 
+    // TODO: dubious we shoudn't need to adapt the parent, that should already have beend done by the calling code
     if( m_formToolkit != null )
       m_formToolkit.adapt( parent );
 
@@ -264,8 +267,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     control.setToolTipText( tooltipText );
 
     /* If a toolkit is set, use it. */
-    if( m_formToolkit != null )
-      m_formToolkit.adapt( control, true, true );
+    applyToolkit( control );
 
     control.setData( DATA_CONTROL_TYPE, controlType );
 
@@ -295,6 +297,24 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     updateLayoutData( control );
 
     return control;
+  }
+
+  private void applyToolkit( final Control control )
+  {
+    if( m_formToolkit == null )
+      return;
+
+    if( control instanceof Composite )
+    {
+      final Composite panel = (Composite) control;
+      m_formToolkit.adapt( panel );
+
+      final Control[] children = panel.getChildren();
+      for( final Control child : children )
+        applyToolkit( child );
+    }
+    else
+      m_formToolkit.adapt( control, true, true );
   }
 
   private void updateLayoutData( final Control control )
@@ -453,7 +473,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     }
 
     /* TODO: move all from above into the factory method */
-    final IFeatureControlFactory controlFactory = createControlFactory( controlType );
+    final IFeatureControlFactory controlFactory = createControlFactory( parent, controlType );
     final IFeatureControl featureControl = createFeatureControl( controlFactory, feature, ftp, controlType, annotation );
     final Control control = featureControl.createControl( parent, style );
     addFeatureControl( featureControl );
@@ -472,13 +492,15 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
   }
 
   // TODO: use extension point instead?
-  private IFeatureControlFactory createControlFactory( final ControlType controlType )
+  private IFeatureControlFactory createControlFactory( final Composite parent, final ControlType controlType )
   {
+    final FormToolkit toolkit = createOrGetToolkit( parent );
+
     if( controlType instanceof LabelType )
       return new LabelFeatureControlFactory();
 
     if( controlType instanceof Extensioncontrol )
-      return new ExtensionFeatureControlFactory();
+      return new ExtensionFeatureControlFactory( toolkit );
 
     if( controlType instanceof Text )
       return new TextFeatureControlFactory();
@@ -499,7 +521,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
       return new SubFeatureControlFactory();
 
     if( controlType instanceof Table )
-      return new TableFeatureContolFactory();
+      return new TableFeatureControlFactory();
 
     if( controlType instanceof ValidatorLabelType )
       return new ValidatorLabelTypeFactory();
@@ -523,6 +545,32 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
       return new GeometryFeatureControlFactory();
 
     return null;
+  }
+
+  /**
+   * Returns a toolkit. Either the one we got already, or a new one that will be disposed if the given control is
+   * disposed
+   */
+  private FormToolkit createOrGetToolkit( final Control control )
+  {
+    if( m_formToolkit == null )
+    {
+      final FormToolkit toolkit = new FormToolkit( control.getDisplay() );
+      toolkit.setBackground( control.getBackground() );
+      control.addDisposeListener( new DisposeListener()
+      {
+        @Override
+        public void widgetDisposed( final DisposeEvent e )
+        {
+          // Need to dispose toolkit as we created it ourselves
+          toolkit.dispose();
+        }
+      } );
+
+      return toolkit;
+    }
+    else
+      return m_formToolkit;
   }
 
   private Composite createCompositeFromCompositeType( final Composite parent, final int style, final CompositeType compositeType, final IAnnotation annotation )

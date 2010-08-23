@@ -45,6 +45,7 @@ import java.util.Properties;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.template.featureview.ControlType;
@@ -56,8 +57,13 @@ import org.kalypsodeegree.model.feature.Feature;
 /**
  * @author Gernot Belger
  */
-public class ExtensionFeatureControlFactory implements IFeatureControlFactory
+public class ExtensionFeatureControlFactory extends AbstractFeatureControlFactory implements IFeatureControlFactory
 {
+  public ExtensionFeatureControlFactory( final FormToolkit formToolkit )
+  {
+    super( formToolkit );
+  }
+
   /**
    * @see org.kalypso.ogc.gml.featureview.control.IFeatureControlFactory#createFeatureControl(org.kalypso.ogc.gml.featureview.control.IFeatureComposite,
    *      org.kalypsodeegree.model.feature.Feature, org.kalypso.gmlschema.property.IPropertyType,
@@ -75,8 +81,9 @@ public class ExtensionFeatureControlFactory implements IFeatureControlFactory
 
     try
     {
-      final IExtensionsFeatureControlFactory controlFactory = KalypsoUIExtensions.getFeatureviewControlFactory( extensionId );
-      return controlFactory.createFeatureControl( feature, pt, parameters );
+      final IExtensionsFeatureControlFactory2 controlFactory = KalypsoUIExtensions.getFeatureviewControlFactory( extensionId );
+      FormToolkit toolkit = getToolkit();
+      return controlFactory.createFeatureControl( toolkit, feature, pt, parameters );
     }
     catch( final CoreException ce )
     {
