@@ -67,12 +67,17 @@ public final class KalypsoFeatureThemeSelection extends AbstractFeatureSelection
 
   public KalypsoFeatureThemeSelection( final List<Feature> selectedFeatures, final IKalypsoFeatureTheme filterTheme, final IFeatureSelectionManager selectionManager, final Feature focusedFeature, final IPropertyType focusedProperty )
   {
-    super( filter( selectedFeatures, filterTheme ) );
+    this( selectedFeatures, filterTheme.getFeatureList(), filterTheme.getWorkspace(), selectionManager, focusedFeature, focusedProperty );
+  }
+
+  public KalypsoFeatureThemeSelection( final List<Feature> selectedFeatures, final FeatureList featureList, final CommandableWorkspace workspace, final IFeatureSelectionManager selectionManager, final Feature focusedFeature, final IPropertyType focusedProperty )
+  {
+    super( filter( selectedFeatures, featureList ) );
 
     m_selectionManager = selectionManager;
     m_focusedFeature = focusedFeature;
     m_focusedProperty = focusedProperty;
-    m_workspace = filterTheme.getWorkspace();
+    m_workspace = workspace;
   }
 
   /**
@@ -88,11 +93,16 @@ public final class KalypsoFeatureThemeSelection extends AbstractFeatureSelection
   public static IStructuredSelection filter( final List<Feature> selection, final IKalypsoFeatureTheme theme )
   {
     final FeatureList featureList = theme.getFeatureList();
+    return filter( selection, featureList );
+  }
+
+  public static IStructuredSelection filter( final List<Feature> selection, final FeatureList featureList )
+  {
     if( featureList == null )
       return StructuredSelection.EMPTY;
 
     // TODO: major performance bug! Calls the slow contains method on split-sort
-    final ArrayList<Feature> list = new ArrayList<Feature>( selection );
+    final List<Feature> list = new ArrayList<Feature>( selection );
     list.retainAll( featureList );
     return new StructuredSelection( list );
   }
