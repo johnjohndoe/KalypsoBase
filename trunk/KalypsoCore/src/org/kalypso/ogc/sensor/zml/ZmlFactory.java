@@ -592,7 +592,9 @@ public final class ZmlFactory
       } );
 
       for( final IAxis axis : obs.getAxisList() )
+      {
         sortedAxis.add( axis );
+      }
 
       for( final IAxis axis : sortedAxis )
       {
@@ -651,9 +653,10 @@ public final class ZmlFactory
   private static String buildStringAxis( final ITupleModel model, final IAxis axis ) throws SensorException
   {
     final StringBuffer buffer = new StringBuffer();
-
     for( int i = 0; i < model.getCount(); i++ )
+    {
       buffer.append( model.getElement( i, axis ) ).append( ";" ); //$NON-NLS-1$
+    }
 
     return StringUtilities.chomp( buffer.toString() );
   }
@@ -664,7 +667,9 @@ public final class ZmlFactory
     final DateParser dateParser = XmlTypes.getDateParser( timezone );
 
     for( int i = 0; i < model.getCount(); i++ )
+    {
       buffer.append( dateParser.toString( model.getElement( i, axis ) ) ).append( ";" ); //$NON-NLS-1$
+    }
 
     return StringUtilities.chomp( buffer.toString() );
   }

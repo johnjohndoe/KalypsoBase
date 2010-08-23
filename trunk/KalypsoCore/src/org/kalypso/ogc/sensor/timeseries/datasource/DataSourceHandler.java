@@ -169,6 +169,7 @@ public class DataSourceHandler
         m_metadata.remove( key );
     }
   }
+
 // /* add virtual sources to meta data */
 // for( final IRepositoryItem item : m_items )
 // {
@@ -176,4 +177,15 @@ public class DataSourceHandler
 // DatasourceItemHelper.addDataSource( mdl, item.getIdentifier(), repository.getLabel() );
 // }
 
+  public boolean containsDataSourceReferences( )
+  {
+    final String[] keys = m_metadata.keySet().toArray( new String[] {} );
+    for( final String key : keys )
+    {
+      if( key.startsWith( IDataSourceItem.MD_DATA_SOURCE_ITEM ) )
+        return true;
+    }
+
+    return false;
+  }
 }

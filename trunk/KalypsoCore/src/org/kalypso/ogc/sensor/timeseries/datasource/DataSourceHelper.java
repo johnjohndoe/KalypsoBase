@@ -47,6 +47,9 @@ import java.util.TreeSet;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.commons.java.util.StringUtilities;
+import org.kalypso.ogc.sensor.IAxis;
+import org.kalypso.ogc.sensor.ITupleModel;
+import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 
 /**
  * Helper code for multiple data source references - lke: filter://smeFilterClass?source_1=blub&source_2=blub2&...
@@ -68,6 +71,9 @@ public final class DataSourceHelper
    */
   public static String[] getSources( final String reference )
   {
+    if( !isFiltered( reference ) )
+      return new String[] { reference };
+
     final String[] referenceParts = reference.split( "\\?" );
     if( referenceParts.length != 2 )
       return new String[] {};
@@ -88,6 +94,11 @@ public final class DataSourceHelper
     }
 
     return sources.toArray( new String[] {} );
+  }
+
+  private static boolean isFiltered( final String reference )
+  {
+    return reference.startsWith( "filter://" );
   }
 
   /**
@@ -168,6 +179,9 @@ public final class DataSourceHelper
 
     for( final String source : sources )
     {
+      if( source.trim().isEmpty() )
+        continue;
+
       if( ArrayUtils.contains( mergedSources, source ) )
       {
         final int index = findSourceIndex( reference, source );
@@ -241,5 +255,12 @@ public final class DataSourceHelper
     }
 
     return -1;
+  }
+
+  public static boolean hasDataSources( final ITupleModel model )
+  {
+    final IAxis[] axes = model.getAxisList();
+
+    return AxisUtils.findDataSourceAxis( axes ) != null;
   }
 }

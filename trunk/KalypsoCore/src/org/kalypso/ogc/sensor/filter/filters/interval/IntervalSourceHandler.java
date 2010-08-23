@@ -61,15 +61,12 @@ public final class IntervalSourceHandler
 
   private IntervalSourceHandler( )
   {
-
   }
 
   public static void intersectSources( final String[] sources, final double factor )
   {
-
     for( int i = 0; i < sources.length; i++ )
     {
-
       /* Faktor != 1: "verschmiert?source=Prio_X" */
       if( factor != 1.0 )
       {
