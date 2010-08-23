@@ -164,7 +164,7 @@ public class TableCursor extends Canvas
   // it is difficult to debug thinks like event
   // in eclipse debugmode, so here some printouts
   // can be enabled
-  final boolean DEBUG = false;
+  static final boolean DEBUG = false;
 
   // By default, invert the list selection colors
   static final int BACKGROUND = SWT.COLOR_LIST_SELECTION_TEXT;
