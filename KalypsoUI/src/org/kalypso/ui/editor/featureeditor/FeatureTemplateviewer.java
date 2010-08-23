@@ -293,7 +293,10 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
     m_contentPanel = createTopLevelComposite( parent, formStyle );
 
     if( m_template != null && m_template.isToolkit() )
+    {
       m_toolkit = new FormToolkit( m_contentPanel.getDisplay() );
+      m_featureComposite.setFormToolkit( m_toolkit );
+    }
 
     m_contentPanel.addDisposeListener( new DisposeListener()
     {
@@ -396,9 +399,6 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
       /* Set the new feature. May be null. */
       m_featureComposite.setFeature( feature );
 
-      if( m_toolkit != null )
-        m_featureComposite.setFormToolkit( m_toolkit );
-
       /* Create the control. */
       final IFeatureType featureType = feature != null ? feature.getFeatureType() : null;
       final Control control = m_featureComposite.createControl( m_contentPanel, SWT.NONE, featureType );
@@ -419,7 +419,7 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
         if( m_topLevelComposite instanceof ScrolledForm )
           ((SharedScrolledComposite) m_topLevelComposite).reflow( true );
         else
-          m_topLevelComposite.layout( true );
+          m_topLevelComposite.layout( true, true );
       }
     }
   }

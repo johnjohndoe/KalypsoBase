@@ -386,8 +386,6 @@ public class FeatureView extends ViewPart implements ModellEventListener
   public void createPartControl( final Composite parent )
   {
     // Comment this in, if you want to use the FormToolkit for FeatureView.
-// m_toolkit = new FormToolkit( parent.getDisplay() );
-
     m_featureComposite.setFormToolkit( m_toolkit );
 
     m_mainGroup = new Group( parent, SWT.NONE );

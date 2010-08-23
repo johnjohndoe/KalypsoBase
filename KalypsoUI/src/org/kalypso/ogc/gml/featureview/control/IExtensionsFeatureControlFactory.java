@@ -47,7 +47,9 @@ import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Gernot Belger
+ * @deprecated USe {@link IExtensionsFeatureControlFactory2} instead.
  */
+@Deprecated
 public interface IExtensionsFeatureControlFactory
 {
   /**

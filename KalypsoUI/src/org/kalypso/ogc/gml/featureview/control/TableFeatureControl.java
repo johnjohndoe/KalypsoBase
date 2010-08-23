@@ -29,14 +29,12 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.command.DefaultCommandManager;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
-import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.util.pool.KeyInfo;
 import org.kalypso.core.util.pool.ResourcePool;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.ogc.gml.KalypsoTableFeatureTheme;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.featureview.toolbar.AddFeatureHandler;
 import org.kalypso.ogc.gml.featureview.toolbar.DeleteFeatureHandler;
@@ -61,13 +59,11 @@ import org.kalypsodeegree_impl.model.feature.FeaturePath;
 /**
  * @author Gernot Belger
  */
-public class TableFeatureContol extends AbstractToolbarFeatureControl implements ModellEventListener
+public class TableFeatureControl extends AbstractToolbarFeatureControl implements ModellEventListener
 {
   private final IFeatureModifierFactory m_factory;
 
   private LayerTableViewer m_viewer;
-
-  private KalypsoTableFeatureTheme m_kft;
 
   private final ICommandTarget m_templateTarget = new JobExclusiveCommandTarget( new DefaultCommandManager(), null );
 
@@ -98,7 +94,9 @@ public class TableFeatureContol extends AbstractToolbarFeatureControl implements
 
   private final boolean m_showToolbar;
 
-  public TableFeatureContol( final IPropertyType ftp, final IFeatureModifierFactory factory, final IFeatureSelectionManager selectionManager, final Toolbar toolbar, final boolean showToolbar, final boolean showContextMenu )
+  private CommandableWorkspace m_workspace;
+
+  public TableFeatureControl( final IPropertyType ftp, final IFeatureModifierFactory factory, final IFeatureSelectionManager selectionManager, final Toolbar toolbar, final boolean showToolbar, final boolean showContextMenu )
   {
     super( ftp, showToolbar, SWT.VERTICAL | SWT.FLAT );
     m_showToolbar = showToolbar;
@@ -129,14 +127,7 @@ public class TableFeatureContol extends AbstractToolbarFeatureControl implements
 
     /* Create the layer table viewer. */
     m_viewer = new LayerTableViewer( client, style, m_templateTarget, m_factory, m_selectionManager, m_fcl );
-    m_viewer.setFeatureCommandTarget( new ICommandTarget()
-    {
-      @Override
-      public void postCommand( final ICommand command, final Runnable runnable )
-      {
-        fireFeatureChange( command );
-      }
-    } );
+
     m_viewer.getTable().setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
 
     /* Set the feature. */
@@ -229,16 +220,10 @@ public class TableFeatureContol extends AbstractToolbarFeatureControl implements
   @Override
   public void dispose( )
   {
-    if( m_viewer != null )
-      m_viewer.dispose();
-
-    if( m_kft != null )
+    if( m_workspace != null )
     {
-      final CommandableWorkspace workspace = m_kft.getWorkspace();
-      if( workspace != null )
-        workspace.removeModellListener( this );
-      m_kft.dispose();
-      m_kft = null;
+      m_workspace.removeModellListener( this );
+      m_workspace = null;
     }
 
     if( m_templateTarget instanceof JobExclusiveCommandTarget )
@@ -256,13 +241,10 @@ public class TableFeatureContol extends AbstractToolbarFeatureControl implements
   {
     super.setFeature( feature );
 
-    if( m_kft != null )
+    if( m_workspace != null )
     {
-      final CommandableWorkspace workspace = m_kft.getWorkspace();
-      if( workspace != null )
-        workspace.removeModellListener( this );
-      m_kft.dispose();
-      m_kft = null;
+      m_workspace.removeModellListener( this );
+      m_workspace = null;
     }
 
     final GMLWorkspace workspace = feature == null ? null : feature.getWorkspace();
@@ -272,22 +254,28 @@ public class TableFeatureContol extends AbstractToolbarFeatureControl implements
       final String ftpName = getFeatureTypeProperty().getQName().getLocalPart();
       final FeaturePath featurePath = new FeaturePath( parentFeaturePath, ftpName );
 
-      final CommandableWorkspace commandable = findCommandableWorkspace( workspace );
+      m_workspace = findCommandableWorkspace( workspace );
 
-      m_kft = new KalypsoTableFeatureTheme( commandable, featurePath.toString(), new I10nString( ftpName ), m_selectionManager );
+      final ICommandTarget commandTarget = new ICommandTarget()
+      {
+        @Override
+        public void postCommand( final ICommand command, final Runnable runnable )
+        {
+          fireFeatureChange( command );
+        }
+      };
 
-      commandable.addModellListener( this );
-      m_viewer.setInput( m_kft );
+      m_workspace.addModellListener( this );
 
-      // create columns
-      // add all columns
+      m_viewer.setInput( m_workspace, featurePath.toString(), commandTarget );
+
       if( m_tableView != null )
       {
-        m_viewer.applyTableTemplate( m_tableView, workspace.getContext(), false );
+        m_viewer.applyLayer( m_tableView.getLayer() );
       }
       else
       {
-        final IFeatureType featureType = m_kft.getFeatureType();
+        final IFeatureType featureType = m_viewer.getInput().getFeatureType();
         final IPropertyType[] properties = featureType == null ? new IPropertyType[0] : featureType.getProperties();
         for( int i = 0; i < properties.length; i++ )
         {
@@ -369,10 +357,10 @@ public class TableFeatureContol extends AbstractToolbarFeatureControl implements
   @Override
   public void onModellChange( final ModellEvent modellEvent )
   {
-    if( m_kft == null )
+    if( m_workspace == null )
       return;
 
-    if( modellEvent instanceof IGMLWorkspaceModellEvent && ((IGMLWorkspaceModellEvent) modellEvent).getGMLWorkspace() == m_kft.getWorkspace() )
+    if( modellEvent instanceof IGMLWorkspaceModellEvent )
     {
       final Event event = new Event();
       final Control control = m_viewer.getControl();
@@ -390,24 +378,22 @@ public class TableFeatureContol extends AbstractToolbarFeatureControl implements
 
           }
         } );
-
-// if( modellEvent instanceof FeatureChangeModellEvent )
-// {
-// final FeatureChangeModellEvent featureEvent = (FeatureChangeModellEvent) modellEvent;
-// fireFeatureChange( featureEvent.getChanges() );
-// }
       }
     }
   }
 
   public CommandableWorkspace getWorkspace( )
   {
-    return m_kft.getWorkspace();
+    return m_workspace;
   }
 
-  public IRelationType getParentRealtion( )
+  /**
+   * @see org.kalypso.ogc.gml.featureview.control.AbstractFeatureControl#getFeatureTypeProperty()
+   */
+  @Override
+  public IRelationType getFeatureTypeProperty( )
   {
-    return (IRelationType) getFeatureTypeProperty();
+    return (IRelationType) super.getFeatureTypeProperty();
   }
 
   public void execute( final ICommand command )
