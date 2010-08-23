@@ -411,8 +411,15 @@ public class ExcelTableCursor extends TableCursor
     if( m_selectionFollowsCursor )
     {
       final Table table = (Table) getParent();
+
+      final TableItem[] currentSelection = table.getSelection();
+      if( currentSelection.length == 1 && currentSelection[0] == row )
+        return;
+
       table.setSelection( new TableItem[] { row } );
       // TODO: sometimes the selection event already has been sent, so we now send it a second time.
+      // TODO: as we are creating the event ourself, post selection does not work on this kind of tables. This is a
+      // pity...
       table.notifyListeners( SWT.Selection, null );
     }
   }
