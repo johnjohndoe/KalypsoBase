@@ -49,12 +49,12 @@ public interface IFeatureSelectionManager extends IFeatureSelection
 
   void removeSelectionListener( final IFeatureSelectionListener l );
 
-  @Override
   /**
    * Return the list of features
    * 
    * @see org.eclipse.jface.viewers.IStructuredSelection#toList()
    */
+  @Override
   List<Feature> toList( );
 
   /**

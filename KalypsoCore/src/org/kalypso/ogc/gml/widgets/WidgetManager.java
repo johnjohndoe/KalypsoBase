@@ -71,7 +71,7 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
   private final IFeatureSelectionListener m_featureSelectionListener = new IFeatureSelectionListener()
   {
     @Override
-    public void selectionChanged( final IFeatureSelection selection )
+    public void selectionChanged( final Object source, final IFeatureSelection selection )
     {
       onSelectionChanged( selection );
     }
@@ -134,7 +134,7 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
           else if( e.getClickCount() == 2 )
             actualWidget.doubleClickedLeft( e.getPoint() );
         }
-          break;
+        break;
 
         case MouseEvent.BUTTON2:
           m_middleWidget.leftClicked( e.getPoint() );
@@ -147,7 +147,7 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
           else if( e.getClickCount() == 2 )
             actualWidget.doubleClickedRight( e.getPoint() );
         }
-          break;
+        break;
 
         default:
           break;

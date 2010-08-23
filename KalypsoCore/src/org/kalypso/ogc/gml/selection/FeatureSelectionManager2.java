@@ -42,6 +42,7 @@
 package org.kalypso.ogc.gml.selection;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -72,6 +73,10 @@ public class FeatureSelectionManager2 implements IFeatureSelectionManager
   @Override
   public void setSelection( final EasyFeatureWrapper[] selectedFeatures )
   {
+    final EasyFeatureWrapper[] allFeatures = getAllFeatures();
+    if( Arrays.equals( selectedFeatures, allFeatures ) )
+      return;
+
     final Set<EasyFeatureWrapper> newState = new HashSet<EasyFeatureWrapper>();
     Collections.addAll( newState, selectedFeatures );
     if( newState.equals( m_map.keySet() ) )
@@ -87,10 +92,6 @@ public class FeatureSelectionManager2 implements IFeatureSelectionManager
     fireSelectionChanged();
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.selection.IFeatureSelectionManager#changeSelection(org.kalypsodeegree.model.feature.Feature[],
-   *      org.kalypso.ogc.gml.selection.EasyFeatureWrapper[])
-   */
   @Override
   public void changeSelection( final Feature[] featuresToRemove, final EasyFeatureWrapper[] featuresToAdd )
   {
@@ -110,14 +111,9 @@ public class FeatureSelectionManager2 implements IFeatureSelectionManager
   {
     final IFeatureSelectionListener[] ls = m_listener.toArray( new IFeatureSelectionListener[m_listener.size()] );
     for( final IFeatureSelectionListener listener : ls )
-    {
-      listener.selectionChanged( this );
-    }
+      listener.selectionChanged( this, this );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.selection.IFeatureSelectionManager#clear()
-   */
   @Override
   public void clear( )
   {
