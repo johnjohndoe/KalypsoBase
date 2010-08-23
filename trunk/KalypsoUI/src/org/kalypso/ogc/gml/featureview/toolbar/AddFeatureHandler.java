@@ -51,7 +51,7 @@ import org.eclipse.ui.PlatformUI;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.i18n.Messages;
-import org.kalypso.ogc.gml.featureview.control.TableFeatureContol;
+import org.kalypso.ogc.gml.featureview.control.TableFeatureControl;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand;
 import org.kalypsodeegree.model.feature.Feature;
@@ -92,11 +92,11 @@ public class AddFeatureHandler extends AbstractTableFeatureControlHandler
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
-    final TableFeatureContol control = getFeatureControl( event );
+    final TableFeatureControl control = getFeatureControl( event );
 
     final Feature parentFeature = control.getFeature();
     final CommandableWorkspace workspace = control.getWorkspace();
-    final IRelationType parentRelation = control.getParentRealtion();
+    final IRelationType parentRelation = control.getFeatureTypeProperty();
 
     /* Get the needed properties. */
     if( !checkMaxCount( parentFeature, parentRelation ) )

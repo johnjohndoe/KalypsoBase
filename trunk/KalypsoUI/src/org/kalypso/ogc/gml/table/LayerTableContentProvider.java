@@ -52,17 +52,16 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Control;
 import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
 import org.kalypso.contribs.java.util.Arrays;
-import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
-import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.IKalypsoThemeListener;
+import org.kalypso.ogc.gml.IFeaturesProvider;
+import org.kalypso.ogc.gml.IFeaturesProviderListener;
 import org.kalypso.ogc.gml.KalypsoFeatureThemeSelection;
-import org.kalypso.ogc.gml.KalypsoThemeAdapter;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
+import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
+import org.kalypsodeegree.model.feature.event.ModellEvent;
 
 /**
  * @author Gernot Belger
@@ -78,31 +77,12 @@ public class LayerTableContentProvider implements IStructuredContentProvider
     }
   };
 
-  private final IKalypsoThemeListener m_themeListener = new KalypsoThemeAdapter()
+  private final IFeaturesProviderListener m_providerListener = new IFeaturesProviderListener()
   {
-    /**
-     * @see org.kalypso.ogc.gml.KalypsoThemeAdapter#statusChanged(org.kalypso.ogc.gml.IKalypsoTheme)
-     */
     @Override
-    public void statusChanged( final IKalypsoTheme source )
+    public void featuresChanged( final IFeaturesProvider source, final ModellEvent modellEvent )
     {
-      handleStatusChanged();
-    }
-
-    // HACK: at the moment, we know this event is sent when the data has been loaded. So we refresah all in that case
-    @Override
-    public void contextChanged( final IKalypsoTheme source )
-    {
-      handleStatusChanged();
-    }
-
-    // HACK: at the moment, we know this event is sent when the data changes in any way (i.e. a feature is added).
-    // So we refresh the table in that case.
-    // FIXME: this should be removed in the head; the layerTable should not use a theme at all....!
-    @Override
-    public void repaintRequested( final IKalypsoTheme source, final GM_Envelope invalidExtent )
-    {
-      handleRepaintRequested();
+      handleFeaturesChanged( modellEvent );
     }
   };
 
@@ -123,33 +103,26 @@ public class LayerTableContentProvider implements IStructuredContentProvider
   @Override
   public Object[] getElements( final Object inputElement )
   {
-    final List<Feature> result = new ArrayList<Feature>();
-    final FeatureList featureList;
-    if( inputElement instanceof IKalypsoFeatureTheme )
-      featureList = ((IKalypsoFeatureTheme) inputElement).getFeatureList();
-    else if( inputElement instanceof FeatureList )
-      featureList = (FeatureList) inputElement;
-    else
-      return new Object[] {};
-
-    if( featureList == null )
-      return new Object[] {};
-
-    final Object[] objects = featureList.toArray();
-    final IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme) m_viewer.getInput();
-    final GMLWorkspace workspace = theme.getWorkspace();
-    for( final Object element : objects )
+    if( inputElement instanceof IFeaturesProvider )
     {
-      if( element instanceof Feature )
-        result.add( (Feature) element );
-      else if( element instanceof String ) // it is a ID
+      final IFeaturesProvider featuresProvider = (IFeaturesProvider) inputElement;
+      final FeatureList featureList = featuresProvider.getFeatureList();
+      // FIXME: unterscheide lade und fehler
+      if( featureList == null )
+        return new Object[] {};
+
+      if( featureList != null )
       {
-        final Feature feature = workspace.getFeature( (String) element );
-        if( feature != null )
-          result.add( feature );
+        final IFeaturesProvider featureProvider = featuresProvider;
+        // TODO; hm, quite heavy, as the complete list is copied here...
+        final List<Feature> features = featureProvider.getFeatures();
+        if( features != null )
+          return features.toArray();
       }
     }
-    return result.toArray();
+
+    return new Object[] {};
+
   }
 
   /**
@@ -158,18 +131,7 @@ public class LayerTableContentProvider implements IStructuredContentProvider
   @Override
   public void dispose( )
   {
-    if( m_viewer != null )
-    {
-      m_viewer.removeSelectionChangedListener( m_tableSelectionListener );
-
-      final Object input = m_viewer.getInput();
-      if( input instanceof IKalypsoFeatureTheme )
-      {
-        final IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme) input;
-        (theme).removeKalypsoThemeListener( m_themeListener );
-        m_viewer.disposeTheme( theme );
-      }
-    }
+    // all listeners are unhooked when inputChanged( ..., null) is called
   }
 
   /**
@@ -179,19 +141,25 @@ public class LayerTableContentProvider implements IStructuredContentProvider
   @Override
   public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
   {
-    if( oldInput instanceof IKalypsoFeatureTheme )
-      ((IKalypsoFeatureTheme) oldInput).removeKalypsoThemeListener( m_themeListener );
+    if( oldInput instanceof IFeaturesProvider )
+    {
+      final IFeaturesProvider oldProvider = (IFeaturesProvider) oldInput;
+      oldProvider.removeFeaturesProviderListener( m_providerListener );
+    }
 
     if( m_viewer != null )
-      m_viewer.removeSelectionChangedListener( m_tableSelectionListener );
+      m_viewer.removePostSelectionChangedListener( m_tableSelectionListener );
 
     m_viewer = (LayerTableViewer) viewer;
 
     if( m_viewer != null )
-      m_viewer.addSelectionChangedListener( m_tableSelectionListener );
+      m_viewer.addPostSelectionChangedListener( m_tableSelectionListener );
 
-    if( newInput instanceof IKalypsoFeatureTheme )
-      ((IKalypsoFeatureTheme) newInput).addKalypsoThemeListener( m_themeListener );
+    if( newInput instanceof IFeaturesProvider )
+    {
+      final IFeaturesProvider newProvider = (IFeaturesProvider) newInput;
+      newProvider.addFeaturesProviderListener( m_providerListener );
+    }
   }
 
   /**
@@ -200,33 +168,24 @@ public class LayerTableContentProvider implements IStructuredContentProvider
   protected void viewerSelectionChanged( final IStructuredSelection selection )
   {
     // remove all features in input from manager
-    final IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme) m_viewer.getInput();
-    final FeatureList featureList = theme == null ? null : theme.getFeatureList();
-    if( featureList == null )
+    final IFeaturesProvider featureProvider = m_viewer.getInput();
+    if( featureProvider == null )
+      return;
+
+    final FeatureList featureList = featureProvider.getFeatureList();
+    final List<Feature> featuresToRemove = featureProvider == null ? null : featureProvider.getFeatures();
+    if( featureList == null || featuresToRemove == null )
       return;
 
     // if viewer selection and tree selection are the same, do nothing
     if( m_selectionManager == null )
       return;
 
-    final IStructuredSelection managerSelection = KalypsoFeatureThemeSelection.filter( m_selectionManager.toList(), theme );
+    final IStructuredSelection managerSelection = KalypsoFeatureThemeSelection.filter( m_selectionManager.toList(), featureList );
     final Object[] managerFeatures = managerSelection.toArray();
     if( Arrays.equalsUnordered( managerFeatures, selection.toArray() ) )
       return;
 
-    final GMLWorkspace workspace = theme.getWorkspace();
-
-    // TODO: remove only previously selected
-    // collect elements as "Feature"
-    final List<Feature> featureToRemove = new ArrayList<Feature>();
-    for( final Iterator< ? > iter = featureList.iterator(); iter.hasNext(); )
-    {
-      final Object element = iter.next();
-      if( element instanceof Feature )
-        featureToRemove.add( (Feature) element );
-      else if( element instanceof String ) // it is the id of a feature
-        featureToRemove.add( workspace.getFeature( (String) element ) );
-    }
 
     // add current selection
     final List<EasyFeatureWrapper> wrappers = new ArrayList<EasyFeatureWrapper>( selection.size() );
@@ -235,31 +194,59 @@ public class LayerTableContentProvider implements IStructuredContentProvider
       final Object object = sIt.next();
       if( object instanceof Feature )
       {
-        final EasyFeatureWrapper wrapper = new EasyFeatureWrapper( theme.getWorkspace(), (Feature) object );
+        final Feature feature = (Feature) object;
+        final EasyFeatureWrapper wrapper = new EasyFeatureWrapper( featureProvider.getWorkspace(), feature );
         wrappers.add( wrapper );
       }
     }
 
     final EasyFeatureWrapper[] izis = wrappers.toArray( new EasyFeatureWrapper[wrappers.size()] );
-    final Feature[] featureArray = featureToRemove.toArray( new Feature[featureToRemove.size()] );
+    final Feature[] featureArray = featuresToRemove.toArray( new Feature[featuresToRemove.size()] );
     m_selectionManager.changeSelection( featureArray, izis );
   }
 
-  protected void handleStatusChanged( )
+  protected void handleFeaturesChanged( final ModellEvent event )
   {
-    final LayerTableViewer viewer = m_viewer;
-    if( viewer != null && !viewer.isDisposed() )
+    if( event == null )
     {
+      final LayerTableViewer viewer = m_viewer;
+
       final Control control = viewer.getControl();
-      control.getDisplay().asyncExec( new Runnable()
+      if( !control.isDisposed() )
       {
-        @Override
-        public void run( )
+        control.getDisplay().syncExec( new Runnable()
         {
-          if( !control.isDisposed() )
+          @Override
+          public void run( )
+          {
+            if( control.isDisposed() )
+              return;
+
             viewer.refreshAll();
+          }
+        } );
+      }
+    }
+    else if( event instanceof FeaturesChangedModellEvent )
+    {
+      final Feature[] features = ((FeaturesChangedModellEvent) event).getFeatures();
+      ViewerUtilities.update( m_viewer, features, null, false );
+    }
+    else if( event instanceof FeatureStructureChangeModellEvent )
+    {
+      final IFeaturesProvider featuresProvider = m_viewer.getInput();
+      final FeatureList featureList = featuresProvider == null ? null : featuresProvider.getFeatureList();
+      final Feature parentFeature = featureList == null ? null : featureList.getParentFeature();
+
+      final Feature[] features = ((FeatureStructureChangeModellEvent) event).getParentFeatures();
+      for( final Feature feature : features )
+      {
+        if( feature == parentFeature )
+        {
+          ViewerUtilities.refresh( m_viewer, false );
+          return;
         }
-      } );
+      }
     }
   }
 

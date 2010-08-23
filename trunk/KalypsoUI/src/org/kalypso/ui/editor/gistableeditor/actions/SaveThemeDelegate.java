@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.gistableeditor.actions;
 
@@ -53,8 +53,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.progress.IProgressService;
 import org.kalypso.i18n.Messages;
-import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ogc.gml.table.ILayerTableInput;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
 import org.kalypso.ui.editor.AbstractGisEditorActionDelegate;
 import org.kalypso.ui.editor.gistableeditor.GisTableEditor;
@@ -85,8 +84,8 @@ public class SaveThemeDelegate extends AbstractGisEditorActionDelegate
     if( !MessageDialog.openConfirm( shell, Messages.getString("org.kalypso.ui.editor.gistableeditor.actions.SaveThemeDelegate.0"), Messages.getString("org.kalypso.ui.editor.gistableeditor.actions.SaveThemeDelegate.1") ) ) //$NON-NLS-1$ //$NON-NLS-2$
       return;
 
-    final IKalypsoFeatureTheme theme = editor.getLayerTable().getTheme();
-    if( theme != null )
+    final Object input = editor.getLayerTable().getInput();
+    if( input != null )
     {
       final IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
 
@@ -134,13 +133,10 @@ public class SaveThemeDelegate extends AbstractGisEditorActionDelegate
     final GisTableEditor editor = (GisTableEditor) part.getPart();
     if( editor != null )
     {
-      final IKalypsoFeatureTheme theme = editor.getLayerTable().getTheme();
-      if( theme != null )
-      {
-        final CommandableWorkspace workspace = theme.getWorkspace();
-        if( workspace != null )
-          enabled = workspace.isDirty();
-      }
+      final LayerTableViewer layerTable = editor.getLayerTable();
+      final ILayerTableInput input = layerTable.getInput();
+      if( input != null )
+        enabled = input.isDirty();
     }
 
     action.setEnabled( enabled );

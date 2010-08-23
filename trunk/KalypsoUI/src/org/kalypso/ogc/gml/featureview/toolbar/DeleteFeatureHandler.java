@@ -50,7 +50,7 @@ import org.eclipse.ui.PlatformUI;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.command.DeleteFeatureCommand;
-import org.kalypso.ogc.gml.featureview.control.TableFeatureContol;
+import org.kalypso.ogc.gml.featureview.control.TableFeatureControl;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
@@ -85,14 +85,14 @@ public class DeleteFeatureHandler extends AbstractTableFeatureControlHandler
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     final IFeatureSelection selection = getSelection( event );
-    final TableFeatureContol tableFeatureControl = getFeatureControl( event );
+    final TableFeatureControl tableFeatureControl = getFeatureControl( event );
 
     final Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 
     if( !canDelete( selection ) )
     {
       /* Get the needed properties. */
-      final IRelationType parentRelation = tableFeatureControl.getParentRealtion();
+      final IRelationType parentRelation = tableFeatureControl.getFeatureTypeProperty();
 
       final String actionLabel = parentRelation == null ? Messages.getString( "org.kalypso.ogc.gml.featureview.control.TableFeatureContol.0" ) : FeatureActionUtilities.newFeatureActionLabel( parentRelation.getTargetFeatureType() ); //$NON-NLS-1$
       MessageDialog.openInformation( shell, actionLabel + Messages.getString( "org.kalypso.ogc.gml.featureview.control.TableFeatureContol.5" ), Messages.getString( "org.kalypso.ogc.gml.featureview.control.TableFeatureContol.6" ) ); //$NON-NLS-1$ //$NON-NLS-2$
