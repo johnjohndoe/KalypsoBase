@@ -241,4 +241,50 @@ public class UrlUtilities implements IUrlResolver
     return new URL( newUrlString );
   }
 
+  /**
+   * Reads the contents of a {@link URL} into a {@link String}. The stream is always closed.
+   * 
+   * @param url
+   *          the url to read, must not be <code>null</code>
+   * @param encoding
+   *          the encoding to use, <code>null</code> means platform default
+   * @return the file contents, never <code>null</code>
+   * @throws IOException
+   *           in case of an I/O error
+   * @throws java.io.UnsupportedEncodingException
+   *           if the encoding is not supported by the VM
+   */
+  public static String readUrlToString( final URL url, final String encoding ) throws IOException
+  {
+    InputStream in = null;
+    try
+    {
+      in = url.openStream();
+
+      InputStreamReader isr;
+      if( encoding == null )
+        isr = new InputStreamReader( in );
+      else
+        isr = new InputStreamReader( in, encoding );
+
+      final StringBuilder stringBuilder = new StringBuilder();
+      final char[] buffer = new char[4096];
+      isr.read( buffer );
+      stringBuilder.append( new String( buffer ) );
+      in.close();
+      return stringBuilder.toString();
+    }
+    finally
+    {
+      try
+      {
+        if( in != null )
+          in.close();
+      }
+      catch( final Exception ignored )
+      {
+      }
+    }
+  }
+
 }
