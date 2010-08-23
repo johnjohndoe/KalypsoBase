@@ -83,7 +83,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
   private final IFeatureSelectionListener m_globalSelectionChangedListener = new IFeatureSelectionListener()
   {
     @Override
-    public void selectionChanged( final IFeatureSelection selection )
+    public void selectionChanged( final Object source, final IFeatureSelection selection )
     {
       if( m_bHandleGlobalEvents )
         handleGlobalSelectionChanged( selection );

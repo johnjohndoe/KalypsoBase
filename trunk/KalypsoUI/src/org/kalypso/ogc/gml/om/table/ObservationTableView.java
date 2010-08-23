@@ -85,7 +85,7 @@ public class ObservationTableView extends ViewPart implements IFeatureSelectionL
     m_viewer.setLabelProvider( m_tupleResultLabelProvider );
     m_viewer.setCellModifier( new TupleResultCellModifier( m_tupleResultContentProvider ) );
 
-    selectionChanged( KalypsoCorePlugin.getDefault().getSelectionManager() );
+    selectionChanged( this, KalypsoCorePlugin.getDefault().getSelectionManager() );
   }
 
   /**
@@ -111,11 +111,13 @@ public class ObservationTableView extends ViewPart implements IFeatureSelectionL
     m_viewer.getControl().setFocus();
   }
 
+
   /**
-   * @see org.kalypso.ogc.gml.selection.IFeatureSelectionListener#selectionChanged(org.kalypso.ogc.gml.selection.IFeatureSelection)
+   * @see org.kalypso.ogc.gml.selection.IFeatureSelectionListener#selectionChanged(java.lang.Object,
+   *      org.kalypso.ogc.gml.selection.IFeatureSelection)
    */
   @Override
-  public void selectionChanged( final IFeatureSelection selection )
+  public void selectionChanged( final Object source, final IFeatureSelection selection )
   {
     m_viewer.setInput( null );
 

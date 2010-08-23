@@ -56,8 +56,8 @@ import org.kalypso.ogc.gml.selection.IFeatureSelectionListener;
 
 /**
  * Der Controller für die MapView
- *
- * @author vdoemming
+ * 
+ * @author Gernot Belger
  */
 public class SwtWidgetManager implements IWidgetManager, MouseListener, MouseMoveListener, MouseWheelListener, KeyListener
 {
@@ -65,8 +65,12 @@ public class SwtWidgetManager implements IWidgetManager, MouseListener, MouseMov
 
   private final IFeatureSelectionListener m_featureSelectionListener = new IFeatureSelectionListener()
   {
+    /**
+     * @see org.kalypso.ogc.gml.selection.IFeatureSelectionListener#selectionChanged(java.lang.Object,
+     *      org.kalypso.ogc.gml.selection.IFeatureSelection)
+     */
     @Override
-    public void selectionChanged( final IFeatureSelection selection )
+    public void selectionChanged( final Object source, final IFeatureSelection selection )
     {
       onSelectionChanged( selection );
     }

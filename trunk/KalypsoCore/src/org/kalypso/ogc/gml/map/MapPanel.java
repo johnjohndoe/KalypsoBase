@@ -69,6 +69,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.widgets.Display;
@@ -98,6 +99,7 @@ import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModellListener;
 import org.kalypso.ogc.gml.mapmodel.MapModellAdapter;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
+import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionListener;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
@@ -146,7 +148,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
   private final IFeatureSelectionListener m_globalSelectionListener = new IFeatureSelectionListener()
   {
     @Override
-    public void selectionChanged( final IFeatureSelection selection )
+    public void selectionChanged( final Object source, final IFeatureSelection selection )
     {
       globalSelectionChanged();
     }
@@ -449,15 +451,16 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
     } );
   }
 
-  public final void fireSelectionChanged( )
+  protected final void fireSelectionChanged( )
   {
     final ISelectionChangedListener[] listenersArray = m_selectionListeners.toArray( new ISelectionChangedListener[m_selectionListeners.size()] );
 
-    final SelectionChangedEvent e = new SelectionChangedEvent( this, getSelection() );
+    final IStructuredSelection selection = (IStructuredSelection) getSelection();
+    final SelectionChangedEvent e = new SelectionChangedEvent( this, selection );
     for( final ISelectionChangedListener l : listenersArray )
     {
       final Display display = PlatformUI.getWorkbench().getDisplay();
-      display.asyncExec( new Runnable()
+      display.syncExec( new Runnable()
       {
         @Override
         public void run( )
@@ -478,7 +481,6 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
             @Override
             public void run( )
             {
-              // TODO: fire in SWT display thread!
               l.selectionChanged( e );
             }
           };
@@ -571,8 +573,6 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
   {
     invalidateMap();
 
-    // TODO: should be fired in the SWT thread, because the global selection listeners
-    // need this
     fireSelectionChanged();
   }
 
@@ -929,8 +929,12 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
   @Override
   public void setSelection( final ISelection selection )
   {
-    // should not be called!
-    throw new UnsupportedOperationException();
+    if( selection instanceof IFeatureSelection )
+    {
+      final IFeatureSelection featureSelection = (IFeatureSelection) selection;
+      final EasyFeatureWrapper[] allFeatures = featureSelection.getAllFeatures();
+      getSelectionManager().setSelection( allFeatures );
+    }
   }
 
   @Override
