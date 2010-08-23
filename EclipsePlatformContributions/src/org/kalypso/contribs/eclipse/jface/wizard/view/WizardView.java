@@ -42,7 +42,6 @@ package org.kalypso.contribs.eclipse.jface.wizard.view;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -78,9 +77,6 @@ import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.IWizardContainer2;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.browser.Browser;
-import org.eclipse.swt.browser.LocationAdapter;
-import org.eclipse.swt.browser.LocationEvent;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.StackLayout;
@@ -103,7 +99,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
@@ -130,6 +125,8 @@ import org.kalypso.contribs.java.lang.DisposeHelper;
  */
 public class WizardView extends ViewPart implements IWizardContainer2, IWizardChangeProvider, IPageChangeProvider
 {
+  public static final String VIEW_ID = WizardView.class.getName();
+
   public static final int SAVE_ID = IDialogConstants.CLIENT_ID + 1;
 
   public static final int RESET_ID = IDialogConstants.CLIENT_ID + 2;
@@ -162,8 +159,6 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
 
   private FontMetrics m_fontMetrics;
 
-  private Browser m_browser;
-
   private SashForm m_mainSash;
 
   private boolean m_isMovingToPreviousPage = false;
@@ -174,14 +169,13 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
 
   private final Map<Integer, String> m_buttonLabels = new HashMap<Integer, String>();
 
-  /** Lock for preventing call to changeLocation when url is set internally */
-  private boolean m_ignoreNextCangeLocation = false;
+  private final ListenerList m_pageChangedListeners = new ListenerList();
 
-  private final ListenerList pageChangedListeners = new ListenerList();
-
-  private final ListenerList pageChangingListeners = new ListenerList();
+  private final ListenerList m_pageChangingListeners = new ListenerList();
 
   private boolean m_useDefaultButton = true;
+
+  private NavigationPanel m_browserPanel;
 
   /** If set to true, the background color of error messages is the same as normal messages. */
   public void setErrorBackgroundBehaviour( final boolean useNormalBackground )
@@ -305,8 +299,8 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
     setWizard( null );
 
     m_listeners.clear();
-    pageChangedListeners.clear();
-    pageChangingListeners.clear();
+    m_pageChangedListeners.clear();
+    m_pageChangingListeners.clear();
 
     m_disposeHelper.dispose();
   }
@@ -352,32 +346,10 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
     m_mainSash.setFont( m_workArea.getFont() );
     m_mainSash.setLayoutData( new GridData( GridData.FILL_BOTH ) );
 
-    // Browser: to the left
-    // Register a context menu on it, so we suppress the ugly explorer menu
-    final Composite browserPanel = new Composite( m_mainSash, SWT.BORDER );
-    final GridLayout browserPanelLayout = new GridLayout();
-    browserPanelLayout.marginHeight = 0;
-    browserPanelLayout.marginWidth = 0;
-    browserPanel.setLayout( browserPanelLayout );
+    m_browserPanel = new NavigationPanel( this, m_mainSash, SWT.BORDER );
 
-    m_browser = new Browser( browserPanel, SWT.NONE );
-    m_browser.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-    final MenuManager menuManager = new MenuManager( "#PopupMenu" ); //$NON-NLS-1$
-    menuManager.setRemoveAllWhenShown( true );
-    final Menu contextMenu = menuManager.createContextMenu( m_browser );
-    m_browser.setMenu( contextMenu );
+    final MenuManager menuManager = m_browserPanel.getContextMenu();
     getSite().registerContextMenu( menuManager, getSite().getSelectionProvider() );
-    m_browser.addLocationListener( new LocationAdapter()
-    {
-      /**
-       * @see org.eclipse.swt.browser.LocationAdapter#changed(org.eclipse.swt.browser.LocationEvent)
-       */
-      @Override
-      public void changed( final LocationEvent event )
-      {
-        changeLocation( event.location );
-      }
-    } );
 
     m_pageAndButtonArea = new Composite( m_mainSash, SWT.NONE );
     final GridLayout pageAndButtonLayout = new GridLayout();
@@ -689,13 +661,13 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
     showPageInternal( page );
   }
 
-  private boolean showPageInternal( final IWizardPage page )
+  boolean showPageInternal( final IWizardPage page )
   {
     if( page == null || page == m_currentPage )
       return false;
 
     if( !m_isMovingToPreviousPage )
-    // remember my previous page.
+      // remember my previous page.
     {
       if( m_backJumpsToLastVisited )
         page.setPreviousPage( m_currentPage );
@@ -789,44 +761,6 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
     return m_buttons.get( new Integer( id ) );
   }
 
-  protected void changeLocation( final String location )
-  {
-    if( m_ignoreNextCangeLocation || m_wizard == null )
-    {
-      m_ignoreNextCangeLocation = false;
-      return;
-    }
-
-    final int index = location.indexOf( '#' );
-    final String link;
-    if( index == -1 )
-      link = location;
-    else
-      link = location.substring( index + 1 );
-
-    boolean pageChanged = false;
-    if( "prev".compareToIgnoreCase( link ) == 0 ) //$NON-NLS-1$
-      pageChanged = doPrev();
-    else if( "next".compareToIgnoreCase( link ) == 0 ) //$NON-NLS-1$
-      pageChanged = doNext();
-    else if( "finish".compareToIgnoreCase( link ) == 0 ) //$NON-NLS-1$
-      pageChanged = doFinish();
-    else if( "cancel".compareToIgnoreCase( link ) == 0 ) //$NON-NLS-1$
-      pageChanged = doCancel();
-    else
-    {
-      final IWizardPage page = m_wizard.getPage( link );
-      if( page != null )
-        pageChanged = showPageInternal( page );
-    }
-
-    if( !pageChanged )
-    {
-      // we do not need to layout, because the page has not changed
-      showUrl( getCurrentPage() );
-    }
-  }
-
   /**
    * @see org.eclipse.jface.operation.IRunnableContext#run(boolean, boolean,
    *      org.eclipse.jface.operation.IRunnableWithProgress)
@@ -899,8 +833,8 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
     m_currentPage = page;
     m_stackLayout.topControl = m_currentPage.getControl();
 
-    final String html = showUrl( page );
-    if( html.length() != 0 )
+    final boolean showBrowser = m_browserPanel.showUrl( page );
+    if( showBrowser )
       m_mainSash.setMaximizedControl( null );
     else
       m_mainSash.setMaximizedControl( m_pageAndButtonArea );
@@ -908,29 +842,6 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
     // update the dialog controls
     m_pageContainer.layout();
     update();
-  }
-
-  private String showUrl( final IWizardPage page )
-  {
-    final String html = getHtmlForPage( page );
-// TODO implement some search/replace, so we only need one html template for all pages
-    m_ignoreNextCangeLocation = true;
-    if( html.length() > 0 )
-      m_browser.setUrl( html );
-
-    return html;
-  }
-
-  private String getHtmlForPage( final IWizardPage page )
-  {
-    if( page instanceof IHtmlWizardPage )
-    {
-      final URL htmlURL = ((IHtmlWizardPage) page).getHtmlURL();
-      if( htmlURL != null )
-        return htmlURL.toString();
-    }
-
-    return ""; //$NON-NLS-1$
   }
 
   /**
@@ -1753,7 +1664,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
   @Override
   public void addPageChangedListener( final IPageChangedListener listener )
   {
-    pageChangedListeners.add( listener );
+    m_pageChangedListeners.add( listener );
   }
 
   /*
@@ -1763,7 +1674,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
   @Override
   public void removePageChangedListener( final IPageChangedListener listener )
   {
-    pageChangedListeners.remove( listener );
+    m_pageChangedListeners.remove( listener );
   }
 
   /**
@@ -1777,7 +1688,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
    */
   protected void firePageChanged( final PageChangedEvent event )
   {
-    final Object[] listeners = pageChangedListeners.getListeners();
+    final Object[] listeners = m_pageChangedListeners.getListeners();
     for( int i = 0; i < listeners.length; ++i )
     {
       final IPageChangedListener l = (IPageChangedListener) listeners[i];
@@ -1802,7 +1713,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
    */
   public void addPageChangingListener( final IPageChangingListener listener )
   {
-    pageChangingListeners.add( listener );
+    m_pageChangingListeners.add( listener );
   }
 
   /**
@@ -1814,7 +1725,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
    */
   public void removePageChangingListener( final IPageChangingListener listener )
   {
-    pageChangingListeners.remove( listener );
+    m_pageChangingListeners.remove( listener );
   }
 
   /**
@@ -1842,7 +1753,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
    */
   protected void firePageChanging( final PageChangingEvent event )
   {
-    final Object[] listeners = pageChangingListeners.getListeners();
+    final Object[] listeners = m_pageChangingListeners.getListeners();
     for( int i = 0; i < listeners.length; ++i )
     {
       final IPageChangingListener l = (IPageChangingListener) listeners[i];
