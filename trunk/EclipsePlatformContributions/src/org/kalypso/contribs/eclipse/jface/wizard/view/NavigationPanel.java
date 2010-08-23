@@ -206,11 +206,13 @@ public class NavigationPanel extends Composite
     {
       m_browser.setUrl( htmlUrl.toExternalForm() );
 
+      final String pageNavigationId = getPageNavigationID( page );
+
       final String script = //
         "elements = document.getElementsByName('%s');" + //
         "for (i = 0; i < elements.length; i++)" + //
         "elements[i].className+=' activ';";
-      final String executeScript = String.format( script, page.getName() );
+      final String executeScript = String.format( script, pageNavigationId );
 
       final Browser browser = m_browser;
       // REMARK: need to execute this in an extra job, else it does not work as the browser seems to still react to the
@@ -232,6 +234,14 @@ public class NavigationPanel extends Composite
     }
     else
       return false;
+  }
+
+  private String getPageNavigationID( final IWizardPage page )
+  {
+    if( page instanceof IHtmlWizardPage )
+      return ((IHtmlWizardPage) page).getNavigationID();
+
+    return page.getName();
   }
 
   private URL getUrlForPage( final IWizardPage page )

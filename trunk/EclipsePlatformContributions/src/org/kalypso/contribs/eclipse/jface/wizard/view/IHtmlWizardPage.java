@@ -53,4 +53,7 @@ public interface IHtmlWizardPage extends IWizardPage
 {
   /** A URL to a html document. */
   URL getHtmlURL( );
+
+  /** The id used for html navigation. The element with this name in the html-navigation will be marked as 'activ' */
+  String getNavigationID( );
 }
