@@ -97,7 +97,7 @@ public final class IntervalSourceHandler
     }
   }
 
-  public static void mergeSources( final String[] baseSources, final String[] otherSources, final boolean baseSourceWasEmpty )
+  public static void mergeSources( final String[] baseSources, final String[] otherSources )
   {
     final Set<String> merged = new HashSet<String>();
 
@@ -113,7 +113,7 @@ public final class IntervalSourceHandler
 
     for( int i = 0; i < otherSources.length; i++ )
     {
-      final String reference = mergeSourceReference( baseSources[i], otherSources[i], baseSourceWasEmpty );
+      final String reference = mergeSourceReference( baseSources[i], otherSources[i] );
 
       // append mergedSources references
       if( !merged.isEmpty() )
@@ -127,22 +127,22 @@ public final class IntervalSourceHandler
    * @param srcFieldWasEmpty
    *          if values has been empty, take source reference of other
    */
-  private static String mergeSourceReference( final String base, final String other, final boolean baseSourceWasEmpty )
+  private static String mergeSourceReference( final String base, final String other )
   {
     // - wenn undefiniert: quelle kopieren
     // - wenn schon definiert: "verschmiert": nach ? kombinieren
-    if( IDataSourceItem.SOURCE_UNKNOWN.equalsIgnoreCase( base ) || IntervalSourceHandler.SOURCE_INITIAL_VALUE.equalsIgnoreCase( base ) )
+    if( IDataSourceItem.SOURCE_UNKNOWN.equalsIgnoreCase( base ) || isInitialValue( base ) )
       return other;
     else if( base.startsWith( "filter://" ) )
     {
       final Set<String> sources = new LinkedHashSet<String>();
 
-      if( !baseSourceWasEmpty )
+      if( !isInitialValue( base ) )
         Collections.addAll( sources, DataSourceHelper.getSources( base ) );
 
       if( other.startsWith( "filter://" ) )
         Collections.addAll( sources, DataSourceHelper.getSources( other ) );
-      else if( !IDataSourceItem.SOURCE_UNKNOWN.equals( other ) || !IntervalSourceHandler.SOURCE_INITIAL_VALUE.equals( other ) )
+      else if( !IDataSourceItem.SOURCE_UNKNOWN.equals( other ) || !isInitialValue( other ) )
         sources.add( other );
 
       if( sources.isEmpty() )
@@ -166,6 +166,11 @@ public final class IntervalSourceHandler
     }
 
     return base;
+  }
+
+  private static boolean isInitialValue( final String base )
+  {
+    return SOURCE_INITIAL_VALUE.equalsIgnoreCase( base );
   }
 
 }

@@ -342,7 +342,9 @@ public class IntervalTupleModel extends AbstractTupleModel
     for( int i = 0; i < srcDataSourceObjects.length; i++ )
     {
       final Number srcIndex = (Number) srcDataSourceObjects[i];
-      srcDataSources[i] = handler.getDataSourceIdentifier( srcIndex.intValue() );
+      final String dataSourceIdentifier = handler.getDataSourceIdentifier( srcIndex.intValue() );
+
+      srcDataSources[i] = dataSourceIdentifier;
     }
 
     return srcDataSources;
