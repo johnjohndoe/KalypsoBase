@@ -398,21 +398,21 @@ public class SelectFeatureWidget extends AbstractWidget
         m_addMode = true;
         break;
 
-      // "STRG": Toggle mode
+        // "STRG": Toggle mode
       case KeyEvent.VK_CONTROL:
         m_toggleMode = true;
         break;
 
-      // "ALT": switch between intersect / contains mode
+        // "ALT": switch between intersect / contains mode
       case KeyEvent.VK_ALT:
         m_intersectMode = true;
         break;
 
-      // "SPACE": switch between polygon / rect mode
+        // "SPACE": switch between polygon / rect mode
       case KeyEvent.VK_SPACE:
         changeGeometryBuilder();
         break;
-      // "ESC": deselection
+        // "ESC": deselection
       case KeyEvent.VK_ESCAPE:
         m_geometryBuilder.reset();
         final IFeatureSelectionManager selectionManager = mapPanel.getSelectionManager();
