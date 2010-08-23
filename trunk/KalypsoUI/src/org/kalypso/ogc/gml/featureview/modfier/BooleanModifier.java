@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.featureview.modfier;
 
@@ -98,7 +98,7 @@ public class BooleanModifier implements IFeatureModifier
    * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#createCellEditor(org.eclipse.swt.widgets.Composite)
    */
   @Override
-  public CellEditor createCellEditor( Composite parent )
+  public CellEditor createCellEditor( final Composite parent )
   {
     return new CheckboxCellEditor( parent );
   }

@@ -133,7 +133,7 @@ public class ComboModifier implements IFeatureModifier
       }
     };
 
-    m_comboBoxCellEditor = new ComboBoxViewerCellEditor( parent, SWT.READ_ONLY | SWT.DROP_DOWN )
+    m_comboBoxCellEditor = new ComboModifierCellEditor( parent, SWT.READ_ONLY | SWT.DROP_DOWN )
     {
       /**
        * @see org.eclipse.jface.viewers.ComboBoxViewerCellEditor#doSetValue(java.lang.Object)
