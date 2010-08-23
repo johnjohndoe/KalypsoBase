@@ -147,8 +147,29 @@ public class DataSourceHandler
   public String getDataSourceIdentifier( final int pos )
   {
     final String header = MetadataHelper.getCountedHeaderItem( IDataSourceItem.MD_DATA_SOURCE_ITEM, pos );
+    final String source = m_metadata.getProperty( header );
+    if( containsFilter( source ) )
+    {
+      final String[] parts = source.split( "\\?" );
+      return parts[0];
 
-    return m_metadata.getProperty( header );
+    }
+
+    return source;
+  }
+
+  /**
+   * @return source reference contains filter string, like source://id?<ns=... ...>
+   */
+  private boolean containsFilter( final String source )
+  {
+    if( source.contains( "?" ) )
+    {
+      final String[] parts = source.split( "\\?" );
+      return parts[1].startsWith( "<" );
+    }
+
+    return false;
   }
 
   public String getDataSourceRepository( final int pos )

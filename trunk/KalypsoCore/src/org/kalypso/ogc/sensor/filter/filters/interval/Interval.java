@@ -279,8 +279,6 @@ public class Interval
 
   public void merge( final Interval other, final MODE mode )
   {
-    final boolean empty = isEmpty();
-
     final double factor = calcFactorMerge( other, mode );
     for( int i = 0; i < other.getValue().length; i++ )
     {
@@ -292,18 +290,7 @@ public class Interval
       m_status[i] |= other.getStatus()[i];
     }
 
-    IntervalSourceHandler.mergeSources( m_sources, other.getSources(), empty );
-  }
-
-  private boolean isEmpty( )
-  {
-    for( final double value : m_value )
-    {
-      if( value != 0.0 )
-        return false;
-    }
-
-    return true;
+    IntervalSourceHandler.mergeSources( m_sources, other.getSources() );
   }
 
   private double calcFactorIntersect( final Interval other, final MODE mode )
