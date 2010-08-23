@@ -283,11 +283,8 @@ public class SelectSingleFeatureWidget extends AbstractWidget
     return formatter.toString();
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#leftClicked(java.awt.Point)
-   */
   @Override
-  public void leftClicked( final Point p )
+  public void leftPressed( final Point p )
   {
     final IMapPanel mapPanel = getMapPanel();
     if( mapPanel == null )
