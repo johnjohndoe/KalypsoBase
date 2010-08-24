@@ -87,7 +87,7 @@ public class EmptyValueInterpolationWorker extends AbstractInterpolationWorker i
 
           final IAxis dateAxis = getDateAxis();
           final IAxis[] valueAxes = getValueAxes();
-          final Object[] defaultValues = parseDefaultValues( valueAxes );
+          final Object[] defaultValues = getDefaultValues( valueAxes );
 
           while( calendar.getTime().compareTo( getDateRange().getTo() ) <= 0 )
           {

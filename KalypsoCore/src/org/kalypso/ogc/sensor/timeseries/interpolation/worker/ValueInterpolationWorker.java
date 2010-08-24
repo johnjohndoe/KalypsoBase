@@ -96,6 +96,7 @@ public class ValueInterpolationWorker extends AbstractInterpolationWorker
 
     try
     {
+      final DateRange dateRange = getDateRange();
       final IAxis[] valueAxes = getValueAxes();
       final Calendar calendar = Calendar.getInstance();
 
@@ -110,6 +111,10 @@ public class ValueInterpolationWorker extends AbstractInterpolationWorker
 
         stack.d1 = stack.d2;
         System.arraycopy( stack.v2, 0, stack.v1, 0, stack.v2.length );
+
+        /* If dataRange is specified, only interpolate values upto dateRane.to */
+        if( dateRange != null && calendar.getTime().after( dateRange.getTo() ) )
+          break;
       }
 
       setEndValues( calendar );
@@ -130,38 +135,70 @@ public class ValueInterpolationWorker extends AbstractInterpolationWorker
     // do we need to fill after the end of the base model?
     if( getDateRange() != null && isFilled() )
     {
-      // optionally remember the last interpolated values in order
-      // to fill them till the end of the new model
-      Object[] lastValidTuple = null;
-      if( isLastFilledWithValid() && getInterpolatedModel().getCount() > 0 )
-      {
-        final int position = getInterpolatedModel().getCount() - 1;
-
-        lastValidTuple = new Object[valueAxes.length + 1];
-        final int datePosition = getInterpolatedModel().getPositionFor( dateAxis );
-        lastValidTuple[datePosition] = getInterpolatedModel().getElement( position, dateAxis );
-
-        for( int i = 0; i < valueAxes.length; i++ )
-        {
-          final int valuePosition = getInterpolatedModel().getPositionFor( valueAxes[i] );
-
-          if( KalypsoStatusUtils.isStatusAxis( valueAxes[i] ) )
-            lastValidTuple[valuePosition] = getDefaultStatus();
-          else
-            lastValidTuple[valuePosition] = getInterpolatedModel().getElement( position, valueAxes[i] );
-        }
-      }
-
-      // FIXME: what happens if lastValidTuple == null
-      if( lastValidTuple == null )
-        return;
+      final Object[] lastValidTuple = determineLastValid( dateAxis, valueAxes );
 
       // FIXME: compare date with Date.before !
       while( calendar.getTime().compareTo( getDateRange().getTo() ) <= 0 )
-      {
         appendTuple( lastValidTuple, calendar );
+    }
+  }
+
+  private Object[] determineLastValid( final IAxis dateAxis, final IAxis[] valueAxes ) throws SensorException
+  {
+    // optionally remember the last interpolated values in order
+    // to fill them till the end of the new model
+    final SimpleTupleModel interpolatedModel = getInterpolatedModel();
+
+    // FIXME: this is not really correct... maybe the last value is not valid? We need first to determine the real last
+    // valid position
+    final int lastValidValuePosition = interpolatedModel.getCount() - 1;
+
+    // FIXME: if no valid tuple is available, an empty object array is returned, is that intended?
+    final Object[] lastValidTuple = new Object[valueAxes.length + 1];
+
+    final int dateAxisPosition = interpolatedModel.getPositionFor( dateAxis );
+    lastValidTuple[dateAxisPosition] = interpolatedModel.getElement( lastValidValuePosition, dateAxis );
+
+    final Object[] defaultValues = getDefaultValues( valueAxes );
+
+    for( final IAxis valueAxe : valueAxes )
+    {
+      final int valueAxisPosition = interpolatedModel.getPositionFor( valueAxe );
+
+      if( KalypsoStatusUtils.isStatusAxis( valueAxe ) )
+        lastValidTuple[valueAxisPosition] = getDefaultStatus();
+      else
+      {
+        if( isLastFilledWithValid() && interpolatedModel.getCount() > 0 )
+          lastValidTuple[valueAxisPosition] = interpolatedModel.getElement( lastValidValuePosition, valueAxe );
+        else
+          lastValidTuple[valueAxisPosition] = defaultValues[valueAxisPosition];
       }
     }
+
+    return lastValidTuple;
+  }
+
+  private void appendTuple( final Object[] tuple, final Calendar calendar ) throws SensorException
+  {
+    final IAxis dateAxis = getDateAxis();
+    final IAxis dataSourceAxis = getDataSourceAxis();
+
+    final SimpleTupleModel interpolatedModel = getInterpolatedModel();
+    final int datePosition = interpolatedModel.getPositionFor( dateAxis );
+
+    final Object[] add = tuple.clone();
+    add[datePosition] = calendar.getTime();
+
+    // FIXME: what to do, if data source is null ?!
+    if( dataSourceAxis != null )
+    {
+      final int dataSrcPosition = interpolatedModel.getPositionFor( dataSourceAxis );
+      add[dataSrcPosition] = getDataSourceIndex();
+    }
+
+    interpolatedModel.addTuple( add );
+    nextStep( calendar );
   }
 
   private void setInterpolationValues( final LocalCalculationStack stack, final Calendar calendar, final int index ) throws SensorException
@@ -173,10 +210,10 @@ public class ValueInterpolationWorker extends AbstractInterpolationWorker
 
     stack.d2 = (Date) getBaseModel().getElement( index, dateAxis );
 
-    for( int ia = 0; ia < valueAxes.length; ia++ )
+    for( final IAxis valueAxe : valueAxes )
     {
-      final Number nb = (Number) getBaseModel().getElement( index, valueAxes[ia] );
-      final int valuePosition = getInterpolatedModel().getPositionFor( valueAxes[ia] );
+      final Number nb = (Number) getBaseModel().getElement( index, valueAxe );
+      final int valuePosition = getInterpolatedModel().getPositionFor( valueAxe );
 
       stack.v2[valuePosition] = nb.doubleValue();
     }
@@ -192,10 +229,8 @@ public class ValueInterpolationWorker extends AbstractInterpolationWorker
 
       boolean interpolated = false;
 
-      for( int ia = 0; ia < valueAxes.length; ia++ )
+      for( final IAxis valueAxis : valueAxes )
       {
-        final IAxis valueAxis = valueAxes[ia];
-
         final int position = getInterpolatedModel().getPositionFor( valueAxis );
 
         final double valStart = stack.v1[position];
@@ -258,7 +293,7 @@ public class ValueInterpolationWorker extends AbstractInterpolationWorker
       return;
 
     // FIXME: what happens if dataSource is null?
-    IAxis dataSourceAxis = getDataSourceAxis();
+    final IAxis dataSourceAxis = getDataSourceAxis();
     if( dataSourceAxis == null )
       return;
 
@@ -273,7 +308,7 @@ public class ValueInterpolationWorker extends AbstractInterpolationWorker
     final IAxis dateAxis = getDateAxis();
     final IAxis[] valueAxes = getValueAxes();
 
-    final Object[] defaultValues = parseDefaultValues( valueAxes );
+    final Object[] defaultValues = getDefaultValues( valueAxes );
 
     final Date timeSeriesStart = (Date) getBaseModel().getElement( 0, dateAxis );
 
@@ -282,11 +317,11 @@ public class ValueInterpolationWorker extends AbstractInterpolationWorker
       calendar.setTime( getDateRange().getFrom() );
       stack.d1 = calendar.getTime();
 
-      for( int i = 0; i < valueAxes.length; i++ )
+      for( final IAxis valueAxe : valueAxes )
       {
         // keep original data_src!
-        final Number number = (Number) getBaseModel().getElement( 0, valueAxes[i] );
-        final int position = interpolated.getPositionFor( valueAxes[i] );
+        final Number number = (Number) getBaseModel().getElement( 0, valueAxe );
+        final int position = interpolated.getPositionFor( valueAxe );
 
         stack.v1[position] = number.doubleValue();
       }
@@ -304,11 +339,11 @@ public class ValueInterpolationWorker extends AbstractInterpolationWorker
       final Object[] tuple = new Object[valueAxes.length + 1];
       tuple[interpolated.getPositionFor( dateAxis )] = calendar.getTime();
 
-      for( int i = 0; i < valueAxes.length; i++ )
+      for( final IAxis valueAxe : valueAxes )
       {
-        final Number number = (Number) getBaseModel().getElement( 0, valueAxes[i] );
+        final Number number = (Number) getBaseModel().getElement( 0, valueAxe );
 
-        final int position = interpolated.getPositionFor( valueAxes[i] );
+        final int position = interpolated.getPositionFor( valueAxe );
         tuple[position] = number;
 
         stack.v1[position] = number.doubleValue();
