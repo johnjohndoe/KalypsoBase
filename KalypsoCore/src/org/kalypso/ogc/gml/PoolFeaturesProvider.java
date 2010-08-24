@@ -55,7 +55,7 @@ import org.kalypsodeegree.model.feature.event.ModellEvent;
 /**
  * @author Gernot Belger
  */
-public class PoolFeaturesProvider extends AbstractFeaturesProvider implements ILoadStartable
+public class PoolFeaturesProvider extends AbstractFeaturesProvider implements ILoadStartable, ISaveableFeaturesProvider
 {
   private final IGmlWorkspaceProviderListener m_providerListener = new IGmlWorkspaceProviderListener()
   {
@@ -194,6 +194,7 @@ public class PoolFeaturesProvider extends AbstractFeaturesProvider implements IL
     return m_workspaceProvider.getPoolKey();
   }
 
+  @Override
   public void save( final IProgressMonitor monitor ) throws CoreException
   {
     m_workspaceProvider.save( monitor );
