@@ -152,7 +152,6 @@ public class DataSourceHandler
     {
       final String[] parts = source.split( "\\?" );
       return parts[0];
-
     }
 
     return source;

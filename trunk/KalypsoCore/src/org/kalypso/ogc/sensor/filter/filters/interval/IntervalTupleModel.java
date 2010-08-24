@@ -172,7 +172,7 @@ public class IntervalTupleModel extends AbstractTupleModel
 
     // BUGFIX: handle case when source start before from
     // Before this fix, this lead to a endless loop
-    final Calendar firstSrcCal = getFirstSrcCalendar( srcMaxRows );
+    final Calendar firstSrcCal = getFirstSrcCalendar();
     if( firstSrcCal.before( stack.lastSrcCalendar ) )
       stack.lastSrcCalendar = firstSrcCal;
 
@@ -259,10 +259,12 @@ public class IntervalTupleModel extends AbstractTupleModel
 
   private PROCESSING_INSTRUCTION setNextSourceInterval( final IntervalCalculationStack stack, final int srcMaxRows ) throws SensorException
   {
-    final Calendar firstSrcCal = getFirstSrcCalendar( srcMaxRows );
+    final Calendar firstSrcCal = getFirstSrcCalendar();
 
     // calculate the end of a source interval with given distance
     final Calendar srcCalIntervallEnd = (Calendar) stack.lastSrcCalendar.clone();
+
+    // FIXME: no! use real source values instead!
     srcCalIntervallEnd.add( m_calendar.getCalendarField(), m_calendar.getAmount() );
 
     // if we are after the source time series
@@ -270,63 +272,44 @@ public class IntervalTupleModel extends AbstractTupleModel
     {
       // generate defaults
       // create dummy interval
+      // FIXME: strange: empty interval?!
       stack.srcInterval = new Interval( stack.lastSrcCalendar, srcCalIntervallEnd, stack.defaultValues, stack.defaultStatis, stack.getPlainSources() );
 
-      stack.lastSrcCalendar = stack.srcInterval.getEnd();
+      stack.lastSrcCalendar = (Calendar) srcCalIntervallEnd.clone();
       // TODO m_to, defaults
       return PROCESSING_INSTRUCTION.eNothing;
     }
 
-    // read current values from source time series
     final Calendar srcCal = createCalendar( (Date) m_srcModel.getElement( stack.srcRow, m_axes.getDateAxis() ) );
-    final Object[] srcStatusValues = ObservationUtilities.getElements( m_srcModel, stack.srcRow, m_axes.getStatusAxes() );
-    final Integer[] srcStati = new Integer[srcStatusValues.length];
-    for( int i = 0; i < srcStatusValues.length; i++ )
-    {
-      srcStati[i] = Integer.valueOf( ((Number) srcStatusValues[i]).intValue() );
-    }
 
     stack.srcInterval = null;
 
-    if( !stack.lastSrcCalendar.after( srcCal ) )
+    if( stack.lastSrcCalendar.after( srcCal ) )
+      return PROCESSING_INSTRUCTION.eNothing;
+
+    /* we need next source interval */
+    if( srcCalIntervallEnd.before( firstSrcCal ) )
     {
-      /* we need next source interval */
-      if( srcCalIntervallEnd.before( firstSrcCal ) )
+      // we are before the source time series
+      stack.srcInterval = new Interval( stack.lastSrcCalendar, srcCalIntervallEnd, stack.defaultValues, stack.defaultStatis, stack.getPlainSources() );
+      stack.lastSrcCalendar = srcCalIntervallEnd;
+    }
+    /* we are inside source time series */
+    else
+    {
+      final Double[] srcValues = getSourceValues( stack.srcRow );
+      final String[] dataSources = getDataSources( stack.srcRow );
+      // read current values from source time series
+      final Object[] srcStatusValues = ObservationUtilities.getElements( m_srcModel, stack.srcRow, m_axes.getStatusAxes() );
+      final Integer[] srcStati = new Integer[srcStatusValues.length];
+      for( int i = 0; i < srcStatusValues.length; i++ )
       {
-        // we are before the source time series
-        stack.srcInterval = new Interval( stack.lastSrcCalendar, srcCalIntervallEnd, stack.defaultValues, stack.defaultStatis, stack.getPlainSources() );
-        stack.lastSrcCalendar = srcCalIntervallEnd;
+        srcStati[i] = Integer.valueOf( ((Number) srcStatusValues[i]).intValue() );
       }
-      /* we are inside source time series */
-      else
-      {
-        final Double[] srcValues = getSourceValues( stack.srcRow );
-        final String[] dataSources = getDataSources( stack.srcRow );
 
-        switch( m_mode )
-        {
-          case eIntensity:
-            stack.srcInterval = new Interval( stack.lastSrcCalendar, srcCal, srcValues, srcStati, dataSources );
-            break;
-          default:
-            /* (IntervallFilter.MODE_SUM) as length of first interval is undefined, we ignore first value */
-
-            /*
-             * bugfix: we use it nevertheless, as it works OK if intervals are equal; also, always no warning produces
-             * problems elsewhere
-             */
-
-            /*
-             * TODO solve: for which interval is the first value valid ? there is no definition :-(
-             */
-
-// if( srcRow > 0 )
-            stack.srcInterval = new Interval( stack.lastSrcCalendar, srcCal, srcValues, srcStati, dataSources );
-            break;
-        }
-        stack.lastSrcCalendar = srcCal;
-        stack.srcRow++;
-      }
+      stack.srcInterval = new Interval( stack.lastSrcCalendar, srcCal, srcValues, srcStati, dataSources );
+      stack.lastSrcCalendar = srcCal;
+      stack.srcRow++;
     }
 
     return PROCESSING_INSTRUCTION.eNothing;
@@ -363,10 +346,10 @@ public class IntervalTupleModel extends AbstractTupleModel
     return srcValues;
   }
 
-  private Calendar getFirstSrcCalendar( final int srcMaxRows ) throws SensorException
+  private Calendar getFirstSrcCalendar( ) throws SensorException
   {
     // check if source time series is empty
-    if( srcMaxRows != 0 ) // not empty
+    if( m_srcModel.getCount() != 0 ) // not empty
       return createCalendar( (Date) m_srcModel.getElement( 0, m_axes.getDateAxis() ) );
     else
       // if empty, we pretend that it begins at requested range
