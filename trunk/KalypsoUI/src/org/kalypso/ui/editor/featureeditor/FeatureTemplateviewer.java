@@ -48,8 +48,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -66,6 +64,7 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.SharedScrolledComposite;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.ui.forms.ToolkitUtils;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.util.pool.IPoolListener;
 import org.kalypso.core.util.pool.IPoolableObjectType;
@@ -151,7 +150,7 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
 
   private Composite m_topLevelComposite;
 
-  FormToolkit m_toolkit;
+  private FormToolkit m_toolkit;
 
   public FeatureTemplateviewer( final JobExclusiveCommandTarget commandtarget )
   {
@@ -200,12 +199,6 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
 
     m_template = template;
 
-    if( m_toolkit != null )
-    {
-      m_toolkit.dispose();
-      m_toolkit = null;
-    }
-
     final List<FeatureviewType> view = template.getView();
     for( final FeatureviewType featureviewType : view )
       m_fvFactory.addView( featureviewType );
@@ -245,7 +238,6 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
     if( m_workspace != null )
       m_workspace.addModellListener( this );
 
-    // TODO!
     m_commandtarget.setCommandManager( workspace );
 
     if( m_contentPanel == null || m_contentPanel.isDisposed() )
@@ -290,26 +282,13 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
   {
     final int formStyle = getTemplateStyle( defaultStyle );
 
+    /* If we explicitely need an toolkit but we don't have one, create it now */
+    if( m_template != null && m_template.isToolkit() && m_toolkit == null )
+      m_toolkit = ToolkitUtils.createToolkit( parent );
+
+    m_featureComposite.setFormToolkit( m_toolkit );
+
     m_contentPanel = createTopLevelComposite( parent, formStyle );
-
-    if( m_template != null && m_template.isToolkit() )
-    {
-      m_toolkit = new FormToolkit( m_contentPanel.getDisplay() );
-      m_featureComposite.setFormToolkit( m_toolkit );
-    }
-
-    m_contentPanel.addDisposeListener( new DisposeListener()
-    {
-      @Override
-      public void widgetDisposed( final DisposeEvent e )
-      {
-        if( m_toolkit != null )
-        {
-          m_toolkit.dispose();
-          m_toolkit = null;
-        }
-      }
-    } );
 
     final GridLayout gridLayout = new GridLayout();
     gridLayout.marginHeight = 0;
@@ -488,5 +467,10 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
   @Override
   public void dirtyChanged( final IPoolableObjectType key, final boolean isDirty )
   {
+  }
+
+  public void setToolkit( final FormToolkit toolkit )
+  {
+    m_toolkit = toolkit;
   }
 }
