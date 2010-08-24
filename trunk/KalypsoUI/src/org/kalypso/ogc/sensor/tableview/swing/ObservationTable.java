@@ -233,6 +233,9 @@ public class ObservationTable extends Panel implements IObsViewEventListener
 
   private void addPopupMenu( final JTableHeader header )
   {
+    if( !m_table.usesContextMenu() )
+      return;
+
     try
     {
       final java.awt.PopupMenu menu = KalypsoUIExtensions.getObservationTableHeaderPopupMenu();
@@ -588,9 +591,12 @@ public class ObservationTable extends Panel implements IObsViewEventListener
 
     private ExcelClipboardAdapter m_excelCp = null;
 
+    private final boolean m_useContextMenu;
+
     public MainTable( final boolean useContextMenu, final NumberFormat nf, final TableModel dm, final TableColumnModel cm )
     {
       super( dm, cm );
+      m_useContextMenu = useContextMenu;
 
       if( useContextMenu )
       {
@@ -616,6 +622,11 @@ public class ObservationTable extends Panel implements IObsViewEventListener
         m_popup.show( this, e.getX(), e.getY() );
       else
         super.processMouseEvent( e );
+    }
+
+    public boolean usesContextMenu( )
+    {
+      return m_useContextMenu;
     }
   }
 }
