@@ -54,6 +54,7 @@ import org.eclipse.swt.browser.LocationAdapter;
 import org.eclipse.swt.browser.LocationEvent;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.progress.UIJob;
 
 /**
@@ -93,12 +94,15 @@ public class NavigationPanel extends Composite
     createContextMenu();
   }
 
+  /**
+   * Set an empty context menu in order to overwrite the one of IE
+   */
   private void createContextMenu( )
   {
     m_menuManager = new MenuManager( "#PopupMenu" ); //$NON-NLS-1$
     m_menuManager.setRemoveAllWhenShown( true );
-// final Menu contextMenu = m_menuManager.createContextMenu( m_browser );
-// m_browser.setMenu( contextMenu );
+    final Menu contextMenu = m_menuManager.createContextMenu( m_browser );
+    m_browser.setMenu( contextMenu );
     m_browser.addLocationListener( new LocationAdapter()
     {
       /**
