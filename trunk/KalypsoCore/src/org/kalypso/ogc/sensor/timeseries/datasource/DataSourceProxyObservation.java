@@ -122,13 +122,13 @@ public class DataSourceProxyObservation implements IObservation
   {
     if( args == null || args != m_args )
     {
-      m_model = m_observation.getValues( args );
+      final ITupleModel model = m_observation.getValues( args );
       if( !DataSourceHelper.hasDataSources( m_model ) )
       {
         // to assert a valid source reference!
         getMetadataList();
 
-        final AddDataSourceModelHandler handler = new AddDataSourceModelHandler( m_model );
+        final AddDataSourceModelHandler handler = new AddDataSourceModelHandler( model );
         m_model = handler.extend();
       }
 

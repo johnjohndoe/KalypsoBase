@@ -58,6 +58,7 @@ import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
+import org.kalypso.ogc.sensor.metadata.MetadataHelper;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
@@ -170,9 +171,33 @@ public class MergeObservationWorker implements ICoreRunnableWithProgress
       }
     }
 
+    updateWqTable();
+
     m_result = new SimpleObservation( m_href, m_href, m_metadata, baseModel );
 
     return StatusUtilities.createStatus( statis, "Combing tuple models." );
+  }
+
+  /**
+   * w/q tables of wiski time series will be generated on the fly (getValue() - the table is daterange related) - so
+   * update our loacl w/q table with each request base observation
+   */
+  private void updateWqTable( )
+  {
+    final String wqTable = MetadataHelper.getWqTable( m_metadata );
+    if( wqTable == null )
+    {
+      for( final ObservationSource source : m_sources )
+      {
+        final MetadataList metadata = source.getObservation().getMetadataList();
+        final String localTable = MetadataHelper.getWqTable( metadata );
+        if( localTable != null )
+        {
+          MetadataHelper.setWqTable( m_metadata, localTable );
+          break;
+        }
+      }
+    }
   }
 
   private Object[][] getFromSourceData( final IObservation srcObservation, final ITupleModel srcModel ) throws SensorException
