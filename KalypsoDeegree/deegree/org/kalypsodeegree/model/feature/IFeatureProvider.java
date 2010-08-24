@@ -43,7 +43,7 @@ package org.kalypsodeegree.model.feature;
  */
 public interface IFeatureProvider
 {
-  public void dispose( );
+  void dispose( );
 
-  public GMLWorkspace getWorkspace( );
+  GMLWorkspace getWorkspace( );
 }
