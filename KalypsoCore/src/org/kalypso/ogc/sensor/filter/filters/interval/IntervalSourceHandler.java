@@ -83,11 +83,24 @@ public final class IntervalSourceHandler
             buffer.append( String.format( "source_%d=%s&", srcIndex, src ) );
           }
 
-          // mergedSources=...,n-1,n
-          buffer.append( String.format( "%s=", DataSourceHelper.MERGED_SOURCES_ID ) );
+          /* merged sources references */
+          String mergedSources = "";
           for( int srcIndex = 0; srcIndex < srcs.length; srcIndex++ )
           {
-            buffer.append( String.format( "%d,", srcIndex ) );
+            if( isInitialValue( srcs[srcIndex] ) )
+              continue;
+
+            mergedSources += String.format( "%d,", srcIndex );
+          }
+
+          if( !mergedSources.isEmpty() )
+          {
+            // mergedSources=...,n-1,n
+            buffer.append( String.format( "%s=", DataSourceHelper.MERGED_SOURCES_ID ) );
+            for( int srcIndex = 0; srcIndex < srcs.length; srcIndex++ )
+            {
+              buffer.append( String.format( "%d,", srcIndex ) );
+            }
           }
         }
 
@@ -141,8 +154,17 @@ public final class IntervalSourceHandler
         Collections.addAll( sources, DataSourceHelper.getSources( base ) );
 
       if( other.startsWith( "filter://" ) )
-        Collections.addAll( sources, DataSourceHelper.getSources( other ) );
-      else if( !IDataSourceItem.SOURCE_UNKNOWN.equals( other ) || !isInitialValue( other ) )
+      {
+        final String[] otherSources = DataSourceHelper.getSources( other );
+        for( final String source : otherSources )
+        {
+          if( SOURCE_INITIAL_VALUE.equalsIgnoreCase( source ) )
+            continue;
+
+          sources.add( source );
+        }
+      }
+      else if( !IDataSourceItem.SOURCE_UNKNOWN.equals( other ) && !isInitialValue( other ) )
         sources.add( other );
 
       if( sources.isEmpty() )

@@ -251,7 +251,6 @@ public final class DataSourceHelper
 
         return Integer.valueOf( sourceLetter );
       }
-
     }
 
     return -1;
