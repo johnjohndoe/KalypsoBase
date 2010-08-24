@@ -50,7 +50,7 @@ import org.eclipse.ui.forms.widgets.Form;
  * 
  * @author Gernot Belger
  */
-public class MessageUtilitites
+public final class MessageUtilitites
 {
   /**
    * {@link IMessage} implementation based on an {@link IStatus}.
