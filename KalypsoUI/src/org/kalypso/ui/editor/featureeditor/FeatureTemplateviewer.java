@@ -325,7 +325,7 @@ public class FeatureTemplateviewer
       m_featureComposite.disposeControl();
 
       /* If a workspace is missing, it is probably still loading. */
-      if( m_featuresProvider == null )
+      if( m_featuresProvider == null || m_featuresProvider.getWorkspace() == null )
       {
         /* Create a label, to inform the user about the status. */
         m_label = new Label( m_contentPanel, SWT.CENTER );
