@@ -149,9 +149,7 @@ public abstract class AbstractInterpolationWorker implements ICoreRunnableWithPr
   protected IAxis[] getValueAxes( )
   {
     final IAxis[] axes = getBaseModel().getAxisList();
-    final IAxis[] valueAxes = ObservationUtilities.findAxesByClasses( axes, new Class[] { Number.class, Boolean.class } );
-
-    return valueAxes;
+    return ObservationUtilities.findAxesByClasses( axes, new Class[] { Number.class, Boolean.class } );
   }
 
   protected IAxis getDataSourceAxis( )
@@ -161,7 +159,7 @@ public abstract class AbstractInterpolationWorker implements ICoreRunnableWithPr
     return AxisUtils.findDataSourceAxis( axes );
   }
 
-  protected Object[] parseDefaultValues( final IAxis[] valueAxes ) throws SensorException
+  protected Object[] getDefaultValues( final IAxis[] valueAxes ) throws SensorException
   {
     final Object[] defaultValues = new Object[valueAxes.length];
     for( int i = 0; i < defaultValues.length; i++ )
@@ -182,27 +180,6 @@ public abstract class AbstractInterpolationWorker implements ICoreRunnableWithPr
       }
     }
     return defaultValues;
-  }
-
-  protected void appendTuple( final Object[] tuple, final Calendar calendar ) throws SensorException
-  {
-    final IAxis dateAxis = getDateAxis();
-    final IAxis dataSourceAxis = getDataSourceAxis();
-
-    final int datePosition = getInterpolatedModel().getPositionFor( dateAxis );
-
-    final Object[] add = tuple.clone();
-    add[datePosition] = calendar.getTime();
-
-    // FIXME: what to do, if data source is null ?!
-    if( dataSourceAxis != null )
-    {
-      final int dataSrcPosition = getInterpolatedModel().getPositionFor( dataSourceAxis );
-      add[dataSrcPosition] = getDataSourceIndex();
-    }
-
-    getInterpolatedModel().addTuple( add );
-    nextStep( calendar );
   }
 
   protected Integer getDataSourceIndex( )
