@@ -390,4 +390,9 @@ public final class RepositoryItemUtils
     return isVirtual( item.getIdentifier() );
   }
 
+  public static boolean equals( final IRepositoryItem item1, final IRepositoryItem item2 )
+  {
+    return getPlainId( item1.getIdentifier() ).equalsIgnoreCase( getPlainId( item2.getIdentifier() ) );
+  }
+
 }
