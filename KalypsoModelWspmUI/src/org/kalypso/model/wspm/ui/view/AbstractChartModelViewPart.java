@@ -234,7 +234,7 @@ public abstract class AbstractChartModelViewPart extends ViewPart implements IAd
 
   protected final void updatePartName( final IChartModel model, final String message )
   {
-    if( m_form == null )
+    if( m_form == null||m_form.isDisposed() )
       return;
     if( model == null )
     {

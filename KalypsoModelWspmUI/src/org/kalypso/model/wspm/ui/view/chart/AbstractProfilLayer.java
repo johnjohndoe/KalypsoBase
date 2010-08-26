@@ -512,6 +512,8 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
 
   public Point2D toNumeric( final Point point )
   {
+    if( point == null )
+      return null;
     final ICoordinateMapper cm = getCoordinateMapper();
     final Double x = cm.getDomainAxis().screenToNumeric( point.x ).doubleValue();
     final Double y = cm.getTargetAxis().screenToNumeric( point.y ).doubleValue();

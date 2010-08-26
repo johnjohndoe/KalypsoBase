@@ -209,7 +209,7 @@ public class ChartFactory
               valueList = axisType.getStringRange().getValueSet().getValueArray();
             ap.init( model, id, pc, context, dataClass, axisPosition, valueList );
             final IAxis axis = ap.getAxis();
-            // axis.setRegistry( mr );
+
             // Provider in Element setzen - fürs speichern benötigt
             axis.setData( ChartFactory.AXIS_PROVIDER_KEY, ap );
             // save configuration type so it can be used for saving to chartfile
@@ -224,14 +224,11 @@ public class ChartFactory
             // Renderer nur erzeugen, wenn es noch keinen für die
             // Achse gibt
 
-            // Hack due old kod-files with this malformed renderer-id still exists
-            // if(rendererID.equals( "TODO: KIM id mit test mittendrin austauschen" ))
             final ReferencingType rendererRef = axisType.getRendererRef();
             IAxisRenderer axisRenderer = findRenderer( mr.getAxes(), rendererRef.getRef() );
 
             if( axisRenderer != null )
             {
-
               // schon vorhanden => einfach zuweisen
               axis.setRenderer( axisRenderer );
             }
@@ -240,13 +237,24 @@ public class ChartFactory
               final AxisRendererType rendererType = (AxisRendererType) rr.resolveReference( rendererRef.getRef() );
               if( rendererType != null )
               {
-
                 final String arpId = rendererType.getProvider().getEpid();
-                final IAxisRendererProvider arp = extLoader.getExtension( IAxisRendererProvider.class, arpId );
+                final IAxisRendererProvider arp;
+                // Hack due older kod-files with this malformed renderer-id still exists
+                if( "de.openali.odysseus.chart.ext.test.axisrenderer.provider.GenericNumberAxisRendererProvider".equals( arpId ) )
+                  arp = extLoader.getExtension( IAxisRendererProvider.class, "de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericNumberAxisRendererProvider" );
+                else
+                  arp = extLoader.getExtension( IAxisRendererProvider.class, arpId );
                 final String rid = rendererType.getId();
                 final IStyleSet styleSet = createStyleSet( rendererType.getStyles(), context );
                 final IParameterContainer rpc = createParameterContainer( rid, rendererType.getProvider() );
-                arp.init( model, rid, rpc, context, styleSet );
+//             // Hack to get rid of older kod-files with this malformed renderer-id
+//                if( "de.openali.odysseus.chart.ext.test.axisrenderer.provider.GenericNumberAxisRendererProvider".equals( arpId ) )
+//                  arp.init( model, "de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericNumberAxisRendererProvider", rpc, context, styleSet );
+//                else
+                  arp.init( model, rid, rpc, context, styleSet );
+                
+                
+                
                 try
                 {
                   axisRenderer = arp.getAxisRenderer();

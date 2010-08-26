@@ -133,7 +133,10 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
       {
         final IRecord[] points = m_profile.getPoints();
         if( points.length > 0 )
-          m_view.update( points, new String[] { "" } ); //$NON-NLS-1$
+        {
+          if( m_view != null && !m_view.getTable().isDisposed() )
+            m_view.update( points, new String[] { "" } ); //$NON-NLS-1$
+        }
       }
       updateProblemView();
       return Status.OK_STATUS;
@@ -145,8 +148,10 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
     @Override
     public IStatus runInUIThread( final IProgressMonitor monitor )
     {
-      EditorFirstAdapterFinder.<IProfilProvider> instance();
+      if( m_view == null || m_view.getTable().isDisposed() )
+        return Status.OK_STATUS;
 
+      EditorFirstAdapterFinder.<IProfilProvider> instance();
       final IRecord activePoint = m_profile.getActivePoint();
       m_view.setSelection( new StructuredSelection( activePoint ) );
       m_view.reveal( activePoint );
@@ -218,6 +223,8 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
 
     if( m_form != null )
       m_form.dispose();
+
+    m_view = null;
   }
 
   private void unhookProvider( )
@@ -429,6 +436,7 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
       m_profile.addProfilListener( m_profileListener );
 
     if( (m_form != null) && !m_form.isDisposed() )
+    {
       m_form.getDisplay().asyncExec( new Runnable()
       {
         @Override
@@ -439,7 +447,7 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
           updateProblemView();
         }
       } );
-
+    }
   }
 
   public IProfil getProfil( )

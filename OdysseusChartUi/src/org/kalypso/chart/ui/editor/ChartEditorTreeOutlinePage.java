@@ -114,7 +114,8 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
     @Override
     public IStatus runInUIThread( final IProgressMonitor monitor )
     {
-      m_treeViewer.refresh();
+      if( notDisposed() )
+        m_treeViewer.refresh();
       return Status.OK_STATUS;
     }
   }
@@ -250,9 +251,14 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
     return m_model;
   }
 
+  protected boolean notDisposed( )
+  {
+    return m_treeViewer != null && m_treeViewer.getControl() != null && !m_treeViewer.getControl().isDisposed();
+  }
+
   private void setInput( final IChartModel model )
   {
-    if( m_treeViewer != null && m_treeViewer.getControl() != null && !m_treeViewer.getControl().isDisposed() )
+    if( notDisposed() )
       m_treeViewer.setInput( model );
   }
 
@@ -498,7 +504,7 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
   @Override
   public void setSelection( final ISelection selection )
   {
-    if( m_treeViewer != null )
+    if( notDisposed() )
       m_treeViewer.setSelection( selection );
   }
 
