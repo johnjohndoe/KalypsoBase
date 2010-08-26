@@ -50,6 +50,7 @@ import java.util.regex.Pattern;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
+import org.kalypsodeegree.graphics.i18n.Messages;
 import org.kalypsodeegree_impl.graphics.sld.ColorMapEntry_Impl;
 
 /**
@@ -182,7 +183,13 @@ public class SldHelper
     final BigDecimal rasterStepWidth = stepWidth.setScale( 2, BigDecimal.ROUND_FLOOR );
     final int numOfClasses = (maxDecimal.subtract( minDecimal ).divide( rasterStepWidth )).intValue() + 1;
 
-    for( int currentClass = 0; currentClass < numOfClasses; currentClass++ )
+    // as quantity represents UPPER BOUNDARY of the class, we should define the behaviour for the values below
+    final BigDecimal belowMinQuantity = new BigDecimal( minDecimal.doubleValue() ).setScale( 2, BigDecimal.ROUND_HALF_UP );
+    final Color belowMinColor = new Color( 255, 255, 255 );
+    final ColorMapEntry belowMinEntry = new ColorMapEntry_Impl( belowMinColor, 0.0, belowMinQuantity.doubleValue(), Messages.getString( "org.kalypsodeegree.graphics.sld.SldHelper.0" ) ); //$NON-NLS-1$
+    colorMapList.add( belowMinEntry );
+
+    for( int currentClass = 1; currentClass < numOfClasses; currentClass++ )
     {
       final BigDecimal quantity = new BigDecimal( minDecimal.doubleValue() + currentClass * rasterStepWidth.doubleValue() ).setScale( 2, BigDecimal.ROUND_HALF_UP );
 
