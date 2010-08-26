@@ -87,6 +87,8 @@ public class TransformationUtilities
    */
   public static void transformImage( TiledImage remoteImage, GM_Envelope sourceEnvelope, String targetCrs, GeoTransform worldToScreenTransformation, Graphics g ) throws Exception
   {
+    if( remoteImage == null )
+      return;
     final int height = remoteImage.getHeight();
     final int width = remoteImage.getWidth();
 

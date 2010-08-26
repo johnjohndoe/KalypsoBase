@@ -42,6 +42,8 @@ package org.kalypso.ui.editor.sldEditor;
 
 import java.awt.Color;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -96,10 +98,20 @@ public abstract class RasterColorMapEditorComposite extends Composite
   {
     super( parent, style );
 
-    if( colorMap.length > 0 )
+    // exclude transparent members from the beginning of the list
+    double modifiedMinValue = colorMap.length > 0 ? colorMap[0].getQuantity() : minGlobalValue.doubleValue();
+    final List<ColorMapEntry> nonTransparentEntriesList = new ArrayList<ColorMapEntry>();
+    for( final ColorMapEntry entry : colorMap )
+      if( entry.getOpacity() > 0.0 )
+        nonTransparentEntriesList.add( entry );
+      else
+        modifiedMinValue = entry.getQuantity();
+    final ColorMapEntry[] modifiedColorMap = nonTransparentEntriesList.toArray( new ColorMapEntry[0] );
+
+    if( modifiedColorMap.length > 0 )
     {
-      m_fromEntry = colorMap[0];
-      m_toEntry = colorMap[colorMap.length - 1];
+      m_fromEntry = modifiedColorMap[0];
+      m_toEntry = modifiedColorMap[modifiedColorMap.length - 1];
     }
 
     m_globalMin = minGlobalValue;
@@ -113,12 +125,12 @@ public abstract class RasterColorMapEditorComposite extends Composite
     }
 
     // calculate step width
-    if( colorMap.length > 1 )
-      m_stepWidth = new BigDecimal( colorMap[1].getQuantity() - colorMap[0].getQuantity() ).setScale( 2, BigDecimal.ROUND_HALF_UP );
+    if( modifiedColorMap.length > 1 )
+      m_stepWidth = new BigDecimal( modifiedColorMap[1].getQuantity() - modifiedColorMap[0].getQuantity() ).setScale( 2, BigDecimal.ROUND_HALF_UP );
     else
       m_stepWidth = m_globalMax.subtract( m_globalMin );
 
-    m_minValue = new BigDecimal( m_fromEntry.getQuantity() ).setScale( 2, BigDecimal.ROUND_HALF_UP );
+    m_minValue = new BigDecimal( modifiedMinValue ).setScale( 2, BigDecimal.ROUND_HALF_UP );
     m_maxValue = new BigDecimal( m_toEntry.getQuantity() ).setScale( 2, BigDecimal.ROUND_HALF_UP );
 
     createControl();
