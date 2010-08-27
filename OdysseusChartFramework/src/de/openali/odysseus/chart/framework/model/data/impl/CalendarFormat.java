@@ -48,9 +48,12 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.SimpleTimeZone;
 
+import javax.xml.datatype.XMLGregorianCalendar;
+
+import org.kalypso.contribs.java.util.DateUtilities;
+
 /**
  * @author alibu
- * 
  */
 public class CalendarFormat extends Format
 {
@@ -76,6 +79,11 @@ public class CalendarFormat extends Format
     else if( obj instanceof Number )
     {
       return m_sdf.format( obj, toAppendTo, pos );
+    }
+    else if( obj instanceof XMLGregorianCalendar )
+    {
+      Date date = DateUtilities.toDate( obj );
+      return m_sdf.format( date, toAppendTo, pos );
     }
     return m_sdf.format( obj, toAppendTo, pos );
   }
