@@ -258,6 +258,12 @@
 		<command categoryId="org.kalypso.ogc.gml.map.category" id="org.kalypso.ogc.gml.map.ZoomInByRectCommand" name="%org.kalypso.ui.editor.mapeditor.actiondelegates.ZoomInByRectWidgetDelegate.label" />
 		<command categoryId="org.kalypso.ogc.gml.map.category" id="org.kalypso.ogc.gml.map.PanToCommand" name="%org.kalypso.ui.editor.mapeditor.actiondelegates.PanToWidgetDelegate.label" />
 		<command categoryId="org.kalypso.ogc.gml.map.category" description="%org.kalypso.ogc.gml.map.Screenshot.description" id="org.kalypso.ogc.gml.map.Screenshot" name="%org.kalypso.ogc.gml.map.Screenshot.name" />
+  <command
+        categoryId="org.kalypso.ogc.gml.map.category"
+        description="%org.kalypso.ogc.gml.map.ExportPDFCommand.description"
+        id="org.kalypso.ogc.gml.map.ExportPdfCommand"
+        name="%org.kalypso.ogc.gml.map.ExportPDFCommand.name">
+  </command>
 		<command categoryId="org.kalypso.ogc.gml.map.category" description="%command.description.0" id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand" name="%command.name.0">
 			<commandParameter id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" name="%commandParameter.name.0" optional="false" />
 			<commandParameter id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.context" name="%commandParameter.name.1" optional="false" />
@@ -611,6 +617,10 @@
 		<image commandId="org.kalypso.ogc.gml.map.ZoomInByRectCommand" icon="icons/map/zoomin.gif" />
 		<image commandId="org.kalypso.ogc.gml.map.PanToCommand" icon="icons/map/pan.gif" />
 		<image commandId="org.kalypso.ogc.gml.map.Screenshot" icon="icons/map/screenshot.gif" />
+  <image
+        commandId="org.kalypso.ogc.gml.map.ExportPdfCommand"
+        icon="icons/map/exportPDF.gif">
+  </image>
 		<image commandId="org.kalypso.ogc.gml.map.ThemeInfoCommand" icon="icons/map/themeInfo.gif" />
 		<image commandId="org.kalypso.ogc.gml.map.OpenOutlineCommand" icon="icons/map/show_outline.gif" />
 		<image commandId="org.kalypso.ui.map.selectFirstFeatureCommand" disabledIcon="icons/map/firstFeature_gray.gif" icon="icons/map/firstFeature.gif" />
@@ -1081,6 +1091,10 @@
 		<handler class="org.kalypso.ogc.gml.map.handlers.ZoomToSelectedFeaturesByLayer" commandId="org.kalypso.ogc.gml.map.ZoomToSelectedFeaturesByLayerCommand"/>
 		<handler class="org.kalypso.ogc.gml.map.handlers.PanToSelectedFeature" commandId="org.kalypso.ogc.gml.map.PanToSelectedFeatureCommand"/>
 		<handler class="org.kalypso.ogc.gml.map.handlers.ScreenshotHandler" commandId="org.kalypso.ogc.gml.map.Screenshot"/>
+  <handler
+        class="org.kalypso.ogc.gml.map.handlers.ExportPdfHandler"
+        commandId="org.kalypso.ogc.gml.map.ExportPdfCommand">
+  </handler>
 		<handler class="org.kalypso.ogc.gml.map.handlers.FullExtentHandler" commandId="org.kalypso.ogc.gml.map.FullExtentCommand"/>
 		<handler commandId="org.kalypso.ogc.gml.map.ThemeInfoCommand">
 			<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
