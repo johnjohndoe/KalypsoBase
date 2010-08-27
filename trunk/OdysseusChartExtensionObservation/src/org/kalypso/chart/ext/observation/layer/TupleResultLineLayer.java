@@ -17,10 +17,9 @@ import de.openali.odysseus.chart.ext.base.layer.AbstractLineLayer;
 import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
-import de.openali.odysseus.chart.framework.model.data.impl.NumberDataOperator;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
-import de.openali.odysseus.chart.framework.model.mapper.registry.impl.NumberComparator;
+import de.openali.odysseus.chart.framework.model.mapper.registry.impl.DataOperatorHelper;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 
@@ -55,9 +54,9 @@ public class TupleResultLineLayer extends AbstractLineLayer
 
   protected TupleResultDomainValueData< ? , ? > m_data;
 
-  final private IDataOperator<Number> m_dataOperator = new NumberDataOperator( new NumberComparator() );//
+  final private DataOperatorHelper m_dataOpertatorHelper = new DataOperatorHelper();
 
-  final public static String TOOLTIP_FORMAT = "%-12s %10.4f [%s]%n%-12s %10.4f [%s]"; //$NON-NLS-1$
+  final public static String TOOLTIP_FORMAT = "%-12s %s %n%-12s %s"; //$NON-NLS-1$
 
   public TupleResultLineLayer( final TupleResultDomainValueData< ? , ? > data, final ILineStyle lineStyle, final IPointStyle pointStyle )
   {
@@ -132,7 +131,6 @@ public class TupleResultLineLayer extends AbstractLineLayer
   }
 
   @Override
-  @SuppressWarnings("unchecked")
   public void paint( final GC gc )
   {
     if( m_data == null )
@@ -140,6 +138,8 @@ public class TupleResultLineLayer extends AbstractLineLayer
 
     final List<Point> path = new ArrayList<Point>();
 
+    final IDataOperator targetDataOp = m_dataOpertatorHelper.getDataOperator( getTargetAxis().getDataClass() );
+    final IDataOperator domainDataOp = m_dataOpertatorHelper.getDataOperator( getDomainAxis().getDataClass() );
     m_data.open();
 
     final Object[] domainValues = m_data.getDomainValues();
@@ -157,7 +157,7 @@ public class TupleResultLineLayer extends AbstractLineLayer
         // in that case
         if( domainValue != null && targetValue != null )
         {
-          final Point screen = getCoordinateMapper().numericToScreen( m_dataOperator.logicalToNumeric( (Number) domainValue ), m_dataOperator.logicalToNumeric( (Number) targetValue ) );
+          final Point screen = getCoordinateMapper().numericToScreen( domainDataOp.logicalToNumeric( domainValue ), targetDataOp.logicalToNumeric( targetValue ) );
           path.add( screen );
         }
       }
@@ -175,14 +175,14 @@ public class TupleResultLineLayer extends AbstractLineLayer
   {
     if( m_data == null )
       return null;
-
+    final IDataOperator domainDataOp = m_dataOpertatorHelper.getDataOperator( getDomainAxis().getDataClass() );
     final IDataRange< ? > dataRange = m_data.getDomainRange();
     final Object min = dataRange.getMin();
     final Object max = dataRange.getMax();
     if( min == null || max == null )
       return null;
 
-    final IDataRange<Number> numRange = new DataRange<Number>( m_dataOperator.logicalToNumeric( (Number) min ), m_dataOperator.logicalToNumeric( (Number) max ) );
+    final IDataRange<Number> numRange = new DataRange<Number>( domainDataOp.logicalToNumeric( min ), domainDataOp.logicalToNumeric( max ) );
     return numRange;
   }
 
@@ -194,14 +194,14 @@ public class TupleResultLineLayer extends AbstractLineLayer
   {
     if( m_data == null )
       return null;
-
+    final IDataOperator targetDataOp = m_dataOpertatorHelper.getDataOperator( getTargetAxis().getDataClass() );
     final IDataRange dataRange = m_data.getTargetRange();
     final Object min = dataRange.getMin();
     final Object max = dataRange.getMax();
     if( min == null || max == null )
       return null;
 
-    final IDataRange<Number> numRange = new DataRange<Number>( m_dataOperator.logicalToNumeric( (Number) min ), m_dataOperator.logicalToNumeric( (Number) max ) );
+    final IDataRange<Number> numRange = new DataRange<Number>( targetDataOp.logicalToNumeric( min ), targetDataOp.logicalToNumeric( max ) );
     return numRange;
   }
 
@@ -210,14 +210,18 @@ public class TupleResultLineLayer extends AbstractLineLayer
     final TupleResult tr = m_data.getObservation().getResult();
     final int targetComponentIndex = tr.indexOfComponent( m_data.getTargetComponentName() );
     final int domainComponentIndex = tr.indexOfComponent( m_data.getDomainComponentName() );
-    final String targetComponentLabel = ComponentUtilities.getComponentLabel(tr.getComponent( targetComponentIndex ));
-    final String domainComponentLabel = ComponentUtilities.getComponentLabel(tr.getComponent( domainComponentIndex ));
-    final String targetComponentUnit = ComponentUtilities.getComponentUnitLabel( tr.getComponent( targetComponentIndex ));
-    final String domainComponentUnit = ComponentUtilities.getComponentUnitLabel( tr.getComponent( domainComponentIndex ));
+    final String targetComponentLabel = ComponentUtilities.getComponentLabel( tr.getComponent( targetComponentIndex ) );
+    final String domainComponentLabel = ComponentUtilities.getComponentLabel( tr.getComponent( domainComponentIndex ) );
+    final String targetComponentUnit = ComponentUtilities.getComponentUnitLabel( tr.getComponent( targetComponentIndex ) );
+    final String domainComponentUnit = ComponentUtilities.getComponentUnitLabel( tr.getComponent( domainComponentIndex ) );
     final Object y = tr.get( index ).getValue( targetComponentIndex );
     final Object x = tr.get( index ).getValue( domainComponentIndex );
 
-    return String.format( TOOLTIP_FORMAT, new Object[] { domainComponentLabel, x, domainComponentUnit, targetComponentLabel, y, targetComponentUnit } );
+    final IDataOperator targetDataOp = m_dataOpertatorHelper.getDataOperator( getTargetAxis().getDataClass() );
+    final IDataOperator domainDataOp = m_dataOpertatorHelper.getDataOperator( getDomainAxis().getDataClass() );
+
+    return String.format( TOOLTIP_FORMAT, new Object[] { domainComponentLabel, domainDataOp.getFormat( getDomainRange() ).format( x ), targetComponentLabel,
+        targetDataOp.logicalToString( y )  } );
   }
 
   protected Rectangle getHoverRect( final Point screen, final int index )
@@ -235,13 +239,15 @@ public class TupleResultLineLayer extends AbstractLineLayer
       return null;
     final Object[] domainValues = m_data.getDomainValues();
     final Object[] targetValues = m_data.getTargetValues();
+    final IDataOperator targetDataOp = m_dataOpertatorHelper.getDataOperator( getTargetAxis().getDataClass() );
+    final IDataOperator domainDataOp = m_dataOpertatorHelper.getDataOperator( getDomainAxis().getDataClass() );
     for( int i = 0; i < domainValues.length; i++ )
     {
       final Object domainValue = domainValues[i];
       final Object targetValue = targetValues[i];
       if( targetValue == null )
         continue;
-      final Point pValue = getCoordinateMapper().numericToScreen( m_dataOperator.logicalToNumeric( (Number) domainValue ), m_dataOperator.logicalToNumeric( (Number) targetValue ) );
+      final Point pValue = getCoordinateMapper().numericToScreen( domainDataOp.logicalToNumeric( domainValue ), targetDataOp.logicalToNumeric( targetValue ) );
       final Rectangle hover = getHoverRect( pValue, i );
       if( hover == null )
         continue;

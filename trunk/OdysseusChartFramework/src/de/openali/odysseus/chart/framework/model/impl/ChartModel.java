@@ -185,7 +185,7 @@ public class ChartModel implements IChartModel
   public void dispose( )
   {
     // nothing to dispose
-    
+
   }
 
   /**
@@ -527,6 +527,8 @@ public class ChartModel implements IChartModel
   @Override
   public <T_logical> void zoomOut( final Point start, final Point end )
   {
+    if( end == null )
+      return;
     final IMapperRegistry ar = getMapperRegistry();
     final IAxis[] axes = ar.getAxes();
     for( final IAxis axis : axes )

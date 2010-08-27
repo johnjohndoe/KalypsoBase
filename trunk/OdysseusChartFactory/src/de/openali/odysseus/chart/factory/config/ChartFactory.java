@@ -34,6 +34,7 @@ import de.openali.odysseus.chart.framework.model.mapper.IMapper;
 import de.openali.odysseus.chart.framework.model.mapper.impl.AxisAdjustment;
 import de.openali.odysseus.chart.framework.model.mapper.impl.CoordinateMapper;
 import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
+import de.openali.odysseus.chart.framework.model.mapper.registry.impl.DataOperatorHelper;
 import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
 import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
@@ -472,6 +473,7 @@ public class ChartFactory
   {
     final Number min;
     final Number max;
+    final DataOperatorHelper dataOperatorHelper =new DataOperatorHelper();
 
     if( at.isSetDateRange() )
     {
@@ -497,7 +499,7 @@ public class ChartFactory
     else if( at.isSetDurationRange() )
     {
       final AxisDurationRangeType range = at.getDurationRange();
-      final IDataOperator<Calendar> dataOperator = axis.getDataOperator( Calendar.class );
+      final IDataOperator<Calendar> dataOperator = dataOperatorHelper.getDataOperator( Calendar.class );//axis.getDataOperator( Calendar.class );
       final GDuration minDur = range.getMinValue();
       final Calendar now = Calendar.getInstance();
       final Calendar minValue = addDurationToCal( now, minDur );
