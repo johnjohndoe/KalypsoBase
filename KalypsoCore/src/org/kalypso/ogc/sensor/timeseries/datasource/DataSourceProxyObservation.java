@@ -131,6 +131,8 @@ public class DataSourceProxyObservation implements IObservation
         final AddDataSourceModelHandler handler = new AddDataSourceModelHandler( model );
         m_model = handler.extend();
       }
+      else
+        m_model = model;
 
       m_args = args;
     }
