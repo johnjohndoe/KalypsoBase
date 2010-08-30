@@ -153,7 +153,7 @@ public class ChartModel implements IChartModel
         final double rangeMin = mergedDataRange.getMin().doubleValue();
 
         // computing preferred adjustment failed if rangesize==0.0, so we set a range minimum depends on adjustment
-        final double rangeSize = rangeMax == rangeMin ? rangeMax : rangeMax - rangeMin;
+        final double rangeSize = rangeMax == rangeMin ? 1.0 : rangeMax - rangeMin;
         final double newMin = rangeMin - rangeSize * (adjBefore / adjRange);
         final double newMax = rangeMax + rangeSize * (adjAfter / adjRange);
 

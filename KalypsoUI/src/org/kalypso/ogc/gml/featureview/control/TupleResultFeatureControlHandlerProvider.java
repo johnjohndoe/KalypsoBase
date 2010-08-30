@@ -45,6 +45,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.kalypso.i18n.Messages;
+import org.kalypso.observation.result.ComponentUtilities;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.om.table.handlers.ComponentUiHandlerFactory;
@@ -122,20 +123,21 @@ public class TupleResultFeatureControlHandlerProvider implements IComponentUiHan
     if( label != null )
       return label;
 
-    final String name = getComponentName( component );
-    final String unit = component.getUnit();
-
-    if( unit == null || unit.isEmpty() )
-      return name;
-
-    return String.format( "%s [%s]", name, unit );
+//    final String name = getComponentName( component );
+//    final String unit = component.getUnit();
+//
+//    if( unit == null || unit.isEmpty() )
+//      return name;
+//
+//    return String.format( "%s [%s]", name, unit );
+    return ComponentUtilities.getComponentLabel( component );
   }
 
-  private String getComponentName( final IComponent component )
-  {
-    // TODO: fixme, use description and or name of phenomenon
-    return component.getName();
-  }
+//  private String getComponentName( final IComponent component )
+//  {
+//    // TODO: fixme, use description and or name of phenomenon
+//    return component.getName();
+//  }
 
   public ColumnDescriptor[] getDescriptors( )
   {
