@@ -44,13 +44,14 @@ import java.net.URL;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.gmlschema.types.IMarshallingTypeHandler2;
 import org.kalypso.gmlschema.types.IGmlContentHandler;
+import org.kalypso.gmlschema.types.IMarshallingTypeHandler2;
 import org.kalypso.gmlschema.types.UnmarshallResultEater;
 import org.kalypsodeegree.model.geometry.GM_MultiCurve;
 import org.kalypsodeegree_impl.io.sax.marshaller.MultiLineStringMarshaller;
 import org.kalypsodeegree_impl.io.sax.parser.MultiLineStringContentHandler;
 import org.kalypsodeegree_impl.tools.GMLConstants;
+import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
 /**
@@ -94,9 +95,9 @@ public class MultiLineStringHandler implements IMarshallingTypeHandler2
    *      java.net.URL, java.lang.String)
    */
   @Override
-  public void marshal( final Object value, final XMLReader reader, final URL context, final String gmlVersion )
+  public void marshal( final Object value, final XMLReader reader, final URL context, final String gmlVersion ) throws SAXException
   {
-    new MultiLineStringMarshaller( reader, (GM_MultiCurve) value );
+    new MultiLineStringMarshaller( reader, (GM_MultiCurve) value ).marshall();
   }
 
   /**
