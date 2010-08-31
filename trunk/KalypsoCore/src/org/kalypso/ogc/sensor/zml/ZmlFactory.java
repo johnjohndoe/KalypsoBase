@@ -48,7 +48,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -88,12 +87,10 @@ import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
-import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.filter.FilterFactory;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
-import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
 import org.kalypso.ogc.sensor.metadata.IObservationConstants;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
@@ -102,7 +99,6 @@ import org.kalypso.ogc.sensor.proxy.RequestObservationProxy;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.request.RequestFactory;
-import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.ogc.sensor.zml.values.IZmlValues;
 import org.kalypso.ogc.sensor.zml.values.ZmlArrayValues;
 import org.kalypso.ogc.sensor.zml.values.ZmlLinkValues;
@@ -119,7 +115,6 @@ import org.kalypso.zml.MetadataType;
 import org.kalypso.zml.ObjectFactory;
 import org.kalypso.zml.Observation;
 import org.kalypso.zml.request.Request;
-import org.kalypsodeegree_impl.gml.schema.SpecialPropertyMapper;
 import org.xml.sax.InputSource;
 
 import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
@@ -567,7 +562,7 @@ public final class ZmlFactory
       // sort axes, this is not needed from a xml view, but very usefull when comparing marshalled files (e.g.
       // Junit-Test)
       final TreeSet<IAxis> sortedAxis = new TreeSet<IAxis>( new Comparator<IAxis>()
-      {
+          {
         @Override
         public int compare( final IAxis a1, final IAxis a2 )
         {
@@ -589,7 +584,7 @@ public final class ZmlFactory
           }
           return type1.compareTo( type2 );
         }
-      } );
+          } );
 
       for( final IAxis axis : obs.getAxisList() )
       {
@@ -797,138 +792,6 @@ public final class ZmlFactory
       throw new SensorException( e );
     }
 
-  }
-
-  /**
-   * @param name
-   * @param content
-   * @param axis
-   * @return observation from the clipboardstring
-   */
-  public static Object createZMLFromClipboardString( final String name, final String content, final IAxis[] axis )
-  {
-    final String[] rows = content.split( "\\n" ); //$NON-NLS-1$
-    final List<Object[]> collector = new ArrayList<Object[]>();
-    for( final String row : rows )
-    {
-      final String[] cells = row.split( "\\t" ); //$NON-NLS-1$
-      final Object[] rowValues = new Object[axis.length];
-      for( int ax = 0; ax < axis.length; ax++ )
-      {
-
-        if( ax == 0 )
-        {
-          try
-          {
-            final String stringValue = cells[ax];
-            final Class< ? > dataClass = axis[ax].getDataClass();
-            Object keyValue;
-            if( Number.class.isAssignableFrom( dataClass ) )
-              keyValue = TimeserieUtils.getNumberFormatFor( axis[ax].getType() ).parseObject( stringValue );
-            else
-              keyValue = SpecialPropertyMapper.cast( stringValue, dataClass, false, false );
-            if( collector.contains( keyValue ) )
-              break;
-            if( !keyValue.getClass().equals( dataClass ) )
-            {
-              keyValue = SpecialPropertyMapper.cast( stringValue, dataClass, false, false );
-            }
-            rowValues[ax] = keyValue;
-          }
-          catch( final Exception e )
-          {
-            e.printStackTrace();
-            break; // ignore this row
-          }
-        }
-        else
-        {
-          try
-          {
-            if( cells.length > ax )
-            {
-              final String stringValue = cells[ax];
-              final Class< ? > dataClass = axis[ax].getDataClass();
-              if( Number.class.isAssignableFrom( dataClass ) )
-                rowValues[ax] = TimeserieUtils.getNumberFormatFor( axis[ax].getType() ).parseObject( stringValue );
-              else
-                rowValues[ax] = SpecialPropertyMapper.cast( stringValue, dataClass, true, false );
-            }
-            else
-              rowValues[ax] = null;
-          }
-          catch( final Exception e )
-          {
-            rowValues[ax] = null;
-          }
-        }
-        if( ax + 1 == axis.length )
-          collector.add( rowValues );
-      }
-    }
-    // copy from list to array
-    final Object[][] values = new Object[collector.size()][axis.length];
-    int r = 0;
-    for( final Iterator<Object[]> iter = collector.iterator(); iter.hasNext(); )
-    {
-      values[r] = iter.next();
-      r++;
-    }
-    final ITupleModel model = new SimpleTupleModel( axis, values );
-    return new SimpleObservation( null, name, new MetadataList(), model );
-  }
-
-  /**
-   * @param observation
-   * @param request
-   *          may be <code>null</code>
-   * @return string made for clipboard
-   * @throws SensorException
-   */
-  public static String createClipboardStringFrom( final IObservation observation, final IRequest request ) throws SensorException
-  {
-    final StringBuffer result = new StringBuffer();
-    final ITupleModel values = observation.getValues( request );
-    final IAxis[] axes = values.getAxisList();
-    final int count = values.getCount();
-    // actually just the first key axis is relevant in our case
-    final IAxis[] keyAxes = ObservationUtilities.findAxesByKey( axes );
-    final List<IAxis> list = new ArrayList<IAxis>();
-    list.add( keyAxes[0] );
-    for( final IAxis axe : axes )
-    {
-      if( axe != keyAxes[0] )
-        list.add( axe );
-    }
-    final IAxis[] sortedAxes = list.toArray( new IAxis[list.size()] );
-    for( int row = 0; row < count; row++ )
-    {
-      for( int col = 0; col < sortedAxes.length; col++ )
-      {
-        final Object value = values.getElement( row, sortedAxes[col] );
-        String stringValue;
-        try
-        {
-          if( value instanceof Number )
-          {
-            stringValue = TimeserieUtils.getNumberFormatFor( sortedAxes[col].getType() ).format( value );
-          }
-          else
-            stringValue = (String) SpecialPropertyMapper.cast( value, String.class, true, false );
-          result.append( stringValue != null ? stringValue : " " ); //$NON-NLS-1$
-        }
-        catch( final Exception e )
-        {
-          result.append( Messages.getString( "org.kalypso.ogc.sensor.zml.ZmlFactory.34" ) ); //$NON-NLS-1$
-          // ignore
-        }
-        if( col + 1 == sortedAxes.length )
-          result.append( "\r\n" ); //$NON-NLS-1$
-        else
-          result.append( "\t" ); //$NON-NLS-1$
-      }
-    }
-    return result.toString();
   }
 
   public static String writeToString( final IObservation value, final IRequest request )

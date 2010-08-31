@@ -58,7 +58,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.contribs.eclipse.ui.controls.ButtonControl;
 import org.kalypso.contribs.eclipse.ui.dialogs.ResourceListSelectionDialog;
 import org.kalypso.contribs.eclipse.ui.views.propertysheet.SimplePropertySheetViewer;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
@@ -74,6 +73,7 @@ import org.kalypso.ogc.sensor.tableview.swing.ObservationTable;
 import org.kalypso.ogc.sensor.template.ObsView;
 import org.kalypso.ogc.sensor.template.ObsView.ItemData;
 import org.kalypso.ogc.sensor.template.PlainObsProvider;
+import org.kalypso.ogc.sensor.view.observationDialog.IObservationAction;
 import org.kalypso.ogc.sensor.view.propertySource.ObservationPropertySource;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
@@ -123,15 +123,15 @@ public class ObservationViewer extends Composite
 
   private final IDialogSettings m_settings;
 
-  public ObservationViewer( final Composite parent, final int style, final boolean header, final ButtonControl[] buttonControls, final IDialogSettings settings )
+  public ObservationViewer( final Composite parent, final int style, final boolean header, final IObservationAction[] buttons, final IDialogSettings settings )
   {
     super( parent, style );
     m_settings = settings;
 
-    createControl( header, buttonControls );
+    createControl( header, buttons );
   }
 
-  private void createControl( final boolean withHeader, final ButtonControl[] buttonControls )
+  private void createControl( final boolean withHeader, final IObservationAction[] buttons )
   {
     final GridLayout gridLayout = new GridLayout( 1, false );
     setLayout( gridLayout );
@@ -148,9 +148,9 @@ public class ObservationViewer extends Composite
       m_show = false;
     }
 
-    if( buttonControls.length > 0 )
+    if( buttons.length > 0 )
     {
-      final Control controlsForm = createControlsForm( main, buttonControls );
+      final Control controlsForm = createControlsForm( main, buttons );
       controlsForm.setLayoutData( new GridData( SWT.FILL, SWT.BEGINNING, true, false ) );
     }
 
@@ -215,17 +215,14 @@ public class ObservationViewer extends Composite
    * @param parent
    * @param buttonControls
    */
-  private Control createControlsForm( final Composite parent, final ButtonControl[] buttonControls )
+  private Control createControlsForm( final Composite parent, final IObservationAction[] buttonControls )
   {
     final Group group = new Group( parent, SWT.NONE );
     group.setLayout( new GridLayout( buttonControls.length, false ) );
 
-    for( final ButtonControl control : buttonControls )
+    for( final IObservationAction control : buttonControls )
     {
-      final Button button = new Button( group, control.getStyle() );
-      button.setText( control.getLabel() );
-      button.setToolTipText( control.getTooltip() );
-      button.addSelectionListener( control.getSelectionListener() );
+      final Button button = control.createButton( group );
       button.setLayoutData( new GridData( GridData.VERTICAL_ALIGN_BEGINNING ) );
     }
 

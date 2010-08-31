@@ -282,7 +282,7 @@ public class SpecialPropertyMapper
     m_map.put( mapper.getSrcType().getName() + mapper.getTargetType().getName(), mapper );
   }
 
-  public static Object map( final Class srcType, final Class targetType, final Object srcObject ) throws Exception
+  public static Object map( final Class< ? > srcType, final Class< ? > targetType, final Object srcObject ) throws Exception
   {
     if( srcType.equals( targetType ) )
       return srcObject;
@@ -290,7 +290,7 @@ public class SpecialPropertyMapper
     return mapper.map( srcObject );
   }
 
-  public static boolean isValidMapping( final Class srcType, final Class targetType )
+  public static boolean isValidMapping( final Class< ? > srcType, final Class< ? > targetType )
   {
     if( srcType.equals( targetType ) )
       return true;
@@ -304,12 +304,10 @@ public class SpecialPropertyMapper
    * @param value
    * @param targetClass
    * @param doCastNull
-   * @param mustClone
-   *          TODO mustClone not supported yet
    * @return castedObject
    * @throws Exception
    */
-  public static Object cast( final Object value, final Class targetClass, final boolean doCastNull, final boolean mustClone ) throws Exception
+  public static Object cast( final Object value, final Class< ? > targetClass, final boolean doCastNull ) throws Exception
   {
     if( value == null && !doCastNull )
       throw new ClassCastException( "will not cast <null>" );
