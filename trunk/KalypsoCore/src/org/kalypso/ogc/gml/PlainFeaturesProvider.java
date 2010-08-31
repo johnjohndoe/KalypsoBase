@@ -89,6 +89,15 @@ public class PlainFeaturesProvider extends AbstractFeaturesProvider
     workspace.addModellListener( m_workspaceListener );
   }
 
+  public PlainFeaturesProvider( final CommandableWorkspace workspace )
+  {
+    m_workspace = workspace;
+    m_featurePath = null;
+    m_featureList = null;
+    m_featureType = null;
+    m_features = Collections.emptyList();
+  }
+
   @Override
   public String getFeaturePath( )
   {
