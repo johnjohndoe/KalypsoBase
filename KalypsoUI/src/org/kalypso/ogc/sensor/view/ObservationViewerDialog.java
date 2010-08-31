@@ -31,38 +31,28 @@ package org.kalypso.ogc.sensor.view;
 
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogSettings;
-import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.Clipboard;
-import org.eclipse.swt.dnd.TextTransfer;
-import org.eclipse.swt.dnd.Transfer;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
-import org.kalypso.contribs.eclipse.ui.controls.ButtonControl;
-import org.kalypso.contribs.java.util.ValueIterator;
 import org.kalypso.i18n.Messages;
-import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.ITupleModel;
-import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.impl.SimpleObservation;
-import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
-import org.kalypso.ogc.sensor.metadata.MetadataList;
-import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
-import org.kalypso.ogc.sensor.zml.ZmlFactory;
+import org.kalypso.ogc.sensor.view.observationDialog.AbstractObservationAction;
+import org.kalypso.ogc.sensor.view.observationDialog.ClipboardExportAction;
+import org.kalypso.ogc.sensor.view.observationDialog.ClipboardImportAction;
+import org.kalypso.ogc.sensor.view.observationDialog.IObservationAction;
+import org.kalypso.ogc.sensor.view.observationDialog.NewIdealLanduseAction;
+import org.kalypso.ogc.sensor.view.observationDialog.NewObservationAction;
+import org.kalypso.ogc.sensor.view.observationDialog.RemoveObservationAction;
 
 /**
  * ObservationViewerDialog
@@ -103,6 +93,8 @@ public class ObservationViewerDialog extends Dialog
 
   private IDialogSettings m_settings;
 
+  private Clipboard m_clipboard;
+
   public ObservationViewerDialog( final Shell parent, final boolean withHeaderForm, final int buttonControls, final String[] axisTypes )
   {
     super( parent );
@@ -129,14 +121,35 @@ public class ObservationViewerDialog extends Dialog
     // composite.setLayout( new FillLayout() );
     composite.setLayout( new GridLayout() );
 
+    m_clipboard = new Clipboard( parent.getDisplay() );
+    composite.addDisposeListener( new DisposeListener()
+    {
+      @Override
+      public void widgetDisposed( final DisposeEvent e )
+      {
+        handleDispose();
+      }
+    } );
+
     final IDialogSettings viewerSettings = PluginUtilities.getSection( m_settings, SETTINGS_VIEWER );
-    m_viewer = new ObservationViewer( composite, SWT.NONE, m_withHeader, createButtonControls(), viewerSettings );
+    final IObservationAction[] buttons = createButtonControls( m_clipboard );
+    m_viewer = new ObservationViewer( composite, SWT.NONE, m_withHeader, buttons, viewerSettings );
     m_viewer.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     updateViewer();
-    // TODO label
+
     getShell().setText( Messages.getString( "org.kalypso.ogc.sensor.view.ObservationViewerDialog.0" ) ); //$NON-NLS-1$
+
     return composite;
+  }
+
+  protected void handleDispose( )
+  {
+    if( m_clipboard != null )
+    {
+      m_clipboard.dispose();
+      m_clipboard = null;
+    }
   }
 
   public final void setContext( final URL context )
@@ -148,6 +161,7 @@ public class ObservationViewerDialog extends Dialog
   public final void setInput( final Object newInput )
   {
     m_input = newInput;
+
     updateViewer();
   }
 
@@ -160,174 +174,29 @@ public class ObservationViewerDialog extends Dialog
     }
   }
 
-  /**
-   * @return buttoncontrols
-   */
-  private ButtonControl[] createButtonControls( )
+  private IObservationAction[] createButtonControls( final Clipboard clipboard )
   {
-    final List<ButtonControl> result = new ArrayList<ButtonControl>();
-    final IAxis[] axis = TimeserieUtils.createDefaultAxes( getAxisTypes(), true );
+    final List<IObservationAction> result = new ArrayList<IObservationAction>();
 
     if( (m_buttonControls & BUTTON_REMOVE) == BUTTON_REMOVE )
-    {
-      final SelectionListener removeListener = new SelectionListener()
-      {
-        @Override
-        public void widgetSelected( final SelectionEvent e )
-        {
-          setInput( null );
-        }
+      result.add( new RemoveObservationAction( this ) );
 
-        @Override
-        public void widgetDefaultSelected( final SelectionEvent e )
-        {
-          // TODO Auto-generated method stub
-        }
-      };
-      result.add( new ButtonControl( removeListener, Messages.getString( "org.kalypso.ogc.sensor.view.ObservationViewerDialog.1" ), Messages.getString( "org.kalypso.ogc.sensor.view.ObservationViewerDialog.2" ), SWT.PUSH ) ); //$NON-NLS-1$ //$NON-NLS-2$
-    }
     if( (m_buttonControls & BUTTON_NEW) == BUTTON_NEW )
-    {
-      final SelectionListener newListener = new SelectionListener()
-      {
-        @Override
-        public void widgetSelected( final SelectionEvent e )
-        {
-          final AxisRangeDialog dialog = new AxisRangeDialog( getShell(), getAxisTypes()[0] );
-          if( dialog.open() == Window.OK )
-          {
-            if( !dialog.isValid() )
-              return;// TODO messagebox
-            final String name = dialog.getName().toString();
-            final Object min = dialog.getMin();
-            final Object intervall = dialog.getInt();
-            final int rows = dialog.getCount();
-
-            final Object[][] values = new Object[rows][axis.length];
-            final Iterator< ? > iterator = new ValueIterator( min, intervall, rows );
-            for( int row = 0; row < rows; row++ )
-            {
-              values[row][0] = iterator.next();
-              for( int ax = 1; ax < axis.length; ax++ )
-                values[row][ax] = dialog.getDefault();
-            }
-            final ITupleModel model = new SimpleTupleModel( axis, values );
-            setInput( new SimpleObservation( null, name, new MetadataList(), model ) );
-          }
-        }
-
-        @Override
-        public void widgetDefaultSelected( final SelectionEvent e )
-        {
-          // TODO Auto-generated method stub
-        }
-      };
-      result.add( new ButtonControl( newListener, Messages.getString( "org.kalypso.ogc.sensor.view.ObservationViewerDialog.3" ), Messages.getString( "org.kalypso.ogc.sensor.view.ObservationViewerDialog.4" ), SWT.PUSH ) ); //$NON-NLS-1$ //$NON-NLS-2$
-    }
+      result.add( new NewObservationAction( this ) );
 
     // FIXME: this specialized stuff has to be refaktored out of this general dialog!
     if( (m_buttonControls & BUTTON_NEW_IDEAL_LANDUSE) == BUTTON_NEW_IDEAL_LANDUSE )
-    {
-      final SelectionListener newListener = new SelectionListener()
-      {
-        @Override
-        public void widgetSelected( final SelectionEvent e )
-        {
-          final String name = Messages.getString( "org.kalypso.ogc.sensor.view.ObservationViewerDialog.5" ); //$NON-NLS-1$
-          final Calendar startDate = Calendar.getInstance();
-          startDate.set( 2000, 11, 15 );
-          final Calendar idealMonth = Calendar.getInstance();
-          idealMonth.setTimeInMillis( 30 * 24 * 60 * 60 * 1000 );
-          final Object intervall = new Date( idealMonth.getTimeInMillis() );
-          final Object min = new Date( startDate.getTimeInMillis() );
-          final int months = 12;
+      result.add( new NewIdealLanduseAction( this ) );
 
-          final Object[][] values = new Object[months][axis.length];
-          final Iterator< ? > iterator = new ValueIterator( min, intervall, months );
-          for( int row = 0; row < months; row++ )
-          {
-            values[row][0] = iterator.next();
-            for( int ax = 1; ax < axis.length; ax++ )
-              values[row][ax] = new Double( 0 );
-          }
-          final ITupleModel model = new SimpleTupleModel( axis, values );
-          setInput( new SimpleObservation( null, name, new MetadataList(), model ) );
-        }
-
-        @Override
-        public void widgetDefaultSelected( final SelectionEvent e )
-        {
-          // TODO Auto-generated method stub
-        }
-      };
-      result.add( new ButtonControl( newListener, Messages.getString( "org.kalypso.ogc.sensor.view.ObservationViewerDialog.6" ), Messages.getString( "org.kalypso.ogc.sensor.view.ObservationViewerDialog.7" ), SWT.PUSH ) ); //$NON-NLS-1$ //$NON-NLS-2$
-    }
     if( (m_buttonControls & BUTTON_EXEL_IMPORT) == BUTTON_EXEL_IMPORT )
-    {
-      final SelectionListener exelImportListener = new SelectionListener()
-      {
-        @Override
-        public void widgetSelected( final SelectionEvent e )
-        {
-          final Clipboard clipboard = new Clipboard( getShell().getDisplay() );
-          final Object content = clipboard.getContents( TextTransfer.getInstance() );
-          if( content != null && content instanceof String )
-          {
-            final IObservation inputObs = (IObservation) m_input;
-            final String name = inputObs == null ? "" : inputObs.getName(); //$NON-NLS-1$
-            setInput( ZmlFactory.createZMLFromClipboardString( name, "" + content, axis ) ); //$NON-NLS-1$
-          }
-          // else
-          // TODO messagebox
-          clipboard.dispose();
-        }
+      result.add( new ClipboardImportAction( this, clipboard ) );
 
-        @Override
-        public void widgetDefaultSelected( final SelectionEvent e )
-        {
-          // TODO Auto-generated method stub
-        }
-      };
-      result.add( new ButtonControl( exelImportListener, Messages.getString( "org.kalypso.ogc.sensor.view.ObservationViewerDialog.8" ), Messages.getString( "org.kalypso.ogc.sensor.view.ObservationViewerDialog.9" ), SWT.PUSH ) ); //$NON-NLS-1$ //$NON-NLS-2$
-    }
     if( (m_buttonControls & BUTTON_EXEL_EXPORT) == BUTTON_EXEL_EXPORT )
-    {
-      final SelectionListener exelExportListener = new SelectionListener()
-      {
-        @Override
-        public void widgetSelected( final SelectionEvent e )
-        {
-          final Clipboard clipboard = new Clipboard( getShell().getDisplay() );
-          final Object input = getInput();
-          if( input != null && input instanceof IObservation )
-          {
-            try
-            {
-              final String content = ZmlFactory.createClipboardStringFrom( (IObservation) input, null );
-              clipboard.setContents( new Object[] { content }, new Transfer[] { TextTransfer.getInstance() } );
-            }
-            catch( final SensorException e1 )
-            {
-              // TODO messagebox ??
-            }
-          }
-          clipboard.dispose();
-        }
+      result.add( new ClipboardExportAction( this, clipboard ) );
 
-        @Override
-        public void widgetDefaultSelected( final SelectionEvent e )
-        {
-          // TODO Auto-generated method stub
-        }
-      };
-      result.add( new ButtonControl( exelExportListener, Messages.getString( "org.kalypso.ogc.sensor.view.ObservationViewerDialog.10" ), Messages.getString( "org.kalypso.ogc.sensor.view.ObservationViewerDialog.11" ), SWT.PUSH ) ); //$NON-NLS-1$ //$NON-NLS-2$
-    }
-    return result.toArray( new ButtonControl[result.size()] );
+    return result.toArray( new AbstractObservationAction[result.size()] );
   }
 
-  /**
-   * @return input
-   */
   public final Object getInput( )
   {
     if( m_viewer != null )
@@ -335,7 +204,7 @@ public class ObservationViewerDialog extends Dialog
     return m_input;
   }
 
-  protected final String[] getAxisTypes( )
+  public final String[] getAxisTypes( )
   {
     return m_axisTypes;
   }
