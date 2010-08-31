@@ -41,6 +41,7 @@
 package org.kalypso.ui.editor.featureeditor;
 
 import java.net.URL;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -334,7 +335,8 @@ public class FeatureTemplateviewer
       m_featureComposite.disposeControl();
 
       /* If a workspace is missing, it is probably still loading. */
-      final List<Feature> features = m_featuresProvider == null ? null : m_featuresProvider.getFeatures();
+      final List<Feature> emptyFeaytureList = Collections.emptyList();
+      final List<Feature> features = m_featuresProvider == null ? emptyFeaytureList : m_featuresProvider.getFeatures();
       final CommandableWorkspace workspace = m_featuresProvider == null ? null : m_featuresProvider.getWorkspace();
 
       if( workspace == null )
@@ -346,10 +348,11 @@ public class FeatureTemplateviewer
         return;
       }
 
-      if( features != null && features.size() != 1 )
+      if( features != null && features.size() > 1 )
         throw new IllegalArgumentException();
+
       // REMARK: we allow for the null-feature!
-      final Feature feature = features == null ? null : features.get( 0 );
+      final Feature feature = (features == null || features.size() == 0) ? null : features.get( 0 );
 
       /* Try to obtain the feature to display. */
       /* The result may be null, if the feature path is null, too. */
