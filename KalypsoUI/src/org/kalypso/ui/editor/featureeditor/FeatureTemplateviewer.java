@@ -81,6 +81,7 @@ import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.featureview.control.FeatureComposite;
 import org.kalypso.ogc.gml.featureview.maker.CachedFeatureviewFactory;
 import org.kalypso.ogc.gml.featureview.maker.FeatureviewHelper;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.FeatureSelectionManager2;
 import org.kalypso.template.featureview.Featuretemplate;
 import org.kalypso.template.featureview.Featuretemplate.Layer;
@@ -247,9 +248,17 @@ public class FeatureTemplateviewer
   {
     final int formStyle = getTemplateStyle( defaultStyle );
 
-    /* If we explicitely need an toolkit but we don't have one, create it now */
-    if( m_template != null && m_template.isToolkit() && m_toolkit == null )
+    /* Always create a toolkit */
+    if( m_toolkit == null )
+    {
       m_toolkit = ToolkitUtils.createToolkit( parent );
+
+      /*
+       * If we are not configured to use a toolkit, we set the background back to gray, but still use it
+       */
+      if( m_template == null || !m_template.isToolkit() )
+        m_toolkit.setBackground( parent.getBackground() );
+    }
 
     m_featureComposite.setFormToolkit( m_toolkit );
 
@@ -325,19 +334,22 @@ public class FeatureTemplateviewer
       m_featureComposite.disposeControl();
 
       /* If a workspace is missing, it is probably still loading. */
-      if( m_featuresProvider == null || m_featuresProvider.getWorkspace() == null )
+      final List<Feature> features = m_featuresProvider == null ? null : m_featuresProvider.getFeatures();
+      final CommandableWorkspace workspace = m_featuresProvider == null ? null : m_featuresProvider.getWorkspace();
+
+      if( workspace == null )
       {
         /* Create a label, to inform the user about the status. */
-        m_label = new Label( m_contentPanel, SWT.CENTER );
-        m_label.setText( Messages.getString( "org.kalypso.ui.editor.featureeditor.FeatureTemplateviewer.5" ) ); //$NON-NLS-1$
+        final String msg = Messages.getString( "org.kalypso.ui.editor.featureeditor.FeatureTemplateviewer.5" ); //$NON-NLS-1$
+        m_label = m_toolkit.createLabel( m_contentPanel, msg, SWT.CENTER );
         m_label.setLayoutData( new GridData( GridData.FILL_BOTH ) );
         return;
       }
 
-      final List<Feature> features = m_featuresProvider == null ? null : m_featuresProvider.getFeatures();
-      if( features.size() != 1 )
+      if( features != null && features.size() != 1 )
         throw new IllegalArgumentException();
-      final Feature feature = features.get( 0 );
+      // REMARK: we allow for the null-feature!
+      final Feature feature = features == null ? null : features.get( 0 );
 
       /* Try to obtain the feature to display. */
       /* The result may be null, if the feature path is null, too. */
