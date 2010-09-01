@@ -226,7 +226,7 @@ public class MergeObservationWorker implements ICoreRunnableWithProgress
           /* adjust data src informations (add to metadata) */
           if( AxisUtils.isDataSrcAxis( srcAxis ) )
           {
-            final Integer srcIndex = (Integer) srcModel.getElement( index, srcAxis );
+            final Number srcIndex = (Number) srcModel.getElement( index, srcAxis );
 
             final String identifier;
             final String repository;
@@ -241,8 +241,8 @@ public class MergeObservationWorker implements ICoreRunnableWithProgress
             }
             else
             {
-              identifier = srcMetaDataHandler.getDataSourceIdentifier( srcIndex );
-              repository = srcMetaDataHandler.getDataSourceRepository( srcIndex );
+              identifier = srcMetaDataHandler.getDataSourceIdentifier( srcIndex.intValue() );
+              repository = srcMetaDataHandler.getDataSourceRepository( srcIndex.intValue() );
             }
 
             final Integer destIndex = destMetaDataHandler.addDataSource( identifier, repository );
