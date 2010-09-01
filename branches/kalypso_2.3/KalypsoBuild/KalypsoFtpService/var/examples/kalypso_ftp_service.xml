@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<ftp:FtpService xmlns:ftp="schema.service.ftp.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="schema.service.ftp.kalypso.org KalypsoFtpService.xsd ">
-	<ftp:port>2121</ftp:port>
-	<ftp:userFile>file:///home/kuch/sdk/shared/klimzug_ftp/configuration/users.properties</ftp:userFile>
-</ftp:FtpService>
