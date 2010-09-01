@@ -1043,14 +1043,36 @@ public final class JTSUtilities
     if( !baseGeometry.intersects( coverPolygon ) )
       return 0.0;
 
-    final Geometry geometry = baseGeometry.intersection( coverPolygon );
-    if( geometry == null )
+    final Geometry intersection = baseGeometry.intersection( coverPolygon );
+    if( intersection == null )
       return 0.0;
 
     final double totalArea = baseGeometry.getArea();
-    final double subArea = geometry.getArea();
+    final double intersectionArea = intersection.getArea();
 
-    return subArea / totalArea;
+    return intersectionArea / totalArea;
+  }
+
+  public static double getAreaFraction( final Geometry baseGeometry, final Polygon coverPolygon )
+  {
+    Assert.isNotNull( baseGeometry );
+
+    if( coverPolygon == null )
+      return 0.0;
+
+    /* The intersect function is much faster, than the intersection function. */
+    /* So you should use it to check for intersection, even if you need the polygon of the overlapping area. */
+    if( !baseGeometry.intersects( coverPolygon ) )
+      return 0.0;
+
+    final Geometry intersection = baseGeometry.intersection( coverPolygon );
+    if( intersection == null )
+      return 0.0;
+
+    final double coverArea = coverPolygon.getArea();
+    final double intersectionArea = intersection.getArea();
+
+    return intersectionArea / coverArea;
   }
 
   public static Polygon cleanPolygonInteriorRings( Polygon poly )

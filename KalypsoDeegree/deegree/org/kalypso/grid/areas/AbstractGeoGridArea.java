@@ -184,7 +184,7 @@ public abstract class AbstractGeoGridArea implements IGeoGridArea
     /* Create the cells polygon. */
     Polygon cell = GeoGridUtilities.createCellPolygon( m_grid, x, y );
 
-    /* The fraction of the cell. */
-    return JTSUtilities.fractionAreaOf( m_geometry, cell );
+    /* The fraction of the area of the cell within the area of the geometry. */
+    return JTSUtilities.getAreaFraction( m_geometry, cell );
   }
 }
