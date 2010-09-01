@@ -163,23 +163,27 @@ public abstract class AbstractInterpolationWorker implements ICoreRunnableWithPr
   {
     final Object[] defaultValues = new Object[valueAxes.length];
     for( int i = 0; i < defaultValues.length; i++ )
+      defaultValues[i] = getDefaultValue( valueAxes[i] );
+
+    return defaultValues;
+  }
+
+  protected Object getDefaultValue( final IAxis valueAxis ) throws SensorException
+  {
+    try
     {
-      try
+      if( KalypsoStatusUtils.isStatusAxis( valueAxis ) )
+        return m_filter.getDefaultStatus();
+      else
       {
-        if( KalypsoStatusUtils.isStatusAxis( valueAxes[i] ) )
-          defaultValues[i] = m_filter.getDefaultStatus();
-        else
-        {
-          final IParser parser = ZmlFactory.createParser( valueAxes[i] );
-          defaultValues[i] = parser.parse( m_filter.getDefaultValue() );
-        }
-      }
-      catch( final Exception e )
-      {
-        throw new SensorException( e );
+        final IParser parser = ZmlFactory.createParser( valueAxis );
+        return parser.parse( m_filter.getDefaultValue() );
       }
     }
-    return defaultValues;
+    catch( final Exception e )
+    {
+      throw new SensorException( e );
+    }
   }
 
   protected Integer getDataSourceIndex( )
