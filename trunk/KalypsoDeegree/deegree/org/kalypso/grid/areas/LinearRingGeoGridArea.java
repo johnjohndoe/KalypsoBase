@@ -83,7 +83,7 @@ public class LinearRingGeoGridArea extends AbstractGeoGridArea
   public boolean contains( final int x, final int y, final Coordinate coordinate ) throws GeoGridException
   {
     final boolean contains = super.contains( x, y, coordinate );
-    if( contains == false )
+    if( !contains )
       return false;
 
     final int locate = SimplePointInAreaLocator.locate( coordinate, m_geom );
