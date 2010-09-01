@@ -159,8 +159,6 @@ public class ValueInterpolationWorker extends AbstractInterpolationWorker
     final int dateAxisPosition = interpolatedModel.getPositionFor( dateAxis );
     lastValidTuple[dateAxisPosition] = interpolatedModel.getElement( lastValidValuePosition, dateAxis );
 
-    final Object[] defaultValues = getDefaultValues( valueAxes );
-
     for( final IAxis valueAxe : valueAxes )
     {
       final int valueAxisPosition = interpolatedModel.getPositionFor( valueAxe );
@@ -172,7 +170,7 @@ public class ValueInterpolationWorker extends AbstractInterpolationWorker
         if( isLastFilledWithValid() && interpolatedModel.getCount() > 0 )
           lastValidTuple[valueAxisPosition] = interpolatedModel.getElement( lastValidValuePosition, valueAxe );
         else
-          lastValidTuple[valueAxisPosition] = defaultValues[valueAxisPosition];
+          lastValidTuple[valueAxisPosition] = getDefaultValue( valueAxe );
       }
     }
 
