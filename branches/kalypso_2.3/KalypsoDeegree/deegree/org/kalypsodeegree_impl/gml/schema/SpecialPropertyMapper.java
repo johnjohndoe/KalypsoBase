@@ -35,9 +35,11 @@
  */
 package org.kalypsodeegree_impl.gml.schema;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_MultiCurve;
@@ -46,19 +48,52 @@ import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
+ * // TODO move to Kalypso-NA, this makes only sense for this special case!
+ * 
  * @author kuepfer
  */
-public class SpecialPropertyMapper
+public final class SpecialPropertyMapper
 {
-  // TODO move to Kalypso-NA, this makes only sense for this special case!
-  private static SpecialPropertyMapper m_instance;
+  private static SpecialPropertyMapper INSTANCE;
 
-  private static HashMap<String, SpecialMapper> m_map = new HashMap<String, SpecialMapper>();
-  static
+  private final Map<String, SpecialMapper> m_map = new HashMap<String, SpecialMapper>();
+
+  public static synchronized SpecialPropertyMapper getInstance( )
   {
-    m_instance = new SpecialPropertyMapper();
+    if( INSTANCE == null )
+      INSTANCE = new SpecialPropertyMapper();
 
-    m_instance.register( m_instance.new SpecialMapper( GM_Surface.class, GM_MultiSurface.class )
+    return INSTANCE;
+  }
+
+  private abstract static class SpecialMapper
+  {
+    private final Class< ? > m_srcType;
+
+    private final Class< ? > m_targetType;
+
+    public SpecialMapper( final Class< ? > srcType, final Class< ? > targetType )
+    {
+      m_srcType = srcType;
+      m_targetType = targetType;
+    }
+
+    public Class< ? > getSrcType( )
+    {
+      return m_srcType;
+    }
+
+    public Class< ? > getTargetType( )
+    {
+      return m_targetType;
+    }
+
+    public abstract Object map( Object srcObject );
+  }
+
+  private SpecialPropertyMapper( )
+  {
+    register( new SpecialMapper( GM_Surface.class, GM_MultiSurface.class )
     {
       @Override
       public Object map( final Object srcObject )
@@ -68,7 +103,7 @@ public class SpecialPropertyMapper
         return GeometryFactory.createGM_MultiSurface( surfaces, surface.getCoordinateSystem() );
       }
     } );
-    m_instance.register( m_instance.new SpecialMapper( GM_MultiSurface.class, GM_Surface.class )
+    register( new SpecialMapper( GM_MultiSurface.class, GM_Surface.class )
     {
       @Override
       public Object map( final Object srcObject )
@@ -77,7 +112,7 @@ public class SpecialPropertyMapper
         return surfaces[0];
       }
     } );
-    m_instance.register( m_instance.new SpecialMapper( GM_MultiCurve.class, GM_Curve.class )
+    register( new SpecialMapper( GM_MultiCurve.class, GM_Curve.class )
     {
       @Override
       public Object map( final Object srcObject )
@@ -87,7 +122,7 @@ public class SpecialPropertyMapper
       }
     } );
 
-    m_instance.register( m_instance.new SpecialMapper( String.class, Integer.class )
+    register( new SpecialMapper( String.class, Integer.class )
     {
       @Override
       public Object map( final Object srcObject )
@@ -96,7 +131,7 @@ public class SpecialPropertyMapper
       }
     } );
 
-    m_instance.register( m_instance.new SpecialMapper( String.class, Double.class )
+    register( new SpecialMapper( String.class, Double.class )
     {
       @Override
       public Object map( final Object srcObject )
@@ -105,7 +140,7 @@ public class SpecialPropertyMapper
       }
     } );
 
-    m_instance.register( m_instance.new SpecialMapper( String.class, Float.class )
+    register( new SpecialMapper( String.class, Float.class )
     {
       @Override
       public Object map( final Object srcObject )
@@ -113,7 +148,7 @@ public class SpecialPropertyMapper
         return new Float( ((String) srcObject).trim() );
       }
     } );
-    m_instance.register( m_instance.new SpecialMapper( Integer.class, Double.class )
+    register( new SpecialMapper( Integer.class, Double.class )
     {
       @Override
       public Object map( final Object srcObject )
@@ -122,7 +157,7 @@ public class SpecialPropertyMapper
       }
     } );
 
-    m_instance.register( m_instance.new SpecialMapper( Long.class, Double.class )
+    register( new SpecialMapper( Long.class, Double.class )
     {
       @Override
       public Object map( final Object srcObject )
@@ -131,7 +166,7 @@ public class SpecialPropertyMapper
       }
     } );
 
-    m_instance.register( m_instance.new SpecialMapper( Float.class, Double.class )
+    register( new SpecialMapper( Float.class, Double.class )
     {
       @Override
       public Object map( final Object srcObject )
@@ -139,7 +174,7 @@ public class SpecialPropertyMapper
         return new Double( ((Float) srcObject).doubleValue() );
       }
     } );
-    m_instance.register( m_instance.new SpecialMapper( Double.class, Integer.class )
+    register( new SpecialMapper( Double.class, Integer.class )
     {
       @Override
       public Object map( final Object srcObject )
@@ -148,7 +183,7 @@ public class SpecialPropertyMapper
       }
     } );
 
-    m_instance.register( m_instance.new SpecialMapper( Double.class, Long.class )
+    register( new SpecialMapper( Double.class, Long.class )
     {
       @Override
       public Object map( final Object srcObject )
@@ -157,7 +192,7 @@ public class SpecialPropertyMapper
       }
     } );
 
-    m_instance.register( m_instance.new SpecialMapper( Double.class, Float.class )
+    register( new SpecialMapper( Double.class, Float.class )
     {
       @Override
       public Object map( final Object srcObject )
@@ -165,7 +200,7 @@ public class SpecialPropertyMapper
         return new Float( ((Double) srcObject).floatValue() );
       }
     } );
-    m_instance.register( m_instance.new SpecialMapper( Double.class, String.class )
+    register( new SpecialMapper( Double.class, String.class )
     {
       @Override
       public Object map( final Object srcObject )
@@ -173,7 +208,7 @@ public class SpecialPropertyMapper
         return srcObject.toString();
       }
     } );
-    m_instance.register( m_instance.new SpecialMapper( Integer.class, String.class )
+    register( new SpecialMapper( Integer.class, String.class )
     {
       @Override
       public Object map( final Object srcObject )
@@ -181,7 +216,7 @@ public class SpecialPropertyMapper
         return srcObject.toString();
       }
     } );
-    m_instance.register( m_instance.new SpecialMapper( Float.class, String.class )
+    register( new SpecialMapper( Float.class, String.class )
     {
       @Override
       public Object map( final Object srcObject )
@@ -189,7 +224,7 @@ public class SpecialPropertyMapper
         return srcObject.toString();
       }
     } );
-    m_instance.register( m_instance.new SpecialMapper( Long.class, String.class )
+    register( new SpecialMapper( Long.class, String.class )
     {
       @Override
       public Object map( final Object srcObject )
@@ -198,7 +233,7 @@ public class SpecialPropertyMapper
       }
     } );
 
-    m_instance.register( m_instance.new SpecialMapper( Float.class, Long.class )
+    register( new SpecialMapper( Float.class, Long.class )
     {
       @Override
       public Object map( final Object srcObject )
@@ -206,7 +241,7 @@ public class SpecialPropertyMapper
         return new Long( ((Number) srcObject).longValue() );
       }
     } );
-    m_instance.register( m_instance.new SpecialMapper( Long.class, Float.class )
+    register( new SpecialMapper( Long.class, Float.class )
     {
       @Override
       public Object map( final Object srcObject )
@@ -214,7 +249,7 @@ public class SpecialPropertyMapper
         return new Float( ((Number) srcObject).floatValue() );
       }
     } );
-    m_instance.register( m_instance.new SpecialMapper( Integer.class, Long.class )
+    register( new SpecialMapper( Integer.class, Long.class )
     {
       @Override
       public Object map( final Object srcObject )
@@ -222,7 +257,7 @@ public class SpecialPropertyMapper
         return new Long( ((Number) srcObject).longValue() );
       }
     } );
-    m_instance.register( m_instance.new SpecialMapper( Long.class, Integer.class )
+    register( new SpecialMapper( Long.class, Integer.class )
     {
       @Override
       public Object map( final Object srcObject )
@@ -231,7 +266,7 @@ public class SpecialPropertyMapper
       }
     } );
 
-    m_instance.register( m_instance.new SpecialMapper( Integer.class, Float.class )
+    register( new SpecialMapper( Integer.class, Float.class )
     {
       @Override
       public Object map( final Object srcObject )
@@ -240,7 +275,7 @@ public class SpecialPropertyMapper
       }
     } );
 
-    m_instance.register( m_instance.new SpecialMapper( Float.class, Integer.class )
+    register( new SpecialMapper( Float.class, Integer.class )
     {
       @Override
       public Object map( final Object srcObject )
@@ -249,7 +284,7 @@ public class SpecialPropertyMapper
       }
     } );
 
-    m_instance.register( m_instance.new SpecialMapper( Date.class, String.class )
+    register( new SpecialMapper( Date.class, String.class )
     {
       @Override
       public Object map( final Object srcObject )
@@ -258,31 +293,35 @@ public class SpecialPropertyMapper
       }
     } );
 
-    m_instance.register( m_instance.new SpecialMapper( String.class, Date.class )
+    register( new SpecialMapper( String.class, Date.class )
     {
       @Override
       public Object map( final Object srcObject )
       {
-        return new Date( srcObject.toString() );
+        try
+        {
+          return SimpleDateFormat.getDateTimeInstance().parseObject( (String) srcObject );
+        }
+        catch( final ParseException e )
+        {
+          e.printStackTrace();
+          return null;
+        }
       }
     } );
-
   }
 
-  private SpecialPropertyMapper( )
-  {
-    // TODO Auto-generated constructor stub
-  }
-
-  /**
-   * @param mapper
-   */
   private void register( final SpecialMapper mapper )
   {
     m_map.put( mapper.getSrcType().getName() + mapper.getTargetType().getName(), mapper );
   }
 
   public static Object map( final Class< ? > srcType, final Class< ? > targetType, final Object srcObject ) throws Exception
+  {
+    return getInstance().doMap( srcType, targetType, srcObject );
+  }
+
+  private Object doMap( final Class< ? > srcType, final Class< ? > targetType, final Object srcObject ) throws Exception
   {
     if( srcType.equals( targetType ) )
       return srcObject;
@@ -291,6 +330,11 @@ public class SpecialPropertyMapper
   }
 
   public static boolean isValidMapping( final Class< ? > srcType, final Class< ? > targetType )
+  {
+    return getInstance().doIsValidMapping( srcType, targetType );
+  }
+
+  private boolean doIsValidMapping( final Class< ? > srcType, final Class< ? > targetType )
   {
     if( srcType.equals( targetType ) )
       return true;
@@ -318,31 +362,5 @@ public class SpecialPropertyMapper
     if( !isValidMapping( ty, t2 ) )
       throw new ClassCastException( "can not cast " + ty + " to " + t2 );
     return map( ty, t2, value );
-  }
-
-  private abstract class SpecialMapper
-  {
-    private final Class< ? > m_srcType;
-
-    private final Class< ? > m_targetType;
-
-    public SpecialMapper( final Class< ? > srcType, final Class< ? > targetType )
-    {
-      m_srcType = srcType;
-      m_targetType = targetType;
-    }
-
-    public Class< ? > getSrcType( )
-    {
-      return m_srcType;
-    }
-
-    public Class< ? > getTargetType( )
-    {
-      return m_targetType;
-    }
-
-    public abstract Object map( Object srcObject );
-
   }
 }

@@ -116,6 +116,10 @@ public class ClipboardExportAction extends AbstractObservationAction
 
   private static String createClipboardStringFrom( final IObservation observation, final IRequest request ) throws SensorException
   {
+    // FIXME: we should not export the observation but the actual table, like it is currently visible to the user
+
+    // vice versa, we should import in the same way; everything else is confusing and cannot be handled by the user.
+
     final StringBuffer result = new StringBuffer();
     final ITupleModel values = observation.getValues( request );
     final IAxis[] axes = values.getAxisList();
@@ -138,10 +142,9 @@ public class ClipboardExportAction extends AbstractObservationAction
         String stringValue;
         try
         {
+          // FIXME: evil: everything should be exported as it appears in the table!
           if( value instanceof Number )
-          {
             stringValue = TimeserieUtils.getNumberFormatFor( sortedAxes[col].getType() ).format( value );
-          }
           else
             stringValue = (String) SpecialPropertyMapper.cast( value, String.class, true );
           result.append( stringValue != null ? stringValue : " " ); //$NON-NLS-1$
