@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:sch="http://www.ascc.net/xml/schematron" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns:jxb="http://java.sun.com/xml/ns/jaxb" targetNamespace="http://www.opengis.net/swe" jxb:version="1.0" elementFormDefault="qualified" version="3.1.1">
+<annotation>
+	<appinfo>
+		<jxb:schemaBindings>
+			<jxb:package name="ogc31.www.opengis.net.swe"/>
+		</jxb:schemaBindings>
+	</appinfo>
+  </annotation>
+</schema>
