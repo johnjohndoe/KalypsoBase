@@ -20,8 +20,6 @@ public class GenericLinearAxis extends AbstractAxis
 
   private IDataRange<Number> m_numericRange = new DataRange<Number>( null, null );
 
-  private int m_height = 1;
-
   public GenericLinearAxis( final String id, final POSITION pos, final Class< ? > clazz, final IAxisRenderer renderer )
   {
     super( id, pos, clazz, renderer );
@@ -152,25 +150,4 @@ public class GenericLinearAxis extends AbstractAxis
 
     return normValue;
   }
-
-  /**
-   * TODO: to abstract axis
-   * 
-   * @see de.openali.odysseus.chart.framework.model.mapper.IAxis#getScreenHeight()
-   */
-  @Override
-  public int getScreenHeight( )
-  {
-    return m_height;
-  }
-
-  @Override
-  public void setScreenHeight( int height )
-  {
-    if( m_height == height )
-      return;
-    m_height = height;
-    fireMapperChanged( this );
-  }
-
 }

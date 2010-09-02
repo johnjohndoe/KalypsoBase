@@ -101,8 +101,8 @@ public class CoordinateMapper implements ICoordinateMapper
    *      java.lang.Object)
    */
   @Override
-  @SuppressWarnings("unchecked")
-  public Point logicalToScreen( Object domainValue, Object targetValue )
+  @SuppressWarnings({"unchecked",  "rawtypes" })
+  public Point logicalToScreen( Object domainValue,Object targetValue )
   {
     IDataOperator dop = getDomainAxis().getDataOperator( domainValue.getClass() );
     IDataOperator top = getTargetAxis().getDataOperator( targetValue.getClass() );
