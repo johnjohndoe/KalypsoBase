@@ -21,6 +21,8 @@ public abstract class AbstractAxis extends AbstractMapper implements IAxis
 
   private boolean m_visible = true;
 
+  private int m_height = 1;
+
   private DIRECTION m_dir = DIRECTION.POSITIVE;
 
   private IDataRange<Number> m_dataRange;
@@ -74,6 +76,8 @@ public abstract class AbstractAxis extends AbstractMapper implements IAxis
     return m_dataRange;
   }
 
+  
+  
   /**
    * @see org.kalypso.chart.framework.axis.IAxis#getPosition()
    */
@@ -98,15 +102,10 @@ public abstract class AbstractAxis extends AbstractMapper implements IAxis
     return m_renderer;
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.mapper.IAxis#setRenderer(IAxisRenderer )
-   */
   @Override
-  public void setRenderer( final IAxisRenderer renderer )
+  public int getScreenHeight( )
   {
-    if( renderer != null && renderer.equals( m_renderer ) )
-      return;
-    m_renderer = renderer;
+    return m_height;
   }
 
   /**
@@ -153,14 +152,33 @@ public abstract class AbstractAxis extends AbstractMapper implements IAxis
     fireMapperChanged( this );
   }
 
+  /**
+   * @see de.openali.odysseus.chart.framework.model.mapper.IAxis#setRenderer(IAxisRenderer )
+   */
+  @Override
+  public void setRenderer( final IAxisRenderer renderer )
+  {
+    if( renderer != null && renderer.equals( m_renderer ) )
+      return;
+    m_renderer = renderer;
+  }
+
+  @Override
+  public void setScreenHeight( int height )
+  {
+    if( m_height == height )
+      return;
+    m_height = height;
+    fireMapperChanged( this );
+  }
+
   @Override
   public void setVisible( boolean visible )
   {
     if( visible == m_visible )
       return;
     m_visible = visible;
-// if( m_renderer != null )
-// m_renderer.invalidateTicks( this );
+
     fireMapperChanged( this );
   }
 

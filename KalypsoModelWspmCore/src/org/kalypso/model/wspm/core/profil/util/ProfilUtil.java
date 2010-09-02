@@ -678,16 +678,16 @@ public final class ProfilUtil
     final int index = owner.indexOfComponent( property );
     if( index < 0 )
       return Double.NaN;
-    Double minValue = getDoubleValueFor( property, section[0] );
-    if( minValue.isNaN() )
-      return minValue;
+    Number minValue = getDoubleValueFor( property, section[0] );
+    if( Double.isNaN( minValue.doubleValue() ) )
+      return minValue.doubleValue();
     for( final IRecord rec : section )
     {
       final Object objVal = rec.getValue( index );
       if( objVal != null && objVal instanceof Number )
-        minValue = Math.min( minValue, (Double) objVal );
+        minValue = Math.min( minValue.doubleValue(), ((Number) objVal).doubleValue() );
     }
-    return minValue;
+    return minValue.doubleValue();
   }
 
   public static Double getSectionMaxValueFor( final IRecord[] section, final IComponent property )
@@ -698,16 +698,16 @@ public final class ProfilUtil
     final int index = owner.indexOfComponent( property );
     if( index < 0 )
       return Double.NaN;
-    Double maxValue = getDoubleValueFor( property, section[0] );
-    if( maxValue.isNaN() )
-      return maxValue;
+    Number maxValue = getDoubleValueFor( property, section[0] );
+    if( Double.isNaN( maxValue.doubleValue() ) )
+      return maxValue.doubleValue();
     for( final IRecord rec : section )
     {
       final Object value = rec.getValue( index );
       if( value instanceof Number )
-        maxValue = Math.max( maxValue, ((Number) value).doubleValue() );
+        maxValue = Math.max( maxValue.doubleValue(), ((Number) value).doubleValue() );
     }
-    return maxValue;
+    return maxValue.doubleValue();
   }
 
   public static Double getMinValueFor( final IProfil profil, final IComponent property )
