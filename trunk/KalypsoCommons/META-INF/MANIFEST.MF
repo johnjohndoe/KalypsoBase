@@ -30,7 +30,13 @@ Bundle-ClassPath: .,
  lib/xmlbeans-2.5/xbean.jar,
  lib/xmlbeans-2.5/xmlbeans-qname.jar,
  lib/xmlbeans-2.5/xmlpublic.jar,
- lib/opencsv/opencsv-2.2.jar
+ lib/opencsv/opencsv-2.2.jar,
+ lib/poi-2.6/poi-bin-3.6-20091214/poi-3.6/poi-3.6-20091214.jar,
+ lib/poi-2.6/poi-bin-3.6-20091214/poi-3.6/poi-contrib-3.6-20091214.jar,
+ lib/poi-2.6/poi-bin-3.6-20091214/poi-3.6/poi-examples-3.6-20091214.jar,
+ lib/poi-2.6/poi-bin-3.6-20091214/poi-3.6/poi-ooxml-3.6-20091214.jar,
+ lib/poi-2.6/poi-bin-3.6-20091214/poi-3.6/poi-ooxml-schemas-3.6-20091214.jar,
+ lib/poi-2.6/poi-bin-3.6-20091214/poi-3.6/poi-scratchpad-3.6-20091214.jar
 Bundle-Activator: org.kalypso.commons.KalypsoCommonsPlugin
 Bundle-Vendor: kalypsobase.sourceforge.net
 Bundle-Localization: plugin
