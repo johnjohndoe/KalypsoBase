@@ -94,10 +94,11 @@ Export-Package: org.kalypso.binding.ratingtable,
  org.kalypso.zml.request,
  org.w3._1999.xlinkext,
  org.w3._2001.xmlschema
-Require-Bundle: org.kalypso.deegree;visibility:=reexport,
- org.kalypso.repository;visibility:=reexport,
+Require-Bundle: org.eclipse.core.expressions,
+ org.eclipse.wst.xml.core;resolution:=optional,
+ org.junit4;bundle-version="4.3.0";resolution:=optional,
  org.kalypso.contribs.ogc31,
- org.eclipse.core.expressions,
- org.junit4;bundle-version="4.3.0";resolution:=optional
+ org.kalypso.deegree;visibility:=reexport,
+ org.kalypso.repository;visibility:=reexport
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
