@@ -78,6 +78,9 @@ public class DeleteSelectedRowsHandler extends AbstractHandler
     if( tupleResult.size() > 0 )
     {
       final int indexToSelect = Math.min( firstIndex, tupleResult.size() - 1 );
+      // to prevent indexOutOfBounds
+      if( indexToSelect < 0 )
+        return null;
       viewer.setSelection( new StructuredSelection( tupleResult.get( indexToSelect ) ) );
     }
 
