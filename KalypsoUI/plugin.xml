@@ -50,7 +50,7 @@
 		<view allowMultiple="false" category="org.kalypso.ui.kalypso" class="org.kalypso.ogc.gml.om.table.ObservationTableView" icon="icons/kalypso_ott.gif" id="org.kalypso.ogc.gml.om.table.ObservationTableView" name="%org.kalypso.ogc.gml.om.table.ObservationTableView" />
 		<view allowMultiple="true" category="org.kalypso.ui.kalypso" class="org.kalypso.ogc.gml.om.tableex.MultiTupleResultView" icon="icons/kalypso_ott.gif" id="org.kalypso.ogc.gml.om.tableex.MultiTupleResultView" name="%org.kalypso.ogc.gml.om.tableex.MultiTupleResultView" />
 		<view allowMultiple="true" category="org.kalypso.ui.kalypso" class="org.kalypso.ui.views.map.MapView" icon="icons/kalypso_gmt.gif" id="org.kalypso.ui.views.mapView" name="%view.name.0" saveMapOnClose="true" reloadMapOnOpen="false" />
-		<view allowMultiple="false" category="org.kalypso.ui.kalypso" class="org.kalypso.ogc.gml.outline.MapOutline" icon="icons/kalypso_gmt.gif" id="org.kalypso.ui.views.outline" name="%org.kalypso.ui.views.outline" />
+		<view allowMultiple="false" category="org.kalypso.ui.kalypso" class="org.kalypso.ogc.gml.outline.ViewContentOutline" icon="icons/kalypso_gmt.gif" id="org.kalypso.ui.views.outline" name="%org.kalypso.ui.views.outline" />
 		<view allowMultiple="true" category="org.kalypso.ui.kalypso" class="org.kalypso.ui.editor.featureeditor.FeatureTemplateView" icon="icons/kalypso_gtt.gif" id="org.kalypso.ui.views.featuretemplateview" name="%view.name.1" reloadMapOnOpen="false" />
 		<view allowMultiple="false" category="org.kalypso.ui.kalypso" class="org.kalypso.ui.views.map.MapOverView" id="org.kalypso.ui.views.mapOverView" name="%view.name.2"/>
 	</extension>

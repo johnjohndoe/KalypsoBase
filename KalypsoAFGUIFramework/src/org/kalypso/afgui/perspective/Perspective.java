@@ -8,7 +8,7 @@ import org.eclipse.ui.internal.PageLayout;
 import org.kalypso.afgui.views.WorkflowView;
 import org.kalypso.chart.ui.view.ChartView;
 import org.kalypso.featureview.views.FeatureView;
-import org.kalypso.ogc.gml.outline.MapOutline;
+import org.kalypso.ogc.gml.outline.ViewContentOutline;
 import org.kalypso.ogc.sensor.view.DiagramViewPart;
 import org.kalypso.ogc.sensor.view.TableViewPart;
 import org.kalypso.ui.editor.featureeditor.FeatureTemplateView;
@@ -49,7 +49,7 @@ public class Perspective implements IPerspectiveFactory
     leftTop.addView( WorkflowView.ID );
     leftBottom.addView( SCENARIO_VIEW_ID );
 
-    leftBottom.addPlaceholder( MapOutline.ID );
+    leftBottom.addPlaceholder( ViewContentOutline.ID );
     leftBottom.addPlaceholder( TIMESERIES_REPOSITORY_VIEW_ID );
 
     rightTop.addPlaceholder( MapView.ID );

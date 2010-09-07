@@ -53,6 +53,7 @@ import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
+import org.kalypso.ogc.gml.outline.IContentOutlineProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.mapeditor.AbstractMapPart;
 import org.kalypso.ui.editor.mapeditor.GisMapOutlinePage;
@@ -68,7 +69,7 @@ import org.kalypso.ui.editor.mapeditor.GisMapOutlinePage;
  * @author Stefan Kurzbach
  * @author Gernot Belger
  */
-public class MapView extends AbstractMapPart implements IViewPart
+public class MapView extends AbstractMapPart implements IViewPart, IContentOutlineProvider
 {
   public static final String ID = "org.kalypso.ui.views.mapView"; //$NON-NLS-1$
 

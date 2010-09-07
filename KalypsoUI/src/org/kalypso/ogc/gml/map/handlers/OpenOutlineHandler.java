@@ -51,7 +51,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartSite;
 import org.kalypso.i18n.Messages;
-import org.kalypso.ogc.gml.outline.MapOutline;
+import org.kalypso.ogc.gml.outline.ViewContentOutline;
 
 /**
  * This handler opens the outline.
@@ -81,7 +81,7 @@ public class OpenOutlineHandler extends AbstractHandler
 
     try
     {
-      final IViewPart view = page.findView( MapOutline.ID );
+      final IViewPart view = page.findView( ViewContentOutline.ID );
       if( view != null )
       {
         page.hideView( view );
@@ -92,7 +92,7 @@ public class OpenOutlineHandler extends AbstractHandler
       // TODO should not be necessary: better: VIEW_SHOW instead and fix the outline, so it directly finds the map
       // itself.
       /* Open the outline. */
-      page.showView( MapOutline.ID, null, IWorkbenchPage.VIEW_ACTIVATE );
+      page.showView( ViewContentOutline.ID, null, IWorkbenchPage.VIEW_ACTIVATE );
 
       /* Focus the part. If it is a map view, the outline will be filled. */
       page.activate( part );

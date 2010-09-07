@@ -80,7 +80,7 @@ import org.kalypso.ogc.gml.command.ChangeExtentCommand;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.MapPanelSourceProvider;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
-import org.kalypso.ogc.gml.outline.MapOutline;
+import org.kalypso.ogc.gml.outline.ViewContentOutline;
 import org.kalypso.ogc.gml.outline.nodes.IThemeNode;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.mapeditor.AbstractMapPart;
@@ -278,7 +278,7 @@ public class MapHandlerUtils
         return (GisMapOutlinePage) currentPage;
     }
 
-    final MapOutline mapOutline = (MapOutline) activePage.findView( MapOutline.ID );
+    final ViewContentOutline mapOutline = (ViewContentOutline) activePage.findView( ViewContentOutline.ID );
     if( mapOutline != null )
     {
       final IPage currentPage = mapOutline.getCurrentPage();
