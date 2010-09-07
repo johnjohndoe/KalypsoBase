@@ -9,7 +9,7 @@ org.kalypso.service.wps.results=[your result directory]
 # Replacement for the client URL: No default.
 # org.kalypso.service.wps.client.replacement=[your replacement]
 
-If you run in a local Jetty with eclipse, add the directives to the paramaters of the VM like this:
+If you run in a local Jetty with Eclipse, add the directives to the parameters of the VM like this:
 
 -Dorg.kalypso.service.wps.service=[your service url] -Dorg.kalypso.service.wps.results=[your result directory]
 
