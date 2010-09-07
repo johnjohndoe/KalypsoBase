@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.grid.areas;
 
@@ -59,7 +59,7 @@ import com.vividsolutions.jts.geom.Polygon;
  * the most cells on a very perfomant way.<br/>
  * <br/>
  * The {@link #overlaps(int, int, Coordinate)} function does check for overlapping. It should not be overriden.
- * 
+ *
  * @author Holger Albert
  */
 public abstract class AbstractGeoGridArea implements IGeoGridArea
@@ -101,7 +101,7 @@ public abstract class AbstractGeoGridArea implements IGeoGridArea
 
   /**
    * The constructor.
-   * 
+   *
    * @param grid
    *          The grid.
    * @param geometry
@@ -148,7 +148,7 @@ public abstract class AbstractGeoGridArea implements IGeoGridArea
 
   /**
    * Subclasses should call the super function, if they want a basic envelope check.
-   * 
+   *
    * @see org.kalypso.grid.areas.IGeoGridArea#contains(int, int, com.vividsolutions.jts.geom.Coordinate)
    */
   @Override
@@ -185,6 +185,6 @@ public abstract class AbstractGeoGridArea implements IGeoGridArea
     Polygon cell = GeoGridUtilities.createCellPolygon( m_grid, x, y );
 
     /* The fraction of the cell. */
-    return JTSUtilities.fractionAreaOf( m_geometry, cell );
+    return JTSUtilities.getAreaFraction( m_geometry, cell );
   }
 }
