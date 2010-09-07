@@ -49,15 +49,11 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.views.contentoutline.ContentOutline;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
-import org.kalypso.ogc.gml.outline.MapOutline;
 
 /**
  * @author Gernot Belger
@@ -96,20 +92,17 @@ public class ThemeInfoWidget extends AbstractThemeInfoWidget
   {
     super.activate( commandPoster, mapPanel );
 
-    final IWorkbench workbench = PlatformUI.getWorkbench();
-    final IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
-    final IWorkbenchPage page = window.getActivePage();
-    final MapOutline outlineView = (MapOutline) page.findView( MapOutline.ID );
+    final ContentOutline outlineView = FindElementMapWidget.findOutlineView();
     if( outlineView == null )
     {
-      getMapPanel().setMessage( Messages.getString( "org.kalypso.ogc.gml.map.widgets.ThemeInfoWidget.3" ) ); //$NON-NLS-1$
+      mapPanel.setMessage( Messages.getString( "org.kalypso.ogc.gml.map.widgets.ThemeInfoWidget.3" ) ); //$NON-NLS-1$
       return;
     }
 
-    final IMapPanel outlineMapPanel = outlineView.getMapPanel();
+    final IMapPanel outlineMapPanel = FindElementMapWidget.findMapPanel( outlineView );
     if( outlineMapPanel != mapPanel )
     {
-      getMapPanel().setMessage( Messages.getString( "org.kalypso.ogc.gml.map.widgets.ThemeInfoWidget.4" ) ); //$NON-NLS-1$
+      mapPanel.setMessage( Messages.getString( "org.kalypso.ogc.gml.map.widgets.ThemeInfoWidget.4" ) ); //$NON-NLS-1$
       return;
     }
 

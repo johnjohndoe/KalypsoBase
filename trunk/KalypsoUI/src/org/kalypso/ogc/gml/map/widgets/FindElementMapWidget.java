@@ -81,6 +81,8 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.handlers.IHandlerService;
+import org.eclipse.ui.part.IPage;
+import org.eclipse.ui.views.contentoutline.ContentOutline;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.java.lang.NumberUtils;
@@ -95,8 +97,9 @@ import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.handlers.MapHandlerUtils;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
-import org.kalypso.ogc.gml.outline.MapOutline;
+import org.kalypso.ogc.gml.outline.ViewContentOutline;
 import org.kalypso.ogc.gml.widgets.AbstractWidget;
+import org.kalypso.ui.editor.mapeditor.GisMapOutlinePage;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
@@ -182,11 +185,9 @@ public class FindElementMapWidget extends AbstractWidget implements IWidgetWithO
   {
     super.activate( commandPoster, mapPanel );
 
-    final IWorkbench workbench = PlatformUI.getWorkbench();
-    final IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
-    final IWorkbenchPage page = window.getActivePage();
-    final MapOutline outlineView = (MapOutline) page.findView( MapOutline.ID );
     m_mapPanel = getMapPanel();
+
+    final ContentOutline outlineView = findOutlineView();
     if( outlineView == null )
     {
       m_themesAct = Arrays.asList( m_mapPanel.getMapModell().getAllThemes() );
@@ -194,7 +195,7 @@ public class FindElementMapWidget extends AbstractWidget implements IWidgetWithO
       return;
     }
 
-    final IMapPanel outlineMapPanel = outlineView.getMapPanel();
+    final IMapPanel outlineMapPanel = findMapPanel( outlineView );
     if( outlineMapPanel != mapPanel )
     {
       m_mapPanel.setMessage( Messages.getString( "org.kalypso.ogc.gml.map.widgets.FindElementMapWidget.2" ) ); //$NON-NLS-1$
@@ -205,6 +206,23 @@ public class FindElementMapWidget extends AbstractWidget implements IWidgetWithO
     m_selectionProvider.addSelectionChangedListener( m_selectionListener );
 
     handleSelectionChanged( m_selectionProvider.getSelection() );
+  }
+
+  public static IMapPanel findMapPanel( final ContentOutline outlineView )
+  {
+    final IPage currentPage = outlineView.getCurrentPage();
+    if( currentPage instanceof GisMapOutlinePage )
+      return ((GisMapOutlinePage) currentPage).getMapPanel();
+
+    return null;
+  }
+
+  public static ContentOutline findOutlineView( )
+  {
+    final IWorkbench workbench = PlatformUI.getWorkbench();
+    final IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
+    final IWorkbenchPage page = window.getActivePage();
+    return (ViewContentOutline) page.findView( ViewContentOutline.ID );
   }
 
   /**
@@ -654,7 +672,7 @@ public class FindElementMapWidget extends AbstractWidget implements IWidgetWithO
 
         geometryObjectToShow = geometryObjectValue.getBuffer( scaledFactor );
         final PolygonSymbolizer symb = new PolygonSymbolizer_Impl();
-        
+
         final Stroke stroke = new Stroke_Impl( new HashMap<Object, Object>(), null, null );
         stroke.setWidth( 5 );
         stroke.setStroke( new Color( 255, 0, 0 ) );
