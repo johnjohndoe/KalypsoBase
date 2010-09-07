@@ -186,7 +186,7 @@ public final class ProfilUtil
         return ((Number) oValue).doubleValue();
       return Double.NaN;
     }
-    catch( IndexOutOfBoundsException e )
+    catch( final IndexOutOfBoundsException e )
     {
       e.printStackTrace();
       return Double.NaN;
@@ -670,14 +670,17 @@ public final class ProfilUtil
     return points2D;
   }
 
+  @Deprecated
   public static Double getSectionMinValueFor( final IRecord[] section, final IComponent property )
   {
-    if( section.length < 1 )
+    if( section.length == 0 )
       return Double.NaN;
+
     final TupleResult owner = section[0].getOwner();
     final int index = owner.indexOfComponent( property );
     if( index < 0 )
       return Double.NaN;
+
     Number minValue = getDoubleValueFor( property, section[0] );
     if( Double.isNaN( minValue.doubleValue() ) )
       return minValue.doubleValue();
@@ -690,9 +693,10 @@ public final class ProfilUtil
     return minValue.doubleValue();
   }
 
+  @Deprecated
   public static Double getSectionMaxValueFor( final IRecord[] section, final IComponent property )
   {
-    if( section.length < 1 )
+    if( section.length == 0 )
       return Double.NaN;
     final TupleResult owner = section[0].getOwner();
     final int index = owner.indexOfComponent( property );
