@@ -38,7 +38,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
 
 	<target name="clean" description="cleans it up - totally">
 		<echo message="Deleting old sources for ${project}" />
-		<delete includeemptydirs="true">
+		<delete includeemptydirs="true" failonerror="false" >
 			<fileset dir="${xmlbean.srcgendir}" includes="**/*"/>
 		</delete>
 	</target>
