@@ -113,7 +113,7 @@ public class LocalSimulationRunner implements ISimulationRunner
     }
     finally
     {
-      // TODO delete tmpDir
+      // FIXME delete tmpDir
       // tmpDir.delete();
     }
   }
