@@ -75,15 +75,29 @@ public class FontUtilities
    *          The style of the original font and this will be set to the new font.
    * @return The new font.
    */
-  public static Font changeHeightAndStyle( Device device, Font font, int height, int style )
+  public static Font changeHeightAndStyle( final Device device, final Font font, final int height, final int style )
   {
     /* The new font data. */
-    List<FontData> fontData = new ArrayList<FontData>();
+    final List<FontData> fontData = new ArrayList<FontData>();
 
     /* Create the new font data. */
-    FontData[] elements = font.getFontData();
-    for( FontData element : elements )
+    final FontData[] elements = font.getFontData();
+    for( final FontData element : elements )
       fontData.add( new FontData( element.getName(), height, element.getStyle() | style ) );
+
+    /* Create and return the new font. */
+    return new Font( device, fontData.toArray( new FontData[] {} ) );
+  }
+
+  public static Font changeHeightAndStyleByFactor( final Device device, final Font font, final double heightFactor, final int style )
+  {
+    /* The new font data. */
+    final List<FontData> fontData = new ArrayList<FontData>();
+
+    /* Create the new font data. */
+    final FontData[] elements = font.getFontData();
+    for( final FontData element : elements )
+      fontData.add( new FontData( element.getName(), (int) (element.getHeight() * heightFactor), element.getStyle() | style ) );
 
     /* Create and return the new font. */
     return new Font( device, fontData.toArray( new FontData[] {} ) );
