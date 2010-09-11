@@ -2,6 +2,7 @@ package org.kalypso.model.wspm.ui.product;
 
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
+import org.eclipse.ui.internal.PageLayout;
 import org.kalypso.model.wspm.ui.view.LayerViewPart;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartViewPart;
 import org.kalypso.model.wspm.ui.view.legend.LegendViewPart;
@@ -42,5 +43,9 @@ public class ProfileManagerPerspective implements IPerspectiveFactory
     layout.addShowViewShortcut( TableView.class.getName() );
     layout.addShowViewShortcut( ProfilChartViewPart.ID );
     layout.addShowViewShortcut( IPageLayout.ID_PROBLEM_VIEW );
+
+    // a bit dirty, but this perspective should be minimalistic
+    if( layout instanceof PageLayout )
+      ((PageLayout) layout).getActionSets().clear();
   }
 }

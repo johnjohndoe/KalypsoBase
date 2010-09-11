@@ -43,6 +43,7 @@ package org.kalypso.model.wspm.ui.product;
 import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
+import org.eclipse.ui.internal.PageLayout;
 import org.kalypso.featureview.views.FeatureView;
 
 /**
@@ -51,7 +52,7 @@ import org.kalypso.featureview.views.FeatureView;
 public class WspmPerspectiveFactory implements IPerspectiveFactory
 {
   public static final String ID = "org.kalypso.model.wspm.ui.product.WspmPerspectiveFactory"; //$NON-NLS-1$
-  
+
   /**
    * @see org.eclipse.ui.IPerspectiveFactory#createInitialLayout(org.eclipse.ui.IPageLayout)
    */
@@ -60,6 +61,10 @@ public class WspmPerspectiveFactory implements IPerspectiveFactory
   {
     defineActions( layout );
     defineLayout( layout );
+
+    // a bit dirty, but this perspective should be minimalistic
+    if( layout instanceof PageLayout )
+      ((PageLayout) layout).getActionSets().clear();
   }
 
   /**
@@ -83,7 +88,7 @@ public class WspmPerspectiveFactory implements IPerspectiveFactory
 //    layout.addShowViewShortcut( IPageLayout.ID_TASK_LIST );
 
     layout.addShowViewShortcut( FeatureView.ID );
-    
+
 //    layout.addActionSet( IPageLayout.ID_NAVIGATE_ACTION_SET );
   }
 
@@ -103,8 +108,8 @@ public class WspmPerspectiveFactory implements IPerspectiveFactory
     topLeft.addView( IPageLayout.ID_RES_NAV );
 
     // Bottom left.
-    IFolderLayout bottomLeft = layout.createFolder( "bottomLeft", IPageLayout.BOTTOM, (float) 0.50,//$NON-NLS-1$
-        "topLeft" );//$NON-NLS-1$
+    final IFolderLayout bottomLeft = layout.createFolder( "bottomLeft", IPageLayout.BOTTOM, (float) 0.50,//$NON-NLS-1$
+    "topLeft" );//$NON-NLS-1$
     bottomLeft.addView( IPageLayout.ID_OUTLINE );
 
     // Top right.
@@ -112,7 +117,7 @@ public class WspmPerspectiveFactory implements IPerspectiveFactory
     topRight.addView( "org.kalypso.featureview.views.FeatureView" ); //$NON-NLS-1$
 //    topLeft.addPlaceholder( IPageLayout.ID_BOOKMARKS );
 
-    
+
 //    // Bottom right.
 //    IFolderLayout bottomRight = layout.createFolder( "bottomRight", IPageLayout.BOTTOM, (float) 0.66,//$NON-NLS-1$
 //        editorArea );

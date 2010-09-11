@@ -88,5 +88,9 @@ public class Perspective implements IPerspectiveFactory
 
     layout.getViewLayout( "org.kalypso.risk.views.RiskStatisticsResultView" ).setMoveable( false ); //$NON-NLS-1$
     layout.getViewLayout( "org.kalypso.risk.views.RiskStatisticsResultView" ).setCloseable( false ); //$NON-NLS-1$
+
+    // a bit dirty, but this perspective should be minimalistic
+    if( layout instanceof PageLayout )
+      ((PageLayout) layout).getActionSets().clear();
   }
 }
