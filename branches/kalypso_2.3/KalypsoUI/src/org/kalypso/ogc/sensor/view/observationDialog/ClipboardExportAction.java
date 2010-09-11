@@ -133,6 +133,7 @@ public class ClipboardExportAction extends AbstractObservationAction
       if( axe != keyAxes[0] )
         list.add( axe );
     }
+
     final IAxis[] sortedAxes = list.toArray( new IAxis[list.size()] );
     for( int row = 0; row < count; row++ )
     {
