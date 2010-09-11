@@ -52,7 +52,7 @@ import org.kalypso.observation.result.TupleResult;
  */
 public interface IProfil extends IObservation<TupleResult>
 {
-  void addPoint( final int index, final IRecord point );
+  void addPoint( int index, IRecord point );
 
   /**
    * @return true
@@ -60,18 +60,18 @@ public interface IProfil extends IObservation<TupleResult>
    *         adds a new Record at the end of this Observation and copies the values of the Components existing in both
    *         records
    */
-  boolean addPoint( final IRecord point );
+  boolean addPoint( IRecord point );
 
   /**
    * @param pointProperty
    */
-  void addPointProperty( final IComponent pointProperty );
+  void addPointProperty( IComponent pointProperty );
 
-  void addPointProperty( final IComponent pointProperty, final Object defaultValue );
+  void addPointProperty( IComponent pointProperty, Object defaultValue );
 
-  IComponent getPointPropertyFor( final String propertyID );
+  IComponent getPointPropertyFor( String propertyID );
 
-  void addPointProperty( final IComponent pointProperty, final IComponent initialValues );
+  void addPointProperty( IComponent pointProperty, IComponent initialValues );
 
   /**
    * remove the current ProfileObject and adds the given ProfileObject
@@ -80,15 +80,15 @@ public interface IProfil extends IObservation<TupleResult>
    * @param building
    *          must not be null, in this case use removeProfileObject()
    */
-  IProfileObject[] addProfileObjects( final IProfileObject... profileObjects );
+  IProfileObject[] addProfileObjects( IProfileObject... profileObjects );
 
-  void addProfilListener( final IProfilListener pl );
+  void addProfilListener( IProfilListener pl );
 
-  boolean isPointMarker( final String propertyID );
+  boolean isPointMarker( String propertyID );
 
-  void fireProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes );
+  void fireProfilChanged( ProfilChangeHint hint, IProfilChange[] changes );
 
-  void removeProfilListener( final IProfilListener pl );
+  void removeProfilListener( IProfilListener pl );
 
   /**
    * @return a valid profilPoint, addable to this profile
@@ -96,7 +96,7 @@ public interface IProfil extends IObservation<TupleResult>
    */
   IRecord createProfilPoint( );
 
-  IProfilPointMarker createPointMarker( final String markerID, IRecord point );
+  IProfilPointMarker createPointMarker( String markerID, IRecord point );
 
   /**
    * @return the active Point.
@@ -137,18 +137,18 @@ public interface IProfil extends IObservation<TupleResult>
    */
   IComponent[] getPointMarkerTypes( );
 
-  int indexOfPoint( final IRecord point );
+  int indexOfPoint( IRecord point );
 
-  int indexOfProperty( final IComponent pointProperty );
+  int indexOfProperty( IComponent pointProperty );
 
-  int indexOfProperty( final String id );
+  int indexOfProperty( String id );
 
-  IRecord getPoint( final int index );
+  IRecord getPoint( int index );
 
   /**
    * @return include both , startPoint and endPoint
    */
-  IRecord[] getPoints( final int startPoint, final int endPoint );
+  IRecord[] getPoints( int startPoint, int endPoint );
 
   /**
    * @return all PointProperties used by this profile
@@ -194,7 +194,7 @@ public interface IProfil extends IObservation<TupleResult>
    * @return true if the profile contains the property
    * @see org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider to get addable properties
    */
-  boolean hasPointProperty( final IComponent property );
+  boolean hasPointProperty( IComponent property );
 
   /**
    * @return the FIRST component with the given Id, if the profile contains the property otherwise null
@@ -202,10 +202,11 @@ public interface IProfil extends IObservation<TupleResult>
    * @see #hasPointProperty(IComponent)
    * @see org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider to get addable properties
    */
-  IComponent hasPointProperty( final String propertyId );
+  IComponent hasPointProperty( String propertyId );
 
-  boolean removePoint( final IRecord point );
+  boolean removePoint( IRecord point );
 
+  boolean removePoints( IRecord[] points );
   /*
    * obsolete - point markers will be automatically set by their own setValue() implementation (value will be directly
    * added to observation, and so the point marker is registered)
@@ -217,7 +218,7 @@ public interface IProfil extends IObservation<TupleResult>
    *          to remove
    * @return false if the pointProperty is not used in this profile
    */
-  boolean removePointProperty( final IComponent pointProperty );
+  boolean removePointProperty( IComponent pointProperty );
 
   boolean removeProfileObject( IProfileObject profileObject );
 
@@ -225,22 +226,22 @@ public interface IProfil extends IObservation<TupleResult>
    * @param key
    *          removes the key and its value from the profiles internal HashMap<Object,Object>
    */
-  Object removeProperty( final Object key );
+  Object removeProperty( Object key );
 
-  void setActivePoint( final IRecord point );
+  void setActivePoint( IRecord point );
 
-  void setActivePointProperty( final IComponent activeProperty );
+  void setActivePointProperty( IComponent activeProperty );
 
-  void setComment( final String comment );
+  void setComment( String comment );
 
   /**
    * @param key
    * @param value
    *          saves any (key,value-Object) in the profiles internal HashMap
    */
-  void setProperty( final Object key, final Object value );
+  void setProperty( Object key, Object value );
 
-  void setStation( final double station );
+  void setStation( double station );
 
   /**
    * Returns the current problem markers, if any, attached to this profile.
@@ -252,4 +253,5 @@ public interface IProfil extends IObservation<TupleResult>
    * A profile event is fired upon this action.
    */
   void setProblemMarker( IMarker[] markers );
+
 }
