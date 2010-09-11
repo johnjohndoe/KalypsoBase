@@ -148,6 +148,7 @@ public class GmlSourceChooserPage extends WizardPage implements IWizardPage
 
   private void setChildrenCheckstate( final ICheckable checkable, final Object element, final boolean checked, final CheckboxTreeViewer treeViewer )
   {
+    // TODO: use checkstate provider instead
     final Object[] children = m_contentProvider.getChildren( element );
     for( final Object child : children )
     {
