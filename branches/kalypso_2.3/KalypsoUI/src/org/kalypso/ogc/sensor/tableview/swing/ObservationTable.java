@@ -144,6 +144,7 @@ public class ObservationTable extends Panel implements IObsViewEventListener
     m_waitForSwing = waitForSwing;
 
     m_model = new ObservationTableModel();
+    m_model.setAlphaSort( template.isAlphaSort() );
     m_model.setRules( template.getRules() );
 
     // date renderer with time zone
@@ -334,6 +335,13 @@ public class ObservationTable extends Panel implements IObsViewEventListener
           final TableViewColumn column = (TableViewColumn) evt.getObject();
           if( column.isShown() )
             model.addColumn( column );
+
+          final int columnCount = model.getColumnCount();
+          for( int i = 0; i < columnCount; i++ )
+          {
+            System.out.print( model.getColumnName( i ) );
+          }
+          System.out.println();
 
           analyseObservation( column.getObservation(), true );
 
