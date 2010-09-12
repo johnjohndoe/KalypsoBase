@@ -78,6 +78,8 @@ public class KalypsoOGC31Plugin extends Plugin
   {
     super.start( context );
 
+    // FIXME: actually this does not work (why?) and starting this plugin too early will lock the workspace.
+
     // PERFORMANCE: as soon as this plug-in is started, we initialise the GML3.1 context
     // as this takes quite some time. This enables clients to initialise the context on
     // startup by starting this plug-in immediately.
