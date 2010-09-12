@@ -4,7 +4,6 @@ import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
 import org.eclipse.ui.IPlaceholderFolderLayout;
-import org.eclipse.ui.internal.PageLayout;
 import org.kalypso.model.wspm.ui.view.LayerViewPart;
 import org.kalypso.model.wspm.ui.view.legend.LegendViewPart;
 import org.kalypso.model.wspm.ui.view.table.TableView;
@@ -36,9 +35,5 @@ public class ProfileditorPerspective implements IPerspectiveFactory
     layout.addShowViewShortcut( LayerViewPart.class.getName() );
     layout.addShowViewShortcut( TableView.class.getName() );
     layout.addShowViewShortcut( IPageLayout.ID_PROBLEM_VIEW );
-
-    // a bit dirty, but this perspective should be minimalistic
-    if( layout instanceof PageLayout )
-      ((PageLayout) layout).getActionSets().clear();
   }
 }

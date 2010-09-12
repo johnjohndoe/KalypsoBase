@@ -43,7 +43,6 @@ package org.kalypso.model.wspm.ui.product;
 import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
-import org.eclipse.ui.internal.PageLayout;
 import org.kalypso.featureview.views.FeatureView;
 
 /**
@@ -61,10 +60,6 @@ public class WspmPerspectiveFactory implements IPerspectiveFactory
   {
     defineActions( layout );
     defineLayout( layout );
-
-    // a bit dirty, but this perspective should be minimalistic
-    if( layout instanceof PageLayout )
-      ((PageLayout) layout).getActionSets().clear();
   }
 
   /**
@@ -81,15 +76,9 @@ public class WspmPerspectiveFactory implements IPerspectiveFactory
 
     // Add "show views".
     layout.addShowViewShortcut( IPageLayout.ID_RES_NAV );
-//    layout.addShowViewShortcut( IPageLayout.ID_BOOKMARKS );
     layout.addShowViewShortcut( IPageLayout.ID_OUTLINE );
-//    layout.addShowViewShortcut( IPageLayout.ID_PROP_SHEET );
-//    layout.addShowViewShortcut( IPageLayout.ID_PROBLEM_VIEW );
-//    layout.addShowViewShortcut( IPageLayout.ID_TASK_LIST );
 
     layout.addShowViewShortcut( FeatureView.ID );
-
-//    layout.addActionSet( IPageLayout.ID_NAVIGATE_ACTION_SET );
   }
 
   /**
@@ -115,14 +104,5 @@ public class WspmPerspectiveFactory implements IPerspectiveFactory
     // Top right.
     final IFolderLayout topRight = layout.createFolder( "topRight", IPageLayout.RIGHT, (float) 0.55, editorArea );//$NON-NLS-1$
     topRight.addView( "org.kalypso.featureview.views.FeatureView" ); //$NON-NLS-1$
-//    topLeft.addPlaceholder( IPageLayout.ID_BOOKMARKS );
-
-
-//    // Bottom right.
-//    IFolderLayout bottomRight = layout.createFolder( "bottomRight", IPageLayout.BOTTOM, (float) 0.66,//$NON-NLS-1$
-//        editorArea );
-
-//    bottomRight.addView( IPageLayout.ID_TASK_LIST );
-
   }
 }

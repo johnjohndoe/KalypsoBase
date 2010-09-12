@@ -4,7 +4,6 @@ import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
 import org.eclipse.ui.IPlaceholderFolderLayout;
-import org.eclipse.ui.internal.PageLayout;
 import org.kalypso.afgui.views.WorkflowView;
 import org.kalypso.chart.ui.view.ChartView;
 import org.kalypso.featureview.views.FeatureView;
@@ -16,10 +15,8 @@ import org.kalypso.ui.editor.mapeditor.views.MapWidgetView;
 import org.kalypso.ui.repository.view.RepositoryExplorerPart;
 import org.kalypso.ui.views.map.MapView;
 
-@SuppressWarnings("restriction")
 public class Perspective implements IPerspectiveFactory
 {
-
   // REMARK: still using kalypso1d2d.pjt as namespace in order to ebnsure backwards compability.
   // If this should ever be changed, make sure all workflow.xml's got updated as well.
   public final static String ID = "org.kalypso.kalypso1d2d.pjt.perspective.Perspective"; //$NON-NLS-1$
@@ -32,10 +29,6 @@ public class Perspective implements IPerspectiveFactory
   @Override
   public void createInitialLayout( final IPageLayout layout )
   {
-    // HACK: make sure that all action sets are initially disabled for this perspective
-    final PageLayout pl = (PageLayout) layout;
-    pl.getActionSets().clear();
-
     // Get the editor area.
     final String editorArea = layout.getEditorArea();
     layout.setEditorAreaVisible( false );
@@ -88,9 +81,5 @@ public class Perspective implements IPerspectiveFactory
 
     layout.getViewLayout( "org.kalypso.risk.views.RiskStatisticsResultView" ).setMoveable( false ); //$NON-NLS-1$
     layout.getViewLayout( "org.kalypso.risk.views.RiskStatisticsResultView" ).setCloseable( false ); //$NON-NLS-1$
-
-    // a bit dirty, but this perspective should be minimalistic
-    if( layout instanceof PageLayout )
-      ((PageLayout) layout).getActionSets().clear();
   }
 }
