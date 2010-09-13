@@ -1,0 +1,200 @@
+/*----------------    FILE HEADER KALYPSO ------------------------------------------
+ *
+ *  This file is part of kalypso.
+ *  Copyright (C) 2004 by:
+ *
+ *  Technical University Hamburg-Harburg (TUHH)
+ *  Institute of River and coastal engineering
+ *  Denickestraße 22
+ *  21073 Hamburg, Germany
+ *  http://www.tuhh.de/wb
+ *
+ *  and
+ *
+ *  Bjoernsen Consulting Engineers (BCE)
+ *  Maria Trost 3
+ *  56070 Koblenz, Germany
+ *  http://www.bjoernsen.de
+ *
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2.1 of the License, or (at your option) any later version.
+ *
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ *  Contact:
+ *
+ *  E-Mail:
+ *  belger@bjoernsen.de
+ *  schlienger@bjoernsen.de
+ *  v.doemming@tuhh.de
+ *
+ *  ---------------------------------------------------------------------------*/
+package org.kalypso.contribs.eclipse.ui.pager;
+
+import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.ComboViewer;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.kalypso.contribs.eclipse.swt.layout.LayoutHelper;
+
+/**
+ * @author Dirk Kuch
+ */
+public class ElementsComposite extends Composite
+{
+
+  private final FormToolkit m_toolkit;
+
+  private Composite m_body;
+
+  private final IElementPage[] m_pages;
+
+  protected IElementPage m_selectedPage;
+
+  private final int m_style;
+
+  public ElementsComposite( final Composite parent, final FormToolkit toolkit, final IElementPage[] pages )
+  {
+    this( parent, toolkit, pages, pages[0] );
+  }
+
+  /**
+   * @param pages
+   *          pages which will be rendered
+   * @param selectedPage
+   *          preselection = pages[index]
+   */
+  public ElementsComposite( final Composite parent, final FormToolkit toolkit, final IElementPage[] pages, final IElementPage selectedPage )
+  {
+    this( parent, toolkit, pages, selectedPage, -1 );
+  }
+
+  public ElementsComposite( final Composite parent, final FormToolkit toolkit, final IElementPage[] pages, final IElementPage selectedPage, final int style )
+  {
+    super( parent, SWT.NULL );
+    m_toolkit = toolkit;
+    m_pages = pages;
+    m_selectedPage = selectedPage;
+    m_style = style;
+
+    this.setLayout( LayoutHelper.createGridLayout() );
+
+    update();
+  }
+
+  /**
+   * @see org.eclipse.swt.widgets.Widget#dispose()
+   */
+  @Override
+  public void dispose( )
+  {
+    for( final IElementPage page : m_pages )
+    {
+      page.dispose();
+    }
+
+    super.dispose();
+  }
+
+  /**
+   * @see org.eclipse.swt.widgets.Control#update()
+   */
+  @Override
+  public final void update( )
+  {
+    if( this.isDisposed() )
+      return;
+
+    if( m_body != null )
+    {
+      if( !m_body.isDisposed() )
+      {
+        m_body.dispose();
+      }
+
+      m_body = null;
+    }
+
+    m_body = m_toolkit.createComposite( this );
+
+    m_body.setLayout( LayoutHelper.createGridLayout() );
+    m_body.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
+
+    if( m_pages.length > 1 && m_style != SWT.BOTTOM )
+    {
+      addCombo( m_body );
+    }
+
+    if( m_selectedPage != null )
+    {
+      m_selectedPage.render( m_body, m_toolkit );
+    }
+
+    if( m_pages.length > 1 && m_style == SWT.BOTTOM )
+    {
+      addCombo( m_body );
+    }
+
+    this.layout();
+    m_toolkit.adapt( this );
+  }
+
+  private void addCombo( final Composite body )
+  {
+    final ComboViewer viewer = new ComboViewer( body, SWT.SINGLE | SWT.READ_ONLY );
+    viewer.getCombo().setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+    viewer.setContentProvider( new ArrayContentProvider() );
+    viewer.setLabelProvider( new LabelProvider()
+    {
+      /**
+       * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
+       */
+      @Override
+      public String getText( final Object element )
+      {
+        if( element instanceof IElementPage )
+        {
+          final IElementPage page = (IElementPage) element;
+
+          return page.getLabel();
+        }
+        return super.getText( element );
+      }
+    } );
+
+    viewer.setInput( m_pages );
+    viewer.setSelection( new StructuredSelection( m_selectedPage ) );
+
+    viewer.addSelectionChangedListener( new ISelectionChangedListener()
+    {
+      @Override
+      public void selectionChanged( final SelectionChangedEvent event )
+      {
+        final IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
+        final Object element = selection.getFirstElement();
+        if( element instanceof IElementPage )
+        {
+          m_selectedPage = (IElementPage) element;
+        }
+
+        update();
+      }
+    } );
+  }
+}
