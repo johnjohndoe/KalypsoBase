@@ -40,8 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse.ui.forms;
 
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
@@ -63,7 +67,30 @@ public final class ToolkitUtils
    */
   public static FormToolkit createToolkit( final Control control )
   {
-    final FormToolkit toolkit = new FormToolkit( control.getDisplay() );
+    final boolean isWindows = Platform.getOS().equals( Platform.OS_WIN32 );
+    // FIXME: how to decide this?! maybe use system property?
+    final boolean classicWindows = false;
+
+    final FormToolkit toolkit = new FormToolkit( control.getDisplay() )
+    {
+      @Override
+      public Button createButton( final Composite buttonParent, final String text, final int style )
+      {
+        if( !isWindows )
+          return super.createButton( buttonParent, text, style );
+
+        // Suppress flat style: this works for all windowses
+        final Button button = new Button( buttonParent, style | Window.getDefaultOrientation() );
+        if( text != null )
+          button.setText( text );
+        adapt( button, true, true );
+        return button;
+      }
+    };
+
+    if( classicWindows )
+      toolkit.setBackground( null );
+
     control.addDisposeListener( new DisposeListener()
     {
       @Override
