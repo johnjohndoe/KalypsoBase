@@ -52,6 +52,9 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.browser.LocationAdapter;
 import org.eclipse.swt.browser.LocationEvent;
+import org.eclipse.swt.browser.ProgressAdapter;
+import org.eclipse.swt.browser.ProgressEvent;
+import org.eclipse.swt.browser.ProgressListener;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
@@ -219,8 +222,22 @@ public class NavigationPanel extends Composite
       final String executeScript = String.format( script, pageNavigationId );
 
       final Browser browser = m_browser;
-      // REMARK: need to execute this in an extra job, else it does not work as the browser seems to still react to the
-      // click
+
+      final ProgressListener progressListener = new ProgressAdapter()
+      {
+        @Override
+        public void completed( final ProgressEvent event )
+        {
+          if( !browser.execute( executeScript ) )
+            System.out.println( "Failed to execute java script on navigator" );
+
+          browser.removeProgressListener( this );
+        }
+      };
+      browser.addProgressListener( progressListener );
+
+      // REMARK: need to execute this in an extra job, else it does not work for clicks.
+      // as the browser seems to still react to the click.
       final UIJob updateBrowserJob = new UIJob( "Aktualisiere Navigation" )
       {
         @Override
