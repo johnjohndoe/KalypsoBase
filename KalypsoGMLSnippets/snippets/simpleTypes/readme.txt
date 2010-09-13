@@ -1,0 +1,1 @@
+This example show different simple typed properties.
