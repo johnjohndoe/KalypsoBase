@@ -105,6 +105,7 @@ public class TableControlMaker implements IControlMaker
     griddata.setHeightHint( 200 );
 
     table.setLayoutData( jaxbgriddata );
+    table.setShowToolbar( true );
 
     controlList.add( TemplateUtilities.OF_FEATUREVIEW.createTable( table ) );
 

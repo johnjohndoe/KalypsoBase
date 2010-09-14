@@ -43,7 +43,6 @@ package org.kalypso.ui.perspectives;
 import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
-import org.eclipse.ui.internal.PageLayout;
 
 /**
  * The perspective for the Kalypso Modeler.
@@ -58,7 +57,6 @@ public class ModelerPerspectiveFactory implements IPerspectiveFactory
    * @see org.eclipse.ui.IPerspectiveFactory#createInitialLayout(org.eclipse.ui.IPageLayout)
    */
   @Override
-  @SuppressWarnings("restriction")
   public void createInitialLayout( final IPageLayout layout )
   {
     // Editors are placed for free.
@@ -75,10 +73,6 @@ public class ModelerPerspectiveFactory implements IPerspectiveFactory
 
     setContentsOfShowViewMenu( layout );
 
-    // a bit dirty, but this perspective should be minimalistic
-    if( layout instanceof PageLayout )
-      ((PageLayout) layout).getActionSets().clear();
-    
     layout.addActionSet( "org.kalypso.simulation.ui.actionSet" ); //$NON-NLS-1$
 
     layout.addNewWizardShortcut( "org.eclipse.ui.wizards.new.folder" );//$NON-NLS-1$

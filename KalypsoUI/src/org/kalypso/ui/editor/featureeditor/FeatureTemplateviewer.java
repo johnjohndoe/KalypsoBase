@@ -258,7 +258,7 @@ public class FeatureTemplateviewer
        * If we are not configured to use a toolkit, we set the background back to gray, but still use it
        */
       if( m_template == null || !m_template.isToolkit() )
-        m_toolkit.setBackground( parent.getBackground() );
+        m_toolkit.setBackground( null );
     }
 
     m_featureComposite.setFormToolkit( m_toolkit );
