@@ -601,6 +601,10 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
       layout.makeColumnsEqualWidth = gridLayoutType.isMakeColumnsEqualWidth();
       layout.marginHeight = gridLayoutType.getMarginHeight();
       layout.marginWidth = gridLayoutType.getMarginWidth();
+      layout.marginTop = gridLayoutType.getMarginTop();
+      layout.marginLeft = gridLayoutType.getMarginLeft();
+      layout.marginRight = gridLayoutType.getMarginRight();
+      layout.marginBottom = gridLayoutType.getMarginBottom();
       layout.numColumns = gridLayoutType.getNumColumns();
 
       return layout;
