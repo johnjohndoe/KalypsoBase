@@ -9,6 +9,7 @@ Bundle-Localization: plugin
 Export-Package: org.kalypso.contribs.eclipse,
  org.kalypso.contribs.eclipse.compare,
  org.kalypso.contribs.eclipse.core.resources,
+ org.kalypso.contribs.eclipse.ide.application,
  org.kalypso.contribs.eclipse.jface.viewers,
  org.kalypso.contribs.eclipse.jface.wizard,
  org.kalypso.contribs.eclipse.jface.wizard.view,
@@ -36,6 +37,7 @@ Require-Bundle: org.eclipse.core.runtime;visibility:=reexport,
  org.eclipse.ui.browser;resolution:=optional;visibility:=reexport,
  org.eclipse.ui.intro;resolution:=optional,
  org.eclipse.core.runtime.compatibility.auth,
- org.eclipse.ui.forms;bundle-version="3.3.100";resolution:=optional;visibility:=reexport
+ org.eclipse.ui.forms;bundle-version="3.3.100";resolution:=optional;visibility:=reexport,
+ org.eclipse.ui.ide.application;bundle-version="1.0.200"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
