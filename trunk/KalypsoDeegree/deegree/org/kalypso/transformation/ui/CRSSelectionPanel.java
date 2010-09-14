@@ -117,12 +117,12 @@ public class CRSSelectionPanel extends Composite implements IJobChangeListener
   /**
    * List of all images.
    */
-  private List<Image> m_imageList;
+  private final List<Image> m_imageList;
 
   /**
    * Some extra text for displaying after the group title.
    */
-  private String m_extText;
+  private final String m_extText;
 
   /**
    * This selection is memorized, if it was set, and no coordinate systems were available. It will be set, if coordinate
@@ -136,7 +136,7 @@ public class CRSSelectionPanel extends Composite implements IJobChangeListener
    * @param parent
    * @param style
    */
-  public CRSSelectionPanel( Composite parent, int style )
+  public CRSSelectionPanel( final Composite parent, final int style )
   {
     this( parent, style, null );
   }
@@ -149,7 +149,7 @@ public class CRSSelectionPanel extends Composite implements IJobChangeListener
    * @param extText
    *          Some extra text for displaying after the group title.
    */
-  public CRSSelectionPanel( Composite parent, int style, String extText )
+  public CRSSelectionPanel( final Composite parent, final int style, final String extText )
   {
     super( parent, style );
 
@@ -172,7 +172,7 @@ public class CRSSelectionPanel extends Composite implements IJobChangeListener
     super.setLayout( new FillLayout() );
 
     /* Create the main group for the panel. */
-    Composite main = createMainComposite();
+    final Composite main = createMainComposite();
 
     /* Create the combo. */
     m_viewer = new ComboViewer( main, SWT.READ_ONLY | SWT.DROP_DOWN );
@@ -188,8 +188,8 @@ public class CRSSelectionPanel extends Composite implements IJobChangeListener
     imageLabel.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, false, false ) );
 
     /* Set the image. */
-    ImageDescriptor imgDesc = ImageDescriptor.createFromURL( getClass().getResource( "resources/info.gif" ) ); //$NON-NLS-1$
-    Image infoImage = imgDesc.createImage();
+    final ImageDescriptor imgDesc = ImageDescriptor.createFromURL( getClass().getResource( "resources/info.gif" ) ); //$NON-NLS-1$
+    final Image infoImage = imgDesc.createImage();
     m_imageList.add( infoImage );
     imageLabel.setImage( infoImage );
 
@@ -200,10 +200,10 @@ public class CRSSelectionPanel extends Composite implements IJobChangeListener
        * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
        */
       @Override
-      public void selectionChanged( SelectionChangedEvent event )
+      public void selectionChanged( final SelectionChangedEvent event )
       {
         /* Get the code of the selected coordinate system. */
-        String selectedCRS = getSelectedCRS();
+        final String selectedCRS = getSelectedCRS();
         if( selectedCRS == null )
         {
           imageLabel.setToolTipText( "" ); //$NON-NLS-1$
@@ -223,16 +223,16 @@ public class CRSSelectionPanel extends Composite implements IJobChangeListener
   {
     if( (getStyle() & NO_GROUP) != 0 )
     {
-      Composite composite = new Composite( this, SWT.NONE );
-      GridLayout layout = new GridLayout( 2, false );
+      final Composite composite = new Composite( this, SWT.NONE );
+      final GridLayout layout = new GridLayout( 2, false );
       layout.marginHeight = 0;
       layout.marginWidth = 0;
       composite.setLayout( layout );
       return composite;
     }
 
-    Group main = new Group( this, SWT.NONE );
-    String title = Messages.getString( "org.kalypso.transformation.ui.CRSSelectionPanel.0" ); //$NON-NLS-1$
+    final Group main = new Group( this, SWT.NONE );
+    final String title = Messages.getString( "org.kalypso.transformation.ui.CRSSelectionPanel.0" ); //$NON-NLS-1$
 
     if( StringUtils.isEmpty( m_extText ) )
       main.setText( title );
@@ -247,7 +247,7 @@ public class CRSSelectionPanel extends Composite implements IJobChangeListener
    * @see org.eclipse.swt.widgets.Composite#setLayout(org.eclipse.swt.widgets.Layout)
    */
   @Override
-  public void setLayout( Layout layout )
+  public void setLayout( final Layout layout )
   {
     /* Ignore user set layouts, only layout datas are permitted. */
   }
@@ -256,7 +256,7 @@ public class CRSSelectionPanel extends Composite implements IJobChangeListener
    * @see org.eclipse.swt.widgets.Control#setEnabled(boolean)
    */
   @Override
-  public void setEnabled( boolean enabled )
+  public void setEnabled( final boolean enabled )
   {
     super.setEnabled( enabled );
 
@@ -273,7 +273,7 @@ public class CRSSelectionPanel extends Composite implements IJobChangeListener
     super.dispose();
 
     /* Dispose all images and colors. */
-    for( Image image : m_imageList )
+    for( final Image image : m_imageList )
     {
       if( !image.isDisposed() )
         image.dispose();
@@ -286,7 +286,7 @@ public class CRSSelectionPanel extends Composite implements IJobChangeListener
    * @param selection
    *          The selection.
    */
-  public void setSelectedCRS( String selectedCRS )
+  public void setSelectedCRS( final String selectedCRS )
   {
     if( m_viewer != null && !m_viewer.getControl().isDisposed() )
     {
@@ -298,7 +298,7 @@ public class CRSSelectionPanel extends Composite implements IJobChangeListener
       }
 
       /* If coordinate systems are available, set it directly. */
-      ICoordinateSystem coordinateSystem = m_coordHash.get( selectedCRS );
+      final ICoordinateSystem coordinateSystem = m_coordHash.get( selectedCRS );
       if( coordinateSystem != null )
         m_viewer.setSelection( new StructuredSelection( coordinateSystem ) );
     }
@@ -311,26 +311,33 @@ public class CRSSelectionPanel extends Composite implements IJobChangeListener
    */
   public String getSelectedCRS( )
   {
+    // FIXME:this does not work! If the update job is still running, null is returned, even if the
+    // crs was set before.
+
+    // TODO: keep the current crs in a separate variable (which is set on setCrs and returned on getCrs
+    // Update the variable if the combo is changed
+    // Probably makes m_lazySelection obsolete as well.
+
     if( m_viewer == null || m_viewer.getControl().isDisposed() )
       return null;
 
     /* Get the selection. */
-    ISelection selection = m_viewer.getSelection();
+    final ISelection selection = m_viewer.getSelection();
 
     /* If not empty and the right type, the name is returned. */
     if( !selection.isEmpty() && selection instanceof IStructuredSelection )
     {
       /* Cast. */
-      IStructuredSelection structuredSelection = (IStructuredSelection) selection;
+      final IStructuredSelection structuredSelection = (IStructuredSelection) selection;
 
       /* Get the selected element. */
-      Object selectedElement = structuredSelection.getFirstElement();
+      final Object selectedElement = structuredSelection.getFirstElement();
 
       /* Check type. */
       if( selectedElement instanceof ICoordinateSystem )
       {
         /* Cast. */
-        ICoordinateSystem coordinateSystem = (ICoordinateSystem) selectedElement;
+        final ICoordinateSystem coordinateSystem = (ICoordinateSystem) selectedElement;
 
         /* Return the code of the selected coordinate system. */
         return coordinateSystem.getCode();
@@ -346,7 +353,7 @@ public class CRSSelectionPanel extends Composite implements IJobChangeListener
    * @param listener
    *          The selection changed listener.
    */
-  public void addSelectionChangedListener( ISelectionChangedListener listener )
+  public void addSelectionChangedListener( final ISelectionChangedListener listener )
   {
     if( m_viewer != null && !m_viewer.getControl().isDisposed() )
     {
@@ -361,7 +368,7 @@ public class CRSSelectionPanel extends Composite implements IJobChangeListener
    * @param listener
    *          The selection changed listener.
    */
-  public void removeSelectionChangedListener( ISelectionChangedListener listener )
+  public void removeSelectionChangedListener( final ISelectionChangedListener listener )
   {
     if( m_viewer != null && !m_viewer.getControl().isDisposed() )
     {
@@ -376,7 +383,7 @@ public class CRSSelectionPanel extends Composite implements IJobChangeListener
    * @param codes
    *          The codes of the coordinate systems, to initialize.
    */
-  public void updateCoordinateSystemsCombo( String[] codes )
+  public void updateCoordinateSystemsCombo( final String[] codes )
   {
     if( m_viewer == null || m_viewer.getControl().isDisposed() )
       return;
@@ -392,7 +399,7 @@ public class CRSSelectionPanel extends Composite implements IJobChangeListener
     setEnabled( false );
 
     /* Start the job. */
-    CRSInitializeJob initCRSJob = new CRSInitializeJob( "CRSInitializeJob", codes ); //$NON-NLS-1$
+    final CRSInitializeJob initCRSJob = new CRSInitializeJob( "CRSInitializeJob", codes ); //$NON-NLS-1$
     initCRSJob.setSystem( true );
 
     /* Add myself as a listener. */
@@ -406,7 +413,7 @@ public class CRSSelectionPanel extends Composite implements IJobChangeListener
    * @see org.eclipse.core.runtime.jobs.IJobChangeListener#aboutToRun(org.eclipse.core.runtime.jobs.IJobChangeEvent)
    */
   @Override
-  public void aboutToRun( IJobChangeEvent event )
+  public void aboutToRun( final IJobChangeEvent event )
   {
   }
 
@@ -414,7 +421,7 @@ public class CRSSelectionPanel extends Composite implements IJobChangeListener
    * @see org.eclipse.core.runtime.jobs.IJobChangeListener#awake(org.eclipse.core.runtime.jobs.IJobChangeEvent)
    */
   @Override
-  public void awake( IJobChangeEvent event )
+  public void awake( final IJobChangeEvent event )
   {
   }
 
@@ -428,10 +435,10 @@ public class CRSSelectionPanel extends Composite implements IJobChangeListener
       return;
 
     /* Get the display. */
-    Display display = getDisplay();
+    final Display display = getDisplay();
 
     /* Create a UI job. */
-    UIJob uiJob = new UIJob( display, "CRSSelectionPanelRefreshJob" ) //$NON-NLS-1$
+    final UIJob uiJob = new UIJob( display, "CRSSelectionPanelRefreshJob" ) //$NON-NLS-1$
     {
       /**
        * @see org.eclipse.ui.progress.UIJob#runInUIThread(org.eclipse.core.runtime.IProgressMonitor)
@@ -449,7 +456,7 @@ public class CRSSelectionPanel extends Composite implements IJobChangeListener
           monitor.beginTask( Messages.getString( "org.kalypso.transformation.ui.CRSSelectionPanel.8" ), 100 ); //$NON-NLS-1$
 
           /* Get the job. */
-          Job job = event.getJob();
+          final Job job = event.getJob();
           if( !(job instanceof CRSInitializeJob) )
           {
             /* Monitor. */
@@ -459,7 +466,7 @@ public class CRSSelectionPanel extends Composite implements IJobChangeListener
           }
 
           /* Cast. */
-          CRSInitializeJob initCRSJob = (CRSInitializeJob) job;
+          final CRSInitializeJob initCRSJob = (CRSInitializeJob) job;
 
           /* If the viewer is already disposed, do nothing any more. */
           if( isDisposed() || m_viewer == null || m_viewer.getControl().isDisposed() )
@@ -474,7 +481,7 @@ public class CRSSelectionPanel extends Composite implements IJobChangeListener
           }
 
           /* Get the hash of them. */
-          HashMap<String, ICoordinateSystem> coordHash = initCRSJob.getCoordHash();
+          final HashMap<String, ICoordinateSystem> coordHash = initCRSJob.getCoordHash();
           if( coordHash == null || coordHash.size() == 0 )
           {
             /* Clear the hash. */
@@ -496,7 +503,7 @@ public class CRSSelectionPanel extends Composite implements IJobChangeListener
           }
 
           /* The code of the coordinate system, which was set before. */
-          String selectedCRS = getSelectedCRS();
+          final String selectedCRS = getSelectedCRS();
 
           /* Store the hash. */
           m_coordHash = coordHash;
@@ -505,7 +512,7 @@ public class CRSSelectionPanel extends Composite implements IJobChangeListener
           m_viewer.setInput( coordHash.values().toArray( new ICoordinateSystem[] {} ) );
 
           /* Get the codes. */
-          List<String> codes = Arrays.asList( coordHash.keySet().toArray( new String[] {} ) );
+          final List<String> codes = Arrays.asList( coordHash.keySet().toArray( new String[] {} ) );
 
           /* If the name of the old coordinate system is also among the new ones, select it again. */
           if( selectedCRS != null && codes.contains( selectedCRS ) )
@@ -516,7 +523,7 @@ public class CRSSelectionPanel extends Composite implements IJobChangeListener
           {
             for( int i = 0; i < m_listener.size(); i++ )
             {
-              ISelectionChangedListener listener = m_listener.get( i );
+              final ISelectionChangedListener listener = m_listener.get( i );
               listener.selectionChanged( new SelectionChangedEvent( m_viewer, m_viewer.getSelection() ) );
             }
           }
@@ -540,7 +547,7 @@ public class CRSSelectionPanel extends Composite implements IJobChangeListener
 
           return Status.OK_STATUS;
         }
-        catch( Exception ex )
+        catch( final Exception ex )
         {
           ex.printStackTrace();
 
@@ -562,7 +569,7 @@ public class CRSSelectionPanel extends Composite implements IJobChangeListener
    * @see org.eclipse.core.runtime.jobs.IJobChangeListener#running(org.eclipse.core.runtime.jobs.IJobChangeEvent)
    */
   @Override
-  public void running( IJobChangeEvent event )
+  public void running( final IJobChangeEvent event )
   {
   }
 
@@ -570,7 +577,7 @@ public class CRSSelectionPanel extends Composite implements IJobChangeListener
    * @see org.eclipse.core.runtime.jobs.IJobChangeListener#scheduled(org.eclipse.core.runtime.jobs.IJobChangeEvent)
    */
   @Override
-  public void scheduled( IJobChangeEvent event )
+  public void scheduled( final IJobChangeEvent event )
   {
   }
 
@@ -578,7 +585,7 @@ public class CRSSelectionPanel extends Composite implements IJobChangeListener
    * @see org.eclipse.core.runtime.jobs.IJobChangeListener#sleeping(org.eclipse.core.runtime.jobs.IJobChangeEvent)
    */
   @Override
-  public void sleeping( IJobChangeEvent event )
+  public void sleeping( final IJobChangeEvent event )
   {
   }
 }
