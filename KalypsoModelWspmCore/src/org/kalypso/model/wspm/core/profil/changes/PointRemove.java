@@ -40,12 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil.changes;
 
-import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.i18n.Messages;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IllegalProfileOperationException;
-import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.observation.result.IRecord;
 
 /**
@@ -56,14 +54,20 @@ public class PointRemove implements IProfilChange
 {
   private final IProfil m_profil;
 
-  private final IRecord m_point;
+  private final IRecord[] m_points;
 
-  private IRecord m_pointBefore;
+  private final int[] m_pointPositions;
 
   public PointRemove( final IProfil profil, final IRecord point )
   {
+    this( profil, new IRecord[] { point } );
+  }
+
+  public PointRemove( final IProfil profil, final IRecord[] points )
+  {
     m_profil = profil;
-    m_point = point;
+    m_points = points;
+    m_pointPositions = new int[m_points.length];
   }
 
   /**
@@ -73,16 +77,17 @@ public class PointRemove implements IProfilChange
   public IProfilChange doChange( final ProfilChangeHint hint ) throws IllegalProfileOperationException
   {
     if( hint != null )
-    {
       hint.setPointsChanged();
-    }
-    m_pointBefore = ProfilUtil.getPointBefore( m_profil, m_point );
 
-    if( m_profil.removePoint( m_point ) )
-      return new PointAdd( m_profil, m_pointBefore, m_point );
+    for( int i = 0; i < m_points.length; i++ )
+      m_pointPositions[i] = m_profil.indexOfPoint( m_points[i] );
+
+    if( m_profil.removePoints( m_points ) )
+      return new PointsAdd( m_profil, m_pointPositions, m_points );
     else
     {
-      m_profil.setActivePoint( m_point );
+      if( m_points.length > 0 )
+        m_profil.setActivePoint( m_points[0] );
       throw new IllegalProfileOperationException( Messages.getString( "org.kalypso.model.wspm.core.profil.changes.PointRemove.1" ), this ); //$NON-NLS-1$
     }
   }
@@ -93,6 +98,6 @@ public class PointRemove implements IProfilChange
   @Override
   public String toString( )
   {
-    return Messages.getString( "org.kalypso.model.wspm.core.profil.changes.PointRemove.0", ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, m_point ) ); //$NON-NLS-1$
+    return "Remove points";
   }
 }

@@ -137,12 +137,7 @@ public final class DouglasPeuckerHelper
     if( pointsToRemove.length == 0 )
       return new IProfilChange[] {};
 
-    /* Remove points. */
-    final IProfilChange[] removeChanges = new IProfilChange[pointsToRemove.length];
-    for( int i = 0; i < pointsToRemove.length; i++ )
-      removeChanges[i] = new PointRemove( profile, pointsToRemove[i] );
-
-    return removeChanges;
+    return new IProfilChange[] { new PointRemove( profile, pointsToRemove ) };
   }
 
   /**

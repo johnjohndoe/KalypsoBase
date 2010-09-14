@@ -42,6 +42,7 @@ package org.kalypso.model.wspm.core.profil.impl;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -561,6 +562,15 @@ public abstract class AbstractProfil implements IProfil
   public boolean removePoint( final IRecord point )
   {
     return getResult().remove( point );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfil#removePoints(org.kalypso.observation.result.IRecord[])
+   */
+  @Override
+  public boolean removePoints( final IRecord[] points )
+  {
+    return getResult().removeAll( Arrays.asList( points ) );
   }
 
   /**
