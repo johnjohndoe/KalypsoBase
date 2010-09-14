@@ -58,7 +58,7 @@ import org.kalypso.observation.result.ITupleResultChangedListener.ValueChange;
 {
   private final List<Object> m_values = new ArrayList<Object>();
 
-  private final TupleResult m_owner;
+  private TupleResult m_owner;
 
   Record( final TupleResult result, final IComponent[] components )
   {
@@ -130,7 +130,7 @@ import org.kalypso.observation.result.ITupleResultChangedListener.ValueChange;
    * @see org.kalypso.observation.result.IRecord#setValue(int, java.lang.Object, boolean)
    */
   @Override
-  public void setValue( int index, Object value, boolean fireNoEvent ) throws IndexOutOfBoundsException
+  public void setValue( final int index, final Object value, final boolean fireNoEvent ) throws IndexOutOfBoundsException
   {
     final Object oldValue = m_values.get( index );
     if( ObjectUtils.equals( value, oldValue ) )
@@ -196,6 +196,11 @@ import org.kalypso.observation.result.ITupleResultChangedListener.ValueChange;
       // Might throw IndexOutOfBoundsException..
       m_values.set( index, value );
     }
+  }
+
+  public void setOwner( final TupleResult owner )
+  {
+    m_owner = owner;
   }
 
 }

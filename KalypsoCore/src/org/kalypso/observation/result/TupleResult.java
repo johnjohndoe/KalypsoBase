@@ -510,8 +510,14 @@ public class TupleResult implements List<IRecord>
   {
     final Record r = (Record) record;
 
-// Assert.isTrue( r.getCount() == m_components.size(), "Number of records values not equal to number of components" );
-    Assert.isTrue( r.getOwner() == this, Messages.getString( "org.kalypso.observation.result.TupleResult.1" ) + record ); //$NON-NLS-1$
+    final TupleResult owner = r.getOwner();
+    // If owner is still null, just set it to me
+    if( owner == null )
+      r.setOwner( this );
+    else
+      Assert.isTrue( r.getOwner() == this, Messages.getString( "org.kalypso.observation.result.TupleResult.1" ) + record ); //$NON-NLS-1$
+
+    // Assert.isTrue( r.getCount() == m_components.size(), "Number of records values not equal to number of components"
   }
 
   private void checkRecords( final Collection< ? extends IRecord> c )
@@ -639,11 +645,14 @@ public class TupleResult implements List<IRecord>
   // - removeComponent( index )
   // - setComponent( index, comp )
 
-  /** This method creates, but DOES NOT adds a record. */
-  // TODO its very confusing - create should add
+  /**
+   * This method creates, but DOES NOT adds a record.<br/>
+   * This allows to modify record before they are added to the result. This is necessary in order to avoid many change
+   * events when new records are created.
+   */
   public IRecord createRecord( )
   {
-    return new Record( this, getComponents() );
+    return new Record( null, getComponents() );
   }
 
   public boolean hasComponent( final IComponent comp )
@@ -722,7 +731,7 @@ public class TupleResult implements List<IRecord>
     return m_components.indexOf( comp );
   }
 
-  public IComponent getComponent( final int index ) throws IndexOutOfBoundsException
+  public IComponent getComponent( final int index )
   {
     return m_components.get( index );
   }

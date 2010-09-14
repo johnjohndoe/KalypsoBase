@@ -3,14 +3,17 @@ package org.kalypso.afgui;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.ui.IPerspectiveDescriptor;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchListener;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.IHandlerService;
@@ -19,6 +22,7 @@ import org.eclipse.ui.progress.UIJob;
 import org.eclipse.ui.services.IEvaluationService;
 import org.kalypso.afgui.i18n.Messages;
 import org.kalypso.afgui.model.IModel;
+import org.kalypso.afgui.perspective.Perspective;
 import org.kalypso.afgui.scenarios.IScenario;
 import org.kalypso.afgui.scenarios.PerspectiveWatcher;
 import org.kalypso.afgui.scenarios.ScenarioDataChangeListenerExtension;
@@ -119,6 +123,16 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
         {
           if( !forced && m_taskExecutionAuthority.canStopTask( m_taskExecutor.getActiveTask() ) )
           {
+            // IMPORTAN: only close views on workflow perspective
+            final IWorkbenchPage activePage = workbench2.getActiveWorkbenchWindow().getActivePage();
+            final IPerspectiveDescriptor perspective = activePage.getPerspective();
+            if( !ObjectUtils.equals( perspective.getId(), Perspective.ID ) )
+              return true;
+
+            // FIXME: check if this really is still needed. All views of workflow should not load any data upon start
+            // of workbench
+            // So the views may open, and the default task will close/open the needed views anyways.
+
             // Close all views previously opened by any task in order to let them save themselves
             final Collection<String> partsToKeep = new ArrayList<String>();
             partsToKeep.add( WorkflowView.ID );

@@ -801,7 +801,7 @@ public final class ZmlFactory
       final ByteArrayOutputStream bos = new ByteArrayOutputStream();
       ZmlFactory.writeToStream( value, bos, request );
       bos.close();
-      return new String( bos.toByteArray() );
+      return new String( bos.toByteArray(), "UTF-8" );
     }
     catch( final Exception e )
     {
