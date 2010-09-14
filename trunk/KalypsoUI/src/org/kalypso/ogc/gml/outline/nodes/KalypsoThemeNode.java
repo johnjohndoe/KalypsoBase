@@ -50,6 +50,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.commons.command.ICommand;
@@ -109,8 +110,22 @@ public class KalypsoThemeNode<T extends IKalypsoTheme> extends AbstractThemeNode
   {
     getElement().removeKalypsoThemeListener( m_themeListener );
 
-    if( m_externIcon != null )
-      m_externIcon.dispose();
+    // REMARK: dispose image in swt thread. Else we might get a racing condition
+    // with the re-creation of the image.
+    final Image externIcon = m_externIcon;
+    final Display display = PlatformUI.getWorkbench().getDisplay();
+    if( display != null && !display.isDisposed() )
+    {
+      display.syncExec( new Runnable()
+      {
+        @Override
+        public void run( )
+        {
+          if( externIcon != null )
+            externIcon.dispose();
+        }
+      } );
+    }
 
     super.dispose();
   }

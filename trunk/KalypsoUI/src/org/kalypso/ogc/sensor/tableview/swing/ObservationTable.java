@@ -144,6 +144,7 @@ public class ObservationTable extends Panel implements IObsViewEventListener
     m_waitForSwing = waitForSwing;
 
     m_model = new ObservationTableModel();
+    m_model.setAlphaSort( template.isAlphaSort() );
     m_model.setRules( template.getRules() );
 
     // date renderer with time zone

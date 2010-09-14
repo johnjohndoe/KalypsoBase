@@ -44,7 +44,6 @@ import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
 import org.eclipse.ui.IViewLayout;
-import org.eclipse.ui.internal.PageLayout;
 import org.kalypso.ui.IKalypsoUIConstants;
 
 /**
@@ -96,10 +95,6 @@ public class ObservationRepositoryPerspectiveFactory implements IPerspectiveFact
     final IViewLayout tableViewLayout = layout.getViewLayout( IKalypsoUIConstants.ID_OBSTABLE_VIEW );
     tableViewLayout.setCloseable( false );
     tableViewLayout.setMoveable( true );
-
-    // a bit dirty, but this perspective should be minimalistic
-    if( layout instanceof PageLayout )
-      ((PageLayout) layout).getActionSets().clear();
   }
 
   /**

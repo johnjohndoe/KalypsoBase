@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.tableview;
 
@@ -65,7 +65,7 @@ public class TableView extends ObsView
 {
   private final ITableViewRules m_rules = RulesFactory.getDefaultRules();
 
-  private boolean m_alphaSort;
+  private boolean m_alphaSort = true;
 
   /**
    * @see org.kalypso.ogc.sensor.template.ObsView#toString()

@@ -85,8 +85,6 @@ import org.kalypso.ogc.sensor.zml.ZmlURL;
  */
 public class ObservationViewer extends Composite
 {
-  private static final String SETTINGS_WEIGHTS_HEADER = "weightsHeader";
-
   private static final String SETTINGS_WEIGHTS_BOTTOM = "weightsBottom";
 
   private static final String SETTINGS_WEIGHTS_MAIN = "weightsMain";
@@ -127,6 +125,7 @@ public class ObservationViewer extends Composite
   {
     super( parent, style );
     m_settings = settings;
+    m_tableView.setAlphaSort( false );
 
     createControl( header, buttons );
   }
