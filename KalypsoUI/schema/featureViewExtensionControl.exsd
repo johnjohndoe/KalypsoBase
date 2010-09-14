@@ -61,17 +61,15 @@ Essentially, the extensions of this extension-point just refer to the implementi
          <attribute name="class" type="string" use="required">
             <annotation>
                <documentation>
-                  The implementing class, must implement org.kalypso.ogc.gml.featureview.control.IFeatureviewControlFactory.
+                  The implementing class, must implement org.kalypso.ogc.gml.featureview.control.IExtensionsFeatureControlFactory2.
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn=":org.kalypso.ogc.gml.featureview.control.IFeatureviewControlFactory"/>
+                  <meta.attribute kind="java" basedOn=":org.kalypso.ogc.gml.featureview.control.IExtensionsFeatureControlFactory2"/>
                </appInfo>
             </annotation>
          </attribute>
       </complexType>
    </element>
-
-
 
    <annotation>
       <appInfo>
@@ -81,6 +79,8 @@ Essentially, the extensions of this extension-point just refer to the implementi
          @see
       </documentation>
    </annotation>
+
+
 
 
    <annotation>
