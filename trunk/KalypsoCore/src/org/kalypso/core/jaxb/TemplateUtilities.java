@@ -115,7 +115,7 @@ public final class TemplateUtilities
     marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
     marshaller.setProperty( Marshaller.JAXB_ENCODING, encoding );
 
-    // REMARK: only validate in trace mode, because this lead often to errors
+    // REMARK: only validate in trace mode, because this leads often to errors
     // because the 'href' attribute of the styledLayers are anyURIs, but its values are often not.
     if( KalypsoCoreDebug.GISMAPVIEW_VALIDATE.isEnabled() )
       marshaller.setSchema( getGismapviewSchema() );
