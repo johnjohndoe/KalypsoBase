@@ -49,6 +49,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Properties;
 
+import javax.swing.UIManager;
+
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
 import org.eclipse.core.runtime.IStatus;
@@ -113,13 +115,22 @@ public abstract class IDEApplicationCopy implements IApplication, IExecutableExt
   @Override
   public final Object start( final IApplicationContext appContext ) throws Exception
   {
+    // Kalypso specific: Set look and feel in case we are using SWT-AWT
+    try
+    {
+      UIManager.setLookAndFeel( UIManager.getSystemLookAndFeelClassName() );
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+    }
+
     final Display display = createDisplay();
     // processor must be created before we start event loop
     final DelayedEventsProcessor processor = new DelayedEventsProcessor( display );
 
     try
     {
-
       // look and see if there's a splash shell we can parent off of
       final Shell shell = WorkbenchPlugin.getSplashShell( display );
       if( shell != null )
@@ -207,7 +218,7 @@ public abstract class IDEApplicationCopy implements IApplication, IExecutableExt
    * 
    * @return true if a valid instance location has been set and false otherwise
    */
-  private boolean checkInstanceLocation( final Shell shell )
+  protected boolean checkInstanceLocation( final Shell shell )
   {
     // -data @none was specified but an ide requires workspace
     final Location instanceLoc = Platform.getInstanceLocation();
