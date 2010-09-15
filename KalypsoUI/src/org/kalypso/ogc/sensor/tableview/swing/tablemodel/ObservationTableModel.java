@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  -----------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.tableview.swing.tablemodel;
 
@@ -431,7 +431,7 @@ public class ObservationTableModel extends AbstractTableModel implements IObserv
             // then set value
             model.setElement( ix, changedValue, valueAxis );
 
-            col.setDirty( true, this );
+            observation.fireChangedEvent( this );
           }
         }
         else
@@ -519,7 +519,7 @@ public class ObservationTableModel extends AbstractTableModel implements IObserv
       final TableViewColumn col = m_columns.get( column );
       try
       {// FIXME: this will reload the timeserie on every step....!
-       // FIXME: col.getTupleModel()!
+        // FIXME: col.getTupleModel()!
         final ITupleModel values = col.getObservation().getValues( col.getArguments() );
         final Object key = m_sharedModel.toArray()[row];
         final int ix = values.indexOf( key, col.getKeyAxis() );

@@ -46,7 +46,6 @@ import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -62,16 +61,11 @@ import javax.xml.bind.Marshaller;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.resources.IContainer;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.commons.java.util.StringUtilities;
-import org.kalypso.contribs.eclipse.core.runtime.MultiStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.core.util.pool.ResourcePool;
 import org.kalypso.i18n.Messages;
-import org.kalypso.loader.LoaderException;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.tableview.rules.RenderingRule;
 import org.kalypso.ogc.sensor.tableview.rules.RulesFactory;
@@ -84,7 +78,6 @@ import org.kalypso.template.obstableview.Obstableview.Rules;
 import org.kalypso.template.obstableview.TypeColumn;
 import org.kalypso.template.obstableview.TypeObservation;
 import org.kalypso.template.obstableview.TypeRenderingRule;
-import org.kalypso.ui.KalypsoGisPlugin;
 import org.xml.sax.InputSource;
 
 /**
@@ -330,75 +323,21 @@ public final class TableViewUtils
         continue;
       }
 
-      final TableViewColumnXMLLoader loader = new TableViewColumnXMLLoader( view, tobs[i], context, synchron, i );
+      // FIXME: check synchron
+
+      final TableViewColumnXMLLoader loader = new TableViewColumnXMLLoader( view, tobs[i], context, false, i );
       stati.add( loader.getResult() );
     }
 
     return StatusUtilities.createStatus( stati, Messages.getString( "org.kalypso.ogc.sensor.tableview.TableViewUtils.5" ) ); //$NON-NLS-1$
   }
 
-  /**
-   * Return a map from IObservation to TableViewColumn. Each IObservation is mapped to a list of TableViewColumns which
-   * are based on it.
-   */
-  public static Map<IObservation, ArrayList<TableViewColumn>> buildObservationColumnsMap( final List<TableViewColumn> tableViewColumns )
+  public static IObservation[] getObservations( final TableViewColumn[] tableViewColumns )
   {
-    final Map<IObservation, ArrayList<TableViewColumn>> map = new HashMap<IObservation, ArrayList<TableViewColumn>>();
-
+    final Set<IObservation> map = new HashSet<IObservation>();
     for( final TableViewColumn col : tableViewColumns )
-    {
-      final IObservation obs = col.getObservation();
-      if( !map.containsKey( obs ) )
-        map.put( obs, new ArrayList<TableViewColumn>() );
+      map.add( col.getObservation() );
 
-      map.get( obs ).add( col );
-    }
-
-    return map;
-  }
-
-  /**
-   * Save the dirty observations
-   */
-  public static IStatus saveDirtyColumns( final TableViewColumn[] columns, final IProgressMonitor monitor )
-  {
-    final MultiStatus status = new MultiStatus( IStatus.OK, KalypsoGisPlugin.getId(), 0, Messages.getString( "org.kalypso.ogc.sensor.tableview.TableViewUtils.6" ) ); //$NON-NLS-1$
-
-    monitor.beginTask( Messages.getString( "org.kalypso.ogc.sensor.tableview.TableViewUtils.7" ), columns.length ); //$NON-NLS-1$
-
-    final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
-    for( final TableViewColumn column : columns )
-    {
-      try
-      {
-        final IObservation obs = column.getObservation();
-        pool.saveObject( obs, monitor );
-      }
-      catch( final LoaderException e )
-      {
-        e.printStackTrace();
-        status.addMessage( Messages.getString( "org.kalypso.ogc.sensor.tableview.TableViewUtils.8" ) + column, e );//$NON-NLS-1$
-      }
-
-      monitor.worked( 1 );
-    }
-
-    return status;
-  }
-
-  /**
-   * Return all observations of dirty columns.
-   */
-  public static IObservation[] findDirtyObservations( final TableViewColumn[] columns )
-  {
-    final Set<IObservation> result = new HashSet<IObservation>();
-
-    for( final TableViewColumn column : columns )
-    {
-      if( column.isDirty() )
-        result.add( column.getObservation() );
-    }
-
-    return result.toArray( new IObservation[result.size()] );
+    return map.toArray( new IObservation[map.size()] );
   }
 }

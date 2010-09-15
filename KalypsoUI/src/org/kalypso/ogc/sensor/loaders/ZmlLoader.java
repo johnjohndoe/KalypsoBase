@@ -44,22 +44,22 @@ import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import javax.xml.bind.Marshaller;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.commons.resources.SetContentHelper;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.java.net.UrlResolver;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.util.pool.IPoolableObjectType;
+import org.kalypso.core.util.pool.KeyInfo;
+import org.kalypso.core.util.pool.ResourcePool;
 import org.kalypso.i18n.Messages;
 import org.kalypso.loader.AbstractLoader;
 import org.kalypso.loader.LoaderException;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.IObservationListener;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
-import org.kalypso.zml.Observation;
 
 /**
  * A specific loader for ZML-Files. Loads <code>ZmlObservation</code> objects.
@@ -69,6 +69,15 @@ import org.kalypso.zml.Observation;
 public class ZmlLoader extends AbstractLoader
 {
   private final UrlResolver m_urlResolver = new UrlResolver();
+
+  private final IObservationListener m_observationListener = new IObservationListener()
+  {
+    @Override
+    public void observationChanged( final IObservation obs, final Object eventSource )
+    {
+      handleObservationChanged( obs );
+    }
+  };
 
   /**
    * @see org.kalypso.loader.ILoader#load(org.kalypso.core.util.pool.IPoolableObjectType,
@@ -86,7 +95,9 @@ public class ZmlLoader extends AbstractLoader
 
       monitor.beginTask( Messages.getString( "org.kalypso.ogc.sensor.loaders.ZmlLoader.0" ) + url, IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
 
-      return ZmlFactory.parseXML( url );
+      final IObservation observation = ZmlFactory.parseXML( url );
+      observation.addListener( m_observationListener );
+      return observation;
     }
     catch( final Exception e ) // generic exception caught for simplicity
     {
@@ -114,6 +125,7 @@ public class ZmlLoader extends AbstractLoader
     {
       if( data == null )
         return;
+
       final URL url = m_urlResolver.resolveURL( context, source );
 
       monitor.beginTask( Messages.getString( "org.kalypso.ogc.sensor.loaders.ZmlLoader.1" ) + url, IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
@@ -122,21 +134,16 @@ public class ZmlLoader extends AbstractLoader
       if( file == null )
         throw new IllegalArgumentException( Messages.getString( "org.kalypso.ogc.sensor.loaders.ZmlLoader.2" ) + url ); //$NON-NLS-1$
 
-      final Observation xmlObs = ZmlFactory.createXML( (IObservation) data, null );
-
       // set contents of ZML-file
       final SetContentHelper helper = new SetContentHelper()
       {
         @Override
         protected void write( final OutputStreamWriter writer ) throws Throwable
         {
-          final Marshaller marshaller = ZmlFactory.getMarshaller();
-          marshaller.setProperty( Marshaller.JAXB_ENCODING, getCharset() );
-
-          marshaller.marshal( xmlObs, writer );
+          ZmlFactory.writeToWriter( (IObservation) data, writer, null );
         }
       };
-      helper.setFileContents( file, false, true, new NullProgressMonitor() );
+      helper.setFileContents( file, false, true, monitor );
     }
     catch( final Throwable e ) // generic exception caught for simplicity
     {
@@ -176,5 +183,16 @@ public class ZmlLoader extends AbstractLoader
   @Override
   public void release( final Object object )
   {
+    final IObservation obs = (IObservation) object;
+    obs.removeListener( m_observationListener );
   }
+
+  protected void handleObservationChanged( final IObservation obs )
+  {
+    final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
+    final KeyInfo info = pool.getInfo( obs );
+    if( info != null )
+      info.setDirty( true );
+  }
+
 }

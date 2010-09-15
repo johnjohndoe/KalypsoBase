@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.tableview;
 
@@ -64,9 +64,6 @@ public class TableViewColumn extends ObsViewItem
   private final IAxis m_keyAxis;
 
   private final IAxis m_valueAxis;
-
-  /** column has been modified, model is not in sync */
-  private boolean m_dirty = false;
 
   private boolean m_shown = true;
 
@@ -108,33 +105,6 @@ public class TableViewColumn extends ObsViewItem
   public int getWidth( )
   {
     return m_width;
-  }
-
-  public boolean isDirty( )
-  {
-    return m_dirty;
-  }
-
-  /**
-   * Set the dirty flag. Optionally an eventSource object can be passed, it designates the origin of the event.
-   * 
-   * @param eventSource
-   *            [optional, can be null] designates the origin of the event
-   */
-  public void setDirty( final boolean dirty, final Object eventSource )
-  {
-    m_dirty = dirty;
-
-    // TODO: A ITuppleModel has currently no way to tell its IObservation
-    // that the model has changed. The only way is using IObservation.setValues()
-    // but since the refactoring in ObservationTableModel, the ITuppleModel is
-    // directly updated and setValues() isn't called any more. So for the meantime,
-    // until the whole IObservation stuff is refactored, we use this TableViewColumn
-    // to call the fireChangedEvent on the underlying observation.
-    // Another solution could have been to give a reference of its IObservation to a
-    // ITuppleModel... but I decided not to use that one.
-    if( dirty )
-      getObservation().fireChangedEvent( eventSource );
   }
 
   public Class<?> getColumnClass( )
