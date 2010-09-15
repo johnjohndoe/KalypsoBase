@@ -74,6 +74,7 @@ import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileSystemManager;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.osgi.framework.internal.core.FrameworkProperties;
 import org.kalypso.commons.io.VFSUtilities;
 import org.kalypso.commons.net.ProxyUtilities;
@@ -81,6 +82,7 @@ import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.util.Arrays;
 import org.kalypso.service.ogc.exception.OWSException;
+import org.kalypso.service.wps.Activator;
 import org.kalypso.service.wps.i18n.Messages;
 import org.kalypso.service.wps.internal.KalypsoServiceWPSDebug;
 import org.kalypso.service.wps.utils.ogc.WPS040ObjectFactoryUtilities;
@@ -186,7 +188,7 @@ public class WPSUtilities
       // String body = post.getResponseBodyAsString();
       // TODO2: also dump post-xml and url!
       final String msg = Messages.getString( "org.kalypso.service.wps.utils.WPSUtilities.0", status ); //$NON-NLS-1$
-      throw new CoreException( StatusUtilities.createErrorStatus( msg ) );
+      throw new CoreException( new Status( IStatus.ERROR, Activator.PLUGIN_ID, msg ) );
     }
 
     final InputStream is = post.getResponseBodyAsStream();
@@ -240,7 +242,7 @@ public class WPSUtilities
     if( describeProcessObject instanceof ExceptionReport )
     {
       final ExceptionReport report = (ExceptionReport) describeProcessObject;
-      throw new CoreException( StatusUtilities.createErrorStatus( createErrorString( report ) ) );
+      throw new CoreException( new Status( IStatus.ERROR, Activator.PLUGIN_ID, createErrorString( report ) ) );
     }
 
     /* Use the process description for building the DataInputs and the OutputDefinitions. */
@@ -270,12 +272,12 @@ public class WPSUtilities
       KalypsoServiceWPSDebug.DEBUG.printf( "Response:\n" + executeResponseString + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
 
       if( executeResponseString == null || executeResponseString.length() == 0 )
-        throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.service.wps.utils.WPSUtilities.2" ) ) ); //$NON-NLS-1$
+        throw new CoreException( new Status( IStatus.ERROR, Activator.PLUGIN_ID, Messages.getString( "org.kalypso.service.wps.utils.WPSUtilities.2" ) ) ); //$NON-NLS-1$
 
       final Object response = MarshallUtilities.unmarshall( executeResponseString, WPS_VERSION.V040 );
 
       if( response instanceof ExceptionReport )
-        throw new CoreException( StatusUtilities.createErrorStatus( WPSUtilities.createErrorString( (ExceptionReport) response ) ) );
+        throw new CoreException( new Status( IStatus.ERROR, Activator.PLUGIN_ID, WPSUtilities.createErrorString( (ExceptionReport) response ) ) );
 
       final JAXBElement<ExecuteResponseType> elmt = (JAXBElement<ExecuteResponseType>) response;
       final ExecuteResponseType executeResponse = elmt.getValue();
@@ -325,7 +327,7 @@ public class WPSUtilities
     KalypsoServiceWPSDebug.DEBUG.printf( "Searching for simulation \"" + simulationType + "\" ...\n" ); //$NON-NLS-1$ //$NON-NLS-2$
     final ISimulation simulation = KalypsoSimulationCoreExtensions.createSimulation( simulationType );
     if( simulation == null )
-      throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.service.wps.utils.WPSUtilities.3", simulationType ) ) ); //$NON-NLS-1$
+      throw new CoreException( new Status( IStatus.ERROR, Activator.PLUGIN_ID, Messages.getString( "org.kalypso.service.wps.utils.WPSUtilities.3", simulationType ) ) ); //$NON-NLS-1$
     return simulation;
   }
 
