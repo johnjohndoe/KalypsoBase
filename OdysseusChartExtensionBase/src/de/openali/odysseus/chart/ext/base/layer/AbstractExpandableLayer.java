@@ -52,16 +52,13 @@ import de.openali.odysseus.chart.framework.model.layer.IExpandableChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 import de.openali.odysseus.chart.framework.model.layer.impl.LayerManager;
+import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 
 /**
  * @author kimwerner
  */
 public abstract class AbstractExpandableLayer extends AbstractChartLayer implements IExpandableChartLayer
 {
-
-
-  
-
 
   private final ILayerManager m_layerManager = new LayerManager();
 
@@ -91,7 +88,6 @@ public abstract class AbstractExpandableLayer extends AbstractChartLayer impleme
   {
     return m_layerManager;
   }
-
 
   /**
    * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getDomainRange()
@@ -139,8 +135,9 @@ public abstract class AbstractExpandableLayer extends AbstractChartLayer impleme
   public void dispose( )
   {
     // TODO Auto-generated method stub
-    
+
   }
+
   /**
    * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getTargetRange()
    */
@@ -169,6 +166,13 @@ public abstract class AbstractExpandableLayer extends AbstractChartLayer impleme
     return new DataRange<Number>( min, max );
   }
 
+  @Override
+  public final void setCoordinateMapper( ICoordinateMapper coordinateMapper )
+  {
+    super.setCoordinateMapper( coordinateMapper );
+    for( final IChartLayer layer : getLayerManager().getLayers() )
+      layer.setCoordinateMapper( coordinateMapper );
+  }
 
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#paint(org.eclipse.swt.graphics.GC)

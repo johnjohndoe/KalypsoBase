@@ -20,7 +20,7 @@ public abstract class AbstractChartLayer implements IChartLayer
 {
   private boolean m_isVisible = true;
 
-  private String m_title = "";
+  private String m_title = null;
 
   private String m_id = "";
 
@@ -190,42 +190,8 @@ public abstract class AbstractChartLayer implements IChartLayer
     return m_handler;
   }
 
-  // /**
-  // * @see org.kalypso.chart.framework.model.layer.IChartLayer#getDomainRange()
-  // */
-  // public IDataRange<Number> getDomainRange( )
-  // {
-  //
-  // IDataRange logRange = getDataContainer().getDomainRange();
-  // Object min = logRange.getMin();
-  // if( min != null )
-  // {
-  // IDataOperator dop = getDomainAxis().getDataOperator( min.getClass() );
-  // return new ComparableDataRange<Number>( new Number[] { dop.logicalToNumeric( min ), dop.logicalToNumeric(
-  // logRange.getMax() ) } );
-  // }
-  // return null;
-  // }
-
-  // /**
-  // * @see org.kalypso.chart.framework.model.layer.IChartLayer#getTargetRange()
-  // */
-  // public IDataRange<Number> getTargetRange( )
-  // {
-  //
-  // IDataRange logRange = getDataContainer().getTargetRange();
-  // Object min = logRange.getMin();
-  // if( min != null )
-  // {
-  // IDataOperator dop = getDomainAxis().getDataOperator( min.getClass() );
-  // return new ComparableDataRange<Number>( new Number[] { dop.logicalToNumeric( min ), dop.logicalToNumeric(
-  // logRange.getMax() ) } );
-  // }
-  // return null;
-  // }
-
   @Override
-  public final void setCoordinateMapper( ICoordinateMapper coordinateMapper )
+  public void setCoordinateMapper( ICoordinateMapper coordinateMapper )
   {
     m_coordinateMapper = coordinateMapper;
   }
