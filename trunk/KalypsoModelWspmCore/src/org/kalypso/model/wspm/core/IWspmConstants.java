@@ -95,6 +95,8 @@ public interface IWspmConstants extends IWspmPhenomenonConstants
   public static final String URN_OGC_GML_DICT_KALYPSO_MODEL_WSPM_COMPONENTS = "urn:ogc:gml:dict:kalypso:model:wspm:components"; //$NON-NLS-1$
 
   public static final String LENGTH_SECTION_PROPERTY = URN_OGC_GML_DICT_KALYPSO_MODEL_WSPM_COMPONENTS + "#";//$NON-NLS-1$
+  
+  public static final String LENGTH_SECTION_THEME = "org.kalypso.model.wspm.tuhh.ui.chart.LengthSectionLayerProvider#";//$NON-NLS-1$
 
   public static final String LENGTH_SECTION_PROPERTY_RUNOFF = LENGTH_SECTION_PROPERTY + "LengthSectionRunOff";//$NON-NLS-1$
 
@@ -125,6 +127,8 @@ public interface IWspmConstants extends IWspmPhenomenonConstants
   public static final String LENGTH_SECTION_PROPERTY_H_BV = LENGTH_SECTION_PROPERTY + "LengthSection_h_BV";//$NON-NLS-1$
 
   public static final String LENGTH_SECTION_PROPERTY_V_M = LENGTH_SECTION_PROPERTY + "LengthSection_v_m";//$NON-NLS-1$
+  
+  public static final String LENGTH_SECTION_THEME_BUILDINGS = LENGTH_SECTION_THEME + "Buildings";//$NON-NLS-1$
 
   /** Constant for coordinate-system of profile rw/hw. For example, it will be set by the GML-Profile converter. */
   public static final String PROFIL_PROPERTY_CRS = "COORDINATE_SYSTEM"; //$NON-NLS-1$

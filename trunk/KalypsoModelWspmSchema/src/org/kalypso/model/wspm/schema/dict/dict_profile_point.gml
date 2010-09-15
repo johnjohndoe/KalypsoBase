@@ -46,7 +46,7 @@
    </swe:property>
    <swe:representation>
     <swe:Number>
-     <gml:unitOfMeasure uom="dict_uom.xml#m NHN"/>
+     <gml:unitOfMeasure uom="dict_uom.xml#mNN"/>
     </swe:Number>
    </swe:representation>
   </swe:ItemDefinition>
