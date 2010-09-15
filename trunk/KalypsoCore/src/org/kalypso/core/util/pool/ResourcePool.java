@@ -211,8 +211,10 @@ public class ResourcePool
 
       final Collection<KeyInfo> values = m_keyInfos.values();
       for( final KeyInfo info : values )
+      {
         if( info.getObject() == object )
           infosToSave.add( info );
+      }
     }
 
     // REMARK: we do not save inside the sync-block, because saving may cause access to

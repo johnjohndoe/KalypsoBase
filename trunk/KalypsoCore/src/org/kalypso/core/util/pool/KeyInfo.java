@@ -487,9 +487,9 @@ public final class KeyInfo extends Job
         reloadInternal();
         return;
       }
+      default:
+        return;
     }
-
-    return;
   }
 
   public ILoader getLoader( )

@@ -47,6 +47,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.Writer;
 import java.net.URL;
 import java.util.Collections;
 import java.util.Comparator;
@@ -562,7 +563,7 @@ public final class ZmlFactory
       // sort axes, this is not needed from a xml view, but very usefull when comparing marshalled files (e.g.
       // Junit-Test)
       final TreeSet<IAxis> sortedAxis = new TreeSet<IAxis>( new Comparator<IAxis>()
-      {
+          {
         @Override
         public int compare( final IAxis a1, final IAxis a2 )
         {
@@ -584,7 +585,7 @@ public final class ZmlFactory
           }
           return type1.compareTo( type2 );
         }
-      } );
+          } );
 
       for( final IAxis axis : obs.getAxisList() )
       {
@@ -791,8 +792,30 @@ public final class ZmlFactory
 
       throw new SensorException( e );
     }
-
   }
+
+  public static void writeToWriter( final IObservation obs, final Writer writer, final IRequest request ) throws SensorException
+  {
+    try
+    {
+      final Observation xml = createXML( obs, request );
+      final Marshaller marshaller = getMarshaller();
+      marshaller.marshal( xml, writer );
+    }
+    catch( final JAXBException e )
+    {
+      LOG.log( Level.WARNING, Messages.getString( "org.kalypso.ogc.sensor.zml.ZmlFactory.30" ), e ); //$NON-NLS-1$
+
+      throw new SensorException( e );
+    }
+    catch( final FactoryException e )
+    {
+      LOG.log( Level.WARNING, Messages.getString( "org.kalypso.ogc.sensor.zml.ZmlFactory.30" ), e ); //$NON-NLS-1$
+
+      throw new SensorException( e );
+    }
+  }
+
 
   public static String writeToString( final IObservation value, final IRequest request )
   {
@@ -809,5 +832,4 @@ public final class ZmlFactory
       return e.toString();
     }
   }
-
 }

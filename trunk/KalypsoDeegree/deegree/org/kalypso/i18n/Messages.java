@@ -46,7 +46,7 @@ import java.util.ResourceBundle;
 /**
  * @author Holger Albert
  */
-public class Messages
+public final class Messages
 {
   private static final String BUNDLE_NAME = "org.kalypso.i18n.messages"; //$NON-NLS-1$
 
@@ -56,13 +56,13 @@ public class Messages
   {
   }
 
-  public static String getString( String key )
+  public static String getString( final String key )
   {
     try
     {
       return RESOURCE_BUNDLE.getString( key );
     }
-    catch( MissingResourceException e )
+    catch( final MissingResourceException e )
     {
       return '!' + key + '!';
     }
