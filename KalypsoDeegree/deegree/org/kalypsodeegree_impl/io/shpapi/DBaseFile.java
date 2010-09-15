@@ -40,6 +40,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.RandomAccessFile;
+import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -50,6 +51,7 @@ import javax.xml.namespace.QName;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.kalypso.commons.java.net.UrlUtilities;
 import org.kalypso.commons.xml.XmlTypes;
 import org.kalypso.contribs.eclipse.core.runtime.TempFileUtilities;
 import org.kalypso.gmlschema.GMLSchema;
@@ -412,9 +414,8 @@ public class DBaseFile
     try
     {
       // TODO: comment! Why is this all needed etc.?
-      final InputStream schemaTemplateInput = getClass().getResource( "resources/shapeCustomTemplate.xsd" ).openStream();
-      String schemaString = IOUtils.toString( schemaTemplateInput );
-      schemaTemplateInput.close();
+      URL resource = getClass().getResource( "resources/shapeCustomTemplate.xsd" );
+      String schemaString = UrlUtilities.toString( resource, "UTF-8" );
 
       schemaString = schemaString.replaceAll( Pattern.quote( "${CUSTOM_NAMESPACE_SUFFIX}" ), m_suffix );
       schemaString = schemaString.replaceAll( Pattern.quote( "${CUSTOM_FEATURE_GEOMETRY_PROPERTY_TYPE}" ), geometryPropertyTypeString );
