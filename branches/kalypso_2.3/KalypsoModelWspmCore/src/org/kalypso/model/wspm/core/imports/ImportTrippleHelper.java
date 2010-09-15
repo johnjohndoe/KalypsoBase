@@ -46,7 +46,6 @@ import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.StringTokenizer;
 
 import org.apache.commons.io.IOUtils;
@@ -59,7 +58,6 @@ import org.kalypso.model.wspm.core.profil.ProfilFactory;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
-import org.kalypso.observation.result.TupleResult;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
@@ -76,6 +74,7 @@ public final class ImportTrippleHelper
   {
     throw new UnsupportedOperationException();
   }
+
   /**
    * imports the profile trippel data and converts it into IProfils
    * 
@@ -151,15 +150,13 @@ public final class ImportTrippleHelper
 
             profile.addPointProperty( rechtswert );
             profile.addPointProperty( hochwert );
-// profile.addPointProperty( hoehe );
-// profile.addPointProperty( breite );
 
             // update profile station
             currentStation = station;
           }
 
-          final IRecord point = profile.createProfilPoint();
-          if( ImportTrippleHelper.createProfilePoint( point, profilPointList, tokenizer ) )
+          final IRecord point = ImportTrippleHelper.createProfilePoint( profile, profilPointList, tokenizer );
+          if( point != null)
             profilPointList.add( point );
         }
         else
@@ -223,56 +220,44 @@ public final class ImportTrippleHelper
    * @param tokenizer
    *          holds the point data (x, y, z)
    */
-  private static boolean createProfilePoint( final IRecord point, final List<IRecord> profilPointList, final StringTokenizer tokenizer )
+  private static IRecord createProfilePoint( final IProfil profile, final List<IRecord> profilPointList, final StringTokenizer tokenizer )
   {
+    final IRecord record = profile.createProfilPoint();
+
     /* observation of profile */
-    final Map<String, IComponent> components = ProfilUtil.getComponentsFromRecord( point );
+    final int iRechtswert = profile.indexOfProperty( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
+    final int iHochwert = profile.indexOfProperty( IWspmConstants.POINT_PROPERTY_HOCHWERT );
+    final int iBreite = profile.indexOfProperty( IWspmConstants.POINT_PROPERTY_BREITE );
+    final int iHoehe = profile.indexOfProperty( IWspmConstants.POINT_PROPERTY_HOEHE );
 
-    final IComponent cRechtswert = components.get( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
-    final IComponent cHochwert = components.get( IWspmConstants.POINT_PROPERTY_HOCHWERT );
-    final IComponent cBreite = components.get( IWspmConstants.POINT_PROPERTY_BREITE );
-    final IComponent cHoehe = components.get( IWspmConstants.POINT_PROPERTY_HOEHE );
+    if( !tokenizer.hasMoreElements() )
+      return null;
 
-    final TupleResult owner = point.getOwner();
-    final int iRechtswert = owner.indexOf( cRechtswert );
-    final int iHochwert = owner.indexOf( cHochwert );
-    final int iBreite = owner.indexOf( cBreite );
-    final int iHoehe = owner.indexOf( cHoehe );
+    final double x = Double.parseDouble( tokenizer.nextToken() );
+    record.setValue( iRechtswert, x );
 
-    if( tokenizer.hasMoreElements() )
-    {
-      final double x = Double.parseDouble( tokenizer.nextToken() );
-      point.setValue( iRechtswert, x );
-    }
-    else
-      return false;
+    if( !tokenizer.hasMoreElements() )
+      return null;
+    
+    final double y = Double.parseDouble( tokenizer.nextToken() );
+    record.setValue( iHochwert, y );
 
-    if( tokenizer.hasMoreElements() )
-    {
-      final double y = Double.parseDouble( tokenizer.nextToken() );
-      point.setValue( iHochwert, y );
-    }
-    else
-      return false;
-
-    if( tokenizer.hasMoreElements() )
-    {
-      final double z = Double.parseDouble( tokenizer.nextToken() );
-      point.setValue( iHoehe, z );
-    }
-    else
-      return false;
+    if( !tokenizer.hasMoreElements() )
+      return null;
+    
+    final double z = Double.parseDouble( tokenizer.nextToken() );
+    record.setValue( iHoehe, z );
 
     final double width;
     /* calculate width coordinate */
     if( profilPointList.size() > 0 )
-      width = ImportTrippleHelper.calculateSegmentLength( profilPointList, point );
+      width = ImportTrippleHelper.calculateSegmentLength( profilPointList, record );
     else
       width = 0;
 
-    point.setValue( iBreite, width );
+    record.setValue( iBreite, width );
 
-    return true;
+    return record;
   }
 
   /**
