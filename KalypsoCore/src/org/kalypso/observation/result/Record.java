@@ -41,6 +41,7 @@
 package org.kalypso.observation.result;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
@@ -58,12 +59,15 @@ import org.kalypso.observation.result.ITupleResultChangedListener.ValueChange;
 {
   private final List<Object> m_values = new ArrayList<Object>();
 
+  private List<IComponent> m_components = new ArrayList<IComponent>();
+  
   private TupleResult m_owner;
 
   Record( final TupleResult result, final IComponent[] components )
   {
     m_owner = result;
-
+    m_components = Arrays.asList( components );
+    
     for( final IComponent component : components )
       m_values.add( component.getDefaultValue() );
   }
@@ -99,7 +103,7 @@ import org.kalypso.observation.result.ITupleResultChangedListener.ValueChange;
 
   private int checkComponent( final IComponent comp )
   {
-    final int index = m_owner.indexOfComponent( comp );
+    final int index = m_components.indexOf( comp );
     if( index == -1 )
       throw new IllegalArgumentException( Messages.getString( "org.kalypso.observation.result.Record.0" ) + comp ); //$NON-NLS-1$
 
@@ -173,7 +177,7 @@ import org.kalypso.observation.result.ITupleResultChangedListener.ValueChange;
   public IRecord cloneRecord( )
   {
     final TupleResult result = getOwner();
-    final IComponent[] components = result.getComponents();
+    final IComponent[] components = m_components.toArray( new IComponent[m_components.size()] );
 
     final Record record = new Record( result, components );
     for( int i = 0; i < components.length; i++ )
@@ -198,9 +202,26 @@ import org.kalypso.observation.result.ITupleResultChangedListener.ValueChange;
     }
   }
 
-  public void setOwner( final TupleResult owner )
+  void setOwner( final TupleResult owner, List<IComponent> components )
   {
     m_owner = owner;
+    m_components = components;
+  }
+  
+  /**
+   * @see org.kalypso.observation.result.IRecord#indexOfComponent(java.lang.String)
+   */
+  @Override
+  public int indexOfComponent( String componentID )
+  {
+    for( int i = 0; i < m_components.size(); i++ )
+    {
+      final IComponent comp = m_components.get( i );
+      if( comp.getId().equals( componentID ) )
+        return i;
+    }
+
+    return -1;
   }
 
 }
