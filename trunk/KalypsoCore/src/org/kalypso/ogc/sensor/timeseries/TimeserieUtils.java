@@ -113,8 +113,6 @@ public final class TimeserieUtils implements ITimeseriesConstants
   @Deprecated
   private static final DateFormat FORECAST_DF = DateFormat.getDateTimeInstance( DateFormat.DEFAULT, DateFormat.DEFAULT, Locale.GERMANY );
 
-// private static final DateFormat FORECAST_DF = new SimpleDateFormat( "dd.MM.yyyy HH:mm:ss", Locale.GERMANY );
-
   private static final String PROP_TIMESERIES_CONFIG = "kalypso.timeseries.properties"; //$NON-NLS-1$
 
   private static URL CONFIG_BASE_URL = TimeserieUtils.class.getResource( "resource/" ); //$NON-NLS-1$
