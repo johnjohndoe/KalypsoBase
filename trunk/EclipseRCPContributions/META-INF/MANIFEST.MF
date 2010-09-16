@@ -9,6 +9,7 @@ Bundle-Localization: plugin
 Export-Package: org.kalypso.contribs.eclipse,
  org.kalypso.contribs.eclipse.core.commands,
  org.kalypso.contribs.eclipse.core.net,
+ org.kalypso.contribs.eclipse.core.resources,
  org.kalypso.contribs.eclipse.core.runtime,
  org.kalypso.contribs.eclipse.core.runtime.jobs,
  org.kalypso.contribs.eclipse.jface.action,
