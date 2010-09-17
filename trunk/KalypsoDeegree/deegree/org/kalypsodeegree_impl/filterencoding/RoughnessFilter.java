@@ -1,5 +1,3 @@
-package org.kalypsodeegree_impl.filterencoding;
-
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -40,33 +38,26 @@ package org.kalypsodeegree_impl.filterencoding;
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
+package org.kalypsodeegree_impl.filterencoding;
+
 import java.util.HashMap;
 
-import org.kalypsodeegree.filterencoding.Filter;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.sld.Rule;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author barbarins, ig
- *
  */
 public class RoughnessFilter extends AbstractFilter
 {
-  private HashMap<String, Rule> lRulesSet = new HashMap<String, Rule>();
-  final private PropertyName m_PropertyName = new PropertyName( "roughnessStyle", null );
-  private Rule m_LastRule = null;
-  private Rule m_ElseRule = null;
+  private final HashMap<String, Rule> m_rulesSet = new HashMap<String, Rule>();
 
-  /**
-   * @see org.kalypsodeegree_impl.filterencoding.AbstractFilter#clone()
-   */
-  @Override
-  public Filter clone( )
-  {
-    // TODO Auto-generated method stub
-    return null;
-  }
+  private final PropertyName m_propertyName = new PropertyName( "roughnessStyle", null );
+
+  private Rule m_lastRule = null;
+
+  private Rule m_elseRule = null;
 
   /**
    * @see org.kalypsodeegree_impl.filterencoding.AbstractFilter#toXML()
@@ -82,42 +73,46 @@ public class RoughnessFilter extends AbstractFilter
    * @see org.kalypsodeegree.filterencoding.Filter#evaluate(org.kalypsodeegree.model.feature.Feature)
    */
   @Override
-  public boolean evaluate( Feature feature ) throws FilterEvaluationException
+  public boolean evaluate( final Feature feature ) throws FilterEvaluationException
   {
-    Object value1 = m_PropertyName.evaluate( feature );
+    final Object value1 = m_propertyName.evaluate( feature );
     if( value1 == null )
       return false;
 
-    String lStrRoughness = value1.toString();
-    
+    final String lStrRoughness = value1.toString();
+
     // get the roughness string
-    m_LastRule = lRulesSet.get( lStrRoughness );
-    
-    if (m_LastRule == null)
-      m_LastRule = m_ElseRule;
-    
+    m_lastRule = m_rulesSet.get( lStrRoughness );
+
+    if( m_lastRule == null )
+      m_lastRule = m_elseRule;
+
     return true;
   }
 
-  public void put( String title, Rule rule )
+  public void put( final String title, final Rule rule )
   {
-    try {
-      ComplexFilter lFilter = (ComplexFilter) rule.getFilter();
-      
-      if (lFilter.getOperation().getOperatorId() == OperationDefines.NOT) {
-        m_ElseRule = rule;
+    try
+    {
+      final ComplexFilter lFilter = (ComplexFilter) rule.getFilter();
+
+      if( lFilter.getOperation().getOperatorId() == OperationDefines.NOT )
+      {
+        m_elseRule = rule;
         return;
       }
-    } catch (Exception e) {
+    }
+    catch( final Exception e )
+    {
       // TODO: handle exception
     }
-    
-    lRulesSet.put( title, rule ); 
+
+    m_rulesSet.put( title, rule );
   }
 
-  
-  public Rule getLastRule( ) {
-    return m_LastRule;
+  public Rule getLastRule( )
+  {
+    return m_lastRule;
   }
 
 }

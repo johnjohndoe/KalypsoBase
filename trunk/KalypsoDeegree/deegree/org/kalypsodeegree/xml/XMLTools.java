@@ -622,9 +622,7 @@ public class XMLTools
   public static Document parse( final String fileName ) throws IOException, SAXException
   {
     final Reader reader = new InputStreamReader( new FileInputStream( fileName ) );
-    final Document doc = parse( reader );
-
-    return doc;
+    return parse( reader );
   }
 
   /**
@@ -1138,5 +1136,4 @@ public class XMLTools
 
     return nodeName;
   }
-
 }
