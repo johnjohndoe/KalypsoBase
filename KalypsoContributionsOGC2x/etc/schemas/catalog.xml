@@ -3,6 +3,9 @@
          "http://www.oasis-open.org/committees/entity/release/1.0/catalog.dtd">
 <catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="public">
 
-  <uri name="http://www.opengis.net/gml" uri="gml/3.1.1/base/gml.xsd" />
+  <uri name="http://www.opengis.net/sldExt" uri="ext/SldExt.xsd" />
+
+  <uri name="http://www.opengis.net/sld" uri="original/sld/1.0.0/StyledLayerDescriptor.xsd" />
+  <uri name="http://www.opengis.net/ogc" uri="original/filter/1.0.0/filter.xsd" />
 
 </catalog>
