@@ -94,7 +94,8 @@ public class RequestBean
       return null;
 
     /* Only try to read, if the content type was set to text/xml. */
-    if( !("text/xml".equals( request.getContentType() )) ) //$NON-NLS-1$
+    String contentType = request.getContentType();
+    if( contentType == null || !contentType.contains( "text/xml" ) ) //$NON-NLS-1$
       return null;
 
     String body = null;
