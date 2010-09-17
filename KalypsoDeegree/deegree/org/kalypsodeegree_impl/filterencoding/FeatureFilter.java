@@ -35,14 +35,9 @@
  */
 package org.kalypsodeegree_impl.filterencoding;
 
-import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 
-import org.kalypso.contribs.java.xml.XMLHelper;
-import org.kalypsodeegree.filterencoding.Filter;
 import org.kalypsodeegree.model.feature.Feature;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 /**
  * Encapsulates the information of a <Filter>element that consists of a number of FeatureId constraints (only) (as
@@ -53,12 +48,11 @@ import org.w3c.dom.Element;
  */
 public class FeatureFilter extends AbstractFilter
 {
-
   /** FeatureIds the FeatureFilter is based on */
-  ArrayList<FeatureId> m_featureIds = new ArrayList<FeatureId>();
+  private final ArrayList<FeatureId> m_featureIds = new ArrayList<FeatureId>();
 
   /** Adds a FeatureId constraint. */
-  public void addFeatureId( FeatureId featureId )
+  public void addFeatureId( final FeatureId featureId )
   {
     m_featureIds.add( featureId );
   }
@@ -78,12 +72,12 @@ public class FeatureFilter extends AbstractFilter
    * @return true, if the <tt>FeatureFilter</tt> evaluates to true, else false
    */
   @Override
-  public boolean evaluate( Feature feature )
+  public boolean evaluate( final Feature feature )
   {
-    String id = feature.getId();
+    final String id = feature.getId();
     for( int i = 0; i < m_featureIds.size(); i++ )
     {
-      FeatureId featureId = m_featureIds.get( i );
+      final FeatureId featureId = m_featureIds.get( i );
       if( id.equals( featureId.getValue() ) )
         return true;
     }
@@ -94,40 +88,18 @@ public class FeatureFilter extends AbstractFilter
   @Override
   public StringBuffer toXML( )
   {
-    StringBuffer sb = new StringBuffer( 500 );
+    final StringBuffer sb = new StringBuffer( 500 );
     sb.append( "<ogc:Filter xmlns:ogc='http://www.opengis.net/ogc'>" );
     for( int i = 0; i < m_featureIds.size(); i++ )
     {
-      FeatureId fid = m_featureIds.get( i );
+      final FeatureId fid = m_featureIds.get( i );
       sb.append( fid.toXML() );
     }
     sb.append( "</ogc:Filter>" );
     return sb;
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.filterencoding.AbstractFilter#clone()
-   */
-  @Override
-  public Filter clone( ) throws CloneNotSupportedException
-  {
-    StringBuffer buffer = toXML();
-    ByteArrayInputStream input = new ByteArrayInputStream( buffer.toString().getBytes() );
-    Document asDOM = null;
-    try
-    {
-      asDOM = XMLHelper.getAsDOM( input, true );
-      Element element = asDOM.getDocumentElement();
-      return AbstractFilter.buildFromDOM( element );
-    }
-    catch( Exception e )
-    {
-      e.printStackTrace();
-    }
-    throw new CloneNotSupportedException();
-  }
-
-  public void removeFeatureId( FeatureId id )
+  public void removeFeatureId( final FeatureId id )
   {
     m_featureIds.remove( id );
   }

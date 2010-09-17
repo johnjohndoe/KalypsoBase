@@ -47,18 +47,8 @@ public class ElseFilter extends AbstractFilter
   }
 
   @Override
-  public boolean evaluate( Feature feature )
+  public boolean evaluate( final Feature feature )
   {
     return false;
   }
-
-  /**
-   * @see org.kalypsodeegree_impl.filterencoding.AbstractFilter#clone()
-   */
-  @Override
-  public Filter clone( ) throws CloneNotSupportedException
-  {
-    throw new CloneNotSupportedException();
-  }
-
 }

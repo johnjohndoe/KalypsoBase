@@ -36,7 +36,11 @@
 
 package org.kalypsodeegree.filterencoding;
 
+import java.io.IOException;
+
 import org.kalypsodeegree.model.feature.Feature;
+import org.w3c.dom.Element;
+import org.xml.sax.SAXException;
 
 /**
  * <p>
@@ -49,7 +53,6 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public interface Filter
 {
-
   /**
    * Calculates the <tt>Filter</tt>'s logical value based on the certain property values of the given feature.
    * 
@@ -62,7 +65,9 @@ public interface Filter
   boolean evaluate( Feature feature ) throws FilterEvaluationException;
 
   /** Produces an indented XML representation of this object. */
-  public StringBuffer toXML( );
+  StringBuffer toXML( );
 
-  public Filter clone( ) throws CloneNotSupportedException;
+  Element toDom( ) throws IOException, SAXException;
+
+  Filter clone( ) throws CloneNotSupportedException;
 }

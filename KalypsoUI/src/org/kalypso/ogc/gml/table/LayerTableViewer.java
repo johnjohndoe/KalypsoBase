@@ -59,7 +59,6 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlAdapter;
@@ -112,7 +111,6 @@ import org.kalypso.ui.KalypsoUIExtensions;
 import org.kalypso.util.swt.SWTUtilities;
 import org.kalypsodeegree.filterencoding.Filter;
 import org.kalypsodeegree.filterencoding.FilterConstructionException;
-import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
@@ -363,25 +361,7 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
       if( filter == null )
         return;
 
-      final ViewerFilter viewerFilter = new ViewerFilter()
-      {
-        @Override
-        public boolean select( final Viewer viewer, final Object parentElement, final Object element )
-        {
-          try
-          {
-            final Feature feature = (Feature) element;
-            return filter.evaluate( feature );
-          }
-          catch( final FilterEvaluationException e )
-          {
-            e.printStackTrace();
-
-            return false;
-          }
-        }
-      };
-
+      final ViewerFilter viewerFilter = new FeatureViewerFilter( filter );
       addFilter( viewerFilter );
     }
     catch( final FilterConstructionException e )
@@ -437,9 +417,7 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
     tc.addControlListener( m_headerControlListener );
 
     if( bRefreshColumns )
-    {
       refreshAll();
-    }
   }
 
   protected void setColumnText( final TableColumn tc )
@@ -566,7 +544,16 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
     // die Namen der Spalten auffrischen, wegen der Sortierungs-Markierung
     final TableColumn[] columns = getTable().getColumns();
     for( final TableColumn element : columns )
+    {
       setColumnText( element );
+
+      // Should work, but does not, but why???
+// /* as long as width is 'auto', autoresize the column */
+// final int width = ((Integer) element.getData( COLUMN_PROP_WIDTH )).intValue();
+// if( width == -1 )
+// element.pack();
+    }
+
     super.refresh();
   }
 
@@ -768,6 +755,23 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
       sort.setPropertyName( propertyName );
       sort.setInverse( sorter.isInverse() );
       layer.setSort( sort );
+    }
+
+    final ViewerFilter[] filters = getFilters();
+    for( final ViewerFilter filter : filters )
+    {
+      if( filter instanceof FeatureViewerFilter )
+      {
+        try
+        {
+          final Filter ogcFilter = ((FeatureViewerFilter) filter).getFilter();
+          TemplateUtilities.setFilter( layer, ogcFilter );
+        }
+        catch( final Exception e )
+        {
+          e.printStackTrace();
+        }
+      }
     }
 
     return tableTemplate;

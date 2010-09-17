@@ -38,81 +38,50 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypsodeegree_impl.filterencoding;
+package org.kalypso.ogc.gml.table;
 
-import java.util.HashMap;
-
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerFilter;
+import org.kalypsodeegree.filterencoding.Filter;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
-import org.kalypsodeegree.graphics.sld.Rule;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * @author barbarins, ig
+ * Fitlers {@link org.kalypsodeegree.model.feature.Feature}'s based on an ogc filter.
+ * 
+ * @author Gernot Belger
  */
-public class RoughnessFilter extends AbstractFilter
+public class FeatureViewerFilter extends ViewerFilter
 {
-  private final HashMap<String, Rule> m_rulesSet = new HashMap<String, Rule>();
+  private final Filter m_filter;
 
-  private final PropertyName m_propertyName = new PropertyName( "roughnessStyle", null );
-
-  private Rule m_lastRule = null;
-
-  private Rule m_elseRule = null;
-
-  /**
-   * @see org.kalypsodeegree_impl.filterencoding.AbstractFilter#toXML()
-   */
-  @Override
-  public StringBuffer toXML( )
+  public FeatureViewerFilter( final Filter filter )
   {
-    // TODO Auto-generated method stub
-    return null;
+    m_filter = filter;
+  }
+
+  public Filter getFilter( )
+  {
+    return m_filter;
   }
 
   /**
-   * @see org.kalypsodeegree.filterencoding.Filter#evaluate(org.kalypsodeegree.model.feature.Feature)
+   * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
    */
   @Override
-  public boolean evaluate( final Feature feature ) throws FilterEvaluationException
-  {
-    final Object value1 = m_propertyName.evaluate( feature );
-    if( value1 == null )
-      return false;
-
-    final String lStrRoughness = value1.toString();
-
-    // get the roughness string
-    m_lastRule = m_rulesSet.get( lStrRoughness );
-
-    if( m_lastRule == null )
-      m_lastRule = m_elseRule;
-
-    return true;
-  }
-
-  public void put( final String title, final Rule rule )
+  public boolean select( final Viewer viewer, final Object parentElement, final Object element )
   {
     try
     {
-      final ComplexFilter lFilter = (ComplexFilter) rule.getFilter();
-
-      if( lFilter.getOperation().getOperatorId() == OperationDefines.NOT )
-      {
-        m_elseRule = rule;
-        return;
-      }
+      final Feature feature = (Feature) element;
+      return m_filter.evaluate( feature );
     }
-    catch( final Exception e )
+    catch( final FilterEvaluationException e )
     {
-      // TODO: handle exception
+      e.printStackTrace();
+
+      return false;
     }
-
-    m_rulesSet.put( title, rule );
-  }
-
-  public Rule getLastRule( )
-  {
-    return m_lastRule;
   }
 
 }

@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.core.jaxb;
 
+import java.io.IOException;
+
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -47,10 +49,18 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.validation.Schema;
 
 import org.kalypso.commons.bind.JaxbUtilities;
+import org.kalypso.commons.bind.NamespacePrefixMap;
 import org.kalypso.commons.bind.SchemaCache;
 import org.kalypso.core.KalypsoCoreDebug;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.template.gismapview.ObjectFactory;
+import org.kalypso.template.gistableview.Gistableview.Layer;
+import org.kalypsodeegree.filterencoding.Filter;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.xml.sax.SAXException;
+
+import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
 
 /**
  * Utility class for handling with the 'template' binding schemata.
@@ -75,6 +85,8 @@ public final class TemplateUtilities
   public static final JAXBContext JC_GISTABLEVIEW = JaxbUtilities.createQuiet( org.kalypso.template.gistableview.ObjectFactory.class );
 
   public static final org.kalypso.template.gistableview.ObjectFactory OF_GISTABLEVIEW = new org.kalypso.template.gistableview.ObjectFactory();
+
+  private static final NamespacePrefixMapper GISTBALEVIEW_MAPPER = new NamespacePrefixMap( "gistableview.template.kalypso.org" );//$NON-NLS-1$
 
   /* GisTreeView */
   public static final JAXBContext JC_GISTREEVIEW = JaxbUtilities.createQuiet( org.kalypso.template.gistreeview.ObjectFactory.class );
@@ -147,9 +159,7 @@ public final class TemplateUtilities
 
   public static Marshaller createGistableviewMarshaller( final String encoding ) throws JAXBException
   {
-    final Marshaller marshaller = JaxbUtilities.createMarshaller( JC_GISTABLEVIEW );
-    marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
-    marshaller.setProperty( Marshaller.JAXB_ENCODING, encoding );
+    final Marshaller marshaller = JaxbUtilities.createMarshaller( JC_GISTABLEVIEW, true, encoding, GISTBALEVIEW_MAPPER );
 
     // REMARK: only validate in trace mode, because this lead often to errors
     // because the 'href' attribute of the styledLayers are anyURIs, but its values are often not.
@@ -167,5 +177,17 @@ public final class TemplateUtilities
       unmarshaller.setSchema( getGistableviewSchema() );
 
     return unmarshaller;
+  }
+
+  /**
+   * Converts the given ogc-filter to an dom-element suitable for the Gistableview and set its to the layer.
+   */
+  public static void setFilter( final Layer layer, final Filter ogcFilter ) throws IOException, SAXException
+  {
+    final Element filterElement = ogcFilter.toDom();
+    final Document doc = filterElement.getOwnerDocument();
+    final Element rootElement = doc.createElementNS( "gistableview.template.kalypso.org", "filter" );
+    rootElement.appendChild( filterElement );
+    layer.setFilter( rootElement );
   }
 }

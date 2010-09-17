@@ -35,15 +35,18 @@
  */
 package org.kalypsodeegree_impl.filterencoding;
 
-import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
-import org.kalypso.contribs.java.xml.XMLHelper;
+import org.apache.commons.io.IOUtils;
 import org.kalypsodeegree.filterencoding.Filter;
 import org.kalypsodeegree.filterencoding.FilterConstructionException;
+import org.kalypsodeegree.xml.XMLTools;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 /**
  * Abstract superclass representing <Filter>elements (as defined in the Filter DTD). A <Filter>element either consists
@@ -81,8 +84,8 @@ public abstract class AbstractFilter implements Filter
     return null;
   }
 
-  
-  
+
+
   /**
    * Given a DOM-fragment, a corresponding Filter-object is built. This method recursively calls other buildFromDOM () -
    * methods to validate the structure of the DOM-fragment.
@@ -92,10 +95,8 @@ public abstract class AbstractFilter implements Filter
    */
   public static Filter buildFromDOM( final Element element ) throws FilterConstructionException
   {
-    Filter filter = null;
-
     // check if root element's name equals 'filter'
-    if( !element.getLocalName().equals( "Filter" ) )
+    if( !"Filter".equals( element.getLocalName() ) )
       throw new FilterConstructionException( "Name of element does not equal 'Filter'!" );
 
     // determine type of Filter (FeatureFilter / ComplexFilter)
@@ -111,7 +112,8 @@ public abstract class AbstractFilter implements Filter
     if( firstElement == null )
       throw new FilterConstructionException( "Filter Node is empty!" );
 
-    if( firstElement.getLocalName().equals( "FeatureId" ) )
+    Filter filter = null;
+    if( "FeatureId".equals( firstElement.getLocalName() ) )
     {
       // must be a FeatureFilter
       final FeatureFilter fFilter = new FeatureFilter();
@@ -121,7 +123,7 @@ public abstract class AbstractFilter implements Filter
         if( children.item( i ).getNodeType() == Node.ELEMENT_NODE )
         {
           final Element fid = (Element) children.item( i );
-          if( !fid.getLocalName().equals( "FeatureId" ) )
+          if( !"FeatureId".equals( fid.getLocalName() ) )
             throw new FilterConstructionException( "Unexpected Element encountered: " + fid.getLocalName() );
           fFilter.addFeatureId( FeatureId.buildFromDOM( fid ) );
         }
@@ -146,6 +148,7 @@ public abstract class AbstractFilter implements Filter
         }
       }
     }
+
     return filter;
   }
 
@@ -153,24 +156,27 @@ public abstract class AbstractFilter implements Filter
   @Override
   public abstract StringBuffer toXML( );
 
-  public Filter clone( final Filter filter ) throws FilterConstructionException
+  @Override
+  public final Element toDom( ) throws IOException, SAXException
   {
-    final StringBuffer buffer = filter.toXML();
-    final ByteArrayInputStream input = new ByteArrayInputStream( buffer.toString().getBytes() );
-    Document asDOM = null;
+    final StringBuffer xml = toXML();
+    final InputStream inputStream = IOUtils.toInputStream( xml.toString() );
+    final Document doc = XMLTools.parse( inputStream );
+    return doc.getDocumentElement();
+  }
+
+  @Override
+  public final Filter clone( ) throws CloneNotSupportedException
+  {
     try
     {
-      asDOM = XMLHelper.getAsDOM( input, true );
+      final Element dom = toDom();
+      return AbstractFilter.buildFromDOM( dom );
     }
     catch( final Exception e )
     {
       e.printStackTrace();
     }
-    final Element element = asDOM.getDocumentElement();
-
-    return AbstractFilter.buildFromDOM( element );
+    throw new CloneNotSupportedException();
   }
-
-  @Override
-  public abstract Filter clone( ) throws CloneNotSupportedException;
 }

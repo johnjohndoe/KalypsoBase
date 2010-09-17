@@ -35,16 +35,11 @@
  */
 package org.kalypsodeegree_impl.filterencoding;
 
-import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 
-import org.kalypso.contribs.java.xml.XMLHelper;
-import org.kalypsodeegree.filterencoding.Filter;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.filterencoding.Operation;
 import org.kalypsodeegree.model.feature.Feature;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 /**
  * Encapsulates the information of a <Filter>element that contains an Operation (only) (as defined in the Filter DTD).
@@ -140,24 +135,4 @@ public class ComplexFilter extends AbstractFilter
     sb.append( "</ogc:Filter>\n" );
     return sb;
   }
-
-  @Override
-  public Filter clone( ) throws CloneNotSupportedException
-  {
-    final StringBuffer buffer = toXML();
-    final ByteArrayInputStream input = new ByteArrayInputStream( buffer.toString().getBytes() );
-    Document asDOM = null;
-    try
-    {
-      asDOM = XMLHelper.getAsDOM( input, true );
-      final Element element = asDOM.getDocumentElement();
-      return AbstractFilter.buildFromDOM( element );
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-    }
-    throw new CloneNotSupportedException();
-  }
-
 }

@@ -48,20 +48,18 @@ import org.kalypsodeegree_impl.filterencoding.RoughnessFilter;
 
 /**
  * @author barbarins
- *
  */
 public class RoughnessRule implements Rule
 {
-  final private RoughnessFilter m_RoughFilter = new RoughnessFilter();
-  
-  
+  private final RoughnessFilter m_roughFilter = new RoughnessFilter();
+
   /**
    * @see org.kalypsodeegree.graphics.sld.Rule#addSymbolizer(org.kalypsodeegree.graphics.sld.Symbolizer)
    */
   @Override
-  public void addSymbolizer( Symbolizer symbolizer )
+  public void addSymbolizer( final Symbolizer symbolizer )
   {
-//    System.out.println(" **** RoughnessRule, non implemented method: addSymbolizer ");
+// System.out.println(" **** RoughnessRule, non implemented method: addSymbolizer ");
   }
 
   /**
@@ -70,7 +68,7 @@ public class RoughnessRule implements Rule
   @Override
   public String getAbstract( )
   {
-//    System.out.println(" **** RoughnessRule, non implemented method: getAbstract");
+// System.out.println(" **** RoughnessRule, non implemented method: getAbstract");
     return null;
   }
 
@@ -80,7 +78,7 @@ public class RoughnessRule implements Rule
   @Override
   public Filter getFilter( )
   {
-    return m_RoughFilter;
+    return m_roughFilter;
   }
 
   /**
@@ -89,7 +87,7 @@ public class RoughnessRule implements Rule
   @Override
   public LegendGraphic getLegendGraphic( )
   {
-//    System.out.println(" **** RoughnessRule, non implemented method: getLegendGraphic");
+// System.out.println(" **** RoughnessRule, non implemented method: getLegendGraphic");
     return null;
   }
 
@@ -99,7 +97,7 @@ public class RoughnessRule implements Rule
   @Override
   public double getMaxScaleDenominator( )
   {
-//    System.out.println(" **** RoughnessRule, non implemented method: getMaxScaleDenominator");
+// System.out.println(" **** RoughnessRule, non implemented method: getMaxScaleDenominator");
     return 0;
   }
 
@@ -109,7 +107,7 @@ public class RoughnessRule implements Rule
   @Override
   public double getMinScaleDenominator( )
   {
-//    System.out.println(" **** RoughnessRule, non implemented method: getMinScaleDenominator");
+// System.out.println(" **** RoughnessRule, non implemented method: getMinScaleDenominator");
     return 0;
   }
 
@@ -119,7 +117,7 @@ public class RoughnessRule implements Rule
   @Override
   public String getName( )
   {
-//    System.out.println(" **** RoughnessRule, non implemented method: getName");
+// System.out.println(" **** RoughnessRule, non implemented method: getName");
     return null;
   }
 
@@ -129,7 +127,7 @@ public class RoughnessRule implements Rule
   @Override
   public Symbolizer[] getSymbolizers( )
   {
-    return m_RoughFilter.getLastRule().getSymbolizers();
+    return m_roughFilter.getLastRule().getSymbolizers();
   }
 
   /**
@@ -138,7 +136,7 @@ public class RoughnessRule implements Rule
   @Override
   public String getTitle( )
   {
-//    System.out.println(" **** RoughnessRule, non implemented method: getTitle");
+// System.out.println(" **** RoughnessRule, non implemented method: getTitle");
     return null;
   }
 
@@ -148,7 +146,7 @@ public class RoughnessRule implements Rule
   @Override
   public boolean hasElseFilter( )
   {
-//    System.out.println(" **** RoughnessRule, non implemented method: hasElseFilter");
+// System.out.println(" **** RoughnessRule, non implemented method: hasElseFilter");
     return false;
   }
 
@@ -156,96 +154,96 @@ public class RoughnessRule implements Rule
    * @see org.kalypsodeegree.graphics.sld.Rule#removeSymbolizer(org.kalypsodeegree.graphics.sld.Symbolizer)
    */
   @Override
-  public void removeSymbolizer( Symbolizer symbolizer )
+  public void removeSymbolizer( final Symbolizer symbolizer )
   {
-//    System.out.println(" **** RoughnessRule, non implemented method: removeSymbolizer");
+// System.out.println(" **** RoughnessRule, non implemented method: removeSymbolizer");
   }
 
   /**
    * @see org.kalypsodeegree.graphics.sld.Rule#setAbstract(java.lang.String)
    */
   @Override
-  public void setAbstract( String abstract1 )
+  public void setAbstract( final String abstract1 )
   {
-//    System.out.println(" **** RoughnessRule, non implemented method: setAbstract");
+// System.out.println(" **** RoughnessRule, non implemented method: setAbstract");
   }
 
   /**
    * @see org.kalypsodeegree.graphics.sld.Rule#setElseFilter(boolean)
    */
   @Override
-  public void setElseFilter( boolean elseFilter )
+  public void setElseFilter( final boolean elseFilter )
   {
-//    System.out.println(" **** RoughnessRule, non implemented method: setElseFilter");
+// System.out.println(" **** RoughnessRule, non implemented method: setElseFilter");
   }
 
   /**
    * @see org.kalypsodeegree.graphics.sld.Rule#setFilter(org.kalypsodeegree.filterencoding.Filter)
    */
   @Override
-  public void setFilter( Filter filter )
+  public void setFilter( final Filter filter )
   {
-//    System.out.println(" **** RoughnessRule, non implemented method: setFilter");
+// System.out.println(" **** RoughnessRule, non implemented method: setFilter");
   }
 
   /**
    * @see org.kalypsodeegree.graphics.sld.Rule#setLegendGraphic(org.kalypsodeegree.graphics.sld.LegendGraphic)
    */
   @Override
-  public void setLegendGraphic( LegendGraphic legendGraphic )
+  public void setLegendGraphic( final LegendGraphic legendGraphic )
   {
-//    System.out.println(" **** RoughnessRule, non implemented method: setLegendGraphic");
+// System.out.println(" **** RoughnessRule, non implemented method: setLegendGraphic");
   }
 
   /**
    * @see org.kalypsodeegree.graphics.sld.Rule#setMaxScaleDenominator(double)
    */
   @Override
-  public void setMaxScaleDenominator( double maxScaleDenominator )
+  public void setMaxScaleDenominator( final double maxScaleDenominator )
   {
-//    System.out.println(" **** RoughnessRule, non implemented method: setMaxScaleDenominator");
+// System.out.println(" **** RoughnessRule, non implemented method: setMaxScaleDenominator");
   }
 
   /**
    * @see org.kalypsodeegree.graphics.sld.Rule#setMinScaleDenominator(double)
    */
   @Override
-  public void setMinScaleDenominator( double minScaleDenominator )
+  public void setMinScaleDenominator( final double minScaleDenominator )
   {
-//    System.out.println(" **** RoughnessRule, non implemented method: setMinScaleDenominator");
+// System.out.println(" **** RoughnessRule, non implemented method: setMinScaleDenominator");
   }
 
   /**
    * @see org.kalypsodeegree.graphics.sld.Rule#setName(java.lang.String)
    */
   @Override
-  public void setName( String name )
+  public void setName( final String name )
   {
-//    System.out.println(" **** RoughnessRule, non implemented method: setName");
+// System.out.println(" **** RoughnessRule, non implemented method: setName");
   }
 
   /**
    * @see org.kalypsodeegree.graphics.sld.Rule#setSymbolizers(org.kalypsodeegree.graphics.sld.Symbolizer[])
    */
   @Override
-  public void setSymbolizers( Symbolizer[] symbolizers )
+  public void setSymbolizers( final Symbolizer[] symbolizers )
   {
-//    System.out.println(" **** RoughnessRule, non implemented method: setSymbolizers");
+// System.out.println(" **** RoughnessRule, non implemented method: setSymbolizers");
   }
 
   /**
    * @see org.kalypsodeegree.graphics.sld.Rule#setTitle(java.lang.String)
    */
   @Override
-  public void setTitle( String title )
+  public void setTitle( final String title )
   {
-//    System.out.println(" **** RoughnessRule, non implemented method: setTitle");
+// System.out.println(" **** RoughnessRule, non implemented method: setTitle");
   }
 
-  public void put( String title, Rule rule )
+  public void put( final String title, final Rule rule )
   {
     // TODO Auto-generated method stub
-    m_RoughFilter.put( title, rule );
+    m_roughFilter.put( title, rule );
   }
 
 }

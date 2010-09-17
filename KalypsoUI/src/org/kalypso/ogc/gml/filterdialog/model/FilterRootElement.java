@@ -29,6 +29,7 @@
  */
 package org.kalypso.ogc.gml.filterdialog.model;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.eclipse.jface.util.IPropertyChangeListener;
@@ -40,6 +41,8 @@ import org.kalypsodeegree.filterencoding.Operation;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.filterencoding.ComplexFilter;
 import org.kalypsodeegree_impl.filterencoding.LogicalOperation;
+import org.w3c.dom.Element;
+import org.xml.sax.SAXException;
 
 /**
  * @author kuepfer
@@ -68,6 +71,15 @@ public class FilterRootElement implements Filter
   public StringBuffer toXML( )
   {
     return m_filter.toXML();
+  }
+
+  /**
+   * @see org.kalypsodeegree.filterencoding.Filter#toDom()
+   */
+  @Override
+  public Element toDom( ) throws IOException, SAXException
+  {
+    return m_filter.toDom();
   }
 
   public String getName( )
@@ -176,9 +188,8 @@ public class FilterRootElement implements Filter
   public Filter clone( ) throws CloneNotSupportedException
   {
     if( m_filter != null )
-    {
       return m_filter.clone();
-    }
+
     throw new CloneNotSupportedException();
   }
 }
