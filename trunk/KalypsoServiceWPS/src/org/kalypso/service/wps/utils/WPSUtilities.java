@@ -159,7 +159,7 @@ public class WPSUtilities
   public static String send( final String xml, final String url ) throws CoreException, HttpException, IOException
   {
     /* Send the request. */
-    KalypsoServiceWPSDebug.DEBUG.printf( "Calling " + url + " ...\n" ); //$NON-NLS-1$ //$NON-NLS-2$
+    KalypsoServiceWPSDebug.DEBUG.printf( "Calling '" + url + "'...\n" ); //$NON-NLS-1$ //$NON-NLS-2$
 
     /* Create the client. */
     final HttpClient client = ProxyUtilities.getConfiguredHttpClient( 25000, new URL( url ), 0 );
