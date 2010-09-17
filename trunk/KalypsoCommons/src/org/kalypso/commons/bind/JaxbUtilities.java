@@ -63,7 +63,12 @@ import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
  */
 public final class JaxbUtilities
 {
+  /* Kalypso default indentation: 2 whitespaces */
+  private static final String INDENT_VALUE = "  "; //$NON-NLS-1$
+
   private static final String COM_SUN_XML_BIND_NAMESPACE_PREFIX_MAPPER = "com.sun.xml.bind.namespacePrefixMapper"; //$NON-NLS-1$
+
+  private static final String INDENT_STRING = "com.sun.xml.bind.indentString";
 
   public final static Debug DEBUG = new Debug( KalypsoCommonsPlugin.getDefault(), "org.kalypso.jwsdp", "/perf/jaxbinitialisation", System.out ); //$NON-NLS-1$ //$NON-NLS-2$
 
@@ -166,6 +171,32 @@ public final class JaxbUtilities
   }
 
   /**
+   * Same as {@link #createMarshaller(JAXBContext, boolean, null, Map)}.
+   */
+  public static Marshaller createMarshaller( final JAXBContext context, final boolean formatOutput, final Map<String, String> specialPrefixes ) throws JAXBException
+  {
+    return createMarshaller( context, formatOutput, null, specialPrefixes );
+  }
+
+  /**
+   * Same as {@link #createMarshaller(JAXBContext, boolean, String, NamespacePrefixMapper)}, but uses a default prefix
+   * mapper based on the given specialPrefixes.
+   * 
+   * @param specialPrefixes
+   *          if non null, use these mappings before the usual prefix mappings. Use with care, it is not tested if
+   *          namespaces are mapped into the same namespace.
+   */
+  public static Marshaller createMarshaller( final JAXBContext context, final boolean formatOutput, final String encoding, final Map<String, String> specialPrefixes ) throws JAXBException
+  {
+    NamespacePrefixMapper prefixMapper;
+    if( specialPrefixes == null )
+      prefixMapper = getNSPrefixMapper();
+    else
+      prefixMapper = getNSPrefixMapper( specialPrefixes );
+    return createMarshaller( context, formatOutput, encoding, prefixMapper );
+  }
+
+  /**
    * Create marshaller with namespace prefixmapping<br>
    * use this methode to avoid bug in jaxb-implementation when prefixing attributes with defaultnamespace like this:
    * <code><element xmlns="www.xlink..." :href="test"/></code> instead if
@@ -173,19 +204,24 @@ public final class JaxbUtilities
    * 
    * @param formaOutput
    *          if true, output is nicely formatted.
-   * @param specialPrefixes
-   *          if non null, use these mappings before the usual prefix mappings. Use with care, it is not tested if
-   *          namespaces are mapped into the same namespace.
+   * @param encoding
+   *          If non <code>null</code>, the marshaller will use this encoding when writing to streams.
    */
-  public static Marshaller createMarshaller( final JAXBContext context, final boolean formatOutput, final Map<String, String> specialPrefixes ) throws JAXBException
+  public static Marshaller createMarshaller( final JAXBContext context, final boolean formatOutput, final String encoding, final NamespacePrefixMapper prefixMapper ) throws JAXBException
   {
     final Marshaller marshaller = context.createMarshaller();
-    if( specialPrefixes == null )
-      marshaller.setProperty( COM_SUN_XML_BIND_NAMESPACE_PREFIX_MAPPER, getNSPrefixMapper() );
-    else
-      marshaller.setProperty( COM_SUN_XML_BIND_NAMESPACE_PREFIX_MAPPER, getNSPrefixMapper( specialPrefixes ) );
+
+    if( prefixMapper != null )
+      marshaller.setProperty( COM_SUN_XML_BIND_NAMESPACE_PREFIX_MAPPER, prefixMapper );
+
     if( formatOutput )
       marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
+
+    if( encoding != null )
+      marshaller.setProperty( Marshaller.JAXB_ENCODING, encoding );
+
+    marshaller.setProperty( INDENT_STRING, INDENT_VALUE );
+
     return marshaller;
   }
 

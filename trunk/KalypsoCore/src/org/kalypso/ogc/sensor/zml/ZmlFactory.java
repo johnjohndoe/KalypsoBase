@@ -74,6 +74,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.commons.bind.JaxbUtilities;
+import org.kalypso.commons.bind.NamespacePrefixMap;
 import org.kalypso.commons.factory.FactoryException;
 import org.kalypso.commons.java.util.PropertiesHelper;
 import org.kalypso.commons.java.util.StringUtilities;
@@ -118,8 +119,6 @@ import org.kalypso.zml.Observation;
 import org.kalypso.zml.request.Request;
 import org.xml.sax.InputSource;
 
-import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
-
 /**
  * Factory for ZML-Files. ZML is a flexible format that covers following possibilities:
  * <ul>
@@ -134,7 +133,11 @@ import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
  */
 public final class ZmlFactory
 {
-  public static final NamespacePrefixMapper ZML_PREFIX_MAPPER = new ZmlNamespacePrefixMapper();
+  public static final NamespacePrefixMap ZML_PREFIX_MAPPER = new NamespacePrefixMap( "zml.kalypso.org" );
+  static
+  {
+    ZML_PREFIX_MAPPER.addMapping( "filters.zml.kalypso.org", "filters" );
+  }
 
   public static final ObjectFactory OF = new ObjectFactory();
 
@@ -697,10 +700,7 @@ public final class ZmlFactory
   @Deprecated
   public static Marshaller getMarshaller( ) throws JAXBException
   {
-    final Marshaller marshaller = JaxbUtilities.createMarshaller( JC );
-    marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
-    marshaller.setProperty( "com.sun.xml.bind.namespacePrefixMapper", ZML_PREFIX_MAPPER );
-    return marshaller;
+    return JaxbUtilities.createMarshaller( JC, true, null, ZML_PREFIX_MAPPER );
   }
 
   /**
