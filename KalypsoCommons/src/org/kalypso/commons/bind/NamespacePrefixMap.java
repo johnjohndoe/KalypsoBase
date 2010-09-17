@@ -38,17 +38,44 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.sensor.zml;
+package org.kalypso.commons.bind;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.commons.lang.StringUtils;
 
 import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
 
 /**
- * Namespace prefix mapper used for zml.
+ * Implementation of {@link NamespacePrefixMapper}, that uses fixed prefixes set from outside.
  * 
  * @author Gernot Belger
  */
-public class ZmlNamespacePrefixMapper extends NamespacePrefixMapper
+public class NamespacePrefixMap extends NamespacePrefixMapper
 {
+  private final Map<String, String> m_mappings = new HashMap<String, String>();
+
+  private final String m_defaultNamespace;
+
+  public NamespacePrefixMap( )
+  {
+    this( null );
+  }
+
+  /**
+   * If this constructor is used, the given namespace is mapped to the default (i.e. empty prefix).
+   */
+  public NamespacePrefixMap( final String defaultNamespace )
+  {
+    m_defaultNamespace = defaultNamespace;
+  }
+
+  public void addMapping( final String namespace, final String prefferedPrefix )
+  {
+    m_mappings.put( namespace, prefferedPrefix );
+  }
+
   /**
    * @see com.sun.xml.bind.marshaller.NamespacePrefixMapper#getPreferredPrefix(java.lang.String, java.lang.String,
    *      boolean)
@@ -56,12 +83,13 @@ public class ZmlNamespacePrefixMapper extends NamespacePrefixMapper
   @Override
   public String getPreferredPrefix( final String namespaceUri, final String suggestion, final boolean requirePrefix )
   {
-    if( "zml.kalypso.org".equals( namespaceUri ) )
-      return "";
+    if( namespaceUri.equals( m_defaultNamespace ) )
+      return StringUtils.EMPTY;
 
-    if( "filters.zml.kalypso.org".equals( namespaceUri ) )
-      return "filters";
+    if( m_mappings.containsKey( namespaceUri ) )
+      return m_mappings.get( namespaceUri );
 
     return suggestion;
   }
+
 }
