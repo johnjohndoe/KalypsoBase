@@ -118,20 +118,7 @@ public class ComboModifier implements IFeatureModifier
   @Override
   public CellEditor createCellEditor( final Composite parent )
   {
-    final Map<Object, String> comboEntries = m_comboEntries;
-
-    final ArrayContentProvider cp = new ArrayContentProvider();
-    final LabelProvider lp = new LabelProvider()
-    {
-      /**
-       * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
-       */
-      @Override
-      public String getText( final Object element )
-      {
-        return comboEntries.get( element );
-      }
-    };
+    final LabelProvider lp = createLabelProvider();
 
     m_comboBoxCellEditor = new ComboModifierCellEditor( parent, SWT.READ_ONLY | SWT.DROP_DOWN )
     {
@@ -150,9 +137,25 @@ public class ComboModifier implements IFeatureModifier
 
     m_comboBoxCellEditor.setActivationStyle( ComboBoxViewerCellEditor.DROP_DOWN_ON_MOUSE_ACTIVATION | ComboBoxViewerCellEditor.DROP_DOWN_ON_KEY_ACTIVATION
         | ComboBoxViewerCellEditor.DROP_DOWN_ON_PROGRAMMATIC_ACTIVATION | ComboBoxViewerCellEditor.DROP_DOWN_ON_TRAVERSE_ACTIVATION );
-    m_comboBoxCellEditor.setContenProvider( cp );
+    m_comboBoxCellEditor.setContenProvider( new ArrayContentProvider() );
     m_comboBoxCellEditor.setLabelProvider( lp );
     return m_comboBoxCellEditor;
+  }
+
+  protected LabelProvider createLabelProvider( )
+  {
+    final Map<Object, String> comboEntries = m_comboEntries;
+    return new LabelProvider()
+    {
+      /**
+       * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
+       */
+      @Override
+      public String getText( final Object element )
+      {
+        return comboEntries.get( element );
+      }
+    };
   }
 
   /**
