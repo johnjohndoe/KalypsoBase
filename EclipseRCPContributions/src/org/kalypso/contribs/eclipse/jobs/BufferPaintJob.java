@@ -93,15 +93,17 @@ public class BufferPaintJob extends Job
   /**
    * Cancels the job and releases the buffered image.
    */
-  public synchronized void dispose( )
+  public void dispose( )
   {
-  //  System.out.println("Dispose paint job");
     cancel();
 
-    if( m_image != null )
+    synchronized( this )
     {
-      m_imageCache.release( m_image );
-      m_image = null;
+      if( m_image != null )
+      {
+        m_imageCache.release( m_image );
+        m_image = null;
+      }
     }
   }
 
@@ -126,7 +128,7 @@ public class BufferPaintJob extends Job
   @Override
   public IStatus run( final IProgressMonitor monitor )
   {
-   // System.out.println("Paint job running");
+    // System.out.println("Paint job running");
 
     if( m_paintable == null )
     {
@@ -149,7 +151,7 @@ public class BufferPaintJob extends Job
         // just return without comment
         if( gr == null )
         {
-      //    System.out.println("BufferPaintJob: image was null");
+          //    System.out.println("BufferPaintJob: image was null");
           return Status.OK_STATUS;
         }
 
