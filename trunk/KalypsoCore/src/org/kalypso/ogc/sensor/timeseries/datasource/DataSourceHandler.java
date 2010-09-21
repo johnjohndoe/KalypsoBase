@@ -148,6 +148,11 @@ public class DataSourceHandler
   {
     final String header = MetadataHelper.getCountedHeaderItem( IDataSourceItem.MD_DATA_SOURCE_ITEM, pos );
     final String source = m_metadata.getProperty( header );
+
+    // TODO: check, what to do in this case?
+    if( source == null )
+      return null;
+
     if( containsFilter( source ) )
     {
       final String[] parts = source.split( "\\?" );
