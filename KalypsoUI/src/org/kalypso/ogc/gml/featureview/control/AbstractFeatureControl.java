@@ -42,9 +42,12 @@ package org.kalypso.ogc.gml.featureview.control;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.jface.util.SafeRunnable;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
@@ -55,6 +58,8 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public abstract class AbstractFeatureControl implements IFeatureControl
 {
+  private final List<ModifyListener> m_listeners = new ArrayList<ModifyListener>( 5 );
+
   private Feature m_feature;
 
   private final IPropertyType m_ftp;
@@ -99,6 +104,31 @@ public abstract class AbstractFeatureControl implements IFeatureControl
   public IPropertyType getFeatureTypeProperty( )
   {
     return m_ftp;
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.featureview.IFeatureControl#addModifyListener(org.eclipse.swt.events.ModifyListener)
+   */
+  @Override
+  public void addModifyListener( final ModifyListener l )
+  {
+    m_listeners.add( l );
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.featureview.IFeatureControl#removeModifyListener(org.eclipse.swt.events.ModifyListener)
+   */
+  @Override
+  public void removeModifyListener( final ModifyListener l )
+  {
+    m_listeners.remove( l );
+  }
+
+  protected void fireModifyText( final ModifyEvent e )
+  {
+    final ModifyListener[] listeners = m_listeners.toArray( new ModifyListener[m_listeners.size()] );
+    for( final ModifyListener listener : listeners )
+      listener.modifyText( e );
   }
 
   /**

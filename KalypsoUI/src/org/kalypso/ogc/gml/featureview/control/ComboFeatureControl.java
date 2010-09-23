@@ -55,7 +55,6 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.jface.viewers.ViewerFilter;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -93,8 +92,6 @@ public class ComboFeatureControl extends AbstractFeatureControl
       comboSelected( (IStructuredSelection) event.getSelection() );
     }
   };
-
-  private final List<ModifyListener> m_listeners = new ArrayList<ModifyListener>( 5 );
 
   private ComboViewer m_comboViewer = null;
 
@@ -285,24 +282,6 @@ public class ComboFeatureControl extends AbstractFeatureControl
   {
     // a radio button is always valid
     return true;
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureControl#addModifyListener(org.eclipse.swt.events.ModifyListener)
-   */
-  @Override
-  public void addModifyListener( final ModifyListener l )
-  {
-    m_listeners.add( l );
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureControl#removeModifyListener(org.eclipse.swt.events.ModifyListener)
-   */
-  @Override
-  public void removeModifyListener( final ModifyListener l )
-  {
-    m_listeners.remove( l );
   }
 
   public static Feature[] collectReferencableFeatures( final GMLWorkspace localWorkspace, final Feature parentFeature, final IRelationType rt )
