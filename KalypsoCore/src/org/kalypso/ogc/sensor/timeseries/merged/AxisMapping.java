@@ -107,6 +107,8 @@ public class AxisMapping
 
   public int getDestinationIndex( final IAxis srcAxis )
   {
+    // FIXME: why do we use a set, if we make a linear search later? Use a specialized comparator on that set and use
+    // .contains()!
     final Set<Entry<IAxis, IAxis>> entries = m_mapping.entrySet();
     for( final Entry<IAxis, IAxis> entry : entries )
     {

@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,19 +36,18 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.timeseries.forecast;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter;
+import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.ogc.sensor.timeseries.merged.MergedObservation;
@@ -83,14 +82,18 @@ public class ForecastFilter extends AbstractObservationFilter
   @Override
   public ITupleModel getValues( final IRequest args ) throws SensorException
   {
-    final List<ObservationSource> sources = new ArrayList<ObservationSource>();
+    final ObservationSource[] sources = new ObservationSource[m_observations.length];
     final DateRange daterange = TimeserieUtils.getDateRange( args );
-    for( final IObservation observation : m_observations )
-    {
-      sources.add( new ObservationSource( null, daterange, null, observation ) );
-    }
+    for( int i = 0; i < sources.length; i++ )
+      sources[i] = new ObservationSource( null, daterange, null, m_observations[i] );
 
-    final MergedObservation observation = new MergedObservation( getHref(), sources.toArray( new ObservationSource[] {} ) );
+    // FIXME: cannot work? The merging observation changes the metadata, but this filter just
+    // returns the metadata of its first observation!
+    // TODO: we should return this metadata instead of the first source metadata!
+    // TODO: test on a real testcase!
+    final MetadataList metadata = MergedObservation.getMetaData( sources );
+
+    final MergedObservation observation = new MergedObservation( getHref(), sources, metadata );
     return observation.getValues( args );
   }
 }

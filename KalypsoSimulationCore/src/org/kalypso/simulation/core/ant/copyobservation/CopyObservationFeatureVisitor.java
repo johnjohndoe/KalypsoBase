@@ -110,11 +110,16 @@ public class CopyObservationFeatureVisitor extends AbstractMonitoredFeatureVisit
       final URL targetLocation = UrlResolverSingleton.getDefault().resolveURL( m_target.getContext(), targetHref );
       final File targetFile = getTargetFile( targetLocation );
 
-      final MergedObservation result = new MergedObservation( targetLocation.toString(), sources );
+      // FIXME: check if this really works with the metadata + why do we need an extra call to CopyObservationHelper
+      // later?!
+      final MetadataList sourceMetadata = MergedObservation.getMetaData( sources );
+      // The MergedObservation than should be responsible to set the sources into this metadata
+      final MergedObservation result = new MergedObservation( targetLocation.toString(), sources, sourceMetadata );
 
       final MetadataList metadata = result.getMetadataList();
       updateMetaData( metadata, feature );
 
+      // FIXME: why does this not happen inside the MErgedObservation?!
       CopyObservationHelper.setCopyObservationSources( metadata, sources );
 
       final IRequest request = new ObservationRequest( m_target.getTargetDateRange() );
@@ -176,7 +181,6 @@ public class CopyObservationFeatureVisitor extends AbstractMonitoredFeatureVisit
 
   private void updateMetaData( final MetadataList metadata, final Feature feature )
   {
-
     for( final Entry<Object, Object> entry : m_metadata.entrySet() )
     {
       /* don't overwrite data source entries! */
