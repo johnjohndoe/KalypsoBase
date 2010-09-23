@@ -128,6 +128,16 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   }
 
   /**
+   * @see java.lang.Object#finalize()
+   */
+  @Override
+  protected void finalize( ) throws Throwable
+  {
+    dispose();
+    super.finalize();
+  }
+
+  /**
    * @see org.kalypsodeegree.model.feature.GMLWorkspace#getFeature(java.lang.String)
    */
   @Override
