@@ -702,8 +702,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
     {
       if( bufferPaintJob.getState() == Job.SLEEPING )
       {
-        // System.out.println("Paint job should wake up?");
-        bufferPaintJob.wakeUp( 100 );
+        bufferPaintJob.wakeUp( 0 );
         return;
       }
     }
