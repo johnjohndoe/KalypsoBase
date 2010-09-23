@@ -913,7 +913,7 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
 
       final Object object = modifier.parseInput( feature, value );
       final Object oldValue = modifier.getValue( feature );
-      if( oldValue != null && oldValue.equals( value ) )
+      if( oldValue != null && oldValue.equals( object ) )
         return;
 
       // dialogs may return FeatureChange objects (doemming)

@@ -127,7 +127,6 @@ public class MergeObservationWorker implements ICoreRunnableWithProgress
     m_strategy = strategy;
 
     Arrays.sort( m_sources, COMPARATOR );
-
   }
 
   /**
@@ -180,10 +179,12 @@ public class MergeObservationWorker implements ICoreRunnableWithProgress
 
   /**
    * w/q tables of wiski time series will be generated on the fly (getValue() - the table is daterange related) - so
-   * update our loacl w/q table with each request base observation
+   * update our local w/q table with each request base observation
    */
   private void updateWqTable( )
   {
+    // FIXME: this code does not belong here...
+
     final String wqTable = MetadataHelper.getWqTable( m_metadata );
     if( wqTable == null )
     {
@@ -199,6 +200,10 @@ public class MergeObservationWorker implements ICoreRunnableWithProgress
       }
     }
   }
+
+  // FIXME: source metadata: we need actually two strategies for the source identifiers:
+  // 1) inherit sources from the source-observations
+  // 2) just set the two source-observations as sources
 
   private Object[][] getFromSourceData( final IObservation srcObservation, final ITupleModel srcModel ) throws SensorException
   {
@@ -217,7 +222,7 @@ public class MergeObservationWorker implements ICoreRunnableWithProgress
         if( !m_strategy.process( srcModel, index, srcAxes ) )
           continue;
 
-        final Object[] values = new Object[srcAxes.length];
+        final Object[] values = new Object[m_axes.length];
 
         for( final IAxis srcAxis : srcAxes )
         {

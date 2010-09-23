@@ -40,7 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.timeseries.merged;
 
-import org.apache.commons.lang.ArrayUtils;
+import java.util.ArrayList;
+import java.util.Collection;
+
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -59,25 +61,17 @@ import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHandler;
  */
 public class MergedObservation extends AbstractObservationDecorator implements IObservation
 {
-
-  public MergedObservation( final String href, final ObservationSource[] sources )
+  /**
+   * @deprecated For backwards compability only: used to create the metadata of the merged observation, usually a copy
+   *             of the first source-observation. Instead, this decision (which metadata to use) should be made outside
+   *             of this class.
+   */
+  @Deprecated
+  public static MetadataList getMetaData( final ObservationSource[] sources )
   {
-    super( merge( href, sources ) );
-  }
+    // FIXME: instead, we should get an metadata template from outside,
+    // it is not possible to decide here which metadata to use!
 
-  private static IObservation merge( final String href, final ObservationSource[] sources )
-  {
-    final IAxis[] axes = getAxisList( sources );
-    final MetadataList metadata = getMetaData( sources );
-
-    final MergeObservationWorker worker = new MergeObservationWorker( href, sources, axes, metadata );
-    worker.execute( new NullProgressMonitor() );
-
-    return worker.getObservation();
-  }
-
-  private static MetadataList getMetaData( final ObservationSource[] sources )
-  {
     for( final ObservationSource source : sources )
     {
       // *grmml* first model defines axes of result model?
@@ -94,20 +88,48 @@ public class MergedObservation extends AbstractObservationDecorator implements I
     return new MetadataList();
   }
 
+  /**
+   * @param metadata
+   *          The metadata for this new observation. During merge process, all data-source information will be cleared
+   *          and replaced by the new data source information.
+   */
+  public MergedObservation( final String href, final ObservationSource[] sources, final MetadataList metadata )
+  {
+    super( merge( href, sources, metadata ) );
+  }
+
+  private static IObservation merge( final String href, final ObservationSource[] sources, final MetadataList metadata )
+  {
+    final IAxis[] axes = getAxisList( sources );
+
+    final MergeObservationWorker worker = new MergeObservationWorker( href, sources, axes, metadata );
+    worker.execute( new NullProgressMonitor() );
+
+    return worker.getObservation();
+  }
+
   private static IAxis[] getAxisList( final ObservationSource[] sources )
   {
     for( final ObservationSource source : sources )
     {
       // *grmml* first model defines axes of result model?
       final IObservation observation = source.getObservation();
+      final Collection<IAxis> resultAxes = new ArrayList<IAxis>();
+
       final IAxis[] axes = observation.getAxisList();
+      for( final IAxis axis : axes )
+      {
+        if( axis.isPersistable() )
+          resultAxes.add( axis );
+      }
+
       if( AxisUtils.findDataSourceAxis( axes ) == null )
       {
         final DefaultAxis dataSourceAxis = new DefaultAxis( ITimeseriesConstants.TYPE_DATA_SRC, ITimeseriesConstants.TYPE_DATA_SRC, "", Integer.class, false );
-        return (IAxis[]) ArrayUtils.add( axes, dataSourceAxis );
+        resultAxes.add( dataSourceAxis );
       }
 
-      return axes;
+      return resultAxes.toArray( new IAxis[resultAxes.size()] );
     }
 
     return new IAxis[] {};
