@@ -47,6 +47,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -743,6 +744,10 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
       columnType.setWidth( tc.getWidth() );
       columnType.setAlignment( "" + tc.getStyle() ); //$NON-NLS-1$
       columnType.setFormat( (String) tc.getData( COLUMN_PROP_FORMAT ) );
+
+      final String modifiderID = (String) tc.getData( COLUMN_PROP_MODIFIER );
+      if( !StringUtils.isBlank( modifiderID ) )
+        columnType.setModifier( modifiderID );
 
       columns.add( columnType );
     }
