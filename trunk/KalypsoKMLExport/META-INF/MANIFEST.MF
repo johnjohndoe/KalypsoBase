@@ -12,3 +12,5 @@ Bundle-ActivationPolicy: lazy
 Bundle-Activator: org.kalypso.kml.export.KalypsoKMLPlugin
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Vendor: kalypsobase.sourceforge.net
+Bundle-ClassPath: lib/JavaApiForKML/2010_01/JavaAPIforKml.jar,
+ .

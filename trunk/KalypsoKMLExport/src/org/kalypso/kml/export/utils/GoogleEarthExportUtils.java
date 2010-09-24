@@ -3,15 +3,10 @@
  */
 package org.kalypso.kml.export.utils;
 
-import net.opengis.kml.ObjectFactory;
-import net.opengis.kml.StyleType;
-
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
-import org.kalypsodeegree.graphics.sld.LineSymbolizer;
-import org.kalypsodeegree.graphics.sld.PointSymbolizer;
-import org.kalypsodeegree.graphics.sld.PolygonSymbolizer;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
-import org.kalypsodeegree.graphics.sld.TextSymbolizer;
+
+import de.micromata.opengis.kml.v_2_2_0.Style;
 
 /**
  * @author Dirk Kuch
@@ -25,24 +20,15 @@ public class GoogleEarthExportUtils
    * @return
    * @throws FilterEvaluationException
    */
-  public static StyleType getStyleType( final ObjectFactory factory, final Symbolizer symbolizer ) throws FilterEvaluationException
+  public static boolean updateStyle( final Style style, final Symbolizer symbolizer ) throws FilterEvaluationException
   {
-    final StyleTypeFactory styleFactory = StyleTypeFactory.getStyleFactory( factory );
-
-    if( symbolizer instanceof PointSymbolizer )
-      return styleFactory.getPointSymbolizer( (PointSymbolizer) symbolizer );
-    else if( symbolizer instanceof LineSymbolizer )
-      return styleFactory.getLineSymbolizer( (LineSymbolizer) symbolizer );
-    else if( symbolizer instanceof PolygonSymbolizer )
-      return styleFactory.getPolygonSymbolizer( (PolygonSymbolizer) symbolizer );
-    else if( symbolizer instanceof TextSymbolizer )
-      return null;
-
-    return null;
     // FIXME
-// throw (new NotImplementedException());
+
+    return true;
+// if( symbolizer instanceof PointSymbolizer )
+// else if( symbolizer instanceof LineSymbolizer )
+// else if( symbolizer instanceof PolygonSymbolizer )
+// else if( symbolizer instanceof TextSymbolizer )
   }
-
-
 
 }

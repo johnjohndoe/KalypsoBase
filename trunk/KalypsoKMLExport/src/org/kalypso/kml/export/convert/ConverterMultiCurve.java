@@ -3,16 +3,11 @@
  */
 package org.kalypso.kml.export.convert;
 
-import java.util.List;
-
-import javax.xml.bind.JAXBElement;
-
-import net.opengis.kml.AbstractGeometryType;
-import net.opengis.kml.MultiGeometryType;
-import net.opengis.kml.ObjectFactory;
-
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_MultiCurve;
+
+import de.micromata.opengis.kml.v_2_2_0.LineString;
+import de.micromata.opengis.kml.v_2_2_0.MultiGeometry;
 
 /**
  * @author Dirk Kuch
@@ -27,16 +22,17 @@ public class ConverterMultiCurve
    * @return
    * @throws Exception
    */
-  public static MultiGeometryType convert( final ObjectFactory factory, final GM_MultiCurve multiCurve ) throws Exception
+  public static MultiGeometry convert( final GM_MultiCurve multiCurve ) throws Exception
   {
-    final MultiGeometryType multiGeometryType = factory.createMultiGeometryType();
+    final MultiGeometry multiGeometry = new MultiGeometry();
 
-    final List<JAXBElement< ? extends AbstractGeometryType>> geometries = multiGeometryType.getAbstractGeometryGroup();
     final GM_Curve[] curves = multiCurve.getAllCurves();
     for( final GM_Curve curve : curves )
-      geometries.add( factory.createLineString( ConverterCurve.convert( factory, curve ) ) );
+    {
+      final LineString lineString = ConverterCurve.convert( curve );
+      multiGeometry.addToGeometry( lineString );
+    }
 
-    return multiGeometryType;
+    return multiGeometry;
   }
-
 }
