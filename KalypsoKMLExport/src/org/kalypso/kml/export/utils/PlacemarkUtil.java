@@ -3,22 +3,20 @@ package org.kalypso.kml.export.utils;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.bind.JAXBElement;
-
-import net.opengis.kml.AbstractFeatureType;
-import net.opengis.kml.FolderType;
-import net.opengis.kml.ObjectFactory;
-import net.opengis.kml.PlacemarkType;
-import net.opengis.kml.PointType;
-
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.kml.export.KalypsoKMLPlugin;
 import org.kalypso.kml.export.Messages;
 import org.kalypso.kml.export.interfaces.IKMLAdapter;
 import org.kalypso.kml.export.interfaces.IPlacemark;
 
+import de.micromata.opengis.kml.v_2_2_0.Folder;
+import de.micromata.opengis.kml.v_2_2_0.Placemark;
+import de.micromata.opengis.kml.v_2_2_0.Point;
+
 public class PlacemarkUtil
 {
 
-  public static void addAdditional( final FolderType base, final IKMLAdapter[] provider, final ObjectFactory googleEarthFactory )
+  public static void addAdditional( final Folder base, final IKMLAdapter[] provider )
   {
     /* add additional place marks and clean up providers */
     final List<IPlacemark> placemarks = new ArrayList<IPlacemark>();
@@ -34,35 +32,25 @@ public class PlacemarkUtil
     }
 
     // add additional layer
-    final FolderType folderType = googleEarthFactory.createFolderType();
-    folderType.setName( Messages.PlacemarkUtil_0 );
-
-    final List<JAXBElement< ? extends AbstractFeatureType>> myFeatures = folderType.getAbstractFeatureGroup();
+    final Folder folder = base.createAndAddFolder();
+    folder.setName( Messages.PlacemarkUtil_0 );
 
     for( final IPlacemark placemark : placemarks )
     {
       try
       {
-        final PlacemarkType placemarkType = googleEarthFactory.createPlacemarkType();
-        placemarkType.setName( placemark.getName() );
-        placemarkType.setDescription( placemark.getDescription() );
+        final Placemark kmlPlaceMark = folder.createAndAddPlacemark();
+        kmlPlaceMark.setName( placemark.getName() );
+        kmlPlaceMark.setDescription( placemark.getDescription() );
 
-        final PointType point = googleEarthFactory.createPointType();
-        final List<String> coordinates = point.getCoordinates();
-        coordinates.add( placemark.getX( GoogleEarthUtils.GOOGLE_EARTH_CS ) + "," + placemark.getY( GoogleEarthUtils.GOOGLE_EARTH_CS ) ); //$NON-NLS-1$
-        placemarkType.setAbstractGeometryGroup( googleEarthFactory.createPoint( point ) );
-
-        myFeatures.add( googleEarthFactory.createPlacemark( placemarkType ) );
+        final Point point = new Point();
+        point.addToCoordinates( placemark.getX( GoogleEarthUtils.GOOGLE_EARTH_CS ), placemark.getY( GoogleEarthUtils.GOOGLE_EARTH_CS ) );
       }
       catch( final Exception e )
       {
-        e.printStackTrace();
+        KalypsoKMLPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
       }
 
     }
-
-    // add to base
-    final List<JAXBElement< ? extends AbstractFeatureType>> features = base.getAbstractFeatureGroup();
-    features.add( 0, googleEarthFactory.createFolder( folderType ) );
   }
 }

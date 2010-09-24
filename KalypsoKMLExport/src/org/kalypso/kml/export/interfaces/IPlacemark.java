@@ -6,8 +6,8 @@ public interface IPlacemark
 
   String getDescription( );
 
-  String getX( String targetCRS ) throws Exception;
+  Double getX( String targetCRS ) throws Exception;
 
-  String getY( String targetCRS ) throws Exception;
+  Double getY( String targetCRS ) throws Exception;
 
 }

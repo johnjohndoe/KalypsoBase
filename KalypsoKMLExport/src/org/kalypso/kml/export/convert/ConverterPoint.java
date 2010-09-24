@@ -3,41 +3,28 @@
  */
 package org.kalypso.kml.export.convert;
 
-import java.util.List;
-import java.util.Locale;
-
-import net.opengis.kml.ObjectFactory;
-import net.opengis.kml.PointType;
-
 import org.kalypso.kml.export.utils.GoogleEarthUtils;
 import org.kalypso.transformation.transformer.GeoTransformerFactory;
 import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypsodeegree.model.geometry.GM_Point;
+
+import de.micromata.opengis.kml.v_2_2_0.Point;
 
 /**
  * @author Dirk Kuch
  */
 public class ConverterPoint
 {
-
-  /**
-   * @param factory
-   * @param gmo
-   * @param style
-   * @return
-   * @throws Exception
-   */
-  public static PointType convert( final ObjectFactory factory, final GM_Point gmo ) throws Exception
+  public static Point convert( final GM_Point gmo ) throws Exception
   {
-    final PointType pointType = factory.createPointType();
+    final Point point = new Point();
 
     final IGeoTransformer transformer = GeoTransformerFactory.getGeoTransformer( GoogleEarthUtils.GOOGLE_EARTH_CS );
     final GM_Point kmlPoint = (GM_Point) transformer.transform( gmo );
 
-    final List<String> coordinates = pointType.getCoordinates();
-    coordinates.add( String.format( Locale.ENGLISH, "%f,%f", kmlPoint.getX(), kmlPoint.getY() ) ); //$NON-NLS-1$
+    point.addToCoordinates( kmlPoint.getX(), kmlPoint.getY() );
 
-    return pointType;
+    return point;
   }
 
 }

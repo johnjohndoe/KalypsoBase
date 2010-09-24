@@ -4,12 +4,6 @@
 package org.kalypso.kml.export.convert;
 
 import java.util.List;
-import java.util.Locale;
-
-import net.opengis.kml.BoundaryType;
-import net.opengis.kml.LinearRingType;
-import net.opengis.kml.ObjectFactory;
-import net.opengis.kml.PolygonType;
 
 import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.kml.export.utils.GoogleEarthUtils;
@@ -20,6 +14,10 @@ import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+
+import de.micromata.opengis.kml.v_2_2_0.Boundary;
+import de.micromata.opengis.kml.v_2_2_0.LinearRing;
+import de.micromata.opengis.kml.v_2_2_0.Polygon;
 
 /**
  * @author Dirk Kuch
@@ -33,7 +31,7 @@ public class ConverterSurface
    * @param style
    * @throws Exception
    */
-  public static PolygonType convert( final ObjectFactory factory, final GM_Surface< ? > gmo ) throws Exception
+  public static Polygon convert( final GM_Surface< ? > gmo ) throws Exception
   {
     /* handling of multigeometries not implemented at the moment */
     if( gmo.size() > 1 )
@@ -43,7 +41,7 @@ public class ConverterSurface
 
     for( int i = 0; i < gmo.size(); i++ )
     {
-      final PolygonType polygoneType = factory.createPolygonType();
+      final Polygon polygoneType = new Polygon();
 
       final Object object = gmo.get( i );
       if( !(object instanceof GM_Polygon) )
@@ -52,42 +50,40 @@ public class ConverterSurface
       final GM_Polygon polygon = (GM_Polygon) object;
 
       /* set outer boundary */
-      final BoundaryType outerBoundary = factory.createBoundaryType();
-      final LinearRingType outerLinearRing = factory.createLinearRingType();
-      final GM_Position[] exteriorRing = polygon.getExteriorRing();
 
-      final List<String> outerCoord = outerLinearRing.getCoordinates();
+      final LinearRing outerRing = new LinearRing();
+      final GM_Position[] exteriorRing = polygon.getExteriorRing();
 
       for( final GM_Position position : exteriorRing )
       {
         final GM_Point point = GeometryFactory.createGM_Point( position, gmo.getCoordinateSystem() );
         final GM_Point kmlPoint = (GM_Point) transformer.transform( point );
 
-        outerCoord.add( String.format( Locale.ENGLISH, "%f,%f", kmlPoint.getX(), kmlPoint.getY() ) ); //$NON-NLS-1$
+        outerRing.addToCoordinates( kmlPoint.getX(), kmlPoint.getY() );
       }
 
-      outerBoundary.setLinearRing( outerLinearRing );
+      final Boundary outerBoundary = new Boundary();
+      outerBoundary.setLinearRing( outerRing );
       polygoneType.setOuterBoundaryIs( outerBoundary );
 
       // get inner boundaries
-      final List<BoundaryType> innerBoundaries = polygoneType.getInnerBoundaryIs();
+      final List<Boundary> innerBoundaries = polygoneType.getInnerBoundaryIs();
 
       final GM_Position[][] interiorRings = polygon.getInteriorRings();
       for( final GM_Position[] innerRing : interiorRings )
       {
-        final BoundaryType innerBoundary = factory.createBoundaryType();
-        final LinearRingType innerLinearRing = factory.createLinearRingType();
 
-        final List<String> innerCoords = innerLinearRing.getCoordinates();
+        final LinearRing innerLinearRing = new LinearRing();
 
         for( final GM_Position position : innerRing )
         {
           final GM_Point point = GeometryFactory.createGM_Point( position, gmo.getCoordinateSystem() );
           final GM_Point kmlPoint = (GM_Point) transformer.transform( point );
 
-          innerCoords.add( String.format( Locale.ENGLISH, "%f,%f", kmlPoint.getX(), kmlPoint.getY() ) ); //$NON-NLS-1$
+          innerLinearRing.addToCoordinates( kmlPoint.getX(), kmlPoint.getY() );
         }
 
+        final Boundary innerBoundary = new Boundary();
         innerBoundary.setLinearRing( innerLinearRing );
         innerBoundaries.add( innerBoundary );
       }
