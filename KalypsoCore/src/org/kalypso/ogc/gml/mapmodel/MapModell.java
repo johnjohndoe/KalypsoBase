@@ -62,7 +62,7 @@ import org.kalypso.ogc.gml.IKalypsoCascadingTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.IKalypsoThemeListener;
 import org.kalypso.ogc.gml.KalypsoThemeAdapter;
-import org.kalypso.ogc.gml.mapmodel.visitor.ThemeVisiblePredicate;
+import org.kalypso.ogc.gml.mapmodel.visitor.ThemeUsedForMaxExtentPredicate;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -410,7 +410,7 @@ public class MapModell implements IMapModell
   public GM_Envelope getFullExtentBoundingBox( )
   {
     final IKalypsoTheme[] themes = getAllThemes();
-    return MapModellHelper.calculateExtent( themes, new ThemeVisiblePredicate() );
+    return MapModellHelper.calculateExtent( themes, new ThemeUsedForMaxExtentPredicate() );
   }
 
   /**
