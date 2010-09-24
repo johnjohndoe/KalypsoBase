@@ -588,6 +588,9 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
   {
     synchronized( this )
     {
+      if( m_boundingBox == null )
+        setBoundingBox( m_wishBBox, false, false );
+
       /* Cancel old job if still running. */
       if( m_bufferPaintJob != null )
       {
@@ -620,7 +623,6 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
 
       m_bufferPaintJob = bufferPaintJob;
       // delay the Schedule, so if another invalidate comes within that time-span, no repaint happens at all
-      // System.out.println("Reschedule paint job");
       bufferPaintJob.schedule( 100 );
     }
 

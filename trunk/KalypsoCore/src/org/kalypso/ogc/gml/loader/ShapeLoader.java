@@ -151,6 +151,7 @@ public class ShapeLoader extends WorkspaceLoader
       final String sourceCrs = ShapeSerializer.loadCrs( prjURL, sourceSrs );
       final String targetCRS = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
 
+      // FIXME: we also need to specify the shape charset
       final GMLWorkspace gmlWorkspace = ShapeSerializer.deserialize( sourceFile.getAbsolutePath(), sourceCrs, moni.newChild( 70, SubMonitor.SUPPRESS_BEGINTASK ) );
       final CommandableWorkspace workspace = new CommandableWorkspace( gmlWorkspace );
 

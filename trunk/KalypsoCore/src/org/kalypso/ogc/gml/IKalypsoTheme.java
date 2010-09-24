@@ -63,12 +63,18 @@ public interface IKalypsoTheme extends IAdaptable
   /**
    * Name of the property which determines if the user is allowed to deleted this theme.
    */
-  final static String PROPERTY_DELETEABLE = "deleteable"; //$NON-NLS-1$
+  String PROPERTY_DELETEABLE = "deleteable"; //$NON-NLS-1$
 
   /**
    * Name of the property which determines the id of the IKalypsoThemeInfo for this theme.
    */
-  final static String PROPERTY_THEME_INFO_ID = "themeInfoId"; //$NON-NLS-1$
+  String PROPERTY_THEME_INFO_ID = "themeInfoId"; //$NON-NLS-1$
+
+  /**
+   * If this property is set to false, the theme will not be used to calculate the maximal extent of a map.<br/>
+   * This property is <code>true</code> by default.
+   */
+  String PROPERTY_USE_IN_FULL_EXTENT = "useForFullExtent"; //$NON-NLS-1$
 
   /**
    * * Adds a listener to the list of listeners. Has no effect if the same listeners is already registered.
