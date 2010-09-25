@@ -43,7 +43,11 @@ package org.kalypso.model.wspm.ui.product;
 import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
+import org.eclipse.ui.wizards.newresource.BasicNewFileResourceWizard;
+import org.eclipse.ui.wizards.newresource.BasicNewFolderResourceWizard;
 import org.kalypso.featureview.views.FeatureView;
+import org.kalypso.ui.createGisMapView.CreateGisMapViewWizard;
+import org.kalypso.ui.wizard.NewGMLFileWizard;
 
 /**
  * @author Gernot
@@ -68,14 +72,18 @@ public class WspmPerspectiveFactory implements IPerspectiveFactory
    * @param layout
    *          The layout we are filling
    */
-  public void defineActions( final IPageLayout layout )
+  private void defineActions( final IPageLayout layout )
   {
     // Add "new wizards".
-//    layout.addNewWizardShortcut( "org.eclipse.ui.wizards.new.folder" );//$NON-NLS-1$
-//    layout.addNewWizardShortcut( "org.eclipse.ui.wizards.new.file" );//$NON-NLS-1$
+    layout.addNewWizardShortcut( BasicNewFolderResourceWizard.WIZARD_ID );
+    layout.addNewWizardShortcut( BasicNewFileResourceWizard.WIZARD_ID );
+    layout.addNewWizardShortcut( NewGMLFileWizard.WIZARD_ID );
+    layout.addNewWizardShortcut( CreateGisMapViewWizard.WIZARD_ID );
 
     // Add "show views".
-    layout.addShowViewShortcut( IPageLayout.ID_RES_NAV );
+    layout.addPerspectiveShortcut( ProfileManagerPerspective.ID );
+
+    layout.addShowViewShortcut( IPageLayout.ID_PROJECT_EXPLORER );
     layout.addShowViewShortcut( IPageLayout.ID_OUTLINE );
 
     layout.addShowViewShortcut( FeatureView.ID );
@@ -87,14 +95,15 @@ public class WspmPerspectiveFactory implements IPerspectiveFactory
    * @param layout
    *          The layout we are filling
    */
-  public void defineLayout( final IPageLayout layout )
+  private void defineLayout( final IPageLayout layout )
   {
     // Editors are placed for free.
     final String editorArea = layout.getEditorArea();
 
     // Top left.
     final IFolderLayout topLeft = layout.createFolder( "topLeft", IPageLayout.LEFT, (float) 0.26, editorArea );//$NON-NLS-1$
-    topLeft.addView( IPageLayout.ID_RES_NAV );
+    topLeft.addView( IPageLayout.ID_PROJECT_EXPLORER );
+    topLeft.addPlaceholder( IPageLayout.ID_RES_NAV );
 
     // Bottom left.
     final IFolderLayout bottomLeft = layout.createFolder( "bottomLeft", IPageLayout.BOTTOM, (float) 0.50,//$NON-NLS-1$
