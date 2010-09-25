@@ -64,18 +64,20 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.dialogs.WizardNewFileCreationPage;
 import org.eclipse.ui.ide.IDE;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
  * @author Gernot
  */
 public class NewGMLFileWizard extends Wizard implements INewWizard
 {
+  public static final String WIZARD_ID = "org.kalypso.ui.wizard.NewGMLFileWizard";
+
   private GMLSchemaSelectionPage m_schemaSelectionPage;
 
   private FeatureTypeSelectionPage m_featureTypeSelectionPage;
@@ -89,6 +91,7 @@ public class NewGMLFileWizard extends Wizard implements INewWizard
   public NewGMLFileWizard( )
   {
     setNeedsProgressMonitor( true );
+    setHelpAvailable( false );
 
     setWindowTitle( Messages.getString("org.kalypso.ui.wizard.NewGMLFileWizard.0") ); //$NON-NLS-1$
   }
@@ -114,7 +117,7 @@ public class NewGMLFileWizard extends Wizard implements INewWizard
         final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
         final IResource resource = root.findMember( containerName );
         if( !resource.exists() || !(resource instanceof IContainer) )
-          return StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.ui.wizard.NewGMLFileWizard.2", containerName ) ); //$NON-NLS-1$
+          return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), Messages.getString( "org.kalypso.ui.wizard.NewGMLFileWizard.2", containerName ) ); //$NON-NLS-1$ 
 
         final IContainer container = (IContainer) resource;
         final IFile file = container.getFile( new Path( fileName ) );
@@ -179,7 +182,7 @@ public class NewGMLFileWizard extends Wizard implements INewWizard
     schemaSelectionPage.getSelectionProvider().addSelectionChangedListener( new ISelectionChangedListener()
     {
       @Override
-      public void selectionChanged( SelectionChangedEvent event )
+      public void selectionChanged( final SelectionChangedEvent event )
       {
         final String namespace = schemaSelectionPage.getNamespace();
         featureTypeSelectionPage.setNamespace( namespace );

@@ -39,6 +39,7 @@ import org.kalypso.ui.i18n.Messages;
 
 public class CreateGisMapViewWizard extends Wizard implements INewWizard
 {
+  public final static String WIZARD_ID = "org.kalypso.ui.createGisMapView.CreateGisMapViewWizard";
 
   private CreateGisMapViewWizardPage page;
 
@@ -65,16 +66,16 @@ public class CreateGisMapViewWizard extends Wizard implements INewWizard
   {
     final String containerName = page.getContainerName();
     final String fileName = page.getFileName();
-    IRunnableWithProgress op = new IRunnableWithProgress()
+    final IRunnableWithProgress op = new IRunnableWithProgress()
     {
       @Override
-      public void run( IProgressMonitor monitor ) throws InvocationTargetException
+      public void run( final IProgressMonitor monitor ) throws InvocationTargetException
       {
         try
         {
           doFinish( containerName, fileName, monitor );
         }
-        catch( CoreException e )
+        catch( final CoreException e )
         {
           throw new InvocationTargetException( e );
         }
@@ -88,44 +89,44 @@ public class CreateGisMapViewWizard extends Wizard implements INewWizard
     {
       getContainer().run( true, false, op );
     }
-    catch( InterruptedException e )
+    catch( final InterruptedException e )
     {
       return false;
     }
-    catch( InvocationTargetException e )
+    catch( final InvocationTargetException e )
     {
-      Throwable realException = e.getTargetException();
+      final Throwable realException = e.getTargetException();
       MessageDialog.openError( getShell(), Messages.getString("org.kalypso.ui.createGisMapView.CreateGisMapViewWizard.0"), realException.getMessage() ); //$NON-NLS-1$
       return false;
     }
     return true;
   }
 
-  void doFinish( String containerName, String fileName, IProgressMonitor monitor ) throws CoreException
+  void doFinish( final String containerName, final String fileName, final IProgressMonitor monitor ) throws CoreException
   {
     monitor.beginTask( Messages.getString("org.kalypso.ui.createGisMapView.CreateGisMapViewWizard.1") + fileName, 2 ); //$NON-NLS-1$
-    IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-    IResource resource = root.findMember( new Path( containerName ) );
+    final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+    final IResource resource = root.findMember( new Path( containerName ) );
     if( !resource.exists() || !(resource instanceof IContainer) )
     {
       throwCoreException( Messages.getString("org.kalypso.ui.createGisMapView.CreateGisMapViewWizard.2", containerName )); //$NON-NLS-1$
     }
-    IContainer container = (IContainer) resource;
+    final IContainer container = (IContainer) resource;
     final IFile file = container.getFile( new Path( fileName ) );
     try
     {
-      InputStream stream = openContentStream();
+      final InputStream stream = openContentStream();
       if( !file.exists() )
       {
         file.create( stream, true, monitor );
       }
       stream.close();
     }
-    catch( IOException e )
+    catch( final IOException e )
     {
       e.printStackTrace();
     }
-    catch( JAXBException e )
+    catch( final JAXBException e )
     {
       e.printStackTrace();
     }
@@ -136,12 +137,12 @@ public class CreateGisMapViewWizard extends Wizard implements INewWizard
       @Override
       public void run( )
       {
-        IWorkbenchPage workbenchPage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+        final IWorkbenchPage workbenchPage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
         try
         {
           IDE.openEditor( workbenchPage, file, true );
         }
-        catch( PartInitException e )
+        catch( final PartInitException e )
         {
           e.printStackTrace();
         }
@@ -158,21 +159,21 @@ public class CreateGisMapViewWizard extends Wizard implements INewWizard
     final JAXBContext jc = JaxbUtilities.createQuiet( ObjectFactory.class );
     final Marshaller marshaller = JaxbUtilities.createMarshaller(jc);
     marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
-    StringWriter stringWriter = new StringWriter();
+    final StringWriter stringWriter = new StringWriter();
     marshaller.marshal( gismapview, stringWriter );
-    String contents = stringWriter.toString();
+    final String contents = stringWriter.toString();
     stringWriter.close();
     return new ByteArrayInputStream( contents.getBytes() );
   }
 
-  private void throwCoreException( String message ) throws CoreException
+  private void throwCoreException( final String message ) throws CoreException
   {
-    IStatus status = new Status( IStatus.ERROR, "org.kalypso.ui.createGisMapView", IStatus.OK, message, null ); //$NON-NLS-1$
+    final IStatus status = new Status( IStatus.ERROR, "org.kalypso.ui.createGisMapView", IStatus.OK, message, null ); //$NON-NLS-1$
     throw new CoreException( status );
   }
 
   @Override
-  public void init( IWorkbench workbench, IStructuredSelection selection )
+  public void init( final IWorkbench workbench, final IStructuredSelection selection )
   {
     m_selection = selection;
   }

@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,13 +36,16 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.perspectives;
 
 import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
+import org.eclipse.ui.wizards.newresource.BasicNewFileResourceWizard;
+import org.eclipse.ui.wizards.newresource.BasicNewFolderResourceWizard;
+import org.kalypso.ui.wizard.NewGMLFileWizard;
 
 /**
  * The perspective for the Kalypso Modeler.
@@ -52,12 +55,44 @@ import org.eclipse.ui.IPerspectiveFactory;
 public class ModelerPerspectiveFactory implements IPerspectiveFactory
 {
   public static final String ID = "org.kalypso.ui.perspectives.ModelerPerspectiveFactory"; //$NON-NLS-1$
-  
+
   /**
    * @see org.eclipse.ui.IPerspectiveFactory#createInitialLayout(org.eclipse.ui.IPageLayout)
    */
   @Override
   public void createInitialLayout( final IPageLayout layout )
+  {
+    defineActions( layout );
+    defineLayout( layout );
+  }
+
+  /**
+   * Defines the initial actions for a page.
+   * 
+   * @param layout
+   *          The layout we are filling
+   */
+  private void defineActions( final IPageLayout layout )
+  {
+    // Add "new wizards".
+    layout.addNewWizardShortcut( BasicNewFolderResourceWizard.WIZARD_ID );
+    layout.addNewWizardShortcut( BasicNewFileResourceWizard.WIZARD_ID );
+    layout.addNewWizardShortcut( NewGMLFileWizard.WIZARD_ID );
+
+    // Add "show views".
+    layout.addShowViewShortcut( IPageLayout.ID_RES_NAV );
+    layout.addShowViewShortcut( IPageLayout.ID_OUTLINE );
+
+    layout.addActionSet( "org.kalypso.simulation.ui.actionSet" ); //$NON-NLS-1$
+  }
+
+  /**
+   * Defines the initial layout for a page.
+   * 
+   * @param layout
+   *          The layout we are filling
+   */
+  private void defineLayout( final IPageLayout layout )
   {
     // Editors are placed for free.
     final String editorArea = layout.getEditorArea();
@@ -68,25 +103,8 @@ public class ModelerPerspectiveFactory implements IPerspectiveFactory
 
     // Bottom left.
     final IFolderLayout bottomLeft = layout.createFolder( "bottomLeft", IPageLayout.BOTTOM, (float) 0.50,//$NON-NLS-1$
-        "topLeft" );//$NON-NLS-1$
+    "topLeft" );//$NON-NLS-1$
     bottomLeft.addView( IPageLayout.ID_OUTLINE );
-
-    setContentsOfShowViewMenu( layout );
-
-    layout.addActionSet( "org.kalypso.simulation.ui.actionSet" ); //$NON-NLS-1$
-
-    layout.addNewWizardShortcut( "org.eclipse.ui.wizards.new.folder" );//$NON-NLS-1$
-    layout.addNewWizardShortcut( "org.eclipse.ui.wizards.new.file" );//$NON-NLS-1$
   }
 
-  /**
-   * Sets the initial contents of the "Show View" menu
-   * 
-   * @param layout
-   */
-  protected void setContentsOfShowViewMenu( final IPageLayout layout )
-  {
-    layout.addShowViewShortcut( IPageLayout.ID_RES_NAV );
-    layout.addShowViewShortcut( IPageLayout.ID_OUTLINE );
-  }
 }

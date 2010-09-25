@@ -80,10 +80,6 @@ public class FeatureTypeSelectionPage extends WizardPage implements ISelectionCh
 
   private String m_namespace;
 
-  private FeatureTypeLabelProvider m_featureTypeLabelProvider;
-
-  private ArrayContentProvider m_contentProvider;
-
   public FeatureTypeSelectionPage( )
   {
     super( "FeatureTypeSelectionPage", Messages.getString( "org.kalypso.ui.wizard.FeatureTypeSelectionPage.1" ), null ); //$NON-NLS-1$ //$NON-NLS-2$
@@ -98,16 +94,19 @@ public class FeatureTypeSelectionPage extends WizardPage implements ISelectionCh
   @Override
   public void createControl( final Composite parent )
   {
-    m_viewer = new ListViewer( parent, SWT.SINGLE | SWT.V_SCROLL | SWT.H_SCROLL );
-    m_contentProvider = new ArrayContentProvider();
-    m_viewer.setContentProvider( m_contentProvider );
-    m_featureTypeLabelProvider = new FeatureTypeLabelProvider( IAnnotation.ANNO_NAME );
-    m_viewer.setLabelProvider( m_featureTypeLabelProvider );
-    final ViewerSorter sorter = new ViewerSorter();
-    m_viewer.setSorter( sorter );
+    m_viewer = new ListViewer( parent, SWT.SINGLE | SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER );
+
+    m_viewer.setContentProvider( new ArrayContentProvider() );
+    m_viewer.setLabelProvider( new FeatureTypeLabelProvider( IAnnotation.ANNO_NAME ) );
+    m_viewer.setSorter( new ViewerSorter() );
+
     final List list = m_viewer.getList();
-    list.setLayoutData( new GridData( GridData.FILL_BOTH ) );
+    final GridData listData = new GridData( SWT.FILL, SWT.FILL, true, true );
+    listData.heightHint = 300;
+    list.setLayoutData( listData );
+
     setControl( list );
+
     m_viewer.addSelectionChangedListener( this );
 
     m_viewer.addFilter( new ViewerFilter()
@@ -120,18 +119,6 @@ public class FeatureTypeSelectionPage extends WizardPage implements ISelectionCh
     } );
 
     update();
-  }
-
-  /**
-   * @see org.eclipse.jface.dialogs.DialogPage#dispose()
-   */
-  @Override
-  public void dispose( )
-  {
-    m_featureTypeLabelProvider.dispose();
-    m_contentProvider.dispose();
-
-    super.dispose();
   }
 
   public void setNamespace( final String namespace )

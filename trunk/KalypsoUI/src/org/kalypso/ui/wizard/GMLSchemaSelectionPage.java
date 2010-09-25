@@ -60,7 +60,7 @@ import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
 import org.kalypso.i18n.Messages;
 
 /**
- * @author Gernot
+ * @author Gernot Belger
  */
 public class GMLSchemaSelectionPage extends WizardPage implements ISelectionChangedListener
 {
@@ -70,7 +70,7 @@ public class GMLSchemaSelectionPage extends WizardPage implements ISelectionChan
   public GMLSchemaSelectionPage( )
   {
     super( "gmlschemaSelectionPage", Messages.getString("org.kalypso.ui.wizard.GMLSchemaSelectionPage.1"), null ); //$NON-NLS-1$ //$NON-NLS-2$
-    
+
     setPageComplete( false );
     setMessage( Messages.getString("org.kalypso.ui.wizard.GMLSchemaSelectionPage.2") ); //$NON-NLS-1$
   }
@@ -79,28 +79,34 @@ public class GMLSchemaSelectionPage extends WizardPage implements ISelectionChan
    * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
    */
   @Override
-  public void createControl( Composite parent )
+  public void createControl( final Composite parent )
   {
-    m_viewer = new ListViewer( parent, SWT.SINGLE | SWT.V_SCROLL | SWT.H_SCROLL );
-    final ArrayContentProvider provider = new ArrayContentProvider();
-    m_viewer.setContentProvider( provider );
+    m_viewer = new ListViewer( parent, SWT.SINGLE | SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER );
+
+    m_viewer.setContentProvider( new ArrayContentProvider() );
     m_viewer.setLabelProvider( new LabelProvider() );
+    m_viewer.setSorter( new ViewerSorter() );
+
     final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
     final Set<String> namespaces = schemaCatalog.getDefaultCatalog().getCatalog().keySet();
     m_viewer.setInput( namespaces );
-    ViewerSorter sorter = new ViewerSorter();
-    m_viewer.setSorter( sorter );
+
     final List list = m_viewer.getList();
-    list.setLayoutData( new GridData( GridData.FILL_BOTH ) );
-    setControl( list );
+    final GridData listData = new GridData( SWT.FILL, SWT.FILL, true, true );
+    listData.heightHint = 300;
+    listData.minimumHeight = 200;
+    list.setLayoutData( listData );
+
     m_viewer.addSelectionChangedListener( this );
+
+    setControl( list );
   }
 
   public ISelectionProvider getSelectionProvider( )
   {
     return m_viewer;
   }
-  
+
   /**
    * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
    */
