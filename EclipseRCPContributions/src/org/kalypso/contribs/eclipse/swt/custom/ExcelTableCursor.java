@@ -523,7 +523,7 @@ public class ExcelTableCursor extends TableCursor
       return false;
 
     final Object[] columnProperties = m_viewer.getColumnProperties();
-    if( columnProperties == null )
+    if( columnProperties == null || columnProperties.length == 0 )
       return false;
 
     final String property = columnProperties[column].toString();
