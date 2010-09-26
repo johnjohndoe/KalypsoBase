@@ -32,11 +32,15 @@ package org.kalypso.contribs.eclipse.swt.events;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Menu;
+import org.eclipse.ui.progress.UIJob;
 
 /**
  * AWT Mouseadapter that wraps Events to show SWT ContextMenu
@@ -45,9 +49,9 @@ import org.eclipse.swt.widgets.Menu;
  */
 public class SWTAWT_ContextMenuMouseAdapter extends MouseAdapter
 {
-  final Menu m_mapMenu;
+  final Menu m_swtMenu;
 
-  final Composite m_swtComposite;
+  final Control m_swtComposite;
 
   /**
    * @param mapMenu
@@ -55,49 +59,59 @@ public class SWTAWT_ContextMenuMouseAdapter extends MouseAdapter
    * @param swtComposite
    *          parent composite that embeddes the awt thing
    */
-  public SWTAWT_ContextMenuMouseAdapter( final Composite swtComposite, final Menu mapMenu )
+  public SWTAWT_ContextMenuMouseAdapter( final Control swtComposite, final Menu mapMenu )
   {
-    super();
     m_swtComposite = swtComposite;
-    m_mapMenu = mapMenu;
+    m_swtMenu = mapMenu;
   }
 
   private void contextMenuAboutToShow( final MouseEvent e )
   {
-    if( e.isPopupTrigger() && m_swtComposite != null && !m_swtComposite.isDisposed() )
-    {
-      m_mapMenu.getDisplay().asyncExec( new Runnable()
-      {
-        @Override
-        public void run()
-        {
-          final Event event = new Event();
-          final Point point = m_swtComposite.toDisplay( e.getX(), e.getY() );
-          event.x = point.x;
-          event.y = point.y;
-          m_swtComposite.notifyListeners( SWT.MenuDetect, event );
+    if( !e.isPopupTrigger() )
+      return;
 
-          if( event.doit )
-          {
-            if( m_mapMenu != null && !m_mapMenu.isDisposed() )
-            {
-              m_mapMenu.setLocation( event.x, event.y );
-              m_mapMenu.setVisible( true );
-            }
-          }
-        }
-      } );
-    }
+    if( m_swtMenu.isDisposed() )
+      return;
+
+    e.consume();
+
+    final UIJob uiJob = new UIJob( m_swtMenu.getDisplay(), "Open Context Menu" )
+    {
+      @Override
+      public IStatus runInUIThread( final IProgressMonitor monitor )
+      {
+        if( m_swtComposite.isDisposed() )
+          return Status.OK_STATUS;
+
+        final Event event = new Event();
+        final Point point = m_swtComposite.toDisplay( e.getX(), e.getY() );
+        event.x = point.x;
+        event.y = point.y;
+        m_swtComposite.notifyListeners( SWT.MenuDetect, event );
+
+        if( !event.doit || m_swtMenu.isDisposed() )
+          return Status.OK_STATUS;
+
+// m_swtMenu.getParent().forceFocus();
+
+        m_swtMenu.setLocation( event.x, event.y );
+        m_swtMenu.setVisible( true );
+
+        // FIXME: does not work any more...
+        return Status.OK_STATUS;
+      }
+    };
+    uiJob.schedule();
   }
 
   @Override
-  public void mouseClicked( MouseEvent e )
+  public void mouseClicked( final MouseEvent e )
   {
     contextMenuAboutToShow( e );
   }
 
   @Override
-  public void mousePressed( MouseEvent e )
+  public void mousePressed( final MouseEvent e )
   {
     contextMenuAboutToShow( e );
   }
