@@ -8,6 +8,7 @@ Bundle-Vendor: kalypsobase.sourceforge.net
 Bundle-Localization: plugin
 Export-Package: org.kalypso.contribs.eclipse,
  org.kalypso.contribs.eclipse.core.commands,
+ org.kalypso.contribs.eclipse.core.commands.operations,
  org.kalypso.contribs.eclipse.core.net,
  org.kalypso.contribs.eclipse.core.resources,
  org.kalypso.contribs.eclipse.core.runtime,
@@ -40,13 +41,13 @@ Export-Package: org.kalypso.contribs.eclipse,
  org.kalypso.contribs.eclipse.ui.plugin,
  org.kalypso.contribs.eclipse.ui.progress,
  org.kalypso.contribs.eclipse.utils
-Require-Bundle: org.eclipse.ui;resolution:=optional,
+Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.junit;resolution:=optional,
  org.kalypso.contribs.java;visibility:=reexport,
  org.eclipse.core.net;visibility:=reexport,
  org.eclipse.core.expressions,
- org.eclipse.ui.forms;resolution:=optional,
+ org.eclipse.ui.forms,
  org.eclipse.core.resources
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
