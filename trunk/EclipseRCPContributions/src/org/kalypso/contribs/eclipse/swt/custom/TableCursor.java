@@ -496,7 +496,7 @@ public class TableCursor extends Canvas
         {
           x += 5;
         }
-        else
+        else if( m_column != null )
         {
           final int alignmnent = m_column.getAlignment();
           switch( alignmnent )
