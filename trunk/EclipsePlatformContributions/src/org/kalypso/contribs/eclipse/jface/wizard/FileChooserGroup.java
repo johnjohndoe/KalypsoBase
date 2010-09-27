@@ -75,7 +75,7 @@ public class FileChooserGroup
 {
   public interface FileChangedListener
   {
-    public void fileChanged( final File file );
+    void fileChanged( File file );
   }
 
   private static final String SETTINGS_FILENAME = "fileChooserGroup.filename"; //$NON-NLS-1$
@@ -134,30 +134,6 @@ public class FileChooserGroup
       return;
 
     m_text.setText( newFile.getAbsolutePath() );
-  }
-
-  public final static String setSuffix( final String fileName, final String suffix )
-  {
-    if( "*".equals( suffix ) )
-      return fileName;
-// FIXME: use FilenameUtils !
-    final int indexDot = fileName.lastIndexOf( '.' );
-
-    if( FileChooserGroup.DIRECTORY_FILTER_SUFFIX.equals( suffix ) )
-    {
-      if( fileName.endsWith( File.separator ) )
-        return fileName;
-      if( indexDot < 0 )
-        return fileName + File.separator;
-      return fileName.substring( 0, fileName.lastIndexOf( File.separator ) + 1 );
-    }
-
-    if( fileName.endsWith( File.separator ) )
-      return fileName + "*." + suffix;
-    if( indexDot < 0 )
-      return fileName + File.separator + "*." + suffix;
-
-    return fileName.substring( 0, indexDot + 1 ) + suffix;
   }
 
   public Group createGroup( final Composite parent, final int style )
