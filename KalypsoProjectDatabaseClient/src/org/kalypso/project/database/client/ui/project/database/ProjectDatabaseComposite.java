@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.client.ui.project.database;
 
+import java.util.Arrays;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -138,6 +140,8 @@ public class ProjectDatabaseComposite extends Composite implements IProjectDatab
     final IKalypsoModuleDatabaseSettings settings = m_module.getDatabaseSettings();
 
     final IProjectHandler[] projects = m_model.getProjects( settings.getFilter() );
+    Arrays.sort( projects, new ProjectHandlerNameComparator() );
+
     for( final IProjectHandler project : projects )
       renderProject( m_body, project );
 
