@@ -61,7 +61,6 @@ import org.kalypsodeegree_impl.graphics.sld.Symbolizer_Impl.UOM;
  */
 class HorizontalLabel implements Label
 {
-
   private final String caption;
 
   private final int[] xpoints = new int[4];
@@ -83,7 +82,7 @@ class HorizontalLabel implements Label
 
   HorizontalLabel( final String caption, final Font font, final Color color, final LineMetrics metrics, final Feature feature, final Halo halo, final int x,
       final int y, final int w, final int h, final double anchorPoint[], final double[] displacement )
-  {
+      {
 
     this.caption = caption;
     this.font = font;
@@ -108,7 +107,7 @@ class HorizontalLabel implements Label
     ypoints[2] = y - h + dy;
     xpoints[3] = x + dx;
     ypoints[3] = y - h + dy;
-  }
+      }
 
   public String getCaption()
   {
@@ -200,16 +199,10 @@ class HorizontalLabel implements Label
       g.setColor( Color.white );
     }
 
-    // radius specified -> draw circle
-    if( radius > 0 )
-    {
-      g.fillOval( ( x + ( w >> 1 ) ) - radius, y - ( ascent >> 1 ) - radius, radius << 1, radius << 1 );
-    }
-    // radius unspecified -> draw rectangle
-    else
-    {
-      g.fillRect( x - 1, y - ascent - 1, w + 2, h + 2 );
-    }
+    // FIXME: the whole halo is not painted according to the SLD spec;
+    // The normal meaning is to add a lining to the edge of text.
+
+    g.fillRect( x - radius, y - ascent - radius, w + (radius * 2), h + (radius * 2) );
 
     // only stroke outline, if Stroke-Element is given
     final org.kalypsodeegree.graphics.sld.Stroke stroke = halo.getStroke();
@@ -247,15 +240,7 @@ class HorizontalLabel implements Label
         }
         g.setStroke( bs );
 
-        // radius specified -> draw circle
-        if( radius > 0 )
-        {
-          g.drawOval( ( x + ( w >> 1 ) ) - radius, y - ( ascent >> 1 ) - radius, radius << 1, radius << 1 );
-        }// radius unspecified -> draw rectangle
-        else
-        {
-          g.drawRect( x - 1, y - ascent - 1, w + 2, h + 2 );
-        }
+        g.drawRect( x - radius, y - ascent - radius, w + 2 * radius, h + 2 * radius );
       }
     }
   }
