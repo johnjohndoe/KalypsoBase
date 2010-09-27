@@ -44,13 +44,13 @@ import org.eclipse.core.runtime.IConfigurationElement;
 
 public abstract class AbstractValidatorRule implements IValidatorRule
 {
+  public static final String FMT_BREITE = "%.4f"; //$NON-NLS-1$
+
   private String m_id;
 
   private String m_description;
 
   private String m_type;
-  
-  protected final String FMT_BREITE = "%.4f"; //$NON-NLS-1$
 
   @Override
   public void setInitializationData( final IConfigurationElement config, final String propertyName, final Object data )

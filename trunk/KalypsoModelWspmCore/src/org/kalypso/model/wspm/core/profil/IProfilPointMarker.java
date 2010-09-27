@@ -66,6 +66,7 @@ public interface IProfilPointMarker
 
   Object getValue( );
 
+  // FIXME: what is the meaning of 'interpreted'?
   /* Interpreted ui values to obtain backward compability */
   Object getIntepretedValue( );
 

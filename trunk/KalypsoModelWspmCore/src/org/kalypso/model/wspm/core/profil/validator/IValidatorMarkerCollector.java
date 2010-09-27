@@ -42,21 +42,22 @@ package org.kalypso.model.wspm.core.profil.validator;
 
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
+import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.reparator.IProfilMarkerResolution;
 
 public interface IValidatorMarkerCollector
 {
-  public static final String MARKER_ATTRIBUTE_POINTPOS = "profile.marker.attribute.pointpos"; //$NON-NLS-1$
+  String MARKER_ATTRIBUTE_POINTPOS = "profile.marker.attribute.pointpos"; //$NON-NLS-1$
 
-  public static final String MARKER_ATTRIBUTE_POINTPROPERTY = "profile.marker.attribute.pointProperty"; //$NON-NLS-1$
+  String MARKER_ATTRIBUTE_POINTPROPERTY = "profile.marker.attribute.pointProperty"; //$NON-NLS-1$
 
-  public static final String MARKER_ATTRIBUTE_QUICK_FIX_PLUGINID = "profile.marker.attribute.quickFix.pluginid"; //$NON-NLS-1$
+  String MARKER_ATTRIBUTE_QUICK_FIX_PLUGINID = "profile.marker.attribute.quickFix.pluginid"; //$NON-NLS-1$
 
-  public static final String MARKER_ATTRIBUTE_QUICK_FIX_RESOLUTIONS = "profile.marker.attribute.quickFix.resolutions"; //$NON-NLS-1$
+  String MARKER_ATTRIBUTE_QUICK_FIX_RESOLUTIONS = "profile.marker.attribute.quickFix.resolutions"; //$NON-NLS-1$
 
-  public static final String MARKER_ATTRIBUTE_PROFILE_ID = "profile.marker.attribute.profileId"; //$NON-NLS-1$
+  String MARKER_ATTRIBUTE_PROFILE_ID = "profile.marker.attribute.profileId"; //$NON-NLS-1$
 
-  public static final String MARKER_ATTRIBUTE_STATION = "profile.marker.attribute.station"; //$NON-NLS-1$
+  String MARKER_ATTRIBUTE_STATION = "profile.marker.attribute.station"; //$NON-NLS-1$
 
   /**
    * Creates a (profile-)marker on the given resource. All validation rules should use this method, so changes in the
@@ -70,23 +71,23 @@ public interface IValidatorMarkerCollector
    *            these classes must not contain references to Objects, only simple Datatypes are allowed
    * @throws CoreException
    */
-  public void createProfilMarker( final int severity, final String message, final String location, final int pointPos, final String pointProperty, final String resolutionPluginId, final IProfilMarkerResolution markerResolution ) throws CoreException;
+  void createProfilMarker( int severity, String message, String location, int pointPos, String pointProperty, IProfilMarkerResolution... resolutions ) throws CoreException;
 
-  public void createProfilMarker( final int severity, final String message, final String location, final int pointPos, final String pointProperty, final String resolutionPluginId, final IProfilMarkerResolution[] markerResolutions ) throws CoreException;
-  
-  public void createProfilMarker( final int severity, final String message, final String location, final int pointPos, final String pointProperty, final String resolutionPluginId) throws CoreException;
+  void createProfilMarker( int severity, String message, String location, int pointPos, String pointProperty ) throws CoreException;
+
+  void createProfilMarker( int severityError, String msg, IProfil profile, IProfilMarkerResolution... markerResolution ) throws CoreException;
 
   /**
    * Clear all markers which may apply to this collector
    * 
    * @throws CoreException
    */
-  public void reset( ) throws CoreException;
+  void reset( ) throws CoreException;
 
   /**
    * only reset markers of profile with this profilFeatureID
    */
-  public void reset( final String profilFeatureID ) throws CoreException;
+  void reset( final String profilFeatureID ) throws CoreException;
 
-  public IMarker[] getMarkers( );
+  IMarker[] getMarkers( );
 }
