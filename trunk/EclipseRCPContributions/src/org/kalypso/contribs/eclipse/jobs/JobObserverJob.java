@@ -38,12 +38,6 @@ public abstract class JobObserverJob extends Job
   private final IJobChangeListener m_jobListener = new JobChangeAdapter()
   {
     @Override
-    public void running( final IJobChangeEvent event )
-    {
-      handleRunning();
-    }
-
- @Override
     public void sleeping( final IJobChangeEvent event )
     {
       // System.out.println("Job was sent so sleep: " + event.getJob() );
@@ -63,8 +57,6 @@ public abstract class JobObserverJob extends Job
 
   private final Job m_observedJob;
 
-  private boolean m_unhookOnDone = false;
-
   /**
    * @param name
    *          See {@link Job#Job(String)}
@@ -80,18 +72,6 @@ public abstract class JobObserverJob extends Job
     m_sleepMillis = sleepMillis;
 
     m_observedJob.addJobChangeListener( m_jobListener );
-  }
-
-  public void dispose( )
-  {
-    m_observedJob.removeJobChangeListener( m_jobListener );
-
-    cancel();
-  }
-
-  protected void handleRunning( )
-  {
-    schedule( 100 );
   }
 
   /**
@@ -146,14 +126,8 @@ public abstract class JobObserverJob extends Job
     if( thread != null )
       thread.interrupt();
 
-    if( m_unhookOnDone )
-      m_observedJob.removeJobChangeListener( m_jobListener );
+    m_observedJob.removeJobChangeListener( m_jobListener );
 
     jobDone( result );
-  }
-
-  public void setUnhookOnDone( final boolean unhookOnDone )
-  {
-    m_unhookOnDone = unhookOnDone;
   }
 }
