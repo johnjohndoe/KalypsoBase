@@ -47,10 +47,11 @@ import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.ui.ide.IDE;
+import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.reparator.IProfilMarkerResolution;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
+import org.kalypso.model.wspm.ui.KalypsoModelWspmUIDebug;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 
 final public class ResourceValidatorMarkerCollector implements IValidatorMarkerCollector
@@ -59,8 +60,8 @@ final public class ResourceValidatorMarkerCollector implements IValidatorMarkerC
   private final IResource m_resource;
 
   private final static String[] USED_ATTRIBUTES = new String[] { IMarker.MESSAGE, IMarker.LOCATION, IMarker.SEVERITY, IMarker.TRANSIENT, IDE.EDITOR_ID_ATTR,
-      IValidatorMarkerCollector.MARKER_ATTRIBUTE_POINTPOS, IValidatorMarkerCollector.MARKER_ATTRIBUTE_POINTPROPERTY, IValidatorMarkerCollector.MARKER_ATTRIBUTE_QUICK_FIX_PLUGINID,
-      IValidatorMarkerCollector.MARKER_ATTRIBUTE_QUICK_FIX_RESOLUTIONS, IValidatorMarkerCollector.MARKER_ATTRIBUTE_PROFILE_ID, IValidatorMarkerCollector.MARKER_ATTRIBUTE_STATION };
+    IValidatorMarkerCollector.MARKER_ATTRIBUTE_POINTPOS, IValidatorMarkerCollector.MARKER_ATTRIBUTE_POINTPROPERTY, IValidatorMarkerCollector.MARKER_ATTRIBUTE_QUICK_FIX_RESOLUTIONS,
+    IValidatorMarkerCollector.MARKER_ATTRIBUTE_PROFILE_ID, IValidatorMarkerCollector.MARKER_ATTRIBUTE_STATION };
 
   private final String m_editorID;
 
@@ -70,7 +71,7 @@ final public class ResourceValidatorMarkerCollector implements IValidatorMarkerC
 
   private final String m_station;
 
-  public ResourceValidatorMarkerCollector( final IResource resource, final String editorID, final String profileStation, String profileID )
+  public ResourceValidatorMarkerCollector( final IResource resource, final String editorID, final String profileStation, final String profileID )
   {
     m_resource = resource;
     m_editorID = editorID;
@@ -78,22 +79,10 @@ final public class ResourceValidatorMarkerCollector implements IValidatorMarkerC
     m_station = profileStation;
   }
 
-  /**
-   * Creates a (profile-)marker on the given resource. All validation rules should use this method, so changes in the
-   * implementation (e.g. the type of the marker) are reflected on all rules.
-   * 
-   * @throws CoreException
-   */
   @Override
-  public void createProfilMarker( final int severity, final String message, final String location, final int pointPos, final String pointProperty, final String resolutionPluginId, final IProfilMarkerResolution resolutionMarker ) throws CoreException
+  public void createProfilMarker( final int severity, final String message, final String location, final int pointPos, final String pointProperty ) throws CoreException
   {
-    createProfilMarker( severity, message, location, pointPos, pointProperty, resolutionPluginId, new IProfilMarkerResolution[] { resolutionMarker } );
-  }
-
-  @Override
-  public void createProfilMarker( final int severity, final String message, final String location, final int pointPos, final String pointProperty, final String resolutionPluginId ) throws CoreException
-  {
-    createProfilMarker( severity, message, location, pointPos, pointProperty, resolutionPluginId, new IProfilMarkerResolution[] {} );
+    createProfilMarker( severity, message, location, pointPos, pointProperty, new IProfilMarkerResolution[] {} );
   }
 
   @Override
@@ -107,9 +96,8 @@ final public class ResourceValidatorMarkerCollector implements IValidatorMarkerC
   {
     final IMarker[] markers = m_resource.findMarkers( KalypsoModelWspmUIPlugin.MARKER_ID, true, IResource.DEPTH_ZERO );
     final ArrayList<IMarker> toDelete = new ArrayList<IMarker>();
-    for( int i = 0; i < markers.length; i++ )
+    for( final IMarker marker : markers )
     {
-      IMarker marker = markers[i];
       if( marker == null )
         continue;
 
@@ -118,7 +106,7 @@ final public class ResourceValidatorMarkerCollector implements IValidatorMarkerC
         continue;
 
       if( attribute.equals( profilFeatureID ) )
-        toDelete.add( markers[i] );
+        toDelete.add( marker );
     }
     if( !toDelete.isEmpty() )
     {
@@ -136,34 +124,35 @@ final public class ResourceValidatorMarkerCollector implements IValidatorMarkerC
     return m_markers.toArray( new IMarker[m_markers.size()] );
   }
 
+  @Override
+  public void createProfilMarker( final int severityError, final String msg, final IProfil profile, final IProfilMarkerResolution... markerResolutions ) throws CoreException
+  {
+    final String location = String.format( "km %.4f", profile.getStation() );
+
+    createProfilMarker( severityError, msg, location, 0, null, markerResolutions );
+  }
+
   /**
    * @see org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector#createProfilMarker(int,
    *      java.lang.String, java.lang.String, int, java.lang.String, java.lang.String,
    *      org.kalypso.model.wspm.core.profil.reparator.IProfilMarkerResolution[])
    */
   @Override
-  public void createProfilMarker( int severity, String message, String location, int pointPos, String pointProperty, String resolutionPluginId, IProfilMarkerResolution[] markerResolutions ) throws CoreException
+  public void createProfilMarker( final int severity, final String message, final String location, final int pointPos, final String pointProperty, final IProfilMarkerResolution... markerResolutions ) throws CoreException
   {
-    if( "true".equals( Platform.getDebugOption( KalypsoModelWspmUIPlugin.ID + "/debug/validationMarkers" ) ) ) //$NON-NLS-1$ //$NON-NLS-2$
-    {
-      final String debugMsg = String.format( "", severity, message, location, pointPos ); //$NON-NLS-1$
-      System.out.println( debugMsg );
-    }
+    KalypsoModelWspmUIDebug.DEBUG_VALIDATION_MARKER.printf( "%s - %s - %s - %s", severity, message, location, pointPos );
 
     final IMarker marker = m_resource.createMarker( KalypsoModelWspmUIPlugin.MARKER_ID );
-    final String[] ResMarkerStrings = new String[markerResolutions.length];
+    final String[] resMarkerStrings = new String[markerResolutions.length];
     for( int i = 0; i < markerResolutions.length; i++ )
-    {
-      ResMarkerStrings[i] = markerResolutions[i].getSerializedParameter();
-    }
-    String ResMarkerSerialized = StringUtils.join( ResMarkerStrings, '\u0000' );
+      resMarkerStrings[i] = markerResolutions[i].getSerializedParameter();
 
-    final Object[] values = new Object[] { message, location, severity, true, m_editorID, pointPos, pointProperty, resolutionPluginId, ResMarkerSerialized == "" ? null : ResMarkerSerialized, //$NON-NLS-1$
+    final String resMarkerSerialized = StringUtils.join( resMarkerStrings, '\u0000' );
+    final Object[] values = new Object[] { message, location, severity, true, m_editorID, pointPos, pointProperty, resMarkerSerialized == "" ? null : resMarkerSerialized, //$NON-NLS-1$
         m_profileFeatureID, m_station };
 
     marker.setAttributes( USED_ATTRIBUTES, values );
 
     m_markers.add( marker );
-
   }
 }

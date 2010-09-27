@@ -86,7 +86,6 @@ public final class KalypsoModelWspmCoreExtensions
 
     for( final IConfigurationElement element : elements )
     {
-
       try
       {
         final IProfilMarkerResolution rule = (IProfilMarkerResolution) element.createExecutableExtension( "class" ); //$NON-NLS-1$

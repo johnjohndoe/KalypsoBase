@@ -50,13 +50,12 @@ import org.kalypso.observation.result.TupleResult;
  */
 public class PointMarker implements IProfilPointMarker
 {
-  final private IComponent m_type;
+  private final IComponent m_type;
 
   IRecord m_point = null;
 
   public PointMarker( final IComponent typ, final IRecord point )
   {
-
     if( typ == null || point == null )
       throw new IllegalStateException();
 
@@ -67,7 +66,6 @@ public class PointMarker implements IProfilPointMarker
     final TupleResult result = point.getOwner();
     if( !result.hasComponent( typ ) )
       result.addComponent( typ );
-
   }
 
   /**

@@ -48,16 +48,15 @@ import org.kalypso.model.wspm.core.profil.IProfil;
  */
 public interface IProfilMarkerResolution extends IMarkerResolution2
 {
-  public boolean resolve( final IProfil profile );
+  boolean resolve( final IProfil profile );
 
-  public String getSerializedParameter( );
+  String getSerializedParameter( );
 
-  public void setData( final String parameterStream );
-  
-  public boolean hasUI();
-  
-  public String getUIresult(final Shell shell,final IProfil profil);
-  
-  public void setUIresult(final String result);
-  
+  void setData( final String parameterStream );
+
+  boolean hasUI( );
+
+  String getUIresult( final Shell shell, final IProfil profil );
+
+  void setUIresult( final String result );
 }
