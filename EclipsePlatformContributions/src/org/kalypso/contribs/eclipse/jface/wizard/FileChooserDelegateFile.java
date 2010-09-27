@@ -97,12 +97,12 @@ public abstract class FileChooserDelegateFile implements IFileChooserDelegate
     m_filterExtensions.add( extension );
   }
 
-  private final String[] getFilterExtensions( )
+  private String[] getFilterExtensions( )
   {
     return m_filterExtensions.toArray( new String[m_filterExtensions.size()] );
   }
 
-  private final String[] getFilterNames( )
+  private String[] getFilterNames( )
   {
     return m_filterNames.toArray( new String[m_filterNames.size()] );
   }
@@ -153,7 +153,7 @@ public abstract class FileChooserDelegateFile implements IFileChooserDelegate
         return "";
 
       final String ext = filterExtensions[0];
-      if( ext.equals( "*.*" ) )
+      if( "*.*".equals( ext ) )
         return "";
 
       if( ext.startsWith( "*" ) )
@@ -173,9 +173,9 @@ public abstract class FileChooserDelegateFile implements IFileChooserDelegate
     return currentFile.getParent();
   }
 
-  abstract String updateFileName( String filename, String suffix );
+  public abstract String updateFileName( String filename, String suffix );
 
-  private final int getFilterIndex( final String fileName )
+  private int getFilterIndex( final String fileName )
   {
     final int index = fileName.lastIndexOf( "." );//$NON-NLS-1$
     final String suffix = index < 0 ? "*.*" : "*" + fileName.substring( index ); //$NON-NLS-1$ //$NON-NLS-2$
