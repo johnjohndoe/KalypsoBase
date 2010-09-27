@@ -822,7 +822,7 @@ public class StyleFactory
    */
   public static Halo createHalo( )
   {
-    return createHalo( createFill(), createStroke(), -1 );
+    return createHalo( createFill(), createStroke(), null );
   }
 
   /**
@@ -834,7 +834,7 @@ public class StyleFactory
    *            the radius of the halo use a value <= 0 for rectangle
    * @return the new halo
    */
-  public static Halo createHalo( final Color color, final double radius )
+  public static Halo createHalo( final Color color, final Double radius )
   {
     return createHalo( createFill( color ), createStroke(), radius );
   }
@@ -852,7 +852,7 @@ public class StyleFactory
    *            the radius of the halo use a value <= 0 for rectangle
    * @return the new halo
    */
-  public static Halo createHalo( final Color fillColor, final double opacity, final Color strokeColor, final double radius )
+  public static Halo createHalo( final Color fillColor, final double opacity, final Color strokeColor, final Double radius )
   {
     final Fill fill = createFill( fillColor, opacity );
     final Stroke stroke = createStroke( strokeColor );
@@ -870,13 +870,12 @@ public class StyleFactory
    *            the radius of the halo use a value <= 0 for rectangle
    * @return the new halo
    */
-  public static Halo createHalo( final Fill fill, final Stroke stroke, final double radius )
+  public static Halo createHalo( final Fill fill, final Stroke stroke, final Double radius )
   {
     ParameterValueType pvt = null;
-    if( radius > 0 )
-    {
+    if( radius != null )
       pvt = createParameterValueType( radius );
-    }
+
     return new Halo_Impl( pvt, fill, stroke );
   }
 

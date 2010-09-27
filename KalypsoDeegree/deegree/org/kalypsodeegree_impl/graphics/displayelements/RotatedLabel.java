@@ -62,47 +62,47 @@ import org.kalypsodeegree_impl.graphics.sld.Symbolizer_Impl.UOM;
  */
 class RotatedLabel implements Label
 {
+  private final String m_caption;
 
-  private String caption;
+  private final int[] m_xpoints;
 
-  private int[] m_xpoints;
+  private final int[] m_ypoints;
 
-  private int[] m_ypoints;
+  private final double m_rotation;
 
-  private double m_rotation;
+  private final int m_width;
 
-  // width and height of the caption
-  private int m_w, m_h;
+  private final int m_height;
 
-  private Color m_color;
+  private final Color m_color;
 
-  private Font m_font;
+  private final Font m_font;
 
-  private int descent, ascent;
+  private final int descent, ascent;
 
-  private Halo m_halo;
+  private final Halo m_halo;
 
-  private Feature feature;
+  private final Feature m_feature;
 
-  RotatedLabel( String caption, Font font, Color color, LineMetrics metrics, Feature feature, Halo halo, int x, int y,
-      int w, int h, double rotation, double anchorPoint[], double[] displacement )
-  {
+  RotatedLabel( final String caption, final Font font, final Color color, final LineMetrics metrics, final Feature feature, final Halo halo, final int x, final int y,
+      final int w, final int h, final double rotation, final double anchorPoint[], final double[] displacement )
+      {
 
-    this.caption = caption;
+    this.m_caption = caption;
     this.m_font = font;
     this.m_color = color;
     this.descent = (int)metrics.getDescent();
     this.ascent = (int)metrics.getAscent();
-    this.feature = feature;
+    this.m_feature = feature;
     this.m_halo = halo;
     this.m_rotation = rotation;
 
-    this.m_w = w;
-    this.m_h = h;
+    this.m_width = w;
+    this.m_height = h;
 
     // vertices of label boundary
-    int[] xpoints = new int[4];
-    int[] ypoints = new int[4];
+    final int[] xpoints = new int[4];
+    final int[] ypoints = new int[4];
     xpoints[0] = x;
     ypoints[0] = y;
     xpoints[1] = x + w;
@@ -115,22 +115,22 @@ class RotatedLabel implements Label
     // get rotated + translated points
     this.m_xpoints = new int[4];
     this.m_ypoints = new int[4];
-    int tx = xpoints[0];
-    int ty = ypoints[0];
+    final int tx = xpoints[0];
+    final int ty = ypoints[0];
 
     // transform all vertices of the boundary
     for( int i = 0; i < 4; i++ )
     {
-      int[] point = transformPoint( xpoints[i], ypoints[i], tx, ty, rotation, anchorPoint[0], anchorPoint[1], w, h,
+      final int[] point = transformPoint( xpoints[i], ypoints[i], tx, ty, rotation, anchorPoint[0], anchorPoint[1], w, h,
           displacement[0], displacement[1] );
       this.m_xpoints[i] = point[0];
       this.m_ypoints[i] = point[1];
     }
-  }
+      }
 
   public String getCaption()
   {
-    return caption;
+    return m_caption;
   }
 
   public double getRotation()
@@ -139,17 +139,17 @@ class RotatedLabel implements Label
   }
 
   @Override
-  public void paintBoundaries( Graphics2D g )
+  public void paintBoundaries( final Graphics2D g )
   {
     setColor( g, new Color( 0x888888 ), 0.5 );
     g.fillPolygon( m_xpoints, m_ypoints, m_xpoints.length );
     g.setColor( Color.BLACK );
 
     // get the current transform
-    AffineTransform saveAT = g.getTransform();
+    final AffineTransform saveAT = g.getTransform();
 
     // translation parameters (rotation)
-    AffineTransform transform = new AffineTransform();
+    final AffineTransform transform = new AffineTransform();
 
     // render the text
     transform.rotate( m_rotation, m_xpoints[0], m_ypoints[0] );
@@ -168,14 +168,14 @@ class RotatedLabel implements Label
    *          <tt>Graphics2D</tt> context to be used
    */
   @Override
-  public void paint( Graphics2D g )
+  public void paint( final Graphics2D g )
   {
 
     // get the current transform
-    AffineTransform saveAT = g.getTransform();
+    final AffineTransform saveAT = g.getTransform();
 
     // perform transformation
-    AffineTransform transform = new AffineTransform();
+    final AffineTransform transform = new AffineTransform();
     transform.rotate( m_rotation, m_xpoints[0], m_ypoints[0] );
     g.setTransform( transform );
 
@@ -186,7 +186,7 @@ class RotatedLabel implements Label
       {
         paintHalo( g, m_halo, m_xpoints[0], m_ypoints[0] - descent );
       }
-      catch( FilterEvaluationException e )
+      catch( final FilterEvaluationException e )
       {
         e.printStackTrace();
       }
@@ -195,7 +195,7 @@ class RotatedLabel implements Label
     // render the text
     setColor( g, m_color, 1.0 );
     g.setFont( m_font );
-    g.drawString( caption, m_xpoints[0], m_ypoints[0] - descent );
+    g.drawString( m_caption, m_xpoints[0], m_ypoints[0] - descent );
 
     // restore original transform
     g.setTransform( saveAT );
@@ -217,27 +217,27 @@ class RotatedLabel implements Label
    * @throws FilterEvaluationException
    *           if the evaluation of a <tt>ParameterValueType</tt> fails
    */
-  private void paintHalo( Graphics2D g, Halo halo, int x, int y ) throws FilterEvaluationException
+  private void paintHalo( final Graphics2D g, final Halo halo, final int x, final int y ) throws FilterEvaluationException
   {
-    int radius = (int)halo.getRadius( feature );
+    final int radius = (int) halo.getRadius( m_feature );
 
     // only draw filled rectangle or circle, if Fill-Element is given
-    Fill fill = halo.getFill();
+    final Fill fill = halo.getFill();
 
     if( fill != null )
     {
-      GraphicFill gFill = fill.getGraphicFill();
+      final GraphicFill gFill = fill.getGraphicFill();
 
       if( gFill != null )
       {
-        BufferedImage texture = gFill.getGraphic().getAsImage( feature, UOM.pixel, null );
-        Rectangle anchor = new Rectangle( 0, 0, texture.getWidth( null ), texture.getHeight( null ) );
+        final BufferedImage texture = gFill.getGraphic().getAsImage( m_feature, UOM.pixel, null );
+        final Rectangle anchor = new Rectangle( 0, 0, texture.getWidth( null ), texture.getHeight( null ) );
         g.setPaint( new TexturePaint( texture, anchor ) );
       }
       else
       {
-        double opacity = fill.getOpacity( feature );
-        Color color = fill.getFill( feature );
+        final double opacity = fill.getOpacity( m_feature );
+        final Color color = fill.getFill( m_feature );
         setColor( g, color, opacity );
       }
     }
@@ -246,39 +246,30 @@ class RotatedLabel implements Label
       g.setColor( Color.white );
     }
 
-    // radius specified -> draw circle
-    if( radius > 0 )
-    {
-      g.fillOval( ( x + ( m_w >> 1 ) ) - radius, y - ( ascent >> 1 ) - radius, radius << 1, radius << 1 );
-    }
-    // radius unspecified -> draw rectangle
-    else
-    {
-      g.fillRect( x - 1, y - ascent - 1, m_w + 2, m_h + 2 );
-    }
+    g.fillRect( x - radius, y - ascent - radius, m_width + 2 * radius, m_height + 2 * radius );
 
     // only stroke outline, if Stroke-Element is given
-    org.kalypsodeegree.graphics.sld.Stroke stroke = halo.getStroke();
+    final org.kalypsodeegree.graphics.sld.Stroke stroke = halo.getStroke();
 
     if( stroke != null )
     {
-      double opacity = stroke.getOpacity( feature );
+      final double opacity = stroke.getOpacity( m_feature );
 
       if( opacity > 0.01 )
       {
-        Color color = stroke.getStroke( feature );
-        int alpha = (int)Math.round( opacity * 255 );
-        int red = color.getRed();
-        int green = color.getGreen();
-        int blue = color.getBlue();
+        Color color = stroke.getStroke( m_feature );
+        final int alpha = (int)Math.round( opacity * 255 );
+        final int red = color.getRed();
+        final int green = color.getGreen();
+        final int blue = color.getBlue();
         color = new Color( red, green, blue, alpha );
         g.setColor( color );
 
-        float[] dash = stroke.getDashArray( feature );
+        final float[] dash = stroke.getDashArray( m_feature );
 
         // use a simple Stroke if dash == null or dash length < 2
         BasicStroke bs = null;
-        float strokeWidth = (float)stroke.getWidth( feature );
+        final float strokeWidth = (float) stroke.getWidth( m_feature );
 
         if( ( dash == null ) || ( dash.length < 2 ) )
         {
@@ -286,23 +277,14 @@ class RotatedLabel implements Label
         }
         else
         {
-          bs = new BasicStroke( strokeWidth, stroke.getLineCap( feature ), stroke.getLineJoin( feature ), 10.0f, dash,
-              stroke.getDashOffset( feature ) );
-          bs = new BasicStroke( strokeWidth, stroke.getLineCap( feature ), stroke.getLineJoin( feature ), 1.0f, dash,
+          bs = new BasicStroke( strokeWidth, stroke.getLineCap( m_feature ), stroke.getLineJoin( m_feature ), 10.0f, dash, stroke.getDashOffset( m_feature ) );
+          bs = new BasicStroke( strokeWidth, stroke.getLineCap( m_feature ), stroke.getLineJoin( m_feature ), 1.0f, dash,
               1.0f );
         }
 
         g.setStroke( bs );
 
-        // radius specified -> draw circle
-        if( radius > 0 )
-        {
-          g.drawOval( ( x + ( m_w >> 1 ) ) - radius, y - ( ascent >> 1 ) - radius, radius << 1, radius << 1 );
-        }// radius unspecified -> draw rectangle
-        else
-        {
-          g.drawRect( x - 1, y - ascent - 1, m_w + 2, m_h + 2 );
-        }
+        g.drawRect( x - radius, y - ascent - radius, m_width + 2 * radius, m_height + 2 * radius );
       }
     }
   }
@@ -352,30 +334,30 @@ class RotatedLabel implements Label
    * @return true if the labels intersect
    */
   @Override
-  public boolean intersects( Label that )
+  public boolean intersects( final Label that )
   {
     System.out.println( "Intersection test for rotated labels is " + "not implemented yet!" );
     return false;
   }
 
-  private int[] transformPoint( int x, int y, int tx, int ty, double rotation, double anchorPointX,
-      double anchorPointY, int w, int h, double displacementX, double displacementY )
+  private int[] transformPoint( final int x, final int y, final int tx, final int ty, final double rotation, final double anchorPointX,
+      final double anchorPointY, final int w, final int h, final double displacementX, final double displacementY )
   {
 
-    double cos = Math.cos( rotation );
-    double sin = Math.sin( rotation );
-    double dx = -anchorPointX * w;
+    final double cos = Math.cos( rotation );
+    final double sin = Math.sin( rotation );
+    final double dx = -anchorPointX * w;
     //		double dy = anchorPointY * h;
-    double dy = anchorPointY * h - displacementY;
+    final double dy = anchorPointY * h - displacementY;
 
-    double m00 = cos;
-    double m01 = -sin;
-    double m02 = cos * dx - sin * dy + tx - tx * cos + ty * sin;
-    double m10 = sin;
-    double m11 = cos;
-    double m12 = sin * dx + cos * dy + ty - tx * sin - ty * cos;
+    final double m00 = cos;
+    final double m01 = -sin;
+    final double m02 = cos * dx - sin * dy + tx - tx * cos + ty * sin;
+    final double m10 = sin;
+    final double m11 = cos;
+    final double m12 = sin * dx + cos * dy + ty - tx * sin - ty * cos;
 
-    int[] point2 = new int[2];
+    final int[] point2 = new int[2];
 
     point2[0] = (int)( m00 * x + m01 * y + m02 + 0.5 + displacementX );
     point2[1] = (int)( m10 * x + m11 * y + m12 + 0.5 );
@@ -383,7 +365,7 @@ class RotatedLabel implements Label
     return point2;
   }
 
-  private Graphics2D setColor( Graphics2D g2, Color color, double opacity )
+  private Graphics2D setColor( final Graphics2D g2, Color color, final double opacity )
   {
     if( opacity < 0.999 )
     {
@@ -401,6 +383,6 @@ class RotatedLabel implements Label
   @Override
   public String toString()
   {
-    return caption;
+    return m_caption;
   }
 }

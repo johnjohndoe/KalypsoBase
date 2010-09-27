@@ -47,7 +47,6 @@ import org.kalypsodeegree_impl.tools.Debug;
 /**
  * Incarnation of a sld:Halo-element. A Halo is a type of Fill that is applied to the backgrounds of font glyphs. The
  * use of halos greatly improves the readability of text labels.
- * <p>
  * 
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  * @author <a href="mailto:mschneider@lat-lon.de">Markus Schneider </a>
@@ -55,24 +54,24 @@ import org.kalypsodeegree_impl.tools.Debug;
  */
 public class Halo_Impl implements Halo, Marshallable
 {
-  private Fill fill = null;
+  private Fill m_fill = null;
 
-  private ParameterValueType radius = null;
+  private ParameterValueType m_radius = null;
 
-  private Stroke stroke = null;
+  private Stroke m_stroke = null;
 
   /**
    * Create a new <tt>Halo</tt> -instance.
    * <p>
    * 
    * @param radius
-   *          radius to be used for the halo, use null for a rectangle styled halo
+   *          radius to be used for the halo
    * @param fill
    *          defines the fill style, use null for default style
    * @param stroke
    *          defines the stroke style, use null for default style
    */
-  Halo_Impl( ParameterValueType radius, Fill fill, Stroke stroke )
+  Halo_Impl( final ParameterValueType radius, final Fill fill, final Stroke stroke )
   {
     setRadius( radius );
     setFill( fill );
@@ -90,7 +89,7 @@ public class Halo_Impl implements Halo, Marshallable
   @Override
   public Fill getFill()
   {
-    return fill;
+    return m_fill;
   }
 
   /**
@@ -101,9 +100,9 @@ public class Halo_Impl implements Halo, Marshallable
    *          defines the fill color and pattern
    */
   @Override
-  public void setFill( Fill fill )
+  public void setFill( final Fill fill )
   {
-    this.fill = fill;
+    this.m_fill = fill;
   }
 
   /**
@@ -118,7 +117,7 @@ public class Halo_Impl implements Halo, Marshallable
   @Override
   public ParameterValueType getRadius()
   {
-    return radius;
+    return m_radius;
   }
 
   /**
@@ -129,9 +128,9 @@ public class Halo_Impl implements Halo, Marshallable
    *          radius to be used for the halo, use null for a rectangle styled halo
    */
   @Override
-  public void setRadius( ParameterValueType radius )
+  public void setRadius( final ParameterValueType radius )
   {
-    this.radius = radius;
+    this.m_radius = radius;
   }
 
   /**
@@ -148,28 +147,22 @@ public class Halo_Impl implements Halo, Marshallable
    *           if the evaluation fails
    */
   @Override
-  public double getRadius( Feature feature ) throws FilterEvaluationException
+  public double getRadius( final Feature feature ) throws FilterEvaluationException
   {
-    if( radius == null )
-    {
-      return -1.0;
-    }
+    if( m_radius == null )
+      return 1.0;
 
     String stringValue = null;
-    double radiusVal;
-
     try
     {
-      stringValue = radius.evaluate( feature );
-      radiusVal = Double.parseDouble( stringValue );
+      stringValue = m_radius.evaluate( feature );
+      return Double.parseDouble( stringValue );
     }
-    catch( NumberFormatException e )
+    catch( final NumberFormatException e )
     {
       throw new FilterEvaluationException( "Given value ('" + stringValue
           + "') for radius of Halo does not denote a number." );
     }
-
-    return radiusVal;
   }
 
   /**
@@ -179,13 +172,13 @@ public class Halo_Impl implements Halo, Marshallable
    *          radius to be set for the halo
    */
   @Override
-  public void setRadius( double radius )
+  public void setRadius( final double radius )
   {
     ParameterValueType pvt = null;
     if( radius > 0 )
     {
       pvt = StyleFactory.createParameterValueType( "" + radius );
-      this.radius = pvt;
+      this.m_radius = pvt;
     }
   }
 
@@ -198,7 +191,7 @@ public class Halo_Impl implements Halo, Marshallable
   @Override
   public Stroke getStroke()
   {
-    return stroke;
+    return m_stroke;
   }
 
   /**
@@ -209,9 +202,9 @@ public class Halo_Impl implements Halo, Marshallable
    *          defines the stroke color and pattern
    */
   @Override
-  public void setStroke( Stroke stroke )
+  public void setStroke( final Stroke stroke )
   {
-    this.stroke = stroke;
+    this.m_stroke = stroke;
   }
 
   /**
@@ -224,21 +217,21 @@ public class Halo_Impl implements Halo, Marshallable
   {
     Debug.debugMethodBegin();
 
-    StringBuffer sb = new StringBuffer( 1000 );
+    final StringBuffer sb = new StringBuffer( 1000 );
     sb.append( "<Halo>" );
-    if( radius != null )
+    if( m_radius != null )
     {
       sb.append( "<Radius>" );
-      sb.append( ( (Marshallable)radius ).exportAsXML() );
+      sb.append( ((Marshallable) m_radius).exportAsXML() );
       sb.append( "</Radius>" );
     }
-    if( fill != null )
+    if( m_fill != null )
     {
-      sb.append( ( (Marshallable)fill ).exportAsXML() );
+      sb.append( ((Marshallable) m_fill).exportAsXML() );
     }
-    if( stroke != null )
+    if( m_stroke != null )
     {
-      sb.append( ( (Marshallable)stroke ).exportAsXML() );
+      sb.append( ((Marshallable) m_stroke).exportAsXML() );
     }
     sb.append( "</Halo>" );
 
