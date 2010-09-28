@@ -42,6 +42,8 @@ package org.kalypso.core.util.pool;
 
 import java.net.URL;
 
+import org.eclipse.core.runtime.Assert;
+
 /**
  * @author vdoemming
  */
@@ -84,6 +86,8 @@ public class PoolableObjectType implements IPoolableObjectType
    */
   public PoolableObjectType( final String type, final String source, final URL context, final boolean ignoreExceptions )
   {
+    Assert.isNotNull( type );
+
     m_type = type;
     m_source = source;
     m_context = context;
