@@ -94,8 +94,11 @@ public abstract class AbstractTemplateStyle implements IKalypsoStyle, Marshallab
 
   protected void startLoad( )
   {
-    final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
-    pool.addPoolListener( this, m_styleKey );
+    if( m_styleKey != null )
+    {
+      final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
+      pool.addPoolListener( this, m_styleKey );
+    }
   }
 
   @Override
