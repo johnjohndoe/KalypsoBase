@@ -57,8 +57,6 @@ public class KalypsoOGC31Plugin extends Plugin
 
   public KalypsoOGC31Plugin( )
   {
-    super();
-
     m_plugin = this;
   }
 
@@ -71,15 +69,21 @@ public class KalypsoOGC31Plugin extends Plugin
   }
 
   /**
-   * @see org.eclipse.core.runtime.Plugin#start(org.osgi.framework.BundleContext)
+   * @see org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
    */
   @Override
-  public void start( final BundleContext context ) throws Exception
+  public void stop( final BundleContext context ) throws Exception
   {
-    super.start( context );
+    super.stop( context );
 
-    // FIXME: actually this does not work (why?) and starting this plugin too early will lock the workspace.
+    m_plugin = null;
+  }
 
+  /**
+   * This method can be called after startup of the workbench to preinitalize the jaxb context for gml 3 parsing.<br/>
+   */
+  public void initGmlJaxb( )
+  {
     // PERFORMANCE: as soon as this plug-in is started, we initialise the GML3.1 context
     // as this takes quite some time. This enables clients to initialise the context on
     // startup by starting this plug-in immediately.
@@ -94,7 +98,9 @@ public class KalypsoOGC31Plugin extends Plugin
       }
     };
     job.setSystem( true );
+    job.setUser( false );
     job.setPriority( Job.LONG );
     job.schedule();
   }
+
 }
