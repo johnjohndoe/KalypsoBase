@@ -41,7 +41,6 @@
 package org.kalypso.simulation.core.util;
 
 import java.io.PrintStream;
-import java.io.PrintWriter;
 
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.simulation.core.ISimulationMonitor;
@@ -58,11 +57,11 @@ public class LogHelper
 
   private final ISimulationMonitor m_monitor;
 
-  private final PrintWriter m_log;
+  private final PrintStream m_log;
 
   private final PrintStream m_outputConsumer;
 
-  public LogHelper( final PrintWriter log, final ISimulationMonitor monitor, final PrintStream outputConsumer )
+  public LogHelper( final PrintStream log, final ISimulationMonitor monitor, final PrintStream outputConsumer )
   {
     m_log = log;
     m_monitor = monitor;

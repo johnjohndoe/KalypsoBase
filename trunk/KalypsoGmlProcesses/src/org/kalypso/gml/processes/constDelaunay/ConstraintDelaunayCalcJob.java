@@ -5,14 +5,12 @@ package org.kalypso.gml.processes.constDelaunay;
 
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.PrintStream;
 import java.net.URL;
 import java.util.List;
 
@@ -78,7 +76,7 @@ public class ConstraintDelaunayCalcJob implements ISimulation
     final File simulogFile = new File( tmpdir, "simulation.log" ); //$NON-NLS-1$
     resultEater.addResult( "SimulationLog", simulogFile ); //$NON-NLS-1$
 
-    PrintWriter pwSimuLog = null;
+    PrintStream pwSimuLog = null;
     FileOutputStream strmKernelLog = null;
     FileOutputStream strmKernelErr = null;
     BufferedOutputStream strmPolyInput = null;
@@ -86,7 +84,7 @@ public class ConstraintDelaunayCalcJob implements ISimulation
     BufferedReader eleReader = null;
     try
     {
-      pwSimuLog = new PrintWriter( new BufferedWriter( new FileWriter( simulogFile ) ) );
+      pwSimuLog = new PrintStream( simulogFile );
 
       final LogHelper log = new LogHelper( pwSimuLog, monitor, System.out );
 
