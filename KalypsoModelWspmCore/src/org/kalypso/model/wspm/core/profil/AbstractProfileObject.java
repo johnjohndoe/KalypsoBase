@@ -55,7 +55,7 @@ public abstract class AbstractProfileObject implements IProfileObject
 
   private final IObservation<TupleResult> m_observation;
 
-  protected AbstractProfileObject(final IObservation<TupleResult> observation )
+  protected AbstractProfileObject( final IObservation<TupleResult> observation )
   {
     // m_profile = profile;
     m_observation = observation;
@@ -90,15 +90,16 @@ public abstract class AbstractProfileObject implements IProfileObject
     }
     return null;
   }
-@Deprecated
+
+  @Deprecated
   protected void init( )
   {
-//    for( final String id : getProfileProperties() )
-//    {
-//      final IComponent property = m_profile.getPointPropertyFor( id );
-//      if( !m_profile.hasPointProperty( property ) )
-//        m_profile.addPointProperty( property );
-//    }
+// for( final String id : getProfileProperties() )
+// {
+// final IComponent property = m_profile.getPointPropertyFor( id );
+// if( !m_profile.hasPointProperty( property ) )
+// m_profile.addPointProperty( property );
+// }
   }
 
   protected abstract String[] getProfileProperties( );
@@ -120,14 +121,14 @@ public abstract class AbstractProfileObject implements IProfileObject
   public IComponent[] getPointProperties( )
   {
     return null;
-//    final List<IComponent> myProperties = new ArrayList<IComponent>();
-//    for( final String id : getProfileProperties() )
-//    {
-//      final IComponent component = m_profile.hasPointProperty( id );
-//      if( component != null )
-//        myProperties.add( component );
-//    }
-//    return myProperties.toArray( new IComponent[] {} );
+// final List<IComponent> myProperties = new ArrayList<IComponent>();
+// for( final String id : getProfileProperties() )
+// {
+// final IComponent component = m_profile.hasPointProperty( id );
+// if( component != null )
+// myProperties.add( component );
+// }
+// return myProperties.toArray( new IComponent[] {} );
 
   }
 

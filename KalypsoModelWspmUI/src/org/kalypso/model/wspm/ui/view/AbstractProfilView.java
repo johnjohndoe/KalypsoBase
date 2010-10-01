@@ -45,6 +45,7 @@ import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilListener;
 import org.kalypso.model.wspm.core.result.IStationResult;
@@ -80,9 +81,9 @@ public abstract class AbstractProfilView implements IProfilListener, IProfilView
    *      org.eclipse.ui.forms.widgets.FormToolkit)
    */
   @Override
-  public final Control createControl( final Composite parent, final FormToolkit toolkit )
+  public final Control createControl( final Composite parent, final FormToolkit toolkit, ScrolledForm form )
   {
-    final Control control = doCreateControl( parent, toolkit );
+    final Control control = doCreateControl( parent, toolkit, form );
     m_control = control;
 
     m_control.addDisposeListener( new DisposeListener()
@@ -98,7 +99,7 @@ public abstract class AbstractProfilView implements IProfilListener, IProfilView
     return m_control;
   }
 
-  protected abstract Control doCreateControl( Composite parent, FormToolkit toolkit );
+  protected abstract Control doCreateControl( Composite parent, FormToolkit toolkit, ScrolledForm form );
 
   /**
    * @see org.kalypso.model.wspm.ui.profil.view.IProfilView#dispose()

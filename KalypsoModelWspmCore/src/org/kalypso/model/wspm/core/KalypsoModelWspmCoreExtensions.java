@@ -202,8 +202,8 @@ public final class KalypsoModelWspmCoreExtensions
     {
       final String filterUsage = filter.getUsageHint();
 
-      /* Blank usage: filter should be used everywhere*/
-      if( StringUtils.isBlank( filterUsage ))
+      /* Blank usage: filter should be used everywhere */
+      if( StringUtils.isBlank( filterUsage ) )
         restrictedFilters.add( filter );
       else
       {
@@ -384,7 +384,8 @@ public final class KalypsoModelWspmCoreExtensions
   {
     final Map<String, IProfileObjectProvider> map = getProfileObjectProviders();
     final IProfileObjectProvider provider = map.get( providerId );
-
+    if( provider == null )
+      System.out.println( "ProfileObjectProvider not registered: " + providerId );
     return provider;
   }
 

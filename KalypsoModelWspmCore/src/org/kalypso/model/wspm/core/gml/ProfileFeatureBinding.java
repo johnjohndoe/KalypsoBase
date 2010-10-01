@@ -249,7 +249,9 @@ public class ProfileFeatureBinding extends AbstractCachedFeature2 implements IPr
     for( final IObservation<TupleResult> obs : profileObjects )
     {
       final IProfileObject profileObject = ProfileObjectFactory.createProfileObject( profil, obs );
-      if( profileObject != null )
+      if( profileObject == null )
+        System.out.println( "failed to create Object: " + obs.getName() );
+      else
         profil.addProfileObjects( profileObject );
     }
 

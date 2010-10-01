@@ -52,6 +52,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
@@ -86,7 +87,7 @@ public class GelaendePanel extends AbstractProfilView
    *      org.eclipse.ui.forms.widgets.FormToolkit)
    */
   @Override
-  protected Control doCreateControl( final Composite parent, final FormToolkit toolkit )
+  protected Control doCreateControl( final Composite parent, final FormToolkit toolkit, ScrolledForm form )
   {
     final Composite panel = toolkit.createComposite( parent );
     panel.setLayout( new GridLayout() );

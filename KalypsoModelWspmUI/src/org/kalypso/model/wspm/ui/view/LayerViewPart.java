@@ -135,7 +135,7 @@ public class LayerViewPart extends AbstractChartModelViewPart
 
     if( panel != null )
     {
-      final Control control = panel.createControl( m_parent, getToolkit() );
+      final Control control = panel.createControl( m_parent, getToolkit(), null );
       control.setLayoutData( new GridData( GridData.FILL_BOTH ) );
       m_parent.layout();
     }

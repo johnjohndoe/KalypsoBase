@@ -80,6 +80,7 @@ public abstract class AbstractChartModelViewPart extends ViewPart implements IAd
 
   private String m_registeredName;
 
+
   protected abstract void createControl( final Composite parent );
 
   /**
@@ -143,6 +144,7 @@ public abstract class AbstractChartModelViewPart extends ViewPart implements IAd
     return m_chartPart;
   }
 
+ 
   private String getStationName( final IChartModel model )
   {
     final IProfil profil = model instanceof ProfilChartModel ? ((ProfilChartModel) model).getProfil() : null;
@@ -234,7 +236,7 @@ public abstract class AbstractChartModelViewPart extends ViewPart implements IAd
 
   protected final void updatePartName( final IChartModel model, final String message )
   {
-    if( m_form == null||m_form.isDisposed() )
+    if( m_form == null || m_form.isDisposed() )
       return;
     if( model == null )
     {
