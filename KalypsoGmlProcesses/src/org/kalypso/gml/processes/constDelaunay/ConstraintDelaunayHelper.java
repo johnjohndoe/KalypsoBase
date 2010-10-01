@@ -50,6 +50,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -92,7 +93,7 @@ public class ConstraintDelaunayHelper
   /**
    * writes out a triangle-polyfile with linestrings for the console program Triangle.exe
    */
-  public static String writePolyFileForLinestrings( final OutputStream polyStream, final List< ? > list, final PrintWriter simLog )
+  public static String writePolyFileForLinestrings( final OutputStream polyStream, final List< ? > list, final PrintStream simLog )
   {
     final List<GM_LineString> breaklines = new ArrayList<GM_LineString>( list.size() );
     int totalPointCount = 0;
@@ -419,7 +420,7 @@ public class ConstraintDelaunayHelper
     return cmd;
   }
 
-  public static void execTriangle( final PrintWriter pwSimuLog, final File tempDir, final StringBuffer cmd ) throws IOException, CoreException, InterruptedException
+  public static void execTriangle( final PrintStream pwSimuLog, final File tempDir, final StringBuffer cmd ) throws IOException, CoreException, InterruptedException
   {
     pwSimuLog.append( Messages.getString( "org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayHelper.21" ) ); //$NON-NLS-1$
 
@@ -610,7 +611,7 @@ public class ConstraintDelaunayHelper
   {
     BufferedReader nodeReader = null;
     BufferedReader eleReader = null;
-    PrintWriter pwSimuLog;
+    PrintStream pwSimuLog;
     final List<GM_Triangle> triangles = new LinkedList<GM_Triangle>();
 
     /* prepare */
@@ -651,7 +652,7 @@ public class ConstraintDelaunayHelper
 
     try
     {
-      pwSimuLog = new PrintWriter( System.out );
+      pwSimuLog = System.out;
 
       final File tempDir = FileUtilities.createNewTempDir( "Triangle" ); //$NON-NLS-1$
       final File polyfile = new File( tempDir, "input.poly" ); //$NON-NLS-1$
