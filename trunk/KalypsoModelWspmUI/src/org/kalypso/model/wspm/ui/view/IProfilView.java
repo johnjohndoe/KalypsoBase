@@ -43,6 +43,7 @@ package org.kalypso.model.wspm.ui.view;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.ScrolledForm;
 
 /**
  * <p>
@@ -57,7 +58,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
  */
 public interface IProfilView
 {
-  public Control createControl( final Composite parent, final FormToolkit toolkit);
+  public Control createControl( final Composite parent, final FormToolkit toolkit, ScrolledForm form );
 
   /**
    * Return the control of this view.
@@ -66,4 +67,4 @@ public interface IProfilView
 
   public void dispose( );
 
- }
+}

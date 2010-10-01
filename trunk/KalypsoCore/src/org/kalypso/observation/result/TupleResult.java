@@ -726,6 +726,7 @@ public class TupleResult implements List<IRecord>
     }
   }
 
+ 
   public int indexOfComponent( final IComponent comp )
   {
     return m_components.indexOf( comp );
@@ -747,17 +748,14 @@ public class TupleResult implements List<IRecord>
       sort();
       return m_records.indexOf( o );
     }
-    else if( o instanceof IComponent )
-      return indexOfComponent( (IComponent) o );
     else
-      return -1;
+      throw new IllegalArgumentException( o.toString() );
   }
 
   /**
-   * Returns the index of the first component with a given id.
-   * 
-   * @return -1, if no such component exists.
+   * @return -1, if no such component exists. Returns the index of the first component with a given id.
    */
+
   public int indexOfComponent( final String domainComponentId )
   {
     for( int i = 0; i < m_components.size(); i++ )
