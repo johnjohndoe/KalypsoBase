@@ -17,7 +17,6 @@ Require-Bundle: org.kalypso.ui,
  org.kalypso.simulation.core;bundle-version="1.0.0"
 Bundle-ActivationPolicy: lazy
 Export-Package: org.kalypso.afgui,
- org.kalypso.afgui.application,
  org.kalypso.afgui.handlers,
  org.kalypso.afgui.helper,
  org.kalypso.afgui.model,

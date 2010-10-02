@@ -40,32 +40,50 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.client.extension.project;
 
-import java.util.Properties;
-
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.kalypso.afgui.application.ActivateWorkflowProjectIntroAction;
+import org.eclipse.ui.IWorkbenchPage;
+import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
+import org.kalypso.afgui.ScenarioHandlingProjectNature;
+import org.kalypso.afgui.scenarios.IScenario;
 
 /**
  * @author Dirk Kuch
  */
 public class SzenarioProjectOpenAction implements IKalypsoModuleProjectOpenAction
 {
-
   /**
-   * @see org.kalypso.afgui.extension.IKalypsoProjectOpenAction#open(java.util.Properties)
+   * @see org.kalypso.project.database.client.extension.project.IKalypsoModuleProjectOpenAction#open(org.eclipse.ui.IWorkbenchPage,
+   *      org.eclipse.core.resources.IProject)
    */
   @Override
-  public IStatus open( final IProject project )
+  public IStatus open( final IWorkbenchPage page, final IProject project ) throws CoreException
   {
-    final Properties properties = new Properties();
-    properties.setProperty( "project", project.getName() ); //$NON-NLS-1$
-
-    final ActivateWorkflowProjectIntroAction action = new ActivateWorkflowProjectIntroAction();
-    action.run( null, properties );
+    final ScenarioHandlingProjectNature nature = ScenarioHandlingProjectNature.toThisNature( project );
+    final IScenario caze = nature.getCaseManager().getCases().get( 0 );
+    KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext().setCurrentCase( caze );
 
     return Status.OK_STATUS;
+  }
+
+  /**
+   * @see org.kalypso.project.database.client.extension.project.IKalypsoModuleProjectOpenAction#getFinalPerspective()
+   */
+  @Override
+  public String getFinalPerspective( )
+  {
+    return null;
+  }
+
+  /**
+   * @see org.kalypso.project.database.client.extension.project.IKalypsoModuleProjectOpenAction#revealProjectInExplorer()
+   */
+  @Override
+  public boolean revealProjectInExplorer( )
+  {
+    return false;
   }
 
 }

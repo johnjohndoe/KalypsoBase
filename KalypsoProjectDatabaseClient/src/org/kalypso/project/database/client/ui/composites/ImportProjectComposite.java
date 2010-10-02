@@ -48,6 +48,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
@@ -66,6 +67,7 @@ import org.kalypso.project.database.client.i18n.Messages;
 @SuppressWarnings("restriction")
 public class ImportProjectComposite extends Composite
 {
+  // FIXME: never disposed! Use one of the resource helper like ImageProvider or similar
   public static Image IMG_IMPORT = new Image( null, ImportProjectComposite.class.getResourceAsStream( "icons/project_import.gif" ) ); //$NON-NLS-1$
 
   private final FormToolkit m_toolkit;
@@ -75,6 +77,7 @@ public class ImportProjectComposite extends Composite
     super( parent, SWT.NULL );
 
     m_toolkit = toolkit;
+    m_toolkit.adapt( this );
 
     final GridLayout layout = new GridLayout();
     layout.verticalSpacing = layout.marginWidth = 0;
@@ -84,15 +87,16 @@ public class ImportProjectComposite extends Composite
   }
 
   /**
+   * FIXME: Control#update is most probably NOT intended to be overwritten in that way! Rename and make this private
+   * instead!
+   * 
    * @see org.eclipse.swt.widgets.Control#update()
    */
   @Override
   public final void update( )
   {
-    if( this.isDisposed() )
-    {
+    if( isDisposed() )
       return;
-    }
 
     final ImageHyperlink lnkImport = m_toolkit.createImageHyperlink( this, SWT.NULL );
     lnkImport.setImage( IMG_IMPORT );
@@ -109,48 +113,46 @@ public class ImportProjectComposite extends Composite
         final ExternalProjectImportWizard wizard = new ExternalProjectImportWizard();
         wizard.init( PlatformUI.getWorkbench(), null );
 
-        final WizardDialog2 dialog = new WizardDialog2( PlatformUI.getWorkbench().getDisplay().getActiveShell(), wizard );
+        final Shell activeShell = ImportProjectComposite.this.getShell();
+        final WizardDialog2 dialog = new WizardDialog2( activeShell, wizard );
         dialog.setRememberSize( true );
 
         /* @hack */
+        // TODO: hack for what?! Do we really need this?
         dialog.addPageChangedListener( new IPageChangedListener()
         {
-
           @Override
           public void pageChanged( final PageChangedEvent event )
           {
             final Object page = event.getSelectedPage();
             if( page instanceof WizardProjectsImportPage )
             {
-              final WizardProjectsImportPage myPage = (WizardProjectsImportPage) page;
+              final WizardProjectsImportPage importPage = (WizardProjectsImportPage) page;
 
-              final Composite control = (Composite) myPage.getControl();
+              final Composite control = (Composite) importPage.getControl();
               final Control[] children = control.getChildren();
 
               /* composite with radio buttons - import from directory, import from zip */
               final Composite composite = (Composite) children[0];
               final Control[] radios = composite.getChildren();
 
-              Button b = (Button) radios[0];
-              b.setSelection( false );
+              ((Button) radios[0]).setSelection( false );
 
-              b = (Button) radios[3];
-              b.setSelection( true );
+              ((Button) radios[3]).setSelection( true );
               radios[4].setEnabled( true );
               radios[5].setEnabled( true );
 
-              myPage.getCopyCheckbox().setSelection( true );
-              myPage.getCopyCheckbox().setEnabled( false );
-
+              importPage.getCopyCheckbox().setSelection( true );
+              importPage.getCopyCheckbox().setEnabled( false );
             }
           }
         } );
 
         dialog.open();
+
+        // FIXME: ask use to open the project now
+        // Problems: which project was imported? there could also be several new projects as well.
       }
     } );
-
-    m_toolkit.adapt( this );
-    this.layout();
   }
 }
