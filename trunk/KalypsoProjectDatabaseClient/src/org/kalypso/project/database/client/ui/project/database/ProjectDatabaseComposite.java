@@ -116,6 +116,9 @@ public class ProjectDatabaseComposite extends Composite implements IProjectDatab
   }
 
   /**
+   * FIXME: do NOT overwrite Control#update! This is for real painting, not for layout/control creation! FIXME: make
+   * private and rename!
+   * 
    * @see org.eclipse.swt.widgets.Control#update()
    */
   @Override

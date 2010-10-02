@@ -41,23 +41,43 @@
 package org.kalypso.project.database.client.core.base.actions;
 
 import org.apache.commons.lang.NotImplementedException;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IPageLayout;
+import org.eclipse.ui.IPerspectiveDescriptor;
+import org.eclipse.ui.IPerspectiveRegistry;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
+import org.eclipse.ui.intro.IIntroManager;
+import org.eclipse.ui.navigator.CommonNavigator;
+import org.eclipse.ui.navigator.CommonViewer;
+import org.eclipse.ui.views.navigator.ResourceNavigator;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
 import org.kalypso.project.database.client.extension.IKalypsoModule;
+import org.kalypso.project.database.client.extension.database.IKalypsoModuleDatabaseSettings;
 import org.kalypso.project.database.client.extension.database.handlers.ILocalProject;
 import org.kalypso.project.database.client.extension.database.handlers.ITranscendenceProject;
 import org.kalypso.project.database.client.extension.project.IKalypsoModuleProjectOpenAction;
 import org.kalypso.project.database.client.i18n.Messages;
 import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
+import org.kalypso.util.swt.StatusDialog;
 
 /**
  * @author Dirk Kuch
@@ -76,9 +96,9 @@ public class ProjectOpenAction implements IProjectAction
 
   private OPEN_TYPE m_type = null;
 
-  protected final ILocalProject m_handler;
+  private final ILocalProject m_handler;
 
-  protected final IKalypsoModule m_module;
+  private final IKalypsoModule m_module;
 
   // FIXME: ugly, implement different open actions instead!
   public enum OPEN_TYPE
@@ -186,6 +206,8 @@ public class ProjectOpenAction implements IProjectAction
 
     link.setToolTipText( Messages.getString( "org.kalypso.project.database.client.core.base.actions.ProjectOpenAction.10", m_handler.getName(), m_type.getStatus() ) ); //$NON-NLS-1$
 
+    final Shell shell = body.getShell();
+
     link.addHyperlinkListener( new HyperlinkAdapter()
     {
       /**
@@ -194,9 +216,139 @@ public class ProjectOpenAction implements IProjectAction
       @Override
       public void linkActivated( final HyperlinkEvent e )
       {
-        final IKalypsoModuleProjectOpenAction action = m_module.getDatabaseSettings().getProjectOpenAction();
-        action.open( m_handler.getProject() );
+        runAction( shell );
       }
     } );
+  }
+
+  protected void runAction( final Shell shell )
+  {
+    final String actionLabel = m_handler.getName();
+
+    final IProject project = m_handler.getProject();
+
+    final IStatus status = doOpenProject( project );
+
+    if( status.isOK() || status.matches( IStatus.CANCEL ) )
+      return;
+
+    new StatusDialog( shell, status, actionLabel );
+  }
+
+  private IStatus doOpenProject( final IProject project )
+  {
+    /* Some common checks, common to all the open actions */
+
+    /* Validate parameters */
+    if( !project.exists() )
+    {
+      final String message = String.format( "Unable to open '%s'. The project does not exist.", project.getName() );
+      return new Status( IStatus.ERROR, KalypsoProjectDatabaseClient.PLUGIN_ID, message );
+    }
+
+    if( !project.isOpen() )
+    {
+      // TODO: instead: we should ask the user if we should open the project.
+      final String message = String.format( "Unable to open '%s'. The project is closed. Please open the project first.", project.getName() );
+      return new Status( IStatus.ERROR, KalypsoProjectDatabaseClient.PLUGIN_ID, message );
+    }
+
+    final IKalypsoModuleDatabaseSettings databaseSettings = m_module.getDatabaseSettings();
+    final IKalypsoModuleProjectOpenAction action = databaseSettings.getProjectOpenAction();
+
+    final IWorkbench workbench = PlatformUI.getWorkbench();
+    final IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
+    if( window == null )
+      return Status.CANCEL_STATUS;
+
+    final IWorkbenchPage page = window.getActivePage();
+    if( page == null )
+      return Status.CANCEL_STATUS;
+
+    /* We need to do this first, the open actions sometimes depend on it */
+    final String perspective = action.getFinalPerspective();
+    hideIntroAndOpenPerspective( page, perspective );
+
+
+    try
+    {
+      if( action.revealProjectInExplorer() )
+        revealProjectInExplorer( page, project );
+      return action.open( page, project );
+    }
+    catch( final CoreException e )
+    {
+      e.printStackTrace();
+      return e.getStatus();
+    }
+    catch( final Exception e )
+    {
+      final String msg = String.format( "Unexpected error: %s", e.getLocalizedMessage() );
+      return new Status( IStatus.ERROR, KalypsoProjectDatabaseClient.PLUGIN_ID, msg, e );
+    }
+  }
+
+  private void revealProjectInExplorer( final IWorkbenchPage page, final IProject project ) throws PartInitException
+  {
+    // At least show project in Resource Navigator
+    final StructuredSelection projectSelection = new StructuredSelection( project );
+
+    final CommonNavigator projectExplorer = (CommonNavigator) page.findView( IPageLayout.ID_PROJECT_EXPLORER );
+    if( projectExplorer != null )
+    {
+      page.showView( IPageLayout.ID_PROJECT_EXPLORER, null, IWorkbenchPage.VIEW_ACTIVATE );
+      final CommonViewer commonViewer = projectExplorer.getCommonViewer();
+      commonViewer.collapseAll();
+      commonViewer.setSelection( projectSelection );
+      commonViewer.expandToLevel( project, 1 );
+    }
+    else
+    {
+      final ResourceNavigator view = (ResourceNavigator) page.showView( IPageLayout.ID_RES_NAV );
+      if( view != null )
+      {
+        final TreeViewer treeViewer = view.getTreeViewer();
+        treeViewer.collapseAll();
+        view.selectReveal( projectSelection );
+        treeViewer.expandToLevel( project, 1 );
+      }
+    }
+  }
+
+  private void hideIntroAndOpenPerspective( final IWorkbenchPage page, final String perspective )
+  {
+    /* hide intro */
+    final IWorkbench workbench = PlatformUI.getWorkbench();
+    final IIntroManager introManager = workbench.getIntroManager();
+    introManager.closeIntro( introManager.getIntro() );
+
+    if( perspective == null )
+      return;
+
+    /* Open desired perspective */
+    if( page == null )
+      return;
+
+    final IPerspectiveRegistry perspectiveRegistry = workbench.getPerspectiveRegistry();
+
+    /* close unused perspectives */
+    // REMARK: we did this before, but this works against eclipse, we should not do it.
+// final IPerspectiveDescriptor[] perspectives = page.getOpenPerspectives();
+// for( final IPerspectiveDescriptor descriptor : perspectives )
+// {
+// final String id = descriptor.getId();
+// if( id.equals( perspective ) )
+// {
+// continue;
+// }
+// else if( descriptor != null )
+// {
+// page.closePerspective( descriptor, true, false );
+// }
+// }
+
+    final IPerspectiveDescriptor descriptor = perspectiveRegistry.findPerspectiveWithId( perspective );
+    if( descriptor != null )
+      page.setPerspective( descriptor );
   }
 }

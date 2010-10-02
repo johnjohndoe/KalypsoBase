@@ -6,6 +6,7 @@ Bundle-Version: 2.3.0.qualifier
 Bundle-Activator: org.kalypso.project.database.client.KalypsoProjectDatabaseClient
 Bundle-Localization: plugin
 Require-Bundle: org.junit4;bundle-version="4.3.1";resolution:=optional,
+ org.eclipse.ui.navigator;bundle-version="3.5.0",
  org.kalypso.afgui;bundle-version="0.0.0";visibility:=reexport,
  org.kalypso.project.database;bundle-version="1.0.0";visibility:=reexport,
  org.eclipse.ui;bundle-version="3.4.1",

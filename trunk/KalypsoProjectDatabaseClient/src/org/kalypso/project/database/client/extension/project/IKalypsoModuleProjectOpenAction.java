@@ -41,12 +41,25 @@
 package org.kalypso.project.database.client.extension.project;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.ui.IWorkbenchPage;
 
 /**
  * @author Dirk Kuch
  */
 public interface IKalypsoModuleProjectOpenAction
 {
-  IStatus open( IProject project );
+  /**
+   * Returns the id of the perspective that should be opened when the project is opened. <br/>
+   * Return <code>null</code>, if the perspective should not be changed.
+   */
+  String getFinalPerspective( );
+
+  IStatus open( IWorkbenchPage page, IProject project ) throws CoreException;
+
+  /**
+   * Return <code>true</code>, if the opened project should be revealed in the project explorer resp. navigator.
+   */
+  boolean revealProjectInExplorer( );
 }
