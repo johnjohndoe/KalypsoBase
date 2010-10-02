@@ -98,7 +98,6 @@ public class ProjectDeleteAction implements IProjectAction
       @Override
       public void linkActivated( final HyperlinkEvent e )
       {
-
         try
         {
           m_locker.acquireUiUpdateLock();

@@ -68,6 +68,10 @@ import org.kalypso.project.database.client.ui.project.database.ProjectDatabaseCo
 import org.kalypso.project.database.client.ui.project.status.ProjectDatabaseServerStatusComposite;
 
 /**
+ * FIXME: this does not belong into KalypsoBase.<br/>
+ * We need an (extension?) mechanism to inject the additional functionality of the project database into the welcome
+ * page.
+ * 
  * @author Dirk Kuch
  */
 public class ModulePageComposite extends Composite
@@ -77,7 +81,7 @@ public class ModulePageComposite extends Composite
 
   private final FormToolkit m_toolkit;
 
-  protected final IKalypsoModule m_module;
+  private final IKalypsoModule m_module;
 
   public ModulePageComposite( final IKalypsoModule module, final FormToolkit toolkit, final Composite parent, final int style )
   {
@@ -178,6 +182,8 @@ public class ModulePageComposite extends Composite
     projects.setLayout( new GridLayout() );
     projects.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true, 2, 0 ) );
 
+    final IKalypsoModuleDatabaseSettings settings = m_module.getDatabaseSettings();
+
     final IModulePageWizardDelegate projectDelegate = new IModulePageWizardDelegate()
     {
       @Override
@@ -189,7 +195,6 @@ public class ModulePageComposite extends Composite
       @Override
       public String getCommitType( )
       {
-        final IKalypsoModuleDatabaseSettings settings = m_module.getDatabaseSettings();
         return settings.getModuleCommitType();
       }
 
@@ -220,8 +225,6 @@ public class ModulePageComposite extends Composite
         @Override
         public String getCommitType( )
         {
-          final IKalypsoModuleDatabaseSettings settings = m_module.getDatabaseSettings();
-
           return settings.getModuleCommitType();
         }
 
