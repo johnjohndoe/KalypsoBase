@@ -51,6 +51,8 @@ import org.kalypso.contribs.java.i18n.I18nUtils;
 import org.kalypso.project.database.client.extension.IKalypsoModule;
 
 /**
+ * TODO: bad name, this is not the page itself, but the page's data.
+ * 
  * @author Dirk Kuch
  */
 public abstract class AbstractKalypsoModulePage implements IKalypsoModulePage

@@ -49,6 +49,8 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 
 /**
+ * FIXME: what is the meaning of this? Probably, probably just use ScrolledForm instead.
+ * 
  * @author Dirk Kuch
  */
 public class ScrolledSection

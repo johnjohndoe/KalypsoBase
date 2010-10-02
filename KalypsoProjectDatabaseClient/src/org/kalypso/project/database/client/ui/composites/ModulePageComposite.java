@@ -72,7 +72,7 @@ import org.kalypso.project.database.client.ui.project.status.ProjectDatabaseServ
  */
 public class ModulePageComposite extends Composite
 {
-
+  // FIXME: never disposed!
   private static final Color COLOR_BOX = new Color( null, 0x7f, 0xb2, 0x99 );
 
   private final FormToolkit m_toolkit;
@@ -147,13 +147,16 @@ public class ModulePageComposite extends Composite
     try
     {
       final URL url = modulePage.getInfoURL();
-      if( url != null )
-      {
-        browser.setUrl( url.toExternalForm() );
-      }
+      if( url == null )
+        return;
+
+      final String projectInfoLocation = url.toExternalForm();
+      browser.setUrl( projectInfoLocation );
+      browser.addLocationListener( new OpenExternalLocationAdapter( true ) );
     }
     catch( final Exception e )
     {
+      // FIXME: error handling! show message
       e.printStackTrace();
     }
   }
@@ -163,6 +166,7 @@ public class ModulePageComposite extends Composite
     final IKalypsoModulePage modulePage = m_module.getModulePage();
 
     // list of projects
+    // FIXME: this scrolling does nothing, as the whole page lives in a scrolled composite
     final ScrolledSection sectionProjects = new ScrolledSection( body, m_toolkit, ExpandableComposite.TITLE_BAR, true );
     final Composite bodyProjects = sectionProjects.setup( Messages.getString("org.kalypso.project.database.client.ui.composites.ModulePageComposite.0"), new GridData( GridData.FILL, GridData.FILL, true, true ), new GridData( GridData.FILL, GridData.FILL, true, true ) ); //$NON-NLS-1$
     final GridLayout layout = new GridLayout( 2, true );
@@ -176,7 +180,6 @@ public class ModulePageComposite extends Composite
 
     final IModulePageWizardDelegate projectDelegate = new IModulePageWizardDelegate()
     {
-
       @Override
       public Image getImage( )
       {
@@ -187,7 +190,6 @@ public class ModulePageComposite extends Composite
       public String getCommitType( )
       {
         final IKalypsoModuleDatabaseSettings settings = m_module.getDatabaseSettings();
-
         return settings.getModuleCommitType();
       }
 
