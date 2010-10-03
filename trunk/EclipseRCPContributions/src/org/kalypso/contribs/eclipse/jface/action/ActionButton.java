@@ -94,7 +94,7 @@ public class ActionButton
         return SWT.RADIO;
 
       default:
-        throw new UnsupportedOperationException( "Unsupported button style: " + style );
+        throw new UnsupportedOperationException( "Unsupported button style: " + style ); //$NON-NLS-1$
     }
   }
 
@@ -173,7 +173,7 @@ public class ActionButton
     // m_action.getHoverImageDescriptor();
 
     final String text = m_action.getText();
-    m_button.setText( text == null ? "" : text );
+    m_button.setText( text == null ? "" : text );//$NON-NLS-1$
     m_button.setToolTipText( m_action.getDescription() );
 
     m_button.setSelection( m_action.isChecked() );
