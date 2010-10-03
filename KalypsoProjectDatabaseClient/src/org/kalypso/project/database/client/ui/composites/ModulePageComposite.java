@@ -46,13 +46,14 @@ import java.net.URL;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.kalypso.afgui.wizards.INewProjectWizard;
+import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
 import org.kalypso.contribs.eclipse.swt.canvas.DefaultContentArea;
 import org.kalypso.contribs.eclipse.swt.canvas.ImageCanvas2;
 import org.kalypso.contribs.eclipse.ui.controls.ScrolledSection;
@@ -60,12 +61,11 @@ import org.kalypso.project.database.client.core.utils.ProjectDatabaseServerUtils
 import org.kalypso.project.database.client.extension.IKalypsoModule;
 import org.kalypso.project.database.client.extension.database.IKalypsoModuleDatabaseSettings;
 import org.kalypso.project.database.client.extension.pages.module.IKalypsoModulePage;
-import org.kalypso.project.database.client.extension.pages.module.IModulePageWizardDelegate;
 import org.kalypso.project.database.client.i18n.Messages;
 import org.kalypso.project.database.client.ui.MyColors;
 import org.kalypso.project.database.client.ui.MyFonts;
 import org.kalypso.project.database.client.ui.project.database.ProjectDatabaseComposite;
-import org.kalypso.project.database.client.ui.project.status.ProjectDatabaseServerStatusComposite;
+import org.kalypso.project.database.client.ui.project.status.ProjectDatabaseServerStatusAction;
 
 /**
  * FIXME: this does not belong into KalypsoBase.<br/>
@@ -184,59 +184,30 @@ public class ModulePageComposite extends Composite
 
     final IKalypsoModuleDatabaseSettings settings = m_module.getDatabaseSettings();
 
-    final IModulePageWizardDelegate projectDelegate = new IModulePageWizardDelegate()
-    {
-      @Override
-      public Image getImage( )
-      {
-        return CreateProjectComposite.IMG_ADD_PROJECT;
-      }
+    final String commitType = settings.getModuleCommitType();
 
-      @Override
-      public String getCommitType( )
-      {
-        return settings.getModuleCommitType();
-      }
+    // FIXME: still too much code duplication: directly fetch the actions from the module
 
-      @Override
-      public INewProjectWizard getWizard( )
-      {
-        return modulePage.getProjectWizard();
-      }
-    };
+    final String createProjectLabel = Messages.getString( "org.kalypso.project.database.client.ui.composites.ModulePageComposite.1" ); //$NON-NLS-1$
+    final INewProjectWizard createProjectWizard = modulePage.getProjectWizard();
+    final CreateProjectAction createProjectAction = new CreateProjectAction( createProjectLabel, commitType, createProjectWizard );
+    final ImageHyperlink createProjectLink = ActionHyperlink.createHyperlink( m_toolkit, bodyProjects, SWT.NONE, createProjectAction );
+    createProjectLink.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
-    final CreateProjectComposite projectTemplate = new CreateProjectComposite( Messages.getString("org.kalypso.project.database.client.ui.composites.ModulePageComposite.1"), bodyProjects, m_toolkit, projectDelegate ); //$NON-NLS-1$
-    projectTemplate.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
-
-    final ImportProjectComposite projectImport = new ImportProjectComposite( bodyProjects, m_toolkit );
-    projectImport.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+    final ImportProjectAction importProjectAction = new ImportProjectAction();
+    final ImageHyperlink importProjectLink = ActionHyperlink.createHyperlink( m_toolkit, bodyProjects, SWT.NONE, importProjectAction );
+    importProjectLink.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
     if( modulePage.hasDemoProjectWizard() )
     {
-      final IModulePageWizardDelegate demoDelegate = new IModulePageWizardDelegate()
-      {
+      final String demoProjectLabel = Messages.getString( "org.kalypso.project.database.client.ui.composites.ModulePageComposite.2" ); //$NON-NLS-1$
 
-        @Override
-        public Image getImage( )
-        {
-          return CreateProjectComposite.IMG_EXTRACT_DEMO;
-        }
+      final INewProjectWizard demoProjectWizard = modulePage.getDemoProjectWizard();
+      final CreateProjectAction demoProjectAction = new CreateProjectAction( demoProjectLabel, commitType, demoProjectWizard );
+      demoProjectAction.setImageDescriptor( CreateProjectAction.IMG_EXTRACT_DEMO );
 
-        @Override
-        public String getCommitType( )
-        {
-          return settings.getModuleCommitType();
-        }
-
-        @Override
-        public INewProjectWizard getWizard( )
-        {
-          return modulePage.getDemoProjectWizard();
-        }
-      };
-
-      final CreateProjectComposite demoProject = new CreateProjectComposite( Messages.getString("org.kalypso.project.database.client.ui.composites.ModulePageComposite.2"), bodyProjects, m_toolkit, demoDelegate ); //$NON-NLS-1$
-      demoProject.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+      final ImageHyperlink demoHyperlink = ActionHyperlink.createHyperlink( m_toolkit, bodyProjects, SWT.NONE, demoProjectAction );
+      demoHyperlink.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
     }
     else
     {
@@ -245,14 +216,17 @@ public class ModulePageComposite extends Composite
 
     if( modulePage.hasImportWizard() )
     {
-      final SpecialImportProjectComposite specialImport = new SpecialImportProjectComposite( bodyProjects, m_toolkit, modulePage );
-      specialImport.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+      final SpecialImportProjectAction specialImportProjectAction = new SpecialImportProjectAction( modulePage );
+      final ImageHyperlink specialImportLink = ActionHyperlink.createHyperlink( m_toolkit, bodyProjects, SWT.NULL, specialImportProjectAction );
+      specialImportLink.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
     }
 
     if( ProjectDatabaseServerUtils.handleRemoteProject() )
     {
-      final ProjectDatabaseServerStatusComposite status = new ProjectDatabaseServerStatusComposite( bodyProjects, m_toolkit );
-      status.setLayoutData( new GridData( GridData.FILL, GridData.FILL, false, false ) );
+      final ProjectDatabaseServerStatusAction serverStatusAction = new ProjectDatabaseServerStatusAction();
+      final ImageHyperlink serverStatusLink = ActionHyperlink.createHyperlink( m_toolkit, bodyProjects, SWT.RIGHT | SWT.END, serverStatusAction );
+      serverStatusLink.setUnderlined( false );
+      serverStatusLink.setLayoutData( new GridData( GridData.FILL, GridData.FILL, false, false ) );
     }
   }
 }

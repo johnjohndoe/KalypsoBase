@@ -107,6 +107,8 @@ public class ProjectDownloadAction implements IProjectAction
           m_locker.acquireUiUpdateLock();
           /* sort beans */
           final KalypsoProjectBean bean = m_handler.getBean();
+          // FIXME: this is crude! Instead, introduce an interface 'IRrojectProvider' with two implementations:
+          // categoryId-based (for 'normal' projects) and another that is based on remote projects
           final ProjectTemplate template = new ProjectTemplate( String.format( "%s - Version %d", bean.getName(), bean.getProjectVersion() ), bean.getUnixName(), bean.getDescription(), null, bean.getUrl() ); //$NON-NLS-1$
 
           final Map<ProjectTemplate, KalypsoProjectBean> mapping = new HashMap<ProjectTemplate, KalypsoProjectBean>();
