@@ -48,7 +48,9 @@ import org.eclipse.ui.INewWizard;
  */
 public interface INewProjectWizard extends INewWizard
 {
-  public void setActivateScenarioOnPerformFinish( boolean b );
+  void setActivateScenarioOnPerformFinish( boolean b );
 
-  public IProject getNewProject( );
+  IProject getNewProject( );
+
+  boolean disableProjectCreationUI( );
 }

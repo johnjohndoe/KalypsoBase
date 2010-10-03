@@ -55,18 +55,18 @@ import org.kalypso.afgui.wizards.NewProjectWizard;
 import org.kalypso.contribs.eclipse.core.resources.ProjectTemplate;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.wizard.ProjectTemplatePage;
-import org.kalypso.project.database.client.i18n.Messages;
 import org.kalypso.project.database.common.nature.RemoteProjectNature;
-import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
- * Wizard for creating a new local Kalypso Planer Client Project
+ * Wizard for creating a new local Kalypso Planer Client Project<br/>
+ * FIXME: why is a different wizard needed? Makes really no sense at all!<br/>
+ * FIXME: Why is planer client code here?!
  * 
  * @author Dirk Kuch
  */
 public class WizardCreateProject extends NewProjectWizard
 {
-  final protected String[] m_natures;
+  private final String[] m_natures;
 
   /**
    * @param templates
@@ -76,10 +76,10 @@ public class WizardCreateProject extends NewProjectWizard
    */
   public WizardCreateProject( final ProjectTemplate[] templates, final String[] natures )
   {
-    super( new ProjectTemplatePage( Messages.getString( "org.kalypso.project.database.client.ui.project.wizard.create.WizardCreateProject.0" ), "", templates ), true ); //$NON-NLS-1$ //$NON-NLS-2$
+    super( new ProjectTemplatePage( "Projekt erzeugen", "", templates ), true ); //$NON-NLS-2$
     m_natures = natures;
 
-    setWindowTitle( Messages.getString( "org.kalypso.project.database.client.ui.project.wizard.create.WizardCreateProject.2" ) ); //$NON-NLS-1$
+    setWindowTitle( "Neues Projekt erzeugen" ); //$NON-NLS-1$
     setNeedsProgressMonitor( true );
   }
 
@@ -89,7 +89,7 @@ public class WizardCreateProject extends NewProjectWizard
 
     m_natures = natures;
 
-    setWindowTitle( Messages.getString( "org.kalypso.project.database.client.ui.project.wizard.create.WizardCreateProject.3" ) ); //$NON-NLS-1$
+    setWindowTitle( "Neues Projekt erzeugen" );
     setNeedsProgressMonitor( true );
   }
 
@@ -104,18 +104,22 @@ public class WizardCreateProject extends NewProjectWizard
     if( !finish )
       return false;
 
+    // NONSENSE: this is already done by the normal project wizard, why is this done here again?
+    // The NewProjectWizard automatically configures all natures that are in the template; do not give the natures from
+    // outside
+    final String[] natureIDs = m_natures;
+
     final WorkspaceModifyOperation operation = new WorkspaceModifyOperation()
     {
-
       @Override
       protected void execute( final IProgressMonitor monitor ) throws CoreException
       {
-        monitor.beginTask( Messages.getString( "org.kalypso.project.database.client.ui.project.wizard.create.WizardCreateProject.4" ), 1 ); //$NON-NLS-1$
-        KalypsoGisPlugin.getDefault();
+        monitor.beginTask( "aktualisiere Projekt", 1 ); //$NON-NLS-1$
+
         final IProject newProject = getNewProject();
         final IProjectDescription description = newProject.getDescription();
 
-        final String[] natures = (String[]) ArrayUtils.addAll( description.getNatureIds(), m_natures );
+        final String[] natures = (String[]) ArrayUtils.addAll( description.getNatureIds(), natureIDs );
         ArrayUtils.add( natures, RemoteProjectNature.NATURE_ID );
 
         // unique natures
@@ -132,7 +136,7 @@ public class WizardCreateProject extends NewProjectWizard
     };
 
     final IStatus status = RunnableContextHelper.execute( getContainer(), false, true, operation );
-    ErrorDialog.openError( getShell(), getWindowTitle(), Messages.getString( "org.kalypso.project.database.client.ui.project.wizard.create.WizardCreateProject.5" ), status ); //$NON-NLS-1$
+    ErrorDialog.openError( getShell(), getWindowTitle(), "Anlegen des Projektes", status ); //$NON-NLS-1$
 
     return status.isOK();
   }
@@ -143,4 +147,12 @@ public class WizardCreateProject extends NewProjectWizard
     return page.getSelectedProject();
   }
 
+  /**
+   * @see org.kalypso.afgui.wizards.NewProjectWizard#disableProjectCreationUI()
+   */
+  @Override
+  public boolean disableProjectCreationUI( )
+  {
+    return true;
+  }
 }

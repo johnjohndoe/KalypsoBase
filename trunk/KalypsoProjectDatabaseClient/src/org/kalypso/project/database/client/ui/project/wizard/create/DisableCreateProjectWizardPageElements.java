@@ -48,9 +48,10 @@ import org.eclipse.ui.dialogs.WizardNewProjectCreationPage;
 /**
  * @author Dirk Kuch
  */
+// FIXME: PLEASE COMMMMMMMMMENT WHAT THE HELL THIS STUFF IS DOING!
 public class DisableCreateProjectWizardPageElements
 {
-
+  // FIXME: PLEASE COMMMMMMMMMENT WHAT THE HELL THIS STUFF IS DOING!
   public static void disableElementsForProjectDownload( final WizardNewProjectCreationPage myPage )
   {
     final Composite myParent = (Composite) myPage.getControl();
@@ -74,6 +75,7 @@ public class DisableCreateProjectWizardPageElements
     subSubChildrenTwo[0].setEnabled( false );
   }
 
+  // FIXME: PLEASE COMMMMMMMMMENT WHAT THE HELL THIS STUFF IS DOING!
   public static void disableElementsForProjectCreation( final WizardNewProjectCreationPage myPage )
   {
     final Composite myParent = (Composite) myPage.getControl();

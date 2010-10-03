@@ -63,7 +63,6 @@ import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
 import org.kalypso.project.database.client.extension.pages.module.IModulePageWizardDelegate;
 import org.kalypso.project.database.client.ui.project.wizard.create.DisableCreateProjectWizardPageElements;
-import org.kalypso.project.database.client.ui.project.wizard.create.WizardCreateProject;
 import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
 import org.kalypso.project.database.common.nature.RemoteProjectNature;
 
@@ -141,7 +140,7 @@ public class CreateProjectComposite extends Composite
               final IUpdateable update = (IUpdateable) page;
               update.update();
             }
-            else if( wizard instanceof WizardCreateProject && page instanceof WizardNewProjectCreationPage )
+            else if( wizard.disableProjectCreationUI() && page instanceof WizardNewProjectCreationPage )
             {
               if( resetProjectName )
               {
