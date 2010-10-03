@@ -66,6 +66,10 @@ import org.kalypso.contribs.eclipse.i18n.Messages;
  */
 public class ProjectTemplatePage extends WizardPage
 {
+  private static String STR_DEFAULT_TITLE = Messages.getString( "org.kalypso.contribs.eclipse.jface.wizard.ProjectTemplatePage.0" ); //$NON-NLS-1$
+
+  private static String STR_DEFAULT_DESCRIPTION = Messages.getString( "org.kalypso.contribs.eclipse.jface.wizard.ProjectTemplatePage.1" ); //$NON-NLS-1$
+
   private final ProjectTemplate[] m_projectTemplates;
 
   private ProjectTemplate m_selectedProject;
@@ -77,29 +81,28 @@ public class ProjectTemplatePage extends WizardPage
    */
   public ProjectTemplatePage( final String categoryId )
   {
-    super( "projectTemplatePage" ); //$NON-NLS-1$
-
-    setTitle( Messages.getString( "org.kalypso.contribs.eclipse.jface.wizard.ProjectTemplatePage.0" ) ); //$NON-NLS-1$
-    setDescription( Messages.getString( "org.kalypso.contribs.eclipse.jface.wizard.ProjectTemplatePage.1" ) ); //$NON-NLS-1$
-
-    m_projectTemplates = EclipsePlatformContributionsExtensions.getProjectTemplates( categoryId );
-    initSelectedProject( categoryId );
+    this( STR_DEFAULT_TITLE, STR_DEFAULT_DESCRIPTION, categoryId );
   }
 
-  public ProjectTemplatePage( final String header, final String description, final ProjectTemplate[] templates )
+  public ProjectTemplatePage( final String title, final String description, final String categoryId )
+  {
+    this( title, description, EclipsePlatformContributionsExtensions.getProjectTemplates( categoryId ) );
+  }
+
+  public ProjectTemplatePage( final String title, final String description, final ProjectTemplate[] templates )
+  {
+    this( title, description, templates, null );
+  }
+
+  private ProjectTemplatePage( final String title, final String description, final ProjectTemplate[] templates, final String categoryId )
   {
     super( "projectTemplatePage" ); //$NON-NLS-1$
 
-    setTitle( header );
+    setTitle( title );
     setDescription( description );
 
     m_projectTemplates = templates;
 
-    initSelectedProject( null );
-  }
-
-  private void initSelectedProject( final String categoryId )
-  {
     /* Preselect the first entry, if any exists. */
     if( m_projectTemplates.length > 0 )
       m_selectedProject = m_projectTemplates[0];
