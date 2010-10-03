@@ -84,7 +84,7 @@ public class ImportProjectAction extends Action
     dialog.setRememberSize( true );
 
     /* @hack */
-    // TODO: hack for what?! Do we really need this?
+    // TODO: hack for what?! Do we really need this? What does it do?
     dialog.addPageChangedListener( new IPageChangedListener()
     {
       @Override

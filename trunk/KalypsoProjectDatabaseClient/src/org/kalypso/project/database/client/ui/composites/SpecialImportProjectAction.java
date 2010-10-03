@@ -45,6 +45,8 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IWorkbenchWizard;
+import org.eclipse.ui.PlatformUI;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.project.database.client.extension.pages.module.IKalypsoModulePage;
 
@@ -73,6 +75,9 @@ public class SpecialImportProjectAction extends Action
   {
     final Shell shell = event.widget.getDisplay().getActiveShell();
     final IWizard importWizard = m_enteringPage.getImportWizard();
+    if( importWizard instanceof IWorkbenchWizard )
+      ((IWorkbenchWizard) importWizard).init( PlatformUI.getWorkbench(), null );
+
     final WizardDialog2 dialog = new WizardDialog2( shell, importWizard );
     dialog.setRememberSize( true );
     dialog.open();

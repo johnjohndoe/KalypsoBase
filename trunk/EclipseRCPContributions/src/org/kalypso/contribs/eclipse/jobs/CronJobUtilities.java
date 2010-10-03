@@ -180,6 +180,7 @@ public class CronJobUtilities
   public static IStatus startCronJob( final Job job )
   {
     /* Is it a cron job? */
+    // TODO: why this check? why not just only allow CronJobs as parameter?
     if( !(job instanceof CronJob) )
       return StatusUtilities.createWarningStatus( "The job ('" + job.getName() + "') should not be activated, because it is no cron job..." );
 
@@ -215,7 +216,7 @@ public class CronJobUtilities
         return StatusUtilities.createWarningStatus( "The cron job ('" + name + "') should not be activated, because a cron job with its id is already activated..." );
     }
 
-    /* Okay, he can be started. */
+    /* Okay, it can be started. */
 
     /* Add the job change listener. */
     /* The listener will remove itself, if the cron job should not be executed anymore. */

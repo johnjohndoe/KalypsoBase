@@ -48,6 +48,8 @@ import org.kalypso.project.database.client.extension.project.IKalypsoModuleProje
 public interface IKalypsoModuleDatabaseSettings
 {
   /**
+   * FIXME: bad name: this is just the moduleID!
+   * 
    * @return commit type of "module project type"
    */
   String getModuleCommitType( );
