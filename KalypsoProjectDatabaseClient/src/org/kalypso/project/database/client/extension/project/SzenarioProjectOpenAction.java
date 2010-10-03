@@ -50,21 +50,22 @@ import org.kalypso.afgui.ScenarioHandlingProjectNature;
 import org.kalypso.afgui.scenarios.IScenario;
 
 /**
+ * FIXME: awful: dependency hell in Kalypso!
+ * 
  * @author Dirk Kuch
  */
-public class SzenarioProjectOpenAction implements IKalypsoModuleProjectOpenAction
+public class SzenarioProjectOpenAction extends AbstractModuleProjectOpenAction
 {
   /**
-   * @see org.kalypso.project.database.client.extension.project.IKalypsoModuleProjectOpenAction#open(org.eclipse.ui.IWorkbenchPage,
+   * @see org.kalypso.project.database.client.extension.project.AbstractModuleProjectOpenAction#doOpen(org.eclipse.ui.IWorkbenchPage,
    *      org.eclipse.core.resources.IProject)
    */
   @Override
-  public IStatus open( final IWorkbenchPage page, final IProject project ) throws CoreException
+  protected IStatus doOpen( final IWorkbenchPage page, final IProject project ) throws CoreException
   {
     final ScenarioHandlingProjectNature nature = ScenarioHandlingProjectNature.toThisNature( project );
     final IScenario caze = nature.getCaseManager().getCases().get( 0 );
     KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext().setCurrentCase( caze );
-
     return Status.OK_STATUS;
   }
 

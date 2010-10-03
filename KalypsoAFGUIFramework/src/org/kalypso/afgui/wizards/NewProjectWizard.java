@@ -95,9 +95,7 @@ public class NewProjectWizard extends BasicNewProjectResourceWizard implements I
    */
   public NewProjectWizard( final String categoryId, final boolean showTemplatePage )
   {
-    m_templateProjectPage = new ProjectTemplatePage( categoryId );
-    if( showTemplatePage )
-      addPage( m_templateProjectPage );
+    this( new ProjectTemplatePage( categoryId ), showTemplatePage );
   }
 
   public NewProjectWizard( final ProjectTemplatePage page, final boolean showTemplates )
@@ -266,5 +264,14 @@ public class NewProjectWizard extends BasicNewProjectResourceWizard implements I
 
     if( m_activateScenario )
       KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext().setCurrentCase( caze );
+  }
+
+  /**
+   * @see org.kalypso.project.database.client.extension.pages.module.INewProjectWizard#disableProjectCreationUI()
+   */
+  @Override
+  public boolean disableProjectCreationUI( )
+  {
+    return false;
   }
 }

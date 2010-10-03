@@ -44,6 +44,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
 /**
+ * FIXME: one of the (main) problems of the planer client dependencies is, that all project actions must live in this
+ * plugins. We need an extension mechanism right here!
+ * 
  * @author Dirk Kuch
  */
 public interface IProjectAction

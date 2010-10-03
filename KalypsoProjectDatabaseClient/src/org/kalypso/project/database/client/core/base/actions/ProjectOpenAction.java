@@ -45,29 +45,15 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IPageLayout;
-import org.eclipse.ui.IPerspectiveDescriptor;
-import org.eclipse.ui.IPerspectiveRegistry;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
-import org.eclipse.ui.intro.IIntroManager;
-import org.eclipse.ui.navigator.CommonNavigator;
-import org.eclipse.ui.navigator.CommonViewer;
-import org.eclipse.ui.views.navigator.ResourceNavigator;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
 import org.kalypso.project.database.client.extension.IKalypsoModule;
@@ -232,10 +218,9 @@ public class ProjectOpenAction implements IProjectAction
     if( status.isOK() || status.matches( IStatus.CANCEL ) )
       return;
 
-    new StatusDialog( shell, status, actionLabel );
+    new StatusDialog( shell, status, actionLabel ).open();
   }
 
-  // TODO: we should rather move all this stuff to a more common place.
   private IStatus doOpenProject( final IProject project )
   {
     /* Some common checks, common to all the open actions */
@@ -257,30 +242,9 @@ public class ProjectOpenAction implements IProjectAction
     final IKalypsoModuleDatabaseSettings databaseSettings = m_module.getDatabaseSettings();
     final IKalypsoModuleProjectOpenAction action = databaseSettings.getProjectOpenAction();
 
-    final IWorkbench workbench = PlatformUI.getWorkbench();
-    final IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
-    if( window == null )
-      return Status.CANCEL_STATUS;
-
-    final IWorkbenchPage page = window.getActivePage();
-    if( page == null )
-      return Status.CANCEL_STATUS;
-
-    // TODO: we should also have some kind of close action: close the currently open project (for example, Scenario
-    // based projects should unload the currently active scenario ). We could equally close a project before it is
-    // deleted.
-
-    checkProjectVersion( project );
-
-    /* We need to do this first, the open actions sometimes depend on it */
-    final String perspective = action.getFinalPerspective();
-    hideIntroAndOpenPerspective( page, perspective );
-
     try
     {
-      if( action.revealProjectInExplorer() )
-        revealProjectInExplorer( page, project );
-      return action.open( page, project );
+      return action.open( project );
     }
     catch( final CoreException e )
     {
@@ -292,65 +256,5 @@ public class ProjectOpenAction implements IProjectAction
       final String msg = String.format( "Unexpected error: %s", e.getLocalizedMessage() );
       return new Status( IStatus.ERROR, KalypsoProjectDatabaseClient.PLUGIN_ID, msg, e );
     }
-  }
-
-  /**
-   * Checks the version number of the project and sets it, if it was never set before.<br/>
-   * If the project is out-dated, we try to convert it to the current version,
-   */
-  private void checkProjectVersion( final IProject project )
-  {
-    // TODO: check version number and possibly convert project to new version
-
-    // TODO Auto-generated method stub
-
-  }
-
-  private void revealProjectInExplorer( final IWorkbenchPage page, final IProject project ) throws PartInitException
-  {
-    // At least show project in Resource Navigator
-    final StructuredSelection projectSelection = new StructuredSelection( project );
-
-    final CommonNavigator projectExplorer = (CommonNavigator) page.findView( IPageLayout.ID_PROJECT_EXPLORER );
-    if( projectExplorer != null )
-    {
-      page.showView( IPageLayout.ID_PROJECT_EXPLORER, null, IWorkbenchPage.VIEW_ACTIVATE );
-      final CommonViewer commonViewer = projectExplorer.getCommonViewer();
-      commonViewer.collapseAll();
-      commonViewer.setSelection( projectSelection );
-      commonViewer.expandToLevel( project, 1 );
-    }
-    else
-    {
-      final ResourceNavigator view = (ResourceNavigator) page.showView( IPageLayout.ID_RES_NAV );
-      if( view != null )
-      {
-        final TreeViewer treeViewer = view.getTreeViewer();
-        treeViewer.collapseAll();
-        view.selectReveal( projectSelection );
-        treeViewer.expandToLevel( project, 1 );
-      }
-    }
-  }
-
-  private void hideIntroAndOpenPerspective( final IWorkbenchPage page, final String perspective )
-  {
-    /* hide intro */
-    final IWorkbench workbench = PlatformUI.getWorkbench();
-    final IIntroManager introManager = workbench.getIntroManager();
-    introManager.closeIntro( introManager.getIntro() );
-
-    if( perspective == null )
-      return;
-
-    /* Open desired perspective */
-    if( page == null )
-      return;
-
-    final IPerspectiveRegistry perspectiveRegistry = workbench.getPerspectiveRegistry();
-
-    final IPerspectiveDescriptor descriptor = perspectiveRegistry.findPerspectiveWithId( perspective );
-    if( descriptor != null )
-      page.setPerspective( descriptor );
   }
 }

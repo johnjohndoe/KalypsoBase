@@ -75,13 +75,14 @@ public class RemoteImportWorker
 
   private final Map<ProjectTemplate, KalypsoProjectBean> m_mapping;
 
-
   public RemoteImportWorker( final ProjectTemplate[] templates, final Map<ProjectTemplate, KalypsoProjectBean> mapping )
   {
     m_templates = templates;
     m_mapping = mapping;
   }
 
+  // FIXME FIXME FIXME!
+  // Really evil and wrong dependencies to planer client here!!!
   public IStatus execute( ) throws CoreException
   {
     final WizardCreateProject wizard;
@@ -147,7 +148,6 @@ public class RemoteImportWorker
         preferences.setModified( false );
         preferences.setChangesCommited( true );
       }
-
     }
 
     return Status.OK_STATUS;

@@ -45,11 +45,13 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceVisitor;
+import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
@@ -68,6 +70,8 @@ import de.renew.workflow.connector.cases.ICase;
 public class ScenarioHandlingProjectNature extends CaseHandlingProjectNature<IScenario>
 {
   public final static String ID = "org.kalypso.afgui.ScenarioHandlingProjectNature"; //$NON-NLS-1$
+
+  public static final String PREFERENCE_ID = "org.kalypso.afgui"; //$NON-NLS-1$
 
   IDerivedScenarioCopyFilter m_filter = new IDerivedScenarioCopyFilter()
   {
@@ -221,8 +225,35 @@ public class ScenarioHandlingProjectNature extends CaseHandlingProjectNature<ISc
     return (ScenarioHandlingProjectNature) project.getNature( ID );
   }
 
+  /**
+   * Same as {@link #toThisNature(IProject)}, but only logs the thrown exception.
+   */
+  public static ScenarioHandlingProjectNature toThisNatureQuiet( final IProject project )
+  {
+    try
+    {
+      return toThisNature( project );
+    }
+    catch( final CoreException e )
+    {
+      e.printStackTrace();
+      KalypsoAFGUIFrameworkPlugin.getDefault().getLog().log( e.getStatus() );
+      return null;
+    }
+  }
+
   public IDerivedScenarioCopyFilter getDerivedScenarioCopyFilter( )
   {
     return m_filter;
   }
+
+  /**
+   * Returns the (scenario specific) preferences for this project.
+   */
+  public IEclipsePreferences getProjectPreference( )
+  {
+    final ProjectScope projectScope = new ProjectScope( getProject() );
+    return projectScope.getNode( ScenarioHandlingProjectNature.PREFERENCE_ID );
+  }
+
 }

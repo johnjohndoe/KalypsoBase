@@ -20,7 +20,6 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -34,6 +33,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
+import org.kalypso.afgui.ScenarioHandlingProjectNature;
 import org.kalypso.afgui.i18n.Messages;
 import org.kalypso.afgui.model.ICommandPoster;
 import org.kalypso.afgui.model.IModel;
@@ -208,15 +208,18 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
     /* Release current models && reset state */
     reset();
 
-    // FIXME: this synchronized block is dubious! Probably, reset should be synchronized as well...
+    // FIXME: this synchronized block is dubious! Probably, reset() should be synchronized as well...
     synchronized( this )
     {
       if( scenario != null )
       {
         final IProject project = scenario.getProject();
-        final ProjectScope projectScope = new ProjectScope( project );
-        final IEclipsePreferences afguiNode = projectScope.getNode( "org.kalypso.afgui" ); //$NON-NLS-1$
-        m_dataSetScope = afguiNode == null ? null : afguiNode.get( Messages.getString( "org.kalypso.afgui.scenarios.SzenarioDataProvider.3" ), null ); //$NON-NLS-1$
+        final ScenarioHandlingProjectNature nature = ScenarioHandlingProjectNature.toThisNatureQuiet( project );
+        final IEclipsePreferences afguiNode = nature.getProjectPreference();
+        if( afguiNode == null )
+          m_dataSetScope = null;
+        else
+          m_dataSetScope = afguiNode.get( "dataSetScope", null ); //$NON-NLS-1$
       }
 
       m_scenario = (IScenario) scenario;
@@ -730,7 +733,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
         return false;
     }
   }
-  
+
   @Override
   public String toString(){
     return "Active data set scope: [ " + m_dataSetScope + " ]";
