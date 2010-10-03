@@ -70,7 +70,8 @@ import org.kalypso.project.database.client.ui.project.status.ProjectDatabaseServ
 /**
  * FIXME: this does not belong into KalypsoBase.<br/>
  * We need an (extension?) mechanism to inject the additional functionality of the project database into the welcome
- * page.
+ * page: two ideas/strategies to do this: 1) use actions instead of fixed wizard 2) create an extension point mechanism
+ * that provides the IProjectHandles (so only the Project database may provide remote projects)
  * 
  * @author Dirk Kuch
  */
@@ -186,7 +187,8 @@ public class ModulePageComposite extends Composite
 
     final String commitType = settings.getModuleCommitType();
 
-    // FIXME: still too much code duplication: directly fetch the actions from the module
+    // FIXME: not flexible enough, we should directly fetch the actions from the module, so we may have
+    // different behavior depending on the module
 
     final String createProjectLabel = Messages.getString( "org.kalypso.project.database.client.ui.composites.ModulePageComposite.1" ); //$NON-NLS-1$
     final INewProjectWizard createProjectWizard = modulePage.getProjectWizard();
@@ -198,6 +200,7 @@ public class ModulePageComposite extends Composite
     final ImageHyperlink importProjectLink = ActionHyperlink.createHyperlink( m_toolkit, bodyProjects, SWT.NONE, importProjectAction );
     importProjectLink.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
+    // TODO: we do not need the 'hasXXX' methods if we fetch actions from the module
     if( modulePage.hasDemoProjectWizard() )
     {
       final String demoProjectLabel = Messages.getString( "org.kalypso.project.database.client.ui.composites.ModulePageComposite.2" ); //$NON-NLS-1$
