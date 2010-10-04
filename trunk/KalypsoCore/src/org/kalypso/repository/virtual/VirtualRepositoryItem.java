@@ -66,7 +66,7 @@ public class VirtualRepositoryItem implements IRepositoryItem
 
   private IRepositoryItem m_parent = null;
 
-  private IRepositoryItem[] m_children = IRepositoryItem.EMPTY_ARRAY;
+  private IRepositoryItem[] m_children = new IRepositoryItem[] {};
 
   private AbstractFilterType m_filterType = null;
 

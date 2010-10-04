@@ -49,8 +49,6 @@ import org.eclipse.core.runtime.IAdaptable;
  */
 public interface IRepositoryItem extends IAdaptable
 {
-  IRepositoryItem[] EMPTY_ARRAY = new IRepositoryItem[0];
-
   /**
    * Returns the item's name. The name is used to display the item in the repository for instance.
    * 
@@ -65,9 +63,8 @@ public interface IRepositoryItem extends IAdaptable
    * <pre>
    * 
    *  id(item) = rep-id:/item-id
-   *  
-   * </pre>
    * 
+   * </pre>
    * <p>
    * Thus, the item's id is made of the id of the item's repository id plus its own id. The identifier should be build
    * according to the URL specification.
@@ -107,6 +104,6 @@ public interface IRepositoryItem extends IAdaptable
    */
   IRepository getRepository( );
 
-   boolean hasAdapter( Class< ? > adapter );
+  boolean hasAdapter( Class< ? > adapter );
 
 }
