@@ -90,12 +90,10 @@ public class FileItem implements IRepositoryItem
   public IRepositoryItem[] getChildren( )
   {
     final File[] files = m_file.listFiles( m_rep.getFilter() );
-
     if( files == null )
-      return IRepositoryItem.EMPTY_ARRAY;
+      return new IRepositoryItem[] {};
 
     final IRepositoryItem[] items = new IRepositoryItem[files.length];
-
     for( int i = 0; i < items.length; i++ )
       items[i] = m_rep.createItem( files[i] );
 
