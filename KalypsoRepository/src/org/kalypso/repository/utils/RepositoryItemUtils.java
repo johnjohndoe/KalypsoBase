@@ -136,6 +136,21 @@ public final class RepositoryItemUtils
     return StringUtilities.chomp( parent );
   }
 
+  public static String getParentItemId( final String identifier )
+  {
+    final String[] parts = identifier.split( "\\." );
+    if( parts.length == 1 )
+      return RepositoryUtils.getRepositoryId( identifier );
+
+    String parent = "";
+    for( int i = 0; i < parts.length - 1; i++ )
+    {
+      parent += parts[i] + ".";
+    }
+
+    return StringUtilities.chomp( parent );
+  }
+
   /**
    * @return "plain" item id without "protocol" (the original source, like zml-proxy://, datastore://)
    */
@@ -343,6 +358,14 @@ public final class RepositoryItemUtils
     return getPlainId( part );
   }
 
+  public static String resolveItemIdPart( final String identifier )
+  {
+    final String[] parts = identifier.split( "\\." );
+    final String part = parts[parts.length - 1];
+
+    return getPlainId( part );
+  }
+
   public static String resolveItemName( final IRepositoryItem item ) throws RepositoryException
   {
     if( item instanceof IRepository )
@@ -393,6 +416,13 @@ public final class RepositoryItemUtils
   public static boolean equals( final IRepositoryItem item1, final IRepositoryItem item2 )
   {
     return getPlainId( item1.getIdentifier() ).equalsIgnoreCase( getPlainId( item2.getIdentifier() ) );
+  }
+
+  public static int countParts( final String identifier )
+  {
+    final String[] parts = identifier.split( "\\." );
+
+    return parts.length;
   }
 
 }
