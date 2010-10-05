@@ -143,7 +143,7 @@ public class WPSRequest
 
   /**
    * @param timeout
-   *          If > 0, the process is automatically cancelled after this amount of time in milliseconds.
+   *          If > 0, the process is automatically canceled after this amount of time in milliseconds.
    */
   public WPSRequest( final String identifier, final String serviceEndpoint, final long timeout )
   {

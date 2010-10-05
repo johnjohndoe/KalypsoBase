@@ -330,7 +330,7 @@ public class ObservationServiceImpl implements IObservationService
   /**
    * This function is executed, if the job has finished (i.e. done, canceled, failure).
    * 
-   *@param status
+   * @param status
    *          The status of the job.
    */
   protected void onJobFinished( final IStatus status )
@@ -386,5 +386,21 @@ public class ObservationServiceImpl implements IObservationService
   {
     getDelegate().setItemName( identifier, name );
 
+  }
+
+  /**
+   * @see org.kalypso.services.observation.sei.IRepositoryService#isMultipleSourceItem(java.lang.String)
+   */
+  @Override
+  public boolean isMultipleSourceItem( final String identifier ) throws RepositoryException
+  {
+    /* Get the observation service delegate. */
+    final IObservationService delegate = getDelegate();
+
+    /* If it is existing, delegate to it. */
+    if( delegate != null )
+      return delegate.isMultipleSourceItem( identifier );
+
+    return false;
   }
 }
