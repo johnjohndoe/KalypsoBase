@@ -757,6 +757,21 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
         }
       }
     }
+  }
 
+  /**
+   * @see org.kalypso.services.observation.sei.IRepositoryService#isMultipleSourceItem(java.lang.String)
+   */
+  @Override
+  public boolean isMultipleSourceItem( final String identifier ) throws RepositoryException
+  {
+    for( final IRepository repository : m_repositories )
+    {
+      final IRepositoryItem item = RepositoryUtils.findEquivalentItem( repository, identifier );
+      if( item != null )
+        return item.isMultipleSourceItem();
+    }
+
+    return false;
   }
 }

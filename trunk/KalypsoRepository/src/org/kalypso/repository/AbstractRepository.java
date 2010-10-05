@@ -368,4 +368,13 @@ public abstract class AbstractRepository implements IRepository
   {
     return m_identifier;
   }
+
+  /**
+   * @see org.kalypso.repository.IRepositoryItem#isMultipleSourceItem()
+   */
+  @Override
+  public boolean isMultipleSourceItem( )
+  {
+    return false;
+  }
 }

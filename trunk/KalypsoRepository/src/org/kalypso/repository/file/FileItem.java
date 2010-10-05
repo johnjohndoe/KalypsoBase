@@ -188,4 +188,13 @@ public class FileItem implements IRepositoryItem
     return true;
   }
 
+  /**
+   * @see org.kalypso.repository.IRepositoryItem#isMultipleSourceItem()
+   */
+  @Override
+  public boolean isMultipleSourceItem( )
+  {
+    return false;
+  }
+
 }

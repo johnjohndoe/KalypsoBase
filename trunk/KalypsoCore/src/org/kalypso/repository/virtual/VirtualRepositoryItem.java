@@ -191,4 +191,13 @@ public class VirtualRepositoryItem implements IRepositoryItem
 
     return false;
   }
+
+  /**
+   * @see org.kalypso.repository.IRepositoryItem#isMultipleSourceItem()
+   */
+  @Override
+  public boolean isMultipleSourceItem( )
+  {
+    return false;
+  }
 }

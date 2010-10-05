@@ -498,4 +498,19 @@ public class ObservationServiceFassade implements IObservationService, IDisposab
       }
     }
   }
+
+  /**
+   * @see org.kalypso.services.observation.sei.IRepositoryService#isMultipleSourceItem(java.lang.String)
+   */
+  @Override
+  public boolean isMultipleSourceItem( final String identifier ) throws RepositoryException
+  {
+    final IRepositoryItem item = RepositoryUtils.findEquivalentItem( m_repository, identifier );
+    if( item != null )
+    {
+      return item.isMultipleSourceItem();
+    }
+
+    return false;
+  }
 }

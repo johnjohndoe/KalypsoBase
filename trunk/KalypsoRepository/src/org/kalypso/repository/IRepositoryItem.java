@@ -106,4 +106,6 @@ public interface IRepositoryItem extends IAdaptable
 
   boolean hasAdapter( Class< ? > adapter );
 
+  boolean isMultipleSourceItem( ) throws RepositoryException;
+
 }

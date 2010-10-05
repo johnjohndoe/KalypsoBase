@@ -201,4 +201,13 @@ public class ServiceRepositoryItem implements IRepositoryItem
     return true;
   }
 
+  /**
+   * @see org.kalypso.repository.IRepositoryItem#isMultipleSourceItem()
+   */
+  @Override
+  public boolean isMultipleSourceItem( ) throws RepositoryException
+  {
+    return m_srv.isMultipleSourceItem( getIdentifier() );
+  }
+
 }

@@ -35,6 +35,8 @@ public final class RepositoriesExtensions
 
   public static final String ATT_CACHED = "cached"; //$NON-NLS-1$
 
+  public static final String ATT_METADATA_SERVICE_PRIORITY = "metadata_service_priority"; //$NON-NLS-1$
+
   private RepositoriesExtensions( )
   {
 

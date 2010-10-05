@@ -89,4 +89,6 @@ public interface IRepositoryService
    * @throws RemoteException
    */
   void reload( ) throws RepositoryException;
+
+  boolean isMultipleSourceItem( String identifier ) throws RepositoryException;
 }
