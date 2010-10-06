@@ -53,48 +53,35 @@ public interface ITupleModel
   IAxis[] getAxisList( );
 
   /**
-   * Returns the position of the axis in this tupple model
+   * Returns the position of the axis in this tuple model
    * 
-   * @param axis
-   * @return the position of the axis in this tupple model
+   * @return the position of the axis in this tuple model
    * @throws SensorException
-   *           when axis not part of this model
+   *           when axis is not part of this model
    */
-  int getPositionFor( final IAxis axis ) throws SensorException;
+  int getPosition( final IAxis axis ) throws SensorException;
 
   /**
    * @return amount of items in this observation's model
-   * @throws SensorException
    */
-  int getCount( ) throws SensorException;
+  int size( ) throws SensorException;
 
   /**
-   * @param axis
-   * @return the range of the given axis for this tupple model
-   * @throws SensorException
+   * @return the range of the given axis for this tuple model
    */
-  IAxisRange getRangeFor( IAxis axis ) throws SensorException;
+  IAxisRange getRange( IAxis axis ) throws SensorException;
 
   /**
-   * @param index
-   * @param axis
-   * @return element at index for axis
-   * @throws SensorException
    */
-  Object getElement( final int index, final IAxis axis ) throws SensorException;
+  Object get( final int index, final IAxis axis ) throws SensorException;
 
   /**
    * Sets the element at index for axis.
-   * 
-   * @param index
-   * @param element
-   * @param axis
-   * @throws SensorException
    */
-  void setElement( final int index, final Object element, final IAxis axis ) throws SensorException;
+  void set( final int index, final IAxis axis, final Object element ) throws SensorException;
 
   /**
-   * Returns the index of the given element in the valueslist for the given axis. Calling this method makes only sense
+   * Returns the index of the given element in the value list for the given axis. Calling this method makes only sense
    * for key axes since other axes can have duplicates. In either case it returns the index of the first element found.
    * 
    * @param element

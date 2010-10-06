@@ -77,10 +77,10 @@ public class ObservationIndex
   {
     m_index = new HashMap<Object, Integer>();
 
-    final int count = m_data.getCount();
+    final int count = m_data.size();
     for( int i = 0; i < count; i++ )
     {
-      final Object key = m_data.getElement( i, m_keyAxis );
+      final Object key = m_data.get( i, m_keyAxis );
       m_index.put( key, i );
     }
   }
@@ -98,6 +98,6 @@ public class ObservationIndex
     if( row == null )
       throw new SensorException( String.format( "Unknown key: %s", key ) );
 
-    return m_data.getElement( row, valueAxis );
+    return m_data.get( row, valueAxis );
   }
 }

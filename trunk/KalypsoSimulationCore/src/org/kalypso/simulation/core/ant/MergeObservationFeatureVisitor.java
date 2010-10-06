@@ -188,9 +188,9 @@ public class MergeObservationFeatureVisitor implements FeatureVisitor
 
     final Map<Object, Integer> sourceKeyHash = ObservationUtilities.hashValues( sourceTuples, sourceKeyAxis );
 
-    for( int i = 0; i < targetTuples.getCount(); i++ )
+    for( int i = 0; i < targetTuples.size(); i++ )
     {
-      final Object targetKey = targetTuples.getElement( i, targetKeyAxis );
+      final Object targetKey = targetTuples.get( i, targetKeyAxis );
 
       // does the source contains the key?
       final Integer sourceKeyIndex = sourceKeyHash.get( targetKey );
@@ -208,20 +208,20 @@ public class MergeObservationFeatureVisitor implements FeatureVisitor
         final IAxis sourceStatusAxis = sources[1];
 
         // is the target a warned value?
-        final Number targetStatus = (Number) targetTuples.getElement( i, targetStatusAxis );
+        final Number targetStatus = (Number) targetTuples.get( i, targetStatusAxis );
         if( !KalypsoStatusUtils.checkMask( targetStatus.intValue(), KalypsoStati.BIT_CHECK ) )
           continue;
 
         // is the source value user edited?
-        final Number sourceStatus = (Number) sourceTuples.getElement( sourceIndex, sourceStatusAxis );
+        final Number sourceStatus = (Number) sourceTuples.get( sourceIndex, sourceStatusAxis );
         if( !KalypsoStatusUtils.checkMask( sourceStatus.intValue(), KalypsoStati.BIT_USER_MODIFIED ) )
           continue;
 
         // copy value
-        final Object sourceValue = sourceTuples.getElement( sourceIndex, sourceAxis );
+        final Object sourceValue = sourceTuples.get( sourceIndex, sourceAxis );
 
-        targetTuples.setElement( i, sourceValue, targetAxis );
-        targetTuples.setElement( i, sourceStatus, targetStatusAxis );
+        targetTuples.set( i, targetAxis, sourceValue );
+        targetTuples.set( i, targetStatusAxis, sourceStatus );
       }
 
     }

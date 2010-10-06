@@ -69,9 +69,9 @@ public class NOperationTuplemodel extends AbstractTupleModel
   }
 
   @Override
-  public int getCount( ) throws SensorException
+  public int size( ) throws SensorException
   {
-    return m_baseModels[0].getCount();
+    return m_baseModels[0].size();
   }
 
   @Override
@@ -81,7 +81,7 @@ public class NOperationTuplemodel extends AbstractTupleModel
   }
 
   @Override
-  public Object getElement( final int index, final IAxis axis ) throws SensorException
+  public Object get( final int index, final IAxis axis ) throws SensorException
   {
     final String axisType = axis.getType();
 
@@ -89,25 +89,25 @@ public class NOperationTuplemodel extends AbstractTupleModel
     if( dataClass.equals( Date.class ) )
     {
       final IAxis a = ObservationUtilities.findAxisByType( m_baseModels[0].getAxisList(), axisType );
-      return m_baseModels[0].getElement( index, a );
+      return m_baseModels[0].get( index, a );
     }
 
     if( dataClass.equals( Double.class ) )
     {
       final IAxis a = ObservationUtilities.findAxisByType( m_baseModels[0].getAxisList(), axisType );
-      if( index >= m_baseModels[0].getCount() )
+      if( index >= m_baseModels[0].size() )
         return null;
 
-      double value = ((Number) m_baseModels[0].getElement( index, a )).doubleValue();
+      double value = ((Number) m_baseModels[0].get( index, a )).doubleValue();
       for( int i = 1; i < m_baseModels.length; i++ )
       {
         final ITupleModel model = m_baseModels[i];
-        if( index >= model.getCount() )
+        if( index >= model.size() )
           continue;
 
         final IAxis a2 = ObservationUtilities.findAxisByType( m_baseModels[i].getAxisList(), axisType );
 
-        final double nextValue = ((Number) model.getElement( index, a2 )).doubleValue();
+        final double nextValue = ((Number) model.get( index, a2 )).doubleValue();
         switch( m_operation )
         {
           case OperationFilter.OPERATION_PLUS:
@@ -132,7 +132,7 @@ public class NOperationTuplemodel extends AbstractTupleModel
     // status-axis
     if( KalypsoStatusUtils.isStatusAxis( axis ) )
     {
-      if( index >= m_baseModels[0].getCount() )
+      if( index >= m_baseModels[0].size() )
         return null;
 
       final int value = KalypsoStati.BIT_OK;
@@ -144,7 +144,7 @@ public class NOperationTuplemodel extends AbstractTupleModel
   }
 
   @Override
-  public void setElement( final int index, final Object element, final IAxis axis )
+  public void set( final int index, final IAxis axis, final Object element )
   {
     throw new UnsupportedOperationException( getClass().getName() + Messages.getString( "org.kalypso.ogc.sensor.filter.filters.NOperationTupplemodel.2" ) ); //$NON-NLS-1$
   }

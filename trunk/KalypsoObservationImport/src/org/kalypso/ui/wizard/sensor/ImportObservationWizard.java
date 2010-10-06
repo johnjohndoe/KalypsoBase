@@ -137,7 +137,7 @@ public class ImportObservationWizard extends Wizard implements IImportWizard
       final IAxis[] axesNew = m_page2.getAxisMappingTarget();
 
       final ITupleModel tuppelModelSrc = srcObservation.getValues( null );
-      final int countSrc = tuppelModelSrc.getCount();
+      final int countSrc = tuppelModelSrc.size();
 
       final IObservation targetObservation;
       final ITupleModel tuppelModelTarget;
@@ -147,7 +147,7 @@ public class ImportObservationWizard extends Wizard implements IImportWizard
         targetObservation = m_page2.getTargetObservation( fileTarget.toURI().toURL() );
         tuppelModelTarget = targetObservation.getValues( null );
         if( selection.isAppend() )
-          countTarget = tuppelModelTarget.getCount();
+          countTarget = tuppelModelTarget.size();
         else
           countTarget = 0;
       }
@@ -194,9 +194,9 @@ public class ImportObservationWizard extends Wizard implements IImportWizard
               newValue = null;
           }
           else
-            newValue = tuppelModelSrc.getElement( i, axesSrc[a] );
+            newValue = tuppelModelSrc.get( i, axesSrc[a] );
           if( newValue != null )
-            newTuppelModel.setElement( i, newValue, axesNew[a] );
+            newTuppelModel.set( i, axesNew[a], newValue );
         }
       }
       // append from existing target
@@ -204,7 +204,7 @@ public class ImportObservationWizard extends Wizard implements IImportWizard
       {
         for( int i = 0; i < countTarget; i++ )
           for( final IAxis element : axesNew )
-            newTuppelModel.setElement( countSrc + i, tuppelModelTarget.getElement( i, element ), element );
+            newTuppelModel.set( countSrc + i, element, tuppelModelTarget.get( i, element ) );
       }
       final String href = ""; //$NON-NLS-1$
       final String name = srcObservation.getName();

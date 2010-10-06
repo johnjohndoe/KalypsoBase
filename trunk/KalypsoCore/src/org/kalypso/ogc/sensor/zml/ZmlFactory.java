@@ -636,7 +636,7 @@ public final class ZmlFactory
    */
   private static String buildValueString( final ITupleModel model, final IAxis axis, final TimeZone timezone ) throws SensorException
   {
-    if( model.getCount() == 0 )
+    if( model.size() == 0 )
       return "";
 
     if( java.util.Date.class.isAssignableFrom( axis.getDataClass() ) )
@@ -652,9 +652,9 @@ public final class ZmlFactory
   private static String buildStringAxis( final ITupleModel model, final IAxis axis ) throws SensorException
   {
     final StringBuffer buffer = new StringBuffer();
-    for( int i = 0; i < model.getCount(); i++ )
+    for( int i = 0; i < model.size(); i++ )
     {
-      buffer.append( model.getElement( i, axis ) ).append( ";" ); //$NON-NLS-1$
+      buffer.append( model.get( i, axis ) ).append( ";" ); //$NON-NLS-1$
     }
 
     return StringUtilities.chomp( buffer.toString() );
@@ -665,9 +665,9 @@ public final class ZmlFactory
     final StringBuffer buffer = new StringBuffer();
     final DateParser dateParser = XmlTypes.getDateParser( timezone );
 
-    for( int i = 0; i < model.getCount(); i++ )
+    for( int i = 0; i < model.size(); i++ )
     {
-      buffer.append( dateParser.toString( model.getElement( i, axis ) ) ).append( ";" ); //$NON-NLS-1$
+      buffer.append( dateParser.toString( model.get( i, axis ) ) ).append( ";" ); //$NON-NLS-1$
     }
 
     return StringUtilities.chomp( buffer.toString() );
@@ -680,9 +680,9 @@ public final class ZmlFactory
   {
     final StringBuffer buffer = new StringBuffer();
 
-    for( int i = 0; i < model.getCount(); i++ )
+    for( int i = 0; i < model.size(); i++ )
     {
-      final Object elt = model.getElement( i, axis );
+      final Object elt = model.get( i, axis );
       if( elt == null )
         LOG.warning( Messages.getString( "org.kalypso.ogc.sensor.zml.ZmlFactory.24" ) + i + Messages.getString( "org.kalypso.ogc.sensor.zml.ZmlFactory.25" ) + axis ); //$NON-NLS-1$ //$NON-NLS-2$
 

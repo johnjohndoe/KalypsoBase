@@ -75,14 +75,14 @@ public class AddDataSourceModelHandler extends AbstractDataSourceModelHandler
     final SimpleTupleModel model = new SimpleTupleModel( baseAxes );
     final int dataSourceIndex = ArrayUtils.indexOf( baseAxes, dataSourceAxis );
 
-    for( int i = 0; i < baseModel.getCount(); i++ )
+    for( int i = 0; i < baseModel.size(); i++ )
     {
       final Object[] data = new Object[baseAxes.length];
 
       for( final IAxis axis : baseModel.getAxisList() )
       {
-        final Object element = baseModel.getElement( i, axis );
-        data[model.getPositionFor( axis )] = element;
+        final Object element = baseModel.get( i, axis );
+        data[model.getPosition( axis )] = element;
       }
 
       /**

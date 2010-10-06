@@ -74,14 +74,14 @@ public class RemoveDataSourceModelHandler extends AbstractDataSourceModelHandler
 
     final SimpleTupleModel model = new SimpleTupleModel( axes );
 
-    for( int i = 0; i < baseModel.getCount(); i++ )
+    for( int i = 0; i < baseModel.size(); i++ )
     {
       final Object[] data = new Object[axes.length];
 
       for( final IAxis axis : axes )
       {
-        final Object element = baseModel.getElement( i, axis );
-        data[model.getPositionFor( axis )] = element;
+        final Object element = baseModel.get( i, axis );
+        data[model.getPosition( axis )] = element;
       }
 
       model.addTuple( data );

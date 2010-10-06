@@ -215,7 +215,7 @@ public class MergeObservationWorker implements ICoreRunnableWithProgress
     final DataSourceHandler srcMetaDataHandler = new DataSourceHandler( srcObservation.getMetadataList() );
     final DataSourceHandler destMetaDataHandler = new DataSourceHandler( m_metadata );
 
-    for( int index = 0; index < srcModel.getCount(); index++ )
+    for( int index = 0; index < srcModel.size(); index++ )
     {
       try
       {
@@ -231,7 +231,7 @@ public class MergeObservationWorker implements ICoreRunnableWithProgress
           /* adjust data src informations (add to metadata) */
           if( AxisUtils.isDataSrcAxis( srcAxis ) )
           {
-            final Number srcIndex = (Number) srcModel.getElement( index, srcAxis );
+            final Number srcIndex = (Number) srcModel.get( index, srcAxis );
 
             final String identifier;
             final String repository;
@@ -255,7 +255,7 @@ public class MergeObservationWorker implements ICoreRunnableWithProgress
           }
           else
           {
-            final Object value = srcModel.getElement( index, srcAxis );
+            final Object value = srcModel.get( index, srcAxis );
             values[baseIndex] = value;
           }
         }
@@ -282,7 +282,7 @@ public class MergeObservationWorker implements ICoreRunnableWithProgress
     final int dataSourceIndex = handler.addDataSource( href, href );
     final int dataSourceValueIndex = mapping.getDestinationIndex( mapping.getDataSourceAxis() );
 
-    for( int index = 0; index < srcModel.getCount(); index++ )
+    for( int index = 0; index < srcModel.size(); index++ )
     {
       try
       {
@@ -293,7 +293,7 @@ public class MergeObservationWorker implements ICoreRunnableWithProgress
 
         for( final IAxis srcAxis : srcAxes )
         {
-          final Object value = srcModel.getElement( index, srcAxis );
+          final Object value = srcModel.get( index, srcAxis );
           final int baseIndex = mapping.getDestinationIndex( srcAxis );
           values[baseIndex] = value;
         }

@@ -90,7 +90,7 @@ public abstract class AbstractTupleModel implements ITupleModel
    * @see org.kalypso.ogc.sensor.ITuppleModel#getPositionFor(org.kalypso.ogc.sensor.IAxis)
    */
   @Override
-  public int getPositionFor( final IAxis axis ) throws SensorException
+  public int getPosition( final IAxis axis ) throws SensorException
   {
     if( !m_axes2pos.containsKey( axis ) )
       throw new SensorException( Messages.getString( "org.kalypso.ogc.sensor.impl.AbstractTuppleModel.0" ) + axis ); //$NON-NLS-1$
@@ -124,9 +124,9 @@ public abstract class AbstractTupleModel implements ITupleModel
    * @see org.kalypso.ogc.sensor.ITuppleModel#getRangeFor(org.kalypso.ogc.sensor.IAxis)
    */
   @Override
-  public IAxisRange getRangeFor( final IAxis axis ) throws SensorException
+  public IAxisRange getRange( final IAxis axis ) throws SensorException
   {
-    if( getCount() > 0 )
+    if( size() > 0 )
     {
       // for numbers we need to step through all the
       // rows in order to find the range
@@ -136,9 +136,9 @@ public abstract class AbstractTupleModel implements ITupleModel
         Number upper = new Double( -Double.MAX_VALUE );
 
         final DoubleComparator dc = new DoubleComparator( 0.000001 );
-        for( int i = 0; i < getCount(); i++ )
+        for( int i = 0; i < size(); i++ )
         {
-          final Number value = (Number) getElement( i, axis );
+          final Number value = (Number) get( i, axis );
 
           if( dc.compare( value, lower ) < 0 )
             lower = value;
@@ -152,8 +152,8 @@ public abstract class AbstractTupleModel implements ITupleModel
 
       // else we assume that the order is already correct
       // and simply take the first and the last element
-      final Object begin = getElement( 0, axis );
-      final Object end = getElement( getCount() - 1, axis );
+      final Object begin = get( 0, axis );
+      final Object end = get( size() - 1, axis );
 
       return new DefaultAxisRange( begin, end );
     }

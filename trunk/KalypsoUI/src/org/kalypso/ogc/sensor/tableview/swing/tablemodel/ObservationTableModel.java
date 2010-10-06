@@ -192,9 +192,9 @@ public class ObservationTableModel extends AbstractTableModel implements IObserv
       final ITupleModel tupModel = obs.getValues( col.getArguments() );
 
       // fill shared column values
-      for( int r = 0; r < tupModel.getCount(); r++ )
+      for( int r = 0; r < tupModel.size(); r++ )
       {
-        final Object elt = tupModel.getElement( r, keyAxis );
+        final Object elt = tupModel.get( r, keyAxis );
         m_sharedModel.add( elt );
       }
     }
@@ -328,7 +328,7 @@ public class ObservationTableModel extends AbstractTableModel implements IObserv
           final ITupleModel values = col.getObservation().getValues( col.getArguments() );
           final int ix = values.indexOf( key, col.getKeyAxis() );
           if( ix != -1 )
-            return values.getElement( ix, col.getValueAxis() );
+            return values.get( ix, col.getValueAxis() );
 
           return null;
         }
@@ -417,19 +417,19 @@ public class ObservationTableModel extends AbstractTableModel implements IObserv
           final IAxis valueAxis = col.getValueAxis();
           final IAxis statusAxis = getStatusAxis( observation, valueAxis );
 
-          final Object oldValue = model.getElement( ix, valueAxis );
+          final Object oldValue = model.get( ix, valueAxis );
           if( !checkValuesEqual( changedValue, oldValue ) )
           {
             /* Only change value if really something has happened */
 
             // first set status (may be overwritten)
             if( statusAxis != null )
-              model.setElement( ix, KalypsoStati.STATUS_USERMOD, statusAxis );
+              model.set( ix, statusAxis, KalypsoStati.STATUS_USERMOD );
 
             changeDataSource( observation, model, ix, IDataSourceItem.SOURCE_MANUAL_CHANGED );
 
             // then set value
-            model.setElement( ix, changedValue, valueAxis );
+            model.set( ix, valueAxis, changedValue );
 
             observation.fireChangedEvent( this );
           }
@@ -454,7 +454,7 @@ public class ObservationTableModel extends AbstractTableModel implements IObserv
     final DataSourceHandler handler = new DataSourceHandler( observation.getMetadataList() );
     final int dataSourceIndex = handler.addDataSource( source, source );
 
-    model.setElement( index, Integer.valueOf( dataSourceIndex ), dataSourceAxis );
+    model.set( index, dataSourceAxis, Integer.valueOf( dataSourceIndex ) );
   }
 
   private boolean isDateColumn( final int columnIndex )
@@ -528,7 +528,7 @@ public class ObservationTableModel extends AbstractTableModel implements IObserv
           final IAxis statusAxis = getStatusAxis( col.getObservation(), col.getValueAxis() );
           if( statusAxis != null )
           {
-            final Number status = (Number) values.getElement( ix, statusAxis );
+            final Number status = (Number) values.get( ix, statusAxis );
 
             if( status != null )
               return m_rules.findRules( status );

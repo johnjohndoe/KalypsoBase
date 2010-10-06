@@ -100,7 +100,7 @@ public class TuppleModelsLinearAdd
     for( int i = 0; i < tuppleModels.length; i++ )
     {
       final ITupleModel values = tuppleModels[i];
-      if( values.getCount() != firstTuppleModel.getCount() )
+      if( values.size() != firstTuppleModel.size() )
         throw new SensorException( "The observations in the list must have a equal number of elements ..." );
 
       final IAxis[] axisList = values.getAxisList();
@@ -115,7 +115,7 @@ public class TuppleModelsLinearAdd
     final int combinedValuePosition = 1;
     final int combinedStatusPosition = 2;
 
-    for( int i = 0; i < firstTuppleModel.getCount(); i++ )
+    for( int i = 0; i < firstTuppleModel.size(); i++ )
     {
       double sum = 0.0;
       for( int j = 0; j < tuppleModels.length; j++ )
@@ -134,7 +134,7 @@ public class TuppleModelsLinearAdd
         final IAxis valueAxis = valueAxes[j];
 
         /* Multiply the values of the current observation. */
-        final Double value = (Double) tuppleModel.getElement( i, valueAxis );
+        final Double value = (Double) tuppleModel.get( i, valueAxis );
 
         /* Weight the value. */
         final double weightedValue = value.doubleValue() * weight;
@@ -147,7 +147,7 @@ public class TuppleModelsLinearAdd
       final Object[] values = new Object[3];
 
       /* Add the first date to the new observation. */
-      final Date firstDate = (Date) firstTuppleModel.getElement( i, m_targetDateAxis );
+      final Date firstDate = (Date) firstTuppleModel.get( i, m_targetDateAxis );
       values[combinedDatePosition] = new Date( firstDate.getTime() );
 
       /* Add the summarised values to the new observation. */

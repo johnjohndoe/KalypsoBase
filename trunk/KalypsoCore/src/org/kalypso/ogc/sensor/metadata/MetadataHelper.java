@@ -97,6 +97,24 @@ public class MetadataHelper implements ITimeseriesConstants, ICopyObservationMet
     return DateRange.createDateRangeOrNull( from, to );
   }
 
+  public static Date getForecastStart( final MetadataList mdl )
+  {
+    final DateRange dateRange = getForecastDateRange( mdl );
+    if( dateRange == null )
+      return null;
+
+    return dateRange.getFrom();
+  }
+
+  public static Date getForecastEnd( final MetadataList mdl )
+  {
+    final DateRange dateRange = getForecastDateRange( mdl );
+    if( dateRange == null )
+      return null;
+
+    return dateRange.getTo();
+  }
+
   public static DateRange getForecastDateRange( final MetadataList mdl )
   {
     return getDateRange( mdl.getProperty( MD_VORHERSAGE_START ), mdl.getProperty( MD_VORHERSAGE_ENDE ) );

@@ -147,10 +147,10 @@ final class RememberForSync
 
         if( ix != -1 )
         {
-          values.setElement( ix, new Double( d ), m_numberAxis );
+          values.set( ix, m_numberAxis, new Double( d ) );
 
           if( statusAxis != null )
-            values.setElement( ix, KalypsoStati.STATUS_USERMOD, statusAxis );
+            values.set( ix, statusAxis, KalypsoStati.STATUS_USERMOD );
         }
         else
         {

@@ -131,7 +131,7 @@ public class IntervalTupleModel extends AbstractTupleModel
 
   private static IAxisRange getSourceModelRange( final ITupleModel srcModel, final IAxis dateAxis ) throws SensorException
   {
-    return srcModel.getRangeFor( dateAxis );
+    return srcModel.getRange( dateAxis );
   }
 
   private ITupleModel initModell( final IAxis[] axisList ) throws SensorException
@@ -165,7 +165,7 @@ public class IntervalTupleModel extends AbstractTupleModel
     stack.lastTargetCalendar = iterator.next(); // TODO hasNext() ?
 
     // initialize values
-    final int srcMaxRows = m_srcModel.getCount();
+    final int srcMaxRows = m_srcModel.size();
 
     // initialize source
     stack.lastSrcCalendar = stack.lastTargetCalendar;
@@ -280,7 +280,7 @@ public class IntervalTupleModel extends AbstractTupleModel
       return PROCESSING_INSTRUCTION.eNothing;
     }
 
-    final Calendar srcCal = createCalendar( (Date) m_srcModel.getElement( stack.srcRow, m_axes.getDateAxis() ) );
+    final Calendar srcCal = createCalendar( (Date) m_srcModel.get( stack.srcRow, m_axes.getDateAxis() ) );
 
     stack.srcInterval = null;
 
@@ -349,8 +349,8 @@ public class IntervalTupleModel extends AbstractTupleModel
   private Calendar getFirstSrcCalendar( ) throws SensorException
   {
     // check if source time series is empty
-    if( m_srcModel.getCount() != 0 ) // not empty
-      return createCalendar( (Date) m_srcModel.getElement( 0, m_axes.getDateAxis() ) );
+    if( m_srcModel.size() != 0 ) // not empty
+      return createCalendar( (Date) m_srcModel.get( 0, m_axes.getDateAxis() ) );
     else
       // if empty, we pretend that it begins at requested range
       return m_from;
@@ -369,7 +369,7 @@ public class IntervalTupleModel extends AbstractTupleModel
     final double[] value = targetInterval.getValue();
     final String[] sources = targetInterval.getSources();
 
-    model.setElement( targetRow, cal.getTime(), m_axes.getDateAxis() );
+    model.set( targetRow, m_axes.getDateAxis(), cal.getTime() );
 
     final IAxis[] statusAxes = m_axes.getStatusAxes();
     final IAxis[] valueAxes = m_axes.getValueAxes();
@@ -377,19 +377,19 @@ public class IntervalTupleModel extends AbstractTupleModel
 
     for( int i = 0; i < statusAxes.length; i++ )
     {
-      model.setElement( targetRow, Integer.valueOf( status[i] ), statusAxes[i] );
+      model.set( targetRow, statusAxes[i], Integer.valueOf( status[i] ) );
     }
 
     for( int i = 0; i < valueAxes.length; i++ )
     {
-      model.setElement( targetRow, new Double( value[i] ), valueAxes[i] );
+      model.set( targetRow, valueAxes[i], new Double( value[i] ) );
     }
 
     final DataSourceHandler handler = new DataSourceHandler( m_metadata );
     for( int i = 0; i < dataSourceAxes.length; i++ )
     {
       final int dataSource = handler.addDataSource( sources[i], String.format( "filter://%s", IntervalFilter.class.getName() ) );
-      model.setElement( targetRow, Integer.valueOf( dataSource ), dataSourceAxes[i] );
+      model.set( targetRow, dataSourceAxes[i], Integer.valueOf( dataSource ) );
     }
   }
 
@@ -401,9 +401,9 @@ public class IntervalTupleModel extends AbstractTupleModel
   }
 
   @Override
-  public int getCount( ) throws SensorException
+  public int size( ) throws SensorException
   {
-    return m_intervallModel.getCount();
+    return m_intervallModel.size();
   }
 
   @Override
@@ -419,13 +419,13 @@ public class IntervalTupleModel extends AbstractTupleModel
   }
 
   @Override
-  public Object getElement( final int index, final IAxis axis ) throws SensorException
+  public Object get( final int index, final IAxis axis ) throws SensorException
   {
-    return m_intervallModel.getElement( index, axis );
+    return m_intervallModel.get( index, axis );
   }
 
   @Override
-  public void setElement( final int index, final Object element, final IAxis axis )
+  public void set( final int index, final IAxis axis, final Object element )
   {
     // TODO support it
     throw new UnsupportedOperationException( getClass().getName() + Messages.getString( "org.kalypso.ogc.sensor.filter.filters.IntervallTupplemodel.0" ) ); //$NON-NLS-1$

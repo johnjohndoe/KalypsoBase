@@ -183,14 +183,14 @@ public class SimpleObservation implements IObservation
 
     final IAxis[] keys = ObservationUtilities.findAxesByKey( getAxisList() );
 
-    for( int i = 0; i < values.getCount(); i++ )
+    for( int i = 0; i < values.size(); i++ )
     {
       // check presence of values if associated axes are keys
       int ixPresent = -1;
 
       for( final IAxis key : keys )
       {
-        final Object obj = values.getElement( i, map.get( key ) );
+        final Object obj = values.get( i, map.get( key ) );
         final int ix = m_model.indexOf( obj, key );
 
         if( (ix >= 0) && (ixPresent != -1) )
@@ -211,8 +211,8 @@ public class SimpleObservation implements IObservation
         {
           final IAxis oA = map.get( myA );
 
-          final Object obj = values.getElement( i, oA );
-          m_model.setElement( ixPresent, obj, myA );
+          final Object obj = values.get( i, oA );
+          m_model.set( ixPresent, myA, obj );
         }
       }
       else
@@ -225,8 +225,8 @@ public class SimpleObservation implements IObservation
 
         for( final IAxis myA : kset )
         {
-          final Object obj = values.getElement( i, map.get( myA ) );
-          tupple[stm.getPositionFor( myA )] = obj;
+          final Object obj = values.get( i, map.get( myA ) );
+          tupple[stm.getPosition( myA )] = obj;
         }
 
         stm.addTuple( tupple );

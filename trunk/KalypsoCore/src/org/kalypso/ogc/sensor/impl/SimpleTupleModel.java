@@ -147,7 +147,7 @@ public class SimpleTupleModel extends AbstractTupleModel
    * @see org.kalypso.ogc.sensor.ITuppleModel#getCount()
    */
   @Override
-  public int getCount( )
+  public int size( )
   {
     return m_tuples.size();
   }
@@ -156,10 +156,10 @@ public class SimpleTupleModel extends AbstractTupleModel
    * @see org.kalypso.ogc.sensor.ITuppleModel#getElement(int, org.kalypso.ogc.sensor.IAxis)
    */
   @Override
-  public Object getElement( final int index, final IAxis axis ) throws SensorException
+  public Object get( final int index, final IAxis axis ) throws SensorException
   {
     final Object[] row = m_tuples.get( index );
-    final int columnIndex = getPositionFor( axis );
+    final int columnIndex = getPosition( axis );
 
     return row[columnIndex];
   }
@@ -168,14 +168,14 @@ public class SimpleTupleModel extends AbstractTupleModel
    * @see org.kalypso.ogc.sensor.ITuppleModel#setElement(int, java.lang.Object, org.kalypso.ogc.sensor.IAxis)
    */
   @Override
-  public void setElement( final int index, final Object element, final IAxis axis ) throws SensorException
+  public void set( final int index, final IAxis axis, final Object element ) throws SensorException
   {
     // TODO For debug purposes! Once problem with "null" is solved remove?
     if( element == null )
       Logger.getLogger( SimpleTupleModel.class.getName() ).warning( Messages.getString( "org.kalypso.ogc.sensor.impl.SimpleTuppleModel.0" ) + index + Messages.getString( "org.kalypso.ogc.sensor.impl.SimpleTuppleModel.1" ) + axis ); //$NON-NLS-1$ //$NON-NLS-2$
 
     final Object[] row = m_tuples.get( index );
-    final int columnIndex = getPositionFor( axis );
+    final int columnIndex = getPosition( axis );
     row[columnIndex] = element;
   }
 
@@ -188,7 +188,7 @@ public class SimpleTupleModel extends AbstractTupleModel
     if( element == null )
       return -1;
 
-    final int columnIndex = getPositionFor( axis );
+    final int columnIndex = getPosition( axis );
     for( int i = 0; i < m_tuples.size(); i++ )
     {
       final Object[] row = m_tuples.get( i );
@@ -240,12 +240,12 @@ public class SimpleTupleModel extends AbstractTupleModel
       mapAxisToPos( axes[ia], ia );
     }
 
-    for( int ix = 0; ix < copyTupples.getCount(); ix++ )
+    for( int ix = 0; ix < copyTupples.size(); ix++ )
     {
       final Object[] row = new Object[axes.length];
       for( int ia = 0; ia < axes.length; ia++ )
       {
-        row[ia] = copyTupples.getElement( ix, axes[ia] );
+        row[ia] = copyTupples.get( ix, axes[ia] );
       }
 
       m_tuples.add( row );
@@ -279,15 +279,15 @@ public class SimpleTupleModel extends AbstractTupleModel
       mapAxisToPos( axes[ia], ia );
     }
 
-    for( int ix = 0; ix < copyTupples.getCount(); ix++ )
+    for( int ix = 0; ix < copyTupples.size(); ix++ )
     {
-      final Date d = (Date) copyTupples.getElement( ix, dateAxis );
+      final Date d = (Date) copyTupples.get( ix, dateAxis );
       if( d.compareTo( dra.getFrom() ) >= 0 && d.compareTo( dra.getTo() ) <= 0 )
       {
         final Object[] row = new Object[axes.length];
         for( int ia = 0; ia < axes.length; ia++ )
         {
-          row[ia] = copyTupples.getElement( ix, axes[ia] );
+          row[ia] = copyTupples.get( ix, axes[ia] );
         }
 
         m_tuples.add( row );

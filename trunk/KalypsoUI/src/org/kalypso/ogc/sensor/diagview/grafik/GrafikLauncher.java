@@ -459,7 +459,7 @@ public class GrafikLauncher
           try
           {
             // fetch Y axis range for placing possible scenario text item
-            final IAxisRange range = values.getRangeFor( axis );
+            final IAxisRange range = values.getRange( axis );
 
             if( range != null )
             {
@@ -484,7 +484,7 @@ public class GrafikLauncher
       try
       {
         // fetch X axis range for placing possible scenario text item
-        final IAxisRange range = values.getRangeFor( dateAxis );
+        final IAxisRange range = values.getRange( dateAxis );
         if( range != null )
         {
           final Date d1 = (Date) range.getLower();
@@ -569,17 +569,17 @@ public class GrafikLauncher
       @Override
       protected void write( final OutputStreamWriter writer ) throws Throwable
       {
-        for( int i = 0; i < values.getCount(); i++ )
+        for( int i = 0; i < values.size(); i++ )
         {
           if( monitor.isCanceled() )
             return;
 
-          final Object elt = values.getElement( i, dateAxis );
+          final Object elt = values.get( i, dateAxis );
           final String text = GRAFIK_DF.format( elt );
           writer.write( text );
           writer.write( '\t' );
 
-          writer.write( values.getElement( i, axis ).toString() );
+          writer.write( values.get( i, axis ).toString() );
 
           writer.write( '\n' );
         }

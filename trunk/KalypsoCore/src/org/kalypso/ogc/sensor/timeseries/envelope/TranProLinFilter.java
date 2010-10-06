@@ -112,7 +112,7 @@ public class TranProLinFilter extends AbstractObservationFilter
   {
     final ITupleModel outerSource = super.getValues( args );
 
-    final int outerSourceCount = outerSource.getCount();
+    final int outerSourceCount = outerSource.size();
     if( outerSourceCount == 0 )
       return outerSource;
 
@@ -146,9 +146,9 @@ public class TranProLinFilter extends AbstractObservationFilter
       }
       // try to assume from base tuppel model if needed
       if( targetBegin == null )
-        targetBegin = (Date) outerSource.getElement( 0, dateAxis );
+        targetBegin = (Date) outerSource.get( 0, dateAxis );
       if( targetEnd == null )
-        targetEnd = (Date) outerSource.getElement( outerSourceCount - 1, dateAxis );
+        targetEnd = (Date) outerSource.get( outerSourceCount - 1, dateAxis );
 
       if( transformBegin == null )
         transformBegin = targetBegin;
@@ -187,7 +187,7 @@ public class TranProLinFilter extends AbstractObservationFilter
       final IAxis[] axesTransform = axesListToTransform.toArray( new IAxis[axesListToTransform.size()] );
       final Date[] targetDates = new Date[targetMaxRows];
       for( int row = sourceIndexBegin; row < sourceIndexEnd + 1; row++ )
-        targetDates[row] = (Date) outerSource.getElement( row, dateAxis );
+        targetDates[row] = (Date) outerSource.get( row, dateAxis );
 
       final ITupleModel innerSource;
       // find inner source to initialize inner target model
@@ -200,7 +200,7 @@ public class TranProLinFilter extends AbstractObservationFilter
         innerSource = outerSource;
 
       // initialize inner target
-      final Object[][] vallues = createValueArray( targetDates, innerSource.getAxisList().length, innerSource.getPositionFor( dateAxis ) );
+      final Object[][] vallues = createValueArray( targetDates, innerSource.getAxisList().length, innerSource.getPosition( dateAxis ) );
       final SimpleTupleModel innerTarget = new SimpleTupleModel( innerSource.getAxisList(), vallues );
 
       // initialize outer target
@@ -255,24 +255,24 @@ public class TranProLinFilter extends AbstractObservationFilter
       for( int t = 0; t < axesCopy.length; t++ )
       {
         final IAxis axis = axesCopy[t];
-        final Object value = outerSource.getElement( sourceRow, axis );
-        outerTarget.setElement( targetRow, value, axis );
+        final Object value = outerSource.get( sourceRow, axis );
+        outerTarget.set( targetRow, axis, value );
       }
 
       // status
       for( int t = 0; t < axesStatus.length; t++ )
       {
         final IAxis axis = axesStatus[t];
-        final Number oldValue = (Number) outerSource.getElement( sourceRow, axis );
+        final Number oldValue = (Number) outerSource.get( sourceRow, axis );
         final Number newValue = new Integer( KalypsoStatusUtils.performArithmetic( oldValue.intValue(), m_statusToMerge ) );
-        outerTarget.setElement( targetRow, newValue, axis );
+        outerTarget.set( targetRow, axis, newValue );
       }
 
       // transform: important to set transformed last, as there may be dependencies to other axes
       // (e.g. WQ-Transformation)
       // TODO: why are we copying generated values at all? We shouldn't do it then there is no problem
 
-      final Date date = (Date) outerSource.getElement( sourceRow, dateAxis );
+      final Date date = (Date) outerSource.get( sourceRow, dateAxis );
 
       final long hereTime = date.getTime() - dateBegin.getTime();
       final double hereCoeff = m_operandBegin + deltaOperand * ((double) hereTime / (double) distTime);
@@ -282,7 +282,7 @@ public class TranProLinFilter extends AbstractObservationFilter
         final IAxis axis = axesTransform[t];
         final String type = axis.getType();
 
-        final double currentValue = ((Number) outerSource.getElement( sourceRow, axis )).doubleValue();
+        final double currentValue = ((Number) outerSource.get( sourceRow, axis )).doubleValue();
         final double changedValue;
 
         // We do only transform within the specified interval
@@ -297,7 +297,7 @@ public class TranProLinFilter extends AbstractObservationFilter
 
         final double checkedValue = checkValue( type, changedValue );
 
-        outerTarget.setElement( targetRow, new Double( checkedValue ), axis );
+        outerTarget.set( targetRow, axis, new Double( checkedValue ) );
       }
       targetRow++;
     }

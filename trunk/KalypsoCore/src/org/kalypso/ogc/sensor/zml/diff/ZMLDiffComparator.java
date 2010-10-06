@@ -99,8 +99,8 @@ public class ZMLDiffComparator implements IDiffComparator
 
     final ITupleModel values1 = obs1.getValues( null );
     final ITupleModel values2 = obs2.getValues( null );
-    final int max1 = values1.getCount();
-    final int max2 = values2.getCount();
+    final int max1 = values1.size();
+    final int max2 = values2.size();
     if( max1 != max2 )
     {
       logger.log( IDiffComparator.DIFF_CONTENT, Messages.getString( "org.kalypso.ogc.sensor.zml.diff.ZMLDiffComparator.3" ) + max1 + " : " + max2 ); //$NON-NLS-1$ //$NON-NLS-2$
@@ -110,8 +110,8 @@ public class ZMLDiffComparator implements IDiffComparator
     if( max1 == 0 )
       return false;
 
-    final double v1 = ((Double) values1.getElement( 0, valueAxis1 )).doubleValue();
-    final double v2 = ((Double) values2.getElement( 0, valueAxis2 )).doubleValue();
+    final double v1 = ((Double) values1.get( 0, valueAxis1 )).doubleValue();
+    final double v2 = ((Double) values2.get( 0, valueAxis2 )).doubleValue();
     double maxValue1 = v1;
     double minValue1 = v1;
     double maxValue2 = v2;
@@ -120,15 +120,15 @@ public class ZMLDiffComparator implements IDiffComparator
     int diffCount = 0;
     for( int i = 0; i < max1; i++ )
     {
-      final Date date1 = (Date) values1.getElement( i, dateAxis1 );
-      final Date date2 = (Date) values2.getElement( i, dateAxis2 );
+      final Date date1 = (Date) values1.get( i, dateAxis1 );
+      final Date date2 = (Date) values2.get( i, dateAxis2 );
       if( !date1.equals( date2 ) )
       {
         logger.log( IDiffComparator.DIFF_CONTENT, Messages.getString( "org.kalypso.ogc.sensor.zml.diff.ZMLDiffComparator.5" ) + date1 + " : " + date2 ); //$NON-NLS-1$ //$NON-NLS-2$
         return true;
       }
-      final double value1 = ((Double) values1.getElement( i, valueAxis1 )).doubleValue();
-      final double value2 = ((Double) values2.getElement( i, valueAxis2 )).doubleValue();
+      final double value1 = ((Double) values1.get( i, valueAxis1 )).doubleValue();
+      final double value2 = ((Double) values2.get( i, valueAxis2 )).doubleValue();
       if( value1 > maxValue1 )
         maxValue1 = value1;
       if( value2 > maxValue2 )

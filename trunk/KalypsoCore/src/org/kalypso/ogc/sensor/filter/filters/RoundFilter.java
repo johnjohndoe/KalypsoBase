@@ -155,17 +155,17 @@ public class RoundFilter extends AbstractObservationFilter
     if( axis == null )
       throw new SensorException( Messages.getString( "org.kalypso.ogc.sensor.filter.filters.RoundFilter.1" ) + m_type ); //$NON-NLS-1$
 
-    final int valueCount = values.getCount();
+    final int valueCount = values.size();
     for( int j = 0; j < valueCount; j++ )
     {
-      final Double value = (Double) values.getElement( j, axis );
+      final Double value = (Double) values.get( j, axis );
       if( value != null && !value.isNaN() )
       {
         final double factoredValue = value.doubleValue() / m_factor;
         final BigDecimal decimal = new BigDecimal( factoredValue );
         final BigDecimal roundedDecimal = decimal.setScale( 0, m_mode );
         final double newValue = roundedDecimal.doubleValue() * m_factor;
-        values.setElement( j, new Double( newValue ), axis );
+        values.set( j, axis, new Double( newValue ) );
       }
     }
 
