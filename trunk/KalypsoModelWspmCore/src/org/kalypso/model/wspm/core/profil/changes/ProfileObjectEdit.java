@@ -75,13 +75,13 @@ public class ProfileObjectEdit implements IProfilChange
     // FIXME at the moment we can only one value of the profile object tuple result
     final IObservation<TupleResult> observation = m_object.getObservation();
     final TupleResult result = observation.getResult();
-
+    final int intCmp = result.indexOfComponent( m_property );
     if( result.size() > 0 )
     {
       final IRecord record = result.get( 0 );
 
-      final Object oldValue = record.getValue( m_property );
-      record.setValue( m_property, m_newValue );
+      final Object oldValue = record.getValue( intCmp );
+      record.setValue( intCmp, m_newValue );
 
       return new ProfileObjectEdit( m_object, m_property, oldValue );
     }
