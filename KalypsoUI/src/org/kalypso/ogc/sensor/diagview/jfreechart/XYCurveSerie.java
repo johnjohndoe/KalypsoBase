@@ -138,12 +138,12 @@ class XYCurveSerie extends Series
 
   public int getItemCount( ) throws SensorException
   {
-    return m_values == null ? 0 : m_values.getCount();
+    return m_values == null ? 0 : m_values.size();
   }
 
   public Number getXValue( final int item ) throws SensorException
   {
-    final Object obj = m_values.getElement( item, m_xAxis );
+    final Object obj = m_values.get( item, m_xAxis );
 
     if( obj instanceof Number )
       return (Number) obj;
@@ -155,7 +155,7 @@ class XYCurveSerie extends Series
 
   public Number getYValue( final int item ) throws SensorException
   {
-    final Object obj = m_values.getElement( item, m_yAxis );
+    final Object obj = m_values.get( item, m_yAxis );
 
     if( obj instanceof Number )
       return (Number) obj;
@@ -177,7 +177,7 @@ class XYCurveSerie extends Series
     if( m_statusAxis == null )
       return null;
 
-    final Object obj = m_values.getElement( item, m_statusAxis );
+    final Object obj = m_values.get( item, m_statusAxis );
 
     if( obj instanceof Number )
       return (Number) obj;

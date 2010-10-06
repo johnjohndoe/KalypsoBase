@@ -71,9 +71,9 @@ public class OperationTuplemodel extends AbstractTupleModel
   }
 
   @Override
-  public int getCount( ) throws SensorException
+  public int size( ) throws SensorException
   {
-    return m_baseModel.getCount();
+    return m_baseModel.size();
   }
 
   @Override
@@ -89,13 +89,13 @@ public class OperationTuplemodel extends AbstractTupleModel
   }
 
   @Override
-  public Object getElement( final int index, final IAxis axis ) throws SensorException
+  public Object get( final int index, final IAxis axis ) throws SensorException
   {
     final IAxis a = ObservationUtilities.findAxisByName( m_baseModel.getAxisList(), axis.getName() );
-    if( index >= m_baseModel.getCount() )
+    if( index >= m_baseModel.size() )
       return null;
 
-    final Object object = m_baseModel.getElement( index, a );
+    final Object object = m_baseModel.get( index, a );
     if( object == null || object instanceof Date || KalypsoStatusUtils.isStatusAxis( axis ) )
       return object;
 
@@ -120,7 +120,7 @@ public class OperationTuplemodel extends AbstractTupleModel
   }
 
   @Override
-  public void setElement( final int index, final Object element, final IAxis axis )
+  public void set( final int index, final IAxis axis, final Object element )
   {
     throw new UnsupportedOperationException( getClass().getName() + Messages.getString( "org.kalypso.ogc.sensor.filter.filters.OperationTupplemodel.2" ) ); //$NON-NLS-1$
     // TODO support it

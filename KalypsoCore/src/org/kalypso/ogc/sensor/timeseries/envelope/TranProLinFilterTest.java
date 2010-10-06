@@ -59,21 +59,21 @@ public class TranProLinFilterTest extends TestCase
   {
     final IObservation obs = TimeserieUtils.createTestTimeserie( new String[] { "W" }, 10, false ); //$NON-NLS-1$
 
-    assertEquals( 10, obs.getValues( null ).getCount() );
+    assertEquals( 10, obs.getValues( null ).size() );
 
     System.out.println( ObservationUtilities.dump( obs.getValues( null ), "   " ) ); //$NON-NLS-1$
 
     final TranProLinFilter filter = new TranProLinFilter( null, null, "*", 1, 1.15, 0, null ); //$NON-NLS-1$
     filter.initFilter( null, obs, null );
 
-    assertEquals( 10, filter.getValues( null ).getCount() );
+    assertEquals( 10, filter.getValues( null ).size() );
 
-    Number valueOrg = (Number) obs.getValues( null ).getElement( 0, ObservationUtilities.findAxisByType( obs.getAxisList(), "W" ) ); //$NON-NLS-1$
-    Number valueNew = (Number) filter.getValues( null ).getElement( 0, ObservationUtilities.findAxisByType( filter.getAxisList(), "W" ) ); //$NON-NLS-1$
+    Number valueOrg = (Number) obs.getValues( null ).get( 0, ObservationUtilities.findAxisByType( obs.getAxisList(), "W" ) ); //$NON-NLS-1$
+    Number valueNew = (Number) filter.getValues( null ).get( 0, ObservationUtilities.findAxisByType( filter.getAxisList(), "W" ) ); //$NON-NLS-1$
     assertEquals( valueOrg.doubleValue(), valueNew.doubleValue(), 0.001 );
 
-    valueOrg = (Number) obs.getValues( null ).getElement( 9, ObservationUtilities.findAxisByType( obs.getAxisList(), "W" ) ); //$NON-NLS-1$
-    valueNew = (Number) filter.getValues( null ).getElement( 9, ObservationUtilities.findAxisByType( filter.getAxisList(), "W" ) ); //$NON-NLS-1$
+    valueOrg = (Number) obs.getValues( null ).get( 9, ObservationUtilities.findAxisByType( obs.getAxisList(), "W" ) ); //$NON-NLS-1$
+    valueNew = (Number) filter.getValues( null ).get( 9, ObservationUtilities.findAxisByType( filter.getAxisList(), "W" ) ); //$NON-NLS-1$
     assertEquals( valueOrg.doubleValue() * 1.15, valueNew.doubleValue(), 0.001 );
 
     final StringWriter w1 = new StringWriter();

@@ -72,7 +72,7 @@ public class ZmlTupleModel extends AbstractTupleModel
    * @see org.kalypso.ogc.sensor.ITuppleModel#getCount()
    */
   @Override
-  public int getCount( ) throws SensorException
+  public int size( ) throws SensorException
   {
     if( m_valuesMap.size() == 0 )
       return 0;
@@ -100,7 +100,7 @@ public class ZmlTupleModel extends AbstractTupleModel
    * @see org.kalypso.ogc.sensor.ITuppleModel#getElement(int, org.kalypso.ogc.sensor.IAxis)
    */
   @Override
-  public Object getElement( final int index, final IAxis axis ) throws SensorException
+  public Object get( final int index, final IAxis axis ) throws SensorException
   {
     if( m_valuesMap.size() == 0 )
       throw new IllegalStateException( Messages.getString( "org.kalypso.ogc.sensor.zml.values.ZmlTuppleModel.1" ) ); //$NON-NLS-1$
@@ -116,7 +116,7 @@ public class ZmlTupleModel extends AbstractTupleModel
    * @see org.kalypso.ogc.sensor.ITuppleModel#setElement(int, java.lang.Object, org.kalypso.ogc.sensor.IAxis)
    */
   @Override
-  public void setElement( final int index, final Object element, final IAxis axis ) throws SensorException
+  public void set( final int index, final IAxis axis, final Object element ) throws SensorException
   {
     if( m_valuesMap.size() == 0 )
       throw new IllegalStateException( Messages.getString( "org.kalypso.ogc.sensor.zml.values.ZmlTuppleModel.2" ) ); //$NON-NLS-1$

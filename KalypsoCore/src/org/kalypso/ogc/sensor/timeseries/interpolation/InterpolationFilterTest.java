@@ -125,12 +125,12 @@ public class InterpolationFilterTest extends TestCase
     }
     i++;
 
-    assertEquals( i, m.getCount() );
+    assertEquals( i, m.size() );
 
-    assertEquals( from, m.getElement( 0, m_dateAxis ) );
-    assertEquals( firstValue.doubleValue(), ((Number) m.getElement( 0, m_valueAxis )).doubleValue(), 0.001 );
-    assertEquals( to, m.getElement( m.getCount() - 1, m_dateAxis ) );
-    assertEquals( lastValue.doubleValue(), ((Number) m.getElement( m.getCount() - 1, m_valueAxis )).doubleValue(), 0.001 );
+    assertEquals( from, m.get( 0, m_dateAxis ) );
+    assertEquals( firstValue.doubleValue(), ((Number) m.get( 0, m_valueAxis )).doubleValue(), 0.001 );
+    assertEquals( to, m.get( m.size() - 1, m_dateAxis ) );
+    assertEquals( lastValue.doubleValue(), ((Number) m.get( m.size() - 1, m_valueAxis )).doubleValue(), 0.001 );
   }
 
 }

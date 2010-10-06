@@ -511,9 +511,9 @@ public final class KalypsoStatusUtils
     if( statusAxis == null )
       return mergedStatus;
 
-    for( int i = 0; i < values.getCount(); i++ )
+    for( int i = 0; i < values.size(); i++ )
     {
-      final int status = ((Number) values.getElement( i, statusAxis )).intValue();
+      final int status = ((Number) values.get( i, statusAxis )).intValue();
       mergedStatus |= status;
     }
 
@@ -529,9 +529,9 @@ public final class KalypsoStatusUtils
   {
     final IAxis statusAxis = KalypsoStatusUtils.findStatusAxisFor( values.getAxisList(), axis );
     int count = 0;
-    for( int i = 0; i < values.getCount(); i++ )
+    for( int i = 0; i < values.size(); i++ )
     {
-      final int status = ((Number) values.getElement( i, statusAxis )).intValue();
+      final int status = ((Number) values.get( i, statusAxis )).intValue();
       if( checkMask( status, mask ) )
         count++;
     }

@@ -287,11 +287,11 @@ public class CommitPrognoseFeatureVisitor extends AbstractMonitoredFeatureVisito
       }
     }
 
-    if( map.size() == 0 || values.getCount() == 0 )
+    if( map.size() == 0 || values.size() == 0 )
       return null;
 
     final SimpleTupleModel model = new SimpleTupleModel( targetAxes );
-    for( int i = 0; i < values.getCount(); i++ )
+    for( int i = 0; i < values.size(); i++ )
     {
       final Object[] tupple = new Object[targetAxes.length];
 
@@ -299,7 +299,7 @@ public class CommitPrognoseFeatureVisitor extends AbstractMonitoredFeatureVisito
       {
         final IAxis srcAxis = map.get( targetAxes[j] );
         if( srcAxis != null )
-          tupple[j] = values.getElement( i, srcAxis );
+          tupple[j] = values.get( i, srcAxis );
       }
 
       model.addTuple( tupple );

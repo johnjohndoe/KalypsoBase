@@ -136,16 +136,16 @@ public class WQTuppleModel extends AbstractTupleModel
    * @see org.kalypso.ogc.sensor.ITuppleModel#getCount()
    */
   @Override
-  public int getCount( ) throws SensorException
+  public int size( ) throws SensorException
   {
-    return m_model.getCount();
+    return m_model.size();
   }
 
   /**
    * @see org.kalypso.ogc.sensor.ITuppleModel#getElement(int, org.kalypso.ogc.sensor.IAxis)
    */
   @Override
-  public Object getElement( final int index, final IAxis axis ) throws SensorException
+  public Object get( final int index, final IAxis axis ) throws SensorException
   {
     final boolean bDestAxis = axis.equals( m_destAxis );
 
@@ -153,7 +153,7 @@ public class WQTuppleModel extends AbstractTupleModel
     {
       final Integer objIndex = new Integer( index );
 
-      final Number number = (Number) m_model.getElement( objIndex.intValue(), m_srcAxis );
+      final Number number = (Number) m_model.get( objIndex.intValue(), m_srcAxis );
 
       if( !m_values.containsKey( objIndex ) )
       {
@@ -168,7 +168,7 @@ public class WQTuppleModel extends AbstractTupleModel
       return m_stati.get( objIndex );
     }
 
-    return m_model.getElement( index, axis );
+    return m_model.get( index, axis );
   }
 
   private Number[] read( final Integer objIndex, final Number number ) throws SensorException
@@ -176,7 +176,7 @@ public class WQTuppleModel extends AbstractTupleModel
     Double value = null;
     Integer status = null;
     final IAxis axis = m_destAxis;
-    final Date d = (Date) m_model.getElement( objIndex.intValue(), m_dateAxis );
+    final Date d = (Date) m_model.get( objIndex.intValue(), m_dateAxis );
 
     if( number != null )
     {
@@ -235,14 +235,14 @@ public class WQTuppleModel extends AbstractTupleModel
    * @see org.kalypso.ogc.sensor.ITuppleModel#setElement(int, java.lang.Object, org.kalypso.ogc.sensor.IAxis)
    */
   @Override
-  public void setElement( final int index, final Object element, final IAxis axis ) throws SensorException
+  public void set( final int index, final IAxis axis, final Object element ) throws SensorException
   {
     final Integer objIndex = new Integer( index );
     m_values.remove( objIndex );
     m_stati.remove( objIndex );
     if( axis.equals( m_destAxis ) )
     {
-      final Date d = (Date) m_model.getElement( index, m_dateAxis );
+      final Date d = (Date) m_model.get( index, m_dateAxis );
 
       Double value = null;
       Integer status = null;
@@ -293,9 +293,9 @@ public class WQTuppleModel extends AbstractTupleModel
         status = KalypsoStati.STATUS_CHECK;
       }
 
-      m_model.setElement( index, value, m_srcAxis );
+      m_model.set( index, m_srcAxis, value );
       if( m_srcStatusAxis != null )
-        m_model.setElement( index, status, m_srcStatusAxis );
+        m_model.set( index, m_srcStatusAxis, status );
     }
     // TODO: ich glaube Gernot hatte geschrieben:
     // "besser wäre eigentlich equals, aber das klappt bei status achsen nicht" und hatte == statt equals() benutzt. Ich
@@ -312,7 +312,7 @@ public class WQTuppleModel extends AbstractTupleModel
     }
     else
     {
-      m_model.setElement( index, element, axis );
+      m_model.set( index, axis, element );
     }
   }
 
@@ -362,14 +362,14 @@ public class WQTuppleModel extends AbstractTupleModel
   {
     final SimpleTupleModel stm = new SimpleTupleModel( axes );
 
-    for( int i = 0; i < values.getCount(); i++ )
+    for( int i = 0; i < values.size(); i++ )
     {
       final Object[] tupple = new Object[axes.length];
 
       // straighforward: simply take the values for the axes of the original
       // observation, not the generated W/Q
       for( int j = 0; j < axes.length; j++ )
-        tupple[stm.getPositionFor( axes[j] )] = values.getElement( i, axes[j] );
+        tupple[stm.getPosition( axes[j] )] = values.get( i, axes[j] );
 
       stm.addTuple( tupple );
     }

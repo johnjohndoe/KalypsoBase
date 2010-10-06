@@ -65,11 +65,11 @@ public final class ZMLUtilities
     final ITupleModel tuppelModel = observation.getValues( request );
     final IAxis[] axisList = tuppelModel.getAxisList();
     final IAxis axis = ObservationUtilities.findAxisByType( axisList, axisType );
-    final int max = tuppelModel.getCount();
+    final int max = tuppelModel.size();
     double maxValue = -1;
     for( int i = 0; i < max; i++ )
     {
-      final Double value = (Double) tuppelModel.getElement( i, axis );
+      final Double value = (Double) tuppelModel.get( i, axis );
       final double d = value.doubleValue();
       if( i == 0 || d > maxValue )
         maxValue = d;

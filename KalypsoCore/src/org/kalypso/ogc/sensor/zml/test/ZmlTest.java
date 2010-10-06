@@ -116,7 +116,7 @@ public class ZmlTest extends TestCase
     final ITupleModel values = obs.getValues( null );
     assertNotNull( values );
 
-    assertEquals( values.getCount(), 21 );
+    assertEquals( values.size(), 21 );
 
     final IAxis[] axes = values.getAxisList();
 
@@ -129,13 +129,13 @@ public class ZmlTest extends TestCase
     final IAxis vAxis2 = ObservationUtilities.findAxisByName( axes, "Pegel2" ); //$NON-NLS-1$
     assertNotNull( vAxis2 );
 
-    assertEquals( values.getElement( 0, dateAxis ), m_df.parse( "01.01.2004" ) ); //$NON-NLS-1$
-    assertTrue( m_dc.compare( (Number) values.getElement( 0, vAxis1 ), Double.valueOf( "1.0" ) ) == 0 ); //$NON-NLS-1$
-    assertTrue( m_dc.compare( (Number) values.getElement( 0, vAxis2 ), new Double( 11 ) ) == 0 );
+    assertEquals( values.get( 0, dateAxis ), m_df.parse( "01.01.2004" ) ); //$NON-NLS-1$
+    assertTrue( m_dc.compare( (Number) values.get( 0, vAxis1 ), Double.valueOf( "1.0" ) ) == 0 ); //$NON-NLS-1$
+    assertTrue( m_dc.compare( (Number) values.get( 0, vAxis2 ), new Double( 11 ) ) == 0 );
 
-    assertEquals( values.getElement( 20, dateAxis ), m_df.parse( "21.01.2004" ) ); //$NON-NLS-1$
-    assertTrue( m_dc.compare( (Number) values.getElement( 20, vAxis1 ), Double.valueOf( "16.6" ) ) == 0 ); //$NON-NLS-1$
-    assertTrue( m_dc.compare( (Number) values.getElement( 20, vAxis2 ), Double.valueOf( "18.5" ) ) == 0 ); //$NON-NLS-1$
+    assertEquals( values.get( 20, dateAxis ), m_df.parse( "21.01.2004" ) ); //$NON-NLS-1$
+    assertTrue( m_dc.compare( (Number) values.get( 20, vAxis1 ), Double.valueOf( "16.6" ) ) == 0 ); //$NON-NLS-1$
+    assertTrue( m_dc.compare( (Number) values.get( 20, vAxis2 ), Double.valueOf( "18.5" ) ) == 0 ); //$NON-NLS-1$
   }
 
   private void _testSetValues( final IObservation obs ) throws SensorException, ParseException
@@ -154,21 +154,21 @@ public class ZmlTest extends TestCase
     final SimpleTupleModel m = new SimpleTupleModel( obs.getAxisList() );
 
     final Object[] t1 = new Object[3];
-    t1[m.getPositionFor( dateAxis )] = m_df.parse( "20.01.2004" ); //$NON-NLS-1$
-    t1[m.getPositionFor( vAxis1 )] = new Double( 44 );
-    t1[m.getPositionFor( vAxis2 )] = new Double( 11 );
+    t1[m.getPosition( dateAxis )] = m_df.parse( "20.01.2004" ); //$NON-NLS-1$
+    t1[m.getPosition( vAxis1 )] = new Double( 44 );
+    t1[m.getPosition( vAxis2 )] = new Double( 11 );
     m.addTuple( t1 );
 
     final Object[] t2 = new Object[3];
-    t2[m.getPositionFor( dateAxis )] = m_df.parse( "21.01.2004" ); //$NON-NLS-1$
-    t2[m.getPositionFor( vAxis1 )] = new Double( 55 );
-    t2[m.getPositionFor( vAxis2 )] = new Double( 22 );
+    t2[m.getPosition( dateAxis )] = m_df.parse( "21.01.2004" ); //$NON-NLS-1$
+    t2[m.getPosition( vAxis1 )] = new Double( 55 );
+    t2[m.getPosition( vAxis2 )] = new Double( 22 );
     m.addTuple( t2 );
 
     final Object[] t3 = new Object[3];
-    t3[m.getPositionFor( dateAxis )] = m_df.parse( "22.01.2004" ); //$NON-NLS-1$
-    t3[m.getPositionFor( vAxis1 )] = new Double( 66 );
-    t3[m.getPositionFor( vAxis2 )] = new Double( 33 );
+    t3[m.getPosition( dateAxis )] = m_df.parse( "22.01.2004" ); //$NON-NLS-1$
+    t3[m.getPosition( vAxis1 )] = new Double( 66 );
+    t3[m.getPosition( vAxis2 )] = new Double( 33 );
     m.addTuple( t3 );
 
     obs.setValues( m );
@@ -176,22 +176,22 @@ public class ZmlTest extends TestCase
     final ITupleModel values = obs.getValues( null );
     assertNotNull( values );
 
-    assertEquals( values.getCount(), 22 );
+    assertEquals( values.size(), 22 );
 
     int i = 19;
-    assertEquals( values.getElement( i, dateAxis ), m_df.parse( "20.01.2004" ) ); //$NON-NLS-1$
-    assertTrue( m_dc.compare( (Number) values.getElement( i, vAxis1 ), Double.valueOf( "44" ) ) == 0 ); //$NON-NLS-1$
-    assertTrue( m_dc.compare( (Number) values.getElement( i, vAxis2 ), Double.valueOf( "11" ) ) == 0 ); //$NON-NLS-1$
+    assertEquals( values.get( i, dateAxis ), m_df.parse( "20.01.2004" ) ); //$NON-NLS-1$
+    assertTrue( m_dc.compare( (Number) values.get( i, vAxis1 ), Double.valueOf( "44" ) ) == 0 ); //$NON-NLS-1$
+    assertTrue( m_dc.compare( (Number) values.get( i, vAxis2 ), Double.valueOf( "11" ) ) == 0 ); //$NON-NLS-1$
 
     i = 20;
-    assertEquals( values.getElement( i, dateAxis ), m_df.parse( "21.01.2004" ) ); //$NON-NLS-1$
-    assertTrue( m_dc.compare( (Number) values.getElement( i, vAxis1 ), Double.valueOf( "55" ) ) == 0 ); //$NON-NLS-1$
-    assertTrue( m_dc.compare( (Number) values.getElement( i, vAxis2 ), Double.valueOf( "22" ) ) == 0 ); //$NON-NLS-1$
+    assertEquals( values.get( i, dateAxis ), m_df.parse( "21.01.2004" ) ); //$NON-NLS-1$
+    assertTrue( m_dc.compare( (Number) values.get( i, vAxis1 ), Double.valueOf( "55" ) ) == 0 ); //$NON-NLS-1$
+    assertTrue( m_dc.compare( (Number) values.get( i, vAxis2 ), Double.valueOf( "22" ) ) == 0 ); //$NON-NLS-1$
 
     i = 21;
-    assertEquals( values.getElement( i, dateAxis ), m_df.parse( "22.01.2004" ) ); //$NON-NLS-1$
-    assertTrue( m_dc.compare( (Number) values.getElement( i, vAxis1 ), Double.valueOf( "66" ) ) == 0 ); //$NON-NLS-1$
-    assertTrue( m_dc.compare( (Number) values.getElement( i, vAxis2 ), Double.valueOf( "33" ) ) == 0 ); //$NON-NLS-1$
+    assertEquals( values.get( i, dateAxis ), m_df.parse( "22.01.2004" ) ); //$NON-NLS-1$
+    assertTrue( m_dc.compare( (Number) values.get( i, vAxis1 ), Double.valueOf( "66" ) ) == 0 ); //$NON-NLS-1$
+    assertTrue( m_dc.compare( (Number) values.get( i, vAxis2 ), Double.valueOf( "33" ) ) == 0 ); //$NON-NLS-1$
   }
 
   /**

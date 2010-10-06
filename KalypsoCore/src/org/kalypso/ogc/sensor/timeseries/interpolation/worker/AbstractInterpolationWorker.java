@@ -118,7 +118,7 @@ public abstract class AbstractInterpolationWorker implements ICoreRunnableWithPr
     // Maybe there should be one day a mean to determine, which is the right amount.
     final ITupleModel values = ObservationUtilities.requestBuffered( filter.getObservation(), dateRange, Calendar.DAY_OF_MONTH, 2 );
 
-    if( values.getCount() == 0 )
+    if( values.size() == 0 )
     {
       return new EmptyValueInterpolationWorker( filter, values, dateRange );
     }
@@ -206,12 +206,12 @@ public abstract class AbstractInterpolationWorker implements ICoreRunnableWithPr
     final Object[] tuple;
 
     tuple = new Object[valueAxes.length + 1];
-    tuple[getInterpolatedModel().getPositionFor( dateAxis )] = calendar.getTime();
+    tuple[getInterpolatedModel().getPosition( dateAxis )] = calendar.getTime();
 
     for( int index = 0; index < valueAxes.length; index++ )
     {
       final IAxis axis = valueAxes[index];
-      final int position = getInterpolatedModel().getPositionFor( axis );
+      final int position = getInterpolatedModel().getPosition( axis );
 
       // update data source reference to interpolation filter
       if( AxisUtils.isDataSrcAxis( axis ) )

@@ -90,7 +90,7 @@ public final class KalypsoProtocolWriter
       if( statusAxes.length != 0 )
       {
         final IObservation observation = observations[i];
-        for( int ix = 0; ix < tuppleModel.getCount(); ix++ )
+        for( int ix = 0; ix < tuppleModel.size(); ix++ )
         {
           // clear reporting buffer
           bf.setLength( 0 );
@@ -98,7 +98,7 @@ public final class KalypsoProtocolWriter
           for( int iAxes = 0; iAxes < statusAxes.length; iAxes++ )
           {
             final IAxis axis = statusAxes[iAxes];
-            final Number nb = (Number) tuppleModel.getElement( ix, axis );
+            final Number nb = (Number) tuppleModel.get( ix, axis );
             final int statusValue = nb == null ? 0 : nb.intValue();
 
             mergedStati[iAxes] = mergedStati[iAxes] | statusValue;

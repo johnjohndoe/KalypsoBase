@@ -69,7 +69,7 @@ public class LastDateObservationMergeStrategy implements IObservationMergeStrate
       if( dateAxis == null )
         return false;
 
-      final Date date = (Date) model.getElement( index, dateAxis );
+      final Date date = (Date) model.get( index, dateAxis );
       if( m_lastDate.before( date ) )
       {
         m_lastDate = date;
