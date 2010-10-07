@@ -83,7 +83,7 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 
 /**
- * This feature visitor copies one timeserie over another. It is used to commit the prognose timeseries to the IMS.
+ * This feature visitor copies one timeserie over another. It is used to commit the prognose time series to the IMS.
  * 
  * @author schlienger
  */

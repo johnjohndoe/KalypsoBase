@@ -385,7 +385,6 @@ public class ObservationServiceImpl implements IObservationService
   public void setItemName( final String identifier, final String name ) throws RepositoryException
   {
     getDelegate().setItemName( identifier, name );
-
   }
 
   /**

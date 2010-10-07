@@ -88,10 +88,10 @@ public class MetadataHelper implements ITimeseriesConstants, ICopyObservationMet
     Date from = null;
     Date to = null;
 
-    if( !propertyFrom.isEmpty() )
+    if( propertyFrom != null && !propertyFrom.isEmpty() )
       from = DateUtilities.parseDateTime( propertyFrom );
 
-    if( !propertyTo.isEmpty() )
+    if( propertyTo != null && !propertyTo.isEmpty() )
       to = DateUtilities.parseDateTime( propertyTo );
 
     return DateRange.createDateRangeOrNull( from, to );
