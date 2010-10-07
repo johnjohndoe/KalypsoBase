@@ -283,17 +283,17 @@ public class CalcJobHandler
       final DataSource jarSource = new FileDataSource( m_zipFile );
       final DataHandler jarHandler = new DataHandler( jarSource );
 
-      final SimulationInfo bean = m_calcService.startJob( m_modelspec.getTypeID(), Messages.getString("org.kalypso.simulation.core.calccase.CalcJobHandler.0"), jarHandler, input, output ); //$NON-NLS-1$
+      final SimulationInfo bean = m_calcService.startJob( m_modelspec.getTypeID(), Messages.getString( "org.kalypso.simulation.core.calccase.CalcJobHandler.0" ), jarHandler, input, output ); //$NON-NLS-1$
       return bean.getId();
     }
     catch( final SimulationException se )
     {
-      throw new CoreException( StatusUtilities.statusFromThrowable( se, Messages.getString("org.kalypso.simulation.core.calccase.CalcJobHandler.1") ) ); //$NON-NLS-1$
+      throw new CoreException( StatusUtilities.statusFromThrowable( se, Messages.getString( "org.kalypso.simulation.core.calccase.CalcJobHandler.1" ) ) ); //$NON-NLS-1$
     }
     catch( final IOException e )
     {
       e.printStackTrace();
-      throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.simulation.core.calccase.CalcJobHandler.2") ) ); //$NON-NLS-1$
+      throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.simulation.core.calccase.CalcJobHandler.2" ) ) ); //$NON-NLS-1$
     }
     finally
     {
@@ -344,7 +344,7 @@ public class CalcJobHandler
 
         if( inputType.equals( QNAME_ANY_URI ) )
         {
-          // if the type is a uri, put the content as file into the zip
+          // if the type is a URI, put the content as file into the zip
 
           // alles relativ zum Projekt auflösen!
           IResource inputResource;
@@ -357,7 +357,6 @@ public class CalcJobHandler
             {
               inputResource = baseresource.findMember( URIUtil.decode( path ) );
             }
-
           }
           else
           {
@@ -371,7 +370,7 @@ public class CalcJobHandler
               continue;
             }
 
-            throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.simulation.core.calccase.CalcJobHandler.3") + inputPath + Messages.getString("org.kalypso.simulation.core.calccase.CalcJobHandler.4") ) ); //$NON-NLS-1$ //$NON-NLS-2$
+            throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.simulation.core.calccase.CalcJobHandler.3" ) + inputPath + Messages.getString( "org.kalypso.simulation.core.calccase.CalcJobHandler.4" ) ) ); //$NON-NLS-1$ //$NON-NLS-2$
           }
 
           // final IPath projectRelativePath = inputResource.getProjectRelativePath();
