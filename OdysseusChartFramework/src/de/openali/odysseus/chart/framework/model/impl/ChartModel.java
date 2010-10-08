@@ -47,7 +47,7 @@ public class ChartModel implements IChartModel
 
   public ChartModel( )
   {
-    final AbstractLayerManagerEventListener m_layerMana = new AbstractLayerManagerEventListener()
+    final AbstractLayerManagerEventListener m_layerManager = new AbstractLayerManagerEventListener()
     {
       /**
        * @see de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener#onActivLayerChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
@@ -88,7 +88,7 @@ public class ChartModel implements IChartModel
       }
 
     };
-    m_manager.addListener( m_layerMana );
+    m_manager.addListener( m_layerManager );
   }
 
   /**
@@ -278,7 +278,7 @@ public class ChartModel implements IChartModel
   }
 
   /**
-   * maximises the chart view - that means all the available data of all layers is shown
+   * Maximizes the chart view - that means all the available data of all layers is shown
    */
   public void maximize( )
   {
@@ -324,7 +324,7 @@ public class ChartModel implements IChartModel
   }
 
   /**
-   * sets autoscaling
+   * sets auto scaling
    * 
    * @param b
    *          if true, axes are automatically scaled to show the layers full data range
@@ -467,7 +467,7 @@ public class ChartModel implements IChartModel
   }
 
   /**
-   * maximises the content of the plot to the values inside a dragged rectangle
+   * Maximizes the content of the plot to the values inside a dragged rectangle
    */
   @Override
   public <T_logical> void zoomIn( final Point start, final Point end )
