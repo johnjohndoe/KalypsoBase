@@ -83,8 +83,8 @@ public class ProfileChartComposite extends ChartComposite implements IProfilChar
 
   public ProfileChartComposite( final Composite parent, final int style, final IProfilLayerProvider layerProvider, final IProfil profile )
   {
-
     super( parent, style, null, BACKGROUND_RGB );
+
     m_profilLayerProvider = layerProvider;
     new PlotDragHandlerDelegate( this );
     new AxisDragHandlerDelegate( this );

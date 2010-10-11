@@ -64,7 +64,7 @@ public class ProfilChartModel extends ChartModel
     @Override
     public void onProblemMarkerChanged( final IProfil source )
     {
-      // Todo: what?
+      // TODO: what?
     }
 
     /**
@@ -96,10 +96,12 @@ public class ProfilChartModel extends ChartModel
   {
     if( m_layerProvider != null )
       return m_layerProvider;
+
     if( getProfil() != null )
     {
       m_layerProvider = KalypsoModelWspmUIExtensions.createProfilLayerProvider( getProfil().getType() );
     }
+
     return m_layerProvider;
   }
 
@@ -112,7 +114,6 @@ public class ProfilChartModel extends ChartModel
     if( m_profil != null && m_layerProvider != null )
     {
       m_profil.addProfilListener( m_profilListener );
-
       m_layerProvider.registerAxis( getMapperRegistry() );
 
       updateLayers();
@@ -140,7 +141,7 @@ public class ProfilChartModel extends ChartModel
     return m_profil;
   }
 
-  protected void handlePropertyOrBuildingChanged( final IProfilChange[] changes )
+  protected void handlePropertyOrBuildingChanged( @SuppressWarnings("unused") final IProfilChange[] changes )
   {
     updateLayers();
   }
@@ -150,16 +151,21 @@ public class ProfilChartModel extends ChartModel
    */
   protected void updateLayers( )
   {
-    final IChartModelState state = this.getState();
+    final IChartModelState state = getState();
 
     final ILayerManager layerManager = getLayerManager();
     layerManager.clear();
+
     final IProfilLayerProvider lp = getProfilLayerProvider();
     if( lp == null )
       return;
+
     final IProfilChartLayer[] profileLayers = lp.createLayers( m_profil, m_result );
     for( final IProfilChartLayer layer : profileLayers )
+    {
       layerManager.addLayer( layer );
+    }
+
     state.restoreState( this );
   }
 }
