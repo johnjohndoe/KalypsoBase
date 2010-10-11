@@ -7,33 +7,33 @@ import de.openali.odysseus.chart.framework.model.style.IStyleConstants.LINEJOIN;
 
 public interface ILineStyle extends IStyle
 {
-  public void setLineJoin( LINEJOIN join );
+  void setLineJoin( LINEJOIN join );
 
-  public void setLineCap( LINECAP cap );
+  void setLineCap( LINECAP cap );
 
-  public void setColor( RGB rgb );
+  void setColor( RGB rgb );
 
-  public void setDash( float dashOffset, float[] dashArray );
+  void setDash( float dashOffset, float[] dashArray );
 
-  public void setWidth( int width );
+  void setWidth( int width );
 
-  public int getWidth( );
+  int getWidth( );
 
-  public void setMiterLimit( int miterLimit );
+  void setMiterLimit( int miterLimit );
 
-  public RGB getColor( );
+  RGB getColor( );
 
-  public float[] getDashArray( );
+  float[] getDashArray( );
 
-  public float getDashOffset( );
+  float getDashOffset( );
 
-  public LINEJOIN getLineJoin( );
+  LINEJOIN getLineJoin( );
 
-  public LINECAP getLineCap( );
+  LINECAP getLineCap( );
 
-  public int getMiterLimit( );
+  int getMiterLimit( );
 
   @Override
-  public ILineStyle copy( );
+  ILineStyle copy( );
 
 }

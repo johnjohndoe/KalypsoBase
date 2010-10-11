@@ -22,7 +22,7 @@ public class PointStyle extends AbstractStyle implements IPointStyle
 
   private boolean m_showFill;
 
-  public PointStyle( ILineStyle outline, int width, int height, int alpha, RGB inlineColor, boolean isFillVisible, IMarker marker, boolean isVisible )
+  public PointStyle( final ILineStyle outline, final int width, final int height, final int alpha, final RGB inlineColor, final boolean isFillVisible, final IMarker marker, final boolean isVisible )
   {
     setStroke( outline );
     setWidth( width );
@@ -35,7 +35,7 @@ public class PointStyle extends AbstractStyle implements IPointStyle
   }
 
   @Override
-  public void setFillVisible( boolean isFillVisible )
+  public void setFillVisible( final boolean isFillVisible )
   {
     m_showFill = isFillVisible;
   }
@@ -47,7 +47,7 @@ public class PointStyle extends AbstractStyle implements IPointStyle
    * .impl.model.style.ILineStyle)
    */
   @Override
-  public void setStroke( ILineStyle stroke )
+  public void setStroke( final ILineStyle stroke )
   {
     m_stroke = stroke;
   }
@@ -57,7 +57,7 @@ public class PointStyle extends AbstractStyle implements IPointStyle
    * @see de.openali.odysseus.chart.framework.impl.model.style.IPointStyle#setWidth(int)
    */
   @Override
-  public void setWidth( int width )
+  public void setWidth( final int width )
   {
     m_width = width;
   }
@@ -67,7 +67,7 @@ public class PointStyle extends AbstractStyle implements IPointStyle
    * @see de.openali.odysseus.chart.framework.impl.model.style.IPointStyle#setHeight(int)
    */
   @Override
-  public void setHeight( int height )
+  public void setHeight( final int height )
   {
     m_height = height;
   }
@@ -97,7 +97,7 @@ public class PointStyle extends AbstractStyle implements IPointStyle
    * @see de.openali.odysseus.chart.framework.impl.model.style.IPointStyle#setInlineColor(org.eclipse.swt.graphics.RGB)
    */
   @Override
-  public void setInlineColor( RGB rgb )
+  public void setInlineColor( final RGB rgb )
   {
     m_inlineRGB = rgb;
   }
@@ -109,7 +109,7 @@ public class PointStyle extends AbstractStyle implements IPointStyle
    * model.style.IMarker)
    */
   @Override
-  public void setMarker( IMarker marker )
+  public void setMarker( final IMarker marker )
   {
     m_marker = marker;
   }
@@ -125,7 +125,7 @@ public class PointStyle extends AbstractStyle implements IPointStyle
   }
 
   @Override
-  public void apply( GC gc )
+  public void apply( final GC gc )
   {
     m_stroke.apply( gc );
 
