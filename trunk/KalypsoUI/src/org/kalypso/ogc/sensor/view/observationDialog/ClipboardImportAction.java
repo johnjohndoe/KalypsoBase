@@ -51,7 +51,7 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
-import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
+import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 import org.kalypso.ogc.sensor.view.ObservationViewerDialog;
 import org.kalypso.ui.KalypsoGisPlugin;
 
@@ -105,7 +105,7 @@ public class ClipboardImportAction extends AbstractObservationAction
       final String name = inputObs instanceof IObservation ? ((IObservation) inputObs).getName() : ""; //$NON-NLS-1$
 
       final String[] axisTypes = getDialog().getAxisTypes();
-      final IAxis[] axis = TimeserieUtils.createDefaultAxes( axisTypes, true );
+      final IAxis[] axis = TimeseriesUtils.createDefaultAxes( axisTypes, true );
 
       final Clipboard2Zml clipboard2Zml = new Clipboard2Zml( axis );
 

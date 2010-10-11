@@ -49,7 +49,7 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResultUtilities;
-import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
+import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 import org.kalypso.transformation.transformer.GeoTransformerFactory;
 import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
@@ -125,7 +125,7 @@ public class WspmGeometryUtilities
 
           /* We assume here that we have a GAUSS-KRUEGER crs in a profile. */
           if( StringUtils.isBlank( srsName ) && rw != null )
-            srsName = TimeserieUtils.getCoordinateSystemNameForGkr( Double.toString( rw ) );
+            srsName = TimeseriesUtils.getCoordinateSystemNameForGkr( Double.toString( rw ) );
         }
         else
         {
@@ -190,7 +190,7 @@ public class WspmGeometryUtilities
 
     /* If CRS is not known, we assume here that we have a GAUSS-KRUEGER crs in a profile. */
     if( crsName == null )
-      crsName = TimeserieUtils.getCoordinateSystemNameForGkr( Double.toString( rw ) );
+      crsName = TimeseriesUtils.getCoordinateSystemNameForGkr( Double.toString( rw ) );
 
     final GM_Point point = GeometryFactory.createGM_Point( position, crsName );
     if( transformer != null )

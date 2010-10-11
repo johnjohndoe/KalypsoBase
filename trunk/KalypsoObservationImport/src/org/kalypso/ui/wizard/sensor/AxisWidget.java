@@ -12,7 +12,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.impl.SimpleAxis;
-import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
+import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 import org.kalypso.ui.wizard.sensor.i18n.Messages;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
@@ -125,7 +125,7 @@ public class AxisWidget extends Composite
     labelType.setLayoutData( data );
 
     m_comboTypes = new Combo( m_group, SWT.NONE );
-    m_comboTypes.setItems( TimeserieUtils.TYPES_ALL );
+    m_comboTypes.setItems( TimeseriesUtils.TYPES_ALL );
     data = new GridData();
     data.horizontalAlignment = GridData.FILL;
     m_comboTypes.setLayoutData( data );
@@ -178,7 +178,7 @@ public class AxisWidget extends Composite
     if( m_axis != null )
     {
       m_textName.setText( m_axis.getName() );
-      m_comboTypes.select( Arrays.binarySearch( TimeserieUtils.TYPES_ALL, m_axis.getType() ) );
+      m_comboTypes.select( Arrays.binarySearch( TimeseriesUtils.TYPES_ALL, m_axis.getType() ) );
     }
   }
 

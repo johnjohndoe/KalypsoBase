@@ -56,7 +56,7 @@ import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.template.IObsProvider;
 import org.kalypso.ogc.sensor.template.ObsView;
 import org.kalypso.ogc.sensor.template.ObsViewItem;
-import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
+import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 import org.kalypso.template.obsdiagview.Obsdiagview;
 import org.kalypso.template.obsdiagview.Obsdiagview.TitleFormat;
 
@@ -256,7 +256,7 @@ public class DiagView extends ObsView
   {
     final int found = numberOfItemsWithType( valueAxisType );
 
-    final Color[] axisColors = TimeserieUtils.getColorsFor( valueAxisType );
+    final Color[] axisColors = TimeseriesUtils.getColorsFor( valueAxisType );
 
     if( found < axisColors.length )
       return axisColors[found];

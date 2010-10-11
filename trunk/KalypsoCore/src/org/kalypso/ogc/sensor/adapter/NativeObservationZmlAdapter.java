@@ -49,7 +49,7 @@ import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
-import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
+import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 
 /**
@@ -102,7 +102,7 @@ public class NativeObservationZmlAdapter implements INativeObservationAdapter
   {
 // return new IAxis[0];
     final IAxis dateAxis = new DefaultAxis( "Datum", ITimeseriesConstants.TYPE_DATE, "", Date.class, true ); //$NON-NLS-1$ //$NON-NLS-2$
-    final IAxis valueAxis = new DefaultAxis( TimeserieUtils.getName( m_axisTypeValue ), m_axisTypeValue, TimeserieUtils.getUnit( m_axisTypeValue ), Double.class, false );
+    final IAxis valueAxis = new DefaultAxis( TimeseriesUtils.getName( m_axisTypeValue ), m_axisTypeValue, TimeseriesUtils.getUnit( m_axisTypeValue ), Double.class, false );
     final IAxis[] axis = new IAxis[] { dateAxis, valueAxis };
     return axis;
   }

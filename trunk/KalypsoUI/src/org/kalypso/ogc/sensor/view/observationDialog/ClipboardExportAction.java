@@ -55,7 +55,7 @@ import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.request.IRequest;
-import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
+import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 import org.kalypso.ogc.sensor.view.ObservationViewerDialog;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree_impl.gml.schema.SpecialPropertyMapper;
@@ -145,7 +145,7 @@ public class ClipboardExportAction extends AbstractObservationAction
         {
           // FIXME: evil: everything should be exported as it appears in the table!
           if( value instanceof Number )
-            stringValue = TimeserieUtils.getNumberFormatFor( sortedAxes[col].getType() ).format( value );
+            stringValue = TimeseriesUtils.getNumberFormatFor( sortedAxes[col].getType() ).format( value );
           else
             stringValue = (String) SpecialPropertyMapper.cast( value, String.class, true );
           result.append( stringValue != null ? stringValue : " " ); //$NON-NLS-1$

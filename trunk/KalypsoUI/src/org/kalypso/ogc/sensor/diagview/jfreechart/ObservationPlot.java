@@ -89,7 +89,7 @@ import org.kalypso.ogc.sensor.diagview.DiagViewCurve.AlarmLevel;
 import org.kalypso.ogc.sensor.diagview.DiagramAxis;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.template.ObsViewItem;
-import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
+import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 
 /**
  * A plot for IObservation.
@@ -160,7 +160,7 @@ public class ObservationPlot extends XYPlot
     try
     {
       final String axisType = axis == null ? null : axis.getType();
-      final String axisClass = TimeserieUtils.getAxisClassFor( axisType );
+      final String axisClass = TimeseriesUtils.getAxisClassFor( axisType );
       if( axisClass == null )
       {
         final String msg = String.format( "No Axis-Class defined for type '%s'. Must be defined in timeseries.ini or /KalypsoCore/src/org/kalypso/ogc/sensor/timeseries/resource/config.properties", axisType ); //$NON-NLS-1$
@@ -372,14 +372,14 @@ public class ObservationPlot extends XYPlot
     if( curve.getView().isFeatureEnabled( ITimeseriesConstants.FEATURE_FORECAST ) )
     {
       // add a marker if the obs is a forecast
-      final DateRange fr = TimeserieUtils.isTargetForecast( obs );
+      final DateRange fr = TimeseriesUtils.isTargetForecast( obs );
       if( fr != null )
       {
         final Long begin = new Long( fr.getFrom().getTime() );
         if( !m_markers.containsKey( begin ) )
         {
           final long end = fr.getTo().getTime();
-          final Marker marker = createMarker( begin.doubleValue(), end, "Vorhersage", TimeserieUtils.getColorForMD( ITimeseriesConstants.MD_VORHERSAGE ) );
+          final Marker marker = createMarker( begin.doubleValue(), end, "Vorhersage", TimeseriesUtils.getColorForMD( ITimeseriesConstants.MD_VORHERSAGE ) );
 
           addDomainMarker( marker, Layer.BACKGROUND );
 

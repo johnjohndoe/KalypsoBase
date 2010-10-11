@@ -48,7 +48,7 @@ import junit.framework.TestCase;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
+import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 
 /**
  * @author schlienger
@@ -57,7 +57,7 @@ public class TranProLinFilterTest extends TestCase
 {
   public void testGetValues( ) throws SensorException
   {
-    final IObservation obs = TimeserieUtils.createTestTimeserie( new String[] { "W" }, 10, false ); //$NON-NLS-1$
+    final IObservation obs = TimeseriesUtils.createTestTimeserie( new String[] { "W" }, 10, false ); //$NON-NLS-1$
 
     assertEquals( 10, obs.getValues( null ).size() );
 

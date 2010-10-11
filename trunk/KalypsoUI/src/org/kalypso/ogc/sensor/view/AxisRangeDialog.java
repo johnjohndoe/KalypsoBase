@@ -44,7 +44,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.i18n.Messages;
-import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
+import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 import org.kalypsodeegree_impl.gml.schema.SpecialPropertyMapper;
 
 public class AxisRangeDialog extends TitleAreaDialog
@@ -192,13 +192,13 @@ public class AxisRangeDialog extends TitleAreaDialog
       message = Messages.getString( "org.kalypso.ogc.sensor.view.AxisRangeDialog.13" ); //$NON-NLS-1$
       m_name = m_nameText.getText();
       message = Messages.getString( "org.kalypso.ogc.sensor.view.AxisRangeDialog.14" ); //$NON-NLS-1$
-      m_min = SpecialPropertyMapper.cast( m_minText.getText(), TimeserieUtils.getDataClass( m_axisType ), false );
+      m_min = SpecialPropertyMapper.cast( m_minText.getText(), TimeseriesUtils.getDataClass( m_axisType ), false );
       message = Messages.getString( "org.kalypso.ogc.sensor.view.AxisRangeDialog.15" ); //$NON-NLS-1$
-      m_int = SpecialPropertyMapper.cast( m_intText.getText(), TimeserieUtils.getDataClass( m_axisType ), false );
+      m_int = SpecialPropertyMapper.cast( m_intText.getText(), TimeseriesUtils.getDataClass( m_axisType ), false );
       message = Messages.getString( "org.kalypso.ogc.sensor.view.AxisRangeDialog.16" ); //$NON-NLS-1$
       m_count = ((Integer) SpecialPropertyMapper.cast( m_countText.getText(), Integer.class, false )).intValue();
       message = Messages.getString( "org.kalypso.ogc.sensor.view.AxisRangeDialog.17" ); //$NON-NLS-1$
-      m_default = SpecialPropertyMapper.cast( m_defaultText.getText(), TimeserieUtils.getDataClass( m_axisType ), false );
+      m_default = SpecialPropertyMapper.cast( m_defaultText.getText(), TimeseriesUtils.getDataClass( m_axisType ), false );
 //      message = Messages.getString( "org.kalypso.ogc.sensor.view.AxisRangeDialog.18" ); //$NON-NLS-1$
       m_valid = true;
     }

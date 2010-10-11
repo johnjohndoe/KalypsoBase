@@ -50,7 +50,7 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
-import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
+import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree_impl.gml.schema.SpecialPropertyMapper;
 
@@ -115,7 +115,7 @@ public class Clipboard2Zml
     if( Number.class.isAssignableFrom( dataClass ) )
     {
       final String type = axis.getType();
-      final NumberFormat numberFormat = TimeserieUtils.getNumberFormatFor( type );
+      final NumberFormat numberFormat = TimeseriesUtils.getNumberFormatFor( type );
       final Object parsedValue = numberFormat.parseObject( stringValue );
       if( dataClass.isInstance( parsedValue ) )
         return parsedValue;

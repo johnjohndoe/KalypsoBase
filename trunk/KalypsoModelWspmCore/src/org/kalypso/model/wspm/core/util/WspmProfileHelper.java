@@ -53,7 +53,7 @@ import org.kalypso.model.wspm.core.profil.ProfilFactory;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
-import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
+import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
@@ -194,7 +194,7 @@ public final class WspmProfileHelper
     /* It is assumed that all points and values share the same coordinate system. */
     final String crs;
     if( srsName == null )
-      crs = TimeserieUtils.getCoordinateSystemNameForGkr( Double.toString( (Double) geoReferencedPoints.get( 0 ).getValue( iRechtswert ) ) );
+      crs = TimeseriesUtils.getCoordinateSystemNameForGkr( Double.toString( (Double) geoReferencedPoints.get( 0 ).getValue( iRechtswert ) ) );
     else
       crs = srsName;
 

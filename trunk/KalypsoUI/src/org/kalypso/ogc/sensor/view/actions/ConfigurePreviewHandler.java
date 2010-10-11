@@ -54,7 +54,7 @@ import org.kalypso.contribs.eclipse.jface.dialog.DateRangeInputDialog;
 import org.kalypso.contribs.eclipse.swt.widgets.DateRangeInputControlStuct;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.cache.ObservationCache;
-import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
+import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 import org.kalypso.ogc.sensor.view.ObservationChooser;
 import org.kalypso.repository.IRepository;
 import org.kalypso.ui.KalypsoGisPlugin;
@@ -81,7 +81,7 @@ public class ConfigurePreviewHandler extends AbstractHandler
     if( rep == null )
       return Status.OK_STATUS;
 
-    final DateFormat dateFormat = TimeserieUtils.getDateFormat();
+    final DateFormat dateFormat = TimeseriesUtils.getDateFormat();
     final DateRangeInputDialog dlg = new DateRangeInputDialog( shell, Messages.getString("org.kalypso.ogc.sensor.view.actions.ConfigurePreviewHandler.0"), Messages.getString("org.kalypso.ogc.sensor.view.actions.ConfigurePreviewHandler.1"), DateRangeInputControlStuct.create( rep.getProperties(), dateFormat ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
     if( dlg.open() == Window.OK )

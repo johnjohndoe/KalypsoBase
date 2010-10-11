@@ -56,7 +56,7 @@ import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.template.IObsProvider;
 import org.kalypso.ogc.sensor.template.PlainObsProvider;
 import org.kalypso.ogc.sensor.template.PooledObsProvider;
-import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
+import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 import org.kalypso.template.obstableview.TypeColumn;
 import org.kalypso.template.obstableview.TypeObservation;
 
@@ -116,7 +116,7 @@ public class TableViewColumnXMLLoader extends PoolableObjectWaiter
         {
           final String colName = tcol.getName() != null ? tcol.getName() : tcol.getAxis();
           final String name = ObservationTokenHelper.replaceTokens( colName, obs, valueAxis );
-          final String format = tcol.getFormat() != null ? tcol.getFormat() : TimeserieUtils.getDefaultFormatString( valueAxis.getType() );
+          final String format = tcol.getFormat() != null ? tcol.getFormat() : TimeseriesUtils.getDefaultFormatString( valueAxis.getType() );
 
           final IObsProvider provider = isSynchron() ? (IObsProvider) new PlainObsProvider( obs, null ) : new PooledObsProvider( key, null );
           final TableViewColumn column = new TableViewColumn( tableView, provider, name, tcol.isEditable(), tcol.getWidth(), keyAxis, valueAxis, format, m_columnPosition );
