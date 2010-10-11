@@ -60,7 +60,7 @@ import org.kalypso.ogc.sensor.diagview.DiagramAxis;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ChartFactory;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ObservationChart;
 import org.kalypso.ogc.sensor.template.PlainObsProvider;
-import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
+import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTable;
 import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTableSet;
 
@@ -120,8 +120,8 @@ public class WQRelationDiagramViewer extends AbstractViewer implements DisposeLi
     final String fromType = wqs.getFromType();
     final String toType = wqs.getToType();
 
-    final String fromUnit = TimeserieUtils.getUnit( fromType );
-    final String toUnit = TimeserieUtils.getUnit( toType );
+    final String fromUnit = TimeseriesUtils.getUnit( fromType );
+    final String toUnit = TimeseriesUtils.getUnit( toType );
 
     final DiagramAxis diagramAxisFrom = new DiagramAxis( fromType, "double", fromType, fromUnit, DiagramAxis.DIRECTION_VERTICAL, DiagramAxis.POSITION_LEFT, false ); //$NON-NLS-1$
     final DiagramAxis diagramAxisTo = new DiagramAxis( toType, "double", toType, toUnit, DiagramAxis.DIRECTION_HORIZONTAL, DiagramAxis.POSITION_BOTTOM, false ); //$NON-NLS-1$

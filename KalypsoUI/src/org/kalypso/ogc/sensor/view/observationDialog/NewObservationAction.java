@@ -53,7 +53,7 @@ import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
-import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
+import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 import org.kalypso.ogc.sensor.view.AxisRangeDialog;
 import org.kalypso.ogc.sensor.view.ObservationViewerDialog;
 
@@ -107,7 +107,7 @@ public class NewObservationAction extends AbstractObservationAction
     final Object intervall = dialog.getInt();
     final int rows = dialog.getCount();
 
-    final IAxis[] axis = TimeserieUtils.createDefaultAxes( axisTypes, true );
+    final IAxis[] axis = TimeseriesUtils.createDefaultAxes( axisTypes, true );
 
     final Object[][] values = new Object[rows][axis.length];
     final Iterator< ? > iterator = new ValueIterator( min, intervall, rows );

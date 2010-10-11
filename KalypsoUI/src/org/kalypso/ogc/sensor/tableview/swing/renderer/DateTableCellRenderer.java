@@ -52,7 +52,7 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import org.kalypso.ogc.sensor.tableview.swing.marker.ILabelMarker;
-import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
+import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 
 /**
  * Helper: formatiert das Datum auf eine richtige Art und Weise
@@ -68,7 +68,7 @@ public class DateTableCellRenderer extends DefaultTableCellRenderer
 
   public DateTableCellRenderer( )
   {
-    m_df = TimeserieUtils.getDateFormat();
+    m_df = TimeseriesUtils.getDateFormat();
   }
 
   /**

@@ -89,11 +89,11 @@ import org.kalypso.ogc.sensor.timeseries.wq.WQFactory;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 
 /**
- * Utilities when dealing with Observations which are Kalypso Timeseries.
+ * Utility for dealing Kalypso time series.
  * 
  * @author schlienger
  */
-public final class TimeserieUtils implements ITimeseriesConstants
+public final class TimeseriesUtils implements ITimeseriesConstants
 {
   public static final String[] TYPES_ALL;
 
@@ -108,14 +108,14 @@ public final class TimeserieUtils implements ITimeseriesConstants
     TYPES_ALL = types;
   }
 
-  /** default date format used within some of the timeseries dependent properties */
+  /** default date format used within some of the time series dependent properties */
   /** @deprecated Should not be used any more. We use xs:dateTime format now for printing times into zml files. */
   @Deprecated
   private static final DateFormat FORECAST_DF = DateFormat.getDateTimeInstance( DateFormat.DEFAULT, DateFormat.DEFAULT, Locale.GERMANY );
 
   private static final String PROP_TIMESERIES_CONFIG = "kalypso.timeseries.properties"; //$NON-NLS-1$
 
-  private static URL CONFIG_BASE_URL = TimeserieUtils.class.getResource( "resource/" ); //$NON-NLS-1$
+  private static URL CONFIG_BASE_URL = TimeseriesUtils.class.getResource( "resource/" ); //$NON-NLS-1$
 
   private static String BASENAME = "config"; //$NON-NLS-1$
 
@@ -125,7 +125,7 @@ public final class TimeserieUtils implements ITimeseriesConstants
 
   private static NumberFormat DEFAULT_FORMAT = null;
 
-  private TimeserieUtils( )
+  private TimeseriesUtils( )
   {
     // no instantiation
   }
@@ -226,8 +226,8 @@ public final class TimeserieUtils implements ITimeseriesConstants
         final String timeseriesConfigLocation = System.getProperty( PROP_TIMESERIES_CONFIG );
         final URL timeseriesConfigUrl = timeseriesConfigLocation == null ? null : new URL( configUrl, timeseriesConfigLocation );
 
-        // TODO: load timeseries ini from local config: ni order to support debugging correctly, sue this pattern:
-// final URL proxyConfigLocation = HwvProductSachsenAnhalt.findConfigLocation( CONFIG_PROXY_PATH );
+        // TODO: load time series ini from local config: ni order to support debugging correctly, sue this pattern:
+        // final URL proxyConfigLocation = HwvProductSachsenAnhalt.findConfigLocation( CONFIG_PROXY_PATH );
 
         try
         {
@@ -524,10 +524,10 @@ public final class TimeserieUtils implements ITimeseriesConstants
     final List<IAxis> axisList = new ArrayList<IAxis>();
     if( axisTypes != null && axisTypes.length > 0 )
     {
-      axisList.add( TimeserieUtils.createDefaulAxis( axisTypes[0], firstWithKey ) );
+      axisList.add( TimeseriesUtils.createDefaulAxis( axisTypes[0], firstWithKey ) );
       for( int i = 1; i < axisTypes.length; i++ )
       {
-        axisList.add( TimeserieUtils.createDefaulAxis( axisTypes[i], false ) );
+        axisList.add( TimeseriesUtils.createDefaulAxis( axisTypes[i], false ) );
       }
     }
     return axisList.toArray( new IAxis[axisList.size()] );
@@ -554,7 +554,7 @@ public final class TimeserieUtils implements ITimeseriesConstants
   }
 
   /**
-   * Create a test timeserie with a date axis and one default axis for each of the given axisTypes. A tupple-model is
+   * Create a test time serie with a date axis and one default axis for each of the given axisTypes. A tupple-model is
    * randomly generated.
    * 
    * @param axisTypes
@@ -566,10 +566,10 @@ public final class TimeserieUtils implements ITimeseriesConstants
   public static IObservation createTestTimeserie( final String[] axisTypes, final int amountRows, final boolean allowNegativeValues ) throws SensorException
   {
     final IAxis[] axes = new IAxis[axisTypes.length + 1];
-    axes[0] = TimeserieUtils.createDefaulAxis( ITimeseriesConstants.TYPE_DATE, true );
+    axes[0] = TimeseriesUtils.createDefaulAxis( ITimeseriesConstants.TYPE_DATE, true );
     for( int i = 0; i < axisTypes.length; i++ )
     {
-      axes[i + 1] = TimeserieUtils.createDefaulAxis( axisTypes[i] );
+      axes[i + 1] = TimeseriesUtils.createDefaulAxis( axisTypes[i] );
     }
 
     final SimpleObservation obs = new SimpleObservation( axes );

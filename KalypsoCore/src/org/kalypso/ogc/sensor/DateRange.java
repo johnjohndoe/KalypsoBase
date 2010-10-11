@@ -45,7 +45,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
+import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 
 /**
  * Simple Date Range
@@ -149,7 +149,7 @@ public class DateRange implements Comparable<DateRange>
   @Override
   public String toString( )
   {
-    final DateFormat df = TimeserieUtils.getDateFormat();
+    final DateFormat df = TimeseriesUtils.getDateFormat();
     return df.format( m_from ) + " - " + df.format( m_to ); //$NON-NLS-1$
   }
 

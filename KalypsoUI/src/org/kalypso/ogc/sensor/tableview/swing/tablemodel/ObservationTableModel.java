@@ -71,7 +71,7 @@ import org.kalypso.ogc.sensor.tableview.rules.ITableViewRules;
 import org.kalypso.ogc.sensor.tableview.rules.RenderingRule;
 import org.kalypso.ogc.sensor.tableview.rules.RulesFactory;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
-import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
+import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHandler;
 import org.kalypso.ogc.sensor.timeseries.datasource.IDataSourceItem;
 
@@ -604,7 +604,7 @@ public class ObservationTableModel extends AbstractTableModel implements IObserv
     synchronized( m_columns )
     {
       final TableViewColumn col = m_columns.get( column );
-      return TimeserieUtils.getNumberFormat( col.getFormat() );
+      return TimeseriesUtils.getNumberFormat( col.getFormat() );
     }
   }
 
@@ -655,7 +655,7 @@ public class ObservationTableModel extends AbstractTableModel implements IObserv
 
     // find appropriate format for shared column (Attention: can still be null)
     if( checkObject instanceof Date )
-      nf[0] = TimeserieUtils.getDateFormat();
+      nf[0] = TimeseriesUtils.getDateFormat();
     else if( checkObject instanceof Integer )
       nf[0] = NumberFormat.getIntegerInstance();
     else if( checkObject instanceof Number )
@@ -680,7 +680,7 @@ public class ObservationTableModel extends AbstractTableModel implements IObserv
     {
       final TableViewColumn tvc = (TableViewColumn) element;
 
-      nf[col] = TimeserieUtils.getNumberFormat( tvc.getFormat() );
+      nf[col] = TimeseriesUtils.getNumberFormat( tvc.getFormat() );
 
       writer.write( separator );
       writer.write( tvc.getName() );

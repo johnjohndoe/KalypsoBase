@@ -93,7 +93,7 @@ import org.kalypso.ogc.sensor.tableview.swing.tablemodel.ObservationTableModel;
 import org.kalypso.ogc.sensor.template.IObsViewEventListener;
 import org.kalypso.ogc.sensor.template.ObsViewEvent;
 import org.kalypso.ogc.sensor.template.SwingEclipseUtilities;
-import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
+import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.KalypsoUIExtensions;
 
@@ -417,7 +417,7 @@ public class ObservationTable extends Panel implements IObsViewEventListener
     }
 
     /* Else, scroll to start forecast (center it on middle of table) */
-    final DateRange dr = TimeserieUtils.isTargetForecast( observation );
+    final DateRange dr = TimeseriesUtils.isTargetForecast( observation );
     if( dr == null )
       return;
 
@@ -456,7 +456,7 @@ public class ObservationTable extends Panel implements IObsViewEventListener
     if( obs != null )
     {
       // check if observation is a vorhersage
-      final DateRange dr = TimeserieUtils.isTargetForecast( obs );
+      final DateRange dr = TimeseriesUtils.isTargetForecast( obs );
       if( dr != null )
       {
         if( adding )

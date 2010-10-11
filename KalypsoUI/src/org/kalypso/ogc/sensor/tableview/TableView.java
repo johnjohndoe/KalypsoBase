@@ -53,7 +53,7 @@ import org.kalypso.ogc.sensor.tableview.rules.RulesFactory;
 import org.kalypso.ogc.sensor.template.IObsProvider;
 import org.kalypso.ogc.sensor.template.ObsView;
 import org.kalypso.ogc.sensor.template.ObsViewEvent;
-import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
+import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 
 /**
  * A table view template for observations. Each observation is wrapped up in a theme which in turn delivers columns for
@@ -143,7 +143,7 @@ public class TableView extends ObsView
             // Check where we need that for Sachsen and fix it there
 // if( name == null || name.length() == 0 )
             name = ObservationTokenHelper.replaceTokens( tokenizedName, obs, valueAxis );
-            final TableViewColumn col = new TableViewColumn( this, provider.copy(), name, data.editable, 50, keyAxes[0], valueAxis, TimeserieUtils.getDefaultFormatString( valueAxis.getType() ) );
+            final TableViewColumn col = new TableViewColumn( this, provider.copy(), name, data.editable, 50, keyAxes[0], valueAxis, TimeseriesUtils.getDefaultFormatString( valueAxis.getType() ) );
 
             addItem( col );
           }

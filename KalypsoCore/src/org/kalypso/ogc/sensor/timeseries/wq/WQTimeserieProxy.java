@@ -53,7 +53,7 @@ import org.kalypso.ogc.sensor.impl.DefaultAxis;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
-import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
+import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 
 /**
  * WQTimeserieProxy for proxying W, Q, and V Timeseries.
@@ -117,8 +117,8 @@ public class WQTimeserieProxy extends AbstractObservationDecorator
 
     m_dateAxis = ObservationUtilities.findAxisByType( axes, ITimeseriesConstants.TYPE_DATE );
 
-    final String name = TimeserieUtils.getName( m_proxyAxisType );
-    final String unit = TimeserieUtils.getUnit( m_proxyAxisType );
+    final String name = TimeseriesUtils.getName( m_proxyAxisType );
+    final String unit = TimeseriesUtils.getUnit( m_proxyAxisType );
 
     m_srcAxis = ObservationUtilities.findAxisByType( axes, m_realAxisType );
     try

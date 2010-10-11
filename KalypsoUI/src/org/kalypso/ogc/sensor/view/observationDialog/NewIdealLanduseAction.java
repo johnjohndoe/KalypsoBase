@@ -53,7 +53,7 @@ import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
-import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
+import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 import org.kalypso.ogc.sensor.view.ObservationViewerDialog;
 
 /**
@@ -91,7 +91,7 @@ public class NewIdealLanduseAction extends AbstractObservationAction
   protected IStatus run( )
   {
     final String[] axisTypes = getDialog().getAxisTypes();
-    final IAxis[] axis = TimeserieUtils.createDefaultAxes( axisTypes, true );
+    final IAxis[] axis = TimeseriesUtils.createDefaultAxes( axisTypes, true );
 
     final String name = Messages.getString( "org.kalypso.ogc.sensor.view.ObservationViewerDialog.5" ); //$NON-NLS-1$
     final Calendar startDate = Calendar.getInstance();

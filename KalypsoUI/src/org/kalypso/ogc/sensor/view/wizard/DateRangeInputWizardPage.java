@@ -52,7 +52,7 @@ import org.kalypso.contribs.eclipse.swt.widgets.DateRangeInputControl;
 import org.kalypso.contribs.eclipse.swt.widgets.DateRangeInputControlStuct;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.DateRange;
-import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
+import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
@@ -78,7 +78,7 @@ public class DateRangeInputWizardPage extends WizardPage
   {
     try
     {
-      final DateFormat dateFormat = TimeserieUtils.getDateFormat();
+      final DateFormat dateFormat = TimeseriesUtils.getDateFormat();
       final DateRangeInputControlStuct struct = DateRangeInputControlStuct.create( m_settings, dateFormat );
       m_control = new DateRangeInputControl( parent, SWT.NONE, struct );
 

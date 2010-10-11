@@ -49,7 +49,7 @@ import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.template.IObsProvider;
 import org.kalypso.ogc.sensor.template.ObsViewItem;
-import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
+import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 
 /**
  * Default implementation of the <code>ITableViewColumn</code> interface
@@ -123,7 +123,7 @@ public class DiagViewCurve extends ObsViewItem
    */
   public AlarmLevel[] getAlarmLevels( )
   {
-    final String[] alarms = TimeserieUtils.findOutMDAlarmLevel( getObservation() );
+    final String[] alarms = TimeseriesUtils.findOutMDAlarmLevel( getObservation() );
     final AlarmLevel[] als = new AlarmLevel[alarms.length];
 
     final MetadataList mdl = getObservation().getMetadataList();
@@ -156,7 +156,7 @@ public class DiagViewCurve extends ObsViewItem
       this.value = val;
       this.label = lbl;
 
-      this.color = TimeserieUtils.getColorForAlarmLevel( lbl );
+      this.color = TimeseriesUtils.getColorForAlarmLevel( lbl );
     }
 
     @Override

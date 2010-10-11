@@ -64,7 +64,7 @@ import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.template.IObsProvider;
 import org.kalypso.ogc.sensor.template.PlainObsProvider;
 import org.kalypso.ogc.sensor.template.PooledObsProvider;
-import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
+import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 import org.kalypso.template.obsdiagview.TypeCurve;
 import org.kalypso.template.obsdiagview.TypeCurve.Mapping;
 import org.kalypso.template.obsdiagview.TypeObservation;
@@ -151,7 +151,7 @@ public class DiagViewCurveXMLLoader extends PoolableObjectWaiter
           if( axis == null )
             color = ColorUtilities.random();
           else
-            color = TimeserieUtils.getColorsFor( axis.getType() )[0];
+            color = TimeseriesUtils.getColorsFor( axis.getType() )[0];
         }
 
         final String curveName = ObservationTokenHelper.replaceTokens( tcurve.getName(), obs, null );

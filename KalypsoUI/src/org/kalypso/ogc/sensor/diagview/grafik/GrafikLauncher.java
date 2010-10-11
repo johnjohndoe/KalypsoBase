@@ -95,7 +95,7 @@ import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.template.ObsView;
-import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
+import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.template.obsdiagview.Obsdiagview;
 import org.kalypso.template.obsdiagview.TypeCurve;
@@ -503,7 +503,7 @@ public class GrafikLauncher
 
       // is this obs a forecast?
       // TODO: check if odt wants forecast to be shown
-      final DateRange fr = TimeserieUtils.isTargetForecast( obs );
+      final DateRange fr = TimeseriesUtils.isTargetForecast( obs );
       if( fr != null )
       {
         final String strDate = GRAFIK_DF.format( fr.getFrom() );
@@ -517,7 +517,7 @@ public class GrafikLauncher
         ObservationUtilities.findAxisByType( displayedAxes.toArray( new IAxis[displayedAxes.size()] ), ITimeseriesConstants.TYPE_WATERLEVEL );
 
         final MetadataList mdl = obs.getMetadataList();
-        final String[] mds = TimeserieUtils.findOutMDAlarmLevel( obs );
+        final String[] mds = TimeseriesUtils.findOutMDAlarmLevel( obs );
         for( final String element2 : mds )
         {
           final String alarmLevel = mdl.getProperty( element2 );

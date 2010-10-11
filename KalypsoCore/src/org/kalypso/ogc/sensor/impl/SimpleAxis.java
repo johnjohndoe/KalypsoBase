@@ -42,7 +42,7 @@
 package org.kalypso.ogc.sensor.impl;
 
 import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
+import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 
 /**
  * SimpleAxis, compared to DefaultAxis, this class is mutable.
@@ -95,7 +95,7 @@ public class SimpleAxis extends AbstractAxis
   @Override
   public Class< ? > getDataClass( )
   {
-    return TimeserieUtils.getDataClass( m_type );
+    return TimeseriesUtils.getDataClass( m_type );
   }
 
   @Override
@@ -114,6 +114,6 @@ public class SimpleAxis extends AbstractAxis
   {
     // TODO Kannst das nicht Seiteneffekte haben? Ich bin der Meinung diese Klasse sollte sein eigenes Member für die
     // Einheit haben.
-    return TimeserieUtils.getUnit( m_type );
+    return TimeseriesUtils.getUnit( m_type );
   }
 }

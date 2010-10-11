@@ -49,7 +49,7 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.request.IRequest;
-import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
+import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 import org.kalypso.ogc.sensor.timeseries.merged.MergedObservation;
 import org.kalypso.ogc.sensor.timeseries.merged.ObservationSource;
 
@@ -83,7 +83,7 @@ public class ForecastFilter extends AbstractObservationFilter
   public ITupleModel getValues( final IRequest args ) throws SensorException
   {
     final ObservationSource[] sources = new ObservationSource[m_observations.length];
-    final DateRange daterange = TimeserieUtils.getDateRange( args );
+    final DateRange daterange = TimeseriesUtils.getDateRange( args );
     for( int i = 0; i < sources.length; i++ )
       sources[i] = new ObservationSource( null, daterange, null, m_observations[i] );
 

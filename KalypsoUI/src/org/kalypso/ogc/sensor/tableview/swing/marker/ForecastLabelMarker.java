@@ -48,7 +48,7 @@ import javax.swing.JLabel;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
-import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
+import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 
 /**
  * ForecastLabelMarker
@@ -57,7 +57,7 @@ import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
  */
 public class ForecastLabelMarker implements ILabelMarker
 {
-  private final static Color FORECAST_BG = TimeserieUtils.getColorForMD( ITimeseriesConstants.MD_VORHERSAGE );
+  private final static Color FORECAST_BG = TimeseriesUtils.getColorForMD( ITimeseriesConstants.MD_VORHERSAGE );
 
   private final static String FORECAST_TT = ITimeseriesConstants.MD_VORHERSAGE;
 
