@@ -47,7 +47,7 @@ public class ChartModel implements IChartModel
 
   public ChartModel( )
   {
-    final AbstractLayerManagerEventListener m_layerManager = new AbstractLayerManagerEventListener()
+    final AbstractLayerManagerEventListener layerManager = new AbstractLayerManagerEventListener()
     {
       /**
        * @see de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener#onActivLayerChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
@@ -88,7 +88,8 @@ public class ChartModel implements IChartModel
       }
 
     };
-    m_manager.addListener( m_layerManager );
+
+    m_manager.addListener( layerManager );
   }
 
   /**

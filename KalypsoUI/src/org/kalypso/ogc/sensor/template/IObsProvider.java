@@ -4,20 +4,20 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.request.IRequest;
 
 /**
- * @author belger
+ * @author Gernot Belger
  */
 public interface IObsProvider
 {
-  public IObservation getObservation();
+  IObservation getObservation( );
 
-  public IRequest getArguments();
+  IRequest getArguments( );
 
-  public void addListener( final IObsProviderListener l );
+  void addListener( final IObsProviderListener listener );
 
-  public void removeListener( final IObsProviderListener l );
+  void removeListener( final IObsProviderListener listener );
 
-  public void dispose();
+  void dispose( );
 
   /** Clones this object, that is returns a provider of the same observation */
-  public IObsProvider copy();
+  IObsProvider copy( );
 }

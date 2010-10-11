@@ -21,21 +21,21 @@ public interface IMapperRegistry extends IEventProvider<IMapperRegistryEventList
   /**
    * @return Array of all present axes
    */
-  public IAxis[] getAxes( );
+  IAxis[] getAxes( );
 
-  public IAxis getAxis( String id );
+  IAxis getAxis( String id );
 
-  public IMapper getMapper( String id );
+  IMapper getMapper( String id );
 
   /**
    * returns Array of all present mappers (excluding axes; if you need axes, try getAxes())
    */
-  public IMapper[] getMappers( );
+  IMapper[] getMappers( );
 
   /**
    * @return Array of all axes at the given position
    */
-  public IAxis[] getAxesAt( IAxisConstants.POSITION pos );
+  IAxis[] getAxesAt( IAxisConstants.POSITION pos );
 
   /**
    * @return renderer for the given axis. If first looks up the renderer that were explicitely registered for a given
@@ -77,12 +77,11 @@ public interface IMapperRegistry extends IEventProvider<IMapperRegistryEventList
   /**
    * removes all IAxis, IAxisRenderer and IAxisComponent entries
    */
-  public void clear( );
+  void clear( );
 
-  public void addMapper( IMapper mapper );
+  void addMapper( IMapper mapper );
 
-  public Map<IAxis, IDataRange<Number>> getNumericRangeAxisSnapshot( );
+  Map<IAxis, IDataRange<Number>> getNumericRangeAxisSnapshot( );
 
-  public <T> IDataOperator<T> getDataOperator( Class<T> clazz );
-
+  <T> IDataOperator<T> getDataOperator( Class<T> clazz );
 }

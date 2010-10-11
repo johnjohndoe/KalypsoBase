@@ -13,52 +13,52 @@ import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry
 public interface IChartModel
 {
 
-  public IMapperRegistry getMapperRegistry( );
+  IMapperRegistry getMapperRegistry( );
 
-  public ILayerManager getLayerManager( );
+  ILayerManager getLayerManager( );
 
-  public void clear( );
+  void clear( );
 
-  public Map<IAxis, List<IChartLayer>> getAxis2Layers( );
-  
-  public void dispose();
+  Map<IAxis, List<IChartLayer>> getAxis2Layers( );
+
+  void dispose( );
 
   /**
    * @param b
    *          if true, axes in the AxisRegistry which are not used by any layer are hidden; if false, all axes are shown
    */
-  public void setHideUnusedAxes( boolean b );
+  void setHideUnusedAxes( boolean b );
 
-  public boolean isHideUnusedAxes( );
-
-  /**
-   * When called, all given axes set their DataRange so all ther layers data can be shown
-   */
-  public void autoscale( IAxis[] axes );
+  boolean isHideUnusedAxes( );
 
   /**
-   * sets automatical autoscaling of axes
+   * When called, all given axes set their DataRange so all their layers data can be shown
    */
-  public void setAutoscale( boolean b );
+  void autoscale( IAxis[] axes );
 
-  public String getId( );
+  /**
+   * sets automatic auto-scaling of axes
+   */
+  void setAutoscale( boolean b );
 
-  public void setId( String id );
+  String getId( );
 
-  public String getTitle( );
+  void setId( String id );
 
-  public void setTitle( String title );
+  String getTitle( );
 
-  public String getDescription( );
+  void setTitle( String title );
 
-  public void setDescription( String description );
+  String getDescription( );
 
-  public <T_logical> void zoomIn( Point start, Point end );
+  void setDescription( String description );
 
-  public <T_logical> void zoomOut( Point start, Point end );
+  <T_logical> void zoomIn( Point start, Point end );
 
-  public void panTo( Point start, Point end );
+  <T_logical> void zoomOut( Point start, Point end );
 
-  public IChartModelState getState( );
+  void panTo( Point start, Point end );
+
+  IChartModelState getState( );
 
 }

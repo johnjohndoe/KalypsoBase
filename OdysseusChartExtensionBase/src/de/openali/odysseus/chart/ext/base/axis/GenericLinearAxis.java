@@ -118,7 +118,7 @@ public class GenericLinearAxis extends AbstractAxis
   }
 
   /**
-   * Uses the widgets' complete extension to calculate the screen value in correspondance to a normalized value
+   * Uses the widgets' complete extension to calculate the screen value in correspondence to a normalized value
    * 
    * @see de.openali.odysseus.chart.framework.model.mapper.component.IAxisComponent#normalizedToScreen(double)
    */
@@ -134,7 +134,7 @@ public class GenericLinearAxis extends AbstractAxis
   }
 
   /**
-   * Uses the widgets' complete extension to alculates the normalized value in correspondance to a screen value
+   * Uses the widgets' complete extension to allocates the normalized value in correspondence to a screen value
    * 
    * @see de.openali.odysseus.chart.framework.model.mapper.component.IAxisComponent#screenToNormalized(int)
    */
