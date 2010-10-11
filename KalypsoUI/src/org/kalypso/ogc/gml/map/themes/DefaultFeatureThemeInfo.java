@@ -65,7 +65,7 @@ import org.kalypsodeegree.model.geometry.GM_Position;
  * This implementation tires first to determine a theme-info registered for a certain qname.<br>
  * If this fails, a default message is provided<br>
  * Else, all calls are delegated to the found theme info.
- *
+ * 
  * @author Gernot Belger
  */
 public class DefaultFeatureThemeInfo implements IKalypsoThemeInfo
@@ -86,27 +86,39 @@ public class DefaultFeatureThemeInfo implements IKalypsoThemeInfo
 
     /* Try to find a registered theme for the given qname */
     final IFeatureType featureType = m_theme.getFeatureType();
-    if( featureType != null )
-    {
-      final QName qname = featureType.getQName();
-      final Properties properties = FeatureTypePropertiesCatalog.getProperties( m_theme.getWorkspace().getContext(), qname );
-      final String infoId = properties.getProperty( IFeatureTypePropertiesConstants.THEME_INFO_ID, null );
-      if( infoId != null )
-      {
-        m_delegate = KalypsoCoreExtensions.createThemeInfo( infoId, theme );
-        if( m_delegate == null )
-        {
-          final String msg = Messages.getString("org.kalypso.ogc.gml.map.themes.DefaultFeatureThemeInfo.4", theme.getLabel(), infoId ); //$NON-NLS-1$
-          throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, msg, null ) );
-        }
+    m_delegate = findDelegate( featureType );
 
-        return;
-      }
+    /* If we have nothing, use default */
+    if( m_delegate == null )
+    {
+      /* If anything else fails, create a default delegate to avoid <code>null</code>-checks. */
+      m_delegate = new org.kalypso.ogc.gml.FeatureThemeInfo();
+      m_delegate.init( theme, props );
+    }
+  }
+
+  private IKalypsoThemeInfo findDelegate( IFeatureType featureType ) throws CoreException
+  {
+    if( featureType == null )
+      return null;
+
+    final QName qname = featureType.getQName();
+    final Properties properties = FeatureTypePropertiesCatalog.getProperties( m_theme.getWorkspace().getContext(), qname );
+    final String infoId = properties.getProperty( IFeatureTypePropertiesConstants.THEME_INFO_ID, null );
+    if( infoId == null )
+    {
+      IFeatureType parentFT = featureType.getSubstitutionGroupFT();
+      return findDelegate( parentFT );
     }
 
-    /* If anything else fails, create a default delegate to avoid <code>null</code>-checks. */
-    m_delegate = new org.kalypso.ogc.gml.FeatureThemeInfo();
-    m_delegate.init( theme, props );
+    IKalypsoThemeInfo delegate = KalypsoCoreExtensions.createThemeInfo( infoId, m_theme );
+    if( delegate == null )
+    {
+      final String msg = Messages.getString( "org.kalypso.ogc.gml.map.themes.DefaultFeatureThemeInfo.4", m_theme.getLabel(), infoId ); //$NON-NLS-1$
+      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, msg, null ) );
+    }
+
+    return delegate;
   }
 
   /**
