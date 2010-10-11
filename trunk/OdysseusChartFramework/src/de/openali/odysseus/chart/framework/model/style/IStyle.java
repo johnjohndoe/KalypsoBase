@@ -4,30 +4,30 @@ import org.eclipse.swt.graphics.GC;
 
 public interface IStyle
 {
-  public void apply( GC gc );
+  void apply( GC gc );
 
-  public void setVisible( boolean isVisible );
+  void setVisible( boolean isVisible );
 
-  public boolean isVisible( );
+  boolean isVisible( );
 
-  public String getTitle( );
+  String getTitle( );
 
-  public void setTitle( String title );
+  void setTitle( String title );
 
-  public void setAlpha( int alpha );
+  void setAlpha( int alpha );
 
-  public int getAlpha( );
+  int getAlpha( );
 
-  public IStyle copy( );
+  IStyle copy( );
 
   /**
    * method to store arbitrary data objects;
    */
-  public void setData( String identifier, Object data );
+  void setData( String identifier, Object data );
 
   /**
    * get stored data objects
    */
-  public Object getData( String identifier );
+  Object getData( String identifier );
 
 }
