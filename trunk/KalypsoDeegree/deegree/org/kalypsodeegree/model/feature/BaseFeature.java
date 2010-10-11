@@ -89,51 +89,51 @@ public interface BaseFeature extends IAdaptable
   @Deprecated
   GM_Envelope getEnvelope( );
 
-  public GMLWorkspace getWorkspace( );
+  GMLWorkspace getWorkspace( );
 
   /**
    * Return the parent of this feature, that is, the feature wich contains this feature as inline feature.
    * 
    * @see #getParentRelation()
    */
-  public Feature getParent( );
+  Feature getParent( );
 
   /**
    * Returns the {@link IRelationType} where this feature resides inside its parent feature.
    * 
    * @see #getParent()
    */
-  public IRelationType getParentRelation( );
+  IRelationType getParentRelation( );
 
-  public void setProperty( final IPropertyType propertyType, final Object value );
+  void setProperty( IPropertyType propertyType, Object value );
 
-  public void setProperty( final QName propQName, final Object value );
+  void setProperty( QName propQName, Object value );
 
   /**
    * @deprecated use getPropery(PropertyType)
    */
   @Deprecated
-  public Object getProperty( final String propLocalName );
+  Object getProperty( String propLocalName );
 
   /**
    * @deprecated
    */
   @Deprecated
-  public void setProperty( final String propLocalName, final Object value );
+  void setProperty( String propLocalName, Object value );
 
-  public Object getProperty( final QName propQName );
+  Object getProperty( QName propQName );
 
   /**
    * intended to be called from GMLWorkspace when root feature is set.
    */
-  public void setWorkspace( final GMLWorkspace workspace );
+  void setWorkspace( GMLWorkspace workspace );
 
   /**
    * @deprecated Use {@link Deegree2Feature#setEnvelopesUpdated()} instead
    * @see org.kalypsodeegree.model.feature.BaseFeature#invalidEnvelope()
    */
   @Deprecated
-  public void invalidEnvelope( );
+  void invalidEnvelope( );
 
 // /**
 // * FIXME dimitri, ilya - *grmmml* this is not allowed for basic features <br>
