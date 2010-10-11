@@ -57,59 +57,59 @@ import org.kalypsodeegree_impl.gml.binding.commons.Image;
  */
 public interface IProfileFeature extends Feature, IFeatureWrapper2
 {
-  public final static QName QN_PROFILE = new QName( IWspmConstants.NS_WSPMPROF, "Profile" ); //$NON-NLS-1$
+  QName QN_PROFILE = new QName( IWspmConstants.NS_WSPMPROF, "Profile" ); //$NON-NLS-1$
 
-  public static final QName QN_PROPERTY_STATION = new QName( IWspmConstants.NS_WSPMPROF, "station" ); //$NON-NLS-1$
+  QName QN_PROPERTY_STATION = new QName( IWspmConstants.NS_WSPMPROF, "station" ); //$NON-NLS-1$
 
-  public static final QName QN_PROPERTY_TYPE = new QName( IWspmConstants.NS_WSPMPROF, "type" ); //$NON-NLS-1$
+  QName QN_PROPERTY_TYPE = new QName( IWspmConstants.NS_WSPMPROF, "type" ); //$NON-NLS-1$
 
-  public final static QName QN_PROPERTY_LINE = new QName( IWspmConstants.NS_WSPMPROF, "profileLocation" ); //$NON-NLS-1$
+  QName QN_PROPERTY_LINE = new QName( IWspmConstants.NS_WSPMPROF, "profileLocation" ); //$NON-NLS-1$
 
-  public static final QName QN_PROPERTY_SRS = new QName( IWspmConstants.NS_WSPMPROF, "srsName" ); //$NON-NLS-1$
+  QName QN_PROPERTY_SRS = new QName( IWspmConstants.NS_WSPMPROF, "srsName" ); //$NON-NLS-1$
 
-  public static final QName QN_PROPERTY_OBS_MEMBERS = new QName( IWspmConstants.NS_WSPMPROF, "member" ); //$NON-NLS-1$
+  QName QN_PROPERTY_OBS_MEMBERS = new QName( IWspmConstants.NS_WSPMPROF, "member" ); //$NON-NLS-1$
 
-  public static final QName QN_PROPERTY_IMAGE_MEMBER = new QName( IWspmConstants.NS_WSPMPROF, "imageMember" ); //$NON-NLS-1$
+  QName QN_PROPERTY_IMAGE_MEMBER = new QName( IWspmConstants.NS_WSPMPROF, "imageMember" ); //$NON-NLS-1$
 
   /**
    * The scale (i.e. fraction digits) for station values.
    * 
    * @see BigDecimal
    */
-  public static final int STATION_SCALE = 4;
+  int STATION_SCALE = 4;
 
   /**
    * @Deprecated Use {@link #getBigStation()} instead.
    */
-  public double getStation( );
+  double getStation( );
 
   /**
    * @deprecated Use {@link #setBigStation(BigDecimal)} instead.
    */
   @Deprecated
-  public void setStation( final double station );
+  void setStation( double station );
 
-  public BigDecimal getBigStation( );
+  BigDecimal getBigStation( );
 
-  public void setBigStation( final BigDecimal bigStation );
+  void setBigStation( BigDecimal bigStation );
 
-  public IProfil getProfil( );
+  IProfil getProfil( );
 
   /**
    * Returns the profile geometry.<br>
    * IMPORTANT: this geometry is (in contrast to {@link #getSrsName()} always in the Kalypso-Coorindate-System.
    */
-  public GM_Curve getLine( );
+  GM_Curve getLine( );
 
-  public String getSrsName( );
+  String getSrsName( );
 
-  public void setSrsName( final String srsName );
+  void setSrsName( String srsName );
 
-  public WspmWaterBody getWater( );
+  WspmWaterBody getWater( );
 
-  public String getProfileType( );
+  String getProfileType( );
 
-  public void setProfileType( final String type );
+  void setProfileType( String type );
 
-  public Image addImage( URL photoURL );
+  Image addImage( URL photoURL );
 }

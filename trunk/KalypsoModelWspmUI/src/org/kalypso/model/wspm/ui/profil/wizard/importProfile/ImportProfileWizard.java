@@ -41,21 +41,14 @@
 package org.kalypso.model.wspm.ui.profil.wizard.importProfile;
 
 import java.io.File;
-import java.util.List;
 
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.Wizard;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
-import org.kalypso.model.wspm.core.imports.ImportTrippleHelper;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
-import org.kalypso.model.wspm.ui.action.WspmImportProfileHelper;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement;
 
@@ -68,15 +61,15 @@ public class ImportProfileWizard extends Wizard implements IWizard
 {
   public static String PROFIL_TYPE_PASCHE = "org.kalypso.model.wspm.tuhh.profiletype"; //$NON-NLS-1$
 
-  protected ImportProfilePage m_ProfilePage;
-
-  private final FeatureAssociationTypeElement m_fate;
+  protected ImportProfilePage m_profilePage;
 
   private final CommandableWorkspace m_workspace;
 
+  private final WspmWaterBody m_water;
+
   public ImportProfileWizard( final FeatureAssociationTypeElement fate, final CommandableWorkspace workspace )
   {
-    m_fate = fate;
+    m_water = (WspmWaterBody) fate.getParentFeature();
     m_workspace = workspace;
     setWindowTitle( "Kalypso Profil Import" ); //$NON-NLS-1$
 
@@ -90,10 +83,10 @@ public class ImportProfileWizard extends Wizard implements IWizard
   public void addPages( )
   {
     /* Choose profile data */
-    m_ProfilePage = new ImportProfilePage( "chooseProfileData", org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.wizard.ImportProfileWizard.0"), null ); //$NON-NLS-1$ //$NON-NLS-2$
-    m_ProfilePage.setDescription( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.wizard.ImportProfileWizard.1") ); //$NON-NLS-1$
+    m_profilePage = new ImportProfilePage( "chooseProfileData", org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.wizard.ImportProfileWizard.0" ), null ); //$NON-NLS-1$ //$NON-NLS-2$
+    m_profilePage.setDescription( org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.wizard.ImportProfileWizard.1" ) ); //$NON-NLS-1$
 
-    addPage( m_ProfilePage );
+    addPage( m_profilePage );
   }
 
   /**
@@ -102,53 +95,12 @@ public class ImportProfileWizard extends Wizard implements IWizard
   @Override
   public boolean performFinish( )
   {
+    final File trippelFile = m_profilePage.getFile();
+    final String separator = m_profilePage.getSeparator();
+    final String crs = m_profilePage.getCoordinateSystem();
+
     /* Do import */
-    final ICoreRunnableWithProgress op = new ICoreRunnableWithProgress()
-    {
-      @Override
-      @SuppressWarnings("synthetic-access")//$NON-NLS-1$
-      public IStatus execute( final IProgressMonitor monitor )
-      {
-        monitor.beginTask( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.wizard.ImportProfileWizard.2"), 2 ); //$NON-NLS-1$
-
-        try
-        {
-          /* Import Trippel Data */
-          monitor.subTask( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.wizard.ImportProfileWizard.3") ); //$NON-NLS-1$
-
-          /* get file name from wizard */
-          final File trippelFile = m_ProfilePage.getFile();
-          final String separator = m_ProfilePage.getSeparator();
-          final String crs = m_ProfilePage.getCoordinateSystem();
-
-          List<IProfil> profiles = ImportTrippleHelper.importTrippelData( trippelFile, separator, PROFIL_TYPE_PASCHE );
-
-// new AddDeviderResolution
-
-          monitor.worked( 1 );
-
-          /* Convert Trippel Data */
-          monitor.subTask( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.wizard.ImportProfileWizard.4") ); //$NON-NLS-1$
-
-          WspmImportProfileHelper.loadIntoGml( profiles, m_fate, m_workspace, crs );
-
-          /* convert them into the profile-list */
-
-          monitor.worked( 1 );
-
-          return Status.OK_STATUS;
-        }
-        catch( final Exception e )
-        {
-          return StatusUtilities.statusFromThrowable( e, org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.wizard.ImportProfileWizard.5") );  //$NON-NLS-1$
-        }
-
-        finally
-        {
-          monitor.done();
-        }
-      }
-    };
+    final ImportTrippleOperation op = new ImportTrippleOperation( trippelFile, separator, crs, m_water, m_workspace );
 
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, op );
     if( !status.isOK() )

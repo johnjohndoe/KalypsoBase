@@ -62,7 +62,9 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.actions.ActionDelegate;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
+import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.serializer.IProfilSource;
 import org.kalypso.model.wspm.core.profil.serializer.ProfilSerializerUtilitites;
@@ -70,6 +72,7 @@ import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 
 /**
  * @author Gernot Belger
@@ -157,7 +160,10 @@ public class ImportProfilePrfAction extends ActionDelegate implements IObjectAct
     {
       final FeatureAssociationTypeElement fate = (FeatureAssociationTypeElement) m_selection.getFirstElement();
       final CommandableWorkspace workspace = m_selection.getWorkspace( fate.getParentFeature() );
-      WspmImportProfileHelper.loadIntoGml( profiles, fate, workspace, null );
+      final WspmWaterBody water = (WspmWaterBody) fate.getParentFeature();
+
+      final ImportProfilesCommand command = new ImportProfilesCommand( water, profiles );
+      workspace.postCommand( command );
     }
     catch( final Exception e )
     {
@@ -179,14 +185,19 @@ public class ImportProfilePrfAction extends ActionDelegate implements IObjectAct
         final IProfil[] profs = ProfilSerializerUtilitites.readProfile( prfSource, file, "org.kalypso.model.wspm.tuhh.profiletype" ); //$NON-NLS-1$
         if( profs == null || profs.length < 0 )
           continue;
-        profs[0].setName( org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.action.ImportProfilePrfAction.4" ) ); //$NON-NLS-1$
+        final IProfil profile = profs[0];
+        profile.setName( org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.action.ImportProfilePrfAction.4" ) ); //$NON-NLS-1$
+
+        // FIXME: ask user for crs!
+        final String crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
+        profile.setProperty( IWspmConstants.PROFIL_PROPERTY_CRS, crs );
 
         // do not overwrite original comment from wspwin profile
         // TODO: put this information into metadata strings
         // final String description = String.format( "Importiert am %s aus %s", todayString, file.getAbsolutePath() );
         // profil.setComment( description );
 
-        profiles.add( profs[0] );
+        profiles.add( profile );
       }
       catch( final IOException e )
       {

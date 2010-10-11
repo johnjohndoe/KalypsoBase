@@ -97,11 +97,7 @@ public class ImportProfilePage extends WizardPage implements SelectionListener, 
 
   private Button m_browseButton;
 
-  private String m_fileName;
-
   private File m_file;
-
-  private String m_filePath;
 
   protected String m_crs;
 
@@ -114,7 +110,7 @@ public class ImportProfilePage extends WizardPage implements SelectionListener, 
   /**
    * @param pageName
    */
-  public ImportProfilePage( String pageName )
+  public ImportProfilePage( final String pageName )
   {
     super( pageName );
     setDescription( "Dieser Dialog liest eine ASCII-Trippel-Datei in den Workspace ein" ); //$NON-NLS-1$
@@ -126,7 +122,7 @@ public class ImportProfilePage extends WizardPage implements SelectionListener, 
    * @param title
    * @param titleImage
    */
-  public ImportProfilePage( String pageName, String title, ImageDescriptor titleImage )
+  public ImportProfilePage( final String pageName, final String title, final ImageDescriptor titleImage )
   {
     super( pageName, title, titleImage );
     setDescription( "Dieser Dialog liest eine ASCII-Trippel-Datei in den Workspace ein" ); //$NON-NLS-1$
@@ -139,7 +135,7 @@ public class ImportProfilePage extends WizardPage implements SelectionListener, 
    * @see wizard.eclipse.jface.dialogs.IDialogPage#createControl(wizard.eclipse.swt.widgets.Composite)
    */
   @Override
-  public void createControl( Composite parent )
+  public void createControl( final Composite parent )
   {
     m_topComposite = new Composite( parent, SWT.NULL );
     m_topComposite.setFont( parent.getFont() );
@@ -162,7 +158,7 @@ public class ImportProfilePage extends WizardPage implements SelectionListener, 
     m_crsPanel.addSelectionChangedListener( new CRSSelectionListener()
     {
       @Override
-      protected void selectionChanged( String selectedCRS )
+      protected void selectionChanged( final String selectedCRS )
       {
         m_crs = selectedCRS;
         validate();
@@ -190,11 +186,11 @@ public class ImportProfilePage extends WizardPage implements SelectionListener, 
     setControl( m_topComposite );
   }
 
-  private void createFileGroup( Composite parent )
+  private void createFileGroup( final Composite parent )
   {
     m_group = new Group( parent, SWT.NULL );
-    GridLayout topGroupLayout = new GridLayout();
-    GridData topGroupData = new GridData();
+    final GridLayout topGroupLayout = new GridLayout();
+    final GridData topGroupData = new GridData();
     topGroupLayout.numColumns = 3;
     topGroupData.horizontalAlignment = GridData.FILL;
     m_group.setLayout( topGroupLayout );
@@ -204,7 +200,7 @@ public class ImportProfilePage extends WizardPage implements SelectionListener, 
     m_sourceFileLabel.setText( "Quelle: " ); //$NON-NLS-1$
 
     // Set width of source path field
-    GridData data0 = new GridData( GridData.FILL_HORIZONTAL );
+    final GridData data0 = new GridData( GridData.FILL_HORIZONTAL );
     data0.widthHint = SIZING_TEXT_FIELD_WIDTH;
 
     m_sourceFileText = new Text( m_group, SWT.BORDER );
@@ -264,7 +260,7 @@ public class ImportProfilePage extends WizardPage implements SelectionListener, 
    * @see org.eclipse.swt.events.SelectionListener#widgetSelected(org.eclipse.swt.events.SelectionEvent)
    */
   @Override
-  public void widgetSelected( SelectionEvent e )
+  public void widgetSelected( final SelectionEvent e )
   {
     Button b;
     Combo d;
@@ -273,7 +269,7 @@ public class ImportProfilePage extends WizardPage implements SelectionListener, 
       b = (Button) e.widget;
       if( b.equals( m_browseButton ) )
       {
-        Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
+        final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
         final FileDialog dialog = new FileDialog( shell, SWT.OPEN );
         dialog.setText( "Trippel-Import" ); //$NON-NLS-1$
         dialog.setFilterExtensions( new String[] { "*.txt", "*.*" } ); //$NON-NLS-1$ //$NON-NLS-2$
@@ -283,14 +279,12 @@ public class ImportProfilePage extends WizardPage implements SelectionListener, 
 
         final String fileName = dialog.getFileName();
         final String name = fileName;
-        File result = new File( filterPath, name );
+        final File result = new File( filterPath, name );
 
         if( fileName != null )
         {
           m_sourceFileText.setText( fileName.toString() );
-          m_fileName = fileName;
           m_file = result;
-          m_filePath = filterPath;
         }
       }
       if( e.widget instanceof Combo )
@@ -313,16 +307,6 @@ public class ImportProfilePage extends WizardPage implements SelectionListener, 
     return m_file;
   }
 
-  public String getFileName( )
-  {
-    return m_fileName;
-  }
-
-  public String getFilePath( )
-  {
-    return m_filePath;
-  }
-
   public String getSeparator( )
   {
     return m_seperator;
@@ -332,7 +316,7 @@ public class ImportProfilePage extends WizardPage implements SelectionListener, 
    * @see org.eclipse.swt.events.SelectionListener#widgetDefaultSelected(org.eclipse.swt.events.SelectionEvent)
    */
   @Override
-  public void widgetDefaultSelected( SelectionEvent e )
+  public void widgetDefaultSelected( final SelectionEvent e )
   {
     // no default selection
   }
@@ -342,7 +326,7 @@ public class ImportProfilePage extends WizardPage implements SelectionListener, 
    * @see org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.swt.events.ModifyEvent)
    */
   @Override
-  public void modifyText( ModifyEvent e )
+  public void modifyText( final ModifyEvent e )
   {
     validate();
   }
@@ -352,9 +336,9 @@ public class ImportProfilePage extends WizardPage implements SelectionListener, 
    * @see org.eclipse.swt.events.KeyListener#keyPressed(org.eclipse.swt.events.KeyEvent)
    */
   @Override
-  public void keyPressed( KeyEvent e )
+  public void keyPressed( final KeyEvent e )
   {
-    Widget w = e.widget;
+    final Widget w = e.widget;
     if( w instanceof Combo && e.character == SWT.CR )
     {
       validate();
@@ -365,7 +349,7 @@ public class ImportProfilePage extends WizardPage implements SelectionListener, 
    * @see org.eclipse.swt.events.KeyListener#keyReleased(org.eclipse.swt.events.KeyEvent)
    */
   @Override
-  public void keyReleased( KeyEvent e )
+  public void keyReleased( final KeyEvent e )
   {
     // do nothing
   }
