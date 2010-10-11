@@ -91,6 +91,7 @@ public abstract class AbstractChartModelViewPart extends ViewPart implements IAd
   {
     m_toolkit = new FormToolkit( parent.getDisplay() );
     m_form = m_toolkit.createScrolledForm( parent );
+    m_form.setExpandHorizontal( false );
     m_toolkit.decorateFormHeading( m_form.getForm() );
 
     final GridLayout bodyLayout = new GridLayout();

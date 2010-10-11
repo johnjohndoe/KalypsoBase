@@ -63,6 +63,7 @@ import org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme;
 import org.kalypso.observation.result.IRecord;
 
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
+import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
 import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
@@ -70,8 +71,6 @@ import de.openali.odysseus.chart.framework.model.layer.impl.LegendEntry;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
-import de.openali.odysseus.chart.framework.model.style.impl.LineStyle;
-import de.openali.odysseus.chart.framework.util.StyleUtils;
 
 /**
  * Displays constant wsp lines in the cross section.
@@ -81,6 +80,43 @@ import de.openali.odysseus.chart.framework.util.StyleUtils;
  */
 public class WspLayer extends AbstractProfilTheme
 {
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme#getTargetRange()
+   */
+  @Override
+  public IDataRange<Number> getTargetRange( )
+  {
+    Double min = null;
+    Double max = null;
+    BigDecimal station = ProfilUtil.stationToBigDecimal( getProfil().getStation() );
+    try
+    {
+      for( final Object element : m_data.getActiveElements() )
+      {
+        /* Search the value. */
+        final Double value = getValue( element, station );
+        if( min == null || max == null )
+        {
+          min = value;
+          max = value;
+        }
+        else
+        {
+          min = Math.min( min, value );
+          max = Math.max( max, value );
+        }
+      }
+    }
+    catch( Exception e )
+    {
+      /* Log the error message. */
+      KalypsoModelWspmUIPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, KalypsoModelWspmUIPlugin.ID, e.getLocalizedMessage(), e ) );
+    }
+    if( min == null || max == null )
+      return null;
+    return new DataRange<Number>( min, max );
+  }
+
   /**
    * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme#createLegendEntries()
    */
@@ -96,12 +132,12 @@ public class WspLayer extends AbstractProfilTheme
         final ILineStyle lineStyle = getLineStyle();
         if( lineStyle == null )
           return;
-        
+
         final PolylineFigure rf = new PolylineFigure();
 
         rf.setStyle( lineStyle );
         rf.getStyle().setWidth( 2 );
-        rf.getStyle().setColor( lineStyle.getColor());
+        rf.getStyle().setColor( lineStyle.getColor() );
         final int d = gc.getClipping().height / 3;
         rf.setPoints( new Point[] { new Point( 1, d + 1 ), new Point( gc.getClipping().width - 1, d + 1 ) } );
         rf.paint( gc );

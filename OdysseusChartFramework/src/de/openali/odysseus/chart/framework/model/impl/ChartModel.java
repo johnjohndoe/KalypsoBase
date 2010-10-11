@@ -37,7 +37,7 @@ public class ChartModel implements IChartModel
   /**
    * if set to true, all axes are sized automatically to fit all data into a layer
    */
-  private boolean m_autoscale = false;
+  private final boolean m_autoscale = false;
 
   private String m_id = "";
 
@@ -49,6 +49,17 @@ public class ChartModel implements IChartModel
   {
     final AbstractLayerManagerEventListener layerManager = new AbstractLayerManagerEventListener()
     {
+      /**
+       * @see de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener#onLayerVisibilityChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
+       */
+      @Override
+      public void onLayerVisibilityChanged( IChartLayer layer )
+      {
+        if( isHideUnusedAxes() )
+          return;
+        hideUnusedAxis( layer.getCoordinateMapper().getTargetAxis() );
+      }
+
       /**
        * @see de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener#onActivLayerChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
        */
@@ -331,11 +342,13 @@ public class ChartModel implements IChartModel
    *          if true, axes are automatically scaled to show the layers full data range
    */
   @Override
+  @Deprecated
+  /**use ChartModel#autoscale(null) instead **/
   public void setAutoscale( final boolean b )
   {
-    m_autoscale = b;
+    // m_autoscale = b;
 
-    if( m_autoscale )
+    if( b )
     {
       autoscale( null );
     }
@@ -360,29 +373,36 @@ public class ChartModel implements IChartModel
     if( b == m_hideUnusedAxes )
       return;
     m_hideUnusedAxes = b;
-    final IAxis[] axes = m_mapperRegistry.getAxes();
 
-    for( final IAxis axis : axes )
+    for( final IAxis axis : m_mapperRegistry.getAxes() )
     {
-      if( !m_hideUnusedAxes )
-      {
+      if( m_hideUnusedAxes )
+        hideUnusedAxis( axis );
+      else
         axis.setVisible( true );
-        continue;
-      }
-      final List<IChartLayer> list = m_axis2Layers.get( axis );
-      if( list == null )
-      {
-        axis.setVisible( false );
-        continue;
-      }
-      boolean visible = false;
-      for( final IChartLayer layer : list )
-      {
-        visible = visible | layer.isVisible();
-      }
-      axis.setVisible( visible );
     }
 
+  }
+
+  protected void hideUnusedAxis( final IAxis axis )
+  {
+    // if axis has no layers, hide axis
+    final List<IChartLayer> list = m_axis2Layers.get( axis );
+    if( list == null )
+    {
+      axis.setVisible( false );
+      return;
+    }
+    // if all layers are hidden, hide axis too
+    for( final IChartLayer layer : list )
+    {
+      if( layer.isVisible() )
+      {
+        axis.setVisible( true );
+        return;
+      }
+    }
+    axis.setVisible( false );
   }
 
   /**
@@ -462,7 +482,7 @@ public class ChartModel implements IChartModel
     }
     if( m_autoscale )
     {
-      autoscale( new IAxis[] { cm.getDomainAxis(), layer.getCoordinateMapper().getTargetAxis() } );
+      autoscale( new IAxis[] { cm.getDomainAxis(), cm.getTargetAxis() } );
     }
 
   }

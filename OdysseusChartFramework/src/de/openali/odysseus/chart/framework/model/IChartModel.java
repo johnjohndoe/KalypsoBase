@@ -13,52 +13,52 @@ import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry
 public interface IChartModel
 {
 
-  IMapperRegistry getMapperRegistry( );
+  public IMapperRegistry getMapperRegistry( );
 
-  ILayerManager getLayerManager( );
+  public ILayerManager getLayerManager( );
 
-  void clear( );
+  public void clear( );
 
-  Map<IAxis, List<IChartLayer>> getAxis2Layers( );
-
-  void dispose( );
+  public Map<IAxis, List<IChartLayer>> getAxis2Layers( );
+  
+  public void dispose();
 
   /**
    * @param b
    *          if true, axes in the AxisRegistry which are not used by any layer are hidden; if false, all axes are shown
    */
-  void setHideUnusedAxes( boolean b );
+  public void setHideUnusedAxes( boolean b );
 
-  boolean isHideUnusedAxes( );
+  public boolean isHideUnusedAxes( );
 
   /**
    * When called, all given axes set their DataRange so all their layers data can be shown
    */
-  void autoscale( IAxis[] axes );
+  public void autoscale( IAxis[] axes );
 
   /**
-   * sets automatic auto-scaling of axes
+   * automatic call autoscale of axes when adding or removing layer
    */
-  void setAutoscale( boolean b );
+  public void setAutoscale( boolean b );
 
-  String getId( );
+  public String getId( );
 
-  void setId( String id );
+  public void setId( String id );
 
-  String getTitle( );
+  public String getTitle( );
 
-  void setTitle( String title );
+  public void setTitle( String title );
 
-  String getDescription( );
+  public String getDescription( );
 
-  void setDescription( String description );
+  public void setDescription( String description );
 
-  <T_logical> void zoomIn( Point start, Point end );
+  public <T_logical> void zoomIn( Point start, Point end );
 
-  <T_logical> void zoomOut( Point start, Point end );
+  public <T_logical> void zoomOut( Point start, Point end );
 
-  void panTo( Point start, Point end );
+  public void panTo( Point start, Point end );
 
-  IChartModelState getState( );
+  public IChartModelState getState( );
 
 }
