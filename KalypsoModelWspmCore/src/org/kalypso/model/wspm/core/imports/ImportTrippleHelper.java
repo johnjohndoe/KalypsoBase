@@ -82,7 +82,7 @@ public final class ImportTrippleHelper
    * @param trippleFile
    *          file with profile tripples
    */
-  public static List<IProfil> importTrippelData( final File trippleFile, final String separator, final String profileType )
+  public static List<IProfil> importTrippelData( final File trippleFile, final String separator, final String profileType, final String crs )
   {
     final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profileType );
 
@@ -142,7 +142,9 @@ public final class ImportTrippleHelper
             if( !Double.isNaN( currentStation ) )
             {
               // store current profile points as IProfil
-              ImportTrippleHelper.storeProfile( profile, profilPointList, currentStation, profiles );
+              finishProfile( profile, profilPointList, currentStation, crs );
+              profiles.add( profile );
+
               profilPointList.clear();
               numStations = numStations + 1;
             }
@@ -174,10 +176,11 @@ public final class ImportTrippleHelper
       fileReader.close();
 
       /* store the last profile */
-      ImportTrippleHelper.storeProfile( profile, profilPointList, station, profiles );
+      finishProfile( profile, profilPointList, station, crs );
+      profiles.add( profile );
+
       profilPointList.clear();
       numStations = numStations + 1;
-
     }
     catch( final Exception e )
     {
@@ -203,7 +206,7 @@ public final class ImportTrippleHelper
    * @param profiles
    *          the list of the already imported profiles
    */
-  private static void storeProfile( final IProfil profile, final List<IRecord> profilPointList, final double station, final List<IProfil> profiles )
+  private static void finishProfile( final IProfil profile, final List<IRecord> profilPointList, final double station, final String crs )
   {
     for( final IRecord point : profilPointList )
       profile.addPoint( point );
@@ -211,8 +214,7 @@ public final class ImportTrippleHelper
     profile.setStation( station );
     profile.setName( Messages.getString( "org.kalypso.model.wspm.core.imports.ImportTrippleHelper.1" ) ); //$NON-NLS-1$
     profile.setDescription( Messages.getString( "org.kalypso.model.wspm.core.imports.ImportTrippleHelper.2" ) ); //$NON-NLS-1$
-
-    profiles.add( profile );
+    profile.setProperty( IWspmConstants.PROFIL_PROPERTY_CRS, crs );
   }
 
   /**
