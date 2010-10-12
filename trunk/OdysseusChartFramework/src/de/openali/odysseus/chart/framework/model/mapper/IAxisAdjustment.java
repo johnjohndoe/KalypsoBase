@@ -48,9 +48,9 @@ package de.openali.odysseus.chart.framework.model.mapper;
  */
 public interface IAxisAdjustment
 {
-  public double getBefore( );
+  double getBefore( );
 
-  public double getRange( );
+  double getRange( );
 
-  public double getAfter( );
+  double getAfter( );
 }

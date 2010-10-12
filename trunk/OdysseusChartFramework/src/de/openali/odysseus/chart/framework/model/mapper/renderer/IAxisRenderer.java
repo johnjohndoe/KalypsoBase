@@ -15,7 +15,7 @@ public interface IAxisRenderer // extends IMapperEventListener
    * 
    * @return Collection of tick-values
    */
-  public Number[] getTicks( IAxis axis, GC gc );
+  Number[] getTicks( IAxis axis, GC gc );
 
   /**
    * draws the IAxis-Representation into the given GC;
@@ -23,30 +23,30 @@ public interface IAxisRenderer // extends IMapperEventListener
    * @param screenArea
    *          Rectangle describing the axis size and location within the drawing area
    */
-  public void paint( GC gc, IAxis axis, Rectangle screenArea );
+  void paint( GC gc, IAxis axis, Rectangle screenArea );
 
   /**
    * @return width of the rendered axis (which means vertical extension for horizontal axes or horizontal extension for
    *         vertical axes)
    */
-  public int getAxisWidth( IAxis axis );
+  int getAxisWidth( IAxis axis );
 
   /**
    * method to store arbitrary data objects;
    */
-  public void setData( String identifier, Object data );
+  void setData( String identifier, Object data );
 
-  public Object getData( String identifier );
+  Object getData( String identifier );
 
   /**
    * returns unique identifier
    */
-  public String getId( );
+  String getId( );
 
   // public void invalidateTicks( IAxis axis );
 
-  public void dispose( );
+  void dispose( );
 
-  public String BORDER_SIZE = "de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer_border_size";
+  String BORDER_SIZE = "de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer_border_size";
 
 }
