@@ -37,15 +37,14 @@
 package org.kalypsodeegree.xml;
 
 // JDK 1.3
+import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.io.StringReader;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
 
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
@@ -73,7 +72,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  * @version $Revision$
  */
-public class XMLTools
+public final class XMLTools
 {
   private static DocumentBuilderFactory DOCUMENT_FACTORY;
   static
@@ -140,7 +139,7 @@ public class XMLTools
   {
     final NodeList nl = node.getChildNodes();
     Element element = null;
-    Element return_ = null;
+    Element result = null;
 
     if( (nl != null) && (nl.getLength() > 0) )
     {
@@ -154,7 +153,7 @@ public class XMLTools
           {
             if( element.getLocalName().equals( name ) )
             {
-              return_ = element;
+              result = element;
               break;
             }
           }
@@ -162,12 +161,12 @@ public class XMLTools
       }
     }
 
-    if( return_ == null )
+    if( result == null )
     {
       throw new XMLParsingException( "Required child-element '" + name + "' of element '" + node.getNodeName() + "' is missing!" );
     }
 
-    return return_;
+    return result;
   }
 
   /**
@@ -187,8 +186,6 @@ public class XMLTools
   {
 
     final NodeList nl = node.getChildNodes();
-    Element element = null;
-    Element return_ = null;
 
     if( (nl != null) && (nl.getLength() > 0) )
     {
@@ -196,23 +193,19 @@ public class XMLTools
       {
         if( nl.item( i ) instanceof Element )
         {
-          element = (Element) nl.item( i );
+          final Element element = (Element) nl.item( i );
 
           final String s = element.getNamespaceURI();
-
           if( (s == null && namespace == null) || (namespace != null && namespace.equals( s )) )
           {
             if( element.getLocalName().equals( name ) )
-            {
-              return_ = element;
-
-              break;
-            }
+              return element;
           }
         }
       }
     }
-    return return_;
+
+    return null;
   }
 
   /**
@@ -638,15 +631,26 @@ public class XMLTools
     try
     {
       stream = resource.openStream();
-      final DocumentBuilder parser = DOCUMENT_FACTORY.newDocumentBuilder();
-      final Document doc = parser.parse( new InputSource( stream ) );
+      final Document doc = parse( stream );
       stream.close();
       return doc;
     }
-    catch( final ParserConfigurationException ex )
+    finally
     {
-      ex.printStackTrace();
-      throw new IOException( "Unable to initialize DocumentBuilder: " + ex.getMessage(), ex );
+      IOUtils.closeQuietly( stream );
+    }
+  }
+
+  public static Document parse( final File file ) throws SAXException, IOException
+  {
+    InputStream stream = null;
+
+    try
+    {
+      stream = new BufferedInputStream( new FileInputStream( file ) );
+      final Document doc = parse( stream );
+      stream.close();
+      return doc;
     }
     finally
     {
@@ -914,104 +918,6 @@ public class XMLTools
 
     // Debug.debugMethodEnd();
     return return_;
-  }
-
-  /**
-   * the method merges two or more XML-schema definitions into one 'meta'-schema. for this it is nessecary that all into
-   * schemas uses the same prefix for namespace: http://www.w3.org/2001/XMLSchema. the result schema won't have a target
-   * namespace because the input schemas may use different target namespace (it's very probably that they will).
-   */
-  public static Document mergeSchemas( final Document[] schemas ) throws Exception
-  {
-    final StringBuffer content = new StringBuffer();
-    final ArrayList<String> attributes = new ArrayList<String>();
-    final ArrayList<String> imports = new ArrayList<String>();
-    final HashMap<String, Object> nodes = new HashMap<String, Object>();
-
-    String schemaNS = null;
-
-    // merge schemas into one schema
-    for( final Document element : schemas )
-    {
-      final Element lr = element.getDocumentElement();
-      final NamedNodeMap nnm = lr.getAttributes();
-
-      // add attributes to the root element
-      for( int j = 0; j < nnm.getLength(); j++ )
-      {
-        final Attr attr = (Attr) nnm.item( j );
-        final String a = attr.getName() + "=\"" + attr.getValue() + "\" ";
-
-        if( !attributes.contains( a ) && !attr.getName().equals( "targetNamespace" ) )
-        {
-          attributes.add( a );
-        }
-
-        // get schema namespace
-        if( attr.getValue().equals( "http://www.w3.org/2001/XMLSchema" ) )
-        {
-          final String s = attr.getName();
-          final int pos = s.indexOf( ":" );
-          schemaNS = s.substring( pos + 1, s.length() );
-        }
-      }
-
-      // get content --> type-, element-definitions
-      final NodeList nl = lr.getChildNodes();
-
-      for( int j = 0; j < nl.getLength(); j++ )
-      {
-        if( nl.item( j ) instanceof Element )
-        {
-          if( !nl.item( j ).getLocalName().equals( "import" ) )
-          {
-            // get element, attribute and type nodes
-            final String s = DOMPrinter.nodeToString( nl.item( j ), null ).trim();
-
-            if( nodes.get( s ) == null )
-            {
-              content.append( s );
-              nodes.put( s, null );
-            }
-          }
-          else
-          {
-            // get import nodes
-            final String s = DOMPrinter.nodeToString( nl.item( j ), null );
-
-            if( !imports.contains( s ) )
-            {
-              imports.add( s );
-            }
-          }
-        }
-      }
-    }
-
-    // put it all together to a valid XML document
-    final StringBuffer sb = new StringBuffer();
-    sb.append( "<" + schemaNS + ":schema " );
-
-    for( int i = 0; i < attributes.size(); i++ )
-    {
-      sb.append( attributes.get( i ) );
-    }
-
-    sb.append( ">" );
-
-    for( int i = 0; i < imports.size(); i++ )
-    {
-      sb.append( imports.get( i ) );
-    }
-
-    sb.append( content.toString() );
-    sb.append( "</" + schemaNS + ":schema>" );
-
-    final StringReader sr = new StringReader( sb.toString() );
-    final Document schemaDoc = XMLTools.parse( sr );
-    sr.close();
-
-    return schemaDoc;
   }
 
   /**
