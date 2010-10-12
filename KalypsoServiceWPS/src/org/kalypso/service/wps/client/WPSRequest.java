@@ -145,10 +145,10 @@ public class WPSRequest
    * @param timeout
    *          If > 0, the process is automatically canceled after this amount of time in milliseconds.
    */
-  public WPSRequest( final String identifier, final String serviceEndpoint, final long timeout )
+  public WPSRequest( final String identifier, final String serviceEndpoint, final long msTimeout )
   {
     wpsRequest = new NonBlockingWPSRequest( identifier, serviceEndpoint );
-    m_timeout = timeout;
+    m_timeout = msTimeout;
   }
 
   /**
