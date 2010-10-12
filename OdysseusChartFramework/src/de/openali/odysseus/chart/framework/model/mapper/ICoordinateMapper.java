@@ -49,15 +49,14 @@ import de.openali.odysseus.chart.framework.util.resource.IPair;
  */
 public interface ICoordinateMapper
 {
+  IPair<Number, Number> screenToNumeric( Point screenValue );
 
-  public IPair<Number, Number> screenToNumeric( Point screenValue );
+  Point numericToScreen( Number domainValue, Number targetValue );
 
-  public Point numericToScreen( Number domainValue, Number targetValue );
+  IAxis getDomainAxis( );
 
-  public IAxis getDomainAxis( );
+  IAxis getTargetAxis( );
 
-  public IAxis getTargetAxis( );
-
-  public Point logicalToScreen( Object domainValue, Object targetValue );
+  Point logicalToScreen( Object domainValue, Object targetValue );
 
 }

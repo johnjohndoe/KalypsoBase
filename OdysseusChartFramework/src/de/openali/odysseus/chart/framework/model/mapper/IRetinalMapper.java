@@ -44,22 +44,17 @@ import de.openali.odysseus.chart.framework.model.style.IStyle;
 
 /**
  * @author burtscher1
- * 
  */
 public interface IRetinalMapper extends IMapper
 {
   /**
-   * 
    * The Styles returned by this method have to be disposed by the caller.
    * 
    * @param value
    *          the value to map
    * @param bluePrintStlye
    *          the style which is to adjust according to the mapping rule
-   * 
-   * 
    * @return a new Style instance with "shifted" attributes
    */
-  public <T extends IStyle> T numericToScreen( Number value, T bluePrintStlye );
-
+  <T extends IStyle> T numericToScreen( Number value, T bluePrintStlye );
 }

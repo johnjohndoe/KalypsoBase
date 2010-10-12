@@ -21,7 +21,7 @@ public interface IAxisConstants
 
     private final ORIENTATION m_orientation;
 
-    POSITION( ORIENTATION orientation )
+    POSITION( final ORIENTATION orientation )
     {
       m_orientation = orientation;
     }
@@ -93,10 +93,10 @@ public interface IAxisConstants
   /**
    * Axis Render Data key's
    */
-  public String BORDER_SIZE = "de.openali.odysseus.chart.framework.model.mapper.IAxisRendere_border_size";
+  String BORDER_SIZE = "de.openali.odysseus.chart.framework.model.mapper.IAxisRendere_border_size";
 
-  public String TICK_LENGTH = "de.openali.odysseus.chart.framework.model.mapper.IAxisRendere_tick_length";
+  String TICK_LENGTH = "de.openali.odysseus.chart.framework.model.mapper.IAxisRendere_tick_length";
 
-  public String AXIS_GAP = "de.openali.odysseus.chart.framework.model.mapper.IAxisRendere_gap";
+  String AXIS_GAP = "de.openali.odysseus.chart.framework.model.mapper.IAxisRendere_gap";
 
 }

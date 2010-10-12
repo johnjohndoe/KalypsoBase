@@ -61,7 +61,7 @@ public class CoordinateMapper implements ICoordinateMapper
 
   private final ORIENTATION m_ori;
 
-  public CoordinateMapper( IAxis domain, IAxis target )
+  public CoordinateMapper( final IAxis domain, final IAxis target )
   {
     m_domainAxis = domain;
     m_targetAxis = target;
@@ -69,11 +69,11 @@ public class CoordinateMapper implements ICoordinateMapper
   }
 
   @Override
-  public Point numericToScreen( Number domVal, Number targetVal )
+  public Point numericToScreen( final Number domVal, final Number targetVal )
   {
     final int domScreen = m_domainAxis.numericToScreen( domVal );
     final int valScreen = m_targetAxis.numericToScreen( targetVal );
-    Point unswitched = new Point( domScreen, valScreen );
+    final Point unswitched = new Point( domScreen, valScreen );
     // Koordinaten switchen
     return new Point( m_ori.getX( unswitched ), m_ori.getY( unswitched ) );
   }
@@ -101,11 +101,11 @@ public class CoordinateMapper implements ICoordinateMapper
    *      java.lang.Object)
    */
   @Override
-  @SuppressWarnings({"unchecked",  "rawtypes" })
-  public Point logicalToScreen( Object domainValue,Object targetValue )
+  @SuppressWarnings({ "unchecked", "rawtypes" })
+  public Point logicalToScreen( final Object domainValue, final Object targetValue )
   {
-    IDataOperator dop = getDomainAxis().getDataOperator( domainValue.getClass() );
-    IDataOperator top = getTargetAxis().getDataOperator( targetValue.getClass() );
+    final IDataOperator dop = getDomainAxis().getDataOperator( domainValue.getClass() );
+    final IDataOperator top = getTargetAxis().getDataOperator( targetValue.getClass() );
 
     return numericToScreen( dop.logicalToNumeric( domainValue ), top.logicalToNumeric( targetValue ) );
   }
@@ -114,16 +114,16 @@ public class CoordinateMapper implements ICoordinateMapper
    * @see de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper#screenToNumeric(int, int)
    */
   @Override
-  public IPair<Number, Number> screenToNumeric( Point screenValue )
+  public IPair<Number, Number> screenToNumeric( final Point screenValue )
   {
     if( screenValue == null )
       return null;
 
-    int domainScreen = getDomainAxis().getPosition().getOrientation().equals( ORIENTATION.HORIZONTAL ) ? screenValue.x : screenValue.y;
-    int targetScreen = getTargetAxis().getPosition().getOrientation().equals( ORIENTATION.HORIZONTAL ) ? screenValue.x : screenValue.y;
+    final int domainScreen = getDomainAxis().getPosition().getOrientation().equals( ORIENTATION.HORIZONTAL ) ? screenValue.x : screenValue.y;
+    final int targetScreen = getTargetAxis().getPosition().getOrientation().equals( ORIENTATION.HORIZONTAL ) ? screenValue.x : screenValue.y;
 
-    Number domainNum = getDomainAxis().screenToNumeric( domainScreen );
-    Number targetNum = getTargetAxis().screenToNumeric( targetScreen );
+    final Number domainNum = getDomainAxis().screenToNumeric( domainScreen );
+    final Number targetNum = getTargetAxis().screenToNumeric( targetScreen );
     return new Pair<Number, Number>( domainNum, targetNum );
   }
 }

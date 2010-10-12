@@ -17,51 +17,51 @@ public interface IAxis extends IMapper
   /**
    * @return axis label
    */
-  public String getLabel( );
+  String getLabel( );
 
-  public void setLabel( String label );
+  void setLabel( String label );
 
   /**
    * @return true if this axis is used by Layers
    */
-  public boolean isVisible( );
+  boolean isVisible( );
 
-  public void setVisible( final boolean visible );
+  void setVisible( final boolean visible );
 
   /**
    * @return axis position - left, right, top, bottom
    */
-  public POSITION getPosition( );
+  POSITION getPosition( );
 
   /**
    * @return axis direction - positive or negative
    */
-  public DIRECTION getDirection( );
+  DIRECTION getDirection( );
 
-  public void setDirection( DIRECTION dir );
+  void setDirection( DIRECTION dir );
 
   /** Same as getDirection() == NEGATIVE */
-  public boolean isInverted( );
+  boolean isInverted( );
 
   /**
    * returns the internally used number range
    */
-  public IDataRange<Number> getNumericRange( );
+  IDataRange<Number> getNumericRange( );
 
   /**
    * sets the internally used number range
    */
-  public void setNumericRange( IDataRange<Number> range );
+  void setNumericRange( IDataRange<Number> range );
 
   /**
    * transforms a screen position into a numeric value
    */
-  public Number screenToNumeric( int value );
+  Number screenToNumeric( int value );
 
   /**
    * transforms a numeric value into a screen position
    */
-  public Integer numericToScreen( Number value );
+  Integer numericToScreen( Number value );
 
   /**
    * if an axis contains a preferred axis adjustment, than the auto adjustment will range the axis in a way that there
@@ -69,23 +69,23 @@ public interface IAxis extends IMapper
    * 
    * @return the preferred adjustment or null if there isn't any
    */
-  public IAxisAdjustment getPreferredAdjustment( );
+  IAxisAdjustment getPreferredAdjustment( );
 
-  public void setPreferredAdjustment( IAxisAdjustment adj );
+  void setPreferredAdjustment( IAxisAdjustment adj );
 
   /**
    * converts a double value into the corresponding screen value
    */
-  public int normalizedToScreen( double d );
+  int normalizedToScreen( double d );
 
   /**
    * converts a screen value into a normalized value
    */
-  public double screenToNormalized( int value );
+  double screenToNormalized( int value );
 
-  public void setScreenHeight( int height );
+  void setScreenHeight( int height );
 
-  public int getScreenHeight( );
+  int getScreenHeight( );
 
   /**
    * This is used for configuration purposes: the numeric range has to be mapped to a concrete range in the Chartfile
@@ -94,13 +94,13 @@ public interface IAxis extends IMapper
    * 
    * @return class of data type which is intended by this axis
    */
-  public Class< ? > getDataClass( );
+  Class< ? > getDataClass( );
 
   /**
    * @return The Renderer for this Axis, if any (maybe null)
    */
-  public IAxisRenderer getRenderer( );
+  IAxisRenderer getRenderer( );
 
-  public void setRenderer( final IAxisRenderer axisRenderer );
+  void setRenderer( final IAxisRenderer axisRenderer );
 
 }
