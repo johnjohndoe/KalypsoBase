@@ -34,7 +34,7 @@ public class WSProxyServlet extends WSServlet
 
     // REMARK: We enforce the plugin-classloader as context classloader here. Else, if the plug-in is loaded too
     // early, or i.e. from an ant-task, the classes referenced from the service endpoint interface will not be found.
-    final ThreadContextClassLoaderRunnable runnable = new ThreadContextClassLoaderRunnable( KalypsoServiceObsActivator.class.getClassLoader() )
+    final ThreadContextClassLoaderRunnable runnable = new ThreadContextClassLoaderRunnable( KalypsoServiceObs.class.getClassLoader() )
     {
       @Override
       protected void runWithContextClassLoader( ) throws Exception

@@ -68,6 +68,7 @@ public final class ObservationHelper
 
   public static byte[] flushMetaDataToByteArray( final IObservation observation ) throws SensorException
   {
+
     final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
     try
     {
@@ -126,6 +127,7 @@ public final class ObservationHelper
 
   public static IObservation parseFromByteArray( final byte[] buffer ) throws SensorException
   {
+
     final ByteArrayInputStream stream = new ByteArrayInputStream( buffer );
     try
     {

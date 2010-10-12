@@ -55,7 +55,7 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.request.RequestFactory;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
-import org.kalypso.services.observation.KalypsoServiceObsActivator;
+import org.kalypso.services.observation.KalypsoServiceObs;
 import org.kalypso.services.observation.ObservationServiceUtils;
 import org.kalypso.services.observation.i18n.Messages;
 import org.kalypso.services.observation.sei.DataBean;
@@ -172,7 +172,7 @@ public class OcsURLStreamHandler extends AbstractURLStreamHandlerService
         return u.openConnection();
 
       // else fetch the observation from the server
-      final IObservationService srv = KalypsoServiceObsActivator.getDefault().getDefaultObservationService();
+      final IObservationService srv = KalypsoServiceObs.getDefault().getDefaultObservationService();
 
       final DataBean data = srv.readData( href );
 
@@ -192,7 +192,7 @@ public class OcsURLStreamHandler extends AbstractURLStreamHandlerService
     catch( final Throwable e ) // generic exception caught for simplicity
     {
       final IStatus status = StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.services.observation.client.OcsURLStreamHandler.4" ) + href ); //$NON-NLS-1$
-      KalypsoServiceObsActivator.getDefault().getLog().log( status );
+      KalypsoServiceObs.getDefault().getLog().log( status );
 
       try
       {
@@ -204,7 +204,7 @@ public class OcsURLStreamHandler extends AbstractURLStreamHandlerService
       {
         m_logger.warning( Messages.getString( "org.kalypso.services.observation.client.OcsURLStreamHandler.6" ) ); //$NON-NLS-1$
         final IStatus status2 = StatusUtilities.statusFromThrowable( se, Messages.getString( "org.kalypso.services.observation.client.OcsURLStreamHandler.7", href ) ); //$NON-NLS-1$
-        KalypsoServiceObsActivator.getDefault().getLog().log( status2 );
+        KalypsoServiceObs.getDefault().getLog().log( status2 );
       }
 
       throw new IOException( Messages.getString( "org.kalypso.services.observation.client.OcsURLStreamHandler.8", e.getLocalizedMessage() ) ); //$NON-NLS-1$

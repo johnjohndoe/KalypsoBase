@@ -13,6 +13,7 @@ import javax.xml.ws.Service;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.SafeRunner;
 import org.kalypso.contribs.eclipse.core.runtime.ThreadContextClassLoaderRunnable;
+import org.kalypso.repository.RepositoryRegistry;
 import org.kalypso.services.observation.client.OcsURLStreamHandler;
 import org.kalypso.services.observation.client.repository.ObservationServiceRepository;
 import org.kalypso.services.observation.sei.IObservationService;
@@ -24,25 +25,27 @@ import org.osgi.service.url.URLStreamHandlerService;
 /**
  * The main plugin class to be used in the desktop.
  */
-public class KalypsoServiceObsActivator extends Plugin
+public class KalypsoServiceObs extends Plugin
 {
-  public final static String SYSPROP_CONFIGURATION_LOCATION = "kalypso.hwv.observation.service.configuration.location"; //$NON-NLS-1$
+  public static final String SYSPROP_CONFIGURATION_LOCATION = "kalypso.hwv.observation.service.configuration.location"; //$NON-NLS-1$
 
-  public final static String SYSPROP_REINIT_SERVICE = "kalypso.hwv.observation.service.reinit.interval"; //$NON-NLS-1$
+  public static final String SYSPROP_REINIT_SERVICE = "kalypso.hwv.observation.service.reinit.interval"; //$NON-NLS-1$
 
   public static final String DEFAULT_OBSERVATION_SERVICE_ID = "default";
 
   // The shared instance.
-  private static KalypsoServiceObsActivator plugin;
+  private static KalypsoServiceObs PLUGIN;
 
   private final Map<String, IObservationService> m_services = new HashMap<String, IObservationService>();
+
+  private final RepositoryRegistry m_repositoryRegistry = new RepositoryRegistry();
 
   /**
    * The constructor.
    */
-  public KalypsoServiceObsActivator( )
+  public KalypsoServiceObs( )
   {
-    plugin = this;
+    PLUGIN = this;
   }
 
   /**
@@ -77,15 +80,15 @@ public class KalypsoServiceObsActivator extends Plugin
   public void stop( final BundleContext context ) throws Exception
   {
     super.stop( context );
-    plugin = null;
+    PLUGIN = null;
   }
 
   /**
    * Returns the shared instance.
    */
-  public static KalypsoServiceObsActivator getDefault( )
+  public static KalypsoServiceObs getDefault( )
   {
-    return plugin;
+    return PLUGIN;
   }
 
   public synchronized IObservationService getDefaultObservationService( )
@@ -96,7 +99,7 @@ public class KalypsoServiceObsActivator extends Plugin
     {
       // REMARK: We enforce the plugin-classloader as context classloader here. Else, if the plug-in is loaded too
       // early, or i.e. from an ant-task, the classes referenced from the service endpoint interface will not be found.
-      final ThreadContextClassLoaderRunnable runnable = new ThreadContextClassLoaderRunnable( KalypsoServiceObsActivator.class.getClassLoader() )
+      final ThreadContextClassLoaderRunnable runnable = new ThreadContextClassLoaderRunnable( KalypsoServiceObs.class.getClassLoader() )
       {
         @Override
         protected void runWithContextClassLoader( ) throws Exception
@@ -157,5 +160,10 @@ public class KalypsoServiceObsActivator extends Plugin
   public static String getID( )
   {
     return getDefault().getBundle().getSymbolicName();
+  }
+
+  public RepositoryRegistry getRepositoryRegistry( )
+  {
+    return m_repositoryRegistry;
   }
 }

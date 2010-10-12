@@ -10,7 +10,7 @@ Require-Bundle: org.kalypso.contribs.java,
  org.kalypso.core,
  org.eclipse.equinox.http.registry;bundle-version="1.0.100"
 Bundle-ActivationPolicy: lazy
-Bundle-Activator: org.kalypso.services.observation.KalypsoServiceObsActivator
+Bundle-Activator: org.kalypso.services.observation.KalypsoServiceObs
 Bundle-ClassPath: lib/jax-ws-2.1.7/activation.jar,
  lib/jax-ws-2.1.7/FastInfoset.jar,
  lib/jax-ws-2.1.7/http.jar,

@@ -45,7 +45,7 @@ import java.io.Serializable;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IWriteableRepositoryItem;
 import org.kalypso.repository.RepositoryException;
-import org.kalypso.services.observation.KalypsoServiceObsActivator;
+import org.kalypso.services.observation.KalypsoServiceObs;
 import org.kalypso.services.observation.sei.IObservationService;
 import org.kalypso.services.observation.sei.ItemBean;
 
@@ -80,11 +80,11 @@ public class ModifyableServiceRepositoryItem extends ServiceRepositoryItem imple
 
   private IObservationService getService( )
   {
-    final IObservationService srv = KalypsoServiceObsActivator.getDefault().getObservationService( getRepository().getName() );
+    final IObservationService srv = KalypsoServiceObs.getDefault().getObservationService( getRepository().getName() );
     if( srv != null )
       return srv;
 
-    return KalypsoServiceObsActivator.getDefault().getDefaultObservationService();
+    return KalypsoServiceObs.getDefault().getDefaultObservationService();
   }
 
 }
