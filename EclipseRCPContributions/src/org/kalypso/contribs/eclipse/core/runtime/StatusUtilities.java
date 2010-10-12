@@ -58,7 +58,7 @@ import org.kalypso.contribs.eclipse.EclipseRCPContributionsPlugin;
 
 /**
  * Helper methods for {@link org.eclipse.core.runtime.IStatus}.
- *
+ * 
  * @author thuel
  */
 public final class StatusUtilities
@@ -117,7 +117,7 @@ public final class StatusUtilities
   /**
    * Returns the message form the given status. If the status is a multi-status, it recursively creates a string with
    * all includes child-stati, separated by line-breaks
-   *
+   * 
    * @param currentDepth
    *          Amout of tabs with wich the message will be indentated
    */
@@ -168,7 +168,7 @@ public final class StatusUtilities
    * <p>
    * If the exception is a {@link CoreException}its status is returned.
    * </p>
-   *
+   * 
    * @throws NullPointerException
    *           If <code>t</code> is null.
    */
@@ -185,7 +185,7 @@ public final class StatusUtilities
    * <p>
    * If the exception is a {@link CoreException}its status is returned.
    * </p>
-   *
+   * 
    * @param message
    *          [optional] used as message for newly created status if specified
    * @throws NullPointerException
@@ -234,7 +234,7 @@ public final class StatusUtilities
    * Creates a status based on the list of stati. If the list is empty, it returns the <code>Status.OK_STATUS</code>. If
    * the list contains just one status, then it is returned. If the list contains more than one status, a MultiStatus is
    * returned.
-   *
+   * 
    * @param message
    *          only used when creating the MultiStatus
    */
@@ -250,9 +250,9 @@ public final class StatusUtilities
   }
 
   /**
-   * Creates a status based on the list of stati. If the list is empty, it returns the <code>Status.OK_STATUS</code>.
-   * If the list contains just one status, then it is returned. If the list contains more than one status, a MultiStatus
-   * is returned.
+   * Creates a status based on the list of stati. If the list is empty, it returns the <code>Status.OK_STATUS</code>. If
+   * the list contains just one status, then it is returned. If the list contains more than one status, a MultiStatus is
+   * returned.
    * 
    * @param message
    *          only used when creating the MultiStatus
@@ -278,14 +278,26 @@ public final class StatusUtilities
     return new Status( severity, EclipseRCPContributionsPlugin.getID(), code, message, t );
   }
 
+  public static IStatus createExceptionalErrorStatus( final String errorMessage, final Throwable t )
+  {
+    return createStatus( IStatus.ERROR, errorMessage, t );
+  }
+
   /**
    * Creates an error-status with given message and null throwable.
-   * @deprecated: Do not use! It is just too often misused... (using exception as argument does not add the exception into the status!). Use {@link Status#Status(int, String, String)} instead.
+   * 
+   * @deprecated: Do not use! It is just too often misused... (using exception as argument does not add the exception
+   *              into the status!). Use {@link Status#Status(int, String, String)} instead.
    */
   @Deprecated
   public static IStatus createErrorStatus( final String errorMessage, final Object... args )
   {
     return createStatus( IStatus.ERROR, String.format( errorMessage, args ), null );
+  }
+
+  public static IStatus createExceptionalInfoStatus( final String infoMessage, final Throwable t )
+  {
+    return createStatus( IStatus.INFO, String.format( infoMessage ), t );
   }
 
   /**
@@ -294,6 +306,11 @@ public final class StatusUtilities
   public static IStatus createInfoStatus( final String infoMessage, final Object... args )
   {
     return createStatus( IStatus.INFO, String.format( infoMessage, args ), null );
+  }
+
+  public static IStatus createExceptionalWarningStatus( final String warningMessage, final Throwable t )
+  {
+    return createStatus( IStatus.WARNING, String.format( warningMessage ), t );
   }
 
   /**
@@ -315,7 +332,7 @@ public final class StatusUtilities
   /**
    * Wraps the given status in a new status with the given severity. If the given status has already the given severity,
    * then it is simply returned.
-   *
+   * 
    * @param status
    *          the status to wrap
    * @param severity
@@ -370,7 +387,7 @@ public final class StatusUtilities
 
   /**
    * Opens an error dialog on the given status.
-   *
+   * 
    * @param showMultipleDialogs
    *          If true, a multi-status will be shown within multiple message boxes, on e for each child of the
    *          multi-status. Else, only one dialog pops-up.
@@ -405,14 +422,14 @@ public final class StatusUtilities
   /**
    * @see #openSpecialErrorDialog(Shell, String, String, IStatus, int, boolean)
    */
-  public static int openSpecialErrorDialog( final Shell shell, final String title, final String message, final IStatus status, final boolean showMultipleDialogs, int displayMask )
+  public static int openSpecialErrorDialog( final Shell shell, final String title, final String message, final IStatus status, final boolean showMultipleDialogs, final int displayMask )
   {
     return openSpecialErrorDialog( shell, title, message, status, displayMask, showMultipleDialogs );
   }
 
   /**
    * Opens an error dialog on the given status. Tweaks the error message.
-   *
+   * 
    * @param showMultipleDialogs
    *          If true, a multi-status will be shown within multiple message boxes, on e for each child of the
    *          multi-status. Else, only one dialog pops-up.
@@ -488,7 +505,7 @@ public final class StatusUtilities
    * Creates a copy of the given status, changeing its severity to the given one.<br>
    * As the severity of a {@link MultiStatus} is defined by the severity of its children, the severities of all children
    * of the cloned status are set to the given status.
-   *
+   * 
    * @param One
    *          of {@link IStatus#OK}, ...
    */
