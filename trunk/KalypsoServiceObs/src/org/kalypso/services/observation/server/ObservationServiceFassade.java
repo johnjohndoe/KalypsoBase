@@ -72,12 +72,13 @@ import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.repository.IWriteableRepositoryItem;
 import org.kalypso.repository.RepositoryException;
+import org.kalypso.repository.RepositoryRegistry;
 import org.kalypso.repository.conf.RepositoryConfigUtils;
 import org.kalypso.repository.conf.RepositoryFactoryConfig;
 import org.kalypso.repository.factory.IRepositoryFactory;
 import org.kalypso.repository.utils.RepositoryItemUtils;
 import org.kalypso.repository.utils.RepositoryUtils;
-import org.kalypso.services.observation.KalypsoServiceObsActivator;
+import org.kalypso.services.observation.KalypsoServiceObs;
 import org.kalypso.services.observation.ObservationServiceUtils;
 import org.kalypso.services.observation.sei.DataBean;
 import org.kalypso.services.observation.sei.IObservationService;
@@ -124,7 +125,7 @@ public class ObservationServiceFassade implements IObservationService, IDisposab
     m_tmpDir = FileUtilities.createNewTempDir( "Observations" ); //$NON-NLS-1$
     m_tmpDir.deleteOnExit();
 
-    m_configurationLocation = FrameworkProperties.getProperty( KalypsoServiceObsActivator.SYSPROP_CONFIGURATION_LOCATION );
+    m_configurationLocation = FrameworkProperties.getProperty( KalypsoServiceObs.SYSPROP_CONFIGURATION_LOCATION );
 
     /* HINT: The init method tries to access another servlet in the same container. */
     init();
@@ -161,6 +162,9 @@ public class ObservationServiceFassade implements IObservationService, IDisposab
       final RepositoryFactoryConfig config = RepositoryConfigUtils.resolveConfiguration( facConfs, System.getProperty( DESTINATION_REPOSITORY, null ) );
       final IRepositoryFactory factory = config.getFactory();
       m_repository = factory.createRepository();
+
+      final RepositoryRegistry registry = KalypsoServiceObs.getDefault().getRepositoryRegistry();
+      registry.registerProtocol( m_repository );
     }
     catch( final Exception e )
     {

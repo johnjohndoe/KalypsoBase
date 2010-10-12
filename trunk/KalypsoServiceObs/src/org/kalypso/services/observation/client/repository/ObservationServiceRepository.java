@@ -49,7 +49,7 @@ import org.kalypso.repository.IModifyableRepository;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.repository.IWriteableRepository;
 import org.kalypso.repository.RepositoryException;
-import org.kalypso.services.observation.KalypsoServiceObsActivator;
+import org.kalypso.services.observation.KalypsoServiceObs;
 import org.kalypso.services.observation.sei.IObservationService;
 import org.kalypso.services.observation.sei.ItemBean;
 
@@ -105,11 +105,11 @@ public class ObservationServiceRepository extends AbstractRepository implements 
 
   private IObservationService getService( )
   {
-    final IObservationService srv = KalypsoServiceObsActivator.getDefault().getObservationService( getName() );
+    final IObservationService srv = KalypsoServiceObs.getDefault().getObservationService( getName() );
     if( srv != null )
       return srv;
 
-    return KalypsoServiceObsActivator.getDefault().getDefaultObservationService();
+    return KalypsoServiceObs.getDefault().getDefaultObservationService();
   }
 
   @Override

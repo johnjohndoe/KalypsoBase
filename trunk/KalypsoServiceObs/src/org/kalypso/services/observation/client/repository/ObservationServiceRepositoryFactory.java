@@ -50,7 +50,7 @@ import javax.xml.ws.WebServiceException;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.RepositoryException;
 import org.kalypso.repository.factory.AbstractRepositoryFactory;
-import org.kalypso.services.observation.KalypsoServiceObsActivator;
+import org.kalypso.services.observation.KalypsoServiceObs;
 import org.kalypso.services.observation.sei.IObservationService;
 import org.kalypso.services.observation.server.ObservationServiceImpl;
 
@@ -72,7 +72,7 @@ public class ObservationServiceRepositoryFactory extends AbstractRepositoryFacto
   @Override
   public final boolean configureRepository( ) throws RepositoryException
   {
-    final KalypsoServiceObsActivator plugin = KalypsoServiceObsActivator.getDefault();
+    final KalypsoServiceObs plugin = KalypsoServiceObs.getDefault();
     if( plugin.isObservationServiceInitialized( getRepositoryName() ) )
       return true;
     // FIXME: if no default is given, read the system property here and set it as config
@@ -112,7 +112,7 @@ public class ObservationServiceRepositoryFactory extends AbstractRepositoryFacto
   @Override
   public final IRepository createRepository( ) throws RepositoryException
   {
-    final KalypsoServiceObsActivator plugin = KalypsoServiceObsActivator.getDefault();
+    final KalypsoServiceObs plugin = KalypsoServiceObs.getDefault();
 
     if( !plugin.isObservationServiceInitialized( getRepositoryName() ) )
     {

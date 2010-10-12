@@ -82,7 +82,7 @@ import org.kalypso.repository.conf.RepositoryFactoryConfig;
 import org.kalypso.repository.factory.IRepositoryFactory;
 import org.kalypso.repository.utils.RepositoryItemUtils;
 import org.kalypso.repository.utils.RepositoryUtils;
-import org.kalypso.services.observation.KalypsoServiceObsActivator;
+import org.kalypso.services.observation.KalypsoServiceObs;
 import org.kalypso.services.observation.ObservationServiceUtils;
 import org.kalypso.services.observation.i18n.Messages;
 import org.kalypso.services.observation.sei.DataBean;
@@ -149,7 +149,7 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
     m_tmpDir = FileUtilities.createNewTempDir( "Observations" ); //$NON-NLS-1$
     m_tmpDir.deleteOnExit();
 
-    m_configurationLocation = FrameworkProperties.getProperty( KalypsoServiceObsActivator.SYSPROP_CONFIGURATION_LOCATION );
+    m_configurationLocation = FrameworkProperties.getProperty( KalypsoServiceObs.SYSPROP_CONFIGURATION_LOCATION );
 
     /* HINT: The init method tries to access another servlet in the same container. */
     init();

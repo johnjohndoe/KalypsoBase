@@ -55,7 +55,7 @@ import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.osgi.framework.internal.core.FrameworkProperties;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.repository.RepositoryException;
-import org.kalypso.services.observation.KalypsoServiceObsActivator;
+import org.kalypso.services.observation.KalypsoServiceObs;
 import org.kalypso.services.observation.sei.DataBean;
 import org.kalypso.services.observation.sei.IObservationService;
 import org.kalypso.services.observation.sei.ItemBean;
@@ -114,7 +114,7 @@ public class ObservationServiceImpl implements IObservationService
     m_observationServiceJob = null;
     m_delegate = null;
 
-    final String reinitStr = FrameworkProperties.getProperty( KalypsoServiceObsActivator.SYSPROP_REINIT_SERVICE, "600000" ); //$NON-NLS-1$
+    final String reinitStr = FrameworkProperties.getProperty( KalypsoServiceObs.SYSPROP_REINIT_SERVICE, "600000" ); //$NON-NLS-1$
     long reinit = 600000; // 10 min
     try
     {
