@@ -44,7 +44,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.eclipse.jface.wizard.IWizard;
-import org.kalypso.afgui.wizards.INewProjectWizard;
+import org.kalypso.afgui.wizards.INewProjectWizardProvider;
 import org.kalypso.project.database.client.extension.IKalypsoModule;
 
 /**
@@ -74,12 +74,12 @@ public interface IKalypsoModulePage
   /**
    * @return special new project wizard of plugin
    */
-  INewProjectWizard getProjectWizard( );
+  INewProjectWizardProvider getProjectWizard( );
 
   /**
    * @return special new demo project wizard of plugin
    */
-  INewProjectWizard getDemoProjectWizard( );
+  INewProjectWizardProvider getDemoProjectWizard( );
 
   public boolean hasDemoProjectWizard( );
 
