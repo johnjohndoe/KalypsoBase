@@ -63,9 +63,9 @@ public class ChartComposite extends Canvas
     public IStatus runInUIThread( final IProgressMonitor monitor )
     {
       // TODO: only invalidate if necessary
-      // final IChartLayer[] layers = m_layer.toArray( new IChartLayer[] {} );
+
+      layout();
       m_plot.invalidate( null );
-      // m_layer.removeAll( Arrays.asList( layers ) );
       return Status.OK_STATUS;
     }
   }
@@ -218,11 +218,12 @@ public class ChartComposite extends Canvas
     setChartModel( model );
   }
 
-  private final void addAllAxis( )
+  private void addAllAxis( )
   {
     final IMapperRegistry mr = m_model.getMapperRegistry();
     if( mr == null )
       return;
+
     final IAxis[] axes = mr == null ? new IAxis[] {} : mr.getAxes();
     for( final IAxis axis : axes )
       addAxisInternal( axis );
@@ -403,8 +404,6 @@ public class ChartComposite extends Canvas
     tmpImg.dispose();
   }
 
-  // FIXME: why deprecated: What should be used instead? Please comment with @deprecated tag in javadoc!
-  @Deprecated
   public final AxisCanvas getAxisCanvas( final IAxis axis )
   {
     final POSITION position = axis.getPosition();
@@ -504,13 +503,13 @@ public class ChartComposite extends Canvas
     m_invalidateChartJob.schedule( 50 );
   }
 
-  private final void registerListener( )
+  private void registerListener( )
   {
     m_model.getLayerManager().addListener( m_layerEventListener );
     m_model.getMapperRegistry().addListener( m_mapperListener );
   }
 
-  private final void removeAllAxis( )
+  private void removeAllAxis( )
   {
     final IMapperRegistry mr = m_model.getMapperRegistry();
     if( mr == null )

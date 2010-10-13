@@ -41,6 +41,7 @@
 package de.openali.odysseus.chart.framework.model.mapper.registry.impl;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -48,6 +49,7 @@ import org.apache.commons.collections.comparators.ComparableComparator;
 
 import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.data.impl.CalendarDataOperator;
+import de.openali.odysseus.chart.framework.model.data.impl.DateDataOperator;
 import de.openali.odysseus.chart.framework.model.data.impl.DummyDataOperator;
 import de.openali.odysseus.chart.framework.model.data.impl.NumberDataOperator;
 
@@ -65,6 +67,7 @@ public class DataOperatorHelper
   {
     m_dataOperators.put( Number.class, new NumberDataOperator( new NumberComparator() ) );
     m_dataOperators.put( Calendar.class, new CalendarDataOperator( new ComparableComparator(), "dd.MM.yyyy HH:mm" ) );
+    m_dataOperators.put( Date.class, new DateDataOperator( new ComparableComparator(), "dd.MM.yyyy HH:mm" ) );
   }
 
   @SuppressWarnings("unchecked")
