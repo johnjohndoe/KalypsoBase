@@ -61,6 +61,7 @@ import org.kalypso.ogc.sensor.timeseries.merged.ObservationSource;
 public class ForecastFilter extends AbstractObservationFilter
 {
   private IObservation[] m_observations = null;
+  private MetadataList m_metadata;
 
   /**
    * @see org.kalypso.ogc.sensor.filter.IObservationFilter#initFilter(java.lang.Object,
@@ -79,6 +80,7 @@ public class ForecastFilter extends AbstractObservationFilter
    *          if <code>args!=null</code>, then the args of the inner observations will be overwritten, usually a
    *          forecastfilter should expect <code>null</code> here.
    */
+  @SuppressWarnings("deprecation")
   @Override
   public ITupleModel getValues( final IRequest args ) throws SensorException
   {
@@ -87,13 +89,22 @@ public class ForecastFilter extends AbstractObservationFilter
     for( int i = 0; i < sources.length; i++ )
       sources[i] = new ObservationSource( null, daterange, null, m_observations[i] );
 
-    // FIXME: cannot work? The merging observation changes the metadata, but this filter just
-    // returns the metadata of its first observation!
-    // TODO: we should return this metadata instead of the first source metadata!
-    // TODO: test on a real testcase!
-    final MetadataList metadata = MergedObservation.getMetaData( sources );
+    m_metadata = MergedObservation.getMetaData( sources );
 
-    final MergedObservation observation = new MergedObservation( getHref(), sources, metadata );
+    
+    final MergedObservation observation = new MergedObservation( getHref(), sources, m_metadata );
     return observation.getValues( args );
+  }
+  
+  /**
+   * @see org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter#getMetadataList()
+   */
+  @Override
+  public MetadataList getMetadataList( )
+  {
+    if (m_metadata != null)
+      return m_metadata;
+    
+    return super.getMetadataList();
   }
 }
