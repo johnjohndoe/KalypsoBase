@@ -52,7 +52,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
-import org.kalypso.afgui.wizards.INewProjectWizard;
+import org.kalypso.afgui.wizards.INewProjectWizardProvider;
 import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
 import org.kalypso.contribs.eclipse.swt.canvas.DefaultContentArea;
 import org.kalypso.contribs.eclipse.swt.canvas.ImageCanvas2;
@@ -191,7 +191,7 @@ public class ModulePageComposite extends Composite
     // different behavior depending on the module
 
     final String createProjectLabel = Messages.getString( "org.kalypso.project.database.client.ui.composites.ModulePageComposite.1" ); //$NON-NLS-1$
-    final INewProjectWizard createProjectWizard = modulePage.getProjectWizard();
+    final INewProjectWizardProvider createProjectWizard = modulePage.getProjectWizard();
     final CreateProjectAction createProjectAction = new CreateProjectAction( createProjectLabel, commitType, createProjectWizard );
     final ImageHyperlink createProjectLink = ActionHyperlink.createHyperlink( m_toolkit, bodyProjects, SWT.NONE, createProjectAction );
     createProjectLink.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
@@ -205,7 +205,7 @@ public class ModulePageComposite extends Composite
     {
       final String demoProjectLabel = Messages.getString( "org.kalypso.project.database.client.ui.composites.ModulePageComposite.2" ); //$NON-NLS-1$
 
-      final INewProjectWizard demoProjectWizard = modulePage.getDemoProjectWizard();
+      final INewProjectWizardProvider demoProjectWizard = modulePage.getDemoProjectWizard();
       final CreateProjectAction demoProjectAction = new CreateProjectAction( demoProjectLabel, commitType, demoProjectWizard );
       demoProjectAction.setImageDescriptor( CreateProjectAction.IMG_EXTRACT_DEMO );
 

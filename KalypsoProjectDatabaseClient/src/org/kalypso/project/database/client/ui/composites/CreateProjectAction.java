@@ -52,6 +52,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.WizardNewProjectCreationPage;
 import org.kalypso.afgui.wizards.INewProjectWizard;
+import org.kalypso.afgui.wizards.INewProjectWizardProvider;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
@@ -74,14 +75,15 @@ public class CreateProjectAction extends Action
 
   private final String m_commitType;
 
-  private final INewProjectWizard m_wizard;
 
   private boolean resetProjectName = true;
 
-  public CreateProjectAction( final String label, final String commitType, final INewProjectWizard wizard )
+  private final INewProjectWizardProvider m_wizardProvider;
+
+  public CreateProjectAction( final String label, final String commitType, final INewProjectWizardProvider wizardProvider )
   {
     m_commitType = commitType;
-    m_wizard = wizard;
+    m_wizardProvider = wizardProvider;
     setText( label );
 
     setImageDescriptor( IMG_ADD_PROJECT );
@@ -93,10 +95,12 @@ public class CreateProjectAction extends Action
   @Override
   public void runWithEvent( final Event event )
   {
-    m_wizard.init( PlatformUI.getWorkbench(), null );
-    m_wizard.setActivateScenarioOnPerformFinish( false );
+    final INewProjectWizard wizard = m_wizardProvider.createWizard();
 
-    final WizardDialog2 dialog = new WizardDialog2( PlatformUI.getWorkbench().getDisplay().getActiveShell(), m_wizard );
+    wizard.init( PlatformUI.getWorkbench(), null );
+    wizard.setActivateScenarioOnPerformFinish( false );
+
+    final WizardDialog2 dialog = new WizardDialog2( PlatformUI.getWorkbench().getDisplay().getActiveShell(), wizard );
     dialog.setRememberSize( true );
 
     dialog.addPageChangedListener( new IPageChangedListener()
@@ -104,7 +108,7 @@ public class CreateProjectAction extends Action
       @Override
       public void pageChanged( final PageChangedEvent pageEvent )
       {
-        handlePageChanged( pageEvent );
+        handlePageChanged( wizard, pageEvent );
       }
     } );
 
@@ -113,7 +117,7 @@ public class CreateProjectAction extends Action
     {
       try
       {
-        final IProject project = m_wizard.getNewProject();
+        final IProject project = wizard.getNewProject();
         final IProjectNature nature = project.getNature( RemoteProjectNature.NATURE_ID );
         if( nature instanceof RemoteProjectNature )
         {
@@ -131,7 +135,7 @@ public class CreateProjectAction extends Action
     }
   }
 
-  protected void handlePageChanged( final PageChangedEvent pageEvent )
+  protected void handlePageChanged( final INewProjectWizard wizard, final PageChangedEvent pageEvent )
   {
     final Object page = pageEvent.getSelectedPage();
     if( page instanceof IUpdateable )
@@ -139,7 +143,7 @@ public class CreateProjectAction extends Action
       final IUpdateable update = (IUpdateable) page;
       update.update();
     }
-    else if( m_wizard.disableProjectCreationUI() && page instanceof WizardNewProjectCreationPage )
+    else if( wizard.disableProjectCreationUI() && page instanceof WizardNewProjectCreationPage )
     {
       if( resetProjectName )
       {
