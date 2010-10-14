@@ -118,7 +118,7 @@ public class TableViewColumnXMLLoader extends PoolableObjectWaiter
           final String name = ObservationTokenHelper.replaceTokens( colName, obs, valueAxis );
           final String format = tcol.getFormat() != null ? tcol.getFormat() : TimeseriesUtils.getDefaultFormatString( valueAxis.getType() );
 
-          final IObsProvider provider = isSynchron() ? (IObsProvider) new PlainObsProvider( obs, null ) : new PooledObsProvider( key, null );
+          final IObsProvider provider = isSynchron() ? (IObsProvider) new PlainObsProvider( obs, null ) : new PooledObsProvider( key );
           final TableViewColumn column = new TableViewColumn( tableView, provider, name, tcol.isEditable(), tcol.getWidth(), keyAxis, valueAxis, format, m_columnPosition );
 
           tableView.addItem( column );

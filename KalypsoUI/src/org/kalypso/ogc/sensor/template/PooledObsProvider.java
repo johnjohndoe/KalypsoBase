@@ -68,19 +68,16 @@ public final class PooledObsProvider implements IObsProvider, IPoolListener
 
   private final IPoolableObjectType m_key;
 
-  private final IRequest m_args;
-
-  public PooledObsProvider( final IPoolableObjectType key, final IRequest args )
+  public PooledObsProvider( final IPoolableObjectType key )
   {
-    this( key, args, null );
+    this( key, null );
   }
 
   /**
    * Copy constructor, only used for copying.
    */
-  private PooledObsProvider( final IPoolableObjectType key, final IRequest args, final IObservation observation )
+  private PooledObsProvider( final IPoolableObjectType key, final IObservation observation )
   {
-    m_args = args;
     m_key = key;
     m_observation = observation;
 
@@ -164,21 +161,12 @@ public final class PooledObsProvider implements IObsProvider, IPoolListener
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.template.IObsProvider#getArguments()
-   */
-  @Override
-  public IRequest getArguments( )
-  {
-    return m_args;
-  }
-
-  /**
    * @see org.kalypso.ogc.sensor.template.IObsProvider#copy()
    */
   @Override
   public IObsProvider copy( )
   {
-    return new PooledObsProvider( m_key, m_args, m_observation );
+    return new PooledObsProvider( m_key, m_observation );
   }
 
   /**
@@ -197,5 +185,14 @@ public final class PooledObsProvider implements IObsProvider, IPoolListener
   public void dirtyChanged( final IPoolableObjectType key, final boolean isDirty )
   {
     // TODO Auto-generated method stub
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.template.IObsProvider#getArguments()
+   */
+  @Override
+  public IRequest getArguments( )
+  {
+    return null;
   }
 }

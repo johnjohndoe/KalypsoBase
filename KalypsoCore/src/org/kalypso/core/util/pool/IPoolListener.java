@@ -47,16 +47,16 @@ import org.eclipse.core.runtime.IStatus;
  */
 public interface IPoolListener
 {
-  public void objectLoaded( final IPoolableObjectType key, final Object newValue, final IStatus status );
+  void objectLoaded( final IPoolableObjectType key, final Object newValue, final IStatus status );
 
-  public void objectInvalid( final IPoolableObjectType key, final Object oldValue );
+  void objectInvalid( final IPoolableObjectType key, final Object oldValue );
 
-  public void dirtyChanged( final IPoolableObjectType key, final boolean isDirty );
-  
+  void dirtyChanged( final IPoolableObjectType key, final boolean isDirty );
+
   /**
    * used by ResourcePool.register(IPoolListener), pool should never register a disposed IPoollistener
    * 
    * @return true if listener is disposed
    */
-  public boolean isDisposed();
+  boolean isDisposed( );
 }
