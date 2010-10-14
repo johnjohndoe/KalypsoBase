@@ -69,11 +69,11 @@ public final class AxisUtils implements ITimeseriesConstants
 
   public static boolean isValueAxis( final IAxis axis )
   {
-    if( isDataSrcAxis( axis ) )
+    if( isDateAxis( axis ) )
+      return false;
+    else if( isDataSrcAxis( axis ) )
       return false;
     else if( isStatusAxis( axis ) )
-      return false;
-    else if( isDateAxis( axis ) )
       return false;
     else if( !axis.isPersistable() )
       return false;
