@@ -653,4 +653,8 @@ public final class TimeseriesUtils implements ITimeseriesConstants
     return args.getDateRange();
   }
 
+  public static String getFormat( final String type )
+  {
+    return getProperties().getProperty( String.format( "FORMAT_%s", type ) );//$NON-NLS-1$
+  }
 }
