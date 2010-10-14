@@ -458,7 +458,17 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     m_initialEnv = env; // only needed, if mapPanel not yet available
 
     final String partName = getPartName( mapModell );
-    setPartName( partName );
+   
+    //set as UI-Thread call to prevent the "invalid thread access" exception 
+    final Display display = getSite().getShell().getDisplay();
+    display.asyncExec( new Runnable()
+    {
+      @Override
+      public void run( )
+      {
+       setPartName( partName );
+      } 
+    } );
 
     updatePanel( m_mapModell, m_initialEnv );
   }
@@ -586,4 +596,5 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
   {
     super.setPartName( partName );
   }
+
 }
