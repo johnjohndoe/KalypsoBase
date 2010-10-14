@@ -50,6 +50,6 @@ import org.eclipse.swt.graphics.Cursor;
  */
 public interface IChartDragHandler extends MouseListener, MouseMoveListener
 {
-  public Cursor getCursor( final MouseEvent e );
+  Cursor getCursor( final MouseEvent e );
 
 }
