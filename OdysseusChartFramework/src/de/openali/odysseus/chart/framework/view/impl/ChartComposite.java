@@ -64,7 +64,7 @@ public class ChartComposite extends Canvas
     {
       // TODO: only invalidate if necessary
 
-      layout();// first resize axis-places, then invalidate plot(maybe resized)
+      layout( true,true );// first resize axis-places, then invalidate plot(maybe resized)
       m_plot.invalidate( null );
       return Status.OK_STATUS;
     }
