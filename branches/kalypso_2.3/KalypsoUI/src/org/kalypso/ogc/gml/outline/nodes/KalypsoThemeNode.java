@@ -113,20 +113,21 @@ public class KalypsoThemeNode<T extends IKalypsoTheme> extends AbstractThemeNode
     // REMARK: dispose image in swt thread. Else we might get a racing condition
     // with the re-creation of the image.
     final Image externIcon = m_externIcon;
-    final Display display = PlatformUI.getWorkbench().getDisplay();
-    if( display != null && !display.isDisposed() )
-    {
-      display.syncExec( new Runnable()
+    if( externIcon != null ){
+      final Display display = PlatformUI.getWorkbench().getDisplay();
+      
+      if( display != null && !display.isDisposed() )
       {
-        @Override
-        public void run( )
+        display.syncExec( new Runnable()
         {
-          if( externIcon != null )
+          @Override
+          public void run( )
+          {
             externIcon.dispose();
-        }
-      } );
+          } 
+        } );
+      }
     }
-
     super.dispose();
   }
 
