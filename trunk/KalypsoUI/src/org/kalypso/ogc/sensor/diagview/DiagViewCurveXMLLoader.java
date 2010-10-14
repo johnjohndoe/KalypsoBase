@@ -176,7 +176,7 @@ public class DiagViewCurveXMLLoader extends PoolableObjectWaiter
         }
 
         // each curve gets its own provider since the curve disposes its provider, when it get disposed
-        final IObsProvider provider = isSynchron() ? (IObsProvider) new PlainObsProvider( obs, null ) : new PooledObsProvider( key, null );
+        final IObsProvider provider = isSynchron() ? (IObsProvider) new PlainObsProvider( obs, null ) : new PooledObsProvider( key );
 
         final DiagViewCurve curve = new DiagViewCurve( view, provider, curveName, color, stroke, mappings.toArray( new AxisMapping[0] ) );
         curve.setShown( tcurve.isShown() );

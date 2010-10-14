@@ -86,10 +86,10 @@ public abstract class ObsView implements IObsViewEventProvider
 
     public ItemData( final boolean bEditable, final Color c, final Stroke s, final boolean showInLegend )
     {
-      this.color = c;
-      this.editable = bEditable;
-      this.stroke = s;
-      this.showLegend = showInLegend;
+      color = c;
+      editable = bEditable;
+      stroke = s;
+      showLegend = showInLegend;
     }
   }
 
@@ -133,7 +133,7 @@ public abstract class ObsView implements IObsViewEventProvider
    * them.
    * 
    * @param ignoreTypes
-   *            if null a default empty array is used
+   *          if null a default empty array is used
    */
   public void setIgnoreTypes( final String[] ignoreTypes )
   {
@@ -283,11 +283,11 @@ public abstract class ObsView implements IObsViewEventProvider
       @Override
       protected void objectLoaded( final IPoolableObjectType key, final Object newValue )
       {
-        final PooledObsProvider provider = new PooledObsProvider( key, null );
+        final PooledObsProvider provider = new PooledObsProvider( key );
 
         try
         {
-          final boolean isSync = ( (Boolean)m_data[3] ).booleanValue();
+          final boolean isSync = ((Boolean) m_data[3]).booleanValue();
           if( isSync )
           {
             provider.objectLoaded( key, newValue, Status.OK_STATUS );
@@ -380,7 +380,7 @@ public abstract class ObsView implements IObsViewEventProvider
    * setIgnoreType, but in contrario to the former, it only hides the items in the ui (it does not remove it).
    * 
    * @param types
-   *            list of types that should be hidden
+   *          list of types that should be hidden
    */
   public void hideTypes( final Set<String> types )
   {
