@@ -167,14 +167,11 @@ public final class ProfilUtil
 
   public static double getDoubleValueFor( final String componentID, final IRecord point )
   {
-    final TupleResult owner = point == null ? null : point.getOwner();
-    if( owner != null )
-    {
-      final int iComponent = owner.indexOfComponent( componentID );
-      if( iComponent > -1 )
-        return getDoubleValueFor( iComponent, point );
-    }
-    return Double.NaN;
+    final int iComponent = point.indexOfComponent( componentID );
+    if( iComponent == -1 )
+      return Double.NaN;
+
+    return getDoubleValueFor( iComponent, point );
   }
 
   public static double getDoubleValueFor( final int componentIndex, final IRecord point )
@@ -346,15 +343,6 @@ public final class ProfilUtil
   {
     final Map<String, IComponent> propHash = new HashMap<String, IComponent>();
     for( final IComponent component : profile.getPointProperties() )
-      propHash.put( component.getId(), component );
-    return propHash;
-  }
-
-  public static Map<String, IComponent> getComponentsFromRecord( final IRecord record )
-  {
-    final Map<String, IComponent> propHash = new HashMap<String, IComponent>();
-    final TupleResult owner = record.getOwner();
-    for( final IComponent component : owner.getComponents() )
       propHash.put( component.getId(), component );
     return propHash;
   }

@@ -142,4 +142,13 @@ public class AbstractRecordWrapper implements IRecord
   {
     return m_record.cloneRecord();
   }
+
+  /**
+   * @see org.kalypso.observation.result.IRecord#indexOfComponent(java.lang.String)
+   */
+  @Override
+  public int indexOfComponent( String componentID )
+  {
+    return m_record.indexOfComponent( componentID );
+  }
 }
