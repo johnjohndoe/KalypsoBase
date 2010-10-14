@@ -104,7 +104,6 @@ public class PlotCanvas extends Canvas implements PaintListener
   public void invalidate( final IChartLayer[] layers )
   {
     final IChartLayer[] layersToInvalidate = getLayersToInvalidate( layers );
-
     for( final IChartLayer layer : layersToInvalidate )
     {
       final Image image = m_layerImageMap.get( layer );

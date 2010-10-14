@@ -63,7 +63,8 @@ public class ChartComposite extends Canvas
     public IStatus runInUIThread( final IProgressMonitor monitor )
     {
       // TODO: only invalidate if necessary
-      layout();//first resize axis-places, then invalidate plot(maybe resized)
+
+      layout();// first resize axis-places, then invalidate plot(maybe resized)
       m_plot.invalidate( null );
       return Status.OK_STATUS;
     }
@@ -177,7 +178,6 @@ public class ChartComposite extends Canvas
             ControlUtils.asyncExec( ac, runnable );
           }
         }
-
         final List<IChartLayer> list = m_model.getAxis2Layers().get( axis );
         if( list != null )
           invalidatePlotCanvas( list.toArray( new IChartLayer[] {} ) );
@@ -267,7 +267,7 @@ public class ChartComposite extends Canvas
 
   }
 
-   public final void clearPanOffset( )
+  public final void clearPanOffset( )
   {
     getPlot().setPanOffset( null, null );
     final IChartModel cm = getChartModel();
@@ -449,7 +449,6 @@ public class ChartComposite extends Canvas
     return acList.toArray( new AxisCanvas[] {} );
   }
 
-  // FIXME: please OBSERVE the correct order of methods/fields etc.!
   public final EditInfo getChartInfo( )
   {
     return getPlot() == null ? null : getPlot().getTooltipInfo();
@@ -460,7 +459,7 @@ public class ChartComposite extends Canvas
     return m_model;
   }
 
-  private final IChartLayer[] getLayer( final IAxis[] axes )
+  private IChartLayer[] getLayer( final IAxis[] axes )
   {
     if( getChartModel() == null )
       return new IChartLayer[] {};
@@ -476,7 +475,7 @@ public class ChartComposite extends Canvas
 
   }
 
-  private final IChartLayer[] getLayers( final IChartLayer[] layers )
+  private IChartLayer[] getLayers( final IChartLayer[] layers )
   {
     if( layers != null )
       return layers;
