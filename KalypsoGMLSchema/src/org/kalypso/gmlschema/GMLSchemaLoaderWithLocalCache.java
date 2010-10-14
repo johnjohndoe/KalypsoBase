@@ -186,7 +186,7 @@ public class GMLSchemaLoaderWithLocalCache
           if( gmlSchema != null )
           {
             gmlSchema.addAdditionalSchema( additionalSchema );
-            m_localSchemaCache.put( xmlnsUri, gmlSchema );
+            m_localSchemaCache.put( xmlnsUri, additionalSchema );
           }
         }
       }
