@@ -63,8 +63,7 @@ public class ChartComposite extends Canvas
     public IStatus runInUIThread( final IProgressMonitor monitor )
     {
       // TODO: only invalidate if necessary
-
-      layout();
+      layout();//first resize axis-places, then invalidate plot(maybe resized)
       m_plot.invalidate( null );
       return Status.OK_STATUS;
     }
@@ -268,7 +267,7 @@ public class ChartComposite extends Canvas
 
   }
 
-  public final void clearPanOffset( )
+   public final void clearPanOffset( )
   {
     getPlot().setPanOffset( null, null );
     final IChartModel cm = getChartModel();
