@@ -5,7 +5,7 @@
  *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  *
@@ -84,8 +84,8 @@ public final class FeatureThemeWizardUtilitites
 
     if( selectedObject instanceof FeatureThemeNode )
     {
-      final FeatureThemeNode sdvölknölisfdbvöklf = (FeatureThemeNode) selectedObject;
-      return sdvölknölisfdbvöklf.getTheme();
+      final FeatureThemeNode theme = (FeatureThemeNode) selectedObject;
+      return theme.getTheme();
     }
 
     return null;
