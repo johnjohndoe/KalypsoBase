@@ -43,7 +43,7 @@ public class AxisCanvas extends Canvas implements IAxisComponent, PaintListener
   private final IMapperEventListener m_axisListener = new IMapperEventListener()
   {
     @Override
-    public void onMapperChanged( IMapper mapper )
+    public void onMapperChanged( final IMapper mapper )
     {
       if( m_bufferImage != null )
       {
@@ -62,7 +62,7 @@ public class AxisCanvas extends Canvas implements IAxisComponent, PaintListener
     addControlListener( new ControlAdapter()
     {
       @Override
-      public void controlResized( ControlEvent e )
+      public void controlResized( final ControlEvent e )
       {
         if( m_bufferImage != null )
         {
@@ -75,7 +75,7 @@ public class AxisCanvas extends Canvas implements IAxisComponent, PaintListener
     addDisposeListener( new DisposeListener()
     {
       @Override
-      public void widgetDisposed( DisposeEvent e )
+      public void widgetDisposed( final DisposeEvent e )
       {
         dispose();
       }
@@ -114,7 +114,7 @@ public class AxisCanvas extends Canvas implements IAxisComponent, PaintListener
   @Override
   public Point computeSize( final int wHint, final int hHint, final boolean changed )
   {
-    if( m_axis != null )
+    if( m_axis != null)
     {
       final IAxisRenderer renderer = m_axis.getRenderer();
       if( renderer != null )
@@ -133,11 +133,11 @@ public class AxisCanvas extends Canvas implements IAxisComponent, PaintListener
     return new Point( 1, 1 );
   }
 
-  private void paintDrag( GC gc, Rectangle bounds2 )
+  private void paintDrag( final GC gc, final Rectangle bounds2 )
   {
     if( m_dragInterval != null )
     {
-      Color bg = gc.getBackground();
+      final Color bg = gc.getBackground();
       gc.setBackground( getDisplay().getSystemColor( SWT.COLOR_BLACK ) );
 
       int x;
@@ -160,7 +160,7 @@ public class AxisCanvas extends Canvas implements IAxisComponent, PaintListener
         height = Math.abs( m_dragInterval.x - m_dragInterval.y );
       }
 
-      Rectangle rect = new Rectangle( x, y, width, height );
+      final Rectangle rect = new Rectangle( x, y, width, height );
       gc.setAlpha( 100 );
       gc.fillRectangle( rect );
       gc.setAlpha( 255 );
@@ -199,7 +199,7 @@ public class AxisCanvas extends Canvas implements IAxisComponent, PaintListener
     }
   }
 
-  public void setDragInterval( int y1, int y2 )
+  public void setDragInterval( final int y1, final int y2 )
   {
     if( y1 == -1 || y2 == -1 )
     {
@@ -212,7 +212,7 @@ public class AxisCanvas extends Canvas implements IAxisComponent, PaintListener
     redraw();
   }
 
-  public void setPanOffsetInterval( Point offset )
+  public void setPanOffsetInterval( final Point offset )
   {
     m_panOffset = offset;
     if( offset != null )
@@ -236,7 +236,7 @@ public class AxisCanvas extends Canvas implements IAxisComponent, PaintListener
    * @see org.eclipse.swt.events.PaintListener#paintControl(org.eclipse.swt.events.PaintEvent)
    */
   @Override
-  public void paintControl( PaintEvent e )
+  public void paintControl( final PaintEvent e )
   {
     final Rectangle bounds = getClientArea();
     setAxisHeight( bounds );
