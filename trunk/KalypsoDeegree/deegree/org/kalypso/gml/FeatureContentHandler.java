@@ -169,7 +169,8 @@ public class FeatureContentHandler extends AbstractGmlContentHandler implements 
   private void startFeature( final QName qname, final Attributes atts ) throws SAXException
   {
     /* Root feature or new sub-feature. */
-    final IGMLSchema schema = m_schemaLoader.findSchema( qname.getNamespaceURI() );
+    final String namespaceURI = qname.getNamespaceURI();
+    final IGMLSchema schema = m_schemaLoader.findSchema( namespaceURI );
 
     final IFeatureType featureType = schema.getFeatureType( qname );
     if( featureType == null )
