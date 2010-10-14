@@ -513,7 +513,7 @@ public class TupleResult implements List<IRecord>
     final TupleResult owner = r.getOwner();
     // If owner is still null, just set it to me
     if( owner == null )
-      r.setOwner( this );
+      r.setOwner( this, m_components );
     else
       Assert.isTrue( r.getOwner() == this, Messages.getString( "org.kalypso.observation.result.TupleResult.1" ) + record ); //$NON-NLS-1$
 

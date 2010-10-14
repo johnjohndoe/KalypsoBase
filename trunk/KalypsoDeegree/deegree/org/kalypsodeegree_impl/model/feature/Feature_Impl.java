@@ -591,6 +591,15 @@ public class Feature_Impl extends PlatformObject implements Feature
     }
   }
 
+  protected boolean getBoolean( final QName property, final boolean defaultValue )
+  {
+    final Boolean value = getProperty( property, Boolean.class );
+    if( value == null )
+      return defaultValue;
+
+    return value;
+  }
+
   /**
    * @see org.eclipse.core.runtime.PlatformObject#getAdapter(java.lang.Class)
    */
@@ -635,6 +644,5 @@ public class Feature_Impl extends PlatformObject implements Feature
 // {
 // return m_geometry;
 // }
-
 
 }

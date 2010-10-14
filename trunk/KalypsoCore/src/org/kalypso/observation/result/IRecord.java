@@ -88,4 +88,6 @@ public interface IRecord
   public void setValue( int index, Object value, boolean fireNoEvent ) throws IndexOutOfBoundsException;
 
   public IRecord cloneRecord( );
+
+  public int indexOfComponent( String componentID );
 }
