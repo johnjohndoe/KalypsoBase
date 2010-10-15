@@ -53,11 +53,10 @@ public class ChartModel implements IChartModel
        * @see de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener#onLayerVisibilityChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
        */
       @Override
-      public void onLayerVisibilityChanged( IChartLayer layer )
+      public void onLayerVisibilityChanged( final IChartLayer layer )
       {
         if( isHideUnusedAxes() )
-          return;
-        hideUnusedAxis( layer.getCoordinateMapper().getTargetAxis() );
+          hideUnusedAxis( layer.getCoordinateMapper().getTargetAxis() );
       }
 
       /**
