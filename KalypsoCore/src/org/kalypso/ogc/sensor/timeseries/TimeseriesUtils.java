@@ -183,7 +183,7 @@ public final class TimeseriesUtils implements ITimeseriesConstants
    */
   public static String[] findOutMDAlarmLevel( final IObservation obs )
   {
-    return findOutMDBeginningWith( obs, Messages.getString( "org.kalypso.ogc.sensor.timeseries.TimeserieUtils.2" ) ); //$NON-NLS-1$
+    return findOutMDBeginningWith( obs, "Alarmstufe" ); //$NON-NLS-1$
   }
 
   /**
@@ -193,7 +193,7 @@ public final class TimeseriesUtils implements ITimeseriesConstants
    */
   public static Color getColorForAlarmLevel( final String mdAlarm )
   {
-    final String strColor = getProperties().getProperty( Messages.getString( "org.kalypso.ogc.sensor.timeseries.TimeserieUtils.3" ) + mdAlarm ); //$NON-NLS-1$
+    final String strColor = getProperties().getProperty( "COLOR_" + mdAlarm ); //$NON-NLS-1$
     if( strColor == null )
       return Color.RED;
 
