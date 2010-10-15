@@ -56,10 +56,10 @@ import de.openali.odysseus.chart.framework.model.style.ILineStyle;
  */
 public class DefaultTickRasterLayer extends AbstractLineLayer
 {
- 
-  public DefaultTickRasterLayer( final ICoordinateMapper coordinateMapper,final ILineStyle lineStyle )
+
+  public DefaultTickRasterLayer( final ICoordinateMapper coordinateMapper, final ILineStyle lineStyle )
   {
-    super( lineStyle,null);
+    super( lineStyle, null );
     setCoordinateMapper( coordinateMapper );
   }
 
@@ -94,19 +94,22 @@ public class DefaultTickRasterLayer extends AbstractLineLayer
     final Number[] domTicks = rendererDom.getTicks( getDomainAxis(), gc );
     final Number[] valTicks = rendererVal.getTicks( getTargetAxis(), gc );
     final List<Point> path = new ArrayList<Point>( 2 );
-
+    final int valSize = valTicks.length;
+    final int domSize = domTicks.length;
+    if( valSize < 2 || domSize < 2 )
+      return;
     for( int i = 0; i < domTicks.length; i++ )
     {
       path.clear();
       path.add( getCoordinateMapper().numericToScreen( domTicks[i], valTicks[0] ) );
-      path.add( getCoordinateMapper().numericToScreen( domTicks[i], valTicks[valTicks.length - 1] ) );
+      path.add( getCoordinateMapper().numericToScreen( domTicks[i], valTicks[valSize - 1] ) );
       drawLine( gc, path );
     }
     for( int i = 0; i < valTicks.length; i++ )
     {
       path.clear();
       path.add( getCoordinateMapper().numericToScreen( domTicks[0], valTicks[i] ) );
-      path.add( getCoordinateMapper().numericToScreen( domTicks[domTicks.length - 1], valTicks[i] ) );
+      path.add( getCoordinateMapper().numericToScreen( domTicks[domSize - 1], valTicks[i] ) );
       drawLine( gc, path );
     }
 
