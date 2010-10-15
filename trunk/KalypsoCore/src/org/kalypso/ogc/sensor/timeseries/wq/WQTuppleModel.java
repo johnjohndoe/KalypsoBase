@@ -151,10 +151,10 @@ public class WQTuppleModel extends AbstractTupleModel
 
     if( bDestAxis || KalypsoStatusUtils.equals( axis, m_destStatusAxis ) )
     {
-      final Integer objIndex = new Integer( index );
 
-      final Number number = (Number) m_model.get( objIndex.intValue(), m_srcAxis );
+      final Number number = (Number) m_model.get( index, m_srcAxis );
 
+      final Integer objIndex = Integer.valueOf( index );
       if( !m_values.containsKey( objIndex ) )
       {
         final Number[] res = read( objIndex, number );
