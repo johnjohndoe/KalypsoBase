@@ -139,7 +139,13 @@ public abstract class AbstractTupleModel implements ITupleModel
         for( int i = 0; i < size(); i++ )
         {
           final Number value = (Number) get( i, axis );
-
+          if (value == null)
+          { 
+            System.out.println(String.format("AbstractTupleModel.getRange() - found invalid NULL value - index: %d", i)); //$NON-NLS-1$
+            continue;
+          }
+            
+          
           if( dc.compare( value, lower ) < 0 )
             lower = value;
 
