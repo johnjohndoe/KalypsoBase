@@ -47,8 +47,8 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
+import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
-import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 
 /**
@@ -56,11 +56,17 @@ import de.openali.odysseus.chart.framework.model.style.ILineStyle;
  */
 public class DefaultTickRasterLayer extends AbstractLineLayer
 {
+  /**
+   * @see de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer#getId()
+   */
+
+  private final static String ID = "de.openali.odysseus.chart.ext.base.layer.DefaultTickRasterLayer";
 
   public DefaultTickRasterLayer( final ICoordinateMapper coordinateMapper, final ILineStyle lineStyle )
   {
     super( lineStyle, null );
     setCoordinateMapper( coordinateMapper );
+    setId( ID );
   }
 
   /**
@@ -89,27 +95,28 @@ public class DefaultTickRasterLayer extends AbstractLineLayer
   @Override
   public void paint( final GC gc )
   {
-    final IAxisRenderer rendererDom = getDomainAxis().getRenderer();
-    final IAxisRenderer rendererVal = getTargetAxis().getRenderer();
-    final Number[] domTicks = rendererDom.getTicks( getDomainAxis(), gc );
-    final Number[] valTicks = rendererVal.getTicks( getTargetAxis(), gc );
-    final List<Point> path = new ArrayList<Point>( 2 );
-    final int valSize = valTicks.length;
-    final int domSize = domTicks.length;
-    if( valSize < 2 || domSize < 2 )
+    final IAxis domAxis = getDomainAxis();
+    final IAxis tarAxis = getTargetAxis();
+    if( !domAxis.isVisible() || !tarAxis.isVisible() )
       return;
+    final Number[] domTicks = domAxis.getRenderer().getTicks( getDomainAxis(), gc );
+    final Number[] valTicks = tarAxis.getRenderer().getTicks( getTargetAxis(), gc );
+    final int width = gc.getClipping().width;
+    final int heigth = gc.getClipping().height;
+    final List<Point> path = new ArrayList<Point>( 2 );
+
     for( int i = 0; i < domTicks.length; i++ )
     {
       path.clear();
-      path.add( getCoordinateMapper().numericToScreen( domTicks[i], valTicks[0] ) );
-      path.add( getCoordinateMapper().numericToScreen( domTicks[i], valTicks[valSize - 1] ) );
+      path.add( new Point( getDomainAxis().numericToScreen( domTicks[i] ), 0 ) );
+      path.add( new Point( getDomainAxis().numericToScreen( domTicks[i] ), heigth ) );
       drawLine( gc, path );
     }
     for( int i = 0; i < valTicks.length; i++ )
     {
       path.clear();
-      path.add( getCoordinateMapper().numericToScreen( domTicks[0], valTicks[i] ) );
-      path.add( getCoordinateMapper().numericToScreen( domTicks[domSize - 1], valTicks[i] ) );
+      path.add( new Point( 0, getTargetAxis().numericToScreen( valTicks[i] ) ) );
+      path.add( new Point( width, getTargetAxis().numericToScreen( valTicks[i] ) ) );
       drawLine( gc, path );
     }
 
