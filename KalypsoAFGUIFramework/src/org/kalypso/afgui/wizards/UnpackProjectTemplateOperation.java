@@ -48,7 +48,7 @@ import java.net.URL;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.io.filefilter.WildcardFilter;
+import org.apache.commons.io.filefilter.WildcardFileFilter;
 import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -67,6 +67,7 @@ import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.i18n.Messages;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.module.nature.ModuleNature;
 
 public final class UnpackProjectTemplateOperation extends WorkspaceModifyOperation
 {
@@ -80,12 +81,16 @@ public final class UnpackProjectTemplateOperation extends WorkspaceModifyOperati
 
   private final NewProjectWizard m_newProjectWizard;
 
-  public UnpackProjectTemplateOperation( final NewProjectWizard newProjectWizard, final URL dataLocation, final IProject project )
+  private final String m_moduleID;
+
+  public UnpackProjectTemplateOperation( final NewProjectWizard newProjectWizard, final URL dataLocation, final IProject project, final String moduleID )
   {
     super( project.getWorkspace().getRoot() );
+
     m_newProjectWizard = newProjectWizard;
     m_dataLocation = dataLocation;
     m_project = project;
+    m_moduleID = moduleID;
   }
 
   @Override
@@ -112,6 +117,8 @@ public final class UnpackProjectTemplateOperation extends WorkspaceModifyOperati
       // IMPORTANT: As the project was already open once before, we need to refresh here, else
       // not all resources are up-to-date
       m_project.refreshLocal( IResource.DEPTH_INFINITE, progress.newChild( 10 ) );
+
+      ModuleNature.enforceNature( m_project, m_moduleID );
 
       final String[] natureIds = cleanDescription( newName, progress );
       configureNatures( natureIds, progress );
@@ -245,7 +252,7 @@ public final class UnpackProjectTemplateOperation extends WorkspaceModifyOperati
 
     new File( destinationDir, "plugin.xml" ).delete();
 
-    final File[] propertyFiles = destinationDir.listFiles( (FilenameFilter) new WildcardFilter( "plugin*.properties" ) );
+    final File[] propertyFiles = destinationDir.listFiles( (FilenameFilter) new WildcardFileFilter( "plugin*.properties" ) );
     if( propertyFiles != null )
     {
       for( final File file : propertyFiles )

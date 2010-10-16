@@ -40,9 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.client.extension;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import org.eclipse.jface.action.IAction;
 import org.kalypso.project.database.client.extension.database.IKalypsoModuleDatabaseSettings;
-import org.kalypso.project.database.client.extension.pages.module.IKalypsoModulePage;
 import org.kalypso.project.database.client.extension.pages.welcome.IKalypsoModuleWelcomePageFrame;
+import org.kalypso.project.database.client.extension.project.IKalypsoModuleProjectOpenAction;
 
 /**
  * Instance of an Kalypso Modul. Like KalypsoWspm, KalypsoNA, KalypsoRisk, etc. Needed for rendering and handling the
@@ -52,13 +56,30 @@ import org.kalypso.project.database.client.extension.pages.welcome.IKalypsoModul
  */
 public interface IKalypsoModule
 {
-  public String EXTENSION_POINT_ID = "org.kalypso.project.database.client.kalypsoModule"; //$NON-NLS-1$
-  
-  public IKalypsoModuleWelcomePageFrame getWelcomePageFrame( );
+  String EXTENSION_POINT_ID = "org.kalypso.project.database.client.kalypsoModule"; //$NON-NLS-1$
 
-  public IKalypsoModulePage getModulePage( );
+  String getId( );
 
-  public IKalypsoModuleDatabaseSettings getDatabaseSettings( );
+  IKalypsoModuleWelcomePageFrame getWelcomePageFrame( );
 
-  public String getId( );
+  IKalypsoModuleDatabaseSettings getDatabaseSettings( );
+
+  /**
+   * @return Entering Page Heading
+   */
+  String getHeader( );
+
+  /**
+   * @return welcome page module placement priority
+   */
+  Integer getPriority( );
+
+  /**
+   * @return Informations about the module. URL links to a html page
+   */
+  URL getInfoURL( ) throws MalformedURLException;
+
+  IAction[] getProjectActions( );
+
+  IKalypsoModuleProjectOpenAction getProjectOpenAction( );
 }

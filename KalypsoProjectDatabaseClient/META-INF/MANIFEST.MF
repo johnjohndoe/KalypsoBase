@@ -14,7 +14,8 @@ Require-Bundle: org.junit4;bundle-version="4.3.1";resolution:=optional,
  org.kalypso.project.database;visibility:=reexport,
  org.kalypso.contribs.eclipsercp,
  org.kalypso.ui,
- org.kalypso.afgui
+ org.kalypso.afgui,
+ org.kalypso.module;bundle-version="2.3.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.kalypso.project.database.client,
@@ -24,7 +25,6 @@ Export-Package: org.kalypso.project.database.client,
  org.kalypso.project.database.client.extension,
  org.kalypso.project.database.client.extension.database,
  org.kalypso.project.database.client.extension.database.handlers,
- org.kalypso.project.database.client.extension.pages.module,
  org.kalypso.project.database.client.extension.pages.welcome,
  org.kalypso.project.database.client.extension.project,
  org.kalypso.project.database.client.ui.composites,

@@ -47,8 +47,8 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchWizard;
 import org.eclipse.ui.PlatformUI;
+import org.kalypso.afgui.wizards.INewProjectWizardProvider;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
-import org.kalypso.project.database.client.extension.pages.module.IKalypsoModulePage;
 
 /**
  * Action for calling the new project wizard
@@ -57,14 +57,13 @@ import org.kalypso.project.database.client.extension.pages.module.IKalypsoModule
  */
 public class SpecialImportProjectAction extends Action
 {
-  protected final IKalypsoModulePage m_enteringPage;
+  private final INewProjectWizardProvider m_wizardProvider;
 
-  public SpecialImportProjectAction( final IKalypsoModulePage enteringPage )
+  public SpecialImportProjectAction( final String label, final INewProjectWizardProvider wizardProvider )
   {
+    m_wizardProvider = wizardProvider;
     setImageDescriptor( ImageDescriptor.createFromURL( SpecialImportProjectAction.class.getResource( "icons/project_import.gif" ) ) ); //$NON-NLS-1$
-    setText( enteringPage.getImportWizardLabel() );
-
-    m_enteringPage = enteringPage;
+    setText( label );
   }
 
   /**
@@ -74,7 +73,7 @@ public class SpecialImportProjectAction extends Action
   public void runWithEvent( final Event event )
   {
     final Shell shell = event.widget.getDisplay().getActiveShell();
-    final IWizard importWizard = m_enteringPage.getImportWizard();
+    final IWizard importWizard = m_wizardProvider.createWizard();
     if( importWizard instanceof IWorkbenchWizard )
       ((IWorkbenchWizard) importWizard).init( PlatformUI.getWorkbench(), null );
 

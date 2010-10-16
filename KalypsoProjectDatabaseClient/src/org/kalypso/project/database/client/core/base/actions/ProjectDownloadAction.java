@@ -114,7 +114,7 @@ public class ProjectDownloadAction implements IProjectAction
           final Map<ProjectTemplate, KalypsoProjectBean> mapping = new HashMap<ProjectTemplate, KalypsoProjectBean>();
           mapping.put( template, bean );
 
-          final RemoteImportWorker worker = new RemoteImportWorker( new ProjectTemplate[] { template }, mapping );
+          final RemoteImportWorker worker = new RemoteImportWorker( new ProjectTemplate[] { template }, mapping, m_module );
           worker.execute();
         }
         catch( final Exception e1 )

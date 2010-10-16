@@ -73,7 +73,6 @@ import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
  */
 public class CreateRemoteProjectWorker implements ICoreRunnableWithProgress
 {
-
   private final ILocalProject m_handler;
 
   private final IKalypsoModuleDatabaseSettings m_settings;
