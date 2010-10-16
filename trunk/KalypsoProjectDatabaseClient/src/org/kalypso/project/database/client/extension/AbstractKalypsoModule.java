@@ -38,38 +38,29 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.project.database.client.extension.pages.module;
+package org.kalypso.project.database.client.extension;
 
 import java.io.File;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Plugin;
+import org.eclipse.jface.action.IAction;
+import org.kalypso.afgui.wizards.INewProjectWizardProvider;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.i18n.I18nUtils;
-import org.kalypso.project.database.client.extension.IKalypsoModule;
+import org.kalypso.project.database.client.i18n.Messages;
+import org.kalypso.project.database.client.ui.composites.CreateProjectAction;
+import org.kalypso.project.database.client.ui.composites.ImportProjectAction;
 
 /**
- * TODO: bad name, this is not the page itself, but the page's data.
- * 
- * @author Dirk Kuch
+ * @author Gernot Belger
  */
-public abstract class AbstractKalypsoModulePage implements IKalypsoModulePage
+public abstract class AbstractKalypsoModule implements IKalypsoModule
 {
-  private final IKalypsoModule m_module;
-
-  public AbstractKalypsoModulePage( final IKalypsoModule module )
-  {
-    m_module = module;
-  }
-
-  @Override
-  public IKalypsoModule getModule( )
-  {
-    return m_module;
-  }
-
   protected URL getInfoURL( final Class< ? > clazz, final Plugin plugin )
   {
     final IPath stateLocation = plugin.getStateLocation();
@@ -92,6 +83,57 @@ public abstract class AbstractKalypsoModulePage implements IKalypsoModulePage
       plugin.getLog().log( StatusUtilities.statusFromThrowable( e ) );
       return null;
     }
-
   }
+
+  /**
+   * @see org.kalypso.project.database.client.extension.IKalypsoModule#getProjectActions()
+   */
+  @Override
+  public IAction[] getProjectActions( )
+  {
+    final Collection<IAction> actions = new ArrayList<IAction>();
+
+    /* Create project actions */
+    final INewProjectWizardProvider newProjectWizard = getNewProjectWizard();
+    final String commitType = getDatabaseSettings().getModuleCommitType();
+    if( newProjectWizard != null )
+    {
+      final String createProjectLabel = Messages.getString( "org.kalypso.project.database.client.ui.composites.ModulePageComposite.1" ); //$NON-NLS-1$
+      final CreateProjectAction createProjectAction = new CreateProjectAction( createProjectLabel, commitType, newProjectWizard );
+      actions.add( createProjectAction );
+    }
+    else
+      actions.add( null );
+
+    /* Import external project */
+    actions.add( new ImportProjectAction() );
+
+    /* Demo project */
+    final INewProjectWizardProvider demoProjectWizard = getDemoProjectWizard();
+    if( demoProjectWizard != null )
+    {
+      final String demoProjectLabel = Messages.getString( "org.kalypso.project.database.client.ui.composites.ModulePageComposite.2" ); //$NON-NLS-1$
+      final CreateProjectAction demoProjectAction = new CreateProjectAction( demoProjectLabel, commitType, demoProjectWizard );
+      demoProjectAction.setImageDescriptor( CreateProjectAction.IMG_EXTRACT_DEMO );
+      actions.add( demoProjectAction );
+    }
+    else
+      actions.add( null );
+
+    /* more module specific actions */
+    addProjectActions( actions );
+
+    return actions.toArray( new IAction[actions.size()] );
+  }
+
+  protected abstract INewProjectWizardProvider getNewProjectWizard( );
+
+  protected abstract INewProjectWizardProvider getDemoProjectWizard( );
+
+  protected void addProjectActions( final Collection<IAction> actions )
+  {
+    // adds one placeholder by default
+    actions.add( null );
+  }
+
 }

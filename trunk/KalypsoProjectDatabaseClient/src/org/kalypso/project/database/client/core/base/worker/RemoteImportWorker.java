@@ -59,6 +59,7 @@ import org.kalypso.contribs.eclipse.core.resources.ProjectTemplate;
 import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
 import org.kalypso.contribs.eclipse.jface.wizard.ProjectTemplatePage;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
+import org.kalypso.project.database.client.extension.IKalypsoModule;
 import org.kalypso.project.database.client.i18n.Messages;
 import org.kalypso.project.database.client.ui.project.wizard.create.DisableCreateProjectWizardPageElements;
 import org.kalypso.project.database.client.ui.project.wizard.create.WizardCreateProject;
@@ -75,10 +76,13 @@ public class RemoteImportWorker
 
   private final Map<ProjectTemplate, KalypsoProjectBean> m_mapping;
 
-  public RemoteImportWorker( final ProjectTemplate[] templates, final Map<ProjectTemplate, KalypsoProjectBean> mapping )
+  private final IKalypsoModule m_module;
+
+  public RemoteImportWorker( final ProjectTemplate[] templates, final Map<ProjectTemplate, KalypsoProjectBean> mapping, final IKalypsoModule module )
   {
     m_templates = templates;
     m_mapping = mapping;
+    m_module = module;
   }
 
   // FIXME FIXME FIXME!
@@ -89,11 +93,11 @@ public class RemoteImportWorker
     if( m_templates.length == 1 )
     {
       final ProjectTemplatePage page = new ProjectTemplatePage( Messages.getString( "org.kalypso.project.database.client.ui.project.database.internal.RemoteProjectHelper.2" ), Messages.getString( "org.kalypso.project.database.client.ui.project.database.internal.RemoteProjectHelper.3" ), new ProjectTemplate[] { m_templates[0] } ); //$NON-NLS-1$ //$NON-NLS-2$
-      wizard = new WizardCreateProject( page, new String[] {} );
+      wizard = new WizardCreateProject( page, new String[] {}, m_module );
     }
     else
     {
-      wizard = new WizardCreateProject( m_templates, new String[] {} );
+      wizard = new WizardCreateProject( m_templates, new String[] {}, m_module );
     }
 
     wizard.init( PlatformUI.getWorkbench(), null );

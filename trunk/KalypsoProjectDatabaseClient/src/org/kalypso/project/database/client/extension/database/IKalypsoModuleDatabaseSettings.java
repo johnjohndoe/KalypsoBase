@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.client.extension.database;
 
-import org.kalypso.project.database.client.extension.project.IKalypsoModuleProjectOpenAction;
 
 /**
  * @author Dirk Kuch
@@ -48,7 +47,7 @@ import org.kalypso.project.database.client.extension.project.IKalypsoModuleProje
 public interface IKalypsoModuleDatabaseSettings
 {
   /**
-   * FIXME: bad name: this is just the moduleID!
+   * FIXME: bad name: this is just the moduleID?! Or is it every different to the module-id?
    * 
    * @return commit type of "module project type"
    */
@@ -58,8 +57,6 @@ public interface IKalypsoModuleDatabaseSettings
    * @return a module handles only specific IProjects in workspace
    */
   IProjectDatabaseFilter getFilter( );
-
-  IKalypsoModuleProjectOpenAction getProjectOpenAction( );
 
   boolean hasManagedDirtyState( );
 }

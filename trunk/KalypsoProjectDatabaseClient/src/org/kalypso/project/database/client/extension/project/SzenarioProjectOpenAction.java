@@ -56,6 +56,11 @@ import org.kalypso.afgui.scenarios.IScenario;
  */
 public class SzenarioProjectOpenAction extends AbstractModuleProjectOpenAction
 {
+  public SzenarioProjectOpenAction( final String moduleID )
+  {
+    super( moduleID );
+  }
+
   /**
    * @see org.kalypso.project.database.client.extension.project.AbstractModuleProjectOpenAction#doOpen(org.eclipse.ui.IWorkbenchPage,
    *      org.eclipse.core.resources.IProject)

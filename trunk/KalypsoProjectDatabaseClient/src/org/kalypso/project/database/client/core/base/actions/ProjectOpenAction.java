@@ -57,7 +57,6 @@ import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
 import org.kalypso.project.database.client.extension.IKalypsoModule;
-import org.kalypso.project.database.client.extension.database.IKalypsoModuleDatabaseSettings;
 import org.kalypso.project.database.client.extension.database.handlers.ILocalProject;
 import org.kalypso.project.database.client.extension.database.handlers.ITranscendenceProject;
 import org.kalypso.project.database.client.extension.project.IKalypsoModuleProjectOpenAction;
@@ -239,8 +238,7 @@ public class ProjectOpenAction implements IProjectAction
       return new Status( IStatus.ERROR, KalypsoProjectDatabaseClient.PLUGIN_ID, message );
     }
 
-    final IKalypsoModuleDatabaseSettings databaseSettings = m_module.getDatabaseSettings();
-    final IKalypsoModuleProjectOpenAction action = databaseSettings.getProjectOpenAction();
+    final IKalypsoModuleProjectOpenAction action = m_module.getProjectOpenAction();
 
     try
     {

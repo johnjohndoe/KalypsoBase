@@ -41,7 +41,10 @@
 package org.kalypso.project.database.client.extension.project;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -54,10 +57,14 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.intro.IIntroManager;
 import org.eclipse.ui.navigator.CommonNavigator;
 import org.eclipse.ui.navigator.CommonViewer;
+import org.eclipse.ui.progress.IProgressService;
 import org.eclipse.ui.views.navigator.ResourceNavigator;
+import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
+import org.kalypso.module.nature.ModuleNature;
 
 /**
  * Holds common behavior for all open actions.
@@ -66,6 +73,13 @@ import org.eclipse.ui.views.navigator.ResourceNavigator;
  */
 public abstract class AbstractModuleProjectOpenAction implements IKalypsoModuleProjectOpenAction
 {
+  private final String m_moduleID;
+
+  public AbstractModuleProjectOpenAction( final String moduleID )
+  {
+    m_moduleID = moduleID;
+  }
+
   /**
    * @see org.kalypso.project.database.client.extension.project.IKalypsoModuleProjectOpenAction#open(org.eclipse.core.resources.IProject)
    */
@@ -85,9 +99,9 @@ public abstract class AbstractModuleProjectOpenAction implements IKalypsoModuleP
     // based projects should unload the currently active scenario ). We could equally close a project before it is
     // deleted.
 
-// final IStatus versionStatus = checkProjectVersion( project );
-// if( !versionStatus.isOK() )
-// return versionStatus;
+    final IStatus versionStatus = checkProjectModule( project );
+    if( !versionStatus.isOK() )
+      return versionStatus;
 
     /* We need to do this first, the open actions sometimes depend on it */
     final String perspective = getFinalPerspective();
@@ -112,46 +126,25 @@ public abstract class AbstractModuleProjectOpenAction implements IKalypsoModuleP
 
   protected abstract IStatus doOpen( IWorkbenchPage page, IProject project ) throws CoreException;
 
-// /**
-// * Checks the version number of the project and sets it, if it was never set before.<br/>
-// * If the project is out-dated, we try to convert it to the current version,
-// */
-// private IStatus checkProjectVersion( final IProject project )
-// {
-// final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-// final WorkspaceModifyOperation operation = new WorkspaceModifyOperation( root )
-// {
-// @Override
-// protected void execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException,
-// InterruptedException
-// {
-// doCheckProjectVersion( project );
-// }
-// };
-//
-// final IProgressService progress = (IProgressService) PlatformUI.getWorkbench().getService( IProgressService.class );
-// return RunnableContextHelper.execute( progress, true, false, operation );
-// }
-//
-// protected void doCheckProjectVersion( final IProject project ) throws CoreException, InvocationTargetException,
-// InterruptedException
-// {
-// // FIXME: we need a common project nature
-// // FIXME: this is not possible, because that must be defined in afgui (not here),
-// // everything else is plain wrong.
-// // But sadly the dependency is the wrong way and very hard to invert!
-//
-// /* For backwards compatibility: Every project that is opened this way automatically gets the module nature. */
-// final ModuleNature nature = ModuleNature.enforceNature( project );
-//
-// /* TODO: what is the module of this project? */
-// /* TODO: what is the version number of this project? */
-// /* TODO: what is the current version number of this module? */
-//
-// /* compare versions */
-//
-// // TODO: check version number and possibly convert project to new version
-// }
+  /**
+   * For backwards compatibility: we enforce the ModuleNature here, setting the module-id if it was never set before.
+   */
+  private IStatus checkProjectModule( final IProject project )
+  {
+    final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+    final String moduleID = m_moduleID;
+    final WorkspaceModifyOperation operation = new WorkspaceModifyOperation( root )
+    {
+      @Override
+      protected void execute( final IProgressMonitor monitor ) throws CoreException
+      {
+        ModuleNature.enforceNature( project, moduleID );
+      }
+    };
+
+    final IProgressService progress = (IProgressService) PlatformUI.getWorkbench().getService( IProgressService.class );
+    return RunnableContextHelper.execute( progress, true, false, operation );
+  }
 
   private void revealProjectInExplorer( final IWorkbenchPage page, final IProject project ) throws PartInitException
   {

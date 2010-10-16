@@ -133,7 +133,7 @@ public class ProjectUpdateChangesAction implements IProjectAction
             final ProjectTemplate template = new ProjectTemplate( String.format( "%s - Version %d", bean.getName(), bean.getProjectVersion() ), bean.getUnixName(), bean.getDescription(), null, bean.getUrl() ); //$NON-NLS-1$
             mapping.put( template, bean );
 
-            final RemoteImportWorker worker = new RemoteImportWorker( new ProjectTemplate[] { template }, mapping );
+            final RemoteImportWorker worker = new RemoteImportWorker( new ProjectTemplate[] { template }, mapping, m_module );
             worker.execute();
           }
           catch( final Exception e1 )

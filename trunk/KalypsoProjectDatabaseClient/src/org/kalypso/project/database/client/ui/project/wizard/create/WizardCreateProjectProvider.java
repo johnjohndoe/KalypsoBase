@@ -43,6 +43,7 @@ package org.kalypso.project.database.client.ui.project.wizard.create;
 import org.kalypso.afgui.wizards.INewProjectWizard;
 import org.kalypso.afgui.wizards.INewProjectWizardProvider;
 import org.kalypso.contribs.eclipse.core.resources.ProjectTemplate;
+import org.kalypso.project.database.client.extension.IKalypsoModule;
 
 /**
  * @author Gernot Belger
@@ -53,10 +54,13 @@ public class WizardCreateProjectProvider implements INewProjectWizardProvider
 
   private final String[] m_natures;
 
-  public WizardCreateProjectProvider( final ProjectTemplate[] templates, final String[] natures )
+  private final IKalypsoModule m_module;
+
+  public WizardCreateProjectProvider( final ProjectTemplate[] templates, final String[] natures, final IKalypsoModule module )
   {
     m_templates = templates;
     m_natures = natures;
+    m_module = module;
   }
 
   /**
@@ -65,7 +69,7 @@ public class WizardCreateProjectProvider implements INewProjectWizardProvider
   @Override
   public INewProjectWizard createWizard( )
   {
-    return new WizardCreateProject( m_templates, m_natures );
+    return new WizardCreateProject( m_templates, m_natures, m_module );
   }
 
 }

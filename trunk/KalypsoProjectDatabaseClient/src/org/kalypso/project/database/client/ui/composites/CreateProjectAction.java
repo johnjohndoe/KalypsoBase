@@ -75,7 +75,6 @@ public class CreateProjectAction extends Action
 
   private final String m_commitType;
 
-
   private boolean resetProjectName = true;
 
   private final INewProjectWizardProvider m_wizardProvider;

@@ -42,6 +42,7 @@ package org.kalypso.project.database.client.ui.project.database;
 
 import java.util.Arrays;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -51,6 +52,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
@@ -101,7 +103,7 @@ public class ProjectDatabaseComposite extends Composite implements IProjectDatab
     m_model = KalypsoProjectDatabaseClient.getModel();
     m_model.addListener( this );
 
-    update();
+    updateControl();
   }
 
   /**
@@ -115,14 +117,7 @@ public class ProjectDatabaseComposite extends Composite implements IProjectDatab
     m_model.removeListener( this );
   }
 
-  /**
-   * FIXME: do NOT overwrite Control#update! This is for real painting, not for layout/control creation! FIXME: make
-   * private and rename!
-   * 
-   * @see org.eclipse.swt.widgets.Control#update()
-   */
-  @Override
-  public final void update( )
+  protected void updateControl( )
   {
     if( m_updateLock )
       return;
@@ -165,18 +160,29 @@ public class ProjectDatabaseComposite extends Composite implements IProjectDatab
     handler.getExportAction().render( body, m_toolkit );
 
     /* second row - enshorted project description */
-    String description = project.getDescription();
-    if( description != null && !description.isEmpty() )
-      if( !description.trim().equalsIgnoreCase( project.getName().trim() ) )
-      {
-        if( description.length() > 50 )
-        {
-          description = description.substring( 0, 50 ) + "..."; //$NON-NLS-1$
-        }
+    final String description = getDescription( project );
+    if( description != null )
+    {
+      // TODO: ugly: the label should wrap if too big; 50 chars is just arbitrary...
+      final String shortDescription = StringUtils.abbreviate( description, 50 );
+      final String msg = String.format( "     %s", shortDescription );
+      final Label descriptionLabel = m_toolkit.createLabel( body, msg );
+      descriptionLabel.setToolTipText( description );
+      descriptionLabel.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false, 6, 0 ) ); //$NON-NLS-1$
+    }
+  }
 
-        m_toolkit.createLabel( body, String.format( "     %s", description ) ).setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false, 6, 0 ) ); //$NON-NLS-1$
-      }
+  private String getDescription( final IProjectHandler project )
+  {
+    final String description = project.getDescription();
 
+    if( StringUtils.isBlank( description ) )
+      return null;
+
+    if( description.trim().equalsIgnoreCase( project.getName().trim() ) )
+      return null;
+
+    return description;
   }
 
   /**
@@ -209,7 +215,7 @@ public class ProjectDatabaseComposite extends Composite implements IProjectDatab
         @Override
         public IStatus runInUIThread( final IProgressMonitor monitor )
         {
-          update();
+          updateControl();
           m_updateJob = null;
 
           return Status.OK_STATUS;

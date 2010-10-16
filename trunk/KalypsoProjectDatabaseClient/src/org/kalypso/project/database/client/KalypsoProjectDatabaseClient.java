@@ -18,7 +18,6 @@ import org.kalypso.project.database.client.core.model.ProjectDatabaseModel;
 import org.kalypso.project.database.client.core.model.interfaces.IProjectDatabaseModel;
 import org.kalypso.project.database.client.extension.IKalypsoModule;
 import org.kalypso.project.database.client.extension.database.IProjectDataBaseClientConstant;
-import org.kalypso.project.database.client.extension.pages.module.IKalypsoModulePage;
 import org.kalypso.project.database.sei.IProjectDatabase;
 import org.kalypso.project.database.sei.ProjectDatabaseServiceLocator;
 import org.osgi.framework.Bundle;
@@ -179,12 +178,9 @@ public class KalypsoProjectDatabaseClient extends AbstractUIPlugin
         @Override
         public int compare( final IKalypsoModule o1, final IKalypsoModule o2 )
         {
-          final IKalypsoModulePage p1 = o1.getModulePage();
-          final IKalypsoModulePage p2 = o2.getModulePage();
-
-          final int compare = p1.getPriority().compareTo( p2.getPriority() );
+          final int compare = o1.getPriority().compareTo( o2.getPriority() );
           if( compare == 0 )
-            return p1.getHeader().compareTo( p2.getHeader() );
+            return o1.getHeader().compareTo( o2.getHeader() );
 
           return compare;
         }

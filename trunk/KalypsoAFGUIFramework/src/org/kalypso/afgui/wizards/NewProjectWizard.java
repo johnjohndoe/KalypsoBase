@@ -89,18 +89,21 @@ public class NewProjectWizard extends BasicNewProjectResourceWizard implements I
 
   protected boolean m_activateScenario = true;
 
+  private final String m_moduleID;
+
   /**
    * @param categoryId
    *          If non-<code>null</code>, only project templates with this categoryId are shown.
    */
-  public NewProjectWizard( final String categoryId, final boolean showTemplatePage )
+  public NewProjectWizard( final String categoryId, final boolean showTemplatePage, final String moduleID )
   {
-    this( new ProjectTemplatePage( categoryId ), showTemplatePage );
+    this( new ProjectTemplatePage( categoryId ), showTemplatePage, moduleID );
   }
 
-  public NewProjectWizard( final ProjectTemplatePage page, final boolean showTemplates )
+  public NewProjectWizard( final ProjectTemplatePage page, final boolean showTemplates, final String moduleID )
   {
     m_templateProjectPage = page;
+    m_moduleID = moduleID;
     if( showTemplates )
       addPage( m_templateProjectPage );
   }
@@ -227,7 +230,7 @@ public class NewProjectWizard extends BasicNewProjectResourceWizard implements I
 
     final URL dataLocation = selectedProject.getData();
 
-    final WorkspaceModifyOperation operation = new UnpackProjectTemplateOperation( this, dataLocation, project );
+    final WorkspaceModifyOperation operation = new UnpackProjectTemplateOperation( this, dataLocation, project, m_moduleID );
 
     final IStatus resultStatus = RunnableContextHelper.execute( getContainer(), true, true, operation );
     KalypsoAFGUIFrameworkPlugin.getDefault().getLog().log( resultStatus );

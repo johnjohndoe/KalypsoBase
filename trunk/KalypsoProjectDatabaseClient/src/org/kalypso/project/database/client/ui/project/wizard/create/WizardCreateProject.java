@@ -55,6 +55,7 @@ import org.kalypso.afgui.wizards.NewProjectWizard;
 import org.kalypso.contribs.eclipse.core.resources.ProjectTemplate;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.wizard.ProjectTemplatePage;
+import org.kalypso.project.database.client.extension.IKalypsoModule;
 import org.kalypso.project.database.common.nature.RemoteProjectNature;
 
 /**
@@ -74,18 +75,14 @@ public class WizardCreateProject extends NewProjectWizard
    * @param natures
    *          list of natures which will be added to the downloaded project
    */
-  public WizardCreateProject( final ProjectTemplate[] templates, final String[] natures )
+  public WizardCreateProject( final ProjectTemplate[] templates, final String[] natures, final IKalypsoModule module )
   {
-    super( new ProjectTemplatePage( "Projekt erzeugen", "", templates ), true ); //$NON-NLS-2$
-    m_natures = natures;
-
-    setWindowTitle( "Neues Projekt erzeugen" ); //$NON-NLS-1$
-    setNeedsProgressMonitor( true );
+    this( new ProjectTemplatePage( "Projekt erzeugen", "", templates ), natures, module ); //$NON-NLS-2$
   }
 
-  public WizardCreateProject( final ProjectTemplatePage page, final String[] natures )
+  public WizardCreateProject( final ProjectTemplatePage page, final String[] natures, final IKalypsoModule module )
   {
-    super( page, true );
+    super( page, true, module.getId() );
 
     m_natures = natures;
 
