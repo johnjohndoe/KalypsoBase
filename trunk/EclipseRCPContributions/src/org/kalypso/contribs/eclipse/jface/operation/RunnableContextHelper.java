@@ -76,11 +76,11 @@ public final class RunnableContextHelper
     }
     catch( final OperationCanceledException e )
     {
-      return Status.CANCEL_STATUS;
+      return new Status( IStatus.CANCEL, EclipseRCPContributionsPlugin.ID, "Abbruch durch Benutzer" );
     }
     catch( final InterruptedException ie )
     {
-      return Status.CANCEL_STATUS;
+      return new Status( IStatus.CANCEL, EclipseRCPContributionsPlugin.ID, "Abbruch durch Benutzer" );
     }
     catch( final Throwable t )
     {
