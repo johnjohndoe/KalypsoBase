@@ -282,7 +282,20 @@ public class FeaturePath
             if( foundFT != null && foundFT.getQName().equals( m_typename ) )
               return foundFT;
           }
-          
+          try{
+            final IFeatureType foundFT = contextSchema.getFeatureType( m_typename );
+            if( foundFT != null) {
+              final IFeatureType[] associationFeatureTypes = GMLSchemaUtilities.getSubstituts( associationFeatureType, contextSchema, true, true );
+              for( final IFeatureType substType : associationFeatureTypes )
+              {
+                if( foundFT.equals( substType ) )
+                  return substType;
+              }
+//              return foundFT;
+            }
+          }
+          catch (Exception e) {
+          }
           final IFeatureType[] associationFeatureTypes = GMLSchemaUtilities.getSubstituts( associationFeatureType, contextSchema, true, true );
           for( final IFeatureType substType : associationFeatureTypes )
           {
