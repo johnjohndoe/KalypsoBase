@@ -206,11 +206,13 @@ public class ActionHyperlink
     // m_link.setActiveImage( image );
 
     final String text = m_action.getText();
-    m_link.setText( text == null ? "" : text ); //$NON-NLS-1$
+    m_link.setText( text ); //$NON-NLS-1$
     m_link.setToolTipText( m_action.getDescription() );
 
-    // TODO: handle underlined
-    // m_link.setUnderlined( enabled );
+    final boolean textIsBlank = text == null || text.trim().isEmpty();
+    final boolean underlined = !textIsBlank;
+
+    m_link.setUnderlined( underlined );
   }
 
   private ImageDescriptor getImageDescriptor( final boolean enabled )
