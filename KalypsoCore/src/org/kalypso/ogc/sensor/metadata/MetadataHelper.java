@@ -298,12 +298,12 @@ public class MetadataHelper implements ITimeseriesConstants, ICopyObservationMet
     return key.startsWith( "Alarmstufe" ); //$NON-NLS-1$
   }
 
-  public static int getAlarmstufenPriority( final String key )
+  public static String getAlarmstufenPriority( final String key )
   {
     if( isAlarmstufe( key ) )
-      return Integer.valueOf( key.substring( key.lastIndexOf( " " ) + 1 ) );
+      return key.substring( key.lastIndexOf( " " ) + 1 );
 
-    return -1;
+    return null;
   }
 
   public static double getAlarmstufenValue( final MetadataList metadata, final String key )
