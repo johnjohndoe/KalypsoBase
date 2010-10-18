@@ -132,13 +132,16 @@ public final class PooledObsProvider implements IObsProvider, IPoolListener
     }
   }
 
+  /**
+   * ATM only triggered from setObservation
+   */
   public void fireChanged( )
   {
     synchronized( m_listeners )
     {
       final Object[] listeners = m_listeners.toArray();
       for( final Object listener : listeners )
-        ((IObsProviderListener) listener).obsProviderChanged();
+        ((IObsProviderListener) listener).observationLoadedEvent();
     }
   }
 
