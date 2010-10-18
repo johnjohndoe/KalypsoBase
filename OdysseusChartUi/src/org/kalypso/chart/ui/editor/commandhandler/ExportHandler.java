@@ -63,7 +63,8 @@ public class ExportHandler extends AbstractHandler
 
         final Rectangle bounds = chart.getBounds();
         final ImageLoader il = new ImageLoader();
-        final ImageData id = ChartImageFactory.createChartImage( chart, Display.getCurrent(), bounds.width, bounds.height );
+     //   final ImageData id = ChartImageFactory.createChartImage(chart.getChartModel(), /*Display.getCurrent()*/ bounds.width, bounds.height );
+        final ImageData id = ChartImageFactory.createChartImage(chart, Display.getCurrent(), bounds.width, bounds.height );
         il.data = new ImageData[] { id };
 
         int format = -1;
@@ -99,7 +100,7 @@ public class ExportHandler extends AbstractHandler
    * this function can be used by IExecutionListener to set a filename from outside; BEWARE: the filename is reset after
    * the image has been saved!!!!!!!!!!!!
    */
-  public void setFilename( String filename )
+  public void setFilename( final String filename )
   {
     m_filename = filename;
 

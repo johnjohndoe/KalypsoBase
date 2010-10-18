@@ -10,6 +10,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.graphics.Transform;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.PlatformUI;
 
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
@@ -56,7 +57,7 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
    * @param fixedWidth
    *          if > 0, no actual width is calculated - the getWidth() will always return the value of fixed width
    */
-  public GenericAxisRenderer( final String id, final int tickLength, final Insets tickLabelInsets, final Insets labelInsets, final int gap, ILabelCreator labelCreator, ITickCalculator tickCalculator, Number minTickInterval, boolean hideCut, int fixedWidth, ILineStyle axisLineStyle, ITextStyle labelStyle, ILineStyle tickLineStyle, ITextStyle tickLabelStyle, int borderSize )
+  public GenericAxisRenderer( final String id, final int tickLength, final Insets tickLabelInsets, final Insets labelInsets, final int gap, final ILabelCreator labelCreator, final ITickCalculator tickCalculator, final Number minTickInterval, final boolean hideCut, final int fixedWidth, final ILineStyle axisLineStyle, final ITextStyle labelStyle, final ILineStyle tickLineStyle, final ITextStyle tickLabelStyle, final int borderSize )
   {
     super( id, tickLength, tickLabelInsets, labelInsets, gap, axisLineStyle, labelStyle, tickLineStyle, tickLabelStyle, borderSize );
     m_tickCalculator = tickCalculator;
@@ -66,17 +67,17 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
     m_fixedWidth = fixedWidth;
   }
 
-  public GenericAxisRenderer( final String id, final int tickLength, final Insets tickLabelInsets, final Insets labelInsets, final int gap, ILabelCreator labelCreator, ITickCalculator tickCalculator, Number minTickInterval, boolean hideCut, int fixedWidth, ILineStyle axisLineStyle, ITextStyle labelStyle, ILineStyle tickLineStyle, ITextStyle tickLabelStyle )
+  public GenericAxisRenderer( final String id, final int tickLength, final Insets tickLabelInsets, final Insets labelInsets, final int gap, final ILabelCreator labelCreator, final ITickCalculator tickCalculator, final Number minTickInterval, final boolean hideCut, final int fixedWidth, final ILineStyle axisLineStyle, final ITextStyle labelStyle, final ILineStyle tickLineStyle, final ITextStyle tickLabelStyle )
   {
     this( id, tickLength, tickLabelInsets, labelInsets, gap, labelCreator, tickCalculator, minTickInterval, hideCut, fixedWidth, axisLineStyle, labelStyle, tickLineStyle, tickLabelStyle, 0 );
   }
 
-  public GenericAxisRenderer( final String id, ILabelCreator labelCreator, ITickCalculator tickCalculator, AxisRendererConfig config )
+  public GenericAxisRenderer( final String id, final ILabelCreator labelCreator, final ITickCalculator tickCalculator, final AxisRendererConfig config )
   {
     this( id, config.tickLength, config.tickLabelInsets, config.labelInsets, config.gap, labelCreator, tickCalculator, config.minTickInterval, config.hideCut, config.fixedWidth, config.axisLineStyle, config.labelStyle, config.tickLineStyle, config.tickLabelStyle );
   }
 
-  public Point calcTickLabelSize( GC gc, final IAxis axis )
+  public Point calcTickLabelSize( final GC gc, final IAxis axis )
   {
     final IDataRange<Number> range = axis.getNumericRange();
     if( range.getMin() == null || range.getMax() == null )
@@ -99,7 +100,7 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
   /**
    * draws the Axis ticks into the given GC
    */
-  private void drawTicks( final GC gc, final IAxis axis, final int startX, final int startY, Number[] ticks, int offset )
+  private void drawTicks( final GC gc, final IAxis axis, final int startX, final int startY, final Number[] ticks, final int offset )
   {
 
     if( (gc == null) || (axis == null) || (ticks == null) )
@@ -111,7 +112,7 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
     final int tickLength = getTickLength();
     final Insets tickLabelInsets = getTickLabelInsets();
 
-    IDataRange<Number> range = axis.getNumericRange();
+    final IDataRange<Number> range = axis.getNumericRange();
     if( range.getMin() == null || range.getMax() == null )
       return;
     final double numericMin = range.getMin().doubleValue();
@@ -121,8 +122,8 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
     final int screenMin = Math.min( axisMin, axisMax );
     final int screenMax = Math.max( axisMin, axisMax );
 
-    ITextStyle tickLabelStyle = getTickLabelStyle();
-    ILineStyle tickLineStyle = getTickLineStyle();
+    final ITextStyle tickLabelStyle = getTickLabelStyle();
+    final ILineStyle tickLineStyle = getTickLineStyle();
 
     for( final Number value : ticks )
     {
@@ -206,7 +207,7 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
   }
 
   @Override
-  protected Point getTextExtent( GC gc, final Number value, ITextStyle style, Format format, IDataRange<Number> range )
+  protected Point getTextExtent( final GC gc, final Number value, final ITextStyle style, final Format format, final IDataRange<Number> range )
   {
     final String label = m_labelCreator.getLabel( value, range );
     final Point p = getTextExtent( gc, label, style );
@@ -267,7 +268,7 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
   }
 
   @Override
-  public void paint( GC gc, final IAxis axis, final Rectangle screen )
+  public void paint( final GC gc, final IAxis axis, final Rectangle screen )
   {
     if( (screen.width > 0) && (screen.height > 0) && axis.isVisible() )
     {
@@ -293,7 +294,7 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
       else
         offset = coords[1];
 
-      Number[] ticks = getTicks( axis, gc );
+      final Number[] ticks = getTicks( axis, gc );
 
       drawTicks( gc, axis, coords[0], coords[1], ticks, offset );
       drawAxisLabel( gc, axis, coords[0], coords[1], coords[2], coords[3], offset );
@@ -301,7 +302,7 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
 
   }
 
-  protected void drawAxisLabel( GC gc, IAxis axis, int startX, int startY, int endX, int endY, int offset )
+  protected void drawAxisLabel( final GC gc, final IAxis axis, final int startX, final int startY, final int endX, final int endY, final int offset )
   {
     if( axis.getLabel() != null )
     {
@@ -367,17 +368,17 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
 
   }
 
-  protected void drawAxisLine( GC gc, final int x1, final int y1, final int x2, final int y2 )
+  protected void drawAxisLine( final GC gc, final int x1, final int y1, final int x2, final int y2 )
   {
     getLineStyle().apply( gc );
     gc.drawLine( x1, y1, x2, y2 );
   }
 
   @Override
-  public Number[] getTicks( IAxis axis, GC gc )
+  public Number[] getTicks( final IAxis axis, final GC gc )
   {
-    Point tickLabelSize = calcTickLabelSize( gc, axis );
-    Number[] ticks = m_tickCalculator.calcTicks( gc, axis, m_minTickInterval, tickLabelSize );
+    final Point tickLabelSize = calcTickLabelSize( gc, axis );
+    final Number[] ticks = m_tickCalculator.calcTicks( gc, axis, m_minTickInterval, tickLabelSize );
     return ticks;
   }
 
@@ -385,7 +386,7 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
    * Gibt die Breite bzw. Tiefe einer Achse zurück. Dadurch wird die Grösse der AxisComponent bestimmt
    */
   @Override
-  public int getAxisWidth( IAxis axis )
+  public int getAxisWidth( final IAxis axis )
   {
     if( !axis.isVisible() )
       return 0;
@@ -396,7 +397,7 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
 
     // Else: Calculate
     // check nullValue first
-    boolean labelEmpty = axis.getLabel() == null ? true : axis.getLabel().trim().equals( "" );
+    final boolean labelEmpty = axis.getLabel() == null ? true : axis.getLabel().trim().equals( "" );
 
     int width = 0;
     final int gap = getGap();
@@ -406,7 +407,10 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
     final Insets labelInsets = getLabelInsets();
 
     // Testutensilien erzeugen
-    final Display dev = Display.getCurrent();
+   
+
+    final Display dev = PlatformUI.getWorkbench().getDisplay();
+//    final Display dev = Display.getCurrent();
     final Image img = new Image( dev, 1, 1 );
     final GC gc = new GC( img );
 
