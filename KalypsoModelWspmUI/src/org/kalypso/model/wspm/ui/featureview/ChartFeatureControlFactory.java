@@ -48,13 +48,13 @@ import java.util.Properties;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swt.SWT;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.swt.SWTUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.ogc.gml.featureview.control.IExtensionsFeatureControlFactory;
 import org.kalypso.ogc.gml.featureview.control.IFeatureControl;
-import org.kalypso.util.swt.SWTUtilities;
 import org.kalypsodeegree.model.feature.Feature;
 
 import de.openali.odysseus.chart.factory.config.ChartConfigurationLoader;

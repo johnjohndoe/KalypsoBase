@@ -67,6 +67,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.SharedScrolledComposite;
 import org.kalypso.commons.command.ICommand;
+import org.kalypso.contribs.eclipse.swt.SWTUtilities;
 import org.kalypso.contribs.eclipse.ui.forms.ToolkitUtils;
 import org.kalypso.core.util.pool.IPoolableObjectType;
 import org.kalypso.core.util.pool.PoolableObjectType;
@@ -88,7 +89,6 @@ import org.kalypso.template.featureview.Featuretemplate;
 import org.kalypso.template.featureview.Featuretemplate.Layer;
 import org.kalypso.template.featureview.FeatureviewType;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
-import org.kalypso.util.swt.SWTUtilities;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 

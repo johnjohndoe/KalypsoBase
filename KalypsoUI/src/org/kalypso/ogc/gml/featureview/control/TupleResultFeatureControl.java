@@ -58,6 +58,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Table;
 import org.kalypso.contribs.eclipse.jface.viewers.DefaultTableViewer;
+import org.kalypso.contribs.eclipse.swt.SWTUtilities;
 import org.kalypso.contribs.eclipse.swt.custom.ExcelTableCursor;
 import org.kalypso.contribs.eclipse.swt.custom.ExcelTableCursor.ADVANCE_MODE;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -78,7 +79,6 @@ import org.kalypso.template.featureview.ColumnDescriptor;
 import org.kalypso.template.featureview.Toolbar;
 import org.kalypso.template.featureview.Toolbar.MenuContribution;
 import org.kalypso.ui.KalypsoUIExtensions;
-import org.kalypso.util.swt.SWTUtilities;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 

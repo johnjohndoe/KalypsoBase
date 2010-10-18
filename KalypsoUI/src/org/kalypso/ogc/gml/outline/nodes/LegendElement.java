@@ -44,7 +44,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
-import org.kalypso.util.swt.SWTUtilities;
+import org.kalypso.contribs.eclipse.swt.SWTUtilities;
 
 /**
  * This class wraps an object for the legend graphic.
