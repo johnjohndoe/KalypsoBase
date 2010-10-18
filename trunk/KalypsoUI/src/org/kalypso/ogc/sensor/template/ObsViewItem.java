@@ -126,7 +126,7 @@ public abstract class ObsViewItem implements IObsProviderListener, IObservationL
    * @see org.kalypso.ogc.sensor.template.IObsProviderListener#obsProviderChanged()
    */
   @Override
-  public void obsProviderChanged( )
+  public void observationLoadedEvent( )
   {
     if( m_observation != null )
       m_observation.removeListener( this );
