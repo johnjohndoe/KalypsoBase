@@ -94,7 +94,7 @@ public final class UnpackProjectTemplateOperation extends WorkspaceModifyOperati
   }
 
   @Override
-  public void execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException
+  public void execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException, InterruptedException
   {
     final String newName = m_project.getName();
 
@@ -130,12 +130,16 @@ public final class UnpackProjectTemplateOperation extends WorkspaceModifyOperati
     }
     catch( final CoreException t )
     {
-      if( t.getStatus().matches( IStatus.ERROR ) )
+      final IStatus status = t.getStatus();
+      if( status.matches( IStatus.ERROR | IStatus.CANCEL ) )
       {
         // If anything went wrong, clean up the project
-        progress.setWorkRemaining( 10 );
-        m_project.delete( true, progress );
+        // We use new monitor, else delete will not work if the monitor is already cancelled.
+        m_project.delete( true, new NullProgressMonitor() );
       }
+
+      if( status.matches( IStatus.CANCEL ) )
+        throw new InterruptedException( "Abbruch durch Benutzer" );
 
       throw t;
     }
