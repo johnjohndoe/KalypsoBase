@@ -90,7 +90,7 @@ public class StatusCollector implements IStatusCollector
   @Override
   public void addError( final String msgFormat, final Throwable exception, final Object... formatParameters )
   {
-    addStatus( IStatus.ERROR, msgFormat, null, formatParameters );
+    addStatus( IStatus.ERROR, msgFormat, exception, formatParameters );
   }
 
   @Override
