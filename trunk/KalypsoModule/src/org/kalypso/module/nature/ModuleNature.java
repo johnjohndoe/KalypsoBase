@@ -40,18 +40,19 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.module.nature;
 
+import java.io.File;
+
 import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IProjectNature;
-import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.kalypso.module.internal.Module;
-import org.osgi.service.prefs.BackingStoreException;
+import org.kalypso.module.internal.nature.ModuleFilePreferences;
+import org.kalypso.module.internal.nature.ModulePreferences;
 
 /**
  * @author Gernot Belger
@@ -60,11 +61,9 @@ public class ModuleNature implements IProjectNature
 {
   public final static String ID = Module.PLUGIN_ID + ".ModuleNature"; //$NON-NLS-1$
 
-  private final String PREFERENCE_MODULE = "module";
-
-  private final String PREFERENCE_VERSION = "version";
-
   private IProject m_project;
+
+  private ModulePreferences m_preferences;
 
   /**
    * @see org.eclipse.core.resources.IProjectNature#configure()
@@ -99,7 +98,9 @@ public class ModuleNature implements IProjectNature
   @Override
   public void setProject( final IProject project )
   {
-    this.m_project = project;
+    m_project = project;
+
+    m_preferences = new ModulePreferences( this );
   }
 
   public static final ModuleNature toThisNature( final IProject project )
@@ -114,15 +115,6 @@ public class ModuleNature implements IProjectNature
       Module.getDefault().getLog().log( e.getStatus() );
       return null;
     }
-  }
-
-  /**
-   * Returns the nature specific project preferences.
-   */
-  public IEclipsePreferences getPreferences( )
-  {
-    final ProjectScope projectScope = new ProjectScope( getProject() );
-    return projectScope.getNode( ID );
   }
 
   /**
@@ -163,7 +155,7 @@ public class ModuleNature implements IProjectNature
     /* Set moduleID or check if the existing id is the same */
     final String projectModuleID = getModule();
     if( projectModuleID == null )
-      writePreference( PREFERENCE_MODULE, moduleID );
+      getPreferences().setModule( moduleID );
     else
     {
       if( !projectModuleID.equals( moduleID ) )
@@ -175,41 +167,50 @@ public class ModuleNature implements IProjectNature
     }
   }
 
-  private void writePreference( final String key, final String value )
-  {
-    try
-    {
-      final IEclipsePreferences preferences = getPreferences();
-      preferences.put( key, value );
-      preferences.flush();
-    }
-    catch( final BackingStoreException e )
-    {
-      final IStatus status = new Status( IStatus.ERROR, Module.PLUGIN_ID, "Failed to write preferences", e );
-      Module.getDefault().getLog().log( status );
-    }
-  }
-
   // FIXME: change to IKalypsoModule later
   /**
    * Returns the module id of this project.
    */
   public String getModule( )
   {
-    final IEclipsePreferences preferences = getPreferences();
-    return preferences.get( PREFERENCE_MODULE, null );
+    return getPreferences().getModule();
+  }
+
+  public IModulePreferences getPreferences( )
+  {
+    return m_preferences;
   }
 
   /**
-   * Returns the project version of this project.
-   * 
-   * @param May
-   *          be <code>null</code>, if the version is not known.
+   * Returns module preferences for a project in the local file system.<br/>
    */
-  public String getVersion( )
+  public static IModulePreferences getPreferences( final File projectDir )
   {
-    final IEclipsePreferences preferences = getPreferences();
-    return preferences.get( PREFERENCE_VERSION, null );
+    return new ModuleFilePreferences( projectDir );
   }
+
+// /**
+// * For backwards compatibility: let module decide, we ask each module if this project belongs to it.
+// *
+// * @return <code>null</code>, if no module accepts the gien project.
+// */
+// public static IKalypsoModule findModule( final IProject project )
+// {
+// final IKalypsoModule[] kalypsoModules = ModuleExtensions.getKalypsoModules();
+// for( final IKalypsoModule module : kalypsoModules )
+// {
+// try
+// {
+// if( module.acceptProject( project ) )
+// return module;
+// }
+// catch( final CoreException e )
+// {
+// Module.getDefault().getLog().log( e.getStatus() );
+// }
+// }
+//
+// return null;
+// }
 
 }
