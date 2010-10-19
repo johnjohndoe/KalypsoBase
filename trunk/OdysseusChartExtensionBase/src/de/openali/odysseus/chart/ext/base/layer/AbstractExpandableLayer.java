@@ -72,7 +72,7 @@ public abstract class AbstractExpandableLayer extends AbstractChartLayer impleme
     try
     {
       gc.setForeground( col );
-      Rectangle clipping = gc.getClipping();
+      final Rectangle clipping = gc.getClipping();
       gc.setLineWidth( 1 );
       gc.drawRectangle( clipping.x, clipping.y, clipping.width - 1, clipping.height - 1 );
       gc.setClipping( clipping.x + 1, clipping.y + 1, clipping.width - 2, clipping.height - 2 );
@@ -167,7 +167,7 @@ public abstract class AbstractExpandableLayer extends AbstractChartLayer impleme
   }
 
   @Override
-  public final void setCoordinateMapper( ICoordinateMapper coordinateMapper )
+  public final void setCoordinateMapper( final ICoordinateMapper coordinateMapper )
   {
     super.setCoordinateMapper( coordinateMapper );
     for( final IChartLayer layer : getLayerManager().getLayers() )
