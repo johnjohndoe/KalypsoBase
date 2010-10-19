@@ -25,7 +25,7 @@ public class TextStyle extends AbstractStyle implements ITextStyle
 
   private FONTWEIGHT m_weight;
 
-  public TextStyle( int height, String family, RGB rgbText, RGB rgbFill, FONTSTYLE style, FONTWEIGHT weight, int alpha, boolean isVisible )
+  public TextStyle( final int height, final String family, final RGB rgbText, final RGB rgbFill, final FONTSTYLE style, final FONTWEIGHT weight, final int alpha, final boolean isVisible )
   {
     setFamily( family );
     setHeight( height );
@@ -44,7 +44,7 @@ public class TextStyle extends AbstractStyle implements ITextStyle
    * .style.IStyleConstants.FONTWEIGHT)
    */
   @Override
-  public void setWeight( FONTWEIGHT weight )
+  public void setWeight( final FONTWEIGHT weight )
   {
     m_weight = weight;
   }
@@ -54,7 +54,7 @@ public class TextStyle extends AbstractStyle implements ITextStyle
    * @see de.openali.odysseus.chart.framework.impl.model.style.ITextStyle#setFillColor(org.eclipse.swt.graphics.RGB)
    */
   @Override
-  public void setFillColor( RGB rgbFill )
+  public void setFillColor( final RGB rgbFill )
   {
     m_fillRGB = rgbFill;
   }
@@ -66,7 +66,7 @@ public class TextStyle extends AbstractStyle implements ITextStyle
    * .style.IStyleConstants.FONTSTYLE)
    */
   @Override
-  public void setFontStyle( FONTSTYLE style )
+  public void setFontStyle( final FONTSTYLE style )
   {
     m_style = style;
   }
@@ -76,7 +76,7 @@ public class TextStyle extends AbstractStyle implements ITextStyle
    * @see de.openali.odysseus.chart.framework.impl.model.style.ITextStyle#setTextColor(org.eclipse.swt.graphics.RGB)
    */
   @Override
-  public void setTextColor( RGB rgbText )
+  public void setTextColor( final RGB rgbText )
   {
     m_textRGB = rgbText;
   }
@@ -86,7 +86,7 @@ public class TextStyle extends AbstractStyle implements ITextStyle
    * @see de.openali.odysseus.chart.framework.impl.model.style.ITextStyle#setFamily(java.lang.String)
    */
   @Override
-  public void setFamily( String family )
+  public void setFamily( final String family )
   {
     m_family = family;
   }
@@ -96,24 +96,20 @@ public class TextStyle extends AbstractStyle implements ITextStyle
    * @see de.openali.odysseus.chart.framework.impl.model.style.ITextStyle#setHeight(int)
    */
   @Override
-  public void setHeight( int size )
+  public void setHeight( final int size )
   {
     m_size = size;
   }
 
   @Override
-  public void apply( GC gc )
+  public void apply( final GC gc )
   {
-    FontData fd = new FontData( m_family, m_size, m_style.toSWT() | m_weight.toSWT() );
-
-    Font font = OdysseusChartFrameworkPlugin.getDefault().getFontRegistry().getResource( gc.getDevice(), fd );
+    final FontData fd = new FontData( m_family, m_size, m_style.toSWT() | m_weight.toSWT() );
+    final Font font = OdysseusChartFrameworkPlugin.getDefault().getFontRegistry().getResource( gc.getDevice(), fd );
 
     gc.setFont( font );
-
     gc.setBackground( OdysseusChartFrameworkPlugin.getDefault().getColorRegistry().getResource( gc.getDevice(), m_fillRGB ) );
-
     gc.setForeground( OdysseusChartFrameworkPlugin.getDefault().getColorRegistry().getResource( gc.getDevice(), m_textRGB ) );
-
   }
 
   @Deprecated

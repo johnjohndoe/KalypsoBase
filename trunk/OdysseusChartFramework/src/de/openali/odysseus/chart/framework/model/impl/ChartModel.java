@@ -21,7 +21,9 @@ import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATI
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
 import de.openali.odysseus.chart.framework.model.mapper.registry.impl.MapperRegistry;
+import de.openali.odysseus.chart.framework.model.style.ITextStyle;
 import de.openali.odysseus.chart.framework.util.ChartUtilities;
+import de.openali.odysseus.chart.framework.util.StyleUtils;
 
 public class ChartModel implements IChartModel
 {
@@ -44,6 +46,8 @@ public class ChartModel implements IChartModel
   private String m_title = "";
 
   private String m_description = "";
+
+  private ITextStyle m_textStyle = StyleUtils.getDefaultTextStyle();
 
   public ChartModel( )
   {
@@ -614,4 +618,13 @@ public class ChartModel implements IChartModel
     }
   }
 
+  public ITextStyle getTextStyle( )
+  {
+    return m_textStyle;
+  }
+
+  public void setTextStyle( final ITextStyle textStyle )
+  {
+    m_textStyle = textStyle;
+  }
 }

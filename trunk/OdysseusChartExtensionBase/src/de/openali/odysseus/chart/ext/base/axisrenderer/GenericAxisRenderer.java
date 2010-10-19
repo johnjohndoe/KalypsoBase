@@ -307,7 +307,6 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
     if( axis.getLabel() != null )
     {
       final Point textExtent = getTextExtent( gc, axis.getLabel(), getLabelStyle() );
-
       final Point tickLabelExtent = calcTickLabelSize( gc, axis );
 
       int x = 0;
@@ -349,19 +348,21 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
             x += lineWidth + tickLength + tickLabelExtent.x + labelInsets.bottom + textExtent.y;
             y -= textExtent.x / 2;
           }
+
           tr.translate( x, y );
           tr.rotate( rotation );
           tr.translate( -x, -y );
-
         }
         if( tr != null )
           gc.setTransform( tr );
+
         drawText( gc, axis.getLabel(), x, y, getLabelStyle() );
       }
       finally
       {
         if( tr != null )
           tr.dispose();
+
         gc.setTransform( null );
       }
     }
@@ -407,10 +408,9 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
     final Insets labelInsets = getLabelInsets();
 
     // Testutensilien erzeugen
-   
 
     final Display dev = PlatformUI.getWorkbench().getDisplay();
-//    final Display dev = Display.getCurrent();
+// final Display dev = Display.getCurrent();
     final Image img = new Image( dev, 1, 1 );
     final GC gc = new GC( img );
 
