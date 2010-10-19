@@ -1,0 +1,134 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- Schema file written by PDE -->
+<schema targetNamespace="org.kalypso.module" xmlns="http://www.w3.org/2001/XMLSchema">
+<annotation>
+      <appinfo>
+         <meta.schema plugin="org.kalypso.module" id="conversion" name="conversion"/>
+      </appinfo>
+      <documentation>
+         This extension-point allows to register project converters. A project convertter converts a project of an older Kalypso version to the current Kalypso version.
+
+The project conversion mechanism relies on the Kalypso module i.e. for different modules exist different project converters.
+      </documentation>
+   </annotation>
+
+   <element name="extension">
+      <annotation>
+         <appinfo>
+            <meta.element />
+         </appinfo>
+      </annotation>
+      <complexType>
+         <sequence>
+            <element ref="projectconversion" minOccurs="1" maxOccurs="unbounded"/>
+         </sequence>
+         <attribute name="point" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="id" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appinfo>
+                  <meta.attribute translatable="true"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="projectconversion">
+      <complexType>
+         <attribute name="module" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The id of the module, this converter is used on. If defined, this converter can only be used for projects with this module id.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="class" type="string" use="required">
+            <annotation>
+               <documentation>
+                  Must implements org.kalypso.module.conversion.IProjectConverterFactory.
+               </documentation>
+               <appinfo>
+                  <meta.attribute kind="java" basedOn=":org.kalypso.module.conversion.IProjectConverterFactory"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <annotation>
+      <appinfo>
+         <meta.section type="since"/>
+      </appinfo>
+      <documentation>
+         Kalypso 2.3
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appinfo>
+         <meta.section type="examples"/>
+      </appinfo>
+      <documentation>
+         [Enter extension point usage example here.]
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appinfo>
+         <meta.section type="apiinfo"/>
+      </appinfo>
+      <documentation>
+         IProjectConverterFactory
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appinfo>
+         <meta.section type="implementation"/>
+      </appinfo>
+      <documentation>
+         [Enter information about supplied implementation of this extension point.]
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appinfo>
+         <meta.section type="copyright"/>
+      </appinfo>
+      <documentation>
+          Copyright (c) 2010 by
+   
+     Björnsen Beratende Ingenieure GmbH, Koblenz, Germany (Bjoernsen Consulting Engineers), http://www.bjoernsen.de
+     Technische Universität Hamburg-Harburg, Institut für Wasserbau, Hamburg, Germany
+     (Technical University Hamburg-Harburg, Institute of River and Coastal Engineering), http://www.tu-harburg.de/wb/
+   
+     Kalypso is free software: you can redistribute it and/or modify it under the terms  
+     of the GNU Lesser General Public License (LGPL) as published by the Free Software 
+     Foundation, either version 3 of the License, or (at your option) any later version.
+   
+     Kalypso is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied 
+     warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+   
+     You should have received a copy of the GNU Lesser General Public
+     License along with Kalypso.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+
+      </documentation>
+   </annotation>
+
+</schema>
