@@ -67,7 +67,7 @@ public class ProjectConversionOperation extends AbstractLoggingOperation
    * @see org.kalypso.ui.rrm.wizards.conversion.AbstractLoggingOperation#doExecute(org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  protected void doExecute( final IProgressMonitor monitor ) throws Throwable
+  protected void doExecute( final IProgressMonitor monitor ) throws Exception
   {
     final String taskName = String.format( "Converting project '%s'", m_project.getName() );
     monitor.beginTask( taskName, m_converters.length + 1 );

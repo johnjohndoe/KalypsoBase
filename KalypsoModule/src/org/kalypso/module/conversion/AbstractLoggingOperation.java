@@ -102,5 +102,5 @@ public abstract class AbstractLoggingOperation implements ILoggingOperation
     return m_log.asMultiStatus( msg );
   }
 
-  protected abstract void doExecute( final IProgressMonitor monitor ) throws Throwable;
+  protected abstract void doExecute( final IProgressMonitor monitor ) throws Exception;
 }

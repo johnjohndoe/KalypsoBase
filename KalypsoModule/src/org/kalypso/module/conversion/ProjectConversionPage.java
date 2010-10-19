@@ -187,6 +187,9 @@ public class ProjectConversionPage extends WizardPage
 
   public IProjectConverterFactory[] getConverters( )
   {
+    // FIXME: choose converter depending on project version
+    // FIXME: let user choose, which converter to use
+
     return ProjectConverterExtensions.getProjectConverter( m_moduleID );
   }
 }
