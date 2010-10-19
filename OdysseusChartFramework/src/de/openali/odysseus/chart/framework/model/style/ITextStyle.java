@@ -7,32 +7,30 @@ import de.openali.odysseus.chart.framework.model.style.IStyleConstants.FONTWEIGH
 
 public interface ITextStyle extends IStyle
 {
+  void setWeight( FONTWEIGHT weight );
 
-  public void setWeight( FONTWEIGHT weight );
+  void setFillColor( RGB rgbFill );
 
-  public void setFillColor( RGB rgbFill );
+  void setFontStyle( FONTSTYLE style );
 
-  public void setFontStyle( FONTSTYLE style );
+  void setTextColor( RGB rgbText );
 
-  public void setTextColor( RGB rgbText );
+  void setFamily( String family );
 
-  public void setFamily( String family );
-
-  public void setHeight( int size );
+  void setHeight( int size );
 
   @Override
-  public ITextStyle copy( );
+  ITextStyle copy( );
 
-  public FONTWEIGHT getWeight( );
+  FONTWEIGHT getWeight( );
 
-  public FONTSTYLE getFontStyle( );
+  FONTSTYLE getFontStyle( );
 
-  public RGB getFillColor( );
+  RGB getFillColor( );
 
-  public RGB getTextColor( );
+  RGB getTextColor( );
 
-  public String getFamily( );
+  String getFamily( );
 
-  public int getHeight( );
-
+  int getHeight( );
 }

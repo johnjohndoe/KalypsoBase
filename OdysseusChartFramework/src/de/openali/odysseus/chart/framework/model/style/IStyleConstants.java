@@ -65,8 +65,8 @@ public interface IStyleConstants
 
   public enum FONTWEIGHT implements ISWTable
   {
-    NORMAL(SWT.NORMAL),
-    BOLD(SWT.BOLD);
+    BOLD(SWT.BOLD),
+    NORMAL(SWT.NORMAL);
 
     private final int m_swtValue;
 

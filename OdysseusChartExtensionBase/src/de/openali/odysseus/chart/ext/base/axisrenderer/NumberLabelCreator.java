@@ -54,7 +54,7 @@ public class NumberLabelCreator implements ILabelCreator
 
   private final String m_formatString;
 
-  public NumberLabelCreator( String formatString )
+  public NumberLabelCreator( final String formatString )
   {
     m_formatString = formatString;
   }
@@ -64,13 +64,13 @@ public class NumberLabelCreator implements ILabelCreator
    *      org.kalypso.chart.framework.model.data.IDataRange)
    */
   @Override
-  public String getLabel( Number value, IDataRange<Number> range )
+  public String getLabel( final Number value, final IDataRange<Number> range )
   {
     if( value == null )
       return "";
     if( m_formatString.equals( "%s" ) )
     {
-      Format format = getFormat( range );
+      final Format format = getFormat( range );
       return format == null ? null : format.format( value );
     }
     else
@@ -81,7 +81,7 @@ public class NumberLabelCreator implements ILabelCreator
 
   public Format getFormat( final IDataRange<Number> range )
   {
-    Number min = range.getMin();
+    final Number min = range.getMin();
     if( min == null )
       return null;
     // FIXME while runs into endlos loop
@@ -90,7 +90,7 @@ public class NumberLabelCreator implements ILabelCreator
 // min = 0.0;
 // }
 
-    Number max = range.getMax();
+    final Number max = range.getMax();
     if( max == null )
       return null;
     // FIXME while runs into endlos loop

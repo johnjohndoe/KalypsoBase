@@ -59,7 +59,7 @@ public class ChartUtilities
   /**
    * finds the smallest and biggest value of all ranges and creates a new DataRange with these values
    */
-  public static IDataRange<Number> mergeDataRanges( IDataRange<Number>[] ranges )
+  public static IDataRange<Number> mergeDataRanges( final IDataRange<Number>[] ranges )
   {
 
     // if there are no input ranges, we return null
@@ -75,13 +75,13 @@ public class ChartUtilities
     {
       try
       {
-        double eltMin = element.getMin().doubleValue();
-        double eltMax = element.getMax().doubleValue();
+        final double eltMin = element.getMin().doubleValue();
+        final double eltMax = element.getMax().doubleValue();
 
         min = Math.min( min, eltMin );
         max = Math.max( max, eltMax );
       }
-      catch( ClassCastException e )
+      catch( final ClassCastException e )
       {
         System.out.println();
       }
@@ -93,7 +93,7 @@ public class ChartUtilities
   /**
    * determines screen values describing the minimal and maximal values concerning a dragged rectangle
    */
-  public static IDataRange<Integer> rectangleToAxisSection( IAxis axis, Rectangle rect )
+  public static IDataRange<Integer> rectangleToAxisSection( final IAxis axis, final Rectangle rect )
   {
     int min;
     int max;
