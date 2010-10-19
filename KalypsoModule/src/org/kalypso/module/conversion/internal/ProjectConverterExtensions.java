@@ -73,7 +73,7 @@ public final class ProjectConverterExtensions
     throw new UnsupportedOperationException( "Helper class, do not instantiate." ); //$NON-NLS-1$
   }
 
-  public IProjectConverterFactory[] getProjectConverter( final String moduleID )
+  public static IProjectConverterFactory[] getProjectConverter( final String moduleID )
   {
     final Collection<IProjectConverterFactory> factories = new ArrayList<IProjectConverterFactory>();
 
