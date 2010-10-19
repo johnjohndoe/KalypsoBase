@@ -8,19 +8,19 @@ import de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListene
  */
 public interface ILayerManager extends IEventProvider<ILayerManagerEventListener>
 {
-  public void addLayer( IChartLayer layer );
+  void addLayer( IChartLayer layer );
 
-  public void addLayer( IChartLayer layer, int position );
+  void addLayer( IChartLayer layer, int position );
 
-  public int getLayerPosition( IChartLayer layer );
+  int getLayerPosition( IChartLayer layer );
 
-  public void removeLayer( IChartLayer layer );
+  void removeLayer( IChartLayer layer );
 
   /**
    * Hiermit wird der Befehl zum Schliessen des LayerManagers erteilt; in der Implementation sollen alle selbst
    * erzeugten Resourcen geschlossen werden
    */
-  public void clear( );
+  void clear( );
 
   /**
    * Gibt eine Liste aller vorhandenen Layer zurück. Die List ist geordnet in der Reihenfolge, in der die Layer
@@ -28,18 +28,18 @@ public interface ILayerManager extends IEventProvider<ILayerManagerEventListener
    * 
    * @return
    */
-  public IChartLayer[] getLayers( );
+  IChartLayer[] getLayers( );
 
-  public void moveLayerToPosition( IChartLayer layer, int position );
+  void moveLayerToPosition( IChartLayer layer, int position );
 
-  public IChartLayer getLayerById( String id );
+  IChartLayer getLayerById( String id );
 
-  public int getSize( );
+  int getSize( );
 
   /**
    * returns only layers which are editable (
    */
-  public IEditableChartLayer[] getEditableLayers( );
+  IEditableChartLayer[] getEditableLayers( );
 
-  public ITooltipChartLayer[] getTooltipLayers( );
+  ITooltipChartLayer[] getTooltipLayers( );
 }

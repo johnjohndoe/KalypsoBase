@@ -159,7 +159,7 @@ public abstract class AbstractChartLayer implements IChartLayer
    * @see org.kalypso.chart.framework.model.layer.IChartLayer#setData()
    */
   @Override
-  public void setData( String id, Object data )
+  public void setData( final String id, final Object data )
   {
     m_data.put( id, data );
   }
@@ -168,19 +168,19 @@ public abstract class AbstractChartLayer implements IChartLayer
    * @see org.kalypso.chart.framework.model.layer.IChartLayer#getData()
    */
   @Override
-  public Object getData( String id )
+  public Object getData( final String id )
   {
     return m_data.get( id );
   }
 
   @Override
-  public void addListener( ILayerEventListener l )
+  public void addListener( final ILayerEventListener l )
   {
     m_handler.addListener( l );
   }
 
   @Override
-  public void removeListener( ILayerEventListener l )
+  public void removeListener( final ILayerEventListener l )
   {
     m_handler.removeListener( l );
   }
@@ -191,7 +191,7 @@ public abstract class AbstractChartLayer implements IChartLayer
   }
 
   @Override
-  public void setCoordinateMapper( ICoordinateMapper coordinateMapper )
+  public void setCoordinateMapper( final ICoordinateMapper coordinateMapper )
   {
     m_coordinateMapper = coordinateMapper;
   }
@@ -223,12 +223,12 @@ public abstract class AbstractChartLayer implements IChartLayer
     return m_legendEntries;
   }
 
-  public void addMapper( String role, IRetinalMapper mapper )
+  public void addMapper( final String role, final IRetinalMapper mapper )
   {
     m_mapperMap.put( role, mapper );
   }
 
-  protected IRetinalMapper getMapper( String role )
+  protected IRetinalMapper getMapper( final String role )
   {
     return m_mapperMap.get( role );
   }

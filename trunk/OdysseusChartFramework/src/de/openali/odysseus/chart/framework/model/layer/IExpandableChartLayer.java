@@ -53,5 +53,5 @@ public interface IExpandableChartLayer extends IChartLayer
   /**
    * @return the layermanager for all childLayers
    */
-  public ILayerManager getLayerManager( );
+  ILayerManager getLayerManager( );
 }
