@@ -149,8 +149,8 @@ public class KalypsoProjectDatabaseClient extends AbstractUIPlugin
     // fill binding map
     if( KALYPSO_MODULES == null )
     {
-
       KALYPSO_MODULES = new ArrayList<IKalypsoModule>();
+
       /* get extension points */
       final IExtensionRegistry registry = Platform.getExtensionRegistry();
       final IConfigurationElement[] elements = registry.getConfigurationElementsFor( IKalypsoModule.EXTENSION_POINT_ID );
