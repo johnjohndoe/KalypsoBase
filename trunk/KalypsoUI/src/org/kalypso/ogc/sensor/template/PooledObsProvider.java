@@ -40,8 +40,8 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.template;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.core.KalypsoCorePlugin;
@@ -60,7 +60,7 @@ public final class PooledObsProvider implements IObsProvider, IPoolListener
 {
   private boolean m_isDisposed = false;
 
-  private final List<IObsProviderListener> m_listeners = new ArrayList<IObsProviderListener>();
+  private final Set<IObsProviderListener> m_listeners = new HashSet<IObsProviderListener>();
 
   private final ResourcePool m_pool = KalypsoCorePlugin.getDefault().getPool();
 
