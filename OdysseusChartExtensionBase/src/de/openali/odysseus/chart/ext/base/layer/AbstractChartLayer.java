@@ -31,7 +31,7 @@ public abstract class AbstractChartLayer implements IChartLayer
   private final LayerEventHandler m_handler = new LayerEventHandler();
 
   /**
-   * Hashmap to store arbitrary key value pairs
+   * hash map to store arbitrary key value pairs
    */
   private final HashMap<String, Object> m_data = new HashMap<String, Object>();
 
