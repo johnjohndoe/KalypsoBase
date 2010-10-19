@@ -125,7 +125,6 @@ public class NativeObservationDVWKAdapter implements INativeObservationAdapter
 
   private ITupleModel createTuppelModel( final File source, final IAxis[] axis, boolean continueWithErrors ) throws IOException
   {
-
     int numberOfErrors = 0;
 
     final StringBuffer errorBuffer = new StringBuffer();

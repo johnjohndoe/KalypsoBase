@@ -362,18 +362,20 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
 
   File chooseFileZML( final File selectedFile )
   {
-    final FileDialog dialog = new FileDialog( getShell(), SWT.SINGLE );
+    final FileDialog dialog = new FileDialog( getShell(), SWT.SINGLE | SWT.SAVE );
+    dialog.setOverwrite( true );
     dialog.setFilterExtensions( new String[] { "*.zml" } ); //$NON-NLS-1$
     if( selectedFile != null )
     {
       dialog.setFileName( selectedFile.getName() );
       dialog.setFilterPath( selectedFile.getParent() );
     }
-    if( dialog.open() == null )
+
+    final String selectedPath = dialog.open();
+    if( selectedPath == null )
       return null;
-    final String fileName = dialog.getFileName();
-    final String filterPath = dialog.getFilterPath();
-    return new File( filterPath, fileName );
+
+    return new File( selectedPath );
   }
 
   /**
@@ -386,7 +388,7 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
     setPageComplete( true );
     final StringBuffer error = new StringBuffer();
     if( m_sourceFile != null )
-      m_textFileSource.setText( m_sourceFile.getName() );
+      m_textFileSource.setText( m_sourceFile.getAbsolutePath() );
     else
     {
       m_textFileSource.setText( DEFAUL_FILE_LABEL );
@@ -397,7 +399,7 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
     m_buttonRetainMeta.setEnabled( false );
     if( m_targetFile != null )
     {
-      m_textFileTarget.setText( m_targetFile.getName() );
+      m_textFileTarget.setText( m_targetFile.getAbsolutePath() );
       if( m_targetFile.exists() )
       {
         m_buttonAppend.setEnabled( true );
@@ -455,14 +457,9 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
   @Override
   public void focusLost( final FocusEvent e )
   {
-    if( m_sourceFile != null && !m_sourceFile.getName().equals( m_textFileSource.getText() ) )
-    {
-      m_sourceFile = new File( m_sourceFile.getParentFile(), m_textFileSource.getText() );
-    }
-    if( m_targetFile != null && !m_targetFile.getName().equals( m_textFileTarget.getText() ) )
-    {
-      m_targetFile = new File( m_targetFile.getParentFile(), m_textFileTarget.getText() );
-    }
+    m_sourceFile = new File( m_textFileSource.getText() );
+    m_targetFile = new File( m_textFileTarget.getText() );
+
     validate();
   }
 
@@ -491,14 +488,8 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
   {
     final IStructuredSelection formatSelection = (IStructuredSelection) m_formatCombo.getSelection();
     if( !m_controlFinished )
-      return new ISelection()
-      {
-        @Override
-        public boolean isEmpty( )
-        {
-          return true;
-        }
-      };
+      return StructuredSelection.EMPTY;
+
     return new ObservationImportSelection( m_sourceFile, m_targetFile, (INativeObservationAdapter) formatSelection.getFirstElement(), m_buttonAppend.getSelection(), m_buttonRetainMeta.getSelection() );
   }
 
