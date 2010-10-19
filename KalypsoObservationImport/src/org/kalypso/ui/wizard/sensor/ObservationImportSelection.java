@@ -45,9 +45,12 @@ import org.kalypso.ogc.sensor.adapter.INativeObservationAdapter;
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
+
+/**
+ * @author doemming
+ */
 public class ObservationImportSelection implements ISelection
 {
-
   private final INativeObservationAdapter m_selectedAdapter;
 
   private final File m_fileTarget;
@@ -63,12 +66,8 @@ public class ObservationImportSelection implements ISelection
 
   private final boolean m_retainMetadata;
 
-  /*
-   * 
-   * @author doemming
-   */
-  public ObservationImportSelection( File fileSource, File fileTarget, INativeObservationAdapter adapter,
-      boolean append, boolean retainMetadata )
+  public ObservationImportSelection( final File fileSource, final File fileTarget, final INativeObservationAdapter adapter,
+      final boolean append, final boolean retainMetadata )
   {
     m_fileSource = fileSource;
     m_fileTarget = fileTarget;

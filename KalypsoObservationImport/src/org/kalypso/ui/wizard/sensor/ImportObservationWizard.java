@@ -64,11 +64,11 @@ import org.kalypso.ui.wizard.sensor.i18n.Messages;
 
 public class ImportObservationWizard extends Wizard implements IImportWizard
 {
-  private ImportObservationSelectionWizardPage m_page1 = null;
+  private ImportObservationSelectionWizardPage m_importPage = null;
 
   private IStructuredSelection m_selection;
 
-  private ImportObservationAxisMappingWizardPage m_page2;
+  private ImportObservationAxisMappingWizardPage m_axisMappingPage;
 
   public ImportObservationWizard( )
   {
@@ -100,14 +100,15 @@ public class ImportObservationWizard extends Wizard implements IImportWizard
   public void addPages( )
   {
     super.addPages();
-    m_page2 = new ImportObservationAxisMappingWizardPage( Messages.getString( "org.kalypso.ui.wizard.sensor.ImportObservationWizard.2" ) ); //$NON-NLS-1$
 
-    m_page1 = new ImportObservationSelectionWizardPage( Messages.getString( "org.kalypso.ui.wizard.sensor.ImportObservationWizard.3" ) ); //$NON-NLS-1$
-    addPage( m_page1 );
-    addPage( m_page2 );
+    m_importPage = new ImportObservationSelectionWizardPage( Messages.getString( "org.kalypso.ui.wizard.sensor.ImportObservationWizard.3" ) ); //$NON-NLS-1$
+    m_axisMappingPage = new ImportObservationAxisMappingWizardPage( Messages.getString( "org.kalypso.ui.wizard.sensor.ImportObservationWizard.2" ) ); //$NON-NLS-1$
 
-    m_page1.setSelection( m_selection );
-    m_page1.addSelectionChangedListener( m_page2 );
+    addPage( m_importPage );
+    addPage( m_axisMappingPage );
+
+    m_importPage.setSelection( m_selection );
+    m_importPage.addSelectionChangedListener( m_axisMappingPage );
   }
 
   /**
@@ -127,14 +128,14 @@ public class ImportObservationWizard extends Wizard implements IImportWizard
   {
     try
     {
-      final ObservationImportSelection selection = (ObservationImportSelection) m_page1.getSelection();
+      final ObservationImportSelection selection = (ObservationImportSelection) m_importPage.getSelection();
       final File fileSource = selection.getFileSource();
       final File fileTarget = selection.getFileTarget();
       final INativeObservationAdapter nativaAdapter = selection.getNativeAdapter();
       final IObservation srcObservation = nativaAdapter.createObservationFromSource( fileSource );
 
-      final IAxis[] axesSrc = m_page2.getAxisMappingSrc();
-      final IAxis[] axesNew = m_page2.getAxisMappingTarget();
+      final IAxis[] axesSrc = m_axisMappingPage.getAxisMappingSrc();
+      final IAxis[] axesNew = m_axisMappingPage.getAxisMappingTarget();
 
       final ITupleModel tuppelModelSrc = srcObservation.getValues( null );
       final int countSrc = tuppelModelSrc.size();
@@ -144,7 +145,7 @@ public class ImportObservationWizard extends Wizard implements IImportWizard
       final int countTarget;
       if( fileTarget.exists() && (selection.isAppend() || selection.isRetainMetadata()) )
       {
-        targetObservation = m_page2.getTargetObservation( fileTarget.toURI().toURL() );
+        targetObservation = m_axisMappingPage.getTargetObservation( fileTarget.toURI().toURL() );
         tuppelModelTarget = targetObservation.getValues( null );
         if( selection.isAppend() )
           countTarget = tuppelModelTarget.size();

@@ -5,10 +5,11 @@
      <extension
          point="org.eclipse.ui.importWizards">
       <wizard
-            icon="icons/sample.gif"
+            category="org.kalypso.ui.importwizards.kalypso"
             class="org.kalypso.ui.wizard.sensor.ImportObservationWizard"
-            name="%KalypsoNA_UI.wizard1.name"
-            id="KalypsoNA_UI.wizard1"/>
+            icon="icons/sample.gif"
+            id="KalypsoNA_UI.wizard1"
+            name="%KalypsoNA_UI.wizard1.name"/>
    </extension>
 
 </plugin>
