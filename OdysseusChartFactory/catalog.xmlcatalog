@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+	<uri name="ChartConfiguration.xsd" uri="platform:/resource/OdysseusChartFactory/etc/binding/schema/ChartConfiguration.xsd" />
+	<uri name="StyleConfiguration.xsd" uri="platform:/resource/OdysseusChartFactory/etc/binding/schema/StyleConfiguration.xsd" />
+</catalog>
