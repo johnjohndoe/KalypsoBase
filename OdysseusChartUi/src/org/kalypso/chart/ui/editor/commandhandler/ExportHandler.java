@@ -7,8 +7,6 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.ImageLoader;
-import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.kalypso.chart.ui.IChartPart;
@@ -61,10 +59,10 @@ public class ExportHandler extends AbstractHandler
       if( m_filename != null )
       {
 
-        final Rectangle bounds = chart.getBounds();
+       // final Rectangle bounds = chart.getBounds();
         final ImageLoader il = new ImageLoader();
-     //   final ImageData id = ChartImageFactory.createChartImage(chart.getChartModel(), /*Display.getCurrent()*/ bounds.width, bounds.height );
-        final ImageData id = ChartImageFactory.createChartImage(chart, Display.getCurrent(), bounds.width, bounds.height );
+        final ImageData id = ChartImageFactory.createChartImage(chart.getChartModel(),400,200); //Display.getCurrent(), bounds.width, bounds.height );
+      //  final ImageData id = ChartImageFactory.createChartImage(chart, Display.getCurrent(), bounds.width, bounds.height );
         il.data = new ImageData[] { id };
 
         int format = -1;
