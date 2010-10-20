@@ -52,7 +52,7 @@ public class ChartImageFactory
         plotTopLeft.x = plotTopLeft.x + renderer.getAxisWidth( axis );
       }
     }
-    final Point plotWidthHight = new Point( width-plotTopLeft.x, height-plotTopLeft.y );
+    final Point plotWidthHight = new Point( width - plotTopLeft.x, height - plotTopLeft.y );
     for( final IAxis axis : model.getMapperRegistry().getAxesAt( POSITION.BOTTOM ) )
     {
       if( axis.isVisible() )
@@ -74,7 +74,8 @@ public class ChartImageFactory
     final Image bufferImage = new Image( dev, width, height );
 
     final GC buffGc = new GC( bufferImage );
-
+//    final Transform transform = new Transform( dev );
+//    buffGc.setTransform( transform );
     try
     {
       int h = 0;
@@ -85,6 +86,7 @@ public class ChartImageFactory
         {
           ChartUtilities.resetGC( buffGc );
           final IAxisRenderer renderer = axis.getRenderer();
+          axis.setScreenHeight( plotWidthHight.x );
           final int y = renderer.getAxisWidth( axis );
           renderer.paint( buffGc, axis, new Rectangle( plotTopLeft.x, h, plotWidthHight.x, y ) );
           h = h + y;
@@ -97,9 +99,10 @@ public class ChartImageFactory
         if( axis.isVisible() )
         {
           ChartUtilities.resetGC( buffGc );
+          axis.setScreenHeight( plotWidthHight.y );
           final IAxisRenderer renderer = axis.getRenderer();
           final int x = renderer.getAxisWidth( axis );
-          renderer.paint( buffGc, axis, new Rectangle( 0, plotTopLeft.y, x, plotWidthHight.y ) );
+          renderer.paint( buffGc, axis, new Rectangle( w, plotTopLeft.y, x, plotWidthHight.y ) );
           w = w + x;
         }
       }
@@ -111,6 +114,7 @@ public class ChartImageFactory
         {
           ChartUtilities.resetGC( buffGc );
           final IAxisRenderer renderer = axis.getRenderer();
+          axis.setScreenHeight( plotWidthHight.x );
           final int x = renderer.getAxisWidth( axis );
           renderer.paint( buffGc, axis, new Rectangle( plotTopLeft.x, plotTopLeft.y + plotWidthHight.y + b, plotWidthHight.x, x ) );
           b = b + x;
@@ -124,24 +128,32 @@ public class ChartImageFactory
         {
           ChartUtilities.resetGC( buffGc );
           final IAxisRenderer renderer = axis.getRenderer();
+          axis.setScreenHeight( plotWidthHight.y );
           final int x = renderer.getAxisWidth( axis );
           renderer.paint( buffGc, axis, new Rectangle( plotTopLeft.x + plotWidthHight.x + r, plotTopLeft.y, x, plotWidthHight.y ) );
           r = r + x;
         }
       }
-     buffGc.setClipping( new Rectangle( plotTopLeft.x, plotTopLeft.y, plotWidthHight.x+plotTopLeft.x, plotWidthHight.y+plotTopLeft.y ) );
+     // transform.translate( plotTopLeft.x, plotTopLeft.y );
+
+      ChartUtilities.resetGC( buffGc );
+      final Image tmpImg = new Image( dev, plotWidthHight.x, plotWidthHight.y );
+      final GC tmpGc = new GC( tmpImg );
       for( final IChartLayer layer : model.getLayerManager().getLayers() )
       {
         if( layer.isVisible() )
         {
-          ChartUtilities.resetGC( buffGc );
-          layer.paint( buffGc );
+          layer.paint( tmpGc );
         }
       }
+      buffGc.drawImage( tmpImg, plotTopLeft.x, plotTopLeft.y );
+      tmpGc.dispose();
+      tmpImg.dispose();
     }
     finally
     {
       buffGc.dispose();
+   //   transform.dispose();
     }
     return bufferImage.getImageData();
   }
