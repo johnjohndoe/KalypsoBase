@@ -33,7 +33,7 @@ public abstract class AbstractLineLayer extends AbstractChartLayer implements IT
 
   private PolylineFigure m_polylineFigure;
 
-  public AbstractLineLayer( ILineStyle lineStyle, IPointStyle pointStyle )
+  public AbstractLineLayer( final ILineStyle lineStyle, final IPointStyle pointStyle )
   {
     m_lineStyle = lineStyle;
     m_pointStyle = pointStyle;
@@ -42,7 +42,7 @@ public abstract class AbstractLineLayer extends AbstractChartLayer implements IT
   /**
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#drawIcon(org.eclipse.swt.graphics.Image, int, int)
    */
-  public void drawIcon( Image img )
+  public void drawIcon( final Image img )
   {
     final Rectangle bounds = img.getBounds();
     final int height = bounds.height;
@@ -63,17 +63,27 @@ public abstract class AbstractLineLayer extends AbstractChartLayer implements IT
     gc.dispose();
   }
 
-  protected void drawLine( GC gc, List<Point> path )
+  protected void drawLine( final GC gc, final List<Point> path )
   {
-    PolylineFigure lf = getPolylineFigure();
-    lf.setPoints( path.toArray( new Point[] {} ) );
+    drawLine( gc, path.toArray( new Point[] {} ) );
+  }
+
+  protected void drawLine( final GC gc, final Point... paths )
+  {
+    final PolylineFigure lf = getPolylineFigure();
+    lf.setPoints( paths );
     lf.paint( gc );
   }
 
-  protected void drawPoints( GC gc, List<Point> path )
+  protected void drawPoints( final GC gc, final List<Point> path )
   {
-    PointFigure pf = getPointFigure();
-    pf.setPoints( path.toArray( new Point[] {} ) );
+    drawPoints( gc, path.toArray( new Point[] {} ) );
+  }
+
+  protected void drawPoints( final GC gc, final Point... paths )
+  {
+    final PointFigure pf = getPointFigure();
+    pf.setPoints( paths );
     pf.paint( gc );
   }
 
@@ -81,7 +91,7 @@ public abstract class AbstractLineLayer extends AbstractChartLayer implements IT
   {
     if( m_polylineFigure == null )
     {
-      ILineStyle ls = getLineStyle();
+      final ILineStyle ls = getLineStyle();
       m_polylineFigure = new PolylineFigure();
       m_polylineFigure.setStyle( ls );
     }
@@ -99,9 +109,9 @@ public abstract class AbstractLineLayer extends AbstractChartLayer implements IT
   {
     if( m_pointFigure == null )
     {
-      IStyle ps = getPointStyle();
+      final IStyle ps = getPointStyle();
       m_pointFigure = new PointFigure();
-      m_pointFigure.setStyle( (IPointStyle)ps );
+      m_pointFigure.setStyle( (IPointStyle) ps );
     }
     return m_pointFigure;
   }
@@ -121,19 +131,19 @@ public abstract class AbstractLineLayer extends AbstractChartLayer implements IT
   public ILegendEntry[] createLegendEntries( )
   {
 
-    ArrayList<ILegendEntry> entries = new ArrayList<ILegendEntry>();
-    ILineStyle ls = getPolylineFigure().getStyle();
+    final ArrayList<ILegendEntry> entries = new ArrayList<ILegendEntry>();
+    final ILineStyle ls = getPolylineFigure().getStyle();
     if( ls.isVisible() )
     {
 
-      LegendEntry le = new LegendEntry( this, ls.getTitle() )
+      final LegendEntry le = new LegendEntry( this, ls.getTitle() )
       {
 
         @Override
-        public void paintSymbol( GC gc, Point size )
+        public void paintSymbol( final GC gc, final Point size )
         {
-          int sizeX = size.x;
-          int sizeY = size.y;
+          final int sizeX = size.x;
+          final int sizeY = size.y;
 
           final ArrayList<Point> path = new ArrayList<Point>();
           path.add( new Point( 0, sizeX / 2 ) );
@@ -151,14 +161,14 @@ public abstract class AbstractLineLayer extends AbstractChartLayer implements IT
 
     }
 
-    IPointStyle ps = getPointFigure().getStyle();
+    final IPointStyle ps = getPointFigure().getStyle();
     if( ps.isVisible() )
     {
 
-      LegendEntry le = new LegendEntry( this, ps.getTitle() )
+      final LegendEntry le = new LegendEntry( this, ps.getTitle() )
       {
         @Override
-        public void paintSymbol( GC gc, Point size )
+        public void paintSymbol( final GC gc, final Point size )
         {
           final ArrayList<Point> path = new ArrayList<Point>();
 
@@ -182,7 +192,7 @@ public abstract class AbstractLineLayer extends AbstractChartLayer implements IT
    * @see de.openali.odysseus.chart.framework.model.layer.ITooltipChartLayer#getHover(org.eclipse.swt.graphics.Point)
    */
   @Override
-  public EditInfo getHover( Point pos )
+  public EditInfo getHover( final Point pos )
   {
     return null;
   }
