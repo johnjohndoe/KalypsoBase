@@ -56,7 +56,6 @@ public class DefaultTickRasterLayer extends AbstractLineLayer
   /**
    * @see de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer#getId()
    */
-
   private static final String ID = "de.openali.odysseus.chart.ext.base.layer.DefaultTickRasterLayer";
 
   public DefaultTickRasterLayer( final ICoordinateMapper coordinateMapper, final ILineStyle lineStyle )
