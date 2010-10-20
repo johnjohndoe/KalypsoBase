@@ -65,7 +65,6 @@ public abstract class AbstractExpandableLayer extends AbstractChartLayer impleme
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.IExpandableChartLayer#addLayer(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
    */
-
   protected final void drawClippingRect( final GC gc )
   {
     final Color col = new Color( gc.getDevice(), new RGB( 0, 0, 0 ) );
@@ -183,6 +182,26 @@ public abstract class AbstractExpandableLayer extends AbstractChartLayer impleme
     for( final IChartLayer layer : getLayerManager().getLayers() )
       if( layer.isVisible() )
         layer.paint( gc );
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer#isVisible()
+   */
+  @Override
+  public boolean isVisible( )
+  {
+    if( super.isVisible() )
+    {
+      final ILayerManager layerManager = getLayerManager();
+      final IChartLayer[] layers = layerManager.getLayers();
+      for( final IChartLayer layer : layers )
+      {
+        if( layer.isVisible() )
+          return true;
+      }
+    }
+
+    return false;
   }
 
 }

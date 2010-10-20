@@ -44,7 +44,10 @@ public class LayerManager implements ILayerManager
     }
   };
 
-  /** my layers */
+  /**
+   * TODO implement as hash set and overwrite equals() and hash() methods of IChartLayer instances - to prevent multiple
+   * adding of layers with the same id. (see method getLayerById())
+   */
   private final List<IChartLayer> m_layers = new ArrayList<IChartLayer>();
 
   final LayerManagerEventHandler m_handler = new LayerManagerEventHandler();
@@ -57,6 +60,7 @@ public class LayerManager implements ILayerManager
   {
     if( layer == null )
       return;
+
     m_layers.add( layer );
     layer.addListener( m_layerListener );
 
@@ -65,7 +69,7 @@ public class LayerManager implements ILayerManager
 
   /**
    * @see de.openali.odysseus.chart.framework.layer.ILayerManager#removeLayer(de.openali.odysseus.chart.framework.layer.IChartLayer)
-   *      reomves layer from chart
+   *      removes layer from chart
    */
   @Override
   public void removeLayer( final IChartLayer layer )

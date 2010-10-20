@@ -53,7 +53,7 @@ public abstract class AbstractLayerManagerEventListener implements ILayerManager
    * @see de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener#onActivLayerChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
    */
   @Override
-  public void onActivLayerChanged( IChartLayer layer )
+  public void onActivLayerChanged( final IChartLayer layer )
   {
     // not implemented - override in subclass if needed
 
@@ -63,7 +63,7 @@ public abstract class AbstractLayerManagerEventListener implements ILayerManager
    * @see de.openali.odysseus.chart.framework.model.layer.ILayerManagerEventListener#onLayerAdded(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
    */
   @Override
-  public void onLayerAdded( IChartLayer layer )
+  public void onLayerAdded( final IChartLayer layer )
   {
     // not implemented - override in subclass if needed
 
@@ -73,7 +73,7 @@ public abstract class AbstractLayerManagerEventListener implements ILayerManager
    * @see de.openali.odysseus.chart.framework.model.layer.ILayerManagerEventListener#onLayerRemoved(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
    */
   @Override
-  public void onLayerRemoved( IChartLayer layer )
+  public void onLayerRemoved( final IChartLayer layer )
   {
     // not implemented - override in subclass if needed
 
@@ -83,7 +83,7 @@ public abstract class AbstractLayerManagerEventListener implements ILayerManager
    * @see de.openali.odysseus.chart.framework.model.layer.ILayerManagerEventListener#onLayerVisibilityChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
    */
   @Override
-  public void onLayerVisibilityChanged( IChartLayer layer )
+  public void onLayerVisibilityChanged( final IChartLayer layer )
   {
     // not implemented - override in subclass if needed
 
@@ -93,7 +93,7 @@ public abstract class AbstractLayerManagerEventListener implements ILayerManager
    * @see de.openali.odysseus.chart.framework.model.layer.ILayerManagerEventListener#onLayerMoved(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
    */
   @Override
-  public void onLayerMoved( IChartLayer layer )
+  public void onLayerMoved( final IChartLayer layer )
   {
     // not implemented - override in subclass if needed
   }
@@ -102,7 +102,7 @@ public abstract class AbstractLayerManagerEventListener implements ILayerManager
    * @see de.openali.odysseus.chart.framework.model.layer.ILayerManagerEventListener#onLayerContentChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
    */
   @Override
-  public void onLayerContentChanged( IChartLayer layer )
+  public void onLayerContentChanged( final IChartLayer layer )
   {
     // not implemented - override in subclass if needed
   }

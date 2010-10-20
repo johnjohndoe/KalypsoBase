@@ -34,7 +34,7 @@ public class ChartModel implements IChartModel
   // /** axis --> List of layers */
   private final Map<IAxis, List<IChartLayer>> m_axis2Layers = new HashMap<IAxis, List<IChartLayer>>();
 
-  private final ILayerManager m_manager = new LayerManager();
+  private ILayerManager m_manager = null;
 
   /**
    * if set to true, all axes are sized automatically to fit all data into a layer
@@ -100,10 +100,9 @@ public class ChartModel implements IChartModel
       {
         updateAxisLayerMap( layer, false );
       }
-
     };
 
-    m_manager.addListener( layerManager );
+    getLayerManager().addListener( layerManager );
   }
 
   /**
@@ -189,7 +188,7 @@ public class ChartModel implements IChartModel
   public void clear( )
   {
     m_axis2Layers.clear();
-    m_manager.clear();
+    getLayerManager().clear();
     m_mapperRegistry.clear();
   }
 
@@ -237,6 +236,9 @@ public class ChartModel implements IChartModel
   @Override
   public ILayerManager getLayerManager( )
   {
+    if( m_manager == null )
+      m_manager = new LayerManager();
+
     return m_manager;
   }
 
@@ -371,18 +373,23 @@ public class ChartModel implements IChartModel
    * @see org.kalypso.chart.framework.model.IChartModel#setHideUnusedAxes(boolean)
    */
   @Override
-  public void setHideUnusedAxes( final boolean b )
+  public void setHideUnusedAxes( final boolean hide )
   {
-    if( b == m_hideUnusedAxes )
+    if( hide == m_hideUnusedAxes )
       return;
-    m_hideUnusedAxes = b;
 
-    for( final IAxis axis : m_mapperRegistry.getAxes() )
+    m_hideUnusedAxes = hide;
+
+    final IAxis[] axes = m_mapperRegistry.getAxes();
+    synchronized( axes )
     {
-      if( m_hideUnusedAxes )
-        hideUnusedAxis( axis );
-      else
-        axis.setVisible( true );
+      for( final IAxis axis : axes )
+      {
+        if( m_hideUnusedAxes )
+          hideUnusedAxis( axis );
+        else
+          axis.setVisible( true );
+      }
     }
 
   }
@@ -391,11 +398,12 @@ public class ChartModel implements IChartModel
   {
     // if axis has no layers, hide axis
     final List<IChartLayer> list = m_axis2Layers.get( axis );
-    if( list == null )
+    if( list == null || list.isEmpty() )
     {
       axis.setVisible( false );
       return;
     }
+
     // if all layers are hidden, hide axis too
     for( final IChartLayer layer : list )
     {
@@ -405,6 +413,7 @@ public class ChartModel implements IChartModel
         return;
       }
     }
+
     axis.setVisible( false );
   }
 
@@ -429,65 +438,68 @@ public class ChartModel implements IChartModel
   /**
    * adds layers to or removes layers from the chart
    * 
-   * @param bAdding
+   * @param add
    *          if true, the layer will be added; if false, the layer will be removed
    */
-  protected void updateAxisLayerMap( final IChartLayer layer, final boolean bAdding )
+  protected void updateAxisLayerMap( final IChartLayer layer, final boolean add )
   {
-    final ICoordinateMapper cm = layer.getCoordinateMapper();
-    if( cm == null )
+    final ICoordinateMapper mapper = layer.getCoordinateMapper();
+    if( mapper == null )
       return;
-    final IAxis domAxis = cm.getDomainAxis();
-    final IAxis valAxis = cm.getTargetAxis();
-    List<IChartLayer> domList = m_axis2Layers.get( domAxis );
-    List<IChartLayer> valList = m_axis2Layers.get( valAxis );
 
-    if( bAdding )
+    final IAxis domainAxis = mapper.getDomainAxis();
+    final IAxis targetAxis = mapper.getTargetAxis();
+
+    List<IChartLayer> domainList = m_axis2Layers.get( domainAxis );
+    List<IChartLayer> targetList = m_axis2Layers.get( targetAxis );
+
+    if( add )
     {
       // mapping for domain axis
-      if( domList == null )
+      if( domainList == null )
       {
-        domList = new ArrayList<IChartLayer>();
-        final IAxis axis = cm.getDomainAxis();
-        m_axis2Layers.put( axis, domList );
+        domainList = new ArrayList<IChartLayer>();
+        final IAxis axis = mapper.getDomainAxis();
+        m_axis2Layers.put( axis, domainList );
       }
-      domList.add( layer );
+
+      domainList.add( layer );
 
       // mapping for value axis
-      if( valList == null )
+      if( targetList == null )
       {
-        valList = new ArrayList<IChartLayer>();
-        final IAxis axis = cm.getTargetAxis();
-        m_axis2Layers.put( axis, valList );
+        targetList = new ArrayList<IChartLayer>();
+        final IAxis axis = mapper.getTargetAxis();
+        m_axis2Layers.put( axis, targetList );
       }
-      valList.add( layer );
 
+      targetList.add( layer );
     }
     else
     {
       // remove domain mapping
-      if( domList != null )
+      if( domainList != null )
       {
-        domList.remove( layer );
+        domainList.remove( layer );
       }
-
       // remove value mapping
-      if( valList != null )
+      if( targetList != null )
       {
-        valList.remove( layer );
+        targetList.remove( layer );
       }
 
     }
-    if( m_hideUnusedAxes )
+
+    if( isHideUnusedAxes() )
     {
-      domAxis.setVisible( domList.size() > 0 );
-      valAxis.setVisible( valList.size() > 0 );
+      domainAxis.setVisible( domainList.size() > 0 );
+      targetAxis.setVisible( targetList.size() > 0 );
     }
+
     if( m_autoscale )
     {
-      autoscale( new IAxis[] { cm.getDomainAxis(), cm.getTargetAxis() } );
+      autoscale( new IAxis[] { mapper.getDomainAxis(), mapper.getTargetAxis() } );
     }
-
   }
 
   /**
