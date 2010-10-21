@@ -36,7 +36,8 @@ Bundle-ClassPath: .,
  lib/poi-2.6/poi-bin-3.6-20091214/poi-3.6/poi-examples-3.6-20091214.jar,
  lib/poi-2.6/poi-bin-3.6-20091214/poi-3.6/poi-ooxml-3.6-20091214.jar,
  lib/poi-2.6/poi-bin-3.6-20091214/poi-3.6/poi-ooxml-schemas-3.6-20091214.jar,
- lib/poi-2.6/poi-bin-3.6-20091214/poi-3.6/poi-scratchpad-3.6-20091214.jar
+ lib/poi-2.6/poi-bin-3.6-20091214/poi-3.6/poi-scratchpad-3.6-20091214.jar,
+ lib/jregex/jregex1.2_01.jar
 Bundle-Activator: org.kalypso.commons.KalypsoCommonsPlugin
 Bundle-Vendor: kalypsobase.sourceforge.net
 Bundle-Localization: plugin
@@ -69,6 +70,8 @@ Export-Package: au.com.bytecode.opencsv,
  javax.xml.stream,
  javax.xml.stream.events,
  javax.xml.stream.util,
+ jregex,
+ jregex.util.io,
  org.apache.commons.codec,
  org.apache.commons.codec.binary,
  org.apache.commons.codec.digest,

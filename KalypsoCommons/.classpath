@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry exported="true" kind="lib" path="lib/jregex/jregex1.2_01.jar" sourcepath="lib/jregex/jregex1.2_01-src.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/poi-2.6/poi-bin-3.6-20091214/poi-3.6/poi-contrib-3.6-20091214.jar" sourcepath="lib/poi-2.6/poi-src-3.6-20091214.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/poi-2.6/poi-bin-3.6-20091214/poi-3.6/poi-examples-3.6-20091214.jar" sourcepath="lib/poi-2.6/poi-src-3.6-20091214.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/poi-2.6/poi-bin-3.6-20091214/poi-3.6/poi-ooxml-3.6-20091214.jar" sourcepath="lib/poi-2.6/poi-src-3.6-20091214.zip"/>
