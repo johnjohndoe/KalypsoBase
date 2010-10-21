@@ -180,7 +180,9 @@ public class RoughnessIntersector
 
       // BUGFIX: use any gm_object here, because we do not know what it is (surface, multi surface, ...)
       final GM_Object gmObject = (GM_Object) polygoneFeature.getProperty( m_polygoneGeomType );
-
+      
+      if (gmObject != null)
+      {
       final Geometry jtsGeom = JTSAdapter.export( gmObject );
       if( jtsGeom.contains( jtsPoint ) )
       {
@@ -216,6 +218,7 @@ public class RoughnessIntersector
         }
         // DONT break, because we may have several polygone covering the point, but only one has an assigned value
         // break;
+      }
       }
     }
     return foundPolygones;
