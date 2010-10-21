@@ -42,16 +42,12 @@ package org.kalypso.ogc.sensor.metadata;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TimeZone;
 
-import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.sensor.DateRange;
@@ -240,75 +236,4 @@ public class MetadataHelper implements ITimeseriesConstants, ICopyObservationMet
       metadata.setProperty( ITimeseriesConstants.MD_DATE_END, toStr ); //$NON-NLS-1$
     }
   }
-
-  public static String[] getMeldegrenzenKeys( final MetadataList metadata )
-  {
-    final List<String> keys = new ArrayList<String>();
-
-    final Set<Entry<Object, Object>> entries = metadata.entrySet();
-    for( final Entry<Object, Object> entry : entries )
-    {
-      final String key = (String) entry.getKey();
-      if( isMeldegrenze( key ) )
-      {
-        keys.add( key );
-      }
-    }
-
-    return keys.toArray( new String[] {} );
-  }
-
-  public static boolean isMeldegrenze( final String key )
-  {
-    return key.startsWith( "Hilfsattribut: Kalypso_Grenzwert_" ); //$NON-NLS-1$
-  }
-
-  public static String getMeldegrenzeType( final String key )
-  {
-    if( isMeldegrenze( key ) )
-      return key.substring( key.lastIndexOf( "_" ) + 1 );
-
-    return null;
-  }
-
-  public static Double getMeldegrenzeValue( final MetadataList metadata, final String key )
-  {
-    return NumberUtils.parseDouble( metadata.getProperty( key ) );
-  }
-
-  public static String[] getAlarmstufenKeys( final MetadataList metadata )
-  {
-    final List<String> keys = new ArrayList<String>();
-
-    final Set<Entry<Object, Object>> entries = metadata.entrySet();
-    for( final Entry<Object, Object> entry : entries )
-    {
-      final String key = (String) entry.getKey();
-      if( isAlarmstufe( key ) )
-      {
-        keys.add( key );
-      }
-    }
-
-    return keys.toArray( new String[] {} );
-  }
-
-  public static boolean isAlarmstufe( final String key )
-  {
-    return key.startsWith( "Alarmstufe" ); //$NON-NLS-1$
-  }
-
-  public static String getAlarmstufenPriority( final String key )
-  {
-    if( isAlarmstufe( key ) )
-      return key.substring( key.lastIndexOf( " " ) + 1 );
-
-    return null;
-  }
-
-  public static double getAlarmstufenValue( final MetadataList metadata, final String key )
-  {
-    return NumberUtils.parseDouble( metadata.getProperty( key ) );
-  }
-
 }
