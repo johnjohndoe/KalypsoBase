@@ -59,6 +59,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
@@ -1062,6 +1063,8 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
     Collections.reverse( result );
 
     final IKalypsoFeatureTheme[] selectionThemes = visibleFestureThemes.toArray( new IKalypsoFeatureTheme[visibleFestureThemes.size()] );
+    /* Paint selection in same order as all themes */
+    ArrayUtils.reverse( selectionThemes );
     // TODO: care for disposal of SelectionMapLayer
     result.add( new SelectionMapLayer( this, selectionThemes ) );
 
