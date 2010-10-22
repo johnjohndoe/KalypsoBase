@@ -58,7 +58,7 @@ import org.kalypso.contribs.eclipse.EclipseRCPContributionsPlugin;
  */
 public final class ConfigUtils
 {
-  private static URL fallbackConfigLocation;
+  private static URL FALLBACK_LOCATION;
 
   private ConfigUtils( )
   {
@@ -91,9 +91,9 @@ public final class ConfigUtils
 
   private static URL getFallbackConfigLocation( )
   {
-    if( fallbackConfigLocation == null )
-      fallbackConfigLocation = findFallbackConfigLocation();
-    return fallbackConfigLocation;
+    if( FALLBACK_LOCATION == null )
+      FALLBACK_LOCATION = findFallbackConfigLocation();
+    return FALLBACK_LOCATION;
   }
 
   private static URL findFallbackConfigLocation( )
@@ -116,10 +116,10 @@ public final class ConfigUtils
     {
       try
       {
-        ILocationProvider provider = (ILocationProvider) element.createExecutableExtension( "class" );
+        final ILocationProvider provider = (ILocationProvider) element.createExecutableExtension( "class" );
         return provider.getLocation();
       }
-      catch( CoreException e )
+      catch( final CoreException e )
       {
         EclipseRCPContributionsPlugin.getDefault().getLog().log( e.getStatus() );
       }
