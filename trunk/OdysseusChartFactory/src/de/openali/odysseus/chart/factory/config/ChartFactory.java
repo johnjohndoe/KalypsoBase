@@ -114,11 +114,11 @@ public class ChartFactory
     model.setTitle( chartType.getTitle() );
     model.setDescription( chartType.getDescription() );
 
-    Mappers mappers = chartType.getMappers();
+    final Mappers mappers = chartType.getMappers();
     if( mappers != null )
     {
-      AxisType[] axisTypes = mappers.getAxisArray();
-      for( AxisType axisType : axisTypes )
+      final AxisType[] axisTypes = mappers.getAxisArray();
+      for( final AxisType axisType : axisTypes )
         addAxis( model, rr, axisType, extLoader, context );
     }
 
@@ -169,7 +169,7 @@ public class ChartFactory
       Logger.logError( Logger.TOPIC_LOG_GENERAL, "AxisFactory: given axis is NULL." );
   }
 
-  private final static IAxisRenderer findRenderer( final IAxis[] axes, final String rendererID )
+  private static IAxisRenderer findRenderer( final IAxis[] axes, final String rendererID )
   {
     for( final IAxis axis : axes )
     {
@@ -248,14 +248,13 @@ public class ChartFactory
                 final String rid = rendererType.getId();
                 final IStyleSet styleSet = createStyleSet( rendererType.getStyles(), context );
                 final IParameterContainer rpc = createParameterContainer( rid, rendererType.getProvider() );
-//             // Hack to get rid of older kod-files with this malformed renderer-id
-//                if( "de.openali.odysseus.chart.ext.test.axisrenderer.provider.GenericNumberAxisRendererProvider".equals( arpId ) )
-//                  arp.init( model, "de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericNumberAxisRendererProvider", rpc, context, styleSet );
-//                else
-                  arp.init( model, rid, rpc, context, styleSet );
-                
-                
-                
+// // Hack to get rid of older kod-files with this malformed renderer-id
+// if( "de.openali.odysseus.chart.ext.test.axisrenderer.provider.GenericNumberAxisRendererProvider".equals( arpId ) )
+// arp.init( model, "de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericNumberAxisRendererProvider", rpc,
+// context, styleSet );
+// else
+                arp.init( model, rid, rpc, context, styleSet );
+
                 try
                 {
                   axisRenderer = arp.getAxisRenderer();
@@ -473,7 +472,7 @@ public class ChartFactory
   {
     final Number min;
     final Number max;
-    final DataOperatorHelper dataOperatorHelper =new DataOperatorHelper();
+    final DataOperatorHelper dataOperatorHelper = new DataOperatorHelper();
 
     if( at.isSetDateRange() )
     {
@@ -499,7 +498,8 @@ public class ChartFactory
     else if( at.isSetDurationRange() )
     {
       final AxisDurationRangeType range = at.getDurationRange();
-      final IDataOperator<Calendar> dataOperator = dataOperatorHelper.getDataOperator( Calendar.class );//axis.getDataOperator( Calendar.class );
+      final IDataOperator<Calendar> dataOperator = dataOperatorHelper.getDataOperator( Calendar.class );// axis.getDataOperator(
+// Calendar.class );
       final GDuration minDur = range.getMinValue();
       final Calendar now = Calendar.getInstance();
       final Calendar minValue = addDurationToCal( now, minDur );
