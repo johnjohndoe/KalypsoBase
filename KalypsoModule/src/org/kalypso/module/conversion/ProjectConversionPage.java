@@ -155,8 +155,7 @@ public class ProjectConversionPage extends WizardPage
 
   private void updateProjectInfo( final File file )
   {
-    // FIXME
-// m_infoGroup.setProject( file );
+    m_infoGroup.setProject( file );
   }
 
   private IMessageProvider validatePage( )
@@ -165,9 +164,7 @@ public class ProjectConversionPage extends WizardPage
     if( groupMessage != null )
       return groupMessage;
 
-    // FIXME:
-// return m_infoGroup.validate();
-    return null;
+    return m_infoGroup.validate();
   }
 
   private void setMessage( final IMessageProvider message )
