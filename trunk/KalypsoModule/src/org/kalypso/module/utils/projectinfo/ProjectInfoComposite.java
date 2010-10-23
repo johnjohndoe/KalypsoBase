@@ -40,14 +40,29 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.module.utils.projectinfo;
 
+import java.io.File;
+import java.net.URI;
+
 import org.apache.commons.lang.StringUtils;
+import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.kalypso.contribs.eclipse.ui.forms.MessageProvider;
+import org.kalypso.module.IKalypsoModule;
+import org.kalypso.module.ModuleExtensions;
+import org.kalypso.module.nature.IModulePreferences;
+import org.kalypso.module.nature.ModuleNature;
 
 /**
  * @author Gernot Belger
@@ -63,6 +78,10 @@ public class ProjectInfoComposite extends Composite
   private IProjectDescription m_project;
 
   private final Text m_commentText;
+
+  private IMessageProvider m_message;
+
+  private IModulePreferences m_preferences;
 
   public ProjectInfoComposite( final Composite parent )
   {
@@ -88,16 +107,83 @@ public class ProjectInfoComposite extends Composite
     updateControl();
   }
 
-  public void setProject( final IProjectDescription project )
+  public void setProject( final File file )
   {
-    m_project = project;
+    readAndValidateProject( file );
 
     updateControl();
+  }
+
+  private void readAndValidateProject( final File file )
+  {
+    m_message = readProjectDescription( file );
+    if( m_message == null )
+      m_message = readPreferences( file );
+  }
+
+  private IMessageProvider readProjectDescription( final File file )
+  {
+    m_project = null;
+
+    if( file == null )
+      return new MessageProvider( "No project directory selected", IMessageProvider.ERROR );
+
+    if( !file.isDirectory() )
+      return new MessageProvider( "Selected project is not a directory", IMessageProvider.ERROR );
+
+    try
+    {
+      final IPath projectPath = new Path( file.getPath() );
+      final IPath projectFilePath = projectPath.append( IProjectDescription.DESCRIPTION_FILE_NAME );
+      m_project = ResourcesPlugin.getWorkspace().loadProjectDescription( projectFilePath );
+      return null;
+    }
+    catch( final CoreException e )
+    {
+// final String message = String.format( "Chosen directory does not contain a project ('%s' file not present)",
+// IProjectDescription.DESCRIPTION_FILE_NAME );
+
+      e.printStackTrace();
+      return new MessageProvider( "Failed to read project description", IMessageProvider.ERROR );
+    }
+  }
+
+  private IMessageProvider readPreferences( final File projectDir )
+  {
+    m_preferences = null;
+
+    final URI uri = projectDir.toURI();
+    final IContainer[] containers = ResourcesPlugin.getWorkspace().getRoot().findContainersForLocationURI( uri );
+    for( final IContainer container : containers )
+    {
+      if( container instanceof IProject )
+      {
+        final ModuleNature nature = ModuleNature.toThisNature( (IProject) container );
+        if( nature != null )
+          m_preferences = nature.getPreferences();
+        else
+        {
+          // User has chosen a project in workspace which is not a module project
+          m_preferences = null;
+        }
+
+        return new MessageProvider( "The project is already part of the Kalypso Workspace", IMessageProvider.INFORMATION );
+      }
+    }
+
+    /* Resource is a local file: read preferences from there */
+    m_preferences = ModuleNature.getPreferences( projectDir );
+    return null;
   }
 
   public IProjectDescription getProject( )
   {
     return m_project;
+  }
+
+  public IMessageProvider validate( )
+  {
+    return m_message;
   }
 
   private void updateControl( )
@@ -116,12 +202,18 @@ public class ProjectInfoComposite extends Composite
     else
       m_commentText.setText( comment );
 
-    // TODO: try to find out version + module type
+    final String moduleID = m_preferences == null ? null : m_preferences.getModule();
+    final String version = m_preferences == null ? null : m_preferences.getVersion();
 
-    // TODO Auto-generated method stub
+    if( version == null )
+      m_versionText.setText( "<Unbekannte Version>" );
+    else
+      m_versionText.setText( version );
 
-    m_versionText.setText( "<Unbekannte Version>" );
-    m_typeText.setText( "<Unbekannter Modelltyp>" );
-
+    final IKalypsoModule module = moduleID == null ? null : ModuleExtensions.getKalypsoModule( moduleID );
+    if( module == null )
+      m_typeText.setText( "<Unbekannter Modelltyp>" );
+    else
+      m_typeText.setText( module.getHeader() );
   }
 }
