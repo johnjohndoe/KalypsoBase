@@ -38,38 +38,51 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.module.conversion;
+package org.kalypso.module.conversion.internal;
 
-import java.io.File;
-
-import org.apache.commons.lang.NotImplementedException;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.SubProgressMonitor;
+import org.kalypso.module.conversion.AbstractLoggingOperation;
+import org.kalypso.module.conversion.IProjectConverter;
 
 /**
  * @author Gernot Belger
  */
-public final class ConverterUtils
+public class ProjectConversionOperation extends AbstractLoggingOperation
 {
-  // TODO: move to converter utilities
-  public static final IProjectConverter[] createConverters( final IProjectConverterFactory[] factories, final File sourceDir, final File targetDir )
+  private final IProjectConverter m_converter;
+
+  private final IProject m_project;
+
+  public ProjectConversionOperation( final IProject project, final IProjectConverter converter )
   {
-    final IProjectConverter[] converter = new IProjectConverter[factories.length];
-    for( int i = 0; i < converter.length; i++ )
+    super( "Projektkonvertierung" );
+
+    m_project = project;
+    m_converter = converter;
+  }
+
+  /**
+   * @see org.kalypso.ui.rrm.wizards.conversion.AbstractLoggingOperation#doExecute(org.eclipse.core.runtime.IProgressMonitor)
+   */
+  @Override
+  protected void doExecute( final IProgressMonitor monitor ) throws Exception
+  {
+    final String taskName = String.format( "Konvertiere '%s' - %s", m_project.getName(), m_converter.getLabel() );
+    monitor.beginTask( taskName, 100 );
+
+    try
     {
-      final IProjectConverterFactory factory = factories[i];
-      converter[i] = createConverter( factory, sourceDir, targetDir );
+      final IStatus status = m_converter.execute( new SubProgressMonitor( monitor, 90 ) );
+      getLog().add( status );
     }
-
-    return converter;
+    finally
+    {
+      m_project.refreshLocal( IResource.DEPTH_INFINITE, new SubProgressMonitor( monitor, 10 ) );
+    }
   }
 
-  private static IProjectConverter createConverter( final IProjectConverterFactory factory, final File sourceDir, final File targetDir )
-  {
-    if( factory instanceof IProject2ProjectConverterFactory )
-      return ((IProject2ProjectConverterFactory) factory).createConverter( sourceDir, targetDir );
-
-    if( factory instanceof IProjectConverterInPlaceFactory )
-      return ((IProjectConverterInPlaceFactory) factory).createConverter( targetDir );
-
-    throw new NotImplementedException( String.format( "Unknown factory type: %s", factory.getClass().getName() ) );
-  }
 }

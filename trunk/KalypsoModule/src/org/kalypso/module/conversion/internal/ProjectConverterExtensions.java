@@ -40,14 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.module.conversion.internal;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.module.conversion.IProjectConverterFactory;
 import org.kalypso.module.internal.Module;
 
@@ -73,10 +72,8 @@ public final class ProjectConverterExtensions
     throw new UnsupportedOperationException( "Helper class, do not instantiate." ); //$NON-NLS-1$
   }
 
-  public static IProjectConverterFactory[] getProjectConverter( final String moduleID )
+  public static IProjectConverterFactory getProjectConverter( final String moduleID ) throws CoreException
   {
-    final Collection<IProjectConverterFactory> factories = new ArrayList<IProjectConverterFactory>();
-
     final IExtensionRegistry registry = Platform.getExtensionRegistry();
     final IConfigurationElement[] configurationElements = registry.getConfigurationElementsFor( NAMESPACE, PROJECT_CONVERSION_EXTENSION );
     for( final IConfigurationElement element : configurationElements )
@@ -85,22 +82,12 @@ public final class ProjectConverterExtensions
       {
         final String module = element.getAttribute( ATTRIBUTE_MODULE );
         if( ObjectUtils.equals( moduleID, module ) )
-        {
-          try
-          {
-            final IProjectConverterFactory factory = (IProjectConverterFactory) element.createExecutableExtension( ATTRIBUTE_CLASS );
-            factories.add( factory );
-          }
-          catch( final CoreException e )
-          {
-            e.printStackTrace();
-            Module.getDefault().getLog().log( e.getStatus() );
-          }
-        }
+          return (IProjectConverterFactory) element.createExecutableExtension( ATTRIBUTE_CLASS );
       }
     }
 
-
-    return factories.toArray( new IProjectConverterFactory[factories.size()] );
+    final String msg = String.format( "No project converter available for module with ID: %s", moduleID );
+    final IStatus error = new Status( IStatus.ERROR, Module.PLUGIN_ID, msg );
+    throw new CoreException( error );
   }
 }

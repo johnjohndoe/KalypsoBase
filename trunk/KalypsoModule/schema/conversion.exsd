@@ -6,9 +6,11 @@
          <meta.schema plugin="org.kalypso.module" id="conversion" name="conversion"/>
       </appinfo>
       <documentation>
-         This extension-point allows to register project converters. A project convertter converts a project of an older Kalypso version to the current Kalypso version.
+         This extension-point allows to register project converters. A project converter converts a project of an older Kalypso version to the current Kalypso version.
 
 The project conversion mechanism relies on the Kalypso module i.e. for different modules exist different project converters.
+
+There should be at most one converter per module. The converter is responsible to distinguish between differetn project versions.
       </documentation>
    </annotation>
 
@@ -112,7 +114,7 @@ The project conversion mechanism relies on the Kalypso module i.e. for different
          <meta.section type="copyright"/>
       </appinfo>
       <documentation>
-          Copyright (c) 2010 by
+         Copyright (c) 2010 by
    
      Björnsen Beratende Ingenieure GmbH, Koblenz, Germany (Bjoernsen Consulting Engineers), http://www.bjoernsen.de
      Technische Universität Hamburg-Harburg, Institut für Wasserbau, Hamburg, Germany
@@ -127,7 +129,6 @@ The project conversion mechanism relies on the Kalypso module i.e. for different
    
      You should have received a copy of the GNU Lesser General Public
      License along with Kalypso.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
-
       </documentation>
    </annotation>
 
