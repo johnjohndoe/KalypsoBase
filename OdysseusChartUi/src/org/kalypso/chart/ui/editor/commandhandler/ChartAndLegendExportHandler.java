@@ -68,7 +68,7 @@ public class ChartAndLegendExportHandler extends AbstractHandler
         final Rectangle bounds = chart.getBounds();
         final ImageLoader il = new ImageLoader();
 
-        final ImageData idChart = ChartImageFactory.createChartImage( chart, Display.getCurrent(), bounds.width, bounds.height );
+        final ImageData idChart = ChartImageFactory.createChartImage( chart.getChartModel(), bounds.width, bounds.height );
         Image imgChart = new Image( Display.getCurrent(), idChart );
 
         ITextStyle layerStyle = StyleUtils.getDefaultTextStyle();
