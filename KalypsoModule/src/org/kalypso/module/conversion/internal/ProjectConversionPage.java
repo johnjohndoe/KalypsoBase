@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.module.conversion;
+package org.kalypso.module.conversion.internal;
 
 import java.io.File;
 
@@ -55,7 +55,6 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserDelegateDirectory;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup.FileChangedListener;
-import org.kalypso.module.conversion.internal.ProjectConverterExtensions;
 import org.kalypso.module.utils.projectinfo.ProjectInfoComposite;
 
 /**
@@ -70,12 +69,9 @@ public class ProjectConversionPage extends WizardPage
 
   private ProjectInfoComposite m_infoGroup;
 
-  private final String m_moduleID;
-
-  public ProjectConversionPage( final String pageName, final String moduleID )
+  public ProjectConversionPage( final String pageName )
   {
     super( pageName );
-    m_moduleID = moduleID;
 
     setTitle( "Daten konvertieren" );
     setDescription( "Bitte wählen Sie das Projekt aus, dessen Daten Sie in das aktuelle Kalypso Format übernehmen möchten." );
@@ -180,13 +176,5 @@ public class ProjectConversionPage extends WizardPage
   public File getProjectDir( )
   {
     return m_projectChooserGroup.getFile();
-  }
-
-  public IProjectConverterFactory[] getConverters( )
-  {
-    // FIXME: choose converter depending on project version
-    // FIXME: let user choose, which converter to use
-
-    return ProjectConverterExtensions.getProjectConverter( m_moduleID );
   }
 }
