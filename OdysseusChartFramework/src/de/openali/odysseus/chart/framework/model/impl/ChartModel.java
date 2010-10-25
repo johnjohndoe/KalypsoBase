@@ -54,6 +54,19 @@ public class ChartModel implements IChartModel
     final AbstractLayerManagerEventListener m_layerManagerEventListener = new AbstractLayerManagerEventListener()
     {
       /**
+       * @see de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener#onLayerContentChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
+       */
+      @Override
+      public void onLayerContentChanged( final IChartLayer layer )
+      {
+        if( isHideUnusedAxes() )
+        {
+          for( final IAxis axis : m_mapperRegistry.getAxes() )
+            hideUnusedAxis( axis );
+        }
+      }
+
+      /**
        * @see de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener#onLayerVisibilityChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
        */
       @Override
