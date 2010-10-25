@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.util.swt;
+package org.kalypso.core.status;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.resource.JFaceResources;
@@ -58,9 +58,9 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.internal.ide.IDEInternalWorkbenchImages;
-import org.kalypso.i18n.Messages;
-import org.kalypso.ui.ImageProvider;
-import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.core.KalypsoCoreImages;
+import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.core.i18n.Messages;
 
 /**
  * A composite, showing an {@link org.eclipse.core.runtime.IStatus}.<br>
@@ -355,7 +355,7 @@ public class StatusComposite extends Composite
 
   public static Image getOKImage( )
   {
-    return KalypsoGisPlugin.getImageProvider().getImage( ImageProvider.DESCRIPTORS.STATUS_IMAGE_OK );
+    return KalypsoCorePlugin.getImageProvider().getImage( KalypsoCoreImages.DESCRIPTORS.STATUS_IMAGE_OK );
   }
 
   public static Image getErrorImage( )

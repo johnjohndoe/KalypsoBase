@@ -45,10 +45,11 @@ import java.io.File;
 import java.util.TimeZone;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
+import org.kalypso.commons.eclipse.core.runtime.PluginImageProvider;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.catalog.CatalogManager;
 import org.kalypso.core.catalog.CatalogSLD;
@@ -68,7 +69,7 @@ import org.osgi.framework.BundleContext;
 /**
  * @author Gernot Belger
  */
-public class KalypsoCorePlugin extends Plugin
+public class KalypsoCorePlugin extends AbstractUIPlugin
 {
   private static KalypsoCorePlugin m_default;
 
@@ -88,6 +89,8 @@ public class KalypsoCorePlugin extends Plugin
   private ILoaderFactory m_loaderFactory;
 
   private DictionaryCache m_dictionaryCache;
+
+  private PluginImageProvider m_imgProvider = null;
 
   public static String getID( )
   {
@@ -111,6 +114,9 @@ public class KalypsoCorePlugin extends Plugin
   public void start( final BundleContext context ) throws Exception
   {
     super.start( context );
+
+    m_imgProvider = new PluginImageProvider( this );
+    m_imgProvider.resetTmpFiles();
   }
 
   /**
@@ -124,6 +130,9 @@ public class KalypsoCorePlugin extends Plugin
     m_selectionManager = null;
 
     savePluginPreferences();
+
+    m_imgProvider.resetTmpFiles();
+    m_imgProvider = null;
 
     super.stop( context );
   }
@@ -232,6 +241,7 @@ public class KalypsoCorePlugin extends Plugin
    * 
    * @return the preference store
    */
+  @Override
   public synchronized IPreferenceStore getPreferenceStore( )
   {
     /* Create the preference store lazily. */
@@ -284,4 +294,10 @@ public class KalypsoCorePlugin extends Plugin
 
     return m_dictionaryCache;
   }
+
+  public static PluginImageProvider getImageProvider( )
+  {
+    return getDefault().m_imgProvider;
+  }
+
 }

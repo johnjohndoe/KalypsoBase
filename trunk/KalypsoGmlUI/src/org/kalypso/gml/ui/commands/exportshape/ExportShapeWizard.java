@@ -48,11 +48,11 @@ import org.eclipse.jface.wizard.Wizard;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.java.util.Arrays;
+import org.kalypso.core.status.StatusDialog2;
 import org.kalypso.gml.ui.jface.FeatureSelectionPage;
 import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.shape.deegree.IShapeDataFactory;
-import org.kalypso.util.swt.StatusDialog2;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**

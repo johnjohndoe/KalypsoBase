@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.core;
 
@@ -45,13 +45,13 @@ package org.kalypso.core;
  */
 public interface IKalypsoCoreConstants
 {
-  public final static String PLUGIN_ID = "org.kalypso.core"; //$NON-NLS-1$
+  String PLUGIN_ID = "org.kalypso.core"; //$NON-NLS-1$
 
-  public static final String CONFIG_PROPERTY_TIMEZONE = "kalypso.timezone";//$NON-NLS-1$
-  
+  String CONFIG_PROPERTY_TIMEZONE = "kalypso.timezone";//$NON-NLS-1$
+
   /**
    * System property from which the locations of the kalypso-client.ini is read. If this property is set, it overwrites
    * (and sets) the user preferences.
    */
-  public static final String CONFIG_PROPERTY_CLIENT_INI_LOCATION = "kalypso.client-ini-locations"; //$NON-NLS-1$
+  String CONFIG_PROPERTY_CLIENT_INI_LOCATION = "kalypso.client-ini-locations"; //$NON-NLS-1$
 }

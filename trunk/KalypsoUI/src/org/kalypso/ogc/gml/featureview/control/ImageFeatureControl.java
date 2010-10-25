@@ -64,12 +64,12 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
 import org.kalypso.contribs.eclipse.swt.widgets.ImageCanvas;
+import org.kalypso.core.status.StatusComposite;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypso.util.swt.StatusComposite;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
