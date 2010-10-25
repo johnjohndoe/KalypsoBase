@@ -17,12 +17,17 @@ import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
 /**
  * @author burtscher Creates an Image from a chart widget. The objects has to be disposed when it's no longer needed
  */
+@Deprecated
+/** 
+ * use ChartImageFactory instead
+ */
 public class AxisImageFactory
 {
 
   public static ImageData createAxisImageFromChart( final ChartComposite chart, final String axisId, final Device dev, final int width, final int height )
   {
-    chart.setPlotSize( width, height );
+    // chart.setPlotSize( width, height );
+    ChartImageFactory.setAxesHeight( chart.getChartModel().getMapperRegistry().getAxes(), ChartImageFactory.calculatePlotSize( chart.getChartModel().getMapperRegistry(), width, height ) );
     chart.layout();
     chart.update();
 
