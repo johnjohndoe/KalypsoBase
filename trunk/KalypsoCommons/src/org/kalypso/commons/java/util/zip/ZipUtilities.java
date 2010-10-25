@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.commons.java.util.zip;
 
@@ -51,6 +51,7 @@ import java.io.OutputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Enumeration;
+import java.util.zip.CRC32;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
@@ -470,26 +471,26 @@ public class ZipUtilities
     {
       zf = new ZipFile( new File( zipFileURL.toURI() ) );
     }
-    catch( URISyntaxException e )
+    catch( final URISyntaxException e )
     {
       e.printStackTrace();
     }
-    catch( ZipException e )
+    catch( final ZipException e )
     {
       e.printStackTrace();
     }
-    catch( IOException e )
+    catch( final IOException e )
     {
       e.printStackTrace();
     }
-    Enumeration< ? > entries = zf.entries();
+    final Enumeration< ? > entries = zf.entries();
     ZipEntry ze;
     while( entries.hasMoreElements() )
     {
       ze = (ZipEntry) entries.nextElement();
       if( !ze.isDirectory() && (zippedFile == null || "".equals( zippedFile ) || zippedFile.equalsIgnoreCase( ze.getName() )) ) //$NON-NLS-1$
       {
-        long size = ze.getSize();
+        final long size = ze.getSize();
         if( size > 0 )
         {
           return zf.getInputStream( ze );
@@ -499,4 +500,156 @@ public class ZipUtilities
 
     return null;
   }
+
+  private static String convertFileName( final File packDir, final File file )
+  {
+    final String strPackDir = packDir.getAbsolutePath();
+    final String strFileDir = file.getAbsolutePath();
+
+    if( strFileDir.contains( strPackDir ) )
+    {
+      String string = strFileDir.substring( strPackDir.length() + 1 );
+
+      /**
+       * openOffice don't like \ in zip archives!!!
+       */
+      string = string.replaceAll( "\\\\", "/" ); //$NON-NLS-1$ //$NON-NLS-2$
+
+      return string;
+    }
+
+    return file.getName();
+  }
+
+  public static void pack( final File archiveTarget, final File packDir ) throws ZipException, IOException
+  {
+    if( !packDir.isDirectory() )
+    {
+      return;
+    }
+
+    final BufferedOutputStream bos = new BufferedOutputStream( new FileOutputStream( archiveTarget ) );
+
+    final ZipOutputStream out = new ZipOutputStream( bos );
+    out.setMethod( ZipOutputStream.DEFLATED );
+
+    final File[] files = packDir.listFiles();
+
+    for( final File file : files )
+    {
+      processFiles( packDir, file, out );
+    }
+    out.close();
+
+    bos.flush();
+    bos.close();
+  }
+
+  private static void processFiles( final File packDir, final File file, final ZipOutputStream out ) throws IOException
+  {
+    if( file.isDirectory() )
+    {
+      final ZipEntry e = new ZipEntry( convertFileName( packDir, file ) + "/" ); //$NON-NLS-1$
+      out.putNextEntry( e );
+      out.closeEntry();
+
+      final File[] files = file.listFiles();
+      for( final File f : files )
+      {
+        processFiles( packDir, f, out );
+      }
+    }
+    else
+    {
+      final BufferedInputStream bis = new BufferedInputStream( new FileInputStream( file ) );
+
+      final ZipEntry e = new ZipEntry( convertFileName( packDir, file ) );
+      final CRC32 crc = new CRC32();
+
+      out.putNextEntry( e );
+
+      final byte[] buf = new byte[4096];
+      int len = 0;
+
+      while( (len = bis.read( buf )) > 0 )
+      {
+        out.write( buf, 0, len );
+        crc.update( buf, 0, len );
+      }
+      e.setCrc( crc.getValue() );
+
+      out.closeEntry();
+      bis.close();
+
+    }
+  }
+
+  public static void rmDir( final File dir )
+  {
+    if( !dir.isDirectory() )
+    {
+      return;
+    }
+
+    final File[] files = dir.listFiles();
+
+    for( final File file : files )
+    {
+      if( file.isDirectory() )
+      {
+        rmDir( file );
+      }
+      else
+      {
+        file.delete();
+      }
+    }
+
+    dir.delete();
+  }
+
+  private static void saveEntry( final ZipFile zf, final File targetDir, final ZipEntry target ) throws ZipException, IOException
+  {
+    final File file = new File( targetDir.getAbsolutePath() + "/" + target.getName() ); //$NON-NLS-1$
+
+    if( target.isDirectory() )
+    {
+      file.mkdirs();
+    }
+    else
+    {
+      final InputStream is = zf.getInputStream( target );
+      final BufferedInputStream bis = new BufferedInputStream( is );
+
+      new File( file.getParent() ).mkdirs();
+
+      final FileOutputStream fos = new FileOutputStream( file );
+      final BufferedOutputStream bos = new BufferedOutputStream( fos );
+
+      final int EOF = -1;
+
+      for( int c; (c = bis.read()) != EOF; )
+      {
+        // $ANALYSIS-IGNORE
+        bos.write( (byte) c );
+      }
+
+      bos.close();
+      fos.close();
+    }
+  }
+
+  public static void unpack( final ZipFile zf, final File targetDir ) throws ZipException, IOException
+  {
+    targetDir.mkdir();
+
+    for( final Enumeration< ? extends ZipEntry> e = zf.entries(); e.hasMoreElements(); )
+    {
+      final ZipEntry target = e.nextElement();
+      System.out.print( target.getName() + " ." ); //$NON-NLS-1$
+      saveEntry( zf, targetDir, target );
+      System.out.println( ". unpacked" ); //$NON-NLS-1$
+    }
+  }
+
 }
