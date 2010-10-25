@@ -64,7 +64,7 @@ import org.kalypso.afgui.scenarios.IScenario;
 import org.kalypso.contribs.eclipse.core.resources.ProjectTemplate;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.wizard.ProjectTemplatePage;
-import org.kalypso.util.swt.StatusDialog;
+import org.kalypso.core.status.StatusDialog;
 
 /**
  * Basic wizard implementation for the various workflow/scenario based projects.<br>

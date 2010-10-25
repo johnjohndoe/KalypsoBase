@@ -59,8 +59,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.contribs.eclipse.ui.forms.MessageProvider;
-import org.kalypso.module.IKalypsoModule;
-import org.kalypso.module.ModuleExtensions;
 import org.kalypso.module.nature.IModulePreferences;
 import org.kalypso.module.nature.ModuleNature;
 
@@ -210,10 +208,10 @@ public class ProjectInfoComposite extends Composite
     else
       m_versionText.setText( version );
 
-    final IKalypsoModule module = moduleID == null ? null : ModuleExtensions.getKalypsoModule( moduleID );
-    if( module == null )
-      m_typeText.setText( "<Unbekannter Modelltyp>" );
-    else
-      m_typeText.setText( module.getHeader() );
+// final IKalypsoModule module = moduleID == null ? null : ModuleExtensions.getKalypsoModule( moduleID );
+// if( module == null )
+// m_typeText.setText( "<Unbekannter Modelltyp>" );
+// else
+// m_typeText.setText( module.getHeader() );
   }
 }
