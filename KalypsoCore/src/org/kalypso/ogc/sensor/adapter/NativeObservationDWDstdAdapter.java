@@ -209,4 +209,13 @@ public class NativeObservationDWDstdAdapter implements INativeObservationAdapter
     final IAxis[] axis = new IAxis[] { dateAxis, valueAxis };
     return axis;
   }
+
+  /**
+   * @see org.kalypso.ogc.sensor.adapter.INativeObservationAdapter#getAxisTypeValue()
+   */
+  @Override
+  public String getAxisTypeValue( )
+  {
+    return m_axisTypeValue;
+  }
 }
