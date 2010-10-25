@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor;
 
@@ -214,5 +214,22 @@ public class DateRange implements Comparable<DateRange>
   {
     final HashCodeBuilder hcb = new HashCodeBuilder();
     return hcb.append( m_from ).append( m_to ).toHashCode();
+  }
+
+  /**
+   * Check if another {@link DateRange} is contained in this one.
+   * 
+   * @return <code>true</code>, iff the other range is contained in this range. The start/end dates of the other range
+   *         may touch this one.
+   */
+  public boolean containsInclusive( final DateRange other )
+  {
+    if( m_from.after( other.m_from ) )
+      return false;
+
+    if( m_to.after( other.m_to ) )
+      return false;
+
+    return true;
   }
 }
