@@ -58,7 +58,7 @@ public class ImageFill implements IFill
   /**
    * @param url
    */
-  public ImageFill( ImageDescriptor id )
+  public ImageFill( final ImageDescriptor id )
   {
     m_id = id;
   }
@@ -67,9 +67,9 @@ public class ImageFill implements IFill
    * @see de.openali.odysseus.chart.framework.model.style.IFill#apply(org.eclipse.swt.graphics.GC)
    */
   @Override
-  public void apply( GC gc )
+  public void apply( final GC gc )
   {
-    Pattern p = OdysseusChartFrameworkPlugin.getDefault().getPatternRegistry().getResource( gc.getDevice(), m_id ).getTarget();
+    final Pattern p = OdysseusChartFrameworkPlugin.getDefault().getPatternRegistry().getResource( gc.getDevice(), m_id ).getTarget();
     gc.setBackgroundPattern( p );
   }
 

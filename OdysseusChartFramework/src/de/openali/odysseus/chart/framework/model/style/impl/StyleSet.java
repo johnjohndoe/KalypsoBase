@@ -1,6 +1,6 @@
 package de.openali.odysseus.chart.framework.model.style.impl;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import de.openali.odysseus.chart.framework.logging.impl.Logger;
@@ -10,10 +10,10 @@ import de.openali.odysseus.chart.framework.util.StyleUtils;
 
 public class StyleSet implements IStyleSet
 {
-  private final Map<String, IStyle> m_styleMap = new HashMap<String, IStyle>();
+  private final Map<String, IStyle> m_styleMap = new LinkedHashMap<String, IStyle>();
 
   @Override
-  public void addStyle( String id, IStyle style )
+  public void addStyle( final String id, final IStyle style )
   {
     m_styleMap.put( id, style );
   }
@@ -23,20 +23,20 @@ public class StyleSet implements IStyleSet
    */
   @Override
   @SuppressWarnings("unchecked")
-  public <T extends IStyle> T getStyle( String id, Class<T> styleClass )
+  public <T extends IStyle> T getStyle( final String id, final Class<T> styleClass )
   {
-    IStyle style = m_styleMap.get( id );
+    final IStyle style = m_styleMap.get( id );
     if( style == null )
     {
       Logger.logWarning( Logger.TOPIC_LOG_STYLE, "No style for id '" + id + "'. Need " + styleClass + ". Returning default style and saving it to style set." );
-      T myStyle = StyleUtils.getDefaultStyle( styleClass );
+      final T myStyle = StyleUtils.getDefaultStyle( styleClass );
       m_styleMap.put( id, myStyle );
       return myStyle;
     }
 
     // check if this is the correct style type
 
-    Class< ? extends IStyle> myStyleClass = style.getClass();
+    final Class< ? extends IStyle> myStyleClass = style.getClass();
 
     if( styleClass.isAssignableFrom( myStyleClass ) )
       return (T) style;
@@ -46,13 +46,11 @@ public class StyleSet implements IStyleSet
           + ". Returning default style but NOT SAVING it to style set." );
       return StyleUtils.getDefaultStyle( styleClass );
     }
-
   }
 
   @Override
   public void dispose( )
   {
-
   }
 
   @Override

@@ -9,18 +9,18 @@ public class PolygonMarker extends AbstractMarker
 {
   private final Point[] m_points;
 
-  public PolygonMarker( Point[] points )
+  public PolygonMarker( final Point[] points )
   {
     m_points = points;
   }
 
   @Override
-  public void paint( GC gc, Point p, int width, int height, boolean drawForeground, boolean drawBackground )
+  public void paint( final GC gc, final Point p, final int width, final int height, final boolean drawForeground, final boolean drawBackground )
   {
-    Point[] resized = FigureUtilities.resizeInOrigin( m_points, width, height );
-    Point[] inverted = FigureUtilities.invertY( resized );
-    Point[] translated = FigureUtilities.translateTo( inverted, p );
-    int[] intArray = FigureUtilities.pointArrayToIntArray( translated );
+    final Point[] resized = FigureUtilities.resizeInOrigin( m_points, width, height );
+    final Point[] inverted = FigureUtilities.invertY( resized );
+    final Point[] translated = FigureUtilities.translateTo( inverted, p );
+    final int[] intArray = FigureUtilities.pointArrayToIntArray( translated );
     if( drawBackground )
       gc.fillPolygon( intArray );
     if( drawForeground )

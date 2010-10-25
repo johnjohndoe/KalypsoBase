@@ -26,7 +26,7 @@ public class LineStyle extends AbstractStyle implements ILineStyle
 
   private int m_miterLimit;
 
-  public LineStyle( int width, RGB rgb, int alpha, float dashOffset, float[] dashArray, LINEJOIN lineJoin, LINECAP lineCap, int miterLimit, boolean isVisible )
+  public LineStyle( final int width, final RGB rgb, final int alpha, final float dashOffset, final float[] dashArray, final LINEJOIN lineJoin, final LINECAP lineCap, final int miterLimit, final boolean isVisible )
   {
     setWidth( width );
     setColor( rgb );
@@ -44,7 +44,7 @@ public class LineStyle extends AbstractStyle implements ILineStyle
   @Override
   public LineStyle copy( )
   {
-    LineStyle lineStyle = new LineStyle( getWidth(), getColor(), getAlpha(), getDashOffset(), getDashArray(), getLineJoin(), getLineCap(), getMiterLimit(), isVisible() );
+    final LineStyle lineStyle = new LineStyle( getWidth(), getColor(), getAlpha(), getDashOffset(), getDashArray(), getLineJoin(), getLineCap(), getMiterLimit(), isVisible() );
     lineStyle.setTitle( getTitle() );
     return lineStyle;
   }
@@ -56,7 +56,7 @@ public class LineStyle extends AbstractStyle implements ILineStyle
    * .impl.model.style.StyleConstants.LINEJOIN)
    */
   @Override
-  public void setLineJoin( LINEJOIN join )
+  public void setLineJoin( final LINEJOIN join )
   {
     m_lineJoin = join;
   }
@@ -68,7 +68,7 @@ public class LineStyle extends AbstractStyle implements ILineStyle
    * impl.model.style.StyleConstants.LINECAP)
    */
   @Override
-  public void setLineCap( LINECAP cap )
+  public void setLineCap( final LINECAP cap )
   {
     m_lineCap = cap;
   }
@@ -78,7 +78,7 @@ public class LineStyle extends AbstractStyle implements ILineStyle
    * @see de.openali.odysseus.chart.framework.impl.model.style.ILineStyle#setColor(org.eclipse.swt.graphics.RGB)
    */
   @Override
-  public void setColor( RGB rgb )
+  public void setColor( final RGB rgb )
   {
     m_rgb = rgb;
   }
@@ -88,7 +88,7 @@ public class LineStyle extends AbstractStyle implements ILineStyle
    * @see de.openali.odysseus.chart.framework.impl.model.style.ILineStyle#setDash(int, int[])
    */
   @Override
-  public void setDash( float dashOffset, float[] dashArray )
+  public void setDash( final float dashOffset, final float[] dashArray )
   {
     m_dashOffset = dashOffset;
     /**
@@ -105,7 +105,7 @@ public class LineStyle extends AbstractStyle implements ILineStyle
    * @see de.openali.odysseus.chart.framework.impl.model.style.ILineStyle#setWidth(int)
    */
   @Override
-  public void setWidth( int width )
+  public void setWidth( final int width )
   {
     m_width = width;
   }
@@ -115,7 +115,7 @@ public class LineStyle extends AbstractStyle implements ILineStyle
    * @see de.openali.odysseus.chart.framework.impl.model.style.ILineStyle#setMiterLimit(int)
    */
   @Override
-  public void setMiterLimit( int miterLimit )
+  public void setMiterLimit( final int miterLimit )
   {
     m_miterLimit = miterLimit;
   }
@@ -125,17 +125,17 @@ public class LineStyle extends AbstractStyle implements ILineStyle
    * @see de.openali.odysseus.chart.framework.impl.model.style.ILineStyle#apply(org.eclipse.swt.graphics.GC)
    */
   @Override
-  public void apply( GC gc )
+  public void apply( final GC gc )
   {
 
     gc.setForeground( OdysseusChartFrameworkPlugin.getDefault().getColorRegistry().getResource( gc.getDevice(), m_rgb ) );
 
     gc.setAlpha( getAlpha() );
 
-    int lineCap = m_lineCap.toSWT();
+    final int lineCap = m_lineCap.toSWT();
 
-    int lineJoin = m_lineJoin.toSWT();
-    LineAttributes la = new LineAttributes( m_width, lineCap, lineJoin, SWT.LINE_CUSTOM, m_dashArray, m_dashOffset, m_miterLimit );
+    final int lineJoin = m_lineJoin.toSWT();
+    final LineAttributes la = new LineAttributes( m_width, lineCap, lineJoin, SWT.LINE_CUSTOM, m_dashArray, m_dashOffset, m_miterLimit );
     gc.setLineAttributes( la );
   }
 
