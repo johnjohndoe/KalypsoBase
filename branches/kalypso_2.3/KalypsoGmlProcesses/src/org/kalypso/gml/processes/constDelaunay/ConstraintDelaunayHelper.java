@@ -52,6 +52,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -468,11 +469,19 @@ public class ConstraintDelaunayHelper
     return convertToTriangles( polygonSurface, crs, true );
   }
 
+  public static GM_Triangle[] convertToTriangles( final GM_Position[] positions, final String crs ) throws GM_Exception
+  {
+    final List<GM_Triangle> triangleList = new LinkedList<GM_Triangle>();
+    triangleList.addAll( Arrays.asList( createGM_Triangles( positions, null, crs, false ) ) );
+    
+    return triangleList.toArray( new GM_Triangle[triangleList.size()] );
+  }
+  
   @SuppressWarnings("unchecked")
   public static GM_Triangle[] convertToTriangles( final GM_MultiSurface polygonSurface, final String crs, final boolean pBoolWriteFiles ) throws GM_Exception
   {
     final List<GM_Triangle> triangleList = new LinkedList<GM_Triangle>();
-
+ 
     final GM_Object[] objects = polygonSurface.getAll();
     for( final GM_Object object : objects )
     {
