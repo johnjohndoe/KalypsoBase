@@ -45,8 +45,16 @@ public interface IAxisRenderer // extends IMapperEventListener
 
   // public void invalidateTicks( IAxis axis );
 
+  @Deprecated
+  /** 
+   * no implementation use this method
+   */
   void dispose( );
 
+  @Deprecated
+  /** 
+   * use IAxisConstants#BORDER_SIZE
+   */
   String BORDER_SIZE = "de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer_border_size";
 
 }

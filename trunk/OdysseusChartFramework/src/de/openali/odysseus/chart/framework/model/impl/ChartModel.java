@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.httpclient.auth.InvalidCredentialsException;
 import org.eclipse.swt.graphics.Point;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
@@ -266,7 +265,7 @@ public class ChartModel implements IChartModel
       return layer.getDomainRange();
 
     if( axis == layer.getCoordinateMapper().getTargetAxis() )
-      return layer.getTargetRange( null );
+      return layer.getTargetRange();
 
     return null;
 
