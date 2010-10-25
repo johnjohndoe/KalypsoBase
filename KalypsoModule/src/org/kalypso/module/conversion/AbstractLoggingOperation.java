@@ -98,8 +98,7 @@ public abstract class AbstractLoggingOperation implements ILoggingOperation
       throw new InvocationTargetException( e );
     }
 
-    final String msg = String.format( "Konvertierung abgeschlossen (Schritt %s)", m_label );
-    return m_log.asMultiStatus( msg );
+    return m_log.asMultiStatus( m_label );
   }
 
   protected abstract void doExecute( final IProgressMonitor monitor ) throws Exception;
