@@ -55,6 +55,8 @@ public interface INativeObservationAdapter extends IExecutableExtension
   IObservation createObservationFromSource( File file ) throws Exception;
 
   IObservation createObservationFromSource( File file, final TimeZone timeZone, boolean continueWithErrors ) throws Exception;
+  
+  String getAxisTypeValue();
 
   IAxis[] createAxis( );
 }
