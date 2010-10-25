@@ -47,6 +47,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IPageChangingListener;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.PageChangingEvent;
@@ -247,9 +248,10 @@ public class NewProjectWizard extends BasicNewProjectResourceWizard implements I
    * Does nothing by default.
    */
   @SuppressWarnings("unused")
-  public void postCreateProject( final IProject project, final IProgressMonitor monitor ) throws CoreException
+  public IStatus postCreateProject( final IProject project, final IProgressMonitor monitor ) throws CoreException
   {
     monitor.done();
+    return Status.OK_STATUS;
   }
 
   /**
