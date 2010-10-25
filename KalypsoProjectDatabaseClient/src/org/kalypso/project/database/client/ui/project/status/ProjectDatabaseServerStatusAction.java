@@ -48,11 +48,11 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.progress.UIJob;
+import org.kalypso.core.status.StatusDialog;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
 import org.kalypso.project.database.client.core.model.interfaces.IProjectDatabaseModel;
 import org.kalypso.project.database.client.core.model.remote.IRemoteProjectsListener;
 import org.kalypso.project.database.client.i18n.Messages;
-import org.kalypso.util.swt.StatusDialog;
 
 /**
  * Action which displays the current project model database server state

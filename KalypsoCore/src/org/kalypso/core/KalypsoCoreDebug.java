@@ -50,7 +50,7 @@ import org.kalypso.contribs.eclipse.core.runtime.Debug;
  * 
  * @author Gernot Belger
  */
-public class KalypsoCoreDebug
+public final class KalypsoCoreDebug
 {
   public static final Debug RESOURCE_POOL = new Debug( KalypsoCorePlugin.getDefault(), "/debug/resourcepool" ); //$NON-NLS-1$
 

@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.util.swt;
+package org.kalypso.core.status;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;

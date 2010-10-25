@@ -87,6 +87,7 @@ import org.eclipse.swt.widgets.Text;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
+import org.kalypso.core.status.StatusComposite;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.IGMLSchema;
@@ -97,7 +98,6 @@ import org.kalypso.ogc.wfs.IWFSLayer;
 import org.kalypso.ogc.wfs.WFSClient;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.i18n.Messages;
-import org.kalypso.util.swt.StatusComposite;
 import org.kalypsodeegree.filterencoding.Filter;
 
 /**

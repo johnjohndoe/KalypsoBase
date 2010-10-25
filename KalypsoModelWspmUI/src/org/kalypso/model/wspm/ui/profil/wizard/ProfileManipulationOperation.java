@@ -18,6 +18,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
+import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.profil.IProfil;
@@ -25,7 +26,6 @@ import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.util.swt.StatusDialog;
 import org.kalypsodeegree_impl.model.feature.AbstractCachedFeature2;
 
 /**

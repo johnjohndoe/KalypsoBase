@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.util.swt;
+package org.kalypso.core.status;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swt.SWT;

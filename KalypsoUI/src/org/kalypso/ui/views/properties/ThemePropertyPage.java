@@ -56,12 +56,12 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbenchPropertyPage;
 import org.eclipse.ui.dialogs.PropertyPage;
 import org.kalypso.commons.i18n.I10nString;
+import org.kalypso.core.status.StatusComposite;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.command.CompositeCommand;
 import org.kalypso.ogc.gml.command.EnableThemeCommand;
 import org.kalypso.ogc.gml.command.RenameThemeCommand;
-import org.kalypso.util.swt.StatusComposite;
 
 /**
  * This is a page for showing some properties of a theme.

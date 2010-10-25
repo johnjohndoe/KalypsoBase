@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.util.swt;
+package org.kalypso.core.status;
 
 import java.text.DateFormat;
 import java.util.Date;
@@ -53,7 +53,7 @@ import org.eclipse.ui.internal.ide.IDEInternalWorkbenchImages;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusWithTime;
 import org.kalypso.contribs.eclipse.jface.viewers.DefaultTableViewer;
 import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.i18n.Messages;
+import org.kalypso.core.i18n.Messages;
 
 /**
  * A label provider showing stati.

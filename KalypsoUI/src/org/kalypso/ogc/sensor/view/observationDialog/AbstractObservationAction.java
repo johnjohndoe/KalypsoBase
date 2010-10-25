@@ -36,8 +36,8 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
+import org.kalypso.core.status.StatusDialog;
 import org.kalypso.ogc.sensor.view.ObservationViewerDialog;
-import org.kalypso.util.swt.StatusDialog;
 
 /**
  * @author Gernot Belger
