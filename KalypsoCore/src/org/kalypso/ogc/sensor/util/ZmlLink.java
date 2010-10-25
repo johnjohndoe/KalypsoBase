@@ -48,12 +48,16 @@ import java.net.URL;
 
 import javax.xml.namespace.QName;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
@@ -142,6 +146,30 @@ public class ZmlLink
     return ResourceUtilities.findFileFromURL( targetURL );
   }
 
+  /**
+   * Returns the linked resource as an java file ({@link File}), if this is possible.
+   */
+  public File getJavaFile( )
+  {
+    final URL targetURL = getLocation();
+    if( targetURL == null )
+      return null;
+
+    final File file = FileUtils.toFile( targetURL );
+    if( file != null )
+      return file;
+
+    final IFile eclipseFile = ResourceUtilities.findFileFromURL( targetURL );
+    if( eclipseFile != null )
+    {
+      final IPath location = eclipseFile.getLocation();
+      if( location != null )
+        return location.toFile();
+    }
+
+    return null;
+  }
+
   public URL getLocation( )
   {
     final TimeseriesLinkType link = getTimeseriesLink();
@@ -220,17 +248,21 @@ public class ZmlLink
    */
   public void saveObservation( final IObservation obs ) throws CoreException, SensorException
   {
-    final IFile targetFile = getFile();
+    final File targetFile = getJavaFile();
     if( targetFile == null )
     {
       final IStatus status = new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), "Ziel-Link nicht gesetzt.", null );
       throw new CoreException( status );
     }
 
-    final File targetJavaFile = targetFile.getLocation().toFile();
-    targetJavaFile.getParentFile().mkdirs();
-    ZmlFactory.writeToFile( obs, targetJavaFile );
-    targetFile.getParent().refreshLocal( IResource.DEPTH_ONE, new NullProgressMonitor() );
+    targetFile.getParentFile().mkdirs();
+    ZmlFactory.writeToFile( obs, targetFile );
+
+    /* If the local file is mapped into the workspace, refresh it. */
+    final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+    final IFile[] eclipseFiles = root.findFilesForLocationURI( targetFile.toURI() );
+    for( final IFile workspaceFile : eclipseFiles )
+      workspaceFile.getParent().refreshLocal( IResource.DEPTH_ONE, new NullProgressMonitor() );
   }
 
   /**
@@ -256,6 +288,11 @@ public class ZmlLink
       return null;
 
     return timeseriesLink.getHref();
+  }
+
+  public Feature getFeature( )
+  {
+    return m_feature;
   }
 
 }
