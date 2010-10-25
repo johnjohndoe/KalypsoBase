@@ -61,8 +61,12 @@ public class ChartModel implements IChartModel
       {
         if( isHideUnusedAxes() )
         {
-          for( final IAxis axis : m_mapperRegistry.getAxes() )
-            hideUnusedAxis( axis );
+          final ICoordinateMapper coordinateMapper = layer.getCoordinateMapper();
+          if( coordinateMapper != null )
+          {
+            hideUnusedAxis( coordinateMapper.getTargetAxis() );
+            hideUnusedAxis( coordinateMapper.getDomainAxis() );
+          }
         }
       }
 
