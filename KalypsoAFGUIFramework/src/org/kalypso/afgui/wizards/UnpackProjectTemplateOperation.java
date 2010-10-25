@@ -124,9 +124,12 @@ public final class UnpackProjectTemplateOperation extends WorkspaceModifyOperati
       configureNatures( natureIds, progress );
 
       /* Let inherited wizards change the project */
-      m_newProjectWizard.postCreateProject( m_project, progress.newChild( 1 ) );
+      final IStatus postCreateStatus = m_newProjectWizard.postCreateProject( m_project, progress.newChild( 1 ) );
+      if( !postCreateStatus.matches( IStatus.ERROR ) )
+        m_newProjectWizard.openProject( m_project );
 
-      m_newProjectWizard.openProject( m_project );
+      if( !postCreateStatus.isOK() )
+        throw new CoreException( postCreateStatus );
     }
     catch( final CoreException t )
     {
