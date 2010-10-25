@@ -119,9 +119,7 @@ public abstract class AbstractInterpolationWorker implements ICoreRunnableWithPr
     final ITupleModel values = ObservationUtilities.requestBuffered( filter.getObservation(), dateRange, Calendar.DAY_OF_MONTH, 2 );
 
     if( values.size() == 0 )
-    {
       return new EmptyValueInterpolationWorker( filter, values, dateRange );
-    }
 
     return new ValueInterpolationWorker( filter, values, dateRange );
   }
@@ -190,48 +188,42 @@ public abstract class AbstractInterpolationWorker implements ICoreRunnableWithPr
   {
     final DataSourceHandler handler = new DataSourceHandler( m_filter.getMetaDataList() );
     final String src = String.format( "filter://%s", InterpolationFilter.class.getName() );
-    final int index = handler.addDataSource( src, src );
-
-    return index;
+    return handler.addDataSource( src, src );
   }
 
   /**
-   * Fills the model with default values
-   * 
-   * @param masterTupple
-   *          if not null, the values from this tuple are used instead of the default one
+   * Add one tupple with default values. The date is set to the given calendar which is stepped after the tupple was
+   * added.
    */
-  protected void fillWithDefault( final IAxis dateAxis, final IAxis[] valueAxes, final Object[] defaultValues, final Calendar calendar ) throws SensorException
+  protected void addDefaultTupple( final IAxis dateAxis, final IAxis[] valueAxes, final Object[] defaultValues, final Calendar calendar ) throws SensorException
   {
-    final Object[] tuple;
+    final SimpleTupleModel interpolatedModel = getInterpolatedModel();
 
-    tuple = new Object[valueAxes.length + 1];
-    tuple[getInterpolatedModel().getPosition( dateAxis )] = calendar.getTime();
+    final Object[] tuple = new Object[valueAxes.length + 1];
+    tuple[interpolatedModel.getPosition( dateAxis )] = calendar.getTime();
 
     for( int index = 0; index < valueAxes.length; index++ )
     {
       final IAxis axis = valueAxes[index];
-      final int position = getInterpolatedModel().getPosition( axis );
+      final int axisPosition = interpolatedModel.getPosition( axis );
 
       // update data source reference to interpolation filter
       if( AxisUtils.isDataSrcAxis( axis ) )
       {
         final Integer dataSourceValue = getDataSourceIndex();
-        tuple[position] = dataSourceValue;
+        tuple[axisPosition] = dataSourceValue;
       }
       else
       {
-
-        tuple[position] = defaultValues[index];
+        tuple[axisPosition] = defaultValues[index];
       }
-
     }
 
-    getInterpolatedModel().addTuple( tuple );
-    nextStep( calendar );
+    interpolatedModel.addTuple( tuple );
+    doStep( calendar );
   }
 
-  protected void nextStep( final Calendar calendar )
+  protected void doStep( final Calendar calendar )
   {
     calendar.add( m_filter.getCalendarField(), m_filter.getCalendarAmnount() );
   }
