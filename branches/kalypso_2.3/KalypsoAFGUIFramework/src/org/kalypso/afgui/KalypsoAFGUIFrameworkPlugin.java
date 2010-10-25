@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.apache.commons.lang.ObjectUtils;
+import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -31,6 +32,8 @@ import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.afgui.scenarios.TaskExecutionAuthority;
 import org.kalypso.afgui.scenarios.TaskExecutor;
 import org.kalypso.afgui.views.WorkflowView;
+import org.kalypso.contribs.eclipse.EclipsePlatformContributionsExtensions;
+import org.kalypso.contribs.eclipse.core.resources.ProjectTemplate;
 import org.osgi.framework.BundleContext;
 
 import de.renew.workflow.base.ITask;
@@ -288,6 +291,9 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
 
     // Then execute default task
     final IWorkflow workflow = ScenarioHelper.findWorkflow( caze, nature );
+    //lazy check and insurance for backwards compatibility 
+    ScenarioHelper.ensureBackwardsCompatibility( caze, nature );
+    
     final ITask defaultTask = workflow == null ? null : workflow.getDefaultTask();
     if( defaultTask != null )
     {
