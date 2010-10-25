@@ -11,19 +11,19 @@ public class ColorFill implements IFill
 
   private RGB m_rgb;
 
-  public ColorFill( RGB rgb )
+  public ColorFill( final RGB rgb )
   {
     m_rgb = rgb;
     setFillColor( rgb );
   }
 
-  public void setFillColor( RGB rgb )
+  public void setFillColor( final RGB rgb )
   {
     m_rgb = rgb;
   }
 
   @Override
-  public void apply( GC gc )
+  public void apply( final GC gc )
   {
     gc.setBackground( OdysseusChartFrameworkPlugin.getDefault().getColorRegistry().getResource( gc.getDevice(), getFillColor() ) );
 

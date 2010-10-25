@@ -12,15 +12,15 @@ public class ImageMarker extends AbstractMarker
 
   private final ImageDescriptor m_id;
 
-  public ImageMarker( ImageDescriptor id )
+  public ImageMarker( final ImageDescriptor id )
   {
     m_id = id;
   }
 
   @Override
-  public void paint( GC gc, Point pos, int width, int height, boolean drawForeground, boolean drawBackground )
+  public void paint( final GC gc, final Point pos, final int width, final int height, final boolean drawForeground, final boolean drawBackground )
   {
-    Image img = OdysseusChartFrameworkPlugin.getDefault().getImageRegistry().getResource( gc.getDevice(), m_id );
+    final Image img = OdysseusChartFrameworkPlugin.getDefault().getImageRegistry().getResource( gc.getDevice(), m_id );
     if( drawBackground )
       gc.fillRectangle( pos.x, pos.y, width, height );
     gc.drawImage( img, 0, 0, img.getBounds().width, img.getBounds().height, pos.x, pos.y, width, height );
