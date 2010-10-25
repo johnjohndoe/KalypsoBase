@@ -21,18 +21,6 @@ import de.openali.odysseus.chart.framework.util.StyleUtils;
 public abstract class AbstractGenericAxisRenderer implements IAxisRenderer
 {
 
-// /**
-// * @see
-// de.openali.odysseus.chart.framework.model.event.IMapperEventListener#onMapperChanged(de.openali.odysseus.chart.framework.model.mapper.IMapper)
-// */
-// @Override
-// public void onMapperChanged( IMapper mapper )
-// {
-// if( mapper instanceof IAxis )
-// invalidateTicks( (IAxis) mapper );
-//
-// }
-
   private final Insets m_labelInsets;
 
   private final Insets m_tickLabelInsets;
