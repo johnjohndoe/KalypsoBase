@@ -91,7 +91,7 @@ public class EmptyValueInterpolationWorker extends AbstractInterpolationWorker i
 
           while( calendar.getTime().compareTo( getDateRange().getTo() ) <= 0 )
           {
-            fillWithDefault( dateAxis, valueAxes, defaultValues, calendar );
+            addDefaultTupple( dateAxis, valueAxes, defaultValues, calendar );
           }
         }
         catch( final SensorException e )

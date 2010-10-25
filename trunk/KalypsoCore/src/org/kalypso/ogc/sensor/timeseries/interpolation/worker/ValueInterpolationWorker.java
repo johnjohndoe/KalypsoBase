@@ -196,7 +196,7 @@ public class ValueInterpolationWorker extends AbstractInterpolationWorker
     }
 
     interpolatedModel.addTuple( add );
-    nextStep( calendar );
+    doStep( calendar );
   }
 
   private void setInterpolationValues( final LocalCalculationStack stack, final Calendar calendar, final int index ) throws SensorException
@@ -280,7 +280,7 @@ public class ValueInterpolationWorker extends AbstractInterpolationWorker
       updateDataSource( tuple, interpolated );
       getInterpolatedModel().addTuple( tuple );
 
-      nextStep( calendar );
+      doStep( calendar );
     }
 
   }
@@ -327,7 +327,7 @@ public class ValueInterpolationWorker extends AbstractInterpolationWorker
       while( calendar.getTime().compareTo( timeSeriesStart ) < 0 )
       {
         stack.d1 = calendar.getTime();
-        fillWithDefault( dateAxis, valueAxes, defaultValues, calendar );
+        addDefaultTupple( dateAxis, valueAxes, defaultValues, calendar );
       }
     }
     else
@@ -350,7 +350,7 @@ public class ValueInterpolationWorker extends AbstractInterpolationWorker
       interpolated.addTuple( tuple );
 
       stack.d1 = calendar.getTime();
-      nextStep( calendar );
+      doStep( calendar );
     }
   }
 
