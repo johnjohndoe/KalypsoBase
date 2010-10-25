@@ -46,7 +46,9 @@ import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
 
 /**
  * @author Dirk Kuch
+ * @deprecated Use {@link org.kalypso.core.projecthandle.local.ILocalProjectHandle} instead.
  */
+@Deprecated
 public interface ILocalProject extends IProjectHandler
 {
   void dispose( );
@@ -55,12 +57,12 @@ public interface ILocalProject extends IProjectHandler
 
   // FIXME brrrrrr remove those preferences - each project can be uploaded by default!!!!
   IRemoteProjectPreferences getRemotePreferences( ) throws CoreException;
- 
+
   /**
    * project is editable? this means a edit lock can be aquired an no one else owns an edit onto the project
    */
   boolean isEditable( );
-  
+
   /**
    * local (and also remote) project is locked for editing by the current client / user
    */
