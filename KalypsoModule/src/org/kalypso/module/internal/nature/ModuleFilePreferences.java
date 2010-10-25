@@ -61,14 +61,17 @@ public class ModuleFilePreferences implements IModulePreferences
 
   public ModuleFilePreferences( final File projectDir )
   {
-    final File settingsDir = new File(projectDir, ".settings");
-    final File prefsFile = new File( settingsDir, ModuleNature.ID + ".prefs");
+    final File settingsDir = new File( projectDir, ".settings" );
+    final File prefsFile = new File( settingsDir, ModuleNature.ID + ".prefs" );
     FileInputStream inputStream = null;
     try
     {
-      inputStream = new FileInputStream( prefsFile );
-      m_node.load( inputStream );
-      inputStream.close();
+      if( prefsFile.isFile() )
+      {
+        inputStream = new FileInputStream( prefsFile );
+        m_node.load( inputStream );
+        inputStream.close();
+      }
     }
     catch( final IOException e )
     {
