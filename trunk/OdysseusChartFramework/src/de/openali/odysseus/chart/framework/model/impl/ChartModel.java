@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.httpclient.auth.InvalidCredentialsException;
 import org.eclipse.swt.graphics.Point;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
@@ -51,7 +52,7 @@ public class ChartModel implements IChartModel
 
   public ChartModel( )
   {
-    final AbstractLayerManagerEventListener layerManager = new AbstractLayerManagerEventListener()
+    final AbstractLayerManagerEventListener m_layerManagerEventListener = new AbstractLayerManagerEventListener()
     {
       /**
        * @see de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener#onLayerVisibilityChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
@@ -60,7 +61,11 @@ public class ChartModel implements IChartModel
       public void onLayerVisibilityChanged( final IChartLayer layer )
       {
         if( isHideUnusedAxes() )
-          hideUnusedAxis( layer.getCoordinateMapper().getTargetAxis() );
+        {
+          final ICoordinateMapper coordinateMapper = layer.getCoordinateMapper();
+          if( coordinateMapper != null )
+            hideUnusedAxis( coordinateMapper.getTargetAxis() );
+        }
       }
 
       /**
@@ -102,7 +107,7 @@ public class ChartModel implements IChartModel
       }
     };
 
-    getLayerManager().addListener( layerManager );
+    getLayerManager().addListener( m_layerManagerEventListener );
   }
 
   /**
@@ -261,7 +266,7 @@ public class ChartModel implements IChartModel
       return layer.getDomainRange();
 
     if( axis == layer.getCoordinateMapper().getTargetAxis() )
-      return layer.getTargetRange();
+      return layer.getTargetRange( null );
 
     return null;
 
@@ -396,6 +401,7 @@ public class ChartModel implements IChartModel
 
   protected void hideUnusedAxis( final IAxis axis )
   {
+
     // if axis has no layers, hide axis
     final List<IChartLayer> list = m_axis2Layers.get( axis );
     if( list == null || list.isEmpty() )
@@ -415,6 +421,7 @@ public class ChartModel implements IChartModel
     }
 
     axis.setVisible( false );
+
   }
 
   /**
@@ -492,8 +499,8 @@ public class ChartModel implements IChartModel
 
     if( isHideUnusedAxes() )
     {
-      domainAxis.setVisible( domainList.size() > 0 );
-      targetAxis.setVisible( targetList.size() > 0 );
+      for( final IAxis axis : getMapperRegistry().getAxes() )
+        hideUnusedAxis( axis );
     }
 
     if( m_autoscale )
