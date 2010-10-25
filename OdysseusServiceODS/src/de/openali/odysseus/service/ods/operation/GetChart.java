@@ -43,7 +43,7 @@ public void run( )
 
     int width = 500;
     int height = 400;
-    RequestBean req = getRequest();
+    final RequestBean req = getRequest();
     final String reqWidth = req.getParameterValue( "WIDTH" );
     final String reqHeight = req.getParameterValue( "HEIGHT" );
     final String reqName = req.getParameterValue( "NAME" );
@@ -58,30 +58,30 @@ public void run( )
       final Display display = DisplayHelper.getInstance().getDisplay();
       final String sceneId = req.getParameterValue( "SCENE" );
 
-      ChartConfigurationDocument scene = getEnv().getConfigLoader().getSceneById( sceneId );
-      ChartConfigurationLoader ccl = new ChartConfigurationLoader( scene );
+      final ChartConfigurationDocument scene = getEnv().getConfigLoader().getSceneById( sceneId );
+      final ChartConfigurationLoader ccl = new ChartConfigurationLoader( scene );
       URL context = null;
       try
       {
         context = getEnv().getConfigDir().toURI().toURL();
       }
-      catch( MalformedURLException e1 )
+      catch( final MalformedURLException e1 )
       {
         // this should not happen, otherwise the Env would not be valid
         e1.printStackTrace();
       }
-      IChartModel model = new ChartModel();
-      IExtensionLoader el = ChartExtensionLoader.getInstance();
+      final IChartModel model = new ChartModel();
+      final IExtensionLoader el = ChartExtensionLoader.getInstance();
       try
       {
         ChartFactory.configureChartModel( model, ccl, reqName, el, context );
       }
-      catch( ConfigChartNotFoundException e )
+      catch( final ConfigChartNotFoundException e )
       {
         setException( new OWSException( OWSException.ExceptionCode.INVALID_PARAMETER_VALUE, e.getMessage(), "No chart available by NAME '" + reqName + "'" ) );
         return;
       }
-      catch( ConfigurationException e )
+      catch( final ConfigurationException e )
       {
         /*
          * This exception will not be handled - it should not occur as the ODSEnvironment already checked the
@@ -91,7 +91,7 @@ public void run( )
       }
 
       final HeadlessChart hc = new HeadlessChart( model, new RGB( 255, 255, 255 ) );
-      ChartComposite chart = hc.getChart();
+      final ChartComposite chart = hc.getChart();
 
       if( chart != null )
       {
@@ -99,12 +99,12 @@ public void run( )
         {
           ODSChartManipulation.manipulateChart( chart.getChartModel(), req );
         }
-        catch( OWSException e )
+        catch( final OWSException e )
         {
           setException( e );
           return;
         }
-        final ImageData id = ChartImageFactory.createChartImage( chart, display, width, height );
+        final ImageData id = ChartImageFactory.createChartImage( chart.getChartModel(), width, height );
         if( id != null )
           ImageOutput.imageResponse( req, getResponse(), id );
         else
