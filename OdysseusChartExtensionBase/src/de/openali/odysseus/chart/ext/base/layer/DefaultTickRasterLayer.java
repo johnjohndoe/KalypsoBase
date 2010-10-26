@@ -118,7 +118,6 @@ public class DefaultTickRasterLayer extends AbstractLineLayer
 
       drawLine( gc, p1, p2 );
     }
-
   }
 
 }
