@@ -233,4 +233,13 @@ public abstract class AbstractChartLayer implements IChartLayer
     return m_mapperMap.get( role );
   }
 
+  /**
+   * @see java.lang.Object#toString()
+   */
+  @Override
+  public String toString( )
+  {
+    return String.format( "IChartLayer - id: %s", getId() );
+  }
+
 }
