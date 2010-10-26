@@ -38,10 +38,12 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.module.conversion.internal;
+package org.kalypso.module.conversion;
 
 import java.io.File;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
@@ -52,9 +54,13 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.ui.forms.widgets.ColumnLayout;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserDelegateDirectory;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup.FileChangedListener;
+import org.kalypso.module.conversion.internal.ConverterUtils;
+import org.kalypso.module.conversion.internal.ProjectConversionOperation;
+import org.kalypso.module.conversion.internal.ProjectConverterExtensions;
 import org.kalypso.module.utils.projectinfo.ProjectInfoComposite;
 
 /**
@@ -69,9 +75,13 @@ public class ProjectConversionPage extends WizardPage
 
   private ProjectInfoComposite m_infoGroup;
 
-  public ProjectConversionPage( final String pageName )
+  private final String m_moduleID;
+
+  public ProjectConversionPage( final String pageName, final String moduleID )
   {
     super( pageName );
+
+    m_moduleID = moduleID;
 
     setTitle( "Daten konvertieren" );
     setDescription( "Bitte wählen Sie das Projekt aus, dessen Daten Sie in das aktuelle Kalypso Format übernehmen möchten." );
@@ -176,5 +186,13 @@ public class ProjectConversionPage extends WizardPage
   public File getProjectDir( )
   {
     return m_projectChooserGroup.getFile();
+  }
+
+  public ICoreRunnableWithProgress getConversionOperation( final File sourceDir, final File targetDir, final IProject targetProject ) throws CoreException
+  {
+    final IProjectConverterFactory factory = ProjectConverterExtensions.getProjectConverter( m_moduleID );
+    final IProjectConverter converter = ConverterUtils.createConverter( factory, sourceDir, targetDir );
+
+    return new ProjectConversionOperation( targetProject, converter );
   }
 }
