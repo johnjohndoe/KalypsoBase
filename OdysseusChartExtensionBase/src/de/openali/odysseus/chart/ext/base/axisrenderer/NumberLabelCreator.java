@@ -68,7 +68,7 @@ public class NumberLabelCreator implements ILabelCreator
   {
     if( value == null )
       return "";
-    if( m_formatString.equals( "%s" ) )
+    if( "%s".equals( m_formatString ) )
     {
       final Format format = getFormat( range );
       return format == null ? null : format.format( value );
