@@ -5,7 +5,7 @@
  *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestra√üe 22
+ *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  *
@@ -39,7 +39,7 @@
  *
  *  ---------------------------------------------------------------------------*/
 
-package org.kalypso.module.conversion;
+package org.kalypso.afgui.wizards;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
@@ -49,13 +49,10 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.kalypso.afgui.wizards.NewProjectWizard;
+import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.wizard.ProjectTemplatePage;
-import org.kalypso.module.conversion.internal.ConverterUtils;
-import org.kalypso.module.conversion.internal.ProjectConversionOperation;
-import org.kalypso.module.conversion.internal.ProjectConversionPage;
-import org.kalypso.module.conversion.internal.ProjectConverterExtensions;
-import org.kalypso.module.internal.Module;
+import org.kalypso.module.conversion.ProjectConversionPage;
 
 /**
  * FIXME: generalize: should be useable for all modules.<br/>
@@ -73,7 +70,7 @@ public class ProjectConversionWizard extends NewProjectWizard
   // FIXME the module should know the project template
   public ProjectConversionWizard( final String moduleID, final String projectTemplate )
   {
-    super( new ProjectTemplatePage( "Projektvorlage", "Bitte w√§hlen Sie, welche Projektvorlage verwendet werden soll", projectTemplate ), true, moduleID );
+    super( new ProjectTemplatePage( "Projektvorlage", "Bitte w‰hlen Sie, welche Projektvorlage verwendet werden soll", projectTemplate ), true, moduleID );
 
     m_moduleID = moduleID;
 
@@ -87,7 +84,7 @@ public class ProjectConversionWizard extends NewProjectWizard
   {
     super.addPages();
 
-    m_conversionPage = new ProjectConversionPage( "conversionPage" );
+    m_conversionPage = new ProjectConversionPage( "conversionPage", m_moduleID );
 
     addPage( m_conversionPage ); //$NON-NLS-1$
 
@@ -101,12 +98,10 @@ public class ProjectConversionWizard extends NewProjectWizard
    *      org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  public void postCreateProject( final IProject project, final IProgressMonitor monitor ) throws CoreException
+  public IStatus postCreateProject( final IProject project, final IProgressMonitor monitor )
   {
     final File inputDir = m_conversionPage.getProjectDir();
-    final IStatus result = doConvertProject( inputDir, project, monitor );
-    if( !result.isOK() )
-      throw new CoreException( result );
+    return doConvertProject( inputDir, project, monitor );
   }
 
   private IStatus doConvertProject( final File sourceDir, final IProject targetProject, final IProgressMonitor monitor )
@@ -115,10 +110,7 @@ public class ProjectConversionWizard extends NewProjectWizard
     {
       final File targetDir = targetProject.getLocation().toFile();
 
-      final IProjectConverterFactory factory = ProjectConverterExtensions.getProjectConverter( m_moduleID );
-      final IProjectConverter converter = ConverterUtils.createConverter( factory, sourceDir, targetDir );
-
-      final ProjectConversionOperation operation = new ProjectConversionOperation( targetProject, converter );
+      final ICoreRunnableWithProgress operation = m_conversionPage.getConversionOperation( sourceDir, targetDir, targetProject );
       return operation.execute( monitor );
     }
     catch( final CoreException e )
@@ -129,7 +121,7 @@ public class ProjectConversionWizard extends NewProjectWizard
     catch( final InvocationTargetException e )
     {
       e.printStackTrace();
-      return new Status( IStatus.ERROR, Module.PLUGIN_ID, "Unexpected error during project conversion", e );
+      return new Status( IStatus.ERROR, KalypsoAFGUIFrameworkPlugin.PLUGIN_ID, "Unexpected error during project conversion", e );
     }
     catch( final InterruptedException e )
     {
