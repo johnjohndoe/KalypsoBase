@@ -40,33 +40,32 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.afgui.scenarios;
 
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.lang.reflect.InvocationTargetException;
+import java.io.FileFilter;
+import java.io.FilenameFilter;
 import java.net.URL;
+import java.util.Collection;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.vfs.FileSystemManagerWrapper;
+import org.apache.commons.io.filefilter.DirectoryFileFilter;
+import org.apache.commons.io.filefilter.FileFileFilter;
+import org.apache.commons.io.filefilter.FileFilterUtils;
+import org.apache.commons.io.filefilter.IOFileFilter;
+import org.apache.commons.io.filefilter.TrueFileFilter;
+import org.apache.commons.io.filefilter.WildcardFileFilter;
+import org.apache.commons.io.filefilter.WildcardFilter;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
-import org.kalypso.commons.io.VFSUtilities;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.eclipse.EclipsePlatformContributionsExtensions;
 import org.kalypso.contribs.eclipse.core.resources.ProjectTemplate;
-import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 
 import de.renew.workflow.base.IWorkflow;
 import de.renew.workflow.connector.WorkflowProjectNature;
@@ -142,64 +141,67 @@ public class ScenarioHelper
 
   public static boolean ensureBackwardsCompatibility( final IScenario caze, final CaseHandlingProjectNature<IScenario> nature )
   {
-    //FIXME: this is dirty fix only for this release 2.3 
-    //should be implemented in other way, we just do not have any time now
-      try
+    // FIXME: this is dirty fix only for this release 2.3
+    // should be implemented in other way, we just do not have any time now
+    try
+    {
+      if( nature != null && nature.getProject().hasNature( "org.kalypso.kalypso1d2d.pjt.Kalypso1D2DProjectNature" ) )
       {
-        if( nature.getProject().hasNature( "org.kalypso.kalypso1d2d.pjt.Kalypso1D2DProjectNature" ) ){
-          ProjectTemplate[] lTemplate = EclipsePlatformContributionsExtensions.getProjectTemplates( "org.kalypso.kalypso1d2d.pjt.projectTemplate" );
-          try
+        ProjectTemplate[] lTemplate = EclipsePlatformContributionsExtensions.getProjectTemplates( "org.kalypso.kalypso1d2d.pjt.projectTemplate" );
+        try
+        {
+          /* Unpack project from template */
+          final File destinationDir = nature.getProject().getLocation().toFile();
+          final URL data = lTemplate[0].getData();
+          final String location = data.toString();
+          final String extension = FilenameUtils.getExtension( location );
+          if( "zip".equalsIgnoreCase( extension ) )
           {
-            /* Unpack project from template */
-            final File destinationDir = nature.getProject().getLocation().toFile();
-            final URL data = lTemplate[ 0 ].getData();
-            final String location = data.toString();
-            final String extension = FilenameUtils.getExtension( location );
-            if( "zip".equalsIgnoreCase( extension ) ){
-              try
-              {
-                ZipUtilities.unzip( data.openStream(), destinationDir, false );
-              }
-              finally
-              {
-              }
+            try
+            {
+              ZipUtilities.unzip( data.openStream(), destinationDir, false );
+            }
+            finally
+            {
+            }
+          }
+          else
+          {
+            final URL fileURL = FileLocator.toFileURL( data );
+            final File dataDir = FileUtils.toFile( fileURL );
+            if( dataDir == null )
+            {
+              return false;
+            }
+            IOFileFilter lFileFilter = new WildcardFileFilter( new String[] { "wind.gml" } );
+            IOFileFilter lDirFilter = TrueFileFilter.INSTANCE;
+            final Collection< ? > windFiles = FileUtils.listFiles( destinationDir, lFileFilter, lDirFilter );
+            
+            if( dataDir.isDirectory() && (windFiles == null || windFiles.size() == 0 ) )
+            {
+              WildcardFileFilter lCopyFilter = new WildcardFileFilter( new String[] { "*asis", "models", "wind.gml" } );
+              FileUtils.copyDirectory( dataDir, destinationDir, lCopyFilter );
             }
             else
             {
-              final URL fileURL = FileLocator.toFileURL( data );
-              final File dataDir = FileUtils.toFile( fileURL );
-              if( dataDir == null )
-              {
-                return false;
-              }
-              FileSystemManagerWrapper vfsManager = VFSUtilities.getNewManager();
-              if( dataDir.isDirectory() )
-              {
-                VFSUtilities.copyDirectoryToDirectory(vfsManager.toFileObject( dataDir ), vfsManager.toFileObject( destinationDir ), false );
-              }
-              else
-              {
-                return false;
-              }
+              return true;
             }
-           
           }
-          
-          catch( final Throwable t )
-          {
-            t.printStackTrace();
-            return false;
-          }
-          nature.getProject().refreshLocal( IProject.DEPTH_INFINITE, null );
         }
+        catch( final Throwable t )
+        {
+          t.printStackTrace();
+          return false;
+        }
+        nature.getProject().refreshLocal( IProject.DEPTH_INFINITE, null );
       }
-      catch( CoreException e )
-      {
-        KalypsoAFGUIFrameworkPlugin.getDefault().getLog().log( e.getStatus() );
-        e.printStackTrace();
-        return false;
-      }
-    
+    }
+    catch( CoreException e )
+    {
+      KalypsoAFGUIFrameworkPlugin.getDefault().getLog().log( e.getStatus() );
+      e.printStackTrace();
+      return false;
+    }
 
     return true;
   }
