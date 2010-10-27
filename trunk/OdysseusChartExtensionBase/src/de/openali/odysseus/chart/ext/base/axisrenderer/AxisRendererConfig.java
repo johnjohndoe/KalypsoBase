@@ -82,7 +82,7 @@ public class AxisRendererConfig
    * if set to true, a tick label which would not diplayed in full because it's cut off by the border of the axis
    * widget, will not be displayed at all
    */
-  boolean hideCut = true;
+  public boolean hideCut = true;
 
   /**
    * if set to a value greater 0, the axis will not be (re)sized according to its needs, its width will always be the

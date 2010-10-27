@@ -37,48 +37,6 @@ public interface IMapperRegistry extends IEventProvider<IMapperRegistryEventList
    */
   IAxis[] getAxesAt( IAxisConstants.POSITION pos );
 
-  /**
-   * @return renderer for the given axis. If first looks up the renderer that were explicitely registered for a given
-   *         axis. If no renderer is found for that axis, it looks up the renderer based on the dataClass of the axis.
-   *         If still no renderer is found, it tries to find a renderer for a super class of the axis dataClass.
-   */
-  // public IAxisRenderer getRenderer( IAxis axis );
-
-  /**
-   * checks if a renderer with the given id is available in the registry and returns it oder null otherwise
-   */
-  // public IAxisRenderer getRenderer( String id );
-
-// /**
-// * sets the AxisRenderer for a particular axis, identified by - guess what - the axis' identifier
-// */
-// public void setRenderer( String identifier, IAxisRenderer renderer );
-//
-// /**
-// * removes the renderer for a particular axis
-// */
-// public void unsetRenderer( String identifier );
-
-  /**
-   * @return the AxisComponent of the given axis or null if there isn't any
-   */
-// public IAxisComponent getComponent( IAxis axis );
-
-  /**
-   * sets the component for a particular axis
-   */
-// public void setComponent( IAxis axis, IAxisComponent comp );
-
-  /**
-   * @return map of Axis-AxisComponent-Pairs
-   */
-  // public Map<IAxis, IAxisComponent> getAxesToComponentsMap( );
-
-  /**
-   * removes all IAxis, IAxisRenderer and IAxisComponent entries
-   */
-  void clear( );
-
   void addMapper( IMapper mapper );
 
   Map<IAxis, IDataRange<Number>> getNumericRangeAxisSnapshot( );

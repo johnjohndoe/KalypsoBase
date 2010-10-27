@@ -45,6 +45,7 @@ import java.text.Format;
 import java.text.NumberFormat;
 
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
+import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.LABEL_POSITION;
 
 /**
  * @author alibu
@@ -52,7 +53,17 @@ import de.openali.odysseus.chart.framework.model.data.IDataRange;
 public class NumberLabelCreator implements ILabelCreator
 {
 
+  @Override
+  public LABEL_POSITION getLabelPosition( )
+  {
+    if( m_labelPosition == null )
+      m_labelPosition = LABEL_POSITION.TICK_CENTERED;
+    return m_labelPosition;
+  }
+
   private final String m_formatString;
+
+  private LABEL_POSITION m_labelPosition = null;
 
   public NumberLabelCreator( final String formatString )
   {
@@ -64,19 +75,29 @@ public class NumberLabelCreator implements ILabelCreator
    *      org.kalypso.chart.framework.model.data.IDataRange)
    */
   @Override
-  public String getLabel( final Number value, final IDataRange<Number> range )
+  public String getLabel( final Number[] ticks, final int i, final IDataRange<Number> range )
   {
-    if( value == null )
+    if( ticks == null )
       return "";
     if( "%s".equals( m_formatString ) )
     {
       final Format format = getFormat( range );
-      return format == null ? null : format.format( value );
+      return format == null ? null : format.format( ticks[i] );
     }
     else
     {
-      return String.format( m_formatString, value );
+      return String.format( m_formatString, ticks[i] );
     }
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.ext.base.axisrenderer.ILabelCreator#getLabel(java.lang.Number,
+   *      de.openali.odysseus.chart.framework.model.data.IDataRange)
+   */
+  @Override
+  public String getLabel( final Number value, final IDataRange<Number> range )
+  {
+    return getLabel( new Number[] { value }, 0, range );
   }
 
   public Format getFormat( final IDataRange<Number> range )

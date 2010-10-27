@@ -7,6 +7,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
@@ -428,12 +429,54 @@ public class ChartImageFactory
 
   }
 
-  final public static Image createPlotImage( final IChartLayer[] layers, final Rectangle plotSize )
+  public static Point calculateTitleSize( final String title, final FontData titleFont )
+  {
+    final Device dev = PlatformUI.getWorkbench().getDisplay();
+    final Image image = new Image( dev, 1, 1 );
+    final GC tmpGc = new GC( image );
+    final Font tmpFont = new Font( dev, titleFont == null ? dev.getFontList( null, true )[0] : titleFont );
+    try
+    {
+      tmpGc.setFont( tmpFont );
+      final Point size = tmpGc.textExtent( title );
+      return size;
+    }
+    finally
+    {
+      image.dispose();
+      tmpGc.dispose();
+      tmpFont.dispose();
+    }
+
+  }
+
+  public static Image createTitleImage( final String title, final FontData titleFont, final Point size )
+  {
+
+    final Device dev = PlatformUI.getWorkbench().getDisplay();
+    final Image image = new Image( dev, size.x, size.y );
+    final GC tmpGc = new GC( image );
+    final Font tmpFont = new Font( dev, titleFont == null ? dev.getFontList( null, true )[0] : titleFont );
+    try
+    {
+      tmpGc.setFont( tmpFont );
+      tmpGc.drawText( title, 0, 0 );
+      return image;
+    }
+    finally
+    {
+      tmpFont.dispose();
+      tmpGc.dispose();
+    }
+
+  }
+
+  public static Image createPlotImage( final IChartLayer[] layers, final Rectangle plotSize )
   {
     return createPlotImage( null, layers, plotSize );
   }
 
-  final public static Image createPlotImage( final Map<IChartLayer, Image> imageMap, final IChartLayer[] layers, final Rectangle plotSize )
+  public static Image createPlotImage( final Map<IChartLayer, Image> imageMap, final IChartLayer[] layers, final Rectangle plotSize )
   {
     if( plotSize.width == 0 || plotSize.height == 0 )
       return null;

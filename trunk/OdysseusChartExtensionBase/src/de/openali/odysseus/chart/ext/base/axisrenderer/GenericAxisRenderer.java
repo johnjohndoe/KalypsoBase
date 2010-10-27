@@ -15,6 +15,7 @@ import org.eclipse.ui.PlatformUI;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.DIRECTION;
+import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.LABEL_POSITION;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
@@ -125,23 +126,31 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
     final ITextStyle tickLabelStyle = getTickLabelStyle();
     final ILineStyle tickLineStyle = getTickLineStyle();
 
-    for( final Number value : ticks )
+    final int tickScreenDistance = ticks.length < 2 ? -1 : Math.abs( axis.numericToScreen( ticks[1] ) - axis.numericToScreen( ticks[0] ) );
+    final LABEL_POSITION labelPosition;
+    if( tickScreenDistance < 0 && m_labelCreator.getLabelPosition() == LABEL_POSITION.INTERVALL_CENTERED )
+      labelPosition = LABEL_POSITION.LEFT;
+    else
+      labelPosition = m_labelCreator.getLabelPosition();
+
+    for( int i = 0; i < ticks.length; i++ )
     {
       int y1, y2, x1, x2, tickPos;
       String label;
-      label = m_labelCreator.getLabel( value, range );
+      label = m_labelCreator.getLabel( ticks, i, range );
 
       boolean drawTick = true;
 
-      tickPos = axis.numericToScreen( value );
-      final Point tickExtent = getTextExtent( gc, label, tickLabelStyle );
+      tickPos = axis.numericToScreen( ticks[i] );
+      final Point labelSize = getTextExtent( gc, label, tickLabelStyle );
       // HORIZONTAL
       if( axis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
       {
         x1 = tickPos + offset;
         x2 = x1;
         y1 = startY;
-        textX = tickPos - tickExtent.x / 2 + offset;
+        // textX = tickPos - labelSize.x / 2 + offset;
+        textX = tickPos - getLabelPosition( labelSize.x,tickScreenDistance, labelPosition ) + offset;
         // BOTTOM
         if( axis.getPosition() == POSITION.BOTTOM )
         {
@@ -152,24 +161,25 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
         else
         {
           y2 = y1 - tickLength;
-          textY = y2 - tickLabelInsets.top - tickExtent.y;
+          textY = y2 - tickLabelInsets.top - labelSize.y;
         }
         // Nicht zeichnen, wenn 1. Text abgeschnitten & hideCut angegeben oder 2. Tick ausserhalb der AxisRange
-        if( (m_hideCut && ((textX < screenMin) || ((textX + tickExtent.x) > screenMax))) || ((x1 < screenMin + offset) || (x1 > screenMax + offset)) )
+        if( (m_hideCut && ((textX < screenMin) || ((textX + labelSize.x) > screenMax))) || ((x1 < screenMin + offset) || (x1 > screenMax + offset)) )
           drawTick = false;
       }
       // VERTICAL
       else
       {
         x1 = startX;
-        textY = tickPos - tickExtent.y / 2 + offset;
+       // textY = tickPos - labelSize.y / 2 + offset;
+        textY = tickPos - getLabelPosition( labelSize.y, tickScreenDistance, labelPosition )+ offset;
         y1 = tickPos + offset;
         y2 = y1;
         // LEFT
         if( axis.getPosition() == POSITION.LEFT )
         {
           x2 = x1 - tickLength;
-          textX = x2 - tickExtent.x - tickLabelInsets.top;
+          textX = x2 - labelSize.x - tickLabelInsets.top;
         }
         // RIGHT
         else
@@ -178,7 +188,7 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
           textX = x2 + tickLabelInsets.top;
         }
         // Nicht zeichnen, wenn 1. Text abgeschnitten & hideCut angegeben oder 2. Tick ausserhalb der AxisRange
-        if( (m_hideCut && ((textY < screenMin) || ((textY + tickExtent.y) > screenMax))) || ((y1 < screenMin + offset) || (y1 > screenMax + offset)) )
+        if( (m_hideCut && ((textY < screenMin) || ((textY + labelSize.y) > screenMax))) || ((y1 < screenMin + offset) || (y1 > screenMax + offset)) )
           drawTick = false;
       }
 
@@ -188,6 +198,23 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
         tickLineStyle.apply( gc );
         gc.drawLine( x1, y1, x2, y2 );
       }
+    }
+  }
+
+  final int getLabelPosition( final int labelWidth, final int tickScreenDistance, final LABEL_POSITION labelPosition )
+  {
+    switch( labelPosition )
+    {
+      case LEFT:
+        return labelWidth;
+      case RIGHT:
+        return 0;
+      case TICK_CENTERED:
+        return labelWidth / 2;
+      case INTERVALL_CENTERED:
+        return (tickScreenDistance -labelWidth)/2 ;
+      default:
+        return labelWidth / 2;
     }
   }
 

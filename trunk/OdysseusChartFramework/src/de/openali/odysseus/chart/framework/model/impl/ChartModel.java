@@ -41,13 +41,15 @@ public class ChartModel implements IChartModel
    */
   private final boolean m_autoscale = false;
 
+  private boolean m_hideTitle = false;
+
   private String m_id = "";
 
-  private String m_title = "";
+  private String m_title = "no Title set";
 
   private String m_description = "";
 
-  private ITextStyle m_textStyle = StyleUtils.getDefaultTextStyle();
+  private ITextStyle m_textStyle = null;
 
   public ChartModel( )
   {
@@ -82,6 +84,7 @@ public class ChartModel implements IChartModel
           if( coordinateMapper != null )
           {
             hideUnusedAxis( coordinateMapper.getTargetAxis() );
+            hideUnusedAxis( coordinateMapper.getDomainAxis() );
           }
         }
       }
@@ -133,14 +136,10 @@ public class ChartModel implements IChartModel
    */
   @Override
   @SuppressWarnings("unchecked")
-  public void autoscale( IAxis[] axes )
+  public void autoscale( final IAxis[] axes )
   {
-    if( axes == null )
-    {
-      axes = getMapperRegistry().getAxes();
-    }
-
-    for( final IAxis axis : axes )
+    final IAxis[] autoscaledAxes = axes == null ? getMapperRegistry().getAxes() : axes;
+    for( final IAxis axis : autoscaledAxes )
     {
       final List<IChartLayer> layers = getAxis2Layers().get( axis );
       if( layers == null )
@@ -212,7 +211,6 @@ public class ChartModel implements IChartModel
   {
     m_axis2Layers.clear();
     getLayerManager().clear();
-    m_mapperRegistry.clear();
   }
 
   /**
@@ -657,11 +655,33 @@ public class ChartModel implements IChartModel
 
   public ITextStyle getTextStyle( )
   {
+    if( m_textStyle == null )
+      m_textStyle = StyleUtils.getDefaultTextStyle();
     return m_textStyle;
   }
 
   public void setTextStyle( final ITextStyle textStyle )
   {
     m_textStyle = textStyle;
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.IChartModel#setHideTitle(boolean)
+   */
+  @Override
+  public void setHideTitle( final boolean b )
+  {
+    if( isHideTitle() != b )
+      m_hideTitle = b;
+
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.IChartModel#isHideTitle()
+   */
+  @Override
+  public boolean isHideTitle( )
+  {
+    return m_hideTitle;
   }
 }

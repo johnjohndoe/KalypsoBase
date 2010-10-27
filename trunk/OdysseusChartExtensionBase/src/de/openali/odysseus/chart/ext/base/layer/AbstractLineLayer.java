@@ -10,6 +10,7 @@ import org.eclipse.swt.graphics.Rectangle;
 
 import de.openali.odysseus.chart.framework.model.figure.impl.PointFigure;
 import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
+import de.openali.odysseus.chart.framework.model.figure.impl.TextFigure;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 import de.openali.odysseus.chart.framework.model.layer.ITooltipChartLayer;
@@ -17,111 +18,39 @@ import de.openali.odysseus.chart.framework.model.layer.impl.LegendEntry;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyle;
-import de.openali.odysseus.chart.framework.util.StyleUtils;
+import de.openali.odysseus.chart.framework.model.style.ITextStyle;
+import de.openali.odysseus.chart.framework.model.style.impl.StyleSet;
+import de.openali.odysseus.chart.framework.model.style.impl.StyleSetVisitor;
 
 /**
  * @author alibu
  */
 public abstract class AbstractLineLayer extends AbstractChartLayer implements ITooltipChartLayer
 {
-
-  private final ILineStyle m_lineStyle;
-
-  private final IPointStyle m_pointStyle;
-
   private PointFigure m_pointFigure;
 
   private PolylineFigure m_polylineFigure;
 
+  private TextFigure m_textFigure;
+
   public AbstractLineLayer( final ILineStyle lineStyle, final IPointStyle pointStyle )
   {
-    m_lineStyle = lineStyle;
-    m_pointStyle = pointStyle;
+    getPolylineFigure().setStyle( lineStyle );
+    getPointFigure().setStyle( pointStyle );
   }
 
-  /**
-   * @see org.kalypso.swtchart.chart.layer.IChartLayer#drawIcon(org.eclipse.swt.graphics.Image, int, int)
-   */
-  public void drawIcon( final Image img )
+  public AbstractLineLayer( final StyleSet styleSet )
   {
-    final Rectangle bounds = img.getBounds();
-    final int height = bounds.height;
-    final int width = bounds.width;
-    final GC gc = new GC( img );
-
-    final ArrayList<Point> path = new ArrayList<Point>();
-
-    path.add( new Point( 0, height / 2 ) );
-    path.add( new Point( width / 5, height / 2 ) );
-    path.add( new Point( width / 5 * 2, height / 4 ) );
-    path.add( new Point( width / 5 * 3, height / 4 * 3 ) );
-    path.add( new Point( width / 5 * 4, height / 2 ) );
-    path.add( new Point( width, height / 2 ) );
-    drawLine( gc, path );
-    drawPoints( gc, path );
-
-    gc.dispose();
-  }
-
-  protected void drawLine( final GC gc, final List<Point> path )
-  {
-    drawLine( gc, path.toArray( new Point[] {} ) );
-  }
-
-  protected void drawLine( final GC gc, final Point... paths )
-  {
-    final PolylineFigure lf = getPolylineFigure();
-    lf.setPoints( paths );
-    lf.paint( gc );
-  }
-
-  protected void drawPoints( final GC gc, final List<Point> path )
-  {
-    drawPoints( gc, path.toArray( new Point[] {} ) );
-  }
-
-  protected void drawPoints( final GC gc, final Point... paths )
-  {
-    final PointFigure pf = getPointFigure();
-    pf.setPoints( paths );
-    pf.paint( gc );
-  }
-
-  protected PolylineFigure getPolylineFigure( )
-  {
-    if( m_polylineFigure == null )
-    {
-      final ILineStyle ls = getLineStyle();
-      m_polylineFigure = new PolylineFigure();
-      m_polylineFigure.setStyle( ls );
-    }
-    return m_polylineFigure;
-  }
-
-  protected ILineStyle getLineStyle( )
-  {
-    if( m_lineStyle == null )
-      return StyleUtils.getDefaultLineStyle();
-    return m_lineStyle;
-  }
-
-  protected PointFigure getPointFigure( )
-  {
-    if( m_pointFigure == null )
-    {
-      final IStyle ps = getPointStyle();
-      m_pointFigure = new PointFigure();
-      m_pointFigure.setStyle( (IPointStyle) ps );
-    }
-    return m_pointFigure;
-  }
-
-  protected IStyle getPointStyle( )
-  {
-    if( m_pointStyle != null )
-      return m_pointStyle;
-    return StyleUtils.getDefaultPointStyle();
-
+    final StyleSetVisitor visitor = new StyleSetVisitor();
+    final ILineStyle ls = visitor.visit( styleSet, ILineStyle.class, 0 );
+    final IPointStyle ps = visitor.visit( styleSet, IPointStyle.class, 0 );
+    final ITextStyle ts = visitor.visit( styleSet, ITextStyle.class, 0 );
+    if( ls != null )
+      getPolylineFigure().setStyle( ls );
+    if( ps != null )
+      getPointFigure().setStyle( ps );
+    if( ts != null )
+      getTextFigure().setStyle( ts );
   }
 
   /**
@@ -189,11 +118,119 @@ public abstract class AbstractLineLayer extends AbstractChartLayer implements IT
   }
 
   /**
+   * @see org.kalypso.swtchart.chart.layer.IChartLayer#drawIcon(org.eclipse.swt.graphics.Image, int, int)
+   */
+  public void drawIcon( final Image img )
+  {
+    final Rectangle bounds = img.getBounds();
+    final int height = bounds.height;
+    final int width = bounds.width;
+    final GC gc = new GC( img );
+
+    final ArrayList<Point> path = new ArrayList<Point>();
+
+    path.add( new Point( 0, height / 2 ) );
+    path.add( new Point( width / 5, height / 2 ) );
+    path.add( new Point( width / 5 * 2, height / 4 ) );
+    path.add( new Point( width / 5 * 3, height / 4 * 3 ) );
+    path.add( new Point( width / 5 * 4, height / 2 ) );
+    path.add( new Point( width, height / 2 ) );
+    drawLine( gc, path );
+    drawPoints( gc, path );
+
+    gc.dispose();
+  }
+
+  protected void drawText( final GC gc, final String text, final Point leftTopPoint  )
+  {
+    final TextFigure tf = getTextFigure();
+    tf.setText( text );
+    tf.setPoints( new Point[] { leftTopPoint } );
+    tf.paint( gc );
+  }
+
+  protected void drawLine( final GC gc, final List<Point> path )
+  {
+    drawLine( gc, path.toArray( new Point[] {} ) );
+  }
+
+  protected void drawLine( final GC gc, final Point... paths )
+  {
+    final PolylineFigure lf = getPolylineFigure();
+    lf.setPoints( paths );
+    lf.paint( gc );
+  }
+
+  protected void drawPoints( final GC gc, final List<Point> path )
+  {
+    drawPoints( gc, path.toArray( new Point[] {} ) );
+  }
+
+  protected void drawPoints( final GC gc, final Point... paths )
+  {
+    final PointFigure pf = getPointFigure();
+    pf.setPoints( paths );
+    pf.paint( gc );
+  }
+
+  /**
    * @see de.openali.odysseus.chart.framework.model.layer.ITooltipChartLayer#getHover(org.eclipse.swt.graphics.Point)
    */
   @Override
   public EditInfo getHover( final Point pos )
   {
     return null;
+  }
+
+  protected ILineStyle getLineStyle( )
+  {
+    return getPolylineFigure().getStyle();
+  }
+
+  protected PointFigure getPointFigure( )
+  {
+    if( m_pointFigure == null )
+      m_pointFigure = new PointFigure();
+    return m_pointFigure;
+  }
+
+  protected IStyle getPointStyle( )
+  {
+    return getPointFigure().getStyle();
+
+  }
+
+  protected PolylineFigure getPolylineFigure( )
+  {
+    if( m_polylineFigure == null )
+      m_polylineFigure = new PolylineFigure();
+    return m_polylineFigure;
+  }
+
+  public TextFigure getTextFigure( )
+  {
+    if( m_textFigure == null )
+      m_textFigure = new TextFigure();
+    return m_textFigure;
+  }
+
+  public ITextStyle getTextStyle( )
+  {
+    return getTextFigure().getStyle();
+  }
+
+  public void setPointFigure( final PointFigure pointFigure )
+  {
+    m_pointFigure = pointFigure;
+  }
+
+  public void setPolylineFigure( final PolylineFigure polylineFigure )
+  {
+    m_polylineFigure = polylineFigure;
+  }
+
+  public void setTextFigure( final TextFigure textFigure )
+  {
+    m_textFigure = textFigure;
   }
 }

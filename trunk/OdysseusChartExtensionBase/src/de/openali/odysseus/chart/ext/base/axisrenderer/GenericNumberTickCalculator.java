@@ -102,12 +102,6 @@ public class GenericNumberTickCalculator implements ITickCalculator
       interval = minDisplayInterval.doubleValue();
     }
 
-    // to fit the range into axissize we need a small distance here
-// if(normmin == normmax)
-// {
-// normmin*= 0.9999;
-// normmax*= 1.0001;
-// }
 
     // hier werden alle Zahlen gespeichert, die als gute Divisoren eines Intervalls gelten
     // 3 w�rde z.B. schnell krumme werte erzeugen
@@ -131,7 +125,7 @@ public class GenericNumberTickCalculator implements ITickCalculator
       findBetweens( normmiddle, normmax, minLogInterval, goodDivisors, ticks, minDisplayInterval, axis );
     }
 
-    Number[] numTicks = ticks.toArray( new Number[] {} );
+    final Number[] numTicks = ticks.toArray( new Number[] {} );
     return numTicks;
 
   }
