@@ -203,7 +203,7 @@ public final class ProfilUtil
 
     if( i2 < i1 )
       return false;
-    final int index = owner.indexOf( component );
+    final int index = owner.indexOfComponent( component );
 
     for( int i = i1; i < i2 - 1; i++ )
     {
@@ -250,7 +250,7 @@ public final class ProfilUtil
 
       if( x1.isNaN() || x2.isNaN() )
       {
-        final int index = point1.getOwner().indexOf( property );
+        final int index = point1.getOwner().indexOfComponent( property );
         final Object o1 = point1.getValue( index );
         final Object o2 = point2.getValue( index );
         if( o1 == null || o2 == null || o1.equals( o2 ) )
