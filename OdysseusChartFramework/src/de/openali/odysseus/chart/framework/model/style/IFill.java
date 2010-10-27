@@ -44,13 +44,13 @@ import org.eclipse.swt.graphics.GC;
 
 /**
  * @author alibu
- * 
  */
 public interface IFill
 {
-  public void apply( GC gc );
+  void apply( GC gc );
 
-  public void dispose( );
+  IFill copy( );
 
-  public IFill copy( );
+  void dispose( );
+
 }

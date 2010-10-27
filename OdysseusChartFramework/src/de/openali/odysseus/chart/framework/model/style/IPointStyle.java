@@ -4,32 +4,30 @@ import org.eclipse.swt.graphics.RGB;
 
 public interface IPointStyle extends IStyle
 {
-
-  public void setStroke( ILineStyle stroke );
-
-  public void setWidth( int width );
-
-  public void setHeight( int height );
-
-  public int getWidth( );
-
-  public int getHeight( );
-
-  public void setInlineColor( RGB rgb );
-
-  public void setFillVisible( boolean isFillVisible );
-
-  public boolean isFillVisible( );
-
-  public void setMarker( IMarker marker );
-
-  public IMarker getMarker( );
-
-  public ILineStyle getStroke( );
-
-  public RGB getInlineColor( );
-
   @Override
-  public IPointStyle copy( );
+  IPointStyle copy( );
 
+  int getHeight( );
+
+  RGB getInlineColor( );
+
+  IMarker getMarker( );
+
+  ILineStyle getStroke( );
+
+  int getWidth( );
+
+  boolean isFillVisible( );
+
+  void setFillVisible( boolean isFillVisible );
+
+  void setHeight( int height );
+
+  void setInlineColor( RGB rgb );
+
+  void setMarker( IMarker marker );
+
+  void setStroke( ILineStyle stroke );
+
+  void setWidth( int width );
 }

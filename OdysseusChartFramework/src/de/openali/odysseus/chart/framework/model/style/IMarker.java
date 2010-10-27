@@ -5,13 +5,12 @@ import org.eclipse.swt.graphics.Point;
 
 public interface IMarker
 {
+  IMarker copy( );
+
+  void dispose( );
 
   /**
    * assumes that the style is already set
    */
-  public void paint( GC gc, Point p, int width, int height, boolean drawForeground, boolean drawBackground );
-
-  public void dispose( );
-
-  public IMarker copy( );
+  void paint( GC gc, Point p, int width, int height, boolean drawForeground, boolean drawBackground );
 }
