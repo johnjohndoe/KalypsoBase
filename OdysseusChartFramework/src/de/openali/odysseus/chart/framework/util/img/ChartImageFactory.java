@@ -239,14 +239,15 @@ public class ChartImageFactory
     return new Rectangle( left, top, right - left, bottom - top );
   }
 
-  public static ImageData createChartImage( final IChartModel model, final int width, final int height )
+  public static ImageData createChartImage( final IChartModel model, final Point size )
   {
-    final Rectangle plotRect = calculatePlotSize( model.getMapperRegistry(), width, height );
+    final Rectangle plotRect = calculatePlotSize( model.getMapperRegistry(), size.x, size.y );
     setAxesHeight( model.getMapperRegistry().getAxes(), plotRect );
-    final Image axesImage = createAxesImage( model.getMapperRegistry(), new Rectangle( 0, 0, width, height ) );
+    final Image axesImage = createAxesImage( model.getMapperRegistry(), new Rectangle( 0, 0, size.x, size.y ) );
     final Image plotImage = createPlotImage( model.getLayerManager().getLayers(), plotRect );
     final Device dev = PlatformUI.getWorkbench().getDisplay();
-    final Image image = new Image( dev, width, height );
+
+    final Image image = new Image( dev, size.x, size.y );
     final GC tmpGc = new GC( image );
     try
     {

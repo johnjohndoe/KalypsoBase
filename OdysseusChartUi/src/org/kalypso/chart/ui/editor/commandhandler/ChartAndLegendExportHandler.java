@@ -68,18 +68,18 @@ public class ChartAndLegendExportHandler extends AbstractHandler
         final Rectangle bounds = chart.getBounds();
         final ImageLoader il = new ImageLoader();
 
-        final ImageData idChart = ChartImageFactory.createChartImage( chart.getChartModel(), bounds.width, bounds.height );
-        Image imgChart = new Image( Display.getCurrent(), idChart );
+        final ImageData idChart = ChartImageFactory.createChartImage( chart.getChartModel(), new Point( bounds.width, bounds.height ) );
+        final Image imgChart = new Image( Display.getCurrent(), idChart );
 
-        ITextStyle layerStyle = StyleUtils.getDefaultTextStyle();
+        final ITextStyle layerStyle = StyleUtils.getDefaultTextStyle();
         layerStyle.setWeight( FONTWEIGHT.BOLD );
-        ITextStyle legendStyle = StyleUtils.getDefaultTextStyle();
+        final ITextStyle legendStyle = StyleUtils.getDefaultTextStyle();
 
         final ImageData idLegend = SimpleLegendImageFactory.createLegendImage( chart.getChartModel(), Display.getCurrent(), layerStyle, legendStyle, new Insets( 2, 10, 2, 5 ), new Point( 15, 15 ) );
-        Image imgLegend = new Image( Display.getCurrent(), idLegend );
+        final Image imgLegend = new Image( Display.getCurrent(), idLegend );
 
-        Image img = new Image( Display.getCurrent(), idChart.width + idLegend.width, Math.max( idChart.height, idLegend.height ) );
-        GC gc = new GC( img );
+        final Image img = new Image( Display.getCurrent(), idChart.width + idLegend.width, Math.max( idChart.height, idLegend.height ) );
+        final GC gc = new GC( img );
 
         gc.drawImage( imgChart, 0, img.getBounds().height - idChart.height );
         gc.drawImage( imgLegend, idChart.width, img.getBounds().height - idLegend.height );
@@ -105,7 +105,7 @@ public class ChartAndLegendExportHandler extends AbstractHandler
           il.save( m_filename, format );
         else
         {
-          final MessageDialog ed = new MessageDialog( shell, Messages.getString("org.kalypso.chart.ui.editor.commandhandler.ChartAndLegendExportHandler.0"), null, Messages.getString("org.kalypso.chart.ui.editor.commandhandler.ChartAndLegendExportHandler.1"), MessageDialog.NONE, new String[] { "OK" }, 1 ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+          final MessageDialog ed = new MessageDialog( shell, Messages.getString( "org.kalypso.chart.ui.editor.commandhandler.ChartAndLegendExportHandler.0" ), null, Messages.getString( "org.kalypso.chart.ui.editor.commandhandler.ChartAndLegendExportHandler.1" ), MessageDialog.NONE, new String[] { "OK" }, 1 ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
           ed.open();
         }
       }
@@ -113,7 +113,7 @@ public class ChartAndLegendExportHandler extends AbstractHandler
     }
     else
     {
-      final MessageDialog ed = new MessageDialog( shell, Messages.getString("org.kalypso.chart.ui.editor.commandhandler.ChartAndLegendExportHandler.2"), null, Messages.getString("org.kalypso.chart.ui.editor.commandhandler.ChartAndLegendExportHandler.3"), MessageDialog.NONE, new String[] { "OK" }, 1 ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      final MessageDialog ed = new MessageDialog( shell, Messages.getString( "org.kalypso.chart.ui.editor.commandhandler.ChartAndLegendExportHandler.2" ), null, Messages.getString( "org.kalypso.chart.ui.editor.commandhandler.ChartAndLegendExportHandler.3" ), MessageDialog.NONE, new String[] { "OK" }, 1 ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
       ed.open();
     }
     m_filename = null;
@@ -124,7 +124,7 @@ public class ChartAndLegendExportHandler extends AbstractHandler
    * this function can be used by IExecutionListener to set a filename from outside; BEWARE: the filename is reset after
    * the image has been saved!!!!!!!!!!!!
    */
-  public void setFilename( String filename )
+  public void setFilename( final String filename )
   {
     m_filename = filename;
 

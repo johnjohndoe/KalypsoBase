@@ -64,12 +64,12 @@ public abstract class AbstractODSDisplayOperation extends AbstractODSOperation i
     final DisplayHelper dh = DisplayHelper.getInstance();
     final Display d = dh.getDisplay();
     d.syncExec( this );
-    OWSException e = getException();
+    final OWSException e = getException();
     if( e != null )
       throw e;
   }
 
-  public void setException( OWSException e )
+  public void setException( final OWSException e )
   {
     m_exception = e;
   }

@@ -6,25 +6,26 @@ import de.openali.odysseus.service.ods.x020.ChartOfferingType;
 public class ODSChart implements IODSChart
 {
 
-	private final ChartConfigurationLoader m_chartConfigLoader;
-	private final ChartOfferingType m_chartOfferingType;
+  private final ChartConfigurationLoader m_chartConfigLoader;
 
-	public ODSChart(ChartConfigurationLoader ccl, ChartOfferingType cot)
-	{
-		m_chartConfigLoader = ccl;
-		m_chartOfferingType = cot;
-	}
+  private final ChartOfferingType m_chartOfferingType;
 
-	@Override
-	public ChartOfferingType getChartOfferingType()
-	{
-		return m_chartOfferingType;
-	}
+  public ODSChart( final ChartConfigurationLoader ccl, final ChartOfferingType cot )
+  {
+    m_chartConfigLoader = ccl;
+    m_chartOfferingType = cot;
+  }
 
-	@Override
-	public ChartConfigurationLoader getDefinitionType()
-	{
-		return m_chartConfigLoader;
-	}
+  @Override
+  public ChartOfferingType getChartOfferingType( )
+  {
+    return m_chartOfferingType;
+  }
+
+  @Override
+  public ChartConfigurationLoader getDefinitionType( )
+  {
+    return m_chartConfigLoader;
+  }
 
 }

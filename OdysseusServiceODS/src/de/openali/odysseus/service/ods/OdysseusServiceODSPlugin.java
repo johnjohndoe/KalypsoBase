@@ -14,7 +14,7 @@ public class OdysseusServiceODSPlugin extends Plugin
   }
 
   @Override
-  public void start( BundleContext context ) throws Exception
+  public void start( final BundleContext context ) throws Exception
   {
     super.start( context );
     DisplayHelper.getInstance().getDisplay();

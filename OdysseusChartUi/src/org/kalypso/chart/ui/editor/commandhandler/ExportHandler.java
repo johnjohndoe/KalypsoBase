@@ -7,6 +7,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.ImageLoader;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.kalypso.chart.ui.IChartPart;
@@ -19,7 +20,6 @@ import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
 public class ExportHandler extends AbstractHandler
 {
   private String m_filename;
-
 
   /**
    * saves an image of the current chart part to a file; if no filename has been set by setFilename(), a file dialog
@@ -44,7 +44,6 @@ public class ExportHandler extends AbstractHandler
     final ChartComposite chart = chartPart.getChartComposite();
     final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
 
-
     if( chart != null )
     {
       // Damit der Dateiname auch von aussen gesetzt werden kann:
@@ -59,10 +58,12 @@ public class ExportHandler extends AbstractHandler
       if( m_filename != null )
       {
 
-       // final Rectangle bounds = chart.getBounds();
+        // final Rectangle bounds = chart.getBounds();
         final ImageLoader il = new ImageLoader();
-        final ImageData id = ChartImageFactory.createChartImage(chart.getChartModel(),400,200); //Display.getCurrent(), bounds.width, bounds.height );
-      //  final ImageData id = ChartImageFactory.createChartImage(chart, Display.getCurrent(), bounds.width, bounds.height );
+        final ImageData id = ChartImageFactory.createChartImage( chart.getChartModel(), new Point( 400, 200 ) ); // Display.getCurrent(),
+// bounds.width, bounds.height );
+        // final ImageData id = ChartImageFactory.createChartImage(chart, Display.getCurrent(), bounds.width,
+// bounds.height );
         il.data = new ImageData[] { id };
 
         int format = -1;
@@ -79,7 +80,7 @@ public class ExportHandler extends AbstractHandler
           il.save( m_filename, format );
         else
         {
-          final MessageDialog ed = new MessageDialog( shell, Messages.getString("org.kalypso.chart.ui.editor.commandhandler.ExportHandler.0"), null, Messages.getString("org.kalypso.chart.ui.editor.commandhandler.ExportHandler.1"), MessageDialog.NONE, new String[] { "OK" }, 1 ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+          final MessageDialog ed = new MessageDialog( shell, Messages.getString( "org.kalypso.chart.ui.editor.commandhandler.ExportHandler.0" ), null, Messages.getString( "org.kalypso.chart.ui.editor.commandhandler.ExportHandler.1" ), MessageDialog.NONE, new String[] { "OK" }, 1 ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
           ed.open();
         }
       }
@@ -87,7 +88,7 @@ public class ExportHandler extends AbstractHandler
     }
     else
     {
-      final MessageDialog ed = new MessageDialog( shell, Messages.getString("org.kalypso.chart.ui.editor.commandhandler.ExportHandler.2"), null, Messages.getString("org.kalypso.chart.ui.editor.commandhandler.ExportHandler.3"), MessageDialog.NONE, new String[] { "OK" }, 1 ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      final MessageDialog ed = new MessageDialog( shell, Messages.getString( "org.kalypso.chart.ui.editor.commandhandler.ExportHandler.2" ), null, Messages.getString( "org.kalypso.chart.ui.editor.commandhandler.ExportHandler.3" ), MessageDialog.NONE, new String[] { "OK" }, 1 ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
       ed.open();
     }
     m_filename = null;

@@ -15,7 +15,7 @@ public class XMLOutput
   /**
    * writes an xmlObject to the output stream of the ResponseBean
    */
-  public static void xmlResponse( ResponseBean response, XmlObject xml )
+  public static void xmlResponse( final ResponseBean response, final XmlObject xml )
   {
     XmlOptions options = new XmlOptions();
     // Ausgabe menschenlesbar formatieren
