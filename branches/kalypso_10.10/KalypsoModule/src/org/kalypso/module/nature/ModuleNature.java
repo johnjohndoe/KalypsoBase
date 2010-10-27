@@ -137,7 +137,7 @@ public class ModuleNature implements IProjectNature
     /* Paranoid: check if my ID is contained in the description (should never happen) */
     final int indexOfId = ArrayUtils.indexOf( natureIds, ID );
     if( indexOfId != -1 )
-      throw new IllegalStateException( "NatureId present but unable to akquire nature" );
+      throw new IllegalStateException( "NatureId present but unable to akquire nature" ); //$NON-NLS-1$
 
     final String[] newNatureIds = (String[]) ArrayUtils.add( natureIds, ID );
     description.setNatureIds( newNatureIds );
@@ -160,7 +160,7 @@ public class ModuleNature implements IProjectNature
     {
       if( !projectModuleID.equals( moduleID ) )
       {
-        final String msg = String.format( "Trying to set module ID (%s), but project already has a different module id: %s", moduleID, projectModuleID );
+        final String msg = String.format( "Trying to set module ID (%s), but project already has a different module id: %s", moduleID, projectModuleID ); //$NON-NLS-1$
         final IStatus status = new Status( IStatus.ERROR, Module.PLUGIN_ID, msg );
         throw new CoreException( status );
       }

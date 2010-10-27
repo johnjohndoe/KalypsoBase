@@ -47,6 +47,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.module.conversion.AbstractLoggingOperation;
 import org.kalypso.module.conversion.IProjectConverter;
+import org.kalypso.module.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -59,7 +60,7 @@ public class ProjectConversionOperation extends AbstractLoggingOperation
 
   public ProjectConversionOperation( final IProject project, final IProjectConverter converter )
   {
-    super( "Projektkonvertierung" );
+    super( Messages.getString("ProjectConversionOperation.0") ); //$NON-NLS-1$
 
     m_project = project;
     m_converter = converter;
@@ -71,7 +72,7 @@ public class ProjectConversionOperation extends AbstractLoggingOperation
   @Override
   protected void doExecute( final IProgressMonitor monitor ) throws Exception
   {
-    final String taskName = String.format( "Konvertiere '%s' - %s", m_project.getName(), m_converter.getLabel() );
+    final String taskName = String.format( Messages.getString("ProjectConversionOperation.1"), m_project.getName(), m_converter.getLabel() ); //$NON-NLS-1$
     monitor.beginTask( taskName, 100 );
 
     try

@@ -47,9 +47,9 @@ package org.kalypso.module.nature;
  */
 public interface IModulePreferences
 {
-  String PREFERENCE_MODULE = "module";
+  String PREFERENCE_MODULE = "module"; //$NON-NLS-1$
 
-  String PREFERENCE_VERSION = "version";
+  String PREFERENCE_VERSION = "version"; //$NON-NLS-1$
 
   void setModule( String moduleID );
 
