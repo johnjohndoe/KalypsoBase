@@ -45,15 +45,18 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.IllegalFormatException;
 import java.util.List;
 import java.util.Locale;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
 
 /**
  * Helper class for I81N stuff.
  * 
  * @author Gernot Belger
  */
-public class I18nUtils
+public final class I18nUtils
 {
   private I18nUtils( )
   {
@@ -169,6 +172,34 @@ public class I18nUtils
     Collections.reverse( keys );
 
     return keys.toArray( new String[keys.size()] );
+  }
+
+  /**
+   * Formats a message from a resource bundle. for the given key.<br/>
+   * This is the common method that should be used for all Message-classes.
+   */
+  public static String formatMessage( final ResourceBundle resourceBundle, final String key, final Object[] args )
+  {
+    try
+    {
+      final String formatStr = resourceBundle.getString( key );
+      if( args.length == 0 )
+        return formatStr;
+
+      try
+      {
+        return String.format( formatStr, args );
+      }
+      catch( final IllegalFormatException e )
+      {
+        e.printStackTrace();
+        return '!' + formatStr + '!';
+      }
+    }
+    catch( final MissingResourceException e )
+    {
+      return '!' + key + '!';
+    }
   }
 
 }
