@@ -5,50 +5,48 @@ import java.util.List;
 public class OperationMetadata
 {
 
-	private final String m_operationId;
+  private final String m_operationId;
 
-	private final List<OperationParameter> m_parameters;
+  private final List<OperationParameter> m_parameters;
 
-	private final String m_service;
+  private final String m_service;
 
-	private final boolean m_isPublic;
+  private final boolean m_isPublic;
 
-	private final String m_description;
+  private final String m_description;
 
-	public OperationMetadata(String service, String operationId,
-	        String operationDescription, List<OperationParameter> parameters,
-	        boolean isPublic)
-	{
-		m_service = service;
-		m_operationId = operationId;
-		m_parameters = parameters;
-		m_isPublic = isPublic;
-		m_description = operationDescription;
-	}
+  public OperationMetadata( final String service, final String operationId, final String operationDescription, final List<OperationParameter> parameters, final boolean isPublic )
+  {
+    m_service = service;
+    m_operationId = operationId;
+    m_parameters = parameters;
+    m_isPublic = isPublic;
+    m_description = operationDescription;
+  }
 
-	public String getService()
-	{
-		return m_service;
-	}
+  public String getService( )
+  {
+    return m_service;
+  }
 
-	public String getOperationId()
-	{
-		return m_operationId;
-	}
+  public String getOperationId( )
+  {
+    return m_operationId;
+  }
 
-	public List<OperationParameter> getParameters()
-	{
-		return m_parameters;
-	}
+  public List<OperationParameter> getParameters( )
+  {
+    return m_parameters;
+  }
 
-	public boolean isPublic()
-	{
-		return m_isPublic;
-	}
+  public boolean isPublic( )
+  {
+    return m_isPublic;
+  }
 
-	public String getDescription()
-	{
-		return m_description;
-	}
+  public String getDescription( )
+  {
+    return m_description;
+  }
 
 }
