@@ -4,6 +4,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.eclipse.swt.graphics.ImageData;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
 
@@ -37,7 +38,7 @@ public class GetChart extends AbstractODSDisplayOperation implements Runnable
    * @see java.lang.Runnable#run()
    */
   @Override
-public void run( )
+  public void run( )
   {
     Logger.logInfo( Logger.TOPIC_LOG_GENERAL, "Accessing servlet: GetChart" );
 
@@ -104,7 +105,7 @@ public void run( )
           setException( e );
           return;
         }
-        final ImageData id = ChartImageFactory.createChartImage( chart.getChartModel(), width, height );
+        final ImageData id = ChartImageFactory.createChartImage( chart.getChartModel(), new Point( width, height ) );
         if( id != null )
           ImageOutput.imageResponse( req, getResponse(), id );
         else

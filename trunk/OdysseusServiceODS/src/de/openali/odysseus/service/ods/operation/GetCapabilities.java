@@ -10,10 +10,10 @@ public class GetCapabilities extends AbstractODSOperation
   public void execute( )
   {
     final CapabilitiesLoader cl = new CapabilitiesLoader( getEnv() );
-    String scene = getRequest().getParameterValue("SCENE");
-    if (scene == null || "".equals(scene.trim()))
+    String scene = getRequest().getParameterValue( "SCENE" );
+    if( scene == null || "".equals( scene.trim() ) )
     {
-    	scene = getEnv().getConfigLoader().getDefaultSceneId();
+      scene = getEnv().getConfigLoader().getDefaultSceneId();
     }
     XMLOutput.xmlResponse( getResponse(), cl.getCapabilitiesDocument( scene ) );
   }

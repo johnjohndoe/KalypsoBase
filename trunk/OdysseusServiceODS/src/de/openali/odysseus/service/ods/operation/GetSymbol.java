@@ -55,70 +55,52 @@ import de.openali.odysseus.service.ows.request.RequestBean;
 public class GetSymbol extends AbstractODSOperation
 {
 
-	/**
-	 * @see de.openali.odysseus.service.ods.operation.AbstractODSOperation#execute(de.openali.ows.service.RequestBean,
-	 *      de.openali.ows.service.ResponseBean,
-	 *      de.openali.odysseus.service.ods.environment.IODSEnvironment)
-	 */
-	@Override
-	public void execute() throws OWSException
-	{
+  /**
+   * @see de.openali.odysseus.service.ods.operation.AbstractODSOperation#execute(de.openali.ows.service.RequestBean,
+   *      de.openali.ows.service.ResponseBean, de.openali.odysseus.service.ods.environment.IODSEnvironment)
+   */
+  @Override
+  public void execute( ) throws OWSException
+  {
 
-		// TODO: Validate scene, chart and layer parameter
-		RequestBean req = getRequest();
+    // TODO: Validate scene, chart and layer parameter
+    final RequestBean req = getRequest();
 
-		String sceneId = req.getParameterValue("SCENE");
-		// use default scene if no parameter value has been assigned
-		if ((sceneId == null) || "".equals(sceneId))
-			sceneId = getEnv().getDefaultSceneId();
-		if (sceneId == null)
-			throw new OWSException(
-			        OWSException.ExceptionCode.MISSING_PARAMETER_VALUE,
-			        "Missing parameter 'SCENE'", req.getUrl());
-		else if (!getEnv().validateSceneId(sceneId))
-			throw new OWSException(
-			        OWSException.ExceptionCode.INVALID_PARAMETER_VALUE,
-			        "Scene '" + sceneId + "' is not available", req.getUrl());
+    String sceneId = req.getParameterValue( "SCENE" );
+    // use default scene if no parameter value has been assigned
+    if( (sceneId == null) || "".equals( sceneId ) )
+      sceneId = getEnv().getDefaultSceneId();
+    if( sceneId == null )
+      throw new OWSException( OWSException.ExceptionCode.MISSING_PARAMETER_VALUE, "Missing parameter 'SCENE'", req.getUrl() );
+    else if( !getEnv().validateSceneId( sceneId ) )
+      throw new OWSException( OWSException.ExceptionCode.INVALID_PARAMETER_VALUE, "Scene '" + sceneId + "' is not available", req.getUrl() );
 
-		String chartId = req.getParameterValue("CHART");
-		if (chartId == null)
-			throw new OWSException(
-			        OWSException.ExceptionCode.MISSING_PARAMETER_VALUE,
-			        "Missing parameter 'CHART'", req.getUrl());
-		else if (!getEnv().validateChartId(sceneId, chartId))
-			throw new OWSException(
-			        OWSException.ExceptionCode.INVALID_PARAMETER_VALUE,
-			        "Chart '" + chartId + "' is not available", req.getUrl());
+    final String chartId = req.getParameterValue( "CHART" );
+    if( chartId == null )
+      throw new OWSException( OWSException.ExceptionCode.MISSING_PARAMETER_VALUE, "Missing parameter 'CHART'", req.getUrl() );
+    else if( !getEnv().validateChartId( sceneId, chartId ) )
+      throw new OWSException( OWSException.ExceptionCode.INVALID_PARAMETER_VALUE, "Chart '" + chartId + "' is not available", req.getUrl() );
 
-		String layerId = req.getParameterValue("LAYER");
-		if (layerId == null)
-			throw new OWSException(
-			        OWSException.ExceptionCode.MISSING_PARAMETER_VALUE,
-			        "Missing parameter 'LAYER'", req.getUrl());
-		else if (!getEnv().validateLayerId(sceneId, chartId, layerId))
-			throw new OWSException(
-			        OWSException.ExceptionCode.INVALID_PARAMETER_VALUE,
-			        "Layer '" + layerId + "' is not available", req.getUrl());
-		String symbolId = req.getParameterValue("SYMBOL");
-		if ((symbolId == null) || "".equals(symbolId.trim()))
-			throw new OWSException(
-			        OWSException.ExceptionCode.MISSING_PARAMETER_VALUE,
-			        "Missing parameter 'SYMBOL'", req.getUrl());
+    final String layerId = req.getParameterValue( "LAYER" );
+    if( layerId == null )
+      throw new OWSException( OWSException.ExceptionCode.MISSING_PARAMETER_VALUE, "Missing parameter 'LAYER'", req.getUrl() );
+    else if( !getEnv().validateLayerId( sceneId, chartId, layerId ) )
+      throw new OWSException( OWSException.ExceptionCode.INVALID_PARAMETER_VALUE, "Layer '" + layerId + "' is not available", req.getUrl() );
+    final String symbolId = req.getParameterValue( "SYMBOL" );
+    if( (symbolId == null) || "".equals( symbolId.trim() ) )
+      throw new OWSException( OWSException.ExceptionCode.MISSING_PARAMETER_VALUE, "Missing parameter 'SYMBOL'", req.getUrl() );
 
-		ImageData id;
-		try
-		{
-			id = ODSUtils.loadSymbol(getEnv().getTmpDir(), sceneId, chartId,
-			        layerId, symbolId);
-		}
-		catch (FileNotFoundException e)
-		{
-			throw new OWSException(
-			        OWSException.ExceptionCode.INVALID_PARAMETER_VALUE,
-			        "Symbol '" + symbolId + "' is not available", req.getUrl());
-		}
-		ImageOutput.imageResponse(req, getResponse(), id);
+    ImageData id;
+    try
+    {
+      id = ODSUtils.loadSymbol( getEnv().getTmpDir(), sceneId, chartId, layerId, symbolId );
+    }
+    catch( final FileNotFoundException e )
+    {
+      throw new OWSException( OWSException.ExceptionCode.INVALID_PARAMETER_VALUE, "Symbol '" + symbolId + "' is not available", req.getUrl() );
+    }
+    ImageOutput.imageResponse( req, getResponse(), id );
 
-	}
+  }
 
 }

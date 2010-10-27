@@ -53,44 +53,35 @@ import org.eclipse.swt.graphics.ImageLoader;
 public class ODSUtils
 {
 
-	private static final String SYMBOL_FILE_SUFFIX = ".png";
+  private static final String SYMBOL_FILE_SUFFIX = ".png";
 
-	private static final int SWT_IMAGE_TYPE = SWT.IMAGE_PNG;
+  private static final int SWT_IMAGE_TYPE = SWT.IMAGE_PNG;
 
-	public static ImageData loadSymbol(File symbolDir, String sceneId,
-	        String chartId, String layerId, String symbolId)
-	        throws FileNotFoundException
-	{
-		ImageLoader il = new ImageLoader();
-		File symbolFile = getSymbolFile(symbolDir, sceneId, chartId, layerId,
-		        symbolId);
-		System.out.println("Loading symbol file "
-		        + symbolFile.getAbsolutePath());
-		if (!symbolFile.exists())
-			throw new FileNotFoundException();
-		ImageData[] id = il.load(symbolFile.getAbsolutePath());
-		return id[0];
-	}
+  public static ImageData loadSymbol( final File symbolDir, final String sceneId, final String chartId, final String layerId, final String symbolId ) throws FileNotFoundException
+  {
+    final ImageLoader il = new ImageLoader();
+    final File symbolFile = getSymbolFile( symbolDir, sceneId, chartId, layerId, symbolId );
+    System.out.println( "Loading symbol file " + symbolFile.getAbsolutePath() );
+    if( !symbolFile.exists() )
+      throw new FileNotFoundException();
+    final ImageData[] id = il.load( symbolFile.getAbsolutePath() );
+    return id[0];
+  }
 
-	private static File getSymbolFile(File symbolDir, String sceneId,
-	        String chartId, String layerId, String symbolId)
-	{
-		String filename = sceneId + "_" + chartId + "_" + layerId + "_"
-		        + symbolId + SYMBOL_FILE_SUFFIX;
-		File symbolFile = new File(symbolDir, filename);
-		return symbolFile;
-	}
+  private static File getSymbolFile( final File symbolDir, final String sceneId, final String chartId, final String layerId, final String symbolId )
+  {
+    final String filename = sceneId + "_" + chartId + "_" + layerId + "_" + symbolId + SYMBOL_FILE_SUFFIX;
+    final File symbolFile = new File( symbolDir, filename );
+    return symbolFile;
+  }
 
-	public static void writeSymbol(File symbolDir, ImageData id,
-	        String sceneId, String chartId, String layerId, String symbolId)
-	{
-		ImageLoader il = new ImageLoader();
-		il.data = new ImageData[] { id };
-		File symbolFile = getSymbolFile(symbolDir, sceneId, chartId, layerId,
-		        symbolId);
-		System.out.println("Writing symbol file "
-		        + symbolFile.getAbsolutePath());
-		il.save(symbolFile.getAbsolutePath(), SWT_IMAGE_TYPE);
-	}
+  public static void writeSymbol( final File symbolDir, final ImageData id, final String sceneId, final String chartId, final String layerId, final String symbolId )
+  {
+    final ImageLoader il = new ImageLoader();
+    il.data = new ImageData[] { id };
+    final File symbolFile = getSymbolFile( symbolDir, sceneId, chartId, layerId, symbolId );
+    System.out.println( "Writing symbol file " + symbolFile.getAbsolutePath() );
+    il.save( symbolFile.getAbsolutePath(), SWT_IMAGE_TYPE );
+  }
 
 }

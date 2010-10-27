@@ -6,7 +6,7 @@ import de.openali.odysseus.service.ods.x020.ChartOfferingType;
 public interface IODSChart
 {
 
-	public ChartOfferingType getChartOfferingType();
+  public ChartOfferingType getChartOfferingType( );
 
-	public ChartConfigurationLoader getDefinitionType();
+  public ChartConfigurationLoader getDefinitionType( );
 }
