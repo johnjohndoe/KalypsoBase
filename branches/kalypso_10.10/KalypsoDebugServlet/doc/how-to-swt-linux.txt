@@ -1,0 +1,9 @@
+In order to use the swt classes from a servlet under linux, you have to manually set the windowing system in the web.xml file.
+It is simple: just add '-ws gtk' to the command line.
+
+<init-param>
+			<param-name>commandline</param-name>
+			<param-value>-console -ws gtk</param-value>			
+</init-param>
+
+This is necessary, because (for what reason i dont know) 'motif' is assumed as standard windows system, which leads to an error when the platform tries to load the swt-gtk fragment.
