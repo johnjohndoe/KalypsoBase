@@ -13,7 +13,7 @@ public class OperationParameter
 
   private final boolean m_isMandatory;
 
-  public OperationParameter( String name, String description, boolean isMandatory, List<String> values )
+  public OperationParameter( final String name, final String description, final boolean isMandatory, final List<String> values )
   {
     m_values = values;
     m_name = name;
