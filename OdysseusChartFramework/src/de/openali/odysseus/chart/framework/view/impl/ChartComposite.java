@@ -11,8 +11,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
-import org.eclipse.swt.graphics.GC;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
@@ -63,8 +61,9 @@ public class ChartComposite extends Canvas
     public IStatus runInUIThread( final IProgressMonitor monitor )
     {
       // TODO: only invalidate if necessary
-
-      layout( true,true );// first resize axis-places, then invalidate plot(maybe resized)
+      if( isDisposed() )
+        return Status.OK_STATUS;
+      layout( true, true );// first resize axis-places, then invalidate plot(maybe resized)
       m_plot.invalidate( null );
       return Status.OK_STATUS;
     }
@@ -396,12 +395,13 @@ public class ChartComposite extends Canvas
     super.dispose();
   }
 
-  public final void drawPlotImage( final GC gc, final Rectangle rect )
-  {
-    final Image tmpImg = m_plot.createImage( getChartModel().getLayerManager().getLayers(), rect );
-    gc.drawImage( tmpImg, 0, 0, m_plot.getBounds().width, m_plot.getBounds().height, m_plot.getBounds().x, m_plot.getBounds().y, m_plot.getBounds().width, m_plot.getBounds().height );
-    tmpImg.dispose();
-  }
+// public final void drawPlotImage( final GC gc, final Rectangle rect )
+// {
+// final Image tmpImg = m_plot.createImage( getChartModel().getLayerManager().getLayers(), rect );
+// gc.drawImage( tmpImg, 0, 0, m_plot.getBounds().width, m_plot.getBounds().height, m_plot.getBounds().x,
+// m_plot.getBounds().y, m_plot.getBounds().width, m_plot.getBounds().height );
+// tmpImg.dispose();
+// }
 
   public final AxisCanvas getAxisCanvas( final IAxis axis )
   {

@@ -44,35 +44,66 @@ import java.util.Date;
 
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.CalendarFormat;
+import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.LABEL_POSITION;
 
 /**
  * @author alibu
- * 
  */
 public class DateLabelCreator implements ILabelCreator
 {
 
+  public void setLabelPosition( final LABEL_POSITION labelPosition )
+  {
+    m_labelPosition = labelPosition;
+  }
+
   CalendarFormat m_format;
+
+  private LABEL_POSITION m_labelPosition = null;
 
   /**
    * @param formatString
-   *            z.B. "yyyy-MM-dd\nhh:mm:ss"
+   *          z.B. "yyyy-MM-dd\nhh:mm:ss"
    */
-  public DateLabelCreator( String formatString )
+  public DateLabelCreator( final String formatString )
   {
     m_format = new CalendarFormat( formatString );
   }
 
+  public DateLabelCreator( final String formatString, final LABEL_POSITION labelPosition )
+  {
+    m_format = new CalendarFormat( formatString );
+    m_labelPosition = labelPosition;
+  }
+
   /**
    * @param value
-   *            date in milliseconds
+   *          date in milliseconds
    * @param range
-   *            can be null, is not evaluated
+   *          can be null, is not evaluated
    * @see org.kalypso.chart.ext.test.axisrenderer.ILabelCreator#getLabel(java.lang.Number)
    */
   @Override
-  public String getLabel( Number value, IDataRange<Number> range )
+  public String getLabel( final Number[] ticks,final int i, final IDataRange<Number> range )
+  {
+    return m_format.format( new Date( ticks[i].longValue() ) );
+  }
+
+  @Override
+  public LABEL_POSITION getLabelPosition( )
+  {
+    if( m_labelPosition == null )
+      m_labelPosition = LABEL_POSITION.TICK_CENTERED;
+    return m_labelPosition;
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.ext.base.axisrenderer.ILabelCreator#getLabel(java.lang.Number, de.openali.odysseus.chart.framework.model.data.IDataRange)
+   */
+  @Override
+  public String getLabel( final Number value, final IDataRange<Number> range )
   {
     return m_format.format( new Date( value.longValue() ) );
   }
+
 }

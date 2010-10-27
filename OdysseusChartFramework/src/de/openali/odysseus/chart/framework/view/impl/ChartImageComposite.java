@@ -10,6 +10,7 @@ import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
+import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
@@ -67,15 +68,24 @@ public class ChartImageComposite extends Canvas
         m_axesImage.dispose();
         m_axesImage = null;
       }
+      if( (m_titleImage != null) && !m_titleImage.isDisposed() )
+      {
+        m_titleImage.dispose();
+        m_titleImage = null;
+      }
       if( isDisposed() )
         return Status.OK_STATUS;
       final IChartModel model = getChartModel();
+      final Point titleSize = model.isHideTitle() ? new Point( 0, 0 ) : ChartImageFactory.calculateTitleSize( model.getTitle(), getTitleFont() );
       final IMapperRegistry mapperRegistry = model == null ? null : model.getMapperRegistry();
       if( mapperRegistry == null )
         return Status.OK_STATUS;
-      m_plotRect = ChartImageFactory.calculatePlotSize( mapperRegistry, getClientArea().width, getClientArea().height );
+      m_plotRect = ChartImageFactory.calculatePlotSize( mapperRegistry, getClientArea().width, getClientArea().height - titleSize.y );
+      m_plotRect.y += titleSize.y;
       ChartImageFactory.setAxesHeight( mapperRegistry.getAxes(), m_plotRect );
       m_axesImage = ChartImageFactory.createAxesImage( getChartModel().getMapperRegistry(), getClientArea(), m_plotRect );
+
+      m_titleImage = model.isHideTitle() ? null : ChartImageFactory.createTitleImage( model.getTitle(), getTitleFont(), titleSize );
 
       final ILayerManager layerManager = model == null ? null : model.getLayerManager();
       if( layerManager == null )
@@ -91,6 +101,10 @@ public class ChartImageComposite extends Canvas
   protected Image m_plotImage = null;
 
   protected Image m_axesImage = null;
+
+  protected FontData m_titlefont = null;
+
+  protected Image m_titleImage = null;
 
   protected Rectangle m_plotRect = null;
 
@@ -208,6 +222,8 @@ public class ChartImageComposite extends Canvas
         if( m_axesImage == null )
           return;
         arg0.gc.drawImage( m_axesImage, 0, 0 );
+        if( m_titleImage != null )
+          arg0.gc.drawImage( m_titleImage, 0, 0 );
         if( m_plotRect == null || m_plotImage == null )
           return;
         arg0.gc.setClipping( m_plotRect );
@@ -286,6 +302,8 @@ public class ChartImageComposite extends Canvas
       m_plotImage.dispose();
     if( m_axesImage != null )
       m_axesImage.dispose();
+    if( m_titleImage != null )
+      m_titleImage.dispose();
     super.dispose();
   }
 
@@ -312,6 +330,11 @@ public class ChartImageComposite extends Canvas
   public final Rectangle getPlotRect( )
   {
     return m_plotRect;
+  }
+
+  public FontData getTitleFont( )
+  {
+    return m_titlefont;
   }
 
   public void invalidate( )
@@ -457,6 +480,11 @@ public class ChartImageComposite extends Canvas
     m_panOffset = new Point( end.x - start.x, end.y - start.y );
     invalidate();
 // getPlot().setPanOffset( getLayer( axes ), new Point( end.x - start.x, end.y - start.y ) );
+  }
+
+  public void setTitlefont( final FontData titlefont )
+  {
+    m_titlefont = titlefont;
   }
 
   protected final void unregisterListener( )

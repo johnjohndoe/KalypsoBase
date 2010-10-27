@@ -41,12 +41,16 @@
 package de.openali.odysseus.chart.ext.base.axisrenderer;
 
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
+import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.LABEL_POSITION;
 
 /**
  * @author alibu
- * 
  */
 public interface ILabelCreator
 {
-  public String getLabel( Number value, IDataRange<Number> range );
+  String getLabel( Number[] ticks, int i, IDataRange<Number> range );
+
+  String getLabel( Number value, IDataRange<Number> range );
+
+  LABEL_POSITION getLabelPosition( );
 }

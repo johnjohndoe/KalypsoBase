@@ -32,6 +32,14 @@ public interface IAxisConstants
     }
   }
 
+  public enum LABEL_POSITION
+  {
+    LEFT,
+    RIGHT,
+    TICK_CENTERED,
+    INTERVALL_CENTERED
+  }
+
   public enum ORIENTATION implements ICoordinateSwitcher
   {
     VERTICAL(true),
