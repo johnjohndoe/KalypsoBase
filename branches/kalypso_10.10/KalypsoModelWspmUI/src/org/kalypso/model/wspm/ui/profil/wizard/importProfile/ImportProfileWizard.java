@@ -105,7 +105,7 @@ public class ImportProfileWizard extends Wizard implements IWizard
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, op );
     if( !status.isOK() )
       KalypsoModelWspmUIPlugin.getDefault().getLog().log( status );
-    ErrorDialog.openError( getShell(), getWindowTitle(), "Probleme beim Profil-Import", status ); //$NON-NLS-1$
+    ErrorDialog.openError( getShell(), getWindowTitle(), "Probleme beim Profil-Import", status );
 
     return !status.matches( IStatus.ERROR );
   }
