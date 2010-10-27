@@ -15,7 +15,6 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.progress.UIJob;
@@ -200,10 +199,9 @@ public class ChartImageComposite extends Canvas
   public ChartImageComposite( final Composite parent, final int style, final IChartModel model, final RGB backgroundRGB )
   {
     super( parent, style | SWT.DOUBLE_BUFFERED );
-    setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+
     addPaintListener( new PaintListener()
     {
-
       @Override
       public void paintControl( final PaintEvent arg0 )
       {
@@ -219,6 +217,7 @@ public class ChartImageComposite extends Canvas
         arg0.gc.setClipping( getBounds() );
       }
     } );
+
     addDisposeListener( new DisposeListener()
     {
 
@@ -228,6 +227,7 @@ public class ChartImageComposite extends Canvas
         dispose();
       }
     } );
+
     addControlListener( new ControlListener()
     {
 
