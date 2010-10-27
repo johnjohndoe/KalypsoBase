@@ -61,8 +61,8 @@ public class ModuleFilePreferences implements IModulePreferences
 
   public ModuleFilePreferences( final File projectDir )
   {
-    final File settingsDir = new File( projectDir, ".settings" );
-    final File prefsFile = new File( settingsDir, ModuleNature.ID + ".prefs" );
+    final File settingsDir = new File( projectDir, ".settings" ); //$NON-NLS-1$
+    final File prefsFile = new File( settingsDir, ModuleNature.ID + ".prefs" ); //$NON-NLS-1$
     FileInputStream inputStream = null;
     try
     {

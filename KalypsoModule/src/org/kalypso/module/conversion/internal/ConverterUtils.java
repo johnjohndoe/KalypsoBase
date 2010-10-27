@@ -74,6 +74,6 @@ public final class ConverterUtils
     if( factory instanceof IProjectConverterInPlaceFactory )
       return ((IProjectConverterInPlaceFactory) factory).createConverter( targetDir );
 
-    throw new NotImplementedException( String.format( "Unknown factory type: %s", factory.getClass().getName() ) );
+    throw new NotImplementedException( String.format( "Unknown factory type: %s", factory.getClass().getName() ) ); //$NON-NLS-1$
   }
 }

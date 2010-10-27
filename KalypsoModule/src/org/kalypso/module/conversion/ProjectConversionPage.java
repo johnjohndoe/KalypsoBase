@@ -61,6 +61,7 @@ import org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup.FileChangedLis
 import org.kalypso.module.conversion.internal.ConverterUtils;
 import org.kalypso.module.conversion.internal.ProjectConversionOperation;
 import org.kalypso.module.conversion.internal.ProjectConverterExtensions;
+import org.kalypso.module.internal.i18n.Messages;
 import org.kalypso.module.utils.projectinfo.ProjectInfoComposite;
 
 /**
@@ -83,8 +84,8 @@ public class ProjectConversionPage extends WizardPage
 
     m_moduleID = moduleID;
 
-    setTitle( "Daten konvertieren" );
-    setDescription( "Bitte wählen Sie das Projekt aus, dessen Daten Sie in das aktuelle Kalypso Format übernehmen möchten." );
+    setTitle( Messages.getString("ProjectConversionPage.0") ); //$NON-NLS-1$
+    setDescription( Messages.getString("ProjectConversionPage.1") ); //$NON-NLS-1$
 
     setPageComplete( false );
   }
@@ -119,7 +120,7 @@ public class ProjectConversionPage extends WizardPage
   {
     final Group group = new Group( panel, SWT.NONE );
     group.setLayout( new GridLayout( 3, false ) );
-    group.setText( "Projekt" );
+    group.setText( Messages.getString("ProjectConversionPage.2") ); //$NON-NLS-1$
 
     final FileChooserDelegateDirectory dirDelegate = new FileChooserDelegateDirectory();
     m_projectChooserGroup = new FileChooserGroup( dirDelegate );
@@ -143,7 +144,7 @@ public class ProjectConversionPage extends WizardPage
   {
     final Group group = new Group( parent, SWT.NONE );
     group.setLayout( new FillLayout() );
-    group.setText( "Projekt Info" );
+    group.setText( Messages.getString("ProjectConversionPage.3") ); //$NON-NLS-1$
 
     m_infoGroup = new ProjectInfoComposite( group );
 

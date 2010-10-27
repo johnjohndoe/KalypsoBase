@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestra�e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,29 +38,37 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.module.nature;
+package org.kalypso.module.internal.i18n;
+
+import java.util.ResourceBundle;
+
+import org.kalypso.contribs.java.i18n.I18nUtils;
 
 /**
- * Wraps the preferences specific to the {@link ModuleNature}.
- * 
- * @author Gernot Belger
+ * @author kimwerner
  */
-public interface IModulePreferences
+public final class Messages
 {
-  String PREFERENCE_MODULE = "module"; //$NON-NLS-1$
+  private static final String BUNDLE_NAME = Messages.class.getPackage().getName() + ".messages"; //$NON-NLS-1$
 
-  String PREFERENCE_VERSION = "version"; //$NON-NLS-1$
+  private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle( BUNDLE_NAME );
 
-  void setModule( String moduleID );
+  private static final Object[] NO_ARGS = new Object[0];
 
-  String getModule( );
+  private Messages( )
+  {
+  }
 
-  /**
-   * Returns the project version of this project.
-   * 
-   * @param May
-   *          be <code>null</code>, if the version is not known.
-   */
-  String getVersion( );
+/*
+ * java reflections needs this method-signatur
+ */
+  public static String getString( final String key )
+  {
+    return getString( key, NO_ARGS );
+  }
 
+  public static String getString( final String key, final Object... args )
+  {
+    return I18nUtils.formatMessage( RESOURCE_BUNDLE, key, args );
+  }
 }

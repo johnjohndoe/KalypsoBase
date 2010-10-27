@@ -71,7 +71,7 @@ public class ModulePreferences implements IModulePreferences
     }
     catch( final BackingStoreException e )
     {
-      final IStatus status = new Status( IStatus.ERROR, Module.PLUGIN_ID, "Failed to write preferences", e );
+      final IStatus status = new Status( IStatus.ERROR, Module.PLUGIN_ID, "Failed to write preferences", e ); //$NON-NLS-1$
       Module.getDefault().getLog().log( status );
     }
   }
