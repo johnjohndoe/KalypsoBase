@@ -46,14 +46,17 @@ import org.eclipse.swt.widgets.Layout;
 /**
  * @author Dirk Kuch
  */
-public class LayoutHelper
+public final class LayoutHelper
 {
+  private LayoutHelper( )
+  {
+  }
 
   public static GridLayout createGridLayout( final int numColumns )
   {
     final GridLayout layout = new GridLayout( numColumns, false );
     layout.marginHeight = layout.marginWidth = 0;
-  
+
     return layout;
   }
 

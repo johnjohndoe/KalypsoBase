@@ -80,7 +80,9 @@ public class ChartModel implements IChartModel
         {
           final ICoordinateMapper coordinateMapper = layer.getCoordinateMapper();
           if( coordinateMapper != null )
+          {
             hideUnusedAxis( coordinateMapper.getTargetAxis() );
+          }
         }
       }
 
