@@ -63,6 +63,7 @@ import de.openali.odysseus.chart.framework.model.style.impl.ImageFill;
 import de.openali.odysseus.chart.framework.model.style.impl.ImageMarker;
 import de.openali.odysseus.chart.framework.model.style.impl.OvalMarker;
 import de.openali.odysseus.chart.framework.model.style.impl.PolygonMarker;
+import de.openali.odysseus.chart.framework.model.style.impl.StyleSet;
 import de.openali.odysseus.chart.framework.util.StyleUtils;
 import de.openali.odysseus.chartconfig.x020.AreaStyleType;
 import de.openali.odysseus.chartconfig.x020.ColorFillType;
@@ -117,6 +118,37 @@ public class StyleFactory
       }
     }
     return styleMap;
+  }
+
+  public static StyleSet createStyleSet( final Styles styles )
+  {
+    final StyleSet styleSet = new StyleSet();
+
+    for( final AreaStyleType ast : styles.getAreaStyleArray() )
+    {
+      final IAreaStyle style = StyleFactory.createAreaStyle( ast, null );
+      styleSet.addStyle( ast.getRole(), style );
+    }
+
+    for( final LineStyleType lst : styles.getLineStyleArray() )
+    {
+      final ILineStyle style = StyleFactory.createLineStyle( lst );
+      styleSet.addStyle( lst.getRole(), style );
+    }
+
+    for( final PointStyleType pst : styles.getPointStyleArray() )
+    {
+      final IPointStyle style = StyleFactory.createPointStyle( pst, null );
+      styleSet.addStyle( pst.getRole(), style );
+    }
+
+    for( final TextStyleType tst : styles.getTextStyleArray() )
+    {
+      final ITextStyle style = StyleFactory.createTextStyle( tst );
+      styleSet.addStyle( tst.getRole(), style );
+    }
+
+    return styleSet;
   }
 
   public static IPointStyle createPointStyle( final PointStyleType pst, final URL context )
