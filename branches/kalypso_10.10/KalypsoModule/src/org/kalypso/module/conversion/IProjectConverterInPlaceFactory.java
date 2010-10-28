@@ -42,10 +42,12 @@ package org.kalypso.module.conversion;
 
 import java.io.File;
 
+import org.osgi.framework.Version;
+
 /**
  * @author Gernot Belger
  */
 public interface IProjectConverterInPlaceFactory extends IProjectConverterFactory
 {
-  IProjectConverter createConverter( File projectDir );
+  IProjectConverter createConverter( Version sourceVersion, File projectDir );
 }
