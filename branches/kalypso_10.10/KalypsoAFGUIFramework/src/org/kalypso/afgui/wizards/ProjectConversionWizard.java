@@ -128,7 +128,8 @@ public class ProjectConversionWizard extends NewProjectWizard
     catch( final InvocationTargetException e )
     {
       e.printStackTrace();
-      return new Status( IStatus.ERROR, KalypsoAFGUIFrameworkPlugin.PLUGIN_ID, "Unexpected error during project conversion", e );
+      final Throwable targetException = e.getTargetException();
+      return new Status( IStatus.ERROR, KalypsoAFGUIFrameworkPlugin.PLUGIN_ID, "Unexpected error during project conversion", targetException );
     }
     catch( final InterruptedException e )
     {
