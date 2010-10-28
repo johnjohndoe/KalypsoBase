@@ -84,7 +84,7 @@ public class DateLabelCreator implements ILabelCreator
    * @see org.kalypso.chart.ext.test.axisrenderer.ILabelCreator#getLabel(java.lang.Number)
    */
   @Override
-  public String getLabel( final Number[] ticks,final int i, final IDataRange<Number> range )
+  public String getLabel( final Number[] ticks, final int i, final IDataRange<Number> range )
   {
     return m_format.format( new Date( ticks[i].longValue() ) );
   }
@@ -98,7 +98,8 @@ public class DateLabelCreator implements ILabelCreator
   }
 
   /**
-   * @see de.openali.odysseus.chart.ext.base.axisrenderer.ILabelCreator#getLabel(java.lang.Number, de.openali.odysseus.chart.framework.model.data.IDataRange)
+   * @see de.openali.odysseus.chart.ext.base.axisrenderer.ILabelCreator#getLabel(java.lang.Number,
+   *      de.openali.odysseus.chart.framework.model.data.IDataRange)
    */
   @Override
   public String getLabel( final Number value, final IDataRange<Number> range )

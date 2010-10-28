@@ -88,13 +88,13 @@ public abstract class AbstractGenericAxisRendererProvider extends AbstractAxisRe
 
     final int borderSize = getBorderSize();
 
-    ILineStyle axisLine = getStyleSet().getStyle( ROLE_AXIS_LINE_STYLE, ILineStyle.class );
-    ITextStyle labelText = getStyleSet().getStyle( ROLE_AXIS_LABEL_STYLE, ITextStyle.class );
-    ILineStyle tickLine = getStyleSet().getStyle( ROLE_AXIS_TICK_LINE_STYLE, ILineStyle.class );
-    ITextStyle tickLabelText = getStyleSet().getStyle( ROLE_AXIS_TICK_LABEL_STYLE, ITextStyle.class );
+    final ILineStyle axisLine = getStyleSet().getStyle( ROLE_AXIS_LINE_STYLE, ILineStyle.class );
+    final ITextStyle labelText = getStyleSet().getStyle( ROLE_AXIS_LABEL_STYLE, ITextStyle.class );
+    final ILineStyle tickLine = getStyleSet().getStyle( ROLE_AXIS_TICK_LINE_STYLE, ILineStyle.class );
+    final ITextStyle tickLabelText = getStyleSet().getStyle( ROLE_AXIS_TICK_LABEL_STYLE, ITextStyle.class );
 
-    ITickCalculator tickCalculator = getTickCalculator();
-    ILabelCreator labelCreator = getLabelCreator();
+    final ITickCalculator tickCalculator = getTickCalculator();
+    final ILabelCreator labelCreator = getLabelCreator();
 
     final IAxisRenderer calendarAxisRenderer = new GenericAxisRenderer( getId(), tickLength, insetsTick, insetsLabel, gap, labelCreator, tickCalculator, minTickInterval, hideCut, fixedWidth, axisLine, labelText, tickLine, tickLabelText, borderSize );
     return calendarAxisRenderer;
@@ -126,7 +126,7 @@ public abstract class AbstractGenericAxisRendererProvider extends AbstractAxisRe
 
   private Insets getLabelInsets( )
   {
-    IParameterContainer pc = getParameterContainer();
+    final IParameterContainer pc = getParameterContainer();
     final int insetLabel = Integer.parseInt( pc.getParameterValue( "inset_label", "1" ) );
     final String insetLabelString = (new Integer( insetLabel )).toString();
     final int insetLabel_left = Integer.parseInt( pc.getParameterValue( "inset_label_left", insetLabelString ) );
@@ -147,7 +147,7 @@ public abstract class AbstractGenericAxisRendererProvider extends AbstractAxisRe
   {
     // Ticks setzen; inset_tick definiert Abstände für alle Seiten; die können dann für jede Seite einzeln überschrieben
     // werden
-    IParameterContainer pc = getParameterContainer();
+    final IParameterContainer pc = getParameterContainer();
     final int insetTick = Integer.parseInt( pc.getParameterValue( "inset_tick", "1" ) );
     final String insetTickString = (new Integer( insetTick )).toString();
     final int insetTick_left = Integer.parseInt( pc.getParameterValue( "inset_tick_left", insetTickString ) );
