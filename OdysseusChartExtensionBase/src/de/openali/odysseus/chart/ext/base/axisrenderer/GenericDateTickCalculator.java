@@ -66,7 +66,7 @@ public class GenericDateTickCalculator implements ITickCalculator
    * Calculates the ticks shown for the given Axis
    */
   @Override
-  public Number[] calcTicks( GC gc, final IAxis axis, final Number minDisplayInterval, Point ticklabelSize )
+  public Number[] calcTicks( final GC gc, final IAxis axis, final Number minDisplayInterval, final Point ticklabelSize )
   {
 
     // TickLabelGröße + 2 wegen Rundungsfehlern beim positionieren
@@ -166,7 +166,7 @@ public class GenericDateTickCalculator implements ITickCalculator
       }
     }
 
-    Number[] numTicks = realticks.toArray( new Number[] {} );
+    final Number[] numTicks = realticks.toArray( new Number[] {} );
 
     return numTicks;
   }
@@ -175,7 +175,7 @@ public class GenericDateTickCalculator implements ITickCalculator
    * recursive function which divides an interval into a number of "divisions" and adds the values to a linked list the
    * divisions have to have a larger range than the param interval
    */
-  private void findBetweens( long from, long to, long minInterval, HashSet<Long> ticks )
+  private void findBetweens( final long from, final long to, final long minInterval, final HashSet<Long> ticks )
   {
 
     if( from == to || minInterval == 0 )
