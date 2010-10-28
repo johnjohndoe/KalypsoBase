@@ -22,10 +22,10 @@ public interface ILayerProvider
   /**
    * @return Array of all layers created by the LayerProvider
    * @param context
-   *            context path - needed to resolve relative paths from xml configuration
+   *          context path - needed to resolve relative paths from xml configuration
    */
-  public IChartLayer getLayer( final URL context ) throws ConfigurationException;
+  IChartLayer getLayer( final URL context ) throws ConfigurationException;
 
-  public void init( final IChartModel model, String id, IParameterContainer parameters, final URL context, String domainAxisId, String targetAxisId, Map<String, String> mapperMap, IStyleSet styleSet );
+  void init( final IChartModel model, String id, IParameterContainer parameters, final URL context, String domainAxisId, String targetAxisId, Map<String, String> mapperMap, IStyleSet styleSet );
 
 }
