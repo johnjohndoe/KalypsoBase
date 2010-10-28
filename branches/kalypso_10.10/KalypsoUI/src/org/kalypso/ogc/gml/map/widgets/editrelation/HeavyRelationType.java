@@ -1,12 +1,3 @@
-package org.kalypso.ogc.gml.map.widgets.editrelation;
-
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.i18n.Messages;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FindExistingHeavyRelationsFeatureVisitor;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
-
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -47,18 +38,25 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
+package org.kalypso.ogc.gml.map.widgets.editrelation;
 
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.i18n.Messages;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FindExistingHeavyRelationsFeatureVisitor;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+
+/**
+ * @author doemming
+ */
 public class HeavyRelationType implements org.kalypso.ogc.gml.map.widgets.editrelation.IRelationType
 {
+  private final RelationType m_relationType1;
 
-  private RelationType m_relationType1;
+  private final RelationType m_relationType2;
 
-  private RelationType m_relationType2;
-
-  /**
-   * @author doemming
-   */
-  public HeavyRelationType( IFeatureType ft1, IRelationType linkFTP1, IFeatureType ft2, IRelationType linkFTP2, IFeatureType ft3 )
+  public HeavyRelationType( final IFeatureType ft1, final IRelationType linkFTP1, final IFeatureType ft2, final IRelationType linkFTP2, final IFeatureType ft3 )
   {
     m_relationType1 = new RelationType( ft1, linkFTP1, ft2 );
     m_relationType2 = new RelationType( ft2, linkFTP2, ft3 );
@@ -69,11 +67,9 @@ public class HeavyRelationType implements org.kalypso.ogc.gml.map.widgets.editre
    *      org.kalypsodeegree.model.feature.IFeatureType)
    */
   @Override
-  public boolean fitsTypes( IFeatureType f1, IFeatureType f2 )
+  public boolean fitsTypes( final IFeatureType f1, final IFeatureType f2 )
   {
-    if( f1 == null || f2 == null )
-      return false;
-    return m_relationType1.getSrcFT() == f1 && m_relationType2.getDestFT() == f2;
+    return m_relationType1.getSrcFT().equals( f1 ) && m_relationType2.getDestFT().equals( f2 );
   }
 
   /**
@@ -81,16 +77,16 @@ public class HeavyRelationType implements org.kalypso.ogc.gml.map.widgets.editre
    *      org.kalypsodeegree.model.feature.Feature, org.kalypsodeegree.model.feature.Feature, boolean)
    */
   @Override
-  public String getFitProblems( GMLWorkspace workspace, Feature f1, Feature f2, boolean isAddMode )
+  public String getFitProblems( final GMLWorkspace workspace, final Feature f1, final Feature f2, final boolean isAddMode )
   {
-    FindExistingHeavyRelationsFeatureVisitor visitor = new FindExistingHeavyRelationsFeatureVisitor( workspace, this );
+    final FindExistingHeavyRelationsFeatureVisitor visitor = new FindExistingHeavyRelationsFeatureVisitor( workspace, this );
     visitor.visit( f1 );
-    boolean exists = visitor.relationExistsTo( f2 );
+    final boolean exists = visitor.relationExistsTo( f2 );
     if( !isAddMode )
-      return exists ? null : Messages.getString("org.kalypso.ogc.gml.map.widgets.editrelation.HeavyRelationType.0"); //$NON-NLS-1$
+      return exists ? null : Messages.getString( "org.kalypso.ogc.gml.map.widgets.editrelation.HeavyRelationType.0" ); //$NON-NLS-1$
     // is addmode:
     if( exists )
-      return Messages.getString("org.kalypso.ogc.gml.map.widgets.editrelation.HeavyRelationType.1"); //$NON-NLS-1$
+      return Messages.getString( "org.kalypso.ogc.gml.map.widgets.editrelation.HeavyRelationType.1" ); //$NON-NLS-1$
     return m_relationType1.getFitProblemsfromOccurency( f1, isAddMode );
   }
 
@@ -126,45 +122,4 @@ public class HeavyRelationType implements org.kalypso.ogc.gml.map.widgets.editre
   {
     return m_relationType1.getDestFT();
   }
-
-  // private final IFeatureType m_bodyFT;
-  //
-  // private final FeatureAssociationTypeProperty m_destLinkFTP;
-  //
-  // /*
-  //
-  // public IFeatureType getBodyFT()
-  // {
-  // return m_bodyFT;
-  // }
-  //
-  // public IFeatureType getDestFT()
-  // {
-  // return m_destFT;
-  // }
-  //
-  // public FeatureAssociationTypeProperty getDestLinkFTP()
-  // {
-  // return m_destLinkFTP;
-  // }
-  //
-  // public IFeatureType getSrcFT()
-  // {
-  // return m_srcFT;
-  // }
-  //
-  // public boolean equals( Object obj )
-  // {
-  // if( obj == null || !( obj instanceof HeavyRelationType ) )
-  // return false;
-  // final HeavyRelationType other = (HeavyRelationType)obj;
-  // return super.equals( obj ) && other.getBodyFT().equals( m_bodyFT )
-  // && other.getDestLinkFTP().equals( m_destLinkFTP );
-  // }
-  //
-  // public int hashCode()
-  // {
-  // return ( getSrcFT().getName() + getLink().getName() + m_bodyFT.getName()
-  // + m_destLinkFTP.getName() + getDestFT().getName() ).hashCode();
-  // }
 }

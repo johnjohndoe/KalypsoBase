@@ -51,22 +51,19 @@ import org.kalypso.i18n.Messages;
 import org.kalypso.ui.ImageProvider;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
+/**
+ * @author doemming
+ */
 public class EditRelationOptionsLabelProvider extends LabelProvider
 {
-  // private final Image m_imageChecked =
-  // ImageProvider.IMAGE_UTIL_CHECKED.createImage();
   private final Image m_imageChecked = ImageProvider.IMAGE_UTIL_CHECKED.createImage();
 
   private final Image m_imageUnchecked = ImageProvider.IMAGE_UTIL_UNCHECKED.createImage();
 
   private final EditRelationOptionsContentProvider m_contentProvider;
 
-  /*
-   * @author doemming
-   */
   public EditRelationOptionsLabelProvider( final EditRelationOptionsContentProvider contentProvider )
   {
-    super();
     m_contentProvider = contentProvider;
   }
 
@@ -89,7 +86,7 @@ public class EditRelationOptionsLabelProvider extends LabelProvider
   {
     if( element == null )
       return "null"; //$NON-NLS-1$
-      
+
     if( element instanceof GMLWorkspace )
     {
       final URL context = ((GMLWorkspace) element).getContext();

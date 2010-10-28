@@ -42,7 +42,6 @@
 package org.kalypsodeegree.model.feature;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -67,7 +66,7 @@ public class FindExistingHeavyRelationsFeatureVisitor implements FeatureVisitor
    * @param workspace
    *          workspace to query
    */
-  public FindExistingHeavyRelationsFeatureVisitor( GMLWorkspace workspace, HeavyRelationType relation )
+  public FindExistingHeavyRelationsFeatureVisitor( final GMLWorkspace workspace, final HeavyRelationType relation )
   {
     m_workspace = workspace;
     m_relation = relation;
@@ -77,23 +76,21 @@ public class FindExistingHeavyRelationsFeatureVisitor implements FeatureVisitor
    * @see org.kalypsodeegree.model.feature.FeatureVisitor#visit(org.kalypsodeegree.model.feature.Feature)
    */
   @Override
-  public boolean visit( Feature srcFE )
+  public boolean visit( final Feature srcFE )
   {
-    if( srcFE.getFeatureType() != m_relation.getSrcFT() )
+    if( !m_relation.getSrcFT().equals( srcFE.getFeatureType() ) )
       return false;
     final IRelationType link1Name = m_relation.getLink1();
     final IRelationType link2Name = m_relation.getLink2();
     final Feature[] props1 = m_workspace.resolveLinks( srcFE, link1Name );
-    for( int i = 0; i < props1.length; i++ )
+    for( final Feature feature1 : props1 )
     {
-      final Feature feature1 = props1[i];
-      if( feature1.getFeatureType() == m_relation.getBodyFT() )
+      if( feature1.getFeatureType().equals( m_relation.getBodyFT() ) )
       {
         final Feature[] props2 = m_workspace.resolveLinks( feature1, link2Name );
-        for( int j = 0; j < props2.length; j++ )
+        for( final Feature feature2 : props2 )
         {
-          final Feature feature2 = props2[j];
-          if( feature2.getFeatureType() == m_relation.getDestFT() )
+          if( feature2.getFeatureType().equals( m_relation.getDestFT() ) )
           {
             m_results.add( new Feature[] { srcFE, feature1, feature2 } );
           }
@@ -103,7 +100,7 @@ public class FindExistingHeavyRelationsFeatureVisitor implements FeatureVisitor
     return !m_results.isEmpty();
   }
 
-  public Feature[] getBodyFeatureFor( Feature destFE )
+  public Feature[] getBodyFeatureFor( final Feature destFE )
   {
     final List<Feature> result = new ArrayList<Feature>();
     for( final Feature[] f : m_results )
@@ -114,11 +111,11 @@ public class FindExistingHeavyRelationsFeatureVisitor implements FeatureVisitor
     return result.toArray( new Feature[result.size()] );
   }
 
-  public boolean relationExistsTo( Feature f2 )
+  public boolean relationExistsTo( final Feature f2 )
   {
-    for( Iterator iter = m_results.iterator(); iter.hasNext(); )
+    for( final Object element : m_results )
     {
-      Feature[] f = (Feature[]) iter.next();
+      final Feature[] f = (Feature[]) element;
       if( f[2] == f2 )
         return true;
     }
