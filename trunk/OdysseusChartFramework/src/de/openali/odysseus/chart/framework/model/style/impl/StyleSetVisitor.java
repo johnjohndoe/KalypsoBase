@@ -44,13 +44,14 @@ import java.util.Collection;
 import java.util.Map;
 
 import de.openali.odysseus.chart.framework.model.style.IStyle;
+import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 
 /**
  * @author Dirk Kuch
  */
 public class StyleSetVisitor
 {
-  public <T extends IStyle> T visit( final StyleSet set, final Class<T> clazz, final int index )
+  public <T extends IStyle> T visit( final IStyleSet set, final Class<T> clazz, final int index )
   {
     final Map<String, IStyle> map = set.getStyles();
     final Collection<IStyle> styles = map.values();

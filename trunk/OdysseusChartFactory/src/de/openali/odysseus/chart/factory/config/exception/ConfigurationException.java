@@ -1,10 +1,9 @@
 package de.openali.odysseus.chart.factory.config.exception;
 
-
 public class ConfigurationException extends Exception
 {
 
-  public ConfigurationException( String message )
+  public ConfigurationException( final String message )
   {
     super( message );
   }
@@ -14,9 +13,9 @@ public class ConfigurationException extends Exception
     super();
   }
 
-  public ConfigurationException( String string, Exception e )
+  public ConfigurationException( final String string, final Throwable t )
   {
-    super( string, e );
+    super( string, t );
   }
 
 }
