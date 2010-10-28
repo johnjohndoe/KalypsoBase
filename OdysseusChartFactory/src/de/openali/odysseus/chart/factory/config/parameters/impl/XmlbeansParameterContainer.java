@@ -35,7 +35,7 @@ public class XmlbeansParameterContainer implements IParameterContainer
 
   private final String m_epId;
 
-  public XmlbeansParameterContainer( String ownerId, String epId, ParametersType xmlParams )
+  public XmlbeansParameterContainer( final String ownerId, final String epId, final ParametersType xmlParams )
   {
     if( xmlParams != null )
     {
@@ -50,9 +50,9 @@ public class XmlbeansParameterContainer implements IParameterContainer
       for( final ParameterListType param : parameterListArray )
       {
         final String name = param.getName().trim();
-        String[] valueArray = param.getValueArray();
-        List<String> list = new ArrayList<String>();
-        for( String string : valueArray )
+        final String[] valueArray = param.getValueArray();
+        final List<String> list = new ArrayList<String>();
+        for( final String string : valueArray )
         {
           list.add( string );
         }
@@ -62,9 +62,9 @@ public class XmlbeansParameterContainer implements IParameterContainer
       for( final ParameterMapType param : parameterMapArray )
       {
         final String name = param.getName().trim();
-        Element[] elementArray = param.getElementArray();
-        Map<String, String> map = new TreeMap<String, String>();
-        for( Element element : elementArray )
+        final Element[] elementArray = param.getElementArray();
+        final Map<String, String> map = new TreeMap<String, String>();
+        for( final Element element : elementArray )
         {
           map.put( element.getKey(), element.getValue() );
         }
@@ -90,7 +90,7 @@ public class XmlbeansParameterContainer implements IParameterContainer
    * returns the value of a parameter with the given name or the defaultValue if the parameter is not found.
    */
   @Override
-  public <T> T getParsedParameterValue( String paramName, String defaultValue, IStringParser<T> parser )
+  public <T> T getParsedParameterValue( final String paramName, final String defaultValue, final IStringParser<T> parser )
   {
     T value = null;
     String strValue = m_parameters.get( paramName );
@@ -127,7 +127,7 @@ public class XmlbeansParameterContainer implements IParameterContainer
    * found.
    */
   @Override
-  public String getParameterValue( String paramName, String defaultValue )
+  public String getParameterValue( final String paramName, final String defaultValue )
   {
     String value = m_parameters.get( paramName );
     if( value == null )
@@ -144,7 +144,7 @@ public class XmlbeansParameterContainer implements IParameterContainer
    * @see org.kalypso.chart.factory.configuration.parameters.IParameterContainer#getParameterList(java.lang.String)
    */
   @Override
-  public List<String> getParameterList( String paramName )
+  public List<String> getParameterList( final String paramName )
   {
     return m_parameterLists.get( paramName );
   }
@@ -153,7 +153,7 @@ public class XmlbeansParameterContainer implements IParameterContainer
    * @see org.kalypso.chart.factory.configuration.parameters.IParameterContainer#getParameterMap(java.lang.String)
    */
   @Override
-  public Map<String, String> getParameterMap( String paramName )
+  public Map<String, String> getParameterMap( final String paramName )
   {
     return m_parameterMaps.get( paramName );
   }
@@ -163,9 +163,9 @@ public class XmlbeansParameterContainer implements IParameterContainer
    *      java.util.List, org.kalypso.chart.framework.model.data.IStringParser)
    */
   @Override
-  public <T> List<T> getParsedParameterList( String paramName, List<String> defaultValues, IStringParser<T> parser )
+  public <T> List<T> getParsedParameterList( final String paramName, final List<String> defaultValues, final IStringParser<T> parser )
   {
-    List<T> valueList = new ArrayList<T>();
+    final List<T> valueList = new ArrayList<T>();
     List<String> stringList = m_parameterLists.get( paramName );
     // Wert nicht vorhanden, versuche auf Default-Wert auszuweichen => Warnung
     if( stringList == null )
@@ -182,7 +182,7 @@ public class XmlbeansParameterContainer implements IParameterContainer
     }
     else
     {
-      for( String stringValue : stringList )
+      for( final String stringValue : stringList )
       {
         T objValue = null;
         try
@@ -205,9 +205,9 @@ public class XmlbeansParameterContainer implements IParameterContainer
    *      java.util.Map, org.kalypso.chart.framework.model.data.IStringParser)
    */
   @Override
-  public <T> Map<String, T> getParsedParameterMap( String paramName, Map<String, String> defaultValues, IStringParser<T> parser )
+  public <T> Map<String, T> getParsedParameterMap( final String paramName, final Map<String, String> defaultValues, final IStringParser<T> parser )
   {
-    Map<String, T> valueMap = new TreeMap<String, T>();
+    final Map<String, T> valueMap = new TreeMap<String, T>();
     Map<String, String> stringMap = m_parameterMaps.get( paramName );
     // Wert nicht vorhanden, versuche auf Default-Wert auszuweichen => Warnung
     if( stringMap == null )
@@ -224,10 +224,10 @@ public class XmlbeansParameterContainer implements IParameterContainer
     }
     else
     {
-      for( Entry<String, String> entry : stringMap.entrySet() )
+      for( final Entry<String, String> entry : stringMap.entrySet() )
       {
-        String key = entry.getKey();
-        String stringValue = entry.getValue();
+        final String key = entry.getKey();
+        final String stringValue = entry.getValue();
         T objValue = null;
         try
         {

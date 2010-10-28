@@ -184,7 +184,7 @@ public class ChartFactory
    * creates a concrete IAxis-Implementation from an AbstractAxisType derived from a ChartConfiguration, sets the
    * corresponding renderer and adds both to a given Chart
    */
-  public static void addAxis( final IChartModel model, final IReferenceResolver rr, final AxisType axisType, final IExtensionLoader extLoader, final URL context )
+  public static IAxis addAxis( final IChartModel model, final IReferenceResolver rr, final AxisType axisType, final IExtensionLoader extLoader, final URL context )
   {
     final IMapperRegistry mr = model.getMapperRegistry();
     if( axisType != null )
@@ -192,7 +192,7 @@ public class ChartFactory
       // wenn die Achse schon da ist, dann muss man sie nicht mehr
       // erzeugen
       if( mr.getAxis( axisType.getId() ) != null )
-        return;
+        return null;
 
       final String apId = axisType.getProvider().getEpid();
       if( (apId != null) && (apId.length() > 0) )
@@ -272,9 +272,12 @@ public class ChartFactory
 
               }
             }
+
+            return axis;
           }
           else
             Logger.logError( Logger.TOPIC_LOG_CONFIG, "Axis could not be created. EPID was: " + apId );
+
         }
         catch( final ConfigurationException e )
         {
@@ -285,6 +288,8 @@ public class ChartFactory
     }
     else
       Logger.logError( Logger.TOPIC_LOG_GENERAL, "AxisFactory: given axis is NULL." );
+
+    return null;
   }
 
   public static void addLayer( final IChartModel model, final IReferenceResolver rr, final URL context, final LayerType layerType, final IExtensionLoader extLoader )
@@ -376,7 +381,7 @@ public class ChartFactory
     }
   }
 
-  private static Map<String, String> createMapperMap( final LayerType lt )
+  public static Map<String, String> createMapperMap( final LayerType lt )
   {
     final Map<String, String> mapperMap = new HashMap<String, String>();
     final RoleReferencingType[] mapperRefArray = lt.getMapperRefs().getMapperRefArray();
