@@ -107,9 +107,6 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
     if( (gc == null) || (axis == null) || (ticks == null) )
       return;
 
-    int textX = 0;
-    int textY = 0;
-
     final int tickLength = getTickLength();
     final Insets tickLabelInsets = getTickLabelInsets();
 
@@ -125,23 +122,23 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
 
     final ITextStyle tickLabelStyle = getTickLabelStyle();
     final ILineStyle tickLineStyle = getTickLineStyle();
-
-    final int tickScreenDistance = ticks.length < 2 ? -1 : Math.abs( axis.numericToScreen( ticks[1] ) - axis.numericToScreen( ticks[0] ) );
-    final LABEL_POSITION labelPosition;
-    if( tickScreenDistance < 0 && m_labelCreator.getLabelPosition() == LABEL_POSITION.INTERVALL_CENTERED )
-      labelPosition = LABEL_POSITION.LEFT;
-    else
-      labelPosition = m_labelCreator.getLabelPosition();
-
+    final int tickScreenDistance = (screenMax - screenMin) / (ticks.length + 1);
+    final LABEL_POSITION labelPosition = m_labelCreator.getLabelPosition();
     for( int i = 0; i < ticks.length; i++ )
     {
-      int y1, y2, x1, x2, tickPos;
-      String label;
-      label = m_labelCreator.getLabel( ticks, i, range );
+      final int y1, y2, x1, x2, tickPos;
+
+      final int textX;
+      final int textY;
+
+      final String label = m_labelCreator.getLabel( ticks, i, range );
 
       boolean drawTick = true;
 
       tickPos = axis.numericToScreen( ticks[i] );
+
+// if( i < ticks.length - 1 )
+// tickScreenDistance = axis.numericToScreen( ticks[i + 1] ) - tickPos;
       final Point labelSize = getTextExtent( gc, label, tickLabelStyle );
       // HORIZONTAL
       if( axis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
@@ -149,8 +146,8 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
         x1 = tickPos + offset;
         x2 = x1;
         y1 = startY;
-        // textX = tickPos - labelSize.x / 2 + offset;
-        textX = tickPos - getLabelPosition( labelSize.x,tickScreenDistance, labelPosition ) + offset;
+        // textX = tickPos- labelSize.x / 2 + offset;
+        textX = tickPos - getLabelPosition( labelSize.x, tickScreenDistance, labelPosition ) + offset;
         // BOTTOM
         if( axis.getPosition() == POSITION.BOTTOM )
         {
@@ -171,10 +168,11 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
       else
       {
         x1 = startX;
-       // textY = tickPos - labelSize.y / 2 + offset;
-        textY = tickPos - getLabelPosition( labelSize.y, tickScreenDistance, labelPosition )+ offset;
         y1 = tickPos + offset;
         y2 = y1;
+        // textY = tickPos - labelSize.y / 2 + offset;
+        textY = y1 - getLabelPosition( labelSize.y, tickScreenDistance, labelPosition );
+
         // LEFT
         if( axis.getPosition() == POSITION.LEFT )
         {
@@ -194,6 +192,7 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
 
       if( drawTick )
       {
+        tickLabelStyle.apply( gc );
         drawText( gc, label, textX, textY, tickLabelStyle );
         tickLineStyle.apply( gc );
         gc.drawLine( x1, y1, x2, y2 );
@@ -212,10 +211,9 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
       case TICK_CENTERED:
         return labelWidth / 2;
       case INTERVALL_CENTERED:
-        return (tickScreenDistance -labelWidth)/2 ;
-      default:
-        return labelWidth / 2;
+        return (labelWidth - tickScreenDistance) / 2;
     }
+    throw new IllegalArgumentException( labelPosition.name() );
   }
 
   private Insets getConvertedInsets( final IAxis axis, final Insets insets )
@@ -383,6 +381,7 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
         if( tr != null )
           gc.setTransform( tr );
 
+        getLabelStyle().apply( gc );
         drawText( gc, axis.getLabel(), x, y, getLabelStyle() );
       }
       finally

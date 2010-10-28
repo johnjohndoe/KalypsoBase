@@ -21,6 +21,16 @@ import de.openali.odysseus.chart.framework.util.StyleUtils;
 public abstract class AbstractGenericAxisRenderer implements IAxisRenderer
 {
 
+  /**
+   * @see de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer#setTickLabelStyle(de.openali.odysseus.chart.framework.model.style.ITextStyle)
+   */
+  @Override
+  public void setTickLabelStyle( final ITextStyle style )
+  {
+    m_tickLabelStyle = style;
+
+  }
+
   private final Insets m_labelInsets;
 
   private final Insets m_tickLabelInsets;
@@ -176,6 +186,7 @@ public abstract class AbstractGenericAxisRenderer implements IAxisRenderer
     return m_labelStyle;
   }
 
+  @Override
   public void setLabelStyle( final ITextStyle style )
   {
     m_labelStyle = style;

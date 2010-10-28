@@ -59,5 +59,7 @@ public interface IAxisRenderer // extends IMapperEventListener
   String BORDER_SIZE = "de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer_border_size";
 
   void setLabelStyle( ITextStyle style );
+  
+  void setTickLabelStyle( ITextStyle style );
 
 }
