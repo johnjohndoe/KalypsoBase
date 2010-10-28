@@ -19,26 +19,25 @@ public class TextFigure extends AbstractFigure<ITextStyle>
   private Point[] m_leftTopPoints;
 
   /**
-   * 
    * @param points
-   *            center position of the figure
-   */   
-  public void setPoints( Point[] points )
+   *          center position of the figure
+   */
+  public void setPoints( final Point[] points )
   {
     m_centerPoints = points;
     m_leftTopPoints = null;
 
   }
 
-  public void setText( String text )
+  public void setText( final String text )
   {
     m_text = text;
   }
 
   @Override
-  protected void paintFigure( GC gc )
+  protected void paintFigure( final GC gc )
   {
-    IStyle style = getStyle();
+    final IStyle style = getStyle();
     if( style != null && m_centerPoints != null )
     {
       style.apply( gc );
@@ -48,13 +47,13 @@ public class TextFigure extends AbstractFigure<ITextStyle>
         m_leftTopPoints = new Point[m_centerPoints.length];
         for( int i = 0; i < m_centerPoints.length; i++ )
         {
-          Point centerPoint = m_centerPoints[i];
-          Point textExtent = gc.textExtent( m_text );
+          final Point centerPoint = m_centerPoints[i];
+          final Point textExtent = gc.textExtent( m_text );
           m_leftTopPoints[i] = FigureUtilities.centerToLeftTop( centerPoint, textExtent.x, textExtent.y );
         }
       }
 
-      for( Point p : m_leftTopPoints )
+      for( final Point p : m_leftTopPoints )
         if( m_text != null )
         {
           gc.drawText( m_text, p.x, p.y );
@@ -68,7 +67,7 @@ public class TextFigure extends AbstractFigure<ITextStyle>
   @Override
   public ITextStyle getStyle( )
   {
-    ITextStyle style = super.getStyle();
+    final ITextStyle style = super.getStyle();
     if( style != null )
       return style;
     else
@@ -76,7 +75,7 @@ public class TextFigure extends AbstractFigure<ITextStyle>
   }
 
   @Override
-  public void setStyle( ITextStyle ts )
+  public void setStyle( final ITextStyle ts )
   {
     super.setStyle( ts );
     m_leftTopPoints = null;

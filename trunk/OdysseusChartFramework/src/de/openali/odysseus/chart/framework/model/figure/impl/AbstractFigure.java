@@ -24,7 +24,7 @@ public abstract class AbstractFigure<T_style extends IStyle> implements IFigure<
   @Override
   public final void paint( final GC gc )
   {
-    if( m_style.isVisible() )
+    if( m_style != null && m_style.isVisible() )
     {
       m_style.apply( gc );
       paintFigure( gc );
