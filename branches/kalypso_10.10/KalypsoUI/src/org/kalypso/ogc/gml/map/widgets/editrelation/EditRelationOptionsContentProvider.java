@@ -98,7 +98,7 @@ public class EditRelationOptionsContentProvider implements ITreeContentProvider
       for( int i = 0; i < featureTypes.length; i++ )
       {
         IFeatureType ft = featureTypes[i];
-        if( ft.getDefaultGeometryProperty() != null )
+        if( !ft.isAbstract() && ft.getDefaultGeometryProperty() != null )
           result.add( ft );
       }
     }
@@ -117,7 +117,7 @@ public class EditRelationOptionsContentProvider implements ITreeContentProvider
         for( int i = 0; i < associationFeatureTypes.length; i++ )
         {
           IFeatureType ft = associationFeatureTypes[i];
-          if( !ft.equals( destFT ) )
+          if( !ft.isAbstract() && !ft.equals( destFT ) )
             result.add( new HeavyRelationType( relation.getSrcFT(), relation.getLink1(), relation.getBodyFT(), relation.getLink2(), ft ) );
         }
     }
@@ -133,45 +133,48 @@ public class EditRelationOptionsContentProvider implements ITreeContentProvider
         for( int i = 0; i < associationFeatureTypes.length; i++ )
         {
           IFeatureType ft = associationFeatureTypes[i];
-          if( !ft.equals( destFT ) )
+          if( !ft.isAbstract() && !ft.equals( destFT ) )
             result.add( new RelationType( relation.getSrcFT(), relation.getLink(), ft ) );
         }
     }
     if( parentElement instanceof IFeatureType )
     {
       IFeatureType ft1 = (IFeatureType) parentElement;
-      IPropertyType[] properties = ft1.getProperties();
-      for( int i = 0; i < properties.length; i++ )
+      if( !ft1.isAbstract() )
       {
-        IPropertyType property = properties[i];
-        if( property instanceof IRelationType )
+        IPropertyType[] properties = ft1.getProperties();
+        for( int i = 0; i < properties.length; i++ )
         {
-          final IRelationType linkFTP1 = (IRelationType) property;
-          final IFeatureType ft2 = linkFTP1.getTargetFeatureType();
-          // leight: FT,Prop,FT
-          // heavy: FT,Prop,FT,PropFT
-          // leight relationship ?
-          if( ft2.getDefaultGeometryProperty() != null )
-            result.add( new RelationType( ft1, linkFTP1, ft2 ) );
-          else
+          IPropertyType property = properties[i];
+          if( property instanceof IRelationType )
           {
-            // heavy relationship ?
-            final IFeatureType ft2a = linkFTP1.getTargetFeatureType();
-            final IFeatureType[] ft2s = GMLSchemaUtilities.getSubstituts( ft2a, null, false, true );
-            for( int j = 0; j < ft2s.length; j++ )
+            final IRelationType linkFTP1 = (IRelationType) property;
+            final IFeatureType ft2 = linkFTP1.getTargetFeatureType();
+            // leight: FT,Prop,FT
+            // heavy: FT,Prop,FT,PropFT
+            // leight relationship ?
+            if( ft2.getDefaultGeometryProperty() != null &&!ft2.isAbstract())
+              result.add( new RelationType( ft1, linkFTP1, ft2 ) );
+            else
             {
-              final IPropertyType[] properties2 = ft2s[j].getProperties();
-              for( int l = 0; l < properties2.length; l++ )
+              // heavy relationship ?
+              final IFeatureType ft2a = linkFTP1.getTargetFeatureType();
+              final IFeatureType[] ft2s = GMLSchemaUtilities.getSubstituts( ft2a, null, false, true );
+              for( int j = 0; j < ft2s.length; j++ )
               {
-                final IPropertyType property2 = properties2[l];
-                if( property2 instanceof IRelationType )
+                final IPropertyType[] properties2 = ft2s[j].getProperties();
+                for( int l = 0; l < properties2.length; l++ )
                 {
-                  final IRelationType linkFTP2 = (IRelationType) property2;
-                  final IFeatureType ft3 = linkFTP2.getTargetFeatureType();
-                  if( ft3.getDefaultGeometryProperty() != null )
+                  final IPropertyType property2 = properties2[l];
+                  if( property2 instanceof IRelationType )
                   {
-                    // it is a heavy relationship;
-                    result.add( new HeavyRelationType( ft1, linkFTP1, ft2s[j], linkFTP2, ft3 ) );
+                    final IRelationType linkFTP2 = (IRelationType) property2;
+                    final IFeatureType ft3 = linkFTP2.getTargetFeatureType();
+                    if( !ft3.isAbstract() && ft3.getDefaultGeometryProperty() != null )
+                    {
+                      // it is a heavy relationship;
+                      result.add( new HeavyRelationType( ft1, linkFTP1, ft2s[j], linkFTP2, ft3 ) );
+                    }
                   }
                 }
               }
