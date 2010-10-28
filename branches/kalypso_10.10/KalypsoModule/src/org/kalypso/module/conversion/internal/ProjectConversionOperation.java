@@ -45,14 +45,16 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.swt.widgets.Shell;
 import org.kalypso.module.conversion.AbstractLoggingOperation;
+import org.kalypso.module.conversion.IProjectConversionOperation;
 import org.kalypso.module.conversion.IProjectConverter;
 import org.kalypso.module.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
  */
-public class ProjectConversionOperation extends AbstractLoggingOperation
+public class ProjectConversionOperation extends AbstractLoggingOperation implements IProjectConversionOperation
 {
   private final IProjectConverter m_converter;
 
@@ -64,6 +66,15 @@ public class ProjectConversionOperation extends AbstractLoggingOperation
 
     m_project = project;
     m_converter = converter;
+  }
+
+  /**
+   * @see org.kalypso.module.conversion.IProjectConversionOperation#preConversion(org.eclipse.swt.widgets.Shell)
+   */
+  @Override
+  public IStatus preConversion( final Shell shell )
+  {
+    return m_converter.preConversion( shell );
   }
 
   /**
@@ -85,5 +96,6 @@ public class ProjectConversionOperation extends AbstractLoggingOperation
       m_project.refreshLocal( IResource.DEPTH_INFINITE, new SubProgressMonitor( monitor, 10 ) );
     }
   }
+
 
 }
