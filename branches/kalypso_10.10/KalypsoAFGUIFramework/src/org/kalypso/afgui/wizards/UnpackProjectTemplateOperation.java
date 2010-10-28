@@ -129,7 +129,7 @@ public final class UnpackProjectTemplateOperation extends WorkspaceModifyOperati
       if( !postCreateStatus.matches( IStatus.ERROR ) )
         m_newProjectWizard.openProject( m_project );
 
-      if( !postCreateStatus.isOK() )
+      if( postCreateStatus != Status.OK_STATUS )
         throw new CoreException( postCreateStatus );
     }
     catch( final CoreException t )
