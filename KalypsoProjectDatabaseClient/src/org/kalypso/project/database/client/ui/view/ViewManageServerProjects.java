@@ -58,6 +58,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.UIJob;
+import org.kalypso.contribs.eclipse.ui.forms.ToolkitUtils;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
 import org.kalypso.project.database.client.i18n.Messages;
 import org.kalypso.project.database.client.ui.management.ManageRemoteProjects;
@@ -101,7 +102,7 @@ public class ViewManageServerProjects extends ViewPart
       }
     }
 
-    final FormToolkit toolkit = KalypsoProjectDatabaseClient.getDefault().getToolkit();
+    final FormToolkit toolkit = ToolkitUtils.createToolkit( m_body );
 
     m_body = toolkit.createComposite( m_parent );
     m_body.setLayout( new GridLayout() );

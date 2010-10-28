@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,35 +38,21 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.project.database.client.core.base.handlers;
+package org.kalypso.module.internal;
+
+import java.util.Comparator;
 
 import org.kalypso.module.IKalypsoModule;
-import org.kalypso.project.database.client.extension.database.IProjectDatabaseUiLocker;
-import org.kalypso.project.database.client.extension.database.handlers.ILocalProject;
-import org.kalypso.project.database.client.extension.database.handlers.IProjectHandler;
-import org.kalypso.project.database.client.extension.database.handlers.IRemoteProject;
-import org.kalypso.project.database.client.extension.database.handlers.ITranscendenceProject;
 
-/**
- * @author Dirk Kuch
- */
-public class ProjectUIHandlerFabrication
+public final class ModuleComparator implements Comparator<IKalypsoModule>
 {
-  public static IProjectUiHandler getHandler( final IProjectHandler handler, final IKalypsoModule module, final IProjectDatabaseUiLocker locker )
+  @Override
+  public int compare( final IKalypsoModule o1, final IKalypsoModule o2 )
   {
-    if( handler instanceof ITranscendenceProject )
-    {
-      return new TranscendenceUiHandler( (ITranscendenceProject) handler, module, locker );
-    }
-    else if( handler instanceof ILocalProject )
-    {
-      return new LocalUiHandler( (ILocalProject) handler, module, locker );
-    }
-    else if( handler instanceof IRemoteProject )
-    {
-      return new RemoteUiHandler( (IRemoteProject) handler, module, locker );
-    }
+    final int compare = o1.getPriority().compareTo( o2.getPriority() );
+    if( compare == 0 )
+      return o1.getHeader().compareTo( o2.getHeader() );
 
-    throw new IllegalStateException();
+    return compare;
   }
 }

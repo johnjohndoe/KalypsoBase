@@ -48,6 +48,7 @@ import java.util.Properties;
 import org.apache.commons.io.IOUtils;
 import org.kalypso.module.nature.IModulePreferences;
 import org.kalypso.module.nature.ModuleNature;
+import org.osgi.framework.Version;
 
 /**
  * {@link IModulePreferences} implementation that reads the settings from a project in the file system.<br/>
@@ -102,12 +103,22 @@ public class ModuleFilePreferences implements IModulePreferences
   }
 
   /**
+   * @see org.kalypso.module.nature.IModulePreferences#setVersion(org.osgi.framework.Version)
+   */
+  @Override
+  public void setVersion( final Version version )
+  {
+    throw new UnsupportedOperationException();
+  }
+
+  /**
    * @see org.kalypso.module.nature.IModulePreferences#getVersion()
    */
   @Override
-  public String getVersion( )
+  public Version getVersion( )
   {
-    return m_node.getProperty( PREFERENCE_VERSION, null );
+    final String property = m_node.getProperty( PREFERENCE_VERSION, null );
+    return ModuleUtils.parseVersion( property );
   }
 
 }

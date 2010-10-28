@@ -43,7 +43,7 @@ package org.kalypso.project.database.client.ui.project.wizard.create;
 import org.kalypso.afgui.wizards.INewProjectWizard;
 import org.kalypso.afgui.wizards.INewProjectWizardProvider;
 import org.kalypso.contribs.eclipse.core.resources.ProjectTemplate;
-import org.kalypso.project.database.client.extension.IKalypsoModule;
+import org.kalypso.module.IKalypsoModule;
 
 /**
  * @author Gernot Belger

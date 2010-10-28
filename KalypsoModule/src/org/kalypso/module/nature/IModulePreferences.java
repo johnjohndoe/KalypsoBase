@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.module.nature;
 
+import org.osgi.framework.Version;
+
 /**
  * Wraps the preferences specific to the {@link ModuleNature}.
  * 
@@ -55,12 +57,13 @@ public interface IModulePreferences
 
   String getModule( );
 
+  void setVersion( Version version );
+
   /**
    * Returns the project version of this project.
    * 
    * @param May
    *          be <code>null</code>, if the version is not known.
    */
-  String getVersion( );
-
+  Version getVersion( );
 }

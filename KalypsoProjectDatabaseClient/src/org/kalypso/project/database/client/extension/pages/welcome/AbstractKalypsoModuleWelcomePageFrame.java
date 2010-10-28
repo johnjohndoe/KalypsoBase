@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.client.extension.pages.welcome;
 
+import org.kalypso.module.IKalypsoModuleWelcomePageFrame;
 import org.kalypso.project.database.client.i18n.Messages;
 
 /**

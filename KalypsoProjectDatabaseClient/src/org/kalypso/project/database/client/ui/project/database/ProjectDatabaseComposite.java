@@ -55,11 +55,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.progress.UIJob;
+import org.kalypso.module.IKalypsoModule;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
 import org.kalypso.project.database.client.core.base.handlers.IProjectUiHandler;
 import org.kalypso.project.database.client.core.base.handlers.ProjectUIHandlerFabrication;
 import org.kalypso.project.database.client.core.model.interfaces.IProjectDatabaseModel;
-import org.kalypso.project.database.client.extension.IKalypsoModule;
 import org.kalypso.project.database.client.extension.database.IKalypsoModuleDatabaseSettings;
 import org.kalypso.project.database.client.extension.database.IProjectDatabaseUiLocker;
 import org.kalypso.project.database.client.extension.database.handlers.IProjectHandler;
@@ -135,7 +135,7 @@ public class ProjectDatabaseComposite extends Composite implements IProjectDatab
     m_body.setLayout( new GridLayout( 6, false ) );
     m_body.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
-    final IKalypsoModuleDatabaseSettings settings = m_module.getDatabaseSettings();
+    final IKalypsoModuleDatabaseSettings settings = (IKalypsoModuleDatabaseSettings) m_module.getDatabaseSettings();
 
     final IProjectHandler[] projects = m_model.getProjects( settings.getFilter() );
     Arrays.sort( projects, new ProjectHandlerNameComparator() );

@@ -48,11 +48,14 @@ import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProduct;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.module.internal.Module;
 import org.kalypso.module.internal.nature.ModuleFilePreferences;
 import org.kalypso.module.internal.nature.ModulePreferences;
+import org.osgi.framework.Version;
 
 /**
  * @author Gernot Belger
@@ -147,7 +150,22 @@ public class ModuleNature implements IProjectNature
     final ModuleNature newNature = toThisNature( project );
     Assert.isNotNull( newNature );
     newNature.checkModule( moduleID );
+    newNature.checkVersion();
+
     return newNature;
+  }
+
+  private void checkVersion( )
+  {
+    /* Find current kalypso version */
+    // HM: what if we have different product using the same module?
+
+    final IProduct product = Platform.getProduct();
+    final Version kalypsoVersion = product.getDefiningBundle().getVersion();
+
+    final Version currentVersion = getPreferences().getVersion();
+    if( Version.emptyVersion.equals( currentVersion ) )
+      getPreferences().setVersion( kalypsoVersion );
   }
 
   private void checkModule( final String moduleID ) throws CoreException
