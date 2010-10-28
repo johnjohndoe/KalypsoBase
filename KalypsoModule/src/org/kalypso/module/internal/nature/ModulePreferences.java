@@ -101,8 +101,23 @@ public class ModulePreferences implements IModulePreferences
   @Override
   public void setVersion( final Version version )
   {
-    final String versionPref = version.equals( Version.emptyVersion ) ? null : version.toString();
+    final Version versionToSet = findVersionToSet( version );
+    final String versionPref = versionToSet.equals( Version.emptyVersion ) ? null : versionToSet.toString();
     writePreference( PREFERENCE_VERSION, versionPref );
+  }
+
+  /**
+   * For debug reasons: if we are working from eclipse, the qualifier is always set to 'qualifier' which is lexically
+   * behin the numbers.<br/>
+   * We replace this one with the empty string, so all debug version are less than a normal deploy version.
+   */
+  private Version findVersionToSet( final Version version )
+  {
+    final String qualifier = version.getQualifier();
+    if( "qualifier".equals( qualifier ) ) //$NON-NLS-1$
+      return new Version( version.getMajor(), version.getMinor(), version.getMicro() );
+
+    return version;
   }
 
   /**
