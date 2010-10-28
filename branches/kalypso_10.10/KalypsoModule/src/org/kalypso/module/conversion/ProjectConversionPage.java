@@ -54,7 +54,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.ui.forms.widgets.ColumnLayout;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
-import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserDelegateDirectory;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup.FileChangedListener;
@@ -190,7 +189,7 @@ public class ProjectConversionPage extends WizardPage
     return m_projectChooserGroup.getFile();
   }
 
-  public ICoreRunnableWithProgress getConversionOperation( final File sourceDir, final File targetDir, final IProject targetProject ) throws CoreException
+  public IProjectConversionOperation getConversionOperation( final File sourceDir, final File targetDir, final IProject targetProject ) throws CoreException
   {
     final Version sourceVersion = m_infoGroup.getVersion();
 
