@@ -56,8 +56,6 @@ public class QualifiedElement
 
   private final QNameUnique m_localQName;
 
-// private final long m_fullIDHash;
-  
   public QualifiedElement( final IGMLSchema gmlSchema, final Element element, final QName qName )
   {
     m_gmlSchema = gmlSchema;
@@ -65,8 +63,6 @@ public class QualifiedElement
 
     m_qName = QNameUnique.create( qName );
     m_localQName = QNameUnique.create( XMLConstants.NULL_NS_URI, qName.getLocalPart() );
-
-// m_fullIDHash = QNameUtilities.getFullID( qName );
   }
 
   public final IGMLSchema getGMLSchema( )
@@ -117,8 +113,6 @@ public class QualifiedElement
     {
       final QualifiedElement lEl = ((QualifiedElement) obj);
       return m_qName == lEl.m_qName;
-// if( m_fullIDHash == lEl.m_fullIDHash )
-// return true;
     }
 
     return false;
