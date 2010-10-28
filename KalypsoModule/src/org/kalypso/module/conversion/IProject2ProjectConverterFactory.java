@@ -42,6 +42,8 @@ package org.kalypso.module.conversion;
 
 import java.io.File;
 
+import org.osgi.framework.Version;
+
 /**
  * Factory for {@link IProject2ProjectConverter}'s.
  * 
@@ -49,5 +51,5 @@ import java.io.File;
  */
 public interface IProject2ProjectConverterFactory extends IProjectConverterFactory
 {
-  IProjectConverter createConverter( final File sourceDir, final File targetDir );
+  IProjectConverter createConverter( Version sourceVersion, final File sourceDir, final File targetDir );
 }

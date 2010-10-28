@@ -111,6 +111,9 @@ public class ProjectInfoComposite extends Composite
 
   public void setProject( final File file )
   {
+    m_project = null;
+    m_preferences = null;
+
     readAndValidateProject( file );
 
     updateControl();
@@ -125,8 +128,6 @@ public class ProjectInfoComposite extends Composite
 
   private IMessageProvider readProjectDescription( final File file )
   {
-    m_project = null;
-
     if( file == null )
       return new MessageProvider( Messages.getString( "ProjectInfoComposite.4" ), IMessageProvider.ERROR ); //$NON-NLS-1$
 
@@ -204,8 +205,8 @@ public class ProjectInfoComposite extends Composite
     else
       m_commentText.setText( comment );
 
-    final String moduleID = m_preferences == null ? null : m_preferences.getModule();
-    final Version version = m_preferences == null ? null : m_preferences.getVersion();
+    final String moduleID = getModule();
+    final Version version = getVersion();
 
     if( version == null || Version.emptyVersion.equals( version ) )
       m_versionText.setText( Messages.getString( "ProjectInfoComposite.12" ) ); //$NON-NLS-1$
@@ -217,5 +218,21 @@ public class ProjectInfoComposite extends Composite
       m_typeText.setText( "<Unbekannter Modelltyp>" );
     else
       m_typeText.setText( module.getHeader() );
+  }
+
+  private String getModule( )
+  {
+    if( m_preferences == null )
+      return null;
+
+    return m_preferences.getModule();
+  }
+
+  public Version getVersion( )
+  {
+    if( m_preferences == null )
+      return null;
+
+    return m_preferences.getVersion();
   }
 }

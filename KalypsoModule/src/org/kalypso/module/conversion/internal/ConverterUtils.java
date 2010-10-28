@@ -47,32 +47,32 @@ import org.kalypso.module.conversion.IProject2ProjectConverterFactory;
 import org.kalypso.module.conversion.IProjectConverter;
 import org.kalypso.module.conversion.IProjectConverterFactory;
 import org.kalypso.module.conversion.IProjectConverterInPlaceFactory;
+import org.osgi.framework.Version;
 
 /**
  * @author Gernot Belger
  */
 public final class ConverterUtils
 {
-  // TODO: move to converter utilities
-  public static final IProjectConverter[] createConverters( final IProjectConverterFactory[] factories, final File sourceDir, final File targetDir )
+  public static final IProjectConverter[] createConverters( final IProjectConverterFactory[] factories, final Version sourceVersion, final File sourceDir, final File targetDir )
   {
     final IProjectConverter[] converter = new IProjectConverter[factories.length];
     for( int i = 0; i < converter.length; i++ )
     {
       final IProjectConverterFactory factory = factories[i];
-      converter[i] = createConverter( factory, sourceDir, targetDir );
+      converter[i] = createConverter( factory, sourceVersion, sourceDir, targetDir );
     }
 
     return converter;
   }
 
-  public static IProjectConverter createConverter( final IProjectConverterFactory factory, final File sourceDir, final File targetDir )
+  public static IProjectConverter createConverter( final IProjectConverterFactory factory, final Version sourceVersion, final File sourceDir, final File targetDir )
   {
     if( factory instanceof IProject2ProjectConverterFactory )
-      return ((IProject2ProjectConverterFactory) factory).createConverter( sourceDir, targetDir );
+      return ((IProject2ProjectConverterFactory) factory).createConverter( sourceVersion, sourceDir, targetDir );
 
     if( factory instanceof IProjectConverterInPlaceFactory )
-      return ((IProjectConverterInPlaceFactory) factory).createConverter( targetDir );
+      return ((IProjectConverterInPlaceFactory) factory).createConverter( sourceVersion, targetDir );
 
     throw new NotImplementedException( String.format( "Unknown factory type: %s", factory.getClass().getName() ) ); //$NON-NLS-1$
   }
