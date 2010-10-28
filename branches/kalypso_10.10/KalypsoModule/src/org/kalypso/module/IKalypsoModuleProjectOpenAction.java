@@ -5,7 +5,7 @@
  *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  *
@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.project.database.client.extension.project;
+package org.kalypso.module;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;

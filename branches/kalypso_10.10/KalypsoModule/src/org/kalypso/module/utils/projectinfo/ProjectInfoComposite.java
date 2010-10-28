@@ -59,16 +59,19 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.contribs.eclipse.ui.forms.MessageProvider;
+import org.kalypso.module.IKalypsoModule;
+import org.kalypso.module.ModuleExtensions;
 import org.kalypso.module.internal.i18n.Messages;
 import org.kalypso.module.nature.IModulePreferences;
 import org.kalypso.module.nature.ModuleNature;
+import org.osgi.framework.Version;
 
 /**
  * @author Gernot Belger
  */
 public class ProjectInfoComposite extends Composite
 {
-  private static final String STR_TOOLTIP_COMMENT = Messages.getString("ProjectInfoComposite.0"); //$NON-NLS-1$
+  private static final String STR_TOOLTIP_COMMENT = Messages.getString( "ProjectInfoComposite.0" ); //$NON-NLS-1$
 
   private final Text m_typeText;
 
@@ -90,16 +93,16 @@ public class ProjectInfoComposite extends Composite
 
     final Label commentLabel = new Label( this, SWT.NONE );
     commentLabel.setToolTipText( STR_TOOLTIP_COMMENT );
-    commentLabel.setText( Messages.getString("ProjectInfoComposite.1") ); //$NON-NLS-1$
+    commentLabel.setText( Messages.getString( "ProjectInfoComposite.1" ) ); //$NON-NLS-1$
     m_commentText = new Text( this, SWT.READ_ONLY | SWT.BORDER );
     m_commentText.setToolTipText( STR_TOOLTIP_COMMENT );
     m_commentText.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
-    new Label( this, SWT.NONE ).setText( Messages.getString("ProjectInfoComposite.2") ); //$NON-NLS-1$
+    new Label( this, SWT.NONE ).setText( Messages.getString( "ProjectInfoComposite.2" ) ); //$NON-NLS-1$
     m_typeText = new Text( this, SWT.READ_ONLY | SWT.BORDER );
     m_typeText.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
-    new Label( this, SWT.NONE ).setText( Messages.getString("ProjectInfoComposite.3") ); //$NON-NLS-1$
+    new Label( this, SWT.NONE ).setText( Messages.getString( "ProjectInfoComposite.3" ) ); //$NON-NLS-1$
     m_versionText = new Text( this, SWT.READ_ONLY | SWT.BORDER );
     m_versionText.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
@@ -125,10 +128,10 @@ public class ProjectInfoComposite extends Composite
     m_project = null;
 
     if( file == null )
-      return new MessageProvider( Messages.getString("ProjectInfoComposite.4"), IMessageProvider.ERROR ); //$NON-NLS-1$
+      return new MessageProvider( Messages.getString( "ProjectInfoComposite.4" ), IMessageProvider.ERROR ); //$NON-NLS-1$
 
     if( !file.isDirectory() )
-      return new MessageProvider( Messages.getString("ProjectInfoComposite.5"), IMessageProvider.ERROR ); //$NON-NLS-1$
+      return new MessageProvider( Messages.getString( "ProjectInfoComposite.5" ), IMessageProvider.ERROR ); //$NON-NLS-1$
 
     try
     {
@@ -143,7 +146,7 @@ public class ProjectInfoComposite extends Composite
 // IProjectDescription.DESCRIPTION_FILE_NAME );
 
       e.printStackTrace();
-      return new MessageProvider( Messages.getString("ProjectInfoComposite.6"), IMessageProvider.ERROR ); //$NON-NLS-1$
+      return new MessageProvider( Messages.getString( "ProjectInfoComposite.6" ), IMessageProvider.ERROR ); //$NON-NLS-1$
     }
   }
 
@@ -166,7 +169,7 @@ public class ProjectInfoComposite extends Composite
           m_preferences = null;
         }
 
-        return new MessageProvider( Messages.getString("ProjectInfoComposite.7"), IMessageProvider.INFORMATION ); //$NON-NLS-1$
+        return new MessageProvider( Messages.getString( "ProjectInfoComposite.7" ), IMessageProvider.INFORMATION ); //$NON-NLS-1$
       }
     }
 
@@ -197,22 +200,22 @@ public class ProjectInfoComposite extends Composite
 
     final String comment = m_project.getComment();
     if( StringUtils.isBlank( comment ) )
-      m_commentText.setText( Messages.getString("ProjectInfoComposite.11") ); //$NON-NLS-1$
+      m_commentText.setText( Messages.getString( "ProjectInfoComposite.11" ) ); //$NON-NLS-1$
     else
       m_commentText.setText( comment );
 
     final String moduleID = m_preferences == null ? null : m_preferences.getModule();
-    final String version = m_preferences == null ? null : m_preferences.getVersion();
+    final Version version = m_preferences == null ? null : m_preferences.getVersion();
 
-    if( version == null )
-      m_versionText.setText( Messages.getString("ProjectInfoComposite.12") ); //$NON-NLS-1$
+    if( version == null || Version.emptyVersion.equals( version ) )
+      m_versionText.setText( Messages.getString( "ProjectInfoComposite.12" ) ); //$NON-NLS-1$
     else
-      m_versionText.setText( version );
+      m_versionText.setText( version.toString() );
 
-// final IKalypsoModule module = moduleID == null ? null : ModuleExtensions.getKalypsoModule( moduleID );
-// if( module == null )
-// m_typeText.setText( "<Unbekannter Modelltyp>" );
-// else
-// m_typeText.setText( module.getHeader() );
+    final IKalypsoModule module = moduleID == null ? null : ModuleExtensions.getKalypsoModule( moduleID );
+    if( module == null )
+      m_typeText.setText( "<Unbekannter Modelltyp>" );
+    else
+      m_typeText.setText( module.getHeader() );
   }
 }

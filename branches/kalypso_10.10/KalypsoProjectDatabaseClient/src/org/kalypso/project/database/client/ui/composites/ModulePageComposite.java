@@ -50,7 +50,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.contribs.eclipse.swt.canvas.DefaultContentArea;
 import org.kalypso.contribs.eclipse.swt.canvas.ImageCanvas2;
-import org.kalypso.project.database.client.extension.IKalypsoModule;
+import org.kalypso.module.IKalypsoModule;
 import org.kalypso.project.database.client.ui.MyColors;
 import org.kalypso.project.database.client.ui.MyFonts;
 

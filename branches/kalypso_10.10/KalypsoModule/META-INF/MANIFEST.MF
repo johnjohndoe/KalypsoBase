@@ -11,6 +11,7 @@ Require-Bundle: org.eclipse.ui,
  org.kalypso.commons;bundle-version="2.3.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
-Export-Package: org.kalypso.module.conversion,
+Export-Package: org.kalypso.module,
+ org.kalypso.module.conversion,
  org.kalypso.module.nature,
  org.kalypso.module.utils.projectinfo

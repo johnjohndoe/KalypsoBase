@@ -47,6 +47,7 @@ import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.kalypso.module.internal.Module;
 import org.kalypso.module.nature.IModulePreferences;
 import org.kalypso.module.nature.ModuleNature;
+import org.osgi.framework.Version;
 import org.osgi.service.prefs.BackingStoreException;
 
 /**
@@ -95,12 +96,23 @@ public class ModulePreferences implements IModulePreferences
   }
 
   /**
+   * @see org.kalypso.module.nature.IModulePreferences#setVersion(org.osgi.framework.Version)
+   */
+  @Override
+  public void setVersion( final Version version )
+  {
+    final String versionPref = version.equals( Version.emptyVersion ) ? null : version.toString();
+    writePreference( PREFERENCE_VERSION, versionPref );
+  }
+
+  /**
    * @see org.kalypso.module.nature.IModulePreferences#getVersion()
    */
   @Override
-  public String getVersion( )
+  public Version getVersion( )
   {
-    return m_node.get( PREFERENCE_VERSION, null );
+    final String property = m_node.get( PREFERENCE_VERSION, null );
+    return ModuleUtils.parseVersion( property );
   }
 
 }

@@ -40,12 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.client.core.base.handlers;
 
+import org.kalypso.module.IKalypsoModule;
 import org.kalypso.project.database.client.core.base.actions.EmptyProjectAction;
 import org.kalypso.project.database.client.core.base.actions.IProjectAction;
 import org.kalypso.project.database.client.core.base.actions.ListRemoteProjectAction;
 import org.kalypso.project.database.client.core.base.actions.ProjectDownloadAction;
 import org.kalypso.project.database.client.core.base.actions.ProjectInfoAction;
-import org.kalypso.project.database.client.extension.IKalypsoModule;
 import org.kalypso.project.database.client.extension.database.IProjectDatabaseUiLocker;
 import org.kalypso.project.database.client.extension.database.handlers.IRemoteProject;
 

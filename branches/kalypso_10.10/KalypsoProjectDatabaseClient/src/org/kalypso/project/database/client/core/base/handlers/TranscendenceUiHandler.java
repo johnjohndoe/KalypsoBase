@@ -42,6 +42,7 @@ package org.kalypso.project.database.client.core.base.handlers;
 
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.module.IKalypsoModule;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
 import org.kalypso.project.database.client.core.base.actions.EmptyProjectAction;
 import org.kalypso.project.database.client.core.base.actions.IProjectAction;
@@ -53,7 +54,7 @@ import org.kalypso.project.database.client.core.base.actions.ProjectOpenAction;
 import org.kalypso.project.database.client.core.base.actions.ProjectUpdateChangesAction;
 import org.kalypso.project.database.client.core.base.actions.ProjectUploadChangesAction;
 import org.kalypso.project.database.client.core.utils.ProjectDatabaseServerUtils;
-import org.kalypso.project.database.client.extension.IKalypsoModule;
+import org.kalypso.project.database.client.extension.database.IKalypsoModuleDatabaseSettings;
 import org.kalypso.project.database.client.extension.database.IProjectDatabaseUiLocker;
 import org.kalypso.project.database.client.extension.database.handlers.ITranscendenceProject;
 import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
@@ -91,16 +92,16 @@ public class TranscendenceUiHandler implements IProjectUiHandler
   @Override
   public IProjectAction getEditAction( )
   {
-    if( m_module.getDatabaseSettings().hasManagedDirtyState() )
+    if( ((IKalypsoModuleDatabaseSettings) m_module.getDatabaseSettings()).hasManagedDirtyState() )
     {
       final Boolean remoteLocked = m_handler.getBean().hasEditLock();
       final boolean localLocked = m_handler.isLocked();
       if( remoteLocked && !localLocked )
         return new EmptyProjectAction();
-      
+
       return new ProjectLockRemoteAction( m_handler, m_locker, m_module );
     }
-      
+
 
     return new EmptyProjectAction();
   }
@@ -139,7 +140,7 @@ public class TranscendenceUiHandler implements IProjectUiHandler
   public IProjectAction getDatabaseAction( )
   {
 
-    if( m_module.getDatabaseSettings().hasManagedDirtyState() )
+    if( ((IKalypsoModuleDatabaseSettings) m_module.getDatabaseSettings()).hasManagedDirtyState() )
     {
       try
       {

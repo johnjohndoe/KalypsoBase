@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.client.core.base.handlers;
 
-import org.kalypso.project.database.client.extension.IKalypsoModule;
+import org.kalypso.module.IKalypsoModule;
 import org.kalypso.project.database.client.extension.database.IProjectDatabaseUiLocker;
 import org.kalypso.project.database.client.extension.database.handlers.ILocalProject;
 import org.kalypso.project.database.client.extension.database.handlers.IProjectHandler;

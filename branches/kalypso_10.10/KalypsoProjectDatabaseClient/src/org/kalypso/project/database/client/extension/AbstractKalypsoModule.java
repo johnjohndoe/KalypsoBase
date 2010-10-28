@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -45,22 +45,43 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExecutableExtension;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.jface.action.IAction;
 import org.kalypso.afgui.wizards.INewProjectWizardProvider;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.i18n.I18nUtils;
+import org.kalypso.module.IKalypsoModule;
+import org.kalypso.project.database.client.extension.database.IKalypsoModuleDatabaseSettings;
 import org.kalypso.project.database.client.i18n.Messages;
 import org.kalypso.project.database.client.ui.composites.CreateProjectAction;
 import org.kalypso.project.database.client.ui.composites.ImportProjectAction;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.Version;
 
 /**
  * @author Gernot Belger
  */
-public abstract class AbstractKalypsoModule implements IKalypsoModule
+public abstract class AbstractKalypsoModule implements IKalypsoModule, IExecutableExtension
 {
+  private Version m_version;
+
+  /**
+   * @see org.eclipse.core.runtime.IExecutableExtension#setInitializationData(org.eclipse.core.runtime.IConfigurationElement,
+   *      java.lang.String, java.lang.Object)
+   */
+  @Override
+  public void setInitializationData( final IConfigurationElement config, final String propertyName, final Object data )
+  {
+    final String pluginid = config.getContributor().getName();
+    final Bundle bundle = Platform.getBundle( pluginid );
+    m_version = bundle.getVersion();
+  }
+
   protected URL getInfoURL( final Class< ? > clazz, final Plugin plugin )
   {
     final IPath stateLocation = plugin.getStateLocation();
@@ -86,6 +107,15 @@ public abstract class AbstractKalypsoModule implements IKalypsoModule
   }
 
   /**
+   * @see org.kalypso.project.database.client.extension.IKalypsoModule#getVersion()
+   */
+  @Override
+  public Version getVersion( )
+  {
+    return m_version;
+  }
+
+  /**
    * @see org.kalypso.project.database.client.extension.IKalypsoModule#getProjectActions()
    */
   @Override
@@ -95,7 +125,7 @@ public abstract class AbstractKalypsoModule implements IKalypsoModule
 
     /* Create project actions */
     final INewProjectWizardProvider newProjectWizard = getNewProjectWizard();
-    final String commitType = getDatabaseSettings().getModuleCommitType();
+    final String commitType = ((IKalypsoModuleDatabaseSettings)getDatabaseSettings()).getModuleCommitType();
     if( newProjectWizard != null )
     {
       final String createProjectLabel = Messages.getString( "org.kalypso.project.database.client.ui.composites.ModulePageComposite.1" ); //$NON-NLS-1$
