@@ -49,9 +49,11 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.progress.UIJob;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
-import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.wizard.ProjectTemplatePage;
+import org.kalypso.module.conversion.IProjectConversionOperation;
 import org.kalypso.module.conversion.ProjectConversionPage;
 
 /**
@@ -110,7 +112,12 @@ public class ProjectConversionWizard extends NewProjectWizard
     {
       final File targetDir = targetProject.getLocation().toFile();
 
-      final ICoreRunnableWithProgress operation = m_conversionPage.getConversionOperation( sourceDir, targetDir, targetProject );
+      final IProjectConversionOperation operation = m_conversionPage.getConversionOperation( sourceDir, targetDir, targetProject );
+
+      final IStatus preConversion = doPreConversion( operation );
+      if( preConversion.matches( IStatus.CANCEL | IStatus.ERROR ) )
+        return preConversion;
+
       return operation.execute( monitor );
     }
     catch( final CoreException e )
@@ -125,6 +132,31 @@ public class ProjectConversionWizard extends NewProjectWizard
     }
     catch( final InterruptedException e )
     {
+      return Status.CANCEL_STATUS;
+    }
+  }
+
+  private IStatus doPreConversion( final IProjectConversionOperation operation )
+  {
+    final Shell shell = getShell();
+    final UIJob job = new UIJob( shell.getDisplay(), "" )
+    {
+      @Override
+      public IStatus runInUIThread( final IProgressMonitor monitor )
+      {
+        return operation.preConversion( getShell() );
+      }
+    };
+
+    job.schedule();
+    try
+    {
+      job.join();
+      return job.getResult();
+    }
+    catch( final InterruptedException e )
+    {
+      e.printStackTrace();
       return Status.CANCEL_STATUS;
     }
   }
