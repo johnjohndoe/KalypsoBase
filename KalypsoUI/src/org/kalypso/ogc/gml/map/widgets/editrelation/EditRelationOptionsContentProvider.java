@@ -43,7 +43,6 @@ package org.kalypso.ogc.gml.map.widgets.editrelation;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
@@ -95,10 +94,9 @@ public class EditRelationOptionsContentProvider implements ITreeContentProvider
     {
       final IFeatureType[] featureTypes = ((GMLWorkspace) parentElement).getGMLSchema().getAllFeatureTypes();
 
-      for( int i = 0; i < featureTypes.length; i++ )
+      for( final IFeatureType ft : featureTypes )
       {
-        IFeatureType ft = featureTypes[i];
-        if( !ft.isAbstract() && ft.getDefaultGeometryProperty() != null )
+        if( /*!ft.isAbstract() && */ft.getDefaultGeometryProperty() != null )
           result.add( ft );
       }
     }
@@ -114,10 +112,10 @@ public class EditRelationOptionsContentProvider implements ITreeContentProvider
       final IFeatureType[] associationFeatureTypes = GMLSchemaUtilities.getSubstituts( associationFeatureType, null, false, true );
 
       if( destFT == destFT2 )
-        for( int i = 0; i < associationFeatureTypes.length; i++ )
+        for( final IFeatureType associationFeatureType2 : associationFeatureTypes )
         {
-          IFeatureType ft = associationFeatureTypes[i];
-          if( !ft.isAbstract() && !ft.equals( destFT ) )
+          final IFeatureType ft = associationFeatureType2;
+          if( /* !ft.isAbstract() && */!ft.equals( destFT ) )
             result.add( new HeavyRelationType( relation.getSrcFT(), relation.getLink1(), relation.getBodyFT(), relation.getLink2(), ft ) );
         }
     }
@@ -130,22 +128,21 @@ public class EditRelationOptionsContentProvider implements ITreeContentProvider
 
       final IFeatureType[] associationFeatureTypes = GMLSchemaUtilities.getSubstituts( associationFeatureType, null, false, true );
       if( destFT == destFT2 )
-        for( int i = 0; i < associationFeatureTypes.length; i++ )
+        for( final IFeatureType associationFeatureType2 : associationFeatureTypes )
         {
-          IFeatureType ft = associationFeatureTypes[i];
-          if( !ft.isAbstract() && !ft.equals( destFT ) )
+          final IFeatureType ft = associationFeatureType2;
+          if( /* !ft.isAbstract() && */!ft.equals( destFT ) )
             result.add( new RelationType( relation.getSrcFT(), relation.getLink(), ft ) );
         }
     }
     if( parentElement instanceof IFeatureType )
     {
-      IFeatureType ft1 = (IFeatureType) parentElement;
-      if( !ft1.isAbstract() )
+      final IFeatureType ft1 = (IFeatureType) parentElement;
+// if( !ft1.isAbstract() )
       {
-        IPropertyType[] properties = ft1.getProperties();
-        for( int i = 0; i < properties.length; i++ )
+        final IPropertyType[] properties = ft1.getProperties();
+        for( final IPropertyType property : properties )
         {
-          IPropertyType property = properties[i];
           if( property instanceof IRelationType )
           {
             final IRelationType linkFTP1 = (IRelationType) property;
@@ -153,27 +150,26 @@ public class EditRelationOptionsContentProvider implements ITreeContentProvider
             // leight: FT,Prop,FT
             // heavy: FT,Prop,FT,PropFT
             // leight relationship ?
-            if( ft2.getDefaultGeometryProperty() != null &&!ft2.isAbstract())
+            if( ft2.getDefaultGeometryProperty() != null /* &&!ft2.isAbstract() */)
               result.add( new RelationType( ft1, linkFTP1, ft2 ) );
             else
             {
               // heavy relationship ?
               final IFeatureType ft2a = linkFTP1.getTargetFeatureType();
               final IFeatureType[] ft2s = GMLSchemaUtilities.getSubstituts( ft2a, null, false, true );
-              for( int j = 0; j < ft2s.length; j++ )
+              for( final IFeatureType ft22 : ft2s )
               {
-                final IPropertyType[] properties2 = ft2s[j].getProperties();
-                for( int l = 0; l < properties2.length; l++ )
+                final IPropertyType[] properties2 = ft22.getProperties();
+                for( final IPropertyType property2 : properties2 )
                 {
-                  final IPropertyType property2 = properties2[l];
                   if( property2 instanceof IRelationType )
                   {
                     final IRelationType linkFTP2 = (IRelationType) property2;
                     final IFeatureType ft3 = linkFTP2.getTargetFeatureType();
-                    if( !ft3.isAbstract() && ft3.getDefaultGeometryProperty() != null )
+                    if( /* !ft3.isAbstract() && */ft3.getDefaultGeometryProperty() != null )
                     {
                       // it is a heavy relationship;
-                      result.add( new HeavyRelationType( ft1, linkFTP1, ft2s[j], linkFTP2, ft3 ) );
+                      result.add( new HeavyRelationType( ft1, linkFTP1, ft22, linkFTP2, ft3 ) );
                     }
                   }
                 }
@@ -187,8 +183,8 @@ public class EditRelationOptionsContentProvider implements ITreeContentProvider
     if( array.length > 0 )
     {
       m_childCache.put( parentElement, array );
-      for( int i = 0; i < array.length; i++ )
-        m_parentCache.put( array[i], parentElement );
+      for( final Object element : array )
+        m_parentCache.put( element, parentElement );
     }
     if( m_childCache.containsKey( parentElement ) )
       return m_childCache.get( parentElement );
@@ -199,7 +195,7 @@ public class EditRelationOptionsContentProvider implements ITreeContentProvider
    * @see org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.Object)
    */
   @Override
-  public Object getParent( Object element )
+  public Object getParent( final Object element )
   {
     if( m_parentCache.containsKey( element ) )
     {
@@ -213,7 +209,7 @@ public class EditRelationOptionsContentProvider implements ITreeContentProvider
    * @see org.eclipse.jface.viewers.ITreeContentProvider#hasChildren(java.lang.Object)
    */
   @Override
-  public boolean hasChildren( Object element )
+  public boolean hasChildren( final Object element )
   {
     if( element == null )
       return false;
@@ -224,11 +220,11 @@ public class EditRelationOptionsContentProvider implements ITreeContentProvider
    * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
    */
   @Override
-  public Object[] getElements( Object inputElement )
+  public Object[] getElements( final Object inputElement )
   {
     if( inputElement != null && inputElement instanceof IKalypsoFeatureTheme )
     {
-      IKalypsoFeatureTheme featureTheme = (IKalypsoFeatureTheme) inputElement;
+      final IKalypsoFeatureTheme featureTheme = (IKalypsoFeatureTheme) inputElement;
       return new GMLWorkspace[] { featureTheme.getWorkspace() };
     }
     return new Object[0];
@@ -248,7 +244,7 @@ public class EditRelationOptionsContentProvider implements ITreeContentProvider
    *      java.lang.Object)
    */
   @Override
-  public void inputChanged( Viewer viewer, Object oldInput, Object newInput )
+  public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
   {
     // final CheckboxTreeViewer treeviewer = (CheckboxTreeViewer)viewer;
     // {
@@ -287,9 +283,8 @@ public class EditRelationOptionsContentProvider implements ITreeContentProvider
   public org.kalypso.ogc.gml.map.widgets.editrelation.IRelationType[] getCheckedRelations( )
   {
     final List<org.kalypso.ogc.gml.map.widgets.editrelation.IRelationType> result = new ArrayList<org.kalypso.ogc.gml.map.widgets.editrelation.IRelationType>();
-    for( Iterator iter = m_checkedElements.iterator(); iter.hasNext(); )
+    for( final Object element : m_checkedElements )
     {
-      Object element = iter.next();
       if( element instanceof org.kalypso.ogc.gml.map.widgets.editrelation.IRelationType )
         result.add( (org.kalypso.ogc.gml.map.widgets.editrelation.IRelationType) element );
     }

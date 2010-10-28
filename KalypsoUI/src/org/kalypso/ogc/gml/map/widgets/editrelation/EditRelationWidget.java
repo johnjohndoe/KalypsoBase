@@ -61,7 +61,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.dialogs.ListSelectionDialog;
@@ -242,12 +241,11 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
     super.moved( p );
     if( m_srcFE == null )
       return;
-    final JMSelector selector = new JMSelector();
     final IMapPanel mapPanel = getMapPanel();
     final GeoTransform transform = mapPanel.getProjection();
     final GM_Point point = GeometryFactory.createGM_Point( p, transform, mapPanel.getMapModell().getCoordinatesSystem() );
     final double r = transform.getSourceX( RADIUS ) - transform.getSourceX( 0 );
-    final Feature feature = (Feature) selector.selectNearest( point, r, m_allowedFeatureList, false );
+    final Feature feature = (Feature) JMSelector.selectNearest( point, r, m_allowedFeatureList, false );
     m_fitProblems.setLength( 0 );
     m_targetFE = null;
     if( m_srcFE == feature )
@@ -270,15 +268,6 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
   public void leftReleased( final Point p )
   {
     perform();
-    finish();
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#rightClicked(java.awt.Point)
-   */
-  @Override
-  public void rightClicked( final Point p )
-  {
     finish();
   }
 
@@ -543,24 +532,6 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
         }
       } );
     }
-    // Andreas: das hatte keine Auswirkungen (mehr). Weg?
-    // if( m_srcFE == null )
-    // {
-    // setLeftMFunction( "Quelle wählen" );
-    // setRightMFunction( null );
-    // }
-    // // src != null && m_targetFE==null
-    // else if( m_targetFE == null )
-    // {
-    // setLeftMFunction( "Ziel wählen" );
-    // setRightMFunction( "Auswahl aufheben" );
-    // }
-    // // src != null && m_targetFE!=null
-    // else
-    // {
-    // setLeftMFunction( "Relation anlegen" );
-    // setRightMFunction( "Auswahl aufheben" );
-    // }
   }
 
   /**
@@ -587,9 +558,7 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
   public Control createControl( final Composite parent, final FormToolkit toolkit )
   {
     m_topLevel = toolkit.createComposite( parent, SWT.NONE );
-    final Layout gridLayout = new GridLayout( 1, false );
-
-    m_topLevel.setLayout( gridLayout );
+    m_topLevel.setLayout( new GridLayout( 1, false ) );
 
     // tree
     final GridData data2 = new GridData();
@@ -632,7 +601,9 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
       }
     } );
     m_textInfo = toolkit.createText( m_topLevel, Messages.getString( "org.kalypso.ogc.gml.map.widgets.editrelation.EditRelationWidget.24" ), SWT.READ_ONLY | SWT.MULTI | SWT.BORDER | SWT.WRAP ); //$NON-NLS-1$
+    m_textInfo.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     m_textProblem = toolkit.createText( m_topLevel, Messages.getString( "org.kalypso.ogc.gml.map.widgets.editrelation.EditRelationWidget.25" ), SWT.READ_ONLY | SWT.MULTI | SWT.WRAP ); //$NON-NLS-1$
+    m_textProblem.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
     viewer.setAutoExpandLevel( 2 );
     viewer.getTree().addMouseListener( new MouseAdapter()
