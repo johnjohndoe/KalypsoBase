@@ -176,6 +176,11 @@ public abstract class AbstractGenericAxisRenderer implements IAxisRenderer
     return m_labelStyle;
   }
 
+  public void setLabelStyle( final ITextStyle style )
+  {
+    m_labelStyle = style;
+  }
+
   public ITextStyle getTickLabelStyle( )
   {
     if( m_tickLabelStyle == null )
