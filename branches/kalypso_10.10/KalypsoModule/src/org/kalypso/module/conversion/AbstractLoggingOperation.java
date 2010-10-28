@@ -93,6 +93,10 @@ public abstract class AbstractLoggingOperation implements ILoggingOperation
     {
       throw e;
     }
+    catch( final InvocationTargetException e )
+    {
+      throw e;
+    }
     catch( final Throwable e )
     {
       throw new InvocationTargetException( e );
