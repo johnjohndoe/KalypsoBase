@@ -49,7 +49,7 @@ import org.kalypso.contribs.java.i18n.I18nUtils;
  */
 public final class Messages
 {
-  private static final String BUNDLE_NAME = Messages.class.getPackage().getName() + ".messages"; //$NON-NLS-1$
+  private static final String BUNDLE_NAME = "org.kalypso.model.wspm.core.i18n.messages"; //$NON-NLS-1$
 
   private static final Object[] NO_ARGS = new Object[0];
 
@@ -59,9 +59,9 @@ public final class Messages
   {
   }
 
-/*
- * java reflections needs this method-signatur
- */
+  /*
+   * java reflections needs this method-signatur
+   */
   public static String getString( final String key )
   {
     return getString( key, NO_ARGS );
