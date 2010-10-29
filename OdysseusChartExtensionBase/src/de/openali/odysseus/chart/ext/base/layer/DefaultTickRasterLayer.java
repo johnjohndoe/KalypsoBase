@@ -45,7 +45,6 @@ import org.eclipse.swt.graphics.Point;
 
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
-import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 
 /**
@@ -58,11 +57,9 @@ public class DefaultTickRasterLayer extends AbstractLineLayer
    */
   private static final String ID = "de.openali.odysseus.chart.ext.base.layer.DefaultTickRasterLayer";
 
-  public DefaultTickRasterLayer( final ICoordinateMapper coordinateMapper, final ILineStyle lineStyle )
+  public DefaultTickRasterLayer( final ILineStyle lineStyle )
   {
     super( lineStyle, null );
-
-    setCoordinateMapper( coordinateMapper );
     setId( ID );
   }
 

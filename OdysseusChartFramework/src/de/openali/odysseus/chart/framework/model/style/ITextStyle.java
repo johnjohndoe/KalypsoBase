@@ -1,5 +1,6 @@
 package de.openali.odysseus.chart.framework.model.style;
 
+import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.RGB;
 
 import de.openali.odysseus.chart.framework.model.style.IStyleConstants.FONTSTYLE;
@@ -33,4 +34,6 @@ public interface ITextStyle extends IStyle
   void setTextColor( RGB rgbText );
 
   void setWeight( FONTWEIGHT weight );
+
+  FontData toFontData( );
 }

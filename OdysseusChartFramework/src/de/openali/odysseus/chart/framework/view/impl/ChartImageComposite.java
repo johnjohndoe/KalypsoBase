@@ -75,11 +75,15 @@ public class ChartImageComposite extends Canvas
       }
       if( isDisposed() )
         return Status.OK_STATUS;
+
       final IChartModel model = getChartModel();
-      final Point titleSize = model.isHideTitle() ? new Point( 0, 0 ) : ChartImageFactory.calculateTitleSize( model.getTitle(), getTitleFont() );
+
       final IMapperRegistry mapperRegistry = model == null ? null : model.getMapperRegistry();
       if( mapperRegistry == null )
         return Status.OK_STATUS;
+
+      final Point titleSize = model.isHideTitle() ? new Point( 0, 0 ) : ChartImageFactory.calculateTitleSize( model.getTitle(), getTitleFont() );
+
       m_plotRect = ChartImageFactory.calculatePlotSize( mapperRegistry, getClientArea().width, getClientArea().height - titleSize.y );
       m_plotRect.y += titleSize.y;
       ChartImageFactory.setAxesHeight( mapperRegistry.getAxes(), m_plotRect );
