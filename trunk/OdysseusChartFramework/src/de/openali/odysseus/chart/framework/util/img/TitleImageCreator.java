@@ -72,10 +72,9 @@ public class TitleImageCreator
       return new Point( 0, 0 );
 
     final Device dev = PlatformUI.getWorkbench().getDisplay();
+    final Font font = getFont( dev );
     final Image image = new Image( dev, 1, 1 );
     final GC gc = new GC( image );
-
-    final Font font = getFont( dev );
 
     try
     {
