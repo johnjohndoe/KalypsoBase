@@ -67,6 +67,8 @@ public class DummyLayer implements IChartLayer
 {
   private boolean m_isVisible = true;
 
+  private boolean m_legend = true;
+
   private String m_title = "";
 
   private String m_id = "";
@@ -352,7 +354,24 @@ public class DummyLayer implements IChartLayer
   public void setMappers( @SuppressWarnings("unused") final Map<String, IMapper> mapperMap )
   {
     // nothing to do
+  }
 
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#isLegend()
+   */
+  @Override
+  public boolean isLegend( )
+  {
+    return m_legend;
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#setLegend(boolean)
+   */
+  @Override
+  public void setLegend( final boolean isVisible )
+  {
+    m_legend = isVisible;
   }
 
 }

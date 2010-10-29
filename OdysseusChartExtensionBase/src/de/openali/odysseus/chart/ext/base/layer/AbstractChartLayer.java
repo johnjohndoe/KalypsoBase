@@ -41,6 +41,8 @@ public abstract class AbstractChartLayer implements IChartLayer
 
   private final Map<String, IRetinalMapper> m_mapperMap = new HashMap<String, IRetinalMapper>();
 
+  private boolean m_legend = true;
+
   @Override
   public void addListener( final ILayerEventListener l )
   {
@@ -240,6 +242,24 @@ public abstract class AbstractChartLayer implements IChartLayer
   public String toString( )
   {
     return String.format( "IChartLayer - id: %s", getId() );
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#isLegend()
+   */
+  @Override
+  public boolean isLegend( )
+  {
+    return m_legend;
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#setLegend(boolean)
+   */
+  @Override
+  public void setLegend( final boolean isVisible )
+  {
+    m_legend = isVisible;
   }
 
 }

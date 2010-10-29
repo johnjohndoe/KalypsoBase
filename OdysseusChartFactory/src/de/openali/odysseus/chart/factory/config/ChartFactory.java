@@ -349,6 +349,7 @@ public class ChartFactory
         icl.setTitle( layerType.getTitle() );
         icl.setDescription( layerType.getDescription() );
         icl.setVisible( layerType.getVisible() );
+        icl.setLegend( layerType.getLegend() );
         // saving provider so it can be reused for saving to chartfile
         icl.setData( LAYER_PROVIDER_KEY, provider );
         // save configuration type so it can be used for saving to chartfile

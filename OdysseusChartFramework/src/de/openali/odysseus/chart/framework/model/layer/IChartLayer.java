@@ -94,4 +94,15 @@ public interface IChartLayer extends IEventProvider<ILayerEventListener>
   // @SuppressWarnings("unchecked")
   // public void setMappers( Map<String, IMapper> mapperMap );
 
+  /**
+   * @return layer is visible in chart legend
+   */
+  boolean isLegend( );
+
+  /**
+   * @param isVisible
+   *          layer is visible in chart legend
+   */
+  void setLegend( final boolean isVisible );
+
 }
