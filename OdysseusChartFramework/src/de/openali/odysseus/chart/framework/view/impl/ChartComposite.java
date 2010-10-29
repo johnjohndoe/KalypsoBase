@@ -63,9 +63,15 @@ public class ChartComposite extends Canvas
     public IStatus runInUIThread( final IProgressMonitor monitor )
     {
       // TODO: only invalidate if necessary
-
-      layout( true,true );// first resize axis-places, then invalidate plot(maybe resized)
-      m_plot.invalidate( null );
+      try
+      {
+        layout( true, true );// first resize axis-places, then invalidate plot(maybe resized)
+        m_plot.invalidate( null );
+      }
+      catch( Exception e )
+      {
+        //rise widget is disposed in some plugins...
+      }
       return Status.OK_STATUS;
     }
   }
