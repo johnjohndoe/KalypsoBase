@@ -354,6 +354,7 @@ public class ChartImageFactory
     final Image image = new Image( dev, size.x, size.y );
     final GC tmpGc = new GC( image );
     final Font tmpFont = new Font( dev, titleFont == null ? dev.getFontList( null, true )[0] : titleFont );
+       
     try
     {
       tmpGc.setFont( tmpFont );
