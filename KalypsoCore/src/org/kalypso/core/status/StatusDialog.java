@@ -45,9 +45,12 @@ import java.io.StringWriter;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -57,7 +60,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
-import org.kalypso.contribs.eclipse.jface.viewers.DefaultTableViewer;
+import org.eclipse.swt.widgets.Tree;
 
 /**
  * A dialog showing a status in full details.
@@ -66,6 +69,8 @@ import org.kalypso.contribs.eclipse.jface.viewers.DefaultTableViewer;
  */
 public class StatusDialog extends AbstractStatusDialog
 {
+  private boolean m_showAsTree;
+
   public StatusDialog( final Shell parentShell, final IStatus status, final String dialogTitle )
   {
     super( parentShell, status, dialogTitle );
@@ -74,6 +79,15 @@ public class StatusDialog extends AbstractStatusDialog
   public StatusDialog( final Shell parentShell, final IStatus status, final String dialogTitle, final String[] dialogButtonLabels, final int defaultIndex )
   {
     super( parentShell, status, dialogTitle, dialogButtonLabels, defaultIndex );
+  }
+
+  /**
+   * Set to <code>true</code>, if the dialog should show the status elements in a tree viewer. Else they are shown in a
+   * table viewer (default).
+   */
+  public void setShowAsTree( final boolean showAsTree )
+  {
+    m_showAsTree = showAsTree;
   }
 
   /**
@@ -117,16 +131,22 @@ public class StatusDialog extends AbstractStatusDialog
     final IStatus[] children = getStatus().getChildren();
     if( children != null && children.length > 0 )
     {
-      final DefaultTableViewer tableViewer = new DefaultTableViewer( composite, SWT.BORDER | SWT.FULL_SELECTION );
-      final Table table = tableViewer.getTable();
-      table.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-      table.setHeaderVisible( true );
-      table.setLinesVisible( true );
-      StatusLabelProvider.configureTableViewer( tableViewer );
-      tableViewer.setContentProvider( new ArrayContentProvider() );
-      tableViewer.setInput( children );
+      final ColumnViewer columnViewer = createViewer( parent );
 
-      tableViewer.addDoubleClickListener( new IDoubleClickListener()
+      final Control viewerControl = columnViewer.getControl();
+      viewerControl.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+
+      StatusLabelProvider.addSeverityColumn( columnViewer );
+      StatusLabelProvider.addMessageColumn( columnViewer );
+      StatusLabelProvider.addTimeColumn( columnViewer );
+
+      if( columnViewer instanceof TreeViewer )
+        columnViewer.setContentProvider( new StatusTreeContentProvider() );
+      else
+        columnViewer.setContentProvider( new ArrayContentProvider() );
+      columnViewer.setInput( children );
+
+      columnViewer.addDoubleClickListener( new IDoubleClickListener()
       {
         @Override
         public void doubleClick( final DoubleClickEvent event )
@@ -143,5 +163,27 @@ public class StatusDialog extends AbstractStatusDialog
     }
 
     return composite;
+  }
+
+  private ColumnViewer createViewer( final Composite parent )
+  {
+    final int viewerStyle = SWT.BORDER | SWT.FULL_SELECTION;
+
+    if( m_showAsTree )
+    {
+      final TreeViewer treeViewer = new TreeViewer( parent, viewerStyle );
+      final Tree tree = treeViewer.getTree();
+      tree.setHeaderVisible( true );
+      tree.setLinesVisible( true );
+      return treeViewer;
+    }
+    else
+    {
+      final TableViewer tableViewer = new TableViewer( parent, viewerStyle );
+      final Table table = tableViewer.getTable();
+      table.setHeaderVisible( true );
+      table.setLinesVisible( true );
+      return tableViewer;
+    }
   }
 }
