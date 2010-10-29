@@ -262,6 +262,11 @@
 						<documentation> legt die Sichtbarkeit des Layers fest </documentation>
 					</annotation>
 				</attribute>
+				<attribute name="legend" type="boolean" default="true">
+					<annotation>
+						<documentation>display layer in chart legend</documentation>
+					</annotation>
+				</attribute>
 			</extension>
 		</complexContent>
 	</complexType>
