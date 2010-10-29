@@ -17,37 +17,36 @@ import de.openali.odysseus.chart.framework.model.style.ITextStyle;
 /**
  * Creates an simple legend from an IChartModel. It displays its elements as lines, where each line corresponds to a
  * layer title or a legend entry. The image size is calculated automatically, depending on style setting and default
- * icon sizes.
- * 
- * It does neither display title or description of the chart nor the description of layers.
- * 
+ * icon sizes. It does neither display title or description of the chart nor the description of layers.
  * 
  * @author burtscher
  */
-public class SimpleLegendImageFactory
+public final class SimpleLegendImageFactory
 {
+  private SimpleLegendImageFactory( )
+  {
+  }
 
   /**
    * @param chart
-   *            the chart for which the legend is created
+   *          the chart for which the legend is created
    * @param dev
-   *            an swt device
+   *          an swt device
    * @param layerStyle
-   *            style for layer text
+   *          style for layer text
    * @param legendEntryStyle
-   *            style for legend entry text
+   *          style for legend entry text
    * @param lineBorder
-   *            Insets to be placed around each lines
+   *          Insets to be placed around each lines
    * @param defaultIconSize
-   *            default size used for all icons - except for those who need more space
-   * 
+   *          default size used for all icons - except for those who need more space
    */
   public static ImageData createLegendImage( final IChartModel chart, final Device dev, final ITextStyle layerStyle, final ITextStyle legendEntryStyle, final Insets lineBorder, final Point defaultIconSize )
   {
-    Image tmpImg = new Image( dev, 10, 10 );
-    GC tmpGc = new GC( tmpImg );
+    final Image tmpImg = new Image( dev, 10, 10 );
+    final GC tmpGc = new GC( tmpImg );
 
-    ILayerManager layerManager = chart.getLayerManager();
+    final ILayerManager layerManager = chart.getLayerManager();
 
     // max Breite eines Icons
     int maxIconWidth = 0;
@@ -64,33 +63,36 @@ public class SimpleLegendImageFactory
     // Gesamtbreite des Bildes
     int totalWidth = 0;
     // Platz zwischen Icon und Beschreibung
-    int spacer = 5;
+    final int spacer = 5;
 
     /*
      * Analyse: wie groß ist das größte Icon, wieviele Icons gibt es, etc
      */
-    for( IChartLayer layer : layerManager.getLayers() )
+    for( final IChartLayer layer : layerManager.getLayers() )
     {
+      if( !layer.isLegend() )
+        continue;
+
       layerStyle.apply( tmpGc );
       String layerText = layer.getTitle();
       if( layerText == null )
         layerText = "";
-      Point layerTextExt = tmpGc.textExtent( layerText );
+      final Point layerTextExt = tmpGc.textExtent( layerText );
 
       totalHeight += lineBorder.bottom + lineBorder.top + layerTextExt.y;
 
-      int layerLineWidth = layerTextExt.x + lineBorder.left + lineBorder.right;
+      final int layerLineWidth = layerTextExt.x + lineBorder.left + lineBorder.right;
       if( layerLineWidth > totalWidth )
       {
         totalWidth = layerLineWidth;
       }
 
-      ILegendEntry[] legendEntries = layer.getLegendEntries();
-      for( ILegendEntry le : legendEntries )
+      final ILegendEntry[] legendEntries = layer.getLegendEntries();
+      for( final ILegendEntry le : legendEntries )
       {
         totalHeight += lineBorder.bottom + lineBorder.top;
 
-        Point iconSize = le.computeSize( defaultIconSize );
+        final Point iconSize = le.computeSize( defaultIconSize );
         if( iconSize.x > maxIconWidth )
         {
           maxIconWidth = iconSize.x;
@@ -105,10 +107,11 @@ public class SimpleLegendImageFactory
         String legendText = le.getDescription();
         if( legendText == null )
           legendText = "";
-        Point legendTextExt = tmpGc.textExtent( legendText );
+
+        final Point legendTextExt = tmpGc.textExtent( legendText );
         totalHeight += Math.max( iconSize.x, legendTextExt.y );
 
-        int legendLineWidth = legendTextExt.x + iconSize.x + spacer + lineBorder.left + lineBorder.right;
+        final int legendLineWidth = legendTextExt.x + iconSize.x + spacer + lineBorder.left + lineBorder.right;
         if( legendLineWidth > totalWidth )
         {
           totalWidth = legendLineWidth;
@@ -123,44 +126,47 @@ public class SimpleLegendImageFactory
     tmpImg.dispose();
 
     // echtes Image erzeugen
-    Image img = new Image( dev, totalWidth, totalHeight );
-    GC gc = new GC( img );
+    final Image img = new Image( dev, totalWidth, totalHeight );
+    final GC gc = new GC( img );
 
     int yOffset = 0;
-    int xOffset = lineBorder.left;
+    final int xOffset = lineBorder.left;
     final int textXOffset = xOffset + maxIconWidth + spacer;
 
-    for( IChartLayer layer : layerManager.getLayers() )
+    for( final IChartLayer layer : layerManager.getLayers() )
     {
+      if( !layer.isLegend() )
+        continue;
+
       layerStyle.apply( gc );
       String layerText = layer.getTitle();
       if( layerText == null )
         layerText = "";
-      Point layerTextExt = gc.textExtent( layerText );
+      final Point layerTextExt = gc.textExtent( layerText );
 
       yOffset += lineBorder.top;
       gc.drawText( layerText, xOffset, yOffset );
 
       yOffset += lineBorder.bottom + layerTextExt.y;
-      for( ILegendEntry le : layer.getLegendEntries() )
+      for( final ILegendEntry le : layer.getLegendEntries() )
       {
         yOffset += lineBorder.top;
         legendEntryStyle.apply( gc );
         String legendText = le.getDescription();
         if( legendText == null )
           legendText = "";
-        Point legendTextExt = gc.textExtent( legendText );
+        final Point legendTextExt = gc.textExtent( legendText );
 
-        ImageData symbol = le.getSymbol( defaultIconSize );
+        final ImageData symbol = le.getSymbol( defaultIconSize );
 
-        int lineHeight = Math.max( symbol.height, legendTextExt.y );
+        final int lineHeight = Math.max( symbol.height, legendTextExt.y );
 
-        int iconYOffset = yOffset + (int) (Math.ceil( Math.abs( lineHeight - symbol.height ) / 2 ));
-        Image iconImage = new Image( dev, symbol );
+        final int iconYOffset = yOffset + (int) (Math.ceil( Math.abs( lineHeight - symbol.height ) / 2 ));
+        final Image iconImage = new Image( dev, symbol );
         gc.drawImage( iconImage, xOffset, iconYOffset );
         iconImage.dispose();
 
-        int textYOffset = yOffset + (int) (Math.ceil( Math.abs( lineHeight - legendTextExt.y ) / 2 ));
+        final int textYOffset = yOffset + (int) (Math.ceil( Math.abs( lineHeight - legendTextExt.y ) / 2 ));
 
         gc.drawText( legendText, textXOffset, textYOffset );
 

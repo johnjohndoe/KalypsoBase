@@ -55,6 +55,7 @@ import org.eclipse.ui.PlatformUI;
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.style.ITextStyle;
+import de.openali.odysseus.chart.framework.util.StyleUtils;
 
 /**
  * @author Dirk Kuch
@@ -63,62 +64,46 @@ public class LegendImageCreator
 {
   private final IChartModel m_model;
 
-  private final ITextStyle m_style;
+  private ITextStyle m_style = StyleUtils.getDefaultTextStyle();
 
   private final int m_maxImageWidth;
 
-  public LegendImageCreator( final IChartModel model, final int maximalImageWidth, final ITextStyle style )
+  private Point m_iconSize = new Point( 15, 15 );
+
+  private final Point m_itemSpacer = new Point( 15, 15 );
+
+  private final ILegendStrategy m_strategy;
+
+  public LegendImageCreator( final IChartModel model, final int maximalImageWidth )
+  {
+    this( model, maximalImageWidth, new DefaultLegendStrategy() );
+  }
+
+  public LegendImageCreator( final IChartModel model, final int maximalImageWidth, final ILegendStrategy strategy )
   {
     m_model = model;
     m_maxImageWidth = maximalImageWidth;
+    m_strategy = strategy;
+  }
+
+  public void setTextStyle( final ITextStyle style )
+  {
     m_style = style;
+  }
+
+  public void setIconSize( final Point size )
+  {
+    m_iconSize = size;
+  }
+
+  public void setItemSpacer( final Point size )
+  {
+    m_iconSize = size;
   }
 
   public Point getSize( )
   {
-    final IChartLayer[] layers = getLayers();
-
-    final Device dev = PlatformUI.getWorkbench().getDisplay();
-    final Image image = new Image( dev, 1, 1 );
-    final GC gc = new GC( image );
-
-    final Font font = getFont( dev );
-
-    int heigth = 0;
-
-    try
-    {
-      int row = 0;
-
-      for( final IChartLayer layer : layers )
-      {
-        final Point imageSize = new Point( m_style.getHeight() * 2, m_style.getHeight() );
-        final Point spacer = getSpacer();
-        final Point titleSize = getTextExtend( gc, font, layer.getTitle() );
-
-        // TODO subtract spacer2 from last line element?
-        final Point spacer2 = getItemSpacer();
-
-        final Point size = calculateSize( imageSize, spacer, titleSize, spacer2 );
-
-        if( row + size.x > m_maxImageWidth )
-        {
-          row = 0;
-          heigth += size.y;
-        }
-        else
-        {
-          row += size.x;
-        }
-      }
-
-      return new Point( m_maxImageWidth, heigth );
-    }
-    finally
-    {
-      font.dispose();
-      gc.dispose();
-    }
+    return m_strategy.getSize( this );
   }
 
   public Image createImage( )
@@ -133,41 +118,19 @@ public class LegendImageCreator
     return null;
   }
 
-  private Point getItemSpacer( )
-  {
-    return new Point( 10, 0 );
-  }
-
-  private Point getSpacer( )
+  Point getSpacer( )
   {
     return new Point( 2, 0 );
   }
 
-  private Point calculateSize( final Point... points )
-  {
-    int x = 0;
-    int y = 0;
-
-    for( final Point point : points )
-    {
-      x += point.x;
-      y = Math.max( point.y, y );
-    }
-
-    return new Point( x, y );
-  }
-
-  private Point getTextExtend( final GC gc, final Font font, final String title )
+  Point getTextExtend( final GC gc, final Font font, final String title )
   {
     gc.setFont( font );
 
     return gc.textExtent( m_model.getTitle(), SWT.DRAW_DELIMITER | SWT.DRAW_TAB );
   }
 
-  /**
-   * @return layers which should be displayed in the chart legend
-   */
-  private IChartLayer[] getLayers( )
+  IChartLayer[] getLayers( )
   {
     final Set<IChartLayer> visible = new LinkedHashSet<IChartLayer>();
 
@@ -181,13 +144,28 @@ public class LegendImageCreator
     return visible.toArray( new IChartLayer[] {} );
   }
 
-  private Font getFont( final Device dev )
+  Font getFont( final Device dev )
   {
     final FontData fontData = m_style.toFontData();
     if( fontData == null )
       return new Font( dev, dev.getFontList( null, true )[0] );
 
     return new Font( dev, fontData );
+  }
+
+  public int getMaximumWidth( )
+  {
+    return m_maxImageWidth;
+  }
+
+  public Point getIconSize( )
+  {
+    return m_iconSize;
+  }
+
+  public Point getItemSpacer( )
+  {
+    return m_itemSpacer;
   }
 
 }

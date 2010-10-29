@@ -40,79 +40,63 @@
  *  ---------------------------------------------------------------------------*/
 package de.openali.odysseus.chart.framework.util.img;
 
-import org.apache.commons.lang.StringUtils;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.ui.PlatformUI;
 
-import de.openali.odysseus.chart.framework.model.IChartModel;
-import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.LABEL_POSITION;
+import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 
 /**
  * @author Dirk Kuch
  */
-public class TitleImageCreator
+public class DefaultLegendStrategy implements ILegendStrategy
 {
 
-  private final IChartModel m_model;
-
-  public TitleImageCreator( final IChartModel model )
+  /**
+   * @see de.openali.odysseus.chart.framework.util.img.ILegendStrategy#getSize(de.openali.odysseus.chart.framework.util.img.LegendImageCreator)
+   */
+  @Override
+  public Point getSize( final LegendImageCreator creator )
   {
-    m_model = model;
-  }
-
-  public Point getSize( )
-  {
-    if( m_model.isHideTitle() )
-      return new Point( 0, 0 );
+    final IChartLayer[] layers = creator.getLayers();
 
     final Device dev = PlatformUI.getWorkbench().getDisplay();
-    final Font font = getFont( dev );
     final Image image = new Image( dev, 1, 1 );
     final GC gc = new GC( image );
 
-    try
-    {
-      gc.setFont( font );
-      return gc.textExtent( m_model.getTitle(), SWT.DRAW_DELIMITER | SWT.DRAW_TAB );
-    }
-    finally
-    {
-      image.dispose();
-      gc.dispose();
-      font.dispose();
-    }
-  }
+    final Font font = creator.getFont( dev );
 
-  public Image createImage( final LABEL_POSITION position )
-  {
-    if( m_model.isHideTitle() )
-      return null;
-
-    final String[] lines = StringUtils.split( m_model.getTitle(), "\n" );
-    final Point size = getSize();
-
-    final Device dev = PlatformUI.getWorkbench().getDisplay();
-    final Image image = new Image( dev, size.x, size.y );
-    final GC gc = new GC( image );
-
-    final Font font = getFont( dev );
+    int heigth = 0;
 
     try
     {
-      gc.setFont( font );
-      for( int i = 0; i < lines.length; i++ )
+      int row = 0;
+
+      for( final IChartLayer layer : layers )
       {
-        final Point lineSize = gc.textExtent( lines[i] );
-        gc.drawText( lines[i], (size.x - lineSize.x) / 2, i * lineSize.y, SWT.DRAW_TAB );
+        final Point spacer = creator.getSpacer();
+        final Point titleSize = creator.getTextExtend( gc, font, layer.getTitle() );
 
+        // TODO subtract spacer2 from last line element?
+        final Point spacer2 = creator.getItemSpacer();
+
+        final Point size = calculateSize( creator.getIconSize(), spacer, titleSize, spacer2 );
+
+        if( row + size.x > creator.getMaximumWidth() )
+        {
+          row = 0;
+          heigth += size.y;
+        }
+        else
+        {
+          row += size.x;
+        }
       }
-      return image;
+
+      return new Point( creator.getMaximumWidth(), heigth );
     }
     finally
     {
@@ -121,12 +105,18 @@ public class TitleImageCreator
     }
   }
 
-  private Font getFont( final Device dev )
+  private Point calculateSize( final Point... points )
   {
-    final FontData fontData = m_model.getTextStyle().toFontData();
-    if( fontData == null )
-      return new Font( dev, dev.getFontList( null, true )[0] );
+    int x = 0;
+    int y = 0;
 
-    return new Font( dev, fontData );
+    for( final Point point : points )
+    {
+      x += point.x;
+      y = Math.max( point.y, y );
+    }
+
+    return new Point( x, y );
   }
+
 }

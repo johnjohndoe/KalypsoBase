@@ -45,22 +45,20 @@ import org.eclipse.swt.graphics.Point;
 
 /**
  * @author alibu
- * 
  */
 public interface ILegendEntry
 {
+  String getDescription( );
 
-  public String getDescription( );
-
-  public ImageData getSymbol( Point size );
+  ImageData getSymbol( Point size );
 
   /**
    * @param size
-   *            the preferred size for width and height
+   *          the preferred size for width and height
    * @return the needed size
    */
-  public Point computeSize( Point size );
+  Point computeSize( Point size );
 
-  public IChartLayer getParentLayer( );
+  IChartLayer getParentLayer( );
 
 }

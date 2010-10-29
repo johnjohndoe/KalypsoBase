@@ -251,9 +251,11 @@ public final class ChartImageFactory
       return null;
 
     final TitleImageCreator titleImageCreator = new TitleImageCreator( model );
+    final LegendImageCreator legendImageCreator = new LegendImageCreator( model, size.x );
 
     /* calc plot size */
     final Point titleSize = titleImageCreator.getSize();
+    final Point legendSize = legendImageCreator.getSize();
 
     final Rectangle plotRect = ChartImageFactory.calculatePlotSize( mapperRegistry, size.x, size.y - titleSize.y );
     plotRect.y += titleSize.y;
@@ -263,6 +265,7 @@ public final class ChartImageFactory
     final Image axesImage = ChartImageFactory.createAxesImage( mapperRegistry, new Rectangle( 0, 0, size.x, size.y ), plotRect );
     final Image titleImage = titleImageCreator.createImage( LABEL_POSITION.CENTERED );
     final Image plotImage = ChartImageFactory.createPlotImage( model.getLayerManager().getLayers(), plotRect );
+// final Image legendImage = legendImageCreator.createImage();
 
     // draw images
     final Device dev = PlatformUI.getWorkbench().getDisplay();
@@ -272,8 +275,12 @@ public final class ChartImageFactory
     try
     {
       tmpGc.drawImage( axesImage, 0, 0 );
-      tmpGc.drawImage( titleImage, 0, 0 );
+
+      if( titleImage != null )
+        tmpGc.drawImage( titleImage, 0, 0 );
+
       tmpGc.drawImage( plotImage, plotRect.x, plotRect.y );
+
       return image.getImageData();
     }
     finally
