@@ -57,14 +57,13 @@ import de.openali.odysseus.chart.framework.model.style.ITextStyle;
  */
 public abstract class AbstractGenericAxisRendererProvider extends AbstractAxisRendererProvider
 {
+  private static final String ROLE_AXIS_LINE_STYLE = "axisLine"; //$NON-NLS-1$
 
-  private final String ROLE_AXIS_LINE_STYLE = "axisLine";
+  private static final String ROLE_AXIS_TICK_LINE_STYLE = "tickLine"; //$NON-NLS-1$
 
-  private final String ROLE_AXIS_TICK_LINE_STYLE = "tickLine";
+  private static final String ROLE_AXIS_LABEL_STYLE = "axisLabel"; //$NON-NLS-1$
 
-  private final String ROLE_AXIS_LABEL_STYLE = "axisLabel";
-
-  private final String ROLE_AXIS_TICK_LABEL_STYLE = "tickLabel";
+  private static final String ROLE_AXIS_TICK_LABEL_STYLE = "tickLabel"; //$NON-NLS-1$
 
   /**
    * @see de.openali.odysseus.chart.factory.provider.IAxisRendererProvider#getAxisRenderer()
@@ -102,24 +101,24 @@ public abstract class AbstractGenericAxisRendererProvider extends AbstractAxisRe
 
   private int getFixedWidth( )
   {
-    return Integer.parseInt( getParameterContainer().getParameterValue( "fixed_width", "0" ) );
+    return Integer.parseInt( getParameterContainer().getParameterValue( "fixed_width", "0" ) ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   private int getBorderSize( )
 
   {
-    return Integer.parseInt( getParameterContainer().getParameterValue( "border_size", "0" ) );
+    return Integer.parseInt( getParameterContainer().getParameterValue( "border_size", "0" ) ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   private int getGap( )
   {
-    return Integer.parseInt( getParameterContainer().getParameterValue( "gap", "0" ) );
+    return Integer.parseInt( getParameterContainer().getParameterValue( "gap", "0" ) ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   private boolean getHideCut( )
   {
     final BooleanParser bp = new BooleanParser();
-    return getParameterContainer().getParsedParameterValue( "hide_cut", "false", bp );
+    return getParameterContainer().getParsedParameterValue( "hide_cut", "false", bp ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   public abstract ILabelCreator getLabelCreator( );
@@ -127,18 +126,19 @@ public abstract class AbstractGenericAxisRendererProvider extends AbstractAxisRe
   private Insets getLabelInsets( )
   {
     final IParameterContainer pc = getParameterContainer();
-    final int insetLabel = Integer.parseInt( pc.getParameterValue( "inset_label", "1" ) );
+    final int insetLabel = Integer.parseInt( pc.getParameterValue( "inset_label", "1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
     final String insetLabelString = (new Integer( insetLabel )).toString();
-    final int insetLabel_left = Integer.parseInt( pc.getParameterValue( "inset_label_left", insetLabelString ) );
-    final int insetLabel_right = Integer.parseInt( pc.getParameterValue( "inset_label_right", insetLabelString ) );
-    final int insetLabel_bottom = Integer.parseInt( pc.getParameterValue( "inset_label_bottom", insetLabelString ) );
-    final int insetLabel_top = Integer.parseInt( pc.getParameterValue( "inset_label_top", insetLabelString ) );
-    return new Insets( insetLabel_top, insetLabel_left, insetLabel_bottom, insetLabel_right );
+    final int insetLabelLeft = Integer.parseInt( pc.getParameterValue( "inset_label_left", insetLabelString ) ); //$NON-NLS-1$
+    final int insetLabelRight = Integer.parseInt( pc.getParameterValue( "inset_label_right", insetLabelString ) ); //$NON-NLS-1$
+    final int insetLabelBottom = Integer.parseInt( pc.getParameterValue( "inset_label_bottom", insetLabelString ) ); //$NON-NLS-1$
+    final int insetLabelTop = Integer.parseInt( pc.getParameterValue( "inset_label_top", insetLabelString ) ); //$NON-NLS-1$
+
+    return new Insets( insetLabelTop, insetLabelLeft, insetLabelBottom, insetLabelRight );
   }
 
   private Number getMinTickInteval( )
   {
-    return Integer.parseInt( getParameterContainer().getParameterValue( "min_tick_interval", "0" ) );
+    return Integer.parseInt( getParameterContainer().getParameterValue( "min_tick_interval", "0" ) ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   public abstract ITickCalculator getTickCalculator( );
@@ -148,18 +148,19 @@ public abstract class AbstractGenericAxisRendererProvider extends AbstractAxisRe
     // Ticks setzen; inset_tick definiert Abstände für alle Seiten; die können dann für jede Seite einzeln überschrieben
     // werden
     final IParameterContainer pc = getParameterContainer();
-    final int insetTick = Integer.parseInt( pc.getParameterValue( "inset_tick", "1" ) );
+    final int insetTick = Integer.parseInt( pc.getParameterValue( "inset_tick", "1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
     final String insetTickString = (new Integer( insetTick )).toString();
-    final int insetTick_left = Integer.parseInt( pc.getParameterValue( "inset_tick_left", insetTickString ) );
-    final int insetTick_right = Integer.parseInt( pc.getParameterValue( "inset_tick_right", insetTickString ) );
-    final int insetTick_bottom = Integer.parseInt( pc.getParameterValue( "inset_tick_bottom", insetTickString ) );
-    final int insetTick_top = Integer.parseInt( pc.getParameterValue( "inset_tick_top", insetTickString ) );
-    return new Insets( insetTick_top, insetTick_left, insetTick_bottom, insetTick_right );
+    final int insetTickLeft = Integer.parseInt( pc.getParameterValue( "inset_tick_left", insetTickString ) ); //$NON-NLS-1$
+    final int insetTickRight = Integer.parseInt( pc.getParameterValue( "inset_tick_right", insetTickString ) ); //$NON-NLS-1$
+    final int insetTickBottom = Integer.parseInt( pc.getParameterValue( "inset_tick_bottom", insetTickString ) ); //$NON-NLS-1$
+    final int insetTickTop = Integer.parseInt( pc.getParameterValue( "inset_tick_top", insetTickString ) ); //$NON-NLS-1$
+
+    return new Insets( insetTickTop, insetTickLeft, insetTickBottom, insetTickRight );
   }
 
   private int getTickLength( )
   {
-    return Integer.parseInt( getParameterContainer().getParameterValue( "tick_length", "5" ) );
+    return Integer.parseInt( getParameterContainer().getParameterValue( "tick_length", "5" ) ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
 }

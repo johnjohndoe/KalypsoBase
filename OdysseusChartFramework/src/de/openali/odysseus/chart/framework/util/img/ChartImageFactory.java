@@ -34,8 +34,11 @@ import de.openali.odysseus.chart.framework.util.ChartUtilities;
 /**
  * @author burtscher Creates an Image from a chart widget. The objects has to be disposed when it's no longer needed
  */
-public class ChartImageFactory
+public final class ChartImageFactory
 {
+  private ChartImageFactory( )
+  {
+  }
 
   public enum IMAGE_TYPE
   {
@@ -106,19 +109,19 @@ public class ChartImageFactory
     }
   }
 
-  public static final Image createAxesImage( final IMapperRegistry mapperRegistry, final Rectangle boundsRect )
+  public static Image createAxesImage( final IMapperRegistry mapperRegistry, final Rectangle boundsRect )
   {
     final Rectangle plotRect = calculatePlotSize( mapperRegistry, boundsRect.width, boundsRect.height );
     setAxesHeight( mapperRegistry.getAxes(), plotRect );
     return createAxesImage( null, mapperRegistry, boundsRect, plotRect );
   }
 
-  public static final Image createAxesImage( final IMapperRegistry mapperRegistry, final Rectangle boundsRect, final Rectangle plotRect )
+  public static Image createAxesImage( final IMapperRegistry mapperRegistry, final Rectangle boundsRect, final Rectangle plotRect )
   {
     return createAxesImage( null, mapperRegistry, boundsRect, plotRect );
   }
 
-  public static final void drawHorizontalAxis( final GC gc, final IAxis[] axes, final int width )
+  public static void drawHorizontalAxis( final GC gc, final IAxis[] axes, final int width )
   {
     int h = 0;
     for( final IAxis axis : axes )
@@ -131,7 +134,7 @@ public class ChartImageFactory
     }
   }
 
-  public static final void drawVerticalAxis( final GC gc, final IAxis[] axes, final int height )
+  public static void drawVerticalAxis( final GC gc, final IAxis[] axes, final int height )
   {
     int h = 0;
     for( final IAxis axis : axes )
@@ -144,7 +147,7 @@ public class ChartImageFactory
     }
   }
 
-  public static final Image createAxesImage( final Map<POSITION, Image> imageMap, final IMapperRegistry mapperRegistry, final Rectangle boundsRect, final Rectangle plotRect )
+  public static Image createAxesImage( final Map<POSITION, Image> imageMap, final IMapperRegistry mapperRegistry, final Rectangle boundsRect, final Rectangle plotRect )
   {
     if( plotRect.width == 0 || plotRect.height == 0 )
       return null;
@@ -203,7 +206,7 @@ public class ChartImageFactory
 
   }
 
-  private static final int getAxesWidth( final IAxis[] axes )
+  private static int getAxesWidth( final IAxis[] axes )
   {
     int w = 0;
     for( final IAxis axis : axes )
@@ -217,7 +220,7 @@ public class ChartImageFactory
     return w;
   }
 
-  public static final void setAxesHeight( final IAxis[] axes, final Rectangle plotRect )
+  public static void setAxesHeight( final IAxis[] axes, final Rectangle plotRect )
   {
     for( final IAxis axis : axes )
     {
@@ -228,7 +231,7 @@ public class ChartImageFactory
     }
   }
 
-  public static final Rectangle calculatePlotSize( final IMapperRegistry mapperRegistry, final int width, final int height )
+  public static Rectangle calculatePlotSize( final IMapperRegistry mapperRegistry, final int width, final int height )
   {
 
     if( mapperRegistry == null )
@@ -278,7 +281,7 @@ public class ChartImageFactory
 
   }
 
-  public static final Image createLayerImage( final GC gc, final IChartLayer layer )
+  public static Image createLayerImage( final GC gc, final IChartLayer layer )
   {
     // get width from Axes
     final ICoordinateMapper mapper = layer.getCoordinateMapper();
@@ -341,20 +344,17 @@ public class ChartImageFactory
 
   public static Image createTitleImage( final String title, final FontData titleFont, final Point size )
   {
-
     return createTitleImage( title, titleFont, size, LABEL_POSITION.CENTERED );
-
   }
 
   public static Image createTitleImage( final String title, final FontData titleFont, final Point size, final LABEL_POSITION position )
   {
-
     final String[] lines = StringUtils.split( title, "\n" );
     final Device dev = PlatformUI.getWorkbench().getDisplay();
     final Image image = new Image( dev, size.x, size.y );
     final GC tmpGc = new GC( image );
     final Font tmpFont = new Font( dev, titleFont == null ? dev.getFontList( null, true )[0] : titleFont );
-       
+
     try
     {
       tmpGc.setFont( tmpFont );
