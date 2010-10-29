@@ -75,9 +75,9 @@ public interface IRunOffEvent extends Feature
 // - {http://www.opengis.net/om}result
 // - {org.kalypso.model.wspmrunoff}returnPeriod
 
-  public QName QN_TYPE = new QName( IWspmConstants.NS_WSPMRUNOFF, "RunOffEvent" );
+  public QName QN_TYPE = new QName( IWspmConstants.NS_WSPMRUNOFF, "RunOffEvent" ); //$NON-NLS-1$
 
-  public QName QN_PROP_ANNUALITY = new QName( IWspmConstants.NS_WSPMRUNOFF, "returnPeriod" );
+  public QName QN_PROP_ANNUALITY = new QName( IWspmConstants.NS_WSPMRUNOFF, "returnPeriod" ); //$NON-NLS-1$
 
   Integer getAnnuality( );
 

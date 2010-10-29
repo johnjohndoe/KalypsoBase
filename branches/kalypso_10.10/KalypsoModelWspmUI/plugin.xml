@@ -87,7 +87,7 @@
 
    <extension
          id="profilemarker"
-         name="Profil Validierung"
+         name="%extension.name"
          point="org.eclipse.core.resources.markers">
       <super type="org.eclipse.core.resources.problemmarker"/>
       <persistent value="false"/>
@@ -430,7 +430,7 @@
          </command>
          <category
                id="org.kalypso.model.wspm.ui.view.legend.category"
-               name="Chart Legend Commands">
+               name="%category.name">
          </category>
          <command
                categoryId="org.kalypso.model.wspm.ui.view.legend.category"
@@ -475,7 +475,7 @@
      
     <!-- Commands for the map outline -->
 	<extension point="org.eclipse.ui.commands">
-		<category id="org.kalypso.mode.wspm.ui.profile.commands" name="WSPM profile commands"/>
+		<category id="org.kalypso.mode.wspm.ui.profile.commands" name="%category.name.1"/>
 		<command categoryId="org.kalypso.mode.wspm.ui.profile.commands" id="org.kalypso.ui.map.outline.command.WspmCreateDevider" name="%org.kalypso.model.wspm.ui.action.CreateDeviderMapThemeAction"  description="%org.kalypso.model.wspm.ui.action.CreateDeviderMapThemeAction.description"/>
 		<command categoryId="org.kalypso.mode.wspm.ui.profile.commands" id="org.kalypso.ui.map.outline.command.WspmIntersectRoughnessMap" name="%org.kalypso.model.wspm.ui.action.IntersectRoughnessMapThemeAction"  description="%org.kalypso.model.wspm.ui.action.IntersectRoughnessMapThemeAction.description"/>
 		  <command
@@ -538,8 +538,8 @@
        <menu
              icon="icons/etool16/profileChange.gif"
              id="org.kalypso.model.wspm.ui.profileChange"
-             label="Profile"
-             mnemonic="p">
+             label="%menu.label"
+             mnemonic="%menu.mnemonic">
           <command
                 commandId="org.kalypso.ui.map.outline.command.WspmCreateDevider"
                 style="push">

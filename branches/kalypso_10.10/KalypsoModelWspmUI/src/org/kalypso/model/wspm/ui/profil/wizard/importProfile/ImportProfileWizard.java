@@ -49,6 +49,7 @@ import org.eclipse.jface.wizard.Wizard;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
+import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement;
 
@@ -105,7 +106,7 @@ public class ImportProfileWizard extends Wizard implements IWizard
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, op );
     if( !status.isOK() )
       KalypsoModelWspmUIPlugin.getDefault().getLog().log( status );
-    ErrorDialog.openError( getShell(), getWindowTitle(), "Probleme beim Profil-Import", status );
+    ErrorDialog.openError( getShell(), getWindowTitle(), Messages.getString("ImportProfileWizard.0"), status ); //$NON-NLS-1$
 
     return !status.matches( IStatus.ERROR );
   }

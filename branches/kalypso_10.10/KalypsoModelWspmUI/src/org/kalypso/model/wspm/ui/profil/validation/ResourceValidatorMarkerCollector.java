@@ -127,7 +127,7 @@ final public class ResourceValidatorMarkerCollector implements IValidatorMarkerC
   @Override
   public void createProfilMarker( final int severityError, final String msg, final IProfil profile, final IProfilMarkerResolution... markerResolutions ) throws CoreException
   {
-    final String location = String.format( "km %.4f", profile.getStation() );
+    final String location = String.format( "km %.4f", profile.getStation() ); //$NON-NLS-1$
 
     createProfilMarker( severityError, msg, location, 0, null, markerResolutions );
   }
@@ -140,7 +140,7 @@ final public class ResourceValidatorMarkerCollector implements IValidatorMarkerC
   @Override
   public void createProfilMarker( final int severity, final String message, final String location, final int pointPos, final String pointProperty, final IProfilMarkerResolution... markerResolutions ) throws CoreException
   {
-    KalypsoModelWspmUIDebug.DEBUG_VALIDATION_MARKER.printf( "%s - %s - %s - %s", severity, message, location, pointPos );
+    KalypsoModelWspmUIDebug.DEBUG_VALIDATION_MARKER.printf( "%s - %s - %s - %s", severity, message, location, pointPos ); //$NON-NLS-1$
 
     final IMarker marker = m_resource.createMarker( KalypsoModelWspmUIPlugin.MARKER_ID );
     final String[] resMarkerStrings = new String[markerResolutions.length];

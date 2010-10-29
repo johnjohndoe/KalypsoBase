@@ -28,7 +28,7 @@ public final class KalypsoModelWspmCoreExtensions
 {
   private KalypsoModelWspmCoreExtensions( )
   {
-    throw new UnsupportedOperationException( "Helper class, do not instantiate" );
+    throw new UnsupportedOperationException( "Helper class, do not instantiate" ); //$NON-NLS-1$
   }
 
   private static IProfileFeatureProvider[] PROFILE_FEATURE_PROVIDER = null;
@@ -211,7 +211,7 @@ public final class KalypsoModelWspmCoreExtensions
          * Else, filters hint must contain the given hint to be added. I.e. if usageHint is empty, all filters with non
          * -empty hint are removed.
          */
-        final String[] usages = filterUsage.split( "," );
+        final String[] usages = filterUsage.split( "," ); //$NON-NLS-1$
         if( ArrayUtils.contains( usages, usageHint ) )
           restrictedFilters.add( filter );
       }
@@ -385,7 +385,7 @@ public final class KalypsoModelWspmCoreExtensions
     final Map<String, IProfileObjectProvider> map = getProfileObjectProviders();
     final IProfileObjectProvider provider = map.get( providerId );
     if( provider == null )
-      System.out.println( "ProfileObjectProvider not registered: " + providerId );
+      System.out.println( "ProfileObjectProvider not registered: " + providerId ); //$NON-NLS-1$
     return provider;
   }
 

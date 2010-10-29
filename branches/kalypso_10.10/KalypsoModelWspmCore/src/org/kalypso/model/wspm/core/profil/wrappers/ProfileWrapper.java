@@ -49,6 +49,7 @@ import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.kalypso.jts.JTSUtilities;
+import org.kalypso.model.wspm.core.i18n.Messages;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.util.WspmGeometryUtilities;
@@ -229,7 +230,7 @@ public class ProfileWrapper
   @Override
   public String toString( )
   {
-    return String.format( "Profile %.3f km", m_profile.getStation() );
+    return String.format( Messages.getString("ProfileWrapper_0"), m_profile.getStation() ); //$NON-NLS-1$
   }
 
   public ProfilePointWrapper getFirstPoint( )

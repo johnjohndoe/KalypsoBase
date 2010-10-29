@@ -49,6 +49,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter;
+import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.observation.result.IRecord;
 
 /**
@@ -95,7 +96,7 @@ public class TableSelectionProfilePointFilter implements IProfilePointFilter
   @Override
   public String getDescription( )
   {
-    return "Selected table rows";
+    return Messages.getString("TableSelectionProfilePointFilter.0"); //$NON-NLS-1$
   }
 
   /**
@@ -113,7 +114,7 @@ public class TableSelectionProfilePointFilter implements IProfilePointFilter
   @Override
   public String getName( )
   {
-    return "Selection";
+    return Messages.getString("TableSelectionProfilePointFilter.1"); //$NON-NLS-1$
   }
 
   /**

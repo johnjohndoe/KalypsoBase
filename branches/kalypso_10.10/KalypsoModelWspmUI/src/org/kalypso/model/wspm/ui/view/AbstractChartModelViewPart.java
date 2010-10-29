@@ -149,7 +149,7 @@ public abstract class AbstractChartModelViewPart extends ViewPart implements IAd
   private String getStationName( final IChartModel model )
   {
     final IProfil profil = model instanceof ProfilChartModel ? ((ProfilChartModel) model).getProfil() : null;
-    return profil == null ? null : String.format( "Station km %10.4f", profil.getStation() );
+    return profil == null ? null : String.format( Messages.getString("AbstractChartModelViewPart.0"), profil.getStation() ); //$NON-NLS-1$
   }
 
   public FormToolkit getToolkit( )
