@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.module.internal.nature;
+package org.kalypso.module.nature;
 
 import org.osgi.framework.Version;
 
@@ -64,6 +64,18 @@ public final class ModuleUtils
       e.printStackTrace();
       return Version.emptyVersion;
     }
+  }
+
+  public static Version removeQualifier( final Version version )
+  {
+    if( version == null )
+      return null;
+
+    final String qualifier = version.getQualifier();
+    if( "qualifier".equals( qualifier ) ) //$NON-NLS-1$
+      return new Version( version.getMajor(), version.getMinor(), version.getMicro() );
+
+    return version;
   }
 
 }

@@ -47,6 +47,7 @@ import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.kalypso.module.internal.Module;
 import org.kalypso.module.nature.IModulePreferences;
 import org.kalypso.module.nature.ModuleNature;
+import org.kalypso.module.nature.ModuleUtils;
 import org.osgi.framework.Version;
 import org.osgi.service.prefs.BackingStoreException;
 
@@ -101,23 +102,9 @@ public class ModulePreferences implements IModulePreferences
   @Override
   public void setVersion( final Version version )
   {
-    final Version versionToSet = findVersionToSet( version );
+    final Version versionToSet = ModuleUtils.removeQualifier( version );
     final String versionPref = versionToSet.equals( Version.emptyVersion ) ? null : versionToSet.toString();
     writePreference( PREFERENCE_VERSION, versionPref );
-  }
-
-  /**
-   * For debug reasons: if we are working from eclipse, the qualifier is always set to 'qualifier' which is lexically
-   * behin the numbers.<br/>
-   * We replace this one with the empty string, so all debug version are less than a normal deploy version.
-   */
-  private Version findVersionToSet( final Version version )
-  {
-    final String qualifier = version.getQualifier();
-    if( "qualifier".equals( qualifier ) ) //$NON-NLS-1$
-      return new Version( version.getMajor(), version.getMinor(), version.getMicro() );
-
-    return version;
   }
 
   /**
