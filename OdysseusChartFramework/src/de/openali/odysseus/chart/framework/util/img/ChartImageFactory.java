@@ -2,6 +2,7 @@ package de.openali.odysseus.chart.framework.util.img;
 
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
@@ -22,6 +23,7 @@ import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
+import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.LABEL_POSITION;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
@@ -463,6 +465,14 @@ public class ChartImageFactory
   public static Image createTitleImage( final String title, final FontData titleFont, final Point size )
   {
 
+    return createTitleImage( title, titleFont, size, LABEL_POSITION.CENTERED );
+
+  }
+
+  public static Image createTitleImage( final String title, final FontData titleFont, final Point size, final LABEL_POSITION position )
+  {
+
+    final String[] lines = StringUtils.split( title, "\n" );
     final Device dev = PlatformUI.getWorkbench().getDisplay();
     final Image image = new Image( dev, size.x, size.y );
     final GC tmpGc = new GC( image );
@@ -470,8 +480,11 @@ public class ChartImageFactory
     try
     {
       tmpGc.setFont( tmpFont );
-      tmpGc.drawText( title, 0, 0, SWT.DRAW_DELIMITER | SWT.DRAW_TAB );
-
+      for( int i = 0; i < lines.length; i++ )
+      {
+        final Point lineSize = tmpGc.textExtent( lines[i] );
+        tmpGc.drawText( lines[i], i * lineSize.y, (size.x - lineSize.x) / 2 );
+      }
       return image;
     }
     finally
