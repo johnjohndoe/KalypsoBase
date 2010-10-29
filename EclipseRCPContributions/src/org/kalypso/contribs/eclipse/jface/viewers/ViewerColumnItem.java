@@ -108,9 +108,9 @@ public class ViewerColumnItem
     final Item col = getColumn();
 
     if( col instanceof TableColumn )
-      ((TableColumn) col).setResizable( moveable );
+      ((TableColumn) col).setMoveable( moveable );
     else if( col instanceof TreeColumn )
-      ((TreeColumn) col).setResizable( moveable );
+      ((TreeColumn) col).setMoveable( moveable );
   }
 
 }
