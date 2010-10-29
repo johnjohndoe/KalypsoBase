@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse.jface.viewers;
 
+import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -97,4 +98,13 @@ public final class ColumnViewerUtil
       column.pack();
   }
 
+  public static ViewerColumn createViewerColumn( final ColumnViewer viewer, final int center )
+  {
+    if( viewer instanceof TreeViewer )
+      return new TreeViewerColumn( (TreeViewer) viewer, center );
+    if( viewer instanceof TableViewer )
+      return new TableViewerColumn( (TableViewer) viewer, center );
+
+    throw new IllegalArgumentException();
+  }
 }
