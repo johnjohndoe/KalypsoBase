@@ -99,6 +99,18 @@ public abstract class StatusLabelProvider extends ColumnLabelProvider
     timeColumn.setLabelProvider( new StatusLabelTimeProvider() );
   }
 
+  public static void addNavigationColumn( final ColumnViewer columnViewer )
+  {
+    final ViewerColumn naviColumn = ColumnViewerUtil.createViewerColumn( columnViewer, SWT.LEFT );
+    final ViewerColumnItem naviCol = new ViewerColumnItem( naviColumn );
+    naviCol.setWidth( 50 );
+    naviCol.setResizable( true );
+    naviCol.setMoveable( false );
+    naviColumn.setLabelProvider( new StatusLabelProvider()
+    {
+    } );
+  }
+
   protected IStatus statusForElement( final Object element )
   {
     if( element instanceof IStatus )
