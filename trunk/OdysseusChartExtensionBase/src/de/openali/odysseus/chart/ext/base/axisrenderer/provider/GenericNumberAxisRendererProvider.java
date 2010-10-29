@@ -14,8 +14,9 @@ public class GenericNumberAxisRendererProvider extends AbstractGenericAxisRender
   @Override
   public ILabelCreator getLabelCreator( )
   {
-    final String tick_label_formater = getParameterContainer().getParameterValue( "tick_label_formater", "%s" );
-    return new NumberLabelCreator( tick_label_formater );
+    final String tickLabelFormater = getParameterContainer().getParameterValue( "tick_label_formater", "%s" );
+
+    return new NumberLabelCreator( tickLabelFormater );
   }
 
   /**
