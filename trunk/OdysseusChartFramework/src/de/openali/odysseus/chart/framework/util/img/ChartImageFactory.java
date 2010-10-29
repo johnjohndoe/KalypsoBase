@@ -253,7 +253,7 @@ public final class ChartImageFactory
     plotRect.y += titleSize.y;
 
     setAxesHeight( model.getMapperRegistry().getAxes(), plotRect );
-    final Image axesImage = createAxesImage( model.getMapperRegistry(), new Rectangle( 0, 0, size.x, size.y ) );
+    final Image axesImage = createAxesImage( model.getMapperRegistry(), new Rectangle( 0, 0, size.x, size.x - plotRect.y ) );
     final Image plotImage = createPlotImage( model.getLayerManager().getLayers(), plotRect );
     final Image titleImage = model.isHideTitle() ? null : ChartImageFactory.createTitleImage( model.getTitle(), model.getTextStyle().toFontData(), titleSize );
 
