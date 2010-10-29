@@ -276,129 +276,6 @@ public class ChartImageFactory
       plotImage.dispose();
     }
 
-// final Point plotTopLeft = new Point( 0, 0 );
-// for( final IAxis axis : model.getMapperRegistry().getAxesAt( POSITION.TOP ) )
-// {
-// if( axis.isVisible() )
-// {
-// final IAxisRenderer renderer = axis.getRenderer();
-// plotTopLeft.y = plotTopLeft.y + renderer.getAxisWidth( axis );
-// }
-// }
-// for( final IAxis axis : model.getMapperRegistry().getAxesAt( POSITION.LEFT ) )
-// {
-// if( axis.isVisible() )
-// {
-// final IAxisRenderer renderer = axis.getRenderer();
-// plotTopLeft.x = plotTopLeft.x + renderer.getAxisWidth( axis );
-// }
-// }
-// final Point plotWidthHight = new Point( width - plotTopLeft.x, height - plotTopLeft.y );
-// for( final IAxis axis : model.getMapperRegistry().getAxesAt( POSITION.BOTTOM ) )
-// {
-// if( axis.isVisible() )
-// {
-// final IAxisRenderer renderer = axis.getRenderer();
-// plotWidthHight.y = plotWidthHight.y - renderer.getAxisWidth( axis );
-// }
-// }
-// for( final IAxis axis : model.getMapperRegistry().getAxesAt( POSITION.RIGHT ) )
-// {
-// if( axis.isVisible() )
-// {
-// final IAxisRenderer renderer = axis.getRenderer();
-// plotWidthHight.x = plotWidthHight.x - renderer.getAxisWidth( axis );
-// }
-// }
-//
-// final Device dev = PlatformUI.getWorkbench().getDisplay();
-// final Image bufferImage = new Image( dev, width, height );
-//
-// final GC buffGc = new GC( bufferImage );
-// // final Transform transform = new Transform( dev );
-// // buffGc.setTransform( transform );
-// try
-// {
-// int h = 0;
-// for( final IAxis axis : model.getMapperRegistry().getAxesAt( POSITION.TOP ) )
-// {
-//
-// if( axis.isVisible() )
-// {
-// ChartUtilities.resetGC( buffGc );
-// final IAxisRenderer renderer = axis.getRenderer();
-// axis.setScreenHeight( plotWidthHight.x );
-// final int y = renderer.getAxisWidth( axis );
-// renderer.paint( buffGc, axis, new Rectangle( plotTopLeft.x, h, plotWidthHight.x, y ) );
-// h = h + y;
-// }
-// }
-// int w = 0;
-// for( final IAxis axis : model.getMapperRegistry().getAxesAt( POSITION.LEFT ) )
-// {
-//
-// if( axis.isVisible() )
-// {
-// ChartUtilities.resetGC( buffGc );
-// axis.setScreenHeight( plotWidthHight.y );
-// final IAxisRenderer renderer = axis.getRenderer();
-// final int x = renderer.getAxisWidth( axis );
-// renderer.paint( buffGc, axis, new Rectangle( w, plotTopLeft.y, x, plotWidthHight.y ) );
-// w = w + x;
-// }
-// }
-// int b = 0;
-// for( final IAxis axis : model.getMapperRegistry().getAxesAt( POSITION.BOTTOM ) )
-// {
-//
-// if( axis.isVisible() )
-// {
-// ChartUtilities.resetGC( buffGc );
-// final IAxisRenderer renderer = axis.getRenderer();
-// axis.setScreenHeight( plotWidthHight.x );
-// final int x = renderer.getAxisWidth( axis );
-// renderer.paint( buffGc, axis, new Rectangle( plotTopLeft.x, plotTopLeft.y + plotWidthHight.y + b, plotWidthHight.x, x
-// ) );
-// b = b + x;
-// }
-// }
-// int r = 0;
-// for( final IAxis axis : model.getMapperRegistry().getAxesAt( POSITION.RIGHT ) )
-// {
-//
-// if( axis.isVisible() )
-// {
-// ChartUtilities.resetGC( buffGc );
-// final IAxisRenderer renderer = axis.getRenderer();
-// axis.setScreenHeight( plotWidthHight.y );
-// final int x = renderer.getAxisWidth( axis );
-// renderer.paint( buffGc, axis, new Rectangle( plotTopLeft.x + plotWidthHight.x + r, plotTopLeft.y, x, plotWidthHight.y
-// ) );
-// r = r + x;
-// }
-// }
-// // transform.translate( plotTopLeft.x, plotTopLeft.y );
-//
-// ChartUtilities.resetGC( buffGc );
-// final Image tmpImg = new Image( dev, plotWidthHight.x, plotWidthHight.y );
-// final GC tmpGc = new GC( tmpImg );
-// for( final IChartLayer layer : model.getLayerManager().getLayers() )
-// {
-// if( layer.isVisible() )
-// {
-// layer.paint( tmpGc );
-// }
-// }
-// buffGc.drawImage( tmpImg, plotTopLeft.x, plotTopLeft.y );
-// tmpGc.dispose();
-// tmpImg.dispose();
-// }
-// finally
-// {
-// buffGc.dispose();
-// // transform.dispose();
-// }
-// return bufferImage.getImageData();
   }
 
   public static final Image createLayerImage( final GC gc, final IChartLayer layer )
@@ -408,7 +285,7 @@ public class ChartImageFactory
     if( mapper == null )
     {
       System.out.println( "no axismapper found for layer :" + layer.getTitle() );
-      // return what??
+      return new Image( gc.getDevice(), 1, 1 );
     }
     final int width = mapper == null ? 1 : mapper.getDomainAxis().getScreenHeight();
     final int height = mapper == null ? 1 : mapper.getTargetAxis().getScreenHeight();
@@ -450,7 +327,7 @@ public class ChartImageFactory
     try
     {
       tmpGc.setFont( tmpFont );
-      final Point size = tmpGc.textExtent( title );
+      final Point size = tmpGc.textExtent( title, SWT.DRAW_DELIMITER | SWT.DRAW_TAB );
       return size;
     }
     finally
@@ -483,7 +360,7 @@ public class ChartImageFactory
       for( int i = 0; i < lines.length; i++ )
       {
         final Point lineSize = tmpGc.textExtent( lines[i] );
-        tmpGc.drawText( lines[i], i * lineSize.y, (size.x - lineSize.x) / 2 );
+        tmpGc.drawText( lines[i], i * lineSize.y, (size.x - lineSize.x) / 2, SWT.DRAW_TAB );
       }
       return image;
     }
