@@ -183,7 +183,7 @@ public class GenericAxisLineLayer extends AbstractLineLayer
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getTargetRange()
    */
   @Override
-  public IDataRange<Number> getTargetRange( )
+  public IDataRange<Number> getTargetRange(IDataRange<Number> domainIntervall )
   {
     // TODO Auto-generated method stub
     return null;

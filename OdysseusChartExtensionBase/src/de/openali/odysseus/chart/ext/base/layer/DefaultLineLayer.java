@@ -131,7 +131,7 @@ public class DefaultLineLayer extends AbstractLineLayer
    */
   @Override
   @SuppressWarnings("unchecked")
-  public IDataRange<Number> getTargetRange( )
+  public IDataRange<Number> getTargetRange(IDataRange<Number> domainIntervall )
   {
     IDataRange targetRange = m_dataContainer.getTargetRange();
     Object max = targetRange.getMax();

@@ -146,7 +146,7 @@ public class PolynomeChartLayer extends AbstractLineLayer
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getTargetRange()
    */
   @Override
-  public IDataRange<Number> getTargetRange( )
+  public IDataRange<Number> getTargetRange(IDataRange<Number> domainIntervall )
   {
     return m_data.getTargetRange();
   }

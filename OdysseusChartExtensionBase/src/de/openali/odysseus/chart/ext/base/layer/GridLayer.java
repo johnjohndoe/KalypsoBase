@@ -122,7 +122,7 @@ public class GridLayer extends AbstractChartLayer
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#getTargetRange()
    */
   @Override
-  public IDataRange<Number> getTargetRange( )
+  public IDataRange<Number> getTargetRange(IDataRange<Number> domainIntervall )
   {
     return null;
   }

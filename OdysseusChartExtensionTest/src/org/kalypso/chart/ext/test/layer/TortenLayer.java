@@ -218,7 +218,7 @@ public IDataRange<Number> getDomainRange( )
   }
 
   @Override
-public IDataRange<Number> getTargetRange( )
+public IDataRange<Number> getTargetRange(IDataRange<Number> domainIntervall )
   {
     return new ComparableDataRange<Number>( new Number[] { -100, 100 } );
   }

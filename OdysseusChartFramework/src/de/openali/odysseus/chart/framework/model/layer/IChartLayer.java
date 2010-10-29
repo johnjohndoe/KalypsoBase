@@ -72,7 +72,11 @@ public interface IChartLayer extends IEventProvider<ILayerEventListener>
 
   IDataRange<Number> getDomainRange( );
 
-  IDataRange<Number> getTargetRange( );
+  /**
+   * @param domainIntervall
+   *          shrinks the TargetRange, pass null to retrieve full dataRange
+   */
+  IDataRange<Number> getTargetRange( IDataRange<Number> domainIntervall );
 
   ICoordinateMapper getCoordinateMapper( );
 

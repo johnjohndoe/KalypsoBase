@@ -247,27 +247,29 @@ public final class ChartImageFactory
 
   public static ImageData createChartImage( final IChartModel model, final Point size )
   {
+
+    final IMapperRegistry mapperRegistry = model == null ? null : model.getMapperRegistry();
+    if( mapperRegistry == null )
+      return null;
+// calc plotDimension
     final Point titleSize = model.isHideTitle() ? new Point( 0, 0 ) : ChartImageFactory.calculateTitleSize( model.getTitle(), model.getTextStyle().toFontData() );
-
-    final Rectangle plotRect = calculatePlotSize( model.getMapperRegistry(), size.x, size.y - titleSize.y );
+    final Rectangle plotRect = ChartImageFactory.calculatePlotSize( mapperRegistry, size.x, size.y - titleSize.y );
     plotRect.y += titleSize.y;
+    ChartImageFactory.setAxesHeight( mapperRegistry.getAxes(), plotRect );
+    // generate chartImages
+    final Image axesImage = ChartImageFactory.createAxesImage( mapperRegistry, new Rectangle( 0, 0, size.x, size.y ), plotRect );
+    final Image titleImage = model.isHideTitle() ? null : ChartImageFactory.createTitleImage( model.getTitle(), model.getTextStyle().toFontData(), new Point( size.x, titleSize.y ) );
+    final Image plotImage = ChartImageFactory.createPlotImage( model.getLayerManager().getLayers(), plotRect );
 
-    setAxesHeight( model.getMapperRegistry().getAxes(), plotRect );
-    final Image axesImage = createAxesImage( model.getMapperRegistry(), new Rectangle( 0, 0, size.x, size.x - plotRect.y ) );
-    final Image plotImage = createPlotImage( model.getLayerManager().getLayers(), plotRect );
-    final Image titleImage = model.isHideTitle() ? null : ChartImageFactory.createTitleImage( model.getTitle(), model.getTextStyle().toFontData(), titleSize );
-
+    // draw images
     final Device dev = PlatformUI.getWorkbench().getDisplay();
-
     final Image image = new Image( dev, size.x, size.y );
 
     final GC tmpGc = new GC( image );
     try
     {
       tmpGc.drawImage( axesImage, 0, 0 );
-      if( titleImage != null )
-        tmpGc.drawImage( titleImage, 0, 0 );
-
+      tmpGc.drawImage( titleImage, 0, 0 );
       tmpGc.drawImage( plotImage, plotRect.x, plotRect.y );
       return image.getImageData();
     }
@@ -275,6 +277,7 @@ public final class ChartImageFactory
     {
       tmpGc.dispose();
       image.dispose();
+      titleImage.dispose();
       axesImage.dispose();
       plotImage.dispose();
     }
@@ -361,7 +364,7 @@ public final class ChartImageFactory
       for( int i = 0; i < lines.length; i++ )
       {
         final Point lineSize = tmpGc.textExtent( lines[i] );
-        tmpGc.drawText( lines[i], i * lineSize.y, (size.x - lineSize.x) / 2, SWT.DRAW_TAB );
+        tmpGc.drawText( lines[i], (size.x - lineSize.x) / 2, i * lineSize.y, SWT.DRAW_TAB );
       }
       return image;
     }
