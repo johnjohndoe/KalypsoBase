@@ -58,6 +58,10 @@ public final class ObservationTokenHelper
 
   public static final String DEFAULT_ITEM_NAME = "%axistype% - %obsname%"; //$NON-NLS-1$
 
+  public static final String TOKEN_AXISNAME_OBSNAME = "%axisname% - %obsname%"; //$NON-NLS-1$
+
+  public static final String TOKEN_AXISNAME_AXISUNIT = "%axisname% [%axisunit%]"; //$NON-NLS-1$
+
   private ObservationTokenHelper( )
   {
     throw new UnsupportedOperationException( "Helper class, do not instantiate" );
