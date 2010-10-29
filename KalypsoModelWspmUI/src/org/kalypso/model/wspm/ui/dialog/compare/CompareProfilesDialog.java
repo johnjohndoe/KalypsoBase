@@ -54,6 +54,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
+import org.kalypso.model.wspm.ui.i18n.Messages;
 
 /**
  * @author Dirk Kuch
@@ -78,8 +79,9 @@ public class CompareProfilesDialog extends TitleAreaDialog
   @Override
   protected Control createDialogArea( final Composite parent )
   {
-    getShell().setText( "Profilansicht" );
+    getShell().setText( Messages.getString("CompareProfilesDialog_0") ); //$NON-NLS-1$
 
+    // FIXME: title should be set from outside, we always have different reasons to compare two profiles
     setTitle( "Profilvergleich zwischen KalypsoWSPM Modellprofil und Maﬂnahmenprofil" );
 
     final FormToolkit toolkit = new FormToolkit( parent.getDisplay() );

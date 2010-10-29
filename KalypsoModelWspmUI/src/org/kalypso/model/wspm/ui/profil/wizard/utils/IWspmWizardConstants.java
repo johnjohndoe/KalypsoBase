@@ -49,5 +49,5 @@ public interface IWspmWizardConstants
    * Used to fetch only filters suitable for roughness assignment (i.e. in cases where profile points are thought as
    * sections).
    */
-  String FILTER_USAGE_SECTION = "section";
+  String FILTER_USAGE_SECTION = "section"; //$NON-NLS-1$
 }

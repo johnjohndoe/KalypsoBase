@@ -339,10 +339,10 @@ public class OperationChooserPage extends WizardPage
   {
     final Object[] checkedElements = m_filterChooser.getCheckedElements();
     if( checkedElements.length == 0 )
-      return new MessageProvider( "No profile points selected", IMessageProvider.WARNING );
+      return new MessageProvider( Messages.getString("OperationChooserPage.0"), IMessageProvider.WARNING ); //$NON-NLS-1$
 
     if( m_value.isNaN() )
-      return new MessageProvider( "Please enter a valid value", IMessageProvider.WARNING );
+      return new MessageProvider( Messages.getString("OperationChooserPage.1"), IMessageProvider.WARNING ); //$NON-NLS-1$
 
     return null;
   }

@@ -80,7 +80,7 @@ public final class ProfilUtil
 {
   private ProfilUtil( )
   {
-    throw new UnsupportedOperationException( "Helper class, do not instantiate" );
+    throw new UnsupportedOperationException( "Helper class, do not instantiate" ); //$NON-NLS-1$
   }
 
   /**
@@ -100,12 +100,12 @@ public final class ProfilUtil
 
     final Dictionary dict = KalypsoCorePlugin.getDefault().getDictionary( dictionaryUrn );
     if( dict == null )
-      throw new IllegalArgumentException( "Unknown dictionary: " + dictionaryUrn );
+      throw new IllegalArgumentException( "Unknown dictionary: " + dictionaryUrn ); //$NON-NLS-1$
 
     final Definition itemDefinition = dict.getDefinition( itemId );
     if( itemDefinition == null )
     {
-      final String msg = String.format( "Unknown item '%s' in dictionary %s", itemId, dictionaryUrn );
+      final String msg = String.format( "Unknown item '%s' in dictionary %s", itemId, dictionaryUrn ); //$NON-NLS-1$
       throw new IllegalArgumentException( msg );
     }
 
@@ -138,7 +138,7 @@ public final class ProfilUtil
     final TupleResult owner = points[0].getOwner();
     final int iProp = owner.indexOfComponent( component );
     if( iProp < 0 )
-      throw new IllegalArgumentException( String.format( "Unknown component: %s", component ) );
+      throw new IllegalArgumentException( String.format( "Unknown component: %s", component ) ); //$NON-NLS-1$
 
     return getValuesFor( points, iProp );
   }

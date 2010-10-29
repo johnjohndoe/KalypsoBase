@@ -269,7 +269,7 @@ public class ProfilChartViewPart extends ViewPart implements IChartPart, IProfil
     else
     {
       setFormMessage( null, IMessageProvider.NONE );
-      setPartNames( String.format( "Station km %10.4f", newProfile.getStation() ), Messages.getString( "org.kalypso.model.wspm.ui.view.AbstractProfilViewPart_2" ) ); //$NON-NLS-1$
+      setPartNames( String.format( Messages.getString("ProfilChartViewPart.1"), newProfile.getStation() ), Messages.getString( "org.kalypso.model.wspm.ui.view.AbstractProfilViewPart_2" ) ); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     setChartModel( newProfile, provider == null ? null : provider.getResult() );
