@@ -56,6 +56,7 @@ import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.i18n.I18nUtils;
 import org.kalypso.module.IKalypsoModule;
+import org.kalypso.module.nature.ModuleUtils;
 import org.kalypso.project.database.client.extension.database.IKalypsoModuleDatabaseSettings;
 import org.kalypso.project.database.client.i18n.Messages;
 import org.kalypso.project.database.client.ui.composites.CreateProjectAction;
@@ -79,7 +80,7 @@ public abstract class AbstractKalypsoModule implements IKalypsoModule, IExecutab
   {
     final String pluginid = config.getContributor().getName();
     final Bundle bundle = Platform.getBundle( pluginid );
-    m_version = bundle.getVersion();
+    m_version = ModuleUtils.removeQualifier( bundle.getVersion() );
   }
 
   protected URL getInfoURL( final Class< ? > clazz, final Plugin plugin )

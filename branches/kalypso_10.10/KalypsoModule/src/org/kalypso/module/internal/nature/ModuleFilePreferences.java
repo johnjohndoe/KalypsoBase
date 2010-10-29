@@ -48,6 +48,7 @@ import java.util.Properties;
 import org.apache.commons.io.IOUtils;
 import org.kalypso.module.nature.IModulePreferences;
 import org.kalypso.module.nature.ModuleNature;
+import org.kalypso.module.nature.ModuleUtils;
 import org.osgi.framework.Version;
 
 /**
