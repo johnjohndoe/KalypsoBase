@@ -281,7 +281,7 @@ public class DummyLayer implements IChartLayer
    * @see org.kalypso.chart.framework.model.layer.IChartLayer#getTargetRange()
    */
   @Override
-  public IDataRange<Number> getTargetRange( )
+  public IDataRange<Number> getTargetRange(IDataRange<Number> domainIntervall )
   {
     return null;
   }

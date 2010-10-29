@@ -470,7 +470,7 @@ public class EditableLineLayer extends AbstractLineLayer implements IEditableCha
    */
   @Override
   @SuppressWarnings("unchecked")
-  public IDataRange<Number> getTargetRange( )
+  public IDataRange<Number> getTargetRange(IDataRange<Number> domainIntervall )
   {
     final IDataRange logRange = getDataContainer().getTargetRange();
     final Object min = logRange.getMin();

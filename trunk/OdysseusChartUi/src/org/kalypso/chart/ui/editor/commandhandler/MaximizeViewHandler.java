@@ -73,7 +73,7 @@ public class MaximizeViewHandler extends AbstractHandler
           }
           else if( axis == layer.getCoordinateMapper().getTargetAxis() )
           {
-            range = layer.getTargetRange();
+            range = layer.getTargetRange(null);
           }
           if( range != null )
           {

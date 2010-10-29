@@ -141,13 +141,13 @@ public abstract class AbstractExpandableLayer extends AbstractChartLayer impleme
    * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getTargetRange()
    */
   @Override
-  public IDataRange<Number> getTargetRange( )
+  public IDataRange<Number> getTargetRange(IDataRange<Number> domainIntervall )
   {
     Double min = null;
     Double max = null;
     for( final IChartLayer layer : getLayerManager().getLayers() )
     {
-      final IDataRange<Number> dr = layer.getTargetRange();
+      final IDataRange<Number> dr = layer.getTargetRange(null);
       if( dr != null )
       {
         if( max == null )

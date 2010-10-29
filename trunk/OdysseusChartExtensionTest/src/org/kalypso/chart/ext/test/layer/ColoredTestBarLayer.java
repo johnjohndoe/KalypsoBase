@@ -94,7 +94,7 @@ public class ColoredTestBarLayer extends AbstractBarLayer
   }
 
   @Override
-public IDataRange<Number> getTargetRange( )
+public IDataRange<Number> getTargetRange(IDataRange<Number> domainIntervall )
   {
     // muss als minimalen Wert 0 zurückgeben, weil die Bars bis dahin laufen
     final IDataRange targetRange = getDataContainer().getTargetRange();

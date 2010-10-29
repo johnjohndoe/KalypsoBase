@@ -100,7 +100,7 @@ public class TooltipTestLayer extends AbstractChartLayer implements ITooltipChar
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getTargetRange()
    */
   @Override
-  public IDataRange<Number> getTargetRange( )
+  public IDataRange<Number> getTargetRange(IDataRange<Number> domainIntervall )
   {
     return new DataRange<Number>( 0, 1 );
   }

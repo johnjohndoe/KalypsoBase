@@ -282,7 +282,7 @@ public class ChartModel implements IChartModel
       return layer.getDomainRange();
 
     if( axis == layer.getCoordinateMapper().getTargetAxis() )
-      return layer.getTargetRange();
+      return layer.getTargetRange(null);
 
     return null;
 

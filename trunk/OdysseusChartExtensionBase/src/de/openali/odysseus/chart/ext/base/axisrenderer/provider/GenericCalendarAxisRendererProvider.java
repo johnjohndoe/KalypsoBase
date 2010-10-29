@@ -4,6 +4,7 @@ import de.openali.odysseus.chart.ext.base.axisrenderer.DateLabelCreator;
 import de.openali.odysseus.chart.ext.base.axisrenderer.GenericDateTickCalculator;
 import de.openali.odysseus.chart.ext.base.axisrenderer.ILabelCreator;
 import de.openali.odysseus.chart.ext.base.axisrenderer.ITickCalculator;
+import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.LABEL_POSITION;
 
 /**
  * Parameters:
@@ -53,8 +54,17 @@ public class GenericCalendarAxisRendererProvider extends AbstractGenericAxisRend
   public ILabelCreator getLabelCreator( )
   {
     String dateFormat = getParameterContainer().getParameterValue( "date-format", "dd.MM.yy\nHH:mm:ss" );
-    dateFormat = dateFormat.replace( "\\n", "\n" );
-    return new DateLabelCreator( dateFormat );
+    final LABEL_POSITION position = getPosition();
+    dateFormat = dateFormat.replaceAll( "\\n", "\n" );
+    
+    return new DateLabelCreator( dateFormat, position );
+  }
+
+  private LABEL_POSITION getPosition( )
+  {
+    final String parameter = getParameterContainer().getParameterValue( "label_position", LABEL_POSITION.TICK_CENTERED.name() );
+    
+    return LABEL_POSITION.valueOf( parameter );
   }
 
   /**
