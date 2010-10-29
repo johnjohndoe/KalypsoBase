@@ -242,17 +242,27 @@ public class ChartImageFactory
 
   public static ImageData createChartImage( final IChartModel model, final Point size )
   {
-    final Rectangle plotRect = calculatePlotSize( model.getMapperRegistry(), size.x, size.y );
+    final Point titleSize = model.isHideTitle() ? new Point( 0, 0 ) : ChartImageFactory.calculateTitleSize( model.getTitle(), model.getTextStyle().toFontData() );
+
+    final Rectangle plotRect = calculatePlotSize( model.getMapperRegistry(), size.x, size.y - titleSize.y );
+    plotRect.y += titleSize.y;
+
     setAxesHeight( model.getMapperRegistry().getAxes(), plotRect );
     final Image axesImage = createAxesImage( model.getMapperRegistry(), new Rectangle( 0, 0, size.x, size.y ) );
     final Image plotImage = createPlotImage( model.getLayerManager().getLayers(), plotRect );
+    final Image titleImage = model.isHideTitle() ? null : ChartImageFactory.createTitleImage( model.getTitle(), model.getTextStyle().toFontData(), titleSize );
+
     final Device dev = PlatformUI.getWorkbench().getDisplay();
 
     final Image image = new Image( dev, size.x, size.y );
+
     final GC tmpGc = new GC( image );
     try
     {
       tmpGc.drawImage( axesImage, 0, 0 );
+      if( titleImage != null )
+        tmpGc.drawImage( titleImage, 0, 0 );
+
       tmpGc.drawImage( plotImage, plotRect.x, plotRect.y );
       return image.getImageData();
     }
@@ -460,7 +470,8 @@ public class ChartImageFactory
     try
     {
       tmpGc.setFont( tmpFont );
-      tmpGc.drawText( title, 0, 0 );
+      tmpGc.drawText( title, 0, 0, SWT.DRAW_DELIMITER | SWT.DRAW_TAB );
+
       return image;
     }
     finally
@@ -507,4 +518,5 @@ public class ChartImageFactory
     }
     return image;
   }
+
 }

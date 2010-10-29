@@ -104,13 +104,19 @@ public class TextStyle extends AbstractStyle implements ITextStyle
   @Override
   public void apply( final GC gc )
   {
-    final FontData fd = new FontData( m_family, m_size, m_style.toSWT() | m_weight.toSWT() );
+    final FontData fd = toFontData();
     final Font font = OdysseusChartFrameworkPlugin.getDefault().getFontRegistry().getResource( gc.getDevice(), fd );
 
     gc.setFont( font );
     gc.setBackground( OdysseusChartFrameworkPlugin.getDefault().getColorRegistry().getResource( gc.getDevice(), m_fillRGB ) );
     gc.setForeground( OdysseusChartFrameworkPlugin.getDefault().getColorRegistry().getResource( gc.getDevice(), m_textRGB ) );
 
+  }
+
+  @Override
+  public FontData toFontData( )
+  {
+    return new FontData( m_family, m_size, m_style.toSWT() | m_weight.toSWT() );
   }
 
   @Deprecated

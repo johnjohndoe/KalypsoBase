@@ -9,6 +9,7 @@ import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
+import de.openali.odysseus.chart.framework.model.style.ITextStyle;
 
 public interface IChartModel
 {
@@ -64,5 +65,7 @@ public interface IChartModel
   void panTo( Point start, Point end );
 
   IChartModelState getState( );
+
+  ITextStyle getTextStyle( );
 
 }
