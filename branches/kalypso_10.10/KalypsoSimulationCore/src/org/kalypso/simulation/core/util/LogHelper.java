@@ -40,8 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.simulation.core.util;
 
+import java.io.OutputStream;
 import java.io.PrintStream;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.i18n.Messages;
@@ -53,19 +55,18 @@ import org.kalypso.simulation.core.i18n.Messages;
  */
 public class LogHelper
 {
-  public static final String MESS_BERECHNUNG_ABGEBROCHEN = Messages.getString("org.kalypso.simulation.core.util.LogHelper.0"); //$NON-NLS-1$
+  public static final String MESS_BERECHNUNG_ABGEBROCHEN = Messages.getString( "org.kalypso.simulation.core.util.LogHelper.0" ); //$NON-NLS-1$
 
   private final ISimulationMonitor m_monitor;
 
   private final PrintStream m_log;
 
-  private final PrintStream m_outputConsumer;
-
-  public LogHelper( final PrintStream log, final ISimulationMonitor monitor, final PrintStream outputConsumer )
+  public LogHelper( final OutputStream outputStream, final ISimulationMonitor monitor )
   {
-    m_log = log;
+    // Keep output stream: we need to access it directly for process streaming
+    m_log = new PrintStream( outputStream );
+
     m_monitor = monitor;
-    m_outputConsumer = outputConsumer;
   }
 
   public ISimulationMonitor getMonitor( )
@@ -75,13 +76,11 @@ public class LogHelper
 
   /**
    * @param updateMonitor
-   *            if true, the message is also set to the monitor
+   *          if true, the message is also set to the monitor
    */
   public void log( final boolean updateMonitor, final String format, final Object... args )
   {
-    final String msg = String.format( format, args );
-    m_log.println( msg );
-    m_outputConsumer.println( msg );
+    final String msg = doLog( null, format, args );
     if( updateMonitor )
       m_monitor.setMessage( msg );
   }
@@ -103,11 +102,25 @@ public class LogHelper
 
   public void log( final Throwable e, final String format, final Object... args )
   {
-    final String msg = String.format( format, args );
-    m_log.println( msg );
-    m_outputConsumer.println( msg );
-    e.printStackTrace( m_log );
-    e.printStackTrace( System.out );
+    doLog( e, format, args );
+  }
+
+  private String doLog( final Throwable e, final String format, final Object... args )
+  {
+    if( format != null )
+    {
+      final String msg = String.format( format, args );
+      m_log.println( msg );
+      if( e != null )
+        e.printStackTrace( m_log );
+      return msg;
+    }
+    else
+    {
+      if( e != null )
+        e.printStackTrace( m_log );
+      return StringUtils.EMPTY;
+    }
   }
 
   /** Logs the message and sets the finish status of the monitor. */
@@ -115,6 +128,11 @@ public class LogHelper
   {
     log( false, message );
     m_monitor.setFinishInfo( status, message );
+  }
+
+  public PrintStream getOutputStream( )
+  {
+    return m_log;
   }
 
 }
