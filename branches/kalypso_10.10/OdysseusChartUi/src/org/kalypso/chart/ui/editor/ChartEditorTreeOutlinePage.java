@@ -64,6 +64,7 @@ import org.eclipse.swt.dnd.DragSourceListener;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.dnd.TransferData;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Tree;
@@ -129,7 +130,6 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
 
   public ChartEditorTreeOutlinePage( final ChartEditorTreeContentProvider contentProvider, final ChartTreeLabelProvider labelProvider )
   {
-
     m_contentProvider = contentProvider;
     m_labelProvider = labelProvider;
     m_eventListener = new AbstractLayerManagerEventListener()
@@ -210,7 +210,6 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
     };
     m_checkStateProvider = new ICheckStateProvider()
     {
-
       @Override
       public boolean isChecked( final Object element )
       {
@@ -389,8 +388,12 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
   @Override
   public void createControl( final Composite parent )
   {
-    final Tree tree = new Tree( parent, SWT.CHECK );
-    tree.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    final Tree tree = new Tree( parent, SWT.CHECK | SWT.V_SCROLL | SWT.H_SCROLL );
+
+    // BAD: we do not know the layout, so this may cause trouble!
+    if( parent.getLayout() instanceof GridLayout )
+      tree.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+
     m_treeViewer = new CheckboxTreeViewer( tree );
     m_treeViewer.setContentProvider( m_contentProvider );
     m_treeViewer.setLabelProvider( m_labelProvider );
