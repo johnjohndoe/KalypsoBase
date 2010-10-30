@@ -67,7 +67,7 @@ final class SaveAndDisposeInfoJob extends UIJob
     try
     {
       final String location = m_info.getKey().getLocation();
-      final String message = Messages.getString("org.kalypso.util.pool.SaveAndDisposeInfoJob.0") + location + Messages.getString("org.kalypso.util.pool.SaveAndDisposeInfoJob.1"); //$NON-NLS-1$ //$NON-NLS-2$
+      final String message = Messages.getString( "org.kalypso.util.pool.SaveAndDisposeInfoJob.0" ) + location + Messages.getString( "org.kalypso.util.pool.SaveAndDisposeInfoJob.1" ); //$NON-NLS-1$ //$NON-NLS-2$
       final Display display = getDisplay();
       final Shell shell = display == null ? null : display.getActiveShell();
       final boolean doSave = MessageDialog.openQuestion( shell, Messages.getString( "org.kalypso.util.pool.SaveAndDisposeInfoJob.2" ), message ); //$NON-NLS-1$
