@@ -10,7 +10,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.PrintStream;
 import java.net.URL;
 import java.util.List;
 
@@ -29,6 +28,7 @@ import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.ISimulationResultEater;
 import org.kalypso.simulation.core.SimulationException;
+import org.kalypso.simulation.core.util.BufferedAndOtherOutputStream;
 import org.kalypso.simulation.core.util.LogHelper;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -76,17 +76,16 @@ public class ConstraintDelaunayCalcJob implements ISimulation
     final File simulogFile = new File( tmpdir, "simulation.log" ); //$NON-NLS-1$
     resultEater.addResult( "SimulationLog", simulogFile ); //$NON-NLS-1$
 
-    PrintStream pwSimuLog = null;
     FileOutputStream strmKernelLog = null;
     FileOutputStream strmKernelErr = null;
     BufferedOutputStream strmPolyInput = null;
     BufferedReader nodeReader = null;
     BufferedReader eleReader = null;
+    BufferedAndOtherOutputStream osSimuLog = null;
     try
     {
-      pwSimuLog = new PrintStream( simulogFile );
-
-      final LogHelper log = new LogHelper( pwSimuLog, monitor, System.out );
+      osSimuLog = new BufferedAndOtherOutputStream( new FileOutputStream( simulogFile ), System.out );
+      final LogHelper log = new LogHelper( osSimuLog, monitor );
 
       log.log( true, Messages.getString( "org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayCalcJob.8", geometryXPath ) ); //$NON-NLS-1$
 
@@ -124,7 +123,7 @@ public class ConstraintDelaunayCalcJob implements ISimulation
       /* Write .poly file for triangle.exe */
       final File polyfile = new File( tmpdir, "input.poly" ); //$NON-NLS-1$
       strmPolyInput = new BufferedOutputStream( new FileOutputStream( polyfile ) );
-      final String crs = ConstraintDelaunayHelper.writePolyFileForLinestrings( strmPolyInput, (List< ? >) calcObject, pwSimuLog );
+      final String crs = ConstraintDelaunayHelper.writePolyFileForLinestrings( strmPolyInput, (List< ? >) calcObject, log.getOutputStream() );
       strmPolyInput.close();
 
       // prepare kernel logs (log and err)
@@ -206,7 +205,7 @@ public class ConstraintDelaunayCalcJob implements ISimulation
     }
     finally
     {
-      IOUtils.closeQuietly( pwSimuLog );
+      IOUtils.closeQuietly( osSimuLog );
       IOUtils.closeQuietly( strmKernelLog );
       IOUtils.closeQuietly( strmKernelErr );
       IOUtils.closeQuietly( strmPolyInput );
