@@ -92,10 +92,10 @@ public class ListSelectionWizardPage extends WizardPage
   }
 
   /**
-   * @see org.eclipse.jface.wizard.WizardPage#canFlipToNextPage()
+   * @see org.eclipse.jface.wizard.WizardPage#isPageComplete()
    */
   @Override
-  public boolean canFlipToNextPage( )
+  public boolean isPageComplete( )
   {
     if( m_allowNextIfEmpty )
       return true;
