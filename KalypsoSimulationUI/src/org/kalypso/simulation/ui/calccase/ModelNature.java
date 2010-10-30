@@ -257,14 +257,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
   {
     final IResource calcFile = folder.findMember( CONTROL_NAME );
 
-    if( (calcFile != null && calcFile.exists() && calcFile instanceof IFile) )
-    {
-      return true;
-    }
-    else
-    {
-      return false;
-    }
+    return calcFile != null && calcFile.exists() && calcFile instanceof IFile;
   }
 
   public IStatus launchAnt( final String progressText, final String launchName, final Map<String, Object> antProps, final IContainer folder, final IProgressMonitor monitor ) throws CoreException
