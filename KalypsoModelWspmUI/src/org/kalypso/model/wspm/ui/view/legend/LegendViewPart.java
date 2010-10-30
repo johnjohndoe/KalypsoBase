@@ -40,8 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.view.legend;
 
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.ui.forms.widgets.Form;
+import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.chart.ui.editor.ChartEditorTreeOutlinePage;
 import org.kalypso.chart.ui.editor.ChartTreeLabelProvider;
 import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
@@ -66,10 +69,26 @@ public class LegendViewPart extends AbstractChartModelViewPart
 {
   private final ChartEditorTreeOutlinePage m_chartlegend = new ChartEditorTreeOutlinePage( new ProfilChartEditorTreeContentProvider(), new ChartTreeLabelProvider() );
 
+  private Form m_form;
+
+  /**
+   * @see org.kalypso.model.wspm.ui.view.AbstractChartModelViewPart#doCreateControl(org.eclipse.swt.widgets.Composite,
+   *      org.eclipse.ui.forms.widgets.FormToolkit)
+   */
   @Override
-  public final void createControl( final Composite parent )
+  protected Control doCreateControl( final Composite parent, final FormToolkit toolkit )
   {
-    m_chartlegend.createControl( parent );
+    m_form = toolkit.createForm( parent );
+    toolkit.decorateFormHeading( m_form );
+
+    final Composite body = m_form.getBody();
+    body.setLayout( new FillLayout() );
+
+    m_chartlegend.createControl( body );
+
+    updateControl();
+
+    return body;
   }
 
   @Override
@@ -102,7 +121,6 @@ public class LegendViewPart extends AbstractChartModelViewPart
   @Override
   public void updateControl( )
   {
-
     if( m_chartlegend == null )
       return;
     IChartModel model = getChartModel();
@@ -110,8 +128,7 @@ public class LegendViewPart extends AbstractChartModelViewPart
     setSelectedLayer( model );
     if( model != null && model instanceof ProfilChartModel && ((ProfilChartModel) model).getProfil() == null )
       model = null;
-    updatePartName( model );
-
+    updatePartName( model, null, m_form );
   }
 
   /**
