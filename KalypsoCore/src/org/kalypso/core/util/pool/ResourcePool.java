@@ -48,6 +48,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IResourceDelta;
@@ -182,10 +183,11 @@ public class ResourcePool
     {
       final String askForSaveProperty = System.getProperty( CONFIG_INI_DO_ASK_FOR_POOL_SAVE, "false" ); //$NON-NLS-1$
       final boolean askForSave = Boolean.parseBoolean( askForSaveProperty );
+      final boolean isSaveable = isSaveable( info );
 
       if( !info.isDirty() )
         info.dispose();
-      else if( askForSave )
+      else if( askForSave && isSaveable )
       {
         final UIJob job = new SaveAndDisposeInfoJob( Messages.getString( "org.kalypso.util.pool.ResourcePool.5" ), info ); //$NON-NLS-1$
         job.setUser( true );
@@ -198,6 +200,24 @@ public class ResourcePool
         info.dispose();
       }
     }
+  }
+
+  // HOTFIX: fixed bug #557. We should not ask for resources to be saved that have no actual resources attached.
+  // TODO: let the loader itself decide if we may save.
+  private boolean isSaveable( final KeyInfo info )
+  {
+    try
+    {
+      final ILoader loader = info.getLoader();
+      final IResource[] resources = loader.getResources( info.getKey() );
+      if( resources.length == 0 )
+        return false;
+    }
+    catch( final Throwable e )
+    {
+      e.printStackTrace();
+    }
+    return true;
   }
 
   public void saveObject( final Object object, final IProgressMonitor monitor ) throws LoaderException
