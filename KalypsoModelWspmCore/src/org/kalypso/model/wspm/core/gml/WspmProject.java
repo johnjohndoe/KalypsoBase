@@ -65,7 +65,7 @@ public abstract class WspmProject extends Feature_Impl implements IWspmConstants
 {
   private static final QName QNAME_WATER_BODY_MEMBER = new QName( NS_WSPM, "waterBodyMember" ); //$NON-NLS-1$
 
-  public final static QName QNAME = new QName( IWspmConstants.NS_WSPMPROJ, "WspmProject" ); //$NON-NLS-1$
+  public static final QName QNAME = new QName( IWspmConstants.NS_WSPMPROJ, "WspmProject" ); //$NON-NLS-1$
 
   public WspmProject( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
