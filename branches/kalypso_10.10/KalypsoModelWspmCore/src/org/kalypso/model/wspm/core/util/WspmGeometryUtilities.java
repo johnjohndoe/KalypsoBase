@@ -189,7 +189,7 @@ public class WspmGeometryUtilities
     final GM_Position position = GeometryFactory.createGM_Position( rw, hw, h );
 
     /* If CRS is not known, we assume here that we have a GAUSS-KRUEGER crs in a profile. */
-    if( crsName == null )
+    if( StringUtils.isBlank( crsName ) )
       crsName = TimeseriesUtils.getCoordinateSystemNameForGkr( Double.toString( rw ) );
 
     final GM_Point point = GeometryFactory.createGM_Point( position, crsName );
