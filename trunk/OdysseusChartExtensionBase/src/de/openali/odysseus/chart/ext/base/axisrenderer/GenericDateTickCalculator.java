@@ -53,7 +53,6 @@ import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATI
 
 /**
  * @author alibu
- * 
  */
 public class GenericDateTickCalculator implements ITickCalculator
 {
@@ -120,7 +119,7 @@ public class GenericDateTickCalculator implements ITickCalculator
     final long logicalMax = axis.screenToNumeric( screenMax ).longValue();
 
     // der minimale logische Abstand
-    final long minLogInterval = Math.abs( axis.screenToNumeric( minScreenInterval ).longValue() - axis.screenToNumeric( 0 ).longValue() );
+    final long minLogInterval = minDisplayInterval == null ? Math.abs( axis.screenToNumeric( minScreenInterval ).longValue() - axis.screenToNumeric( 0 ).longValue() ) : minDisplayInterval.longValue();
     // ein paar Größen
     final long secondInMillis = 1000;
     final long minuteInMillis = secondInMillis * 60;
