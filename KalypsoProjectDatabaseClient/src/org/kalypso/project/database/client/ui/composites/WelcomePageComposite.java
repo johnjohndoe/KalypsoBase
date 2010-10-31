@@ -49,9 +49,9 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.contribs.eclipse.swt.canvas.DefaultContentArea;
 import org.kalypso.contribs.eclipse.swt.canvas.ImageCanvas2;
-import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
-import org.kalypso.project.database.client.extension.IKalypsoModule;
-import org.kalypso.project.database.client.extension.pages.welcome.IKalypsoModuleWelcomePageFrame;
+import org.kalypso.module.IKalypsoModule;
+import org.kalypso.module.IKalypsoModuleWelcomePageFrame;
+import org.kalypso.module.ModuleExtensions;
 import org.kalypso.project.database.client.extension.pages.welcome.IKalypsoWelcomePage;
 import org.kalypso.project.database.client.ui.MyColors;
 import org.kalypso.project.database.client.ui.MyFonts;
@@ -97,7 +97,7 @@ public class WelcomePageComposite extends Composite
     final ImageCanvas2 mainCanvas = new ImageCanvas2( this, SWT.NO_REDRAW_RESIZE );
     mainCanvas.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
 
-    final IKalypsoModule[] extensions = KalypsoProjectDatabaseClient.getDefault().getKalypsoModules();
+    final IKalypsoModule[] extensions = ModuleExtensions.getKalypsoModules();
     for( final IKalypsoModule module : extensions )
     {
       final IKalypsoModuleWelcomePageFrame handler = module.getWelcomePageFrame();

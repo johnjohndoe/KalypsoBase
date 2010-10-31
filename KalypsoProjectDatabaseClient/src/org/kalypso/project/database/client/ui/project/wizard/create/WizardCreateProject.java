@@ -55,7 +55,7 @@ import org.kalypso.afgui.wizards.NewProjectWizard;
 import org.kalypso.contribs.eclipse.core.resources.ProjectTemplate;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.wizard.ProjectTemplatePage;
-import org.kalypso.project.database.client.extension.IKalypsoModule;
+import org.kalypso.module.IKalypsoModule;
 import org.kalypso.project.database.common.nature.RemoteProjectNature;
 
 /**

@@ -56,11 +56,11 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.status.StatusDialog;
+import org.kalypso.module.IKalypsoModule;
+import org.kalypso.module.IKalypsoModuleProjectOpenAction;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
-import org.kalypso.project.database.client.extension.IKalypsoModule;
 import org.kalypso.project.database.client.extension.database.handlers.ILocalProject;
 import org.kalypso.project.database.client.extension.database.handlers.ITranscendenceProject;
-import org.kalypso.project.database.client.extension.project.IKalypsoModuleProjectOpenAction;
 import org.kalypso.project.database.client.i18n.Messages;
 import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
 

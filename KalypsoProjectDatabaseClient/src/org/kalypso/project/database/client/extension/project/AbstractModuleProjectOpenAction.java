@@ -64,6 +64,7 @@ import org.eclipse.ui.navigator.CommonViewer;
 import org.eclipse.ui.progress.IProgressService;
 import org.eclipse.ui.views.navigator.ResourceNavigator;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
+import org.kalypso.module.IKalypsoModuleProjectOpenAction;
 import org.kalypso.module.nature.ModuleNature;
 
 /**

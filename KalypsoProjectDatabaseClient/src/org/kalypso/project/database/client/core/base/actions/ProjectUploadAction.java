@@ -52,8 +52,9 @@ import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
+import org.kalypso.module.IKalypsoModule;
 import org.kalypso.project.database.client.core.ProjectDataBaseController;
-import org.kalypso.project.database.client.extension.IKalypsoModule;
+import org.kalypso.project.database.client.extension.database.IKalypsoModuleDatabaseSettings;
 import org.kalypso.project.database.client.extension.database.IProjectDatabaseUiLocker;
 import org.kalypso.project.database.client.extension.database.handlers.ILocalProject;
 import org.kalypso.project.database.client.i18n.Messages;
@@ -105,7 +106,7 @@ public class ProjectUploadAction implements IProjectAction
         {
           m_locker.acquireUiUpdateLock();
 
-          final IStatus status = ProjectDataBaseController.createRemoteProject( m_module.getDatabaseSettings(), m_handler );
+          final IStatus status = ProjectDataBaseController.createRemoteProject( (IKalypsoModuleDatabaseSettings) m_module.getDatabaseSettings(), m_handler );
 
           final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
           if( shell != null && !shell.isDisposed() )
