@@ -60,7 +60,7 @@ public class ChartOutlinePopupDialog extends PopupDialog
 
   private final IChartPart m_chartPart;
 
-  public ChartOutlinePopupDialog( Shell parentShell, IChartPart chartPart )
+  public ChartOutlinePopupDialog( final Shell parentShell, final IChartPart chartPart )
   {
     super( parentShell, SWT.RESIZE, true, true, true, false, false, "", "" ); //$NON-NLS-1$ //$NON-NLS-2$
     m_chartPart = chartPart;
