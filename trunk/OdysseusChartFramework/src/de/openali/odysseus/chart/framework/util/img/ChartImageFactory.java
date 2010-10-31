@@ -298,13 +298,13 @@ public final class ChartImageFactory
   {
     // get width from Axes
     final ICoordinateMapper mapper = layer.getCoordinateMapper();
-    if( mapper == null )
+    if( mapper == null || mapper.getDomainAxis() == null || mapper.getTargetAxis() == null )
     {
       System.out.println( "no axismapper found for layer :" + layer.getTitle() );
       return new Image( gc.getDevice(), 1, 1 );
     }
-    final int width = mapper == null ? 1 : mapper.getDomainAxis().getScreenHeight();
-    final int height = mapper == null ? 1 : mapper.getTargetAxis().getScreenHeight();
+    final int width = mapper.getDomainAxis().getScreenHeight();
+    final int height = mapper.getTargetAxis().getScreenHeight();
     // prepare image
     final ImageData id = new ImageData( width, height, 32, new PaletteData( 0xFF, 0xFF00, 0xFF0000 ) );
     id.transparentPixel = 0xfffffe;
