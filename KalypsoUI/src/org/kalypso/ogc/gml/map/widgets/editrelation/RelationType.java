@@ -49,18 +49,17 @@ import org.kalypso.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
+/**
+ * @author doemming
+ */
 public class RelationType implements org.kalypso.ogc.gml.map.widgets.editrelation.IRelationType
 {
-
   protected final IFeatureType m_srcFT;
 
   protected final IFeatureType m_destFT;
 
   private final IRelationType m_link;
 
-  /*
-   * @author doemming
-   */
   public RelationType( final IFeatureType srcFT, final IRelationType link, final IFeatureType destFT )
   {
     m_srcFT = srcFT;
@@ -71,13 +70,11 @@ public class RelationType implements org.kalypso.ogc.gml.map.widgets.editrelatio
   @Override
   public boolean fitsTypes( final IFeatureType f1, final IFeatureType f2 )
   {
-    if( f1 == null || f2 == null )
-      return false;
-    return f1 == m_srcFT && f2 == m_destFT;
+    return m_srcFT.equals( f1 ) && m_destFT.equals( f2 );
   }
 
   @Override
-  public String getFitProblems( final GMLWorkspace workspace, final Feature f1, final Feature f2, boolean isAddMode )
+  public String getFitProblems( final GMLWorkspace workspace, final Feature f1, final Feature f2, final boolean isAddMode )
   {
 
     final boolean exists = workspace.isExistingRelation( f1, f2, m_link );
@@ -92,30 +89,6 @@ public class RelationType implements org.kalypso.ogc.gml.map.widgets.editrelatio
     return getFitProblemsfromOccurency( f1, isAddMode );
   }
 
-  // private boolean isExistingRelation( Feature f1, Feature f2 )
-  // {
-  // if( f2.getFeatureType().getName().startsWith( "KMCh" ) )
-  // {
-  // System.out.println( "test" );
-  // }
-  // final Object property = f1.getProperty( m_link.getName() );
-  // if( property == null )
-  // return false;
-  // if( property instanceof List )
-  // {
-  // if( ( (List)property ).contains( f2 ) )
-  // return true;
-  // if( ( (List)property ).contains( f2.getId() ) )
-  // return true;
-  // return false;
-  // }
-  // if( property == f2 )
-  // return true;
-  // if( f2.getId().equals( property ) )
-  // return true;
-  // return false;
-  // }
-  //
   public String getFitProblemsfromOccurency( final Feature f1, final boolean isAddMode )
   {
     final String ftLabel = f1.getFeatureType().getAnnotation().getLabel();
@@ -123,7 +96,6 @@ public class RelationType implements org.kalypso.ogc.gml.map.widgets.editrelatio
 
     final Object property = f1.getProperty( m_link );
     final int max = m_link.getMaxOccurs();
-    // int min = m_srcFT.getMinOccurs( propName );
     if( isAddMode )
     {
       switch( max )
@@ -133,7 +105,7 @@ public class RelationType implements org.kalypso.ogc.gml.map.widgets.editrelatio
         case 1:
           return property == null ? null : ftLabel + "." + linkLabel + Messages.getString( "org.kalypso.ogc.gml.map.widgets.editrelation.RelationType.3" ); //$NON-NLS-1$ //$NON-NLS-2$
         default:
-          return ((List) property).size() + 1 < max ? null : ftLabel + "." + linkLabel + Messages.getString( "org.kalypso.ogc.gml.map.widgets.editrelation.RelationType.5" ) + max + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+          return ((List< ? >) property).size() + 1 < max ? null : ftLabel + "." + linkLabel + Messages.getString( "org.kalypso.ogc.gml.map.widgets.editrelation.RelationType.5" ) + max + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
       }
     }
     // else remove mode:
@@ -142,7 +114,7 @@ public class RelationType implements org.kalypso.ogc.gml.map.widgets.editrelatio
       case 1:
         return property != null ? null : ftLabel + "." + linkLabel + Messages.getString( "org.kalypso.ogc.gml.map.widgets.editrelation.RelationType.8" ); //$NON-NLS-1$ //$NON-NLS-2$
       default: // minOccurs should not be validated here.
-        return ((List) property).size() > 0 ? null : ftLabel + "." + linkLabel + Messages.getString( "org.kalypso.ogc.gml.map.widgets.editrelation.RelationType.10" ); //$NON-NLS-1$ //$NON-NLS-2$
+        return ((List< ? >) property).size() > 0 ? null : ftLabel + "." + linkLabel + Messages.getString( "org.kalypso.ogc.gml.map.widgets.editrelation.RelationType.10" ); //$NON-NLS-1$ //$NON-NLS-2$
     }
   }
 
@@ -168,20 +140,4 @@ public class RelationType implements org.kalypso.ogc.gml.map.widgets.editrelatio
   {
     return m_srcFT;
   }
-
-  // public boolean equals( Object obj )
-  // {
-  // if( obj == null || !( obj instanceof RelationType ) )
-  // return false;
-  // final RelationType other = (RelationType)obj;
-  // return ( other.getSrcFT().equals( m_srcFT ) && other.getDestFT().equals(
-  // m_destFT ) && other
-  // .getLink().equals( m_link ) );
-  // }
-  //
-  // public int hashCode()
-  // {
-  // return ( m_srcFT.getName() + m_link.getName() + m_destFT.getName()
-  // ).hashCode();
-  // }
 }

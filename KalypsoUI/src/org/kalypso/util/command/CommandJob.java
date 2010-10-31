@@ -62,6 +62,8 @@ public final class CommandJob extends Job
 
   public final static TYPE REDO = new TYPE( "REDO" ); //$NON-NLS-1$
 
+  public static final Object FAMILY = new Object();
+
   private final ICommand myCommand;
 
   private final ICommandManager myCommandManager;
@@ -92,6 +94,17 @@ public final class CommandJob extends Job
     m_type = type;
 
     schedule();
+  }
+
+  /**
+   * Define a job family for this kind of job in order to allow clients to wait for this kind of job to be finished
+   * 
+   * @see org.eclipse.core.runtime.jobs.Job#belongsTo(java.lang.Object)
+   */
+  @Override
+  public boolean belongsTo( final Object family )
+  {
+    return family == FAMILY;
   }
 
   @Override
