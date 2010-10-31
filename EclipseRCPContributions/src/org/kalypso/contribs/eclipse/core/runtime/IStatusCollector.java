@@ -54,26 +54,20 @@ import org.eclipse.core.runtime.MultiStatus;
 public interface IStatusCollector extends Collection<IStatus>
 {
   /**
-   * Adds a new status object to this collection.
-   */
-  void addStatus( IStatus status );
-
-  /**
    * Convienience method that adds an error status to this collection.
    */
-  void addError( String msg );
+  void add( int severity, String msg );
 
   /**
    * Convienience method that adds an error status to this collection, using {@link String#format(String, Object...)} to
    * format the message.
    */
-  void addError( String msgFormat, Throwable exception, Object... formatParameters );
+  void add( int severity, String msgFormat, Throwable exception, Object... formatParameters );
 
   /**
    * Convienience method that adds an error status to this collection.
    */
-  void addError( String msg, Throwable exception );
-
+  void add( int severity, String msg, Throwable exception );
 
   /**
    * Returns all collected stati.

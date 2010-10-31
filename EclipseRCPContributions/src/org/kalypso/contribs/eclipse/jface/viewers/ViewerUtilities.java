@@ -68,7 +68,7 @@ public final class ViewerUtilities
    * The content provider must be a {@link IStructuredContentProvider}.
    * </p>
    */
-  public final static void selectFirstElement( final ContentViewer viewer )
+  public static void selectFirstElement( final ContentViewer viewer )
   {
     final IContentProvider contentProvider = viewer.getContentProvider();
     if( contentProvider instanceof IStructuredContentProvider )

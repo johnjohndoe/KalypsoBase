@@ -93,6 +93,7 @@ import org.kalypso.ui.editor.gmleditor.ui.GMLLabelProvider;
 import org.kalypso.ui.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
 /**
  * @author Kuepferle
@@ -121,9 +122,16 @@ public class GmlFileImportPage extends WizardPage
 
   protected ViewerFilter m_filter;
 
+  private GMLXPath m_rootPath;
+
   public GmlFileImportPage( final String pageName, final String title, final ImageDescriptor titleImage )
   {
     super( pageName, title, titleImage );
+  }
+
+  public void setRootPath( final GMLXPath rootPath )
+  {
+    m_rootPath = rootPath;
   }
 
   /** If set to non-<code>null</code>, only files from within this project may be selected. */
@@ -181,7 +189,11 @@ public class GmlFileImportPage extends WizardPage
         handleTreeSelection( (IStructuredSelection) event.getSelection() );
       }
     } );
-    m_treeViewer.setContentProvider( new GMLContentProvider( true ) );
+
+    final GMLContentProvider contentProvider = new GMLContentProvider( true );
+    contentProvider.setRootPath( m_rootPath );
+
+    m_treeViewer.setContentProvider( contentProvider );
     m_treeViewer.setLabelProvider( new GMLLabelProvider() );
     m_treeViewer.setUseHashlookup( true );
 
@@ -374,7 +386,7 @@ public class GmlFileImportPage extends WizardPage
     m_validAllowFeatureAssociation = allowFeatureAssociation;
   }
 
-  public void setViewerFilter( ViewerFilter filter )
+  public void setViewerFilter( final ViewerFilter filter )
   {
     m_filter = filter;
 

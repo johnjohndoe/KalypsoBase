@@ -40,10 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse.jface.viewers;
 
-import org.eclipse.jface.viewers.ColumnViewer;
-import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
-import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.jface.viewers.ViewerColumn;
 import org.eclipse.swt.widgets.Item;
@@ -51,60 +48,69 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TreeColumn;
 
 /**
- * Utilities for {@link org.eclipse.jface.viewers.ColumnViewer}'s.
+ * Wrapper class that wraps both {@link org.eclipse.jface.viewers.TreeViewerColumn} and
+ * {@link org.eclipse.jface.viewers.TableViewerColumn}'s.
  * 
  * @author Gernot Belger
  */
-public final class ColumnViewerUtil
+public class ViewerColumnItem
 {
-  private ColumnViewerUtil( )
+  private final ViewerColumn m_viewerColumn;
+
+  public ViewerColumnItem( final ViewerColumn viewerColumn )
   {
-    throw new UnsupportedOperationException( "Helper class, do not instantiate" );
+    m_viewerColumn = viewerColumn;
   }
 
-  public static Item[] getSisterItems( final Item item )
+  private Item getColumn( )
   {
-    if( item instanceof TableColumn )
-      return ((TableColumn) item).getParent().getColumns();
+    if( m_viewerColumn instanceof TableViewerColumn )
+      return ((TableViewerColumn) m_viewerColumn).getColumn();
 
-    if( item instanceof TreeColumn )
-      return ((TreeColumn) item).getParent().getColumns();
-
-    throw new IllegalArgumentException( String.format( "Unknown item type for sorting %s", item.getClass().getName() ) );
-  }
-
-  public static Item itemForColumn( final ViewerColumn column ) throws IllegalArgumentException
-  {
-    if( column instanceof TableViewerColumn )
-      return ((TableViewerColumn) column).getColumn();
-
-    if( column instanceof TreeViewerColumn )
-      return ((TreeViewerColumn) column).getColumn();
-
-    throw new IllegalArgumentException( String.format( "Unknown column type %s", column.getClass() ) );
-  }
-
-  public static void packColumns( final TableViewer viewer )
-  {
-    final TableColumn[] columns = viewer.getTable().getColumns();
-    for( final TableColumn column : columns )
-      column.pack();
-  }
-
-  public static void packColumns( final TreeViewer viewer )
-  {
-    final TreeColumn[] columns = viewer.getTree().getColumns();
-    for( final TreeColumn column : columns )
-      column.pack();
-  }
-
-  public static ViewerColumn createViewerColumn( final ColumnViewer viewer, final int center )
-  {
-    if( viewer instanceof TreeViewer )
-      return new TreeViewerColumn( (TreeViewer) viewer, center );
-    if( viewer instanceof TableViewer )
-      return new TableViewerColumn( (TableViewer) viewer, center );
+    if( m_viewerColumn instanceof TreeViewerColumn )
+      return ((TreeViewerColumn) m_viewerColumn).getColumn();
 
     throw new IllegalArgumentException();
   }
+
+  public void setText( final String text )
+  {
+    final Item col = getColumn();
+
+    if( col instanceof TableColumn )
+      ((TableColumn) col).setText( text );
+    else if( col instanceof TreeColumn )
+      ((TreeColumn) col).setText( text );
+  }
+
+  public void setWidth( final int width )
+  {
+    final Item col = getColumn();
+
+    if( col instanceof TableColumn )
+      ((TableColumn) col).setWidth( width );
+    else if( col instanceof TreeColumn )
+      ((TreeColumn) col).setWidth( width );
+  }
+
+  public void setResizable( final boolean resizeable )
+  {
+    final Item col = getColumn();
+
+    if( col instanceof TableColumn )
+      ((TableColumn) col).setResizable( resizeable );
+    else if( col instanceof TreeColumn )
+      ((TreeColumn) col).setResizable( resizeable );
+  }
+
+  public void setMoveable( final boolean moveable )
+  {
+    final Item col = getColumn();
+
+    if( col instanceof TableColumn )
+      ((TableColumn) col).setMoveable( moveable );
+    else if( col instanceof TreeColumn )
+      ((TreeColumn) col).setMoveable( moveable );
+  }
+
 }
