@@ -40,19 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.core.status;
 
-import java.text.DateFormat;
-import java.util.Date;
-
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jface.viewers.ITableLabelProvider;
-import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.ColumnViewer;
+import org.eclipse.jface.viewers.ViewerColumn;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.ui.internal.ide.IDEInternalWorkbenchImages;
-import org.kalypso.contribs.eclipse.core.runtime.IStatusWithTime;
-import org.kalypso.contribs.eclipse.jface.viewers.DefaultTableViewer;
-import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.contribs.eclipse.jface.viewers.ColumnViewerUtil;
+import org.kalypso.contribs.eclipse.jface.viewers.ViewerColumnItem;
 import org.kalypso.core.i18n.Messages;
 
 /**
@@ -60,62 +55,63 @@ import org.kalypso.core.i18n.Messages;
  * 
  * @author Gernot Belger
  */
-public class StatusLabelProvider extends LabelProvider implements ITableLabelProvider
+public abstract class StatusLabelProvider extends ColumnLabelProvider
 {
-  private final DateFormat m_dateFormat = DateFormat.getDateTimeInstance( DateFormat.MEDIUM, DateFormat.MEDIUM );
-
-  private static final String TIME = "time"; //$NON-NLS-1$
-
-  private static final String MESSAGE = "message"; //$NON-NLS-1$
-
-  private static final String SEVERITY = "severity"; //$NON-NLS-1$
-
-  private final Object[] m_columnProperties;
-
-  public StatusLabelProvider( final Object[] columnProperties )
+  /**
+   * Adds a column that shows the severity of a status.
+   */
+  public static void addSeverityColumn( final ColumnViewer columnViewer )
   {
-    m_columnProperties = columnProperties;
-    m_dateFormat.setTimeZone( KalypsoCorePlugin.getDefault().getTimeZone() );
+    final ViewerColumn severityColumn = ColumnViewerUtil.createViewerColumn( columnViewer, SWT.CENTER );
+    final ViewerColumnItem severityCol = new ViewerColumnItem( severityColumn );
+    severityCol.setText( Messages.getString( "org.kalypso.util.swt.StatusLabelProvider.3" ) );
+    severityCol.setWidth( 30 );
+    severityCol.setResizable( true );
+    severityCol.setMoveable( false );
+    severityColumn.setLabelProvider( new StatusLabelSeverityProvider() );
   }
 
   /**
-   * Configure a default table viewer, to work with this label provider.<br>
-   * Also sets an instance of this class as label provider.
+   * Adds a column that shows the message of a status.
    */
-  public static void configureTableViewer( final DefaultTableViewer tableViewer )
+  public static void addMessageColumn( final ColumnViewer columnViewer )
   {
-    tableViewer.addColumn( SEVERITY, Messages.getString( "org.kalypso.util.swt.StatusLabelProvider.3" ), null, 30, 0, false, SWT.CENTER, false, true ); //$NON-NLS-1$
-    tableViewer.addColumn( MESSAGE, Messages.getString( "org.kalypso.util.swt.StatusLabelProvider.4" ), null, 500, 0, false, SWT.LEFT, true, true ); //$NON-NLS-1$
-    tableViewer.addColumn( TIME, Messages.getString( "org.kalypso.util.swt.StatusLabelProvider.5" ), null, 150, 0, false, SWT.LEFT, false, true ); //$NON-NLS-1$
-
-    tableViewer.setLabelProvider( new StatusLabelProvider( tableViewer.getColumnProperties() ) );
+    final ViewerColumn messageColumn = ColumnViewerUtil.createViewerColumn( columnViewer, SWT.LEFT );
+    final ViewerColumnItem messageCol = new ViewerColumnItem( messageColumn );
+    messageCol.setText( Messages.getString( "org.kalypso.util.swt.StatusLabelProvider.4" ) );
+    messageCol.setWidth( 500 );
+    messageCol.setResizable( true );
+    messageCol.setMoveable( false );
+    messageColumn.setLabelProvider( new StatusLabelMessageProvider() );
   }
 
   /**
-   * @see org.kalypso.gml.ui.jface.FeatureWrapperLabelProvider#getColumnImage(java.lang.Object, int)
+   * Adds a column that shows the time of a status.
    */
-  @Override
-  @SuppressWarnings("restriction")//$NON-NLS-1$
-  public Image getColumnImage( final Object element, final int columnIndex )
+  public static void addTimeColumn( final ColumnViewer columnViewer )
   {
-    final IStatus status = statusForElement( element );
-    if( status == null )
-      return null;
+    final ViewerColumn timeColumn = ColumnViewerUtil.createViewerColumn( columnViewer, SWT.LEFT );
+    final ViewerColumnItem timeCol = new ViewerColumnItem( timeColumn );
+    timeCol.setText( Messages.getString( "org.kalypso.util.swt.StatusLabelProvider.5" ) );
+    timeCol.setWidth( 150 );
+    timeCol.setResizable( false );
+    timeCol.setMoveable( false );
+    timeColumn.setLabelProvider( new StatusLabelTimeProvider() );
+  }
 
-    final Object columnProperty = m_columnProperties[columnIndex];
-    if( columnProperty == SEVERITY )
+  public static void addNavigationColumn( final ColumnViewer columnViewer )
+  {
+    final ViewerColumn naviColumn = ColumnViewerUtil.createViewerColumn( columnViewer, SWT.LEFT );
+    final ViewerColumnItem naviCol = new ViewerColumnItem( naviColumn );
+    naviCol.setWidth( 50 );
+    naviCol.setResizable( true );
+    naviCol.setMoveable( false );
+    naviColumn.setLabelProvider( new StatusLabelProvider()
     {
-      // Special treatment for cancel: show as warning
-      if( status.matches( IStatus.CANCEL ) )
-        return StatusComposite.getIDEImage( IDEInternalWorkbenchImages.IMG_OBJS_WARNING_PATH );
-
-      return StatusComposite.getStatusImage( status );
-    }
-
-    return null;
+    } );
   }
 
-  private IStatus statusForElement( final Object element )
+  protected IStatus statusForElement( final Object element )
   {
     if( element instanceof IStatus )
       return (IStatus) element;
@@ -126,32 +122,11 @@ public class StatusLabelProvider extends LabelProvider implements ITableLabelPro
     return null;
   }
 
-  /**
-   * @see org.kalypso.gml.ui.jface.FeatureWrapperLabelProvider#getColumnText(java.lang.Object, int)
-   */
+  // Needed in order to overwrite standard behaviour
   @Override
-  public String getColumnText( final Object element, final int columnIndex )
+  public String getText( final Object element )
   {
-    final IStatus status = statusForElement( element );
-    if( status == null )
-      return ""; //$NON-NLS-1$
-
-    final Object columnProperty = m_columnProperties[columnIndex];
-    if( columnProperty == MESSAGE )
-      return status.getMessage();
-
-    if( columnProperty == TIME )
-    {
-      if( status instanceof IStatusWithTime )
-      {
-        final Date time = ((IStatusWithTime) status).getTime();
-        if( time == null )
-          return ""; //$NON-NLS-1$
-
-        return m_dateFormat.format( time );
-      }
-    }
-
-    return ""; //$NON-NLS-1$
+    return null;
   }
+
 }
