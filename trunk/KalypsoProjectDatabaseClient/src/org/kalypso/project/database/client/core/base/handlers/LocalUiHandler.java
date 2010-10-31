@@ -42,6 +42,7 @@ package org.kalypso.project.database.client.core.base.handlers;
 
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.module.IKalypsoModule;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
 import org.kalypso.project.database.client.core.base.actions.EmptyProjectAction;
 import org.kalypso.project.database.client.core.base.actions.IProjectAction;
@@ -52,7 +53,6 @@ import org.kalypso.project.database.client.core.base.actions.ProjectOpenAction;
 import org.kalypso.project.database.client.core.base.actions.ProjectUploadAction;
 import org.kalypso.project.database.client.core.model.interfaces.IProjectDatabaseModel;
 import org.kalypso.project.database.client.core.model.interfaces.IRemoteWorkspaceModel;
-import org.kalypso.project.database.client.extension.IKalypsoModule;
 import org.kalypso.project.database.client.extension.database.IProjectDatabaseUiLocker;
 import org.kalypso.project.database.client.extension.database.handlers.ILocalProject;
 import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
