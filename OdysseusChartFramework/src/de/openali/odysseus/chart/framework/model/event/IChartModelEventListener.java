@@ -47,5 +47,5 @@ import de.openali.odysseus.chart.framework.model.IChartModel;
  */
 public interface IChartModelEventListener
 {
-  public void onModelChanged(IChartModel oldModel, IChartModel newModel );
+  void onModelChanged( IChartModel oldModel, IChartModel newModel );
 }
