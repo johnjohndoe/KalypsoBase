@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.loader;
 
@@ -56,7 +56,7 @@ import org.kalypso.core.util.pool.IPoolableObjectType;
 public interface ILoader
 {
   /** Return a description for this loader */
-  public String getDescription( );
+  String getDescription( );
 
   /**
    * Load an object from somewhere
@@ -66,20 +66,20 @@ public interface ILoader
    * @return object
    * @throws LoaderException
    */
-  public Object load( final IPoolableObjectType key, final IProgressMonitor monitor ) throws LoaderException;
+  Object load( IPoolableObjectType key, IProgressMonitor monitor ) throws LoaderException;
 
   /**
    * Save an object to the given location
    */
-  public void save( final IPoolableObjectType key, final IProgressMonitor monitor, final Object data ) throws LoaderException;
+  void save( IPoolableObjectType key, IProgressMonitor monitor, Object data ) throws LoaderException;
 
   /**
    * Release resources or whatsoever is associated to the given object
    */
-  public void release( final Object object );
+  void release( Object object );
 
-  public IStatus getStatus( );
+  IStatus getStatus( );
 
   /** Returns the resources this key describes in respect to this loader. */
-  public IResource[] getResources( final IPoolableObjectType key ) throws MalformedURLException;
+  IResource[] getResources( IPoolableObjectType key ) throws MalformedURLException;
 }
