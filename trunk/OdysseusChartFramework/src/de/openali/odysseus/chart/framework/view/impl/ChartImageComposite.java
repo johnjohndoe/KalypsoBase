@@ -92,7 +92,7 @@ public class ChartImageComposite extends Canvas
       ChartImageFactory.setAxesHeight( mapperRegistry.getAxes(), m_plotRect );
       m_axesImage = ChartImageFactory.createAxesImage( getChartModel().getMapperRegistry(), getClientArea(), m_plotRect );
 
-      m_titleImage = titleImageCreator.createImage( LABEL_POSITION.CENTERED );
+      m_titleImage = titleImageCreator.createImage( LABEL_POSITION.CENTERED, new Point( getClientArea().width, titleSize.y ) );
 
       final ILayerManager layerManager = model == null ? null : model.getLayerManager();
       if( layerManager == null )

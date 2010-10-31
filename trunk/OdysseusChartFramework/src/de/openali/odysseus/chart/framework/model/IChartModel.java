@@ -32,6 +32,10 @@ public interface IChartModel
 
   boolean isHideUnusedAxes( );
 
+  void setHideLegend( boolean b );
+
+  boolean isHideLegend( );
+
   void setHideTitle( boolean b );
 
   boolean isHideTitle( );

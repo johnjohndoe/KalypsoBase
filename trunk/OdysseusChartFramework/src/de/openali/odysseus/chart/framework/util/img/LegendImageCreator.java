@@ -103,11 +103,15 @@ public class LegendImageCreator
 
   public Point getSize( )
   {
+    if( m_model.isHideLegend() )
+      return new Point( 0, 0 );
     return m_strategy.getSize( this );
   }
 
   public Image createImage( )
   {
+    if( m_model.isHideLegend() )
+      return null;
     final IChartLayer[] layers = getLayers();
     final Point size = getSize();
 

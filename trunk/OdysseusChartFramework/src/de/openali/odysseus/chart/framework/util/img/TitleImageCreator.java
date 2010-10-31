@@ -89,16 +89,15 @@ public class TitleImageCreator
     }
   }
 
-  public Image createImage( final LABEL_POSITION position )
+  public Image createImage( final LABEL_POSITION position, final Point clientSize )
   {
-    if( m_model.isHideTitle() )
+    if( m_model.isHideTitle() || clientSize.x < 1 || clientSize.y < 1 )
       return null;
 
     final String[] lines = StringUtils.split( m_model.getTitle(), "\n" );
-    final Point size = getSize();
-
+   
     final Device dev = PlatformUI.getWorkbench().getDisplay();
-    final Image image = new Image( dev, size.x, size.y );
+    final Image image = new Image( dev, clientSize.x, clientSize.y );
     final GC gc = new GC( image );
 
     final Font font = getFont( dev );
@@ -109,7 +108,7 @@ public class TitleImageCreator
       for( int i = 0; i < lines.length; i++ )
       {
         final Point lineSize = gc.textExtent( lines[i] );
-        gc.drawText( lines[i], (size.x - lineSize.x) / 2, i * lineSize.y, SWT.DRAW_TAB );
+        gc.drawText( lines[i], (clientSize.x - lineSize.x) / 2, i * lineSize.y, SWT.DRAW_TAB );
 
       }
       return image;
