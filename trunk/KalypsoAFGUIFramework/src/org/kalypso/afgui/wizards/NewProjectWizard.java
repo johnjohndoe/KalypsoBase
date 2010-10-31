@@ -235,8 +235,14 @@ public class NewProjectWizard extends BasicNewProjectResourceWizard implements I
 
     final IStatus resultStatus = RunnableContextHelper.execute( getContainer(), true, true, operation );
     KalypsoAFGUIFrameworkPlugin.getDefault().getLog().log( resultStatus );
-    if( !resultStatus.isOK() )
-      new StatusDialog( getShell(), resultStatus, getWindowTitle() ).open();
+    // REMARK: we explicitely use != to compare with OK_STATUS: if the status isOK, but
+    // not THE OK_STATUS we whish to show an status dialog (with the ok message).
+    if( resultStatus != Status.OK_STATUS )
+    {
+      final StatusDialog statusDialog = new StatusDialog( getShell(), resultStatus, getWindowTitle() );
+      // statusDialog.setShowAsTree( true );
+      statusDialog.open();
+    }
 
     // REMARK: we always return here, because the BasicNewProjectWizard does not allow to create a project twice
     // So the wizard must be closed now

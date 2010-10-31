@@ -2,7 +2,7 @@
 <feature
       id="org.kalypso.babel.nls_eclipse"
       label="KalypsoBaseBabelEclipseFeature"
-      version="2.3.0.qualifier"
+      version="10.10.0.qualifier"
       provider-name="kalypso.sourceforge.net"
       plugin="org.kalypso.base">
 
@@ -52,6 +52,7 @@
 
    <plugin
          id="org.eclipse.compare.win32.nl_de"
+         os="win32"
          download-size="3180"
          install-size="3180"
          version="0.0.0"

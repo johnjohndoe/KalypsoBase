@@ -98,7 +98,7 @@ public final class UnpackProjectTemplateOperation extends WorkspaceModifyOperati
   {
     final String newName = m_project.getName();
 
-    final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.afgui.wizards.NewProjectWizard.2" ), 90 ); //$NON-NLS-1$
+    final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.afgui.wizards.NewProjectWizard.2" ), 100 ); //$NON-NLS-1$
     try
     {
       // REMARK: we unpack into a closed project here (not using unzip(URL, IFolder)), as else
@@ -106,9 +106,10 @@ public final class UnpackProjectTemplateOperation extends WorkspaceModifyOperati
       m_project.close( progress.newChild( 10 ) );
 
       /* Unpack project from template */
+      monitor.subTask( "Extracting project data" );
       final File destinationDir = m_project.getLocation().toFile();
       unpackProjectData( m_dataLocation, destinationDir );
-      ProgressUtilities.worked( progress, 40 );
+      ProgressUtilities.worked( progress, 30 );
 
       m_project.open( progress.newChild( 10 ) );
 
@@ -124,11 +125,11 @@ public final class UnpackProjectTemplateOperation extends WorkspaceModifyOperati
       configureNatures( natureIds, progress );
 
       /* Let inherited wizards change the project */
-      final IStatus postCreateStatus = m_newProjectWizard.postCreateProject( m_project, progress.newChild( 1 ) );
+      final IStatus postCreateStatus = m_newProjectWizard.postCreateProject( m_project, progress.newChild( 30 ) );
       if( !postCreateStatus.matches( IStatus.ERROR ) )
         m_newProjectWizard.openProject( m_project );
 
-      if( !postCreateStatus.isOK() )
+      if( postCreateStatus != Status.OK_STATUS )
         throw new CoreException( postCreateStatus );
     }
     catch( final CoreException t )
