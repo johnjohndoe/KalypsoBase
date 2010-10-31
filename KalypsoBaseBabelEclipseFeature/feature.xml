@@ -52,6 +52,7 @@
 
    <plugin
          id="org.eclipse.compare.win32.nl_de"
+         os="win32"
          download-size="3180"
          install-size="3180"
          version="0.0.0"
