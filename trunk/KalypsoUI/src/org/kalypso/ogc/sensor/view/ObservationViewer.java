@@ -416,7 +416,7 @@ public class ObservationViewer extends Composite
 
     final int[] mainWeights = getWeightsFromSettings( new int[] { 2, 5 }, SETTINGS_WEIGHTS_MAIN );
     form.setWeights( mainWeights );
-    addWeightsListener( form, SETTINGS_WEIGHTS_MAIN );    
+    addWeightsListener( form, SETTINGS_WEIGHTS_MAIN );
   }
 
   /**
@@ -504,8 +504,8 @@ public class ObservationViewer extends Composite
       final PlainObsProvider pop = new PlainObsProvider( obs, null );
 
       final ItemData itd = new ObsView.ItemData( true, null, null, true );
-      m_diagView.addObservation( pop, ObservationTokenHelper.DEFAULT_ITEM_NAME, itd );
-      m_tableView.addObservation( pop, ObservationTokenHelper.DEFAULT_ITEM_NAME, itd );
+      m_diagView.addObservation( pop, ObservationTokenHelper.TOKEN_AXISNAME_OBSNAME, itd );
+      m_tableView.addObservation( pop, ObservationTokenHelper.TOKEN_AXISNAME_AXISUNIT, itd );
     }
     else if( obs != null )
     {
