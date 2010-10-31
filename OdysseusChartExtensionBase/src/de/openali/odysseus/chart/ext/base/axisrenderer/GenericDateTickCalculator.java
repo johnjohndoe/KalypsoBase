@@ -48,7 +48,6 @@ import org.eclipse.swt.graphics.Point;
 
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
-import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.DIRECTION;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
 
 /**
@@ -80,46 +79,52 @@ public class GenericDateTickCalculator implements ITickCalculator
     }
 
     // Mini- und maximalen ANZEIGBAREN Wert ermitteln anhand der Größe der Labels
-    int screenMin, screenMax;
+    // Kim: aber bitte nicht hier, LabelCreator entscheidet ob gezeichnet wird
+// int screenMin, screenMax;
     final IDataRange<Number> range = axis.getNumericRange();
-
-    if( axis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
-    {
-      if( axis.getDirection() == DIRECTION.POSITIVE )
-      {
-        screenMin = (int) (axis.numericToScreen( range.getMin() ) + Math.ceil( 0.5 * ticklabelSize.x ));
-        screenMax = (int) (axis.numericToScreen( range.getMax() ) - Math.ceil( 0.5 * ticklabelSize.x ));
-      }
-      else
-      {
-
-        screenMin = (int) (axis.numericToScreen( range.getMin() ) - Math.ceil( 0.5 * ticklabelSize.x ));
-        screenMax = (int) (axis.numericToScreen( range.getMax() ) + Math.ceil( 0.5 * ticklabelSize.x ));
-      }
-    }
-    else
-    {
-      if( axis.getDirection() == DIRECTION.POSITIVE )
-      {
-        screenMin = (int) (axis.numericToScreen( range.getMin() ) - Math.ceil( 0.5 * ticklabelSize.y ));
-        screenMax = (int) (axis.numericToScreen( range.getMax() ) + Math.ceil( 0.5 * ticklabelSize.y ));
-      }
-      else
-      {
-        screenMin = (int) (axis.numericToScreen( range.getMin() ) + Math.ceil( 0.5 * ticklabelSize.y ));
-        screenMax = (int) (axis.numericToScreen( range.getMax() ) - Math.ceil( 0.5 * ticklabelSize.y ));
-      }
-
-    }
+//
+// if( axis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
+// {
+// if( axis.getDirection() == DIRECTION.POSITIVE )
+// {
+// screenMin = (int) (axis.numericToScreen( range.getMin() ) + Math.ceil( 0.5 * ticklabelSize.x ));
+// screenMax = (int) (axis.numericToScreen( range.getMax() ) - Math.ceil( 0.5 * ticklabelSize.x ));
+// }
+// else
+// {
+//
+// screenMin = (int) (axis.numericToScreen( range.getMin() ) - Math.ceil( 0.5 * ticklabelSize.x ));
+// screenMax = (int) (axis.numericToScreen( range.getMax() ) + Math.ceil( 0.5 * ticklabelSize.x ));
+// }
+// }
+// else
+// {
+// if( axis.getDirection() == DIRECTION.POSITIVE )
+// {
+// screenMin = (int) (axis.numericToScreen( range.getMin() ) - Math.ceil( 0.5 * ticklabelSize.y ));
+// screenMax = (int) (axis.numericToScreen( range.getMax() ) + Math.ceil( 0.5 * ticklabelSize.y ));
+// }
+// else
+// {
+// screenMin = (int) (axis.numericToScreen( range.getMin() ) + Math.ceil( 0.5 * ticklabelSize.y ));
+// screenMax = (int) (axis.numericToScreen( range.getMax() ) - Math.ceil( 0.5 * ticklabelSize.y ));
+// }
+//
+// }
 
     // Ab jetzt wird nur noch mit long gerechnet
 
     // logischen mini- und maximalen Wert ermitteln
-    final long logicalMin = axis.screenToNumeric( screenMin ).longValue();
-    final long logicalMax = axis.screenToNumeric( screenMax ).longValue();
+    final long logicalMin = range.getMin().longValue();// axis.screenToNumeric( screenMin ).longValue();
+    final long logicalMax = range.getMax().longValue();// axis.screenToNumeric( screenMax ).longValue();
 
     // der minimale logische Abstand
-    final long minLogInterval = minDisplayInterval == null ? Math.abs( axis.screenToNumeric( minScreenInterval ).longValue() - axis.screenToNumeric( 0 ).longValue() ) : minDisplayInterval.longValue();
+    final long minLogInterval;
+    if( minDisplayInterval == null || minDisplayInterval.intValue() == 0 )
+      minLogInterval = Math.abs( axis.screenToNumeric( minScreenInterval ).longValue() - axis.screenToNumeric( 0 ).longValue() );
+    else
+      minLogInterval = minDisplayInterval.longValue();
+
     // ein paar Größen
     final long secondInMillis = 1000;
     final long minuteInMillis = secondInMillis * 60;
