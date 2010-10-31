@@ -111,7 +111,7 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
 
   public AbstractProfilTheme( final IProfil profil, final String id, final String title, final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm, final ILayerStyleProvider styleProvider )
   {
-    super( id, profil, "", styleProvider );
+    super( id, profil, "", styleProvider ); //$NON-NLS-1$
 
     m_title = title;
     m_id = id;

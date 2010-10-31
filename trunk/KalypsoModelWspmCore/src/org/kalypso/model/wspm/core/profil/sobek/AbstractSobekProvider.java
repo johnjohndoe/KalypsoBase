@@ -50,6 +50,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
+import org.kalypso.model.wspm.core.i18n.Messages;
 import org.kalypso.model.wspm.core.profil.sobek.profiles.SobekProfile;
 
 /**
@@ -91,26 +92,24 @@ public abstract class AbstractSobekProvider
     try
     {
       /* Get the profiles. */
-      IProfileFeature[] profiles = getProfiles();
+      final IProfileFeature[] profiles = getProfiles();
 
       /* Monitor. */
-      monitor.beginTask( "Converting profiles...", profiles.length * 100 );
-      monitor.subTask( "Converting profiles..." );
+      final String taskName = Messages.getString("AbstractSobekProvider_0"); //$NON-NLS-1$
+      monitor.beginTask( taskName, profiles.length * 100 );
+      monitor.subTask( taskName );
 
       /* Memory for the results. */
-      List<SobekProfile> results = new ArrayList<SobekProfile>();
+      final List<SobekProfile> results = new ArrayList<SobekProfile>();
 
-      for( int i = 0; i < profiles.length; i++ )
+      for( final IProfileFeature profileFeature : profiles )
       {
         /* Monitor. */
         if( monitor.isCanceled() )
-          throw new CoreException( new Status( IStatus.CANCEL, KalypsoModelWspmCorePlugin.getID(), "The operation was canceled by the user..." ) );
-
-        /* Get the profile. */
-        IProfileFeature profileFeature = profiles[i];
+          throw new CoreException( new Status( IStatus.CANCEL, KalypsoModelWspmCorePlugin.getID(), Messages.getString("AbstractSobekProvider_1") ) ); //$NON-NLS-1$
 
         /* Convert the profile into a sobek profile. */
-        SobekProfile sobekProfile = convertProfile( profileFeature );
+        final SobekProfile sobekProfile = convertProfile( profileFeature );
 
         /* Add to the results. */
         results.add( sobekProfile );

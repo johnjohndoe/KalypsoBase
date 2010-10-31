@@ -43,6 +43,7 @@ package org.kalypso.model.wspm.core.profil.sobek.profiles;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
+import org.kalypso.model.wspm.core.i18n.Messages;
 
 /**
  * A sobek profile.
@@ -54,12 +55,12 @@ public class SobekProfile
   /**
    * The data for the file 'profile.dat'.
    */
-  private SobekProfileDat m_profileDat;
+  private final SobekProfileDat m_profileDat;
 
   /**
    * The data for the file 'profile.def'.
    */
-  private SobekProfileDef m_profileDef;
+  private final SobekProfileDef m_profileDef;
 
   /**
    * The constructor.
@@ -69,7 +70,7 @@ public class SobekProfile
    * @param profileDef
    *          The data for the file 'profile.def'.
    */
-  public SobekProfile( SobekProfileDat profileDat, SobekProfileDef profileDef )
+  public SobekProfile( final SobekProfileDat profileDat, final SobekProfileDef profileDef )
   {
     m_profileDat = profileDat;
     m_profileDef = profileDef;
@@ -78,25 +79,25 @@ public class SobekProfile
   public IStatus validate( )
   {
     if( m_profileDat == null )
-      return new Status( IStatus.ERROR, KalypsoModelWspmCorePlugin.getID(), "No data for the file 'profile.dat' available..." );
+      return new Status( IStatus.ERROR, KalypsoModelWspmCorePlugin.getID(), Messages.getString("SobekProfile_0") ); //$NON-NLS-1$
 
     if( m_profileDef == null )
-      return new Status( IStatus.ERROR, KalypsoModelWspmCorePlugin.getID(), "No data for the file 'profile.def' available..." );
+      return new Status( IStatus.ERROR, KalypsoModelWspmCorePlugin.getID(), Messages.getString("SobekProfile_1") ); //$NON-NLS-1$
 
-    IStatus statusDat = m_profileDat.validate();
+    final IStatus statusDat = m_profileDat.validate();
     if( !statusDat.isOK() )
       return statusDat;
 
-    IStatus statusDef = m_profileDef.validate();
+    final IStatus statusDef = m_profileDef.validate();
     if( !statusDef.isOK() )
       return statusDef;
 
-    String di = m_profileDat.getDi();
-    String id = m_profileDef.getId();
+    final String di = m_profileDat.getDi();
+    final String id = m_profileDef.getId();
     if( !di.equals( id ) )
-      return new Status( IStatus.ERROR, KalypsoModelWspmCorePlugin.getID(), "The ids of the cross section definition does not match..." );
+      return new Status( IStatus.ERROR, KalypsoModelWspmCorePlugin.getID(), Messages.getString("SobekProfile_2") ); //$NON-NLS-1$
 
-    return new Status( IStatus.OK, KalypsoModelWspmCorePlugin.getID(), "OK" );
+    return Status.OK_STATUS;
   }
 
   /**

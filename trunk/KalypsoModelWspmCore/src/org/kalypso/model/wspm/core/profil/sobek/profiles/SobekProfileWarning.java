@@ -105,16 +105,16 @@ public class SobekProfileWarning
   public String serialize( )
   {
     if( m_warnings.size() == 0 )
-      return "";
+      return ""; //$NON-NLS-1$
 
     StringBuilder line = new StringBuilder();
-    line.append( " #" );
+    line.append( " #" ); //$NON-NLS-1$
 
     for( int i = 0; i < m_warnings.size(); i++ )
     {
       line.append( m_warnings.get( i ) );
       if( i < m_warnings.size() - 1 )
-        line.append( " #" );
+        line.append( " #" ); //$NON-NLS-1$
     }
 
     return line.toString();

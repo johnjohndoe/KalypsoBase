@@ -56,7 +56,7 @@ public final class FeatureThemeWizardUtilitites
 {
   private FeatureThemeWizardUtilitites( )
   {
-    throw new UnsupportedOperationException( "helper class, don't instantiate" );
+    throw new UnsupportedOperationException( "helper class, don't instantiate" ); //$NON-NLS-1$
   }
 
   public static IKalypsoFeatureTheme findTheme( final ISelection selection )

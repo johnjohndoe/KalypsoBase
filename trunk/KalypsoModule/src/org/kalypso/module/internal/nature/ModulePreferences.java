@@ -47,6 +47,8 @@ import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.kalypso.module.internal.Module;
 import org.kalypso.module.nature.IModulePreferences;
 import org.kalypso.module.nature.ModuleNature;
+import org.kalypso.module.nature.ModuleUtils;
+import org.osgi.framework.Version;
 import org.osgi.service.prefs.BackingStoreException;
 
 /**
@@ -71,7 +73,7 @@ public class ModulePreferences implements IModulePreferences
     }
     catch( final BackingStoreException e )
     {
-      final IStatus status = new Status( IStatus.ERROR, Module.PLUGIN_ID, "Failed to write preferences", e );
+      final IStatus status = new Status( IStatus.ERROR, Module.PLUGIN_ID, "Failed to write preferences", e ); //$NON-NLS-1$
       Module.getDefault().getLog().log( status );
     }
   }
@@ -95,12 +97,24 @@ public class ModulePreferences implements IModulePreferences
   }
 
   /**
+   * @see org.kalypso.module.nature.IModulePreferences#setVersion(org.osgi.framework.Version)
+   */
+  @Override
+  public void setVersion( final Version version )
+  {
+    final Version versionToSet = ModuleUtils.removeQualifier( version );
+    final String versionPref = versionToSet.equals( Version.emptyVersion ) ? null : versionToSet.toString();
+    writePreference( PREFERENCE_VERSION, versionPref );
+  }
+
+  /**
    * @see org.kalypso.module.nature.IModulePreferences#getVersion()
    */
   @Override
-  public String getVersion( )
+  public Version getVersion( )
   {
-    return m_node.get( PREFERENCE_VERSION, null );
+    final String property = m_node.get( PREFERENCE_VERSION, null );
+    return ModuleUtils.parseVersion( property );
   }
 
 }

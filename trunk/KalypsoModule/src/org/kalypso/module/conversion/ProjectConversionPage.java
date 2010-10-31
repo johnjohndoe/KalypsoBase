@@ -54,7 +54,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.ui.forms.widgets.ColumnLayout;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
-import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserDelegateDirectory;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup.FileChangedListener;
@@ -62,6 +61,7 @@ import org.kalypso.module.conversion.internal.ConverterUtils;
 import org.kalypso.module.conversion.internal.ProjectConversionOperation;
 import org.kalypso.module.conversion.internal.ProjectConverterExtensions;
 import org.kalypso.module.utils.projectinfo.ProjectInfoComposite;
+import org.osgi.framework.Version;
 
 /**
  * Lets the user choose which project to import and convert (only external projects supported now). <br/>
@@ -188,10 +188,11 @@ public class ProjectConversionPage extends WizardPage
     return m_projectChooserGroup.getFile();
   }
 
-  public ICoreRunnableWithProgress getConversionOperation( final File sourceDir, final File targetDir, final IProject targetProject ) throws CoreException
+  public IProjectConversionOperation getConversionOperation( final File sourceDir, final File targetDir, final IProject targetProject ) throws CoreException
   {
+    final Version sourceVersion = m_infoGroup.getVersion();
     final IProjectConverterFactory factory = ProjectConverterExtensions.getProjectConverter( m_moduleID );
-    final IProjectConverter converter = ConverterUtils.createConverter( factory, sourceDir, targetDir );
+    final IProjectConverter converter = ConverterUtils.createConverter( factory, sourceVersion, sourceDir, targetDir );
 
     return new ProjectConversionOperation( targetProject, converter );
   }

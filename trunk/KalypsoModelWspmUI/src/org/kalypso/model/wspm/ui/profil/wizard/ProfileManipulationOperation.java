@@ -23,6 +23,7 @@ import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
+import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -62,7 +63,7 @@ public final class ProfileManipulationOperation implements ICoreRunnableWithProg
   @Override
   public IStatus execute( final IProgressMonitor monitor ) throws InterruptedException
   {
-    monitor.beginTask( "Changing Profiles", m_profileFeatures.length );
+    monitor.beginTask( Messages.getString("ProfileManipulationOperation_0"), m_profileFeatures.length ); //$NON-NLS-1$
 
     final Collection<IStatus> problems = new ArrayList<IStatus>();
     for( final Object profileObject : m_profileFeatures )
@@ -71,7 +72,7 @@ public final class ProfileManipulationOperation implements ICoreRunnableWithProg
       {
         final IProfileFeature profileFeature = (IProfileFeature) profileObject;
 
-        final String subTask = String.format( "%s (km %s)", profileFeature.getName(), profileFeature.getBigStation() );
+        final String subTask = String.format( Messages.getString("ProfileManipulationOperation_1"), profileFeature.getName(), profileFeature.getBigStation() ); //$NON-NLS-1$
         monitor.subTask( subTask );
 
         final IProfil profile = profileFeature.getProfil();
@@ -92,7 +93,7 @@ public final class ProfileManipulationOperation implements ICoreRunnableWithProg
       return Status.OK_STATUS;
 
     final IStatus[] problemStati = problems.toArray( new IStatus[problems.size()] );
-    return new MultiStatus( KalypsoModelWspmUIPlugin.ID, 0, problemStati, "Problems occured while changing the profiles. Continue anyways?", null );
+    return new MultiStatus( KalypsoModelWspmUIPlugin.ID, 0, problemStati, Messages.getString("ProfileManipulationOperation_2"), null ); //$NON-NLS-1$
   }
 
   public boolean perform( )
@@ -131,7 +132,7 @@ public final class ProfileManipulationOperation implements ICoreRunnableWithProg
       e.printStackTrace();
       final IStatus status = StatusUtilities.statusFromThrowable( e );
       final Shell shell = m_wizardContainer.getShell();
-      ErrorDialog.openError( shell, m_windowTitle, "Failed to apply profile changes", status );
+      ErrorDialog.openError( shell, m_windowTitle, Messages.getString("ProfileManipulationOperation_3"), status ); //$NON-NLS-1$
       return false;
     }
   }

@@ -71,7 +71,7 @@ public final class WspmProfileHelper
 {
   private WspmProfileHelper( )
   {
-    throw new UnsupportedOperationException( "Helper class, do not instantiate" );
+    throw new UnsupportedOperationException( "Helper class, do not instantiate" ); //$NON-NLS-1$
   }
 
   public static final double FUZZINESS = 0.005; // Inaccuracies profile of points

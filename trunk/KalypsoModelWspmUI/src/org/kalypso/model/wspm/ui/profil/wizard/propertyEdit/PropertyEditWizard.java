@@ -196,7 +196,7 @@ public class PropertyEditWizard extends Wizard
       @Override
       public void performProfileManipulation( final IProfil profile, final IProgressMonitor monitor )
       {
-        monitor.beginTask( "", 1 );
+        monitor.beginTask( "", 1 ); //$NON-NLS-1$
         operationChooserPage.changeProfile( profile, choosenProperties );
         monitor.done();
       }

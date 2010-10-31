@@ -741,7 +741,7 @@ public abstract class AbstractProfil implements IProfil
   {
     final Double station = getStation();
     if( station != null )
-      return String.format( "Profile %.3f km", station );
+      return String.format( Messages.getString("AbstractProfil_0"), station ); //$NON-NLS-1$
 
     return super.toString();
   }

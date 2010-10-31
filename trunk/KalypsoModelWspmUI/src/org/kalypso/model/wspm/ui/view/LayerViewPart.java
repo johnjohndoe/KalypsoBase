@@ -40,9 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.view;
 
-import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartModel;
@@ -77,6 +79,31 @@ public class LayerViewPart extends AbstractChartModelViewPart
       ControlUtils.syncExec( getParent(), runnable );
     }
   };
+
+  private ScrolledForm m_form;
+
+
+  /**
+   * @see org.kalypso.model.wspm.ui.view.AbstractChartModelViewPart#doCreateControl(org.eclipse.swt.widgets.Composite,
+   *      org.eclipse.ui.forms.widgets.FormToolkit)
+   */
+  @Override
+  protected Control doCreateControl( final Composite parent, final FormToolkit toolkit )
+  {
+    m_form = toolkit.createScrolledForm( parent );
+    m_form.setExpandHorizontal( false );
+    m_form.setExpandHorizontal( true );
+    toolkit.decorateFormHeading( m_form.getForm() );
+
+    m_parent = m_form.getBody();
+    m_parent.setLayout( new FillLayout() );
+
+    modelChanged( null );
+
+    updateControl();
+
+    return m_parent;
+  }
 
   /**
    * @see org.eclipse.ui.part.WorkbenchPart#dispose()
@@ -127,7 +154,9 @@ public class LayerViewPart extends AbstractChartModelViewPart
     IChartModel model = getChartModel();
     if( model != null && model instanceof ProfilChartModel && ((ProfilChartModel) model).getProfil() == null )
       model = null;
-    updatePartName( model, activeLayer == null ? null : activeLayer.getTitle() );
+
+    updatePartName( model, activeLayer == null ? null : activeLayer.getTitle(), m_form.getForm() );
+
     if( activeLayer == null )
       return;
 
@@ -135,22 +164,9 @@ public class LayerViewPart extends AbstractChartModelViewPart
 
     if( panel != null )
     {
-      final Control control = panel.createControl( m_parent, getToolkit() );
-      control.setLayoutData( new GridData( GridData.FILL_BOTH ) );
+      panel.createControl( m_parent, getToolkit() );
       m_parent.layout();
     }
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.ui.view.AbstractChartModelView#createControl(org.eclipse.swt.widgets.Composite)
-   */
-  @Override
-  protected void createControl( final Composite parent )
-  {
-    if( parent == null )
-      return;
-    m_parent = parent;
-    modelChanged( null );
   }
 
   /**
