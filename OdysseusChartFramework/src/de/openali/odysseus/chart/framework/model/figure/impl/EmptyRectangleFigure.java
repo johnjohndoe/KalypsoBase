@@ -59,7 +59,7 @@ public class EmptyRectangleFigure extends AbstractFigure<ILineStyle>
   /**
    * 
    */
-  public void setRectangle( Rectangle rect )
+  public void setRectangle( final Rectangle rect )
   {
     m_rect = rect;
   }
@@ -68,7 +68,7 @@ public class EmptyRectangleFigure extends AbstractFigure<ILineStyle>
    * @see de.openali.odysseus.chart.framework.model.figure.impl.AbstractFigure#paintFigure(org.eclipse.swt.graphics.GC)
    */
   @Override
-  protected void paintFigure( GC gc )
+  protected void paintFigure( final GC gc )
   {
     gc.drawRectangle( m_rect );
   }

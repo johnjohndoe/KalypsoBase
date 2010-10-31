@@ -256,16 +256,17 @@ public final class ChartImageFactory
     /* calc plot size */
     final Point titleSize = titleImageCreator.getSize();
     final Point legendSize = legendImageCreator.getSize();
+    final Rectangle plotRect = ChartImageFactory.calculatePlotSize( mapperRegistry, size.x, size.y - titleSize.y - legendSize.y );
+    // plotRect.y += titleSize.y;
 
-    final Rectangle plotRect = ChartImageFactory.calculatePlotSize( mapperRegistry, size.x, size.y - titleSize.y );
-    plotRect.y += titleSize.y;
+    /* fit Axes to plotRect */
     ChartImageFactory.setAxesHeight( mapperRegistry.getAxes(), plotRect );
 
     /* generate chartImages */
-    final Image axesImage = ChartImageFactory.createAxesImage( mapperRegistry, new Rectangle( 0, 0, size.x, size.y ), plotRect );
-    final Image titleImage = titleImageCreator.createImage( LABEL_POSITION.CENTERED );
+    final Image axesImage = ChartImageFactory.createAxesImage( mapperRegistry, new Rectangle( 0, 0, size.x, size.y - titleSize.y - legendSize.y ), plotRect );
+    final Image titleImage = titleImageCreator.createImage( LABEL_POSITION.CENTERED, new Point( size.x, titleSize.y ) );
     final Image plotImage = ChartImageFactory.createPlotImage( model.getLayerManager().getLayers(), plotRect );
-// final Image legendImage = legendImageCreator.createImage();
+    final Image legendImage = legendImageCreator.createImage();
 
     // draw images
     final Device dev = PlatformUI.getWorkbench().getDisplay();
@@ -274,14 +275,14 @@ public final class ChartImageFactory
     final GC tmpGc = new GC( image );
     try
     {
-      tmpGc.drawImage( axesImage, 0, 0 );
-
       if( titleImage != null )
         tmpGc.drawImage( titleImage, 0, 0 );
-
-      tmpGc.drawImage( plotImage, plotRect.x, plotRect.y );
-
+      if( legendImage != null )
+        tmpGc.drawImage( legendImage, 0, size.y-legendSize.y );
+      tmpGc.drawImage( axesImage, 0, titleSize.y );
+      tmpGc.drawImage( plotImage, plotRect.x, plotRect.y + titleSize.y );
       return image.getImageData();
+
     }
     finally
     {

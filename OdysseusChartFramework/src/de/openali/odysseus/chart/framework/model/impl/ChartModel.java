@@ -42,6 +42,8 @@ public class ChartModel implements IChartModel
   private final boolean m_autoscale = false;
 
   private boolean m_hideTitle = false;
+  
+  private boolean m_hideLegend = true;
 
   private String m_id = "";
 
@@ -55,40 +57,6 @@ public class ChartModel implements IChartModel
   {
     final AbstractLayerManagerEventListener m_layerManagerEventListener = new AbstractLayerManagerEventListener()
     {
-      /**
-       * @see de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener#onLayerContentChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
-       */
-      @Override
-      public void onLayerContentChanged( final IChartLayer layer )
-      {
-        if( isHideUnusedAxes() )
-        {
-          final ICoordinateMapper coordinateMapper = layer.getCoordinateMapper();
-          if( coordinateMapper != null )
-          {
-            hideUnusedAxis( coordinateMapper.getTargetAxis() );
-            hideUnusedAxis( coordinateMapper.getDomainAxis() );
-          }
-        }
-      }
-
-      /**
-       * @see de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener#onLayerVisibilityChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
-       */
-      @Override
-      public void onLayerVisibilityChanged( final IChartLayer layer )
-      {
-        if( isHideUnusedAxes() )
-        {
-          final ICoordinateMapper coordinateMapper = layer.getCoordinateMapper();
-          if( coordinateMapper != null )
-          {
-            hideUnusedAxis( coordinateMapper.getTargetAxis() );
-            hideUnusedAxis( coordinateMapper.getDomainAxis() );
-          }
-        }
-      }
-
       /**
        * @see de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener#onActivLayerChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
        */
@@ -115,6 +83,23 @@ public class ChartModel implements IChartModel
         updateAxisLayerMap( layer, true );
       }
 
+      /**
+       * @see de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener#onLayerContentChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
+       */
+      @Override
+      public void onLayerContentChanged( final IChartLayer layer )
+      {
+        if( isHideUnusedAxes() )
+        {
+          final ICoordinateMapper coordinateMapper = layer.getCoordinateMapper();
+          if( coordinateMapper != null )
+          {
+            hideUnusedAxis( coordinateMapper.getTargetAxis() );
+            hideUnusedAxis( coordinateMapper.getDomainAxis() );
+          }
+        }
+      }
+
       /*
        * (non-Javadoc)
        * @see
@@ -125,6 +110,23 @@ public class ChartModel implements IChartModel
       public void onLayerRemoved( final IChartLayer layer )
       {
         updateAxisLayerMap( layer, false );
+      }
+
+      /**
+       * @see de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener#onLayerVisibilityChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
+       */
+      @Override
+      public void onLayerVisibilityChanged( final IChartLayer layer )
+      {
+        if( isHideUnusedAxes() )
+        {
+          final ICoordinateMapper coordinateMapper = layer.getCoordinateMapper();
+          if( coordinateMapper != null )
+          {
+            hideUnusedAxis( coordinateMapper.getTargetAxis() );
+            hideUnusedAxis( coordinateMapper.getDomainAxis() );
+          }
+        }
       }
     };
 
@@ -297,6 +299,14 @@ public class ChartModel implements IChartModel
     return new ChartModelState( getLayerManager() );
   }
 
+  @Override
+  public ITextStyle getTextStyle( )
+  {
+    if( m_textStyle == null )
+      m_textStyle = StyleUtils.getDefaultTextStyle();
+    return m_textStyle;
+  }
+
   /**
    * @see de.openali.odysseus.chart.framework.model.IChartModel#getTitle()
    */
@@ -304,6 +314,46 @@ public class ChartModel implements IChartModel
   public String getTitle( )
   {
     return m_title;
+  }
+
+  protected void hideUnusedAxis( final IAxis axis )
+  {
+
+    // if axis has no layers, hide axis
+    final List<IChartLayer> list = m_axis2Layers.get( axis );
+    if( list == null || list.isEmpty() )
+    {
+      axis.setVisible( false );
+      return;
+    }
+
+    // if all layers are hidden, hide axis too
+    for( final IChartLayer layer : list )
+    {
+      if( layer.isVisible() )
+      {
+        axis.setVisible( true );
+        return;
+      }
+    }
+
+    axis.setVisible( false );
+
+  }
+
+  @Override
+  public boolean isHideLegend( )
+  {
+    return m_hideLegend;
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.IChartModel#isHideTitle()
+   */
+  @Override
+  public boolean isHideTitle( )
+  {
+    return m_hideTitle;
   }
 
   /**
@@ -389,6 +439,23 @@ public class ChartModel implements IChartModel
     m_description = description;
   }
 
+  @Override
+  public void setHideLegend( final boolean hideLegend )
+  {
+    m_hideLegend = hideLegend;
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.IChartModel#setHideTitle(boolean)
+   */
+  @Override
+  public void setHideTitle( final boolean b )
+  {
+    if( isHideTitle() != b )
+      m_hideTitle = b;
+
+  }
+
   /*
    * (non-Javadoc)
    * @see org.kalypso.chart.framework.model.IChartModel#setHideUnusedAxes(boolean)
@@ -415,31 +482,6 @@ public class ChartModel implements IChartModel
 
   }
 
-  protected void hideUnusedAxis( final IAxis axis )
-  {
-
-    // if axis has no layers, hide axis
-    final List<IChartLayer> list = m_axis2Layers.get( axis );
-    if( list == null || list.isEmpty() )
-    {
-      axis.setVisible( false );
-      return;
-    }
-
-    // if all layers are hidden, hide axis too
-    for( final IChartLayer layer : list )
-    {
-      if( layer.isVisible() )
-      {
-        axis.setVisible( true );
-        return;
-      }
-    }
-
-    axis.setVisible( false );
-
-  }
-
   /**
    * @see de.openali.odysseus.chart.framework.model.IChartModel#setId()
    */
@@ -447,6 +489,11 @@ public class ChartModel implements IChartModel
   public void setId( final String id )
   {
     m_id = id;
+  }
+
+  public void setTextStyle( final ITextStyle textStyle )
+  {
+    m_textStyle = textStyle;
   }
 
   /**
@@ -651,37 +698,5 @@ public class ChartModel implements IChartModel
         }
       }
     }
-  }
-
-  public ITextStyle getTextStyle( )
-  {
-    if( m_textStyle == null )
-      m_textStyle = StyleUtils.getDefaultTextStyle();
-    return m_textStyle;
-  }
-
-  public void setTextStyle( final ITextStyle textStyle )
-  {
-    m_textStyle = textStyle;
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.framework.model.IChartModel#setHideTitle(boolean)
-   */
-  @Override
-  public void setHideTitle( final boolean b )
-  {
-    if( isHideTitle() != b )
-      m_hideTitle = b;
-
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.framework.model.IChartModel#isHideTitle()
-   */
-  @Override
-  public boolean isHideTitle( )
-  {
-    return m_hideTitle;
   }
 }
