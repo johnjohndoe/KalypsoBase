@@ -184,7 +184,7 @@ public class WspLayer extends AbstractProfilTheme
    */
   public WspLayer( final IProfil profile, final String layerId, final ILayerStyleProvider styleProvider, final IWspLayerData data, final boolean fill, final ICoordinateMapper mapper )
   {
-    super( profile, layerId, "Wasserspiegel", null, mapper, styleProvider );
+    super( profile, layerId, Messages.getString("WspLayer.0"), null, mapper, styleProvider ); //$NON-NLS-1$
 
     m_profil = profile;
     m_data = data;

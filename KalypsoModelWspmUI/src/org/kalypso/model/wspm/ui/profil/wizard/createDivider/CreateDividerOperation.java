@@ -159,7 +159,7 @@ public class CreateDividerOperation implements ICoreRunnableWithProgress
       {
         final IProfileFeature profile = (IProfileFeature) object;
 
-        monitor.subTask( String.format( "%s (km %s)", profile.getName(), profile.getBigStation() ) );
+        monitor.subTask( String.format( "%s (km %s)", profile.getName(), profile.getBigStation() ) ); //$NON-NLS-1$
 
         final IProfil profil = profile.getProfil();
 

@@ -23,9 +23,9 @@ public class ProfileManagerPerspective implements IPerspectiveFactory
 {
   public final static String ID = "org.kalypso.model.wspm.ui.product.ProfileManagerPerspective"; //$NON-NLS-1$
 
-  public final static String OUTLINE_FOLDER_ID = ProfileManagerPerspective.class.getName() + ".outlineFolder";
+  public final static String OUTLINE_FOLDER_ID = ProfileManagerPerspective.class.getName() + ".outlineFolder"; //$NON-NLS-1$
 
-  public final static String TABLE_FOLDER_ID = ProfileManagerPerspective.class.getName() + ".tableFolder";
+  public final static String TABLE_FOLDER_ID = ProfileManagerPerspective.class.getName() + ".tableFolder"; //$NON-NLS-1$
 
   /**
    * @see org.eclipse.ui.IPerspectiveFactory#createInitialLayout(org.eclipse.ui.IPageLayout)
@@ -75,7 +75,7 @@ public class ProfileManagerPerspective implements IPerspectiveFactory
   {
     layout.setEditorAreaVisible( true );
 
-    final IPlaceholderFolderLayout topLeft = layout.createPlaceholderFolder( "topLeft", IPageLayout.LEFT, 0.25f, IPageLayout.ID_EDITOR_AREA );
+    final IPlaceholderFolderLayout topLeft = layout.createPlaceholderFolder( "topLeft", IPageLayout.LEFT, 0.25f, IPageLayout.ID_EDITOR_AREA ); //$NON-NLS-1$
     topLeft.addPlaceholder( IPageLayout.ID_PROJECT_EXPLORER );
     topLeft.addPlaceholder( IPageLayout.ID_RES_NAV );
 

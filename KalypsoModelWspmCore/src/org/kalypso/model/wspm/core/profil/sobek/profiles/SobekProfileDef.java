@@ -48,6 +48,7 @@ import java.util.Locale;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
+import org.kalypso.model.wspm.core.i18n.Messages;
 
 /**
  * This class containes data of a tabulated sobek profile, which will be stored in the file 'profile.def'.
@@ -62,77 +63,77 @@ public class SobekProfileDef
    * <strong>NOTE:</strong><br>
    * This id is referenced from a line in the file 'profile.dat'.
    */
-  private String m_id;
+  private final String m_id;
 
   /**
    * The name of the cross section definition.
    */
-  private String m_nm;
+  private final String m_nm;
 
   /**
    * The type of the cross section (0=table).
    */
-  private int m_ty;
+  private final int m_ty;
 
   /**
    * The width of the main channel.
    */
-  private BigDecimal m_wm;
+  private final BigDecimal m_wm;
 
   /**
    * The width of the floodplain 1 (used in River profile only, else value = 0).
    */
-  private BigDecimal m_w1;
+  private final BigDecimal m_w1;
 
   /**
    * The width of the floodplain 2 (used in River profile only, else value = 0).
    */
-  private BigDecimal m_w2;
+  private final BigDecimal m_w2;
 
   /**
    * The sediment transport width (not in SOBEK Urban/Rural). Default 0. Only important for module sediment/morfology.
    */
-  private BigDecimal m_sw;
+  private final BigDecimal m_sw;
 
   /**
    * The data for the heights of a tabulated sobek profile.
    */
-  private List<SobekProfileHeight> m_profileHeights;
+  private final List<SobekProfileHeight> m_profileHeights;
 
   /**
    * Summer dike (1 = active, 0 = not active) (in River profile only).
    */
-  private int m_dk;
+  private final int m_dk;
 
   /**
    * The dike crest level (in River profile only).
    */
-  private BigDecimal m_dc;
+  private final BigDecimal m_dc;
 
   /**
    * The floodplain base level behind the dike (in River profile only).
    */
-  private BigDecimal m_db;
+  private final BigDecimal m_db;
 
   /**
    * The flow area behind the dike (in River profile only).
    */
-  private BigDecimal m_df;
+  private final BigDecimal m_df;
 
   /**
    * The total area behind the dike (in River profile only).
    */
-  private BigDecimal m_dt;
+  private final BigDecimal m_dt;
 
   /**
    * The ground layer depth (meter relative to bed level).
    */
-  private BigDecimal m_gl;
+  private final BigDecimal m_gl;
 
   /**
    * The ground layer to be used within hydraulics calculation (1) or not (0).
    */
-  private int m_gu;
+  private final int m_gu;
 
   /**
    * The constructor.
@@ -168,7 +169,7 @@ public class SobekProfileDef
    * @param gu
    *          The ground layer to be used within hydraulics calculation (1) or not (0).
    */
-  public SobekProfileDef( String id, String nm, BigDecimal wm, BigDecimal w1, BigDecimal w2, BigDecimal sw, List<SobekProfileHeight> profileHeights, int dk, BigDecimal dc, BigDecimal db, BigDecimal df, BigDecimal dt, BigDecimal gl, int gu )
+  public SobekProfileDef( final String id, final String nm, final BigDecimal wm, final BigDecimal w1, final BigDecimal w2, final BigDecimal sw, final List<SobekProfileHeight> profileHeights, final int dk, final BigDecimal dc, final BigDecimal db, final BigDecimal df, final BigDecimal dt, final BigDecimal gl, final int gu )
   {
     m_id = id;
     m_nm = nm;
@@ -350,12 +351,12 @@ public class SobekProfileDef
   public IStatus validate( )
   {
     if( m_id == null || m_id.length() == 0 )
-      return new Status( IStatus.ERROR, KalypsoModelWspmCorePlugin.getID(), "The id of the cross section definition is mandatory..." );
+      return new Status( IStatus.ERROR, KalypsoModelWspmCorePlugin.getID(), "The id of the cross section definition is mandatory..." ); //$NON-NLS-1$
 
     if( m_nm == null || m_nm.length() == 0 )
-      return new Status( IStatus.ERROR, KalypsoModelWspmCorePlugin.getID(), "The name of the cross section definition is mandatory..." );
+      return new Status( IStatus.ERROR, KalypsoModelWspmCorePlugin.getID(), "The name of the cross section definition is mandatory..." ); //$NON-NLS-1$
 
-    return new Status( IStatus.OK, KalypsoModelWspmCorePlugin.getID(), "OK" );
+    return Status.OK_STATUS;
   }
 
   /**
@@ -366,7 +367,7 @@ public class SobekProfileDef
   public String serialize( )
   {
     /* Create warnings for each sobek profile height. */
-    List<SobekProfileWarning> profileWarnings = new ArrayList<SobekProfileWarning>();
+    final List<SobekProfileWarning> profileWarnings = new ArrayList<SobekProfileWarning>();
 
     /* Check all heights, full widths and flow widths. */
     double lastHeight = -1.0;
@@ -375,24 +376,24 @@ public class SobekProfileDef
     for( int i = 0; i < m_profileHeights.size(); i++ )
     {
       /* Get the sobek profile height. */
-      SobekProfileHeight profileHeight = m_profileHeights.get( i );
+      final SobekProfileHeight profileHeight = m_profileHeights.get( i );
 
       /* Create a sobek profile warning. */
       /* It will be empty. */
-      SobekProfileWarning profileWarning = new SobekProfileWarning();
+      final SobekProfileWarning profileWarning = new SobekProfileWarning();
 
       /* Get the values. */
-      double height = profileHeight.getHeight().doubleValue();
-      double fullWidth = profileHeight.getFullWidth().doubleValue();
-      double flowWidth = profileHeight.getFlowWidth().doubleValue();
+      final double height = profileHeight.getHeight().doubleValue();
+      final double fullWidth = profileHeight.getFullWidth().doubleValue();
+      final double flowWidth = profileHeight.getFlowWidth().doubleValue();
 
       /* Create a warning. */
       if( height < lastHeight || fullWidth < lastFullWidth || flowWidth < lastFlowWidth )
-        profileWarning.addWarning( String.format( Locale.PRC, "Check current line with previous line: %f>=%f %f>=%f %f>=%f", height, lastHeight, fullWidth, lastFullWidth, flowWidth, lastFlowWidth ) );
+        profileWarning.addWarning( String.format( Locale.PRC, Messages.getString("SobekProfileDef_0"), height, lastHeight, fullWidth, lastFullWidth, flowWidth, lastFlowWidth ) ); //$NON-NLS-1$
 
       /* Create a warning. */
       if( fullWidth < flowWidth )
-        profileWarning.addWarning( String.format( Locale.PRC, "Flow width (%f) is larger than full width (%f)", flowWidth, fullWidth ) );
+        profileWarning.addWarning( String.format( Locale.PRC, Messages.getString("SobekProfileDef_4"), flowWidth, fullWidth ) ); //$NON-NLS-1$
 
       /* Store the warning. */
       profileWarnings.add( profileWarning );
@@ -404,20 +405,20 @@ public class SobekProfileDef
     }
 
     BigDecimal w2 = m_w2;
-    double width = m_wm.doubleValue() + m_w1.doubleValue() + m_w2.doubleValue();
-    double diff = width - lastFlowWidth;
+    final double width = m_wm.doubleValue() + m_w1.doubleValue() + m_w2.doubleValue();
+    final double diff = width - lastFlowWidth;
     if( Math.abs( diff ) > 0.0001 )
     {
       /* Adjust the width of the flood plain 2. */
       w2 = new BigDecimal( lastFlowWidth - (m_wm.doubleValue() + m_w1.doubleValue()) );
 
       /* Add a warning in the last sobek profile warning. */
-      SobekProfileWarning profileWarning = profileWarnings.get( profileWarnings.size() - 1 );
-      profileWarning.addWarning( String.format( Locale.PRC, "Adjusted w2 (now %f) because: wm + w1 + w2 (%f) != flow width (%f)", w2, width, lastFlowWidth ) );
+      final SobekProfileWarning profileWarning = profileWarnings.get( profileWarnings.size() - 1 );
+      profileWarning.addWarning( String.format( Locale.PRC, Messages.getString("SobekProfileDef_5"), w2, width, lastFlowWidth ) ); //$NON-NLS-1$
     }
 
     /* Create a string builder. */
-    StringBuilder line = new StringBuilder();
+    final StringBuilder line = new StringBuilder();
 
     /* Serialize. */
     line.append( serializeCrdsStart( m_id, m_nm, m_ty, m_wm, m_w1, w2, m_sw, m_gl, m_gu ) );
@@ -428,49 +429,49 @@ public class SobekProfileDef
     return line.toString();
   }
 
-  private String serializeCrdsStart( String id, String nm, int ty, BigDecimal wm, BigDecimal w1, BigDecimal w2, BigDecimal sw, BigDecimal gl, int gu )
+  private String serializeCrdsStart( final String id, final String nm, final int ty, final BigDecimal wm, final BigDecimal w1, final BigDecimal w2, final BigDecimal sw, final BigDecimal gl, final int gu )
   {
-    return String.format( Locale.PRC, "CRDS id '%s' nm '%s' ty %d wm %.2f w1 %.2f w2 %.2f sw %.2f gl %.2f gu %d lt lw%n", id, nm, ty, wm, w1, w2, sw, gl, gu );
+    return String.format( Locale.PRC, "CRDS id '%s' nm '%s' ty %d wm %.2f w1 %.2f w2 %.2f sw %.2f gl %.2f gu %d lt lw%n", id, nm, ty, wm, w1, w2, sw, gl, gu ); //$NON-NLS-1$
   }
 
-  private String serializeTable( List<SobekProfileHeight> profileHeights, List<SobekProfileWarning> profileWarnings )
+  private String serializeTable( final List<SobekProfileHeight> profileHeights, final List<SobekProfileWarning> profileWarnings )
   {
     /* Create a string builder. */
-    StringBuilder line = new StringBuilder();
+    final StringBuilder line = new StringBuilder();
 
     /* Build the table. */
-    line.append( String.format( Locale.PRC, "TBLE%n" ) );
+    line.append( String.format( Locale.PRC, "TBLE%n" ) ); //$NON-NLS-1$
 
     /* Iterate through the sobek profile heights. */
     for( int i = 0; i < profileHeights.size(); i++ )
     {
       /* Get the elements. */
-      SobekProfileHeight profileHeight = profileHeights.get( i );
-      SobekProfileWarning profileWarning = profileWarnings.get( i );
+      final SobekProfileHeight profileHeight = profileHeights.get( i );
+      final SobekProfileWarning profileWarning = profileWarnings.get( i );
 
       /* Get the values. */
-      BigDecimal height = profileHeight.getHeight();
-      BigDecimal fullWidth = profileHeight.getFullWidth();
-      BigDecimal flowWidth = profileHeight.getFlowWidth();
-      String warning = profileWarning.serialize();
+      final BigDecimal height = profileHeight.getHeight();
+      final BigDecimal fullWidth = profileHeight.getFullWidth();
+      final BigDecimal flowWidth = profileHeight.getFlowWidth();
+      final String warning = profileWarning.serialize();
 
       /* Add the line. */
-      line.append( String.format( Locale.PRC, "%.2f %.2f %.2f <%s%n", height, fullWidth, flowWidth, warning ) );
+      line.append( String.format( Locale.PRC, "%.2f %.2f %.2f <%s%n", height, fullWidth, flowWidth, warning ) ); //$NON-NLS-1$
     }
 
     /* Finish the table. */
-    line.append( String.format( Locale.PRC, "tble%n" ) );
+    line.append( String.format( Locale.PRC, "tble%n" ) ); //$NON-NLS-1$
 
     return line.toString();
   }
 
-  private String serializeDikes( int dk, BigDecimal dc, BigDecimal db, BigDecimal df, BigDecimal dt )
+  private String serializeDikes( final int dk, final BigDecimal dc, final BigDecimal db, final BigDecimal df, final BigDecimal dt )
   {
-    return String.format( Locale.PRC, "dk %d dc %.2f db %.2f df %.2f dt %.2f%n", dk, dc, db, df, dt );
+    return String.format( Locale.PRC, "dk %d dc %.2f db %.2f df %.2f dt %.2f%n", dk, dc, db, df, dt ); //$NON-NLS-1$
   }
 
   private String serializeCrdsEnd( )
   {
-    return String.format( Locale.PRC, "crds" );
+    return String.format( Locale.PRC, "crds" ); //$NON-NLS-1$
   }
 }

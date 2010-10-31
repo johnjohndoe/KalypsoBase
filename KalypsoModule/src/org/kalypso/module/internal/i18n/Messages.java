@@ -38,16 +38,37 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.module.conversion;
+package org.kalypso.module.internal.i18n;
 
-import java.io.File;
+import java.util.ResourceBundle;
 
-import org.osgi.framework.Version;
+import org.kalypso.contribs.java.i18n.I18nUtils;
 
 /**
- * @author Gernot Belger
+ * @author kimwerner
  */
-public interface IProjectConverterInPlaceFactory extends IProjectConverterFactory
+public final class Messages
 {
-  IProjectConverter createConverter( Version sourceVersion, File projectDir );
+  private static final String BUNDLE_NAME = Messages.class.getPackage().getName() + ".messages"; //$NON-NLS-1$
+
+  private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle( BUNDLE_NAME );
+
+  private static final Object[] NO_ARGS = new Object[0];
+
+  private Messages( )
+  {
+  }
+
+/*
+ * java reflections needs this method-signatur
+ */
+  public static String getString( final String key )
+  {
+    return getString( key, NO_ARGS );
+  }
+
+  public static String getString( final String key, final Object... args )
+  {
+    return I18nUtils.formatMessage( RESOURCE_BUNDLE, key, args );
+  }
 }

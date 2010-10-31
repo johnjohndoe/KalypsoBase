@@ -98,6 +98,6 @@ public class PointRemove implements IProfilChange
   @Override
   public String toString( )
   {
-    return "Remove points";
+    return Messages.getString("PointRemove_0"); //$NON-NLS-1$
   }
 }

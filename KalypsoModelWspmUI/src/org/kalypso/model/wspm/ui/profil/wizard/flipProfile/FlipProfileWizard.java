@@ -69,7 +69,7 @@ public class FlipProfileWizard extends ManipulateProfileWizard
       @Override
       public void performProfileManipulation( final IProfil profile, final IProgressMonitor monitor )
       {
-        monitor.beginTask( "", 1 );
+        monitor.beginTask( "", 1 ); //$NON-NLS-1$
         ProfilUtil.flipProfile( profile, true );
         monitor.done();
       }

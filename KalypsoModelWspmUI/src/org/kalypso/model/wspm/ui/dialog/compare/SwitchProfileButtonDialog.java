@@ -52,6 +52,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChart;
 
 import de.openali.odysseus.chart.framework.util.ChartUtilities;
@@ -95,14 +96,14 @@ public class SwitchProfileButtonDialog extends Composite
     final GridData data = new GridData( GridData.FILL, GridData.CENTER, false, false );
     data.minimumWidth = 250;
 
-    toolkit.createLabel( this, "" ).setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+    toolkit.createLabel( this, "" ).setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) ); //$NON-NLS-1$
 
     m_label.setLayoutData( data );
 
-    final Button back = toolkit.createButton( this, "Profil zurück", SWT.PUSH );
+    final Button back = toolkit.createButton( this, Messages.getString("SwitchProfileButtonDialog_1") , SWT.PUSH ); //$NON-NLS-1$
     back.setLayoutData( getButtonLayoutData() );
 
-    final Button next = toolkit.createButton( this, "Profil vor", SWT.PUSH );
+    final Button next = toolkit.createButton( this, Messages.getString("SwitchProfileButtonDialog_2") , SWT.PUSH ); //$NON-NLS-1$
     next.setLayoutData( getButtonLayoutData() );
 
     back.addSelectionListener( new SelectionAdapter()
@@ -163,7 +164,7 @@ public class SwitchProfileButtonDialog extends Composite
     final IProfil profil = m_chartView.getProfil();
     final double station = profil.getStation();
 
-    final String msg = String.format( "Profil %.3f km (%d / %d)", station, getIndex() + 1, m_profiles.length );
+    final String msg = String.format( Messages.getString("SwitchProfileButtonDialog_3") , station, getIndex() + 1, m_profiles.length ); //$NON-NLS-1$
     return msg;
   }
 

@@ -41,17 +41,17 @@
 package org.kalypso.model.wspm.ui.view;
 
 import org.eclipse.jface.dialogs.IMessageProvider;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.part.ViewPart;
 import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
+import org.kalypso.contribs.eclipse.ui.forms.ToolkitUtils;
 import org.kalypso.contribs.eclipse.ui.partlistener.AdapterPartListener;
 import org.kalypso.contribs.eclipse.ui.partlistener.EditorFirstAdapterFinder;
 import org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater;
@@ -70,39 +70,32 @@ public abstract class AbstractChartModelViewPart extends ViewPart implements IAd
 {
   private final AdapterPartListener<IChartPart> m_chartProviderListener = new AdapterPartListener<IChartPart>( IChartPart.class, this, EditorFirstAdapterFinder.<IChartPart> instance(), EditorFirstAdapterFinder.<IChartPart> instance() );
 
-  private ScrolledForm m_form;
-
-  private FormToolkit m_toolkit;
-
   private IChartPart m_chartPart;
 
   private IChartModel m_chartModel;
 
   private String m_registeredName;
 
+  private Control m_control;
 
-  protected abstract void createControl( final Composite parent );
+  private FormToolkit m_toolkit;
 
   /**
    * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
    */
   @Override
-  public void createPartControl( final Composite parent )
+  public final void createPartControl( final Composite parent )
   {
-    m_toolkit = new FormToolkit( parent.getDisplay() );
-    m_form = m_toolkit.createScrolledForm( parent );
-    m_form.setExpandHorizontal( false );
-    m_toolkit.decorateFormHeading( m_form.getForm() );
+    m_toolkit = ToolkitUtils.createToolkit( parent );
 
-    final GridLayout bodyLayout = new GridLayout();
-    bodyLayout.marginHeight = 0;
-    bodyLayout.marginWidth = 0;
+    m_control = doCreateControl( parent, m_toolkit );
+  }
 
-    m_form.getBody().setLayout( bodyLayout );
+  protected abstract Control doCreateControl( Composite parent, FormToolkit toolkit );
 
-    createControl( m_form.getBody() );
-
-    updateControl();
+  protected FormToolkit getToolkit( )
+  {
+    return m_toolkit;
   }
 
   /**
@@ -114,8 +107,6 @@ public abstract class AbstractChartModelViewPart extends ViewPart implements IAd
     getSite().setSelectionProvider( null );
     if( m_chartPart != null )
       m_chartPart.removeListener( this );
-    m_toolkit.dispose();
-    m_form.dispose();
 
     super.dispose();
   }
@@ -145,16 +136,27 @@ public abstract class AbstractChartModelViewPart extends ViewPart implements IAd
     return m_chartPart;
   }
 
- 
+  protected final void updatePartName( final IChartModel model, final String message, final Form form )
+  {
+    if( form == null || form.isDisposed() )
+      return;
+
+    if( model == null )
+    {
+      setPartName( m_registeredName );
+      form.setMessage( Messages.getString( "org.kalypso.model.wspm.ui.view.legend.LegendView.2" ), IMessageProvider.INFORMATION ); //$NON-NLS-1$
+    }
+    else
+    {
+      form.setMessage( message );
+      setPartName( getStationName( model ) );
+    }
+  }
+
   private String getStationName( final IChartModel model )
   {
     final IProfil profil = model instanceof ProfilChartModel ? ((ProfilChartModel) model).getProfil() : null;
-    return profil == null ? null : String.format( "Station km %10.4f", profil.getStation() );
-  }
-
-  public FormToolkit getToolkit( )
-  {
-    return m_toolkit;
+    return profil == null ? null : String.format( Messages.getString( "AbstractChartModelViewPart.0" ), profil.getStation() ); //$NON-NLS-1$
   }
 
   @Override
@@ -188,7 +190,7 @@ public abstract class AbstractChartModelViewPart extends ViewPart implements IAd
       }
     };
 
-    ControlUtils.asyncExec( m_form, runnable );
+    ControlUtils.asyncExec( m_control, runnable );
 
   }
 
@@ -219,36 +221,10 @@ public abstract class AbstractChartModelViewPart extends ViewPart implements IAd
   @Override
   public void setFocus( )
   {
-    if( m_form != null )
-    {
-      final Control control = m_form.getBody();
-      if( control != null && !control.isDisposed() )
-        control.setFocus();
-    }
+    if( m_control != null && !m_control.isDisposed() )
+      m_control.setFocus();
   }
 
   /** Must be called in SWT thread */
   protected abstract void updateControl( );
-
-  protected final void updatePartName( final IChartModel model )
-  {
-    updatePartName( model, null );
-  }
-
-  protected final void updatePartName( final IChartModel model, final String message )
-  {
-    if( m_form == null || m_form.isDisposed() )
-      return;
-    if( model == null )
-    {
-      setPartName( m_registeredName );
-      m_form.setMessage( Messages.getString( "org.kalypso.model.wspm.ui.view.legend.LegendView.2" ), IMessageProvider.INFORMATION ); //$NON-NLS-1$
-    }
-    else
-    {
-      m_form.getForm().setMessage( message );
-      setPartName( getStationName( model ) );
-    }
-  }
-
 }

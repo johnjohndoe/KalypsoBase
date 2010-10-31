@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestra�e 22
+ *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,16 +38,44 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.module.conversion;
-
-import java.io.File;
+package org.kalypso.module.nature;
 
 import org.osgi.framework.Version;
 
 /**
  * @author Gernot Belger
  */
-public interface IProjectConverterInPlaceFactory extends IProjectConverterFactory
+public final class ModuleUtils
 {
-  IProjectConverter createConverter( Version sourceVersion, File projectDir );
+  private ModuleUtils( )
+  {
+    throw new UnsupportedOperationException( "Helper class, do not instantiate" );
+  }
+
+  /** Parses the module version from its perferences. */
+  public static Version parseVersion( final String property )
+  {
+    try
+    {
+      return Version.parseVersion( property );
+    }
+    catch( final IllegalArgumentException e )
+    {
+      e.printStackTrace();
+      return Version.emptyVersion;
+    }
+  }
+
+  public static Version removeQualifier( final Version version )
+  {
+    if( version == null )
+      return null;
+
+    final String qualifier = version.getQualifier();
+    if( "qualifier".equals( qualifier ) ) //$NON-NLS-1$
+      return new Version( version.getMajor(), version.getMinor(), version.getMicro() );
+
+    return version;
+  }
+
 }

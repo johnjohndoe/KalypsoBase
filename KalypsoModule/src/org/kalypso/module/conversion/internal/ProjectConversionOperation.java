@@ -45,13 +45,16 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.swt.widgets.Shell;
 import org.kalypso.module.conversion.AbstractLoggingOperation;
+import org.kalypso.module.conversion.IProjectConversionOperation;
 import org.kalypso.module.conversion.IProjectConverter;
+import org.kalypso.module.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
  */
-public class ProjectConversionOperation extends AbstractLoggingOperation
+public class ProjectConversionOperation extends AbstractLoggingOperation implements IProjectConversionOperation
 {
   private final IProjectConverter m_converter;
 
@@ -59,10 +62,19 @@ public class ProjectConversionOperation extends AbstractLoggingOperation
 
   public ProjectConversionOperation( final IProject project, final IProjectConverter converter )
   {
-    super( "Projektkonvertierung" );
+    super( Messages.getString("ProjectConversionOperation.0") ); //$NON-NLS-1$
 
     m_project = project;
     m_converter = converter;
+  }
+
+  /**
+   * @see org.kalypso.module.conversion.IProjectConversionOperation#preConversion(org.eclipse.swt.widgets.Shell)
+   */
+  @Override
+  public IStatus preConversion( final Shell shell )
+  {
+    return m_converter.preConversion( shell );
   }
 
   /**
@@ -71,7 +83,7 @@ public class ProjectConversionOperation extends AbstractLoggingOperation
   @Override
   protected void doExecute( final IProgressMonitor monitor ) throws Exception
   {
-    final String taskName = String.format( "Konvertiere '%s' - %s", m_project.getName(), m_converter.getLabel() );
+    final String taskName = String.format( Messages.getString("ProjectConversionOperation.1"), m_project.getName(), m_converter.getLabel() ); //$NON-NLS-1$
     monitor.beginTask( taskName, 100 );
 
     try
@@ -84,5 +96,6 @@ public class ProjectConversionOperation extends AbstractLoggingOperation
       m_project.refreshLocal( IResource.DEPTH_INFINITE, new SubProgressMonitor( monitor, 10 ) );
     }
   }
+
 
 }

@@ -49,6 +49,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.module.conversion.IProjectConverterFactory;
 import org.kalypso.module.internal.Module;
+import org.kalypso.module.internal.i18n.Messages;
 
 /**
  * Access to the project converter extension-point.
@@ -86,7 +87,7 @@ public final class ProjectConverterExtensions
       }
     }
 
-    final String msg = String.format( "No project converter available for module with ID: %s", moduleID );
+    final String msg = String.format( "No project converter available for module with ID: %s", moduleID ); //$NON-NLS-1$
     final IStatus error = new Status( IStatus.ERROR, Module.PLUGIN_ID, msg );
     throw new CoreException( error );
   }

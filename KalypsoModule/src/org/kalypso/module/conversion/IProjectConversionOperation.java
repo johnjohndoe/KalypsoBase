@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestra�e 22
+ *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -40,14 +40,19 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.module.conversion;
 
-import java.io.File;
-
-import org.osgi.framework.Version;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.swt.widgets.Shell;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 
 /**
  * @author Gernot Belger
  */
-public interface IProjectConverterInPlaceFactory extends IProjectConverterFactory
+public interface IProjectConversionOperation extends ICoreRunnableWithProgress
 {
-  IProjectConverter createConverter( Version sourceVersion, File projectDir );
+  /**
+   * Will be called before the execution of the conversion.<br/>
+   * Runs in the swt-thread.
+   */
+  IStatus preConversion( Shell shell );
+
 }

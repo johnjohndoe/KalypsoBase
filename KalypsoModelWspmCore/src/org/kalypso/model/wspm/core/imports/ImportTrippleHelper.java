@@ -145,7 +145,7 @@ public final class ImportTrippleHelper
               profiles.add( profile );
 
               profilPointList.clear();
-              numStations = numStations + 1;
+              numStations++;
             }
 
             profile = ProfilFactory.createProfil( profileType );
@@ -158,13 +158,13 @@ public final class ImportTrippleHelper
           }
 
           final IRecord point = ImportTrippleHelper.createProfilePoint( profile, profilPointList, tokenizer );
-          if( point != null)
+          if( point != null )
             profilPointList.add( point );
         }
         else
         {
           // inform the user that his profile has not enough values...
-          final String message = Messages.getString( "org.kalypso.model.wspm.core.imports.ImportTrippleHelper.0" ,(numStations + 1),count ); //$NON-NLS-1$
+          final String message = Messages.getString( "org.kalypso.model.wspm.core.imports.ImportTrippleHelper.0", count ); //$NON-NLS-1$
           throw new Exception( message );
           // continue;
         }
@@ -240,13 +240,13 @@ public final class ImportTrippleHelper
 
     if( !tokenizer.hasMoreElements() )
       return null;
-    
+
     final double y = Double.parseDouble( tokenizer.nextToken() );
     record.setValue( iHochwert, y );
 
     if( !tokenizer.hasMoreElements() )
       return null;
-    
+
     final double z = Double.parseDouble( tokenizer.nextToken() );
     record.setValue( iHoehe, z );
 

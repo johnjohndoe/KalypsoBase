@@ -48,11 +48,14 @@ import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProduct;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.module.internal.Module;
 import org.kalypso.module.internal.nature.ModuleFilePreferences;
 import org.kalypso.module.internal.nature.ModulePreferences;
+import org.osgi.framework.Version;
 
 /**
  * @author Gernot Belger
@@ -137,7 +140,7 @@ public class ModuleNature implements IProjectNature
     /* Paranoid: check if my ID is contained in the description (should never happen) */
     final int indexOfId = ArrayUtils.indexOf( natureIds, ID );
     if( indexOfId != -1 )
-      throw new IllegalStateException( "NatureId present but unable to akquire nature" );
+      throw new IllegalStateException( "NatureId present but unable to akquire nature" ); //$NON-NLS-1$
 
     final String[] newNatureIds = (String[]) ArrayUtils.add( natureIds, ID );
     description.setNatureIds( newNatureIds );
@@ -147,7 +150,22 @@ public class ModuleNature implements IProjectNature
     final ModuleNature newNature = toThisNature( project );
     Assert.isNotNull( newNature );
     newNature.checkModule( moduleID );
+    newNature.checkVersion();
+
     return newNature;
+  }
+
+  private void checkVersion( )
+  {
+    /* Find current kalypso version */
+    // HM: what if we have different product using the same module?
+
+    final IProduct product = Platform.getProduct();
+    final Version kalypsoVersion = product.getDefiningBundle().getVersion();
+
+    final Version currentVersion = getPreferences().getVersion();
+    if( Version.emptyVersion.equals( currentVersion ) )
+      getPreferences().setVersion( kalypsoVersion );
   }
 
   private void checkModule( final String moduleID ) throws CoreException
@@ -160,7 +178,7 @@ public class ModuleNature implements IProjectNature
     {
       if( !projectModuleID.equals( moduleID ) )
       {
-        final String msg = String.format( "Trying to set module ID (%s), but project already has a different module id: %s", moduleID, projectModuleID );
+        final String msg = String.format( "Trying to set module ID (%s), but project already has a different module id: %s", moduleID, projectModuleID ); //$NON-NLS-1$
         final IStatus status = new Status( IStatus.ERROR, Module.PLUGIN_ID, msg );
         throw new CoreException( status );
       }

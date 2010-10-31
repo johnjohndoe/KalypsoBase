@@ -38,16 +38,21 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.module.conversion;
+package org.kalypso.module.internal;
 
-import java.io.File;
+import java.util.Comparator;
 
-import org.osgi.framework.Version;
+import org.kalypso.module.IKalypsoModule;
 
-/**
- * @author Gernot Belger
- */
-public interface IProjectConverterInPlaceFactory extends IProjectConverterFactory
+public final class ModuleComparator implements Comparator<IKalypsoModule>
 {
-  IProjectConverter createConverter( Version sourceVersion, File projectDir );
+  @Override
+  public int compare( final IKalypsoModule o1, final IKalypsoModule o2 )
+  {
+    final int compare = o1.getPriority().compareTo( o2.getPriority() );
+    if( compare == 0 )
+      return o1.getHeader().compareTo( o2.getHeader() );
+
+    return compare;
+  }
 }

@@ -433,7 +433,6 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
   public void lockLayer( final boolean isLocked )
   {
     m_isLocked = isLocked;
-
   }
 
   /**

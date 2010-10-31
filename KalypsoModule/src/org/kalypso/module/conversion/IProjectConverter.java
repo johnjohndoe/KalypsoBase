@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.module.conversion;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.swt.widgets.Shell;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 
 /**
@@ -50,4 +52,6 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 public interface IProjectConverter extends ICoreRunnableWithProgress
 {
   String getLabel( );
+
+  IStatus preConversion( Shell shell );
 }
