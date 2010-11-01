@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package de.openali.odysseus.chart.framework.util.img;
 
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 
 /**
@@ -48,5 +49,7 @@ import org.eclipse.swt.graphics.Point;
 public interface ILegendStrategy
 {
   Point getSize( LegendImageCreator legendImageCreator );
+
+  Image createImage( LegendImageCreator legendImageCreator );
 
 }

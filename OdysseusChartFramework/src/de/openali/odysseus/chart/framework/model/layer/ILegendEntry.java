@@ -48,10 +48,6 @@ import org.eclipse.swt.graphics.Point;
  */
 public interface ILegendEntry
 {
-  String getDescription( );
-
-  ImageData getSymbol( Point size );
-
   /**
    * @param size
    *          the preferred size for width and height
@@ -59,6 +55,10 @@ public interface ILegendEntry
    */
   Point computeSize( Point size );
 
+  String getDescription( );
+
   IChartLayer getParentLayer( );
+
+  ImageData getSymbol( Point size );
 
 }

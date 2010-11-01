@@ -27,7 +27,9 @@ import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
 import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
+import de.openali.odysseus.chart.framework.model.style.ITextStyle;
 import de.openali.odysseus.chart.framework.util.ChartUtilities;
+import de.openali.odysseus.chart.framework.util.StyleUtils;
 
 /**
  * @author burtscher Creates an Image from a chart widget. The objects has to be disposed when it's no longer needed
@@ -253,6 +255,11 @@ public final class ChartImageFactory
     final TitleImageCreator titleImageCreator = new TitleImageCreator( model );
     final LegendImageCreator legendImageCreator = new LegendImageCreator( model, size.x );
 
+    // TODO define legend text style as kod style element
+    final ITextStyle legendTextStyle = StyleUtils.getDefaultTextStyle();
+    legendTextStyle.setHeight( 7 );
+    legendImageCreator.setTextStyle( legendTextStyle );
+
     /* calc plot size */
     final Point titleSize = titleImageCreator.getSize();
     final Point legendSize = legendImageCreator.getSize();
@@ -277,12 +284,14 @@ public final class ChartImageFactory
     {
       if( titleImage != null )
         tmpGc.drawImage( titleImage, 0, 0 );
-      if( legendImage != null )
-        tmpGc.drawImage( legendImage, 0, size.y-legendSize.y );
+
       tmpGc.drawImage( axesImage, 0, titleSize.y );
       tmpGc.drawImage( plotImage, plotRect.x, plotRect.y + titleSize.y );
-      return image.getImageData();
 
+      if( legendImage != null )
+        tmpGc.drawImage( legendImage, 0, size.y - legendSize.y );
+
+      return image.getImageData();
     }
     finally
     {

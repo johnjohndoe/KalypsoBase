@@ -59,7 +59,6 @@ public abstract class AbstractLineLayer extends AbstractChartLayer implements IT
   @Override
   public ILegendEntry[] createLegendEntries( )
   {
-
     final ArrayList<ILegendEntry> entries = new ArrayList<ILegendEntry>();
     final ILineStyle ls = getPolylineFigure().getStyle();
     if( ls.isVisible() )
@@ -108,6 +107,7 @@ public abstract class AbstractLineLayer extends AbstractChartLayer implements IT
       };
       entries.add( le );
     }
+
     return entries.toArray( new ILegendEntry[] {} );
   }
 
@@ -141,7 +141,7 @@ public abstract class AbstractLineLayer extends AbstractChartLayer implements IT
     gc.dispose();
   }
 
-  protected void drawText( final GC gc, final String text, final Point leftTopPoint  )
+  protected void drawText( final GC gc, final String text, final Point leftTopPoint )
   {
     final TextFigure tf = getTextFigure();
     tf.setText( text );
