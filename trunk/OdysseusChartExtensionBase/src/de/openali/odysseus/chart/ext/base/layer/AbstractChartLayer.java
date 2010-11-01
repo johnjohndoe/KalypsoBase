@@ -107,6 +107,7 @@ public abstract class AbstractChartLayer implements IChartLayer
   {
     if( m_legendEntries == null )
       m_legendEntries = createLegendEntries();
+
     return m_legendEntries;
   }
 

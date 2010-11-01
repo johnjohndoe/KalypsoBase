@@ -43,14 +43,11 @@ package de.openali.odysseus.chart.framework.util.img;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
-import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.ui.PlatformUI;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
@@ -68,9 +65,9 @@ public class LegendImageCreator
 
   private final int m_maxImageWidth;
 
-  private Point m_iconSize = new Point( 15, 15 );
+  private Point m_iconSize = new Point( 9, 9 );
 
-  private final Point m_itemSpacer = new Point( 15, 15 );
+  private final Point m_itemSpacer = new Point( 5, 8 );
 
   private final ILegendStrategy m_strategy;
 
@@ -105,6 +102,7 @@ public class LegendImageCreator
   {
     if( m_model.isHideLegend() )
       return new Point( 0, 0 );
+
     return m_strategy.getSize( this );
   }
 
@@ -112,26 +110,13 @@ public class LegendImageCreator
   {
     if( m_model.isHideLegend() )
       return null;
-    final IChartLayer[] layers = getLayers();
-    final Point size = getSize();
 
-    final Device dev = PlatformUI.getWorkbench().getDisplay();
-    final Image image = new Image( dev, size.x, size.y );
-    final GC gc = new GC( image );
-
-    return null;
+    return m_strategy.createImage( this );
   }
 
   Point getSpacer( )
   {
     return new Point( 2, 0 );
-  }
-
-  Point getTextExtend( final GC gc, final Font font, final String title )
-  {
-    gc.setFont( font );
-
-    return gc.textExtent( m_model.getTitle(), SWT.DRAW_DELIMITER | SWT.DRAW_TAB );
   }
 
   IChartLayer[] getLayers( )
@@ -170,6 +155,11 @@ public class LegendImageCreator
   public Point getItemSpacer( )
   {
     return m_itemSpacer;
+  }
+
+  public ITextStyle getTextStyle( )
+  {
+    return m_style;
   }
 
 }
