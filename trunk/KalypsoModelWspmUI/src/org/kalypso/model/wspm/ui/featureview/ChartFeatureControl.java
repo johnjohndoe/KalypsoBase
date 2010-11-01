@@ -43,6 +43,7 @@ package org.kalypso.model.wspm.ui.featureview;
 import java.net.URL;
 import java.util.Map;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
@@ -151,7 +152,11 @@ public class ChartFeatureControl extends AbstractFeatureControl implements IFeat
 
       /* The tab item */
       final TabItem item = new TabItem( folder, SWT.NONE );
-      item.setText( chartType.getTitle() );
+
+      final String[] title = chartType.getTitleArray();
+      if( !ArrayUtils.isEmpty( title ) )
+        item.setText( title[0] );
+
       item.setToolTipText( chartType.getDescription() );
 
       m_chartTabs[i] = new ChartTabItem( folder, style, m_commands );
@@ -222,10 +227,10 @@ public class ChartFeatureControl extends AbstractFeatureControl implements IFeat
       final ChartComposite chart = m_chartTabs[i].getChartComposite();
 
       // if the chart was previously loaded, it will contain layers - these have to be removed
-      IChartModel chartModel = chart.getChartModel();
-      ILayerManager lm = chartModel.getLayerManager();
-      IChartLayer[] layers = lm.getLayers();
-      for( IChartLayer chartLayer : layers )
+      final IChartModel chartModel = chart.getChartModel();
+      final ILayerManager lm = chartModel.getLayerManager();
+      final IChartLayer[] layers = lm.getLayers();
+      for( final IChartLayer chartLayer : layers )
         lm.removeLayer( chartLayer );
 
       ChartFactory.doConfiguration( chartModel, m_ccl, m_chartTypes[i], ChartExtensionLoader.getInstance(), m_context );
@@ -243,22 +248,22 @@ public class ChartFeatureControl extends AbstractFeatureControl implements IFeat
    * @param chartModel
    *          The chart model.
    */
-  private void doConfiguration( IChartModel chartModel )
+  private void doConfiguration( final IChartModel chartModel )
   {
     try
     {
       /* Get the chart provider. */
-      IChartProvider chartProvider = getChartProvider( m_chartProviderID );
+      final IChartProvider chartProvider = getChartProvider( m_chartProviderID );
       if( chartProvider == null )
         return;
 
       /* Get the feature. */
-      Feature feature = getChartFeature( getFeature(), getFeatureTypeProperty() );
+      final Feature feature = getChartFeature( getFeature(), getFeatureTypeProperty() );
 
       /* Configure. */
       chartProvider.configure( chartModel, feature );
     }
-    catch( CoreException ex )
+    catch( final CoreException ex )
     {
       /* Log the error message. */
       KalypsoModelWspmUIPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( ex ) );
@@ -272,17 +277,17 @@ public class ChartFeatureControl extends AbstractFeatureControl implements IFeat
    *          The ID of the chart provider.
    * @return The chart provider or null.
    */
-  private IChartProvider getChartProvider( String chartProviderID ) throws CoreException
+  private IChartProvider getChartProvider( final String chartProviderID ) throws CoreException
   {
     /* Get the extension registry. */
-    IExtensionRegistry registry = Platform.getExtensionRegistry();
+    final IExtensionRegistry registry = Platform.getExtensionRegistry();
 
     /* Get all elements for the extension point. */
-    IConfigurationElement[] elements = registry.getConfigurationElementsFor( "org.kalypso.model.wspm.ui.chartProvider" ); //$NON-NLS-1$
-    for( IConfigurationElement element : elements )
+    final IConfigurationElement[] elements = registry.getConfigurationElementsFor( "org.kalypso.model.wspm.ui.chartProvider" ); //$NON-NLS-1$
+    for( final IConfigurationElement element : elements )
     {
       /* Get the id. */
-      String id = element.getAttribute( "id" ); //$NON-NLS-1$
+      final String id = element.getAttribute( "id" ); //$NON-NLS-1$
       if( id != null && id.length() > 0 && id.equals( chartProviderID ) )
         return (IChartProvider) element.createExecutableExtension( "class" ); //$NON-NLS-1$
     }

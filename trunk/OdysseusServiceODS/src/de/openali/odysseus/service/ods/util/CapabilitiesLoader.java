@@ -214,7 +214,7 @@ public class CapabilitiesLoader
 
     // Chart-Info
     xmlChart.setId( model.getId() );
-    xmlChart.setTitle( model.getTitle() );
+    xmlChart.setTitleArray( model.getTitle() );
     xmlChart.setDescription( model.getDescription() );
 
     // Layer

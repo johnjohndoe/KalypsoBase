@@ -111,7 +111,7 @@ public class ChartFactory
   public static void doConfiguration( final IChartModel model, final IReferenceResolver rr, final ChartType chartType, final IExtensionLoader extLoader, final URL context )
   {
     model.setId( chartType.getId() );
-    model.setTitle( chartType.getTitle() );
+    model.setTitle( chartType.getTitleArray() );
     model.setDescription( chartType.getDescription() );
 
     final Mappers mappers = chartType.getMappers();

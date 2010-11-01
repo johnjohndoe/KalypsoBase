@@ -7,6 +7,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlOptions;
 import org.eclipse.core.resources.IFile;
@@ -414,7 +415,11 @@ public class ChartEditor extends EditorPart implements IChartPart
             }
 
             // Name des Parts
-            setPartName( m_chartModel.getTitle() );
+            final String[] title = m_chartModel.getTitle();
+            if( !ArrayUtils.isEmpty( title ) )
+              setPartName( title[0] );
+            else
+              setPartName( null );
 
             // drag delegates
             m_plotDragHandler = new PlotDragHandlerDelegate( m_chartComposite );
@@ -465,9 +470,9 @@ public class ChartEditor extends EditorPart implements IChartPart
   @Override
   public IContentOutlinePage getOutlinePage( )
   {
-    if( m_outlinePage == null && this.getChartComposite() != null )
+    if( m_outlinePage == null && getChartComposite() != null )
     {
-      final IChartModel model = this.getChartComposite().getChartModel();
+      final IChartModel model = getChartComposite().getChartModel();
       m_outlinePage = new ChartEditorTreeOutlinePage();
       m_outlinePage.setModel( model );
     }

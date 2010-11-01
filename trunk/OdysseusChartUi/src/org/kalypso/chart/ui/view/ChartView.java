@@ -42,6 +42,7 @@ package org.kalypso.chart.ui.view;
 
 import java.net.URL;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
@@ -196,7 +197,11 @@ public class ChartView extends ViewPart implements IChartPart, ISelectionListene
           m_axisDragHandler = new AxisDragHandlerDelegate( m_chartComposite );
 
           // Titel der View setzen
-          setPartName( m_chartModel.getTitle() );
+          final String[] title = m_chartModel.getTitle();
+          if( !ArrayUtils.isEmpty( title ) )
+            setPartName( title[0] );
+          else
+            setPartName( null );
 
           // m_chartComposite.getChartModel().setAutoscale( true );
         }
@@ -263,7 +268,7 @@ public class ChartView extends ViewPart implements IChartPart, ISelectionListene
   {
     if( m_outlinePage == null )
     {
-      final IChartModel model = this.getChartComposite().getChartModel();
+      final IChartModel model = getChartComposite().getChartModel();
       m_outlinePage = new ChartEditorTreeOutlinePage();
       m_outlinePage.setModel( model );
     }
@@ -356,7 +361,7 @@ public class ChartView extends ViewPart implements IChartPart, ISelectionListene
    * @see de.openali.odysseus.chart.framework.model.event.IEventProvider#addListener(java.lang.Object)
    */
   @Override
-  public void addListener( IChartModelEventListener listener )
+  public void addListener( final IChartModelEventListener listener )
   {
     // TODO Auto-generated method stub
 
@@ -366,7 +371,7 @@ public class ChartView extends ViewPart implements IChartPart, ISelectionListene
    * @see de.openali.odysseus.chart.framework.model.event.IEventProvider#removeListener(java.lang.Object)
    */
   @Override
-  public void removeListener( IChartModelEventListener listener )
+  public void removeListener( final IChartModelEventListener listener )
   {
     // TODO Auto-generated method stub
 

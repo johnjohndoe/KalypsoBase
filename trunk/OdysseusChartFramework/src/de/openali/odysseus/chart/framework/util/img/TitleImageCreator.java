@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package de.openali.odysseus.chart.framework.util.img;
 
-import org.apache.commons.lang.StringUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.Font;
@@ -79,7 +78,19 @@ public class TitleImageCreator
     try
     {
       gc.setFont( font );
-      return gc.textExtent( m_model.getTitle(), SWT.DRAW_DELIMITER | SWT.DRAW_TAB );
+
+      int x = 0;
+      int y = 0;
+
+      final String[] title = m_model.getTitle();
+      for( final String row : title )
+      {
+        final Point extend = gc.textExtent( row, SWT.DRAW_DELIMITER | SWT.DRAW_TAB );
+        x = Math.max( extend.x, x );
+        y += extend.y;
+      }
+
+      return new Point( x, y );
     }
     finally
     {
@@ -94,8 +105,8 @@ public class TitleImageCreator
     if( m_model.isHideTitle() || clientSize.x < 1 || clientSize.y < 1 )
       return null;
 
-    final String[] lines = StringUtils.split( m_model.getTitle(), "\n" );
-   
+    final String[] title = m_model.getTitle();
+
     final Device dev = PlatformUI.getWorkbench().getDisplay();
     final Image image = new Image( dev, clientSize.x, clientSize.y );
     final GC gc = new GC( image );
@@ -105,10 +116,10 @@ public class TitleImageCreator
     try
     {
       gc.setFont( font );
-      for( int i = 0; i < lines.length; i++ )
+      for( int i = 0; i < title.length; i++ )
       {
-        final Point lineSize = gc.textExtent( lines[i] );
-        gc.drawText( lines[i], (clientSize.x - lineSize.x) / 2, i * lineSize.y, SWT.DRAW_TAB );
+        final Point lineSize = gc.textExtent( title[i] );
+        gc.drawText( title[i], (clientSize.x - lineSize.x) / 2, i * lineSize.y, SWT.DRAW_TAB );
 
       }
       return image;
