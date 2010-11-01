@@ -42,10 +42,15 @@ package de.openali.odysseus.chart.ext.base.layer;
 
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
+import de.openali.odysseus.chart.framework.model.figure.impl.FullRectangleFigure;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
+import de.openali.odysseus.chart.framework.model.style.IPointStyle;
+import de.openali.odysseus.chart.framework.model.style.impl.AreaStyle;
+import de.openali.odysseus.chart.framework.model.style.impl.ColorFill;
 
 /**
  * @author kimwerner
@@ -57,9 +62,9 @@ public class DefaultTickRasterLayer extends AbstractLineLayer
    */
   private static final String ID = "de.openali.odysseus.chart.ext.base.layer.DefaultTickRasterLayer";
 
-  public DefaultTickRasterLayer( final ILineStyle lineStyle )
+  public DefaultTickRasterLayer( final ILineStyle lineStyle, final IPointStyle pointStyle )
   {
-    super( lineStyle, null );
+    super( lineStyle, pointStyle );
     setId( ID );
   }
 
@@ -77,7 +82,7 @@ public class DefaultTickRasterLayer extends AbstractLineLayer
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getTargetRange()
    */
   @Override
-  public IDataRange<Number> getTargetRange(IDataRange<Number> domainIntervall )
+  public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
   {
     // don't calculate
     return null;
@@ -100,6 +105,14 @@ public class DefaultTickRasterLayer extends AbstractLineLayer
     final int width = gc.getClipping().width;
     final int heigth = gc.getClipping().height;
 
+    final FullRectangleFigure figureRect = new FullRectangleFigure();
+    final IPointStyle pointStyle = getPointFigure().getStyle();
+    if( pointStyle.isVisible() )
+    {
+      figureRect.setStyle( new AreaStyle( new ColorFill( pointStyle.getInlineColor() ), pointStyle.getAlpha(), pointStyle.getStroke(), pointStyle.isFillVisible() ) );
+      figureRect.setRectangle( new Rectangle( 0, 0, width, heigth ) );
+      figureRect.paint( gc );
+    }
     for( int i = 0; i < domTicks.length; i++ )
     {
       final Point p1 = new Point( getDomainAxis().numericToScreen( domTicks[i] ), 0 );

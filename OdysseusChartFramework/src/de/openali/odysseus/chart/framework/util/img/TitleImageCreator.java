@@ -72,6 +72,10 @@ public class TitleImageCreator
 
     final Device dev = PlatformUI.getWorkbench().getDisplay();
     final Font font = getFont( dev );
+    // Hack für letzte Zeile
+    final FontData fontData = m_model.getTextStyle().toFontData();
+    fontData.height = 6;
+    final Font font2 = new Font( dev, fontData );
     final Image image = new Image( dev, 1, 1 );
     final GC gc = new GC( image );
 
@@ -83,12 +87,16 @@ public class TitleImageCreator
       int y = 0;
 
       final String[] title = m_model.getTitle();
-      for( final String row : title )
+      for( int i = 0; i < title.length - 1; i++ )
       {
-        final Point extend = gc.textExtent( row, SWT.DRAW_DELIMITER | SWT.DRAW_TAB );
+        final Point extend = gc.textExtent( title[i], SWT.DRAW_DELIMITER | SWT.DRAW_TAB );
         x = Math.max( extend.x, x );
         y += extend.y;
       }
+      gc.setFont( font2 );
+      final Point extend = gc.textExtent( title[title.length - 1], SWT.DRAW_DELIMITER | SWT.DRAW_TAB );
+      x = Math.max( extend.x, x );
+      y += extend.y;
 
       return new Point( x, y );
     }
@@ -97,6 +105,7 @@ public class TitleImageCreator
       image.dispose();
       gc.dispose();
       font.dispose();
+      font2.dispose();
     }
   }
 
@@ -110,22 +119,30 @@ public class TitleImageCreator
     final Device dev = PlatformUI.getWorkbench().getDisplay();
     final Image image = new Image( dev, clientSize.x, clientSize.y );
     final GC gc = new GC( image );
+    // Hack für letzte Zeile
+    final FontData fontData = m_model.getTextStyle().toFontData();
+    fontData.height = 6;
+    final Font font2 = new Font( dev, fontData );
 
     final Font font = getFont( dev );
 
     try
     {
       gc.setFont( font );
-      for( int i = 0; i < title.length; i++ )
+      for( int i = 0; i < title.length - 1; i++ )
       {
         final Point lineSize = gc.textExtent( title[i] );
         gc.drawText( title[i], (clientSize.x - lineSize.x) / 2, i * lineSize.y, SWT.DRAW_TAB );
-
       }
+      // Hack für letzte Zeile
+      gc.setFont( font2 );
+      final Point lineSize = gc.textExtent( title[title.length - 1] );
+      gc.drawText( title[title.length - 1], 20, clientSize.y - lineSize.y, SWT.DRAW_TAB );
       return image;
     }
     finally
     {
+      font2.dispose();
       font.dispose();
       gc.dispose();
     }

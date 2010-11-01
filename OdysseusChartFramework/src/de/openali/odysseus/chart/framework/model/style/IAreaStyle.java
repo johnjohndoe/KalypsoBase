@@ -9,6 +9,8 @@ public interface IAreaStyle extends IStyle
 
   public IFill getFill( );
 
+  public boolean isFillVisible( );
+
   public ILineStyle getStroke( );
 
   @Override

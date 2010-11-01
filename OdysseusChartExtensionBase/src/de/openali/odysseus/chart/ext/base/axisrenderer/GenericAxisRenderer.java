@@ -249,7 +249,7 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
 
     final ITextStyle tickLabelStyle = getTickLabelStyle();
     final ILineStyle tickLineStyle = getTickLineStyle();
-    final int tickScreenDistance = (screenMax - screenMin) / (ticks.length -1);
+    final int tickScreenDistance = (screenMax - screenMin) / (ticks.length - 1);
     final LABEL_POSITION labelPosition = getLabelCreator().getLabelPosition();
     for( int i = 0; i < ticks.length; i++ )
     {
@@ -317,12 +317,12 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
           drawTick = false;
       }
 
+      tickLineStyle.apply( gc );
+      gc.drawLine( x1, y1, x2, y2 );
       if( drawTick )
       {
         tickLabelStyle.apply( gc );
         drawText( gc, label, textX, textY, tickLabelStyle );
-        tickLineStyle.apply( gc );
-        gc.drawLine( x1, y1, x2, y2 );
       }
     }
   }
