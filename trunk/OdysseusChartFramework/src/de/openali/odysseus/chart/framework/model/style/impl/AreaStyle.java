@@ -12,11 +12,14 @@ public class AreaStyle extends AbstractStyle implements IAreaStyle
 
   private IFill m_fill;
 
-  public AreaStyle( final IFill fill, final int alpha, final ILineStyle stroke, final boolean isVisible )
+  private final boolean m_isFillVisible;
+
+  public AreaStyle( final IFill fill, final int alpha, final ILineStyle stroke, final boolean isFillVisible )
   {
     setFill( fill );
     setAlpha( alpha );
-    setVisible( isVisible );
+    setVisible( stroke.isVisible() || isFillVisible );
+    m_isFillVisible = isFillVisible;
     setStroke( stroke );
   }
 
@@ -47,13 +50,13 @@ public class AreaStyle extends AbstractStyle implements IAreaStyle
   @Override
   public void apply( final GC gc )
   {
-    if( m_stroke != null )
+    if( m_stroke != null && m_stroke.isVisible() )
       m_stroke.apply( gc );
 
     final int alpha = getAlpha();
     gc.setAlpha( alpha );
 
-    if( (m_fill != null) )
+    if( m_fill != null && m_isFillVisible )
       m_fill.apply( gc );
   }
 
@@ -73,6 +76,15 @@ public class AreaStyle extends AbstractStyle implements IAreaStyle
   public ILineStyle getStroke( )
   {
     return m_stroke;
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.style.IAreaStyle#isFillVisible()
+   */
+  @Override
+  public boolean isFillVisible( )
+  {
+    return m_isFillVisible;
   }
 
 }

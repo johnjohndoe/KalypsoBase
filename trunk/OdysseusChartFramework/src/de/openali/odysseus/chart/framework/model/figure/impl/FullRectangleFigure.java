@@ -69,8 +69,10 @@ public class FullRectangleFigure extends AbstractFigure<IAreaStyle>
   @Override
   protected void paintFigure( final GC gc )
   {
-    gc.drawRectangle( m_rect );
-    gc.fillRectangle( m_rect );
+    if( getStyle().getStroke().isVisible() )
+      gc.drawRectangle( m_rect );
+    if( getStyle().isFillVisible() )
+      gc.fillRectangle( m_rect );
 
   }
 
