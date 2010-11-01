@@ -54,8 +54,9 @@ import org.apache.ftpserver.ftplet.Ftplet;
 import org.apache.ftpserver.listener.ListenerFactory;
 import org.apache.ftpserver.usermanager.PropertiesUserManagerFactory;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.bind.JaxbUtilities;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ftp.service.ftplet.KalypsoFtplet;
 import org.kalypso.ftp.service.schema.FtpServiceType;
 import org.kalypso.ftp.service.schema.ObjectFactory;
@@ -122,7 +123,8 @@ public final class KalypsoFtpFactory
     }
     catch( final Exception e )
     {
-      throw new CoreException( StatusUtilities.createErrorStatus( "Starting of the ftp server failed.", e ) );
+      e.printStackTrace();
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoFtpService.PLUGIN_ID, "Starting of the ftp server failed.", e ) );
     }
   }
 
