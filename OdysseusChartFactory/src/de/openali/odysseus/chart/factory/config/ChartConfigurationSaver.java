@@ -83,7 +83,7 @@ public class ChartConfigurationSaver
     final ChartType chartType = chartconf.addNewChart();
     chartType.setId( model.getId() );
     chartType.setDescription( model.getDescription() );
-    chartType.setTitle( model.getTitle() );
+    chartType.setTitleArray( model.getTitle() );
 
     final Layers layers = chartType.addNewLayers();
     layers.setLayerArray( extractLayers( model.getLayerManager() ).values().toArray( new LayerType[] {} ) );

@@ -42,12 +42,12 @@ public class ChartModel implements IChartModel
   private final boolean m_autoscale = false;
 
   private boolean m_hideTitle = false;
-  
+
   private boolean m_hideLegend = true;
 
   private String m_id = "";
 
-  private String m_title = "no Title set";
+  private String m_title[] = new String[] { "no Title set" };
 
   private String m_description = "";
 
@@ -284,7 +284,7 @@ public class ChartModel implements IChartModel
       return layer.getDomainRange();
 
     if( axis == layer.getCoordinateMapper().getTargetAxis() )
-      return layer.getTargetRange(null);
+      return layer.getTargetRange( null );
 
     return null;
 
@@ -311,7 +311,7 @@ public class ChartModel implements IChartModel
    * @see de.openali.odysseus.chart.framework.model.IChartModel#getTitle()
    */
   @Override
-  public String getTitle( )
+  public String[] getTitle( )
   {
     return m_title;
   }
@@ -500,7 +500,7 @@ public class ChartModel implements IChartModel
    * @see de.openali.odysseus.chart.framework.model.IChartModel#setTitle(java.lang.String)
    */
   @Override
-  public void setTitle( final String title )
+  public void setTitle( final String[] title )
   {
     m_title = title;
   }

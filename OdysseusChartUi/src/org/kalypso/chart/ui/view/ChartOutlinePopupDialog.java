@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.chart.ui.view;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.PopupDialog;
 import org.eclipse.swt.SWT;
@@ -79,7 +80,12 @@ public class ChartOutlinePopupDialog extends PopupDialog
       final ChartEditorTreeOutlinePage cop = (ChartEditorTreeOutlinePage) m_chartPart.getOutlinePage();
       cop.createControl( da );
 
-      setTitleText( m_chartPart.getChartComposite().getChartModel().getTitle() );
+      final String[] title = m_chartPart.getChartComposite().getChartModel().getTitle();
+      if( !ArrayUtils.isEmpty( title ) )
+        setTitleText( title[0] );
+      else
+        setTitleText( null );
+
       return da;
     }
     return new Composite( parent, SWT.NONE );

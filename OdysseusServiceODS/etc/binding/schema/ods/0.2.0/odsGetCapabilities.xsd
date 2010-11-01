@@ -41,7 +41,7 @@
          <documentation>chart which can be individually queried by GetChart or GetLegend operation</documentation>
      </annotation>
          <sequence>
-             <element name="Title" type="string" minOccurs="0">
+             <element name="Title" type="string" minOccurs="0" maxOccurs="unbounded">
 				<annotation>
 					<documentation>
 						(human readable) chart name

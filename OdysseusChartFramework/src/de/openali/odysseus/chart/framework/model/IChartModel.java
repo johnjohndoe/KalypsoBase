@@ -54,9 +54,9 @@ public interface IChartModel
 
   void setId( String id );
 
-  String getTitle( );
+  String[] getTitle( );
 
-  void setTitle( String title );
+  void setTitle( String[] title );
 
   String getDescription( );
 

@@ -207,7 +207,7 @@
 		<complexContent>
 			<extension base="ods:ReferencableType">
 				<sequence>
-					<element name="Title" type="string"/>
+					<element name="Title" type="string" maxOccurs="unbounded"/>
 					<element name="Description" type="string"/>
 					<element name="Layers">
 						<complexType>
