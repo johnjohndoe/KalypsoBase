@@ -145,6 +145,8 @@ public class DefaultLegendStrategy implements ILegendStrategy
   {
     final IChartLayer[] layers = creator.getLayers();
     final Point size = getSize( creator );
+    if( size.x <= 0 || size.y <= 0 )
+      return null;
 
     final Device dev = PlatformUI.getWorkbench().getDisplay();
     final Image canvas = new Image( dev, size.x, size.y );
@@ -208,7 +210,8 @@ public class DefaultLegendStrategy implements ILegendStrategy
       gc.setFont( font );
 
       final Point anchor = getTextAnchor( creator, iconSize );
-      gc.drawText( entry.getDescription() == null ? "" : entry.getDescription(), anchor.x, anchor.y );
+      final String description = entry.getDescription();
+      gc.drawText( description == null ? "" : description, anchor.x, anchor.y );
 
       return canvas.getImageData();
     }

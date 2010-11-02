@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package de.openali.odysseus.chart.framework.util.img;
 
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -51,6 +52,7 @@ import org.eclipse.swt.graphics.Point;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
+import de.openali.odysseus.chart.framework.model.layer.IExpandableChartLayer;
 import de.openali.odysseus.chart.framework.model.style.ITextStyle;
 import de.openali.odysseus.chart.framework.util.StyleUtils;
 
@@ -126,9 +128,26 @@ public class LegendImageCreator
     final IChartLayer[] layers = m_model.getLayerManager().getLayers();
     for( final IChartLayer layer : layers )
     {
-      if( layer.isLegend() )
-        visible.add( layer );
+      Collections.addAll( visible, getLayers( layer ) );
     }
+
+    return visible.toArray( new IChartLayer[] {} );
+  }
+
+  private IChartLayer[] getLayers( final IChartLayer layer )
+  {
+    final Set<IChartLayer> visible = new LinkedHashSet<IChartLayer>();
+
+    if( layer instanceof IExpandableChartLayer )
+    {
+      final IChartLayer[] children = ((IExpandableChartLayer) layer).getLayerManager().getLayers();
+      for( final IChartLayer child : children )
+      {
+        Collections.addAll( visible, getLayers( child ) );
+      }
+    }
+    else if( layer.isLegend() )
+      visible.add( layer );
 
     return visible.toArray( new IChartLayer[] {} );
   }

@@ -24,7 +24,7 @@ public abstract class AbstractBarLayer extends AbstractChartLayer
 
   private PolygonFigure m_polygonFigure;
 
-  public AbstractBarLayer( IAreaStyle areaStyle )
+  public AbstractBarLayer( final IAreaStyle areaStyle )
   {
     m_areaStyle = areaStyle;
   }
@@ -32,10 +32,10 @@ public abstract class AbstractBarLayer extends AbstractChartLayer
   /**
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#drawIcon(org.eclipse.swt.graphics.Image, int, int)
    */
-  public void drawIcon( Image img )
+  public void drawIcon( final Image img )
   {
 
-    PolygonFigure pf = getPolygonFigure();
+    final PolygonFigure pf = getPolygonFigure();
 
     final Rectangle bounds = img.getBounds();
     final int height = bounds.height;
@@ -66,7 +66,7 @@ public abstract class AbstractBarLayer extends AbstractChartLayer
   {
     if( m_polygonFigure == null )
     {
-      IAreaStyle as = getAreaStyle();
+      final IAreaStyle as = getAreaStyle();
       m_polygonFigure = new PolygonFigure();
       m_polygonFigure.setStyle( as );
     }
@@ -83,15 +83,15 @@ public abstract class AbstractBarLayer extends AbstractChartLayer
   @Override
   public ILegendEntry[] createLegendEntries( )
   {
-    List<ILegendEntry> entries = new ArrayList<ILegendEntry>();
+    final List<ILegendEntry> entries = new ArrayList<ILegendEntry>();
     final PolygonFigure pf = getPolygonFigure();
     if( pf.getStyle().isVisible() )
     {
 
-      LegendEntry entry = new LegendEntry( this, pf.getStyle().getTitle() )
+      final LegendEntry entry = new LegendEntry( this, pf.getStyle().getTitle() )
       {
         @Override
-        public void paintSymbol( GC gc, Point size )
+        public void paintSymbol( final GC gc, final Point size )
         {
           final int height = size.x;
           final int width = size.y;
@@ -113,6 +113,7 @@ public abstract class AbstractBarLayer extends AbstractChartLayer
         }
 
       };
+
       entries.add( entry );
     }
     return entries.toArray( new ILegendEntry[] {} );

@@ -148,8 +148,9 @@ public final class ChartImageFactory
 
   public static Image createAxesImage( final Map<POSITION, Image> imageMap, final IMapperRegistry mapperRegistry, final Rectangle boundsRect, final Rectangle plotRect )
   {
-    if( plotRect.width == 0 || plotRect.height == 0 )
+    if( plotRect.width <= 0 || plotRect.height <= 0 )
       return null;
+
     final Device dev = PlatformUI.getWorkbench().getDisplay();
     int height = Math.max( 1, boundsRect.height - plotRect.y - plotRect.height );
     final Image bottomImage = new Image( dev, plotRect.width, height );
@@ -264,6 +265,7 @@ public final class ChartImageFactory
   {
     if( model.isHideTitle() )
       return new Point( 0, 0 );
+
     int x = 0;
     int y = 0;
     final ChartTitleBean[] titles = model.getTitle();
@@ -283,7 +285,6 @@ public final class ChartImageFactory
     if( mapperRegistry == null )
       return null;
 
-    // final TitleImageCreator titleImageCreator = new TitleImageCreator( model );
     final LegendImageCreator legendImageCreator = new LegendImageCreator( model, size.x );
 
     // TODO define legend text style as kod style element
@@ -385,8 +386,9 @@ public final class ChartImageFactory
 
   public static Image createPlotImage( final Map<IChartLayer, Image> imageMap, final IChartLayer[] layers, final Rectangle plotSize )
   {
-    if( plotSize.width == 0 || plotSize.height == 0 )
+    if( plotSize.width <= 0 || plotSize.height <= 0 )
       return null;
+
     final Device dev = PlatformUI.getWorkbench().getDisplay();
     final Image image = new Image( dev, plotSize.width, plotSize.height );
     final GC tmpGc = new GC( image );
