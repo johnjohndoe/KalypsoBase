@@ -53,6 +53,8 @@ import org.kalypso.chart.ui.KalypsoChartUiPlugin;
 import org.kalypso.chart.ui.editor.ChartEditorTreeOutlinePage;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 
+import de.openali.odysseus.chart.framework.util.img.ChartTitleBean;
+
 /**
  * @author burtscher1
  */
@@ -80,9 +82,9 @@ public class ChartOutlinePopupDialog extends PopupDialog
       final ChartEditorTreeOutlinePage cop = (ChartEditorTreeOutlinePage) m_chartPart.getOutlinePage();
       cop.createControl( da );
 
-      final String[] title = m_chartPart.getChartComposite().getChartModel().getTitle();
+      final ChartTitleBean[] title = m_chartPart.getChartComposite().getChartModel().getTitle();
       if( !ArrayUtils.isEmpty( title ) )
-        setTitleText( title[0] );
+        setTitleText( title[0].getText() );
       else
         setTitleText( null );
 

@@ -10,6 +10,7 @@ import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
 import de.openali.odysseus.chart.framework.model.style.ITextStyle;
+import de.openali.odysseus.chart.framework.util.img.ChartTitleBean;
 
 public interface IChartModel
 {
@@ -54,9 +55,11 @@ public interface IChartModel
 
   void setId( String id );
 
-  String[] getTitle( );
+  ChartTitleBean[] getTitle( );
 
-  void setTitle( String[] title );
+  void addTitle( ChartTitleBean title );
+
+  void setTitle( final String title );
 
   String getDescription( );
 

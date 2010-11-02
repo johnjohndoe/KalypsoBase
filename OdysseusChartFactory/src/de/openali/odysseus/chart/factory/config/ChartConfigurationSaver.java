@@ -53,6 +53,7 @@ import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IMapper;
 import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
 import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
+import de.openali.odysseus.chart.framework.util.img.ChartTitleBean;
 import de.openali.odysseus.chartconfig.x020.AxisDateRangeType;
 import de.openali.odysseus.chartconfig.x020.AxisNumberRangeType;
 import de.openali.odysseus.chartconfig.x020.AxisRendererType;
@@ -83,8 +84,13 @@ public class ChartConfigurationSaver
     final ChartType chartType = chartconf.addNewChart();
     chartType.setId( model.getId() );
     chartType.setDescription( model.getDescription() );
-    chartType.setTitleArray( model.getTitle() );
-
+    final ChartTitleBean[] titleBeans = model.getTitle();
+    final String[] titleArray = new String[titleBeans.length];
+    for( int i = 0; i < titleBeans.length; i++ )
+    {
+      titleArray[i] = titleBeans[i].getText();
+    }
+    chartType.setTitleArray( titleArray );
     final Layers layers = chartType.addNewLayers();
     layers.setLayerArray( extractLayers( model.getLayerManager() ).values().toArray( new LayerType[] {} ) );
 

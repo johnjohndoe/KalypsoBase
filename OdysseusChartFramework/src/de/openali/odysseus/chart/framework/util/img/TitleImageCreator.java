@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package de.openali.odysseus.chart.framework.util.img;
 
+
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.Font;
@@ -49,7 +51,6 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.ui.PlatformUI;
 
-import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.LABEL_POSITION;
 
 /**
@@ -58,24 +59,25 @@ import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.LABEL_POS
 public class TitleImageCreator
 {
 
-  private final IChartModel m_model;
+  //private final IChartModel m_model;
+  
+  private final ChartTitleBean m_titleBean;
 
-  public TitleImageCreator( final IChartModel model )
+  public TitleImageCreator( final ChartTitleBean chartTitleBean )
   {
-    m_model = model;
+    m_titleBean = chartTitleBean;
   }
 
   public Point getSize( )
   {
-    if( m_model.isHideTitle() )
-      return new Point( 0, 0 );
+    
 
     final Device dev = PlatformUI.getWorkbench().getDisplay();
     final Font font = getFont( dev );
     // Hack für letzte Zeile
-    final FontData fontData = m_model.getTextStyle().toFontData();
-    fontData.height = 6;
-    final Font font2 = new Font( dev, fontData );
+//    final FontData fontData = m_titleBean.getFontData();
+//    fontData.height = 6;
+//    final Font font2 = new Font( dev, fontData );
     final Image image = new Image( dev, 1, 1 );
     final GC gc = new GC( image );
 
@@ -86,17 +88,17 @@ public class TitleImageCreator
       int x = 0;
       int y = 0;
 
-      final String[] title = m_model.getTitle();
+      final String[] title = StringUtils.split(  m_titleBean.getText(),"\n");
       for( int i = 0; i < title.length - 1; i++ )
       {
         final Point extend = gc.textExtent( title[i], SWT.DRAW_DELIMITER | SWT.DRAW_TAB );
         x = Math.max( extend.x, x );
         y += extend.y;
       }
-      gc.setFont( font2 );
-      final Point extend = gc.textExtent( title[title.length - 1], SWT.DRAW_DELIMITER | SWT.DRAW_TAB );
-      x = Math.max( extend.x, x );
-      y += extend.y;
+//      gc.setFont( font2 );
+//      final Point extend = gc.textExtent( title[title.length - 1], SWT.DRAW_DELIMITER | SWT.DRAW_TAB );
+//      x = Math.max( extend.x, x );
+//      y += extend.y;
 
       return new Point( x, y );
     }
@@ -105,24 +107,24 @@ public class TitleImageCreator
       image.dispose();
       gc.dispose();
       font.dispose();
-      font2.dispose();
+ //     font2.dispose();
     }
   }
 
   public Image createImage( final LABEL_POSITION position, final Point clientSize )
   {
-    if( m_model.isHideTitle() || clientSize.x < 1 || clientSize.y < 1 )
+    if( clientSize.x < 1 || clientSize.y < 1 )
       return null;
 
-    final String[] title = m_model.getTitle();
+    final String[] title = StringUtils.split( m_titleBean.getText(),"\n");
 
     final Device dev = PlatformUI.getWorkbench().getDisplay();
     final Image image = new Image( dev, clientSize.x, clientSize.y );
     final GC gc = new GC( image );
     // Hack für letzte Zeile
-    final FontData fontData = m_model.getTextStyle().toFontData();
-    fontData.height = 6;
-    final Font font2 = new Font( dev, fontData );
+//    final FontData fontData = m_titleBean.getFontData();
+//    fontData.height = 6;
+//    final Font font2 = new Font( dev, fontData );
 
     final Font font = getFont( dev );
 
@@ -135,14 +137,14 @@ public class TitleImageCreator
         gc.drawText( title[i], (clientSize.x - lineSize.x) / 2, i * lineSize.y, SWT.DRAW_TAB );
       }
       // Hack für letzte Zeile
-      gc.setFont( font2 );
-      final Point lineSize = gc.textExtent( title[title.length - 1] );
-      gc.drawText( title[title.length - 1], 20, clientSize.y - lineSize.y, SWT.DRAW_TAB );
+//      gc.setFont( font2 );
+//      final Point lineSize = gc.textExtent( title[title.length - 1] );
+//      gc.drawText( title[title.length - 1], 20, clientSize.y - lineSize.y, SWT.DRAW_TAB );
       return image;
     }
     finally
     {
-      font2.dispose();
+//      font2.dispose();
       font.dispose();
       gc.dispose();
     }
@@ -150,7 +152,7 @@ public class TitleImageCreator
 
   private Font getFont( final Device dev )
   {
-    final FontData fontData = m_model.getTextStyle().toFontData();
+    final FontData fontData = m_titleBean.getTextStyle().toFontData();
     if( fontData == null )
       return new Font( dev, dev.getFontList( null, true )[0] );
 

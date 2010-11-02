@@ -42,6 +42,7 @@ import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 import de.openali.odysseus.chart.framework.model.style.ITextStyle;
 import de.openali.odysseus.chart.framework.model.style.impl.StyleSet;
+import de.openali.odysseus.chart.framework.util.img.ChartTitleBean;
 import de.openali.odysseus.chartconfig.x020.AreaStyleType;
 import de.openali.odysseus.chartconfig.x020.AxisDateRangeType;
 import de.openali.odysseus.chartconfig.x020.AxisDurationRangeType;
@@ -111,7 +112,8 @@ public class ChartFactory
   public static void doConfiguration( final IChartModel model, final IReferenceResolver rr, final ChartType chartType, final IExtensionLoader extLoader, final URL context )
   {
     model.setId( chartType.getId() );
-    model.setTitle( chartType.getTitleArray() );
+    for( final String title : chartType.getTitleArray() )
+      model.addTitle( new ChartTitleBean( title ) );
     model.setDescription( chartType.getDescription() );
 
     final Mappers mappers = chartType.getMappers();

@@ -29,11 +29,9 @@ import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
-import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.LABEL_POSITION;
 import de.openali.odysseus.chart.framework.model.mapper.IMapper;
 import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
 import de.openali.odysseus.chart.framework.util.img.ChartImageFactory;
-import de.openali.odysseus.chart.framework.util.img.TitleImageCreator;
 import de.openali.odysseus.chart.framework.view.IAxisDragHandler;
 import de.openali.odysseus.chart.framework.view.IChartDragHandler;
 import de.openali.odysseus.chart.framework.view.TooltipHandler;
@@ -84,15 +82,14 @@ public class ChartImageComposite extends Canvas
       if( mapperRegistry == null )
         return Status.OK_STATUS;
 
-      final TitleImageCreator titleImageCreator = new TitleImageCreator( model );
-      final Point titleSize = titleImageCreator.getSize();
+      final Point titleSize = ChartImageFactory.calculateTitleSize( model );
 
       m_plotRect = ChartImageFactory.calculatePlotSize( mapperRegistry, getClientArea().width, getClientArea().height - titleSize.y );
       m_plotRect.y += titleSize.y;
       ChartImageFactory.setAxesHeight( mapperRegistry.getAxes(), m_plotRect );
       m_axesImage = ChartImageFactory.createAxesImage( getChartModel().getMapperRegistry(), getClientArea(), m_plotRect );
 
-      m_titleImage = titleImageCreator.createImage( LABEL_POSITION.CENTERED, new Point( getClientArea().width, titleSize.y ) );
+      m_titleImage = ChartImageFactory.createTitleImage( model, new Point( getClientArea().width, titleSize.y ) );
 
       final ILayerManager layerManager = model == null ? null : model.getLayerManager();
       if( layerManager == null )
