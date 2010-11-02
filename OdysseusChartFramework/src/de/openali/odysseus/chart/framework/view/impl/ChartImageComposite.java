@@ -31,7 +31,10 @@ import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IMapper;
 import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
+import de.openali.odysseus.chart.framework.model.style.ITextStyle;
+import de.openali.odysseus.chart.framework.util.StyleUtils;
 import de.openali.odysseus.chart.framework.util.img.ChartImageFactory;
+import de.openali.odysseus.chart.framework.util.img.LegendImageCreator;
 import de.openali.odysseus.chart.framework.view.IAxisDragHandler;
 import de.openali.odysseus.chart.framework.view.IChartDragHandler;
 import de.openali.odysseus.chart.framework.view.TooltipHandler;
@@ -46,6 +49,7 @@ public class ChartImageComposite extends Canvas
 
   private final class InvalidateChartJob extends UIJob
   {
+
     public InvalidateChartJob( final String name )
     {
       super( name );
@@ -73,6 +77,11 @@ public class ChartImageComposite extends Canvas
         m_titleImage.dispose();
         m_titleImage = null;
       }
+      if( (m_legendImage != null) && !m_legendImage.isDisposed() )
+      {
+        m_legendImage.dispose();
+        m_legendImage = null;
+      }
       if( isDisposed() )
         return Status.OK_STATUS;
 
@@ -82,14 +91,24 @@ public class ChartImageComposite extends Canvas
       if( mapperRegistry == null )
         return Status.OK_STATUS;
 
-      final Point titleSize = ChartImageFactory.calculateTitleSize( model );
+      final Rectangle pane = getClientArea();
 
-      m_plotRect = ChartImageFactory.calculatePlotSize( mapperRegistry, getClientArea().width, getClientArea().height - titleSize.y );
+      final LegendImageCreator legendImageCreator = new LegendImageCreator( model, pane.width );
+      // TODO define legend text style as kod style element
+      final ITextStyle legendTextStyle = StyleUtils.getDefaultTextStyle();
+      legendTextStyle.setHeight( 7 );
+      legendImageCreator.setTextStyle( legendTextStyle );
+
+      final Point titleSize = ChartImageFactory.calculateTitleSize( model );
+      final Point legendSize = legendImageCreator.getSize();
+
+      m_plotRect = ChartImageFactory.calculatePlotSize( mapperRegistry, pane.width, pane.height - titleSize.y - legendSize.y );
       m_plotRect.y += titleSize.y;
       ChartImageFactory.setAxesHeight( mapperRegistry.getAxes(), m_plotRect );
-      m_axesImage = ChartImageFactory.createAxesImage( getChartModel().getMapperRegistry(), getClientArea(), m_plotRect );
+      m_axesImage = ChartImageFactory.createAxesImage( getChartModel().getMapperRegistry(), pane, m_plotRect );
 
-      m_titleImage = ChartImageFactory.createTitleImage( model, new Point( getClientArea().width, titleSize.y ) );
+      m_titleImage = ChartImageFactory.createTitleImage( model, new Point( pane.width, titleSize.y ) );
+      m_legendImage = legendImageCreator.createImage();
 
       final ILayerManager layerManager = model == null ? null : model.getLayerManager();
       if( layerManager == null )
@@ -109,6 +128,8 @@ public class ChartImageComposite extends Canvas
   protected FontData m_titlefont = null;
 
   protected Image m_titleImage = null;
+
+  protected Image m_legendImage = null;
 
   protected Rectangle m_plotRect = null;
 
@@ -221,20 +242,40 @@ public class ChartImageComposite extends Canvas
     addPaintListener( new PaintListener()
     {
       @Override
-      public void paintControl( final PaintEvent arg0 )
+      public void paintControl( final PaintEvent paintEvent )
       {
         if( m_axesImage == null )
           return;
-        arg0.gc.drawImage( m_axesImage, 0, 0 );
+
+        final GC gc = paintEvent.gc;
+
+        gc.drawImage( m_axesImage, 0, 0 );
+
         if( m_titleImage != null )
-          arg0.gc.drawImage( m_titleImage, 0, 0 );
+          gc.drawImage( m_titleImage, 0, 0 );
+
         if( m_plotRect == null || m_plotImage == null )
           return;
-        arg0.gc.setClipping( m_plotRect );
-        arg0.gc.drawImage( m_plotImage, m_plotRect.x - m_panOffset.x, m_plotRect.y - m_panOffset.y );
-        paintDragArea( arg0.gc );
-        ChartImageFactory.paintEditInfo( arg0.gc, m_editInfo );
-        arg0.gc.setClipping( getBounds() );
+
+        final Point plotAnchor = new Point( m_plotRect.x - m_panOffset.x, m_plotRect.y - m_panOffset.y );
+
+        if( m_legendImage != null )
+        {
+          final int h1 = m_plotImage.getImageData().height;
+          final int h2 = Math.abs( m_axesImage.getImageData().height - h1 - m_legendImage.getImageData().height );
+
+          final int x = plotAnchor.x; // + m_plotRect.width / 2 - m_legendImage.getImageData().width;
+          final int y = plotAnchor.y + h1 + h2;
+
+          gc.drawImage( m_legendImage, x, y );
+        }
+
+        gc.setClipping( m_plotRect );
+        gc.drawImage( m_plotImage, plotAnchor.x, plotAnchor.y );
+
+        paintDragArea( gc );
+        ChartImageFactory.paintEditInfo( gc, m_editInfo );
+        gc.setClipping( getBounds() );
       }
     } );
 

@@ -3,6 +3,7 @@ package de.openali.odysseus.chart.ext.base.layer;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.swt.graphics.ImageData;
 
 import de.openali.odysseus.chart.framework.model.event.ILayerEventListener;
@@ -37,7 +38,7 @@ public abstract class AbstractChartLayer implements IChartLayer
 
   private ICoordinateMapper m_coordinateMapper;
 
-  private ILegendEntry[] m_legendEntries;
+  private ILegendEntry[] m_legendEntries = new ILegendEntry[] {};
 
   private final Map<String, IRetinalMapper> m_mapperMap = new HashMap<String, IRetinalMapper>();
 
@@ -105,7 +106,7 @@ public abstract class AbstractChartLayer implements IChartLayer
   @Override
   public synchronized ILegendEntry[] getLegendEntries( )
   {
-    if( m_legendEntries == null )
+    if( ArrayUtils.isEmpty( m_legendEntries ) )
       m_legendEntries = createLegendEntries();
 
     return m_legendEntries;

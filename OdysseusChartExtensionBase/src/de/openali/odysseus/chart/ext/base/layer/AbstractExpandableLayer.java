@@ -123,8 +123,7 @@ public abstract class AbstractExpandableLayer extends AbstractChartLayer impleme
   @Override
   protected ILegendEntry[] createLegendEntries( )
   {
-    // TODO Auto-generated method stub
-    return null;
+    return new ILegendEntry[] {};
   }
 
   /**
@@ -133,21 +132,19 @@ public abstract class AbstractExpandableLayer extends AbstractChartLayer impleme
   @Override
   public void dispose( )
   {
-    // TODO Auto-generated method stub
-
   }
 
   /**
    * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getTargetRange()
    */
   @Override
-  public IDataRange<Number> getTargetRange(IDataRange<Number> domainIntervall )
+  public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
   {
     Double min = null;
     Double max = null;
     for( final IChartLayer layer : getLayerManager().getLayers() )
     {
-      final IDataRange<Number> dr = layer.getTargetRange(null);
+      final IDataRange<Number> dr = layer.getTargetRange( null );
       if( dr != null )
       {
         if( max == null )

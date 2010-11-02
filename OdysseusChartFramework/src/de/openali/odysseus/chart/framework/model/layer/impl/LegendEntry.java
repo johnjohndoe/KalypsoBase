@@ -12,64 +12,63 @@ import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 public abstract class LegendEntry implements ILegendEntry
 {
 
-	private final String m_description;
-	private final IChartLayer m_parent;
+  private final String m_description;
 
-	public LegendEntry( IChartLayer parent, String description )
-	{
-		m_parent = parent;
-		m_description = description;
-	}
+  private final IChartLayer m_parent;
 
-	@Override
-  public String getDescription()
-	{
-		return m_description;
-	}
+  public LegendEntry( final IChartLayer parent, final String description )
+  {
+    m_parent = parent;
+    m_description = description;
+  }
 
-	public abstract void paintSymbol(GC gc, Point size);
+  @Override
+  public String getDescription( )
+  {
+    return m_description;
+  }
 
-	@Override
-  public ImageData getSymbol(Point size)
-	{
-		Point realSize = computeSize(size);
-		Image img = new Image(Display.getDefault(), realSize.x, realSize.y);
-		GC gc = new GC(img);
-		paintSymbol(gc, realSize);
-		ImageData id = img.getImageData();
-		gc.dispose();
-		img.dispose();
-		return id;
-	}
+  public abstract void paintSymbol( GC gc, Point size );
 
-	/**
-	 * @param size
-	 *            the preferred size
-	 * @return the minimum size or null if any
-	 */
-	@Override
-  public Point computeSize(Point size)
-	{
-		Point neededSize = getMinimumSize();
-		Point realSize = new Point(Math.max(neededSize.x, size.x), Math.max(neededSize.y, size.y));
-		return realSize;
-	}
+  @Override
+  public ImageData getSymbol( final Point size )
+  {
+    final Point realSize = computeSize( size );
+    final Image img = new Image( Display.getDefault(), realSize.x, realSize.y );
+    final GC gc = new GC( img );
+    paintSymbol( gc, realSize );
+    final ImageData id = img.getImageData();
+    gc.dispose();
+    img.dispose();
+    return id;
+  }
 
-	/**
-	 * 
-	 * implementations need to override this method if the symbol needs a
-	 * special size;
-	 * 
-	 * @return Point (16, 16)
-	 */
-	public Point getMinimumSize()
-	{
-		return new Point(16, 16);
-	}
+  /**
+   * @param size
+   *          the preferred size
+   * @return the minimum size or null if any
+   */
+  @Override
+  public Point computeSize( final Point size )
+  {
+    final Point neededSize = getMinimumSize();
+    final Point realSize = new Point( Math.max( neededSize.x, size.x ), Math.max( neededSize.y, size.y ) );
+    return realSize;
+  }
 
-	@Override
-  public IChartLayer getParentLayer()
-	{
-		return m_parent;
-	}
+  /**
+   * implementations need to override this method if the symbol needs a special size;
+   * 
+   * @return Point (16, 16)
+   */
+  public Point getMinimumSize( )
+  {
+    return new Point( 16, 16 );
+  }
+
+  @Override
+  public IChartLayer getParentLayer( )
+  {
+    return m_parent;
+  }
 }

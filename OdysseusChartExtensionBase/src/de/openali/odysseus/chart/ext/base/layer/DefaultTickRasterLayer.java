@@ -130,4 +130,12 @@ public class DefaultTickRasterLayer extends AbstractLineLayer
     }
   }
 
+  /**
+   * @see de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer#isLegend()
+   */
+  @Override
+  public boolean isLegend( )
+  {
+    return false;
+  }
 }
