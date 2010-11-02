@@ -47,7 +47,7 @@ public class ChartModel implements IChartModel
 
   private String m_id = "";
 
-  private String m_title[] = new String[] { "no Title set" };
+  private String[] m_title = new String[] { "no Title set" };
 
   private String m_description = "";
 
