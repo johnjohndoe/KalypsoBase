@@ -142,6 +142,29 @@ public class DBaseFile
     return fields.readRecord( m_raf, m_charset );
   }
 
+  public Object getValue( int recordIndex, String field ) throws DBaseException, IOException
+  {
+    int index = getIndex( field );
+    if( index < 0 )
+      throw new DBaseException( String.format( "Unknown field '%s'", field ) );
+
+    Object[] record = getRecord( recordIndex );
+    return record[index];
+  }
+
+  public int getIndex( String field )
+  {
+    DBFField[] fields = getFields();
+    for( int i = 0; i < fields.length; i++ )
+    {
+      DBFField dbfField = fields[i];
+      if( dbfField.getName().equalsIgnoreCase( field ) )
+        return i;
+    }
+
+    return -1;
+  }
+
   /**
    * Really writes the record into the underlying file.<br>
    * This method is atomic, in the sense that a record only gets written if all fields could successfully be written.
