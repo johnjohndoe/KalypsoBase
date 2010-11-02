@@ -191,6 +191,11 @@ public class ShapeFile
     return m_dbf.getRecord( rowNo );
   }
 
+  public DBFField[] getFields( )
+  {
+    return m_dbf.getFields();
+  }
+
   public void addFeature( final ISHPGeometry shape, final Object[] data ) throws IOException, DBaseException, SHPException
   {
     m_dbf.addRecord( data );
