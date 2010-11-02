@@ -24,6 +24,7 @@ import de.openali.odysseus.chart.framework.model.mapper.registry.impl.MapperRegi
 import de.openali.odysseus.chart.framework.model.style.ITextStyle;
 import de.openali.odysseus.chart.framework.util.ChartUtilities;
 import de.openali.odysseus.chart.framework.util.StyleUtils;
+import de.openali.odysseus.chart.framework.util.img.ChartTitleBean;
 
 public class ChartModel implements IChartModel
 {
@@ -47,7 +48,7 @@ public class ChartModel implements IChartModel
 
   private String m_id = "";
 
-  private String[] m_title = new String[] { "no Title set" };
+  private final List<ChartTitleBean> m_title = new ArrayList<ChartTitleBean>();
 
   private String m_description = "";
 
@@ -311,9 +312,9 @@ public class ChartModel implements IChartModel
    * @see de.openali.odysseus.chart.framework.model.IChartModel#getTitle()
    */
   @Override
-  public String[] getTitle( )
+  public ChartTitleBean[] getTitle( )
   {
-    return m_title;
+    return m_title.toArray( new ChartTitleBean[] {} );
   }
 
   protected void hideUnusedAxis( final IAxis axis )
@@ -500,9 +501,9 @@ public class ChartModel implements IChartModel
    * @see de.openali.odysseus.chart.framework.model.IChartModel#setTitle(java.lang.String)
    */
   @Override
-  public void setTitle( final String[] title )
+  public void addTitle( final ChartTitleBean title )
   {
-    m_title = title;
+    m_title.add( title );
   }
 
   /**
@@ -698,5 +699,22 @@ public class ChartModel implements IChartModel
         }
       }
     }
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.IChartModel#setTitle(java.lang.String)
+   */
+  @Override
+  public void setTitle( final String title )
+  {
+    if( m_title.size() > 0 )
+    {
+      final ChartTitleBean titleBean = m_title.get( 0 );
+      m_title.clear();
+      titleBean.setText( title );
+      m_title.add( titleBean );
+    }
+    m_title.add( new ChartTitleBean( title ) );
+
   }
 }
