@@ -112,12 +112,7 @@ public final class ChartImageFactory
   {
     final Rectangle plotRect = calculatePlotSize( mapperRegistry, boundsRect.width, boundsRect.height );
     setAxesHeight( mapperRegistry.getAxes(), plotRect );
-    return createAxesImage( null, mapperRegistry, boundsRect, plotRect );
-  }
-
-  public static Image createAxesImage( final IMapperRegistry mapperRegistry, final Rectangle boundsRect, final Rectangle plotRect )
-  {
-    return createAxesImage( null, mapperRegistry, boundsRect, plotRect );
+    return createAxesImage( mapperRegistry, boundsRect, plotRect );
   }
 
   public static void drawHorizontalAxis( final GC gc, final IAxis[] axes, final int width )
@@ -146,7 +141,7 @@ public final class ChartImageFactory
     }
   }
 
-  public static Image createAxesImage( final Map<POSITION, Image> imageMap, final IMapperRegistry mapperRegistry, final Rectangle boundsRect, final Rectangle plotRect )
+  public static Image createAxesImage( final IMapperRegistry mapperRegistry, final Rectangle boundsRect, final Rectangle plotRect )
   {
     if( plotRect.width <= 0 || plotRect.height <= 0 )
       return null;
@@ -249,6 +244,10 @@ public final class ChartImageFactory
   {
     if( model.isHideTitle() )
       return null;
+
+    if( size.x <= 0 || size.y <= 0 )
+      return null;
+
     final Device dev = PlatformUI.getWorkbench().getDisplay();
     final Image image = new Image( dev, size.x, size.y );
     final GC gc = new GC( image, SWT.DRAW_DELIMITER | SWT.DRAW_TAB );
@@ -261,7 +260,7 @@ public final class ChartImageFactory
     return image;
   }
 
-  public static final Point calculateTitleSize( final IChartModel model )
+  public static Point calculateTitleSize( final IChartModel model )
   {
     if( model.isHideTitle() )
       return new Point( 0, 0 );
