@@ -289,7 +289,10 @@ public final class ChartImageFactory
       tmpGc.drawImage( plotImage, plotRect.x, plotRect.y + titleSize.y );
 
       if( legendImage != null )
-        tmpGc.drawImage( legendImage, 0, size.y - legendSize.y );
+      {
+        final int offsetX = (size.x - legendImage.getImageData().width) / 2;
+        tmpGc.drawImage( legendImage, offsetX, size.y - legendSize.y );
+      }
 
       return image.getImageData();
     }

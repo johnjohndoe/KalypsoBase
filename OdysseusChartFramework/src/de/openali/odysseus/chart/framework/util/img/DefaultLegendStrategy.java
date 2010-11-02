@@ -70,6 +70,8 @@ public class DefaultLegendStrategy implements ILegendStrategy
     int heigth = 0;
     int row = 0;
 
+    int maxRowSize = 0;
+
     for( final IChartLayer layer : layers )
     {
       final ILegendEntry entry = getLegendEntry( layer );
@@ -80,23 +82,24 @@ public class DefaultLegendStrategy implements ILegendStrategy
 
       if( row + size.x > creator.getMaximumWidth() )
       {
+        maxRowSize = Math.max( maxRowSize, row );
         row = 0;
         heigth += size.y;
       }
       else
       {
         row += size.x;
+        maxRowSize = Math.max( maxRowSize, row );
         if( heigth == 0 )
           heigth = size.y;
       }
     }
 
-    return new Point( creator.getMaximumWidth(), heigth );
+    return new Point( maxRowSize, heigth );
   }
 
   private Point getItemSize( final LegendImageCreator creator, final ILegendEntry entry )
   {
-
     final Device dev = PlatformUI.getWorkbench().getDisplay();
     final Image image = new Image( dev, 1, 1 );
     final GC gc = new GC( image );
