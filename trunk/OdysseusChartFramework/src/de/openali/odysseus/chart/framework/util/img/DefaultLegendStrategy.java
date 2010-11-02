@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package de.openali.odysseus.chart.framework.util.img;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.Font;
@@ -129,6 +130,11 @@ public class DefaultLegendStrategy implements ILegendStrategy
   private ILegendEntry getLegendEntry( final IChartLayer layer )
   {
     final ILegendEntry[] legendEntries = layer.getLegendEntries();
+
+    // TODO - instead of returning null (layer.getLegendEntries()) always return an empty array!
+    if( ArrayUtils.isEmpty( legendEntries ) )
+      return null;
+
     for( final ILegendEntry entry : legendEntries )
     {
       return entry;
