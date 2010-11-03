@@ -82,6 +82,8 @@ public class GenericDateTickCalculator implements ITickCalculator
     // Kim: aber bitte nicht hier, LabelCreator entscheidet ob gezeichnet wird
 // int screenMin, screenMax;
     final IDataRange<Number> range = axis.getNumericRange();
+    if( range == null )
+      return new Number[] {};
 //
 // if( axis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
 // {
