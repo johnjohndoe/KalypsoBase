@@ -48,8 +48,8 @@ import org.eclipse.swt.graphics.Point;
  */
 public interface ILegendStrategy
 {
-  Point getSize( LegendImageCreator legendImageCreator );
+  Point getSize( ChartLegendPainter legendImageCreator );
 
-  Image createImage( LegendImageCreator legendImageCreator );
+  Image createImage( ChartLegendPainter legendImageCreator );
 
 }

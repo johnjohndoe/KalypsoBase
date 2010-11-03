@@ -240,43 +240,6 @@ public final class ChartImageFactory
     return new Rectangle( left, top, right - left, bottom - top );
   }
 
-  public static Image createTitleImage( final IChartModel model, final Point size )
-  {
-    if( model.isHideTitle() )
-      return null;
-
-    if( size.x <= 0 || size.y <= 0 )
-      return null;
-
-    final Device dev = PlatformUI.getWorkbench().getDisplay();
-    final Image image = new Image( dev, size.x, size.y );
-    final GC gc = new GC( image, SWT.DRAW_DELIMITER | SWT.DRAW_TAB );
-    final Rectangle boundsRect = new Rectangle( 0, 0, size.x, size.y );
-    for( final ChartTitleBean titleBean : model.getTitle() )
-    {
-      titleBean.drawText( gc, boundsRect );
-      boundsRect.y += titleBean.getSize().y;
-    }
-    return image;
-  }
-
-  public static Point calculateTitleSize( final IChartModel model )
-  {
-    if( model.isHideTitle() )
-      return new Point( 0, 0 );
-
-    int x = 0;
-    int y = 0;
-    final ChartTitleBean[] titles = model.getTitle();
-    for( final ChartTitleBean title : titles )
-    {
-      final Point size = title.getSize();
-      x += size.x;
-      y += size.y;
-    }
-    return new Point( x, y );
-  }
-
   public static ImageData createChartImage( final IChartModel model, final Point size )
   {
 
@@ -284,16 +247,18 @@ public final class ChartImageFactory
     if( mapperRegistry == null )
       return null;
 
-    final LegendImageCreator legendImageCreator = new LegendImageCreator( model, size.x );
+    final ChartLegendPainter legendPainter = new ChartLegendPainter( model, size.x );
+    final ChartTitlePainter titlePainter = new ChartTitlePainter( model, size.x );
 
     // TODO define legend text style as kod style element
     final ITextStyle legendTextStyle = StyleUtils.getDefaultTextStyle();
     legendTextStyle.setHeight( 7 );
-    legendImageCreator.setTextStyle( legendTextStyle );
+    legendPainter.setTextStyle( legendTextStyle );
 
     /* calc plot size */
-    final Point titleSize = calculateTitleSize( model );
-    final Point legendSize = legendImageCreator.getSize();
+    final Point titleSize = titlePainter.getSize();
+
+    final Point legendSize = legendPainter.getSize();
     final Rectangle plotRect = ChartImageFactory.calculatePlotSize( mapperRegistry, size.x, size.y - titleSize.y - legendSize.y );
     // plotRect.y += titleSize.y;
 
@@ -302,9 +267,9 @@ public final class ChartImageFactory
 
     /* generate chartImages */
     final Image axesImage = ChartImageFactory.createAxesImage( mapperRegistry, new Rectangle( 0, 0, size.x, size.y - titleSize.y - legendSize.y ), plotRect );
-    final Image titleImage = createTitleImage( model, new Point( size.x, titleSize.y ) );
+    final Image titleImage = titlePainter.paint();
     final Image plotImage = ChartImageFactory.createPlotImage( model.getLayerManager().getLayers(), plotRect );
-    final Image legendImage = legendImageCreator.createImage();
+    final Image legendImage = legendPainter.createImage();
 
     // draw images
     final Device dev = PlatformUI.getWorkbench().getDisplay();

@@ -59,7 +59,7 @@ import de.openali.odysseus.chart.framework.util.StyleUtils;
 /**
  * @author Dirk Kuch
  */
-public class LegendImageCreator
+public class ChartLegendPainter
 {
   private final IChartModel m_model;
 
@@ -73,12 +73,12 @@ public class LegendImageCreator
 
   private final ILegendStrategy m_strategy;
 
-  public LegendImageCreator( final IChartModel model, final int maximalImageWidth )
+  public ChartLegendPainter( final IChartModel model, final int maximalImageWidth )
   {
     this( model, maximalImageWidth, new DefaultLegendStrategy() );
   }
 
-  public LegendImageCreator( final IChartModel model, final int maximalImageWidth, final ILegendStrategy strategy )
+  public ChartLegendPainter( final IChartModel model, final int maximalImageWidth, final ILegendStrategy strategy )
   {
     m_model = model;
     m_maxImageWidth = maximalImageWidth;

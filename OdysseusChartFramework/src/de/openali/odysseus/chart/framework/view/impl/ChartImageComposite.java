@@ -34,7 +34,8 @@ import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry
 import de.openali.odysseus.chart.framework.model.style.ITextStyle;
 import de.openali.odysseus.chart.framework.util.StyleUtils;
 import de.openali.odysseus.chart.framework.util.img.ChartImageFactory;
-import de.openali.odysseus.chart.framework.util.img.LegendImageCreator;
+import de.openali.odysseus.chart.framework.util.img.ChartLegendPainter;
+import de.openali.odysseus.chart.framework.util.img.ChartTitlePainter;
 import de.openali.odysseus.chart.framework.view.IAxisDragHandler;
 import de.openali.odysseus.chart.framework.view.IChartDragHandler;
 import de.openali.odysseus.chart.framework.view.TooltipHandler;
@@ -93,28 +94,32 @@ public class ChartImageComposite extends Canvas
 
       final Rectangle pane = getClientArea();
 
-      final LegendImageCreator legendImageCreator = new LegendImageCreator( model, pane.width );
+      final ChartLegendPainter legendPainter = new ChartLegendPainter( model, pane.width );
+      final ChartTitlePainter titlePainter = new ChartTitlePainter( model, pane.width );
+
       // TODO define legend text style as kod style element
       final ITextStyle legendTextStyle = StyleUtils.getDefaultTextStyle();
       legendTextStyle.setHeight( 7 );
-      legendImageCreator.setTextStyle( legendTextStyle );
+      legendPainter.setTextStyle( legendTextStyle );
 
-      final Point titleSize = ChartImageFactory.calculateTitleSize( model );
-      final Point legendSize = legendImageCreator.getSize();
+      final Point titleSize = titlePainter.getSize();
+      final Point legendSize = legendPainter.getSize();
 
       m_plotRect = ChartImageFactory.calculatePlotSize( mapperRegistry, pane.width, pane.height - titleSize.y - legendSize.y );
       m_plotRect.y += titleSize.y;
       ChartImageFactory.setAxesHeight( mapperRegistry.getAxes(), m_plotRect );
       m_axesImage = ChartImageFactory.createAxesImage( getChartModel().getMapperRegistry(), pane, m_plotRect );
 
-      m_titleImage = ChartImageFactory.createTitleImage( model, new Point( pane.width, titleSize.y ) );
-      m_legendImage = legendImageCreator.createImage();
+      m_titleImage = titlePainter.paint();
+      m_legendImage = legendPainter.createImage();
 
       final ILayerManager layerManager = model == null ? null : model.getLayerManager();
       if( layerManager == null )
         return Status.OK_STATUS;
+
       m_plotImage = ChartImageFactory.createPlotImage( getChartModel().getLayerManager().getLayers(), m_plotRect );
       redraw();
+
       return Status.OK_STATUS;
     }
   }
