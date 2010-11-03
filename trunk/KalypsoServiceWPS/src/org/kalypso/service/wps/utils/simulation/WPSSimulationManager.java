@@ -140,6 +140,7 @@ public class WPSSimulationManager
     }
     catch( final SimulationException e )
     {
+      e.printStackTrace();
       throw new OWSException( OWSException.ExceptionCode.NO_APPLICABLE_CODE, e, Messages.getString( "org.kalypso.service.wps.utils.simulation.WPSSimulationManager.2" ) ); //$NON-NLS-1$
     }
   }
