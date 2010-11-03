@@ -42,15 +42,6 @@ package de.openali.odysseus.chart.framework.util.img;
 
 import java.awt.Insets;
 
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Device;
-import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.graphics.GC;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.ui.PlatformUI;
-
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.LABEL_POSITION;
 import de.openali.odysseus.chart.framework.model.style.ITextStyle;
 import de.openali.odysseus.chart.framework.util.StyleUtils;
@@ -63,8 +54,6 @@ public class ChartTitleBean
   private String m_text = "";
 
   private LABEL_POSITION m_position = LABEL_POSITION.CENTERED;
-
-  private Point m_size = null;
 
   private ITextStyle m_textStyle;
 
@@ -84,12 +73,6 @@ public class ChartTitleBean
     m_insets = insets;
   }
 
-  public final void drawText( final GC gc, final Rectangle size )
-  {
-    getTextStyle().apply( gc );
-    gc.drawText( getText(), getStart( size.width ), size.y, SWT.DRAW_DELIMITER | SWT.DRAW_TAB );
-  }
-
   public Insets getInsets( )
   {
     return m_insets;
@@ -100,47 +83,46 @@ public class ChartTitleBean
     return m_position;
   }
 
-  public Point getSize( )
-  {
-    if( m_size == null )
-    {
-      final Device dev = PlatformUI.getWorkbench().getDisplay();
-      final Image image = new Image( dev, 1, 1 );
-      final GC gc = new GC( image );
-      final Font font = new Font( dev, getTextStyle().toFontData() );
-      gc.setFont( font );
-      try
-      {
-        m_size = gc.textExtent( getText(), SWT.DRAW_DELIMITER | SWT.DRAW_TAB );
-        m_size.x += m_insets.bottom + m_insets.top;
-        m_size.y += m_insets.left + m_insets.right;
-      }
-      finally
-      {
-        gc.dispose();
-        image.dispose();
-        font.dispose();
-      }
-    }
-    return m_size;
-  }
+// public Point getSize( )
+// {
+// if( m_size == null )
+// {
+// final Device dev = PlatformUI.getWorkbench().getDisplay();
+// final Image image = new Image( dev, 1, 1 );
+// final GC gc = new GC( image );
+// final Font font = new Font( dev, getTextStyle().toFontData() );
+// gc.setFont( font );
+// try
+// {
+// m_size = gc.textExtent( getText(), SWT.DRAW_DELIMITER | SWT.DRAW_TAB );
+// m_size.x += m_insets.bottom + m_insets.top;
+// m_size.y += m_insets.left + m_insets.right;
+// }
+// finally
+// {
+// gc.dispose();
+// image.dispose();
+// font.dispose();
+// }
+// }
+// return m_size;
+// }
 
-  private final int getStart( final int width )
-  {
-    final Point textWidth = getSize();
-    switch( m_position )
-    {
-      case LEFT:
-        return m_insets.left;
-
-      case RIGHT:
-        return width - textWidth.x - m_insets.right;
-
-    }
-    // all centered
-    return Math.max( 0, (width - textWidth.x) / 2 );
-
-  }
+// private int getStart( final int width )
+// {
+// final Point textWidth = getSize();
+// switch( m_position )
+// {
+// case LEFT:
+// return m_insets.left;
+//
+// case RIGHT:
+// return width - textWidth.x - m_insets.right;
+//
+// }
+// // all centered
+// return Math.max( 0, (width - textWidth.x) / 2 );
+// }
 
   public String getText( )
   {
@@ -151,12 +133,12 @@ public class ChartTitleBean
   {
     if( m_textStyle == null )
       m_textStyle = StyleUtils.getDefaultTextStyle();
+
     return m_textStyle;
   }
 
   public void setInsets( final Insets insets )
   {
-    m_size = null;
     m_insets = insets;
   }
 
@@ -167,13 +149,11 @@ public class ChartTitleBean
 
   public void setText( final String text )
   {
-    m_size = null;
     m_text = text;
   }
 
   public void setTextStyle( final ITextStyle textStyle )
   {
-    m_size = null;
     m_textStyle = textStyle;
   }
 

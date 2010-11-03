@@ -60,12 +60,17 @@ import de.openali.odysseus.chart.framework.model.style.ITextStyle;
 public class DefaultLegendStrategy implements ILegendStrategy
 {
 
+  private Point m_size;
+
   /**
    * @see de.openali.odysseus.chart.framework.util.img.ILegendStrategy#getSize(de.openali.odysseus.chart.framework.util.img.LegendImageCreator)
    */
   @Override
-  public Point getSize( final LegendImageCreator creator )
+  public Point getSize( final ChartLegendPainter creator )
   {
+    if( m_size != null )
+      return m_size;
+
     final IChartLayer[] layers = creator.getLayers();
 
     int heigth = 0;
@@ -96,10 +101,12 @@ public class DefaultLegendStrategy implements ILegendStrategy
       }
     }
 
-    return new Point( maxRowSize, heigth );
+    m_size = new Point( maxRowSize, heigth );
+
+    return m_size;
   }
 
-  private Point getItemSize( final LegendImageCreator creator, final ILegendEntry entry )
+  private Point getItemSize( final ChartLegendPainter creator, final ILegendEntry entry )
   {
     final Device dev = PlatformUI.getWorkbench().getDisplay();
     final Image image = new Image( dev, 1, 1 );
@@ -147,7 +154,7 @@ public class DefaultLegendStrategy implements ILegendStrategy
    * @see de.openali.odysseus.chart.framework.util.img.ILegendStrategy#createImage(de.openali.odysseus.chart.framework.util.img.LegendImageCreator)
    */
   @Override
-  public Image createImage( final LegendImageCreator creator )
+  public Image createImage( final ChartLegendPainter creator )
   {
     final IChartLayer[] layers = creator.getLayers();
     final Point size = getSize( creator );
@@ -198,7 +205,7 @@ public class DefaultLegendStrategy implements ILegendStrategy
 
   }
 
-  private ImageData createLegendItem( final LegendImageCreator creator, final ILegendEntry entry, final Font font )
+  private ImageData createLegendItem( final ChartLegendPainter creator, final ILegendEntry entry, final Font font )
   {
     final Point size = getItemSize( creator, entry );
 
@@ -228,7 +235,7 @@ public class DefaultLegendStrategy implements ILegendStrategy
     }
   }
 
-  private Point getTextAnchor( final LegendImageCreator creator, final Point iconSize )
+  private Point getTextAnchor( final ChartLegendPainter creator, final Point iconSize )
   {
     final ITextStyle style = creator.getTextStyle();
     final Point spacer = creator.getSpacer();
