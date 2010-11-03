@@ -324,6 +324,7 @@ public final class ZmlFactory
 
   private static IObservation fetchZmlFromRepository( final IRepository repository, final String itemId ) throws RepositoryException
   {
+// final IRepositoryItem item = RepositoryUtils.findEquivalentItem( repository, itemId );
     final IRepositoryItem item = repository.findItem( itemId );
     if( item == null )
       throw new RepositoryException( String.format( "Unknown ID: %s", itemId ) );
