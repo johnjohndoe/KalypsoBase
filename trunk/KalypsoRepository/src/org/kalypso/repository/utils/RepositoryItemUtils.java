@@ -92,13 +92,16 @@ public final class RepositoryItemUtils
     if( parts.length < PARAMETER_START_BORDER )
       return null;
 
-    final StringBuffer parameter = new StringBuffer();
-    for( int i = PARAMETER_START_BORDER - 1; i < parts.length; i++ )
-    {
-      parameter.append( parts[i] + "." );
-    }
+// final StringBuffer parameter = new StringBuffer();
+// for( int i = PARAMETER_START_BORDER - 1; i < parts.length; i++ )
+// {
+// parameter.append( parts[i] + "." );
+// }
+//
+// return StringUtilities.chomp( parameter.toString() );
 
-    return StringUtilities.chomp( parameter.toString() );
+    // becaus q.prognose is type of q!
+    return parts[PARAMETER_START_BORDER - 1];
   }
 
   /**
@@ -405,7 +408,18 @@ public final class RepositoryItemUtils
     final String identifier = item.getIdentifier();
     final String[] parts = identifier.split( "\\." );
 
-    return parts.length == parameterUrlParts;
+    if( parts.length == parameterUrlParts )
+    {
+      return true;
+    }
+    else if( parts.length - 1 == parameterUrlParts )
+    {
+      // is prognose
+      if( isPrognose( item ) )
+        return true;
+    }
+
+    return false;
   }
 
   public static boolean isVirtual( final IRepositoryItem item )
