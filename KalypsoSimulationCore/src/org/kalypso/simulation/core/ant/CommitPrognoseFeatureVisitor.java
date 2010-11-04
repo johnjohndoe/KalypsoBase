@@ -118,7 +118,11 @@ public class CommitPrognoseFeatureVisitor extends AbstractMonitoredFeatureVisito
   @Override
   public final boolean visit( final Feature f )
   {
-    m_stati.add( work( f ) );
+    final IStatus work = work( f );
+    System.out.print( work.toString() );
+    // FIXME: always return OK_STATUS, else later task will not run because we get a build exception
+    // We should introduce a flag, if we should halt on errors
+    // m_stati.add( work );
 
     return true;
   }

@@ -313,6 +313,9 @@ public final class ZmlFactory
       final IObservation observation = fetchZmlFromRepository( registeredRepository, itemId );
 
       /* If we have an request here but we did not find an observation -> create an request anyways */
+      if( observation != null )
+        return observation;
+
       final Request xmlReq = RequestFactory.parseRequest( urlBase );
       if( xmlReq != null )
         return RequestFactory.createDefaultObservation( xmlReq );
