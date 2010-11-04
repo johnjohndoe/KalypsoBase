@@ -310,7 +310,14 @@ public final class ZmlFactory
 
       final String itemId = splittedUrlBase[0];
 
-      return fetchZmlFromRepository( registeredRepository, itemId );
+      final IObservation observation = fetchZmlFromRepository( registeredRepository, itemId );
+
+      /* If we have an request here but we did not find an observation -> create an request anyways */
+      final Request xmlReq = RequestFactory.parseRequest( urlBase );
+      if( xmlReq != null )
+        return RequestFactory.createDefaultObservation( xmlReq );
+
+      return observation;
     }
     catch( final SensorException e )
     {
