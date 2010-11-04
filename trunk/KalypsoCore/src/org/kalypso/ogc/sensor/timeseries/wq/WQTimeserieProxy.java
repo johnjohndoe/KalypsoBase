@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.timeseries.wq;
 
@@ -45,12 +45,14 @@ import java.util.NoSuchElementException;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.IObservationListener;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.impl.AbstractObservationDecorator;
+import org.kalypso.ogc.sensor.event.ObservationEventAdapter;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
+import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
@@ -60,8 +62,12 @@ import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
  * 
  * @author schlienger
  */
-public class WQTimeserieProxy extends AbstractObservationDecorator
+public class WQTimeserieProxy implements IObservation
 {
+  private final ObservationEventAdapter m_eventAdapter = new ObservationEventAdapter( this );
+
+  private final IObservation m_obs;
+
   private IAxis[] m_axes;
 
   private IAxis m_dateAxis;
@@ -88,6 +94,7 @@ public class WQTimeserieProxy extends AbstractObservationDecorator
 
   private ITupleModel m_cachedModel = null;
 
+
   /**
    * Constructor
    * 
@@ -100,8 +107,7 @@ public class WQTimeserieProxy extends AbstractObservationDecorator
    */
   public WQTimeserieProxy( final String realAxisType, final String proxyAxisType, final IObservation obs )
   {
-    super( obs );
-
+    m_obs = obs;
     m_realAxisType = realAxisType;
     m_proxyAxisType = proxyAxisType;
 
@@ -160,7 +166,7 @@ public class WQTimeserieProxy extends AbstractObservationDecorator
     if( m_cachedModel != null && (m_cachedArgs == null && args == null || (m_cachedArgs != null && m_cachedArgs.equals( args ))) )
       return m_cachedModel;
 
-    m_cachedModel = new WQTuppleModel( super.getValues( args ), m_axes, m_dateAxis, m_srcAxis, m_srcStatusAxis, m_destAxis, m_destStatusAxis, getWQConverter(), m_destAxisPos, m_destStatusAxisPos );
+    m_cachedModel = new WQTuppleModel( m_obs.getValues( args ), m_axes, m_dateAxis, m_srcAxis, m_srcStatusAxis, m_destAxis, m_destStatusAxis, getWQConverter(), m_destAxisPos, m_destStatusAxisPos );
 
     m_cachedArgs = args;
 
@@ -181,7 +187,7 @@ public class WQTimeserieProxy extends AbstractObservationDecorator
   @Override
   public void setValues( final ITupleModel values ) throws SensorException
   {
-    super.setValues( WQTuppleModel.reverse( values, m_obs.getAxisList() ) );
+    m_obs.setValues( WQTuppleModel.reverse( values, m_obs.getAxisList() ) );
   }
 
   public IAxis getDateAxis( )
@@ -198,4 +204,80 @@ public class WQTimeserieProxy extends AbstractObservationDecorator
   {
     return m_srcAxis;
   }
+
+  /**
+   * @see org.kalypso.ogc.sensor.IObservationEventProvider#addListener(org.kalypso.ogc.sensor.IObservationListener)
+   */
+  @Override
+  public void addListener( final IObservationListener listener )
+  {
+    m_eventAdapter.addListener( listener );
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.IObservationEventProvider#removeListener(org.kalypso.ogc.sensor.IObservationListener)
+   */
+  @Override
+  public void removeListener( final IObservationListener listener )
+  {
+    m_eventAdapter.addListener( listener );
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.IObservationEventProvider#fireChangedEvent(java.lang.Object)
+   */
+  @Override
+  public void fireChangedEvent( final Object source )
+  {
+    m_eventAdapter.fireChangedEvent( source );
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.IObservation#getName()
+   */
+  @Override
+  public String getName( )
+  {
+    return m_obs.getName();
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.IObservation#getMetadataList()
+   */
+  @Override
+  public MetadataList getMetadataList( )
+  {
+    return m_obs.getMetadataList();
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.IObservation#getHref()
+   */
+  @Override
+  public String getHref( )
+  {
+    return m_obs.getHref();
+  }
+
+  @Override
+  public String toString( )
+  {
+    return m_obs.toString();
+  }
+
+  @Override
+  public boolean equals( final Object obj )
+  {
+    return m_obs.equals( obj );
+  }
+
+  /**
+   * @see java.lang.Object#hashCode()
+   */
+  @Override
+  public int hashCode( )
+  {
+    return m_obs.hashCode();
+  }
+
 }
