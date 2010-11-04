@@ -69,7 +69,7 @@ public class RequestObservationProxy extends AbstractObservationDecorator implem
   public ITupleModel getValues( final IRequest args ) throws SensorException
   {
     if( args == null )
-      m_obs.getValues( m_args );
+      return m_obs.getValues( m_args );
 
     // TODO if m_args!=null: they are not used at all, check policy here
     return m_obs.getValues( args );
