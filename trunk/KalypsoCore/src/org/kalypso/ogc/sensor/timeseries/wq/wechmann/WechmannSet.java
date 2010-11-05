@@ -128,7 +128,7 @@ public class WechmannSet
       return m_mapW.get( ds[i] );
 
     // W was too big for current parameters, just use last branch of Wechmann-Set
-    return null;
+    return m_mapW.get( ds[ds.length-1]);
   }
 
   /**
