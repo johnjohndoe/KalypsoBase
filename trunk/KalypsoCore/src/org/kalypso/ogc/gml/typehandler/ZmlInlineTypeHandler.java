@@ -141,7 +141,8 @@ public class ZmlInlineTypeHandler extends XsdBaseTypeHandler<IObservation>
 
   public interface WVQ extends IObservation
   {
-    String[] axis = new String[] { ITimeseriesConstants.TYPE_NORMNULL, ITimeseriesConstants.TYPE_VOLUME, ITimeseriesConstants.TYPE_RUNOFF };
+    String[] axis = new String[] { ITimeseriesConstants.TYPE_NORMNULL, ITimeseriesConstants.TYPE_VOLUME, ITimeseriesConstants.TYPE_RUNOFF, ITimeseriesConstants.TYPE_RUNOFF_Q2,
+        ITimeseriesConstants.TYPE_RUNOFF_Q3 };
   }
 
   public interface TN extends IObservation
