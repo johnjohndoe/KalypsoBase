@@ -167,6 +167,10 @@ public interface ITimeseriesConstants extends IObservationConstants
 
   String TYPE_RUNOFF_RHB = "Qrhb"; //$NON-NLS-1$
 
+  String TYPE_RUNOFF_Q2 = "Q2"; //$NON-NLS-1$
+
+  String TYPE_RUNOFF_Q3 = "Q3"; //$NON-NLS-1$
+
   /** Temperatur */
   String TYPE_TEMPERATURE = "T"; //$NON-NLS-1$
 

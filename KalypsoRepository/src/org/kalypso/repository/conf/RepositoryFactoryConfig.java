@@ -166,6 +166,9 @@ public class RepositoryFactoryConfig
     final String factoryClassName = splits[2];
     final String conf = splits[3];
     final boolean readOnly = Boolean.valueOf( splits[4] ).booleanValue();
+    
+    // FIXME ArrayIndexOutOfBoundsException 
+    // You cannot check for "splits.length == 5" and than expect to read "splits[5]"!!! 
     final boolean cached = Boolean.valueOf( splits[5] ).booleanValue();
 
     return new RepositoryFactoryConfig( repositoryName, repositoryLabel, factoryClassName, conf, readOnly, cached, null );
