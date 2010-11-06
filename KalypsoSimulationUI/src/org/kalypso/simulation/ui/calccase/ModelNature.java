@@ -51,6 +51,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.TimeZone;
 
 import javax.xml.bind.DatatypeConverter;
 
@@ -375,12 +376,15 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     final IKalypsoUser currentUser = authPlugin.getCurrentUser();
     final Date now = new Date();
 
+    final TimeZone kalypsoTimezone = KalypsoCorePlugin.getDefault().getTimeZone();
+
     // auf x stunden vorher runden! hängt von der Modellspec ab
     final Calendar cal = Calendar.getInstance();
-    cal.setTimeZone( KalypsoCorePlugin.getDefault().getTimeZone() );
+    cal.setTimeZone( kalypsoTimezone );
     cal.setTime( now );
 
     attributes.setProperty( "kalypso.currentTime", DatatypeConverter.printDateTime( cal ) ); //$NON-NLS-1$
+    attributes.setProperty( "kalypso.timezone", kalypsoTimezone.getID() ); //$NON-NLS-1$
 
     // erstmal auf die letzte Stunde runden
     cal.set( Calendar.MINUTE, 0 );
@@ -397,7 +401,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       // nach 24h spätestens abbrechen!
       count++;
       if( count == 24 )
-        throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.simulation.ui.calccase.ModelNature.7" ) + cal ) ); //$NON-NLS-1$
+        throw new CoreException( new Status( IStatus.ERROR, KalypsoSimulationUIPlugin.getID(), Messages.getString( "org.kalypso.simulation.ui.calccase.ModelNature.7" ) + cal ) ); //$NON-NLS-1$
     }
 
     attributes.setProperty( "kalypso.startforecast", DatatypeConverter.printDateTime( cal ) ); //$NON-NLS-1$
@@ -436,7 +440,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
   {
     final IFolder launchFolder = getLaunchFolder();
     if( launchFolder == null )
-      throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.simulation.ui.calccase.ModelNature.8" ) ) ); //$NON-NLS-1$
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoSimulationUIPlugin.getID(), Messages.getString( "org.kalypso.simulation.ui.calccase.ModelNature.8" ) ) ); //$NON-NLS-1$
 
     return launchFolder.getFile( launchName + ".launch" );
   }
