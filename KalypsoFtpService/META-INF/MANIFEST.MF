@@ -1,0 +1,20 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: KalypsoFtpService Plug-in
+Bundle-SymbolicName: org.kalypso.ftp.service
+Bundle-Version: 10.10.0.qualifier
+Bundle-Activator: org.kalypso.ftp.service.KalypsoFtpService
+Require-Bundle: org.kalypso.commons
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ClassPath: lib/apache/mina/ftplet-api-1.0.5.jar,
+ lib/apache/mina/ftpserver-core-1.0.5.jar,
+ lib/apache/mina/log4j-1.2.14.jar,
+ lib/apache/mina/mina-core-2.0.0-RC1.jar,
+ lib/apache/mina/slf4j-api-1.5.2.jar,
+ lib/apache/mina/slf4j-log4j12-1.5.2.jar,
+ .
+Export-Package: org.kalypso.ftp.service,
+ org.kalypso.ftp.service.ftplet,
+ org.kalypso.ftp.service.schema
+Bundle-Vendor: kalypsobase.sourceforge.net
