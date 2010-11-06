@@ -44,7 +44,6 @@ import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
@@ -61,9 +60,9 @@ import org.kalypso.metadoc.IExportTargetModes;
 import org.kalypso.metadoc.ui.ExportAction;
 import org.kalypso.metadoc.ui.ExportActionContributor;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ogc.gml.table.ILayerTableInput;
+import org.kalypso.ogc.gml.table.LayerTableViewer;
 import org.kalypso.ui.editor.AbstractEditorActionBarContributor;
 import org.kalypso.ui.editor.actions.FeatureSelectionActionGroup;
 import org.kalypso.ui.editor.actions.NewFeatureScope;
@@ -163,27 +162,26 @@ public class GisTableEditorActionBarContributor extends AbstractEditorActionBarC
       return;
 
     final GisTableEditor tableEditor = (GisTableEditor) activeEditor;
-    final ILayerTableInput tableInput = tableEditor.getTableInput();
+    final LayerTableViewer layerTable = tableEditor.getLayerTable();
+    if( layerTable == null )
+      return;
+
+    final ILayerTableInput tableInput = layerTable.getInput();
     if( tableInput == null )
       return;
 
     final FeatureList featureList = tableInput.getFeatureList();
+    final CommandableWorkspace workspace = tableInput.getWorkspace();
+
     if( featureList == null )
       return;
 
-    final ISelectionProvider selectionProvider = tableEditor.getSite().getSelectionProvider();
-    final ISelection selection = selectionProvider.getSelection();
-    if( !(selection instanceof IFeatureSelection) )
-      return;
+    final IFeatureSelectionManager selectionManager = layerTable.getSelectionManager();
 
-    final IFeatureSelection fs = (IFeatureSelection) selection;
-    final IFeatureSelectionManager selectionManager = fs.getSelectionManager();
-
-    // HACK: we know this works, as this must be the TreeFeatureSelection here
-    final CommandableWorkspace workspace = fs.getWorkspace( null );
+    // FIXME: hard to solve: we should consider if there is a feature-type filter on the list of the table -> only
+    // features that may go into this list should be created
 
     final NewFeatureScope scope = new NewFeatureScope( workspace, featureList, selectionManager );
-    NewFeatureScope.createFromTreeSelection( workspace, fs, selectionManager );
     scope.addMenuItems( newFeatureMenu );
   }
 

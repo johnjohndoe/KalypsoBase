@@ -1021,4 +1021,9 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
     final Menu cursormenu = menuManager.createContextMenu( m_tableCursor );
     m_tableCursor.setMenu( cursormenu );
   }
+
+  public IFeatureSelectionManager getSelectionManager( )
+  {
+    return m_selectionManager;
+  }
 }
