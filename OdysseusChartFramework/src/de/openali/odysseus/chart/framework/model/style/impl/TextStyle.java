@@ -110,7 +110,7 @@ public class TextStyle extends AbstractStyle implements ITextStyle
     gc.setFont( font );
     gc.setBackground( OdysseusChartFrameworkPlugin.getDefault().getColorRegistry().getResource( gc.getDevice(), m_fillRGB ) );
     gc.setForeground( OdysseusChartFrameworkPlugin.getDefault().getColorRegistry().getResource( gc.getDevice(), m_textRGB ) );
-
+    gc.setAlpha( getAlpha() );
   }
 
   @Override
