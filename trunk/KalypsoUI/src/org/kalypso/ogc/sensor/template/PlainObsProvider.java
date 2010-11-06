@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.template;
 
@@ -48,64 +48,20 @@ import org.kalypso.ogc.sensor.request.IRequest;
  * 
  * @author schlienger
  */
-public final class PlainObsProvider implements IObsProvider
+public final class PlainObsProvider extends AbstractObsProvider
 {
-  private final IObservation m_obs;
-
-  private final IRequest m_args;
-
   public PlainObsProvider( final IObservation obs, final IRequest args )
   {
-    m_args = args;
-    m_obs = obs;
+    setArguments( args );
+    setObservation( obs );
   }
 
   @Override
   public void dispose()
   {
-  // nix zu tun
+    // nix zu tun
   }
 
-  @Override
-  public IObservation getObservation()
-  {
-    return m_obs;
-  }
-
-  /**
-   * @return [optional] variable arguments that can be used when values are fetched from the observation
-   */
-  @Override
-  public IRequest getArguments()
-  {
-    return m_args;
-  }
-
-  /**
-   * @see org.kalypso.ogc.sensor.template.IObsProvider#addListener(org.kalypso.ogc.sensor.template.IObsProviderListener)
-   */
-  @Override
-  public void addListener( final IObsProviderListener l )
-  {
-  // obs kann sich nicht ändern
-  }
-
-  /**
-   * @see org.kalypso.ogc.sensor.template.IObsProvider#removeListener(org.kalypso.ogc.sensor.template.IObsProviderListener)
-   */
-  @Override
-  public void removeListener( IObsProviderListener l )
-  {
-  // obs kann sich nicht ändern
-  }
-
-//  /**
-//   * @see org.kalypso.ogc.sensor.template.IObsProvider#isLoading()
-//   */
-//  public boolean isLoading()
-//  {
-//    return false;
-//  }
 
   /**
    * @see org.kalypso.ogc.sensor.template.IObsProvider#copy()
@@ -113,6 +69,6 @@ public final class PlainObsProvider implements IObsProvider
   @Override
   public IObsProvider copy()
   {
-    return new PlainObsProvider( m_obs, m_args );
+    return new PlainObsProvider( getObservation(), getArguments() );
   }
 }

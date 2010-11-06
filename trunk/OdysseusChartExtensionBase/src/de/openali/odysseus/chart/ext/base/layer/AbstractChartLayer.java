@@ -42,7 +42,7 @@ public abstract class AbstractChartLayer implements IChartLayer
 
   private final Map<String, IRetinalMapper> m_mapperMap = new HashMap<String, IRetinalMapper>();
 
-  private boolean m_legend = true;
+  private boolean m_legendIsVisible = true;
 
   @Override
   public void addListener( final ILayerEventListener l )
@@ -252,7 +252,7 @@ public abstract class AbstractChartLayer implements IChartLayer
   @Override
   public boolean isLegend( )
   {
-    return m_legend;
+    return m_legendIsVisible;
   }
 
   /**
@@ -261,7 +261,7 @@ public abstract class AbstractChartLayer implements IChartLayer
   @Override
   public void setLegend( final boolean isVisible )
   {
-    m_legend = isVisible;
+    m_legendIsVisible = isVisible;
   }
 
 }

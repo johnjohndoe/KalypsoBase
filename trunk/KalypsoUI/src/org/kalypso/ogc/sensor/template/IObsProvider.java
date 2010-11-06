@@ -10,6 +10,8 @@ public interface IObsProvider
 {
   void addListener( final IObsProviderListener listener );
 
+  void removeListener( final IObsProviderListener listener );
+
   /** Clones this object, that is returns a provider of the same observation */
   IObsProvider copy( );
 
@@ -19,5 +21,8 @@ public interface IObsProvider
 
   IObservation getObservation( );
 
-  void removeListener( final IObsProviderListener listener );
+  /**
+   * @return observation is loaded?
+   */
+  boolean isLoaded( );
 }
