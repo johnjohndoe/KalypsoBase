@@ -53,12 +53,14 @@ import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
+import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoAddLayerPlugin;
 import org.kalypso.ui.action.AddThemeCommand;
+import org.kalypso.ui.editor.actions.FeatureActionUtilities;
 import org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement;
 import org.kalypso.ui.i18n.Messages;
 import org.kalypso.ui.wizard.IKalypsoDataImportWizard;
@@ -146,11 +148,22 @@ public class KalypsoGmlImportWizard extends Wizard implements IKalypsoDataImport
       final IFeatureType associationFeatureType = ftp.getTargetFeatureType();
       final IFeatureType[] associationFeatureTypes = GMLSchemaUtilities.getSubstituts( associationFeatureType, null, false, true );
 
+      final IAnnotation annotation = ftp.getAnnotation();
+      final String linkLabel = annotation == null ? "" : annotation.getLabel();
+
       // TODO: this is very often not what is wanted...
       // We should show a dialog to the user and ask what we really want to add here...
       for( final IFeatureType ft : associationFeatureTypes )
       {
-        final String title = ft.getAnnotation().getLabel();
+        final String title;
+        if( ft.equals( associationFeatureType ) )
+          title = linkLabel;
+        else
+        {
+          final String ftLabel = FeatureActionUtilities.newFeatureActionLabel( ft );
+          title = String.format( "%s [%s]", linkLabel, ftLabel );
+        }
+
         final String ftpName = ftp.getQName().getLocalPart();
         final String ftName = ft.getQName().getLocalPart();
         final FeaturePath path = new FeaturePath( parentFeaturePath, ftpName + "[" + ftName + "]" ); //$NON-NLS-1$ //$NON-NLS-2$
