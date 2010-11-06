@@ -118,23 +118,23 @@ public class ImportShapeFileImportPage extends WizardPage implements SelectionLi
   private IProject m_project;
 
   // style
-  private Text styleTextField;
+  private Text m_styleTextField;
 
-  private Button browseButton2;
+  private Button m_browseButton2;
 
   protected Path stylePath;
 
-  protected Combo styleNameCombo;
+  protected Combo m_styleNameCombo;
 
   protected String styleName;
 
-  private boolean checkDefaultStyle = false;
+  private boolean m_checkDefaultStyle = true;
 
   private Button checkDefaultStyleButton;
 
-  private Label styleNameLabel;
+  private Label m_styleNameLabel;
 
-  private Label styleLabel;
+  private Label m_styleLabel;
 
   protected ViewerFilter m_filter;
 
@@ -239,45 +239,36 @@ public class ImportShapeFileImportPage extends WizardPage implements SelectionLi
     gridLayout1.numColumns = 3;
     styleGroup.setLayout( gridLayout1 );
 
-    styleLabel = new Label( styleGroup, SWT.NONE );
-    styleLabel.setText( Messages.getString("org.kalypso.ui.wizard.shape.ImportShapeFileImportPage.6") ); //$NON-NLS-1$
+    m_styleLabel = new Label( styleGroup, SWT.NONE );
+    m_styleLabel.setText( Messages.getString( "org.kalypso.ui.wizard.shape.ImportShapeFileImportPage.6" ) ); //$NON-NLS-1$
 
-    styleTextField = new Text( styleGroup, SWT.BORDER );
+    m_styleTextField = new Text( styleGroup, SWT.BORDER );
     final GridData data4 = new GridData();
     data4.horizontalAlignment = GridData.FILL;
     data4.grabExcessHorizontalSpace = true;
-    styleTextField.setLayoutData( data4 );
-    styleTextField.setEditable( false );
+    m_styleTextField.setLayoutData( data4 );
+    m_styleTextField.setEditable( false );
 
-    browseButton2 = new Button( styleGroup, SWT.PUSH );
-    browseButton2.setText( Messages.getString("org.kalypso.ui.wizard.shape.ImportShapeFileImportPage.7") ); //$NON-NLS-1$
-    browseButton2.setLayoutData( new GridData( GridData.END ) );
-    browseButton2.addSelectionListener( this );
+    m_browseButton2 = new Button( styleGroup, SWT.PUSH );
+    m_browseButton2.setText( Messages.getString( "org.kalypso.ui.wizard.shape.ImportShapeFileImportPage.7" ) ); //$NON-NLS-1$
+    m_browseButton2.setLayoutData( new GridData( GridData.END ) );
+    m_browseButton2.addSelectionListener( this );
 
-    styleNameLabel = new Label( styleGroup, SWT.NONE );
-    styleNameLabel.setText( Messages.getString("org.kalypso.ui.wizard.shape.ImportShapeFileImportPage.8") ); //$NON-NLS-1$
+    m_styleNameLabel = new Label( styleGroup, SWT.NONE );
+    m_styleNameLabel.setText( Messages.getString( "org.kalypso.ui.wizard.shape.ImportShapeFileImportPage.8" ) ); //$NON-NLS-1$
 
-    styleNameCombo = new Combo( styleGroup, SWT.READ_ONLY );
+    m_styleNameCombo = new Combo( styleGroup, SWT.READ_ONLY );
     final GridData data5 = new GridData();
     data5.horizontalAlignment = GridData.FILL;
     data5.grabExcessHorizontalSpace = true;
-    styleNameCombo.setLayoutData( data5 );
-    styleNameCombo.addSelectionListener( this );
-
-    // new SelectionAdapter()
-    // {
-    // public void widgetSelected( SelectionEvent e )
-    // {
-    // styleName = styleNameCombo.getText();
-    // validate();
-    // }
-    // } );
+    m_styleNameCombo.setLayoutData( data5 );
+    m_styleNameCombo.addSelectionListener( this );
 
     final Label dummyLabel = new Label( styleGroup, SWT.NONE );
     dummyLabel.setText( "" ); //$NON-NLS-1$
 
     checkDefaultStyleButton = new Button( styleGroup, SWT.CHECK );
-    checkDefaultStyleButton.setSelection( checkDefaultStyle );
+    checkDefaultStyleButton.setSelection( m_checkDefaultStyle );
     checkDefaultStyleButton.addSelectionListener( this );
 
     final Label defaultStyleLabel = new Label( styleGroup, SWT.NONE );
@@ -289,7 +280,7 @@ public class ImportShapeFileImportPage extends WizardPage implements SelectionLi
   {
     setErrorMessage( null );
     boolean pageComplete = true;
-    if( !checkDefaultStyle )
+    if( !m_checkDefaultStyle )
     {
       // styleName
       if( styleName != null )
@@ -303,7 +294,7 @@ public class ImportShapeFileImportPage extends WizardPage implements SelectionLi
       }
 
       // styleFile
-      if( styleTextField.getText() != null && styleTextField.getText().length() > 0 )
+      if( m_styleTextField.getText() != null && m_styleTextField.getText().length() > 0 )
       {
         // ok
       }
@@ -339,7 +330,7 @@ public class ImportShapeFileImportPage extends WizardPage implements SelectionLi
     setPageComplete( pageComplete );
   }
 
-  public void setViewerFilter( ViewerFilter filter )
+  public void setViewerFilter( final ViewerFilter filter )
   {
     m_filter = filter;
   }
@@ -370,7 +361,7 @@ public class ImportShapeFileImportPage extends WizardPage implements SelectionLi
           m_relativeSourcePath = resultPath;
         }
       }
-      if( b.equals( browseButton2 ) )
+      if( b.equals( m_browseButton2 ) )
       {
         final KalypsoResourceSelectionDialog dialog = createResourceDialog( new String[] { "sld" } ); //$NON-NLS-1$
         dialog.open();
@@ -378,7 +369,7 @@ public class ImportShapeFileImportPage extends WizardPage implements SelectionLi
         if( result != null )
         {
           final Path resultPath = (Path) result[0];
-          styleTextField.setText( resultPath.toString() );
+          m_styleTextField.setText( resultPath.toString() );
           stylePath = resultPath;
           try
           {
@@ -413,8 +404,8 @@ public class ImportShapeFileImportPage extends WizardPage implements SelectionLi
             {
               styleNames[k] = styleNameVector.get( k );
             }
-            styleNameCombo.setItems( styleNames );
-            styleNameCombo.select( 0 );
+            m_styleNameCombo.setItems( styleNames );
+            m_styleNameCombo.select( 0 );
             styleName = styleNames[0];
           }
           catch( final MalformedURLException e1 )
@@ -433,30 +424,20 @@ public class ImportShapeFileImportPage extends WizardPage implements SelectionLi
       }
       if( b.equals( checkDefaultStyleButton ) )
       {
-        checkDefaultStyle = checkDefaultStyleButton.getSelection();
-        if( checkDefaultStyleButton.getSelection() )
-        {
-          styleLabel.setEnabled( false );
-          styleTextField.setEnabled( false );
-          browseButton2.setEnabled( false );
-          styleNameLabel.setEnabled( false );
-          styleNameCombo.setEnabled( false );
-        }
-        else
-        {
-          styleLabel.setEnabled( true );
-          styleTextField.setEnabled( true );
-          browseButton2.setEnabled( true );
-          styleNameLabel.setEnabled( true );
-          styleNameCombo.setEnabled( true );
-        }
+        final boolean isSelected = checkDefaultStyleButton.getSelection();
+        m_checkDefaultStyle = isSelected;
+        m_styleLabel.setEnabled( !isSelected );
+        m_styleTextField.setEnabled( !isSelected );
+        m_browseButton2.setEnabled( !isSelected );
+        m_styleNameLabel.setEnabled( !isSelected );
+        m_styleNameCombo.setEnabled( !isSelected );
       }
     }
     if( e.widget instanceof Combo )
     {
-      if( e.widget == styleNameCombo )
+      if( e.widget == m_styleNameCombo )
       {
-        styleName = styleNameCombo.getText();
+        styleName = m_styleNameCombo.getText();
       }
     }
 
@@ -542,7 +523,7 @@ public class ImportShapeFileImportPage extends WizardPage implements SelectionLi
 
   public boolean checkDefaultStyle( )
   {
-    return checkDefaultStyle;
+    return m_checkDefaultStyle;
   }
 
   public IPath getStylePath( )
