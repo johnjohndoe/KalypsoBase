@@ -36,12 +36,9 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.template;
-
-import java.util.HashSet;
-import java.util.Set;
 
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.core.KalypsoCorePlugin;
@@ -49,22 +46,17 @@ import org.kalypso.core.util.pool.IPoolListener;
 import org.kalypso.core.util.pool.IPoolableObjectType;
 import org.kalypso.core.util.pool.ResourcePool;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.request.IRequest;
 
 /**
  * A Theme for an IObservation
  * 
  * @author schlienger
  */
-public final class PooledObsProvider implements IObsProvider, IPoolListener
+public class PooledObsProvider extends AbstractObsProvider implements IPoolListener
 {
   private boolean m_isDisposed = false;
 
-  private final Set<IObsProviderListener> m_listeners = new HashSet<IObsProviderListener>();
-
   private final ResourcePool m_pool = KalypsoCorePlugin.getDefault().getPool();
-
-  private IObservation m_observation;
 
   private final IPoolableObjectType m_key;
 
@@ -79,7 +71,8 @@ public final class PooledObsProvider implements IObsProvider, IPoolListener
   private PooledObsProvider( final IPoolableObjectType key, final IObservation observation )
   {
     m_key = key;
-    m_observation = observation;
+
+    setObservation( observation );
 
     m_pool.addPoolListener( this, key );
   }
@@ -90,12 +83,8 @@ public final class PooledObsProvider implements IObsProvider, IPoolListener
     m_isDisposed = true;
 
     m_pool.removePoolListener( this );
-  }
 
-  @Override
-  public IObservation getObservation( )
-  {
-    return m_observation;
+    super.dispose();
   }
 
   /**
@@ -123,53 +112,14 @@ public final class PooledObsProvider implements IObsProvider, IPoolListener
       setObservation( (IObservation) newValue );
   }
 
-  private void setObservation( final IObservation obs )
-  {
-    if( m_observation != obs )
-    {
-      m_observation = obs;
-      fireChanged();
-    }
-  }
-
-  /**
-   * ATM only triggered from setObservation
-   */
-  public void fireChanged( )
-  {
-    synchronized( m_listeners )
-    {
-      final Object[] listeners = m_listeners.toArray();
-      for( final Object listener : listeners )
-        ((IObsProviderListener) listener).observationLoadedEvent();
-    }
-  }
-
-  /**
-   * @see org.kalypso.ogc.sensor.template.IObsProvider#addListener(org.kalypso.ogc.sensor.template.IObsProviderListener)
-   */
-  @Override
-  public void addListener( final IObsProviderListener l )
-  {
-    m_listeners.add( l );
-  }
-
-  /**
-   * @see org.kalypso.ogc.sensor.template.IObsProvider#removeListener(org.kalypso.ogc.sensor.template.IObsProviderListener)
-   */
-  @Override
-  public void removeListener( final IObsProviderListener l )
-  {
-    m_listeners.remove( l );
-  }
-
   /**
    * @see org.kalypso.ogc.sensor.template.IObsProvider#copy()
    */
   @Override
   public IObsProvider copy( )
   {
-    return new PooledObsProvider( m_key, m_observation );
+    final IObservation observation = getObservation();
+    return new PooledObsProvider( m_key, observation );
   }
 
   /**
@@ -187,15 +137,6 @@ public final class PooledObsProvider implements IObsProvider, IPoolListener
   @Override
   public void dirtyChanged( final IPoolableObjectType key, final boolean isDirty )
   {
-    // TODO Auto-generated method stub
-  }
-
-  /**
-   * @see org.kalypso.ogc.sensor.template.IObsProvider#getArguments()
-   */
-  @Override
-  public IRequest getArguments( )
-  {
-    return null;
+    // nothing to do
   }
 }

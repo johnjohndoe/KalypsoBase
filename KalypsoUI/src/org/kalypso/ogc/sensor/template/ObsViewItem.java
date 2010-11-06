@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.template;
 
@@ -44,7 +44,6 @@ import java.util.Set;
 
 import org.kalypso.contribs.eclipse.ui.IViewable;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.IObservationListener;
 import org.kalypso.ogc.sensor.request.IRequest;
 
 /**
@@ -52,13 +51,11 @@ import org.kalypso.ogc.sensor.request.IRequest;
  * 
  * @author schlienger
  */
-public abstract class ObsViewItem implements IObsProviderListener, IObservationListener, IViewable
+public abstract class ObsViewItem implements IObsProviderListener, IViewable
 {
   private final ObsView m_view;
 
   private final IObsProvider m_obsProvider;
-
-  private IObservation m_observation;
 
   private boolean m_shown = true;
 
@@ -69,17 +66,12 @@ public abstract class ObsViewItem implements IObsProviderListener, IObservationL
     m_obsProvider = obsProvider;
     m_view = view;
     m_name = name;
-    m_observation = obsProvider.getObservation();
-    if( m_observation != null )
-      m_observation.addListener( this );
     obsProvider.addListener( this );
   }
 
   public void dispose( )
   {
     m_obsProvider.removeListener( this );
-    if( m_observation != null )
-      m_observation.removeListener( this );
     m_obsProvider.dispose();
   }
 
@@ -126,25 +118,16 @@ public abstract class ObsViewItem implements IObsProviderListener, IObservationL
    * @see org.kalypso.ogc.sensor.template.IObsProviderListener#obsProviderChanged()
    */
   @Override
-  public void observationLoadedEvent( )
+  public void observationReplaced( )
   {
-    if( m_observation != null )
-      m_observation.removeListener( this );
-
-    m_observation = m_obsProvider.getObservation();
-
-    if( m_observation != null )
-      m_observation.addListener( this );
-
-    observationChanged( m_observation, null );
+    observationChanged( null );
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.IObservationListener#observationChanged(org.kalypso.ogc.sensor.IObservation,
-   *      java.lang.Object)
+   * @see org.kalypso.ogc.sensor.template.IObsProviderListener#observationChangedX(java.lang.Object)
    */
   @Override
-  public void observationChanged( final IObservation obs, final Object source )
+  public void observationChanged( final Object source )
   {
     m_view.refreshItemData( this, source );
   }
