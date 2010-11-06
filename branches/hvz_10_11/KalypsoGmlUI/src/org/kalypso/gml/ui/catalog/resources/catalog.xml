@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<catalog:catalog id="urn:" ns0:base="urn:" xmlns:ns0="xml"
+	xmlns:catalog="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+
+	<catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.gml.processes.mesh:Triangle:sld:default"
+		uri="org.kalypso.gml.processes.mesh.triangle.sld" />
+
+	<catalog:system
+		systemId="urn:ogc:gml:featuretype:http___www.opengis.net_gml:_Coverage:uiproperties:default"
+		uri="http___www.opengis.net_gml._Coverage.properties" />
+
+
+</catalog:catalog>
+
