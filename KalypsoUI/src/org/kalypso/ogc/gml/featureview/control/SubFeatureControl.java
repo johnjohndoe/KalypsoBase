@@ -6,7 +6,6 @@ import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -66,8 +65,13 @@ public class SubFeatureControl extends AbstractFeatureControl
     {
       // on first call to createControl the container is set up
       m_container = new Composite( parent, style );
-      m_container.setLayout( new GridLayout( 1, false ) );
-      m_container.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+
+      // FIXME: actually we'd like to use a FillLayout, but there are still buggy Feature-Controls out
+      // there that set their own layoutData to grid-data....
+      final GridLayout layout = new GridLayout( 1, false );
+      layout.marginWidth = 0;
+      layout.marginHeight = 0;
+      m_container.setLayout( layout );
     }
 
     try
@@ -115,7 +119,8 @@ public class SubFeatureControl extends AbstractFeatureControl
       }
     } );
 
-    return m_fc.createControl( m_container, SWT.NONE );
+    m_fc.createControl( m_container, SWT.NONE );
+    return m_container;
   }
 
   private Feature findFeatuereToSet( )
