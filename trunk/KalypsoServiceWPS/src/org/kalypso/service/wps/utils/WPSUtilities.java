@@ -66,6 +66,7 @@ import net.opengeospatial.wps.ProcessDescriptions;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
+import org.apache.commons.httpclient.StatusLine;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.apache.commons.io.IOUtils;
@@ -79,6 +80,8 @@ import org.eclipse.osgi.framework.internal.core.FrameworkProperties;
 import org.kalypso.commons.io.VFSUtilities;
 import org.kalypso.commons.net.ProxyUtilities;
 import org.kalypso.commons.xml.NS;
+import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
+import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.util.Arrays;
 import org.kalypso.service.ogc.exception.OWSException;
@@ -183,12 +186,16 @@ public class WPSUtilities
 
     if( status != 200 )
     {
-      // TODO: we should also add the body into a sub-status;
-      // so we could show it to the user if he examines it more closely
-      // String body = post.getResponseBodyAsString();
-      // TODO2: also dump post-xml and url!
-      final String msg = Messages.getString( "org.kalypso.service.wps.utils.WPSUtilities.0", status ); //$NON-NLS-1$
-      throw new CoreException( new Status( IStatus.ERROR, Activator.PLUGIN_ID, msg ) );
+      final IStatusCollector collector = new StatusCollector( Activator.PLUGIN_ID );
+      final StatusLine statusLine = post.getStatusLine();
+      collector.add( IStatus.ERROR, "%s", null, statusLine );
+      final String responseBodyAsString = post.getResponseBodyAsString();
+      collector.add( IStatus.INFO, "Response body was '%s'", null, responseBodyAsString );
+      collector.add( IStatus.INFO, "Post content was '%s'", null, xml );
+
+      final String msg = Messages.getString( "org.kalypso.service.wps.utils.WPSUtilities.0", url, statusLine ); //$NON-NLS-1$
+      final IStatus error = collector.asMultiStatusOrOK( msg );
+      throw new CoreException( error );
     }
 
     final InputStream is = post.getResponseBodyAsStream();
