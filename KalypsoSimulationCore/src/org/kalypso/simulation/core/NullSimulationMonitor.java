@@ -47,7 +47,6 @@ package org.kalypso.simulation.core;
  */
 public class NullSimulationMonitor implements ISimulationMonitor
 {
-
   private boolean m_cancel = false;
 
   private final ISimulationMonitor m_simulationmonitor;
@@ -61,7 +60,7 @@ public class NullSimulationMonitor implements ISimulationMonitor
    * @param simulationmonitor
    *          a monitor that will receive cancel information, but no progressinformation from this monitor
    */
-  public NullSimulationMonitor( ISimulationMonitor simulationmonitor )
+  public NullSimulationMonitor( final ISimulationMonitor simulationmonitor )
   {
     m_simulationmonitor = simulationmonitor;
   }
@@ -70,7 +69,7 @@ public class NullSimulationMonitor implements ISimulationMonitor
    * @see org.kalypso.simulation.core.ISimulationMonitor#setProgress(int)
    */
   @Override
-  public void setProgress( int progress )
+  public void setProgress( final int progress )
   {
     // nothing
   }
@@ -99,7 +98,7 @@ public class NullSimulationMonitor implements ISimulationMonitor
    * @see org.kalypso.simulation.core.ISimulationMonitor#setMessage(java.lang.String)
    */
   @Override
-  public void setMessage( String message )
+  public void setMessage( final String message )
   {
     // nothing
   }
@@ -108,7 +107,7 @@ public class NullSimulationMonitor implements ISimulationMonitor
    * @see org.kalypso.simulation.core.ISimulationMonitor#setFinishInfo(int, java.lang.String)
    */
   @Override
-  public void setFinishInfo( int status, String text )
+  public void setFinishInfo( final int status, final String text )
   {
     // TODO Auto-generated method stub
   }
