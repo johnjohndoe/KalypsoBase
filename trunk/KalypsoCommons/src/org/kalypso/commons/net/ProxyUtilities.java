@@ -59,6 +59,10 @@ import org.kalypso.contribs.eclipse.core.net.Proxy;
  */
 public class ProxyUtilities
 {
+  private static final String LOCALHOST = "localhost";
+
+  private static final String LOCALHOST_IP = "127.0.0.1";
+
   /**
    * The constructor.
    */
@@ -73,6 +77,24 @@ public class ProxyUtilities
    */
   public static Proxy getProxy( )
   {
+    // FIXME: replace with org.eclipse.core.net.IProxyService;
+    // Is there also a reusable HTTPClient in eclipse?
+
+    // try
+    // {
+    // final org.eclipse.core.net.proxy.IProxyService proxy = (IProxyService) PlatformUI.getWorkbench().getService(
+    // IProxyService.class );
+    // final IProxyData[] proxyData = proxy.select( requestURL.toURI() );
+    // for( final IProxyData pd : proxyData )
+    // {
+    // }
+    // }
+    // catch( final URISyntaxException e )
+    // {
+    // // TODO Auto-generated catch block
+    // e.printStackTrace();
+    // }
+
     return new Proxy();
   }
 
@@ -250,6 +272,11 @@ public class ProxyUtilities
     /* Get the host. A empty host denotes a local resource, so no proxy is needed. */
     final String host = url.getHost();
     if( host == null || host.isEmpty() )
+      return true;
+
+    /* We nned to explicitely test for localhost, it is usually not in the non-proxyhost list */
+    // TODO: isn't there a more elegant way to test this?
+    if( LOCALHOST.equals( host ) || LOCALHOST_IP.equals( host ) )
       return true;
 
     /* Get the proxy object. */
