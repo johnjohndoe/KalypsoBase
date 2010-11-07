@@ -55,7 +55,6 @@ import org.apache.commons.httpclient.util.URIUtil;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
-import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.SimulationDataPath;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.simulation.core.i18n.Messages;
@@ -66,7 +65,7 @@ import org.kalypso.simulation.core.util.AbstractSimulationDataProvider;
 /**
  * @author Dirk Kuch
  */
-public class LocalSimulationDataProvider extends AbstractSimulationDataProvider implements ISimulationDataProvider
+public class LocalSimulationDataProvider extends AbstractSimulationDataProvider
 {
   private final URL m_context;
   private final Map<String, String> m_inputs;

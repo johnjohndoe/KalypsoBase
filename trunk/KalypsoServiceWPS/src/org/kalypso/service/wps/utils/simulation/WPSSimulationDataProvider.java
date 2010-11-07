@@ -65,12 +65,8 @@ import net.opengeospatial.wps.IOValueType.ComplexValueReference;
 import net.opengeospatial.wps.LiteralValueType;
 
 import org.apache.commons.io.FileUtils;
-import org.eclipse.core.runtime.CoreException;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.xml.NS;
-import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.core.util.pool.PoolableObjectType;
-import org.kalypso.core.util.pool.ResourcePool;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
@@ -116,33 +112,6 @@ public class WPSSimulationDataProvider implements ISimulationDataProvider
      * The input data will not be deleted, this is a concern of the client, because only he could have write access to
      * this place.
      */
-  }
-
-  /**
-   * checks if the requested object is already loaded,
-   * if yes, returns the object from the ResourcePool
-   * otherwise returns null 
-   * 
-   * should prevent the recreation of already loaded objects
-   * specially in case of local execution  
-   * 
-   * @param pInputURL - {@link URL} to the needed object
-   * 
-   * @return {@link Object}
-   *
-   */
-  private Object getInputFromPool( final URL pInputURL ){
-    final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
-    final PoolableObjectType key = new PoolableObjectType( "gml", pInputURL.toExternalForm(), pInputURL ); //$NON-NLS-1$
-    Object inputRes = null;
-    try
-    {
-      inputRes = pool.getObject( key );
-    }
-    catch( CoreException e )
-    {
-    }
-    return inputRes;
   }
   
   /**

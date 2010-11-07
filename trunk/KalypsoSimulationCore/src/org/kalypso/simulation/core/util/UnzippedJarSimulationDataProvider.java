@@ -50,14 +50,13 @@ import javax.activation.DataHandler;
 import org.apache.commons.io.IOUtils;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
-import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.SimulationDataPath;
 import org.kalypso.simulation.core.internal.queued.ModelspecData;
 
 /**
  * @author belger
  */
-public class UnzippedJarSimulationDataProvider extends JarSimulationDataProvider implements ISimulationDataProvider
+public class UnzippedJarSimulationDataProvider extends JarSimulationDataProvider
 {
   private URL m_baseURL;
 

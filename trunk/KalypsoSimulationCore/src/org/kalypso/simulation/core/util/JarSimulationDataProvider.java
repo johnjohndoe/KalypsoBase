@@ -49,14 +49,13 @@ import java.net.URL;
 import javax.activation.DataHandler;
 
 import org.apache.commons.io.IOUtils;
-import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.SimulationDataPath;
 import org.kalypso.simulation.core.internal.queued.ModelspecData;
 
 /**
  * @author belger
  */
-public class JarSimulationDataProvider extends AbstractSimulationDataProvider implements ISimulationDataProvider
+public class JarSimulationDataProvider extends AbstractSimulationDataProvider
 {
   private URL m_baseURL;
 
