@@ -43,17 +43,18 @@ package de.openali.odysseus.chart.framework.util.img;
 import java.awt.Insets;
 
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.LABEL_POSITION;
+import de.openali.odysseus.chart.framework.model.style.IChartLabelRenderer;
 import de.openali.odysseus.chart.framework.model.style.ITextStyle;
 import de.openali.odysseus.chart.framework.util.StyleUtils;
 
 /**
  * @author kimwerner
  */
-public class ChartTitleBean
+public class ChartTitleBean implements IChartLabelRenderer
 {
   private String m_text = "";
 
-  private LABEL_POSITION m_position = LABEL_POSITION.CENTERED;
+  private LABEL_POSITION m_position = LABEL_POSITION.TICK_CENTERED;
 
   private ITextStyle m_textStyle;
 
@@ -73,11 +74,13 @@ public class ChartTitleBean
     m_insets = insets;
   }
 
+  @Override
   public Insets getInsets( )
   {
     return m_insets;
   }
 
+  @Override
   public LABEL_POSITION getPosition( )
   {
     return m_position;
@@ -129,6 +132,7 @@ public class ChartTitleBean
     return m_text;
   }
 
+  @Override
   public ITextStyle getTextStyle( )
   {
     if( m_textStyle == null )
@@ -137,21 +141,25 @@ public class ChartTitleBean
     return m_textStyle;
   }
 
+  @Override
   public void setInsets( final Insets insets )
   {
     m_insets = insets;
   }
 
+  @Override
   public void setPosition( final LABEL_POSITION position )
   {
     m_position = position;
   }
 
-  public void setText( final String text )
+  @Override
+  public void setLabel( final String text )
   {
     m_text = text;
   }
 
+  @Override
   public void setTextStyle( final ITextStyle textStyle )
   {
     m_textStyle = textStyle;

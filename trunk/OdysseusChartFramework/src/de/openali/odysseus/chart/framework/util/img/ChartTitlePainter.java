@@ -171,7 +171,7 @@ public class ChartTitlePainter
     final Insets inset = title.getInsets();
 
     final LABEL_POSITION position = title.getPosition();
-    if( LABEL_POSITION.CENTERED.equals( position ) )
+    if( LABEL_POSITION.TICK_CENTERED.equals( position ) )
     {
       final int x = Double.valueOf( m_width / 2.0 - textExtent.x / 2.0 ).intValue();
 
