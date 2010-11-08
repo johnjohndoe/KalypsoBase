@@ -21,6 +21,7 @@ import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATI
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
 import de.openali.odysseus.chart.framework.model.mapper.registry.impl.MapperRegistry;
+import de.openali.odysseus.chart.framework.model.style.IChartLabelRenderer;
 import de.openali.odysseus.chart.framework.model.style.ITextStyle;
 import de.openali.odysseus.chart.framework.util.ChartUtilities;
 import de.openali.odysseus.chart.framework.util.StyleUtils;
@@ -48,7 +49,7 @@ public class ChartModel implements IChartModel
 
   private String m_id = "";
 
-  private final List<ChartTitleBean> m_title = new ArrayList<ChartTitleBean>();
+  private final List<IChartLabelRenderer> m_title = new ArrayList<IChartLabelRenderer>();
 
   private String m_description = "";
 
@@ -709,9 +710,9 @@ public class ChartModel implements IChartModel
   {
     if( m_title.size() > 0 )
     {
-      final ChartTitleBean titleBean = m_title.get( 0 );
+      final IChartLabelRenderer titleBean = m_title.get( 0 );
       m_title.clear();
-      titleBean.setText( title );
+      titleBean.setLabel( title );
       m_title.add( titleBean );
     }
     m_title.add( new ChartTitleBean( title ) );

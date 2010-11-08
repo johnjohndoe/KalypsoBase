@@ -423,8 +423,6 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
         return 0;
       case TICK_CENTERED:
         return labelWidth / 2;
-      case CENTERED:
-        return labelWidth / 2;
       case INTERVALL_CENTERED:
         return (labelWidth - tickScreenDistance) / 2;
     }
