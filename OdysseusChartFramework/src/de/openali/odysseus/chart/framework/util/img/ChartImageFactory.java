@@ -108,12 +108,12 @@ public final class ChartImageFactory
     }
   }
 
-  public static Image createAxesImage( final IMapperRegistry mapperRegistry, final Rectangle boundsRect )
-  {
-    final Rectangle plotRect = calculatePlotSize( mapperRegistry, boundsRect.width, boundsRect.height );
-    setAxesHeight( mapperRegistry.getAxes(), plotRect );
-    return createAxesImage( mapperRegistry, boundsRect, plotRect );
-  }
+//  public static Image createAxesImage( final IMapperRegistry mapperRegistry, final Rectangle boundsRect )
+//  {
+//    final Rectangle plotRect = calculatePlotSize( mapperRegistry, boundsRect.width, boundsRect.height );
+//    setAxesHeight( mapperRegistry.getAxes(), plotRect );
+//    return createAxesImage( mapperRegistry, boundsRect, plotRect );
+//  }
 
   public static void drawHorizontalAxis( final GC gc, final IAxis[] axes, final int width )
   {
