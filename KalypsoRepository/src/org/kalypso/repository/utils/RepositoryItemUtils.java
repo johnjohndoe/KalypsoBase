@@ -92,14 +92,6 @@ public final class RepositoryItemUtils
     if( parts.length < PARAMETER_START_BORDER )
       return null;
 
-// final StringBuffer parameter = new StringBuffer();
-// for( int i = PARAMETER_START_BORDER - 1; i < parts.length; i++ )
-// {
-// parameter.append( parts[i] + "." );
-// }
-//
-// return StringUtilities.chomp( parameter.toString() );
-
     // becaus q.prognose is type of q!
     return parts[PARAMETER_START_BORDER - 1];
   }
@@ -300,8 +292,11 @@ public final class RepositoryItemUtils
 
   public static boolean isPrognose( final IRepositoryItem item )
   {
-    final String identifier = item.getIdentifier();
+    return isPrognose( item.getIdentifier() );
+  }
 
+  private static boolean isPrognose( final String identifier )
+  {
     /**
      * the group has to be prognose, not the station value itselfs
      */
@@ -386,40 +381,6 @@ public final class RepositoryItemUtils
       base += "." + item.getName();
 
     return base;
-  }
-
-  /**
-   * @param parameterUrlParts
-   *          assumption an identifier of a parameter consists of 'x' parts
-   */
-  public static boolean isParameterItem( final IRepositoryItem item, final int parameterUrlParts ) throws RepositoryException
-  {
-    if( isVirtual( item ) )
-    {
-      final String identifier = item.getIdentifier();
-      final String[] parts = identifier.split( "\\." );
-
-      return parts.length == parameterUrlParts;
-    }
-
-    if( !ArrayUtils.isEmpty( item.getChildren() ) )
-      return false;
-
-    final String identifier = item.getIdentifier();
-    final String[] parts = identifier.split( "\\." );
-
-    if( parts.length == parameterUrlParts )
-    {
-      return true;
-    }
-    else if( parts.length - 1 == parameterUrlParts )
-    {
-      // is prognose
-      if( isPrognose( item ) )
-        return true;
-    }
-
-    return false;
   }
 
   public static boolean isVirtual( final IRepositoryItem item )
