@@ -84,6 +84,7 @@ public class GenericDateTickCalculator implements ITickCalculator
     final IDataRange<Number> range = axis.getNumericRange();
     if( range == null )
       return new Number[] {};
+
 //
 // if( axis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
 // {
@@ -117,8 +118,13 @@ public class GenericDateTickCalculator implements ITickCalculator
     // Ab jetzt wird nur noch mit long gerechnet
 
     // logischen mini- und maximalen Wert ermitteln
-    final long logicalMin = range.getMin().longValue();// axis.screenToNumeric( screenMin ).longValue();
-    final long logicalMax = range.getMax().longValue();// axis.screenToNumeric( screenMax ).longValue();
+    final Number min = range.getMin();
+    final Number max = range.getMax();
+    if( min == null || max == null )
+      return new Number[] {};
+
+    final long logicalMin = min.longValue();// axis.screenToNumeric( screenMin ).longValue();
+    final long logicalMax = max.longValue();// axis.screenToNumeric( screenMax ).longValue();
 
     // der minimale logische Abstand
     final long minLogInterval;
