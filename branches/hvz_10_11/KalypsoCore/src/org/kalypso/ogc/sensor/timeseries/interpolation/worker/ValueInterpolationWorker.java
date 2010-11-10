@@ -57,6 +57,7 @@ import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
+import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 
 /**
@@ -247,7 +248,9 @@ public class ValueInterpolationWorker extends AbstractInterpolationWorker
           else
           {
             // this is the status axis: no interpolation
-            tuple[position] = new Integer( KalypsoStatusUtils.performInterpolation( (int) valStart, (int) valStop ) );
+            // tuple[position] = new Integer( KalypsoStatusUtils.performInterpolation( (int) valStart, (int) valStop )
+            // // );
+            tuple[position] = new Integer( KalypsoStati.BIT_CHECK );
 
             interpolated = true;
           }
@@ -290,7 +293,7 @@ public class ValueInterpolationWorker extends AbstractInterpolationWorker
     if( !interpolated )
       return;
 
-    // FIXME: what happens if dataSource is null?
+    // FIXME: what happens if dataSource is null? Shouldn't we add it?
     final IAxis dataSourceAxis = getDataSourceAxis();
     if( dataSourceAxis == null )
       return;
