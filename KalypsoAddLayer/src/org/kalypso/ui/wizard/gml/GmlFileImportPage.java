@@ -191,7 +191,8 @@ public class GmlFileImportPage extends WizardPage
     } );
 
     final GMLContentProvider contentProvider = new GMLContentProvider( true );
-    contentProvider.setRootPath( m_rootPath );
+    if( m_rootPath != null )
+      contentProvider.setRootPath( m_rootPath );
 
     m_treeViewer.setContentProvider( contentProvider );
     m_treeViewer.setLabelProvider( new GMLLabelProvider() );
