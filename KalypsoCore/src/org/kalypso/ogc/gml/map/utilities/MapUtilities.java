@@ -58,6 +58,8 @@ import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineString;
+import com.vividsolutions.jts.geom.MultiLineString;
+import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.geom.Polygon;
 
 /**
@@ -135,22 +137,15 @@ public final class MapUtilities
       return null;
 
     if( geometryJTS instanceof com.vividsolutions.jts.geom.Point )
-    {
-      final com.vividsolutions.jts.geom.Point snapPoint = SnapUtilities.snapPoint( pointJTS );
-      return snapPoint;
-    }
+      return SnapUtilities.snapPoint( pointJTS );
     else if( geometryJTS instanceof LineString )
-    {
-      final com.vividsolutions.jts.geom.Point snapPoint = SnapUtilities.snapLine( (LineString) geometryJTS, pointBuffer, type );
-
-      return snapPoint;
-    }
+      return SnapUtilities.snapLine( (LineString) geometryJTS, pointBuffer, type );
+    else if( geometryJTS instanceof MultiLineString )
+      return SnapUtilities.snapMultiLine( (MultiLineString) geometryJTS, pointBuffer, type );
     else if( geometryJTS instanceof Polygon )
-    {
-      final com.vividsolutions.jts.geom.Point snapPoint = SnapUtilities.snapPolygon( (Polygon) geometryJTS, pointBuffer, type );
-
-      return snapPoint;
-    }
+      return SnapUtilities.snapPolygon( (Polygon) geometryJTS, pointBuffer, type );
+    else if( geometryJTS instanceof MultiPolygon )
+      return SnapUtilities.snapMultiPolygon( (MultiPolygon) geometryJTS, pointBuffer, type );
 
     return null;
   }

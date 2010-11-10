@@ -43,6 +43,8 @@ package org.kalypso.jts;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
+import com.vividsolutions.jts.geom.MultiLineString;
+import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
 import com.vividsolutions.jts.geom.TopologyException;
@@ -191,6 +193,72 @@ public class SnapUtilities
         return null;
 
       return point;
+    }
+
+    return null;
+  }
+
+  /**
+   * This function returns a point snapped to the multi line.
+   * 
+   * @param geometryJTS
+   *          The multi line.
+   * @param pointBuffer
+   *          The buffered point.
+   * @param type
+   *          The snap type.
+   * @return A point snapped to the multi line.
+   */
+  public static Point snapMultiLine( final MultiLineString geometryJTS, final Geometry pointBuffer, final SNAP_TYPE type )
+  {
+    /* Get the number of geoemtries. */
+    int numGeometries = geometryJTS.getNumGeometries();
+    for( int i = 0; i < numGeometries; i++ )
+    {
+      /* Get the geometry. */
+      Geometry geometry = geometryJTS.getGeometryN( i );
+
+      /* Only handle lines. */
+      if( geometry instanceof LineString )
+      {
+        /* Return the first snap point. */
+        Point snapPoint = snapLine( (LineString) geometry, pointBuffer, type );
+        if( snapPoint != null )
+          return snapPoint;
+      }
+    }
+
+    return null;
+  }
+
+  /**
+   * This function returns a point snapped to the multi polygon at the outside.
+   * 
+   * @param geometryJTS
+   *          The multi polygon.
+   * @param pointBuffer
+   *          The buffered point.
+   * @param type
+   *          The snap type.
+   * @return A point snapped to the multi polygon at the outside.
+   */
+  public static Point snapMultiPolygon( final MultiPolygon geometryJTS, final Geometry pointBuffer, final SNAP_TYPE type )
+  {
+    /* Get the number of geoemtries. */
+    int numGeometries = geometryJTS.getNumGeometries();
+    for( int i = 0; i < numGeometries; i++ )
+    {
+      /* Get the geometry. */
+      Geometry geometry = geometryJTS.getGeometryN( i );
+
+      /* Only handle polygons. */
+      if( geometry instanceof Polygon )
+      {
+        /* Return the first snap point. */
+        Point snapPoint = snapPolygon( (Polygon) geometry, pointBuffer, type );
+        if( snapPoint != null )
+          return snapPoint;
+      }
     }
 
     return null;
