@@ -79,6 +79,6 @@ abstract class GM_Boundary_Impl extends GM_Object_Impl implements GM_Boundary, S
   protected GM_Boundary calculateBoundary( )
   {
     // TODO: implement,, what is the boundary of a boundary?
-    return GM_Object_Impl.EMPTY_BOUNDARY;
+    return GM_Constants.EMPTY_BOUNDARY;
   }
 }
