@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,13 +36,15 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.repository.conf;
 
 import org.eclipse.core.runtime.CoreException;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.repository.IRepository;
+import org.kalypso.repository.KalypsoRepository;
 import org.kalypso.repository.RepositoriesExtensions;
 import org.kalypso.repository.factory.IRepositoryFactory;
 
@@ -62,7 +64,7 @@ public class RepositoryFactoryConfig
 
   private final boolean m_readOnly;
 
-  private final static String SEPARATOR = ";"; //$NON-NLS-1$
+  private static final String SEPARATOR = ";"; //$NON-NLS-1$
 
   /** factory can be specified in constructor */
   private IRepositoryFactory m_rf = null;
@@ -123,7 +125,10 @@ public class RepositoryFactoryConfig
 
     final IRepositoryFactory rf = RepositoriesExtensions.retrieveFactoryFor( m_factory );
     if( rf == null )
-      throw new CoreException( StatusUtilities.createErrorStatus( String.format( "Factory not found for repository: %s", m_factory ) ) ); //$NON-NLS-1$
+    {
+      final String msg = String.format( "Factory not found for repository: %s", m_factory ); //$NON-NLS-1$
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoRepository.PLUGIN_ID, msg ) );
+    }
 
     rf.setReadOnly( m_readOnly );
     rf.setCached( m_cached );
@@ -143,7 +148,12 @@ public class RepositoryFactoryConfig
   {
     final StringBuffer bf = new StringBuffer();
 
-    bf.append( m_name ).append( SEPARATOR ).append( m_label ).append( SEPARATOR ).append( m_factory ).append( SEPARATOR ).append( m_conf ).append( SEPARATOR ).append( String.valueOf( m_readOnly ) ).append( String.valueOf( m_cached ) );
+    bf.append( m_name ).append( SEPARATOR );
+    bf.append( m_label ).append( SEPARATOR );
+    bf.append( m_factory ).append( SEPARATOR );
+    bf.append( m_conf ).append( SEPARATOR );
+    bf.append( String.valueOf( m_readOnly ) ).append( SEPARATOR );
+    bf.append( String.valueOf( m_cached ) );
 
     return bf.toString();
   }

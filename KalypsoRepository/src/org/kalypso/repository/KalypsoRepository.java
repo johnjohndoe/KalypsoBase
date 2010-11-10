@@ -40,6 +40,8 @@ import org.osgi.framework.BundleContext;
 
 public class KalypsoRepository extends Plugin
 {
+  public static final String PLUGIN_ID = "org.kalypso.repository"; //$NON-NLS-1$
+
   /**
    * The shared instance.
    */
