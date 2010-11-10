@@ -147,7 +147,7 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
   {
     final GM_Position[] positions = getAsLineString().getPositions();
     if( positions.length < 2 )
-      return EMPTY_CENTROID;
+      return GM_Constants.EMPTY_CENTROID;
 
     final double length = getLength();
     if( length == 0 )

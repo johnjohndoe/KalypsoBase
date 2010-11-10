@@ -366,7 +366,7 @@ public class GM_Ring_Impl extends GM_OrientableCurve_Impl implements GM_Ring, Se
   protected GM_Boundary calculateBoundary( )
   {
     // TODO: implement,, what is the boundary of a boundary?
-    return GM_Object_Impl.EMPTY_BOUNDARY;
+    return GM_Constants.EMPTY_BOUNDARY;
   }
 
   @Override

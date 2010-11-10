@@ -233,7 +233,7 @@ class GM_CurveBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Curv
   protected GM_Point calculateCentroid( )
   {
     // TODO: implement
-    return EMPTY_CENTROID;
+    return GM_Constants.EMPTY_CENTROID;
   }
 
   /**
