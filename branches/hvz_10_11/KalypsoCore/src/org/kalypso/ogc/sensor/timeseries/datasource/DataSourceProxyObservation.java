@@ -120,9 +120,9 @@ public class DataSourceProxyObservation implements IObservation
   @Override
   public ITupleModel getValues( final IRequest args ) throws SensorException
   {
-    if( args == null || args != m_args )
+    if( args == null || args != m_args || m_model == null )
     {
-      final ITupleModel model = m_observation.getValues( args );
+      ITupleModel model = m_observation.getValues( args );
       if( !DataSourceHelper.hasDataSources( model ) )
       {
         // to assert a valid source reference!
@@ -146,7 +146,15 @@ public class DataSourceProxyObservation implements IObservation
   @Override
   public void setValues( final ITupleModel values ) throws SensorException
   {
-    m_observation.setValues( values );
+    try
+    {
+      m_observation.setValues( values );
+    }
+    finally
+    {
+      m_model = null;
+      m_args = null;
+    }
   }
 
   /**
