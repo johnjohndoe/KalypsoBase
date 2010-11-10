@@ -260,29 +260,40 @@ public final class RepositoryItemUtils
   }
 
   /**
-   * @return wiski://HVZ_Modelle_Elbe.Elbe_Prio_1 -> will return true
+   * @return wiski://HVZ_Modelle_Elbe.Elbe_Prio_1.56500 -> will return true
    */
-  public static boolean isGroupItem( final IRepositoryItem item )
+  public static boolean isStationItem( final IRepositoryItem item )
   {
-    final String identifier = item.getIdentifier();
-    final String[] parts = identifier.split( "\\." );
-    if( parts.length == 2 )
-      return true;
+    return isStationItem( item.getIdentifier() );
+  }
 
-    return false;
+  public static boolean isStationItem( final String identifier )
+  {
+    final String[] parts = identifier.split( "\\." ); //$NON-NLS-1$
+
+    return parts.length == 3;
   }
 
   /**
    * @return wiski://HVZ_Modelle_Elbe.Elbe_Prio_1 -> will return true
    */
+  public static boolean isGroupItem( final IRepositoryItem item )
+  {
+    final String identifier = item.getIdentifier();
+    final String[] parts = identifier.split( "\\." ); //$NON-NLS-1$
+
+    return parts.length == 2;
+  }
+
+  /**
+   * @return wiski://HVZ_Modelle_Elbe -> will return true
+   */
   public static boolean isModelItem( final IRepositoryItem item )
   {
     final String identifier = item.getIdentifier();
-    final String[] parts = identifier.split( "\\." );
-    if( parts.length == 1 )
-      return true;
+    final String[] parts = identifier.split( "\\." ); //$NON-NLS-1$
 
-    return false;
+    return parts.length == 1;
   }
 
   public static boolean isPlainId( final String identifier )
