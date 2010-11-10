@@ -195,7 +195,7 @@ final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
     final int size = getSize();
     // If we are empty we dont have a centroid
     if( size == 0 )
-      return EMPTY_CENTROID;
+      return GM_Constants.EMPTY_CENTROID;
 
     final GM_Point gmp = getCurveAt( 0 ).getCentroid();
 

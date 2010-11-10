@@ -242,7 +242,7 @@ final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_Mu
     m_area = 0;
 
     if( getSize() == 0 )
-      return EMPTY_CENTROID;
+      return GM_Constants.EMPTY_CENTROID;
 
     // REMARK: we reduce to dimension 2 here, because everyone else (GM_Surface, GM_Curve)
     // always only produce 2-dim centroids, causing an ArrayOutOfBoundsException here...

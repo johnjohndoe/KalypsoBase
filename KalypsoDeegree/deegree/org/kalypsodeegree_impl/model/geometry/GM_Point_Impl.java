@@ -344,7 +344,7 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
   protected GM_Boundary calculateBoundary( )
   {
     // TODO: implement: what is the boundary of a point?
-    return GM_Object_Impl.EMPTY_BOUNDARY;
+    return GM_Constants.EMPTY_BOUNDARY;
   }
 
   /**

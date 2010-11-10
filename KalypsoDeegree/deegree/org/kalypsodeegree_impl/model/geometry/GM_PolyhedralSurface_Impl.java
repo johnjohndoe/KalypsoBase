@@ -421,7 +421,7 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
   protected GM_Boundary calculateBoundary( )
   {
     // TODO: implement, what is the boundary this?
-    return GM_Object_Impl.EMPTY_BOUNDARY;
+    return GM_Constants.EMPTY_BOUNDARY;
   }
 
   /**
@@ -431,7 +431,7 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
   protected GM_Point calculateCentroid( )
   {
     // TODO: implement, what is the centroid of this?
-    return EMPTY_CENTROID;
+    return GM_Constants.EMPTY_CENTROID;
   }
 
   private static <T extends GM_Polygon> Envelope recalcEnvelope( final List<T> items )
