@@ -63,15 +63,6 @@ public abstract class GM_Object_Impl extends PlatformObject implements GM_Object
   /** Use serialVersionUID for interoperability. */
   private final static long serialVersionUID = 130728662284673112L;
 
-  /** Placeholder if the boundary cannot be created */
-  protected static final GM_Boundary EMPTY_BOUNDARY = new GM_CurveBoundary_Impl( null, null, null );
-
-  /** Placeholder if the centroid cannot be created */
-  protected static final GM_Point EMPTY_CENTROID = new GM_Point_Impl( Double.NaN, Double.NaN, null );
-
-  /** Placeholder if the envelope cannot be created */
-  protected static final GM_Envelope EMPTY_ENVELOPE = new GM_Envelope_Impl( Double.NaN, Double.NaN, Double.NaN, Double.NaN, null );
-
   private String m_crs = null;
 
   private GM_Boundary m_boundary = null;
@@ -152,12 +143,12 @@ public abstract class GM_Object_Impl extends PlatformObject implements GM_Object
       {
         // TODO: exception should be thrown by this method
         e.printStackTrace();
-        m_boundary = EMPTY_BOUNDARY;
+        m_boundary = GM_Constants.EMPTY_BOUNDARY;
       }
     }
 
     // if boundary is empty, return null
-    if( m_boundary == EMPTY_BOUNDARY )
+    if( m_boundary == GM_Constants.EMPTY_BOUNDARY )
       return null;
 
     return m_boundary;
@@ -235,12 +226,12 @@ public abstract class GM_Object_Impl extends PlatformObject implements GM_Object
       {
         e.printStackTrace();
         // TODO: we should throw this exception
-        m_centroid = EMPTY_CENTROID;
+        m_centroid = GM_Constants.EMPTY_CENTROID;
       }
     }
 
     // if empty, just return null
-    if( m_centroid == EMPTY_CENTROID )
+    if( m_centroid == GM_Constants.EMPTY_CENTROID )
       return null;
 
     return m_centroid;
@@ -265,12 +256,12 @@ public abstract class GM_Object_Impl extends PlatformObject implements GM_Object
       {
         e.printStackTrace();
         // TODO: we should throw this exception
-        m_envelope = EMPTY_ENVELOPE;
+        m_envelope = GM_Constants.EMPTY_ENVELOPE;
       }
     }
 
     // if empty, just return null
-    if( m_envelope == EMPTY_ENVELOPE )
+    if( m_envelope == GM_Constants.EMPTY_ENVELOPE )
       return null;
 
     return m_envelope;

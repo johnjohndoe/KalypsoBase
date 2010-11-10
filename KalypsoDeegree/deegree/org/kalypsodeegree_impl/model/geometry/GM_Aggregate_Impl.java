@@ -460,7 +460,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
   protected GM_Boundary calculateBoundary( )
   {
     // TODO: implement: what is the boundary of a GM_Aggregate?
-    return GM_Object_Impl.EMPTY_BOUNDARY;
+    return GM_Constants.EMPTY_BOUNDARY;
   }
 
   /**
@@ -470,7 +470,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
   protected GM_Envelope calculateEnvelope( )
   {
     if( getSize() == 0 )
-      return EMPTY_ENVELOPE;
+      return GM_Constants.EMPTY_ENVELOPE;
 
     final GM_Envelope bb = getObjectAt( 0 ).getEnvelope();
 
