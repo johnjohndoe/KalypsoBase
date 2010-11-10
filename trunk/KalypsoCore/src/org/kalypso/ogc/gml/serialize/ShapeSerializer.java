@@ -86,7 +86,7 @@ public final class ShapeSerializer
 
   public static final String SHP_NAMESPACE_URI = DBaseFile.SHP_NAMESPACE_URI;
 
-  private static final QName ROOT_FEATURETYPE = new QName( SHP_NAMESPACE_URI, "ShapeCollection" ); //$NON-NLS-1$
+  public static final QName ROOT_FEATURETYPE = new QName( SHP_NAMESPACE_URI, "ShapeCollection" ); //$NON-NLS-1$
 
   public static final QName PROPERTY_FEATURE_MEMBER = new QName( DBaseFile.SHP_NAMESPACE_URI, "featureMember" ); //$NON-NLS-1$
 
