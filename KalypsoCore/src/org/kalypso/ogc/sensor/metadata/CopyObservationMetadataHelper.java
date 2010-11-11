@@ -45,6 +45,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.kalypso.ogc.sensor.DateRange;
+import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHelper;
 import org.kalypso.repository.utils.RepositoryItemUtils;
 
 /**
@@ -90,6 +91,9 @@ public class CopyObservationMetadataHelper extends MetadataHelper
     return null;
   }
 
+  /**
+   * @return only IRepository item sources will be returned - filters (like interval, interpolation) will be ignored
+   */
   public static String[] getCopyObservationSources( final MetadataList mdl )
   {
     final List<String> sources = new ArrayList<String>();
@@ -99,7 +103,13 @@ public class CopyObservationMetadataHelper extends MetadataHelper
     {
       final String key = (String) object;
       if( key.startsWith( MD_TIME_SERIES_SOURCE ) )
+      {
+        if( DataSourceHelper.isFiltered( key ) )
+          continue;
+
         sources.add( mdl.getProperty( key ) );
+      }
+
     }
 
     return sources.toArray( new String[] {} );
