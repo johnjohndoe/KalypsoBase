@@ -117,6 +117,8 @@ public class RestoreSelectionHelper
     }
     final EasyFeatureWrapper[] easyArray = easyFeatures.toArray( new EasyFeatureWrapper[easyFeatures.size()] );
 
+    // REMARK: we are using the changeSelection method instead of #setselection in order to force the
+    m_selectionManager.clear();
     m_selectionManager.setSelection( easyArray );
   }
 
