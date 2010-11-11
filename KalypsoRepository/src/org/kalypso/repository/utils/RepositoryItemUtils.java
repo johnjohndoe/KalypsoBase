@@ -88,7 +88,7 @@ public final class RepositoryItemUtils
    */
   public static String getParameterType( final String identifier )
   {
-    final String[] parts = identifier.split( "\\." );
+    final String[] parts = identifier.split( "\\." ); //$NON-NLS-1$
     if( parts.length < PARAMETER_START_BORDER )
       return null;
 
@@ -122,10 +122,10 @@ public final class RepositoryItemUtils
     if( parts.length == 1 )
       return RepositoryUtils.getRepositoryId( identifier );
 
-    String parent = "";
+    String parent = ""; //$NON-NLS-1$
     for( int i = 0; i < parts.length - 1; i++ )
     {
-      parent += parts[i] + ".";
+      parent += parts[i] + "."; //$NON-NLS-1$
     }
 
     return StringUtilities.chomp( parent );
@@ -133,14 +133,14 @@ public final class RepositoryItemUtils
 
   public static String getParentItemId( final String identifier )
   {
-    final String[] parts = identifier.split( "\\." );
+    final String[] parts = identifier.split( "\\." ); //$NON-NLS-1$
     if( parts.length == 1 )
       return RepositoryUtils.getRepositoryId( identifier );
 
     String parent = "";
     for( int i = 0; i < parts.length - 1; i++ )
     {
-      parent += parts[i] + ".";
+      parent += parts[i] + "."; //$NON-NLS-1$
     }
 
     return StringUtilities.chomp( parent );
@@ -151,7 +151,7 @@ public final class RepositoryItemUtils
    */
   public static String getPlainId( final String identifier )
   {
-    final String[] parts = identifier.split( "://" );
+    final String[] parts = identifier.split( "://" ); //$NON-NLS-1$
 
     /**
      * sometime an identifier looks like:<br/>
@@ -166,9 +166,9 @@ public final class RepositoryItemUtils
       for( int i = 0; i < parts.length; i++ )
       {
         if( i == parts.length - 1 )
-          plain.append( parts[i] + "://" );
+          plain.append( parts[i] + "://" ); //$NON-NLS-1$
         else
-          plain.append( parts[i] + "://" );
+          plain.append( parts[i] + "://" ); //$NON-NLS-1$
       }
 
       return plain.toString();
@@ -182,7 +182,7 @@ public final class RepositoryItemUtils
    */
   public static String getProtocol( final String identifier )
   {
-    final String[] parts = identifier.split( ":" );
+    final String[] parts = identifier.split( ":" ); //$NON-NLS-1$
     return parts[0];
   }
 
@@ -193,9 +193,9 @@ public final class RepositoryItemUtils
   {
     final List<String> partsQualified = new ArrayList<String>();
 
-    String concat = "";
+    String concat = ""; //$NON-NLS-1$
 
-    final String[] parts = identifier.split( "\\." );
+    final String[] parts = identifier.split( "\\." ); //$NON-NLS-1$
     for( int i = 0; i < parts.length; i++ )
     {
       if( i < qualified - 1 )
@@ -204,7 +204,7 @@ public final class RepositoryItemUtils
       }
       else
       {
-        concat += parts[i] + ".";
+        concat += parts[i] + "."; //$NON-NLS-1$
       }
     }
     if( !concat.isEmpty() )
@@ -220,7 +220,7 @@ public final class RepositoryItemUtils
 
   public static String getStationKennziffer( final String identifier )
   {
-    final String[] parts = identifier.split( "\\." );
+    final String[] parts = identifier.split( "\\." ); //$NON-NLS-1$
     if( parts.length >= 3 )
       return parts[2];
 
@@ -234,7 +234,7 @@ public final class RepositoryItemUtils
 
   private static String getModel( final String identifier )
   {
-    final String[] parts = getPlainId( identifier ).split( "\\." );
+    final String[] parts = getPlainId( identifier ).split( "\\." ); //$NON-NLS-1$
     if( !ArrayUtils.isEmpty( parts ) )
     {
       return parts[0];
@@ -298,7 +298,7 @@ public final class RepositoryItemUtils
 
   public static boolean isPlainId( final String identifier )
   {
-    return !identifier.contains( "\\:" );
+    return !identifier.contains( "\\:" ); //$NON-NLS-1$
   }
 
   public static boolean isPrognose( final IRepositoryItem item )
@@ -311,10 +311,10 @@ public final class RepositoryItemUtils
     /**
      * the group has to be prognose, not the station value itselfs
      */
-    final String[] parts = identifier.split( "\\." );
+    final String[] parts = identifier.split( "\\." ); //$NON-NLS-1$
     if( parts.length > 2 )
     {
-      return parts[1].toLowerCase().contains( "_prog_" );
+      return parts[1].toLowerCase().contains( "_prog_" );//$NON-NLS-1$
     }
 
     return false;
@@ -322,7 +322,7 @@ public final class RepositoryItemUtils
 
   public static boolean isRepositoryItem( final String identifier )
   {
-    return identifier.contains( "://" );
+    return identifier.contains( "://" ); //$NON-NLS-1$
   }
 
   public static boolean isVirtual( final String identifier )
