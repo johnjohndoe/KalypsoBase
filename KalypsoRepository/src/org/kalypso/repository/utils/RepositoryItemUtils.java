@@ -301,20 +301,24 @@ public final class RepositoryItemUtils
     return !identifier.contains( "\\:" ); //$NON-NLS-1$
   }
 
-  public static boolean isPrognose( final IRepositoryItem item )
+  public static boolean isForecast( final IRepositoryItem item )
   {
-    return isPrognose( item.getIdentifier() );
+    return isForecast( item.getIdentifier() );
   }
 
-  public static boolean isPrognose( final String identifier )
+  public static boolean isForecast( final String identifier )
   {
     /**
-     * the group has to be prognose, not the station value itselfs
+     * the group has to be forecast, not the station value itself's
      */
     final String[] parts = identifier.split( "\\." ); //$NON-NLS-1$
     if( parts.length > 2 )
     {
-      return parts[1].toLowerCase().contains( "_prog_" );//$NON-NLS-1$
+      if( parts[1].toLowerCase().contains( "_prog_" ) )//$NON-NLS-1$
+        return true;
+      else if( parts[parts.length - 1].toLowerCase().contains( "prognose" ) )
+        return true;
+
     }
 
     return false;
