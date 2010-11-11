@@ -51,7 +51,6 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.logging.Logger;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -183,13 +182,7 @@ public class CommitPrognoseFeatureVisitor extends AbstractMonitoredFeatureVisito
       // Metadaten o.ä. geändert werden.
       final IObservation targetTemplateObservation = fetchTargetTemplate( targetHref );
 
-      IAxis[] targetAxes = fetchTargetAxes( targetTemplateObservation );
-      /** empty target observation? */
-      if( ArrayUtils.isEmpty( targetAxes ) )
-      {
-        System.out.println( "Warning: Target observation was empty creating a new target axes list from source observation." );
-        targetAxes = fetchTargetAxes( source );
-      }
+      final IAxis[] targetAxes = fetchTargetAxes( targetTemplateObservation );
 
       // copy values from source into dest, expecting full compatibility
       final IObservation target = optimisticValuesCopy( source, targetAxes );
