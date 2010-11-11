@@ -100,13 +100,14 @@ public class ValueInterpolationWorker extends AbstractInterpolationWorker
       final DateRange dateRange = getDateRange();
       final IAxis[] valueAxes = getValueAxes();
       final Calendar calendar = Calendar.getInstance();
+//      calendar.setTimeZone( KalypsoCorePlugin.getDefault().getTimeZone() );
 
       final LocalCalculationStack stack = new LocalCalculationStack( valueAxes.length );
 
       // do we need to fill before the beginning of the base model?
       setStartValue( stack, calendar );
 
-      for( int index = 1; index < getBaseModel().size(); index++ )
+      for( int index = 0; index < getBaseModel().size(); index++ )
       {
         setInterpolationValues( stack, calendar, index );
 
@@ -138,8 +139,8 @@ public class ValueInterpolationWorker extends AbstractInterpolationWorker
     {
       final Object[] lastValidTuple = determineLastValid( dateAxis, valueAxes );
 
-      // FIXME: compare date with Date.before !
-      while( calendar.getTime().compareTo( getDateRange().getTo() ) <= 0 )
+      final Date until = getDateRange().getTo();
+      while( until.after( calendar.getTime() ) )
         appendTuple( lastValidTuple, calendar );
     }
   }
@@ -217,6 +218,7 @@ public class ValueInterpolationWorker extends AbstractInterpolationWorker
       stack.v2[valuePosition] = nb.doubleValue();
     }
 
+    // FIXME: use .before...
     while( calendar.getTime().compareTo( stack.d2 ) <= 0 )
     {
       final long ms = calendar.getTimeInMillis();
@@ -311,7 +313,9 @@ public class ValueInterpolationWorker extends AbstractInterpolationWorker
 
     final Object[] defaultValues = getDefaultValues( valueAxes );
 
-    final Date timeSeriesStart = (Date) getBaseModel().get( 0, dateAxis );
+    final Date timeSeriesStartDate = (Date) getBaseModel().get( 0, dateAxis );
+    final Calendar timeSeriesStart = Calendar.getInstance();
+    timeSeriesStart.setTime( timeSeriesStartDate );
 
     if( getDateRange() != null && isFilled() )
     {
@@ -327,7 +331,7 @@ public class ValueInterpolationWorker extends AbstractInterpolationWorker
         stack.v1[position] = number.doubleValue();
       }
 
-      while( calendar.getTime().compareTo( timeSeriesStart ) < 0 )
+      while( calendar.before( timeSeriesStart ) )
       {
         stack.d1 = calendar.getTime();
         addDefaultTupple( dateAxis, valueAxes, defaultValues, calendar );
@@ -335,7 +339,7 @@ public class ValueInterpolationWorker extends AbstractInterpolationWorker
     }
     else
     {
-      calendar.setTime( timeSeriesStart );
+      calendar.setTime( timeSeriesStart.getTime() );
 
       final Object[] tuple = new Object[valueAxes.length + 1];
       tuple[interpolated.getPosition( dateAxis )] = calendar.getTime();
