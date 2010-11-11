@@ -147,9 +147,12 @@ public class MergeObservationWorker implements ICoreRunnableWithProgress
       {
         final ITupleModel srcModel = srcObservation.getValues( new ObservationRequest( source.getDateRange() ) );
         final IAxis[] srcAxes = srcModel.getAxisList();
+        final IAxis dataSourceAxis = AxisUtils.findDataSourceAxis( srcAxes );
 
         Object[][] data;
-        if( AxisUtils.findDataSourceAxis( srcAxes ) == null )
+        // FIXME: wrong! abstraction -> the both methods are almost copy/paste -> BAD!
+        // the distintions must be made inside the get data method!
+        if( dataSourceAxis == null )
         {
           data = getFromSourcelessData( srcObservation.getHref(), srcModel );
         }
