@@ -60,6 +60,8 @@ public final class DataSourceHelper
 {
   public static final String MERGED_SOURCES_ID = "mergedSources";
 
+  public static final String FILTER_SOURCE = "filter://";
+
   private DataSourceHelper( )
   {
   }
@@ -96,9 +98,9 @@ public final class DataSourceHelper
     return sources.toArray( new String[] {} );
   }
 
-  private static boolean isFiltered( final String reference )
+  public static boolean isFiltered( final String reference )
   {
-    return reference.startsWith( "filter://" );
+    return reference.startsWith( FILTER_SOURCE );
   }
 
   /**
