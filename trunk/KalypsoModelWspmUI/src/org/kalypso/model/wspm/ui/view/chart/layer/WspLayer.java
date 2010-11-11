@@ -84,13 +84,17 @@ public class WspLayer extends AbstractProfilTheme
    * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme#getTargetRange()
    */
   @Override
-  public IDataRange<Number> getTargetRange(IDataRange<Number> domainIntervall )
+  public IDataRange<Number> getTargetRange( IDataRange<Number> domainIntervall )
   {
     Double min = null;
     Double max = null;
     BigDecimal station = ProfilUtil.stationToBigDecimal( getProfil().getStation() );
+
     try
     {
+      if( m_data == null )
+        return null;
+
       for( final Object element : m_data.getActiveElements() )
       {
         /* Search the value. */
@@ -112,8 +116,10 @@ public class WspLayer extends AbstractProfilTheme
       /* Log the error message. */
       KalypsoModelWspmUIPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, KalypsoModelWspmUIPlugin.ID, e.getLocalizedMessage(), e ) );
     }
-    if( min == null || max == null )
+
+    if( min == null || Double.isNaN( min ) || max == null || Double.isNaN( max ) )
       return null;
+
     return new DataRange<Number>( min, max );
   }
 
@@ -184,7 +190,7 @@ public class WspLayer extends AbstractProfilTheme
    */
   public WspLayer( final IProfil profile, final String layerId, final ILayerStyleProvider styleProvider, final IWspLayerData data, final boolean fill, final ICoordinateMapper mapper )
   {
-    super( profile, layerId, Messages.getString("WspLayer.0"), null, mapper, styleProvider ); //$NON-NLS-1$
+    super( profile, layerId, Messages.getString( "WspLayer.0" ), null, mapper, styleProvider ); //$NON-NLS-1$
 
     m_profil = profile;
     m_data = data;

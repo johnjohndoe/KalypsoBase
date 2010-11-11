@@ -27,12 +27,13 @@ public class GenericNumberTickCalculator implements ITickCalculator
   public Number[] calcTicks( final GC gc, final IAxis axis, final Number minDisplayInterval, final Point ticklabelSize )
   {
     final IDataRange<Number> range = axis.getNumericRange();
-    if( range.getMax() == null || range.getMin() == null )
+    Number max = range.getMax();
+    Number min = range.getMin();
+    if( max == null || Double.isNaN( max.doubleValue() ) || min == null || Double.isNaN( min.doubleValue() ) )
       return new Number[] {};
-    // TickLabelGrï¿½ï¿½e + 2 wegen Rundungsfehlern beim positionieren
-    /*
-     * minimaler Bildschirmabstand zwischen zwei labels
-     */
+
+    // TickLabelGröße + 2 wegen Rundungsfehlern beim positionieren
+    /* minimaler Bildschirmabstand zwischen zwei labels */
     final int minScreenInterval;
     if( axis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
     {
@@ -43,11 +44,11 @@ public class GenericNumberTickCalculator implements ITickCalculator
       minScreenInterval = ticklabelSize.y;
     }
 
-    // Collection fï¿½r Ticks
+    // Collection für Ticks
     // final TreeMap<Integer, SortedSet<Double>> ticks = new TreeMap<Integer, SortedSet<Double>>();
     final SortedSet<Number> ticks = new TreeSet<Number>();
 
-    // Mini- und maximalen Grenz-Wert ermitteln anhand der Grï¿½ï¿½e der Labels
+    // Mini- und maximalen Grenz-Wert ermitteln anhand der Größe der Labels
     int screenMin, screenMax;
 
     final Point screenMinMax = GenericNumberTickCalculator.getScreenMinMax( axis, range, ticklabelSize );
@@ -101,7 +102,6 @@ public class GenericNumberTickCalculator implements ITickCalculator
     {
       interval = minDisplayInterval.doubleValue();
     }
-
 
     // hier werden alle Zahlen gespeichert, die als gute Divisoren eines Intervalls gelten
     // 3 wï¿½rde z.B. schnell krumme werte erzeugen
