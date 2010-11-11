@@ -306,7 +306,7 @@ public final class RepositoryItemUtils
     return isPrognose( item.getIdentifier() );
   }
 
-  private static boolean isPrognose( final String identifier )
+  public static boolean isPrognose( final String identifier )
   {
     /**
      * the group has to be prognose, not the station value itselfs
