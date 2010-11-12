@@ -88,7 +88,7 @@ public final class RepositoryItemUtils
    */
   public static String getParameterType( final String identifier )
   {
-    final String[] parts = identifier.split( "\\." );
+    final String[] parts = identifier.split( "\\." ); //$NON-NLS-1$
     if( parts.length < PARAMETER_START_BORDER )
       return null;
 
@@ -130,10 +130,10 @@ public final class RepositoryItemUtils
     if( parts.length == 1 )
       return RepositoryUtils.getRepositoryId( identifier );
 
-    String parent = "";
+    String parent = ""; //$NON-NLS-1$
     for( int i = 0; i < parts.length - 1; i++ )
     {
-      parent += parts[i] + ".";
+      parent += parts[i] + "."; //$NON-NLS-1$
     }
 
     return StringUtilities.chomp( parent );
@@ -141,14 +141,14 @@ public final class RepositoryItemUtils
 
   public static String getParentItemId( final String identifier )
   {
-    final String[] parts = identifier.split( "\\." );
+    final String[] parts = identifier.split( "\\." ); //$NON-NLS-1$
     if( parts.length == 1 )
       return RepositoryUtils.getRepositoryId( identifier );
 
     String parent = "";
     for( int i = 0; i < parts.length - 1; i++ )
     {
-      parent += parts[i] + ".";
+      parent += parts[i] + "."; //$NON-NLS-1$
     }
 
     return StringUtilities.chomp( parent );
@@ -159,7 +159,7 @@ public final class RepositoryItemUtils
    */
   public static String getPlainId( final String identifier )
   {
-    final String[] parts = identifier.split( "://" );
+    final String[] parts = identifier.split( "://" ); //$NON-NLS-1$
 
     /**
      * sometime an identifier looks like:<br/>
@@ -174,9 +174,9 @@ public final class RepositoryItemUtils
       for( int i = 0; i < parts.length; i++ )
       {
         if( i == parts.length - 1 )
-          plain.append( parts[i] + "://" );
+          plain.append( parts[i] + "://" ); //$NON-NLS-1$
         else
-          plain.append( parts[i] + "://" );
+          plain.append( parts[i] + "://" ); //$NON-NLS-1$
       }
 
       return plain.toString();
@@ -190,7 +190,7 @@ public final class RepositoryItemUtils
    */
   public static String getProtocol( final String identifier )
   {
-    final String[] parts = identifier.split( ":" );
+    final String[] parts = identifier.split( ":" ); //$NON-NLS-1$
     return parts[0];
   }
 
@@ -201,9 +201,9 @@ public final class RepositoryItemUtils
   {
     final List<String> partsQualified = new ArrayList<String>();
 
-    String concat = "";
+    String concat = ""; //$NON-NLS-1$
 
-    final String[] parts = identifier.split( "\\." );
+    final String[] parts = identifier.split( "\\." ); //$NON-NLS-1$
     for( int i = 0; i < parts.length; i++ )
     {
       if( i < qualified - 1 )
@@ -212,7 +212,7 @@ public final class RepositoryItemUtils
       }
       else
       {
-        concat += parts[i] + ".";
+        concat += parts[i] + "."; //$NON-NLS-1$
       }
     }
     if( !concat.isEmpty() )
@@ -228,7 +228,7 @@ public final class RepositoryItemUtils
 
   public static String getStationKennziffer( final String identifier )
   {
-    final String[] parts = identifier.split( "\\." );
+    final String[] parts = identifier.split( "\\." ); //$NON-NLS-1$
     if( parts.length >= 3 )
       return parts[2];
 
@@ -242,7 +242,7 @@ public final class RepositoryItemUtils
 
   private static String getModel( final String identifier )
   {
-    final String[] parts = getPlainId( identifier ).split( "\\." );
+    final String[] parts = getPlainId( identifier ).split( "\\." ); //$NON-NLS-1$
     if( !ArrayUtils.isEmpty( parts ) )
     {
       return parts[0];
@@ -268,47 +268,65 @@ public final class RepositoryItemUtils
   }
 
   /**
-   * @return wiski://HVZ_Modelle_Elbe.Elbe_Prio_1 -> will return true
+   * @return wiski://HVZ_Modelle_Elbe.Elbe_Prio_1.56500 -> will return true
    */
-  public static boolean isGroupItem( final IRepositoryItem item )
+  public static boolean isStationItem( final IRepositoryItem item )
   {
-    final String identifier = item.getIdentifier();
-    final String[] parts = identifier.split( "\\." );
-    if( parts.length == 2 )
-      return true;
+    return isStationItem( item.getIdentifier() );
+  }
 
-    return false;
+  public static boolean isStationItem( final String identifier )
+  {
+    final String[] parts = identifier.split( "\\." ); //$NON-NLS-1$
+
+    return parts.length == 3;
   }
 
   /**
    * @return wiski://HVZ_Modelle_Elbe.Elbe_Prio_1 -> will return true
    */
+  public static boolean isGroupItem( final IRepositoryItem item )
+  {
+    final String identifier = item.getIdentifier();
+    final String[] parts = identifier.split( "\\." ); //$NON-NLS-1$
+
+    return parts.length == 2;
+  }
+
+  /**
+   * @return wiski://HVZ_Modelle_Elbe -> will return true
+   */
   public static boolean isModelItem( final IRepositoryItem item )
   {
     final String identifier = item.getIdentifier();
-    final String[] parts = identifier.split( "\\." );
-    if( parts.length == 1 )
-      return true;
+    final String[] parts = identifier.split( "\\." ); //$NON-NLS-1$
 
-    return false;
+    return parts.length == 1;
   }
 
   public static boolean isPlainId( final String identifier )
   {
-    return !identifier.contains( "\\:" );
+    return !identifier.contains( "\\:" ); //$NON-NLS-1$
   }
 
-  public static boolean isPrognose( final IRepositoryItem item )
+  public static boolean isForecast( final IRepositoryItem item )
   {
-    final String identifier = item.getIdentifier();
+    return isForecast( item.getIdentifier() );
+  }
 
+  public static boolean isForecast( final String identifier )
+  {
     /**
-     * the group has to be prognose, not the station value itselfs
+     * the group has to be forecast, not the station value itself's
      */
-    final String[] parts = identifier.split( "\\." );
+    final String[] parts = identifier.split( "\\." ); //$NON-NLS-1$
     if( parts.length > 2 )
     {
-      return parts[1].toLowerCase().contains( "_prog_" );
+      if( parts[1].toLowerCase().contains( "_prog_" ) )//$NON-NLS-1$
+        return true;
+      else if( parts[parts.length - 1].toLowerCase().contains( "prognose" ) )
+        return true;
+
     }
 
     return false;
@@ -316,7 +334,7 @@ public final class RepositoryItemUtils
 
   public static boolean isRepositoryItem( final String identifier )
   {
-    return identifier.contains( "://" );
+    return identifier.contains( "://" ); //$NON-NLS-1$
   }
 
   public static boolean isVirtual( final String identifier )
@@ -363,7 +381,7 @@ public final class RepositoryItemUtils
 
   public static String resolveItemIdPart( final String identifier )
   {
-    final String[] parts = identifier.split( "\\." );
+    final String[] parts = identifier.split( "\\." ); //$NON-NLS-1$
     final String part = parts[parts.length - 1];
 
     return getPlainId( part );
@@ -374,16 +392,16 @@ public final class RepositoryItemUtils
     if( item instanceof IRepository )
       return item.getIdentifier();
 
-    String base = "";
+    String base = ""; //$NON-NLS-1$
 
     final IRepositoryItem parent = item.getParent();
     if( parent != null )
       base += resolveItemName( parent );
 
-    if( base.endsWith( "/" ) || base.endsWith( "." ) )
+    if( base.endsWith( "/" ) || base.endsWith( "." ) ) //$NON-NLS-1$
       base += item.getName();
     else
-      base += "." + item.getName();
+      base += "." + item.getName(); //$NON-NLS-1$
 
     return base;
   }
@@ -397,7 +415,7 @@ public final class RepositoryItemUtils
     if( isVirtual( item ) )
     {
       final String identifier = item.getIdentifier();
-      final String[] parts = identifier.split( "\\." );
+      final String[] parts = identifier.split( "\\." ); //$NON-NLS-1$
 
       return parts.length == parameterUrlParts;
     }
@@ -406,7 +424,7 @@ public final class RepositoryItemUtils
       return false;
 
     final String identifier = item.getIdentifier();
-    final String[] parts = identifier.split( "\\." );
+    final String[] parts = identifier.split( "\\." ); //$NON-NLS-1$
 
     if( parts.length == parameterUrlParts )
     {
@@ -415,7 +433,7 @@ public final class RepositoryItemUtils
     else if( parts.length - 1 == parameterUrlParts )
     {
       // is prognose
-      if( isPrognose( item ) )
+      if( isForecast( item ) )
         return true;
     }
 

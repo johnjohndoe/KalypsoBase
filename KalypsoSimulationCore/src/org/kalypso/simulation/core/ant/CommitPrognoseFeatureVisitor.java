@@ -181,6 +181,7 @@ public class CommitPrognoseFeatureVisitor extends AbstractMonitoredFeatureVisito
       // Wenn Daten in die Datenhaltung geschrieben werden, dürfen nur die Werte, keine
       // Metadaten o.ä. geändert werden.
       final IObservation targetTemplateObservation = fetchTargetTemplate( targetHref );
+
       final IAxis[] targetAxes = fetchTargetAxes( targetTemplateObservation );
 
       // copy values from source into dest, expecting full compatibility
