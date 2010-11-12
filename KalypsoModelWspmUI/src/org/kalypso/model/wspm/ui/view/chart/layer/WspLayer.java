@@ -88,13 +88,16 @@ public class WspLayer extends AbstractProfilTheme
   {
     Double min = null;
     Double max = null;
-    BigDecimal station = ProfilUtil.stationToBigDecimal( getProfil().getStation() );
+    final BigDecimal station = ProfilUtil.stationToBigDecimal( getProfil().getStation() );
     try
     {
       for( final Object element : m_data.getActiveElements() )
       {
         /* Search the value. */
         final Double value = getValue( element, station );
+        if( Double.isNaN( value ) )
+          continue;
+
         if( min == null || max == null )
         {
           min = value;
@@ -107,7 +110,7 @@ public class WspLayer extends AbstractProfilTheme
         }
       }
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       /* Log the error message. */
       KalypsoModelWspmUIPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, KalypsoModelWspmUIPlugin.ID, e.getLocalizedMessage(), e ) );
