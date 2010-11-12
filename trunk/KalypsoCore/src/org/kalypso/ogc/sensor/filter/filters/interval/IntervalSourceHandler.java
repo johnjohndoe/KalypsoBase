@@ -73,7 +73,7 @@ public final class IntervalSourceHandler
         final String[] srcs = DataSourceHelper.getSources( sources[i] );
 
         final StringBuffer buffer = new StringBuffer();
-        buffer.append( String.format( "filter://%s?", IntervalFilter.class.getName() ) );
+        buffer.append( String.format( "%s%s?", DataSourceHelper.FILTER_SOURCE, IntervalFilter.class.getName() ) );
 
         if( !ArrayUtils.isEmpty( srcs ) )
         {
@@ -146,14 +146,14 @@ public final class IntervalSourceHandler
     // - wenn schon definiert: "verschmiert": nach ? kombinieren
     if( IDataSourceItem.SOURCE_UNKNOWN.equalsIgnoreCase( base ) || isInitialValue( base ) )
       return other;
-    else if( base.startsWith( "filter://" ) )
+    else if( DataSourceHelper.isFiltered( base ) )
     {
       final Set<String> sources = new LinkedHashSet<String>();
 
       if( !isInitialValue( base ) )
         Collections.addAll( sources, DataSourceHelper.getSources( base ) );
 
-      if( other.startsWith( "filter://" ) )
+      if( DataSourceHelper.isFiltered( other ) )
       {
         final String[] otherSources = DataSourceHelper.getSources( other );
         for( final String source : otherSources )
@@ -169,12 +169,12 @@ public final class IntervalSourceHandler
 
       if( sources.isEmpty() )
       {
-        return String.format( "filter://%s?source_0=%s", IntervalFilter.class.getName(), SOURCE_EXTENDED );
+        return String.format( "%s%s?source_0=%s", DataSourceHelper.FILTER_SOURCE, IntervalFilter.class.getName(), SOURCE_EXTENDED );
       }
       else
       {
         final StringBuffer buffer = new StringBuffer();
-        buffer.append( String.format( "filter://%s?", IntervalFilter.class.getName() ) );
+        buffer.append( String.format( "%s%s?", DataSourceHelper.FILTER_SOURCE, IntervalFilter.class.getName() ) );
 
         final String[] sourceArray = sources.toArray( new String[] {} );
         for( int i = 0; i < sourceArray.length; i++ )

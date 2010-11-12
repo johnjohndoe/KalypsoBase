@@ -108,6 +108,7 @@ public final class ChartImageFactory
     }
   }
 
+
 //  public static Image createAxesImage( final IMapperRegistry mapperRegistry, final Rectangle boundsRect )
 //  {
 //    final Rectangle plotRect = calculatePlotSize( mapperRegistry, boundsRect.width, boundsRect.height );
