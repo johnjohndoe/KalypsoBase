@@ -82,6 +82,9 @@ public class PointsLineLayer extends AbstractProfilLayer
   @Override
   public EditInfo drag( final Point newPos, final EditInfo dragStartData )
   {
+    if( dragStartData.m_pos == null )
+      return null;
+
     final Point newPoint = verifyPos( dragStartData.m_pos, newPos );
     final Integer index = (Integer) dragStartData.m_data;
     final IRecord[] profilPoints = getProfil().getPoints();
@@ -122,6 +125,9 @@ public class PointsLineLayer extends AbstractProfilLayer
   @Override
   public void executeDrop( final Point point, final EditInfo dragStartData )
   {
+    if( dragStartData.m_pos == null )
+      return;
+
     final Point newPoint = verifyPos( dragStartData.m_pos, point );
     final Integer pos = dragStartData.m_data instanceof Integer ? (Integer) (dragStartData.m_data) : -1;
     if( pos > -1 )
@@ -259,7 +265,7 @@ public class PointsLineLayer extends AbstractProfilLayer
   {
     final Object o = getData( IProfilChartLayer.VIEW_DATA_KEY );
     if( o != null )
-
+    {
       try
       {
         final int i = Integer.valueOf( o.toString() );
@@ -272,12 +278,11 @@ public class PointsLineLayer extends AbstractProfilLayer
           newPos.x = oldPos.x;
         }
       }
-
       catch( final NumberFormatException e )
       {
         return oldPos;
       }
+    }
     return newPos;
   }
-
 }
