@@ -42,10 +42,11 @@ package org.kalypso.gml.ui.commands.exportshape;
 
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.kalypso.shape.ShapeDataException;
+import org.kalypso.shape.dbf.DBFField;
 import org.kalypso.shape.dbf.IDBFValue;
 
 /**
- * @author Gernot
+ * @author Gernot Belger
  */
 public class FieldNameLabelProvider extends ColumnLabelProvider
 {
@@ -57,14 +58,28 @@ public class FieldNameLabelProvider extends ColumnLabelProvider
   {
     try
     {
-      final IDBFValue value = (IDBFValue) element;
-      return value.getField().getName();
+      final DBFField field = asField( element );
+      if( field == null )
+        return null;
+
+      return field.getName();
     }
     catch( final ShapeDataException e )
     {
       e.printStackTrace();
       return e.getLocalizedMessage();
     }
+  }
+
+  private DBFField asField( final Object element ) throws ShapeDataException
+  {
+    if( element instanceof DBFField )
+      return (DBFField) element;
+
+    if( element instanceof IDBFValue )
+      return ((IDBFValue) element).getField();
+
+    return null;
   }
 
 }
