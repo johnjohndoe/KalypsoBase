@@ -182,6 +182,11 @@ public class ShapeFile
     return m_shp.getShape( record );
   }
 
+  public DBFField[] getFields( )
+  {
+    return m_dbf.getFields();
+  }
+
   /**
    * returns a row of the dBase-file <BR>
    * associated to the shape-file <BR>
