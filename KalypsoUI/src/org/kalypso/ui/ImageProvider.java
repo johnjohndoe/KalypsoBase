@@ -175,6 +175,8 @@ public class ImageProvider
 
   public static final ImageDescriptor IMAGE_UTIL_IMPORT_WIZARD = ImageProvider.id( "icons/util/import_wiz.gif" ); //$NON-NLS-1$
 
+  public static final ImageDescriptor IMAGE_WIZBAN_IMPORT = ImageProvider.id( "icons/util/wizban-import.gif" ); //$NON-NLS-1$
+
   public static final ImageDescriptor IMAGE_STYLEEDITOR_SAVE = ImageProvider.id( "icons/gistable/save_edit.gif" ); //$NON-NLS-1$
 
   public static final ImageDescriptor IMAGE_STYLEEDITOR_ADD_RULE = ImageProvider.id( "icons/obstable/add_row.gif" ); //$NON-NLS-1$
