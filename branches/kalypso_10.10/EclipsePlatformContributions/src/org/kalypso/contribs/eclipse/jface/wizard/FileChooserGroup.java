@@ -64,7 +64,6 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Text;
-import org.kalypso.contribs.eclipse.i18n.Messages;
 
 /**
  * A group to choose a file from the file system.
@@ -89,8 +88,6 @@ public class FileChooserGroup
 
   private String m_path;
 
-  private boolean m_showLabel = true;
-
   private IDialogSettings m_settings;
 
   private Text m_text;
@@ -98,6 +95,8 @@ public class FileChooserGroup
   private final Set<FileChangedListener> m_listeners = new HashSet<FileChangedListener>();
 
   private final IFileChooserDelegate m_delegate;
+
+  private String m_label;
 
   public FileChooserGroup( )
   {
@@ -110,12 +109,13 @@ public class FileChooserGroup
   }
 
   /**
-   * Show or hide the label (the label before the text-control).<br>
+   * Sets and hence overwrites the default label.<br/>
+   * If set to <code>null</code>, no label will be shown.<br/>
    * Must be called before {@link #createControl(Composite, int)} is invoked.
    */
-  public void setShowLabel( final boolean showLabel )
+  public void setLabel( final String label )
   {
-    m_showLabel = showLabel;
+    m_label = label;
   }
 
   /**
@@ -173,15 +173,15 @@ public class FileChooserGroup
       }
     } );
 
-    if( m_showLabel )
+    if( m_label != null )
     {
       final Label label = new Label( parent, SWT.NONE );
-      label.setText( Messages.getString( "org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup.4" ) ); //$NON-NLS-1$
+      label.setText( m_label );
     }
 
     final Text text = new Text( parent, m_delegate.getTextBoxStyle() );
     m_text = text;
-    final int textSpan = m_showLabel ? gridLayout.numColumns - 2 : gridLayout.numColumns - 1;
+    final int textSpan = m_label != null ? gridLayout.numColumns - 2 : gridLayout.numColumns - 1;
     text.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, textSpan, 1 ) );
     m_text.addModifyListener( new ModifyListener()
     {

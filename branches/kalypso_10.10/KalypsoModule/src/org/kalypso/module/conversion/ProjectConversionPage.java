@@ -125,7 +125,7 @@ public class ProjectConversionPage extends WizardPage
     final FileChooserDelegateDirectory dirDelegate = new FileChooserDelegateDirectory();
     m_projectChooserGroup = new FileChooserGroup( dirDelegate );
     m_projectChooserGroup.setDialogSettings( getDialogSettings() );
-    m_projectChooserGroup.setShowLabel( false );
+    m_projectChooserGroup.setLabel( null );
 
     m_projectChooserGroup.createControlsInGrid( group );
     m_projectChooserGroup.addFileChangedListener( new FileChangedListener()
