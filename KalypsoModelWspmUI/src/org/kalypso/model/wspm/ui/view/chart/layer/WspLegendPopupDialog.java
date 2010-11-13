@@ -49,6 +49,7 @@ import org.eclipse.jface.viewers.CheckboxTreeViewer;
 import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
+import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
@@ -139,6 +140,8 @@ public class WspLegendPopupDialog extends PopupDialog
 
       final ILabelProvider labelProvider = data.createLabelProvider();
       treeViewer.setLabelProvider( labelProvider );
+
+      treeViewer.setSorter( new ViewerSorter() );
 
       treeViewer.setInput( treeInput );
 
