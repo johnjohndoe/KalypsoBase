@@ -9,6 +9,7 @@
   <nextCatalog catalog="platform:/resource/KalypsoDeegree/deegree/org/kalypsodeegree_impl/gml/schema/schemata/catalog.xml" />
 
   <nextCatalog catalog="platform:/resource/KalypsoHwvCore/etc/schemes/catalog.xml" />
-  <nextCatalog catalog="platform:/resource/OdysseusChartFactory/etc/binding/schema/catalog.xmlcatalog" />
+  <nextCatalog catalog="platform:/resource/OdysseusChartFactory/etc/binding/schema/catalog.xml" />
+  <nextCatalog catalog="platform:/resource/KalypsoModelNA/src/org/kalypso/convert/namodel/schema/catalog.xml" />
 
 </catalog>
