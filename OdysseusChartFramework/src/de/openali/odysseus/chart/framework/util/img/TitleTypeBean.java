@@ -54,7 +54,7 @@ public class TitleTypeBean implements IChartLabelRenderer
 {
   private String m_text = "";
 
-  private ALIGNMENT m_position = ALIGNMENT.TICK_CENTERED;
+  private ALIGNMENT m_alignment = ALIGNMENT.CENTER;
 
   private ITextStyle m_textStyle;
 
@@ -65,11 +65,11 @@ public class TitleTypeBean implements IChartLabelRenderer
     m_text = text;
   }
 
-  public TitleTypeBean( final String text, final ALIGNMENT position, final ITextStyle textStyle, final Insets insets )
+  public TitleTypeBean( final String text, final ALIGNMENT alignment, final ITextStyle textStyle, final Insets insets )
   {
     super();
     m_text = text;
-    m_position = position;
+    m_alignment = alignment;
     m_textStyle = textStyle;
     m_insets = insets;
   }
@@ -83,49 +83,8 @@ public class TitleTypeBean implements IChartLabelRenderer
   @Override
   public ALIGNMENT getAlignment( )
   {
-    return m_position;
+    return m_alignment;
   }
-
-// public Point getSize( )
-// {
-// if( m_size == null )
-// {
-// final Device dev = PlatformUI.getWorkbench().getDisplay();
-// final Image image = new Image( dev, 1, 1 );
-// final GC gc = new GC( image );
-// final Font font = new Font( dev, getTextStyle().toFontData() );
-// gc.setFont( font );
-// try
-// {
-// m_size = gc.textExtent( getText(), SWT.DRAW_DELIMITER | SWT.DRAW_TAB );
-// m_size.x += m_insets.bottom + m_insets.top;
-// m_size.y += m_insets.left + m_insets.right;
-// }
-// finally
-// {
-// gc.dispose();
-// image.dispose();
-// font.dispose();
-// }
-// }
-// return m_size;
-// }
-
-// private int getStart( final int width )
-// {
-// final Point textWidth = getSize();
-// switch( m_position )
-// {
-// case LEFT:
-// return m_insets.left;
-//
-// case RIGHT:
-// return width - textWidth.x - m_insets.right;
-//
-// }
-// // all centered
-// return Math.max( 0, (width - textWidth.x) / 2 );
-// }
 
   public String getText( )
   {
@@ -148,9 +107,9 @@ public class TitleTypeBean implements IChartLabelRenderer
   }
 
   @Override
-  public void setPosition( final ALIGNMENT position )
+  public void setAlignment( final ALIGNMENT alignment )
   {
-    m_position = position;
+    m_alignment = alignment;
   }
 
   @Override

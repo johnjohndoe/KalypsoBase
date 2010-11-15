@@ -39,6 +39,7 @@ public interface IAxisConstants
     CENTER,
     TICK_CENTERED,
     INTERVALL_CENTERED
+
   }
 
   public enum ORIENTATION implements ICoordinateSwitcher

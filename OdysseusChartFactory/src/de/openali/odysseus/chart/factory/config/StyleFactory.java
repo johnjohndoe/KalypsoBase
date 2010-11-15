@@ -453,19 +453,6 @@ public class StyleFactory
       }
     }
 
-    if( tst.isSetAlignment() )
-    {
-      final de.openali.odysseus.chartconfig.x020.AlignmentType.Enum alignmentType = tst.getAlignment();
-      if( "LEFT".equals( alignmentType.toString() ) )
-        style.setAlignment( ALIGNMENT.LEFT );
-      else if( "CENTER".equals( alignmentType.toString() ) )
-        style.setAlignment( ALIGNMENT.CENTER );
-      else if( "RIGHT".equals( alignmentType.toString() ) )
-        style.setAlignment( ALIGNMENT.RIGHT );
-      else
-        style.setAlignment( ALIGNMENT.LEFT );
-    }
-
     return style;
   }
 
@@ -490,4 +477,21 @@ public class StyleFactory
     return new RGB( red, green, blue );
   }
 
+  public static ALIGNMENT getAlignment( final de.openali.odysseus.chartconfig.x020.AlignmentType.Enum alignment )
+  {
+    if( "LEFT".equals( alignment.toString() ) )
+    {
+      return ALIGNMENT.LEFT;
+    }
+    else if( "CENTER".equals( alignment.toString() ) )
+    {
+      return ALIGNMENT.CENTER;
+    }
+    else if( "RIGHT".equals( alignment.toString() ) )
+    {
+      return ALIGNMENT.RIGHT;
+    }
+
+    return ALIGNMENT.LEFT;
+  }
 }

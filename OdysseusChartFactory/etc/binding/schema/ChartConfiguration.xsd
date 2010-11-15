@@ -485,6 +485,7 @@
     <simpleContent>
       <restriction base="ods:StringType">
         <attribute name="styleref" type="IDREF" />
+        <attribute name="alignment" type="ods:AlignmentType" />
       </restriction>
     </simpleContent>
   </complexType>

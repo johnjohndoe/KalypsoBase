@@ -84,4 +84,5 @@ public final class StyleUtils
   {
     return new TextStyle( IDefaultStyles.DEFAULT_FONT_HEIGHT, IDefaultStyles.DEFAULT_FONT_FAMILY, IDefaultStyles.DEFAULT_RGB_TEXT, IDefaultStyles.DEFAULT_RGB_TEXT_BACKGROUND, IDefaultStyles.DEFAULT_FONT_STYLE, IDefaultStyles.DEFAULT_FONT_WEIGHT, IDefaultStyles.DEFAULT_TEXT_ALIGNMENT, IDefaultStyles.DEFAULT_ALPHA, IDefaultStyles.DEFAULT_VISIBILITY );
   }
+
 }
