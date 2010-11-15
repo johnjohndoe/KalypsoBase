@@ -5,15 +5,15 @@
        point="de.openali.odysseus.chart.factory.LayerProvider">
     <provider
           class="org.kalypso.zml.ui.chart.layer.provider.ZmlLineLayerProvider"
-          id="org.kalypso.hwv.core.chart.layer.ZmlLineLayerProvider">
+          id="org.kalypso.zml.ui.chart.layer.provider.ZmlLineLayerProvider">
     </provider>
     <provider
           class="org.kalypso.zml.ui.chart.layer.provider.ZmlGridLayerProvider"
-          id="org.kalypso.hwv.core.chart.layer.ZmlGridLayerProvider">
+          id="org.kalypso.zml.ui.chart.layer.provider.ZmlGridLayerProvider">
     </provider>
     <provider
           class="org.kalypso.zml.ui.chart.layer.provider.ZmlSinglePointProvider"
-          id="org.kalypso.hwv.core.chart.layer.ZmlSinglePointProvider">
+          id="org.kalypso.zml.ui.chart.layer.provider.ZmlSinglePointProvider">
     </provider>
  </extension>
 

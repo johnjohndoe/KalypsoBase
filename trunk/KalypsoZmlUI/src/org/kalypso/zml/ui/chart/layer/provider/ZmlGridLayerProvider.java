@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -57,7 +57,7 @@ import de.openali.odysseus.chart.framework.model.style.impl.StyleSetVisitor;
  */
 public class ZmlGridLayerProvider extends AbstractLayerProvider implements ILayerProvider
 {
-  public static final String ID = "org.kalypso.hwv.core.chart.layer.ZmlGridLayerProvider";
+  public static final String ID = "org.kalypso.zml.ui.chart.layer.provider.ZmlGridLayerProvider";
 
   /**
    * @see de.openali.odysseus.chart.factory.provider.ILayerProvider#getLayer(java.net.URL)

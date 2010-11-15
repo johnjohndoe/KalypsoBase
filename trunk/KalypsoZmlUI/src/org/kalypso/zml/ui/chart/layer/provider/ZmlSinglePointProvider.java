@@ -69,7 +69,7 @@ import de.openali.odysseus.chart.framework.util.resource.Pair;
  */
 public class ZmlSinglePointProvider extends AbstractLayerProvider implements ILayerProvider
 {
-  public static final String ID = "org.kalypso.hwv.core.chart.layer.ZmlSinglePointProvider";
+  public static final String ID = "org.kalypso.zml.ui.chart.layer.provider.ZmlSinglePointProvider";
 
   /**
    * @see de.openali.odysseus.chart.factory.provider.ILayerProvider#getLayer(java.net.URL)
