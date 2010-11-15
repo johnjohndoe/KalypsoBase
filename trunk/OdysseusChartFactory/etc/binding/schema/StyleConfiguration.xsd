@@ -173,7 +173,6 @@
           <element name="FillColor" type="ods:ColorType" minOccurs="0"></element>
           <element name="FontWeight" type="ods:FontWeightType" minOccurs="0"></element>
           <element name="FontStyle" type="ods:FontStyleType" minOccurs="0"></element>
-          <element name="Alignment" type="ods:AlignmentType" minOccurs="0"></element>
         </sequence>
       </extension>
     </complexContent>

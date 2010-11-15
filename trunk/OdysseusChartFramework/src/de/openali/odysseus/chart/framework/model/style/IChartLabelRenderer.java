@@ -58,7 +58,7 @@ public interface IChartLabelRenderer
 
   void setInsets( final Insets insets );
 
-  void setPosition( final ALIGNMENT position );
+  void setAlignment( final ALIGNMENT position );
 
   void setTextStyle( final ITextStyle textStyle );
 

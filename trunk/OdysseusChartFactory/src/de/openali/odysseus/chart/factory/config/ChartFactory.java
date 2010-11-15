@@ -27,6 +27,7 @@ import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.ComparableDataRange;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
+import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.DIRECTION;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
@@ -128,6 +129,9 @@ public final class ChartFactory
       final StyleSetVisitor visitor = new StyleSetVisitor();
       final ITextStyle textStyle = visitor.visit( styleSet, ITextStyle.class, type.getStyleref() );
       title.setTextStyle( textStyle );
+
+      final ALIGNMENT alignment = StyleFactory.getAlignment( type.getAlignment() );
+      title.setAlignment( alignment );
 
       model.addTitles( title );
     }
