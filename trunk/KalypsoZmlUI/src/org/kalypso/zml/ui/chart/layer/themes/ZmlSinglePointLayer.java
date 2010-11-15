@@ -140,10 +140,9 @@ public class ZmlSinglePointLayer extends AbstractLineLayer
       if( descriptor.isShowLabel() )
       {
         final TextFigure textFigure = new TextFigure();
-        final Point ext = gc.textExtent( descriptor.getLabel() );
-           textFigure.setStyle( descriptor.getTextStyle() );
+        textFigure.setStyle( descriptor.getTextStyle() );
         textFigure.setText( descriptor.getLabel() );
-        //TODO: getPosition according to centerpoint
+        // TODO: getPosition according to centerpoint
         textFigure.setPoints( new Point[] { centerPoint } );
         textFigure.paint( gc );
       }

@@ -92,30 +92,11 @@ public class ZmlTextLayer extends AbstractChartLayer
 
     final Point center = new Point( domainAxis.numericToScreen( domainCenter ), targetAxis.numericToScreen( targetCenter ) );
 
-    /*
-     * FIXME - implement helper class to configure gc (set and disposing styles and color, perhaps drawing of figures,
-     * too)
-     */
-// final FontData fontData = m_style.toFontData();
-// final Font font = new Font( gc.getDevice(), fontData );
-// final Color color = new Color( gc.getDevice(), m_style.getTextColor() );
+    m_style.apply( gc );
 
-    try
-    {
-      m_style.apply( gc );
-// gc.setFont( font );
-// gc.setForeground( color );
-// gc.setAlpha( m_style.getAlpha() );
-
-      /** compute textExtend */
-      final Point extent = gc.textExtent( m_text );
-      gc.drawText( m_text, center.x - extent.x / 2, center.y - extent.y / 2 );
-    }
-    finally
-    {
-// font.dispose();
-// color.dispose();
-    }
+    /** compute textExtend */
+    final Point extent = gc.textExtent( m_text );
+    gc.drawText( m_text, center.x - extent.x / 2, center.y - extent.y / 2 );
   }
 
   /**
@@ -142,8 +123,6 @@ public class ZmlTextLayer extends AbstractChartLayer
   @Override
   public void dispose( )
   {
-    // TODO Auto-generated method stub
-
   }
 
   /**

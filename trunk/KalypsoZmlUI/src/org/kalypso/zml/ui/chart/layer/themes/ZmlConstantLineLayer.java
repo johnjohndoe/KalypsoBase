@@ -142,7 +142,7 @@ public class ZmlConstantLineLayer extends AbstractLineLayer
     }
   }
 
-  private final boolean canDrawLabel( final int[] screens, final int value, final int size )
+  private boolean canDrawLabel( final int[] screens, final int value, final int size )
   {
     for( final int x : screens )
     {
@@ -152,7 +152,7 @@ public class ZmlConstantLineLayer extends AbstractLineLayer
     return true;
   }
 
-  private final int[] getScreenValues( )
+  private int[] getScreenValues( )
   {
     final int[] screens = new int[m_descriptors.length];
     for( int i = 0; i < m_descriptors.length; i++ )
