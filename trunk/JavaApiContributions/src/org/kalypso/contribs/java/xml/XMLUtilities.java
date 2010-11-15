@@ -44,7 +44,6 @@ import java.util.Iterator;
 
 import javax.xml.namespace.NamespaceContext;
 
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -99,7 +98,7 @@ public final class XMLUtilities
     return "<filter>" + result + "</filter>";
   }
 
-  public static void setTextNode( final Document dom, final Node node, final String value )
+  public static void setTextNode( final Node node, final String value )
   {
     final NodeList cn = node.getChildNodes();
     for( int _n = 0; _n < cn.getLength(); _n++ )
@@ -111,7 +110,7 @@ public final class XMLUtilities
     }
     if( cn.getLength() == 0 ) // text node does not exist
     {
-      final Text text = dom.createTextNode( value );
+      final Text text = node.getOwnerDocument().createTextNode( value );
       node.appendChild( text );
     }
   }
