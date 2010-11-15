@@ -51,6 +51,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
 
 import de.openali.odysseus.chart.framework.logging.impl.Logger;
+import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT;
 import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;
@@ -123,6 +124,8 @@ public class StyleFactory
   public static StyleSet createStyleSet( final Styles styles )
   {
     final StyleSet styleSet = new StyleSet();
+    if( styles == null )
+      return styleSet;
 
     for( final AreaStyleType ast : styles.getAreaStyleArray() )
     {
@@ -448,6 +451,19 @@ public class StyleFactory
       {
         // keep default
       }
+    }
+
+    if( tst.isSetAlignment() )
+    {
+      final de.openali.odysseus.chartconfig.x020.AlignmentType.Enum alignmentType = tst.getAlignment();
+      if( "LEFT".equals( alignmentType.toString() ) )
+        style.setAlignment( ALIGNMENT.LEFT );
+      else if( "CENTER".equals( alignmentType.toString() ) )
+        style.setAlignment( ALIGNMENT.CENTER );
+      else if( "RIGHT".equals( alignmentType.toString() ) )
+        style.setAlignment( ALIGNMENT.RIGHT );
+      else
+        style.setAlignment( ALIGNMENT.LEFT );
     }
 
     return style;

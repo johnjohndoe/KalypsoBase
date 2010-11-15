@@ -1,5 +1,6 @@
 package de.openali.odysseus.chart.framework.model;
 
+import java.awt.Insets;
 import java.util.List;
 import java.util.Map;
 
@@ -8,9 +9,10 @@ import org.eclipse.swt.graphics.Point;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
+import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT;
 import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
 import de.openali.odysseus.chart.framework.model.style.ITextStyle;
-import de.openali.odysseus.chart.framework.util.img.ChartTitleBean;
+import de.openali.odysseus.chart.framework.util.img.TitleTypeBean;
 
 public interface IChartModel
 {
@@ -55,11 +57,11 @@ public interface IChartModel
 
   void setId( String id );
 
-  ChartTitleBean[] getTitle( );
+  TitleTypeBean[] getTitles( );
 
-  void addTitle( ChartTitleBean title );
+  void setTitle( String title, final ALIGNMENT position, ITextStyle textStyle, Insets insets );
 
-  void setTitle( final String title );
+  void addTitles( TitleTypeBean... titles );
 
   String getDescription( );
 

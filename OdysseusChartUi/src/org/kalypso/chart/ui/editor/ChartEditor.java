@@ -54,7 +54,7 @@ import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IMapper;
 import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
-import de.openali.odysseus.chart.framework.util.img.ChartTitleBean;
+import de.openali.odysseus.chart.framework.util.img.TitleTypeBean;
 import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
 import de.openali.odysseus.chartconfig.x020.AxisDateRangeType;
 import de.openali.odysseus.chartconfig.x020.AxisDurationRangeType;
@@ -416,7 +416,7 @@ public class ChartEditor extends EditorPart implements IChartPart
             }
 
             // Name des Parts
-            final ChartTitleBean[] title = m_chartModel.getTitle();
+            final TitleTypeBean[] title = m_chartModel.getTitles();
             if( !ArrayUtils.isEmpty( title ) )
               setPartName( title[0].getText() );
             else

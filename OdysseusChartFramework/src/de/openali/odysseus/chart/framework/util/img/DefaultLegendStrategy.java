@@ -43,7 +43,6 @@ package de.openali.odysseus.chart.framework.util.img;
 import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Device;
-import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
@@ -57,7 +56,7 @@ import de.openali.odysseus.chart.framework.model.style.ITextStyle;
 /**
  * @author Dirk Kuch
  */
-public class DefaultLegendStrategy implements ILegendStrategy
+public class DefaultLegendStrategy implements ILegendPaintStrategy
 {
 
   private Point m_size;
@@ -111,8 +110,9 @@ public class DefaultLegendStrategy implements ILegendStrategy
     final Device dev = PlatformUI.getWorkbench().getDisplay();
     final Image image = new Image( dev, 1, 1 );
     final GC gc = new GC( image );
-    final Font font = creator.getFont( dev );
-    gc.setFont( font );
+
+    final ITextStyle style = creator.getTextStyle();
+    style.apply( gc );
 
     try
     {
@@ -129,7 +129,6 @@ public class DefaultLegendStrategy implements ILegendStrategy
     }
     finally
     {
-      font.dispose();
       gc.dispose();
     }
   }
@@ -165,7 +164,8 @@ public class DefaultLegendStrategy implements ILegendStrategy
     final Image canvas = new Image( dev, size.x, size.y );
     final GC gc = new GC( canvas );
 
-    final Font font = creator.getFont( dev );
+    final ITextStyle style = creator.getTextStyle();
+    style.apply( gc );
 
     try
     {
@@ -178,7 +178,7 @@ public class DefaultLegendStrategy implements ILegendStrategy
         if( entry == null )
           continue;
 
-        final ImageData imageData = createLegendItem( creator, entry, font );
+        final ImageData imageData = createLegendItem( creator, entry );
         final Image image = new Image( dev, imageData );
         gc.drawImage( image, x, y );
 
@@ -199,13 +199,12 @@ public class DefaultLegendStrategy implements ILegendStrategy
     }
     finally
     {
-      font.dispose();
       gc.dispose();
     }
 
   }
 
-  private ImageData createLegendItem( final ChartLegendPainter creator, final ILegendEntry entry, final Font font )
+  private ImageData createLegendItem( final ChartLegendPainter creator, final ILegendEntry entry )
   {
     final Point size = getItemSize( creator, entry );
 
@@ -220,7 +219,8 @@ public class DefaultLegendStrategy implements ILegendStrategy
       final Image iconImage = new Image( dev, iconImageData );
       gc.drawImage( iconImage, 0, 0 );
 
-      gc.setFont( font );
+      final ITextStyle style = creator.getTextStyle();
+      style.apply( gc );
 
       final Point anchor = getTextAnchor( creator, iconSize );
       final String description = entry.getDescription();

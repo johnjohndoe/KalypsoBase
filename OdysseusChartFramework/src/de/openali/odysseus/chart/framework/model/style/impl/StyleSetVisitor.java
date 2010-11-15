@@ -42,9 +42,12 @@ package de.openali.odysseus.chart.framework.model.style.impl;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import de.openali.odysseus.chart.framework.model.style.IStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
+import de.openali.odysseus.chart.framework.util.StyleUtils;
 
 /**
  * @author Dirk Kuch
@@ -74,5 +77,24 @@ public class StyleSetVisitor
     }
 
     return (T) lastItem;
+  }
+
+  public <T extends IStyle> T visit( final IStyleSet set, final Class<T> clazz, final String styleref )
+  {
+
+    final Map<String, IStyle> map = set.getStyles();
+
+    final Set<Entry<String, IStyle>> entries = map.entrySet();
+    for( final Entry<String, IStyle> entry : entries )
+    {
+      final String role = entry.getKey();
+      final IStyle style = entry.getValue();
+      if( styleref.equals( role ) && clazz.isAssignableFrom( style.getClass() ) )
+      {
+        return (T) style;
+      }
+    }
+
+    return StyleUtils.getDefaultStyle( clazz );
   }
 }

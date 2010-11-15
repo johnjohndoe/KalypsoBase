@@ -38,7 +38,7 @@ import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.DIRECTION;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
-import de.openali.odysseus.chart.framework.util.img.ChartTitleBean;
+import de.openali.odysseus.chart.framework.util.img.TitleTypeBean;
 import de.openali.odysseus.service.ods.environment.IODSChart;
 import de.openali.odysseus.service.ods.environment.IODSEnvironment;
 import de.openali.odysseus.service.ods.x020.AxesOfferingType;
@@ -215,7 +215,7 @@ public class CapabilitiesLoader
 
     // Chart-Info
     xmlChart.setId( model.getId() );
-    final ChartTitleBean[] titleBeans = model.getTitle();
+    final TitleTypeBean[] titleBeans = model.getTitles();
     final String[] titleArray = new String[titleBeans.length];
     for( int i = 0; i < titleBeans.length; i++ )
     {

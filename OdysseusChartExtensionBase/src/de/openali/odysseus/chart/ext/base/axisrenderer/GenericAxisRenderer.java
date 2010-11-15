@@ -15,7 +15,7 @@ import org.eclipse.ui.PlatformUI;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.DIRECTION;
-import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.LABEL_POSITION;
+import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
@@ -250,7 +250,7 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
     final ITextStyle tickLabelStyle = getTickLabelStyle();
     final ILineStyle tickLineStyle = getTickLineStyle();
     final int tickScreenDistance = (screenMax - screenMin) / (ticks.length - 1);
-    final LABEL_POSITION labelPosition = getLabelCreator().getLabelPosition();
+    final ALIGNMENT labelPosition = getLabelCreator().getLabelPosition();
     for( int i = 0; i < ticks.length; i++ )
     {
       final int y1, y2, x1, x2, tickPos;
@@ -413,7 +413,7 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
     return m_labelCreator;
   }
 
-  final int getLabelPosition( final int labelWidth, final int tickScreenDistance, final LABEL_POSITION labelPosition )
+  final int getLabelPosition( final int labelWidth, final int tickScreenDistance, final ALIGNMENT labelPosition )
   {
     switch( labelPosition )
     {

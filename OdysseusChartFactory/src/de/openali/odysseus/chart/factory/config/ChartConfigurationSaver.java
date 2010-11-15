@@ -53,7 +53,7 @@ import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IMapper;
 import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
 import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
-import de.openali.odysseus.chart.framework.util.img.ChartTitleBean;
+import de.openali.odysseus.chart.framework.util.img.TitleTypeBean;
 import de.openali.odysseus.chartconfig.x020.AxisDateRangeType;
 import de.openali.odysseus.chartconfig.x020.AxisNumberRangeType;
 import de.openali.odysseus.chartconfig.x020.AxisRendererType;
@@ -67,6 +67,7 @@ import de.openali.odysseus.chartconfig.x020.ChartType.Mappers;
 import de.openali.odysseus.chartconfig.x020.ChartType.Renderers;
 import de.openali.odysseus.chartconfig.x020.LayerType;
 import de.openali.odysseus.chartconfig.x020.MapperType;
+import de.openali.odysseus.chartconfig.x020.TitleType;
 
 /**
  * saves a chart to an XML document
@@ -84,11 +85,14 @@ public class ChartConfigurationSaver
     final ChartType chartType = chartconf.addNewChart();
     chartType.setId( model.getId() );
     chartType.setDescription( model.getDescription() );
-    final ChartTitleBean[] titleBeans = model.getTitle();
-    final String[] titleArray = new String[titleBeans.length];
-    for( int i = 0; i < titleBeans.length; i++ )
+    final TitleTypeBean[] titleTypes = model.getTitles();
+    final TitleType[] titleArray = new TitleType[titleTypes.length];
+    for( int i = 0; i < titleTypes.length; i++ )
     {
-      titleArray[i] = titleBeans[i].getText();
+      final TitleType type = TitleType.Factory.newInstance();
+      type.setStringValue( titleTypes[i].getText() );
+      titleArray[i] = type;
+
     }
     chartType.setTitleArray( titleArray );
     final Layers layers = chartType.addNewLayers();

@@ -77,7 +77,7 @@ import de.openali.odysseus.chart.factory.config.IExtensionLoader;
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.event.IChartModelEventListener;
 import de.openali.odysseus.chart.framework.model.impl.ChartModel;
-import de.openali.odysseus.chart.framework.util.img.ChartTitleBean;
+import de.openali.odysseus.chart.framework.util.img.TitleTypeBean;
 import de.openali.odysseus.chart.framework.view.TooltipHandler;
 import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
 import de.openali.odysseus.chartconfig.x020.ChartType;
@@ -198,7 +198,7 @@ public class ChartView extends ViewPart implements IChartPart, ISelectionListene
           m_axisDragHandler = new AxisDragHandlerDelegate( m_chartComposite );
 
           // Titel der View setzen
-          final ChartTitleBean[] title = m_chartModel.getTitle();
+          final TitleTypeBean[] title = m_chartModel.getTitles();
           if( !ArrayUtils.isEmpty( title ) )
             setPartName( title[0].getText() );
           else

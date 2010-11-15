@@ -44,7 +44,7 @@ import java.util.Date;
 
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.CalendarFormat;
-import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.LABEL_POSITION;
+import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT;
 
 /**
  * @author alibu
@@ -52,14 +52,14 @@ import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.LABEL_POS
 public class DateLabelCreator implements ILabelCreator
 {
 
-  public void setLabelPosition( final LABEL_POSITION labelPosition )
+  public void setLabelPosition( final ALIGNMENT labelPosition )
   {
     m_labelPosition = labelPosition;
   }
 
   CalendarFormat m_format;
 
-  private LABEL_POSITION m_labelPosition = null;
+  private ALIGNMENT m_labelPosition = null;
 
   /**
    * @param formatString
@@ -70,7 +70,7 @@ public class DateLabelCreator implements ILabelCreator
     m_format = new CalendarFormat( formatString );
   }
 
-  public DateLabelCreator( final String formatString, final LABEL_POSITION labelPosition )
+  public DateLabelCreator( final String formatString, final ALIGNMENT labelPosition )
   {
     m_format = new CalendarFormat( formatString );
     m_labelPosition = labelPosition;
@@ -90,10 +90,10 @@ public class DateLabelCreator implements ILabelCreator
   }
 
   @Override
-  public LABEL_POSITION getLabelPosition( )
+  public ALIGNMENT getLabelPosition( )
   {
     if( m_labelPosition == null )
-      m_labelPosition = LABEL_POSITION.TICK_CENTERED;
+      m_labelPosition = ALIGNMENT.TICK_CENTERED;
     return m_labelPosition;
   }
 

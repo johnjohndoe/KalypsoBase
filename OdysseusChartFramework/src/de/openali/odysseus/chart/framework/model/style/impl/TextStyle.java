@@ -6,13 +6,13 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.RGB;
 
 import de.openali.odysseus.chart.framework.OdysseusChartFrameworkPlugin;
+import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT;
 import de.openali.odysseus.chart.framework.model.style.IStyleConstants.FONTSTYLE;
 import de.openali.odysseus.chart.framework.model.style.IStyleConstants.FONTWEIGHT;
 import de.openali.odysseus.chart.framework.model.style.ITextStyle;
 
 public class TextStyle extends AbstractStyle implements ITextStyle
 {
-
   private FONTSTYLE m_style;
 
   private RGB m_textRGB;
@@ -25,7 +25,9 @@ public class TextStyle extends AbstractStyle implements ITextStyle
 
   private FONTWEIGHT m_weight;
 
-  public TextStyle( final int height, final String family, final RGB rgbText, final RGB rgbFill, final FONTSTYLE style, final FONTWEIGHT weight, final int alpha, final boolean isVisible )
+  private ALIGNMENT m_alignment;
+
+  public TextStyle( final int height, final String family, final RGB rgbText, final RGB rgbFill, final FONTSTYLE style, final FONTWEIGHT weight, final ALIGNMENT alignment, final int alpha, final boolean isVisible )
   {
     setFamily( family );
     setHeight( height );
@@ -35,6 +37,7 @@ public class TextStyle extends AbstractStyle implements ITextStyle
     setWeight( weight );
     setAlpha( alpha );
     setVisible( isVisible );
+    setAlignment( alignment );
   }
 
   /*
@@ -130,7 +133,7 @@ public class TextStyle extends AbstractStyle implements ITextStyle
   @Override
   public ITextStyle copy( )
   {
-    return new TextStyle( getHeight(), getFamily(), getTextColor(), getFillColor(), getFontStyle(), getWeight(), getAlpha(), isVisible() );
+    return new TextStyle( getHeight(), getFamily(), getTextColor(), getFillColor(), getFontStyle(), getWeight(), getAlignment(), getAlpha(), isVisible() );
   }
 
   @Override
@@ -167,6 +170,24 @@ public class TextStyle extends AbstractStyle implements ITextStyle
   public int getHeight( )
   {
     return m_size;
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.style.ITextStyle#getPosition()
+   */
+  @Override
+  public ALIGNMENT getAlignment( )
+  {
+    return m_alignment;
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.style.ITextStyle#setPosition(de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.LABEL_POSITION)
+   */
+  @Override
+  public void setAlignment( final ALIGNMENT position )
+  {
+    m_alignment = position;
   }
 
 }

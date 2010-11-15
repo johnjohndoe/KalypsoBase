@@ -42,7 +42,8 @@ import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 import de.openali.odysseus.chart.framework.model.style.ITextStyle;
 import de.openali.odysseus.chart.framework.model.style.impl.StyleSet;
-import de.openali.odysseus.chart.framework.util.img.ChartTitleBean;
+import de.openali.odysseus.chart.framework.model.style.impl.StyleSetVisitor;
+import de.openali.odysseus.chart.framework.util.img.TitleTypeBean;
 import de.openali.odysseus.chartconfig.x020.AreaStyleType;
 import de.openali.odysseus.chartconfig.x020.AxisDateRangeType;
 import de.openali.odysseus.chartconfig.x020.AxisDurationRangeType;
@@ -65,26 +66,31 @@ import de.openali.odysseus.chartconfig.x020.ReferencingType;
 import de.openali.odysseus.chartconfig.x020.RoleReferencingType;
 import de.openali.odysseus.chartconfig.x020.StylesDocument.Styles;
 import de.openali.odysseus.chartconfig.x020.TextStyleType;
+import de.openali.odysseus.chartconfig.x020.TitleType;
 
 /**
  * Creates a chart object from a configuration
  * 
  * @author alibu
  */
-public class ChartFactory
+public final class ChartFactory
 {
+  private ChartFactory( )
+  {
+  }
+
   /**
    * Keys for saving providers in chart elements
    */
-  public static String LAYER_PROVIDER_KEY = "de.openali.odysseus.chart.factory.layerprovider";
+  public static final String LAYER_PROVIDER_KEY = "de.openali.odysseus.chart.factory.layerprovider";
 
-  public static String AXIS_PROVIDER_KEY = "de.openali.odysseus.chart.factory.axisprovider";
+  public static final String AXIS_PROVIDER_KEY = "de.openali.odysseus.chart.factory.axisprovider";
 
-  public static String AXISRENDERER_PROVIDER_KEY = "de.openali.odysseus.chart.factory.axisrendererprovider";
+  public static final String AXISRENDERER_PROVIDER_KEY = "de.openali.odysseus.chart.factory.axisrendererprovider";
 
-  public static String MAPPER_PROVIDER_KEY = "de.openali.odysseus.chart.factory.mapperprovider";
+  public static final String MAPPER_PROVIDER_KEY = "de.openali.odysseus.chart.factory.mapperprovider";
 
-  public static String CONFIGURATION_TYPE_KEY = "de.openali.odysseus.chart.factory.configurationType";
+  public static final String CONFIGURATION_TYPE_KEY = "de.openali.odysseus.chart.factory.configurationType";
 
   public static void configureChartModel( final IChartModel model, final ChartConfigurationLoader cl, final String configChartName, final IExtensionLoader extLoader, final URL context ) throws ConfigurationException
   {
@@ -112,8 +118,20 @@ public class ChartFactory
   public static void doConfiguration( final IChartModel model, final IReferenceResolver rr, final ChartType chartType, final IExtensionLoader extLoader, final URL context )
   {
     model.setId( chartType.getId() );
-    for( final String title : chartType.getTitleArray() )
-      model.addTitle( new ChartTitleBean( title ) );
+
+    final StyleSet styleSet = StyleFactory.createStyleSet( chartType.getStyles() );
+
+    for( final TitleType type : chartType.getTitleArray() )
+    {
+      final TitleTypeBean title = new TitleTypeBean( type.getStringValue() );
+
+      final StyleSetVisitor visitor = new StyleSetVisitor();
+      final ITextStyle textStyle = visitor.visit( styleSet, ITextStyle.class, type.getStyleref() );
+      title.setTextStyle( textStyle );
+
+      model.addTitles( title );
+    }
+
     model.setDescription( chartType.getDescription() );
 
     final Mappers mappers = chartType.getMappers();
@@ -121,7 +139,9 @@ public class ChartFactory
     {
       final AxisType[] axisTypes = mappers.getAxisArray();
       for( final AxisType axisType : axisTypes )
+      {
         addAxis( model, rr, axisType, extLoader, context );
+      }
     }
 
     final Layers layers = chartType.getLayers();
@@ -133,10 +153,12 @@ public class ChartFactory
       return;
 
     for( final LayerType layerType : layerRefArray )
+    {
       if( layerType != null )
         addLayer( model, rr, context, layerType, extLoader );
       else
         Logger.logWarning( Logger.TOPIC_LOG_CONFIG, "a reference to a layer type could not be resolved " );
+    }
   }
 
   private static void addMapper( final IChartModel model, final MapperType mapperType, final IExtensionLoader extLoader, final URL context )
@@ -161,7 +183,6 @@ public class ChartFactory
         }
         catch( final ConfigurationException e )
         {
-          // TODO Auto-generated catch block
           e.printStackTrace();
         }
       else
@@ -268,7 +289,6 @@ public class ChartFactory
                 }
                 catch( final ConfigurationException e )
                 {
-                  // TODO Auto-generated catch block
                   e.printStackTrace();
                 }
 

@@ -45,7 +45,7 @@ import java.text.Format;
 import java.text.NumberFormat;
 
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
-import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.LABEL_POSITION;
+import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT;
 
 /**
  * @author alibu
@@ -54,16 +54,16 @@ public class NumberLabelCreator implements ILabelCreator
 {
 
   @Override
-  public LABEL_POSITION getLabelPosition( )
+  public ALIGNMENT getLabelPosition( )
   {
     if( m_labelPosition == null )
-      m_labelPosition = LABEL_POSITION.TICK_CENTERED;
+      m_labelPosition = ALIGNMENT.TICK_CENTERED;
     return m_labelPosition;
   }
 
   private final String m_formatString;
 
-  private LABEL_POSITION m_labelPosition = null;
+  private ALIGNMENT m_labelPosition = null;
 
   public NumberLabelCreator( final String formatString )
   {

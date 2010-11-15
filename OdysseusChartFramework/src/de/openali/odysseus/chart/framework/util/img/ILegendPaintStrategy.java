@@ -46,7 +46,7 @@ import org.eclipse.swt.graphics.Point;
 /**
  * @author Dirk Kuch
  */
-public interface ILegendStrategy
+public interface ILegendPaintStrategy
 {
   Point getSize( ChartLegendPainter legendImageCreator );
 
