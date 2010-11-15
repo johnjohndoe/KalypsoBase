@@ -59,7 +59,7 @@ import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
  */
 public class ZmlDateRangeLayerProvider extends AbstractLayerProvider implements ILayerProvider
 {
-  public static final String ID = "org.kalypso.hwv.core.chart.layer.ZmlDateRangeLayerProvider";
+  public static final String ID = "org.kalypso.zml.ui.chart.layer.provider.ZmlDateRangeLayerProvider";
 
   /**
    * @see de.openali.odysseus.chart.factory.provider.ILayerProvider#getLayer(java.net.URL)
