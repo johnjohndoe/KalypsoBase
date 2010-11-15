@@ -906,17 +906,17 @@ public final class ProfilUtil
   }
 
   /**
-   * returns the georeferenced points of a profile.
+   * This function returns the georeferenced points of a profile.
    * 
    * @param profile
-   *          input profile
+   *          The input profile.
    */
   public static IRecord[] getGeoreferencedPoints( final IProfil profile )
   {
     /* List for storing points of the profile, which have a geo reference. */
-
     final IRecord[] points = profile.getPoints();
     final ArrayList<IRecord> geoReferencedPoints = new ArrayList<IRecord>( points.length );
+
     for( final IRecord point : points )
     {
       final Double rechtsWert = getDoubleValueFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT, point );
@@ -924,6 +924,7 @@ public final class ProfilUtil
       if( !rechtsWert.isNaN() && !hochWert.isNaN() )
         geoReferencedPoints.add( point );
     }
+
     return geoReferencedPoints.toArray( new IRecord[] {} );
   }
 
@@ -939,8 +940,8 @@ public final class ProfilUtil
       final Double z = getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, georeferencedPoints[i] );
       pos[i] = GeometryFactory.createGM_Position( x, y, z );
     }
-    return GeometryFactory.createGM_Curve( pos, crs );
 
+    return GeometryFactory.createGM_Curve( pos, crs );
   }
 
   public static Double[] getDoubleValuesFor( final IProfil profil, final IComponent pointProperty )

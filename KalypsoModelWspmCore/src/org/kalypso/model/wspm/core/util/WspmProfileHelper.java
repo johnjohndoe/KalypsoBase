@@ -77,7 +77,7 @@ public final class WspmProfileHelper
   public static final double FUZZINESS = 0.005; // Inaccuracies profile of points
 
   /**
-   * Returns the width position of a geo point projected on a profile.
+   * This function returns the width position of a geo point projected on a profile.
    * <p>
    * It works with the following steps:<br />
    * <ol>
@@ -137,7 +137,7 @@ public final class WspmProfileHelper
   }
 
   /**
-   * Returns the width position of a geo point projected on a profile.
+   * This function returns the width position of a geo point projected on a profile.
    * <p>
    * It works with the following steps:<br />
    * <ol>
@@ -209,10 +209,10 @@ public final class WspmProfileHelper
     IRecord pointTwo = null;
     LineSegment segment = null;
 
-    /* No we have a list with fully geo referenced points of a profile. */
+    /* Now we have a list with fully geo referenced points of a profile. */
     for( int i = 0; i < geoReferencedPoints.size() - 1; i++ )
     {
-      /* We need a line string of the to neighbour points. */
+      /* We need a line string of the two neighbouring points. */
       final IRecord tempPointOne = geoReferencedPoints.get( i );
       final double rechtsWertOne = (Double) tempPointOne.getValue( iRechtswert );
       final double hochWertOne = (Double) tempPointOne.getValue( iHochwert );
@@ -221,7 +221,7 @@ public final class WspmProfileHelper
       final double rechtsWertTwo = (Double) tempPointTwo.getValue( iRechtswert );
       final double hochWertTwo = (Double) tempPointTwo.getValue( iHochwert );
 
-      /* Geo-Projection */
+      /* Create the gm points. */
       final GM_Point geoPointOne = GeometryFactory.createGM_Point( rechtsWertOne, hochWertOne, crs );
       final GM_Point geoPointTwo = GeometryFactory.createGM_Point( rechtsWertTwo, hochWertTwo, crs );
 
@@ -283,35 +283,32 @@ public final class WspmProfileHelper
   }
 
   /**
-   * returns the geographic coordinates (x, y, z) for a given width coordinate as GM_Point.
+   * This function returns the geographic coordinates (x, y, z) for a given width coordinate as GM_Point.
    * 
    * @param width
-   *          width coordinate
+   *          The width coordinate.
    * @param profile
-   *          profile
+   *          The profile.
    * @return Geo position as GM_Point (untransformed).
    */
   private static GM_Point getGeoPositionInternal( final double width, final IProfil profile ) throws Exception
   {
-    final IRecord[] geoReferencedPoints = ProfilUtil.getGeoreferencedPoints( profile );
-
-    final String srsName = (String) profile.getProperty( IWspmConstants.PROFIL_PROPERTY_CRS );
-
     /* If no or only one geo referenced points are found, return. */
+    final IRecord[] geoReferencedPoints = ProfilUtil.getGeoreferencedPoints( profile );
     if( geoReferencedPoints.length <= 1 )
       return null;
 
     // END OF FINDING GEOREFERENCED POINTS
 
-    /* No we have a list with fully geo referenced points of a profile. */
-
+    /* Now we have a list with fully geo referenced points of a profile. */
+    final String srsName = (String) profile.getProperty( IWspmConstants.PROFIL_PROPERTY_CRS );
     final int iRechtswert = profile.indexOfProperty( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
     final int iHochwert = profile.indexOfProperty( IWspmConstants.POINT_PROPERTY_HOCHWERT );
     final int iBreite = profile.indexOfProperty( IWspmConstants.POINT_PROPERTY_BREITE );
     final int iHoehe = profile.indexOfProperty( IWspmConstants.POINT_PROPERTY_HOEHE );
     for( int i = 0; i < geoReferencedPoints.length - 1; i++ )
     {
-      /* We need a line string of the to neighbour points. */
+      /* We need a line string of the two neighbouring points. */
       final IRecord tempPointOne = geoReferencedPoints[i];
       final Double widthValueOne = (Double) tempPointOne.getValue( iBreite );
       final Double heigthValueOne = (Double) tempPointOne.getValue( iHoehe );
@@ -324,10 +321,10 @@ public final class WspmProfileHelper
       final Double rechtsWertTwo = (Double) tempPointTwo.getValue( iRechtswert );
       final Double hochWertTwo = (Double) tempPointTwo.getValue( iHochwert );
 
-      /* find the right segment with the neighboring points */
+      /* Find the right segment with the neighbouring points. */
       if( widthValueOne < width && widthValueTwo > width )
       {
-        /* calculate the georeference */
+        /* Calculate the geo reference. */
         final double deltaOne = width - widthValueOne;
         final double delta = widthValueTwo - widthValueOne;
         final double x = deltaOne * (rechtsWertTwo - rechtsWertOne) / delta + rechtsWertOne;
@@ -336,7 +333,8 @@ public final class WspmProfileHelper
 
         return org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Point( x, y, z, srsName );
       }
-      /* if the point is lying on the start point of the segment */
+
+      /* If the point is lying on the start point of the segment. */
       else if( widthValueOne == width )
         return org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Point( rechtsWertOne, hochWertOne, heigthValueOne, srsName );
       else if( widthValueTwo == width )
