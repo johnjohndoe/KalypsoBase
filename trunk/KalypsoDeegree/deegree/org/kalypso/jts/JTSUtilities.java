@@ -134,7 +134,7 @@ public final class JTSUtilities
   {
     /* Check for intersection. */
     if( point.distance( line ) >= TOLERANCE )
-      throw new IllegalStateException( "The point does not lie on the line ..." );
+      throw new IllegalStateException( "The point does not lie on the line..." );
 
     /* The needed factory. */
     final GeometryFactory factory = new GeometryFactory( line.getPrecisionModel(), line.getSRID() );
@@ -293,39 +293,41 @@ public final class JTSUtilities
    *          The line string on which the point has to be.
    * @param percent
    *          The distance in percent at which the point should be placed on the line.
-   * @return The newly created point on the line or null, if something was wrong. Update: returns the start point or the
-   *         end point if percentage is 0 or 100.
+   * @return The newly created point on the line or null, if something was wrong. Returns the start point or the end
+   *         point if percentage is 0 or 100.
    */
   public static Point pointOnLinePercent( final LineString lineJTS, final int percent )
   {
     if( percent < 0 || percent > 100 )
       return null;
 
-    final double length = lineJTS.getLength();
-    final double distance = length / 100.0 * percent;
-
     if( percent == 0 )
       return lineJTS.getPointN( 0 );
+
     if( percent == 100 )
       return lineJTS.getPointN( lineJTS.getNumPoints() - 1 );
+
+    final double length = lineJTS.getLength();
+    final double distance = length / 100.0 * percent;
 
     return pointOnLine( lineJTS, distance );
   }
 
   /**
    * This function creates a line segment (JTS) of a line from a given start point to an end point, including all points
-   * on the given line.
+   * on the given line.<br>
+   * TODO: The used distance is calculated only by the x- and y-coordinates!! For an 3-dimensaional distance
+   * calculation, the start and end point should have z-coordinates.
    * 
    * @param line
    *          The original line.
    * @param start
    *          The start point of the new line (it has to be one point that lies on the original line).
    * @param end
-   *          The end point of the new line (it has to be one point that lies on the original line). TODO: the used
-   *          distance is calculated only by the x- and y-coordinates!! for an 3-dimensaional distance calculation, the
-   *          start and end point should have z-coordinates.
+   *          The end point of the new line (it has to be one point that lies on the original line).
+   * @return A LineString on the original line starting at with the start point and ending with the end point.
    */
-  public static LineString createLineSegment( final Geometry line, final Point start, final Point end )
+  public static LineString createLineString( final Geometry line, final Point start, final Point end )
   {
     /* Check if both points are lying on the line (2d!). */
     if( line.distance( start ) >= TOLERANCE || line.distance( end ) >= TOLERANCE )
@@ -335,12 +337,12 @@ public final class JTSUtilities
     {
       /* Check the orientation of the line. */
       if( !getLineOrientation( (LineString) line, start, end ) )
-        return createLineSegmentFromLine( (LineString) line, end, start );
+        return createLineStringFromLine( (LineString) line, end, start );
 
-      return createLineSegmentFromLine( (LineString) line, start, end );
+      return createLineStringFromLine( (LineString) line, start, end );
     }
     else if( line instanceof MultiLineString )
-      return createLineSegmentFromMultiLine( (MultiLineString) line, start, end );
+      return createLineStringFromMultiLine( (MultiLineString) line, start, end );
 
     return null;
   }
@@ -403,7 +405,7 @@ public final class JTSUtilities
    *          The end point of the new line (it has to be one point that lies on the original LineString).
    * @return A LineString on the original LineString starting at with the start point and ending with the end point.
    */
-  private static LineString createLineSegmentFromLine( final LineString line, final Point start, final Point end )
+  private static LineString createLineStringFromLine( final LineString line, final Point start, final Point end )
   {
     final List<Point> points = new LinkedList<Point>();
 
@@ -470,7 +472,7 @@ public final class JTSUtilities
    * @return A LineString on the original MultiLineString starting at with the start point and ending with the end
    *         point.
    */
-  private static LineString createLineSegmentFromMultiLine( final MultiLineString line, final Point start, final Point end )
+  private static LineString createLineStringFromMultiLine( final MultiLineString line, final Point start, final Point end )
   {
     final List<Point> points = new LinkedList<Point>();
 
@@ -805,7 +807,7 @@ public final class JTSUtilities
    * @param curve
    *          The curve with original points.
    * @param distance
-   *          the definition at what length along the curve a point should be inserted.
+   *          The definition at what length along the curve a point should be inserted.
    * @return The coordinates of the calculated points on the line.
    */
   public static Coordinate[] calculatePointsOnLine( final LineString curve, final double distance )
@@ -993,9 +995,9 @@ public final class JTSUtilities
   }
 
   /**
-   * Buffers a geometry<br>
+   * Buffers a geometry.<br>
    * The size of the buffer is determined as a ratio of the size of its envelope.<br>
-   * More exact, it is <code>ratio * Math.max(envelope.getWidht(), envelope.getHeight())</code>
+   * More exact, it is <code>ratio * Math.max(envelope.getWidht(), envelope.getHeight())</code>.
    */
   public static Geometry bufferWithRatio( final Geometry geometry, final double ratio )
   {
@@ -1151,9 +1153,12 @@ public final class JTSUtilities
   }
 
   /**
-   * Returns the minimal x-value of a sequence of coordinates.
+   * This function returns the minimal x-value of a sequence of coordinates.
    * 
-   * @return {@link Double#POSITIVE_INFINITY} if the sequence is empty
+   * @param seq
+   *          The coordinate sequence.
+   * @return The minimal x-value of a sequence of coordinates. {@link Double#POSITIVE_INFINITY} If the sequence is
+   *         empty.
    */
   public static double getMinX( final CoordinateSequence seq )
   {
@@ -1165,9 +1170,12 @@ public final class JTSUtilities
   }
 
   /**
-   * Returns the maximal x-value of a sequence of coordinates.
+   * This function returns the maximal x-value of a sequence of coordinates.
    * 
-   * @return {@link Double#NEGATIVE_INFINITY} if the sequence is empty
+   * @param seq
+   *          The coordinate sequence.
+   * @return The maximal x-value of a sequence of coordinates. {@link Double#NEGATIVE_INFINITY} If the sequence is
+   *         empty.
    */
   public static double getMaxX( final CoordinateSequence seq )
   {
@@ -1179,7 +1187,11 @@ public final class JTSUtilities
   }
 
   /**
-   * Returns all x-values of the given sequence as an array.
+   * This function returns all x-values of the given sequence as an array.
+   * 
+   * @param seq
+   *          The coordinate sequence.
+   * @return All x-values of the given sequence as an array.
    */
   public static double[] getXValues( final CoordinateSequence seq )
   {
@@ -1191,7 +1203,11 @@ public final class JTSUtilities
   }
 
   /**
-   * Returns all y-values of the given sequence as an array.
+   * This function returns all y-values of the given sequence as an array.
+   * 
+   * @param seq
+   *          The coordinate sequence.
+   * @return All y-values of the given sequence as an array.
    */
   public static double[] getYValues( final CoordinateSequence seq )
   {
@@ -1203,11 +1219,13 @@ public final class JTSUtilities
   }
 
   /**
+   * This function validates geometries.
+   * 
    * @param msg
-   *          basic error message
+   *          Basic error message.
    * @param g
-   *          geometries to check
-   * @return if an error exists an error message will be returned
+   *          Geometries to check.
+   * @return If an error exists an error message will be returned.
    */
   public static String validateGeometries( String msg, final Geometry... g )
   {
@@ -1391,4 +1409,44 @@ public final class JTSUtilities
     return results;
   }
 
+  /**
+   * This function returns the nearest point on the line within a distance of the provided point.
+   * 
+   * @param line
+   *          The points on this line will be evaluated.
+   * @param point
+   *          This is the reference point.
+   * @param distance
+   *          The nearest point of line segment, the point is in must lie within the given distance. If you provide a
+   *          invalid distance such as {@link Double#NaN}, {@link Double#NEGATIVE_INFINITY},
+   *          {@link Double#POSITIVE_INFINITY} or a negative number, a default distance ({@link #TOLERANCE} =
+   *          {@value #TOLERANCE}) will be used.
+   * @return The point, if one could be found or null.
+   */
+  public static Point findPointInLine( LineString line, Point point, double distance )
+  {
+    /* Check for intersection. */
+    if( point.distance( line ) >= TOLERANCE )
+      throw new IllegalStateException( "The point does not lie on the line ..." );
+
+    /* Check the distance. */
+    if( Double.isNaN( distance ) || Double.isInfinite( distance ) )
+      distance = TOLERANCE;
+
+    /* Find the line segment, this point is in. */
+    LineSegment segment = findLineSegment( line, point );
+    if( segment == null )
+      return null;
+
+    /* Check the distance to the reference point. */
+    Coordinate referenceCoordinate = point.getCoordinate();
+    Coordinate closestCoordinate = segment.closestPoint( referenceCoordinate );
+    if( closestCoordinate.distance( referenceCoordinate ) <= distance )
+    {
+      GeometryFactory factory = new GeometryFactory( line.getPrecisionModel(), line.getSRID() );
+      return factory.createPoint( closestCoordinate );
+    }
+
+    return null;
+  }
 }
