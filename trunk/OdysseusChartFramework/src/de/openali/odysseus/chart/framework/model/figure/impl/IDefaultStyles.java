@@ -2,6 +2,7 @@ package de.openali.odysseus.chart.framework.model.figure.impl;
 
 import org.eclipse.swt.graphics.RGB;
 
+import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT;
 import de.openali.odysseus.chart.framework.model.style.IFill;
 import de.openali.odysseus.chart.framework.model.style.IMarker;
 import de.openali.odysseus.chart.framework.model.style.IStyleConstants.FONTSTYLE;
@@ -54,4 +55,6 @@ public interface IDefaultStyles
   int DEFAULT_MITERLIMIT = 1;
 
   boolean DEFAULT_FILL_VISIBILITY = true;
+
+  ALIGNMENT DEFAULT_TEXT_ALIGNMENT = ALIGNMENT.LEFT;
 }

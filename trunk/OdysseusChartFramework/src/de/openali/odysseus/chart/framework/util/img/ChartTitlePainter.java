@@ -51,7 +51,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.ui.PlatformUI;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
-import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.LABEL_POSITION;
+import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT;
 import de.openali.odysseus.chart.framework.model.style.ITextStyle;
 
 /**
@@ -87,9 +87,9 @@ public class ChartTitlePainter
 
     try
     {
-      final ChartTitleBean[] titles = m_model.getTitle();
+      final TitleTypeBean[] titles = m_model.getTitles();
 
-      for( final ChartTitleBean title : titles )
+      for( final TitleTypeBean title : titles )
       {
         final ITextStyle textStyle = title.getTextStyle();
         final Font font = new Font( dev, textStyle.toFontData() );
@@ -135,24 +135,16 @@ public class ChartTitlePainter
     {
       int y = 0;
 
-      for( final ChartTitleBean bean : m_model.getTitle() )
+      for( final TitleTypeBean bean : m_model.getTitles() )
       {
         final ITextStyle textStyle = bean.getTextStyle();
-        final Font font = new Font( dev, textStyle.toFontData() );
-        try
-        {
-          gc.setFont( font );
-          final Point extent = gc.textExtent( bean.getText(), SWT.DRAW_DELIMITER | SWT.DRAW_TAB );
+        textStyle.apply( gc );
 
-          final Point anchor = getAnchor( bean, extent, y );
+        final Point extent = gc.textExtent( bean.getText(), SWT.DRAW_DELIMITER | SWT.DRAW_TAB );
+        final Point anchor = getAnchor( bean, extent, y );
 
-          gc.drawText( bean.getText(), anchor.x, anchor.y, SWT.DRAW_DELIMITER | SWT.DRAW_TAB );
-          y += extent.y;
-        }
-        finally
-        {
-          font.dispose();
-        }
+        gc.drawText( bean.getText(), anchor.x, anchor.y, SWT.DRAW_DELIMITER | SWT.DRAW_TAB );
+        y += extent.y;
       }
     }
     finally
@@ -166,24 +158,24 @@ public class ChartTitlePainter
    * @param y
    *          pointer to y row position
    */
-  private Point getAnchor( final ChartTitleBean title, final Point textExtent, final int y )
+  private Point getAnchor( final TitleTypeBean title, final Point textExtent, final int y )
   {
     final Insets inset = title.getInsets();
 
-    final LABEL_POSITION position = title.getPosition();
-    if( LABEL_POSITION.TICK_CENTERED.equals( position ) )
+    final ALIGNMENT alignment = title.getAlignment();
+    if( ALIGNMENT.CENTER.equals( alignment ) )
     {
       final int x = Double.valueOf( m_width / 2.0 - textExtent.x / 2.0 ).intValue();
 
       return new Point( x, y );
     }
-    else if( LABEL_POSITION.LEFT.equals( position ) )
+    else if( ALIGNMENT.LEFT.equals( alignment ) )
     {
       final int x = Double.valueOf( inset.left ).intValue();
 
       return new Point( x, y );
     }
-    else if( LABEL_POSITION.RIGHT.equals( position ) )
+    else if( ALIGNMENT.RIGHT.equals( alignment ) )
     {
       final int x = Double.valueOf( m_width - textExtent.x - inset.right ).intValue();
 

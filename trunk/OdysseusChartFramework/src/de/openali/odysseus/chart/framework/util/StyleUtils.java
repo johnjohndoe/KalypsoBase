@@ -16,15 +16,20 @@ import de.openali.odysseus.chart.framework.model.style.impl.PointStyle;
 import de.openali.odysseus.chart.framework.model.style.impl.TextStyle;
 
 /**
- * @author burtscher static helper methods to ease the handling of Style-concerns
+ * static helper methods to ease the handling of Style-concerns
+ * 
+ * @author burtscher
  */
-public class StyleUtils
+public final class StyleUtils
 {
+  private StyleUtils( )
+  {
+  }
 
   /**
    * transforms an array of points into an array of alternating x- and y- values
    */
-  public static int[] pointListToIntArray( List<Point> path )
+  public static int[] pointListToIntArray( final List<Point> path )
   {
     int[] newpath;
     if( path != null )
@@ -46,7 +51,7 @@ public class StyleUtils
   }
 
   @SuppressWarnings("unchecked")
-  public static <T_style extends IStyle> T_style getDefaultStyle( Class<T_style> clazz )
+  public static <T_style extends IStyle> T_style getDefaultStyle( final Class<T_style> clazz )
   {
     if( IPointStyle.class.isAssignableFrom( clazz ) )
       return (T_style) getDefaultPointStyle();
@@ -77,6 +82,6 @@ public class StyleUtils
 
   public static ITextStyle getDefaultTextStyle( )
   {
-    return new TextStyle( IDefaultStyles.DEFAULT_FONT_HEIGHT, IDefaultStyles.DEFAULT_FONT_FAMILY, IDefaultStyles.DEFAULT_RGB_TEXT, IDefaultStyles.DEFAULT_RGB_TEXT_BACKGROUND, IDefaultStyles.DEFAULT_FONT_STYLE, IDefaultStyles.DEFAULT_FONT_WEIGHT, IDefaultStyles.DEFAULT_ALPHA, IDefaultStyles.DEFAULT_VISIBILITY );
+    return new TextStyle( IDefaultStyles.DEFAULT_FONT_HEIGHT, IDefaultStyles.DEFAULT_FONT_FAMILY, IDefaultStyles.DEFAULT_RGB_TEXT, IDefaultStyles.DEFAULT_RGB_TEXT_BACKGROUND, IDefaultStyles.DEFAULT_FONT_STYLE, IDefaultStyles.DEFAULT_FONT_WEIGHT, IDefaultStyles.DEFAULT_TEXT_ALIGNMENT, IDefaultStyles.DEFAULT_ALPHA, IDefaultStyles.DEFAULT_VISIBILITY );
   }
 }

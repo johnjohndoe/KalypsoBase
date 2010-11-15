@@ -78,6 +78,7 @@ import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.util.ChartUtilities;
 import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
 import de.openali.odysseus.chartconfig.x020.ChartType;
+import de.openali.odysseus.chartconfig.x020.TitleType;
 
 /**
  * @author Gernot Belger
@@ -153,9 +154,9 @@ public class ChartFeatureControl extends AbstractFeatureControl implements IFeat
       /* The tab item */
       final TabItem item = new TabItem( folder, SWT.NONE );
 
-      final String[] title = chartType.getTitleArray();
+      final TitleType[] title = chartType.getTitleArray();
       if( !ArrayUtils.isEmpty( title ) )
-        item.setText( title[0] );
+        item.setText( title[0].getStringValue() );
 
       item.setToolTipText( chartType.getDescription() );
 

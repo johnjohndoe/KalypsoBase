@@ -32,10 +32,11 @@ public interface IAxisConstants
     }
   }
 
-  public enum LABEL_POSITION
+  public enum ALIGNMENT
   {
     LEFT,
     RIGHT,
+    CENTER,
     TICK_CENTERED,
     INTERVALL_CENTERED
   }

@@ -42,7 +42,7 @@ package de.openali.odysseus.chart.framework.util.img;
 
 import java.awt.Insets;
 
-import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.LABEL_POSITION;
+import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT;
 import de.openali.odysseus.chart.framework.model.style.IChartLabelRenderer;
 import de.openali.odysseus.chart.framework.model.style.ITextStyle;
 import de.openali.odysseus.chart.framework.util.StyleUtils;
@@ -50,22 +50,22 @@ import de.openali.odysseus.chart.framework.util.StyleUtils;
 /**
  * @author kimwerner
  */
-public class ChartTitleBean implements IChartLabelRenderer
+public class TitleTypeBean implements IChartLabelRenderer
 {
   private String m_text = "";
 
-  private LABEL_POSITION m_position = LABEL_POSITION.TICK_CENTERED;
+  private ALIGNMENT m_position = ALIGNMENT.TICK_CENTERED;
 
   private ITextStyle m_textStyle;
 
   private Insets m_insets = new Insets( 0, 0, 0, 0 );
 
-  public ChartTitleBean( final String text )
+  public TitleTypeBean( final String text )
   {
     m_text = text;
   }
 
-  public ChartTitleBean( final String text, final LABEL_POSITION position, final ITextStyle textStyle, final Insets insets )
+  public TitleTypeBean( final String text, final ALIGNMENT position, final ITextStyle textStyle, final Insets insets )
   {
     super();
     m_text = text;
@@ -81,7 +81,7 @@ public class ChartTitleBean implements IChartLabelRenderer
   }
 
   @Override
-  public LABEL_POSITION getPosition( )
+  public ALIGNMENT getAlignment( )
   {
     return m_position;
   }
@@ -148,7 +148,7 @@ public class ChartTitleBean implements IChartLabelRenderer
   }
 
   @Override
-  public void setPosition( final LABEL_POSITION position )
+  public void setPosition( final ALIGNMENT position )
   {
     m_position = position;
   }

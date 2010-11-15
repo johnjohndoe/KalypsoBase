@@ -7,7 +7,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.resources;visibility:=reexport,
  de.openali.odysseus.chart.framework;visibility:=reexport,
  org.kalypso.commons;visibility:=reexport,
- org.junit4;bundle-version="4.3.1";resolution:=optional
+ org.junit4;bundle-version="4.3.1";resolution:=optional,
+ org.eclipse.wst.xml.core;resolution:=optional
 Export-Package: de.openali.odysseus.chart.factory.config;
   uses:="de.openali.odysseus.chart.framework.model,
    de.openali.odysseus.chart.factory.config.parameters,

@@ -44,9 +44,6 @@ import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import org.eclipse.swt.graphics.Device;
-import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 
@@ -71,14 +68,14 @@ public class ChartLegendPainter
 
   private final Point m_itemSpacer = new Point( 5, 8 );
 
-  private final ILegendStrategy m_strategy;
+  private final ILegendPaintStrategy m_strategy;
 
   public ChartLegendPainter( final IChartModel model, final int maximalImageWidth )
   {
     this( model, maximalImageWidth, new DefaultLegendStrategy() );
   }
 
-  public ChartLegendPainter( final IChartModel model, final int maximalImageWidth, final ILegendStrategy strategy )
+  public ChartLegendPainter( final IChartModel model, final int maximalImageWidth, final ILegendPaintStrategy strategy )
   {
     m_model = model;
     m_maxImageWidth = maximalImageWidth;
@@ -150,15 +147,6 @@ public class ChartLegendPainter
       visible.add( layer );
 
     return visible.toArray( new IChartLayer[] {} );
-  }
-
-  Font getFont( final Device dev )
-  {
-    final FontData fontData = m_style.toFontData();
-    if( fontData == null )
-      return new Font( dev, dev.getFontList( null, true )[0] );
-
-    return new Font( dev, fontData );
   }
 
   public int getMaximumWidth( )

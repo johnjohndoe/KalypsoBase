@@ -42,7 +42,7 @@ package de.openali.odysseus.chart.framework.model.style;
 
 import java.awt.Insets;
 
-import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.LABEL_POSITION;
+import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT;
 
 /**
  * @author kimwerner
@@ -52,13 +52,13 @@ public interface IChartLabelRenderer
 
   Insets getInsets( );
 
-  LABEL_POSITION getPosition( );
+  ALIGNMENT getAlignment( );
 
   ITextStyle getTextStyle( );
 
   void setInsets( final Insets insets );
 
-  void setPosition( final LABEL_POSITION position );
+  void setPosition( final ALIGNMENT position );
 
   void setTextStyle( final ITextStyle textStyle );
 
