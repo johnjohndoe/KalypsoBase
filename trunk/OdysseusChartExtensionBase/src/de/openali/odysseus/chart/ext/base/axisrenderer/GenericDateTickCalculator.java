@@ -42,9 +42,11 @@ package de.openali.odysseus.chart.ext.base.axisrenderer;
 
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.TimeZone;
 
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
+import org.kalypso.core.KalypsoCorePlugin;
 
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
@@ -55,6 +57,14 @@ import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATI
  */
 public class GenericDateTickCalculator implements ITickCalculator
 {
+
+  static final long SECONDS_IN_MILLISECONDS = 1000;
+
+  static final long MINUTES_IN_MS = SECONDS_IN_MILLISECONDS * 60;
+
+  static final long HOURS_IN_MS = MINUTES_IN_MS * 60;
+
+  static final long DAYS_IN_MS = HOURS_IN_MS * 24;
 
   /**
    * @see org.kalypso.chart.ext.test.axisrenderer.ITickCalculator#calcTicks(org.eclipse.swt.graphics.GC,
@@ -122,8 +132,11 @@ public class GenericDateTickCalculator implements ITickCalculator
     if( min == null || max == null )
       return new Number[] {};
 
-    final long logicalMin = min.longValue();// axis.screenToNumeric( screenMin ).longValue();
-    final long logicalMax = max.longValue();// axis.screenToNumeric( screenMax ).longValue();
+    final TimeZone timeZone = KalypsoCorePlugin.getDefault().getTimeZone();
+    final int timeZoneOffset = timeZone.getRawOffset();
+
+    final long logicalMin = min.longValue() + timeZoneOffset;// axis.screenToNumeric( screenMin ).longValue();
+    final long logicalMax = max.longValue() + timeZoneOffset;// axis.screenToNumeric( screenMax ).longValue();
 
     // der minimale logische Abstand
     final long minLogInterval;
@@ -132,16 +145,10 @@ public class GenericDateTickCalculator implements ITickCalculator
     else
       minLogInterval = minDisplayInterval.longValue();
 
-    // ein paar Größen
-    final long secondInMillis = 1000;
-    final long minuteInMillis = secondInMillis * 60;
-    final long hourInMillis = minuteInMillis * 60;
-    final long dayInMillis = hourInMillis * 24;
-
     // letzten Tagesbeginn VOR dem Startdatum
-    final long normmin = ((logicalMin / dayInMillis) - 1) * dayInMillis;
+    final long normmin = ((logicalMin / DAYS_IN_MS) - 1) * DAYS_IN_MS;
     // erster Tagesbeginn NACH dem Startdatum
-    final long normmax = ((logicalMax / dayInMillis) + 1) * dayInMillis;
+    final long normmax = ((logicalMax / DAYS_IN_MS) + 1) * DAYS_IN_MS;
 
     // Collection für Ticks
     final HashSet<Long> ticks = new HashSet<Long>();
@@ -149,10 +156,10 @@ public class GenericDateTickCalculator implements ITickCalculator
     int count = 0;
     long oldi = 0;
 
-    long goodInterval = dayInMillis;
+    long goodInterval = DAYS_IN_MS;
     while( goodInterval < minLogInterval )
     {
-      goodInterval += dayInMillis;
+      goodInterval += DAYS_IN_MS;
     }
 
     for( long i = normmin; i <= normmax; i += goodInterval )
@@ -173,7 +180,7 @@ public class GenericDateTickCalculator implements ITickCalculator
       final long ticklv = tick.longValue();
       if( ticklv >= logicalMin && ticklv <= logicalMax )
       {
-        realticks.add( tick );
+        realticks.add( tick - timeZoneOffset );
       }
     }
 
@@ -199,14 +206,7 @@ public class GenericDateTickCalculator implements ITickCalculator
      * DateRange muss dann bestimmt werden, welche divisoren sinnvoll sind; Beispiel: Wenn Stunden geteilt werden, dann
      * sind die Divisoren 6,4,3,2 gut; bei Tagen eher 120, 90, 60, 30, etc.
      */
-    final LinkedList<Integer> divisors = new LinkedList<Integer>();
-
-    divisors.add( 60 );
-    divisors.add( 24 );
-    divisors.add( 18 );
-    divisors.add( 12 );
-    divisors.add( 6 );
-    divisors.add( 2 );
+    final Integer[] divisors = new Integer[] { 60, 30, 24, 18, 15, 12, 6, 2 };
 
     // Abbruchbedingung: Abstand muss größer 1 sein, sonst kommt immer der 2. Wert raus
     if( to - from > 1 )
@@ -234,7 +234,6 @@ public class GenericDateTickCalculator implements ITickCalculator
         }
       }
     }
-
   }
 
 }
