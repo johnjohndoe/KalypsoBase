@@ -111,15 +111,15 @@ public class DragPointsWidget extends AbstractWidget
    * The constructor.
    * 
    * @param name
-   *            The name of this widget.
+   *          The name of this widget.
    * @param toolTip
-   *            The tooltip of this widget.
+   *          The tooltip of this widget.
    * @param handlesProvider
-   *            The class which provides the handles the geometries of a feature.
+   *          The class which provides the handles the geometries of a feature.
    * @param radius
-   *            The radius in which the handles should be selectable.
+   *          The radius in which the handles should be selectable.
    * @param qnames
-   *            The QNames the editable features should substitute from.
+   *          The QNames the editable features should substitute from.
    */
   public DragPointsWidget( final String name, final String toolTip, final IHandlesProvider handlesProvider, final int radius, final QName[] qnames )
   {
@@ -180,7 +180,7 @@ public class DragPointsWidget extends AbstractWidget
       return;
     }
 
-    getMapPanel().setMessage( Messages.getString("org.kalypso.ogc.gml.map.widgets.DragPointsWidget.0") ); //$NON-NLS-1$
+    getMapPanel().setMessage( Messages.getString( "org.kalypso.ogc.gml.map.widgets.DragPointsWidget.0" ) ); //$NON-NLS-1$
 
     /* Create the new geometry. */
     final GeoTransform projection = getMapPanel().getProjection();
@@ -207,7 +207,7 @@ public class DragPointsWidget extends AbstractWidget
     m_currentPoint = null;
     m_startPoint = null;
 
-    getMapPanel().setMessage( Messages.getString("org.kalypso.ogc.gml.map.widgets.DragPointsWidget.1") ); //$NON-NLS-1$
+    getMapPanel().setMessage( Messages.getString( "org.kalypso.ogc.gml.map.widgets.DragPointsWidget.1" ) ); //$NON-NLS-1$
   }
 
   /**
@@ -231,7 +231,7 @@ public class DragPointsWidget extends AbstractWidget
         if( handle.isSelectable( p, getMapPanel().getProjection() ) )
         {
           handle.setActive( true );
-          getMapPanel().setMessage( Messages.getString("org.kalypso.ogc.gml.map.widgets.DragPointsWidget.2") ); //$NON-NLS-1$
+          getMapPanel().setMessage( Messages.getString( "org.kalypso.ogc.gml.map.widgets.DragPointsWidget.2" ) ); //$NON-NLS-1$
         }
         else
           handle.setActive( false );
@@ -241,8 +241,7 @@ public class DragPointsWidget extends AbstractWidget
     /* Store the current mouse position. */
     m_currentPoint = p;
 
-    // TODO: check if this repaint is really necessary
-    // Answer: It is necessary, but it was at the wrong scope. Moved it out of the upper if-block.
+    /* Repaint. */
     final IMapPanel panel = getMapPanel();
     if( panel != null )
       panel.repaintMap();
@@ -281,9 +280,50 @@ public class DragPointsWidget extends AbstractWidget
   }
 
   /**
-   * Resets the widget.
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#setSelection(org.kalypso.ogc.gml.selection.IFeatureSelection)
    */
-  public void reset( )
+  @Override
+  public void setSelection( final ISelection selection )
+  {
+    /* If no feature with geometries is found, do nothing. */
+    final EasyFeatureWrapper wrapper = checkSelection( selection );
+    if( wrapper == null )
+    {
+      reset();
+      return;
+    }
+
+    /* Store the feature and the workspace. */
+    final Feature feature = wrapper.getFeature();
+    m_workspace = wrapper.getWorkspace();
+
+    /* Create a new list for the handles. */
+    m_handles = new ArrayList<IHandle>();
+
+    /* Collect all handles from the handle provider. */
+    m_handles.addAll( m_handlesProvider.collectHandles( feature, m_radius ) );
+
+    getMapPanel().setMessage( Messages.getString( "org.kalypso.ogc.gml.map.widgets.DragPointsWidget.4" ) ); //$NON-NLS-1$
+    return;
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#canBeActivated(org.eclipse.jface.viewers.ISelection,
+   *      org.kalypso.ogc.gml.map.MapPanel)
+   */
+  @Override
+  public boolean canBeActivated( final ISelection selection, final IMapPanel mapPanel )
+  {
+    if( mapPanel == null )
+      return false;
+
+    return checkSelection( mapPanel.getSelectionManager() ) != null;
+  }
+
+  /**
+   * This function resets the widget.
+   */
+  protected void reset( )
   {
     getMapPanel().setMessage( "" ); //$NON-NLS-1$
 
@@ -302,85 +342,33 @@ public class DragPointsWidget extends AbstractWidget
     getMapPanel().setCursor( cursor );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#setSelection(org.kalypso.ogc.gml.selection.IFeatureSelection)
-   */
-  @Override
-  public void setSelection( final ISelection selection )
-  {
-    final EasyFeatureWrapper wrapper = checkSelection( selection );
-
-    /* If no feature with geometries is found, do nothing. */
-    if( wrapper == null )
-    {
-      reset();
-      return;
-    }
-
-    /* Store the feature and the workspace. */
-    final Feature feature = wrapper.getFeature();
-    m_workspace = wrapper.getWorkspace();
-
-    /* Create a new list for the handles. */
-    m_handles = new ArrayList<IHandle>();
-
-    /* Collect all handles from the handle provider. */
-    m_handles.addAll( m_handlesProvider.collectHandles( feature, m_radius ) );
-
-    getMapPanel().setMessage( Messages.getString("org.kalypso.ogc.gml.map.widgets.DragPointsWidget.4") ); //$NON-NLS-1$
-    return;
-  }
-
-  private EasyFeatureWrapper checkSelection( final ISelection selection )
+  protected EasyFeatureWrapper checkSelection( final ISelection selection )
   {
     if( !(selection instanceof IFeatureSelection) )
       return null;
 
     /* On activation collect all handles of the selected feature. */
     final EasyFeatureWrapper[] allFeatures = ((IFeatureSelection) selection).getAllFeatures();
-
     for( final EasyFeatureWrapper wrapper : allFeatures )
     {
       /* Take the first feature, which is in this list and which has geometries. */
-      if( wrapper.getFeature().getGeometryProperties().length > 0 )
-      {
-        final IFeatureType featureType = wrapper.getFeature().getFeatureType();
+      if( wrapper.getFeature().getGeometryPropertyValues().length == 0 )
+        continue;
 
-        /*
-         * If a list of qnames is specified and at least one qname exists in it, search only for features, which
-         * substitutes one of the qnames in the list.
-         */
-        if( (m_qnames != null) && (m_qnames.length > 0) )
-        {
-          for( final QName qname : m_qnames )
-          {
-            /* And it has to susbtitute one of the qnames. */
-            if( GMLSchemaUtilities.substitutes( featureType, qname ) )
-            {
-              return wrapper;
-            }
-          }
-        }
-        else
-        {
+      /* If a list of qnames is specified and at least one qname exists in it, */
+      /* search only for features, which substitutes one of the qnames in the list. */
+      if( m_qnames == null || m_qnames.length == 0 )
+        return wrapper;
+
+      /* And it has to susbtitute one of the qnames. */
+      final IFeatureType featureType = wrapper.getFeature().getFeatureType();
+      for( final QName qname : m_qnames )
+      {
+        if( GMLSchemaUtilities.substitutes( featureType, qname ) )
           return wrapper;
-        }
       }
     }
 
     return null;
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#canBeActivated(org.eclipse.jface.viewers.ISelection,
-   *      org.kalypso.ogc.gml.map.MapPanel)
-   */
-  @Override
-  public boolean canBeActivated( final ISelection selection, final IMapPanel mapPanel )
-  {
-    if( mapPanel == null )
-      return false;
-
-    return checkSelection( mapPanel.getSelectionManager() ) != null;
   }
 }
