@@ -179,18 +179,16 @@ public class DefaultLegendStrategy implements ILegendStrategy
           continue;
 
         final ImageData imageData = createLegendItem( creator, entry, font );
-        final Image image = new Image( dev, imageData );
-        gc.drawImage( image, x, y );
-
         if( x + imageData.width > creator.getMaximumWidth() )
         {
           x = 0;
           y += imageData.height;
         }
-        else
-        {
-          x += imageData.width;
-        }
+
+        final Image image = new Image( dev, imageData );
+        gc.drawImage( image, x, y );
+
+        x += imageData.width;
 
         image.dispose();
       }
