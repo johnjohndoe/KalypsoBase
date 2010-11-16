@@ -161,8 +161,7 @@ public class PropertyContentHandler extends AbstractGmlContentHandler implements
   {
     final QName qname = new QName( uri, localName );
 
-    final Feature feature = m_scopeFeature;
-    final IFeatureType featureType = feature.getFeatureType();
+    final IFeatureType featureType = m_scopeFeature.getFeatureType();
     final IPropertyType pt = featureType.getProperty( qname );
     if( pt == null )
     {
