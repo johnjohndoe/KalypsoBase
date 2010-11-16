@@ -46,11 +46,11 @@ import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.SimpleTimeZone;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.kalypso.contribs.java.util.DateUtilities;
+import org.kalypso.core.KalypsoCorePlugin;
 
 /**
  * @author alibu
@@ -59,21 +59,21 @@ public class CalendarFormat extends Format
 {
   private final SimpleDateFormat m_sdf;
 
-  public CalendarFormat( String formatString )
+  public CalendarFormat( final String formatString )
   {
     m_sdf = new SimpleDateFormat( formatString );
-    m_sdf.setTimeZone( new SimpleTimeZone( 0, "" ) );
+    m_sdf.setTimeZone( KalypsoCorePlugin.getDefault().getTimeZone() );
   }
 
   /**
    * @see java.text.Format#format(java.lang.Object, java.lang.StringBuffer, java.text.FieldPosition)
    */
   @Override
-  public StringBuffer format( Object obj, StringBuffer toAppendTo, FieldPosition pos )
+  public StringBuffer format( final Object obj, final StringBuffer toAppendTo, final FieldPosition pos )
   {
     if( obj instanceof Calendar )
     {
-      Calendar cal = (Calendar) obj;
+      final Calendar cal = (Calendar) obj;
       return m_sdf.format( cal.getTimeInMillis(), toAppendTo, pos );
     }
     else if( obj instanceof Number )
@@ -82,7 +82,7 @@ public class CalendarFormat extends Format
     }
     else if( obj instanceof XMLGregorianCalendar )
     {
-      Date date = DateUtilities.toDate( obj );
+      final Date date = DateUtilities.toDate( obj );
       return m_sdf.format( date, toAppendTo, pos );
     }
     return m_sdf.format( obj, toAppendTo, pos );
@@ -92,10 +92,10 @@ public class CalendarFormat extends Format
    * @see java.text.Format#parseObject(java.lang.String, java.text.ParsePosition)
    */
   @Override
-  public Object parseObject( String source, ParsePosition pos )
+  public Object parseObject( final String source, final ParsePosition pos )
   {
-    Date date = (Date) m_sdf.parseObject( source, pos );
-    Calendar cal = Calendar.getInstance();
+    final Date date = (Date) m_sdf.parseObject( source, pos );
+    final Calendar cal = Calendar.getInstance();
     cal.setTimeInMillis( date.getTime() );
     return cal;
   }
