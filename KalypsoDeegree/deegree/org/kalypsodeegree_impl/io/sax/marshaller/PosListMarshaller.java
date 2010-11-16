@@ -56,6 +56,8 @@ public class PosListMarshaller extends AbstractMarshaller<GM_Position[]>
 {
   public static final String ELEMENT_POS_LIST = "posList";
 
+  private int m_srsDimension;
+
   public PosListMarshaller( final XMLReader reader, final GM_Position[] posList )
   {
     super( reader, ELEMENT_POS_LIST, posList );
@@ -68,13 +70,22 @@ public class PosListMarshaller extends AbstractMarshaller<GM_Position[]>
   protected void startMarshalling( ) throws SAXException
   {
     /* gets the dimension of any point in the posList */
-    final int srsDimension = getMarshalledObject()[0].getCoordinateDimension();
+    GM_Position[] positions = getMarshalledObject();
+    m_srsDimension = findSrsDimension( positions );
 
     final AttributesImpl atts = new AttributesImpl();
-    atts.addAttribute( "", "srsDimension", "srsDimension", "decimal", String.valueOf( srsDimension ) );
+    atts.addAttribute( "", "srsDimension", "srsDimension", "decimal", String.valueOf( m_srsDimension ) );
 
     final ContentHandler contentHandler = getXMLReader().getContentHandler();
     contentHandler.startElement( NS.GML3, getTag(), getQName(), atts );
+  }
+
+  private int findSrsDimension( GM_Position[] positions )
+  {
+    int srsDim = 0;
+    for( GM_Position pos : positions )
+      srsDim = Math.max( srsDim, pos.getCoordinateDimension() );
+    return srsDim;
   }
 
   /**
@@ -94,16 +105,15 @@ public class PosListMarshaller extends AbstractMarshaller<GM_Position[]>
     final ContentHandler contentHandler = getXMLReader().getContentHandler();
 
     final double[] asArray = pos.getAsArray();
-    for( final double d : asArray )
+
+    // REMARK: make sure we write exactly srsDim count of values per position
+    for( int i = 0; i < m_srsDimension; i++ )
     {
-      // do not write the third coordinate if not set
-      if( !Double.isNaN( d ) )
-      {
-        final String dString = Double.toString( d );
-        final char[] charArray = dString.toCharArray();
-        contentHandler.characters( charArray, 0, charArray.length );
-        contentHandler.characters( WHITESPACE, 0, 1 );
-      }
+      final double value = i < asArray.length ? asArray[i] : Double.NaN;
+      final String dString = Double.toString( value );
+      final char[] charArray = dString.toCharArray();
+      contentHandler.characters( charArray, 0, charArray.length );
+      contentHandler.characters( WHITESPACE, 0, 1 );
     }
   }
 }

@@ -200,7 +200,15 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
   @Override
   public int getCoordinateDimension( )
   {
-    return getStartPoint().getAsArray().length;
+    int srsDimension = 0;
+    for( GM_CurveSegment segment : m_segments )
+    {
+      GM_Position[] positions = segment.getPositions();
+      for( GM_Position position : positions )
+        srsDimension = Math.max( srsDimension, position.getCoordinateDimension() );
+    }
+
+    return srsDimension;
   }
 
   /**

@@ -60,7 +60,6 @@ import org.xml.sax.XMLReader;
  * A content handler which parses a gml:LineString element.<br>
  * 
  * @author Felipe Maximino
- *
  */
 public class LineStringContentHandler extends GMLElementContentHandler implements IPositionHandler, ICoordinatesHandler
 {
@@ -92,14 +91,15 @@ public class LineStringContentHandler extends GMLElementContentHandler implement
   {
     super( reader, NS.GML3, ELEMENT_LINE_STRING, defaultSrs, parentContentHandler );
 
-    m_resultEater = resultEater;    
-    m_lineStringHandler = lineStringHandler;    
+    m_resultEater = resultEater;
+    m_lineStringHandler = lineStringHandler;
     m_positions = new ArrayList<GM_Position>();
     m_lineString = null;
   }
 
   /**
-   * @see org.kalypsodeegree_impl.io.sax.parser.GMLElementContentHandler#doEndElement(java.lang.String, java.lang.String, java.lang.String)
+   * @see org.kalypsodeegree_impl.io.sax.parser.GMLElementContentHandler#doEndElement(java.lang.String,
+   *      java.lang.String, java.lang.String)
    */
   @Override
   protected void doEndElement( final String uri, final String localName, final String name ) throws SAXException
@@ -109,16 +109,17 @@ public class LineStringContentHandler extends GMLElementContentHandler implement
     if( m_resultEater != null )
     {
       m_resultEater.unmarshallSuccesful( m_lineString );
-    }    
+    }
 
     if( m_lineStringHandler != null )
     {
       m_lineStringHandler.handle( m_lineString );
-    }    
+    }
   }
 
   /**
-   * @see org.kalypsodeegree_impl.io.sax.parser.GMLElementContentHandler#handleUnexpectedEndElement(java.lang.String, java.lang.String, java.lang.String)
+   * @see org.kalypsodeegree_impl.io.sax.parser.GMLElementContentHandler#handleUnexpectedEndElement(java.lang.String,
+   *      java.lang.String, java.lang.String)
    */
   @Override
   public void handleUnexpectedEndElement( final String uri, final String localName, final String name ) throws SAXException
@@ -136,7 +137,8 @@ public class LineStringContentHandler extends GMLElementContentHandler implement
   }
 
   /**
-   * @see org.kalypsodeegree_impl.io.sax.parser.GMLElementContentHandler#doStartElement(java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
+   * @see org.kalypsodeegree_impl.io.sax.parser.GMLElementContentHandler#doStartElement(java.lang.String,
+   *      java.lang.String, java.lang.String, org.xml.sax.Attributes)
    */
   @Override
   protected void doStartElement( final String uri, final String localName, final String name, final Attributes atts ) throws SAXParseException
@@ -147,7 +149,7 @@ public class LineStringContentHandler extends GMLElementContentHandler implement
     final GMLPropertyChoiceContentHandler choiceContentHandler = new GMLPropertyChoiceContentHandler( getXMLReader(), this, m_activeSrs );
     choiceContentHandler.loadPropertiesFor( GMLConstants.QN_LINE_STRING );
     choiceContentHandler.activate();
-  }  
+  }
 
   private GM_Curve endLineString( ) throws SAXParseException
   {
@@ -160,27 +162,22 @@ public class LineStringContentHandler extends GMLElementContentHandler implement
 
       return GeometryFactory.createGM_Curve( m_positions.toArray( new GM_Position[m_positions.size()] ), m_activeSrs );
     }
-    catch( final GM_Exception e)
+    catch( final GM_Exception e )
     {
       throwSAXParseException( e, "It was not possible to create a gml:LineString!" );
       return null;
-    }        
+    }
   }
 
   /**
-   * @see org.kalypsodeegree_impl.io.sax.parser.IPositionHandler#handle(org.kalypsodeegree.model.geometry.GM_Position[], java.lang.String)
+   * @see org.kalypsodeegree_impl.io.sax.parser.IPositionHandler#handle(org.kalypsodeegree.model.geometry.GM_Position[],
+   *      java.lang.String)
    */
   @Override
-  public void handle( final GM_Position[] positions, final String srs ) throws SAXParseException
+  public void handle( final GM_Position[] positions, final String srs )
   {
     for( final GM_Position position : positions )
-    {
-      /* check srsDimension */
-      if( m_srsDimension != null && position.getCoordinateDimension() != m_srsDimension )
-        throwSAXParseException( "The position " + position.toString() + "in this gml:LineString does not have the number of coordinates specified in 'srsDimension': " + m_srsDimension );
-
       m_positions.add( position );
-    }
   }
 
   /**
@@ -201,6 +198,6 @@ public class LineStringContentHandler extends GMLElementContentHandler implement
         m_positions.add( GeometryFactory.createGM_Position( tuple[0], tuple[1] ) );
       else
         m_positions.add( GeometryFactory.createGM_Position( tuple[0], tuple[1], tuple[2] ) );
-    }    
+    }
   }
 }

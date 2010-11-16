@@ -35,8 +35,6 @@
  */
 package org.kalypsodeegree_impl.io.sax.parser;
 
-import java.util.List;
-
 import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.types.IGmlContentHandler;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -85,22 +83,20 @@ public class PosContentHandler extends GMLElementContentHandler
   {
     final String coordsString = m_coordBuffer == null ? "" : m_coordBuffer.toString().trim();
     m_coordBuffer = null;
-    final List<Double> doubles = ContentHandlerUtils.parseDoublesString( coordsString );
+    final double[] doubles = ContentHandlerUtils.parseDoublesString( coordsString );
 
 // final int dimension = m_currentCrs.getDimension();
 // TODO: check against crs
-    final int coordCount = doubles.size();
+    final int coordCount = doubles.length;
 
     // HACK: as long as we have no variable sized coordinates, we have only the choice between dimension 2 or 3.
     if( coordCount >= 3 )
-    {
-      return GeometryFactory.createGM_Position( doubles.get( 0 ), doubles.get( 1 ), doubles.get( 2 ) );
-    }
+      return GeometryFactory.createGM_Position( doubles[0], doubles[1], doubles[2] );
 
     if( coordCount != 2 )
       throwSAXParseException( "Not enough coords in pos element: " + coordsString );
 
-    return GeometryFactory.createGM_Position( doubles.get( 0 ), doubles.get( 1 ) );
+    return GeometryFactory.createGM_Position( doubles[0], doubles[1] );
   }
 
   /**
