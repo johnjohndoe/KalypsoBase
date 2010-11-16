@@ -4,7 +4,8 @@ Bundle-Name: OdysseusChartExtensionBase Plug-in
 Bundle-SymbolicName: de.openali.odysseus.chart.ext.base;singleton:=true
 Bundle-Version: 10.10.0.qualifier
 Require-Bundle: org.kalypso.contribs.java,
- de.openali.odysseus.chart.factory;bundle-version="0.2.0";visibility:=reexport
+ de.openali.odysseus.chart.factory;bundle-version="0.2.0";visibility:=reexport,
+ org.kalypso.core;bundle-version="10.10.0"
 Bundle-Activator: de.openali.odysseus.chart.ext.base.Activator
 Bundle-ActivationPolicy: lazy
 Bundle-Vendor: kalypsobase.sourceforge.net
