@@ -40,10 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.io.sax.parser;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.StringTokenizer;
-
+import org.apache.commons.lang.StringUtils;
 import org.kalypso.contribs.org.xml.sax.AttributesUtilities;
 import org.xml.sax.Attributes;
 
@@ -69,7 +66,6 @@ public final class ContentHandlerUtils
     return value;
   }
 
-
   /** Get srs from attributes, fallback to default crs */
   public static String parseSrsFromAttributes( final Attributes attributes, final String defaultSrs )
   {
@@ -92,27 +88,21 @@ public final class ContentHandlerUtils
   }
 
   public static Integer parseSrsDimensionFromAttributes( final Attributes attributes )
-  { 
+  {
     return AttributesUtilities.getAttributeIntegerValue( attributes, "", "srsDimension", null );
   }
 
   public static Integer parseCountFromAttributes( final Attributes attributes )
   {
     return AttributesUtilities.getAttributeIntegerValue( attributes, "", "count", null );
-  }  
+  }
 
-  public static List<Double> parseDoublesString( final String text )
-  { 
-    final List<Double> doubles = new ArrayList<Double>();
-
-    final StringTokenizer st = new StringTokenizer( text );    
-    while ( st.hasMoreTokens() )
-    {
-      final String token = st.nextToken();
-      final Double d = Double.valueOf( token );
-      doubles.add( d );  
-    }
-
-    return doubles;
+  public static double[] parseDoublesString( final String text )
+  {
+    String[] split = StringUtils.split( text );
+    double[] result = new double[split.length];
+    for( int i = 0; i < result.length; i++ )
+      result[i] = Double.valueOf( split[i] );
+    return result;
   }
 }

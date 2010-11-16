@@ -146,9 +146,9 @@ public class PosListContentHandler extends GMLElementContentHandler
     final String coordsString = m_coordBuffer == null ? "" : m_coordBuffer.toString().trim();
     m_coordBuffer = null;
 
-    final List<Double> doubles = ContentHandlerUtils.parseDoublesString( coordsString );
+    final double[] doubles = ContentHandlerUtils.parseDoublesString( coordsString );
 
-    final int coordsSize = doubles.size();
+    final int coordsSize = doubles.length;
 
     verifyCoordsSize( coordsSize, coordsString );
 
@@ -164,23 +164,19 @@ public class PosListContentHandler extends GMLElementContentHandler
       throwSAXParseException( "The number of coords in posList ( " + coordsSize + " ) element doesn't respect the count attribute: " + m_count + " in " + coordsString );
   }
 
-  private GM_Position[] createPositions( final List<Double> doubles, final int coordsSize )
+  private GM_Position[] createPositions( final double[] doubles, final int coordsSize )
   {
     final List<GM_Position> positions = new ArrayList<GM_Position>( coordsSize );
     if( m_checkedCrsDimension == 2 )
     {
       for( int i = 0; i < coordsSize; )
-      {
-        positions.add( GeometryFactory.createGM_Position( doubles.get( i++ ), doubles.get( i++ ) ) );
-      }
+        positions.add( GeometryFactory.createGM_Position( doubles[i++], doubles[i++] ) );
     }
     else
-      // dimension = 3
+    // dimension = 3
     {
       for( int i = 0; i < coordsSize; )
-      {
-        positions.add( GeometryFactory.createGM_Position( doubles.get( i++ ), doubles.get( i++ ), doubles.get( i++ ) ) );
-      }
+        positions.add( GeometryFactory.createGM_Position( doubles[i++], doubles[i++], doubles[i++] ) );
     }
 
     return positions.toArray( new GM_Position[positions.size()] );
