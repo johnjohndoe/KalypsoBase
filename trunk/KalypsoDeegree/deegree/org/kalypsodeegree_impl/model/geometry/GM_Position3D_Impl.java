@@ -37,6 +37,7 @@ package org.kalypsodeegree_impl.model.geometry;
 
 import java.io.Serializable;
 
+import org.eclipse.core.runtime.Assert;
 import org.kalypso.transformation.transformer.GeoTransformerFactory;
 import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -154,12 +155,13 @@ class GM_Position3D_Impl implements GM_Position, Serializable
   @Override
   public void translate( final double[] d )
   {
-    if( d.length < 3 )
-      throw new IllegalArgumentException( "3D position must be translated with 3d vector" );
+    Assert.isTrue( d.length >= 2 );
 
     m_x += d[0];
     m_y += d[1];
-    m_z += d[2];
+
+    if( d.length > 2 )
+      m_z += d[2];
   }
 
   /**

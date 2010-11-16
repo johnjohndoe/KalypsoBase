@@ -720,22 +720,26 @@ public final class JTSUtilities
 
   /**
    * This function adds points to the line.<br>
+   * It will not change the topology of the line in that way, that it changes direction.<br>
    * <br>
    * REMARK:<br>
-   * Not used at the moment and should only be used after a small refactoring.<br>
-   * It can be very slow, in dependance of the amount of points to be added.<br>
-   * Furthermore the given list of points is modified. It should be cloned here.
+   * It can be very slow, in dependance of the amount of points to be added.
    * 
    * @param line
    *          The line, to which the points are added to.
-   * @param points
+   * @param originalPoints
    *          The points, which should be added. The points has to lie on the line.
    * @return The new line as copy of the old line, including the given points. The result may be null.
    */
-  public static LineString addPointsToLine( final LineString line, final List<Point> points )
+  public static LineString addPointsToLine( final LineString line, final List<Point> originalPoints )
   {
+    /* Clone the whole list. */
+    List<Point> clonedPoints = new ArrayList<Point>();
+    for( Point originalPoint : originalPoints )
+      clonedPoints.add( (Point) originalPoint.clone() );
+
     /* Check for intersection. */
-    for( final Point point : points )
+    for( final Point point : clonedPoints )
     {
       final double distance = point.distance( line );
       if( distance >= TOLERANCE )
@@ -765,14 +769,15 @@ public final class JTSUtilities
       final LineString ls = factory.createLineString( new Coordinate[] { startCoord, endCoord } );
 
       /* If no one is intersecting, the current end coordinate has to be added. */
+      final ArrayList<Point> toAdd = new ArrayList<Point>();
       final ArrayList<Point> toRemove = new ArrayList<Point>();
-      for( int j = 0; j < points.size(); j++ )
+      for( int j = 0; j < clonedPoints.size(); j++ )
       {
-        final Point point = points.get( j );
+        final Point point = clonedPoints.get( j );
         if( point.distance( ls ) < TOLERANCE )
         {
           /* The point intersects, and has to be added. */
-          newCoordinates.add( point.getCoordinate() );
+          toAdd.add( point );
 
           /* The points should be removed from the old points list for perfomance reasons. */
           toRemove.add( point );
@@ -783,21 +788,20 @@ public final class JTSUtilities
         continue;
       }
 
-      /* No point was added and should be removed from the points list. */
+      /* Add all points. */
+      List<CoordinatePair> coordinatePairs = getCoordinatePairs( startCoord, toAdd );
+      for( CoordinatePair coordinatePair : coordinatePairs )
+        newCoordinates.add( coordinatePair.getSecondCoordinate() );
+
+      /* Remove all added points. */
       if( toRemove.size() > 0 )
-      {
-        /* Remove all added points. */
-        points.removeAll( toRemove );
-      }
+        clonedPoints.removeAll( toRemove );
 
       /* Add the end coordinate. */
       newCoordinates.add( endCoord );
     }
 
-    /* Create the new geometry. */
-    final LineString newLine = factory.createLineString( newCoordinates.toArray( new Coordinate[] {} ) );
-
-    return newLine;
+    return factory.createLineString( newCoordinates.toArray( new Coordinate[] {} ) );
   }
 
   /**
@@ -1440,7 +1444,14 @@ public final class JTSUtilities
 
     /* Check the distance to the reference point. */
     Coordinate referenceCoordinate = point.getCoordinate();
-    Coordinate closestCoordinate = segment.closestPoint( referenceCoordinate );
+    double distance0 = segment.getCoordinate( 0 ).distance( referenceCoordinate );
+    double distance1 = segment.getCoordinate( 1 ).distance( referenceCoordinate );
+    Coordinate closestCoordinate = null;
+    if( distance0 <= distance1 )
+      closestCoordinate = segment.getCoordinate( 0 );
+    else
+      closestCoordinate = segment.getCoordinate( 1 );
+
     if( closestCoordinate.distance( referenceCoordinate ) <= distance )
     {
       GeometryFactory factory = new GeometryFactory( line.getPrecisionModel(), line.getSRID() );
