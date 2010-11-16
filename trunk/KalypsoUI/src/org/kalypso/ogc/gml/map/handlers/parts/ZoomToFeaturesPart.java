@@ -119,6 +119,8 @@ public class ZoomToFeaturesPart
 
     /* This is the envelope containing all features of this list. */
     final GM_Envelope envelope = FeatureHelper.getEnvelope( m_features );
+    if( envelope == null )
+      return;
 
     /* Get the positions of the envelope. */
     double min_x = envelope.getMin().getX();
