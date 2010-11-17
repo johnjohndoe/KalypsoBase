@@ -74,11 +74,19 @@ public class CurveStyleSet extends AbstractStyleSetProvider implements IStyleSet
       final RGB rgb = getRgb( color );
 
       final Stroke stroke = curve.getStroke();
-      final int width = Float.valueOf( stroke.getWidth() ).intValue();
+      final int width = getWidth( stroke );
 
       final LineStyle lineStyle = new LineStyle( width, rgb, IDefaultStyles.DEFAULT_ALPHA, IDefaultStyles.DEFAULT_DASHOFFSET, IDefaultStyles.DEFAULT_DASHARRAY, IDefaultStyles.DEFAULT_LINEJOIN, IDefaultStyles.DEFAULT_LINECAP, IDefaultStyles.DEFAULT_MITERLIMIT, IDefaultStyles.DEFAULT_VISIBILITY );
       getStyleSet().addStyle( LINE_PREFIX + id, lineStyle );
     }
+  }
+
+  private int getWidth( final Stroke stroke )
+  {
+    if( stroke == null )
+      return 1;
+
+    return Float.valueOf( stroke.getWidth() ).intValue();
   }
 
   private RGB getRgb( final String color )
@@ -97,7 +105,7 @@ public class CurveStyleSet extends AbstractStyleSetProvider implements IStyleSet
       final RGB rgb = getRgb( color );
 
       final Stroke stroke = curve.getStroke();
-      final int width = Float.valueOf( stroke.getWidth() ).intValue();
+      final int width = getWidth( stroke );
 
       final PointStyle pointStyle = new PointStyle( getLineStyle( id ), width, width, IDefaultStyles.DEFAULT_ALPHA, rgb, IDefaultStyles.DEFAULT_FILL_VISIBILITY, IDefaultStyles.DEFAULT_MARKER, IDefaultStyles.DEFAULT_VISIBILITY );
 
