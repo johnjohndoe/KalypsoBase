@@ -72,7 +72,7 @@ import org.kalypsodeegree_impl.model.sort.SplitSort;
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  * @version $Revision$ $Date$
  */
-public class FeatureFactory
+public final class FeatureFactory
 {
   /**
    * creates an instance of a Feature from its IFeatureType and an array of Objects that represents it properties. It is
@@ -90,8 +90,7 @@ public class FeatureFactory
   public static Feature createFeature( final Feature parent, final IRelationType parentRelation, final String id, final IFeatureType featureType, final Object[] properties )
   {
     // / TODO: put the feature into the workspace!
-    final ExtendedFeatureFactory factory = ExtendedFeatureFactory.getInstance();
-    return factory.getFeature( parent, parentRelation, featureType, id, properties );
+    return ExtendedFeatureFactory.getFeature( parent, parentRelation, featureType, id, properties );
   }
 
   /**
@@ -113,8 +112,7 @@ public class FeatureFactory
   {
     final IPropertyType[] ftp = featureType.getProperties();
 
-    final ExtendedFeatureFactory factory = ExtendedFeatureFactory.getInstance();
-    final Feature feature = factory.getFeature( parent, parentRelation, featureType, id, new Object[ftp.length] );
+    final Feature feature = ExtendedFeatureFactory.getFeature( parent, parentRelation, featureType, id, new Object[ftp.length] );
 
     // TODO: shouldn't we move this to the Feature_Impl constructor?
     for( final IPropertyType pt : ftp )
