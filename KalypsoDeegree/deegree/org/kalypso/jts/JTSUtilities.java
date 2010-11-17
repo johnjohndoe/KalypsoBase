@@ -280,7 +280,7 @@ public final class JTSUtilities
       currentDistance += distance;
 
       if( distanceOnLine < currentDistance )
-        return new LineSegment( new Coordinate( startPoint.getCoordinate() ), new Coordinate( endPoint.getCoordinate() ) );
+        return new LineSegment( startPoint.getCoordinate(), endPoint.getCoordinate() );
     }
 
     return null;
@@ -708,7 +708,7 @@ public final class JTSUtilities
       final Point pointN1 = curve.getPointN( i + 1 );
 
       /* Build a line with the two points to check the intersection. */
-      final LineSegment segment = new LineSegment( new Coordinate( pointN.getCoordinate() ), new Coordinate( pointN1.getCoordinate() ) );
+      final LineSegment segment = new LineSegment( pointN.getCoordinate(), pointN1.getCoordinate() );
 
       /* If found, return it. */
       if( segment.distance( point.getCoordinate() ) < TOLERANCE )
