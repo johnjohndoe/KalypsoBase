@@ -27,8 +27,8 @@ public class GenericNumberTickCalculator implements ITickCalculator
   public Number[] calcTicks( final GC gc, final IAxis axis, final Number minDisplayInterval, final Point ticklabelSize )
   {
     final IDataRange<Number> range = axis.getNumericRange();
-    Number max = range.getMax();
-    Number min = range.getMin();
+    final Number max = range.getMax();
+    final Number min = range.getMin();
     if( max == null || Double.isNaN( max.doubleValue() ) || min == null || Double.isNaN( min.doubleValue() ) )
       return new Number[] {};
 

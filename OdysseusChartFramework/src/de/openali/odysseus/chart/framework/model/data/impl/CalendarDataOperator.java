@@ -24,13 +24,13 @@ public class CalendarDataOperator extends AbstractDataOperator<Calendar>
 
   private final String m_regexDuration = "(NOW|TODAY)(([+-])P([1-9]+[0-9]*Y)?([1-9]+[0-9]*M)?([1-9]+[0-9]*D)?(T([1-9]+[0-9]*H)?([1-9]+[0-9]*M)?([1-9]+[0-9]*S)?)?)?";
 
-  public CalendarDataOperator( Comparator<Calendar> comparator, String formatString )
+  public CalendarDataOperator( final Comparator<Calendar> comparator, final String formatString )
   {
     super( comparator );
     m_dateFormat = new CalendarFormat( formatString );
   }
 
-  public IDataRange<Calendar> getContainingInterval( Calendar logVal, Number numIntervalWidth, Calendar logFixedPoint )
+  public IDataRange<Calendar> getContainingInterval( final Calendar logVal, final Number numIntervalWidth, final Calendar logFixedPoint )
   {
     Long min = logFixedPoint.getTimeInMillis();
     Long max = logVal.getTimeInMillis();
@@ -50,7 +50,7 @@ public class CalendarDataOperator extends AbstractDataOperator<Calendar>
   }
 
   @Override
-  public Long logicalToNumeric( Calendar logVal )
+  public Long logicalToNumeric( final Calendar logVal )
   {
     if( logVal != null )
       return logVal.getTimeInMillis();
@@ -58,7 +58,7 @@ public class CalendarDataOperator extends AbstractDataOperator<Calendar>
   }
 
   @Override
-  public Calendar numericToLogical( Number numVal )
+  public Calendar numericToLogical( final Number numVal )
   {
     if( numVal == null )
       return null;
@@ -72,7 +72,7 @@ public class CalendarDataOperator extends AbstractDataOperator<Calendar>
   }
 
   @Override
-  public String logicalToString( Calendar value )
+  public String logicalToString( final Calendar value )
   {
     final SimpleDateFormat sdf = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss" );
     System.out.println( sdf.format( value.getTime() ) );
@@ -92,13 +92,13 @@ public class CalendarDataOperator extends AbstractDataOperator<Calendar>
    */
   public IDataRange<Calendar> getDefaultRange( )
   {
-    Calendar today = Calendar.getInstance();
+    final Calendar today = Calendar.getInstance();
     today.set( Calendar.HOUR_OF_DAY, 0 );
     today.set( Calendar.MINUTE, 0 );
     today.set( Calendar.SECOND, 0 );
     today.set( Calendar.MILLISECOND, 0 );
 
-    Calendar tomorrow = Calendar.getInstance();
+    final Calendar tomorrow = Calendar.getInstance();
     tomorrow.set( Calendar.HOUR_OF_DAY, 0 );
     tomorrow.set( Calendar.MINUTE, 0 );
     tomorrow.set( Calendar.SECOND, 0 );
@@ -112,7 +112,7 @@ public class CalendarDataOperator extends AbstractDataOperator<Calendar>
    * @see org.kalypso.chart.framework.model.data.IDataOperator#getFormat(org.kalypso.chart.framework.model.data.IDataRange)
    */
   @Override
-  public Format getFormat( IDataRange<Number> range )
+  public Format getFormat( final IDataRange<Number> range )
   {
     return m_dateFormat;
   }
@@ -121,7 +121,7 @@ public class CalendarDataOperator extends AbstractDataOperator<Calendar>
    * TODO: This is a copy of CalendarStringParser; rewrite String2Calendar mapping using xml data types
    */
   @Override
-  public Calendar stringToLogical( String value ) throws MalformedValueException
+  public Calendar stringToLogical( final String value ) throws MalformedValueException
   {
     if( value == null )
       return null;

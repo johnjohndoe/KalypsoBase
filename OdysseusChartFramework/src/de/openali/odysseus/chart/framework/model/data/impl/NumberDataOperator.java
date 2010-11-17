@@ -37,7 +37,7 @@ public class NumberDataOperator extends AbstractDataOperator<Number>
     }
     max = min + dirFactor * doubleIntervalWidth;
 
-    IDataRange<Number> dataRange = new ComparableDataRange<Number>( new Number[] { min, max } );
+    final IDataRange<Number> dataRange = new ComparableDataRange<Number>( new Number[] { min, max } );
     return dataRange;
   }
 
