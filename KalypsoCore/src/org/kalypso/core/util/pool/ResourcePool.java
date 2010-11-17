@@ -335,13 +335,16 @@ public class ResourcePool
     if( event.getType() == IResourceChangeEvent.POST_CHANGE )
     {
       final IResourceDelta delta = event.getDelta();
+
+      KeyInfo[] array;
       synchronized( m_keyInfos )
       {
         final Collection<KeyInfo> values = m_keyInfos.values();
-        final KeyInfo[] array = values.toArray( new KeyInfo[values.size()] );
-        for( final KeyInfo keyInfo : array )
-          keyInfo.handleResourceChanged( delta );
+        array = values.toArray( new KeyInfo[values.size()] );
       }
+
+      for( final KeyInfo keyInfo : array )
+        keyInfo.handleResourceChanged( delta );
     }
   }
 }
