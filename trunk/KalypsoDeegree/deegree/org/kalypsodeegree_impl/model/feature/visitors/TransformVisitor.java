@@ -95,12 +95,9 @@ public class TransformVisitor implements FeatureVisitor
       // and the linked feature may be different.
       // We should check, if we want to transform through xlinks anyways...
       if( f instanceof XLinkedFeature_Impl )
-      {
-        final Feature feature = ((XLinkedFeature_Impl)f).getFeature();
-        doVisit( feature );
-      }
-      else      
-        doVisit( f );
+        return false;
+
+      doVisit( f );
     }
     catch( final Exception e )
     {
