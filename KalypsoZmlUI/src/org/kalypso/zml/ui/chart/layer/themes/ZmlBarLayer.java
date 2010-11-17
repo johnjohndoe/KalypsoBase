@@ -273,7 +273,7 @@ public class ZmlBarLayer extends AbstractBarLayer
           final Number logicalTarget = m_targetDataOperator.logicalToNumeric( targetValue );
           final Point screen = getCoordinateMapper().numericToScreen( logicalDomain, logicalTarget );
 
-          // don't draw lines only rectangles
+          // don't draw empty lines only rectangles
           if( screen.y != base.y )
           {
             final int lastScreenX = lastScreen == null ? screen.x : lastScreen.x;
