@@ -42,6 +42,8 @@ package org.kalypsodeegree_impl.model.feature;
 
 import java.lang.reflect.Constructor;
 
+import javax.xml.namespace.QName;
+
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -58,30 +60,39 @@ import org.osgi.framework.Bundle;
  */
 public final class ExtendedFeatureFactory
 {
-  private static ExtendedFeatureFactory SINGELTON = null;
-
   private ExtendedFeatureFactory( )
   {
   }
 
-  public static ExtendedFeatureFactory getInstance( )
+  public static Feature getFeature( final Feature parent, final IRelationType parentRelation, final IFeatureType featureType, final String id, final Object[] properties )
   {
-    if( SINGELTON == null )
-    {
-      SINGELTON = new ExtendedFeatureFactory();
-    }
-
-    return SINGELTON;
+    return createFeature( parent, parentRelation, featureType, id, properties, featureType );
   }
 
-  public Feature getFeature( final Feature parent, final IRelationType parentRelation, final IFeatureType featureType, final String id, final Object[] properties )
+  private static Feature createFeature( final Feature parent, final IRelationType parentRelation, final IFeatureType featureType, final String id, final Object[] properties, final IFeatureType targetType )
   {
     if( featureType == null )
       throw new IllegalArgumentException( "must provide a featuretype" );
 
     /* get feature binding class for feature type */
-    final IConfigurationElement element = KalypsoDeegreeExtensions.getFeatureBinding( featureType.getQName() );
-    if( element != null )
+    final QName qName = featureType.getQName();
+
+    if( Feature.QNAME_FEATURE.equals( qName ) )
+      return new Feature_Impl( parent, parentRelation, targetType, id, properties );
+
+    final IConfigurationElement element = KalypsoDeegreeExtensions.getFeatureBinding( qName );
+    if( element == null )
+    {
+      final IFeatureType substitutionFT = featureType.getSubstitutionGroupFT();
+      if( substitutionFT == null )
+      {
+        // Should never happen, all features must substitute gml:Feature
+        return new Feature_Impl( parent, parentRelation, targetType, id, properties );
+      }
+
+      return createFeature( parent, parentRelation, substitutionFT, id, properties, targetType );
+    }
+    else
     {
       try
       {
@@ -89,8 +100,7 @@ public final class ExtendedFeatureFactory
         final Bundle bundle = Platform.getBundle( pluginid );
         final Class< ? extends Feature> featureClass = bundle.loadClass( element.getAttribute( "class" ) );
         final Constructor< ? extends Feature> constructor = featureClass.getConstructor( Object.class, IRelationType.class, IFeatureType.class, String.class, Object[].class );
-
-        return constructor.newInstance( parent, parentRelation, featureType, id, properties );
+        return constructor.newInstance( parent, parentRelation, targetType, id, properties );
       }
       catch( final Throwable e )
       {
@@ -98,6 +108,6 @@ public final class ExtendedFeatureFactory
       }
     }
 
-    return new Feature_Impl( parent, parentRelation, featureType, id, properties );
+    return new Feature_Impl( parent, parentRelation, targetType, id, properties );
   }
 }
