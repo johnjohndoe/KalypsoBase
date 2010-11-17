@@ -96,15 +96,17 @@ public class ZmlBarLayer extends AbstractBarLayer
 
   private final IDataOperator<Date> m_dateDataOperator = new DataOperatorHelper().getDataOperator( Date.class );
 
-  private final IDataOperator<Number> m_numberDataOperator = new DataOperatorHelper().getDataOperator( Number.class );
-
   private final IAxis m_valueAxis;
 
   private final IObsProvider m_provider;
 
-  public ZmlBarLayer( final ICoordinateMapper coordinateMapper, final IObsProvider provider, final IAxis valueAxis, final IAreaStyle style )
+  private final IDataOperator m_targetDataOperator;
+
+  public ZmlBarLayer( final ICoordinateMapper coordinateMapper, final IDataOperator targetDataOperator, final IObsProvider provider, final IAxis valueAxis, final IAreaStyle style )
   {
     super( style );
+
+    m_targetDataOperator = targetDataOperator;
 
     m_provider = provider;
     m_valueAxis = valueAxis;
@@ -225,8 +227,14 @@ public class ZmlBarLayer extends AbstractBarLayer
   {
     try
     {
+      /** hack for polder control which consists of boolean values */
+      final Class< ? > dataClass = m_valueAxis.getDataClass();
+      if( Boolean.class.equals( dataClass ) )
+        return new DataRange<Number>( 0, 1 );
+
       final IAxisRange range = getModel().getRange( m_valueAxis );
-      final Number max = m_numberDataOperator.logicalToNumeric( (Number) range.getUpper() );
+
+      final Number max = m_targetDataOperator.logicalToNumeric( range.getUpper() );
 
       final IDataRange<Number> numRange = new DataRange<Number>( 0, Math.max( 1.0, max.doubleValue() ) );
       return numRange;
@@ -261,8 +269,12 @@ public class ZmlBarLayer extends AbstractBarLayer
           if( domainValue == null || targetValue == null )
             continue;
 
-          final Point screen = getCoordinateMapper().numericToScreen( m_dateDataOperator.logicalToNumeric( (Date) domainValue ), m_numberDataOperator.logicalToNumeric( (Double) targetValue ) );
-          if( screen.y > base.y )
+          final Number logicalDomain = m_dateDataOperator.logicalToNumeric( (Date) domainValue );
+          final Number logicalTarget = m_targetDataOperator.logicalToNumeric( targetValue );
+          final Point screen = getCoordinateMapper().numericToScreen( logicalDomain, logicalTarget );
+
+          // don't draw lines only rectangles
+          if( screen.y != base.y )
           {
             final int lastScreenX = lastScreen == null ? screen.x : lastScreen.x;
             pf.setPoints( new Point[] { new Point( lastScreenX, base.y ), new Point( lastScreenX, screen.y ), screen, new Point( screen.x, base.y ) } );

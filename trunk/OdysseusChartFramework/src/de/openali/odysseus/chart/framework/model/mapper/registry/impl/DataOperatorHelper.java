@@ -48,6 +48,7 @@ import java.util.Map;
 import org.apache.commons.collections.comparators.ComparableComparator;
 
 import de.openali.odysseus.chart.framework.model.data.IDataOperator;
+import de.openali.odysseus.chart.framework.model.data.impl.BooleanDataOperator;
 import de.openali.odysseus.chart.framework.model.data.impl.CalendarDataOperator;
 import de.openali.odysseus.chart.framework.model.data.impl.DateDataOperator;
 import de.openali.odysseus.chart.framework.model.data.impl.DummyDataOperator;
@@ -61,11 +62,13 @@ import de.openali.odysseus.chart.framework.model.data.impl.NumberDataOperator;
  */
 public class DataOperatorHelper
 {
+  @SuppressWarnings("rawtypes")
   private final Map<Class< ? >, IDataOperator> m_dataOperators = new HashMap<Class< ? >, IDataOperator>();
 
   public DataOperatorHelper( )
   {
     m_dataOperators.put( Number.class, new NumberDataOperator( new NumberComparator() ) );
+    m_dataOperators.put( Boolean.class, new BooleanDataOperator( new ComparableComparator() ) );
     m_dataOperators.put( Calendar.class, new CalendarDataOperator( new ComparableComparator(), "dd.MM.yyyy HH:mm" ) );
     m_dataOperators.put( Date.class, new DateDataOperator( new ComparableComparator(), "dd.MM.yyyy HH:mm" ) );
   }
