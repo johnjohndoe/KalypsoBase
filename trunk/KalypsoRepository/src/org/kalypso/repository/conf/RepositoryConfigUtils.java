@@ -56,7 +56,7 @@ import org.kalypso.repository.conf.Repconf.Repository;
  * 
  * @author schlienger
  */
-public class RepositoryConfigUtils
+public final class RepositoryConfigUtils
 {
   private static final JAXBContext JC = JaxbUtilities.createQuiet( ObjectFactory.class );
 
