@@ -56,14 +56,6 @@ public interface ITimeseriesConstants extends IObservationConstants
   /** the forecast feature is used in some of the views to mark the forecast date-range */
   String FEATURE_FORECAST = "Vorhersage";
 
-  String MD_ALARM_1 = "Alarmstufe 1"; //$NON-NLS-1$
-
-  String MD_ALARM_2 = "Alarmstufe 2"; //$NON-NLS-1$
-
-  String MD_ALARM_3 = "Alarmstufe 3"; //$NON-NLS-1$
-
-  String MD_ALARM_4 = "Alarmstufe 4"; //$NON-NLS-1$
-
   String MD_COORDSYS = "Koordinatensystem"; //$NON-NLS-1$
 
   String MD_DATE_BEGIN = "Datum-Von"; //$NON-NLS-1$
