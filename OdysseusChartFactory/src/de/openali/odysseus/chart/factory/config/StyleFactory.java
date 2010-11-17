@@ -479,6 +479,9 @@ public class StyleFactory
 
   public static ALIGNMENT getAlignment( final de.openali.odysseus.chartconfig.x020.AlignmentType.Enum alignment )
   {
+    if( alignment == null )
+      return ALIGNMENT.LEFT;
+
     if( "LEFT".equals( alignment.toString() ) )
     {
       return ALIGNMENT.LEFT;
