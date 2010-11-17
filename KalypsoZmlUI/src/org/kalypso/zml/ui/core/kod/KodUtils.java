@@ -38,38 +38,32 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.core.zml;
+package org.kalypso.zml.ui.core.kod;
 
-import de.openali.odysseus.chart.framework.model.mapper.IAxis;
+import de.openali.odysseus.chartconfig.x020.ParameterType;
+import de.openali.odysseus.chartconfig.x020.ParametersType;
+import de.openali.odysseus.chartconfig.x020.ProviderType;
 
 /**
  * @author Dirk Kuch
  */
-public final class AxisUtils
+public final class KodUtils
 {
-  private AxisUtils( )
+  private KodUtils( )
   {
   }
 
-  public static IAxis findDomainAxis( final IAxis[] axes )
+  public static String getParameter( final ProviderType provider, final String key )
   {
-    for( final IAxis axis : axes )
+    final ParametersType parametersType = provider.getParameters();
+    final ParameterType[] parameters = parametersType.getParameterArray();
+    for( final ParameterType parameter : parameters )
     {
-      if( "date".equals( axis.getId() ) )
-        return axis;
+      if( parameter.getName().equals( key ) )
+        return parameter.getValue();
     }
 
     return null;
   }
 
-  public static IAxis findTargetAxis( final IAxis[] axes )
-  {
-    for( final IAxis axis : axes )
-    {
-      if( !"date".equals( axis.getId() ) )
-        return axis;
-    }
-
-    return null;
-  }
 }

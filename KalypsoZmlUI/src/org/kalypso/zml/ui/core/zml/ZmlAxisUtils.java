@@ -40,36 +40,43 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.core.zml;
 
-import de.openali.odysseus.chart.framework.model.mapper.IAxis;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.kalypso.ogc.sensor.IAxis;
+import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 
 /**
  * @author Dirk Kuch
  */
-public final class AxisUtils
+public final class ZmlAxisUtils
 {
-  private AxisUtils( )
+  private ZmlAxisUtils( )
   {
   }
 
-  public static IAxis findDomainAxis( final IAxis[] axes )
+  public static IAxis[] findValueAxes( final IAxis[] axes )
   {
+    final List<IAxis> valueAxes = new ArrayList<IAxis>();
     for( final IAxis axis : axes )
     {
-      if( "date".equals( axis.getId() ) )
-        return axis;
+      if( isValueAxis( axis ) )
+        valueAxes.add( axis );
     }
 
-    return null;
+    return valueAxes.toArray( new IAxis[] {} );
   }
 
-  public static IAxis findTargetAxis( final IAxis[] axes )
+  public static boolean isValueAxis( final IAxis axis )
   {
-    for( final IAxis axis : axes )
-    {
-      if( !"date".equals( axis.getId() ) )
-        return axis;
-    }
+    if( AxisUtils.isDateAxis( axis ) )
+      return false;
+    else if( AxisUtils.isDataSrcAxis( axis ) )
+      return false;
+    else if( AxisUtils.isStatusAxis( axis ) )
+      return false;
 
-    return null;
+    return true;
   }
+
 }

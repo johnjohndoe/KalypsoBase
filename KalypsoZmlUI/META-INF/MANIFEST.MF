@@ -16,6 +16,7 @@ Bundle-Vendor: kalypsobase.sourceforge.net
 Export-Package: org.kalypso.zml.ui,
  org.kalypso.zml.ui.chart.layer.provider,
  org.kalypso.zml.ui.chart.layer.themes,
+ org.kalypso.zml.ui.core.kod,
  org.kalypso.zml.ui.core.provider.observation,
  org.kalypso.zml.ui.core.provider.style,
  org.kalypso.zml.ui.core.zml
