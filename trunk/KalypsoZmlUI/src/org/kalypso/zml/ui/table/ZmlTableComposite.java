@@ -40,15 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table;
 
-import java.util.List;
-
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.contribs.eclipse.swt.layout.LayoutHelper;
-import org.kalypso.zml.ui.table.schema.ColumnType;
+import org.kalypso.ogc.sensor.template.IObsProvider;
 import org.kalypso.zml.ui.table.schema.ZmlTableType;
 
 /**
@@ -82,7 +80,20 @@ public class ZmlTableComposite extends Composite
     m_tableViewer.getTable().setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
     m_tableViewer.setContentProvider( new ArrayContentProvider() );
 
-    final List<ColumnType> columns = tableType.getColumns();
+  }
+
+  public void clean( )
+  {
+    // TODO Auto-generated method stub
+  }
+
+  public void addColumn( final IZmlTableColumn column )
+  {
+    final String id = column.getId();
+    final IObsProvider obsProvider = column.getObsProvider();
+
+    // TODO Auto-generated method stub
+    final int asdfasdf = 0;
   }
 
 }
