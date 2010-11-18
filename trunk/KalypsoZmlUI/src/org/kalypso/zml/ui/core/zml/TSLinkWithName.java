@@ -70,8 +70,11 @@ public class TSLinkWithName
 
   private final Stroke m_stroke;
 
-  public TSLinkWithName( final URL scontext, final String sname, final String slinktype, final String shref, final String filter, final String scolor, final String swidth, final String sdashing, final boolean editable, final boolean showInLegend )
+  private final String m_id;
+
+  public TSLinkWithName( final String id, final URL scontext, final String sname, final String slinktype, final String shref, final String filter, final String scolor, final String swidth, final String sdashing, final boolean editable, final boolean showInLegend )
   {
+    m_id = id;
     m_context = scontext;
     m_name = sname;
     m_linktype = slinktype;
@@ -96,6 +99,11 @@ public class TSLinkWithName
     }
 
     m_stroke = new BasicStroke( width, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 10.0f, dash, 1f );
+  }
+
+  public String getId( )
+  {
+    return m_id;
   }
 
   public Color getColor( )
