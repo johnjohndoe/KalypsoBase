@@ -40,49 +40,43 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table;
 
-import java.util.List;
+import java.net.URL;
 
-import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.Composite;
-import org.kalypso.contribs.eclipse.swt.layout.LayoutHelper;
-import org.kalypso.zml.ui.table.schema.ColumnType;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
+
+import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.zml.ui.table.schema.ZmlTableType;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlTableComposite extends Composite
+public class ZmlTableConfigurationLoader
 {
+  private final URL m_url;
+
+  public static final JAXBContext JC = JaxbUtilities.createQuiet( org.kalypso.zml.ui.table.schema.ObjectFactory.class );
+
   private ZmlTableType m_tableType;
 
-  private TableViewer m_tableViewer;
-
-  public ZmlTableComposite( final Composite parent )
+  public ZmlTableConfigurationLoader( final URL url )
   {
-    this( parent, null );
+    m_url = url;
   }
 
-  public ZmlTableComposite( final Composite parent, final ZmlTableType tableType )
+  public ZmlTableType getTableType( ) throws JAXBException
   {
-    super( parent, SWT.NULL );
+    if( m_tableType == null )
+    {
+      final Unmarshaller unmarshaller = JC.createUnmarshaller();
+      @SuppressWarnings("unchecked")
+      final JAXBElement<ZmlTableType> element = (JAXBElement<ZmlTableType>) unmarshaller.unmarshal( m_url );
 
-    setLayout( LayoutHelper.createGridLayout() );
-    if( tableType != null )
-      setup( tableType );
+      m_tableType = element.getValue();
+    }
+
+    return m_tableType;
   }
-
-  private void setup( final ZmlTableType tableType )
-  {
-    m_tableType = tableType;
-
-    m_tableViewer = new TableViewer( this, SWT.BORDER );
-    m_tableViewer.getTable().setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
-    m_tableViewer.setContentProvider( new ArrayContentProvider() );
-
-    final List<ColumnType> columns = tableType.getColumns();
-  }
-
 }
