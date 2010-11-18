@@ -240,7 +240,7 @@ public final class GmlSerializer
   {
     return createGMLWorkspace( gmlURL, null, factory, monitor );
   }
-  
+
   /**
    * @param context If set, this context is used instead of the gmlUrl where the workspace is loaded from.
    */
@@ -275,7 +275,7 @@ public final class GmlSerializer
       }
 
       final URL usedContext = context == null ? gmlURL : context;
-      
+
       final GMLWorkspace workspace = createGMLWorkspace( new InputSource( is ), null, usedContext, factory );
       is.close();
       return workspace;
