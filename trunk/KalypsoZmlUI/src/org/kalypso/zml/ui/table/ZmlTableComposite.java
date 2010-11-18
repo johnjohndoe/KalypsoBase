@@ -40,23 +40,26 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table;
 
-import org.eclipse.jface.viewers.ArrayContentProvider;
+import java.util.List;
+
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.contribs.eclipse.swt.layout.LayoutHelper;
-import org.kalypso.ogc.sensor.template.IObsProvider;
+import org.kalypso.zml.ui.table.schema.ColumnType;
 import org.kalypso.zml.ui.table.schema.ZmlTableType;
+import org.kalypso.zml.ui.table.utils.ZmlTableHelper;
 
 /**
  * @author Dirk Kuch
  */
 public class ZmlTableComposite extends Composite
 {
-  private ZmlTableType m_tableType;
-
   private TableViewer m_tableViewer;
+
+  private ZmlColumnRegistry m_registry;
 
   public ZmlTableComposite( final Composite parent )
   {
@@ -74,26 +77,39 @@ public class ZmlTableComposite extends Composite
 
   private void setup( final ZmlTableType tableType )
   {
-    m_tableType = tableType;
-
+    m_registry = new ZmlColumnRegistry( tableType );
     m_tableViewer = new TableViewer( this, SWT.BORDER );
     m_tableViewer.getTable().setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
-    m_tableViewer.setContentProvider( new ArrayContentProvider() );
+    m_tableViewer.setContentProvider( new ZmlTableContentProvider( tableType ) );
 
+    final TableViewerColumn indexColumn = new TableViewerColumn( m_tableViewer, SWT.LEFT );
+    indexColumn.setLabelProvider( new ZmlLabelProvider( "dd.MM.yyyy HH:mm" ) );
+
+    final List<ColumnType> columns = tableType.getColumns().getColumn();
+    for( final ColumnType column : columns )
+    {
+      addColumnViewer( column );
+    }
+
+    m_tableViewer.setInput( m_registry );
+  }
+
+  private TableViewerColumn addColumnViewer( final ColumnType type )
+  {
+    final TableViewerColumn column = new TableViewerColumn( m_tableViewer, ZmlTableHelper.toSWT( type.getAlignment() ) );
+    column.setLabelProvider( new ZmlLabelProvider( type.getFormat() ) );
+
+    return column;
   }
 
   public void clean( )
   {
-    // TODO Auto-generated method stub
+    m_registry.clean();
   }
 
   public void addColumn( final IZmlTableColumn column )
   {
-    final String id = column.getId();
-    final IObsProvider obsProvider = column.getObsProvider();
-
-    // TODO Auto-generated method stub
-    final int asdfasdf = 0;
+    m_registry.addColumn( column );
   }
 
 }

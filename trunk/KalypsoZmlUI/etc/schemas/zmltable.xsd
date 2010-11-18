@@ -1,32 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:zmltable="schema.table.ui.zml.kalypso.org" targetNamespace="schema.table.ui.zml.kalypso.org" elementFormDefault="qualified">
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:zmltable="schema.table.ui.zml.kalypso.org" targetNamespace="schema.table.ui.zml.kalypso.org" elementFormDefault="qualified">
 
   <!-- elements -->
-  <xs:element name="ZmlTable" type="zmltable:ZmlTableType" />
-  <xs:element name="IndexColumn" type="zmltable:ColumnType" />
-  <xs:element name="Columns" type="zmltable:ColumnsType" />
-  <xs:element name="Column" type="zmltable:ColumnType" />
+  <element name="ZmlTable" type="zmltable:ZmlTableType" />
+  <element name="Columns" type="zmltable:ColumnsType" />
+  <element name="Column" type="zmltable:ColumnType" /> 
   
-  <!-- types -->
-  <xs:complexType name="ZmlTableType">
-    <xs:sequence>
-      <xs:element ref="zmltable:IndexColumn" minOccurs="1" />
-      <xs:element ref="zmltable:Columns" maxOccurs="unbounded" />
-    </xs:sequence>
-  </xs:complexType>
+  <!-- types --> 
+  <complexType name="ZmlTableType">
+    <sequence>
+      <element ref="zmltable:Columns" minOccurs="0" maxOccurs="1" />
+    </sequence>
+  </complexType>
 
- <xs:complexType name="ColumnsType">
-    <xs:sequence>
-      <xs:element ref="zmltable:Column"  minOccurs="0" maxOccurs="unbounded" />
-    </xs:sequence>
-  </xs:complexType>
+  <complexType name="ColumnsType">
+    <sequence>
+      <element ref="zmltable:Column" minOccurs="0" maxOccurs="unbounded" />
+    </sequence>
+  </complexType>
 
-  <xs:complexType name="ColumnType">
-    <xs:sequence>
-      <xs:element name="srcAxis" type="xs:string" minOccurs="1" maxOccurs="1" />
-      <xs:element name="format" type="xs:string" default="%s" minOccurs="0" />
-    </xs:sequence>
-  </xs:complexType>
+  <complexType name="ColumnType">
+    <sequence>
+      <element name="id" type="ID" />
+      <element name="indexAxis" type="string" minOccurs="1" maxOccurs="1" />
+      <element name="valueAxis" type="string" minOccurs="1" maxOccurs="1" />
+      <element name="format" type="string" default="%s"  />
+      <element name="alignment" type="zmltable:AlignmentType" default="LEFT" />
+    </sequence>
+  </complexType>
 
-
-</xs:schema>
+  <simpleType name="AlignmentType">
+    <restriction base="string">
+      <enumeration value="LEFT"></enumeration>
+      <enumeration value="CENTER"></enumeration>
+      <enumeration value="RIGHT"></enumeration>
+    </restriction>
+  </simpleType>
+</schema>
