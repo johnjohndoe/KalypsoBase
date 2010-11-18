@@ -56,7 +56,6 @@ public class ZmlTableComposite extends Composite
     setLayout( LayoutHelper.createGridLayout() );
 
     new Label( this, SWT.NULL ).setText( "blub" );
-
   }
 
 }
