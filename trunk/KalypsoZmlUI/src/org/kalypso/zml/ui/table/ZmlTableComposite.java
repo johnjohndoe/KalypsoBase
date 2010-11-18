@@ -40,22 +40,49 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table;
 
+import java.util.List;
+
+import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
 import org.kalypso.contribs.eclipse.swt.layout.LayoutHelper;
+import org.kalypso.zml.ui.table.schema.ColumnType;
+import org.kalypso.zml.ui.table.schema.ZmlTableType;
 
 /**
  * @author Dirk Kuch
  */
 public class ZmlTableComposite extends Composite
 {
+  private ZmlTableType m_tableType;
+
+  private TableViewer m_tableViewer;
+
   public ZmlTableComposite( final Composite parent )
   {
-    super( parent, SWT.NULL );
-    setLayout( LayoutHelper.createGridLayout() );
+    this( parent, null );
+  }
 
-    new Label( this, SWT.NULL ).setText( "blub" );
+  public ZmlTableComposite( final Composite parent, final ZmlTableType tableType )
+  {
+    super( parent, SWT.NULL );
+
+    setLayout( LayoutHelper.createGridLayout() );
+    if( tableType != null )
+      setup( tableType );
+  }
+
+  private void setup( final ZmlTableType tableType )
+  {
+    m_tableType = tableType;
+
+    m_tableViewer = new TableViewer( this, SWT.BORDER );
+    m_tableViewer.getTable().setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
+    m_tableViewer.setContentProvider( new ArrayContentProvider() );
+
+    final List<ColumnType> columns = tableType.getColumns();
   }
 
 }
