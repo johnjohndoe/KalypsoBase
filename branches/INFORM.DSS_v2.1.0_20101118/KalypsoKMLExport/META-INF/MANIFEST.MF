@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: %Bundle-Name.0
+Bundle-SymbolicName: org.kalypso.kml.export;singleton:=true
+Bundle-Version: 10.10.0.qualifier
+Require-Bundle: org.eclipse.core.expressions,
+ org.kalypso.ui
+Export-Package: org.kalypso.kml.export.constants,
+ org.kalypso.kml.export.interfaces;uses:="org.kalypsodeegree.model.feature"
+Bundle-Localization: plugin
+Bundle-ActivationPolicy: lazy
+Bundle-Activator: org.kalypso.kml.export.KalypsoKMLPlugin
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-Vendor: kalypsobase.sourceforge.net
+Bundle-ClassPath: lib/JavaApiForKML/2010_01/JavaAPIforKml.jar,
+ .
