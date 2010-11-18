@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TinResult xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults" gml:id="root">
+ <triangulatedSurfaceMember>
+ <gml:TriangulatedSurface srsName="EPSG:31467" srsDimension="2">
+   <gml:trianglePatches>
+    <gml:Triangle interpolation="planar">
+     <gml:exterior>
+      <gml:LinearRing>
+       <gml:posList srsDimension="3">3342959.1568235 5698386.5607302 21.0449145 3342956.6525826 5698373.2691856 21.0535021 3342966.2677769 5698371.404639674 19.6082573 3342959.1568235 5698386.5607302 21.0449145</gml:posList>
+      </gml:LinearRing>
+     </gml:exterior>
+    </gml:Triangle>
+    <gml:Triangle interpolation="planar">
+     <gml:exterior>
+      <gml:LinearRing>
+       <gml:pos>3342956.6525826 5698373.2691856 21.0535021 </gml:pos>
+       <gml:pos>3342954.1483418 5698359.9776409 21.0620896 </gml:pos>
+       <gml:pos>3342966.2677769 5698371.404639674 19.6082573 </gml:pos>
+       <gml:pos>3342956.6525826 5698373.2691856 21.0535021 </gml:pos>
+      </gml:LinearRing>
+     </gml:exterior>
+    </gml:Triangle>
+    <gml:Triangle interpolation="planar">
+     <gml:exterior>
+      <gml:LinearRing>
+       <gml:pos>3342954.1483418 5698359.9776409 21.0620896 </gml:pos>
+       <gml:pos>3342964.2005407 5698357.9442815 19.5874579 </gml:pos>
+       <gml:pos>3342966.2677769 5698371.404639674 19.6082573 </gml:pos>
+       <gml:pos>3342954.1483418 5698359.9776409 21.0620896 </gml:pos>
+      </gml:LinearRing>
+     </gml:exterior>
+    </gml:Triangle>
+     </gml:trianglePatches>
+  </gml:TriangulatedSurface>
+	 <unit>m</unit>
+	 <parameter>Geländehöhe</parameter>
+	 <date>2009-09-02T01:00:00+02:00</date> 
+ </triangulatedSurfaceMember>
+</TinResult>
