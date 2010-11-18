@@ -40,60 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table;
 
-import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.Composite;
-import org.kalypso.contribs.eclipse.swt.layout.LayoutHelper;
 import org.kalypso.ogc.sensor.template.IObsProvider;
-import org.kalypso.zml.ui.table.schema.ZmlTableType;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlTableComposite extends Composite
+public interface IZmlTableColumn
 {
-  private ZmlTableType m_tableType;
+  String getId( );
 
-  private TableViewer m_tableViewer;
-
-  public ZmlTableComposite( final Composite parent )
-  {
-    this( parent, null );
-  }
-
-  public ZmlTableComposite( final Composite parent, final ZmlTableType tableType )
-  {
-    super( parent, SWT.NULL );
-
-    setLayout( LayoutHelper.createGridLayout() );
-    if( tableType != null )
-      setup( tableType );
-  }
-
-  private void setup( final ZmlTableType tableType )
-  {
-    m_tableType = tableType;
-
-    m_tableViewer = new TableViewer( this, SWT.BORDER );
-    m_tableViewer.getTable().setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
-    m_tableViewer.setContentProvider( new ArrayContentProvider() );
-
-  }
-
-  public void clean( )
-  {
-    // TODO Auto-generated method stub
-  }
-
-  public void addColumn( final IZmlTableColumn column )
-  {
-    final String id = column.getId();
-    final IObsProvider obsProvider = column.getObsProvider();
-
-    // TODO Auto-generated method stub
-    final int asdfasdf = 0;
-  }
-
+  IObsProvider getObsProvider( );
 }

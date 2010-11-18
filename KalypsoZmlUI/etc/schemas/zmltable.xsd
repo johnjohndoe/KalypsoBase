@@ -3,18 +3,28 @@
 
   <!-- elements -->
   <xs:element name="ZmlTable" type="zmltable:ZmlTableType" />
-  <xs:element name="Columns" type="zmltable:ColumnType" />
+  <xs:element name="IndexColumn" type="zmltable:ColumnType" />
+  <xs:element name="Columns" type="zmltable:ColumnsType" />
+  <xs:element name="Column" type="zmltable:ColumnType" />
   
   <!-- types -->
   <xs:complexType name="ZmlTableType">
     <xs:sequence>
+      <xs:element ref="zmltable:IndexColumn" minOccurs="1" />
       <xs:element ref="zmltable:Columns" maxOccurs="unbounded" />
+    </xs:sequence>
+  </xs:complexType>
+
+ <xs:complexType name="ColumnsType">
+    <xs:sequence>
+      <xs:element ref="zmltable:Column"  minOccurs="0" maxOccurs="unbounded" />
     </xs:sequence>
   </xs:complexType>
 
   <xs:complexType name="ColumnType">
     <xs:sequence>
-      <xs:element name="urlMember" type="xs:string" minOccurs="1" maxOccurs="1" />
+      <xs:element name="srcAxis" type="xs:string" minOccurs="1" maxOccurs="1" />
+      <xs:element name="format" type="xs:string" default="%s" minOccurs="0" />
     </xs:sequence>
   </xs:complexType>
 
