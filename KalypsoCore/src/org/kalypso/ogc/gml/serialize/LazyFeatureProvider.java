@@ -107,6 +107,7 @@ public class LazyFeatureProvider extends AbstractXLinkFeatureProvider implements
   @Override
   public void dispose( )
   {
-    m_workspace = null;
+    // we do not! release the workspace reference here -> else the workspace will be out of scope and will disposed;
+    // and the caching will not work...
   }
 }
