@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:zmltable="schema.table.ui.zml.kalypso.org" targetNamespace="schema.table.ui.zml.kalypso.org" elementFormDefault="qualified">
+
+  <!-- elements -->
+  <xs:element name="ZmlTable" type="zmltable:ZmlTableType" />
+  <xs:element name="Columns" type="zmltable:ColumnType" />
+  
+  <!-- types -->
+  <xs:complexType name="ZmlTableType">
+    <xs:sequence>
+      <xs:element ref="zmltable:Columns" maxOccurs="unbounded" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ColumnType">
+    <xs:sequence>
+      <xs:element name="urlMember" type="xs:string" minOccurs="1" maxOccurs="1" />
+    </xs:sequence>
+  </xs:complexType>
+
+
+</xs:schema>
