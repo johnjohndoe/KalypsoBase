@@ -1,0 +1,13 @@
+<!DOCTYPE catalog
+  PUBLIC "-//OASIS//DTD Entity Resolution XML Catalog V1.0//EN"
+         "http://www.oasis-open.org/committees/entity/release/1.0/catalog.dtd">
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="public">
+  <nextCatalog catalog="platform:/resource/KalypsoContributionsOGC2x/etc/schemas/catalog.xml" />
+  <nextCatalog catalog="platform:/resource/KalypsoContributionsOGC31/etc/schemas/catalog.xml" />
+  <nextCatalog catalog="platform:/resource/KalypsoCore/etc/schemas/catalog.xml" />
+  <nextCatalog catalog="platform:/resource/KalypsoDeegree/deegree/org/kalypsodeegree_impl/gml/schema/schemata/catalog.xml" />
+  <nextCatalog catalog="platform:/resource/KalypsoHwvCore/etc/schemes/catalog.xml" />
+  <nextCatalog catalog="platform:/resource/OdysseusChartFactory/etc/binding/schema/catalog.xml" />
+  <nextCatalog catalog="platform:/resource/KalypsoModelNA/src/org/kalypso/convert/namodel/schema/catalog.xml" />
+  <nextCatalog catalog="platform:/resource/KalypsoZmlUI/etc/schemas/catalog.xmlcatalog" />
+</catalog>
