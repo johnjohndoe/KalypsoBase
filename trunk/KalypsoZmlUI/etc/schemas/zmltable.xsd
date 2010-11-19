@@ -24,11 +24,12 @@
   <complexType name="AbstractColumnType" abstract="true">
     <sequence>
       <element name="id" type="ID" />
-      <element name="label" type="string" minOccurs="1"/>
+      <element name="label" type="string" minOccurs="1" />
       <element name="format" type="string" default="%s" />
       <element name="width" type="integer" default="100" />
       <element name="alignment" type="zmltable:AlignmentType" default="LEFT" />
     </sequence>
+    <attribute name="autopack" type="boolean" default="true" />
   </complexType>
 
   <complexType name="DataColumnType">
@@ -41,12 +42,12 @@
       </extension>
     </complexContent>
   </complexType>
-  
+
   <complexType name="IndexColumnType">
     <complexContent>
       <extension base="zmltable:AbstractColumnType">
         <sequence>
-         
+
         </sequence>
       </extension>
     </complexContent>
