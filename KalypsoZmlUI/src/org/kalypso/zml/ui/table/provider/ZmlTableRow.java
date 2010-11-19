@@ -38,18 +38,44 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table;
+package org.kalypso.zml.ui.table.provider;
 
-import org.kalypso.ogc.sensor.template.IObsProvider;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.kalypso.zml.ui.table.IZmlTableColumn;
 
 /**
  * @author Dirk Kuch
  */
-public interface IZmlTableColumn
+public class ZmlTableRow
 {
-  String ZML_TABLE_INDEX_ID = "zml_table_index";
 
-  String getId( );
+  private final Date m_date;
 
-  IObsProvider getObsProvider( );
+  private final int m_valueColumnSize;
+
+  /** Map<Reference (id), Reference> */
+  Map<String, ZmlValueReference> m_values = new HashMap<String, ZmlValueReference>();
+
+  public ZmlTableRow( final Date date, final int valueColumnSize )
+  {
+    m_date = date;
+    m_valueColumnSize = valueColumnSize;
+  }
+
+  public void add( final ZmlValueReference reference )
+  {
+    m_values.put( reference.getId(), reference );
+  }
+
+  public Object get( final String identifier )
+  {
+    if( IZmlTableColumn.ZML_TABLE_INDEX_ID.equals( identifier ) )
+      return m_date;
+
+    return m_values.get( identifier );
+  }
+
 }
