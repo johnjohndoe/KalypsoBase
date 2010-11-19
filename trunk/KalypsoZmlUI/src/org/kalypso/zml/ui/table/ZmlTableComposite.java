@@ -54,12 +54,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.kalypso.contribs.eclipse.swt.layout.LayoutHelper;
-import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.ogc.sensor.template.IObsProvider;
-import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.zml.ui.table.provider.IZmlTableComposite;
 import org.kalypso.zml.ui.table.provider.ZmlColumnRegistry;
 import org.kalypso.zml.ui.table.provider.ZmlLabelProvider;
+import org.kalypso.zml.ui.table.provider.ZmlTableColumn;
 import org.kalypso.zml.ui.table.provider.ZmlTableContentProvider;
 import org.kalypso.zml.ui.table.schema.AbstractColumnType;
 import org.kalypso.zml.ui.table.schema.DataColumnType;
@@ -140,7 +138,7 @@ public class ZmlTableComposite extends Composite implements IZmlTableComposite
 
   public void addColumn( final IZmlTableColumn column )
   {
-    m_registry.addColumn( column );
+    m_registry.loadColumn( column );
   }
 
   @Override
@@ -149,8 +147,6 @@ public class ZmlTableComposite extends Composite implements IZmlTableComposite
     m_tableViewer.refresh();
 
     /** update header labels */
-    final IZmlTableColumn[] dataColumns = m_registry.getColumns();
-
     final TableColumn[] tableColumns = m_tableViewer.getTable().getColumns();
     Assert.isTrue( tableColumns.length == m_columnIndex.size() );
 
@@ -162,20 +158,8 @@ public class ZmlTableComposite extends Composite implements IZmlTableComposite
       /** only update headers of data column types */
       if( columnType instanceof DataColumnType )
       {
-        /*** FIXME *brrrrr* refactor */
-        final IZmlTableColumn zmlColumn = ZmlTableHelper.findZmlTableColumn( dataColumns, columnType.getId() );
-        if( zmlColumn == null )
-          continue;
-
-        final IObsProvider provider = zmlColumn.getObsProvider();
-        if( !provider.isLoaded() )
-          continue;
-
-        final IAxis[] axes = provider.getObservation().getAxisList();
-        final IAxis axis = AxisUtils.findAxis( axes, columnType.getId() );
-
-        final String label = zmlColumn.getTitle( axis );
-        tableColumn.setText( label );
+        final ZmlTableColumn column = m_registry.getColumn( columnType.getId() );
+        tableColumn.setText( column.getLabel() );
       }
 
       if( columnType.isAutopack() && columnType.getWidth() == null )
