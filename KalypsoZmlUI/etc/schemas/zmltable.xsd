@@ -30,6 +30,7 @@
       <element name="alignment" type="zmltable:AlignmentType" default="LEFT" />
     </sequence>
     <attribute name="autopack" type="boolean" default="true" />
+    <attribute name="editable" type="boolean" default="false" />
   </complexType>
 
   <complexType name="DataColumnType">

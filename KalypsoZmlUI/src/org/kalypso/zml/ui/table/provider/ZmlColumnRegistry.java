@@ -41,10 +41,16 @@
 package org.kalypso.zml.ui.table.provider;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.ui.progress.UIJob;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
@@ -61,18 +67,44 @@ import org.kalypso.zml.ui.table.utils.ZmlTableHelper;
  */
 public class ZmlColumnRegistry
 {
-  List<IZmlTableColumn> m_columns = new ArrayList<IZmlTableColumn>();
+  private final Set<ZmlColumnLoadCommand> m_commands = new HashSet<ZmlColumnLoadCommand>();
+
+  private final List<IZmlTableColumn> m_columns = new ArrayList<IZmlTableColumn>();
 
   private final ZmlTableType m_type;
 
-  public ZmlColumnRegistry( final ZmlTableType type )
+  protected final IZmlTableComposite m_table;
+
+  public ZmlColumnRegistry( final IZmlTableComposite table, final ZmlTableType type )
   {
+    m_table = table;
     m_type = type;
   }
 
   public void addColumn( final IZmlTableColumn column )
   {
+    m_commands.add( new ZmlColumnLoadCommand( this, column ) );
+  }
+
+  /***
+   * FIXME *brrr* addColumn / addLoaded -> crap -> refactor
+   */
+  protected void addLoaded( final IZmlTableColumn column )
+  {
     m_columns.add( column );
+
+    new UIJob( "" )
+    {
+
+      @Override
+      public IStatus runInUIThread( final IProgressMonitor monitor )
+      {
+        m_table.refresh();
+
+        return Status.OK_STATUS;
+      }
+    }.schedule();
+
   }
 
   public IZmlTableColumn[] getColumns( )
@@ -82,7 +114,18 @@ public class ZmlColumnRegistry
 
   public void clean( )
   {
-    m_columns.clear();
+    synchronized( this )
+    {
+      m_columns.clear();
+
+      final ZmlColumnLoadCommand[] commands = m_commands.toArray( new ZmlColumnLoadCommand[] {} );
+      m_commands.clear();
+
+      for( final ZmlColumnLoadCommand command : commands )
+      {
+        command.cancel();
+      }
+    }
   }
 
   public ZmlTableRow[] getInput( ) throws SensorException
@@ -132,4 +175,5 @@ public class ZmlColumnRegistry
 
     return null;
   }
+
 }
