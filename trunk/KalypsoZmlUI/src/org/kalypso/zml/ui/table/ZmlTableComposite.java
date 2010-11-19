@@ -40,18 +40,27 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table;
 
+import java.math.BigInteger;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
 import org.kalypso.contribs.eclipse.swt.layout.LayoutHelper;
+import org.kalypso.ogc.sensor.IAxis;
+import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.zml.ui.table.provider.ZmlColumnRegistry;
 import org.kalypso.zml.ui.table.provider.ZmlLabelProvider;
 import org.kalypso.zml.ui.table.provider.ZmlTableContentProvider;
 import org.kalypso.zml.ui.table.schema.AbstractColumnType;
+import org.kalypso.zml.ui.table.schema.IndexColumnType;
 import org.kalypso.zml.ui.table.schema.ZmlTableType;
 import org.kalypso.zml.ui.table.utils.ZmlTableHelper;
 
@@ -63,6 +72,8 @@ public class ZmlTableComposite extends Composite
   private TableViewer m_tableViewer;
 
   private ZmlColumnRegistry m_registry;
+
+  private final Map<Integer, AbstractColumnType> m_columnIndex = new HashMap<Integer, AbstractColumnType>();
 
   public ZmlTableComposite( final Composite parent, final ZmlTableType tableType )
   {
@@ -78,7 +89,6 @@ public class ZmlTableComposite extends Composite
   {
     m_registry = new ZmlColumnRegistry( tableType );
     m_tableViewer = new TableViewer( this, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER );
-    m_tableViewer.getTable().setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
     m_tableViewer.setContentProvider( new ZmlTableContentProvider( tableType ) );
 
     final List<AbstractColumnType> columns = tableType.getColumns().getColumn();
@@ -88,14 +98,30 @@ public class ZmlTableComposite extends Composite
     }
 
     m_tableViewer.setInput( m_registry );
+
+    /** layout stuff */
+    final Table table = m_tableViewer.getTable();
+    table.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
+    table.setHeaderVisible( true );
+
+    /** TODO auto pack */
+// final TableColumn[] tableColumns = table.getColumns();
+// for( final TableColumn tableColumn : tableColumns )
+// tableColumn.pack();
   }
 
   private TableViewerColumn addColumnViewer( final AbstractColumnType type )
   {
+    final int index = m_tableViewer.getTable().getColumnCount();
+    m_columnIndex.put( index, type );
+
     final TableViewerColumn column = new TableViewerColumn( m_tableViewer, ZmlTableHelper.toSWT( type.getAlignment() ) );
     column.setLabelProvider( new ZmlLabelProvider( type ) );
-    column.getColumn().setText( "blub" );
-    column.getColumn().setWidth( type.getWidth() );
+    column.getColumn().setText( type.getLabel() );
+
+    final BigInteger width = type.getWidth();
+    if( width != null )
+      column.getColumn().setWidth( width.intValue() );
 
     return column;
   }
@@ -109,7 +135,36 @@ public class ZmlTableComposite extends Composite
   {
     m_registry.addColumn( column );
 
-    m_tableViewer.refresh();
+    refresh();
   }
 
+  private void refresh( )
+  {
+    m_tableViewer.refresh();
+
+    /** update header labels */
+    final IZmlTableColumn[] dataColumns = m_registry.getColumns();
+
+    final TableColumn[] tableColumns = m_tableViewer.getTable().getColumns();
+    Assert.isTrue( tableColumns.length == m_columnIndex.size() );
+
+    /*** FIXME *brrrrr* refactor */
+    for( int i = 0; i < tableColumns.length; i++ )
+    {
+      final AbstractColumnType columnType = m_columnIndex.get( i );
+      /** data of index column types are generated on-the-fly */
+      if( columnType instanceof IndexColumnType )
+        continue;
+
+      final TableColumn tableColumn = tableColumns[i];
+
+      final IZmlTableColumn zmlColumn = ZmlTableHelper.findZmlTableColumn( dataColumns, columnType.getId() );
+
+      final IAxis[] axes = zmlColumn.getObsProvider().getObservation().getAxisList();
+      final IAxis axis = AxisUtils.findAxis( axes, columnType.getId() );
+
+      final String label = zmlColumn.getTitle( axis );
+      tableColumn.setText( label );
+    }
+  }
 }

@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table;
 
+import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.template.IObsProvider;
 
 /**
@@ -52,4 +53,6 @@ public interface IZmlTableColumn
   String getId( );
 
   IObsProvider getObsProvider( );
+
+  String getTitle( IAxis axis );
 }
