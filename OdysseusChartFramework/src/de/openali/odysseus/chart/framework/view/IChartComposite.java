@@ -78,4 +78,6 @@ public interface IChartComposite
   void setPanOffset( final IAxis[] axes, final Point start, final Point end );
 
   void setTooltipInfo( EditInfo tooltipInfo );
+
+  void invalidate( );
 }

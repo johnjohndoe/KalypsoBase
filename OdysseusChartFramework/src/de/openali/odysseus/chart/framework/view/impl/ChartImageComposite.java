@@ -305,6 +305,7 @@ public class ChartImageComposite extends Canvas implements IChartComposite
     return new Rectangle( rect.x + insets.left, rect.y + insets.top, rect.width - insets.left - insets.right, rect.height - insets.bottom - insets.top );
   }
 
+  @Override
   public void invalidate( )
   {
     if( isDisposed() )
