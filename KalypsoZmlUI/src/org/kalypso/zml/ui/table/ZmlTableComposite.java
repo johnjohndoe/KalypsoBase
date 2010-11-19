@@ -51,7 +51,7 @@ import org.kalypso.contribs.eclipse.swt.layout.LayoutHelper;
 import org.kalypso.zml.ui.table.provider.ZmlColumnRegistry;
 import org.kalypso.zml.ui.table.provider.ZmlLabelProvider;
 import org.kalypso.zml.ui.table.provider.ZmlTableContentProvider;
-import org.kalypso.zml.ui.table.schema.ColumnType;
+import org.kalypso.zml.ui.table.schema.AbstractColumnType;
 import org.kalypso.zml.ui.table.schema.ZmlTableType;
 import org.kalypso.zml.ui.table.utils.ZmlTableHelper;
 
@@ -81,13 +81,8 @@ public class ZmlTableComposite extends Composite
     m_tableViewer.getTable().setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
     m_tableViewer.setContentProvider( new ZmlTableContentProvider( tableType ) );
 
-    final TableViewerColumn indexColumn = new TableViewerColumn( m_tableViewer, SWT.LEFT );
-    indexColumn.setLabelProvider( new ZmlLabelProvider( getIndexColumnType() ) );
-    indexColumn.getColumn().setText( "blub" );
-    indexColumn.getColumn().setWidth( 100 );
-
-    final List<ColumnType> columns = tableType.getColumns().getColumn();
-    for( final ColumnType column : columns )
+    final List<AbstractColumnType> columns = tableType.getColumns().getColumn();
+    for( final AbstractColumnType column : columns )
     {
       addColumnViewer( column );
     }
@@ -95,23 +90,12 @@ public class ZmlTableComposite extends Composite
     m_tableViewer.setInput( m_registry );
   }
 
-  private ColumnType getIndexColumnType( )
-  {
-    final ColumnType type = new ColumnType();
-    type.setId( IZmlTableColumn.ZML_TABLE_INDEX_ID );
-    type.setIndexAxis( "date" );
-    type.setValueAxis( "date" );
-    type.setFormat( "dd.MM.yyyy HH:mm" );
-
-    return type;
-  }
-
-  private TableViewerColumn addColumnViewer( final ColumnType type )
+  private TableViewerColumn addColumnViewer( final AbstractColumnType type )
   {
     final TableViewerColumn column = new TableViewerColumn( m_tableViewer, ZmlTableHelper.toSWT( type.getAlignment() ) );
     column.setLabelProvider( new ZmlLabelProvider( type ) );
     column.getColumn().setText( "blub" );
-    column.getColumn().setWidth( 100 );
+    column.getColumn().setWidth( type.getWidth() );
 
     return column;
   }
