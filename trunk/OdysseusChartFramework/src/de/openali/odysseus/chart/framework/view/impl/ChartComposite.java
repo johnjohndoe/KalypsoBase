@@ -103,7 +103,7 @@ public class ChartComposite extends Canvas implements IChartComposite
     @Override
     public void onLayerAdded( final IChartLayer layer )
     {
-      invalidatePlotCanvas( new IChartLayer[] { layer } );
+      invalidate();
     }
 
     /**
@@ -112,7 +112,7 @@ public class ChartComposite extends Canvas implements IChartComposite
     @Override
     public void onLayerContentChanged( final IChartLayer layer )
     {
-      invalidatePlotCanvas( new IChartLayer[] { layer } );
+      invalidate();
     }
 
     /**
@@ -121,7 +121,7 @@ public class ChartComposite extends Canvas implements IChartComposite
     @Override
     public void onLayerMoved( final IChartLayer layer )
     {
-      invalidatePlotCanvas( new IChartLayer[] { layer } );
+      invalidate();
     }
 
     /**
@@ -130,7 +130,7 @@ public class ChartComposite extends Canvas implements IChartComposite
     @Override
     public void onLayerRemoved( final IChartLayer layer )
     {
-      invalidatePlotCanvas( new IChartLayer[] { layer } );
+      invalidate();
     }
 
     /**
@@ -139,7 +139,7 @@ public class ChartComposite extends Canvas implements IChartComposite
     @Override
     public void onLayerVisibilityChanged( final IChartLayer layer )
     {
-      invalidatePlotCanvas( new IChartLayer[] { layer } );
+      invalidate();
     }
   };
 
@@ -187,7 +187,7 @@ public class ChartComposite extends Canvas implements IChartComposite
         }
         final List<IChartLayer> list = m_model.getAxis2Layers().get( axis );
         if( list != null )
-          invalidatePlotCanvas( list.toArray( new IChartLayer[] {} ) );
+          invalidate();
       }
     }
 
@@ -512,7 +512,8 @@ public class ChartComposite extends Canvas implements IChartComposite
     return getPlot().getTooltipInfo();
   }
 
-  public final void invalidatePlotCanvas( final IChartLayer[] layers )
+  @Override
+  public void invalidate( )
   {
     if( isDisposed() )
       return;
@@ -643,7 +644,7 @@ public class ChartComposite extends Canvas implements IChartComposite
       addAllAxis();
 
       m_plot.setLayerManager( m_model.getLayerManager() );
-      invalidatePlotCanvas( null );
+      invalidate();
     }
     layout( true, true );
 
