@@ -46,14 +46,16 @@ import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Point;
 
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
+import de.openali.odysseus.chart.framework.view.IChartComposite;
 import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
+import de.openali.odysseus.chart.framework.view.impl.ChartImageComposite;
 
 /**
  * @author burtscher1
  */
 public class DragPanHandler extends AbstractChartDragHandler
 {
-  public DragPanHandler( final ChartComposite chartComposite )
+  public DragPanHandler( final IChartComposite chartComposite )
   {
     super( chartComposite, 5 );
   }
@@ -62,7 +64,7 @@ public class DragPanHandler extends AbstractChartDragHandler
    * @see org.kalypso.chart.framework.view.IChartDragHandler#getCursor()
    */
   @Override
-  public Cursor getCursor(final MouseEvent e   )
+  public Cursor getCursor( final MouseEvent e )
   {
     return e.display.getSystemCursor( SWT.CURSOR_SIZEALL );
   }
@@ -74,7 +76,11 @@ public class DragPanHandler extends AbstractChartDragHandler
   @Override
   public void doMouseUpAction( final Point start, final EditInfo editInfo )
   {
-    getChart().clearPanOffset();
+    final IChartComposite cc = getChart();
+    if( cc instanceof ChartComposite )
+      ((ChartComposite) cc).clearPanOffset();
+    if( cc instanceof ChartImageComposite )
+      ((ChartImageComposite) cc).setPanOffset( null, null, null );
     if( start != null )
       getChart().getChartModel().panTo( start, editInfo.m_pos );
 
@@ -87,7 +93,7 @@ public class DragPanHandler extends AbstractChartDragHandler
   @Override
   public void doMouseMoveAction( final Point start, final EditInfo editInfo )
   {
-    getChart().setPlotPanOffset(null, start, editInfo.m_pos );
+    getChart().setPanOffset( null, start, editInfo.m_pos );
   }
 
 }

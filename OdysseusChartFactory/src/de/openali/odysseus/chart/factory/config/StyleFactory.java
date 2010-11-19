@@ -481,7 +481,6 @@ public class StyleFactory
   {
     if( alignment == null )
       return ALIGNMENT.LEFT;
-
     if( "LEFT".equals( alignment.toString() ) )
     {
       return ALIGNMENT.LEFT;

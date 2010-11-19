@@ -14,8 +14,8 @@ import org.eclipse.ui.PlatformUI;
 
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
-import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.DIRECTION;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT;
+import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.DIRECTION;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
@@ -421,10 +421,12 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
         return labelWidth;
       case RIGHT:
         return 0;
-      case TICK_CENTERED:
+      case CENTERED_HORIZONTAL:
         return labelWidth / 2;
       case INTERVALL_CENTERED:
         return (labelWidth - tickScreenDistance) / 2;
+      case TICK_CENTERED:
+        return labelWidth / 2;
     }
     throw new IllegalArgumentException( labelPosition.name() );
   }

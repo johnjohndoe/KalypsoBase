@@ -43,7 +43,7 @@ package org.kalypso.chart.ui.editor.mousehandler;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.ComparableDataRange;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
-import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
+import de.openali.odysseus.chart.framework.view.IChartComposite;
 
 /**
  * @author burtscher1
@@ -51,7 +51,7 @@ import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
 public class AxisDragZoomOutHandler extends AxisDragZoomHandler
 {
 
-  public AxisDragZoomOutHandler( ChartComposite chartComposite )
+  public AxisDragZoomOutHandler( final IChartComposite chartComposite )
   {
     super( chartComposite );
   }
@@ -99,16 +99,16 @@ public class AxisDragZoomOutHandler extends AxisDragZoomHandler
 
       if( from != Double.NaN && to != Double.NaN )
       {
-        IDataRange<Number> numericRange = axis.getNumericRange();
+        final IDataRange<Number> numericRange = axis.getNumericRange();
 
-        double oldmin = numericRange.getMin().doubleValue();
-        double oldmax = numericRange.getMax().doubleValue();
-        double oldrange = Math.abs( oldmin - oldmax );
-        double mouserange = Math.abs( from - to );
-        double newrange = (oldrange / mouserange) * oldrange;
+        final double oldmin = numericRange.getMin().doubleValue();
+        final double oldmax = numericRange.getMax().doubleValue();
+        final double oldrange = Math.abs( oldmin - oldmax );
+        final double mouserange = Math.abs( from - to );
+        final double newrange = (oldrange / mouserange) * oldrange;
 
-        double newFrom = oldmin - ((Math.abs( from - oldmin ) / oldrange) * newrange);
-        double newTo = oldmax + ((Math.abs( to - oldmax ) / oldrange) * newrange);
+        final double newFrom = oldmin - ((Math.abs( from - oldmin ) / oldrange) * newrange);
+        final double newTo = oldmax + ((Math.abs( to - oldmax ) / oldrange) * newrange);
 
         axis.setNumericRange( new ComparableDataRange<Number>( new Number[] { new Double( newFrom ), new Double( newTo ) } ) );
       }

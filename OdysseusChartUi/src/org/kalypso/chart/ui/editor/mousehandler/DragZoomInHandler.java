@@ -47,7 +47,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
-import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
+import de.openali.odysseus.chart.framework.view.IChartComposite;
 
 /**
  * @author Gernot Belger
@@ -56,7 +56,7 @@ import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
 public class DragZoomInHandler extends AbstractChartDragHandler
 {
 
-  public DragZoomInHandler( final ChartComposite chartComposite )
+  public DragZoomInHandler( final IChartComposite chartComposite )
   {
     super( chartComposite, 5 );
 
@@ -81,7 +81,7 @@ public class DragZoomInHandler extends AbstractChartDragHandler
 
     try
     {
-      getChart().getChartModel().zoomIn( editInfo.m_pos, end );
+      getChart().getChartModel().zoomIn( getChart().screen2plotPoint( editInfo.m_pos ), getChart().screen2plotPoint( end ) );
     }
     finally
     {
@@ -96,7 +96,9 @@ public class DragZoomInHandler extends AbstractChartDragHandler
   @Override
   public void doMouseMoveAction( final Point end, final EditInfo editInfo )
   {
-    getChart().setDragArea( new Rectangle( editInfo.m_pos.x, editInfo.m_pos.y, end.x - editInfo.m_pos.x, end.y - editInfo.m_pos.y ) );
+    final Point start = editInfo.m_pos;
+    final Point pos = getChart().plotPoint2screen( end );
+    getChart().setDragArea( new Rectangle( start.x, start.y, pos.x - start.x, pos.y - start.y ) );
   }
 
 }

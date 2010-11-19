@@ -56,13 +56,13 @@ public class GenericCalendarAxisRendererProvider extends AbstractGenericAxisRend
     String dateFormat = getParameterContainer().getParameterValue( "date-format", "dd.MM.yy\nHH:mm:ss" );
     final ALIGNMENT position = getPosition();
     dateFormat = dateFormat.replaceAll( "\\n", "\n" );
-    
+
     return new DateLabelCreator( dateFormat, position );
   }
 
   private ALIGNMENT getPosition( )
   {
-    final String parameter = getParameterContainer().getParameterValue( "label_position", ALIGNMENT.TICK_CENTERED.name() );
+   final String parameter = getParameterContainer().getParameterValue( "label_position", ALIGNMENT.TICK_CENTERED.name() );
     
     return ALIGNMENT.valueOf( parameter );
   }

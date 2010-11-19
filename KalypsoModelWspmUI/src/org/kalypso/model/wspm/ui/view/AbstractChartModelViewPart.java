@@ -61,7 +61,7 @@ import org.kalypso.model.wspm.ui.view.chart.ProfilChartModel;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.event.IChartModelEventListener;
-import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
+import de.openali.odysseus.chart.framework.view.IChartComposite;
 
 /**
  * @author kimwerner
@@ -209,7 +209,7 @@ public abstract class AbstractChartModelViewPart extends ViewPart implements IAd
     if( adapter != null )
     {
       adapter.addListener( this );
-      final ChartComposite chart = adapter.getChartComposite();
+      final IChartComposite chart = adapter.getChartComposite();
       m_chartModel = chart == null ? null : chart.getChartModel();
     }
     updateControl();

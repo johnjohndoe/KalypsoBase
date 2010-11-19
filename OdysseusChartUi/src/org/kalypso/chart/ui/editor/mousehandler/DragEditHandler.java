@@ -7,32 +7,32 @@ import org.eclipse.swt.graphics.Point;
 
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer;
-import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
+import de.openali.odysseus.chart.framework.view.IChartComposite;
 
 /**
  * @author kimwerner
  */
 public class DragEditHandler extends AbstractChartDragHandler
 {
-  
-  IEditableChartLayer m_layer = null;
 
-  public DragEditHandler( final ChartComposite chart )
+  EditInfo m_editInfo = null;
+
+  public DragEditHandler( final IChartComposite chart )
   {
     this( chart, 5 );
   }
 
-  public DragEditHandler( final ChartComposite chart, final int trashhold )
+  public DragEditHandler( final IChartComposite chart, final int trashold )
   {
-    super( chart, trashhold );
+    super( chart, trashold );
   }
 
   private final boolean canSnap( final Point point )
   {
-    IEditableChartLayer[] eLayers = getChart().getChartModel().getLayerManager().getEditableLayers();
+    final IEditableChartLayer[] eLayers = getChart().getChartModel().getLayerManager().getEditableLayers();
     for( final IEditableChartLayer layer : eLayers )
     {
-      if( !layer.isLocked() && layer.isVisible() && layer.getHover( point ) != null )
+      if( !layer.isLocked() && layer.isVisible() && layer.getHover( getChart().screen2plotPoint( point ) ) != null )
       {
         return true;
       }
@@ -46,10 +46,10 @@ public class DragEditHandler extends AbstractChartDragHandler
   @Override
   public Cursor getCursor( final MouseEvent e )
   {
-    if( canSnap( new Point( e.x, e.y ) )||m_layer!=null )
-      return e.display.getSystemCursor( SWT.CURSOR_HAND ) ;
+    if( canSnap( new Point( e.x, e.y ) ) || m_editInfo != null )
+      return e.display.getSystemCursor( SWT.CURSOR_HAND );
 
-     return  e.display.getSystemCursor( SWT.CURSOR_ARROW );
+    return e.display.getSystemCursor( SWT.CURSOR_ARROW );
   }
 
   /**
@@ -57,14 +57,17 @@ public class DragEditHandler extends AbstractChartDragHandler
    *      org.eclipse.swt.graphics.Point, de.openali.odysseus.chart.framework.model.layer.EditInfo)
    */
   @Override
-  public void doMouseUpAction( Point start, EditInfo editInfo )
+  public void doMouseUpAction( final Point start, final EditInfo editInfo )
   {
-
-    if( m_layer == null )
-      return;
-    m_layer.commitDrag( start, editInfo );
-    m_layer = null;
-
+    try
+    {
+      if( m_editInfo != null && m_editInfo.m_layer != null )
+        ((IEditableChartLayer) m_editInfo.m_layer).commitDrag( start, editInfo );
+    }
+    finally
+    {
+      m_editInfo = null;
+    }
   }
 
   /**
@@ -72,15 +75,13 @@ public class DragEditHandler extends AbstractChartDragHandler
    *      org.eclipse.swt.graphics.Point, de.openali.odysseus.chart.framework.model.layer.EditInfo)
    */
   @Override
-  public void doMouseMoveAction( Point start, EditInfo editInfo )
+  public void doMouseMoveAction( final Point start, final EditInfo editInfo )
   {
-    if( editInfo.m_layer != null && editInfo.m_layer instanceof IEditableChartLayer )
-    {
-      final IEditableChartLayer layer = (IEditableChartLayer) editInfo.m_layer;
-      if( !layer.isLocked() && layer.isVisible() )
-        m_layer = layer;
-      getChart().setChartInfo( m_layer.drag( start, editInfo ) );
-    }
+    if( m_editInfo == null )
+      m_editInfo = editInfo;
+    getChart().setEditInfo( ((IEditableChartLayer) m_editInfo.m_layer).drag( start, m_editInfo ) );
   }
 
+  // m_chart.setTooltipInfo( null );
+// }
 }

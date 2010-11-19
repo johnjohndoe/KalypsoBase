@@ -3,10 +3,8 @@ package de.openali.odysseus.chart.framework.view.impl;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
@@ -14,7 +12,6 @@ import org.eclipse.swt.graphics.PaletteData;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.ui.PlatformUI;
 import org.kalypso.contribs.eclipse.swt.graphics.RectangleUtils;
 
 import de.openali.odysseus.chart.framework.OdysseusChartFrameworkPlugin;
@@ -22,6 +19,7 @@ import de.openali.odysseus.chart.framework.logging.impl.Logger;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.util.ChartUtilities;
+import de.openali.odysseus.chart.framework.util.img.ChartTooltipPainter;
 
 /**
  * @author kimwerner
@@ -30,9 +28,13 @@ public class GenericLayerRenderer
 {
   private EditInfo m_editInfo;
 
+  private EditInfo m_tooltipInfo;
+
   private final Map<IChartLayer, Point> m_layerPanOffsets = new HashMap<IChartLayer, Point>();
 
   private Rectangle m_dragArea = null;
+
+  private final ChartTooltipPainter m_tooltipPainter = new ChartTooltipPainter();
 
   public Image createLayerImage( final GC gc, final IChartLayer layer )
   {
@@ -46,7 +48,7 @@ public class GenericLayerRenderer
     // Hintergrund explizit malen - der wird später transparent gezeichnet
     final Color transparentColor = OdysseusChartFrameworkPlugin.getDefault().getColorRegistry().getResource( gc.getDevice(), new RGB( 0xfe, 0xff, 0xff ) );
     tmpGC.setBackground( transparentColor );
-    tmpGC.fillRectangle(gc.getClipping() );
+    tmpGC.fillRectangle( gc.getClipping() );
 
     try
     {
@@ -104,61 +106,66 @@ public class GenericLayerRenderer
 
   public void paintEditInfo( final GC gcw )
   {
-    ChartUtilities.resetGC( gcw );
-    if( m_editInfo == null )
-      return;
 
-    // draw hover shape
-    if( m_editInfo.m_hoverFigure != null )
-      m_editInfo.m_hoverFigure.paint( gcw );
-    // draw edit shape
-    if( m_editInfo.m_editFigure != null )
-      m_editInfo.m_editFigure.paint( gcw );
-
-    // draw tooltip
-    ChartUtilities.resetGC( gcw );
-
-    final Rectangle screen = gcw.getClipping();
-
-    String tooltiptext = m_editInfo.m_text;
-    final Point mousePos = m_editInfo.m_pos;
-    if( (tooltiptext != null) && (mousePos != null) )
+    if( m_editInfo != null )
     {
-      tooltiptext = tooltiptext.replace( '\r', ' ' );
+      ChartUtilities.resetGC( gcw );
+      // draw hover shape
+      if( m_editInfo.m_hoverFigure != null )
+        m_editInfo.m_hoverFigure.paint( gcw );
+      // draw edit shape
+      if( m_editInfo.m_editFigure != null )
+        m_editInfo.m_editFigure.paint( gcw );
+    }
+    if( m_tooltipInfo != null )
+    {
+      ChartUtilities.resetGC( gcw );
+      // draw tooltip
+      final Rectangle screen = gcw.getClipping();
 
-      final int TOOLINSET = 3;
-
-      final Font oldFont = gcw.getFont();
-      final Font bannerFont = JFaceResources.getTextFont();
-      gcw.setFont( bannerFont );
-      gcw.setBackground( PlatformUI.getWorkbench().getDisplay().getSystemColor( SWT.COLOR_INFO_BACKGROUND ) );
-      gcw.setForeground( PlatformUI.getWorkbench().getDisplay().getSystemColor( SWT.COLOR_INFO_FOREGROUND ) );
-      final Point toolsize = gcw.textExtent( tooltiptext );
-
-      /*
-       * Positionieren der Tooltip-Box: der ideale Platz liegt rechts unter dem Mauszeiger. Wenn rechts nicht genï¿½gend
-       * Platz ist, dann wird er nach links verschoben. Der Startpunkt soll dabei immer im sichtbaren Bereich liegen.
-       */
-      int toolx = mousePos.x + 3 + TOOLINSET;
-      if( toolx + toolsize.x > screen.width )
+      // String tooltiptext = m_editInfo.m_text;
+      final Point mousePos = m_tooltipInfo.m_pos;
+      if( (m_tooltipInfo.m_text != null) && (mousePos != null) )
       {
-        toolx = screen.width - 5 - toolsize.x;
-        if( toolx < 5 )
-          toolx = 5;
+        // tooltiptext = tooltiptext.replace( '\r', ' ' );
+        m_tooltipPainter.setTooltip( m_tooltipInfo.m_text.replace( '\r', ' ' ) );
+        m_tooltipPainter.paint( gcw, mousePos );
+
+// final int TOOLINSET = 3;
+//
+// final Font oldFont = gcw.getFont();
+// final Font bannerFont = JFaceResources.getTextFont();
+// gcw.setFont( bannerFont );
+// gcw.setBackground( PlatformUI.getWorkbench().getDisplay().getSystemColor( SWT.COLOR_INFO_BACKGROUND ) );
+// gcw.setForeground( PlatformUI.getWorkbench().getDisplay().getSystemColor( SWT.COLOR_INFO_FOREGROUND ) );
+// final Point toolsize = gcw.textExtent( tooltiptext );
+//
+// /*
+// * Positionieren der Tooltip-Box: der ideale Platz liegt rechts unter dem Mauszeiger. Wenn rechts nicht genï¿½gend
+// * Platz ist, dann wird er nach links verschoben. Der Startpunkt soll dabei immer im sichtbaren Bereich liegen.
+// */
+// int toolx = mousePos.x + 3 + TOOLINSET;
+// if( toolx + toolsize.x > screen.width )
+// {
+// toolx = screen.width - 5 - toolsize.x;
+// if( toolx < 5 )
+// toolx = 5;
+// }
+//
+// int tooly = mousePos.y + 3 + TOOLINSET + 20;
+// if( (tooly + toolsize.y > screen.height) && ((mousePos.y - 3 - TOOLINSET - toolsize.y - 20) > 0) )
+// tooly = mousePos.y - 3 - TOOLINSET - toolsize.y - 20;
+//
+// gcw.setLineWidth( 1 );
+// final Rectangle toolrect = new Rectangle( toolx - TOOLINSET, tooly - TOOLINSET, toolsize.x + TOOLINSET * 2,
+// toolsize.y + TOOLINSET * 2 );
+// gcw.fillRectangle( toolrect );
+// gcw.drawRectangle( toolrect );
+//
+// gcw.drawText( tooltiptext, toolx, tooly, true );
+//
+// gcw.setFont( oldFont );
       }
-
-      int tooly = mousePos.y + 3 + TOOLINSET + 20;
-      if( (tooly + toolsize.y > screen.height) && ((mousePos.y - 3 - TOOLINSET - toolsize.y - 20) > 0) )
-        tooly = mousePos.y - 3 - TOOLINSET - toolsize.y - 20;
-
-      gcw.setLineWidth( 1 );
-      final Rectangle toolrect = new Rectangle( toolx - TOOLINSET, tooly - TOOLINSET, toolsize.x + TOOLINSET * 2, toolsize.y + TOOLINSET * 2 );
-      gcw.fillRectangle( toolrect );
-      gcw.drawRectangle( toolrect );
-
-      gcw.drawText( tooltiptext, toolx, tooly, true );
-
-      gcw.setFont( oldFont );
     }
   }
 
@@ -171,8 +178,8 @@ public class GenericLayerRenderer
     {
       if( layer.isVisible() )
       {
-           if( !layerImageMap.containsKey( layer ) )
-          layerImageMap.put( layer, createLayerImage(gc, layer ) );
+        if( !layerImageMap.containsKey( layer ) )
+          layerImageMap.put( layer, createLayerImage( gc, layer ) );
 
         final Image image = layerImageMap.get( layer );
         final Point point = m_layerPanOffsets.get( layer );
@@ -204,6 +211,11 @@ public class GenericLayerRenderer
   }
 
   public void setTooltipInfo( final EditInfo hoverInfo )
+  {
+    m_tooltipInfo = hoverInfo;
+  }
+
+  public void setEditInfo( final EditInfo hoverInfo )
   {
     m_editInfo = hoverInfo;
   }

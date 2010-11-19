@@ -40,45 +40,36 @@
  *  ---------------------------------------------------------------------------*/
 package de.openali.odysseus.chart.framework.util.img;
 
-import org.eclipse.swt.graphics.Device;
-import org.eclipse.swt.graphics.GC;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.ui.PlatformUI;
+import java.awt.Insets;
 
-import de.openali.odysseus.chart.framework.model.mapper.IAxis;
-import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
+import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Point;
+
+import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT;
+import de.openali.odysseus.chart.framework.model.style.ITextStyle;
 
 /**
  * @author kimwerner
  */
-public class ChartAxisPainter
+public interface IChartLabelRenderer
 {
-  private final IAxis m_axis;
 
-  public ChartAxisPainter( final IAxis axis )
-  {
-    m_axis = axis;
-  }
+  void paint( final GC gc, final Point anchor );
 
-  public final Image createImage( )
-  {
-    if(!m_axis.isVisible())
-      return null;
-    final Device dev = PlatformUI.getWorkbench().getDisplay();
-    final int width = m_axis.getRenderer().getAxisWidth( m_axis );
-    final int height = m_axis.getScreenHeight();
-    if( width == 0 || height == 0 )
-      return null;
-    final Image image = m_axis.getPosition().getOrientation() == ORIENTATION.VERTICAL ? new Image( dev, width, height ) : new Image( dev, height, width );
-    final GC gc = new GC( image );
-    try
-    {
-      m_axis.getRenderer().paint( gc, m_axis, image.getBounds() );
-    }
-    finally
-    {
-      gc.dispose();
-    }
-    return image;
-  }
+  void setInsets( final Insets insets );
+
+  void setTextAnchor( final ALIGNMENT positionX, final ALIGNMENT positionY );
+
+  void setTextStyle( final ITextStyle textStyle );
+
+  void setRotation( final int angle, final ALIGNMENT centerX, final ALIGNMENT centerY );
+
+  void setLinePosition( final ALIGNMENT position );
+
+  void setDrawBorder( final boolean drawBorder );
+
+  Point getSize( );
+
+  void setLabel( final String label );
+
 }

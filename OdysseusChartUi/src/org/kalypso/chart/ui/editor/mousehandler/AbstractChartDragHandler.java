@@ -5,25 +5,27 @@ import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Control;
 
+import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
+import de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer;
+import de.openali.odysseus.chart.framework.view.IChartComposite;
 import de.openali.odysseus.chart.framework.view.IChartDragHandler;
-import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
 
 /**
  * @author kimwerner
  */
 public abstract class AbstractChartDragHandler implements IChartDragHandler
 {
-  public ChartComposite getChart( )
+  public IChartComposite getChart( )
   {
     return m_chart;
   }
 
-  private final ChartComposite m_chart;
+  private final IChartComposite m_chart;
 
   private EditInfo m_editInfo = null;
 
-  private final int m_trashHold;
+  private final int m_trashOld;
 
   private EditInfo m_clickInfo = null;
 
@@ -37,15 +39,15 @@ public abstract class AbstractChartDragHandler implements IChartDragHandler
 
   private Cursor m_cursor = null;
 
-  public AbstractChartDragHandler( final ChartComposite chart )
+  public AbstractChartDragHandler( final IChartComposite chart )
   {
     this( chart, 5 );
   }
 
-  public AbstractChartDragHandler( final ChartComposite chart, final int trashhold )
+  public AbstractChartDragHandler( final IChartComposite chart, final int trashhold )
   {
     m_chart = chart;
-    m_trashHold = trashhold;
+    m_trashOld = trashhold;
   }
 
   /**
@@ -62,7 +64,7 @@ public abstract class AbstractChartDragHandler implements IChartDragHandler
   @Override
   public void mouseDown( final MouseEvent e )
   {
-    m_clickInfo = m_chart.getChartInfo();
+    m_clickInfo = getHover( getChart().screen2plotPoint( new Point( e.x, e.y ) ) );
     if( m_clickInfo == null )
       m_clickInfo = new EditInfo( null, null, null, null, null, new Point( e.x, e.y ) );
 
@@ -70,6 +72,26 @@ public abstract class AbstractChartDragHandler implements IChartDragHandler
     m_deltaSnapY = e.y - m_clickInfo.m_pos.y;
     m_startX = e.x;
     m_startY = e.y;
+  }
+
+  final protected EditInfo getHover( final Point point )
+  {
+    final IChartModel model = getChart().getChartModel();
+    if( model == null )
+      return null;
+
+    final IEditableChartLayer[] layers = model.getLayerManager().getEditableLayers();
+    for( int i = layers.length - 1; i >= 0; i-- )
+
+      if( layers[i].isVisible() )
+      {
+        final EditInfo info = layers[i].getHover( point );
+        if( info != null )
+        {
+          return info;
+        }
+      }
+    return null;
   }
 
   /**
@@ -85,7 +107,7 @@ public abstract class AbstractChartDragHandler implements IChartDragHandler
       else if( m_clickInfo != null )
         doMouseUpAction( null, m_clickInfo );
     }
-    catch( Error err )
+    catch( final Error err )
     {
       err.printStackTrace();
     }
@@ -93,13 +115,13 @@ public abstract class AbstractChartDragHandler implements IChartDragHandler
     {
       m_clickInfo = null;
       m_editInfo = null;
-      m_chart.setChartInfo( null );
+      m_chart.setEditInfo( null );
     }
   }
 
   private final void setCursor( final MouseEvent e )
   {
-    final Cursor cursor = getCursor(e);
+    final Cursor cursor = getCursor( e );
     if( cursor == null )
       return;
     if( e.getSource() instanceof Control )
@@ -125,10 +147,11 @@ public abstract class AbstractChartDragHandler implements IChartDragHandler
     setCursor( e );
     if( m_clickInfo == null )
       return;
-    if( (m_editInfo == null) && ((Math.abs( e.x - m_startX ) > m_trashHold) || (Math.abs( e.y - m_startY ) > m_trashHold)) )
+    if( (m_editInfo == null) && ((Math.abs( e.x - m_startX ) > m_trashOld) || (Math.abs( e.y - m_startY ) > m_trashOld)) )
       m_editInfo = new EditInfo( m_clickInfo );
 
-    doMouseMoveAction( new Point( e.x - m_deltaSnapX, e.y - m_deltaSnapY ), m_editInfo == null ? m_clickInfo : m_editInfo );
+    doMouseMoveAction( getChart().screen2plotPoint( new Point( e.x - m_deltaSnapX, e.y - m_deltaSnapY ) ), m_editInfo == null ? m_clickInfo : m_editInfo );
 
   }
+
 }

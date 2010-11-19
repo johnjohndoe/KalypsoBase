@@ -78,6 +78,7 @@ import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.event.IChartModelEventListener;
 import de.openali.odysseus.chart.framework.model.impl.ChartModel;
 import de.openali.odysseus.chart.framework.util.img.TitleTypeBean;
+import de.openali.odysseus.chart.framework.view.IChartComposite;
 import de.openali.odysseus.chart.framework.view.TooltipHandler;
 import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
 import de.openali.odysseus.chartconfig.x020.ChartType;
@@ -97,7 +98,7 @@ public class ChartView extends ViewPart implements IChartPart, ISelectionListene
 
   private ChartConfigurationLoader m_chartConfigurationLoader = null;
 
-  private ChartComposite m_chartComposite = null;
+  private IChartComposite m_chartComposite = null;
 
   private IFile m_input;
 
@@ -130,7 +131,7 @@ public class ChartView extends ViewPart implements IChartPart, ISelectionListene
 
     if( m_chartComposite != null )
     {
-      m_chartComposite.dispose();
+      m_chartComposite.getPlot().dispose();
       m_chartComposite = null;
     }
     // prepare for exception
@@ -195,7 +196,7 @@ public class ChartView extends ViewPart implements IChartPart, ISelectionListene
 
           // DragHandler erzeugen
           m_plotDragHandler = new PlotDragHandlerDelegate( m_chartComposite );
-          m_axisDragHandler = new AxisDragHandlerDelegate( m_chartComposite );
+          // TODO: m_axisDragHandler = new AxisDragHandlerDelegate( m_chartComposite );
 
           // Titel der View setzen
           final TitleTypeBean[] title = m_chartModel.getTitles();
@@ -232,7 +233,7 @@ public class ChartView extends ViewPart implements IChartPart, ISelectionListene
    * @see org.kalypso.chart.ui.IChartPart#getChartComposite()
    */
   @Override
-  public ChartComposite getChartComposite( )
+  public IChartComposite getChartComposite( )
   {
     return m_chartComposite;
   }
@@ -280,9 +281,9 @@ public class ChartView extends ViewPart implements IChartPart, ISelectionListene
   @Override
   public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
   {
-    if( ChartComposite.class.equals( adapter ) )
+    if( IChartComposite.class.equals( adapter ) )
     {
-      if( m_chartComposite != null && !m_chartComposite.isDisposed() )
+      if( m_chartComposite != null && !m_chartComposite.getPlot().isDisposed() )
         return m_chartComposite;
       else
         return null;

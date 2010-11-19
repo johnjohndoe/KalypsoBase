@@ -6,6 +6,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
+import de.openali.odysseus.chart.framework.view.IChartComposite;
 import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
 
 /**
@@ -15,7 +16,7 @@ public class HeadlessChart
 {
   private final Shell m_shell;
 
-  private final ChartComposite m_chart;
+  private final IChartComposite m_chart;
 
   public HeadlessChart( final IChartModel chartModel, final RGB bgRGB )
   {
@@ -30,13 +31,13 @@ public class HeadlessChart
     {
       m_shell.dispose();
     }
-    if( m_chart != null && !m_chart.isDisposed() )
+    if( m_chart != null && !m_chart.getPlot().isDisposed() )
     {
-      m_chart.dispose();
+      m_chart.getPlot().dispose();
     }
   }
 
-  public ChartComposite getChart( )
+  public IChartComposite getChart( )
   {
     return m_chart;
   }

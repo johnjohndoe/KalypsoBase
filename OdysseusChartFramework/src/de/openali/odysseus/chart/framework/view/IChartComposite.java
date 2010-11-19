@@ -38,47 +38,44 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package de.openali.odysseus.chart.framework.util.img;
+package de.openali.odysseus.chart.framework.view;
 
-import org.eclipse.swt.graphics.Device;
-import org.eclipse.swt.graphics.GC;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.ui.PlatformUI;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.widgets.Canvas;
 
+import de.openali.odysseus.chart.framework.model.IChartModel;
+import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
-import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
 
 /**
  * @author kimwerner
  */
-public class ChartAxisPainter
+public interface IChartComposite
 {
-  private final IAxis m_axis;
+  void addAxisHandler( final IAxisDragHandler handler );
 
-  public ChartAxisPainter( final IAxis axis )
-  {
-    m_axis = axis;
-  }
+  void addPlotHandler( final IChartDragHandler handler );
 
-  public final Image createImage( )
-  {
-    if(!m_axis.isVisible())
-      return null;
-    final Device dev = PlatformUI.getWorkbench().getDisplay();
-    final int width = m_axis.getRenderer().getAxisWidth( m_axis );
-    final int height = m_axis.getScreenHeight();
-    if( width == 0 || height == 0 )
-      return null;
-    final Image image = m_axis.getPosition().getOrientation() == ORIENTATION.VERTICAL ? new Image( dev, width, height ) : new Image( dev, height, width );
-    final GC gc = new GC( image );
-    try
-    {
-      m_axis.getRenderer().paint( gc, m_axis, image.getBounds() );
-    }
-    finally
-    {
-      gc.dispose();
-    }
-    return image;
-  }
+  IChartModel getChartModel( );
+
+  Canvas getPlot( );
+
+  EditInfo getTooltipInfo( );
+
+  void removeAxisHandler( final IAxisDragHandler handler );
+
+  void removePlotHandler( final IChartDragHandler handler );
+
+  Point screen2plotPoint( Point screen );
+
+  Point plotPoint2screen( Point plotPoint );
+
+  void setDragArea( Rectangle dragRect );
+
+  void setEditInfo( final EditInfo editInfo );
+
+  void setPanOffset( final IAxis[] axes, final Point start, final Point end );
+
+  void setTooltipInfo( EditInfo tooltipInfo );
 }

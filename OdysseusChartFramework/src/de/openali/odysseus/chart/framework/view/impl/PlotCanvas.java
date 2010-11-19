@@ -363,5 +363,12 @@ public class PlotCanvas extends Canvas implements PaintListener
 //    m_editInfo = hoverInfo;
 
   }
+  public void setEditInfo( final EditInfo hoverInfo )
+  {
+    m_layerRenderer.setEditInfo( hoverInfo );
+//    if( hoverInfo == null )
+//      m_editInfo = hoverInfo;
+//    m_editInfo = hoverInfo;
 
+  }
 }

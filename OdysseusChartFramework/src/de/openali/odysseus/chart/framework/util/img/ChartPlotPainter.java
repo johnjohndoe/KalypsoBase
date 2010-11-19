@@ -60,8 +60,8 @@ public class ChartPlotPainter
 
   public ChartPlotPainter( final IChartModel chartModel, final Point size )
   {
-    super();
     m_chartLayers = chartModel.getLayerManager().getLayers();
+    // FIXME: should be a rectangle
     m_size = size;
   }
 
@@ -72,20 +72,27 @@ public class ChartPlotPainter
 
   public final Image createImage( )
   {
+    if(m_size==null||m_size.x<1||m_size.y<1)
+      return null;
     final Device dev = PlatformUI.getWorkbench().getDisplay();
     final Image image = new Image( dev, m_size.x, m_size.y );
     final GC gc = new GC( image );
     try
     {
-      for( final IChartLayer layer : m_chartLayers )
-      {
-        layer.paint( gc );
-      }
+      paint( gc );
     }
     finally
     {
       gc.dispose();
     }
     return image;
+  }
+
+  private void paint( final GC gc )
+  {
+    for( final IChartLayer layer : m_chartLayers )
+    {if(layer.isVisible()) 
+      layer.paint( gc );
+    }
   }
 }

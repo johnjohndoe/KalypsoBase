@@ -73,7 +73,8 @@ import org.kalypso.chart.ui.editor.mousehandler.PlotDragHandlerDelegate;
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.event.IChartModelEventListener;
 import de.openali.odysseus.chart.framework.model.impl.ChartModel;
-import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
+import de.openali.odysseus.chart.framework.view.IChartComposite;
+import de.openali.odysseus.chart.framework.view.impl.ChartImageComposite;
 
 /**
  * Class for charts inserted as tabs into the chart feature control; this has to be isolated in a seperate class as each
@@ -85,11 +86,11 @@ public class ChartTabItem extends Composite implements IChartPart
 {
   private final PlotDragHandlerDelegate m_plotDragHandlerDelegate;
 
-  private final ChartComposite m_chartComposite;
+  private final IChartComposite m_chartComposite;
 
   private final IExecutionListener m_executionListener;
 
-  private final AxisDragHandlerDelegate m_axisDragHandlerDelegate;
+  // private final AxisDragHandlerDelegate m_axisDragHandlerDelegate;
 
   private ChartEditorTreeOutlinePage m_outlinePage;
 
@@ -122,13 +123,13 @@ public class ChartTabItem extends Composite implements IChartPart
     }
 
     final IChartModel chartModel = new ChartModel();
-    m_chartComposite = new ChartComposite( this, SWT.BORDER, chartModel, new RGB( 255, 255, 255 ) );
+    m_chartComposite = new ChartImageComposite( this, SWT.BORDER, chartModel, new RGB( 255, 255, 255 ) );
     final GridData gridData = new GridData( SWT.FILL, SWT.FILL, true, true );
 
-    m_chartComposite.setLayoutData( gridData );
+    m_chartComposite.getPlot().setLayoutData( gridData );
 
     m_plotDragHandlerDelegate = new PlotDragHandlerDelegate( m_chartComposite );
-    m_axisDragHandlerDelegate = new AxisDragHandlerDelegate( m_chartComposite );
+    // m_axisDragHandlerDelegate = new AxisDragHandlerDelegate( m_chartComposite );
 
     final ICommandService cmdService = (ICommandService) serviceLocator.getService( ICommandService.class );
     final IHandlerService handlerService = (IHandlerService) serviceLocator.getService( IHandlerService.class );
@@ -192,7 +193,7 @@ public class ChartTabItem extends Composite implements IChartPart
    * @see org.kalypso.chart.ui.IChartPart#getChartComposite()
    */
   @Override
-  public ChartComposite getChartComposite( )
+  public IChartComposite getChartComposite( )
   {
     return m_chartComposite;
   }
@@ -212,8 +213,8 @@ public class ChartTabItem extends Composite implements IChartPart
     final ICommandService cmdService = (ICommandService) PlatformUI.getWorkbench().getService( ICommandService.class );
     cmdService.removeExecutionListener( m_executionListener );
 
-    if( m_chartComposite != null && !m_chartComposite.isDisposed() )
-      m_chartComposite.dispose();
+    if( m_chartComposite != null && !m_chartComposite.getPlot().isDisposed() )
+      m_chartComposite.getPlot().dispose();
   }
 
   /**
@@ -222,7 +223,7 @@ public class ChartTabItem extends Composite implements IChartPart
   @Override
   public AxisDragHandlerDelegate getAxisDragHandler( )
   {
-    return m_axisDragHandlerDelegate;
+    return null;// m_axisDragHandlerDelegate;
   }
 
   /**
@@ -244,7 +245,7 @@ public class ChartTabItem extends Composite implements IChartPart
    * @see de.openali.odysseus.chart.framework.model.event.IEventProvider#addListener(java.lang.Object)
    */
   @Override
-  public void addListener( IChartModelEventListener listener )
+  public void addListener( final IChartModelEventListener listener )
   {
     // TODO Auto-generated method stub
 
@@ -254,7 +255,7 @@ public class ChartTabItem extends Composite implements IChartPart
    * @see de.openali.odysseus.chart.framework.model.event.IEventProvider#removeListener(java.lang.Object)
    */
   @Override
-  public void removeListener( IChartModelEventListener listener )
+  public void removeListener( final IChartModelEventListener listener )
   {
     // TODO Auto-generated method stub
 

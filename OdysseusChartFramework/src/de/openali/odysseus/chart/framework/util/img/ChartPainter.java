@@ -45,11 +45,14 @@ import java.awt.Insets;
 import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.ui.PlatformUI;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
+import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
 import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
 
@@ -61,7 +64,7 @@ public class ChartPainter
 
   final IChartModel m_model;
 
-  final Point m_size;
+  final Rectangle m_size;
 
   final Insets m_plotInsets;
 
@@ -71,20 +74,35 @@ public class ChartPainter
 
   final ChartPlotPainter m_plotPainter;
 
-  public ChartPainter( final IChartModel model, final Point size )
+  public ChartPainter( final IChartModel model, final Rectangle size )
   {
-    super();
     m_model = model;
     m_size = size;
-    m_legendPainter = new ChartLegendPainter( model, size.x );
-    m_titlePainter = new ChartTitlePainter( model, size.x );
+    m_legendPainter = new ChartLegendPainter( model, size);
+    m_titlePainter = new ChartTitlePainter( model, size);
     m_plotInsets = getPlotInsets();
-    m_plotPainter = new ChartPlotPainter( model, new Point( size.x - m_plotInsets.left - m_plotInsets.right, size.y - m_plotInsets.bottom - m_plotInsets.top ) );
+    setAxesHeight();
+    m_plotPainter = new ChartPlotPainter( model, new Point( size.width - m_plotInsets.left - m_plotInsets.right, size.height - m_plotInsets.bottom - m_plotInsets.top ) );
+  }
+
+  private void setAxesHeight( )
+  {
+    for( final IAxis axis : m_model.getMapperRegistry().getAxes() )
+    {
+      if( axis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
+        axis.setScreenHeight( m_size.width - m_plotInsets.left - m_plotInsets.right );
+      else
+        axis.setScreenHeight( m_size.height - m_plotInsets.top - m_plotInsets.bottom );
+    }
   }
 
   private Image createAxesImage( final IAxis[] axes, final int width, final int height, final boolean horizontal )
   {
     final Device dev = PlatformUI.getWorkbench().getDisplay();
+    if( width < 1 || height < 1 )
+    {
+      return null;
+    }
     final Image image = new Image( dev, width, height );
     final GC gc = new GC( image );
     int offsetX = 0;
@@ -95,13 +113,16 @@ public class ChartPainter
       {
         final ChartAxisPainter axisPainter = new ChartAxisPainter( axis );
         final Image axisImage = axisPainter.createImage();
-        if( horizontal )
-          offsetY += axisImage.getBounds().y;
-        else
-          offsetX += axisImage.getBounds().x;
+        if( axisImage == null )
+          continue;
+
         try
         {
           gc.drawImage( axisImage, offsetX, offsetY );
+          if( horizontal )
+            offsetY += axisImage.getBounds().height;
+          else
+            offsetX += axisImage.getBounds().width;
         }
         finally
         {
@@ -117,11 +138,25 @@ public class ChartPainter
 
   }
 
+  public final ImageData getImageData( )
+  {
+    final Image image = createImage();
+    try
+    {
+      final ImageData imageData = image.getImageData();
+      return imageData;
+    }
+    finally
+    {
+      image.dispose();
+    }
+  }
+
   public final Image createImage( )
   {
     final Device dev = PlatformUI.getWorkbench().getDisplay();
 
-    final Image image = new Image( dev, m_size.x, m_size.y );
+    final Image image = new Image( dev, m_size.width, m_size.height);
     final Image titleImage = m_titlePainter.paint();
     final Image legendImage = m_legendPainter.createImage();
     final Image plotImage = m_plotPainter.createImage();
@@ -132,22 +167,35 @@ public class ChartPainter
     final GC gc = new GC( image );
     try
     {
-      gc.drawImage( titleImage, 0, 0 );
-      gc.drawImage( topImage, m_plotInsets.left, m_titlePainter.getSize().y );
-      gc.drawImage( bottomImage, m_plotInsets.left, m_plotInsets.bottom );
-      gc.drawImage( leftImage, 0, m_plotInsets.top );
-      gc.drawImage( rightImage, m_plotInsets.left + m_plotPainter.getSize().x, m_plotInsets.top );
-
+      if( titleImage != null )
+        gc.drawImage( titleImage, 0, 0 );
+      if( topImage != null )
+        gc.drawImage( topImage, m_plotInsets.left, m_titlePainter.getSize().y );
+      if( bottomImage != null )
+        gc.drawImage( bottomImage, m_plotInsets.left, m_size.height - m_plotInsets.bottom );
+      if( leftImage != null )
+        gc.drawImage( leftImage, 0, m_plotInsets.top );
+      if( rightImage != null )
+        gc.drawImage( rightImage, m_size.width - m_plotInsets.right, m_plotInsets.top );
+      if( plotImage != null )
+        gc.drawImage( plotImage, m_plotInsets.left, m_plotInsets.top );
     }
     finally
     {
-      titleImage.dispose();
-      legendImage.dispose();
-      plotImage.dispose();
-      leftImage.dispose();
-      rightImage.dispose();
-      topImage.dispose();
-      bottomImage.dispose();
+      if( titleImage != null )
+        titleImage.dispose();
+      if( legendImage != null )
+        legendImage.dispose();
+      if( plotImage != null )
+        plotImage.dispose();
+      if( leftImage != null )
+        leftImage.dispose();
+      if( rightImage != null )
+        rightImage.dispose();
+      if( topImage != null )
+        topImage.dispose();
+      if( bottomImage != null )
+        bottomImage.dispose();
 
       gc.dispose();
     }

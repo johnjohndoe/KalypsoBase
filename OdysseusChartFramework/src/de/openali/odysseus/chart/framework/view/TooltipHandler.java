@@ -11,7 +11,6 @@ import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ITooltipChartLayer;
-import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
 import de.openali.odysseus.chart.framework.view.impl.PlotCanvas;
 
 /**
@@ -52,13 +51,13 @@ public class TooltipHandler extends MouseAdapter implements MouseListener, Mouse
 
   private final PlotCanvas m_plot;
 
-  private final ChartComposite m_chart;
+  private final IChartComposite m_chart;
 
   private EditInfo m_info;
 
   private boolean m_mouseDown = false;
 
-  public TooltipHandler( final ChartComposite chart, final PlotCanvas plot )
+  public TooltipHandler( final IChartComposite chart, final PlotCanvas plot )
   {
     m_plot = plot;
     m_chart = chart;
@@ -90,7 +89,7 @@ public class TooltipHandler extends MouseAdapter implements MouseListener, Mouse
       final IChartModel model = m_chart.getChartModel();
       if( model == null )
         return;
-      final Point point = new Point( e.x, e.y );
+      final Point point = m_chart.screen2plotPoint( new Point( e.x, e.y ));
 
       final ITooltipChartLayer[] tooltipLayers = model.getLayerManager().getTooltipLayers();
       // Array umdrehen, damit die oberen Layer zuerst befragt werden

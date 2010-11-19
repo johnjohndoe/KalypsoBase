@@ -46,7 +46,7 @@ import org.kalypso.chart.ui.editor.mousehandler.PlotDragHandlerDelegate;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider;
 
-import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
+import de.openali.odysseus.chart.framework.view.IChartComposite;
 
 /**
  * @author Dirk Kuch
@@ -63,7 +63,7 @@ public class EditableProfileChart extends ProfileChartComposite
 
   private void mkeEditable( )
   {
-    final ChartComposite chart = getChart();
+    final IChartComposite chart = getChart();
 
     final DragEditHandler dragEditHandler = new DragEditHandler( chart );
 

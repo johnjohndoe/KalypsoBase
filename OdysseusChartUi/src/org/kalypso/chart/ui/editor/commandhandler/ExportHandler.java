@@ -7,15 +7,15 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.ImageLoader;
-import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.chart.ui.editor.ui.SafeSaveDialog;
 import org.kalypso.chart.ui.i18n.Messages;
 
-import de.openali.odysseus.chart.framework.util.img.ChartImageFactory;
-import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
+import de.openali.odysseus.chart.framework.util.img.ChartPainter;
+import de.openali.odysseus.chart.framework.view.IChartComposite;
 
 public class ExportHandler extends AbstractHandler
 {
@@ -41,7 +41,7 @@ public class ExportHandler extends AbstractHandler
     {
       return null;
     }
-    final ChartComposite chart = chartPart.getChartComposite();
+    final IChartComposite chart = chartPart.getChartComposite();
     final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
 
     if( chart != null )
@@ -58,9 +58,11 @@ public class ExportHandler extends AbstractHandler
       if( m_filename != null )
       {
 
-        // final Rectangle bounds = chart.getBounds();
+        final Rectangle bounds = chart.getPlot().getBounds();
         final ImageLoader il = new ImageLoader();
-        final ImageData id = ChartImageFactory.createChartImage( chart.getChartModel(), new Point( 400, 200 ) ); // Display.getCurrent(),
+        final ChartPainter chartPainter = new ChartPainter( chart.getChartModel(), bounds );
+        final ImageData id = chartPainter.getImageData();// ChartImageFactory.createChartImage( chart.getChartModel(),
+// new Point( 400, 200 ) ); // Display.getCurrent(),
 // bounds.width, bounds.height );
         // final ImageData id = ChartImageFactory.createChartImage(chart, Display.getCurrent(), bounds.width,
 // bounds.height );

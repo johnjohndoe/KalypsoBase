@@ -58,8 +58,7 @@ import org.kalypso.model.wspm.ui.view.chart.LayerDescriptor;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartModel;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
-import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
-import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
+import de.openali.odysseus.chart.framework.view.IChartComposite;
 
 /**
  * @author kimwerner
@@ -77,7 +76,7 @@ public class AddLayerHandler extends AbstractHandler
     final IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
     final IViewPart view = activePage == null ? null : activePage.findView( "org.kalypso.model.wspm.ui.view.chart.ChartView" ); //$NON-NLS-1$
     final IChartPart chartPart = view == null ? null : (IChartPart) view.getAdapter( IChartPart.class );
-    final ChartComposite chartComp = chartPart == null ? null : chartPart.getChartComposite();
+    final IChartComposite chartComp = chartPart == null ? null : chartPart.getChartComposite();
     final IChartModel chartModel = chartComp == null ? null : chartComp.getChartModel();
     final ProfilChartModel profChartModel = chartModel instanceof ProfilChartModel ? (ProfilChartModel) chartModel : null;
     final IProfil profil = profChartModel == null ? null : profChartModel.getProfil();

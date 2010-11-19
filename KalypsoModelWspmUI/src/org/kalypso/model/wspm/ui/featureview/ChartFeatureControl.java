@@ -76,6 +76,7 @@ import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.util.ChartUtilities;
+import de.openali.odysseus.chart.framework.view.IChartComposite;
 import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
 import de.openali.odysseus.chartconfig.x020.ChartType;
 import de.openali.odysseus.chartconfig.x020.TitleType;
@@ -90,7 +91,7 @@ public class ChartFeatureControl extends AbstractFeatureControl implements IFeat
 
   private final static String STR_SETTINGS_TAB = "tabIndex"; //$NON-NLS-1$
 
-  private ChartComposite[] m_charts;
+  private IChartComposite[] m_charts;
 
   private final ChartType[] m_chartTypes;
 
@@ -225,7 +226,7 @@ public class ChartFeatureControl extends AbstractFeatureControl implements IFeat
   {
     for( int i = 0; i < m_charts.length; i++ )
     {
-      final ChartComposite chart = m_chartTabs[i].getChartComposite();
+      final IChartComposite chart = m_chartTabs[i].getChartComposite();
 
       // if the chart was previously loaded, it will contain layers - these have to be removed
       final IChartModel chartModel = chart.getChartModel();

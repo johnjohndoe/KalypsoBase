@@ -53,8 +53,8 @@ import org.eclipse.swt.widgets.Control;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
 import de.openali.odysseus.chart.framework.view.IAxisDragHandler;
+import de.openali.odysseus.chart.framework.view.IChartComposite;
 import de.openali.odysseus.chart.framework.view.impl.AxisCanvas;
-import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
 
 /**
  * @author kimwerner
@@ -62,7 +62,7 @@ import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
 public abstract class AbstractAxisDragHandler implements IAxisDragHandler
 {
 
-  private final ChartComposite m_chartComposite;
+  private final IChartComposite m_chartComposite;
 
   private Point m_mouseDragStart = null;
 
@@ -76,12 +76,12 @@ public abstract class AbstractAxisDragHandler implements IAxisDragHandler
 
   private Cursor m_cursor = null;
 
-  public AbstractAxisDragHandler( final ChartComposite chartComposite )
+  public AbstractAxisDragHandler(  IChartComposite chartComposite )
   {
     this( chartComposite, 5 );
   }
 
-  public AbstractAxisDragHandler( final ChartComposite chartComposite, final int trashHold )
+  public AbstractAxisDragHandler( IChartComposite chartComposite, final int trashHold )
   {
     m_chartComposite = chartComposite;
     m_trashHold = trashHold;
@@ -105,7 +105,7 @@ public abstract class AbstractAxisDragHandler implements IAxisDragHandler
     return axisList.toArray( new IAxis[] {} );
   }
 
-  public ChartComposite getChartComposite( )
+  public IChartComposite getChartComposite( )
   {
     return m_chartComposite;
   }

@@ -36,6 +36,10 @@ public interface IAxisConstants
   {
     LEFT,
     RIGHT,
+    TOP,
+    BOTTOM,
+    CENTERED_HORIZONTAL,
+    CENTERED_VERTICAL,
     CENTER,
     TICK_CENTERED,
     INTERVALL_CENTERED

@@ -45,14 +45,17 @@ import java.awt.Insets;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.ui.PlatformUI;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT;
 import de.openali.odysseus.chart.framework.model.style.ITextStyle;
+import de.openali.odysseus.chart.framework.util.StyleUtils;
 
 /**
  * @author Dirk Kuch
@@ -65,10 +68,10 @@ public class ChartTitlePainter
 
   private Point m_size;
 
-  public ChartTitlePainter( final IChartModel model, final int width )
+  public ChartTitlePainter( final IChartModel model, final Rectangle size )
   {
     m_model = model;
-    m_width = width;
+    m_width = size.width;
   }
 
   public Point getSize( )
@@ -92,7 +95,8 @@ public class ChartTitlePainter
       for( final TitleTypeBean title : titles )
       {
         final ITextStyle textStyle = title.getTextStyle();
-        final Font font = new Font( dev, textStyle.toFontData() );
+        final FontData fontData = textStyle == null ? StyleUtils.getDefaultTextStyle().toFontData() : textStyle.toFontData();
+        final Font font = new Font( dev, fontData );
         try
         {
           gc.setFont( font );
