@@ -44,7 +44,7 @@ import org.eclipse.swt.SWT;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.zml.ui.table.schema.AlignmentType;
-import org.kalypso.zml.ui.table.schema.ColumnType;
+import org.kalypso.zml.ui.table.schema.DataColumnType;
 
 /**
  * @author Dirk Kuch
@@ -70,14 +70,14 @@ public final class ZmlTableHelper
     return SWT.LEFT;
   }
 
-  public static IAxis getIndexAxis( final ColumnType column, final IAxis[] axes )
+  public static IAxis getIndexAxis( final DataColumnType column, final IAxis[] axes )
   {
     final String index = column.getIndexAxis();
 
     return AxisUtils.findAxis( axes, index );
   }
 
-  public static IAxis getValueAxis( final ColumnType column, final IAxis[] axes )
+  public static IAxis getValueAxis( final DataColumnType column, final IAxis[] axes )
   {
     final String index = column.getValueAxis();
 

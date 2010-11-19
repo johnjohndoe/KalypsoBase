@@ -47,16 +47,17 @@ import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.ui.KalypsoZmlUI;
-import org.kalypso.zml.ui.table.schema.ColumnType;
+import org.kalypso.zml.ui.table.schema.AbstractColumnType;
+import org.kalypso.zml.ui.table.schema.IndexColumnType;
 
 /**
  * @author Dirk Kuch
  */
 public class ZmlLabelProvider extends ColumnLabelProvider
 {
-  private final ColumnType m_type;
+  private final AbstractColumnType m_type;
 
-  public ZmlLabelProvider( final ColumnType type )
+  public ZmlLabelProvider( final AbstractColumnType type )
   {
     m_type = type;
   }
@@ -70,25 +71,22 @@ public class ZmlLabelProvider extends ColumnLabelProvider
     if( element instanceof ZmlTableRow )
     {
       final ZmlTableRow set = (ZmlTableRow) element;
-      final Object object = set.get( m_type.getId() );
 
-      if( object instanceof Date )
+      if( m_type instanceof IndexColumnType )
       {
-        final Date date = (Date) object;
-        final SimpleDateFormat sdf = new SimpleDateFormat( m_type.getFormat() );
+        final Object value = set.getIndexValue();
 
-        return sdf.format( date );
+        return format( value );
       }
-      else if( object instanceof ZmlValueReference )
+      else
       {
         try
         {
-          final ZmlValueReference row = (ZmlValueReference) object;
-          final Object value = row.getValue();
-          if( m_type.getFormat() == null )
-            return String.format( "%s", value );
+          final ZmlValueReference reference = set.get( m_type.getId() );
+          if( reference != null )
+            return format( reference.getValue() );
 
-          return String.format( m_type.getFormat(), value );
+          return "";
         }
         catch( final SensorException e )
         {
@@ -98,6 +96,19 @@ public class ZmlLabelProvider extends ColumnLabelProvider
     }
 
     return super.getText( element );
+  }
+
+  private String format( final Object value )
+  {
+    final String format = m_type.getFormat();
+
+    if( value instanceof Date )
+    {
+      final SimpleDateFormat sdf = new SimpleDateFormat( format == null ? "dd.MM.yyyy HH:mm" : format );
+      return sdf.format( value );
+    }
+
+    return String.format( format == null ? "%s" : format, value );
   }
 
 }

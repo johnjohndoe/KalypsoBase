@@ -40,29 +40,22 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.provider;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-
-import org.kalypso.zml.ui.table.IZmlTableColumn;
 
 /**
  * @author Dirk Kuch
  */
 public class ZmlTableRow
 {
-
-  private final Date m_date;
-
-  private final int m_valueColumnSize;
+  private final Object m_index;
 
   /** Map<Reference (id), Reference> */
   Map<String, ZmlValueReference> m_values = new HashMap<String, ZmlValueReference>();
 
-  public ZmlTableRow( final Date date, final int valueColumnSize )
+  public ZmlTableRow( final Object index )
   {
-    m_date = date;
-    m_valueColumnSize = valueColumnSize;
+    m_index = index;
   }
 
   public void add( final ZmlValueReference reference )
@@ -70,12 +63,14 @@ public class ZmlTableRow
     m_values.put( reference.getId(), reference );
   }
 
-  public Object get( final String identifier )
+  public ZmlValueReference get( final String identifier )
   {
-    if( IZmlTableColumn.ZML_TABLE_INDEX_ID.equals( identifier ) )
-      return m_date;
-
     return m_values.get( identifier );
+  }
+
+  public Object getIndexValue( )
+  {
+    return m_index;
   }
 
 }

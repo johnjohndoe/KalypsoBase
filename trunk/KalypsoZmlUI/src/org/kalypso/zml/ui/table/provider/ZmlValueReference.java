@@ -46,7 +46,7 @@ import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.zml.ui.table.IZmlTableColumn;
-import org.kalypso.zml.ui.table.schema.ColumnType;
+import org.kalypso.zml.ui.table.schema.DataColumnType;
 
 /**
  * @author Dirk Kuch
@@ -60,14 +60,14 @@ public class ZmlValueReference
 
   private final int m_position;
 
-  private final ColumnType m_type;
+  private final DataColumnType m_type;
 
   // FIXME clean up - not all values needed!
   /**
    * @param position
    *          position of value in model
    */
-  public ZmlValueReference( final IZmlTableColumn column, final IObservation observation, final ITupleModel model, final int position, final ColumnType type )
+  public ZmlValueReference( final IZmlTableColumn column, final IObservation observation, final ITupleModel model, final int position, final DataColumnType type )
   {
     m_column = column;
     m_model = model;

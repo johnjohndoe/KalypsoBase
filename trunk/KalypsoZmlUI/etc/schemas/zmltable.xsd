@@ -4,14 +4,15 @@
   <!-- elements -->
   <element name="ZmlTable" type="zmltable:ZmlTableType" />
   <element name="Columns" type="zmltable:ColumnsType" />
-  <element name="Column" type="zmltable:ColumnType" /> 
+  <element name="Column" type="zmltable:AbstractColumnType" /> 
   
-  <!-- types --> 
+  <!-- types -->
   <complexType name="ZmlTableType">
     <sequence>
       <element ref="zmltable:Columns" minOccurs="0" maxOccurs="1" />
     </sequence>
   </complexType>
+
 
   <complexType name="ColumnsType">
     <sequence>
@@ -19,14 +20,32 @@
     </sequence>
   </complexType>
 
-  <complexType name="ColumnType">
+  <!-- column types -->
+  <complexType name="AbstractColumnType" abstract="true">
     <sequence>
       <element name="id" type="ID" />
-      <element name="indexAxis" type="string" minOccurs="1" maxOccurs="1" />
-      <element name="valueAxis" type="string" minOccurs="1" maxOccurs="1" />
-      <element name="format" type="string" default="%s"  />
+      <element name="format" type="string" default="%s" />
+      <element name="width" type="int" default="100" />
       <element name="alignment" type="zmltable:AlignmentType" default="LEFT" />
     </sequence>
+  </complexType>
+
+  <complexType name="DataColumnType">
+    <complexContent>
+      <extension base="zmltable:AbstractColumnType">
+        <sequence>
+          <element name="indexAxis" type="string" minOccurs="1" maxOccurs="1" />
+          <element name="valueAxis" type="string" minOccurs="1" maxOccurs="1" />
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  
+  <complexType name="IndexColumnType">
+    <complexContent>
+      <extension base="zmltable:AbstractColumnType">
+      </extension>
+    </complexContent>
   </complexType>
 
   <simpleType name="AlignmentType">
