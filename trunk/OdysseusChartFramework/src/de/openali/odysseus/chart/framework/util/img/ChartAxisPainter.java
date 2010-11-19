@@ -57,16 +57,19 @@ public class ChartAxisPainter
 
   public ChartAxisPainter( final IAxis axis )
   {
-    super();
     m_axis = axis;
   }
 
   public final Image createImage( )
   {
+    if(!m_axis.isVisible())
+      return null;
     final Device dev = PlatformUI.getWorkbench().getDisplay();
     final int width = m_axis.getRenderer().getAxisWidth( m_axis );
     final int height = m_axis.getScreenHeight();
-    final Image image = m_axis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL ? new Image( dev, width, height ) : new Image( dev, height, width );
+    if( width == 0 || height == 0 )
+      return null;
+    final Image image = m_axis.getPosition().getOrientation() == ORIENTATION.VERTICAL ? new Image( dev, width, height ) : new Image( dev, height, width );
     final GC gc = new GC( image );
     try
     {

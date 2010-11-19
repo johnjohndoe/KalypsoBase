@@ -38,6 +38,7 @@ import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
 import de.openali.odysseus.chart.framework.model.mapper.IMapper;
 import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
 import de.openali.odysseus.chart.framework.view.IAxisDragHandler;
+import de.openali.odysseus.chart.framework.view.IChartComposite;
 import de.openali.odysseus.chart.framework.view.IChartDragHandler;
 import de.openali.odysseus.chart.framework.view.TooltipHandler;
 
@@ -45,7 +46,7 @@ import de.openali.odysseus.chart.framework.view.TooltipHandler;
  * @author burtscher Chart widget; parent for AxisComponent and Plot also acts as LayerManager and contains the
  *         AxisRegistry;
  */
-public class ChartComposite extends Canvas
+public class ChartComposite extends Canvas implements IChartComposite
 {
   private final class InvalidateChartJob extends UIJob
   {
@@ -68,9 +69,9 @@ public class ChartComposite extends Canvas
         layout( true, true );// first resize axis-places, then invalidate plot(maybe resized)
         m_plot.invalidate( null );
       }
-      catch( Exception e )
+      catch( final Exception e )
       {
-        //rise widget is disposed in some plugins...
+        // rise widget is disposed in some plugins...
       }
       return Status.OK_STATUS;
     }
@@ -205,6 +206,8 @@ public class ChartComposite extends Canvas
 
   private TooltipHandler m_tooltipHandler;
 
+  private final EditInfo m_editInfo = null;
+
   public ChartComposite( final Composite parent, final int style, final IChartModel model, final RGB backgroundRGB )
   {
     super( parent, style | SWT.DOUBLE_BUFFERED );// | SWT.NO_REDRAW_RESIZE );
@@ -234,6 +237,7 @@ public class ChartComposite extends Canvas
       addAxisInternal( axis );
   }
 
+  @Override
   public final void addAxisHandler( final IAxisDragHandler handler )
   {
     final IMapperRegistry mr = getChartModel() == null ? null : getChartModel().getMapperRegistry();
@@ -261,6 +265,7 @@ public class ChartComposite extends Canvas
     return ac;
   }
 
+  @Override
   public final void addPlotHandler( final IChartDragHandler handler )
   {
     if( handler == null )
@@ -402,14 +407,6 @@ public class ChartComposite extends Canvas
     super.dispose();
   }
 
-// public final void drawPlotImage( final GC gc, final Rectangle rect )
-// {
-// final Image tmpImg = m_plot.createImage( getChartModel().getLayerManager().getLayers(), rect );
-// gc.drawImage( tmpImg, 0, 0, m_plot.getBounds().width, m_plot.getBounds().height, m_plot.getBounds().x,
-// m_plot.getBounds().y, m_plot.getBounds().width, m_plot.getBounds().height );
-// tmpImg.dispose();
-// }
-
   public final AxisCanvas getAxisCanvas( final IAxis axis )
   {
     final POSITION position = axis.getPosition();
@@ -456,11 +453,20 @@ public class ChartComposite extends Canvas
     return acList.toArray( new AxisCanvas[] {} );
   }
 
+// public final void drawPlotImage( final GC gc, final Rectangle rect )
+// {
+// final Image tmpImg = m_plot.createImage( getChartModel().getLayerManager().getLayers(), rect );
+// gc.drawImage( tmpImg, 0, 0, m_plot.getBounds().width, m_plot.getBounds().height, m_plot.getBounds().x,
+// m_plot.getBounds().y, m_plot.getBounds().width, m_plot.getBounds().height );
+// tmpImg.dispose();
+// }
+
   public final EditInfo getChartInfo( )
   {
     return getPlot() == null ? null : getPlot().getTooltipInfo();
   }
 
+  @Override
   public IChartModel getChartModel( )
   {
     return m_model;
@@ -491,10 +497,19 @@ public class ChartComposite extends Canvas
     return layerManager == null ? new IChartLayer[] {} : m_model.getLayerManager().getLayers();
   }
 
-  @Deprecated
+  @Override
   public PlotCanvas getPlot( )
   {
     return m_plot;
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.view.IChartComposite#getTooltipInfo()
+   */
+  @Override
+  public EditInfo getTooltipInfo( )
+  {
+    return getPlot().getTooltipInfo();
   }
 
   public final void invalidatePlotCanvas( final IChartLayer[] layers )
@@ -524,6 +539,7 @@ public class ChartComposite extends Canvas
       removeAxisInternal( axis );
   }
 
+  @Override
   public final void removeAxisHandler( final IAxisDragHandler handler )
   {
 
@@ -547,6 +563,7 @@ public class ChartComposite extends Canvas
       ac.dispose();
   }
 
+  @Override
   public final void removePlotHandler( final IChartDragHandler handler )
   {
     if( handler != null )
@@ -554,6 +571,12 @@ public class ChartComposite extends Canvas
       m_plot.removeMouseListener( handler );
       m_plot.removeMouseMoveListener( handler );
     }
+  }
+
+  @Override
+  public final Point screen2plotPoint( final Point screen )
+  {
+    return screen;
   }
 
   public void setAxisPanOffset( final Point start, final Point end, final IAxis[] axes )
@@ -603,13 +626,6 @@ public class ChartComposite extends Canvas
     }
   }
 
-  public final void setChartInfo( final EditInfo editInfo )
-  {
-    if( getPlot() == null )
-      return;
-    getPlot().setTooltipInfo( editInfo );
-  }
-
   public void setChartModel( final IChartModel model )
   {
     if( m_model != null )
@@ -633,6 +649,7 @@ public class ChartComposite extends Canvas
 
   }
 
+  @Override
   public final void setDragArea( final Rectangle dragArea )
   {
     m_plot.setDragArea( dragArea );
@@ -648,7 +665,14 @@ public class ChartComposite extends Canvas
     }
   }
 
-  public final void setPlotPanOffset( final IAxis[] axes, final Point start, final Point end )
+  @Override
+  public void setEditInfo( final EditInfo editInfo )
+  {
+    m_plot.setEditInfo( editInfo );
+  }
+
+  @Override
+  public final void setPanOffset( final IAxis[] axes, final Point start, final Point end )
   {
     getPlot().setPanOffset( getLayer( axes ), new Point( end.x - start.x, end.y - start.y ) );
   }
@@ -691,6 +715,14 @@ public class ChartComposite extends Canvas
 
   }
 
+  @Override
+  public final void setTooltipInfo( final EditInfo editInfo )
+  {
+    if( getPlot() == null )
+      return;
+    getPlot().setTooltipInfo( editInfo );
+  }
+
   protected final void unregisterListener( )
   {
     if( m_model == null )
@@ -698,5 +730,14 @@ public class ChartComposite extends Canvas
 
     m_model.getLayerManager().removeListener( m_layerEventListener );
     m_model.getMapperRegistry().removeListener( m_mapperListener );
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.view.IChartComposite#plotPoint2screen(org.eclipse.swt.graphics.Point)
+   */
+  @Override
+  public Point plotPoint2screen( final Point plotPoint )
+  {
+    return plotPoint;
   }
 }

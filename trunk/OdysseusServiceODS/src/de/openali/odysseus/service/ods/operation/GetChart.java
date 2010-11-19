@@ -4,8 +4,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.eclipse.swt.graphics.ImageData;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
 
 import de.openali.odysseus.chart.factory.config.ChartConfigurationLoader;
@@ -17,8 +17,8 @@ import de.openali.odysseus.chart.factory.config.exception.ConfigurationException
 import de.openali.odysseus.chart.framework.logging.impl.Logger;
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.impl.ChartModel;
-import de.openali.odysseus.chart.framework.util.img.ChartImageFactory;
-import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
+import de.openali.odysseus.chart.framework.util.img.ChartPainter;
+import de.openali.odysseus.chart.framework.view.IChartComposite;
 import de.openali.odysseus.chartconfig.x020.ChartConfigurationDocument;
 import de.openali.odysseus.service.ods.util.DisplayHelper;
 import de.openali.odysseus.service.ods.util.HeadlessChart;
@@ -91,8 +91,9 @@ public class GetChart extends AbstractODSDisplayOperation implements Runnable
         e.printStackTrace();
       }
 
+      // FIXME: create empty model instead
       final HeadlessChart hc = new HeadlessChart( model, new RGB( 255, 255, 255 ) );
-      final ChartComposite chart = hc.getChart();
+      final IChartComposite chart = hc.getChart();
 
       if( chart != null )
       {
@@ -105,7 +106,8 @@ public class GetChart extends AbstractODSDisplayOperation implements Runnable
           setException( e );
           return;
         }
-        final ImageData id = ChartImageFactory.createChartImage( chart.getChartModel(), new Point( width, height ) );
+        final ChartPainter chartPainter = new ChartPainter( chart.getChartModel(), new Rectangle(0,0, width, height ) );
+        final ImageData id = chartPainter.getImageData();//ChartImageFactory.createChartImage( chart.getChartModel(), new Point( width, height ) );
         if( id != null )
           ImageOutput.imageResponse( req, getResponse(), id );
         else

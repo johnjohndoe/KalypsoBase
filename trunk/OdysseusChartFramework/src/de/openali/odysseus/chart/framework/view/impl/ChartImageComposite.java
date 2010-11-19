@@ -1,5 +1,7 @@
 package de.openali.odysseus.chart.framework.view.impl;
 
+import java.awt.Insets;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -10,7 +12,6 @@ import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
-import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
@@ -27,25 +28,22 @@ import de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListene
 import de.openali.odysseus.chart.framework.model.event.impl.AbstractMapperRegistryEventListener;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
-import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IMapper;
 import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
-import de.openali.odysseus.chart.framework.model.style.ITextStyle;
-import de.openali.odysseus.chart.framework.util.StyleUtils;
-import de.openali.odysseus.chart.framework.util.img.ChartImageFactory;
-import de.openali.odysseus.chart.framework.util.img.ChartLegendPainter;
-import de.openali.odysseus.chart.framework.util.img.ChartTitlePainter;
+import de.openali.odysseus.chart.framework.util.img.ChartPainter;
+import de.openali.odysseus.chart.framework.util.img.ChartTooltipPainter;
 import de.openali.odysseus.chart.framework.view.IAxisDragHandler;
+import de.openali.odysseus.chart.framework.view.IChartComposite;
 import de.openali.odysseus.chart.framework.view.IChartDragHandler;
-import de.openali.odysseus.chart.framework.view.TooltipHandler;
+import de.openali.odysseus.chart.framework.view.TooltipHandler2;
 
 /**
  * @author kimwerner
  * @author burtscher Chart widget; parent for AxisComponent and Plot also acts as LayerManager and contains the
  *         AxisRegistry;
  */
-public class ChartImageComposite extends Canvas
+public class ChartImageComposite extends Canvas implements IChartComposite
 {
 
   private final class InvalidateChartJob extends UIJob
@@ -63,26 +61,12 @@ public class ChartImageComposite extends Canvas
     public IStatus runInUIThread( final IProgressMonitor monitor )
     {
 
-      if( (m_plotImage != null) && !m_plotImage.isDisposed() )
+      if( (m_image != null) && !m_image.isDisposed() )
       {
-        m_plotImage.dispose();
-        m_plotImage = null;
+        m_image.dispose();
+        m_image = null;
       }
-      if( (m_axesImage != null) && !m_axesImage.isDisposed() )
-      {
-        m_axesImage.dispose();
-        m_axesImage = null;
-      }
-      if( (m_titleImage != null) && !m_titleImage.isDisposed() )
-      {
-        m_titleImage.dispose();
-        m_titleImage = null;
-      }
-      if( (m_legendImage != null) && !m_legendImage.isDisposed() )
-      {
-        m_legendImage.dispose();
-        m_legendImage = null;
-      }
+
       if( isDisposed() )
         return Status.OK_STATUS;
 
@@ -92,32 +76,11 @@ public class ChartImageComposite extends Canvas
       if( mapperRegistry == null )
         return Status.OK_STATUS;
 
-      final Rectangle pane = getClientArea();
+      final Rectangle panel = getClientArea();
+      final ChartPainter chartPainter = new ChartPainter( model, panel );
+      m_plotRect = inflateRect( panel, chartPainter.getPlotInsets() );
+      m_image = chartPainter.createImage();
 
-      final ChartLegendPainter legendPainter = new ChartLegendPainter( model, pane.width );
-      final ChartTitlePainter titlePainter = new ChartTitlePainter( model, pane.width );
-
-      // TODO define legend text style as kod style element
-      final ITextStyle legendTextStyle = StyleUtils.getDefaultTextStyle();
-      legendTextStyle.setHeight( 7 );
-      legendPainter.setTextStyle( legendTextStyle );
-
-      final Point titleSize = titlePainter.getSize();
-      final Point legendSize = legendPainter.getSize();
-
-      m_plotRect = ChartImageFactory.calculatePlotSize( mapperRegistry, pane.width, pane.height - titleSize.y - legendSize.y );
-      m_plotRect.y += titleSize.y;
-      ChartImageFactory.setAxesHeight( mapperRegistry.getAxes(), m_plotRect );
-      m_axesImage = ChartImageFactory.createAxesImage( getChartModel().getMapperRegistry(), pane, m_plotRect );
-
-      m_titleImage = titlePainter.paint();
-      m_legendImage = legendPainter.createImage();
-
-      final ILayerManager layerManager = model == null ? null : model.getLayerManager();
-      if( layerManager == null )
-        return Status.OK_STATUS;
-
-      m_plotImage = ChartImageFactory.createPlotImage( getChartModel().getLayerManager().getLayers(), m_plotRect );
       redraw();
 
       return Status.OK_STATUS;
@@ -126,15 +89,7 @@ public class ChartImageComposite extends Canvas
 
   protected IChartModel m_model;
 
-  protected Image m_plotImage = null;
-
-  protected Image m_axesImage = null;
-
-  protected FontData m_titlefont = null;
-
-  protected Image m_titleImage = null;
-
-  protected Image m_legendImage = null;
+  protected Image m_image = null;
 
   protected Rectangle m_plotRect = null;
 
@@ -143,6 +98,16 @@ public class ChartImageComposite extends Canvas
   protected Point m_panOffset = new Point( 0, 0 );
 
   protected EditInfo m_editInfo = null;
+
+  protected EditInfo m_tooltipInfo = null;
+
+  @Override
+  public EditInfo getTooltipInfo( )
+  {
+    return m_tooltipInfo;
+  }
+
+  private final ChartTooltipPainter m_tooltipPainter = new ChartTooltipPainter();
 
   private final ILayerManagerEventListener m_layerEventListener = new ILayerManagerEventListener()
   {
@@ -236,7 +201,7 @@ public class ChartImageComposite extends Canvas
     }
   };
 
-  private final TooltipHandler m_tooltipHandler = null;// new TooltipHandler( this );
+  private final TooltipHandler2 m_tooltipHandler = new TooltipHandler2( this );
 
   private final InvalidateChartJob m_invalidateChartJob = new InvalidateChartJob( "" );
 
@@ -249,37 +214,15 @@ public class ChartImageComposite extends Canvas
       @Override
       public void paintControl( final PaintEvent paintEvent )
       {
-        if( m_axesImage == null )
+        if( m_image == null )
           return;
-
         final GC gc = paintEvent.gc;
-
-        gc.drawImage( m_axesImage, 0, 0 );
-
-        if( m_titleImage != null )
-          gc.drawImage( m_titleImage, 0, 0 );
-
-        if( m_plotRect == null || m_plotImage == null )
-          return;
-
-        final Point plotAnchor = new Point( m_plotRect.x - m_panOffset.x, m_plotRect.y - m_panOffset.y );
-
-        if( m_legendImage != null )
-        {
-          final int h1 = m_plotImage.getImageData().height;
-          final int h2 = Math.abs( m_axesImage.getImageData().height - h1 - m_legendImage.getImageData().height );
-
-          final int x = plotAnchor.x; // + m_plotRect.width / 2 - m_legendImage.getImageData().width;
-          final int y = plotAnchor.y + h1 + h2;
-
-          gc.drawImage( m_legendImage, x, y );
-        }
+        gc.drawImage( m_image, -m_panOffset.x, -m_panOffset.y );
 
         gc.setClipping( m_plotRect );
-        gc.drawImage( m_plotImage, plotAnchor.x, plotAnchor.y );
-
         paintDragArea( gc );
-        ChartImageFactory.paintEditInfo( gc, m_editInfo );
+        paintEditInfo( gc );
+        paintTooltipInfo( gc );
         gc.setClipping( getBounds() );
       }
     } );
@@ -314,19 +257,7 @@ public class ChartImageComposite extends Canvas
     setChartModel( model );
   }
 
-  public final void addAxisHandler( final IAxisDragHandler handler )
-  {
-
-    if( handler != null )
-    {
-      // TODO
-// ac.addMouseListener( handler );
-// ac.addMouseMoveListener( handler );
-// ac.addKeyListener( handler );
-    }
-
-  }
-
+  @Override
   public final void addPlotHandler( final IChartDragHandler handler )
   {
     if( handler == null )
@@ -348,25 +279,12 @@ public class ChartImageComposite extends Canvas
 
     if( m_tooltipHandler != null )
       m_tooltipHandler.dispose();
-    if( m_plotImage != null )
-      m_plotImage.dispose();
-    if( m_axesImage != null )
-      m_axesImage.dispose();
-    if( m_titleImage != null )
-      m_titleImage.dispose();
+    if( m_image != null )
+      m_image.dispose();
     super.dispose();
   }
 
-  public final AxisCanvas getAxisCanvas( final IAxis axis )
-  {
-    return null;
-  }
-
-  public final EditInfo getChartInfo( )
-  {
-    return null;// getPlot() == null ? null : getPlot().getTooltipInfo();
-  }
-
+  @Override
   public IChartModel getChartModel( )
   {
     return m_model;
@@ -382,9 +300,9 @@ public class ChartImageComposite extends Canvas
     return m_plotRect;
   }
 
-  public FontData getTitleFont( )
+  protected final Rectangle inflateRect( final Rectangle rect, final Insets insets )
   {
-    return m_titlefont;
+    return new Rectangle( rect.x + insets.left, rect.y + insets.top, rect.width - insets.left - insets.right, rect.height - insets.bottom - insets.top );
   }
 
   public void invalidate( )
@@ -405,17 +323,34 @@ public class ChartImageComposite extends Canvas
 
       gcw.setBackground( gcw.getDevice().getSystemColor( SWT.COLOR_BLUE ) );
       final Rectangle r = RectangleUtils.createNormalizedRectangle( m_dragArea );
-      final int x = r.x + getPlotRect().x;
-      final int y = r.y + getPlotRect().y;
 
-      // TODO: SWT-Bug mit drawFocus (wird nicht immer gezeichnet),
-      // irgendwann mal wieder berprfen
       gcw.setAlpha( 50 );
-      gcw.fillRectangle( x, y, r.width, r.height );
+      gcw.fillRectangle( r );
       gcw.setAlpha( 255 );
       gcw.setLineStyle( SWT.LINE_DASH );
-      gcw.drawRectangle( x, y, r.width, r.height );
+      gcw.drawRectangle( r );
     }
+  }
+
+  protected final void paintEditInfo( final GC gc )
+  {
+    if( m_editInfo == null )
+      return;
+    // draw hover shape
+    if( m_editInfo.m_hoverFigure != null )
+      m_editInfo.m_hoverFigure.paint( gc );
+    // draw edit shape
+    if( m_editInfo.m_editFigure != null )
+      m_editInfo.m_editFigure.paint( gc );
+
+  }
+
+  protected final void paintTooltipInfo( final GC gc )
+  {
+    if( m_tooltipInfo == null )
+      return;
+    m_tooltipPainter.setTooltip( m_tooltipInfo.m_text );
+    m_tooltipPainter.paint( gc, plotPoint2screen( m_tooltipInfo.m_pos ) );
   }
 
   private void registerListener( )
@@ -426,15 +361,7 @@ public class ChartImageComposite extends Canvas
     m_model.getMapperRegistry().addListener( m_mapperListener );
   }
 
-  public final void removeAxisHandler( final IAxisDragHandler handler )
-  {
-
-// ac.removeMouseListener( handler );
-// ac.removeMouseMoveListener( handler );
-// ac.removeKeyListener( handler );
-
-  }
-
+  @Override
   public final void removePlotHandler( final IChartDragHandler handler )
   {
     if( handler != null )
@@ -444,58 +371,20 @@ public class ChartImageComposite extends Canvas
     }
   }
 
-  public void setAxisPanOffset( final Point start, final Point end, final IAxis[] axes )
+  @Override
+  public final Point screen2plotPoint( final Point screen )
   {
-
-// for( final IAxis axis : axes )
-// {
-// final AxisCanvas ac = getAxisCanvas( axis );
-// if( ac == null )
-// continue;
-//
-// if( axis.getPosition().getOrientation().equals( ORIENTATION.HORIZONTAL ) )
-// {
-// ac.setPanOffsetInterval( new Point( end.x - start.x, 0 ) );
-// }
-// else
-// {
-// ac.setPanOffsetInterval( new Point( 0, end.y - start.y ) );
-// }
-// }
+    if( m_plotRect == null||m_plotRect == null  )
+      return screen;
+    return new Point( screen.x - m_plotRect.x, screen.y - m_plotRect.y );
   }
 
-  public void setAxisZoomOffset( final Point start, final Point end, final IAxis[] axes )
+  @Override
+  public final Point plotPoint2screen( final Point plotPoint )
   {
-// int startZ = -1;
-// int endZ = -1;
-//
-// for( final IAxis axis : axes )
-// {
-// final AxisCanvas ac = getAxisCanvas( axis );
-// if( ac == null )
-// continue;
-// if( start != null && end != null )
-// {
-// if( axis.getPosition().getOrientation().equals( ORIENTATION.HORIZONTAL ) )
-// {
-// startZ = start.x;
-// endZ = end.x;
-// }
-// else
-// {
-// startZ = start.y;
-// endZ = end.y;
-// }
-// }
-// ac.setDragInterval( startZ, endZ );
-// }
-  }
-
-  public final void setChartInfo( final EditInfo editInfo )
-  {
-// if( getPlot() == null )
-// return;
-// getPlot().setTooltipInfo( editInfo );
+    if( m_plotRect == null )
+      return plotPoint;
+    return new Point( plotPoint.x + m_plotRect.x, plotPoint.y + m_plotRect.y );
   }
 
   public void setChartModel( final IChartModel model )
@@ -509,32 +398,38 @@ public class ChartImageComposite extends Canvas
     invalidate();
   }
 
+  @Override
   public final void setDragArea( final Rectangle dragArea )
   {
-// if( m_dragArea == dragArea )
-// return;
     m_dragArea = dragArea;
-// if( m_dragArea == null )
-// invalidate();
-// else
     redraw();
   }
 
+  @Override
   public void setEditInfo( final EditInfo editInfo )
   {
     m_editInfo = editInfo;
   }
 
-  public final void setPlotPanOffset( final IAxis[] axes, final Point start, final Point end )
+  @Override
+  public void setTooltipInfo( final EditInfo tooltipInfo )
   {
-    m_panOffset = new Point( end.x - start.x, end.y - start.y );
-    invalidate();
-// getPlot().setPanOffset( getLayer( axes ), new Point( end.x - start.x, end.y - start.y ) );
+    if( m_tooltipInfo == null && tooltipInfo == null )
+      return;
+    m_tooltipInfo = tooltipInfo;
+    redraw();
   }
 
-  public void setTitlefont( final FontData titlefont )
+  @Override
+  public final void setPanOffset( final IAxis[] axes, final Point start, final Point end )
   {
-    m_titlefont = titlefont;
+    if( start == null || end == null )
+    {
+      m_panOffset = new Point( 0, 0 );
+      return;
+    }
+    m_panOffset = new Point( end.x - start.x, end.y - start.y );
+    invalidate();
   }
 
   protected final void unregisterListener( )
@@ -544,4 +439,32 @@ public class ChartImageComposite extends Canvas
     m_model.getLayerManager().removeListener( m_layerEventListener );
     m_model.getMapperRegistry().removeListener( m_mapperListener );
   }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.view.IChartComposite#getPlot()
+   */
+  @Override
+  public Canvas getPlot( )
+  {
+    return this;
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.view.IChartComposite#removeAxisHandler(de.openali.odysseus.chart.framework.view.IAxisDragHandler)
+   */
+  @Override
+  public void removeAxisHandler( final IAxisDragHandler handler )
+  {
+    // TODO: implement AxisHandler;
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.view.IChartComposite#addAxisHandler(de.openali.odysseus.chart.framework.view.IAxisDragHandler)
+   */
+  @Override
+  public void addAxisHandler( final IAxisDragHandler handler )
+  {
+    // TODO: implement AxisHandler
+  }
+
 }

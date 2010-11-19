@@ -40,8 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.chart.ui.editor.mousehandler;
 
+import de.openali.odysseus.chart.framework.view.IChartComposite;
 import de.openali.odysseus.chart.framework.view.IChartDragHandler;
-import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
 
 /**
  * delegate to manage handlers for mouse dragging; only one handler is active at a time
@@ -52,9 +52,9 @@ public class PlotDragHandlerDelegate
 {
   private IChartDragHandler m_handler;
 
-  private final ChartComposite m_chartComposite;
+  private final IChartComposite m_chartComposite;
 
-  public PlotDragHandlerDelegate( final ChartComposite chartComposite )
+  public PlotDragHandlerDelegate( final IChartComposite chartComposite )
   {
     m_chartComposite = chartComposite;
   }

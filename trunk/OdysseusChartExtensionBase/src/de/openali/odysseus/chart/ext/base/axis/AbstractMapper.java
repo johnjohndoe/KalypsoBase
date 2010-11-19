@@ -14,13 +14,13 @@ import de.openali.odysseus.chart.framework.model.mapper.IMapper;
  */
 public abstract class AbstractMapper implements IMapper
 {
-  private List<IMapperEventListener> m_listeners = new ArrayList<IMapperEventListener>();
+  private final List<IMapperEventListener> m_listeners = new ArrayList<IMapperEventListener>();
 
   /**
    * @see de.openali.odysseus.chart.framework.model.event.IEventProvider#addListener(java.lang.Object)
    */
   @Override
-  public void addListener( IMapperEventListener listener )
+  public void addListener( final IMapperEventListener listener )
   {
     if( m_listeners.contains( listener ) )
       return;
@@ -31,7 +31,7 @@ public abstract class AbstractMapper implements IMapper
    * @see de.openali.odysseus.chart.framework.model.event.IEventProvider#removeListener(java.lang.Object)
    */
   @Override
-  public void removeListener( IMapperEventListener listener )
+  public void removeListener( final IMapperEventListener listener )
   {
     m_listeners.remove( listener );
 
@@ -59,19 +59,6 @@ public abstract class AbstractMapper implements IMapper
   }
 
   /**
-   * @see org.kalypso.chart.framework.axis.IAxis#setRegistry(org.kalypso.chart.framework.axis.registry.IMapperRegistry)
-   */
-// public void setRegistry( final IMapperRegistry mapperRegistry )
-// {
-// m_registry = mapperRegistry;
-// }
-//
-// public IMapperRegistry getRegistry( )
-// {
-// return m_registry;
-// }
-
-  /**
    * @see org.kalypso.chart.framework.axis.IAxis#getIdentifier()
    */
   @Override
@@ -84,7 +71,7 @@ public abstract class AbstractMapper implements IMapper
    * @see org.kalypso.chart.framework.model.layer.IChartLayer#setData()
    */
   @Override
-  public void setData( String id, Object data )
+  public void setData( final String id, final Object data )
   {
     m_data.put( id, data );
   }
@@ -93,27 +80,10 @@ public abstract class AbstractMapper implements IMapper
    * @see org.kalypso.chart.framework.model.layer.IChartLayer#getData()
    */
   @Override
-  public Object getData( String id )
+  public Object getData( final String id )
   {
     return m_data.get( id );
   }
-
-//
-// public void addListener( IMapperEventListener l )
-// {
-// m_handler.addListener( l );
-// }
-//
-// public void removeListener( IMapperEventListener l )
-// {
-// m_handler.removeListener( l );
-// }
-
-// // EVIL: do not exhibit internal event manager
-// public MapperEventHandler getEventHandler( )
-// {
-// return m_handler;
-// }
 
   /**
    * returns a data converter which may be used to convert data to numbers which can directly be used by the mapper (and
@@ -121,12 +91,12 @@ public abstract class AbstractMapper implements IMapper
    */
   @Override
   @SuppressWarnings({ "cast", "unchecked" })
-  public <T> IDataOperator<T> getDataOperator( Class<T> clazz )
+  public <T> IDataOperator<T> getDataOperator( final Class<T> clazz )
   {
-    for( Class c : m_dataOperators.keySet() )
+    for( final Class c : m_dataOperators.keySet() )
       if( c.isAssignableFrom( clazz ) )
         return (IDataOperator<T>) m_dataOperators.get( c );
-    return null;// getRegistry().getDataOperator( clazz );
+    return null;
   }
 
   /**
@@ -134,7 +104,7 @@ public abstract class AbstractMapper implements IMapper
    * instance
    */
   @Override
-  public <T> void addDataOperator( Class<T> clazz, IDataOperator<T> dataOperator )
+  public <T> void addDataOperator( final Class<T> clazz, final IDataOperator<T> dataOperator )
   {
     m_dataOperators.put( clazz, dataOperator );
   }

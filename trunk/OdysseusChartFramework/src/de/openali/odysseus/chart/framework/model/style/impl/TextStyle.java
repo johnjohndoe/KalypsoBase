@@ -182,7 +182,7 @@ public class TextStyle extends AbstractStyle implements ITextStyle
   }
 
   /**
-   * @see de.openali.odysseus.chart.framework.model.style.ITextStyle#setPosition(de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.LABEL_POSITION)
+   * @see de.openali.odysseus.chart.framework.model.style.ITextStyle#setPosition(de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT)
    */
   @Override
   public void setAlignment( final ALIGNMENT position )

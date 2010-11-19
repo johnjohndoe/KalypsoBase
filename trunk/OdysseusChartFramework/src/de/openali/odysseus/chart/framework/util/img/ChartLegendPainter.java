@@ -46,6 +46,7 @@ import java.util.Set;
 
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
@@ -70,12 +71,14 @@ public class ChartLegendPainter
 
   private final ILegendPaintStrategy m_strategy;
 
-  public ChartLegendPainter( final IChartModel model, final int maximalImageWidth )
+  public ChartLegendPainter( final IChartModel model, final Rectangle size )
   {
-    this( model, maximalImageWidth, new DefaultLegendStrategy() );
+    this( model, size.width, new DefaultLegendStrategy() );
   }
 
+
   public ChartLegendPainter( final IChartModel model, final int maximalImageWidth, final ILegendPaintStrategy strategy )
+
   {
     m_model = model;
     m_maxImageWidth = maximalImageWidth;

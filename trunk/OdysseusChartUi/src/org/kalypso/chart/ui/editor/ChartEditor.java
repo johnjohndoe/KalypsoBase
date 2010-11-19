@@ -55,7 +55,8 @@ import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IMapper;
 import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
 import de.openali.odysseus.chart.framework.util.img.TitleTypeBean;
-import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
+import de.openali.odysseus.chart.framework.view.IChartComposite;
+import de.openali.odysseus.chart.framework.view.impl.ChartImageComposite;
 import de.openali.odysseus.chartconfig.x020.AxisDateRangeType;
 import de.openali.odysseus.chartconfig.x020.AxisDurationRangeType;
 import de.openali.odysseus.chartconfig.x020.AxisNumberRangeType;
@@ -84,7 +85,7 @@ public class ChartEditor extends EditorPart implements IChartPart
 
   private boolean m_dirty = false;
 
-  private ChartComposite m_chartComposite = null;
+  private IChartComposite m_chartComposite = null;
 
   private PlotDragHandlerDelegate m_plotDragHandler;
 
@@ -158,7 +159,7 @@ public class ChartEditor extends EditorPart implements IChartPart
 
     if( m_chartComposite != null )
     {
-      m_chartComposite.dispose();
+      m_chartComposite.getPlot().dispose();
     }
 
     super.dispose();
@@ -370,7 +371,7 @@ public class ChartEditor extends EditorPart implements IChartPart
           final List<IAxis> autoscaledAxes = new ArrayList<IAxis>();
           if( m_chartModel != null )
           {
-            m_chartComposite = new ChartComposite( m_composite, SWT.BORDER, m_chartModel, new RGB( 255, 255, 255 ) );
+            m_chartComposite = new ChartImageComposite( m_composite, SWT.BORDER, m_chartModel, new RGB( 255, 255, 255 ) );
 
             // Wenn die Achsenintervalle nicht in der Konfigurationsdatei gesetzt sind, muss ge-autorange-t werden
             final AxisType[] axisArray = m_chartType.getMappers().getAxisArray();
@@ -450,7 +451,7 @@ public class ChartEditor extends EditorPart implements IChartPart
   }
 
   @Override
-  public ChartComposite getChartComposite( )
+  public IChartComposite getChartComposite( )
   {
     return m_chartComposite;
   }
@@ -492,7 +493,7 @@ public class ChartEditor extends EditorPart implements IChartPart
       return getOutlinePage();
     }
 
-    if( ChartComposite.class.equals( adapter ) )
+    if( IChartComposite.class.equals( adapter ) )
     {
       return m_chartComposite;
     }

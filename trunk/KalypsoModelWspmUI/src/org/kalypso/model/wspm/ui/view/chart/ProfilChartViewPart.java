@@ -71,8 +71,8 @@ import org.kalypso.model.wspm.ui.profil.IProfilProviderListener;
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.event.IChartModelEventListener;
 import de.openali.odysseus.chart.framework.model.event.impl.ChartModelEventHandler;
+import de.openali.odysseus.chart.framework.view.IChartComposite;
 import de.openali.odysseus.chart.framework.view.IChartView;
-import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
 
 /**
  * @author kimwerner
@@ -132,6 +132,7 @@ public class ProfilChartViewPart extends ViewPart implements IChartPart, IProfil
       m_toolkit.decorateFormHeading( m_form );
       final IProfil profile = m_provider == null ? null : m_provider.getProfil();
       m_profilChartComposite = new ProfileChartComposite( m_form.getBody(), parent.getStyle(), getProfilLayerProvider(), profile );
+      m_profilChartComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
       m_axisDragHandler = new AxisDragHandlerDelegate( m_profilChartComposite.getChart() );
       m_plotDragHandler = new PlotDragHandlerDelegate( m_profilChartComposite.getChart() );
 
@@ -205,7 +206,7 @@ public class ProfilChartViewPart extends ViewPart implements IChartPart, IProfil
    * @see org.kalypso.chart.ui.IChartPart#getChartComposite()
    */
   @Override
-  public ChartComposite getChartComposite( )
+  public IChartComposite getChartComposite( )
   {
 
     return m_profilChartComposite;
@@ -269,7 +270,7 @@ public class ProfilChartViewPart extends ViewPart implements IChartPart, IProfil
     else
     {
       setFormMessage( null, IMessageProvider.NONE );
-      setPartNames( String.format( Messages.getString("ProfilChartViewPart.1"), newProfile.getStation() ), Messages.getString( "org.kalypso.model.wspm.ui.view.AbstractProfilViewPart_2" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      setPartNames( String.format( Messages.getString( "ProfilChartViewPart.1" ), newProfile.getStation() ), Messages.getString( "org.kalypso.model.wspm.ui.view.AbstractProfilViewPart_2" ) ); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     setChartModel( newProfile, provider == null ? null : provider.getResult() );

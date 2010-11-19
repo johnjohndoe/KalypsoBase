@@ -51,6 +51,7 @@ import org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartModel;
 
 import de.openali.odysseus.chart.framework.model.IChartModelState;
+import de.openali.odysseus.chart.framework.view.IChartComposite;
 import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
 
 /**
@@ -107,8 +108,9 @@ public class ProfileChartComposite extends ChartComposite implements IProfilChar
   /**
    * @see org.kalypso.model.wspm.ui.view.chart.IProfilChart#getChart()
    */
+
   @Override
-  public ChartComposite getChart( )
+  public IChartComposite getChart( )
   {
     return this;
   }

@@ -46,7 +46,7 @@ import org.kalypso.chart.ui.editor.mousehandler.PlotDragHandlerDelegate;
 
 import de.openali.odysseus.chart.framework.model.event.IChartModelEventListener;
 import de.openali.odysseus.chart.framework.model.event.IEventProvider;
-import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
+import de.openali.odysseus.chart.framework.view.IChartComposite;
 
 /**
  * @author burtscher1
@@ -57,7 +57,7 @@ public interface IChartPart extends IEventProvider<IChartModelEventListener>
 
   public AxisDragHandlerDelegate getAxisDragHandler( );
 
-  public ChartComposite getChartComposite( );
+  public IChartComposite getChartComposite( );
 
   public IContentOutlinePage getOutlinePage( );
 }

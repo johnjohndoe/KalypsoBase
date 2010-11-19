@@ -42,7 +42,7 @@ package org.kalypso.chart.ui.editor.mousehandler;
 
 import de.openali.odysseus.chart.framework.model.data.impl.ComparableDataRange;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
-import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
+import de.openali.odysseus.chart.framework.view.IChartComposite;
 
 /**
  * @author burtscher1
@@ -50,13 +50,13 @@ import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
 public class AxisDragZoomInHandler extends AxisDragZoomHandler
 {
 
-  public AxisDragZoomInHandler( ChartComposite chartComposite )
+  public AxisDragZoomInHandler( final IChartComposite chartComposite )
   {
     super( chartComposite );
   }
 
   @Override
-  protected void performZoomAction( final int start, final int end, IAxis[] axes )
+  protected void performZoomAction( final int start, final int end, final IAxis[] axes )
   {
     for( final IAxis axis : axes )
     {

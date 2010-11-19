@@ -56,7 +56,7 @@ import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChart;
 
 import de.openali.odysseus.chart.framework.util.ChartUtilities;
-import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
+import de.openali.odysseus.chart.framework.view.IChartComposite;
 
 /**
  * @author Dirk Kuch
@@ -145,7 +145,7 @@ public class SwitchProfileButtonDialog extends Composite
   {
     m_chartView.setProfil( profile,null );
 
-    final ChartComposite chart = m_chartView.getChart();
+    final IChartComposite chart = m_chartView.getChart();
     if( chart != null )
       ChartUtilities.maximize( chart.getChartModel() );
 

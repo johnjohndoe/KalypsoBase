@@ -46,6 +46,8 @@ import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.CalendarFormat;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT;
 
+;
+
 /**
  * @author alibu
  */
@@ -93,7 +95,7 @@ public class DateLabelCreator implements ILabelCreator
   public ALIGNMENT getLabelPosition( )
   {
     if( m_labelPosition == null )
-      m_labelPosition = ALIGNMENT.TICK_CENTERED;
+      m_labelPosition = ALIGNMENT.CENTERED_HORIZONTAL;
     return m_labelPosition;
   }
 

@@ -57,7 +57,7 @@ import org.kalypso.model.wspm.ui.i18n.Messages;
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
-import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
+import de.openali.odysseus.chart.framework.view.IChartComposite;
 
 /**
  * This handler opens the wsp legend.
@@ -70,23 +70,23 @@ public class WspLegendHandler extends AbstractHandler
    * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
   @Override
-  public Object execute( ExecutionEvent event ) throws ExecutionException
+  public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     /* Get the context. */
-    IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
+    final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
 
     /* Get the part. */
-    IWorkbenchPart part = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );
+    final IWorkbenchPart part = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );
     if( part == null )
       throw new ExecutionException( Messages.getString( "org.kalypso.model.wspm.ui.view.chart.layer.WspLegendHandler.0" ) ); //$NON-NLS-1$
 
     /* Get the site. */
-    IWorkbenchPartSite site = part.getSite();
+    final IWorkbenchPartSite site = part.getSite();
     if( site == null )
       throw new ExecutionException( Messages.getString( "org.kalypso.model.wspm.ui.view.chart.layer.WspLegendHandler.1" ) ); //$NON-NLS-1$
 
     /* Get the page. */
-    IWorkbenchPage page = site.getPage();
+    final IWorkbenchPage page = site.getPage();
     if( page == null )
       throw new ExecutionException( Messages.getString( "org.kalypso.model.wspm.ui.view.chart.layer.WspLegendHandler.2" ) ); //$NON-NLS-1$
 
@@ -97,7 +97,7 @@ public class WspLegendHandler extends AbstractHandler
     /* Cast. */
     final IChartPart chartView = (IChartPart) part;
 
-    final ChartComposite chartComposite = chartView.getChartComposite();
+    final IChartComposite chartComposite = chartView.getChartComposite();
     if( chartComposite == null )
       throw new ExecutionException( Messages.getString( "org.kalypso.model.wspm.ui.view.chart.layer.WspLegendHandler.4" ) ); //$NON-NLS-1$
 
@@ -106,17 +106,17 @@ public class WspLegendHandler extends AbstractHandler
     if( chartModel == null )
       throw new ExecutionException( Messages.getString( "org.kalypso.model.wspm.ui.view.chart.layer.WspLegendHandler.4" ) ); //$NON-NLS-1$
 
-    ILayerManager layerManager = chartModel.getLayerManager();
+    final ILayerManager layerManager = chartModel.getLayerManager();
 
     /* The wsp layer. */
     WspLayer wspLayer = null;
 
     /* Get all layers. */
-    IChartLayer[] layers = layerManager.getLayers();
+    final IChartLayer[] layers = layerManager.getLayers();
     for( int i = 0; i < layers.length; i++ )
     {
       /* Get the layer. */
-      IChartLayer layer = layers[i];
+      final IChartLayer layer = layers[i];
 
       if( layer instanceof WspLayer )
       {
@@ -128,15 +128,15 @@ public class WspLegendHandler extends AbstractHandler
     }
 
     /* Create the dialog. */
-    WspLegendPopupDialog dialog = new WspLegendPopupDialog( (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME ), wspLayer );
+    final WspLegendPopupDialog dialog = new WspLegendPopupDialog( (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME ), wspLayer );
 
     /* Open the dialog. */
     dialog.open();
 
     /* Adjust the position of the dialog. */
-    Shell shell = dialog.getShell();
-    Point shellSize = shell.getSize();
-    Point mousePos = shell.getDisplay().getCursorLocation();
+    final Shell shell = dialog.getShell();
+    final Point shellSize = shell.getSize();
+    final Point mousePos = shell.getDisplay().getCursorLocation();
     shell.setBounds( new Rectangle( mousePos.x - shellSize.x, mousePos.y, shellSize.x, shellSize.y ) );
 
     return null;

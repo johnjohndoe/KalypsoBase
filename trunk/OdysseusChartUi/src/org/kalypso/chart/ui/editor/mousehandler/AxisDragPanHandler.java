@@ -49,6 +49,7 @@ import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.ComparableDataRange;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
+import de.openali.odysseus.chart.framework.view.IChartComposite;
 import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
 
 /**
@@ -57,7 +58,7 @@ import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
 public class AxisDragPanHandler extends AbstractAxisDragHandler
 {
 
-  public AxisDragPanHandler( final ChartComposite chartComposite )
+  public AxisDragPanHandler( final IChartComposite chartComposite )
   {
     super( chartComposite );
   }
@@ -71,12 +72,13 @@ public class AxisDragPanHandler extends AbstractAxisDragHandler
   {
     if( axes == null || axes.length == 0 )
       return;
-
-    getChartComposite().setAxisPanOffset( start, end, axes );
+    final IChartComposite cc = getChartComposite();
+    if( cc instanceof ChartComposite )
+      ((ChartComposite) cc).setAxisPanOffset( start, end, axes );
     if( axes[0].getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
-      getChartComposite().setPlotPanOffset(axes, new Point( end.x, 0 ), new Point( start.x, 0 ) );
+      getChartComposite().setPanOffset( axes, new Point( end.x, 0 ), new Point( start.x, 0 ) );
     else
-      getChartComposite().setPlotPanOffset(axes, new Point( 0, end.y ), new Point( 0, start.y ) );
+      getChartComposite().setPanOffset( axes, new Point( 0, end.y ), new Point( 0, start.y ) );
   }
 
   /**
@@ -86,7 +88,9 @@ public class AxisDragPanHandler extends AbstractAxisDragHandler
   @Override
   void doMouseUpAction( final Point start, final Point end, final IAxis[] axes )
   {
-    getChartComposite().clearPanOffset();
+    final IChartComposite cc = getChartComposite();
+    if( cc instanceof ChartComposite )
+      ((ChartComposite) cc).clearPanOffset();
     if( axes.length > 0 )
     {
       final int startI;

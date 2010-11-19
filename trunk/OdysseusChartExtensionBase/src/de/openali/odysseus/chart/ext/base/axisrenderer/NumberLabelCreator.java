@@ -57,6 +57,7 @@ public class NumberLabelCreator implements ILabelCreator
   public ALIGNMENT getLabelPosition( )
   {
     if( m_labelPosition == null )
+
       m_labelPosition = ALIGNMENT.TICK_CENTERED;
     return m_labelPosition;
   }

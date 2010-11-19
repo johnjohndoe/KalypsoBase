@@ -49,6 +49,7 @@ import org.eclipse.swt.graphics.Rectangle;
 
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
+import de.openali.odysseus.chart.framework.view.IChartComposite;
 import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
 
 /**
@@ -56,7 +57,7 @@ import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
  */
 public class AxisDragZoomHandler extends AbstractAxisDragHandler
 {
-  public AxisDragZoomHandler( final ChartComposite chartComposite )
+  public AxisDragZoomHandler( final IChartComposite chartComposite )
   {
     super( chartComposite );
   }
@@ -76,8 +77,9 @@ public class AxisDragZoomHandler extends AbstractAxisDragHandler
    */
   @Override
   void doMouseMoveAction( final Point start, final Point end, final IAxis[] axes )
-  {
-    getChartComposite().setAxisZoomOffset( start, end, axes );
+  {final IChartComposite cc = getChartComposite();
+  if( cc instanceof ChartComposite )
+    ((ChartComposite) cc).setAxisZoomOffset( start, end, axes );
     if( axes[0].getPosition().getOrientation().equals( ORIENTATION.HORIZONTAL ) )
       getChartComposite().setDragArea( new Rectangle( start.x, 0, end.x - start.x, Integer.MAX_VALUE ) );
     else
@@ -92,7 +94,9 @@ public class AxisDragZoomHandler extends AbstractAxisDragHandler
   @Override
   void doMouseUpAction( final Point start, final Point end, final IAxis[] axes )
   {
-    getChartComposite().clearZoomOffset();
+    final IChartComposite cc = getChartComposite();
+    if( cc instanceof ChartComposite )
+      ((ChartComposite) cc).clearZoomOffset();
     if( axes.length > 0 )
     {
       final int startI;

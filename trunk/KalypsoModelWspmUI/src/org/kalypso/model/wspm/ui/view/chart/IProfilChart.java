@@ -42,7 +42,7 @@ package org.kalypso.model.wspm.ui.view.chart;
 
 import org.kalypso.model.wspm.core.profil.IProfil;
 
-import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
+import de.openali.odysseus.chart.framework.view.IChartComposite;
 
 /**
  * @author Dirk Kuch
@@ -51,7 +51,7 @@ public interface IProfilChart
 {
   IProfil getProfil( );
 
-  ChartComposite getChart( );
+  IChartComposite getChart( );
 
   void setProfil( IProfil profile, Object result );
 }
