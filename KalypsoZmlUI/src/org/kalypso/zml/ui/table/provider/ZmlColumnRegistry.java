@@ -75,19 +75,23 @@ public class ZmlColumnRegistry
     m_columns.add( column );
   }
 
+  public IZmlTableColumn[] getColumns( )
+  {
+    return m_columns.toArray( new IZmlTableColumn[] {} );
+  }
+
   public void clean( )
   {
     m_columns.clear();
   }
 
-  public Object[] getInput( ) throws SensorException
+  public ZmlTableRow[] getInput( ) throws SensorException
   {
     // TODO always date?!?
     final Map<Object, ZmlTableRow> map = new TreeMap<Object, ZmlTableRow>();
 
-    for( final IZmlTableColumn column : m_columns )
+    for( final IZmlTableColumn column : getColumns() )
     {
-
       final IObsProvider provider = column.getObsProvider();
       final IObservation observation = provider.getObservation();
       final ITupleModel model = observation.getValues( null );
@@ -114,7 +118,7 @@ public class ZmlColumnRegistry
       }
     }
 
-    return map.values().toArray();
+    return map.values().toArray( new ZmlTableRow[] {} );
   }
 
   private DataColumnType getColumn( final String id )

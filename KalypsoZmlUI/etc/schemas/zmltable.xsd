@@ -24,8 +24,9 @@
   <complexType name="AbstractColumnType" abstract="true">
     <sequence>
       <element name="id" type="ID" />
+      <element name="label" type="string" minOccurs="1"/>
       <element name="format" type="string" default="%s" />
-      <element name="width" type="int" default="100" />
+      <element name="width" type="integer" default="100" />
       <element name="alignment" type="zmltable:AlignmentType" default="LEFT" />
     </sequence>
   </complexType>
@@ -44,6 +45,9 @@
   <complexType name="IndexColumnType">
     <complexContent>
       <extension base="zmltable:AbstractColumnType">
+        <sequence>
+         
+        </sequence>
       </extension>
     </complexContent>
   </complexType>
