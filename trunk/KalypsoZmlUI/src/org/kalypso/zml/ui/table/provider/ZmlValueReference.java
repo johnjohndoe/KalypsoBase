@@ -38,28 +38,52 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table;
+package org.kalypso.zml.ui.table.provider;
 
-import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.kalypso.ogc.sensor.IAxis;
+import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.ITupleModel;
+import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.timeseries.AxisUtils;
+import org.kalypso.zml.ui.table.IZmlTableColumn;
+import org.kalypso.zml.ui.table.schema.ColumnType;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlLabelProvider extends ColumnLabelProvider
+public class ZmlValueReference
 {
-  private final String m_format;
 
-  public ZmlLabelProvider( final String format )
+  private final IZmlTableColumn m_column;
+
+  private final ITupleModel m_model;
+
+  private final int m_position;
+
+  private final ColumnType m_type;
+
+  // FIXME clean up - not all values needed!
+  /**
+   * @param position
+   *          position of value in model
+   */
+  public ZmlValueReference( final IZmlTableColumn column, final IObservation observation, final ITupleModel model, final int position, final ColumnType type )
   {
-    m_format = format;
+    m_column = column;
+    m_model = model;
+    m_position = position;
+    m_type = type;
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ColumnLabelProvider#getText(java.lang.Object)
-   */
-  @Override
-  public String getText( final Object element )
+  public String getId( )
   {
-    return super.getText( element );
+    return m_column.getId();
+  }
+
+  public Object getValue( ) throws SensorException
+  {
+    final IAxis axis = AxisUtils.findAxis( m_model.getAxisList(), m_type.getValueAxis() );
+
+    return m_model.get( m_position, axis );
   }
 }

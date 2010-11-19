@@ -38,10 +38,13 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table;
+package org.kalypso.zml.ui.table.provider;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.schema.ZmlTableType;
 
 /**
@@ -85,8 +88,17 @@ public class ZmlTableContentProvider implements ITreeContentProvider
   {
     if( inputElement instanceof ZmlColumnRegistry )
     {
-      final ZmlColumnRegistry registry = (ZmlColumnRegistry) inputElement;
+      try
+      {
+        final ZmlColumnRegistry registry = (ZmlColumnRegistry) inputElement;
+        final Object[] input = registry.getInput();
 
+        return input;
+      }
+      catch( final SensorException e )
+      {
+        KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+      }
     }
 
     return new Object[] {};
@@ -118,7 +130,6 @@ public class ZmlTableContentProvider implements ITreeContentProvider
   @Override
   public boolean hasChildren( final Object element )
   {
-    // TODO Auto-generated method stub
     return false;
   }
 

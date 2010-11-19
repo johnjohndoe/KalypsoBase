@@ -179,4 +179,15 @@ public final class AxisUtils implements ITimeseriesConstants
     return found[0];
   }
 
+  public static IAxis findAxis( final IAxis[] axes, final String identifier )
+  {
+    for( final IAxis axis : axes )
+    {
+      if( axis.getType().equals( identifier ) )
+        return axis;
+    }
+
+    return null;
+  }
+
 }

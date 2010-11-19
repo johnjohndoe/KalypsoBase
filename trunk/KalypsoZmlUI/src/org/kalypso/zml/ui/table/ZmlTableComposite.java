@@ -48,6 +48,9 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.contribs.eclipse.swt.layout.LayoutHelper;
+import org.kalypso.zml.ui.table.provider.ZmlColumnRegistry;
+import org.kalypso.zml.ui.table.provider.ZmlLabelProvider;
+import org.kalypso.zml.ui.table.provider.ZmlTableContentProvider;
 import org.kalypso.zml.ui.table.schema.ColumnType;
 import org.kalypso.zml.ui.table.schema.ZmlTableType;
 import org.kalypso.zml.ui.table.utils.ZmlTableHelper;
@@ -61,16 +64,12 @@ public class ZmlTableComposite extends Composite
 
   private ZmlColumnRegistry m_registry;
 
-  public ZmlTableComposite( final Composite parent )
-  {
-    this( parent, null );
-  }
-
   public ZmlTableComposite( final Composite parent, final ZmlTableType tableType )
   {
     super( parent, SWT.NULL );
 
     setLayout( LayoutHelper.createGridLayout() );
+
     if( tableType != null )
       setup( tableType );
   }
@@ -78,12 +77,14 @@ public class ZmlTableComposite extends Composite
   private void setup( final ZmlTableType tableType )
   {
     m_registry = new ZmlColumnRegistry( tableType );
-    m_tableViewer = new TableViewer( this, SWT.BORDER );
+    m_tableViewer = new TableViewer( this, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER );
     m_tableViewer.getTable().setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
     m_tableViewer.setContentProvider( new ZmlTableContentProvider( tableType ) );
 
     final TableViewerColumn indexColumn = new TableViewerColumn( m_tableViewer, SWT.LEFT );
-    indexColumn.setLabelProvider( new ZmlLabelProvider( "dd.MM.yyyy HH:mm" ) );
+    indexColumn.setLabelProvider( new ZmlLabelProvider( getIndexColumnType() ) );
+    indexColumn.getColumn().setText( "blub" );
+    indexColumn.getColumn().setWidth( 100 );
 
     final List<ColumnType> columns = tableType.getColumns().getColumn();
     for( final ColumnType column : columns )
@@ -94,10 +95,23 @@ public class ZmlTableComposite extends Composite
     m_tableViewer.setInput( m_registry );
   }
 
+  private ColumnType getIndexColumnType( )
+  {
+    final ColumnType type = new ColumnType();
+    type.setId( IZmlTableColumn.ZML_TABLE_INDEX_ID );
+    type.setIndexAxis( "date" );
+    type.setValueAxis( "date" );
+    type.setFormat( "dd.MM.yyyy HH:mm" );
+
+    return type;
+  }
+
   private TableViewerColumn addColumnViewer( final ColumnType type )
   {
     final TableViewerColumn column = new TableViewerColumn( m_tableViewer, ZmlTableHelper.toSWT( type.getAlignment() ) );
-    column.setLabelProvider( new ZmlLabelProvider( type.getFormat() ) );
+    column.setLabelProvider( new ZmlLabelProvider( type ) );
+    column.getColumn().setText( "blub" );
+    column.getColumn().setWidth( 100 );
 
     return column;
   }
@@ -110,6 +124,8 @@ public class ZmlTableComposite extends Composite
   public void addColumn( final IZmlTableColumn column )
   {
     m_registry.addColumn( column );
+
+    m_tableViewer.refresh();
   }
 
 }
