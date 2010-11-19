@@ -60,7 +60,7 @@ public class ZmlTableRow
 
   public void add( final ZmlValueReference reference )
   {
-    m_values.put( reference.getId(), reference );
+    m_values.put( reference.getIdentifier(), reference );
   }
 
   public ZmlValueReference get( final String identifier )
@@ -72,5 +72,4 @@ public class ZmlTableRow
   {
     return m_index;
   }
-
 }

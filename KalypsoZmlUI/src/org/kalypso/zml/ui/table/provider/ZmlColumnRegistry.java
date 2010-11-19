@@ -52,15 +52,11 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.template.IObsProvider;
 import org.kalypso.zml.ui.table.IZmlTableColumn;
 import org.kalypso.zml.ui.table.schema.AbstractColumnType;
 import org.kalypso.zml.ui.table.schema.DataColumnType;
 import org.kalypso.zml.ui.table.schema.ZmlTableType;
-import org.kalypso.zml.ui.table.utils.ZmlTableHelper;
 
 /**
  * @author Dirk Kuch
@@ -69,11 +65,11 @@ public class ZmlColumnRegistry
 {
   private final Set<ZmlColumnLoadCommand> m_commands = new HashSet<ZmlColumnLoadCommand>();
 
-  private final List<IZmlTableColumn> m_columns = new ArrayList<IZmlTableColumn>();
+  private final List<ZmlTableColumn> m_columns = new ArrayList<ZmlTableColumn>();
 
   private final ZmlTableType m_type;
 
-  protected final IZmlTableComposite m_table;
+  private final IZmlTableComposite m_table;
 
   public ZmlColumnRegistry( final IZmlTableComposite table, final ZmlTableType type )
   {
@@ -81,15 +77,17 @@ public class ZmlColumnRegistry
     m_type = type;
   }
 
-  public void addColumn( final IZmlTableColumn column )
+  public IZmlTableComposite getTable( )
+  {
+    return m_table;
+  }
+
+  public void loadColumn( final IZmlTableColumn column )
   {
     m_commands.add( new ZmlColumnLoadCommand( this, column ) );
   }
 
-  /***
-   * FIXME *brrr* addColumn / addLoaded -> crap -> refactor
-   */
-  protected void addLoaded( final IZmlTableColumn column )
+  protected void addColumn( final ZmlTableColumn column )
   {
     m_columns.add( column );
 
@@ -99,7 +97,7 @@ public class ZmlColumnRegistry
       @Override
       public IStatus runInUIThread( final IProgressMonitor monitor )
       {
-        m_table.refresh();
+        getTable().refresh();
 
         return Status.OK_STATUS;
       }
@@ -107,24 +105,32 @@ public class ZmlColumnRegistry
 
   }
 
-  public IZmlTableColumn[] getColumns( )
+  public ZmlTableColumn[] getColumns( )
   {
-    return m_columns.toArray( new IZmlTableColumn[] {} );
+    return m_columns.toArray( new ZmlTableColumn[] {} );
   }
 
   public void clean( )
   {
+    final ZmlTableColumn[] columns;
+    final ZmlColumnLoadCommand[] commands;
     synchronized( this )
     {
+      columns = m_columns.toArray( new ZmlTableColumn[] {} );
       m_columns.clear();
 
-      final ZmlColumnLoadCommand[] commands = m_commands.toArray( new ZmlColumnLoadCommand[] {} );
+      commands = m_commands.toArray( new ZmlColumnLoadCommand[] {} );
       m_commands.clear();
+    }
 
-      for( final ZmlColumnLoadCommand command : commands )
-      {
-        command.cancel();
-      }
+    for( final ZmlTableColumn column : columns )
+    {
+      column.dispose();
+    }
+
+    for( final ZmlColumnLoadCommand command : commands )
+    {
+      command.cancel();
     }
   }
 
@@ -133,21 +139,13 @@ public class ZmlColumnRegistry
     // TODO always date?!?
     final Map<Object, ZmlTableRow> map = new TreeMap<Object, ZmlTableRow>();
 
-    for( final IZmlTableColumn column : getColumns() )
+    for( final ZmlTableColumn column : getColumns() )
     {
-      final IObsProvider provider = column.getObsProvider();
-      final IObservation observation = provider.getObservation();
-      final ITupleModel model = observation.getValues( null );
-      final IAxis[] axes = model.getAxisList();
+      final IAxis indexAxis = column.getIndexAxis();
 
-      // FIXME handle data src axis
-      final DataColumnType type = getColumn( column.getId() );
-
-      final IAxis indexAxis = ZmlTableHelper.getIndexAxis( type, axes );
-
-      for( int i = 0; i < model.size(); i++ )
+      for( int i = 0; i < column.size(); i++ )
       {
-        final Object index = model.get( i, indexAxis );
+        final Object index = column.get( i, indexAxis );
 
         ZmlTableRow structure = map.get( index );
         if( structure == null )
@@ -156,7 +154,8 @@ public class ZmlColumnRegistry
           map.put( index, structure );
         }
 
-        final ZmlValueReference reference = new ZmlValueReference( column, observation, model, i, type );
+        final ZmlValueReference reference = new ZmlValueReference( column, i );
+
         structure.add( reference );
       }
     }
@@ -164,13 +163,24 @@ public class ZmlColumnRegistry
     return map.values().toArray( new ZmlTableRow[] {} );
   }
 
-  private DataColumnType getColumn( final String id )
+  public DataColumnType getDataColumnType( final String id )
   {
     final List<AbstractColumnType> columns = m_type.getColumns().getColumn();
     for( final AbstractColumnType column : columns )
     {
       if( column.getId().equals( id ) )
         return (DataColumnType) column;
+    }
+
+    return null;
+  }
+
+  public ZmlTableColumn getColumn( final String id )
+  {
+    for( final ZmlTableColumn column : m_columns )
+    {
+      if( column.getIdentifier().equals( id ) )
+        return column;
     }
 
     return null;

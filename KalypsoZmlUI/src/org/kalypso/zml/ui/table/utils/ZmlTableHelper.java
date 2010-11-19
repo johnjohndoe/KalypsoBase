@@ -41,11 +41,7 @@
 package org.kalypso.zml.ui.table.utils;
 
 import org.eclipse.swt.SWT;
-import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.ogc.sensor.timeseries.AxisUtils;
-import org.kalypso.zml.ui.table.IZmlTableColumn;
 import org.kalypso.zml.ui.table.schema.AlignmentType;
-import org.kalypso.zml.ui.table.schema.DataColumnType;
 
 /**
  * @author Dirk Kuch
@@ -71,29 +67,4 @@ public final class ZmlTableHelper
     return SWT.LEFT;
   }
 
-  public static IAxis getIndexAxis( final DataColumnType column, final IAxis[] axes )
-  {
-    final String index = column.getIndexAxis();
-
-    return AxisUtils.findAxis( axes, index );
-  }
-
-  public static IAxis getValueAxis( final DataColumnType column, final IAxis[] axes )
-  {
-    final String index = column.getValueAxis();
-
-    return AxisUtils.findAxis( axes, index );
-  }
-
-  public static IZmlTableColumn findZmlTableColumn( final IZmlTableColumn[] dataColumns, final String id )
-  {
-    for( final IZmlTableColumn column : dataColumns )
-    {
-      if( column.getId().equals( id ) )
-        return column;
-    }
-
-    return null;
-
-  }
 }

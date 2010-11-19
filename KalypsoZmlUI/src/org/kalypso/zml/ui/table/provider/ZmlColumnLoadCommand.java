@@ -40,9 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.provider;
 
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.ITupleModel;
+import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.template.IObsProvider;
 import org.kalypso.ogc.sensor.template.IObsProviderListener;
+import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.IZmlTableColumn;
+import org.kalypso.zml.ui.table.schema.DataColumnType;
 
 /**
  * @author Dirk Kuch
@@ -106,7 +112,19 @@ public class ZmlColumnLoadCommand implements IObsProviderListener
     if( m_canceled )
       return;
 
-    m_registry.addLoaded( m_column );
+    try
+    {
+      final IObsProvider provider = m_column.getObsProvider();
+      final IObservation observation = provider.getObservation();
+      final ITupleModel model = observation.getValues( null );
+
+      final DataColumnType type = m_registry.getDataColumnType( m_column.getId() );
+      m_registry.addColumn( new ZmlTableColumn( m_registry.getTable(), m_column, observation, model, type ) );
+    }
+    catch( final SensorException e )
+    {
+      KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+    }
   }
 
   /**
