@@ -44,7 +44,10 @@ import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
+import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHandler;
+import org.kalypso.ogc.sensor.timeseries.datasource.IDataSourceItem;
 import org.kalypso.zml.ui.table.IZmlTableColumn;
 import org.kalypso.zml.ui.table.schema.DataColumnType;
 
@@ -53,7 +56,6 @@ import org.kalypso.zml.ui.table.schema.DataColumnType;
  */
 public class ZmlValueReference
 {
-
   private final IZmlTableColumn m_column;
 
   private final ITupleModel m_model;
@@ -61,6 +63,8 @@ public class ZmlValueReference
   private final int m_position;
 
   private final DataColumnType m_type;
+
+  private final IObservation m_observation;
 
   // FIXME clean up - not all values needed!
   /**
@@ -70,6 +74,7 @@ public class ZmlValueReference
   public ZmlValueReference( final IZmlTableColumn column, final IObservation observation, final ITupleModel model, final int position, final DataColumnType type )
   {
     m_column = column;
+    m_observation = observation;
     m_model = model;
     m_position = position;
     m_type = type;
@@ -82,8 +87,43 @@ public class ZmlValueReference
 
   public Object getValue( ) throws SensorException
   {
+    return m_model.get( m_position, getAxis() );
+  }
+
+  public IAxis getAxis( )
+  {
     final IAxis axis = AxisUtils.findAxis( m_model.getAxisList(), m_type.getValueAxis() );
 
-    return m_model.get( m_position, axis );
+    return axis;
   }
+
+  public void update( final Object value ) throws SensorException
+  {
+    final IAxis[] axes = m_model.getAxisList();
+
+    for( final IAxis axis : axes )
+    {
+      if( AxisUtils.isDataSrcAxis( axis ) )
+      {
+        final DataSourceHandler handler = new DataSourceHandler( m_observation.getMetadataList() );
+        final int source = handler.addDataSource( IDataSourceItem.SOURCE_MANUAL_CHANGED, IDataSourceItem.SOURCE_MANUAL_CHANGED );
+
+        m_model.set( m_position, axis, source );
+      }
+      else if( AxisUtils.isStatusAxis( axis ) )
+      {
+        m_model.set( m_position, axis, KalypsoStati.BIT_USER_MODIFIED );
+      }
+      else if( isTargetAxis( axis ) )
+      {
+        m_model.set( m_position, axis, value );
+      }
+    }
+  }
+
+  private boolean isTargetAxis( final IAxis axis )
+  {
+    return axis.getType().equals( m_type.getValueAxis() );
+  }
+
 }

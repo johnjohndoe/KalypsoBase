@@ -55,7 +55,9 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.kalypso.contribs.eclipse.swt.layout.LayoutHelper;
 import org.kalypso.ogc.sensor.IAxis;
+import org.kalypso.ogc.sensor.template.IObsProvider;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
+import org.kalypso.zml.ui.table.provider.IZmlTableComposite;
 import org.kalypso.zml.ui.table.provider.ZmlColumnRegistry;
 import org.kalypso.zml.ui.table.provider.ZmlLabelProvider;
 import org.kalypso.zml.ui.table.provider.ZmlTableContentProvider;
@@ -67,7 +69,7 @@ import org.kalypso.zml.ui.table.utils.ZmlTableHelper;
 /**
  * @author Dirk Kuch
  */
-public class ZmlTableComposite extends Composite
+public class ZmlTableComposite extends Composite implements IZmlTableComposite
 {
   private TableViewer m_tableViewer;
 
@@ -87,14 +89,14 @@ public class ZmlTableComposite extends Composite
 
   private void setup( final ZmlTableType tableType )
   {
-    m_registry = new ZmlColumnRegistry( tableType );
+    m_registry = new ZmlColumnRegistry( this, tableType );
     m_tableViewer = new TableViewer( this, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.FULL_SELECTION );
     m_tableViewer.setContentProvider( new ZmlTableContentProvider( tableType ) );
 
     final List<AbstractColumnType> columns = tableType.getColumns().getColumn();
     for( final AbstractColumnType column : columns )
     {
-      addColumnViewer( column );
+      buildColumnViewer( column );
     }
 
     m_tableViewer.setInput( m_registry );
@@ -106,7 +108,7 @@ public class ZmlTableComposite extends Composite
 
   }
 
-  private TableViewerColumn addColumnViewer( final AbstractColumnType type )
+  private TableViewerColumn buildColumnViewer( final AbstractColumnType type )
   {
     final int index = m_tableViewer.getTable().getColumnCount();
     m_columnIndex.put( index, type );
@@ -122,6 +124,12 @@ public class ZmlTableComposite extends Composite
     if( width == null && type.isAutopack() )
       column.getColumn().pack();
 
+    /** edit support */
+    if( type instanceof DataColumnType && type.isEditable() )
+    {
+      column.setEditingSupport( new ZmlEditingSupport( (DataColumnType) type, column ) );
+    }
+
     return column;
   }
 
@@ -133,11 +141,10 @@ public class ZmlTableComposite extends Composite
   public void addColumn( final IZmlTableColumn column )
   {
     m_registry.addColumn( column );
-
-    refresh();
   }
 
-  private void refresh( )
+  @Override
+  public void refresh( )
   {
     m_tableViewer.refresh();
 
@@ -157,8 +164,14 @@ public class ZmlTableComposite extends Composite
       {
         /*** FIXME *brrrrr* refactor */
         final IZmlTableColumn zmlColumn = ZmlTableHelper.findZmlTableColumn( dataColumns, columnType.getId() );
+        if( zmlColumn == null )
+          continue;
 
-        final IAxis[] axes = zmlColumn.getObsProvider().getObservation().getAxisList();
+        final IObsProvider provider = zmlColumn.getObsProvider();
+        if( !provider.isLoaded() )
+          continue;
+
+        final IAxis[] axes = provider.getObservation().getAxisList();
         final IAxis axis = AxisUtils.findAxis( axes, columnType.getId() );
 
         final String label = zmlColumn.getTitle( axis );
