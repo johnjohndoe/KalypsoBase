@@ -248,8 +248,8 @@ public final class ChartImageFactory
     if( mapperRegistry == null )
       return null;
 
-    final ChartLegendPainter legendPainter = new ChartLegendPainter( model, size.x );
-    final ChartTitlePainter titlePainter = new ChartTitlePainter( model, size.x );
+    final ChartLegendPainter legendPainter = new ChartLegendPainter( model, new Rectangle(0,0,size.x,size.y) );
+    final ChartTitlePainter titlePainter = new ChartTitlePainter( model, new Rectangle(0,0,size.x,size.y)  );
 
     // TODO define legend text style as kod style element
     final ITextStyle legendTextStyle = StyleUtils.getDefaultTextStyle();
