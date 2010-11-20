@@ -69,6 +69,7 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
@@ -93,6 +94,14 @@ public class ZmlLink
   }
 
   /**
+   * Constructs an new {@link ZmlLink} with a different context.
+   */
+  public ZmlLink( final ZmlLink link, final URL context )
+  {
+    this( link.getFeature(), link.getProperty(), context );
+  }
+
+  /**
    * Alternate constructor, using an external {@link URL} as context to resolve timeseries links.
    */
   public ZmlLink( final Feature feature, final QName linkProperty, final URL context )
@@ -104,16 +113,21 @@ public class ZmlLink
     m_linkProperty = linkProperty;
   }
 
+  private QName getProperty( )
+  {
+    return m_linkProperty;
+  }
+
   public IObservation loadObservation( ) throws SensorException
   {
     if( m_linkProperty == null )
       return null;
 
-    final URL messwertURL = getExistingLocation();
-    if( messwertURL == null )
+    final URL locationURL = getExistingLocation();
+    if( locationURL == null )
       return null;
 
-    return ZmlFactory.parseXML( messwertURL );
+    return ZmlFactory.parseXML( locationURL );
   }
 
   /**
@@ -135,7 +149,7 @@ public class ZmlLink
       final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
       return (IObservation) pool.getObject( key );
     }
-    catch( CoreException e )
+    catch( final CoreException e )
     {
       // Ignored, we already check via isLinkSet etc. if this obs is valid
       return null;
@@ -251,10 +265,15 @@ public class ZmlLink
     return link;
   }
 
+  public void saveObservation( final IObservation obs ) throws CoreException, SensorException
+  {
+    saveObservation( obs, null );
+  }
+
   /**
    * Saves the given observation to the target resource of this link.
    */
-  public void saveObservation( final IObservation obs ) throws CoreException, SensorException
+  public void saveObservation( final IObservation obs, final IRequest request ) throws CoreException, SensorException
   {
     final File targetFile = getJavaFile();
     if( targetFile == null )
@@ -264,7 +283,7 @@ public class ZmlLink
     }
 
     targetFile.getParentFile().mkdirs();
-    ZmlFactory.writeToFile( obs, targetFile );
+    ZmlFactory.writeToFile( obs, targetFile, request );
 
     /* If the local file is mapped into the workspace, refresh it. */
     final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
@@ -302,5 +321,4 @@ public class ZmlLink
   {
     return m_feature;
   }
-
 }

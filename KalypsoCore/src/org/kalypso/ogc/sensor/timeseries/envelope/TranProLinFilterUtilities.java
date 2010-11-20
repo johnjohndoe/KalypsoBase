@@ -30,73 +30,65 @@
 package org.kalypso.ogc.sensor.timeseries.envelope;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
-import java.io.StringWriter;
-import java.io.UnsupportedEncodingException;
 import java.util.Calendar;
 
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-
-import org.apache.commons.io.IOUtils;
-import org.kalypso.commons.bind.JaxbUtilities;
-import org.kalypso.commons.factory.FactoryException;
-import org.kalypso.contribs.java.xml.XMLUtilities;
+import org.eclipse.core.runtime.CoreException;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.filter.FilterFactory;
+import org.kalypso.ogc.sensor.metadata.IObservationConstants;
+import org.kalypso.ogc.sensor.metadata.MetadataList;
+import org.kalypso.ogc.sensor.proxy.AutoProxyFactory;
 import org.kalypso.ogc.sensor.request.IRequest;
+import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
-import org.kalypso.zml.Observation;
-import org.kalypso.zml.filters.TranProLinFilterType;
 
 /**
  * @author doemming
  */
 public final class TranProLinFilterUtilities
 {
-  public static void transformAndWrite( final IObservation baseObservation, final Calendar dateBegin, final Calendar dateEnd, final double operandBegin, final double operandEnd, final String operator, final String axisTypes, final int statusToMerge, final File resultFile, final String sufix, final IRequest request ) throws SensorException, JAXBException, FactoryException, UnsupportedEncodingException, FileNotFoundException
+  private TranProLinFilterUtilities( )
+  {
+    throw new UnsupportedOperationException();
+  }
+
+  public static void transformAndWrite( final IObservation baseObservation, final Calendar dateBegin, final Calendar dateEnd, final double operandBegin, final double operandEnd, final String operator, final String axisTypes, final int statusToMerge, final File resultFile, final String name, final IRequest request ) throws SensorException
   {
     if( resultFile == null )
       return; // nothing to do
-    final TranProLinFilterType filter = FilterFactory.OF_FILTER.createTranProLinFilterType();
 
-    filter.setDateBegin( dateBegin );
-    filter.setDateEnd( dateEnd );
-    filter.setOperandBegin( operandBegin );
-    filter.setOperandEnd( operandEnd );
-    filter.setOperator( operator );
-    filter.setStatusToMerge( statusToMerge );
-    filter.setAxisTypes( axisTypes );
-    final StringWriter stringWriter = new StringWriter();
+    final IObservation resultObservation = transform( baseObservation, dateBegin, dateEnd, operandBegin, operandEnd, operator, axisTypes, statusToMerge );
+    final MetadataList metadataList = resultObservation.getMetadataList();
+    final String oldName = metadataList.getProperty( IObservationConstants.MD_NAME );
+    metadataList.setProperty( IObservationConstants.MD_NAME, name );
+    ZmlFactory.writeToFile( resultObservation, resultFile, request );
+    metadataList.setProperty( IObservationConstants.MD_NAME, oldName );
+  }
 
-    final Marshaller marshaller = JaxbUtilities.createMarshaller( ZmlFactory.JC );
-    marshaller.marshal( FilterFactory.OF_FILTER.createTranProLinFilter( filter ), stringWriter );
-    final String string = XMLUtilities.removeXMLHeader( stringWriter.toString() );
-    final String filterInline = XMLUtilities.prepareInLine( string );
-    final IObservation resultObservation = ZmlFactory.decorateObservation( baseObservation, filterInline, null );
-    // write ZML
-    final Observation observationType = ZmlFactory.createXML( resultObservation, request );
-    String name = observationType.getName();
+  public static void transformAndWrite( final IObservation baseObservation, final Calendar dateBegin, final Calendar dateEnd, final double operandBegin, final double operandEnd, final String operator, final String axisTypes, final int statusToMerge, final ZmlLink targetLink, final String name, final IRequest request ) throws SensorException, CoreException
+  {
+    final IObservation resultObservation = transform( baseObservation, dateBegin, dateEnd, operandBegin, operandEnd, operator, axisTypes, statusToMerge );
+    final MetadataList metadataList = resultObservation.getMetadataList();
+    final String oldName = metadataList.getProperty( IObservationConstants.MD_NAME );
+    metadataList.setProperty( IObservationConstants.MD_NAME, name );
+    targetLink.saveObservation( resultObservation, request );
+    metadataList.setProperty( IObservationConstants.MD_NAME, oldName );
+  }
+
+  public static IObservation transform( final IObservation baseObservation, final Calendar dateBegin, final Calendar dateEnd, final double operandBegin, final double operandEnd, final String operator, final String axisTypes, final int statusToMerge ) throws SensorException
+  {
+    final TranProLinFilter filter = new TranProLinFilter( dateBegin.getTime(), dateEnd.getTime(), operator, operandBegin, operandEnd, statusToMerge, axisTypes );
+    filter.initFilter( null, baseObservation, null );
+    return AutoProxyFactory.getInstance().proxyObservation( filter );
+  }
+
+// final String name = getName( baseObservation, suffix );
+  public static String getName( final IObservation baseObservation, final String suffix )
+  {
+    final String name = baseObservation.getName();
     if( name == null )
-      name = ""; //$NON-NLS-1$
-    observationType.setName( name + sufix );
-    final Marshaller m = ZmlFactory.getMarshaller();
-    m.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
-    FileOutputStream stream = null;
-    OutputStreamWriter writer = null;
-    try
-    {
-      stream = new FileOutputStream( resultFile );
-      writer = new OutputStreamWriter( stream, "UTF-8" ); //$NON-NLS-1$
-      m.marshal( observationType, writer );
-    }
-    finally
-    {
-      IOUtils.closeQuietly( writer );
-      IOUtils.closeQuietly( stream );
-    }
+      return suffix;
+
+    return name + suffix;
   }
 }
