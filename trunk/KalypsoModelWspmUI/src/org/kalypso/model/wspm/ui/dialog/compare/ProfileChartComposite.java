@@ -52,14 +52,14 @@ import org.kalypso.model.wspm.ui.view.chart.ProfilChartModel;
 
 import de.openali.odysseus.chart.framework.model.IChartModelState;
 import de.openali.odysseus.chart.framework.view.IChartComposite;
-import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
+import de.openali.odysseus.chart.framework.view.impl.ChartImageComposite;
 
 /**
  * @author belger
  * @author kimwerner
  * @author Dirk Kuch
  */
-public class ProfileChartComposite extends ChartComposite implements IProfilChart
+public class ProfileChartComposite extends ChartImageComposite implements IProfilChart
 {
   private static final RGB BACKGROUND_RGB = new RGB( 255, 255, 255 );
 
