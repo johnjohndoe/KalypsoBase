@@ -80,7 +80,7 @@ import de.openali.odysseus.chart.framework.model.impl.ChartModel;
 import de.openali.odysseus.chart.framework.util.img.TitleTypeBean;
 import de.openali.odysseus.chart.framework.view.IChartComposite;
 import de.openali.odysseus.chart.framework.view.TooltipHandler;
-import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
+import de.openali.odysseus.chart.framework.view.impl.ChartImageComposite;
 import de.openali.odysseus.chartconfig.x020.ChartType;
 
 /**
@@ -192,7 +192,7 @@ public class ChartView extends ViewPart implements IChartPart, ISelectionListene
 
         if( m_chartModel != null )
         {
-          m_chartComposite = new ChartComposite( m_composite, SWT.BORDER, m_chartModel, new RGB( 255, 255, 255 ) );
+          m_chartComposite = new ChartImageComposite( m_composite, SWT.BORDER, m_chartModel, new RGB( 255, 255, 255 ) );
 
           // DragHandler erzeugen
           m_plotDragHandler = new PlotDragHandlerDelegate( m_chartComposite );

@@ -9,7 +9,6 @@ import org.eclipse.ui.commands.IElementUpdater;
 import org.eclipse.ui.menus.UIElement;
 import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.chart.ui.editor.ElementUpdateHelper;
-import org.kalypso.chart.ui.editor.mousehandler.AxisDragPanHandler;
 import org.kalypso.chart.ui.editor.mousehandler.DragPanHandler;
 
 public class PanHandler extends AbstractHandler implements IElementUpdater
@@ -26,8 +25,6 @@ public class PanHandler extends AbstractHandler implements IElementUpdater
 
     final DragPanHandler plotDragPanHandler = new DragPanHandler( chartPart.getChartComposite() );
     chartPart.getPlotDragHandler().setActiveHandler( plotDragPanHandler );
-    final AxisDragPanHandler axisDragPanHandler = new AxisDragPanHandler( chartPart.getChartComposite() );
-    chartPart.getAxisDragHandler().setActiveHandler( axisDragPanHandler );
 
     ChartHandlerUtilities.updateElements( chartPart );
 

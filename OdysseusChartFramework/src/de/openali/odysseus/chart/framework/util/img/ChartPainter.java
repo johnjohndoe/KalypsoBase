@@ -78,8 +78,8 @@ public class ChartPainter
   {
     m_model = model;
     m_size = size;
-    m_legendPainter = new ChartLegendPainter( model, size);
-    m_titlePainter = new ChartTitlePainter( model, size);
+    m_legendPainter = new ChartLegendPainter( model, size );
+    m_titlePainter = new ChartTitlePainter( model, size );
     m_plotInsets = getPlotInsets();
     setAxesHeight();
     m_plotPainter = new ChartPlotPainter( model, new Point( size.width - m_plotInsets.left - m_plotInsets.right, size.height - m_plotInsets.bottom - m_plotInsets.top ) );
@@ -154,9 +154,12 @@ public class ChartPainter
 
   public final Image createImage( )
   {
+    if( m_size.width == 0 || m_size.height == 0 )
+      return null;
+    
     final Device dev = PlatformUI.getWorkbench().getDisplay();
 
-    final Image image = new Image( dev, m_size.width, m_size.height);
+    final Image image = new Image( dev, m_size.width, m_size.height );
     final Image titleImage = m_titlePainter.paint();
     final Image legendImage = m_legendPainter.createImage();
     final Image plotImage = m_plotPainter.createImage();

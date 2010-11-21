@@ -17,6 +17,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.graphics.Transform;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.progress.UIJob;
@@ -219,11 +220,23 @@ public class ChartImageComposite extends Canvas implements IChartComposite
         final GC gc = paintEvent.gc;
         gc.drawImage( m_image, -m_panOffset.x, -m_panOffset.y );
 
-        gc.setClipping( m_plotRect );
-        paintDragArea( gc );
-        paintEditInfo( gc );
-        paintTooltipInfo( gc );
-        gc.setClipping( getBounds() );
+        final Transform oldTransform = new Transform( gc.getDevice() );
+        gc.getTransform( oldTransform );
+
+        final Transform newTransform = new Transform( gc.getDevice() );
+        newTransform.translate( m_plotRect.x, m_plotRect.y );
+        gc.setTransform( newTransform );
+        try
+        {
+          paintDragArea( gc );
+          paintEditInfo( gc );
+          paintTooltipInfo( gc );
+        }
+        finally
+        {
+          gc.setTransform( oldTransform );
+          newTransform.dispose();
+        }
       }
     } );
 
@@ -351,7 +364,7 @@ public class ChartImageComposite extends Canvas implements IChartComposite
     if( m_tooltipInfo == null )
       return;
     m_tooltipPainter.setTooltip( m_tooltipInfo.m_text );
-    m_tooltipPainter.paint( gc, plotPoint2screen( m_tooltipInfo.m_pos ) );
+    m_tooltipPainter.paint( gc, m_tooltipInfo.m_pos );
   }
 
   private void registerListener( )
@@ -375,7 +388,7 @@ public class ChartImageComposite extends Canvas implements IChartComposite
   @Override
   public final Point screen2plotPoint( final Point screen )
   {
-    if( m_plotRect == null||m_plotRect == null  )
+    if( m_plotRect == null || m_plotRect == null )
       return screen;
     return new Point( screen.x - m_plotRect.x, screen.y - m_plotRect.y );
   }
@@ -402,6 +415,8 @@ public class ChartImageComposite extends Canvas implements IChartComposite
   @Override
   public final void setDragArea( final Rectangle dragArea )
   {
+    if( m_dragArea == null && dragArea == null )
+      return;
     m_dragArea = dragArea;
     redraw();
   }
@@ -409,7 +424,10 @@ public class ChartImageComposite extends Canvas implements IChartComposite
   @Override
   public void setEditInfo( final EditInfo editInfo )
   {
+    if( m_editInfo == null && editInfo == null )
+      return;
     m_editInfo = editInfo;
+    redraw();
   }
 
   @Override

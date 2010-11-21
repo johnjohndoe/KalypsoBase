@@ -81,7 +81,9 @@ public class DragZoomInHandler extends AbstractChartDragHandler
 
     try
     {
-      getChart().getChartModel().zoomIn( getChart().screen2plotPoint( editInfo.m_pos ), getChart().screen2plotPoint( end ) );
+      if( end != null )
+        getChart().getChartModel().zoomIn( editInfo.m_pos, end );
+      // else do nothing -> clickEvent
     }
     finally
     {
@@ -96,9 +98,7 @@ public class DragZoomInHandler extends AbstractChartDragHandler
   @Override
   public void doMouseMoveAction( final Point end, final EditInfo editInfo )
   {
-    final Point start = editInfo.m_pos;
-    final Point pos = getChart().plotPoint2screen( end );
-    getChart().setDragArea( new Rectangle( start.x, start.y, pos.x - start.x, pos.y - start.y ) );
+    getChart().setDragArea( new Rectangle( editInfo.m_pos.x, editInfo.m_pos.y, end.x - editInfo.m_pos.x, end.y - editInfo.m_pos.y ) );
   }
 
 }

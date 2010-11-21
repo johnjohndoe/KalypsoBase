@@ -47,8 +47,6 @@ import org.eclipse.swt.graphics.Point;
 
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.view.IChartComposite;
-import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
-import de.openali.odysseus.chart.framework.view.impl.ChartImageComposite;
 
 /**
  * @author burtscher1
@@ -76,11 +74,7 @@ public class DragPanHandler extends AbstractChartDragHandler
   @Override
   public void doMouseUpAction( final Point start, final EditInfo editInfo )
   {
-    final IChartComposite cc = getChart();
-    if( cc instanceof ChartComposite )
-      ((ChartComposite) cc).clearPanOffset();
-    if( cc instanceof ChartImageComposite )
-      ((ChartImageComposite) cc).setPanOffset( null, null, null );
+    getChart().setPanOffset( null, null, null );
     if( start != null )
       getChart().getChartModel().panTo( start, editInfo.m_pos );
 
