@@ -40,20 +40,45 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.chart.ui.editor;
 
-import org.eclipse.ui.IPartListener2;
+import org.eclipse.core.runtime.Assert;
+import org.eclipse.ui.ISourceProvider;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartReference;
+import org.eclipse.ui.services.IServiceLocator;
 import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.chart.ui.editor.commandhandler.ChartHandlerUtilities;
+import org.kalypso.chart.ui.editor.commandhandler.ChartSourceProvider;
+import org.kalypso.contribs.eclipse.ui.partlistener.PartAdapter2;
+
+import de.openali.odysseus.chart.framework.view.IChartComposite;
 
 /**
  * part listener for all chart parts
  * 
  * @author burtscher1
- * 
  */
-public class ChartPartListener implements IPartListener2
+public class ChartPartListener extends PartAdapter2
 {
+  private final IChartPart m_chartPart;
+
+  private ISourceProvider m_sourceProvider = null;
+
+  private final IServiceLocator m_locator;
+
+  public ChartPartListener( final IChartPart chartPart, final IServiceLocator locator )
+  {
+    Assert.isNotNull( locator );
+    Assert.isNotNull( chartPart );
+
+    m_chartPart = chartPart;
+    m_locator = locator;
+  }
+
+  public void dispose( )
+  {
+    destroySource();
+  }
+
   /**
    * @see org.eclipse.ui.IPartListener2#partActivated(org.eclipse.ui.IWorkbenchPartReference)
    */
@@ -61,78 +86,32 @@ public class ChartPartListener implements IPartListener2
   public void partActivated( final IWorkbenchPartReference partRef )
   {
     final IWorkbenchPart part = partRef.getPart( false );
-    final IChartPart cp = (IChartPart) part.getAdapter( IChartPart.class );
-    if( cp != null )
-      ChartHandlerUtilities.updateElements( cp );
+    if( part == m_chartPart )
+    {
+      activateSource();
+      // FIXME: remove, as soon as the source activation automatically refreshes the elements
+      ChartHandlerUtilities.updateElements( m_chartPart );
+    }
+    else
+      destroySource();
   }
 
-  /**
-   * @see org.eclipse.ui.IPartListener2#partBroughtToTop(org.eclipse.ui.IWorkbenchPartReference)
-   */
-  @Override
-  public void partBroughtToTop( final IWorkbenchPartReference partRef )
+  private void activateSource( )
   {
-    // nothing to do
+    destroySource();
 
+    final IChartComposite chartComposite = m_chartPart.getChartComposite();
+    if( chartComposite != null )
+      m_sourceProvider = new ChartSourceProvider( m_locator, chartComposite );
   }
 
-  /**
-   * @see org.eclipse.ui.IPartListener2#partClosed(org.eclipse.ui.IWorkbenchPartReference)
-   */
-  @Override
-  public void partClosed( final IWorkbenchPartReference partRef )
+  private void destroySource( )
   {
-    // nothing to do
-
-  }
-
-  /**
-   * @see org.eclipse.ui.IPartListener2#partDeactivated(org.eclipse.ui.IWorkbenchPartReference)
-   */
-  @Override
-  public void partDeactivated( final IWorkbenchPartReference partRef )
-  {
-    // nothing to do
-
-  }
-
-  /**
-   * @see org.eclipse.ui.IPartListener2#partHidden(org.eclipse.ui.IWorkbenchPartReference)
-   */
-  @Override
-  public void partHidden( final IWorkbenchPartReference partRef )
-  {
-    // nothing to do
-
-  }
-
-  /**
-   * @see org.eclipse.ui.IPartListener2#partInputChanged(org.eclipse.ui.IWorkbenchPartReference)
-   */
-  @Override
-  public void partInputChanged( final IWorkbenchPartReference partRef )
-  {
-    // nothing to do
-  }
-
-  /**
-   * @see org.eclipse.ui.IPartListener2#partOpened(org.eclipse.ui.IWorkbenchPartReference)
-   */
-  @Override
-  public void partOpened( final IWorkbenchPartReference partRef )
-  {
-    // nothing to do
-
-  }
-
-  /**
-   * @see org.eclipse.ui.IPartListener2#partVisible(org.eclipse.ui.IWorkbenchPartReference)
-   */
-  @Override
-  public void partVisible( final IWorkbenchPartReference partRef )
-  {
-    // nothing to do
-
+    if( m_sourceProvider != null )
+    {
+      m_sourceProvider.dispose();
+      m_sourceProvider = null;
+    }
   }
 
 }

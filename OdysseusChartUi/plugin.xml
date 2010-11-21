@@ -333,5 +333,9 @@
          </with>
       </definition>
    </extension>
+   
+   	<extension point="org.eclipse.ui.contexts">
+		<context id="de.openali.odysseus.chart.ui.context" name="Chart" parentId="org.eclipse.ui.contexts.window" />
+	</extension>
 
 </plugin>

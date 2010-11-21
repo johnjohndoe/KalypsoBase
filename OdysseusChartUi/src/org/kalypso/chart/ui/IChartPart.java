@@ -53,11 +53,11 @@ import de.openali.odysseus.chart.framework.view.IChartComposite;
  */
 public interface IChartPart extends IEventProvider<IChartModelEventListener>
 {
-  public PlotDragHandlerDelegate getPlotDragHandler( );
+  PlotDragHandlerDelegate getPlotDragHandler( );
 
-  public AxisDragHandlerDelegate getAxisDragHandler( );
+  AxisDragHandlerDelegate getAxisDragHandler( );
 
-  public IChartComposite getChartComposite( );
+  IChartComposite getChartComposite( );
 
-  public IContentOutlinePage getOutlinePage( );
+  IContentOutlinePage getOutlinePage( );
 }

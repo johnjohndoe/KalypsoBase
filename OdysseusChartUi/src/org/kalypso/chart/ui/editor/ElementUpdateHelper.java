@@ -52,21 +52,19 @@ import de.openali.odysseus.chart.framework.view.IChartDragHandler;
 
 /**
  * @author burtscher1
- * 
  */
 public class ElementUpdateHelper
 {
-
   /**
    * function is called by all radio commands from updateElement (IElementUpdater) in order to synchronize toggle state
    * with chart handler state
    */
-  @SuppressWarnings("unused")
   public static void updateElement( final UIElement element, final Map< ? , ? > parameters, final Class< ? > handlerClass )
   {
     // TODO: we get NPEs here
 
     // chart finden,
+    // FIXME: get chart from context
     final IWorkbenchPart activePart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getPartService().getActivePart();
 
     if( activePart == null )
@@ -76,7 +74,7 @@ public class ElementUpdateHelper
     final IChartPart chartPart = (IChartPart) activePart.getAdapter( IChartPart.class );
     if( chartPart != null )
     {
-      PlotDragHandlerDelegate plotDragHandler = chartPart.getPlotDragHandler();
+      final PlotDragHandlerDelegate plotDragHandler = chartPart.getPlotDragHandler();
       if( plotDragHandler != null )
       {
         final IChartDragHandler activeHandler = plotDragHandler.getActiveHandler();
