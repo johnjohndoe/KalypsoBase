@@ -101,6 +101,9 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.IViewSite;
+import org.eclipse.ui.IWorkbenchPartReference;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import org.eclipse.ui.part.ViewPart;
@@ -109,6 +112,7 @@ import org.kalypso.contribs.eclipse.i18n.Messages;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.wizard.IResetableWizard;
+import org.kalypso.contribs.eclipse.ui.partlistener.PartAdapter2;
 import org.kalypso.contribs.java.lang.CatchRunnable;
 import org.kalypso.contribs.java.lang.DisposeHelper;
 
@@ -130,6 +134,19 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
   public static final int SAVE_ID = IDialogConstants.CLIENT_ID + 1;
 
   public static final int RESET_ID = IDialogConstants.CLIENT_ID + 2;
+
+  final PartAdapter2 m_partListener = new PartAdapter2()
+  {
+    /**
+     * @see org.kalypso.contribs.eclipse.ui.partlistener.PartAdapter2#partActivated(org.eclipse.ui.IWorkbenchPartReference)
+     */
+    @Override
+    public void partActivated( final IWorkbenchPartReference partRef )
+    {
+      if( partRef.getPart( false ) == WizardView.this )
+        handleViewActivated();
+    }
+  };
 
   private RGB m_defaultTitleBackground;
 
@@ -181,6 +198,13 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
   public void setErrorBackgroundBehaviour( final boolean useNormalBackground )
   {
     m_useNormalBackground = useNormalBackground;
+  }
+
+  protected void handleViewActivated( )
+  {
+    final IWizard wizard = getWizard();
+    if( wizard instanceof IWizard2 )
+      ((IWizard2) wizard).activate();
   }
 
   /**
@@ -298,11 +322,24 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
   {
     setWizard( null );
 
+    getSite().getPage().removePartListener( m_partListener );
+
     m_listeners.clear();
     m_pageChangedListeners.clear();
     m_pageChangingListeners.clear();
 
     m_disposeHelper.dispose();
+  }
+
+  /**
+   * @see org.eclipse.ui.part.ViewPart#init(org.eclipse.ui.IViewSite)
+   */
+  @Override
+  public void init( final IViewSite site ) throws PartInitException
+  {
+    super.init( site );
+
+    site.getPage().addPartListener( m_partListener );
   }
 
   /**
