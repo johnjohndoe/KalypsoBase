@@ -46,10 +46,8 @@ import de.openali.odysseus.chart.framework.view.TooltipHandler2;
  */
 public class ChartImageComposite extends Canvas implements IChartComposite
 {
-
   private final class InvalidateChartJob extends UIJob
   {
-
     public InvalidateChartJob( final String name )
     {
       super( name );
@@ -61,7 +59,6 @@ public class ChartImageComposite extends Canvas implements IChartComposite
     @Override
     public IStatus runInUIThread( final IProgressMonitor monitor )
     {
-
       if( (m_image != null) && !m_image.isDisposed() )
       {
         m_image.dispose();
@@ -102,6 +99,7 @@ public class ChartImageComposite extends Canvas implements IChartComposite
 
   protected EditInfo m_tooltipInfo = null;
 
+  // FIXME: move code below constructor!
   @Override
   public EditInfo getTooltipInfo( )
   {
@@ -404,9 +402,8 @@ public class ChartImageComposite extends Canvas implements IChartComposite
   public void setChartModel( final IChartModel model )
   {
     if( m_model != null )
-    {
       unregisterListener();
-    }
+
     m_model = model;
     registerListener();
     invalidate();

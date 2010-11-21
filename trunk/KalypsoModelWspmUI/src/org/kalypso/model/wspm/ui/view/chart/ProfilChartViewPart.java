@@ -56,6 +56,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.chart.ui.IChartPart;
+import org.kalypso.chart.ui.editor.ChartPartListener;
 import org.kalypso.chart.ui.editor.mousehandler.AxisDragHandlerDelegate;
 import org.kalypso.chart.ui.editor.mousehandler.PlotDragHandlerDelegate;
 import org.kalypso.contribs.eclipse.ui.partlistener.AdapterPartListener;
@@ -99,6 +100,8 @@ public class ProfilChartViewPart extends ViewPart implements IChartPart, IProfil
 
   private Form m_form;
 
+  private ChartPartListener m_partListener = null;
+
   /**
    * @see de.openali.odysseus.chart.framework.model.event.IEventProvider#addListener(java.lang.Object)
    */
@@ -106,7 +109,6 @@ public class ProfilChartViewPart extends ViewPart implements IChartPart, IProfil
   public void addListener( final IChartModelEventListener listener )
   {
     m_chartModelEventHandler.addListener( listener );
-
   }
 
   /**
@@ -162,12 +164,22 @@ public class ProfilChartViewPart extends ViewPart implements IChartPart, IProfil
   @Override
   public void dispose( )
   {
+    if( m_partListener != null )
+    {
+      m_partListener.dispose();
+      getSite().getPage().removePartListener( m_partListener );
+      m_partListener = null;
+    }
+
     if( m_provider != null )
       m_provider.removeProfilProviderListener( this );
+
     if( m_adapterPartListener != null )
       m_adapterPartListener.dispose();
+
     if( m_profilChartComposite != null )
       m_profilChartComposite.dispose();
+
     if( m_form != null )
       m_form.dispose();
 
@@ -250,6 +262,9 @@ public class ProfilChartViewPart extends ViewPart implements IChartPart, IProfil
 
     final IWorkbenchPage page = site.getPage();
     m_adapterPartListener.init( page );
+
+    m_partListener = new ChartPartListener( this, site );
+    page.addPartListener( m_partListener );
   }
 
   /**

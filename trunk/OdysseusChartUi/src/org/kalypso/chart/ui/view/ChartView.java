@@ -58,12 +58,15 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.ISelectionListener;
+import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.chart.ui.KalypsoChartUiPlugin;
 import org.kalypso.chart.ui.editor.ChartEditorTreeOutlinePage;
+import org.kalypso.chart.ui.editor.ChartPartListener;
 import org.kalypso.chart.ui.editor.mousehandler.AxisDragHandlerDelegate;
 import org.kalypso.chart.ui.editor.mousehandler.PlotDragHandlerDelegate;
 import org.kalypso.chart.ui.i18n.Messages;
@@ -90,6 +93,8 @@ public class ChartView extends ViewPart implements IChartPart, ISelectionListene
 {
   public static final String ID = "org.kalypso.chart.ui.view.ChartView"; //$NON-NLS-1$
 
+  private ChartPartListener m_partListener = null;
+
   private Composite m_composite = null;
 
   private IChartModel m_chartModel = null;
@@ -111,18 +116,28 @@ public class ChartView extends ViewPart implements IChartPart, ISelectionListene
   private ChartEditorTreeOutlinePage m_outlinePage;
 
   /**
+   * @see org.eclipse.ui.part.ViewPart#init(org.eclipse.ui.IViewSite)
+   */
+  @Override
+  public void init( final IViewSite site ) throws PartInitException
+  {
+    super.init( site );
+
+    m_partListener = new ChartPartListener( this, site );
+    site.getPage().addPartListener( m_partListener );
+  }
+
+  /**
    * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
    */
   @Override
   public void createPartControl( final Composite parent )
   {
-
     m_composite = new Composite( parent, SWT.NONE );
     m_composite.setLayout( new FillLayout() );
     getSite().getPage().addSelectionListener( this );
 
     updateControl();
-
   }
 
   public void setInput( final IFile input )
@@ -252,14 +267,18 @@ public class ChartView extends ViewPart implements IChartPart, ISelectionListene
   {
     super.dispose();
 
+    if( m_partListener != null )
+    {
+      m_partListener.dispose();
+      getSite().getPage().removePartListener( m_partListener );
+      m_partListener = null;
+    }
+
     if( m_tooltipHandler != null )
-    {
       m_tooltipHandler.dispose();
-    }
+
     if( m_outlinePage != null )
-    {
       m_outlinePage.dispose();
-    }
   }
 
   /**

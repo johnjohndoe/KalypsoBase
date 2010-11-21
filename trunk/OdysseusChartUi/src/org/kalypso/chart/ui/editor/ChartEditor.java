@@ -91,6 +91,8 @@ public class ChartEditor extends EditorPart implements IChartPart
 
   private AxisDragHandlerDelegate m_axisDragHandler;
 
+  private ChartPartListener m_chartPartListener;
+
   /**
    * @see org.eclipse.ui.part.EditorPart#init(org.eclipse.ui.IEditorSite, org.eclipse.ui.IEditorInput)
    */
@@ -98,9 +100,10 @@ public class ChartEditor extends EditorPart implements IChartPart
   public void init( final IEditorSite site, final IEditorInput input ) throws PartInitException
   {
     if( !(input instanceof IStorageEditorInput) )
-    {
       throw new PartInitException( "Invalid Input: Must be IStorageEditorInput" ); //$NON-NLS-1$
-    }
+
+    m_chartPartListener = new ChartPartListener( this, site );
+    site.getPage().addPartListener( m_chartPartListener );
 
     setSite( site );
     setInput( input );
@@ -151,6 +154,13 @@ public class ChartEditor extends EditorPart implements IChartPart
   @Override
   public void dispose( )
   {
+    if( m_chartPartListener != null )
+    {
+      m_chartPartListener.dispose();
+      getSite().getPage().removePartListener( m_chartPartListener );
+      m_chartPartListener = null;
+    }
+
     if( m_outlinePage != null )
     {
       m_outlinePage.dispose();
@@ -274,7 +284,7 @@ public class ChartEditor extends EditorPart implements IChartPart
   /**
    * Totally refreshes the control based on the contents of {@link m_config.}
    */
-  public void updateControl( )
+  protected void updateControl( )
   {
     if( m_composite == null || m_composite.isDisposed() )
     {
@@ -426,10 +436,6 @@ public class ChartEditor extends EditorPart implements IChartPart
             // drag delegates
             m_plotDragHandler = new PlotDragHandlerDelegate( m_chartComposite );
             m_axisDragHandler = new AxisDragHandlerDelegate( m_chartComposite );
-
-            // PartListener
-            final ChartPartListener chartPartListener = new ChartPartListener();
-            getSite().getPage().addPartListener( chartPartListener );
 
             m_composite.layout();
             m_chartModel.autoscale( autoscaledAxes.toArray( new IAxis[] {} ) );
