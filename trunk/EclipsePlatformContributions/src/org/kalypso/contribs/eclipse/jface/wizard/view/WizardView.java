@@ -146,6 +146,13 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
       if( partRef.getPart( false ) == WizardView.this )
         handleViewActivated();
     }
+
+    @Override
+    public void partDeactivated( final IWorkbenchPartReference partRef )
+    {
+      if( partRef.getPart( false ) == WizardView.this )
+        handleViewDectivated();
+    }
   };
 
   private RGB m_defaultTitleBackground;
@@ -198,13 +205,6 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
   public void setErrorBackgroundBehaviour( final boolean useNormalBackground )
   {
     m_useNormalBackground = useNormalBackground;
-  }
-
-  protected void handleViewActivated( )
-  {
-    final IWizard wizard = getWizard();
-    if( wizard instanceof IWizard2 )
-      ((IWizard2) wizard).activate();
   }
 
   /**
@@ -1803,6 +1803,20 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
         }
       } );
     }
+  }
+
+  protected void handleViewActivated( )
+  {
+    final IWizard wizard = getWizard();
+    if( wizard instanceof IWizard2 )
+      ((IWizard2) wizard).activate();
+  }
+
+  protected void handleViewDectivated( )
+  {
+    final IWizard wizard = getWizard();
+    if( wizard instanceof IWizard2 )
+      ((IWizard2) wizard).deactivate();
   }
 
 }

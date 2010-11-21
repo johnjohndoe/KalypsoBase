@@ -57,6 +57,11 @@ public interface IWizard2 extends IWizard
   void activate( );
 
   /**
+   * @see #activate()
+   */
+  void deactivate( );
+
+  /**
    * Finishes a single page
    * 
    * @return false, if something went wrong. Don't change the page now.
@@ -93,4 +98,5 @@ public interface IWizard2 extends IWizard
    * buttons in the normal wizard container implementations).
    */
   boolean useDefaultButton( );
+
 }
