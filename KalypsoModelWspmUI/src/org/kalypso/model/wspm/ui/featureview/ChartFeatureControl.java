@@ -77,7 +77,7 @@ import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.util.ChartUtilities;
 import de.openali.odysseus.chart.framework.view.IChartComposite;
-import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
+import de.openali.odysseus.chart.framework.view.impl.ChartImageComposite;
 import de.openali.odysseus.chartconfig.x020.ChartType;
 import de.openali.odysseus.chartconfig.x020.TitleType;
 
@@ -125,7 +125,7 @@ public class ChartFeatureControl extends AbstractFeatureControl implements IFeat
   @Override
   public Control createControl( final Composite parent, final int style )
   {
-    m_charts = new ChartComposite[m_chartTypes.length];
+    m_charts = new ChartImageComposite[m_chartTypes.length];
     m_chartTabs = new ChartTabItem[m_chartTypes.length];
 
     if( m_chartTabs.length == 0 )
