@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse.jface.wizard.view;
 
@@ -53,41 +53,44 @@ import org.eclipse.jface.wizard.IWizardPage;
  */
 public interface IWizard2 extends IWizard
 {
+  /** Should be called if this wizard is brought to top (for example, if the view containing this wizard is shown) */
+  void activate( );
+
   /**
    * Finishes a single page
    * 
    * @return false, if something went wrong. Don't change the page now.
    */
-  public boolean finishPage( final IWizardPage page );
+  boolean finishPage( final IWizardPage page );
 
-  public boolean hasCancelButton( );
+  boolean hasCancelButton( );
 
   /** The initial browser size in percent of the whole area */
-  public int getInitialBrowserSize( );
+  int getInitialBrowserSize( );
 
   /** The context-id which to show if help is invoked */
-  public String getHelpId( );
+  String getHelpId( );
 
   /**
    * Saves the contents/state of all pages.
    * 
    * @throws CoreException
    */
-  public IStatus saveAllPages( final IProgressMonitor monitor ) throws CoreException;
+  IStatus saveAllPages( IProgressMonitor monitor ) throws CoreException;
 
   /**
    * @return Return <code>true</code>, if a 'save' button should be visible for this wizard.
    */
-  public boolean hasSaveButton( );
+  boolean hasSaveButton( );
 
   /**
    * @return If the user should be aksed before any save.
    */
-  public boolean doAskForSave( );
+  boolean doAskForSave( );
 
   /**
    * Return <code>false</code>, if the wizard should not set the shell-default button (usually the next or finish
    * buttons in the normal wizard container implementations).
    */
-  public boolean useDefaultButton( );
+  boolean useDefaultButton( );
 }
