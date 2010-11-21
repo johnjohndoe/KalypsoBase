@@ -32,7 +32,7 @@ public class DragEditHandler extends AbstractChartDragHandler
     final IEditableChartLayer[] eLayers = getChart().getChartModel().getLayerManager().getEditableLayers();
     for( final IEditableChartLayer layer : eLayers )
     {
-      if( !layer.isLocked() && layer.isVisible() && layer.getHover( getChart().screen2plotPoint( point ) ) != null )
+      if( !layer.isLocked() && layer.isVisible() && layer.getHover( point ) != null )
       {
         return true;
       }
@@ -46,7 +46,7 @@ public class DragEditHandler extends AbstractChartDragHandler
   @Override
   public Cursor getCursor( final MouseEvent e )
   {
-    if( canSnap( new Point( e.x, e.y ) ) || m_editInfo != null )
+    if( canSnap( getChart().screen2plotPoint( new Point( e.x, e.y ) ) ) || m_editInfo != null )
       return e.display.getSystemCursor( SWT.CURSOR_HAND );
 
     return e.display.getSystemCursor( SWT.CURSOR_ARROW );
@@ -77,11 +77,10 @@ public class DragEditHandler extends AbstractChartDragHandler
   @Override
   public void doMouseMoveAction( final Point start, final EditInfo editInfo )
   {
+
     if( m_editInfo == null )
       m_editInfo = editInfo;
-    getChart().setEditInfo( ((IEditableChartLayer) m_editInfo.m_layer).drag( start, m_editInfo ) );
+    if( m_editInfo.m_layer != null )
+      getChart().setEditInfo( ((IEditableChartLayer) m_editInfo.m_layer).drag( start, m_editInfo ) );
   }
-
-  // m_chart.setTooltipInfo( null );
-// }
 }

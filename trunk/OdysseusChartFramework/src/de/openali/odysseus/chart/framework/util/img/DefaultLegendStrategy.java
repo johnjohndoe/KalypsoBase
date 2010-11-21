@@ -129,6 +129,7 @@ public class DefaultLegendStrategy implements ILegendPaintStrategy
     }
     finally
     {
+      image.dispose();
       gc.dispose();
     }
   }
@@ -210,11 +211,11 @@ public class DefaultLegendStrategy implements ILegendPaintStrategy
     final Image canvas = new Image( dev, size.x, size.y );
     final GC gc = new GC( canvas );
 
+    final Point iconSize = entry.computeSize( creator.getIconSize() );
+    final ImageData iconImageData = entry.getSymbol( iconSize );
+    final Image iconImage = new Image( dev, iconImageData );
     try
     {
-      final Point iconSize = entry.computeSize( creator.getIconSize() );
-      final ImageData iconImageData = entry.getSymbol( iconSize );
-      final Image iconImage = new Image( dev, iconImageData );
       gc.drawImage( iconImage, 0, 0 );
 
       final ITextStyle style = creator.getTextStyle();
@@ -228,6 +229,7 @@ public class DefaultLegendStrategy implements ILegendPaintStrategy
     }
     finally
     {
+      iconImage.dispose();
       canvas.dispose();
       gc.dispose();
     }

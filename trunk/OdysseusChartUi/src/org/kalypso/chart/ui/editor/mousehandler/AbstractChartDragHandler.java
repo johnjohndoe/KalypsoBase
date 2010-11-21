@@ -44,10 +44,10 @@ public abstract class AbstractChartDragHandler implements IChartDragHandler
     this( chart, 5 );
   }
 
-  public AbstractChartDragHandler( final IChartComposite chart, final int trashhold )
+  public AbstractChartDragHandler( final IChartComposite chart, final int trashold )
   {
     m_chart = chart;
-    m_trashOld = trashhold;
+    m_trashOld = trashold;
   }
 
   /**
@@ -64,28 +64,32 @@ public abstract class AbstractChartDragHandler implements IChartDragHandler
   @Override
   public void mouseDown( final MouseEvent e )
   {
-    m_clickInfo = getHover( getChart().screen2plotPoint( new Point( e.x, e.y ) ) );
+    final Point screen = new Point( e.x, e.y );
+    m_clickInfo = getHover( screen );
     if( m_clickInfo == null )
-      m_clickInfo = new EditInfo( null, null, null, null, null, new Point( e.x, e.y ) );
+      m_clickInfo = new EditInfo( null, null, null, null, null, getChart().screen2plotPoint( screen ) );
 
-    m_deltaSnapX = e.x - m_clickInfo.m_pos.x;
-    m_deltaSnapY = e.y - m_clickInfo.m_pos.y;
+    // offset from cursor relative to the given InfoObject Center
+    final Point pos = getChart().plotPoint2screen( m_clickInfo.m_pos );
+    m_deltaSnapX = e.x - pos.x;
+    m_deltaSnapY = e.y - pos.y;
     m_startX = e.x;
     m_startY = e.y;
   }
 
-  final protected EditInfo getHover( final Point point )
+  final protected EditInfo getHover( final Point screen )
   {
     final IChartModel model = getChart().getChartModel();
     if( model == null )
       return null;
 
+    final Point plotPoint = getChart().screen2plotPoint( screen );
     final IEditableChartLayer[] layers = model.getLayerManager().getEditableLayers();
     for( int i = layers.length - 1; i >= 0; i-- )
 
       if( layers[i].isVisible() )
       {
-        final EditInfo info = layers[i].getHover( point );
+        final EditInfo info = layers[i].getHover( plotPoint );
         if( info != null )
         {
           return info;
@@ -103,7 +107,10 @@ public abstract class AbstractChartDragHandler implements IChartDragHandler
     try
     {
       if( m_editInfo != null )
-        doMouseUpAction( new Point( e.x - m_deltaSnapX, e.y - m_deltaSnapY ), m_editInfo );
+      {
+        final Point plotPoint = getChart().screen2plotPoint( new Point( e.x - m_deltaSnapX, e.y - m_deltaSnapY ) );
+        doMouseUpAction( plotPoint, m_editInfo );
+      }
       else if( m_clickInfo != null )
         doMouseUpAction( null, m_clickInfo );
     }
@@ -149,8 +156,9 @@ public abstract class AbstractChartDragHandler implements IChartDragHandler
       return;
     if( (m_editInfo == null) && ((Math.abs( e.x - m_startX ) > m_trashOld) || (Math.abs( e.y - m_startY ) > m_trashOld)) )
       m_editInfo = new EditInfo( m_clickInfo );
-
-    doMouseMoveAction( getChart().screen2plotPoint( new Point( e.x - m_deltaSnapX, e.y - m_deltaSnapY ) ), m_editInfo == null ? m_clickInfo : m_editInfo );
+    
+    final Point plotPoint = getChart().screen2plotPoint( new Point( e.x - m_deltaSnapX, e.y - m_deltaSnapY ) );
+    doMouseMoveAction( plotPoint, m_editInfo == null ? m_clickInfo : m_editInfo );
 
   }
 

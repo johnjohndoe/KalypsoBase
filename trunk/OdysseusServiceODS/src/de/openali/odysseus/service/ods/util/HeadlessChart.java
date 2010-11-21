@@ -7,7 +7,7 @@ import org.eclipse.swt.widgets.Shell;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.view.IChartComposite;
-import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
+import de.openali.odysseus.chart.framework.view.impl.ChartImageComposite;
 
 /**
  * @author alibu this class contains all objects (e.g. shell) needed to keep a chart in the cache
@@ -22,7 +22,7 @@ public class HeadlessChart
   {
     final Display d = DisplayHelper.getInstance().getDisplay();
     m_shell = new Shell( d );
-    m_chart = new ChartComposite( m_shell, SWT.NONE, chartModel, bgRGB );
+    m_chart = new ChartImageComposite( m_shell, SWT.NONE, chartModel, bgRGB );
   }
 
   public void dispose( )
