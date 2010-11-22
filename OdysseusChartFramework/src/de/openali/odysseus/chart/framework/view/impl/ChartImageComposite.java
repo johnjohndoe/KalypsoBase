@@ -95,14 +95,7 @@ public class ChartImageComposite extends Canvas implements IChartComposite
 
   protected EditInfo m_tooltipInfo = null;
 
-  // FIXME: move code below constructor!
-  @Override
-  public EditInfo getTooltipInfo( )
-  {
-    return m_tooltipInfo;
-  }
-
-  private final ChartTooltipPainter m_tooltipPainter = new ChartTooltipPainter();
+   private final ChartTooltipPainter m_tooltipPainter = new ChartTooltipPainter();
 
   private final ILayerManagerEventListener m_layerEventListener = new ILayerManagerEventListener()
   {
@@ -302,9 +295,24 @@ public class ChartImageComposite extends Canvas implements IChartComposite
     return m_editInfo;
   }
 
+  /**
+   * @see de.openali.odysseus.chart.framework.view.IChartComposite#getPlot()
+   */
+  @Override
+  public Canvas getPlot( )
+  {
+    return this;
+  }
+
   public final Rectangle getPlotRect( )
   {
     return m_plotRect;
+  }
+
+  @Override
+  public EditInfo getTooltipInfo( )
+  {
+    return m_tooltipInfo;
   }
 
   protected final Rectangle inflateRect( final Rectangle rect, final Insets insets )
@@ -361,6 +369,14 @@ public class ChartImageComposite extends Canvas implements IChartComposite
     m_tooltipPainter.paint( gc, m_tooltipInfo.m_pos );
   }
 
+  @Override
+  public final Point plotPoint2screen( final Point plotPoint )
+  {
+    if( m_plotRect == null )
+      return plotPoint;
+    return new Point( plotPoint.x + m_plotRect.x, plotPoint.y + m_plotRect.y );
+  }
+
   private void registerListener( )
   {
     if( m_model == null )
@@ -385,14 +401,6 @@ public class ChartImageComposite extends Canvas implements IChartComposite
     if( m_plotRect == null || m_plotRect == null )
       return screen;
     return new Point( screen.x - m_plotRect.x, screen.y - m_plotRect.y );
-  }
-
-  @Override
-  public final Point plotPoint2screen( final Point plotPoint )
-  {
-    if( m_plotRect == null )
-      return plotPoint;
-    return new Point( plotPoint.x + m_plotRect.x, plotPoint.y + m_plotRect.y );
   }
 
   public void setChartModel( final IChartModel model )
@@ -424,15 +432,6 @@ public class ChartImageComposite extends Canvas implements IChartComposite
   }
 
   @Override
-  public void setTooltipInfo( final EditInfo tooltipInfo )
-  {
-    if( m_tooltipInfo == null && tooltipInfo == null )
-      return;
-    m_tooltipInfo = tooltipInfo;
-    redraw();
-  }
-
-  @Override
   public final void setPanOffset( final IAxis[] axes, final Point start, final Point end )
   {
     if( start == null || end == null )
@@ -444,21 +443,21 @@ public class ChartImageComposite extends Canvas implements IChartComposite
     invalidate();
   }
 
+  @Override
+  public void setTooltipInfo( final EditInfo tooltipInfo )
+  {
+    if( m_tooltipInfo == null && tooltipInfo == null )
+      return;
+    m_tooltipInfo = tooltipInfo;
+    redraw();
+  }
+
   protected final void unregisterListener( )
   {
     if( m_model == null )
       return;
     m_model.getLayerManager().removeListener( m_layerEventListener );
     m_model.getMapperRegistry().removeListener( m_mapperListener );
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.framework.view.IChartComposite#getPlot()
-   */
-  @Override
-  public Canvas getPlot( )
-  {
-    return this;
   }
 
 }

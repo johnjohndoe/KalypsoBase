@@ -77,10 +77,14 @@ public class DragEditHandler extends AbstractChartDragHandler
   @Override
   public void doMouseMoveAction( final Point start, final EditInfo editInfo )
   {
-
     if( m_editInfo == null )
       m_editInfo = editInfo;
     if( m_editInfo.m_layer != null )
-      getChart().setEditInfo( ((IEditableChartLayer) m_editInfo.m_layer).drag( start, m_editInfo ) );
+    {
+      if( ((IEditableChartLayer) editInfo.m_layer).isLocked() )
+        m_editInfo = null;
+      else
+        getChart().setEditInfo( ((IEditableChartLayer) editInfo.m_layer).drag( start, m_editInfo ) );
+    }
   }
 }

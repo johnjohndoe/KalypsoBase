@@ -154,6 +154,7 @@ public abstract class AbstractChartDragHandler implements IChartDragHandler
     setCursor( e );
     if( m_clickInfo == null )
       return;
+
     if( (m_editInfo == null) && ((Math.abs( e.x - m_startX ) > m_trashOld) || (Math.abs( e.y - m_startY ) > m_trashOld)) )
       m_editInfo = new EditInfo( m_clickInfo );
     
