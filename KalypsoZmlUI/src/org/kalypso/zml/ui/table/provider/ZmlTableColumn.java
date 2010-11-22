@@ -91,7 +91,7 @@ public class ZmlTableColumn implements IObservationListener
 
   public String getIdentifier( )
   {
-    return m_column.getId();
+    return m_column.getIdentifier();
   }
 
   public IAxis getIndexAxis( )

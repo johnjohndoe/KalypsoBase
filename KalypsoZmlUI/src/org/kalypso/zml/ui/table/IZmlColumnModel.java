@@ -42,7 +42,6 @@ package org.kalypso.zml.ui.table;
 
 import org.kalypso.zml.ui.table.provider.IZmlColumnModelListener;
 import org.kalypso.zml.ui.table.provider.ZmlTableColumn;
-import org.kalypso.zml.ui.table.schema.DataColumnType;
 import org.kalypso.zml.ui.table.schema.ZmlTableType;
 
 /**
@@ -54,8 +53,6 @@ public interface IZmlColumnModel
   ZmlTableType getTableType( );
 
   void addListener( IZmlColumnModelListener listener );
-
-  DataColumnType getDataColumnType( String id );
 
   void addColumn( ZmlTableColumn zmlTableColumn );
 

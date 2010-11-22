@@ -38,17 +38,16 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.provider;
+package org.kalypso.zml.ui.table;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.kalypso.zml.ui.table.IZmlColumnModel;
-import org.kalypso.zml.ui.table.IZmlTableColumn;
-import org.kalypso.zml.ui.table.schema.AbstractColumnType;
-import org.kalypso.zml.ui.table.schema.DataColumnType;
+import org.kalypso.zml.ui.table.provider.IZmlColumnModelListener;
+import org.kalypso.zml.ui.table.provider.ZmlColumnLoadCommand;
+import org.kalypso.zml.ui.table.provider.ZmlTableColumn;
 import org.kalypso.zml.ui.table.schema.ZmlTableType;
 
 /**
@@ -133,19 +132,6 @@ public class ZmlColumnModel implements IZmlColumnModel
     {
       command.cancel();
     }
-  }
-
-  @Override
-  public DataColumnType getDataColumnType( final String id )
-  {
-    final List<AbstractColumnType> columns = m_type.getColumns().getColumn();
-    for( final AbstractColumnType column : columns )
-    {
-      if( column.getId().equals( id ) )
-        return (DataColumnType) column;
-    }
-
-    return null;
   }
 
   @Override

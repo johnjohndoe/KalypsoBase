@@ -38,33 +38,37 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.utils;
+package org.kalypso.zml.ui.core.zml;
 
-import org.eclipse.swt.SWT;
-import org.kalypso.zml.ui.table.schema.AlignmentType;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
  * @author Dirk Kuch
  */
-public final class ZmlTableHelper
+public class MultipleTsLink
 {
-  private ZmlTableHelper( )
+  Set<TSLinkWithName> m_links = new LinkedHashSet<TSLinkWithName>();
+
+  private final String m_identifier;
+
+  public MultipleTsLink( final String identifier )
   {
+    m_identifier = identifier;
   }
 
-  public static int toSWT( final AlignmentType alignment )
+  public String getIdentifier( )
   {
-    if( alignment == null )
-      return SWT.LEFT;
-
-    if( AlignmentType.LEFT.toString().equals( alignment.toString() ) )
-      return SWT.LEFT;
-    else if( AlignmentType.CENTER.toString().equals( alignment.toString() ) )
-      return SWT.CENTER;
-    else if( AlignmentType.RIGHT.toString().equals( alignment.toString() ) )
-      return SWT.RIGHT;
-
-    return SWT.LEFT;
+    return m_identifier;
   }
 
+  public void add( final TSLinkWithName link )
+  {
+    m_links.add( link );
+  }
+
+  public TSLinkWithName[] getLinks( )
+  {
+    return m_links.toArray( new TSLinkWithName[] {} );
+  }
 }
