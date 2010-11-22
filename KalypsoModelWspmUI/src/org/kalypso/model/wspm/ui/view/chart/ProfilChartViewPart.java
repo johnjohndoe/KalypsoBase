@@ -57,7 +57,6 @@ import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.chart.ui.editor.ChartPartListener;
-import org.kalypso.chart.ui.editor.mousehandler.AxisDragHandlerDelegate;
 import org.kalypso.chart.ui.editor.mousehandler.PlotDragHandlerDelegate;
 import org.kalypso.contribs.eclipse.ui.partlistener.AdapterPartListener;
 import org.kalypso.contribs.eclipse.ui.partlistener.EditorFirstAdapterFinder;
@@ -91,8 +90,6 @@ public class ProfilChartViewPart extends ViewPart implements IChartPart, IProfil
   private IProfilProvider m_provider;
 
   private final ChartModelEventHandler m_chartModelEventHandler = new ChartModelEventHandler();
-
-  private AxisDragHandlerDelegate m_axisDragHandler = null;
 
   private PlotDragHandlerDelegate m_plotDragHandler = null;
 
@@ -135,7 +132,6 @@ public class ProfilChartViewPart extends ViewPart implements IChartPart, IProfil
       final IProfil profile = m_provider == null ? null : m_provider.getProfil();
       m_profilChartComposite = new ProfileChartComposite( m_form.getBody(), parent.getStyle(), getProfilLayerProvider(), profile );
       m_profilChartComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-      m_axisDragHandler = new AxisDragHandlerDelegate( m_profilChartComposite.getChart() );
       m_plotDragHandler = new PlotDragHandlerDelegate( m_profilChartComposite.getChart() );
 
     }
@@ -205,15 +201,7 @@ public class ProfilChartViewPart extends ViewPart implements IChartPart, IProfil
     return super.getAdapter( adapter );
   }
 
-  /**
-   * @see org.kalypso.chart.ui.IChartPart#getAxisDragHandler()
-   */
-  @Override
-  public AxisDragHandlerDelegate getAxisDragHandler( )
-  {
-    return m_axisDragHandler;
-  }
-
+ 
   /**
    * @see org.kalypso.chart.ui.IChartPart#getChartComposite()
    */

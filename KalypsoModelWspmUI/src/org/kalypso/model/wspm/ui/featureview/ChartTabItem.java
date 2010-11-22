@@ -67,7 +67,6 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.chart.ui.editor.ChartEditorTreeOutlinePage;
 import org.kalypso.chart.ui.editor.commandhandler.ChartHandlerUtilities;
-import org.kalypso.chart.ui.editor.mousehandler.AxisDragHandlerDelegate;
 import org.kalypso.chart.ui.editor.mousehandler.PlotDragHandlerDelegate;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
@@ -217,15 +216,7 @@ public class ChartTabItem extends Composite implements IChartPart
       m_chartComposite.getPlot().dispose();
   }
 
-  /**
-   * @see org.kalypso.chart.ui.IChartPart#getAxisDragHandler()
-   */
-  @Override
-  public AxisDragHandlerDelegate getAxisDragHandler( )
-  {
-    return null;// m_axisDragHandlerDelegate;
-  }
-
+  
   /**
    * @see org.kalypso.chart.ui.IChartPart#getOutlinePage()
    */
