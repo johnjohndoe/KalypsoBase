@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
+   <extension-point id="tableRule" name="tableRule" schema="schema/tableRule.exsd"/>
     <extension
        point="de.openali.odysseus.chart.factory.LayerProvider">
     <provider
@@ -24,4 +25,11 @@
          </nextCatalog>
       </catalogContribution>
    </extension>
+ <extension
+       point="org.kalypso.zml.ui.tableRule">
+    <rule
+          id="org.kalypso.zml.ui.table.rules.impl.ZmlRuleCellStatus"
+          rule="org.kalypso.zml.ui.table.rules.impl.ZmlRuleCellStatus">
+    </rule>
+ </extension>
 </plugin>
