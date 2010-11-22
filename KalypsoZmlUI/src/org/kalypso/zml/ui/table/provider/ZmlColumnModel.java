@@ -43,16 +43,9 @@ package org.kalypso.zml.ui.table.provider;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.ui.progress.UIJob;
-import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.zml.ui.table.IZmlColumnModel;
 import org.kalypso.zml.ui.table.IZmlTableColumn;
 import org.kalypso.zml.ui.table.schema.AbstractColumnType;
 import org.kalypso.zml.ui.table.schema.DataColumnType;
@@ -61,25 +54,31 @@ import org.kalypso.zml.ui.table.schema.ZmlTableType;
 /**
  * @author Dirk Kuch
  */
-public class ZmlColumnRegistry
+public class ZmlColumnModel implements IZmlColumnModel
 {
   private final Set<ZmlColumnLoadCommand> m_commands = new HashSet<ZmlColumnLoadCommand>();
 
   private final List<ZmlTableColumn> m_columns = new ArrayList<ZmlTableColumn>();
 
+  private final Set<IZmlColumnModelListener> m_listeners = new HashSet<IZmlColumnModelListener>();
+
   private final ZmlTableType m_type;
 
-  private final IZmlTableComposite m_table;
-
-  public ZmlColumnRegistry( final IZmlTableComposite table, final ZmlTableType type )
+  public ZmlColumnModel( final ZmlTableType type )
   {
-    m_table = table;
     m_type = type;
   }
 
-  public IZmlTableComposite getTable( )
+  @Override
+  public ZmlTableType getTableType( )
   {
-    return m_table;
+    return m_type;
+  }
+
+  @Override
+  public void addListener( final IZmlColumnModelListener listener )
+  {
+    m_listeners.add( listener );
   }
 
   public void loadColumn( final IZmlTableColumn column )
@@ -87,24 +86,26 @@ public class ZmlColumnRegistry
     m_commands.add( new ZmlColumnLoadCommand( this, column ) );
   }
 
-  protected void addColumn( final ZmlTableColumn column )
+  @Override
+  public void addColumn( final ZmlTableColumn column )
   {
     m_columns.add( column );
 
-    new UIJob( "" )
+    fireModelChanged();
+  }
+
+  @Override
+  public void fireModelChanged( )
+  {
+    final IZmlColumnModelListener[] listeners = m_listeners.toArray( new IZmlColumnModelListener[] {} );
+    for( final IZmlColumnModelListener listener : listeners )
     {
-
-      @Override
-      public IStatus runInUIThread( final IProgressMonitor monitor )
-      {
-        getTable().refresh();
-
-        return Status.OK_STATUS;
-      }
-    }.schedule();
+      listener.modelChanged();
+    }
 
   }
 
+  @Override
   public ZmlTableColumn[] getColumns( )
   {
     return m_columns.toArray( new ZmlTableColumn[] {} );
@@ -134,35 +135,7 @@ public class ZmlColumnRegistry
     }
   }
 
-  public ZmlTableRow[] getInput( ) throws SensorException
-  {
-    // TODO always date?!?
-    final Map<Object, ZmlTableRow> map = new TreeMap<Object, ZmlTableRow>();
-
-    for( final ZmlTableColumn column : getColumns() )
-    {
-      final IAxis indexAxis = column.getIndexAxis();
-
-      for( int i = 0; i < column.size(); i++ )
-      {
-        final Object index = column.get( i, indexAxis );
-
-        ZmlTableRow structure = map.get( index );
-        if( structure == null )
-        {
-          structure = new ZmlTableRow( index );
-          map.put( index, structure );
-        }
-
-        final ZmlValueReference reference = new ZmlValueReference( column, i );
-
-        structure.add( reference );
-      }
-    }
-
-    return map.values().toArray( new ZmlTableRow[] {} );
-  }
-
+  @Override
   public DataColumnType getDataColumnType( final String id )
   {
     final List<AbstractColumnType> columns = m_type.getColumns().getColumn();
@@ -175,6 +148,7 @@ public class ZmlColumnRegistry
     return null;
   }
 
+  @Override
   public ZmlTableColumn getColumn( final String id )
   {
     for( final ZmlTableColumn column : m_columns )

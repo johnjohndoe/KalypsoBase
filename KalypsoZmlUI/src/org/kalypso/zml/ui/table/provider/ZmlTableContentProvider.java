@@ -40,23 +40,28 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.provider;
 
+import java.util.Map;
+import java.util.TreeMap;
+
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.ui.KalypsoZmlUI;
-import org.kalypso.zml.ui.table.schema.ZmlTableType;
+import org.kalypso.zml.ui.table.IZmlColumnModel;
 
 /**
  * @author Dirk Kuch
  */
 public class ZmlTableContentProvider implements ITreeContentProvider
 {
-  private final ZmlTableType m_tableType;
 
-  public ZmlTableContentProvider( final ZmlTableType tableType )
+  private final IZmlColumnModel m_model;
+
+  public ZmlTableContentProvider( final IZmlColumnModel model )
   {
-    m_tableType = tableType;
+    m_model = model;
   }
 
   /**
@@ -65,8 +70,6 @@ public class ZmlTableContentProvider implements ITreeContentProvider
   @Override
   public void dispose( )
   {
-    // TODO Auto-generated method stub
-
   }
 
   /**
@@ -76,7 +79,6 @@ public class ZmlTableContentProvider implements ITreeContentProvider
   @Override
   public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
   {
-    // TODO Auto-generated method stub
 
   }
 
@@ -86,14 +88,37 @@ public class ZmlTableContentProvider implements ITreeContentProvider
   @Override
   public Object[] getElements( final Object inputElement )
   {
-    if( inputElement instanceof ZmlColumnRegistry )
+    if( inputElement instanceof IZmlColumnModel )
     {
       try
       {
-        final ZmlColumnRegistry registry = (ZmlColumnRegistry) inputElement;
-        final Object[] input = registry.getInput();
+        final IZmlColumnModel model = (IZmlColumnModel) inputElement;
 
-        return input;
+        // TODO always date?!?
+        final Map<Object, ZmlTableRow> map = new TreeMap<Object, ZmlTableRow>();
+
+        for( final ZmlTableColumn column : m_model.getColumns() )
+        {
+          final IAxis indexAxis = column.getIndexAxis();
+
+          for( int i = 0; i < column.size(); i++ )
+          {
+            final Object index = column.get( i, indexAxis );
+
+            ZmlTableRow structure = map.get( index );
+            if( structure == null )
+            {
+              structure = new ZmlTableRow( index );
+              map.put( index, structure );
+            }
+
+            final ZmlValueReference reference = new ZmlValueReference( column, i );
+            structure.add( reference );
+          }
+        }
+
+        return map.values().toArray( new ZmlTableRow[] {} );
+
       }
       catch( final SensorException e )
       {
