@@ -93,6 +93,8 @@ public final class TableTypeHelper
 
   public static AbstractColumnType cloneColumn( final AbstractColumnType base )
   {
+    // FIXME *brrrr* use reflection api!
+
     if( base instanceof DataColumnType )
     {
       final DataColumnType data = (DataColumnType) base;
@@ -118,6 +120,8 @@ public final class TableTypeHelper
 
   private static void copyBasicSettings( final AbstractColumnType source, final AbstractColumnType destination )
   {
+    // FIXME *brrrr* use reflection api!
+
     destination.setAlignment( source.getAlignment() );
     destination.setAutopack( source.isAutopack() );
     destination.setEditable( source.isEditable() );
@@ -125,7 +129,6 @@ public final class TableTypeHelper
     destination.setId( source.getId() );
     destination.setLabel( source.getLabel() );
     destination.setWidth( source.getWidth() );
-
   }
 
   public static AbstractColumnType findColumnType( final ZmlTableType tableType, final String identifier )
