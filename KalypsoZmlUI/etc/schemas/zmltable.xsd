@@ -3,24 +3,36 @@
 
   <!-- elements -->
   <element name="ZmlTable" type="zmltable:ZmlTableType" />
+  
+  <!-- columns -->
   <element name="Columns" type="zmltable:ColumnsType" />
   <element name="Column" type="zmltable:AbstractColumnType" /> 
+  
+  <!-- styles -->
+  <element name="StyleSet" type="zmltable:StyleSetType" />
+  <element name="Style" type="zmltable:AbstractStyleType" /> 
+  
+  <!-- rules -->
+  <element name="Rules" type="zmltable:RulesType" />
+  <element name="Rule" type="zmltable:RuleType" /> 
   
   <!-- types -->
   <complexType name="ZmlTableType">
     <sequence>
       <element ref="zmltable:Columns" minOccurs="0" maxOccurs="1" />
+      <element ref="zmltable:StyleSet" minOccurs="0" maxOccurs="1" />
     </sequence>
   </complexType>
 
 
+  <!-- column types -->
   <complexType name="ColumnsType">
     <sequence>
       <element ref="zmltable:Column" minOccurs="0" maxOccurs="unbounded" />
     </sequence>
   </complexType>
 
-  <!-- column types -->
+
   <complexType name="AbstractColumnType" abstract="true">
     <sequence>
       <element name="id" type="ID" />
@@ -28,6 +40,9 @@
       <element name="format" type="string" default="%s" />
       <element name="width" type="integer" default="100" />
       <element name="alignment" type="zmltable:AlignmentType" default="LEFT" />
+
+      <element ref="zmltable:Style" minOccurs="0" maxOccurs="1" />
+      <element ref="zmltable:Rules" minOccurs="0" maxOccurs="unbounded" />
     </sequence>
     <attribute name="autopack" type="boolean" default="true" />
     <attribute name="editable" type="boolean" default="false" />
@@ -61,4 +76,37 @@
       <enumeration value="RIGHT"></enumeration>
     </restriction>
   </simpleType>
+  
+  
+  
+  <!-- Styles -->
+  <complexType name="StyleSetType">
+    <sequence>
+      <element ref="zmltable:Style" minOccurs="0" maxOccurs="unbounded" />
+    </sequence>
+  </complexType>
+
+
+  <complexType name="AbstractStyleType" abstract="true">
+    <sequence>
+      <element name="id" type="ID" />
+    </sequence>
+  </complexType>
+  
+  
+   <!-- Rules -->
+  <complexType name="RulesType">
+    <sequence>
+      <element ref="zmltable:Rule" minOccurs="0" maxOccurs="unbounded" />
+    </sequence>
+  </complexType>
+
+
+  <complexType name="RuleType">
+    <sequence>
+      <element name="rule" type="anyURI" />
+      <element name="style" type="IDREF" />
+    </sequence>
+  </complexType>
+
 </schema>
