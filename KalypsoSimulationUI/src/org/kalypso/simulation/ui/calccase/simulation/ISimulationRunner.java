@@ -38,49 +38,16 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.simulation.core.refactoring;
+package org.kalypso.simulation.ui.calccase.simulation;
 
-import java.net.URL;
-
-import org.kalypso.simulation.core.refactoring.local.LocalSimulationRunner;
-import org.kalypso.simulation.core.simspec.Modeldata;
-
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 
 /**
- * @author kuch
- *
+ * Runs a simulation defined by a {@link org.kalypso.simulation.core.simspec.Modeldata}.
+ * 
+ * @author Gernot Belger
  */
-public class SimulationRunnerFactory
+public interface ISimulationRunner extends ICoreRunnableWithProgress
 {
-  
-  /**
-   * FIXME refactoring
-   * 
-   * <pre>
-   * 
-   * final ISimulationRunner runner = SimulationRunnerFacotry.createRunner( typeID );
-   * runner.getSpec();
-   * 
-   * final String typeID = modeldata.getTypeID();
-   * 
-   * // Übersetzung modeldata -&gt; hashmap
-   * // - Ableich modelspec/modeldata
-   * 
-   * // modelspec -&gt; Map&lt;String, Object&gt;
-   * // - Literal: String, Double, Integer
-   * // - ComplexValueType: Feature/Image
-   * // - ComplexReferenceType: URL/URI
-   * 
-   * final IStatus status = runner.run( Map &lt; String, Object &gt; inputs, List &lt; String &gt; outputs, progress );
-   * 
-   * </pre>
-   */
 
-  public static ISimulationRunner createRunner( final String calculationTypeId, final Modeldata modeldata, final URL inputDir )
-  {
-    // FIXME atm only local simulation runner will be returned...
-    return new LocalSimulationRunner( calculationTypeId, modeldata, inputDir );
-  }
-
- 
 }

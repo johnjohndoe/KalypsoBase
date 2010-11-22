@@ -38,49 +38,39 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.simulation.core.refactoring;
+package org.kalypso.simulation.ui.calccase.simulation;
 
-import java.net.URL;
-
-import org.kalypso.simulation.core.refactoring.local.LocalSimulationRunner;
+import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.kalypso.simulation.core.ISimulationService;
+import org.kalypso.simulation.core.calccase.CalcJobHandler;
+import org.kalypso.simulation.core.internal.local.LocalSimulationService;
 import org.kalypso.simulation.core.simspec.Modeldata;
 
-
 /**
- * @author kuch
+ * @author Gernot Belger
  *
  */
-public class SimulationRunnerFactory
+public class LocalSimulationRunner implements ISimulationRunner
 {
-  
-  /**
-   * FIXME refactoring
-   * 
-   * <pre>
-   * 
-   * final ISimulationRunner runner = SimulationRunnerFacotry.createRunner( typeID );
-   * runner.getSpec();
-   * 
-   * final String typeID = modeldata.getTypeID();
-   * 
-   * // Übersetzung modeldata -&gt; hashmap
-   * // - Ableich modelspec/modeldata
-   * 
-   * // modelspec -&gt; Map&lt;String, Object&gt;
-   * // - Literal: String, Double, Integer
-   * // - ComplexValueType: Feature/Image
-   * // - ComplexReferenceType: URL/URI
-   * 
-   * final IStatus status = runner.run( Map &lt; String, Object &gt; inputs, List &lt; String &gt; outputs, progress );
-   * 
-   * </pre>
-   */
+  private final IContainer m_calcCaseFolder;
 
-  public static ISimulationRunner createRunner( final String calculationTypeId, final Modeldata modeldata, final URL inputDir )
+  private final Modeldata m_modelspec;
+
+  public LocalSimulationRunner( final IContainer calcCaseFolder, final Modeldata modelspec )
   {
-    // FIXME atm only local simulation runner will be returned...
-    return new LocalSimulationRunner( calculationTypeId, modeldata, inputDir );
+    m_calcCaseFolder = calcCaseFolder;
+    m_modelspec = modelspec;
   }
 
- 
+  @Override
+  public IStatus execute( final IProgressMonitor monitor ) throws CoreException
+  {
+    final ISimulationService calcService = new LocalSimulationService();
+    final CalcJobHandler cjHandler = new CalcJobHandler( m_modelspec, calcService );
+    return cjHandler.runJob( m_calcCaseFolder, monitor );
+  }
+
 }

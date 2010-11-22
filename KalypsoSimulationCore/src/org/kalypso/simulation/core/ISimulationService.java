@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,13 +36,13 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.simulation.core;
 
-import java.io.File;
-
 import javax.activation.DataHandler;
+
+import org.eclipse.core.resources.IContainer;
 
 /**
  * <p>
@@ -134,7 +134,7 @@ public interface ISimulationService
    * @return Die Ergebnisse als ZIP Archiv, sollte in die Rechenvariante als Hauptverzeichnis entpackt werden.
    * @throws SimulationServiceException
    */
-  public void transferCurrentResults( final File targetFolder, final String jobID ) throws SimulationException;
+  public void transferCurrentResults( final IContainer targetFolder, final String jobID ) throws SimulationException;
 
   /**
    * Gibt zurück, welche Ergebniss (IDs) zur Zeit vorliegen.

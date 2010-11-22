@@ -79,7 +79,6 @@ import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.simulation.core.SimulationInfo;
 import org.kalypso.simulation.core.i18n.Messages;
 import org.kalypso.simulation.core.simspec.Modeldata;
-import org.kalypso.simulation.core.simspec.Modeldata.ClearAfterCalc;
 import org.kalypso.simulation.core.simspec.Modeldata.Input;
 import org.kalypso.simulation.core.simspec.Modeldata.Output;
 
@@ -143,7 +142,7 @@ public class CalcJobHandler
 
         try
         {
-          Thread.sleep( 1000 );
+          Thread.sleep( 100 );
         }
         catch( final InterruptedException e1 )
         {
@@ -177,13 +176,13 @@ public class CalcJobHandler
       {
         case FINISHED:
         {
-          final IProject project = calcCaseFolder.getProject();
-          // clear results as defined in modelspec
-          clearResults( calcCaseFolder, new SubProgressMonitor( monitor, 500 ) );
+          monitor.subTask( "Altergebnisse aus dem Arbeitsbereich löschen..." );
+          SimulationUtils.clearResultsAfterCalculation( m_modelspec, calcCaseFolder, new SubProgressMonitor( monitor, 500 ) );
 
-          // Ergebniss abholen
-          m_calcService.transferCurrentResults( project.getLocation().toFile(), m_jobID );
-          project.refreshLocal( IResource.DEPTH_INFINITE, new SubProgressMonitor( monitor, 500 ) );
+          monitor.subTask( "Ergebnisse in den Arbeitsbereich kopieren..." );
+          final IProject project = calcCaseFolder.getProject();
+          m_calcService.transferCurrentResults( project, m_jobID );
+
           return StatusUtilities.createMultiStatusFromMessage( jobBean.getFinishStatus(), KalypsoSimulationCorePlugin.getID(), 0, message, System.getProperty( "line.separator" ), null ); //$NON-NLS-1$
         }
 
@@ -237,33 +236,7 @@ public class CalcJobHandler
     }
   }
 
-  private void clearResults( final IContainer calcCaseFolder, final IProgressMonitor monitor ) throws CoreException
-  {
-    try
-    {
-      final IProject project = calcCaseFolder.getProject();
 
-      final List<ClearAfterCalc> clearList = m_modelspec.getClearAfterCalc();
-      monitor.beginTask( "Alte Ergebnisse werden gelöscht", clearList.size() ); //$NON-NLS-1$
-
-      for( final ClearAfterCalc clearAfterCalc : clearList )
-      {
-        final Modeldata.ClearAfterCalc clearType = clearAfterCalc;
-
-        final boolean relToCalc = clearType.isRelativeToCalcCase();
-        final String path = clearType.getPath();
-        final IResource resource = relToCalc ? calcCaseFolder.findMember( path ) : project.findMember( path );
-        if( resource != null )
-        {
-          resource.delete( false, new SubProgressMonitor( monitor, 1 ) );
-        }
-      }
-    }
-    finally
-    {
-      monitor.done();
-    }
-  }
 
   private String startCalcJob( final IContainer calcCaseFolder, final IProgressMonitor monitor ) throws CoreException
   {

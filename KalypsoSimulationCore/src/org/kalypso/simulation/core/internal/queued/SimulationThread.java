@@ -45,6 +45,7 @@ import java.util.logging.Logger;
 
 import javax.activation.DataHandler;
 
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.kalypso.commons.java.io.FileUtilities;
@@ -162,7 +163,7 @@ public class SimulationThread extends Thread
     }
   }
 
-  public void transferCurrentResults( final File targetFolder ) throws SimulationException
+  public void transferCurrentResults( final IContainer targetFolder ) throws SimulationException
   {
     m_resultPacker.transferCurrentResults( targetFolder );
   }

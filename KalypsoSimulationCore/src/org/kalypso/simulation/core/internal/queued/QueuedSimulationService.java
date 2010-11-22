@@ -55,6 +55,7 @@ import java.util.logging.Logger;
 import javax.activation.DataHandler;
 import javax.activation.URLDataSource;
 
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.runtime.Platform;
 import org.kalypso.contribs.java.net.IUrlCatalog;
 import org.kalypso.simulation.core.ISimulation;
@@ -379,12 +380,8 @@ public class QueuedSimulationService implements ISimulationService
     super.finalize();
   }
 
-  /**
-   * @throws CalcJobServiceException
-   * @see org.kalypso.services.calculation.service.ICalculationService#transferCurrentResults(java.lang.String)
-   */
   @Override
-  public void transferCurrentResults( final File targetFolder, final String jobID ) throws SimulationException
+  public void transferCurrentResults( final IContainer targetFolder, final String jobID ) throws SimulationException
   {
     final SimulationThread thread = findJobThread( jobID );
     thread.transferCurrentResults( targetFolder );

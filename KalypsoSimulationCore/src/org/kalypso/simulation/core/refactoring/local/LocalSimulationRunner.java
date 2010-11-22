@@ -48,10 +48,15 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.apache.commons.io.FileUtils;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.simulation.core.ISimulation;
+import org.kalypso.simulation.core.KalypsoSimulationCorePlugin;
 import org.kalypso.simulation.core.SimulationDataPath;
 import org.kalypso.simulation.core.i18n.Messages;
 import org.kalypso.simulation.core.internal.local.LocalSimulationFactory;
@@ -67,7 +72,6 @@ import org.kalypso.simulation.core.util.SimulationUtilitites;
  */
 public class LocalSimulationRunner implements ISimulationRunner
 {
-
   private final String m_calculationTypeId;
 
   private final Modeldata m_modeldata;
@@ -104,12 +108,17 @@ public class LocalSimulationRunner implements ISimulationRunner
       final DefaultResultEater resultEater = new DefaultResultEater( modelspec, outputPaths );
 
       job.run( tmpDir, inputProvider, resultEater, new LocalSimulationMonitor( monitor ) );
-      resultEater.transferCurrentResults( new File( m_inputDir.getFile() ) );
+
+      final IFolder resultFolder = ResourceUtilities.findFolderFromURL( m_inputDir );
+      if( resultFolder != null )
+        resultEater.transferCurrentResults( resultFolder );
+      else
+        resultEater.transferCurrentResults( FileUtils.toFile( m_inputDir ) );
     }
     catch( final Exception e )
     {
       e.printStackTrace();
-      throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.simulation.core.refactoring.local.LocalSimulationRunner.0" ), e ) ); //$NON-NLS-1$
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoSimulationCorePlugin.getID(), Messages.getString( "org.kalypso.simulation.core.refactoring.local.LocalSimulationRunner.0" ), e ) ); //$NON-NLS-1$
     }
     finally
     {

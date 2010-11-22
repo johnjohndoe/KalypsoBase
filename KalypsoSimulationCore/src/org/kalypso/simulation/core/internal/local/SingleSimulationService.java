@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.simulation.core.internal.local;
 
@@ -47,6 +47,7 @@ import java.util.logging.Logger;
 
 import javax.activation.DataHandler;
 
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.runtime.Platform;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.ISimulationService;
@@ -173,12 +174,8 @@ public class SingleSimulationService implements ISimulationService
     return m_simulationInfo;
   }
 
-  /*
-   * (non-Javadoc)
-   * @see org.kalypso.simulation.core.ISimulationService#transferCurrentResults (java.lang.String)
-   */
   @Override
-  public void transferCurrentResults( final File targetFolder, final String jobID ) throws SimulationException
+  public void transferCurrentResults( final IContainer targetFolder, final String jobID ) throws SimulationException
   {
     m_simulationThread.transferCurrentResults( targetFolder );
   }

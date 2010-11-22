@@ -46,6 +46,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 
+import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Path;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.simulation.core.ISimulationResultEater;
 import org.kalypso.simulation.core.SimulationDataPath;
@@ -122,28 +128,50 @@ public class DefaultResultEater implements ISimulationResultEater
     return results;
   }
 
+  public void transferCurrentResults( final IContainer targetFolder ) throws SimulationException
+  {
+    final IPath targetLocation = targetFolder.getLocation();
+    final File targetDir = targetLocation == null ? null : targetLocation.toFile();
+    transferCurrentResults( targetDir, targetFolder );
+  }
+
+  public void transferCurrentResults( final File targetDir ) throws SimulationException
+  {
+    transferCurrentResults( targetDir, null );
+  }
+
   /**
-   * Transfers the current results
+   * Transfers the current results. For internal use only. targetDir must correspond to targetFolder
    */
-  public void transferCurrentResults( final File targetFolder ) throws SimulationException
+  private void transferCurrentResults( final File targetDir, final IContainer targetFolder ) throws SimulationException
   {
     try
     {
       for( final SimulationResult result : m_results )
       {
-        final File file = result.getFile();
-        final String path = result.getPath();
+        final File resultFile = result.getFile();
+        final String relativeTargetPath = result.getPath();
 
-        // destination file is the file relative to the target folder
-        final File targetRelativeFile = new File( targetFolder, path );
-
+        final File targetFile = new File( targetDir, relativeTargetPath );
         // try to move file/directory to destination
-        FileUtilities.moveContents( file, targetRelativeFile );
+        FileUtilities.moveContents( resultFile, targetFile );
+
+        if( targetFolder != null )
+        {
+          final IResource targetMember = targetFolder.findMember( new Path( relativeTargetPath ) );
+          if( targetMember != null )
+            targetMember.refreshLocal( IResource.DEPTH_INFINITE, new NullProgressMonitor() );
+        }
       }
     }
     catch( final IOException e )
     {
       throw new SimulationException( Messages.getString( "org.kalypso.simulation.core.internal.queued.DefaultResultEater.2" ), e ); //$NON-NLS-1$
+    }
+    catch( final CoreException e )
+    {
+      e.printStackTrace();
+      throw new SimulationException( "Failed to refresh result files in workspace", e );
     }
   }
 
