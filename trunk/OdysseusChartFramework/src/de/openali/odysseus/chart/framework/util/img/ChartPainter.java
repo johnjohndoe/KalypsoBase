@@ -78,11 +78,24 @@ public class ChartPainter
   {
     m_model = model;
     m_size = size;
-    m_legendPainter = new ChartLegendPainter( model, size );
+
     m_titlePainter = new ChartTitlePainter( model, size );
-    m_plotInsets = getPlotInsets();
+    final int left = getAxesWidth( m_model.getMapperRegistry().getAxesAt( POSITION.LEFT ) );
+    final int right = getAxesWidth( m_model.getMapperRegistry().getAxesAt( POSITION.RIGHT ) );
+
+    m_legendPainter = new ChartLegendPainter( model, new Rectangle( left, 0, size.width - left - right, size.height ) );
+
+    final int top = m_titlePainter.getSize().y + getAxesWidth( m_model.getMapperRegistry().getAxesAt( POSITION.TOP ) );
+    final int bottom = m_legendPainter.getSize().y + getAxesWidth( m_model.getMapperRegistry().getAxesAt( POSITION.BOTTOM ) );
+
+    m_plotInsets = new Insets( top, left, bottom, right );
     setAxesHeight();
     m_plotPainter = new ChartPlotPainter( model, new Point( size.width - m_plotInsets.left - m_plotInsets.right, size.height - m_plotInsets.bottom - m_plotInsets.top ) );
+  }
+
+  public final Insets getPlotInsets( )
+  {
+    return m_plotInsets;
   }
 
   private void setAxesHeight( )
@@ -156,7 +169,7 @@ public class ChartPainter
   {
     if( m_size.width == 0 || m_size.height == 0 )
       return null;
-    
+
     final Device dev = PlatformUI.getWorkbench().getDisplay();
 
     final Image image = new Image( dev, m_size.width, m_size.height );
@@ -182,6 +195,8 @@ public class ChartPainter
         gc.drawImage( rightImage, m_size.width - m_plotInsets.right, m_plotInsets.top );
       if( plotImage != null )
         gc.drawImage( plotImage, m_plotInsets.left, m_plotInsets.top );
+      if( legendImage != null )
+        gc.drawImage( legendImage, m_plotInsets.left, m_size.y - m_legendPainter.getSize().y );
     }
     finally
     {
@@ -219,14 +234,4 @@ public class ChartPainter
     return width;
   }
 
-  public Insets getPlotInsets( )
-  {
-
-    final int top = m_titlePainter.getSize().y + getAxesWidth( m_model.getMapperRegistry().getAxesAt( POSITION.TOP ) );
-    final int left = getAxesWidth( m_model.getMapperRegistry().getAxesAt( POSITION.LEFT ) );
-    final int bottom = m_legendPainter.getSize().y + getAxesWidth( m_model.getMapperRegistry().getAxesAt( POSITION.BOTTOM ) );
-    final int right = getAxesWidth( m_model.getMapperRegistry().getAxesAt( POSITION.RIGHT ) );
-
-    return new Insets( top, left, bottom, right );
-  }
 }

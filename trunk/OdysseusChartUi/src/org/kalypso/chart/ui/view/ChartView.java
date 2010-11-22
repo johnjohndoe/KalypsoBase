@@ -335,7 +335,6 @@ public class ChartView extends ViewPart implements IChartPart, ISelectionListene
   @Override
   public void selectionChanged( final IWorkbenchPart part, final ISelection selection )
   {
-
     // TODO Auto-generated method stub
     if( selection instanceof ITreeSelection )
     {
