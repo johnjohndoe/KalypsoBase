@@ -33,7 +33,6 @@ import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.chart.ui.KalypsoChartUiPlugin;
-import org.kalypso.chart.ui.editor.mousehandler.AxisDragHandlerDelegate;
 import org.kalypso.chart.ui.editor.mousehandler.PlotDragHandlerDelegate;
 import org.kalypso.chart.ui.i18n.Messages;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
@@ -88,8 +87,6 @@ public class ChartEditor extends EditorPart implements IChartPart
   private IChartComposite m_chartComposite = null;
 
   private PlotDragHandlerDelegate m_plotDragHandler;
-
-  private AxisDragHandlerDelegate m_axisDragHandler;
 
   private ChartPartListener m_chartPartListener;
 
@@ -435,8 +432,6 @@ public class ChartEditor extends EditorPart implements IChartPart
 
             // drag delegates
             m_plotDragHandler = new PlotDragHandlerDelegate( m_chartComposite );
-            m_axisDragHandler = new AxisDragHandlerDelegate( m_chartComposite );
-
             m_composite.layout();
             m_chartModel.autoscale( autoscaledAxes.toArray( new IAxis[] {} ) );
           }
@@ -526,12 +521,6 @@ public class ChartEditor extends EditorPart implements IChartPart
   public PlotDragHandlerDelegate getPlotDragHandler( )
   {
     return m_plotDragHandler;
-  }
-
-  @Override
-  public AxisDragHandlerDelegate getAxisDragHandler( )
-  {
-    return m_axisDragHandler;
   }
 
   protected void setDirty( final boolean dirty )

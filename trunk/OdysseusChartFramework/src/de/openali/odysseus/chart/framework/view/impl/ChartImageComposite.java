@@ -34,15 +34,11 @@ import de.openali.odysseus.chart.framework.model.mapper.IMapper;
 import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
 import de.openali.odysseus.chart.framework.util.img.ChartPainter;
 import de.openali.odysseus.chart.framework.util.img.ChartTooltipPainter;
-import de.openali.odysseus.chart.framework.view.IAxisDragHandler;
 import de.openali.odysseus.chart.framework.view.IChartComposite;
 import de.openali.odysseus.chart.framework.view.IChartDragHandler;
-import de.openali.odysseus.chart.framework.view.TooltipHandler2;
 
 /**
  * @author kimwerner
- * @author burtscher Chart widget; parent for AxisComponent and Plot also acts as LayerManager and contains the
- *         AxisRegistry;
  */
 public class ChartImageComposite extends Canvas implements IChartComposite
 {
@@ -200,7 +196,7 @@ public class ChartImageComposite extends Canvas implements IChartComposite
     }
   };
 
-  private final TooltipHandler2 m_tooltipHandler = new TooltipHandler2( this );
+  private final TooltipHandler m_tooltipHandler = new TooltipHandler( this );
 
   private final InvalidateChartJob m_invalidateChartJob = new InvalidateChartJob( "" );
 
@@ -463,24 +459,6 @@ public class ChartImageComposite extends Canvas implements IChartComposite
   public Canvas getPlot( )
   {
     return this;
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.framework.view.IChartComposite#removeAxisHandler(de.openali.odysseus.chart.framework.view.IAxisDragHandler)
-   */
-  @Override
-  public void removeAxisHandler( final IAxisDragHandler handler )
-  {
-    // TODO: implement AxisHandler;
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.framework.view.IChartComposite#addAxisHandler(de.openali.odysseus.chart.framework.view.IAxisDragHandler)
-   */
-  @Override
-  public void addAxisHandler( final IAxisDragHandler handler )
-  {
-    // TODO: implement AxisHandler
   }
 
 }

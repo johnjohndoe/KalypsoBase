@@ -42,7 +42,6 @@ package org.kalypso.model.wspm.ui.dialog.compare;
 
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Composite;
-import org.kalypso.chart.ui.editor.mousehandler.AxisDragHandlerDelegate;
 import org.kalypso.chart.ui.editor.mousehandler.PlotDragHandlerDelegate;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIExtensions;
@@ -88,7 +87,6 @@ public class ProfileChartComposite extends ChartImageComposite implements IProfi
 
     m_profilLayerProvider = layerProvider;
     new PlotDragHandlerDelegate( this );
-    new AxisDragHandlerDelegate( this );
 
     invalidate( profile, null );
   }

@@ -67,7 +67,6 @@ import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.chart.ui.KalypsoChartUiPlugin;
 import org.kalypso.chart.ui.editor.ChartEditorTreeOutlinePage;
 import org.kalypso.chart.ui.editor.ChartPartListener;
-import org.kalypso.chart.ui.editor.mousehandler.AxisDragHandlerDelegate;
 import org.kalypso.chart.ui.editor.mousehandler.PlotDragHandlerDelegate;
 import org.kalypso.chart.ui.i18n.Messages;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
@@ -82,8 +81,8 @@ import de.openali.odysseus.chart.framework.model.event.IChartModelEventListener;
 import de.openali.odysseus.chart.framework.model.impl.ChartModel;
 import de.openali.odysseus.chart.framework.util.img.TitleTypeBean;
 import de.openali.odysseus.chart.framework.view.IChartComposite;
-import de.openali.odysseus.chart.framework.view.TooltipHandler;
 import de.openali.odysseus.chart.framework.view.impl.ChartImageComposite;
+import de.openali.odysseus.chart.framework.view.impl.TooltipHandler;
 import de.openali.odysseus.chartconfig.x020.ChartType;
 
 /**
@@ -110,8 +109,6 @@ public class ChartView extends ViewPart implements IChartPart, ISelectionListene
   private PlotDragHandlerDelegate m_plotDragHandler;
 
   private TooltipHandler m_tooltipHandler;
-
-  private AxisDragHandlerDelegate m_axisDragHandler;
 
   private ChartEditorTreeOutlinePage m_outlinePage;
 
@@ -329,15 +326,6 @@ public class ChartView extends ViewPart implements IChartPart, ISelectionListene
   public void setTitleImage( final Image titleImage )
   {
     super.setTitleImage( titleImage );
-  }
-
-  /**
-   * @see org.kalypso.chart.ui.IChartPart#getAxisDragHandler()
-   */
-  @Override
-  public AxisDragHandlerDelegate getAxisDragHandler( )
-  {
-    return m_axisDragHandler;
   }
 
   /**
