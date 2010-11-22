@@ -40,10 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.simulation.core.internal.local;
 
-import java.io.File;
-
 import javax.activation.DataHandler;
 
+import org.eclipse.core.resources.IContainer;
 import org.kalypso.simulation.core.ISimulationService;
 import org.kalypso.simulation.core.SimulationDataPath;
 import org.kalypso.simulation.core.SimulationDescription;
@@ -185,11 +184,8 @@ public class LocalSimulationService implements ISimulationService
     return m_service.startJob( typeID, description, zipHandler, input, output );
   }
 
-  /**
-   * @see org.kalypso.simulation.core.ISimulationService#transferCurrentResults(java.lang.String)
-   */
   @Override
-  public void transferCurrentResults( final File targetFolder, final String jobID ) throws SimulationException
+  public void transferCurrentResults( final IContainer targetFolder, final String jobID ) throws SimulationException
   {
     m_service.transferCurrentResults( targetFolder, jobID );
   }

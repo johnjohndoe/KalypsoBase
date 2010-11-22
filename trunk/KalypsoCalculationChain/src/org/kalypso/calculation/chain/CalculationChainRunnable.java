@@ -53,7 +53,7 @@ public class CalculationChainRunnable implements ICoreRunnableWithProgress
     this( jobSpecificationList, context, null );
   }
 
-  public CalculationChainRunnable( final List<SimulationJobSpecification> jobSpecificationList, final URL context, ISimulationMonitor monitor )
+  public CalculationChainRunnable( final List<SimulationJobSpecification> jobSpecificationList, final URL context, final ISimulationMonitor monitor )
   {
     m_monitor = monitor;
     m_jobSpecificationList.addAll( jobSpecificationList );
@@ -99,6 +99,9 @@ public class CalculationChainRunnable implements ICoreRunnableWithProgress
           final IResource workspaceResource = ResourcesPlugin.getWorkspace().getRoot().findMember( workspace );
 
           URL context;
+          // FIXME: use platform constants!
+          // FIXME: what is the link between m_context and the workspace resource?
+          // If we are working in a tmpDir, why do we still have a workspaceResource?
           if( m_context.toString().startsWith( "platform:/resource//" ) ) //$NON-NLS-1$
           {
             // local processing - project workspace
@@ -118,6 +121,8 @@ public class CalculationChainRunnable implements ICoreRunnableWithProgress
           final ISimulationRunner runner = SimulationRunnerFactory.createRunner( job.getCalculationTypeID(), modeldata, context );
           runner.run( inputs, outputs, monitor );
 
+          // FIXME: no need to refresh all; if we are working in a workspace (not tmp), the runner already refreshes the
+          // resources
           workspaceResource.refreshLocal( IResource.DEPTH_INFINITE, new NullProgressMonitor() );
         }
       }
@@ -136,7 +141,7 @@ public class CalculationChainRunnable implements ICoreRunnableWithProgress
     return status;
   }
 
-  private void setTask( String message, IProgressMonitor monitor )
+  private void setTask( final String message, final IProgressMonitor monitor )
   {
     if( m_monitor != null )
     {

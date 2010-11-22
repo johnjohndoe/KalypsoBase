@@ -78,8 +78,6 @@ public class SimulationRunnerFactory
 
   public static ISimulationRunner createRunner( final String calculationTypeId, final Modeldata modeldata, final URL inputDir )
   {
-    
-    
     // FIXME atm only local simulation runner will be returned...
     return new LocalSimulationRunner( calculationTypeId, modeldata, inputDir );
   }

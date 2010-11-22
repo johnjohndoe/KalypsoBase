@@ -43,18 +43,16 @@ package org.kalypso.simulation.ui.calccase;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
 import javax.xml.bind.DatatypeConverter;
-
-import net.opengeospatial.wps.ProcessDescriptionType;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IContainer;
@@ -88,14 +86,12 @@ import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
-import org.kalypso.service.wps.client.WPSRequest;
-import org.kalypso.service.wps.client.simulation.SimulationDelegate;
-import org.kalypso.simulation.core.ISimulationService;
 import org.kalypso.simulation.core.KalypsoSimulationCoreJaxb;
-import org.kalypso.simulation.core.calccase.CalcJobHandler;
-import org.kalypso.simulation.core.internal.local.LocalSimulationService;
 import org.kalypso.simulation.core.simspec.Modeldata;
 import org.kalypso.simulation.ui.KalypsoSimulationUIPlugin;
+import org.kalypso.simulation.ui.calccase.simulation.ISimulationRunner;
+import org.kalypso.simulation.ui.calccase.simulation.LocalSimulationRunner;
+import org.kalypso.simulation.ui.calccase.simulation.WpsSimulationRunner;
 import org.kalypso.simulation.ui.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
@@ -397,7 +393,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       // nach 24h spätestens abbrechen!
       count++;
       if( count == 24 )
-        throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.simulation.ui.calccase.ModelNature.7" ) + cal ) ); //$NON-NLS-1$
+        throw new CoreException( new Status( IStatus.ERROR, KalypsoSimulationUIPlugin.getID(), Messages.getString( "org.kalypso.simulation.ui.calccase.ModelNature.7" ) + cal ) ); //$NON-NLS-1$
     }
 
     attributes.setProperty( "kalypso.startforecast", DatatypeConverter.printDateTime( cal ) ); //$NON-NLS-1$
@@ -436,7 +432,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
   {
     final IFolder launchFolder = getLaunchFolder();
     if( launchFolder == null )
-      throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.simulation.ui.calccase.ModelNature.8" ) ) ); //$NON-NLS-1$
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoSimulationUIPlugin.getID(), Messages.getString( "org.kalypso.simulation.ui.calccase.ModelNature.8" ) ) ); //$NON-NLS-1$
 
     return launchFolder.getFile( launchName + ".launch" );
   }
@@ -628,7 +624,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     return runCalculation( calcCaseFolder, monitor, modelspec );
   }
 
-  // TODO: move this one to simulation plugins
+  // TODO: move this one of the simulation plugins
   public static IStatus runCalculation( final IContainer calcCaseFolder, final IProgressMonitor monitor, final Modeldata modelspec ) throws CoreException
   {
     /**
@@ -658,50 +654,45 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
     try
     {
-      // REMARK: very crude: If no WPS-Endpoint is configured, we try to start the calculation locally
-      final String serviceEndpoint = System.getProperty( "org.kalypso.service.wps.service" ); //$NON-NLS-1$
-      final String defaultUseWps = Boolean.toString( serviceEndpoint != null );
-
-      // REMARK: Instead of the WPS-Endpoint a different system property is checked...
-      // TODO: We should introduce an abstraction for all available WPS (including a 'fake' local one)
-      // and find out, which ones are available for calculation this typeID.
-      // If more than one is available, the user should be able to choose.
-      final boolean remoteCalculation = Boolean.parseBoolean( System.getProperty( "org.kalypso.hwv.use.wps", defaultUseWps ) ); //$NON-NLS-1$
-      if( !remoteCalculation )
-      {
-        // TODO: the extension-point for ISimulationService is not used anymore. Remove it.
-        // final ISimulationService calcService = KalypsoSimulationCorePlugin.findCalculationServiceForType( typeID );
-        final ISimulationService calcService = new LocalSimulationService();
-        final CalcJobHandler cjHandler = new CalcJobHandler( modelspec, calcService );
-        return cjHandler.runJob( calcCaseFolder, progress.newChild( 1000 ) );
-      }
-
-      final String typeID = modelspec.getTypeID();
-      final WPSRequest simulationJob = new WPSRequest( typeID, serviceEndpoint, 1000 * 60 * 60 );
-      final SimulationDelegate delegate = new SimulationDelegate( typeID, calcCaseFolder, modelspec );
-      delegate.init();
-      final ProcessDescriptionType processDescription = simulationJob.getProcessDescription( progress.newChild( 100, SubMonitor.SUPPRESS_NONE ) );
-      final Map<String, Object> inputs = delegate.createInputs( processDescription, progress.newChild( 100, SubMonitor.SUPPRESS_NONE ) );
-      final List<String> outputs = delegate.createOutputs();
-
-      final IStatus status = simulationJob.run( inputs, outputs, progress.newChild( 800, SubMonitor.SUPPRESS_NONE ) );
-      if( !status.isOK() )
-        return status;
-
-      delegate.copyResults( simulationJob.getReferences() );
-      delegate.finish();
-
-      return status;
+      final ISimulationRunner runner = createSimulationRunner( calcCaseFolder, modelspec );
+      return runner.execute( progress.newChild( SubMonitor.SUPPRESS_NONE ) );
     }
     catch( final CoreException e )
     {
       e.printStackTrace();
       throw e;
     }
+    catch( final InvocationTargetException e )
+    {
+      e.printStackTrace();
+      final IStatus error = new Status( IStatus.ERROR, KalypsoSimulationUIPlugin.getID(), "Unexpected error during simulation", e.getTargetException() );
+      throw new CoreException( error );
+    }
+    catch( final InterruptedException e )
+    {
+      return Status.CANCEL_STATUS;
+    }
     finally
     {
       progress.done();
     }
+  }
+
+  private static ISimulationRunner createSimulationRunner( final IContainer calcCaseFolder, final Modeldata modelspec )
+  {
+    // REMARK: very crude: If no WPS-Endpoint is configured, we try to start the calculation locally
+    final String serviceEndpoint = System.getProperty( "org.kalypso.service.wps.service" ); //$NON-NLS-1$
+    final String defaultUseWps = Boolean.toString( serviceEndpoint != null );
+
+    // REMARK: Instead of the WPS-Endpoint a different system property is checked...
+    // TODO: We should introduce an abstraction for all available WPS (including a 'fake' local one)
+    // and find out, which ones are available for calculation this typeID.
+    // If more than one is available, the user should be able to choose.
+    final boolean remoteCalculation = Boolean.parseBoolean( System.getProperty( "org.kalypso.hwv.use.wps", defaultUseWps ) ); //$NON-NLS-1$
+    if( remoteCalculation )
+      return new WpsSimulationRunner( calcCaseFolder, modelspec, serviceEndpoint );
+    else
+      return new LocalSimulationRunner( calcCaseFolder, modelspec );
   }
 
   /**
