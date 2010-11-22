@@ -119,7 +119,7 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
     m_columnIndex.put( index, type );
 
     final TableViewerColumn column = new TableViewerColumn( m_tableViewer, TableTypeHelper.toSWT( type.getAlignment() ) );
-    column.setLabelProvider( new ZmlLabelProvider( type ) );
+    column.setLabelProvider( new ZmlLabelProvider( m_model.getTableType().getStyleSet(), type ) );
     column.getColumn().setText( type.getLabel() );
 
     final BigInteger width = type.getWidth();

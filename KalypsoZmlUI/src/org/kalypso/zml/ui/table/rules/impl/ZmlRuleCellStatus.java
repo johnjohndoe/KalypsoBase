@@ -40,7 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.rules.impl;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.kalypso.zml.ui.table.provider.ZmlValueReference;
 import org.kalypso.zml.ui.table.rules.IZmlTableRule;
+import org.kalypso.zml.ui.table.schema.AbstractStyleType;
+import org.kalypso.zml.ui.table.schema.CellStyleType;
 
 /**
  * @author Dirk Kuch
@@ -48,5 +54,46 @@ import org.kalypso.zml.ui.table.rules.IZmlTableRule;
 public class ZmlRuleCellStatus implements IZmlTableRule
 {
   public static final String ID = "org.kalypso.zml.ui.table.rules.impl.ZmlRuleCellStatus";
+
+  Map<String, AbstractStyleType> m_styles = new HashMap<String, AbstractStyleType>();
+
+  /**
+   * @see org.kalypso.zml.ui.table.rules.IZmlTableRule#getIdentifier()
+   */
+  @Override
+  public String getIdentifier( )
+  {
+    return ID;
+  }
+
+  /**
+   * @see org.kalypso.zml.ui.table.rules.IZmlTableRule#addStyle(java.lang.String,
+   *      org.kalypso.zml.ui.table.schema.AbstractStyleType)
+   */
+  @Override
+  public void addStyle( final String columnId, final AbstractStyleType style )
+  {
+    m_styles.put( columnId, style );
+  }
+
+  /**
+   * @see org.kalypso.zml.ui.table.rules.IZmlTableRule#apply(org.kalypso.zml.ui.table.provider.ZmlValueReference)
+   */
+  @Override
+  public boolean apply( final ZmlValueReference reference )
+  {
+    // TODO Auto-generated method stub
+    return false;
+  }
+
+  /**
+   * @see org.kalypso.zml.ui.table.rules.IZmlTableRule#getStyle(java.lang.String)
+   */
+  @Override
+  public CellStyleType getStyle( final String columnId )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
 
 }

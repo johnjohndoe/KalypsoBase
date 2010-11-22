@@ -42,24 +42,127 @@ package org.kalypso.zml.ui.table.provider;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
+import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.RGB;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.ui.KalypsoZmlUI;
+import org.kalypso.zml.ui.table.rules.IZmlTableRule;
 import org.kalypso.zml.ui.table.schema.AbstractColumnType;
+import org.kalypso.zml.ui.table.schema.CellStyleType;
 import org.kalypso.zml.ui.table.schema.IndexColumnType;
+import org.kalypso.zml.ui.table.schema.RuleType;
+import org.kalypso.zml.ui.table.schema.RulesType;
+import org.kalypso.zml.ui.table.schema.StyleSetType;
+import org.kalypso.zml.ui.table.utils.TableTypeHelper;
 
 /**
  * @author Dirk Kuch
  */
 public class ZmlLabelProvider extends ColumnLabelProvider
 {
+  private static final ColorRegistry COLOR_REGISTRY = new ColorRegistry();
+
   private final AbstractColumnType m_type;
 
-  public ZmlLabelProvider( final AbstractColumnType type )
+  Set<IZmlTableRule> m_rules = new HashSet<IZmlTableRule>();
+
+  private final StyleSetType m_styleSet;
+
+  public ZmlLabelProvider( final StyleSetType styleSet, final AbstractColumnType type )
   {
+    m_styleSet = styleSet;
     m_type = type;
+
+    final RulesType ruleTypes = type.getRules();
+    if( ruleTypes != null )
+    {
+      for( final RuleType ruleType : ruleTypes.getRule() )
+      {
+        final String ruleIdentifier = ruleType.getRule();
+        final IZmlTableRule rule = KalypsoZmlUI.getDefault().getTableRule( ruleIdentifier );
+        rule.addStyle( type.getId(), ruleType.getStyle() );
+
+        m_rules.add( rule );
+      }
+    }
+  }
+
+  /**
+   * @see org.eclipse.jface.viewers.ColumnLabelProvider#getBackground(java.lang.Object)
+   */
+  @Override
+  public Color getBackground( final Object element )
+  {
+    final CellStyleType style = findStyle( element );
+
+    final RGB rgb = TableTypeHelper.colorByteToRGB( style.getBackgroundColor() );
+    final String name = rgb.toString();
+
+    COLOR_REGISTRY.put( name, rgb );
+
+    return COLOR_REGISTRY.get( name );
+  }
+
+  private CellStyleType findStyle( final Object element )
+  {
+    if( m_type instanceof IndexColumnType )
+      return m_styleSet.getDefaultCellStyle();
+
+    if( element instanceof ZmlTableRow )
+    {
+      final ZmlTableRow row = (ZmlTableRow) element;
+
+      final ZmlValueReference reference = row.get( m_type.getId() );
+      if( reference != null )
+      {
+        for( final IZmlTableRule rule : m_rules )
+        {
+          if( rule.apply( reference ) )
+            return rule.getStyle( m_type.getId() );
+        }
+
+      }
+
+    }
+
+    return m_styleSet.getDefaultCellStyle();
+  }
+
+  /**
+   * @see org.eclipse.jface.viewers.ColumnLabelProvider#getFont(java.lang.Object)
+   */
+  @Override
+  public Font getFont( final Object element )
+  {
+    // TODO Auto-generated method stub
+    return super.getFont( element );
+  }
+
+  /**
+   * @see org.eclipse.jface.viewers.ColumnLabelProvider#getForeground(java.lang.Object)
+   */
+  @Override
+  public Color getForeground( final Object element )
+  {
+    // TODO Auto-generated method stub
+    return super.getForeground( element );
+  }
+
+  /**
+   * @see org.eclipse.jface.viewers.ColumnLabelProvider#getImage(java.lang.Object)
+   */
+  @Override
+  public Image getImage( final Object element )
+  {
+    return super.getImage( element );
   }
 
   /**

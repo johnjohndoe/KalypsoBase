@@ -19,8 +19,8 @@
   <!-- types -->
   <complexType name="ZmlTableType">
     <sequence>
+      <element ref="zmltable:StyleSet" minOccurs="1" maxOccurs="1" />
       <element ref="zmltable:Columns" minOccurs="0" maxOccurs="1" />
-      <element ref="zmltable:StyleSet" minOccurs="0" maxOccurs="1" />
     </sequence>
   </complexType>
 
@@ -35,15 +35,15 @@
 
   <complexType name="AbstractColumnType" abstract="true">
     <sequence>
-      <element name="id" type="ID" />
       <element name="label" type="string" minOccurs="1" />
-      <element name="format" type="string" default="%s" />
-      <element name="width" type="integer" default="100" />
-      <element name="alignment" type="zmltable:AlignmentType" default="LEFT" />
+      <element name="format" type="string" default="%s" minOccurs="0"/>
+      <element name="width" type="integer" default="100" minOccurs="0"/>
+      <element name="alignment" type="zmltable:AlignmentType" default="LEFT" minOccurs="0"/>
 
       <element ref="zmltable:Style" minOccurs="0" maxOccurs="1" />
-      <element ref="zmltable:Rules" minOccurs="0" maxOccurs="unbounded" />
+      <element ref="zmltable:Rules" minOccurs="0" maxOccurs="1" />
     </sequence>
+     <attribute name="id" type="ID" use="required"/>
     <attribute name="autopack" type="boolean" default="true" />
     <attribute name="editable" type="boolean" default="false" />
   </complexType>
@@ -82,15 +82,33 @@
   <!-- Styles -->
   <complexType name="StyleSetType">
     <sequence>
+      <element name="defaultCellStyle" type="zmltable:CellStyleType" minOccurs="1" />
       <element ref="zmltable:Style" minOccurs="0" maxOccurs="unbounded" />
     </sequence>
   </complexType>
 
+  <simpleType name="ColorType">
+    <restriction base="hexBinary">
+      <length value="3"></length>
+    </restriction>
+  </simpleType>
+
 
   <complexType name="AbstractStyleType" abstract="true">
-    <sequence>
-      <element name="id" type="ID" />
-    </sequence>
+    <attribute name="styleRef" type="IDREF" use="optional"/>
+  </complexType>
+  
+  <complexType name="CellStyleType">
+    <complexContent>
+      <extension base="zmltable:AbstractStyleType">
+        <sequence>
+          <element name="backgroundColor" type="zmltable:ColorType" minOccurs="0"/>
+          <element name="textColor" type="zmltable:ColorType" minOccurs="0"/>
+          <element name="fontFamily" type="string" minOccurs="0"/>
+        </sequence>
+          <attribute name="id" type="ID"/>
+      </extension>
+    </complexContent>
   </complexType>
   
   
@@ -105,7 +123,7 @@
   <complexType name="RuleType">
     <sequence>
       <element name="rule" type="anyURI" />
-      <element name="style" type="IDREF" />
+      <element name="style" type="zmltable:AbstractStyleType" />
     </sequence>
   </complexType>
 
