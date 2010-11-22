@@ -50,6 +50,7 @@ import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.IZmlColumnModel;
 import org.kalypso.zml.ui.table.IZmlTableColumn;
 import org.kalypso.zml.ui.table.schema.DataColumnType;
+import org.kalypso.zml.ui.table.utils.TableTypeHelper;
 
 /**
  * @author Dirk Kuch
@@ -121,8 +122,8 @@ public class ZmlColumnLoadCommand implements IObsProviderListener
         return;
 
       final ITupleModel model = observation.getValues( null );
+      final DataColumnType type = (DataColumnType) TableTypeHelper.findColumnType( m_model.getTableType(), m_column.getIdentifier() );
 
-      final DataColumnType type = m_model.getDataColumnType( m_column.getId() );
       m_model.addColumn( new ZmlTableColumn( m_model, m_column, observation, model, type ) );
     }
     catch( final SensorException e )

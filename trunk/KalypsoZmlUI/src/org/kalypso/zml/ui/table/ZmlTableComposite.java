@@ -41,6 +41,7 @@
 package org.kalypso.zml.ui.table;
 
 import java.math.BigInteger;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -65,7 +66,7 @@ import org.kalypso.zml.ui.table.provider.ZmlTableContentProvider;
 import org.kalypso.zml.ui.table.schema.AbstractColumnType;
 import org.kalypso.zml.ui.table.schema.DataColumnType;
 import org.kalypso.zml.ui.table.schema.ZmlTableType;
-import org.kalypso.zml.ui.table.utils.ZmlTableHelper;
+import org.kalypso.zml.ui.table.utils.TableTypeHelper;
 
 /**
  * @author Dirk Kuch
@@ -117,7 +118,7 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
     final int index = m_tableViewer.getTable().getColumnCount();
     m_columnIndex.put( index, type );
 
-    final TableViewerColumn column = new TableViewerColumn( m_tableViewer, ZmlTableHelper.toSWT( type.getAlignment() ) );
+    final TableViewerColumn column = new TableViewerColumn( m_tableViewer, TableTypeHelper.toSWT( type.getAlignment() ) );
     column.setLabelProvider( new ZmlLabelProvider( type ) );
     column.getColumn().setText( type.getLabel() );
 
@@ -159,7 +160,6 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
         if( column == null )
         {
           tableColumn.setWidth( 0 );
-
           tableColumn.setText( dataColumnType.getLabel() );
         }
         else
@@ -198,6 +198,23 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
         return Status.OK_STATUS;
       }
     }.schedule();
-
   }
+
+  public void duplicateColumn( final String identifier, final String newIdentifier )
+  {
+    // column already exists?
+    final Collection<AbstractColumnType> columns = m_columnIndex.values();
+    for( final AbstractColumnType column : columns )
+    {
+      if( column.getId().equals( newIdentifier ) )
+        return;
+    }
+
+    final AbstractColumnType base = TableTypeHelper.finColumn( m_model.getTableType(), identifier );
+    final AbstractColumnType clone = TableTypeHelper.cloneColumn( base );
+    clone.setId( newIdentifier );
+
+    buildColumnViewer( clone );
+  }
+
 }
