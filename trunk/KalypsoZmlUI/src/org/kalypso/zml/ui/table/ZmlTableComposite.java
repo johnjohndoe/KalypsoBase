@@ -46,6 +46,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
@@ -53,9 +56,9 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.ui.progress.UIJob;
 import org.kalypso.contribs.eclipse.swt.layout.LayoutHelper;
-import org.kalypso.zml.ui.table.provider.IZmlTableComposite;
-import org.kalypso.zml.ui.table.provider.ZmlColumnRegistry;
+import org.kalypso.zml.ui.table.provider.IZmlColumnModelListener;
 import org.kalypso.zml.ui.table.provider.ZmlLabelProvider;
 import org.kalypso.zml.ui.table.provider.ZmlTableColumn;
 import org.kalypso.zml.ui.table.provider.ZmlTableContentProvider;
@@ -67,29 +70,33 @@ import org.kalypso.zml.ui.table.utils.ZmlTableHelper;
 /**
  * @author Dirk Kuch
  */
-public class ZmlTableComposite extends Composite implements IZmlTableComposite
+public class ZmlTableComposite extends Composite implements IZmlColumnModelListener
 {
   private TableViewer m_tableViewer;
 
-  private ZmlColumnRegistry m_registry;
-
   private final Map<Integer, AbstractColumnType> m_columnIndex = new HashMap<Integer, AbstractColumnType>();
 
-  public ZmlTableComposite( final Composite parent, final ZmlTableType tableType )
+  private final IZmlColumnModel m_model;
+
+  public ZmlTableComposite( final IZmlColumnModel model, final Composite parent )
   {
     super( parent, SWT.NULL );
+    m_model = model;
 
     setLayout( LayoutHelper.createGridLayout() );
 
-    if( tableType != null )
-      setup( tableType );
+    setup();
+
+    model.addListener( this );
   }
 
-  private void setup( final ZmlTableType tableType )
+  private void setup( )
   {
-    m_registry = new ZmlColumnRegistry( this, tableType );
+    final ZmlTableType tableType = m_model.getTableType();
+
     m_tableViewer = new TableViewer( this, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.FULL_SELECTION );
-    m_tableViewer.setContentProvider( new ZmlTableContentProvider( tableType ) );
+    m_tableViewer.getTable().setLinesVisible( true );
+    m_tableViewer.setContentProvider( new ZmlTableContentProvider( m_model ) );
 
     final List<AbstractColumnType> columns = tableType.getColumns().getColumn();
     for( final AbstractColumnType column : columns )
@@ -97,13 +104,12 @@ public class ZmlTableComposite extends Composite implements IZmlTableComposite
       buildColumnViewer( column );
     }
 
-    m_tableViewer.setInput( m_registry );
+    m_tableViewer.setInput( m_model );
 
     /** layout stuff */
     final Table table = m_tableViewer.getTable();
     table.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
     table.setHeaderVisible( true );
-
   }
 
   private TableViewerColumn buildColumnViewer( final AbstractColumnType type )
@@ -131,18 +137,7 @@ public class ZmlTableComposite extends Composite implements IZmlTableComposite
     return column;
   }
 
-  public void clean( )
-  {
-    m_registry.clean();
-  }
-
-  public void addColumn( final IZmlTableColumn column )
-  {
-    m_registry.loadColumn( column );
-  }
-
-  @Override
-  public void refresh( )
+  protected void refresh( )
   {
     m_tableViewer.refresh();
 
@@ -158,12 +153,51 @@ public class ZmlTableComposite extends Composite implements IZmlTableComposite
       /** only update headers of data column types */
       if( columnType instanceof DataColumnType )
       {
-        final ZmlTableColumn column = m_registry.getColumn( columnType.getId() );
-        tableColumn.setText( column.getLabel() );
-      }
+        final DataColumnType dataColumnType = (DataColumnType) columnType;
 
-      if( columnType.isAutopack() && columnType.getWidth() == null )
-        tableColumn.pack();
+        final ZmlTableColumn column = m_model.getColumn( columnType.getId() );
+        if( column == null )
+        {
+          tableColumn.setWidth( 0 );
+
+          tableColumn.setText( dataColumnType.getLabel() );
+        }
+        else
+        {
+          if( columnType.getWidth() == null )
+            tableColumn.pack();
+          else
+            tableColumn.setWidth( columnType.getWidth().intValue() );
+
+          tableColumn.setText( column.getLabel() );
+        }
+      }
+      else
+      {
+        if( columnType.getWidth() == null )
+          tableColumn.pack();
+        else
+          tableColumn.setWidth( columnType.getWidth().intValue() );
+      }
     }
+  }
+
+  /**
+   * @see org.kalypso.zml.ui.table.provider.IZmlColumnModelListener#modelChanged()
+   */
+  @Override
+  public void modelChanged( )
+  {
+    new UIJob( "" )
+    {
+      @Override
+      public IStatus runInUIThread( final IProgressMonitor monitor )
+      {
+        refresh();
+
+        return Status.OK_STATUS;
+      }
+    }.schedule();
+
   }
 }

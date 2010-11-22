@@ -38,12 +38,31 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.provider;
+package org.kalypso.zml.ui.table;
+
+import org.kalypso.zml.ui.table.provider.IZmlColumnModelListener;
+import org.kalypso.zml.ui.table.provider.ZmlTableColumn;
+import org.kalypso.zml.ui.table.schema.DataColumnType;
+import org.kalypso.zml.ui.table.schema.ZmlTableType;
 
 /**
  * @author Dirk Kuch
  */
-public interface IZmlTableComposite
+public interface IZmlColumnModel
 {
-  void refresh( );
+
+  ZmlTableType getTableType( );
+
+  void addListener( IZmlColumnModelListener listener );
+
+  DataColumnType getDataColumnType( String id );
+
+  void addColumn( ZmlTableColumn zmlTableColumn );
+
+  void fireModelChanged( );
+
+  ZmlTableColumn getColumn( String id );
+
+  ZmlTableColumn[] getColumns( );
+
 }

@@ -91,4 +91,5 @@ public interface ITupleModel
    *           when there are no axis
    */
   int indexOf( final Object element, final IAxis axis ) throws SensorException;
+
 }

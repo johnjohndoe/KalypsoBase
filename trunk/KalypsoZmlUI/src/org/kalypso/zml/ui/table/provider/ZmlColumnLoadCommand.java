@@ -47,6 +47,7 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.template.IObsProvider;
 import org.kalypso.ogc.sensor.template.IObsProviderListener;
 import org.kalypso.zml.ui.KalypsoZmlUI;
+import org.kalypso.zml.ui.table.IZmlColumnModel;
 import org.kalypso.zml.ui.table.IZmlTableColumn;
 import org.kalypso.zml.ui.table.schema.DataColumnType;
 
@@ -59,11 +60,11 @@ public class ZmlColumnLoadCommand implements IObsProviderListener
 
   private final IZmlTableColumn m_column;
 
-  private final ZmlColumnRegistry m_registry;
+  private final IZmlColumnModel m_model;
 
-  public ZmlColumnLoadCommand( final ZmlColumnRegistry registry, final IZmlTableColumn column )
+  public ZmlColumnLoadCommand( final IZmlColumnModel model, final IZmlTableColumn column )
   {
-    m_registry = registry;
+    m_model = model;
     m_column = column;
 
     synchronized( this )
@@ -116,10 +117,13 @@ public class ZmlColumnLoadCommand implements IObsProviderListener
     {
       final IObsProvider provider = m_column.getObsProvider();
       final IObservation observation = provider.getObservation();
+      if( observation == null )
+        return;
+
       final ITupleModel model = observation.getValues( null );
 
-      final DataColumnType type = m_registry.getDataColumnType( m_column.getId() );
-      m_registry.addColumn( new ZmlTableColumn( m_registry.getTable(), m_column, observation, model, type ) );
+      final DataColumnType type = m_model.getDataColumnType( m_column.getId() );
+      m_model.addColumn( new ZmlTableColumn( m_model, m_column, observation, model, type ) );
     }
     catch( final SensorException e )
     {
@@ -133,7 +137,7 @@ public class ZmlColumnLoadCommand implements IObsProviderListener
   @Override
   public void observationChanged( final Object source )
   {
-    // nothing to do
+    m_model.fireModelChanged();
   }
 
 }

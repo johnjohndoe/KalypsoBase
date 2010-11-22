@@ -40,10 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.provider;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.ui.progress.UIJob;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.IObservationListener;
@@ -53,6 +49,7 @@ import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHandler;
 import org.kalypso.ogc.sensor.timeseries.datasource.IDataSourceItem;
+import org.kalypso.zml.ui.table.IZmlColumnModel;
 import org.kalypso.zml.ui.table.IZmlTableColumn;
 import org.kalypso.zml.ui.table.schema.DataColumnType;
 
@@ -69,11 +66,11 @@ public class ZmlTableColumn implements IObservationListener
 
   private final DataColumnType m_type;
 
-  protected final IZmlTableComposite m_table;
+  private final IZmlColumnModel m_tabelModel;
 
-  public ZmlTableColumn( final IZmlTableComposite table, final IZmlTableColumn column, final IObservation observation, final ITupleModel model, final DataColumnType type )
+  public ZmlTableColumn( final IZmlColumnModel tabelModel, final IZmlTableColumn column, final IObservation observation, final ITupleModel model, final DataColumnType type )
   {
-    m_table = table;
+    m_tabelModel = tabelModel;
     m_column = column;
     m_observation = observation;
     m_model = model;
@@ -163,15 +160,6 @@ public class ZmlTableColumn implements IObservationListener
   @Override
   public void observationChanged( final IObservation obs, final Object source )
   {
-    new UIJob( "" )
-    {
-      @Override
-      public IStatus runInUIThread( final IProgressMonitor monitor )
-      {
-        m_table.refresh();
-        return Status.OK_STATUS;
-      }
-    }.schedule();
-
+    m_tabelModel.fireModelChanged();
   }
 }
