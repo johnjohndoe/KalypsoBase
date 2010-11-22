@@ -40,10 +40,22 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.rules;
 
+import org.kalypso.zml.ui.table.provider.ZmlValueReference;
+import org.kalypso.zml.ui.table.schema.AbstractStyleType;
+import org.kalypso.zml.ui.table.schema.CellStyleType;
+
 /**
  * @author Dirk Kuch
  */
 public interface IZmlTableRule
 {
   String EXTENSION_POINT_ID = "org.kalypso.zml.ui.tableRule"; //$NON-NLS-1$
+
+  void addStyle( String columnId, AbstractStyleType style );
+
+  boolean apply( ZmlValueReference reference );
+
+  String getIdentifier( );
+
+  CellStyleType getStyle( String columnId );
 }

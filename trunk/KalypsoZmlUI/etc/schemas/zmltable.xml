@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<zml:ZmlTable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:zml="schema.table.ui.zml.kalypso.org" xsi:schemaLocation="schema.table.ui.zml.kalypso.org zmltable.xsd ">
+
+  <zml:StyleSet>
+    <zml:defaultCellStyle>
+      <zml:backgroundColor>FFFFFF</zml:backgroundColor>
+      <zml:textColor>000000</zml:textColor>
+      <zml:fontFamily>Arial</zml:fontFamily>
+    </zml:defaultCellStyle>
+    <zml:Style xsi:type="zml:CellStyleType" id="baseCellStyle">
+      <zml:backgroundColor>FFFFFF</zml:backgroundColor>
+      <zml:textColor>000000</zml:textColor>
+      <zml:fontFamily>Arial</zml:fontFamily>
+    </zml:Style>
+  </zml:StyleSet>
+
+  <zml:Columns>
+    <zml:Column xsi:type="zml:IndexColumnType" autopack="true" id="date">
+      <zml:label>Datum</zml:label>
+      <zml:format>dd.MM.yyyy HH:mm</zml:format>
+      <zml:alignment>LEFT</zml:alignment>
+    </zml:Column>
+
+    <zml:Column xsi:type="zml:DataColumnType" editable="true" id="W">
+      <zml:label>Wasserstand</zml:label>
+      <zml:format>%.0f</zml:format>
+      <zml:width>100</zml:width>
+      <zml:alignment>RIGHT</zml:alignment>
+      <zml:Rules>
+        <zml:Rule>
+          <zml:rule>org.kalypso.zml.ui.table.rules.impl.ZmlRuleCellStatus</zml:rule>
+          <zml:style xsi:type="zml:CellStyleType" styleRef="baseCellStyle">
+          </zml:style>
+        </zml:Rule>
+      </zml:Rules>
+
+      <zml:indexAxis>date</zml:indexAxis>
+      <zml:valueAxis>W</zml:valueAxis>
+    </zml:Column>
+
+    <zml:Column xsi:type="zml:DataColumnType" editable="true" id="W_MODELL">
+      <zml:label>Wasserstand (Modell)</zml:label>
+      <zml:format>%.0f</zml:format>
+      <zml:width>100</zml:width>
+      <zml:alignment>RIGHT</zml:alignment>
+      <zml:indexAxis>date</zml:indexAxis>
+      <zml:valueAxis>W</zml:valueAxis>
+    </zml:Column>
+
+  </zml:Columns>
+</zml:ZmlTable>

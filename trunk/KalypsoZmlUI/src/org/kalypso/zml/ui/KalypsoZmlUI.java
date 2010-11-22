@@ -68,7 +68,7 @@ public class KalypsoZmlUI extends AbstractUIPlugin
   /**
    * @return list of feature binding handlers, handling a special featureType qname
    */
-  public synchronized IZmlTableRule[] getMetadataBoundaries( )
+  public synchronized IZmlTableRule[] getTableRules( )
   {
     // fill binding map
     if( ZML_TABLE_RULES == null )
@@ -99,6 +99,21 @@ public class KalypsoZmlUI extends AbstractUIPlugin
     }
 
     return ZML_TABLE_RULES.toArray( new IZmlTableRule[] {} );
+  }
+
+  /**
+   * @return list of feature binding handlers, handling a special featureType qname
+   */
+  public synchronized IZmlTableRule getTableRule( final String identifier )
+  {
+    final IZmlTableRule[] rules = getTableRules();
+    for( final IZmlTableRule rule : rules )
+    {
+      if( rule.getIdentifier().equals( identifier ) )
+        return rule;
+    }
+
+    return null;
   }
 
 }

@@ -46,6 +46,7 @@ import jregex.Pattern;
 import jregex.RETokenizer;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.RGB;
 import org.kalypso.zml.ui.table.schema.AbstractColumnType;
 import org.kalypso.zml.ui.table.schema.AlignmentType;
 import org.kalypso.zml.ui.table.schema.DataColumnType;
@@ -148,6 +149,24 @@ public final class TableTypeHelper
     }
 
     return null;
+  }
+
+  public static RGB colorByteToRGB( final byte[] color )
+  {
+    final int red = byteToInt( color[0] );
+    final int green = byteToInt( color[1] );
+    final int blue = byteToInt( color[2] );
+
+    return new RGB( red, green, blue );
+  }
+
+  /**
+   * @param b
+   *          a byte value
+   */
+  private static int byteToInt( final byte b )
+  {
+    return b & 0xff;
   }
 
 }
