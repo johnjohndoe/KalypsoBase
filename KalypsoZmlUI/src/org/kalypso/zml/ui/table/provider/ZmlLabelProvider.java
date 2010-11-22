@@ -204,7 +204,6 @@ public class ZmlLabelProvider extends ColumnLabelProvider
   private String format( final Object value )
   {
     final String format = m_type.getFormat();
-
     if( value instanceof Date )
     {
       final SimpleDateFormat sdf = new SimpleDateFormat( format == null ? "dd.MM.yyyy HH:mm" : format );
@@ -213,5 +212,4 @@ public class ZmlLabelProvider extends ColumnLabelProvider
 
     return String.format( format == null ? "%s" : format, value );
   }
-
 }
