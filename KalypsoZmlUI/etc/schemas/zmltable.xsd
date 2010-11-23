@@ -35,10 +35,7 @@
 
   <complexType name="AbstractColumnType" abstract="true">
     <sequence>
-      <element name="label" type="string" minOccurs="1" />
-      <element name="format" type="string" default="%s" minOccurs="0" />
-      <element name="width" type="integer" default="100" minOccurs="0" />
-      <element name="alignment" type="zmltable:AlignmentType" default="LEFT" minOccurs="0" />
+      <element name="Property" type="zmltable:ColumnPropertyType" minOccurs="0" maxOccurs="unbounded" />
 
       <element ref="zmltable:Style" minOccurs="0" maxOccurs="1" />
       <element ref="zmltable:Rules" minOccurs="0" maxOccurs="1" />
@@ -68,6 +65,29 @@
       </extension>
     </complexContent>
   </complexType>
+  
+  
+   <complexType name="ColumnPropertyType">
+    <simpleContent>
+      <restriction base="zmltable:StringSimpleType">
+        <attribute name="name" type="zmltable:ColumnPropertyName" use="required"  />
+      </restriction>
+    </simpleContent>
+  </complexType>
+
+  
+
+
+  <simpleType name="ColumnPropertyName">
+    <restriction base="string">
+      <enumeration value="label"></enumeration>
+      <enumeration value="format"></enumeration>
+      <enumeration value="width"></enumeration>
+      <enumeration value="alignment"></enumeration>
+    </restriction>
+  </simpleType>
+  
+  
 
   <simpleType name="AlignmentType">
     <restriction base="string">
@@ -87,11 +107,6 @@
     </sequence>
   </complexType>
 
-  <simpleType name="ColorType">
-    <restriction base="hexBinary">
-      <length value="3"></length>
-    </restriction>
-  </simpleType>
 
 
   <complexType name="CellStyleType">
@@ -117,10 +132,8 @@
 
 
   <complexType name="RuleType">
-    <sequence>
-      <element name="style" type="zmltable:CellStyleType" />
-    </sequence>
-    <attribute name="rule" type="anyURI" use="required" />
+    <attribute name="ruleReference" type="anyURI" use="required" />
+    <attribute name="styleReference" type="IDREF" use="required" />
   </complexType>
 
   <complexType name="StylePropertyType">
