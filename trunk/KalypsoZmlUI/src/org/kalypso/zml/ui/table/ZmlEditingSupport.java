@@ -54,23 +54,23 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.ui.KalypsoZmlUI;
+import org.kalypso.zml.ui.table.binding.DataColumn;
 import org.kalypso.zml.ui.table.provider.ZmlTableRow;
 import org.kalypso.zml.ui.table.provider.ZmlValueReference;
-import org.kalypso.zml.ui.table.schema.DataColumnType;
 
 /**
  * @author Dirk Kuch
  */
 public class ZmlEditingSupport extends EditingSupport
 {
-  private final DataColumnType m_type;
+  private final DataColumn m_column;
 
   protected final TextCellEditor m_cellEditor;
 
-  public ZmlEditingSupport( final DataColumnType type, final TableViewerColumn viewer )
+  public ZmlEditingSupport( final DataColumn type, final TableViewerColumn viewer )
   {
     super( viewer.getViewer() );
-    m_type = type;
+    m_column = type;
 
     m_cellEditor = new TextCellEditor( (Composite) viewer.getViewer().getControl(), SWT.NONE );
 
@@ -114,12 +114,12 @@ public class ZmlEditingSupport extends EditingSupport
       {
         final ZmlTableRow row = (ZmlTableRow) element;
 
-        final ZmlValueReference reference = row.get( m_type.getId() );
+        final ZmlValueReference reference = row.get( m_column.getIdentifier() );
         if( reference == null )
           return "";
 
         final Object value = reference.getValue();
-        final String format = m_type.getFormat();
+        final String format = m_column.getFormat();
 
         return String.format( format == null ? "%s" : format, value );
       }
@@ -143,7 +143,7 @@ public class ZmlEditingSupport extends EditingSupport
       try
       {
         final ZmlTableRow row = (ZmlTableRow) element;
-        final ZmlValueReference reference = row.get( m_type.getId() );
+        final ZmlValueReference reference = row.get( m_column.getIdentifier() );
 
         final Object targetValue = getTargetValue( reference, value );
         if( !targetValue.equals( reference.getValue() ) )
