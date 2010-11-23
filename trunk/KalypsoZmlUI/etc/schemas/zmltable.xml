@@ -7,41 +7,38 @@
       <zml:Property name="textColor">000000</zml:Property>
       <zml:Property name="fontFamily">Arial</zml:Property>
     </zml:defaultCellStyle>
-    <zml:Style xsi:type="zml:CellStyleType" id="baseCellStyle">
+    <zml:Style id="baseCellStyle">
       <zml:Property name="backgroundColor">FFFFFF</zml:Property>
       <zml:Property name="textColor">000000</zml:Property>
       <zml:Property name="fontFamily">Arial</zml:Property>
+    </zml:Style>
+    <zml:Style styleRef="baseCellStyle" id="userModifiedStyle">
+      <zml:Property name="icon">urn:org:kalypso:zml:ui:table:rule:user:modified:icon</zml:Property>
+    </zml:Style>
+    <zml:Style styleRef="baseCellStyle" id="interpolatedValueStyle">
+      <zml:Property name="icon">urn:org:kalypso:zml:ui:table:rule:interpolated:value:icon</zml:Property>
+    </zml:Style>
+    <zml:Style styleRef="baseCellStyle" id="wqConflictStyle">
+      <zml:Property name="icon">urn:org:kalypso:zml:ui:table:rule:wq:conflict:icon</zml:Property>
     </zml:Style>
   </zml:StyleSet>
 
   <zml:Columns>
     <zml:Column xsi:type="zml:IndexColumnType" autopack="true" id="date">
-      <zml:label>Datum</zml:label>
-      <zml:format>dd.MM.yyyy HH:mm</zml:format>
-      <zml:alignment>LEFT</zml:alignment>
+      <zml:Property name="label">Datum</zml:Property>
+      <zml:Property name="format">dd.MM.yyyy HH:mm</zml:Property>
+      <zml:Property name="alignment">LEFT</zml:Property>
     </zml:Column>
 
     <zml:Column xsi:type="zml:DataColumnType" editable="true" id="W">
-      <zml:label>Wasserstand</zml:label>
-      <zml:format>%.0f</zml:format>
-      <zml:width>100</zml:width>
-      <zml:alignment>RIGHT</zml:alignment>
+      <zml:Property name="label">Wasserstand</zml:Property>
+      <zml:Property name="format">%.0f</zml:Property>
+      <zml:Property name="width">100</zml:Property>
+      <zml:Property name="alignment">RIGHT</zml:Property>
       <zml:Rules>
-        <zml:Rule rule="org.kalypso.zml.ui.table.rule.user.modified">
-          <zml:style xsi:type="zml:CellStyleType" styleRef="baseCellStyle" id="userModified">
-            <zml:Property name="icon">urn:org:kalypso:zml:ui:table:rule:user:modified:icon</zml:Property>
-          </zml:style>
-        </zml:Rule>
-        <zml:Rule rule="org.kalypso.zml.ui.table.rule.value.interpolated">
-          <zml:style xsi:type="zml:CellStyleType" styleRef="baseCellStyle" id="valueInterpolated">
-            <zml:Property name="icon">urn:org:kalypso:zml:ui:table:rule:interpolated:value:icon</zml:Property>
-          </zml:style>
-        </zml:Rule>
-        <zml:Rule rule="org.kalypso.zml.ui.table.rule.wq.conflict">
-          <zml:style xsi:type="zml:CellStyleType" styleRef="baseCellStyle" id="wqConflict">
-            <zml:Property name="icon">urn:org:kalypso:zml:ui:table:rule:wq:conflict:icon</zml:Property>
-          </zml:style>
-        </zml:Rule>
+        <zml:Rule ruleReference="org.kalypso.zml.ui.table.rule.user.modified" styleReference="userModifiedStyle" />
+        <zml:Rule ruleReference="org.kalypso.zml.ui.table.rule.value.interpolated" styleReference="interpolatedValueStyle" />
+        <zml:Rule ruleReference="org.kalypso.zml.ui.table.rule.wq.conflict" styleReference="wqConflictStyle" />
       </zml:Rules>
 
       <zml:indexAxis>date</zml:indexAxis>
@@ -49,10 +46,49 @@
     </zml:Column>
 
     <zml:Column xsi:type="zml:DataColumnType" editable="true" id="W_MODELL">
-      <zml:label>Wasserstand (Modell)</zml:label>
-      <zml:format>%.0f</zml:format>
-      <zml:width>100</zml:width>
-      <zml:alignment>RIGHT</zml:alignment>
+      <zml:Property name="label">Wasserstand (Modell)</zml:Property>
+      <zml:Property name="format">%.0f</zml:Property>
+      <zml:Property name="width">100</zml:Property>
+      <zml:Property name="alignment">RIGHT</zml:Property>
+
+      <zml:Rules>
+        <zml:Rule ruleReference="org.kalypso.zml.ui.table.rule.user.modified" styleReference="userModifiedStyle" />
+        <zml:Rule ruleReference="org.kalypso.zml.ui.table.rule.value.interpolated" styleReference="interpolatedValueStyle" />
+        <zml:Rule ruleReference="org.kalypso.zml.ui.table.rule.wq.conflict" styleReference="wqConflictStyle" />
+      </zml:Rules>
+
+      <zml:indexAxis>date</zml:indexAxis>
+      <zml:valueAxis>W</zml:valueAxis>
+    </zml:Column>
+
+    <zml:Column xsi:type="zml:DataColumnType" editable="true" id="Q">
+      <zml:Property name="label">Abfluss</zml:Property>
+      <zml:Property name="format">%.0f</zml:Property>
+      <zml:Property name="width">100</zml:Property>
+      <zml:Property name="alignment">RIGHT</zml:Property>
+
+      <zml:Rules>
+        <zml:Rule ruleReference="org.kalypso.zml.ui.table.rule.user.modified" styleReference="userModifiedStyle" />
+        <zml:Rule ruleReference="org.kalypso.zml.ui.table.rule.value.interpolated" styleReference="interpolatedValueStyle" />
+        <zml:Rule ruleReference="org.kalypso.zml.ui.table.rule.wq.conflict" styleReference="wqConflictStyle" />
+      </zml:Rules>
+
+      <zml:indexAxis>date</zml:indexAxis>
+      <zml:valueAxis>W</zml:valueAxis>
+    </zml:Column>
+
+    <zml:Column xsi:type="zml:DataColumnType" editable="true" id="Q_MODELL">
+      <zml:Property name="label">Abfluss (Modell)</zml:Property>
+      <zml:Property name="format">%.0f</zml:Property>
+      <zml:Property name="width">100</zml:Property>
+      <zml:Property name="alignment">RIGHT</zml:Property>
+
+      <zml:Rules>
+        <zml:Rule ruleReference="org.kalypso.zml.ui.table.rule.user.modified" styleReference="userModifiedStyle" />
+        <zml:Rule ruleReference="org.kalypso.zml.ui.table.rule.value.interpolated" styleReference="interpolatedValueStyle" />
+        <zml:Rule ruleReference="org.kalypso.zml.ui.table.rule.wq.conflict" styleReference="wqConflictStyle" />
+      </zml:Rules>
+
       <zml:indexAxis>date</zml:indexAxis>
       <zml:valueAxis>W</zml:valueAxis>
     </zml:Column>
