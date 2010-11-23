@@ -28,7 +28,7 @@
  <extension
        point="org.kalypso.zml.ui.tableRule">
     <rule
-          id="org.kalypso.zml.ui.table.rules.impl.ZmlRuleCellStatus"
+          id="org.kalypso.zml.ui.table.rule.user.modified"
           rule="org.kalypso.zml.ui.table.rules.impl.ZmlRuleCellStatus">
     </rule>
  </extension>

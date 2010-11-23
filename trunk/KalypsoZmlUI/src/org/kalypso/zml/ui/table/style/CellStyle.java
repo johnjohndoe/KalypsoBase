@@ -43,7 +43,10 @@ package org.kalypso.zml.ui.table.style;
 import java.util.List;
 
 import org.eclipse.jface.resource.ColorRegistry;
+import org.eclipse.jface.resource.FontRegistry;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.RGB;
 import org.kalypso.contribs.eclipse.swt.graphics.RGBUtilities;
 import org.kalypso.zml.ui.table.schema.CellStyleType;
@@ -59,7 +62,15 @@ public class CellStyle
 {
   private static final ColorRegistry COLOR_REGISTRY = new ColorRegistry();
 
+  private static final FontRegistry FONT_REGISTRY = new FontRegistry();
+
   private final CellStyleType m_style;
+
+  private Color m_backgroundColor;
+
+  private Font m_font;
+
+  private Color m_foregroundColor;
 
   public CellStyle( final StyleSetType styleSet, final CellStyleType style )
   {
@@ -88,24 +99,65 @@ public class CellStyle
     }
   }
 
-  private boolean hasProperty( final CellStyleType style, final StylePropertyType property )
+  private boolean hasProperty( final CellStyleType style, final StylePropertyType type )
   {
-    final String name = TableTypeHelper.getPropertyName( property );
-    final String value = TableTypeHelper.findProperty( style, name );
+    final String name = TableTypeHelper.getPropertyName( type );
+    final StylePropertyName property = StylePropertyName.fromValue( name );
+
+    final String value = TableTypeHelper.findProperty( style, property );
 
     return value != null;
   }
 
   public Color getBackgroundColor( )
   {
-    final String htmlColor = TableTypeHelper.findProperty( m_style, StylePropertyName.BACKGROUND_COLOR.value() );
+    if( m_backgroundColor != null )
+      return m_backgroundColor;
+
+    final String htmlColor = TableTypeHelper.findProperty( m_style, StylePropertyName.BACKGROUND_COLOR );
     if( htmlColor == null )
       return null;
 
+    final String id = "background" + m_style.getId();
     final RGB rgb = RGBUtilities.decodeHtmlColor( htmlColor );
-    COLOR_REGISTRY.put( htmlColor, rgb );
+    COLOR_REGISTRY.put( id, rgb );
 
-    return COLOR_REGISTRY.get( htmlColor );
+    m_backgroundColor = COLOR_REGISTRY.get( id );
+
+    return m_backgroundColor;
   }
 
+  public Color getForegroundColor( )
+  {
+    if( m_foregroundColor != null )
+      return m_foregroundColor;
+
+    final String htmlColor = TableTypeHelper.findProperty( m_style, StylePropertyName.TEXT_COLOR );
+    if( htmlColor == null )
+      return null;
+
+    final String id = "foreground" + m_style.getId();
+    final RGB rgb = RGBUtilities.decodeHtmlColor( htmlColor );
+    COLOR_REGISTRY.put( id, rgb );
+
+    m_foregroundColor = COLOR_REGISTRY.get( id );
+    return m_foregroundColor;
+  }
+
+  public Font getFont( )
+  {
+    if( m_font != null )
+      return m_font;
+
+    final String fontFamily = TableTypeHelper.findProperty( m_style, StylePropertyName.FONT_FAMILY );
+    final String fontSize = TableTypeHelper.findProperty( m_style, StylePropertyName.FONT_SIZE );
+    final int fontWeight = TableTypeHelper.toSWTFontWeight( TableTypeHelper.findProperty( m_style, StylePropertyName.FONT_WEIGHT ) );
+
+    final FontData data = new FontData( fontFamily == null ? "Arial" : fontFamily, fontSize == null ? 10 : Integer.valueOf( fontSize ), fontWeight );
+    FONT_REGISTRY.put( m_style.getId(), new FontData[] { data } );
+
+    m_font = FONT_REGISTRY.get( m_style.getId() );
+
+    return m_font;
+  }
 }
