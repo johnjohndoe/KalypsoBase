@@ -118,9 +118,9 @@
 
   <complexType name="RuleType">
     <sequence>
-      <element name="rule" type="anyURI" />
       <element name="style" type="zmltable:CellStyleType" />
     </sequence>
+    <attribute name="rule" type="anyURI" use="required" />
   </complexType>
 
   <complexType name="StylePropertyType">
@@ -145,6 +145,8 @@
       <enumeration value="backgroundColor"></enumeration>
       <enumeration value="textColor"></enumeration>
       <enumeration value="fontFamily"></enumeration>
+      <enumeration value="fontWeight"></enumeration>
+      <enumeration value="fontSize"></enumeration>
     </restriction>
   </simpleType>
 

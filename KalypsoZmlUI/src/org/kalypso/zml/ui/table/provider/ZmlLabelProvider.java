@@ -119,9 +119,7 @@ public class ZmlLabelProvider extends ColumnLabelProvider
           if( rule.apply( reference ) )
             return rule.getStyle( m_type.getId() );
         }
-
       }
-
     }
 
     return new CellStyle( m_styleSet, m_styleSet.getDefaultCellStyle() );
@@ -133,8 +131,9 @@ public class ZmlLabelProvider extends ColumnLabelProvider
   @Override
   public Font getFont( final Object element )
   {
-    // TODO Auto-generated method stub
-    return super.getFont( element );
+    final CellStyle style = findStyle( element );
+
+    return style.getFont();
   }
 
   /**
@@ -143,8 +142,9 @@ public class ZmlLabelProvider extends ColumnLabelProvider
   @Override
   public Color getForeground( final Object element )
   {
-    // TODO Auto-generated method stub
-    return super.getForeground( element );
+    final CellStyle style = findStyle( element );
+
+    return style.getForegroundColor();
   }
 
   /**

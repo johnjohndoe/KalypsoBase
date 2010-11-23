@@ -54,6 +54,7 @@ import org.kalypso.zml.ui.table.schema.AlignmentType;
 import org.kalypso.zml.ui.table.schema.CellStyleType;
 import org.kalypso.zml.ui.table.schema.DataColumnType;
 import org.kalypso.zml.ui.table.schema.IndexColumnType;
+import org.kalypso.zml.ui.table.schema.StylePropertyName;
 import org.kalypso.zml.ui.table.schema.StylePropertyType;
 import org.kalypso.zml.ui.table.schema.StyleSetType;
 import org.kalypso.zml.ui.table.schema.ZmlTableType;
@@ -160,14 +161,14 @@ public final class TableTypeHelper
     return null;
   }
 
-  public static String findProperty( final CellStyleType style, final String name )
+  public static String findProperty( final CellStyleType style, final StylePropertyName property )
   {
     final List<StylePropertyType> properties = style.getProperty();
-    for( final StylePropertyType property : properties )
+    for( final StylePropertyType prop : properties )
     {
-      final String propertyName = TableTypeHelper.getPropertyName( property );
-      if( name.equals( propertyName ) )
-        return property.getValue();
+      final String propertyName = TableTypeHelper.getPropertyName( prop );
+      if( property.value().equals( propertyName ) )
+        return prop.getValue();
     }
 
     return null;
@@ -194,5 +195,24 @@ public final class TableTypeHelper
     }
 
     return null;
+  }
+
+  public static int toSWTFontWeight( final String fontWeight )
+  {
+    if( fontWeight == null )
+      return SWT.NORMAL;
+
+    int weight = SWT.NULL;
+
+    if( fontWeight.toUpperCase().contains( "NORMAL" ) ) //$NON-NLS-1$
+      weight |= SWT.NORMAL;
+
+    if( fontWeight.toUpperCase().contains( "BOLD" ) ) //$NON-NLS-1$
+      weight |= SWT.BOLD;
+
+    if( fontWeight.toUpperCase().contains( "ITALIC" ) ) //$NON-NLS-1$
+      weight |= SWT.ITALIC;
+
+    return weight;
   }
 }

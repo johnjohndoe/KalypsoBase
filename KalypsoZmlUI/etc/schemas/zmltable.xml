@@ -27,9 +27,10 @@
       <zml:width>100</zml:width>
       <zml:alignment>RIGHT</zml:alignment>
       <zml:Rules>
-        <zml:Rule>
-          <zml:rule>org.kalypso.zml.ui.table.rules.impl.ZmlRuleCellStatus</zml:rule>
+        <zml:Rule rule="org.kalypso.zml.ui.table.rule.user.modified">
           <zml:style xsi:type="zml:CellStyleType" styleRef="baseCellStyle" id="cellStatus">
+            <zml:Property name="fontWeight">NORMAL | BOLD | ITALIC</zml:Property>
+            <zml:Property name="fontSize">10</zml:Property>
           </zml:style>
         </zml:Rule>
       </zml:Rules>

@@ -45,6 +45,7 @@ import java.util.Map;
 
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.provider.ZmlValueReference;
 import org.kalypso.zml.ui.table.rules.IZmlTableRule;
@@ -55,7 +56,7 @@ import org.kalypso.zml.ui.table.style.CellStyle;
  */
 public class ZmlRuleCellStatus implements IZmlTableRule
 {
-  public static final String ID = "org.kalypso.zml.ui.table.rules.impl.ZmlRuleCellStatus";
+  public static final String ID = "org.kalypso.zml.ui.table.rule.user.modified";
 
   Map<String, CellStyle> m_styles = new HashMap<String, CellStyle>();
 
@@ -87,8 +88,9 @@ public class ZmlRuleCellStatus implements IZmlTableRule
     try
     {
       final Integer status = reference.getStatus();
+      final int modified = KalypsoStati.BIT_USER_MODIFIED & status;
 
-      return 0 != status;
+      return KalypsoStati.BIT_USER_MODIFIED == modified;
     }
     catch( final SensorException e )
     {
