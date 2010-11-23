@@ -40,8 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.rules;
 
+import org.kalypso.zml.ui.table.binding.CellStyle;
 import org.kalypso.zml.ui.table.provider.ZmlValueReference;
-import org.kalypso.zml.ui.table.style.CellStyle;
 
 /**
  * @author Dirk Kuch
