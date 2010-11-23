@@ -74,7 +74,6 @@ import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.variables.IStringVariableManager;
 import org.eclipse.core.variables.IValueVariable;
@@ -86,7 +85,6 @@ import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
-import org.kalypso.simulation.core.KalypsoSimulationCoreJaxb;
 import org.kalypso.simulation.core.simspec.Modeldata;
 import org.kalypso.simulation.ui.KalypsoSimulationUIPlugin;
 import org.kalypso.simulation.ui.calccase.simulation.ISimulationRunner;
@@ -110,8 +108,6 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
   public static final String MODELLTYP_FOLDER = ".model"; //$NON-NLS-1$
 
   public static final String MODELLTYP_CALCCASECONFIG_XML = MODELLTYP_FOLDER + "/" + "calcCaseConfig.xml"; //$NON-NLS-1$ //$NON-NLS-2$
-
-  public static final String MODELLTYP_MODELSPEC_XML = "modelspec.xml"; //$NON-NLS-1$
 
   public static final String ID = KalypsoSimulationUIPlugin.getID() + ".ModelNature"; //$NON-NLS-1$
 
@@ -470,13 +466,6 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     return launchAnt( message, "setBasicModel", null, folder, monitor ); //$NON-NLS-1$
   }
 
-  public String getCalcType( ) throws CoreException
-  {
-    final Modeldata modelspec = getModelspec( MODELLTYP_MODELSPEC_XML );
-
-    return modelspec.getTypeID();
-  }
-
   /**
    * @see org.eclipse.core.resources.IResourceChangeListener#resourceChanged(org.eclipse.core.resources.IResourceChangeEvent)
    */
@@ -554,15 +543,6 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     return m_project.getFolder( MODELLTYP_FOLDER );
   }
 
-  private Modeldata getModelspec( final String modelSpec ) throws CoreException
-  {
-    final IFile file = getModelFolder().getFile( modelSpec );
-    if( !file.exists() )
-      return null;
-
-    return KalypsoSimulationCoreJaxb.readModeldata( file );
-  }
-
   public GMLWorkspace loadOrCreateControl( final IContainer folder ) throws CoreException
   {
     try
@@ -601,27 +581,9 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     return (" " + validHours + " ").indexOf( " " + hour + " " ) != -1; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
   }
 
-  public IStatus runCalculation( final IContainer folder, final IProgressMonitor monitor ) throws CoreException
+  public IStatus runCalculation( final IContainer calcCaseFolder, final IProgressMonitor monitor ) throws CoreException
   {
-    return runCalculation( folder, monitor, MODELLTYP_MODELSPEC_XML );
-  }
-
-  public IStatus runCalculation( final IContainer calcCaseFolder, final IProgressMonitor monitor, final String modelSpec ) throws CoreException
-  {
-    if( modelSpec == null )
-      return runCalculation( calcCaseFolder, monitor );
-
-    // for backwards compability
-    // new models always should use the ant task
-    final Modeldata modelspec = getModelspec( modelSpec );
-    if( modelspec == null )
-    {
-      // if there is no 'modelspec' file
-      // we try to call the ant task
-      return launchAnt( STR_MODELLRECHNUNG_WIRD_DURCHGEFUEHRT, "runCalculation", null, calcCaseFolder, monitor ); //$NON-NLS-1$
-    }
-
-    return runCalculation( calcCaseFolder, monitor, modelspec );
+    return launchAnt( STR_MODELLRECHNUNG_WIRD_DURCHGEFUEHRT, "runCalculation", null, calcCaseFolder, monitor ); //$NON-NLS-1$
   }
 
   // TODO: move this one of the simulation plugins
@@ -650,12 +612,10 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
      * </pre>
      */
 
-    final SubMonitor progress = SubMonitor.convert( monitor, STR_MODELLRECHNUNG_WIRD_DURCHGEFUEHRT, 1000 );
-
     try
     {
       final ISimulationRunner runner = createSimulationRunner( calcCaseFolder, modelspec );
-      return runner.execute( progress.newChild( SubMonitor.SUPPRESS_NONE ) );
+      return runner.execute( monitor );
     }
     catch( final CoreException e )
     {
@@ -671,10 +631,6 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     catch( final InterruptedException e )
     {
       return Status.CANCEL_STATUS;
-    }
-    finally
-    {
-      progress.done();
     }
   }
 

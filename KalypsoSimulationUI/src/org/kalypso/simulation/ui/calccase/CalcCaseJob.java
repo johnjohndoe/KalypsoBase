@@ -48,7 +48,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.kalypso.simulation.ui.i18n.Messages;
 
 /**
- * @author belger
+ * @author Gernot Belger
  */
 public class CalcCaseJob extends Job
 {
@@ -56,7 +56,7 @@ public class CalcCaseJob extends Job
 
   public CalcCaseJob( final IFolder calcCaseFolder )
   {
-    super( Messages.getString("org.kalypso.simulation.ui.calccase.CalcCaseJob.0") + calcCaseFolder.getName() ); //$NON-NLS-1$
+    super( Messages.getString( "org.kalypso.simulation.ui.calccase.CalcCaseJob.0" ) + calcCaseFolder.getName() ); //$NON-NLS-1$
 
     m_calcCaseFolder = calcCaseFolder;
 
@@ -71,7 +71,7 @@ public class CalcCaseJob extends Job
   {
     try
     {
-      final ModelNature nature = (ModelNature)m_calcCaseFolder.getProject().getNature( ModelNature.ID );
+      final ModelNature nature = (ModelNature) m_calcCaseFolder.getProject().getNature( ModelNature.ID );
       return nature.runCalculation( m_calcCaseFolder, monitor );
     }
     catch( final CoreException e )

@@ -72,6 +72,7 @@ public class StartCalculationActionDelegate extends AbstractHandler
 
     final IFolder[] calcCasesToCalc = CalcCaseHelper.chooseCalcCases( shell, selection,
         Messages.getString("org.kalypso.simulation.ui.actions.StartCalculationActionDelegate.0"), Messages.getString("org.kalypso.simulation.ui.actions.StartCalculationActionDelegate.1") ); //$NON-NLS-1$ //$NON-NLS-2$
+
     if( calcCasesToCalc == null )
       return null;
 
