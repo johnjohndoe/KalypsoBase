@@ -147,6 +147,7 @@
       <enumeration value="fontFamily"></enumeration>
       <enumeration value="fontWeight"></enumeration>
       <enumeration value="fontSize"></enumeration>
+      <enumeration value="icon"></enumeration>
     </restriction>
   </simpleType>
 

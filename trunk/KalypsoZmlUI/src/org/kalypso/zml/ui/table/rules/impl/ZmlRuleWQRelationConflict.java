@@ -54,9 +54,9 @@ import org.kalypso.zml.ui.table.style.CellStyle;
 /**
  * @author Dirk Kuch
  */
-public class ZmlRuleCellStatus implements IZmlTableRule
+public class ZmlRuleWQRelationConflict implements IZmlTableRule
 {
-  public static final String ID = "org.kalypso.zml.ui.table.rule.user.modified";
+  public static final String ID = "org.kalypso.zml.ui.table.rule.wq.conflict";
 
   Map<String, CellStyle> m_styles = new HashMap<String, CellStyle>();
 
@@ -88,9 +88,8 @@ public class ZmlRuleCellStatus implements IZmlTableRule
     try
     {
       final Integer status = reference.getStatus();
-      final int modified = KalypsoStati.BIT_USER_MODIFIED & status;
 
-      return KalypsoStati.BIT_USER_MODIFIED == modified;
+      return (KalypsoStati.BIT_DERIVATION_ERROR & status) == KalypsoStati.BIT_DERIVATION_ERROR;
     }
     catch( final SensorException e )
     {

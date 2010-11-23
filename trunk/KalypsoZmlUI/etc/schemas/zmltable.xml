@@ -28,9 +28,18 @@
       <zml:alignment>RIGHT</zml:alignment>
       <zml:Rules>
         <zml:Rule rule="org.kalypso.zml.ui.table.rule.user.modified">
-          <zml:style xsi:type="zml:CellStyleType" styleRef="baseCellStyle" id="cellStatus">
-            <zml:Property name="fontWeight">NORMAL | BOLD | ITALIC</zml:Property>
-            <zml:Property name="fontSize">10</zml:Property>
+          <zml:style xsi:type="zml:CellStyleType" styleRef="baseCellStyle" id="userModified">
+            <zml:Property name="icon">urn:org:kalypso:zml:ui:table:rule:user:modified:icon</zml:Property>
+          </zml:style>
+        </zml:Rule>
+        <zml:Rule rule="org.kalypso.zml.ui.table.rule.value.interpolated">
+          <zml:style xsi:type="zml:CellStyleType" styleRef="baseCellStyle" id="valueInterpolated">
+            <zml:Property name="icon">urn:org:kalypso:zml:ui:table:rule:interpolated:value:icon</zml:Property>
+          </zml:style>
+        </zml:Rule>
+        <zml:Rule rule="org.kalypso.zml.ui.table.rule.wq.conflict">
+          <zml:style xsi:type="zml:CellStyleType" styleRef="baseCellStyle" id="wqConflict">
+            <zml:Property name="icon">urn:org:kalypso:zml:ui:table:rule:wq:conflict:icon</zml:Property>
           </zml:style>
         </zml:Rule>
       </zml:Rules>
