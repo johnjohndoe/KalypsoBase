@@ -39,10 +39,10 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -63,6 +63,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.ui.dialogs.KalypsoResourceSelectionDialog;
 import org.kalypso.contribs.eclipse.ui.dialogs.ResourceSelectionValidator;
 import org.kalypso.transformation.CRSHelper;
@@ -85,7 +86,7 @@ public class ImportImageWizardPage extends WizardPage implements SelectionListen
 
   private Text m_sourceFileText;
 
-  private IPath m_relativeSourcePath;
+  private IPath m_sourcePath;
 
   private IProject m_project;
 
@@ -249,7 +250,7 @@ public class ImportImageWizardPage extends WizardPage implements SelectionListen
         {
           final Path resultPath = (Path) result[0];
           m_sourceFileText.setText( resultPath.toString() );
-          m_relativeSourcePath = resultPath;
+          m_sourcePath = resultPath;
         }
         updateWorldFile();
       }
@@ -261,23 +262,23 @@ public class ImportImageWizardPage extends WizardPage implements SelectionListen
   private void updateWorldFile( )
   {
     IPath path = null;
-    if( m_relativeSourcePath.getFileExtension().toUpperCase().equals( "TIF" ) ) //$NON-NLS-1$
+    if( m_sourcePath.getFileExtension().toUpperCase().equals( "TIF" ) ) //$NON-NLS-1$
     {
       m_fileType = "tif"; //$NON-NLS-1$
       m_wfType = "tfw"; //$NON-NLS-1$
-      path = m_relativeSourcePath.removeFileExtension().addFileExtension( m_wfType ).removeFirstSegments( 1 );
+      path = m_sourcePath.removeFileExtension().addFileExtension( m_wfType ).removeFirstSegments( 1 );
     }
-    if( m_relativeSourcePath.getFileExtension().toUpperCase().equals( "JPG" ) ) //$NON-NLS-1$
+    if( m_sourcePath.getFileExtension().toUpperCase().equals( "JPG" ) ) //$NON-NLS-1$
     {
       m_fileType = "jpg"; //$NON-NLS-1$
       m_wfType = "jgw"; //$NON-NLS-1$
-      path = m_relativeSourcePath.removeFileExtension().addFileExtension( m_wfType ).removeFirstSegments( 1 );
+      path = m_sourcePath.removeFileExtension().addFileExtension( m_wfType ).removeFirstSegments( 1 );
     }
-    if( m_relativeSourcePath.getFileExtension().toUpperCase().equals( "PNG" ) ) //$NON-NLS-1$
+    if( m_sourcePath.getFileExtension().toUpperCase().equals( "PNG" ) ) //$NON-NLS-1$
     {
       m_fileType = "png"; //$NON-NLS-1$
       m_wfType = "pgw"; //$NON-NLS-1$
-      path = m_relativeSourcePath.removeFileExtension().addFileExtension( m_wfType ).removeFirstSegments( 1 );
+      path = m_sourcePath.removeFileExtension().addFileExtension( m_wfType ).removeFirstSegments( 1 );
     }
     // if( m_relativeSourcePath.getFileExtension().toUpperCase().equals( "GIF" ) )
     // {
@@ -358,7 +359,7 @@ public class ImportImageWizardPage extends WizardPage implements SelectionListen
     {
       try
       {
-        final IFile worldfile = m_project.getFile( m_relativeSourcePath.removeFirstSegments( 1 ).removeFileExtension().addFileExtension( m_wfType ) );
+        final IFile worldfile = m_project.getFile( m_sourcePath.removeFirstSegments( 1 ).removeFileExtension().addFileExtension( m_wfType ) );
 
         String str = ""; //$NON-NLS-1$
         final Control[] array = m_worldFileGroup.getChildren();
@@ -435,9 +436,31 @@ public class ImportImageWizardPage extends WizardPage implements SelectionListen
 
   }
 
-  public URL getURL( ) throws MalformedURLException
+  public String getSource( final URL context )
   {
-    return m_project.getLocation().append( m_relativeSourcePath.removeFirstSegments( 1 ) ).toFile().toURI().toURL();
+    final IPath contextPath = findContextPath( context );
+    if( contextPath == null )
+      return m_sourcePath.toString();
+
+    final IPath relativeSourcePath = m_sourcePath.makeRelativeTo( contextPath );
+    return relativeSourcePath.toString();
+  }
+
+  private IPath findContextPath( final URL context )
+  {
+    final IFile contextFile = ResourceUtilities.findFileFromURL( context );
+    if( contextFile != null )
+      return contextFile.getParent().getFullPath();
+
+    final IFolder contextFolder = ResourceUtilities.findFolderFromURL( context );
+    if( contextFolder != null )
+      return contextFolder.getFullPath();
+
+    final IProject contextProject = ResourceUtilities.findProjectFromURL( context );
+    if( contextProject != null )
+      return contextProject.getFullPath();
+
+    return null;
   }
 
   public String getFileType( )
@@ -450,9 +473,9 @@ public class ImportImageWizardPage extends WizardPage implements SelectionListen
     return m_wfExists;
   }
 
-  public IPath getRelativeSourcePath( )
+  public IPath getSourcePath( )
   {
-    return m_relativeSourcePath;
+    return m_sourcePath;
   }
 
   public String getCSName( )
