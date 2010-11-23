@@ -42,14 +42,11 @@ package org.kalypso.ogc.gml;
 
 import java.net.URL;
 
-import javax.media.jai.JAI;
-import javax.media.jai.RenderedOp;
 import javax.media.jai.TiledImage;
 
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.grid.GridFileVerifier;
@@ -81,28 +78,20 @@ public class KalypsoPictureThemeWorldFile extends KalypsoPictureTheme
     if( arrFileName.length != 2 )
       throw new IllegalStateException();
 
-    RenderedOp image = null;
     try
     {
       final String relativeURL = arrFileName[0];
       final String srsName = arrFileName[1];
 
-      // UGLY HACK: replace backslashes with slashes. The add-picture-theme action seems to put backslashes (on windows)
-      // in the relative URLs (which is even wrong in windows). Should be fixed there, but is fixed also here to support
-      // older projects.
-      final String relativeURLchecked = relativeURL.replaceAll( "\\\\", "/" );
+      final URL imageUrl = loadImage( relativeURL );
 
-      final URL imageUrl = UrlResolverSingleton.resolveUrl( context, relativeURLchecked );
-
-      if( GridFileVerifier.verify( imageUrl ) )
+      final TiledImage image = getImage();
+      if( image != null && GridFileVerifier.verify( imageUrl ) )
       {
         final IGridMetaReader reader = GridFileVerifier.getRasterMetaReader( imageUrl, null );
 
-        image = JAI.create( "url", imageUrl ); //$NON-NLS-1$
-        setImage( new TiledImage( image, true ) );
-
-        final int height = getImage().getHeight();
-        final int width = getImage().getWidth();
+        final int height = image.getHeight();
+        final int width = image.getWidth();
         final GM_Point origin = GeometryFactory.createGM_Point( reader.getOriginCornerX(), reader.getOriginCornerY(), srsName );
 
         final OffsetVector offsetX = new OffsetVector( new Double( reader.getVectorXx() ), new Double( reader.getVectorXy() ) );
@@ -118,11 +107,6 @@ public class KalypsoPictureThemeWorldFile extends KalypsoPictureTheme
       KalypsoCorePlugin.getDefault().getLog().log( status );
       setStatus( status );
       // We cannot throw exceptions here, it will break the whole map. This holds for all themes...
-    }
-    finally
-    {
-      if( image != null )
-        image.dispose();
     }
   }
 }
