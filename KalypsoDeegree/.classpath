@@ -1,51 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry exported="true" kind="lib" path="lib/jts/jts-1.11.jar" sourcepath="lib/jts/jts-1.11_src.zip"/>
-	<classpathentry exported="true" kind="lib" path="lib/jts/jtsio-1.11.jar" sourcepath="lib/jts/jtsio-1.11_src.zip"/>
+	<classpathentry exported="true" kind="lib" path="lib/xtiff-jai/xtiff-jai.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/geotiff-jai/geotiff-jai.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/batik/batik-ttf2svg.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/batik/lib/batik-anim.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/batik/lib/batik-awt-util.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/batik/lib/batik-bridge.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/batik/lib/batik-codec.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/batik/lib/batik-css.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/batik/lib/batik-dom.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/batik/lib/batik-ext.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/batik/lib/batik-extension.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/batik/lib/batik-gui-util.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/batik/lib/batik-gvt.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/batik/lib/batik-parser.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/batik/lib/batik-script.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/batik/lib/batik-svg-dom.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/batik/lib/batik-svggen.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/batik/lib/batik-swing.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/batik/lib/batik-transcoder.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/batik/lib/batik-util.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/batik/lib/batik-xml.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/batik/lib/js.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/batik/lib/pdf-transcoder.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="src" path="deegree"/>
 	<classpathentry kind="src" path="srcbind"/>
-	<classpathentry exported="true" kind="lib" path="lib/acme/acme.jar" sourcepath="KalypsoDeegreesrc.zip"/>
-	<classpathentry exported="true" kind="lib" path="lib/geotiff-jai/geotiff-jai.jar" sourcepath="KalypsoDeegreesrc.zip"/>
-	<classpathentry exported="true" kind="lib" path="lib/jai/jai_codec.jar" sourcepath="KalypsoDeegreesrc.zip"/>
-	<classpathentry exported="true" kind="lib" path="lib/jai/jai_core.jar" sourcepath="lib/jai/jai-1_1-mr-doc.zip">
-		<attributes>
-			<attribute name="javadoc_location" value="jar:platform:/resource/KalypsoDeegree/lib/jai/jai-1_1-mr-doc.zip!/"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry exported="true" kind="lib" path="lib/jai/mlibwrapper_jai.jar" sourcepath="KalypsoDeegreesrc.zip"/>
-	<classpathentry exported="true" kind="lib" path="lib/shiftone/shiftone-cache.jar" sourcepath="lib/shiftone/shiftone-cache_src.zip"/>
-	<classpathentry exported="true" kind="lib" path="lib/xalan-j/xalan.jar" sourcepath="KalypsoDeegreesrc.zip"/>
-	<classpathentry exported="true" kind="lib" path="lib/xtiff-jai/xtiff-jai.jar" sourcepath="KalypsoDeegreesrc.zip"/>
-	<classpathentry exported="true" kind="lib" path="lib/batik/lib/batik-anim.jar" sourcepath="KalypsoDeegreesrc.zip"/>
-	<classpathentry exported="true" kind="lib" path="lib/batik/lib/batik-awt-util.jar" sourcepath="KalypsoDeegreesrc.zip"/>
-	<classpathentry exported="true" kind="lib" path="lib/batik/lib/batik-bridge.jar" sourcepath="KalypsoDeegreesrc.zip"/>
-	<classpathentry exported="true" kind="lib" path="lib/batik/lib/batik-codec.jar" sourcepath="KalypsoDeegreesrc.zip"/>
-	<classpathentry exported="true" kind="lib" path="lib/batik/lib/batik-css.jar" sourcepath="KalypsoDeegreesrc.zip"/>
-	<classpathentry exported="true" kind="lib" path="lib/batik/lib/batik-dom.jar" sourcepath="KalypsoDeegreesrc.zip"/>
-	<classpathentry exported="true" kind="lib" path="lib/batik/lib/batik-ext.jar" sourcepath="KalypsoDeegreesrc.zip"/>
-	<classpathentry exported="true" kind="lib" path="lib/batik/lib/batik-extension.jar" sourcepath="KalypsoDeegreesrc.zip"/>
-	<classpathentry exported="true" kind="lib" path="lib/batik/lib/batik-gui-util.jar" sourcepath="KalypsoDeegreesrc.zip"/>
-	<classpathentry exported="true" kind="lib" path="lib/batik/lib/batik-gvt.jar" sourcepath="KalypsoDeegreesrc.zip"/>
-	<classpathentry exported="true" kind="lib" path="lib/batik/lib/batik-parser.jar" sourcepath="KalypsoDeegreesrc.zip"/>
-	<classpathentry exported="true" kind="lib" path="lib/batik/lib/batik-script.jar" sourcepath="KalypsoDeegreesrc.zip"/>
-	<classpathentry exported="true" kind="lib" path="lib/batik/lib/batik-svg-dom.jar" sourcepath="KalypsoDeegreesrc.zip"/>
-	<classpathentry exported="true" kind="lib" path="lib/batik/lib/batik-svggen.jar" sourcepath="KalypsoDeegreesrc.zip"/>
-	<classpathentry exported="true" kind="lib" path="lib/batik/lib/batik-swing.jar" sourcepath="KalypsoDeegreesrc.zip"/>
-	<classpathentry exported="true" kind="lib" path="lib/batik/lib/batik-transcoder.jar" sourcepath="KalypsoDeegreesrc.zip"/>
-	<classpathentry exported="true" kind="lib" path="lib/batik/lib/batik-util.jar" sourcepath="KalypsoDeegreesrc.zip"/>
-	<classpathentry exported="true" kind="lib" path="lib/batik/lib/batik-xml.jar" sourcepath="KalypsoDeegreesrc.zip"/>
-	<classpathentry exported="true" kind="lib" path="lib/batik/lib/js.jar" sourcepath="KalypsoDeegreesrc.zip"/>
-	<classpathentry exported="true" kind="lib" path="lib/batik/lib/pdf-transcoder.jar" sourcepath="/KalypsoCommons/lib/commons-io-1.2-src.zip"/>
-	<classpathentry exported="true" kind="lib" path="lib/batik/lib/xalan-2.6.0.jar" sourcepath="KalypsoDeegreesrc.zip"/>
-	<classpathentry exported="true" kind="lib" path="lib/batik/lib/xml-apis-ext.jar" sourcepath="KalypsoDeegreesrc.zip"/>
-	<classpathentry exported="true" kind="lib" path="lib/batik/lib/xml-apis.jar" sourcepath="KalypsoDeegreesrc.zip"/>
-	<classpathentry exported="true" kind="lib" path="lib/batik/batik-rasterizer.jar" sourcepath="KalypsoDeegreesrc.zip"/>
-	<classpathentry exported="true" kind="lib" path="lib/batik/batik-slideshow.jar" sourcepath="KalypsoDeegreesrc.zip"/>
-	<classpathentry exported="true" kind="lib" path="lib/batik/batik-squiggle.jar" sourcepath="KalypsoDeegreesrc.zip"/>
-	<classpathentry exported="true" kind="lib" path="lib/batik/batik-svgpp.jar" sourcepath="KalypsoDeegreesrc.zip"/>
-	<classpathentry exported="true" kind="lib" path="lib/batik/batik-ttf2svg.jar" sourcepath="KalypsoDeegreesrc.zip"/>
-	<classpathentry exported="true" kind="lib" path="lib/batik/batik.jar" sourcepath="KalypsoDeegreesrc.zip"/>
 	<classpathentry kind="output" path="build/bin"/>
 </classpath>
