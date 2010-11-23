@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.provider;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
@@ -153,6 +154,17 @@ public class ZmlLabelProvider extends ColumnLabelProvider
   @Override
   public Image getImage( final Object element )
   {
+    try
+    {
+      final CellStyle style = findStyle( element );
+
+      return style.getImage();
+    }
+    catch( final IOException e )
+    {
+      KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+    }
+
     return super.getImage( element );
   }
 

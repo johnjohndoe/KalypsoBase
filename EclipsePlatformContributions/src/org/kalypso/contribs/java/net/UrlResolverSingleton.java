@@ -41,21 +41,21 @@ import java.util.Properties;
  * 
  * @author schlienger (24.05.2005)
  */
-public class UrlResolverSingleton
+public final class UrlResolverSingleton
 {
-  private static IUrlResolver m_ur = null;
+  private static IUrlResolver RESOLVER = null;
 
-  private UrlResolverSingleton()
+  private UrlResolverSingleton( )
   {
-  // no instanciation
+    // no instanciation
   }
 
-  public static IUrlResolver getDefault()
+  public static IUrlResolver getDefault( )
   {
-    if( m_ur == null )
-      m_ur = new UrlResolver();
+    if( RESOLVER == null )
+      RESOLVER = new UrlResolver();
 
-    return m_ur;
+    return RESOLVER;
   }
 
   public static URL resolveUrl( final URL baseURL, final String relativeURL ) throws MalformedURLException
@@ -67,17 +67,20 @@ public class UrlResolverSingleton
   }
 
   /**
-   * Goes through a property-list and resolves every key ending with 'URL' against the
-   * given context.
-   * @param confUrl Context for resolving the urls
-   * @param props Every property ending with 'URL' will be changed = URL( context, prop )
-   * @throws MalformedURLException if any url is malformed
+   * Goes through a property-list and resolves every key ending with 'URL' against the given context.
+   * 
+   * @param confUrl
+   *          Context for resolving the urls
+   * @param props
+   *          Every property ending with 'URL' will be changed = URL( context, prop )
+   * @throws MalformedURLException
+   *           if any url is malformed
    */
   public static void resolveUrlProperties( final URL confUrl, final Properties props ) throws MalformedURLException
   {
     for( final Object object : props.keySet() )
     {
-      final String key = (String)object;
+      final String key = (String) object;
       if( key.endsWith( "URL" ) ) //$NON-NLS-1$
       {
         final String path = props.getProperty( key );
