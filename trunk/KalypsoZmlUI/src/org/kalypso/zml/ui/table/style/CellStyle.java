@@ -185,8 +185,14 @@ public class CellStyle
 
     final URL url = new URL( uri );
 
-    m_image = new Image( null, url.openStream() );
-    IMAGE_REGISTRY.put( uri, m_image );
+    final Image registered = IMAGE_REGISTRY.get( uri );
+    if( registered == null )
+    {
+      m_image = new Image( null, url.openStream() );
+      IMAGE_REGISTRY.put( uri, m_image );
+    }
+    else
+      m_image = registered;
 
     return m_image;
   }
