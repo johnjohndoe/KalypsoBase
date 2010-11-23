@@ -43,10 +43,12 @@ package org.kalypso.zml.ui.table.rules.impl;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.provider.ZmlValueReference;
 import org.kalypso.zml.ui.table.rules.IZmlTableRule;
-import org.kalypso.zml.ui.table.schema.AbstractStyleType;
-import org.kalypso.zml.ui.table.schema.CellStyleType;
+import org.kalypso.zml.ui.table.style.CellStyle;
 
 /**
  * @author Dirk Kuch
@@ -55,7 +57,7 @@ public class ZmlRuleCellStatus implements IZmlTableRule
 {
   public static final String ID = "org.kalypso.zml.ui.table.rules.impl.ZmlRuleCellStatus";
 
-  Map<String, AbstractStyleType> m_styles = new HashMap<String, AbstractStyleType>();
+  Map<String, CellStyle> m_styles = new HashMap<String, CellStyle>();
 
   /**
    * @see org.kalypso.zml.ui.table.rules.IZmlTableRule#getIdentifier()
@@ -71,7 +73,7 @@ public class ZmlRuleCellStatus implements IZmlTableRule
    *      org.kalypso.zml.ui.table.schema.AbstractStyleType)
    */
   @Override
-  public void addStyle( final String columnId, final AbstractStyleType style )
+  public void addStyle( final String columnId, final CellStyle style )
   {
     m_styles.put( columnId, style );
   }
@@ -82,7 +84,17 @@ public class ZmlRuleCellStatus implements IZmlTableRule
   @Override
   public boolean apply( final ZmlValueReference reference )
   {
-    // TODO Auto-generated method stub
+    try
+    {
+      final Integer status = reference.getStatus();
+
+      return 0 != status;
+    }
+    catch( final SensorException e )
+    {
+      KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+    }
+
     return false;
   }
 
@@ -90,10 +102,9 @@ public class ZmlRuleCellStatus implements IZmlTableRule
    * @see org.kalypso.zml.ui.table.rules.IZmlTableRule#getStyle(java.lang.String)
    */
   @Override
-  public CellStyleType getStyle( final String columnId )
+  public CellStyle getStyle( final String columnId )
   {
-    // TODO Auto-generated method stub
-    return null;
+    return m_styles.get( columnId );
   }
 
 }

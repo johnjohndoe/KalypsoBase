@@ -68,6 +68,12 @@ public class ZmlTableColumn implements IObservationListener
 
   private final IZmlColumnModel m_tabelModel;
 
+  private IAxis m_indexAxis;
+
+  private IAxis m_valueAxis;
+
+  private IAxis m_statusAxis;
+
   public ZmlTableColumn( final IZmlColumnModel tabelModel, final IZmlTableColumn column, final IObservation observation, final ITupleModel model, final DataColumnType type )
   {
     m_tabelModel = tabelModel;
@@ -96,10 +102,14 @@ public class ZmlTableColumn implements IObservationListener
 
   public IAxis getIndexAxis( )
   {
+    if( m_indexAxis != null )
+      return m_indexAxis;
+
     final String type = m_type.getIndexAxis();
     final IAxis[] axes = m_model.getAxisList();
+    m_indexAxis = AxisUtils.findAxis( axes, type );
 
-    return AxisUtils.findAxis( axes, type );
+    return m_indexAxis;
   }
 
   public String getLabel( )
@@ -109,10 +119,14 @@ public class ZmlTableColumn implements IObservationListener
 
   public IAxis getValueAxis( )
   {
+    if( m_valueAxis != null )
+      return m_valueAxis;
+
     final String type = m_type.getValueAxis();
     final IAxis[] axes = m_model.getAxisList();
+    m_valueAxis = AxisUtils.findAxis( axes, type );
 
-    return AxisUtils.findAxis( axes, type );
+    return m_valueAxis;
   }
 
   private boolean isTargetAxis( final IAxis axis )
@@ -161,5 +175,16 @@ public class ZmlTableColumn implements IObservationListener
   public void observationChanged( final IObservation obs, final Object source )
   {
     m_tabelModel.fireModelChanged();
+  }
+
+  public IAxis getStatusAxis( )
+  {
+    if( m_statusAxis != null )
+      return m_statusAxis;
+
+    final IAxis[] axes = m_model.getAxisList();
+    m_statusAxis = AxisUtils.findStatusAxis( axes );
+
+    return m_statusAxis;
   }
 }

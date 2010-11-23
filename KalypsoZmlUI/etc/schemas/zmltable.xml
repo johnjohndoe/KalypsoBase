@@ -2,15 +2,15 @@
 <zml:ZmlTable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:zml="schema.table.ui.zml.kalypso.org" xsi:schemaLocation="schema.table.ui.zml.kalypso.org zmltable.xsd ">
 
   <zml:StyleSet>
-    <zml:defaultCellStyle>
-      <zml:backgroundColor>FFFFFF</zml:backgroundColor>
-      <zml:textColor>000000</zml:textColor>
-      <zml:fontFamily>Arial</zml:fontFamily>
+    <zml:defaultCellStyle id="defaultCellStyle">
+      <zml:Property name="backgroundColor">FFFFFF</zml:Property>
+      <zml:Property name="textColor">000000</zml:Property>
+      <zml:Property name="fontFamily">Arial</zml:Property>
     </zml:defaultCellStyle>
     <zml:Style xsi:type="zml:CellStyleType" id="baseCellStyle">
-      <zml:backgroundColor>FFFFFF</zml:backgroundColor>
-      <zml:textColor>000000</zml:textColor>
-      <zml:fontFamily>Arial</zml:fontFamily>
+      <zml:Property name="backgroundColor">FFFFFF</zml:Property>
+      <zml:Property name="textColor">000000</zml:Property>
+      <zml:Property name="fontFamily">Arial</zml:Property>
     </zml:Style>
   </zml:StyleSet>
 
@@ -29,7 +29,7 @@
       <zml:Rules>
         <zml:Rule>
           <zml:rule>org.kalypso.zml.ui.table.rules.impl.ZmlRuleCellStatus</zml:rule>
-          <zml:style xsi:type="zml:CellStyleType" styleRef="baseCellStyle">
+          <zml:style xsi:type="zml:CellStyleType" styleRef="baseCellStyle" id="cellStatus">
           </zml:style>
         </zml:Rule>
       </zml:Rules>
