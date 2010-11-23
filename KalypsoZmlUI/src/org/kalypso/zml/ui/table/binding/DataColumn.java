@@ -38,23 +38,26 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.rules;
+package org.kalypso.zml.ui.table.binding;
 
-import org.kalypso.zml.ui.table.binding.CellStyle;
-import org.kalypso.zml.ui.table.provider.ZmlValueReference;
+import org.kalypso.zml.ui.table.schema.AbstractColumnType;
+import org.kalypso.zml.ui.table.schema.DataColumnType;
+import org.kalypso.zml.ui.table.schema.ZmlTableType;
 
 /**
  * @author Dirk Kuch
  */
-public interface IZmlTableRule
+public class DataColumn extends AbstractColumn
 {
-  String EXTENSION_POINT_ID = "org.kalypso.zml.ui.tableRule"; //$NON-NLS-1$
 
-  void addStyle( String columnId, CellStyle style );
+  public DataColumn( final ZmlTableType root, final AbstractColumnType type )
+  {
+    super( root, type );
+  }
 
-  boolean apply( ZmlValueReference reference );
-
-  String getIdentifier( );
-
-  CellStyle getStyle( String columnId );
+  @Override
+  public DataColumnType getType( )
+  {
+    return (DataColumnType) super.getType();
+  }
 }
