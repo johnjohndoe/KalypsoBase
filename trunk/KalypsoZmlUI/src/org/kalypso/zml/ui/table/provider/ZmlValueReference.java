@@ -77,4 +77,16 @@ public class ZmlValueReference
   {
     return m_column.getIdentifier();
   }
+
+  public Integer getStatus( ) throws SensorException
+  {
+    final IAxis status = m_column.getStatusAxis();
+    final Object value = m_column.get( m_index, status );
+
+    if( value instanceof Number )
+      return ((Number) value).intValue();
+
+    return null;
+  }
+
 }

@@ -41,16 +41,21 @@
 package org.kalypso.zml.ui.table.utils;
 
 import java.util.List;
+import java.util.Map;
+
+import javax.xml.namespace.QName;
 
 import jregex.Pattern;
 import jregex.RETokenizer;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.RGB;
 import org.kalypso.zml.ui.table.schema.AbstractColumnType;
 import org.kalypso.zml.ui.table.schema.AlignmentType;
+import org.kalypso.zml.ui.table.schema.CellStyleType;
 import org.kalypso.zml.ui.table.schema.DataColumnType;
 import org.kalypso.zml.ui.table.schema.IndexColumnType;
+import org.kalypso.zml.ui.table.schema.StylePropertyType;
+import org.kalypso.zml.ui.table.schema.StyleSetType;
 import org.kalypso.zml.ui.table.schema.ZmlTableType;
 
 /**
@@ -58,7 +63,9 @@ import org.kalypso.zml.ui.table.schema.ZmlTableType;
  */
 public final class TableTypeHelper
 {
-  public static final Pattern PATTERN_CLONED_COLUMN_IDENTIFIER = new Pattern( ".*\\_\\d+$" );
+  private static final QName PROPERTY_NAME = new QName( "name" ); //$NON-NLS-1$
+
+  public static final Pattern PATTERN_CLONED_COLUMN_IDENTIFIER = new Pattern( ".*\\_\\d+$" ); //$NON-NLS-1$
 
   private TableTypeHelper( )
   {
@@ -94,7 +101,6 @@ public final class TableTypeHelper
   public static AbstractColumnType cloneColumn( final AbstractColumnType base )
   {
     // FIXME *brrrr* use reflection api!
-
     if( base instanceof DataColumnType )
     {
       final DataColumnType data = (DataColumnType) base;
@@ -154,22 +160,39 @@ public final class TableTypeHelper
     return null;
   }
 
-  public static RGB colorByteToRGB( final byte[] color )
+  public static String findProperty( final CellStyleType style, final String name )
   {
-    final int red = byteToInt( color[0] );
-    final int green = byteToInt( color[1] );
-    final int blue = byteToInt( color[2] );
+    final List<StylePropertyType> properties = style.getProperty();
+    for( final StylePropertyType property : properties )
+    {
+      final String propertyName = TableTypeHelper.getPropertyName( property );
+      if( name.equals( propertyName ) )
+        return property.getValue();
+    }
 
-    return new RGB( red, green, blue );
+    return null;
   }
 
-  /**
-   * @param b
-   *          a byte value
-   */
-  private static int byteToInt( final byte b )
+  public static String getPropertyName( final StylePropertyType property )
   {
-    return b & 0xff;
+    final Map<QName, String> attributes = property.getOtherAttributes();
+
+    return attributes.get( PROPERTY_NAME );
   }
 
+  public static CellStyleType findCellStyleType( final StyleSetType styleSet, final String ref )
+  {
+    final CellStyleType defaultStyle = styleSet.getDefaultCellStyle();
+    if( defaultStyle.getId() == ref )
+      return defaultStyle;
+
+    final List<CellStyleType> styles = styleSet.getStyle();
+    for( final CellStyleType style : styles )
+    {
+      if( style.getId().equals( ref ) )
+        return style;
+    }
+
+    return null;
+  }
 }

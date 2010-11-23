@@ -45,30 +45,26 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.RGB;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.rules.IZmlTableRule;
 import org.kalypso.zml.ui.table.schema.AbstractColumnType;
-import org.kalypso.zml.ui.table.schema.CellStyleType;
 import org.kalypso.zml.ui.table.schema.IndexColumnType;
 import org.kalypso.zml.ui.table.schema.RuleType;
 import org.kalypso.zml.ui.table.schema.RulesType;
 import org.kalypso.zml.ui.table.schema.StyleSetType;
-import org.kalypso.zml.ui.table.utils.TableTypeHelper;
+import org.kalypso.zml.ui.table.style.CellStyle;
 
 /**
  * @author Dirk Kuch
  */
 public class ZmlLabelProvider extends ColumnLabelProvider
 {
-  private static final ColorRegistry COLOR_REGISTRY = new ColorRegistry();
 
   private final AbstractColumnType m_type;
 
@@ -88,7 +84,7 @@ public class ZmlLabelProvider extends ColumnLabelProvider
       {
         final String ruleIdentifier = ruleType.getRule();
         final IZmlTableRule rule = KalypsoZmlUI.getDefault().getTableRule( ruleIdentifier );
-        rule.addStyle( type.getId(), ruleType.getStyle() );
+        rule.addStyle( type.getId(), new CellStyle( styleSet, ruleType.getStyle() ) );
 
         m_rules.add( rule );
       }
@@ -101,20 +97,15 @@ public class ZmlLabelProvider extends ColumnLabelProvider
   @Override
   public Color getBackground( final Object element )
   {
-    final CellStyleType style = findStyle( element );
+    final CellStyle style = findStyle( element );
 
-    final RGB rgb = TableTypeHelper.colorByteToRGB( style.getBackgroundColor() );
-    final String name = rgb.toString();
-
-    COLOR_REGISTRY.put( name, rgb );
-
-    return COLOR_REGISTRY.get( name );
+    return style.getBackgroundColor();
   }
 
-  private CellStyleType findStyle( final Object element )
+  private CellStyle findStyle( final Object element )
   {
     if( m_type instanceof IndexColumnType )
-      return m_styleSet.getDefaultCellStyle();
+      return new CellStyle( m_styleSet, m_styleSet.getDefaultCellStyle() );
 
     if( element instanceof ZmlTableRow )
     {
@@ -133,7 +124,7 @@ public class ZmlLabelProvider extends ColumnLabelProvider
 
     }
 
-    return m_styleSet.getDefaultCellStyle();
+    return new CellStyle( m_styleSet, m_styleSet.getDefaultCellStyle() );
   }
 
   /**
