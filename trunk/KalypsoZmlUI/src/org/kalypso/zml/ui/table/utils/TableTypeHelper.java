@@ -52,6 +52,7 @@ import org.eclipse.swt.SWT;
 import org.kalypso.zml.ui.table.schema.AbstractColumnType;
 import org.kalypso.zml.ui.table.schema.AlignmentType;
 import org.kalypso.zml.ui.table.schema.CellStyleType;
+import org.kalypso.zml.ui.table.schema.ColumnPropertyType;
 import org.kalypso.zml.ui.table.schema.DataColumnType;
 import org.kalypso.zml.ui.table.schema.IndexColumnType;
 import org.kalypso.zml.ui.table.schema.StylePropertyName;
@@ -101,7 +102,6 @@ public final class TableTypeHelper
 
   public static AbstractColumnType cloneColumn( final AbstractColumnType base )
   {
-    // FIXME *brrrr* use reflection api!
     if( base instanceof DataColumnType )
     {
       final DataColumnType data = (DataColumnType) base;
@@ -125,17 +125,16 @@ public final class TableTypeHelper
     return null;
   }
 
-  private static void copyBasicSettings( final AbstractColumnType source, final AbstractColumnType destination )
+  private static void copyBasicSettings( final AbstractColumnType source, final AbstractColumnType target )
   {
-    // FIXME *brrrr* use reflection api!
+    final List<ColumnPropertyType> targetProperties = target.getProperty();
+    targetProperties.clear();
 
-    destination.setAlignment( source.getAlignment() );
-    destination.setAutopack( source.isAutopack() );
-    destination.setEditable( source.isEditable() );
-    destination.setFormat( source.getFormat() );
-    destination.setId( source.getId() );
-    destination.setLabel( source.getLabel() );
-    destination.setWidth( source.getWidth() );
+    final List<ColumnPropertyType> srcProperties = source.getProperty();
+    for( final ColumnPropertyType property : srcProperties )
+    {
+      targetProperties.add( property );
+    }
   }
 
   public static AbstractColumnType findColumnType( final ZmlTableType tableType, final String identifier )
@@ -175,6 +174,13 @@ public final class TableTypeHelper
   }
 
   public static String getPropertyName( final StylePropertyType property )
+  {
+    final Map<QName, String> attributes = property.getOtherAttributes();
+
+    return attributes.get( PROPERTY_NAME );
+  }
+
+  public static String getPropertyName( final ColumnPropertyType property )
   {
     final Map<QName, String> attributes = property.getOtherAttributes();
 
