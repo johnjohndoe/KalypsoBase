@@ -718,10 +718,10 @@ public class ExcelTableCursor extends TableCursor
     final TableColumn newColumn = column == -1 ? null : m_table.getColumn( column );
 
     final boolean cellEditorActive = m_viewer.isCellEditorActive();
-    if( cellEditorActive )
+    final CellEditor[] cellEditors = m_viewer.getCellEditors();
+    if( cellEditorActive && cellEditors != null )
     {
       setVisible( false );
-      final CellEditor[] cellEditors = m_viewer.getCellEditors();
       hookCellEditor( cellEditors[column] );
       setRowColumn( item, newColumn, false );
     }

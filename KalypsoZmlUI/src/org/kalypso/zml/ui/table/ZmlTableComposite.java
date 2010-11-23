@@ -97,6 +97,10 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
 
     m_tableViewer = new TableViewer( this, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.FULL_SELECTION );
     m_tableViewer.getTable().setLinesVisible( true );
+
+    /* excel table cursor */
+// new ExcelTableCursor( m_tableViewer, SWT.BORDER_DASH, ADVANCE_MODE.DOWN, true );
+
     m_tableViewer.setContentProvider( new ZmlTableContentProvider( m_model ) );
 
     final List<AbstractColumnType> columns = tableType.getColumns().getColumn();
@@ -140,6 +144,9 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
 
   protected void refresh( )
   {
+    if( m_tableViewer.getTable().isDisposed() )
+      return;
+
     m_tableViewer.refresh();
 
     /** update header labels */
