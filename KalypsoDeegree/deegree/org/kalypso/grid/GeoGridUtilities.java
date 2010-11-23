@@ -401,7 +401,7 @@ public final class GeoGridUtilities
    */
   public static void walkCoverages( final ICoverageCollection coverages, final IGeoGridWalker walker, final IGeoGridArea walkingArea, final IProgressMonitor monitor ) throws Exception
   {
-    IFeatureBindingCollection<ICoverage> coveragesList = coverages.getCoverages();
+    final IFeatureBindingCollection<ICoverage> coveragesList = coverages.getCoverages();
     monitor.beginTask( "Visiting coverages", coveragesList.size() );
 
     try
@@ -684,7 +684,7 @@ public final class GeoGridUtilities
   /**
    * @return Midpoint of Rasterposition x,y and sets its value to the corresponding cell value.
    */
-  public static final Coordinate calcCoordinate( final IGeoGrid grid, final int x, final int y, final Coordinate c ) throws GeoGridException
+  public static Coordinate calcCoordinate( final IGeoGrid grid, final int x, final int y, final Coordinate c ) throws GeoGridException
   {
     final Coordinate coordinate = GeoGridUtilities.toCoordinate( grid, x, y, c );
 
@@ -696,7 +696,7 @@ public final class GeoGridUtilities
   /**
    * @return Midpoint of raster position x,y and sets its value to the given cell value.
    */
-  public static final Coordinate calcCoordinateWithoutZ( final IGeoGrid grid, final int x, final int y, final double z, final Coordinate c ) throws GeoGridException
+  public static Coordinate calcCoordinateWithoutZ( final IGeoGrid grid, final int x, final int y, final double z, final Coordinate c ) throws GeoGridException
   {
     final Coordinate coordinate = GeoGridUtilities.toCoordinate( grid, x, y, c );
     coordinate.z = z;
@@ -798,7 +798,7 @@ public final class GeoGridUtilities
     BigDecimal minValue = new BigDecimal( Double.MAX_VALUE ).setScale( 4, BigDecimal.ROUND_HALF_UP );
     BigDecimal maxValue = new BigDecimal( -Double.MAX_VALUE ).setScale( 4, BigDecimal.ROUND_HALF_UP );
 
-    IFeatureBindingCollection<ICoverage> coverages = covCollection.getCoverages();
+    final IFeatureBindingCollection<ICoverage> coverages = covCollection.getCoverages();
     for( final ICoverage coverage : coverages )
     {
       final IGeoGrid grid = GeoGridUtilities.toGrid( coverage );
@@ -880,7 +880,7 @@ public final class GeoGridUtilities
     for( final ICoverageCollection collection : collections )
     {
       Geometry unionGeom = null;
-      IFeatureBindingCollection<ICoverage> coverages = collection.getCoverages();
+      final IFeatureBindingCollection<ICoverage> coverages = collection.getCoverages();
       for( int j = 0; j < coverages.size(); j++ )
       {
         final ICoverage coverage = coverages.get( j );
