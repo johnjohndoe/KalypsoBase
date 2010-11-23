@@ -40,12 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table;
 
-import java.math.BigInteger;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -59,12 +59,16 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.contribs.eclipse.swt.layout.LayoutHelper;
+import org.kalypso.zml.ui.table.binding.AbstractColumn;
+import org.kalypso.zml.ui.table.binding.DataColumn;
+import org.kalypso.zml.ui.table.binding.IndexColumn;
 import org.kalypso.zml.ui.table.provider.IZmlColumnModelListener;
 import org.kalypso.zml.ui.table.provider.ZmlLabelProvider;
 import org.kalypso.zml.ui.table.provider.ZmlTableColumn;
 import org.kalypso.zml.ui.table.provider.ZmlTableContentProvider;
 import org.kalypso.zml.ui.table.schema.AbstractColumnType;
 import org.kalypso.zml.ui.table.schema.DataColumnType;
+import org.kalypso.zml.ui.table.schema.IndexColumnType;
 import org.kalypso.zml.ui.table.schema.ZmlTableType;
 import org.kalypso.zml.ui.table.utils.TableTypeHelper;
 
@@ -75,7 +79,7 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
 {
   private TableViewer m_tableViewer;
 
-  private final Map<Integer, AbstractColumnType> m_columnIndex = new HashMap<Integer, AbstractColumnType>();
+  private final Map<Integer, AbstractColumn> m_columnIndex = new HashMap<Integer, AbstractColumn>();
 
   private final IZmlColumnModel m_model;
 
@@ -106,7 +110,12 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
     final List<AbstractColumnType> columns = tableType.getColumns().getColumn();
     for( final AbstractColumnType column : columns )
     {
-      buildColumnViewer( column );
+      if( column instanceof DataColumnType )
+        buildColumnViewer( new DataColumn( tableType, column ) );
+      else if( column instanceof IndexColumnType )
+        buildColumnViewer( new IndexColumn( tableType, column ) );
+      else
+        throw new NotImplementedException();
     }
 
     m_tableViewer.setInput( m_model );
@@ -117,7 +126,7 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
     table.setHeaderVisible( true );
   }
 
-  private TableViewerColumn buildColumnViewer( final AbstractColumnType type )
+  private TableViewerColumn buildColumnViewer( final AbstractColumn type )
   {
     final int index = m_tableViewer.getTable().getColumnCount();
     m_columnIndex.put( index, type );
@@ -126,7 +135,7 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
     column.setLabelProvider( new ZmlLabelProvider( m_model.getTableType().getStyleSet(), type ) );
     column.getColumn().setText( type.getLabel() );
 
-    final BigInteger width = type.getWidth();
+    final Integer width = type.getWidth();
     if( width != null )
       column.getColumn().setWidth( width.intValue() );
 
@@ -134,9 +143,9 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
       column.getColumn().pack();
 
     /** edit support */
-    if( type instanceof DataColumnType && type.isEditable() )
+    if( type instanceof DataColumn && type.isEditable() )
     {
-      column.setEditingSupport( new ZmlEditingSupport( (DataColumnType) type, column ) );
+      column.setEditingSupport( new ZmlEditingSupport( (DataColumn) type, column ) );
     }
 
     return column;
@@ -155,15 +164,15 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
 
     for( int i = 0; i < tableColumns.length; i++ )
     {
-      final AbstractColumnType columnType = m_columnIndex.get( i );
+      final AbstractColumn columnType = m_columnIndex.get( i );
       final TableColumn tableColumn = tableColumns[i];
 
       /** only update headers of data column types */
-      if( columnType instanceof DataColumnType )
+      if( columnType instanceof DataColumn )
       {
-        final DataColumnType dataColumnType = (DataColumnType) columnType;
+        final DataColumn dataColumnType = (DataColumn) columnType;
 
-        final ZmlTableColumn column = m_model.getColumn( columnType.getId() );
+        final ZmlTableColumn column = m_model.getColumn( columnType.getIdentifier() );
         if( column == null )
         {
           tableColumn.setWidth( 0 );
@@ -210,10 +219,10 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
   public void duplicateColumn( final String identifier, final String newIdentifier )
   {
     // column already exists?
-    final Collection<AbstractColumnType> columns = m_columnIndex.values();
-    for( final AbstractColumnType column : columns )
+    final Collection<AbstractColumn> columns = m_columnIndex.values();
+    for( final AbstractColumn column : columns )
     {
-      if( column.getId().equals( newIdentifier ) )
+      if( column.getIdentifier().equals( newIdentifier ) )
         return;
     }
 
@@ -221,7 +230,12 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
     final AbstractColumnType clone = TableTypeHelper.cloneColumn( base );
     clone.setId( newIdentifier );
 
-    buildColumnViewer( clone );
+    if( clone instanceof DataColumnType )
+      buildColumnViewer( new DataColumn( m_model.getTableType(), clone ) );
+    else if( clone instanceof IndexColumnType )
+      buildColumnViewer( new IndexColumn( m_model.getTableType(), clone ) );
+    else
+      throw new NotImplementedException();
   }
 
 }
