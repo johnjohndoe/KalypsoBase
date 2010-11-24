@@ -368,7 +368,8 @@ public class QueuedSimulationService implements ISimulationService
   {
     synchronized( m_threads )
     {
-      for( final Object element : m_threads )
+      final SimulationThread[] threads = m_threads.toArray( new SimulationThread[m_threads.size()] );
+      for( final Object element : threads )
       {
         final SimulationThread cjt = (SimulationThread) element;
         final SimulationInfo jobBean = cjt.getJobBean();
