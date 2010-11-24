@@ -173,6 +173,8 @@ public class ChartSourceProvider extends AbstractSourceProvider
 
     m_chartContext = contextService.activateContext( CHART_CONTEXT );
 
+    // TODO: fire source chabge?
+
     // FIXME: register similar listeners here
 // m_mapPanel.addMapPanelListener( m_mapPanelListener );
 // m_mapPanelListener.onMapModelChanged( m_mapPanel, null, m_mapPanel.getMapModell() );
