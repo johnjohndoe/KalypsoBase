@@ -2,12 +2,7 @@
 <zml:ZmlTable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:zml="schema.table.ui.zml.kalypso.org" xsi:schemaLocation="schema.table.ui.zml.kalypso.org zmltable.xsd ">
 
   <zml:StyleSet>
-    <zml:defaultCellStyle id="defaultCellStyle">
-      <zml:Property name="backgroundColor">FFFFFF</zml:Property>
-      <zml:Property name="textColor">000000</zml:Property>
-      <zml:Property name="fontFamily">Arial</zml:Property>
-    </zml:defaultCellStyle>
-    <zml:Style id="baseCellStyle">
+    <zml:Style id="baseCellStyle" default="true">
       <zml:Property name="backgroundColor">FFFFFF</zml:Property>
       <zml:Property name="textColor">000000</zml:Property>
       <zml:Property name="fontFamily">Arial</zml:Property>
@@ -28,6 +23,10 @@
       <zml:Property name="label">Datum</zml:Property>
       <zml:Property name="format">dd.MM.yyyy HH:mm</zml:Property>
       <zml:Property name="alignment">LEFT</zml:Property>
+
+      <zml:Style id="dateStyle">
+        <zml:Property name="backgroundColor">A2B5DB</zml:Property>
+      </zml:Style>
     </zml:Column>
 
     <zml:Column xsi:type="zml:DataColumnType" editable="true" id="W">
@@ -35,6 +34,8 @@
       <zml:Property name="format">%.0f</zml:Property>
       <zml:Property name="width">100</zml:Property>
       <zml:Property name="alignment">RIGHT</zml:Property>
+
+
       <zml:Rules>
         <zml:Rule ruleReference="org.kalypso.zml.ui.table.rule.user.modified" styleReference="userModifiedStyle" />
         <zml:Rule ruleReference="org.kalypso.zml.ui.table.rule.value.interpolated" styleReference="interpolatedValueStyle" />
@@ -63,9 +64,13 @@
 
     <zml:Column xsi:type="zml:DataColumnType" editable="true" id="Q">
       <zml:Property name="label">Abfluss</zml:Property>
-      <zml:Property name="format">%.0f</zml:Property>
+      <zml:Property name="format">%.3f</zml:Property>
       <zml:Property name="width">100</zml:Property>
       <zml:Property name="alignment">RIGHT</zml:Property>
+
+      <zml:Style id="qCellStyle" styleRef="baseCellStyle">
+        <zml:Property name="backgroundColor">F8F3C0</zml:Property>
+      </zml:Style>
 
       <zml:Rules>
         <zml:Rule ruleReference="org.kalypso.zml.ui.table.rule.user.modified" styleReference="userModifiedStyle" />
@@ -74,14 +79,18 @@
       </zml:Rules>
 
       <zml:indexAxis>date</zml:indexAxis>
-      <zml:valueAxis>W</zml:valueAxis>
+      <zml:valueAxis>Q</zml:valueAxis>
     </zml:Column>
 
     <zml:Column xsi:type="zml:DataColumnType" editable="true" id="Q_MODELL">
       <zml:Property name="label">Abfluss (Modell)</zml:Property>
-      <zml:Property name="format">%.0f</zml:Property>
+      <zml:Property name="format">%.3f</zml:Property>
       <zml:Property name="width">100</zml:Property>
       <zml:Property name="alignment">RIGHT</zml:Property>
+
+      <zml:Style id="qModellCellStyle" styleRef="baseCellStyle">
+        <zml:Property name="backgroundColor">F8F3C0</zml:Property>
+      </zml:Style>
 
       <zml:Rules>
         <zml:Rule ruleReference="org.kalypso.zml.ui.table.rule.user.modified" styleReference="userModifiedStyle" />
@@ -90,7 +99,7 @@
       </zml:Rules>
 
       <zml:indexAxis>date</zml:indexAxis>
-      <zml:valueAxis>W</zml:valueAxis>
+      <zml:valueAxis>Q</zml:valueAxis>
     </zml:Column>
 
   </zml:Columns>

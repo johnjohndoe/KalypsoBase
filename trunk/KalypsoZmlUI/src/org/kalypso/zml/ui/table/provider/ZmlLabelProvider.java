@@ -56,6 +56,7 @@ import org.kalypso.zml.ui.table.binding.CellStyle;
 import org.kalypso.zml.ui.table.binding.IndexColumn;
 import org.kalypso.zml.ui.table.rules.IZmlTableRule;
 import org.kalypso.zml.ui.table.schema.StyleSetType;
+import org.kalypso.zml.ui.table.utils.TableTypeHelper;
 
 /**
  * @author Dirk Kuch
@@ -86,7 +87,7 @@ public class ZmlLabelProvider extends ColumnLabelProvider
   private CellStyle findStyle( final Object element )
   {
     if( m_column instanceof IndexColumn )
-      return new CellStyle( m_styleSet, m_styleSet.getDefaultCellStyle() );
+      return new CellStyle( m_styleSet, TableTypeHelper.getDefaultStyleSet( m_styleSet ) );
 
     if( element instanceof ZmlTableRow )
     {
@@ -103,7 +104,7 @@ public class ZmlLabelProvider extends ColumnLabelProvider
       }
     }
 
-    return new CellStyle( m_styleSet, m_styleSet.getDefaultCellStyle() );
+    return m_column.getCellStyle();
   }
 
   /**

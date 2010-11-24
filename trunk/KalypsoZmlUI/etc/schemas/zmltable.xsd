@@ -102,7 +102,6 @@
   <!-- Styles -->
   <complexType name="StyleSetType">
     <sequence>
-      <element name="defaultCellStyle" type="zmltable:CellStyleType" minOccurs="1" />
       <element ref="zmltable:Style" minOccurs="0" maxOccurs="unbounded" />
     </sequence>
   </complexType>
@@ -120,6 +119,7 @@
         </sequence>
         <attribute name="id" type="ID" use="required" />
         <attribute name="styleRef" type="IDREF" use="optional" />
+        <attribute name="default" type="boolean" use="optional" />
   </complexType>
   
   

@@ -187,16 +187,27 @@ public final class TableTypeHelper
     return attributes.get( PROPERTY_NAME );
   }
 
-  public static CellStyleType findCellStyleType( final StyleSetType styleSet, final String ref )
+  public static CellStyleType findCellStyleType( final StyleSetType styleSet, final String reference )
   {
-    final CellStyleType defaultStyle = styleSet.getDefaultCellStyle();
-    if( defaultStyle.getId() == ref )
-      return defaultStyle;
+    if( reference == null )
+      return getDefaultStyleSet( styleSet );
 
     final List<CellStyleType> styles = styleSet.getStyle();
     for( final CellStyleType style : styles )
     {
-      if( style.getId().equals( ref ) )
+      if( style.getId().equals( reference ) )
+        return style;
+    }
+
+    return null;
+  }
+
+  public static CellStyleType getDefaultStyleSet( final StyleSetType styleSet )
+  {
+    final List<CellStyleType> styles = styleSet.getStyle();
+    for( final CellStyleType style : styles )
+    {
+      if( style.isDefault() )
         return style;
     }
 
@@ -221,4 +232,5 @@ public final class TableTypeHelper
 
     return weight;
   }
+
 }
