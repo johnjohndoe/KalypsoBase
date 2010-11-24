@@ -147,14 +147,17 @@ public class ChartModel implements IChartModel
     final IAxis[] autoscaledAxes = axes == null ? getMapperRegistry().getAxes() : axes;
     for( final IAxis axis : autoscaledAxes )
     {
-      // FIXME: gives convurrentmodification exception sometimes: use arrays instead of list and/or synchronize
-      final List<IChartLayer> layers = getAxis2Layers().get( axis );
-      if( layers == null )
+      IChartLayer[] layers;
+      synchronized( this )
       {
-        continue;
+        final List<IChartLayer> list = getAxis2Layers().get( axis );
+        if( list == null )
+          layers = new IChartLayer[] {};
+        else
+          layers = list.toArray( new IChartLayer[] {} );
       }
 
-      final List<IDataRange<Number>> ranges = new ArrayList<IDataRange<Number>>( layers.size() );
+      final List<IDataRange<Number>> ranges = new ArrayList<IDataRange<Number>>( layers.length );
 
       for( final IChartLayer layer : layers )
       {
