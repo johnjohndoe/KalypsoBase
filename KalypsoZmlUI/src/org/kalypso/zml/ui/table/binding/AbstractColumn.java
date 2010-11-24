@@ -53,6 +53,7 @@ import org.kalypso.zml.ui.table.schema.ColumnPropertyName;
 import org.kalypso.zml.ui.table.schema.ColumnPropertyType;
 import org.kalypso.zml.ui.table.schema.RuleType;
 import org.kalypso.zml.ui.table.schema.RulesType;
+import org.kalypso.zml.ui.table.schema.StyleSetType;
 import org.kalypso.zml.ui.table.schema.ZmlTableType;
 import org.kalypso.zml.ui.table.utils.TableTypeHelper;
 
@@ -66,6 +67,8 @@ public abstract class AbstractColumn
   private final ZmlTableType m_root;
 
   private final Set<IZmlTableRule> m_rules = new LinkedHashSet<IZmlTableRule>();
+
+  private CellStyle m_cellStyle;
 
   public AbstractColumn( final ZmlTableType root, final AbstractColumnType type )
   {
@@ -152,5 +155,20 @@ public abstract class AbstractColumn
     }
 
     return null;
+  }
+
+  public CellStyle getCellStyle( )
+  {
+    if( m_cellStyle != null )
+      return m_cellStyle;
+
+    final StyleSetType styleSet = m_root.getStyleSet();
+    final CellStyleType style = m_type.getStyle();
+    if( style == null )
+      m_cellStyle = new CellStyle( styleSet, TableTypeHelper.getDefaultStyleSet( styleSet ) );
+    else
+      m_cellStyle = new CellStyle( styleSet, style );
+
+    return m_cellStyle;
   }
 }
