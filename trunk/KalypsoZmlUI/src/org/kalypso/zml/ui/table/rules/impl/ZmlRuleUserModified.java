@@ -48,7 +48,7 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.binding.CellStyle;
-import org.kalypso.zml.ui.table.provider.ZmlValueReference;
+import org.kalypso.zml.ui.table.provider.IZmlValueReference;
 import org.kalypso.zml.ui.table.rules.IZmlTableRule;
 
 /**
@@ -83,7 +83,7 @@ public class ZmlRuleUserModified implements IZmlTableRule
    * @see org.kalypso.zml.ui.table.rules.IZmlTableRule#apply(org.kalypso.zml.ui.table.provider.ZmlValueReference)
    */
   @Override
-  public boolean apply( final ZmlValueReference reference )
+  public boolean apply( final IZmlValueReference reference )
   {
     try
     {

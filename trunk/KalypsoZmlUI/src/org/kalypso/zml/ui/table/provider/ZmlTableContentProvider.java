@@ -94,7 +94,6 @@ public class ZmlTableContentProvider implements ITreeContentProvider
       {
         final IZmlColumnModel model = (IZmlColumnModel) inputElement;
 
-        // TODO always date?!?
         final Map<Object, ZmlTableRow> map = new TreeMap<Object, ZmlTableRow>();
 
         for( final ZmlTableColumn column : m_model.getColumns() )
@@ -112,10 +111,12 @@ public class ZmlTableContentProvider implements ITreeContentProvider
               map.put( index, structure );
             }
 
-            final ZmlValueReference reference = new ZmlValueReference( column, i );
+            final ZmlDataValueReference reference = new ZmlDataValueReference( column, i );
             structure.add( reference );
           }
         }
+
+        model.setIndexColumnValues( map.keySet().toArray() );
 
         return map.values().toArray( new ZmlTableRow[] {} );
 

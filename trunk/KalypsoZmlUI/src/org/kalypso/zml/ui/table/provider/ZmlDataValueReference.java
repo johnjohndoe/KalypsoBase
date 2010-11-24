@@ -42,32 +42,41 @@ package org.kalypso.zml.ui.table.provider;
 
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.metadata.MetadataList;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlValueReference
+public class ZmlDataValueReference implements IZmlValueReference
 {
   private final ZmlTableColumn m_column;
 
   private final int m_index;
 
-  public ZmlValueReference( final ZmlTableColumn column, final int index )
+  public ZmlDataValueReference( final ZmlTableColumn column, final int index )
   {
     m_column = column;
     m_index = index;
   }
 
+  public Object getIndexValue( ) throws SensorException
+  {
+    return m_column.get( m_index, m_column.getIndexAxis() );
+  }
+
+  @Override
   public Object getValue( ) throws SensorException
   {
     return m_column.get( m_index, m_column.getValueAxis() );
   }
 
+  @Override
   public void update( final Object value ) throws SensorException
   {
     m_column.update( m_index, value );
   }
 
+  @Override
   public IAxis getAxis( )
   {
     return m_column.getValueAxis();
@@ -78,6 +87,7 @@ public class ZmlValueReference
     return m_column.getIdentifier();
   }
 
+  @Override
   public Integer getStatus( ) throws SensorException
   {
     final IAxis status = m_column.getStatusAxis();
@@ -87,6 +97,12 @@ public class ZmlValueReference
       return ((Number) value).intValue();
 
     return null;
+  }
+
+  @Override
+  public MetadataList[] getMetadata( )
+  {
+    return new MetadataList[] { m_column.getMetadata() };
   }
 
 }

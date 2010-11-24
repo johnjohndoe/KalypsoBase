@@ -63,6 +63,8 @@ public class ZmlColumnModel implements IZmlColumnModel
 
   private final ZmlTableType m_type;
 
+  private Object[] m_indexColumnValues;
+
   public ZmlColumnModel( final ZmlTableType type )
   {
     m_type = type;
@@ -144,6 +146,20 @@ public class ZmlColumnModel implements IZmlColumnModel
     }
 
     return null;
+  }
+
+  /**
+   * @see org.kalypso.zml.ui.table.IZmlColumnModel#setIndexColumnValues(java.lang.Object[])
+   */
+  @Override
+  public void setIndexColumnValues( final Object[] indexColumnValues )
+  {
+    m_indexColumnValues = indexColumnValues;
+  }
+
+  public Object[] getIndexColumnValues( )
+  {
+    return m_indexColumnValues;
   }
 
 }

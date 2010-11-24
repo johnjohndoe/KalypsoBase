@@ -55,8 +55,6 @@ import org.kalypso.zml.ui.table.binding.AbstractColumn;
 import org.kalypso.zml.ui.table.binding.CellStyle;
 import org.kalypso.zml.ui.table.binding.IndexColumn;
 import org.kalypso.zml.ui.table.rules.IZmlTableRule;
-import org.kalypso.zml.ui.table.schema.StyleSetType;
-import org.kalypso.zml.ui.table.utils.TableTypeHelper;
 
 /**
  * @author Dirk Kuch
@@ -65,35 +63,18 @@ public class ZmlLabelProvider extends ColumnLabelProvider
 {
   private final AbstractColumn m_column;
 
-  private final StyleSetType m_styleSet;
-
-  public ZmlLabelProvider( final StyleSetType styleSet, final AbstractColumn column )
+  public ZmlLabelProvider( final AbstractColumn column )
   {
-    m_styleSet = styleSet;
     m_column = column;
-  }
-
-  /**
-   * @see org.eclipse.jface.viewers.ColumnLabelProvider#getBackground(java.lang.Object)
-   */
-  @Override
-  public Color getBackground( final Object element )
-  {
-    final CellStyle style = findStyle( element );
-
-    return style.getBackgroundColor();
   }
 
   private CellStyle findStyle( final Object element )
   {
-    if( m_column instanceof IndexColumn )
-      return new CellStyle( m_styleSet, TableTypeHelper.getDefaultStyleSet( m_styleSet ) );
-
     if( element instanceof ZmlTableRow )
     {
       final ZmlTableRow row = (ZmlTableRow) element;
 
-      final ZmlValueReference reference = row.get( m_column.getIdentifier() );
+      final IZmlValueReference reference = row.get( m_column );
       if( reference != null )
       {
         for( final IZmlTableRule rule : m_column.getRules() )
@@ -105,6 +86,29 @@ public class ZmlLabelProvider extends ColumnLabelProvider
     }
 
     return m_column.getCellStyle();
+  }
+
+  private String format( final Object value )
+  {
+    final String format = m_column.getFormat();
+    if( value instanceof Date )
+    {
+      final SimpleDateFormat sdf = new SimpleDateFormat( format == null ? "dd.MM.yyyy HH:mm" : format );
+      return sdf.format( value );
+    }
+
+    return String.format( format == null ? "%s" : format, value );
+  }
+
+  /**
+   * @see org.eclipse.jface.viewers.ColumnLabelProvider#getBackground(java.lang.Object)
+   */
+  @Override
+  public Color getBackground( final Object element )
+  {
+    final CellStyle style = findStyle( element );
+
+    return style.getBackgroundColor();
   }
 
   /**
@@ -169,7 +173,7 @@ public class ZmlLabelProvider extends ColumnLabelProvider
       {
         try
         {
-          final ZmlValueReference reference = set.get( m_column.getIdentifier() );
+          final IZmlValueReference reference = set.get( m_column );
           if( reference != null )
             return format( reference.getValue() );
 
@@ -183,17 +187,5 @@ public class ZmlLabelProvider extends ColumnLabelProvider
     }
 
     return super.getText( element );
-  }
-
-  private String format( final Object value )
-  {
-    final String format = m_column.getFormat();
-    if( value instanceof Date )
-    {
-      final SimpleDateFormat sdf = new SimpleDateFormat( format == null ? "dd.MM.yyyy HH:mm" : format );
-      return sdf.format( value );
-    }
-
-    return String.format( format == null ? "%s" : format, value );
   }
 }

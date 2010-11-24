@@ -41,7 +41,7 @@
 package org.kalypso.zml.ui.table.rules;
 
 import org.kalypso.zml.ui.table.binding.CellStyle;
-import org.kalypso.zml.ui.table.provider.ZmlValueReference;
+import org.kalypso.zml.ui.table.provider.IZmlValueReference;
 
 /**
  * @author Dirk Kuch
@@ -52,7 +52,7 @@ public interface IZmlTableRule
 
   void addStyle( String columnId, CellStyle style );
 
-  boolean apply( ZmlValueReference reference );
+  boolean apply( IZmlValueReference reference );
 
   String getIdentifier( );
 
