@@ -51,6 +51,7 @@ import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.ui.KalypsoZmlUI;
@@ -167,7 +168,7 @@ public class ZmlEditingSupport extends EditingSupport
 
     if( Double.class == clazz )
     {
-      return Double.valueOf( (String) value );
+      return NumberUtils.parseDouble( (String) value );
     }
     else
       throw new NotImplementedException();

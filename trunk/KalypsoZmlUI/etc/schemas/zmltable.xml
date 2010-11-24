@@ -10,11 +10,20 @@
     <zml:Style styleRef="baseCellStyle" id="userModifiedStyle">
       <zml:Property name="icon">urn:org:kalypso:zml:ui:table:rule:user:modified:icon</zml:Property>
     </zml:Style>
+    <zml:Style styleRef="userModifiedStyle" id="userModifiedQStyle">
+      <zml:Property name="backgroundColor">F8F3C0</zml:Property>
+    </zml:Style>
     <zml:Style styleRef="baseCellStyle" id="interpolatedValueStyle">
       <zml:Property name="icon">urn:org:kalypso:zml:ui:table:rule:interpolated:value:icon</zml:Property>
     </zml:Style>
+    <zml:Style styleRef="interpolatedValueStyle" id="interpolatedQValueStyle">
+      <zml:Property name="backgroundColor">F8F3C0</zml:Property>
+    </zml:Style>
     <zml:Style styleRef="baseCellStyle" id="wqConflictStyle">
       <zml:Property name="icon">urn:org:kalypso:zml:ui:table:rule:wq:conflict:icon</zml:Property>
+    </zml:Style>
+    <zml:Style styleRef="wqConflictStyle" id="wqConflictQStyle">
+      <zml:Property name="backgroundColor">F8F3C0</zml:Property>
     </zml:Style>
   </zml:StyleSet>
 
@@ -73,9 +82,9 @@
       </zml:Style>
 
       <zml:Rules>
-        <zml:Rule ruleReference="org.kalypso.zml.ui.table.rule.user.modified" styleReference="userModifiedStyle" />
-        <zml:Rule ruleReference="org.kalypso.zml.ui.table.rule.value.interpolated" styleReference="interpolatedValueStyle" />
-        <zml:Rule ruleReference="org.kalypso.zml.ui.table.rule.wq.conflict" styleReference="wqConflictStyle" />
+        <zml:Rule ruleReference="org.kalypso.zml.ui.table.rule.user.modified" styleReference="userModifiedQStyle" />
+        <zml:Rule ruleReference="org.kalypso.zml.ui.table.rule.value.interpolated" styleReference="interpolatedQValueStyle" />
+        <zml:Rule ruleReference="org.kalypso.zml.ui.table.rule.wq.conflict" styleReference="wqConflictQStyle" />
       </zml:Rules>
 
       <zml:indexAxis>date</zml:indexAxis>
@@ -93,9 +102,9 @@
       </zml:Style>
 
       <zml:Rules>
-        <zml:Rule ruleReference="org.kalypso.zml.ui.table.rule.user.modified" styleReference="userModifiedStyle" />
-        <zml:Rule ruleReference="org.kalypso.zml.ui.table.rule.value.interpolated" styleReference="interpolatedValueStyle" />
-        <zml:Rule ruleReference="org.kalypso.zml.ui.table.rule.wq.conflict" styleReference="wqConflictStyle" />
+        <zml:Rule ruleReference="org.kalypso.zml.ui.table.rule.user.modified" styleReference="userModifiedQStyle" />
+        <zml:Rule ruleReference="org.kalypso.zml.ui.table.rule.value.interpolated" styleReference="interpolatedQValueStyle" />
+        <zml:Rule ruleReference="org.kalypso.zml.ui.table.rule.wq.conflict" styleReference="wqConflictQStyle" />
       </zml:Rules>
 
       <zml:indexAxis>date</zml:indexAxis>
