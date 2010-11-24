@@ -43,12 +43,7 @@
       </baseStyle>
       <property name="backgroundColor">F8F3C0</property>
     </Style>
-    <Style id="dateForecastStyle">
-      <baseStyle>
-        <reference>baseCellStyle</reference>
-      </baseStyle>
-      <property name="backgroundColor">FFF7EE</property>
-    </Style>
+
 
   </StyleSet>
 
@@ -58,16 +53,25 @@
       <property name="format">dd.MM.yyyy HH:mm</property>
       <property name="alignment">LEFT</property>
 
-      <Style id="dateStyle">
-        <baseStyle>
-          <reference>baseCellStyle</reference>
-        </baseStyle>
-        <property name="backgroundColor">DEDEDE</property>
-      </Style>
+      <StyleSet>
+        <Style id="dateStyle" default="true">
+          <baseStyle>
+            <reference>baseCellStyle</reference>
+          </baseStyle>
+          <property name="backgroundColor">DEDEDE</property>
+        </Style>
+        <Style id="dateForecastStyle">
+          <baseStyle>
+            <reference>dateStyle</reference>
+          </baseStyle>
+          <property name="backgroundColor">FFF7EE</property>
+        </Style>
+      </StyleSet>
 
       <Rules>
         <Rule ruleReference="org.kalypso.zml.ui.table.rule.forecast.value" styleReference="dateForecastStyle" />
       </Rules>
+
     </Column>
 
     <Column xsi:type="DataColumnType" editable="true" id="W">
@@ -109,12 +113,14 @@
       <property name="width">100</property>
       <property name="alignment">RIGHT</property>
 
-      <Style id="qCellStyle">
-        <baseStyle>
-          <reference>baseCellStyle</reference>
-        </baseStyle>
-        <property name="backgroundColor">F8F3C0</property>
-      </Style>
+      <StyleSet>
+        <Style id="defaultQCellStyle" default="true">
+          <baseStyle>
+            <reference>baseCellStyle</reference>
+          </baseStyle>
+          <property name="backgroundColor">F8F3C0</property>
+        </Style>
+      </StyleSet>
 
       <Rules>
         <Rule ruleReference="org.kalypso.zml.ui.table.rule.user.modified" styleReference="userModifiedQStyle" />
@@ -132,12 +138,14 @@
       <property name="width">100</property>
       <property name="alignment">RIGHT</property>
 
-      <Style id="qModellCellStyle">
-        <baseStyle>
-          <reference>baseCellStyle</reference>
-        </baseStyle>
-        <property name="backgroundColor">F8F3C0</property>
-      </Style>
+      <StyleSet>
+        <Style id="defaultQModelStyle" default="true">
+          <baseStyle>
+            <reference>baseCellStyle</reference>
+          </baseStyle>
+          <property name="backgroundColor">F8F3C0</property>
+        </Style>
+      </StyleSet>
 
       <Rules>
         <Rule ruleReference="org.kalypso.zml.ui.table.rule.user.modified" styleReference="userModifiedQStyle" />
