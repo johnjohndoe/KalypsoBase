@@ -157,17 +157,35 @@ public abstract class AbstractColumn
     return null;
   }
 
-  public CellStyle getCellStyle( )
+  public CellStyle getDefaultStyle( )
   {
     if( m_cellStyle != null )
       return m_cellStyle;
 
     final StyleSetType styleSet = m_root.getStyleSet();
-    final CellStyleType style = m_type.getStyle();
-    if( style == null )
+
+    final StyleSetType styleSetType = m_type.getStyleSet();
+    if( styleSetType == null )
       m_cellStyle = new CellStyle( styleSet, TableTypeHelper.getDefaultStyleSet( styleSet ) );
     else
-      m_cellStyle = new CellStyle( styleSet, style );
+    {
+      final List<CellStyleType> styles = styleSetType.getStyle();
+      for( final CellStyleType style : styles )
+      {
+        if( style == null )
+          m_cellStyle = new CellStyle( styleSet, TableTypeHelper.getDefaultStyleSet( styleSet ) );
+        else if( style.isDefault() )
+          m_cellStyle = new CellStyle( styleSet, style );
+      }
+
+      if( m_cellStyle == null )
+      {
+        if( styles.size() > 0 )
+          m_cellStyle = new CellStyle( styleSet, styles.get( 0 ) );
+        else
+          m_cellStyle = new CellStyle( styleSet, TableTypeHelper.getDefaultStyleSet( styleSet ) );
+      }
+    }
 
     return m_cellStyle;
   }

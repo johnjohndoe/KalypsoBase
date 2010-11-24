@@ -85,7 +85,7 @@ public class ZmlLabelProvider extends ColumnLabelProvider
       }
     }
 
-    return m_column.getCellStyle();
+    return m_column.getDefaultStyle();
   }
 
   private String format( final Object value )
