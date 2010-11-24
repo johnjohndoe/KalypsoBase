@@ -18,6 +18,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.IEditorReference;
+import org.eclipse.ui.ISources;
 import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
@@ -70,6 +71,8 @@ public class SelectWidgetHandler extends AbstractHandler implements IHandler, IE
     final IEvaluationContext applicationContext = (IEvaluationContext) event.getApplicationContext();
     if( isDeselecting( event.getTrigger() ) )
       return null;
+
+    applicationContext.getVariable( ISources.ACTIVE_EDITOR_ID_NAME );
 
     final String widgetFromEvent = event.getParameter( PARAM_WIDGET_CLASS );
     final String widgetParameter;
