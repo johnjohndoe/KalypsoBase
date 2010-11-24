@@ -92,7 +92,7 @@ public class ChartHandlerUtilities
    * @throws ExecutionException
    *           If the current context contains no chart.
    */
-  public static IChartComposite getMapPanelChecked( final IEvaluationContext context ) throws ExecutionException
+  public static IChartComposite getChartChecked( final IEvaluationContext context ) throws ExecutionException
   {
     final IChartComposite chart = getChart( context );
     if( chart == null )

@@ -61,7 +61,6 @@ public class PlotDragHandlerDelegate
 
   public void setActiveHandler( final IChartDragHandler handler )
   {
-
     m_chartComposite.removePlotHandler( m_handler );
     m_handler = handler;
     m_chartComposite.addPlotHandler( m_handler );
