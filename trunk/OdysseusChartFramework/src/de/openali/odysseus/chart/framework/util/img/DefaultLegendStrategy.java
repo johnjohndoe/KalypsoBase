@@ -61,48 +61,108 @@ public class DefaultLegendStrategy implements ILegendPaintStrategy
 
   private Point m_size;
 
-  /**
-   * @see de.openali.odysseus.chart.framework.util.img.ILegendStrategy#getSize(de.openali.odysseus.chart.framework.util.img.LegendImageCreator)
-   */
-  @Override
-  public Point getSize( final ChartLegendPainter creator )
+  private int m_numRows;
+
+  private Point calculateSize( final Point... points )
   {
-    if( m_size != null )
-      return m_size;
+    int x = 0;
+    int y = 0;
 
-    final IChartLayer[] layers = creator.getLayers();
-
-    int heigth = 0;
-    int row = 0;
-
-    int maxRowSize = 0;
-
-    for( final IChartLayer layer : layers )
+    for( final Point point : points )
     {
-      final ILegendEntry entry = getLegendEntry( layer );
-      if( entry == null )
-        continue;
-
-      final Point size = getItemSize( creator, entry );
-
-      if( row + size.x > creator.getMaximumWidth() )
-      {
-        maxRowSize = Math.max( maxRowSize, row );
-        row = 0;
-        heigth += size.y;
-      }
-      else
-      {
-        row += size.x;
-        maxRowSize = Math.max( maxRowSize, row );
-        if( heigth == 0 )
-          heigth = size.y;
-      }
+      x += point.x;
+      y = Math.max( point.y, y );
     }
 
-    m_size = new Point( maxRowSize, heigth );
+    return new Point( x, y );
+  }
 
-    return m_size;
+  /**
+   * @see de.openali.odysseus.chart.framework.util.img.ILegendStrategy#createImage(de.openali.odysseus.chart.framework.util.img.LegendImageCreator)
+   */
+  @Override
+  public Image createImage( final ChartLegendPainter creator )
+  {
+    final IChartLayer[] layers = creator.getLayers();
+    final Point size = getSize( creator );
+    final int rowHeight = m_numRows < 2 ? size.y : size.y / m_numRows;
+    if( size.x <= 0 || size.y <= 0 )
+      return null;
+
+    final Device dev = PlatformUI.getWorkbench().getDisplay();
+    final Image canvas = new Image( dev, size.x, size.y );
+    final GC gc = new GC( canvas );
+
+    final ITextStyle style = creator.getTextStyle();
+    style.apply( gc );
+
+    try
+    {
+      int x = 0;
+      int y = 0;
+
+      for( final IChartLayer layer : layers )
+      {
+        final ILegendEntry entry = getLegendEntry( layer );
+        if( entry == null )
+          continue;
+
+        final ImageData imageData = createLegendItem( creator, entry, rowHeight );
+        if( x + imageData.width > creator.getMaximumWidth() )
+        {
+          x = 0;
+          y += imageData.height;
+        }
+
+        final Image image = new Image( dev, imageData );
+        gc.drawImage( image, x, y );
+
+        x += imageData.width;
+
+        image.dispose();
+      }
+
+      return canvas;
+    }
+    finally
+    {
+      gc.dispose();
+    }
+
+  }
+
+  private ImageData createLegendItem( final ChartLegendPainter creator, final ILegendEntry entry, final int rowHeight )
+  {
+    final Point size = getItemSize( creator, entry );
+
+    final Device dev = PlatformUI.getWorkbench().getDisplay();
+    final Image canvas = new Image( dev, size.x, size.y );
+    final GC gc = new GC( canvas );
+
+    final Point iconSize = entry.computeSize( creator.getIconSize() );
+    final ImageData iconImageData = entry.getSymbol( iconSize );
+    final Image iconImage = new Image( dev, iconImageData );
+    try
+    {
+      gc.drawImage( iconImage, 0, (rowHeight - iconSize.y) / 2 );
+
+      final ITextStyle style = creator.getTextStyle();
+      style.apply( gc );
+      final Point textSize = gc.textExtent( entry.getDescription() );
+
+      final Point anchor = getTextAnchor( creator, iconSize.x, rowHeight, textSize );
+      final String description = entry.getDescription();
+      gc.drawText( description == null ? "" : description, anchor.x, anchor.y, SWT.TRANSPARENT );
+
+      final ImageData imageData = canvas.getImageData();
+      return imageData;
+    }
+    finally
+    {
+      iconImage.dispose();
+      canvas.dispose();
+      gc.dispose();
+    }
   }
 
   private Point getItemSize( final ChartLegendPainter creator, final ILegendEntry entry )
@@ -151,116 +211,63 @@ public class DefaultLegendStrategy implements ILegendPaintStrategy
   }
 
   /**
-   * @see de.openali.odysseus.chart.framework.util.img.ILegendStrategy#createImage(de.openali.odysseus.chart.framework.util.img.LegendImageCreator)
+   * @see de.openali.odysseus.chart.framework.util.img.ILegendStrategy#getSize(de.openali.odysseus.chart.framework.util.img.LegendImageCreator)
    */
   @Override
-  public Image createImage( final ChartLegendPainter creator )
+  public Point getSize( final ChartLegendPainter creator )
   {
+    if( m_size != null )
+      return m_size;
+
     final IChartLayer[] layers = creator.getLayers();
-    final Point size = getSize( creator );
-    if( size.x <= 0 || size.y <= 0 )
-      return null;
 
-    final Device dev = PlatformUI.getWorkbench().getDisplay();
-    final Image canvas = new Image( dev, size.x, size.y );
-    final GC gc = new GC( canvas );
+    int heigth = 0;
+    int row = 0;
 
-    final ITextStyle style = creator.getTextStyle();
-    style.apply( gc );
+    int maxRowWidth = 0;
+    int maxRowHeight = 0;
 
-    try
+    m_numRows = 0;
+
+    for( final IChartLayer layer : layers )
     {
-      int x = 0;
-      int y = 0;
+      final ILegendEntry entry = getLegendEntry( layer );
+      if( entry == null )
+        continue;
 
-      for( final IChartLayer layer : layers )
+      final Point size = getItemSize( creator, entry );
+
+      if( row + size.x > creator.getMaximumWidth() )
       {
-        final ILegendEntry entry = getLegendEntry( layer );
-        if( entry == null )
-          continue;
-
-        final ImageData imageData = createLegendItem( creator, entry );
-        if( x + imageData.width > creator.getMaximumWidth() )
-        {
-          x = 0;
-          y += imageData.height;
-        }
-
-        final Image image = new Image( dev, imageData );
-        gc.drawImage( image, x, y );
-
-        x += imageData.width;
-
-        image.dispose();
+        maxRowWidth = Math.max( maxRowWidth, size.x );
+        heigth += Math.max( maxRowHeight, size.y );
+        maxRowHeight = 0;
+        row = 0;
+        m_numRows += 1;
       }
-
-      return canvas;
+      else
+      {
+        row += size.x;
+        maxRowHeight = Math.max( maxRowHeight, size.y );
+        maxRowWidth = Math.max( maxRowWidth, row );
+        if( heigth == 0 )
+          heigth = maxRowHeight;
+        if( m_numRows == 0 )
+          m_numRows = 1;
+      }
     }
-    finally
-    {
-      gc.dispose();
-    }
 
+    m_size = new Point( maxRowWidth, heigth );
+
+    return m_size;
   }
 
-  private ImageData createLegendItem( final ChartLegendPainter creator, final ILegendEntry entry )
+  private Point getTextAnchor( final ChartLegendPainter creator, final int iconWidth, final int rowHeight, final Point textSize )
   {
-    final Point size = getItemSize( creator, entry );
-
-    final Device dev = PlatformUI.getWorkbench().getDisplay();
-    final Image canvas = new Image( dev, size.x, size.y );
-    final GC gc = new GC( canvas );
-
-    final Point iconSize = entry.computeSize( creator.getIconSize() );
-    final ImageData iconImageData = entry.getSymbol( iconSize );
-    final Image iconImage = new Image( dev, iconImageData );
-    try
-    {
-      gc.drawImage( iconImage, 0, 0 );
-
-      final ITextStyle style = creator.getTextStyle();
-      style.apply( gc );
-
-      final Point anchor = getTextAnchor( creator, iconSize );
-      final String description = entry.getDescription();
-      gc.drawText( description == null ? "" : description, anchor.x, anchor.y );
-
-      return canvas.getImageData();
-    }
-    finally
-    {
-      iconImage.dispose();
-      canvas.dispose();
-      gc.dispose();
-    }
-  }
-
-  private Point getTextAnchor( final ChartLegendPainter creator, final Point iconSize )
-  {
-    final ITextStyle style = creator.getTextStyle();
     final Point spacer = creator.getSpacer();
 
-    final int x = iconSize.x + spacer.x;
-    int y = 0;
-
-    // text is smaller than icon height?
-    final int space = iconSize.y - style.getHeight();
-    if( space > 0 )
-      y = Double.valueOf( space / 2.0 ).intValue();
-
-    return new Point( x, y );
-  }
-
-  private Point calculateSize( final Point... points )
-  {
-    int x = 0;
-    int y = 0;
-
-    for( final Point point : points )
-    {
-      x += point.x;
-      y = Math.max( point.y, y );
-    }
+    final int x = iconWidth + spacer.x;
+    final int y = (rowHeight - textSize.y) / 2;
 
     return new Point( x, y );
   }

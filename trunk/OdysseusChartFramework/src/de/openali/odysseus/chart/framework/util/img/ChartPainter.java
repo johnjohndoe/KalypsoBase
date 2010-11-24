@@ -196,7 +196,7 @@ public class ChartPainter
       if( plotImage != null )
         gc.drawImage( plotImage, m_plotInsets.left, m_plotInsets.top );
       if( legendImage != null )
-        gc.drawImage( legendImage, m_plotInsets.left, m_size.y - m_legendPainter.getSize().y );
+        gc.drawImage( legendImage, m_plotInsets.left, m_size.height - m_legendPainter.getSize().y );
     }
     finally
     {
