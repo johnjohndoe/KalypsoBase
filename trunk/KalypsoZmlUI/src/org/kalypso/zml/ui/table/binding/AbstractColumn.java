@@ -97,7 +97,7 @@ public abstract class AbstractColumn
         final IZmlTableRule rule = KalypsoZmlUI.getDefault().getTableRule( ruleIdentifier );
         final CellStyleType styleReference = (CellStyleType) ruleType.getStyleReference();
 
-        rule.addStyle( getIdentifier(), new CellStyle( m_root.getStyleSet(), styleReference ) );
+        rule.addStyle( getIdentifier(), new CellStyle( styleReference ) );
 
         m_rules.add( rule );
       }
@@ -162,29 +162,13 @@ public abstract class AbstractColumn
     if( m_cellStyle != null )
       return m_cellStyle;
 
-    final StyleSetType styleSet = m_root.getStyleSet();
-
     final StyleSetType styleSetType = m_type.getStyleSet();
     if( styleSetType == null )
-      m_cellStyle = new CellStyle( styleSet, TableTypeHelper.getDefaultStyleSet( styleSet ) );
+      m_cellStyle = new CellStyle( TableTypeHelper.getDefaultStyleSet( m_root.getStyleSet() ) );
     else
     {
-      final List<CellStyleType> styles = styleSetType.getStyle();
-      for( final CellStyleType style : styles )
-      {
-        if( style == null )
-          m_cellStyle = new CellStyle( styleSet, TableTypeHelper.getDefaultStyleSet( styleSet ) );
-        else if( style.isDefault() )
-          m_cellStyle = new CellStyle( styleSet, style );
-      }
-
-      if( m_cellStyle == null )
-      {
-        if( styles.size() > 0 )
-          m_cellStyle = new CellStyle( styleSet, styles.get( 0 ) );
-        else
-          m_cellStyle = new CellStyle( styleSet, TableTypeHelper.getDefaultStyleSet( styleSet ) );
-      }
+      final CellStyleType defaultStyleType = TableTypeHelper.getDefaultStyleSet( styleSetType );
+      m_cellStyle = new CellStyle( defaultStyleType );
     }
 
     return m_cellStyle;

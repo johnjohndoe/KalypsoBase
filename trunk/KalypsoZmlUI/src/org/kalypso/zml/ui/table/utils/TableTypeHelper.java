@@ -213,6 +213,9 @@ public final class TableTypeHelper
         return style;
     }
 
+    if( styles.size() >= 0 )
+      return styles.get( 0 );
+
     return null;
   }
 

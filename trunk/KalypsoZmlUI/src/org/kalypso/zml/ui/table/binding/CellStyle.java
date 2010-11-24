@@ -59,7 +59,6 @@ import org.kalypso.core.catalog.ICatalog;
 import org.kalypso.zml.ui.table.schema.CellStyleType;
 import org.kalypso.zml.ui.table.schema.StylePropertyName;
 import org.kalypso.zml.ui.table.schema.StylePropertyType;
-import org.kalypso.zml.ui.table.schema.StyleSetType;
 import org.kalypso.zml.ui.table.utils.TableTypeHelper;
 
 /**
@@ -83,23 +82,23 @@ public class CellStyle
 
   private Image m_image;
 
-  public CellStyle( final StyleSetType styleSet, final CellStyleType style )
+  public CellStyle( final CellStyleType style )
   {
     m_style = style;
 
-    init( styleSet, style );
+    init( style );
   }
 
   /**
    * initialize style (cascading style set!)
    */
-  private void init( final StyleSetType styleSet, final CellStyleType style )
+  private void init( final CellStyleType style )
   {
     final CellStyleType base = TableTypeHelper.resolveReference( style.getBaseStyle() );
     if( base == null )
       return;
 
-    init( styleSet, base );
+    init( base );
 
     final List<StylePropertyType> baseProperties = base.getProperty();
     for( final StylePropertyType property : baseProperties )
