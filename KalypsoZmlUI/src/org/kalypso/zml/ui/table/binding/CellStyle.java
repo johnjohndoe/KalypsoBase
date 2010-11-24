@@ -46,6 +46,7 @@ import java.util.List;
 
 import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.jface.resource.FontRegistry;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
@@ -176,6 +177,10 @@ public class CellStyle
     if( m_image != null )
       return m_image;
 
+    final Image registered = IMAGE_REGISTRY.get( m_style.getId() );
+    if( registered != null )
+      return registered;
+
     final String urlString = TableTypeHelper.findProperty( m_style, StylePropertyName.ICON );
     if( urlString == null )
       return null;
@@ -183,16 +188,10 @@ public class CellStyle
     final ICatalog baseCatalog = KalypsoCorePlugin.getDefault().getCatalogManager().getBaseCatalog();
     final String uri = baseCatalog.resolve( urlString, urlString );
 
-    final URL url = new URL( uri );
+    final ImageDescriptor descriptor = ImageDescriptor.createFromURL( new URL( uri ) );
+    m_image = descriptor.createImage();
 
-    final Image registered = IMAGE_REGISTRY.get( uri );
-    if( registered == null )
-    {
-      m_image = new Image( null, url.openStream() );
-      IMAGE_REGISTRY.put( uri, m_image );
-    }
-    else
-      m_image = registered;
+    IMAGE_REGISTRY.put( m_style.getId(), m_image );
 
     return m_image;
   }
