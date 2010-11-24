@@ -48,6 +48,7 @@ import javax.xml.namespace.QName;
 import jregex.Pattern;
 import jregex.RETokenizer;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.swt.SWT;
 import org.kalypso.zml.ui.table.schema.AbstractColumnType;
 import org.kalypso.zml.ui.table.schema.AlignmentType;
@@ -57,6 +58,7 @@ import org.kalypso.zml.ui.table.schema.DataColumnType;
 import org.kalypso.zml.ui.table.schema.IndexColumnType;
 import org.kalypso.zml.ui.table.schema.StylePropertyName;
 import org.kalypso.zml.ui.table.schema.StylePropertyType;
+import org.kalypso.zml.ui.table.schema.StyleReferenceType;
 import org.kalypso.zml.ui.table.schema.StyleSetType;
 import org.kalypso.zml.ui.table.schema.ZmlTableType;
 
@@ -231,6 +233,22 @@ public final class TableTypeHelper
       weight |= SWT.ITALIC;
 
     return weight;
+  }
+
+  public static CellStyleType resolveReference( final StyleReferenceType reference )
+  {
+    if( reference == null )
+      return null;
+
+    final Object objReference = reference.getReference();
+    if( objReference instanceof CellStyleType )
+      return (CellStyleType) objReference;
+
+    final String url = reference.getUrl();
+    if( url != null )
+      throw new NotImplementedException();
+
+    return null;
   }
 
 }

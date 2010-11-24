@@ -35,7 +35,7 @@
 
   <complexType name="AbstractColumnType" abstract="true">
     <sequence>
-      <element name="Property" type="zmltable:ColumnPropertyType" minOccurs="0" maxOccurs="unbounded" />
+      <element name="property" type="zmltable:ColumnPropertyType" minOccurs="0" maxOccurs="unbounded" />
 
       <element ref="zmltable:Style" minOccurs="0" maxOccurs="1" />
       <element ref="zmltable:Rules" minOccurs="0" maxOccurs="1" />
@@ -65,17 +65,15 @@
       </extension>
     </complexContent>
   </complexType>
-  
-  
-   <complexType name="ColumnPropertyType">
+
+
+  <complexType name="ColumnPropertyType">
     <simpleContent>
       <restriction base="zmltable:StringSimpleType">
-        <attribute name="name" type="zmltable:ColumnPropertyName" use="required"  />
+        <attribute name="name" type="zmltable:ColumnPropertyName" use="required" />
       </restriction>
     </simpleContent>
   </complexType>
-
-  
 
 
   <simpleType name="ColumnPropertyName">
@@ -86,8 +84,8 @@
       <enumeration value="alignment"></enumeration>
     </restriction>
   </simpleType>
-  
-  
+
+
 
   <simpleType name="AlignmentType">
     <restriction base="string">
@@ -109,17 +107,13 @@
 
 
   <complexType name="CellStyleType">
-        <sequence>
-          <element name="Property" type="zmltable:StylePropertyType" minOccurs="0" maxOccurs="unbounded" />
-          <!-- 
-          <element name="backgroundColor" type="zmltable:ColorType" minOccurs="0" />
-          <element name="textColor" type="zmltable:ColorType" minOccurs="0" />
-          <element name="fontFamily" type="string" minOccurs="0" />
-           -->
-        </sequence>
-        <attribute name="id" type="ID" use="required" />
-        <attribute name="styleRef" type="IDREF" use="optional" />
-        <attribute name="default" type="boolean" use="optional" />
+    <sequence>
+      <element name="baseStyle" type="zmltable:StyleReferenceType" minOccurs="0" maxOccurs="1" />
+      <element name="property" type="zmltable:StylePropertyType" minOccurs="0" maxOccurs="unbounded" />
+    </sequence>
+    <attribute name="id" type="ID" use="required" />
+
+    <attribute name="default" type="boolean" use="optional" />
   </complexType>
   
   
@@ -139,10 +133,11 @@
   <complexType name="StylePropertyType">
     <simpleContent>
       <restriction base="zmltable:StringSimpleType">
-        <attribute name="name" type="zmltable:StylePropertyName" use="required"  />
+        <attribute name="name" type="zmltable:StylePropertyName" use="required" />
       </restriction>
     </simpleContent>
   </complexType>
+
 
   <complexType name="StringSimpleType">
     <simpleContent>
@@ -163,5 +158,14 @@
       <enumeration value="icon"></enumeration>
     </restriction>
   </simpleType>
+
+
+  <complexType name="StyleReferenceType">
+    <choice>
+      <element name="reference" type="IDREF" />
+      <element name="url" type="anyURI" />
+    </choice>
+  </complexType>
+
 
 </schema>

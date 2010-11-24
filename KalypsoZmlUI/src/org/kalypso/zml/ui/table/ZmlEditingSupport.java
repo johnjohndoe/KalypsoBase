@@ -56,8 +56,8 @@ import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.binding.DataColumn;
+import org.kalypso.zml.ui.table.provider.IZmlValueReference;
 import org.kalypso.zml.ui.table.provider.ZmlTableRow;
-import org.kalypso.zml.ui.table.provider.ZmlValueReference;
 
 /**
  * @author Dirk Kuch
@@ -115,7 +115,7 @@ public class ZmlEditingSupport extends EditingSupport
       {
         final ZmlTableRow row = (ZmlTableRow) element;
 
-        final ZmlValueReference reference = row.get( m_column.getIdentifier() );
+        final IZmlValueReference reference = row.get( m_column );
         if( reference == null )
           return "";
 
@@ -144,7 +144,7 @@ public class ZmlEditingSupport extends EditingSupport
       try
       {
         final ZmlTableRow row = (ZmlTableRow) element;
-        final ZmlValueReference reference = row.get( m_column.getIdentifier() );
+        final IZmlValueReference reference = row.get( m_column );
 
         final Object targetValue = getTargetValue( reference, value );
         if( !targetValue.equals( reference.getValue() ) )
@@ -159,7 +159,7 @@ public class ZmlEditingSupport extends EditingSupport
       throw new NotImplementedException();
   }
 
-  private Object getTargetValue( final ZmlValueReference reference, final Object value )
+  private Object getTargetValue( final IZmlValueReference reference, final Object value )
   {
     Assert.isTrue( value instanceof String );
 

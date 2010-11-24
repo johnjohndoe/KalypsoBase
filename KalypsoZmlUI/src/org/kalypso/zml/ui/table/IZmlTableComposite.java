@@ -38,23 +38,12 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.rules;
-
-import org.kalypso.zml.ui.table.binding.CellStyle;
-import org.kalypso.zml.ui.table.provider.IZmlValueReference;
+package org.kalypso.zml.ui.table;
 
 /**
  * @author Dirk Kuch
  */
-public interface IZmlTableRule
+public interface IZmlTableComposite
 {
-  String EXTENSION_POINT_ID = "org.kalypso.zml.ui.tableRule"; //$NON-NLS-1$
 
-  void addStyle( String columnId, CellStyle style );
-
-  boolean apply( IZmlValueReference reference );
-
-  String getIdentifier( );
-
-  CellStyle getStyle( String columnId );
 }

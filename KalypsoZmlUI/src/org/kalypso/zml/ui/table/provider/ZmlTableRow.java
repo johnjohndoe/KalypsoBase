@@ -43,6 +43,9 @@ package org.kalypso.zml.ui.table.provider;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.kalypso.zml.ui.table.binding.AbstractColumn;
+import org.kalypso.zml.ui.table.binding.IndexColumn;
+
 /**
  * @author Dirk Kuch
  */
@@ -51,21 +54,28 @@ public class ZmlTableRow
   private final Object m_index;
 
   /** Map<Reference (id), Reference> */
-  Map<String, ZmlValueReference> m_values = new HashMap<String, ZmlValueReference>();
+  Map<String, IZmlValueReference> m_values = new HashMap<String, IZmlValueReference>();
 
   public ZmlTableRow( final Object index )
   {
     m_index = index;
   }
 
-  public void add( final ZmlValueReference reference )
+  public void add( final ZmlDataValueReference reference )
   {
     m_values.put( reference.getIdentifier(), reference );
   }
 
-  public ZmlValueReference get( final String identifier )
+  public IZmlValueReference get( final AbstractColumn column )
   {
-    return m_values.get( identifier );
+    if( column instanceof IndexColumn )
+    {
+      final IZmlValueReference[] references = m_values.values().toArray( new IZmlValueReference[] {} );
+
+      return new ZmlIndexValueReference( references, m_index );
+    }
+
+    return m_values.get( column.getIdentifier() );
   }
 
   public Object getIndexValue( )

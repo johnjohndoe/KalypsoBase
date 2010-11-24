@@ -95,18 +95,17 @@ public class CellStyle
    */
   private void init( final StyleSetType styleSet, final CellStyleType style )
   {
-    final Object styleRef = style.getStyleRef();
-    if( styleRef instanceof CellStyleType )
-    {
-      final CellStyleType base = (CellStyleType) styleRef;
-      init( styleSet, base );
+    final CellStyleType base = TableTypeHelper.resolveReference( style.getBaseStyle() );
+    if( base == null )
+      return;
 
-      final List<StylePropertyType> baseProperties = base.getProperty();
-      for( final StylePropertyType property : baseProperties )
-      {
-        if( !hasProperty( style, property ) )
-          style.getProperty().add( property );
-      }
+    init( styleSet, base );
+
+    final List<StylePropertyType> baseProperties = base.getProperty();
+    for( final StylePropertyType property : baseProperties )
+    {
+      if( !hasProperty( style, property ) )
+        style.getProperty().add( property );
     }
   }
 

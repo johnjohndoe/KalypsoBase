@@ -38,23 +38,24 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.rules;
+package org.kalypso.zml.ui.table.provider;
 
-import org.kalypso.zml.ui.table.binding.CellStyle;
-import org.kalypso.zml.ui.table.provider.IZmlValueReference;
+import org.kalypso.ogc.sensor.IAxis;
+import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.metadata.MetadataList;
 
 /**
  * @author Dirk Kuch
  */
-public interface IZmlTableRule
+public interface IZmlValueReference
 {
-  String EXTENSION_POINT_ID = "org.kalypso.zml.ui.tableRule"; //$NON-NLS-1$
+  Object getValue( ) throws SensorException;
 
-  void addStyle( String columnId, CellStyle style );
+  Integer getStatus( ) throws SensorException;
 
-  boolean apply( IZmlValueReference reference );
+  MetadataList[] getMetadata( );
 
-  String getIdentifier( );
+  IAxis getAxis( );
 
-  CellStyle getStyle( String columnId );
+  void update( Object targetValue ) throws SensorException;
 }

@@ -38,74 +38,91 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.rules.impl;
+package org.kalypso.zml.ui.table.provider;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.zml.ui.KalypsoZmlUI;
-import org.kalypso.zml.ui.table.binding.CellStyle;
-import org.kalypso.zml.ui.table.provider.IZmlValueReference;
-import org.kalypso.zml.ui.table.rules.IZmlTableRule;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlRuleWQRelationConflict implements IZmlTableRule
+public class ZmlIndexValueReference implements IZmlValueReference
 {
-  public static final String ID = "org.kalypso.zml.ui.table.rule.wq.conflict";
+  private final Object m_value;
 
-  Map<String, CellStyle> m_styles = new HashMap<String, CellStyle>();
+  private final IZmlValueReference[] m_references;
 
-  /**
-   * @see org.kalypso.zml.ui.table.rules.IZmlTableRule#getIdentifier()
-   */
-  @Override
-  public String getIdentifier( )
+  public ZmlIndexValueReference( final IZmlValueReference[] references, final Object value )
   {
-    return ID;
+    m_references = references;
+    m_value = value;
   }
 
   /**
-   * @see org.kalypso.zml.ui.table.rules.IZmlTableRule#addStyle(java.lang.String,
-   *      org.kalypso.zml.ui.table.schema.AbstractStyleType)
+   * @see org.kalypso.zml.ui.table.provider.IZmlValueReference#getValue()
    */
   @Override
-  public void addStyle( final String columnId, final CellStyle style )
+  public Object getValue( )
   {
-    m_styles.put( columnId, style );
+    return m_value;
   }
 
   /**
-   * @see org.kalypso.zml.ui.table.rules.IZmlTableRule#apply(org.kalypso.zml.ui.table.provider.ZmlValueReference)
+   * @see org.kalypso.zml.ui.table.provider.IZmlValueReference#getStatus()
    */
   @Override
-  public boolean apply( final IZmlValueReference reference )
+  public Integer getStatus( )
   {
-    try
+    return KalypsoStati.BIT_OK;
+  }
+
+  /**
+   * @see org.kalypso.zml.ui.table.provider.IZmlValueReference#getMetadata()
+   */
+  @Override
+  public MetadataList[] getMetadata( )
+  {
+    final List<MetadataList> metadata = new ArrayList<MetadataList>();
+    for( final IZmlValueReference reference : m_references )
     {
-      final Integer status = reference.getStatus();
-
-      return (KalypsoStati.BIT_DERIVATION_ERROR & status) == KalypsoStati.BIT_DERIVATION_ERROR;
+      try
+      {
+        if( reference.getValue() != null )
+          Collections.addAll( metadata, reference.getMetadata() );
+      }
+      catch( final SensorException e )
+      {
+        KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+      }
     }
-    catch( final SensorException e )
-    {
-      KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-    }
 
-    return false;
+    return metadata.toArray( new MetadataList[] {} );
   }
 
   /**
-   * @see org.kalypso.zml.ui.table.rules.IZmlTableRule#getStyle(java.lang.String)
+   * @see org.kalypso.zml.ui.table.provider.IZmlValueReference#getAxis()
    */
   @Override
-  public CellStyle getStyle( final String columnId )
+  public IAxis getAxis( )
   {
-    return m_styles.get( columnId );
+    return null;
   }
 
+  /**
+   * @see org.kalypso.zml.ui.table.provider.IZmlValueReference#update(java.lang.Object)
+   */
+  @Override
+  public void update( final Object targetValue )
+  {
+    throw new NotImplementedException();
+  }
 }

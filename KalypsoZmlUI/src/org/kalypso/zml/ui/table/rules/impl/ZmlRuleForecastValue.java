@@ -40,12 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.rules.impl;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.status.KalypsoStati;
+import org.kalypso.ogc.sensor.metadata.MetadataHelper;
+import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.binding.CellStyle;
 import org.kalypso.zml.ui.table.provider.IZmlValueReference;
@@ -54,9 +56,9 @@ import org.kalypso.zml.ui.table.rules.IZmlTableRule;
 /**
  * @author Dirk Kuch
  */
-public class ZmlRuleWQRelationConflict implements IZmlTableRule
+public class ZmlRuleForecastValue implements IZmlTableRule
 {
-  public static final String ID = "org.kalypso.zml.ui.table.rule.wq.conflict";
+  public static final String ID = "org.kalypso.zml.ui.table.rule.forecast.value";
 
   Map<String, CellStyle> m_styles = new HashMap<String, CellStyle>();
 
@@ -87,9 +89,27 @@ public class ZmlRuleWQRelationConflict implements IZmlTableRule
   {
     try
     {
-      final Integer status = reference.getStatus();
+      final MetadataList[] metadata = reference.getMetadata();
 
-      return (KalypsoStati.BIT_DERIVATION_ERROR & status) == KalypsoStati.BIT_DERIVATION_ERROR;
+      // index value reference!
+      final Object index = reference.getValue();
+      if( index instanceof Date )
+      {
+        final Date date = (Date) index;
+        for( final MetadataList data : metadata )
+        {
+          final Date start = MetadataHelper.getForecastStart( data );
+          if( start == null )
+            continue;
+
+          if( date.after( start ) )
+            return true;
+          else if( date.equals( start ) )
+            return true;
+        }
+      }
+
+      return false;
     }
     catch( final SensorException e )
     {
