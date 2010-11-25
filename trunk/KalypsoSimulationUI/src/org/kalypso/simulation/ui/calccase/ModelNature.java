@@ -43,7 +43,6 @@ package org.kalypso.simulation.ui.calccase;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
@@ -85,11 +84,7 @@ import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
-import org.kalypso.simulation.core.simspec.Modeldata;
 import org.kalypso.simulation.ui.KalypsoSimulationUIPlugin;
-import org.kalypso.simulation.ui.calccase.simulation.ISimulationRunner;
-import org.kalypso.simulation.ui.calccase.simulation.LocalSimulationRunner;
-import org.kalypso.simulation.ui.calccase.simulation.WpsSimulationRunner;
 import org.kalypso.simulation.ui.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
@@ -586,71 +581,6 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     return launchAnt( STR_MODELLRECHNUNG_WIRD_DURCHGEFUEHRT, "runCalculation", null, calcCaseFolder, monitor ); //$NON-NLS-1$
   }
 
-  // TODO: move this one of the simulation plugins
-  public static IStatus runCalculation( final IContainer calcCaseFolder, final IProgressMonitor monitor, final Modeldata modelspec ) throws CoreException
-  {
-    /**
-     * FIXME refactoring
-     * 
-     * <pre>
-     * 
-     * final ISimulationRunner runner = SimulationRunnerFacotry.createRunner( typeID );
-     * runner.getSpec();
-     * 
-     * final String typeID = modeldata.getTypeID();
-     * 
-     * // Übersetzung modeldata -&gt; hashmap
-     * // - Ableich modelspec/modeldata
-     * 
-     * // modelspec -&gt; Map&lt;String, Object&gt;
-     * // - Literal: String, Double, Integer
-     * // - ComplexValueType: Feature/Image
-     * // - ComplexReferenceType: URL/URI
-     * 
-     * final IStatus status = runner.run( Map &lt; String, Object &gt; inputs, List &lt; String &gt; outputs, progress );
-     * 
-     * </pre>
-     */
-
-    try
-    {
-      final ISimulationRunner runner = createSimulationRunner( calcCaseFolder, modelspec );
-      return runner.execute( monitor );
-    }
-    catch( final CoreException e )
-    {
-      e.printStackTrace();
-      throw e;
-    }
-    catch( final InvocationTargetException e )
-    {
-      e.printStackTrace();
-      final IStatus error = new Status( IStatus.ERROR, KalypsoSimulationUIPlugin.getID(), "Unexpected error during simulation", e.getTargetException() );
-      throw new CoreException( error );
-    }
-    catch( final InterruptedException e )
-    {
-      return Status.CANCEL_STATUS;
-    }
-  }
-
-  private static ISimulationRunner createSimulationRunner( final IContainer calcCaseFolder, final Modeldata modelspec )
-  {
-    // REMARK: very crude: If no WPS-Endpoint is configured, we try to start the calculation locally
-    final String serviceEndpoint = System.getProperty( "org.kalypso.service.wps.service" ); //$NON-NLS-1$
-    final String defaultUseWps = Boolean.toString( serviceEndpoint != null );
-
-    // REMARK: Instead of the WPS-Endpoint a different system property is checked...
-    // TODO: We should introduce an abstraction for all available WPS (including a 'fake' local one)
-    // and find out, which ones are available for calculation this typeID.
-    // If more than one is available, the user should be able to choose.
-    final boolean remoteCalculation = Boolean.parseBoolean( System.getProperty( "org.kalypso.hwv.use.wps", defaultUseWps ) ); //$NON-NLS-1$
-    if( remoteCalculation )
-      return new WpsSimulationRunner( calcCaseFolder, modelspec, serviceEndpoint );
-    else
-      return new LocalSimulationRunner( calcCaseFolder, modelspec );
-  }
-
   /**
    * Load the calculation and read the value for the given property
    * 
@@ -671,7 +601,6 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     final FindPropertyByNameVisitor vis = new FindPropertyByNameVisitor( propertyName );
     workspace.accept( vis, rootFeature, FeatureVisitor.DEPTH_INFINITE );
 
-    final Object result = vis.getResult();
-    return result;
+    return vis.getResult();
   }
 }

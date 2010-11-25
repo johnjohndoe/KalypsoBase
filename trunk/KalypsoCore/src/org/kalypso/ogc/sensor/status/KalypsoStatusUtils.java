@@ -513,7 +513,8 @@ public final class KalypsoStatusUtils
 
     for( int i = 0; i < values.size(); i++ )
     {
-      final int status = ((Number) values.get( i, statusAxis )).intValue();
+      final Object statusObject = values.get( i, statusAxis );
+      final int status = ((Number) statusObject).intValue();
       mergedStatus |= status;
     }
 
