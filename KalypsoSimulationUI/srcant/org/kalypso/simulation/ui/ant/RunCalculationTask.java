@@ -62,7 +62,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.simulation.core.simspec.Modeldata;
-import org.kalypso.simulation.ui.calccase.ModelNature;
+import org.kalypso.simulation.ui.calccase.simulation.SimulationFactory;
 
 /**
  * This ant task starts the calculation of a kalypso calcCase.
@@ -143,7 +143,7 @@ public class RunCalculationTask extends Task
     IStatus status = null;
     try
     {
-      status = ModelNature.runCalculation( m_calcCaseFolder, new SubProgressMonitor( monitor, 1 ), m_modeldata );
+      status = SimulationFactory.runCalculation( m_calcCaseFolder, new SubProgressMonitor( monitor, 1 ), m_modeldata );
     }
     catch( final Throwable t )
     {
