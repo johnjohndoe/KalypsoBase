@@ -118,7 +118,10 @@ public class ZmlLineLayer extends AbstractLineLayer
   public void dispose( )
   {
     if( m_provider != null )
+    {
       m_provider.removeListener( m_observationProviderListener );
+      m_provider.dispose();
+    }
 
     super.dispose();
   }
@@ -131,10 +134,11 @@ public class ZmlLineLayer extends AbstractLineLayer
   {
     if( !super.isVisible() )
       return false;
-    else if( getTargetRange( null ) == null )
-      return false;
-    else if( getDomainRange() == null )
-      return false;
+    // FIXME: what IS that???? Does this makes any sense??? Please AT LEAST comment such strange stuff!
+// else if( getTargetRange( null ) == null )
+// return false;
+// else if( getDomainRange() == null )
+// return false;
 
     return true;
   }
@@ -188,6 +192,7 @@ public class ZmlLineLayer extends AbstractLineLayer
     final IObservation observation = m_provider.getObservation();
     setVisible( observation != null );
 
+    getEventHandler().fireLayerVisibilityChanged( this );
     getEventHandler().fireLayerContentChanged( this );
   }
 
@@ -199,16 +204,19 @@ public class ZmlLineLayer extends AbstractLineLayer
   {
     try
     {
-      final org.kalypso.ogc.sensor.IAxis dateAxis = AxisUtils.findDateAxis( getModel().getAxisList() );
-      final IAxisRange range = getModel().getRange( dateAxis );
+      final ITupleModel model = getModel();
+      if( model == null )
+        return null;
+
+      final org.kalypso.ogc.sensor.IAxis dateAxis = AxisUtils.findDateAxis( model.getAxisList() );
+      final IAxisRange range = model.getRange( dateAxis );
       if( range == null )
         return null;
 
       final Date min = (Date) range.getLower();
       final Date max = (Date) range.getUpper();
 
-      final IDataRange<Number> numRange = new DataRange<Number>( m_dateDataOperator.logicalToNumeric( min ), m_dateDataOperator.logicalToNumeric( max ) );
-      return numRange;
+      return new DataRange<Number>( m_dateDataOperator.logicalToNumeric( min ), m_dateDataOperator.logicalToNumeric( max ) );
     }
     catch( final SensorException e )
     {
@@ -224,11 +232,15 @@ public class ZmlLineLayer extends AbstractLineLayer
   @Override
   public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
   {
-    if( domainIntervall == null )
+    try
     {
-      try
+      final ITupleModel model = getModel();
+      if( model == null )
+        return null;
+
+      if( domainIntervall == null )
       {
-        final IAxisRange range = getModel().getRange( m_valueAxis );
+        final IAxisRange range = model.getRange( m_valueAxis );
         if( range == null )
           return null;
 
@@ -236,48 +248,37 @@ public class ZmlLineLayer extends AbstractLineLayer
 
         return numRange;
       }
-      catch( final SensorException e )
+      else
       {
-        KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-
-        return null;
-      }
-    }
-    else
-    {
-      try
-      {
-        final org.kalypso.ogc.sensor.IAxis dateAxis = AxisUtils.findDateAxis( getModel().getAxisList() );
+        final org.kalypso.ogc.sensor.IAxis dateAxis = AxisUtils.findDateAxis( model.getAxisList() );
 
         Number minValue = null;
         Number maxValue = null;
-        for( int i = 0; i < getModel().size(); i++ )
+        for( int i = 0; i < model.size(); i++ )
         {
 
-          final Object domainValue = getModel().get( i, dateAxis );
+          final Object domainValue = model.get( i, dateAxis );
 
           if( domainValue == null )
             continue;
           if( minValue == null && ((Date) domainValue).getTime() > domainIntervall.getMin().longValue() )
           {
-            minValue = (Number) getModel().get( i - 1, m_valueAxis );
+            minValue = (Number) model.get( i - 1, m_valueAxis );
           }
           if( maxValue == null && ((Date) domainValue).getTime() > domainIntervall.getMax().longValue() )
           {
-            maxValue = (Number) getModel().get( i, m_valueAxis );
+            maxValue = (Number) model.get( i, m_valueAxis );
           }
         }
-        final IDataRange<Number> numRange = new DataRange<Number>( m_numberDataOperator.logicalToNumeric( minValue ), m_numberDataOperator.logicalToNumeric( maxValue ) );
-        return numRange;
-      }
-      catch( final SensorException e )
-      {
-        KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-
-        return null;
+        return new DataRange<Number>( m_numberDataOperator.logicalToNumeric( minValue ), m_numberDataOperator.logicalToNumeric( maxValue ) );
       }
     }
+    catch( final SensorException e )
+    {
+      KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
 
+      return null;
+    }
   }
 
   /**

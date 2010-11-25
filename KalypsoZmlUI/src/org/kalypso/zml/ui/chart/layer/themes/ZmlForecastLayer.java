@@ -47,6 +47,7 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.metadata.MetadataHelper;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.template.IObsProvider;
@@ -102,6 +103,9 @@ public class ZmlForecastLayer extends AbstractChartLayer implements IObsProvider
     final Number min = domainRange.getMin();
     final Number max = domainRange.getMax();
 
+    if( min == null || max == null )
+      return;
+
     final Calendar from = getCalendar( min.longValue() );
     final Calendar to = getCalendar( max.longValue() );
     final Calendar forecast = getForecast();
@@ -131,7 +135,11 @@ public class ZmlForecastLayer extends AbstractChartLayer implements IObsProvider
 
   private Calendar getForecast( )
   {
-    final MetadataList metadata = m_provider.getObservation().getMetadataList();
+    final IObservation observation = m_provider.getObservation();
+    if( observation == null )
+      return null;
+
+    final MetadataList metadata = observation.getMetadataList();
     final Date forecastStart = MetadataHelper.getForecastStart( metadata );
     if( forecastStart == null )
       return null;
@@ -173,6 +181,7 @@ public class ZmlForecastLayer extends AbstractChartLayer implements IObsProvider
   @Override
   public void dispose( )
   {
+    m_provider.dispose();
   }
 
   /**
