@@ -130,7 +130,10 @@ public class ZmlBarLayer extends AbstractBarLayer
   public void dispose( )
   {
     if( m_provider != null )
+    {
       m_provider.removeListener( m_observationProviderListener );
+      m_provider.dispose();
+    }
 
     super.dispose();
   }

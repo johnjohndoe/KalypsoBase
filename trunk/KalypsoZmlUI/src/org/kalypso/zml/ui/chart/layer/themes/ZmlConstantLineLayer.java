@@ -59,6 +59,13 @@ public class ZmlConstantLineLayer extends AbstractLineLayer
 
   private boolean m_calculateRange = false;
 
+  public ZmlConstantLineLayer( final ZmlConstantLineBean[] descriptors, final boolean calculateRange )
+  {
+    super( null, null );
+    m_descriptors = descriptors == null ? new ZmlConstantLineBean[] {} : descriptors;
+    m_calculateRange = calculateRange;
+  }
+
   public boolean isCalculateRange( )
   {
     return m_calculateRange;
@@ -66,13 +73,6 @@ public class ZmlConstantLineLayer extends AbstractLineLayer
 
   public void setCalculateRange( final boolean calculateRange )
   {
-    m_calculateRange = calculateRange;
-  }
-
-  public ZmlConstantLineLayer( final ZmlConstantLineBean[] descriptors, final boolean calculateRange )
-  {
-    super( null, null );
-    m_descriptors = descriptors == null ? new ZmlConstantLineBean[] {} : descriptors;
     m_calculateRange = calculateRange;
   }
 
