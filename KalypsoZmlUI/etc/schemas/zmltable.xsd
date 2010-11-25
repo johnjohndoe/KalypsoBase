@@ -53,6 +53,7 @@
           <element name="indexAxis" type="string" minOccurs="1" maxOccurs="1" />
           <element name="valueAxis" type="string" minOccurs="1" maxOccurs="1" />
         </sequence>
+        <attribute name="metadataSource" type="boolean" default="false" />
       </extension>
     </complexContent>
   </complexType>

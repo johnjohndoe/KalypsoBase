@@ -27,8 +27,8 @@
     </Column>
 
 
-    <!-- wasserstand -->
-    <Column xsi:type="DataColumnType" editable="true" id="W">
+    <!-- wasserstand --> 
+    <Column xsi:type="DataColumnType" editable="true" id="W" metadataSource="true">
       <property name="label">Wasserstand</property>
       <property name="format">%.0f</property>
       <property name="width">100</property>
@@ -96,7 +96,7 @@
 
 
     <!-- Abfluss -->
-    <Column xsi:type="DataColumnType" editable="true" id="Q">
+    <Column xsi:type="DataColumnType" editable="true" id="Q"  metadataSource="true">
       <property name="label">Abfluss</property>
       <property name="format">%.3f</property>
       <property name="width">100</property>

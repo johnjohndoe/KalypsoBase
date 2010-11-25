@@ -182,4 +182,8 @@ public class ZmlTableColumn implements IObsProviderListener
     return m_label;
   }
 
+  public boolean isMetadataSource( )
+  {
+    return m_type.isMetadataSource();
+  }
 }

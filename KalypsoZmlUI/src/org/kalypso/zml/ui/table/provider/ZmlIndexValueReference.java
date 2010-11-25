@@ -96,7 +96,7 @@ public class ZmlIndexValueReference implements IZmlValueReference
     {
       try
       {
-        if( reference.getValue() != null )
+        if( reference.isMetadataSource() && reference.getValue() != null )
           Collections.addAll( metadata, reference.getMetadata() );
       }
       catch( final SensorException e )
@@ -124,5 +124,14 @@ public class ZmlIndexValueReference implements IZmlValueReference
   public void update( final Object targetValue )
   {
     throw new NotImplementedException();
+  }
+
+  /**
+   * @see org.kalypso.zml.ui.table.provider.IZmlValueReference#isMetadataSource()
+   */
+  @Override
+  public boolean isMetadataSource( )
+  {
+    return true;
   }
 }

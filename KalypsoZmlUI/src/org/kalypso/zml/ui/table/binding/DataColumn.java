@@ -112,4 +112,9 @@ public class DataColumn extends BaseColumn
 
     return m_statusAxis;
   }
+
+  public boolean isMetadataSource( )
+  {
+    return getType().isMetadataSource();
+  }
 }
