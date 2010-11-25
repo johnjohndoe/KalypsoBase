@@ -59,7 +59,6 @@ import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
  */
 public abstract class AbstractExpandableLayer extends AbstractChartLayer implements IExpandableChartLayer
 {
-
   private final ILayerManager m_layerManager = new LayerManager();
 
   /**
@@ -87,6 +86,7 @@ public abstract class AbstractExpandableLayer extends AbstractChartLayer impleme
   {
     return m_layerManager;
   }
+
 
   /**
    * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getDomainRange()
@@ -132,6 +132,7 @@ public abstract class AbstractExpandableLayer extends AbstractChartLayer impleme
   @Override
   public void dispose( )
   {
+    m_layerManager.clear();
   }
 
   /**
@@ -177,8 +178,10 @@ public abstract class AbstractExpandableLayer extends AbstractChartLayer impleme
   public void paint( final GC gc )
   {
     for( final IChartLayer layer : getLayerManager().getLayers() )
+    {
       if( layer.isVisible() )
         layer.paint( gc );
+    }
   }
 
   /**

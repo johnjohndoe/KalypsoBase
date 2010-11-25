@@ -78,6 +78,7 @@ public class LayerManager implements ILayerManager
 
     m_layers.remove( layer );
     layer.removeListener( m_layerListener );
+    layer.dispose();
 
     m_handler.fireLayerRemoved( layer );
   }
