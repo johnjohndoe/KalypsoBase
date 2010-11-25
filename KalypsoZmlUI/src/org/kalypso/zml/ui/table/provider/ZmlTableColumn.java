@@ -42,93 +42,66 @@ package org.kalypso.zml.ui.table.provider;
 
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.IObservationListener;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
-import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
+import org.kalypso.ogc.sensor.template.IObsProvider;
+import org.kalypso.ogc.sensor.template.IObsProviderListener;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHandler;
 import org.kalypso.ogc.sensor.timeseries.datasource.IDataSourceItem;
 import org.kalypso.zml.ui.table.IZmlColumnModel;
-import org.kalypso.zml.ui.table.IZmlTableColumn;
-import org.kalypso.zml.ui.table.schema.DataColumnType;
+import org.kalypso.zml.ui.table.binding.DataColumn;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlTableColumn implements IObservationListener
+public class ZmlTableColumn implements IObsProviderListener
 {
-  private final IZmlTableColumn m_column;
-
-  private final ITupleModel m_model;
-
-  private final IObservation m_observation;
-
-  private final DataColumnType m_type;
+  private final IObsProvider m_provider;
 
   private final IZmlColumnModel m_tabelModel;
 
-  private IAxis m_indexAxis;
+  private final DataColumn m_type;
 
-  private IAxis m_valueAxis;
+  private ITupleModel m_model;
 
-  private IAxis m_statusAxis;
+  private final String m_label;
 
-  public ZmlTableColumn( final IZmlColumnModel tabelModel, final IZmlTableColumn column, final IObservation observation, final ITupleModel model, final DataColumnType type )
+  public ZmlTableColumn( final String label, final IZmlColumnModel tabelModel, final DataColumn type, final IObsProvider provider )
   {
+    m_label = label;
     m_tabelModel = tabelModel;
-    m_column = column;
-    m_observation = observation;
-    m_model = model;
+    m_provider = provider;
     m_type = type;
-
-    observation.addListener( this );
   }
 
   public void dispose( )
   {
-    m_observation.removeListener( this );
-  }
-
-  public Object get( final int index, final IAxis axis ) throws SensorException
-  {
-    return m_model.get( index, axis );
+    m_provider.removeListener( this );
+    m_provider.dispose();
   }
 
   public String getIdentifier( )
   {
-    return m_column.getIdentifier();
+    return m_type.getIdentifier();
   }
 
-  public IAxis getIndexAxis( )
+  public Object get( final int index, final IAxis axis ) throws SensorException
   {
-    if( m_indexAxis != null )
-      return m_indexAxis;
-
-    final String type = m_type.getIndexAxis();
-    final IAxis[] axes = m_model.getAxisList();
-    m_indexAxis = AxisUtils.findAxis( axes, type );
-
-    return m_indexAxis;
+    return getModel().get( index, axis );
   }
 
-  public String getLabel( )
+  private ITupleModel getModel( ) throws SensorException
   {
-    return m_column.getTitle( getValueAxis() );
-  }
+    if( m_model == null )
+    {
+      final IObservation observation = m_provider.getObservation();
+      m_model = observation.getValues( null );
+    }
 
-  public IAxis getValueAxis( )
-  {
-    if( m_valueAxis != null )
-      return m_valueAxis;
-
-    final String type = m_type.getValueAxis();
-    final IAxis[] axes = m_model.getAxisList();
-    m_valueAxis = AxisUtils.findAxis( axes, type );
-
-    return m_valueAxis;
+    return m_model;
   }
 
   private boolean isTargetAxis( final IAxis axis )
@@ -138,60 +111,75 @@ public class ZmlTableColumn implements IObservationListener
 
   public int size( ) throws SensorException
   {
-    return m_model.size();
+    return getModel().size();
   }
 
   public void update( final int index, final Object value ) throws SensorException
   {
-    final IAxis[] axes = m_model.getAxisList();
+    final ITupleModel model = getModel();
+    final IAxis[] axes = model.getAxisList();
 
     for( final IAxis axis : axes )
     {
       if( AxisUtils.isDataSrcAxis( axis ) )
       {
-        final DataSourceHandler handler = new DataSourceHandler( m_observation.getMetadataList() );
+        final DataSourceHandler handler = new DataSourceHandler( getMetadata() );
         final int source = handler.addDataSource( IDataSourceItem.SOURCE_MANUAL_CHANGED, IDataSourceItem.SOURCE_MANUAL_CHANGED );
 
-        m_model.set( index, axis, source );
+        model.set( index, axis, source );
       }
       else if( AxisUtils.isStatusAxis( axis ) )
       {
-        m_model.set( index, axis, KalypsoStati.BIT_USER_MODIFIED );
+        model.set( index, axis, KalypsoStati.BIT_USER_MODIFIED );
       }
       else if( isTargetAxis( axis ) )
       {
-        m_model.set( index, axis, value );
+        model.set( index, axis, value );
       }
     }
 
     // FIXME improve update value handling
-    m_observation.setValues( m_model );
-    m_observation.fireChangedEvent( this );
+    final IObservation observation = m_provider.getObservation();
+    observation.setValues( model );
+    observation.fireChangedEvent( this );
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.IObservationListener#observationChanged(org.kalypso.ogc.sensor.IObservation,
-   *      java.lang.Object)
-   */
-  @Override
   public void observationChanged( final IObservation obs, final Object source )
   {
     m_tabelModel.fireModelChanged();
   }
 
-  public IAxis getStatusAxis( )
-  {
-    if( m_statusAxis != null )
-      return m_statusAxis;
-
-    final IAxis[] axes = m_model.getAxisList();
-    m_statusAxis = KalypsoStatusUtils.findStatusAxisFor( axes, getValueAxis() );
-
-    return m_statusAxis;
-  }
-
   public MetadataList getMetadata( )
   {
-    return m_observation.getMetadataList();
+    return m_provider.getObservation().getMetadataList();
   }
+
+  /**
+   * @see org.kalypso.ogc.sensor.template.IObsProviderListener#observationReplaced()
+   */
+  @Override
+  public void observationReplaced( )
+  {
+    m_tabelModel.fireModelChanged();
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.template.IObsProviderListener#observationChanged(java.lang.Object)
+   */
+  @Override
+  public void observationChanged( final Object source )
+  {
+    m_tabelModel.fireModelChanged();
+  }
+
+  public DataColumn getDataColumn( )
+  {
+    return m_type;
+  }
+
+  public String getLabel( )
+  {
+    return m_label;
+  }
+
 }

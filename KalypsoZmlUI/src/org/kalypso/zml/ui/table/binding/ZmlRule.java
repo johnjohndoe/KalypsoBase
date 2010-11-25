@@ -38,48 +38,41 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.provider;
+package org.kalypso.zml.ui.table.binding;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.kalypso.zml.ui.table.schema.AbstractColumnType;
-import org.kalypso.zml.ui.table.schema.IndexColumnType;
+import org.eclipse.core.runtime.CoreException;
+import org.kalypso.zml.ui.table.schema.RuleType;
+import org.kalypso.zml.ui.table.schema.StyleReferenceType;
+import org.kalypso.zml.ui.table.styles.ZmlStyleResolver;
 
 /**
+ * ZmlRuleType binding class
+ * 
  * @author Dirk Kuch
  */
-public class ZmlTableRow
+public class ZmlRule
 {
-  private final Object m_index;
+  private final BaseColumn m_column;
 
-  /** Map<Reference (id), Reference> */
-  Map<String, IZmlValueReference> m_values = new HashMap<String, IZmlValueReference>();
+  private final RuleType m_rule;
 
-  public ZmlTableRow( final Object index )
+  public ZmlRule( final BaseColumn column, final RuleType rule )
   {
-    m_index = index;
+    m_column = column;
+    m_rule = rule;
   }
 
-  public void add( final ZmlDataValueReference reference )
+  public String getIdentifier( )
   {
-    m_values.put( reference.getIdentifier(), reference );
+    return m_column.getIdentifier();
   }
 
-  public IZmlValueReference get( final AbstractColumnType type )
+  public CellStyle getStyle( ) throws CoreException
   {
-    if( type instanceof IndexColumnType )
-    {
-      final IZmlValueReference[] references = m_values.values().toArray( new IZmlValueReference[] {} );
+    final ZmlStyleResolver resolver = ZmlStyleResolver.getInstance();
+    final StyleReferenceType reference = m_rule.getStyleReference();
 
-      return new ZmlIndexValueReference( references, m_index );
-    }
-
-    return m_values.get( type.getId() );
+    return resolver.findStyle( reference );
   }
 
-  public Object getIndexValue( )
-  {
-    return m_index;
-  }
 }

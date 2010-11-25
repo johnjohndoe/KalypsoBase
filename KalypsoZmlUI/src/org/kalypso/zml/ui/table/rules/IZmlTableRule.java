@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.rules;
 
-import org.kalypso.zml.ui.table.binding.CellStyle;
+import org.kalypso.zml.ui.table.binding.ZmlRule;
 import org.kalypso.zml.ui.table.provider.IZmlValueReference;
 
 /**
@@ -50,11 +50,15 @@ public interface IZmlTableRule
 {
   String EXTENSION_POINT_ID = "org.kalypso.zml.ui.tableRule"; //$NON-NLS-1$
 
-  void addStyle( String columnId, CellStyle style );
+  void addBinding( ZmlRule rule );
 
   boolean apply( IZmlValueReference reference );
 
   String getIdentifier( );
 
-  CellStyle getStyle( String columnId );
+  /**
+   * @param identifier
+   *          identifier = columnId
+   */
+  ZmlRule getBinding( String identifier );
 }

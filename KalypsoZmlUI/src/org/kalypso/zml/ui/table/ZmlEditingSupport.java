@@ -55,7 +55,7 @@ import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.ui.KalypsoZmlUI;
-import org.kalypso.zml.ui.table.binding.DataColumn;
+import org.kalypso.zml.ui.table.binding.BaseColumn;
 import org.kalypso.zml.ui.table.provider.IZmlValueReference;
 import org.kalypso.zml.ui.table.provider.ZmlTableRow;
 
@@ -64,15 +64,15 @@ import org.kalypso.zml.ui.table.provider.ZmlTableRow;
  */
 public class ZmlEditingSupport extends EditingSupport
 {
-  private final DataColumn m_column;
-
   protected final TextCellEditor m_cellEditor;
 
-  public ZmlEditingSupport( final DataColumn type, final TableViewerColumn viewer )
+  private final BaseColumn m_type;
+
+  public ZmlEditingSupport( final BaseColumn type, final TableViewerColumn viewer )
   {
     super( viewer.getViewer() );
-    m_column = type;
 
+    m_type = type;
     m_cellEditor = new TextCellEditor( (Composite) viewer.getViewer().getControl(), SWT.NONE );
 
     viewer.getViewer().getControl().addDisposeListener( new DisposeListener()
@@ -115,12 +115,12 @@ public class ZmlEditingSupport extends EditingSupport
       {
         final ZmlTableRow row = (ZmlTableRow) element;
 
-        final IZmlValueReference reference = row.get( m_column );
+        final IZmlValueReference reference = row.get( m_type.getType() );
         if( reference == null )
           return "";
 
         final Object value = reference.getValue();
-        final String format = m_column.getFormat();
+        final String format = m_type.getFormat();
 
         return String.format( format == null ? "%s" : format, value );
       }
@@ -144,7 +144,7 @@ public class ZmlEditingSupport extends EditingSupport
       try
       {
         final ZmlTableRow row = (ZmlTableRow) element;
-        final IZmlValueReference reference = row.get( m_column );
+        final IZmlValueReference reference = row.get( m_type.getType() );
 
         final Object targetValue = getTargetValue( reference, value );
         if( !targetValue.equals( reference.getValue() ) )

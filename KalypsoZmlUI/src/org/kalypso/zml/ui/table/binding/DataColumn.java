@@ -40,24 +40,76 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.binding;
 
+import org.kalypso.ogc.sensor.IAxis;
+import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
+import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.zml.ui.table.schema.AbstractColumnType;
 import org.kalypso.zml.ui.table.schema.DataColumnType;
-import org.kalypso.zml.ui.table.schema.ZmlTableType;
 
 /**
  * @author Dirk Kuch
  */
-public class DataColumn extends AbstractColumn
+public class DataColumn extends BaseColumn
 {
 
-  public DataColumn( final ZmlTableType root, final AbstractColumnType type )
+  private final IObservation m_observation;
+
+  private IAxis m_valueAxis;
+
+  private IAxis m_indexAxis;
+
+  private IAxis m_statusAxis;
+
+  public DataColumn( final IObservation observation, final AbstractColumnType type )
   {
-    super( root, type );
+    super( type );
+
+    m_observation = observation;
   }
 
   @Override
   public DataColumnType getType( )
   {
     return (DataColumnType) super.getType();
+  }
+
+  public IAxis getValueAxis( )
+  {
+    if( m_valueAxis != null )
+      return m_valueAxis;
+
+    final DataColumnType dataType = getType();
+    final String type = dataType.getValueAxis();
+
+    final IAxis[] axes = m_observation.getAxisList();
+    m_valueAxis = AxisUtils.findAxis( axes, type );
+
+    return m_valueAxis;
+  }
+
+  public IAxis getIndexAxis( )
+  {
+    if( m_indexAxis != null )
+      return m_indexAxis;
+
+    final DataColumnType dataType = getType();
+    final String type = dataType.getIndexAxis();
+
+    final IAxis[] axes = m_observation.getAxisList();
+    m_indexAxis = AxisUtils.findAxis( axes, type );
+
+    return m_indexAxis;
+  }
+
+  public IAxis getStatusAxis( )
+  {
+    if( m_statusAxis != null )
+      return m_statusAxis;
+
+    final IAxis[] axes = m_observation.getAxisList();
+    m_statusAxis = KalypsoStatusUtils.findStatusAxisFor( axes, getValueAxis() );
+
+    return m_statusAxis;
   }
 }

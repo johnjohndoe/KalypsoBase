@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <catalog:catalog id="urn:" ns0:base="urn:" xmlns:ns0="xml" xmlns:catalog="urn:oasis:names:tc:entity:xmlns:xml:catalog">
 
-  <catalog:system systemId="urn:org:kalypso:zml:ui:table:rule:user:modified:icon" uri="icons/write.png" />
-  <catalog:system systemId="urn:org:kalypso:zml:ui:table:rule:interpolated:value:icon" uri="icons/warning.png" />
-  <catalog:system systemId="urn:org:kalypso:zml:ui:table:rule:wq:conflict:icon" uri="icons/conflict.png" />
+  <catalog:system systemId="urn:org:kalypso:zml:ui:table:icon:user:modified" uri="icons/write.png" />
+  <catalog:system systemId="urn:org:kalypso:zml:ui:table:icon:interpolated:value" uri="icons/warning.png" />
+  <catalog:system systemId="urn:org:kalypso:zml:ui:table:icon:wq:conflict" uri="icons/conflict.png" />
 
+
+  <catalog:system systemId="urn:org:kalypso:zml:ui:table:style:base" uri="layout/styles.xml" />
 </catalog:catalog>
 

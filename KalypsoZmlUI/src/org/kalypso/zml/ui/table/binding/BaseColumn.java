@@ -44,35 +44,32 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.core.runtime.CoreException;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.rules.IZmlTableRule;
 import org.kalypso.zml.ui.table.schema.AbstractColumnType;
 import org.kalypso.zml.ui.table.schema.AlignmentType;
-import org.kalypso.zml.ui.table.schema.CellStyleType;
 import org.kalypso.zml.ui.table.schema.ColumnPropertyName;
 import org.kalypso.zml.ui.table.schema.ColumnPropertyType;
 import org.kalypso.zml.ui.table.schema.RuleType;
 import org.kalypso.zml.ui.table.schema.RulesType;
-import org.kalypso.zml.ui.table.schema.StyleSetType;
-import org.kalypso.zml.ui.table.schema.ZmlTableType;
+import org.kalypso.zml.ui.table.schema.StyleReferenceType;
+import org.kalypso.zml.ui.table.styles.ZmlStyleResolver;
 import org.kalypso.zml.ui.table.utils.TableTypeHelper;
 
 /**
  * @author Dirk Kuch
  */
-public abstract class AbstractColumn
+public class BaseColumn
 {
   private final AbstractColumnType m_type;
-
-  private final ZmlTableType m_root;
 
   private final Set<IZmlTableRule> m_rules = new LinkedHashSet<IZmlTableRule>();
 
   private CellStyle m_cellStyle;
 
-  public AbstractColumn( final ZmlTableType root, final AbstractColumnType type )
+  public BaseColumn( final AbstractColumnType type )
   {
-    m_root = root;
     m_type = type;
   }
 
@@ -95,9 +92,7 @@ public abstract class AbstractColumn
       {
         final String ruleIdentifier = ruleType.getRuleReference();
         final IZmlTableRule rule = KalypsoZmlUI.getDefault().getTableRule( ruleIdentifier );
-        final CellStyleType styleReference = (CellStyleType) ruleType.getStyleReference();
-
-        rule.addStyle( getIdentifier(), new CellStyle( styleReference ) );
+        rule.addBinding( new ZmlRule( this, ruleType ) );
 
         m_rules.add( rule );
       }
@@ -157,19 +152,15 @@ public abstract class AbstractColumn
     return null;
   }
 
-  public CellStyle getDefaultStyle( )
+  public CellStyle getDefaultStyle( ) throws CoreException
   {
     if( m_cellStyle != null )
       return m_cellStyle;
 
-    final StyleSetType styleSetType = m_type.getStyleSet();
-    if( styleSetType == null )
-      m_cellStyle = new CellStyle( TableTypeHelper.getDefaultStyleSet( m_root.getStyleSet() ) );
-    else
-    {
-      final CellStyleType defaultStyleType = TableTypeHelper.getDefaultStyleSet( styleSetType );
-      m_cellStyle = new CellStyle( defaultStyleType );
-    }
+    final ZmlStyleResolver resolver = ZmlStyleResolver.getInstance();
+    final StyleReferenceType reference = m_type.getDefaultCellStyle();
+
+    m_cellStyle = resolver.findStyle( reference );
 
     return m_cellStyle;
   }

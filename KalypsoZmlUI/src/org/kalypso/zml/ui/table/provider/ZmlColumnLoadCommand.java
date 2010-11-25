@@ -40,15 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.provider;
 
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.ITupleModel;
-import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.template.IObsProvider;
 import org.kalypso.ogc.sensor.template.IObsProviderListener;
-import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.IZmlColumnModel;
 import org.kalypso.zml.ui.table.IZmlTableColumn;
+import org.kalypso.zml.ui.table.binding.DataColumn;
 import org.kalypso.zml.ui.table.schema.DataColumnType;
 import org.kalypso.zml.ui.table.utils.TableTypeHelper;
 
@@ -114,22 +111,19 @@ public class ZmlColumnLoadCommand implements IObsProviderListener
     if( m_canceled )
       return;
 
-    try
-    {
-      final IObsProvider provider = m_column.getObsProvider();
-      final IObservation observation = provider.getObservation();
-      if( observation == null )
-        return;
+    final IObsProvider provider = m_column.getObsProvider().copy();
 
-      final ITupleModel model = observation.getValues( null );
-      final DataColumnType type = (DataColumnType) TableTypeHelper.findColumnType( m_model.getTableType(), m_column.getIdentifier() );
+    final IObservation observation = provider.getObservation();
+    if( observation == null )
+      return;
 
-      m_model.addColumn( new ZmlTableColumn( m_model, m_column, observation, model, type ) );
-    }
-    catch( final SensorException e )
-    {
-      KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-    }
+    final DataColumnType type = (DataColumnType) TableTypeHelper.findColumnType( m_model.getTableType(), m_column.getIdentifier() );
+
+    final DataColumn data = new DataColumn( observation, type );
+    final String label = m_column.getTitle( data.getValueAxis() );
+
+    m_model.addColumn( new ZmlTableColumn( label, m_model, data, provider ) );
+
   }
 
   /**

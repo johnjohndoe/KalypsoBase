@@ -49,12 +49,11 @@ import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.binding.CellStyle;
 import org.kalypso.zml.ui.table.provider.IZmlValueReference;
-import org.kalypso.zml.ui.table.rules.IZmlTableRule;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlRuleUserModified implements IZmlTableRule
+public class ZmlRuleUserModified extends AbstractZmlTableRule
 {
   public static final String ID = "org.kalypso.zml.ui.table.rule.user.modified";
 
@@ -67,16 +66,6 @@ public class ZmlRuleUserModified implements IZmlTableRule
   public String getIdentifier( )
   {
     return ID;
-  }
-
-  /**
-   * @see org.kalypso.zml.ui.table.rules.IZmlTableRule#addStyle(java.lang.String,
-   *      org.kalypso.zml.ui.table.schema.AbstractStyleType)
-   */
-  @Override
-  public void addStyle( final String columnId, final CellStyle style )
-  {
-    m_styles.put( columnId, style );
   }
 
   /**
@@ -97,15 +86,6 @@ public class ZmlRuleUserModified implements IZmlTableRule
     }
 
     return false;
-  }
-
-  /**
-   * @see org.kalypso.zml.ui.table.rules.IZmlTableRule#getStyle(java.lang.String)
-   */
-  @Override
-  public CellStyle getStyle( final String columnId )
-  {
-    return m_styles.get( columnId );
   }
 
 }

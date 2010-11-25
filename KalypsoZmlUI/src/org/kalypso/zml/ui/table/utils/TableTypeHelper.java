@@ -191,30 +191,12 @@ public final class TableTypeHelper
 
   public static CellStyleType findCellStyleType( final StyleSetType styleSet, final String reference )
   {
-    if( reference == null )
-      return getDefaultStyleSet( styleSet );
-
     final List<CellStyleType> styles = styleSet.getStyle();
     for( final CellStyleType style : styles )
     {
       if( style.getId().equals( reference ) )
         return style;
     }
-
-    return null;
-  }
-
-  public static CellStyleType getDefaultStyleSet( final StyleSetType styleSet )
-  {
-    final List<CellStyleType> styles = styleSet.getStyle();
-    for( final CellStyleType style : styles )
-    {
-      if( style.isDefault() )
-        return style;
-    }
-
-    if( styles.size() >= 0 )
-      return styles.get( 0 );
 
     return null;
   }

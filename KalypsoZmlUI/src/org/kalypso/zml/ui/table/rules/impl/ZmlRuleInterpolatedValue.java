@@ -40,25 +40,18 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.rules.impl;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.zml.ui.KalypsoZmlUI;
-import org.kalypso.zml.ui.table.binding.CellStyle;
 import org.kalypso.zml.ui.table.provider.IZmlValueReference;
-import org.kalypso.zml.ui.table.rules.IZmlTableRule;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlRuleInterpolatedValue implements IZmlTableRule
+public class ZmlRuleInterpolatedValue extends AbstractZmlTableRule
 {
   public static final String ID = "org.kalypso.zml.ui.table.rule.value.interpolated";
-
-  Map<String, CellStyle> m_styles = new HashMap<String, CellStyle>();
 
   /**
    * @see org.kalypso.zml.ui.table.rules.IZmlTableRule#getIdentifier()
@@ -67,16 +60,6 @@ public class ZmlRuleInterpolatedValue implements IZmlTableRule
   public String getIdentifier( )
   {
     return ID;
-  }
-
-  /**
-   * @see org.kalypso.zml.ui.table.rules.IZmlTableRule#addStyle(java.lang.String,
-   *      org.kalypso.zml.ui.table.schema.AbstractStyleType)
-   */
-  @Override
-  public void addStyle( final String columnId, final CellStyle style )
-  {
-    m_styles.put( columnId, style );
   }
 
   /**
@@ -98,14 +81,4 @@ public class ZmlRuleInterpolatedValue implements IZmlTableRule
 
     return false;
   }
-
-  /**
-   * @see org.kalypso.zml.ui.table.rules.IZmlTableRule#getStyle(java.lang.String)
-   */
-  @Override
-  public CellStyle getStyle( final String columnId )
-  {
-    return m_styles.get( columnId );
-  }
-
 }
