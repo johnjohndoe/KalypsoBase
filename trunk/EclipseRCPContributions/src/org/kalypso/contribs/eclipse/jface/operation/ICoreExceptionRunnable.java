@@ -53,5 +53,5 @@ import org.eclipse.core.runtime.IStatus;
  */
 public interface ICoreExceptionRunnable
 {
-  public IStatus run( final IProgressMonitor monitor ) throws CoreException;
+  IStatus run( IProgressMonitor monitor ) throws CoreException;
 }
