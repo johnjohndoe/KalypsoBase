@@ -44,6 +44,7 @@ import java.text.DecimalFormat;
 import java.text.Format;
 import java.text.NumberFormat;
 
+import org.eclipse.core.runtime.Assert;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT;
 
@@ -68,6 +69,8 @@ public class NumberLabelCreator implements ILabelCreator
 
   public NumberLabelCreator( final String formatString )
   {
+    Assert.isNotNull( formatString );
+
     m_formatString = formatString;
   }
 
@@ -80,6 +83,7 @@ public class NumberLabelCreator implements ILabelCreator
   {
     if( ticks == null )
       return "";
+
     if( "%s".equals( m_formatString ) )
     {
       final Format format = getFormat( range );
