@@ -94,7 +94,6 @@ public class WQTimeserieProxy implements IObservation
 
   private ITupleModel m_cachedModel = null;
 
-
   /**
    * Constructor
    * 
@@ -220,7 +219,7 @@ public class WQTimeserieProxy implements IObservation
   @Override
   public void removeListener( final IObservationListener listener )
   {
-    m_eventAdapter.addListener( listener );
+    m_eventAdapter.removeListener( listener );
   }
 
   /**
