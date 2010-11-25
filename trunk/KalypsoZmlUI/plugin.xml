@@ -46,7 +46,7 @@
  </extension> 
  
  <extension point="org.kalypso.core.catalogContribution">
-    <catalogContribution class="org.kalypso.zml.ui.table.rules.ZmlTableRulesCatalogContribution"
+    <catalogContribution class="org.kalypso.zml.ui.table.styles.ZmlTableStylesCatalogContribution"
       name="org.kalypso.zml.ui.table.rules.ZmlTableRulesCatalogContributionbution" />
   </extension>
   

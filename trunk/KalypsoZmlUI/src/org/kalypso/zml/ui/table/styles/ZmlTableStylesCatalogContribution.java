@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.rules;
+package org.kalypso.zml.ui.table.styles;
 
 import java.net.URL;
 
@@ -46,7 +46,7 @@ import org.kalypso.core.catalog.CatalogManager;
 import org.kalypso.core.catalog.ICatalog;
 import org.kalypso.core.catalog.ICatalogContribution;
 
-public class ZmlTableRulesCatalogContribution implements ICatalogContribution
+public class ZmlTableStylesCatalogContribution implements ICatalogContribution
 {
   @Override
   public void contributeTo( final CatalogManager catalogManager )
