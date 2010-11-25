@@ -24,7 +24,7 @@
 				<include name="KalypsoSimulationUI/build/bin" />
 			</dirset>
 			<fileset dir="${basedir}/..">
-				<include name="KalypsoCommons/lib/*.jar" />
+				<include name="KalypsoCommons/lib/**/*.jar" />
 				<include name="KalypsoDeegree/lib/**/*.jar" />
 			</fileset>
 			<fileset dir="${eclipse.home}">
