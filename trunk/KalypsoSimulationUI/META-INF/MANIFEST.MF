@@ -13,6 +13,7 @@ Export-Package: org.kalypso.compare,
  org.kalypso.simulation.ui.actions,
  org.kalypso.simulation.ui.calccase,
  org.kalypso.simulation.ui.calccase.jface,
+ org.kalypso.simulation.ui.calccase.simulation,
  org.kalypso.simulation.ui.wizards.createCalcCase
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ClassPath: .
