@@ -163,7 +163,7 @@ public class ZmlEditingSupport extends EditingSupport
   {
     Assert.isTrue( value instanceof String );
 
-    final IAxis axis = reference.getAxis();
+    final IAxis axis = reference.getValueAxis();
     final Class< ? > clazz = axis.getDataClass();
 
     if( Double.class == clazz )

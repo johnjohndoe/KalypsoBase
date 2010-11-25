@@ -40,9 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.provider;
 
+import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.template.IObsProvider;
 import org.kalypso.ogc.sensor.template.IObsProviderListener;
+import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.zml.ui.table.IZmlColumnModel;
 import org.kalypso.zml.ui.table.IZmlTableColumn;
 import org.kalypso.zml.ui.table.binding.DataColumn;
@@ -111,19 +113,25 @@ public class ZmlColumnLoadCommand implements IObsProviderListener
     if( m_canceled )
       return;
 
-    final IObsProvider provider = m_column.getObsProvider().copy();
-
-    final IObservation observation = provider.getObservation();
+    final IObsProvider base = m_column.getObsProvider();
+    final IObsProvider clone = base.copy();
+    final IObservation observation = clone.getObservation();
     if( observation == null )
+    {
+      base.dispose();
+      clone.dispose();
       return;
+    }
 
     final DataColumnType type = (DataColumnType) TableTypeHelper.findColumnType( m_model.getTableType(), m_column.getIdentifier() );
 
-    final DataColumn data = new DataColumn( observation, type );
-    final String label = m_column.getTitle( data.getValueAxis() );
+    final DataColumn data = new DataColumn( type );
+    final IAxis[] axes = clone.getObservation().getAxisList();
+    final String label = m_column.getTitle( AxisUtils.findAxis( axes, data.getValueAxis() ) );
 
-    m_model.addColumn( new ZmlTableColumn( label, m_model, data, provider ) );
+    m_model.addColumn( new ZmlTableColumn( label, clone, m_model, data ) );
 
+    base.dispose();
   }
 
   /**

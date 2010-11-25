@@ -115,6 +115,25 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
     final Table table = m_tableViewer.getTable();
     table.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
     table.setHeaderVisible( true );
+
+// final TableViewerFocusCellManager focusCellManager = new TableViewerFocusCellManager( m_tableViewer, new
+// FocusCellOwnerDrawHighlighter( m_tableViewer ) );
+// final ColumnViewerEditorActivationStrategy actSupport = new ColumnViewerEditorActivationStrategy( m_tableViewer )
+// {
+// @Override
+// protected boolean isEditorActivationEvent( final ColumnViewerEditorActivationEvent event )
+// {
+// return event.eventType == ColumnViewerEditorActivationEvent.TRAVERSAL || event.eventType ==
+// ColumnViewerEditorActivationEvent.MOUSE_DOUBLE_CLICK_SELECTION
+// || (event.eventType == ColumnViewerEditorActivationEvent.KEY_PRESSED && event.keyCode == SWT.CR) || event.eventType
+// == ColumnViewerEditorActivationEvent.PROGRAMMATIC;
+// }
+// };
+//
+// TableViewerEditor.create( m_tableViewer, focusCellManager, actSupport, ColumnViewerEditor.TABBING_HORIZONTAL |
+// ColumnViewerEditor.TABBING_MOVE_TO_ROW_NEIGHBOR
+// | ColumnViewerEditor.TABBING_VERTICAL | ColumnViewerEditor.KEYBOARD_ACTIVATION );
+
   }
 
   private TableViewerColumn buildColumnViewer( final BaseColumn type )
@@ -137,6 +156,7 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
     if( type.getType() instanceof DataColumnType && type.isEditable() )
     {
       column.setEditingSupport( new ZmlEditingSupport( type, column ) );
+
     }
 
     return column;

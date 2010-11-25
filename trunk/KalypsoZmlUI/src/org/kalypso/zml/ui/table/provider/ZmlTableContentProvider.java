@@ -48,6 +48,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.IZmlColumnModel;
 import org.kalypso.zml.ui.table.binding.DataColumn;
@@ -100,7 +101,8 @@ public class ZmlTableContentProvider implements ITreeContentProvider
         for( final ZmlTableColumn column : m_model.getColumns() )
         {
           final DataColumn type = column.getDataColumn();
-          final IAxis indexAxis = type.getIndexAxis();
+          final IAxis[] axes = column.getAxes();
+          final IAxis indexAxis = AxisUtils.findAxis( axes, type.getIndexAxis() );
 
           for( int i = 0; i < column.size(); i++ )
           {

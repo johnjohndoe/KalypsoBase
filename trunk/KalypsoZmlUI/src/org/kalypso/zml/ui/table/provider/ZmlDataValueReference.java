@@ -43,6 +43,8 @@ package org.kalypso.zml.ui.table.provider;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
+import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
+import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.zml.ui.table.binding.DataColumn;
 
 /**
@@ -63,16 +65,16 @@ public class ZmlDataValueReference implements IZmlValueReference
   public Object getIndexValue( ) throws SensorException
   {
     final DataColumn type = m_column.getDataColumn();
+    final IAxis[] axes = m_column.getAxes();
+    final IAxis axis = AxisUtils.findAxis( axes, type.getIndexAxis() );
 
-    return m_column.get( m_index, type.getIndexAxis() );
+    return m_column.get( m_index, axis );
   }
 
   @Override
   public Object getValue( ) throws SensorException
   {
-    final DataColumn type = m_column.getDataColumn();
-
-    return m_column.get( m_index, type.getValueAxis() );
+    return m_column.get( m_index, getValueAxis() );
   }
 
   @Override
@@ -82,11 +84,12 @@ public class ZmlDataValueReference implements IZmlValueReference
   }
 
   @Override
-  public IAxis getAxis( )
+  public IAxis getValueAxis( )
   {
     final DataColumn type = m_column.getDataColumn();
+    final IAxis[] axes = m_column.getAxes();
 
-    return type.getValueAxis();
+    return AxisUtils.findAxis( axes, type.getValueAxis() );
   }
 
   public String getIdentifier( )
@@ -97,10 +100,9 @@ public class ZmlDataValueReference implements IZmlValueReference
   @Override
   public Integer getStatus( ) throws SensorException
   {
-    final DataColumn type = m_column.getDataColumn();
-    final IAxis status = type.getStatusAxis();
+    final IAxis axis = KalypsoStatusUtils.findStatusAxisFor( m_column.getAxes(), getValueAxis() );
 
-    final Object value = m_column.get( m_index, status );
+    final Object value = m_column.get( m_index, axis );
     if( value instanceof Number )
       return ((Number) value).intValue();
 
