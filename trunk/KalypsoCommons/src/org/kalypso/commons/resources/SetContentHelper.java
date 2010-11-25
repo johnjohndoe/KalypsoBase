@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,14 +36,16 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.commons.resources;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
+import java.util.zip.GZIPOutputStream;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.ObjectUtils;
@@ -72,6 +74,8 @@ public abstract class SetContentHelper
 
   private String m_oldCharset;
 
+  private boolean m_doCompress;
+
   public SetContentHelper()
   {
     this( Messages.getString("org.kalypso.commons.resources.SetContentHelper.0") ); //$NON-NLS-1$
@@ -88,13 +92,13 @@ public abstract class SetContentHelper
 
   public void setFileContents( final IFile file, final boolean force, final boolean keepHistory,
       final IProgressMonitor monitor ) throws CoreException
-  {
+      {
     setFileContents( file, force, keepHistory, monitor, null );
-  }
+      }
 
   public void setFileContents( final IFile file, final boolean force, final boolean keepHistory,
       final IProgressMonitor monitor, final String charset ) throws CoreException
-  {
+      {
     m_oldCharset = findCurrentCharset( file );
     m_newCharset = findNewCharset( file, charset, m_oldCharset );
 
@@ -104,8 +108,10 @@ public abstract class SetContentHelper
     {
       monitor.beginTask( m_title, 2000 );
 
-      final PipedOutputStream m_pos = new PipedOutputStream();
-      m_pis = new PipedInputStream( m_pos );
+      final PipedOutputStream pos = new PipedOutputStream();
+      m_pis = new PipedInputStream( pos );
+
+      final boolean doCompress = m_doCompress;
 
       final CatchRunnable innerRunnable = new CatchRunnable()
       {
@@ -115,7 +121,13 @@ public abstract class SetContentHelper
           OutputStreamWriter outputStreamWriter = null;
           try
           {
-            outputStreamWriter = new OutputStreamWriter( m_pos, getCharset() );
+            final OutputStream os;
+            if( doCompress )
+              os = new GZIPOutputStream( pos );
+            else
+              os = pos;
+
+            outputStreamWriter = new OutputStreamWriter( os, getCharset() );
             write( outputStreamWriter );
             outputStreamWriter.close();
           }
@@ -136,7 +148,7 @@ public abstract class SetContentHelper
         file.create( m_pis, force, new SubProgressMonitor( monitor, 1000 ) );
         wasCreated = true;
       }
-      
+
       // wait for innerThread to stop
       while( innerThread.isAlive() )
       {
@@ -168,12 +180,12 @@ public abstract class SetContentHelper
         catch( final CoreException ce )
         {
           // Log?
-          
+
           // ignore
           ce.printStackTrace();
         }
       }
-      
+
       // rethrow
       throw e;
     }
@@ -192,7 +204,7 @@ public abstract class SetContentHelper
 
     // enclose in finally?
     monitor.done();
-  }
+      }
 
   private String findNewCharset( final IFile file, final String charset, final String currentCharset ) throws CoreException
   {
@@ -224,5 +236,10 @@ public abstract class SetContentHelper
   protected String getCharset()
   {
     return m_newCharset;
+  }
+
+  public void setCompressed( final boolean doCompress )
+  {
+    m_doCompress = doCompress;
   }
 }

@@ -45,7 +45,9 @@ import org.eclipse.core.internal.resources.PlatformURLResourceConnection;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.i18n.Messages;
 
 /**
@@ -56,6 +58,17 @@ import org.kalypso.core.i18n.Messages;
 @SuppressWarnings("restriction")//$NON-NLS-1$
 public final class LayerTypeUtilities
 {
+  private static final String TYPE_SHAPE = "shape"; //$NON-NLS-1$
+
+  private static final String TYPE_GML = "gml"; //$NON-NLS-1$
+
+  private static final String EXT_SHP = "shp"; //$NON-NLS-1$
+
+  private static final String EXT_GMLZ = "gmlz"; //$NON-NLS-1$
+
+  private static final String EXT_GML = "gml"; //$NON-NLS-1$
+
+
   private LayerTypeUtilities( )
   {
   }
@@ -64,24 +77,27 @@ public final class LayerTypeUtilities
   {
     final IPath projectRelativePath = file.getProjectRelativePath();
 
-    final String fileext = projectRelativePath.getFileExtension();
+    final String fileext = projectRelativePath.getFileExtension().toLowerCase();
     final String contentType;
 
     final String projectURL = PlatformURLResourceConnection.RESOURCE_URL_STRING + "/" + file.getProject().getName() + "/"; //$NON-NLS-1$ //$NON-NLS-2$
 
     final String href;
-    if( "gml".equalsIgnoreCase( fileext ) ) //$NON-NLS-1$
+    if( EXT_GML.equals( fileext ) || EXT_GMLZ.equals( fileext ) )
     {
       href = projectURL + projectRelativePath;
-      contentType = "gml"; //$NON-NLS-1$
+      contentType = TYPE_GML;
     }
-    else if( "shp".equalsIgnoreCase( "shp" ) ) //$NON-NLS-1$ //$NON-NLS-2$
+    else if( EXT_SHP.equalsIgnoreCase( fileext ) )
     {
-      contentType = "shape"; //$NON-NLS-1$
+      contentType = TYPE_SHAPE;
       href = projectURL + projectRelativePath.removeFileExtension();
     }
     else
-      throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.template.types.LayerTypeUtilities.8" ) + fileext ) ); //$NON-NLS-1$
+    {
+      final String msg = Messages.getString( "org.kalypso.template.types.LayerTypeUtilities.8" ) + fileext; //$NON-NLS-1$
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), msg ) );
+    }
 
     layer.setId( file.getName() );
     layer.setFeaturePath( "" ); //$NON-NLS-1$

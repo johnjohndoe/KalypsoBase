@@ -78,7 +78,7 @@ public class GmlEditor extends AbstractEditorPart implements IEditorPart, IComma
     {
       final IFile file = ((IFileEditorInput) input).getFile();
       final String ext = file.getFileExtension();
-      if( "gml".equalsIgnoreCase( ext ) || "shp".equalsIgnoreCase( ext ) )
+      if( "gml".equalsIgnoreCase( ext ) || "shp".equalsIgnoreCase( ext ) || "gmlz".equalsIgnoreCase( ext ) )
       {
         try
         {
