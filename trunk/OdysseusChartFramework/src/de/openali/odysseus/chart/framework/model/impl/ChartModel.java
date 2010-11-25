@@ -158,7 +158,7 @@ public class ChartModel implements IChartModel
       }
 
       final List<IDataRange<Number>> ranges = new ArrayList<IDataRange<Number>>( layers.length );
-
+// FIXME: concurrent modification exception here!
       for( final IChartLayer layer : layers )
       {
         if( layer.isVisible() )
