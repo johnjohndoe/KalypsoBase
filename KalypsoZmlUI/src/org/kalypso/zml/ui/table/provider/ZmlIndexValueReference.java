@@ -112,7 +112,7 @@ public class ZmlIndexValueReference implements IZmlValueReference
    * @see org.kalypso.zml.ui.table.provider.IZmlValueReference#getAxis()
    */
   @Override
-  public IAxis getAxis( )
+  public IAxis getValueAxis( )
   {
     return null;
   }

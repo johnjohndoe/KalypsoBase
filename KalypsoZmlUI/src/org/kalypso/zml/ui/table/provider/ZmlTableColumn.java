@@ -57,7 +57,7 @@ import org.kalypso.zml.ui.table.binding.DataColumn;
 /**
  * @author Dirk Kuch
  */
-public class ZmlTableColumn implements IObsProviderListener
+public class ZmlTableColumn
 {
   private final IObsProvider m_provider;
 
@@ -69,17 +69,46 @@ public class ZmlTableColumn implements IObsProviderListener
 
   private final String m_label;
 
-  public ZmlTableColumn( final String label, final IZmlColumnModel tabelModel, final DataColumn type, final IObsProvider provider )
+  private final IObsProviderListener m_observationProviderListener = new IObsProviderListener()
+  {
+    @Override
+    public void observationReplaced( )
+    {
+      onObservationLoaded();
+    }
+
+    /**
+     * @see org.kalypso.ogc.sensor.template.IObsProviderListener#observationChangedX(java.lang.Object)
+     */
+    @Override
+    public void observationChanged( final Object source )
+    {
+      onObservationChanged();
+    }
+  };
+
+  public ZmlTableColumn( final String label, final IObsProvider provider, final IZmlColumnModel tabelModel, final DataColumn type )
   {
     m_label = label;
     m_tabelModel = tabelModel;
     m_provider = provider;
     m_type = type;
+
+  }
+
+  protected void onObservationChanged( )
+  {
+    m_tabelModel.fireModelChanged();
+  }
+
+  protected void onObservationLoaded( )
+  {
+    m_tabelModel.fireModelChanged();
   }
 
   public void dispose( )
   {
-    m_provider.removeListener( this );
+    m_provider.removeListener( m_observationProviderListener );
     m_provider.dispose();
   }
 
@@ -154,24 +183,6 @@ public class ZmlTableColumn implements IObsProviderListener
     return m_provider.getObservation().getMetadataList();
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.template.IObsProviderListener#observationReplaced()
-   */
-  @Override
-  public void observationReplaced( )
-  {
-    m_tabelModel.fireModelChanged();
-  }
-
-  /**
-   * @see org.kalypso.ogc.sensor.template.IObsProviderListener#observationChanged(java.lang.Object)
-   */
-  @Override
-  public void observationChanged( final Object source )
-  {
-    m_tabelModel.fireModelChanged();
-  }
-
   public DataColumn getDataColumn( )
   {
     return m_type;
@@ -185,5 +196,10 @@ public class ZmlTableColumn implements IObsProviderListener
   public boolean isMetadataSource( )
   {
     return m_type.isMetadataSource();
+  }
+
+  public IAxis[] getAxes( )
+  {
+    return m_provider.getObservation().getAxisList();
   }
 }
