@@ -38,19 +38,40 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.binding;
+package org.kalypso.zml.ui.table.rules.impl;
 
-import org.kalypso.zml.ui.table.schema.AbstractColumnType;
-import org.kalypso.zml.ui.table.schema.ZmlTableType;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.kalypso.zml.ui.table.binding.ZmlRule;
+import org.kalypso.zml.ui.table.rules.IZmlTableRule;
 
 /**
  * @author Dirk Kuch
  */
-public class IndexColumn extends AbstractColumn
+public abstract class AbstractZmlTableRule implements IZmlTableRule
 {
-  public IndexColumn( final ZmlTableType root, final AbstractColumnType type )
+
+  Map<String, ZmlRule> m_bindings = new HashMap<String, ZmlRule>();
+
+  /**
+   * @see org.kalypso.zml.ui.table.rules.IZmlTableRule#addStyle(java.lang.String,
+   *      org.kalypso.zml.ui.table.binding.CellStyle)
+   */
+  @Override
+  public void addBinding( final ZmlRule binding )
   {
-    super( root, type );
+    m_bindings.put( binding.getIdentifier(), binding );
+
+  }
+
+  /**
+   * @see org.kalypso.zml.ui.table.rules.IZmlTableRule#getStyle(java.lang.String)
+   */
+  @Override
+  public ZmlRule getBinding( final String columnId )
+  {
+    return m_bindings.get( columnId );
   }
 
 }

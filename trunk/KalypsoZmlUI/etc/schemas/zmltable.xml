@@ -1,156 +1,161 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ZmlTable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="schema.table.ui.zml.kalypso.org" xsi:schemaLocation="schema.table.ui.zml.kalypso.org zmltable.xsd ">
 
-  <StyleSet>
-    <Style id="baseCellStyle" default="true">
-      <property name="backgroundColor">FFFFFF</property>
-      <property name="textColor">000000</property>
-      <property name="fontFamily">Arial</property>
-    </Style>
-    <Style id="userModifiedStyle">
-      <baseStyle>
-        <reference>baseCellStyle</reference>
-      </baseStyle>
-      <property name="icon">urn:org:kalypso:zml:ui:table:rule:user:modified:icon</property>
-    </Style>
-    <Style id="userModifiedQStyle">
-      <baseStyle>
-        <reference>userModifiedStyle</reference>
-      </baseStyle>
-      <property name="backgroundColor">F8F3C0</property>
-    </Style>
-    <Style id="interpolatedValueStyle">
-      <baseStyle>
-        <reference>baseCellStyle</reference>
-      </baseStyle>
-      <property name="icon">urn:org:kalypso:zml:ui:table:rule:interpolated:value:icon</property>
-    </Style>
-    <Style id="interpolatedQValueStyle">
-      <baseStyle>
-        <reference>interpolatedValueStyle</reference>
-      </baseStyle>
-      <property name="backgroundColor">F8F3C0</property>
-    </Style>
-    <Style id="wqConflictStyle">
-      <baseStyle>
-        <reference>baseCellStyle</reference>
-      </baseStyle>
-      <property name="icon">urn:org:kalypso:zml:ui:table:rule:wq:conflict:icon</property>
-    </Style>
-    <Style id="wqConflictQStyle">
-      <baseStyle>
-        <reference>wqConflictStyle</reference>
-      </baseStyle>
-      <property name="backgroundColor">F8F3C0</property>
-    </Style>
-
-
-  </StyleSet>
+  <defaultStyle>
+    <url>urn:org:kalypso:zml:ui:table:style:base#defaultCellStyle</url>
+  </defaultStyle>
 
   <Columns>
+  
+    <!-- date column -->
     <Column xsi:type="IndexColumnType" autopack="true" id="date">
       <property name="label">Datum</property>
       <property name="format">dd.MM.yyyy HH:mm</property>
       <property name="alignment">LEFT</property>
 
-      <StyleSet>
-        <Style id="dateStyle" default="true">
-          <baseStyle>
-            <reference>baseCellStyle</reference>
-          </baseStyle>
-          <property name="backgroundColor">DEDEDE</property>
-        </Style>
-        <Style id="dateForecastStyle">
-          <baseStyle>
-            <reference>dateStyle</reference>
-          </baseStyle>
-          <property name="backgroundColor">FFF7EE</property>
-        </Style>
-      </StyleSet>
+      <defaultCellStyle>
+        <url>urn:org:kalypso:zml:ui:table:style:base#dateCellStyle</url>
+      </defaultCellStyle>
 
       <Rules>
-        <Rule ruleReference="org.kalypso.zml.ui.table.rule.forecast.value" styleReference="dateForecastStyle" />
+        <Rule ruleReference="org.kalypso.zml.ui.table.rule.forecast.value">
+          <styleReference>
+            <url>urn:org:kalypso:zml:ui:table:style:base#dateForecastCellStyle</url>
+          </styleReference>
+        </Rule>
       </Rules>
-
     </Column>
 
+
+    <!-- wasserstand -->
     <Column xsi:type="DataColumnType" editable="true" id="W">
       <property name="label">Wasserstand</property>
       <property name="format">%.0f</property>
       <property name="width">100</property>
       <property name="alignment">RIGHT</property>
 
+      <defaultCellStyle>
+        <url>urn:org:kalypso:zml:ui:table:style:base#defaultCellStyle</url>
+      </defaultCellStyle>
+
 
       <Rules>
-        <Rule ruleReference="org.kalypso.zml.ui.table.rule.user.modified" styleReference="userModifiedStyle" />
-        <Rule ruleReference="org.kalypso.zml.ui.table.rule.value.interpolated" styleReference="interpolatedValueStyle" />
-        <Rule ruleReference="org.kalypso.zml.ui.table.rule.wq.conflict" styleReference="wqConflictStyle" />
+        <Rule ruleReference="org.kalypso.zml.ui.table.rule.user.modified">
+          <styleReference>
+            <url>urn:org:kalypso:zml:ui:table:style:base#wUserModifiedStyle</url>
+          </styleReference>
+        </Rule>
+        <Rule ruleReference="org.kalypso.zml.ui.table.rule.value.interpolated">
+          <styleReference>
+            <url>urn:org:kalypso:zml:ui:table:style:base#wInterpolatedValueStyle</url>
+          </styleReference>
+        </Rule>
+        <Rule ruleReference="org.kalypso.zml.ui.table.rule.wq.conflict">
+          <styleReference>
+            <url>urn:org:kalypso:zml:ui:table:style:base#wWqConversionConflict</url>
+          </styleReference>
+        </Rule>
       </Rules>
 
       <indexAxis>date</indexAxis>
       <valueAxis>W</valueAxis>
     </Column>
 
+    <!-- wasserstand modell zeitreihe -->
     <Column xsi:type="DataColumnType" editable="true" id="W_MODELL">
       <property name="label">Wasserstand (Modell)</property>
       <property name="format">%.0f</property>
       <property name="width">100</property>
       <property name="alignment">RIGHT</property>
 
+      <defaultCellStyle>
+        <url>urn:org:kalypso:zml:ui:table:style:base#defaultCellStyle</url>
+      </defaultCellStyle>
+
       <Rules>
-        <Rule ruleReference="org.kalypso.zml.ui.table.rule.user.modified" styleReference="userModifiedStyle" />
-        <Rule ruleReference="org.kalypso.zml.ui.table.rule.value.interpolated" styleReference="interpolatedValueStyle" />
-        <Rule ruleReference="org.kalypso.zml.ui.table.rule.wq.conflict" styleReference="wqConflictStyle" />
+        <Rule ruleReference="org.kalypso.zml.ui.table.rule.user.modified">
+          <styleReference>
+            <url>urn:org:kalypso:zml:ui:table:style:base#wUserModifiedStyle</url>
+          </styleReference>
+        </Rule>
+        <Rule ruleReference="org.kalypso.zml.ui.table.rule.value.interpolated">
+          <styleReference>
+            <url>urn:org:kalypso:zml:ui:table:style:base#wInterpolatedValueStyle</url>
+          </styleReference>
+        </Rule>
+        <Rule ruleReference="org.kalypso.zml.ui.table.rule.wq.conflict">
+          <styleReference>
+            <url>urn:org:kalypso:zml:ui:table:style:base#wWqConversionConflict</url>
+          </styleReference>
+        </Rule>
       </Rules>
 
       <indexAxis>date</indexAxis>
       <valueAxis>W</valueAxis>
     </Column>
 
+
+    <!-- Abfluss -->
     <Column xsi:type="DataColumnType" editable="true" id="Q">
       <property name="label">Abfluss</property>
       <property name="format">%.3f</property>
       <property name="width">100</property>
       <property name="alignment">RIGHT</property>
 
-      <StyleSet>
-        <Style id="defaultQCellStyle" default="true">
-          <baseStyle>
-            <reference>baseCellStyle</reference>
-          </baseStyle>
-          <property name="backgroundColor">F8F3C0</property>
-        </Style>
-      </StyleSet>
+
+      <defaultCellStyle>
+        <url>urn:org:kalypso:zml:ui:table:style:base#qBaseCellStyle</url>
+      </defaultCellStyle>
 
       <Rules>
-        <Rule ruleReference="org.kalypso.zml.ui.table.rule.user.modified" styleReference="userModifiedQStyle" />
-        <Rule ruleReference="org.kalypso.zml.ui.table.rule.value.interpolated" styleReference="interpolatedQValueStyle" />
-        <Rule ruleReference="org.kalypso.zml.ui.table.rule.wq.conflict" styleReference="wqConflictQStyle" />
+        <Rule ruleReference="org.kalypso.zml.ui.table.rule.user.modified">
+          <styleReference>
+            <url>urn:org:kalypso:zml:ui:table:style:base#qUserModifiedStyle</url>
+          </styleReference>
+        </Rule>
+        <Rule ruleReference="org.kalypso.zml.ui.table.rule.value.interpolated">
+          <styleReference>
+            <url>urn:org:kalypso:zml:ui:table:style:base#qInterpolatedValueStyle</url>
+          </styleReference>
+        </Rule>
+        <Rule ruleReference="org.kalypso.zml.ui.table.rule.wq.conflict">
+          <styleReference>
+            <url>urn:org:kalypso:zml:ui:table:style:base#qWqConflictQStyle</url>
+          </styleReference>
+        </Rule>
       </Rules>
 
       <indexAxis>date</indexAxis>
       <valueAxis>Q</valueAxis>
     </Column>
 
+    <!-- Abfluss Modell Zeitreihe -->
     <Column xsi:type="DataColumnType" editable="true" id="Q_MODELL">
       <property name="label">Abfluss (Modell)</property>
       <property name="format">%.3f</property>
       <property name="width">100</property>
       <property name="alignment">RIGHT</property>
 
-      <StyleSet>
-        <Style id="defaultQModelStyle" default="true">
-          <baseStyle>
-            <reference>baseCellStyle</reference>
-          </baseStyle>
-          <property name="backgroundColor">F8F3C0</property>
-        </Style>
-      </StyleSet>
+      <defaultCellStyle>
+        <url>urn:org:kalypso:zml:ui:table:style:base#qBaseCellStyle</url>
+      </defaultCellStyle>
 
       <Rules>
-        <Rule ruleReference="org.kalypso.zml.ui.table.rule.user.modified" styleReference="userModifiedQStyle" />
-        <Rule ruleReference="org.kalypso.zml.ui.table.rule.value.interpolated" styleReference="interpolatedQValueStyle" />
-        <Rule ruleReference="org.kalypso.zml.ui.table.rule.wq.conflict" styleReference="wqConflictQStyle" />
+        <Rule ruleReference="org.kalypso.zml.ui.table.rule.user.modified">
+          <styleReference>
+            <url>urn:org:kalypso:zml:ui:table:style:base#qUserModifiedStyle</url>
+          </styleReference>
+        </Rule>
+        <Rule ruleReference="org.kalypso.zml.ui.table.rule.value.interpolated">
+          <styleReference>
+            <url>urn:org:kalypso:zml:ui:table:style:base#qInterpolatedValueStyle</url>
+          </styleReference>
+        </Rule>
+        <Rule ruleReference="org.kalypso.zml.ui.table.rule.wq.conflict">
+          <styleReference>
+            <url>urn:org:kalypso:zml:ui:table:style:base#qWqConflictQStyle</url>
+          </styleReference>
+        </Rule>
       </Rules>
 
       <indexAxis>date</indexAxis>

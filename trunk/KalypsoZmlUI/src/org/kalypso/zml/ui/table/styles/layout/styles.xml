@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ZmlTable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="schema.table.ui.zml.kalypso.org" xsi:schemaLocation="schema.table.ui.zml.kalypso.org zmltable.xsd ">
+
+  <StyleSet>
+    <!-- basic zml table style -->
+    <Style id="defaultCellStyle">
+      <property name="backgroundColor">FFFFFF</property>
+      <property name="textColor">000000</property>
+      <property name="fontFamily">Arial</property>
+      <property name="fontSize">10</property>
+    </Style>
+    
+    
+    <!-- base q cell table style -->
+    <Style id="qBaseCellStyle">
+      <baseStyle>
+        <reference>defaultCellStyle</reference>
+      </baseStyle>
+      <property name="backgroundColor">F8F3C0</property>
+    </Style>
+
+  <!-- base date cell table styles -->
+    <Style id="dateCellStyle">
+      <baseStyle>
+        <reference>defaultCellStyle</reference>
+      </baseStyle>
+      <property name="backgroundColor">DEDEDE</property>
+    </Style>
+
+
+    <Style id="dateForecastCellStyle">
+      <baseStyle>
+        <reference>defaultCellStyle</reference>
+      </baseStyle>
+      <property name="backgroundColor">FFF7EE</property>
+    </Style>
+
+
+    <!-- rule - value user modified? -->
+    <Style id="wUserModifiedStyle">
+      <baseStyle>
+        <reference>defaultCellStyle</reference>
+      </baseStyle>
+      <property name="icon">urn:org:kalypso:zml:ui:table:icon:user:modified</property>
+    </Style>
+    <Style id="qUserModifiedStyle">
+      <baseStyle>
+        <reference>qBaseCellStyle</reference>
+      </baseStyle>
+      <property name="icon">urn:org:kalypso:zml:ui:table:icon:user:modified</property>
+    </Style>
+    
+    
+    <!-- rule - interpolated value? -->
+    <Style id="wInterpolatedValueStyle">
+      <baseStyle>
+        <reference>defaultCellStyle</reference>
+      </baseStyle>
+      <property name="icon">urn:org:kalypso:zml:ui:table:icon:interpolated:value</property>
+    </Style>
+    <Style id="qInterpolatedValueStyle">
+      <baseStyle>
+        <reference>qBaseCellStyle</reference>
+      </baseStyle>
+      <property name="icon">urn:org:kalypso:zml:ui:table:icon:interpolated:value</property>
+    </Style>
+    
+    
+    <!-- rule - w/q conversion conflict? -->
+    <Style id="wWqConversionConflict">
+      <baseStyle>
+        <reference>defaultCellStyle</reference>
+      </baseStyle>
+      <property name="icon">urn:org:kalypso:zml:ui:table:icon:wq:conflict</property>
+    </Style>
+    <Style id="qWqConflictQStyle">
+      <baseStyle>
+        <reference>qBaseCellStyle</reference>
+      </baseStyle>
+      <property name="icon">urn:org:kalypso:zml:ui:table:icon:wq:conflict</property>
+    </Style>
+  </StyleSet>
+
+
+  <defaultStyle>
+    <reference>defaultCellStyle</reference>
+  </defaultStyle>
+</ZmlTable>

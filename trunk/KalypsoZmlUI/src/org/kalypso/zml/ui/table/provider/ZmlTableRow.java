@@ -43,8 +43,8 @@ package org.kalypso.zml.ui.table.provider;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.kalypso.zml.ui.table.binding.AbstractColumn;
-import org.kalypso.zml.ui.table.binding.IndexColumn;
+import org.kalypso.zml.ui.table.schema.AbstractColumnType;
+import org.kalypso.zml.ui.table.schema.IndexColumnType;
 
 /**
  * @author Dirk Kuch
@@ -66,16 +66,16 @@ public class ZmlTableRow
     m_values.put( reference.getIdentifier(), reference );
   }
 
-  public IZmlValueReference get( final AbstractColumn column )
+  public IZmlValueReference get( final AbstractColumnType type )
   {
-    if( column instanceof IndexColumn )
+    if( type instanceof IndexColumnType )
     {
       final IZmlValueReference[] references = m_values.values().toArray( new IZmlValueReference[] {} );
 
       return new ZmlIndexValueReference( references, m_index );
     }
 
-    return m_values.get( column.getIdentifier() );
+    return m_values.get( type.getId() );
   }
 
   public Object getIndexValue( )

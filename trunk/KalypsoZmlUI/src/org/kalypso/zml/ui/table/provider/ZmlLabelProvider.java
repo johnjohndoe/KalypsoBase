@@ -40,10 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.provider;
 
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
@@ -51,36 +51,41 @@ import org.eclipse.swt.graphics.Image;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.ui.KalypsoZmlUI;
-import org.kalypso.zml.ui.table.binding.AbstractColumn;
+import org.kalypso.zml.ui.table.binding.BaseColumn;
 import org.kalypso.zml.ui.table.binding.CellStyle;
-import org.kalypso.zml.ui.table.binding.IndexColumn;
+import org.kalypso.zml.ui.table.binding.ZmlRule;
 import org.kalypso.zml.ui.table.rules.IZmlTableRule;
+import org.kalypso.zml.ui.table.schema.IndexColumnType;
 
 /**
  * @author Dirk Kuch
  */
 public class ZmlLabelProvider extends ColumnLabelProvider
 {
-  private final AbstractColumn m_column;
+  private final BaseColumn m_column;
 
-  public ZmlLabelProvider( final AbstractColumn column )
+  public ZmlLabelProvider( final BaseColumn column )
   {
     m_column = column;
   }
 
-  private CellStyle findStyle( final Object element )
+  private CellStyle findStyle( final Object element ) throws CoreException
   {
     if( element instanceof ZmlTableRow )
     {
       final ZmlTableRow row = (ZmlTableRow) element;
 
-      final IZmlValueReference reference = row.get( m_column );
+      final IZmlValueReference reference = row.get( m_column.getType() );
       if( reference != null )
       {
         for( final IZmlTableRule rule : m_column.getRules() )
         {
           if( rule.apply( reference ) )
-            return rule.getStyle( m_column.getIdentifier() );
+          {
+            final ZmlRule binding = rule.getBinding( m_column.getIdentifier() );
+            return binding.getStyle();
+          }
+
         }
       }
     }
@@ -106,9 +111,18 @@ public class ZmlLabelProvider extends ColumnLabelProvider
   @Override
   public Color getBackground( final Object element )
   {
-    final CellStyle style = findStyle( element );
+    try
+    {
+      final CellStyle style = findStyle( element );
 
-    return style.getBackgroundColor();
+      return style.getBackgroundColor();
+    }
+    catch( final CoreException e )
+    {
+      KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+    }
+
+    return super.getBackground( element );
   }
 
   /**
@@ -117,9 +131,19 @@ public class ZmlLabelProvider extends ColumnLabelProvider
   @Override
   public Font getFont( final Object element )
   {
-    final CellStyle style = findStyle( element );
+    try
+    {
+      final CellStyle style = findStyle( element );
 
-    return style.getFont();
+      return style.getFont();
+    }
+    catch( final CoreException e )
+    {
+      KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+    }
+
+    return super.getFont( element );
+
   }
 
   /**
@@ -128,9 +152,18 @@ public class ZmlLabelProvider extends ColumnLabelProvider
   @Override
   public Color getForeground( final Object element )
   {
-    final CellStyle style = findStyle( element );
+    try
+    {
+      final CellStyle style = findStyle( element );
 
-    return style.getForegroundColor();
+      return style.getForegroundColor();
+    }
+    catch( final CoreException e )
+    {
+      KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+    }
+
+    return super.getForeground( element );
   }
 
   /**
@@ -145,7 +178,7 @@ public class ZmlLabelProvider extends ColumnLabelProvider
 
       return style.getImage();
     }
-    catch( final IOException e )
+    catch( final Exception e )
     {
       KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
     }
@@ -163,7 +196,7 @@ public class ZmlLabelProvider extends ColumnLabelProvider
     {
       final ZmlTableRow set = (ZmlTableRow) element;
 
-      if( m_column instanceof IndexColumn )
+      if( m_column.getType() instanceof IndexColumnType )
       {
         final Object value = set.getIndexValue();
 
@@ -173,7 +206,7 @@ public class ZmlLabelProvider extends ColumnLabelProvider
       {
         try
         {
-          final IZmlValueReference reference = set.get( m_column );
+          final IZmlValueReference reference = set.get( m_column.getType() );
           if( reference != null )
             return format( reference.getValue() );
 

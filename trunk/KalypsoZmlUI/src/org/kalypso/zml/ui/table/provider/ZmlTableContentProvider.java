@@ -50,6 +50,7 @@ import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.IZmlColumnModel;
+import org.kalypso.zml.ui.table.binding.DataColumn;
 
 /**
  * @author Dirk Kuch
@@ -98,7 +99,8 @@ public class ZmlTableContentProvider implements ITreeContentProvider
 
         for( final ZmlTableColumn column : m_model.getColumns() )
         {
-          final IAxis indexAxis = column.getIndexAxis();
+          final DataColumn type = column.getDataColumn();
+          final IAxis indexAxis = type.getIndexAxis();
 
           for( int i = 0; i < column.size(); i++ )
           {

@@ -19,7 +19,8 @@
   <!-- types -->
   <complexType name="ZmlTableType">
     <sequence>
-      <element ref="zmltable:StyleSet" minOccurs="1" maxOccurs="1" />
+      <element ref="zmltable:StyleSet" minOccurs="0" maxOccurs="1" />
+      <element name="defaultStyle" type="zmltable:StyleReferenceType" minOccurs="1" maxOccurs="1" />
       <element ref="zmltable:Columns" minOccurs="0" maxOccurs="1" />
     </sequence>
   </complexType>
@@ -36,8 +37,8 @@
   <complexType name="AbstractColumnType" abstract="true">
     <sequence>
       <element name="property" type="zmltable:ColumnPropertyType" minOccurs="0" maxOccurs="unbounded" />
-
       <element ref="zmltable:StyleSet" minOccurs="0" maxOccurs="1" />
+      <element name="defaultCellStyle" type="zmltable:StyleReferenceType" minOccurs="1" maxOccurs="1" />
       <element ref="zmltable:Rules" minOccurs="0" maxOccurs="1" />
     </sequence>
     <attribute name="id" type="ID" use="required" />
@@ -112,8 +113,6 @@
       <element name="property" type="zmltable:StylePropertyType" minOccurs="0" maxOccurs="unbounded" />
     </sequence>
     <attribute name="id" type="ID" use="required" />
-
-    <attribute name="default" type="boolean" use="optional" />
   </complexType>
   
   
@@ -126,8 +125,12 @@
 
 
   <complexType name="RuleType">
+    <sequence>
+      <element name="styleReference" type="zmltable:StyleReferenceType" minOccurs="1" maxOccurs="1" />
+    </sequence>
+
     <attribute name="ruleReference" type="anyURI" use="required" />
-    <attribute name="styleReference" type="IDREF" use="required" />
+
   </complexType>
 
   <complexType name="StylePropertyType">
