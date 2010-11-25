@@ -13,7 +13,6 @@ import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
  */
 public interface IChartLayer extends IEventProvider<ILayerEventListener>
 {
-
   /**
    * Setzt die ID des Layers; die ID wird verwendet, um das Layer im Chart zu referenzieren
    */
@@ -91,9 +90,6 @@ public interface IChartLayer extends IEventProvider<ILayerEventListener>
 
   ILegendEntry[] getLegendEntries( );
 
-  // @SuppressWarnings("unchecked")
-  // public void setMappers( Map<String, IMapper> mapperMap );
-
   /**
    * @return layer is visible in chart legend
    */
@@ -104,5 +100,4 @@ public interface IChartLayer extends IEventProvider<ILayerEventListener>
    *          layer is visible in chart legend
    */
   void setLegend( final boolean isVisible );
-
 }
