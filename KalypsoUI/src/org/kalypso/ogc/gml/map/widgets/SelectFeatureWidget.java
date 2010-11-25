@@ -290,15 +290,33 @@ public class SelectFeatureWidget extends AbstractWidget
 
     try
     {
+      GM_Point point = null;
       if( m_geometryBuilder instanceof RectangleGeometryBuilder )
       {
-        final GM_Point point = MapUtilities.transform( mapPanel, p );
+        point = MapUtilities.transform( mapPanel, p );
         final GM_Object object = m_geometryBuilder.addPoint( point );
         if( object != null )
         {
           doSelect( object );
           m_geometryBuilder.reset();
         }
+      }
+      else if( m_geometryBuilder instanceof PointGeometryBuilder )
+      {
+        /* just snap to grabbed feature */
+        if( m_hoverFeature != null )
+        {
+          final List<Feature> selectedFeatures = new ArrayList<Feature>();
+          selectedFeatures.add( m_hoverFeature );
+          final IFeatureSelectionManager selectionManager = mapPanel.getSelectionManager();
+          changeSelection( selectionManager, selectedFeatures, m_themes, m_addMode, m_toggleMode );
+        }
+        m_geometryBuilder.reset();
+      }
+      else if( m_geometryBuilder instanceof PolygonGeometryBuilder )
+      {
+        point = MapUtilities.transform( mapPanel, p );
+        m_geometryBuilder.addPoint( point );
       }
     }
     catch( final Exception e )
@@ -321,24 +339,6 @@ public class SelectFeatureWidget extends AbstractWidget
 
     try
     {
-      GM_Point point = null;
-      if( m_geometryBuilder instanceof PointGeometryBuilder )
-      {
-        /* just snap to grabbed feature */
-        if( m_hoverFeature != null )
-        {
-          final List<Feature> selectedFeatures = new ArrayList<Feature>();
-          selectedFeatures.add( m_hoverFeature );
-          final IFeatureSelectionManager selectionManager = mapPanel.getSelectionManager();
-          changeSelection( selectionManager, selectedFeatures, m_themes, m_addMode, m_toggleMode );
-        }
-        m_geometryBuilder.reset();
-      }
-      else if( m_geometryBuilder instanceof PolygonGeometryBuilder )
-      {
-        point = MapUtilities.transform( mapPanel, p );
-        m_geometryBuilder.addPoint( point );
-      }
     }
     catch( final Exception e )
     {
