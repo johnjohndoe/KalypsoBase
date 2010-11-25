@@ -296,6 +296,9 @@ public class GmlLoader extends WorkspaceLoader
       }
     };
 
+    if( GmlSerializer.isGZ( file.getName() ) )
+      thread.setCompressed( true );
+
     thread.setFileContents( file, false, true, new NullProgressMonitor() );
   }
 

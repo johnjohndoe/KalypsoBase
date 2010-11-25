@@ -27,13 +27,13 @@
 		<editor default="true" name="%org.kalypso.ui.editor.featureeditor.FeatureEditor" icon="icons/kalypso_gtt.gif" extensions="gft" class="org.kalypso.ui.editor.featureeditor.FeatureEditor" id="org.kalypso.ui.editor.featureeditor.FeatureEditor">
 		</editor>
 		<editor class="org.kalypso.ogc.gml.schemaeditor.GMLSchemaEditor" default="true" extensions="xsd" icon="icons/full/obj16/gml_schema_file.gif" id="org.kalypso.ogc.gml.schemaeditor.GMLSchemaEditor" name="%org.kalypso.ogc.gml.schemaeditor.GMLSchemaEditor" />
-		<editor class="org.kalypso.ui.editor.gmleditor.ui.GmlEditor" contributorClass="org.kalypso.ui.editor.gmleditor.ui.GmlEditorActionBarContributor" default="true" extensions="gmv,gml,shp" icon="icons/kalypso_gtt.gif" id="org.kalypso.ui.editor.GmlEditor" name="%org.kalypso.ui.editor.gmleditor.ui.GmlEditor">
+		<editor class="org.kalypso.ui.editor.gmleditor.ui.GmlEditor" contributorClass="org.kalypso.ui.editor.gmleditor.ui.GmlEditorActionBarContributor" default="true" extensions="gmv,gml,shp,gmlz" icon="icons/kalypso_gtt.gif" id="org.kalypso.ui.editor.GmlEditor" name="%org.kalypso.ui.editor.gmleditor.ui.GmlEditor">
 		</editor>
 		<editor class="org.kalypso.ui.editor.diagrameditor.ObservationDiagramEditor" icon="icons/kalypso_odt.gif" default="true" contributorClass="org.kalypso.ui.editor.diagrameditor.ObservationDiagramEditorContributor" name="%org.kalypso.ui.editor.diagrameditor.ObservationDiagramEditor" id="org.kalypso.ui.editor.diagrameditor.ObservationDiagramEditor" extensions="odt,zml">
 		</editor>
 		<editor class="org.kalypso.ui.editor.obstableeditor.ObservationTableEditor" icon="icons/kalypso_ott.gif" default="true" contributorClass="org.kalypso.ui.editor.obstableeditor.ObservationTableEditorContributor" name="%org.kalypso.ui.editor.obstableeditor.ObservationTableEditor" id="org.kalypso.ui.editor.obstableeditor.ObservationTableEditor" extensions="ott,zml">
 		</editor>
-		<editor launcher="org.kalypso.ui.editorLauncher.GisTemplateLauncher" icon="icons/full/obj16/gml_file.gif" default="false" name="%org.kalypso.ui.editorLauncher.GisTemplateLauncher" id="org.kalypso.ui.editor.GisEditor" extensions="gml,shp">
+		<editor launcher="org.kalypso.ui.editorLauncher.GisTemplateLauncher" icon="icons/full/obj16/gml_file.gif" default="false" name="%org.kalypso.ui.editorLauncher.GisTemplateLauncher" id="org.kalypso.ui.editor.GisEditor" extensions="gml,gmlz,shp">
 		</editor>
 		<editor launcher="org.kalypso.ui.editorLauncher.ObsTemplateLauncher" icon="icons/sample.gif" default="false" name="%org.kalypso.ui.editorLauncher.ObsTemplateLauncher" id="org.kalypso.ui.editor.ObsEditor" extensions="zml">
 		</editor>

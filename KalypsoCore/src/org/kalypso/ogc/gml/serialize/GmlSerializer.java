@@ -74,7 +74,9 @@ import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -117,6 +119,8 @@ public final class GmlSerializer
 {
   public static final IFeatureProviderFactory DEFAULT_FACTORY = new GmlSerializerFeatureProviderFactory();
 
+  public static final String[] GZ_EXTENSIONS = new String[] { "gz", "gmlz" }; //$NON-NLS-1$ //$NON-NLS-2$
+
   private GmlSerializer( )
   {
     // do not instantiate this class
@@ -138,15 +142,10 @@ public final class GmlSerializer
     {
       final BufferedOutputStream bs = new BufferedOutputStream( new FileOutputStream( gmlFile ) );
 
-      // REMARK: this is a quite crude way to decide, if to compress or not. But how should we decide it anyway?
-      if( gmlFile.getName().endsWith( ".gz" ) ) //$NON-NLS-1$
-      {
+      if( isGZ( gmlFile.getName() ) )
         os = new GZIPOutputStream( bs );
-      }
       else
-      {
         os = bs;
-      }
 
       GmlSerializer.serializeWorkspace( os, gmlWorkspace, encoding );
       os.close();
@@ -265,14 +264,10 @@ public final class GmlSerializer
         bis = new ProgressInputStream( urlStream, contentLength, monitor );
       }
 
-      if( gmlURL.toExternalForm().endsWith( ".gz" ) ) //$NON-NLS-1$
-      {
+      if( isGZ( gmlURL.toExternalForm() ) )
         is = new GZIPInputStream( bis );
-      }
       else
-      {
         is = bis;
-      }
 
       final URL usedContext = context == null ? gmlURL : context;
 
@@ -296,6 +291,13 @@ public final class GmlSerializer
       IOUtils.closeQuietly( urlStream );
       ProgressUtilities.done( monitor );
     }
+  }
+
+  public static boolean isGZ( final String filename )
+  {
+    // REMARK: this is a quite crude way to decide, if to compress or not. But how should we decide it anyway?
+    final String extension = FilenameUtils.getExtension( filename );
+    return ArrayUtils.contains( GZ_EXTENSIONS, extension );
   }
 
   private static long getContentLength( final URL url ) throws IOException
