@@ -40,8 +40,8 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.event;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.IObservationEventProvider;
@@ -54,7 +54,7 @@ import org.kalypso.ogc.sensor.IObservationListener;
  */
 public class ObservationEventAdapter implements IObservationEventProvider
 {
-  private final List<IObservationListener> m_listeners = new ArrayList<IObservationListener>();
+  private final Set<IObservationListener> m_listeners = new LinkedHashSet<IObservationListener>();
 
   private final IObservation m_obs;
 
