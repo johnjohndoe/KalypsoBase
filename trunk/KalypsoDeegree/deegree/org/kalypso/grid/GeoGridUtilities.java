@@ -40,11 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.grid;
 
+import java.awt.image.DataBuffer;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.util.Collection;
+
+import javax.media.jai.TiledImage;
 
 import ogc31.www.opengis.net.gml.FileType;
 import ogc31.www.opengis.net.gml.FileValueModelType;
@@ -53,12 +56,15 @@ import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.math.Range;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
+import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.commons.math.LinearEquation;
 import org.kalypso.commons.math.LinearEquation.SameXValuesException;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.contribs.ogc31.KalypsoOGC31JAXBcontext;
 import org.kalypso.grid.areas.IGeoGridArea;
+import org.kalypso.grid.tiff.TIFFUtilities;
 import org.kalypso.transformation.transformer.GeoTransformerFactory;
 import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
@@ -611,7 +617,7 @@ public final class GeoGridUtilities
    * @param grid
    *          The values of the new coverage will be read from this grid.
    * @param scale
-   *          Scaling factor, i.e. number of important digits to round up the value
+   *          Scaling factor, i.e. number of important digits to round up the value.
    * @param file
    *          The new coverage will be serialized to this file.
    * @param filePath
@@ -619,33 +625,133 @@ public final class GeoGridUtilities
    *          file.
    * @param mimeType
    *          The mime type of the created underlying file.
-   * @throws GeoGridException
-   *           If the acces to the given grid fails.
-   * @throws IOException
-   *           If writing to the output file fails.
-   * @throws CoreException
-   *           If the monitor is cancelled.
    */
-  public static void setCoverage( final RectifiedGridCoverage coverage, final IGeoGrid grid, final int scale, final File file, final String filePath, final String mimeType, final IProgressMonitor monitor ) throws Exception
+  public static void setCoverage( RectifiedGridCoverage coverage, IGeoGrid grid, int scale, File file, String filePath, String mimeType, IProgressMonitor monitor ) throws Exception
   {
-    final SubMonitor progress = SubMonitor.convert( monitor, "Coverage wird erzeugt", 100 );
+    /* Monitor. */
+    if( monitor == null )
+      monitor = new NullProgressMonitor();
 
-    IWriteableGeoGrid outputGrid = null;
     try
     {
-      outputGrid = createWriteableGrid( mimeType, file, grid.getSizeX(), grid.getSizeY(), scale, grid.getOrigin(), grid.getOffsetX(), grid.getOffsetY(), grid.getSourceCRS(), false );
-      ProgressUtilities.worked( monitor, 20 );
-      final IGeoGridWalker walker = new CopyGeoGridWalker( outputGrid );
-      grid.getWalkingStrategy().walk( grid, walker, null, progress.newChild( 70 ) );
-      outputGrid.dispose();
+      /* Monitor. */
+      monitor.beginTask( "Creating coverage...", 1250 );
+      monitor.subTask( "Creating coverage..." );
+
+      if( mimeType.endsWith( "bin" ) )
+        toBinaryGrid( grid, scale, file, new SubProgressMonitor( monitor, 1000 ) );
+      else if( mimeType.endsWith( "tiff" ) )
+        toTiff( grid, file, new SubProgressMonitor( monitor, 1000 ) );
+      else
+        throw new GeoGridException( String.format( "Unknown mime type '%s'...", mimeType ), null );
+
       setCoverage( coverage, toGridDomain( grid ), filePath, mimeType );
-      ProgressUtilities.worked( progress, 10 );
+
+      /* Monitor. */
+      monitor.worked( 250 );
     }
     finally
     {
+      /* Monitor. */
+      monitor.done();
+    }
+  }
+
+  /**
+   * This function creates a binary grid using the given file as target and sets the value from the grid to it.
+   * 
+   * @param grid
+   *          The values of the binary grid will be read from this grid.
+   * @param scale
+   *          Scaling factor, i.e. number of important digits to round up the value.
+   * @param file
+   *          The binary grid will be serialized to this file.
+   * @param monitor
+   *          A progress monitor.
+   */
+  private static void toBinaryGrid( IGeoGrid grid, int scale, File file, IProgressMonitor monitor ) throws GeoGridException
+  {
+    /* Monitor. */
+    if( monitor == null )
+      monitor = new NullProgressMonitor();
+
+    /* The binary grid. */
+    IWriteableGeoGrid outputGrid = null;
+
+    try
+    {
+      /* Monitor. */
+      monitor.beginTask( "Creating binary grid...", 1000 );
+      monitor.subTask( "Creating binary grid..." );
+
+      /* Create the binary grid. */
+      outputGrid = createWriteableGrid( "image/bin", file, grid.getSizeX(), grid.getSizeY(), scale, grid.getOrigin(), grid.getOffsetX(), grid.getOffsetY(), grid.getSourceCRS(), false );
+
+      /* Monitor. */
+      monitor.worked( 250 );
+      monitor.subTask( "Copying values..." );
+
+      /* Copy the values. */
+      IGeoGridWalker walker = new CopyGeoGridWalker( outputGrid );
+      grid.getWalkingStrategy().walk( grid, walker, null, new SubProgressMonitor( monitor, 750 ) );
+    }
+    finally
+    {
+      /* Dispose the binary grid. */
       if( outputGrid != null )
         outputGrid.dispose();
-      progress.done();
+
+      /* Monitor. */
+      monitor.done();
+    }
+  }
+
+  /**
+   * This function creates a TIFF using the given file as target and sets the value from the grid to it.
+   * 
+   * @param grid
+   *          The values of the TIFF will be read from this grid.
+   * @param file
+   *          The binary grid will be serialized to this file.
+   * @param monitor
+   *          A progress monitor.
+   */
+  private static void toTiff( IGeoGrid grid, File file, IProgressMonitor monitor ) throws GeoGridException
+  {
+    /* Monitor. */
+    if( monitor == null )
+      monitor = new NullProgressMonitor();
+
+    try
+    {
+      /* Monitor. */
+      monitor.beginTask( "Creating TIFF...", 1000 );
+      monitor.subTask( "Creating TIFF..." );
+
+      /* Create the TIFF. */
+      TiledImage image = TIFFUtilities.createTiff( DataBuffer.TYPE_FLOAT, grid.getSizeX(), grid.getSizeY() );
+
+      /* Monitor. */
+      monitor.worked( 250 );
+      monitor.subTask( "Copying values..." );
+
+      /* Copy the values. */
+      TIFFUtilities.copyGeoGridToTiff( grid, image );
+
+      /* Monitor. */
+      monitor.worked( 500 );
+      monitor.subTask( "Saving TIFF..." );
+
+      /* Save the TIFF. */
+      TIFFUtilities.saveTiff( image, 100, 100, file );
+
+      /* Monitor. */
+      monitor.worked( 250 );
+    }
+    finally
+    {
+      /* Monitor. */
+      monitor.done();
     }
   }
 
