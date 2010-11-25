@@ -53,9 +53,12 @@ public interface IZmlValueReference
 
   Integer getStatus( ) throws SensorException;
 
+  boolean isMetadataSource( );
+
   MetadataList[] getMetadata( );
 
   IAxis getAxis( );
 
   void update( Object targetValue ) throws SensorException;
+
 }
