@@ -60,9 +60,46 @@
       name="zml table commands - category">
    </category>
    <command
+         categoryId="org.kalypso.zml.ui.table.commands.category"
          defaultHandler="org.kalypso.zml.ui.table.commands.ZmlCommandSetAllValues"
          id="org.kalypso.zml.ui.table.commands.value.set.all"
          name="Alle Werte setzen">
+   </command>
+   <command
+         categoryId="org.kalypso.zml.ui.table.commands.category"
+         defaultHandler="org.kalypso.zml.ui.table.commands.ZmlCommandSetSelectedValues"
+         id="org.kalypso.zml.ui.table.commands.value.set.selected"
+         name="Selektierte Werte setzen">
+   </command>
+   <command
+         categoryId="org.kalypso.zml.ui.table.commands.category"
+         defaultHandler="org.kalypso.zml.ui.table.commands.ZmlCommandSetValuesAbove"
+         id="org.kalypso.zml.ui.table.commands.value.set.above"
+         name="Werte oberhalb setzen">
+   </command>
+   <command
+         categoryId="org.kalypso.zml.ui.table.commands.category"
+         defaultHandler="org.kalypso.zml.ui.table.commands.ZmlCommandSetValuesBelow"
+         id="org.kalypso.zml.ui.table.commands.value.set.below"
+         name="Werte unterhalb setzen">
+   </command>
+   <command
+         categoryId="org.kalypso.zml.ui.table.commands.category"
+         defaultHandler="org.kalypso.zml.ui.table.commands.ZmlCommandInterpolateValues"
+         id="org.kalypso.zml.ui.table.commands.value.interpolate"
+         name="Werte interpolieren">
+   </command>
+   <command
+         categoryId="org.kalypso.zml.ui.table.commands.category"
+         defaultHandler="org.kalypso.zml.ui.table.commands.ZmlCommandCopyValue"
+         id="org.kalypso.zml.ui.table.commands.value.copy"
+         name="Kopieren">
+   </command>
+   <command
+         categoryId="org.kalypso.zml.ui.table.commands.category"
+         defaultHandler="org.kalypso.zml.ui.table.commands.ZmlCommandPasteValue"
+         id="org.kalypso.zml.ui.table.commands.value.set.paste"
+         name="Einfügen">
    </command>
  </extension>
 </plugin>
