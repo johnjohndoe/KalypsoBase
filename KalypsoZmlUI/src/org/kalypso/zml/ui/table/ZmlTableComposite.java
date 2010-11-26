@@ -201,18 +201,19 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
         if( column == null )
         {
           tableColumn.setWidth( 0 );
+          tableColumn.setText( baseColumn.getLabel() );
         }
         else
         {
           pack( tableColumn, baseColumn );
+          tableColumn.setText( column.getLabel() );
         }
       }
       else
       {
         pack( tableColumn, baseColumn );
+        tableColumn.setText( baseColumn.getLabel() );
       }
-
-      tableColumn.setText( baseColumn.getLabel() );
     }
   }
 
