@@ -55,6 +55,7 @@ public interface IZmlValueReference
 
   boolean isMetadataSource( );
 
+  // TODO reduce to return Metadata (no array)
   MetadataList[] getMetadata( );
 
   IAxis getValueAxis( );

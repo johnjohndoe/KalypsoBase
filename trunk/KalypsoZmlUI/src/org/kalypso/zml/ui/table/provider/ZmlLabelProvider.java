@@ -49,7 +49,6 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.binding.BaseColumn;
 import org.kalypso.zml.ui.table.binding.CellStyle;
@@ -95,9 +94,10 @@ public class ZmlLabelProvider extends ColumnLabelProvider
     return m_column.getDefaultStyle();
   }
 
-  private String format( final Object value )
+  private String format( final Object value ) throws CoreException
   {
-    final String format = m_column.getFormat();
+    final CellStyle style = m_column.getDefaultStyle();
+    final String format = style.getTextFormat();
     if( value instanceof Date )
     {
       final SimpleDateFormat sdf = new SimpleDateFormat( format == null ? "dd.MM.yyyy HH:mm" : format );
@@ -196,17 +196,17 @@ public class ZmlLabelProvider extends ColumnLabelProvider
   {
     if( element instanceof ZmlTableRow )
     {
-      final ZmlTableRow set = (ZmlTableRow) element;
-
-      if( m_column.getType() instanceof IndexColumnType )
+      try
       {
-        final Object value = set.getIndexValue();
+        final ZmlTableRow set = (ZmlTableRow) element;
 
-        return format( value );
-      }
-      else
-      {
-        try
+        if( m_column.getType() instanceof IndexColumnType )
+        {
+          final Object value = set.getIndexValue();
+
+          return format( value );
+        }
+        else
         {
           final IZmlValueReference reference = set.get( m_column.getType() );
           if( reference != null )
@@ -214,10 +214,10 @@ public class ZmlLabelProvider extends ColumnLabelProvider
 
           return "";
         }
-        catch( final SensorException e )
-        {
-          KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-        }
+      }
+      catch( final Throwable t )
+      {
+        KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( t ) );
       }
     }
 

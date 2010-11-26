@@ -101,11 +101,6 @@ public class BaseColumn
     return m_rules.toArray( new IZmlTableRule[] {} );
   }
 
-  public String getFormat( )
-  {
-    return findProperty( ColumnPropertyName.FORMAT );
-  }
-
   public AlignmentType getAlignment( )
   {
     final String property = findProperty( ColumnPropertyName.ALIGNMENT );

@@ -56,6 +56,7 @@ import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.binding.BaseColumn;
+import org.kalypso.zml.ui.table.binding.CellStyle;
 import org.kalypso.zml.ui.table.model.ZmlTableRow;
 import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
 
@@ -120,13 +121,13 @@ public class ZmlEditingSupport extends EditingSupport
           return "";
 
         final Object value = reference.getValue();
-        final String format = m_type.getFormat();
 
-        return String.format( format == null ? "%s" : format, value );
+        final CellStyle style = m_type.getDefaultStyle();
+        return String.format( style.getTextFormat() == null ? "%s" : style.getTextFormat(), value );
       }
-      catch( final SensorException e )
+      catch( final Throwable t )
       {
-        e.printStackTrace();
+        t.printStackTrace();
       }
     }
 
