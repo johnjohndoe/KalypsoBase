@@ -44,6 +44,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.rules.IZmlTableRule;
@@ -180,5 +181,10 @@ public class BaseColumn
   public String getUriContextMenu( )
   {
     return findProperty( ColumnPropertyName.URI_CONTEXT_MENU );
+  }
+
+  public String getUriHeaderContextMenu( )
+  {
+    throw new NotImplementedException();
   }
 }

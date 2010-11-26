@@ -88,8 +88,6 @@ public class ZmlRuleForecastValue extends AbstractZmlTableRule
 
           if( date.after( start ) )
             return true;
-          else if( date.equals( start ) )
-            return true;
         }
       }
 
