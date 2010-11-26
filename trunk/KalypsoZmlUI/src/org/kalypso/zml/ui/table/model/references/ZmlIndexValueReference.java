@@ -38,81 +38,92 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.provider;
+package org.kalypso.zml.ui.table.model.references;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import org.apache.commons.lang.NotImplementedException;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
-import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
-import org.kalypso.ogc.sensor.timeseries.AxisUtils;
-import org.kalypso.zml.ui.table.binding.DataColumn;
+import org.kalypso.ogc.sensor.status.KalypsoStati;
+import org.kalypso.zml.ui.KalypsoZmlUI;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlDataValueReference implements IZmlValueReference
+public class ZmlIndexValueReference implements IZmlValueReference
 {
-  private final ZmlTableColumn m_column;
+  private final Object m_value;
 
-  private final int m_index;
+  private final IZmlValueReference[] m_references;
 
-  public ZmlDataValueReference( final ZmlTableColumn column, final int index )
+  public ZmlIndexValueReference( final IZmlValueReference[] references, final Object value )
   {
-    m_column = column;
-    m_index = index;
+    m_references = references;
+    m_value = value;
   }
 
-  public Object getIndexValue( ) throws SensorException
-  {
-    final DataColumn type = m_column.getDataColumn();
-    final IAxis[] axes = m_column.getAxes();
-    final IAxis axis = AxisUtils.findAxis( axes, type.getIndexAxis() );
-
-    return m_column.get( m_index, axis );
-  }
-
+  /**
+   * @see org.kalypso.zml.ui.table.provider.IZmlValueReference#getValue()
+   */
   @Override
-  public Object getValue( ) throws SensorException
+  public Object getValue( )
   {
-    return m_column.get( m_index, getValueAxis() );
+    return m_value;
   }
 
+  /**
+   * @see org.kalypso.zml.ui.table.provider.IZmlValueReference#getStatus()
+   */
   @Override
-  public void update( final Object value ) throws SensorException
+  public Integer getStatus( )
   {
-    m_column.update( m_index, value );
+    return KalypsoStati.BIT_OK;
   }
 
-  @Override
-  public IAxis getValueAxis( )
-  {
-    final DataColumn type = m_column.getDataColumn();
-    final IAxis[] axes = m_column.getAxes();
-
-    return AxisUtils.findAxis( axes, type.getValueAxis() );
-  }
-
-  public String getIdentifier( )
-  {
-    return m_column.getIdentifier();
-  }
-
-  @Override
-  public Integer getStatus( ) throws SensorException
-  {
-    final IAxis axis = KalypsoStatusUtils.findStatusAxisFor( m_column.getAxes(), getValueAxis() );
-
-    final Object value = m_column.get( m_index, axis );
-    if( value instanceof Number )
-      return ((Number) value).intValue();
-
-    return null;
-  }
-
+  /**
+   * @see org.kalypso.zml.ui.table.provider.IZmlValueReference#getMetadata()
+   */
   @Override
   public MetadataList[] getMetadata( )
   {
-    return new MetadataList[] { m_column.getMetadata() };
+    final List<MetadataList> metadata = new ArrayList<MetadataList>();
+    for( final IZmlValueReference reference : m_references )
+    {
+      try
+      {
+        if( reference.isMetadataSource() && reference.getValue() != null )
+          Collections.addAll( metadata, reference.getMetadata() );
+      }
+      catch( final SensorException e )
+      {
+        KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+      }
+    }
+
+    return metadata.toArray( new MetadataList[] {} );
+  }
+
+  /**
+   * @see org.kalypso.zml.ui.table.provider.IZmlValueReference#getAxis()
+   */
+  @Override
+  public IAxis getValueAxis( )
+  {
+    return null;
+  }
+
+  /**
+   * @see org.kalypso.zml.ui.table.provider.IZmlValueReference#update(java.lang.Object)
+   */
+  @Override
+  public void update( final Object targetValue )
+  {
+    throw new NotImplementedException();
   }
 
   /**
@@ -121,6 +132,6 @@ public class ZmlDataValueReference implements IZmlValueReference
   @Override
   public boolean isMetadataSource( )
   {
-    return m_column.isMetadataSource();
+    return true;
   }
 }

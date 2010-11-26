@@ -38,16 +38,16 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table;
+package org.kalypso.zml.ui.table.model;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.kalypso.zml.ui.table.IZmlTableColumn;
+import org.kalypso.zml.ui.table.model.loader.ZmlColumnLoadCommand;
 import org.kalypso.zml.ui.table.provider.IZmlColumnModelListener;
-import org.kalypso.zml.ui.table.provider.ZmlColumnLoadCommand;
-import org.kalypso.zml.ui.table.provider.ZmlTableColumn;
 import org.kalypso.zml.ui.table.schema.ZmlTableType;
 
 /**
@@ -103,7 +103,6 @@ public class ZmlColumnModel implements IZmlColumnModel
     {
       listener.modelChanged();
     }
-
   }
 
   @Override

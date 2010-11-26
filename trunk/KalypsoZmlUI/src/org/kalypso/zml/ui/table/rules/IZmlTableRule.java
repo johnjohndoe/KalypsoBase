@@ -41,7 +41,7 @@
 package org.kalypso.zml.ui.table.rules;
 
 import org.kalypso.zml.ui.table.binding.ZmlRule;
-import org.kalypso.zml.ui.table.provider.IZmlValueReference;
+import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
 
 /**
  * @author Dirk Kuch

@@ -38,92 +38,82 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.provider;
+package org.kalypso.zml.ui.table.model.references;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import org.apache.commons.lang.NotImplementedException;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
-import org.kalypso.ogc.sensor.status.KalypsoStati;
-import org.kalypso.zml.ui.KalypsoZmlUI;
+import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
+import org.kalypso.ogc.sensor.timeseries.AxisUtils;
+import org.kalypso.zml.ui.table.binding.DataColumn;
+import org.kalypso.zml.ui.table.model.ZmlTableColumn;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlIndexValueReference implements IZmlValueReference
+public class ZmlDataValueReference implements IZmlValueReference
 {
-  private final Object m_value;
+  private final ZmlTableColumn m_column;
 
-  private final IZmlValueReference[] m_references;
+  private final int m_index;
 
-  public ZmlIndexValueReference( final IZmlValueReference[] references, final Object value )
+  public ZmlDataValueReference( final ZmlTableColumn column, final int index )
   {
-    m_references = references;
-    m_value = value;
+    m_column = column;
+    m_index = index;
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.provider.IZmlValueReference#getValue()
-   */
+  public Object getIndexValue( ) throws SensorException
+  {
+    final DataColumn type = m_column.getDataColumn();
+    final IAxis[] axes = m_column.getAxes();
+    final IAxis axis = AxisUtils.findAxis( axes, type.getIndexAxis() );
+
+    return m_column.get( m_index, axis );
+  }
+
   @Override
-  public Object getValue( )
+  public Object getValue( ) throws SensorException
   {
-    return m_value;
+    return m_column.get( m_index, getValueAxis() );
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.provider.IZmlValueReference#getStatus()
-   */
   @Override
-  public Integer getStatus( )
+  public void update( final Object value ) throws SensorException
   {
-    return KalypsoStati.BIT_OK;
+    m_column.update( m_index, value );
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.provider.IZmlValueReference#getMetadata()
-   */
-  @Override
-  public MetadataList[] getMetadata( )
-  {
-    final List<MetadataList> metadata = new ArrayList<MetadataList>();
-    for( final IZmlValueReference reference : m_references )
-    {
-      try
-      {
-        if( reference.isMetadataSource() && reference.getValue() != null )
-          Collections.addAll( metadata, reference.getMetadata() );
-      }
-      catch( final SensorException e )
-      {
-        KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-      }
-    }
-
-    return metadata.toArray( new MetadataList[] {} );
-  }
-
-  /**
-   * @see org.kalypso.zml.ui.table.provider.IZmlValueReference#getAxis()
-   */
   @Override
   public IAxis getValueAxis( )
   {
+    final DataColumn type = m_column.getDataColumn();
+    final IAxis[] axes = m_column.getAxes();
+
+    return AxisUtils.findAxis( axes, type.getValueAxis() );
+  }
+
+  public String getIdentifier( )
+  {
+    return m_column.getIdentifier();
+  }
+
+  @Override
+  public Integer getStatus( ) throws SensorException
+  {
+    final IAxis axis = KalypsoStatusUtils.findStatusAxisFor( m_column.getAxes(), getValueAxis() );
+
+    final Object value = m_column.get( m_index, axis );
+    if( value instanceof Number )
+      return ((Number) value).intValue();
+
     return null;
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.provider.IZmlValueReference#update(java.lang.Object)
-   */
   @Override
-  public void update( final Object targetValue )
+  public MetadataList[] getMetadata( )
   {
-    throw new NotImplementedException();
+    return new MetadataList[] { m_column.getMetadata() };
   }
 
   /**
@@ -132,6 +122,6 @@ public class ZmlIndexValueReference implements IZmlValueReference
   @Override
   public boolean isMetadataSource( )
   {
-    return true;
+    return m_column.isMetadataSource();
   }
 }
