@@ -40,10 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table;
 
+import org.kalypso.zml.ui.table.binding.BaseColumn;
+
 /**
  * @author Dirk Kuch
  */
 public interface IZmlTableComposite
 {
-
+  BaseColumn getColumn( int columnIndex );
 }

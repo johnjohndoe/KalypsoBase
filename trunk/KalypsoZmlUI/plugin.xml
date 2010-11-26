@@ -49,15 +49,19 @@
     <catalogContribution class="org.kalypso.zml.ui.table.styles.ZmlTableStylesCatalogContribution"
       name="org.kalypso.zml.ui.table.rules.ZmlTableRulesCatalogContributionbution" />
   </extension>
+    
+ <extension point="org.eclipse.ui.contexts">
+	<context id="org.kalypso.zml.ui.table.context" name="Table" parentId="org.eclipse.ui.contexts.window" />
+ </extension>
   
   
  <extension point="org.eclipse.ui.commands">
    <category id="org.kalypso.zml.ui.table.commands.category"
       name="zml table commands - category">
    </category>
- </extension>
-    
- <extension point="org.eclipse.ui.contexts">
-	<context id="org.kalypso.zml.ui.table.context" name="Table" parentId="org.eclipse.ui.contexts.window" />
+   <command
+         id="org.kalypso.zml.ui.table.commands.value.set.all"
+         name="Alle Werte setzen">
+   </command>
  </extension>
 </plugin>

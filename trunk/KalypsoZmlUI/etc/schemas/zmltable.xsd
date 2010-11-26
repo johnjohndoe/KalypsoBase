@@ -84,6 +84,7 @@
       <enumeration value="label"></enumeration>
       <enumeration value="width"></enumeration>
       <enumeration value="alignment"></enumeration>
+      <enumeration value="uriContextMenu"></enumeration>
     </restriction>
   </simpleType>
 
