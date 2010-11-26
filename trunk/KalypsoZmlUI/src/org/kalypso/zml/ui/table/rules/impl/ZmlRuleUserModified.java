@@ -40,14 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.rules.impl;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.zml.ui.KalypsoZmlUI;
-import org.kalypso.zml.ui.table.binding.CellStyle;
 import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
 
 /**
@@ -56,8 +52,6 @@ import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
 public class ZmlRuleUserModified extends AbstractZmlTableRule
 {
   public static final String ID = "org.kalypso.zml.ui.table.rule.user.modified";
-
-  Map<String, CellStyle> m_styles = new HashMap<String, CellStyle>();
 
   /**
    * @see org.kalypso.zml.ui.table.rules.IZmlTableRule#getIdentifier()

@@ -60,6 +60,7 @@ import org.eclipse.ui.progress.UIJob;
 import org.kalypso.contribs.eclipse.swt.layout.LayoutHelper;
 import org.kalypso.zml.ui.table.binding.BaseColumn;
 import org.kalypso.zml.ui.table.menu.ZmlTableContextMenuListener;
+import org.kalypso.zml.ui.table.menu.ZmlTableHeaderContextMenuListener;
 import org.kalypso.zml.ui.table.model.IZmlColumnModel;
 import org.kalypso.zml.ui.table.model.ZmlTableColumn;
 import org.kalypso.zml.ui.table.model.ZmlTableRow;
@@ -71,6 +72,7 @@ import org.kalypso.zml.ui.table.schema.AbstractColumnType;
 import org.kalypso.zml.ui.table.schema.DataColumnType;
 import org.kalypso.zml.ui.table.schema.ZmlTableType;
 import org.kalypso.zml.ui.table.utils.TableTypeHelper;
+import org.kalypso.zml.ui.table.utils.ZmlEditingSupport;
 import org.kalypso.zml.ui.table.utils.ZmlTableMouseMoveListener;
 
 /**
@@ -155,6 +157,8 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
     m_columnIndex.put( index, type );
 
     final TableViewerColumn column = new TableViewerColumn( m_tableViewer, TableTypeHelper.toSWT( type.getAlignment() ) );
+
+    column.getColumn().addSelectionListener( new ZmlTableHeaderContextMenuListener( this ) );
     column.setLabelProvider( new ZmlLabelProvider( type ) );
     column.getColumn().setText( type.getLabel() );
 
