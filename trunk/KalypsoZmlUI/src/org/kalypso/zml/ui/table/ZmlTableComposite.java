@@ -59,9 +59,11 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.contribs.eclipse.swt.layout.LayoutHelper;
 import org.kalypso.zml.ui.table.binding.BaseColumn;
-import org.kalypso.zml.ui.table.menu.ZmlTableContextMenu;
+import org.kalypso.zml.ui.table.menu.ZmlTableContextMenuListener;
 import org.kalypso.zml.ui.table.model.IZmlColumnModel;
 import org.kalypso.zml.ui.table.model.ZmlTableColumn;
+import org.kalypso.zml.ui.table.model.ZmlTableRow;
+import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
 import org.kalypso.zml.ui.table.provider.IZmlColumnModelListener;
 import org.kalypso.zml.ui.table.provider.ZmlLabelProvider;
 import org.kalypso.zml.ui.table.provider.ZmlTableContentProvider;
@@ -69,6 +71,7 @@ import org.kalypso.zml.ui.table.schema.AbstractColumnType;
 import org.kalypso.zml.ui.table.schema.DataColumnType;
 import org.kalypso.zml.ui.table.schema.ZmlTableType;
 import org.kalypso.zml.ui.table.utils.TableTypeHelper;
+import org.kalypso.zml.ui.table.utils.ZmlTableMouseMoveListener;
 
 /**
  * @author Dirk Kuch
@@ -80,6 +83,8 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
   private final Map<Integer, BaseColumn> m_columnIndex = new HashMap<Integer, BaseColumn>();
 
   private final IZmlColumnModel m_model;
+
+  private ZmlTableMouseMoveListener m_mouseMoveListener;
 
   public ZmlTableComposite( final IZmlColumnModel model, final Composite parent )
   {
@@ -99,8 +104,11 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
 
     m_tableViewer = new TableViewer( this, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.FULL_SELECTION );
     m_tableViewer.getTable().setLinesVisible( true );
-    final ZmlTableContextMenu menu = new ZmlTableContextMenu( this );
-    menu.register( m_tableViewer );
+
+    m_mouseMoveListener = new ZmlTableMouseMoveListener( this );
+    m_tableViewer.getTable().addMouseMoveListener( m_mouseMoveListener );
+
+    m_tableViewer.addSelectionChangedListener( new ZmlTableContextMenuListener( this ) );
 
     /* excel table cursor */
 // new ExcelTableCursor( m_tableViewer, SWT.BORDER_DASH, ADVANCE_MODE.DOWN, true );
@@ -257,6 +265,38 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
   public BaseColumn getColumn( final int columnIndex )
   {
     return m_columnIndex.get( columnIndex );
+  }
+
+  public TableViewer getTableViewer( )
+  {
+    return m_tableViewer;
+  }
+
+  /**
+   * @see org.kalypso.zml.ui.table.IZmlTableComposite#getActiveCell()
+   */
+  @Override
+  public IZmlValueReference getActiveCell( )
+  {
+    return m_mouseMoveListener.findActiveCell();
+  }
+
+  /**
+   * @see org.kalypso.zml.ui.table.IZmlTableComposite#getActiveColumn()
+   */
+  @Override
+  public BaseColumn getActiveColumn( )
+  {
+    return m_mouseMoveListener.findActiveColumn();
+  }
+
+  /**
+   * @see org.kalypso.zml.ui.table.IZmlTableComposite#getActiveRow()
+   */
+  @Override
+  public ZmlTableRow getActiveRow( )
+  {
+    return m_mouseMoveListener.findActiveRow();
   }
 
 }

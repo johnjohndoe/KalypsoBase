@@ -40,48 +40,68 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.menu;
 
-import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.ViewerCell;
-import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.MouseMoveListener;
-import org.eclipse.swt.graphics.Point;
-import org.kalypso.zml.ui.table.IZmlTableComposite;
+import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.ui.PlatformUI;
+import org.kalypso.contribs.eclipse.jface.action.ContributionUtils;
+import org.kalypso.zml.ui.table.ZmlTableComposite;
 import org.kalypso.zml.ui.table.binding.BaseColumn;
-import org.kalypso.zml.ui.table.model.ZmlTableRow;
 import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
+
+import com.google.common.base.Objects;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlTableContextMouseMoveListener implements MouseMoveListener
+public class ZmlTableContextMenuListener implements ISelectionChangedListener
 {
-  Point m_position;
+  String m_lastUri;
 
-  private final IZmlTableComposite m_table;
+  private final ZmlTableComposite m_table;
 
-  public ZmlTableContextMouseMoveListener( final IZmlTableComposite table )
+  public ZmlTableContextMenuListener( final ZmlTableComposite table )
   {
     m_table = table;
   }
 
-  /**
-   * @see org.eclipse.swt.events.MouseMoveListener#mouseMove(org.eclipse.swt.events.MouseEvent)
-   */
-  @Override
-  public void mouseMove( final MouseEvent e )
+  private void setMenu( final String uri )
   {
-    m_position = new Point( e.x, e.y );
+    if( Objects.equal( m_lastUri, uri ) )
+      return;
+
+    final Control control = m_table.getTableViewer().getControl();
+    if( uri != null )
+    {
+      final MenuManager menuManager = new MenuManager();
+      final Menu menu = menuManager.createContextMenu( control );
+      ContributionUtils.populateContributionManager( PlatformUI.getWorkbench(), menuManager, uri );
+
+      control.setMenu( menu );
+    }
+    else
+      control.setMenu( new Menu( control ) );
+
+    m_lastUri = uri;
   }
 
-  public IZmlValueReference findCell( final TableViewer viewer, final ZmlTableRow row )
+  /**
+   * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
+   */
+  @Override
+  public void selectionChanged( final SelectionChangedEvent event )
   {
-    final ViewerCell cell = viewer.getCell( m_position );
-    if( cell == null )
-      return null;
+    final IZmlValueReference reference = m_table.getActiveCell();
+    if( reference != null )
+    {
+      final BaseColumn column = reference.getColumn();
+      final String uri = column.getUriContextMenu();
 
-    final BaseColumn column = m_table.getColumn( cell.getColumnIndex() );
-    final IZmlValueReference reference = row.get( column.getType() );
-
-    return reference;
+      setMenu( uri );
+    }
+    else
+      setMenu( null );
   }
 }

@@ -41,6 +41,8 @@
 package org.kalypso.zml.ui.table;
 
 import org.kalypso.zml.ui.table.binding.BaseColumn;
+import org.kalypso.zml.ui.table.model.ZmlTableRow;
+import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
 
 /**
  * @author Dirk Kuch
@@ -48,4 +50,10 @@ import org.kalypso.zml.ui.table.binding.BaseColumn;
 public interface IZmlTableComposite
 {
   BaseColumn getColumn( int columnIndex );
+
+  IZmlValueReference getActiveCell( );
+
+  BaseColumn getActiveColumn( );
+
+  ZmlTableRow getActiveRow( );
 }
