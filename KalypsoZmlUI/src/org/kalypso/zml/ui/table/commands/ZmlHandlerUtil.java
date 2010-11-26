@@ -38,15 +38,24 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.menu;
+package org.kalypso.zml.ui.table.commands;
 
-import org.eclipse.jface.viewers.TableViewer;
-import org.kalypso.zml.ui.table.model.ZmlTableRow;
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.expressions.IEvaluationContext;
+import org.kalypso.zml.ui.table.IZmlTableComposite;
+import org.kalypso.zml.ui.table.context.TableSourceProvider;
 
 /**
  * @author Dirk Kuch
  */
-public interface IZmlTableSelectionChangeListener
+public class ZmlHandlerUtil
 {
-  void selectionChanged( TableViewer viewer, ZmlTableRow row );
+
+  public static IZmlTableComposite getTable( final ExecutionEvent event )
+  {
+    final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
+
+    return (IZmlTableComposite) context.getVariable( TableSourceProvider.ACTIVE_TABLE_NAME );
+  }
+
 }

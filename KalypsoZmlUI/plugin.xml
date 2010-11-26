@@ -60,6 +60,7 @@
       name="zml table commands - category">
    </category>
    <command
+         defaultHandler="org.kalypso.zml.ui.table.commands.ZmlCommandSetAllValues"
          id="org.kalypso.zml.ui.table.commands.value.set.all"
          name="Alle Werte setzen">
    </command>

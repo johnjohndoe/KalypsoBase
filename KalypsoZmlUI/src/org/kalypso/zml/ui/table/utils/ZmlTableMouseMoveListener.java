@@ -38,8 +38,13 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table;
+package org.kalypso.zml.ui.table.utils;
 
+import org.eclipse.jface.viewers.ViewerCell;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseMoveListener;
+import org.eclipse.swt.graphics.Point;
+import org.kalypso.zml.ui.table.ZmlTableComposite;
 import org.kalypso.zml.ui.table.binding.BaseColumn;
 import org.kalypso.zml.ui.table.model.ZmlTableRow;
 import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
@@ -47,13 +52,60 @@ import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
 /**
  * @author Dirk Kuch
  */
-public interface IZmlTableComposite
+public class ZmlTableMouseMoveListener implements MouseMoveListener
 {
-  BaseColumn getColumn( int columnIndex );
+  Point m_position;
 
-  IZmlValueReference getActiveCell( );
+  private final ZmlTableComposite m_table;
 
-  BaseColumn getActiveColumn( );
+  public ZmlTableMouseMoveListener( final ZmlTableComposite table )
+  {
+    m_table = table;
+  }
 
-  ZmlTableRow getActiveRow( );
+  /**
+   * @see org.eclipse.swt.events.MouseMoveListener#mouseMove(org.eclipse.swt.events.MouseEvent)
+   */
+  @Override
+  public void mouseMove( final MouseEvent e )
+  {
+    m_position = new Point( e.x, e.y );
+  }
+
+  private ViewerCell getActiveCell( )
+  {
+    final ViewerCell cell = m_table.getTableViewer().getCell( m_position );
+
+    return cell;
+  }
+
+  public BaseColumn findActiveColumn( )
+  {
+    final ViewerCell cell = getActiveCell();
+    final BaseColumn column = m_table.getColumn( cell.getColumnIndex() );
+
+    return column;
+  }
+
+  public ZmlTableRow findActiveRow( )
+  {
+    final ViewerCell cell = getActiveCell();
+    final Object element = cell.getElement();
+    if( element instanceof ZmlTableRow )
+      return (ZmlTableRow) element;
+
+    return null;
+  }
+
+  public IZmlValueReference findActiveCell( )
+  {
+    final BaseColumn column = findActiveColumn();
+    final ZmlTableRow row = findActiveRow();
+    if( column == null || row == null )
+      return null;
+
+    final IZmlValueReference reference = row.get( column.getType() );
+
+    return reference;
+  }
 }
