@@ -135,12 +135,13 @@ public class ValueInterpolationWorker extends AbstractInterpolationWorker
     final IAxis[] valueAxes = getValueAxes();
 
     // do we need to fill after the end of the base model?
-    if( getDateRange() != null && isFilled() )
+    final DateRange dateRange = getDateRange();
+    if( dateRange != null && isFilled() )
     {
       final Object[] lastValidTuple = determineLastValid( dateAxis, valueAxes );
 
-      final Date until = getDateRange().getTo();
-      while( until.after( calendar.getTime() ) )
+      final Date until = dateRange.getTo();
+      while( !calendar.getTime().after( until ) )
         appendTuple( lastValidTuple, calendar );
     }
   }
