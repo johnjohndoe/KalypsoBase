@@ -70,6 +70,8 @@ public class ZmlEditingSupport extends EditingSupport
 
   private final BaseColumn m_type;
 
+  private String m_lastEdited;
+
   public ZmlEditingSupport( final BaseColumn type, final TableViewerColumn viewer )
   {
     super( viewer.getViewer() );
@@ -124,7 +126,9 @@ public class ZmlEditingSupport extends EditingSupport
         final Object value = reference.getValue();
 
         final CellStyle style = getStyle();
-        return String.format( style.getTextFormat() == null ? "%s" : style.getTextFormat(), value );
+        m_lastEdited = String.format( style.getTextFormat() == null ? "%s" : style.getTextFormat(), value );
+
+        return m_lastEdited;
       }
       catch( final Throwable t )
       {
@@ -132,6 +136,7 @@ public class ZmlEditingSupport extends EditingSupport
       }
     }
 
+    m_lastEdited = null;
     return null;
   }
 
@@ -150,6 +155,9 @@ public class ZmlEditingSupport extends EditingSupport
   @Override
   protected void setValue( final Object element, final Object value )
   {
+    if( value.equals( m_lastEdited ) )
+      return;
+
     if( element instanceof ZmlTableRow && value instanceof String )
     {
       try
@@ -158,8 +166,7 @@ public class ZmlEditingSupport extends EditingSupport
         final IZmlValueReference reference = row.get( m_type.getType() );
 
         final Object targetValue = getTargetValue( reference, value );
-        if( !targetValue.equals( reference.getValue() ) )
-          reference.update( targetValue );
+        reference.update( targetValue );
       }
       catch( final SensorException e )
       {
