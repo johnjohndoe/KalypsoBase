@@ -43,7 +43,7 @@ package org.kalypso.zml.ui.table.commands;
 /**
  * @author Dirk Kuch
  */
-public class ZmlCommandSetAllValues extends AbstractZmlCommandHandler
+public class ZmlCommandPasteValue extends AbstractZmlCommandHandler
 {
 
 }

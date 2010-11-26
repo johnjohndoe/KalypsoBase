@@ -82,6 +82,9 @@ public class ZmlTableMouseMoveListener implements MouseMoveListener
   public BaseColumn findActiveColumn( )
   {
     final ViewerCell cell = getActiveCell();
+    if( cell == null )
+      return null;
+
     final BaseColumn column = m_table.getColumn( cell.getColumnIndex() );
 
     return column;
@@ -90,6 +93,9 @@ public class ZmlTableMouseMoveListener implements MouseMoveListener
   public ZmlTableRow findActiveRow( )
   {
     final ViewerCell cell = getActiveCell();
+    if( cell == null )
+      return null;
+
     final Object element = cell.getElement();
     if( element instanceof ZmlTableRow )
       return (ZmlTableRow) element;

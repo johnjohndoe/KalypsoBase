@@ -110,9 +110,6 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
 
     m_tableViewer.addSelectionChangedListener( new ZmlTableContextMenuListener( this ) );
 
-    /* excel table cursor */
-// new ExcelTableCursor( m_tableViewer, SWT.BORDER_DASH, ADVANCE_MODE.DOWN, true );
-
     m_tableViewer.setContentProvider( new ZmlTableContentProvider( m_model ) );
 
     final List<AbstractColumnType> columns = tableType.getColumns().getColumn();
@@ -128,23 +125,27 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
     table.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
     table.setHeaderVisible( true );
 
-// final TableViewerFocusCellManager focusCellManager = new TableViewerFocusCellManager( m_tableViewer, new
-// FocusCellOwnerDrawHighlighter( m_tableViewer ) );
-// final ColumnViewerEditorActivationStrategy actSupport = new ColumnViewerEditorActivationStrategy( m_tableViewer )
-// {
-// @Override
-// protected boolean isEditorActivationEvent( final ColumnViewerEditorActivationEvent event )
-// {
-// return event.eventType == ColumnViewerEditorActivationEvent.TRAVERSAL || event.eventType ==
-// ColumnViewerEditorActivationEvent.MOUSE_DOUBLE_CLICK_SELECTION
-// || (event.eventType == ColumnViewerEditorActivationEvent.KEY_PRESSED && event.keyCode == SWT.CR) || event.eventType
-// == ColumnViewerEditorActivationEvent.PROGRAMMATIC;
-// }
-// };
-//
-// TableViewerEditor.create( m_tableViewer, focusCellManager, actSupport, ColumnViewerEditor.TABBING_HORIZONTAL |
-// ColumnViewerEditor.TABBING_MOVE_TO_ROW_NEIGHBOR
-// | ColumnViewerEditor.TABBING_VERTICAL | ColumnViewerEditor.KEYBOARD_ACTIVATION );
+    /* excel table cursor */
+    // new ExcelTableCursor( m_tableViewer, SWT.BORDER_DASH, ADVANCE_MODE.DOWN, true );
+    /* or something like this */
+    // final TableViewerFocusCellManager focusCellManager = new TableViewerFocusCellManager( m_tableViewer, new
+    // FocusCellOwnerDrawHighlighter( m_tableViewer ) );
+    // final ColumnViewerEditorActivationStrategy actSupport = new ColumnViewerEditorActivationStrategy( m_tableViewer )
+    // {
+    // @Override
+    // protected boolean isEditorActivationEvent( final ColumnViewerEditorActivationEvent event )
+    // {
+    // return event.eventType == ColumnViewerEditorActivationEvent.TRAVERSAL || event.eventType ==
+    // ColumnViewerEditorActivationEvent.MOUSE_DOUBLE_CLICK_SELECTION
+    // || (event.eventType == ColumnViewerEditorActivationEvent.KEY_PRESSED && event.keyCode == SWT.CR) ||
+    // event.eventType
+    // == ColumnViewerEditorActivationEvent.PROGRAMMATIC;
+    // }
+    // };
+    //
+    // TableViewerEditor.create( m_tableViewer, focusCellManager, actSupport, ColumnViewerEditor.TABBING_HORIZONTAL |
+    // ColumnViewerEditor.TABBING_MOVE_TO_ROW_NEIGHBOR
+    // | ColumnViewerEditor.TABBING_VERTICAL | ColumnViewerEditor.KEYBOARD_ACTIVATION );
 
   }
 
