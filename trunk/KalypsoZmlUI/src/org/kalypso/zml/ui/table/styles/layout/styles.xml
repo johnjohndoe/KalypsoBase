@@ -18,7 +18,13 @@
       </baseStyle>
       <property name="textFormat">%.0f</property>
     </Style>
-    
+
+    <Style id="wBaseEditingCellStyle">
+      <baseStyle>
+        <reference>wBaseCellStyle</reference>
+      </baseStyle>
+      <property name="textFormat">%.3f</property>
+    </Style>
     
     <!-- base q cell table style -->
     <Style id="qBaseCellStyle">

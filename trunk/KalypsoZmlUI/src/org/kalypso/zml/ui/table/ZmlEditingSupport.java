@@ -42,6 +42,7 @@ package org.kalypso.zml.ui.table;
 
 import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.viewers.TableViewerColumn;
@@ -122,7 +123,7 @@ public class ZmlEditingSupport extends EditingSupport
 
         final Object value = reference.getValue();
 
-        final CellStyle style = m_type.getDefaultStyle();
+        final CellStyle style = getStyle();
         return String.format( style.getTextFormat() == null ? "%s" : style.getTextFormat(), value );
       }
       catch( final Throwable t )
@@ -132,6 +133,15 @@ public class ZmlEditingSupport extends EditingSupport
     }
 
     return null;
+  }
+
+  private CellStyle getStyle( ) throws CoreException
+  {
+    final CellStyle editing = m_type.getDefaultEditingStyle();
+    if( editing == null )
+      return m_type.getDefaultStyle();
+
+    return editing;
   }
 
   /**

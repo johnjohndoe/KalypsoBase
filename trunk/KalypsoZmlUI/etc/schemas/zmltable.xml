@@ -4,7 +4,7 @@
   <defaultStyle>
     <url>urn:org:kalypso:zml:ui:table:style:base#defaultCellStyle</url>
   </defaultStyle>
-  
+
   <Columns>
   
     <!-- date column -->
@@ -26,7 +26,7 @@
     </Column>
 
 
-    <!-- wasserstand --> 
+    <!-- wasserstand -->
     <Column xsi:type="DataColumnType" editable="true" id="W" metadataSource="true">
       <property name="label">Wasserstand</property>
       <property name="width">100</property>
@@ -35,7 +35,9 @@
       <defaultCellStyle>
         <url>urn:org:kalypso:zml:ui:table:style:base#wBaseCellStyle</url>
       </defaultCellStyle>
-
+      <defaultCellEditingStyle>
+        <url>urn:org:kalypso:zml:ui:table:style:base#wBaseEditingCellStyle</url>
+      </defaultCellEditingStyle>
 
       <Rules>
         <Rule ruleReference="org.kalypso.zml.ui.table.rule.user.modified">
@@ -68,7 +70,10 @@
       <defaultCellStyle>
         <url>urn:org:kalypso:zml:ui:table:style:base#wBaseCellStyle</url>
       </defaultCellStyle>
-
+      <defaultCellEditingStyle>
+        <url>urn:org:kalypso:zml:ui:table:style:base#wBaseEditingCellStyle</url>
+      </defaultCellEditingStyle>
+      
       <Rules>
         <Rule ruleReference="org.kalypso.zml.ui.table.rule.user.modified">
           <styleReference>
@@ -93,7 +98,7 @@
 
 
     <!-- Abfluss -->
-    <Column xsi:type="DataColumnType" editable="true" id="Q"  metadataSource="true">
+    <Column xsi:type="DataColumnType" editable="true" id="Q" metadataSource="true">
       <property name="label">Abfluss</property>
       <property name="width">100</property>
       <property name="alignment">RIGHT</property>

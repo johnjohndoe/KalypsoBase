@@ -39,6 +39,7 @@
       <element name="property" type="zmltable:ColumnPropertyType" minOccurs="0" maxOccurs="unbounded" />
       <element ref="zmltable:StyleSet" minOccurs="0" maxOccurs="1" />
       <element name="defaultCellStyle" type="zmltable:StyleReferenceType" minOccurs="1" maxOccurs="1" />
+      <element name="defaultCellEditingStyle" type="zmltable:StyleReferenceType" minOccurs="0" maxOccurs="1" />
       <element ref="zmltable:Rules" minOccurs="0" maxOccurs="1" />
     </sequence>
     <attribute name="id" type="ID" use="required" />

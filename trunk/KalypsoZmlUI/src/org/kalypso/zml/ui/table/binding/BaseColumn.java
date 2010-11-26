@@ -68,6 +68,8 @@ public class BaseColumn
 
   private CellStyle m_cellStyle;
 
+  private CellStyle m_editingCellStyle;
+
   public BaseColumn( final AbstractColumnType type )
   {
     m_type = type;
@@ -158,5 +160,18 @@ public class BaseColumn
     m_cellStyle = resolver.findStyle( reference );
 
     return m_cellStyle;
+  }
+
+  public CellStyle getDefaultEditingStyle( ) throws CoreException
+  {
+    if( m_editingCellStyle != null )
+      return m_editingCellStyle;
+
+    final ZmlStyleResolver resolver = ZmlStyleResolver.getInstance();
+    final StyleReferenceType reference = m_type.getDefaultCellEditingStyle();
+
+    m_editingCellStyle = resolver.findStyle( reference );
+
+    return m_editingCellStyle;
   }
 }
