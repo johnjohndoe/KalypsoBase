@@ -38,16 +38,17 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.provider;
+package org.kalypso.zml.ui.table.model.loader;
 
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.template.IObsProvider;
 import org.kalypso.ogc.sensor.template.IObsProviderListener;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
-import org.kalypso.zml.ui.table.IZmlColumnModel;
 import org.kalypso.zml.ui.table.IZmlTableColumn;
 import org.kalypso.zml.ui.table.binding.DataColumn;
+import org.kalypso.zml.ui.table.model.IZmlColumnModel;
+import org.kalypso.zml.ui.table.model.ZmlTableColumn;
 import org.kalypso.zml.ui.table.schema.DataColumnType;
 import org.kalypso.zml.ui.table.utils.TableTypeHelper;
 
@@ -126,7 +127,7 @@ public class ZmlColumnLoadCommand implements IObsProviderListener
     final DataColumnType type = (DataColumnType) TableTypeHelper.findColumnType( m_model.getTableType(), m_column.getIdentifier() );
 
     final DataColumn data = new DataColumn( type );
-    final IAxis[] axes = clone.getObservation().getAxisList();
+    final IAxis[] axes = observation.getAxisList();
     final String label = m_column.getTitle( AxisUtils.findAxis( axes, data.getValueAxis() ) );
 
     m_model.addColumn( new ZmlTableColumn( label, clone, m_model, data ) );

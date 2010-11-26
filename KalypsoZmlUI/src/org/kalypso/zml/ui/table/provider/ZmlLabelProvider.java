@@ -54,6 +54,8 @@ import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.binding.BaseColumn;
 import org.kalypso.zml.ui.table.binding.CellStyle;
 import org.kalypso.zml.ui.table.binding.ZmlRule;
+import org.kalypso.zml.ui.table.model.ZmlTableRow;
+import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
 import org.kalypso.zml.ui.table.rules.IZmlTableRule;
 import org.kalypso.zml.ui.table.schema.IndexColumnType;
 

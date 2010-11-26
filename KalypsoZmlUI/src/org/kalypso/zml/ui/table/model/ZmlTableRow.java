@@ -38,29 +38,51 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table;
+package org.kalypso.zml.ui.table.model;
 
-import org.kalypso.zml.ui.table.provider.IZmlColumnModelListener;
-import org.kalypso.zml.ui.table.provider.ZmlTableColumn;
-import org.kalypso.zml.ui.table.schema.ZmlTableType;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
+import org.kalypso.zml.ui.table.model.references.ZmlDataValueReference;
+import org.kalypso.zml.ui.table.model.references.ZmlIndexValueReference;
+import org.kalypso.zml.ui.table.schema.AbstractColumnType;
+import org.kalypso.zml.ui.table.schema.IndexColumnType;
 
 /**
  * @author Dirk Kuch
  */
-public interface IZmlColumnModel
+public class ZmlTableRow
 {
-  ZmlTableType getTableType( );
+  private final Object m_index;
 
-  void addListener( IZmlColumnModelListener listener );
+  /** Map<Reference (id), Reference> */
+  Map<String, IZmlValueReference> m_values = new HashMap<String, IZmlValueReference>();
 
-  void addColumn( ZmlTableColumn zmlTableColumn );
+  public ZmlTableRow( final Object index )
+  {
+    m_index = index;
+  }
 
-  void fireModelChanged( );
+  public void add( final ZmlDataValueReference reference )
+  {
+    m_values.put( reference.getIdentifier(), reference );
+  }
 
-  ZmlTableColumn getColumn( String id );
+  public IZmlValueReference get( final AbstractColumnType type )
+  {
+    if( type instanceof IndexColumnType )
+    {
+      final IZmlValueReference[] references = m_values.values().toArray( new IZmlValueReference[] {} );
 
-  ZmlTableColumn[] getColumns( );
+      return new ZmlIndexValueReference( references, m_index );
+    }
 
-  void setIndexColumnValues( Object[] array );
+    return m_values.get( type.getId() );
+  }
 
+  public Object getIndexValue( )
+  {
+    return m_index;
+  }
 }

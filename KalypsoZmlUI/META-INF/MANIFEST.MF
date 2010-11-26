@@ -22,6 +22,7 @@ Export-Package: org.kalypso.zml.ui,
  org.kalypso.zml.ui.core.zml,
  org.kalypso.zml.ui.table,
  org.kalypso.zml.ui.table.context,
+ org.kalypso.zml.ui.table.model,
  org.kalypso.zml.ui.table.provider,
  org.kalypso.zml.ui.table.schema
 Bundle-ClassPath: .

@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.provider;
+package org.kalypso.zml.ui.table.model;
 
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -51,7 +51,6 @@ import org.kalypso.ogc.sensor.template.IObsProviderListener;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHandler;
 import org.kalypso.ogc.sensor.timeseries.datasource.IDataSourceItem;
-import org.kalypso.zml.ui.table.IZmlColumnModel;
 import org.kalypso.zml.ui.table.binding.DataColumn;
 
 /**
@@ -94,6 +93,7 @@ public class ZmlTableColumn
     m_provider = provider;
     m_type = type;
 
+    provider.addListener( m_observationProviderListener );
   }
 
   protected void onObservationChanged( )

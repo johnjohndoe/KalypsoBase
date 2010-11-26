@@ -50,8 +50,11 @@ import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.zml.ui.KalypsoZmlUI;
-import org.kalypso.zml.ui.table.IZmlColumnModel;
 import org.kalypso.zml.ui.table.binding.DataColumn;
+import org.kalypso.zml.ui.table.model.IZmlColumnModel;
+import org.kalypso.zml.ui.table.model.ZmlTableColumn;
+import org.kalypso.zml.ui.table.model.ZmlTableRow;
+import org.kalypso.zml.ui.table.model.references.ZmlDataValueReference;
 
 /**
  * @author Dirk Kuch

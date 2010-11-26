@@ -38,48 +38,27 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.provider;
+package org.kalypso.zml.ui.table.model.references;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.kalypso.zml.ui.table.schema.AbstractColumnType;
-import org.kalypso.zml.ui.table.schema.IndexColumnType;
+import org.kalypso.ogc.sensor.IAxis;
+import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.metadata.MetadataList;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlTableRow
+public interface IZmlValueReference
 {
-  private final Object m_index;
+  Object getValue( ) throws SensorException;
 
-  /** Map<Reference (id), Reference> */
-  Map<String, IZmlValueReference> m_values = new HashMap<String, IZmlValueReference>();
+  Integer getStatus( ) throws SensorException;
 
-  public ZmlTableRow( final Object index )
-  {
-    m_index = index;
-  }
+  boolean isMetadataSource( );
 
-  public void add( final ZmlDataValueReference reference )
-  {
-    m_values.put( reference.getIdentifier(), reference );
-  }
+  MetadataList[] getMetadata( );
 
-  public IZmlValueReference get( final AbstractColumnType type )
-  {
-    if( type instanceof IndexColumnType )
-    {
-      final IZmlValueReference[] references = m_values.values().toArray( new IZmlValueReference[] {} );
+  IAxis getValueAxis( );
 
-      return new ZmlIndexValueReference( references, m_index );
-    }
+  void update( Object targetValue ) throws SensorException;
 
-    return m_values.get( type.getId() );
-  }
-
-  public Object getIndexValue( )
-  {
-    return m_index;
-  }
 }
