@@ -38,14 +38,50 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table;
+package org.kalypso.zml.ui.table.menu;
 
+import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.ViewerCell;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseMoveListener;
+import org.eclipse.swt.graphics.Point;
+import org.kalypso.zml.ui.table.IZmlTableComposite;
 import org.kalypso.zml.ui.table.binding.BaseColumn;
+import org.kalypso.zml.ui.table.model.ZmlTableRow;
+import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
 
 /**
  * @author Dirk Kuch
  */
-public interface IZmlTableComposite
+public class ZmlTableContextMouseMoveListener implements MouseMoveListener
 {
-  BaseColumn getColumn( int columnIndex );
+  Point m_position;
+
+  private final IZmlTableComposite m_table;
+
+  public ZmlTableContextMouseMoveListener( final IZmlTableComposite table )
+  {
+    m_table = table;
+  }
+
+  /**
+   * @see org.eclipse.swt.events.MouseMoveListener#mouseMove(org.eclipse.swt.events.MouseEvent)
+   */
+  @Override
+  public void mouseMove( final MouseEvent e )
+  {
+    m_position = new Point( e.x, e.y );
+  }
+
+  public IZmlValueReference findCell( final TableViewer viewer, final ZmlTableRow row )
+  {
+    final ViewerCell cell = viewer.getCell( m_position );
+    if( cell == null )
+      return null;
+
+    final BaseColumn column = m_table.getColumn( cell.getColumnIndex() );
+    final IZmlValueReference reference = row.get( column.getType() );
+
+    return reference;
+  }
 }

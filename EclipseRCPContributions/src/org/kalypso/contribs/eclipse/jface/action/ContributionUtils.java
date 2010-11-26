@@ -51,7 +51,7 @@ import org.eclipse.ui.services.IServiceLocator;
  * 
  * @author Gernot Belger
  */
-public class ContributionUtils
+public final class ContributionUtils
 {
   private ContributionUtils( )
   {

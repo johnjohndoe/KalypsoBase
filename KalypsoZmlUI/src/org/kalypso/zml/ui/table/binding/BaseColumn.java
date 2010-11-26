@@ -174,4 +174,9 @@ public class BaseColumn
 
     return m_editingCellStyle;
   }
+
+  public String getUriContextMenu( )
+  {
+    return findProperty( ColumnPropertyName.URI_CONTEXT_MENU );
+  }
 }

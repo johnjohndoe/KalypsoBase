@@ -124,4 +124,13 @@ public class ZmlDataValueReference implements IZmlValueReference
   {
     return m_column.isMetadataSource();
   }
+
+  /**
+   * @see org.kalypso.zml.ui.table.model.references.IZmlValueReference#getColumn()
+   */
+  @Override
+  public DataColumn getColumn( )
+  {
+    return m_column.getDataColumn();
+  }
 }

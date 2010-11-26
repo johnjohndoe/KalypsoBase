@@ -51,6 +51,7 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.zml.ui.KalypsoZmlUI;
+import org.kalypso.zml.ui.table.binding.BaseColumn;
 
 /**
  * @author Dirk Kuch
@@ -61,8 +62,11 @@ public class ZmlIndexValueReference implements IZmlValueReference
 
   private final IZmlValueReference[] m_references;
 
-  public ZmlIndexValueReference( final IZmlValueReference[] references, final Object value )
+  private final BaseColumn m_column;
+
+  public ZmlIndexValueReference( final BaseColumn column, final IZmlValueReference[] references, final Object value )
   {
+    m_column = column;
     m_references = references;
     m_value = value;
   }
@@ -133,5 +137,14 @@ public class ZmlIndexValueReference implements IZmlValueReference
   public boolean isMetadataSource( )
   {
     return true;
+  }
+
+  /**
+   * @see org.kalypso.zml.ui.table.model.references.IZmlValueReference#getColumn()
+   */
+  @Override
+  public BaseColumn getColumn( )
+  {
+    return m_column;
   }
 }

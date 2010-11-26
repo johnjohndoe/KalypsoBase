@@ -31,6 +31,7 @@
       <property name="label">Wasserstand</property>
       <property name="width">100</property>
       <property name="alignment">RIGHT</property>
+      <property name="uriContextMenu">menu:org.kalypso.hwv.product.sachsenanhalt.zml.table.menu.cell.ContextMenu</property>
 
       <defaultCellStyle>
         <url>urn:org:kalypso:zml:ui:table:style:base#wBaseCellStyle</url>
@@ -66,7 +67,8 @@
       <property name="label">Wasserstand (Modell)</property>
       <property name="width">100</property>
       <property name="alignment">RIGHT</property>
-
+      <property name="uriContextMenu">menu:org.kalypso.hwv.product.sachsenanhalt.zml.table.menu.cell.ContextMenu</property>
+      
       <defaultCellStyle>
         <url>urn:org:kalypso:zml:ui:table:style:base#wBaseCellStyle</url>
       </defaultCellStyle>
@@ -102,6 +104,7 @@
       <property name="label">Abfluss</property>
       <property name="width">100</property>
       <property name="alignment">RIGHT</property>
+      <property name="uriContextMenu">menu:org.kalypso.hwv.product.sachsenanhalt.zml.table.menu.cell.ContextMenu</property>
 
 
       <defaultCellStyle>
@@ -135,6 +138,7 @@
       <property name="label">Abfluss (Modell)</property>
       <property name="width">100</property>
       <property name="alignment">RIGHT</property>
+      <property name="uriContextMenu">menu:org.kalypso.hwv.product.sachsenanhalt.zml.table.menu.cell.ContextMenu</property>
 
       <defaultCellStyle>
         <url>urn:org:kalypso:zml:ui:table:style:base#qBaseCellStyle</url>

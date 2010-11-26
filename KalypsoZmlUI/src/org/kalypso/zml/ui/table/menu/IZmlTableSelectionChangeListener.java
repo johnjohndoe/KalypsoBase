@@ -38,14 +38,15 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table;
+package org.kalypso.zml.ui.table.menu;
 
-import org.kalypso.zml.ui.table.binding.BaseColumn;
+import org.eclipse.jface.viewers.TableViewer;
+import org.kalypso.zml.ui.table.model.ZmlTableRow;
 
 /**
  * @author Dirk Kuch
  */
-public interface IZmlTableComposite
+public interface IZmlTableSelectionChangeListener
 {
-  BaseColumn getColumn( int columnIndex );
+  void selectionChanged( TableViewer viewer, ZmlTableRow row );
 }

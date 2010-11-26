@@ -59,6 +59,7 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.contribs.eclipse.swt.layout.LayoutHelper;
 import org.kalypso.zml.ui.table.binding.BaseColumn;
+import org.kalypso.zml.ui.table.menu.ZmlTableContextMenu;
 import org.kalypso.zml.ui.table.model.IZmlColumnModel;
 import org.kalypso.zml.ui.table.model.ZmlTableColumn;
 import org.kalypso.zml.ui.table.provider.IZmlColumnModelListener;
@@ -98,6 +99,8 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
 
     m_tableViewer = new TableViewer( this, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.FULL_SELECTION );
     m_tableViewer.getTable().setLinesVisible( true );
+    final ZmlTableContextMenu menu = new ZmlTableContextMenu( this );
+    menu.register( m_tableViewer );
 
     /* excel table cursor */
 // new ExcelTableCursor( m_tableViewer, SWT.BORDER_DASH, ADVANCE_MODE.DOWN, true );
@@ -157,7 +160,6 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
     if( type.getType() instanceof DataColumnType && type.isEditable() )
     {
       column.setEditingSupport( new ZmlEditingSupport( type, column ) );
-
     }
 
     return column;
@@ -246,6 +248,15 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
     clone.setId( newIdentifier );
 
     buildColumnViewer( new BaseColumn( clone ) );
+  }
+
+  /**
+   * @see org.kalypso.zml.ui.table.IZmlTableComposite#getColumn(int)
+   */
+  @Override
+  public BaseColumn getColumn( final int columnIndex )
+  {
+    return m_columnIndex.get( columnIndex );
   }
 
 }

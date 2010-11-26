@@ -43,6 +43,7 @@ package org.kalypso.zml.ui.table.model;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.kalypso.zml.ui.table.binding.BaseColumn;
 import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
 import org.kalypso.zml.ui.table.model.references.ZmlDataValueReference;
 import org.kalypso.zml.ui.table.model.references.ZmlIndexValueReference;
@@ -75,7 +76,7 @@ public class ZmlTableRow
     {
       final IZmlValueReference[] references = m_values.values().toArray( new IZmlValueReference[] {} );
 
-      return new ZmlIndexValueReference( references, m_index );
+      return new ZmlIndexValueReference( new BaseColumn( type ), references, m_index );
     }
 
     return m_values.get( type.getId() );
