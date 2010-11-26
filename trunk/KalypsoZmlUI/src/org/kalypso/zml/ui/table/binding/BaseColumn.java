@@ -169,6 +169,8 @@ public class BaseColumn
 
     final ZmlStyleResolver resolver = ZmlStyleResolver.getInstance();
     final StyleReferenceType reference = m_type.getDefaultCellEditingStyle();
+    if( reference == null )
+      return null;
 
     m_editingCellStyle = resolver.findStyle( reference );
 
