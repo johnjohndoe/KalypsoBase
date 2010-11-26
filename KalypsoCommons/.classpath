@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry exported="true" kind="lib" path="lib/guava/guava-r07.jar" sourcepath="lib/guava/guava-src-r07.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/j3d-1_5_2/j3d-1_5_2/lib/ext/j3dcore.jar" sourcepath="lib/j3d-1_5_2/j3d-1_5_2-src.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/j3d-1_5_2/j3d-1_5_2/lib/ext/j3dutils.jar" sourcepath="lib/j3d-1_5_2/j3d-1_5_2-src.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/j3d-1_5_2/j3d-1_5_2/lib/ext/vecmath.jar" sourcepath="lib/j3d-1_5_2/vecmath-1_5_2-src.zip"/>

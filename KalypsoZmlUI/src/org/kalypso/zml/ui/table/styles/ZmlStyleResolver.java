@@ -42,8 +42,8 @@ package org.kalypso.zml.ui.table.styles;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import javax.xml.bind.JAXBException;
 
@@ -61,6 +61,8 @@ import org.kalypso.zml.ui.table.schema.StyleReferenceType;
 import org.kalypso.zml.ui.table.schema.StyleSetType;
 import org.kalypso.zml.ui.table.schema.ZmlTableType;
 
+import com.google.common.collect.MapMaker;
+
 /**
  * TODO singleton with caching of zml styles types
  * 
@@ -68,14 +70,17 @@ import org.kalypso.zml.ui.table.schema.ZmlTableType;
  */
 public final class ZmlStyleResolver
 {
-  private final Map<String, StyleSetType> m_styleSetCache = new HashMap<String, StyleSetType>();
+  private final Map<String, StyleSetType> m_styleSetCache;
 
-  private final Map<String, CellStyle> m_styleCache = new HashMap<String, CellStyle>();
+  private final Map<String, CellStyle> m_styleCache;
 
   private static ZmlStyleResolver INSTANCE;
 
   private ZmlStyleResolver( )
   {
+    final MapMaker marker = new MapMaker().expiration( 30, TimeUnit.MINUTES );
+    m_styleSetCache = marker.makeMap();
+    m_styleCache = marker.makeMap();
   }
 
   public static ZmlStyleResolver getInstance( )
