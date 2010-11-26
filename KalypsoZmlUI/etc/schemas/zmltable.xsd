@@ -81,7 +81,6 @@
   <simpleType name="ColumnPropertyName">
     <restriction base="string">
       <enumeration value="label"></enumeration>
-      <enumeration value="format"></enumeration>
       <enumeration value="width"></enumeration>
       <enumeration value="alignment"></enumeration>
     </restriction>
@@ -156,6 +155,7 @@
     <restriction base="string">
       <enumeration value="backgroundColor"></enumeration>
       <enumeration value="textColor"></enumeration>
+      <enumeration value="textFormat"></enumeration>
       <enumeration value="fontFamily"></enumeration>
       <enumeration value="fontWeight"></enumeration>
       <enumeration value="fontSize"></enumeration>

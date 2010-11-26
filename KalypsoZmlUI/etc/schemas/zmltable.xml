@@ -4,13 +4,12 @@
   <defaultStyle>
     <url>urn:org:kalypso:zml:ui:table:style:base#defaultCellStyle</url>
   </defaultStyle>
-
+  
   <Columns>
   
     <!-- date column -->
     <Column xsi:type="IndexColumnType" autopack="true" id="date">
       <property name="label">Datum</property>
-      <property name="format">dd.MM.yyyy HH:mm</property>
       <property name="alignment">LEFT</property>
 
       <defaultCellStyle>
@@ -30,12 +29,11 @@
     <!-- wasserstand --> 
     <Column xsi:type="DataColumnType" editable="true" id="W" metadataSource="true">
       <property name="label">Wasserstand</property>
-      <property name="format">%.0f</property>
       <property name="width">100</property>
       <property name="alignment">RIGHT</property>
 
       <defaultCellStyle>
-        <url>urn:org:kalypso:zml:ui:table:style:base#defaultCellStyle</url>
+        <url>urn:org:kalypso:zml:ui:table:style:base#wBaseCellStyle</url>
       </defaultCellStyle>
 
 
@@ -64,12 +62,11 @@
     <!-- wasserstand modell zeitreihe -->
     <Column xsi:type="DataColumnType" editable="true" id="W_MODELL">
       <property name="label">Wasserstand (Modell)</property>
-      <property name="format">%.0f</property>
       <property name="width">100</property>
       <property name="alignment">RIGHT</property>
 
       <defaultCellStyle>
-        <url>urn:org:kalypso:zml:ui:table:style:base#defaultCellStyle</url>
+        <url>urn:org:kalypso:zml:ui:table:style:base#wBaseCellStyle</url>
       </defaultCellStyle>
 
       <Rules>
@@ -98,7 +95,6 @@
     <!-- Abfluss -->
     <Column xsi:type="DataColumnType" editable="true" id="Q"  metadataSource="true">
       <property name="label">Abfluss</property>
-      <property name="format">%.3f</property>
       <property name="width">100</property>
       <property name="alignment">RIGHT</property>
 
@@ -132,7 +128,6 @@
     <!-- Abfluss Modell Zeitreihe -->
     <Column xsi:type="DataColumnType" editable="true" id="Q_MODELL">
       <property name="label">Abfluss (Modell)</property>
-      <property name="format">%.3f</property>
       <property name="width">100</property>
       <property name="alignment">RIGHT</property>
 

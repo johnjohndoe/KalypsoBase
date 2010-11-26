@@ -193,4 +193,11 @@ public class CellStyle
 
     return m_image;
   }
+
+  public String getTextFormat( )
+  {
+    final String format = TableTypeHelper.findProperty( m_style, StylePropertyName.TEXT_FORMAT );
+
+    return format;
+  }
 }
