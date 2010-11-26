@@ -45,11 +45,20 @@ Bundle-ClassPath: .,
  lib/xalan-j/xalan.jar,
  lib/j3d-1_5_2/j3d-1_5_2/lib/ext/j3dcore.jar,
  lib/j3d-1_5_2/j3d-1_5_2/lib/ext/j3dutils.jar,
- lib/j3d-1_5_2/j3d-1_5_2/lib/ext/vecmath.jar
+ lib/j3d-1_5_2/j3d-1_5_2/lib/ext/vecmath.jar,
+ lib/guava/guava-r07.jar
 Bundle-Activator: org.kalypso.commons.KalypsoCommonsPlugin
 Bundle-Vendor: kalypsobase.sourceforge.net
 Bundle-Localization: plugin
 Export-Package: au.com.bytecode.opencsv,
+ com.google.common.annotations,
+ com.google.common.base,
+ com.google.common.base.internal,
+ com.google.common.collect,
+ com.google.common.io,
+ com.google.common.net,
+ com.google.common.primitives,
+ com.google.common.util.concurrent,
  com.sun.j3d.audioengines,
  com.sun.j3d.audioengines.javasound,
  com.sun.j3d.exp.swing,
