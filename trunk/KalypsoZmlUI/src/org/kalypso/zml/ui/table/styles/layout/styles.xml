@@ -41,7 +41,7 @@
         <reference>defaultCellStyle</reference>
       </baseStyle>
       <property name="backgroundColor">DEDEDE</property>
-      <property name="textFormat">dd.MM.yyyy HH:mm</property>
+      <property name="textFormat">dd.MM.yy HH:mm</property>
     </Style>
 
 
