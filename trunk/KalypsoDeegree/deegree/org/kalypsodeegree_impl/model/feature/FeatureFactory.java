@@ -76,7 +76,7 @@ public final class FeatureFactory
 {
   private FeatureFactory( )
   {
-    // helper clas, do not instantiate
+    // helper class, do not instantiate
   }
 
   /**
