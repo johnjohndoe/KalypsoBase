@@ -98,9 +98,10 @@ public final class ExtendedFeatureFactory
       {
         final String pluginid = element.getContributor().getName();
         final Bundle bundle = Platform.getBundle( pluginid );
-        final Class< ? extends Feature> featureClass = bundle.loadClass( element.getAttribute( "class" ) );
-        final Constructor< ? extends Feature> constructor = featureClass.getConstructor( Object.class, IRelationType.class, IFeatureType.class, String.class, Object[].class );
-        return constructor.newInstance( parent, parentRelation, targetType, id, properties );
+        final Class< ? > featureClass = bundle.loadClass( element.getAttribute( "class" ) );
+        final Constructor< ? > constructor = featureClass.getConstructor( Object.class, IRelationType.class, IFeatureType.class, String.class, Object[].class );
+        final Object newInstance = constructor.newInstance( parent, parentRelation, targetType, id, properties );
+        return (Feature) newInstance;
       }
       catch( final Throwable e )
       {
