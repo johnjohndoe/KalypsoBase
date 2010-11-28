@@ -10,7 +10,6 @@ import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Object;
-import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
 import com.vividsolutions.jts.geom.Coordinate;
 
@@ -21,8 +20,6 @@ import com.vividsolutions.jts.geom.Coordinate;
  */
 public interface SegmentCollector
 {
-  public static final FeatureFactory FF = new FeatureFactory();
-
   public static final String FEATURE_BASE_ID = SegmentCollector.class.getName();
 
   public static final ITypeRegistry<IMarshallingTypeHandler> registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
