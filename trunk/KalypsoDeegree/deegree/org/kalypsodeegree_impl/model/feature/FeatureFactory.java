@@ -74,6 +74,11 @@ import org.kalypsodeegree_impl.model.sort.SplitSort;
  */
 public final class FeatureFactory
 {
+  private FeatureFactory( )
+  {
+    // helper clas, do not instantiate
+  }
+
   /**
    * creates an instance of a Feature from its IFeatureType and an array of Objects that represents it properties. It is
    * assumed that the order of the properties is identical to the order of the FeatureTypeProperties of the the
