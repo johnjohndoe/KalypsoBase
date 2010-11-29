@@ -86,7 +86,6 @@ public class ZmlLabelProvider extends ColumnLabelProvider
             final ZmlRule binding = rule.getBinding( m_column.getIdentifier() );
             return binding.getStyle();
           }
-
         }
       }
     }
