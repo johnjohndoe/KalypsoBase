@@ -58,16 +58,19 @@ public class ZmlModelRow implements IZmlModelRow
   private final Object m_index;
 
   /** Map<Reference (id), Reference> */
-  Map<String, IZmlValueReference> m_values = new HashMap<String, IZmlValueReference>();
+  Map<String, IZmlValueReference> m_references = new HashMap<String, IZmlValueReference>();
 
-  public ZmlModelRow( final Object index )
+  private final IZmlDataModel m_model;
+
+  protected ZmlModelRow( final IZmlDataModel model, final Object index )
   {
+    m_model = model;
     m_index = index;
   }
 
   public void add( final ZmlDataValueReference reference )
   {
-    m_values.put( reference.getIdentifier(), reference );
+    m_references.put( reference.getIdentifier(), reference );
   }
 
   @Override
@@ -75,17 +78,34 @@ public class ZmlModelRow implements IZmlModelRow
   {
     if( type instanceof IndexColumnType )
     {
-      final IZmlValueReference[] references = m_values.values().toArray( new IZmlValueReference[] {} );
 
-      return new ZmlIndexValueReference( new BaseColumn( type ), references, m_index );
+      return new ZmlIndexValueReference( this, new BaseColumn( type ) );
     }
 
-    return m_values.get( type.getId() );
+    return m_references.get( type.getId() );
   }
 
   @Override
   public Object getIndexValue( )
   {
     return m_index;
+  }
+
+  /**
+   * @see org.kalypso.zml.ui.table.model.IZmlModelRow#getModel()
+   */
+  @Override
+  public IZmlDataModel getModel( )
+  {
+    return m_model;
+  }
+
+  /**
+   * @see org.kalypso.zml.ui.table.model.IZmlModelRow#getReferences()
+   */
+  @Override
+  public IZmlValueReference[] getReferences( )
+  {
+    return m_references.values().toArray( new IZmlValueReference[] {} );
   }
 }

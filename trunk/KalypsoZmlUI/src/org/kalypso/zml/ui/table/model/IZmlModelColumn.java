@@ -54,7 +54,7 @@ public interface IZmlModelColumn
 
   IAxis[] getAxes( );
 
-  int size( ) throws SensorException;
+  int modelSize( ) throws SensorException;
 
   Object get( int i, IAxis indexAxis ) throws SensorException;
 

@@ -52,14 +52,13 @@ public interface IZmlDataModel
 
   void addListener( IZmlColumnModelListener listener );
 
-  void addColumn( ZmlModelColumn zmlTableColumn );
-
   void fireModelChanged( );
 
   IZmlModelColumn getColumn( String id );
 
   IZmlModelColumn[] getColumns( );
 
-  void setIndexColumnValues( Object[] array );
+  IZmlModelRow getRow( final Object index );
 
+  IZmlModelRow[] getRows( );
 }
