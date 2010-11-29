@@ -38,45 +38,36 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.commands;
+package org.kalypso.zml.ui.table;
 
-import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.zml.ui.table.IZmlTableComposite;
-import org.kalypso.zml.ui.table.model.IZmlModelColumn;
-import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
+import org.eclipse.ui.progress.UIJob;
 
 /**
- * @author Dirk Kuch
+ * @author kuch
  */
-public class ZmlCommandSetAllValues extends AbstractZmlCommandHandler
+public class ZmlTableUiUpdateJob extends UIJob
 {
+
+  private final ZmlTableComposite m_table;
+
+  public ZmlTableUiUpdateJob( final ZmlTableComposite table )
+  {
+    super( "ZmlTableUiUpdateJob" );
+    m_table = table;
+  }
+
   /**
-   * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
+   * @see org.eclipse.ui.progress.UIJob#runInUIThread(org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  public Object execute( final ExecutionEvent event ) throws ExecutionException
+  public IStatus runInUIThread( final IProgressMonitor monitor )
   {
-    try
-    {
-      final IZmlTableComposite table = ZmlHandlerUtil.getTable( event );
-      final IZmlValueReference cell = table.getActiveCell();
+    m_table.refresh();
 
-      final IZmlModelColumn column = cell.getColumn();
-      final Object value = cell.getValue();
-
-      for( int index = 0; index < column.modelSize(); index++ )
-      {
-        column.update( index, value );
-      }
-
-      return Status.OK_STATUS;
-    }
-    catch( final SensorException e )
-    {
-      throw new ExecutionException( "Aktualisieren der Werte fehlgeschlagen.", e );
-    }
+    return Status.OK_STATUS;
   }
+
 }

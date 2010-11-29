@@ -48,8 +48,11 @@ import org.kalypso.zml.ui.table.context.TableSourceProvider;
 /**
  * @author Dirk Kuch
  */
-public class ZmlHandlerUtil
+public final class ZmlHandlerUtil
 {
+  private ZmlHandlerUtil( )
+  {
+  }
 
   public static IZmlTableComposite getTable( final ExecutionEvent event )
   {

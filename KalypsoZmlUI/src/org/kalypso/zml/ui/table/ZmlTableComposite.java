@@ -46,9 +46,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
@@ -56,7 +53,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.ui.progress.UIJob;
 import org.kalypso.contribs.eclipse.swt.layout.LayoutHelper;
 import org.kalypso.zml.ui.table.binding.BaseColumn;
 import org.kalypso.zml.ui.table.menu.ZmlTableContextMenuListener;
@@ -87,6 +83,8 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
   private final IZmlDataModel m_model;
 
   private ZmlTableMouseMoveListener m_mouseMoveListener;
+
+  private ZmlTableUiUpdateJob m_updateJob;
 
   public ZmlTableComposite( final IZmlDataModel model, final Composite parent )
   {
@@ -178,7 +176,7 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
     return column;
   }
 
-  protected void refresh( )
+  public void refresh( )
   {
     if( m_tableViewer.getTable().isDisposed() )
       return;
@@ -235,16 +233,11 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
   @Override
   public void modelChanged( )
   {
-    new UIJob( "" )
-    {
-      @Override
-      public IStatus runInUIThread( final IProgressMonitor monitor )
-      {
-        refresh();
+    if( m_updateJob != null )
+      m_updateJob.cancel();
 
-        return Status.OK_STATUS;
-      }
-    }.schedule();
+    m_updateJob = new ZmlTableUiUpdateJob( this );
+    m_updateJob.schedule( 250 );
   }
 
   public void duplicateColumn( final String identifier, final String newIdentifier )
