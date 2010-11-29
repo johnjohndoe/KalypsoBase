@@ -99,6 +99,7 @@ public class ZmlModelBuilder implements ICoreRunnableWithProgress
           if( row == null )
           {
             row = modelFactory.createRow( m_model, indexValue );
+            rows.put( indexValue, row );
           }
 
           referenceFactory.createReference( (ZmlModelRow) row, column, modelIndex );
