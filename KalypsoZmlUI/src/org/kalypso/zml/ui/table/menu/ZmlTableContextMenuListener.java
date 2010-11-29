@@ -49,17 +49,12 @@ import org.eclipse.ui.PlatformUI;
 import org.kalypso.contribs.eclipse.jface.action.ContributionUtils;
 import org.kalypso.zml.ui.table.ZmlTableComposite;
 import org.kalypso.zml.ui.table.binding.BaseColumn;
-import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
-
-import com.google.common.base.Objects;
 
 /**
  * @author Dirk Kuch
  */
 public class ZmlTableContextMenuListener implements ISelectionChangedListener
 {
-  String m_lastUri;
-
   private final ZmlTableComposite m_table;
 
   public ZmlTableContextMenuListener( final ZmlTableComposite table )
@@ -69,9 +64,6 @@ public class ZmlTableContextMenuListener implements ISelectionChangedListener
 
   private void setMenu( final String uri )
   {
-    if( Objects.equal( m_lastUri, uri ) )
-      return;
-
     final Control control = m_table.getTableViewer().getControl();
     if( uri != null )
     {
@@ -79,12 +71,11 @@ public class ZmlTableContextMenuListener implements ISelectionChangedListener
       final Menu menu = menuManager.createContextMenu( control );
       ContributionUtils.populateContributionManager( PlatformUI.getWorkbench(), menuManager, uri );
 
-      control.setMenu( menu );
+      m_table.setContextMenu( menu );
     }
     else
-      control.setMenu( new Menu( control ) );
+      m_table.setContextMenu( new Menu( control ) );
 
-    m_lastUri = uri;
   }
 
   /**
@@ -93,15 +84,11 @@ public class ZmlTableContextMenuListener implements ISelectionChangedListener
   @Override
   public void selectionChanged( final SelectionChangedEvent event )
   {
-    final IZmlValueReference reference = m_table.getActiveCell();
-    if( reference != null )
-    {
-      final BaseColumn column = reference.getBaseColumn();
-      final String uri = column.getUriContextMenu();
+    String uri = null;
+    final BaseColumn column = m_table.getActiveColumn();
+    if( column != null )
+      uri = column.getUriContextMenu();
 
-      setMenu( uri );
-    }
-    else
-      setMenu( null );
+    setMenu( uri );
   }
 }

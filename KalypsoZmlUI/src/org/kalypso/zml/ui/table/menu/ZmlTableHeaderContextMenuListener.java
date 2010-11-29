@@ -40,8 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.menu;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Control;
@@ -49,41 +49,35 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.contribs.eclipse.jface.action.ContributionUtils;
 import org.kalypso.zml.ui.table.ZmlTableComposite;
-
-import com.google.common.base.Objects;
+import org.kalypso.zml.ui.table.binding.BaseColumn;
 
 /**
  * @author Dirk Kuch
  */
 public class ZmlTableHeaderContextMenuListener implements SelectionListener
 {
-  String m_lastUri;
-
   private final ZmlTableComposite m_table;
 
-  public ZmlTableHeaderContextMenuListener( final ZmlTableComposite table )
+  private final TableViewerColumn m_column;
+
+  public ZmlTableHeaderContextMenuListener( final ZmlTableComposite table, final TableViewerColumn column )
   {
     m_table = table;
+    m_column = column;
   }
 
   private void setMenu( final String uri )
   {
-    if( Objects.equal( m_lastUri, uri ) )
-      return;
-
     final Control control = m_table.getTableViewer().getControl();
     if( uri != null )
     {
       final MenuManager menuManager = new MenuManager();
       final Menu menu = menuManager.createContextMenu( control );
       ContributionUtils.populateContributionManager( PlatformUI.getWorkbench(), menuManager, uri );
-
-      control.setMenu( menu );
+      m_table.setContextMenu( menu );
     }
     else
-      control.setMenu( new Menu( control ) );
-
-    m_lastUri = uri;
+      m_table.setContextMenu( new Menu( control ) );
   }
 
   /**
@@ -92,18 +86,12 @@ public class ZmlTableHeaderContextMenuListener implements SelectionListener
   @Override
   public void widgetSelected( final SelectionEvent event )
   {
-    throw new NotImplementedException();
+    String uri = null;
+    final BaseColumn column = m_table.getActiveColumn();
+    if( column != null )
+      uri = column.getUriHeaderContextMenu();
 
-// final IZmlValueReference reference = m_table.getActiveCell();
-// if( reference != null )
-// {
-// final BaseColumn column = reference.getColumn();
-// final String uri = column.getUriHeaderContextMenu();
-//
-// setMenu( uri );
-// }
-// else
-// setMenu( null );
+    setMenu( uri );
   }
 
   /**
@@ -112,6 +100,5 @@ public class ZmlTableHeaderContextMenuListener implements SelectionListener
   @Override
   public void widgetDefaultSelected( final SelectionEvent e )
   {
-    // TODO Auto-generated method stub
   }
 }
