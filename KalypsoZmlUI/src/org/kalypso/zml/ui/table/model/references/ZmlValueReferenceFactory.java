@@ -38,27 +38,35 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.model;
+package org.kalypso.zml.ui.table.model.references;
 
-import org.kalypso.zml.ui.table.provider.IZmlColumnModelListener;
-import org.kalypso.zml.ui.table.schema.ZmlTableType;
+import org.kalypso.zml.ui.table.model.IZmlModelColumn;
+import org.kalypso.zml.ui.table.model.ZmlModelRow;
 
 /**
  * @author Dirk Kuch
  */
-public interface IZmlDataModel
+public final class ZmlValueReferenceFactory
 {
-  ZmlTableType getTableType( );
+  private static ZmlValueReferenceFactory INSTANCE;
 
-  void addListener( IZmlColumnModelListener listener );
+  private ZmlValueReferenceFactory( )
+  {
+  }
 
-  void fireModelChanged( );
+  public static synchronized ZmlValueReferenceFactory getInstance( )
+  {
+    if( INSTANCE == null )
+      INSTANCE = new ZmlValueReferenceFactory();
 
-  IZmlModelColumn getColumn( String id );
+    return INSTANCE;
+  }
 
-  IZmlModelColumn[] getColumns( );
+  public IZmlValueReference createReference( final ZmlModelRow row, final IZmlModelColumn column, final int tupleModelIndex )
+  {
+    final ZmlDataValueReference reference = new ZmlDataValueReference( row, column, tupleModelIndex );
+    row.add( reference );
 
-  IZmlModelRow getRow( final Object index );
-
-  IZmlModelRow[] getRows( );
+    return reference;
+  }
 }

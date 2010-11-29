@@ -141,7 +141,7 @@ public class ZmlModelColumn implements IZmlModelColumn
   }
 
   @Override
-  public int size( ) throws SensorException
+  public int modelSize( ) throws SensorException
   {
     return getModel().size();
   }

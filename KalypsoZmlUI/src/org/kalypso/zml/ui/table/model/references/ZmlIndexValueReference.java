@@ -52,23 +52,22 @@ import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.binding.BaseColumn;
+import org.kalypso.zml.ui.table.model.IZmlModelColumn;
+import org.kalypso.zml.ui.table.model.IZmlModelRow;
 
 /**
  * @author Dirk Kuch
  */
 public class ZmlIndexValueReference implements IZmlValueReference
 {
-  private final Object m_value;
-
-  private final IZmlValueReference[] m_references;
-
   private final BaseColumn m_column;
 
-  public ZmlIndexValueReference( final BaseColumn column, final IZmlValueReference[] references, final Object value )
+  private final IZmlModelRow m_row;
+
+  public ZmlIndexValueReference( final IZmlModelRow row, final BaseColumn column )
   {
+    m_row = row;
     m_column = column;
-    m_references = references;
-    m_value = value;
   }
 
   /**
@@ -77,7 +76,7 @@ public class ZmlIndexValueReference implements IZmlValueReference
   @Override
   public Object getValue( )
   {
-    return m_value;
+    return m_row.getIndexValue();
   }
 
   /**
@@ -96,7 +95,9 @@ public class ZmlIndexValueReference implements IZmlValueReference
   public MetadataList[] getMetadata( )
   {
     final List<MetadataList> metadata = new ArrayList<MetadataList>();
-    for( final IZmlValueReference reference : m_references )
+    final IZmlValueReference[] references = m_row.getReferences();
+
+    for( final IZmlValueReference reference : references )
     {
       try
       {
@@ -143,8 +144,26 @@ public class ZmlIndexValueReference implements IZmlValueReference
    * @see org.kalypso.zml.ui.table.model.references.IZmlValueReference#getColumn()
    */
   @Override
-  public BaseColumn getColumn( )
+  public IZmlModelColumn getColumn( )
+  {
+    return null;
+  }
+
+  /**
+   * @see org.kalypso.zml.ui.table.model.references.IZmlValueReference#getBaseColumn()
+   */
+  @Override
+  public BaseColumn getBaseColumn( )
   {
     return m_column;
+  }
+
+  /**
+   * @see org.kalypso.zml.ui.table.model.references.IZmlValueReference#getRow()
+   */
+  @Override
+  public IZmlModelRow getRow( )
+  {
+    return m_row;
   }
 }

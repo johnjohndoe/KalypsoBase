@@ -44,16 +44,22 @@ import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.zml.ui.table.binding.BaseColumn;
+import org.kalypso.zml.ui.table.model.IZmlModelColumn;
+import org.kalypso.zml.ui.table.model.IZmlModelRow;
 
 /**
  * @author Dirk Kuch
  */
 public interface IZmlValueReference
 {
-  BaseColumn getColumn( );
+  BaseColumn getBaseColumn( );
+
+  IZmlModelColumn getColumn( );
 
   // TODO reduce to return Metadata (no array)
   MetadataList[] getMetadata( );
+
+  IZmlModelRow getRow( );
 
   Integer getStatus( ) throws SensorException;
 

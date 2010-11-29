@@ -96,7 +96,7 @@ public class ZmlTableContextMenuListener implements ISelectionChangedListener
     final IZmlValueReference reference = m_table.getActiveCell();
     if( reference != null )
     {
-      final BaseColumn column = reference.getColumn();
+      final BaseColumn column = reference.getBaseColumn();
       final String uri = column.getUriContextMenu();
 
       setMenu( uri );

@@ -40,25 +40,31 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.model;
 
-import org.kalypso.zml.ui.table.provider.IZmlColumnModelListener;
-import org.kalypso.zml.ui.table.schema.ZmlTableType;
-
 /**
  * @author Dirk Kuch
  */
-public interface IZmlDataModel
+public final class ZmlModelFactory
 {
-  ZmlTableType getTableType( );
+  private static ZmlModelFactory INSTANCE;
 
-  void addListener( IZmlColumnModelListener listener );
+  private ZmlModelFactory( )
+  {
 
-  void fireModelChanged( );
+  }
 
-  IZmlModelColumn getColumn( String id );
+  public static synchronized ZmlModelFactory getInstance( )
+  {
+    if( INSTANCE == null )
+      INSTANCE = new ZmlModelFactory();
 
-  IZmlModelColumn[] getColumns( );
+    return INSTANCE;
+  }
 
-  IZmlModelRow getRow( final Object index );
+  public IZmlModelRow createRow( final ZmlDataModel model, final Object index )
+  {
+    final ZmlModelRow row = new ZmlModelRow( model, index );
+    model.add( row );
 
-  IZmlModelRow[] getRows( );
+    return row;
+  }
 }

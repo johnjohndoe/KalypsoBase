@@ -40,21 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.provider;
 
-import java.util.Map;
-import java.util.TreeMap;
-
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.timeseries.AxisUtils;
-import org.kalypso.zml.ui.KalypsoZmlUI;
-import org.kalypso.zml.ui.table.binding.DataColumn;
 import org.kalypso.zml.ui.table.model.IZmlDataModel;
-import org.kalypso.zml.ui.table.model.IZmlModelColumn;
-import org.kalypso.zml.ui.table.model.ZmlModelRow;
-import org.kalypso.zml.ui.table.model.references.ZmlDataValueReference;
+import org.kalypso.zml.ui.table.model.ZmlDataModel;
 
 /**
  * @author Dirk Kuch
@@ -93,45 +82,11 @@ public class ZmlTableContentProvider implements ITreeContentProvider
   @Override
   public Object[] getElements( final Object inputElement )
   {
-    if( inputElement instanceof IZmlDataModel )
+    if( inputElement instanceof ZmlDataModel )
     {
-      try
-      {
-        final IZmlDataModel model = (IZmlDataModel) inputElement;
+      final ZmlDataModel model = (ZmlDataModel) inputElement;
 
-        final Map<Object, ZmlModelRow> map = new TreeMap<Object, ZmlModelRow>();
-
-        for( final IZmlModelColumn column : m_model.getColumns() )
-        {
-          final DataColumn type = column.getDataColumn();
-          final IAxis[] axes = column.getAxes();
-          final IAxis indexAxis = AxisUtils.findAxis( axes, type.getIndexAxis() );
-
-          for( int i = 0; i < column.size(); i++ )
-          {
-            final Object index = column.get( i, indexAxis );
-
-            ZmlModelRow structure = map.get( index );
-            if( structure == null )
-            {
-              structure = new ZmlModelRow( index );
-              map.put( index, structure );
-            }
-
-            final ZmlDataValueReference reference = new ZmlDataValueReference( column, i );
-            structure.add( reference );
-          }
-        }
-
-        model.setIndexColumnValues( map.keySet().toArray() );
-
-        return map.values().toArray( new ZmlModelRow[] {} );
-
-      }
-      catch( final SensorException e )
-      {
-        KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-      }
+      return model.getRows();
     }
 
     return new Object[] {};

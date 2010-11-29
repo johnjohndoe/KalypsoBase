@@ -43,10 +43,14 @@ package org.kalypso.zml.ui.table.model;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.zml.ui.table.IZmlTableColumn;
 import org.kalypso.zml.ui.table.model.loader.ZmlColumnLoadCommand;
+import org.kalypso.zml.ui.table.model.loader.ZmlModelBuilder;
 import org.kalypso.zml.ui.table.provider.IZmlColumnModelListener;
 import org.kalypso.zml.ui.table.schema.ZmlTableType;
 
@@ -61,9 +65,11 @@ public class ZmlDataModel implements IZmlDataModel
 
   private final Set<IZmlColumnModelListener> m_listeners = new HashSet<IZmlColumnModelListener>();
 
-  private final ZmlTableType m_type;
+  private final Map<Object, IZmlModelRow> m_rows = new TreeMap<Object, IZmlModelRow>();
 
-  private Object[] m_indexColumnValues;
+  private boolean m_rowsDirty = true;
+
+  private final ZmlTableType m_type;
 
   public ZmlDataModel( final ZmlTableType type )
   {
@@ -87,7 +93,6 @@ public class ZmlDataModel implements IZmlDataModel
     m_commands.add( new ZmlColumnLoadCommand( this, column ) );
   }
 
-  @Override
   public void addColumn( final ZmlModelColumn column )
   {
     m_columns.add( column );
@@ -98,6 +103,8 @@ public class ZmlDataModel implements IZmlDataModel
   @Override
   public void fireModelChanged( )
   {
+    m_rowsDirty = true;
+
     final IZmlColumnModelListener[] listeners = m_listeners.toArray( new IZmlColumnModelListener[] {} );
     for( final IZmlColumnModelListener listener : listeners )
     {
@@ -115,6 +122,7 @@ public class ZmlDataModel implements IZmlDataModel
   {
     final ZmlModelColumn[] columns;
     final ZmlColumnLoadCommand[] commands;
+
     synchronized( this )
     {
       columns = m_columns.toArray( new ZmlModelColumn[] {} );
@@ -122,6 +130,8 @@ public class ZmlDataModel implements IZmlDataModel
 
       commands = m_commands.toArray( new ZmlColumnLoadCommand[] {} );
       m_commands.clear();
+
+      m_rows.clear();
     }
 
     for( final ZmlModelColumn column : columns )
@@ -147,18 +157,46 @@ public class ZmlDataModel implements IZmlDataModel
     return null;
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.IZmlColumnModel#setIndexColumnValues(java.lang.Object[])
-   */
-  @Override
-  public void setIndexColumnValues( final Object[] indexColumnValues )
+  public void add( final IZmlModelRow row )
   {
-    m_indexColumnValues = indexColumnValues;
+    m_rows.put( row.getIndexValue(), row );
   }
 
-  public Object[] getIndexColumnValues( )
+  @Override
+  public IZmlModelRow getRow( final Object index )
   {
-    return m_indexColumnValues;
+    synchronized( this )
+    {
+      if( m_rowsDirty )
+      {
+        final ZmlModelBuilder builder = new ZmlModelBuilder( this );
+        ProgressUtilities.busyCursorWhile( builder );
+
+        m_rowsDirty = false;
+      }
+    }
+
+    return m_rows.get( index );
+  }
+
+  /**
+   * @see org.kalypso.zml.ui.table.model.IZmlDataModel#getRows()
+   */
+  @Override
+  public IZmlModelRow[] getRows( )
+  {
+    synchronized( this )
+    {
+      if( m_rowsDirty )
+      {
+        final ZmlModelBuilder builder = new ZmlModelBuilder( this );
+        ProgressUtilities.busyCursorWhile( builder );
+
+        m_rowsDirty = false;
+      }
+    }
+
+    return m_rows.values().toArray( new IZmlModelRow[] {} );
   }
 
 }
