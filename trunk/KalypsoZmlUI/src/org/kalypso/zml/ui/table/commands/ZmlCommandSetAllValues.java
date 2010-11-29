@@ -40,11 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.commands;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.runtime.Status;
+import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.ui.table.IZmlTableComposite;
-import org.kalypso.zml.ui.table.binding.BaseColumn;
+import org.kalypso.zml.ui.table.model.IZmlModelColumn;
 import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
 
 /**
@@ -58,12 +59,24 @@ public class ZmlCommandSetAllValues extends AbstractZmlCommandHandler
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
-    final IZmlTableComposite table = ZmlHandlerUtil.getTable( event );
+    try
+    {
+      final IZmlTableComposite table = ZmlHandlerUtil.getTable( event );
+      final IZmlValueReference cell = table.getActiveCell();
 
-    final IZmlValueReference cell = table.getActiveCell();
+      final IZmlModelColumn column = cell.getColumn();
+      final Object value = cell.getValue();
 
-    final BaseColumn column = table.getActiveColumn();
+      for( int index = 0; index < column.modelSize(); index++ )
+      {
+        column.update( index, value );
+      }
 
-    throw new NotImplementedException();
+      return Status.OK_STATUS;
+    }
+    catch( final SensorException e )
+    {
+      throw new ExecutionException( "Aktualisieren der Werte fehlgeschlagen.", e );
+    }
   }
 }
