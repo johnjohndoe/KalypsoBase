@@ -57,7 +57,7 @@ public class ChangeFeaturesFromFeaturelist implements FeatureVisitor
 
   private final String m_sourceID;
 
-  private final Map m_index;
+  private final Map<Object, Feature> m_index;
 
   public ChangeFeaturesFromFeaturelist( final FeatureList list, final Properties propertyMap, final String sourceID, final String targetID )
   {
@@ -76,8 +76,8 @@ public class ChangeFeaturesFromFeaturelist implements FeatureVisitor
   @Override
   public boolean visit( final Feature f )
   {
-    final Object index = f.getProperty( m_sourceID );
-    final Feature targetFeature = (Feature) m_index.get( index );
+    final Object index = AddFeaturesToFeaturelist.findSourceID( f, m_sourceID );
+    final Feature targetFeature = m_index.get( index );
     if( targetFeature == null )
       return true;
 

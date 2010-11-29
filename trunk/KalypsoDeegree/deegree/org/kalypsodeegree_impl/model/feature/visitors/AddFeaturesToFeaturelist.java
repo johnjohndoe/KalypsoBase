@@ -35,6 +35,7 @@
  */
 package org.kalypsodeegree_impl.model.feature.visitors;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -45,6 +46,7 @@ import org.kalypso.gmlschema.GMLSchemaCatalog;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
 import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -140,7 +142,7 @@ public class AddFeaturesToFeaturelist implements FeatureVisitor
 
   private Feature getTargetFeature( final Feature sourceFeature ) throws GMLSchemaException
   {
-    final Object fromID = sourceFeature.getProperty( m_fromID );
+    final Object fromID = findSourceID( sourceFeature, m_fromID );
 
     final Feature existingFeature = m_idHash.get( fromID );
     final String fid = createID( existingFeature, fromID );
@@ -164,6 +166,24 @@ public class AddFeaturesToFeaturelist implements FeatureVisitor
       return null;
 
     throw new IllegalArgumentException( "Argument 'handleExisting' must be one of 'change', 'overwrite' or 'existing', but is: " + m_handleExisting );
+  }
+
+  public static Object findSourceID( final Feature sourceFeature, final String fromID )
+  {
+    final IFeatureType sourceFT = sourceFeature.getFeatureType();
+    final IPropertyType idPT = sourceFT.getProperty( fromID );
+    final Object property = sourceFeature.getProperty( idPT );
+
+    if( idPT.isList() )
+    {
+      final List< ? > list = (List< ? >) property;
+      if( list.isEmpty() )
+        return null;
+
+      return list.get( 0 );
+    }
+
+    return property;
   }
 
   private IFeatureType findTargetFeatureType( final Feature sourceFeature ) throws GMLSchemaException

@@ -362,6 +362,13 @@ public final class FeatureHelper
     }
     else if( targetPT instanceof IRelationType )
     {
+      if( objectAsString.contains( "#" ) ) //$NON-NLS-1$
+      {
+        final IRelationType targetRT = (IRelationType) targetPT;
+        final IFeatureType targetFeatureType = targetRT.getTargetFeatureType();
+        return new XLinkedFeature_Impl( targetFeature, targetRT, targetFeatureType, objectAsString );
+      }
+
       // We assume, its internal link only. What to do, if the target references an external link?
       return objectAsString;
     }
