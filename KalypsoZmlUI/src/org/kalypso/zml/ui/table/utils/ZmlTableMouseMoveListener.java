@@ -40,6 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.utils;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseMoveListener;
@@ -91,7 +96,7 @@ public class ZmlTableMouseMoveListener implements MouseMoveListener
     return column;
   }
 
-  public ZmlModelRow findActiveRow( )
+  public IZmlModelRow findActiveRow( )
   {
     final ViewerCell cell = getActiveCell();
     if( cell == null )
@@ -114,5 +119,22 @@ public class ZmlTableMouseMoveListener implements MouseMoveListener
     final IZmlValueReference reference = row.get( column.getType() );
 
     return reference;
+  }
+
+  public IZmlModelRow[] findSelectedRows( )
+  {
+    final TableViewer viewer = m_table.getTableViewer();
+    final IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
+
+    final List<IZmlModelRow> rows = new ArrayList<IZmlModelRow>();
+
+    final Object[] elements = selection.toArray();
+    for( final Object element : elements )
+    {
+      if( element instanceof IZmlModelRow )
+        rows.add( (IZmlModelRow) element );
+    }
+
+    return rows.toArray( new IZmlModelRow[] {} );
   }
 }
