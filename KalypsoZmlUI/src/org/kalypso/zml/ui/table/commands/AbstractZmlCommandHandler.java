@@ -43,11 +43,8 @@ package org.kalypso.zml.ui.table.commands;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.commands.IHandlerListener;
-import org.kalypso.zml.ui.table.IZmlTableComposite;
 
 /**
  * @author Dirk Kuch
@@ -72,18 +69,6 @@ public abstract class AbstractZmlCommandHandler implements IHandler
   public void dispose( )
   {
     m_listeners.clear();
-  }
-
-  /**
-   * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
-   */
-  @Override
-  public Object execute( final ExecutionEvent event ) throws ExecutionException
-  {
-    final IZmlTableComposite table = ZmlHandlerUtil.getTable( event );
-
-    // TODO Auto-generated method stub
-    return null;
   }
 
   /**

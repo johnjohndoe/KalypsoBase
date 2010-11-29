@@ -40,10 +40,30 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.commands;
 
+import org.apache.commons.lang.NotImplementedException;
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
+import org.kalypso.zml.ui.table.IZmlTableComposite;
+import org.kalypso.zml.ui.table.binding.BaseColumn;
+import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
+
 /**
  * @author Dirk Kuch
  */
 public class ZmlCommandSetAllValues extends AbstractZmlCommandHandler
 {
+  /**
+   * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
+   */
+  @Override
+  public Object execute( final ExecutionEvent event ) throws ExecutionException
+  {
+    final IZmlTableComposite table = ZmlHandlerUtil.getTable( event );
 
+    final IZmlValueReference cell = table.getActiveCell();
+
+    final BaseColumn column = table.getActiveColumn();
+
+    throw new NotImplementedException();
+  }
 }

@@ -56,11 +56,11 @@ import org.kalypso.zml.ui.table.binding.DataColumn;
 /**
  * @author Dirk Kuch
  */
-public class ZmlTableColumn
+public class ZmlModelColumn implements IZmlModelColumn
 {
   private final IObsProvider m_provider;
 
-  private final IZmlColumnModel m_tabelModel;
+  private final IZmlDataModel m_tabelModel;
 
   private final DataColumn m_type;
 
@@ -86,7 +86,7 @@ public class ZmlTableColumn
     }
   };
 
-  public ZmlTableColumn( final String label, final IObsProvider provider, final IZmlColumnModel tabelModel, final DataColumn type )
+  public ZmlModelColumn( final String label, final IObsProvider provider, final IZmlDataModel tabelModel, final DataColumn type )
   {
     m_label = label;
     m_tabelModel = tabelModel;
@@ -112,11 +112,13 @@ public class ZmlTableColumn
     m_provider.dispose();
   }
 
+  @Override
   public String getIdentifier( )
   {
     return m_type.getIdentifier();
   }
 
+  @Override
   public Object get( final int index, final IAxis axis ) throws SensorException
   {
     return getModel().get( index, axis );
@@ -138,11 +140,13 @@ public class ZmlTableColumn
     return axis.getType().equals( m_type.getValueAxis() );
   }
 
+  @Override
   public int size( ) throws SensorException
   {
     return getModel().size();
   }
 
+  @Override
   public void update( final int index, final Object value ) throws SensorException
   {
     final ITupleModel model = getModel();
@@ -178,26 +182,31 @@ public class ZmlTableColumn
     m_tabelModel.fireModelChanged();
   }
 
+  @Override
   public MetadataList getMetadata( )
   {
     return m_provider.getObservation().getMetadataList();
   }
 
+  @Override
   public DataColumn getDataColumn( )
   {
     return m_type;
   }
 
+  @Override
   public String getLabel( )
   {
     return m_label;
   }
 
+  @Override
   public boolean isMetadataSource( )
   {
     return m_type.isMetadataSource();
   }
 
+  @Override
   public IAxis[] getAxes( )
   {
     return m_provider.getObservation().getAxisList();

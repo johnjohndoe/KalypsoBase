@@ -38,27 +38,33 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.commands;
+package org.kalypso.zml.ui.table.model;
 
-import org.apache.commons.lang.NotImplementedException;
-import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
-import org.kalypso.zml.ui.table.IZmlTableComposite;
+import org.kalypso.ogc.sensor.IAxis;
+import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.metadata.MetadataList;
+import org.kalypso.zml.ui.table.binding.DataColumn;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlCommandCopyValue extends AbstractZmlCommandHandler
+public interface IZmlModelColumn
 {
-  /**
-   * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
-   */
-  @Override
-  public Object execute( final ExecutionEvent event ) throws ExecutionException
-  {
-    final IZmlTableComposite table = ZmlHandlerUtil.getTable( event );
+  DataColumn getDataColumn( );
 
-    throw new NotImplementedException();
-  }
+  IAxis[] getAxes( );
 
+  int size( ) throws SensorException;
+
+  Object get( int i, IAxis indexAxis ) throws SensorException;
+
+  void update( int index, Object value ) throws SensorException;
+
+  String getIdentifier( );
+
+  MetadataList getMetadata( );
+
+  boolean isMetadataSource( );
+
+  String getLabel( );
 }

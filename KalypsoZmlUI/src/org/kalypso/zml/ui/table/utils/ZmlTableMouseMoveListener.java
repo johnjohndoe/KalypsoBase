@@ -46,7 +46,8 @@ import org.eclipse.swt.events.MouseMoveListener;
 import org.eclipse.swt.graphics.Point;
 import org.kalypso.zml.ui.table.ZmlTableComposite;
 import org.kalypso.zml.ui.table.binding.BaseColumn;
-import org.kalypso.zml.ui.table.model.ZmlTableRow;
+import org.kalypso.zml.ui.table.model.IZmlModelRow;
+import org.kalypso.zml.ui.table.model.ZmlModelRow;
 import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
 
 /**
@@ -90,15 +91,15 @@ public class ZmlTableMouseMoveListener implements MouseMoveListener
     return column;
   }
 
-  public ZmlTableRow findActiveRow( )
+  public ZmlModelRow findActiveRow( )
   {
     final ViewerCell cell = getActiveCell();
     if( cell == null )
       return null;
 
     final Object element = cell.getElement();
-    if( element instanceof ZmlTableRow )
-      return (ZmlTableRow) element;
+    if( element instanceof ZmlModelRow )
+      return (ZmlModelRow) element;
 
     return null;
   }
@@ -106,7 +107,7 @@ public class ZmlTableMouseMoveListener implements MouseMoveListener
   public IZmlValueReference findActiveCell( )
   {
     final BaseColumn column = findActiveColumn();
-    final ZmlTableRow row = findActiveRow();
+    final IZmlModelRow row = findActiveRow();
     if( column == null || row == null )
       return null;
 

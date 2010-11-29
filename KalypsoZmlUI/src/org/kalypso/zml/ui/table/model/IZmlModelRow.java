@@ -38,27 +38,17 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.commands;
+package org.kalypso.zml.ui.table.model;
 
-import org.apache.commons.lang.NotImplementedException;
-import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
-import org.kalypso.zml.ui.table.IZmlTableComposite;
+import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
+import org.kalypso.zml.ui.table.schema.AbstractColumnType;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlCommandCopyValue extends AbstractZmlCommandHandler
+public interface IZmlModelRow
 {
-  /**
-   * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
-   */
-  @Override
-  public Object execute( final ExecutionEvent event ) throws ExecutionException
-  {
-    final IZmlTableComposite table = ZmlHandlerUtil.getTable( event );
+  IZmlValueReference get( AbstractColumnType type );
 
-    throw new NotImplementedException();
-  }
-
+  Object getIndexValue( );
 }

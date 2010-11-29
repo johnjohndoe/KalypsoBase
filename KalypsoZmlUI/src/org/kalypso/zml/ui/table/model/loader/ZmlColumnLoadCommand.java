@@ -47,8 +47,8 @@ import org.kalypso.ogc.sensor.template.IObsProviderListener;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.zml.ui.table.IZmlTableColumn;
 import org.kalypso.zml.ui.table.binding.DataColumn;
-import org.kalypso.zml.ui.table.model.IZmlColumnModel;
-import org.kalypso.zml.ui.table.model.ZmlTableColumn;
+import org.kalypso.zml.ui.table.model.IZmlDataModel;
+import org.kalypso.zml.ui.table.model.ZmlModelColumn;
 import org.kalypso.zml.ui.table.schema.DataColumnType;
 import org.kalypso.zml.ui.table.utils.TableTypeHelper;
 
@@ -61,9 +61,9 @@ public class ZmlColumnLoadCommand implements IObsProviderListener
 
   private final IZmlTableColumn m_column;
 
-  private final IZmlColumnModel m_model;
+  private final IZmlDataModel m_model;
 
-  public ZmlColumnLoadCommand( final IZmlColumnModel model, final IZmlTableColumn column )
+  public ZmlColumnLoadCommand( final IZmlDataModel model, final IZmlTableColumn column )
   {
     m_model = model;
     m_column = column;
@@ -130,7 +130,7 @@ public class ZmlColumnLoadCommand implements IObsProviderListener
     final IAxis[] axes = observation.getAxisList();
     final String label = m_column.getTitle( AxisUtils.findAxis( axes, data.getValueAxis() ) );
 
-    m_model.addColumn( new ZmlTableColumn( label, clone, m_model, data ) );
+    m_model.addColumn( new ZmlModelColumn( label, clone, m_model, data ) );
 
     base.dispose();
   }
