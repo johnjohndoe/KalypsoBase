@@ -101,30 +101,5 @@
          id="org.kalypso.zml.ui.table.commands.value.set.paste"
          name="Einfügen">
    </command>
-   <command
-         categoryId="org.kalypso.zml.ui.table.commands.category"
-         id="org.kalypso.zml.ui.table.commands.zeitreihenuebersicht"
-         name="Zeitreihenübersicht">
-   </command>
-   <command
-         categoryId="org.kalypso.zml.ui.table.commands.category"
-         id="org.kalypso.zml.ui.table.commands.reset.timeseries"
-         name="Zurücksetzen auf Ausgangszustand">
-   </command>
-   <command
-         categoryId="org.kalypso.zml.ui.table.commands.category"
-         id="org.kalypso.zml.ui.table.commands.datenaustausch"
-         name="Datenaustausch">
-   </command>
-   <command
-         categoryId="org.kalypso.zml.ui.table.commands.category"
-         id="org.kalypso.zml.ui.table.commands.external.sources"
-         name="Externe Quellen">
-   </command>
-   <command
-         categoryId="org.kalypso.zml.ui.table.commands.category"
-         id="org.kalypso.zml.ui.table.commands.open.rohdaten.directories"
-         name="Öffne Rohdateneingangs- und Ablageverzeichnis">
-   </command>
  </extension>
 </plugin>

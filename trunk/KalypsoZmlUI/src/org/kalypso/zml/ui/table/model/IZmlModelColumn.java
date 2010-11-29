@@ -41,6 +41,7 @@
 package org.kalypso.zml.ui.table.model;
 
 import org.kalypso.ogc.sensor.IAxis;
+import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.zml.ui.table.binding.DataColumn;
@@ -68,4 +69,5 @@ public interface IZmlModelColumn
 
   String getLabel( );
 
+  IObservation getObservation( );
 }

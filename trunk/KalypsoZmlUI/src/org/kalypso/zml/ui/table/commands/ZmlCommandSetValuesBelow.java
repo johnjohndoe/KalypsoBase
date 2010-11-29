@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.commands;
 
+import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.Status;
@@ -53,7 +54,7 @@ import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
 /**
  * @author Dirk Kuch
  */
-public class ZmlCommandSetValuesBelow extends AbstractZmlCommandHandler
+public class ZmlCommandSetValuesBelow extends AbstractHandler
 {
   /**
    * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)

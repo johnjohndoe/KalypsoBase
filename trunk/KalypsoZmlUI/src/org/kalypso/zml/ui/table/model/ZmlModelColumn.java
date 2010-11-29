@@ -211,4 +211,13 @@ public class ZmlModelColumn implements IZmlModelColumn
   {
     return m_provider.getObservation().getAxisList();
   }
+
+  /**
+   * @see org.kalypso.zml.ui.table.model.IZmlModelColumn#getObservation()
+   */
+  @Override
+  public IObservation getObservation( )
+  {
+    return m_provider.getObservation();
+  }
 }
