@@ -53,11 +53,11 @@ import org.kalypso.zml.ui.table.schema.ZmlTableType;
 /**
  * @author Dirk Kuch
  */
-public class ZmlColumnModel implements IZmlColumnModel
+public class ZmlDataModel implements IZmlDataModel
 {
   private final Set<ZmlColumnLoadCommand> m_commands = new HashSet<ZmlColumnLoadCommand>();
 
-  private final List<ZmlTableColumn> m_columns = new ArrayList<ZmlTableColumn>();
+  private final List<ZmlModelColumn> m_columns = new ArrayList<ZmlModelColumn>();
 
   private final Set<IZmlColumnModelListener> m_listeners = new HashSet<IZmlColumnModelListener>();
 
@@ -65,7 +65,7 @@ public class ZmlColumnModel implements IZmlColumnModel
 
   private Object[] m_indexColumnValues;
 
-  public ZmlColumnModel( final ZmlTableType type )
+  public ZmlDataModel( final ZmlTableType type )
   {
     m_type = type;
   }
@@ -88,7 +88,7 @@ public class ZmlColumnModel implements IZmlColumnModel
   }
 
   @Override
-  public void addColumn( final ZmlTableColumn column )
+  public void addColumn( final ZmlModelColumn column )
   {
     m_columns.add( column );
 
@@ -106,25 +106,25 @@ public class ZmlColumnModel implements IZmlColumnModel
   }
 
   @Override
-  public ZmlTableColumn[] getColumns( )
+  public ZmlModelColumn[] getColumns( )
   {
-    return m_columns.toArray( new ZmlTableColumn[] {} );
+    return m_columns.toArray( new ZmlModelColumn[] {} );
   }
 
   public void clean( )
   {
-    final ZmlTableColumn[] columns;
+    final ZmlModelColumn[] columns;
     final ZmlColumnLoadCommand[] commands;
     synchronized( this )
     {
-      columns = m_columns.toArray( new ZmlTableColumn[] {} );
+      columns = m_columns.toArray( new ZmlModelColumn[] {} );
       m_columns.clear();
 
       commands = m_commands.toArray( new ZmlColumnLoadCommand[] {} );
       m_commands.clear();
     }
 
-    for( final ZmlTableColumn column : columns )
+    for( final ZmlModelColumn column : columns )
     {
       column.dispose();
     }
@@ -136,9 +136,9 @@ public class ZmlColumnModel implements IZmlColumnModel
   }
 
   @Override
-  public ZmlTableColumn getColumn( final String id )
+  public ZmlModelColumn getColumn( final String id )
   {
-    for( final ZmlTableColumn column : m_columns )
+    for( final ZmlModelColumn column : m_columns )
     {
       if( column.getIdentifier().equals( id ) )
         return column;

@@ -61,9 +61,9 @@ import org.kalypso.contribs.eclipse.swt.layout.LayoutHelper;
 import org.kalypso.zml.ui.table.binding.BaseColumn;
 import org.kalypso.zml.ui.table.menu.ZmlTableContextMenuListener;
 import org.kalypso.zml.ui.table.menu.ZmlTableHeaderContextMenuListener;
-import org.kalypso.zml.ui.table.model.IZmlColumnModel;
-import org.kalypso.zml.ui.table.model.ZmlTableColumn;
-import org.kalypso.zml.ui.table.model.ZmlTableRow;
+import org.kalypso.zml.ui.table.model.IZmlDataModel;
+import org.kalypso.zml.ui.table.model.IZmlModelColumn;
+import org.kalypso.zml.ui.table.model.ZmlModelRow;
 import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
 import org.kalypso.zml.ui.table.provider.IZmlColumnModelListener;
 import org.kalypso.zml.ui.table.provider.ZmlLabelProvider;
@@ -84,11 +84,11 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
 
   private final Map<Integer, BaseColumn> m_columnIndex = new HashMap<Integer, BaseColumn>();
 
-  private final IZmlColumnModel m_model;
+  private final IZmlDataModel m_model;
 
   private ZmlTableMouseMoveListener m_mouseMoveListener;
 
-  public ZmlTableComposite( final IZmlColumnModel model, final Composite parent )
+  public ZmlTableComposite( final IZmlDataModel model, final Composite parent )
   {
     super( parent, SWT.NULL );
     m_model = model;
@@ -197,7 +197,7 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
       /** only update headers of data column types */
       if( baseColumn.getType() instanceof DataColumnType )
       {
-        final ZmlTableColumn column = m_model.getColumn( baseColumn.getIdentifier() );
+        final IZmlModelColumn column = m_model.getColumn( baseColumn.getIdentifier() );
         if( column == null )
         {
           tableColumn.setWidth( 0 );
@@ -300,7 +300,7 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
    * @see org.kalypso.zml.ui.table.IZmlTableComposite#getActiveRow()
    */
   @Override
-  public ZmlTableRow getActiveRow( )
+  public ZmlModelRow getActiveRow( )
   {
     return m_mouseMoveListener.findActiveRow();
   }

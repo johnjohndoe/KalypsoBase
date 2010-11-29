@@ -46,18 +46,18 @@ import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.zml.ui.table.binding.DataColumn;
-import org.kalypso.zml.ui.table.model.ZmlTableColumn;
+import org.kalypso.zml.ui.table.model.IZmlModelColumn;
 
 /**
  * @author Dirk Kuch
  */
 public class ZmlDataValueReference implements IZmlValueReference
 {
-  private final ZmlTableColumn m_column;
+  private final IZmlModelColumn m_column;
 
   private final int m_index;
 
-  public ZmlDataValueReference( final ZmlTableColumn column, final int index )
+  public ZmlDataValueReference( final IZmlModelColumn column, final int index )
   {
     m_column = column;
     m_index = index;

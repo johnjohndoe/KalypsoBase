@@ -58,7 +58,7 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.binding.BaseColumn;
 import org.kalypso.zml.ui.table.binding.CellStyle;
-import org.kalypso.zml.ui.table.model.ZmlTableRow;
+import org.kalypso.zml.ui.table.model.IZmlModelRow;
 import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
 
 /**
@@ -113,11 +113,11 @@ public class ZmlEditingSupport extends EditingSupport
   @Override
   protected Object getValue( final Object element )
   {
-    if( element instanceof ZmlTableRow )
+    if( element instanceof IZmlModelRow )
     {
       try
       {
-        final ZmlTableRow row = (ZmlTableRow) element;
+        final IZmlModelRow row = (IZmlModelRow) element;
 
         final IZmlValueReference reference = row.get( m_type.getType() );
         if( reference == null )
@@ -158,11 +158,11 @@ public class ZmlEditingSupport extends EditingSupport
     if( value.equals( m_lastEdited ) )
       return;
 
-    if( element instanceof ZmlTableRow && value instanceof String )
+    if( element instanceof IZmlModelRow && value instanceof String )
     {
       try
       {
-        final ZmlTableRow row = (ZmlTableRow) element;
+        final IZmlModelRow row = (IZmlModelRow) element;
         final IZmlValueReference reference = row.get( m_type.getType() );
 
         final Object targetValue = getTargetValue( reference, value );

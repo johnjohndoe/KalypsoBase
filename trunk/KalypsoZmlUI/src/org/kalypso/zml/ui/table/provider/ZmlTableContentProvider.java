@@ -51,9 +51,9 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.binding.DataColumn;
-import org.kalypso.zml.ui.table.model.IZmlColumnModel;
-import org.kalypso.zml.ui.table.model.ZmlTableColumn;
-import org.kalypso.zml.ui.table.model.ZmlTableRow;
+import org.kalypso.zml.ui.table.model.IZmlDataModel;
+import org.kalypso.zml.ui.table.model.IZmlModelColumn;
+import org.kalypso.zml.ui.table.model.ZmlModelRow;
 import org.kalypso.zml.ui.table.model.references.ZmlDataValueReference;
 
 /**
@@ -62,9 +62,9 @@ import org.kalypso.zml.ui.table.model.references.ZmlDataValueReference;
 public class ZmlTableContentProvider implements ITreeContentProvider
 {
 
-  private final IZmlColumnModel m_model;
+  private final IZmlDataModel m_model;
 
-  public ZmlTableContentProvider( final IZmlColumnModel model )
+  public ZmlTableContentProvider( final IZmlDataModel model )
   {
     m_model = model;
   }
@@ -93,15 +93,15 @@ public class ZmlTableContentProvider implements ITreeContentProvider
   @Override
   public Object[] getElements( final Object inputElement )
   {
-    if( inputElement instanceof IZmlColumnModel )
+    if( inputElement instanceof IZmlDataModel )
     {
       try
       {
-        final IZmlColumnModel model = (IZmlColumnModel) inputElement;
+        final IZmlDataModel model = (IZmlDataModel) inputElement;
 
-        final Map<Object, ZmlTableRow> map = new TreeMap<Object, ZmlTableRow>();
+        final Map<Object, ZmlModelRow> map = new TreeMap<Object, ZmlModelRow>();
 
-        for( final ZmlTableColumn column : m_model.getColumns() )
+        for( final IZmlModelColumn column : m_model.getColumns() )
         {
           final DataColumn type = column.getDataColumn();
           final IAxis[] axes = column.getAxes();
@@ -111,10 +111,10 @@ public class ZmlTableContentProvider implements ITreeContentProvider
           {
             final Object index = column.get( i, indexAxis );
 
-            ZmlTableRow structure = map.get( index );
+            ZmlModelRow structure = map.get( index );
             if( structure == null )
             {
-              structure = new ZmlTableRow( index );
+              structure = new ZmlModelRow( index );
               map.put( index, structure );
             }
 
@@ -125,7 +125,7 @@ public class ZmlTableContentProvider implements ITreeContentProvider
 
         model.setIndexColumnValues( map.keySet().toArray() );
 
-        return map.values().toArray( new ZmlTableRow[] {} );
+        return map.values().toArray( new ZmlModelRow[] {} );
 
       }
       catch( final SensorException e )
