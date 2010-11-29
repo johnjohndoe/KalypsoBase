@@ -49,6 +49,7 @@ import javax.xml.namespace.QName;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
@@ -485,7 +486,8 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     if( controlFactory == null )
     {
       final String msg = Messages.getString( "org.kalypso.ogc.gml.featureview.control.FeatureComposite.create" ); //$NON-NLS-1$
-      return new LabelFeatureControl( feature, ftp, msg );
+      final IStatus status = new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), msg );
+      return new StatusFeatureControl( status );
     }
 
     return controlFactory.createFeatureControl( this, feature, ftp, controlType, annotation );

@@ -40,12 +40,17 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.featureview.control;
 
+import javax.xml.namespace.QName;
+
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.gmlschema.annotation.AnnotationUtilities;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.template.featureview.Checkbox;
 import org.kalypso.template.featureview.ControlType;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -65,6 +70,15 @@ public class CheckboxFeatureControlFactory implements IFeatureControlFactory
     final String text = AnnotationUtilities.getAnnotation( annotation, checkboxControlText, IAnnotation.ANNO_LABEL );
 
     final IValuePropertyType vpt = (IValuePropertyType) pt;
+
+    // TODO: this check should be made for (almost) all feature controls
+    if( vpt == null )
+    {
+      final QName property = checkboxType.getProperty();
+      final String message = String.format( "Unknown property: %s", property );
+      final IStatus status = new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), message );
+      return new StatusFeatureControl( status );
+    }
 
     return new CheckboxFeatureControl( feature, vpt, text );
   }
