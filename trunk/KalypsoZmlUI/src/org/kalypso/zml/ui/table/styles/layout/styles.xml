@@ -26,6 +26,14 @@
       <property name="textFormat">%.3f</property>
     </Style>
     
+     <!-- base n cell table style -->
+    <Style id="nBaseCellStyle">
+      <baseStyle>
+        <reference>defaultCellStyle</reference>
+      </baseStyle>
+      <property name="textFormat">%.1f</property>
+    </Style>
+
     <!-- base q cell table style -->
     <Style id="qBaseCellStyle">
       <baseStyle>
@@ -60,6 +68,11 @@
       </baseStyle>
       <property name="icon">urn:org:kalypso:zml:ui:table:icon:user:modified</property>
     </Style>
+    <Style id="nUserModifiedStyle">
+      <baseStyle>
+        <reference>wUserModifiedStyle</reference>
+      </baseStyle>
+    </Style>
     <Style id="qUserModifiedStyle">
       <baseStyle>
         <reference>qBaseCellStyle</reference>
@@ -72,6 +85,12 @@
     <Style id="wInterpolatedValueStyle">
       <baseStyle>
         <reference>wBaseCellStyle</reference>
+      </baseStyle>
+      <property name="icon">urn:org:kalypso:zml:ui:table:icon:interpolated:value</property>
+    </Style>
+     <Style id="nInterpolatedValueStyle">
+      <baseStyle>
+        <reference>wInterpolatedValueStyle</reference>
       </baseStyle>
       <property name="icon">urn:org:kalypso:zml:ui:table:icon:interpolated:value</property>
     </Style>
