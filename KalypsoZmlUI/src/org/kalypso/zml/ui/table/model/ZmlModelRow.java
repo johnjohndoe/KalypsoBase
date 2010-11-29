@@ -85,6 +85,15 @@ public class ZmlModelRow implements IZmlModelRow
     return m_references.get( type.getId() );
   }
 
+  /**
+   * @see org.kalypso.zml.ui.table.model.IZmlModelRow#get(org.kalypso.zml.ui.table.model.IZmlModelColumn)
+   */
+  @Override
+  public IZmlValueReference get( final IZmlModelColumn column )
+  {
+    return get( column.getDataColumn().getType() );
+  }
+
   @Override
   public Object getIndexValue( )
   {
@@ -108,4 +117,5 @@ public class ZmlModelRow implements IZmlModelRow
   {
     return m_references.values().toArray( new IZmlValueReference[] {} );
   }
+
 }

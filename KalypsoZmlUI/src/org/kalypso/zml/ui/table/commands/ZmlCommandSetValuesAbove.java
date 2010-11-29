@@ -40,10 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.commands;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.runtime.Status;
+import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.ui.table.IZmlTableComposite;
+import org.kalypso.zml.ui.table.model.IZmlDataModel;
+import org.kalypso.zml.ui.table.model.IZmlModelColumn;
+import org.kalypso.zml.ui.table.model.IZmlModelRow;
+import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
 
 /**
  * @author Dirk Kuch
@@ -56,8 +61,32 @@ public class ZmlCommandSetValuesAbove extends AbstractZmlCommandHandler
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
-    final IZmlTableComposite table = ZmlHandlerUtil.getTable( event );
+    try
+    {
+      final IZmlTableComposite table = ZmlHandlerUtil.getTable( event );
+      final IZmlValueReference cell = table.getActiveCell();
+      final IZmlModelColumn column = cell.getColumn();
+      final Integer modelIndex = cell.getTupleModelIndex();
+      final Object value = cell.getValue();
 
-    throw new NotImplementedException();
+      final IZmlDataModel model = cell.getModel();
+      final IZmlModelRow[] rows = model.getRows();
+      for( final IZmlModelRow row : rows )
+      {
+        final IZmlValueReference reference = row.get( column );
+        if( reference == null )
+          continue;
+
+        final Integer rowModelIndex = reference.getTupleModelIndex();
+        if( rowModelIndex < modelIndex )
+          reference.update( value );
+      }
+
+      return Status.OK_STATUS;
+    }
+    catch( final SensorException e )
+    {
+      throw new ExecutionException( "Aktualisieren der Werte fehlgeschlagen.", e );
+    }
   }
 }
