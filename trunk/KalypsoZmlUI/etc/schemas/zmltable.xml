@@ -32,6 +32,7 @@
       <property name="width">100</property>
       <property name="alignment">RIGHT</property>
       <property name="uriContextMenu">menu:org.kalypso.hwv.product.sachsenanhalt.zml.table.menu.cell.ContextMenu</property>
+      <property name="uriHeaderContextMenu">menu:org.kalypso.hwv.product.sachsenanhalt.zml.table.menu.header.ContextMenu</property>
 
       <defaultCellStyle>
         <url>urn:org:kalypso:zml:ui:table:style:base#wBaseCellStyle</url>
@@ -68,14 +69,15 @@
       <property name="width">100</property>
       <property name="alignment">RIGHT</property>
       <property name="uriContextMenu">menu:org.kalypso.hwv.product.sachsenanhalt.zml.table.menu.cell.ContextMenu</property>
-      
+      <property name="uriHeaderContextMenu">menu:org.kalypso.hwv.product.sachsenanhalt.zml.table.menu.header.ContextMenu</property>
+
       <defaultCellStyle>
         <url>urn:org:kalypso:zml:ui:table:style:base#wBaseCellStyle</url>
       </defaultCellStyle>
       <defaultCellEditingStyle>
         <url>urn:org:kalypso:zml:ui:table:style:base#wBaseEditingCellStyle</url>
       </defaultCellEditingStyle>
-      
+
       <Rules>
         <Rule ruleReference="org.kalypso.zml.ui.table.rule.user.modified">
           <styleReference>
@@ -105,7 +107,7 @@
       <property name="width">100</property>
       <property name="alignment">RIGHT</property>
       <property name="uriContextMenu">menu:org.kalypso.hwv.product.sachsenanhalt.zml.table.menu.cell.ContextMenu</property>
-
+      <property name="uriHeaderContextMenu">menu:org.kalypso.hwv.product.sachsenanhalt.zml.table.menu.header.ContextMenu</property>
 
       <defaultCellStyle>
         <url>urn:org:kalypso:zml:ui:table:style:base#qBaseCellStyle</url>
@@ -139,6 +141,7 @@
       <property name="width">100</property>
       <property name="alignment">RIGHT</property>
       <property name="uriContextMenu">menu:org.kalypso.hwv.product.sachsenanhalt.zml.table.menu.cell.ContextMenu</property>
+      <property name="uriHeaderContextMenu">menu:org.kalypso.hwv.product.sachsenanhalt.zml.table.menu.header.ContextMenu</property>
 
       <defaultCellStyle>
         <url>urn:org:kalypso:zml:ui:table:style:base#qBaseCellStyle</url>

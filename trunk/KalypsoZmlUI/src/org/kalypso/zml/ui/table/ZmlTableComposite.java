@@ -51,6 +51,7 @@ import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.kalypso.contribs.eclipse.swt.layout.LayoutHelper;
@@ -85,6 +86,8 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
   private ZmlTableMouseMoveListener m_mouseMoveListener;
 
   private ZmlTableUiUpdateJob m_updateJob;
+
+  private Menu m_menu;
 
   public ZmlTableComposite( final IZmlDataModel model, final Composite parent )
   {
@@ -146,7 +149,6 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
     // TableViewerEditor.create( m_tableViewer, focusCellManager, actSupport, ColumnViewerEditor.TABBING_HORIZONTAL |
     // ColumnViewerEditor.TABBING_MOVE_TO_ROW_NEIGHBOR
     // | ColumnViewerEditor.TABBING_VERTICAL | ColumnViewerEditor.KEYBOARD_ACTIVATION );
-
   }
 
   private TableViewerColumn buildColumnViewer( final BaseColumn type )
@@ -156,7 +158,7 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
 
     final TableViewerColumn column = new TableViewerColumn( m_tableViewer, TableTypeHelper.toSWT( type.getAlignment() ) );
 
-    column.getColumn().addSelectionListener( new ZmlTableHeaderContextMenuListener( this ) );
+    column.getColumn().addSelectionListener( new ZmlTableHeaderContextMenuListener( this, column ) );
     column.setLabelProvider( new ZmlLabelProvider( type ) );
     column.getColumn().setText( type.getLabel() );
 
@@ -305,6 +307,15 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
   public IZmlModelRow[] getSelectedRows( )
   {
     return m_mouseMoveListener.findSelectedRows();
+  }
+
+  public void setContextMenu( final Menu menu )
+  {
+    if( m_menu != null )
+      m_menu.dispose();
+
+    m_tableViewer.getControl().setMenu( menu );
+    m_menu = menu;
   }
 
 }
