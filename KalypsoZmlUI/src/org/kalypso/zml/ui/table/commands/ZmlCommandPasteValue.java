@@ -40,10 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.commands;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.swt.dnd.Clipboard;
+import org.eclipse.swt.dnd.TextTransfer;
+import org.eclipse.ui.PlatformUI;
+import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.zml.ui.table.IZmlTableComposite;
+import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
 
 /**
  * @author Dirk Kuch
@@ -56,8 +61,24 @@ public class ZmlCommandPasteValue extends AbstractZmlCommandHandler
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
-    final IZmlTableComposite table = ZmlHandlerUtil.getTable( event );
+    try
+    {
+      final IZmlTableComposite table = ZmlHandlerUtil.getTable( event );
+      final IZmlValueReference cell = table.getActiveCell();
 
-    throw new NotImplementedException();
+      final Clipboard clipboard = new Clipboard( PlatformUI.getWorkbench().getDisplay() );
+      final TextTransfer transfer = TextTransfer.getInstance();
+      final String data = (String) clipboard.getContents( transfer );
+
+      final double value = NumberUtils.parseDouble( data );
+      cell.update( value );
+
+      return Status.OK_STATUS;
+    }
+    catch( final Exception e )
+    {
+      throw new ExecutionException( "Einfügen des Wertes aus der Zwischenablage fehlgeschlagen.", e );
+    }
+
   }
 }
