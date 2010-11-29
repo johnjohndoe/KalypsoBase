@@ -59,7 +59,7 @@ import org.kalypso.zml.ui.table.menu.ZmlTableContextMenuListener;
 import org.kalypso.zml.ui.table.menu.ZmlTableHeaderContextMenuListener;
 import org.kalypso.zml.ui.table.model.IZmlDataModel;
 import org.kalypso.zml.ui.table.model.IZmlModelColumn;
-import org.kalypso.zml.ui.table.model.ZmlModelRow;
+import org.kalypso.zml.ui.table.model.IZmlModelRow;
 import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
 import org.kalypso.zml.ui.table.provider.IZmlColumnModelListener;
 import org.kalypso.zml.ui.table.provider.ZmlLabelProvider;
@@ -293,9 +293,18 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
    * @see org.kalypso.zml.ui.table.IZmlTableComposite#getActiveRow()
    */
   @Override
-  public ZmlModelRow getActiveRow( )
+  public IZmlModelRow getActiveRow( )
   {
     return m_mouseMoveListener.findActiveRow();
+  }
+
+  /**
+   * @see org.kalypso.zml.ui.table.IZmlTableComposite#getSelectedRows()
+   */
+  @Override
+  public IZmlModelRow[] getSelectedRows( )
+  {
+    return m_mouseMoveListener.findSelectedRows();
   }
 
 }
