@@ -67,4 +67,5 @@ public interface IZmlModelColumn
   boolean isMetadataSource( );
 
   String getLabel( );
+
 }

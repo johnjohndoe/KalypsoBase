@@ -165,9 +165,9 @@ public class ZmlDataModel implements IZmlDataModel
   @Override
   public IZmlModelRow getRow( final Object index )
   {
-    synchronized( this )
+    if( m_rowsDirty )
     {
-      if( m_rowsDirty )
+      synchronized( this )
       {
         final ZmlModelBuilder builder = new ZmlModelBuilder( this );
         ProgressUtilities.busyCursorWhile( builder );
@@ -185,9 +185,9 @@ public class ZmlDataModel implements IZmlDataModel
   @Override
   public IZmlModelRow[] getRows( )
   {
-    synchronized( this )
+    if( m_rowsDirty )
     {
-      if( m_rowsDirty )
+      synchronized( this )
       {
         final ZmlModelBuilder builder = new ZmlModelBuilder( this );
         ProgressUtilities.busyCursorWhile( builder );
