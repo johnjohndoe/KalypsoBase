@@ -50,9 +50,12 @@ public interface IZmlModelRow
 {
   IZmlValueReference get( AbstractColumnType type );
 
+  IZmlValueReference get( IZmlModelColumn column );
+
   Object getIndexValue( );
 
   IZmlDataModel getModel( );
 
   IZmlValueReference[] getReferences( );
+
 }

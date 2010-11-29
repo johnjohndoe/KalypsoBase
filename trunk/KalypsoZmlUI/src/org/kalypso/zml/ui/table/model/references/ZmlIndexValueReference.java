@@ -52,6 +52,7 @@ import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.binding.BaseColumn;
+import org.kalypso.zml.ui.table.model.IZmlDataModel;
 import org.kalypso.zml.ui.table.model.IZmlModelColumn;
 import org.kalypso.zml.ui.table.model.IZmlModelRow;
 
@@ -165,5 +166,23 @@ public class ZmlIndexValueReference implements IZmlValueReference
   public IZmlModelRow getRow( )
   {
     return m_row;
+  }
+
+  /**
+   * @see org.kalypso.zml.ui.table.model.references.IZmlValueReference#getTupleModelIndex()
+   */
+  @Override
+  public Integer getTupleModelIndex( )
+  {
+    return null;
+  }
+
+  /**
+   * @see org.kalypso.zml.ui.table.model.references.IZmlValueReference#getModel()
+   */
+  @Override
+  public IZmlDataModel getModel( )
+  {
+    return m_row.getModel();
   }
 }

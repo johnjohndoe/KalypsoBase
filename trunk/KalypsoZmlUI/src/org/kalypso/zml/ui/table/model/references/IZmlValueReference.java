@@ -44,6 +44,7 @@ import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.zml.ui.table.binding.BaseColumn;
+import org.kalypso.zml.ui.table.model.IZmlDataModel;
 import org.kalypso.zml.ui.table.model.IZmlModelColumn;
 import org.kalypso.zml.ui.table.model.IZmlModelRow;
 
@@ -52,6 +53,8 @@ import org.kalypso.zml.ui.table.model.IZmlModelRow;
  */
 public interface IZmlValueReference
 {
+  IZmlDataModel getModel( );
+
   BaseColumn getBaseColumn( );
 
   IZmlModelColumn getColumn( );
@@ -71,4 +74,5 @@ public interface IZmlValueReference
 
   void update( Object targetValue ) throws SensorException;
 
+  Integer getTupleModelIndex( );
 }
