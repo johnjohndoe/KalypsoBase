@@ -5,8 +5,9 @@
     <url>urn:org:kalypso:zml:ui:table:style:base#defaultCellStyle</url>
   </defaultStyle>
 
+  <toolbar>toolbar:org.kalypso.hwv.product.sachsenanhalt.zml.table.menu.toolbar</toolbar>
+
   <Columns>
-  
     <!-- date column -->
     <Column xsi:type="IndexColumnType" autopack="true" id="date">
       <property name="label">Datum</property>

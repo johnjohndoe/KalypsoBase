@@ -46,6 +46,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
@@ -54,6 +55,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.kalypso.contribs.eclipse.jface.action.ContributionUtils;
 import org.kalypso.contribs.eclipse.swt.layout.LayoutHelper;
 import org.kalypso.zml.ui.table.binding.BaseColumn;
 import org.kalypso.zml.ui.table.menu.ZmlTableContextMenuListener;
@@ -89,21 +94,23 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
 
   private Menu m_menu;
 
-  public ZmlTableComposite( final IZmlDataModel model, final Composite parent )
+  public ZmlTableComposite( final IZmlDataModel model, final Composite parent, final FormToolkit toolkit )
   {
     super( parent, SWT.NULL );
     m_model = model;
 
     setLayout( LayoutHelper.createGridLayout() );
-
-    setup();
+    setup( toolkit );
 
     model.addListener( this );
+    toolkit.adapt( this );
   }
 
-  private void setup( )
+  private void setup( final FormToolkit toolkit )
   {
     final ZmlTableType tableType = m_model.getTableType();
+
+    initToolbar( tableType, toolkit );
 
     m_tableViewer = new TableViewer( this, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.FULL_SELECTION );
     m_tableViewer.getTable().setLinesVisible( true );
@@ -149,6 +156,23 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
     // TableViewerEditor.create( m_tableViewer, focusCellManager, actSupport, ColumnViewerEditor.TABBING_HORIZONTAL |
     // ColumnViewerEditor.TABBING_MOVE_TO_ROW_NEIGHBOR
     // | ColumnViewerEditor.TABBING_VERTICAL | ColumnViewerEditor.KEYBOARD_ACTIVATION );
+  }
+
+  private void initToolbar( final ZmlTableType tableType, final FormToolkit toolkit )
+  {
+    final String reference = tableType.getToolbar();
+    if( reference == null || reference.trim().isEmpty() )
+      return;
+
+    final ToolBarManager manager = new ToolBarManager();
+
+    final ToolBar control = manager.createControl( this );
+    control.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+
+    ContributionUtils.populateContributionManager( PlatformUI.getWorkbench(), manager, reference );
+    manager.update( true );
+
+    toolkit.adapt( control );
   }
 
   private TableViewerColumn buildColumnViewer( final BaseColumn type )

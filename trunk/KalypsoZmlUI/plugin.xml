@@ -102,4 +102,50 @@
          name="Einfügen">
    </command>
  </extension>
+ <extension
+       point="org.eclipse.ui.commands">
+    <category
+          id="org.kalypso.zml.ui.table.toolbar.commands.category"
+          name="zml table toolbar commands">
+    </category>
+    <command
+          categoryId="org.kalypso.zml.ui.table.toolbar.commands.category"
+          id="org.kalypso.zml.ui.table.commands.toolbar.view.all"
+          name="Vollansicht">
+    </command>
+    <command
+          categoryId="org.kalypso.zml.ui.table.toolbar.commands.category"
+          id="org.kalypso.zml.ui.table.commands.toolbar.view.6.hours"
+          name="6 Stunden Ansicht">
+    </command>
+    <command
+          categoryId="org.kalypso.zml.ui.table.toolbar.commands.category"
+          id="org.kalypso.zml.ui.table.commands.toolbar.view.12.hours"
+          name="12 Stunden Ansicht">
+    </command>
+    <command
+          categoryId="org.kalypso.zml.ui.table.toolbar.commands.category"
+          id="org.kalypso.zml.ui.table.commands.toolbar.view.24.hours"
+          name="24 Stunden Ansicht">
+    </command>
+ </extension>
+ <extension
+       point="org.eclipse.ui.commandImages">
+    <image
+          commandId="org.kalypso.zml.ui.table.commands.toolbar.view.all"
+          icon="icons/table/view_all.png">
+    </image>
+    <image
+          commandId="org.kalypso.zml.ui.table.commands.toolbar.view.6.hours"
+          icon="icons/table/6_hour_view.png">
+    </image>
+    <image
+          commandId="org.kalypso.zml.ui.table.commands.toolbar.view.12.hours"
+          icon="icons/table/12_hour_view.png">
+    </image>
+    <image
+          commandId="org.kalypso.zml.ui.table.commands.toolbar.view.24.hours"
+          icon="icons/table/24_hour_view.png">
+    </image>
+ </extension>
 </plugin>
