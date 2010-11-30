@@ -46,7 +46,7 @@ import org.kalypso.ogc.sensor.template.IObsProvider;
 /**
  * @author Dirk Kuch
  */
-public interface IZmlTableColumn
+public interface IZmlTableElement
 {
   String ZML_TABLE_INDEX_ID = "zml_table_index";
 

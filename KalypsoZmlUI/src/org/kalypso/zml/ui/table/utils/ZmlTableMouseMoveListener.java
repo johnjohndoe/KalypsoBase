@@ -50,10 +50,12 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseMoveListener;
 import org.eclipse.swt.graphics.Point;
 import org.kalypso.zml.ui.table.ZmlTableComposite;
-import org.kalypso.zml.ui.table.binding.BaseColumn;
 import org.kalypso.zml.ui.table.model.IZmlModelRow;
-import org.kalypso.zml.ui.table.model.ZmlModelRow;
-import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
+import org.kalypso.zml.ui.table.viewmodel.IZmlTableCell;
+import org.kalypso.zml.ui.table.viewmodel.IZmlTableColumn;
+import org.kalypso.zml.ui.table.viewmodel.IZmlTableRow;
+import org.kalypso.zml.ui.table.viewmodel.ZmlTableCell;
+import org.kalypso.zml.ui.table.viewmodel.ZmlTableRow;
 
 /**
  * @author Dirk Kuch
@@ -85,56 +87,62 @@ public class ZmlTableMouseMoveListener implements MouseMoveListener
     return cell;
   }
 
-  public BaseColumn findActiveColumn( )
+  public IZmlTableColumn findActiveColumn( )
   {
     final ViewerCell cell = getActiveCell();
     if( cell == null )
       return null;
 
-    final BaseColumn column = m_table.getColumn( cell.getColumnIndex() );
+    final IZmlTableColumn column = m_table.getColumn( cell.getColumnIndex() );
 
     return column;
   }
 
-  public IZmlModelRow findActiveRow( )
+  public IZmlTableRow findActiveRow( )
   {
     final ViewerCell cell = getActiveCell();
     if( cell == null )
       return null;
 
     final Object element = cell.getElement();
-    if( element instanceof ZmlModelRow )
-      return (ZmlModelRow) element;
+    if( element instanceof IZmlModelRow )
+    {
+      final IZmlModelRow row = (IZmlModelRow) element;
+
+      return new ZmlTableRow( m_table, row );
+    }
 
     return null;
   }
 
-  public IZmlValueReference findActiveCell( )
+  public IZmlTableCell findActiveCell( )
   {
-    final BaseColumn column = findActiveColumn();
-    final IZmlModelRow row = findActiveRow();
+    final IZmlTableColumn column = findActiveColumn();
+    final IZmlTableRow row = findActiveRow();
     if( column == null || row == null )
       return null;
 
-    final IZmlValueReference reference = row.get( column.getType() );
+    final ZmlTableCell cell = new ZmlTableCell( column, row );
 
-    return reference;
+    return cell;
   }
 
-  public IZmlModelRow[] findSelectedRows( )
+  public IZmlTableRow[] findSelectedRows( )
   {
     final TableViewer viewer = m_table.getTableViewer();
     final IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
 
-    final List<IZmlModelRow> rows = new ArrayList<IZmlModelRow>();
+    final List<IZmlTableRow> rows = new ArrayList<IZmlTableRow>();
 
     final Object[] elements = selection.toArray();
     for( final Object element : elements )
     {
       if( element instanceof IZmlModelRow )
-        rows.add( (IZmlModelRow) element );
+      {
+        rows.add( new ZmlTableRow( m_table, (IZmlModelRow) element ) );
+      }
     }
 
-    return rows.toArray( new IZmlModelRow[] {} );
+    return rows.toArray( new IZmlTableRow[] {} );
   }
 }

@@ -50,6 +50,7 @@ import org.eclipse.ui.PlatformUI;
 import org.kalypso.contribs.eclipse.jface.action.ContributionUtils;
 import org.kalypso.zml.ui.table.ZmlTableComposite;
 import org.kalypso.zml.ui.table.binding.BaseColumn;
+import org.kalypso.zml.ui.table.viewmodel.IZmlTableColumn;
 
 /**
  * @author Dirk Kuch
@@ -87,9 +88,12 @@ public class ZmlTableHeaderContextMenuListener implements SelectionListener
   public void widgetSelected( final SelectionEvent event )
   {
     String uri = null;
-    final BaseColumn column = m_table.getActiveColumn();
+    final IZmlTableColumn column = m_table.getActiveColumn();
     if( column != null )
-      uri = column.getUriHeaderContextMenu();
+    {
+      final BaseColumn columnType = column.getColumnType();
+      uri = columnType.getUriHeaderContextMenu();
+    }
 
     setMenu( uri );
   }

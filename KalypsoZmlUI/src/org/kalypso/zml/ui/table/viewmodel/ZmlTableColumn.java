@@ -1,0 +1,141 @@
+/*----------------    FILE HEADER KALYPSO ------------------------------------------
+ *
+ *  This file is part of kalypso.
+ *  Copyright (C) 2004 by:
+ * 
+ *  Technical University Hamburg-Harburg (TUHH)
+ *  Institute of River and coastal engineering
+ *  Denickestraße 22
+ *  21073 Hamburg, Germany
+ *  http://www.tuhh.de/wb
+ * 
+ *  and
+ *  
+ *  Bjoernsen Consulting Engineers (BCE)
+ *  Maria Trost 3
+ *  56070 Koblenz, Germany
+ *  http://www.bjoernsen.de
+ * 
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2.1 of the License, or (at your option) any later version.
+ * 
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
+ * 
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * 
+ *  Contact:
+ * 
+ *  E-Mail:
+ *  belger@bjoernsen.de
+ *  schlienger@bjoernsen.de
+ *  v.doemming@tuhh.de
+ *   
+ *  ---------------------------------------------------------------------------*/
+package org.kalypso.zml.ui.table.viewmodel;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.TableViewerColumn;
+import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.TableItem;
+import org.kalypso.zml.ui.table.IZmlTableComposite;
+import org.kalypso.zml.ui.table.binding.BaseColumn;
+import org.kalypso.zml.ui.table.model.IZmlDataModel;
+import org.kalypso.zml.ui.table.model.IZmlModelColumn;
+import org.kalypso.zml.ui.table.model.IZmlModelRow;
+
+/**
+ * @author Dirk Kuch
+ */
+public class ZmlTableColumn implements IZmlTableColumn
+{
+  private final TableViewerColumn m_column;
+
+  private final BaseColumn m_type;
+
+  private final IZmlTableComposite m_table;
+
+  public ZmlTableColumn( final IZmlTableComposite table, final TableViewerColumn column, final BaseColumn type )
+  {
+    m_table = table;
+    m_column = column;
+    m_type = type;
+  }
+
+  @Override
+  public BaseColumn getColumnType( )
+  {
+    return m_type;
+  }
+
+  @Override
+  public TableViewerColumn getTableViewerColumn( )
+  {
+    return m_column;
+  }
+
+  public TableColumn getTableColumn( )
+  {
+    return m_column.getColumn();
+  }
+
+  @Override
+  public IZmlModelColumn getModelColumn( )
+  {
+    final IZmlDataModel model = m_table.getDataModel();
+
+    return model.getColumn( m_type.getIdentifier() );
+  }
+
+  /**
+   * @see org.kalypso.zml.ui.table.viewmodel.IZmlTableColumn#getCells()
+   */
+  @Override
+  public IZmlTableCell[] getCells( )
+  {
+    final TableViewer viewer = (TableViewer) m_column.getViewer();
+    final List<IZmlTableCell> cells = new ArrayList<IZmlTableCell>();
+
+    final TableItem[] items = viewer.getTable().getItems();
+    for( final TableItem item : items )
+    {
+      final Object data = item.getData();
+      if( data instanceof IZmlModelRow )
+      {
+        final IZmlModelRow row = (IZmlModelRow) data;
+        final ZmlTableRow zmlRow = new ZmlTableRow( m_table, row );
+
+        cells.add( new ZmlTableCell( this, zmlRow ) );
+      }
+    }
+
+    return cells.toArray( new IZmlTableCell[] {} );
+  }
+
+  /**
+   * @see org.kalypso.zml.ui.table.viewmodel.IZmlTableColumn#getSelectedCells()
+   */
+  @Override
+  public IZmlTableCell[] getSelectedCells( )
+  {
+    final List<IZmlTableCell> selected = new ArrayList<IZmlTableCell>();
+
+    final IZmlTableRow[] rows = m_table.getSelectedRows();
+    for( final IZmlTableRow row : rows )
+    {
+      selected.add( row.getCell( this ) );
+    }
+
+    return selected.toArray( new IZmlTableCell[] {} );
+  }
+
+}

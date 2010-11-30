@@ -45,7 +45,7 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.template.IObsProvider;
 import org.kalypso.ogc.sensor.template.IObsProviderListener;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
-import org.kalypso.zml.ui.table.IZmlTableColumn;
+import org.kalypso.zml.ui.table.IZmlTableElement;
 import org.kalypso.zml.ui.table.binding.DataColumn;
 import org.kalypso.zml.ui.table.model.ZmlDataModel;
 import org.kalypso.zml.ui.table.model.ZmlModelColumn;
@@ -59,11 +59,11 @@ public class ZmlColumnLoadCommand implements IObsProviderListener
 {
   private boolean m_canceled = false;
 
-  private final IZmlTableColumn m_column;
+  private final IZmlTableElement m_column;
 
   private final ZmlDataModel m_model;
 
-  public ZmlColumnLoadCommand( final ZmlDataModel model, final IZmlTableColumn column )
+  public ZmlColumnLoadCommand( final ZmlDataModel model, final IZmlTableElement column )
   {
     m_model = model;
     m_column = column;

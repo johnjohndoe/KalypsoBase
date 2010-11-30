@@ -52,6 +52,7 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.ui.table.IZmlTableComposite;
 import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
 import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
+import org.kalypso.zml.ui.table.viewmodel.IZmlTableCell;
 
 /**
  * @author Dirk Kuch
@@ -65,12 +66,13 @@ public class ZmlCommandCopyValue extends AbstractHandler
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     final IZmlTableComposite table = ZmlHandlerUtil.getTable( event );
-    final IZmlValueReference cell = table.getActiveCell();
+    final IZmlTableCell cell = table.getActiveCell();
+    final IZmlValueReference reference = cell.getValueReference();
 
     try
     {
       final Clipboard clipboard = new Clipboard( PlatformUI.getWorkbench().getDisplay() );
-      final Object value = cell.getValue();
+      final Object value = reference.getValue();
 
       final TextTransfer textTransfer = TextTransfer.getInstance();
       clipboard.setContents( new Object[] { value.toString() }, new Transfer[] { textTransfer } );

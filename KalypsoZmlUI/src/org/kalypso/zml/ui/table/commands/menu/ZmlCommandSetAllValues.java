@@ -47,8 +47,9 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.ui.table.IZmlTableComposite;
 import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
-import org.kalypso.zml.ui.table.model.IZmlModelColumn;
 import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
+import org.kalypso.zml.ui.table.viewmodel.IZmlTableCell;
+import org.kalypso.zml.ui.table.viewmodel.IZmlTableColumn;
 
 /**
  * @author Dirk Kuch
@@ -64,14 +65,17 @@ public class ZmlCommandSetAllValues extends AbstractHandler
     try
     {
       final IZmlTableComposite table = ZmlHandlerUtil.getTable( event );
-      final IZmlValueReference cell = table.getActiveCell();
+      final IZmlTableCell active = table.getActiveCell();
 
-      final IZmlModelColumn column = cell.getColumn();
-      final Object value = cell.getValue();
+      final IZmlValueReference base = active.getValueReference();
+      final Object targetValue = base.getValue();
 
-      for( int index = 0; index < column.modelSize(); index++ )
+      final IZmlTableColumn column = active.getColumn();
+      final IZmlTableCell[] visibleCells = column.getCells();
+      for( final IZmlTableCell cell : visibleCells )
       {
-        column.update( index, value );
+        final IZmlValueReference ref = cell.getValueReference();
+        ref.update( targetValue );
       }
 
       return Status.OK_STATUS;

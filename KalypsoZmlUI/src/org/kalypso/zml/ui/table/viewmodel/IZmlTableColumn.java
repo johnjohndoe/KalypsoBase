@@ -38,37 +38,27 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.model;
+package org.kalypso.zml.ui.table.viewmodel;
 
-import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.metadata.MetadataList;
-import org.kalypso.zml.ui.table.binding.DataColumn;
+import org.eclipse.jface.viewers.TableViewerColumn;
+import org.kalypso.zml.ui.table.binding.BaseColumn;
+import org.kalypso.zml.ui.table.model.IZmlModelColumn;
 
 /**
  * @author Dirk Kuch
  */
-public interface IZmlModelColumn
+public interface IZmlTableColumn
 {
-  DataColumn getDataColumn( );
+  BaseColumn getColumnType( );
 
-  IAxis[] getAxes( );
+  IZmlModelColumn getModelColumn( );
 
-  int modelSize( ) throws SensorException;
+  /**
+   * @return visible table cells
+   */
+  IZmlTableCell[] getCells( );
 
-  Object get( int i, IAxis indexAxis ) throws SensorException;
+  IZmlTableCell[] getSelectedCells( );
 
-  void update( int index, Object value ) throws SensorException;
-
-  String getIdentifier( );
-
-  MetadataList getMetadata( );
-
-  boolean isMetadataSource( );
-
-  String getLabel( );
-
-  IObservation getObservation( );
-
+  TableViewerColumn getTableViewerColumn( );
 }
