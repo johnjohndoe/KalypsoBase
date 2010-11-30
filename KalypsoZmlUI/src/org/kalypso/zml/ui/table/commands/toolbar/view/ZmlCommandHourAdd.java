@@ -45,7 +45,7 @@ import org.eclipse.core.commands.ExecutionEvent;
 /**
  * @author Dirk Kuch
  */
-public class ZmlCommand24HourView extends AbstractHourViewCommand
+public class ZmlCommandHourAdd extends AbstractHourViewCommand
 {
 
   /**
@@ -54,7 +54,7 @@ public class ZmlCommand24HourView extends AbstractHourViewCommand
   @Override
   public Object execute( final ExecutionEvent event )
   {
-    return updateResulution( event, 24 );
+    return updateOffset( event, +1 );
   }
 
 }

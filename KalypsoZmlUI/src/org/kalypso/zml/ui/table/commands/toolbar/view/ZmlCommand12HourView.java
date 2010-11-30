@@ -40,24 +40,21 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.commands.toolbar.view;
 
-import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlCommand12HourView extends AbstractHandler
+public class ZmlCommand12HourView extends AbstractHourViewCommand
 {
 
   /**
    * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
   @Override
-  public Object execute( final ExecutionEvent event ) throws ExecutionException
+  public Object execute( final ExecutionEvent event )
   {
-    // TODO Auto-generated method stub
-    return null;
+    return updateResulution( event, 12 );
   }
 
 }

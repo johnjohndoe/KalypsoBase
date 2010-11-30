@@ -292,6 +292,7 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
     return m_columnIndex.get( columnIndex );
   }
 
+  @Override
   public TableViewer getTableViewer( )
   {
     return m_tableViewer;
@@ -340,6 +341,15 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
 
     m_tableViewer.getControl().setMenu( menu );
     m_menu = menu;
+  }
+
+  /**
+   * @see org.kalypso.zml.ui.table.IZmlTableComposite#getDataModel()
+   */
+  @Override
+  public IZmlDataModel getDataModel( )
+  {
+    return m_model;
   }
 
 }

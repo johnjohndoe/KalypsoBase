@@ -132,6 +132,16 @@
           id="org.kalypso.zml.ui.table.commands.toolbar.view.24.hours"
           name="24 Stunden Ansicht">
     </command>
+    <command
+          defaultHandler="org.kalypso.zml.ui.table.commands.toolbar.view.ZmlCommandHourAdd"
+          id="org.kalypso.zml.ui.table.commands.toolbar.view.hour.add"
+          name="Stunde hinzufügen">
+    </command>
+    <command
+          defaultHandler="org.kalypso.zml.ui.table.commands.toolbar.view.ZmlCommandHourMinus"
+          id="org.kalypso.zml.ui.table.commands.toolbar.view.hour.minus"
+          name="Stunde abziehen">
+    </command>
  </extension>
  <extension
        point="org.eclipse.ui.commandImages">
@@ -150,6 +160,14 @@
     <image
           commandId="org.kalypso.zml.ui.table.commands.toolbar.view.24.hours"
           icon="icons/table/24_hour_view.png">
+    </image>
+    <image
+          commandId="org.kalypso.zml.ui.table.commands.toolbar.view.hour.add"
+          icon="icons/table/hour_add.png">
+    </image>
+    <image
+          commandId="org.kalypso.zml.ui.table.commands.toolbar.view.hour.minus"
+          icon="icons/table/hour_minus.png">
     </image>
  </extension>
 </plugin>
