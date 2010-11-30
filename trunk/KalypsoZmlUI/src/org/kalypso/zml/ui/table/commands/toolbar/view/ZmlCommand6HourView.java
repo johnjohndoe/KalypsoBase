@@ -54,7 +54,7 @@ public class ZmlCommand6HourView extends AbstractHourViewCommand
   @Override
   public Object execute( final ExecutionEvent event )
   {
-    return updateResulution( event, 6 );
+    return updateResulution( event, 6, false );
   }
 
 }

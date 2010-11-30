@@ -61,7 +61,6 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.contribs.eclipse.jface.action.ContributionUtils;
 import org.kalypso.contribs.eclipse.swt.layout.LayoutHelper;
 import org.kalypso.zml.ui.table.binding.BaseColumn;
-import org.kalypso.zml.ui.table.binding.DataColumn;
 import org.kalypso.zml.ui.table.menu.ZmlTableContextMenuListener;
 import org.kalypso.zml.ui.table.menu.ZmlTableHeaderContextMenuListener;
 import org.kalypso.zml.ui.table.model.IZmlDataModel;
@@ -222,10 +221,9 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
       final BaseColumn columnType = column.getColumnType();
 
       /** only update headers of data column types */
-      if( columnType instanceof DataColumn )
+      if( columnType.getType() instanceof DataColumnType )
       {
         final IZmlModelColumn modelColumn = column.getModelColumn();
-
         if( modelColumn == null )
         {
           column.getTableColumn().setWidth( 0 );

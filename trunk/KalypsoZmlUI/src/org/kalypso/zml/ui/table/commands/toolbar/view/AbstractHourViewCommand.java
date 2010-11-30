@@ -55,13 +55,14 @@ import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
 public abstract class AbstractHourViewCommand extends AbstractHandler
 {
 
-  protected IStatus updateResulution( final ExecutionEvent event, final int resultion )
+  protected IStatus updateResulution( final ExecutionEvent event, final int resultion, final boolean mode )
   {
     final IZmlTableComposite table = ZmlHandlerUtil.getTable( event );
     final TableViewer viewer = table.getTableViewer();
 
     final ZmlViewResolutionFilter filter = resolveFilter( viewer );
     filter.setResolution( resultion );
+    filter.setStuetzstellenMode( mode );
 
     viewer.refresh();
 
