@@ -21,6 +21,7 @@
     <sequence>
       <element ref="zmltable:StyleSet" minOccurs="0" maxOccurs="1" />
       <element name="defaultStyle" type="zmltable:StyleReferenceType" minOccurs="1" maxOccurs="1" />
+      <element name="toolbar" type="string" minOccurs="0" maxOccurs="1" />
       <element ref="zmltable:Columns" minOccurs="0" maxOccurs="1" />
     </sequence>
   </complexType>
@@ -133,7 +134,6 @@
     </sequence>
 
     <attribute name="ruleReference" type="anyURI" use="required" />
-
   </complexType>
 
   <complexType name="StylePropertyType">
