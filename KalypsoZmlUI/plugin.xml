@@ -61,43 +61,43 @@
    </category>
    <command
          categoryId="org.kalypso.zml.ui.table.commands.category"
-         defaultHandler="org.kalypso.zml.ui.table.commands.ZmlCommandSetAllValues"
+         defaultHandler="org.kalypso.zml.ui.table.commands.menu.ZmlCommandSetAllValues"
          id="org.kalypso.zml.ui.table.commands.value.set.all"
          name="Alle Werte setzen">
    </command>
    <command
          categoryId="org.kalypso.zml.ui.table.commands.category"
-         defaultHandler="org.kalypso.zml.ui.table.commands.ZmlCommandSetSelectedValues"
+         defaultHandler="org.kalypso.zml.ui.table.commands.menu.ZmlCommandSetSelectedValues"
          id="org.kalypso.zml.ui.table.commands.value.set.selected"
          name="Selektierte Werte setzen">
    </command>
    <command
          categoryId="org.kalypso.zml.ui.table.commands.category"
-         defaultHandler="org.kalypso.zml.ui.table.commands.ZmlCommandSetValuesAbove"
+         defaultHandler="org.kalypso.zml.ui.table.commands.menu.ZmlCommandSetValuesAbove"
          id="org.kalypso.zml.ui.table.commands.value.set.above"
          name="Werte oberhalb setzen">
    </command>
    <command
          categoryId="org.kalypso.zml.ui.table.commands.category"
-         defaultHandler="org.kalypso.zml.ui.table.commands.ZmlCommandSetValuesBelow"
+         defaultHandler="org.kalypso.zml.ui.table.commands.menu.ZmlCommandSetValuesBelow"
          id="org.kalypso.zml.ui.table.commands.value.set.below"
          name="Werte unterhalb setzen">
    </command>
    <command
          categoryId="org.kalypso.zml.ui.table.commands.category"
-         defaultHandler="org.kalypso.zml.ui.table.commands.ZmlCommandInterpolateValues"
+         defaultHandler="org.kalypso.zml.ui.table.commands.menu.ZmlCommandInterpolateValues"
          id="org.kalypso.zml.ui.table.commands.value.interpolate"
          name="Werte interpolieren">
    </command>
    <command
          categoryId="org.kalypso.zml.ui.table.commands.category"
-         defaultHandler="org.kalypso.zml.ui.table.commands.ZmlCommandCopyValue"
+         defaultHandler="org.kalypso.zml.ui.table.commands.menu.ZmlCommandCopyValue"
          id="org.kalypso.zml.ui.table.commands.value.copy"
          name="Kopieren">
    </command>
    <command
          categoryId="org.kalypso.zml.ui.table.commands.category"
-         defaultHandler="org.kalypso.zml.ui.table.commands.ZmlCommandPasteValue"
+         defaultHandler="org.kalypso.zml.ui.table.commands.menu.ZmlCommandPasteValue"
          id="org.kalypso.zml.ui.table.commands.value.set.paste"
          name="Einfügen">
    </command>
@@ -110,21 +110,25 @@
     </category>
     <command
           categoryId="org.kalypso.zml.ui.table.toolbar.commands.category"
+          defaultHandler="org.kalypso.zml.ui.table.commands.toolbar.view.ZmlCommandViewAll"
           id="org.kalypso.zml.ui.table.commands.toolbar.view.all"
           name="Vollansicht">
     </command>
     <command
           categoryId="org.kalypso.zml.ui.table.toolbar.commands.category"
+          defaultHandler="org.kalypso.zml.ui.table.commands.toolbar.view.ZmlCommand6HourView"
           id="org.kalypso.zml.ui.table.commands.toolbar.view.6.hours"
           name="6 Stunden Ansicht">
     </command>
     <command
           categoryId="org.kalypso.zml.ui.table.toolbar.commands.category"
+          defaultHandler="org.kalypso.zml.ui.table.commands.toolbar.view.ZmlCommand12HourView"
           id="org.kalypso.zml.ui.table.commands.toolbar.view.12.hours"
           name="12 Stunden Ansicht">
     </command>
     <command
           categoryId="org.kalypso.zml.ui.table.toolbar.commands.category"
+          defaultHandler="org.kalypso.zml.ui.table.commands.toolbar.view.ZmlCommand24HourView"
           id="org.kalypso.zml.ui.table.commands.toolbar.view.24.hours"
           name="24 Stunden Ansicht">
     </command>
