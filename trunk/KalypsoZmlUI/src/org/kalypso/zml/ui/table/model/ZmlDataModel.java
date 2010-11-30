@@ -48,7 +48,7 @@ import java.util.Set;
 import java.util.TreeMap;
 
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
-import org.kalypso.zml.ui.table.IZmlTableColumn;
+import org.kalypso.zml.ui.table.IZmlTableElement;
 import org.kalypso.zml.ui.table.model.loader.ZmlColumnLoadCommand;
 import org.kalypso.zml.ui.table.model.loader.ZmlModelBuilder;
 import org.kalypso.zml.ui.table.provider.IZmlColumnModelListener;
@@ -88,7 +88,7 @@ public class ZmlDataModel implements IZmlDataModel
     m_listeners.add( listener );
   }
 
-  public void loadColumn( final IZmlTableColumn column )
+  public void loadColumn( final IZmlTableElement column )
   {
     m_commands.add( new ZmlColumnLoadCommand( this, column ) );
   }

@@ -47,9 +47,9 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.ui.table.IZmlTableComposite;
 import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
-import org.kalypso.zml.ui.table.model.IZmlModelColumn;
-import org.kalypso.zml.ui.table.model.IZmlModelRow;
 import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
+import org.kalypso.zml.ui.table.viewmodel.IZmlTableCell;
+import org.kalypso.zml.ui.table.viewmodel.IZmlTableColumn;
 
 /**
  * @author Dirk Kuch
@@ -65,36 +65,38 @@ public class ZmlCommandInterpolateValues extends AbstractHandler
     try
     {
       final IZmlTableComposite table = ZmlHandlerUtil.getTable( event );
-      final IZmlModelRow[] selected = table.getSelectedRows();
+      final IZmlTableCell active = table.getActiveCell();
+      final IZmlTableColumn column = active.getColumn();
+      final IZmlTableCell[] selected = column.getSelectedCells();
       if( selected.length < 2 )
         throw new ExecutionException( "Interpolation fehlgeschlagen - selektieren Sie eine zweite Zelle!" );
 
-      final IZmlValueReference cell = table.getActiveCell();
-      final IZmlModelColumn activeColumn = cell.getColumn();
+      final IZmlTableCell[] intervall = findIntervall( selected );
+      final IZmlTableCell intervallStart = intervall[0];
+      final IZmlTableCell intervallEnd = intervall[1];
 
-      final IZmlModelRow row1 = findIntervallStart( selected, activeColumn );
-      final IZmlModelRow row2 = findIntervallEnd( selected, activeColumn );
+      final int indexDifference = Math.abs( intervallEnd.getIndex() - intervallStart.getIndex() );
+      final double valueDifference = getValueDifference( intervallStart, intervallEnd );
 
-      final IZmlValueReference reference1 = row1.get( activeColumn );
-      final IZmlValueReference reference2 = row2.get( activeColumn );
+      final double stepValue = valueDifference / indexDifference;
 
-      final Integer modelIndex1 = reference1.getTupleModelIndex();
-      final Integer modelIndex2 = reference2.getTupleModelIndex();
+      final int baseIndex = intervallStart.getIndex();
+      final IZmlValueReference reference = intervallStart.getValueReference();
+      final double baseValue = ((Number) reference.getValue()).doubleValue();
 
-      final Number value1 = (Number) reference1.getValue();
-      final Number value2 = (Number) reference2.getValue();
-
-      final int indexDifference = Math.abs( modelIndex2 - modelIndex1 );
-      final double valueDiffernce = value2.doubleValue() - value1.doubleValue();
-
-      final double stepValue = valueDiffernce / indexDifference;
-
-      for( int index = modelIndex1 + 1; index < modelIndex2; index++ )
+      final IZmlTableCell[] cells = column.getCells();
+      for( final IZmlTableCell cell : cells )
       {
-        final int step = index - modelIndex1;
-        final double value = value1.doubleValue() + step * stepValue;
+        if( cell.getIndex() <= intervallStart.getIndex() )
+          continue;
+        else if( cell.getIndex() >= intervallEnd.getIndex() )
+          continue;
 
-        activeColumn.update( index, value );
+        final int step = cell.getIndex() - baseIndex;
+        final double value = baseValue + step * stepValue;
+
+        final IZmlValueReference ref = cell.getValueReference();
+        ref.update( value );
       }
 
       return Status.OK_STATUS;
@@ -105,59 +107,32 @@ public class ZmlCommandInterpolateValues extends AbstractHandler
     }
   }
 
-  private IZmlModelRow findIntervallStart( final IZmlModelRow[] selected, final IZmlModelColumn activeColumn )
+  private double getValueDifference( final IZmlTableCell intervallStart, final IZmlTableCell intervallEnd ) throws SensorException
   {
-    IZmlModelRow start = null;
-    Integer startIndex = null;
+    final IZmlValueReference referenceStart = intervallStart.getValueReference();
+    final IZmlValueReference referenceEnd = intervallEnd.getValueReference();
 
-    for( final IZmlModelRow row : selected )
-    {
-      if( start == null )
-      {
-        start = row;
-        final IZmlValueReference reference = row.get( activeColumn );
-        startIndex = reference.getTupleModelIndex();
-      }
-      else
-      {
-        final IZmlValueReference reference = row.get( activeColumn );
-        final Integer index = reference.getTupleModelIndex();
-        if( index < startIndex )
-        {
-          start = row;
-          startIndex = index;
-        }
-      }
-    }
+    final Number valueStart = (Number) referenceStart.getValue();
+    final Number valueEnd = (Number) referenceEnd.getValue();
 
-    return start;
+    return valueEnd.doubleValue() - valueStart.doubleValue();
   }
 
-  private IZmlModelRow findIntervallEnd( final IZmlModelRow[] selected, final IZmlModelColumn activeColumn )
+  private IZmlTableCell[] findIntervall( final IZmlTableCell[] cells )
   {
-    IZmlModelRow end = null;
-    Integer endIndex = null;
+    IZmlTableCell start = cells[0];
+    IZmlTableCell end = cells[0];
 
-    for( final IZmlModelRow row : selected )
+    for( final IZmlTableCell cell : cells )
     {
-      if( end == null )
-      {
-        end = row;
-        final IZmlValueReference reference = row.get( activeColumn );
-        endIndex = reference.getTupleModelIndex();
-      }
-      else
-      {
-        final IZmlValueReference reference = row.get( activeColumn );
-        final Integer index = reference.getTupleModelIndex();
-        if( index > endIndex )
-        {
-          end = row;
-          endIndex = index;
-        }
-      }
+      if( cell.getIndex() < start.getIndex() )
+        start = cell;
+
+      if( cell.getIndex() > end.getIndex() )
+        end = cell;
     }
 
-    return end;
+    return new IZmlTableCell[] { start, end };
+
   }
 }

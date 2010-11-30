@@ -51,6 +51,7 @@ import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.zml.ui.table.IZmlTableComposite;
 import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
 import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
+import org.kalypso.zml.ui.table.viewmodel.IZmlTableCell;
 
 /**
  * @author Dirk Kuch
@@ -66,14 +67,15 @@ public class ZmlCommandPasteValue extends AbstractHandler
     try
     {
       final IZmlTableComposite table = ZmlHandlerUtil.getTable( event );
-      final IZmlValueReference cell = table.getActiveCell();
+      final IZmlTableCell cell = table.getActiveCell();
+      final IZmlValueReference reference = cell.getValueReference();
 
       final Clipboard clipboard = new Clipboard( PlatformUI.getWorkbench().getDisplay() );
       final TextTransfer transfer = TextTransfer.getInstance();
       final String data = (String) clipboard.getContents( transfer );
 
       final double value = NumberUtils.parseDouble( data );
-      cell.update( value );
+      reference.update( value );
 
       return Status.OK_STATUS;
     }

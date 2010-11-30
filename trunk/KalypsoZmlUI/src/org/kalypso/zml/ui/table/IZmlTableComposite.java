@@ -41,27 +41,29 @@
 package org.kalypso.zml.ui.table;
 
 import org.eclipse.jface.viewers.TableViewer;
-import org.kalypso.zml.ui.table.binding.BaseColumn;
 import org.kalypso.zml.ui.table.model.IZmlDataModel;
-import org.kalypso.zml.ui.table.model.IZmlModelRow;
-import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
+import org.kalypso.zml.ui.table.viewmodel.IZmlTableCell;
+import org.kalypso.zml.ui.table.viewmodel.IZmlTableColumn;
+import org.kalypso.zml.ui.table.viewmodel.IZmlTableRow;
 
 /**
  * @author Dirk Kuch
  */
 public interface IZmlTableComposite
 {
-  BaseColumn getColumn( int columnIndex );
+  IZmlTableColumn getColumn( int columnIndex );
 
-  IZmlValueReference getActiveCell( );
+  IZmlTableCell getActiveCell( );
 
-  BaseColumn getActiveColumn( );
+  IZmlTableColumn getActiveColumn( );
 
-  IZmlModelRow getActiveRow( );
+  IZmlTableRow getActiveRow( );
 
-  IZmlModelRow[] getSelectedRows( );
+  IZmlTableRow[] getSelectedRows( );
 
   TableViewer getTableViewer( );
 
   IZmlDataModel getDataModel( );
+
+  IZmlTableColumn[] getColumns( );
 }

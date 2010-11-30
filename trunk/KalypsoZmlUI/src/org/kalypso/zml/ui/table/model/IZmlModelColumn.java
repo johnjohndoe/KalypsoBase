@@ -70,4 +70,5 @@ public interface IZmlModelColumn
   String getLabel( );
 
   IObservation getObservation( );
+
 }

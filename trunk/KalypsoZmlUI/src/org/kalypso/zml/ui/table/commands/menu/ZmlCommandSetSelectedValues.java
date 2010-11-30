@@ -47,10 +47,9 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.ui.table.IZmlTableComposite;
 import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
-import org.kalypso.zml.ui.table.model.IZmlModelColumn;
-import org.kalypso.zml.ui.table.model.IZmlModelRow;
 import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
-import org.kalypso.zml.ui.table.schema.DataColumnType;
+import org.kalypso.zml.ui.table.viewmodel.IZmlTableCell;
+import org.kalypso.zml.ui.table.viewmodel.IZmlTableColumn;
 
 /**
  * @author Dirk Kuch
@@ -67,18 +66,16 @@ public class ZmlCommandSetSelectedValues extends AbstractHandler
     {
       final IZmlTableComposite table = ZmlHandlerUtil.getTable( event );
 
-      final IZmlValueReference cell = table.getActiveCell();
-      final IZmlModelColumn column = cell.getColumn();
-      final DataColumnType columnType = column.getDataColumn().getType();
+      final IZmlTableCell active = table.getActiveCell();
+      final IZmlTableColumn column = active.getColumn();
+      final IZmlValueReference reference = active.getValueReference();
+      final Object targetValue = reference.getValue();
 
-      final Object value = cell.getValue();
-
-      final IZmlModelRow[] selected = table.getSelectedRows();
-      for( final IZmlModelRow row : selected )
+      final IZmlTableCell[] selected = column.getSelectedCells();
+      for( final IZmlTableCell cell : selected )
       {
-
-        final IZmlValueReference reference = row.get( columnType );
-        reference.update( value );
+        final IZmlValueReference ref = cell.getValueReference();
+        ref.update( targetValue );
       }
 
       return Status.OK_STATUS;
