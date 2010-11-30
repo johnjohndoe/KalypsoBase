@@ -40,7 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table;
 
+import org.eclipse.jface.viewers.TableViewer;
 import org.kalypso.zml.ui.table.binding.BaseColumn;
+import org.kalypso.zml.ui.table.model.IZmlDataModel;
 import org.kalypso.zml.ui.table.model.IZmlModelRow;
 import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
 
@@ -58,4 +60,8 @@ public interface IZmlTableComposite
   IZmlModelRow getActiveRow( );
 
   IZmlModelRow[] getSelectedRows( );
+
+  TableViewer getTableViewer( );
+
+  IZmlDataModel getDataModel( );
 }
