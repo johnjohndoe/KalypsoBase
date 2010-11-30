@@ -38,23 +38,24 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.commands;
+package org.kalypso.zml.ui.table.commands.menu;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.swt.dnd.Clipboard;
-import org.eclipse.swt.dnd.TextTransfer;
-import org.eclipse.ui.PlatformUI;
-import org.kalypso.contribs.java.lang.NumberUtils;
+import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.ui.table.IZmlTableComposite;
+import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
+import org.kalypso.zml.ui.table.model.IZmlDataModel;
+import org.kalypso.zml.ui.table.model.IZmlModelColumn;
+import org.kalypso.zml.ui.table.model.IZmlModelRow;
 import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlCommandPasteValue extends AbstractHandler
+public class ZmlCommandSetValuesAbove extends AbstractHandler
 {
   /**
    * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
@@ -66,20 +67,28 @@ public class ZmlCommandPasteValue extends AbstractHandler
     {
       final IZmlTableComposite table = ZmlHandlerUtil.getTable( event );
       final IZmlValueReference cell = table.getActiveCell();
+      final IZmlModelColumn column = cell.getColumn();
+      final Integer modelIndex = cell.getTupleModelIndex();
+      final Object value = cell.getValue();
 
-      final Clipboard clipboard = new Clipboard( PlatformUI.getWorkbench().getDisplay() );
-      final TextTransfer transfer = TextTransfer.getInstance();
-      final String data = (String) clipboard.getContents( transfer );
+      final IZmlDataModel model = cell.getModel();
+      final IZmlModelRow[] rows = model.getRows();
+      for( final IZmlModelRow row : rows )
+      {
+        final IZmlValueReference reference = row.get( column );
+        if( reference == null )
+          continue;
 
-      final double value = NumberUtils.parseDouble( data );
-      cell.update( value );
+        final Integer rowModelIndex = reference.getTupleModelIndex();
+        if( rowModelIndex < modelIndex )
+          reference.update( value );
+      }
 
       return Status.OK_STATUS;
     }
-    catch( final Exception e )
+    catch( final SensorException e )
     {
-      throw new ExecutionException( "Einfügen des Wertes aus der Zwischenablage fehlgeschlagen.", e );
+      throw new ExecutionException( "Aktualisieren der Werte fehlgeschlagen.", e );
     }
-
   }
 }

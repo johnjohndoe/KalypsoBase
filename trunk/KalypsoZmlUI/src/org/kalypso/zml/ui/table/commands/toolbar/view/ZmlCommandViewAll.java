@@ -38,53 +38,26 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.commands;
+package org.kalypso.zml.ui.table.commands.toolbar.view;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.runtime.Status;
-import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.zml.ui.table.IZmlTableComposite;
-import org.kalypso.zml.ui.table.model.IZmlModelColumn;
-import org.kalypso.zml.ui.table.model.IZmlModelRow;
-import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
-import org.kalypso.zml.ui.table.schema.DataColumnType;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlCommandSetSelectedValues extends AbstractHandler
+public class ZmlCommandViewAll extends AbstractHandler
 {
+
   /**
    * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
-    try
-    {
-      final IZmlTableComposite table = ZmlHandlerUtil.getTable( event );
-
-      final IZmlValueReference cell = table.getActiveCell();
-      final IZmlModelColumn column = cell.getColumn();
-      final DataColumnType columnType = column.getDataColumn().getType();
-
-      final Object value = cell.getValue();
-
-      final IZmlModelRow[] selected = table.getSelectedRows();
-      for( final IZmlModelRow row : selected )
-      {
-
-        final IZmlValueReference reference = row.get( columnType );
-        reference.update( value );
-      }
-
-      return Status.OK_STATUS;
-    }
-    catch( final SensorException e )
-    {
-      throw new ExecutionException( "Aktualisieren der selektierten Werte fehlgeschlagen.", e );
-    }
+    // TODO Auto-generated method stub
+    return null;
   }
+
 }

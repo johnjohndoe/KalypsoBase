@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.commands;
+package org.kalypso.zml.ui.table.commands.menu;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -46,13 +46,16 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.ui.table.IZmlTableComposite;
+import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
 import org.kalypso.zml.ui.table.model.IZmlModelColumn;
+import org.kalypso.zml.ui.table.model.IZmlModelRow;
 import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
+import org.kalypso.zml.ui.table.schema.DataColumnType;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlCommandSetAllValues extends AbstractHandler
+public class ZmlCommandSetSelectedValues extends AbstractHandler
 {
   /**
    * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
@@ -63,21 +66,26 @@ public class ZmlCommandSetAllValues extends AbstractHandler
     try
     {
       final IZmlTableComposite table = ZmlHandlerUtil.getTable( event );
-      final IZmlValueReference cell = table.getActiveCell();
 
+      final IZmlValueReference cell = table.getActiveCell();
       final IZmlModelColumn column = cell.getColumn();
+      final DataColumnType columnType = column.getDataColumn().getType();
+
       final Object value = cell.getValue();
 
-      for( int index = 0; index < column.modelSize(); index++ )
+      final IZmlModelRow[] selected = table.getSelectedRows();
+      for( final IZmlModelRow row : selected )
       {
-        column.update( index, value );
+
+        final IZmlValueReference reference = row.get( columnType );
+        reference.update( value );
       }
 
       return Status.OK_STATUS;
     }
     catch( final SensorException e )
     {
-      throw new ExecutionException( "Aktualisieren der Werte fehlgeschlagen.", e );
+      throw new ExecutionException( "Aktualisieren der selektierten Werte fehlgeschlagen.", e );
     }
   }
 }

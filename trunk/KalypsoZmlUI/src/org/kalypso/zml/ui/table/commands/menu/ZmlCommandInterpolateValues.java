@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.commands;
+package org.kalypso.zml.ui.table.commands.menu;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -46,6 +46,7 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.ui.table.IZmlTableComposite;
+import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
 import org.kalypso.zml.ui.table.model.IZmlModelColumn;
 import org.kalypso.zml.ui.table.model.IZmlModelRow;
 import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
