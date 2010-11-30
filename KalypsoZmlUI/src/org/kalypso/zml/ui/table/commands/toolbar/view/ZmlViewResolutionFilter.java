@@ -45,8 +45,12 @@ import java.util.Date;
 import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.model.IZmlDataModel;
 import org.kalypso.zml.ui.table.model.IZmlModelRow;
+import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
+import org.kalypso.zml.ui.table.model.references.ZmlValueRefernceHelper;
 
 /**
  * @author Dirk Kuch
@@ -89,6 +93,8 @@ public class ZmlViewResolutionFilter extends ViewerFilter
 
   private final ZmlFilterBaseIndex m_base = new ZmlFilterBaseIndex();
 
+  private boolean m_stuetzstellenMode;
+
   protected static int ticksInHours( final Date date )
   {
     final long time = date.getTime();
@@ -103,19 +109,55 @@ public class ZmlViewResolutionFilter extends ViewerFilter
   @Override
   public boolean select( final Viewer viewer, final Object parentElement, final Object element )
   {
-    if( m_resolution == 0 )
-      return true;
-
     if( parentElement instanceof IZmlDataModel && element instanceof IZmlModelRow )
     {
+      final IZmlDataModel model = (IZmlDataModel) parentElement;
       final IZmlModelRow row = (IZmlModelRow) element;
+
+      if( m_resolution == 0 )
+      {
+        if( m_stuetzstellenMode )
+        {
+          return hasStuetzstelle( row );
+        }
+
+        return true;
+      }
+
       final Date index = (Date) row.getIndexValue();
       final int ticks = ticksInHours( index );
 
-      final int base = m_base.getBaseIndex( (IZmlDataModel) parentElement );
+      final int base = m_base.getBaseIndex( model );
       final int diff = Math.abs( base + m_offset - ticks );
 
-      return (diff % m_resolution) == 0;
+      final int mod = diff % m_resolution;
+
+      if( m_stuetzstellenMode )
+      {
+        if( hasStuetzstelle( row ) && mod == 0 )
+          return true;
+      }
+
+      return mod == 0;
+    }
+
+    return false;
+  }
+
+  private boolean hasStuetzstelle( final IZmlModelRow row )
+  {
+    final IZmlValueReference[] references = row.getReferences();
+    for( final IZmlValueReference reference : references )
+    {
+      try
+      {
+        if( ZmlValueRefernceHelper.isStuetzstelle( reference ) )
+          return true;
+      }
+      catch( final Throwable t )
+      {
+        KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( t ) );
+      }
     }
 
     return false;
@@ -129,6 +171,11 @@ public class ZmlViewResolutionFilter extends ViewerFilter
   public void setResolution( final int resolution )
   {
     m_resolution = resolution;
+  }
+
+  public void setStuetzstellenMode( final boolean mode )
+  {
+    m_stuetzstellenMode = mode;
   }
 
 }

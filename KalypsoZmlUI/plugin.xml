@@ -116,6 +116,12 @@
     </command>
     <command
           categoryId="org.kalypso.zml.ui.table.toolbar.commands.category"
+          defaultHandler="org.kalypso.zml.ui.table.commands.toolbar.view.ZmlCommandViewStuetzstellen"
+          id="org.kalypso.zml.ui.table.commands.toolbar.view.stuetzstellen"
+          name="Stützstellen">
+    </command>
+    <command
+          categoryId="org.kalypso.zml.ui.table.toolbar.commands.category"
           defaultHandler="org.kalypso.zml.ui.table.commands.toolbar.view.ZmlCommand6HourView"
           id="org.kalypso.zml.ui.table.commands.toolbar.view.6.hours"
           name="6 Stunden Ansicht">
@@ -148,6 +154,10 @@
     <image
           commandId="org.kalypso.zml.ui.table.commands.toolbar.view.all"
           icon="icons/table/view_all.png">
+    </image>
+    <image
+          commandId="org.kalypso.zml.ui.table.commands.toolbar.view.stuetzstellen"
+          icon="icons/table/stuetzstelle.png">
     </image>
     <image
           commandId="org.kalypso.zml.ui.table.commands.toolbar.view.6.hours"

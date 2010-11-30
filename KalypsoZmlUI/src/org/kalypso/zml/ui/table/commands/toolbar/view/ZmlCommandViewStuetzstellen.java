@@ -45,16 +45,15 @@ import org.eclipse.core.commands.ExecutionEvent;
 /**
  * @author Dirk Kuch
  */
-public class ZmlCommand24HourView extends AbstractHourViewCommand
+public class ZmlCommandViewStuetzstellen extends AbstractHourViewCommand
 {
-
   /**
    * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
   @Override
   public Object execute( final ExecutionEvent event )
   {
-    return updateResulution( event, 24, false );
+    return updateResulution( event, 0, true );
   }
 
 }

@@ -38,23 +38,29 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.commands.toolbar.view;
+package org.kalypso.zml.ui.table.model.references;
 
-import org.eclipse.core.commands.ExecutionEvent;
+import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.status.KalypsoStati;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlCommand24HourView extends AbstractHourViewCommand
+public final class ZmlValueRefernceHelper
 {
-
-  /**
-   * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
-   */
-  @Override
-  public Object execute( final ExecutionEvent event )
+  private ZmlValueRefernceHelper( )
   {
-    return updateResulution( event, 24, false );
+  }
+
+  public static boolean isStuetzstelle( final IZmlValueReference reference ) throws SensorException
+  {
+    final Integer status = reference.getStatus();
+    if( KalypsoStati.BIT_OK == status )
+      return true;
+    else if( KalypsoStati.BIT_USER_MODIFIED == status )
+      return true;
+
+    return false;
   }
 
 }
