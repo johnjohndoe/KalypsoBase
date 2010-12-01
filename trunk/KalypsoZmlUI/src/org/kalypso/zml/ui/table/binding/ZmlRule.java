@@ -70,9 +70,9 @@ public class ZmlRule
   public CellStyle getStyle( ) throws CoreException
   {
     final ZmlStyleResolver resolver = ZmlStyleResolver.getInstance();
-    final StyleReferenceType reference = m_rule.getStyleReference();
+    final StyleReferenceType styleReference = m_rule.getStyleReference();
 
-    return resolver.findStyle( reference );
+    return resolver.findStyle( styleReference );
   }
 
 }

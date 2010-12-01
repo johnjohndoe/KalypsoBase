@@ -67,11 +67,7 @@ public class ZmlRuleDisplayAlarmstufen extends AbstractZmlTableRule
   @Override
   public boolean apply( final IZmlValueReference reference )
   {
-    if( !ENABLED )
-      return false;
-
-    // TODO Auto-generated method stub
-    return false;
+    return ENABLED;
   }
 
   /**
