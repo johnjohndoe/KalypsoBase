@@ -89,6 +89,17 @@ public class CellStyle
     init( style );
   }
 
+  public CellStyleType getType( )
+  {
+    return m_style;
+  }
+
+  @Override
+  public CellStyle clone( )
+  {
+    return new CellStyle( m_style );
+  }
+
   /**
    * initialize style (cascading style set!)
    */
@@ -100,15 +111,21 @@ public class CellStyle
 
     init( base );
 
+    merge( base, style );
+
+  }
+
+  public static void merge( final CellStyleType base, final CellStyleType target )
+  {
     final List<StylePropertyType> baseProperties = base.getProperty();
     for( final StylePropertyType property : baseProperties )
     {
-      if( !hasProperty( style, property ) )
-        style.getProperty().add( property );
+      if( !hasProperty( target, property ) )
+        target.getProperty().add( property );
     }
   }
 
-  private boolean hasProperty( final CellStyleType style, final StylePropertyType type )
+  public static boolean hasProperty( final CellStyleType style, final StylePropertyType type )
   {
     final String name = TableTypeHelper.getPropertyName( type );
     final StylePropertyName property = StylePropertyName.fromValue( name );
@@ -200,4 +217,5 @@ public class CellStyle
 
     return format;
   }
+
 }

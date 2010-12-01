@@ -56,6 +56,8 @@ public class ZmlRule
 
   private final RuleType m_rule;
 
+  private CellStyle m_style;
+
   public ZmlRule( final BaseColumn column, final RuleType rule )
   {
     m_column = column;
@@ -69,10 +71,19 @@ public class ZmlRule
 
   public CellStyle getStyle( ) throws CoreException
   {
-    final ZmlStyleResolver resolver = ZmlStyleResolver.getInstance();
-    final StyleReferenceType styleReference = m_rule.getStyleReference();
+    if( m_style == null )
+    {
+      final ZmlStyleResolver resolver = ZmlStyleResolver.getInstance();
+      final StyleReferenceType styleReference = m_rule.getStyleReference();
 
-    return resolver.findStyle( styleReference );
+      final CellStyle baseStyle = m_column.getDefaultStyle().clone();
+      final CellStyle ruleStyle = resolver.findStyle( styleReference );
+      CellStyle.merge( baseStyle.getType(), ruleStyle.getType() );
+
+      /** clone - because of cached style properties (invalid cell style members) */
+      m_style = ruleStyle.clone();
+    }
+
+    return m_style;
   }
-
 }
