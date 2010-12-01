@@ -71,6 +71,8 @@ public class ZmlRuleInterpolatedValue extends AbstractZmlTableRule
     try
     {
       final Integer status = reference.getStatus();
+      if( status == null )
+        return false;
 
       return KalypsoStati.BIT_CHECK == (KalypsoStati.BIT_CHECK & status);
     }

@@ -106,7 +106,11 @@ public class ZmlDataValueReference implements IZmlValueReference
   @Override
   public Integer getStatus( ) throws SensorException
   {
-    final IAxis axis = KalypsoStatusUtils.findStatusAxisFor( m_column.getAxes(), getValueAxis() );
+    final IAxis valueAxis = getValueAxis();
+    if( valueAxis == null )
+      return null;
+
+    final IAxis axis = KalypsoStatusUtils.findStatusAxisFor( m_column.getAxes(), valueAxis );
 
     final Object value = m_column.get( m_tupleModelIndex, axis );
     if( value instanceof Number )

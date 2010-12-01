@@ -71,6 +71,8 @@ public class ZmlRuleWQRelationConflict extends AbstractZmlTableRule
     try
     {
       final Integer status = reference.getStatus();
+      if( status == null )
+        return false;
 
       return (KalypsoStati.BIT_DERIVATION_ERROR & status) == KalypsoStati.BIT_DERIVATION_ERROR;
     }
