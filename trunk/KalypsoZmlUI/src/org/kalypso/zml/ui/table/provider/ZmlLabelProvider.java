@@ -57,6 +57,7 @@ import org.kalypso.zml.ui.table.binding.ZmlRule;
 import org.kalypso.zml.ui.table.model.IZmlModelRow;
 import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
 import org.kalypso.zml.ui.table.rules.IZmlTableRule;
+import org.kalypso.zml.ui.table.schema.CellStyleType;
 import org.kalypso.zml.ui.table.schema.IndexColumnType;
 
 /**
@@ -68,6 +69,10 @@ public class ZmlLabelProvider extends ColumnLabelProvider
 
   private final RuleMapper m_mapper = new RuleMapper();
 
+  private Object m_lastElement = null;
+
+  private CellStyle m_lastCellStyle = null;
+
   public ZmlLabelProvider( final BaseColumn column )
   {
     m_column = column;
@@ -75,6 +80,9 @@ public class ZmlLabelProvider extends ColumnLabelProvider
 
   private CellStyle findStyle( final Object element ) throws CoreException
   {
+    if( m_lastElement == element )
+      return m_lastCellStyle;
+
     if( element instanceof IZmlModelRow )
     {
       final IZmlModelRow row = (IZmlModelRow) element;
@@ -82,13 +90,32 @@ public class ZmlLabelProvider extends ColumnLabelProvider
 
       if( ArrayUtils.isNotEmpty( rules ) )
       {
-        final ZmlRule binding = rules[0].getBinding( m_column.getIdentifier() );
+        final ZmlRule base = rules[0].getBinding( m_column.getIdentifier() );
+        final CellStyleType baseType = base.getStyle().getType();
 
-        return binding.getStyle();
+        for( int index = 1; index < rules.length; index++ )
+        {
+          final IZmlTableRule tableRule = rules[index];
+          final ZmlRule rule = tableRule.getBinding( m_column.getIdentifier() );
+
+          CellStyle.merge( rule.getStyle().getType(), baseType );
+        }
+
+        m_lastCellStyle = new CellStyle( baseType );
+      }
+      else
+      {
+        m_lastCellStyle = m_column.getDefaultStyle();
       }
     }
+    else
+    {
+      m_lastCellStyle = m_column.getDefaultStyle();
+    }
 
-    return m_column.getDefaultStyle();
+    m_lastElement = element;
+
+    return m_lastCellStyle;
   }
 
   private String format( final Object value ) throws CoreException

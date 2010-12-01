@@ -52,67 +52,22 @@
       <property name="textFormat">dd.MM.yy HH:mm</property>
     </Style>
 
-
     <Style id="dateForecastCellStyle">
-      <baseStyle>
-        <reference>dateCellStyle</reference>
-      </baseStyle>
       <property name="backgroundColor">FFF7EE</property>
     </Style>
 
-
     <!-- rule - value user modified? -->
-    <Style id="wUserModifiedStyle">
-      <baseStyle>
-        <reference>wBaseCellStyle</reference>
-      </baseStyle>
+    <Style id="userModifiedStyle">
       <property name="icon">urn:org:kalypso:zml:ui:table:icon:user:modified</property>
     </Style>
-    <Style id="nUserModifiedStyle">
-      <baseStyle>
-        <reference>wUserModifiedStyle</reference>
-      </baseStyle>
-    </Style>
-    <Style id="qUserModifiedStyle">
-      <baseStyle>
-        <reference>qBaseCellStyle</reference>
-      </baseStyle>
-      <property name="icon">urn:org:kalypso:zml:ui:table:icon:user:modified</property>
-    </Style>
-    
     
     <!-- rule - interpolated value? -->
-    <Style id="wInterpolatedValueStyle">
-      <baseStyle>
-        <reference>wBaseCellStyle</reference>
-      </baseStyle>
+    <Style id="interpolatedValueStyle">
       <property name="icon">urn:org:kalypso:zml:ui:table:icon:interpolated:value</property>
     </Style>
-     <Style id="nInterpolatedValueStyle">
-      <baseStyle>
-        <reference>wInterpolatedValueStyle</reference>
-      </baseStyle>
-      <property name="icon">urn:org:kalypso:zml:ui:table:icon:interpolated:value</property>
-    </Style>
-    <Style id="qInterpolatedValueStyle">
-      <baseStyle>
-        <reference>qBaseCellStyle</reference>
-      </baseStyle>
-      <property name="icon">urn:org:kalypso:zml:ui:table:icon:interpolated:value</property>
-    </Style>
-    
     
     <!-- rule - w/q conversion conflict? -->
-    <Style id="wWqConversionConflict">
-      <baseStyle>
-        <reference>wBaseCellStyle</reference>
-      </baseStyle>
-      <property name="icon">urn:org:kalypso:zml:ui:table:icon:wq:conflict</property>
-    </Style>
-    <Style id="qWqConflictQStyle">
-      <baseStyle>
-        <reference>qBaseCellStyle</reference>
-      </baseStyle>
+    <Style id="wqConversionConflict">
       <property name="icon">urn:org:kalypso:zml:ui:table:icon:wq:conflict</property>
     </Style>
   </StyleSet>
