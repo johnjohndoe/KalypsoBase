@@ -38,41 +38,50 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.binding;
+package org.kalypso.zml.ui.table.provider;
 
-import org.eclipse.core.runtime.CoreException;
-import org.kalypso.zml.ui.table.schema.RuleType;
-import org.kalypso.zml.ui.table.schema.StyleReferenceType;
-import org.kalypso.zml.ui.table.styles.ZmlStyleResolver;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.kalypso.zml.ui.table.binding.BaseColumn;
+import org.kalypso.zml.ui.table.model.IZmlModelRow;
+import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
+import org.kalypso.zml.ui.table.rules.IZmlTableRule;
 
 /**
- * ZmlRuleType binding class
- * 
  * @author Dirk Kuch
  */
-public class ZmlRule
+public class RuleMapper
 {
-  private final BaseColumn m_column;
+  private IZmlModelRow m_lastRow;
 
-  private final RuleType m_rule;
+  private BaseColumn m_lastColumn;
 
-  public ZmlRule( final BaseColumn column, final RuleType rule )
+  private IZmlTableRule[] m_rules;
+
+  public IZmlTableRule[] find( final IZmlModelRow row, final BaseColumn column )
   {
-    m_column = column;
-    m_rule = rule;
-  }
+    if( m_lastRow == row && m_lastColumn == column )
+      return m_rules;
 
-  public String getIdentifier( )
-  {
-    return m_column.getIdentifier();
-  }
+    final List<IZmlTableRule> rules = new ArrayList<IZmlTableRule>();
+    final IZmlValueReference reference = row.get( column.getType() );
+    if( reference != null )
+    {
+      for( final IZmlTableRule rule : column.getRules() )
+      {
+        if( rule.apply( reference ) )
+        {
+          rules.add( rule );
+        }
+      }
+    }
 
-  public CellStyle getStyle( ) throws CoreException
-  {
-    final ZmlStyleResolver resolver = ZmlStyleResolver.getInstance();
-    final StyleReferenceType styleReference = m_rule.getStyleReference();
+    m_lastRow = row;
+    m_lastColumn = column;
+    m_rules = rules.toArray( new IZmlTableRule[] {} );
 
-    return resolver.findStyle( styleReference );
+    return m_rules;
   }
 
 }

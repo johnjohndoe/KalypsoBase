@@ -43,6 +43,7 @@ package org.kalypso.zml.ui.table.provider;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.swt.graphics.Color;
@@ -65,6 +66,8 @@ public class ZmlLabelProvider extends ColumnLabelProvider
 {
   private final BaseColumn m_column;
 
+  private final RuleMapper m_mapper = new RuleMapper();
+
   public ZmlLabelProvider( final BaseColumn column )
   {
     m_column = column;
@@ -75,18 +78,13 @@ public class ZmlLabelProvider extends ColumnLabelProvider
     if( element instanceof IZmlModelRow )
     {
       final IZmlModelRow row = (IZmlModelRow) element;
+      final IZmlTableRule[] rules = m_mapper.find( row, m_column );
 
-      final IZmlValueReference reference = row.get( m_column.getType() );
-      if( reference != null )
+      if( ArrayUtils.isNotEmpty( rules ) )
       {
-        for( final IZmlTableRule rule : m_column.getRules() )
-        {
-          if( rule.apply( reference ) )
-          {
-            final ZmlRule binding = rule.getBinding( m_column.getIdentifier() );
-            return binding.getStyle();
-          }
-        }
+        final ZmlRule binding = rules[0].getBinding( m_column.getIdentifier() );
+
+        return binding.getStyle();
       }
     }
 
