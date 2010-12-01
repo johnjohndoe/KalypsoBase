@@ -302,7 +302,7 @@ public class GMLContentProvider implements ITreeContentProvider
 
   private Object findObjectForPath( ) throws GMLXPathException
   {
-    if( m_rootPath.getSegmentSize() == 0 )
+    if( m_rootPath == null || m_rootPath.getSegmentSize() == 0 )
       return m_workspace;
 
     final GMLXPath parentPath = m_rootPath.getParentPath();
