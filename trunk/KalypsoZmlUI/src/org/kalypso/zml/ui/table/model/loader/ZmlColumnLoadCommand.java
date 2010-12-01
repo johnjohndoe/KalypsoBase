@@ -143,5 +143,4 @@ public class ZmlColumnLoadCommand implements IObsProviderListener
   {
     m_model.fireModelChanged();
   }
-
 }
