@@ -71,6 +71,8 @@ public class ZmlRuleUserModified extends AbstractZmlTableRule
     try
     {
       final Integer status = reference.getStatus();
+      if( status == null )
+        return false;
 
       return KalypsoStati.BIT_USER_MODIFIED == (KalypsoStati.BIT_USER_MODIFIED & status);
     }

@@ -61,7 +61,7 @@ public class ZmlViewResolutionFilter extends ViewerFilter
 
   private int m_offset = 0;
 
-  protected class ZmlFilterBaseIndex
+  protected static class ZmlFilterBaseIndex
   {
     private int m_baseIndex = 0;
 
