@@ -40,38 +40,24 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.rules.impl;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.kalypso.zml.ui.table.binding.ZmlRule;
-import org.kalypso.zml.ui.table.rules.IZmlTableRule;
+import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
+import org.kalypso.zml.ui.table.rules.IZmlRuleImplementation;
 
 /**
  * @author Dirk Kuch
  */
-public abstract class AbstractZmlTableRule implements IZmlTableRule
+public abstract class AbstractZmlTableRule implements IZmlRuleImplementation
 {
 
-  Map<String, ZmlRule> m_bindings = new HashMap<String, ZmlRule>();
-
   /**
-   * @see org.kalypso.zml.ui.table.rules.IZmlTableRule#addStyle(java.lang.String,
-   *      org.kalypso.zml.ui.table.binding.CellStyle)
+   * @see org.kalypso.zml.ui.table.rules.IZmlTableRule#update(org.kalypso.zml.ui.table.model.IZmlModelRow,
+   *      org.kalypso.zml.ui.table.binding.BaseColumn, java.lang.String)
    */
   @Override
-  public void addBinding( final ZmlRule binding )
+  public String update( final IZmlValueReference reference, final String text ) throws SensorException
   {
-    m_bindings.put( binding.getIdentifier(), binding );
-
-  }
-
-  /**
-   * @see org.kalypso.zml.ui.table.rules.IZmlTableRule#getStyle(java.lang.String)
-   */
-  @Override
-  public ZmlRule getBinding( final String columnId )
-  {
-    return m_bindings.get( columnId );
+    return text;
   }
 
 }

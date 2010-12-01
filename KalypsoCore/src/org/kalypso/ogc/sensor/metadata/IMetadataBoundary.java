@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestra√üe 22
+ *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,40 +38,14 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.commands.toolbar;
-
-import org.eclipse.core.commands.AbstractHandler;
-import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.runtime.Status;
-import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
-import org.kalypso.zml.ui.table.IZmlTableComposite;
-import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
-import org.kalypso.zml.ui.table.rules.impl.ZmlRuleDisplayAlarmstufen;
+package org.kalypso.ogc.sensor.metadata;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlCommandAlarmstufenViewMode extends AbstractHandler
+public interface IMetadataBoundary extends IMetadataConstants
 {
+  String getType( );
 
-  /**
-   * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
-   */
-  @Override
-  public Object execute( final ExecutionEvent event )
-  {
-    if( HandlerUtils.isSelected( event ) )
-    {
-      ZmlRuleDisplayAlarmstufen.enable();
-    }
-    else
-    {
-      ZmlRuleDisplayAlarmstufen.disable();
-    }
-
-    final IZmlTableComposite table = ZmlHandlerUtil.getTable( event );
-    table.refresh();
-
-    return Status.OK_STATUS;
-  }
+  double getValue( );
 }

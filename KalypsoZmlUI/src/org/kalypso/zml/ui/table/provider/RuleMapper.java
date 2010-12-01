@@ -44,9 +44,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.kalypso.zml.ui.table.binding.BaseColumn;
+import org.kalypso.zml.ui.table.binding.ZmlRule;
 import org.kalypso.zml.ui.table.model.IZmlModelRow;
 import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
-import org.kalypso.zml.ui.table.rules.IZmlTableRule;
+import org.kalypso.zml.ui.table.rules.IZmlRuleImplementation;
 
 /**
  * @author Dirk Kuch
@@ -57,20 +58,21 @@ public class RuleMapper
 
   private BaseColumn m_lastColumn;
 
-  private IZmlTableRule[] m_rules;
+  private ZmlRule[] m_rules;
 
-  public IZmlTableRule[] find( final IZmlModelRow row, final BaseColumn column )
+  public ZmlRule[] findActiveRules( final IZmlModelRow row, final BaseColumn column )
   {
     if( m_lastRow == row && m_lastColumn == column )
       return m_rules;
 
-    final List<IZmlTableRule> rules = new ArrayList<IZmlTableRule>();
+    final List<ZmlRule> rules = new ArrayList<ZmlRule>();
     final IZmlValueReference reference = row.get( column.getType() );
     if( reference != null )
     {
-      for( final IZmlTableRule rule : column.getRules() )
+      for( final ZmlRule rule : column.getRules() )
       {
-        if( rule.apply( reference ) )
+        final IZmlRuleImplementation impl = rule.getImplementation();
+        if( impl.apply( reference ) )
         {
           rules.add( rule );
         }
@@ -79,7 +81,7 @@ public class RuleMapper
 
     m_lastRow = row;
     m_lastColumn = column;
-    m_rules = rules.toArray( new IZmlTableRule[] {} );
+    m_rules = rules.toArray( new ZmlRule[] {} );
 
     return m_rules;
   }

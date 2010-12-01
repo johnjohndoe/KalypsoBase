@@ -50,13 +50,14 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.binding.BaseColumn;
 import org.kalypso.zml.ui.table.binding.CellStyle;
 import org.kalypso.zml.ui.table.binding.ZmlRule;
 import org.kalypso.zml.ui.table.model.IZmlModelRow;
 import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
-import org.kalypso.zml.ui.table.rules.IZmlTableRule;
+import org.kalypso.zml.ui.table.rules.IZmlRuleImplementation;
 import org.kalypso.zml.ui.table.schema.CellStyleType;
 import org.kalypso.zml.ui.table.schema.IndexColumnType;
 
@@ -86,19 +87,15 @@ public class ZmlLabelProvider extends ColumnLabelProvider
     if( element instanceof IZmlModelRow )
     {
       final IZmlModelRow row = (IZmlModelRow) element;
-      final IZmlTableRule[] rules = m_mapper.find( row, m_column );
+      final ZmlRule[] rules = m_mapper.findActiveRules( row, m_column );
 
       if( ArrayUtils.isNotEmpty( rules ) )
       {
-        final ZmlRule base = rules[0].getBinding( m_column.getIdentifier() );
-        final CellStyleType baseType = base.getStyle().getType();
-
+        final CellStyleType baseType = rules[0].getStyle( m_column ).getType();
         for( int index = 1; index < rules.length; index++ )
         {
-          final IZmlTableRule tableRule = rules[index];
-          final ZmlRule rule = tableRule.getBinding( m_column.getIdentifier() );
-
-          CellStyle.merge( rule.getStyle().getType(), baseType );
+          final ZmlRule rule = rules[index];
+          CellStyle.merge( rule.getPlainStyle().getType(), baseType );
         }
 
         m_lastCellStyle = new CellStyle( baseType );
@@ -222,22 +219,23 @@ public class ZmlLabelProvider extends ColumnLabelProvider
     {
       try
       {
-        final IZmlModelRow set = (IZmlModelRow) element;
+        String text = "";
 
-        if( m_column.getType() instanceof IndexColumnType )
+        final IZmlModelRow row = (IZmlModelRow) element;
+
+        final Object value = getValue( row );
+        if( value != null )
+          text = format( value );
+
+        final IZmlValueReference reference = row.get( m_column.getType() );
+        final ZmlRule[] rules = m_mapper.findActiveRules( row, m_column );
+        for( final ZmlRule rule : rules )
         {
-          final Object value = set.getIndexValue();
-
-          return format( value );
+          final IZmlRuleImplementation impl = rule.getImplementation();
+          text = impl.update( reference, text );
         }
-        else
-        {
-          final IZmlValueReference reference = set.get( m_column.getType() );
-          if( reference != null )
-            return format( reference.getValue() );
 
-          return "";
-        }
+        return text;
       }
       catch( final Throwable t )
       {
@@ -246,5 +244,19 @@ public class ZmlLabelProvider extends ColumnLabelProvider
     }
 
     return super.getText( element );
+  }
+
+  private Object getValue( final IZmlModelRow row ) throws SensorException
+  {
+    if( m_column.getType() instanceof IndexColumnType )
+    {
+      return row.getIndexValue();
+    }
+
+    final IZmlValueReference reference = row.get( m_column.getType() );
+    if( reference != null )
+      return reference.getValue();
+
+    return null;
   }
 }

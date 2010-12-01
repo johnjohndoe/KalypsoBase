@@ -63,7 +63,7 @@ import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
-import org.kalypso.ogc.sensor.metadata.IObservationConstants;
+import org.kalypso.ogc.sensor.metadata.IMetadataConstants;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
@@ -112,7 +112,7 @@ public class NativeObservationZrxAdapter implements INativeObservationAdapter
   public IObservation createObservationFromSource( final File source, TimeZone timeZone, final boolean continueWithErrors ) throws Exception
   {
     final MetadataList metaDataList = new MetadataList();
-    metaDataList.put( IObservationConstants.MD_ORIGIN, source.getAbsolutePath() );
+    metaDataList.put( IMetadataConstants.MD_ORIGIN, source.getAbsolutePath() );
 
     /* this is due to backwards compatibility */
     if( timeZone == null )

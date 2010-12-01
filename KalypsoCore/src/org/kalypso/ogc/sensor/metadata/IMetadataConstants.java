@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestra√üe 22
+ *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,40 +38,25 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.commands.toolbar;
-
-import org.eclipse.core.commands.AbstractHandler;
-import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.runtime.Status;
-import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
-import org.kalypso.zml.ui.table.IZmlTableComposite;
-import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
-import org.kalypso.zml.ui.table.rules.impl.ZmlRuleDisplayAlarmstufen;
+package org.kalypso.ogc.sensor.metadata;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlCommandAlarmstufenViewMode extends AbstractHandler
+public interface IMetadataConstants
 {
+  String BOUNDARY_PREFIX = "Grenzwert_";
 
-  /**
-   * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
-   */
-  @Override
-  public Object execute( final ExecutionEvent event )
-  {
-    if( HandlerUtils.isSelected( event ) )
-    {
-      ZmlRuleDisplayAlarmstufen.enable();
-    }
-    else
-    {
-      ZmlRuleDisplayAlarmstufen.disable();
-    }
+  String BOUNDARY_FORMAT = BOUNDARY_PREFIX + "%s: %s";
 
-    final IZmlTableComposite table = ZmlHandlerUtil.getTable( event );
-    table.refresh();
+  String AUSGABE_ZEITPUNKT = "Zeitreihe_Ausgabezeitpunkt";
 
-    return Status.OK_STATUS;
-  }
+  /** Name of the observation */
+  String MD_NAME = "Name"; //$NON-NLS-1$
+
+  /** Description of the observation */
+  String MD_DESCRIPTION = "Beschreibung";//$NON-NLS-1$ 
+
+  /** Some information about the Origin of the observation */
+  String MD_ORIGIN = "Entstehung"; //$NON-NLS-1$
 }

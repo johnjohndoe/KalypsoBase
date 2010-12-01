@@ -236,4 +236,5 @@ public class MetadataHelper implements ITimeseriesConstants, ICopyObservationMet
       metadata.setProperty( ITimeseriesConstants.MD_DATE_END, toStr ); //$NON-NLS-1$
     }
   }
+
 }

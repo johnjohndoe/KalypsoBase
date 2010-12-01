@@ -49,7 +49,7 @@ import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.metadata.IObservationConstants;
+import org.kalypso.ogc.sensor.metadata.IMetadataConstants;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 
 /**
@@ -117,7 +117,7 @@ public final class KalypsoProtocolWriter
           final StringBuffer sb = new StringBuffer( Messages.getString( "org.kalypso.ogc.sensor.status.KalypsoProtocolWriter.0" ) ); //$NON-NLS-1$
           sb.append( obsName );
 
-          final String desc = metadataList.getProperty( IObservationConstants.MD_DESCRIPTION, "" ); //$NON-NLS-1$
+          final String desc = metadataList.getProperty( IMetadataConstants.MD_DESCRIPTION, "" ); //$NON-NLS-1$
           if( desc.length() > 0 )
           {
             // desc += " aus " + observations[i].getMetadataList().getProperty( ObservationConstants.MD_ORIGIN,

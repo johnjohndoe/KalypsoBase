@@ -66,4 +66,6 @@ public interface IZmlTableComposite
   IZmlDataModel getDataModel( );
 
   IZmlTableColumn[] getColumns( );
+
+  void refresh( );
 }

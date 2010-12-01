@@ -8,7 +8,7 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.kalypso.zml.ui.table.rules.IZmlTableRule;
+import org.kalypso.zml.ui.table.rules.IZmlRuleImplementation;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 
@@ -18,7 +18,7 @@ import org.osgi.framework.BundleContext;
 public class KalypsoZmlUI extends AbstractUIPlugin
 {
 
-  private static List<IZmlTableRule> ZML_TABLE_RULES = null;
+  private static List<IZmlRuleImplementation> ZML_TABLE_RULES = null;
 
   // The plug-in ID
   public static final String PLUGIN_ID = "org.kalypso.zml.ui"; //$NON-NLS-1$
@@ -68,16 +68,16 @@ public class KalypsoZmlUI extends AbstractUIPlugin
   /**
    * @return list of feature binding handlers, handling a special featureType qname
    */
-  public synchronized IZmlTableRule[] getTableRules( )
+  public synchronized IZmlRuleImplementation[] getRuleImplementations( )
   {
     // fill binding map
     if( ZML_TABLE_RULES == null )
     {
-      ZML_TABLE_RULES = new ArrayList<IZmlTableRule>();
+      ZML_TABLE_RULES = new ArrayList<IZmlRuleImplementation>();
 
       /* get extension points */
       final IExtensionRegistry registry = Platform.getExtensionRegistry();
-      final IConfigurationElement[] elements = registry.getConfigurationElementsFor( IZmlTableRule.EXTENSION_POINT_ID );
+      final IConfigurationElement[] elements = registry.getConfigurationElementsFor( IZmlRuleImplementation.EXTENSION_POINT_ID );
 
       for( final IConfigurationElement element : elements )
       {
@@ -88,7 +88,7 @@ public class KalypsoZmlUI extends AbstractUIPlugin
           final Class< ? > featureClass = bundle.loadClass( element.getAttribute( "rule" ) ); //$NON-NLS-1$
           final Constructor< ? > constructor = featureClass.getConstructor();
 
-          final IZmlTableRule instance = (IZmlTableRule) constructor.newInstance();
+          final IZmlRuleImplementation instance = (IZmlRuleImplementation) constructor.newInstance();
           ZML_TABLE_RULES.add( instance );
         }
         catch( final Throwable e )
@@ -98,16 +98,16 @@ public class KalypsoZmlUI extends AbstractUIPlugin
       }
     }
 
-    return ZML_TABLE_RULES.toArray( new IZmlTableRule[] {} );
+    return ZML_TABLE_RULES.toArray( new IZmlRuleImplementation[] {} );
   }
 
   /**
    * @return list of feature binding handlers, handling a special featureType qname
    */
-  public synchronized IZmlTableRule getTableRule( final String identifier )
+  public synchronized IZmlRuleImplementation getRuleImplementation( final String identifier )
   {
-    final IZmlTableRule[] rules = getTableRules();
-    for( final IZmlTableRule rule : rules )
+    final IZmlRuleImplementation[] rules = getRuleImplementations();
+    for( final IZmlRuleImplementation rule : rules )
     {
       if( rule.getIdentifier().equals( identifier ) )
         return rule;

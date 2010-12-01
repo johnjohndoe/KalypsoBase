@@ -204,6 +204,7 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
     return column;
   }
 
+  @Override
   public void refresh( )
   {
     if( m_tableViewer.getTable().isDisposed() )
