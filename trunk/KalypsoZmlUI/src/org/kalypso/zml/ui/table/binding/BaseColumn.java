@@ -40,19 +40,19 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.binding;
 
-import java.util.LinkedHashSet;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
+import javax.xml.bind.JAXBElement;
+
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.runtime.CoreException;
-import org.kalypso.zml.ui.KalypsoZmlUI;
-import org.kalypso.zml.ui.table.rules.IZmlTableRule;
 import org.kalypso.zml.ui.table.schema.AbstractColumnType;
 import org.kalypso.zml.ui.table.schema.AlignmentType;
 import org.kalypso.zml.ui.table.schema.ColumnPropertyName;
 import org.kalypso.zml.ui.table.schema.ColumnPropertyType;
 import org.kalypso.zml.ui.table.schema.RuleType;
-import org.kalypso.zml.ui.table.schema.RulesType;
 import org.kalypso.zml.ui.table.schema.StyleReferenceType;
 import org.kalypso.zml.ui.table.styles.ZmlStyleResolver;
 import org.kalypso.zml.ui.table.utils.TableTypeHelper;
@@ -64,7 +64,7 @@ public class BaseColumn
 {
   private final AbstractColumnType m_type;
 
-  private final Set<IZmlTableRule> m_rules = new LinkedHashSet<IZmlTableRule>();
+  private ZmlRule[] m_rules;
 
   private CellStyle m_cellStyle;
 
@@ -85,22 +85,31 @@ public class BaseColumn
     return m_type.getId();
   }
 
-  public IZmlTableRule[] getRules( )
+  public ZmlRule[] getRules( )
   {
-    final RulesType ruleTypes = m_type.getRules();
-    if( ruleTypes != null )
-    {
-      for( final RuleType ruleType : ruleTypes.getRule() )
-      {
-        final String ruleIdentifier = ruleType.getRuleReference();
-        final IZmlTableRule rule = KalypsoZmlUI.getDefault().getTableRule( ruleIdentifier );
-        rule.addBinding( new ZmlRule( this, ruleType ) );
+    if( ArrayUtils.isNotEmpty( m_rules ) )
+      return m_rules;
 
-        m_rules.add( rule );
+    final List<JAXBElement<Object>> ruleReferences = m_type.getRule();
+    if( ruleReferences == null )
+      return new ZmlRule[] {};
+
+    final List<ZmlRule> rules = new ArrayList<ZmlRule>();
+
+    for( final JAXBElement<Object> element : ruleReferences )
+    {
+      final Object reference = element.getValue();
+      if( reference instanceof RuleType )
+      {
+        rules.add( new ZmlRule( (RuleType) reference ) );
       }
+      else
+        throw new NotImplementedException();
     }
 
-    return m_rules.toArray( new IZmlTableRule[] {} );
+    m_rules = rules.toArray( new ZmlRule[] {} );
+
+    return m_rules;
   }
 
   public AlignmentType getAlignment( )

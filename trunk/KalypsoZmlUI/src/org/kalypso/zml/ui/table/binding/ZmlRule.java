@@ -41,6 +41,8 @@
 package org.kalypso.zml.ui.table.binding;
 
 import org.eclipse.core.runtime.CoreException;
+import org.kalypso.zml.ui.KalypsoZmlUI;
+import org.kalypso.zml.ui.table.rules.IZmlRuleImplementation;
 import org.kalypso.zml.ui.table.schema.RuleType;
 import org.kalypso.zml.ui.table.schema.StyleReferenceType;
 import org.kalypso.zml.ui.table.styles.ZmlStyleResolver;
@@ -52,38 +54,36 @@ import org.kalypso.zml.ui.table.styles.ZmlStyleResolver;
  */
 public class ZmlRule
 {
-  private final BaseColumn m_column;
-
   private final RuleType m_rule;
 
-  private CellStyle m_style;
-
-  public ZmlRule( final BaseColumn column, final RuleType rule )
+  public ZmlRule( final RuleType rule )
   {
-    m_column = column;
     m_rule = rule;
   }
 
-  public String getIdentifier( )
+  public CellStyle getPlainStyle( ) throws CoreException
   {
-    return m_column.getIdentifier();
+    final ZmlStyleResolver resolver = ZmlStyleResolver.getInstance();
+    final StyleReferenceType styleReference = m_rule.getStyleReference();
+
+    return resolver.findStyle( styleReference );
   }
 
-  public CellStyle getStyle( ) throws CoreException
+  public CellStyle getStyle( final BaseColumn column ) throws CoreException
   {
-    if( m_style == null )
-    {
-      final ZmlStyleResolver resolver = ZmlStyleResolver.getInstance();
-      final StyleReferenceType styleReference = m_rule.getStyleReference();
+    final ZmlStyleResolver resolver = ZmlStyleResolver.getInstance();
+    final StyleReferenceType styleReference = m_rule.getStyleReference();
 
-      final CellStyle baseStyle = m_column.getDefaultStyle().clone();
-      final CellStyle ruleStyle = resolver.findStyle( styleReference );
-      CellStyle.merge( baseStyle.getType(), ruleStyle.getType() );
+    final CellStyle baseStyle = column.getDefaultStyle().clone();
+    final CellStyle ruleStyle = resolver.findStyle( styleReference );
+    CellStyle.merge( baseStyle.getType(), ruleStyle.getType() );
 
-      /** clone - because of cached style properties (invalid cell style members) */
-      m_style = ruleStyle.clone();
-    }
+    /** clone - because of cached style properties (invalid cell style members) */
+    return ruleStyle.clone();
+  }
 
-    return m_style;
+  public IZmlRuleImplementation getImplementation( )
+  {
+    return KalypsoZmlUI.getDefault().getRuleImplementation( m_rule.getRuleReference() );
   }
 }

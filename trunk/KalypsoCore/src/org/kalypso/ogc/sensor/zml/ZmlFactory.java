@@ -93,7 +93,7 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.filter.FilterFactory;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
-import org.kalypso.ogc.sensor.metadata.IObservationConstants;
+import org.kalypso.ogc.sensor.metadata.IMetadataConstants;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.proxy.AutoProxyFactory;
@@ -368,7 +368,7 @@ public final class ZmlFactory
   {
     // metadata
     final MetadataList metadata = new MetadataList();
-    metadata.put( IObservationConstants.MD_NAME, obs.getName() );
+    metadata.put( IMetadataConstants.MD_NAME, obs.getName() );
     TimeZone timeZone = null;
     if( obs.getMetadataList() != null )
     {
@@ -551,7 +551,7 @@ public final class ZmlFactory
         else
           mdType.setValue( mdValue );
 
-        if( IObservationConstants.MD_NAME.equals( mdKey ) )
+        if( IMetadataConstants.MD_NAME.equals( mdKey ) )
           metaName = mdValue;
 
         metadataList.add( mdType );
@@ -577,7 +577,7 @@ public final class ZmlFactory
       // sort axes, this is not needed from a xml view, but very usefull when comparing marshalled files (e.g.
       // Junit-Test)
       final TreeSet<IAxis> sortedAxis = new TreeSet<IAxis>( new Comparator<IAxis>()
-          {
+      {
         @Override
         public int compare( final IAxis a1, final IAxis a2 )
         {
@@ -599,7 +599,7 @@ public final class ZmlFactory
           }
           return type1.compareTo( type2 );
         }
-          } );
+      } );
 
       for( final IAxis axis : obs.getAxisList() )
       {
@@ -826,7 +826,6 @@ public final class ZmlFactory
       throw new SensorException( e );
     }
   }
-
 
   public static String writeToString( final IObservation value, final IRequest request )
   {

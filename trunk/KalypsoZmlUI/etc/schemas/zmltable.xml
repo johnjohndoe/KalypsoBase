@@ -5,6 +5,29 @@
     <url>urn:org:kalypso:zml:ui:table:style:base#defaultCellStyle</url>
   </defaultStyle>
 
+  <Rules>
+    <Rule ruleReference="org.kalypso.zml.ui.table.rule.forecast.value">
+      <styleReference>
+        <url>urn:org:kalypso:zml:ui:table:style:base#dateForecastCellStyle</url>
+      </styleReference>
+    </Rule>
+    <Rule ruleReference="org.kalypso.zml.ui.table.rule.user.modified">
+      <styleReference>
+        <url>urn:org:kalypso:zml:ui:table:style:base#userModifiedStyle</url>
+      </styleReference>
+    </Rule>
+    <Rule ruleReference="org.kalypso.zml.ui.table.rule.value.interpolated">
+      <styleReference>
+        <url>urn:org:kalypso:zml:ui:table:style:base#interpolatedValueStyle</url>
+      </styleReference>
+    </Rule>
+    <Rule ruleReference="org.kalypso.zml.ui.table.rule.wq.conflict">
+      <styleReference>
+        <url>urn:org:kalypso:zml:ui:table:style:base#wqConversionConflict</url>
+      </styleReference>
+    </Rule>
+  </Rules>
+
   <toolbar>toolbar:org.kalypso.hwv.product.sachsenanhalt.zml.table.menu.toolbar</toolbar>
 
   <Columns>
@@ -17,20 +40,14 @@
         <url>urn:org:kalypso:zml:ui:table:style:base#dateCellStyle</url>
       </defaultCellStyle>
 
-      <Rules>
-        <Rule ruleReference="org.kalypso.zml.ui.table.rule.forecast.value">
-          <styleReference>
-            <url>urn:org:kalypso:zml:ui:table:style:base#dateForecastCellStyle</url>
-          </styleReference>
-        </Rule>
-      </Rules>
+      <rule>org.kalypso.zml.ui.table.rule.forecast.value</rule>
     </Column>
 
 
     <!-- wasserstand -->
-    <Column xsi:type="DataColumnType" editable="true" id="W" metadataSource="true">
-      <property name="label">Wasserstand</property>
-      <property name="width">100</property>
+    <Column xsi:type="DataColumnType" editable="true" id="W_MESS" metadataSource="true">
+      <property name="label">Wasserstand (Messung)</property>
+      <property name="width">150</property>
       <property name="alignment">RIGHT</property>
       <property name="uriContextMenu">menu:org.kalypso.hwv.product.sachsenanhalt.zml.table.menu.cell.ContextMenu</property>
       <property name="uriHeaderContextMenu">menu:org.kalypso.hwv.product.sachsenanhalt.zml.table.menu.header.ContextMenu</property>
@@ -42,23 +59,9 @@
         <url>urn:org:kalypso:zml:ui:table:style:base#wBaseEditingCellStyle</url>
       </defaultCellEditingStyle>
 
-      <Rules>
-        <Rule ruleReference="org.kalypso.zml.ui.table.rule.user.modified">
-          <styleReference>
-            <url>urn:org:kalypso:zml:ui:table:style:base#wUserModifiedStyle</url>
-          </styleReference>
-        </Rule>
-        <Rule ruleReference="org.kalypso.zml.ui.table.rule.value.interpolated">
-          <styleReference>
-            <url>urn:org:kalypso:zml:ui:table:style:base#wInterpolatedValueStyle</url>
-          </styleReference>
-        </Rule>
-        <Rule ruleReference="org.kalypso.zml.ui.table.rule.wq.conflict">
-          <styleReference>
-            <url>urn:org:kalypso:zml:ui:table:style:base#wWqConversionConflict</url>
-          </styleReference>
-        </Rule>
-      </Rules>
+      <rule>org.kalypso.zml.ui.table.rule.user.modified</rule>
+      <rule>org.kalypso.zml.ui.table.rule.value.interpolated</rule>
+      <rule>org.kalypso.zml.ui.table.rule.wq.conflict</rule>
 
       <indexAxis>date</indexAxis>
       <valueAxis>W</valueAxis>
@@ -67,7 +70,7 @@
     <!-- wasserstand modell zeitreihe -->
     <Column xsi:type="DataColumnType" editable="true" id="W_MODELL">
       <property name="label">Wasserstand (Modell)</property>
-      <property name="width">100</property>
+      <property name="width">150</property>
       <property name="alignment">RIGHT</property>
       <property name="uriContextMenu">menu:org.kalypso.hwv.product.sachsenanhalt.zml.table.menu.cell.ContextMenu</property>
       <property name="uriHeaderContextMenu">menu:org.kalypso.hwv.product.sachsenanhalt.zml.table.menu.header.ContextMenu</property>
@@ -79,23 +82,9 @@
         <url>urn:org:kalypso:zml:ui:table:style:base#wBaseEditingCellStyle</url>
       </defaultCellEditingStyle>
 
-      <Rules>
-        <Rule ruleReference="org.kalypso.zml.ui.table.rule.user.modified">
-          <styleReference>
-            <url>urn:org:kalypso:zml:ui:table:style:base#wUserModifiedStyle</url>
-          </styleReference>
-        </Rule>
-        <Rule ruleReference="org.kalypso.zml.ui.table.rule.value.interpolated">
-          <styleReference>
-            <url>urn:org:kalypso:zml:ui:table:style:base#wInterpolatedValueStyle</url>
-          </styleReference>
-        </Rule>
-        <Rule ruleReference="org.kalypso.zml.ui.table.rule.wq.conflict">
-          <styleReference>
-            <url>urn:org:kalypso:zml:ui:table:style:base#wWqConversionConflict</url>
-          </styleReference>
-        </Rule>
-      </Rules>
+      <rule>org.kalypso.zml.ui.table.rule.user.modified</rule>
+      <rule>org.kalypso.zml.ui.table.rule.value.interpolated</rule>
+      <rule>org.kalypso.zml.ui.table.rule.wq.conflict</rule>
 
       <indexAxis>date</indexAxis>
       <valueAxis>W</valueAxis>
@@ -103,9 +92,9 @@
 
 
     <!-- Abfluss -->
-    <Column xsi:type="DataColumnType" editable="true" id="Q" metadataSource="true">
-      <property name="label">Abfluss</property>
-      <property name="width">100</property>
+    <Column xsi:type="DataColumnType" editable="true" id="Q_MESS" metadataSource="true">
+      <property name="label">Abfluss (Messung)</property>
+      <property name="width">150</property>
       <property name="alignment">RIGHT</property>
       <property name="uriContextMenu">menu:org.kalypso.hwv.product.sachsenanhalt.zml.table.menu.cell.ContextMenu</property>
       <property name="uriHeaderContextMenu">menu:org.kalypso.hwv.product.sachsenanhalt.zml.table.menu.header.ContextMenu</property>
@@ -114,32 +103,35 @@
         <url>urn:org:kalypso:zml:ui:table:style:base#qBaseCellStyle</url>
       </defaultCellStyle>
 
-      <Rules>
-        <Rule ruleReference="org.kalypso.zml.ui.table.rule.user.modified">
-          <styleReference>
-            <url>urn:org:kalypso:zml:ui:table:style:base#qUserModifiedStyle</url>
-          </styleReference>
-        </Rule>
-        <Rule ruleReference="org.kalypso.zml.ui.table.rule.value.interpolated">
-          <styleReference>
-            <url>urn:org:kalypso:zml:ui:table:style:base#qInterpolatedValueStyle</url>
-          </styleReference>
-        </Rule>
-        <Rule ruleReference="org.kalypso.zml.ui.table.rule.wq.conflict">
-          <styleReference>
-            <url>urn:org:kalypso:zml:ui:table:style:base#qWqConflictQStyle</url>
-          </styleReference>
-        </Rule>
-      </Rules>
+      <rule>org.kalypso.zml.ui.table.rule.user.modified</rule>
+      <rule>org.kalypso.zml.ui.table.rule.value.interpolated</rule>
+      <rule>org.kalypso.zml.ui.table.rule.wq.conflict</rule>
+
+      <indexAxis>date</indexAxis>
+      <valueAxis>Q</valueAxis>
+    </Column>
+    <Column xsi:type="DataColumnType" editable="true" id="Q_MODELL" metadataSource="true">
+      <property name="label">Abfluss (Modell)</property>
+      <property name="width">150</property>
+      <property name="alignment">RIGHT</property>
+      <property name="uriContextMenu">menu:org.kalypso.hwv.product.sachsenanhalt.zml.table.menu.cell.ContextMenu</property>
+      <property name="uriHeaderContextMenu">menu:org.kalypso.hwv.product.sachsenanhalt.zml.table.menu.header.ContextMenu</property>
+
+      <defaultCellStyle>
+        <url>urn:org:kalypso:zml:ui:table:style:base#qBaseCellStyle</url>
+      </defaultCellStyle>
+
+      <rule>org.kalypso.zml.ui.table.rule.user.modified</rule>
+      <rule>org.kalypso.zml.ui.table.rule.value.interpolated</rule>
+      <rule>org.kalypso.zml.ui.table.rule.wq.conflict</rule>
 
       <indexAxis>date</indexAxis>
       <valueAxis>Q</valueAxis>
     </Column>
 
-    <!-- Abfluss Modell Zeitreihe -->
-    <Column xsi:type="DataColumnType" editable="true" id="Q_MODELL">
-      <property name="label">Abfluss (Modell)</property>
-      <property name="width">100</property>
+    <Column xsi:type="DataColumnType" editable="true" id="Q_INFO" metadataSource="true">
+      <property name="label">Abfluss (Info)</property>
+      <property name="width">150</property>
       <property name="alignment">RIGHT</property>
       <property name="uriContextMenu">menu:org.kalypso.hwv.product.sachsenanhalt.zml.table.menu.cell.ContextMenu</property>
       <property name="uriHeaderContextMenu">menu:org.kalypso.hwv.product.sachsenanhalt.zml.table.menu.header.ContextMenu</property>
@@ -148,23 +140,9 @@
         <url>urn:org:kalypso:zml:ui:table:style:base#qBaseCellStyle</url>
       </defaultCellStyle>
 
-      <Rules>
-        <Rule ruleReference="org.kalypso.zml.ui.table.rule.user.modified">
-          <styleReference>
-            <url>urn:org:kalypso:zml:ui:table:style:base#qUserModifiedStyle</url>
-          </styleReference>
-        </Rule>
-        <Rule ruleReference="org.kalypso.zml.ui.table.rule.value.interpolated">
-          <styleReference>
-            <url>urn:org:kalypso:zml:ui:table:style:base#qInterpolatedValueStyle</url>
-          </styleReference>
-        </Rule>
-        <Rule ruleReference="org.kalypso.zml.ui.table.rule.wq.conflict">
-          <styleReference>
-            <url>urn:org:kalypso:zml:ui:table:style:base#qWqConflictQStyle</url>
-          </styleReference>
-        </Rule>
-      </Rules>
+      <rule>org.kalypso.zml.ui.table.rule.user.modified</rule>
+      <rule>org.kalypso.zml.ui.table.rule.value.interpolated</rule>
+      <rule>org.kalypso.zml.ui.table.rule.wq.conflict</rule>
 
       <indexAxis>date</indexAxis>
       <valueAxis>Q</valueAxis>

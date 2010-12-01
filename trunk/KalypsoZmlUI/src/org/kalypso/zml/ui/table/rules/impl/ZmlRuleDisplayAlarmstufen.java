@@ -40,6 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.rules.impl;
 
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.TreeMap;
+
+import org.kalypso.ogc.sensor.IAxis;
+import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.metadata.MetadataBoundary;
+import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
 
 /**
@@ -77,5 +86,40 @@ public class ZmlRuleDisplayAlarmstufen extends AbstractZmlTableRule
   public String getIdentifier( )
   {
     return ID;
+  }
+
+  /**
+   * @see org.kalypso.zml.ui.table.rules.impl.AbstractZmlTableRule#update(org.kalypso.zml.ui.table.model.IZmlModelRow,
+   *      org.kalypso.zml.ui.table.binding.BaseColumn, java.lang.String)
+   */
+  @Override
+  public String update( final IZmlValueReference reference, final String text ) throws SensorException
+  {
+    final IAxis axis = reference.getValueAxis();
+    final String type = axis.getType();
+
+    final Map<Double, MetadataBoundary> map = new TreeMap<Double, MetadataBoundary>();
+
+    final MetadataList[] metadataList = reference.getMetadata();
+    for( final MetadataList metadata : metadataList )
+    {
+      final String[] keys = MetadataBoundary.findBoundaryKeys( metadata, type, "Alarmstufe" );
+      final MetadataBoundary[] boundaries = MetadataBoundary.getBoundaries( metadata, keys );
+      for( final MetadataBoundary boundary : boundaries )
+      {
+        map.put( boundary.getValue(), boundary );
+      }
+    }
+
+    final Number value = (Number) reference.getValue();
+
+    final Set<Entry<Double, MetadataBoundary>> entries = map.entrySet();
+    for( final Entry<Double, MetadataBoundary> entry : entries )
+    {
+      final Double key = entry.getKey();
+
+    }
+
+    return text;
   }
 }

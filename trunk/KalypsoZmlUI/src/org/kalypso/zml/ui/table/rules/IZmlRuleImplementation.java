@@ -40,25 +40,19 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.rules;
 
-import org.kalypso.zml.ui.table.binding.ZmlRule;
+import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
 
 /**
  * @author Dirk Kuch
  */
-public interface IZmlTableRule
+public interface IZmlRuleImplementation
 {
   String EXTENSION_POINT_ID = "org.kalypso.zml.ui.tableRule"; //$NON-NLS-1$
-
-  void addBinding( ZmlRule rule );
 
   boolean apply( IZmlValueReference reference );
 
   String getIdentifier( );
 
-  /**
-   * @param identifier
-   *          identifier = columnId
-   */
-  ZmlRule getBinding( String identifier );
+  String update( final IZmlValueReference reference, String text ) throws SensorException;
 }

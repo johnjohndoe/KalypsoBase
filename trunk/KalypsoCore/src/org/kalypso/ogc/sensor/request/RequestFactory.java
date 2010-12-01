@@ -47,8 +47,8 @@ import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
+import org.kalypso.ogc.sensor.metadata.IMetadataConstants;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
-import org.kalypso.ogc.sensor.metadata.IObservationConstants;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 import org.kalypso.ogc.sensor.zml.ZmlURLConstants;
@@ -118,7 +118,7 @@ public final class RequestFactory
    * <p>
    * If there is an extension for org.kalypso.core.requestObsToMerge, then the observation delivered by the instance of
    * this extension is merged with the observation created here. You can use this for instance to have some default
-   * W/Q-Table in the metadata.
+   * W/Q-Table in the meta data.
    * 
    * @return a new instance of SimpleObservation that will satisfy the request specification
    */
@@ -137,10 +137,10 @@ public final class RequestFactory
     }
     // create observation instance
     final SimpleObservation obs = new SimpleObservation( "", request.getName(), new MetadataList(), axes.toArray( new IAxis[axes.size()] ) ); //$NON-NLS-1$ //$NON-NLS-2$
-    // update metadata
+    // update meta data
     final MetadataList mdl = obs.getMetadataList();
-    mdl.setProperty( IObservationConstants.MD_NAME, request.getName() != null ? request.getName() : "<?>" ); //$NON-NLS-1$
-    mdl.setProperty( IObservationConstants.MD_ORIGIN, Messages.getString( "org.kalypso.ogc.sensor.request.RequestFactory.3" ) ); //$NON-NLS-1$
+    mdl.setProperty( IMetadataConstants.MD_NAME, request.getName() != null ? request.getName() : "<?>" ); //$NON-NLS-1$
+    mdl.setProperty( IMetadataConstants.MD_ORIGIN, Messages.getString( "org.kalypso.ogc.sensor.request.RequestFactory.3" ) ); //$NON-NLS-1$
     return obs;
   }
 
