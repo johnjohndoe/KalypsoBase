@@ -198,5 +198,4 @@ public class ZmlDataModel implements IZmlDataModel
 
     return m_rows.values().toArray( new IZmlModelRow[] {} );
   }
-
 }
