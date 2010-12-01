@@ -41,6 +41,8 @@
 package org.kalypso.zml.ui.table.commands.toolbar.view;
 
 import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.runtime.Status;
+import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
 
 /**
  * @author Dirk Kuch
@@ -54,7 +56,10 @@ public class ZmlCommand6HourView extends AbstractHourViewCommand
   @Override
   public Object execute( final ExecutionEvent event )
   {
-    return updateResulution( event, 6, false );
+    if( HandlerUtils.isSelected( event ) )
+      return updateResulution( event, 6, false );
+
+    return Status.OK_STATUS;
   }
 
 }

@@ -43,6 +43,10 @@ package org.kalypso.contribs.eclipse.core.commands;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.common.NotDefinedException;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.ToolItem;
+import org.eclipse.swt.widgets.Widget;
 
 /**
  * Utility class for {@link org.eclipse.core.commands.IHandler} related stuff.
@@ -68,6 +72,38 @@ public final class HandlerUtils
       e.printStackTrace();
       return "<Command name not set>"; //$NON-NLS-1$
     }
+  }
+
+  public static boolean isSelected( final ExecutionEvent executionEvent )
+  {
+    return !isDeselected( executionEvent );
+  }
+
+  /**
+   * Checks if this command was executed as de-selection of a radio button/menu.<br>
+   * If this is the case, we just ignore it.<br>
+   * In doubt, we always execute.
+   */
+  public static boolean isDeselected( final ExecutionEvent executionEvent )
+  {
+    final Object trigger = executionEvent.getTrigger();
+    if( !(trigger instanceof Event) )
+      return false;
+
+    final Event event = (Event) trigger;
+    final Widget widget = event.widget;
+    if( widget instanceof ToolItem )
+    {
+      final ToolItem item = (ToolItem) widget;
+      return !item.getSelection();
+    }
+    if( widget instanceof MenuItem )
+    {
+      final MenuItem item = (MenuItem) widget;
+      return !item.getSelection();
+    }
+
+    return false;
   }
 
 }

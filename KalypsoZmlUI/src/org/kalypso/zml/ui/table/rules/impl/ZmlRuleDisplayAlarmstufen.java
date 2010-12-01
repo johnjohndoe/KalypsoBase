@@ -38,28 +38,48 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.commands.toolbar.view;
+package org.kalypso.zml.ui.table.rules.impl;
 
-import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.runtime.Status;
-import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
+import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlCommand12HourView extends AbstractHourViewCommand
+public class ZmlRuleDisplayAlarmstufen extends AbstractZmlTableRule
 {
+  public static final String ID = "org.kalypso.zml.ui.table.rule.display.alarmstufen";
 
-  /**
-   * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
-   */
-  @Override
-  public Object execute( final ExecutionEvent event )
+  private static Boolean ENABLED = Boolean.FALSE;
+
+  public static void enable( )
   {
-    if( HandlerUtils.isSelected( event ) )
-      return updateResulution( event, 12, false );
-
-    return Status.OK_STATUS;
+    ENABLED = Boolean.TRUE;
   }
 
+  public static void disable( )
+  {
+    ENABLED = Boolean.FALSE;
+  }
+
+  /**
+   * @see org.kalypso.zml.ui.table.rules.IZmlTableRule#apply(org.kalypso.zml.ui.table.model.references.IZmlValueReference)
+   */
+  @Override
+  public boolean apply( final IZmlValueReference reference )
+  {
+    if( !ENABLED )
+      return false;
+
+    // TODO Auto-generated method stub
+    return false;
+  }
+
+  /**
+   * @see org.kalypso.zml.ui.table.rules.IZmlTableRule#getIdentifier()
+   */
+  @Override
+  public String getIdentifier( )
+  {
+    return ID;
+  }
 }

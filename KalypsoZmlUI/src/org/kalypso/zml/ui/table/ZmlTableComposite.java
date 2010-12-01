@@ -169,7 +169,7 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
     final ToolBarManager manager = new ToolBarManager();
 
     final ToolBar control = manager.createControl( this );
-    control.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+    control.setLayoutData( new GridData( SWT.RIGHT, GridData.FILL, true, false ) );
 
     ContributionUtils.populateContributionManager( PlatformUI.getWorkbench(), manager, reference );
     manager.update( true );

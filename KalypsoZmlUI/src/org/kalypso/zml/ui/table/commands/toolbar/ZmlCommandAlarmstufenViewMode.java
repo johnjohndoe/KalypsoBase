@@ -38,16 +38,18 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.commands.toolbar.view;
+package org.kalypso.zml.ui.table.commands.toolbar;
 
+import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
+import org.kalypso.zml.ui.table.rules.impl.ZmlRuleDisplayAlarmstufen;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlCommand12HourView extends AbstractHourViewCommand
+public class ZmlCommandAlarmstufenViewMode extends AbstractHandler
 {
 
   /**
@@ -57,9 +59,14 @@ public class ZmlCommand12HourView extends AbstractHourViewCommand
   public Object execute( final ExecutionEvent event )
   {
     if( HandlerUtils.isSelected( event ) )
-      return updateResulution( event, 12, false );
+    {
+      ZmlRuleDisplayAlarmstufen.enable();
+    }
+    else
+    {
+      ZmlRuleDisplayAlarmstufen.disable();
+    }
 
     return Status.OK_STATUS;
   }
-
 }
