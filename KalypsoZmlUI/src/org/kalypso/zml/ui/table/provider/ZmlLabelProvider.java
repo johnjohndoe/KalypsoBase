@@ -232,7 +232,7 @@ public class ZmlLabelProvider extends ColumnLabelProvider
         for( final ZmlRule rule : rules )
         {
           final IZmlRuleImplementation impl = rule.getImplementation();
-          text = impl.update( reference, text );
+          text = impl.update( rule, reference, text );
         }
 
         return text;

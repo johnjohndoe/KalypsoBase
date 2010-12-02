@@ -115,17 +115,18 @@ public final class MetadataBoundary implements IMetadataBoundary
   /**
    * @param type
    *          w or q
-   * @param boundaryType
-   *          alarmstufe or meldegrenze
+   * @param metadataKey
+   *          jregex of meta data key
    */
-  public static String[] findBoundaryKeys( final MetadataList metadata, final String type, final String boundaryType )
+  public static String[] findBoundaryKeys( final MetadataList metadata, final String metadataKey, final String type )
   {
     final List<String> found = new ArrayList<String>();
+    final Pattern pattern = new Pattern( metadataKey );
 
     final String[] keys = findBoundaryKeys( metadata, type );
     for( final String key : keys )
     {
-      if( key.contains( boundaryType ) )
+      if( pattern.matches( key ) )
         found.add( key );
     }
 

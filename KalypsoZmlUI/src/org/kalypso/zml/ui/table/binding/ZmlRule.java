@@ -40,9 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.binding;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.rules.IZmlRuleImplementation;
+import org.kalypso.zml.ui.table.schema.RuleInstruction;
+import org.kalypso.zml.ui.table.schema.RuleInstructionsType;
 import org.kalypso.zml.ui.table.schema.RuleType;
 import org.kalypso.zml.ui.table.schema.StyleReferenceType;
 import org.kalypso.zml.ui.table.styles.ZmlStyleResolver;
@@ -55,6 +61,8 @@ import org.kalypso.zml.ui.table.styles.ZmlStyleResolver;
 public class ZmlRule
 {
   private final RuleType m_rule;
+
+  private ZmlRuleInstruction[] m_instructions;
 
   public ZmlRule( final RuleType rule )
   {
@@ -85,5 +93,27 @@ public class ZmlRule
   public IZmlRuleImplementation getImplementation( )
   {
     return KalypsoZmlUI.getDefault().getRuleImplementation( m_rule.getRuleReference() );
+  }
+
+  public ZmlRuleInstruction[] getInstructions( )
+  {
+    if( ArrayUtils.isNotEmpty( m_instructions ) )
+      return m_instructions;
+
+    final List<ZmlRuleInstruction> myInstructions = new ArrayList<ZmlRuleInstruction>();
+
+    final RuleInstructionsType type = m_rule.getRuleInstructions();
+    if( type == null )
+      return new ZmlRuleInstruction[] {};
+
+    final List<RuleInstruction> instructions = type.getInstruction();
+    for( final RuleInstruction instruction : instructions )
+    {
+      myInstructions.add( new ZmlRuleInstruction( instruction ) );
+    }
+
+    m_instructions = myInstructions.toArray( new ZmlRuleInstruction[] {} );
+
+    return m_instructions;
   }
 }
