@@ -41,7 +41,7 @@
       </styleReference>
     </Rule>
     <Rule ruleReference="org.kalypso.zml.ui.table.rule.display.alarmstufen">
-       <styleReference>
+      <styleReference>
         <url>urn:org:kalypso:zml:ui:table:style:base#emptyStyle</url>
       </styleReference>
       <RuleInstructions>
@@ -67,7 +67,59 @@
         </instruction>
       </RuleInstructions>
     </Rule>
+
+
+    <Rule ruleReference="org.kalypso.zml.ui.table.rule.display.hauptzahlen">
+      <styleReference>
+        <url>urn:org:kalypso:zml:ui:table:style:base#emptyStyle</url>
+      </styleReference>
+      <RuleInstructions>
+        <!-- <metadata value="26" name="Grenzwert_W: Kalypso_Grenzwert_NW"/>  -->
+        <instruction metadataKey=".*Kalypso_Grenzwert_N\w?" operator="SMALLER" label="&lt;N">
+          <styleReference>
+            <url>urn:org:kalypso:zml:ui:table:style:base#emptyStyle</url>
+          </styleReference>
+        </instruction>
+        <!--   <metadata value="80" name="Grenzwert_W: Kalypso_Grenzwert_MNW"/> -->
+        <instruction metadataKey=".*Kalypso_Grenzwert_MN\w?" operator="SMALLER" label="&lt;MN">
+          <styleReference>
+            <url>urn:org:kalypso:zml:ui:table:style:base#emptyStyle</url>
+          </styleReference>
+        </instruction>
+        <!--   <metadata value="80" name="Grenzwert_W: Kalypso_Grenzwert_MW"/> -->
+        <instruction metadataKey=".*Kalypso_Grenzwert_M\w?" operator="SMALLER" label="&lt;M">
+          <styleReference>
+            <url>urn:org:kalypso:zml:ui:table:style:base#emptyStyle</url>
+          </styleReference>
+        </instruction>
+        <!--   <metadata value="80" name="Grenzwert_W: Kalypso_Grenzwert_MW"/> -->
+        <instruction metadataKey=".*Kalypso_Grenzwert_M\w?" operator="EQUAL" label="=M">
+          <styleReference>
+            <url>urn:org:kalypso:zml:ui:table:style:base#emptyStyle</url>
+          </styleReference>
+        </instruction>
+        <!--  <metadata value="210" name="Grenzwert_W: Kalypso_Grenzwert_MHW"/> -->
+        <instruction metadataKey=".*Kalypso_Grenzwert_MH\w?" operator="SMALLER_EQUAL" label="&gt;M">
+          <styleReference>
+            <url>urn:org:kalypso:zml:ui:table:style:base#emptyStyle</url>
+          </styleReference>
+        </instruction>
+         <!--   <metadata value="300" name="Grenzwert_W: Kalypso_Grenzwert_HW"/>-->
+        <instruction metadataKey=".*Kalypso_Grenzwert_H\w?" operator="SMALLER_EQUAL" label="&gt;MH">
+          <styleReference>
+            <url>urn:org:kalypso:zml:ui:table:style:base#emptyStyle</url>
+          </styleReference>
+        </instruction>
+        <!--   <metadata value="300" name="Grenzwert_W: Kalypso_Grenzwert_HW"/>-->
+        <instruction metadataKey=".*Kalypso_Grenzwert_H\w?" operator="GREATER" label="&gt;H">
+          <styleReference>
+            <url>urn:org:kalypso:zml:ui:table:style:base#emptyStyle</url>
+          </styleReference>
+        </instruction>
+      </RuleInstructions>
+    </Rule>
   </Rules>
+
 
   <toolbar>toolbar:org.kalypso.hwv.product.sachsenanhalt.zml.table.menu.toolbar</toolbar>
 
@@ -104,6 +156,7 @@
       <rule>org.kalypso.zml.ui.table.rule.value.interpolated</rule>
       <rule>org.kalypso.zml.ui.table.rule.wq.conflict</rule>
       <rule>org.kalypso.zml.ui.table.rule.display.alarmstufen</rule>
+      <rule>org.kalypso.zml.ui.table.rule.display.hauptzahlen</rule>
 
       <indexAxis>date</indexAxis>
       <valueAxis>W</valueAxis>
@@ -128,6 +181,7 @@
       <rule>org.kalypso.zml.ui.table.rule.value.interpolated</rule>
       <rule>org.kalypso.zml.ui.table.rule.wq.conflict</rule>
       <rule>org.kalypso.zml.ui.table.rule.display.alarmstufen</rule>
+      <rule>org.kalypso.zml.ui.table.rule.display.hauptzahlen</rule>
 
       <indexAxis>date</indexAxis>
       <valueAxis>W</valueAxis>
@@ -150,7 +204,8 @@
       <rule>org.kalypso.zml.ui.table.rule.value.interpolated</rule>
       <rule>org.kalypso.zml.ui.table.rule.wq.conflict</rule>
       <rule>org.kalypso.zml.ui.table.rule.display.alarmstufen</rule>
-
+      <rule>org.kalypso.zml.ui.table.rule.display.hauptzahlen</rule>
+      
       <indexAxis>date</indexAxis>
       <valueAxis>Q</valueAxis>
     </Column>
@@ -171,7 +226,8 @@
       <rule>org.kalypso.zml.ui.table.rule.value.interpolated</rule>
       <rule>org.kalypso.zml.ui.table.rule.wq.conflict</rule>
       <rule>org.kalypso.zml.ui.table.rule.display.alarmstufen</rule>
-
+      <rule>org.kalypso.zml.ui.table.rule.display.hauptzahlen</rule>
+      
       <indexAxis>date</indexAxis>
       <valueAxis>Q</valueAxis>
     </Column>

@@ -47,6 +47,10 @@
            id="org.kalypso.zml.ui.table.rule.display.alarmstufen"
            rule="org.kalypso.zml.ui.table.rules.impl.ZmlRuleDisplayAlarmstufen">
      </rule>
+     <rule
+           id="org.kalypso.zml.ui.table.rule.display.hauptzahlen"
+           rule="org.kalypso.zml.ui.table.rules.impl.ZmlRuleDisplayHauptzahlen">
+     </rule>
  </extension> 
  
  <extension point="org.kalypso.core.catalogContribution">
@@ -160,6 +164,12 @@
           id="org.kalypso.zml.ui.table.commands.toolbar.view.alarm.levels"
           name="Alarmstufen anzeigen">
     </command>
+    <command
+          categoryId="org.kalypso.zml.ui.table.toolbar.commands.category"
+          defaultHandler="org.kalypso.zml.ui.table.commands.toolbar.ZmlCommandHauptzahlenViewMode"
+          id="org.kalypso.zml.ui.table.commands.toolbar.view.hauptzahlen"
+          name="Hauptzahlen anzeigen">
+    </command>
  </extension>
  <extension
        point="org.eclipse.ui.commandImages">
@@ -194,6 +204,10 @@
     <image
           commandId="org.kalypso.zml.ui.table.commands.toolbar.view.alarm.levels"
           icon="icons/table/alarmstufen_view_mode.png">
+    </image>
+    <image
+          commandId="org.kalypso.zml.ui.table.commands.toolbar.view.hauptzahlen"
+          icon="icons/table/hauptzahlen.png">
     </image>
  </extension>
 </plugin>
