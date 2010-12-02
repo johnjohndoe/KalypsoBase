@@ -84,9 +84,7 @@ public class CellStyle
 
   public CellStyle( final CellStyleType style )
   {
-    m_style = style;
-
-    init( style );
+    m_style = init( style );
   }
 
   public CellStyleType getType( )
@@ -103,26 +101,47 @@ public class CellStyle
   /**
    * initialize style (cascading style set!)
    */
-  private void init( final CellStyleType style )
+  private CellStyleType init( final CellStyleType style )
   {
     final CellStyleType base = TableTypeHelper.resolveReference( style.getBaseStyle() );
     if( base == null )
-      return;
+      return style;
 
-    init( base );
-
-    merge( base, style );
-
+    return merge( base, style );
   }
 
-  public static void merge( final CellStyleType base, final CellStyleType target )
+  public static CellStyleType merge( final CellStyleType... styles )
   {
+    final CellStyleType base = new CellStyleType();
     final List<StylePropertyType> baseProperties = base.getProperty();
-    for( final StylePropertyType property : baseProperties )
+
+    for( final CellStyleType style : styles )
     {
-      if( !hasProperty( target, property ) )
-        target.getProperty().add( property );
+      final List<StylePropertyType> properties = style.getProperty();
+      for( final StylePropertyType property : properties )
+      {
+        final StylePropertyType clone = TableTypeHelper.cloneProperty( property );
+
+        if( !hasProperty( base, property ) )
+        {
+          base.getProperty().add( clone );
+        }
+        else
+        {
+          final String name = TableTypeHelper.getPropertyName( property );
+          final StylePropertyName targetName = StylePropertyName.fromValue( name );
+
+          final StylePropertyType targetProperty = TableTypeHelper.findPropertyType( base, targetName );
+          targetProperty.setValue( clone.getValue() );
+        }
+
+        baseProperties.add( clone );
+      }
+
+      base.setId( style.getId() );
     }
+
+    return base;
   }
 
   public static boolean hasProperty( final CellStyleType style, final StylePropertyType type )

@@ -40,10 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.rules.impl;
 
-import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.metadata.MetadataBoundary;
-import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.zml.ui.table.binding.ZmlRule;
 import org.kalypso.zml.ui.table.binding.ZmlRuleInstruction;
 import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
@@ -92,14 +90,10 @@ public class ZmlRuleDisplayAlarmstufen extends AbstractZmlTableRule
   @Override
   public String update( final ZmlRule rule, final IZmlValueReference reference, final String text ) throws SensorException
   {
-    final MetadataList metadata = reference.getMetadata();
-    final IAxis valueAxis = reference.getValueAxis();
-    final Number value = (Number) reference.getValue();
-
     final ZmlRuleInstruction[] instructions = rule.getInstructions();
     for( final ZmlRuleInstruction instruction : instructions )
     {
-      final MetadataBoundary boundary = instruction.matches( metadata, valueAxis.getType(), value );
+      final MetadataBoundary boundary = instruction.matches( reference );
       if( boundary != null )
         return instruction.update( boundary, text );
     }

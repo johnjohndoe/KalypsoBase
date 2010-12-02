@@ -175,6 +175,19 @@ public final class TableTypeHelper
     return null;
   }
 
+  public static StylePropertyType findPropertyType( final CellStyleType style, final StylePropertyName property )
+  {
+    final List<StylePropertyType> properties = style.getProperty();
+    for( final StylePropertyType prop : properties )
+    {
+      final String propertyName = TableTypeHelper.getPropertyName( prop );
+      if( property.value().equals( propertyName ) )
+        return prop;
+    }
+
+    return null;
+  }
+
   public static String getPropertyName( final StylePropertyType property )
   {
     final Map<QName, String> attributes = property.getOtherAttributes();
@@ -234,6 +247,15 @@ public final class TableTypeHelper
       throw new NotImplementedException();
 
     return null;
+  }
+
+  public static StylePropertyType cloneProperty( final StylePropertyType source )
+  {
+    final StylePropertyType clone = new StylePropertyType();
+    clone.setValue( source.getValue() );
+    clone.getOtherAttributes().putAll( source.getOtherAttributes() );
+
+    return clone;
   }
 
 }

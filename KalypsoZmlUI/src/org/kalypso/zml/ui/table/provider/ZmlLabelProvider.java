@@ -70,7 +70,7 @@ public class ZmlLabelProvider extends ColumnLabelProvider
 
   private final RuleMapper m_mapper = new RuleMapper();
 
-  private Object m_lastElement = null;
+  private Object m_lastRow = null;
 
   private CellStyle m_lastCellStyle = null;
 
@@ -79,38 +79,28 @@ public class ZmlLabelProvider extends ColumnLabelProvider
     m_column = column;
   }
 
-  private CellStyle findStyle( final Object element ) throws CoreException
+  private CellStyle findStyle( final IZmlModelRow row ) throws CoreException
   {
-    if( m_lastElement == element )
+    if( m_lastRow == row )
       return m_lastCellStyle;
 
-    if( element instanceof IZmlModelRow )
+    final ZmlRule[] rules = m_mapper.findActiveRules( row, m_column );
+    if( ArrayUtils.isNotEmpty( rules ) )
     {
-      final IZmlModelRow row = (IZmlModelRow) element;
-      final ZmlRule[] rules = m_mapper.findActiveRules( row, m_column );
-
-      if( ArrayUtils.isNotEmpty( rules ) )
+      CellStyleType baseType = new CellStyleType();
+      for( final ZmlRule rule : rules )
       {
-        final CellStyleType baseType = rules[0].getStyle( m_column ).getType();
-        for( int index = 1; index < rules.length; index++ )
-        {
-          final ZmlRule rule = rules[index];
-          CellStyle.merge( rule.getPlainStyle().getType(), baseType );
-        }
+        baseType = CellStyle.merge( baseType, rule.getPlainStyle( row, m_column ).getType() );
+      }
 
-        m_lastCellStyle = new CellStyle( baseType );
-      }
-      else
-      {
-        m_lastCellStyle = m_column.getDefaultStyle();
-      }
+      m_lastCellStyle = new CellStyle( baseType );
     }
     else
     {
       m_lastCellStyle = m_column.getDefaultStyle();
     }
 
-    m_lastElement = element;
+    m_lastRow = row;
 
     return m_lastCellStyle;
   }
@@ -134,15 +124,18 @@ public class ZmlLabelProvider extends ColumnLabelProvider
   @Override
   public Color getBackground( final Object element )
   {
-    try
+    if( element instanceof IZmlModelRow )
     {
-      final CellStyle style = findStyle( element );
+      try
+      {
+        final CellStyle style = findStyle( (IZmlModelRow) element );
 
-      return style.getBackgroundColor();
-    }
-    catch( final CoreException e )
-    {
-      KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+        return style.getBackgroundColor();
+      }
+      catch( final CoreException e )
+      {
+        KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+      }
     }
 
     return super.getBackground( element );
@@ -154,19 +147,22 @@ public class ZmlLabelProvider extends ColumnLabelProvider
   @Override
   public Font getFont( final Object element )
   {
-    try
-    {
-      final CellStyle style = findStyle( element );
 
-      return style.getFont();
-    }
-    catch( final CoreException e )
+    if( element instanceof IZmlModelRow )
     {
-      KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+      try
+      {
+        final CellStyle style = findStyle( (IZmlModelRow) element );
+
+        return style.getFont();
+      }
+      catch( final CoreException e )
+      {
+        KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+      }
     }
 
     return super.getFont( element );
-
   }
 
   /**
@@ -175,15 +171,18 @@ public class ZmlLabelProvider extends ColumnLabelProvider
   @Override
   public Color getForeground( final Object element )
   {
-    try
+    if( element instanceof IZmlModelRow )
     {
-      final CellStyle style = findStyle( element );
+      try
+      {
+        final CellStyle style = findStyle( (IZmlModelRow) element );
 
-      return style.getForegroundColor();
-    }
-    catch( final CoreException e )
-    {
-      KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+        return style.getForegroundColor();
+      }
+      catch( final CoreException e )
+      {
+        KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+      }
     }
 
     return super.getForeground( element );
@@ -195,15 +194,18 @@ public class ZmlLabelProvider extends ColumnLabelProvider
   @Override
   public Image getImage( final Object element )
   {
-    try
+    if( element instanceof IZmlModelRow )
     {
-      final CellStyle style = findStyle( element );
+      try
+      {
+        final CellStyle style = findStyle( (IZmlModelRow) element );
 
-      return style.getImage();
-    }
-    catch( final Exception e )
-    {
-      KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+        return style.getImage();
+      }
+      catch( final Exception e )
+      {
+        KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+      }
     }
 
     return super.getImage( element );

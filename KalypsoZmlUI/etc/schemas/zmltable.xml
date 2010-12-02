@@ -1,9 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ZmlTable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="schema.table.ui.zml.kalypso.org" xsi:schemaLocation="schema.table.ui.zml.kalypso.org zmltable.xsd ">
-
+  <StyleSet>
+    <Style id="alarmstufe_1">
+      <property name="backgroundColor">E8E800</property>
+    </Style>
+    <Style id="alarmstufe_2">
+      <property name="backgroundColor">FF8000</property>
+    </Style>
+    <Style id="alarmstufe_3">
+      <property name="backgroundColor">FF8080</property>
+    </Style>
+    <Style id="alarmstufe_4">
+      <property name="backgroundColor">FF0000</property>
+    </Style>
+  </StyleSet>
   <defaultStyle>
     <url>urn:org:kalypso:zml:ui:table:style:base#defaultCellStyle</url>
   </defaultStyle>
+
+
 
   <Rules>
     <Rule ruleReference="org.kalypso.zml.ui.table.rule.forecast.value">
@@ -31,11 +46,28 @@
         <url>urn:org:kalypso:zml:ui:table:style:base#wBaseCellStyle</url>
       </styleReference>
       <RuleInstructions>
-        <instruction metadataKey=".*Alarmstufe_\d\w?" operator="GREATER_EQUAL" label=">=AS%s" labelTokenizer="^.+_" />
-        
+        <instruction metadataKey=".*Alarmstufe_1\w?" operator="GREATER_EQUAL" label="AS%s" labelTokenizer="^.+_">
+          <styleReference>
+            <reference>alarmstufe_1</reference>
+          </styleReference>
+        </instruction>
+        <instruction metadataKey=".*Alarmstufe_2\w?" operator="GREATER_EQUAL" label="AS%s" labelTokenizer="^.+_">
+          <styleReference>
+            <reference>alarmstufe_2</reference>
+          </styleReference>
+        </instruction>
+        <instruction metadataKey=".*Alarmstufe_3\w?" operator="GREATER_EQUAL" label="AS%s" labelTokenizer="^.+_">
+          <styleReference>
+            <reference>alarmstufe_3</reference>
+          </styleReference>
+        </instruction>
+        <instruction metadataKey=".*Alarmstufe_4\w?" operator="GREATER_EQUAL" label="AS%s" labelTokenizer="^.+_">
+          <styleReference>
+            <reference>alarmstufe_4</reference>
+          </styleReference>
+        </instruction>
       </RuleInstructions>
     </Rule>
-
   </Rules>
 
   <toolbar>toolbar:org.kalypso.hwv.product.sachsenanhalt.zml.table.menu.toolbar</toolbar>
