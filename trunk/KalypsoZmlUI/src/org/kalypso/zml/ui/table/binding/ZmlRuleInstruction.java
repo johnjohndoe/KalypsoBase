@@ -43,10 +43,16 @@ package org.kalypso.zml.ui.table.binding;
 import jregex.Pattern;
 import jregex.RETokenizer;
 
+import org.eclipse.core.runtime.CoreException;
+import org.kalypso.ogc.sensor.IAxis;
+import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.metadata.MetadataBoundary;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
+import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
 import org.kalypso.zml.ui.table.schema.RuleInstruction;
 import org.kalypso.zml.ui.table.schema.RuleInstructionOperator;
+import org.kalypso.zml.ui.table.schema.StyleReferenceType;
+import org.kalypso.zml.ui.table.styles.ZmlStyleResolver;
 
 /**
  * @author Dirk Kuch
@@ -55,14 +61,20 @@ public class ZmlRuleInstruction
 {
   private final RuleInstruction m_type;
 
+  private CellStyle m_style;
+
   public ZmlRuleInstruction( final RuleInstruction type )
   {
     m_type = type;
   }
 
-  public MetadataBoundary matches( final MetadataList metadata, final String boundaryType, final Number value )
+  public MetadataBoundary matches( final IZmlValueReference reference ) throws SensorException
   {
-    final String[] keys = MetadataBoundary.findBoundaryKeys( metadata, m_type.getMetadataKey(), boundaryType );
+    final MetadataList metadata = reference.getMetadata();
+    final IAxis valueAxis = reference.getValueAxis();
+    final Number value = (Number) reference.getValue();
+
+    final String[] keys = MetadataBoundary.findBoundaryKeys( metadata, m_type.getMetadataKey(), valueAxis.getType() );
 
     final MetadataBoundary[] boundaries = MetadataBoundary.getBoundaries( metadata, keys );
     for( final MetadataBoundary boundary : boundaries )
@@ -112,6 +124,19 @@ public class ZmlRuleInstruction
     final String instruction = String.format( m_type.getLabel(), value );
 
     return String.format( "%s   %s", instruction, text );
+  }
+
+  public CellStyle getStyle( ) throws CoreException
+  {
+    if( m_style != null )
+      return m_style;
+
+    final ZmlStyleResolver resolver = ZmlStyleResolver.getInstance();
+    final StyleReferenceType styleReference = m_type.getStyleReference();
+    if( styleReference != null )
+      m_style = resolver.findStyle( styleReference );
+
+    return null;
   }
 
 }

@@ -149,6 +149,9 @@
   </complexType>
 
   <complexType name="RuleInstruction">
+    <sequence>
+      <element name="styleReference" type="zmltable:StyleReferenceType" minOccurs="0" maxOccurs="1" />
+    </sequence>
     <attribute name="metadataKey" type="string" use="required" />
     <attribute name="operator" type="zmltable:RuleInstructionOperator" use="required" />
     <attribute name="label" type="string" use="required" />

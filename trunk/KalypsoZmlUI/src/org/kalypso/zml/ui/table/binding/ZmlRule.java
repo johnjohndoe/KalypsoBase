@@ -45,8 +45,12 @@ import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.CoreException;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.zml.ui.KalypsoZmlUI;
+import org.kalypso.zml.ui.table.model.IZmlModelRow;
+import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
 import org.kalypso.zml.ui.table.rules.IZmlRuleImplementation;
+import org.kalypso.zml.ui.table.schema.CellStyleType;
 import org.kalypso.zml.ui.table.schema.RuleInstruction;
 import org.kalypso.zml.ui.table.schema.RuleInstructionsType;
 import org.kalypso.zml.ui.table.schema.RuleType;
@@ -69,25 +73,61 @@ public class ZmlRule
     m_rule = rule;
   }
 
-  public CellStyle getPlainStyle( ) throws CoreException
+  public CellStyle getPlainStyle( final IZmlModelRow row, final BaseColumn column ) throws CoreException
   {
     final ZmlStyleResolver resolver = ZmlStyleResolver.getInstance();
     final StyleReferenceType styleReference = m_rule.getStyleReference();
+    final CellStyle baseStyle = resolver.findStyle( styleReference );
 
-    return resolver.findStyle( styleReference );
+    return extendStyle( row, column, baseStyle );
   }
 
-  public CellStyle getStyle( final BaseColumn column ) throws CoreException
+  public CellStyle getStyle( final IZmlModelRow row, final BaseColumn column ) throws CoreException
+  {
+    final CellStyle baseStyle = getBaseStyle( column );
+
+    return extendStyle( row, column, baseStyle );
+  }
+
+  private CellStyle extendStyle( final IZmlModelRow row, final BaseColumn column, final CellStyle baseStyle )
+  {
+    final IZmlValueReference reference = row.get( column.getType() );
+    if( reference == null )
+      return baseStyle;
+
+    CellStyleType base = CellStyle.merge( new CellStyleType(), baseStyle.getType() );
+
+    final ZmlRuleInstruction[] instructions = getInstructions();
+    for( final ZmlRuleInstruction instruction : instructions )
+    {
+      try
+      {
+        if( instruction.matches( reference ) != null )
+        {
+          final CellStyle style = instruction.getStyle();
+          if( style != null )
+            base = CellStyle.merge( base, style.getType() );
+        }
+      }
+      catch( final Throwable t )
+      {
+        KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( t ) );
+      }
+    }
+
+    return new CellStyle( base );
+  }
+
+  private CellStyle getBaseStyle( final BaseColumn column ) throws CoreException
   {
     final ZmlStyleResolver resolver = ZmlStyleResolver.getInstance();
     final StyleReferenceType styleReference = m_rule.getStyleReference();
 
     final CellStyle baseStyle = column.getDefaultStyle().clone();
     final CellStyle ruleStyle = resolver.findStyle( styleReference );
-    CellStyle.merge( baseStyle.getType(), ruleStyle.getType() );
+    final CellStyleType merged = CellStyle.merge( baseStyle.getType(), ruleStyle.getType() );
 
-    /** clone - because of cached style properties (invalid cell style members) */
-    return ruleStyle.clone();
+    return new CellStyle( merged );
   }
 
   public IZmlRuleImplementation getImplementation( )
