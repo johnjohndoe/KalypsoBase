@@ -41,6 +41,7 @@
 package org.kalypso.zml.ui.table.rules.impl;
 
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.zml.ui.table.binding.ZmlRule;
 import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
 import org.kalypso.zml.ui.table.rules.IZmlRuleImplementation;
 
@@ -55,7 +56,7 @@ public abstract class AbstractZmlTableRule implements IZmlRuleImplementation
    *      org.kalypso.zml.ui.table.binding.BaseColumn, java.lang.String)
    */
   @Override
-  public String update( final IZmlValueReference reference, final String text ) throws SensorException
+  public String update( final ZmlRule rule, final IZmlValueReference reference, final String text ) throws SensorException
   {
     return text;
   }

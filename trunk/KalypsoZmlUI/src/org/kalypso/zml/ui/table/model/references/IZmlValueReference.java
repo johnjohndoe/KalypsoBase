@@ -60,7 +60,7 @@ public interface IZmlValueReference
   IZmlModelColumn getColumn( );
 
   // TODO reduce to return Metadata (no array)
-  MetadataList[] getMetadata( );
+  MetadataList getMetadata( );
 
   IZmlModelRow getRow( );
 

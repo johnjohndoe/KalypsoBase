@@ -26,6 +26,16 @@
         <url>urn:org:kalypso:zml:ui:table:style:base#wqConversionConflict</url>
       </styleReference>
     </Rule>
+    <Rule ruleReference="org.kalypso.zml.ui.table.rule.display.alarmstufen">
+      <styleReference>
+        <url>urn:org:kalypso:zml:ui:table:style:base#wBaseCellStyle</url>
+      </styleReference>
+      <RuleInstructions>
+        <instruction metadataKey=".*Alarmstufe_\d\w?" operator="GREATER_EQUAL" label=">=AS%s" labelTokenizer="^.+_" />
+        
+      </RuleInstructions>
+    </Rule>
+
   </Rules>
 
   <toolbar>toolbar:org.kalypso.hwv.product.sachsenanhalt.zml.table.menu.toolbar</toolbar>
@@ -45,8 +55,8 @@
 
 
     <!-- wasserstand -->
-    <Column xsi:type="DataColumnType" editable="true" id="W_MESS" metadataSource="true">
-      <property name="label">Wasserstand (Messung)</property>
+    <Column xsi:type="DataColumnType" editable="true" id="W" metadataSource="true">
+      <property name="label">Wasserstand</property>
       <property name="width">150</property>
       <property name="alignment">RIGHT</property>
       <property name="uriContextMenu">menu:org.kalypso.hwv.product.sachsenanhalt.zml.table.menu.cell.ContextMenu</property>
@@ -62,6 +72,7 @@
       <rule>org.kalypso.zml.ui.table.rule.user.modified</rule>
       <rule>org.kalypso.zml.ui.table.rule.value.interpolated</rule>
       <rule>org.kalypso.zml.ui.table.rule.wq.conflict</rule>
+      <rule>org.kalypso.zml.ui.table.rule.display.alarmstufen</rule>
 
       <indexAxis>date</indexAxis>
       <valueAxis>W</valueAxis>
@@ -85,6 +96,7 @@
       <rule>org.kalypso.zml.ui.table.rule.user.modified</rule>
       <rule>org.kalypso.zml.ui.table.rule.value.interpolated</rule>
       <rule>org.kalypso.zml.ui.table.rule.wq.conflict</rule>
+      <rule>org.kalypso.zml.ui.table.rule.display.alarmstufen</rule>
 
       <indexAxis>date</indexAxis>
       <valueAxis>W</valueAxis>
@@ -92,8 +104,8 @@
 
 
     <!-- Abfluss -->
-    <Column xsi:type="DataColumnType" editable="true" id="Q_MESS" metadataSource="true">
-      <property name="label">Abfluss (Messung)</property>
+    <Column xsi:type="DataColumnType" editable="true" id="Q" metadataSource="true">
+      <property name="label">Abfluss</property>
       <property name="width">150</property>
       <property name="alignment">RIGHT</property>
       <property name="uriContextMenu">menu:org.kalypso.hwv.product.sachsenanhalt.zml.table.menu.cell.ContextMenu</property>
@@ -106,11 +118,14 @@
       <rule>org.kalypso.zml.ui.table.rule.user.modified</rule>
       <rule>org.kalypso.zml.ui.table.rule.value.interpolated</rule>
       <rule>org.kalypso.zml.ui.table.rule.wq.conflict</rule>
+      <rule>org.kalypso.zml.ui.table.rule.display.alarmstufen</rule>
 
       <indexAxis>date</indexAxis>
       <valueAxis>Q</valueAxis>
     </Column>
-    <Column xsi:type="DataColumnType" editable="true" id="Q_MODELL" metadataSource="true">
+
+    <!-- Abfluss Modell Zeitreihe -->
+    <Column xsi:type="DataColumnType" editable="true" id="Q_MODELL">
       <property name="label">Abfluss (Modell)</property>
       <property name="width">150</property>
       <property name="alignment">RIGHT</property>
@@ -124,25 +139,7 @@
       <rule>org.kalypso.zml.ui.table.rule.user.modified</rule>
       <rule>org.kalypso.zml.ui.table.rule.value.interpolated</rule>
       <rule>org.kalypso.zml.ui.table.rule.wq.conflict</rule>
-
-      <indexAxis>date</indexAxis>
-      <valueAxis>Q</valueAxis>
-    </Column>
-
-    <Column xsi:type="DataColumnType" editable="true" id="Q_INFO" metadataSource="true">
-      <property name="label">Abfluss (Info)</property>
-      <property name="width">150</property>
-      <property name="alignment">RIGHT</property>
-      <property name="uriContextMenu">menu:org.kalypso.hwv.product.sachsenanhalt.zml.table.menu.cell.ContextMenu</property>
-      <property name="uriHeaderContextMenu">menu:org.kalypso.hwv.product.sachsenanhalt.zml.table.menu.header.ContextMenu</property>
-
-      <defaultCellStyle>
-        <url>urn:org:kalypso:zml:ui:table:style:base#qBaseCellStyle</url>
-      </defaultCellStyle>
-
-      <rule>org.kalypso.zml.ui.table.rule.user.modified</rule>
-      <rule>org.kalypso.zml.ui.table.rule.value.interpolated</rule>
-      <rule>org.kalypso.zml.ui.table.rule.wq.conflict</rule>
+      <rule>org.kalypso.zml.ui.table.rule.display.alarmstufen</rule>
 
       <indexAxis>date</indexAxis>
       <valueAxis>Q</valueAxis>

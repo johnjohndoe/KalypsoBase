@@ -14,7 +14,8 @@
   
   <!-- rules -->
   <element name="Rules" type="zmltable:RulesType" />
-  <element name="Rule" type="zmltable:RuleType" /> 
+  <element name="Rule" type="zmltable:RuleType" />
+  <element name="RuleInstructions" type="zmltable:RuleInstructionsType" />
   
   <!-- types -->
   <complexType name="ZmlTableType">
@@ -134,10 +135,26 @@
   <complexType name="RuleType">
     <sequence>
       <element name="styleReference" type="zmltable:StyleReferenceType" minOccurs="1" maxOccurs="1" />
+      <element ref="zmltable:RuleInstructions" minOccurs="0" maxOccurs="1" />
     </sequence>
 
     <attribute name="ruleReference" type="ID" use="required" />
   </complexType>
+
+
+  <complexType name="RuleInstructionsType">
+    <sequence>
+      <element name="instruction" type="zmltable:RuleInstruction" minOccurs="1" maxOccurs="unbounded" />
+    </sequence>
+  </complexType>
+
+  <complexType name="RuleInstruction">
+    <attribute name="metadataKey" type="string" use="required" />
+    <attribute name="operator" type="zmltable:RuleInstructionOperator" use="required" />
+    <attribute name="label" type="string" use="required" />
+    <attribute name="labelTokenizer" type="string" use="optional" default="%s"/>
+  </complexType>
+
 
   <complexType name="StylePropertyType">
     <simpleContent>
@@ -177,5 +194,14 @@
     </choice>
   </complexType>
 
+  <simpleType name="RuleInstructionOperator">
+    <restriction base="string">
+      <enumeration value="SMALLER"></enumeration>
+      <enumeration value="SMALLER_EQUAL"></enumeration>
+      <enumeration value="EQUAL"></enumeration>
+      <enumeration value="GREATER"></enumeration>
+      <enumeration value="GREATER_EQUAL"></enumeration>
+    </restriction>
+  </simpleType>
 
 </schema>

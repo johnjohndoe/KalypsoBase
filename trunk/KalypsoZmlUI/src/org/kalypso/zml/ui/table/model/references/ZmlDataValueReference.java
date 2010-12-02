@@ -120,9 +120,9 @@ public class ZmlDataValueReference implements IZmlValueReference
   }
 
   @Override
-  public MetadataList[] getMetadata( )
+  public MetadataList getMetadata( )
   {
-    return new MetadataList[] { m_column.getMetadata() };
+    return m_column.getMetadata();
   }
 
   /**

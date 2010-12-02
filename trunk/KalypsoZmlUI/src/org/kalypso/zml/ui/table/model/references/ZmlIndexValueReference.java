@@ -40,10 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.model.references;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.IAxis;
@@ -93,9 +89,8 @@ public class ZmlIndexValueReference implements IZmlValueReference
    * @see org.kalypso.zml.ui.table.provider.IZmlValueReference#getMetadata()
    */
   @Override
-  public MetadataList[] getMetadata( )
+  public MetadataList getMetadata( )
   {
-    final List<MetadataList> metadata = new ArrayList<MetadataList>();
     final IZmlValueReference[] references = m_row.getReferences();
 
     for( final IZmlValueReference reference : references )
@@ -103,7 +98,7 @@ public class ZmlIndexValueReference implements IZmlValueReference
       try
       {
         if( reference.isMetadataSource() && reference.getValue() != null )
-          Collections.addAll( metadata, reference.getMetadata() );
+          return reference.getMetadata();
       }
       catch( final SensorException e )
       {
@@ -111,7 +106,7 @@ public class ZmlIndexValueReference implements IZmlValueReference
       }
     }
 
-    return metadata.toArray( new MetadataList[] {} );
+    return new MetadataList();
   }
 
   /**

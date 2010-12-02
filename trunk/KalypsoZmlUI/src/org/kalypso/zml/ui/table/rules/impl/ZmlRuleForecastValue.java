@@ -73,22 +73,19 @@ public class ZmlRuleForecastValue extends AbstractZmlTableRule
   {
     try
     {
-      final MetadataList[] metadata = reference.getMetadata();
+      final MetadataList metadata = reference.getMetadata();
 
       // index value reference!
       final Object index = reference.getValue();
       if( index instanceof Date )
       {
         final Date date = (Date) index;
-        for( final MetadataList data : metadata )
-        {
-          final Date start = MetadataHelper.getForecastStart( data );
-          if( start == null )
-            continue;
+        final Date start = MetadataHelper.getForecastStart( metadata );
+        if( start == null )
+          return false;
 
-          if( date.after( start ) )
-            return true;
-        }
+        if( date.after( start ) )
+          return true;
       }
 
       return false;
