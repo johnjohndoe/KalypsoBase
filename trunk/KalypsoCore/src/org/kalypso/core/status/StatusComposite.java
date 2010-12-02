@@ -57,7 +57,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.internal.ide.IDEInternalWorkbenchImages;
+import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 import org.kalypso.core.KalypsoCoreImages;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.i18n.Messages;
@@ -97,9 +99,19 @@ public class StatusComposite extends Composite
 
   private ILabelProvider m_labelProvider;
 
+  private final FormToolkit m_toolkit;
+
   public StatusComposite( final Composite parent, final int style )
   {
+    this( null, parent, style );
+  }
+
+  public StatusComposite( final FormToolkit toolkit, final Composite parent, final int style )
+  {
     super( parent, style );
+    m_toolkit = toolkit;
+
+    ControlUtils.adapt( this, m_toolkit );
 
     init( style );
   }
@@ -132,6 +144,7 @@ public class StatusComposite extends Composite
   private void createImageLabel( )
   {
     m_imageLabel = new Label( this, SWT.NONE );
+    ControlUtils.adapt( m_imageLabel, m_toolkit );
     m_imageLabel.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, false, false ) );
     m_imageLabel.addMouseListener( new MouseAdapter()
     {
@@ -149,6 +162,7 @@ public class StatusComposite extends Composite
   private void createMessageText( )
   {
     m_messageText = new Text( this, SWT.NONE );
+    ControlUtils.adapt( m_messageText, m_toolkit );
     m_messageText.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     m_messageText.setEditable( false );
     m_messageText.addMouseListener( new MouseAdapter()
@@ -167,6 +181,7 @@ public class StatusComposite extends Composite
   private void createDetailsButton( )
   {
     m_detailsButton = new Button( this, SWT.PUSH );
+    ControlUtils.adapt( m_detailsButton, m_toolkit );
     m_detailsButton.setText( Messages.getString( "org.kalypso.util.swt.StatusComposite.1" ) ); //$NON-NLS-1$
     m_detailsButton.addSelectionListener( new SelectionAdapter()
     {
