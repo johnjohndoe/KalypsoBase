@@ -40,8 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.rules.impl;
 
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.metadata.MetadataBoundary;
+import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.binding.ZmlRule;
 import org.kalypso.zml.ui.table.binding.ZmlRuleInstruction;
 import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
@@ -69,9 +71,26 @@ public class ZmlRuleDisplayAlarmstufen extends AbstractZmlTableRule
    * @see org.kalypso.zml.ui.table.rules.IZmlTableRule#apply(org.kalypso.zml.ui.table.model.references.IZmlValueReference)
    */
   @Override
-  public boolean apply( final IZmlValueReference reference )
+  public boolean apply( final ZmlRule rule, final IZmlValueReference reference )
   {
-    return ENABLED;
+    if( !ENABLED )
+      return false;
+
+    final ZmlRuleInstruction[] instructions = rule.getInstructions();
+    for( final ZmlRuleInstruction instruction : instructions )
+    {
+      try
+      {
+        if( instruction.matches( reference ) != null )
+          return true;
+      }
+      catch( final SensorException e )
+      {
+        KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+      }
+    }
+
+    return false;
   }
 
   /**

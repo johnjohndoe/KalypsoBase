@@ -68,34 +68,32 @@ public class ZmlRule
 
   private ZmlRuleInstruction[] m_instructions;
 
+  private CellStyle m_baseStyle;
+
   public ZmlRule( final RuleType rule )
   {
     m_rule = rule;
   }
 
-  public CellStyle getPlainStyle( final IZmlModelRow row, final BaseColumn column ) throws CoreException
-  {
-    final ZmlStyleResolver resolver = ZmlStyleResolver.getInstance();
-    final StyleReferenceType styleReference = m_rule.getStyleReference();
-    final CellStyle baseStyle = resolver.findStyle( styleReference );
-
-    return extendStyle( row, column, baseStyle );
-  }
-
   public CellStyle getStyle( final IZmlModelRow row, final BaseColumn column ) throws CoreException
   {
-    final CellStyle baseStyle = getBaseStyle( column );
+    if( m_baseStyle == null )
+    {
+      final ZmlStyleResolver resolver = ZmlStyleResolver.getInstance();
+      final StyleReferenceType styleReference = m_rule.getStyleReference();
+      m_baseStyle = resolver.findStyle( styleReference );
+    }
 
-    return extendStyle( row, column, baseStyle );
+    return extendStyle( row, column );
   }
 
-  private CellStyle extendStyle( final IZmlModelRow row, final BaseColumn column, final CellStyle baseStyle )
+  private CellStyle extendStyle( final IZmlModelRow row, final BaseColumn column )
   {
     final IZmlValueReference reference = row.get( column.getType() );
     if( reference == null )
-      return baseStyle;
+      return m_baseStyle;
 
-    CellStyleType base = CellStyle.merge( new CellStyleType(), baseStyle.getType() );
+    CellStyleType base = m_baseStyle.getType();
 
     final ZmlRuleInstruction[] instructions = getInstructions();
     for( final ZmlRuleInstruction instruction : instructions )
@@ -116,18 +114,6 @@ public class ZmlRule
     }
 
     return new CellStyle( base );
-  }
-
-  private CellStyle getBaseStyle( final BaseColumn column ) throws CoreException
-  {
-    final ZmlStyleResolver resolver = ZmlStyleResolver.getInstance();
-    final StyleReferenceType styleReference = m_rule.getStyleReference();
-
-    final CellStyle baseStyle = column.getDefaultStyle().clone();
-    final CellStyle ruleStyle = resolver.findStyle( styleReference );
-    final CellStyleType merged = CellStyle.merge( baseStyle.getType(), ruleStyle.getType() );
-
-    return new CellStyle( merged );
   }
 
   public IZmlRuleImplementation getImplementation( )
@@ -155,5 +141,14 @@ public class ZmlRule
     m_instructions = myInstructions.toArray( new ZmlRuleInstruction[] {} );
 
     return m_instructions;
+  }
+
+  /**
+   * @see java.lang.Object#toString()
+   */
+  @Override
+  public String toString( )
+  {
+    return m_rule.getRuleReference();
   }
 }

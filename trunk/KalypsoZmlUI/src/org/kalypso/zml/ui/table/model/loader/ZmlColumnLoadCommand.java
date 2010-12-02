@@ -47,10 +47,10 @@ import org.kalypso.ogc.sensor.template.IObsProviderListener;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.zml.ui.table.IZmlTableElement;
 import org.kalypso.zml.ui.table.binding.DataColumn;
+import org.kalypso.zml.ui.table.binding.TableTypeHelper;
 import org.kalypso.zml.ui.table.model.ZmlDataModel;
 import org.kalypso.zml.ui.table.model.ZmlModelColumn;
 import org.kalypso.zml.ui.table.schema.DataColumnType;
-import org.kalypso.zml.ui.table.utils.TableTypeHelper;
 
 /**
  * @author Dirk Kuch

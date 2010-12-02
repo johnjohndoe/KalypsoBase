@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.utils;
+package org.kalypso.zml.ui.table.binding;
 
 import java.util.List;
 import java.util.Map;
@@ -254,6 +254,22 @@ public final class TableTypeHelper
     final StylePropertyType clone = new StylePropertyType();
     clone.setValue( source.getValue() );
     clone.getOtherAttributes().putAll( source.getOtherAttributes() );
+
+    return clone;
+  }
+
+  public static CellStyleType cloneStyleType( final CellStyleType style )
+  {
+    final CellStyleType clone = new CellStyleType();
+    clone.setId( style.getId() );
+    clone.setBaseStyle( style.getBaseStyle() );
+    final List<StylePropertyType> baseProperties = clone.getProperty();
+
+    final List<StylePropertyType> properties = style.getProperty();
+    for( final StylePropertyType property : properties )
+    {
+      baseProperties.add( cloneProperty( property ) );
+    }
 
     return clone;
   }

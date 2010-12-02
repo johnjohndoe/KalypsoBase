@@ -19,7 +19,6 @@
   </defaultStyle>
 
 
-
   <Rules>
     <Rule ruleReference="org.kalypso.zml.ui.table.rule.forecast.value">
       <styleReference>
@@ -42,8 +41,8 @@
       </styleReference>
     </Rule>
     <Rule ruleReference="org.kalypso.zml.ui.table.rule.display.alarmstufen">
-      <styleReference>
-        <url>urn:org:kalypso:zml:ui:table:style:base#wBaseCellStyle</url>
+       <styleReference>
+        <url>urn:org:kalypso:zml:ui:table:style:base#emptyStyle</url>
       </styleReference>
       <RuleInstructions>
         <instruction metadataKey=".*Alarmstufe_1\w?" operator="GREATER_EQUAL" label="AS%s" labelTokenizer="^.+_">

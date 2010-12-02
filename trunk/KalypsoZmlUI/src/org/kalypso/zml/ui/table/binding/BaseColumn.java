@@ -55,7 +55,6 @@ import org.kalypso.zml.ui.table.schema.ColumnPropertyType;
 import org.kalypso.zml.ui.table.schema.RuleType;
 import org.kalypso.zml.ui.table.schema.StyleReferenceType;
 import org.kalypso.zml.ui.table.styles.ZmlStyleResolver;
-import org.kalypso.zml.ui.table.utils.TableTypeHelper;
 
 /**
  * @author Dirk Kuch

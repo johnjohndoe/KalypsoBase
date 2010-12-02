@@ -81,16 +81,16 @@ public class ZmlLabelProvider extends ColumnLabelProvider
 
   private CellStyle findStyle( final IZmlModelRow row ) throws CoreException
   {
-    if( m_lastRow == row )
-      return m_lastCellStyle;
+// if( m_lastRow == row )
+// return m_lastCellStyle;
 
     final ZmlRule[] rules = m_mapper.findActiveRules( row, m_column );
     if( ArrayUtils.isNotEmpty( rules ) )
     {
-      CellStyleType baseType = new CellStyleType();
+      CellStyleType baseType = m_column.getDefaultStyle().getType();
       for( final ZmlRule rule : rules )
       {
-        baseType = CellStyle.merge( baseType, rule.getPlainStyle( row, m_column ).getType() );
+        baseType = CellStyle.merge( baseType, rule.getStyle( row, m_column ).getType() );
       }
 
       m_lastCellStyle = new CellStyle( baseType );

@@ -47,6 +47,7 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.metadata.MetadataHelper;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.zml.ui.KalypsoZmlUI;
+import org.kalypso.zml.ui.table.binding.ZmlRule;
 import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
 
 /**
@@ -69,7 +70,7 @@ public class ZmlRuleForecastValue extends AbstractZmlTableRule
    * @see org.kalypso.zml.ui.table.rules.IZmlTableRule#apply(org.kalypso.zml.ui.table.provider.ZmlValueReference)
    */
   @Override
-  public boolean apply( final IZmlValueReference reference )
+  public boolean apply( final ZmlRule rule, final IZmlValueReference reference )
   {
     try
     {
