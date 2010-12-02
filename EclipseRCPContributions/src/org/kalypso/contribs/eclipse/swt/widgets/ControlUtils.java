@@ -40,8 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse.swt.widgets;
 
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.forms.widgets.FormToolkit;
 
 /**
  * Common helper code for {@link org.eclipse.swt.widgets.Control}.
@@ -83,5 +85,32 @@ public final class ControlUtils
       return;
 
     display.syncExec( operation );
+  }
+
+  /**
+   * Disposes all children of a composite.
+   */
+  public static void disposeChildren( final Composite parent )
+  {
+    if( parent == null || parent.isDisposed() )
+      return;
+
+    final Control[] children = parent.getChildren();
+    for( final Control control : children )
+      control.dispose();
+  }
+
+  /**
+   * Adapts a {@link Control} to a {@link FormToolkit}, but handles the case that the toolkit is <code>null</code>.
+   */
+  public static void adapt( final Control control, final FormToolkit toolkit )
+  {
+    if( toolkit == null )
+      return;
+
+    if( control instanceof Composite )
+      toolkit.adapt( (Composite)control );
+    else
+      toolkit.adapt( control, true, true );
   }
 }
