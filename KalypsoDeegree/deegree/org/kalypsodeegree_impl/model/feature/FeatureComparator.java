@@ -42,6 +42,7 @@
 package org.kalypsodeegree_impl.model.feature;
 
 import java.util.Comparator;
+import java.util.List;
 
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -51,9 +52,10 @@ import org.kalypsodeegree.model.feature.Feature;
  * 
  * @author schlienger
  */
-public class FeatureComparator implements Comparator
+public class FeatureComparator implements Comparator<Feature>
 {
   private final String m_propertyName;
+
   private final Comparator m_propertyValueComparator;
 
   /**
@@ -75,7 +77,7 @@ public class FeatureComparator implements Comparator
    * @param propertyValueComparator
    *          comparator to use for comparing the values of the given property. Optional, can be null.
    */
-  public FeatureComparator( final String propertyName, final Comparator propertyValueComparator )
+  public FeatureComparator( final String propertyName, final Comparator< ? > propertyValueComparator )
   {
     m_propertyName = propertyName;
     m_propertyValueComparator = propertyValueComparator;
@@ -85,20 +87,40 @@ public class FeatureComparator implements Comparator
    * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
    */
   @Override
-  public int compare( Object o1, Object o2 )
+  public int compare( final Feature f1, final Feature f2 )
   {
-    if( o1 == o2 )
+    if( f1 == f2 )
       return 0;
-
-    final Feature f1 = (Feature)o1;
-    final Feature f2 = (Feature)o2;
 
     final Object value1 = f1.getProperty( m_propertyName );
     final Object value2 = f2.getProperty( m_propertyName );
 
+    return compareValues( value1, value2 );
+  }
+
+  private int compareValues( final Object value1, final Object value2 )
+  {
     if( m_propertyValueComparator != null )
       return m_propertyValueComparator.compare( value1, value2 );
 
-    return ( (Comparable)value1 ).compareTo( value2 );
+    if( value1 instanceof Comparable< ? > )
+      return ((Comparable) value1).compareTo( value2 );
+
+    /**
+     * Sepcial case: list-properties: just compare first value
+     */
+    if( value1 instanceof List< ? > && value2 instanceof List< ? > )
+    {
+      final List< ? > list1 = (List< ? >) value1;
+      final List< ? > list2 = (List< ? >) value2;
+      if( list1.isEmpty() || list2.isEmpty() )
+        return 0;
+
+      final Object listElement1 = list1.get( 0 );
+      final Object listElement2 = list2.get( 0 );
+      return compareValues( listElement1, listElement2 );
+    }
+
+    return 0;
   }
 }
