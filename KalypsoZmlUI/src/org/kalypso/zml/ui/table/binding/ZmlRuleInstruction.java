@@ -133,10 +133,9 @@ public class ZmlRuleInstruction
 
     final ZmlStyleResolver resolver = ZmlStyleResolver.getInstance();
     final StyleReferenceType styleReference = m_type.getStyleReference();
-    if( styleReference != null )
-      m_style = resolver.findStyle( styleReference );
 
-    return null;
+    m_style = resolver.findStyle( styleReference );
+    return m_style;
   }
 
 }

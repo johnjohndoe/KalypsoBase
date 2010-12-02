@@ -72,7 +72,7 @@ public class RuleMapper
       for( final ZmlRule rule : column.getRules() )
       {
         final IZmlRuleImplementation impl = rule.getImplementation();
-        if( impl.apply( reference ) )
+        if( impl.apply( rule, reference ) )
         {
           rules.add( rule );
         }

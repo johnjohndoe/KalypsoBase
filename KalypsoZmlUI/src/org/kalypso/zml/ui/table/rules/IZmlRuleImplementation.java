@@ -51,7 +51,7 @@ public interface IZmlRuleImplementation
 {
   String EXTENSION_POINT_ID = "org.kalypso.zml.ui.tableRule"; //$NON-NLS-1$
 
-  boolean apply( IZmlValueReference reference );
+  boolean apply( ZmlRule rule, IZmlValueReference reference );
 
   String getIdentifier( );
 

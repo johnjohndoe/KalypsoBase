@@ -61,6 +61,10 @@
       <property name="icon">urn:org:kalypso:zml:ui:table:icon:user:modified</property>
     </Style>
     
+     <Style id="emptyStyle">
+      
+    </Style>
+    
     <!-- rule - interpolated value? -->
     <Style id="interpolatedValueStyle">
       <property name="icon">urn:org:kalypso:zml:ui:table:icon:interpolated:value</property>

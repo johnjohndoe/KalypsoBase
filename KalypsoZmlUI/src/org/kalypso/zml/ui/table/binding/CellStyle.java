@@ -44,6 +44,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 
+import jregex.Pattern;
+import jregex.RETokenizer;
+
 import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.jface.resource.FontRegistry;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -59,7 +62,6 @@ import org.kalypso.core.catalog.ICatalog;
 import org.kalypso.zml.ui.table.schema.CellStyleType;
 import org.kalypso.zml.ui.table.schema.StylePropertyName;
 import org.kalypso.zml.ui.table.schema.StylePropertyType;
-import org.kalypso.zml.ui.table.utils.TableTypeHelper;
 
 /**
  * @author Dirk Kuch
@@ -74,14 +76,6 @@ public class CellStyle
 
   private final CellStyleType m_style;
 
-  private Color m_backgroundColor;
-
-  private Font m_font;
-
-  private Color m_foregroundColor;
-
-  private Image m_image;
-
   public CellStyle( final CellStyleType style )
   {
     m_style = init( style );
@@ -95,7 +89,7 @@ public class CellStyle
   @Override
   public CellStyle clone( )
   {
-    return new CellStyle( m_style );
+    return new CellStyle( TableTypeHelper.cloneStyleType( m_style ) );
   }
 
   /**
@@ -113,7 +107,6 @@ public class CellStyle
   public static CellStyleType merge( final CellStyleType... styles )
   {
     final CellStyleType base = new CellStyleType();
-    final List<StylePropertyType> baseProperties = base.getProperty();
 
     for( final CellStyleType style : styles )
     {
@@ -121,7 +114,6 @@ public class CellStyle
       for( final StylePropertyType property : properties )
       {
         final StylePropertyType clone = TableTypeHelper.cloneProperty( property );
-
         if( !hasProperty( base, property ) )
         {
           base.getProperty().add( clone );
@@ -134,14 +126,26 @@ public class CellStyle
           final StylePropertyType targetProperty = TableTypeHelper.findPropertyType( base, targetName );
           targetProperty.setValue( clone.getValue() );
         }
-
-        baseProperties.add( clone );
       }
 
-      base.setId( style.getId() );
+      base.setId( mergeId( base.getId(), style.getId() ) );
     }
 
     return base;
+  }
+
+  private static String mergeId( final String id1, final String id2 )
+  {
+    if( id1 == null )
+      return id2;
+    else if( id2.startsWith( "urn" ) )
+    {
+      final RETokenizer tokenizer = new RETokenizer( new Pattern( ".*#" ), id2 );
+      final String anchor = tokenizer.nextToken();
+      return String.format( "%s#%s", id1, anchor );
+    }
+
+    return String.format( "%s#%s", id1, id2 );
   }
 
   public static boolean hasProperty( final CellStyleType style, final StylePropertyType type )
@@ -156,9 +160,6 @@ public class CellStyle
 
   public Color getBackgroundColor( )
   {
-    if( m_backgroundColor != null )
-      return m_backgroundColor;
-
     final String htmlColor = TableTypeHelper.findProperty( m_style, StylePropertyName.BACKGROUND_COLOR );
     if( htmlColor == null )
       return null;
@@ -167,16 +168,11 @@ public class CellStyle
     final RGB rgb = RGBUtilities.decodeHtmlColor( htmlColor );
     COLOR_REGISTRY.put( id, rgb );
 
-    m_backgroundColor = COLOR_REGISTRY.get( id );
-
-    return m_backgroundColor;
+    return COLOR_REGISTRY.get( id );
   }
 
   public Color getForegroundColor( )
   {
-    if( m_foregroundColor != null )
-      return m_foregroundColor;
-
     final String htmlColor = TableTypeHelper.findProperty( m_style, StylePropertyName.TEXT_COLOR );
     if( htmlColor == null )
       return null;
@@ -185,15 +181,11 @@ public class CellStyle
     final RGB rgb = RGBUtilities.decodeHtmlColor( htmlColor );
     COLOR_REGISTRY.put( id, rgb );
 
-    m_foregroundColor = COLOR_REGISTRY.get( id );
-    return m_foregroundColor;
+    return COLOR_REGISTRY.get( id );
   }
 
   public Font getFont( )
   {
-    if( m_font != null )
-      return m_font;
-
     final String fontFamily = TableTypeHelper.findProperty( m_style, StylePropertyName.FONT_FAMILY );
     final String fontSize = TableTypeHelper.findProperty( m_style, StylePropertyName.FONT_SIZE );
     final int fontWeight = TableTypeHelper.toSWTFontWeight( TableTypeHelper.findProperty( m_style, StylePropertyName.FONT_WEIGHT ) );
@@ -201,33 +193,28 @@ public class CellStyle
     final FontData data = new FontData( fontFamily == null ? "Arial" : fontFamily, fontSize == null ? 10 : Integer.valueOf( fontSize ), fontWeight );
     FONT_REGISTRY.put( m_style.getId(), new FontData[] { data } );
 
-    m_font = FONT_REGISTRY.get( m_style.getId() );
-
-    return m_font;
+    return FONT_REGISTRY.get( m_style.getId() );
   }
 
   public Image getImage( ) throws IOException
   {
-    if( m_image != null )
-      return m_image;
-
-    final Image registered = IMAGE_REGISTRY.get( m_style.getId() );
-    if( registered != null )
-      return registered;
-
     final String urlString = TableTypeHelper.findProperty( m_style, StylePropertyName.ICON );
     if( urlString == null )
       return null;
+
+    final Image cached = IMAGE_REGISTRY.get( m_style.getId() );
+    if( cached != null )
+      return cached;
 
     final ICatalog baseCatalog = KalypsoCorePlugin.getDefault().getCatalogManager().getBaseCatalog();
     final String uri = baseCatalog.resolve( urlString, urlString );
 
     final ImageDescriptor descriptor = ImageDescriptor.createFromURL( new URL( uri ) );
-    m_image = descriptor.createImage();
+    final Image image = descriptor.createImage();
 
-    IMAGE_REGISTRY.put( m_style.getId(), m_image );
+    IMAGE_REGISTRY.put( m_style.getId(), image );
 
-    return m_image;
+    return image;
   }
 
   public String getTextFormat( )
