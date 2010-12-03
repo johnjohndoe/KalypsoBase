@@ -64,6 +64,7 @@ import org.kalypso.contribs.eclipse.jface.action.ContributionUtils;
 import org.kalypso.contribs.eclipse.swt.layout.LayoutHelper;
 import org.kalypso.zml.ui.table.binding.BaseColumn;
 import org.kalypso.zml.ui.table.binding.TableTypeHelper;
+import org.kalypso.zml.ui.table.commands.toolbar.view.ZmlViewResolutionFilter;
 import org.kalypso.zml.ui.table.menu.ZmlTableContextMenuListener;
 import org.kalypso.zml.ui.table.menu.ZmlTableHeaderContextMenuListener;
 import org.kalypso.zml.ui.table.model.IZmlDataModel;
@@ -135,6 +136,8 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
 
     m_tableViewer.setInput( m_model );
 
+    addBasicFilters();
+
     /** layout stuff */
     final Table table = m_tableViewer.getTable();
     table.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
@@ -161,6 +164,12 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
     // TableViewerEditor.create( m_tableViewer, focusCellManager, actSupport, ColumnViewerEditor.TABBING_HORIZONTAL |
     // ColumnViewerEditor.TABBING_MOVE_TO_ROW_NEIGHBOR
     // | ColumnViewerEditor.TABBING_VERTICAL | ColumnViewerEditor.KEYBOARD_ACTIVATION );
+  }
+
+  private void addBasicFilters( )
+  {
+    final ZmlViewResolutionFilter filter = new ZmlViewResolutionFilter();
+    m_tableViewer.addFilter( filter );
   }
 
   private void initToolbar( final ZmlTableType tableType, final FormToolkit toolkit )
