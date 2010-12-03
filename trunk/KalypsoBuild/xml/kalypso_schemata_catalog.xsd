@@ -10,4 +10,5 @@
   <nextCatalog catalog="platform:/resource/OdysseusChartFactory/etc/binding/schema/catalog.xml" />
   <nextCatalog catalog="platform:/resource/KalypsoModelNA/src/org/kalypso/convert/namodel/schema/catalog.xml" />
   <nextCatalog catalog="platform:/resource/KalypsoZmlUI/etc/schemas/catalog.xmlcatalog" />
+  <nextCatalog catalog="platform:/resource/KalypsoMapServer/etc/mapfile/catalog.xml" />
 </catalog>
