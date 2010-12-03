@@ -3,6 +3,8 @@ package org.kalypso.commons;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
+import javax.xml.transform.TransformerFactory;
+
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -11,21 +13,21 @@ import org.osgi.framework.BundleContext;
  */
 public class KalypsoCommonsPlugin extends AbstractUIPlugin
 {
-  //The shared instance.
+  // The shared instance.
   private static KalypsoCommonsPlugin plugin;
 
-  //Resource bundle.
+  // Resource bundle.
   private ResourceBundle resourceBundle;
 
-  public static String getID()
+  public static String getID( )
   {
     return getDefault().getBundle().getSymbolicName();
   }
-  
+
   /**
    * The constructor.
    */
-  public KalypsoCommonsPlugin()
+  public KalypsoCommonsPlugin( )
   {
     super();
     plugin = this;
@@ -60,7 +62,7 @@ public class KalypsoCommonsPlugin extends AbstractUIPlugin
   /**
    * Returns the shared instance.
    */
-  public static KalypsoCommonsPlugin getDefault()
+  public static KalypsoCommonsPlugin getDefault( )
   {
     return plugin;
   }
@@ -73,7 +75,7 @@ public class KalypsoCommonsPlugin extends AbstractUIPlugin
     final ResourceBundle bundle = KalypsoCommonsPlugin.getDefault().getResourceBundle();
     try
     {
-      return ( bundle != null ) ? bundle.getString( key ) : key;
+      return (bundle != null) ? bundle.getString( key ) : key;
     }
     catch( final MissingResourceException e )
     {
@@ -84,8 +86,13 @@ public class KalypsoCommonsPlugin extends AbstractUIPlugin
   /**
    * Returns the plugin's resource bundle,
    */
-  public ResourceBundle getResourceBundle()
+  public ResourceBundle getResourceBundle( )
   {
     return resourceBundle;
+  }
+
+  public TransformerFactory getTransformerFactory( )
+  {
+    return TransformerFactory.newInstance();
   }
 }
