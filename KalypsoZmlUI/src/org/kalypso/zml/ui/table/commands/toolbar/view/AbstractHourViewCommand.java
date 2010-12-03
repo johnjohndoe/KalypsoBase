@@ -40,19 +40,23 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.commands.toolbar.view;
 
+import java.util.Map;
+
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.ui.commands.IElementUpdater;
+import org.eclipse.ui.menus.UIElement;
 import org.kalypso.zml.ui.table.IZmlTableComposite;
 import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
 
 /**
  * @author Dirk Kuch
  */
-public abstract class AbstractHourViewCommand extends AbstractHandler
+public abstract class AbstractHourViewCommand extends AbstractHandler implements IElementUpdater
 {
 
   protected IStatus updateResulution( final ExecutionEvent event, final int resultion, final boolean mode )
@@ -93,9 +97,13 @@ public abstract class AbstractHourViewCommand extends AbstractHandler
       }
     }
 
-    final ZmlViewResolutionFilter filter = new ZmlViewResolutionFilter();
-    viewer.addFilter( filter );
+    throw new IllegalStateException();
+  }
 
-    return filter;
+  @Override
+  public void updateElement( final UIElement element, final Map parameters )
+  {
+
+    final int asdf = 0;
   }
 }
