@@ -45,27 +45,16 @@ import java.text.Format;
 import java.text.NumberFormat;
 
 import org.eclipse.core.runtime.Assert;
+
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
-import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT;
 
 /**
  * @author alibu
  */
-public class NumberLabelCreator implements ILabelCreator
+public class NumberLabelCreator extends AbstractLabelCreator implements ILabelCreator
 {
 
-  @Override
-  public ALIGNMENT getLabelPosition( )
-  {
-    if( m_labelPosition == null )
-
-      m_labelPosition = ALIGNMENT.TICK_CENTERED;
-    return m_labelPosition;
-  }
-
   private final String m_formatString;
-
-  private ALIGNMENT m_labelPosition = null;
 
   public NumberLabelCreator( final String formatString )
   {
@@ -110,20 +99,10 @@ public class NumberLabelCreator implements ILabelCreator
     final Number min = range.getMin();
     if( min == null )
       return null;
-    // FIXME while runs into endlos loop
-// if( Double.valueOf( min.doubleValue() ).isInfinite() )
-// {
-// min = 0.0;
-// }
 
     final Number max = range.getMax();
     if( max == null )
       return null;
-    // FIXME while runs into endlos loop
-// if( Double.valueOf( max.doubleValue() ).isInfinite() )
-// {
-// max = 1.0;
-// }
 
     // Differenz bilden und sicherstellen, dass sie positiv ist
     Double diff = (max == null || min == null) ? 0.0 : Math.abs( max.doubleValue() - min.doubleValue() );

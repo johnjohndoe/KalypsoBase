@@ -41,45 +41,12 @@
 package de.openali.odysseus.chart.ext.base.axisrenderer;
 
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
-import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT;
 
 /**
  * @author alibu
  */
-public class BooleanLabelCreator implements ILabelCreator
+public class BooleanLabelCreator extends AbstractLabelCreator implements ILabelCreator
 {
-
-  @Override
-  public ALIGNMENT getLabelPosition( )
-  {
-    if( m_alignment == null )
-      m_alignment = ALIGNMENT.TICK_CENTERED;
-    return m_alignment;
-  }
-
-  private ALIGNMENT m_alignment = null;
-
-  public BooleanLabelCreator( )
-  {
-  }
-
-  /**
-   * @see org.kalypso.chart.ext.test.axisrenderer.ILabelCreator#getLabel(java.lang.Number,
-   *      org.kalypso.chart.framework.model.data.IDataRange)
-   */
-  @Override
-  public String getLabel( final Number[] ticks, final int i, final IDataRange<Number> range )
-  {
-    if( ticks == null )
-      return "";
-
-    if( ticks[i].intValue() == 0 )
-      return "zu";
-    else if( ticks[i].intValue() == 1 )
-      return "auf";
-
-    return String.format( "%d", ticks[i].intValue() );
-  }
 
   /**
    * @see de.openali.odysseus.chart.ext.base.axisrenderer.ILabelCreator#getLabel(java.lang.Number,
@@ -88,7 +55,12 @@ public class BooleanLabelCreator implements ILabelCreator
   @Override
   public String getLabel( final Number value, final IDataRange<Number> range )
   {
-    return getLabel( new Number[] { value }, 0, range );
-  }
 
+    if( value.intValue() == 0 )
+      return "zu";
+    else if( value.intValue() == 1 )
+      return "auf";
+
+    return String.format( "%d", value.intValue() );
+  }
 }

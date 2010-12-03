@@ -9,7 +9,7 @@ import de.openali.odysseus.chart.framework.model.style.ITextStyle;
 /**
  * @author alibu Interface used to render an IAxis object into an IAxisComponent
  */
-public interface IAxisRenderer // extends IMapperEventListener
+public interface IAxisRenderer
 {
   /**
    * calculates axis values for which label and tick will be shown
@@ -44,8 +44,6 @@ public interface IAxisRenderer // extends IMapperEventListener
    */
   String getId( );
 
-  // public void invalidateTicks( IAxis axis );
-
   @Deprecated
   /** 
    * no implementation use this method
@@ -59,7 +57,7 @@ public interface IAxisRenderer // extends IMapperEventListener
   String BORDER_SIZE = "de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer_border_size";
 
   void setLabelStyle( ITextStyle style );
-  
+
   void setTickLabelStyle( ITextStyle style );
 
 }

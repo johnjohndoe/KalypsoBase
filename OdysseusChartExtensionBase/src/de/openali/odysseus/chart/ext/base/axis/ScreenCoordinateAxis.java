@@ -6,52 +6,30 @@ import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
 import de.openali.odysseus.chart.framework.util.ChartUtilities;
 
 /**
- * logical and numerical range are identical;
+ 
  * 
- * @author burtscher Concrete IAxis implementation - to be used for numeric data
+ * @author kimwerner
  */
 public class ScreenCoordinateAxis extends AbstractAxis
 {
 
-  /**
-   * @see de.openali.odysseus.chart.ext.base.axis.AbstractAxis#setScreenHeight(int)
-   */
-  @Override
-  public void setScreenHeight( final int height )
-  {
-    // TODO Auto-generated method stub
-    super.setScreenHeight( height );
-  }
-
-  private final IDataRange<Number> m_numericRange = new DataRange<Number>( null, null );
-
   public ScreenCoordinateAxis( final String id, final POSITION pos )
   {
-    super( id, pos, Integer.class, null );
+    super( id, pos, Double.class, null );
   }
 
-  public double numericToNormalized( final Number value )
+  
+  
+  /**
+   * @see de.openali.odysseus.chart.ext.base.axis.AbstractAxis#isVisible()
+   */
+  @Override
+  public boolean isVisible( )
   {
-    final IDataRange<Number> dataRange = getNumericRange();
-    if( dataRange.getMax() == null || dataRange.getMin() == null )
-      return Double.NaN;
-    final double r = dataRange.getMax().doubleValue() - dataRange.getMin().doubleValue();
-    final double norm = (value.doubleValue() - dataRange.getMin().doubleValue()) / r;
-    return norm;
+    // always hidden
+    return false;
   }
 
-  private Number normalizedToNumeric( final double value )
-  {
-    final IDataRange<Number> dataRange = getNumericRange();
-
-    if( dataRange.getMax() == null || dataRange.getMin() == null )
-      return Double.NaN;
-    final double r = dataRange.getMax().doubleValue() - dataRange.getMin().doubleValue();
-
-    final double logical = value * r + dataRange.getMin().doubleValue();
-
-    return logical;
-  }
 
   /**
    * @see org.kalypso.chart.framework.model.mapper.IAxis#getNumericRange()
@@ -68,7 +46,7 @@ public class ScreenCoordinateAxis extends AbstractAxis
   @Override
   public Integer numericToScreen( final Number value )
   {
-    return normalizedToScreen( numericToNormalized( value ) );
+    return normalizedToScreen(  value.doubleValue()  );
   }
 
   /**
@@ -77,7 +55,7 @@ public class ScreenCoordinateAxis extends AbstractAxis
   @Override
   public Number screenToNumeric( final int value )
   {
-    return normalizedToNumeric( screenToNormalized( value ) );
+    return  screenToNormalized( value ) ;
   }
 
   /**
@@ -86,28 +64,10 @@ public class ScreenCoordinateAxis extends AbstractAxis
   @Override
   public void setNumericRange( final IDataRange<Number> range )
   {
-   //do nothing, fixed Range
+    // do nothing, fixed Range
   }
 
-  /**
-   * @see de.openali.odysseus.chart.ext.base.axis.AbstractAxis#setLogicalRange(org.kalypso.chart.framework.model.data.IDataRange)
-   */
-  @Override
-  public void setLogicalRange( final IDataRange<Number> dataRange )
-  {
-    // Nix machen! Wir wollen auf logical Range verzichten
-    assert (false);
-  }
 
-  /**
-   * @see de.openali.odysseus.chart.ext.base.axis.AbstractAxis#getLogicalRange()
-   */
-  @Override
-  public IDataRange<Number> getLogicalRange( )
-  {
-    assert (false);
-    return null;
-  }
 
   /**
    * Uses the widgets' complete extension to calculate the screen value in correspondence to a normalized value

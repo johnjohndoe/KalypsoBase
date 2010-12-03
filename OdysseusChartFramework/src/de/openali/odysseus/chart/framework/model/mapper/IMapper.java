@@ -14,10 +14,6 @@ public interface IMapper extends IEventProvider<IMapperEventListener>
    */
   String getId( );
 
-  // public void setRegistry( IMapperRegistry mapperRegistry );
-
-  // public IMapperRegistry getRegistry( );
-
   /**
    * method to store arbitrary data objects;
    */

@@ -48,6 +48,7 @@ import de.openali.odysseus.chart.ext.base.axisrenderer.ITickCalculator;
 import de.openali.odysseus.chart.factory.config.parameters.IParameterContainer;
 import de.openali.odysseus.chart.factory.config.parameters.impl.BooleanParser;
 import de.openali.odysseus.chart.factory.provider.AbstractAxisRendererProvider;
+import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT;
 import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.ITextStyle;
@@ -95,7 +96,7 @@ public abstract class AbstractGenericAxisRendererProvider extends AbstractAxisRe
     final ITickCalculator tickCalculator = getTickCalculator();
     final ILabelCreator labelCreator = getLabelCreator();
 
-    final IAxisRenderer calendarAxisRenderer = new GenericAxisRenderer( getId(), tickLength, insetsTick, insetsLabel, gap, labelCreator, tickCalculator, minTickInterval, hideCut, fixedWidth, axisLine, labelText, tickLine, tickLabelText, borderSize );
+    final IAxisRenderer calendarAxisRenderer = new GenericAxisRenderer( getId(), tickLength, insetsTick, insetsLabel, gap, labelCreator, tickCalculator, minTickInterval, hideCut, fixedWidth, axisLine, labelText, tickLine, tickLabelText, borderSize,ALIGNMENT.TICK_CENTERED );
     return calendarAxisRenderer;
   }
 

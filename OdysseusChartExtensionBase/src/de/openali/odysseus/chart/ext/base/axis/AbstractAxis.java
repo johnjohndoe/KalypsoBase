@@ -1,6 +1,7 @@
 package de.openali.odysseus.chart.ext.base.axis;
 
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
+import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisAdjustment;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.DIRECTION;
@@ -25,13 +26,13 @@ public abstract class AbstractAxis extends AbstractMapper implements IAxis
 
   private DIRECTION m_dir = DIRECTION.POSITIVE;
 
-  private IDataRange<Number> m_dataRange;
-
   private IAxisAdjustment m_preferredAdjustment = null;
 
   private final Class< ? > m_dataClass;
 
   private IAxisRenderer m_renderer;
+
+  private IDataRange<Number> m_numericRange = new DataRange<Number>( null, null );
 
   public AbstractAxis( final String id, final POSITION pos, final Class< ? > dataClass )
   {
@@ -71,13 +72,15 @@ public abstract class AbstractAxis extends AbstractMapper implements IAxis
     return m_label;
   }
 
-  public IDataRange<Number> getLogicalRange( )
+  /**
+   * @see org.kalypso.chart.framework.model.mapper.IAxis#getNumericRange()
+   */
+  @Override
+  public IDataRange<Number> getNumericRange( )
   {
-    return m_dataRange;
+    return m_numericRange;
   }
 
-  
-  
   /**
    * @see org.kalypso.chart.framework.axis.IAxis#getPosition()
    */
@@ -124,13 +127,13 @@ public abstract class AbstractAxis extends AbstractMapper implements IAxis
   }
 
   @Override
-  public void setDirection( DIRECTION dir )
+  public void setDirection( final DIRECTION dir )
   {
     m_dir = dir;
   }
 
   @Override
-  public void setLabel( String label )
+  public void setLabel( final String label )
   {
     if( !getLabel().equals( label ) )
     {
@@ -139,14 +142,17 @@ public abstract class AbstractAxis extends AbstractMapper implements IAxis
     }
   }
 
-  public void setLogicalRange( final IDataRange<Number> dataRange )
+  @Override
+  public void setNumericRange( final IDataRange<Number> range )
   {
-    m_dataRange = dataRange;
+    if( range.getMax() == m_numericRange.getMax() && range.getMin() == m_numericRange.getMin() )
+      return;
+    m_numericRange = range;
     fireMapperChanged( this );
   }
 
   @Override
-  public void setPreferredAdjustment( IAxisAdjustment adj )
+  public void setPreferredAdjustment( final IAxisAdjustment adj )
   {
     m_preferredAdjustment = adj;
     fireMapperChanged( this );
@@ -164,7 +170,7 @@ public abstract class AbstractAxis extends AbstractMapper implements IAxis
   }
 
   @Override
-  public void setScreenHeight( int height )
+  public void setScreenHeight( final int height )
   {
     if( m_height == height )
       return;
@@ -173,7 +179,7 @@ public abstract class AbstractAxis extends AbstractMapper implements IAxis
   }
 
   @Override
-  public void setVisible( boolean visible )
+  public void setVisible( final boolean visible )
   {
     if( visible == m_visible )
       return;

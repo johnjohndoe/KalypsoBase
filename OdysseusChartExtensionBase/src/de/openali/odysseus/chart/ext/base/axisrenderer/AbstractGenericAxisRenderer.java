@@ -21,16 +21,6 @@ import de.openali.odysseus.chart.framework.util.StyleUtils;
 public abstract class AbstractGenericAxisRenderer implements IAxisRenderer
 {
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer#setTickLabelStyle(de.openali.odysseus.chart.framework.model.style.ITextStyle)
-   */
-  @Override
-  public void setTickLabelStyle( final ITextStyle style )
-  {
-    m_tickLabelStyle = style;
-
-  }
-
   private final Insets m_labelInsets;
 
   private final Insets m_tickLabelInsets;
@@ -41,8 +31,6 @@ public abstract class AbstractGenericAxisRenderer implements IAxisRenderer
    * Hashmap to store arbitrary key value pairs
    */
   private final Map<String, Object> m_data = new HashMap<String, Object>();
-
-  // private final Map<IAxis, Number[]> m_tickMap = new HashMap<IAxis, Number[]>();
 
   private ILineStyle m_axisLineStyle;
 
@@ -73,13 +61,9 @@ public abstract class AbstractGenericAxisRenderer implements IAxisRenderer
 
   }
 
-  protected abstract Point getTextExtent( GC gcw, Number value, ITextStyle style, Format format, IDataRange<Number> range );
-
-  protected Point getTextExtent( final GC gc, final String value, final ITextStyle style )
+  @Override
+  public void dispose( )
   {
-    style.apply( gc );
-    final Point point = gc.textExtent( value == null ? "" : value );
-    return point;
   }
 
   /**
@@ -94,49 +78,9 @@ public abstract class AbstractGenericAxisRenderer implements IAxisRenderer
     gc.drawText( text, x, y );
   }
 
-  public int getTickLength( )
-  {
-    return (Integer) m_data.get( IAxisConstants.TICK_LENGTH );
-  }
-
   public int getBorderSize( )
   {
     return (Integer) m_data.get( IAxisConstants.BORDER_SIZE );
-  }
-
-  public int getGap( )
-  {
-    return (Integer) m_data.get( IAxisConstants.AXIS_GAP );
-  }
-
-  public Insets getLabelInsets( )
-  {
-    return m_labelInsets;
-  }
-
-  public Insets getTickLabelInsets( )
-  {
-    return m_tickLabelInsets;
-  }
-
-// public void setTickMapElement( final IAxis axis, final Number[] ticks )
-// {
-// m_tickMap.put( axis, ticks );
-// }
-//
-// protected Number[] getTickMapElement( final IAxis axis )
-// {
-// final Number[] tickMap = m_tickMap.get( axis );
-// return tickMap;
-// }
-
-  /**
-   * @see org.kalypso.chart.framework.model.layer.IChartLayer#setData()
-   */
-  @Override
-  public void setData( final String id, final Object data )
-  {
-    m_data.put( id, data );
   }
 
   /**
@@ -148,35 +92,20 @@ public abstract class AbstractGenericAxisRenderer implements IAxisRenderer
     return m_data.get( id );
   }
 
+  public int getGap( )
+  {
+    return (Integer) m_data.get( IAxisConstants.AXIS_GAP );
+  }
+
   @Override
   public String getId( )
   {
     return m_id;
   }
 
-// @Override
-// public void invalidateTicks( final IAxis axis )
-// {
-// m_tickMap.put( axis, null );
-// }
-
-  @Override
-  public void dispose( )
+  public Insets getLabelInsets( )
   {
-  }
-
-  public ILineStyle getTickLineStyle( )
-  {
-    if( m_tickLineStyle == null )
-      m_tickLineStyle = StyleUtils.getDefaultLineStyle();
-    return m_tickLineStyle;
-  }
-
-  public ILineStyle getLineStyle( )
-  {
-    if( m_axisLineStyle == null )
-      m_axisLineStyle = StyleUtils.getDefaultLineStyle();
-    return m_axisLineStyle;
+    return m_labelInsets;
   }
 
   public ITextStyle getLabelStyle( )
@@ -186,10 +115,25 @@ public abstract class AbstractGenericAxisRenderer implements IAxisRenderer
     return m_labelStyle;
   }
 
-  @Override
-  public void setLabelStyle( final ITextStyle style )
+  public ILineStyle getLineStyle( )
   {
-    m_labelStyle = style;
+    if( m_axisLineStyle == null )
+      m_axisLineStyle = StyleUtils.getDefaultLineStyle();
+    return m_axisLineStyle;
+  }
+
+  protected abstract Point getTextExtent( GC gcw, Number value, ITextStyle style, Format format, IDataRange<Number> range );
+
+  protected Point getTextExtent( final GC gc, final String value, final ITextStyle style )
+  {
+    style.apply( gc );
+    final Point point = gc.textExtent( value == null ? "" : value );
+    return point;
+  }
+
+  public Insets getTickLabelInsets( )
+  {
+    return m_tickLabelInsets;
   }
 
   public ITextStyle getTickLabelStyle( )
@@ -197,6 +141,43 @@ public abstract class AbstractGenericAxisRenderer implements IAxisRenderer
     if( m_tickLabelStyle == null )
       m_tickLabelStyle = StyleUtils.getDefaultTextStyle();
     return m_tickLabelStyle;
+  }
+
+  public int getTickLength( )
+  {
+    return (Integer) m_data.get( IAxisConstants.TICK_LENGTH );
+  }
+
+  public ILineStyle getTickLineStyle( )
+  {
+    if( m_tickLineStyle == null )
+      m_tickLineStyle = StyleUtils.getDefaultLineStyle();
+    return m_tickLineStyle;
+  }
+
+  /**
+   * @see org.kalypso.chart.framework.model.layer.IChartLayer#setData()
+   */
+  @Override
+  public void setData( final String id, final Object data )
+  {
+    m_data.put( id, data );
+  }
+
+  @Override
+  public void setLabelStyle( final ITextStyle style )
+  {
+    m_labelStyle = style;
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer#setTickLabelStyle(de.openali.odysseus.chart.framework.model.style.ITextStyle)
+   */
+  @Override
+  public void setTickLabelStyle( final ITextStyle style )
+  {
+    m_tickLabelStyle = style;
+
   }
 
 }
