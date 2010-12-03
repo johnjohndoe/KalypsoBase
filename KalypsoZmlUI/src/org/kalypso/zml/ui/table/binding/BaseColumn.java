@@ -43,18 +43,16 @@ package org.kalypso.zml.ui.table.binding;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.bind.JAXBElement;
-
 import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.runtime.CoreException;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.schema.AbstractColumnType;
 import org.kalypso.zml.ui.table.schema.AlignmentType;
 import org.kalypso.zml.ui.table.schema.ColumnPropertyName;
 import org.kalypso.zml.ui.table.schema.ColumnPropertyType;
-import org.kalypso.zml.ui.table.schema.RuleType;
+import org.kalypso.zml.ui.table.schema.RuleRefernceType;
 import org.kalypso.zml.ui.table.schema.StyleReferenceType;
-import org.kalypso.zml.ui.table.styles.ZmlStyleResolver;
 
 /**
  * @author Dirk Kuch
@@ -89,21 +87,25 @@ public class BaseColumn
     if( ArrayUtils.isNotEmpty( m_rules ) )
       return m_rules;
 
-    final List<JAXBElement<Object>> ruleReferences = m_type.getRule();
-    if( ruleReferences == null )
+    final List<RuleRefernceType> ruleReferenceTypes = m_type.getRule();
+    if( ruleReferenceTypes == null )
       return new ZmlRule[] {};
 
     final List<ZmlRule> rules = new ArrayList<ZmlRule>();
+    final ZmlRuleResolver resolver = ZmlRuleResolver.getInstance();
 
-    for( final JAXBElement<Object> element : ruleReferences )
+    for( final RuleRefernceType referenceType : ruleReferenceTypes )
     {
-      final Object reference = element.getValue();
-      if( reference instanceof RuleType )
+      try
       {
-        rules.add( new ZmlRule( (RuleType) reference ) );
+        final ZmlRule rule = resolver.findRule( referenceType );
+        if( rule != null )
+          rules.add( rule );
       }
-      else
-        throw new NotImplementedException();
+      catch( final CoreException e )
+      {
+        KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+      }
     }
 
     m_rules = rules.toArray( new ZmlRule[] {} );

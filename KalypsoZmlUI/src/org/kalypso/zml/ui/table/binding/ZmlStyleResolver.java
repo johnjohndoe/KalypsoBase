@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.styles;
+package org.kalypso.zml.ui.table.binding;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -56,7 +56,6 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.catalog.ICatalog;
 import org.kalypso.zml.ui.table.ZmlTableConfigurationLoader;
-import org.kalypso.zml.ui.table.binding.CellStyle;
 import org.kalypso.zml.ui.table.schema.CellStyleType;
 import org.kalypso.zml.ui.table.schema.StyleReferenceType;
 import org.kalypso.zml.ui.table.schema.StyleSetType;
@@ -65,8 +64,6 @@ import org.kalypso.zml.ui.table.schema.ZmlTableType;
 import com.google.common.collect.MapMaker;
 
 /**
- * TODO singleton with caching of zml styles types
- * 
  * @author Dirk Kuch
  */
 public final class ZmlStyleResolver

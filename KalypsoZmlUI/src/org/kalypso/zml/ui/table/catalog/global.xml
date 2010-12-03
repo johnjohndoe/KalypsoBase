@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ZmlTable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="schema.table.ui.zml.kalypso.org" xsi:schemaLocation="schema.table.ui.zml.kalypso.org zmltable.xsd ">
+
+  <StyleSet>
+    <!-- basic zml table style -->
+    <Style id="defaultCellStyle">
+      <property name="backgroundColor">FFFFFF</property>
+      <property name="textColor">000000</property>
+      <property name="fontFamily">Arial</property>
+      <property name="fontSize">10</property>
+      <property name="textFormat">%s</property>
+    </Style>
+    
+     <!-- base w cell table style -->
+    <Style id="wBaseCellStyle">
+      <baseStyle>
+        <reference>defaultCellStyle</reference>
+      </baseStyle>
+      <property name="textFormat">%.0f</property>
+    </Style>
+
+    <Style id="wBaseEditingCellStyle">
+      <baseStyle>
+        <reference>wBaseCellStyle</reference>
+      </baseStyle>
+      <property name="textFormat">%.3f</property>
+    </Style>
+    
+     <!-- base n cell table style -->
+    <Style id="nBaseCellStyle">
+      <baseStyle>
+        <reference>defaultCellStyle</reference>
+      </baseStyle>
+      <property name="textFormat">%.1f</property>
+    </Style>
+
+    <!-- base q cell table style -->
+    <Style id="qBaseCellStyle">
+      <baseStyle>
+        <reference>defaultCellStyle</reference>
+      </baseStyle>
+      <property name="textFormat">%.3f</property>
+      <property name="backgroundColor">F8F3C0</property>
+    </Style>
+
+  <!-- base date cell table styles -->
+    <Style id="dateCellStyle">
+      <baseStyle>
+        <reference>defaultCellStyle</reference>
+      </baseStyle>
+      <property name="backgroundColor">DEDEDE</property>
+      <property name="textFormat">dd.MM.yy HH:mm</property>
+    </Style>
+
+    <Style id="dateForecastCellStyle">
+      <property name="backgroundColor">FFF7EE</property>
+    </Style>
+
+    <!-- rule - value user modified? -->
+    <Style id="userModifiedStyle">
+      <property name="icon">urn:org:kalypso:zml:ui:table:icon:user:modified</property>
+    </Style>
+    
+    
+    
+    <!-- rule - interpolated value? -->
+    <Style id="interpolatedValueStyle">
+      <property name="icon">urn:org:kalypso:zml:ui:table:icon:interpolated:value</property>
+    </Style>
+    
+    <!-- rule - w/q conversion conflict? -->
+    <Style id="wqConversionConflict">
+      <property name="icon">urn:org:kalypso:zml:ui:table:icon:wq:conflict</property>
+    </Style>
+
+    <Style id="emptyStyle">
+    </Style>
+    
+     <!-- alarmstufen styles -->
+    <Style id="alarmstufe_1">
+      <property name="backgroundColor">E8E800</property>
+    </Style>
+    <Style id="alarmstufe_2">
+      <property name="backgroundColor">FF8000</property>
+    </Style>
+    <Style id="alarmstufe_3">
+      <property name="backgroundColor">FF8080</property>
+    </Style>
+    <Style id="alarmstufe_4">
+      <property name="backgroundColor">FF0000</property>
+    </Style>
+
+  </StyleSet>
+  
+  <defaultStyle>
+    <reference>defaultCellStyle</reference>
+  </defaultStyle>
+
+  <RuleSet>
+    <Rule id="ruleForecast" ruleReference="org.kalypso.zml.ui.table.rule.forecast.value">
+      <styleReference>
+        <url>urn:org:kalypso:zml:ui:table:global#dateForecastCellStyle</url>
+      </styleReference>
+    </Rule>
+    <Rule id="ruleUserModified" ruleReference="org.kalypso.zml.ui.table.rule.user.modified">
+      <styleReference>
+        <url>urn:org:kalypso:zml:ui:table:global#userModifiedStyle</url>
+      </styleReference>
+    </Rule>
+    <Rule id="ruleInterpolatedValue" ruleReference="org.kalypso.zml.ui.table.rule.value.interpolated">
+      <styleReference>
+        <url>urn:org:kalypso:zml:ui:table:global#interpolatedValueStyle</url>
+      </styleReference>
+    </Rule>
+    <Rule id="ruleWqConflict" ruleReference="org.kalypso.zml.ui.table.rule.wq.conflict">
+      <styleReference>
+        <url>urn:org:kalypso:zml:ui:table:global#wqConversionConflict</url>
+      </styleReference>
+    </Rule>
+    <Rule id="ruleAlarmstufen" ruleReference="org.kalypso.zml.ui.table.rule.display.alarmstufen">
+      <styleReference>
+        <url>urn:org:kalypso:zml:ui:table:global#emptyStyle</url>
+      </styleReference>
+      <RuleInstructions>
+        <instruction metadataKey=".*Alarmstufe_1\w?" operator="GREATER_EQUAL" label="AS%s" labelTokenizer="^.+_">
+          <styleReference>
+            <reference>alarmstufe_1</reference>
+          </styleReference>
+        </instruction>
+        <instruction metadataKey=".*Alarmstufe_2\w?" operator="GREATER_EQUAL" label="AS%s" labelTokenizer="^.+_">
+          <styleReference>
+            <reference>alarmstufe_2</reference>
+          </styleReference>
+        </instruction>
+        <instruction metadataKey=".*Alarmstufe_3\w?" operator="GREATER_EQUAL" label="AS%s" labelTokenizer="^.+_">
+          <styleReference>
+            <reference>alarmstufe_3</reference>
+          </styleReference>
+        </instruction>
+        <instruction metadataKey=".*Alarmstufe_4\w?" operator="GREATER_EQUAL" label="AS%s" labelTokenizer="^.+_">
+          <styleReference>
+            <reference>alarmstufe_4</reference>
+          </styleReference>
+        </instruction>
+      </RuleInstructions>
+    </Rule>
+
+    <Rule id="ruleHauptzahlen" ruleReference="org.kalypso.zml.ui.table.rule.display.hauptzahlen">
+      <styleReference>
+        <url>urn:org:kalypso:zml:ui:table:global#emptyStyle</url>
+      </styleReference>
+      <RuleInstructions>
+        <!-- <metadata value="26" name="Grenzwert_W: Kalypso_Grenzwert_NW"/>  -->
+        <instruction metadataKey=".*Kalypso_Grenzwert_N\w?" operator="SMALLER" label="&lt;N">
+          <styleReference>
+            <url>urn:org:kalypso:zml:ui:table:global#emptyStyle</url>
+          </styleReference>
+        </instruction>
+        <!--   <metadata value="80" name="Grenzwert_W: Kalypso_Grenzwert_MNW"/> -->
+        <instruction metadataKey=".*Kalypso_Grenzwert_MN\w?" operator="SMALLER" label="&lt;MN">
+          <styleReference>
+            <url>urn:org:kalypso:zml:ui:table:global#emptyStyle</url>
+          </styleReference>
+        </instruction>
+        <!--   <metadata value="80" name="Grenzwert_W: Kalypso_Grenzwert_MW"/> -->
+        <instruction metadataKey=".*Kalypso_Grenzwert_M\w?" operator="SMALLER" label="&lt;M">
+          <styleReference>
+            <url>urn:org:kalypso:zml:ui:table:global#emptyStyle</url>
+          </styleReference>
+        </instruction>
+        <!--   <metadata value="80" name="Grenzwert_W: Kalypso_Grenzwert_MW"/> -->
+        <instruction metadataKey=".*Kalypso_Grenzwert_M\w?" operator="EQUAL" label="=M">
+          <styleReference>
+            <url>urn:org:kalypso:zml:ui:table:global#emptyStyle</url>
+          </styleReference>
+        </instruction>
+        <!--  <metadata value="210" name="Grenzwert_W: Kalypso_Grenzwert_MHW"/> -->
+        <instruction metadataKey=".*Kalypso_Grenzwert_MH\w?" operator="SMALLER_EQUAL" label="&gt;M">
+          <styleReference>
+            <url>urn:org:kalypso:zml:ui:table:global#emptyStyle</url>
+          </styleReference>
+        </instruction>
+         <!--   <metadata value="300" name="Grenzwert_W: Kalypso_Grenzwert_HW"/>-->
+        <instruction metadataKey=".*Kalypso_Grenzwert_H\w?" operator="SMALLER_EQUAL" label="&gt;MH">
+          <styleReference>
+            <url>urn:org:kalypso:zml:ui:table:global#emptyStyle</url>
+          </styleReference>
+        </instruction>
+        <!--   <metadata value="300" name="Grenzwert_W: Kalypso_Grenzwert_HW"/>-->
+        <instruction metadataKey=".*Kalypso_Grenzwert_H\w?" operator="GREATER" label="&gt;H">
+          <styleReference>
+            <url>urn:org:kalypso:zml:ui:table:global#emptyStyle</url>
+          </styleReference>
+        </instruction>
+      </RuleInstructions>
+    </Rule>
+  </RuleSet>
+
+</ZmlTable>

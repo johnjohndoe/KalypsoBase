@@ -55,7 +55,6 @@ import org.kalypso.zml.ui.table.schema.RuleInstruction;
 import org.kalypso.zml.ui.table.schema.RuleInstructionsType;
 import org.kalypso.zml.ui.table.schema.RuleType;
 import org.kalypso.zml.ui.table.schema.StyleReferenceType;
-import org.kalypso.zml.ui.table.styles.ZmlStyleResolver;
 
 /**
  * ZmlRuleType binding class

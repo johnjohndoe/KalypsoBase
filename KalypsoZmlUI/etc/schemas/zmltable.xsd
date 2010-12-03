@@ -13,7 +13,7 @@
   <element name="Style" type="zmltable:CellStyleType" /> 
   
   <!-- rules -->
-  <element name="Rules" type="zmltable:RulesType" />
+  <element name="RuleSet" type="zmltable:RuleSetType" />
   <element name="Rule" type="zmltable:RuleType" />
   <element name="RuleInstructions" type="zmltable:RuleInstructionsType" />
   
@@ -22,7 +22,7 @@
     <sequence>
       <element ref="zmltable:StyleSet" minOccurs="0" maxOccurs="1" />
       <element name="defaultStyle" type="zmltable:StyleReferenceType" minOccurs="1" maxOccurs="1" />
-      <element ref="zmltable:Rules" minOccurs="0" maxOccurs="1" />
+      <element ref="zmltable:RuleSet" minOccurs="0" maxOccurs="1" />
       <element name="toolbar" type="string" minOccurs="0" maxOccurs="1" />
       <element ref="zmltable:Columns" minOccurs="0" maxOccurs="1" />
     </sequence>
@@ -43,7 +43,7 @@
       <element ref="zmltable:StyleSet" minOccurs="0" maxOccurs="1" />
       <element name="defaultCellStyle" type="zmltable:StyleReferenceType" minOccurs="1" maxOccurs="1" />
       <element name="defaultCellEditingStyle" type="zmltable:StyleReferenceType" minOccurs="0" maxOccurs="1" />
-      <element name="rule" type="IDREF" minOccurs="0" maxOccurs="unbounded" />
+      <element name="rule" type="zmltable:RuleRefernceType" minOccurs="0" maxOccurs="unbounded" />
     </sequence>
     <attribute name="id" type="ID" use="required" />
     <attribute name="autopack" type="boolean" default="true" />
@@ -112,9 +112,6 @@
   </complexType>
 
 
-
-
-
   <complexType name="CellStyleType">
     <sequence>
       <element name="baseStyle" type="zmltable:StyleReferenceType" minOccurs="0" maxOccurs="1" />
@@ -125,9 +122,9 @@
   
   
    <!-- Rules -->
-  <complexType name="RulesType">
+  <complexType name="RuleSetType">
     <sequence>
-      <element ref="zmltable:Rule" minOccurs="0" maxOccurs="unbounded" />
+      <element ref="zmltable:Rule" minOccurs="1" maxOccurs="unbounded" />
     </sequence>
   </complexType>
 
@@ -138,7 +135,8 @@
       <element ref="zmltable:RuleInstructions" minOccurs="0" maxOccurs="1" />
     </sequence>
 
-    <attribute name="ruleReference" type="ID" use="required" />
+    <attribute name="id" type="ID" use="required" />
+    <attribute name="ruleReference" type="string" use="required" />
   </complexType>
 
 
@@ -155,7 +153,7 @@
     <attribute name="metadataKey" type="string" use="required" />
     <attribute name="operator" type="zmltable:RuleInstructionOperator" use="required" />
     <attribute name="label" type="string" use="required" />
-    <attribute name="labelTokenizer" type="string" use="optional" default="%s"/>
+    <attribute name="labelTokenizer" type="string" use="optional" default="%s" />
   </complexType>
 
 
@@ -197,6 +195,13 @@
     </choice>
   </complexType>
 
+  <complexType name="RuleRefernceType">
+    <choice>
+      <element name="reference" type="IDREF" />
+      <element name="url" type="anyURI" />
+    </choice>
+  </complexType>
+ 
   <simpleType name="RuleInstructionOperator">
     <restriction base="string">
       <enumeration value="SMALLER"></enumeration>
