@@ -125,7 +125,6 @@ public class TableSourceProvider extends AbstractSourceProvider
     registerServiceWithSources( serviceLocator, IMenuService.class );
 
     m_tableContext = contextService.activateContext( TABLE_CONTEXT );
-
     table.addListener( m_listener );
   }
 
