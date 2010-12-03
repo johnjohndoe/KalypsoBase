@@ -180,4 +180,22 @@ public class ZmlIndexValueReference implements IZmlValueReference
   {
     return m_row.getModel();
   }
+
+  /**
+   * @see org.kalypso.zml.ui.table.model.references.IZmlValueReference#getDataSource()
+   */
+  @Override
+  public String getDataSource( )
+  {
+    return null;
+  }
+
+  /**
+   * @see org.kalypso.zml.ui.table.model.references.IZmlValueReference#getHref()
+   */
+  @Override
+  public String getHref( )
+  {
+    return null;
+  }
 }

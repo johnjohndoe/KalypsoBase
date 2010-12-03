@@ -57,7 +57,7 @@ public interface IZmlModelColumn
 
   int modelSize( ) throws SensorException;
 
-  Object get( int i, IAxis indexAxis ) throws SensorException;
+  Object get( int i, IAxis axis ) throws SensorException;
 
   void update( int index, Object value ) throws SensorException;
 

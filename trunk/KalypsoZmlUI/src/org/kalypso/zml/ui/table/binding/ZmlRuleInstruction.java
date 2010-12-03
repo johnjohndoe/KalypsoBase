@@ -72,6 +72,8 @@ public class ZmlRuleInstruction
     final MetadataList metadata = reference.getMetadata();
     final IAxis valueAxis = reference.getValueAxis();
     final Number value = (Number) reference.getValue();
+    if( metadata == null || valueAxis == null || value == null )
+      return null;
 
     final String[] keys = MetadataBoundary.findBoundaryKeys( metadata, m_type.getMetadataKey(), valueAxis.getType() );
 

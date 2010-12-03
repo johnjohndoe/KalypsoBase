@@ -46,6 +46,7 @@ import java.util.Date;
 import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
@@ -56,6 +57,7 @@ import org.kalypso.zml.ui.table.binding.BaseColumn;
 import org.kalypso.zml.ui.table.binding.CellStyle;
 import org.kalypso.zml.ui.table.binding.ZmlRule;
 import org.kalypso.zml.ui.table.model.IZmlModelRow;
+import org.kalypso.zml.ui.table.model.ZmlModelRow;
 import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
 import org.kalypso.zml.ui.table.rules.IZmlRuleImplementation;
 import org.kalypso.zml.ui.table.schema.CellStyleType;
@@ -74,15 +76,18 @@ public class ZmlLabelProvider extends ColumnLabelProvider
 
   private CellStyle m_lastCellStyle = null;
 
+  private final ZmlTooltipSupport m_tooltip;
+
   public ZmlLabelProvider( final BaseColumn column )
   {
     m_column = column;
+    m_tooltip = new ZmlTooltipSupport( column );
   }
 
   private CellStyle findStyle( final IZmlModelRow row ) throws CoreException
   {
-// if( m_lastRow == row )
-// return m_lastCellStyle;
+    if( m_lastRow == row )
+      return m_lastCellStyle;
 
     final ZmlRule[] rules = m_mapper.findActiveRules( row, m_column );
     if( ArrayUtils.isNotEmpty( rules ) )
@@ -248,6 +253,15 @@ public class ZmlLabelProvider extends ColumnLabelProvider
     return super.getText( element );
   }
 
+  /**
+   * @see org.eclipse.jface.viewers.CellLabelProvider#getToolTipStyle(java.lang.Object)
+   */
+  @Override
+  public int getToolTipStyle( final Object object )
+  {
+    return SWT.TOP | SWT.BEGINNING | SWT.LEFT | SWT.SHADOW_NONE;
+  }
+
   private Object getValue( final IZmlModelRow row ) throws SensorException
   {
     if( m_column.getType() instanceof IndexColumnType )
@@ -261,4 +275,33 @@ public class ZmlLabelProvider extends ColumnLabelProvider
 
     return null;
   }
+
+  /**
+   * @see org.eclipse.jface.viewers.CellLabelProvider#getToolTipImage(java.lang.Object)
+   */
+  @Override
+  public Image getToolTipImage( final Object object )
+  {
+    if( object instanceof ZmlModelRow )
+    {
+      return m_tooltip.getToolTipImage( (ZmlModelRow) object );
+    }
+
+    return super.getToolTipImage( object );
+  }
+
+  /**
+   * @see org.eclipse.jface.viewers.CellLabelProvider#getToolTipText(java.lang.Object)
+   */
+  @Override
+  public String getToolTipText( final Object element )
+  {
+    if( element instanceof ZmlModelRow )
+    {
+      return m_tooltip.getToolTipText( (ZmlModelRow) element );
+    }
+
+    return super.getToolTipText( element );
+  }
+
 }

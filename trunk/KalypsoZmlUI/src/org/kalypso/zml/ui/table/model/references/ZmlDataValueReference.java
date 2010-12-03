@@ -41,10 +41,12 @@
 package org.kalypso.zml.ui.table.model.references;
 
 import org.kalypso.ogc.sensor.IAxis;
+import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
+import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHandler;
 import org.kalypso.zml.ui.table.binding.DataColumn;
 import org.kalypso.zml.ui.table.model.IZmlDataModel;
 import org.kalypso.zml.ui.table.model.IZmlModelColumn;
@@ -179,4 +181,35 @@ public class ZmlDataValueReference implements IZmlValueReference
     return m_row.getModel();
   }
 
+  /**
+   * @see org.kalypso.zml.ui.table.model.references.IZmlValueReference#getDataSource()
+   */
+  @Override
+  public String getDataSource( ) throws SensorException
+  {
+    final MetadataList metadata = m_column.getMetadata();
+    final IAxis axis = AxisUtils.findDataSourceAxis( m_column.getAxes() );
+
+    final Object objIndex = m_column.get( m_tupleModelIndex, axis );
+    if( objIndex instanceof Number )
+    {
+      final Number index = (Number) objIndex;
+
+      final DataSourceHandler handler = new DataSourceHandler( metadata );
+      return handler.getDataSourceIdentifier( index.intValue() );
+    }
+
+    return null;
+  }
+
+  /**
+   * @see org.kalypso.zml.ui.table.model.references.IZmlValueReference#getHref()
+   */
+  @Override
+  public String getHref( )
+  {
+    final IObservation observation = m_column.getObservation();
+
+    return observation.getHref();
+  }
 }

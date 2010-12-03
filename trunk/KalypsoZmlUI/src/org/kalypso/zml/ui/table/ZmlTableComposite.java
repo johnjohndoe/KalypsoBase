@@ -47,8 +47,10 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.action.ToolBarManager;
+import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
+import org.eclipse.jface.window.ToolTip;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
@@ -121,6 +123,7 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
     m_tableViewer.getTable().addMouseMoveListener( m_mouseMoveListener );
 
     m_tableViewer.addSelectionChangedListener( new ZmlTableContextMenuListener( this ) );
+    ColumnViewerToolTipSupport.enableFor( m_tableViewer, ToolTip.NO_RECREATE );
 
     m_tableViewer.setContentProvider( new ZmlTableContentProvider( m_model ) );
 
