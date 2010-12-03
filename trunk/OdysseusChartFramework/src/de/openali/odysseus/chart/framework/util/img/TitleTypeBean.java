@@ -42,9 +42,6 @@ package de.openali.odysseus.chart.framework.util.img;
 
 import java.awt.Insets;
 
-import org.eclipse.swt.graphics.GC;
-import org.eclipse.swt.graphics.Point;
-
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT;
 import de.openali.odysseus.chart.framework.model.style.ITextStyle;
 import de.openali.odysseus.chart.framework.util.StyleUtils;
@@ -52,13 +49,21 @@ import de.openali.odysseus.chart.framework.util.StyleUtils;
 /**
  * @author kimwerner
  */
-public class TitleTypeBean implements IChartLabelRenderer
+public class TitleTypeBean
 {
   private String m_text = "";
 
-  private ALIGNMENT m_alignment = ALIGNMENT.CENTER;
+  private ALIGNMENT m_alignmentHorizontal = ALIGNMENT.CENTER;
+
+  private ALIGNMENT m_alignmentVertical = ALIGNMENT.CENTER;
+
+  private  Double m_normalizedPositionX = ALIGNMENT.CENTER.doubleValue();
+
+  private  Double m_normalizedPositionY = ALIGNMENT.CENTER.doubleValue();
 
   private ITextStyle m_textStyle;
+
+  private int m_rotation;
 
   private Insets m_insets = new Insets( 0, 0, 0, 0 );
 
@@ -67,13 +72,23 @@ public class TitleTypeBean implements IChartLabelRenderer
     m_text = text;
   }
 
-  public TitleTypeBean( final String text, final ALIGNMENT alignment, final ITextStyle textStyle, final Insets insets )
+  public TitleTypeBean( final String text, final ALIGNMENT alignmentHorizontal, final ITextStyle textStyle, final Insets insets )
   {
     super();
     m_text = text;
-    m_alignment = alignment;
+    m_alignmentHorizontal = alignmentHorizontal;
     m_textStyle = textStyle;
     m_insets = insets;
+  }
+
+  public ALIGNMENT getAlignmentHorizontal( )
+  {
+    return m_alignmentHorizontal;
+  }
+
+  public ALIGNMENT getAlignmentVertical( )
+  {
+    return m_alignmentVertical;
   }
 
   public Insets getInsets( )
@@ -81,9 +96,19 @@ public class TitleTypeBean implements IChartLabelRenderer
     return m_insets;
   }
 
-  public ALIGNMENT getAlignment( )
+  public Double getNormalizedPositionX( )
   {
-    return m_alignment;
+    return m_normalizedPositionX;
+  }
+
+  public Double getNormalizedPositionY( )
+  {
+    return m_normalizedPositionY;
+  }
+
+  public int getRotation( )
+  {
+    return m_rotation;
   }
 
   public String getText( )
@@ -99,87 +124,49 @@ public class TitleTypeBean implements IChartLabelRenderer
     return m_textStyle;
   }
 
-  @Override
+  public void setAlignmentHorizontal( final ALIGNMENT alignmentHorizontal )
+  {
+    m_alignmentHorizontal = alignmentHorizontal;
+  }
+
+  public void setAlignmentVertical( final ALIGNMENT alignmentVertical )
+  {
+    m_alignmentVertical = alignmentVertical;
+  }
+
   public void setInsets( final Insets insets )
   {
     m_insets = insets;
   }
 
-  public void setAlignment( final ALIGNMENT alignment )
-  {
-    m_alignment = alignment;
-  }
-
-  @Override
   public void setLabel( final String text )
   {
     m_text = text;
   }
 
-  @Override
+  public void setNormalizedPositionX( final Double normalizedPositionX )
+  {
+    m_normalizedPositionX = normalizedPositionX;
+  }
+
+  public void setNormalizedPositionY( final Double normalizedPositionY )
+  {
+    m_normalizedPositionY = normalizedPositionY;
+  }
+
+  public void setRotation( final int rotation )
+  {
+    m_rotation = rotation;
+  }
+
+  public void setText( final String text )
+  {
+    m_text = text;
+  }
+
   public void setTextStyle( final ITextStyle textStyle )
   {
     m_textStyle = textStyle;
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.framework.util.img.IChartLabelRenderer#paint(org.eclipse.swt.graphics.GC, org.eclipse.swt.graphics.Point)
-   */
-  @Override
-  public void paint( final GC gc, final Point anchor )
-  {
-    // TODO Auto-generated method stub
-    
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.framework.util.img.IChartLabelRenderer#setTextAnchor(de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT, de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT)
-   */
-  @Override
-  public void setTextAnchor( final ALIGNMENT positionX, final ALIGNMENT positionY )
-  {
-    // TODO Auto-generated method stub
-    
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.framework.util.img.IChartLabelRenderer#setRotation(int, de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT, de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT)
-   */
-  @Override
-  public void setRotation( final int angle, final ALIGNMENT centerX, final ALIGNMENT centerY )
-  {
-    // TODO Auto-generated method stub
-    
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.framework.util.img.IChartLabelRenderer#setLinePosition(de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT)
-   */
-  @Override
-  public void setLinePosition( final ALIGNMENT position )
-  {
-    // TODO Auto-generated method stub
-    
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.framework.util.img.IChartLabelRenderer#setDrawBorder(boolean)
-   */
-  @Override
-  public void setDrawBorder( final boolean drawBorder )
-  {
-    // TODO Auto-generated method stub
-    
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.framework.util.img.IChartLabelRenderer#getSize()
-   */
-  @Override
-  public Point getSize( )
-  {
-    // TODO Auto-generated method stub
-    return null;
   }
 
 }

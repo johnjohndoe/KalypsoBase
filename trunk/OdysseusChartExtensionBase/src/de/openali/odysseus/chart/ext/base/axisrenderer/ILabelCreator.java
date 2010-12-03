@@ -41,7 +41,6 @@
 package de.openali.odysseus.chart.ext.base.axisrenderer;
 
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
-import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT;
 
 /**
  * @author alibu
@@ -51,6 +50,4 @@ public interface ILabelCreator
   String getLabel( Number[] ticks, int i, IDataRange<Number> range );
 
   String getLabel( Number value, IDataRange<Number> range );
-
-  ALIGNMENT getLabelPosition( );
 }

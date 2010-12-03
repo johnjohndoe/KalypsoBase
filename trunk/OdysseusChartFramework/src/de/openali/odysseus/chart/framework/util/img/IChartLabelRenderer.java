@@ -54,22 +54,42 @@ import de.openali.odysseus.chart.framework.model.style.ITextStyle;
 public interface IChartLabelRenderer
 {
 
-  void paint( final GC gc, final Point anchor );
+  void eatBean( final TitleTypeBean titleTypeBean );
+
+  boolean isDrawBorder( );
+
+  Insets getInsets( );
+
+  String getLabel( );
+
+  ALIGNMENT getAlignmentX( );
+
+  ALIGNMENT getAlignmentY( );
+
+  int getRotation( );
+
+  Point getSize( );
+
+  ALIGNMENT getTextAnchorX( );
+
+  ALIGNMENT getTextAnchorY( );
+
+  ITextStyle getTextStyle( );
+
+  void paint( final GC gc, final Point textAnchor );
+
+  void setDrawBorder( final boolean drawBorder );
 
   void setInsets( final Insets insets );
+
+  void setLabel( final String label );
+
+  void setAlignment( final ALIGNMENT alignmentX, final ALIGNMENT alignmentY );
+
+  void setRotation( final int degree );
 
   void setTextAnchor( final ALIGNMENT positionX, final ALIGNMENT positionY );
 
   void setTextStyle( final ITextStyle textStyle );
-
-  void setRotation( final int angle, final ALIGNMENT centerX, final ALIGNMENT centerY );
-
-  void setLinePosition( final ALIGNMENT position );
-
-  void setDrawBorder( final boolean drawBorder );
-
-  Point getSize( );
-
-  void setLabel( final String label );
 
 }

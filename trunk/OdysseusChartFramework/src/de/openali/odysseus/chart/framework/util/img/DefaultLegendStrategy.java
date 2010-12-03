@@ -199,6 +199,7 @@ public class DefaultLegendStrategy implements ILegendPaintStrategy
     final ILegendEntry[] legendEntries = layer.getLegendEntries();
 
     // TODO - instead of returning null (layer.getLegendEntries()) always return an empty array!
+
     if( ArrayUtils.isEmpty( legendEntries ) )
       return null;
 

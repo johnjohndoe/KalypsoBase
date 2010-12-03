@@ -95,7 +95,7 @@ public class ChartImageComposite extends Canvas implements IChartComposite
 
   protected EditInfo m_tooltipInfo = null;
 
-   private final ChartTooltipPainter m_tooltipPainter = new ChartTooltipPainter();
+  private final ChartTooltipPainter m_tooltipPainter = new ChartTooltipPainter();
 
   private final ILayerManagerEventListener m_layerEventListener = new ILayerManagerEventListener()
   {
@@ -207,21 +207,21 @@ public class ChartImageComposite extends Canvas implements IChartComposite
         final GC gc = paintEvent.gc;
         gc.drawImage( m_image, -m_panOffset.x, -m_panOffset.y );
 
-        final Transform oldTransform = new Transform( gc.getDevice() );
-        gc.getTransform( oldTransform );
-
         final Transform newTransform = new Transform( gc.getDevice() );
-        newTransform.translate( m_plotRect.x, m_plotRect.y );
-        gc.setTransform( newTransform );
         try
         {
+          gc.getTransform( newTransform );
+          newTransform.translate( m_plotRect.x, m_plotRect.y );
+          gc.setTransform( newTransform );
+
           paintDragArea( gc );
           paintEditInfo( gc );
           paintTooltipInfo( gc );
         }
         finally
         {
-          gc.setTransform( oldTransform );
+          newTransform.translate( -m_plotRect.x, -m_plotRect.y );
+          gc.setTransform( newTransform );
           newTransform.dispose();
         }
       }

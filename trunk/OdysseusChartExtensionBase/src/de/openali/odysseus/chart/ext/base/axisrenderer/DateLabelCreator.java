@@ -44,24 +44,16 @@ import java.util.Date;
 
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.CalendarFormat;
-import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT;
 
 ;
 
 /**
  * @author alibu
  */
-public class DateLabelCreator implements ILabelCreator
+public class DateLabelCreator extends AbstractLabelCreator implements ILabelCreator
 {
 
-  public void setLabelPosition( final ALIGNMENT labelPosition )
-  {
-    m_labelPosition = labelPosition;
-  }
-
   CalendarFormat m_format;
-
-  private ALIGNMENT m_labelPosition = null;
 
   /**
    * @param formatString
@@ -70,12 +62,6 @@ public class DateLabelCreator implements ILabelCreator
   public DateLabelCreator( final String formatString )
   {
     m_format = new CalendarFormat( formatString );
-  }
-
-  public DateLabelCreator( final String formatString, final ALIGNMENT labelPosition )
-  {
-    m_format = new CalendarFormat( formatString );
-    m_labelPosition = labelPosition;
   }
 
   /**
@@ -89,14 +75,6 @@ public class DateLabelCreator implements ILabelCreator
   public String getLabel( final Number[] ticks, final int i, final IDataRange<Number> range )
   {
     return m_format.format( new Date( ticks[i].longValue() ) );
-  }
-
-  @Override
-  public ALIGNMENT getLabelPosition( )
-  {
-    if( m_labelPosition == null )
-      m_labelPosition = ALIGNMENT.CENTERED_HORIZONTAL;
-    return m_labelPosition;
   }
 
   /**

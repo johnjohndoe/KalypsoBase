@@ -38,30 +38,44 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package de.openali.odysseus.chart.framework.model.style;
+package de.openali.odysseus.chart.ext.base.axisrenderer;
 
-import java.awt.Insets;
-
-import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT;
+import de.openali.odysseus.chart.framework.model.data.IDataRange;
 
 /**
- * @author kimwerner
+ * @author alibu
  */
-public interface IChartLabelRenderer
+public abstract class AbstractLabelCreator implements ILabelCreator
 {
 
-  Insets getInsets( );
+  /**
+   * @see de.openali.odysseus.chart.ext.base.axisrenderer.ILabelCreator#getLabel(java.lang.Number,
+   *      de.openali.odysseus.chart.framework.model.data.IDataRange)
+   */
+  @Override
+  public String getLabel( final Number value, final IDataRange<Number> range )
+  {
+    return value.toString();
+  }
 
-  ALIGNMENT getAlignment( );
-
-  ITextStyle getTextStyle( );
-
-  void setInsets( final Insets insets );
-
-  void setAlignment( final ALIGNMENT position );
-
-  void setTextStyle( final ITextStyle textStyle );
-
-  void setLabel( final String Label );
+  /**
+   * @see org.kalypso.chart.ext.test.axisrenderer.ILabelCreator#getLabel(java.lang.Number,
+   *      org.kalypso.chart.framework.model.data.IDataRange)
+   */
+  @Override
+  public String getLabel( final Number[] ticks, final int i, final IDataRange<Number> range )
+  {
+    if( ticks == null )
+      return "";
+    try
+    {
+      return getLabel( ticks[i], range );
+    }
+    catch( final ArrayIndexOutOfBoundsException e )
+    {
+      e.printStackTrace();
+      return "";
+    }
+  }
 
 }

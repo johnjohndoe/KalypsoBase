@@ -38,14 +38,16 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
 
   private int m_fixedWidth;
 
+  private ALIGNMENT m_labelPosition;
+
   public GenericAxisRenderer( final String id, final ILabelCreator labelCreator, final ITickCalculator tickCalculator, final AxisRendererConfig config )
   {
-    this( id, config.tickLength, config.tickLabelInsets, config.labelInsets, config.gap, labelCreator, tickCalculator, config.minTickInterval, config.hideCut, config.fixedWidth, config.axisLineStyle, config.labelStyle, config.tickLineStyle, config.tickLabelStyle );
+    this( id, config.tickLength, config.tickLabelInsets, config.labelInsets, config.gap, labelCreator, tickCalculator, config.minTickInterval, config.hideCut, config.fixedWidth, config.axisLineStyle, config.labelStyle, config.tickLineStyle, config.tickLabelStyle, config.labelPosition );
   }
 
-  public GenericAxisRenderer( final String id, final int tickLength, final Insets tickLabelInsets, final Insets labelInsets, final int gap, final ILabelCreator labelCreator, final ITickCalculator tickCalculator, final Number minTickInterval, final boolean hideCut, final int fixedWidth, final ILineStyle axisLineStyle, final ITextStyle labelStyle, final ILineStyle tickLineStyle, final ITextStyle tickLabelStyle )
+  public GenericAxisRenderer( final String id, final int tickLength, final Insets tickLabelInsets, final Insets labelInsets, final int gap, final ILabelCreator labelCreator, final ITickCalculator tickCalculator, final Number minTickInterval, final boolean hideCut, final int fixedWidth, final ILineStyle axisLineStyle, final ITextStyle labelStyle, final ILineStyle tickLineStyle, final ITextStyle tickLabelStyle, final ALIGNMENT labelPosition )
   {
-    this( id, tickLength, tickLabelInsets, labelInsets, gap, labelCreator, tickCalculator, minTickInterval, hideCut, fixedWidth, axisLineStyle, labelStyle, tickLineStyle, tickLabelStyle, 0 );
+    this( id, tickLength, tickLabelInsets, labelInsets, gap, labelCreator, tickCalculator, minTickInterval, hideCut, fixedWidth, axisLineStyle, labelStyle, tickLineStyle, tickLabelStyle, 0, labelPosition );
   }
 
   /**
@@ -68,7 +70,7 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
    * @param fixedWidth
    *          if > 0, no actual width is calculated - the getWidth() will always return the value of fixed width
    */
-  public GenericAxisRenderer( final String id, final int tickLength, final Insets tickLabelInsets, final Insets labelInsets, final int gap, final ILabelCreator labelCreator, final ITickCalculator tickCalculator, final Number minTickInterval, final boolean hideCut, final int fixedWidth, final ILineStyle axisLineStyle, final ITextStyle labelStyle, final ILineStyle tickLineStyle, final ITextStyle tickLabelStyle, final int borderSize )
+  public GenericAxisRenderer( final String id, final int tickLength, final Insets tickLabelInsets, final Insets labelInsets, final int gap, final ILabelCreator labelCreator, final ITickCalculator tickCalculator, final Number minTickInterval, final boolean hideCut, final int fixedWidth, final ILineStyle axisLineStyle, final ITextStyle labelStyle, final ILineStyle tickLineStyle, final ITextStyle tickLabelStyle, final int borderSize, final ALIGNMENT labelPosition )
   {
     super( id, tickLength, tickLabelInsets, labelInsets, gap, axisLineStyle, labelStyle, tickLineStyle, tickLabelStyle, borderSize );
     setTickCalculator( tickCalculator );
@@ -76,6 +78,7 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
     setMinTickInterval( minTickInterval );
     setHideCut( hideCut );
     setFixedWidth( fixedWidth );
+    setLabelPosition( labelPosition );
   }
 
   public Point calcTickLabelSize( final GC gc, final IAxis axis )
@@ -250,7 +253,7 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
     final ITextStyle tickLabelStyle = getTickLabelStyle();
     final ILineStyle tickLineStyle = getTickLineStyle();
     final int tickScreenDistance = (screenMax - screenMin) / (ticks.length - 1);
-    final ALIGNMENT labelPosition = getLabelCreator().getLabelPosition();
+
     for( int i = 0; i < ticks.length; i++ )
     {
       final int y1, y2, x1, x2, tickPos;
@@ -274,7 +277,7 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
         x2 = x1;
         y1 = startY;
         // textX = tickPos- labelSize.x / 2 + offset;
-        textX = tickPos - getLabelPosition( labelSize.x, tickScreenDistance, labelPosition ) + offset;
+        textX = tickPos - getLabelPosition( labelSize.x, tickScreenDistance, m_labelPosition ) + offset;
         // BOTTOM
         if( axis.getPosition() == POSITION.BOTTOM )
         {
@@ -298,7 +301,7 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
         y1 = tickPos + offset;
         y2 = y1;
         // textY = tickPos - labelSize.y / 2 + offset;
-        textY = y1 - getLabelPosition( labelSize.y, tickScreenDistance, labelPosition );
+        textY = y1 - getLabelPosition( labelSize.y, tickScreenDistance, m_labelPosition );
 
         // LEFT
         if( axis.getPosition() == POSITION.LEFT )
@@ -413,6 +416,11 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
     return m_labelCreator;
   }
 
+  public ALIGNMENT getLabelPosition( )
+  {
+    return m_labelPosition;
+  }
+
   final int getLabelPosition( final int labelWidth, final int tickScreenDistance, final ALIGNMENT labelPosition )
   {
     switch( labelPosition )
@@ -510,6 +518,11 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
   public void setLabelCreator( final ILabelCreator labelCreator )
   {
     m_labelCreator = labelCreator;
+  }
+
+  public void setLabelPosition( final ALIGNMENT labelPosition )
+  {
+    m_labelPosition = labelPosition;
   }
 
   public void setMinTickInterval( final Number minTickInterval )

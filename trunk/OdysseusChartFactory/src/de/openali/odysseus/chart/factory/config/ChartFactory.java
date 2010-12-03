@@ -131,7 +131,7 @@ public final class ChartFactory
       title.setTextStyle( textStyle );
 
       final ALIGNMENT alignment = StyleFactory.getAlignment( type.getAlignment() );
-      title.setAlignment( alignment );
+      title.setAlignmentHorizontal( alignment );
 
       model.addTitles( title );
     }

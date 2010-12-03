@@ -165,7 +165,6 @@ public class ProfilChartModel extends ChartModel
     {
       layerManager.addLayer( layer );
     }
-
     state.restoreState( this );
   }
 }

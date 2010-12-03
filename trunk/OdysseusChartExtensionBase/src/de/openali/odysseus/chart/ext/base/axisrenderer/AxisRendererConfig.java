@@ -42,6 +42,7 @@ package de.openali.odysseus.chart.ext.base.axisrenderer;
 
 import java.awt.Insets;
 
+import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.ITextStyle;
 import de.openali.odysseus.chart.framework.util.StyleUtils;
@@ -111,6 +112,8 @@ public class AxisRendererConfig
   public ITextStyle tickLabelStyle = StyleUtils.getDefaultTextStyle();
 
   public int borderSize = 0;
+
+  public ALIGNMENT labelPosition = ALIGNMENT.TICK_CENTERED;
 
   public AxisRendererConfig( )
   {

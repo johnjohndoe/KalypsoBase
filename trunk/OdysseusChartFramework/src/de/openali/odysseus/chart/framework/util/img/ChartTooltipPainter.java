@@ -71,8 +71,9 @@ public class ChartTooltipPainter
   public ChartTooltipPainter( )
   {
     m_labelRenderer = new GenericChartLabelRenderer();
-    m_labelRenderer.setInsets( new Insets( 3, 3, 3, 3 ) );
+    m_labelRenderer.setInsets( new Insets( 2, 2, 2, 2 ) );
     m_labelRenderer.setDrawBorder( true );
+    m_labelRenderer.setRotation( 0 );
     final FontData fontData = JFaceResources.getTextFont().getFontData()[0];
     final RGB rgbFill = PlatformUI.getWorkbench().getDisplay().getSystemColor( SWT.COLOR_INFO_BACKGROUND ).getRGB();
     final RGB rgbText = PlatformUI.getWorkbench().getDisplay().getSystemColor( SWT.COLOR_INFO_FOREGROUND ).getRGB();
@@ -97,24 +98,24 @@ public class ChartTooltipPainter
 
     final Rectangle clippRect = gcw.getClipping();
     /*
-     * Positionieren der Tooltip-Box: der ideale Platz liegt 3 Pixel rechts unter dem Mauszeiger. Wenn rechts nicht
+     * Positionieren der Tooltip-Box: der ideale Platz liegt 3 Pixel rechts über dem Mauszeiger. Wenn rechts nicht
      * genï¿½gend Platz ist, dann wird er nach links verschoben. Der Startpunkt soll dabei immer im sichtbaren Bereich
      * liegen.
      */
     ALIGNMENT posX = ALIGNMENT.LEFT;
-    ALIGNMENT posY = ALIGNMENT.TOP;
+    ALIGNMENT posY = ALIGNMENT.BOTTOM;
     int offsetX = 3/* Pixel */;
-    int offsetY = 3/* Pixel */;
+    int offsetY = -3/* Pixel */;
 
     if( toolsize.x + offsetX + mousePos.x > clippRect.x + clippRect.width )
     {
       posX = ALIGNMENT.RIGHT;
       offsetX = -3;
     }
-    if( toolsize.y + offsetY + mousePos.y > clippRect.y + clippRect.height )
+    if( toolsize.y - offsetY - mousePos.y > clippRect.y )
     {
-      posY = ALIGNMENT.BOTTOM;
-      offsetY = -3;
+      posY = ALIGNMENT.TOP;
+      offsetY = 3;
     }
 
     getLabelRenderer().setTextAnchor( posX, posY );

@@ -32,17 +32,35 @@ public interface IAxisConstants
     }
   }
 
+  String SCREEN_COORDINATE_AXIS = "de.openali.odysseus.chart.ext.base.axis.ScreenCoordinateAxis";
+
+  String SCREEN_COORDINATE_AXIS_HORIZONTAL = SCREEN_COORDINATE_AXIS + "#HORIZONTAL";
+
+  String SCREEN_COORDINATE_AXIS_VERTICAL = SCREEN_COORDINATE_AXIS + "#VERTICAL";
+
   public enum ALIGNMENT
   {
-    LEFT,
-    RIGHT,
-    TOP,
-    BOTTOM,
-    CENTERED_HORIZONTAL,
-    CENTERED_VERTICAL,
-    CENTER,
-    TICK_CENTERED,
-    INTERVALL_CENTERED
+    LEFT(0),
+    RIGHT(1),
+    TOP(1),
+    BOTTOM(0),
+    CENTER(0.5),
+    CENTERED_HORIZONTAL(0.5),
+    CENTERED_VERTICAL(0.5),
+    TICK_CENTERED(0.5),
+    INTERVALL_CENTERED(0.5);
+
+    private final double m_doubleValue;
+
+    ALIGNMENT( final double doubleValue )
+    {
+      m_doubleValue = doubleValue;
+    }
+
+    public double doubleValue( )
+    {
+      return m_doubleValue;
+    }
 
   }
 
