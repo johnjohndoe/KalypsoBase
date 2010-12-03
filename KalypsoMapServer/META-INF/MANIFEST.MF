@@ -5,9 +5,7 @@ Bundle-SymbolicName: org.kalypso.mapserver;singleton:=true
 Bundle-Version: 10.10.0.qualifier
 Bundle-Activator: org.kalypso.mapserver.Activator
 Require-Bundle: org.eclipse.core.runtime,
- org.kalypso.commons,
- org.eclipse.equinox.http.registry,
- org.mortbay.jetty.util
+ org.kalypso.commons
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Vendor: kalypsobase.sourceforge.net
