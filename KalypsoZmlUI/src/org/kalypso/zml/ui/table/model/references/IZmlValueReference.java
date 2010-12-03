@@ -75,4 +75,8 @@ public interface IZmlValueReference
   void update( Object targetValue ) throws SensorException;
 
   Integer getTupleModelIndex( );
+
+  String getDataSource( ) throws SensorException;
+
+  String getHref( );
 }
