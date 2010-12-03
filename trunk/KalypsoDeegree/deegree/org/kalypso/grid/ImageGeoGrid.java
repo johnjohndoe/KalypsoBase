@@ -47,6 +47,8 @@ import java.net.URL;
 import javax.media.jai.JAI;
 import javax.media.jai.RenderedOp;
 
+import org.eclipse.core.runtime.NullProgressMonitor;
+
 import com.vividsolutions.jts.geom.Coordinate;
 
 /**
@@ -58,7 +60,7 @@ import com.vividsolutions.jts.geom.Coordinate;
  * slow (several seconds), but succeeding access is accpetable fast. However, no remarkable memory consumption is
  * noticed.
  * </p>
- *
+ * 
  * @author Dejan
  */
 public class ImageGeoGrid extends AbstractGeoGrid implements IGeoGrid
@@ -69,6 +71,10 @@ public class ImageGeoGrid extends AbstractGeoGrid implements IGeoGrid
 
   private RenderedOp m_image;
 
+  private BigDecimal m_min;
+
+  private BigDecimal m_max;
+
   public ImageGeoGrid( final URL imageURL, final Coordinate origin, final Coordinate offsetX, final Coordinate offsetY, final String sourceCRS )
   {
     super( origin, offsetX, offsetY, sourceCRS );
@@ -77,6 +83,27 @@ public class ImageGeoGrid extends AbstractGeoGrid implements IGeoGrid
 
     m_sizeX = m_image.getWidth();
     m_sizeY = m_image.getHeight();
+    m_min = BigDecimal.valueOf( Double.MAX_VALUE );
+    m_max = BigDecimal.valueOf( -Double.MAX_VALUE );
+
+    initialize();
+  }
+
+  /**
+   * @see org.kalypso.gis.doubleraster.grid.DoubleGrid#getValue(int, int)
+   */
+  @Override
+  public double getValue( final int x, final int y )
+  {
+    if( m_image == null )
+      return Double.NaN;
+
+    final int tileX = m_image.XToTileX( x );
+    final int tileY = m_image.YToTileY( y );
+
+    final Raster tile = m_image.getTile( tileX, tileY );
+
+    return tile.getSampleDouble( x, y, 0 );
   }
 
   /**
@@ -98,17 +125,37 @@ public class ImageGeoGrid extends AbstractGeoGrid implements IGeoGrid
   }
 
   /**
-   * @see org.kalypso.gis.doubleraster.grid.DoubleGrid#getValue(int, int)
+   * @see org.kalypso.grid.IGeoGrid#getMin()
    */
   @Override
-  public double getValue( final int x, final int y )
+  public BigDecimal getMin( )
   {
-    final int tileX = m_image.XToTileX( x );
-    final int tileY = m_image.YToTileY( y );
+    return m_min;
+  }
 
-    final Raster tile = m_image.getTile( tileX, tileY );
+  /**
+   * @see org.kalypso.grid.IGeoGrid#getMax()
+   */
+  @Override
+  public BigDecimal getMax( )
+  {
+    return m_max;
+  }
 
-    return tile.getSampleDouble( x, y, 0 );
+  /**
+   * @see org.kalypso.grid.IGeoGrid#setMin(java.math.BigDecimal)
+   */
+  @Override
+  public void setMin( final BigDecimal minValue )
+  {
+  }
+
+  /**
+   * @see org.kalypso.grid.IGeoGrid#setMax(java.math.BigDecimal)
+   */
+  @Override
+  public void setMax( final BigDecimal maxValue )
+  {
   }
 
   /**
@@ -119,47 +166,26 @@ public class ImageGeoGrid extends AbstractGeoGrid implements IGeoGrid
   {
     if( m_image != null )
       m_image.dispose();
+
     m_image = null;
+    m_min = null;
+    m_max = null;
   }
 
-  /**
-   * @see org.kalypso.grid.IGeoGrid#getMax()
-   */
-  @Override
-  public BigDecimal getMax( )
+  private void initialize( )
   {
-    // TODO Auto-generated method stub
-    return null;
+    try
+    {
+      IGeoWalkingStrategy walkingStrategy = getWalkingStrategy();
+      MinMaxRasterWalker walker = new MinMaxRasterWalker();
+      walkingStrategy.walk( this, walker, null, new NullProgressMonitor() );
+
+      m_min = BigDecimal.valueOf( walker.getMin() );
+      m_max = BigDecimal.valueOf( walker.getMax() );
+    }
+    catch( Exception ex )
+    {
+      ex.printStackTrace();
+    }
   }
-
-  /**
-   * @see org.kalypso.grid.IGeoGrid#getMin()
-   */
-  @Override
-  public BigDecimal getMin( )
-  {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  /**
-   * @see org.kalypso.grid.IGeoGrid#setMax(java.math.BigDecimal)
-   */
-  @Override
-  public void setMax( final BigDecimal maxValue )
-  {
-    // TODO Auto-generated method stub
-
-  }
-
-  /**
-   * @see org.kalypso.grid.IGeoGrid#setMin(java.math.BigDecimal)
-   */
-  @Override
-  public void setMin( final BigDecimal minValue )
-  {
-    // TODO Auto-generated method stub
-
-  }
-
 }

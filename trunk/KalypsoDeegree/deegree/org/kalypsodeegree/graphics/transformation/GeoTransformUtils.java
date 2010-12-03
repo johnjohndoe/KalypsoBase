@@ -49,10 +49,7 @@ import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Position;
 
 /**
- * Helper class for {@link org.kalypso.transformation.GeoTransformer}.<br>
- * Introduced in otder not to change the {@link org.kalypso.transformation.GeoTransformer} interface.<br>
- * These helper methods should probably be added to the {@link org.kalypso.transformation.GeoTransformer} once it is
- * refactored.
+ * Helper class for {@link org.kalypso.transformation.transformer.IGeoTransformer}.
  * 
  * @author Gernot Belger
  */
@@ -88,10 +85,9 @@ public class GeoTransformUtils
 
   /**
    * Silently transforms a {@link GM_Object} into another coordinate system.<br>
-   * Silently, i.e. the {@link Exception}, normally thrown by {@link GeoTransformer#transform(GM_Object)} is ignored (it
-   * really is never thrown at all...)
+   * Silently, i.e. the {@link Exception}, normally thrown by {@link IGeoTransformer#transform(GM_Object)} is ignored.
    * 
-   * @return <code>null</code>, if {@link GeoTransformer#transform(GM_Object)} throws an exception.
+   * @return <code>Null</code>, if {@link IGeoTransformer#transform(GM_Object)} throws an exception.
    */
   public static GM_Object transformQuiet( final GM_Object geo, final String targetSrs )
   {
