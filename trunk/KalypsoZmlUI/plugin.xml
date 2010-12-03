@@ -213,19 +213,20 @@
     <handler
           class="org.kalypso.zml.ui.table.commands.toolbar.view.ZmlCommandHourAdd"
           commandId="org.kalypso.zml.ui.table.commands.toolbar.view.hour.add">
-       <enabledWhen>
+       <activeWhen>
           <reference
                 definitionId="zml.table.shift.command.test.expression">
           </reference>
-       </enabledWhen>
+       </activeWhen>
     </handler>
     <handler
           class="org.kalypso.zml.ui.table.commands.toolbar.view.ZmlCommandHourMinus"
           commandId="org.kalypso.zml.ui.table.commands.toolbar.view.hour.minus">
-       <enabledWhen>
+       <activeWhen>
           <reference
                 definitionId="zml.table.shift.command.test.expression">
-          </reference></enabledWhen>
+          </reference>
+       </activeWhen>
     </handler>
  </extension>
  <extension

@@ -65,8 +65,7 @@ public abstract class AbstractHourViewCommand extends AbstractHandler implements
     final IZmlTableComposite table = ZmlHandlerUtil.getTable( event );
 
     final ZmlViewResolutionFilter filter = resolveFilter( table );
-    filter.setResolution( resultion );
-    filter.setStuetzstellenMode( mode );
+    filter.setParameters( resultion, mode );
 
     table.getTableViewer().refresh();
 
@@ -85,7 +84,7 @@ public abstract class AbstractHourViewCommand extends AbstractHandler implements
     return Status.OK_STATUS;
   }
 
-  protected ZmlViewResolutionFilter resolveFilter( final IZmlTableComposite table )
+  public static ZmlViewResolutionFilter resolveFilter( final IZmlTableComposite table )
   {
     final TableViewer viewer = table.getTableViewer();
     final ViewerFilter[] filters = viewer.getFilters();

@@ -47,6 +47,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.zml.ui.KalypsoZmlUI;
+import org.kalypso.zml.ui.table.ZmlTableComposite;
 import org.kalypso.zml.ui.table.model.IZmlDataModel;
 import org.kalypso.zml.ui.table.model.IZmlModelRow;
 import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
@@ -94,6 +95,13 @@ public class ZmlViewResolutionFilter extends ViewerFilter
   private final ZmlFilterBaseIndex m_base = new ZmlFilterBaseIndex();
 
   private boolean m_stuetzstellenMode;
+
+  private final ZmlTableComposite m_table;
+
+  public ZmlViewResolutionFilter( final ZmlTableComposite table )
+  {
+    m_table = table;
+  }
 
   protected static int ticksInHours( final Date date )
   {
@@ -168,14 +176,15 @@ public class ZmlViewResolutionFilter extends ViewerFilter
     m_offset += number;
   }
 
-  public void setResolution( final int resolution )
+  public void setParameters( final int resolution, final boolean mode )
   {
-    m_resolution = resolution;
-  }
+    if( m_resolution == resolution && m_stuetzstellenMode == mode )
+      return;
 
-  public void setStuetzstellenMode( final boolean mode )
-  {
+    m_resolution = resolution;
     m_stuetzstellenMode = mode;
+
+    m_table.fireTableChanged();
   }
 
   public int getResulution( )

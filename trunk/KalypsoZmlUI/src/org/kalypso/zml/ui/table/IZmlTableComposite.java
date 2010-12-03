@@ -68,4 +68,8 @@ public interface IZmlTableComposite
   IZmlTableColumn[] getColumns( );
 
   void refresh( );
+
+  void addListener( IZmlTableListener listener );
+
+  void removeListener( IZmlTableListener mListener );
 }

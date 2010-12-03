@@ -40,7 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.commands.toolbar.view;
 
+import java.util.Map;
+
 import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.ui.menus.UIElement;
 
 /**
  * @author Dirk Kuch
@@ -65,9 +68,18 @@ public class ZmlCommandHourMinus extends AbstractHourViewCommand
   {
     if( filter.isStuetzstellenMode() )
       return false;
-    if( filter.getResulution() > 0 )
+    if( filter.getResulution() == 0 )
       return false;
 
     return true;
+  }
+
+  /**
+   * @see org.kalypso.zml.ui.table.commands.toolbar.view.AbstractHourViewCommand#updateElement(org.eclipse.ui.menus.UIElement,
+   *      java.util.Map)
+   */
+  @Override
+  public void updateElement( final UIElement element, final Map parameters )
+  {
   }
 }

@@ -42,8 +42,10 @@ package org.kalypso.zml.ui.table;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -103,6 +105,8 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
 
   private Menu m_menu;
 
+  private final Set<IZmlTableListener> m_listeners = new LinkedHashSet<IZmlTableListener>();
+
   public ZmlTableComposite( final IZmlDataModel model, final Composite parent, final FormToolkit toolkit )
   {
     super( parent, SWT.NULL );
@@ -113,6 +117,7 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
 
     model.addListener( this );
     toolkit.adapt( this );
+
   }
 
   private void setup( final FormToolkit toolkit )
@@ -174,7 +179,7 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
 
   private void addBasicFilters( )
   {
-    final ZmlViewResolutionFilter filter = new ZmlViewResolutionFilter();
+    final ZmlViewResolutionFilter filter = new ZmlViewResolutionFilter( this );
     m_tableViewer.addFilter( filter );
   }
 
@@ -275,6 +280,18 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
         column.getTableColumn().setText( columnType.getLabel() );
       }
     }
+
+    fireTableChanged();
+  }
+
+  public void fireTableChanged( )
+  {
+    final IZmlTableListener[] listeners = m_listeners.toArray( new IZmlTableListener[] {} );
+    for( final IZmlTableListener listener : listeners )
+    {
+      listener.eventTableChanged();
+    }
+
   }
 
   private void pack( final TableColumn table, final BaseColumn base )
@@ -393,5 +410,23 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
   public IZmlDataModel getDataModel( )
   {
     return m_model;
+  }
+
+  /**
+   * @see org.kalypso.zml.ui.table.IZmlTableComposite#addListener(org.kalypso.zml.ui.table.IZmlTableListener)
+   */
+  @Override
+  public void addListener( final IZmlTableListener listener )
+  {
+    m_listeners.add( listener );
+  }
+
+  /**
+   * @see org.kalypso.zml.ui.table.IZmlTableComposite#removeListener(org.kalypso.zml.ui.table.IZmlTableListener)
+   */
+  @Override
+  public void removeListener( final IZmlTableListener listener )
+  {
+    m_listeners.remove( listener );
   }
 }
