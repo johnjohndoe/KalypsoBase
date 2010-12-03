@@ -38,49 +38,12 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.commands.toolbar.view;
-
-import java.util.Map;
-
-import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.ui.menus.UIElement;
+package org.kalypso.zml.ui.table;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlCommandHourAdd extends AbstractHourViewCommand
+public interface IZmlTableListener
 {
-
-  /**
-   * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
-   */
-  @Override
-  public Object execute( final ExecutionEvent event )
-  {
-    return updateOffset( event, +1 );
-  }
-
-  /**
-   * @see org.kalypso.zml.ui.table.commands.toolbar.view.AbstractHourViewCommand#isActive(org.kalypso.zml.ui.table.commands.toolbar.view.ZmlViewResolutionFilter)
-   */
-  @Override
-  protected boolean isActive( final ZmlViewResolutionFilter filter )
-  {
-    if( filter.isStuetzstellenMode() )
-      return false;
-    if( filter.getResulution() == 0 )
-      return false;
-
-    return true;
-  }
-
-  /**
-   * @see org.kalypso.zml.ui.table.commands.toolbar.view.AbstractHourViewCommand#updateElement(org.eclipse.ui.menus.UIElement,
-   *      java.util.Map)
-   */
-  @Override
-  public void updateElement( final UIElement element, final Map parameters )
-  {
-  }
-
+  void eventTableChanged( );
 }

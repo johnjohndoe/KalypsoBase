@@ -64,6 +64,7 @@ import org.eclipse.ui.services.IServiceWithSources;
 import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
 import org.kalypso.contribs.eclipse.ui.commands.CommandUtilities;
 import org.kalypso.zml.ui.table.IZmlTableComposite;
+import org.kalypso.zml.ui.table.IZmlTableListener;
 
 /**
  * Manages context and sources corresponding to the chart.<br>
@@ -85,53 +86,14 @@ public class TableSourceProvider extends AbstractSourceProvider
 
   private static final String[] PROVIDED_SOURCE_NAMES = new String[] { ACTIVE_TABLE_NAME };
 
-  // FIXME: implement similar listeners
-
-// protected final IMapModellListener m_mapModellListener = new MapModellAdapter()
-// {
-// // TODO: we should fire a source change on any change of the modell
-//
-// /**
-// * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#themeActivated(org.kalypso.ogc.gml.mapmodel.IMapModell,
-// * org.kalypso.ogc.gml.IKalypsoTheme, org.kalypso.ogc.gml.IKalypsoTheme)
-// */
-// @Override
-// public void themeActivated( final IMapModell source, final IKalypsoTheme previouslyActive, final IKalypsoTheme
-// nowActive )
-// {
-// refreshUIelements();
-// }
-//
-// /**
-// * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#themeContextChanged(org.kalypso.ogc.gml.mapmodel.IMapModell,
-// * org.kalypso.ogc.gml.IKalypsoTheme)
-// */
-// @Override
-// public void themeContextChanged( final IMapModell source, final IKalypsoTheme theme )
-// {
-// refreshUIelements();
-// }
-// };
-//
-// private final IMapPanelListener m_mapPanelListener = new MapPanelAdapter()
-// {
-// // TODO: we should fire a source change on any change of the panel
-//
-// /**
-// * @see org.kalypso.ogc.gml.map.listeners.MapPanelAdapter#onMapModelChanged(org.kalypso.ogc.gml.map.MapPanel,
-// * org.kalypso.ogc.gml.mapmodel.IMapModell, org.kalypso.ogc.gml.mapmodel.IMapModell)
-// */
-// @Override
-// public void onMapModelChanged( final IMapPanel source, final IMapModell oldModel, final IMapModell newModel )
-// {
-// if( oldModel != null )
-// oldModel.removeMapModelListener( m_mapModellListener );
-// if( newModel != null )
-// newModel.addMapModelListener( m_mapModellListener );
-//
-// refreshUIelements();
-// }
-// };
+  private final IZmlTableListener m_listener = new IZmlTableListener()
+  {
+    @Override
+    public void eventTableChanged( )
+    {
+      refreshUIelements();
+    }
+  };
 
   /**
    * This collection contains all services, with which this provider has been registered. Used in order to correctly
@@ -149,14 +111,6 @@ public class TableSourceProvider extends AbstractSourceProvider
   private final IServiceLocator m_serviceLocator;
 
   /**
-   * Creates a new {@link ChartSourceProvider} on the given service locator.
-   */
-  public TableSourceProvider( final IServiceLocator serviceLocator )
-  {
-    this( serviceLocator, null );
-  }
-
-  /**
    * Creates a new {@link ChartSourceProvider} on the given chart.<br>
    * Initializes it state with the given parameters.
    */
@@ -172,9 +126,7 @@ public class TableSourceProvider extends AbstractSourceProvider
 
     m_tableContext = contextService.activateContext( TABLE_CONTEXT );
 
-    // FIXME: register similar listeners here
-// m_mapPanel.addMapPanelListener( m_mapPanelListener );
-// m_mapPanelListener.onMapModelChanged( m_mapPanel, null, m_mapPanel.getMapModell() );
+    table.addListener( m_listener );
   }
 
   private IServiceWithSources registerServiceWithSources( final IServiceLocator serviceLocator, final Class< ? extends IServiceWithSources> serviceClass )
@@ -197,11 +149,11 @@ public class TableSourceProvider extends AbstractSourceProvider
   {
     // unregister the registered source provider
     for( final IServiceWithSources service : m_registeredServices )
+    {
       service.removeSourceProvider( this );
+    }
 
-// m_mapPanel.removeMapPanelListener( m_mapPanelListener );
-// m_mapPanelListener.onMapModelChanged( m_mapPanel, m_mapPanel.getMapModell(), null );
-
+    m_table.removeListener( m_listener );
     m_table = null;
 
     if( m_tableContext != null )
@@ -246,6 +198,7 @@ public class TableSourceProvider extends AbstractSourceProvider
         return Status.OK_STATUS;
       }
     };
+
     job.setRule( m_mutexRule );
     job.setSystem( true );
     job.schedule();
