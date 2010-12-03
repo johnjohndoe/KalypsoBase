@@ -52,7 +52,6 @@ import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
 import org.kalypso.zml.ui.table.schema.RuleInstruction;
 import org.kalypso.zml.ui.table.schema.RuleInstructionOperator;
 import org.kalypso.zml.ui.table.schema.StyleReferenceType;
-import org.kalypso.zml.ui.table.styles.ZmlStyleResolver;
 
 /**
  * @author Dirk Kuch

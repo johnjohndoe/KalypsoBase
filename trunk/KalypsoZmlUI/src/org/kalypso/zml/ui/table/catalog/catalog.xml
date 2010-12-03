@@ -5,7 +5,6 @@
   <catalog:system systemId="urn:org:kalypso:zml:ui:table:icon:interpolated:value" uri="icons/warning_new.png" />
   <catalog:system systemId="urn:org:kalypso:zml:ui:table:icon:wq:conflict" uri="icons/conflict_new.png" />
 
-
-  <catalog:system systemId="urn:org:kalypso:zml:ui:table:style:base" uri="layout/styles.xml" />
+  <catalog:system systemId="urn:org:kalypso:zml:ui:table:global" uri="global.xml" />
 </catalog:catalog>
 
