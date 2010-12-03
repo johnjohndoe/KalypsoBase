@@ -60,16 +60,17 @@ public class DefaultTextLayer extends AbstractChartLayer
 
   private final TitleTypeBean[] m_titleTypeBeans;
 
-  public DefaultTextLayer( final ICoordinateMapper coordinateMapper, final IChartLabelRenderer labelRenderer, final TitleTypeBean... titleTypeBeans )
+  public DefaultTextLayer(final String id, final ICoordinateMapper coordinateMapper, final IChartLabelRenderer labelRenderer, final TitleTypeBean... titleTypeBeans )
   {
     m_titleTypeBeans = titleTypeBeans;
     m_labelRenderer = labelRenderer;
     setCoordinateMapper( coordinateMapper );
+    setId( id );
   }
 
-  public DefaultTextLayer( final ICoordinateMapper coordinateMapper, final TitleTypeBean... titleTypeBeans )
+  public DefaultTextLayer(final String id, final ICoordinateMapper coordinateMapper, final TitleTypeBean... titleTypeBeans )
   {
-    this( coordinateMapper, new GenericChartLabelRenderer(), titleTypeBeans );
+    this(id, coordinateMapper, new GenericChartLabelRenderer(), titleTypeBeans );
   }
 
   /**
@@ -85,7 +86,7 @@ public class DefaultTextLayer extends AbstractChartLayer
     for( final TitleTypeBean bean : m_titleTypeBeans )
     {
       m_labelRenderer.eatBean( bean );
-      final Point position = cm.numericToScreen( bean.getNormalizedPositionX(), bean.getNormalizedPositionY() );
+      final Point position = cm.numericToScreen( bean.getTextAnchorX().doubleValue(), bean.getTextAnchorY().doubleValue() );
 
       m_labelRenderer.paint( gc, new Point( position.x, position.y ) );
     }

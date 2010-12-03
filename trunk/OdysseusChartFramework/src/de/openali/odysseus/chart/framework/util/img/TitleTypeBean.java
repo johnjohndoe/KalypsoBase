@@ -57,9 +57,9 @@ public class TitleTypeBean
 
   private ALIGNMENT m_alignmentVertical = ALIGNMENT.CENTER;
 
-  private  Double m_normalizedPositionX = ALIGNMENT.CENTER.doubleValue();
+  private  ALIGNMENT m_textAnchorX = ALIGNMENT.CENTER;
 
-  private  Double m_normalizedPositionY = ALIGNMENT.CENTER.doubleValue();
+  private  ALIGNMENT m_textAnchorY = ALIGNMENT.CENTER;
 
   private ITextStyle m_textStyle;
 
@@ -96,14 +96,14 @@ public class TitleTypeBean
     return m_insets;
   }
 
-  public Double getNormalizedPositionX( )
+  public ALIGNMENT getTextAnchorX( )
   {
-    return m_normalizedPositionX;
+    return m_textAnchorX;
   }
 
-  public Double getNormalizedPositionY( )
+  public ALIGNMENT getTextAnchorY( )
   {
-    return m_normalizedPositionY;
+    return m_textAnchorY;
   }
 
   public int getRotation( )
@@ -144,14 +144,14 @@ public class TitleTypeBean
     m_text = text;
   }
 
-  public void setNormalizedPositionX( final Double normalizedPositionX )
+  public void setTextAnchorX( final ALIGNMENT normalizedPositionX )
   {
-    m_normalizedPositionX = normalizedPositionX;
+    m_textAnchorX = normalizedPositionX;
   }
 
-  public void setNormalizedPositionY( final Double normalizedPositionY )
+  public void setTextAnchorY( final ALIGNMENT normalizedPositionY )
   {
-    m_normalizedPositionY = normalizedPositionY;
+    m_textAnchorY = normalizedPositionY;
   }
 
   public void setRotation( final int rotation )

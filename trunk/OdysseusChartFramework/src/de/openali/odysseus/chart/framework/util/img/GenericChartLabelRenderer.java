@@ -168,7 +168,7 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
       gc.setTransform( newTransform );
 
       // draw BorderRect
-      final Rectangle textRect = new Rectangle( left,top, getSize().x, getSize().y );
+      final Rectangle textRect = new Rectangle( left, top, getSize().x, getSize().y );
       gc.fillRectangle( textRect );
       if( isDrawBorder() )
       {
@@ -181,7 +181,7 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
       for( int i = 0; i < lines.length; i++ )
       {
         final int lineInset = getLineInset( gc, border, lines[i], getAlignmentX() );
-        gc.drawText( lines[i],left+ lineInset, top+border + i * lineHeight, SWT.DRAW_TRANSPARENT | SWT.DRAW_DELIMITER | SWT.DRAW_TAB );
+        gc.drawText( lines[i], left + lineInset, top + border + i * lineHeight, SWT.DRAW_TRANSPARENT | SWT.DRAW_DELIMITER | SWT.DRAW_TAB );
       }
     }
     finally
@@ -216,7 +216,7 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
         return 0;
       case CENTERED_HORIZONTAL:
         return -getSize().x / 2;
-      case BOTTOM:
+            case BOTTOM:
         return -getSize().y;
       case TOP:
         return 0;
@@ -285,7 +285,6 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
   {
     m_size = null;
     m_alignmentX = alignmentX;
-    ;
     m_alignmentY = alignmentY;
   }
 
@@ -334,6 +333,7 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
     if( titleTypeBean == null )
       return;
     setAlignment( titleTypeBean.getAlignmentHorizontal(), titleTypeBean.getAlignmentVertical() );
+    setTextAnchor( titleTypeBean.getTextAnchorX(), titleTypeBean.getTextAnchorY() );
     setLabel( titleTypeBean.getText() );
     setTextStyle( titleTypeBean.getTextStyle() );
     setRotation( titleTypeBean.getRotation() );

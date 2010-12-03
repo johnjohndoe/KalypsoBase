@@ -32,12 +32,6 @@ public interface IAxisConstants
     }
   }
 
-  String SCREEN_COORDINATE_AXIS = "de.openali.odysseus.chart.ext.base.axis.ScreenCoordinateAxis";
-
-  String SCREEN_COORDINATE_AXIS_HORIZONTAL = SCREEN_COORDINATE_AXIS + "#HORIZONTAL";
-
-  String SCREEN_COORDINATE_AXIS_VERTICAL = SCREEN_COORDINATE_AXIS + "#VERTICAL";
-
   public enum ALIGNMENT
   {
     LEFT(0),
@@ -130,5 +124,11 @@ public interface IAxisConstants
   String TICK_LENGTH = "de.openali.odysseus.chart.framework.model.mapper.IAxisRendere_tick_length";
 
   String AXIS_GAP = "de.openali.odysseus.chart.framework.model.mapper.IAxisRendere_gap";
+
+  String SCREEN_COORDINATE_AXIS = "de.openali.odysseus.chart.ext.base.axis.ScreenCoordinateAxis";
+
+  String SCREEN_COORDINATE_AXIS_HORIZONTAL = SCREEN_COORDINATE_AXIS + "#HORIZONTAL";
+
+  String SCREEN_COORDINATE_AXIS_VERTICAL = SCREEN_COORDINATE_AXIS + "#VERTICAL";
 
 }
