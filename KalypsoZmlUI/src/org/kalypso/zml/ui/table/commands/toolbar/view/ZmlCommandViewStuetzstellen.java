@@ -61,4 +61,13 @@ public class ZmlCommandViewStuetzstellen extends AbstractHourViewCommand
     return Status.OK_STATUS;
   }
 
+  /**
+   * @see org.kalypso.zml.ui.table.commands.toolbar.view.AbstractHourViewCommand#isActive(org.kalypso.zml.ui.table.commands.toolbar.view.ZmlViewResolutionFilter)
+   */
+  @Override
+  protected boolean isActive( final ZmlViewResolutionFilter filter )
+  {
+    return filter.isStuetzstellenMode();
+  }
+
 }

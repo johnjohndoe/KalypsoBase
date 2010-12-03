@@ -57,4 +57,17 @@ public class ZmlCommandHourMinus extends AbstractHourViewCommand
     return updateOffset( event, -1 );
   }
 
+  /**
+   * @see org.kalypso.zml.ui.table.commands.toolbar.view.AbstractHourViewCommand#isActive(org.kalypso.zml.ui.table.commands.toolbar.view.ZmlViewResolutionFilter)
+   */
+  @Override
+  protected boolean isActive( final ZmlViewResolutionFilter filter )
+  {
+    if( filter.isStuetzstellenMode() )
+      return false;
+    if( filter.getResulution() > 0 )
+      return false;
+
+    return true;
+  }
 }

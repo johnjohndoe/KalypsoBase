@@ -46,6 +46,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.TableViewer;
@@ -60,6 +63,7 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.progress.UIJob;
 import org.kalypso.contribs.eclipse.jface.action.ContributionUtils;
 import org.kalypso.contribs.eclipse.swt.layout.LayoutHelper;
 import org.kalypso.zml.ui.table.binding.BaseColumn;
@@ -115,7 +119,7 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
   {
     final ZmlTableType tableType = m_model.getTableType();
 
-    initToolbar( tableType, toolkit );
+    final Composite toolbar = toolkit.createComposite( this );
 
     m_tableViewer = new TableViewer( this, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.FULL_SELECTION );
     m_tableViewer.getTable().setLinesVisible( true );
@@ -164,6 +168,8 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
     // TableViewerEditor.create( m_tableViewer, focusCellManager, actSupport, ColumnViewerEditor.TABBING_HORIZONTAL |
     // ColumnViewerEditor.TABBING_MOVE_TO_ROW_NEIGHBOR
     // | ColumnViewerEditor.TABBING_VERTICAL | ColumnViewerEditor.KEYBOARD_ACTIVATION );
+
+    initToolbar( tableType, toolbar, toolkit );
   }
 
   private void addBasicFilters( )
@@ -172,21 +178,36 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
     m_tableViewer.addFilter( filter );
   }
 
-  private void initToolbar( final ZmlTableType tableType, final FormToolkit toolkit )
+  private void initToolbar( final ZmlTableType tableType, final Composite composite, final FormToolkit toolkit )
   {
-    final String reference = tableType.getToolbar();
-    if( reference == null || reference.trim().isEmpty() )
-      return;
+    /** process as job in order to handle toolbar IElementUpdate job actions */
+    new UIJob( "" )
+    {
 
-    final ToolBarManager manager = new ToolBarManager();
+      @Override
+      public IStatus runInUIThread( final IProgressMonitor monitor )
+      {
+        final String reference = tableType.getToolbar();
+        if( reference == null || reference.trim().isEmpty() )
+          return Status.OK_STATUS;
 
-    final ToolBar control = manager.createControl( this );
-    control.setLayoutData( new GridData( SWT.RIGHT, GridData.FILL, true, false ) );
+        composite.setLayout( LayoutHelper.createGridLayout() );
+        composite.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
-    ContributionUtils.populateContributionManager( PlatformUI.getWorkbench(), manager, reference );
-    manager.update( true );
+        final ToolBarManager toolBarManager = new ToolBarManager();
 
-    toolkit.adapt( control );
+        final ToolBar control = toolBarManager.createControl( composite );
+        control.setLayoutData( new GridData( SWT.RIGHT, GridData.FILL, true, false ) );
+
+        ContributionUtils.populateContributionManager( PlatformUI.getWorkbench(), toolBarManager, reference );
+        toolBarManager.update( true );
+
+        toolkit.adapt( control );
+
+        return Status.OK_STATUS;
+      }
+    }.schedule();
+
   }
 
   private TableViewerColumn buildColumnViewer( final BaseColumn type )
@@ -373,5 +394,4 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
   {
     return m_model;
   }
-
 }

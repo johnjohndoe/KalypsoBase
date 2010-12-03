@@ -42,6 +42,8 @@ package org.kalypso.zml.ui.table.commands;
 
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.expressions.IEvaluationContext;
+import org.eclipse.ui.services.IEvaluationService;
+import org.eclipse.ui.services.IServiceLocator;
 import org.kalypso.zml.ui.table.IZmlTableComposite;
 import org.kalypso.zml.ui.table.context.TableSourceProvider;
 
@@ -58,6 +60,20 @@ public final class ZmlHandlerUtil
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
 
+    return getTable( context );
+
+  }
+
+  public static IZmlTableComposite getTable( final IServiceLocator locator )
+  {
+    final IEvaluationService service = (IEvaluationService) locator.getService( IEvaluationService.class );
+    final IEvaluationContext context = service.getCurrentState();
+
+    return getTable( context );
+  }
+
+  public static IZmlTableComposite getTable( final IEvaluationContext context )
+  {
     return (IZmlTableComposite) context.getVariable( TableSourceProvider.ACTIVE_TABLE_NAME );
   }
 

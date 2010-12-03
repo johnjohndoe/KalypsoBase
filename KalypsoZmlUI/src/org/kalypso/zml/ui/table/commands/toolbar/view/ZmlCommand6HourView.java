@@ -49,6 +49,7 @@ import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
  */
 public class ZmlCommand6HourView extends AbstractHourViewCommand
 {
+  private static final int RESULUTION = 6;
 
   /**
    * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
@@ -57,9 +58,23 @@ public class ZmlCommand6HourView extends AbstractHourViewCommand
   public Object execute( final ExecutionEvent event )
   {
     if( HandlerUtils.isSelected( event ) )
-      return updateResulution( event, 6, false );
+      return updateResulution( event, RESULUTION, false );
 
     return Status.OK_STATUS;
+  }
+
+  /**
+   * @see org.kalypso.zml.ui.table.commands.toolbar.view.AbstractHourViewCommand#isActive(org.kalypso.zml.ui.table.commands.toolbar.view.ZmlViewResolutionFilter)
+   */
+  @Override
+  protected boolean isActive( final ZmlViewResolutionFilter filter )
+  {
+    if( RESULUTION != filter.getResulution() )
+      return false;
+    if( filter.isStuetzstellenMode() )
+      return false;
+
+    return true;
   }
 
 }

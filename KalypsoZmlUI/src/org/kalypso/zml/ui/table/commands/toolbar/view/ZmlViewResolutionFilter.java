@@ -178,4 +178,13 @@ public class ZmlViewResolutionFilter extends ViewerFilter
     m_stuetzstellenMode = mode;
   }
 
+  public int getResulution( )
+  {
+    return m_resolution;
+  }
+
+  public boolean isStuetzstellenMode( )
+  {
+    return m_stuetzstellenMode;
+  }
 }
