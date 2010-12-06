@@ -40,15 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gmlschema;
 
-import java.io.File;
-import java.io.IOException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.Date;
 
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.core.runtime.IPath;
-import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.commons.java.net.UrlUtilities;
 import org.kalypso.gmlschema.i18n.Messages;
 import org.shiftone.cache.Cache;
 import org.shiftone.cache.policy.lfu.LfuCacheFactory;
@@ -134,7 +130,7 @@ public class GMLSchemaCache
       if( doCheckModified )
       {
         Debug.CATALOG.printf( "Check for modification of: %s%n", schemaURL ); //$NON-NLS-1$
-        validity = lastModified( schemaURL );
+        validity = UrlUtilities.lastModified( schemaURL );
         sw.setLastModifiedCheck( currentMillis );
       }
       else
@@ -153,43 +149,12 @@ public class GMLSchemaCache
     }
 
     final GMLSchema schema = GMLSchemaFactory.createGMLSchema( gmlVersion, schemaURL );
-    final Date validity = lastModified( schemaURL );
+    final Date validity = UrlUtilities.lastModified( schemaURL );
     m_memCache.addObject( publicId, new GMLSchemaWrapper( schema, validity, currentMillis ) );
 
     Debug.CATALOG.printf( "Schema successfully looked-up: %s%n%n", namespace ); //$NON-NLS-1$
     return schema;
 
-  }
-
-  private Date lastModified( final URL schemaURL )
-  {
-    if( schemaURL == null )
-      return null;
-
-    try
-    {
-      final URLConnection connection = schemaURL.openConnection();
-      connection.connect();
-
-      final long lastModified = connection.getLastModified();
-      // BUGFIX: some URLConnection implementations (such as eclipse resource-protokoll)
-      // do not return lastModified correctly. If we have such a case, we try some more...
-      if( lastModified != 0 )
-        return new Date( lastModified );
-
-      final IPath path = ResourceUtilities.findPathFromURL( schemaURL );
-      if( path == null )
-        return null;
-
-      final File file = ResourceUtilities.makeFileFromPath( path );
-      return new Date( file.lastModified() );
-    }
-    catch( final IOException e )
-    {
-      // ignore, some resources cannot be checked at all
-    }
-
-    return null;
   }
 
   private static class GMLSchemaWrapper
