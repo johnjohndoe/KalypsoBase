@@ -40,8 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.binding;
 
-import jregex.Pattern;
-import jregex.RETokenizer;
+import java.math.BigDecimal;
 
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.ogc.sensor.IAxis;
@@ -51,7 +50,6 @@ import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.zml.ui.table.model.IZmlModelColumn;
 import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
 import org.kalypso.zml.ui.table.schema.RuleInstruction;
-import org.kalypso.zml.ui.table.schema.RuleInstructionOperator;
 import org.kalypso.zml.ui.table.schema.StyleReferenceType;
 
 /**
@@ -68,66 +66,86 @@ public class ZmlRuleInstruction
     m_type = type;
   }
 
-  public MetadataBoundary matches( final IZmlValueReference reference ) throws SensorException
+  public boolean matches( final IZmlValueReference reference ) throws SensorException
   {
     final IZmlModelColumn column = reference.getColumn();
 
     final MetadataList metadata = column.getMetadata();
     final IAxis valueAxis = column.getValueAxis();
-    final Number value = (Number) reference.getValue();
-    if( metadata == null || valueAxis == null || value == null )
-      return null;
+    final Object refValue = reference.getValue();
+    if( metadata == null || valueAxis == null || !(refValue instanceof Number) )
+      return false;
 
-    final String[] keys = MetadataBoundary.findBoundaryKeys( metadata, m_type.getMetadataKey(), valueAxis.getType() );
+    final String keyFrom = m_type.getFrom();
+    final String keyTo = m_type.getTo();
+    final String opFrom =m_type.getOpFrom();
+    final String opTo = m_type.getOpTo();
 
-    final MetadataBoundary[] boundaries = MetadataBoundary.getBoundaries( metadata, keys );
-    for( final MetadataBoundary boundary : boundaries )
-    {
-      if( matches( boundary, value ) )
-        return boundary;
-    }
+    final MetadataBoundary metaFrom = MetadataBoundary.getBoundary( metadata, keyFrom, new BigDecimal( -Double.MAX_VALUE ) );
+    final MetadataBoundary metaTo = MetadataBoundary.getBoundary( metadata, keyTo, new BigDecimal( -Double.MIN_VALUE ) );
 
-    return null;
+    /* If defined but not satisfied, do not apply this rule. */
+    if( keyFrom != null && metaFrom == null )
+      return false;
+    if( keyTo != null && metaTo == null )
+      return false;
+
+    final Object valueObject = reference.getValue();
+    if( !(valueObject instanceof Number) )
+      return false;
+
+    final double value = ((Number) valueObject).doubleValue();
+
+    // FIXME: get the scale from the axis and/or table column definition
+    final int scale = 3;
+    final BigDecimal valueDecimal = new BigDecimal( value ).setScale( scale, BigDecimal.ROUND_HALF_UP );
+
+    if( !compareMeta( metaFrom, valueDecimal, opFrom ) )
+      return false;
+    if( !compareMeta( metaTo, valueDecimal, opTo ) )
+      return false;
+
+    return true;
   }
 
-  private boolean matches( final MetadataBoundary metadataBoundary, final Number value )
+  private boolean compareMeta( final MetadataBoundary meta, final BigDecimal value, final String op )
   {
-    final double source = value.doubleValue();
-    final double boundary = metadataBoundary.getValue();
+    if( meta == null )
+      return true;
 
-    final RuleInstructionOperator operator = m_type.getOperator();
-    if( RuleInstructionOperator.SMALLER.equals( operator ) )
+    final BigDecimal compareValue = meta.getValue();
+
+    if( "<".equals( op ) )
     {
-      return source < boundary;
+      if( value.compareTo( compareValue ) < 0 )
+        return true;
     }
-    else if( RuleInstructionOperator.SMALLER_EQUAL.equals( operator ) )
+
+    if( "<=".equals( op ) )
     {
-      return source <= boundary;
+      if( value.compareTo( compareValue ) <= 0 )
+        return true;
     }
-    else if( RuleInstructionOperator.EQUAL.equals( operator ) )
+
+    if( ">".equals( op ) )
     {
-      return source == boundary;
+      if( value.compareTo( compareValue ) > 0 )
+        return true;
     }
-    else if( RuleInstructionOperator.GREATER.equals( operator ) )
+
+    if( ">=".equals( op ) )
     {
-      return source > boundary;
-    }
-    else if( RuleInstructionOperator.GREATER_EQUAL.equals( operator ) )
-    {
-      return source >= boundary;
+      if( value.compareTo( compareValue ) >= 0 )
+        return true;
     }
 
     return false;
   }
 
-  public String update( final MetadataBoundary boundary, final String text )
+  public String update( final String text )
   {
-    final RETokenizer tokenizer = new RETokenizer( new Pattern( m_type.getLabelTokenizer() ), boundary.getType() );
-    final String value = tokenizer.nextToken();
-
-    final String instruction = String.format( m_type.getLabel(), value );
-
-    return String.format( "%s   %s", instruction, text );
+    final String label = m_type.getLabel();
+    return label.replace( "${text}", text );
   }
 
   public CellStyle getStyle( ) throws CoreException

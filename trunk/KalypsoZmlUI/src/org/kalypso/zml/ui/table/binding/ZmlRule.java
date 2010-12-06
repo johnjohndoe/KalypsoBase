@@ -99,7 +99,7 @@ public class ZmlRule
     {
       try
       {
-        if( instruction.matches( reference ) != null )
+        if( instruction.matches( reference ) )
         {
           final CellStyle style = instruction.getStyle();
           if( style != null )

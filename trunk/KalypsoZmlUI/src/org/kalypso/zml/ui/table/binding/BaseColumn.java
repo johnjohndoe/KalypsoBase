@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.binding;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -132,7 +133,10 @@ public class BaseColumn
     {
       try
       {
-        final ZmlRule rule = resolver.findRule( referenceType );
+        // FIXME: use the locatino of the current xml document (where referenceType was defined) as context
+        // in order to support relative url's.
+        final URL context = null;
+        final ZmlRule rule = resolver.findRule( context, referenceType );
         if( rule != null )
           rules.add( rule );
       }

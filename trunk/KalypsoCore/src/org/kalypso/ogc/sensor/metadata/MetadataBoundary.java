@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.metadata;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -57,13 +58,13 @@ public final class MetadataBoundary implements IMetadataBoundary
 {
   private final String m_type;
 
-  private final double m_value;
+  private final BigDecimal m_value;
 
   /**
    * @param type
    *          type of the boundary (alarmstufe 3b, niedrigwasser, hochwasser, aso.)
    */
-  public MetadataBoundary( final String type, final double value )
+  public MetadataBoundary( final String type, final BigDecimal value )
   {
     m_type = type;
     m_value = value;
@@ -76,7 +77,7 @@ public final class MetadataBoundary implements IMetadataBoundary
   }
 
   @Override
-  public double getValue( )
+  public BigDecimal getValue( )
   {
     return m_value;
   }
@@ -139,15 +140,34 @@ public final class MetadataBoundary implements IMetadataBoundary
 
     for( final String key : keys )
     {
-      final Object property = metadata.get( key );
-      if( property instanceof String )
-      {
-        final double value = NumberUtils.parseDouble( (String) property );
-        boundaries.add( new MetadataBoundary( key, value ) );
-      }
+      final MetadataBoundary mb = getBoundary( metadata, key, null );
+      if( mb != null )
+        boundaries.add( mb );
     }
 
     return boundaries.toArray( new MetadataBoundary[] {} );
   }
 
+  /**
+   * Gets a {@link MetadataBoundary} from the metadata.
+   * 
+   * @param defaultValue
+   *          Used, if the property is defined but cannot be parsed.
+   * @return <code>null</code>, if the either the key is <code>null</code> or the property is not defined.
+   */
+  public static MetadataBoundary getBoundary( final MetadataList metadata, final String key, final BigDecimal defaultValue )
+  {
+    if( key == null )
+      return null;
+
+    final String property = metadata.getProperty( key );
+    if( property == null )
+      return null;
+
+    final BigDecimal value = NumberUtils.parseQuietDecimal( property );
+    if( value == null )
+      return new MetadataBoundary( property, defaultValue );
+
+    return new MetadataBoundary( key, value );
+  }
 }

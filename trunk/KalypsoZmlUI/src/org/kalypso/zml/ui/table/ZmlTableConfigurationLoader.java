@@ -48,6 +48,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
 import org.kalypso.commons.bind.JaxbUtilities;
+import org.kalypso.zml.ui.table.schema.ObjectFactory;
 import org.kalypso.zml.ui.table.schema.ZmlTableType;
 
 /**
@@ -57,7 +58,9 @@ public class ZmlTableConfigurationLoader
 {
   private final URL m_url;
 
-  public static final JAXBContext JC = JaxbUtilities.createQuiet( org.kalypso.zml.ui.table.schema.ObjectFactory.class );
+  public static final JAXBContext JC = JaxbUtilities.createQuiet( ObjectFactory.class );
+
+  public static final ObjectFactory OF = new ObjectFactory();
 
   private ZmlTableType m_tableType;
 

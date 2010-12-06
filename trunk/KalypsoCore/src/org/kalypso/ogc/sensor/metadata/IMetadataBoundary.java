@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.metadata;
 
+import java.math.BigDecimal;
+
 /**
  * @author Dirk Kuch
  */
@@ -47,5 +49,5 @@ public interface IMetadataBoundary extends IMetadataConstants
 {
   String getType( );
 
-  double getValue( );
+  BigDecimal getValue( );
 }

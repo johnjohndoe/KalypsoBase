@@ -93,37 +93,45 @@ public final class ZmlStyleResolver
   {
     try
     {
+      if( reference == null )
+      {
+        /* If no reference is given, we assume the empty style */
+        final CellStyleType emptyStyle = ZmlTableConfigurationLoader.OF.createCellStyleType();
+        /* Set mandatory id, else we get NPEs */
+        emptyStyle.setId( "emptyStyle" );
+        return new CellStyle( emptyStyle );
+      }
+
       final Object ref = reference.getReference();
       if( ref instanceof CellStyleType )
         return new CellStyle( (CellStyleType) ref );
 
       final String url = reference.getUrl();
-      if( url != null )
-      {
-        final CellStyle cached = m_styleCache.get( url );
-        if( cached != null )
-          return cached;
+      if( url == null )
+        throw new IllegalStateException();
 
-        final String plainUrl = getUrl( url );
-        final String identifier = getAnchor( url );
+      final CellStyle cached = m_styleCache.get( url );
+      if( cached != null )
+        return cached;
 
-        CellStyle style;
-        if( plainUrl.startsWith( "urn:" ) )
+      final String plainUrl = getUrl( url );
+      final String identifier = getAnchor( url );
 
-          style = findUrnStyle( plainUrl, identifier );
-        else
-          style = findUrlStyle( plainUrl, identifier );
+      CellStyle style;
+      if( plainUrl.startsWith( "urn:" ) )
 
-        m_styleCache.put( url, style );
+        style = findUrnStyle( plainUrl, identifier );
+      else
+        style = findUrlStyle( plainUrl, identifier );
 
-        return style;
-      }
+      m_styleCache.put( url, style );
+
+      return style;
     }
     catch( final Throwable t )
     {
       throw new CoreException( StatusUtilities.createExceptionalErrorStatus( "Resolving style failed", t ) );
     }
-    throw new IllegalStateException();
   }
 
   private CellStyle findUrlStyle( final String uri, final String identifier ) throws MalformedURLException, JAXBException

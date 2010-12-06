@@ -46,9 +46,11 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
-import org.kalypso.zml.ui.table.rules.impl.ZmlRuleDisplayAlarmstufen;
+import org.kalypso.zml.ui.table.rules.impl.ZmlRuleGrenzwerte;
 
 /**
+ * FIXME: use id of rule-set to enable/disable. DO NOT use static enablement/diablement!
+ * 
  * @author Dirk Kuch
  */
 public class ZmlCommandAlarmstufenViewMode extends AbstractHandler
@@ -62,11 +64,11 @@ public class ZmlCommandAlarmstufenViewMode extends AbstractHandler
   {
     if( HandlerUtils.isSelected( event ) )
     {
-      ZmlRuleDisplayAlarmstufen.enable();
+      ZmlRuleGrenzwerte.enable();
     }
     else
     {
-      ZmlRuleDisplayAlarmstufen.disable();
+      ZmlRuleGrenzwerte.disable();
     }
 
     final IZmlTable table = ZmlHandlerUtil.getTable( event );

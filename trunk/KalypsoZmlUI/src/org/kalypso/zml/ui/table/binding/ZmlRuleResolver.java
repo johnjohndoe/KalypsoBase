@@ -89,7 +89,7 @@ public final class ZmlRuleResolver
     return INSTANCE;
   }
 
-  public ZmlRule findRule( final RuleRefernceType reference ) throws CoreException
+  public ZmlRule findRule( final URL context, final RuleRefernceType reference ) throws CoreException
   {
     try
     {
@@ -100,7 +100,7 @@ public final class ZmlRuleResolver
       final String url = reference.getUrl();
       if( url != null )
       {
-        final ZmlRule cached = m_ruleCache.get( url );
+        final ZmlRule cached = getCachedRule( url );
         if( cached != null )
           return cached;
 
@@ -109,9 +109,9 @@ public final class ZmlRuleResolver
 
         ZmlRule rule;
         if( plainUrl.startsWith( "urn:" ) )
-          rule = findUrnRule( plainUrl, identifier );
+          rule = findUrnRule( context, plainUrl, identifier );
         else
-          rule = findUrlRule( plainUrl, identifier );
+          rule = findUrlRule( context, plainUrl, identifier );
 
         m_ruleCache.put( url, rule );
 
@@ -125,14 +125,21 @@ public final class ZmlRuleResolver
     throw new IllegalStateException();
   }
 
-  private ZmlRule findUrlRule( final String uri, final String identifier ) throws MalformedURLException, JAXBException
+  private ZmlRule getCachedRule( final String url )
   {
-    RuleSetType ruleSet = m_ruleSetCache.get( uri );
+    // FIXME: we should consider a timeout based on the modification timestamp of the underlying resource here
+    // Else, the referenced resource will never be loaded again, even if it has changed meanwhile
+    return m_ruleCache.get( url );
+  }
+
+  private ZmlRule findUrlRule( final URL context, final String uri, final String identifier ) throws MalformedURLException, JAXBException
+  {
+    final URL absoluteUri = new URL( context, uri );
+
+    RuleSetType ruleSet = m_ruleSetCache.get( absoluteUri );
     if( ruleSet == null )
     {
-      final URL url = new URL( uri );
-
-      final ZmlTableConfigurationLoader loader = new ZmlTableConfigurationLoader( url );
+      final ZmlTableConfigurationLoader loader = new ZmlTableConfigurationLoader( absoluteUri );
       final ZmlTableType tableType = loader.getTableType();
 
       ruleSet = tableType.getRuleSet();
@@ -151,12 +158,12 @@ public final class ZmlRuleResolver
     return null;
   }
 
-  private ZmlRule findUrnRule( final String urn, final String identifier ) throws MalformedURLException, JAXBException
+  private ZmlRule findUrnRule( final URL context, final String urn, final String identifier ) throws MalformedURLException, JAXBException
   {
     final ICatalog baseCatalog = KalypsoCorePlugin.getDefault().getCatalogManager().getBaseCatalog();
     final String uri = baseCatalog.resolve( urn, urn );
 
-    return findUrlRule( uri, identifier );
+    return findUrlRule( context, uri, identifier );
   }
 
   private String getUrl( final String url )

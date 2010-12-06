@@ -42,7 +42,6 @@ package org.kalypso.zml.ui.table.rules.impl;
 
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.metadata.MetadataBoundary;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.binding.ZmlRule;
 import org.kalypso.zml.ui.table.binding.ZmlRuleInstruction;
@@ -51,9 +50,9 @@ import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
 /**
  * @author Dirk Kuch
  */
-public class ZmlRuleDisplayAlarmstufen extends AbstractZmlTableRule
+public class ZmlRuleGrenzwerte extends AbstractZmlTableRule
 {
-  public static final String ID = "org.kalypso.zml.ui.table.rule.display.alarmstufen";
+  public static final String ID = "org.kalypso.zml.ui.table.rule.grenzwerte";
 
   private static Boolean ENABLED = Boolean.FALSE;
 
@@ -81,7 +80,7 @@ public class ZmlRuleDisplayAlarmstufen extends AbstractZmlTableRule
     {
       try
       {
-        if( instruction.matches( reference ) != null )
+        if( instruction.matches( reference ) )
           return true;
       }
       catch( final SensorException e )
@@ -112,9 +111,8 @@ public class ZmlRuleDisplayAlarmstufen extends AbstractZmlTableRule
     final ZmlRuleInstruction[] instructions = rule.getInstructions();
     for( final ZmlRuleInstruction instruction : instructions )
     {
-      final MetadataBoundary boundary = instruction.matches( reference );
-      if( boundary != null )
-        return instruction.update( boundary, text );
+      if( instruction.matches( reference ) )
+        return instruction.update( text );
     }
 
     return text;
