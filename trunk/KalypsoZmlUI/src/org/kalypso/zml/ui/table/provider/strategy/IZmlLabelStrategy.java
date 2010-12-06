@@ -42,13 +42,12 @@ package org.kalypso.zml.ui.table.provider.strategy;
 
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.zml.ui.table.model.IZmlModelRow;
 
 /**
  * @author Dirk Kuch
  */
 public interface IZmlLabelStrategy
 {
-
-  String getText( ) throws SensorException, CoreException;
-
+  String getText( final IZmlModelRow row ) throws SensorException, CoreException;
 }

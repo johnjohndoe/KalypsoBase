@@ -41,12 +41,13 @@
 package org.kalypso.zml.ui.table.viewmodel;
 
 import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlTableCell implements IZmlTableCell
+public class ZmlTableCell extends ZmlTableElement implements IZmlTableCell
 {
   private final IZmlTableColumn m_column;
 
@@ -54,6 +55,8 @@ public class ZmlTableCell implements IZmlTableCell
 
   public ZmlTableCell( final IZmlTableColumn column, final IZmlTableRow row )
   {
+    super( column.getTable() );
+
     m_column = column;
     m_row = row;
   }
@@ -122,4 +125,19 @@ public class ZmlTableCell implements IZmlTableCell
     return m_row.getIndex();
   }
 
+  /**
+   * @see org.kalypso.zml.ui.table.viewmodel.IZmlTableCell#findPreviousCell()
+   */
+  @Override
+  public IZmlTableCell findPreviousCell( )
+  {
+    final int index = getIndex();
+    if( index == 0 )
+      return null;
+
+    final IZmlTable table = getTable();
+    final IZmlTableRow previousRow = table.getRow( index - 1 );
+
+    return new ZmlTableCell( m_column, previousRow );
+  }
 }

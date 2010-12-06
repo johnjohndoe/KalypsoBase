@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
@@ -64,6 +65,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
@@ -77,6 +79,7 @@ import org.kalypso.zml.ui.table.menu.ZmlTableContextMenuListener;
 import org.kalypso.zml.ui.table.menu.ZmlTableHeaderContextMenuListener;
 import org.kalypso.zml.ui.table.model.IZmlDataModel;
 import org.kalypso.zml.ui.table.model.IZmlModelColumn;
+import org.kalypso.zml.ui.table.model.IZmlModelRow;
 import org.kalypso.zml.ui.table.provider.IZmlColumnModelListener;
 import org.kalypso.zml.ui.table.provider.ZmlLabelProvider;
 import org.kalypso.zml.ui.table.provider.ZmlTableContentProvider;
@@ -89,11 +92,12 @@ import org.kalypso.zml.ui.table.viewmodel.IZmlTableCell;
 import org.kalypso.zml.ui.table.viewmodel.IZmlTableColumn;
 import org.kalypso.zml.ui.table.viewmodel.IZmlTableRow;
 import org.kalypso.zml.ui.table.viewmodel.ZmlTableColumn;
+import org.kalypso.zml.ui.table.viewmodel.ZmlTableRow;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlTableComposite extends Composite implements IZmlColumnModelListener, IZmlTableComposite
+public class ZmlTableComposite extends Composite implements IZmlColumnModelListener, IZmlTable
 {
   private TableViewer m_tableViewer;
 
@@ -108,6 +112,8 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
   private Menu m_menu;
 
   private final Set<IZmlTableListener> m_listeners = new LinkedHashSet<IZmlTableListener>();
+
+  private ZmlViewResolutionFilter m_filter;
 
   public ZmlTableComposite( final IZmlDataModel model, final Composite parent, final FormToolkit toolkit )
   {
@@ -182,8 +188,8 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
 
   private void addBasicFilters( )
   {
-    final ZmlViewResolutionFilter filter = new ZmlViewResolutionFilter( this );
-    m_tableViewer.addFilter( filter );
+    m_filter = new ZmlViewResolutionFilter( this );
+    m_tableViewer.addFilter( m_filter );
   }
 
   private void initToolbar( final ZmlTableType tableType, final Composite composite, final FormToolkit toolkit )
@@ -431,5 +437,62 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
   public void removeListener( final IZmlTableListener listener )
   {
     m_listeners.remove( listener );
+  }
+
+  /**
+   * @see org.kalypso.zml.ui.table.IZmlTableComposite#getResoltion()
+   */
+  @Override
+  public int getResolution( )
+  {
+    return m_filter.getResolution();
+  }
+
+  /**
+   * @see org.kalypso.zml.ui.table.IZmlTable#findColumn(org.kalypso.zml.ui.table.binding.BaseColumn)
+   */
+  @Override
+  public IZmlTableColumn findColumn( final BaseColumn column )
+  {
+    final IZmlTableColumn[] tableColumns = getColumns();
+    for( final IZmlTableColumn tableColumn : tableColumns )
+    {
+      if( tableColumn.getColumnType().equals( column ) )
+        return tableColumn;
+    }
+
+    return null;
+  }
+
+  /**
+   * @see org.kalypso.zml.ui.table.IZmlTable#getRows()
+   */
+  @Override
+  public IZmlTableRow[] getRows( )
+  {
+    final List<IZmlTableRow> rows = new ArrayList<IZmlTableRow>();
+
+    final Table table = m_tableViewer.getTable();
+    final TableItem[] items = table.getItems();
+    for( final TableItem item : items )
+    {
+      final IZmlModelRow row = (IZmlModelRow) item.getData();
+      rows.add( new ZmlTableRow( this, row ) );
+    }
+
+    return rows.toArray( new IZmlTableRow[] {} );
+  }
+
+  /**
+   * @see org.kalypso.zml.ui.table.IZmlTable#getRow(int)
+   */
+  @Override
+  public IZmlTableRow getRow( final int index )
+  {
+    final IZmlTableRow[] rows = getRows();
+    if( index < rows.length )
+      return rows[index];
+
+    return null;
   }
 }

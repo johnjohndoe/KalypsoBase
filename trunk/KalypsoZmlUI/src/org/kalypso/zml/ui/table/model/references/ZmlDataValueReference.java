@@ -44,7 +44,6 @@ import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
-import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHandler;
 import org.kalypso.zml.ui.table.binding.DataColumn;
@@ -82,22 +81,13 @@ public class ZmlDataValueReference implements IZmlValueReference
   @Override
   public Object getValue( ) throws SensorException
   {
-    return m_column.get( m_tupleModelIndex, getValueAxis() );
+    return m_column.get( m_tupleModelIndex, m_column.getValueAxis() );
   }
 
   @Override
   public void update( final Object value ) throws SensorException
   {
     m_column.update( m_tupleModelIndex, value );
-  }
-
-  @Override
-  public IAxis getValueAxis( )
-  {
-    final DataColumn type = m_column.getDataColumn();
-    final IAxis[] axes = m_column.getAxes();
-
-    return AxisUtils.findAxis( axes, type.getValueAxis() );
   }
 
   public String getIdentifier( )
@@ -108,41 +98,15 @@ public class ZmlDataValueReference implements IZmlValueReference
   @Override
   public Integer getStatus( ) throws SensorException
   {
-    final IAxis valueAxis = getValueAxis();
-    if( valueAxis == null )
+    final IAxis axis = m_column.getStatusAxis();
+    if( axis == null )
       return null;
-
-    final IAxis axis = KalypsoStatusUtils.findStatusAxisFor( m_column.getAxes(), valueAxis );
 
     final Object value = m_column.get( m_tupleModelIndex, axis );
     if( value instanceof Number )
       return ((Number) value).intValue();
 
     return null;
-  }
-
-  @Override
-  public MetadataList getMetadata( )
-  {
-    return m_column.getMetadata();
-  }
-
-  /**
-   * @see org.kalypso.zml.ui.table.provider.IZmlValueReference#isMetadataSource()
-   */
-  @Override
-  public boolean isMetadataSource( )
-  {
-    return m_column.isMetadataSource();
-  }
-
-  /**
-   * @see org.kalypso.zml.ui.table.model.references.IZmlValueReference#getBaseColumn()
-   */
-  @Override
-  public DataColumn getBaseColumn( )
-  {
-    return m_column.getDataColumn();
   }
 
   /**

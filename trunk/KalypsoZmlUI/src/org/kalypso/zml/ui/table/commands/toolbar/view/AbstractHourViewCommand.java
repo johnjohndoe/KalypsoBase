@@ -51,7 +51,7 @@ import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.ui.commands.IElementUpdater;
 import org.eclipse.ui.menus.UIElement;
 import org.eclipse.ui.services.IServiceLocator;
-import org.kalypso.zml.ui.table.IZmlTableComposite;
+import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
 
 /**
@@ -62,7 +62,7 @@ public abstract class AbstractHourViewCommand extends AbstractHandler implements
 
   protected IStatus updateResulution( final ExecutionEvent event, final int resultion, final boolean mode )
   {
-    final IZmlTableComposite table = ZmlHandlerUtil.getTable( event );
+    final IZmlTable table = ZmlHandlerUtil.getTable( event );
 
     final ZmlViewResolutionFilter filter = resolveFilter( table );
     filter.setParameters( resultion, mode );
@@ -74,7 +74,7 @@ public abstract class AbstractHourViewCommand extends AbstractHandler implements
 
   protected IStatus updateOffset( final ExecutionEvent event, final int number )
   {
-    final IZmlTableComposite table = ZmlHandlerUtil.getTable( event );
+    final IZmlTable table = ZmlHandlerUtil.getTable( event );
 
     final ZmlViewResolutionFilter filter = resolveFilter( table );
     filter.add2Offset( number );
@@ -84,7 +84,7 @@ public abstract class AbstractHourViewCommand extends AbstractHandler implements
     return Status.OK_STATUS;
   }
 
-  public static ZmlViewResolutionFilter resolveFilter( final IZmlTableComposite table )
+  public static ZmlViewResolutionFilter resolveFilter( final IZmlTable table )
   {
     final TableViewer viewer = table.getTableViewer();
     final ViewerFilter[] filters = viewer.getFilters();
@@ -103,7 +103,7 @@ public abstract class AbstractHourViewCommand extends AbstractHandler implements
   public void updateElement( final UIElement element, final Map parameters )
   {
     final IServiceLocator locator = element.getServiceLocator();
-    final IZmlTableComposite table = ZmlHandlerUtil.getTable( locator );
+    final IZmlTable table = ZmlHandlerUtil.getTable( locator );
 
     if( table != null )
     {

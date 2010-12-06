@@ -58,6 +58,7 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.binding.BaseColumn;
 import org.kalypso.zml.ui.table.binding.CellStyle;
+import org.kalypso.zml.ui.table.model.IZmlModelColumn;
 import org.kalypso.zml.ui.table.model.IZmlModelRow;
 import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
 
@@ -181,7 +182,9 @@ public class ZmlEditingSupport extends EditingSupport
   {
     Assert.isTrue( value instanceof String );
 
-    final IAxis axis = reference.getValueAxis();
+    final IZmlModelColumn column = reference.getColumn();
+    final IAxis axis = column.getValueAxis();
+
     final Class< ? > clazz = axis.getDataClass();
 
     if( Double.class == clazz )

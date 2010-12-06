@@ -70,7 +70,7 @@ public class ZmlCommandViewAll extends AbstractHourViewCommand
   @Override
   protected boolean isActive( final ZmlViewResolutionFilter filter )
   {
-    if( RESULUTION != filter.getResulution() )
+    if( RESULUTION != filter.getResolution() )
       return false;
     if( filter.isStuetzstellenMode() )
       return false;

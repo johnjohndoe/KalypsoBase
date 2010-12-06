@@ -41,12 +41,7 @@
 package org.kalypso.zml.ui.table.model.references;
 
 import org.apache.commons.lang.NotImplementedException;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
-import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.binding.BaseColumn;
 import org.kalypso.zml.ui.table.model.IZmlDataModel;
 import org.kalypso.zml.ui.table.model.IZmlModelColumn;
@@ -85,38 +80,29 @@ public class ZmlIndexValueReference implements IZmlValueReference
     return KalypsoStati.BIT_OK;
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.provider.IZmlValueReference#getMetadata()
-   */
-  @Override
-  public MetadataList getMetadata( )
-  {
-    final IZmlValueReference[] references = m_row.getReferences();
-
-    for( final IZmlValueReference reference : references )
-    {
-      try
-      {
-        if( reference.isMetadataSource() && reference.getValue() != null )
-          return reference.getMetadata();
-      }
-      catch( final SensorException e )
-      {
-        KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-      }
-    }
-
-    return new MetadataList();
-  }
-
-  /**
-   * @see org.kalypso.zml.ui.table.provider.IZmlValueReference#getAxis()
-   */
-  @Override
-  public IAxis getValueAxis( )
-  {
-    return null;
-  }
+// /**
+// * @see org.kalypso.zml.ui.table.provider.IZmlValueReference#getMetadata()
+// */
+// @Override
+// public MetadataList getMetadata( )
+// {
+// final IZmlValueReference[] references = m_row.getReferences();
+//
+// for( final IZmlValueReference reference : references )
+// {
+// try
+// {
+// if( reference.isMetadataSource() && reference.getValue() != null )
+// return reference.getMetadata();
+// }
+// catch( final SensorException e )
+// {
+// KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+// }
+// }
+//
+// return new MetadataList();
+// }
 
   /**
    * @see org.kalypso.zml.ui.table.provider.IZmlValueReference#update(java.lang.Object)
@@ -128,30 +114,12 @@ public class ZmlIndexValueReference implements IZmlValueReference
   }
 
   /**
-   * @see org.kalypso.zml.ui.table.provider.IZmlValueReference#isMetadataSource()
-   */
-  @Override
-  public boolean isMetadataSource( )
-  {
-    return true;
-  }
-
-  /**
    * @see org.kalypso.zml.ui.table.model.references.IZmlValueReference#getColumn()
    */
   @Override
   public IZmlModelColumn getColumn( )
   {
     return null;
-  }
-
-  /**
-   * @see org.kalypso.zml.ui.table.model.references.IZmlValueReference#getBaseColumn()
-   */
-  @Override
-  public BaseColumn getBaseColumn( )
-  {
-    return m_column;
   }
 
   /**

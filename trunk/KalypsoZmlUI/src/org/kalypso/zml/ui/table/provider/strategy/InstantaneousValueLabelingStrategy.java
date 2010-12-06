@@ -56,23 +56,24 @@ import org.kalypso.zml.ui.table.rules.IZmlRuleImplementation;
 public class InstantaneousValueLabelingStrategy extends AbstractValueLabelingStrategy
 {
 
-  public InstantaneousValueLabelingStrategy( final ZmlLabelProvider provider, final IZmlModelRow row, final IZmlValueReference reference )
+  public InstantaneousValueLabelingStrategy( final ZmlLabelProvider provider )
   {
-    super( provider, row, reference );
+    super( provider );
   }
 
   /**
    * @see org.kalypso.zml.ui.table.provider.IZmlLabelStrategy#getText()
    */
   @Override
-  public String getText( ) throws SensorException, CoreException
+  public String getText( final IZmlModelRow row ) throws SensorException, CoreException
   {
-    String text = "";
+    final IZmlValueReference reference = getReference( row );
+    if( reference == null )
+      return "";
 
-    final IZmlValueReference reference = getReference();
-    text = format( reference.getValue() );
+    String text = format( row, reference.getValue() );
 
-    final ZmlRule[] rules = findActiveRules();
+    final ZmlRule[] rules = findActiveRules( row );
     for( final ZmlRule rule : rules )
     {
       try
@@ -88,4 +89,5 @@ public class InstantaneousValueLabelingStrategy extends AbstractValueLabelingStr
 
     return text;
   }
+
 }

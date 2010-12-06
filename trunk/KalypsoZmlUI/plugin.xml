@@ -253,7 +253,7 @@
           id="zml.table.shift.command.tester"
           namespace="zml.table.command.shift"
           properties="isActive"
-          type="org.kalypso.zml.ui.table.IZmlTableComposite">
+          type="org.kalypso.zml.ui.table.IZmlTable">
     </propertyTester>
  </extension>
  <extension

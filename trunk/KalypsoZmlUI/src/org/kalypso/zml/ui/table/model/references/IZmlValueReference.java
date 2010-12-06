@@ -40,10 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.model.references;
 
-import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.metadata.MetadataList;
-import org.kalypso.zml.ui.table.binding.BaseColumn;
 import org.kalypso.zml.ui.table.model.IZmlDataModel;
 import org.kalypso.zml.ui.table.model.IZmlModelColumn;
 import org.kalypso.zml.ui.table.model.IZmlModelRow;
@@ -55,22 +52,13 @@ public interface IZmlValueReference
 {
   IZmlDataModel getModel( );
 
-  BaseColumn getBaseColumn( );
-
   IZmlModelColumn getColumn( );
-
-  // TODO reduce to return Metadata (no array)
-  MetadataList getMetadata( );
 
   IZmlModelRow getRow( );
 
   Integer getStatus( ) throws SensorException;
 
   Object getValue( ) throws SensorException;
-
-  IAxis getValueAxis( );
-
-  boolean isMetadataSource( );
 
   void update( Object targetValue ) throws SensorException;
 

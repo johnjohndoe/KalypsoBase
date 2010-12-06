@@ -43,11 +43,13 @@ package org.kalypso.zml.ui.table.viewmodel;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
-import org.kalypso.zml.ui.table.IZmlTableComposite;
+import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.binding.BaseColumn;
 import org.kalypso.zml.ui.table.model.IZmlDataModel;
 import org.kalypso.zml.ui.table.model.IZmlModelColumn;
@@ -56,19 +58,50 @@ import org.kalypso.zml.ui.table.model.IZmlModelRow;
 /**
  * @author Dirk Kuch
  */
-public class ZmlTableColumn implements IZmlTableColumn
+public class ZmlTableColumn extends ZmlTableElement implements IZmlTableColumn
 {
   private final TableViewerColumn m_column;
 
   private final BaseColumn m_type;
 
-  private final IZmlTableComposite m_table;
-
-  public ZmlTableColumn( final IZmlTableComposite table, final TableViewerColumn column, final BaseColumn type )
+  public ZmlTableColumn( final IZmlTable table, final TableViewerColumn column, final BaseColumn type )
   {
-    m_table = table;
+    super( table );
+
     m_column = column;
     m_type = type;
+  }
+
+  /**
+   * @see java.lang.Object#equals(java.lang.Object)
+   */
+  @Override
+  public boolean equals( final Object obj )
+  {
+    if( obj instanceof IZmlTableColumn )
+    {
+      final IZmlTableColumn other = (IZmlTableColumn) obj;
+
+      final EqualsBuilder builder = new EqualsBuilder();
+      builder.append( getColumnType().getIdentifier(), other.getColumnType().getIdentifier() );
+
+      return builder.isEquals();
+    }
+
+    return super.equals( obj );
+  }
+
+  /**
+   * @see java.lang.Object#hashCode()
+   */
+  @Override
+  public int hashCode( )
+  {
+    final HashCodeBuilder builder = new HashCodeBuilder();
+    builder.append( getClass().getName() );
+    builder.append( getColumnType().getIdentifier() );
+
+    return builder.toHashCode();
   }
 
   @Override
@@ -91,7 +124,7 @@ public class ZmlTableColumn implements IZmlTableColumn
   @Override
   public IZmlModelColumn getModelColumn( )
   {
-    final IZmlDataModel model = m_table.getDataModel();
+    final IZmlDataModel model = getTable().getDataModel();
 
     return model.getColumn( m_type.getIdentifier() );
   }
@@ -112,7 +145,7 @@ public class ZmlTableColumn implements IZmlTableColumn
       if( data instanceof IZmlModelRow )
       {
         final IZmlModelRow row = (IZmlModelRow) data;
-        final ZmlTableRow zmlRow = new ZmlTableRow( m_table, row );
+        final ZmlTableRow zmlRow = new ZmlTableRow( getTable(), row );
 
         cells.add( new ZmlTableCell( this, zmlRow ) );
       }
@@ -129,13 +162,22 @@ public class ZmlTableColumn implements IZmlTableColumn
   {
     final List<IZmlTableCell> selected = new ArrayList<IZmlTableCell>();
 
-    final IZmlTableRow[] rows = m_table.getSelectedRows();
+    final IZmlTableRow[] rows = getTable().getSelectedRows();
     for( final IZmlTableRow row : rows )
     {
       selected.add( row.getCell( this ) );
     }
 
     return selected.toArray( new IZmlTableCell[] {} );
+  }
+
+  /**
+   * @see org.kalypso.zml.ui.table.viewmodel.IZmlTableColumn#findCell(org.kalypso.zml.ui.table.model.IZmlModelRow)
+   */
+  @Override
+  public IZmlTableCell findCell( final IZmlModelRow row )
+  {
+    return new ZmlTableCell( this, new ZmlTableRow( getTable(), row ) );
   }
 
 }

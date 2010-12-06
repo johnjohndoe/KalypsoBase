@@ -44,6 +44,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.zml.ui.KalypsoZmlUI;
@@ -70,6 +72,38 @@ public class BaseColumn
   public BaseColumn( final AbstractColumnType type )
   {
     m_type = type;
+  }
+
+  /**
+   * @see java.lang.Object#equals(java.lang.Object)
+   */
+  @Override
+  public boolean equals( final Object obj )
+  {
+    if( obj instanceof BaseColumn )
+    {
+      final BaseColumn other = (BaseColumn) obj;
+
+      final EqualsBuilder builder = new EqualsBuilder();
+      builder.append( getIdentifier(), other.getIdentifier() );
+
+      return builder.isEquals();
+    }
+
+    return super.equals( obj );
+  }
+
+  /**
+   * @see java.lang.Object#hashCode()
+   */
+  @Override
+  public int hashCode( )
+  {
+    final HashCodeBuilder builder = new HashCodeBuilder();
+    builder.append( getClass().getName() );
+    builder.append( getIdentifier() );
+
+    return builder.toHashCode();
   }
 
   public AbstractColumnType getType( )

@@ -55,6 +55,8 @@ public interface IZmlModelColumn
 
   IAxis[] getAxes( );
 
+  IAxis getValueAxis( );
+
   int modelSize( ) throws SensorException;
 
   Object get( int i, IAxis axis ) throws SensorException;
@@ -70,5 +72,7 @@ public interface IZmlModelColumn
   String getLabel( );
 
   IObservation getObservation( );
+
+  IAxis getStatusAxis( );
 
 }

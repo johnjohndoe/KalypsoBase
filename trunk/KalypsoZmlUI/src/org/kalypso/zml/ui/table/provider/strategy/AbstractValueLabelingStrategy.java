@@ -44,35 +44,30 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.eclipse.core.runtime.CoreException;
+import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.binding.CellStyle;
 import org.kalypso.zml.ui.table.binding.ZmlRule;
 import org.kalypso.zml.ui.table.model.IZmlModelRow;
 import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
+import org.kalypso.zml.ui.table.provider.IZmlLabelProvider;
 import org.kalypso.zml.ui.table.provider.RuleMapper;
-import org.kalypso.zml.ui.table.provider.ZmlLabelProvider;
+import org.kalypso.zml.ui.table.viewmodel.IZmlTableColumn;
 
 /**
  * @author Dirk Kuch
  */
 public abstract class AbstractValueLabelingStrategy implements IZmlLabelStrategy
 {
-  private final IZmlValueReference m_reference;
+  private final IZmlLabelProvider m_provider;
 
-  private final ZmlLabelProvider m_provider;
-
-  private final IZmlModelRow m_row;
-
-  public AbstractValueLabelingStrategy( final ZmlLabelProvider provider, final IZmlModelRow row, final IZmlValueReference reference )
+  public AbstractValueLabelingStrategy( final IZmlLabelProvider provider )
   {
     m_provider = provider;
-    m_row = row;
-    m_reference = reference;
-
   }
 
-  protected String format( final Object value ) throws CoreException
+  protected String format( final IZmlModelRow row, final Object value ) throws CoreException
   {
-    final CellStyle style = m_provider.findStyle( m_row );
+    final CellStyle style = m_provider.findStyle( row );
     final String format = style.getTextFormat();
     if( value instanceof Date )
     {
@@ -83,24 +78,31 @@ public abstract class AbstractValueLabelingStrategy implements IZmlLabelStrategy
     return String.format( format == null ? "%s" : format, value );
   }
 
-  protected IZmlValueReference getReference( )
-  {
-    return m_reference;
-  }
-
-  protected IZmlModelRow getRow( )
-  {
-    return m_row;
-  }
-
   private RuleMapper getMapper( )
   {
     return m_provider.getMapper();
   }
 
-  protected ZmlRule[] findActiveRules( )
+  protected ZmlRule[] findActiveRules( final IZmlModelRow row )
   {
-    return getMapper().findActiveRules( m_row, m_provider.getColumn() );
+    return getMapper().findActiveRules( row, m_provider.getColumn() );
   }
 
+  protected IZmlValueReference getReference( final IZmlModelRow row )
+  {
+    return row.get( m_provider.getColumn().getType() );
+  }
+
+  protected IZmlTable getTable( )
+  {
+    return m_provider.getTable();
+  }
+
+  protected IZmlTableColumn getTableColumn( final IZmlModelRow row )
+  {
+    final IZmlTable table = getTable();
+    final IZmlTableColumn column = table.findColumn( m_provider.getColumn() );
+
+    return column;
+  }
 }

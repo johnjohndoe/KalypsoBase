@@ -63,7 +63,7 @@ import org.eclipse.ui.services.IServiceLocator;
 import org.eclipse.ui.services.IServiceWithSources;
 import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
 import org.kalypso.contribs.eclipse.ui.commands.CommandUtilities;
-import org.kalypso.zml.ui.table.IZmlTableComposite;
+import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.IZmlTableListener;
 
 /**
@@ -104,7 +104,7 @@ public class TableSourceProvider extends AbstractSourceProvider
   /** Ensures, that the context are activated in the same order as the themes are activated. */
   private final ISchedulingRule m_mutexRule = new MutexRule();
 
-  private IZmlTableComposite m_table;
+  private IZmlTable m_table;
 
   private final IContextActivation m_tableContext;
 
@@ -114,7 +114,7 @@ public class TableSourceProvider extends AbstractSourceProvider
    * Creates a new {@link ChartSourceProvider} on the given chart.<br>
    * Initializes it state with the given parameters.
    */
-  public TableSourceProvider( final IServiceLocator serviceLocator, final IZmlTableComposite table )
+  public TableSourceProvider( final IServiceLocator serviceLocator, final IZmlTable table )
   {
     m_serviceLocator = serviceLocator;
     m_table = table;

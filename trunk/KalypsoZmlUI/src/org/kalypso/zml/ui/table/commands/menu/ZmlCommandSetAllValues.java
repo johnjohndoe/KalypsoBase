@@ -45,7 +45,7 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.zml.ui.table.IZmlTableComposite;
+import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
 import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
 import org.kalypso.zml.ui.table.viewmodel.IZmlTableCell;
@@ -64,7 +64,7 @@ public class ZmlCommandSetAllValues extends AbstractHandler
   {
     try
     {
-      final IZmlTableComposite table = ZmlHandlerUtil.getTable( event );
+      final IZmlTable table = ZmlHandlerUtil.getTable( event );
       final IZmlTableCell active = table.getActiveCell();
 
       final IZmlValueReference base = active.getValueReference();

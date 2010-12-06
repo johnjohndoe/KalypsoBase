@@ -41,25 +41,26 @@
 package org.kalypso.zml.ui.table.viewmodel;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
-import org.kalypso.zml.ui.table.IZmlTableComposite;
+import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.model.IZmlModelRow;
 import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlTableRow implements IZmlTableRow
+public class ZmlTableRow extends ZmlTableElement implements IZmlTableRow
 {
   private final IZmlModelRow m_row;
 
-  private final IZmlTableComposite m_table;
-
-  public ZmlTableRow( final IZmlTableComposite table, final IZmlModelRow row )
+  public ZmlTableRow( final IZmlTable table, final IZmlModelRow row )
   {
-    m_table = table;
+    super( table );
+
     m_row = row;
   }
 
@@ -70,6 +71,58 @@ public class ZmlTableRow implements IZmlTableRow
   public IZmlValueReference getValueReference( final IZmlTableColumn column )
   {
     return m_row.get( column.getModelColumn() );
+  }
+
+  /**
+   * @see java.lang.Object#equals(java.lang.Object)
+   */
+  @Override
+  public boolean equals( final Object obj )
+  {
+    if( obj instanceof IZmlTableRow )
+    {
+      final IZmlTableRow other = (IZmlTableRow) obj;
+
+      if( getIndex() != other.getIndex() )
+        return false;
+
+      final IZmlTableColumn[] columns = getColumns();
+      final IZmlTableColumn[] otherColumns = other.getColumns();
+
+      if( columns.length != otherColumns.length )
+        return false;
+
+      final EqualsBuilder builder = new EqualsBuilder();
+      for( int i = 0; i < columns.length; i++ )
+      {
+        final IZmlTableColumn column = columns[i];
+        final IZmlTableColumn otherColumn = otherColumns[i];
+
+        builder.append( column.getColumnType().getIdentifier(), otherColumn.getColumnType().getIdentifier() );
+      }
+
+      return builder.isEquals();
+    }
+
+    return super.equals( obj );
+  }
+
+  /**
+   * @see java.lang.Object#hashCode()
+   */
+  @Override
+  public int hashCode( )
+  {
+    final HashCodeBuilder builder = new HashCodeBuilder();
+    builder.append( getIndex() );
+
+    final IZmlTableColumn[] columns = getColumns();
+    for( final IZmlTableColumn column : columns )
+    {
+      builder.append( column.getColumnType().getIdentifier() );
+    }
+
+    return builder.toHashCode();
   }
 
   /**
@@ -87,7 +140,7 @@ public class ZmlTableRow implements IZmlTableRow
   @Override
   public IZmlTableColumn[] getColumns( )
   {
-    return m_table.getColumns();
+    return getTable().getColumns();
   }
 
   /**
@@ -96,7 +149,7 @@ public class ZmlTableRow implements IZmlTableRow
   @Override
   public int getIndex( )
   {
-    final TableViewer viewer = m_table.getTableViewer();
+    final TableViewer viewer = getTable().getTableViewer();
     final Table table = viewer.getTable();
     final TableItem[] items = table.getItems();
     for( final TableItem item : items )

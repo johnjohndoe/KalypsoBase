@@ -187,7 +187,7 @@ public class ZmlViewResolutionFilter extends ViewerFilter
     m_table.fireTableChanged();
   }
 
-  public int getResulution( )
+  public int getResolution( )
   {
     return m_resolution;
   }

@@ -46,6 +46,7 @@ import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
+import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.template.IObsProvider;
 import org.kalypso.ogc.sensor.template.IObsProviderListener;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
@@ -219,5 +220,24 @@ public class ZmlModelColumn implements IZmlModelColumn
   public IObservation getObservation( )
   {
     return m_provider.getObservation();
+  }
+
+  @Override
+  public IAxis getValueAxis( )
+  {
+    return AxisUtils.findAxis( getAxes(), m_type.getValueAxis() );
+  }
+
+  /**
+   * @see org.kalypso.zml.ui.table.model.IZmlModelColumn#getStatusAxis()
+   */
+  @Override
+  public IAxis getStatusAxis( )
+  {
+    final IAxis valueAxis = getValueAxis();
+    if( valueAxis == null )
+      return null;
+
+    return KalypsoStatusUtils.findStatusAxisFor( getAxes(), valueAxis );
   }
 }
