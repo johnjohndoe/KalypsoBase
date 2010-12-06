@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.utils;
+package org.kalypso.zml.ui.table.provider;
 
 import java.util.ArrayList;
 import java.util.List;

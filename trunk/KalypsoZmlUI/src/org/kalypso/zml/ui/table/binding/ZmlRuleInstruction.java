@@ -78,7 +78,7 @@ public class ZmlRuleInstruction
 
     final String keyFrom = m_type.getFrom();
     final String keyTo = m_type.getTo();
-    final String opFrom =m_type.getOpFrom();
+    final String opFrom = m_type.getOpFrom();
     final String opTo = m_type.getOpTo();
 
     final MetadataBoundary metaFrom = MetadataBoundary.getBoundary( metadata, keyFrom, new BigDecimal( -Double.MAX_VALUE ) );

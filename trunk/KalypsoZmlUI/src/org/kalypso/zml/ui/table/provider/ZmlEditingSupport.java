@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.utils;
+package org.kalypso.zml.ui.table.provider;
 
 import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.runtime.Assert;
