@@ -6,7 +6,10 @@
   
   <!-- columns -->
   <element name="Columns" type="zmltable:ColumnsType" />
-  <element name="Column" type="zmltable:AbstractColumnType" /> 
+  <element name="AbstractColumn" type="zmltable:AbstractColumnType" />
+
+  <element name="DataColumn" type="zmltable:DataColumnType" substitutionGroup="zmltable:AbstractColumn" />
+  <element name="IndexColumn" type="zmltable:IndexColumnType" substitutionGroup="zmltable:AbstractColumn" />
   
   <!-- styles -->
   <element name="StyleSet" type="zmltable:StyleSetType" />
@@ -32,7 +35,7 @@
   <!-- column types -->
   <complexType name="ColumnsType">
     <sequence>
-      <element ref="zmltable:Column" minOccurs="0" maxOccurs="unbounded" />
+      <element ref="zmltable:AbstractColumn" minOccurs="0" maxOccurs="unbounded" />
     </sequence>
   </complexType>
 
@@ -49,6 +52,9 @@
     <attribute name="autopack" type="boolean" default="true" />
     <attribute name="editable" type="boolean" default="false" />
   </complexType>
+
+
+
 
   <complexType name="DataColumnType">
     <complexContent>
@@ -201,7 +207,7 @@
       <element name="url" type="anyURI" />
     </choice>
   </complexType>
- 
+
   <simpleType name="RuleInstructionOperator">
     <restriction base="string">
       <enumeration value="SMALLER"></enumeration>

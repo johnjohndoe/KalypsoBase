@@ -43,6 +43,7 @@ package org.kalypso.zml.ui.table.binding;
 import java.util.List;
 import java.util.Map;
 
+import javax.xml.bind.JAXBElement;
 import javax.xml.namespace.QName;
 
 import jregex.Pattern;
@@ -92,9 +93,10 @@ public final class TableTypeHelper
 
   public static AbstractColumnType finColumn( final ZmlTableType tableType, final String identifier )
   {
-    final List<AbstractColumnType> columns = tableType.getColumns().getColumn();
-    for( final AbstractColumnType column : columns )
+    final List<JAXBElement< ? extends AbstractColumnType>> columns = tableType.getColumns().getAbstractColumn();
+    for( final JAXBElement< ? extends AbstractColumnType> columnType : columns )
     {
+      final AbstractColumnType column = columnType.getValue();
       if( column.getId().equals( identifier ) )
         return column;
     }
@@ -141,7 +143,7 @@ public final class TableTypeHelper
 
   public static AbstractColumnType findColumnType( final ZmlTableType tableType, final String identifier )
   {
-    final List<AbstractColumnType> columns = tableType.getColumns().getColumn();
+    final List<JAXBElement< ? extends AbstractColumnType>> columnTypes = tableType.getColumns().getAbstractColumn();
 
     String id = identifier;
 
@@ -153,8 +155,9 @@ public final class TableTypeHelper
       id = tokenizer.nextToken();
     }
 
-    for( final AbstractColumnType column : columns )
+    for( final JAXBElement< ? extends AbstractColumnType> columnType : columnTypes )
     {
+      final AbstractColumnType column = columnType.getValue();
       if( column.getId().equals( id ) )
         return column;
     }
