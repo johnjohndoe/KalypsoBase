@@ -40,9 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.model.references;
 
-import org.apache.commons.lang.NotImplementedException;
-import org.kalypso.ogc.sensor.status.KalypsoStati;
-import org.kalypso.zml.ui.table.binding.BaseColumn;
 import org.kalypso.zml.ui.table.model.IZmlDataModel;
 import org.kalypso.zml.ui.table.model.IZmlModelColumn;
 import org.kalypso.zml.ui.table.model.IZmlModelRow;
@@ -52,65 +49,11 @@ import org.kalypso.zml.ui.table.model.IZmlModelRow;
  */
 public class ZmlIndexValueReference implements IZmlValueReference
 {
-  private final BaseColumn m_column;
-
   private final IZmlModelRow m_row;
 
-  public ZmlIndexValueReference( final IZmlModelRow row, final BaseColumn column )
+  public ZmlIndexValueReference( final IZmlModelRow row )
   {
     m_row = row;
-    m_column = column;
-  }
-
-  /**
-   * @see org.kalypso.zml.ui.table.provider.IZmlValueReference#getValue()
-   */
-  @Override
-  public Object getValue( )
-  {
-    return m_row.getIndexValue();
-  }
-
-  /**
-   * @see org.kalypso.zml.ui.table.provider.IZmlValueReference#getStatus()
-   */
-  @Override
-  public Integer getStatus( )
-  {
-    return KalypsoStati.BIT_OK;
-  }
-
-// /**
-// * @see org.kalypso.zml.ui.table.provider.IZmlValueReference#getMetadata()
-// */
-// @Override
-// public MetadataList getMetadata( )
-// {
-// final IZmlValueReference[] references = m_row.getReferences();
-//
-// for( final IZmlValueReference reference : references )
-// {
-// try
-// {
-// if( reference.isMetadataSource() && reference.getValue() != null )
-// return reference.getMetadata();
-// }
-// catch( final SensorException e )
-// {
-// KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-// }
-// }
-//
-// return new MetadataList();
-// }
-
-  /**
-   * @see org.kalypso.zml.ui.table.provider.IZmlValueReference#update(java.lang.Object)
-   */
-  @Override
-  public void update( final Object targetValue )
-  {
-    throw new NotImplementedException();
   }
 
   /**
@@ -132,15 +75,6 @@ public class ZmlIndexValueReference implements IZmlValueReference
   }
 
   /**
-   * @see org.kalypso.zml.ui.table.model.references.IZmlValueReference#getTupleModelIndex()
-   */
-  @Override
-  public Integer getTupleModelIndex( )
-  {
-    return null;
-  }
-
-  /**
    * @see org.kalypso.zml.ui.table.model.references.IZmlValueReference#getModel()
    */
   @Override
@@ -150,20 +84,56 @@ public class ZmlIndexValueReference implements IZmlValueReference
   }
 
   /**
-   * @see org.kalypso.zml.ui.table.model.references.IZmlValueReference#getDataSource()
+   * @see org.kalypso.zml.ui.table.model.references.IZmlModelCell#getValue()
+   */
+  @Override
+  public Object getValue( )
+  {
+    return getRow().getIndexValue();
+  }
+
+  /**
+   * @see org.kalypso.zml.ui.table.model.references.IZmlModelCell#getDataSource()
    */
   @Override
   public String getDataSource( )
   {
-    return null;
+    throw new UnsupportedOperationException();
   }
 
   /**
-   * @see org.kalypso.zml.ui.table.model.references.IZmlValueReference#getHref()
+   * @see org.kalypso.zml.ui.table.model.references.IZmlModelCell#getHref()
    */
   @Override
   public String getHref( )
   {
-    return null;
+    throw new UnsupportedOperationException();
+  }
+
+  /**
+   * @see org.kalypso.zml.ui.table.model.references.IZmlModelCell#getStatus()
+   */
+  @Override
+  public Integer getStatus( )
+  {
+    throw new UnsupportedOperationException();
+  }
+
+  /**
+   * @see org.kalypso.zml.ui.table.model.references.IZmlModelCell#getTupleModelIndex()
+   */
+  @Override
+  public Integer getTupleModelIndex( )
+  {
+    throw new UnsupportedOperationException();
+  }
+
+  /**
+   * @see org.kalypso.zml.ui.table.model.references.IZmlModelCell#update(java.lang.Object)
+   */
+  @Override
+  public void update( final Object targetValue )
+  {
+    throw new UnsupportedOperationException();
   }
 }

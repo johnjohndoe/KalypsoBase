@@ -83,7 +83,7 @@ public class SumValueLabelingStrategy extends AbstractValueLabelingStrategy impl
 
   private String getAsAggregatedValue( final IZmlModelRow row ) throws CoreException, SensorException
   {
-    final IZmlTableColumn column = getTableColumn( row );
+    final IZmlTableColumn column = getTableColumn();
 
     final IZmlTableCell current = column.findCell( row );
     final IZmlTableCell previous = current.findPreviousCell();
