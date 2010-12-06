@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ZmlTable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="schema.table.ui.zml.kalypso.org" xsi:schemaLocation="schema.table.ui.zml.kalypso.org zmltable.xsd">
+<ZmlTable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="schema.table.ui.zml.kalypso.org" xsi:schemaLocation="schema.table.ui.zml.kalypso.org zmltable.xsd ">
 
   <defaultStyle>
-    <url>urn:org:kalypso:zml:ui:table:global#defaultCellStyle</url>
+    <url>urn:org:kalypso:zml:ui:table:style:base#defaultCellStyle</url>
   </defaultStyle>
 
-  <toolbar>toolbar:org.kalypso.hwv.product.sachsenanhalt.zml.table.menu.toolbar</toolbar>
+  <toolbar>toolbar:org.kalypso.hwv.product.sachsenanhalt.zml.table.menu.toolbar.sum</toolbar>
 
   <Columns>
     <!-- date column -->
-    <Column xsi:type="IndexColumnType" autopack="true" id="date">
+    <IndexColumn autopack="true" id="date">
       <property name="label">Datum</property>
       <property name="alignment">LEFT</property>
 
@@ -20,90 +20,17 @@
       <rule>
         <url>urn:org:kalypso:zml:ui:table:global#ruleForecast</url>
       </rule>
-    </Column>
+    </IndexColumn>
 
 
-    <!-- wasserstand -->
-    <Column xsi:type="DataColumnType" editable="true" id="W" metadataSource="true">
-      <property name="label">Wasserstand</property>
-      <property name="width">150</property>
+    <!-- ombrometer -->
+    <DataColumn editable="true" id="N_OMBROMETER" metadataSource="true">
+      <property name="label">Ombrometer/LM2</property>
+      <property name="width">100</property>
       <property name="alignment">RIGHT</property>
-      <property name="uriContextMenu">menu:org.kalypso.hwv.product.sachsenanhalt.zml.table.menu.cell.ContextMenu</property>
-      <property name="uriHeaderContextMenu">menu:org.kalypso.hwv.product.sachsenanhalt.zml.table.menu.header.ContextMenu</property>
 
       <defaultCellStyle>
-        <url>urn:org:kalypso:zml:ui:table:global#wBaseCellStyle</url>
-      </defaultCellStyle>
-      <defaultCellEditingStyle>
-        <url>urn:org:kalypso:zml:ui:table:global#wBaseEditingCellStyle</url>
-      </defaultCellEditingStyle>
-
-      <rule>
-        <url>urn:org:kalypso:zml:ui:table:global#ruleUserModified</url>
-      </rule>
-      <rule>
-        <url>urn:org:kalypso:zml:ui:table:global#ruleInterpolatedValue</url>
-      </rule>
-      <rule>
-        <url>urn:org:kalypso:zml:ui:table:global#ruleWqConflict</url>
-      </rule>
-      <rule>
-        <url>urn:org:kalypso:zml:ui:table:global#ruleAlarmstufen</url>
-      </rule>
-      <rule>
-        <url>urn:org:kalypso:zml:ui:table:global#ruleHauptzahlen</url>
-      </rule>
-
-      <indexAxis>date</indexAxis>
-      <valueAxis>W</valueAxis>
-    </Column>
-
-    <!-- wasserstand modell zeitreihe -->
-    <Column xsi:type="DataColumnType" editable="true" id="W_MODELL">
-      <property name="label">Wasserstand (Modell)</property>
-      <property name="width">150</property>
-      <property name="alignment">RIGHT</property>
-      <property name="uriContextMenu">menu:org.kalypso.hwv.product.sachsenanhalt.zml.table.menu.cell.ContextMenu</property>
-      <property name="uriHeaderContextMenu">menu:org.kalypso.hwv.product.sachsenanhalt.zml.table.menu.header.ContextMenu</property>
-
-      <defaultCellStyle>
-        <url>urn:org:kalypso:zml:ui:table:global#wBaseCellStyle</url>
-      </defaultCellStyle>
-      <defaultCellEditingStyle>
-        <url>urn:org:kalypso:zml:ui:table:global#wBaseEditingCellStyle</url>
-      </defaultCellEditingStyle>
-
-      <rule>
-        <url>urn:org:kalypso:zml:ui:table:global#ruleUserModified</url>
-      </rule>
-      <rule>
-        <url>urn:org:kalypso:zml:ui:table:global#ruleInterpolatedValue</url>
-      </rule>
-      <rule>
-        <url>urn:org:kalypso:zml:ui:table:global#ruleWqConflict</url>
-      </rule>
-      <rule>
-        <url>urn:org:kalypso:zml:ui:table:global#ruleAlarmstufen</url>
-      </rule>
-      <rule>
-        <url>urn:org:kalypso:zml:ui:table:global#ruleHauptzahlen</url>
-      </rule>
-
-      <indexAxis>date</indexAxis>
-      <valueAxis>W</valueAxis>
-    </Column>
-
-
-    <!-- Abfluss -->
-    <Column xsi:type="DataColumnType" editable="true" id="Q" metadataSource="true">
-      <property name="label">Abfluss</property>
-      <property name="width">150</property>
-      <property name="alignment">RIGHT</property>
-      <property name="uriContextMenu">menu:org.kalypso.hwv.product.sachsenanhalt.zml.table.menu.cell.ContextMenu</property>
-      <property name="uriHeaderContextMenu">menu:org.kalypso.hwv.product.sachsenanhalt.zml.table.menu.header.ContextMenu</property>
-
-      <defaultCellStyle>
-        <url>urn:org:kalypso:zml:ui:table:global#qBaseCellStyle</url>
+        <url>urn:org:kalypso:zml:ui:table:global#nBaseCellStyle</url>
       </defaultCellStyle>
 
       <rule>
@@ -112,30 +39,19 @@
       <rule>
         <url>urn:org:kalypso:zml:ui:table:global#ruleInterpolatedValue</url>
       </rule>
-      <rule>
-        <url>urn:org:kalypso:zml:ui:table:global#ruleWqConflict</url>
-      </rule>
-      <rule>
-        <url>urn:org:kalypso:zml:ui:table:global#ruleAlarmstufen</url>
-      </rule>
-      <rule>
-        <url>urn:org:kalypso:zml:ui:table:global#ruleHauptzahlen</url>
-      </rule>
 
       <indexAxis>date</indexAxis>
-      <valueAxis>Q</valueAxis>
-    </Column>
+      <valueAxis>N</valueAxis>
+    </DataColumn>
 
-    <!-- Abfluss Modell Zeitreihe -->
-    <Column xsi:type="DataColumnType" editable="true" id="Q_MODELL">
-      <property name="label">Abfluss (Modell)</property>
-      <property name="width">150</property>
+    <!-- Radolan -->
+    <DataColumn editable="true" id="N_RADOLAN" metadataSource="true">
+      <property name="label">Radolan/LM2</property>
+      <property name="width">100</property>
       <property name="alignment">RIGHT</property>
-      <property name="uriContextMenu">menu:org.kalypso.hwv.product.sachsenanhalt.zml.table.menu.cell.ContextMenu</property>
-      <property name="uriHeaderContextMenu">menu:org.kalypso.hwv.product.sachsenanhalt.zml.table.menu.header.ContextMenu</property>
 
       <defaultCellStyle>
-        <url>urn:org:kalypso:zml:ui:table:global#qBaseCellStyle</url>
+        <url>urn:org:kalypso:zml:ui:table:global#nBaseCellStyle</url>
       </defaultCellStyle>
 
       <rule>
@@ -144,19 +60,32 @@
       <rule>
         <url>urn:org:kalypso:zml:ui:table:global#ruleInterpolatedValue</url>
       </rule>
+
+      <indexAxis>date</indexAxis>
+      <valueAxis>N</valueAxis>
+    </DataColumn>
+
+
+    <!-- ombrometer -->
+    <DataColumn editable="true" id="N_SNOW" metadataSource="true">
+      <property name="label">SNOW4</property>
+      <property name="width">100</property>
+      <property name="alignment">RIGHT</property>
+
+      <defaultCellStyle>
+        <url>urn:org:kalypso:zml:ui:table:global#nBaseCellStyle</url>
+      </defaultCellStyle>
+
       <rule>
-        <url>urn:org:kalypso:zml:ui:table:global#ruleWqConflict</url>
+        <url>urn:org:kalypso:zml:ui:table:global#ruleUserModified</url>
       </rule>
       <rule>
-        <url>urn:org:kalypso:zml:ui:table:global#ruleAlarmstufen</url>
-      </rule>
-      <rule>
-        <url>urn:org:kalypso:zml:ui:table:global#ruleHauptzahlen</url>
+        <url>urn:org:kalypso:zml:ui:table:global#ruleInterpolatedValue</url>
       </rule>
 
       <indexAxis>date</indexAxis>
-      <valueAxis>Q</valueAxis>
-    </Column>
+      <valueAxis>N</valueAxis>
+    </DataColumn>
 
   </Columns>
 </ZmlTable>

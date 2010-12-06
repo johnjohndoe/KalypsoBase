@@ -47,6 +47,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.xml.bind.JAXBElement;
+
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -137,9 +139,10 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
 
     m_tableViewer.setContentProvider( new ZmlTableContentProvider( m_model ) );
 
-    final List<AbstractColumnType> columns = tableType.getColumns().getColumn();
-    for( final AbstractColumnType column : columns )
+    final List<JAXBElement< ? extends AbstractColumnType>> columnTypes = tableType.getColumns().getAbstractColumn();
+    for( final JAXBElement< ? extends AbstractColumnType> columnType : columnTypes )
     {
+      final AbstractColumnType column = columnType.getValue();
       buildColumnViewer( new BaseColumn( column ) );
     }
 
