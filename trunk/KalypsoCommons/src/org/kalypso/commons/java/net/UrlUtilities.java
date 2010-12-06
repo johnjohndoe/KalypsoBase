@@ -41,15 +41,19 @@
 
 package org.kalypso.commons.java.net;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Date;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
@@ -173,5 +177,43 @@ public class UrlUtilities
     {
       IOUtils.closeQuietly( is );
     }
+  }
+
+  /**
+   * Tires to find a 'lastModified' timestamp from an {@link URL}.
+   */
+  public static Date lastModified( final URL location )
+  {
+    if( location == null )
+      return null;
+
+    try
+    {
+      final URLConnection connection = location.openConnection();
+      connection.connect();
+
+      final long lastModified = connection.getLastModified();
+      // BUGFIX: some URLConnection implementations (such as eclipse resource-protokoll)
+      // do not return lastModified correctly. If we have such a case, we try some more...
+      if( lastModified != 0 )
+        return new Date( lastModified );
+
+      final File file = FileUtils.toFile( location );
+      if( file != null )
+        return new Date( file.lastModified() );
+
+      final IPath path = ResourceUtilities.findPathFromURL( location );
+      if( path == null )
+        return null;
+
+      final File resourceFile = ResourceUtilities.makeFileFromPath( path );
+      return new Date( resourceFile.lastModified() );
+    }
+    catch( final IOException e )
+    {
+      // ignore, some resources cannot be checked at all
+    }
+
+    return null;
   }
 }
