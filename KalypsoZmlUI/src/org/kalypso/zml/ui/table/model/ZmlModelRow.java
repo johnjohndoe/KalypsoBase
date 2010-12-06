@@ -43,7 +43,6 @@ package org.kalypso.zml.ui.table.model;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.kalypso.zml.ui.table.binding.BaseColumn;
 import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
 import org.kalypso.zml.ui.table.model.references.ZmlDataValueReference;
 import org.kalypso.zml.ui.table.model.references.ZmlIndexValueReference;
@@ -78,8 +77,7 @@ public class ZmlModelRow implements IZmlModelRow
   {
     if( type instanceof IndexColumnType )
     {
-
-      return new ZmlIndexValueReference( this, new BaseColumn( type ) );
+      return new ZmlIndexValueReference( this );
     }
 
     return m_references.get( type.getId() );

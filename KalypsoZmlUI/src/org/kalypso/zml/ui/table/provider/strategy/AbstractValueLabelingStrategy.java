@@ -98,7 +98,7 @@ public abstract class AbstractValueLabelingStrategy implements IZmlLabelStrategy
     return m_provider.getTable();
   }
 
-  protected IZmlTableColumn getTableColumn( final IZmlModelRow row )
+  protected IZmlTableColumn getTableColumn( )
   {
     final IZmlTable table = getTable();
     final IZmlTableColumn column = table.findColumn( m_provider.getColumn() );

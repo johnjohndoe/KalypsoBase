@@ -66,7 +66,7 @@ import org.kalypso.zml.ui.table.schema.StylePropertyType;
 /**
  * @author Dirk Kuch
  */
-public class CellStyle
+public class CellStyle implements Cloneable
 {
   private static final ColorRegistry COLOR_REGISTRY = new ColorRegistry();
 

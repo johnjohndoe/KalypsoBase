@@ -50,21 +50,21 @@ import org.kalypso.zml.ui.table.model.IZmlModelRow;
  */
 public interface IZmlValueReference
 {
-  IZmlDataModel getModel( );
-
   IZmlModelColumn getColumn( );
+
+  String getDataSource( ) throws SensorException;
+
+  String getHref( );
+
+  IZmlDataModel getModel( );
 
   IZmlModelRow getRow( );
 
   Integer getStatus( ) throws SensorException;
 
+  Integer getTupleModelIndex( );
+
   Object getValue( ) throws SensorException;
 
   void update( Object targetValue ) throws SensorException;
-
-  Integer getTupleModelIndex( );
-
-  String getDataSource( ) throws SensorException;
-
-  String getHref( );
 }
