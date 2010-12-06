@@ -44,12 +44,8 @@
            rule="org.kalypso.zml.ui.table.rules.impl.ZmlRuleForecastValue">
      </rule>
      <rule
-           id="org.kalypso.zml.ui.table.rule.display.alarmstufen"
-           rule="org.kalypso.zml.ui.table.rules.impl.ZmlRuleDisplayAlarmstufen">
-     </rule>
-     <rule
-           id="org.kalypso.zml.ui.table.rule.display.hauptzahlen"
-           rule="org.kalypso.zml.ui.table.rules.impl.ZmlRuleDisplayHauptzahlen">
+           id="org.kalypso.zml.ui.table.rule.grenzwerte"
+           rule="org.kalypso.zml.ui.table.rules.impl.ZmlRuleGrenzwerte">
      </rule>
  </extension> 
  
@@ -267,5 +263,12 @@
           </test>
        </with>
     </definition>
+ </extension> 
+ <extension
+       point="org.eclipse.core.contenttype.contentTypes">
+    <file-association
+          content-type="org.eclipse.core.runtime.xml"
+          file-extensions="kot">
+    </file-association>
  </extension>
 </plugin>

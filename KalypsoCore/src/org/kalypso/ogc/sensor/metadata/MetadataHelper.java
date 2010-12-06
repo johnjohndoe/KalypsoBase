@@ -62,8 +62,6 @@ public class MetadataHelper implements ITimeseriesConstants, ICopyObservationMet
   @Deprecated
   private static final DateFormat FORECAST_DF = DateFormat.getDateTimeInstance( DateFormat.DEFAULT, DateFormat.DEFAULT, Locale.GERMANY );
 
-// private static final DateFormat FORECAST_DF = new SimpleDateFormat( "dd.MM.yyyy HH:mm:ss", Locale.GERMANY );
-
   private static SimpleDateFormat SDF = new SimpleDateFormat( "dd.MM.yyyy HH:mm:ss" );
 
   public static final transient String WQ_TABLE = "WQ-Tabelle";
@@ -236,5 +234,4 @@ public class MetadataHelper implements ITimeseriesConstants, ICopyObservationMet
       metadata.setProperty( ITimeseriesConstants.MD_DATE_END, toStr ); //$NON-NLS-1$
     }
   }
-
 }
