@@ -69,14 +69,9 @@
 
   <complexType name="IndexColumnType">
     <complexContent>
-      <extension base="zmltable:AbstractColumnType">
-        <sequence>
-
-        </sequence>
-      </extension>
+      <extension base="zmltable:AbstractColumnType"/>
     </complexContent>
   </complexType>
-
 
   <complexType name="ColumnPropertyType">
     <simpleContent>
@@ -85,7 +80,6 @@
       </restriction>
     </simpleContent>
   </complexType>
-
 
   <simpleType name="ColumnPropertyName">
     <restriction base="string">
@@ -115,7 +109,6 @@
       <element ref="zmltable:Style" minOccurs="0" maxOccurs="unbounded" />
     </sequence>
   </complexType>
-
 
   <complexType name="CellStyleType">
     <sequence>
