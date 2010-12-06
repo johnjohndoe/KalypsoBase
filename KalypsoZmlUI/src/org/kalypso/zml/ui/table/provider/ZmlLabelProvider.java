@@ -40,10 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.provider;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.swt.SWT;
@@ -51,15 +49,19 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.ui.KalypsoZmlUI;
+import org.kalypso.zml.ui.table.IZmlTableComposite;
 import org.kalypso.zml.ui.table.binding.BaseColumn;
 import org.kalypso.zml.ui.table.binding.CellStyle;
 import org.kalypso.zml.ui.table.binding.ZmlRule;
 import org.kalypso.zml.ui.table.model.IZmlModelRow;
 import org.kalypso.zml.ui.table.model.ZmlModelRow;
 import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
-import org.kalypso.zml.ui.table.rules.IZmlRuleImplementation;
+import org.kalypso.zml.ui.table.provider.strategy.IZmlLabelStrategy;
+import org.kalypso.zml.ui.table.provider.strategy.IndexValueLabelingStrategy;
+import org.kalypso.zml.ui.table.provider.strategy.InstantaneousValueLabelingStrategy;
 import org.kalypso.zml.ui.table.schema.CellStyleType;
 import org.kalypso.zml.ui.table.schema.IndexColumnType;
 
@@ -70,21 +72,26 @@ public class ZmlLabelProvider extends ColumnLabelProvider
 {
   private final BaseColumn m_column;
 
-  private final RuleMapper m_mapper = new RuleMapper();
-
   private Object m_lastRow = null;
 
   private CellStyle m_lastCellStyle = null;
 
   private final ZmlTooltipSupport m_tooltip;
 
-  public ZmlLabelProvider( final BaseColumn column )
+  private final IZmlTableComposite m_table;
+
+  private final RuleMapper m_mapper = new RuleMapper();
+
+  private IZmlLabelStrategy m_strategy;
+
+  public ZmlLabelProvider( final IZmlTableComposite table, final BaseColumn column )
   {
+    m_table = table;
     m_column = column;
     m_tooltip = new ZmlTooltipSupport( column );
   }
 
-  private CellStyle findStyle( final IZmlModelRow row ) throws CoreException
+  public CellStyle findStyle( final IZmlModelRow row ) throws CoreException
   {
     if( m_lastRow == row )
       return m_lastCellStyle;
@@ -108,19 +115,6 @@ public class ZmlLabelProvider extends ColumnLabelProvider
     m_lastRow = row;
 
     return m_lastCellStyle;
-  }
-
-  private String format( final Object value ) throws CoreException
-  {
-    final CellStyle style = m_column.getDefaultStyle();
-    final String format = style.getTextFormat();
-    if( value instanceof Date )
-    {
-      final SimpleDateFormat sdf = new SimpleDateFormat( format == null ? "dd.MM.yyyy HH:mm" : format );
-      return sdf.format( value );
-    }
-
-    return String.format( format == null ? "%s" : format, value );
   }
 
   /**
@@ -226,23 +220,12 @@ public class ZmlLabelProvider extends ColumnLabelProvider
     {
       try
       {
-        String text = "";
-
         final IZmlModelRow row = (IZmlModelRow) element;
+        final IZmlLabelStrategy strategy = getStrategy( row );
+        if( strategy == null )
+          return "";
 
-        final Object value = getValue( row );
-        if( value != null )
-          text = format( value );
-
-        final IZmlValueReference reference = row.get( m_column.getType() );
-        final ZmlRule[] rules = m_mapper.findActiveRules( row, m_column );
-        for( final ZmlRule rule : rules )
-        {
-          final IZmlRuleImplementation impl = rule.getImplementation();
-          text = impl.update( rule, reference, text );
-        }
-
-        return text;
+        return strategy.getText();
       }
       catch( final Throwable t )
       {
@@ -251,6 +234,33 @@ public class ZmlLabelProvider extends ColumnLabelProvider
     }
 
     return super.getText( element );
+  }
+
+  private IZmlLabelStrategy getStrategy( final IZmlModelRow row )
+  {
+    if( m_strategy != null )
+      return m_strategy;
+
+    // index column type?
+    if( m_column.getType() instanceof IndexColumnType )
+      m_strategy = new IndexValueLabelingStrategy( this, row );
+    else
+    {
+      // empty and hidden value column?
+      final IZmlValueReference reference = row.get( m_column.getType() );
+      if( reference == null )
+        return null;
+
+      // value column type - differ between momentan and summenwerten
+      final IAxis valueAxis = reference.getValueAxis();
+
+      if( valueAxis.getType() == "N" )
+        throw new NotImplementedException();
+      else
+        m_strategy = new InstantaneousValueLabelingStrategy( this, row, reference );
+    }
+
+    return m_strategy;
   }
 
   /**
@@ -302,6 +312,16 @@ public class ZmlLabelProvider extends ColumnLabelProvider
     }
 
     return super.getToolTipText( element );
+  }
+
+  public RuleMapper getMapper( )
+  {
+    return m_mapper;
+  }
+
+  public BaseColumn getColumn( )
+  {
+    return m_column;
   }
 
 }

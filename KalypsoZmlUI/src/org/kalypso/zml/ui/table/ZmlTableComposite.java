@@ -226,7 +226,7 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
     m_columns.put( index, new ZmlTableColumn( this, column, type ) );
 
     column.getColumn().addSelectionListener( new ZmlTableHeaderContextMenuListener( this, column ) );
-    column.setLabelProvider( new ZmlLabelProvider( type ) );
+    column.setLabelProvider( new ZmlLabelProvider( this, type ) );
     column.getColumn().setText( type.getLabel() );
 
     final Integer width = type.getWidth();
