@@ -395,4 +395,11 @@
          version="10.10.0.qualifier"
          unpack="false"/>
 
+   <plugin
+         id="org.kalypso.mapserver"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
 </feature>
