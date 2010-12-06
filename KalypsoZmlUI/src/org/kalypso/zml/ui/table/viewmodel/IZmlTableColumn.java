@@ -43,11 +43,12 @@ package org.kalypso.zml.ui.table.viewmodel;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.kalypso.zml.ui.table.binding.BaseColumn;
 import org.kalypso.zml.ui.table.model.IZmlModelColumn;
+import org.kalypso.zml.ui.table.model.IZmlModelRow;
 
 /**
  * @author Dirk Kuch
  */
-public interface IZmlTableColumn
+public interface IZmlTableColumn extends IZmlTableObject
 {
   BaseColumn getColumnType( );
 
@@ -61,4 +62,6 @@ public interface IZmlTableColumn
   IZmlTableCell[] getSelectedCells( );
 
   TableViewerColumn getTableViewerColumn( );
+
+  IZmlTableCell findCell( IZmlModelRow row );
 }

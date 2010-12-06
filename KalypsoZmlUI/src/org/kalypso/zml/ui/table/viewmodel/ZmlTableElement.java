@@ -38,56 +38,28 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.provider.strategy;
+package org.kalypso.zml.ui.table.viewmodel;
 
-import org.eclipse.core.runtime.CoreException;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.zml.ui.KalypsoZmlUI;
-import org.kalypso.zml.ui.table.binding.ZmlRule;
-import org.kalypso.zml.ui.table.model.IZmlModelRow;
-import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
-import org.kalypso.zml.ui.table.provider.ZmlLabelProvider;
-import org.kalypso.zml.ui.table.rules.IZmlRuleImplementation;
+import org.kalypso.zml.ui.table.IZmlTable;
 
 /**
  * @author Dirk Kuch
  */
-public class InstantaneousValueLabelingStrategy extends AbstractValueLabelingStrategy
+public class ZmlTableElement implements IZmlTableObject
 {
+  private final IZmlTable m_table;
 
-  public InstantaneousValueLabelingStrategy( final ZmlLabelProvider provider )
+  public ZmlTableElement( final IZmlTable table )
   {
-    super( provider );
+    m_table = table;
   }
 
   /**
-   * @see org.kalypso.zml.ui.table.provider.IZmlLabelStrategy#getText()
+   * @see org.kalypso.zml.ui.table.viewmodel.IZmlTableObject#getTable()
    */
   @Override
-  public String getText( final IZmlModelRow row ) throws SensorException, CoreException
+  public IZmlTable getTable( )
   {
-    final IZmlValueReference reference = getReference( row );
-    if( reference == null )
-      return "";
-
-    String text = format( row, reference.getValue() );
-
-    final ZmlRule[] rules = findActiveRules( row );
-    for( final ZmlRule rule : rules )
-    {
-      try
-      {
-        final IZmlRuleImplementation impl = rule.getImplementation();
-        text = impl.update( rule, reference, text );
-      }
-      catch( final SensorException e )
-      {
-        KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-      }
-    }
-
-    return text;
+    return m_table;
   }
-
 }

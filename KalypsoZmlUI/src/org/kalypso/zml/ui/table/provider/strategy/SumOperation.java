@@ -40,54 +40,28 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.provider.strategy;
 
-import org.eclipse.core.runtime.CoreException;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.zml.ui.KalypsoZmlUI;
-import org.kalypso.zml.ui.table.binding.ZmlRule;
-import org.kalypso.zml.ui.table.model.IZmlModelRow;
-import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
-import org.kalypso.zml.ui.table.provider.ZmlLabelProvider;
-import org.kalypso.zml.ui.table.rules.IZmlRuleImplementation;
+import org.kalypso.zml.ui.table.model.walker.IZmlModelOperation;
 
 /**
  * @author Dirk Kuch
  */
-public class InstantaneousValueLabelingStrategy extends AbstractValueLabelingStrategy
+public class SumOperation implements IZmlModelOperation
 {
-
-  public InstantaneousValueLabelingStrategy( final ZmlLabelProvider provider )
-  {
-    super( provider );
-  }
+  private double m_sum = 0;
 
   /**
-   * @see org.kalypso.zml.ui.table.provider.IZmlLabelStrategy#getText()
+   * @see org.kalypso.zml.ui.table.model.walker.IZmlModelOperation#add(java.lang.Object)
    */
   @Override
-  public String getText( final IZmlModelRow row ) throws SensorException, CoreException
+  public void add( final Object obj )
   {
-    final IZmlValueReference reference = getReference( row );
-    if( reference == null )
-      return "";
+    if( obj instanceof Number )
+      m_sum += ((Number) obj).doubleValue();
+  }
 
-    String text = format( row, reference.getValue() );
-
-    final ZmlRule[] rules = findActiveRules( row );
-    for( final ZmlRule rule : rules )
-    {
-      try
-      {
-        final IZmlRuleImplementation impl = rule.getImplementation();
-        text = impl.update( rule, reference, text );
-      }
-      catch( final SensorException e )
-      {
-        KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-      }
-    }
-
-    return text;
+  public Double getValue( )
+  {
+    return m_sum;
   }
 
 }

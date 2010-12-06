@@ -48,6 +48,7 @@ import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.metadata.MetadataBoundary;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
+import org.kalypso.zml.ui.table.model.IZmlModelColumn;
 import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
 import org.kalypso.zml.ui.table.schema.RuleInstruction;
 import org.kalypso.zml.ui.table.schema.RuleInstructionOperator;
@@ -69,8 +70,10 @@ public class ZmlRuleInstruction
 
   public MetadataBoundary matches( final IZmlValueReference reference ) throws SensorException
   {
-    final MetadataList metadata = reference.getMetadata();
-    final IAxis valueAxis = reference.getValueAxis();
+    final IZmlModelColumn column = reference.getColumn();
+
+    final MetadataList metadata = column.getMetadata();
+    final IAxis valueAxis = column.getValueAxis();
     final Number value = (Number) reference.getValue();
     if( metadata == null || valueAxis == null || value == null )
       return null;

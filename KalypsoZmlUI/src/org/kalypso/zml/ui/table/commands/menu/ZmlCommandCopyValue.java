@@ -49,7 +49,7 @@ import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.zml.ui.table.IZmlTableComposite;
+import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
 import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
 import org.kalypso.zml.ui.table.viewmodel.IZmlTableCell;
@@ -65,7 +65,7 @@ public class ZmlCommandCopyValue extends AbstractHandler
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
-    final IZmlTableComposite table = ZmlHandlerUtil.getTable( event );
+    final IZmlTable table = ZmlHandlerUtil.getTable( event );
     final IZmlTableCell cell = table.getActiveCell();
     final IZmlValueReference reference = cell.getValueReference();
 

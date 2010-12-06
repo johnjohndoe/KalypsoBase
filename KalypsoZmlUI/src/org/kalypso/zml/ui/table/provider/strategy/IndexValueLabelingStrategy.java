@@ -50,20 +50,18 @@ import org.kalypso.zml.ui.table.provider.ZmlLabelProvider;
 public class IndexValueLabelingStrategy extends AbstractValueLabelingStrategy implements IZmlLabelStrategy
 {
 
-  public IndexValueLabelingStrategy( final ZmlLabelProvider provider, final IZmlModelRow row )
+  public IndexValueLabelingStrategy( final ZmlLabelProvider provider )
   {
-    super( provider, row, null );
+    super( provider );
   }
 
   /**
    * @see org.kalypso.zml.ui.table.provider.strategy.IZmlLabelStrategy#getText()
    */
   @Override
-  public String getText( ) throws CoreException
+  public String getText( final IZmlModelRow row ) throws CoreException
   {
-    final IZmlModelRow row = getRow();
-
-    return format( row.getIndexValue() );
+    return format( row, row.getIndexValue() );
   }
 
 }

@@ -38,56 +38,39 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.provider.strategy;
+package org.kalypso.zml.ui.table.model.walker;
 
-import org.eclipse.core.runtime.CoreException;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.zml.ui.KalypsoZmlUI;
-import org.kalypso.zml.ui.table.binding.ZmlRule;
-import org.kalypso.zml.ui.table.model.IZmlModelRow;
-import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
-import org.kalypso.zml.ui.table.provider.ZmlLabelProvider;
-import org.kalypso.zml.ui.table.rules.IZmlRuleImplementation;
+import org.kalypso.zml.ui.table.model.IZmlModelColumn;
 
 /**
  * @author Dirk Kuch
  */
-public class InstantaneousValueLabelingStrategy extends AbstractValueLabelingStrategy
+public class ZmlModelWalker
 {
 
-  public InstantaneousValueLabelingStrategy( final ZmlLabelProvider provider )
+  private final IZmlModelColumn m_column;
+
+  public ZmlModelWalker( final IZmlModelColumn column )
   {
-    super( provider );
+    m_column = column;
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.provider.IZmlLabelStrategy#getText()
-   */
-  @Override
-  public String getText( final IZmlModelRow row ) throws SensorException, CoreException
+  public void walk( final IZmlModelOperation operation ) throws SensorException
   {
-    final IZmlValueReference reference = getReference( row );
-    if( reference == null )
-      return "";
+    walk( operation, 0, m_column.modelSize() );
+  }
 
-    String text = format( row, reference.getValue() );
+  public void walk( final IZmlModelOperation operation, final int startIndex, final int endIndex ) throws SensorException
+  {
+    final IAxis axis = m_column.getValueAxis();
 
-    final ZmlRule[] rules = findActiveRules( row );
-    for( final ZmlRule rule : rules )
+    for( int i = startIndex; i < endIndex; i++ )
     {
-      try
-      {
-        final IZmlRuleImplementation impl = rule.getImplementation();
-        text = impl.update( rule, reference, text );
-      }
-      catch( final SensorException e )
-      {
-        KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-      }
+      final Object obj = m_column.get( i, axis );
+      operation.add( obj );
     }
-
-    return text;
   }
 
 }

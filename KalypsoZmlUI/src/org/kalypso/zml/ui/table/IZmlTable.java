@@ -38,16 +38,51 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.provider.strategy;
+package org.kalypso.zml.ui.table;
 
-import org.eclipse.core.runtime.CoreException;
-import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.zml.ui.table.model.IZmlModelRow;
+import org.eclipse.jface.viewers.TableViewer;
+import org.kalypso.zml.ui.table.binding.BaseColumn;
+import org.kalypso.zml.ui.table.model.IZmlDataModel;
+import org.kalypso.zml.ui.table.viewmodel.IZmlTableCell;
+import org.kalypso.zml.ui.table.viewmodel.IZmlTableColumn;
+import org.kalypso.zml.ui.table.viewmodel.IZmlTableRow;
 
 /**
  * @author Dirk Kuch
  */
-public interface IZmlLabelStrategy
+public interface IZmlTable
 {
-  String getText( final IZmlModelRow row ) throws SensorException, CoreException;
+  IZmlTableColumn getColumn( int columnIndex );
+
+  IZmlTableCell getActiveCell( );
+
+  IZmlTableColumn getActiveColumn( );
+
+  IZmlTableRow getActiveRow( );
+
+  IZmlTableRow[] getSelectedRows( );
+
+  IZmlTableColumn findColumn( BaseColumn column );
+
+  TableViewer getTableViewer( );
+
+  IZmlDataModel getDataModel( );
+
+  IZmlTableColumn[] getColumns( );
+
+  IZmlTableRow[] getRows( );
+
+  IZmlTableRow getRow( int index );
+
+  /**
+   * @return time resolution of displayed time series (one hour spacing or six hour spaceing, aso)
+   */
+  int getResolution( );
+
+  void refresh( );
+
+  void addListener( IZmlTableListener listener );
+
+  void removeListener( IZmlTableListener mListener );
+
 }

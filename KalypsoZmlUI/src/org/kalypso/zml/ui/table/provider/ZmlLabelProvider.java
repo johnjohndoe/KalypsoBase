@@ -41,7 +41,6 @@
 package org.kalypso.zml.ui.table.provider;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.swt.SWT;
@@ -49,26 +48,25 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.ui.KalypsoZmlUI;
-import org.kalypso.zml.ui.table.IZmlTableComposite;
+import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.binding.BaseColumn;
 import org.kalypso.zml.ui.table.binding.CellStyle;
 import org.kalypso.zml.ui.table.binding.ZmlRule;
 import org.kalypso.zml.ui.table.model.IZmlModelRow;
 import org.kalypso.zml.ui.table.model.ZmlModelRow;
-import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
 import org.kalypso.zml.ui.table.provider.strategy.IZmlLabelStrategy;
 import org.kalypso.zml.ui.table.provider.strategy.IndexValueLabelingStrategy;
 import org.kalypso.zml.ui.table.provider.strategy.InstantaneousValueLabelingStrategy;
+import org.kalypso.zml.ui.table.provider.strategy.SumValueLabelingStrategy;
 import org.kalypso.zml.ui.table.schema.CellStyleType;
+import org.kalypso.zml.ui.table.schema.DataColumnType;
 import org.kalypso.zml.ui.table.schema.IndexColumnType;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlLabelProvider extends ColumnLabelProvider
+public class ZmlLabelProvider extends ColumnLabelProvider implements IZmlLabelProvider
 {
   private final BaseColumn m_column;
 
@@ -78,19 +76,20 @@ public class ZmlLabelProvider extends ColumnLabelProvider
 
   private final ZmlTooltipSupport m_tooltip;
 
-  private final IZmlTableComposite m_table;
+  private final IZmlTable m_table;
 
   private final RuleMapper m_mapper = new RuleMapper();
 
   private IZmlLabelStrategy m_strategy;
 
-  public ZmlLabelProvider( final IZmlTableComposite table, final BaseColumn column )
+  public ZmlLabelProvider( final IZmlTable table, final BaseColumn column )
   {
     m_table = table;
     m_column = column;
     m_tooltip = new ZmlTooltipSupport( column );
   }
 
+  @Override
   public CellStyle findStyle( final IZmlModelRow row ) throws CoreException
   {
     if( m_lastRow == row )
@@ -221,11 +220,11 @@ public class ZmlLabelProvider extends ColumnLabelProvider
       try
       {
         final IZmlModelRow row = (IZmlModelRow) element;
-        final IZmlLabelStrategy strategy = getStrategy( row );
+        final IZmlLabelStrategy strategy = getStrategy();
         if( strategy == null )
           return "";
 
-        return strategy.getText();
+        return strategy.getText( row );
       }
       catch( final Throwable t )
       {
@@ -236,28 +235,22 @@ public class ZmlLabelProvider extends ColumnLabelProvider
     return super.getText( element );
   }
 
-  private IZmlLabelStrategy getStrategy( final IZmlModelRow row )
+  private IZmlLabelStrategy getStrategy( )
   {
     if( m_strategy != null )
       return m_strategy;
 
     // index column type?
     if( m_column.getType() instanceof IndexColumnType )
-      m_strategy = new IndexValueLabelingStrategy( this, row );
+      m_strategy = new IndexValueLabelingStrategy( this );
     else
     {
-      // empty and hidden value column?
-      final IZmlValueReference reference = row.get( m_column.getType() );
-      if( reference == null )
-        return null;
+      final DataColumnType dataColumnType = (DataColumnType) m_column.getType();
 
-      // value column type - differ between momentan and summenwerten
-      final IAxis valueAxis = reference.getValueAxis();
-
-      if( valueAxis.getType() == "N" )
-        throw new NotImplementedException();
+      if( "N".equals( dataColumnType.getValueAxis() ) )
+        m_strategy = new SumValueLabelingStrategy( this );
       else
-        m_strategy = new InstantaneousValueLabelingStrategy( this, row, reference );
+        m_strategy = new InstantaneousValueLabelingStrategy( this );
     }
 
     return m_strategy;
@@ -270,20 +263,6 @@ public class ZmlLabelProvider extends ColumnLabelProvider
   public int getToolTipStyle( final Object object )
   {
     return SWT.TOP | SWT.BEGINNING | SWT.LEFT | SWT.SHADOW_NONE;
-  }
-
-  private Object getValue( final IZmlModelRow row ) throws SensorException
-  {
-    if( m_column.getType() instanceof IndexColumnType )
-    {
-      return row.getIndexValue();
-    }
-
-    final IZmlValueReference reference = row.get( m_column.getType() );
-    if( reference != null )
-      return reference.getValue();
-
-    return null;
   }
 
   /**
@@ -314,14 +293,25 @@ public class ZmlLabelProvider extends ColumnLabelProvider
     return super.getToolTipText( element );
   }
 
+  @Override
   public RuleMapper getMapper( )
   {
     return m_mapper;
   }
 
+  @Override
   public BaseColumn getColumn( )
   {
     return m_column;
+  }
+
+  /**
+   * @see org.kalypso.zml.ui.table.provider.IZmlLabelProvider#getTable()
+   */
+  @Override
+  public IZmlTable getTable( )
+  {
+    return m_table;
   }
 
 }

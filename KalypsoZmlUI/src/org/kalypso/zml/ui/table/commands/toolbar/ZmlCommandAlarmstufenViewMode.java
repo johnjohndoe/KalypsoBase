@@ -44,7 +44,7 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
-import org.kalypso.zml.ui.table.IZmlTableComposite;
+import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
 import org.kalypso.zml.ui.table.rules.impl.ZmlRuleDisplayAlarmstufen;
 
@@ -69,7 +69,7 @@ public class ZmlCommandAlarmstufenViewMode extends AbstractHandler
       ZmlRuleDisplayAlarmstufen.disable();
     }
 
-    final IZmlTableComposite table = ZmlHandlerUtil.getTable( event );
+    final IZmlTable table = ZmlHandlerUtil.getTable( event );
     table.refresh();
 
     return Status.OK_STATUS;

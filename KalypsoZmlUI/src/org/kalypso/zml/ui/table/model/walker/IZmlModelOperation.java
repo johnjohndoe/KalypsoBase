@@ -38,38 +38,12 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table;
-
-import org.eclipse.jface.viewers.TableViewer;
-import org.kalypso.zml.ui.table.model.IZmlDataModel;
-import org.kalypso.zml.ui.table.viewmodel.IZmlTableCell;
-import org.kalypso.zml.ui.table.viewmodel.IZmlTableColumn;
-import org.kalypso.zml.ui.table.viewmodel.IZmlTableRow;
+package org.kalypso.zml.ui.table.model.walker;
 
 /**
  * @author Dirk Kuch
  */
-public interface IZmlTableComposite
+public interface IZmlModelOperation
 {
-  IZmlTableColumn getColumn( int columnIndex );
-
-  IZmlTableCell getActiveCell( );
-
-  IZmlTableColumn getActiveColumn( );
-
-  IZmlTableRow getActiveRow( );
-
-  IZmlTableRow[] getSelectedRows( );
-
-  TableViewer getTableViewer( );
-
-  IZmlDataModel getDataModel( );
-
-  IZmlTableColumn[] getColumns( );
-
-  void refresh( );
-
-  void addListener( IZmlTableListener listener );
-
-  void removeListener( IZmlTableListener mListener );
+  void add( Object obj );
 }

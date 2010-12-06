@@ -45,7 +45,7 @@ import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
 /**
  * @author Dirk Kuch
  */
-public interface IZmlTableRow
+public interface IZmlTableRow extends IZmlTableObject
 {
   IZmlValueReference getValueReference( IZmlTableColumn column );
 
@@ -54,4 +54,5 @@ public interface IZmlTableRow
   IZmlTableColumn[] getColumns( );
 
   int getIndex( );
+
 }

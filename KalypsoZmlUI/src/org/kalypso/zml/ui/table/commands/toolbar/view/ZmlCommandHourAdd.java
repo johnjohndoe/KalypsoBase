@@ -68,7 +68,7 @@ public class ZmlCommandHourAdd extends AbstractHourViewCommand
   {
     if( filter.isStuetzstellenMode() )
       return false;
-    if( filter.getResulution() == 0 )
+    if( filter.getResolution() == 0 )
       return false;
 
     return true;

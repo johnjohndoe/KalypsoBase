@@ -47,7 +47,10 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.metadata.MetadataHelper;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.zml.ui.KalypsoZmlUI;
+import org.kalypso.zml.ui.table.binding.DataColumn;
 import org.kalypso.zml.ui.table.binding.ZmlRule;
+import org.kalypso.zml.ui.table.model.IZmlDataModel;
+import org.kalypso.zml.ui.table.model.IZmlModelColumn;
 import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
 
 /**
@@ -74,7 +77,7 @@ public class ZmlRuleForecastValue extends AbstractZmlTableRule
   {
     try
     {
-      final MetadataList metadata = reference.getMetadata();
+      final MetadataList metadata = findMetadata( reference );
 
       // index value reference!
       final Object index = reference.getValue();
@@ -97,6 +100,20 @@ public class ZmlRuleForecastValue extends AbstractZmlTableRule
     }
 
     return false;
+  }
+
+  private MetadataList findMetadata( final IZmlValueReference reference )
+  {
+    final IZmlDataModel model = reference.getModel();
+    final IZmlModelColumn[] columns = model.getColumns();
+    for( final IZmlModelColumn column : columns )
+    {
+      final DataColumn dataColumn = column.getDataColumn();
+      if( dataColumn.isMetadataSource() )
+        return column.getMetadata();
+    }
+
+    return null;
   }
 
 }

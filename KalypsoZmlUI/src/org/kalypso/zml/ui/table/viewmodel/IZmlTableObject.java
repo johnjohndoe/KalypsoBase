@@ -38,16 +38,14 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.provider.strategy;
+package org.kalypso.zml.ui.table.viewmodel;
 
-import org.eclipse.core.runtime.CoreException;
-import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.zml.ui.table.model.IZmlModelRow;
+import org.kalypso.zml.ui.table.IZmlTable;
 
 /**
  * @author Dirk Kuch
  */
-public interface IZmlLabelStrategy
+public interface IZmlTableObject
 {
-  String getText( final IZmlModelRow row ) throws SensorException, CoreException;
+  IZmlTable getTable( );
 }

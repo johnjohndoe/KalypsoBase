@@ -44,28 +44,86 @@ import org.eclipse.core.runtime.CoreException;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.ui.KalypsoZmlUI;
+import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.binding.ZmlRule;
 import org.kalypso.zml.ui.table.model.IZmlModelRow;
 import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
-import org.kalypso.zml.ui.table.provider.ZmlLabelProvider;
+import org.kalypso.zml.ui.table.model.walker.ZmlModelWalker;
+import org.kalypso.zml.ui.table.provider.IZmlLabelProvider;
 import org.kalypso.zml.ui.table.rules.IZmlRuleImplementation;
+import org.kalypso.zml.ui.table.viewmodel.IZmlTableCell;
+import org.kalypso.zml.ui.table.viewmodel.IZmlTableColumn;
 
 /**
  * @author Dirk Kuch
  */
-public class InstantaneousValueLabelingStrategy extends AbstractValueLabelingStrategy
+public class SumValueLabelingStrategy extends AbstractValueLabelingStrategy implements IZmlLabelStrategy
 {
 
-  public InstantaneousValueLabelingStrategy( final ZmlLabelProvider provider )
+  public SumValueLabelingStrategy( final IZmlLabelProvider provider )
   {
     super( provider );
   }
 
   /**
-   * @see org.kalypso.zml.ui.table.provider.IZmlLabelStrategy#getText()
+   * @see org.kalypso.zml.ui.table.provider.strategy.IZmlLabelStrategy#getText(org.kalypso.zml.ui.table.model.IZmlModelRow)
    */
   @Override
   public String getText( final IZmlModelRow row ) throws SensorException, CoreException
+  {
+    final IZmlTable table = getTable();
+    final int resolution = table.getResolution();
+    if( resolution == 0 )
+    {
+      return getAsOriginValue( row );
+    }
+
+    return getAsAggregatedValue( row );
+  }
+
+  private String getAsAggregatedValue( final IZmlModelRow row ) throws CoreException, SensorException
+  {
+    final IZmlTableColumn column = getTableColumn( row );
+
+    final IZmlTableCell current = column.findCell( row );
+    final IZmlTableCell previous = current.findPreviousCell();
+
+    if( previous == null )
+      return getAsOriginValue( row );
+
+    final IZmlValueReference previousReference = previous.getValueReference();
+    final IZmlValueReference currentReference = current.getValueReference();
+
+    final int startIndex = previousReference.getTupleModelIndex() + 1;
+    final int endIndex = currentReference.getTupleModelIndex();
+
+    final SumOperation operation = new SumOperation();
+
+    final ZmlModelWalker walker = new ZmlModelWalker( column.getModelColumn() );
+    walker.walk( operation, startIndex, endIndex );
+
+    final Double value = operation.getValue();
+
+    String text = format( row, value );
+
+    final ZmlRule[] rules = findActiveRules( row );
+    for( final ZmlRule rule : rules )
+    {
+      try
+      {
+        final IZmlRuleImplementation impl = rule.getImplementation();
+        text = impl.update( rule, currentReference, text );
+      }
+      catch( final SensorException e )
+      {
+        KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+      }
+    }
+
+    return text;
+  }
+
+  private String getAsOriginValue( final IZmlModelRow row ) throws CoreException, SensorException
   {
     final IZmlValueReference reference = getReference( row );
     if( reference == null )

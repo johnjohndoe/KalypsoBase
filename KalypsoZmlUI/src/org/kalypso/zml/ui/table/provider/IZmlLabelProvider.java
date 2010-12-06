@@ -38,56 +38,26 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.provider.strategy;
+package org.kalypso.zml.ui.table.provider;
 
 import org.eclipse.core.runtime.CoreException;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.zml.ui.KalypsoZmlUI;
-import org.kalypso.zml.ui.table.binding.ZmlRule;
+import org.kalypso.zml.ui.table.IZmlTable;
+import org.kalypso.zml.ui.table.binding.BaseColumn;
+import org.kalypso.zml.ui.table.binding.CellStyle;
 import org.kalypso.zml.ui.table.model.IZmlModelRow;
-import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
-import org.kalypso.zml.ui.table.provider.ZmlLabelProvider;
-import org.kalypso.zml.ui.table.rules.IZmlRuleImplementation;
 
 /**
  * @author Dirk Kuch
  */
-public class InstantaneousValueLabelingStrategy extends AbstractValueLabelingStrategy
+public interface IZmlLabelProvider
 {
 
-  public InstantaneousValueLabelingStrategy( final ZmlLabelProvider provider )
-  {
-    super( provider );
-  }
+  RuleMapper getMapper( );
 
-  /**
-   * @see org.kalypso.zml.ui.table.provider.IZmlLabelStrategy#getText()
-   */
-  @Override
-  public String getText( final IZmlModelRow row ) throws SensorException, CoreException
-  {
-    final IZmlValueReference reference = getReference( row );
-    if( reference == null )
-      return "";
+  CellStyle findStyle( IZmlModelRow row ) throws CoreException;
 
-    String text = format( row, reference.getValue() );
+  BaseColumn getColumn( );
 
-    final ZmlRule[] rules = findActiveRules( row );
-    for( final ZmlRule rule : rules )
-    {
-      try
-      {
-        final IZmlRuleImplementation impl = rule.getImplementation();
-        text = impl.update( rule, reference, text );
-      }
-      catch( final SensorException e )
-      {
-        KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-      }
-    }
-
-    return text;
-  }
+  IZmlTable getTable( );
 
 }
