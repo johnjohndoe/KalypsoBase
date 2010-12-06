@@ -33,6 +33,5 @@ Export-Package: org.kalypso.zml.ui,
  org.kalypso.zml.ui.table.provider,
  org.kalypso.zml.ui.table.rules,
  org.kalypso.zml.ui.table.schema,
- org.kalypso.zml.ui.table.utils,
  org.kalypso.zml.ui.table.viewmodel
 Bundle-ClassPath: .
