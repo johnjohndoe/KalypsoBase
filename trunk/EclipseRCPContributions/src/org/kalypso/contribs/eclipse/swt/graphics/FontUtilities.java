@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse.swt.graphics;
 
@@ -52,11 +52,8 @@ import org.eclipse.swt.graphics.FontData;
  * 
  * @author Gernot Belger, Holger Albert
  */
-public class FontUtilities
+public final class FontUtilities
 {
-  /**
-   * The constructor.
-   */
   private FontUtilities( )
   {
   }
