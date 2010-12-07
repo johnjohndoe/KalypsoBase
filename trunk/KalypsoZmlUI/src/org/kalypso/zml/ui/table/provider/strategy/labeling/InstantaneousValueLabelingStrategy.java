@@ -38,71 +38,56 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.provider.strategy;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
+package org.kalypso.zml.ui.table.provider.strategy.labeling;
 
 import org.eclipse.core.runtime.CoreException;
-import org.kalypso.zml.ui.table.IZmlTable;
-import org.kalypso.zml.ui.table.binding.CellStyle;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.binding.ZmlRule;
 import org.kalypso.zml.ui.table.model.IZmlModelRow;
 import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
-import org.kalypso.zml.ui.table.provider.IZmlLabelProvider;
-import org.kalypso.zml.ui.table.provider.RuleMapper;
-import org.kalypso.zml.ui.table.viewmodel.IZmlTableColumn;
+import org.kalypso.zml.ui.table.rules.IZmlRuleImplementation;
+import org.kalypso.zml.ui.table.viewmodel.ExtendedZmlTableColumn;
 
 /**
  * @author Dirk Kuch
  */
-public abstract class AbstractValueLabelingStrategy implements IZmlLabelStrategy
+public class InstantaneousValueLabelingStrategy extends AbstractValueLabelingStrategy
 {
-  private final IZmlLabelProvider m_provider;
 
-  public AbstractValueLabelingStrategy( final IZmlLabelProvider provider )
+  public InstantaneousValueLabelingStrategy( final ExtendedZmlTableColumn column )
   {
-    m_provider = provider;
+    super( column );
   }
 
-  protected String format( final IZmlModelRow row, final Object value ) throws CoreException
+  /**
+   * @see org.kalypso.zml.ui.table.provider.IZmlLabelStrategy#getText()
+   */
+  @Override
+  public String getText( final IZmlModelRow row ) throws SensorException, CoreException
   {
-    final CellStyle style = m_provider.findStyle( row );
-    final String format = style.getTextFormat();
-    if( value instanceof Date )
+    final IZmlValueReference reference = getReference( row );
+    if( reference == null )
+      return "";
+
+    String text = format( row, reference.getValue() );
+
+    final ZmlRule[] rules = getColumn().findActiveRules( row );
+    for( final ZmlRule rule : rules )
     {
-      final SimpleDateFormat sdf = new SimpleDateFormat( format == null ? "dd.MM.yyyy HH:mm" : format );
-      return sdf.format( value );
+      try
+      {
+        final IZmlRuleImplementation impl = rule.getImplementation();
+        text = impl.update( rule, reference, text );
+      }
+      catch( final SensorException e )
+      {
+        KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+      }
     }
 
-    return String.format( format == null ? "%s" : format, value );
+    return text;
   }
 
-  private RuleMapper getMapper( )
-  {
-    return m_provider.getMapper();
-  }
-
-  protected ZmlRule[] findActiveRules( final IZmlModelRow row )
-  {
-    return getMapper().findActiveRules( row, m_provider.getColumn() );
-  }
-
-  protected IZmlValueReference getReference( final IZmlModelRow row )
-  {
-    return row.get( m_provider.getColumn().getType() );
-  }
-
-  protected IZmlTable getTable( )
-  {
-    return m_provider.getTable();
-  }
-
-  protected IZmlTableColumn getTableColumn( )
-  {
-    final IZmlTable table = getTable();
-    final IZmlTableColumn column = table.findColumn( m_provider.getColumn() );
-
-    return column;
-  }
 }

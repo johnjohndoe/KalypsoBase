@@ -96,7 +96,7 @@ public abstract class AbstractHourViewCommand extends AbstractHandler implements
       }
     }
 
-    throw new IllegalStateException();
+    return null;
   }
 
   @Override

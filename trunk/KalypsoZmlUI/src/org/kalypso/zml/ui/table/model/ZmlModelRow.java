@@ -89,6 +89,9 @@ public class ZmlModelRow implements IZmlModelRow
   @Override
   public IZmlValueReference get( final IZmlModelColumn column )
   {
+    if( column == null )
+      return null;
+
     return get( column.getDataColumn().getType() );
   }
 
