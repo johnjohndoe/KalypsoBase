@@ -48,9 +48,9 @@ import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.model.ZmlModelRow;
 import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
+import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
 import org.kalypso.zml.ui.table.schema.AbstractColumnType;
 import org.kalypso.zml.ui.table.schema.DataColumnType;
-import org.kalypso.zml.ui.table.viewmodel.ExtendedZmlTableColumn;
 
 /**
  * @author Dirk Kuch

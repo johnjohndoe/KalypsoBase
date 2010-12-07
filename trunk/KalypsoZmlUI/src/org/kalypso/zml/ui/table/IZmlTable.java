@@ -42,7 +42,7 @@ package org.kalypso.zml.ui.table;
 
 import org.eclipse.jface.viewers.TableViewer;
 import org.kalypso.zml.ui.table.binding.BaseColumn;
-import org.kalypso.zml.ui.table.model.IZmlDataModel;
+import org.kalypso.zml.ui.table.model.IZmlModel;
 import org.kalypso.zml.ui.table.viewmodel.IZmlTableCell;
 import org.kalypso.zml.ui.table.viewmodel.IZmlTableColumn;
 import org.kalypso.zml.ui.table.viewmodel.IZmlTableRow;
@@ -66,7 +66,7 @@ public interface IZmlTable
 
   TableViewer getTableViewer( );
 
-  IZmlDataModel getDataModel( );
+  IZmlModel getDataModel( );
 
   IZmlTableColumn[] getColumns( );
 

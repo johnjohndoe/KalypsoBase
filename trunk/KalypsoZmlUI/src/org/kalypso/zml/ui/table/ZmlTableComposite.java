@@ -77,7 +77,7 @@ import org.kalypso.zml.ui.table.binding.TableTypeHelper;
 import org.kalypso.zml.ui.table.commands.toolbar.view.ZmlViewResolutionFilter;
 import org.kalypso.zml.ui.table.menu.ZmlTableContextMenuListener;
 import org.kalypso.zml.ui.table.menu.ZmlTableHeaderContextMenuListener;
-import org.kalypso.zml.ui.table.model.IZmlDataModel;
+import org.kalypso.zml.ui.table.model.IZmlModel;
 import org.kalypso.zml.ui.table.model.IZmlModelColumn;
 import org.kalypso.zml.ui.table.model.IZmlModelRow;
 import org.kalypso.zml.ui.table.provider.IZmlColumnModelListener;
@@ -85,10 +85,10 @@ import org.kalypso.zml.ui.table.provider.ZmlEditingSupport;
 import org.kalypso.zml.ui.table.provider.ZmlLabelProvider;
 import org.kalypso.zml.ui.table.provider.ZmlTableContentProvider;
 import org.kalypso.zml.ui.table.provider.ZmlTableMouseMoveListener;
+import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
 import org.kalypso.zml.ui.table.schema.AbstractColumnType;
 import org.kalypso.zml.ui.table.schema.DataColumnType;
 import org.kalypso.zml.ui.table.schema.ZmlTableType;
-import org.kalypso.zml.ui.table.viewmodel.ExtendedZmlTableColumn;
 import org.kalypso.zml.ui.table.viewmodel.IZmlTableCell;
 import org.kalypso.zml.ui.table.viewmodel.IZmlTableColumn;
 import org.kalypso.zml.ui.table.viewmodel.IZmlTableRow;
@@ -104,7 +104,7 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
 
   private final Map<Integer, ZmlTableColumn> m_columns = new HashMap<Integer, ZmlTableColumn>();
 
-  private final IZmlDataModel m_model;
+  private final IZmlModel m_model;
 
   private ZmlTableMouseMoveListener m_mouseMoveListener;
 
@@ -116,7 +116,7 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
 
   private ZmlViewResolutionFilter m_filter;
 
-  public ZmlTableComposite( final IZmlDataModel model, final Composite parent, final FormToolkit toolkit )
+  public ZmlTableComposite( final IZmlModel model, final Composite parent, final FormToolkit toolkit )
   {
     super( parent, SWT.NULL );
     m_model = model;
@@ -126,7 +126,6 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
 
     model.addListener( this );
     toolkit.adapt( this );
-
   }
 
   private void setup( final FormToolkit toolkit )
@@ -247,7 +246,7 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
     /** edit support */
     if( type.getType() instanceof DataColumnType && type.isEditable() )
     {
-      viewerColumn.setEditingSupport( new ZmlEditingSupport( type, viewerColumn ) );
+      viewerColumn.setEditingSupport( new ZmlEditingSupport( column ) );
     }
 
     return viewerColumn;
@@ -418,7 +417,7 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
    * @see org.kalypso.zml.ui.table.IZmlTableComposite#getDataModel()
    */
   @Override
-  public IZmlDataModel getDataModel( )
+  public IZmlModel getDataModel( )
   {
     return m_model;
   }

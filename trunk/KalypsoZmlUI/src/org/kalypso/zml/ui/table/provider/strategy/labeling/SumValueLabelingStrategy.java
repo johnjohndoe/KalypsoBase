@@ -49,8 +49,8 @@ import org.kalypso.zml.ui.table.binding.ZmlRule;
 import org.kalypso.zml.ui.table.model.IZmlModelRow;
 import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
 import org.kalypso.zml.ui.table.model.walker.ZmlModelWalker;
+import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
 import org.kalypso.zml.ui.table.rules.IZmlRuleImplementation;
-import org.kalypso.zml.ui.table.viewmodel.ExtendedZmlTableColumn;
 import org.kalypso.zml.ui.table.viewmodel.IZmlTableCell;
 
 /**

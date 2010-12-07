@@ -40,27 +40,19 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.provider;
 
-import org.apache.commons.lang.NotImplementedException;
-import org.eclipse.core.runtime.Assert;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.EditingSupport;
-import org.eclipse.jface.viewers.TableViewerColumn;
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.widgets.Composite;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.java.lang.NumberUtils;
-import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.zml.ui.KalypsoZmlUI;
-import org.kalypso.zml.ui.table.binding.BaseColumn;
-import org.kalypso.zml.ui.table.binding.CellStyle;
-import org.kalypso.zml.ui.table.model.IZmlModelColumn;
 import org.kalypso.zml.ui.table.model.IZmlModelRow;
-import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
+import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
+import org.kalypso.zml.ui.table.provider.strategy.editing.IZmlEditingStrategy;
+
+import com.google.common.base.Objects;
 
 /**
  * @author Dirk Kuch
@@ -69,18 +61,19 @@ public class ZmlEditingSupport extends EditingSupport
 {
   protected final TextCellEditor m_cellEditor;
 
-  private final BaseColumn m_type;
-
   private String m_lastEdited;
 
-  public ZmlEditingSupport( final BaseColumn type, final TableViewerColumn viewer )
+  private final ExtendedZmlTableColumn m_column;
+
+  public ZmlEditingSupport( final ExtendedZmlTableColumn column )
   {
-    super( viewer.getViewer() );
+    super( column.getTable().getTableViewer() );
+    m_column = column;
+    final TableViewer viewer = column.getTable().getTableViewer();
 
-    m_type = type;
-    m_cellEditor = new TextCellEditor( (Composite) viewer.getViewer().getControl(), SWT.NONE );
+    m_cellEditor = new TextCellEditor( (Composite) viewer.getControl(), SWT.NONE );
 
-    viewer.getViewer().getControl().addDisposeListener( new DisposeListener()
+    viewer.getControl().addDisposeListener( new DisposeListener()
     {
       @Override
       public void widgetDisposed( final DisposeEvent e )
@@ -114,40 +107,10 @@ public class ZmlEditingSupport extends EditingSupport
   @Override
   protected Object getValue( final Object element )
   {
-    if( element instanceof IZmlModelRow )
-    {
-      try
-      {
-        final IZmlModelRow row = (IZmlModelRow) element;
+    final IZmlEditingStrategy strategy = m_column.getEditingStrategy();
+    m_lastEdited = strategy.getValue( element );
 
-        final IZmlValueReference reference = row.get( m_type.getType() );
-        if( reference == null )
-          return "";
-
-        final Object value = reference.getValue();
-
-        final CellStyle style = getStyle();
-        m_lastEdited = String.format( style.getTextFormat() == null ? "%s" : style.getTextFormat(), value );
-
-        return m_lastEdited;
-      }
-      catch( final Throwable t )
-      {
-        t.printStackTrace();
-      }
-    }
-
-    m_lastEdited = null;
-    return null;
-  }
-
-  private CellStyle getStyle( ) throws CoreException
-  {
-    final CellStyle editing = m_type.getDefaultEditingStyle();
-    if( editing == null )
-      return m_type.getDefaultStyle();
-
-    return editing;
+    return m_lastEdited;
   }
 
   /**
@@ -156,42 +119,14 @@ public class ZmlEditingSupport extends EditingSupport
   @Override
   protected void setValue( final Object element, final Object value )
   {
-    if( value.equals( m_lastEdited ) )
+    if( Objects.equal( m_lastEdited, value ) )
       return;
 
     if( element instanceof IZmlModelRow && value instanceof String )
     {
-      try
-      {
-        final IZmlModelRow row = (IZmlModelRow) element;
-        final IZmlValueReference reference = row.get( m_type.getType() );
-
-        final Object targetValue = getTargetValue( reference, value );
-        reference.update( targetValue );
-      }
-      catch( final SensorException e )
-      {
-        KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-      }
+      final IZmlEditingStrategy strategy = m_column.getEditingStrategy();
+      strategy.setValue( (IZmlModelRow) element, (String) value );
     }
-    else
-      throw new NotImplementedException();
   }
 
-  private Object getTargetValue( final IZmlValueReference reference, final Object value )
-  {
-    Assert.isTrue( value instanceof String );
-
-    final IZmlModelColumn column = reference.getColumn();
-    final IAxis axis = column.getValueAxis();
-
-    final Class< ? > clazz = axis.getDataClass();
-
-    if( Double.class == clazz )
-    {
-      return NumberUtils.parseDouble( (String) value );
-    }
-    else
-      throw new NotImplementedException();
-  }
 }

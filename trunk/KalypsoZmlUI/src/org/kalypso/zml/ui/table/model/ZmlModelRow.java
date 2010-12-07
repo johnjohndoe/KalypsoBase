@@ -59,9 +59,9 @@ public class ZmlModelRow implements IZmlModelRow
   /** Map<Reference (id), Reference> */
   Map<String, IZmlValueReference> m_references = new HashMap<String, IZmlValueReference>();
 
-  private final IZmlDataModel m_model;
+  private final IZmlModel m_model;
 
-  protected ZmlModelRow( final IZmlDataModel model, final Object index )
+  protected ZmlModelRow( final IZmlModel model, final Object index )
   {
     m_model = model;
     m_index = index;
@@ -105,7 +105,7 @@ public class ZmlModelRow implements IZmlModelRow
    * @see org.kalypso.zml.ui.table.model.IZmlModelRow#getModel()
    */
   @Override
-  public IZmlDataModel getModel( )
+  public IZmlModel getModel( )
   {
     return m_model;
   }

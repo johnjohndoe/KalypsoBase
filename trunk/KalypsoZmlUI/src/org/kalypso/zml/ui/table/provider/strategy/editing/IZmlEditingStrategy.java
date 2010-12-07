@@ -38,27 +38,16 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.model;
+package org.kalypso.zml.ui.table.provider.strategy.editing;
 
-import org.kalypso.zml.ui.table.provider.IZmlColumnModelListener;
-import org.kalypso.zml.ui.table.schema.ZmlTableType;
+import org.kalypso.zml.ui.table.model.IZmlModelRow;
 
 /**
  * @author Dirk Kuch
  */
-public interface IZmlDataModel
+public interface IZmlEditingStrategy
 {
-  ZmlTableType getTableType( );
+  String getValue( Object element );
 
-  void addListener( IZmlColumnModelListener listener );
-
-  void fireModelChanged( );
-
-  IZmlModelColumn getColumn( String id );
-
-  IZmlModelColumn[] getColumns( );
-
-  IZmlModelRow getRow( final Object index );
-
-  IZmlModelRow[] getRows( );
+  void setValue( IZmlModelRow element, String value );
 }

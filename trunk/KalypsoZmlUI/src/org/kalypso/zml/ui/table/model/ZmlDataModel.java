@@ -57,7 +57,7 @@ import org.kalypso.zml.ui.table.schema.ZmlTableType;
 /**
  * @author Dirk Kuch
  */
-public class ZmlDataModel implements IZmlDataModel
+public class ZmlDataModel implements IZmlModel
 {
   private final Set<ZmlColumnLoadCommand> m_commands = new HashSet<ZmlColumnLoadCommand>();
 

@@ -48,7 +48,7 @@ import org.eclipse.jface.viewers.ViewerFilter;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.ZmlTableComposite;
-import org.kalypso.zml.ui.table.model.IZmlDataModel;
+import org.kalypso.zml.ui.table.model.IZmlModel;
 import org.kalypso.zml.ui.table.model.IZmlModelRow;
 import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
 import org.kalypso.zml.ui.table.model.references.ZmlValueRefernceHelper;
@@ -66,9 +66,9 @@ public class ZmlViewResolutionFilter extends ViewerFilter
   {
     private int m_baseIndex = 0;
 
-    private IZmlDataModel m_model = null;
+    private IZmlModel m_model = null;
 
-    protected int getBaseIndex( final IZmlDataModel model )
+    protected int getBaseIndex( final IZmlModel model )
     {
       if( m_model == null )
         update( model );
@@ -78,7 +78,7 @@ public class ZmlViewResolutionFilter extends ViewerFilter
       return m_baseIndex;
     }
 
-    private void update( final IZmlDataModel model )
+    private void update( final IZmlModel model )
     {
       final IZmlModelRow[] rows = model.getRows();
       if( ArrayUtils.isEmpty( rows ) )
@@ -117,9 +117,9 @@ public class ZmlViewResolutionFilter extends ViewerFilter
   @Override
   public boolean select( final Viewer viewer, final Object parentElement, final Object element )
   {
-    if( parentElement instanceof IZmlDataModel && element instanceof IZmlModelRow )
+    if( parentElement instanceof IZmlModel && element instanceof IZmlModelRow )
     {
-      final IZmlDataModel model = (IZmlDataModel) parentElement;
+      final IZmlModel model = (IZmlModel) parentElement;
       final IZmlModelRow row = (IZmlModelRow) element;
 
       if( m_resolution == 0 )
