@@ -38,30 +38,16 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.provider.strategy;
+package org.kalypso.zml.ui.table.provider.strategy.labeling;
 
 import org.eclipse.core.runtime.CoreException;
+import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.ui.table.model.IZmlModelRow;
-import org.kalypso.zml.ui.table.provider.ZmlLabelProvider;
 
 /**
  * @author Dirk Kuch
  */
-public class IndexValueLabelingStrategy extends AbstractValueLabelingStrategy implements IZmlLabelStrategy
+public interface IZmlLabelStrategy
 {
-
-  public IndexValueLabelingStrategy( final ZmlLabelProvider provider )
-  {
-    super( provider );
-  }
-
-  /**
-   * @see org.kalypso.zml.ui.table.provider.strategy.IZmlLabelStrategy#getText()
-   */
-  @Override
-  public String getText( final IZmlModelRow row ) throws CoreException
-  {
-    return format( row, row.getIndexValue() );
-  }
-
+  String getText( final IZmlModelRow row ) throws SensorException, CoreException;
 }

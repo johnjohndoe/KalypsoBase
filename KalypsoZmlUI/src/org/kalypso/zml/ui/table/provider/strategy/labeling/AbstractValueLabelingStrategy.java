@@ -38,30 +38,60 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.provider.strategy;
+package org.kalypso.zml.ui.table.provider.strategy.labeling;
 
-import org.kalypso.zml.ui.table.model.walker.IZmlModelOperation;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import org.eclipse.core.runtime.CoreException;
+import org.kalypso.zml.ui.table.IZmlTable;
+import org.kalypso.zml.ui.table.binding.CellStyle;
+import org.kalypso.zml.ui.table.model.IZmlModelRow;
+import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
+import org.kalypso.zml.ui.table.viewmodel.ExtendedZmlTableColumn;
 
 /**
  * @author Dirk Kuch
  */
-public class SumOperation implements IZmlModelOperation
+public abstract class AbstractValueLabelingStrategy implements IZmlLabelStrategy
 {
-  private double m_sum = 0;
+  private final ExtendedZmlTableColumn m_column;
 
-  /**
-   * @see org.kalypso.zml.ui.table.model.walker.IZmlModelOperation#add(java.lang.Object)
-   */
-  @Override
-  public void add( final Object obj )
+  public AbstractValueLabelingStrategy( final ExtendedZmlTableColumn column )
   {
-    if( obj instanceof Number )
-      m_sum += ((Number) obj).doubleValue();
+    m_column = column;
   }
 
-  public Double getValue( )
+  protected String format( final IZmlModelRow row, final Object value ) throws CoreException
   {
-    return m_sum;
+
+    final CellStyle style = m_column.findStyle( row );
+    final String format = style.getTextFormat();
+    if( value instanceof Date )
+    {
+      final SimpleDateFormat sdf = new SimpleDateFormat( format == null ? "dd.MM.yyyy HH:mm" : format );
+      return sdf.format( value );
+    }
+
+    return String.format( format == null ? "%s" : format, value );
+  }
+
+  protected IZmlValueReference getReference( final IZmlModelRow row )
+  {
+    if( row == null )
+      return null;
+
+    return row.get( m_column.getModelColumn() );
+  }
+
+  protected IZmlTable getTable( )
+  {
+    return m_column.getTable();
+  }
+
+  protected ExtendedZmlTableColumn getColumn( )
+  {
+    return m_column;
   }
 
 }

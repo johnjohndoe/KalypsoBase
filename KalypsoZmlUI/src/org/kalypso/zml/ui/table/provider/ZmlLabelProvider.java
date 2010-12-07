@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.provider;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.swt.SWT;
@@ -49,71 +48,26 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.zml.ui.KalypsoZmlUI;
-import org.kalypso.zml.ui.table.IZmlTable;
-import org.kalypso.zml.ui.table.binding.BaseColumn;
 import org.kalypso.zml.ui.table.binding.CellStyle;
-import org.kalypso.zml.ui.table.binding.ZmlRule;
 import org.kalypso.zml.ui.table.model.IZmlModelRow;
 import org.kalypso.zml.ui.table.model.ZmlModelRow;
-import org.kalypso.zml.ui.table.provider.strategy.IZmlLabelStrategy;
-import org.kalypso.zml.ui.table.provider.strategy.IndexValueLabelingStrategy;
-import org.kalypso.zml.ui.table.provider.strategy.InstantaneousValueLabelingStrategy;
-import org.kalypso.zml.ui.table.provider.strategy.SumValueLabelingStrategy;
-import org.kalypso.zml.ui.table.schema.CellStyleType;
-import org.kalypso.zml.ui.table.schema.DataColumnType;
-import org.kalypso.zml.ui.table.schema.IndexColumnType;
+import org.kalypso.zml.ui.table.provider.strategy.labeling.IZmlLabelStrategy;
+import org.kalypso.zml.ui.table.viewmodel.ExtendedZmlTableColumn;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlLabelProvider extends ColumnLabelProvider implements IZmlLabelProvider
+public class ZmlLabelProvider extends ColumnLabelProvider
 {
-  private final BaseColumn m_column;
-
-  private Object m_lastRow = null;
-
-  private CellStyle m_lastCellStyle = null;
-
   private final ZmlTooltipSupport m_tooltip;
 
-  private final IZmlTable m_table;
+  private final ExtendedZmlTableColumn m_column;
 
-  private final RuleMapper m_mapper = new RuleMapper();
-
-  private IZmlLabelStrategy m_strategy;
-
-  public ZmlLabelProvider( final IZmlTable table, final BaseColumn column )
+  public ZmlLabelProvider( final ExtendedZmlTableColumn column )
   {
-    m_table = table;
     m_column = column;
+
     m_tooltip = new ZmlTooltipSupport( column );
-  }
-
-  @Override
-  public CellStyle findStyle( final IZmlModelRow row ) throws CoreException
-  {
-    if( m_lastRow == row )
-      return m_lastCellStyle;
-
-    final ZmlRule[] rules = m_mapper.findActiveRules( row, m_column );
-    if( ArrayUtils.isNotEmpty( rules ) )
-    {
-      CellStyleType baseType = m_column.getDefaultStyle().getType();
-      for( final ZmlRule rule : rules )
-      {
-        baseType = CellStyle.merge( baseType, rule.getStyle( row, m_column ).getType() );
-      }
-
-      m_lastCellStyle = new CellStyle( baseType );
-    }
-    else
-    {
-      m_lastCellStyle = m_column.getDefaultStyle();
-    }
-
-    m_lastRow = row;
-
-    return m_lastCellStyle;
   }
 
   /**
@@ -126,7 +80,7 @@ public class ZmlLabelProvider extends ColumnLabelProvider implements IZmlLabelPr
     {
       try
       {
-        final CellStyle style = findStyle( (IZmlModelRow) element );
+        final CellStyle style = m_column.findStyle( (IZmlModelRow) element );
 
         return style.getBackgroundColor();
       }
@@ -150,7 +104,7 @@ public class ZmlLabelProvider extends ColumnLabelProvider implements IZmlLabelPr
     {
       try
       {
-        final CellStyle style = findStyle( (IZmlModelRow) element );
+        final CellStyle style = m_column.findStyle( (IZmlModelRow) element );
 
         return style.getFont();
       }
@@ -173,7 +127,7 @@ public class ZmlLabelProvider extends ColumnLabelProvider implements IZmlLabelPr
     {
       try
       {
-        final CellStyle style = findStyle( (IZmlModelRow) element );
+        final CellStyle style = m_column.findStyle( (IZmlModelRow) element );
 
         return style.getForegroundColor();
       }
@@ -196,7 +150,7 @@ public class ZmlLabelProvider extends ColumnLabelProvider implements IZmlLabelPr
     {
       try
       {
-        final CellStyle style = findStyle( (IZmlModelRow) element );
+        final CellStyle style = m_column.findStyle( (IZmlModelRow) element );
 
         return style.getImage();
       }
@@ -220,7 +174,7 @@ public class ZmlLabelProvider extends ColumnLabelProvider implements IZmlLabelPr
       try
       {
         final IZmlModelRow row = (IZmlModelRow) element;
-        final IZmlLabelStrategy strategy = getStrategy();
+        final IZmlLabelStrategy strategy = m_column.getLabelingStrategy();
         if( strategy == null )
           return "";
 
@@ -233,27 +187,6 @@ public class ZmlLabelProvider extends ColumnLabelProvider implements IZmlLabelPr
     }
 
     return super.getText( element );
-  }
-
-  private IZmlLabelStrategy getStrategy( )
-  {
-    if( m_strategy != null )
-      return m_strategy;
-
-    // index column type?
-    if( m_column.getType() instanceof IndexColumnType )
-      m_strategy = new IndexValueLabelingStrategy( this );
-    else
-    {
-      final DataColumnType dataColumnType = (DataColumnType) m_column.getType();
-
-      if( "N".equals( dataColumnType.getValueAxis() ) )
-        m_strategy = new SumValueLabelingStrategy( this );
-      else
-        m_strategy = new InstantaneousValueLabelingStrategy( this );
-    }
-
-    return m_strategy;
   }
 
   /**
@@ -273,7 +206,7 @@ public class ZmlLabelProvider extends ColumnLabelProvider implements IZmlLabelPr
   {
     if( object instanceof ZmlModelRow )
     {
-      return m_tooltip.getToolTipImage( (ZmlModelRow) object );
+      return m_tooltip.getToolTipImage();
     }
 
     return super.getToolTipImage( object );
@@ -291,27 +224,6 @@ public class ZmlLabelProvider extends ColumnLabelProvider implements IZmlLabelPr
     }
 
     return super.getToolTipText( element );
-  }
-
-  @Override
-  public RuleMapper getMapper( )
-  {
-    return m_mapper;
-  }
-
-  @Override
-  public BaseColumn getColumn( )
-  {
-    return m_column;
-  }
-
-  /**
-   * @see org.kalypso.zml.ui.table.provider.IZmlLabelProvider#getTable()
-   */
-  @Override
-  public IZmlTable getTable( )
-  {
-    return m_table;
   }
 
 }

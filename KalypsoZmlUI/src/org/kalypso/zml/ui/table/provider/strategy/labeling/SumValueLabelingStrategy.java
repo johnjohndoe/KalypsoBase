@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.provider.strategy;
+package org.kalypso.zml.ui.table.provider.strategy.labeling;
 
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -49,10 +49,9 @@ import org.kalypso.zml.ui.table.binding.ZmlRule;
 import org.kalypso.zml.ui.table.model.IZmlModelRow;
 import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
 import org.kalypso.zml.ui.table.model.walker.ZmlModelWalker;
-import org.kalypso.zml.ui.table.provider.IZmlLabelProvider;
 import org.kalypso.zml.ui.table.rules.IZmlRuleImplementation;
+import org.kalypso.zml.ui.table.viewmodel.ExtendedZmlTableColumn;
 import org.kalypso.zml.ui.table.viewmodel.IZmlTableCell;
-import org.kalypso.zml.ui.table.viewmodel.IZmlTableColumn;
 
 /**
  * @author Dirk Kuch
@@ -60,9 +59,9 @@ import org.kalypso.zml.ui.table.viewmodel.IZmlTableColumn;
 public class SumValueLabelingStrategy extends AbstractValueLabelingStrategy implements IZmlLabelStrategy
 {
 
-  public SumValueLabelingStrategy( final IZmlLabelProvider provider )
+  public SumValueLabelingStrategy( final ExtendedZmlTableColumn column )
   {
-    super( provider );
+    super( column );
   }
 
   /**
@@ -83,7 +82,7 @@ public class SumValueLabelingStrategy extends AbstractValueLabelingStrategy impl
 
   private String getAsAggregatedValue( final IZmlModelRow row ) throws CoreException, SensorException
   {
-    final IZmlTableColumn column = getTableColumn();
+    final ExtendedZmlTableColumn column = getColumn();
 
     final IZmlTableCell current = column.findCell( row );
     final IZmlTableCell previous = current.findPreviousCell();
@@ -106,7 +105,7 @@ public class SumValueLabelingStrategy extends AbstractValueLabelingStrategy impl
 
     String text = format( row, value );
 
-    final ZmlRule[] rules = findActiveRules( row );
+    final ZmlRule[] rules = column.findActiveRules( row );
     for( final ZmlRule rule : rules )
     {
       try
@@ -131,7 +130,7 @@ public class SumValueLabelingStrategy extends AbstractValueLabelingStrategy impl
 
     String text = format( row, reference.getValue() );
 
-    final ZmlRule[] rules = findActiveRules( row );
+    final ZmlRule[] rules = getColumn().findActiveRules( row );
     for( final ZmlRule rule : rules )
     {
       try

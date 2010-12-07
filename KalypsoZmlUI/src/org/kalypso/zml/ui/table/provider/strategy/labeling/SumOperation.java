@@ -38,26 +38,30 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.provider;
+package org.kalypso.zml.ui.table.provider.strategy.labeling;
 
-import org.eclipse.core.runtime.CoreException;
-import org.kalypso.zml.ui.table.IZmlTable;
-import org.kalypso.zml.ui.table.binding.BaseColumn;
-import org.kalypso.zml.ui.table.binding.CellStyle;
-import org.kalypso.zml.ui.table.model.IZmlModelRow;
+import org.kalypso.zml.ui.table.model.walker.IZmlModelOperation;
 
 /**
  * @author Dirk Kuch
  */
-public interface IZmlLabelProvider
+public class SumOperation implements IZmlModelOperation
 {
+  private double m_sum = 0;
 
-  RuleMapper getMapper( );
+  /**
+   * @see org.kalypso.zml.ui.table.model.walker.IZmlModelOperation#add(java.lang.Object)
+   */
+  @Override
+  public void add( final Object obj )
+  {
+    if( obj instanceof Number )
+      m_sum += ((Number) obj).doubleValue();
+  }
 
-  CellStyle findStyle( IZmlModelRow row ) throws CoreException;
-
-  BaseColumn getColumn( );
-
-  IZmlTable getTable( );
+  public Double getValue( )
+  {
+    return m_sum;
+  }
 
 }

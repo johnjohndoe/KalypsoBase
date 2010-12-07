@@ -46,11 +46,11 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.zml.ui.KalypsoZmlUI;
-import org.kalypso.zml.ui.table.binding.BaseColumn;
 import org.kalypso.zml.ui.table.model.ZmlModelRow;
 import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
 import org.kalypso.zml.ui.table.schema.AbstractColumnType;
 import org.kalypso.zml.ui.table.schema.DataColumnType;
+import org.kalypso.zml.ui.table.viewmodel.ExtendedZmlTableColumn;
 
 /**
  * @author Dirk Kuch
@@ -59,16 +59,16 @@ public class ZmlTooltipSupport
 {
   private static final Image IMG = new Image( null, ZmlLabelProvider.class.getResourceAsStream( "icons/help_about_48.png" ) );
 
-  private final BaseColumn m_column;
+  private final ExtendedZmlTableColumn m_column;
 
-  public ZmlTooltipSupport( final BaseColumn column )
+  public ZmlTooltipSupport( final ExtendedZmlTableColumn column )
   {
     m_column = column;
   }
 
   public String getToolTipText( final ZmlModelRow row )
   {
-    final AbstractColumnType type = m_column.getType();
+    final AbstractColumnType type = m_column.getColumnType().getType();
     if( type instanceof DataColumnType )
     {
       final IZmlValueReference reference = row.get( type );
@@ -153,12 +153,9 @@ public class ZmlTooltipSupport
     return String.format( "%s:%s%s\n", label, tabs, v );
   }
 
-  public Image getToolTipImage( final ZmlModelRow row )
+  public Image getToolTipImage( )
   {
-    if( m_column.getType() instanceof DataColumnType )
-      return IMG;
-
-    return null;
+    return IMG;
   }
 
 }

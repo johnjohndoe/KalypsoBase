@@ -38,56 +38,30 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.provider.strategy;
+package org.kalypso.zml.ui.table.provider.strategy.labeling;
 
 import org.eclipse.core.runtime.CoreException;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.zml.ui.KalypsoZmlUI;
-import org.kalypso.zml.ui.table.binding.ZmlRule;
 import org.kalypso.zml.ui.table.model.IZmlModelRow;
-import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
-import org.kalypso.zml.ui.table.provider.ZmlLabelProvider;
-import org.kalypso.zml.ui.table.rules.IZmlRuleImplementation;
+import org.kalypso.zml.ui.table.viewmodel.ExtendedZmlTableColumn;
 
 /**
  * @author Dirk Kuch
  */
-public class InstantaneousValueLabelingStrategy extends AbstractValueLabelingStrategy
+public class IndexValueLabelingStrategy extends AbstractValueLabelingStrategy implements IZmlLabelStrategy
 {
 
-  public InstantaneousValueLabelingStrategy( final ZmlLabelProvider provider )
+  public IndexValueLabelingStrategy( final ExtendedZmlTableColumn column )
   {
-    super( provider );
+    super( column );
   }
 
   /**
-   * @see org.kalypso.zml.ui.table.provider.IZmlLabelStrategy#getText()
+   * @see org.kalypso.zml.ui.table.provider.strategy.IZmlLabelStrategy#getText()
    */
   @Override
-  public String getText( final IZmlModelRow row ) throws SensorException, CoreException
+  public String getText( final IZmlModelRow row ) throws CoreException
   {
-    final IZmlValueReference reference = getReference( row );
-    if( reference == null )
-      return "";
-
-    String text = format( row, reference.getValue() );
-
-    final ZmlRule[] rules = findActiveRules( row );
-    for( final ZmlRule rule : rules )
-    {
-      try
-      {
-        final IZmlRuleImplementation impl = rule.getImplementation();
-        text = impl.update( rule, reference, text );
-      }
-      catch( final SensorException e )
-      {
-        KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-      }
-    }
-
-    return text;
+    return format( row, row.getIndexValue() );
   }
 
 }

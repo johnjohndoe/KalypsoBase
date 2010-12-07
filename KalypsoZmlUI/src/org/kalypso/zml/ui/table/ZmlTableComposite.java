@@ -88,6 +88,7 @@ import org.kalypso.zml.ui.table.provider.ZmlTableMouseMoveListener;
 import org.kalypso.zml.ui.table.schema.AbstractColumnType;
 import org.kalypso.zml.ui.table.schema.DataColumnType;
 import org.kalypso.zml.ui.table.schema.ZmlTableType;
+import org.kalypso.zml.ui.table.viewmodel.ExtendedZmlTableColumn;
 import org.kalypso.zml.ui.table.viewmodel.IZmlTableCell;
 import org.kalypso.zml.ui.table.viewmodel.IZmlTableColumn;
 import org.kalypso.zml.ui.table.viewmodel.IZmlTableRow;
@@ -227,28 +228,29 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
   private TableViewerColumn buildColumnViewer( final BaseColumn type )
   {
     final int index = m_tableViewer.getTable().getColumnCount();
-    final TableViewerColumn column = new TableViewerColumn( m_tableViewer, TableTypeHelper.toSWT( type.getAlignment() ) );
+    final TableViewerColumn viewerColumn = new TableViewerColumn( m_tableViewer, TableTypeHelper.toSWT( type.getAlignment() ) );
 
-    m_columns.put( index, new ZmlTableColumn( this, column, type ) );
+    final ExtendedZmlTableColumn column = new ExtendedZmlTableColumn( this, viewerColumn, type );
+    m_columns.put( index, column );
 
-    column.getColumn().addSelectionListener( new ZmlTableHeaderContextMenuListener( this ) );
-    column.setLabelProvider( new ZmlLabelProvider( this, type ) );
-    column.getColumn().setText( type.getLabel() );
+    viewerColumn.getColumn().addSelectionListener( new ZmlTableHeaderContextMenuListener( this ) );
+    viewerColumn.setLabelProvider( new ZmlLabelProvider( column ) );
+    viewerColumn.getColumn().setText( type.getLabel() );
 
     final Integer width = type.getWidth();
     if( width != null )
-      column.getColumn().setWidth( width.intValue() );
+      viewerColumn.getColumn().setWidth( width.intValue() );
 
     if( width == null && type.isAutopack() )
-      column.getColumn().pack();
+      viewerColumn.getColumn().pack();
 
     /** edit support */
     if( type.getType() instanceof DataColumnType && type.isEditable() )
     {
-      column.setEditingSupport( new ZmlEditingSupport( type, column ) );
+      viewerColumn.setEditingSupport( new ZmlEditingSupport( type, viewerColumn ) );
     }
 
-    return column;
+    return viewerColumn;
   }
 
   @Override
