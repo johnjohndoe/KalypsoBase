@@ -114,7 +114,7 @@
         <reference>wqConversionConflict</reference>
       </styleReference>
     </Rule>
-    <Rule id="ruleAlarmstufen" ruleReference="org.kalypso.zml.ui.table.rule.grenzwerte">
+    <Rule id="ruleAlarmstufen" ruleReference="org.kalypso.zml.ui.table.rule.grenzwerte" enabled="false">
       <RuleInstructions>
         <instruction from="Grenzwert_W: Alarmstufe_1" opFrom="&gt;=" to="Grenzwert_W: Alarmstufe_2" label="AS1   ${text}">
           <styleReference>
@@ -145,7 +145,7 @@
       </RuleInstructions>
     </Rule>
 
-    <Rule id="ruleHauptzahlenQ" ruleReference="org.kalypso.zml.ui.table.rule.grenzwerte">
+    <Rule id="ruleHauptzahlenQ" ruleReference="org.kalypso.zml.ui.table.rule.grenzwerte" enabled="false">
       <RuleInstructions>
         <instruction to="Grenzwert_Q: Kalypso_Grenzwert_NQ" label="&lt;N   ${text}"/>
         <instruction from="Grenzwert_Q: Kalypso_Grenzwert_NQ" opFrom="&gt;=" to="Grenzwert_Q: Kalypso_Grenzwert_MNQ" label="&lt;MN   ${text}"/>
@@ -157,7 +157,7 @@
       </RuleInstructions>
     </Rule>
 
-    <Rule id="ruleHauptzahlenW" ruleReference="org.kalypso.zml.ui.table.rule.grenzwerte">
+    <Rule id="ruleHauptzahlenW" ruleReference="org.kalypso.zml.ui.table.rule.grenzwerte" enabled="false">
       <RuleInstructions>
         <instruction to="Grenzwert_W: Kalypso_Grenzwert_NW" label="&lt;N   ${text}"/>
         <instruction from="Grenzwert_W: Kalypso_Grenzwert_NW" opFrom="&gt;=" to="Grenzwert_W: Kalypso_Grenzwert_MNW" label="&lt;MN   ${text}"/>

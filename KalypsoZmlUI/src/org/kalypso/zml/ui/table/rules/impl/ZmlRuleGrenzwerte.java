@@ -54,27 +54,12 @@ public class ZmlRuleGrenzwerte extends AbstractZmlTableRule
 {
   public static final String ID = "org.kalypso.zml.ui.table.rule.grenzwerte";
 
-  private static Boolean ENABLED = Boolean.FALSE;
-
-  public static void enable( )
-  {
-    ENABLED = Boolean.TRUE;
-  }
-
-  public static void disable( )
-  {
-    ENABLED = Boolean.FALSE;
-  }
-
   /**
    * @see org.kalypso.zml.ui.table.rules.IZmlTableRule#apply(org.kalypso.zml.ui.table.model.references.IZmlValueReference)
    */
   @Override
-  public boolean apply( final ZmlRule rule, final IZmlValueReference reference )
+  protected boolean doApply( final ZmlRule rule, final IZmlValueReference reference )
   {
-    if( !ENABLED )
-      return false;
-
     final ZmlRuleInstruction[] instructions = rule.getInstructions();
     for( final ZmlRuleInstruction instruction : instructions )
     {

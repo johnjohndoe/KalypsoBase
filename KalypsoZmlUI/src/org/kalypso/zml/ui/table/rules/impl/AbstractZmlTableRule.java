@@ -61,4 +61,21 @@ public abstract class AbstractZmlTableRule implements IZmlRuleImplementation
     return text;
   }
 
+  /**
+   * @see org.kalypso.zml.ui.table.rules.IZmlRuleImplementation#apply(org.kalypso.zml.ui.table.binding.ZmlRule,
+   *      org.kalypso.zml.ui.table.model.references.IZmlValueReference)
+   */
+  @Override
+  public final boolean apply( final ZmlRule rule, final IZmlValueReference reference )
+  {
+    if( !rule.isEnabled() )
+      return false;
+    else if( reference == null )
+      return false;
+
+    return doApply( rule, reference );
+  }
+
+  protected abstract boolean doApply( ZmlRule rule, IZmlValueReference reference );
+
 }
