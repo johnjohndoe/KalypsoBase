@@ -292,18 +292,19 @@ public class MergeObservationWorker implements ICoreRunnableWithProgress
         if( !m_strategy.process( srcModel, index, srcAxes ) )
           continue;
 
-        final Object[] values = new Object[srcAxes.length + 1]; // the data source axis!
+        final Object[] destValues = new Object[m_axes.length];
 
         for( final IAxis srcAxis : srcAxes )
         {
           final Object value = srcModel.get( index, srcAxis );
-          final int baseIndex = mapping.getDestinationIndex( srcAxis );
-          values[baseIndex] = value;
+          final int destinationIndex = mapping.getDestinationIndex( srcAxis );
+          if( destinationIndex != -1 )
+            destValues[destinationIndex] = value;
         }
 
-        values[dataSourceValueIndex] = dataSourceIndex;
+        destValues[dataSourceValueIndex] = dataSourceIndex;
 
-        data.add( values );
+        data.add( destValues );
       }
       catch( final Throwable t )
       {
