@@ -41,14 +41,17 @@
 package org.kalypso.zml.ui.table.provider.strategy.editing;
 
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.ui.KalypsoZmlUI;
+import org.kalypso.zml.ui.table.binding.CellStyle;
 import org.kalypso.zml.ui.table.model.IZmlModelColumn;
 import org.kalypso.zml.ui.table.model.IZmlModelRow;
 import org.kalypso.zml.ui.table.model.ZmlModelRow;
 import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
 import org.kalypso.zml.ui.table.model.references.ZmlDataValueReference;
 import org.kalypso.zml.ui.table.model.references.ZmlValueReferenceFactory;
+import org.kalypso.zml.ui.table.provider.ZmlLabelProvider;
 import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
 import org.kalypso.zml.ui.table.viewmodel.IZmlTableCell;
 
@@ -57,10 +60,34 @@ import org.kalypso.zml.ui.table.viewmodel.IZmlTableCell;
  */
 public class SumValueEditingStrategy extends AbstractEditingStrategy
 {
+  private final ZmlLabelProvider m_labelProvider;
 
-  public SumValueEditingStrategy( final ExtendedZmlTableColumn column )
+  public SumValueEditingStrategy( final ExtendedZmlTableColumn column, final ZmlLabelProvider labelProvider )
   {
     super( column );
+    m_labelProvider = labelProvider;
+  }
+
+  /**
+   * @see org.kalypso.zml.ui.table.provider.strategy.editing.IZmlEditingStrategy#getValue(java.lang.Object)
+   */
+  @Override
+  public String getValue( final IZmlModelRow row )
+  {
+    try
+    {
+      final String text = m_labelProvider.getText( row );
+      final double value = NumberUtils.parseDouble( text );
+
+      final CellStyle style = getStyle();
+      return String.format( style.getTextFormat() == null ? "%s" : style.getTextFormat(), value );
+    }
+    catch( final Throwable t )
+    {
+      KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( t ) );
+    }
+
+    return null;
   }
 
   /**
@@ -111,10 +138,7 @@ public class SumValueEditingStrategy extends AbstractEditingStrategy
     final Integer endIndex = end.getTupleModelIndex();
     final int steps = endIndex - startIndex + 1;
 
-    final Double original = (Double) end.getValue();
-
-    final double difference = targetValue.doubleValue() - original.doubleValue();
-    final double stepping = difference / steps;
+    final double stepping = targetValue.doubleValue() / steps;
 
     final IZmlModelColumn modelColumn = getColumn().getModelColumn();
 

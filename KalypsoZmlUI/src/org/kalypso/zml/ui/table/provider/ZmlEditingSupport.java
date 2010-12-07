@@ -65,10 +65,13 @@ public class ZmlEditingSupport extends EditingSupport
 
   private final ExtendedZmlTableColumn m_column;
 
-  public ZmlEditingSupport( final ExtendedZmlTableColumn column )
+  private final ZmlLabelProvider m_labelProvider;
+
+  public ZmlEditingSupport( final ExtendedZmlTableColumn column, final ZmlLabelProvider labelProvider )
   {
     super( column.getTable().getTableViewer() );
     m_column = column;
+    m_labelProvider = labelProvider;
     final TableViewer viewer = column.getTable().getTableViewer();
 
     m_cellEditor = new TextCellEditor( (Composite) viewer.getControl(), SWT.NONE );
@@ -107,8 +110,13 @@ public class ZmlEditingSupport extends EditingSupport
   @Override
   protected Object getValue( final Object element )
   {
-    final IZmlEditingStrategy strategy = m_column.getEditingStrategy();
-    m_lastEdited = strategy.getValue( element );
+    if( element instanceof IZmlModelRow )
+    {
+      final IZmlEditingStrategy strategy = m_column.getEditingStrategy( m_labelProvider );
+      m_lastEdited = strategy.getValue( (IZmlModelRow) element );
+    }
+    else
+      m_lastEdited = null;
 
     return m_lastEdited;
   }
@@ -124,7 +132,7 @@ public class ZmlEditingSupport extends EditingSupport
 
     if( element instanceof IZmlModelRow && value instanceof String )
     {
-      final IZmlEditingStrategy strategy = m_column.getEditingStrategy();
+      final IZmlEditingStrategy strategy = m_column.getEditingStrategy( m_labelProvider );
       strategy.setValue( (IZmlModelRow) element, (String) value );
     }
   }

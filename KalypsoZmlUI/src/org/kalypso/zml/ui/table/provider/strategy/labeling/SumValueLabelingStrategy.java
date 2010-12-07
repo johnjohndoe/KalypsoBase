@@ -93,6 +93,9 @@ public class SumValueLabelingStrategy extends AbstractValueLabelingStrategy impl
     final IZmlValueReference previousReference = previous.getValueReference();
     final IZmlValueReference currentReference = current.getValueReference();
 
+    if( previousReference == null || currentReference == null )
+      return null;
+
     final int startIndex = previousReference.getTupleModelIndex() + 1;
     final int endIndex = currentReference.getTupleModelIndex();
 

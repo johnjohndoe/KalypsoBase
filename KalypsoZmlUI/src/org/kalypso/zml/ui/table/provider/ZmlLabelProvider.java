@@ -204,8 +204,9 @@ public class ZmlLabelProvider extends ColumnLabelProvider
   @Override
   public Image getToolTipImage( final Object object )
   {
-    if( object instanceof ZmlModelRow )
+    if( object instanceof IZmlModelRow )
     {
+
       return m_tooltip.getToolTipImage();
     }
 
