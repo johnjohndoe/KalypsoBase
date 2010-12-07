@@ -143,6 +143,8 @@ public class ZmlDataModel implements IZmlModel
     {
       command.cancel();
     }
+
+    fireModelChanged();
   }
 
   @Override

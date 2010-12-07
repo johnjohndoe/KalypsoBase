@@ -233,7 +233,8 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
     m_columns.put( index, column );
 
     viewerColumn.getColumn().addSelectionListener( new ZmlTableHeaderContextMenuListener( this ) );
-    viewerColumn.setLabelProvider( new ZmlLabelProvider( column ) );
+    final ZmlLabelProvider labelProvider = new ZmlLabelProvider( column );
+    viewerColumn.setLabelProvider( labelProvider );
     viewerColumn.getColumn().setText( type.getLabel() );
 
     final Integer width = type.getWidth();
@@ -246,7 +247,7 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
     /** edit support */
     if( type.getType() instanceof DataColumnType && type.isEditable() )
     {
-      viewerColumn.setEditingSupport( new ZmlEditingSupport( column ) );
+      viewerColumn.setEditingSupport( new ZmlEditingSupport( column, labelProvider ) );
     }
 
     return viewerColumn;

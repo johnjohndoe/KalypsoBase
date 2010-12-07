@@ -155,7 +155,10 @@ public class ZmlTooltipSupport
 
   public Image getToolTipImage( )
   {
-    return IMG;
+    if( m_column.getColumnType().getType() instanceof DataColumnType )
+      return IMG;
+
+    return null;
   }
 
 }

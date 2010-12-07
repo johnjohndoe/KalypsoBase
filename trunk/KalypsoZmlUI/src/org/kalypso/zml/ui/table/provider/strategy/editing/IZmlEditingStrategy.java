@@ -47,7 +47,7 @@ import org.kalypso.zml.ui.table.model.IZmlModelRow;
  */
 public interface IZmlEditingStrategy
 {
-  String getValue( Object element );
+  String getValue( IZmlModelRow row );
 
-  void setValue( IZmlModelRow element, String value );
+  void setValue( IZmlModelRow row, String value );
 }

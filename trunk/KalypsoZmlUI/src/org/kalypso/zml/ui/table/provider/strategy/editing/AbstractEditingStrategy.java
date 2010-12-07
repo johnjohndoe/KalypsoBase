@@ -45,8 +45,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.zml.ui.table.binding.CellStyle;
-import org.kalypso.zml.ui.table.model.IZmlModelRow;
-import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
 import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
 
 /**
@@ -64,36 +62,6 @@ public abstract class AbstractEditingStrategy implements IZmlEditingStrategy
   protected ExtendedZmlTableColumn getColumn( )
   {
     return m_column;
-  }
-
-  /**
-   * @see org.kalypso.zml.ui.table.provider.strategy.editing.IZmlEditingStrategy#getValue(java.lang.Object)
-   */
-  @Override
-  public String getValue( final Object element )
-  {
-    if( element instanceof IZmlModelRow )
-    {
-      try
-      {
-        final IZmlModelRow row = (IZmlModelRow) element;
-
-        final IZmlValueReference reference = row.get( m_column.getColumnType().getType() );
-        if( reference == null )
-          return "";
-
-        final Object value = reference.getValue();
-
-        final CellStyle style = getStyle();
-        return String.format( style.getTextFormat() == null ? "%s" : style.getTextFormat(), value );
-      }
-      catch( final Throwable t )
-      {
-        t.printStackTrace();
-      }
-    }
-
-    return null;
   }
 
   protected CellStyle getStyle( ) throws CoreException

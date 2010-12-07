@@ -49,6 +49,7 @@ import org.kalypso.zml.ui.table.binding.CellStyle;
 import org.kalypso.zml.ui.table.binding.ZmlRule;
 import org.kalypso.zml.ui.table.model.IZmlModelRow;
 import org.kalypso.zml.ui.table.provider.RuleMapper;
+import org.kalypso.zml.ui.table.provider.ZmlLabelProvider;
 import org.kalypso.zml.ui.table.provider.strategy.editing.IZmlEditingStrategy;
 import org.kalypso.zml.ui.table.provider.strategy.editing.SimpleEditingStrategy;
 import org.kalypso.zml.ui.table.provider.strategy.editing.SumValueEditingStrategy;
@@ -82,7 +83,7 @@ public class ExtendedZmlTableColumn extends ZmlTableColumn
     super( table, column, type );
   }
 
-  public IZmlEditingStrategy getEditingStrategy( )
+  public IZmlEditingStrategy getEditingStrategy( final ZmlLabelProvider labelProvider )
   {
     if( m_editing != null )
       return m_editing;
@@ -94,7 +95,7 @@ public class ExtendedZmlTableColumn extends ZmlTableColumn
     {
       final DataColumnType dataColumnType = (DataColumnType) type;
       if( "N".equals( dataColumnType.getValueAxis() ) )
-        m_editing = new SumValueEditingStrategy( this );
+        m_editing = new SumValueEditingStrategy( this, labelProvider );
       else
         m_editing = new SimpleEditingStrategy( this );
     }

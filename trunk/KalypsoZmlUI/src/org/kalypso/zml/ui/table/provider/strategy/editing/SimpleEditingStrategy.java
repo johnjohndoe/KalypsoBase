@@ -43,6 +43,7 @@ package org.kalypso.zml.ui.table.provider.strategy.editing;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.ui.KalypsoZmlUI;
+import org.kalypso.zml.ui.table.binding.CellStyle;
 import org.kalypso.zml.ui.table.model.IZmlModelRow;
 import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
 import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
@@ -55,6 +56,32 @@ public class SimpleEditingStrategy extends AbstractEditingStrategy implements IZ
   public SimpleEditingStrategy( final ExtendedZmlTableColumn column )
   {
     super( column );
+  }
+
+  /**
+   * @see org.kalypso.zml.ui.table.provider.strategy.editing.IZmlEditingStrategy#getValue(java.lang.Object)
+   */
+  @Override
+  public String getValue( final IZmlModelRow row )
+  {
+    try
+    {
+
+      final IZmlValueReference reference = row.get( getColumn().getColumnType().getType() );
+      if( reference == null )
+        return "";
+
+      final Object value = reference.getValue();
+
+      final CellStyle style = getStyle();
+      return String.format( style.getTextFormat() == null ? "%s" : style.getTextFormat(), value );
+    }
+    catch( final Throwable t )
+    {
+      t.printStackTrace();
+    }
+
+    return null;
   }
 
   /**

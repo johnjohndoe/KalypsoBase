@@ -133,7 +133,7 @@ public class BaseColumn
     {
       try
       {
-        // FIXME: use the locatino of the current xml document (where referenceType was defined) as context
+        // FIXME: use the location of the current xml document (where referenceType was defined) as context
         // in order to support relative url's.
         final URL context = null;
         final ZmlRule rule = resolver.findRule( context, referenceType );
