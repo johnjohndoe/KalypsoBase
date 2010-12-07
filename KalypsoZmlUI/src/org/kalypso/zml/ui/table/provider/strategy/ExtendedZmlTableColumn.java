@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.viewmodel;
+package org.kalypso.zml.ui.table.provider.strategy;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.CoreException;
@@ -49,6 +49,9 @@ import org.kalypso.zml.ui.table.binding.CellStyle;
 import org.kalypso.zml.ui.table.binding.ZmlRule;
 import org.kalypso.zml.ui.table.model.IZmlModelRow;
 import org.kalypso.zml.ui.table.provider.RuleMapper;
+import org.kalypso.zml.ui.table.provider.strategy.editing.IZmlEditingStrategy;
+import org.kalypso.zml.ui.table.provider.strategy.editing.SimpleEditingStrategy;
+import org.kalypso.zml.ui.table.provider.strategy.editing.SumValueEditingStrategy;
 import org.kalypso.zml.ui.table.provider.strategy.labeling.IZmlLabelStrategy;
 import org.kalypso.zml.ui.table.provider.strategy.labeling.IndexValueLabelingStrategy;
 import org.kalypso.zml.ui.table.provider.strategy.labeling.InstantaneousValueLabelingStrategy;
@@ -57,45 +60,68 @@ import org.kalypso.zml.ui.table.schema.AbstractColumnType;
 import org.kalypso.zml.ui.table.schema.CellStyleType;
 import org.kalypso.zml.ui.table.schema.DataColumnType;
 import org.kalypso.zml.ui.table.schema.IndexColumnType;
+import org.kalypso.zml.ui.table.viewmodel.ZmlTableColumn;
 
 /**
  * @author Dirk Kuch
  */
 public class ExtendedZmlTableColumn extends ZmlTableColumn
 {
-  private IZmlLabelStrategy m_strategy;
-
   private final RuleMapper m_mapper = new RuleMapper();
 
   private CellStyle m_lastCellStyle;
 
   private IZmlModelRow m_lastRow;
 
+  private IZmlLabelStrategy m_labeling;
+
+  private IZmlEditingStrategy m_editing;
+
   public ExtendedZmlTableColumn( final IZmlTable table, final TableViewerColumn column, final BaseColumn type )
   {
     super( table, column, type );
   }
 
+  public IZmlEditingStrategy getEditingStrategy( )
+  {
+    if( m_editing != null )
+      return m_editing;
+
+    final AbstractColumnType type = getColumnType().getType();
+    if( type instanceof IndexColumnType )
+      return null;
+    else
+    {
+      final DataColumnType dataColumnType = (DataColumnType) type;
+      if( "N".equals( dataColumnType.getValueAxis() ) )
+        m_editing = new SumValueEditingStrategy( this );
+      else
+        m_editing = new SimpleEditingStrategy( this );
+    }
+
+    return m_editing;
+  }
+
   public IZmlLabelStrategy getLabelingStrategy( )
   {
-    if( m_strategy != null )
-      return m_strategy;
+    if( m_labeling != null )
+      return m_labeling;
 
     // index column type?
     final AbstractColumnType type = getColumnType().getType();
     if( type instanceof IndexColumnType )
-      m_strategy = new IndexValueLabelingStrategy( this );
+      m_labeling = new IndexValueLabelingStrategy( this );
     else
     {
       final DataColumnType dataColumnType = (DataColumnType) type;
 
       if( "N".equals( dataColumnType.getValueAxis() ) )
-        m_strategy = new SumValueLabelingStrategy( this );
+        m_labeling = new SumValueLabelingStrategy( this );
       else
-        m_strategy = new InstantaneousValueLabelingStrategy( this );
+        m_labeling = new InstantaneousValueLabelingStrategy( this );
     }
 
-    return m_strategy;
+    return m_labeling;
   }
 
   public CellStyle findStyle( final IZmlModelRow row ) throws CoreException

@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.model.references;
 
-import org.kalypso.zml.ui.table.model.IZmlDataModel;
+import org.kalypso.zml.ui.table.model.IZmlModel;
 import org.kalypso.zml.ui.table.model.IZmlModelColumn;
 import org.kalypso.zml.ui.table.model.IZmlModelRow;
 
@@ -78,7 +78,7 @@ public class ZmlIndexValueReference implements IZmlValueReference
    * @see org.kalypso.zml.ui.table.model.references.IZmlValueReference#getModel()
    */
   @Override
-  public IZmlDataModel getModel( )
+  public IZmlModel getModel( )
   {
     return m_row.getModel();
   }

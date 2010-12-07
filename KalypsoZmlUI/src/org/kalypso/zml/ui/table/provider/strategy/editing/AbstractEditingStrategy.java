@@ -38,13 +38,12 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.provider.strategy.labeling;
+package org.kalypso.zml.ui.table.provider.strategy.editing;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
+import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.runtime.CoreException;
-import org.kalypso.zml.ui.table.IZmlTable;
+import org.kalypso.contribs.java.lang.NumberUtils;
+import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.zml.ui.table.binding.CellStyle;
 import org.kalypso.zml.ui.table.model.IZmlModelRow;
 import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
@@ -53,40 +52,13 @@ import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
 /**
  * @author Dirk Kuch
  */
-public abstract class AbstractValueLabelingStrategy implements IZmlLabelStrategy
+public abstract class AbstractEditingStrategy implements IZmlEditingStrategy
 {
   private final ExtendedZmlTableColumn m_column;
 
-  public AbstractValueLabelingStrategy( final ExtendedZmlTableColumn column )
+  public AbstractEditingStrategy( final ExtendedZmlTableColumn column )
   {
     m_column = column;
-  }
-
-  protected String format( final IZmlModelRow row, final Object value ) throws CoreException
-  {
-
-    final CellStyle style = m_column.findStyle( row );
-    final String format = style.getTextFormat();
-    if( value instanceof Date )
-    {
-      final SimpleDateFormat sdf = new SimpleDateFormat( format == null ? "dd.MM.yyyy HH:mm" : format );
-      return sdf.format( value );
-    }
-
-    return String.format( format == null ? "%s" : format, value );
-  }
-
-  protected IZmlValueReference getReference( final IZmlModelRow row )
-  {
-    if( row == null )
-      return null;
-
-    return row.get( m_column.getModelColumn() );
-  }
-
-  protected IZmlTable getTable( )
-  {
-    return m_column.getTable();
   }
 
   protected ExtendedZmlTableColumn getColumn( )
@@ -94,4 +66,55 @@ public abstract class AbstractValueLabelingStrategy implements IZmlLabelStrategy
     return m_column;
   }
 
+  /**
+   * @see org.kalypso.zml.ui.table.provider.strategy.editing.IZmlEditingStrategy#getValue(java.lang.Object)
+   */
+  @Override
+  public String getValue( final Object element )
+  {
+    if( element instanceof IZmlModelRow )
+    {
+      try
+      {
+        final IZmlModelRow row = (IZmlModelRow) element;
+
+        final IZmlValueReference reference = row.get( m_column.getColumnType().getType() );
+        if( reference == null )
+          return "";
+
+        final Object value = reference.getValue();
+
+        final CellStyle style = getStyle();
+        return String.format( style.getTextFormat() == null ? "%s" : style.getTextFormat(), value );
+      }
+      catch( final Throwable t )
+      {
+        t.printStackTrace();
+      }
+    }
+
+    return null;
+  }
+
+  protected CellStyle getStyle( ) throws CoreException
+  {
+    final CellStyle editing = m_column.getColumnType().getDefaultEditingStyle();
+    if( editing == null )
+      return m_column.getColumnType().getDefaultStyle();
+
+    return editing;
+  }
+
+  protected Number getTargetValue( final String value )
+  {
+    final IAxis axis = m_column.getModelColumn().getValueAxis();
+    final Class< ? > clazz = axis.getDataClass();
+
+    if( Double.class == clazz )
+    {
+      return NumberUtils.parseDouble( value );
+    }
+    else
+      throw new NotImplementedException();
+  }
 }

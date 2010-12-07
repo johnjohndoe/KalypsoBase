@@ -75,4 +75,5 @@ public interface IZmlModelColumn
 
   IAxis getStatusAxis( );
 
+  IZmlModel getZmlModel( );
 }

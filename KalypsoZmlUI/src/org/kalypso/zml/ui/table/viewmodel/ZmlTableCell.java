@@ -140,4 +140,21 @@ public class ZmlTableCell extends ZmlTableElement implements IZmlTableCell
 
     return new ZmlTableCell( m_column, previousRow );
   }
+
+  /**
+   * @see org.kalypso.zml.ui.table.viewmodel.IZmlTableCell#findNextCell()
+   */
+  @Override
+  public IZmlTableCell findNextCell( )
+  {
+    final IZmlTable table = getTable();
+
+    final int index = getIndex();
+    if( table.getRows().length <= index )
+      return null;
+
+    final IZmlTableRow nextRow = table.getRow( index + 1 );
+
+    return new ZmlTableCell( m_column, nextRow );
+  }
 }

@@ -61,11 +61,11 @@ public class ZmlModelColumn implements IZmlModelColumn
 {
   private final IObsProvider m_provider;
 
-  private final IZmlDataModel m_tabelModel;
+  private final IZmlModel m_zmlModel;
 
   private final DataColumn m_type;
 
-  private ITupleModel m_model;
+  private ITupleModel m_tupleModel;
 
   private final String m_label;
 
@@ -87,10 +87,10 @@ public class ZmlModelColumn implements IZmlModelColumn
     }
   };
 
-  public ZmlModelColumn( final String label, final IObsProvider provider, final IZmlDataModel tabelModel, final DataColumn type )
+  public ZmlModelColumn( final String label, final IObsProvider provider, final IZmlModel tabelModel, final DataColumn type )
   {
     m_label = label;
-    m_tabelModel = tabelModel;
+    m_zmlModel = tabelModel;
     m_provider = provider;
     m_type = type;
 
@@ -99,12 +99,12 @@ public class ZmlModelColumn implements IZmlModelColumn
 
   protected void onObservationChanged( )
   {
-    m_tabelModel.fireModelChanged();
+    m_zmlModel.fireModelChanged();
   }
 
   protected void onObservationLoaded( )
   {
-    m_tabelModel.fireModelChanged();
+    m_zmlModel.fireModelChanged();
   }
 
   public void dispose( )
@@ -127,13 +127,13 @@ public class ZmlModelColumn implements IZmlModelColumn
 
   private ITupleModel getModel( ) throws SensorException
   {
-    if( m_model == null )
+    if( m_tupleModel == null )
     {
       final IObservation observation = m_provider.getObservation();
-      m_model = observation.getValues( null );
+      m_tupleModel = observation.getValues( null );
     }
 
-    return m_model;
+    return m_tupleModel;
   }
 
   private boolean isTargetAxis( final IAxis axis )
@@ -181,7 +181,7 @@ public class ZmlModelColumn implements IZmlModelColumn
   @SuppressWarnings("unused")
   public void observationChanged( final IObservation obs, final Object source )
   {
-    m_tabelModel.fireModelChanged();
+    m_zmlModel.fireModelChanged();
   }
 
   @Override
@@ -240,5 +240,14 @@ public class ZmlModelColumn implements IZmlModelColumn
       return null;
 
     return KalypsoStatusUtils.findStatusAxisFor( getAxes(), valueAxis );
+  }
+
+  /**
+   * @see org.kalypso.zml.ui.table.model.IZmlModelColumn#getZmlModel()
+   */
+  @Override
+  public IZmlModel getZmlModel( )
+  {
+    return m_zmlModel;
   }
 }

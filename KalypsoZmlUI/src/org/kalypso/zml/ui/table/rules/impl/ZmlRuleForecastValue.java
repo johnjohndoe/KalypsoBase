@@ -49,7 +49,7 @@ import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.binding.DataColumn;
 import org.kalypso.zml.ui.table.binding.ZmlRule;
-import org.kalypso.zml.ui.table.model.IZmlDataModel;
+import org.kalypso.zml.ui.table.model.IZmlModel;
 import org.kalypso.zml.ui.table.model.IZmlModelColumn;
 import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
 
@@ -104,7 +104,7 @@ public class ZmlRuleForecastValue extends AbstractZmlTableRule
 
   private MetadataList findMetadata( final IZmlValueReference reference )
   {
-    final IZmlDataModel model = reference.getModel();
+    final IZmlModel model = reference.getModel();
     final IZmlModelColumn[] columns = model.getColumns();
     for( final IZmlModelColumn column : columns )
     {

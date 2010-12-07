@@ -42,7 +42,7 @@ package org.kalypso.zml.ui.table.provider;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.kalypso.zml.ui.table.model.IZmlDataModel;
+import org.kalypso.zml.ui.table.model.IZmlModel;
 import org.kalypso.zml.ui.table.model.ZmlDataModel;
 
 /**
@@ -51,9 +51,9 @@ import org.kalypso.zml.ui.table.model.ZmlDataModel;
 public class ZmlTableContentProvider implements ITreeContentProvider
 {
 
-  private final IZmlDataModel m_model;
+  private final IZmlModel m_model;
 
-  public ZmlTableContentProvider( final IZmlDataModel model )
+  public ZmlTableContentProvider( final IZmlModel model )
   {
     m_model = model;
   }

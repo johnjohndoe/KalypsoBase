@@ -40,10 +40,41 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.provider.strategy.editing;
 
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.zml.ui.KalypsoZmlUI;
+import org.kalypso.zml.ui.table.model.IZmlModelRow;
+import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
+import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
+
 /**
  * @author Dirk Kuch
  */
-public class SimpleEditingStrategy
+public class SimpleEditingStrategy extends AbstractEditingStrategy implements IZmlEditingStrategy
 {
+  public SimpleEditingStrategy( final ExtendedZmlTableColumn column )
+  {
+    super( column );
+  }
 
+  /**
+   * @see org.kalypso.zml.ui.table.provider.strategy.editing.IZmlEditingStrategy#setValue(org.kalypso.zml.ui.table.model.IZmlModelRow,
+   *      java.lang.String)
+   */
+  @Override
+  public void setValue( final IZmlModelRow element, final String value )
+  {
+    try
+    {
+      final IZmlModelRow row = element;
+      final IZmlValueReference reference = row.get( getColumn().getColumnType().getType() );
+
+      final Object targetValue = getTargetValue( value );
+      reference.update( targetValue );
+    }
+    catch( final SensorException e )
+    {
+      KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+    }
+  }
 }

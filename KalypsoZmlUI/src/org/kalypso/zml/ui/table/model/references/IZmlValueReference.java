@@ -41,7 +41,7 @@
 package org.kalypso.zml.ui.table.model.references;
 
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.zml.ui.table.model.IZmlDataModel;
+import org.kalypso.zml.ui.table.model.IZmlModel;
 import org.kalypso.zml.ui.table.model.IZmlModelColumn;
 import org.kalypso.zml.ui.table.model.IZmlModelRow;
 
@@ -56,7 +56,7 @@ public interface IZmlValueReference
 
   String getHref( );
 
-  IZmlDataModel getModel( );
+  IZmlModel getModel( );
 
   IZmlModelRow getRow( );
 

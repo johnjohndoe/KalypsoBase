@@ -47,7 +47,7 @@ import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHandler;
 import org.kalypso.zml.ui.table.binding.DataColumn;
-import org.kalypso.zml.ui.table.model.IZmlDataModel;
+import org.kalypso.zml.ui.table.model.IZmlModel;
 import org.kalypso.zml.ui.table.model.IZmlModelColumn;
 import org.kalypso.zml.ui.table.model.IZmlModelRow;
 
@@ -140,7 +140,7 @@ public class ZmlDataValueReference implements IZmlValueReference
    * @see org.kalypso.zml.ui.table.model.references.IZmlValueReference#getModel()
    */
   @Override
-  public IZmlDataModel getModel( )
+  public IZmlModel getModel( )
   {
     return m_row.getModel();
   }

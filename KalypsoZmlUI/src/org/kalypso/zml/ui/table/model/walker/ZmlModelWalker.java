@@ -66,7 +66,7 @@ public class ZmlModelWalker
   {
     final IAxis axis = m_column.getValueAxis();
 
-    for( int i = startIndex; i < endIndex; i++ )
+    for( int i = startIndex; i <= endIndex; i++ )
     {
       final Object obj = m_column.get( i, axis );
       operation.add( obj );
