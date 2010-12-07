@@ -178,6 +178,7 @@ public class ZmlModelColumn implements IZmlModelColumn
     observation.fireChangedEvent( this );
   }
 
+  @SuppressWarnings("unused")
   public void observationChanged( final IObservation obs, final Object source )
   {
     m_tabelModel.fireModelChanged();
