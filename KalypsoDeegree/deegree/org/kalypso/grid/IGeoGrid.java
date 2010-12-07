@@ -39,9 +39,9 @@ public interface IGeoGrid extends IGeoValueProvider
    * </p>
    * 
    * @param x
-   *            The (cell-)coordinate x.
+   *          The (cell-)coordinate x.
    * @param y
-   *            The (cell-)coordinate y.
+   *          The (cell-)coordinate y.
    * @return The value.
    */
   public double getValue( final int x, final int y ) throws GeoGridException;
@@ -56,23 +56,22 @@ public interface IGeoGrid extends IGeoValueProvider
    * This function returns the surface of this grid.
    * 
    * @param targetCRS
-   *            The coordinate system will be used to transform the surface, after it was created and before it is
-   *            returned.
+   *          The coordinate system will be used to transform the surface, after it was created and before it is
+   *          returned.
    * @return The surface of the grid.
    */
   public GM_Surface< ? > getSurface( final String targetCRS ) throws GeoGridException;
 
   /**
-   * This function returns the cell at the given (cell-)coordinates. We interpret the grid cell as a surface
-   * with the grid point as center point of the cell.
+   * This function returns the cell at the given (cell-)coordinates. We interpret the grid cell as a surface with the
+   * grid point as center point of the cell.
    * 
    * @param x
-   *            The (cell-)coordinate x.
+   *          The (cell-)coordinate x.
    * @param y
-   *            The (cell-)coordinate y.
+   *          The (cell-)coordinate y.
    * @param targetCRS
-   *            The coordinate system will be used to transform the cell, after it was created and before it is
-   *            returned.
+   *          The coordinate system will be used to transform the cell, after it was created and before it is returned.
    * @return The cell.
    */
   public GM_Surface< ? > getCell( final int x, final int y, final String targetCRS ) throws GeoGridException;
@@ -116,7 +115,7 @@ public interface IGeoGrid extends IGeoValueProvider
   public String getSourceCRS( ) throws GeoGridException;
 
   /**
-   * Returns a walking strategy suitable to iterate thorugh this grid.
+   * Returns a walking strategy suitable to iterate through this grid.
    */
   public IGeoWalkingStrategy getWalkingStrategy( ) throws GeoGridException;
 
