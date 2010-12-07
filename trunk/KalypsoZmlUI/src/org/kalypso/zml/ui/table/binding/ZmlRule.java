@@ -69,9 +69,13 @@ public class ZmlRule
 
   private CellStyle m_baseStyle;
 
+  private boolean m_enabled;
+
   public ZmlRule( final RuleType rule )
   {
     m_rule = rule;
+
+    setEnabled( rule.isEnabled() );
   }
 
   public CellStyle getStyle( final IZmlModelRow row, final BaseColumn column ) throws CoreException
@@ -117,7 +121,7 @@ public class ZmlRule
 
   public IZmlRuleImplementation getImplementation( )
   {
-    return KalypsoZmlUI.getDefault().getRuleImplementation( m_rule.getRuleReference() );
+    return KalypsoZmlUI.getDefault().findRule( m_rule.getRuleReference() );
   }
 
   public ZmlRuleInstruction[] getInstructions( )
@@ -149,5 +153,15 @@ public class ZmlRule
   public String toString( )
   {
     return m_rule.getRuleReference();
+  }
+
+  public boolean isEnabled( )
+  {
+    return m_enabled;
+  }
+
+  public void setEnabled( final boolean enabled )
+  {
+    m_enabled = enabled;
   }
 }

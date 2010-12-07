@@ -68,7 +68,7 @@ public class KalypsoZmlUI extends AbstractUIPlugin
   /**
    * @return list of feature binding handlers, handling a special featureType qname
    */
-  public synchronized IZmlRuleImplementation[] getRuleImplementations( )
+  public synchronized IZmlRuleImplementation[] getRules( )
   {
     // fill binding map
     if( ZML_TABLE_RULES == null )
@@ -104,9 +104,9 @@ public class KalypsoZmlUI extends AbstractUIPlugin
   /**
    * @return list of feature binding handlers, handling a special featureType qname
    */
-  public synchronized IZmlRuleImplementation getRuleImplementation( final String identifier )
+  public synchronized IZmlRuleImplementation findRule( final String identifier )
   {
-    final IZmlRuleImplementation[] rules = getRuleImplementations();
+    final IZmlRuleImplementation[] rules = getRules();
     for( final IZmlRuleImplementation rule : rules )
     {
       if( rule.getIdentifier().equals( identifier ) )

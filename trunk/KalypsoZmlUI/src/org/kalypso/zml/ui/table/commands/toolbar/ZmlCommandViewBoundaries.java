@@ -40,20 +40,27 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.commands.toolbar;
 
+import java.util.Map;
+
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.IZmlTable;
+import org.kalypso.zml.ui.table.binding.ZmlRule;
+import org.kalypso.zml.ui.table.binding.ZmlRuleResolver;
 import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
-import org.kalypso.zml.ui.table.rules.impl.ZmlRuleGrenzwerte;
+import org.kalypso.zml.ui.table.schema.RuleRefernceType;
+
+import com.google.common.base.Splitter;
 
 /**
- * FIXME: use id of rule-set to enable/disable. DO NOT use static enablement/diablement!
- * 
  * @author Dirk Kuch
  */
-public class ZmlCommandAlarmstufenViewMode extends AbstractHandler
+public class ZmlCommandViewBoundaries extends AbstractHandler
 {
 
   /**
@@ -62,13 +69,27 @@ public class ZmlCommandAlarmstufenViewMode extends AbstractHandler
   @Override
   public Object execute( final ExecutionEvent event )
   {
-    if( HandlerUtils.isSelected( event ) )
+    @SuppressWarnings("rawtypes")
+    final Map parameters = event.getParameters();
+    final String linkedRules = (String) parameters.get( "rules" ); // $NON-NLS-1$
+
+    final ZmlRuleResolver resolver = ZmlRuleResolver.getInstance();
+
+    final Iterable<String> rules = Splitter.on( ';' ).split( linkedRules );
+    for( final String lnkRule : rules )
     {
-      ZmlRuleGrenzwerte.enable();
-    }
-    else
-    {
-      ZmlRuleGrenzwerte.disable();
+      try
+      {
+        final RuleRefernceType reference = new RuleRefernceType();
+        reference.setUrl( lnkRule );
+
+        final ZmlRule rule = resolver.findRule( null, reference );
+        rule.setEnabled( HandlerUtils.isSelected( event ) );
+      }
+      catch( final CoreException e )
+      {
+        KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+      }
     }
 
     final IZmlTable table = ZmlHandlerUtil.getTable( event );
@@ -76,4 +97,5 @@ public class ZmlCommandAlarmstufenViewMode extends AbstractHandler
 
     return Status.OK_STATUS;
   }
+
 }

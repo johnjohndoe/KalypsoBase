@@ -142,13 +142,13 @@
     </command>
     <command
           categoryId="org.kalypso.zml.ui.table.commands.category"
-          id="org.kalypso.zml.ui.table.commands.toolbar.view.alarm.levels"
-          name="Alarmstufen anzeigen">
-    </command>
-    <command
-          categoryId="org.kalypso.zml.ui.table.commands.category"
-          id="org.kalypso.zml.ui.table.commands.toolbar.view.hauptzahlen"
-          name="Hauptzahlen anzeigen">
+          id="org.kalypso.zml.ui.table.commands.toolbar.view.boundaries"
+          name="View Bundary Command">
+       <commandParameter
+             id="rules"
+             name="zml rules seperated by ;"
+             optional="false">
+       </commandParameter>
     </command>
  </extension>
  <extension
@@ -195,12 +195,8 @@
        </activeWhen>
     </handler>
     <handler
-          class="org.kalypso.zml.ui.table.commands.toolbar.ZmlCommandAlarmstufenViewMode"
-          commandId="org.kalypso.zml.ui.table.commands.toolbar.view.alarm.levels">
-    </handler>
-    <handler
-          class="org.kalypso.zml.ui.table.commands.toolbar.ZmlCommandHauptzahlenViewMode"
-          commandId="org.kalypso.zml.ui.table.commands.toolbar.view.hauptzahlen">
+          class="org.kalypso.zml.ui.table.commands.toolbar.ZmlCommandViewBoundaries"
+          commandId="org.kalypso.zml.ui.table.commands.toolbar.view.boundaries">
     </handler>
  </extension>
   <extension
@@ -232,14 +228,6 @@
     <image
           commandId="org.kalypso.zml.ui.table.commands.toolbar.view.hour.minus"
           icon="icons/table/hour_minus.png">
-    </image>
-    <image
-          commandId="org.kalypso.zml.ui.table.commands.toolbar.view.alarm.levels"
-          icon="icons/table/alarmstufen_view_mode.png">
-    </image>
-    <image
-          commandId="org.kalypso.zml.ui.table.commands.toolbar.view.hauptzahlen"
-          icon="icons/table/hauptzahlen.png">
     </image>
  </extension>
  <extension
