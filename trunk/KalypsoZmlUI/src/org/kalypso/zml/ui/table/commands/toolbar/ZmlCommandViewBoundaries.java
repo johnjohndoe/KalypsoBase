@@ -40,12 +40,16 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.commands.toolbar;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.ui.commands.IElementUpdater;
+import org.eclipse.ui.menus.UIElement;
 import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.zml.ui.KalypsoZmlUI;
@@ -60,7 +64,7 @@ import com.google.common.base.Splitter;
 /**
  * @author Dirk Kuch
  */
-public class ZmlCommandViewBoundaries extends AbstractHandler
+public class ZmlCommandViewBoundaries extends AbstractHandler implements IElementUpdater
 {
 
   /**
@@ -69,10 +73,23 @@ public class ZmlCommandViewBoundaries extends AbstractHandler
   @Override
   public Object execute( final ExecutionEvent event )
   {
-    @SuppressWarnings("rawtypes")
-    final Map parameters = event.getParameters();
+    final ZmlRule[] rules = findRules( event.getParameters() );
+    for( final ZmlRule rule : rules )
+    {
+      rule.setEnabled( HandlerUtils.isSelected( event ) );
+    }
+
+    final IZmlTable table = ZmlHandlerUtil.getTable( event );
+    table.refresh();
+
+    return Status.OK_STATUS;
+  }
+
+  private ZmlRule[] findRules( @SuppressWarnings("rawtypes") final Map parameters )
+  {
     final String linkedRules = (String) parameters.get( "rules" ); // $NON-NLS-1$
 
+    final List<ZmlRule> myRules = new ArrayList<ZmlRule>();
     final ZmlRuleResolver resolver = ZmlRuleResolver.getInstance();
 
     final Iterable<String> rules = Splitter.on( ';' ).split( linkedRules );
@@ -84,7 +101,7 @@ public class ZmlCommandViewBoundaries extends AbstractHandler
         reference.setUrl( lnkRule );
 
         final ZmlRule rule = resolver.findRule( null, reference );
-        rule.setEnabled( HandlerUtils.isSelected( event ) );
+        myRules.add( rule );
       }
       catch( final CoreException e )
       {
@@ -92,10 +109,21 @@ public class ZmlCommandViewBoundaries extends AbstractHandler
       }
     }
 
-    final IZmlTable table = ZmlHandlerUtil.getTable( event );
-    table.refresh();
+    return myRules.toArray( new ZmlRule[] {} );
+  }
 
-    return Status.OK_STATUS;
+  /**
+   * @see org.eclipse.ui.commands.IElementUpdater#updateElement(org.eclipse.ui.menus.UIElement, java.util.Map)
+   */
+  @Override
+  public void updateElement( final UIElement element, @SuppressWarnings("rawtypes") final Map parameters )
+  {
+    final ZmlRule[] rules = findRules( parameters );
+    for( final ZmlRule rule : rules )
+    {
+      if( rule.isEnabled() )
+        element.setChecked( true );
+    }
   }
 
 }
