@@ -41,7 +41,6 @@
 package org.kalypso.zml.ui.table.menu;
 
 import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Control;
@@ -59,12 +58,9 @@ public class ZmlTableHeaderContextMenuListener implements SelectionListener
 {
   private final ZmlTableComposite m_table;
 
-  private final TableViewerColumn m_column;
-
-  public ZmlTableHeaderContextMenuListener( final ZmlTableComposite table, final TableViewerColumn column )
+  public ZmlTableHeaderContextMenuListener( final ZmlTableComposite table )
   {
     m_table = table;
-    m_column = column;
   }
 
   private void setMenu( final String uri )
