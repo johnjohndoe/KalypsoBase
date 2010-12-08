@@ -47,7 +47,9 @@ import java.math.BigDecimal;
  */
 public interface IMetadataBoundary extends IMetadataConstants
 {
-  String getType( );
+  String getName( );
 
   BigDecimal getValue( );
+
+  String getParameterType( );
 }
