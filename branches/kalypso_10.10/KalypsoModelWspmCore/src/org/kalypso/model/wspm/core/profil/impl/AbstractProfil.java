@@ -580,7 +580,10 @@ public abstract class AbstractProfil implements IProfil
   public Object removePointMarker( final IProfilPointMarker marker )
   {
     final Object oldValue = marker.getValue();
-    marker.setValue( null );
+
+    final IComponent id = marker.getId();
+    final Object defaultValue = id.getDefaultValue();
+    marker.setValue( defaultValue );
 
     return oldValue;
   }
