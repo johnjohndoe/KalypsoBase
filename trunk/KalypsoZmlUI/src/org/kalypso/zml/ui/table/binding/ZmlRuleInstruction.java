@@ -42,11 +42,13 @@ package org.kalypso.zml.ui.table.binding;
 
 import java.math.BigDecimal;
 
+import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.metadata.MetadataBoundary;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
+import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.zml.ui.table.model.IZmlModelColumn;
 import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
 import org.kalypso.zml.ui.table.schema.RuleInstruction;
@@ -57,6 +59,8 @@ import org.kalypso.zml.ui.table.schema.StyleReferenceType;
  */
 public class ZmlRuleInstruction
 {
+  public static final String PATTERN_TEXT = "${text}";
+
   private final RuleInstruction m_type;
 
   private CellStyle m_style;
@@ -90,11 +94,11 @@ public class ZmlRuleInstruction
     if( keyTo != null && metaTo == null )
       return false;
 
-    final Object valueObject = reference.getValue();
-    if( !(valueObject instanceof Number) )
-      return false;
+    final String boundaryType = findBoundaryType( metaFrom, metaTo );
 
-    final double value = ((Number) valueObject).doubleValue();
+    final double value = findValue( reference, boundaryType );
+    if( Double.isNaN( value ) )
+      return false;
 
     // FIXME: get the scale from the axis and/or table column definition
     final int scale = 3;
@@ -106,6 +110,56 @@ public class ZmlRuleInstruction
       return false;
 
     return true;
+  }
+
+  private String findBoundaryType( final MetadataBoundary metaFrom, final MetadataBoundary metaTo )
+  {
+    if( metaFrom != null )
+      return metaFrom.getType();
+
+    if( metaTo != null )
+      return metaTo.getType();
+
+    return null;
+  }
+
+  private double findValue( final IZmlValueReference reference, final String boundaryType ) throws SensorException
+  {
+    if( boundaryType == null )
+      return getReferenceValue( reference );
+
+    final IZmlModelColumn column = reference.getColumn();
+    final IAxis valueAxis = column.getValueAxis();
+    if( ObjectUtils.equals( valueAxis.getType(), boundaryType ) )
+      return getReferenceValue( reference );
+
+    /* Type of boundary is different from value type -> we need to retrieve the value ourselfs */
+    final Integer tupleModelIndex = reference.getTupleModelIndex();
+    if( tupleModelIndex == null )
+      return Double.NaN;
+
+    final IAxis[] axes = column.getAxes();
+    final IAxis boundaryAxis = AxisUtils.findAxis( axes, boundaryType );
+    if( boundaryAxis == null )
+      return Double.NaN;
+
+    final Object boundaryValue = column.get( 0, valueAxis );
+    if( boundaryValue instanceof Number )
+      return ((Number) boundaryAxis).doubleValue();
+
+    return Double.NaN;
+  }
+
+  /**
+   * Returns the value hold by the reference itself.
+   */
+  private double getReferenceValue( final IZmlValueReference reference ) throws SensorException
+  {
+    final Object valueObject = reference.getValue();
+    if( valueObject instanceof Number )
+      return ((Number) valueObject).doubleValue();
+
+    return Double.NaN;
   }
 
   private boolean compareMeta( final MetadataBoundary meta, final BigDecimal value, final String op )
@@ -145,7 +199,7 @@ public class ZmlRuleInstruction
   public String update( final String text )
   {
     final String label = m_type.getLabel();
-    return label.replace( "${text}", text );
+    return label.replace( PATTERN_TEXT, text );
   }
 
   public CellStyle getStyle( ) throws CoreException
