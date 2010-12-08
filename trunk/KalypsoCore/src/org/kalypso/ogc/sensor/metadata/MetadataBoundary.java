@@ -56,30 +56,55 @@ import org.kalypso.contribs.java.lang.NumberUtils;
  */
 public final class MetadataBoundary implements IMetadataBoundary
 {
-  private final String m_type;
+  private final String m_name;
 
   private final BigDecimal m_value;
+
+  private final String m_parameterType;
 
   /**
    * @param type
    *          type of the boundary (alarmstufe 3b, niedrigwasser, hochwasser, aso.)
    */
-  public MetadataBoundary( final String type, final BigDecimal value )
+  public MetadataBoundary( final String name, final BigDecimal value )
   {
-    m_type = type;
+    m_name = name;
     m_value = value;
+
+    m_parameterType = parseParameterType( m_name );
   }
 
-  @Override
-  public String getType( )
+  private static String parseParameterType( final String key )
   {
-    return m_type;
+    if( key.startsWith( IMetadataConstants.BOUNDARY_PREFIX ) )
+      return String.valueOf( key.charAt( IMetadataConstants.BOUNDARY_PREFIX.length() ) );
+
+    /** hack for sachsen, so old typeless entries will work */
+    return "W";
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.metadata.IMetadataBoundary#getName()
+   */
+  @Override
+  public String getName( )
+  {
+    return m_name;
   }
 
   @Override
   public BigDecimal getValue( )
   {
     return m_value;
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.metadata.IMetadataBoundary#getParameterType()
+   */
+  @Override
+  public String getParameterType( )
+  {
+    return m_parameterType;
   }
 
   public static String[] findBoundaryKeys( final MetadataList metadata )
