@@ -75,6 +75,7 @@ import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.repository.IModifyableRepository;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryItem;
+import org.kalypso.repository.IWriteableRepository;
 import org.kalypso.repository.IWriteableRepositoryItem;
 import org.kalypso.repository.RepositoryException;
 import org.kalypso.repository.conf.RepositoryConfigUtils;
@@ -721,7 +722,7 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
   {
     for( final IRepository repository : m_repositories )
     {
-      if( repository instanceof IModifyableRepository )
+      if( repository instanceof IWriteableRepository )
       {
         final IRepositoryItem item = repository.findItem( identifier );
         if( item instanceof IWriteableRepositoryItem )
