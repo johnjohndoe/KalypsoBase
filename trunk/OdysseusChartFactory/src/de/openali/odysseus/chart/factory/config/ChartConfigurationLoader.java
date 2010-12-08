@@ -41,6 +41,7 @@ import de.openali.odysseus.chartconfig.x020.MapperType;
 import de.openali.odysseus.chartconfig.x020.PointStyleDocument;
 import de.openali.odysseus.chartconfig.x020.PointStyleType;
 import de.openali.odysseus.chartconfig.x020.RoleReferencingType;
+import de.openali.odysseus.chartconfig.x020.ScreenAxisDocument;
 import de.openali.odysseus.chartconfig.x020.StylesDocument.Styles;
 import de.openali.odysseus.chartconfig.x020.TextStyleDocument;
 import de.openali.odysseus.chartconfig.x020.TextStyleType;
@@ -268,65 +269,79 @@ public class ChartConfigurationLoader implements IReferenceResolver
      * hier muss man die Document-Factories zum Parsen verwenden ( z.B. ChartDocument.Factory statt ChartType.Factory),
      * weil sonst das erzeugt XmlObject nur null-Objekte enthält
      */
-
-    XmlObject obj = null;
     final String nodeName = node.getLocalName();
 
-    if( nodeName.equals( "Chart" ) )
+    if( "Chart".equals( nodeName ) ) //$NON-NLS-1$
     {
       final ChartDocument doc = ChartDocument.Factory.parse( node );
-      obj = doc.getChart();
+
+      return doc.getChart();
     }
-    else if( nodeName.equals( "Layer" ) )
+    else if( "Layer".equals( nodeName ) ) //$NON-NLS-1$
     {
       final LayerDocument doc = LayerDocument.Factory.parse( node );
-      obj = doc.getLayer();
+
+      return doc.getLayer();
     }
-    else if( nodeName.equals( "Axis" ) )
+    else if( "Axis".equals( nodeName ) ) //$NON-NLS-1$
     {
       final AxisDocument doc = AxisDocument.Factory.parse( node );
-      obj = doc.getAxis();
+
+      return doc.getAxis();
     }
-    else if( nodeName.equals( "Mapper" ) )
+    else if( "ScreenAxis".equals( nodeName ) ) //$NON-NLS-1$
+    {
+      final ScreenAxisDocument doc = ScreenAxisDocument.Factory.parse( node );
+
+      return doc.getScreenAxis();
+    }
+    else if( "Mapper".equals( nodeName ) ) //$NON-NLS-1$
     {
       final MapperDocument doc = MapperDocument.Factory.parse( node );
-      obj = doc.getMapper();
+
+      return doc.getMapper();
     }
-    else if( nodeName.equals( "LineStyle" ) )
+    else if( "LineStyle".equals( nodeName ) ) //$NON-NLS-1$
     {
       final LineStyleDocument doc = LineStyleDocument.Factory.parse( node );
-      obj = doc.getLineStyle();
+
+      return doc.getLineStyle();
     }
-    else if( nodeName.equals( "PointStyle" ) )
+    else if( "PointStyle".equals( nodeName ) ) //$NON-NLS-1$
     {
       final PointStyleDocument doc = PointStyleDocument.Factory.parse( node );
-      obj = doc.getPointStyle();
+
+      return doc.getPointStyle();
     }
-    else if( nodeName.equals( "AreaStyle" ) )
+    else if( "AreaStyle".equals( nodeName ) ) //$NON-NLS-1$
     {
       final AreaStyleDocument doc = AreaStyleDocument.Factory.parse( node );
-      obj = doc.getAreaStyle();
+
+      return doc.getAreaStyle();
     }
-    else if( nodeName.equals( "TextStyle" ) )
+    else if( "TextStyle".equals( nodeName ) ) //$NON-NLS-1$
     {
       final TextStyleDocument doc = TextStyleDocument.Factory.parse( node );
-      obj = doc.getTextStyle();
+
+      return doc.getTextStyle();
     }
-    else if( nodeName.equals( "AxisRenderer" ) )
+    else if( "AxisRenderer".equals( nodeName ) ) //$NON-NLS-1$
     {
       final AxisRendererDocument doc = AxisRendererDocument.Factory.parse( node );
-      obj = doc.getAxisRenderer();
+
+      return doc.getAxisRenderer();
     }
     else
       Logger.logError( Logger.TOPIC_LOG_CONFIG, "Cannot identify configuration node named: " + nodeName );
-    return obj;
+
+    return null;
   }
 
   public static XmlOptions configureXmlOptions( final String charset )
   {
     final XmlOptions options = new XmlOptions();
     final Map<String, String> prefixes = new HashMap<String, String>();
-    prefixes.put( "http://www.openali.de/odysseus/chartconfig/0.2.0/", "" );
+    prefixes.put( "http://www.openali.de/odysseus/chartconfig/0.2.0/", "" ); //$NON-NLS-1$ //$NON-NLS-2$
     options.setSaveSuggestedPrefixes( prefixes );
     options.setSavePrettyPrint();
     options.setCharacterEncoding( charset );

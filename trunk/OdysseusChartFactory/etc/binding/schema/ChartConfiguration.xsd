@@ -3,10 +3,10 @@
   <include schemaLocation="./StyleConfiguration.xsd" />
 
   <element name="ChartConfiguration" type="ods:ChartConfigurationType">
-		<!-- Achsen Keys -->
+	<!-- Achsen Keys -->
     <key name="axisKey" id="axisKey.key">
       <selector xpath="ods:Axis">
-      </selector>
+      </selector> 
       <field xpath="@id" />
     </key>
     <keyref refer="ods:axisKey" name="domainAxisKey.ref">
@@ -17,8 +17,22 @@
       <selector xpath="ods:Layer/ods:Mappers/ods:TargetAxisRef" />
       <field xpath="@ref" />
     </keyref>
+    <key name="screenAxisKey" id="screenAxisKey.key">
+      <selector xpath="ods:ScreenAxis">
+      </selector>
+      <field xpath="@id" />
+    </key>
+    <keyref refer="ods:screenAxisKey" name="domainScreenAxisKey.ref">
+      <selector xpath="ods:Layer/ods:Mappers/ods:DomainAxisRef" />
+      <field xpath="@ref" />
+    </keyref>
+    <keyref refer="ods:screenAxisKey" name="targetScreenAxisKey.ref">
+      <selector xpath="ods:Layer/ods:Mappers/ods:TargetAxisRef" />
+      <field xpath="@ref" />
+    </keyref>
+   
 
-		<!-- Mapper Keys -->
+	<!-- Mapper Keys -->
     <key name="mapperKey" id="mapperKey.key">
       <selector xpath="ods:Mapper">
       </selector>
@@ -29,7 +43,7 @@
       <field xpath="@ref" />
     </keyref>
 
-		<!-- Layer Keys -->
+	<!-- Layer Keys -->
     <key name="layerKey" id="layerKey.key">
       <selector xpath="ods:Layer">
       </selector>
@@ -40,7 +54,7 @@
       <field xpath="@ref" />
     </keyref>
 
-		<!-- AxisRenderer Keys -->
+	<!-- AxisRenderer Keys -->
     <key name="axisRendererKey" id="axisRendererKey.key">
       <selector xpath="ods:AxisRenderer">
       </selector>
@@ -51,7 +65,7 @@
       <field xpath="@ref" />
     </keyref>
 
-		<!-- LineStyleKeys -->
+	<!-- LineStyleKeys -->
     <key name="lineStyleKey" id="lineStyleKey.key">
       <selector xpath="ods:LineStyle">
       </selector>
@@ -62,7 +76,7 @@
       <field xpath="@ref" />
     </keyref>
 
-		<!-- PointStyleKeys -->
+	<!-- PointStyleKeys -->
     <key name="pointStyleKey" id="pointStyleKey.key">
       <selector xpath="ods:PointStyle">
       </selector>
@@ -174,6 +188,7 @@
   <element name="Chart" type="ods:ChartType" />
   <element name="Layer" type="ods:LayerType" />
   <element name="Axis" type="ods:AxisType" />
+  <element name="ScreenAxis" type="ods:ScreenAxisType" />
   <element name="Mapper" type="ods:MapperType" />
   <element name="AxisRenderer" type="ods:AxisRendererType" />
 
@@ -224,6 +239,7 @@
                 <choice maxOccurs="unbounded">
                   <element ref="ods:Mapper" />
                   <element ref="ods:Axis" />
+                  <element ref="ods:ScreenAxis" />
                 </choice>
               </sequence>
             </complexType>
@@ -279,13 +295,10 @@
     </sequence>
     <attribute name="epid" type="string" use="required">
       <annotation>
-        <documentation> ID der Extension, die den jeweiligen Erweiterungspunkt implementiert
-				</documentation>
+        <documentation> ID der Extension, die den jeweiligen Erweiterungspunkt implementiert</documentation>
       </annotation>
     </attribute>
   </complexType>
-
-
 
   <complexType name="MapperRefType">
     <complexContent>
@@ -307,7 +320,7 @@
     <complexContent>
       <extension base="ods:MapperType">
         <sequence>
-          <element name="Label" type="string" minOccurs="0"/>
+          <element name="Label" type="string" minOccurs="0" />
           <element name="Direction" minOccurs="1">
             <simpleType>
               <restriction base="string">
@@ -316,17 +329,8 @@
               </restriction>
             </simpleType>
           </element>
-          <element name="Position" minOccurs="1">
-            <simpleType>
-              <restriction base="string">
-                <enumeration value="LEFT" />
-                <enumeration value="RIGHT" />
-                <enumeration value="BOTTOM" />
-                <enumeration value="TOP" />
-              </restriction>
-            </simpleType>
-          </element>
-          <choice minOccurs="0"> 
+          <element name="Position" type="ods:PositionType" minOccurs="1" />
+          <choice minOccurs="0">
             <element ref="ods:DateRange" />
             <element ref="ods:DurationRange" />
             <element ref="ods:StringRange" />
@@ -372,6 +376,26 @@
 
 
 
+  <complexType name="ScreenAxisType">
+    <complexContent>
+      <extension base="ods:MapperType">
+        <sequence>
+          <element name="Position" type="ods:PositionType" minOccurs="1" />
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+
+
+
+  <simpleType name="PositionType">
+    <restriction base="string">
+      <enumeration value="LEFT" />
+      <enumeration value="RIGHT" />
+      <enumeration value="BOTTOM" />
+      <enumeration value="TOP" />
+    </restriction>
+  </simpleType>
 
 
   <complexType name="AxisNumberRangeType">
@@ -506,6 +530,9 @@
       </extension>
     </simpleContent>
   </complexType>
+
+
+
 
  
 

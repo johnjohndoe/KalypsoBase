@@ -62,9 +62,11 @@ import de.openali.odysseus.chartconfig.x020.LineStyleType;
 import de.openali.odysseus.chartconfig.x020.MapperType;
 import de.openali.odysseus.chartconfig.x020.ParametersType;
 import de.openali.odysseus.chartconfig.x020.PointStyleType;
+import de.openali.odysseus.chartconfig.x020.PositionType;
 import de.openali.odysseus.chartconfig.x020.ProviderType;
 import de.openali.odysseus.chartconfig.x020.ReferencingType;
 import de.openali.odysseus.chartconfig.x020.RoleReferencingType;
+import de.openali.odysseus.chartconfig.x020.ScreenAxisType;
 import de.openali.odysseus.chartconfig.x020.StylesDocument.Styles;
 import de.openali.odysseus.chartconfig.x020.TextStyleType;
 import de.openali.odysseus.chartconfig.x020.TitleType;
@@ -151,6 +153,12 @@ public final class ChartFactory
       {
         addAxis( model, rr, axisType, extLoader, context );
       }
+
+      final ScreenAxisType[] screenAxesTypes = mappers.getScreenAxisArray();
+      for( final ScreenAxisType screenAxisType : screenAxesTypes )
+      {
+        addScreenAxis( model, screenAxisType, extLoader );
+      }
     }
 
     final Layers layers = chartType.getLayers();
@@ -227,14 +235,14 @@ public final class ChartFactory
         return null;
 
       final String apId = axisType.getProvider().getEpid();
-      if( (apId != null) && (apId.length() > 0) )
+      if( apId != null && !apId.trim().isEmpty() )
         try
         {
           final IAxisProvider ap = extLoader.getExtension( IAxisProvider.class, apId );
           if( ap != null )
           {
             final String id = axisType.getId();
-            final POSITION axisPosition = getAxisPosition( axisType );
+            final POSITION axisPosition = getAxisPosition( axisType.getPosition() );
             final IParameterContainer pc = createParameterContainer( id, axisType.getProvider() );
             final Class< ? > dataClass = getAxisDataClass( axisType );
             String[] valueList = null;
@@ -300,7 +308,6 @@ public final class ChartFactory
                 {
                   e.printStackTrace();
                 }
-
               }
             }
 
@@ -319,6 +326,30 @@ public final class ChartFactory
     }
     else
       Logger.logError( Logger.TOPIC_LOG_GENERAL, "AxisFactory: given axis is NULL." );
+
+    return null;
+  }
+
+  public static IAxis addScreenAxis( final IChartModel model, final ScreenAxisType screenAxisType, final IExtensionLoader extLoader )
+  {
+    final IMapperRegistry mr = model.getMapperRegistry();
+    if( screenAxisType != null )
+    {
+      /* screen axis already exists? */
+      if( mr.getAxis( screenAxisType.getId() ) != null )
+        return null;
+
+      final String providerId = screenAxisType.getProvider().getEpid();
+      if( providerId != null && !providerId.trim().isEmpty() )
+      {
+        final IAxisProvider provider = extLoader.getExtension( IAxisProvider.class, providerId );
+
+        final IAxis screenAxis = provider.getScreenAxis( screenAxisType.getId(), getAxisPosition( screenAxisType.getPosition() ) );
+        mr.addMapper( screenAxis );
+
+        return screenAxis;
+      }
+    }
 
     return null;
   }
@@ -481,11 +512,12 @@ public final class ChartFactory
     return dir;
   }
 
-  private static POSITION getAxisPosition( final AxisType at )
+  private static POSITION getAxisPosition( final PositionType.Enum positionType )
   {
     final AxisPositionParser app = new AxisPositionParser();
-    final String position = at.getPosition().toString();
+    final String position = positionType.toString();
     final POSITION pos = app.stringToLogical( position );
+
     return pos;
   }
 

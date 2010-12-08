@@ -60,7 +60,7 @@ public class DefaultTextLayer extends AbstractChartLayer
 
   private final TitleTypeBean[] m_titleTypeBeans;
 
-  public DefaultTextLayer(final String id, final ICoordinateMapper coordinateMapper, final IChartLabelRenderer labelRenderer, final TitleTypeBean... titleTypeBeans )
+  public DefaultTextLayer( final String id, final ICoordinateMapper coordinateMapper, final IChartLabelRenderer labelRenderer, final TitleTypeBean... titleTypeBeans )
   {
     m_titleTypeBeans = titleTypeBeans;
     m_labelRenderer = labelRenderer;
@@ -68,9 +68,9 @@ public class DefaultTextLayer extends AbstractChartLayer
     setId( id );
   }
 
-  public DefaultTextLayer(final String id, final ICoordinateMapper coordinateMapper, final TitleTypeBean... titleTypeBeans )
+  public DefaultTextLayer( final String id, final ICoordinateMapper coordinateMapper, final TitleTypeBean... titleTypeBeans )
   {
-    this(id, coordinateMapper, new GenericChartLabelRenderer(), titleTypeBeans );
+    this( id, coordinateMapper, new GenericChartLabelRenderer(), titleTypeBeans );
   }
 
   /**
