@@ -97,6 +97,7 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
       getTextStyle().apply( gc );
       final Point size = gc.textExtent( m_label, SWT.DRAW_TRANSPARENT | SWT.DRAW_DELIMITER | SWT.DRAW_TAB );
       final int border = isDrawBorder() ? 1 : 0;// TODO getBorderLine().getWidth()
+
       return new Point( size.x + border * 2 + getInsets().left + getInsets().right, size.y + border * 2 + getInsets().top + getInsets().bottom );
     }
     finally
@@ -216,7 +217,7 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
         return 0;
       case CENTERED_HORIZONTAL:
         return -getSize().x / 2;
-            case BOTTOM:
+      case BOTTOM:
         return -getSize().y;
       case TOP:
         return 0;
@@ -264,7 +265,6 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
   {
     m_size = null;
     m_insets = insets;
-
   }
 
   /**
@@ -331,9 +331,9 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
   @Override
   public void eatBean( final TitleTypeBean titleTypeBean )
   {
-
     if( titleTypeBean == null )
       return;
+
     setAlignment( titleTypeBean.getAlignmentHorizontal(), titleTypeBean.getAlignmentVertical() );
     setTextAnchor( titleTypeBean.getTextAnchorX(), titleTypeBean.getTextAnchorY() );
     setLabel( titleTypeBean.getText() );
@@ -348,7 +348,6 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
   @Override
   public boolean isDrawBorder( )
   {
-
     return m_drawBorder;
   }
 
