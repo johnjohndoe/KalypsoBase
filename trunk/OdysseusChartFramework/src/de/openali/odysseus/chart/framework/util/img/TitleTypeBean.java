@@ -57,15 +57,15 @@ public class TitleTypeBean
 
   private ALIGNMENT m_alignmentVertical = ALIGNMENT.CENTER;
 
-  private  ALIGNMENT m_textAnchorX = ALIGNMENT.CENTER;
+  private ALIGNMENT m_textAnchorX = ALIGNMENT.CENTER;
 
-  private  ALIGNMENT m_textAnchorY = ALIGNMENT.CENTER;
+  private ALIGNMENT m_textAnchorY = ALIGNMENT.CENTER;
 
   private ITextStyle m_textStyle;
 
   private int m_rotation;
 
-  private Insets m_insets = new Insets( 0, 0, 0, 0 );
+  private Insets m_insets;
 
   public TitleTypeBean( final String text )
   {
@@ -78,7 +78,7 @@ public class TitleTypeBean
     m_text = text;
     m_alignmentHorizontal = alignmentHorizontal;
     m_textStyle = textStyle;
-    m_insets = insets;
+    m_insets = insets == null ? new Insets( 0, 0, 0, 0 ) : insets;
   }
 
   public ALIGNMENT getAlignmentHorizontal( )

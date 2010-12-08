@@ -69,29 +69,40 @@ public class OrdinalAxisRenderer implements IAxisRenderer
 {
   private IChartLabelRenderer m_tickLabelRenderer;
 
-  private final IChartLabelRenderer m_labelRenderer = new GenericChartLabelRenderer();
+  private final IChartLabelRenderer m_labelRenderer;
 
   private final String m_id;
 
-  private final AxisRendererConfig m_config;
+  private final boolean m_fixedWidth = true;
 
   private ITextStyle m_tickStyle = null;
 
   private final Map<String, Object> m_dataMap = new HashMap<String, Object>();
 
-  public static String STRING_ARRAY = "de.openali.odysseus.chart.ext.base.OrdinalAxisRenderer_string_array";
+  private final String[] m_labels;
 
-  public OrdinalAxisRenderer( final String id, final AxisRendererConfig config )
+  private final AxisRendererConfig m_config;
+
+  public OrdinalAxisRenderer( final String id, final AxisRendererConfig config, final String[] labels )
   {
 
-    this( id, null, config );
+    this( id, config, null, null, labels );
 
   }
 
-  public OrdinalAxisRenderer( final String id, final IChartLabelRenderer tickLabelRenderer, final AxisRendererConfig config )
+  public OrdinalAxisRenderer( final String id, final AxisRendererConfig config, final IChartLabelRenderer tickLabelRenderer, final String[] labels )
+  {
+
+    this( id, config, tickLabelRenderer, null, labels );
+
+  }
+
+  public OrdinalAxisRenderer( final String id, final AxisRendererConfig config, final IChartLabelRenderer tickLabelRenderer, final IChartLabelRenderer axisTitleRenderer, final String[] labels )
   {
     m_tickLabelRenderer = tickLabelRenderer;
+    m_labelRenderer = axisTitleRenderer == null ? new GenericChartLabelRenderer() : axisTitleRenderer;
     m_id = id;
+    m_labels = labels;
     m_config = config;
   }
 
@@ -112,24 +123,20 @@ public class OrdinalAxisRenderer implements IAxisRenderer
   public int getAxisWidth( final IAxis axis )
   {
     final IDataRange<Number> range = axis.getNumericRange();
-    final String[] labels = getLabels();
 
-    if( labels == null || range.getMin() == null || range.getMax() == null )
+    if( range.getMin() == null || range.getMax() == null )
       return 0;
     int maxWidth = 0;
+    final IChartLabelRenderer tickRenderer = getTickLabelRenderer( axis );
     for( int i = range.getMin().intValue(); i <= range.getMax().intValue(); i++ )
     {
-      if( i < 0 || labels.length < i - 1 )
+      if( i < 0 || m_labels.length < i - 1 )
         continue;
-      getTickLabelRenderer( axis ).setLabel( labels[i] );
-      maxWidth = Math.max( getTickLabelRenderer( axis ).getSize().x, maxWidth );
+      tickRenderer.setLabel( m_labels[i] );
+      maxWidth = Math.max( getTickLabelRenderer( axis ).getSize().y, maxWidth );
     }
-    return maxWidth;
-  }
 
-  private final String[] getLabels( )
-  {
-    return (String[]) getData( STRING_ARRAY );
+    return m_config.tickLength + m_config.axisLineStyle.getWidth() + maxWidth + m_labelRenderer.getSize().y;
   }
 
   /**
@@ -150,6 +157,7 @@ public class OrdinalAxisRenderer implements IAxisRenderer
       {
         m_tickLabelRenderer.setInsets( m_config.labelInsets );
         m_tickLabelRenderer.setAlignment( m_config.labelPosition, ALIGNMENT.TOP );
+        m_tickLabelRenderer.setTextAnchor( m_config.labelPosition, ALIGNMENT.TOP );
         m_tickLabelRenderer.setTextStyle( m_config.labelStyle );
       }
       if( axis != null )
@@ -169,29 +177,44 @@ public class OrdinalAxisRenderer implements IAxisRenderer
   {
     if( axis.getNumericRange().getMin() == null || axis.getNumericRange().getMax() == null )
       return new Number[] {};
-    final String[] labels = getLabels();
     final int start = Math.max( 0, axis.getNumericRange().getMin().intValue() );
-    final int end = Math.min( labels.length - 1, axis.getNumericRange().getMax().intValue() );
-    if( start == end )
-      return new Number[] {};
-    final Number[] labelSizes = new Number[end - start + 1];
-    Number sumWidth = 0;
-    for( int i = start; i <= end; i++ )
-    {
-      getTickLabelRenderer( axis ).setLabel( labels[i] );
-      labelSizes[i] = getTickLabelRenderer( axis ).getSize().x;
-      sumWidth = sumWidth.intValue() + labelSizes[i].intValue();
-    }
-    final int spacer = (axis.getScreenHeight() - sumWidth.intValue()) / (end - start);
-    sumWidth = 0;
-    for( Number width : labelSizes )
-    {
-      final int midPos = width.intValue() / 2;
-      width = sumWidth.intValue() + midPos;
-      sumWidth = midPos + spacer;
-    }
+    final int end = Math.min( m_labels.length - 1, axis.getNumericRange().getMax().intValue() );
 
-    return labelSizes;
+    final Number[] labelPosLeft = new Number[end - start + 1];
+    if( m_fixedWidth )
+    {
+      final int tickDist = axis.getScreenHeight() / (end - start + 1);
+      int pos = tickDist/2;
+      for( int i = start; i <= end; i++ )
+      {
+        labelPosLeft[i] =pos;
+        pos += tickDist;
+      }
+    }
+    else
+    {
+
+      Number sumWidth = 0;
+      for( int i = start; i <= end; i++ )
+      {
+        getTickLabelRenderer( axis ).setLabel( m_labels[i] );
+        final int width = getTickLabelRenderer( axis ).getSize().x;
+        labelPosLeft[i] = sumWidth.intValue() + width / 2;
+        sumWidth = sumWidth.intValue() + width;
+      }
+// final int spacer = (axis.getScreenHeight() - sumWidth.intValue()) / (end - start + 1);
+// final int fixedWidth = spacer < 0 ? axis.getScreenHeight() / (end - start + 1) : -1;
+//
+// sumWidth = 0;
+// for( Number width : labelPosLeft )
+// {
+// final int midPos = fixedWidth > 0 ? fixedWidth / 2 : width.intValue() / 2;
+// width = sumWidth.intValue() + midPos;
+// sumWidth = midPos + spacer < 0 ? 0 : spacer;
+// }
+    }
+    return labelPosLeft;
+
   }
 
   public ITextStyle getTickStyle( )
@@ -264,8 +287,8 @@ public class OrdinalAxisRenderer implements IAxisRenderer
 
     final ITextStyle tickLabelStyle = m_config.labelStyle;
     final ILineStyle tickLineStyle = m_config.tickLineStyle;
-    final int tickScreenDistance = (screenMax - screenMin) / (ticks.length - 1);
-    final String[] labels = getLabels();
+    final int tickScreenDistance = (screenMax - screenMin) / ticks.length == 1 ? 1 : (ticks.length - 1);
+
     for( int i = 0; i < ticks.length; i++ )
     {
       final int y1, y2, x1, x2, tickPos;
@@ -273,10 +296,10 @@ public class OrdinalAxisRenderer implements IAxisRenderer
       final int textX;
       final int textY;
 
-      getTickLabelRenderer( axis ).setLabel( labels[i] );
+      getTickLabelRenderer( axis ).setLabel( m_labels[i] );
       final boolean drawTick = true;
 
-      tickPos = axis.numericToScreen( ticks[i] );
+      tickPos = ticks[i].intValue();
 
 // if( i < ticks.length - 1 )
 // tickScreenDistance = axis.numericToScreen( ticks[i + 1] ) - tickPos;
@@ -430,8 +453,7 @@ public class OrdinalAxisRenderer implements IAxisRenderer
   @Override
   public Object getData( final String identifier )
   {
-    // TODO Auto-generated method stub
-    return null;
+    return m_dataMap.get( identifier );
   }
 
 }

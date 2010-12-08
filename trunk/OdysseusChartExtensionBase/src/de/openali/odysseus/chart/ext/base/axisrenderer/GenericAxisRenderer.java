@@ -234,7 +234,7 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
   private void drawTicks( final GC gc, final IAxis axis, final int startX, final int startY, final Number[] ticks, final int offset )
   {
 
-    if( (gc == null) || (axis == null) || (ticks == null) )
+    if( (gc == null) || (axis == null) || (ticks == null) || ticks.length < 1 )
       return;
 
     final int tickLength = getTickLength();
@@ -252,7 +252,7 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
 
     final ITextStyle tickLabelStyle = getTickLabelStyle();
     final ILineStyle tickLineStyle = getTickLineStyle();
-    final int tickScreenDistance = (screenMax - screenMin) / (ticks.length - 1);
+    final int tickScreenDistance = (screenMax - screenMin) / ticks.length == 1 ? 1 : (ticks.length - 1);
 
     for( int i = 0; i < ticks.length; i++ )
     {
@@ -387,8 +387,8 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
 
     gc.dispose();
     img.dispose();
-
-    return width;
+// wenn keine Ticks gezeichnet werden ist die ganze Achse unsichtbar
+    return tls.x == 0 || tls.y == 0 ? 0 : width;
   }
 
   private Insets getConvertedInsets( final IAxis axis, final Insets insets )

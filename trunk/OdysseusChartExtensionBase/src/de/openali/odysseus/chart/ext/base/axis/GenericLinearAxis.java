@@ -21,7 +21,10 @@ public class GenericLinearAxis extends AbstractAxis
   {
     super( id, pos, Number.class, new GenericAxisRenderer( id + "_RENDERER", new NumberLabelCreator( "%s" ), new GenericNumberTickCalculator(), new AxisRendererConfig() ) );//$NON-NLS-1$ //$NON-NLS-2$
   }
-
+  public GenericLinearAxis( final String id, final POSITION pos, final AxisRendererConfig config )
+  {
+    super( id, pos, Number.class, new GenericAxisRenderer( id + "_RENDERER", new NumberLabelCreator( "%s" ), new GenericNumberTickCalculator(), config ) );//$NON-NLS-1$ //$NON-NLS-2$
+  }
   public GenericLinearAxis( final String id, final POSITION pos, final Class< ? > clazz )
   {
     super( id, pos, clazz, new GenericAxisRenderer( id + "_RENDERER", new NumberLabelCreator( "%s" ), new GenericNumberTickCalculator(), new AxisRendererConfig() ) ); //$NON-NLS-1$ //$NON-NLS-2$
