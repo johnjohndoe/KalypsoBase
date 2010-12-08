@@ -50,11 +50,11 @@ import org.kalypso.zml.ui.table.rules.IZmlRuleImplementation;
  */
 public abstract class AbstractZmlTableRule implements IZmlRuleImplementation
 {
-
   /**
    * @see org.kalypso.zml.ui.table.rules.IZmlTableRule#update(org.kalypso.zml.ui.table.model.IZmlModelRow,
    *      org.kalypso.zml.ui.table.binding.BaseColumn, java.lang.String)
    */
+  @SuppressWarnings("unused")
   @Override
   public String update( final ZmlRule rule, final IZmlValueReference reference, final String text ) throws SensorException
   {
