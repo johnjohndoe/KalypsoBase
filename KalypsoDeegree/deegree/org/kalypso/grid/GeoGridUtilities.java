@@ -769,7 +769,7 @@ public final class GeoGridUtilities
     coverage.setRangeSet( rangeSetFile );
   }
 
-  private static RectifiedGridDomain toGridDomain( final IGeoGrid grid ) throws Exception
+  public static RectifiedGridDomain toGridDomain( final IGeoGrid grid ) throws Exception
   {
     final Point jtsOrigin = JTSAdapter.jtsFactory.createPoint( grid.getOrigin() );
     final GM_Point gmOrigin = (GM_Point) JTSAdapter.wrap( jtsOrigin, grid.getSourceCRS() );
