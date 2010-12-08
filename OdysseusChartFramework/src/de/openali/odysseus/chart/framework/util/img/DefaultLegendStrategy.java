@@ -232,18 +232,23 @@ public class DefaultLegendStrategy implements ILegendPaintStrategy
         if( row + size.x > creator.getMaximumWidth() )
         {
           maxRowWidth = Math.max( maxRowWidth, size.x );
-          heigth += Math.max( maxRowHeight, size.y );
-          maxRowHeight = 0;
-          row = 0;
+          maxRowHeight = size.y;
+          
+          heigth += size.y;
+          row = size.x;
+          
           m_numRows += 1;
         }
         else
         {
           row += size.x;
-          maxRowHeight = Math.max( maxRowHeight, size.y );
+
+          if( size.y > maxRowHeight )
+            heigth += size.y - maxRowHeight;
+          
           maxRowWidth = Math.max( maxRowWidth, row );
-          if( heigth == 0 )
-            heigth = maxRowHeight;
+          maxRowHeight = Math.max( maxRowHeight, size.y );
+          
           if( m_numRows == 0 )
             m_numRows = 1;
         }

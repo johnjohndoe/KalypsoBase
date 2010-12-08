@@ -44,6 +44,7 @@ import java.awt.Insets;
 
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT;
 import de.openali.odysseus.chart.framework.model.style.ITextStyle;
@@ -77,6 +78,8 @@ public interface IChartLabelRenderer
   ITextStyle getTextStyle( );
 
   void paint( final GC gc, final Point textAnchor );
+  
+  void paint( final GC gc, final Rectangle fixedWidth );
 
   void setDrawBorder( final boolean drawBorder );
 

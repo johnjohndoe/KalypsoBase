@@ -60,13 +60,14 @@ public class OrdinalValueAxis extends AbstractAxis
   {
     int minDist = Integer.MAX_VALUE;
     Number returnValue = 0;
-    for( final Number tick : getRenderer().getTicks( this, null ) )
+    final Number[] ticks = getRenderer().getTicks( this, null );
+    for( int i= 0;i< ticks.length;i++)//final Number tick : getRenderer().getTicks( this, null ) )
     {
-      final int dist = Math.abs( tick.intValue() - value );
+      final int dist = Math.abs( ticks[i].intValue() - value );
       if( dist < minDist )
       {
         minDist = dist;
-        returnValue = tick;
+        returnValue = i;
       }
     }
     return returnValue;

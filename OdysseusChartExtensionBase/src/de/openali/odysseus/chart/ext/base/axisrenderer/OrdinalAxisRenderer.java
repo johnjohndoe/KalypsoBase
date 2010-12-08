@@ -46,7 +46,6 @@ import java.util.Map;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.GC;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
@@ -73,7 +72,7 @@ public class OrdinalAxisRenderer implements IAxisRenderer
 
   private final String m_id;
 
-  private final boolean m_fixedWidth = true;
+  private int m_fixedWidth = -1;
 
   private ITextStyle m_tickStyle = null;
 
@@ -83,11 +82,15 @@ public class OrdinalAxisRenderer implements IAxisRenderer
 
   private final AxisRendererConfig m_config;
 
-  public OrdinalAxisRenderer( final String id, final AxisRendererConfig config, final String[] labels )
+  public OrdinalAxisRenderer( final String id, final AxisRendererConfig config, final IChartLabelRenderer tickLabelRenderer, final IChartLabelRenderer axisTitleRenderer, final String[] labels )
   {
+    m_tickLabelRenderer = tickLabelRenderer;
 
-    this( id, config, null, null, labels );
-
+    m_labelRenderer = axisTitleRenderer == null ? new GenericChartLabelRenderer() : axisTitleRenderer;
+    m_labelRenderer.setInsets( config.labelInsets );
+    m_id = id;
+    m_labels = labels;
+    m_config = config;
   }
 
   public OrdinalAxisRenderer( final String id, final AxisRendererConfig config, final IChartLabelRenderer tickLabelRenderer, final String[] labels )
@@ -97,13 +100,64 @@ public class OrdinalAxisRenderer implements IAxisRenderer
 
   }
 
-  public OrdinalAxisRenderer( final String id, final AxisRendererConfig config, final IChartLabelRenderer tickLabelRenderer, final IChartLabelRenderer axisTitleRenderer, final String[] labels )
+  public OrdinalAxisRenderer( final String id, final AxisRendererConfig config, final String[] labels )
   {
-    m_tickLabelRenderer = tickLabelRenderer;
-    m_labelRenderer = axisTitleRenderer == null ? new GenericChartLabelRenderer() : axisTitleRenderer;
-    m_id = id;
-    m_labels = labels;
-    m_config = config;
+
+    this( id, config, null, null, labels );
+
+  }
+
+  /**
+   * @return Array of 4 int-Values: startX, startY, endX, endY - where startX/Y are the start coordinates for the axis
+   *         line and endX/Y its end coordinates within the given Rectangle
+   */
+  private int[] createAxisSegment( final IAxis axis, final Rectangle screen )
+  {
+    int startX;
+    int startY;
+    int endX;
+    int endY;
+
+    final int gap = m_config.gap;
+
+    if( axis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
+    {
+      startX = screen.x;
+      endX = screen.x + screen.width;
+
+      if( axis.getPosition() == POSITION.BOTTOM )
+        startY = screen.y + gap + 1;
+      else
+        startY = screen.y + screen.height - 1 - gap;
+      endY = startY;
+
+      if( axis.getDirection() == DIRECTION.NEGATIVE )
+      {
+        final int tmp = startX;
+        startX = endX;
+        endX = tmp;
+      }
+    }
+    else
+    {
+      startY = screen.y;
+      endY = screen.y + screen.height;
+
+      if( axis.getPosition() == POSITION.RIGHT )
+        startX = screen.x + gap + 1;
+      else
+        startX = screen.x + screen.width - 1 - gap;
+      endX = startX;
+
+      if( axis.getDirection() == DIRECTION.POSITIVE )
+      {
+        final int tmp = startY;
+        startY = endY;
+        endY = tmp;
+      }
+    }
+
+    return new int[] { startX, startY, endX, endY };
   }
 
   /**
@@ -114,6 +168,101 @@ public class OrdinalAxisRenderer implements IAxisRenderer
   {
     // TODO Auto-generated method stub
 
+  }
+
+  /**
+   * draws the Axis ticks into the given GC
+   */
+  private void drawTicks( final GC gc, final IAxis axis, final int startX, final int startY, final Number[] ticks, final int offset )
+  {
+
+    if( (gc == null) || (axis == null) || (ticks == null) )
+      return;
+
+    final int tickLength = m_config.tickLength;
+    final Insets tickLabelInsets = m_config.labelInsets;
+
+    final IDataRange<Number> range = axis.getNumericRange();
+    if( range.getMin() == null || range.getMax() == null )
+      return;
+    final double numericMin = range.getMin().doubleValue();
+    final double numericMax = range.getMax().doubleValue();
+    final int axisMin = axis.numericToScreen( numericMin );
+    final int axisMax = axis.numericToScreen( numericMax );
+    final int screenMin = Math.min( axisMin, axisMax );
+    final int screenMax = Math.max( axisMin, axisMax );
+
+    final ITextStyle tickLabelStyle = m_config.labelStyle;
+    final ILineStyle tickLineStyle = m_config.tickLineStyle;
+    final int tickScreenDistance = (screenMax - screenMin) / (ticks.length == 1 ? 1 : (ticks.length - 1));
+
+    for( int i = 0; i < ticks.length; i++ )
+    {
+      final int y1, y2, x1, x2, tickPos;
+
+      final int textX;
+      final int textY;
+
+      getTickLabelRenderer( axis ).setLabel( m_labels[i] );
+      final boolean drawTick = true;
+
+      tickPos = ticks[i].intValue();
+
+// if( i < ticks.length - 1 )
+// tickScreenDistance = axis.numericToScreen( ticks[i + 1] ) - tickPos;
+      // final Point labelSize = getTickLabelRenderer( axis ).getSize();//getTextExtent( gc, label, tickLabelStyle );
+      // HORIZONTAL
+      if( axis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
+      {
+        x1 = tickPos + offset;
+        x2 = x1;
+        y1 = startY;
+        // textX = tickPos- labelSize.x / 2 + offset;
+        textX = tickPos + offset;
+        // BOTTOM
+        if( axis.getPosition() == POSITION.BOTTOM )
+        {
+          y2 = y1 + tickLength;
+          textY = y2 + tickLabelInsets.top;
+        }
+        // TOP
+        else
+        {
+          y2 = y1 - tickLength;
+          textY = y2 - tickLabelInsets.top;
+        }
+
+      }
+      // VERTICAL
+      else
+      {
+        x1 = startX;
+        y1 = tickPos + offset;
+        y2 = y1;
+        // textY = tickPos - labelSize.y / 2 + offset;
+        textY = y1;
+
+        // LEFT
+        if( axis.getPosition() == POSITION.LEFT )
+        {
+          x2 = x1 - tickLength;
+          textX = x2 - tickLabelInsets.top;
+        }
+        // RIGHT
+        else
+        {
+          x2 = x1 + tickLength;
+          textX = x2 + tickLabelInsets.top;
+        }
+      }
+
+      tickLineStyle.apply( gc );
+      gc.drawLine( x1, y1, x2, y2 );
+      if( drawTick )
+      {
+        getTickLabelRenderer( axis ).paint( gc, new Rectangle( textX, textY, tickScreenDistance, -1 ) );
+      }
+    }
   }
 
   /**
@@ -130,13 +279,22 @@ public class OrdinalAxisRenderer implements IAxisRenderer
     final IChartLabelRenderer tickRenderer = getTickLabelRenderer( axis );
     for( int i = range.getMin().intValue(); i <= range.getMax().intValue(); i++ )
     {
-      if( i < 0 || m_labels.length < i - 1 )
+      if( i < 0 || i - 1 > m_labels.length )
         continue;
       tickRenderer.setLabel( m_labels[i] );
       maxWidth = Math.max( getTickLabelRenderer( axis ).getSize().y, maxWidth );
     }
 
     return m_config.tickLength + m_config.axisLineStyle.getWidth() + maxWidth + m_labelRenderer.getSize().y;
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer#getData(java.lang.String)
+   */
+  @Override
+  public Object getData( final String identifier )
+  {
+    return m_dataMap.get( identifier );
   }
 
   /**
@@ -155,7 +313,7 @@ public class OrdinalAxisRenderer implements IAxisRenderer
       m_tickLabelRenderer = new GenericChartLabelRenderer();
       if( m_config != null )
       {
-        m_tickLabelRenderer.setInsets( m_config.labelInsets );
+        m_tickLabelRenderer.setInsets( m_config.tickLabelInsets );
         m_tickLabelRenderer.setAlignment( m_config.labelPosition, ALIGNMENT.TOP );
         m_tickLabelRenderer.setTextAnchor( m_config.labelPosition, ALIGNMENT.TOP );
         m_tickLabelRenderer.setTextStyle( m_config.labelStyle );
@@ -181,13 +339,13 @@ public class OrdinalAxisRenderer implements IAxisRenderer
     final int end = Math.min( m_labels.length - 1, axis.getNumericRange().getMax().intValue() );
 
     final Number[] labelPosLeft = new Number[end - start + 1];
-    if( m_fixedWidth )
+    if( m_fixedWidth > 0 )
     {
-      final int tickDist = axis.getScreenHeight() / (end - start + 1);
-      int pos = tickDist/2;
+      final int tickDist = Math.max( m_fixedWidth, axis.getScreenHeight() / (end - start + 1) );
+      int pos = tickDist / 2;
       for( int i = start; i <= end; i++ )
       {
-        labelPosLeft[i] =pos;
+        labelPosLeft[i] = pos;
         pos += tickDist;
       }
     }
@@ -264,151 +422,19 @@ public class OrdinalAxisRenderer implements IAxisRenderer
   }
 
   /**
-   * draws the Axis ticks into the given GC
+   * @see de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer#setData(java.lang.String,
+   *      java.lang.Object)
    */
-  private void drawTicks( final GC gc, final IAxis axis, final int startX, final int startY, final Number[] ticks, final int offset )
+  @Override
+  public void setData( final String identifier, final Object data )
   {
+    m_dataMap.put( identifier, data );
 
-    if( (gc == null) || (axis == null) || (ticks == null) )
-      return;
-
-    final int tickLength = m_config.tickLength;
-    final Insets tickLabelInsets = m_config.labelInsets;
-
-    final IDataRange<Number> range = axis.getNumericRange();
-    if( range.getMin() == null || range.getMax() == null )
-      return;
-    final double numericMin = range.getMin().doubleValue();
-    final double numericMax = range.getMax().doubleValue();
-    final int axisMin = axis.numericToScreen( numericMin );
-    final int axisMax = axis.numericToScreen( numericMax );
-    final int screenMin = Math.min( axisMin, axisMax );
-    final int screenMax = Math.max( axisMin, axisMax );
-
-    final ITextStyle tickLabelStyle = m_config.labelStyle;
-    final ILineStyle tickLineStyle = m_config.tickLineStyle;
-    final int tickScreenDistance = (screenMax - screenMin) / ticks.length == 1 ? 1 : (ticks.length - 1);
-
-    for( int i = 0; i < ticks.length; i++ )
-    {
-      final int y1, y2, x1, x2, tickPos;
-
-      final int textX;
-      final int textY;
-
-      getTickLabelRenderer( axis ).setLabel( m_labels[i] );
-      final boolean drawTick = true;
-
-      tickPos = ticks[i].intValue();
-
-// if( i < ticks.length - 1 )
-// tickScreenDistance = axis.numericToScreen( ticks[i + 1] ) - tickPos;
-      // final Point labelSize = getTickLabelRenderer( axis ).getSize();//getTextExtent( gc, label, tickLabelStyle );
-      // HORIZONTAL
-      if( axis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
-      {
-        x1 = tickPos + offset;
-        x2 = x1;
-        y1 = startY;
-        // textX = tickPos- labelSize.x / 2 + offset;
-        textX = tickPos + offset;
-        // BOTTOM
-        if( axis.getPosition() == POSITION.BOTTOM )
-        {
-          y2 = y1 + tickLength;
-          textY = y2 + tickLabelInsets.top;
-        }
-        // TOP
-        else
-        {
-          y2 = y1 - tickLength;
-          textY = y2 - tickLabelInsets.top;
-        }
-
-      }
-      // VERTICAL
-      else
-      {
-        x1 = startX;
-        y1 = tickPos + offset;
-        y2 = y1;
-        // textY = tickPos - labelSize.y / 2 + offset;
-        textY = y1;
-
-        // LEFT
-        if( axis.getPosition() == POSITION.LEFT )
-        {
-          x2 = x1 - tickLength;
-          textX = x2 - tickLabelInsets.top;
-        }
-        // RIGHT
-        else
-        {
-          x2 = x1 + tickLength;
-          textX = x2 + tickLabelInsets.top;
-        }
-      }
-
-      tickLineStyle.apply( gc );
-      gc.drawLine( x1, y1, x2, y2 );
-      if( drawTick )
-      {
-        getTickLabelRenderer( axis ).paint( gc, new Point( textX, textY ) );
-      }
-    }
   }
 
-  /**
-   * @return Array of 4 int-Values: startX, startY, endX, endY - where startX/Y are the start coordinates for the axis
-   *         line and endX/Y its end coordinates within the given Rectangle
-   */
-  private int[] createAxisSegment( final IAxis axis, final Rectangle screen )
+  public void setFixedWidth( final int fixedWidth )
   {
-    int startX;
-    int startY;
-    int endX;
-    int endY;
-
-    final int gap = m_config.gap;
-
-    if( axis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
-    {
-      startX = screen.x;
-      endX = screen.x + screen.width;
-
-      if( axis.getPosition() == POSITION.BOTTOM )
-        startY = screen.y + gap + 1;
-      else
-        startY = screen.y + screen.height - 1 - gap;
-      endY = startY;
-
-      if( axis.getDirection() == DIRECTION.NEGATIVE )
-      {
-        final int tmp = startX;
-        startX = endX;
-        endX = tmp;
-      }
-    }
-    else
-    {
-      startY = screen.y;
-      endY = screen.y + screen.height;
-
-      if( axis.getPosition() == POSITION.RIGHT )
-        startX = screen.x + gap + 1;
-      else
-        startX = screen.x + screen.width - 1 - gap;
-      endX = startX;
-
-      if( axis.getDirection() == DIRECTION.POSITIVE )
-      {
-        final int tmp = startY;
-        startY = endY;
-        endY = tmp;
-      }
-    }
-
-    return new int[] { startX, startY, endX, endY };
+    m_fixedWidth = fixedWidth;
   }
 
   /**
@@ -434,26 +460,6 @@ public class OrdinalAxisRenderer implements IAxisRenderer
   public void setTickStyle( final ITextStyle tickStyle )
   {
     m_tickStyle = tickStyle;
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer#setData(java.lang.String,
-   *      java.lang.Object)
-   */
-  @Override
-  public void setData( final String identifier, final Object data )
-  {
-    m_dataMap.put( identifier, data );
-
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer#getData(java.lang.String)
-   */
-  @Override
-  public Object getData( final String identifier )
-  {
-    return m_dataMap.get( identifier );
   }
 
 }
