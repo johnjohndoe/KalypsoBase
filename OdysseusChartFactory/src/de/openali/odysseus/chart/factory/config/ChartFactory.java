@@ -1,5 +1,6 @@
 package de.openali.odysseus.chart.factory.config;
 
+import java.awt.Insets;
 import java.net.URL;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -27,7 +28,6 @@ import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.ComparableDataRange;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
-import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.DIRECTION;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
@@ -130,8 +130,13 @@ public final class ChartFactory
       final ITextStyle textStyle = visitor.visit( styleSet, ITextStyle.class, type.getStyleref() );
       title.setTextStyle( textStyle );
 
-      final ALIGNMENT alignment = StyleFactory.getAlignment( type.getAlignment() );
-      title.setAlignmentHorizontal( alignment );
+      title.setAlignmentHorizontal( StyleFactory.getAlignment( type.getHorizontalAlignment() ) );
+      title.setAlignmentVertical( StyleFactory.getAlignment( type.getVerticalAlignment() ) );
+      title.setTextAnchorX( StyleFactory.getAlignment( type.getHorizontalTextAnchor() ) );
+      title.setTextAnchorY( StyleFactory.getAlignment( type.getVerticalTextAnchor() ) );
+
+      final Insets inset = new Insets( type.getInsetTop(), type.getInsetLeft(), type.getInsetBottom(), type.getInsetBottom() );
+      title.setInsets( inset );
 
       model.addTitles( title );
     }

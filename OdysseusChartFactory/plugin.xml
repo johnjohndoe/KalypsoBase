@@ -9,7 +9,7 @@
          point="org.eclipse.wst.xml.core.catalogContributions">
       <catalogContribution>
          <nextCatalog
-               catalog="etc/binding/schema/catalog.xmlcatalog">
+               catalog="etc/binding/schema/catalog.xml">
          </nextCatalog>
       </catalogContribution>
    </extension>

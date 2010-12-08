@@ -136,7 +136,7 @@ public final class ZmlRuleResolver
   {
     final URL absoluteUri = new URL( context, uri );
 
-    RuleSetType ruleSet = m_ruleSetCache.get( absoluteUri );
+    RuleSetType ruleSet = m_ruleSetCache.get( uri );
     if( ruleSet == null )
     {
       final ZmlTableConfigurationLoader loader = new ZmlTableConfigurationLoader( absoluteUri );

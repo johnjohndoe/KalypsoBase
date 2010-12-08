@@ -65,7 +65,7 @@ public class TitleTypeBean
 
   private int m_rotation;
 
-  private Insets m_insets;
+  private Insets m_insets = new Insets( 0, 0, 0, 0 );
 
   public TitleTypeBean( final String text )
   {

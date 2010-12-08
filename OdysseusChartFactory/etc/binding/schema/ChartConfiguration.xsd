@@ -245,8 +245,8 @@
     <complexContent>
       <extension base="ods:AbstractConfigurationType">
         <sequence>
-          <element name="Title" type="string" />
-          <element name="Description" type="string" />
+          <element name="Title" type="string" minOccurs="1" />
+          <element name="Description" type="string" minOccurs="0" />
           <element name="MapperRefs">
             <complexType>
               <sequence>
@@ -307,8 +307,8 @@
     <complexContent>
       <extension base="ods:MapperType">
         <sequence>
-          <element name="Label" type="string" />
-          <element name="Direction">
+          <element name="Label" type="string" minOccurs="0"/>
+          <element name="Direction" minOccurs="1">
             <simpleType>
               <restriction base="string">
                 <enumeration value="POSITIVE" />
@@ -316,7 +316,7 @@
               </restriction>
             </simpleType>
           </element>
-          <element name="Position">
+          <element name="Position" minOccurs="1">
             <simpleType>
               <restriction base="string">
                 <enumeration value="LEFT" />
@@ -326,7 +326,7 @@
               </restriction>
             </simpleType>
           </element>
-          <choice>
+          <choice minOccurs="0"> 
             <element ref="ods:DateRange" />
             <element ref="ods:DurationRange" />
             <element ref="ods:StringRange" />
@@ -485,7 +485,16 @@
     <simpleContent>
       <restriction base="ods:StringType">
         <attribute name="styleref" type="IDREF" />
-        <attribute name="alignment" type="ods:AlignmentType" />
+
+        <attribute name="horizontalAlignment" type="ods:AlignmentType" use="optional" default="CENTER" />
+        <attribute name="verticalAlignment" type="ods:AlignmentType" use="optional" default="CENTER" />
+        <attribute name="horizontalTextAnchor" type="ods:AlignmentType" use="optional" default="CENTER" />
+        <attribute name="verticalTextAnchor" type="ods:AlignmentType" use="optional" default="CENTER" />
+
+        <attribute name="insetTop" type="int" use="optional" default="0" />
+        <attribute name="insetLeft" type="int" use="optional" default="0" />
+        <attribute name="insetBottom" type="int" use="optional" default="0" />
+        <attribute name="insetRight" type="int" use="optional" default="0" />
       </restriction>
     </simpleContent>
   </complexType>
@@ -494,7 +503,7 @@
     <simpleContent>
       <extension base="string">
         <anyAttribute></anyAttribute>
-      </extension> 
+      </extension>
     </simpleContent>
   </complexType>
 
