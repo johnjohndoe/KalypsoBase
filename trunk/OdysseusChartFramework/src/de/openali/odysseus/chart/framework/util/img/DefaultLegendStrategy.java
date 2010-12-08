@@ -151,10 +151,17 @@ public class DefaultLegendStrategy implements ILegendPaintStrategy
 
       final ITextStyle style = creator.getTextStyle();
       style.apply( gc );
-      final Point textSize = gc.textExtent( entry.getDescription() );
+
+      final String description = entry.getDescription();
+
+      final Point textSize;
+      if( description == null )
+        textSize = new Point( 1, 1 );
+      else
+        textSize = gc.textExtent( description );
 
       final Point anchor = getTextAnchor( creator, iconSize.x, rowHeight, textSize );
-      final String description = entry.getDescription();
+
       gc.drawText( description == null ? "" : description, anchor.x, anchor.y, SWT.TRANSPARENT );
 
       final ImageData imageData = canvas.getImageData();
@@ -196,7 +203,6 @@ public class DefaultLegendStrategy implements ILegendPaintStrategy
       gc.dispose();
     }
   }
-
 
   /**
    * @see de.openali.odysseus.chart.framework.util.img.ILegendStrategy#getSize(de.openali.odysseus.chart.framework.util.img.LegendImageCreator)
