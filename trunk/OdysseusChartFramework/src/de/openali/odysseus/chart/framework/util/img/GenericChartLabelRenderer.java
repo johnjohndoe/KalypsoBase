@@ -62,6 +62,7 @@ import de.openali.odysseus.chart.framework.model.style.ITextStyle;
  */
 public class GenericChartLabelRenderer implements IChartLabelRenderer
 {
+  private static final Insets DEFAULT_INSETS = new Insets( 2, 2, 2, 2 );
 
   private ALIGNMENT m_anchorX = ALIGNMENT.LEFT;
 
@@ -77,7 +78,7 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
 
   private String m_label;
 
-  private Insets m_insets = new Insets( 2, 2, 2, 2 );
+  private Insets m_insets = DEFAULT_INSETS;
 
   private Point m_size = null;
 
@@ -98,7 +99,8 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
       final Point size = gc.textExtent( m_label, SWT.DRAW_TRANSPARENT | SWT.DRAW_DELIMITER | SWT.DRAW_TAB );
       final int border = isDrawBorder() ? 1 : 0;// TODO getBorderLine().getWidth()
 
-      return new Point( size.x + border * 2 + getInsets().left + getInsets().right, size.y + border * 2 + getInsets().top + getInsets().bottom );
+      final Insets insets = getInsets();
+      return new Point( size.x + border * 2 + insets.left + insets.right, size.y + border * 2 + insets.top + insets.bottom );
     }
     finally
     {
@@ -178,7 +180,10 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
       // draw Text
       final String[] lines = StringUtils.split( getLabel(), "\n" );// TODO: maybe other split strategy
       final int lineHeight = gc.textExtent( "Pq" ).y;
-      final int border = (isDrawBorder() ? gc.getLineWidth() : 0) + getInsets().top;
+
+      final Insets insets = getInsets();
+      final int border = (isDrawBorder() ? gc.getLineWidth() : 0) + insets.top;
+
       for( int i = 0; i < lines.length; i++ )
       {
         final int lineInset = getLineInset( gc, border, lines[i], getAlignmentX() );
@@ -264,7 +269,10 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
   public void setInsets( final Insets insets )
   {
     m_size = null;
-    m_insets = insets;
+    if( insets == null )
+      m_insets = DEFAULT_INSETS;
+    else
+      m_insets = insets;
   }
 
   /**
