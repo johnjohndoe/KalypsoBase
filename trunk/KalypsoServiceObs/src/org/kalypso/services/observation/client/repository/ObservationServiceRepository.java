@@ -191,11 +191,12 @@ public class ObservationServiceRepository extends AbstractRepository implements 
   @Override
   public final IRepositoryItem findItem( final String identifier ) throws RepositoryException
   {
-    final ItemBean bean = getService().findItem( getServiceId( identifier ) );
+    final IObservationService service = getService();
+    final ItemBean bean = service.findItem( getServiceId( identifier ) );
     if( bean == null )
       return null;
 
-    return beanToItem( getService(), bean );
+    return beanToItem( service, bean );
   }
 
   /**
