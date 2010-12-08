@@ -61,6 +61,7 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter;
 import org.kalypso.model.wspm.core.util.WspmGeometryUtilities;
+import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
@@ -105,7 +106,7 @@ public class RoughnessIntersector
 
   public FeatureChange[] intersect( final IProgressMonitor monitor ) throws Exception
   {
-    monitor.beginTask( org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.wizard.RoughnessIntersector.0" ), m_profileFeatures.length ); //$NON-NLS-1$
+    monitor.beginTask( Messages.getString( "org.kalypso.model.wspm.ui.wizard.RoughnessIntersector.0" ), m_profileFeatures.length ); //$NON-NLS-1$
 
     final List<FeatureChange> changes = new ArrayList<FeatureChange>();
 
@@ -115,6 +116,7 @@ public class RoughnessIntersector
       final IProfileFeature profile = (IProfileFeature) object;
       final String crs = profile.getSrsName();
       final IProfil profil = profile.getProfil();
+
       // TODO: check if the profile has all components already.
       // but how to do, we don't know here what components are necessary for the current profile...
       final String label = FeatureHelper.getAnnotationValue( profile, IAnnotation.ANNO_LABEL );
@@ -168,7 +170,7 @@ public class RoughnessIntersector
   }
 
   @SuppressWarnings("unchecked")
-  private List<Object> assignValueToPoint( final IProfil profil, final IRecord point, final GM_Point geoPoint, final Geometry jtsPoint ) throws GM_Exception
+  private void assignValueToPoint( final IProfil profil, final IRecord point, final GM_Point geoPoint, final Geometry jtsPoint ) throws GM_Exception
   {
     final TupleResult owner = point.getOwner();
 
@@ -180,47 +182,45 @@ public class RoughnessIntersector
 
       // BUGFIX: use any gm_object here, because we do not know what it is (surface, multi surface, ...)
       final GM_Object gmObject = (GM_Object) polygoneFeature.getProperty( m_polygoneGeomType );
-      
-      if (gmObject != null)
+
+      if( gmObject != null )
       {
-      final Geometry jtsGeom = JTSAdapter.export( gmObject );
-      if( jtsGeom.contains( jtsPoint ) )
-      {
-        final Object polygoneValue = polygoneFeature.getProperty( m_polygoneValueType );
-        if( polygoneValue != null )
+        final Geometry jtsGeom = JTSAdapter.export( gmObject );
+        if( jtsGeom.contains( jtsPoint ) )
         {
-          // find assignment for polygon
-          final Map<String, Double> assignments = m_assignment.getAssignmentsFor( polygoneValue.toString() );
-          // apply assignment to point properties
-          for( final Map.Entry<String, Double> entry : assignments.entrySet() )
+          final Object polygoneValue = polygoneFeature.getProperty( m_polygoneValueType );
+          if( polygoneValue != null )
           {
-            final String componentId = entry.getKey();
-            final Double newValue = entry.getValue();
-
-            if( newValue != null )
+            // find assignment for polygon
+            final Map<String, Double> assignments = m_assignment.getAssignmentsFor( polygoneValue.toString() );
+            // apply assignment to point properties
+            for( final Map.Entry<String, Double> entry : assignments.entrySet() )
             {
-              if( componentId != null )
+              final String componentId = entry.getKey();
+              final Double newValue = entry.getValue();
+
+              if( newValue != null )
               {
-                final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profil.getType() );
+                if( componentId != null )
+                {
+                  final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profil.getType() );
 
-                final IComponent component = provider.getPointProperty( componentId );
+                  final IComponent component = provider.getPointProperty( componentId );
 
-                Object defaultValue = component.getDefaultValue();
-                if( defaultValue == null && component.getValueTypeName().equals( new QName( NS.XSD_SCHEMA, "double" ) ) ) //$NON-NLS-1$
-                  defaultValue = 0.0;
+                  Object defaultValue = component.getDefaultValue();
+                  if( defaultValue == null && component.getValueTypeName().equals( new QName( NS.XSD_SCHEMA, "double" ) ) ) //$NON-NLS-1$
+                    defaultValue = 0.0;
 
-                profil.addPointProperty( component, defaultValue );
-
-                point.setValue( owner.indexOfComponent( component ), newValue );
+                  profil.addPointProperty( component, defaultValue );
+                  point.setValue( owner.indexOfComponent( component ), newValue );
+                }
               }
             }
           }
+          // DONT break, because we may have several polygone covering the point, but only one has an assigned value
+          // break;
         }
-        // DONT break, because we may have several polygone covering the point, but only one has an assigned value
-        // break;
-      }
       }
     }
-    return foundPolygones;
   }
 }
