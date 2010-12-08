@@ -4,8 +4,6 @@ import org.apache.poi.ss.formula.eval.NotImplementedException;
 
 import de.openali.odysseus.chart.ext.base.axisrenderer.AxisRendererConfig;
 import de.openali.odysseus.chart.ext.base.axisrenderer.OrdinalAxisRenderer;
-import de.openali.odysseus.chart.framework.model.data.IDataRange;
-import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
 
 /**
@@ -13,25 +11,24 @@ import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
  */
 public class OrdinalValueAxis extends AbstractAxis
 {
-
-  /**
-   * @see de.openali.odysseus.chart.ext.base.axis.AbstractAxis#getNumericRange()
-   */
-  @Override
-  public IDataRange<Number> getNumericRange( )
-  {
-
-    final Object labels = getRenderer().getData( OrdinalAxisRenderer.STRING_ARRAY );
-    if( labels == null )
-      return null;
-    final int len = ((String[]) labels).length;
-    return new DataRange<Number>( 0, len == 0 ? 0 : len - 1 );
-
-  }
-
   public OrdinalValueAxis( final String id, final POSITION pos, final AxisRendererConfig config )
   {
-    super( id, pos, Integer.class, new OrdinalAxisRenderer( id, config ) );
+    super( id, pos, Integer.class, new OrdinalAxisRenderer( id, config, null ) );
+  }
+
+  public OrdinalValueAxis( final String id, final POSITION pos, final AxisRendererConfig config, final String[] labels )
+  {
+    super( id, pos, Integer.class, new OrdinalAxisRenderer( id, config, labels ) );
+  }
+
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.mapper.IAxis#normalizedToScreen(double)
+   */
+  @Override
+  public int normalizedToScreen( final double d )
+  {
+    throw new NotImplementedException( "use numericToScreen instead" );
   }
 
   /**
@@ -44,6 +41,15 @@ public class OrdinalValueAxis extends AbstractAxis
     if( ticks.length < value.intValue() || ticks.length < 1 )
       return 0;
     return ticks[value.intValue()].intValue();
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.mapper.IAxis#screenToNormalized(int)
+   */
+  @Override
+  public double screenToNormalized( final int value )
+  {
+    throw new NotImplementedException( "use screenToNumeric instead" );
   }
 
   /**
@@ -64,24 +70,6 @@ public class OrdinalValueAxis extends AbstractAxis
       }
     }
     return returnValue;
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.framework.model.mapper.IAxis#normalizedToScreen(double)
-   */
-  @Override
-  public int normalizedToScreen( final double d )
-  {
-    throw new NotImplementedException( "use numericToScreen instead" );
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.framework.model.mapper.IAxis#screenToNormalized(int)
-   */
-  @Override
-  public double screenToNormalized( final int value )
-  {
-    throw new NotImplementedException( "use screenToNumeric instead" );
   }
 
 }

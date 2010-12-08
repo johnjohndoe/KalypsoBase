@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package de.openali.odysseus.chart.framework.util.img;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.GC;
@@ -103,25 +102,29 @@ public class DefaultLegendStrategy implements ILegendPaintStrategy
 
       for( final IChartLayer layer : layers )
       {
-        final ILegendEntry entry = getLegendEntry( layer );
-        if( entry == null )
+        // final ILegendEntry entry = getLegendEntry( layer );
+        if( layer.getLegendEntries() == null )
           continue;
-
-        final ImageData imageData = createLegendItem( creator, entry, rowHeight );
-        if( x + imageData.width > creator.getMaximumWidth() )
+        for( final ILegendEntry entry : layer.getLegendEntries() )
         {
-          x = 0;
-          y += imageData.height;
+          if( entry == null )
+            continue;
+
+          final ImageData imageData = createLegendItem( creator, entry, rowHeight );
+          if( x + imageData.width > creator.getMaximumWidth() )
+          {
+            x = 0;
+            y += imageData.height;
+          }
+
+          final Image image = new Image( dev, imageData );
+          gc.drawImage( image, x, y );
+
+          x += imageData.width;
+
+          image.dispose();
         }
-
-        final Image image = new Image( dev, imageData );
-        gc.drawImage( image, x, y );
-
-        x += imageData.width;
-
-        image.dispose();
       }
-
       return canvas;
     }
     finally
@@ -194,22 +197,6 @@ public class DefaultLegendStrategy implements ILegendPaintStrategy
     }
   }
 
-  private ILegendEntry getLegendEntry( final IChartLayer layer )
-  {
-    final ILegendEntry[] legendEntries = layer.getLegendEntries();
-
-    // TODO - instead of returning null (layer.getLegendEntries()) always return an empty array!
-
-    if( ArrayUtils.isEmpty( legendEntries ) )
-      return null;
-
-    for( final ILegendEntry entry : legendEntries )
-    {
-      return entry;
-    }
-
-    return null;
-  }
 
   /**
    * @see de.openali.odysseus.chart.framework.util.img.ILegendStrategy#getSize(de.openali.odysseus.chart.framework.util.img.LegendImageCreator)
@@ -232,32 +219,36 @@ public class DefaultLegendStrategy implements ILegendPaintStrategy
 
     for( final IChartLayer layer : layers )
     {
-      final ILegendEntry entry = getLegendEntry( layer );
-      if( entry == null )
+      // final ILegendEntry entry = getLegendEntry( layer );
+      if( layer.getLegendEntries() == null )
         continue;
-
-      final Point size = getItemSize( creator, entry );
-
-      if( row + size.x > creator.getMaximumWidth() )
+      for( final ILegendEntry entry : layer.getLegendEntries() )
       {
-        maxRowWidth = Math.max( maxRowWidth, size.x );
-        heigth += Math.max( maxRowHeight, size.y );
-        maxRowHeight = 0;
-        row = 0;
-        m_numRows += 1;
-      }
-      else
-      {
-        row += size.x;
-        maxRowHeight = Math.max( maxRowHeight, size.y );
-        maxRowWidth = Math.max( maxRowWidth, row );
-        if( heigth == 0 )
-          heigth = maxRowHeight;
-        if( m_numRows == 0 )
-          m_numRows = 1;
+        if( entry == null )
+          continue;
+
+        final Point size = getItemSize( creator, entry );
+
+        if( row + size.x > creator.getMaximumWidth() )
+        {
+          maxRowWidth = Math.max( maxRowWidth, size.x );
+          heigth += Math.max( maxRowHeight, size.y );
+          maxRowHeight = 0;
+          row = 0;
+          m_numRows += 1;
+        }
+        else
+        {
+          row += size.x;
+          maxRowHeight = Math.max( maxRowHeight, size.y );
+          maxRowWidth = Math.max( maxRowWidth, row );
+          if( heigth == 0 )
+            heigth = maxRowHeight;
+          if( m_numRows == 0 )
+            m_numRows = 1;
+        }
       }
     }
-
     m_size = new Point( maxRowWidth, heigth );
 
     return m_size;

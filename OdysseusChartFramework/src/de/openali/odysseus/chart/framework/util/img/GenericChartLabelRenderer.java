@@ -222,6 +222,8 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
         return 0;
       case CENTERED_VERTICAL:
         return -getSize().y / 2;
+      case TICK_CENTERED:
+        return -getSize().x / 2;
     }
     throw new IllegalArgumentException();
 
