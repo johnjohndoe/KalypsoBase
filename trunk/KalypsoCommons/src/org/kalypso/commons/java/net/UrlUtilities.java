@@ -216,4 +216,22 @@ public class UrlUtilities
 
     return null;
   }
+
+  /**
+   * This function strips everything from an given URL, except the protocol, the host and the port.
+   * 
+   * @param sourceURL
+   *          The URL.
+   * @return A URL in the format: http://localhost:8080
+   */
+  public static URL removeRequest( URL sourceURL ) throws MalformedURLException
+  {
+    String protocol = sourceURL.getProtocol();
+    String host = sourceURL.getHost();
+    int port = sourceURL.getPort();
+    if( port >= 1 )
+      return new URL( String.format( "%s://%s:%d", protocol, host, port ) );
+
+    return new URL( String.format( "%s://%s", protocol, host ) );
+  }
 }
