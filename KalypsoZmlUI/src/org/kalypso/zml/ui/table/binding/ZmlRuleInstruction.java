@@ -115,10 +115,10 @@ public class ZmlRuleInstruction
   private String findBoundaryType( final MetadataBoundary metaFrom, final MetadataBoundary metaTo )
   {
     if( metaFrom != null )
-      return metaFrom.getType();
+      return metaFrom.getParameterType();
 
     if( metaTo != null )
-      return metaTo.getType();
+      return metaTo.getParameterType();
 
     return null;
   }
@@ -143,9 +143,9 @@ public class ZmlRuleInstruction
     if( boundaryAxis == null )
       return Double.NaN;
 
-    final Object boundaryValue = column.get( 0, valueAxis );
+    final Object boundaryValue = column.get( tupleModelIndex, boundaryAxis );
     if( boundaryValue instanceof Number )
-      return ((Number) boundaryAxis).doubleValue();
+      return ((Number) boundaryValue).doubleValue();
 
     return Double.NaN;
   }
