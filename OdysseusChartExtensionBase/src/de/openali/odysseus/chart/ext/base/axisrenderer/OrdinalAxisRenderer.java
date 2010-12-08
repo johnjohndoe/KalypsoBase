@@ -148,7 +148,7 @@ public class OrdinalAxisRenderer implements IAxisRenderer
     return m_id;
   }
 
-  private final IChartLabelRenderer getTickLabelRenderer( final IAxis axis )
+  private IChartLabelRenderer getTickLabelRenderer( final IAxis axis )
   {
     if( m_tickLabelRenderer == null )
     {
