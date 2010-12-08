@@ -41,13 +41,14 @@
 package de.openali.odysseus.chart.ext.base.axis.provider;
 
 import de.openali.odysseus.chart.ext.base.axis.GenericLinearAxis;
+import de.openali.odysseus.chart.ext.base.axis.ScreenCoordinateAxis;
 import de.openali.odysseus.chart.factory.provider.AbstractAxisProvider;
 import de.openali.odysseus.chart.framework.model.data.impl.StringDataOperator;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
+import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
 
 /**
  * @author alibu
- * 
  */
 public class GenericLinearAxisProvider extends AbstractAxisProvider
 {
@@ -58,12 +59,19 @@ public class GenericLinearAxisProvider extends AbstractAxisProvider
   @Override
   public IAxis getAxis( )
   {
-    IAxis axis = new GenericLinearAxis( getId(), getPosition(), getDataClass() );
+    final IAxis axis = new GenericLinearAxis( getId(), getPosition(), getDataClass() );
     if( getValueArray() != null )
     {
-      StringDataOperator sdo = new StringDataOperator( getValueArray() );
+      final StringDataOperator sdo = new StringDataOperator( getValueArray() );
       axis.addDataOperator( String.class, sdo );
     }
+
     return axis;
+  }
+
+  @Override
+  public IAxis getScreenAxis( final String identifier, final POSITION position )
+  {
+    return new ScreenCoordinateAxis( identifier, position );
   }
 }

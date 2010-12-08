@@ -6,20 +6,15 @@ import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
 import de.openali.odysseus.chart.framework.util.ChartUtilities;
 
 /**
- 
- * 
  * @author kimwerner
  */
 public class ScreenCoordinateAxis extends AbstractAxis
 {
-
   public ScreenCoordinateAxis( final String id, final POSITION pos )
   {
     super( id, pos, Double.class, null );
   }
 
-  
-  
   /**
    * @see de.openali.odysseus.chart.ext.base.axis.AbstractAxis#isVisible()
    */
@@ -29,7 +24,6 @@ public class ScreenCoordinateAxis extends AbstractAxis
     // always hidden
     return false;
   }
-
 
   /**
    * @see org.kalypso.chart.framework.model.mapper.IAxis#getNumericRange()
@@ -46,7 +40,7 @@ public class ScreenCoordinateAxis extends AbstractAxis
   @Override
   public Integer numericToScreen( final Number value )
   {
-    return normalizedToScreen(  value.doubleValue()  );
+    return normalizedToScreen( value.doubleValue() );
   }
 
   /**
@@ -55,7 +49,7 @@ public class ScreenCoordinateAxis extends AbstractAxis
   @Override
   public Number screenToNumeric( final int value )
   {
-    return  screenToNormalized( value ) ;
+    return screenToNormalized( value );
   }
 
   /**
@@ -66,8 +60,6 @@ public class ScreenCoordinateAxis extends AbstractAxis
   {
     // do nothing, fixed Range
   }
-
-
 
   /**
    * Uses the widgets' complete extension to calculate the screen value in correspondence to a normalized value
