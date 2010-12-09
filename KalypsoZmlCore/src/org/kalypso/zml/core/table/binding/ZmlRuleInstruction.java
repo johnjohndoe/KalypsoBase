@@ -187,20 +187,17 @@ public class ZmlRuleInstruction
       if( value.compareTo( compareValue ) < 0 )
         return true;
     }
-
-    if( "<=".equals( op ) )
+    else if( "<=".equals( op ) )
     {
       if( value.compareTo( compareValue ) <= 0 )
         return true;
     }
-
-    if( ">".equals( op ) )
+    else if( ">".equals( op ) )
     {
       if( value.compareTo( compareValue ) > 0 )
         return true;
     }
-
-    if( ">=".equals( op ) )
+    else if( ">=".equals( op ) )
     {
       if( value.compareTo( compareValue ) >= 0 )
         return true;
