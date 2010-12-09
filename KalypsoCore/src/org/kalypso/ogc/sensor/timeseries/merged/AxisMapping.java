@@ -55,7 +55,9 @@ import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 public class AxisMapping
 {
   /** map<baseAxis, axis> */
-  private final Map<IAxis, IAxis> m_mapping = new HashMap<IAxis, IAxis>();
+  private final Map<IAxis, IAxis> m_destinationMapping = new HashMap<IAxis, IAxis>();
+
+  private final Map<IAxis, IAxis> m_sourceMapping = new HashMap<IAxis, IAxis>();
 
   private final IAxis[] m_destinationAxes;
 
@@ -67,16 +69,17 @@ public class AxisMapping
    * @param axes
    *          map axes to result model baseAxes
    */
-  public AxisMapping( final IAxis[] destinationAxes, final IAxis[] axes )
+  public AxisMapping( final IAxis[] destinationAxes, final IAxis[] srcAxes )
   {
     m_destinationAxes = destinationAxes;
     for( final IAxis base : destinationAxes )
     {
-      final IAxis fitting = find( base, axes );
+      final IAxis fitting = find( base, srcAxes );
       if( fitting == null )
         continue;
 
-      m_mapping.put( base, fitting );
+      m_destinationMapping.put( base, fitting );
+      m_sourceMapping.put( fitting, base );
     }
   }
 
@@ -102,14 +105,14 @@ public class AxisMapping
 
   public IAxis[] getSourceAxes( )
   {
-    return m_mapping.values().toArray( new IAxis[] {} );
+    return m_destinationMapping.values().toArray( new IAxis[] {} );
   }
 
   public int getDestinationIndex( final IAxis srcAxis )
   {
     // FIXME: why do we use a set, if we make a linear search later? Use a specialized comparator on that set and use
     // .contains()!
-    final Set<Entry<IAxis, IAxis>> entries = m_mapping.entrySet();
+    final Set<Entry<IAxis, IAxis>> entries = m_destinationMapping.entrySet();
     for( final Entry<IAxis, IAxis> entry : entries )
     {
       if( entry.getValue().equals( srcAxis ) )
@@ -121,15 +124,12 @@ public class AxisMapping
 
   public IAxis getDestinationAxis( final IAxis srcAxis )
   {
-    final Set<Entry<IAxis, IAxis>> entries = m_mapping.entrySet();
-    for( final Entry<IAxis, IAxis> entry : entries )
-    {
-      final IAxis destAxis = entry.getValue();
-      if( destAxis.equals( srcAxis ) )
-        return destAxis;
-    }
+    return m_destinationMapping.get( srcAxis );
+  }
 
-    return null;
+  public IAxis getSourceAxis( final IAxis destinationAxis )
+  {
+    return m_sourceMapping.get( destinationAxis );
   }
 
   public IAxis getDataSourceAxis( )
