@@ -160,7 +160,10 @@ public class ZmlDataModel implements IZmlModel
 
   public void add( final IZmlModelRow row )
   {
-    m_rows.put( row.getIndexValue(), row );
+    synchronized( m_rows )
+    {
+      m_rows.put( row.getIndexValue(), row );
+    }
   }
 
   @Override
@@ -197,6 +200,12 @@ public class ZmlDataModel implements IZmlModel
       }
     }
 
-    return m_rows.values().toArray( new IZmlModelRow[] {} );
+    IZmlModelRow[] rows;
+    synchronized( m_rows )
+    {
+      rows = m_rows.values().toArray( new IZmlModelRow[] {} );
+    }
+
+    return rows;
   }
 }

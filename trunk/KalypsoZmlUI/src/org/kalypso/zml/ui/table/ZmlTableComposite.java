@@ -55,6 +55,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.ToolBarManager;
+import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
@@ -145,6 +146,8 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
 
     m_tableViewer.setContentProvider( new ZmlTableContentProvider( m_model ) );
 
+    addEmptyColumn();
+
     final List<JAXBElement< ? extends AbstractColumnType>> columnTypes = tableType.getColumns().getAbstractColumn();
     for( final JAXBElement< ? extends AbstractColumnType> columnType : columnTypes )
     {
@@ -224,6 +227,15 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
 
   }
 
+  private void addEmptyColumn( )
+  {
+    final TableViewerColumn column = new TableViewerColumn( m_tableViewer, SWT.NULL );
+    column.setLabelProvider( new ColumnLabelProvider() );
+    column.getColumn().setWidth( 0 );
+    column.getColumn().setResizable( false );
+    column.getColumn().setMoveable( false );
+  }
+
   private TableViewerColumn buildColumnViewer( final BaseColumn type )
   {
     final int index = m_tableViewer.getTable().getColumnCount();
@@ -263,9 +275,10 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
 
     /** update header labels */
     final TableColumn[] tableColumns = m_tableViewer.getTable().getColumns();
-    Assert.isTrue( tableColumns.length == m_columns.size() );
+    Assert.isTrue( tableColumns.length == m_columns.size() + 1 );
 
-    for( int i = 0; i < tableColumns.length; i++ )
+    // i = 1, think of first empty column (windows column icon bug!)
+    for( int i = 1; i < tableColumns.length; i++ )
     {
       final ZmlTableColumn column = m_columns.get( i );
       final BaseColumn columnType = column.getColumnType();
@@ -278,6 +291,8 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
         {
           column.getTableColumn().setWidth( 0 );
           column.getTableColumn().setText( columnType.getLabel() );
+          column.getTableColumn().setResizable( false );
+          column.getTableColumn().setMoveable( false );
         }
         else
         {
@@ -315,6 +330,9 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
       table.pack();
     else
       table.setWidth( width );
+
+    table.setMoveable( true );
+    table.setResizable( true );
   }
 
   /**
