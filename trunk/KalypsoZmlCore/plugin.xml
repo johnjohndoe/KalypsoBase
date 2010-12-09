@@ -17,12 +17,16 @@
           rule="org.kalypso.zml.core.table.rules.impl.ZmlRuleWQRelationConflict">
     </rule>
      <rule
-           id="org.kalypso.zml.ui.core.rule.forecast.value"
-           rule="org.kalypso.zml.core.table.rules.impl.ZmlRuleForecastValue">
+           id="org.kalypso.zml.ui.core.rule.safe.forecast.value"
+           rule="org.kalypso.zml.core.table.rules.impl.forecast.ZmlRuleSafeForecastValue">
+     </rule>
+      <rule
+           id="org.kalypso.zml.ui.core.rule.unsafe.forecast.value"
+           rule="org.kalypso.zml.core.table.rules.impl.forecast.ZmlRuleUnsafeForecastValue">
      </rule>
      <rule
            id="org.kalypso.zml.ui.core.rule.grenzwerte"
-           rule="org.kalypso.zml.core.table.rules.impl.ZmlRuleGrenzwerte">
+           rule="org.kalypso.zml.core.table.rules.impl.grenzwert.ZmlRuleGrenzwerte">
      </rule>
  </extension> 
  <extension

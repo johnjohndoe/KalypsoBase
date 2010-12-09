@@ -73,7 +73,7 @@ public class MetadataHelper implements ITimeseriesConstants, ICopyObservationMet
 
   }
 
-  protected static DateRange getDateRange( final MetadataList mdl, final String fromTag, final String endTag )
+  public static DateRange getDateRange( final MetadataList mdl, final String fromTag, final String endTag )
   {
     final String propertyFrom = mdl.getProperty( fromTag, "" );
     final String propertyTo = mdl.getProperty( endTag, "" );
@@ -81,7 +81,7 @@ public class MetadataHelper implements ITimeseriesConstants, ICopyObservationMet
     return getDateRange( propertyFrom, propertyTo );
   }
 
-  protected static DateRange getDateRange( final String propertyFrom, final String propertyTo )
+  public static DateRange getDateRange( final String propertyFrom, final String propertyTo )
   {
     Date from = null;
     Date to = null;
@@ -115,7 +115,7 @@ public class MetadataHelper implements ITimeseriesConstants, ICopyObservationMet
 
   public static DateRange getForecastDateRange( final MetadataList mdl )
   {
-    return getDateRange( mdl.getProperty( MD_VORHERSAGE_START ), mdl.getProperty( MD_VORHERSAGE_ENDE ) );
+    return getDateRange( mdl, mdl.getProperty( MD_VORHERSAGE_START ), mdl.getProperty( MD_VORHERSAGE_ENDE ) );
   }
 
   public static DateRange getDateRange( final MetadataList mdl )

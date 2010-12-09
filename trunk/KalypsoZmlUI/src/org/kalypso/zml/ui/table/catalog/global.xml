@@ -52,7 +52,10 @@
       <property name="textFormat">dd.MM.yy HH:mm</property>
     </Style>
 
-    <Style id="dateForecastCellStyle">
+    <Style id="dateForecastCellStyleSafe">
+      <property name="backgroundColor">E2FFCC</property>
+    </Style>
+    <Style id="dateForecastCellStyleUnsafe">
       <property name="backgroundColor">FFF7EE</property>
     </Style>
 
@@ -94,9 +97,14 @@
   </defaultStyle>
 
   <RuleSet>
-    <Rule id="ruleForecast" ruleReference="org.kalypso.zml.ui.core.rule.forecast.value">
+    <Rule id="ruleForecastSafe" ruleReference="org.kalypso.zml.ui.core.rule.safe.forecast.value">
       <styleReference>
-        <reference>dateForecastCellStyle</reference>
+        <reference>dateForecastCellStyleSafe</reference>
+      </styleReference>
+    </Rule>
+    <Rule id="ruleForecastUnsafe" ruleReference="org.kalypso.zml.ui.core.rule.unsafe.forecast.value">
+      <styleReference>
+        <reference>dateForecastCellStyleUnsafe</reference>
       </styleReference>
     </Rule>
     <Rule id="ruleUserModified" ruleReference="org.kalypso.zml.ui.core.rule.user.modified">
@@ -141,31 +149,31 @@
             <reference>meldegrenze</reference>
           </styleReference>
         </instruction>
-       
+
       </RuleInstructions>
     </Rule>
 
     <Rule id="ruleHauptzahlenQ" ruleReference="org.kalypso.zml.ui.core.rule.grenzwerte" enabled="false">
       <RuleInstructions>
-        <instruction to="Grenzwert_Q: Kalypso_Grenzwert_NQ" label="&lt;N   ${text}"/>
-        <instruction from="Grenzwert_Q: Kalypso_Grenzwert_NQ" opFrom="&gt;=" to="Grenzwert_Q: Kalypso_Grenzwert_MNQ" label="&lt;MN   ${text}"/>
-        <instruction from="Grenzwert_Q: Kalypso_Grenzwert_MNQ" opFrom="&gt;=" to="Grenzwert_Q: Kalypso_Grenzwert_MQ" label="&lt;M   ${text}"/>
-        <instruction from="Grenzwert_Q: Kalypso_Grenzwert_MQ" opFrom="&gt;=" to="Grenzwert_Q: Kalypso_Grenzwert_MQ" opTo="&lt;=" label="=M   ${text}"/>
-        <instruction from="Grenzwert_Q: Kalypso_Grenzwert_MQ" to="Grenzwert_Q: Kalypso_Grenzwert_MHQ" opTo="&lt;=" label="&gt;M   ${text}"/>
-        <instruction from="Grenzwert_Q: Kalypso_Grenzwert_MHQ" to="Grenzwert_Q: Kalypso_Grenzwert_HQ" opTo="&lt;=" label="&gt;MH   ${text}"/>
-        <instruction from="Grenzwert_Q: Kalypso_Grenzwert_HQ" label="&gt;H   ${text}"/>
+        <instruction to="Grenzwert_Q: Kalypso_Grenzwert_NQ" label="&lt;N   ${text}" />
+        <instruction from="Grenzwert_Q: Kalypso_Grenzwert_NQ" opFrom="&gt;=" to="Grenzwert_Q: Kalypso_Grenzwert_MNQ" label="&lt;MN   ${text}" />
+        <instruction from="Grenzwert_Q: Kalypso_Grenzwert_MNQ" opFrom="&gt;=" to="Grenzwert_Q: Kalypso_Grenzwert_MQ" label="&lt;M   ${text}" />
+        <instruction from="Grenzwert_Q: Kalypso_Grenzwert_MQ" opFrom="&gt;=" to="Grenzwert_Q: Kalypso_Grenzwert_MQ" opTo="&lt;=" label="=M   ${text}" />
+        <instruction from="Grenzwert_Q: Kalypso_Grenzwert_MQ" to="Grenzwert_Q: Kalypso_Grenzwert_MHQ" opTo="&lt;=" label="&gt;M   ${text}" />
+        <instruction from="Grenzwert_Q: Kalypso_Grenzwert_MHQ" to="Grenzwert_Q: Kalypso_Grenzwert_HQ" opTo="&lt;=" label="&gt;MH   ${text}" />
+        <instruction from="Grenzwert_Q: Kalypso_Grenzwert_HQ" label="&gt;H   ${text}" />
       </RuleInstructions>
     </Rule>
 
     <Rule id="ruleHauptzahlenW" ruleReference="org.kalypso.zml.ui.core.rule.grenzwerte" enabled="false">
       <RuleInstructions>
-        <instruction to="Grenzwert_W: Kalypso_Grenzwert_NW" label="&lt;N   ${text}"/>
-        <instruction from="Grenzwert_W: Kalypso_Grenzwert_NW" opFrom="&gt;=" to="Grenzwert_W: Kalypso_Grenzwert_MNW" label="&lt;MN   ${text}"/>
-        <instruction from="Grenzwert_W: Kalypso_Grenzwert_MNW" opFrom="&gt;=" to="Grenzwert_W: Kalypso_Grenzwert_MW" label="&lt;M   ${text}"/>
-        <instruction from="Grenzwert_W: Kalypso_Grenzwert_MW" opFrom="&gt;=" to="Grenzwert_W: Kalypso_Grenzwert_MW" opTo="&lt;=" label="=M   ${text}"/>
-        <instruction from="Grenzwert_W: Kalypso_Grenzwert_MW" to="Grenzwert_W: Kalypso_Grenzwert_MHW" opTo="&lt;=" label="&gt;M   ${text}"/>
-        <instruction from="Grenzwert_W: Kalypso_Grenzwert_MHW" to="Grenzwert_W: Kalypso_Grenzwert_HW" opTo="&lt;=" label="&gt;MH   ${text}"/>
-        <instruction from="Grenzwert_W: Kalypso_Grenzwert_HW" label="&gt;H   ${text}"/>
+        <instruction to="Grenzwert_W: Kalypso_Grenzwert_NW" label="&lt;N   ${text}" />
+        <instruction from="Grenzwert_W: Kalypso_Grenzwert_NW" opFrom="&gt;=" to="Grenzwert_W: Kalypso_Grenzwert_MNW" label="&lt;MN   ${text}" />
+        <instruction from="Grenzwert_W: Kalypso_Grenzwert_MNW" opFrom="&gt;=" to="Grenzwert_W: Kalypso_Grenzwert_MW" label="&lt;M   ${text}" />
+        <instruction from="Grenzwert_W: Kalypso_Grenzwert_MW" opFrom="&gt;=" to="Grenzwert_W: Kalypso_Grenzwert_MW" opTo="&lt;=" label="=M   ${text}" />
+        <instruction from="Grenzwert_W: Kalypso_Grenzwert_MW" to="Grenzwert_W: Kalypso_Grenzwert_MHW" opTo="&lt;=" label="&gt;M   ${text}" />
+        <instruction from="Grenzwert_W: Kalypso_Grenzwert_MHW" to="Grenzwert_W: Kalypso_Grenzwert_HW" opTo="&lt;=" label="&gt;MH   ${text}" />
+        <instruction from="Grenzwert_W: Kalypso_Grenzwert_HW" label="&gt;H   ${text}" />
       </RuleInstructions>
     </Rule>
   </RuleSet>

@@ -51,6 +51,7 @@ import org.kalypso.zml.core.KalypsoZmlCore;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
 import org.kalypso.zml.core.table.rules.IZmlRuleImplementation;
+import org.kalypso.zml.core.table.rules.impl.grenzwert.ZmlRuleGrenzwertInstruction;
 import org.kalypso.zml.core.table.schema.CellStyleType;
 import org.kalypso.zml.core.table.schema.RuleInstruction;
 import org.kalypso.zml.core.table.schema.RuleInstructionsType;
@@ -66,7 +67,7 @@ public class ZmlRule
 {
   private final RuleType m_rule;
 
-  private ZmlRuleInstruction[] m_instructions;
+  private ZmlRuleGrenzwertInstruction[] m_instructions;
 
   private CellStyle m_baseStyle;
 
@@ -99,8 +100,8 @@ public class ZmlRule
 
     CellStyleType base = m_baseStyle.getType();
 
-    final ZmlRuleInstruction[] instructions = getInstructions();
-    for( final ZmlRuleInstruction instruction : instructions )
+    final ZmlRuleGrenzwertInstruction[] instructions = getInstructions();
+    for( final ZmlRuleGrenzwertInstruction instruction : instructions )
     {
       try
       {
@@ -125,24 +126,24 @@ public class ZmlRule
     return KalypsoZmlCore.getDefault().findRule( m_rule.getRuleReference() );
   }
 
-  public ZmlRuleInstruction[] getInstructions( )
+  public ZmlRuleGrenzwertInstruction[] getInstructions( )
   {
     if( ArrayUtils.isNotEmpty( m_instructions ) )
       return m_instructions;
 
-    final List<ZmlRuleInstruction> myInstructions = new ArrayList<ZmlRuleInstruction>();
+    final List<ZmlRuleGrenzwertInstruction> myInstructions = new ArrayList<ZmlRuleGrenzwertInstruction>();
 
     final RuleInstructionsType type = m_rule.getRuleInstructions();
     if( type == null )
-      return new ZmlRuleInstruction[] {};
+      return new ZmlRuleGrenzwertInstruction[] {};
 
     final List<RuleInstruction> instructions = type.getInstruction();
     for( final RuleInstruction instruction : instructions )
     {
-      myInstructions.add( new ZmlRuleInstruction( instruction ) );
+      myInstructions.add( new ZmlRuleGrenzwertInstruction( instruction ) );
     }
 
-    m_instructions = myInstructions.toArray( new ZmlRuleInstruction[] {} );
+    m_instructions = myInstructions.toArray( new ZmlRuleGrenzwertInstruction[] {} );
 
     return m_instructions;
   }

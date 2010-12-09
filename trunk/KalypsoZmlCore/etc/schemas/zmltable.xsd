@@ -152,7 +152,7 @@
     <attribute name="opFrom" type="zmltable:operatorFromType" use="optional" default="&gt;" />
     <attribute name="to" type="string" use="optional" />
     <attribute name="opTo" type="zmltable:operatorToType" use="optional" default="&lt;" />
-    <attribute name="label" type="string" use="required" />
+    <attribute name="label" type="string" use="optional" />
   </complexType>
 
 
