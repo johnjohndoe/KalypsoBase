@@ -69,6 +69,8 @@ public class WMSThemePropertyPage extends PropertyPage implements IWorkbenchProp
 {
   private String m_themeSource = null;
 
+  private String m_lastRequest = null;
+
   /**
    * @see org.eclipse.jface.preference.PreferencePage#createContents(org.eclipse.swt.widgets.Composite)
    */
@@ -83,15 +85,15 @@ public class WMSThemePropertyPage extends PropertyPage implements IWorkbenchProp
 
     if( theme == null )
     {
-      // todo: show some error message
+      // TODO: show some error message
       return composite;
     }
 
-    /* Theme name */
+    /* Theme source. */
     final Label sourceLabel = new Label( composite, SWT.NONE );
     sourceLabel.setText( Messages.getString( "org.kalypso.ui.views.properties.WMSThemePropertyPage.sourceLabel" ) ); //$NON-NLS-1$
 
-    // Yet read only, as WMS-Theme does not support changing the source yet
+    /* Read only, as WMS-Theme does not support changing the source yet. */
     final Text sourceText = new Text( composite, SWT.READ_ONLY | SWT.BORDER );
     final GridData sourceData = new GridData( SWT.FILL, SWT.CENTER, true, false );
     sourceData.widthHint = 200;
@@ -99,6 +101,9 @@ public class WMSThemePropertyPage extends PropertyPage implements IWorkbenchProp
     sourceText.setText( theme.getSource() );
     sourceText.addModifyListener( new ModifyListener()
     {
+      /**
+       * @see org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.swt.events.ModifyEvent)
+       */
       @Override
       public void modifyText( final ModifyEvent e )
       {
@@ -107,20 +112,33 @@ public class WMSThemePropertyPage extends PropertyPage implements IWorkbenchProp
       }
     } );
 
+    /* Last request */
+    Label lastRequestLabel = new Label( composite, SWT.NONE );
+    lastRequestLabel.setText( "Letzte Anfrage" );
+    lastRequestLabel.setLayoutData( new GridData( SWT.FILL, SWT.TOP, false, false ) );
+
+    /* Read only, as WMS-Theme does not support changing the last request. */
+    final Text lastRequestText = new Text( composite, SWT.READ_ONLY | SWT.MULTI | SWT.BORDER | SWT.WRAP );
+    GridData lastRequestData = new GridData( SWT.FILL, SWT.TOP, true, false );
+    lastRequestData.widthHint = 200;
+    lastRequestText.setLayoutData( lastRequestData );
+    String lastRequest = theme.getLastRequest();
+    if( lastRequest == null || lastRequest.length() == 0 )
+      lastRequest = "Unbekannt";
+    lastRequestText.setText( lastRequest );
+    lastRequestText.addModifyListener( new ModifyListener()
+    {
+      /**
+       * @see org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.swt.events.ModifyEvent)
+       */
+      @Override
+      public void modifyText( final ModifyEvent e )
+      {
+        setLastRequest( lastRequestText.getText() );
+      }
+    } );
+
     return composite;
-  }
-
-
-  /**
-   * This function returns the theme.
-   * 
-   * @return The theme.
-   */
-  private KalypsoWMSTheme getTheme( )
-  {
-    final IAdaptable element = getElement();
-    final KalypsoWMSTheme theme = (KalypsoWMSTheme) (element instanceof KalypsoWMSTheme ? element : element.getAdapter( KalypsoWMSTheme.class ));
-    return theme;
   }
 
   /**
@@ -150,21 +168,31 @@ public class WMSThemePropertyPage extends PropertyPage implements IWorkbenchProp
     return super.performOk();
   }
 
+  /**
+   * This function returns the theme.
+   * 
+   * @return The theme.
+   */
+  private KalypsoWMSTheme getTheme( )
+  {
+    final IAdaptable element = getElement();
+    final KalypsoWMSTheme theme = (KalypsoWMSTheme) (element instanceof KalypsoWMSTheme ? element : element.getAdapter( KalypsoWMSTheme.class ));
+    return theme;
+  }
+
   private void checkValid( )
   {
-    /* clear error */
+    /* Clear error. */
+    setValid( true );
     setErrorMessage( null );
 
-    /* Revalidate and set message accoring to result */
-    final String msg = validate();
-    if( msg == null )
-      setValid( true );
-    else if( msg.length() == 0 )
-      setValid( false );
-    else
+    /* Revalidate and set message accoring to result. */
+    String msg = validate();
+    if( msg != null )
     {
       setValid( false );
       setErrorMessage( msg );
+      return;
     }
   }
 
@@ -174,21 +202,35 @@ public class WMSThemePropertyPage extends PropertyPage implements IWorkbenchProp
     if( m_themeSource == null )
       return ""; //$NON-NLS-1$
 
-    // TODO: check validity of source-URL; reuse code of add WMS theme functionality (refaktor!)
+    /* Check the validity of source-URL. */
+    // TODO
 
-    // everything else is valid
+    /* Everything else is valid. */
     return null;
   }
 
   /**
-   * This function sets the name of the theme.
+   * This function sets the source of the theme.
    * 
-   * @param name
-   *            The name of the theme.
+   * @param source
+   *          The source of the theme.
    */
-  protected void setThemeSource( final String source )
+  protected void setThemeSource( String themeSource )
   {
-    m_themeSource = source;
+    m_themeSource = themeSource;
+
+    checkValid();
+  }
+
+  /**
+   * This function sets the last request of the theme.
+   * 
+   * @param lastRequest
+   *          The last request of the theme.
+   */
+  protected void setLastRequest( String lastRequest )
+  {
+    m_lastRequest = lastRequest;
 
     checkValid();
   }

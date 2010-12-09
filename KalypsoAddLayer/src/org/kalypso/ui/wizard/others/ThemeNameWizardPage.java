@@ -81,7 +81,7 @@ public class ThemeNameWizardPage extends WizardPage
     topComposite.setLayoutData( new GridData( GridData.FILL_BOTH ) );
 
     final Label label = new Label( topComposite, SWT.NONE );
-    label.setText( Messages.getString("org.kalypso.ui.wizard.others.ThemeNameWizardPage.1") ); //$NON-NLS-1$
+    label.setText( Messages.getString( "org.kalypso.ui.wizard.others.ThemeNameWizardPage.1" ) ); //$NON-NLS-1$
     label.setLayoutData( new GridData() );
 
     final Text text = new Text( topComposite, SWT.BORDER );
@@ -99,7 +99,7 @@ public class ThemeNameWizardPage extends WizardPage
         setPageComplete( m_themeName.length() > 0 );
 
         if( m_themeName.length() == 0 )
-          setMessage( Messages.getString("org.kalypso.ui.wizard.others.ThemeNameWizardPage.2"), ERROR ); //$NON-NLS-1$
+          setMessage( Messages.getString( "org.kalypso.ui.wizard.others.ThemeNameWizardPage.2" ), ERROR ); //$NON-NLS-1$
         else
           setMessage( null );
       }
@@ -108,9 +108,13 @@ public class ThemeNameWizardPage extends WizardPage
     setControl( topComposite );
   }
 
+  /**
+   * This function returns the name of the page.
+   * 
+   * @return The name of the page.
+   */
   public String getThemeName( )
   {
     return m_themeName;
   }
-
 }

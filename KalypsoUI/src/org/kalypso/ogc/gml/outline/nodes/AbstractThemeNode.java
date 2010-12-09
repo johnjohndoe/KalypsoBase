@@ -325,7 +325,7 @@ abstract class AbstractThemeNode<T> implements IThemeNode
     /* Memory for all legends. */
     final List<Image> legends = new ArrayList<Image>();
 
-    final IThemeNode[] children = getChildrenCompact();
+    final IThemeNode[] children = getChildren();
 
     /* Get the legend of each child. */
     for( final IThemeNode childNode : children )
@@ -375,7 +375,7 @@ abstract class AbstractThemeNode<T> implements IThemeNode
       gc.drawImage( legend, BORDER + ICON_SIZE + GAP, heightSoFar );
 
       // TODO: normally, the images should be disposed here, but
-      // this also disposed reused images... (the getLEgenGraphics() image should
+      // this also disposed reused images... (the getLegenGraphics() image should
       // always be disposable (or not)
 
       /* Increase the height. */

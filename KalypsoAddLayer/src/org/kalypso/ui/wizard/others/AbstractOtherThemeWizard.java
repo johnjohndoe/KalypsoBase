@@ -51,7 +51,6 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.ogc.gml.IKalypsoLayerModell;
@@ -73,8 +72,7 @@ public abstract class AbstractOtherThemeWizard extends Wizard implements IKalyps
   public AbstractOtherThemeWizard( final ThemeNameWizardPage themeNameWizardPage )
   {
     m_themeNameWizardPage = themeNameWizardPage;
-
-    m_themeNameWizardPage.setDescription( Messages.getString("org.kalypso.ui.wizard.others.AbstractOtherThemeWizard.0") ); //$NON-NLS-1$
+    m_themeNameWizardPage.setDescription( Messages.getString( "org.kalypso.ui.wizard.others.AbstractOtherThemeWizard.0" ) ); //$NON-NLS-1$
   }
 
   @Override
@@ -108,9 +106,7 @@ public abstract class AbstractOtherThemeWizard extends Wizard implements IKalyps
   public boolean performFinish( )
   {
     final IKalypsoLayerModell mapModell = m_mapModel;
-
     final String themeName = m_themeNameWizardPage.getThemeName();
-
     final ICommandTarget outlineviewer = m_outlineviewer;
     final ICoreRunnableWithProgress operation = new ICoreRunnableWithProgress()
     {
@@ -120,7 +116,7 @@ public abstract class AbstractOtherThemeWizard extends Wizard implements IKalyps
         try
         {
           if( mapModell == null )
-            return StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.ui.wizard.others.AbstractOtherThemeWizard.1") ); //$NON-NLS-1$
+            return new Status( IStatus.ERROR, KalypsoAddLayerPlugin.getId(), Messages.getString( "org.kalypso.ui.wizard.others.AbstractOtherThemeWizard.1" ) ); //$NON-NLS-1$
 
           final ICommand command = createCommand( mapModell, themeName );
           outlineviewer.postCommand( command, null );
@@ -137,11 +133,10 @@ public abstract class AbstractOtherThemeWizard extends Wizard implements IKalyps
 
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, operation );
     KalypsoAddLayerPlugin.getDefault().getLog().log( status );
-    ErrorDialog.openError( getShell(), getWindowTitle(), Messages.getString("org.kalypso.ui.wizard.others.AbstractOtherThemeWizard.2"), status ); //$NON-NLS-1$
+    ErrorDialog.openError( getShell(), getWindowTitle(), Messages.getString( "org.kalypso.ui.wizard.others.AbstractOtherThemeWizard.2" ), status ); //$NON-NLS-1$
 
     return status.isOK();
   }
 
   protected abstract ICommand createCommand( IKalypsoLayerModell mapModell, String themeName );
-
 }

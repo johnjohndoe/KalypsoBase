@@ -55,6 +55,7 @@ import org.kalypso.ogc.gml.AbstractKalypsoTheme;
 import org.kalypso.ogc.gml.IGetFeatureInfoResultProcessor;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.wms.loader.images.KalypsoImageLoader;
+import org.kalypso.ogc.gml.wms.provider.images.AbstractDeegreeImageProvider;
 import org.kalypso.ogc.gml.wms.provider.images.IKalypsoImageProvider;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
@@ -63,7 +64,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
  * This class implements the a theme, which loads images from a given provider.
- *
+ * 
  * @author Doemming, Kuepferle
  * @author Holger Albert
  */
@@ -97,14 +98,14 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
 
   /**
    * The constructor.
-   *
+   * 
    * @param linktype
    *          The link type.
    * @param themeName
    *          The name of the theme.
    * @param imageProvider
-   *          The image provider, which should be used. If it has also the type {@link ILegendProvider} also a
-   *          legend can be shown.
+   *          The image provider, which should be used. If it has also the type {@link ILegendProvider} also a legend
+   *          can be shown.
    * @param mapModel
    *          The map modell.
    */
@@ -198,7 +199,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
 
   /**
    * This function returns the image provider of this theme.
-   *
+   * 
    * @return The image provider of this theme.
    */
   public IKalypsoImageProvider getImageProvider( )
@@ -208,7 +209,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
 
   /**
    * This function currently does nothing, because the info functionality of themes has to be refactored completely.
-   *
+   * 
    * @param pointOfInterest
    * @param format
    * @param getFeatureInfoResultProcessor
@@ -287,5 +288,21 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
   public ImageDescriptor getDefaultIcon( )
   {
     return KalypsoGisPlugin.getImageProvider().getImageDescriptor( ImageProvider.DESCRIPTORS.IMAGE_THEME_WMS );
+  }
+
+  /**
+   * This function returns the last request or null.
+   * 
+   * @return The last request or null.
+   */
+  public String getLastRequest( )
+  {
+    if( m_provider == null )
+      return null;
+
+    if( !(m_provider instanceof AbstractDeegreeImageProvider) )
+      return null;
+
+    return ((AbstractDeegreeImageProvider) m_provider).getLastRequest();
   }
 }

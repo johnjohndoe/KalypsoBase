@@ -42,6 +42,7 @@ package org.kalypso.ui.views.properties;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.DisposeEvent;
@@ -63,7 +64,7 @@ import org.kalypso.ogc.gml.outline.nodes.IThemeNode;
 
 /**
  * This page will show a legend for a theme, if one is available.
- *
+ * 
  * @author Holger Albert
  */
 public class LegendPropertyPage extends PropertyPage implements IWorkbenchPropertyPage
@@ -86,14 +87,10 @@ public class LegendPropertyPage extends PropertyPage implements IWorkbenchProper
     if( node == null )
       return createError( composite, Messages.getString( "org.kalypso.ui.views.properties.LegendPropertyPage.0" ) ); //$NON-NLS-1$
 
-    /* Get the legend graphic. */
-
     try
     {
       /* Get the legend graphic. */
-      final Font font = new Font( display, "Arial", 10, SWT.NORMAL ); //$NON-NLS-1$
-
-
+      final Font font = new Font( display, JFaceResources.DIALOG_FONT, 10, SWT.NORMAL );
       final Image legendGraphic = node.getLegendGraphic( font );
 
       /* No legend available. */
@@ -146,7 +143,7 @@ public class LegendPropertyPage extends PropertyPage implements IWorkbenchProper
 
   /**
    * This function creates an error message in the given composite.
-   *
+   * 
    * @param parent
    *          The parent composite.
    * @param message
@@ -168,7 +165,7 @@ public class LegendPropertyPage extends PropertyPage implements IWorkbenchProper
 
   /**
    * This function returns the theme.
-   *
+   * 
    * @return The theme.
    */
   private IThemeNode getNode( )

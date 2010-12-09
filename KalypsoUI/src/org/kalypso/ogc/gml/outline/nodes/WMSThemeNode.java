@@ -101,5 +101,4 @@ public class WMSThemeNode extends KalypsoThemeNode<KalypsoWMSTheme>
 
     return super.getLegendGraphic( font );
   }
-
 }
