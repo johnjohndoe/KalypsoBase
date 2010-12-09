@@ -52,6 +52,7 @@ import org.kalypso.zml.core.table.schema.CellStyleType;
 import org.kalypso.zml.core.table.schema.DataColumnType;
 import org.kalypso.zml.core.table.schema.IndexColumnType;
 import org.kalypso.zml.ui.table.IZmlTable;
+import org.kalypso.zml.ui.table.model.ZmlTableColumn;
 import org.kalypso.zml.ui.table.provider.RuleMapper;
 import org.kalypso.zml.ui.table.provider.ZmlLabelProvider;
 import org.kalypso.zml.ui.table.provider.strategy.editing.IZmlEditingStrategy;
@@ -61,7 +62,6 @@ import org.kalypso.zml.ui.table.provider.strategy.labeling.IZmlLabelStrategy;
 import org.kalypso.zml.ui.table.provider.strategy.labeling.IndexValueLabelingStrategy;
 import org.kalypso.zml.ui.table.provider.strategy.labeling.InstantaneousValueLabelingStrategy;
 import org.kalypso.zml.ui.table.provider.strategy.labeling.SumValueLabelingStrategy;
-import org.kalypso.zml.ui.table.viewmodel.ZmlTableColumn;
 
 /**
  * @author Dirk Kuch

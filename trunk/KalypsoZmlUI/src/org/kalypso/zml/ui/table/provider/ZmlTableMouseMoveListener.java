@@ -51,11 +51,11 @@ import org.eclipse.swt.events.MouseMoveListener;
 import org.eclipse.swt.graphics.Point;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.ui.table.ZmlTableComposite;
-import org.kalypso.zml.ui.table.viewmodel.IZmlTableCell;
-import org.kalypso.zml.ui.table.viewmodel.IZmlTableColumn;
-import org.kalypso.zml.ui.table.viewmodel.IZmlTableRow;
-import org.kalypso.zml.ui.table.viewmodel.ZmlTableCell;
-import org.kalypso.zml.ui.table.viewmodel.ZmlTableRow;
+import org.kalypso.zml.ui.table.model.IZmlTableCell;
+import org.kalypso.zml.ui.table.model.IZmlTableColumn;
+import org.kalypso.zml.ui.table.model.IZmlTableRow;
+import org.kalypso.zml.ui.table.model.ZmlTableCell;
+import org.kalypso.zml.ui.table.model.ZmlTableRow;
 
 /**
  * @author Dirk Kuch

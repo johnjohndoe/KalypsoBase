@@ -38,30 +38,14 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.viewmodel;
+package org.kalypso.zml.ui.table.model;
 
-import org.eclipse.jface.viewers.TableViewerColumn;
-import org.kalypso.zml.core.table.binding.BaseColumn;
-import org.kalypso.zml.core.table.model.IZmlModelColumn;
-import org.kalypso.zml.core.table.model.IZmlModelRow;
+import org.kalypso.zml.ui.table.IZmlTable;
 
 /**
  * @author Dirk Kuch
  */
-public interface IZmlTableColumn extends IZmlTableObject
+public interface IZmlTableObject
 {
-  BaseColumn getColumnType( );
-
-  IZmlModelColumn getModelColumn( );
-
-  /**
-   * @return visible table cells
-   */
-  IZmlTableCell[] getCells( );
-
-  IZmlTableCell[] getSelectedCells( );
-
-  TableViewerColumn getTableViewerColumn( );
-
-  IZmlTableCell findCell( IZmlModelRow row );
+  IZmlTable getTable( );
 }

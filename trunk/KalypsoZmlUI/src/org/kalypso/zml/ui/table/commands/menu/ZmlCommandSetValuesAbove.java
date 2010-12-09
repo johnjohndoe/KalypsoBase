@@ -48,8 +48,8 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
-import org.kalypso.zml.ui.table.viewmodel.IZmlTableCell;
-import org.kalypso.zml.ui.table.viewmodel.IZmlTableColumn;
+import org.kalypso.zml.ui.table.model.IZmlTableCell;
+import org.kalypso.zml.ui.table.model.IZmlTableColumn;
 
 /**
  * @author Dirk Kuch

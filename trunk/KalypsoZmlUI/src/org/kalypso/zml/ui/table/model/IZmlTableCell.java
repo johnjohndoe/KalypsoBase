@@ -38,28 +38,24 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.viewmodel;
+package org.kalypso.zml.ui.table.model;
 
-import org.kalypso.zml.ui.table.IZmlTable;
+import org.kalypso.zml.core.table.model.references.IZmlValueReference;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlTableElement implements IZmlTableObject
+public interface IZmlTableCell extends IZmlTableObject
 {
-  private final IZmlTable m_table;
+  IZmlTableColumn getColumn( );
 
-  public ZmlTableElement( final IZmlTable table )
-  {
-    m_table = table;
-  }
+  IZmlTableRow getRow( );
 
-  /**
-   * @see org.kalypso.zml.ui.table.viewmodel.IZmlTableObject#getTable()
-   */
-  @Override
-  public IZmlTable getTable( )
-  {
-    return m_table;
-  }
+  IZmlValueReference getValueReference( );
+
+  int getIndex( );
+
+  IZmlTableCell findPreviousCell( );
+
+  IZmlTableCell findNextCell( );
 }
