@@ -82,7 +82,14 @@ public class ZmlTableMouseMoveListener implements MouseMoveListener
 
   private ViewerCell getActiveCell( )
   {
-    final ViewerCell cell = m_table.getTableViewer().getCell( m_position );
+    if( m_position == null )
+      return null;
+
+    final TableViewer tableViewer = m_table.getTableViewer();
+    if( tableViewer == null )
+      return null;
+
+    final ViewerCell cell = tableViewer.getCell( m_position );
 
     return cell;
   }
