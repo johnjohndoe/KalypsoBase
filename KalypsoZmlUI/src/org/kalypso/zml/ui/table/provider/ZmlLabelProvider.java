@@ -66,7 +66,6 @@ public class ZmlLabelProvider extends ColumnLabelProvider
   public ZmlLabelProvider( final ExtendedZmlTableColumn column )
   {
     m_column = column;
-
     m_tooltip = new ZmlTooltipSupport( column );
   }
 
@@ -76,6 +75,9 @@ public class ZmlLabelProvider extends ColumnLabelProvider
   @Override
   public Color getBackground( final Object element )
   {
+    if( !m_column.isVisible() )
+      return null;
+
     if( element instanceof IZmlModelRow )
     {
       try
@@ -99,6 +101,8 @@ public class ZmlLabelProvider extends ColumnLabelProvider
   @Override
   public Font getFont( final Object element )
   {
+    if( !m_column.isVisible() )
+      return null;
 
     if( element instanceof IZmlModelRow )
     {
@@ -123,6 +127,9 @@ public class ZmlLabelProvider extends ColumnLabelProvider
   @Override
   public Color getForeground( final Object element )
   {
+    if( !m_column.isVisible() )
+      return null;
+
     if( element instanceof IZmlModelRow )
     {
       try
@@ -146,6 +153,9 @@ public class ZmlLabelProvider extends ColumnLabelProvider
   @Override
   public Image getImage( final Object element )
   {
+    if( !m_column.isVisible() )
+      return null;
+
     if( element instanceof IZmlModelRow )
     {
       try
@@ -169,6 +179,9 @@ public class ZmlLabelProvider extends ColumnLabelProvider
   @Override
   public String getText( final Object element )
   {
+    if( !m_column.isVisible() )
+      return "";
+
     if( element instanceof IZmlModelRow )
     {
       try
@@ -204,6 +217,9 @@ public class ZmlLabelProvider extends ColumnLabelProvider
   @Override
   public Image getToolTipImage( final Object object )
   {
+    if( !m_column.isVisible() )
+      return null;
+
     if( object instanceof IZmlModelRow )
     {
 
@@ -219,6 +235,9 @@ public class ZmlLabelProvider extends ColumnLabelProvider
   @Override
   public String getToolTipText( final Object element )
   {
+    if( !m_column.isVisible() )
+      return null;
+
     if( element instanceof ZmlModelRow )
     {
       return m_tooltip.getToolTipText( (ZmlModelRow) element );

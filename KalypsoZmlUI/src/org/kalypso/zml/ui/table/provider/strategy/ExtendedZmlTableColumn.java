@@ -43,6 +43,7 @@ package org.kalypso.zml.ui.table.provider.strategy;
 import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.TableViewerColumn;
+import org.eclipse.swt.widgets.TableColumn;
 import org.kalypso.zml.core.table.binding.BaseColumn;
 import org.kalypso.zml.core.table.binding.CellStyle;
 import org.kalypso.zml.core.table.binding.ZmlRule;
@@ -156,5 +157,14 @@ public class ExtendedZmlTableColumn extends ZmlTableColumn
   public ZmlRule[] findActiveRules( final IZmlModelRow row )
   {
     return m_mapper.findActiveRules( row, getColumnType() );
+  }
+
+  public boolean isVisible( )
+  {
+    final TableColumn column = getTableColumn();
+    if( column.getWidth() == 0 )
+      return false;
+
+    return true;
   }
 }
