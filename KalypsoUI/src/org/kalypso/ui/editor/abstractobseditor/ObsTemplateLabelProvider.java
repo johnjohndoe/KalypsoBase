@@ -2,7 +2,7 @@ package org.kalypso.ui.editor.abstractobseditor;
 
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
-import org.kalypso.ogc.sensor.template.PlainObsProvider;
+import org.kalypso.ogc.sensor.provider.PlainObsProvider;
 import org.kalypso.ui.ImageProvider;
 
 /**
