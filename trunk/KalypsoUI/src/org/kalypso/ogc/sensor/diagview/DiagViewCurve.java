@@ -47,7 +47,7 @@ import java.util.Set;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
-import org.kalypso.ogc.sensor.template.IObsProvider;
+import org.kalypso.ogc.sensor.provider.IObsProvider;
 import org.kalypso.ogc.sensor.template.ObsViewItem;
 import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 

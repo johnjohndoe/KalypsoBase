@@ -44,7 +44,7 @@ import java.util.Set;
 
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.ogc.sensor.template.IObsProvider;
+import org.kalypso.ogc.sensor.provider.IObsProvider;
 import org.kalypso.ogc.sensor.template.ObsViewItem;
 
 /**
