@@ -50,7 +50,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -61,6 +60,7 @@ import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
 import org.kalypso.ogc.sensor.metadata.MetadataHelper;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
+import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHandler;
 import org.kalypso.ogc.sensor.timeseries.datasource.IDataSourceItem;
@@ -146,20 +146,7 @@ public class MergeObservationWorker implements ICoreRunnableWithProgress
       try
       {
         final ITupleModel srcModel = srcObservation.getValues( new ObservationRequest( source.getDateRange() ) );
-        final IAxis[] srcAxes = srcModel.getAxisList();
-        final IAxis dataSourceAxis = AxisUtils.findDataSourceAxis( srcAxes );
-
-        Object[][] data;
-        // FIXME: wrong! abstraction -> the both methods are almost copy/paste -> BAD!
-        // the distintions must be made inside the get data method!
-        if( dataSourceAxis == null )
-        {
-          data = getFromSourcelessData( srcObservation.getHref(), srcModel );
-        }
-        else
-        {
-          data = getFromSourceData( srcObservation, srcModel );
-        }
+        final Object[][] data = getData( srcObservation, srcModel );
 
         for( final Object[] values : data )
         {
@@ -204,115 +191,82 @@ public class MergeObservationWorker implements ICoreRunnableWithProgress
     }
   }
 
-  // FIXME: source metadata: we need actually two strategies for the source identifiers:
-  // 1) inherit sources from the source-observations
-  // 2) just set the two source-observations as sources
-
-  private Object[][] getFromSourceData( final IObservation srcObservation, final ITupleModel srcModel ) throws SensorException
+  private Object[][] getData( final IObservation srcObservation, final ITupleModel srcModel ) throws SensorException
   {
     final List<Object[]> data = new ArrayList<Object[]>();
 
     final AxisMapping mapping = new AxisMapping( m_axes, srcModel.getAxisList() );
     final IAxis[] srcAxes = mapping.getSourceAxes();
 
-    final DataSourceHandler srcMetaDataHandler = new DataSourceHandler( srcObservation.getMetadataList() );
     final DataSourceHandler destMetaDataHandler = new DataSourceHandler( m_metadata );
+
+    final IAxis srcDataSourceAxis = AxisUtils.findDataSourceAxis( srcAxes );
+
+    final DataSourceHandler srcMetaDataHandler = srcDataSourceAxis == null ? null : new DataSourceHandler( srcObservation.getMetadataList() );
+
+    /* If we have no sourceAxis, create fixed dataSource */
+    final String href = srcObservation.getHref();
+    final int defaultDataSourceIndex = srcDataSourceAxis == null ? destMetaDataHandler.addDataSource( href, href ) : -1;
 
     for( int index = 0; index < srcModel.size(); index++ )
     {
-      try
+      if( !m_strategy.process( srcModel, index, srcAxes ) )
+        continue;
+
+      final Object[] destValues = new Object[m_axes.length];
+      for( int i = 0; i < destValues.length; i++ )
       {
-        if( !m_strategy.process( srcModel, index, srcAxes ) )
-          continue;
-
-        final Object[] values = new Object[m_axes.length];
-
-        for( final IAxis srcAxis : srcAxes )
-        {
-          final int baseIndex = mapping.getDestinationIndex( srcAxis );
-
-          /* adjust data src informations (add to metadata) */
-          if( AxisUtils.isDataSrcAxis( srcAxis ) )
-          {
-            final Number srcIndex = (Number) srcModel.get( index, srcAxis );
-
-            final String identifier;
-            final String repository;
-
-            if( srcIndex == null )
-            {
-              /** *grml* fallback - this should never happen! */
-              identifier = IDataSourceItem.SOURCE_UNKNOWN;
-              repository = IDataSourceItem.SOURCE_UNKNOWN;
-
-              System.out.println( String.format( "Fallback: %s - found missing source reference.\nSource observation href: %s", this.getClass().getName(), srcObservation.getHref() ) );
-            }
-            else
-            {
-              identifier = srcMetaDataHandler.getDataSourceIdentifier( srcIndex.intValue() );
-              repository = srcMetaDataHandler.getDataSourceRepository( srcIndex.intValue() );
-            }
-
-            final Integer destIndex = destMetaDataHandler.addDataSource( identifier, repository );
-            values[baseIndex] = destIndex;
-          }
-          else
-          {
-            final Object value = srcModel.get( index, srcAxis );
-            values[baseIndex] = value;
-          }
-        }
-
-        data.add( values );
+        final IAxis destAxis = m_axes[i];
+        final IAxis srcAxis = mapping.getSourceAxis( destAxis );
+        destValues[i] = getDestValue( srcObservation, srcModel, destMetaDataHandler, srcMetaDataHandler, defaultDataSourceIndex, index, srcAxis, destAxis );
       }
-      catch( final Throwable t )
-      {
-        KalypsoCorePlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( t ) );
-      }
+
+      data.add( destValues );
     }
 
     return data.toArray( new Object[][] {} );
   }
 
-  private Object[][] getFromSourcelessData( final String href, final ITupleModel srcModel ) throws SensorException
+  private Object getDestValue( final IObservation srcObservation, final ITupleModel srcModel, final DataSourceHandler destMetaDataHandler, final DataSourceHandler srcMetaDataHandler, final int dataSourceIndex, final int index, final IAxis srcAxis, final IAxis destAxis ) throws SensorException
   {
-    final List<Object[]> data = new ArrayList<Object[]>();
-
-    final AxisMapping mapping = new AxisMapping( m_axes, srcModel.getAxisList() );
-    final IAxis[] srcAxes = mapping.getSourceAxes();
-
-    final DataSourceHandler handler = new DataSourceHandler( m_metadata );
-    final int dataSourceIndex = handler.addDataSource( href, href );
-    final int dataSourceValueIndex = mapping.getDestinationIndex( mapping.getDataSourceAxis() );
-
-    for( int index = 0; index < srcModel.size(); index++ )
+    if( AxisUtils.isDataSrcAxis( destAxis ) )
     {
-      try
-      {
-        if( !m_strategy.process( srcModel, index, srcAxes ) )
-          continue;
+      if( srcAxis == null )
+        return dataSourceIndex;
 
-        final Object[] destValues = new Object[m_axes.length];
-
-        for( final IAxis srcAxis : srcAxes )
-        {
-          final Object value = srcModel.get( index, srcAxis );
-          final int destinationIndex = mapping.getDestinationIndex( srcAxis );
-          if( destinationIndex != -1 )
-            destValues[destinationIndex] = value;
-        }
-
-        destValues[dataSourceValueIndex] = dataSourceIndex;
-
-        data.add( destValues );
-      }
-      catch( final Throwable t )
-      {
-        KalypsoCorePlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( t ) );
-      }
+      return getDestDataSource( srcObservation, srcModel, srcAxis, index, srcMetaDataHandler, destMetaDataHandler );
     }
 
-    return data.toArray( new Object[][] {} );
+    final Object srcValue = srcAxis == null ? null : srcModel.get( index, srcAxis );
+
+    /* Special handling for status axes */
+    if( AxisUtils.isStatusAxis( destAxis ) )
+    {
+      /* Return OK if this source has no status */
+      if( !(srcValue instanceof Number) )
+        return KalypsoStati.BIT_OK;
+
+      /* Clear the derived bit in all cases */
+      final Number srcStatusNumber = (Number) srcValue;
+      final int srcStatus = srcStatusNumber.intValue();
+      return srcStatus & ~KalypsoStati.BIT_DERIVATED;
+    }
+
+    return srcValue;
+  }
+
+  private Object getDestDataSource( final IObservation srcObservation, final ITupleModel srcModel, final IAxis srcAxis, final int index, final DataSourceHandler srcMetaDataHandler, final DataSourceHandler destMetaDataHandler ) throws SensorException
+  {
+    final Number srcIndex = (Number) srcModel.get( index, srcAxis );
+    if( srcIndex == null )
+    {
+      System.out.println( String.format( "Fallback: Found missing source reference.\nSource observation href: %s", srcObservation.getHref() ) );
+      return destMetaDataHandler.addDataSource( IDataSourceItem.SOURCE_UNKNOWN, IDataSourceItem.SOURCE_UNKNOWN );
+    }
+
+    final String identifier = srcMetaDataHandler.getDataSourceIdentifier( srcIndex.intValue() );
+    final String repository = srcMetaDataHandler.getDataSourceRepository( srcIndex.intValue() );
+    return destMetaDataHandler.addDataSource( identifier, repository );
   }
 
   public IObservation getObservation( )
