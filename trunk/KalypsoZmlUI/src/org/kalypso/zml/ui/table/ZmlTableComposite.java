@@ -56,15 +56,9 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
-import org.eclipse.jface.viewers.ColumnViewerEditor;
-import org.eclipse.jface.viewers.ColumnViewerEditorActivationEvent;
-import org.eclipse.jface.viewers.ColumnViewerEditorActivationStrategy;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
-import org.eclipse.jface.viewers.FocusCellOwnerDrawHighlighter;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
-import org.eclipse.jface.viewers.TableViewerEditor;
-import org.eclipse.jface.viewers.TableViewerFocusCellManager;
 import org.eclipse.jface.window.ToolTip;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -90,7 +84,6 @@ import org.kalypso.zml.core.table.schema.DataColumnType;
 import org.kalypso.zml.core.table.schema.ZmlTableType;
 import org.kalypso.zml.ui.table.commands.toolbar.view.ZmlViewResolutionFilter;
 import org.kalypso.zml.ui.table.menu.ZmlTableContextMenuListener;
-import org.kalypso.zml.ui.table.menu.ZmlTableHeaderContextMenuListener;
 import org.kalypso.zml.ui.table.model.IZmlTableCell;
 import org.kalypso.zml.ui.table.model.IZmlTableColumn;
 import org.kalypso.zml.ui.table.model.IZmlTableRow;
@@ -170,22 +163,23 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
     table.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
     table.setHeaderVisible( true );
 
-    /* excel table cursor */
-    // new ExcelTableCursor( m_tableViewer, SWT.BORDER_DASH, ADVANCE_MODE.DOWN, true );
-
-    /* or something like this */
-    final TableViewerFocusCellManager focusCellManager = new TableViewerFocusCellManager( m_tableViewer, new FocusCellOwnerDrawHighlighter( m_tableViewer ) );
-    final ColumnViewerEditorActivationStrategy actSupport = new ColumnViewerEditorActivationStrategy( m_tableViewer )
-    {
-      @Override
-      protected boolean isEditorActivationEvent( final ColumnViewerEditorActivationEvent event )
-      {
-        return event.eventType == ColumnViewerEditorActivationEvent.TRAVERSAL || event.eventType == ColumnViewerEditorActivationEvent.MOUSE_DOUBLE_CLICK_SELECTION
-            || (event.eventType == ColumnViewerEditorActivationEvent.KEY_PRESSED && event.keyCode == SWT.CR) || event.eventType == ColumnViewerEditorActivationEvent.PROGRAMMATIC;
-      }
-    };
-
-    TableViewerEditor.create( m_tableViewer, focusCellManager, actSupport, ColumnViewerEditor.TABBING_VERTICAL | ColumnViewerEditor.KEYBOARD_ACTIVATION | ColumnViewerEditorActivationEvent.TRAVERSAL );
+    /* keyboard table cursor */
+// final TableViewerFocusCellManager focusCellManager = new TableViewerFocusCellManager( m_tableViewer, new
+// FocusCellOwnerDrawHighlighter( m_tableViewer ) );
+// final ColumnViewerEditorActivationStrategy actSupport = new ColumnViewerEditorActivationStrategy( m_tableViewer )
+// {
+// @Override
+// protected boolean isEditorActivationEvent( final ColumnViewerEditorActivationEvent event )
+// {
+// return event.eventType == ColumnViewerEditorActivationEvent.TRAVERSAL || event.eventType ==
+// ColumnViewerEditorActivationEvent.MOUSE_DOUBLE_CLICK_SELECTION
+// || (event.eventType == ColumnViewerEditorActivationEvent.KEY_PRESSED && event.keyCode == SWT.CR) || event.eventType
+// == ColumnViewerEditorActivationEvent.PROGRAMMATIC;
+// }
+// };
+//
+// TableViewerEditor.create( m_tableViewer, focusCellManager, actSupport, ColumnViewerEditor.TABBING_VERTICAL |
+// ColumnViewerEditor.KEYBOARD_ACTIVATION | ColumnViewerEditorActivationEvent.TRAVERSAL );
 
     initToolbar( tableType, toolbar, toolkit );
   }
@@ -245,7 +239,6 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
     final ExtendedZmlTableColumn column = new ExtendedZmlTableColumn( this, viewerColumn, type );
     m_columns.put( index, column );
 
-    viewerColumn.getColumn().addSelectionListener( new ZmlTableHeaderContextMenuListener( this ) );
     final ZmlLabelProvider labelProvider = new ZmlLabelProvider( column );
     viewerColumn.setLabelProvider( labelProvider );
     viewerColumn.getColumn().setText( type.getLabel() );

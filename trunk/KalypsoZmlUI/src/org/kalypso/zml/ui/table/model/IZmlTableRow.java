@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.model;
 
+import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
 
 /**
@@ -54,5 +55,7 @@ public interface IZmlTableRow extends IZmlTableObject
   IZmlTableColumn[] getColumns( );
 
   int getIndex( );
+
+  IZmlModelRow getModelRow( );
 
 }

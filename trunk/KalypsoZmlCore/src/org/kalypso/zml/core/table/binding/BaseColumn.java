@@ -231,8 +231,4 @@ public class BaseColumn
     return findProperty( ColumnPropertyName.URI_CONTEXT_MENU );
   }
 
-  public String getUriHeaderContextMenu( )
-  {
-    return findProperty( ColumnPropertyName.URI_HEADER_CONTEXT_MENU );
-  }
 }

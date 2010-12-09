@@ -73,6 +73,12 @@ public class ZmlTableRow extends ZmlTableElement implements IZmlTableRow
     return m_row.get( column.getModelColumn() );
   }
 
+  @Override
+  public IZmlModelRow getModelRow( )
+  {
+    return m_row;
+  }
+
   /**
    * @see java.lang.Object#equals(java.lang.Object)
    */
