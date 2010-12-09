@@ -108,6 +108,9 @@ public class LegendThemeWizardPage extends WizardPage
 
     /* In the first time, the page cannot be completed. */
     setPageComplete( false );
+
+    // TODO
+    checkPageComplete();
   }
 
   /**
