@@ -55,12 +55,12 @@ public final class ZmlValueRefernceHelper
   public static boolean isStuetzstelle( final IZmlValueReference reference ) throws SensorException
   {
     final Integer status = reference.getStatus();
-    if( KalypsoStati.BIT_OK == status )
+    if( (status & KalypsoStati.BIT_USER_MODIFIED) != 0 )
       return true;
-    else if( KalypsoStati.BIT_USER_MODIFIED == status )
-      return true;
+    else if( (status & KalypsoStati.BIT_CHECK) != 0 )
+      return false;
 
-    return false;
+    return true;
   }
 
 }

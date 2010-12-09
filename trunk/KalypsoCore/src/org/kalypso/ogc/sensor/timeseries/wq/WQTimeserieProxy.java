@@ -118,7 +118,9 @@ public class WQTimeserieProxy implements IObservation
     final IAxis[] axes = obs.getAxisList();
     m_axes = new IAxis[axes.length + 2];
     for( int i = 0; i < axes.length; i++ )
+    {
       m_axes[i] = axes[i];
+    }
 
     m_dateAxis = ObservationUtilities.findAxisByType( axes, ITimeseriesConstants.TYPE_DATE );
 

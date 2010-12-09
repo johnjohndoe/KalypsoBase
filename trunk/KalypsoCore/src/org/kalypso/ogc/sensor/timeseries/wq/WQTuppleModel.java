@@ -151,13 +151,10 @@ public class WQTuppleModel extends AbstractTupleModel
 
     if( bDestAxis || KalypsoStatusUtils.equals( axis, m_destStatusAxis ) )
     {
-
-      final Number number = (Number) m_model.get( index, m_srcAxis );
-
       final Integer objIndex = Integer.valueOf( index );
       if( !m_values.containsKey( objIndex ) )
       {
-        final Number[] res = read( objIndex, number );
+        final Number[] res = read( index );
         m_values.put( objIndex, res[0] );
         m_stati.put( objIndex, res[1] );
       }
@@ -171,64 +168,36 @@ public class WQTuppleModel extends AbstractTupleModel
     return m_model.get( index, axis );
   }
 
-  private Number[] read( final Integer objIndex, final Number number ) throws SensorException
+  private Number[] read( final int index ) throws SensorException
   {
-    Double value = null;
-    Integer status = null;
-    final IAxis axis = m_destAxis;
-    final Date d = (Date) m_model.get( objIndex.intValue(), m_dateAxis );
+    final Number srcValue = (Number) m_model.get( index, m_srcAxis );
+    final Number srcStatus = (Number) m_model.get( index, m_srcStatusAxis );
+    if( srcValue == null || srcStatus == null )
+      return new Number[] { null, null };
 
-    if( number != null )
+    final Date d = (Date) m_model.get( index, m_dateAxis );
+    try
     {
-      try
+      final String type = m_destAxis.getType();
+      if( type.equals( m_converter.getFromType() ) )
       {
-        final String type = axis.getType();
-        if( type.equals( m_converter.getFromType() ) )
-        {
-          final double q = number.doubleValue();
-          value = new Double( m_converter.computeW( d, q ) );
-          status = KalypsoStati.STATUS_DERIVATED;
-        }
-        else if( type.equals( m_converter.getToType() ) )
-        {
-          final double w = number.doubleValue();
-          final double q = m_converter.computeQ( d, w );
-
-          value = new Double( q );
-          status = KalypsoStati.STATUS_DERIVATED;
-        }
-        else
-        {
-          value = ZERO;
-          status = KalypsoStati.STATUS_DERIVATION_ERROR;
-        }
-
-        // // TODO: remove if still everything works fine
-        // if( type.equals( TimeserieConstants.TYPE_WATERLEVEL ) )
-        // {
-        // final double q = number.doubleValue();
-        // value = new Double( m_converter.computeW( d, q ) );
-        // }
-        // else
-        // {
-        // final double w = number.doubleValue();
-        // double q = m_converter.computeQ( d, w );
-        //
-        // value = new Double( q );
-        // }
-        //
-        // status = KalypsoStati.STATUS_DERIVATED;
+        final double q = srcValue.doubleValue();
+        return new Number[] { m_converter.computeW( d, q ), KalypsoStati.STATUS_DERIVATED | srcStatus.intValue() };
       }
-      catch( final WQException e )
+      else if( type.equals( m_converter.getToType() ) )
       {
-        // Logger.getLogger( getClass().getName() ).warning( "WQ-Konvertierungsproblem: " + e.getLocalizedMessage() );
+        final double w = srcValue.doubleValue();
+        final double q = m_converter.computeQ( d, w );
 
-        value = ZERO;
-        status = KalypsoStati.STATUS_DERIVATION_ERROR;
+        return new Number[] { q, KalypsoStati.STATUS_DERIVATED | srcStatus.intValue() };
       }
+
+      return new Number[] { ZERO, KalypsoStati.STATUS_DERIVATION_ERROR };
     }
-
-    return new Number[] { value, status };
+    catch( final WQException e )
+    {
+      return new Number[] { ZERO, KalypsoStati.STATUS_DERIVATION_ERROR };
+    }
   }
 
   /**
