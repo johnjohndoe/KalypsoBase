@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -50,10 +50,10 @@ import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.observation.util.ObservationHelper;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.provider.AbstractObsProvider;
+import org.kalypso.ogc.sensor.provider.IObsProvider;
+import org.kalypso.ogc.sensor.provider.PlainObsProvider;
 import org.kalypso.ogc.sensor.request.IRequest;
-import org.kalypso.ogc.sensor.template.AbstractObsProvider;
-import org.kalypso.ogc.sensor.template.IObsProvider;
-import org.kalypso.ogc.sensor.template.PlainObsProvider;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 
 /**

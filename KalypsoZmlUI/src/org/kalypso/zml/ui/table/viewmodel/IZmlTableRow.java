@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.viewmodel;
 
-import org.kalypso.zml.ui.table.model.references.IZmlValueReference;
+import org.kalypso.zml.core.table.model.references.IZmlValueReference;
 
 /**
  * @author Dirk Kuch

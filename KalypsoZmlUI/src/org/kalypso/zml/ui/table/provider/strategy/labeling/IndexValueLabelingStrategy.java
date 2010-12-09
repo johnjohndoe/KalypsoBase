@@ -41,7 +41,7 @@
 package org.kalypso.zml.ui.table.provider.strategy.labeling;
 
 import org.eclipse.core.runtime.CoreException;
-import org.kalypso.zml.ui.table.model.IZmlModelRow;
+import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
 
 /**

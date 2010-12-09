@@ -50,8 +50,8 @@ import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.metadata.MetadataHelper;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
-import org.kalypso.ogc.sensor.template.IObsProvider;
-import org.kalypso.ogc.sensor.template.IObsProviderListener;
+import org.kalypso.ogc.sensor.provider.IObsProvider;
+import org.kalypso.ogc.sensor.provider.IObsProviderListener;
 
 import de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;

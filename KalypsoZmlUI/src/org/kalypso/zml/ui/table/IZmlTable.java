@@ -41,8 +41,8 @@
 package org.kalypso.zml.ui.table;
 
 import org.eclipse.jface.viewers.TableViewer;
-import org.kalypso.zml.ui.table.binding.BaseColumn;
-import org.kalypso.zml.ui.table.model.IZmlModel;
+import org.kalypso.zml.core.table.binding.BaseColumn;
+import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.ui.table.viewmodel.IZmlTableCell;
 import org.kalypso.zml.ui.table.viewmodel.IZmlTableColumn;
 import org.kalypso.zml.ui.table.viewmodel.IZmlTableRow;
