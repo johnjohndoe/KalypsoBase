@@ -66,7 +66,6 @@ public class SimpleEditingStrategy extends AbstractEditingStrategy implements IZ
   {
     try
     {
-
       final IZmlValueReference reference = row.get( getColumn().getColumnType().getType() );
       if( reference == null )
         return "";

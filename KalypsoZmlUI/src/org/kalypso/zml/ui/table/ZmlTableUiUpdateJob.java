@@ -46,7 +46,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.progress.UIJob;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class ZmlTableUiUpdateJob extends UIJob
 {

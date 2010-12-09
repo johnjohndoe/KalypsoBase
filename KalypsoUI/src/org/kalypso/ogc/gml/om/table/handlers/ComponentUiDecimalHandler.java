@@ -52,7 +52,7 @@ import org.kalypso.ogc.gml.table.celleditors.DefaultCellValidators;
 
 /**
  * Handles decimal values (i.e. BigDecimal in java).
- *
+ * 
  * @author Dirk Kuch
  * @author Gernot Belger
  */
@@ -71,6 +71,7 @@ public class ComponentUiDecimalHandler extends AbstractComponentUiHandler
   {
     final TextCellEditor textCellEditor = new TextCellEditor( table, SWT.NONE );
     textCellEditor.setValidator( DefaultCellValidators.DOUBLE_VALIDATOR );
+
     return textCellEditor;
   }
 
@@ -116,7 +117,7 @@ public class ComponentUiDecimalHandler extends AbstractComponentUiHandler
     final int index = getComponent();
     final Object oldValue = record.getValue( index );
 
-    if( !ObjectUtils.equals(value, oldValue ) )
+    if( !ObjectUtils.equals( value, oldValue ) )
       record.setValue( getComponent(), value );
   }
 }

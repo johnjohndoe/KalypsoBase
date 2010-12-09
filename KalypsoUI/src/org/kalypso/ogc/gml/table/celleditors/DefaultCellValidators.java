@@ -69,6 +69,7 @@ public class DefaultCellValidators
       {
         if( value != null )
           Boolean.valueOf( value.toString() );
+
         return null;
       }
       catch( final NumberFormatException nfe )
