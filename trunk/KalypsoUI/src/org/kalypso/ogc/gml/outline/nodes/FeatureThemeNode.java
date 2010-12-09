@@ -263,8 +263,8 @@ public class FeatureThemeNode extends KalypsoThemeNode<IKalypsoFeatureTheme> imp
       /* Draw the text. */
       gc.drawString( legendElement.getText(), BORDER + (ICON_SIZE + GAP) + legendElement.getLevel() * (ICON_SIZE + GAP), heightSoFar, true );
 
-      // TODO: images should be disposed here (but getLEgendGeaphic returns
-      // sometimes images than can be disposed, sometimes not)
+      // TODO: images should be disposed here (but getLegendGeaphic returns
+      // sometimes images that can be disposed, sometimes not)
 
       /* Add the height of the element and increase by gap. */
       heightSoFar = heightSoFar + legendElement.getSize().height + GAP;

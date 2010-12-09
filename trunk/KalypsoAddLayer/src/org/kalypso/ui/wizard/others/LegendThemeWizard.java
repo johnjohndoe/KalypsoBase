@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.wizard.others;
 
+import java.util.Map;
+
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ui.ImageProvider;
@@ -47,16 +49,57 @@ import org.kalypso.ui.action.AddThemeCommand;
 import org.kalypso.ui.i18n.Messages;
 import org.kalypso.ui.wizard.IKalypsoDataImportWizard;
 
+/**
+ * The wizard for a legend theme.
+ * 
+ * @author unknown (original)
+ * @author Holger Albert (modifications)
+ */
 public class LegendThemeWizard extends AbstractOtherThemeWizard implements IKalypsoDataImportWizard
 {
+  /**
+   * The wizard page for entering properties for a legend theme.
+   */
+  private LegendThemeWizardPage m_legendThemeWizardPage;
+
+  /**
+   * The constructor.
+   */
   public LegendThemeWizard( )
   {
-    super( new ThemeNameWizardPage( "themeNamePage", Messages.getString("org.kalypso.ui.wizard.others.LegendThemeWizard.1"), ImageProvider.IMAGE_KALYPSO_ICON_BIG, Messages.getString("org.kalypso.ui.wizard.others.LegendThemeWizard.2") ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    super( new ThemeNameWizardPage( "themeNamePage", Messages.getString( "org.kalypso.ui.wizard.others.LegendThemeWizard.1" ), ImageProvider.IMAGE_KALYPSO_ICON_BIG, Messages.getString( "org.kalypso.ui.wizard.others.LegendThemeWizard.2" ) ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+
+    m_legendThemeWizardPage = null;
   }
 
+  /**
+   * @see org.kalypso.ui.wizard.others.AbstractOtherThemeWizard#addPages()
+   */
   @Override
-  protected ICommand createCommand( final IKalypsoLayerModell mapModell, final String themeName )
+  public void addPages( )
   {
-    return new AddThemeCommand( mapModell, themeName, "legend", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    /* Add the pages of the parent. */
+    super.addPages();
+
+    /* Add the legend theme wizard page. */
+    addPage( m_legendThemeWizardPage = new LegendThemeWizardPage( "LegendThemeWizardPage" ) );
+  }
+
+  /**
+   * @see org.kalypso.ui.wizard.others.AbstractOtherThemeWizard#createCommand(org.kalypso.ogc.gml.IKalypsoLayerModell,
+   *      java.lang.String)
+   */
+  @Override
+  protected ICommand createCommand( IKalypsoLayerModell mapModell, String themeName )
+  {
+    /* Create the add theme command. */
+    AddThemeCommand command = new AddThemeCommand( mapModell, themeName, "legend", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+
+    /* Add the selected properties. */
+    Map<String, String> properties = m_legendThemeWizardPage.getProperties();
+    if( properties != null && properties.size() > 0 )
+      command.addProperties( properties );
+
+    return command;
   }
 }

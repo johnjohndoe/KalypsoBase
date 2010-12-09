@@ -45,15 +45,17 @@ import java.awt.Image;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.wms.provider.images.IKalypsoImageProvider;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
  * This class loads a theme with a provider.
- *
+ * 
  * @author Holger Albert
  */
 public class KalypsoImageLoader extends Job
@@ -85,17 +87,17 @@ public class KalypsoImageLoader extends Job
 
   /**
    * The constructor.
-   *
+   * 
    * @param name
-   *            The name of the job.
+   *          The name of the job.
    * @param provider
-   *            The image provider, which will retrieve the image.
+   *          The image provider, which will retrieve the image.
    * @param width
-   *            The requested width.
+   *          The requested width.
    * @param height
-   *            The requested height.
+   *          The requested height.
    * @param bbox
-   *            The requested bounding box.
+   *          The requested bounding box.
    */
   public KalypsoImageLoader( final String name, final IKalypsoImageProvider provider, final int width, final int height, final GM_Envelope bbox )
   {
@@ -116,18 +118,18 @@ public class KalypsoImageLoader extends Job
   public IStatus run( final IProgressMonitor monitor )
   {
     /* Start the task. */
-    monitor.beginTask( Messages.getString("org.kalypso.ogc.gml.wms.loader.images.KalypsoImageLoader.0"), 1000 ); //$NON-NLS-1$
+    monitor.beginTask( Messages.getString( "org.kalypso.ogc.gml.wms.loader.images.KalypsoImageLoader.0" ), 1000 ); //$NON-NLS-1$
 
     try
     {
       /* If the provider is missing, tell the user. */
       if( m_provider == null )
-        return StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.ogc.gml.wms.loader.images.KalypsoImageLoader.1") ); //$NON-NLS-1$
+        return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), Messages.getString( "org.kalypso.ogc.gml.wms.loader.images.KalypsoImageLoader.1" ) ); //$NON-NLS-1$
 
       /* Load the image. This could take a while. */
       m_buffer = m_provider.getImage( m_width, m_height, m_bbox );
 
-      return StatusUtilities.createOkStatus( Messages.getString("org.kalypso.ogc.gml.wms.loader.images.KalypsoImageLoader.2") ); //$NON-NLS-1$
+      return StatusUtilities.createOkStatus( Messages.getString( "org.kalypso.ogc.gml.wms.loader.images.KalypsoImageLoader.2" ) ); //$NON-NLS-1$
     }
     catch( final CoreException e )
     {
@@ -145,7 +147,7 @@ public class KalypsoImageLoader extends Job
 
   /**
    * This function returns the result of the loading process. This could be null, if loading has not finished yet.
-   *
+   * 
    * @return The result image or null.
    */
   public Image getBuffer( )
@@ -155,7 +157,7 @@ public class KalypsoImageLoader extends Job
 
   /**
    * This function returns the full extent, if available.
-   *
+   * 
    * @return The full extent.
    */
   public GM_Envelope getFullExtent( )

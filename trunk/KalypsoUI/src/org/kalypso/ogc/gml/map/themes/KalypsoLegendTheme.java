@@ -75,11 +75,17 @@ import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
- * @author doemming
+ * The legend theme is able to display available legends for all or a subset of themes in a map.
+ * 
+ * @author Andreas Doemming (original)
+ * @author Holger Albert (modifications)
  */
 public class KalypsoLegendTheme extends AbstractKalypsoTheme
 {
-  private final IMapModellListener m_modellListener = new MapModellAdapter()
+  /**
+   * This listener invalidates the displayed legends.
+   */
+  private IMapModellListener m_modellListener = new MapModellAdapter()
   {
     /**
      * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#themeAdded(org.kalypso.ogc.gml.mapmodel.IMapModell,
@@ -93,7 +99,7 @@ public class KalypsoLegendTheme extends AbstractKalypsoTheme
 
     /**
      * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#themeRemoved(org.kalypso.ogc.gml.mapmodel.IMapModell,
-     *      org.kalypso.ogc.gml.IKalypsoTheme)
+     *      org.kalypso.ogc.gml.IKalypsoTheme, boolean)
      */
     @Override
     public void themeRemoved( final IMapModell source, final IKalypsoTheme theme, final boolean lastVisibility )
@@ -131,7 +137,10 @@ public class KalypsoLegendTheme extends AbstractKalypsoTheme
     }
   };
 
-  private final Job m_legendJob = new UIJob( Messages.getString("org.kalypso.ogc.gml.KalypsoLegendTheme.0") ) //$NON-NLS-1$
+  /**
+   * Responsible for updating the legend.
+   */
+  private Job m_legendJob = new UIJob( Messages.getString( "org.kalypso.ogc.gml.KalypsoLegendTheme.0" ) ) //$NON-NLS-1$
   {
     /**
      * @see org.eclipse.ui.progress.UIJob#runInUIThread(org.eclipse.core.runtime.IProgressMonitor)
@@ -144,12 +153,12 @@ public class KalypsoLegendTheme extends AbstractKalypsoTheme
         updateLegend( monitor );
         return Status.OK_STATUS;
       }
-      catch( final CoreException e )
+      catch( CoreException ex )
       {
-        if( !e.getStatus().matches( IStatus.CANCEL ) )
-          e.printStackTrace();
+        if( !ex.getStatus().matches( IStatus.CANCEL ) )
+          ex.printStackTrace();
 
-        return e.getStatus();
+        return ex.getStatus();
       }
     }
   };
@@ -157,13 +166,20 @@ public class KalypsoLegendTheme extends AbstractKalypsoTheme
   private Image m_image = null;
 
   // TODO: get from properties
-  private final int m_borderWidth = 10;
+  private int m_borderWidth = 10;
 
   // TODO: get from properties
-  // Default: just a shade of gray for a little contrast
-  private final RGB m_backgroundColor = new RGB( 245, 245, 245 );
+  private RGB m_backgroundColor = new RGB( 245, 245, 245 );
 
-  public KalypsoLegendTheme( final I10nString name, final IMapModell mapModell )
+  /**
+   * The constructor
+   * 
+   * @param name
+   *          The name of the theme.
+   * @param mapModel
+   *          The map model to use.
+   */
+  public KalypsoLegendTheme( I10nString name, IMapModell mapModell )
   {
     super( name, "legend", mapModell ); //$NON-NLS-1$
 
@@ -182,6 +198,15 @@ public class KalypsoLegendTheme extends AbstractKalypsoTheme
   }
 
   /**
+   * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#getDefaultIcon()
+   */
+  @Override
+  public ImageDescriptor getDefaultIcon( )
+  {
+    return KalypsoGisPlugin.getImageProvider().getImageDescriptor( ImageProvider.DESCRIPTORS.IMAGE_THEME_LEGEND );
+  }
+
+  /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#paint(java.awt.Graphics,
    *      org.kalypsodeegree.graphics.transformation.GeoTransform, java.lang.Boolean,
    *      org.eclipse.core.runtime.IProgressMonitor)
@@ -192,46 +217,54 @@ public class KalypsoLegendTheme extends AbstractKalypsoTheme
     if( selected != null && selected )
       return Status.OK_STATUS;
 
-    final int wMax = g.getClipBounds().width;
-    final int hMax = g.getClipBounds().height;
+    int wMax = g.getClipBounds().width;
+    int hMax = g.getClipBounds().height;
     if( m_image != null )
     {
       g.setPaintMode();
-      final int widthIamge = m_image.getWidth( null );
-      final int heightImage = m_image.getHeight( null );
+      int widthIamge = m_image.getWidth( null );
+      int heightImage = m_image.getHeight( null );
       g.drawImage( m_image, wMax - widthIamge, hMax - heightImage, widthIamge, heightImage, null );
     }
+
     return Status.OK_STATUS;
   }
 
-  protected final void invalidateLegend( )
+  /**
+   * @see org.kalypso.ogc.gml.IKalypsoTheme#getFullExtent()
+   */
+  @Override
+  public GM_Envelope getFullExtent( )
+  {
+    return null;
+  }
+
+  protected void invalidateLegend( )
   {
     m_legendJob.cancel();
-
     m_image = null;
-
     m_legendJob.schedule( 100 );
   }
 
   protected void updateLegend( final IProgressMonitor monitor ) throws CoreException
   {
-    final IMapModell mapModell = getMapModell();
+    IMapModell mapModell = getMapModell();
     if( mapModell == null )
       return;
 
-    final IThemeNode rootNode = NodeFactory.createRootNode( mapModell, null );
-    final IThemeNode[] nodes = rootNode.getChildrenCompact();
+    IThemeNode rootNode = NodeFactory.createRootNode( mapModell, null );
+    IThemeNode[] nodes = rootNode.getChildrenCompact();
 
-    final Display display = Display.getCurrent();
-    final Insets insets = new Insets( m_borderWidth, m_borderWidth, m_borderWidth, m_borderWidth );
-    final LegendExporter legendExporter = new LegendExporter();
-    final org.eclipse.swt.graphics.Image image = legendExporter.exportLegends( nodes, display, insets, m_backgroundColor, -1, -1, monitor );
+    Display display = Display.getCurrent();
+    Insets insets = new Insets( m_borderWidth, m_borderWidth, m_borderWidth, m_borderWidth );
+    LegendExporter legendExporter = new LegendExporter();
+    org.eclipse.swt.graphics.Image image = legendExporter.exportLegends( nodes, display, insets, m_backgroundColor, -1, -1, monitor );
 
-    final BufferedImage awtImage = ImageConverter.convertToAWT( image.getImageData() );
+    BufferedImage awtImage = ImageConverter.convertToAWT( image.getImageData() );
     image.dispose();
     ProgressUtilities.worked( monitor, 0 ); // cancel check
 
-    final Graphics2D graphics = (Graphics2D) awtImage.getGraphics();
+    Graphics2D graphics = (Graphics2D) awtImage.getGraphics();
     graphics.setColor( Color.BLACK );
     graphics.setStroke( new BasicStroke( 2.0f ) );
     graphics.drawRect( 0, 0, awtImage.getWidth(), awtImage.getHeight() );
@@ -240,23 +273,5 @@ public class KalypsoLegendTheme extends AbstractKalypsoTheme
     m_image = awtImage;
 
     fireRepaintRequested( null );
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoTheme#getBoundingBox()
-   */
-  @Override
-  public GM_Envelope getFullExtent( )
-  {
-    return null;
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#getDefaultIcon()
-   */
-  @Override
-  public ImageDescriptor getDefaultIcon( )
-  {
-    return KalypsoGisPlugin.getImageProvider().getImageDescriptor( ImageProvider.DESCRIPTORS.IMAGE_THEME_LEGEND );
   }
 }
