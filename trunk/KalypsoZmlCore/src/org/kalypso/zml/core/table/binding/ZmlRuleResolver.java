@@ -114,7 +114,9 @@ public final class ZmlRuleResolver
         else
           rule = findUrlRule( context, plainUrl, identifier );
 
-        m_ruleCache.put( url, rule );
+        // FIXME: what to do if rule null?
+        if( rule != null )
+          m_ruleCache.put( url, rule );
 
         return rule;
       }
