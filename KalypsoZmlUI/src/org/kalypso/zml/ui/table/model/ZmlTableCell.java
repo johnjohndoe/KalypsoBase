@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.viewmodel;
+package org.kalypso.zml.ui.table.model;
 
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;

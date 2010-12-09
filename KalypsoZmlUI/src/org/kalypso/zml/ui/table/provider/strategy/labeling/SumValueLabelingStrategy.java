@@ -50,8 +50,8 @@ import org.kalypso.zml.core.table.model.walker.ZmlModelWalker;
 import org.kalypso.zml.core.table.rules.IZmlRuleImplementation;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.IZmlTable;
+import org.kalypso.zml.ui.table.model.IZmlTableCell;
 import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
-import org.kalypso.zml.ui.table.viewmodel.IZmlTableCell;
 
 /**
  * @author Dirk Kuch

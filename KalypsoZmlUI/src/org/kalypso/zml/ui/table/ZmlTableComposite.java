@@ -84,16 +84,16 @@ import org.kalypso.zml.core.table.schema.ZmlTableType;
 import org.kalypso.zml.ui.table.commands.toolbar.view.ZmlViewResolutionFilter;
 import org.kalypso.zml.ui.table.menu.ZmlTableContextMenuListener;
 import org.kalypso.zml.ui.table.menu.ZmlTableHeaderContextMenuListener;
+import org.kalypso.zml.ui.table.model.IZmlTableCell;
+import org.kalypso.zml.ui.table.model.IZmlTableColumn;
+import org.kalypso.zml.ui.table.model.IZmlTableRow;
+import org.kalypso.zml.ui.table.model.ZmlTableColumn;
+import org.kalypso.zml.ui.table.model.ZmlTableRow;
 import org.kalypso.zml.ui.table.provider.ZmlEditingSupport;
 import org.kalypso.zml.ui.table.provider.ZmlLabelProvider;
 import org.kalypso.zml.ui.table.provider.ZmlTableContentProvider;
 import org.kalypso.zml.ui.table.provider.ZmlTableMouseMoveListener;
 import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
-import org.kalypso.zml.ui.table.viewmodel.IZmlTableCell;
-import org.kalypso.zml.ui.table.viewmodel.IZmlTableColumn;
-import org.kalypso.zml.ui.table.viewmodel.IZmlTableRow;
-import org.kalypso.zml.ui.table.viewmodel.ZmlTableColumn;
-import org.kalypso.zml.ui.table.viewmodel.ZmlTableRow;
 
 /**
  * @author Dirk Kuch
