@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension-point id="tableRule" name="tableRule" schema="schema/tableRule.exsd"/>
+  	<extension
+       point="org.kalypso.zml.core.tableRule">
+    <rule
+          id="org.kalypso.zml.ui.core.rule.user.modified"
+          rule="org.kalypso.zml.ui.core.rules.impl.ZmlRuleUserModified">
+    </rule>
+      <rule
+          id="org.kalypso.zml.ui.core.rule.value.interpolated"
+          rule="org.kalypso.zml.ui.core.rules.impl.ZmlRuleInterpolatedValue">
+    </rule>
+     <rule
+          id="org.kalypso.zml.ui.core.rule.wq.conflict"
+          rule="org.kalypso.zml.ui.core.rules.impl.ZmlRuleWQRelationConflict">
+    </rule>
+     <rule
+           id="org.kalypso.zml.ui.core.rule.forecast.value"
+           rule="org.kalypso.zml.ui.core.rules.impl.ZmlRuleForecastValue">
+     </rule>
+     <rule
+           id="org.kalypso.zml.ui.core.rule.grenzwerte"
+           rule="org.kalypso.zml.ui.core.rules.impl.ZmlRuleGrenzwerte">
+     </rule>
+ </extension> 
+
+</plugin>
