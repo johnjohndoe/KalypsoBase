@@ -94,6 +94,9 @@ public class ChartTitlePainter
 
       for( final TitleTypeBean title : titles )
       {
+        if( title.getText() == null )
+          continue;
+
         final ITextStyle textStyle = title.getTextStyle();
         final FontData fontData = textStyle == null ? StyleUtils.getDefaultTextStyle().toFontData() : textStyle.toFontData();
         final Font font = new Font( dev, fontData );
@@ -141,6 +144,9 @@ public class ChartTitlePainter
 
       for( final TitleTypeBean bean : m_model.getTitles() )
       {
+        if( bean.getText() == null )
+          continue;
+
         final ITextStyle textStyle = bean.getTextStyle();
         textStyle.apply( gc );
 
