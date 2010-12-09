@@ -38,14 +38,14 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.core.table.rules.impl;
+package org.kalypso.zml.core.table.rules.impl.grenzwert;
 
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.core.KalypsoZmlCore;
 import org.kalypso.zml.core.table.binding.ZmlRule;
-import org.kalypso.zml.core.table.binding.ZmlRuleInstruction;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
+import org.kalypso.zml.core.table.rules.impl.AbstractZmlTableRule;
 
 /**
  * @author Dirk Kuch
@@ -60,8 +60,8 @@ public class ZmlRuleGrenzwerte extends AbstractZmlTableRule
   @Override
   protected boolean doApply( final ZmlRule rule, final IZmlValueReference reference )
   {
-    final ZmlRuleInstruction[] instructions = rule.getInstructions();
-    for( final ZmlRuleInstruction instruction : instructions )
+    final ZmlRuleGrenzwertInstruction[] instructions = rule.getInstructions();
+    for( final ZmlRuleGrenzwertInstruction instruction : instructions )
     {
       try
       {
@@ -93,8 +93,8 @@ public class ZmlRuleGrenzwerte extends AbstractZmlTableRule
   @Override
   public String update( final ZmlRule rule, final IZmlValueReference reference, final String text ) throws SensorException
   {
-    final ZmlRuleInstruction[] instructions = rule.getInstructions();
-    for( final ZmlRuleInstruction instruction : instructions )
+    final ZmlRuleGrenzwertInstruction[] instructions = rule.getInstructions();
+    for( final ZmlRuleGrenzwertInstruction instruction : instructions )
     {
       if( instruction.matches( reference ) )
         return instruction.update( text );

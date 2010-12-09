@@ -1,4 +1,4 @@
-package org.kalypso.zml.core.table.binding;
+package org.kalypso.zml.core.table.rules.impl.grenzwert;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
@@ -49,6 +49,8 @@ import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.metadata.MetadataBoundary;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
+import org.kalypso.zml.core.table.binding.CellStyle;
+import org.kalypso.zml.core.table.binding.ZmlStyleResolver;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
 import org.kalypso.zml.core.table.schema.RuleInstruction;
@@ -57,7 +59,7 @@ import org.kalypso.zml.core.table.schema.StyleReferenceType;
 /**
  * @author Dirk Kuch
  */
-public class ZmlRuleInstruction
+public class ZmlRuleGrenzwertInstruction
 {
   public static final String PATTERN_TEXT = "${text}";
 
@@ -73,7 +75,7 @@ public class ZmlRuleInstruction
 
   private IZmlModelColumn m_lastFromColumn;
 
-  public ZmlRuleInstruction( final RuleInstruction type )
+  public ZmlRuleGrenzwertInstruction( final RuleInstruction type )
   {
     m_type = type;
   }
@@ -209,6 +211,9 @@ public class ZmlRuleInstruction
   public String update( final String text )
   {
     final String label = m_type.getLabel();
+    if( label == null )
+      return text;
+
     return label.replace( PATTERN_TEXT, text );
   }
 
