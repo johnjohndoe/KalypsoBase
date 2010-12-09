@@ -71,6 +71,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.contribs.eclipse.jface.action.ContributionUtils;
+import org.kalypso.contribs.eclipse.jface.viewers.ArrayTreeContentProvider;
 import org.kalypso.contribs.eclipse.swt.layout.LayoutHelper;
 import org.kalypso.zml.core.table.binding.BaseColumn;
 import org.kalypso.zml.core.table.binding.TableTypeHelper;
@@ -78,11 +79,13 @@ import org.kalypso.zml.core.table.model.IZmlColumnModelListener;
 import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
+import org.kalypso.zml.core.table.model.ZmlDataModel;
 import org.kalypso.zml.core.table.schema.AbstractColumnType;
 import org.kalypso.zml.core.table.schema.DataColumnType;
 import org.kalypso.zml.core.table.schema.ZmlTableType;
 import org.kalypso.zml.ui.table.commands.toolbar.view.ZmlViewResolutionFilter;
 import org.kalypso.zml.ui.table.menu.ZmlTableContextMenuListener;
+import org.kalypso.zml.ui.table.menu.ZmlTableHeaderContextMenuListener;
 import org.kalypso.zml.ui.table.model.IZmlTableCell;
 import org.kalypso.zml.ui.table.model.IZmlTableColumn;
 import org.kalypso.zml.ui.table.model.IZmlTableRow;
@@ -90,7 +93,6 @@ import org.kalypso.zml.ui.table.model.ZmlTableColumn;
 import org.kalypso.zml.ui.table.model.ZmlTableRow;
 import org.kalypso.zml.ui.table.provider.ZmlEditingSupport;
 import org.kalypso.zml.ui.table.provider.ZmlLabelProvider;
-import org.kalypso.zml.ui.table.provider.ZmlTableContentProvider;
 import org.kalypso.zml.ui.table.provider.ZmlTableMouseMoveListener;
 import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
 
@@ -142,7 +144,23 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
     m_tableViewer.addSelectionChangedListener( new ZmlTableContextMenuListener( this ) );
     ColumnViewerToolTipSupport.enableFor( m_tableViewer, ToolTip.NO_RECREATE );
 
-    m_tableViewer.setContentProvider( new ZmlTableContentProvider( m_model ) );
+    m_tableViewer.setContentProvider( new ArrayTreeContentProvider()
+    {
+      /**
+       * @see org.eclipse.jface.viewers.ITreeContentProvider#getElements(java.lang.Object)
+       */
+      @Override
+      public Object[] getElements( final Object inputElement )
+      {
+        if( inputElement instanceof ZmlDataModel )
+        {
+          final ZmlDataModel model = (ZmlDataModel) inputElement;
+          return model.getRows();
+        }
+
+        return new Object[] {};
+      }
+    } );
 
     addEmptyColumn();
 
@@ -240,12 +258,14 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
     viewerColumn.setLabelProvider( labelProvider );
     viewerColumn.getColumn().setText( type.getLabel() );
 
-    final Integer width = type.getWidth();
-    if( width != null )
-      viewerColumn.getColumn().setWidth( width.intValue() );
+    viewerColumn.getColumn().addSelectionListener( new ZmlTableHeaderContextMenuListener( this ) );
 
-    if( width == null && type.isAutopack() )
-      viewerColumn.getColumn().pack();
+// final Integer width = type.getWidth();
+// if( width != null )
+// viewerColumn.getColumn().setWidth( width.intValue() );
+//
+// if( width == null && type.isAutopack() )
+// viewerColumn.getColumn().pack();
 
     /** edit support */
     if( type.getType() instanceof DataColumnType && type.isEditable() )

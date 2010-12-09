@@ -24,11 +24,12 @@
 
 
     <!-- wasserstand -->
-    <DataColumn  editable="true" id="W_MESS" metadataSource="true">
+    <DataColumn editable="true" id="W_MESS" metadataSource="true">
       <property name="label">Wasserstand (Messung)</property>
       <property name="width">150</property>
       <property name="alignment">RIGHT</property>
       <property name="uriContextMenu">menu:org.kalypso.hwv.product.sachsenanhalt.zml.table.menu.cell.ContextMenu</property>
+      <property name="uriHeaderContextMenu">menu:org.kalypso.hwv.product.sachsenanhalt.zml.table.menu.header.ContextMenu</property>
 
       <defaultCellStyle>
         <url>urn:org:kalypso:zml:ui:table:global#wBaseCellStyle</url>
@@ -58,12 +59,13 @@
     </DataColumn>
 
     <!-- wasserstand modell zeitreihe -->
-    <DataColumn  editable="true" id="W_MODELL">
+    <DataColumn editable="true" id="W_MODELL">
       <property name="label">Wasserstand (Modell)</property>
       <property name="width">150</property>
       <property name="alignment">RIGHT</property>
       <property name="uriContextMenu">menu:org.kalypso.hwv.product.sachsenanhalt.zml.table.menu.cell.ContextMenu</property>
-
+      <property name="uriHeaderContextMenu">menu:org.kalypso.hwv.product.sachsenanhalt.zml.table.menu.header.ContextMenu</property>
+      
       <defaultCellStyle>
         <url>urn:org:kalypso:zml:ui:table:global#wBaseCellStyle</url>
       </defaultCellStyle>
@@ -93,12 +95,13 @@
 
 
     <!-- Abfluss -->
-    <DataColumn  editable="true" id="Q_MESS" metadataSource="true">
+    <DataColumn editable="true" id="Q_MESS" metadataSource="true">
       <property name="label">Abfluss (Messung)</property>
       <property name="width">150</property>
       <property name="alignment">RIGHT</property>
       <property name="uriContextMenu">menu:org.kalypso.hwv.product.sachsenanhalt.zml.table.menu.cell.ContextMenu</property>
-
+      <property name="uriHeaderContextMenu">menu:org.kalypso.hwv.product.sachsenanhalt.zml.table.menu.header.ContextMenu</property>
+      
       <defaultCellStyle>
         <url>urn:org:kalypso:zml:ui:table:global#qBaseCellStyle</url>
       </defaultCellStyle>
@@ -127,7 +130,8 @@
       <property name="width">150</property>
       <property name="alignment">RIGHT</property>
       <property name="uriContextMenu">menu:org.kalypso.hwv.product.sachsenanhalt.zml.table.menu.cell.ContextMenu</property>
-
+      <property name="uriHeaderContextMenu">menu:org.kalypso.hwv.product.sachsenanhalt.zml.table.menu.header.ContextMenu</property>
+      
       <defaultCellStyle>
         <url>urn:org:kalypso:zml:ui:table:global#qBaseCellStyle</url>
       </defaultCellStyle>
@@ -152,12 +156,13 @@
       <valueAxis>Q</valueAxis>
     </DataColumn>
 
-    <DataColumn  editable="true" id="Q_INFO" metadataSource="true">
+    <DataColumn editable="true" id="Q_INFO" metadataSource="true">
       <property name="label">Abfluss (Info)</property>
       <property name="width">150</property>
       <property name="alignment">RIGHT</property>
       <property name="uriContextMenu">menu:org.kalypso.hwv.product.sachsenanhalt.zml.table.menu.cell.ContextMenu</property>
-
+      <property name="uriHeaderContextMenu">menu:org.kalypso.hwv.product.sachsenanhalt.zml.table.menu.header.ContextMenu</property>
+      
       <defaultCellStyle>
         <url>urn:org:kalypso:zml:ui:table:global#qBaseCellStyle</url>
       </defaultCellStyle>
