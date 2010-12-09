@@ -65,7 +65,6 @@ public class ValidateCellEditorListener implements ICellEditorListener
   public ValidateCellEditorListener( final CellEditor cellEditor, final Color errorColor )
   {
     m_cellEditor = cellEditor;
-
     m_errorColor = errorColor;
   }
 

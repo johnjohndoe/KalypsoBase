@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.provider;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.viewers.TableViewer;
@@ -47,7 +48,12 @@ import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Composite;
+import org.kalypso.contribs.eclipse.swt.custom.ValidateCellEditorListener;
+import org.kalypso.ogc.gml.table.celleditors.DefaultCellValidators;
+import org.kalypso.ogc.sensor.IAxis;
+import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
 import org.kalypso.zml.ui.table.provider.strategy.editing.IZmlEditingStrategy;
@@ -59,6 +65,8 @@ import com.google.common.base.Objects;
  */
 public class ZmlEditingSupport extends EditingSupport
 {
+  private static final Color COLOR_ERROR = new Color( null, 255, 10, 10 );
+
   protected final TextCellEditor m_cellEditor;
 
   private String m_lastEdited;
@@ -66,6 +74,8 @@ public class ZmlEditingSupport extends EditingSupport
   private final ExtendedZmlTableColumn m_column;
 
   private final ZmlLabelProvider m_labelProvider;
+
+  private boolean m_isValidated = false;
 
   public ZmlEditingSupport( final ExtendedZmlTableColumn column, final ZmlLabelProvider labelProvider )
   {
@@ -84,6 +94,30 @@ public class ZmlEditingSupport extends EditingSupport
         m_cellEditor.dispose();
       }
     } );
+  }
+
+  private void setValidator( )
+  {
+    if( m_isValidated )
+      return;
+
+    final IZmlModelColumn column = m_column.getModelColumn();
+    if( column == null )
+      return;
+
+    final IAxis axis = column.getValueAxis();
+    final Class< ? > dataClass = axis.getDataClass();
+
+    if( Double.class.equals( dataClass ) )
+      m_cellEditor.setValidator( DefaultCellValidators.DOUBLE_VALIDATOR );
+    else if( Integer.class.equals( dataClass ) )
+      m_cellEditor.setValidator( DefaultCellValidators.INTEGER_VALIDATOR );
+    else
+      throw new NotImplementedException();
+
+    m_cellEditor.addListener( new ValidateCellEditorListener( m_cellEditor, COLOR_ERROR ) );
+
+    m_isValidated = true;
   }
 
   /**
@@ -110,6 +144,8 @@ public class ZmlEditingSupport extends EditingSupport
   @Override
   protected Object getValue( final Object element )
   {
+    setValidator();
+
     if( element instanceof IZmlModelRow )
     {
       final IZmlEditingStrategy strategy = m_column.getEditingStrategy( m_labelProvider );
