@@ -53,6 +53,7 @@ import org.kalypso.zml.core.table.binding.BaseColumn;
 import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
+import org.kalypso.zml.core.table.schema.IndexColumnType;
 import org.kalypso.zml.ui.table.IZmlTable;
 
 /**
@@ -70,6 +71,11 @@ public class ZmlTableColumn extends ZmlTableElement implements IZmlTableColumn
 
     m_column = column;
     m_type = type;
+  }
+
+  public boolean isIndexColumn( )
+  {
+    return m_type.getType() instanceof IndexColumnType;
   }
 
   /**

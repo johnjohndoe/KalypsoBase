@@ -50,7 +50,6 @@ import java.util.Set;
 
 import javax.xml.bind.JAXBElement;
 
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -195,7 +194,6 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
     /** process as job in order to handle toolbar IElementUpdate job actions */
     new UIJob( "" )
     {
-
       @Override
       public IStatus runInUIThread( final IProgressMonitor monitor )
       {
@@ -219,7 +217,6 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
         return Status.OK_STATUS;
       }
     }.schedule();
-
   }
 
   private void addEmptyColumn( )
@@ -265,15 +262,21 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
     if( m_tableViewer.getTable().isDisposed() )
       return;
 
-    /** update header labels */
-    final TableColumn[] tableColumns = m_tableViewer.getTable().getColumns();
-    Assert.isTrue( tableColumns.length == m_columns.size() + 1 );
+    m_tableViewer.refresh();
 
-    // i = 1, think of first empty column (windows column icon bug!)
-    for( int i = 1; i < tableColumns.length; i++ )
+    final IZmlTableColumn[] columns = getColumns();
+    updateColumns( columns );
+
+    fireTableChanged();
+  }
+
+  private void updateColumns( final IZmlTableColumn[] columns )
+  {
+    for( final IZmlTableColumn column : columns )
     {
-      final ZmlTableColumn column = m_columns.get( i );
       final BaseColumn columnType = column.getColumnType();
+      final TableViewerColumn tableViewerColumn = column.getTableViewerColumn();
+      final TableColumn tableColumn = tableViewerColumn.getColumn();
 
       /** only update headers of data column types */
       if( columnType.getType() instanceof DataColumnType )
@@ -281,27 +284,23 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
         final IZmlModelColumn modelColumn = column.getModelColumn();
         if( modelColumn == null )
         {
-          column.getTableColumn().setWidth( 0 );
-          column.getTableColumn().setText( columnType.getLabel() );
-          column.getTableColumn().setResizable( false );
-          column.getTableColumn().setMoveable( false );
+          tableColumn.setWidth( 0 );
+          tableColumn.setText( columnType.getLabel() );
+          tableColumn.setResizable( false );
+          tableColumn.setMoveable( false );
         }
         else
         {
-          pack( column.getTableColumn(), columnType );
-          column.getTableColumn().setText( modelColumn.getLabel() );
+          pack( tableColumn, columnType );
+          tableColumn.setText( modelColumn.getLabel() );
         }
       }
       else
       {
-        pack( column.getTableColumn(), columnType );
-        column.getTableColumn().setText( columnType.getLabel() );
+        pack( tableColumn, columnType );
+        tableColumn.setText( columnType.getLabel() );
       }
     }
-
-    m_tableViewer.refresh();
-
-    fireTableChanged();
   }
 
   public void fireTableChanged( )
@@ -317,7 +316,9 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
   private void pack( final TableColumn table, final BaseColumn base )
   {
     if( base.isAutopack() )
+    {
       table.pack();
+    }
 
     final Integer width = base.getWidth();
     if( width == null )
