@@ -42,8 +42,8 @@ package org.kalypso.zml.ui.table.provider;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.kalypso.zml.ui.table.model.IZmlModel;
-import org.kalypso.zml.ui.table.model.ZmlDataModel;
+import org.kalypso.zml.core.table.model.IZmlModel;
+import org.kalypso.zml.core.table.model.ZmlDataModel;
 
 /**
  * @author Dirk Kuch

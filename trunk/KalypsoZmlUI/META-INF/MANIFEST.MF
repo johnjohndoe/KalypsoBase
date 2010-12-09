@@ -10,7 +10,8 @@ Require-Bundle: org.eclipse.ui,
  org.kalypso.core;bundle-version="10.10.0",
  de.openali.odysseus.chart.factory;bundle-version="10.10.0",
  org.kalypso.ui;bundle-version="10.10.0",
- de.openali.odysseus.chart.ext.base;bundle-version="10.10.0"
+ de.openali.odysseus.chart.ext.base;bundle-version="10.10.0",
+ org.kalypso.zml.core;bundle-version="1.0.0";visibility:=reexport
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Vendor: kalypsobase.sourceforge.net
@@ -22,16 +23,11 @@ Export-Package: org.kalypso.zml.ui,
  org.kalypso.zml.ui.core.provider.style,
  org.kalypso.zml.ui.core.zml,
  org.kalypso.zml.ui.table,
- org.kalypso.zml.ui.table.binding,
  org.kalypso.zml.ui.table.catalog,
  org.kalypso.zml.ui.table.commands,
  org.kalypso.zml.ui.table.commands.menu,
  org.kalypso.zml.ui.table.commands.toolbar.view,
  org.kalypso.zml.ui.table.context,
- org.kalypso.zml.ui.table.model,
- org.kalypso.zml.ui.table.model.references,
  org.kalypso.zml.ui.table.provider,
- org.kalypso.zml.ui.table.rules,
- org.kalypso.zml.ui.table.schema,
  org.kalypso.zml.ui.table.viewmodel
 Bundle-ClassPath: .

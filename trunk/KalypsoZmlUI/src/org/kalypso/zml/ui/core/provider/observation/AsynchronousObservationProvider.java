@@ -41,7 +41,7 @@
 package org.kalypso.zml.ui.core.provider.observation;
 
 import org.kalypso.core.util.pool.PoolableObjectType;
-import org.kalypso.ogc.sensor.template.PooledObsProvider;
+import org.kalypso.ogc.sensor.provider.PooledObsProvider;
 import org.kalypso.zml.ui.core.zml.TSLinkWithName;
 
 /**

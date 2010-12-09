@@ -52,12 +52,12 @@ import org.eclipse.ui.commands.IElementUpdater;
 import org.eclipse.ui.menus.UIElement;
 import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.zml.core.table.binding.ZmlRule;
+import org.kalypso.zml.core.table.binding.ZmlRuleResolver;
+import org.kalypso.zml.core.table.schema.RuleRefernceType;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.IZmlTable;
-import org.kalypso.zml.ui.table.binding.ZmlRule;
-import org.kalypso.zml.ui.table.binding.ZmlRuleResolver;
 import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
-import org.kalypso.zml.ui.table.schema.RuleRefernceType;
 
 import com.google.common.base.Splitter;
 

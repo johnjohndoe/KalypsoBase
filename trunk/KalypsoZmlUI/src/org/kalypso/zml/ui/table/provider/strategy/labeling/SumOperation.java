@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.provider.strategy.labeling;
 
-import org.kalypso.zml.ui.table.model.walker.IZmlModelOperation;
+import org.kalypso.zml.core.table.model.walker.IZmlModelOperation;
 
 /**
  * @author Dirk Kuch

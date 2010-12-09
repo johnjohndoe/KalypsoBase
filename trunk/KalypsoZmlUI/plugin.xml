@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
-   <extension-point id="tableRule" name="tableRule" schema="schema/tableRule.exsd"/>
     <extension
        point="de.openali.odysseus.chart.factory.LayerProvider">
     <provider
@@ -25,33 +24,11 @@
          </nextCatalog>
       </catalogContribution>
    </extension>
- <extension
-       point="org.kalypso.zml.ui.tableRule">
-    <rule
-          id="org.kalypso.zml.ui.table.rule.user.modified"
-          rule="org.kalypso.zml.ui.table.rules.impl.ZmlRuleUserModified">
-    </rule>
-      <rule
-          id="org.kalypso.zml.ui.table.rule.value.interpolated"
-          rule="org.kalypso.zml.ui.table.rules.impl.ZmlRuleInterpolatedValue">
-    </rule>
-     <rule
-          id="org.kalypso.zml.ui.table.rule.wq.conflict"
-          rule="org.kalypso.zml.ui.table.rules.impl.ZmlRuleWQRelationConflict">
-    </rule>
-     <rule
-           id="org.kalypso.zml.ui.table.rule.forecast.value"
-           rule="org.kalypso.zml.ui.table.rules.impl.ZmlRuleForecastValue">
-     </rule>
-     <rule
-           id="org.kalypso.zml.ui.table.rule.grenzwerte"
-           rule="org.kalypso.zml.ui.table.rules.impl.ZmlRuleGrenzwerte">
-     </rule>
- </extension> 
+ 
  
  <extension point="org.kalypso.core.catalogContribution">
     <catalogContribution class="org.kalypso.zml.ui.table.catalog.ZmlTableCatalogContribution"
-      name="org.kalypso.zml.ui.table.rules.ZmlTableRulesCatalogContributionbution" />
+      name="org.kalypso.zml.ui.core.rules.ZmlTableRulesCatalogContributionbution" />
   </extension>
     
  <extension point="org.eclipse.ui.contexts">
