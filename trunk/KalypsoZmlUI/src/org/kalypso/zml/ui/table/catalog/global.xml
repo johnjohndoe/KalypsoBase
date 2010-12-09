@@ -136,12 +136,12 @@
             <reference>alarmstufe_4</reference>
           </styleReference>
         </instruction>
-
         <instruction from="Grenzwert_W: Meldegrenze" opFrom="&gt;=" label="MG   ${text}">
           <styleReference>
             <reference>meldegrenze</reference>
           </styleReference>
         </instruction>
+       
       </RuleInstructions>
     </Rule>
 

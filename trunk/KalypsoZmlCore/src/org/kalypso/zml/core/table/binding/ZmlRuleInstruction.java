@@ -48,7 +48,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.metadata.MetadataBoundary;
-import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
@@ -66,6 +65,14 @@ public class ZmlRuleInstruction
 
   private CellStyle m_style;
 
+  private MetadataBoundary m_boundaryFrom;
+
+  private MetadataBoundary m_boundaryTo;
+
+  private IZmlModelColumn m_lastToColumn;
+
+  private IZmlModelColumn m_lastFromColumn;
+
   public ZmlRuleInstruction( final RuleInstruction type )
   {
     m_type = type;
@@ -73,27 +80,8 @@ public class ZmlRuleInstruction
 
   public boolean matches( final IZmlValueReference reference ) throws SensorException
   {
-    final IZmlModelColumn column = reference.getColumn();
-
-    final MetadataList metadata = column.getMetadata();
-    final IAxis valueAxis = column.getValueAxis();
-    final Object refValue = reference.getValue();
-    if( metadata == null || valueAxis == null || !(refValue instanceof Number) )
-      return false;
-
-    final String keyFrom = m_type.getFrom();
-    final String keyTo = m_type.getTo();
-    final String opFrom = m_type.getOpFrom();
-    final String opTo = m_type.getOpTo();
-
-    final MetadataBoundary metaFrom = MetadataBoundary.getBoundary( metadata, keyFrom, new BigDecimal( -Double.MAX_VALUE ) );
-    final MetadataBoundary metaTo = MetadataBoundary.getBoundary( metadata, keyTo, new BigDecimal( -Double.MIN_VALUE ) );
-
-    /* If defined but not satisfied, do not apply this rule. */
-    if( keyFrom != null && metaFrom == null )
-      return false;
-    if( keyTo != null && metaTo == null )
-      return false;
+    final MetadataBoundary metaFrom = getBoundaryFrom( reference );
+    final MetadataBoundary metaTo = getBoundaryTo( reference );
 
     final String boundaryType = findBoundaryType( metaFrom, metaTo );
 
@@ -105,12 +93,34 @@ public class ZmlRuleInstruction
     final int scale = 3;
     final BigDecimal valueDecimal = new BigDecimal( value ).setScale( scale, BigDecimal.ROUND_HALF_UP );
 
-    if( !compareMeta( metaFrom, valueDecimal, opFrom ) )
+    if( !compareMeta( metaFrom, m_type.getFrom(), valueDecimal, m_type.getOpFrom() ) )
       return false;
-    if( !compareMeta( metaTo, valueDecimal, opTo ) )
+    if( !compareMeta( metaTo, m_type.getTo(), valueDecimal, m_type.getOpTo() ) )
       return false;
 
     return true;
+  }
+
+  private MetadataBoundary getBoundaryFrom( final IZmlValueReference reference )
+  {
+    if( m_boundaryFrom == null || reference.getColumn() != m_lastFromColumn )
+    {
+      m_lastFromColumn = reference.getColumn();
+      m_boundaryFrom = MetadataBoundary.getBoundary( m_lastFromColumn.getMetadata(), m_type.getFrom(), new BigDecimal( -Double.MAX_VALUE ) );
+    }
+
+    return m_boundaryFrom;
+  }
+
+  private MetadataBoundary getBoundaryTo( final IZmlValueReference reference )
+  {
+    if( m_boundaryTo == null || reference.getColumn() != m_lastToColumn )
+    {
+      m_lastToColumn = reference.getColumn();
+      m_boundaryTo = MetadataBoundary.getBoundary( m_lastToColumn.getMetadata(), m_type.getTo(), new BigDecimal( -Double.MAX_VALUE ) );
+    }
+
+    return m_boundaryTo;
   }
 
   private String findBoundaryType( final MetadataBoundary metaFrom, final MetadataBoundary metaTo )
@@ -163,9 +173,11 @@ public class ZmlRuleInstruction
     return Double.NaN;
   }
 
-  private boolean compareMeta( final MetadataBoundary meta, final BigDecimal value, final String op )
+  private boolean compareMeta( final MetadataBoundary meta, final String property, final BigDecimal value, final String op )
   {
-    if( meta == null )
+    if( meta == null && property != null )
+      return false;
+    else if( meta == null )
       return true;
 
     final BigDecimal compareValue = meta.getValue();
