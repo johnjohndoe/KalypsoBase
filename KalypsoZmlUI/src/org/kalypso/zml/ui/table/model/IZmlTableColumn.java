@@ -64,4 +64,6 @@ public interface IZmlTableColumn extends IZmlTableObject
   TableViewerColumn getTableViewerColumn( );
 
   IZmlTableCell findCell( IZmlModelRow row );
+
+  boolean isIndexColumn( );
 }
