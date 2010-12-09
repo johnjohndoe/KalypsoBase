@@ -314,13 +314,9 @@ public class RectifiedGridCoverageGeoGrid implements IGeoGrid
    * @see org.kalypso.grid.IGeoGrid#getSourceCRS()
    */
   @Override
-  public String getSourceCRS( ) throws GeoGridException
+  public String getSourceCRS( )
   {
-    final IGeoGrid grid = getGrid();
-    if( grid == null )
-      return null;
-
-    return grid.getSourceCRS();
+    return m_sourceCRS;
   }
 
   /**
