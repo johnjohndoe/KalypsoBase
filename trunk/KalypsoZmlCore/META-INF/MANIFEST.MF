@@ -4,9 +4,7 @@ Bundle-Name: KalypsoZmlCore
 Bundle-SymbolicName: org.kalypso.zml.core;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.kalypso.zml.core.KalypsoZmlCore
-Require-Bundle: org.eclipse.core.runtime,
- org.kalypso.commons;bundle-version="10.10.0",
- org.kalypso.core;bundle-version="10.10.0"
+Require-Bundle: org.kalypso.core;bundle-version="10.10.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.kalypso.zml.core.table,
