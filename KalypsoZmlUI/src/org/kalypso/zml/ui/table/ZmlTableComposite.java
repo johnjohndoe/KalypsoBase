@@ -199,6 +199,8 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
 // ColumnViewerEditor.KEYBOARD_ACTIVATION | ColumnViewerEditorActivationEvent.TRAVERSAL );
 
     initToolbar( tableType, toolbar, toolkit );
+
+    refresh();
   }
 
   private void addBasicFilters( )
@@ -259,13 +261,6 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
     viewerColumn.getColumn().setText( type.getLabel() );
 
     viewerColumn.getColumn().addSelectionListener( new ZmlTableHeaderContextMenuListener( this ) );
-
-// final Integer width = type.getWidth();
-// if( width != null )
-// viewerColumn.getColumn().setWidth( width.intValue() );
-//
-// if( width == null && type.isAutopack() )
-// viewerColumn.getColumn().pack();
 
     /** edit support */
     if( type.getType() instanceof DataColumnType && type.isEditable() )
