@@ -271,8 +271,6 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
     if( m_tableViewer.getTable().isDisposed() )
       return;
 
-    m_tableViewer.refresh();
-
     /** update header labels */
     final TableColumn[] tableColumns = m_tableViewer.getTable().getColumns();
     Assert.isTrue( tableColumns.length == m_columns.size() + 1 );
@@ -306,6 +304,8 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
         column.getTableColumn().setText( columnType.getLabel() );
       }
     }
+
+    m_tableViewer.refresh();
 
     fireTableChanged();
   }
