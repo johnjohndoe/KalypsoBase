@@ -6,24 +6,32 @@
        point="org.kalypso.zml.core.tableRule">
     <rule
           id="org.kalypso.zml.ui.core.rule.user.modified"
-          rule="org.kalypso.zml.ui.core.rules.impl.ZmlRuleUserModified">
+          rule="org.kalypso.zml.core.table.rules.impl.ZmlRuleUserModified">
     </rule>
       <rule
           id="org.kalypso.zml.ui.core.rule.value.interpolated"
-          rule="org.kalypso.zml.ui.core.rules.impl.ZmlRuleInterpolatedValue">
+          rule="org.kalypso.zml.core.table.rules.impl.ZmlRuleInterpolatedValue">
     </rule>
      <rule
           id="org.kalypso.zml.ui.core.rule.wq.conflict"
-          rule="org.kalypso.zml.ui.core.rules.impl.ZmlRuleWQRelationConflict">
+          rule="org.kalypso.zml.core.table.rules.impl.ZmlRuleWQRelationConflict">
     </rule>
      <rule
            id="org.kalypso.zml.ui.core.rule.forecast.value"
-           rule="org.kalypso.zml.ui.core.rules.impl.ZmlRuleForecastValue">
+           rule="org.kalypso.zml.core.table.rules.impl.ZmlRuleForecastValue">
      </rule>
      <rule
            id="org.kalypso.zml.ui.core.rule.grenzwerte"
-           rule="org.kalypso.zml.ui.core.rules.impl.ZmlRuleGrenzwerte">
+           rule="org.kalypso.zml.core.table.rules.impl.ZmlRuleGrenzwerte">
      </rule>
  </extension> 
+ <extension
+         point="org.eclipse.wst.xml.core.catalogContributions">
+      <catalogContribution>
+         <nextCatalog
+               catalog="etc/schemas/catalog.xmlcatalog">
+         </nextCatalog>
+      </catalogContribution>
+  </extension>
 
 </plugin>

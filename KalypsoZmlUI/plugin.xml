@@ -16,14 +16,7 @@
           id="org.kalypso.zml.ui.chart.layer.provider.ZmlSinglePointProvider">
     </provider>
  </extension>
-	<extension
-         point="org.eclipse.wst.xml.core.catalogContributions">
-      <catalogContribution>
-         <nextCatalog
-               catalog="etc/schemas/catalog.xmlcatalog">
-         </nextCatalog>
-      </catalogContribution>
-   </extension>
+	
  
  
  <extension point="org.kalypso.core.catalogContribution">

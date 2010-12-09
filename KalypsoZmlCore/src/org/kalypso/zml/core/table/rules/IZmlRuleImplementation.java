@@ -49,7 +49,7 @@ import org.kalypso.zml.core.table.model.references.IZmlValueReference;
  */
 public interface IZmlRuleImplementation
 {
-  String EXTENSION_POINT_ID = "org.kalypso.zml.ui.tableRule"; //$NON-NLS-1$
+  String EXTENSION_POINT_ID = "org.kalypso.zml.core.tableRule"; //$NON-NLS-1$
 
   boolean apply( ZmlRule rule, IZmlValueReference reference );
 

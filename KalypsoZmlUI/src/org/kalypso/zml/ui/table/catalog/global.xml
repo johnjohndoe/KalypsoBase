@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ZmlTable xmlns="schema.table.ui.zml.kalypso.org">
+<ZmlTable xmlns="schema.table.core.zml.kalypso.org">
 
   <StyleSet>
     <!-- basic zml table style -->
