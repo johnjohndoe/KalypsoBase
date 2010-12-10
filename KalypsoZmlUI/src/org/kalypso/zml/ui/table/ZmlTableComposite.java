@@ -320,7 +320,7 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
         tableColumn.setText( columnType.getLabel() );
       }
 
-      updateHeader( tableViewerColumn, column.getAppliedRules() );
+// updateHeader( tableViewerColumn, column.getAppliedRules() );
     }
   }
 
