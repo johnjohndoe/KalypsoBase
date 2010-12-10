@@ -213,11 +213,8 @@ public class FeatureThemeNode extends KalypsoThemeNode<IKalypsoFeatureTheme> imp
   @Override
   public Image getLegendGraphic( final Font font )
   {
-    // TODO: this is too much copy paste; reuse code from MapUtilities
-
     /* All elements in this theme. */
     final List<LegendElement> elements = collectElements( font );
-
     if( elements.size() == 0 )
       return null;
 
@@ -263,8 +260,9 @@ public class FeatureThemeNode extends KalypsoThemeNode<IKalypsoFeatureTheme> imp
       /* Draw the text. */
       gc.drawString( legendElement.getText(), BORDER + (ICON_SIZE + GAP) + legendElement.getLevel() * (ICON_SIZE + GAP), heightSoFar, true );
 
-      // TODO: images should be disposed here (but getLegendGeaphic returns
-      // sometimes images that can be disposed, sometimes not)
+      // TODO:
+      // Images should be disposed here.
+      // But getLegendGraphic returns sometimes images that can be disposed, sometimes not.
 
       /* Add the height of the element and increase by gap. */
       heightSoFar = heightSoFar + legendElement.getSize().height + GAP;

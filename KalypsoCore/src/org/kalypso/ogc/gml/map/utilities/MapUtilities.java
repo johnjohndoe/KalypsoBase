@@ -119,12 +119,7 @@ public final class MapUtilities
     final double buffer = MapUtilities.calculateWorldDistance( mapPanel, point, radiusPx );
     final com.vividsolutions.jts.geom.Point snapPoint = snap( geometryJTS, pointJTS, type, buffer );
     if( snapPoint != null )
-    {
-      final GM_Point myPoint = (GM_Point) JTSAdapter.wrap( snapPoint );
-      myPoint.setCoordinateSystem( point.getCoordinateSystem() );
-
-      return myPoint;
-    }
+      return (GM_Point) JTSAdapter.wrap( snapPoint, point.getCoordinateSystem() );
 
     return null;
   }

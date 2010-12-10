@@ -147,16 +147,18 @@ public class ImageCanvas extends Canvas
       {
         /* Draw according to scroll */
         int x;
-        if( bounds.width < clientArea.width )
+        ScrollBar horizontalBar = getHorizontalBar();
+        if( bounds.width < clientArea.width || horizontalBar == null )
           x = (clientArea.width - bounds.width) / 2;
         else
-          x = -getHorizontalBar().getSelection();
+          x = -horizontalBar.getSelection();
 
         int y;
-        if( bounds.height < clientArea.height )
+        ScrollBar verticalBar = getVerticalBar();
+        if( bounds.height < clientArea.height || verticalBar == null )
           y = (clientArea.height - bounds.height) / 2;
         else
-          y = -getVerticalBar().getSelection();
+          y = -verticalBar.getSelection();
 
         gc.drawImage( fImage, x, y );
       }

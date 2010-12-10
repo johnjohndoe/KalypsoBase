@@ -56,6 +56,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
+import org.kalypso.ogc.gml.map.themes.KalypsoLegendTheme;
 
 /**
  * @author Gernot Belger
@@ -244,13 +245,16 @@ abstract class AbstractThemeNode<T> implements IThemeNode
   @Override
   public IThemeNode[] getChildrenCompact( )
   {
+    /* Get all children. */
     final IThemeNode[] children = getChildren();
     if( children.length == 0 )
-      return new IThemeNode[0];
+      return new IThemeNode[] {};
 
-    if( children.length > 1 )
+    /* If there are more than one children or if this node belongs to a cascading theme, return all children. */
+    if( children.length > 1 || this instanceof CascadingThemeNode )
       return children;
 
+    /* Else ask the single children for its own children. */
     return children[0].getChildrenCompact();
   }
 
@@ -322,12 +326,15 @@ abstract class AbstractThemeNode<T> implements IThemeNode
   @Override
   public Image getLegendGraphic( final Font font ) throws CoreException
   {
+    /* Legend themes should not provide itself for a legend. */
+    if( m_element instanceof KalypsoLegendTheme )
+      return null;
+
     /* Memory for all legends. */
     final List<Image> legends = new ArrayList<Image>();
 
-    final IThemeNode[] children = getChildren();
-
     /* Get the legend of each child. */
+    final IThemeNode[] children = getChildrenCompact();
     for( final IThemeNode childNode : children )
     {
       /* Get the legend. */

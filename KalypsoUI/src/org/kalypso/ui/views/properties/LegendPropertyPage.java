@@ -44,7 +44,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.Font;
@@ -80,12 +79,13 @@ public class LegendPropertyPage extends PropertyPage implements IWorkbenchProper
 
     /* Create a composite. */
     final Display display = parent.getDisplay();
-    final Composite composite = new Composite( parent, SWT.NONE );
-    composite.setLayout( new GridLayout( 1, false ) );
+    final Composite main = new Composite( parent, SWT.NONE );
+    main.setLayout( new GridLayout( 1, false ) );
+    main.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     /* If there is no theme, no legend could be shown. */
     if( node == null )
-      return createError( composite, Messages.getString( "org.kalypso.ui.views.properties.LegendPropertyPage.0" ) ); //$NON-NLS-1$
+      return createError( main, Messages.getString( "org.kalypso.ui.views.properties.LegendPropertyPage.0" ) ); //$NON-NLS-1$
 
     try
     {
@@ -95,34 +95,32 @@ public class LegendPropertyPage extends PropertyPage implements IWorkbenchProper
 
       /* No legend available. */
       if( legendGraphic == null )
-        return createError( composite, Messages.getString( "org.kalypso.ui.views.properties.LegendPropertyPage.2" ) ); //$NON-NLS-1$
+        return createError( main, Messages.getString( "org.kalypso.ui.views.properties.LegendPropertyPage.2" ) ); //$NON-NLS-1$
 
       /* Create a group. */
-      final Composite group = new Composite( composite, SWT.BORDER );
+      final Composite group = new Composite( main, SWT.BORDER );
       group.setLayout( new GridLayout( 1, false ) );
       group.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
       group.setBackground( display.getSystemColor( SWT.COLOR_WHITE ) );
 
-      /* Create a scrolled composite. */
-      final ScrolledComposite sComposite = new ScrolledComposite( group, SWT.H_SCROLL | SWT.V_SCROLL );
-      sComposite.setLayout( new GridLayout( 1, false ) );
-      final GridData sCompData = new GridData( SWT.FILL, SWT.FILL, true, true );
-      sComposite.setLayoutData( sCompData );
-      sComposite.setBackground( display.getSystemColor( SWT.COLOR_WHITE ) );
+      /* Create a composite. */
+      final Composite composite = new Composite( group, SWT.NONE );
+      composite.setLayout( new GridLayout( 1, false ) );
+      composite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+      composite.setBackground( display.getSystemColor( SWT.COLOR_WHITE ) );
 
-      /**
-       * And finally display it. <br>
-       * REMARK: We are using an real ImageCanvas instead of just setting the background, as this will not work for
-       * transparent images
-       */
-      final ImageCanvas canvas = new ImageCanvas( sComposite, SWT.H_SCROLL | SWT.V_SCROLL );
+      /* And finally display it. */
+      /* REMARK: We are using an real ImageCanvas instead of just setting the background, */
+      /* as this will not work for transparent images. */
+      final ImageCanvas canvas = new ImageCanvas( composite, SWT.NONE );
       final Rectangle legendBounds = legendGraphic.getBounds();
+      final GridData canvasData = new GridData( SWT.BEGINNING, SWT.TOP, true, true );
+      canvasData.heightHint = legendBounds.height;
+      canvasData.widthHint = legendBounds.width;
+      canvas.setLayoutData( canvasData );
       canvas.setSize( legendBounds.width, legendBounds.height );
       canvas.setBackground( display.getSystemColor( SWT.COLOR_WHITE ) );
       canvas.setImage( legendGraphic );
-
-      sComposite.setContent( canvas );
-
       canvas.addDisposeListener( new DisposeListener()
       {
         @Override
@@ -135,10 +133,10 @@ public class LegendPropertyPage extends PropertyPage implements IWorkbenchProper
     }
     catch( final CoreException e )
     {
-      return createError( composite, e.getLocalizedMessage() );
+      return createError( main, e.getLocalizedMessage() );
     }
 
-    return composite;
+    return main;
   }
 
   /**
