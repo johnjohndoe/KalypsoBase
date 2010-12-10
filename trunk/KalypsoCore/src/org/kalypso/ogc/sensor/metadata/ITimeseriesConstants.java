@@ -100,6 +100,18 @@ public interface ITimeseriesConstants extends IMetadataConstants
 
   String MD_VORHERSAGE_START = "Vorhersage Start"; //$NON-NLS-1$
 
+  /**
+   * qualitative Markierungen für eine Vorhersage. Sichere bzw. unsichere Vorhersage. Letzteres heißt auch Abschätzung,
+   * Tendenz
+   */
+  String MD_SICHERE_VORHERSAGE_START = "sichere Vorhersage Start"; //$NON-NLS-1$
+
+  String MD_SICHERE_VORHERSAGE_ENDE = "sichere Vorhersage Ende"; //$NON-NLS-1$
+
+  String MD_UNSICHERE_VORHERSAGE_START = "unsichere Vorhersage Start"; //$NON-NLS-1$
+
+  String MD_UNSICHERE_VORHERSAGE_ENDE = "unsichere Vorhersage Ende"; //$NON-NLS-1$
+
   String MD_WQTABLE = "WQ-Tabelle"; //$NON-NLS-1$
 
   String MD_WQWECHMANN = "WQ-Parameter"; //$NON-NLS-1$

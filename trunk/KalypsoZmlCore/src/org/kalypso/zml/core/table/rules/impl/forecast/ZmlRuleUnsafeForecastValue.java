@@ -47,24 +47,16 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
-import org.kalypso.ogc.sensor.metadata.MetadataHelper;
-import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.zml.core.KalypsoZmlCore;
-import org.kalypso.zml.core.table.binding.DataColumn;
 import org.kalypso.zml.core.table.binding.ZmlRule;
-import org.kalypso.zml.core.table.model.IZmlModel;
-import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
-import org.kalypso.zml.core.table.rules.impl.AbstractZmlTableRule;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlRuleUnsafeForecastValue extends AbstractZmlTableRule
+public class ZmlRuleUnsafeForecastValue extends AbstractForecastRule
 {
-  String MD_SICHERE_VORHERSAGE_ENDE = "sichere Vorhersage Ende"; //$NON-NLS-1$
-
-  public static final String ID = "org.kalypso.zml.ui.core.rule.unsafe.forecast.value";
+  public static final String ID = "org.kalypso.zml.ui.core.rule.unsafe.forecast.value"; //$NON-NLS-1$
 
   /**
    * @see org.kalypso.zml.ui.core.rules.IZmlTableRule#getIdentifier()
@@ -83,16 +75,16 @@ public class ZmlRuleUnsafeForecastValue extends AbstractZmlTableRule
   {
     try
     {
-      final MetadataList metadata = findMetadata( reference );
-
       // index value reference!
       final Object index = reference.getValue();
       if( index instanceof Date )
       {
         final Date date = (Date) index;
-        final DateRange daterange = MetadataHelper.getDateRange( metadata, MD_SICHERE_VORHERSAGE_ENDE, ITimeseriesConstants.MD_VORHERSAGE_ENDE );
+        final DateRange dateRange = getDateRange( reference, ITimeseriesConstants.MD_SICHERE_VORHERSAGE_ENDE, ITimeseriesConstants.MD_VORHERSAGE_ENDE );
+        if( dateRange == null )
+          return false;
 
-        return daterange.containsInclusive( date );
+        return dateRange.getFrom().before( date );
       }
 
       return false;
@@ -105,17 +97,4 @@ public class ZmlRuleUnsafeForecastValue extends AbstractZmlTableRule
     return false;
   }
 
-  private MetadataList findMetadata( final IZmlValueReference reference )
-  {
-    final IZmlModel model = reference.getModel();
-    final IZmlModelColumn[] columns = model.getColumns();
-    for( final IZmlModelColumn column : columns )
-    {
-      final DataColumn dataColumn = column.getDataColumn();
-      if( dataColumn.isMetadataSource() )
-        return column.getMetadata();
-    }
-
-    return null;
-  }
 }

@@ -42,6 +42,7 @@ package org.kalypso.zml.ui.chart.layer.themes;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
@@ -118,7 +119,10 @@ public class ZmlForecastLayer extends AbstractChartLayer implements IObsProvider
     if( !to.after( forecast ) )
       return;
 
-    final double logicalX = min.doubleValue() + (forecast.getTimeInMillis() - min.doubleValue());
+    final TimeZone timeZone = KalypsoCorePlugin.getDefault().getTimeZone();
+    final int timeZoneOffset = timeZone.getRawOffset();
+
+    final double logicalX = min.doubleValue() + (forecast.getTimeInMillis() - min.doubleValue() + timeZoneOffset);
     final Integer x = Math.abs( domainAxis.numericToScreen( logicalX ) );
 
     final Integer y0 = targetAxis.numericToScreen( targetRange.getMin() );
@@ -146,6 +150,7 @@ public class ZmlForecastLayer extends AbstractChartLayer implements IObsProvider
 
     final Calendar calendar = Calendar.getInstance( KalypsoCorePlugin.getDefault().getTimeZone() );
     calendar.setTime( forecastStart );
+
     return calendar;
   }
 
