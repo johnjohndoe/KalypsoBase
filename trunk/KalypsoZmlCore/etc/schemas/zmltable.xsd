@@ -135,6 +135,7 @@
     <attribute name="id" type="ID" use="required" />
     <attribute name="ruleReference" type="string" use="required" />
     <attribute name="enabled" type="boolean" use="optional" default="true" />
+    <attribute name="setHeaderIcon" type="boolean" use="optional" default="false" />
   </complexType>
 
 

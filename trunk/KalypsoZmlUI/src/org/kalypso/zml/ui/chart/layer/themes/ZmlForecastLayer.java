@@ -123,7 +123,6 @@ public class ZmlForecastLayer extends AbstractChartLayer implements IObsProvider
     final Integer x = Math.abs( domainAxis.numericToScreen( logicalX ) );
 
     final Integer y0 = targetAxis.numericToScreen( targetRange.getMin() );
-    // FIXME: use directly the screensize; do not use any targetAxis
     final Integer y1 = targetAxis.numericToScreen( targetRange.getMax() );
 
     final ILineStyle style = new LineStyle( 3, new RGB( 255, 0, 0 ), 100, 0F, new float[] { 12, 7 }, LINEJOIN.MITER, LINECAP.ROUND, 1, true );

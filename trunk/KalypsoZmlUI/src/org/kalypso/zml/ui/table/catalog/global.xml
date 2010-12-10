@@ -107,17 +107,17 @@
         <reference>dateForecastCellStyleUnsafe</reference>
       </styleReference>
     </Rule>
-    <Rule id="ruleUserModified" ruleReference="org.kalypso.zml.ui.core.rule.user.modified">
+    <Rule id="ruleUserModified" ruleReference="org.kalypso.zml.ui.core.rule.user.modified" setHeaderIcon="true">
       <styleReference>
         <reference>userModifiedStyle</reference>
       </styleReference>
     </Rule>
-    <Rule id="ruleInterpolatedValue" ruleReference="org.kalypso.zml.ui.core.rule.value.interpolated">
+    <Rule id="ruleInterpolatedValue" ruleReference="org.kalypso.zml.ui.core.rule.value.interpolated" setHeaderIcon="true">
       <styleReference>
         <reference>interpolatedValueStyle</reference>
       </styleReference>
     </Rule>
-    <Rule id="ruleWqConflict" ruleReference="org.kalypso.zml.ui.core.rule.wq.conflict">
+    <Rule id="ruleWqConflict" ruleReference="org.kalypso.zml.ui.core.rule.wq.conflict" setHeaderIcon="true">
       <styleReference>
         <reference>wqConversionConflict</reference>
       </styleReference>
