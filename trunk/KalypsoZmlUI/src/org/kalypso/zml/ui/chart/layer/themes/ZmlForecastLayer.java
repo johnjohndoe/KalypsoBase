@@ -119,10 +119,7 @@ public class ZmlForecastLayer extends AbstractChartLayer implements IObsProvider
     if( !to.after( forecast ) )
       return;
 
-    final TimeZone timeZone = KalypsoCorePlugin.getDefault().getTimeZone();
-    final int timeZoneOffset = timeZone.getRawOffset();
-
-    final double logicalX = min.doubleValue() + (forecast.getTimeInMillis() - min.doubleValue() + timeZoneOffset);
+    final double logicalX = min.doubleValue() + (forecast.getTimeInMillis() - min.doubleValue());
     final Integer x = Math.abs( domainAxis.numericToScreen( logicalX ) );
 
     final Integer y0 = targetAxis.numericToScreen( targetRange.getMin() );
@@ -150,6 +147,10 @@ public class ZmlForecastLayer extends AbstractChartLayer implements IObsProvider
 
     final Calendar calendar = Calendar.getInstance( KalypsoCorePlugin.getDefault().getTimeZone() );
     calendar.setTime( forecastStart );
+
+    final TimeZone timeZone = KalypsoCorePlugin.getDefault().getTimeZone();
+    final int timeZoneOffset = timeZone.getRawOffset();
+    calendar.add( Calendar.MILLISECOND, timeZoneOffset );
 
     return calendar;
   }
