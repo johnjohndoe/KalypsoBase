@@ -75,8 +75,6 @@ public class ZmlEditingSupport extends EditingSupport
 
   private final ZmlLabelProvider m_labelProvider;
 
-  private boolean m_isValidated = false;
-
   public ZmlEditingSupport( final ExtendedZmlTableColumn column, final ZmlLabelProvider labelProvider )
   {
     super( column.getTable().getTableViewer() );
@@ -98,9 +96,6 @@ public class ZmlEditingSupport extends EditingSupport
 
   private void setValidator( )
   {
-    if( m_isValidated )
-      return;
-
     final IZmlModelColumn column = m_column.getModelColumn();
     if( column == null )
       return;
@@ -116,8 +111,6 @@ public class ZmlEditingSupport extends EditingSupport
       throw new NotImplementedException();
 
     m_cellEditor.addListener( new ValidateCellEditorListener( m_cellEditor, COLOR_ERROR ) );
-
-    m_isValidated = true;
   }
 
   /**
