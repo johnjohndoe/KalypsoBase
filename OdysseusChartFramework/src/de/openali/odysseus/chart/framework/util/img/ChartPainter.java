@@ -167,6 +167,11 @@ public class ChartPainter
 
   public final Image createImage( )
   {
+    return createImage( new Point( 0, 0 ) );
+  }
+
+  public final Image createImage( final Point panOffset )
+  {
     if( m_size.width == 0 || m_size.height == 0 )
       return null;
 
@@ -183,6 +188,8 @@ public class ChartPainter
     final GC gc = new GC( image );
     try
     {
+      if( plotImage != null )
+        gc.drawImage( plotImage, m_plotInsets.left - panOffset.x, m_plotInsets.top - panOffset.y );
       if( titleImage != null )
         gc.drawImage( titleImage, 0, 0 );
       if( topImage != null )
@@ -193,8 +200,7 @@ public class ChartPainter
         gc.drawImage( leftImage, 0, m_plotInsets.top );
       if( rightImage != null )
         gc.drawImage( rightImage, m_size.width - m_plotInsets.right, m_plotInsets.top );
-      if( plotImage != null )
-        gc.drawImage( plotImage, m_plotInsets.left, m_plotInsets.top );
+
       if( legendImage != null )
         gc.drawImage( legendImage, m_plotInsets.left, m_size.height - m_legendPainter.getSize().y );
     }

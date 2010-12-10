@@ -180,6 +180,8 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
       return offset + (width - gc.textExtent( line, SWT.DRAW_TAB ).x) / 2;
     else if( pos == ALIGNMENT.TICK_CENTERED )
       return offset + (width - gc.textExtent( line, SWT.DRAW_TAB ).x) / 2;
+    else if( pos == ALIGNMENT.INTERVALL_CENTERED )
+      return offset + (width - gc.textExtent( line, SWT.DRAW_TAB ).x);
 
     throw new IllegalArgumentException();
 
@@ -256,6 +258,9 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
         return -getSize().y / 2;
       case TICK_CENTERED:
         return -width / 2;
+      case INTERVALL_CENTERED:
+        return rect.width < 0 ? 0 : (rect.width - width) / 2;
+
     }
     throw new IllegalArgumentException();
 
@@ -344,7 +349,7 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
       for( int i = 0; i < lines.length; i++ )
       {
         final String line = fitToFixedWidth( lines[i], fixedWidth.width );
-        final int lineInset = getLineInset( gc, border, line, getAlignmentX(), Math.min( fixedWidth.width, getSize().x ) );
+        final int lineInset = getLineInset( gc, border, line, getAlignmentX(), fixedWidth.width < 0 ? getSize().x : Math.min( fixedWidth.width, getSize().x ) );
         gc.drawText( line, left + lineInset, top + border + i * lineHeight, SWT.DRAW_TRANSPARENT | SWT.DRAW_DELIMITER | SWT.DRAW_TAB );
       }
     }
