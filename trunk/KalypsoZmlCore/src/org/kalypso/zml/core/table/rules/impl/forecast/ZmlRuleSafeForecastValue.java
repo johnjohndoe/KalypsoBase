@@ -1,5 +1,3 @@
-package org.kalypso.zml.core.table.rules.impl.forecast;
-
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -40,6 +38,7 @@ package org.kalypso.zml.core.table.rules.impl.forecast;
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
+package org.kalypso.zml.core.table.rules.impl.forecast;
 
 import java.util.Date;
 
