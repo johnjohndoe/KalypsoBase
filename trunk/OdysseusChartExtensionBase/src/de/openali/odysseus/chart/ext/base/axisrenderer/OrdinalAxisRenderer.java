@@ -48,6 +48,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Rectangle;
 
+import de.openali.odysseus.chart.ext.base.data.ArrayContentProvider;
+import de.openali.odysseus.chart.ext.base.data.IAxisContentProvider;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT;
@@ -78,32 +80,44 @@ public class OrdinalAxisRenderer implements IAxisRenderer
 
   private final Map<String, Object> m_dataMap = new HashMap<String, Object>();
 
-  private final String[] m_labels;
+  private final IAxisContentProvider m_contentProvider;
 
   private final AxisRendererConfig m_config;
 
-  public OrdinalAxisRenderer( final String id, final AxisRendererConfig config, final IChartLabelRenderer tickLabelRenderer, final IChartLabelRenderer axisTitleRenderer, final String[] labels )
+  public OrdinalAxisRenderer( final String id, final AxisRendererConfig config, final IChartLabelRenderer tickLabelRenderer, final IChartLabelRenderer axisTitleRenderer, final IAxisContentProvider contentProvider )
   {
     m_tickLabelRenderer = tickLabelRenderer;
 
-    m_labelRenderer = axisTitleRenderer == null ? new GenericChartLabelRenderer() : axisTitleRenderer;
-    m_labelRenderer.setInsets( config.labelInsets );
+    if( axisTitleRenderer == null )
+    {
+      m_labelRenderer = new GenericChartLabelRenderer();
+      m_labelRenderer.setInsets( config.labelInsets );
+    }
+    else
+      m_labelRenderer = axisTitleRenderer;
     m_id = id;
-    m_labels = labels;
+    m_contentProvider = contentProvider;
     m_config = config;
   }
 
-  public OrdinalAxisRenderer( final String id, final AxisRendererConfig config, final IChartLabelRenderer tickLabelRenderer, final String[] labels )
+  public OrdinalAxisRenderer( final String id, final AxisRendererConfig config, final IChartLabelRenderer tickLabelRenderer, final IAxisContentProvider contentProvider )
   {
 
-    this( id, config, tickLabelRenderer, null, labels );
+    this( id, config, tickLabelRenderer, null, contentProvider );
 
   }
 
-  public OrdinalAxisRenderer( final String id, final AxisRendererConfig config, final String[] labels )
+  public OrdinalAxisRenderer( final String id, final AxisRendererConfig config, final IAxisContentProvider contentProvider )
   {
 
-    this( id, config, null, null, labels );
+    this( id, config, null, null, contentProvider );
+
+  }
+
+  public OrdinalAxisRenderer( final String id, final AxisRendererConfig config )
+  {
+
+    this( id, config, null, null, new ArrayContentProvider() );
 
   }
 
@@ -185,28 +199,29 @@ public class OrdinalAxisRenderer implements IAxisRenderer
     final IDataRange<Number> range = axis.getNumericRange();
     if( range.getMin() == null || range.getMax() == null )
       return;
-    final double numericMin = range.getMin().doubleValue();
-    final double numericMax = range.getMax().doubleValue();
-    final int axisMin = axis.numericToScreen( numericMin );
-    final int axisMax = axis.numericToScreen( numericMax );
-    final int screenMin = Math.min( axisMin, axisMax );
-    final int screenMax = Math.max( axisMin, axisMax );
+// final double numericMin = range.getMin().doubleValue();
+// final double numericMax = range.getMax().doubleValue();
+// final int axisMin = axis.numericToScreen( numericMin );
+// final int axisMax = axis.numericToScreen( numericMax );
+// final int screenMin = Math.min( axisMin, axisMax );
+// final int screenMax = Math.max( axisMin, axisMax );
 
     final ITextStyle tickLabelStyle = m_config.labelStyle;
     final ILineStyle tickLineStyle = m_config.tickLineStyle;
-    final int tickScreenDistance = (screenMax - screenMin) / (ticks.length == 1 ? 1 : (ticks.length - 1));
+    // final int tickScreenDistance = (screenMax - screenMin) / (ticks.length == 1 ? 1 : (ticks.length - 1));
 
-    for( int i = 0; i < ticks.length; i++ )
+    for( int i = 0; i < m_contentProvider.size(); i++ )
     {
-      final int y1, y2, x1, x2, tickPos;
+      final int y1, y2, x1, x2;
 
       final int textX;
       final int textY;
 
-      getTickLabelRenderer( axis ).setLabel( m_labels[i] );
+      getTickLabelRenderer( axis ).setLabel( m_contentProvider.getLabel( i ) );
       final boolean drawTick = true;
 
-      tickPos = ticks[i].intValue();
+      final int tickPos = ticks[i].intValue();
+      final int tickScreenDistance = i < m_contentProvider.size() - 1 ? ticks[i + 1].intValue() - tickPos : -1;
 
 // if( i < ticks.length - 1 )
 // tickScreenDistance = axis.numericToScreen( ticks[i + 1] ) - tickPos;
@@ -279,9 +294,9 @@ public class OrdinalAxisRenderer implements IAxisRenderer
     final IChartLabelRenderer tickRenderer = getTickLabelRenderer( axis );
     for( int i = range.getMin().intValue(); i <= range.getMax().intValue(); i++ )
     {
-      if( i < 0 || i - 1 > m_labels.length )
+      if( i < 0 || i > m_contentProvider.size() - 1 )
         continue;
-      tickRenderer.setLabel( m_labels[i] );
+      tickRenderer.setLabel( m_contentProvider.getLabel( i ) );
       maxWidth = Math.max( getTickLabelRenderer( axis ).getSize().y, maxWidth );
     }
 
@@ -314,8 +329,8 @@ public class OrdinalAxisRenderer implements IAxisRenderer
       if( m_config != null )
       {
         m_tickLabelRenderer.setInsets( m_config.tickLabelInsets );
-        m_tickLabelRenderer.setAlignment( m_config.labelPosition, ALIGNMENT.TOP );
-        m_tickLabelRenderer.setTextAnchor( m_config.labelPosition, ALIGNMENT.TOP );
+        m_tickLabelRenderer.setAlignment( ALIGNMENT.CENTERED_HORIZONTAL, ALIGNMENT.CENTERED_VERTICAL );
+        m_tickLabelRenderer.setTextAnchor( ALIGNMENT.LEFT, ALIGNMENT.TOP );
         m_tickLabelRenderer.setTextStyle( m_config.labelStyle );
       }
       if( axis != null )
@@ -335,43 +350,38 @@ public class OrdinalAxisRenderer implements IAxisRenderer
   {
     if( axis.getNumericRange().getMin() == null || axis.getNumericRange().getMax() == null )
       return new Number[] {};
-    final int start = Math.max( 0, axis.getNumericRange().getMin().intValue() );
-    final int end = Math.min( m_labels.length - 1, axis.getNumericRange().getMax().intValue() );
 
-    final Number[] labelPosLeft = new Number[end - start + 1];
+    final int start = axis.getNumericRange().getMin().intValue();
+    final int end = axis.getNumericRange().getMax().intValue();
+
+    final int intervallCount = end - start + 1;
+
+    final Number[] tickPos = new Number[m_contentProvider.size()];
     if( m_fixedWidth > 0 )
     {
-      final int tickDist = Math.max( m_fixedWidth, axis.getScreenHeight() / (end - start + 1) );
-      int pos = tickDist / 2;
-      for( int i = start; i <= end; i++ )
+      final int tickDist = Math.max( m_fixedWidth, axis.getScreenHeight() / intervallCount ) - 1/* Pixel */;
+      int pos = -tickDist * start;
+      if( getTickLabelRenderer( axis ).getAlignmentX() == ALIGNMENT.TICK_CENTERED )
+        pos -= tickDist / 2;
+      for( int i = 0; i < m_contentProvider.size(); i++ )
       {
-        labelPosLeft[i] = pos;
+        tickPos[i] = pos;
         pos += tickDist;
       }
     }
     else
     {
-
+// FIXME : not tested anywhere
       Number sumWidth = 0;
       for( int i = start; i <= end; i++ )
       {
-        getTickLabelRenderer( axis ).setLabel( m_labels[i] );
+        getTickLabelRenderer( axis ).setLabel( m_contentProvider.getLabel( i ) );
         final int width = getTickLabelRenderer( axis ).getSize().x;
-        labelPosLeft[i] = sumWidth.intValue() + width / 2;
+        tickPos[i] = sumWidth.intValue() + width / 2;
         sumWidth = sumWidth.intValue() + width;
       }
-// final int spacer = (axis.getScreenHeight() - sumWidth.intValue()) / (end - start + 1);
-// final int fixedWidth = spacer < 0 ? axis.getScreenHeight() / (end - start + 1) : -1;
-//
-// sumWidth = 0;
-// for( Number width : labelPosLeft )
-// {
-// final int midPos = fixedWidth > 0 ? fixedWidth / 2 : width.intValue() / 2;
-// width = sumWidth.intValue() + midPos;
-// sumWidth = midPos + spacer < 0 ? 0 : spacer;
-// }
     }
-    return labelPosLeft;
+    return tickPos;
 
   }
 
@@ -391,7 +401,6 @@ public class OrdinalAxisRenderer implements IAxisRenderer
     {
 
       gc.setBackground( gc.getDevice().getSystemColor( SWT.COLOR_GRAY ) );
-      // gc.fillRectangle( screen );
 
       // draw axis line
       final int[] coords = createAxisSegment( axis, screenArea );

@@ -73,7 +73,7 @@ public class ChartImageComposite extends Canvas implements IChartComposite
       final Rectangle panel = getClientArea();
       final ChartPainter chartPainter = new ChartPainter( model, panel );
       m_plotRect = inflateRect( panel, chartPainter.getPlotInsets() );
-      m_image = chartPainter.createImage();
+      m_image = chartPainter.createImage(m_panOffset);
 
       redraw();
 
@@ -205,7 +205,7 @@ public class ChartImageComposite extends Canvas implements IChartComposite
         if( m_image == null )
           return;
         final GC gc = paintEvent.gc;
-        gc.drawImage( m_image, -m_panOffset.x, -m_panOffset.y );
+        gc.drawImage( m_image,0,0);// -m_panOffset.x, -m_panOffset.y );
 
         final Transform newTransform = new Transform( gc.getDevice() );
         try
