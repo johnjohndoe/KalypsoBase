@@ -83,10 +83,10 @@ public class ImageGeoGrid extends AbstractGeoGrid implements IGeoGrid
 
     m_sizeX = m_image.getWidth();
     m_sizeY = m_image.getHeight();
-    m_min = BigDecimal.valueOf( Double.MAX_VALUE );
-    m_max = BigDecimal.valueOf( -Double.MAX_VALUE );
+    m_min = null;
+    m_max = null;
 
-    initialize();
+    //initialize();
   }
 
   /**
@@ -130,6 +130,9 @@ public class ImageGeoGrid extends AbstractGeoGrid implements IGeoGrid
   @Override
   public BigDecimal getMin( )
   {
+    if( m_min == null )
+      initialize();
+
     return m_min;
   }
 
@@ -139,6 +142,9 @@ public class ImageGeoGrid extends AbstractGeoGrid implements IGeoGrid
   @Override
   public BigDecimal getMax( )
   {
+    if( m_max == null )
+      initialize();
+
     return m_max;
   }
 
