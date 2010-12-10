@@ -103,7 +103,7 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
 {
   private TableViewer m_tableViewer;
 
-  private final Map<Integer, ZmlTableColumn> m_columns = new HashMap<Integer, ZmlTableColumn>();
+  private final Map<Integer, ExtendedZmlTableColumn> m_columns = new HashMap<Integer, ExtendedZmlTableColumn>();
 
   private final IZmlModel m_model;
 
@@ -277,9 +277,10 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
     if( m_tableViewer.getTable().isDisposed() )
       return;
 
+    final IZmlTableColumn[] columns = getColumns();
+
     m_tableViewer.refresh();
 
-    final IZmlTableColumn[] columns = getColumns();
     updateColumns( columns );
 
     fireTableChanged();
@@ -361,7 +362,7 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
   public void duplicateColumn( final String identifier, final String newIdentifier )
   {
     // column already exists?
-    final Collection<ZmlTableColumn> columns = m_columns.values();
+    final Collection<ExtendedZmlTableColumn> columns = m_columns.values();
     for( final ZmlTableColumn column : columns )
     {
       final BaseColumn columnType = column.getColumnType();

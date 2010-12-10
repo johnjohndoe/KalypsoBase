@@ -41,7 +41,11 @@
 package org.kalypso.zml.ui.table.provider;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.kalypso.zml.core.table.binding.BaseColumn;
 import org.kalypso.zml.core.table.binding.ZmlRule;
@@ -60,6 +64,8 @@ public class RuleMapper
 
   private ZmlRule[] m_rules;
 
+  private final Map<BaseColumn, Set<ZmlRule>> m_applied = new HashMap<BaseColumn, Set<ZmlRule>>();
+
   public ZmlRule[] findActiveRules( final IZmlModelRow row, final BaseColumn column )
   {
     if( m_lastRow == row && m_lastColumn == column )
@@ -75,6 +81,7 @@ public class RuleMapper
         if( impl.apply( rule, reference ) )
         {
           rules.add( rule );
+          map( column, rule );
         }
       }
     }
@@ -86,4 +93,20 @@ public class RuleMapper
     return m_rules;
   }
 
+  private void map( final BaseColumn column, final ZmlRule rule )
+  {
+    Set<ZmlRule> rules = m_applied.get( column );
+    if( rules == null )
+    {
+      rules = new LinkedHashSet<ZmlRule>();
+      m_applied.put( column, rules );
+    }
+
+    rules.add( rule );
+  }
+
+  public void reset( )
+  {
+    m_applied.clear();
+  }
 }

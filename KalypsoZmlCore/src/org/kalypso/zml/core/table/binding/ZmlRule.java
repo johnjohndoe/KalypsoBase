@@ -166,4 +166,9 @@ public class ZmlRule
   {
     m_enabled = enabled;
   }
+
+  public boolean hasHeaderIcon( )
+  {
+    return m_rule.isSetHeaderIcon();
+  }
 }
