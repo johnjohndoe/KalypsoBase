@@ -58,6 +58,7 @@ import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 
 import de.openali.odysseus.chart.ext.base.layer.AbstractBarLayer;
+import de.openali.odysseus.chart.ext.base.layer.ChartLayerUtils;
 import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
@@ -272,7 +273,7 @@ public class ZmlBarLayer extends AbstractBarLayer
           if( domainValue == null || targetValue == null )
             continue;
 
-          final Number logicalDomain = m_dateDataOperator.logicalToNumeric( (Date) domainValue );
+          final Number logicalDomain = m_dateDataOperator.logicalToNumeric( ChartLayerUtils.addTimezoneOffset( (Date) domainValue ) );
           final Number logicalTarget = m_targetDataOperator.logicalToNumeric( targetValue );
           final Point screen = getCoordinateMapper().numericToScreen( logicalDomain, logicalTarget );
 

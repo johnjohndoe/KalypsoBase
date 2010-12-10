@@ -1,5 +1,3 @@
-package org.kalypso.zml.core.table.rules.impl.forecast;
-
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -40,61 +38,49 @@ package org.kalypso.zml.core.table.rules.impl.forecast;
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
+package org.kalypso.zml.core.table.rules.impl.forecast;
 
-import java.util.Date;
-
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.DateRange;
-import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
-import org.kalypso.zml.core.KalypsoZmlCore;
-import org.kalypso.zml.core.table.binding.ZmlRule;
+import org.kalypso.ogc.sensor.metadata.MetadataHelper;
+import org.kalypso.ogc.sensor.metadata.MetadataList;
+import org.kalypso.zml.core.table.binding.DataColumn;
+import org.kalypso.zml.core.table.model.IZmlModel;
+import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
+import org.kalypso.zml.core.table.rules.impl.AbstractZmlTableRule;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlRuleUnsafeForecastValue extends AbstractForecastRule
+public abstract class AbstractForecastRule extends AbstractZmlTableRule
 {
-  public static final String ID = "org.kalypso.zml.ui.core.rule.unsafe.forecast.value"; //$NON-NLS-1$
+  private DateRange m_dateRange;
 
-  /**
-   * @see org.kalypso.zml.ui.core.rules.IZmlTableRule#getIdentifier()
-   */
-  @Override
-  public String getIdentifier( )
+  private MetadataList m_metadata;
+
+  protected DateRange getDateRange( final IZmlValueReference reference, final String keyFrom, final String keyTo )
   {
-    return ID;
-  }
-
-  /**
-   * @see org.kalypso.zml.ui.core.rules.IZmlTableRule#apply(org.kalypso.zml.ui.table.provider.ZmlValueReference)
-   */
-  @Override
-  protected boolean doApply( final ZmlRule rule, final IZmlValueReference reference )
-  {
-    try
+    final MetadataList metadata = findMetadata( reference );
+    if( m_metadata != metadata )
     {
-      // index value reference!
-      final Object index = reference.getValue();
-      if( index instanceof Date )
-      {
-        final Date date = (Date) index;
-        final DateRange dateRange = getDateRange( reference, ITimeseriesConstants.MD_SICHERE_VORHERSAGE_ENDE, ITimeseriesConstants.MD_VORHERSAGE_ENDE );
-        if( dateRange == null )
-          return false;
-
-        return dateRange.getFrom().before( date );
-      }
-
-      return false;
-    }
-    catch( final SensorException e )
-    {
-      KalypsoZmlCore.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+      m_dateRange = MetadataHelper.getDateRange( metadata, keyFrom, keyTo );
+      m_metadata = metadata;
     }
 
-    return false;
+    return m_dateRange;
   }
 
+  private MetadataList findMetadata( final IZmlValueReference reference )
+  {
+    final IZmlModel model = reference.getModel();
+    final IZmlModelColumn[] columns = model.getColumns();
+    for( final IZmlModelColumn column : columns )
+    {
+      final DataColumn dataColumn = column.getDataColumn();
+      if( dataColumn.isMetadataSource() )
+        return column.getMetadata();
+    }
+
+    return null;
+  }
 }

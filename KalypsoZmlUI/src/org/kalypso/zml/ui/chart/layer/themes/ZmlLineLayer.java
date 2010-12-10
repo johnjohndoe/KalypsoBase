@@ -59,6 +59,7 @@ import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 
 import de.openali.odysseus.chart.ext.base.layer.AbstractLineLayer;
+import de.openali.odysseus.chart.ext.base.layer.ChartLayerUtils;
 import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
@@ -305,7 +306,9 @@ public class ZmlLineLayer extends AbstractLineLayer
           if( domainValue == null || targetValue == null )
             continue;
 
-          final Point screen = getCoordinateMapper().numericToScreen( m_dateDataOperator.logicalToNumeric( (Date) domainValue ), m_numberDataOperator.logicalToNumeric( (Double) targetValue ) );
+          final Date adjusted = ChartLayerUtils.addTimezoneOffset( (Date) domainValue );
+
+          final Point screen = getCoordinateMapper().numericToScreen( m_dateDataOperator.logicalToNumeric( adjusted ), m_numberDataOperator.logicalToNumeric( (Double) targetValue ) );
           path.add( screen );
         }
         catch( final SensorException e )
