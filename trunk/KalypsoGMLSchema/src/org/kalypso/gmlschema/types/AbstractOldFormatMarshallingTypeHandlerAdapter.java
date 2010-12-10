@@ -69,15 +69,18 @@ import org.xml.sax.XMLReader;
  */
 public abstract class AbstractOldFormatMarshallingTypeHandlerAdapter implements IMarshallingTypeHandler
 {
-  private final DocumentBuilderFactory m_factory = DocumentBuilderFactory.newInstance();
+  private static final DocumentBuilderFactory DOCUMENT_FACTORY = DocumentBuilderFactory.newInstance();
+
+  private static final SAXParserFactory SAX_FACTORY = SAXParserFactory.newInstance();
+
   private DocumentBuilder m_builder;
 
   public AbstractOldFormatMarshallingTypeHandlerAdapter( )
   {
     try
     {
-      m_builder = m_factory.newDocumentBuilder();
-      m_factory.setNamespaceAware( true );
+      m_builder = DOCUMENT_FACTORY.newDocumentBuilder();
+      DOCUMENT_FACTORY.setNamespaceAware( true );
     }
     catch( final ParserConfigurationException e )
     {
@@ -108,9 +111,8 @@ public abstract class AbstractOldFormatMarshallingTypeHandlerAdapter implements 
       final String xmlStringNoHeader = XMLUtilities.removeXMLHeader( xmlString );
       final InputSource input = new InputSource( new StringReader( xmlStringNoHeader ) );
 
-      final SAXParserFactory saxFac = SAXParserFactory.newInstance();
-      saxFac.setNamespaceAware( true );
-      final SAXParser saxParser = saxFac.newSAXParser();
+      SAX_FACTORY.setNamespaceAware( true );
+      final SAXParser saxParser = SAX_FACTORY.newSAXParser();
       final XMLReader xmlReader = saxParser.getXMLReader();
       xmlReader.setContentHandler( reader.getContentHandler() );
       xmlReader.parse( input );
