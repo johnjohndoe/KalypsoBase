@@ -39,6 +39,9 @@ import org.xml.sax.SAXException;
  */
 public class XMLHelper
 {
+  /** Performance: instantiate this factory only once, this is expensive. */
+  private static final TransformerFactory TRANSFORMER_FACTORY = TransformerFactory.newInstance();
+
   /**
    * @deprecated Use {@link NS.XSD_SCHEMA} instead.
    */
@@ -128,9 +131,7 @@ public class XMLHelper
 
   public static void writeDOM( final Node xmlDOM, final String charset, final StreamResult streamResult, final boolean indent ) throws TransformerException
   {
-    final TransformerFactory tFactory = TransformerFactory.newInstance();
-
-    final Transformer t = tFactory.newTransformer();
+    final Transformer t = TRANSFORMER_FACTORY.newTransformer();
 
     if( indent )
     {
@@ -233,7 +234,7 @@ public class XMLHelper
   {
     try
     {
-      final Transformer t = TransformerFactory.newInstance().newTransformer();
+      final Transformer t = TRANSFORMER_FACTORY.newTransformer();
       final DOMSource src = new DOMSource( node );
       final StringWriter sw = new StringWriter();
       final StreamResult result = new StreamResult( sw );
@@ -274,10 +275,7 @@ public class XMLHelper
   {
     try
     {
-      final TransformerFactory transformerFactory = TransformerFactory.newInstance();
-
-      // transformerFactory.setAttribute("version",new String("1.0"));
-      final Transformer transformer = transformerFactory.newTransformer( xslSource );
+      final Transformer transformer = TRANSFORMER_FACTORY.newTransformer( xslSource );
       final StringWriter resultSW = new StringWriter();
       transformer.transform( xmlSource, new StreamResult( resultSW ) );
 
@@ -299,8 +297,7 @@ public class XMLHelper
     final DocumentBuilder docuBuilder = factory.newDocumentBuilder();
     final Document xmlDOM = docuBuilder.parse( xmlInputStream );
     final Document xslDOM = docuBuilder.parse( xslInputStream );
-    final TransformerFactory transformerFactory = TransformerFactory.newInstance();
-    final Transformer transformer = transformerFactory.newTransformer( new DOMSource( xslDOM ) );
+    final Transformer transformer = TRANSFORMER_FACTORY.newTransformer( new DOMSource( xslDOM ) );
     transformer.transform( new DOMSource( xmlDOM ), new StreamResult( writer ) );
     writer.close();
   }
