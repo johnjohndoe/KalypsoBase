@@ -171,7 +171,7 @@ public class WQTuppleModel extends AbstractTupleModel
   private Number[] read( final int index ) throws SensorException
   {
     final Number srcValue = (Number) m_model.get( index, m_srcAxis );
-    final Number srcStatus = (Number) m_model.get( index, m_srcStatusAxis );
+    final Number srcStatus =  m_srcStatusAxis == null ? KalypsoStati.BIT_OK : (Number) m_model.get( index, m_srcStatusAxis );
     if( srcValue == null || srcStatus == null )
       return new Number[] { null, null };
 
