@@ -323,9 +323,7 @@ public final class TableViewUtils
         continue;
       }
 
-      // FIXME: check synchron
-
-      final TableViewColumnXMLLoader loader = new TableViewColumnXMLLoader( view, tobs[i], context, false, i );
+      final TableViewColumnXMLLoader loader = new TableViewColumnXMLLoader( view, tobs[i], context, synchron, i );
       stati.add( loader.getResult() );
     }
 

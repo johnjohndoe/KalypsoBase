@@ -185,7 +185,7 @@ public abstract class AbstractObservationEditor extends AbstractEditorPart imple
       }
       else
       {
-        final boolean sync = true;
+        final boolean sync = false;
 
         if( view instanceof DiagView )
         {
