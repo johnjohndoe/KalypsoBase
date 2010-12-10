@@ -41,15 +41,12 @@
 package org.kalypso.zml.ui.table.provider;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.kalypso.zml.core.table.binding.BaseColumn;
 import org.kalypso.zml.core.table.binding.ZmlRule;
-import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
 import org.kalypso.zml.core.table.rules.IZmlRuleImplementation;
 
@@ -58,55 +55,51 @@ import org.kalypso.zml.core.table.rules.IZmlRuleImplementation;
  */
 public class RuleMapper
 {
-  private IZmlModelRow m_lastRow;
-
-  private BaseColumn m_lastColumn;
-
   private ZmlRule[] m_rules;
 
-  private final Map<BaseColumn, Set<ZmlRule>> m_applied = new HashMap<BaseColumn, Set<ZmlRule>>();
+  private final Set<ZmlRule> m_applied = new LinkedHashSet<ZmlRule>();
 
-  public ZmlRule[] findActiveRules( final IZmlModelRow row, final BaseColumn column )
+  private final BaseColumn m_column;
+
+  private IZmlValueReference m_lastReference;
+
+  public RuleMapper( final BaseColumn column )
   {
-    if( m_lastRow == row && m_lastColumn == column )
+    m_column = column;
+  }
+
+  public ZmlRule[] findActiveRules( final IZmlValueReference reference )
+  {
+    if( m_lastReference == reference )
       return m_rules;
 
     final List<ZmlRule> rules = new ArrayList<ZmlRule>();
-    final IZmlValueReference reference = row.get( column.getType() );
     if( reference != null )
     {
-      for( final ZmlRule rule : column.getRules() )
+      for( final ZmlRule rule : m_column.getRules() )
       {
         final IZmlRuleImplementation impl = rule.getImplementation();
         if( impl.apply( rule, reference ) )
         {
           rules.add( rule );
-          map( column, rule );
+          m_applied.add( rule );
         }
       }
     }
 
-    m_lastRow = row;
-    m_lastColumn = column;
     m_rules = rules.toArray( new ZmlRule[] {} );
+    m_lastReference = reference;
 
     return m_rules;
-  }
-
-  private void map( final BaseColumn column, final ZmlRule rule )
-  {
-    Set<ZmlRule> rules = m_applied.get( column );
-    if( rules == null )
-    {
-      rules = new LinkedHashSet<ZmlRule>();
-      m_applied.put( column, rules );
-    }
-
-    rules.add( rule );
   }
 
   public void reset( )
   {
     m_applied.clear();
+  }
+
+  public ZmlRule[] getAppliedRules( )
+  {
+    return m_applied.toArray( new ZmlRule[] {} );
   }
 }

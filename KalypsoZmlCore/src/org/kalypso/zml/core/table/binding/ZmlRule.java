@@ -171,4 +171,11 @@ public class ZmlRule
   {
     return m_rule.isSetHeaderIcon();
   }
+
+  public CellStyle getPlainStyle( ) throws CoreException
+  {
+    final ZmlStyleResolver resolver = ZmlStyleResolver.getInstance();
+
+    return resolver.findStyle( m_rule.getStyleReference() );
+  }
 }

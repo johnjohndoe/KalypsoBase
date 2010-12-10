@@ -38,49 +38,46 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table;
+package org.kalypso.zml.ui.table.base;
 
-import org.eclipse.jface.viewers.TableViewer;
-import org.kalypso.zml.core.table.binding.BaseColumn;
-import org.kalypso.zml.core.table.model.IZmlModel;
-import org.kalypso.zml.ui.table.model.IZmlTableCell;
-import org.kalypso.zml.ui.table.model.IZmlTableColumn;
-import org.kalypso.zml.ui.table.model.IZmlTableRow;
+import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.ImageData;
+import org.eclipse.swt.widgets.Display;
 
 /**
  * @author Dirk Kuch
  */
-public interface IZmlTable
+public final class ImageHelper
 {
-  IZmlTableCell getActiveCell( );
+  private ImageHelper( )
+  {
+  }
 
-  IZmlTableColumn getActiveColumn( );
+  public static Image merge( final Display display, final Image base, final Image extend )
+  {
+    if( base == null )
+      return extend;
 
-  IZmlTableRow getActiveRow( );
+    if( extend == null )
+      return base;
 
-  IZmlTableRow[] getSelectedRows( );
+    final ImageData imageData1 = base.getImageData();
+    final ImageData imageData2 = extend.getImageData();
 
-  IZmlTableColumn findColumn( BaseColumn column );
+    final Image image = new Image( display, imageData1.width + imageData2.width, Math.max( imageData1.height, imageData2.height ) );
+    final GC gc = new GC( image );
 
-  TableViewer getTableViewer( );
+    try
+    {
+      gc.drawImage( base, 0, 0 );
+      gc.drawImage( extend, imageData1.width, 0 );
 
-  IZmlModel getDataModel( );
-
-  IZmlTableColumn[] getColumns( );
-
-  IZmlTableRow[] getRows( );
-
-  IZmlTableRow getRow( int index );
-
-  /**
-   * @return time resolution of displayed time series (one hour spacing or six hour spaceing, aso)
-   */
-  int getResolution( );
-
-  void refresh( );
-
-  void addListener( IZmlTableListener listener );
-
-  void removeListener( IZmlTableListener mListener );
-
+      return image;
+    }
+    finally
+    {
+      gc.dispose();
+    }
+  }
 }

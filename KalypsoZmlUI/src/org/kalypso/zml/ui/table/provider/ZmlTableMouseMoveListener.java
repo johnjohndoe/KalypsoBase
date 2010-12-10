@@ -43,6 +43,7 @@ package org.kalypso.zml.ui.table.provider;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.ViewerCell;
@@ -100,9 +101,7 @@ public class ZmlTableMouseMoveListener implements MouseMoveListener
     if( cell == null )
       return null;
 
-    final IZmlTableColumn column = m_table.getColumn( cell.getColumnIndex() );
-
-    return column;
+    throw new NotImplementedException();
   }
 
   public IZmlTableRow findActiveRow( )

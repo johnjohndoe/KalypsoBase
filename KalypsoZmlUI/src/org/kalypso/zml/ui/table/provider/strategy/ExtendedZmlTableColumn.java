@@ -47,6 +47,7 @@ import org.kalypso.zml.core.table.binding.BaseColumn;
 import org.kalypso.zml.core.table.binding.CellStyle;
 import org.kalypso.zml.core.table.binding.ZmlRule;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
+import org.kalypso.zml.core.table.model.references.IZmlValueReference;
 import org.kalypso.zml.core.table.schema.AbstractColumnType;
 import org.kalypso.zml.core.table.schema.CellStyleType;
 import org.kalypso.zml.core.table.schema.DataColumnType;
@@ -68,7 +69,7 @@ import org.kalypso.zml.ui.table.provider.strategy.labeling.SumValueLabelingStrat
  */
 public class ExtendedZmlTableColumn extends ZmlTableColumn
 {
-  private final RuleMapper m_mapper = new RuleMapper();
+  private final RuleMapper m_mapper;
 
   private CellStyle m_lastCellStyle;
 
@@ -81,6 +82,8 @@ public class ExtendedZmlTableColumn extends ZmlTableColumn
   public ExtendedZmlTableColumn( final IZmlTable table, final TableViewerColumn column, final BaseColumn type )
   {
     super( table, column, type );
+
+    m_mapper = new RuleMapper( type );
   }
 
   public IZmlEditingStrategy getEditingStrategy( final ZmlLabelProvider labelProvider )
@@ -131,8 +134,9 @@ public class ExtendedZmlTableColumn extends ZmlTableColumn
       return m_lastCellStyle;
 
     final BaseColumn columnType = getColumnType();
+    final IZmlValueReference reference = row.get( columnType.getType() );
 
-    final ZmlRule[] rules = m_mapper.findActiveRules( row, columnType );
+    final ZmlRule[] rules = m_mapper.findActiveRules( reference );
     if( ArrayUtils.isNotEmpty( rules ) )
     {
       CellStyleType baseType = columnType.getDefaultStyle().getType();
@@ -155,7 +159,7 @@ public class ExtendedZmlTableColumn extends ZmlTableColumn
 
   public ZmlRule[] findActiveRules( final IZmlModelRow row )
   {
-    return m_mapper.findActiveRules( row, getColumnType() );
+    return m_mapper.findActiveRules( row.get( getColumnType().getType() ) );
   }
 
   public boolean isVisible( )
@@ -164,5 +168,16 @@ public class ExtendedZmlTableColumn extends ZmlTableColumn
       return true;
 
     return getModelColumn() != null;
+  }
+
+  public void reset( )
+  {
+    m_mapper.reset();
+  }
+
+  public ZmlRule[] getAppliedRules( )
+  {
+    return m_mapper.getAppliedRules();
+
   }
 }
