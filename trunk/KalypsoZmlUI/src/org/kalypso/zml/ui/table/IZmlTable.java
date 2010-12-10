@@ -52,8 +52,6 @@ import org.kalypso.zml.ui.table.model.IZmlTableRow;
  */
 public interface IZmlTable
 {
-  IZmlTableColumn getColumn( int columnIndex );
-
   IZmlTableCell getActiveCell( );
 
   IZmlTableColumn getActiveColumn( );

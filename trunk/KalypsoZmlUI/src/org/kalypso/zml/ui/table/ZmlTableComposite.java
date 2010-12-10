@@ -41,11 +41,8 @@
 package org.kalypso.zml.ui.table;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import javax.xml.bind.JAXBElement;
@@ -60,6 +57,7 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.window.ToolTip;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
@@ -70,11 +68,14 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.progress.UIJob;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.action.ContributionUtils;
 import org.kalypso.contribs.eclipse.jface.viewers.ArrayTreeContentProvider;
 import org.kalypso.contribs.eclipse.swt.layout.LayoutHelper;
 import org.kalypso.zml.core.table.binding.BaseColumn;
+import org.kalypso.zml.core.table.binding.CellStyle;
 import org.kalypso.zml.core.table.binding.TableTypeHelper;
+import org.kalypso.zml.core.table.binding.ZmlRule;
 import org.kalypso.zml.core.table.model.IZmlColumnModelListener;
 import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
@@ -83,6 +84,8 @@ import org.kalypso.zml.core.table.model.ZmlDataModel;
 import org.kalypso.zml.core.table.schema.AbstractColumnType;
 import org.kalypso.zml.core.table.schema.DataColumnType;
 import org.kalypso.zml.core.table.schema.ZmlTableType;
+import org.kalypso.zml.ui.KalypsoZmlUI;
+import org.kalypso.zml.ui.table.base.ImageHelper;
 import org.kalypso.zml.ui.table.commands.toolbar.view.ZmlViewResolutionFilter;
 import org.kalypso.zml.ui.table.menu.ZmlTableContextMenuListener;
 import org.kalypso.zml.ui.table.menu.ZmlTableHeaderContextMenuListener;
@@ -103,7 +106,7 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
 {
   private TableViewer m_tableViewer;
 
-  private final Map<Integer, ExtendedZmlTableColumn> m_columns = new HashMap<Integer, ExtendedZmlTableColumn>();
+  private final Set<ExtendedZmlTableColumn> m_columns = new LinkedHashSet<ExtendedZmlTableColumn>();
 
   private final IZmlModel m_model;
 
@@ -250,11 +253,9 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
 
   private TableViewerColumn buildColumnViewer( final BaseColumn type )
   {
-    final int index = m_tableViewer.getTable().getColumnCount();
     final TableViewerColumn viewerColumn = new TableViewerColumn( m_tableViewer, TableTypeHelper.toSWT( type.getAlignment() ) );
-
     final ExtendedZmlTableColumn column = new ExtendedZmlTableColumn( this, viewerColumn, type );
-    m_columns.put( index, column );
+    m_columns.add( column );
 
     final ZmlLabelProvider labelProvider = new ZmlLabelProvider( column );
     viewerColumn.setLabelProvider( labelProvider );
@@ -277,18 +278,20 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
     if( m_tableViewer.getTable().isDisposed() )
       return;
 
-    final IZmlTableColumn[] columns = getColumns();
+    for( final ExtendedZmlTableColumn column : m_columns )
+    {
+      column.reset();
+    }
 
     m_tableViewer.refresh();
-
-    updateColumns( columns );
+    updateColumns();
 
     fireTableChanged();
   }
 
-  private void updateColumns( final IZmlTableColumn[] columns )
+  private void updateColumns( )
   {
-    for( final IZmlTableColumn column : columns )
+    for( final ExtendedZmlTableColumn column : m_columns )
     {
       final BaseColumn columnType = column.getColumnType();
       final TableViewerColumn tableViewerColumn = column.getTableViewerColumn();
@@ -316,7 +319,36 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
         pack( tableColumn, columnType );
         tableColumn.setText( columnType.getLabel() );
       }
+
+      updateHeader( tableViewerColumn, column.getAppliedRules() );
     }
+  }
+
+  private void updateHeader( final TableViewerColumn viewerColumn, final ZmlRule[] applied )
+  {
+    final TableColumn column = viewerColumn.getColumn();
+    Image image = null;
+
+    for( final ZmlRule rule : applied )
+    {
+      try
+      {
+        if( rule.hasHeaderIcon() )
+        {
+          final CellStyle style = rule.getPlainStyle();
+          image = ImageHelper.merge( column.getDisplay(), image, style.getImage() );
+        }
+      }
+      catch( final Throwable e )
+      {
+        KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+      }
+    }
+
+    if( image == null )
+      column.setImage( new Image( column.getDisplay(), 1, 1 ) );
+    else
+      column.setImage( image );
   }
 
   public void fireTableChanged( )
@@ -362,8 +394,7 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
   public void duplicateColumn( final String identifier, final String newIdentifier )
   {
     // column already exists?
-    final Collection<ExtendedZmlTableColumn> columns = m_columns.values();
-    for( final ZmlTableColumn column : columns )
+    for( final ZmlTableColumn column : m_columns )
     {
       final BaseColumn columnType = column.getColumnType();
       if( columnType.getIdentifier().equals( newIdentifier ) )
@@ -377,19 +408,10 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
     buildColumnViewer( new BaseColumn( clone ) );
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.IZmlTableComposite#getColumn(int)
-   */
-  @Override
-  public IZmlTableColumn getColumn( final int columnIndex )
-  {
-    return m_columns.get( columnIndex );
-  }
-
   @Override
   public IZmlTableColumn[] getColumns( )
   {
-    return m_columns.values().toArray( new IZmlTableColumn[] {} );
+    return m_columns.toArray( new IZmlTableColumn[] {} );
   }
 
   @Override
