@@ -79,7 +79,7 @@ public class ZmlCommandHourMinus extends AbstractHourViewCommand
    *      java.util.Map)
    */
   @Override
-  public void updateElement( final UIElement element, final Map parameters )
+  public void updateElement( final UIElement element, @SuppressWarnings("rawtypes") final Map parameters )
   {
   }
 }

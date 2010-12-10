@@ -73,6 +73,7 @@ public class ZmlTableColumn extends ZmlTableElement implements IZmlTableColumn
     m_type = type;
   }
 
+  @Override
   public boolean isIndexColumn( )
   {
     return m_type.getType() instanceof IndexColumnType;
