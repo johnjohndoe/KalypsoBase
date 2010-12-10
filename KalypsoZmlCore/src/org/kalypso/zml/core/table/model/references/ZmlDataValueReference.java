@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.core.table.model.references;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.Path;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
@@ -173,7 +176,12 @@ public class ZmlDataValueReference implements IZmlValueReference
   public String getHref( )
   {
     final IObservation observation = m_column.getObservation();
+    final String href = observation.getHref();
 
-    return observation.getHref();
+    final IFile resource = ResourceUtilities.findFileFromPath( new Path( href ) );
+    if( resource != null )
+      return resource.getProjectRelativePath().toOSString();
+
+    return href;
   }
 }
