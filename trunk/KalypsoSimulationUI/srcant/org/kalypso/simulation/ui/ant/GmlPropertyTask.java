@@ -42,6 +42,7 @@ package org.kalypso.simulation.ui.ant;
 
 import java.net.URL;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -53,6 +54,8 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.kalypso.contribs.java.util.CalendarUtilities;
+import org.kalypso.contribs.java.util.DateUtilities;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -167,7 +170,12 @@ public class GmlPropertyTask extends Task
     {
       // special handling for Date
       // We write Date as String in XML-Format, in order to correctly transfer timezone information
-      Calendar cal = ((XMLGregorianCalendar) value).toGregorianCalendar();
+      final Date date = DateUtilities.toDate( value );
+      Calendar cal = Calendar.getInstance( KalypsoCorePlugin.getDefault().getTimeZone() );
+      cal.setTime( date );
+      
+//      Calendar cal = ((XMLGregorianCalendar) value).toGregorianCalendar();
+//      cal.setTimeZone( KalypsoCorePlugin.getDefault().getTimeZone() );
       final Integer dateoffset = property.getDateoffset();
       final String dateoffsetfield = property.getDateoffsetfield();
       final String dateTruncField = property.getDateTruncField();
@@ -176,7 +184,7 @@ public class GmlPropertyTask extends Task
         cal.add( CalendarUtilities.getCalendarField( dateoffsetfield ), dateoffset.intValue() );
 
       if( dateTruncField != null )
-        cal = DateUtils.truncate( cal, Integer.valueOf( dateTruncField ).intValue() );
+        cal = DateUtils.truncate( cal, Integer.parseInt( dateTruncField ) );
 
       final String dateString = DatatypeConverter.printDateTime( cal );
       m_propertyAdder.addProperty( name, dateString, null );
