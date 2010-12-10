@@ -648,7 +648,7 @@ public final class TimeseriesUtils implements ITimeseriesConstants
   public static DateRange getDateRange( final IRequest args )
   {
     if( args == null )
-      return new DateRange();
+      return null;
 
     return args.getDateRange();
   }
