@@ -114,12 +114,13 @@ public class ZmlColumnLoadCommand implements IObsProviderListener
     if( m_canceled )
       return;
 
+    /** base observation will be disposed by NewZmlTableLayoutPart (save table) */
     final IObsProvider base = m_column.getObsProvider();
     final IObsProvider clone = base.copy();
     final IObservation observation = clone.getObservation();
     if( observation == null )
     {
-      base.dispose();
+// base.dispose();
       clone.dispose();
       return;
     }
@@ -132,7 +133,7 @@ public class ZmlColumnLoadCommand implements IObsProviderListener
 
     m_model.addColumn( new ZmlModelColumn( label, clone, m_model, data ) );
 
-    base.dispose();
+// base.dispose();
   }
 
   /**

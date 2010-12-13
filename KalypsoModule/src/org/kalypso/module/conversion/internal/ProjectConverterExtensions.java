@@ -49,7 +49,6 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.module.conversion.IProjectConverterFactory;
 import org.kalypso.module.internal.Module;
-import org.kalypso.module.internal.i18n.Messages;
 
 /**
  * Access to the project converter extension-point.
@@ -64,9 +63,9 @@ public final class ProjectConverterExtensions
 
   private static final String CONVERSION_POINT = "projectconversion"; //$NON-NLS-1$
 
-  private static final String ATTRIBUTE_MODULE = "module";//$NON-NLS-1$
+  private static final String ATTRIBUTE_MODULE = "module"; //$NON-NLS-1$
 
-  private static final String ATTRIBUTE_CLASS = "class";//$NON-NLS-1$
+  private static final String ATTRIBUTE_CLASS = "class"; //$NON-NLS-1$ 
 
   private ProjectConverterExtensions( )
   {

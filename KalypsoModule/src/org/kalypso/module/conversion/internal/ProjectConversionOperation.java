@@ -62,7 +62,7 @@ public class ProjectConversionOperation extends AbstractLoggingOperation impleme
 
   public ProjectConversionOperation( final IProject project, final IProjectConverter converter )
   {
-    super( Messages.getString("ProjectConversionOperation.0") ); //$NON-NLS-1$
+    super( Messages.getString( "ProjectConversionOperation.0" ) ); //$NON-NLS-1$
 
     m_project = project;
     m_converter = converter;
@@ -83,7 +83,7 @@ public class ProjectConversionOperation extends AbstractLoggingOperation impleme
   @Override
   protected void doExecute( final IProgressMonitor monitor ) throws Exception
   {
-    final String taskName = String.format( Messages.getString("ProjectConversionOperation.1"), m_project.getName(), m_converter.getLabel() ); //$NON-NLS-1$
+    final String taskName = String.format( Messages.getString( "ProjectConversionOperation.1" ), m_project.getName(), m_converter.getLabel() ); //$NON-NLS-1$
     monitor.beginTask( taskName, 100 );
 
     try
@@ -96,6 +96,5 @@ public class ProjectConversionOperation extends AbstractLoggingOperation impleme
       m_project.refreshLocal( IResource.DEPTH_INFINITE, new SubProgressMonitor( monitor, 10 ) );
     }
   }
-
 
 }

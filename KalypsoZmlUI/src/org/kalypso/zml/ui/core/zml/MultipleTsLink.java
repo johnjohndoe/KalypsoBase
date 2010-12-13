@@ -42,6 +42,7 @@ package org.kalypso.zml.ui.core.zml;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.TreeSet;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -73,14 +74,39 @@ public class MultipleTsLink
   {
     if( obj instanceof MultipleTsLink )
     {
-      final MultipleTsLink link = (MultipleTsLink) obj;
+      final MultipleTsLink other = (MultipleTsLink) obj;
+
       final EqualsBuilder builder = new EqualsBuilder();
-      builder.append( getIdentifier(), link.getIdentifier() );
+      builder.append( getIdentifier(), other.getIdentifier() );
+
+      final TSLinkWithName[] links = getLinks();
+      final TSLinkWithName[] otherLinks = other.getLinks();
+      if( links.length != otherLinks.length )
+        return false;
+
+      final String[] set = getSortedLinks( links );
+      final String[] otherSet = getSortedLinks( otherLinks );
+
+      for( int i = 0; i < links.length; i++ )
+      {
+        builder.append( set[i], otherSet[i] );
+      }
 
       return builder.isEquals();
     }
 
     return super.equals( obj );
+  }
+
+  private String[] getSortedLinks( final TSLinkWithName[] links )
+  {
+    final Set<String> identifiers = new TreeSet<String>();
+    for( final TSLinkWithName link : links )
+    {
+      identifiers.add( link.getIdentifier() );
+    }
+
+    return identifiers.toArray( new String[] {} );
   }
 
   /**
