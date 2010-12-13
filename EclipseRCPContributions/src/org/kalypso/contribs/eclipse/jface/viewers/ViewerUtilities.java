@@ -154,29 +154,29 @@ public final class ViewerUtilities
 
   public static void refresh( final StructuredViewer viewer, final Object element, final boolean async )
   {
-    if( viewer != null )
+    if( viewer == null )
+      return;
+
+    final Control control = viewer.getControl();
+    if( control == null || control.isDisposed() )
+      return;
+
+    final Runnable runner = new Runnable()
     {
-      final Control control = viewer.getControl();
-      if( control != null && !control.isDisposed() )
+      @Override
+      public void run( )
       {
-        final Runnable runner = new Runnable()
-        {
-          @Override
-          public void run( )
-          {
-            if( !viewer.getControl().isDisposed() )
-              viewer.refresh( element );
-          }
-        };
-
-        final Display display = control.getDisplay();
-
-        if( async )
-          display.asyncExec( runner );
-        else
-          display.syncExec( runner );
+        if( !viewer.getControl().isDisposed() )
+          viewer.refresh( element );
       }
-    }
+    };
+
+    final Display display = control.getDisplay();
+
+    if( async )
+      display.asyncExec( runner );
+    else
+      display.syncExec( runner );
   }
 
   public static void update( final StructuredViewer viewer, final Object[] elements, final String[] properties, final boolean async )
