@@ -101,26 +101,31 @@
       <styleReference>
         <reference>dateForecastCellStyleSafe</reference>
       </styleReference>
+      <label>Sicherer Vorhersagezeitraum</label>
     </Rule>
     <Rule id="ruleForecastUnsafe" ruleReference="org.kalypso.zml.ui.core.rule.unsafe.forecast.value">
       <styleReference>
         <reference>dateForecastCellStyleUnsafe</reference>
       </styleReference>
+      <label>Unsicherer Vorhersagezeitraum</label>
     </Rule>
     <Rule id="ruleUserModified" ruleReference="org.kalypso.zml.ui.core.rule.user.modified" setHeaderIcon="true">
       <styleReference>
         <reference>userModifiedStyle</reference>
       </styleReference>
+      <label>Benutereingabe(n)</label>
     </Rule>
     <Rule id="ruleInterpolatedValue" ruleReference="org.kalypso.zml.ui.core.rule.value.interpolated" setHeaderIcon="true">
       <styleReference>
         <reference>interpolatedValueStyle</reference>
       </styleReference>
+      <label>Interpolierte(r) Wert(e)</label>
     </Rule>
     <Rule id="ruleWqConflict" ruleReference="org.kalypso.zml.ui.core.rule.wq.conflict" setHeaderIcon="true">
       <styleReference>
         <reference>wqConversionConflict</reference>
       </styleReference>
+      <label>W/Q Konflikt(e)</label>
     </Rule>
     <Rule id="ruleAlarmstufen" ruleReference="org.kalypso.zml.ui.core.rule.grenzwerte" enabled="false">
       <RuleInstructions>
@@ -149,8 +154,8 @@
             <reference>meldegrenze</reference>
           </styleReference>
         </instruction>
-
       </RuleInstructions>
+      <label>Alarmstufe(n)</label>
     </Rule>
 
     <Rule id="ruleHauptzahlenQ" ruleReference="org.kalypso.zml.ui.core.rule.grenzwerte" enabled="false">
@@ -163,6 +168,7 @@
         <instruction from="Grenzwert_Q: Kalypso_Grenzwert_MHQ" to="Grenzwert_Q: Kalypso_Grenzwert_HQ" opTo="&lt;=" label="&gt;MH   ${text}" />
         <instruction from="Grenzwert_Q: Kalypso_Grenzwert_HQ" label="&gt;H   ${text}" />
       </RuleInstructions>
+      <label>Hauptzahl(en) Q</label>
     </Rule>
 
     <Rule id="ruleHauptzahlenW" ruleReference="org.kalypso.zml.ui.core.rule.grenzwerte" enabled="false">
@@ -175,6 +181,7 @@
         <instruction from="Grenzwert_W: Kalypso_Grenzwert_MHW" to="Grenzwert_W: Kalypso_Grenzwert_HW" opTo="&lt;=" label="&gt;MH   ${text}" />
         <instruction from="Grenzwert_W: Kalypso_Grenzwert_HW" label="&gt;H   ${text}" />
       </RuleInstructions>
+      <label>Hauptzahl(en) W</label>
     </Rule>
   </RuleSet>
 

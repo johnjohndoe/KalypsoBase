@@ -263,7 +263,7 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
     viewerColumn.setLabelProvider( labelProvider );
     viewerColumn.getColumn().setText( type.getLabel() );
 
-    viewerColumn.getColumn().addSelectionListener( new ZmlTableHeaderContextMenuListener( this ) );
+    viewerColumn.getColumn().addSelectionListener( new ZmlTableHeaderContextMenuListener( this, column ) );
 
     /** edit support */
     if( type.getType() instanceof DataColumnType && type.isEditable() )
@@ -300,7 +300,7 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
       final TableViewerColumn tableViewerColumn = column.getTableViewerColumn();
       final TableColumn tableColumn = tableViewerColumn.getColumn();
 
-      updateHeader( tableViewerColumn, column.getAppliedRules() );
+      updateHeader( column );
 
       /** only update headers of data column types */
       if( columnType.getType() instanceof DataColumnType )
@@ -328,9 +328,10 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
     }
   }
 
-  private void updateHeader( final TableViewerColumn viewerColumn, final ZmlRule[] applied )
+  private void updateHeader( final ExtendedZmlTableColumn column )
   {
-    final TableColumn column = viewerColumn.getColumn();
+    final TableColumn tableColumn = column.getTableViewerColumn().getColumn();
+    final ZmlRule[] applied = column.getAppliedRules();
 
     final ZmlTableHeaderIconProvider provider = new ZmlTableHeaderIconProvider( 2, new Point( 16, 16 ) );
 
@@ -350,8 +351,7 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
       }
     }
 
-    column.setImage( provider.createImage( column.getDisplay() ) );
-
+    tableColumn.setImage( provider.createImage( tableColumn.getDisplay() ) );
   }
 
   public void fireTableChanged( )
