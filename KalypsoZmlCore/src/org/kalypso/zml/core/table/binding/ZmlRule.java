@@ -178,4 +178,9 @@ public class ZmlRule
 
     return resolver.findStyle( m_rule.getStyleReference() );
   }
+
+  public String getLabel( )
+  {
+    return m_rule.getLabel();
+  }
 }

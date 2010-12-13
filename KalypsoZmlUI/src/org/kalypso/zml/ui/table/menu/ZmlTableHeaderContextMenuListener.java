@@ -40,27 +40,41 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.menu;
 
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.PlatformUI;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.action.ContributionUtils;
 import org.kalypso.zml.core.table.binding.BaseColumn;
+import org.kalypso.zml.core.table.binding.CellStyle;
+import org.kalypso.zml.core.table.binding.ZmlRule;
+import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.ZmlTableComposite;
 import org.kalypso.zml.ui.table.model.IZmlTableColumn;
+import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
 
 /**
  * @author Dirk Kuch
  */
 public class ZmlTableHeaderContextMenuListener implements SelectionListener
 {
+  protected static final Image IMG_INFO = new Image( null, ZmlTableContextMenuListener.class.getResourceAsStream( "icons/info.png" ) );
+
   private final ZmlTableComposite m_table;
 
-  public ZmlTableHeaderContextMenuListener( final ZmlTableComposite table )
+  private final ExtendedZmlTableColumn m_column;
+
+  public ZmlTableHeaderContextMenuListener( final ZmlTableComposite table, final ExtendedZmlTableColumn column )
   {
     m_table = table;
+    m_column = column;
   }
 
   private void setMenu( final String uri )
@@ -70,7 +84,13 @@ public class ZmlTableHeaderContextMenuListener implements SelectionListener
     {
       final MenuManager menuManager = new MenuManager();
       final Menu menu = menuManager.createContextMenu( control );
+
+      // add basic menu entries which are defined in the plugin.xml
       ContributionUtils.populateContributionManager( PlatformUI.getWorkbench(), menuManager, uri );
+
+      // add additional info items
+      addAdditionalItems( menuManager );
+
       m_table.setContextMenu( menu );
 
       menu.setVisible( true );
@@ -78,6 +98,67 @@ public class ZmlTableHeaderContextMenuListener implements SelectionListener
     }
     else
       m_table.setContextMenu( new Menu( control ) );
+  }
+
+  private void addAdditionalItems( final MenuManager menuManager )
+  {
+    menuManager.add( new Separator() );
+
+    menuManager.add( new Action()
+    {
+      @Override
+      public String getText( )
+      {
+        return "Details und zusätzliche Informationen:";
+      }
+
+      @Override
+      public boolean isEnabled( )
+      {
+        return false;
+      }
+    } );
+
+    final ZmlRule[] applied = m_column.getAppliedRules();
+    for( final ZmlRule rule : applied )
+    {
+      addAditionalItem( rule, menuManager );
+    }
+  }
+
+  private void addAditionalItem( final ZmlRule rule, final MenuManager menuManager )
+  {
+    menuManager.add( new Action()
+    {
+      @Override
+      public org.eclipse.jface.resource.ImageDescriptor getImageDescriptor( )
+      {
+        try
+        {
+          final CellStyle style = rule.getPlainStyle();
+          return ImageDescriptor.createFromImage( style.getImage() );
+        }
+        catch( final Throwable t )
+        {
+          KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( t ) );
+        }
+
+        return ImageDescriptor.createFromImage( IMG_INFO );
+      }
+
+      @Override
+      public String getText( )
+      {
+        return String.format( "   enthält: %s", rule.getLabel() );
+      }
+
+      @Override
+      public boolean isEnabled( )
+      {
+        return false;
+      }
+
+    } );
   }
 
   /**
