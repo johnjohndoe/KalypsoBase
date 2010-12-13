@@ -45,6 +45,8 @@ import java.awt.Color;
 import java.awt.Stroke;
 import java.net.URL;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.kalypso.contribs.java.awt.ColorUtilities;
 import org.kalypso.contribs.java.lang.NumberUtils;
@@ -149,6 +151,42 @@ public class TSLinkWithName
   public void setContext( final URL context )
   {
     m_context = context;
+  }
+
+  /**
+   * @see java.lang.Object#equals(java.lang.Object)
+   */
+  @Override
+  public boolean equals( final Object obj )
+  {
+    if( obj instanceof TSLinkWithName )
+    {
+      final TSLinkWithName other = (TSLinkWithName) obj;
+
+      final EqualsBuilder builder = new EqualsBuilder();
+      builder.append( getIdentifier(), other.getIdentifier() );
+      builder.append( getContext(), other.getContext() );
+      builder.append( getHref(), other.getHref() );
+
+      return builder.isEquals();
+    }
+
+    return super.equals( obj );
+  }
+
+  /**
+   * @see java.lang.Object#hashCode()
+   */
+  @Override
+  public int hashCode( )
+  {
+    final HashCodeBuilder builder = new HashCodeBuilder();
+    builder.append( getClass().getName() );
+    builder.append( getIdentifier() );
+    builder.append( getContext() );
+    builder.append( getHref() );
+
+    return builder.toHashCode();
   }
 
   /**

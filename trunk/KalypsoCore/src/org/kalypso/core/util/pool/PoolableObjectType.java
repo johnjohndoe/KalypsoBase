@@ -42,6 +42,7 @@ package org.kalypso.core.util.pool;
 
 import java.net.URL;
 
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -59,7 +60,7 @@ public class PoolableObjectType implements IPoolableObjectType
 
   /**
    * Constructor. Defaults ignoreExceptions to false.
-   *
+   * 
    * @param type
    *          type of object to load
    * @param source
@@ -74,7 +75,7 @@ public class PoolableObjectType implements IPoolableObjectType
 
   /**
    * Constructor.
-   *
+   * 
    * @param type
    *          type of object to load
    * @param source
@@ -98,7 +99,7 @@ public class PoolableObjectType implements IPoolableObjectType
    * @see org.kalypso.util.pool.IPoolableObjectType#getType()
    */
   @Override
-  public String getType()
+  public String getType( )
   {
     return m_type;
   }
@@ -107,7 +108,7 @@ public class PoolableObjectType implements IPoolableObjectType
    * @see org.kalypso.util.pool.IPoolableObjectType#getLocation()
    */
   @Override
-  public String getLocation()
+  public String getLocation( )
   {
     return m_source;
   }
@@ -116,7 +117,7 @@ public class PoolableObjectType implements IPoolableObjectType
    * @see org.kalypso.util.pool.IPoolableObjectType#getContext()
    */
   @Override
-  public URL getContext()
+  public URL getContext( )
   {
     return m_context;
   }
@@ -125,7 +126,7 @@ public class PoolableObjectType implements IPoolableObjectType
    * @return Returns the ignoreExceptions.
    */
   @Override
-  public boolean isIgnoreExceptions()
+  public boolean isIgnoreExceptions( )
   {
     return m_ignoreExceptions;
   }
@@ -133,10 +134,10 @@ public class PoolableObjectType implements IPoolableObjectType
   @Override
   public boolean equals( final Object obj )
   {
-    if( !( obj instanceof IPoolableObjectType ) )
+    if( !(obj instanceof IPoolableObjectType) )
       return false;
 
-    final IPoolableObjectType other = (IPoolableObjectType)obj;
+    final IPoolableObjectType other = (IPoolableObjectType) obj;
     if( !getType().equals( other.getType() ) )
       return false;
     if( !getLocation().equals( other.getLocation() ) )
@@ -145,16 +146,21 @@ public class PoolableObjectType implements IPoolableObjectType
     if( getContext() == null && other.getContext() == null )
       return true;
 
-    if( ( getContext() != null && !getContext().equals( other.getContext() ) ) )
+    if( (getContext() != null && !getContext().equals( other.getContext() )) )
       return false;
 
     return true;
   }
 
   @Override
-  public int hashCode()
+  public int hashCode( )
   {
-    return toString().hashCode();
+    final HashCodeBuilder builder = new HashCodeBuilder();
+    builder.append( getLocation() );
+    builder.append( getType() );
+    builder.append( getContext() );
+
+    return builder.toHashCode();
   }
 
   /**
