@@ -170,6 +170,9 @@ public class AddFeaturesToFeaturelist implements FeatureVisitor
 
   public static Object findSourceID( final Feature sourceFeature, final String fromID )
   {
+    if( "#FID#".equals( fromID ))
+      return sourceFeature.getId();
+    
     final IFeatureType sourceFT = sourceFeature.getFeatureType();
     final IPropertyType idPT = sourceFT.getProperty( fromID );
     final Object property = sourceFeature.getProperty( idPT );
