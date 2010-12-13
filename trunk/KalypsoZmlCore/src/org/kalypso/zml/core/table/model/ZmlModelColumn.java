@@ -114,6 +114,12 @@ public class ZmlModelColumn implements IZmlModelColumn
   }
 
   @Override
+  public ITupleModel getTupleModel( )
+  {
+    return m_tupleModel;
+  }
+
+  @Override
   public String getIdentifier( )
   {
     return m_type.getIdentifier();

@@ -113,12 +113,18 @@
     <command
           categoryId="org.kalypso.zml.ui.table.commands.category"
           id="org.kalypso.zml.ui.table.commands.toolbar.view.boundaries"
-          name="View Bundary Command">
+          name="View Boundary Command">
        <commandParameter
              id="rules"
              name="zml rules seperated by ;"
              optional="false">
        </commandParameter>
+    </command>
+    <command
+          categoryId="org.kalypso.zml.ui.table.commands.category"
+          defaultHandler="org.kalypso.zml.ui.table.commands.menu.ZmlCommandDeleteStuetzstellen"
+          id="org.kalypso.zml.ui.table.commands.value.delete.stuetzstellen"
+          name="Stützstellen löschen">
     </command>
  </extension>
  <extension
