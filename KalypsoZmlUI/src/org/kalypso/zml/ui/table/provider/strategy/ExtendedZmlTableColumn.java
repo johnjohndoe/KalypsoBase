@@ -79,9 +79,12 @@ public class ExtendedZmlTableColumn extends ZmlTableColumn
 
   private IZmlEditingStrategy m_editing;
 
-  public ExtendedZmlTableColumn( final IZmlTable table, final TableViewerColumn column, final BaseColumn type )
+  private final int m_tableColumnIndex;
+
+  public ExtendedZmlTableColumn( final IZmlTable table, final TableViewerColumn column, final BaseColumn type, final int tableColumnIndex )
   {
     super( table, column, type );
+    m_tableColumnIndex = tableColumnIndex;
 
     m_mapper = new RuleMapper( type );
   }
@@ -178,6 +181,10 @@ public class ExtendedZmlTableColumn extends ZmlTableColumn
   public ZmlRule[] getAppliedRules( )
   {
     return m_mapper.getAppliedRules();
+  }
 
+  public int getTableColumnIndex( )
+  {
+    return m_tableColumnIndex;
   }
 }
