@@ -57,7 +57,7 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.window.ToolTip;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
@@ -85,7 +85,6 @@ import org.kalypso.zml.core.table.schema.AbstractColumnType;
 import org.kalypso.zml.core.table.schema.DataColumnType;
 import org.kalypso.zml.core.table.schema.ZmlTableType;
 import org.kalypso.zml.ui.KalypsoZmlUI;
-import org.kalypso.zml.ui.table.base.ImageHelper;
 import org.kalypso.zml.ui.table.commands.toolbar.view.ZmlViewResolutionFilter;
 import org.kalypso.zml.ui.table.menu.ZmlTableContextMenuListener;
 import org.kalypso.zml.ui.table.menu.ZmlTableHeaderContextMenuListener;
@@ -96,6 +95,7 @@ import org.kalypso.zml.ui.table.model.ZmlTableColumn;
 import org.kalypso.zml.ui.table.model.ZmlTableRow;
 import org.kalypso.zml.ui.table.provider.ZmlEditingSupport;
 import org.kalypso.zml.ui.table.provider.ZmlLabelProvider;
+import org.kalypso.zml.ui.table.provider.ZmlTableHeaderIconProvider;
 import org.kalypso.zml.ui.table.provider.ZmlTableMouseMoveListener;
 import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
 
@@ -253,8 +253,10 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
 
   private TableViewerColumn buildColumnViewer( final BaseColumn type )
   {
+    final int index = m_tableViewer.getTable().getColumnCount();
     final TableViewerColumn viewerColumn = new TableViewerColumn( m_tableViewer, TableTypeHelper.toSWT( type.getAlignment() ) );
-    final ExtendedZmlTableColumn column = new ExtendedZmlTableColumn( this, viewerColumn, type );
+
+    final ExtendedZmlTableColumn column = new ExtendedZmlTableColumn( this, viewerColumn, type, index );
     m_columns.add( column );
 
     final ZmlLabelProvider labelProvider = new ZmlLabelProvider( column );
@@ -293,9 +295,12 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
   {
     for( final ExtendedZmlTableColumn column : m_columns )
     {
+
       final BaseColumn columnType = column.getColumnType();
       final TableViewerColumn tableViewerColumn = column.getTableViewerColumn();
       final TableColumn tableColumn = tableViewerColumn.getColumn();
+
+      updateHeader( tableViewerColumn, column.getAppliedRules() );
 
       /** only update headers of data column types */
       if( columnType.getType() instanceof DataColumnType )
@@ -320,14 +325,14 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
         tableColumn.setText( columnType.getLabel() );
       }
 
-// updateHeader( tableViewerColumn, column.getAppliedRules() );
     }
   }
 
   private void updateHeader( final TableViewerColumn viewerColumn, final ZmlRule[] applied )
   {
     final TableColumn column = viewerColumn.getColumn();
-    Image image = null;
+
+    final ZmlTableHeaderIconProvider provider = new ZmlTableHeaderIconProvider( 2, new Point( 16, 16 ) );
 
     for( final ZmlRule rule : applied )
     {
@@ -336,7 +341,7 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
         if( rule.hasHeaderIcon() )
         {
           final CellStyle style = rule.getPlainStyle();
-          image = ImageHelper.merge( column.getDisplay(), image, style.getImage() );
+          provider.addImage( style.getImage() );
         }
       }
       catch( final Throwable e )
@@ -345,10 +350,8 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
       }
     }
 
-    if( image == null )
-      column.setImage( new Image( column.getDisplay(), 1, 1 ) );
-    else
-      column.setImage( image );
+    column.setImage( provider.createImage( column.getDisplay() ) );
+
   }
 
   public void fireTableChanged( )
@@ -374,7 +377,7 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
     else
       table.setWidth( width );
 
-    table.setMoveable( true );
+    table.setMoveable( false );
     table.setResizable( true );
   }
 
@@ -545,6 +548,17 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
     final IZmlTableRow[] rows = getRows();
     if( index < rows.length )
       return rows[index];
+
+    return null;
+  }
+
+  public IZmlTableColumn findColumn( final int columnIndex )
+  {
+    for( final ExtendedZmlTableColumn column : m_columns )
+    {
+      if( column.getTableColumnIndex() == columnIndex )
+        return column;
+    }
 
     return null;
   }

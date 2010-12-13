@@ -77,7 +77,7 @@ public final class ImageHelper
     }
     finally
     {
-      gc.dispose();
+// gc.dispose();
     }
   }
 }

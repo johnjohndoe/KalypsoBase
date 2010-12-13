@@ -15,11 +15,9 @@ import org.eclipse.swt.graphics.Region;
 import org.eclipse.swt.graphics.Transform;
 
 /**
- * Same as {@link org.eclipse.swt.graphics.GC}, but adds helper methods and
- * perform some sanity checks.
+ * Same as {@link org.eclipse.swt.graphics.GC}, but adds helper methods and perform some sanity checks.
  * 
  * @author gernot
- * 
  */
 public class GCWrapper
 {
@@ -35,9 +33,7 @@ public class GCWrapper
     m_gc.dispose();
   }
 
-
-  public void drawRectangle( final int x, final int y, final int width,
-      final int height )
+  public void drawRectangle( final int x, final int y, final int width, final int height )
   {
     m_gc.drawRectangle( x, y, Math.max( 1, width ), Math.max( 1, height ) );
   }
@@ -52,46 +48,42 @@ public class GCWrapper
     m_gc.drawImage( image, x, y );
   }
 
-  public void copyArea( int srcX, int srcY, int width, int height, int destX,
-      int destY )
+  public void copyArea( final int srcX, final int srcY, final int width, final int height, final int destX, final int destY )
   {
     m_gc.copyArea( srcX, srcY, width, height, destX, destY );
   }
 
-  public void copyArea( Image image, int x, int y )
+  public void copyArea( final Image image, final int x, final int y )
   {
     m_gc.copyArea( image, x, y );
   }
 
-  public void drawArc( int x, int y, int width, int height, int startAngle,
-      int arcAngle )
+  public void drawArc( final int x, final int y, final int width, final int height, final int startAngle, final int arcAngle )
   {
     m_gc.drawArc( x, y, width, height, startAngle, arcAngle );
   }
 
-  public void drawFocus( int x, int y, int width, int height )
+  public void drawFocus( final int x, final int y, final int width, final int height )
   {
     m_gc.drawFocus( x, y, Math.max( 1, width ), Math.max( 1, height ) );
   }
 
-  public void drawImage( Image image, int srcX, int srcY, int srcWidth,
-      int srcHeight, int destX, int destY, int destWidth, int destHeight )
+  public void drawImage( final Image image, final int srcX, final int srcY, final int srcWidth, final int srcHeight, final int destX, final int destY, final int destWidth, final int destHeight )
   {
-    m_gc.drawImage( image, srcX, srcY, srcWidth, srcHeight, destX, destY,
-        destWidth, destHeight );
+    m_gc.drawImage( image, srcX, srcY, srcWidth, srcHeight, destX, destY, destWidth, destHeight );
   }
 
-  public void drawOval( int x, int y, int width, int height )
+  public void drawOval( final int x, final int y, final int width, final int height )
   {
     m_gc.drawOval( x, y, width, height );
   }
 
-  public void drawPoint( int x, int y )
+  public void drawPoint( final int x, final int y )
   {
     m_gc.drawPoint( x, y );
   }
 
-  public void drawPolygon( int[] pointArray )
+  public void drawPolygon( final int[] pointArray )
   {
     m_gc.drawPolygon( pointArray );
   }
@@ -101,13 +93,12 @@ public class GCWrapper
     m_gc.drawPolyline( pointArray );
   }
 
-  public void drawRectangle( Rectangle rect )
+  public void drawRectangle( final Rectangle rect )
   {
     m_gc.drawRectangle( rect );
   }
 
-  public void drawRoundRectangle( int x, int y, int width, int height,
-      int arcWidth, int arcHeight )
+  public void drawRoundRectangle( final int x, final int y, final int width, final int height, final int arcWidth, final int arcHeight )
   {
     m_gc.drawRoundRectangle( x, y, width, height, arcWidth, arcHeight );
   }
@@ -116,8 +107,8 @@ public class GCWrapper
   {
     m_gc.drawString( string, x, y );
   }
-  
-  public void drawString( final String string, int x, int y, boolean isTransparent )
+
+  public void drawString( final String string, final int x, final int y, final boolean isTransparent )
   {
     m_gc.drawString( string, x, y, isTransparent );
   }
@@ -126,62 +117,59 @@ public class GCWrapper
   {
     m_gc.drawText( string, x, y );
   }
-  
-  public void drawText( final String string, int x, int y, boolean isTransparent )
+
+  public void drawText( final String string, final int x, final int y, final boolean isTransparent )
   {
     m_gc.drawText( string, x, y, isTransparent );
   }
 
-  public void drawText( final String string, int x, int y, int flags )
+  public void drawText( final String string, final int x, final int y, final int flags )
   {
     m_gc.drawText( string, x, y, flags );
   }
 
   @Override
-  public boolean equals( Object obj )
+  public boolean equals( final Object obj )
   {
     return m_gc.equals( obj );
   }
 
-  public void fillArc( int x, int y, int width, int height, int startAngle,
-      int arcAngle )
+  public void fillArc( final int x, final int y, final int width, final int height, final int startAngle, final int arcAngle )
   {
     m_gc.fillArc( x, y, width, height, startAngle, arcAngle );
   }
 
-  public void fillGradientRectangle( int x, int y, int width, int height,
-      boolean vertical )
+  public void fillGradientRectangle( final int x, final int y, final int width, final int height, final boolean vertical )
   {
     m_gc.fillGradientRectangle( x, y, width, height, vertical );
   }
 
-  public void fillOval( int x, int y, int width, int height )
+  public void fillOval( final int x, final int y, final int width, final int height )
   {
     m_gc.fillOval( x, y, width, height );
   }
 
-  public void fillPolygon( int[] pointArray )
+  public void fillPolygon( final int[] pointArray )
   {
     m_gc.fillPolygon( pointArray );
   }
 
-  public void fillRectangle( int x, int y, int width, int height )
+  public void fillRectangle( final int x, final int y, final int width, final int height )
   {
     m_gc.fillRectangle( x, y, width, height );
   }
 
-  public void fillRectangle( Rectangle rect )
+  public void fillRectangle( final Rectangle rect )
   {
     m_gc.fillRectangle( rect );
   }
 
-  public void fillRoundRectangle( int x, int y, int width, int height,
-      int arcWidth, int arcHeight )
+  public void fillRoundRectangle( final int x, final int y, final int width, final int height, final int arcWidth, final int arcHeight )
   {
     m_gc.fillRoundRectangle( x, y, width, height, arcWidth, arcHeight );
   }
 
-  public int getAdvanceWidth( char ch )
+  public int getAdvanceWidth( final char ch )
   {
     return m_gc.getAdvanceWidth( ch );
   }
@@ -191,7 +179,7 @@ public class GCWrapper
     return m_gc.getBackground();
   }
 
-  public int getCharWidth( char ch )
+  public int getCharWidth( final char ch )
   {
     return m_gc.getCharWidth( ch );
   }
@@ -201,7 +189,7 @@ public class GCWrapper
     return m_gc.getClipping();
   }
 
-  public void getClipping( Region region )
+  public void getClipping( final Region region )
   {
     m_gc.getClipping( region );
   }
@@ -272,72 +260,72 @@ public class GCWrapper
     return m_gc.isDisposed();
   }
 
-  public void setBackground( Color color )
+  public void setBackground( final Color color )
   {
     m_gc.setBackground( color );
   }
 
-  public void setClipping( int x, int y, int width, int height )
+  public void setClipping( final int x, final int y, final int width, final int height )
   {
     m_gc.setClipping( x, y, width, height );
   }
 
-  public void setClipping( Rectangle rect )
+  public void setClipping( final Rectangle rect )
   {
     m_gc.setClipping( rect );
   }
 
-  public void setClipping( Region region )
+  public void setClipping( final Region region )
   {
     m_gc.setClipping( region );
   }
 
-  public void setFont( Font font )
+  public void setFont( final Font font )
   {
     m_gc.setFont( font );
   }
 
-  public void setForeground( Color color )
+  public void setForeground( final Color color )
   {
     m_gc.setForeground( color );
   }
 
-  public void setLineCap( int cap )
+  public void setLineCap( final int cap )
   {
     m_gc.setLineCap( cap );
   }
 
-  public void setLineDash( int[] dashes )
+  public void setLineDash( final int[] dashes )
   {
     m_gc.setLineDash( dashes );
   }
 
-  public void setLineJoin( int join )
+  public void setLineJoin( final int join )
   {
     m_gc.setLineJoin( join );
   }
 
-  public void setLineStyle( int lineStyle )
+  public void setLineStyle( final int lineStyle )
   {
     m_gc.setLineStyle( lineStyle );
   }
 
-  public void setLineWidth( int width )
+  public void setLineWidth( final int width )
   {
     m_gc.setLineWidth( width );
   }
 
-  public Point stringExtent( String string )
+  public Point stringExtent( final String string )
   {
     return m_gc.stringExtent( string );
   }
 
-  public Point textExtent( String string )
+  public Point textExtent( final String string )
   {
     return m_gc.textExtent( string );
   }
 
-  public Point textExtent( String string, int flags )
+  public Point textExtent( final String string, final int flags )
   {
     return m_gc.textExtent( string, flags );
   }
@@ -368,27 +356,27 @@ public class GCWrapper
     return m_gc.getFillRule();
   }
 
-  public void getTransform( Transform transform )
+  public void getTransform( final Transform transform )
   {
     m_gc.getTransform( transform );
   }
 
-  public void setAlpha( int alpha )
+  public void setAlpha( final int alpha )
   {
     m_gc.setAlpha( alpha );
   }
 
-  public void setClipping( Path path )
+  public void setClipping( final Path path )
   {
     m_gc.setClipping( path );
   }
 
-  public void setFillRule( int rule )
+  public void setFillRule( final int rule )
   {
     m_gc.setFillRule( rule );
   }
 
-  public void setTransform( Transform transform )
+  public void setTransform( final Transform transform )
   {
     m_gc.setTransform( transform );
   }
@@ -403,7 +391,7 @@ public class GCWrapper
    * @param paint
    * @see org.eclipse.swt.graphics.GC#copyArea(int, int, int, int, int, int, boolean)
    */
-  public void copyArea( int srcX, int srcY, int width, int height, int destX, int destY, boolean paint )
+  public void copyArea( final int srcX, final int srcY, final int width, final int height, final int destX, final int destY, final boolean paint )
   {
     m_gc.copyArea( srcX, srcY, width, height, destX, destY, paint );
   }
@@ -484,7 +472,7 @@ public class GCWrapper
    * @param advanced
    * @see org.eclipse.swt.graphics.GC#setAdvanced(boolean)
    */
-  public void setAdvanced( boolean advanced )
+  public void setAdvanced( final boolean advanced )
   {
     m_gc.setAdvanced( advanced );
   }
@@ -493,7 +481,7 @@ public class GCWrapper
    * @param antialias
    * @see org.eclipse.swt.graphics.GC#setAntialias(int)
    */
-  public void setAntialias( int antialias )
+  public void setAntialias( final int antialias )
   {
     m_gc.setAntialias( antialias );
   }
@@ -502,7 +490,7 @@ public class GCWrapper
    * @param pattern
    * @see org.eclipse.swt.graphics.GC#setBackgroundPattern(org.eclipse.swt.graphics.Pattern)
    */
-  public void setBackgroundPattern( Pattern pattern )
+  public void setBackgroundPattern( final Pattern pattern )
   {
     m_gc.setBackgroundPattern( pattern );
   }
@@ -511,7 +499,7 @@ public class GCWrapper
    * @param pattern
    * @see org.eclipse.swt.graphics.GC#setForegroundPattern(org.eclipse.swt.graphics.Pattern)
    */
-  public void setForegroundPattern( Pattern pattern )
+  public void setForegroundPattern( final Pattern pattern )
   {
     m_gc.setForegroundPattern( pattern );
   }
@@ -520,7 +508,7 @@ public class GCWrapper
    * @param interpolation
    * @see org.eclipse.swt.graphics.GC#setInterpolation(int)
    */
-  public void setInterpolation( int interpolation )
+  public void setInterpolation( final int interpolation )
   {
     m_gc.setInterpolation( interpolation );
   }
@@ -529,7 +517,7 @@ public class GCWrapper
    * @param antialias
    * @see org.eclipse.swt.graphics.GC#setTextAntialias(int)
    */
-  public void setTextAntialias( int antialias )
+  public void setTextAntialias( final int antialias )
   {
     m_gc.setTextAntialias( antialias );
   }
