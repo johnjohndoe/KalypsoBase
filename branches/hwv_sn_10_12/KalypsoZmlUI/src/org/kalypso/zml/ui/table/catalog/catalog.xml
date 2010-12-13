@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<catalog:catalog id="urn:" ns0:base="urn:" xmlns:ns0="xml" xmlns:catalog="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+
+  <catalog:system systemId="urn:org:kalypso:zml:ui:table:icon:user:modified" uri="icons/write_new.png" />
+  <catalog:system systemId="urn:org:kalypso:zml:ui:table:icon:interpolated:value" uri="icons/warning_new.png" />
+  <catalog:system systemId="urn:org:kalypso:zml:ui:table:icon:wq:conflict" uri="icons/conflict_new.png" />
+
+  <catalog:system systemId="urn:org:kalypso:zml:ui:table:global" uri="global.xml" />
+</catalog:catalog>
+
