@@ -42,6 +42,7 @@ package org.kalypso.zml.core.table.model;
 
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.zml.core.table.binding.DataColumn;
@@ -76,4 +77,6 @@ public interface IZmlModelColumn
   IAxis getStatusAxis( );
 
   IZmlModel getZmlModel( );
+
+  ITupleModel getTupleModel( );
 }
