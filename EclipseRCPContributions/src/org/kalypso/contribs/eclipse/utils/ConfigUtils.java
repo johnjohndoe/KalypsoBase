@@ -42,7 +42,6 @@ package org.kalypso.contribs.eclipse.utils;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.eclipse.core.runtime.CoreException;
@@ -67,26 +66,50 @@ public final class ConfigUtils
 
   public static URL findCentralConfigLocation( final String path ) throws IOException
   {
+    System.out.println( String.format( "Find config location for path: %s", path ) );
+
+    final Location configurationLocation = Platform.getConfigurationLocation();
+
     try
     {
-      final Location configurationLocation = Platform.getConfigurationLocation();
-      final URL configurationURL = configurationLocation.getURL();
-      return checkConfigLocation( configurationURL, path );
+      System.out.println( String.format( "First try: check config location: %s", configurationLocation.getURL() ) );
+      return checkConfigLocation( configurationLocation, path );
     }
     catch( final IOException e )
     {
-      // ignore exception for now, second try
       try
       {
-        final URL configResource = getFallbackConfigLocation();
-        return checkConfigLocation( configResource, path );
+        // ignore exception for now, second try
+        final Location baseConfigurationLocation = configurationLocation.getParentLocation();
+        if( baseConfigurationLocation != null )
+          System.out.println( String.format( "Second try: check parent config location: %s", baseConfigurationLocation.getURL() ) );
+        return checkConfigLocation( baseConfigurationLocation, path );
       }
-      catch( final IOException e1 )
+      catch( final IOException e2 )
       {
-        // we throw the originial, first exception, as this is the primary location that should work
-        throw e;
+        // ignore exception for now, third try
+        try
+        {
+          final URL configResource = getFallbackConfigLocation();
+          System.out.println( String.format( "Third try: check fallback: %s", configResource ) );
+          return checkConfigLocation( configResource, path );
+        }
+        catch( final IOException e1 )
+        {
+          // we throw the originial, first exception, as this is the primary location that should work
+          throw e;
+        }
       }
     }
+  }
+
+  private static URL checkConfigLocation( final Location configurationLocation, final String path ) throws IOException
+  {
+    if( configurationLocation == null )
+      throw new IOException( "Config location not set" );
+
+    final URL configurationURL = configurationLocation.getURL();
+    return checkConfigLocation( configurationURL, path );
   }
 
   private static URL getFallbackConfigLocation( )
@@ -128,7 +151,7 @@ public final class ConfigUtils
     return null;
   }
 
-  public static URL checkConfigLocation( final URL basisURL, final String configurationPath ) throws MalformedURLException, IOException
+  public static URL checkConfigLocation( final URL basisURL, final String configurationPath ) throws IOException
   {
     final URL configLocation = new URL( basisURL, configurationPath );
     InputStream is = null;
