@@ -156,11 +156,13 @@ public class ValueInterpolationWorker extends AbstractInterpolationWorker
     // valid position
     final int lastValidValuePosition = interpolatedModel.size() - 1;
 
-    // FIXME: if no valid tuple is available, an empty object array is returned, is that intended?
     final Object[] lastValidTuple = new Object[valueAxes.length + 1];
 
     final int dateAxisPosition = interpolatedModel.getPosition( dateAxis );
-    lastValidTuple[dateAxisPosition] = interpolatedModel.get( lastValidValuePosition, dateAxis );
+    if( lastValidValuePosition < 0 )
+      lastValidTuple[dateAxisPosition] = null;
+    else
+      lastValidTuple[dateAxisPosition] = interpolatedModel.get( lastValidValuePosition, dateAxis );
 
     for( final IAxis valueAxe : valueAxes )
     {
@@ -170,7 +172,7 @@ public class ValueInterpolationWorker extends AbstractInterpolationWorker
         lastValidTuple[valueAxisPosition] = getDefaultStatus();
       else
       {
-        if( isLastFilledWithValid() && interpolatedModel.size() > 0 )
+        if( isLastFilledWithValid() && interpolatedModel.size() > 0 && lastValidValuePosition >= 0 )
           lastValidTuple[valueAxisPosition] = interpolatedModel.get( lastValidValuePosition, valueAxe );
         else
           lastValidTuple[valueAxisPosition] = getDefaultValue( valueAxe );
