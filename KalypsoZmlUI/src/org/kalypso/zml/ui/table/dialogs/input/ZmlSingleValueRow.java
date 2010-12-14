@@ -38,47 +38,21 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.core.table.model;
+package org.kalypso.zml.ui.table.dialogs.input;
 
-import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.ITupleModel;
-import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.metadata.MetadataList;
-import org.kalypso.zml.core.table.binding.DataColumn;
+import java.util.Date;
 
 /**
  * @author Dirk Kuch
  */
-public interface IZmlModelColumn
+public class ZmlSingleValueRow
 {
-  DataColumn getDataColumn( );
 
-  IAxis[] getAxes( );
+  private Date m_date;
 
-  IAxis getValueAxis( );
+  public Date getDate( )
+  {
+    return m_date;
+  }
 
-  int modelSize( ) throws SensorException;
-
-  Object get( int i, IAxis axis ) throws SensorException;
-
-  void update( int index, Object value ) throws SensorException;
-
-  String getIdentifier( );
-
-  MetadataList getMetadata( );
-
-  boolean isMetadataSource( );
-
-  String getLabel( );
-
-  IObservation getObservation( );
-
-  IAxis getStatusAxis( );
-
-  IZmlModel getZmlModel( );
-
-  ITupleModel getTupleModel( );
-
-  IAxis getIndexAxis( );
 }

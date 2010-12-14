@@ -230,6 +230,12 @@ public class ZmlModelColumn implements IZmlModelColumn
   }
 
   @Override
+  public IAxis getIndexAxis( )
+  {
+    return AxisUtils.findAxis( getAxes(), m_type.getIndexAxis() );
+  }
+
+  @Override
   public IAxis getValueAxis( )
   {
     return AxisUtils.findAxis( getAxes(), m_type.getValueAxis() );

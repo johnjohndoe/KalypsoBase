@@ -50,7 +50,12 @@ Bundle-ClassPath: .,
  lib/xalan-j/serializer.jar,
  lib/xalan-j/xercesImpl.jar,
  lib/xalan-j/xml-apis.jar,
- lib/apache/sanselan-0_97/sanselan-0.97-incubator.jar
+ lib/apache/sanselan-0_97/sanselan-0.97-incubator.jar,
+ lib/slf4j_1_6_1/slf4j-api-1.6.1.jar,
+ lib/slf4j_1_6_1/slf4j-ext-1.6.1.jar,
+ lib/slf4j_1_6_1/slf4j-jdk14-1.6.1.jar,
+ lib/slf4j_1_6_1/slf4j-log4j12-1.6.1.jar,
+ lib/slf4j_1_6_1/slf4j-simple-1.6.1.jar
 Bundle-Activator: org.kalypso.commons.KalypsoCommonsPlugin
 Bundle-Vendor: kalypsobase.sourceforge.net
 Bundle-Localization: plugin
@@ -524,6 +529,15 @@ Export-Package: au.com.bytecode.opencsv,
  org.kalypso.commons.tuple.impl,
  org.kalypso.commons.validation,
  org.kalypso.commons.xml,
+ org.slf4j,
+ org.slf4j.agent,
+ org.slf4j.cal10n,
+ org.slf4j.ext,
+ org.slf4j.helpers,
+ org.slf4j.impl,
+ org.slf4j.instrumentation,
+ org.slf4j.profiler,
+ org.slf4j.spi,
  org.w3c.dom
 Require-Bundle: org.junit4;bundle-version="4.5.0";resolution:=optional,
  org.apache.ant;visibility:=reexport,

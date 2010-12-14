@@ -24,6 +24,7 @@ Export-Package: org.kalypso.zml.ui,
  org.kalypso.zml.ui.table.commands.menu,
  org.kalypso.zml.ui.table.commands.toolbar.view,
  org.kalypso.zml.ui.table.context,
+ org.kalypso.zml.ui.table.dialogs,
  org.kalypso.zml.ui.table.model,
  org.kalypso.zml.ui.table.provider
 Bundle-ClassPath: .

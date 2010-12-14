@@ -38,47 +38,37 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.core.table.model;
+package org.kalypso.zml.ui.table.commands.toolbar.input.dialog;
 
-import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.ITupleModel;
-import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.metadata.MetadataList;
-import org.kalypso.zml.core.table.binding.DataColumn;
+import org.eclipse.core.commands.AbstractHandler;
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
+import org.kalypso.zml.ui.table.IZmlTable;
+import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
+import org.kalypso.zml.ui.table.dialogs.input.ZmlSingleValueInputDialog;
+import org.kalypso.zml.ui.table.model.IZmlTableColumn;
 
 /**
  * @author Dirk Kuch
  */
-public interface IZmlModelColumn
+public class ZmlCommandOpenValueInputDialog extends AbstractHandler
 {
-  DataColumn getDataColumn( );
 
-  IAxis[] getAxes( );
+  /**
+   * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
+   */
+  @Override
+  public Object execute( final ExecutionEvent event )
+  {
+    final IZmlTable table = ZmlHandlerUtil.getTable( event );
+    final IZmlTableColumn column = table.getActiveColumn();
 
-  IAxis getValueAxis( );
+    final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
+    final ZmlSingleValueInputDialog dialog = new ZmlSingleValueInputDialog( shell, column );
+    dialog.open();
 
-  int modelSize( ) throws SensorException;
-
-  Object get( int i, IAxis axis ) throws SensorException;
-
-  void update( int index, Object value ) throws SensorException;
-
-  String getIdentifier( );
-
-  MetadataList getMetadata( );
-
-  boolean isMetadataSource( );
-
-  String getLabel( );
-
-  IObservation getObservation( );
-
-  IAxis getStatusAxis( );
-
-  IZmlModel getZmlModel( );
-
-  ITupleModel getTupleModel( );
-
-  IAxis getIndexAxis( );
+    return Status.OK_STATUS;
+  }
 }

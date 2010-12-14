@@ -38,47 +38,32 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.core.table.model;
+package org.kalypso.zml.ui.table.dialogs.input;
 
-import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.ITupleModel;
-import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.metadata.MetadataList;
-import org.kalypso.zml.core.table.binding.DataColumn;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
  * @author Dirk Kuch
  */
-public interface IZmlModelColumn
+public class ZmlSingleValueModel
 {
-  DataColumn getDataColumn( );
+  Set<ZmlSingleValueRow> m_rows = new LinkedHashSet<ZmlSingleValueRow>();
 
-  IAxis[] getAxes( );
+  public ZmlSingleValueModel( )
+  {
+    // add first empty row
+    m_rows.add( new ZmlSingleValueRow() );
+  }
 
-  IAxis getValueAxis( );
+  public ZmlSingleValueRow[] getRows( )
+  {
+    return m_rows.toArray( new ZmlSingleValueRow[] {} );
+  }
 
-  int modelSize( ) throws SensorException;
+  public void addRow( final ZmlSingleValueRow row )
+  {
+    m_rows.add( row );
+  }
 
-  Object get( int i, IAxis axis ) throws SensorException;
-
-  void update( int index, Object value ) throws SensorException;
-
-  String getIdentifier( );
-
-  MetadataList getMetadata( );
-
-  boolean isMetadataSource( );
-
-  String getLabel( );
-
-  IObservation getObservation( );
-
-  IAxis getStatusAxis( );
-
-  IZmlModel getZmlModel( );
-
-  ITupleModel getTupleModel( );
-
-  IAxis getIndexAxis( );
 }

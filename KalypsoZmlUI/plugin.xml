@@ -126,6 +126,11 @@
           id="org.kalypso.zml.ui.table.commands.value.delete.stuetzstellen"
           name="Stützstellen löschen">
     </command>
+    <command
+          categoryId="org.kalypso.zml.ui.table.commands.category"
+          id="org.kalypso.zml.ui.table.commands.toolbar.value.input.dialog"
+          name="Eingabe von Einzelwerten">
+    </command>
  </extension>
  <extension
        point="org.eclipse.ui.handlers">
@@ -174,6 +179,10 @@
           class="org.kalypso.zml.ui.table.commands.toolbar.ZmlCommandViewBoundaries"
           commandId="org.kalypso.zml.ui.table.commands.toolbar.view.boundaries">
     </handler>
+    <handler
+          class="org.kalypso.zml.ui.table.commands.toolbar.input.dialog.ZmlCommandOpenValueInputDialog"
+          commandId="org.kalypso.zml.ui.table.commands.toolbar.value.input.dialog">
+    </handler>
  </extension>
   <extension
        point="org.eclipse.ui.commandImages">
@@ -204,6 +213,10 @@
     <image
           commandId="org.kalypso.zml.ui.table.commands.toolbar.view.hour.minus"
           icon="icons/table/hour_minus.png">
+    </image>
+    <image
+          commandId="org.kalypso.zml.ui.table.commands.toolbar.value.input.dialog"
+          icon="icons/table/value_input_dialog.png">
     </image>
  </extension>
  <extension

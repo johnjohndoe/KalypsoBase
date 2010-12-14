@@ -38,47 +38,64 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.core.table.model;
+package org.kalypso.zml.ui.table.base.widgets.rules;
 
-import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.ITupleModel;
-import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.metadata.MetadataList;
-import org.kalypso.zml.core.table.binding.DataColumn;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import org.kalypso.zml.ui.table.base.widgets.IWidgetRule;
 
 /**
  * @author Dirk Kuch
  */
-public interface IZmlModelColumn
+public class DateWidgetRule implements IWidgetRule
 {
-  DataColumn getDataColumn( );
 
-  IAxis[] getAxes( );
+  /**
+   * @see org.kalypso.zml.ui.table.base.widgets.ITextBoxRule#isValid(java.lang.String)
+   */
+  @Override
+  public boolean isValid( final String text )
+  {
+    // TODO Auto-generated method stub
+    return false;
+  }
 
-  IAxis getValueAxis( );
+  /**
+   * @see org.kalypso.zml.ui.table.base.widgets.ITextBoxRule#getLastValidationMessage()
+   */
+  @Override
+  public String getLastValidationMessage( )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
 
-  int modelSize( ) throws SensorException;
+  /**
+   * @see org.kalypso.zml.ui.table.base.widgets.ITextBoxRule#getFormatedString(java.lang.Object)
+   */
+  @Override
+  public String getFormatedString( final Object value )
+  {
+    if( value instanceof Date )
+    {
+// "yyyy-MM-dd'T'HH:mm:ss"
+      final SimpleDateFormat sdf = new SimpleDateFormat( "yyyy-MM-dd" );
 
-  Object get( int i, IAxis axis ) throws SensorException;
+      return sdf.format( (Date) value );
+    }
 
-  void update( int index, Object value ) throws SensorException;
+    return "";
+  }
 
-  String getIdentifier( );
+  /**
+   * @see org.kalypso.zml.ui.table.base.widgets.ITextBoxRule#getValue(java.lang.String)
+   */
+  @Override
+  public Object getValue( final String value )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
 
-  MetadataList getMetadata( );
-
-  boolean isMetadataSource( );
-
-  String getLabel( );
-
-  IObservation getObservation( );
-
-  IAxis getStatusAxis( );
-
-  IZmlModel getZmlModel( );
-
-  ITupleModel getTupleModel( );
-
-  IAxis getIndexAxis( );
 }
