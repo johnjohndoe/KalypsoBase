@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.view.wizard;
 
@@ -57,7 +57,6 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.contribs.eclipse.core.resources.ProjectUtilities;
-import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.wizard.FileSelectWizardPage;
 import org.kalypso.i18n.Messages;
@@ -110,14 +109,14 @@ public class ExportAsFileWizard extends Wizard
     if( projects.length > 0 )
     {
       m_project = projects[0];
-      fileName = ResourceUtilities.makeFileFromPath( m_project.getFullPath() ).getAbsolutePath();
+      fileName = m_project.getLocation().toFile().getAbsolutePath();
     }
     else
       fileName = ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString() + File.separator + "datei.zml"; //$NON-NLS-1$
 
     m_page1 = new DateRangeInputWizardPage();
     m_page2 = new FileSelectWizardPage( "fileselect", fileName, new String[] //$NON-NLS-1$
-    { "*.zml", "*.xml" } ); //$NON-NLS-1$ //$NON-NLS-2$
+                                                                           { "*.zml", "*.xml" } ); //$NON-NLS-1$ //$NON-NLS-2$
 
     addPage( m_page1 );
     addPage( m_page2 );
@@ -127,7 +126,7 @@ public class ExportAsFileWizard extends Wizard
    * @see org.eclipse.jface.wizard.Wizard#createPageControls(org.eclipse.swt.widgets.Composite)
    */
   @Override
-  public void createPageControls( Composite pageContainer )
+  public void createPageControls( final Composite pageContainer )
   {
     //super.createPageControls( pageContainer );
 
@@ -171,13 +170,13 @@ public class ExportAsFileWizard extends Wizard
       final Job refreshJob = new Job( Messages.getString("org.kalypso.ogc.sensor.view.wizard.ExportAsFileWizard.7") + m_project.getName() + Messages.getString("org.kalypso.ogc.sensor.view.wizard.ExportAsFileWizard.8") ) //$NON-NLS-1$ //$NON-NLS-2$
       {
         @Override
-        protected IStatus run( IProgressMonitor monitor )
+        protected IStatus run( final IProgressMonitor monitor )
         {
           try
           {
             m_project.refreshLocal( IResource.DEPTH_INFINITE, monitor );
           }
-          catch( CoreException e )
+          catch( final CoreException e )
           {
             e.printStackTrace();
 
