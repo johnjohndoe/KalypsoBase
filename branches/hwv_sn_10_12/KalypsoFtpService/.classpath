@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry exported="true" kind="lib" path="lib/apache/mina/javassist-3.7.ga.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/apache/mina/jzlib-1.0.7.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/apache/mina/slf4j-api-1.5.11.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/apache/mina/mina-core-2.0.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/apache/mina/ftplet-api-1.0.5.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/apache/mina/ftpserver-core-1.0.5.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/apache/mina/log4j-1.2.14.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
+	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
+	<classpathentry kind="src" path="srcbind"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="output" path="build/bin"/>
+</classpath>
