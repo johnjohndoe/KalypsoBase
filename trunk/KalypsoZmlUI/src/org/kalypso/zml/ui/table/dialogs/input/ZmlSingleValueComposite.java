@@ -40,11 +40,16 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.dialogs.input;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
@@ -81,6 +86,7 @@ public class ZmlSingleValueComposite extends Composite
     setLayout( LayoutHelper.createGridLayout() );
 
     render( toolkit );
+    toolkit.adapt( this );
   }
 
   private void render( final FormToolkit toolkit )
@@ -103,23 +109,45 @@ public class ZmlSingleValueComposite extends Composite
     try
     {
       final Date date = row.getDate();
-      final Date[] existing = getExistingDateValues();
+      final Date[] existing = getExistingDateValues( date );
 
-      final EnhancedComboViewer viewerDay = new EnhancedComboViewer( base, toolkit, new DateWidgetRule() );
+      final EnhancedComboViewer<Date> viewerDay = new EnhancedComboViewer<Date>( base, toolkit, new DateWidgetRule() );
+      viewerDay.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
       viewerDay.setInput( getDayAnchors( existing ) );
 
-      final EnhancedComboViewer viewerTime = new EnhancedComboViewer( base, toolkit, new TimeWidgetRule() );
+      final EnhancedComboViewer<Date> viewerTime = new EnhancedComboViewer<Date>( base, toolkit, new TimeWidgetRule() );
+      viewerTime.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
       viewerTime.setFilter( new ViewerFilter()
       {
         @Override
         public boolean select( final Viewer viewer, final Object parentElement, final Object element )
         {
-          // TODO Auto-generated method stub
+          if( element instanceof Date )
+          {
+            final Date d = (Date) element;
+
+            final Date selection = viewerDay.getSelection();
+            if( selection != null )
+            {
+              return compareDayAnchor( d, selection );
+            }
+          }
+
           return false;
         }
       } );
 
-      viewerDay.setInput( existing );
+      viewerDay.addListener( new ISelectionChangedListener()
+      {
+        @Override
+        public void selectionChanged( final SelectionChangedEvent event )
+        {
+          viewerTime.refresh();
+        }
+      } );
+
+      viewerTime.setInput( existing );
+
     }
     catch( final SensorException e )
     {
@@ -135,6 +163,7 @@ public class ZmlSingleValueComposite extends Composite
     {
       final Calendar calendar = Calendar.getInstance();
       calendar.setTime( date );
+
       calendar.set( Calendar.HOUR_OF_DAY, 0 );
       calendar.set( Calendar.MINUTE, 0 );
       calendar.set( Calendar.MILLISECOND, 0 );
@@ -145,7 +174,7 @@ public class ZmlSingleValueComposite extends Composite
     return anchors.toArray( new Date[] {} );
   }
 
-  private Date[] getExistingDateValues( ) throws SensorException
+  private Date[] getExistingDateValues( final Date selection ) throws SensorException
   {
     final Set<Date> existing = new TreeSet<Date>();
 
@@ -162,6 +191,37 @@ public class ZmlSingleValueComposite extends Composite
       }
     }
 
-    return existing.toArray( new Date[] {} );
+    final List<Date> list = new ArrayList<Date>();
+    list.addAll( existing );
+
+    for( final Date date : list )
+    {
+      if( compareDayAnchor( date, selection ) )
+      {
+        final int index = list.indexOf( date );
+        list.set( index, selection );
+      }
+    }
+
+    return list.toArray( new Date[] {} );
+  }
+
+  protected boolean compareDayAnchor( final Date d1, final Date d2 )
+  {
+    if( d1 == null || d2 == null )
+      return false;
+
+    final Calendar c1 = Calendar.getInstance();
+    c1.setTime( d1 );
+
+    final Calendar c2 = Calendar.getInstance();
+    c2.setTime( d2 );
+
+    final EqualsBuilder builder = new EqualsBuilder();
+    builder.append( c1.get( Calendar.DAY_OF_MONTH ), c2.get( Calendar.DAY_OF_MONTH ) );
+    builder.append( c1.get( Calendar.MONTH ), c2.get( Calendar.MONTH ) );
+    builder.append( c1.get( Calendar.YEAR ), c2.get( Calendar.YEAR ) );
+
+    return builder.isEquals();
   }
 }

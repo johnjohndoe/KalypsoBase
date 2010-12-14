@@ -109,8 +109,10 @@ public class ZmlSingleValueInputDialog extends EnhancedTitleAreaDialog
 
     } );
 
-// final ZmlSingleValueComposite composite =
-    new ZmlSingleValueComposite( base, toolkit, m_column, m_model );
+    final ZmlSingleValueComposite composite = new ZmlSingleValueComposite( base, toolkit, m_column, m_model );
+    composite.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
+
+    toolkit.adapt( parent );
 
     return super.createDialogArea( parent );
   }
