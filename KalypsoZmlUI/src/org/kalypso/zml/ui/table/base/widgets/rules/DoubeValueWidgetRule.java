@@ -40,16 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.base.widgets.rules;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import org.kalypso.contribs.java.lang.NumberUtils;
 
 /**
  * @author Dirk Kuch
  */
-public class DateWidgetRule implements IWidgetRule<Date>
+public class DoubeValueWidgetRule implements ITextWidgetRule<Double>
 {
   /**
-   * @see org.kalypso.zml.ui.table.base.widgets.ITextBoxRule#getLastValidationMessage()
+   * @see org.kalypso.zml.ui.table.base.widgets.rules.IWidgetRule#getLastValidationMessage()
    */
   @Override
   public String getLastValidationMessage( )
@@ -58,13 +57,30 @@ public class DateWidgetRule implements IWidgetRule<Date>
   }
 
   /**
-   * @see org.kalypso.zml.ui.table.base.widgets.ITextBoxRule#getFormatedString(java.lang.Object)
+   * @see org.kalypso.zml.ui.table.base.widgets.rules.IWidgetRule#getFormatedString(java.lang.Object)
    */
   @Override
-  public String getFormatedString( final Date value )
+  public String getFormatedString( final Double value )
   {
-    final SimpleDateFormat sdf = new SimpleDateFormat( "dd.MM.yyyy" );
-
-    return sdf.format( value );
+    return String.format( "%.3f", value );
   }
+
+  /**
+   * @see org.kalypso.zml.ui.table.base.widgets.rules.ITextWidgetRule#parseValue(java.lang.String)
+   */
+  @Override
+  public Double parseValue( final String text )
+  {
+    return NumberUtils.parseQuietDouble( text );
+  }
+
+  /**
+   * @see org.kalypso.zml.ui.table.base.widgets.rules.ITextWidgetRule#isValid(java.lang.String)
+   */
+  @Override
+  public boolean isValid( final String text )
+  {
+    return NumberUtils.isDouble( text );
+  }
+
 }

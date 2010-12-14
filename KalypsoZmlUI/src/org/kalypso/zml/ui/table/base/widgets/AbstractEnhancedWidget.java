@@ -47,19 +47,20 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.kalypso.contribs.eclipse.swt.layout.LayoutHelper;
+import org.kalypso.zml.ui.table.base.widgets.rules.IWidgetRule;
 
 /**
  * @author Dirk Kuch
  */
-public abstract class AbstractEnhancedWidget extends Composite
+public abstract class AbstractEnhancedWidget<T> extends Composite
 {
   protected static final Image IMG_INVALID_PARAMETER = new Image( null, EnhancedTextBox.class.getResourceAsStream( "icons/invalid_parameter.gif" ) );
 
-  private final IWidgetRule m_rule;
+  private final IWidgetRule<T> m_rule;
 
   private ImageHyperlink m_validationIcon;
 
-  public AbstractEnhancedWidget( final Composite parent, final FormToolkit toolkit, final IWidgetRule rule )
+  public AbstractEnhancedWidget( final Composite parent, final FormToolkit toolkit, final IWidgetRule<T> rule )
   {
     super( parent, SWT.NULL );
     m_rule = rule;
@@ -81,7 +82,7 @@ public abstract class AbstractEnhancedWidget extends Composite
 
   protected abstract void initWidget( FormToolkit toolkit );
 
-  protected IWidgetRule getRule( )
+  protected IWidgetRule<T> getRule( )
   {
     return m_rule;
   }

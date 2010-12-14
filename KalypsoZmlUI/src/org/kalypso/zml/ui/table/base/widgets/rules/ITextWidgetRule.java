@@ -40,31 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.base.widgets.rules;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 /**
  * @author Dirk Kuch
  */
-public class DateWidgetRule implements IWidgetRule<Date>
+public interface ITextWidgetRule<T> extends IWidgetRule<T>
 {
-  /**
-   * @see org.kalypso.zml.ui.table.base.widgets.ITextBoxRule#getLastValidationMessage()
-   */
-  @Override
-  public String getLastValidationMessage( )
-  {
-    return null;
-  }
+  T parseValue( final String text );
 
-  /**
-   * @see org.kalypso.zml.ui.table.base.widgets.ITextBoxRule#getFormatedString(java.lang.Object)
-   */
-  @Override
-  public String getFormatedString( final Date value )
-  {
-    final SimpleDateFormat sdf = new SimpleDateFormat( "dd.MM.yyyy" );
-
-    return sdf.format( value );
-  }
+  boolean isValid( String text );
 }

@@ -64,7 +64,9 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.base.widgets.EnhancedComboViewer;
+import org.kalypso.zml.ui.table.base.widgets.EnhancedTextBox;
 import org.kalypso.zml.ui.table.base.widgets.rules.DateWidgetRule;
+import org.kalypso.zml.ui.table.base.widgets.rules.DoubeValueWidgetRule;
 import org.kalypso.zml.ui.table.base.widgets.rules.TimeWidgetRule;
 import org.kalypso.zml.ui.table.model.IZmlTableColumn;
 
@@ -92,13 +94,17 @@ public class ZmlSingleValueComposite extends Composite
   private void render( final FormToolkit toolkit )
   {
     final Composite base = toolkit.createComposite( this );
-    base.setLayout( LayoutHelper.createGridLayout( 2 ) );
+    base.setLayout( LayoutHelper.createGridLayout( 4 ) );
     base.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+
+    toolkit.createLabel( base, "Datum" );
+    toolkit.createLabel( base, "Uhrzeit" );
+    toolkit.createLabel( base, "" );
+    toolkit.createLabel( base, "Wert" );
 
     final ZmlSingleValueRow[] rows = m_model.getRows();
     for( final ZmlSingleValueRow row : rows )
     {
-
       renderRow( base, toolkit, row );
     }
 
@@ -148,6 +154,11 @@ public class ZmlSingleValueComposite extends Composite
 
       viewerTime.setInput( existing );
 
+      toolkit.createComposite( base ).setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+
+      final EnhancedTextBox<Double> textBox = new EnhancedTextBox<Double>( base, toolkit, new DoubeValueWidgetRule() );
+      textBox.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+      textBox.setText( row.getValue() );
     }
     catch( final SensorException e )
     {

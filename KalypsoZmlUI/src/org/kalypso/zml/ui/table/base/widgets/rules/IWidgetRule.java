@@ -38,18 +38,14 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.base.widgets;
+package org.kalypso.zml.ui.table.base.widgets.rules;
 
 /**
  * @author Dirk Kuch
  */
-public interface IWidgetRule
+public interface IWidgetRule<T>
 {
-  boolean isValid( String text );
-
   String getLastValidationMessage( );
 
-  String getFormatedString( Object value );
-
-  Object getValue( String value );
+  String getFormatedString( T value );
 }
