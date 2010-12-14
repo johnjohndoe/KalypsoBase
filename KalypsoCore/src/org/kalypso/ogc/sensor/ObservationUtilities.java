@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor;
 
@@ -91,10 +91,10 @@ public final class ObservationUtilities
    */
   public static IAxis findAxisByName( final IAxis[] axes, final String axisName ) throws NoSuchElementException
   {
-    for( int i = 0; i < axes.length; i++ )
+    for( final IAxis axe : axes )
     {
-      if( axes[i].getName().equalsIgnoreCase( axisName ) )
-        return axes[i];
+      if( axe.getName().equalsIgnoreCase( axisName ) )
+        return axe;
     }
 
     throw new NoSuchElementException( MSG_ERROR_NOAXISTYPE + axisName );
@@ -170,10 +170,10 @@ public final class ObservationUtilities
    */
   public static IAxis findAxisByTypeNoEx( final IAxis[] axes, final String axisType ) throws NoSuchElementException
   {
-    for( int i = 0; i < axes.length; i++ )
+    for( final IAxis axe : axes )
     {
-      if( axes[i].getType().equalsIgnoreCase( axisType ) )
-        return axes[i];
+      if( axe.getType().equalsIgnoreCase( axisType ) )
+        return axe;
     }
 
     return null;
@@ -184,9 +184,9 @@ public final class ObservationUtilities
    */
   public static boolean hasAxisOfType( final IAxis[] axes, final String axisType )
   {
-    for( int i = 0; i < axes.length; i++ )
+    for( final IAxis axe : axes )
     {
-      if( axes[i].getType().equalsIgnoreCase( axisType ) )
+      if( axe.getType().equalsIgnoreCase( axisType ) )
         return true;
     }
 
@@ -202,10 +202,10 @@ public final class ObservationUtilities
   {
     final ArrayList<IAxis> list = new ArrayList<IAxis>( axes == null ? 0 : axes.length );
 
-    for( int i = 0; i < axes.length; i++ )
+    for( final IAxis axe : axes )
     {
-      if( desired.isAssignableFrom( axes[i].getDataClass() ) )
-        list.add( axes[i] );
+      if( desired.isAssignableFrom( axe.getDataClass() ) )
+        list.add( axe );
     }
 
     if( list.size() == 0 )
@@ -223,12 +223,12 @@ public final class ObservationUtilities
   {
     final List<IAxis> list = new ArrayList<IAxis>( axes == null ? 0 : axes.length );
 
-    for( int i = 0; i < axes.length; i++ )
+    for( final IAxis axe : axes )
     {
-      for( int j = 0; j < desired.length; j++ )
+      for( final Class< ? > element : desired )
       {
-        if( desired[j].isAssignableFrom( axes[i].getDataClass() ) )
-          list.add( axes[i] );
+        if( element.isAssignableFrom( axe.getDataClass() ) )
+          list.add( axe );
       }
     }
 
@@ -243,10 +243,10 @@ public final class ObservationUtilities
    */
   public static IAxis findAxisByClass( final IAxis[] axes, final Class< ? > desired )
   {
-    for( int i = 0; i < axes.length; i++ )
+    for( final IAxis axe : axes )
     {
-      if( desired.isAssignableFrom( axes[i].getDataClass() ) )
-        return axes[i];
+      if( desired.isAssignableFrom( axe.getDataClass() ) )
+        return axe;
     }
 
     throw new NoSuchElementException( MSG_ERROR_NOAXISTYPE + desired );
@@ -258,10 +258,10 @@ public final class ObservationUtilities
    */
   public static IAxis findAxisByClassNoEx( final IAxis[] axes, final Class< ? > desired )
   {
-    for( int i = 0; i < axes.length; i++ )
+    for( final IAxis axe : axes )
     {
-      if( desired.isAssignableFrom( axes[i].getDataClass() ) )
-        return axes[i];
+      if( desired.isAssignableFrom( axe.getDataClass() ) )
+        return axe;
     }
 
     return null;
@@ -274,10 +274,10 @@ public final class ObservationUtilities
   {
     final ArrayList<IAxis> list = new ArrayList<IAxis>( axes.length );
 
-    for( int i = 0; i < axes.length; i++ )
+    for( final IAxis axe : axes )
     {
-      if( axes[i].isKey() )
-        list.add( axes[i] );
+      if( axe.isKey() )
+        list.add( axe );
     }
 
     return list.toArray( new IAxis[list.size()] );
@@ -546,6 +546,9 @@ public final class ObservationUtilities
   public static int findIndexBeforeDate( final ITupleModel tuppleModel, final IAxis dateAxis, final Date date, final int minIndex, final int maxIndex ) throws SensorException
   {
     final int index = findNextIndexForDate( tuppleModel, dateAxis, date, minIndex, maxIndex );
+    if( index < 0 )
+      return index;
+
     final Date rowDate = (Date) tuppleModel.get( index, dateAxis );
     if( rowDate.before( rowDate ) )
       return index;
