@@ -48,16 +48,6 @@ import java.util.Date;
  */
 public class TimeWidgetRule implements IWidgetRule<Date>
 {
-
-  /**
-   * @see org.kalypso.zml.ui.table.base.widgets.ITextBoxRule#getLastValidationMessage()
-   */
-  @Override
-  public String getLastValidationMessage( )
-  {
-    return null;
-  }
-
   /**
    * @see org.kalypso.zml.ui.table.base.widgets.ITextBoxRule#getFormatedString(java.lang.Object)
    */

@@ -47,13 +47,15 @@ import org.kalypso.contribs.java.lang.NumberUtils;
  */
 public class DoubeValueWidgetRule implements ITextWidgetRule<Double>
 {
+  private String m_lastValidationMsg;
+
   /**
    * @see org.kalypso.zml.ui.table.base.widgets.rules.IWidgetRule#getLastValidationMessage()
    */
   @Override
   public String getLastValidationMessage( )
   {
-    return null;
+    return m_lastValidationMsg;
   }
 
   /**
@@ -80,7 +82,13 @@ public class DoubeValueWidgetRule implements ITextWidgetRule<Double>
   @Override
   public boolean isValid( final String text )
   {
-    return NumberUtils.isDouble( text );
+    final boolean isDouble = NumberUtils.isDouble( text );
+    if( !isDouble )
+      m_lastValidationMsg = "Ungültiger Zahlenwert";
+    else
+      m_lastValidationMsg = null;
+
+    return isDouble;
   }
 
 }

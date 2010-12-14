@@ -48,7 +48,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.zml.ui.table.base.widgets.rules.ITextWidgetRule;
-import org.kalypso.zml.ui.table.base.widgets.rules.IWidgetRule;
 
 /**
  * @author Dirk Kuch
@@ -84,7 +83,7 @@ public class EnhancedTextBox<T> extends AbstractEnhancedWidget<T>
 
   public void setText( final T value )
   {
-    m_text.addModifyListener( new TextModifyListener( getValidationIcon(), new IWidgetRule[] { getRule() }, m_text, getValidationIcon() ) );
+    m_text.addModifyListener( new TextModifyListener( getValidationIcon(), getRule(), m_text, getValidationIcon() ) );
     m_text.setText( getRule().getFormatedString( value ) );
     m_text.addModifyListener( new ModifyListener()
     {
