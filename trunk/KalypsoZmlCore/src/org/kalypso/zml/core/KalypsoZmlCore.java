@@ -17,11 +17,11 @@ public class KalypsoZmlCore extends Plugin implements BundleActivator
 {
   private static List<IZmlRuleImplementation> ZML_TABLE_RULES = null;
 
-  private static BundleContext context;
+  private static BundleContext CONTEXT;
 
   static BundleContext getContext( )
   {
-    return context;
+    return CONTEXT;
   }
 
   private static KalypsoZmlCore PLUGIN;
@@ -33,7 +33,7 @@ public class KalypsoZmlCore extends Plugin implements BundleActivator
   @Override
   public void start( final BundleContext bundleContext ) throws Exception
   {
-    KalypsoZmlCore.context = bundleContext;
+    KalypsoZmlCore.CONTEXT = bundleContext;
     PLUGIN = this;
   }
 
@@ -44,7 +44,7 @@ public class KalypsoZmlCore extends Plugin implements BundleActivator
   @Override
   public void stop( final BundleContext bundleContext ) throws Exception
   {
-    KalypsoZmlCore.context = null;
+    KalypsoZmlCore.CONTEXT = null;
     PLUGIN = null;
   }
 

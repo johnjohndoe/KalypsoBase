@@ -79,4 +79,6 @@ public interface IZmlModelColumn
   IZmlModel getZmlModel( );
 
   ITupleModel getTupleModel( );
+
+  IAxis getIndexAxis( );
 }
