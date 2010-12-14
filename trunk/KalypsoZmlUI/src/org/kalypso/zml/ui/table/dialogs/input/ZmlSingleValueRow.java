@@ -47,12 +47,18 @@ import java.util.Date;
  */
 public class ZmlSingleValueRow
 {
-
   private Date m_date;
+
+  private Double m_value;
 
   public Date getDate( )
   {
     return m_date;
+  }
+
+  public Double getValue( )
+  {
+    return m_value;
   }
 
 }

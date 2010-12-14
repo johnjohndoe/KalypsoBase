@@ -51,19 +51,20 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.kalypso.zml.ui.table.base.widgets.rules.IWidgetRule;
 
 /**
  * @author Dirk Kuch
  */
-public class EnhancedComboViewer<T> extends AbstractEnhancedWidget
+public class EnhancedComboViewer<T> extends AbstractEnhancedWidget<T>
 {
   private ComboViewer m_viewer;
 
-  private final IWidgetRule m_rule;
+  private final IWidgetRule<T> m_rule;
 
   protected T m_selection;
 
-  public EnhancedComboViewer( final Composite parent, final FormToolkit toolkit, final IWidgetRule rule )
+  public EnhancedComboViewer( final Composite parent, final FormToolkit toolkit, final IWidgetRule<T> rule )
   {
     super( parent, toolkit, rule );
     m_rule = rule;
@@ -90,7 +91,7 @@ public class EnhancedComboViewer<T> extends AbstractEnhancedWidget
       @Override
       public String getText( final Object element )
       {
-        return getRule().getFormatedString( element );
+        return getRule().getFormatedString( (T) element );
       }
     } );
 

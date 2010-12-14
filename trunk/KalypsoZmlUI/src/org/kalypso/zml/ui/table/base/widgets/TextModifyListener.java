@@ -41,25 +41,27 @@
 package org.kalypso.zml.ui.table.base.widgets;
 
 import org.apache.commons.lang.NotImplementedException;
+import org.apache.poi.hssf.record.formula.functions.T;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
+import org.kalypso.zml.ui.table.base.widgets.rules.ITextWidgetRule;
+import org.kalypso.zml.ui.table.base.widgets.rules.IWidgetRule;
 
 /**
  * @author Dirk Kuch
  */
 public class TextModifyListener implements ModifyListener
 {
-
-  private final IWidgetRule[] m_rules;
+  private final IWidgetRule<T>[] m_rules;
 
   private final Control[] m_tooltipControls;
 
   private final ImageHyperlink m_valid;
 
-  public TextModifyListener( final ImageHyperlink valid, final IWidgetRule[] rules, final Control... tooltipControls )
+  public TextModifyListener( final ImageHyperlink valid, final IWidgetRule<T>[] rules, final Control... tooltipControls )
   {
     m_tooltipControls = tooltipControls;
     m_valid = valid;
@@ -72,33 +74,39 @@ public class TextModifyListener implements ModifyListener
   @Override
   public void modifyText( final ModifyEvent e )
   {
-    final String text;
+    final String text = resolveText( e );
 
-    final Object source = e.getSource();
-    if( source instanceof Text )
+    for( final IWidgetRule<T> rule : m_rules )
     {
-      final Text textField = (Text) source;
-
-      text = textField.getText();
-    }
-    else
-      throw new NotImplementedException();
-
-    for( final IWidgetRule rule : m_rules )
-    {
-      if( !rule.isValid( text ) )
+      if( rule instanceof ITextWidgetRule )
       {
-        final String message = rule.getLastValidationMessage();
-        setTooltip( message );
+        final ITextWidgetRule r = (ITextWidgetRule) rule;
+        if( !r.isValid( text ) )
+        {
+          final String message = rule.getLastValidationMessage();
+          setTooltip( message );
 
-        m_valid.setVisible( true );
+          m_valid.setVisible( true );
 
-        return;
+          return;
+        }
       }
     }
 
     setTooltip( null );
     m_valid.setVisible( false );
+  }
+
+  private String resolveText( final ModifyEvent e )
+  {
+    final Object source = e.getSource();
+    if( source instanceof Text )
+    {
+      final Text textField = (Text) source;
+      return textField.getText();
+    }
+    else
+      throw new NotImplementedException();
   }
 
   private void setTooltip( final String message )
@@ -107,7 +115,6 @@ public class TextModifyListener implements ModifyListener
     {
       control.setToolTipText( message );
     }
-
   }
 
 }

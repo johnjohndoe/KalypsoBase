@@ -43,31 +43,17 @@ package org.kalypso.zml.ui.table.base.widgets.rules;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.kalypso.zml.ui.table.base.widgets.IWidgetRule;
-
 /**
  * @author Dirk Kuch
  */
-public class DateWidgetRule implements IWidgetRule
+public class DateWidgetRule implements IWidgetRule<Date>
 {
-
-  /**
-   * @see org.kalypso.zml.ui.table.base.widgets.ITextBoxRule#isValid(java.lang.String)
-   */
-  @Override
-  public boolean isValid( final String text )
-  {
-    // TODO Auto-generated method stub
-    return false;
-  }
-
   /**
    * @see org.kalypso.zml.ui.table.base.widgets.ITextBoxRule#getLastValidationMessage()
    */
   @Override
   public String getLastValidationMessage( )
   {
-    // TODO Auto-generated method stub
     return null;
   }
 
@@ -75,27 +61,10 @@ public class DateWidgetRule implements IWidgetRule
    * @see org.kalypso.zml.ui.table.base.widgets.ITextBoxRule#getFormatedString(java.lang.Object)
    */
   @Override
-  public String getFormatedString( final Object value )
+  public String getFormatedString( final Date value )
   {
-    if( value instanceof Date )
-    {
-// "yyyy-MM-dd'T'HH:mm:ss"
-      final SimpleDateFormat sdf = new SimpleDateFormat( "yyyy-MM-dd" );
+    final SimpleDateFormat sdf = new SimpleDateFormat( "dd.MM.yyyy" );
 
-      return sdf.format( (Date) value );
-    }
-
-    return "";
+    return sdf.format( value );
   }
-
-  /**
-   * @see org.kalypso.zml.ui.table.base.widgets.ITextBoxRule#getValue(java.lang.String)
-   */
-  @Override
-  public Object getValue( final String value )
-  {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
 }

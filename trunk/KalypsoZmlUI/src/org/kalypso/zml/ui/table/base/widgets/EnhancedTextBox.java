@@ -47,20 +47,21 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.kalypso.zml.ui.table.base.widgets.rules.ITextWidgetRule;
+import org.kalypso.zml.ui.table.base.widgets.rules.IWidgetRule;
 
 /**
  * @author Dirk Kuch
  */
-public class EnhancedTextBox extends AbstractEnhancedWidget
+public class EnhancedTextBox<T> extends AbstractEnhancedWidget<T>
 {
   protected Text m_text;
 
-  protected String m_value;
+  protected T m_value;
 
-  public EnhancedTextBox( final Composite parent, final FormToolkit toolkit, final IWidgetRule rule )
+  public EnhancedTextBox( final Composite parent, final FormToolkit toolkit, final ITextWidgetRule<T> rule )
   {
     super( parent, toolkit, rule );
-    initWidget( toolkit );
 
     toolkit.adapt( this );
   }
@@ -72,7 +73,16 @@ public class EnhancedTextBox extends AbstractEnhancedWidget
     m_text.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
   }
 
-  public void setText( final Object value )
+  /**
+   * @see org.kalypso.zml.ui.table.base.widgets.AbstractEnhancedWidget#getRule()
+   */
+  @Override
+  protected ITextWidgetRule<T> getRule( )
+  {
+    return (ITextWidgetRule<T>) super.getRule();
+  }
+
+  public void setText( final T value )
   {
     m_text.addModifyListener( new TextModifyListener( getValidationIcon(), new IWidgetRule[] { getRule() }, m_text, getValidationIcon() ) );
     m_text.setText( getRule().getFormatedString( value ) );
@@ -81,13 +91,13 @@ public class EnhancedTextBox extends AbstractEnhancedWidget
       @Override
       public void modifyText( final ModifyEvent e )
       {
-        m_value = m_text.getText();
+        m_value = getRule().parseValue( m_text.getText() );
       }
     } );
   }
 
-  public Object getValue( )
+  public T getValue( )
   {
-    return getRule().getValue( m_value );
+    return m_value;
   }
 }

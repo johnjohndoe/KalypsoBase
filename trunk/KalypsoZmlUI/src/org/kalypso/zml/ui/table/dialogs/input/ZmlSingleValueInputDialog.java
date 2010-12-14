@@ -58,7 +58,6 @@ import org.kalypso.zml.ui.table.model.IZmlTableColumn;
  */
 public class ZmlSingleValueInputDialog extends EnhancedTitleAreaDialog
 {
-
   private static final String SCREEN_SIZE = "zml.input.dialog.screen.size";
 
   private final IZmlTableColumn m_column;
@@ -106,7 +105,6 @@ public class ZmlSingleValueInputDialog extends EnhancedTitleAreaDialog
       {
         setScreenSize( SCREEN_SIZE, base.getSize() );
       }
-
     } );
 
     final ZmlSingleValueComposite composite = new ZmlSingleValueComposite( base, toolkit, m_column, m_model );
