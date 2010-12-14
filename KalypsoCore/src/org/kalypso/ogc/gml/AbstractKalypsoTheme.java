@@ -122,6 +122,11 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
   private boolean m_showLegendChildren = true;
 
   /**
+   * The id of this theme.
+   */
+  private String m_id;
+
+  /**
    * The constructor.
    * 
    * @param name
@@ -135,6 +140,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
   {
     Assert.isNotNull( mapModel );
 
+    m_id = null;
     m_name = name;
     m_type = type;
     m_mapModel = mapModel;
@@ -533,5 +539,23 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
     m_showLegendChildren = showChildren;
 
     fireStatusChanged( this );
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.IKalypsoTheme#setId(java.lang.String)
+   */
+  @Override
+  public void setId( String id )
+  {
+    m_id = id;
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.IKalypsoTheme#getId()
+   */
+  @Override
+  public String getId( )
+  {
+    return m_id;
   }
 }
