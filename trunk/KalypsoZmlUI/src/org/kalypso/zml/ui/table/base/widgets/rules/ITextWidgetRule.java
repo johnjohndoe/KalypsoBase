@@ -45,6 +45,8 @@ package org.kalypso.zml.ui.table.base.widgets.rules;
  */
 public interface ITextWidgetRule<T> extends IWidgetRule<T>
 {
+  String getLastValidationMessage( );
+
   T parseValue( final String text );
 
   boolean isValid( String text );

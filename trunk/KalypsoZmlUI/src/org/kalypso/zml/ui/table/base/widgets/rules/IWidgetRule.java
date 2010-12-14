@@ -45,7 +45,5 @@ package org.kalypso.zml.ui.table.base.widgets.rules;
  */
 public interface IWidgetRule<T>
 {
-  String getLastValidationMessage( );
-
   String getFormatedString( T value );
 }

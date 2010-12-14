@@ -60,14 +60,11 @@ public class EnhancedComboViewer<T> extends AbstractEnhancedWidget<T>
 {
   private ComboViewer m_viewer;
 
-  private final IWidgetRule<T> m_rule;
-
   protected T m_selection;
 
   public EnhancedComboViewer( final Composite parent, final FormToolkit toolkit, final IWidgetRule<T> rule )
   {
     super( parent, toolkit, rule );
-    m_rule = rule;
   }
 
   public void setInput( final T[] input )
@@ -120,10 +117,6 @@ public class EnhancedComboViewer<T> extends AbstractEnhancedWidget<T>
 
   public void refresh( )
   {
-// final ViewerFilter[] filters = m_viewer.getFilters();
-// m_viewer.resetFilters();
-// m_viewer.setFilters( filters );
-
     m_viewer.refresh();
   }
 }

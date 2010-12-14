@@ -41,31 +41,30 @@
 package org.kalypso.zml.ui.table.base.widgets;
 
 import org.apache.commons.lang.NotImplementedException;
-import org.apache.poi.hssf.record.formula.functions.T;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.kalypso.zml.ui.table.base.widgets.rules.ITextWidgetRule;
-import org.kalypso.zml.ui.table.base.widgets.rules.IWidgetRule;
 
 /**
  * @author Dirk Kuch
  */
 public class TextModifyListener implements ModifyListener
 {
-  private final IWidgetRule<T>[] m_rules;
+  @SuppressWarnings("rawtypes")
+  private final ITextWidgetRule m_rule;
 
   private final Control[] m_tooltipControls;
 
   private final ImageHyperlink m_valid;
 
-  public TextModifyListener( final ImageHyperlink valid, final IWidgetRule<T>[] rules, final Control... tooltipControls )
+  public TextModifyListener( final ImageHyperlink icon, @SuppressWarnings("rawtypes") final ITextWidgetRule rule, final Control... tooltipControls )
   {
     m_tooltipControls = tooltipControls;
-    m_valid = valid;
-    m_rules = rules;
+    m_valid = icon;
+    m_rule = rule;
   }
 
   /**
@@ -76,21 +75,14 @@ public class TextModifyListener implements ModifyListener
   {
     final String text = resolveText( e );
 
-    for( final IWidgetRule<T> rule : m_rules )
+    if( !m_rule.isValid( text ) )
     {
-      if( rule instanceof ITextWidgetRule )
-      {
-        final ITextWidgetRule r = (ITextWidgetRule) rule;
-        if( !r.isValid( text ) )
-        {
-          final String message = rule.getLastValidationMessage();
-          setTooltip( message );
+      final String message = m_rule.getLastValidationMessage();
+      setTooltip( message );
 
-          m_valid.setVisible( true );
+      m_valid.setVisible( true );
 
-          return;
-        }
-      }
+      return;
     }
 
     setTooltip( null );
