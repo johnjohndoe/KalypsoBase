@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<compare xmlns="compare.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="compare.kalypso.org
-compare.xsd">
-	<resource>
-		<path name=".model/test/blubb.zml" relativeToCalcCase="false"/>
-		<path name="Zeitreihen/Abfluß/blbb.zml" relativeToCalcCase="true"/>
-	</resource>
-</compare>
