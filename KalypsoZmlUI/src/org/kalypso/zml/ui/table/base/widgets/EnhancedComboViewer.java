@@ -40,11 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.base.widgets;
 
-import java.util.Date;
-
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -54,21 +55,21 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 /**
  * @author Dirk Kuch
  */
-public class EnhancedComboViewer extends AbstractEnhancedWidget
+public class EnhancedComboViewer<T> extends AbstractEnhancedWidget
 {
   private ComboViewer m_viewer;
 
   private final IWidgetRule m_rule;
 
+  protected T m_selection;
+
   public EnhancedComboViewer( final Composite parent, final FormToolkit toolkit, final IWidgetRule rule )
   {
     super( parent, toolkit, rule );
     m_rule = rule;
-
-    initWidget( toolkit );
   }
 
-  public void setInput( final Date[] input )
+  public void setInput( final T[] input )
   {
     m_viewer.setInput( input );
   }
@@ -81,7 +82,7 @@ public class EnhancedComboViewer extends AbstractEnhancedWidget
   @Override
   protected void initWidget( final FormToolkit toolkit )
   {
-    m_viewer = new ComboViewer( this, SWT.BORDER | SWT.READ_ONLY );
+    m_viewer = new ComboViewer( this, SWT.BORDER | SWT.READ_ONLY | SWT.SINGLE );
     m_viewer.getCombo().setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
     m_viewer.setContentProvider( new ArrayContentProvider() );
     m_viewer.setLabelProvider( new LabelProvider()
@@ -93,5 +94,35 @@ public class EnhancedComboViewer extends AbstractEnhancedWidget
       }
     } );
 
+    m_viewer.addSelectionChangedListener( new ISelectionChangedListener()
+    {
+
+      @SuppressWarnings("unchecked")
+      @Override
+      public void selectionChanged( final SelectionChangedEvent event )
+      {
+        final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+        m_selection = (T) selection.getFirstElement();
+      }
+    } );
+  }
+
+  public T getSelection( )
+  {
+    return m_selection;
+  }
+
+  public void addListener( final ISelectionChangedListener listener )
+  {
+    m_viewer.addSelectionChangedListener( listener );
+  }
+
+  public void refresh( )
+  {
+// final ViewerFilter[] filters = m_viewer.getFilters();
+// m_viewer.resetFilters();
+// m_viewer.setFilters( filters );
+
+    m_viewer.refresh();
   }
 }
