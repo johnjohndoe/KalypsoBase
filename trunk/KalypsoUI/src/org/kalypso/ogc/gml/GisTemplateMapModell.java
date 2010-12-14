@@ -44,6 +44,7 @@ import java.awt.Graphics;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.bind.JAXBElement;
@@ -200,6 +201,8 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
     final JAXBElement<Boolean> sC = layerType.getShowChildren();
     final boolean showChildren = sC == null ? true : sC.getValue().booleanValue();
 
+    final String id = layerType.getId();
+
     final String linktype = layerType.getLinktype();
     final ITranslator translator = getName().getTranslator();
     final I10nString layerName = new I10nString( layerType.getName(), translator );
@@ -213,6 +216,7 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
     {
       ((AbstractKalypsoTheme) theme).setLegendIcon( legendIcon, context );
       ((AbstractKalypsoTheme) theme).setShowLegendChildren( showChildren );
+      ((AbstractKalypsoTheme) theme).setId( id );
     }
 
     return theme;
@@ -223,18 +227,26 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
    */
   public synchronized Gismapview createGismapTemplate( final GM_Envelope bbox, final String srsName, IProgressMonitor monitor ) throws CoreException
   {
+    /* If no progress monitor was given, take the null progress monitor. */
     if( monitor == null )
       monitor = new NullProgressMonitor();
 
     try
     {
+      /* Get all themes. */
       final IKalypsoTheme[] themes = m_modell.getAllThemes();
+
+      /* Monitor. */
       monitor.beginTask( Messages.getString( "org.kalypso.ogc.gml.GisTemplateMapModell.10" ), themes.length * 1000 + 1000 ); //$NON-NLS-1$
 
+      /* Create the gismap view. */
       final Gismapview gismapview = GisTemplateHelper.OF_GISMAPVIEW.createGismapview();
-      final Layers layersType = GisTemplateHelper.OF_GISMAPVIEW.createGismapviewLayers();
+
+      /* Create the name. */
       final I10nString name = getName();
       gismapview.setName( name.getKey() );
+
+      /* Create the translator. */
       final ITranslator i10nTranslator = name.getTranslator();
       if( i10nTranslator != null )
       {
@@ -246,10 +258,10 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
         gismapview.setTranslator( translator );
       }
 
+      /* Set the bounding box. */
       if( bbox != null )
       {
         final ExtentType extentType = GisTemplateHelper.OF_TEMPLATE_TYPES.createExtentType();
-
         extentType.setTop( bbox.getMax().getY() );
         extentType.setBottom( bbox.getMin().getY() );
         extentType.setLeft( bbox.getMin().getX() );
@@ -258,16 +270,42 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
         gismapview.setExtent( extentType );
       }
 
+      /* Create the layers. */
+      final Layers layersType = GisTemplateHelper.OF_GISMAPVIEW.createGismapviewLayers();
       final List<JAXBElement< ? extends StyledLayerType>> layerList = layersType.getLayer();
-
       gismapview.setLayers( layersType );
 
-      monitor.worked( 100 );
+      /* Monitor. */
+      monitor.worked( 500 );
 
-      int count = 0;
+      /* Collect already used ids. */
+      final List<String> usedIds = new ArrayList<String>();
       for( final IKalypsoTheme theme : themes )
       {
-        final String id = "ID_" + count++;
+        /* Get the id of the theme. */
+        final String usedId = theme.getId();
+        if( usedId != null && usedId.length() > 0 && !usedIds.contains( usedId ) )
+        {
+          /* If one is set and not already used, store it. */
+          usedIds.add( usedId );
+          continue;
+        }
+
+        /* Otherwise the theme had no id set or a duplicate id was detected. */
+        /* Mark the theme of beeing able to receive a new id. */
+        theme.setId( null );
+      }
+
+      /* Monitor. */
+      monitor.worked( 500 );
+
+      /* Loop all themes. */
+      for( final IKalypsoTheme theme : themes )
+      {
+        String id = theme.getId();
+        if( id == null || id.length() == 0 )
+          id = getNewId( usedIds );
+
         final JAXBElement< ? extends StyledLayerType> layerElement = GisTemplateHelper.configureLayer( theme, id, bbox, srsName, new SubProgressMonitor( monitor, 1000 ) );
         if( layerElement != null )
         {
@@ -292,8 +330,19 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
     }
     finally
     {
+      /* Monitor. */
       monitor.done();
     }
+  }
+
+  private String getNewId( List<String> usedIds )
+  {
+    int count = 0;
+    String newId = "ID_" + count++;
+    while( usedIds.contains( newId ) )
+      newId = "ID_" + count++;
+
+    return newId;
   }
 
   public synchronized void saveGismapTemplate( final GM_Envelope bbox, final String srsName, IProgressMonitor monitor, final IFile file ) throws CoreException

@@ -46,8 +46,11 @@ import java.util.Map;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.kalypso.ogc.gml.IKalypsoLayerModell;
+import org.kalypso.util.themes.legend.controls.LegendComposite;
 
 /**
  * A wizard page for entering properties of for a legend theme.
@@ -56,6 +59,11 @@ import org.eclipse.swt.widgets.Composite;
  */
 public class LegendThemeWizardPage extends WizardPage
 {
+  /**
+   * The map modell.
+   */
+  private IKalypsoLayerModell m_mapModell;
+
   /**
    * The selected properties.
    */
@@ -66,12 +74,18 @@ public class LegendThemeWizardPage extends WizardPage
    * 
    * @param pageName
    *          The name of the page.
+   * @param mapModell
+   *          The map modell.
    */
-  public LegendThemeWizardPage( String pageName )
+  public LegendThemeWizardPage( String pageName, IKalypsoLayerModell mapModell )
   {
     super( pageName );
 
+    m_mapModell = mapModell;
     m_properties = new HashMap<String, String>();
+
+    setTitle( "Legendeneigenschaften" );
+    setDescription( "Wählen Sie die Eigenschaften der Legende." );
   }
 
   /**
@@ -83,12 +97,17 @@ public class LegendThemeWizardPage extends WizardPage
    *          The title for this wizard page, or null if none.
    * @param titleImage
    *          The image descriptor for the title of this wizard page, or null if none.
+   * @param mapModell
+   *          The map modell.
    */
-  public LegendThemeWizardPage( String pageName, String title, ImageDescriptor titleImage )
+  public LegendThemeWizardPage( String pageName, String title, ImageDescriptor titleImage, IKalypsoLayerModell mapModell )
   {
     super( pageName, title, titleImage );
 
+    m_mapModell = mapModell;
     m_properties = new HashMap<String, String>();
+
+    setDescription( "Wählen Sie die Eigenschaften der Legende." );
   }
 
   /**
@@ -99,7 +118,11 @@ public class LegendThemeWizardPage extends WizardPage
   {
     /* Create the main composite. */
     Composite main = new Composite( parent, SWT.NONE );
-    main.setLayout( new FillLayout() );
+    main.setLayout( new GridLayout( 1, false ) );
+
+    /* Create the legend composite. */
+    LegendComposite legendComposite = new LegendComposite( main, SWT.NONE, m_mapModell, null );
+    legendComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     // TODO
 

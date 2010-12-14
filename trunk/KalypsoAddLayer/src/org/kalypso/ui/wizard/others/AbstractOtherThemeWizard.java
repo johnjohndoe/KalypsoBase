@@ -128,7 +128,6 @@ public abstract class AbstractOtherThemeWizard extends Wizard implements IKalyps
 
         return Status.OK_STATUS;
       }
-
     };
 
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, operation );
@@ -139,4 +138,9 @@ public abstract class AbstractOtherThemeWizard extends Wizard implements IKalyps
   }
 
   protected abstract ICommand createCommand( IKalypsoLayerModell mapModell, String themeName );
+
+  public IKalypsoLayerModell getMapModel( )
+  {
+    return m_mapModel;
+  }
 }

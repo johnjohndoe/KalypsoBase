@@ -167,4 +167,19 @@ public interface IKalypsoTheme extends IAdaptable
    * The name of the property should be one of the <code>PROPERTY_</code> constants of this interface.
    */
   void setProperty( final String name, final String value );
+
+  /**
+   * This function returns the ID of this theme.
+   * 
+   * @return The ID of this theme.
+   */
+  public String getId( );
+
+  /**
+   * This function sets the id of this theme.
+   * 
+   * @param id
+   *          The id of this theme.
+   */
+  public void setId( String id );
 }
