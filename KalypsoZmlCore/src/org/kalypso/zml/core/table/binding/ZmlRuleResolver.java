@@ -59,6 +59,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.catalog.ICatalog;
 import org.kalypso.zml.core.table.ZmlTableConfigurationLoader;
+import org.kalypso.zml.core.table.binding.rule.ZmlRule;
 import org.kalypso.zml.core.table.schema.RuleRefernceType;
 import org.kalypso.zml.core.table.schema.RuleSetType;
 import org.kalypso.zml.core.table.schema.RuleType;

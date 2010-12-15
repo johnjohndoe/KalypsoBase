@@ -48,7 +48,7 @@ import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.zml.core.KalypsoZmlCore;
-import org.kalypso.zml.core.table.binding.ZmlRule;
+import org.kalypso.zml.core.table.binding.rule.ZmlRule;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
 
 /**

@@ -101,6 +101,9 @@ public class ZmlEditingSupport extends EditingSupport
       return;
 
     final IAxis axis = column.getValueAxis();
+    if( axis == null )
+      return;
+
     final Class< ? > dataClass = axis.getDataClass();
 
     if( Double.class.equals( dataClass ) )
@@ -165,5 +168,4 @@ public class ZmlEditingSupport extends EditingSupport
       strategy.setValue( (IZmlModelRow) element, (String) value );
     }
   }
-
 }

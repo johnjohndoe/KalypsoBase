@@ -45,7 +45,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.kalypso.zml.core.table.binding.BaseColumn;
 import org.kalypso.zml.core.table.binding.CellStyle;
-import org.kalypso.zml.core.table.binding.ZmlRule;
+import org.kalypso.zml.core.table.binding.rule.ZmlRule;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
 import org.kalypso.zml.core.table.schema.AbstractColumnType;

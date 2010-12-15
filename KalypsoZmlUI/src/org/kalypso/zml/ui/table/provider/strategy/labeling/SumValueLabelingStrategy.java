@@ -43,7 +43,7 @@ package org.kalypso.zml.ui.table.provider.strategy.labeling;
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.zml.core.table.binding.ZmlRule;
+import org.kalypso.zml.core.table.binding.rule.ZmlRule;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
 import org.kalypso.zml.core.table.model.walker.ZmlModelWalker;

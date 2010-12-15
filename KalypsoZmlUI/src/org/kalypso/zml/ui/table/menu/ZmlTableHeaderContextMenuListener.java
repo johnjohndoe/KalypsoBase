@@ -55,7 +55,7 @@ import org.kalypso.contribs.eclipse.jface.action.ContributionUtils;
 import org.kalypso.zml.core.table.binding.BaseColumn;
 import org.kalypso.zml.core.table.binding.CellStyle;
 import org.kalypso.zml.core.table.binding.ColumnHeader;
-import org.kalypso.zml.core.table.binding.ZmlRule;
+import org.kalypso.zml.core.table.binding.rule.ZmlRule;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.ZmlTableComposite;
 import org.kalypso.zml.ui.table.model.IZmlTableColumn;

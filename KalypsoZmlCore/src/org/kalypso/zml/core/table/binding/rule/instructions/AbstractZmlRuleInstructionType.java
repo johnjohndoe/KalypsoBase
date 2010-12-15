@@ -38,68 +38,43 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.provider;
+package org.kalypso.zml.core.table.binding.rule.instructions;
 
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
-
-import org.kalypso.zml.core.table.binding.BaseColumn;
-import org.kalypso.zml.core.table.binding.rule.ZmlRule;
-import org.kalypso.zml.core.table.model.references.IZmlValueReference;
-import org.kalypso.zml.core.table.rules.IZmlRuleImplementation;
+import org.eclipse.core.runtime.CoreException;
+import org.kalypso.zml.core.table.binding.CellStyle;
+import org.kalypso.zml.core.table.binding.ZmlStyleResolver;
+import org.kalypso.zml.core.table.schema.AbstractRuleInstructionType;
+import org.kalypso.zml.core.table.schema.StyleReferenceType;
 
 /**
  * @author Dirk Kuch
  */
-public class RuleMapper
+public class AbstractZmlRuleInstructionType
 {
-  private ZmlRule[] m_rules;
+  private final AbstractRuleInstructionType m_type;
 
-  private final Set<ZmlRule> m_applied = new LinkedHashSet<ZmlRule>();
+  private CellStyle m_style;
 
-  private final BaseColumn m_column;
-
-  private IZmlValueReference m_lastReference;
-
-  public RuleMapper( final BaseColumn column )
+  public AbstractZmlRuleInstructionType( final AbstractRuleInstructionType type )
   {
-    m_column = column;
+    m_type = type;
   }
 
-  public ZmlRule[] findActiveRules( final IZmlValueReference reference )
+  public AbstractRuleInstructionType getType( )
   {
-    if( m_lastReference == reference )
-      return m_rules;
-
-    final List<ZmlRule> rules = new ArrayList<ZmlRule>();
-    if( reference != null )
-    {
-      for( final ZmlRule rule : m_column.getRules() )
-      {
-        final IZmlRuleImplementation impl = rule.getImplementation();
-        if( impl.apply( rule, reference ) )
-        {
-          rules.add( rule );
-          m_applied.add( rule );
-        }
-      }
-    }
-
-    m_rules = rules.toArray( new ZmlRule[] {} );
-    m_lastReference = reference;
-
-    return m_rules;
+    return m_type;
   }
 
-  public void reset( )
+  public CellStyle getStyle( ) throws CoreException
   {
-    m_applied.clear();
+    if( m_style != null )
+      return m_style;
+
+    final ZmlStyleResolver resolver = ZmlStyleResolver.getInstance();
+    final StyleReferenceType styleReference = m_type.getStyleReference();
+
+    m_style = resolver.findStyle( styleReference );
+    return m_style;
   }
 
-  public ZmlRule[] getAppliedRules( )
-  {
-    return m_applied.toArray( new ZmlRule[] {} );
-  }
 }
