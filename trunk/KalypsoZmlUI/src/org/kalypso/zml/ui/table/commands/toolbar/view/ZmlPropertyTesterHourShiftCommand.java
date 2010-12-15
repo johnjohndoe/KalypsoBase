@@ -16,6 +16,8 @@ public class ZmlPropertyTesterHourShiftCommand extends PropertyTester
     {
       final IZmlTable table = (IZmlTable) receiver;
       final ZmlViewResolutionFilter filter = AbstractHourViewCommand.resolveFilter( table );
+      if( filter == null )
+        return false;
 
       if( filter.isStuetzstellenMode() )
         return false;
