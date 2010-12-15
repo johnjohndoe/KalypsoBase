@@ -43,14 +43,16 @@ package org.kalypso.util.themes.legend.controls;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import java.util.Properties;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.IMessageProvider;
+import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
+import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.TableLayout;
-import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -69,11 +71,11 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.ui.forms.widgets.Form;
 import org.kalypso.contribs.eclipse.ui.forms.MessageUtilitites;
-import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.util.themes.legend.LegendUtilities;
-import org.kalypso.util.themes.legend.listener.IPropertyChangedListener;
+import org.kalypso.util.themes.legend.listener.ILegendChangedListener;
+import org.kalypso.util.themes.legend.provider.ThemeCheckStateProvider;
 import org.kalypso.util.themes.legend.provider.ThemeNameLabelProvider;
 import org.kalypso.util.themes.legend.provider.ThemeTableContentProvider;
 import org.kalypso.util.themes.legend.provider.ThemeTypeLabelProvider;
@@ -89,9 +91,9 @@ import org.kalypso.util.themes.position.listener.IPositionChangedListener;
 public class LegendComposite extends Composite
 {
   /**
-   * This listeners are notified, if a property has changed.
+   * This listeners are notified, if a legend property has changed.
    */
-  private List<IPropertyChangedListener> m_listener;
+  private List<ILegendChangedListener> m_listener;
 
   /**
    * The form.
@@ -118,11 +120,20 @@ public class LegendComposite extends Composite
    */
   protected int m_vertical;
 
+  /**
+   * The background color.
+   */
   protected Color m_backgroundColor;
 
-  protected int m_borderWidth;
+  /**
+   * The insets.
+   */
+  protected int m_insets;
 
-  protected IKalypsoTheme[] m_themes;
+  /**
+   * The selected themes.
+   */
+  protected List<IKalypsoTheme> m_themes;
 
   /**
    * The constructor.
@@ -141,11 +152,11 @@ public class LegendComposite extends Composite
     super( parent, style );
 
     /* Initialize. */
-    m_listener = new ArrayList<IPropertyChangedListener>();
+    m_listener = new ArrayList<ILegendChangedListener>();
     m_main = null;
     m_content = null;
-    m_availableThemes = getAvailableThemes( mapModell );
-    checkProperties( properties, m_availableThemes );
+    m_availableThemes = Arrays.asList( mapModell.getAllThemes() );
+    checkProperties( properties, mapModell );
 
     /* Create the controls. */
     createControls();
@@ -176,15 +187,10 @@ public class LegendComposite extends Composite
     m_horizontal = PositionUtilities.RIGHT;
     m_vertical = PositionUtilities.BOTTOM;
     m_backgroundColor = null;
-    m_borderWidth = 10;
+    m_insets = 10;
     m_themes = null;
 
     super.dispose();
-  }
-
-  private List<IKalypsoTheme> getAvailableThemes( IMapModell mapModell )
-  {
-    return Arrays.asList( mapModell.getAllThemes() );
   }
 
   /**
@@ -193,57 +199,70 @@ public class LegendComposite extends Composite
    * ones have wrong values, they will be set to the members with default values.
    * 
    * @param properties
-   *          The properties, containing the default values.
-   * @param availableThemes
-   *          All available kalypso themes.
+   *          The properties, containing the values.
+   * @param mapModell
+   *          The map modell.
    */
-  private void checkProperties( Properties properties, List<IKalypsoTheme> availableThemes )
+  private void checkProperties( Properties properties, IMapModell mapModell )
   {
+    /* Default values. */
     m_horizontal = PositionUtilities.RIGHT;
     m_vertical = PositionUtilities.BOTTOM;
     m_backgroundColor = new Color( getDisplay(), 255, 255, 255 );
-    m_borderWidth = 10;
-    m_themes = availableThemes.toArray( new IKalypsoTheme[] {} );
+    m_insets = 10;
+    m_themes = new ArrayList<IKalypsoTheme>();
 
+    /* Do not change the default values, if no new properties are set. */
     if( properties == null )
       return;
 
+    /* Update the default values, with the one of the given properties. */
+    updateProperties( properties, mapModell );
+  }
+
+  /**
+   * This function checks the provided properties object for properties this composite can edit. Found properties will
+   * be checked for correct values. Then they are set to the members. If editable properties are missing or if existing
+   * ones have wrong values, the members will not be changed.
+   * 
+   * @param properties
+   *          The properties, containing the values.
+   * @param mapModell
+   *          The map modell.
+   */
+  private void updateProperties( Properties properties, IMapModell mapModell )
+  {
+    /* Get the properties. */
     String horizontalProperty = properties.getProperty( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION );
-    Integer horizontal = NumberUtils.parseQuietInteger( horizontalProperty );
-    if( horizontal != null )
-      m_horizontal = PositionUtilities.checkHorizontalPosition( horizontal.intValue() );
-
     String verticalProperty = properties.getProperty( PositionUtilities.THEME_PROPERTY_VERTICAL_POSITION );
-    Integer vertical = NumberUtils.parseQuietInteger( verticalProperty );
-    if( vertical != null )
-      m_vertical = PositionUtilities.checkVerticalPosition( vertical.intValue() );
-
     String backgroundColorProperty = properties.getProperty( LegendUtilities.THEME_PROPERTY_BACKGROUND_COLOR );
-    // TODO
-
-    String borderWidthProperty = properties.getProperty( LegendUtilities.THEME_PROPERTY_BORDER_WIDTH );
-    Integer borderWitdh = NumberUtils.parseQuietInteger( borderWidthProperty );
-    if( borderWitdh != null && borderWitdh.intValue() > 0 )
-      m_borderWidth = borderWitdh.intValue();
-
+    String insetsProperty = properties.getProperty( LegendUtilities.THEME_PROPERTY_INSETS );
     String themeIdsProperty = properties.getProperty( LegendUtilities.THEME_PROPERTY_THEME_IDS );
-    if( themeIdsProperty != null )
-    {
-      List<IKalypsoTheme> themes = new ArrayList<IKalypsoTheme>();
-      String[] themeIds = StringUtils.split( themeIdsProperty, ";" );
-      for( int i = 0; i < themeIds.length; i++ )
-      {
-        String themeId = themeIds[i];
-        for( int j = 0; j < availableThemes.size(); j++ )
-        {
-          IKalypsoTheme availableTheme = availableThemes.get( j );
-          if( themeId.equals( availableTheme.getId() ) )
-            themes.add( availableTheme );
-        }
-      }
 
-      m_themes = themes.toArray( new IKalypsoTheme[] {} );
-    }
+    /* Check the horizontal position. */
+    int horizontal = LegendUtilities.checkHorizontalPosition( horizontalProperty );
+    if( horizontal != -1 )
+      m_horizontal = horizontal;
+
+    /* Check the vertical position. */
+    int vertical = LegendUtilities.checkVerticalPosition( verticalProperty );
+    if( vertical != -1 )
+      m_vertical = vertical;
+
+    /* Check the background color. */
+    Color backgroundColor = LegendUtilities.checkBackgroundColor( getDisplay(), backgroundColorProperty );
+    if( backgroundColor != null )
+      m_backgroundColor = backgroundColor;
+
+    /* Check the insets. */
+    int insets = LegendUtilities.checkInsets( insetsProperty );
+    if( insets >= 1 && insets <= 25 )
+      m_insets = insets;
+
+    /* Check the theme ids. */
+    List<IKalypsoTheme> themes = LegendUtilities.checkThemeIds( mapModell, themeIdsProperty );
+    if( themes != null && themes.size() > 0 )
+      m_themes = themes;
   }
 
   /**
@@ -354,6 +373,8 @@ public class LegendComposite extends Composite
       {
         m_horizontal = horizontal;
         m_vertical = vertical;
+
+        fireLegendPropertyChanged( getProperties(), m_horizontal, m_vertical, m_backgroundColor, m_insets, m_themes.toArray( new IKalypsoTheme[] {} ) );
       }
     } );
 
@@ -410,20 +431,22 @@ public class LegendComposite extends Composite
         m_backgroundColor.dispose();
         m_backgroundColor = new Color( shell.getDisplay(), rgb );
         backgroundColorText.setBackground( m_backgroundColor );
+
+        fireLegendPropertyChanged( getProperties(), m_horizontal, m_vertical, m_backgroundColor, m_insets, m_themes.toArray( new IKalypsoTheme[] {} ) );
       }
     } );
 
     /* Create a label. */
-    Label borderWidthLabel = new Label( legendGroup, SWT.NONE );
-    borderWidthLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
-    borderWidthLabel.setText( "Randbreite" );
-    borderWidthLabel.setAlignment( SWT.LEFT );
+    Label insetsLabel = new Label( legendGroup, SWT.NONE );
+    insetsLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
+    insetsLabel.setText( "Zwischenraum" );
+    insetsLabel.setAlignment( SWT.LEFT );
 
     /* Create a spinner. */
-    final Spinner borderWidthSpinner = new Spinner( legendGroup, SWT.BORDER );
-    borderWidthSpinner.setValues( m_borderWidth, 1, 25, 0, 1, 5 );
-    borderWidthSpinner.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    borderWidthSpinner.addSelectionListener( new SelectionAdapter()
+    final Spinner insetsSpinner = new Spinner( legendGroup, SWT.BORDER );
+    insetsSpinner.setValues( m_insets, 1, 25, 0, 1, 5 );
+    insetsSpinner.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    insetsSpinner.addSelectionListener( new SelectionAdapter()
     {
       /**
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
@@ -431,7 +454,8 @@ public class LegendComposite extends Composite
       @Override
       public void widgetSelected( SelectionEvent e )
       {
-        m_borderWidth = borderWidthSpinner.getSelection();
+        m_insets = insetsSpinner.getSelection();
+        fireLegendPropertyChanged( getProperties(), m_horizontal, m_vertical, m_backgroundColor, m_insets, m_themes.toArray( new IKalypsoTheme[] {} ) );
       }
     } );
 
@@ -447,7 +471,7 @@ public class LegendComposite extends Composite
     availableThemesLabel.setAlignment( SWT.LEFT );
 
     /* Create a table viewer. */
-    TreeViewer availableThemesViewer = new CheckboxTreeViewer( legendGroup, SWT.MULTI | SWT.FULL_SELECTION | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.VIRTUAL );
+    CheckboxTreeViewer availableThemesViewer = new CheckboxTreeViewer( legendGroup, SWT.MULTI | SWT.FULL_SELECTION | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.VIRTUAL );
     GridData availableThemeData = new GridData( SWT.FILL, SWT.FILL, true, true, 3, 1 );
     availableThemeData.heightHint = 250;
     availableThemesViewer.getTree().setLayoutData( availableThemeData );
@@ -470,12 +494,30 @@ public class LegendComposite extends Composite
     /* Set a content provider. */
     availableThemesViewer.setContentProvider( new ThemeTableContentProvider() );
 
+    /* Set the check state provider. */
+    availableThemesViewer.setCheckStateProvider( new ThemeCheckStateProvider( m_themes ) );
+
     /* Set the input. */
     availableThemesViewer.setInput( m_availableThemes );
 
-    // TODO Checkstate provider...
+    /* Add a listener. */
+    availableThemesViewer.addCheckStateListener( new ICheckStateListener()
+    {
+      /**
+       * @see org.eclipse.jface.viewers.ICheckStateListener#checkStateChanged(org.eclipse.jface.viewers.CheckStateChangedEvent)
+       */
+      @Override
+      public void checkStateChanged( CheckStateChangedEvent event )
+      {
+        IKalypsoTheme element = (IKalypsoTheme) event.getElement();
+        if( event.getChecked() && !m_themes.contains( element ) )
+          m_themes.add( element );
+        else
+          m_themes.remove( element );
 
-    // TODO Listener...
+        fireLegendPropertyChanged( getProperties(), m_horizontal, m_vertical, m_backgroundColor, m_insets, m_themes.toArray( new IKalypsoTheme[] {} ) );
+      }
+    } );
 
     return legendGroup;
   }
@@ -512,40 +554,81 @@ public class LegendComposite extends Composite
   }
 
   /**
-   * This function fires a property changed event.
+   * This function fires a legend property changed event.
    * 
-   * @param property
-   *          The changed property.
-   * @param value
-   *          The new value of the changed property.
+   * @param properties
+   *          A up to date properties object, containing all serialized legend properties.
+   * @param horizontal
+   *          The horizontal position.
+   * @param vertical
+   *          The vertical position.
+   * @param backgroundColor
+   *          The background color.
+   * @param insets
+   *          The insets.
+   * @param themes
+   *          The selected themes.
    */
-  protected void firePropertyChanged( String property, String value )
+  protected void fireLegendPropertyChanged( Properties properties, int horizontal, int vertical, Color backgroundColor, int insets, IKalypsoTheme[] themes )
   {
-    for( IPropertyChangedListener listener : m_listener )
-      listener.propertyChanged( property, value );
+    for( ILegendChangedListener listener : m_listener )
+      listener.legendPropertyChanged( properties, horizontal, vertical, backgroundColor, insets, themes );
   }
 
   /**
-   * This function adds a property changed listener.
+   * This function adds a legend changed listener.
    * 
    * @param listener
-   *          The property changed listener to add.
+   *          The legend changed listener to add.
    */
-  public void addPropertyChangedListener( IPropertyChangedListener listener )
+  public void addLegendChangedListener( ILegendChangedListener listener )
   {
     if( !m_listener.contains( listener ) )
       m_listener.add( listener );
   }
 
   /**
-   * This function removes a property changed listener.
+   * This function removes a legend changed listener.
    * 
    * @param listener
-   *          The property changed listener to remove.
+   *          The legend changed listener to remove.
    */
-  public void removePropertyChangedListener( IPropertyChangedListener listener )
+  public void removeLegendChangedListener( ILegendChangedListener listener )
   {
     if( m_listener.contains( listener ) )
       m_listener.remove( listener );
+  }
+
+  /**
+   * This function returns a up to date properties object, containing all serialized legend properties.
+   * 
+   * @return A up to date properties object, containing all serialized legend properties.
+   */
+  public Properties getProperties( )
+  {
+    /* Create the properties object. */
+    Properties properties = new Properties();
+
+    /* Serialize the properties. */
+    String horizontalProperty = String.format( Locale.PRC, "%d", m_horizontal );
+    String verticalProperty = String.format( Locale.PRC, "%d", m_vertical );
+    String backgroundColorProperty = String.format( Locale.PRC, "%d;%d;%d", m_backgroundColor.getRed(), m_backgroundColor.getGreen(), m_backgroundColor.getBlue() );
+    String insetsProperty = String.format( Locale.PRC, "%d", m_insets );
+    List<String> themeIds = new ArrayList<String>();
+    for( int i = 0; i < m_themes.size(); i++ )
+    {
+      IKalypsoTheme theme = m_themes.get( i );
+      themeIds.add( theme.getId() );
+    }
+    String themeIdsProperty = StringUtils.join( themeIds, ";" );
+
+    /* Add the properties. */
+    properties.put( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION, horizontalProperty );
+    properties.put( PositionUtilities.THEME_PROPERTY_VERTICAL_POSITION, verticalProperty );
+    properties.put( LegendUtilities.THEME_PROPERTY_BACKGROUND_COLOR, backgroundColorProperty );
+    properties.put( LegendUtilities.THEME_PROPERTY_INSETS, insetsProperty );
+    properties.put( LegendUtilities.THEME_PROPERTY_THEME_IDS, themeIdsProperty );
+
+    return properties;
   }
 }

@@ -40,6 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.util.themes.position;
 
+import java.awt.Graphics;
+import java.awt.Image;
+
+import org.kalypso.util.themes.legend.LegendCoordinate;
+
 /**
  * This class provides functions for positioning.
  * 
@@ -136,5 +141,53 @@ public class PositionUtilities
       return vertical;
 
     return PositionUtilities.BOTTOM;
+  }
+
+  /**
+   * This function calculates the position for the image.
+   * 
+   * @param g
+   *          The graphic context.
+   * @param image
+   *          The image.
+   * @param horizontal
+   *          The horizontal position.
+   * @param vertical
+   *          The vertical position.
+   * @return The position of the image in the given graphics context.
+   */
+  public static LegendCoordinate determinePosition( Graphics g, Image image, int horizontal, int vertical )
+  {
+    /* Get the dimensions of the drawable area. */
+    int widthMax = g.getClipBounds().width;
+    int heightMax = g.getClipBounds().height;
+
+    /* Get the dimensions of the image. */
+    int widthImage = image.getWidth( null );
+    int heightImage = image.getHeight( null );
+
+    /* There are cases, regarding the x coordinate. */
+    int x = widthMax - widthImage;
+    if( (horizontal & PositionUtilities.LEFT) != 0 )
+      x = 0;
+
+    if( (horizontal & PositionUtilities.H_CENTER) != 0 )
+      x = (widthMax - widthImage) / 2;
+
+    if( (horizontal & PositionUtilities.RIGHT) != 0 )
+      x = widthMax - widthImage;
+
+    /* There are cases, regarding the y coordinate. */
+    int y = heightMax - heightImage;
+    if( (vertical & PositionUtilities.TOP) != 0 )
+      y = 0;
+
+    if( (vertical & PositionUtilities.V_CENTER) != 0 )
+      y = (heightMax - heightImage) / 2;
+
+    if( (vertical & PositionUtilities.BOTTOM) != 0 )
+      y = heightMax - heightImage;
+
+    return new LegendCoordinate( x, y );
   }
 }

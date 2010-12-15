@@ -47,19 +47,21 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Insets;
 import java.awt.image.BufferedImage;
+import java.util.Arrays;
+import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.contribs.eclipse.swt.awt.ImageConverter;
-import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.AbstractKalypsoTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
@@ -71,6 +73,9 @@ import org.kalypso.ogc.gml.outline.nodes.LegendExporter;
 import org.kalypso.ogc.gml.outline.nodes.NodeFactory;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.util.themes.legend.LegendCoordinate;
+import org.kalypso.util.themes.legend.LegendUtilities;
+import org.kalypso.util.themes.position.PositionUtilities;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
@@ -92,7 +97,7 @@ public class KalypsoLegendTheme extends AbstractKalypsoTheme
      *      org.kalypso.ogc.gml.IKalypsoTheme)
      */
     @Override
-    public void themeAdded( final IMapModell source, final IKalypsoTheme theme )
+    public void themeAdded( IMapModell source, IKalypsoTheme theme )
     {
       invalidateLegend();
     }
@@ -102,7 +107,7 @@ public class KalypsoLegendTheme extends AbstractKalypsoTheme
      *      org.kalypso.ogc.gml.IKalypsoTheme, boolean)
      */
     @Override
-    public void themeRemoved( final IMapModell source, final IKalypsoTheme theme, final boolean lastVisibility )
+    public void themeRemoved( IMapModell source, IKalypsoTheme theme, boolean lastVisibility )
     {
       invalidateLegend();
     }
@@ -111,7 +116,7 @@ public class KalypsoLegendTheme extends AbstractKalypsoTheme
      * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#themeOrderChanged(org.kalypso.ogc.gml.mapmodel.IMapModell)
      */
     @Override
-    public void themeOrderChanged( final IMapModell source )
+    public void themeOrderChanged( IMapModell source )
     {
       invalidateLegend();
     }
@@ -121,7 +126,7 @@ public class KalypsoLegendTheme extends AbstractKalypsoTheme
      *      org.kalypso.ogc.gml.IKalypsoTheme, boolean)
      */
     @Override
-    public void themeVisibilityChanged( final IMapModell source, final IKalypsoTheme theme, final boolean visibility )
+    public void themeVisibilityChanged( IMapModell source, IKalypsoTheme theme, boolean visibility )
     {
       invalidateLegend();
     }
@@ -131,7 +136,7 @@ public class KalypsoLegendTheme extends AbstractKalypsoTheme
      *      org.kalypso.ogc.gml.IKalypsoTheme)
      */
     @Override
-    public void themeStatusChanged( final IMapModell source, final IKalypsoTheme theme )
+    public void themeStatusChanged( IMapModell source, IKalypsoTheme theme )
     {
       invalidateLegend();
     }
@@ -146,11 +151,21 @@ public class KalypsoLegendTheme extends AbstractKalypsoTheme
      * @see org.eclipse.ui.progress.UIJob#runInUIThread(org.eclipse.core.runtime.IProgressMonitor)
      */
     @Override
-    public IStatus runInUIThread( final IProgressMonitor monitor )
+    public IStatus runInUIThread( IProgressMonitor monitor )
     {
+      /* If no monitor was given, take a null progress monitor. */
+      if( monitor == null )
+        monitor = new NullProgressMonitor();
+
       try
       {
-        updateLegend( monitor );
+        /* Monitor. */
+        monitor.beginTask( "Zeichne Legende...", 1000 );
+        monitor.subTask( "Zeichne Legende..." );
+
+        /* Update the legend. */
+        updateLegend( new SubProgressMonitor( monitor, 1000 ) );
+
         return Status.OK_STATUS;
       }
       catch( CoreException ex )
@@ -160,16 +175,48 @@ public class KalypsoLegendTheme extends AbstractKalypsoTheme
 
         return ex.getStatus();
       }
+      finally
+      {
+        /* Monitor. */
+        monitor.done();
+      }
     }
   };
 
-  private Image m_image = null;
+  /**
+   * All available kalypso themes.
+   */
+  private List<IKalypsoTheme> m_availableThemes;
 
-  // TODO: get from properties
-  private int m_borderWidth = 10;
+  /**
+   * The horizontal position.
+   */
+  protected int m_horizontal;
 
-  // TODO: get from properties
-  private RGB m_backgroundColor = new RGB( 245, 245, 245 );
+  /**
+   * The vertical position.
+   */
+  protected int m_vertical;
+
+  /**
+   * The background color.
+   */
+  protected org.eclipse.swt.graphics.Color m_backgroundColor;
+
+  /**
+   * The insets.
+   */
+  protected int m_insets;
+
+  /**
+   * The selected themes.
+   */
+  protected IKalypsoTheme[] m_themes;
+
+  /**
+   * The drawn image.
+   */
+  private Image m_image;
 
   /**
    * The constructor
@@ -183,6 +230,14 @@ public class KalypsoLegendTheme extends AbstractKalypsoTheme
   {
     super( name, "legend", mapModell ); //$NON-NLS-1$
 
+    m_image = null;
+    m_availableThemes = null;
+    m_horizontal = -1;
+    m_vertical = -1;
+    m_backgroundColor = null;
+    m_insets = -1;
+    m_themes = null;
+
     mapModell.addMapModelListener( m_modellListener );
   }
 
@@ -193,6 +248,17 @@ public class KalypsoLegendTheme extends AbstractKalypsoTheme
   public void dispose( )
   {
     getMapModell().removeMapModelListener( m_modellListener );
+
+    if( m_backgroundColor != null )
+      m_backgroundColor.dispose();
+
+    m_image = null;
+    m_availableThemes = null;
+    m_horizontal = -1;
+    m_vertical = -1;
+    m_backgroundColor = null;
+    m_insets = -1;
+    m_themes = null;
 
     super.dispose();
   }
@@ -212,19 +278,19 @@ public class KalypsoLegendTheme extends AbstractKalypsoTheme
    *      org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  public IStatus paint( final Graphics g, final GeoTransform p, final Boolean selected, final IProgressMonitor monitor )
+  public IStatus paint( Graphics g, GeoTransform p, Boolean selected, IProgressMonitor monitor )
   {
     if( selected != null && selected )
       return Status.OK_STATUS;
 
-    int wMax = g.getClipBounds().width;
-    int hMax = g.getClipBounds().height;
     if( m_image != null )
     {
+      /* Determine the position. */
+      LegendCoordinate position = PositionUtilities.determinePosition( g, m_image, m_horizontal, m_vertical );
+
+      /* Draw the image. */
       g.setPaintMode();
-      int widthIamge = m_image.getWidth( null );
-      int heightImage = m_image.getHeight( null );
-      g.drawImage( m_image, wMax - widthIamge, hMax - heightImage, widthIamge, heightImage, null );
+      g.drawImage( m_image, position.getX(), position.getY(), m_image.getWidth( null ), m_image.getHeight( null ), null );
     }
 
     return Status.OK_STATUS;
@@ -239,6 +305,58 @@ public class KalypsoLegendTheme extends AbstractKalypsoTheme
     return null;
   }
 
+  /**
+   * This function initializes the legend theme from its own properties. For these not found, defaults will be set.
+   */
+  private void initFromProperties( )
+  {
+    /* Default values. */
+    m_availableThemes = Arrays.asList( getMapModell().getAllThemes() );
+    m_horizontal = PositionUtilities.RIGHT;
+    m_vertical = PositionUtilities.BOTTOM;
+    m_backgroundColor = new org.eclipse.swt.graphics.Color( Display.getCurrent(), 255, 255, 255 );
+    m_insets = 10;
+    m_themes = m_availableThemes.toArray( new IKalypsoTheme[] {} );
+
+    /* Get the properties. */
+    String horizontalProperty = getProperty( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION, null );
+    String verticalProperty = getProperty( PositionUtilities.THEME_PROPERTY_VERTICAL_POSITION, null );
+    String backgroundColorProperty = getProperty( LegendUtilities.THEME_PROPERTY_BACKGROUND_COLOR, null );
+    String insetsProperty = getProperty( LegendUtilities.THEME_PROPERTY_INSETS, null );
+    String themeIdsProperty = getProperty( LegendUtilities.THEME_PROPERTY_THEME_IDS, null );
+
+    /* Check the horizontal position. */
+    int horizontal = LegendUtilities.checkHorizontalPosition( horizontalProperty );
+    if( horizontal != -1 )
+      m_horizontal = horizontal;
+
+    /* Check the vertical position. */
+    int vertical = LegendUtilities.checkVerticalPosition( verticalProperty );
+    if( vertical != -1 )
+      m_vertical = vertical;
+
+    /* Check the background color. */
+    org.eclipse.swt.graphics.Color backgroundColor = LegendUtilities.checkBackgroundColor( Display.getCurrent(), backgroundColorProperty );
+    if( backgroundColor != null )
+    {
+      m_backgroundColor.dispose();
+      m_backgroundColor = backgroundColor;
+    }
+
+    /* Check the insets. */
+    int insets = LegendUtilities.checkInsets( insetsProperty );
+    if( insets >= 1 && insets <= 25 )
+      m_insets = insets;
+
+    /* Check the theme ids. */
+    List<IKalypsoTheme> themes = LegendUtilities.checkThemeIds( getMapModell(), themeIdsProperty );
+    if( themes != null && themes.size() > 0 )
+      m_themes = themes.toArray( new IKalypsoTheme[] {} );
+  }
+
+  /**
+   * This function invaludates the legend.
+   */
   protected void invalidateLegend( )
   {
     m_legendJob.cancel();
@@ -246,32 +364,74 @@ public class KalypsoLegendTheme extends AbstractKalypsoTheme
     m_legendJob.schedule( 100 );
   }
 
-  protected void updateLegend( final IProgressMonitor monitor ) throws CoreException
+  /**
+   * This function updates the legend.
+   * 
+   * @param monitor
+   *          A progress monitor.
+   */
+  protected void updateLegend( IProgressMonitor monitor ) throws CoreException
   {
-    IMapModell mapModell = getMapModell();
-    if( mapModell == null )
-      return;
+    /* If no monitor was given, take a null progress monitor. */
+    if( monitor == null )
+      monitor = new NullProgressMonitor();
 
-    IThemeNode rootNode = NodeFactory.createRootNode( mapModell, null );
-    IThemeNode[] nodes = rootNode.getChildrenCompact();
+    try
+    {
+      /* Monitor. */
+      monitor.beginTask( "Zeichne Legende...", 1000 );
+      monitor.subTask( "Erzeuge Knoten..." );
 
-    Display display = Display.getCurrent();
-    Insets insets = new Insets( m_borderWidth, m_borderWidth, m_borderWidth, m_borderWidth );
-    LegendExporter legendExporter = new LegendExporter();
-    org.eclipse.swt.graphics.Image image = legendExporter.exportLegends( nodes, display, insets, m_backgroundColor, -1, -1, monitor );
+      /* It is not initialized, if the background color is still null. */
+      initFromProperties();
 
-    BufferedImage awtImage = ImageConverter.convertToAWT( image.getImageData() );
-    image.dispose();
-    ProgressUtilities.worked( monitor, 0 ); // cancel check
+      /* Create the nodes. */
+      // TODO Tree problem...
+      IThemeNode[] nodes = NodeFactory.createNodes( null, m_themes );
 
-    Graphics2D graphics = (Graphics2D) awtImage.getGraphics();
-    graphics.setColor( Color.BLACK );
-    graphics.setStroke( new BasicStroke( 2.0f ) );
-    graphics.drawRect( 0, 0, awtImage.getWidth(), awtImage.getHeight() );
-    graphics.dispose();
+      /* Monitor. */
+      monitor.worked( 250 );
+      monitor.subTask( "Erzeuge Legende..." );
 
-    m_image = awtImage;
+      /* Create the legend. */
+      LegendExporter legendExporter = new LegendExporter();
+      org.eclipse.swt.graphics.Image image = legendExporter.exportLegends( nodes, Display.getCurrent(), new Insets( m_insets, m_insets, m_insets, m_insets ), m_backgroundColor.getRGB(), -1, -1, new SubProgressMonitor( monitor, 250 ) );
 
-    fireRepaintRequested( null );
+      /* Monitor. */
+      monitor.subTask( "Konvertiere Legende..." );
+
+      /* Convert to an AWT image. */
+      BufferedImage awtImage = ImageConverter.convertToAWT( image.getImageData() );
+      image.dispose();
+
+      /* Monitor. */
+      if( monitor.isCanceled() )
+        return;
+
+      /* Monitor. */
+      monitor.worked( 250 );
+      monitor.subTask( "Zeichne Legende..." );
+
+      /* Draw the AWT image. */
+      Graphics2D graphics = (Graphics2D) awtImage.getGraphics();
+      graphics.setColor( Color.BLACK );
+      graphics.setStroke( new BasicStroke( 2.0f ) );
+      graphics.drawRect( 0, 0, awtImage.getWidth(), awtImage.getHeight() );
+      graphics.dispose();
+
+      /* Store the AWT image. */
+      m_image = awtImage;
+
+      /* Fire a repaint request. */
+      fireRepaintRequested( null );
+
+      /* Monitor. */
+      monitor.worked( 250 );
+    }
+    finally
+    {
+      /* Monitor. */
+      monitor.done();
+    }
   }
 }

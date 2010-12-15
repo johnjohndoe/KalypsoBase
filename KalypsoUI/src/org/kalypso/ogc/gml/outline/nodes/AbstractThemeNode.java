@@ -305,6 +305,9 @@ abstract class AbstractThemeNode<T> implements IThemeNode
 
   protected TreeViewer getViewer( )
   {
+    if( m_parent == null )
+      return null;
+
     return ((AbstractThemeNode< ? >) m_parent).getViewer();
   }
 

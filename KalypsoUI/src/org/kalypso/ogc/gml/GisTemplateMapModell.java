@@ -74,6 +74,7 @@ import org.kalypso.template.gismapview.Gismapview.Layers;
 import org.kalypso.template.types.ExtentType;
 import org.kalypso.template.types.I18NTranslatorType;
 import org.kalypso.template.types.StyledLayerType;
+import org.kalypso.template.types.StyledLayerType.Property;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.w3c.dom.Element;
@@ -218,6 +219,11 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
       ((AbstractKalypsoTheme) theme).setShowLegendChildren( showChildren );
       ((AbstractKalypsoTheme) theme).setId( id );
     }
+
+    /* Read the properties. */
+    List<Property> properties = layerType.getProperty();
+    for( Property property : properties )
+      theme.setProperty( property.getName(), property.getValue() );
 
     return theme;
   }

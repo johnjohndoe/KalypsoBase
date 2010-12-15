@@ -38,22 +38,48 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.util.themes.legend.listener;
+package org.kalypso.util.themes.legend.provider;
+
+import java.util.List;
+
+import org.eclipse.jface.viewers.ICheckStateProvider;
+import org.kalypso.ogc.gml.IKalypsoTheme;
 
 /**
- * This interface provides functions for listeners, which should be notified, if a property has changed.
+ * A check state provider.
  * 
  * @author Holger Albert
  */
-public interface IPropertyChangedListener
+public class ThemeCheckStateProvider implements ICheckStateProvider
 {
   /**
-   * This function is modified, if a property has changed.
-   * 
-   * @param property
-   *          The changed property.
-   * @param value
-   *          The new value of the changed property.
+   * The selected themes.
    */
-  public void propertyChanged( String property, String value );
+  private List<IKalypsoTheme> m_themes;
+
+  /**
+   * The constructor.
+   */
+  public ThemeCheckStateProvider( List<IKalypsoTheme> themes )
+  {
+    m_themes = themes;
+  }
+
+  /**
+   * @see org.eclipse.jface.viewers.ICheckStateProvider#isChecked(java.lang.Object)
+   */
+  @Override
+  public boolean isChecked( Object element )
+  {
+    return m_themes.contains( element );
+  }
+
+  /**
+   * @see org.eclipse.jface.viewers.ICheckStateProvider#isGrayed(java.lang.Object)
+   */
+  @Override
+  public boolean isGrayed( Object element )
+  {
+    return false;
+  }
 }

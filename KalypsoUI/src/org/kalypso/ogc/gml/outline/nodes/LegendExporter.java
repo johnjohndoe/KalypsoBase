@@ -162,6 +162,10 @@ public class LegendExporter
    */
   public Image exportLegends( IThemeNode[] nodes, Device device, Insets insets, RGB backgroundRGB, int sizeWidth, int sizeHeight, IProgressMonitor monitor ) throws CoreException
   {
+    /* Set default insets, if none are given. */
+    if( insets == null )
+      insets = new Insets( 5, 5, 5, 5 );
+
     /* Monitor. */
     SubMonitor progress = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.ogc.gml.map.utilities.MapUtilities.0" ), nodes.length * 100 + 100 ); //$NON-NLS-1$
 
