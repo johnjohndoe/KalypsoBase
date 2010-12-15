@@ -57,7 +57,6 @@ import org.kalypso.zml.core.table.schema.ColumnPropertyName;
 import org.kalypso.zml.core.table.schema.ColumnPropertyType;
 import org.kalypso.zml.core.table.schema.RuleRefernceType;
 import org.kalypso.zml.core.table.schema.RuleSetType;
-import org.kalypso.zml.core.table.schema.RuleType;
 import org.kalypso.zml.core.table.schema.StyleReferenceType;
 
 /**
@@ -140,39 +139,13 @@ public class BaseColumn
 
   private ZmlRule[] resolveFromRuleSetReference( )
   {
-    final List<ZmlRule> rules = new ArrayList<ZmlRule>();
-
     final Object ruleSetReference = m_type.getRuleSetReference();
     if( !(ruleSetReference instanceof RuleSetType) )
       return new ZmlRule[] {};
 
-    final ZmlRuleResolver resolver = ZmlRuleResolver.getInstance();
+    final ZmlRuleSet ruleSet = new ZmlRuleSet( (RuleSetType) ruleSetReference );
 
-    final RuleSetType ruleSet = (RuleSetType) ruleSetReference;
-    for( final Object objRule : ruleSet.getRuleOrRule() )
-    {
-      if( objRule instanceof RuleType )
-      {
-        final RuleType ruleType = (RuleType) objRule;
-        rules.add( new ZmlRule( ruleType ) );
-      }
-      else if( objRule instanceof RuleRefernceType )
-      {
-        try
-        {
-          final RuleRefernceType reference = (RuleRefernceType) objRule;
-          final ZmlRule rule = resolver.findRule( null, reference );
-          if( rule != null )
-            rules.add( rule );
-        }
-        catch( final CoreException e )
-        {
-          KalypsoZmlCore.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-        }
-      }
-    }
-
-    return rules.toArray( new ZmlRule[] {} );
+    return ruleSet.getRules();
   }
 
   private ZmlRule[] resolveRules( )
