@@ -27,7 +27,7 @@
     <sequence>
       <element ref="zmltable:StyleSet" minOccurs="0" maxOccurs="1" />
       <element name="defaultStyle" type="zmltable:StyleReferenceType" minOccurs="1" maxOccurs="1" />
-      <element ref="zmltable:RuleSet" minOccurs="0" maxOccurs="1" />
+      <element ref="zmltable:RuleSet" minOccurs="0" maxOccurs="unbounded" />
       <element name="toolbar" type="string" minOccurs="0" maxOccurs="1" />
       <element ref="zmltable:Columns" minOccurs="0" maxOccurs="1" />
     </sequence>
@@ -48,6 +48,7 @@
       <element ref="zmltable:StyleSet" minOccurs="0" maxOccurs="1" />
       <element name="defaultCellStyle" type="zmltable:StyleReferenceType" minOccurs="1" maxOccurs="1" />
       <element name="defaultCellEditingStyle" type="zmltable:StyleReferenceType" minOccurs="0" maxOccurs="1" />
+      <element name="ruleSetReference" type="IDREF" minOccurs="0" maxOccurs="1" />
       <element name="rule" type="zmltable:RuleRefernceType" minOccurs="0" maxOccurs="unbounded" />
     </sequence>
     <attribute name="id" type="ID" use="required" />
@@ -122,8 +123,13 @@
    <!-- Rules -->
   <complexType name="RuleSetType">
     <sequence>
-      <element ref="zmltable:Rule" minOccurs="1" maxOccurs="unbounded" />
+    <choice minOccurs="1" maxOccurs="unbounded">
+      <element ref="zmltable:Rule" />
+      <element name="rule" type="zmltable:RuleRefernceType" /> 
+    </choice>
+    
     </sequence>
+    <attribute name="id" type="ID" use="required"/>
   </complexType>
 
   <complexType name="RuleType">

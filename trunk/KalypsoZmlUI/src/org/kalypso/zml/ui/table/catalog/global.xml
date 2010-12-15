@@ -99,8 +99,8 @@
   <defaultStyle>
     <reference>defaultCellStyle</reference>
   </defaultStyle>
-
-  <RuleSet>
+ 
+  <RuleSet id="default">
     <Rule id="ruleForecastSafe" ruleReference="org.kalypso.zml.ui.core.rule.safe.forecast.value">
       <styleReference>
         <reference>dateForecastCellStyleSafe</reference>
