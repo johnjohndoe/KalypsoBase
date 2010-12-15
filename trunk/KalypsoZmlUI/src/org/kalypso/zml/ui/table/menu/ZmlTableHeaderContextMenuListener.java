@@ -54,6 +54,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.action.ContributionUtils;
 import org.kalypso.zml.core.table.binding.BaseColumn;
 import org.kalypso.zml.core.table.binding.CellStyle;
+import org.kalypso.zml.core.table.binding.ColumnHeader;
 import org.kalypso.zml.core.table.binding.ZmlRule;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.ZmlTableComposite;
@@ -65,7 +66,6 @@ import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
  */
 public class ZmlTableHeaderContextMenuListener implements SelectionListener
 {
-  protected static final Image IMG_INFO = new Image( null, ZmlTableContextMenuListener.class.getResourceAsStream( "icons/info.png" ) );
 
   private final ZmlTableComposite m_table;
 
@@ -119,11 +119,54 @@ public class ZmlTableHeaderContextMenuListener implements SelectionListener
       }
     } );
 
+    final ColumnHeader[] headers = m_column.getColumnType().getHeaders();
+    for( final ColumnHeader header : headers )
+    {
+      addAditionalItem( header, menuManager );
+    }
+
     final ZmlRule[] applied = m_column.getAppliedRules();
     for( final ZmlRule rule : applied )
     {
       addAditionalItem( rule, menuManager );
     }
+  }
+
+  private void addAditionalItem( final ColumnHeader header, final MenuManager menuManager )
+  {
+    menuManager.add( new Action()
+    {
+      @Override
+      public org.eclipse.jface.resource.ImageDescriptor getImageDescriptor( )
+      {
+        try
+        {
+          final Image icon = header.getIcon();
+          if( icon != null )
+            return ImageDescriptor.createFromImage( icon );
+        }
+        catch( final Throwable t )
+        {
+          KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( t ) );
+        }
+
+        return null;
+      }
+
+      @Override
+      public String getText( )
+      {
+        return String.format( "   %s", header.getLabel() );
+      }
+
+      @Override
+      public boolean isEnabled( )
+      {
+        return false;
+      }
+
+    } );
+
   }
 
   private void addAditionalItem( final ZmlRule rule, final MenuManager menuManager )
@@ -143,7 +186,7 @@ public class ZmlTableHeaderContextMenuListener implements SelectionListener
           KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( t ) );
         }
 
-        return ImageDescriptor.createFromImage( IMG_INFO );
+        return null;
       }
 
       @Override
@@ -157,7 +200,6 @@ public class ZmlTableHeaderContextMenuListener implements SelectionListener
       {
         return false;
       }
-
     } );
   }
 

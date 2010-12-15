@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:zmltable="schema.table.core.zml.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" targetNamespace="schema.table.core.zml.kalypso.org" elementFormDefault="qualified">
 
-  <import namespace="http://www.w3.org/2001/XMLSchema-instance"/>
+  <import namespace="http://www.w3.org/2001/XMLSchema-instance" />
 
   <!-- elements -->
   <element name="ZmlTable" type="zmltable:ZmlTableType" />
@@ -13,9 +13,13 @@
   <element name="DataColumn" type="zmltable:DataColumnType" substitutionGroup="zmltable:AbstractColumn" />
   <element name="IndexColumn" type="zmltable:IndexColumnType" substitutionGroup="zmltable:AbstractColumn" />
   
+  
+  
   <!-- styles -->
   <element name="StyleSet" type="zmltable:StyleSetType" />
   <element name="Style" type="zmltable:CellStyleType" /> 
+  
+  
   
   <!-- rules -->
   <element name="RuleSet" type="zmltable:RuleSetType" />
@@ -41,10 +45,10 @@
     </sequence>
   </complexType>
 
-
   <complexType name="AbstractColumnType" abstract="true">
     <sequence>
       <element name="property" type="zmltable:ColumnPropertyType" minOccurs="0" maxOccurs="unbounded" />
+      <element name="headers" type="zmltable:HeaderEntriesType" minOccurs="0" maxOccurs="1" />
       <element ref="zmltable:StyleSet" minOccurs="0" maxOccurs="1" />
       <element name="defaultCellStyle" type="zmltable:StyleReferenceType" minOccurs="1" maxOccurs="1" />
       <element name="defaultCellEditingStyle" type="zmltable:StyleReferenceType" minOccurs="0" maxOccurs="1" />
@@ -70,7 +74,7 @@
 
   <complexType name="IndexColumnType">
     <complexContent>
-      <extension base="zmltable:AbstractColumnType"/>
+      <extension base="zmltable:AbstractColumnType" />
     </complexContent>
   </complexType>
 
@@ -103,6 +107,20 @@
   </simpleType>
   
   
+  <!-- column header entries -->
+  <complexType name="HeaderEntriesType">
+    <sequence>
+      <element name="header" type="zmltable:HeaderEntry" minOccurs="0" maxOccurs="unbounded" />
+    </sequence>
+  </complexType>
+
+  <complexType name="HeaderEntry">
+    <sequence>
+      <element name="property" type="zmltable:ColumnHeaderPropertyType" minOccurs="0" maxOccurs="unbounded" />
+    </sequence>
+    <attribute name="id" type="ID" use="required" />
+  </complexType>
+  
   
   <!-- Styles -->
   <complexType name="StyleSetType">
@@ -123,20 +141,19 @@
    <!-- Rules -->
   <complexType name="RuleSetType">
     <sequence>
-    <choice minOccurs="1" maxOccurs="unbounded">
-      <element ref="zmltable:Rule" />
-      <element name="rule" type="zmltable:RuleRefernceType" /> 
-    </choice>
-    
+      <choice minOccurs="1" maxOccurs="unbounded">
+        <element ref="zmltable:Rule" />
+        <element name="rule" type="zmltable:RuleRefernceType" />
+      </choice>
     </sequence>
-    <attribute name="id" type="ID" use="required"/>
+    <attribute name="id" type="ID" use="required" />
   </complexType>
 
   <complexType name="RuleType">
     <sequence>
       <element name="styleReference" type="zmltable:StyleReferenceType" minOccurs="0" maxOccurs="1" />
       <element ref="zmltable:RuleInstructions" minOccurs="0" maxOccurs="1" />
-      <element name="label" type="string" minOccurs="1"/>
+      <element name="label" type="string" minOccurs="1" />
     </sequence>
 
     <attribute name="id" type="ID" use="required" />
@@ -164,6 +181,15 @@
   </complexType>
 
 
+
+  <complexType name="ColumnHeaderPropertyType">
+    <simpleContent>
+      <restriction base="zmltable:StringSimpleType">
+        <attribute name="name" type="zmltable:ColumnHeaderPropertyName" use="required" />
+      </restriction>
+    </simpleContent>
+  </complexType>
+
   <complexType name="StylePropertyType">
     <simpleContent>
       <restriction base="zmltable:StringSimpleType">
@@ -179,6 +205,13 @@
       </extension>
     </simpleContent>
   </complexType>
+
+  <simpleType name="ColumnHeaderPropertyName">
+    <restriction base="string">
+      <enumeration value="icon"></enumeration>
+      <enumeration value="label"></enumeration>
+    </restriction>
+  </simpleType>
 
   <simpleType name="StylePropertyName">
     <restriction base="string">
@@ -207,17 +240,17 @@
     </choice>
   </complexType>
 
-  <simpleType name="operatorFromType" >
+  <simpleType name="operatorFromType">
     <restriction base="string">
-        <enumeration value="&gt;"></enumeration>
-        <enumeration value="&gt;="></enumeration>
+      <enumeration value="&gt;"></enumeration>
+      <enumeration value="&gt;="></enumeration>
     </restriction>
   </simpleType>
 
-  <simpleType name="operatorToType" >
+  <simpleType name="operatorToType">
     <restriction base="string">
-        <enumeration value="&lt;"></enumeration>
-        <enumeration value="&lt;="></enumeration>
+      <enumeration value="&lt;"></enumeration>
+      <enumeration value="&lt;="></enumeration>
     </restriction>
   </simpleType>
 
