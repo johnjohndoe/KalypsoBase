@@ -40,30 +40,36 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.dialogs.input;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.Calendar;
+import java.util.Date;
+
+import org.apache.commons.lang.builder.EqualsBuilder;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlSingleValueModel
+public final class ZmlEinzelwertHelper
 {
-  Set<ZmlSingleValueRow> m_rows = new LinkedHashSet<ZmlSingleValueRow>();
-
-  public ZmlSingleValueModel( )
+  private ZmlEinzelwertHelper( )
   {
-    // add first empty row
-    m_rows.add( new ZmlSingleValueRow() );
   }
 
-  public ZmlSingleValueRow[] getRows( )
+  public static boolean compareDayAnchor( final Date d1, final Date d2 )
   {
-    return m_rows.toArray( new ZmlSingleValueRow[] {} );
-  }
+    if( d1 == null || d2 == null )
+      return false;
 
-  public void addRow( final ZmlSingleValueRow row )
-  {
-    m_rows.add( row );
-  }
+    final Calendar c1 = Calendar.getInstance();
+    c1.setTime( d1 );
 
+    final Calendar c2 = Calendar.getInstance();
+    c2.setTime( d2 );
+
+    final EqualsBuilder builder = new EqualsBuilder();
+    builder.append( c1.get( Calendar.DAY_OF_MONTH ), c2.get( Calendar.DAY_OF_MONTH ) );
+    builder.append( c1.get( Calendar.MONTH ), c2.get( Calendar.MONTH ) );
+    builder.append( c1.get( Calendar.YEAR ), c2.get( Calendar.YEAR ) );
+
+    return builder.isEquals();
+  }
 }

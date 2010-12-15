@@ -45,11 +45,17 @@ import java.util.Date;
 /**
  * @author Dirk Kuch
  */
-public class ZmlSingleValueRow
+public class ZmlEinzelwert
 {
-  private Date m_date;
+  private final Date m_date;
 
-  private Double m_value;
+  private final Double m_value;
+
+  public ZmlEinzelwert( final Date date, final Double value )
+  {
+    m_date = date;
+    m_value = value;
+  }
 
   public Date getDate( )
   {

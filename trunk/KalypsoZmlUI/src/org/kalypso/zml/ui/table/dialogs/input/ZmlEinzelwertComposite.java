@@ -40,49 +40,47 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.dialogs.input;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.apache.commons.lang.builder.EqualsBuilder;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.forms.events.HyperlinkAdapter;
+import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.swt.layout.LayoutHelper;
-import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.base.widgets.EnhancedComboViewer;
 import org.kalypso.zml.ui.table.base.widgets.EnhancedTextBox;
 import org.kalypso.zml.ui.table.base.widgets.rules.DateWidgetRule;
 import org.kalypso.zml.ui.table.base.widgets.rules.DoubeValueWidgetRule;
 import org.kalypso.zml.ui.table.base.widgets.rules.TimeWidgetRule;
-import org.kalypso.zml.ui.table.model.IZmlTableColumn;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlSingleValueComposite extends Composite
+public class ZmlEinzelwertComposite extends Composite
 {
-  private final ZmlSingleValueModel m_model;
+  private static final Image IMG_ADD = new Image( null, ZmlEinzelwertComposite.class.getResourceAsStream( "icons/add.png" ) );
 
-  private final IZmlTableColumn m_column;
+  private static final Image IMG_REMOVE = new Image( null, ZmlEinzelwertComposite.class.getResourceAsStream( "icons/remove.png" ) );
 
-  public ZmlSingleValueComposite( final Composite parent, final FormToolkit toolkit, final IZmlTableColumn column, final ZmlSingleValueModel model )
+  private final ZmlEinzelwertModel m_model;
+
+  public ZmlEinzelwertComposite( final Composite parent, final FormToolkit toolkit, final ZmlEinzelwertModel model )
   {
     super( parent, SWT.NULL );
-    m_column = column;
     m_model = model;
 
     setLayout( LayoutHelper.createGridLayout() );
@@ -94,32 +92,35 @@ public class ZmlSingleValueComposite extends Composite
   private void render( final FormToolkit toolkit )
   {
     final Composite base = toolkit.createComposite( this );
-    base.setLayout( LayoutHelper.createGridLayout( 4 ) );
+    base.setLayout( LayoutHelper.createGridLayout( 5 ) );
     base.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
     toolkit.createLabel( base, "Datum" );
     toolkit.createLabel( base, "Uhrzeit" );
     toolkit.createLabel( base, "" );
     toolkit.createLabel( base, "Wert" );
+    toolkit.createLabel( base, "" );
 
-    final ZmlSingleValueRow[] rows = m_model.getRows();
-    for( final ZmlSingleValueRow row : rows )
+    final ZmlEinzelwert[] rows = m_model.getRows();
+    for( final ZmlEinzelwert row : rows )
     {
-      renderRow( base, toolkit, row );
+      addRow( base, toolkit, row );
     }
 
   }
 
-  private void renderRow( final Composite base, final FormToolkit toolkit, final ZmlSingleValueRow row )
+  private void addRow( final Composite base, final FormToolkit toolkit, final ZmlEinzelwert row )
   {
     try
     {
       final Date date = row.getDate();
-      final Date[] existing = getExistingDateValues( date );
+      final Date[] existing = m_model.getExistingDateValues();
+      final Date[] dayAnchors = getDayAnchors( existing );
 
       final EnhancedComboViewer<Date> viewerDay = new EnhancedComboViewer<Date>( base, toolkit, new DateWidgetRule() );
       viewerDay.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
-      viewerDay.setInput( getDayAnchors( existing ) );
+      viewerDay.setInput( dayAnchors );
+      viewerDay.setSelection( dayAnchors[0] );
 
       final EnhancedComboViewer<Date> viewerTime = new EnhancedComboViewer<Date>( base, toolkit, new TimeWidgetRule() );
       viewerTime.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
@@ -135,7 +136,7 @@ public class ZmlSingleValueComposite extends Composite
             final Date selection = viewerDay.getSelection();
             if( selection != null )
             {
-              return compareDayAnchor( d, selection );
+              return ZmlEinzelwertHelper.compareDayAnchor( d, selection );
             }
           }
 
@@ -153,12 +154,30 @@ public class ZmlSingleValueComposite extends Composite
       } );
 
       viewerTime.setInput( existing );
+      viewerTime.setSelection( date );
 
-      toolkit.createComposite( base ).setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+// toolkit.createComposite( base ).setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
       final EnhancedTextBox<Double> textBox = new EnhancedTextBox<Double>( base, toolkit, new DoubeValueWidgetRule() );
       textBox.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
       textBox.setText( row.getValue() );
+
+      final ImageHyperlink lnkAdd = toolkit.createImageHyperlink( base, SWT.NULL );
+      lnkAdd.setImage( IMG_ADD );
+      lnkAdd.addHyperlinkListener( new HyperlinkAdapter()
+      {
+        /**
+         * @see org.eclipse.ui.forms.events.HyperlinkAdapter#linkActivated(org.eclipse.ui.forms.events.HyperlinkEvent)
+         */
+        @Override
+        public void linkActivated( final HyperlinkEvent e )
+        {
+
+        }
+      } );
+
+      final ImageHyperlink lnkAdd2 = toolkit.createImageHyperlink( base, SWT.NULL );
+      lnkAdd2.setImage( IMG_ADD );
     }
     catch( final SensorException e )
     {
@@ -185,54 +204,4 @@ public class ZmlSingleValueComposite extends Composite
     return anchors.toArray( new Date[] {} );
   }
 
-  private Date[] getExistingDateValues( final Date selection ) throws SensorException
-  {
-    final Set<Date> existing = new TreeSet<Date>();
-
-    final IZmlModelColumn columnModel = m_column.getModelColumn();
-    final IAxis axis = columnModel.getIndexAxis();
-    final ITupleModel model = columnModel.getTupleModel();
-
-    for( int index = 0; index < model.size(); index++ )
-    {
-      final Object object = model.get( index, axis );
-      if( object instanceof Date )
-      {
-        existing.add( (Date) object );
-      }
-    }
-
-    final List<Date> list = new ArrayList<Date>();
-    list.addAll( existing );
-
-    for( final Date date : list )
-    {
-      if( compareDayAnchor( date, selection ) )
-      {
-        final int index = list.indexOf( date );
-        list.set( index, selection );
-      }
-    }
-
-    return list.toArray( new Date[] {} );
-  }
-
-  protected boolean compareDayAnchor( final Date d1, final Date d2 )
-  {
-    if( d1 == null || d2 == null )
-      return false;
-
-    final Calendar c1 = Calendar.getInstance();
-    c1.setTime( d1 );
-
-    final Calendar c2 = Calendar.getInstance();
-    c2.setTime( d2 );
-
-    final EqualsBuilder builder = new EqualsBuilder();
-    builder.append( c1.get( Calendar.DAY_OF_MONTH ), c2.get( Calendar.DAY_OF_MONTH ) );
-    builder.append( c1.get( Calendar.MONTH ), c2.get( Calendar.MONTH ) );
-    builder.append( c1.get( Calendar.YEAR ), c2.get( Calendar.YEAR ) );
-
-    return builder.isEquals();
-  }
 }
