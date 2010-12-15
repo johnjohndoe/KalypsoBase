@@ -247,7 +247,7 @@ public class PositionComposite extends Composite
     /* Create a group. */
     Group horizontalGroup = new Group( parent, SWT.NONE );
     horizontalGroup.setLayout( new GridLayout( 1, false ) );
-    horizontalGroup.setText( "Horizontal" );
+    horizontalGroup.setText( "Position Horizontal" );
 
     /* Create a button. */
     Button leftButton = new Button( horizontalGroup, SWT.RADIO );
@@ -321,7 +321,7 @@ public class PositionComposite extends Composite
     /* Create a group. */
     Group verticalGroup = new Group( parent, SWT.NONE );
     verticalGroup.setLayout( new GridLayout( 1, false ) );
-    verticalGroup.setText( "Vertikal" );
+    verticalGroup.setText( "Position Vertikal" );
 
     /* Create a button. */
     Button topButton = new Button( verticalGroup, SWT.RADIO );

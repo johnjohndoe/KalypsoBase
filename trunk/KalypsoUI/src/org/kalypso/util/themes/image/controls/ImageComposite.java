@@ -53,7 +53,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Layout;
 import org.eclipse.ui.forms.widgets.Form;
 import org.kalypso.contribs.eclipse.ui.forms.MessageUtilitites;
-import org.kalypso.util.themes.legend.listener.IPropertyChangedListener;
+import org.kalypso.util.themes.text.listener.IPropertyChangedListener;
 
 /**
  * This composite edits the position.

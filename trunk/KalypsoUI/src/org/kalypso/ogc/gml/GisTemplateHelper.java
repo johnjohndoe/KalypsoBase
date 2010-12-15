@@ -90,6 +90,7 @@ import org.kalypso.template.gistableview.Gistableview.Layer;
 import org.kalypso.template.gistreeview.Gistreeview;
 import org.kalypso.template.types.ExtentType;
 import org.kalypso.template.types.StyledLayerType;
+import org.kalypso.template.types.StyledLayerType.Property;
 import org.kalypso.transformation.CRSHelper;
 import org.kalypso.transformation.transformer.GeoTransformerFactory;
 import org.kalypso.transformation.transformer.IGeoTransformer;
@@ -288,7 +289,7 @@ public final class GisTemplateHelper
     final String orgSRSName = extent.getSrs();
     if( orgSRSName != null )
       try
-    {
+      {
         final String targetSRS = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
         if( (orgSRSName != null) && !orgSRSName.equals( targetSRS ) )
         {
@@ -296,12 +297,12 @@ public final class GisTemplateHelper
           final IGeoTransformer transformer = GeoTransformerFactory.getGeoTransformer( targetSRS );
           return transformer.transform( env );
         }
-    }
-    catch( final Exception e )
-    {
-      // we just print the error, but asume that we can return an envelope that is not converted
-      e.printStackTrace();
-    }
+      }
+      catch( final Exception e )
+      {
+        // we just print the error, but asume that we can return an envelope that is not converted
+        e.printStackTrace();
+      }
     return env;
   }
 
@@ -501,6 +502,17 @@ public final class GisTemplateHelper
         layer.setLegendicon( extentFac.createStyledLayerTypeLegendicon( legendIcon ) );
 
       layer.setShowChildren( extentFac.createStyledLayerTypeShowChildren( abstractKalypsoTheme.shouldShowLegendChildren() ) );
+
+      /* Update the properties. */
+      String[] propertyNames = ((KalypsoLegendTheme) theme).getPropertyNames();
+      for( String propertyName : propertyNames )
+      {
+        Property property = TemplateUtilities.OF_TEMPLATE_TYPES.createStyledLayerTypeProperty();
+        property.setName( propertyName );
+        property.setValue( theme.getProperty( propertyName, null ) );
+        layer.getProperty().add( property );
+      }
+
       return TemplateUtilities.OF_GISMAPVIEW.createLayer( layer );
     }
     else if( theme instanceof KalypsoScaleTheme )

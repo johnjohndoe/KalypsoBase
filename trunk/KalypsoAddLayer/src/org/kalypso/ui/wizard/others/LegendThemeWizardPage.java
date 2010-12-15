@@ -42,15 +42,21 @@ package org.kalypso.ui.wizard.others;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.ogc.gml.IKalypsoLayerModell;
+import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.util.themes.legend.LegendUtilities;
 import org.kalypso.util.themes.legend.controls.LegendComposite;
+import org.kalypso.util.themes.legend.listener.ILegendChangedListener;
+import org.kalypso.util.themes.position.PositionUtilities;
 
 /**
  * A wizard page for entering properties of for a legend theme.
@@ -67,7 +73,7 @@ public class LegendThemeWizardPage extends WizardPage
   /**
    * The selected properties.
    */
-  private Map<String, String> m_properties;
+  protected Map<String, String> m_properties;
 
   /**
    * The constructor.
@@ -123,32 +129,43 @@ public class LegendThemeWizardPage extends WizardPage
     /* Create the legend composite. */
     LegendComposite legendComposite = new LegendComposite( main, SWT.NONE, m_mapModell, null );
     legendComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    legendComposite.addLegendChangedListener( new ILegendChangedListener()
+    {
+      /**
+       * @see org.kalypso.util.themes.legend.listener.ILegendChangedListener#legendPropertyChanged(java.util.Properties,
+       *      int, int, org.eclipse.swt.graphics.Color, int, org.kalypso.ogc.gml.IKalypsoTheme[])
+       */
+      @Override
+      public void legendPropertyChanged( Properties properties, int horizontal, int vertical, Color backgroundColor, int insets, IKalypsoTheme[] themes )
+      {
+        /* Store the properties. */
+        m_properties.clear();
 
-    // TODO
+        /* Get the properties. */
+        String horizontalProperty = properties.getProperty( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION );
+        String verticalProperty = properties.getProperty( PositionUtilities.THEME_PROPERTY_VERTICAL_POSITION );
+        String backgroundColorProperty = properties.getProperty( LegendUtilities.THEME_PROPERTY_BACKGROUND_COLOR );
+        String insetsProperty = properties.getProperty( LegendUtilities.THEME_PROPERTY_INSETS );
+        String themeIdsProperty = properties.getProperty( LegendUtilities.THEME_PROPERTY_THEME_IDS );
+
+        /* Set the properties. */
+        m_properties.put( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION, horizontalProperty );
+        m_properties.put( PositionUtilities.THEME_PROPERTY_VERTICAL_POSITION, verticalProperty );
+        m_properties.put( LegendUtilities.THEME_PROPERTY_BACKGROUND_COLOR, backgroundColorProperty );
+        m_properties.put( LegendUtilities.THEME_PROPERTY_INSETS, insetsProperty );
+        m_properties.put( LegendUtilities.THEME_PROPERTY_THEME_IDS, themeIdsProperty );
+      }
+    } );
 
     /* Set the control to the page. */
     setControl( main );
-
-    /* In the first time, the page cannot be completed. */
-    setPageComplete( false );
-
-    // TODO
-    checkPageComplete();
   }
 
   /**
-   * This function checks, if the page can be completed.
+   * This function returns the selected properties.
+   * 
+   * @return The selected properties.
    */
-  protected void checkPageComplete( )
-  {
-    /* The wizard page can be completed. */
-    setMessage( null );
-    setErrorMessage( null );
-    setPageComplete( true );
-
-    // TODO
-  }
-
   public Map<String, String> getProperties( )
   {
     return m_properties;
