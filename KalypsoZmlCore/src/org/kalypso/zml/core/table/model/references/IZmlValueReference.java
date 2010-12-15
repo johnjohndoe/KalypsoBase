@@ -66,5 +66,7 @@ public interface IZmlValueReference
 
   Object getValue( ) throws SensorException;
 
+  Object getIndexValue( ) throws SensorException;
+
   void update( Object targetValue ) throws SensorException;
 }

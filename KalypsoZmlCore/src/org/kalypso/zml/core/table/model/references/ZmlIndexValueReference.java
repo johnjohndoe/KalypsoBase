@@ -136,4 +136,13 @@ public class ZmlIndexValueReference implements IZmlValueReference
   {
     throw new UnsupportedOperationException();
   }
+
+  /**
+   * @see org.kalypso.zml.core.table.model.references.IZmlValueReference#getIndexValue()
+   */
+  @Override
+  public Object getIndexValue( )
+  {
+    return getRow().getIndexValue();
+  }
 }
