@@ -76,7 +76,7 @@ public class ZmlRuleUnsafeForecastValue extends AbstractForecastRule
     try
     {
       // index value reference!
-      final Object index = reference.getValue();
+      final Object index = reference.getIndexValue();
       if( index instanceof Date )
       {
         final Date date = (Date) index;
