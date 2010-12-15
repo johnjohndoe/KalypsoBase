@@ -55,8 +55,11 @@ import org.eclipse.swt.SWT;
 import org.kalypso.zml.core.table.schema.AbstractColumnType;
 import org.kalypso.zml.core.table.schema.AlignmentType;
 import org.kalypso.zml.core.table.schema.CellStyleType;
+import org.kalypso.zml.core.table.schema.ColumnHeaderPropertyName;
+import org.kalypso.zml.core.table.schema.ColumnHeaderPropertyType;
 import org.kalypso.zml.core.table.schema.ColumnPropertyType;
 import org.kalypso.zml.core.table.schema.DataColumnType;
+import org.kalypso.zml.core.table.schema.HeaderEntry;
 import org.kalypso.zml.core.table.schema.IndexColumnType;
 import org.kalypso.zml.core.table.schema.StylePropertyName;
 import org.kalypso.zml.core.table.schema.StylePropertyType;
@@ -189,6 +192,26 @@ public final class TableTypeHelper
     }
 
     return null;
+  }
+
+  public static String findProperty( final HeaderEntry type, final ColumnHeaderPropertyName property )
+  {
+    final List<ColumnHeaderPropertyType> properties = type.getProperty();
+    for( final ColumnHeaderPropertyType prop : properties )
+    {
+      final String propertyName = TableTypeHelper.getPropertyName( prop );
+      if( property.value().equals( propertyName ) )
+        return prop.getValue();
+    }
+
+    return null;
+  }
+
+  private static String getPropertyName( final ColumnHeaderPropertyType property )
+  {
+    final Map<QName, String> attributes = property.getOtherAttributes();
+
+    return attributes.get( PROPERTY_NAME );
   }
 
   public static String getPropertyName( final StylePropertyType property )

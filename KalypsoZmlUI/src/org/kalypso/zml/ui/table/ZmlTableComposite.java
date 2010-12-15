@@ -75,6 +75,7 @@ import org.kalypso.contribs.eclipse.jface.viewers.ArrayTreeContentProvider;
 import org.kalypso.contribs.eclipse.swt.layout.LayoutHelper;
 import org.kalypso.zml.core.table.binding.BaseColumn;
 import org.kalypso.zml.core.table.binding.CellStyle;
+import org.kalypso.zml.core.table.binding.ColumnHeader;
 import org.kalypso.zml.core.table.binding.TableTypeHelper;
 import org.kalypso.zml.core.table.binding.ZmlRule;
 import org.kalypso.zml.core.table.model.IZmlColumnModelListener;
@@ -336,6 +337,21 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
 
     final ZmlTableHeaderIconProvider provider = new ZmlTableHeaderIconProvider( 2, new Point( 16, 16 ) );
 
+    final BaseColumn columnType = column.getColumnType();
+    for( final ColumnHeader header : columnType.getHeaders() )
+    {
+      try
+      {
+        final Image icon = header.getIcon();
+        if( icon != null )
+          provider.addImage( icon );
+      }
+      catch( final Throwable t )
+      {
+        KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( t ) );
+      }
+    }
+
     for( final ZmlRule rule : applied )
     {
       try
@@ -348,9 +364,9 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
             provider.addImage( image );
         }
       }
-      catch( final Throwable e )
+      catch( final Throwable t )
       {
-        KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+        KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( t ) );
       }
     }
 

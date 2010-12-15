@@ -55,6 +55,8 @@ import org.kalypso.zml.core.table.schema.AbstractColumnType;
 import org.kalypso.zml.core.table.schema.AlignmentType;
 import org.kalypso.zml.core.table.schema.ColumnPropertyName;
 import org.kalypso.zml.core.table.schema.ColumnPropertyType;
+import org.kalypso.zml.core.table.schema.HeaderEntriesType;
+import org.kalypso.zml.core.table.schema.HeaderEntry;
 import org.kalypso.zml.core.table.schema.RuleRefernceType;
 import org.kalypso.zml.core.table.schema.RuleSetType;
 import org.kalypso.zml.core.table.schema.StyleReferenceType;
@@ -71,6 +73,8 @@ public class BaseColumn
   private CellStyle m_cellStyle;
 
   private CellStyle m_editingCellStyle;
+
+  private ColumnHeader[] m_headers;
 
   public BaseColumn( final AbstractColumnType type )
   {
@@ -94,6 +98,29 @@ public class BaseColumn
     }
 
     return super.equals( obj );
+  }
+
+  public ColumnHeader[] getHeaders( )
+  {
+    if( ArrayUtils.isNotEmpty( m_headers ) )
+      return m_headers;
+
+    final HeaderEntriesType headers = m_type.getHeaders();
+    if( headers == null )
+    {
+      return new ColumnHeader[] {};
+    }
+
+    final List<ColumnHeader> columnHeaders = new ArrayList<ColumnHeader>();
+
+    for( final HeaderEntry header : headers.getHeader() )
+    {
+      columnHeaders.add( new ColumnHeader( header ) );
+    }
+
+    m_headers = columnHeaders.toArray( new ColumnHeader[] {} );
+
+    return m_headers;
   }
 
   /**
