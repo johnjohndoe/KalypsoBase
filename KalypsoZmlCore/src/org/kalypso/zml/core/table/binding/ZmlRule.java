@@ -183,4 +183,9 @@ public class ZmlRule
   {
     return m_rule.getLabel();
   }
+
+  public String getIdentifier( )
+  {
+    return m_rule.getId();
+  }
 }

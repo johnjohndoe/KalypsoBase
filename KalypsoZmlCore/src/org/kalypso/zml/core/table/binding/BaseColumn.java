@@ -42,6 +42,7 @@ package org.kalypso.zml.core.table.binding;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
@@ -55,6 +56,8 @@ import org.kalypso.zml.core.table.schema.AlignmentType;
 import org.kalypso.zml.core.table.schema.ColumnPropertyName;
 import org.kalypso.zml.core.table.schema.ColumnPropertyType;
 import org.kalypso.zml.core.table.schema.RuleRefernceType;
+import org.kalypso.zml.core.table.schema.RuleSetType;
+import org.kalypso.zml.core.table.schema.RuleType;
 import org.kalypso.zml.core.table.schema.StyleReferenceType;
 
 /**
@@ -122,6 +125,59 @@ public class BaseColumn
     if( ArrayUtils.isNotEmpty( m_rules ) )
       return m_rules;
 
+    final List<ZmlRule> rules = new ArrayList<ZmlRule>();
+
+    final ZmlRule[] resolved1 = resolveFromRuleSetReference();
+    final ZmlRule[] resolved2 = resolveRules();
+
+    Collections.addAll( rules, resolved1 );
+    Collections.addAll( rules, resolved2 );
+
+    m_rules = rules.toArray( new ZmlRule[] {} );
+
+    return m_rules;
+  }
+
+  private ZmlRule[] resolveFromRuleSetReference( )
+  {
+    final List<ZmlRule> rules = new ArrayList<ZmlRule>();
+
+    final Object ruleSetReference = m_type.getRuleSetReference();
+    if( !(ruleSetReference instanceof RuleSetType) )
+      return new ZmlRule[] {};
+
+    final ZmlRuleResolver resolver = ZmlRuleResolver.getInstance();
+
+    final RuleSetType ruleSet = (RuleSetType) ruleSetReference;
+    for( final Object objRule : ruleSet.getRuleOrRule() )
+    {
+      if( objRule instanceof RuleType )
+      {
+        final RuleType ruleType = (RuleType) objRule;
+        rules.add( new ZmlRule( ruleType ) );
+      }
+      else if( objRule instanceof RuleRefernceType )
+      {
+        try
+        {
+          final RuleRefernceType reference = (RuleRefernceType) objRule;
+          final ZmlRule rule = resolver.findRule( null, reference );
+          if( rule != null )
+            rules.add( rule );
+        }
+        catch( final CoreException e )
+        {
+          KalypsoZmlCore.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+        }
+      }
+    }
+
+    return rules.toArray( new ZmlRule[] {} );
+  }
+
+  private ZmlRule[] resolveRules( )
+  {
+
     final List<RuleRefernceType> ruleReferenceTypes = m_type.getRule();
     if( ruleReferenceTypes == null )
       return new ZmlRule[] {};
@@ -147,9 +203,7 @@ public class BaseColumn
       }
     }
 
-    m_rules = rules.toArray( new ZmlRule[] {} );
-
-    return m_rules;
+    return rules.toArray( new ZmlRule[] {} );
   }
 
   public AlignmentType getAlignment( )
