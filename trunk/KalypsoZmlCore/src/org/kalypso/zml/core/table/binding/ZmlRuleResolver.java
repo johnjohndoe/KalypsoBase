@@ -43,6 +43,7 @@ package org.kalypso.zml.core.table.binding;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -70,7 +71,7 @@ import com.google.common.collect.MapMaker;
  */
 public final class ZmlRuleResolver
 {
-  private final Map<String, List<RuleSetType>> m_ruleSetCache;
+  private final Map<String, List<ZmlRuleSet>> m_ruleSetCache;
 
   private final Map<String, ZmlRule> m_ruleCache;
 
@@ -136,51 +137,37 @@ public final class ZmlRuleResolver
     return m_ruleCache.get( url );
   }
 
-  private ZmlRule findUrlRule( final URL context, final String uri, final String identifier ) throws MalformedURLException, JAXBException, CoreException
+  private ZmlRule findUrlRule( final URL context, final String uri, final String identifier ) throws MalformedURLException, JAXBException
   {
     final URL absoluteUri = new URL( context, uri );
 
-    List<RuleSetType> ruleSets = m_ruleSetCache.get( uri );
+    List<ZmlRuleSet> ruleSets = m_ruleSetCache.get( uri );
     if( ruleSets == null )
     {
       final ZmlTableConfigurationLoader loader = new ZmlTableConfigurationLoader( absoluteUri );
       final ZmlTableType tableType = loader.getTableType();
 
-      ruleSets = tableType.getRuleSet();
+      ruleSets = new ArrayList<ZmlRuleSet>();
+
+      for( final RuleSetType ruleSet : tableType.getRuleSet() )
+      {
+        ruleSets.add( new ZmlRuleSet( ruleSet ) );
+      }
 
       m_ruleSetCache.put( uri, ruleSets );
     }
 
-    if( ruleSets == null )
-      return null;
-
-    for( final RuleSetType ruleSet : ruleSets )
+    for( final ZmlRuleSet ruleSet : ruleSets )
     {
-
-      for( final Object ruleObject : ruleSet.getRuleOrRule() )
-      {
-        if( ruleObject instanceof RuleType )
-        {
-          final RuleType ruleType = (RuleType) ruleObject;
-          if( ruleType.getId().equals( identifier ) )
-            return new ZmlRule( ruleType );
-        }
-        else if( ruleObject instanceof RuleRefernceType )
-        {
-          final RuleRefernceType reference = (RuleRefernceType) ruleObject;
-          final ZmlRule rule = findRule( context, reference );
-          if( rule.getIdentifier().equals( identifier ) )
-            return rule;
-        }
-
-      }
-
+      final ZmlRule rule = ruleSet.find( identifier );
+      if( rule != null )
+        return rule;
     }
 
     return null;
   }
 
-  private ZmlRule findUrnRule( final URL context, final String urn, final String identifier ) throws MalformedURLException, JAXBException, CoreException
+  private ZmlRule findUrnRule( final URL context, final String urn, final String identifier ) throws MalformedURLException, JAXBException
   {
     final ICatalog baseCatalog = KalypsoCorePlugin.getDefault().getCatalogManager().getBaseCatalog();
     final String uri = baseCatalog.resolve( urn, urn );
