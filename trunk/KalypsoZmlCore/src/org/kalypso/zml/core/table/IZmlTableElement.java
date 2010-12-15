@@ -48,8 +48,6 @@ import org.kalypso.ogc.sensor.provider.IObsProvider;
  */
 public interface IZmlTableElement
 {
-  String ZML_TABLE_INDEX_ID = "zml_table_index";
-
   String getIdentifier( );
 
   IObsProvider getObsProvider( );

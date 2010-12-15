@@ -72,6 +72,7 @@ public class ZmlDataValueReference implements IZmlValueReference
     m_tupleModelIndex = tupleModelIndex;
   }
 
+  @Override
   public Object getIndexValue( ) throws SensorException
   {
     final DataColumn type = m_column.getDataColumn();
