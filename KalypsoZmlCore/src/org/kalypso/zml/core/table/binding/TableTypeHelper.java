@@ -61,7 +61,6 @@ import org.kalypso.zml.core.table.schema.IndexColumnType;
 import org.kalypso.zml.core.table.schema.StylePropertyName;
 import org.kalypso.zml.core.table.schema.StylePropertyType;
 import org.kalypso.zml.core.table.schema.StyleReferenceType;
-import org.kalypso.zml.core.table.schema.StyleSetType;
 import org.kalypso.zml.core.table.schema.ZmlTableType;
 
 /**
@@ -204,18 +203,6 @@ public final class TableTypeHelper
     final Map<QName, String> attributes = property.getOtherAttributes();
 
     return attributes.get( PROPERTY_NAME );
-  }
-
-  public static CellStyleType findCellStyleType( final StyleSetType styleSet, final String reference )
-  {
-    final List<CellStyleType> styles = styleSet.getStyle();
-    for( final CellStyleType style : styles )
-    {
-      if( style.getId().equals( reference ) )
-        return style;
-    }
-
-    return null;
   }
 
   public static int toSWTFontWeight( final String fontWeight )

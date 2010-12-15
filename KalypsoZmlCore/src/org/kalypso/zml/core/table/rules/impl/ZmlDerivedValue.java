@@ -1,3 +1,5 @@
+package org.kalypso.zml.core.table.rules.impl;
+
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -38,19 +40,36 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.core.table;
 
 import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.ogc.sensor.provider.IObsProvider;
+import org.kalypso.zml.core.table.binding.ZmlRule;
+import org.kalypso.zml.core.table.model.references.IZmlValueReference;
 
 /**
  * @author Dirk Kuch
  */
-public interface IZmlTableElement
+public class ZmlDerivedValue extends AbstractZmlTableRule
 {
-  String getIdentifier( );
+  public static final String ID = "org.kalypso.zml.ui.core.rule.derived.value";
 
-  IObsProvider getObsProvider( );
+  /**
+   * @see org.kalypso.zml.ui.core.rules.IZmlTableRule#getIdentifier()
+   */
+  @Override
+  public String getIdentifier( )
+  {
+    return ID;
+  }
 
-  String getTitle( IAxis axis );
+  /**
+   * @see org.kalypso.zml.ui.core.rules.IZmlTableRule#apply(org.kalypso.zml.ui.table.provider.ZmlValueReference)
+   */
+  @Override
+  protected boolean doApply( final ZmlRule rule, final IZmlValueReference reference )
+  {
+    final IAxis axis = reference.getColumn().getValueAxis();
+
+    return !axis.isPersistable();
+  }
+
 }

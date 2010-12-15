@@ -28,6 +28,10 @@
            id="org.kalypso.zml.ui.core.rule.grenzwerte"
            rule="org.kalypso.zml.core.table.rules.impl.grenzwert.ZmlRuleGrenzwerte">
      </rule>
+     <rule
+           id="org.kalypso.zml.ui.core.rule.derived.value"
+           rule="org.kalypso.zml.core.table.rules.impl.ZmlDerivedValue">
+     </rule>
  </extension> 
  <extension
          point="org.eclipse.wst.xml.core.catalogContributions">

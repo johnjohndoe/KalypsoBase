@@ -40,6 +40,10 @@
         <reference>defaultCellStyle</reference>
       </baseStyle>
       <property name="textFormat">%.3f</property>
+    </Style>
+
+    <!-- derived value style -->
+    <Style id="derivedValueCellStyle">
       <property name="backgroundColor">F8F3C0</property>
     </Style>
 
@@ -108,6 +112,12 @@
         <reference>dateForecastCellStyleUnsafe</reference>
       </styleReference>
       <label>Unsicherer Vorhersagezeitraum</label>
+    </Rule>
+    <Rule id="ruleDerivedValue" ruleReference="org.kalypso.zml.ui.core.rule.derived.value" setHeaderIcon="true">
+      <styleReference>
+        <reference>derivedValueCellStyle</reference>
+      </styleReference>
+      <label>Abgeleitete(r) Wert(e)</label>
     </Rule>
     <Rule id="ruleUserModified" ruleReference="org.kalypso.zml.ui.core.rule.user.modified" setHeaderIcon="true">
       <styleReference>

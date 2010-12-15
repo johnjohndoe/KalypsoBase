@@ -57,6 +57,7 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.window.ToolTip;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
@@ -342,7 +343,9 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
         if( rule.hasHeaderIcon() )
         {
           final CellStyle style = rule.getPlainStyle();
-          provider.addImage( style.getImage() );
+          final Image image = style.getImage();
+          if( image != null )
+            provider.addImage( image );
         }
       }
       catch( final Throwable e )
