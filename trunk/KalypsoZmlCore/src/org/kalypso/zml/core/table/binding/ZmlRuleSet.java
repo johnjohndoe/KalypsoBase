@@ -47,6 +47,7 @@ import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.zml.core.KalypsoZmlCore;
+import org.kalypso.zml.core.table.binding.rule.ZmlRule;
 import org.kalypso.zml.core.table.schema.RuleRefernceType;
 import org.kalypso.zml.core.table.schema.RuleSetType;
 import org.kalypso.zml.core.table.schema.RuleType;

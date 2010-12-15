@@ -9,6 +9,7 @@ Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.kalypso.zml.core.table,
  org.kalypso.zml.core.table.binding,
+ org.kalypso.zml.core.table.binding.rule,
  org.kalypso.zml.core.table.model,
  org.kalypso.zml.core.table.model.references,
  org.kalypso.zml.core.table.model.walker,

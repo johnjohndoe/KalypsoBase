@@ -1,4 +1,4 @@
-package org.kalypso.zml.core.table.rules.impl.grenzwert;
+package org.kalypso.zml.core.table.binding.rule.instructions;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
@@ -44,28 +44,20 @@ package org.kalypso.zml.core.table.rules.impl.grenzwert;
 import java.math.BigDecimal;
 
 import org.apache.commons.lang.ObjectUtils;
-import org.eclipse.core.runtime.CoreException;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.metadata.MetadataBoundary;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
-import org.kalypso.zml.core.table.binding.CellStyle;
-import org.kalypso.zml.core.table.binding.ZmlStyleResolver;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
-import org.kalypso.zml.core.table.schema.RuleInstruction;
-import org.kalypso.zml.core.table.schema.StyleReferenceType;
+import org.kalypso.zml.core.table.schema.MetadataBoundaryInstructionType;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlRuleGrenzwertInstruction
+public class ZmlMetadataBoundaryInstruction extends AbstractZmlRuleInstructionType
 {
   public static final String PATTERN_TEXT = "${text}";
-
-  private final RuleInstruction m_type;
-
-  private CellStyle m_style;
 
   private MetadataBoundary m_boundaryFrom;
 
@@ -75,9 +67,15 @@ public class ZmlRuleGrenzwertInstruction
 
   private IZmlModelColumn m_lastFromColumn;
 
-  public ZmlRuleGrenzwertInstruction( final RuleInstruction type )
+  public ZmlMetadataBoundaryInstruction( final MetadataBoundaryInstructionType type )
   {
-    m_type = type;
+    super( type );
+  }
+
+  @Override
+  public MetadataBoundaryInstructionType getType( )
+  {
+    return (MetadataBoundaryInstructionType) super.getType();
   }
 
   public boolean matches( final IZmlValueReference reference ) throws SensorException
@@ -95,9 +93,9 @@ public class ZmlRuleGrenzwertInstruction
     final int scale = 3;
     final BigDecimal valueDecimal = new BigDecimal( value ).setScale( scale, BigDecimal.ROUND_HALF_UP );
 
-    if( !compareMeta( metaFrom, m_type.getFrom(), valueDecimal, m_type.getOpFrom() ) )
+    if( !compareMeta( metaFrom, getType().getFrom(), valueDecimal, getType().getOpFrom() ) )
       return false;
-    if( !compareMeta( metaTo, m_type.getTo(), valueDecimal, m_type.getOpTo() ) )
+    if( !compareMeta( metaTo, getType().getTo(), valueDecimal, getType().getOpTo() ) )
       return false;
 
     return true;
@@ -108,7 +106,7 @@ public class ZmlRuleGrenzwertInstruction
     if( m_boundaryFrom == null || reference.getColumn() != m_lastFromColumn )
     {
       m_lastFromColumn = reference.getColumn();
-      m_boundaryFrom = MetadataBoundary.getBoundary( m_lastFromColumn.getMetadata(), m_type.getFrom(), new BigDecimal( -Double.MAX_VALUE ) );
+      m_boundaryFrom = MetadataBoundary.getBoundary( m_lastFromColumn.getMetadata(), getType().getFrom(), new BigDecimal( -Double.MAX_VALUE ) );
     }
 
     return m_boundaryFrom;
@@ -119,7 +117,7 @@ public class ZmlRuleGrenzwertInstruction
     if( m_boundaryTo == null || reference.getColumn() != m_lastToColumn )
     {
       m_lastToColumn = reference.getColumn();
-      m_boundaryTo = MetadataBoundary.getBoundary( m_lastToColumn.getMetadata(), m_type.getTo(), new BigDecimal( -Double.MAX_VALUE ) );
+      m_boundaryTo = MetadataBoundary.getBoundary( m_lastToColumn.getMetadata(), getType().getTo(), new BigDecimal( -Double.MAX_VALUE ) );
     }
 
     return m_boundaryTo;
@@ -210,23 +208,11 @@ public class ZmlRuleGrenzwertInstruction
 
   public String update( final String text )
   {
-    final String label = m_type.getLabel();
+    final String label = getType().getLabel();
     if( label == null )
       return text;
 
     return label.replace( PATTERN_TEXT, text );
-  }
-
-  public CellStyle getStyle( ) throws CoreException
-  {
-    if( m_style != null )
-      return m_style;
-
-    final ZmlStyleResolver resolver = ZmlStyleResolver.getInstance();
-    final StyleReferenceType styleReference = m_type.getStyleReference();
-
-    m_style = resolver.findStyle( styleReference );
-    return m_style;
   }
 
 }

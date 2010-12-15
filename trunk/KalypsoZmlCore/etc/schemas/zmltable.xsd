@@ -13,18 +13,19 @@
   <element name="DataColumn" type="zmltable:DataColumnType" substitutionGroup="zmltable:AbstractColumn" />
   <element name="IndexColumn" type="zmltable:IndexColumnType" substitutionGroup="zmltable:AbstractColumn" />
   
-  
-  
   <!-- styles -->
   <element name="StyleSet" type="zmltable:StyleSetType" />
   <element name="Style" type="zmltable:CellStyleType" /> 
   
-  
-  
   <!-- rules -->
   <element name="RuleSet" type="zmltable:RuleSetType" />
   <element name="Rule" type="zmltable:RuleType" />
+
   <element name="RuleInstructions" type="zmltable:RuleInstructionsType" />
+  <element name="AbstractRuleInstruction" type="zmltable:AbstractRuleInstructionType"  />
+
+  <element name="MetadataBoundaryInstruction" type="zmltable:MetadataBoundaryInstructionType" substitutionGroup="zmltable:AbstractRuleInstruction" />
+  
   
   <!-- types -->
   <complexType name="ZmlTableType">
@@ -163,21 +164,31 @@
   </complexType>
 
 
+  
+  <!-- rule instruction types -->
   <complexType name="RuleInstructionsType">
     <sequence>
-      <element name="instruction" type="zmltable:RuleInstruction" minOccurs="1" maxOccurs="unbounded" />
+      <element ref="zmltable:AbstractRuleInstruction" minOccurs="1" maxOccurs="unbounded" />
     </sequence>
   </complexType>
 
-  <complexType name="RuleInstruction">
+  <complexType name="AbstractRuleInstructionType" abstract="true">
     <sequence>
       <element name="styleReference" type="zmltable:StyleReferenceType" minOccurs="0" maxOccurs="1" />
     </sequence>
-    <attribute name="from" type="string" use="optional" />
-    <attribute name="opFrom" type="zmltable:operatorFromType" use="optional" default="&gt;" />
-    <attribute name="to" type="string" use="optional" />
-    <attribute name="opTo" type="zmltable:operatorToType" use="optional" default="&lt;" />
-    <attribute name="label" type="string" use="optional" />
+  </complexType>
+
+
+  <complexType name="MetadataBoundaryInstructionType">
+    <complexContent>
+      <extension base="zmltable:AbstractRuleInstructionType">
+        <attribute name="from" type="string" use="optional" />
+        <attribute name="opFrom" type="zmltable:operatorFromType" use="optional" default="&gt;" />
+        <attribute name="to" type="string" use="optional" />
+        <attribute name="opTo" type="zmltable:operatorToType" use="optional" default="&lt;" />
+        <attribute name="label" type="string" use="optional" />
+      </extension>
+    </complexContent>
   </complexType>
 
 

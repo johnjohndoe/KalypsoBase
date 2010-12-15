@@ -99,7 +99,7 @@
   <defaultStyle>
     <reference>defaultCellStyle</reference>
   </defaultStyle>
- 
+
   <RuleSet id="default">
     <Rule id="ruleForecastSafe" ruleReference="org.kalypso.zml.ui.core.rule.safe.forecast.value">
       <styleReference>
@@ -139,57 +139,57 @@
     </Rule>
     <Rule id="ruleAlarmstufen" ruleReference="org.kalypso.zml.ui.core.rule.grenzwerte" enabled="false">
       <RuleInstructions>
-        <instruction from="Grenzwert_W: Alarmstufe_1" opFrom="&gt;=" to="Grenzwert_W: Alarmstufe_2" label="AS1   ${text}">
+        <MetadataBoundaryInstruction from="Grenzwert_W: Alarmstufe_1" opFrom="&gt;=" to="Grenzwert_W: Alarmstufe_2" label="AS1   ${text}">
           <styleReference>
             <reference>alarmstufe_1</reference>
           </styleReference>
-        </instruction>
-        <instruction from="Grenzwert_W: Alarmstufe_2" opFrom="&gt;=" to="Grenzwert_W: Alarmstufe_3" label="AS2   ${text}">
+        </MetadataBoundaryInstruction>
+        <MetadataBoundaryInstruction from="Grenzwert_W: Alarmstufe_2" opFrom="&gt;=" to="Grenzwert_W: Alarmstufe_3" label="AS2   ${text}">
           <styleReference>
             <reference>alarmstufe_2</reference>
           </styleReference>
-        </instruction>
-        <instruction from="Grenzwert_W: Alarmstufe_3" opFrom="&gt;=" to="Grenzwert_W: Alarmstufe_4" label="AS3   ${text}">
+        </MetadataBoundaryInstruction>
+        <MetadataBoundaryInstruction from="Grenzwert_W: Alarmstufe_3" opFrom="&gt;=" to="Grenzwert_W: Alarmstufe_4" label="AS3   ${text}">
           <styleReference>
             <reference>alarmstufe_3</reference>
           </styleReference>
-        </instruction>
-        <instruction from="Grenzwert_W: Alarmstufe_4" opFrom="&gt;=" label="AS4   ${text}">
+        </MetadataBoundaryInstruction>
+        <MetadataBoundaryInstruction from="Grenzwert_W: Alarmstufe_4" opFrom="&gt;=" label="AS4   ${text}">
           <styleReference>
             <reference>alarmstufe_4</reference>
           </styleReference>
-        </instruction>
-        <instruction from="Grenzwert_W: Meldegrenze" opFrom="&gt;=" label="MG   ${text}">
+        </MetadataBoundaryInstruction>
+        <MetadataBoundaryInstruction from="Grenzwert_W: Meldegrenze" opFrom="&gt;=" label="MG   ${text}">
           <styleReference>
             <reference>meldegrenze</reference>
           </styleReference>
-        </instruction>
+        </MetadataBoundaryInstruction>
       </RuleInstructions>
       <label>Alarmstufe(n)</label>
     </Rule>
 
     <Rule id="ruleHauptzahlenQ" ruleReference="org.kalypso.zml.ui.core.rule.grenzwerte" enabled="false">
       <RuleInstructions>
-        <instruction to="Grenzwert_Q: Kalypso_Grenzwert_NQ" label="&lt;N   ${text}" />
-        <instruction from="Grenzwert_Q: Kalypso_Grenzwert_NQ" opFrom="&gt;=" to="Grenzwert_Q: Kalypso_Grenzwert_MNQ" label="&lt;MN   ${text}" />
-        <instruction from="Grenzwert_Q: Kalypso_Grenzwert_MNQ" opFrom="&gt;=" to="Grenzwert_Q: Kalypso_Grenzwert_MQ" label="&lt;M   ${text}" />
-        <instruction from="Grenzwert_Q: Kalypso_Grenzwert_MQ" opFrom="&gt;=" to="Grenzwert_Q: Kalypso_Grenzwert_MQ" opTo="&lt;=" label="=M   ${text}" />
-        <instruction from="Grenzwert_Q: Kalypso_Grenzwert_MQ" to="Grenzwert_Q: Kalypso_Grenzwert_MHQ" opTo="&lt;=" label="&gt;M   ${text}" />
-        <instruction from="Grenzwert_Q: Kalypso_Grenzwert_MHQ" to="Grenzwert_Q: Kalypso_Grenzwert_HQ" opTo="&lt;=" label="&gt;MH   ${text}" />
-        <instruction from="Grenzwert_Q: Kalypso_Grenzwert_HQ" label="&gt;H   ${text}" />
+        <MetadataBoundaryInstruction to="Grenzwert_Q: Kalypso_Grenzwert_NQ" label="&lt;N   ${text}" />
+        <MetadataBoundaryInstruction from="Grenzwert_Q: Kalypso_Grenzwert_NQ" opFrom="&gt;=" to="Grenzwert_Q: Kalypso_Grenzwert_MNQ" label="&lt;MN   ${text}" />
+        <MetadataBoundaryInstruction from="Grenzwert_Q: Kalypso_Grenzwert_MNQ" opFrom="&gt;=" to="Grenzwert_Q: Kalypso_Grenzwert_MQ" label="&lt;M   ${text}" />
+        <MetadataBoundaryInstruction from="Grenzwert_Q: Kalypso_Grenzwert_MQ" opFrom="&gt;=" to="Grenzwert_Q: Kalypso_Grenzwert_MQ" opTo="&lt;=" label="=M   ${text}" />
+        <MetadataBoundaryInstruction from="Grenzwert_Q: Kalypso_Grenzwert_MQ" to="Grenzwert_Q: Kalypso_Grenzwert_MHQ" opTo="&lt;=" label="&gt;M   ${text}" />
+        <MetadataBoundaryInstruction from="Grenzwert_Q: Kalypso_Grenzwert_MHQ" to="Grenzwert_Q: Kalypso_Grenzwert_HQ" opTo="&lt;=" label="&gt;MH   ${text}" />
+        <MetadataBoundaryInstruction from="Grenzwert_Q: Kalypso_Grenzwert_HQ" label="&gt;H   ${text}" />
       </RuleInstructions>
       <label>Hauptzahl(en) Q</label>
     </Rule>
 
     <Rule id="ruleHauptzahlenW" ruleReference="org.kalypso.zml.ui.core.rule.grenzwerte" enabled="false">
       <RuleInstructions>
-        <instruction to="Grenzwert_W: Kalypso_Grenzwert_NW" label="&lt;N   ${text}" />
-        <instruction from="Grenzwert_W: Kalypso_Grenzwert_NW" opFrom="&gt;=" to="Grenzwert_W: Kalypso_Grenzwert_MNW" label="&lt;MN   ${text}" />
-        <instruction from="Grenzwert_W: Kalypso_Grenzwert_MNW" opFrom="&gt;=" to="Grenzwert_W: Kalypso_Grenzwert_MW" label="&lt;M   ${text}" />
-        <instruction from="Grenzwert_W: Kalypso_Grenzwert_MW" opFrom="&gt;=" to="Grenzwert_W: Kalypso_Grenzwert_MW" opTo="&lt;=" label="=M   ${text}" />
-        <instruction from="Grenzwert_W: Kalypso_Grenzwert_MW" to="Grenzwert_W: Kalypso_Grenzwert_MHW" opTo="&lt;=" label="&gt;M   ${text}" />
-        <instruction from="Grenzwert_W: Kalypso_Grenzwert_MHW" to="Grenzwert_W: Kalypso_Grenzwert_HW" opTo="&lt;=" label="&gt;MH   ${text}" />
-        <instruction from="Grenzwert_W: Kalypso_Grenzwert_HW" label="&gt;H   ${text}" />
+        <MetadataBoundaryInstruction to="Grenzwert_W: Kalypso_Grenzwert_NW" label="&lt;N   ${text}" />
+        <MetadataBoundaryInstruction from="Grenzwert_W: Kalypso_Grenzwert_NW" opFrom="&gt;=" to="Grenzwert_W: Kalypso_Grenzwert_MNW" label="&lt;MN   ${text}" />
+        <MetadataBoundaryInstruction from="Grenzwert_W: Kalypso_Grenzwert_MNW" opFrom="&gt;=" to="Grenzwert_W: Kalypso_Grenzwert_MW" label="&lt;M   ${text}" />
+        <MetadataBoundaryInstruction from="Grenzwert_W: Kalypso_Grenzwert_MW" opFrom="&gt;=" to="Grenzwert_W: Kalypso_Grenzwert_MW" opTo="&lt;=" label="=M   ${text}" />
+        <MetadataBoundaryInstruction from="Grenzwert_W: Kalypso_Grenzwert_MW" to="Grenzwert_W: Kalypso_Grenzwert_MHW" opTo="&lt;=" label="&gt;M   ${text}" />
+        <MetadataBoundaryInstruction from="Grenzwert_W: Kalypso_Grenzwert_MHW" to="Grenzwert_W: Kalypso_Grenzwert_HW" opTo="&lt;=" label="&gt;MH   ${text}" />
+        <MetadataBoundaryInstruction from="Grenzwert_W: Kalypso_Grenzwert_HW" label="&gt;H   ${text}" />
       </RuleInstructions>
       <label>Hauptzahl(en) W</label>
     </Rule>

@@ -1,4 +1,4 @@
-package org.kalypso.zml.core.table.binding;
+package org.kalypso.zml.core.table.binding.rule;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
@@ -44,16 +44,22 @@ package org.kalypso.zml.core.table.binding;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.bind.JAXBElement;
+
 import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.zml.core.KalypsoZmlCore;
+import org.kalypso.zml.core.table.binding.BaseColumn;
+import org.kalypso.zml.core.table.binding.CellStyle;
+import org.kalypso.zml.core.table.binding.ZmlStyleResolver;
+import org.kalypso.zml.core.table.binding.rule.instructions.ZmlMetadataBoundaryInstruction;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
 import org.kalypso.zml.core.table.rules.IZmlRuleImplementation;
-import org.kalypso.zml.core.table.rules.impl.grenzwert.ZmlRuleGrenzwertInstruction;
+import org.kalypso.zml.core.table.schema.AbstractRuleInstructionType;
 import org.kalypso.zml.core.table.schema.CellStyleType;
-import org.kalypso.zml.core.table.schema.RuleInstruction;
+import org.kalypso.zml.core.table.schema.MetadataBoundaryInstructionType;
 import org.kalypso.zml.core.table.schema.RuleInstructionsType;
 import org.kalypso.zml.core.table.schema.RuleType;
 import org.kalypso.zml.core.table.schema.StyleReferenceType;
@@ -67,7 +73,7 @@ public class ZmlRule
 {
   private final RuleType m_rule;
 
-  private ZmlRuleGrenzwertInstruction[] m_instructions;
+  private ZmlMetadataBoundaryInstruction[] m_instructions;
 
   private CellStyle m_baseStyle;
 
@@ -100,8 +106,8 @@ public class ZmlRule
 
     CellStyleType base = m_baseStyle.getType();
 
-    final ZmlRuleGrenzwertInstruction[] instructions = getInstructions();
-    for( final ZmlRuleGrenzwertInstruction instruction : instructions )
+    final ZmlMetadataBoundaryInstruction[] instructions = getInstructions();
+    for( final ZmlMetadataBoundaryInstruction instruction : instructions )
     {
       try
       {
@@ -126,24 +132,28 @@ public class ZmlRule
     return KalypsoZmlCore.getDefault().findRule( m_rule.getRuleReference() );
   }
 
-  public ZmlRuleGrenzwertInstruction[] getInstructions( )
+  public ZmlMetadataBoundaryInstruction[] getInstructions( )
   {
     if( ArrayUtils.isNotEmpty( m_instructions ) )
       return m_instructions;
 
-    final List<ZmlRuleGrenzwertInstruction> myInstructions = new ArrayList<ZmlRuleGrenzwertInstruction>();
+    final List<ZmlMetadataBoundaryInstruction> myInstructions = new ArrayList<ZmlMetadataBoundaryInstruction>();
 
     final RuleInstructionsType type = m_rule.getRuleInstructions();
     if( type == null )
-      return new ZmlRuleGrenzwertInstruction[] {};
+      return new ZmlMetadataBoundaryInstruction[] {};
 
-    final List<RuleInstruction> instructions = type.getInstruction();
-    for( final RuleInstruction instruction : instructions )
+    final List<JAXBElement< ? extends AbstractRuleInstructionType>> abstractInstructions = type.getAbstractRuleInstruction();
+    for( final JAXBElement< ? extends AbstractRuleInstructionType> element : abstractInstructions )
     {
-      myInstructions.add( new ZmlRuleGrenzwertInstruction( instruction ) );
+      final AbstractRuleInstructionType abstractType = element.getValue();
+      if( abstractType instanceof MetadataBoundaryInstructionType )
+      {
+        myInstructions.add( new ZmlMetadataBoundaryInstruction( (MetadataBoundaryInstructionType) abstractType ) );
+      }
     }
 
-    m_instructions = myInstructions.toArray( new ZmlRuleGrenzwertInstruction[] {} );
+    m_instructions = myInstructions.toArray( new ZmlMetadataBoundaryInstruction[] {} );
 
     return m_instructions;
   }

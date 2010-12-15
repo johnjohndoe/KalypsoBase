@@ -41,7 +41,7 @@
 package org.kalypso.zml.core.table.rules;
 
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.zml.core.table.binding.ZmlRule;
+import org.kalypso.zml.core.table.binding.rule.ZmlRule;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
 
 /**
