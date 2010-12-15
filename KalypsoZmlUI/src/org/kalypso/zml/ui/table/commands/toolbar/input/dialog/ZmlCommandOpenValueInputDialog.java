@@ -47,7 +47,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
-import org.kalypso.zml.ui.table.dialogs.input.ZmlSingleValueInputDialog;
+import org.kalypso.zml.ui.table.dialogs.input.ZmlEinzelwertDialog;
 import org.kalypso.zml.ui.table.model.IZmlTableColumn;
 
 /**
@@ -66,7 +66,7 @@ public class ZmlCommandOpenValueInputDialog extends AbstractHandler
     final IZmlTableColumn column = table.getActiveColumn();
 
     final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
-    final ZmlSingleValueInputDialog dialog = new ZmlSingleValueInputDialog( shell, column );
+    final ZmlEinzelwertDialog dialog = new ZmlEinzelwertDialog( shell, column );
     dialog.open();
 
     return Status.OK_STATUS;

@@ -56,18 +56,16 @@ import org.kalypso.zml.ui.table.model.IZmlTableColumn;
 /**
  * @author Dirk Kuch
  */
-public class ZmlSingleValueInputDialog extends EnhancedTitleAreaDialog
+public class ZmlEinzelwertDialog extends EnhancedTitleAreaDialog
 {
   private static final String SCREEN_SIZE = "zml.input.dialog.screen.size";
 
-  private final IZmlTableColumn m_column;
+  private final ZmlEinzelwertModel m_model;
 
-  private final ZmlSingleValueModel m_model = new ZmlSingleValueModel();
-
-  public ZmlSingleValueInputDialog( final Shell shell, final IZmlTableColumn column )
+  public ZmlEinzelwertDialog( final Shell shell, final IZmlTableColumn column )
   {
     super( shell );
-    m_column = column;
+    m_model = new ZmlEinzelwertModel( column );
 
     setShellStyle( SWT.CLOSE | SWT.MAX | SWT.TITLE | SWT.BORDER | SWT.APPLICATION_MODAL | SWT.RESIZE );
   }
@@ -80,7 +78,7 @@ public class ZmlSingleValueInputDialog extends EnhancedTitleAreaDialog
   {
     getShell().setText( "Eingabe von Einzelwerten" );
 
-    setTitle( String.format( "Bearbeiten der Zeitreihe: \"%s\"", m_column.getModelColumn().getLabel() ) );
+    setTitle( String.format( "Bearbeiten der Zeitreihe: \"%s\"", m_model.getLabel() ) );
     setMessage( "Mit Hilfe dieses Dialogs können Sie gezielt Änderungen an einzelnen Werten vornehmen." );
 
     final FormToolkit toolkit = new FormToolkit( parent.getDisplay() );
@@ -107,7 +105,7 @@ public class ZmlSingleValueInputDialog extends EnhancedTitleAreaDialog
       }
     } );
 
-    final ZmlSingleValueComposite composite = new ZmlSingleValueComposite( base, toolkit, m_column, m_model );
+    final ZmlEinzelwertComposite composite = new ZmlEinzelwertComposite( base, toolkit, m_model );
     composite.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
 
     toolkit.adapt( parent );

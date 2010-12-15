@@ -40,12 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.base.widgets;
 
+import java.util.Date;
+
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -85,6 +88,7 @@ public class EnhancedComboViewer<T> extends AbstractEnhancedWidget<T>
     m_viewer.setContentProvider( new ArrayContentProvider() );
     m_viewer.setLabelProvider( new LabelProvider()
     {
+      @SuppressWarnings("unchecked")
       @Override
       public String getText( final Object element )
       {
@@ -118,5 +122,10 @@ public class EnhancedComboViewer<T> extends AbstractEnhancedWidget<T>
   public void refresh( )
   {
     m_viewer.refresh();
+  }
+
+  public void setSelection( final Date date )
+  {
+    m_viewer.setSelection( new StructuredSelection( date ) );
   }
 }
