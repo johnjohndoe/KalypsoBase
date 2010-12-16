@@ -53,16 +53,19 @@ import org.kalypso.ogc.gml.IKalypsoTheme;
 public class ThemeCheckStateProvider implements ICheckStateProvider
 {
   /**
-   * The selected themes.
+   * The ids of the selected themes.
    */
-  private List<IKalypsoTheme> m_themes;
+  private List<String> m_themeIds;
 
   /**
    * The constructor.
+   * 
+   * @param themeIds
+   *          The ids of the selected themes.
    */
-  public ThemeCheckStateProvider( List<IKalypsoTheme> themes )
+  public ThemeCheckStateProvider( List<String> themeIds )
   {
-    m_themes = themes;
+    m_themeIds = themeIds;
   }
 
   /**
@@ -71,7 +74,10 @@ public class ThemeCheckStateProvider implements ICheckStateProvider
   @Override
   public boolean isChecked( Object element )
   {
-    return m_themes.contains( element );
+    if( element instanceof IKalypsoTheme )
+      return m_themeIds.contains( ((IKalypsoTheme) element).getId() );
+
+    return false;
   }
 
   /**

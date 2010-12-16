@@ -276,7 +276,7 @@ public class LegendPropertyPage extends PropertyPage implements IWorkbenchProper
 
       /* Get the legend graphic. */
       LegendExporter legendExporter = new LegendExporter();
-      Image legendGraphic = legendExporter.exportLegends( new IThemeNode[] { m_node }, display, null, new RGB( 255, 255, 255 ), -1, -1, null );
+      Image legendGraphic = legendExporter.exportLegends( null, new IThemeNode[] { m_node }, display, null, new RGB( 255, 255, 255 ), -1, -1, null );
       if( legendGraphic == null )
         throw new Exception( Messages.getString( "org.kalypso.ui.views.properties.LegendPropertyPage.2" ) );//$NON-NLS-1$
 
@@ -371,10 +371,10 @@ public class LegendPropertyPage extends PropertyPage implements IWorkbenchProper
     {
       /**
        * @see org.kalypso.util.themes.legend.listener.ILegendChangedListener#legendPropertyChanged(java.util.Properties,
-       *      int, int, org.eclipse.swt.graphics.Color, int, org.kalypso.ogc.gml.IKalypsoTheme[])
+       *      int, int, org.eclipse.swt.graphics.Color, int, java.lang.String[])
        */
       @Override
-      public void legendPropertyChanged( Properties properties, int horizontal, int vertical, Color backgroundColor, int insets, IKalypsoTheme[] themes )
+      public void legendPropertyChanged( Properties properties, int horizontal, int vertical, Color backgroundColor, int insets, String[] themeIds )
       {
         /* Update the properties object. */
         m_properties = properties;
@@ -450,17 +450,17 @@ public class LegendPropertyPage extends PropertyPage implements IWorkbenchProper
       int insets = LegendUtilities.checkInsets( insetsProperty );
       if( insets == -1 )
         insets = 5;
-      List<IKalypsoTheme> themes = LegendUtilities.checkThemeIds( m_theme.getMapModell(), themeIdsProperty );
-      if( themes == null || themes.size() == 0 )
+      List<String> themeIds = LegendUtilities.verifyThemeIds( m_theme.getMapModell(), themeIdsProperty );
+      if( themeIds == null || themeIds.size() == 0 )
         throw new Exception( "Es wurden keine Themen ausgewählt..." );
 
       /* Create the nodes. */
-      // TODO Tree problem...
-      IThemeNode[] nodes = NodeFactory.createNodes( null, themes.toArray( new IKalypsoTheme[] {} ) );
+      IThemeNode rootNode = NodeFactory.createRootNode( m_theme.getMapModell(), null );
+      IThemeNode[] nodes = rootNode.getChildren();
 
       /* Get the legend graphic. */
       LegendExporter legendExporter = new LegendExporter();
-      Image legendGraphic = legendExporter.exportLegends( nodes, display, new Insets( insets, insets, insets, insets ), backgroundColor.getRGB(), -1, -1, null );
+      Image legendGraphic = legendExporter.exportLegends( themeIds.toArray( new String[] {} ), nodes, display, new Insets( insets, insets, insets, insets ), backgroundColor.getRGB(), -1, -1, null );
       if( legendGraphic == null )
         throw new Exception( Messages.getString( "org.kalypso.ui.views.properties.LegendPropertyPage.2" ) );//$NON-NLS-1$
 

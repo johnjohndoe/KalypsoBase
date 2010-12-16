@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.outline.nodes;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
@@ -75,22 +78,36 @@ public class WMSThemeNode extends KalypsoThemeNode<KalypsoWMSTheme>
   }
 
   /**
-   * @see org.kalypso.ogc.gml.wms.provider.legends.IKalypsoLegendProvider#getLegendGraphic(org.eclipse.swt.graphics.Font)
+   * @see org.kalypso.ogc.gml.outline.nodes.AbstractThemeNode#getLegendGraphic(java.lang.String[],
+   *      org.eclipse.swt.graphics.Font)
    */
   @Override
-  public Image getLegendGraphic( final Font font ) throws CoreException
+  public Image getLegendGraphic( final String[] whiteList, final Font font ) throws CoreException
   {
+    /* Get the wms theme. */
     final KalypsoWMSTheme element = getElement();
 
-    final IKalypsoImageProvider imageProvider = element.getImageProvider();
+    /* The theme ids, which are allowed. */
+    List<String> themeIds = null;
+    if( whiteList != null && whiteList.length > 0 )
+      themeIds = Arrays.asList( whiteList );
 
+    /* Only show themes in the white list. */
+    if( themeIds != null && themeIds.size() > 0 )
+    {
+      final String id = element.getId();
+      if( id != null && id.length() > 0 && !themeIds.contains( id ) )
+        return null;
+    }
+
+    final IKalypsoImageProvider imageProvider = element.getImageProvider();
     if( imageProvider == null || !(imageProvider instanceof ILegendProvider) )
-      return super.getLegendGraphic( font );
+      return super.getLegendGraphic( whiteList, font );
 
     if( m_legend == null )
     {
       final ILegendProvider legendProvider = (ILegendProvider) imageProvider;
-      m_legend = legendProvider.getLegendGraphic( font );
+      m_legend = legendProvider.getLegendGraphic( whiteList, font );
     }
 
     if( m_legend != null )
@@ -99,6 +116,6 @@ public class WMSThemeNode extends KalypsoThemeNode<KalypsoWMSTheme>
       return new Image( font.getDevice(), m_legend, SWT.IMAGE_COPY );
     }
 
-    return super.getLegendGraphic( font );
+    return super.getLegendGraphic( whiteList, font );
   }
 }

@@ -43,7 +43,6 @@ package org.kalypso.util.themes.legend.listener;
 import java.util.Properties;
 
 import org.eclipse.swt.graphics.Color;
-import org.kalypso.ogc.gml.IKalypsoTheme;
 
 /**
  * This interface provides functions for listener, which would like to be notified if a legend property has changed.
@@ -65,8 +64,8 @@ public interface ILegendChangedListener
    *          The background color.
    * @param insets
    *          The insets.
-   * @param themes
-   *          The selected themes.
+   * @param themeIds
+   *          The ids of the selected themes.
    */
-  public void legendPropertyChanged( Properties properties, int horizontal, int vertical, Color backgroundColor, int insets, IKalypsoTheme[] themes );
+  public void legendPropertyChanged( Properties properties, int horizontal, int vertical, Color backgroundColor, int insets, String[] themeIds );
 }

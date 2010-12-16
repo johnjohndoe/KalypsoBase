@@ -47,7 +47,6 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Insets;
 import java.awt.image.BufferedImage;
-import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
@@ -184,11 +183,6 @@ public class KalypsoLegendTheme extends AbstractKalypsoTheme
   };
 
   /**
-   * All available kalypso themes.
-   */
-  private List<IKalypsoTheme> m_availableThemes;
-
-  /**
    * The horizontal position.
    */
   protected int m_horizontal;
@@ -209,9 +203,9 @@ public class KalypsoLegendTheme extends AbstractKalypsoTheme
   protected int m_insets;
 
   /**
-   * The selected themes.
+   * The ids of the selected themes.
    */
-  protected IKalypsoTheme[] m_themes;
+  protected String[] m_themeIds;
 
   /**
    * The drawn image.
@@ -231,12 +225,11 @@ public class KalypsoLegendTheme extends AbstractKalypsoTheme
     super( name, "legend", mapModell ); //$NON-NLS-1$
 
     m_image = null;
-    m_availableThemes = null;
     m_horizontal = -1;
     m_vertical = -1;
     m_backgroundColor = null;
     m_insets = -1;
-    m_themes = null;
+    m_themeIds = null;
 
     mapModell.addMapModelListener( m_modellListener );
   }
@@ -253,12 +246,11 @@ public class KalypsoLegendTheme extends AbstractKalypsoTheme
       m_backgroundColor.dispose();
 
     m_image = null;
-    m_availableThemes = null;
     m_horizontal = -1;
     m_vertical = -1;
     m_backgroundColor = null;
     m_insets = -1;
-    m_themes = null;
+    m_themeIds = null;
 
     super.dispose();
   }
@@ -311,12 +303,11 @@ public class KalypsoLegendTheme extends AbstractKalypsoTheme
   private void initFromProperties( )
   {
     /* Default values. */
-    m_availableThemes = Arrays.asList( getMapModell().getAllThemes() );
     m_horizontal = PositionUtilities.RIGHT;
     m_vertical = PositionUtilities.BOTTOM;
     m_backgroundColor = new org.eclipse.swt.graphics.Color( Display.getCurrent(), 255, 255, 255 );
     m_insets = 10;
-    m_themes = m_availableThemes.toArray( new IKalypsoTheme[] {} );
+    m_themeIds = new String[] {};
 
     /* Get the properties. */
     String horizontalProperty = getProperty( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION, null );
@@ -349,9 +340,9 @@ public class KalypsoLegendTheme extends AbstractKalypsoTheme
       m_insets = insets;
 
     /* Check the theme ids. */
-    List<IKalypsoTheme> themes = LegendUtilities.checkThemeIds( getMapModell(), themeIdsProperty );
-    if( themes != null && themes.size() > 0 )
-      m_themes = themes.toArray( new IKalypsoTheme[] {} );
+    List<String> themeIds = LegendUtilities.verifyThemeIds( getMapModell(), themeIdsProperty );
+    if( themeIds != null && themeIds.size() > 0 )
+      m_themeIds = themeIds.toArray( new String[] {} );
   }
 
   /**
@@ -386,8 +377,8 @@ public class KalypsoLegendTheme extends AbstractKalypsoTheme
       initFromProperties();
 
       /* Create the nodes. */
-      // TODO Tree problem...
-      IThemeNode[] nodes = NodeFactory.createNodes( null, m_themes );
+      IThemeNode rootNode = NodeFactory.createRootNode( getMapModell(), null );
+      IThemeNode[] nodes = rootNode.getChildren();
 
       /* Monitor. */
       monitor.worked( 250 );
@@ -395,7 +386,7 @@ public class KalypsoLegendTheme extends AbstractKalypsoTheme
 
       /* Create the legend. */
       LegendExporter legendExporter = new LegendExporter();
-      org.eclipse.swt.graphics.Image image = legendExporter.exportLegends( nodes, Display.getCurrent(), new Insets( m_insets, m_insets, m_insets, m_insets ), m_backgroundColor.getRGB(), -1, -1, new SubProgressMonitor( monitor, 250 ) );
+      org.eclipse.swt.graphics.Image image = legendExporter.exportLegends( m_themeIds, nodes, Display.getCurrent(), new Insets( m_insets, m_insets, m_insets, m_insets ), m_backgroundColor.getRGB(), -1, -1, new SubProgressMonitor( monitor, 250 ) );
 
       /* Monitor. */
       monitor.subTask( "Konvertiere Legende..." );

@@ -128,18 +128,28 @@ public class LegendUtilities
     return -1;
   }
 
-  public static List<IKalypsoTheme> checkThemeIds( IMapModell mapModell, String themeIdsProperty )
+  /**
+   * This function verifies the ids contained in the themeIdsProperty variable and returns a list of ids, still
+   * contained in the map modell.
+   * 
+   * @param mapModell
+   *          The map modell.
+   * @param themeIdsProperty
+   *          The theme ids as serialized property, seperated by a ';'.
+   * @return A list of verified theme ids.
+   */
+  public static List<String> verifyThemeIds( IMapModell mapModell, String themeIdsProperty )
   {
     if( themeIdsProperty != null )
     {
-      List<IKalypsoTheme> themes = new ArrayList<IKalypsoTheme>();
+      List<String> themes = new ArrayList<String>();
       String[] themeIds = StringUtils.split( themeIdsProperty, ";" );
       for( int i = 0; i < themeIds.length; i++ )
       {
         String themeId = themeIds[i];
         IKalypsoTheme theme = findThemeById( mapModell, themeId );
         if( theme != null )
-          themes.add( theme );
+          themes.add( theme.getId() );
       }
 
       return themes;

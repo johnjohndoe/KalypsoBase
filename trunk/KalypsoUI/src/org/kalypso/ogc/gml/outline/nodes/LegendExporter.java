@@ -110,7 +110,7 @@ public class LegendExporter
         insets = new Insets( 5, 5, 5, 5 );
 
       /* Create the legend image. */
-      image = exportLegends( nodes, device, insets, null, sizeWidth, sizeHeight, progress.newChild( 50 ) );
+      image = exportLegends( null, nodes, device, insets, null, sizeWidth, sizeHeight, progress.newChild( 50 ) );
 
       /* Monitor. */
       ProgressUtilities.worked( progress, 50 );
@@ -140,10 +140,13 @@ public class LegendExporter
   }
 
   /**
-   * This function exports the legend of the given themes as swt image. Has to run in an UI-Thread. (TODO change this!)<br>
+   * This function exports the legend of the given themes as swt image.<br>
    * 
-   * @param themes
-   *          The themes to export.
+   * @param whiteList
+   *          The ids of the nodes (themes), which are to be shown. May be empty or null. In these cases, all nodes
+   *          (themes) will be shown.
+   * @param nodes
+   *          The theme nodes to export.
    * @param device
    *          The device.
    * @param insets
@@ -160,7 +163,7 @@ public class LegendExporter
    *          A progress monitor.
    * @return The newly created image, must be disposed by the caller.
    */
-  public Image exportLegends( IThemeNode[] nodes, Device device, Insets insets, RGB backgroundRGB, int sizeWidth, int sizeHeight, IProgressMonitor monitor ) throws CoreException
+  public Image exportLegends( String[] whiteList, IThemeNode[] nodes, Device device, Insets insets, RGB backgroundRGB, int sizeWidth, int sizeHeight, IProgressMonitor monitor ) throws CoreException
   {
     /* Set default insets, if none are given. */
     if( insets == null )
@@ -184,7 +187,7 @@ public class LegendExporter
       try
       {
         /* Get the legend. */
-        Image legend = themeNode.getLegendGraphic( font );
+        Image legend = themeNode.getLegendGraphic( whiteList, font );
         if( legend != null )
           legends.add( legend );
       }

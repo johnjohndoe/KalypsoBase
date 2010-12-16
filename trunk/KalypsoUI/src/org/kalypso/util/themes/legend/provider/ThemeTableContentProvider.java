@@ -40,12 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.util.themes.legend.provider;
 
-import java.util.List;
-
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.kalypso.ogc.gml.AbstractCascadingLayerTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.mapmodel.IMapModell;
 
 /**
  * A content provider for kalypso themes.
@@ -57,7 +56,7 @@ public class ThemeTableContentProvider implements ITreeContentProvider
   /**
    * The input of the viewer.
    */
-  private List<IKalypsoTheme> m_input;
+  private IMapModell m_input;
 
   /**
    * The constructor.
@@ -73,15 +72,13 @@ public class ThemeTableContentProvider implements ITreeContentProvider
   @Override
   public Object[] getChildren( Object parentElement )
   {
-    if( m_input == null )
-      return new Object[] {};
+    if( parentElement instanceof IMapModell )
+      return ((IMapModell) parentElement).getAllThemes();
 
-    if( !(parentElement instanceof AbstractCascadingLayerTheme) )
-      return new Object[] {};
+    if( parentElement instanceof AbstractCascadingLayerTheme )
+      return ((AbstractCascadingLayerTheme) parentElement).getAllThemes();
 
-    AbstractCascadingLayerTheme theme = (AbstractCascadingLayerTheme) parentElement;
-
-    return theme.getAllThemes();
+    return new Object[] {};
   }
 
   /**
@@ -90,15 +87,10 @@ public class ThemeTableContentProvider implements ITreeContentProvider
   @Override
   public Object getParent( Object element )
   {
-    if( m_input == null )
-      return null;
+    if( element instanceof IKalypsoTheme )
+      return ((IKalypsoTheme) element).getMapModell();
 
-    if( !(element instanceof IKalypsoTheme) )
-      return null;
-
-    IKalypsoTheme theme = (IKalypsoTheme) element;
-
-    return theme.getMapModell();
+    return null;
   }
 
   /**
@@ -110,12 +102,13 @@ public class ThemeTableContentProvider implements ITreeContentProvider
     if( m_input == null )
       return false;
 
-    if( !(element instanceof AbstractCascadingLayerTheme) )
-      return false;
+    if( element instanceof IMapModell )
+      return ((IMapModell) element).getAllThemes().length > 0;
 
-    AbstractCascadingLayerTheme theme = (AbstractCascadingLayerTheme) element;
+    if( element instanceof AbstractCascadingLayerTheme )
+      return ((AbstractCascadingLayerTheme) element).getAllThemes().length > 0;
 
-    return theme.getAllThemes().length > 0;
+    return false;
   }
 
   /**
@@ -127,7 +120,7 @@ public class ThemeTableContentProvider implements ITreeContentProvider
     if( m_input == null )
       return new Object[] {};
 
-    return m_input.toArray( new IKalypsoTheme[] {} );
+    return m_input.getAllThemes();
   }
 
   /**
@@ -150,10 +143,10 @@ public class ThemeTableContentProvider implements ITreeContentProvider
     m_input = null;
 
     /* If the new input is not the right type, ignore it. */
-    if( newInput == null || !(newInput instanceof List) )
+    if( newInput == null || !(newInput instanceof IMapModell) )
       return;
 
     /* Store the new input. */
-    m_input = (List<IKalypsoTheme>) newInput;
+    m_input = (IMapModell) newInput;
   }
 }

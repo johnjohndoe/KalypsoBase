@@ -186,10 +186,11 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
   }
 
   /**
-   * @see org.kalypso.ogc.gml.wms.provider.IKalypsoLegendProvider#getLegendGraphic(org.eclipse.swt.graphics.Font)
+   * @see org.kalypso.ogc.gml.outline.nodes.ILegendProvider#getLegendGraphic(java.lang.String[],
+   *      org.eclipse.swt.graphics.Font)
    */
   @Override
-  public org.eclipse.swt.graphics.Image getLegendGraphic( final Font font ) throws CoreException
+  public org.eclipse.swt.graphics.Image getLegendGraphic( String[] whiteList, final Font font ) throws CoreException
   {
     /* Initialize the remote WMS, if it is not already done. */
     initializeRemoteWMS();
