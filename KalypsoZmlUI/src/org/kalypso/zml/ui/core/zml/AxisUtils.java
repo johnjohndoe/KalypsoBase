@@ -61,15 +61,4 @@ public final class AxisUtils
 
     return null;
   }
-
-  public static IAxis findTargetAxis( final IAxis[] axes )
-  {
-    for( final IAxis axis : axes )
-    {
-      if( !"date".equals( axis.getId() ) )
-        return axis;
-    }
-
-    return null;
-  }
 }
