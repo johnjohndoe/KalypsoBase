@@ -72,6 +72,11 @@
     <Style id="interpolatedValueStyle">
       <property name="icon">urn:org:kalypso:zml:ui:table:icon:interpolated:value</property>
     </Style>
+    <!-- rule - warned value? -->
+    <Style id="warnedValueStyle">
+      <property name="icon">urn:org:kalypso:zml:ui:table:icon:warned:value</property>
+    </Style>
+
     <!-- rule - w/q conversion conflict? -->
     <Style id="wqConversionConflict">
       <property name="icon">urn:org:kalypso:zml:ui:table:icon:wq:conflict</property>
@@ -157,6 +162,12 @@
     <Rule id="ruleInterpolatedValue" ruleReference="org.kalypso.zml.ui.core.rule.value.interpolated" setHeaderIcon="true">
       <styleReference>
         <reference>interpolatedValueStyle</reference>
+      </styleReference>
+      <label>Interpolierte(r) Wert(e)</label>
+    </Rule>
+    <Rule id="ruleWarnedValue" ruleReference="org.kalypso.zml.ui.core.rule.warned.value" setHeaderIcon="true">
+      <styleReference>
+        <reference>warnedValueStyle</reference>
       </styleReference>
       <label>Interpolierte(r) Wert(e)</label>
     </Rule>

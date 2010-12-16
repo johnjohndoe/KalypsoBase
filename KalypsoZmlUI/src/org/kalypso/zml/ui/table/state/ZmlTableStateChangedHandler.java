@@ -45,7 +45,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -57,7 +56,7 @@ import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.schema.DataColumnType;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.ZmlTableComposite;
-import org.kalypso.zml.ui.table.provider.ZmlTableHeaderIconProvider;
+import org.kalypso.zml.ui.table.provider.ZmlTableIconMerger;
 import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
 
 /**
@@ -129,7 +128,7 @@ public class ZmlTableStateChangedHandler
     final TableColumn tableColumn = column.getTableViewerColumn().getColumn();
     final ZmlRule[] applied = column.getAppliedRules();
 
-    final ZmlTableHeaderIconProvider provider = new ZmlTableHeaderIconProvider( 2, new Point( 16, 16 ) );
+    final ZmlTableIconMerger provider = new ZmlTableIconMerger( 2 );
 
     final BaseColumn columnType = column.getColumnType();
     for( final ColumnHeader header : columnType.getHeaders() )

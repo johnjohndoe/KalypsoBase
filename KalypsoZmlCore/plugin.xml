@@ -13,6 +13,10 @@
           rule="org.kalypso.zml.core.table.rules.impl.ZmlRuleInterpolatedValue">
     </rule>
     <rule
+          id="org.kalypso.zml.ui.core.rule.warned.value"
+          rule="org.kalypso.zml.core.table.rules.impl.ZmlRuleWarnedValue">
+    </rule>
+    <rule
           id="org.kalypso.zml.ui.core.rule.wq.conflict"
           rule="org.kalypso.zml.core.table.rules.impl.ZmlRuleWQRelationConflict">
     </rule>

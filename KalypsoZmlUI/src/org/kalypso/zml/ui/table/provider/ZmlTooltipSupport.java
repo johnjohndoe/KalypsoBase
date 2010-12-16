@@ -127,7 +127,7 @@ public class ZmlTooltipSupport
     if( KalypsoStati.BIT_OK == status )
       return "Stützstelle";
     else if( KalypsoStati.BIT_CHECK == status )
-      return "Interpoliert";
+      return "Gewarnt";
     else if( KalypsoStati.BIT_USER_MODIFIED == status )
       return "Benutzereingabe";
 
@@ -145,7 +145,7 @@ public class ZmlTooltipSupport
     String v;
     if( value.length() > 60 )
     {
-      v = value.subSequence( 0, 60 ) + "\n\t\t" + value.substring( 61 );
+      v = value.subSequence( 0, 60 ) + "\n\t\t" + value.substring( 60 );
     }
     else
       v = value;

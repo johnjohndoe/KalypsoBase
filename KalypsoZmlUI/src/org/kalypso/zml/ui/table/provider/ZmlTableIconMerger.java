@@ -43,32 +43,33 @@ package org.kalypso.zml.ui.table.provider;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.GC;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.PaletteData;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.internal.OverlayIcon;
 
 /**
  * @author Dirk Kuch
  */
-public final class ZmlTableHeaderIconProvider
+public final class ZmlTableIconMerger
 {
-  private static final Image IMG_ADDITIONAL = new Image( null, ZmlTableHeaderIconProvider.class.getResourceAsStream( "icons/additional.png" ) );
+  private final static RGB RGB_WHITE = new RGB( 255, 255, 255 );
 
-  Set<Image> m_images = new LinkedHashSet<Image>();
+  private static final ImageData IMG_ADDITIONAL = new ImageData( ZmlTableIconMerger.class.getResourceAsStream( "icons/additional.png" ) );
 
-  private final int m_numberOfIcons;
+  private final Set<Image> m_images = new LinkedHashSet<Image>();
 
-  private final Point m_iconSize;
+  protected final int m_numberOfIcons;
 
-  public ZmlTableHeaderIconProvider( final int numberOfIcons, final Point iconSize )
+  protected final Point m_iconSize = new Point( 16, 16 );
+
+  public ZmlTableIconMerger( final int numberOfIcons )
   {
     m_numberOfIcons = numberOfIcons;
-    m_iconSize = iconSize;
   }
 
   public void addImage( final Image image )
@@ -78,37 +79,72 @@ public final class ZmlTableHeaderIconProvider
 
   public Image createImage( final Display display )
   {
-    // size = number of icons + one place holder image ('+' icon, for "not all icons are displayed");
-    final ImageData data = new ImageData( m_numberOfIcons * m_iconSize.x + m_iconSize.x, m_iconSize.y, 32, new PaletteData( new RGB[] { display.getSystemColor( SWT.COLOR_WHITE ).getRGB(),
-        display.getSystemColor( SWT.COLOR_BLACK ).getRGB() } ) );
-    data.transparentPixel = data.palette.getPixel( new RGB( 255, 255, 255 ) );
+    if( m_images.size() == 0 )
+      return null;
 
-    final Image image = new Image( display, data );
+    final Point size = getSize();
+
+    ImageData base = new ImageData( 1, 1, 1, new PaletteData( new RGB[] { RGB_WHITE } ) );
+    base.transparentPixel = base.palette.getPixel( RGB_WHITE );
+
     final Image[] images = m_images.toArray( new Image[] {} );
-
-    final GC gc = new GC( image );
-
     for( int index = 0; index < m_numberOfIcons; index++ )
     {
       if( index >= images.length )
         break;
 
+      final int i = index;
+
       final Image tile = images[index];
-      gc.drawImage( tile, getX( index ), 0 );
+
+      @SuppressWarnings("restriction")
+      final OverlayIcon overlay = new OverlayIcon( ImageDescriptor.createFromImageData( base ), ImageDescriptor.createFromImage( tile ), size )
+      {
+        /**
+         * @see org.eclipse.ui.internal.OverlayIcon#drawTopRight(org.eclipse.jface.resource.ImageDescriptor)
+         */
+        @Override
+        protected void drawTopRight( final ImageDescriptor ov )
+        {
+          if( ov == null )
+            return;
+
+          drawImage( ov.getImageData(), getX( i ), 0 );
+        }
+      };
+
+      base = overlay.getImageData();
     }
 
     if( images.length > m_numberOfIcons )
     {
-      gc.drawImage( IMG_ADDITIONAL, getX( m_numberOfIcons ) + m_iconSize.x, 0 );
+      @SuppressWarnings("restriction")
+      final OverlayIcon overlay = new OverlayIcon( ImageDescriptor.createFromImageData( base ), ImageDescriptor.createFromImageData( IMG_ADDITIONAL ), size )
+      {
+        /**
+         * @see org.eclipse.ui.internal.OverlayIcon#drawTopRight(org.eclipse.jface.resource.ImageDescriptor)
+         */
+        @Override
+        protected void drawTopRight( final ImageDescriptor ov )
+        {
+          drawImage( ov.getImageData(), getX( m_numberOfIcons ) + m_iconSize.x, 0 );
+        }
+      };
+
+      base = overlay.getImageData();
     }
 
-    gc.dispose();
-
-    return image;
+    return new Image( display, base );
   }
 
-  private int getX( final int index )
+  private Point getSize( )
+  {
+    return new Point( m_numberOfIcons * m_iconSize.x + m_iconSize.x, m_iconSize.y );
+  }
+
+  protected int getX( final int index )
   {
     return m_iconSize.x * index;
   }
+
 }
