@@ -67,11 +67,11 @@ public class ZmlTableHeaderContextMenuListener
 
     final BaseColumn columnType = column.getColumnType();
     final String uri = columnType.getUriHeaderContextMenu();
-    if( uri == null )
-      return;
-
-    // add basic menu entries which are defined in the plugin.xml
-    ContributionUtils.populateContributionManager( PlatformUI.getWorkbench(), menuManager, uri );
+    if( uri != null )
+    {
+      // add basic menu entries which are defined in the plugin.xml
+      ContributionUtils.populateContributionManager( PlatformUI.getWorkbench(), menuManager, uri );
+    }
 
     // add additional info items
     addAdditionalItems( column, menuManager );
