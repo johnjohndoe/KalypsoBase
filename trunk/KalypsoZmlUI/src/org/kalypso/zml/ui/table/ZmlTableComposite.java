@@ -50,6 +50,7 @@ import javax.xml.bind.JAXBElement;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
@@ -59,8 +60,11 @@ import org.eclipse.jface.window.ToolTip;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
@@ -106,6 +110,8 @@ import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
  */
 public class ZmlTableComposite extends Composite implements IZmlColumnModelListener, IZmlTable
 {
+  private final MenuManager m_contextMenuManager = new MenuManager();
+
   private TableViewer m_tableViewer;
 
   private final Set<ExtendedZmlTableColumn> m_columns = new LinkedHashSet<ExtendedZmlTableColumn>();
@@ -115,8 +121,6 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
   private ZmlTableMouseMoveListener m_mouseMoveListener;
 
   private ZmlTableUiUpdateJob m_updateJob;
-
-  private Menu m_menu;
 
   private final Set<IZmlTableListener> m_listeners = new LinkedHashSet<IZmlTableListener>();
 
@@ -146,7 +150,15 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
     m_mouseMoveListener = new ZmlTableMouseMoveListener( this );
     m_tableViewer.getTable().addMouseMoveListener( m_mouseMoveListener );
 
-    m_tableViewer.addSelectionChangedListener( new ZmlTableContextMenuListener( this ) );
+    m_tableViewer.getTable().addListener( SWT.MenuDetect, new Listener()
+    {
+      @Override
+      public void handleEvent( final Event event )
+      {
+        handleMenuDetect( event );
+      }
+    } );
+
     ColumnViewerToolTipSupport.enableFor( m_tableViewer, ToolTip.NO_RECREATE );
 
     m_tableViewer.setContentProvider( new ArrayTreeContentProvider()
@@ -178,12 +190,17 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
 
     m_tableViewer.setInput( m_model );
 
+
     addBasicFilters();
 
     /** layout stuff */
     final Table table = m_tableViewer.getTable();
     table.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
     table.setHeaderVisible( true );
+
+    m_contextMenuManager.setRemoveAllWhenShown( false );
+    final Menu contextMenu = m_contextMenuManager.createContextMenu( table );
+    table.setMenu( contextMenu );
 
     /* keyboard table cursor */
 // final TableViewerFocusCellManager focusCellManager = new TableViewerFocusCellManager( m_tableViewer, new
@@ -203,9 +220,68 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
 // TableViewerEditor.create( m_tableViewer, focusCellManager, actSupport, ColumnViewerEditor.TABBING_VERTICAL |
 // ColumnViewerEditor.KEYBOARD_ACTIVATION | ColumnViewerEditorActivationEvent.TRAVERSAL );
 
+
     initToolbar( tableType, toolbar, toolkit );
 
     refresh();
+  }
+
+  protected void handleMenuDetect( final Event event )
+  {
+    m_contextMenuManager.removeAll();
+
+    final Table table = m_tableViewer.getTable();
+    if( table.isDisposed() )
+      return;
+
+    final Point eventPoint = new Point( event.x, event.y );
+    final Point pt = table.toControl( eventPoint );
+
+    final Rectangle clientArea = table.getClientArea();
+    final boolean header = clientArea.y <= pt.y && pt.y < (clientArea.y + table.getHeaderHeight());
+
+    final int columnIndex = findColumnIndex( pt.x );
+    if( columnIndex == -1 )
+      return;
+
+    final ExtendedZmlTableColumn zmlColumn = (ExtendedZmlTableColumn) findColumn( columnIndex );
+
+    // FIXME: set the active column right here, we probably do not need the mouveMoveListener any more.
+
+    if( header )
+    {
+      final ZmlTableHeaderContextMenuListener menuProvider = new ZmlTableHeaderContextMenuListener();
+      menuProvider.fillMenu( zmlColumn, m_contextMenuManager );
+      m_contextMenuManager.update( true );
+    }
+    else
+    {
+      final ZmlTableContextMenuListener menuProvider = new ZmlTableContextMenuListener();
+      menuProvider.fillMenu( zmlColumn, m_contextMenuManager );
+      m_contextMenuManager.update( true );
+    }
+  }
+
+  private int findColumnIndex( final int x )
+  {
+    final Table table = m_tableViewer.getTable();
+    final TableColumn[] columns = table.getColumns();
+    final int[] columnOrder = table.getColumnOrder();
+
+    if( x < 0 )
+      return -1;
+
+    int currentWidth = 0;
+    for( final int index : columnOrder )
+    {
+      final TableColumn column = columns[index];
+      if( x < currentWidth + column.getWidth() )
+        return index;
+
+      currentWidth += column.getWidth();
+    }
+
+    return -1;
   }
 
   private void addBasicFilters( )
@@ -264,8 +340,6 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
     final ZmlLabelProvider labelProvider = new ZmlLabelProvider( column );
     viewerColumn.setLabelProvider( labelProvider );
     viewerColumn.getColumn().setText( type.getLabel() );
-
-    viewerColumn.getColumn().addSelectionListener( new ZmlTableHeaderContextMenuListener( this, column ) );
 
     /** edit support */
     if( type.getType() instanceof DataColumnType && type.isEditable() )
@@ -476,15 +550,6 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
   public IZmlTableRow[] getSelectedRows( )
   {
     return m_mouseMoveListener.findSelectedRows();
-  }
-
-  public void setContextMenu( final Menu menu )
-  {
-    if( m_menu != null )
-      m_menu.dispose();
-
-    m_tableViewer.getControl().setMenu( menu );
-    m_menu = menu;
   }
 
   /**

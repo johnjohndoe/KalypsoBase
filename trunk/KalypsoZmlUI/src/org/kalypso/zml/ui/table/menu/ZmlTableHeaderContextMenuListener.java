@@ -44,11 +44,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.action.ContributionUtils;
@@ -57,50 +53,31 @@ import org.kalypso.zml.core.table.binding.CellStyle;
 import org.kalypso.zml.core.table.binding.ColumnHeader;
 import org.kalypso.zml.core.table.binding.rule.ZmlRule;
 import org.kalypso.zml.ui.KalypsoZmlUI;
-import org.kalypso.zml.ui.table.ZmlTableComposite;
-import org.kalypso.zml.ui.table.model.IZmlTableColumn;
 import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlTableHeaderContextMenuListener implements SelectionListener
+public class ZmlTableHeaderContextMenuListener
 {
-
-  private final ZmlTableComposite m_table;
-
-  private final ExtendedZmlTableColumn m_column;
-
-  public ZmlTableHeaderContextMenuListener( final ZmlTableComposite table, final ExtendedZmlTableColumn column )
+  public void fillMenu( final ExtendedZmlTableColumn column, final MenuManager menuManager )
   {
-    m_table = table;
-    m_column = column;
+    if( column == null )
+      return;
+
+    final BaseColumn columnType = column.getColumnType();
+    final String uri = columnType.getUriHeaderContextMenu();
+    if( uri == null )
+      return;
+
+    // add basic menu entries which are defined in the plugin.xml
+    ContributionUtils.populateContributionManager( PlatformUI.getWorkbench(), menuManager, uri );
+
+    // add additional info items
+    addAdditionalItems( column, menuManager );
   }
 
-  private void setMenu( final String uri )
-  {
-    final Control control = m_table.getTableViewer().getControl();
-    if( uri != null )
-    {
-      final MenuManager menuManager = new MenuManager();
-      final Menu menu = menuManager.createContextMenu( control );
-
-      // add basic menu entries which are defined in the plugin.xml
-      ContributionUtils.populateContributionManager( PlatformUI.getWorkbench(), menuManager, uri );
-
-      // add additional info items
-      addAdditionalItems( menuManager );
-
-      m_table.setContextMenu( menu );
-
-      menu.setVisible( true );
-
-    }
-    else
-      m_table.setContextMenu( new Menu( control ) );
-  }
-
-  private void addAdditionalItems( final MenuManager menuManager )
+  private void addAdditionalItems( final ExtendedZmlTableColumn column, final MenuManager menuManager )
   {
     menuManager.add( new Separator() );
 
@@ -119,20 +96,20 @@ public class ZmlTableHeaderContextMenuListener implements SelectionListener
       }
     } );
 
-    final ColumnHeader[] headers = m_column.getColumnType().getHeaders();
+    final ColumnHeader[] headers = column.getColumnType().getHeaders();
     for( final ColumnHeader header : headers )
     {
-      addAditionalItem( header, menuManager );
+      addAdditionalItem( header, menuManager );
     }
 
-    final ZmlRule[] applied = m_column.getAppliedRules();
+    final ZmlRule[] applied = column.getAppliedRules();
     for( final ZmlRule rule : applied )
     {
       addAditionalItem( rule, menuManager );
     }
   }
 
-  private void addAditionalItem( final ColumnHeader header, final MenuManager menuManager )
+  private void addAdditionalItem( final ColumnHeader header, final MenuManager menuManager )
   {
     menuManager.add( new Action()
     {
@@ -201,30 +178,5 @@ public class ZmlTableHeaderContextMenuListener implements SelectionListener
         return false;
       }
     } );
-  }
-
-  /**
-   * @see org.eclipse.swt.events.SelectionListener#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-   */
-  @Override
-  public void widgetSelected( final SelectionEvent event )
-  {
-    String uri = null;
-    final IZmlTableColumn column = m_table.getActiveColumn();
-    if( column != null )
-    {
-      final BaseColumn columnType = column.getColumnType();
-      uri = columnType.getUriHeaderContextMenu();
-    }
-
-    setMenu( uri );
-  }
-
-  /**
-   * @see org.eclipse.swt.events.SelectionListener#widgetDefaultSelected(org.eclipse.swt.events.SelectionEvent)
-   */
-  @Override
-  public void widgetDefaultSelected( final SelectionEvent e )
-  {
   }
 }
