@@ -66,13 +66,10 @@ public final class ConfigUtils
 
   public static URL findCentralConfigLocation( final String path ) throws IOException
   {
-    System.out.println( String.format( "Find config location for path: %s", path ) );
-
     final Location configurationLocation = Platform.getConfigurationLocation();
 
     try
     {
-      System.out.println( String.format( "First try: check config location: %s", configurationLocation.getURL() ) );
       return checkConfigLocation( configurationLocation, path );
     }
     catch( final IOException e )
@@ -81,8 +78,6 @@ public final class ConfigUtils
       {
         // ignore exception for now, second try
         final Location baseConfigurationLocation = configurationLocation.getParentLocation();
-        if( baseConfigurationLocation != null )
-          System.out.println( String.format( "Second try: check parent config location: %s", baseConfigurationLocation.getURL() ) );
         return checkConfigLocation( baseConfigurationLocation, path );
       }
       catch( final IOException e2 )
@@ -91,7 +86,6 @@ public final class ConfigUtils
         try
         {
           final URL configResource = getFallbackConfigLocation();
-          System.out.println( String.format( "Third try: check fallback: %s", configResource ) );
           return checkConfigLocation( configResource, path );
         }
         catch( final IOException e1 )
