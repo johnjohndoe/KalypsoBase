@@ -73,7 +73,9 @@ public final class TableTypeHelper
 {
   private static final QName PROPERTY_NAME = new QName( "name" ); //$NON-NLS-1$
 
-  public static final Pattern PATTERN_CLONED_COLUMN_IDENTIFIER = new Pattern( ".*\\_\\d+$" ); //$NON-NLS-1$
+  public static final Pattern PATTERN_CLONED_COLUMN_IDENTIFIER = new Pattern( ".*\\(\\d+\\)$" ); //$NON-NLS-1$
+
+  public static final Pattern PATTERN_CLONED_COLUMN_TOKENIZER = new Pattern( "\\(\\d+\\)$" ); //$NON-NLS-1$
 
   private TableTypeHelper( )
   {
@@ -150,11 +152,10 @@ public final class TableTypeHelper
 
     String id = identifier;
 
-    /** cloned, multiple column entry?!? like W_1 or W_3 */
-
+    /** cloned, multiple column entry?!? like W(1) or W(3) */
     if( PATTERN_CLONED_COLUMN_IDENTIFIER.matches( identifier ) )
     {
-      final RETokenizer tokenizer = new RETokenizer( new Pattern( "_\\d+$" ), identifier );
+      final RETokenizer tokenizer = new RETokenizer( PATTERN_CLONED_COLUMN_TOKENIZER, identifier );
       id = tokenizer.nextToken();
     }
 
