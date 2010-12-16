@@ -48,6 +48,9 @@ public class LayerManager implements ILayerManager
    * TODO implement as hash set and overwrite equals() and hash() methods of IChartLayer instances - to prevent multiple
    * adding of layers with the same id. (see method getLayerById())
    */
+  /**
+   * FIXME HashSet instead of list?!?
+   */
   private final List<IChartLayer> m_layers = new ArrayList<IChartLayer>();
 
   final LayerManagerEventHandler m_handler = new LayerManagerEventHandler();
@@ -98,9 +101,10 @@ public class LayerManager implements ILayerManager
   @Override
   public void clear( )
   {
-    final IChartLayer[] layers = m_layers.toArray( new IChartLayer[m_layers.size()] );
-    for( final IChartLayer next : layers )
+    for( final IChartLayer next : getLayers() )
+    {
       removeLayer( next );
+    }
   }
 
   /**
@@ -109,7 +113,7 @@ public class LayerManager implements ILayerManager
   @Override
   public IChartLayer[] getLayers( )
   {
-    return m_layers.toArray( new IChartLayer[0] );
+    return m_layers.toArray( new IChartLayer[] {} );
   }
 
   @Override
@@ -120,13 +124,14 @@ public class LayerManager implements ILayerManager
       m_layers.add( position, layer );
     else
       m_layers.add( layer );
+
     m_handler.fireLayerMoved( layer );
   }
 
   @Override
   public IChartLayer getLayerById( final String id )
   {
-    for( final IChartLayer layer : m_layers )
+    for( final IChartLayer layer : getLayers() )
     {
       if( layer != null && layer.getId().equals( id ) )
         return layer;
@@ -143,6 +148,7 @@ public class LayerManager implements ILayerManager
   {
     m_layers.add( position, layer );
     layer.addListener( m_layerListener );
+
     m_handler.fireLayerAdded( layer );
   }
 
@@ -152,16 +158,7 @@ public class LayerManager implements ILayerManager
   @Override
   public int getLayerPosition( final IChartLayer layer )
   {
-    int count = 0;
-    for( final IChartLayer currentLayer : m_layers )
-    {
-      if( layer == currentLayer )
-        return count;
-
-      count++;
-    }
-
-    return -1;
+    return m_layers.indexOf( layer );
   }
 
   /**
