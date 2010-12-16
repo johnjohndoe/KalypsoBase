@@ -208,11 +208,25 @@ public class FeatureThemeNode extends KalypsoThemeNode<IKalypsoFeatureTheme> imp
   }
 
   /**
-   * @see org.kalypso.ogc.gml.wms.provider.IKalypsoLegendProvider#getLegendGraphic(org.eclipse.swt.graphics.Font)
+   * @see org.kalypso.ogc.gml.outline.nodes.AbstractThemeNode#getLegendGraphic(java.lang.String[],
+   *      org.eclipse.swt.graphics.Font)
    */
   @Override
-  public Image getLegendGraphic( final Font font )
+  public Image getLegendGraphic( final String[] whiteList, final Font font )
   {
+    /* The theme ids, which are allowed. */
+    List<String> themeIds = null;
+    if( whiteList != null && whiteList.length > 0 )
+      themeIds = Arrays.asList( whiteList );
+
+    /* Only show themes in the white list. */
+    if( themeIds != null && themeIds.size() > 0 )
+    {
+      final String id = getElement().getId();
+      if( id != null && id.length() > 0 && !themeIds.contains( id ) )
+        return null;
+    }
+
     /* All elements in this theme. */
     final List<LegendElement> elements = collectElements( font );
     if( elements.size() == 0 )

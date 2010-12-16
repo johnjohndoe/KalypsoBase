@@ -52,7 +52,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.ogc.gml.IKalypsoLayerModell;
-import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.util.themes.legend.LegendUtilities;
 import org.kalypso.util.themes.legend.controls.LegendComposite;
 import org.kalypso.util.themes.legend.listener.ILegendChangedListener;
@@ -133,10 +132,10 @@ public class LegendThemeWizardPage extends WizardPage
     {
       /**
        * @see org.kalypso.util.themes.legend.listener.ILegendChangedListener#legendPropertyChanged(java.util.Properties,
-       *      int, int, org.eclipse.swt.graphics.Color, int, org.kalypso.ogc.gml.IKalypsoTheme[])
+       *      int, int, org.eclipse.swt.graphics.Color, int, java.lang.String[])
        */
       @Override
-      public void legendPropertyChanged( Properties properties, int horizontal, int vertical, Color backgroundColor, int insets, IKalypsoTheme[] themes )
+      public void legendPropertyChanged( Properties properties, int horizontal, int vertical, Color backgroundColor, int insets, String[] themeIds )
       {
         /* Store the properties. */
         m_properties.clear();

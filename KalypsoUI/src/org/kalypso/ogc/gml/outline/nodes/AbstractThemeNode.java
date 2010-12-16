@@ -41,6 +41,7 @@
 package org.kalypso.ogc.gml.outline.nodes;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
@@ -56,6 +57,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
+import org.kalypso.ogc.gml.AbstractKalypsoTheme;
 import org.kalypso.ogc.gml.map.themes.KalypsoLegendTheme;
 
 /**
@@ -324,14 +326,28 @@ abstract class AbstractThemeNode<T> implements IThemeNode
   }
 
   /**
-   * @see org.kalypso.ogc.gml.wms.provider.IKalypsoLegendProvider#getLegendGraphic(org.eclipse.swt.graphics.Font)
+   * @see org.kalypso.ogc.gml.outline.nodes.ILegendProvider#getLegendGraphic(java.lang.String[],
+   *      org.eclipse.swt.graphics.Font)
    */
   @Override
-  public Image getLegendGraphic( final Font font ) throws CoreException
+  public Image getLegendGraphic( final String[] whiteList, final Font font ) throws CoreException
   {
     /* Legend themes should not provide itself for a legend. */
     if( m_element instanceof KalypsoLegendTheme )
       return null;
+
+    /* The theme ids, which are allowed. */
+    List<String> themeIds = null;
+    if( whiteList != null && whiteList.length > 0 )
+      themeIds = Arrays.asList( whiteList );
+
+    /* Only show themes in the white list. */
+    if( themeIds != null && themeIds.size() > 0 )
+    {
+      final String id = ((AbstractKalypsoTheme) getElement()).getId();
+      if( id != null && id.length() > 0 && !themeIds.contains( id ) )
+        return null;
+    }
 
     /* Memory for all legends. */
     final List<Image> legends = new ArrayList<Image>();
@@ -341,7 +357,7 @@ abstract class AbstractThemeNode<T> implements IThemeNode
     for( final IThemeNode childNode : children )
     {
       /* Get the legend. */
-      final Image legendGraphic = childNode.getLegendGraphic( font );
+      final Image legendGraphic = childNode.getLegendGraphic( whiteList, font );
       if( legendGraphic != null )
         legends.add( legendGraphic );
     }
