@@ -48,20 +48,20 @@ import org.eclipse.ui.PlatformUI;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
+import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 
 /**
  * @author kimwerner
  */
 public class ChartPlotPainter
 {
-  final IChartLayer[] m_chartLayers;
-
   final Point m_size;
+
+  private final IChartModel m_chartModel;
 
   public ChartPlotPainter( final IChartModel chartModel, final Point size )
   {
-    m_chartLayers = chartModel.getLayerManager().getLayers();
-    // FIXME: should be a rectangle
+    m_chartModel = chartModel;
     m_size = size;
   }
 
@@ -72,7 +72,7 @@ public class ChartPlotPainter
 
   public final Image createImage( )
   {
-    if(m_size==null||m_size.x<1||m_size.y<1)
+    if( m_size == null || m_size.x < 1 || m_size.y < 1 )
       return null;
     final Device dev = PlatformUI.getWorkbench().getDisplay();
     final Image image = new Image( dev, m_size.x, m_size.y );
@@ -90,9 +90,18 @@ public class ChartPlotPainter
 
   private void paint( final GC gc )
   {
-    for( final IChartLayer layer : m_chartLayers )
-    {if(layer.isVisible()) 
-      layer.paint( gc );
+    for( final IChartLayer layer : getChartLayers() )
+    {
+      if( layer.isVisible() )
+        layer.paint( gc );
     }
   }
+
+  private IChartLayer[] getChartLayers( )
+  {
+    final ILayerManager manager = m_chartModel.getLayerManager();
+
+    return manager.getLayers();
+  }
+
 }
