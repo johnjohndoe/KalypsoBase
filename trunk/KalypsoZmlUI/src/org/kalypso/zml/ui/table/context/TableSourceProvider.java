@@ -180,28 +180,28 @@ public class TableSourceProvider extends AbstractSourceProvider
     return PROVIDED_SOURCE_NAMES;
   }
 
-  public void fireSourceChanged( )
-  {
-    final UIJob job = new UIJob( "Activate theme context job" ) //$NON-NLS-1$
-    {
-      @SuppressWarnings("synthetic-access")
-      @Override
-      public IStatus runInUIThread( final IProgressMonitor monitor )
-      {
-        // REMARK: priority has been chosen more or less by random... set a correct priority if
-        // clear how that stuff works.
-        fireSourceChanged( ISources.ACTIVE_WORKBENCH_WINDOW, ACTIVE_TABLE_NAME, m_table );
-
-        refreshElements();
-
-        return Status.OK_STATUS;
-      }
-    };
-
-    job.setRule( m_mutexRule );
-    job.setSystem( true );
-    job.schedule();
-  }
+// public void fireSourceChanged( )
+// {
+//    final UIJob job = new UIJob( "Activate theme context job" ) //$NON-NLS-1$
+// {
+// @SuppressWarnings("synthetic-access")
+// @Override
+// public IStatus runInUIThread( final IProgressMonitor monitor )
+// {
+// // REMARK: priority has been chosen more or less by random... set a correct priority if
+// // clear how that stuff works.
+// fireSourceChanged( ISources.ACTIVE_WORKBENCH_WINDOW, ACTIVE_TABLE_NAME, m_table );
+//
+// refreshElements();
+//
+// return Status.OK_STATUS;
+// }
+// };
+//
+// job.setRule( m_mutexRule );
+// job.setSystem( true );
+// job.schedule();
+// }
 
   public void refreshUIelements( )
   {

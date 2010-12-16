@@ -42,6 +42,7 @@ package org.kalypso.zml.core.table.model.references;
 
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
+import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHelper;
 
 /**
  * @author Dirk Kuch
@@ -60,7 +61,11 @@ public final class ZmlValueRefernceHelper
     else if( (status & KalypsoStati.BIT_CHECK) != 0 )
       return false;
 
-    return true;
+    final String source = reference.getDataSource();
+    if( source == null )
+      return true;
+
+    return !source.startsWith( DataSourceHelper.FILTER_SOURCE ); //$NON-NLS-1$
   }
 
 }
