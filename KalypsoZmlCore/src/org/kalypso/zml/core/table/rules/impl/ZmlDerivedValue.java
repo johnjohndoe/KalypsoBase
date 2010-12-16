@@ -68,6 +68,8 @@ public class ZmlDerivedValue extends AbstractZmlTableRule
   protected boolean doApply( final ZmlRule rule, final IZmlValueReference reference )
   {
     final IAxis axis = reference.getColumn().getValueAxis();
+    if( axis == null )
+      return false;
 
     return !axis.isPersistable();
   }

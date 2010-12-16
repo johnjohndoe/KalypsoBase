@@ -126,14 +126,23 @@ public class ZmlColumnLoadCommand implements IObsProviderListener
     }
 
     final DataColumnType type = (DataColumnType) TableTypeHelper.findColumnType( m_model.getTableType(), m_column.getIdentifier() );
+    final IAxis[] axes = observation.getAxisList();
+    if( !hasValueAxis( axes, type ) )
+      return;
 
     final DataColumn data = new DataColumn( type );
-    final IAxis[] axes = observation.getAxisList();
     final String label = m_column.getTitle( AxisUtils.findAxis( axes, data.getValueAxis() ) );
 
     m_model.addColumn( new ZmlModelColumn( label, clone, m_model, data ) );
 
 // base.dispose();
+  }
+
+  private boolean hasValueAxis( final IAxis[] axes, final DataColumnType type )
+  {
+    final IAxis axis = AxisUtils.findAxis( axes, type.getValueAxis() );
+
+    return axis != null;
   }
 
   /**
