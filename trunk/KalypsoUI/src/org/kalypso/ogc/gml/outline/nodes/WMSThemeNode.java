@@ -70,7 +70,8 @@ public class WMSThemeNode extends KalypsoThemeNode<KalypsoWMSTheme>
   {
     if( m_legend != null )
     {
-      m_legend.dispose();
+      if( !m_legend.isDisposed() )
+        m_legend.dispose();
       m_legend = null;
     }
 
