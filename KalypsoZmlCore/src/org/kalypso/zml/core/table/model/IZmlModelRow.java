@@ -57,5 +57,4 @@ public interface IZmlModelRow
   IZmlModel getModel( );
 
   IZmlValueReference[] getReferences( );
-
 }

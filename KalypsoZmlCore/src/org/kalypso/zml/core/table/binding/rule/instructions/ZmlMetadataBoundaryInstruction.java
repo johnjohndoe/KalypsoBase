@@ -50,6 +50,7 @@ import org.kalypso.ogc.sensor.metadata.MetadataBoundary;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
+import org.kalypso.zml.core.table.schema.AbstractRuleInstructionType;
 import org.kalypso.zml.core.table.schema.MetadataBoundaryInstructionType;
 
 /**
@@ -67,7 +68,7 @@ public class ZmlMetadataBoundaryInstruction extends AbstractZmlRuleInstructionTy
 
   private IZmlModelColumn m_lastFromColumn;
 
-  public ZmlMetadataBoundaryInstruction( final MetadataBoundaryInstructionType type )
+  public ZmlMetadataBoundaryInstruction( final AbstractRuleInstructionType type )
   {
     super( type );
   }
@@ -78,6 +79,7 @@ public class ZmlMetadataBoundaryInstruction extends AbstractZmlRuleInstructionTy
     return (MetadataBoundaryInstructionType) super.getType();
   }
 
+  @Override
   public boolean matches( final IZmlValueReference reference ) throws SensorException
   {
     final MetadataBoundary metaFrom = getBoundaryFrom( reference );
