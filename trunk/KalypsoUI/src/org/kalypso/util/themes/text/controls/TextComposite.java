@@ -42,18 +42,29 @@ package org.kalypso.util.themes.text.controls;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Properties;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.Form;
 import org.kalypso.contribs.eclipse.ui.forms.MessageUtilitites;
-import org.kalypso.util.themes.text.listener.IPropertyChangedListener;
+import org.kalypso.util.themes.legend.LegendUtilities;
+import org.kalypso.util.themes.position.PositionUtilities;
+import org.kalypso.util.themes.position.controls.PositionComposite;
+import org.kalypso.util.themes.position.listener.IPositionChangedListener;
+import org.kalypso.util.themes.text.TextUtilities;
+import org.kalypso.util.themes.text.listener.ITextChangedListener;
 
 /**
  * This composite edits the position.
@@ -63,9 +74,9 @@ import org.kalypso.util.themes.text.listener.IPropertyChangedListener;
 public class TextComposite extends Composite
 {
   /**
-   * This listeners are notified, if a property has changed.
+   * This listeners are notified, if a text property has changed.
    */
-  private List<IPropertyChangedListener> m_listener;
+  private List<ITextChangedListener> m_listener;
 
   /**
    * The form.
@@ -78,9 +89,19 @@ public class TextComposite extends Composite
   private Composite m_content;
 
   /**
-   * The edited properties.
+   * The horizontal position.
    */
-  private Properties m_properties;
+  protected int m_horizontal;
+
+  /**
+   * The vertical position.
+   */
+  protected int m_vertical;
+
+  /**
+   * The text, which should be shown.
+   */
+  protected String m_text;
 
   /**
    * The constructor.
@@ -97,10 +118,10 @@ public class TextComposite extends Composite
     super( parent, style );
 
     /* Initialize. */
-    m_listener = new ArrayList<IPropertyChangedListener>();
+    m_listener = new ArrayList<ITextChangedListener>();
     m_main = null;
     m_content = null;
-    m_properties = checkProperties( properties );
+    checkProperties( properties );
 
     /* Create the controls. */
     createControls();
@@ -133,18 +154,55 @@ public class TextComposite extends Composite
 
   /**
    * This function checks the provided properties object for properties this composite can edit. Found properties will
-   * be checked for correct values. Then they are added to a new properties object. If editable properties are missing
-   * or if existing ones have wrong values, they will be added with default values.
+   * be checked for correct values. Then they are set to the members. If editable properties are missing or if existing
+   * ones have wrong values, they will be set to the members with default values.
    * 
    * @param properties
-   *          The properties, containing the default values.
-   * @return A new properties object, containing all properties with values/default values, which can be edited by this
-   *         composite.
+   *          The properties, containing the values.
    */
-  private Properties checkProperties( Properties properties )
+  private void checkProperties( Properties properties )
   {
-    // TODO
-    return null;
+    /* Default values. */
+    m_horizontal = PositionUtilities.RIGHT;
+    m_vertical = PositionUtilities.BOTTOM;
+    m_text = "Bitte geben Sie einen Text an...";
+
+    /* Do not change the default values, if no new properties are set. */
+    if( properties == null )
+      return;
+
+    /* Update the default values, with the one of the given properties. */
+    updateProperties( properties );
+  }
+
+  /**
+   * This function checks the provided properties object for properties this composite can edit. Found properties will
+   * be checked for correct values. Then they are set to the members. If editable properties are missing or if existing
+   * ones have wrong values, the members will not be changed.
+   * 
+   * @param properties
+   *          The properties, containing the values.
+   */
+  private void updateProperties( Properties properties )
+  {
+    /* Get the properties. */
+    String horizontalProperty = properties.getProperty( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION );
+    String verticalProperty = properties.getProperty( PositionUtilities.THEME_PROPERTY_VERTICAL_POSITION );
+    String textProperty = properties.getProperty( TextUtilities.THEME_PROPERTY_TEXT, null );
+
+    /* Check the horizontal position. */
+    int horizontal = LegendUtilities.checkHorizontalPosition( horizontalProperty );
+    if( horizontal != -1 )
+      m_horizontal = horizontal;
+
+    /* Check the vertical position. */
+    int vertical = LegendUtilities.checkVerticalPosition( verticalProperty );
+    if( vertical != -1 )
+      m_vertical = vertical;
+
+    /* Check the text. */
+    if( textProperty != null && textProperty.length() > 0 )
+      m_text = TextUtilities.checkText( textProperty );
   }
 
   /**
@@ -223,9 +281,88 @@ public class TextComposite extends Composite
     Composite contentInternalComposite = new Composite( parent, SWT.NONE );
     contentInternalComposite.setLayout( new GridLayout( 1, false ) );
 
-    // TODO
+    /* Create the position composite. */
+    Composite positionComposite = createPositionComposite( contentInternalComposite );
+    positionComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
+
+    /* Create the text group. */
+    Group textGroup = createTextGroup( contentInternalComposite );
+    textGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     return contentInternalComposite;
+  }
+
+  /**
+   * This function creates the position composite.
+   * 
+   * @param parent
+   *          The parent composite.
+   * @return The position composite.
+   */
+  private Composite createPositionComposite( Composite parent )
+  {
+    /* Create a composite. */
+    PositionComposite positionComposite = new PositionComposite( parent, SWT.NONE, m_horizontal, m_vertical );
+    positionComposite.addPositionChangedListener( new IPositionChangedListener()
+    {
+      /**
+       * @see org.kalypso.util.themes.position.listener.IPositionChangedListener#positionChanged(int, int)
+       */
+      @Override
+      public void positionChanged( int horizontal, int vertical )
+      {
+        m_horizontal = horizontal;
+        m_vertical = vertical;
+
+        fireTextPropertyChanged( getProperties(), m_horizontal, m_vertical, m_text );
+      }
+    } );
+
+    /* Return the composite. */
+    return positionComposite;
+  }
+
+  /**
+   * This function creates the text group.
+   * 
+   * @param parent
+   *          The parent composite.
+   * @return The text group.
+   */
+  private Group createTextGroup( Composite parent )
+  {
+    /* Create a group. */
+    Group textGroup = new Group( parent, SWT.NONE );
+    textGroup.setLayout( new GridLayout( 2, false ) );
+    textGroup.setText( "Optionen" );
+
+    /* Create a label. */
+    Label textLabel = new Label( textGroup, SWT.NONE );
+    textLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
+    textLabel.setText( "Text" );
+    textLabel.setAlignment( SWT.LEFT );
+
+    /* Create a text field. */
+    Text textText = new Text( textGroup, SWT.BORDER );
+    textText.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    if( m_text != null )
+      textText.setText( m_text );
+    textText.addModifyListener( new ModifyListener()
+    {
+      /**
+       * @see org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.swt.events.ModifyEvent)
+       */
+      @Override
+      public void modifyText( ModifyEvent e )
+      {
+        Text source = (Text) e.getSource();
+        m_text = source.getText();
+
+        fireTextPropertyChanged( getProperties(), m_horizontal, m_vertical, m_text );
+      }
+    } );
+
+    return textGroup;
   }
 
   /**
@@ -260,40 +397,67 @@ public class TextComposite extends Composite
   }
 
   /**
-   * This function fires a property changed event.
+   * This function fires a text property changed event.
    * 
-   * @param property
-   *          The changed property.
-   * @param value
-   *          The new value of the changed property.
+   * @param properties
+   *          A up to date properties object, containing all serialized text properties.
+   * @param horizontal
+   *          The horizontal position.
+   * @param vertical
+   *          The vertical position.
+   * @param text
+   *          The text, which should be shown.
    */
-  protected void firePropertyChanged( String property, String value )
+  protected void fireTextPropertyChanged( Properties properties, int horizontal, int vertical, String text )
   {
-    for( IPropertyChangedListener listener : m_listener )
-      listener.propertyChanged( property, value );
+    for( ITextChangedListener listener : m_listener )
+      listener.textPropertyChanged( properties, horizontal, vertical, text );
   }
 
   /**
-   * This function adds a property changed listener.
+   * This function adds a text changed listener.
    * 
    * @param listener
-   *          The property changed listener to add.
+   *          The text changed listener to add.
    */
-  public void addPropertyChangedListener( IPropertyChangedListener listener )
+  public void addTextChangedListener( ITextChangedListener listener )
   {
     if( !m_listener.contains( listener ) )
       m_listener.add( listener );
   }
 
   /**
-   * This function removes a property changed listener.
+   * This function removes a text changed listener.
    * 
    * @param listener
-   *          The property changed listener to remove.
+   *          The text changed listener to remove.
    */
-  public void removePropertyChangedListener( IPropertyChangedListener listener )
+  public void removeTextChangedListener( ITextChangedListener listener )
   {
     if( m_listener.contains( listener ) )
       m_listener.remove( listener );
+  }
+
+  /**
+   * This function returns a up to date properties object, containing all serialized text properties.
+   * 
+   * @return A up to date properties object, containing all serialized text properties.
+   */
+  public Properties getProperties( )
+  {
+    /* Create the properties object. */
+    Properties properties = new Properties();
+
+    /* Serialize the properties. */
+    String horizontalProperty = String.format( Locale.PRC, "%d", m_horizontal );
+    String verticalProperty = String.format( Locale.PRC, "%d", m_vertical );
+    String textProperty = String.format( Locale.PRC, "%s", m_text );
+
+    /* Add the properties. */
+    properties.put( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION, horizontalProperty );
+    properties.put( PositionUtilities.THEME_PROPERTY_VERTICAL_POSITION, verticalProperty );
+    properties.put( TextUtilities.THEME_PROPERTY_TEXT, textProperty );
+
+    return properties;
   }
 }

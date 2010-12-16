@@ -45,6 +45,8 @@ import org.kalypso.ogc.gml.IKalypsoCascadingTheme;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.IKalypsoUserStyle;
+import org.kalypso.ogc.gml.map.themes.KalypsoImageTheme;
+import org.kalypso.ogc.gml.map.themes.KalypsoTextTheme;
 import org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypsodeegree.graphics.sld.ColorMapEntry;
@@ -91,6 +93,12 @@ public class NodeFactory
 
     if( element instanceof KalypsoWMSTheme )
       return new WMSThemeNode( parent, (KalypsoWMSTheme) element );
+
+    if( element instanceof KalypsoImageTheme )
+      return new ImageThemeNode( parent, (KalypsoImageTheme) element );
+
+    if( element instanceof KalypsoTextTheme )
+      return new TextThemeNode( parent, (KalypsoTextTheme) element );
 
     if( element instanceof IKalypsoTheme )
       return new KalypsoThemeNode<IKalypsoTheme>( parent, (IKalypsoTheme) element );

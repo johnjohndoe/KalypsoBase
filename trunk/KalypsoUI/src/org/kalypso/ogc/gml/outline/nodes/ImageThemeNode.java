@@ -38,22 +38,28 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.util.themes.text.listener;
+package org.kalypso.ogc.gml.outline.nodes;
+
+import org.kalypso.ogc.gml.map.themes.KalypsoImageTheme;
 
 /**
- * This interface provides functions for listeners, which should be notified, if a property has changed.
+ * Image theme node.
  * 
  * @author Holger Albert
  */
-public interface IPropertyChangedListener
+public class ImageThemeNode extends KalypsoThemeNode<KalypsoImageTheme>
 {
   /**
-   * This function is modified, if a property has changed.
+   * The constructor.
    * 
-   * @param property
-   *          The changed property.
-   * @param value
-   *          The new value of the changed property.
+   * @param parent
+   *          The parent theme node.
+   * @param element
+   *          The kalypso image theme.
    */
-  public void propertyChanged( String property, String value );
+
+  ImageThemeNode( IThemeNode parent, KalypsoImageTheme element )
+  {
+    super( parent, element );
+  }
 }

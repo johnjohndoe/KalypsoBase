@@ -48,9 +48,20 @@ package org.kalypso.util.themes.text;
 public class TextUtilities
 {
   /**
+   * This constant defines the theme property, used to configure the text, which should be shown.
+   */
+  public static final String THEME_PROPERTY_TEXT = "text";
+
+  /**
    * The constructor.
    */
   private TextUtilities( )
   {
+  }
+
+  public static String checkText( String textProperty )
+  {
+    // TODO Perhaps we want to validate the text?
+    return textProperty;
   }
 }

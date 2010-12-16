@@ -40,8 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.util.themes.image.controls;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Properties;
 
 import org.eclipse.core.runtime.IStatus;
@@ -49,11 +51,20 @@ import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.Form;
 import org.kalypso.contribs.eclipse.ui.forms.MessageUtilitites;
-import org.kalypso.util.themes.text.listener.IPropertyChangedListener;
+import org.kalypso.util.themes.image.ImageUtilities;
+import org.kalypso.util.themes.image.listener.IImageChangedListener;
+import org.kalypso.util.themes.legend.LegendUtilities;
+import org.kalypso.util.themes.position.PositionUtilities;
+import org.kalypso.util.themes.position.controls.PositionComposite;
+import org.kalypso.util.themes.position.listener.IPositionChangedListener;
 
 /**
  * This composite edits the position.
@@ -63,9 +74,9 @@ import org.kalypso.util.themes.text.listener.IPropertyChangedListener;
 public class ImageComposite extends Composite
 {
   /**
-   * This listeners are notified, if a property has changed.
+   * This listeners are notified, if a image property has changed.
    */
-  private List<IPropertyChangedListener> m_listener;
+  private List<IImageChangedListener> m_listener;
 
   /**
    * The form.
@@ -78,9 +89,19 @@ public class ImageComposite extends Composite
   private Composite m_content;
 
   /**
-   * The edited properties.
+   * The horizontal position.
    */
-  private Properties m_properties;
+  protected int m_horizontal;
+
+  /**
+   * The vertical position.
+   */
+  protected int m_vertical;
+
+  /**
+   * The URL of the image, which should be shown.
+   */
+  protected URL m_imageUrl;
 
   /**
    * The constructor.
@@ -97,10 +118,10 @@ public class ImageComposite extends Composite
     super( parent, style );
 
     /* Initialize. */
-    m_listener = new ArrayList<IPropertyChangedListener>();
+    m_listener = new ArrayList<IImageChangedListener>();
     m_main = null;
     m_content = null;
-    m_properties = checkProperties( properties );
+    checkProperties( properties );
 
     /* Create the controls. */
     createControls();
@@ -173,18 +194,55 @@ public class ImageComposite extends Composite
 
   /**
    * This function checks the provided properties object for properties this composite can edit. Found properties will
-   * be checked for correct values. Then they are added to a new properties object. If editable properties are missing
-   * or if existing ones have wrong values, they will be added with default values.
+   * be checked for correct values. Then they are set to the members. If editable properties are missing or if existing
+   * ones have wrong values, they will be set to the members with default values.
    * 
    * @param properties
-   *          The properties, containing the default values.
-   * @return A new properties object, containing all properties with values/default values, which can be edited by this
-   *         composite.
+   *          The properties, containing the values.
    */
-  private Properties checkProperties( Properties properties )
+  private void checkProperties( Properties properties )
   {
-    // TODO
-    return null;
+    /* Default values. */
+    m_horizontal = PositionUtilities.RIGHT;
+    m_vertical = PositionUtilities.BOTTOM;
+    m_imageUrl = null;
+
+    /* Do not change the default values, if no new properties are set. */
+    if( properties == null )
+      return;
+
+    /* Update the default values, with the one of the given properties. */
+    updateProperties( properties );
+  }
+
+  /**
+   * This function checks the provided properties object for properties this composite can edit. Found properties will
+   * be checked for correct values. Then they are set to the members. If editable properties are missing or if existing
+   * ones have wrong values, the members will not be changed.
+   * 
+   * @param properties
+   *          The properties, containing the values.
+   */
+  private void updateProperties( Properties properties )
+  {
+    /* Get the properties. */
+    String horizontalProperty = properties.getProperty( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION );
+    String verticalProperty = properties.getProperty( PositionUtilities.THEME_PROPERTY_VERTICAL_POSITION );
+    String imageUrlProperty = properties.getProperty( ImageUtilities.THEME_PROPERTY_IMAGE_URL, null );
+
+    /* Check the horizontal position. */
+    int horizontal = LegendUtilities.checkHorizontalPosition( horizontalProperty );
+    if( horizontal != -1 )
+      m_horizontal = horizontal;
+
+    /* Check the vertical position. */
+    int vertical = LegendUtilities.checkVerticalPosition( verticalProperty );
+    if( vertical != -1 )
+      m_vertical = vertical;
+
+    /* Check the URL of the image. */
+    if( imageUrlProperty != null && imageUrlProperty.length() > 0 )
+      m_imageUrl = ImageUtilities.checkImageUrl( imageUrlProperty );
   }
 
   /**
@@ -223,9 +281,83 @@ public class ImageComposite extends Composite
     Composite contentInternalComposite = new Composite( parent, SWT.NONE );
     contentInternalComposite.setLayout( new GridLayout( 1, false ) );
 
-    // TODO
+    /* Create the position composite. */
+    Composite positionComposite = createPositionComposite( contentInternalComposite );
+    positionComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
+
+    /* Create the image group. */
+    Group imageGroup = createImageGroup( contentInternalComposite );
+    imageGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     return contentInternalComposite;
+  }
+
+  /**
+   * This function creates the position composite.
+   * 
+   * @param parent
+   *          The parent composite.
+   * @return The position composite.
+   */
+  private Composite createPositionComposite( Composite parent )
+  {
+    /* Create a composite. */
+    PositionComposite positionComposite = new PositionComposite( parent, SWT.NONE, m_horizontal, m_vertical );
+    positionComposite.addPositionChangedListener( new IPositionChangedListener()
+    {
+      /**
+       * @see org.kalypso.util.themes.position.listener.IPositionChangedListener#positionChanged(int, int)
+       */
+      @Override
+      public void positionChanged( int horizontal, int vertical )
+      {
+        m_horizontal = horizontal;
+        m_vertical = vertical;
+
+        fireImagePropertyChanged( getProperties(), m_horizontal, m_vertical, m_imageUrl );
+      }
+    } );
+
+    /* Return the composite. */
+    return positionComposite;
+  }
+
+  /**
+   * This function creates the image group.
+   * 
+   * @param parent
+   *          The parent composite.
+   * @return The image group.
+   */
+  private Group createImageGroup( Composite parent )
+  {
+    /* Create a group. */
+    Group imageGroup = new Group( parent, SWT.NONE );
+    imageGroup.setLayout( new GridLayout( 3, false ) );
+    imageGroup.setText( "Optionen" );
+
+    /* Create a label. */
+    Label imageUrlLabel = new Label( imageGroup, SWT.NONE );
+    imageUrlLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
+    imageUrlLabel.setText( "URL" );
+    imageUrlLabel.setAlignment( SWT.LEFT );
+
+    /* Create a text field. */
+    Text imageUrlText = new Text( imageGroup, SWT.BORDER );
+    imageUrlText.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    if( m_imageUrl != null )
+      imageUrlText.setText( m_imageUrl.toExternalForm() );
+
+    // TODO Listener...
+
+    /* Create a button. */
+    Button textButton = new Button( imageGroup, SWT.PUSH );
+    textButton.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
+    textButton.setText( "..." );
+
+    // TODO Listener...
+
+    return imageGroup;
   }
 
   /**
@@ -260,40 +392,67 @@ public class ImageComposite extends Composite
   }
 
   /**
-   * This function fires a property changed event.
+   * This function fires a image property changed event.
    * 
-   * @param property
-   *          The changed property.
-   * @param value
-   *          The new value of the changed property.
+   * @param properties
+   *          A up to date properties object, containing all serialized image properties.
+   * @param horizontal
+   *          The horizontal position.
+   * @param vertical
+   *          The vertical position.
+   * @param imageUrl
+   *          The URL of the image, which should be shown.
    */
-  protected void firePropertyChanged( String property, String value )
+  protected void fireImagePropertyChanged( Properties properties, int horizontal, int vertical, URL imageUrl )
   {
-    for( IPropertyChangedListener listener : m_listener )
-      listener.propertyChanged( property, value );
+    for( IImageChangedListener listener : m_listener )
+      listener.imagePropertyChanged( properties, horizontal, vertical, imageUrl );
   }
 
   /**
-   * This function adds a property changed listener.
+   * This function adds a image changed listener.
    * 
    * @param listener
-   *          The property changed listener to add.
+   *          The image changed listener to add.
    */
-  public void addPropertyChangedListener( IPropertyChangedListener listener )
+  public void addImageChangedListener( IImageChangedListener listener )
   {
     if( !m_listener.contains( listener ) )
       m_listener.add( listener );
   }
 
   /**
-   * This function removes a property changed listener.
+   * This function removes a image changed listener.
    * 
    * @param listener
-   *          The property changed listener to remove.
+   *          The image changed listener to remove.
    */
-  public void removePropertyChangedListener( IPropertyChangedListener listener )
+  public void removeImageChangedListener( IImageChangedListener listener )
   {
     if( m_listener.contains( listener ) )
       m_listener.remove( listener );
+  }
+
+  /**
+   * This function returns a up to date properties object, containing all serialized image properties.
+   * 
+   * @return A up to date properties object, containing all serialized image properties.
+   */
+  public Properties getProperties( )
+  {
+    /* Create the properties object. */
+    Properties properties = new Properties();
+
+    /* Serialize the properties. */
+    String horizontalProperty = String.format( Locale.PRC, "%d", m_horizontal );
+    String verticalProperty = String.format( Locale.PRC, "%d", m_vertical );
+    String imageUrlProperty = String.format( Locale.PRC, "%s", m_imageUrl.toExternalForm() );
+
+    /* Add the properties. */
+    properties.put( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION, horizontalProperty );
+    properties.put( PositionUtilities.THEME_PROPERTY_VERTICAL_POSITION, verticalProperty );
+    properties.put( ImageUtilities.THEME_PROPERTY_IMAGE_URL, imageUrlProperty );
+
+    return properties;
   }
 }

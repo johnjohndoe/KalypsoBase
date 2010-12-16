@@ -38,18 +38,28 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml;
+package org.kalypso.ogc.gml.outline.nodes;
 
-import org.kalypso.commons.i18n.I10nString;
-import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.ogc.gml.map.themes.KalypsoTextTheme;
 
 /**
+ * Text theme node.
+ * 
  * @author Holger Albert
  */
-public class KalypsoImageTheme extends AbstractImageTheme
+public class TextThemeNode extends KalypsoThemeNode<KalypsoTextTheme>
 {
-  public KalypsoImageTheme( I10nString name, String type, IMapModell mapModel )
+  /**
+   * The constructor.
+   * 
+   * @param parent
+   *          The parent theme node.
+   * @param element
+   *          The kalypso text theme.
+   */
+
+  TextThemeNode( IThemeNode parent, KalypsoTextTheme element )
   {
-    super( name, type, mapModel );
+    super( parent, element );
   }
 }
