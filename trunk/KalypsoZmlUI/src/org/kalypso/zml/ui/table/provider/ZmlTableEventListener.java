@@ -43,32 +43,122 @@ package org.kalypso.zml.ui.table.provider;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.ViewerCell;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseMoveListener;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.ui.table.ZmlTableComposite;
+import org.kalypso.zml.ui.table.menu.ZmlTableContextMenuProvider;
+import org.kalypso.zml.ui.table.menu.ZmlTableHeaderContextMenuProvider;
 import org.kalypso.zml.ui.table.model.IZmlTableCell;
 import org.kalypso.zml.ui.table.model.IZmlTableColumn;
 import org.kalypso.zml.ui.table.model.IZmlTableRow;
 import org.kalypso.zml.ui.table.model.ZmlTableCell;
 import org.kalypso.zml.ui.table.model.ZmlTableRow;
+import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
 
 /**
+ * handles mouse move and menu detect events (active selection of table cells, columns and rows and updating of the
+ * table context menu)
+ * 
  * @author Dirk Kuch
  */
-public class ZmlTableMouseMoveListener implements MouseMoveListener
+public class ZmlTableEventListener implements MouseMoveListener, Listener
 {
   Point m_position;
 
+  private final MenuManager m_contextMenuManager = new MenuManager();
+
   private final ZmlTableComposite m_table;
 
-  public ZmlTableMouseMoveListener( final ZmlTableComposite table )
+  public ZmlTableEventListener( final ZmlTableComposite table )
   {
     m_table = table;
+
+    m_contextMenuManager.setRemoveAllWhenShown( false );
+    final Menu contextMenu = m_contextMenuManager.createContextMenu( table );
+    table.setMenu( contextMenu );
+  }
+
+  /**
+   * @see org.eclipse.swt.widgets.Listener#handleEvent(org.eclipse.swt.widgets.Event)
+   */
+  @Override
+  public void handleEvent( final Event event )
+  {
+    if( SWT.MenuDetect != event.type )
+      return;
+
+    handleMenuDetect( event );
+    final Menu menu = m_contextMenuManager.getMenu();
+    menu.setVisible( true );
+  }
+
+  protected void handleMenuDetect( final Event event )
+  {
+    m_contextMenuManager.removeAll();
+
+    final Table table = m_table.getTableViewer().getTable();
+    if( table.isDisposed() )
+      return;
+
+    final Point eventPoint = new Point( event.x, event.y );
+    final Point pt = table.toControl( eventPoint );
+
+    final Rectangle clientArea = table.getClientArea();
+    final boolean header = clientArea.y <= pt.y && pt.y < (clientArea.y + table.getHeaderHeight());
+
+    final int columnIndex = findColumnIndex( pt.x );
+    if( columnIndex == -1 )
+      return;
+
+    final ExtendedZmlTableColumn zmlColumn = (ExtendedZmlTableColumn) m_table.findColumn( columnIndex );
+
+    if( header )
+    {
+      final ZmlTableHeaderContextMenuProvider menuProvider = new ZmlTableHeaderContextMenuProvider();
+      menuProvider.fillMenu( zmlColumn, m_contextMenuManager );
+      m_contextMenuManager.update( true );
+    }
+    else
+    {
+      final ZmlTableContextMenuProvider menuProvider = new ZmlTableContextMenuProvider();
+      menuProvider.fillMenu( zmlColumn, m_contextMenuManager );
+      m_contextMenuManager.update( true );
+    }
+  }
+
+  private int findColumnIndex( final int x )
+  {
+    final Table table = m_table.getTableViewer().getTable();
+    final TableColumn[] columns = table.getColumns();
+    final int[] columnOrder = table.getColumnOrder();
+
+    if( x < 0 )
+      return -1;
+
+    int currentWidth = 0;
+    for( final int index : columnOrder )
+    {
+      final TableColumn column = columns[index];
+      if( x < currentWidth + column.getWidth() )
+        return index;
+
+      currentWidth += column.getWidth();
+    }
+
+    return -1;
   }
 
   /**
@@ -150,4 +240,5 @@ public class ZmlTableMouseMoveListener implements MouseMoveListener
 
     return rows.toArray( new IZmlTableRow[] {} );
   }
+
 }

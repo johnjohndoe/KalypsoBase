@@ -58,7 +58,7 @@ import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
 /**
  * @author Dirk Kuch
  */
-public class ZmlTableHeaderContextMenuListener
+public class ZmlTableHeaderContextMenuProvider
 {
   public void fillMenu( final ExtendedZmlTableColumn column, final MenuManager menuManager )
   {
