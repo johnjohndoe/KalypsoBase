@@ -315,7 +315,9 @@ public final class StatusUtilities
 
   /**
    * Creates a warning-status with given message and null throwable.
+   * @deprecated
    */
+  @Deprecated
   public static IStatus createWarningStatus( final String warningMessage, final Object... args )
   {
     return createStatus( IStatus.WARNING, String.format( warningMessage, args ), null );
