@@ -45,6 +45,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javax.xml.bind.JAXBElement;
+
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -153,12 +155,8 @@ public class BaseColumn
       return m_rules;
 
     final List<ZmlRule> rules = new ArrayList<ZmlRule>();
-
-    final ZmlRule[] resolved1 = resolveFromRuleSetReference();
-    final ZmlRule[] resolved2 = resolveRules();
-
-    Collections.addAll( rules, resolved1 );
-    Collections.addAll( rules, resolved2 );
+    Collections.addAll( rules, resolveFromRuleSetReference() );
+    Collections.addAll( rules, resolveRules() );
 
     m_rules = rules.toArray( new ZmlRule[] {} );
 
@@ -167,13 +165,20 @@ public class BaseColumn
 
   private ZmlRule[] resolveFromRuleSetReference( )
   {
-    final Object ruleSetReference = m_type.getRuleSetReference();
-    if( !(ruleSetReference instanceof RuleSetType) )
-      return new ZmlRule[] {};
+    final List<ZmlRule> rules = new ArrayList<ZmlRule>();
 
-    final ZmlRuleSet ruleSet = new ZmlRuleSet( (RuleSetType) ruleSetReference );
+    final List<JAXBElement<Object>> references = m_type.getRuleSetReference();
+    for( final JAXBElement<Object> reference : references )
+    {
+      final Object obj = reference.getValue();
+      if( !(obj instanceof RuleSetType) )
+        continue;
 
-    return ruleSet.getRules();
+      final ZmlRuleSet ruleSet = new ZmlRuleSet( (RuleSetType) obj );
+      Collections.addAll( rules, ruleSet.getRules() );
+    }
+
+    return rules.toArray( new ZmlRule[] {} );
   }
 
   private ZmlRule[] resolveRules( )

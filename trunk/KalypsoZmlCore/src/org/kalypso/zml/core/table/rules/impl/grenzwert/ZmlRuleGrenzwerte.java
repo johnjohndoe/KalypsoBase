@@ -44,6 +44,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.core.KalypsoZmlCore;
 import org.kalypso.zml.core.table.binding.rule.ZmlRule;
+import org.kalypso.zml.core.table.binding.rule.instructions.AbstractZmlRuleInstructionType;
 import org.kalypso.zml.core.table.binding.rule.instructions.ZmlMetadataBoundaryInstruction;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
 import org.kalypso.zml.core.table.rules.impl.AbstractZmlTableRule;
@@ -61,8 +62,8 @@ public class ZmlRuleGrenzwerte extends AbstractZmlTableRule
   @Override
   protected boolean doApply( final ZmlRule rule, final IZmlValueReference reference )
   {
-    final ZmlMetadataBoundaryInstruction[] instructions = rule.getInstructions();
-    for( final ZmlMetadataBoundaryInstruction instruction : instructions )
+    final AbstractZmlRuleInstructionType[] instructions = rule.getInstructions();
+    for( final AbstractZmlRuleInstructionType instruction : instructions )
     {
       try
       {
@@ -94,11 +95,15 @@ public class ZmlRuleGrenzwerte extends AbstractZmlTableRule
   @Override
   public String update( final ZmlRule rule, final IZmlValueReference reference, final String text ) throws SensorException
   {
-    final ZmlMetadataBoundaryInstruction[] instructions = rule.getInstructions();
-    for( final ZmlMetadataBoundaryInstruction instruction : instructions )
+    final AbstractZmlRuleInstructionType[] instructions = rule.getInstructions();
+    for( final AbstractZmlRuleInstructionType instruction : instructions )
     {
-      if( instruction.matches( reference ) )
-        return instruction.update( text );
+      if( instruction instanceof ZmlMetadataBoundaryInstruction )
+      {
+        final ZmlMetadataBoundaryInstruction impl = (ZmlMetadataBoundaryInstruction) instruction;
+        if( instruction.matches( reference ) )
+          return impl.update( text );
+      }
     }
 
     return text;

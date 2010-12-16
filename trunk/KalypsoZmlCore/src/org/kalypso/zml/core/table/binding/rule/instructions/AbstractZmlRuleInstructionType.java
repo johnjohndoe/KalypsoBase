@@ -41,15 +41,17 @@
 package org.kalypso.zml.core.table.binding.rule.instructions;
 
 import org.eclipse.core.runtime.CoreException;
+import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.core.table.binding.CellStyle;
 import org.kalypso.zml.core.table.binding.ZmlStyleResolver;
+import org.kalypso.zml.core.table.model.references.IZmlValueReference;
 import org.kalypso.zml.core.table.schema.AbstractRuleInstructionType;
 import org.kalypso.zml.core.table.schema.StyleReferenceType;
 
 /**
  * @author Dirk Kuch
  */
-public class AbstractZmlRuleInstructionType
+public abstract class AbstractZmlRuleInstructionType
 {
   private final AbstractRuleInstructionType m_type;
 
@@ -76,5 +78,7 @@ public class AbstractZmlRuleInstructionType
     m_style = resolver.findStyle( styleReference );
     return m_style;
   }
+
+  public abstract boolean matches( final IZmlValueReference reference ) throws SensorException;
 
 }

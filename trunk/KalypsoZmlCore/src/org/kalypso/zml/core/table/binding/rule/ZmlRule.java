@@ -47,19 +47,23 @@ import java.util.List;
 import javax.xml.bind.JAXBElement;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.zml.core.KalypsoZmlCore;
 import org.kalypso.zml.core.table.binding.BaseColumn;
 import org.kalypso.zml.core.table.binding.CellStyle;
 import org.kalypso.zml.core.table.binding.ZmlStyleResolver;
+import org.kalypso.zml.core.table.binding.rule.instructions.AbstractZmlRuleInstructionType;
 import org.kalypso.zml.core.table.binding.rule.instructions.ZmlMetadataBoundaryInstruction;
+import org.kalypso.zml.core.table.binding.rule.instructions.ZmlMetadataDaterangeInstruction;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
 import org.kalypso.zml.core.table.rules.IZmlRuleImplementation;
 import org.kalypso.zml.core.table.schema.AbstractRuleInstructionType;
 import org.kalypso.zml.core.table.schema.CellStyleType;
 import org.kalypso.zml.core.table.schema.MetadataBoundaryInstructionType;
+import org.kalypso.zml.core.table.schema.MetadataDateRangeInstructionType;
 import org.kalypso.zml.core.table.schema.RuleInstructionsType;
 import org.kalypso.zml.core.table.schema.RuleType;
 import org.kalypso.zml.core.table.schema.StyleReferenceType;
@@ -73,7 +77,7 @@ public class ZmlRule
 {
   private final RuleType m_rule;
 
-  private ZmlMetadataBoundaryInstruction[] m_instructions;
+  private AbstractZmlRuleInstructionType[] m_instructions;
 
   private CellStyle m_baseStyle;
 
@@ -106,8 +110,8 @@ public class ZmlRule
 
     CellStyleType base = m_baseStyle.getType();
 
-    final ZmlMetadataBoundaryInstruction[] instructions = getInstructions();
-    for( final ZmlMetadataBoundaryInstruction instruction : instructions )
+    final AbstractZmlRuleInstructionType[] instructions = getInstructions();
+    for( final AbstractZmlRuleInstructionType instruction : instructions )
     {
       try
       {
@@ -132,12 +136,12 @@ public class ZmlRule
     return KalypsoZmlCore.getDefault().findRule( m_rule.getRuleReference() );
   }
 
-  public ZmlMetadataBoundaryInstruction[] getInstructions( )
+  public AbstractZmlRuleInstructionType[] getInstructions( )
   {
     if( ArrayUtils.isNotEmpty( m_instructions ) )
       return m_instructions;
 
-    final List<ZmlMetadataBoundaryInstruction> myInstructions = new ArrayList<ZmlMetadataBoundaryInstruction>();
+    final List<AbstractZmlRuleInstructionType> myInstructions = new ArrayList<AbstractZmlRuleInstructionType>();
 
     final RuleInstructionsType type = m_rule.getRuleInstructions();
     if( type == null )
@@ -148,12 +152,14 @@ public class ZmlRule
     {
       final AbstractRuleInstructionType abstractType = element.getValue();
       if( abstractType instanceof MetadataBoundaryInstructionType )
-      {
-        myInstructions.add( new ZmlMetadataBoundaryInstruction( (MetadataBoundaryInstructionType) abstractType ) );
-      }
+        myInstructions.add( new ZmlMetadataBoundaryInstruction( abstractType ) );
+      else if( abstractType instanceof MetadataDateRangeInstructionType )
+        myInstructions.add( new ZmlMetadataDaterangeInstruction( abstractType ) );
+      else
+        throw new NotImplementedException();
     }
 
-    m_instructions = myInstructions.toArray( new ZmlMetadataBoundaryInstruction[] {} );
+    m_instructions = myInstructions.toArray( new AbstractZmlRuleInstructionType[] {} );
 
     return m_instructions;
   }
