@@ -40,16 +40,38 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.views.properties;
 
+import java.net.URL;
+import java.util.Properties;
+
+import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IWorkbenchPropertyPage;
 import org.eclipse.ui.dialogs.PropertyPage;
+import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.map.themes.KalypsoImageTheme;
+import org.kalypso.ogc.gml.outline.nodes.IThemeNode;
+import org.kalypso.util.themes.image.controls.ImageComposite;
+import org.kalypso.util.themes.image.listener.IImageChangedListener;
 
 /**
  * @author Holger Albert
  */
 public class ImagePropertyPage extends PropertyPage implements IWorkbenchPropertyPage
 {
+  /**
+   * The theme.
+   */
+  private IKalypsoTheme m_theme;
+
+  /**
+   * A up to date properties object, containing all serialized image properties.
+   */
+  protected Properties m_properties;
+
   /**
    * The constructor.
    */
@@ -63,6 +85,109 @@ public class ImagePropertyPage extends PropertyPage implements IWorkbenchPropert
   @Override
   protected Control createContents( Composite parent )
   {
-    return null;
+    /* Initialize. */
+    init();
+
+    /* Create the main composite. */
+    Composite main = new Composite( parent, SWT.NONE );
+    main.setLayout( new GridLayout( 1, false ) );
+    main.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+
+    /* Create the image composite. */
+    ImageComposite imageComposite = new ImageComposite( main, SWT.NONE, m_properties );
+    imageComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    imageComposite.addImageChangedListener( new IImageChangedListener()
+    {
+      /**
+       * @see org.kalypso.util.themes.image.listener.IImageChangedListener#imagePropertyChanged(java.util.Properties,
+       *      int, int, java.net.URL)
+       */
+      @Override
+      public void imagePropertyChanged( Properties properties, int horizontal, int vertical, URL imageUrl )
+      {
+        /* Update the properties object. */
+        m_properties = properties;
+
+        /* Update the GUI. */
+        // TODO
+      }
+    } );
+
+    return main;
+  }
+
+  /**
+   * @see org.eclipse.jface.preference.PreferencePage#performDefaults()
+   */
+  @Override
+  protected void performDefaults( )
+  {
+    if( m_theme == null )
+    {
+      super.performDefaults();
+      return;
+    }
+
+    if( !(m_theme instanceof KalypsoImageTheme) )
+    {
+      super.performDefaults();
+      return;
+    }
+
+    // TODO
+
+    super.performDefaults();
+  }
+
+  /**
+   * @see org.eclipse.jface.preference.PreferencePage#performOk()
+   */
+  @Override
+  public boolean performOk( )
+  {
+    if( m_theme == null || m_properties == null )
+      return super.performOk();
+
+    if( !(m_theme instanceof KalypsoImageTheme) )
+      return super.performOk();
+
+    // TODO
+
+    return super.performOk();
+  }
+
+  /**
+   * This function initializes the property page.
+   */
+  private void init( )
+  {
+    /* Get the element. */
+    IAdaptable element = getElement();
+
+    /* Get the node. */
+    IThemeNode node = (IThemeNode) (element instanceof IThemeNode ? element : element.getAdapter( IThemeNode.class ));
+
+    /* Get the theme. */
+    Object nodeElement = node.getElement();
+    IKalypsoTheme theme = (nodeElement instanceof IKalypsoTheme) ? (IKalypsoTheme) nodeElement : null;
+
+    /* Store the members. */
+    m_theme = theme;
+    m_properties = null;
+
+    if( m_theme instanceof KalypsoImageTheme )
+    {
+      /* Cast. */
+      KalypsoImageTheme imageTheme = (KalypsoImageTheme) m_theme;
+
+      /* Get the properties of the image theme. */
+      Properties imageProperties = new Properties();
+      String[] propertyNames = imageTheme.getPropertyNames();
+      for( String propertyName : propertyNames )
+        imageProperties.put( propertyName, imageTheme.getProperty( propertyName, null ) );
+
+      /* Store the member. */
+      m_properties = imageProperties;
+    }
   }
 }

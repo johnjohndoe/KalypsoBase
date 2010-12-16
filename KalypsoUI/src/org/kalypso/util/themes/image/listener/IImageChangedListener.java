@@ -38,44 +38,29 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml;
+package org.kalypso.util.themes.image.listener;
 
-import java.awt.Graphics;
-
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.kalypso.commons.i18n.I10nString;
-import org.kalypso.ogc.gml.mapmodel.IMapModell;
-import org.kalypsodeegree.graphics.transformation.GeoTransform;
-import org.kalypsodeegree.model.geometry.GM_Envelope;
+import java.net.URL;
+import java.util.Properties;
 
 /**
+ * This interface provides functions for listener, which would like to be notified if a image property has changed.
+ * 
  * @author Holger Albert
  */
-public class KalypsoTextTheme extends AbstractKalypsoTheme
+public interface IImageChangedListener
 {
-  public KalypsoTextTheme( I10nString name, String type, IMapModell mapModel )
-  {
-    super( name, type, mapModel );
-  }
-
   /**
-   * @see org.kalypso.ogc.gml.IKalypsoTheme#paint(java.awt.Graphics,
-   *      org.kalypsodeegree.graphics.transformation.GeoTransform, java.lang.Boolean,
-   *      org.eclipse.core.runtime.IProgressMonitor)
+   * This function is notified, if a image property has changed.
+   * 
+   * @param properties
+   *          A up to date properties object, containing all serialized image properties.
+   * @param horizontal
+   *          The horizontal position.
+   * @param vertical
+   *          The vertical position.
+   * @param imageUrl
+   *          The URL of the image, which should be shown.
    */
-  @Override
-  public IStatus paint( Graphics g, GeoTransform world2screen, Boolean selected, IProgressMonitor monitor )
-  {
-    return null;
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoTheme#getFullExtent()
-   */
-  @Override
-  public GM_Envelope getFullExtent( )
-  {
-    return null;
-  }
+  public void imagePropertyChanged( Properties properties, int horizontal, int vertical, URL imageUrl );
 }

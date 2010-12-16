@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.util.themes.image;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
 /**
  * This class provides functions for {@link org.kalypso.ogc.gml.IKalypsoTheme}s.
  * 
@@ -48,9 +51,27 @@ package org.kalypso.util.themes.image;
 public class ImageUtilities
 {
   /**
+   * This constant defines the theme property, used to configure the URL of the image, which should be shown.
+   */
+  public static final String THEME_PROPERTY_IMAGE_URL = "image_url";
+
+  /**
    * The constructor.
    */
   private ImageUtilities( )
   {
+  }
+
+  public static URL checkImageUrl( String imageUrlProperty )
+  {
+    try
+    {
+      return new URL( imageUrlProperty );
+    }
+    catch( MalformedURLException ex )
+    {
+      ex.printStackTrace();
+      return null;
+    }
   }
 }

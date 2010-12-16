@@ -396,11 +396,11 @@ public class LegendComposite extends Composite
     backgroundColorLabel.setText( "Hintergrundfarbe" );
     backgroundColorLabel.setAlignment( SWT.LEFT );
 
-    /* Create a text field. */
-    final Label backgroundColorText = new Label( legendGroup, SWT.BORDER );
-    backgroundColorText.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    backgroundColorText.setText( "Hintergrundfarbe" );
-    backgroundColorText.setBackground( m_backgroundColor );
+    /* Create a label. */
+    final Label backgroundLabel = new Label( legendGroup, SWT.BORDER );
+    backgroundLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    backgroundLabel.setText( "Hintergrundfarbe" );
+    backgroundLabel.setBackground( m_backgroundColor );
 
     /* Create a button. */
     Button backgroundColorButton = new Button( legendGroup, SWT.PUSH );
@@ -424,7 +424,7 @@ public class LegendComposite extends Composite
 
         m_backgroundColor.dispose();
         m_backgroundColor = new Color( shell.getDisplay(), rgb );
-        backgroundColorText.setBackground( m_backgroundColor );
+        backgroundLabel.setBackground( m_backgroundColor );
 
         fireLegendPropertyChanged( getProperties(), m_horizontal, m_vertical, m_backgroundColor, m_insets, m_themeIds.toArray( new String[] {} ) );
       }

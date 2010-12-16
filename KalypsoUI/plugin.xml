@@ -367,6 +367,28 @@
         <instanceof value="org.kalypso.ogc.gml.outline.nodes.FeatureThemeNode"/>
      </enabledWhen>
   </page>
+  <page
+        category="org.kalypso.ui.views.properties.ThemePropertyPage"
+        class="org.kalypso.ui.views.properties.ImagePropertyPage"
+        id="org.kalypso.ui.views.properties.ImagePropertyPage"
+        name="Bild">
+     <enabledWhen>
+        <instanceof
+              value="org.kalypso.ogc.gml.outline.nodes.ImageThemeNode">
+        </instanceof>
+     </enabledWhen>
+  </page>
+  <page
+        category="org.kalypso.ui.views.properties.ThemePropertyPage"
+        class="org.kalypso.ui.views.properties.TextPropertyPage"
+        id="org.kalypso.ui.views.properties.TextPropertyPage"
+        name="Text">
+     <enabledWhen>
+        <instanceof
+              value="org.kalypso.ogc.gml.outline.nodes.TextThemeNode">
+        </instanceof>
+     </enabledWhen>
+  </page>
 	</extension>
 	<extension point="org.eclipse.ui.menus">
 		<menuContribution locationURI="toolbar:org.kalypso.ui.views.mapView">
