@@ -56,11 +56,15 @@
       <property name="textFormat">dd.MM.yy HH:mm</property>
     </Style>
 
-    <Style id="dateForecastCellStyleSafe">
-      <property name="backgroundColor">E2FFCC</property>
+    <Style id="forecastCellStyleSafe">
+      <property name="fontWeight">BOLD</property>
     </Style>
-    <Style id="dateForecastCellStyleUnsafe">
-      <property name="backgroundColor">FFF7EE</property>
+    <Style id="forecastCellStyleUnsafe">
+      <property name="fontWeight">ITALIC</property>
+    </Style>
+     <Style id="forecastCellStyleRestrechenzeitraum">
+      <property name="fontWeight">ITALIC</property>
+      <property name="textColor">CCCCCC</property>
     </Style>
 
     <!-- rule - value user modified? -->
@@ -103,13 +107,13 @@
   <RuleSet id="default">
     <Rule id="ruleForecastSafe" ruleReference="org.kalypso.zml.ui.core.rule.safe.forecast.value">
       <styleReference>
-        <reference>dateForecastCellStyleSafe</reference>
+        <reference>forecastCellStyleSafe</reference>
       </styleReference>
       <label>Sicherer Vorhersagezeitraum</label>
     </Rule>
     <Rule id="ruleForecastUnsafe" ruleReference="org.kalypso.zml.ui.core.rule.unsafe.forecast.value">
       <styleReference>
-        <reference>dateForecastCellStyleUnsafe</reference>
+        <reference>forecastCellStyleUnsafe</reference>
       </styleReference>
       <label>Unsicherer Vorhersagezeitraum</label>
     </Rule>
