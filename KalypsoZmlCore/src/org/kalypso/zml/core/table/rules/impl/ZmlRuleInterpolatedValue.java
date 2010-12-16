@@ -43,9 +43,9 @@ package org.kalypso.zml.core.table.rules.impl;
 
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.zml.core.KalypsoZmlCore;
 import org.kalypso.zml.core.table.binding.rule.ZmlRule;
+import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
 
 /**
@@ -72,11 +72,17 @@ public class ZmlRuleInterpolatedValue extends AbstractZmlTableRule
   {
     try
     {
-      final Integer status = reference.getStatus();
-      if( status == null )
+      final IZmlModelColumn column = reference.getColumn();
+      if( column == null )
         return false;
 
-      return KalypsoStati.BIT_CHECK == (KalypsoStati.BIT_CHECK & status);
+      final String dataSource = reference.getDataSource();
+      if( dataSource == null )
+        return false;
+
+      return dataSource.startsWith( "filter:" );
+
+// return KalypsoStati.BIT_CHECK == (KalypsoStati.BIT_CHECK & status);
     }
     catch( final SensorException e )
     {
