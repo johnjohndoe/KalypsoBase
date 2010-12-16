@@ -41,58 +41,26 @@
 package org.kalypso.zml.ui.table.menu;
 
 import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.contribs.eclipse.jface.action.ContributionUtils;
 import org.kalypso.zml.core.table.binding.BaseColumn;
-import org.kalypso.zml.ui.table.ZmlTableComposite;
 import org.kalypso.zml.ui.table.model.IZmlTableColumn;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlTableContextMenuListener implements ISelectionChangedListener
+public class ZmlTableContextMenuListener
 {
-  private final ZmlTableComposite m_table;
-
-  public ZmlTableContextMenuListener( final ZmlTableComposite table )
+  public void fillMenu( final IZmlTableColumn column, final MenuManager menuManager )
   {
-    m_table = table;
-  }
+    if( column == null )
+      return;
 
-  private void setMenu( final String uri )
-  {
-    final Control control = m_table.getTableViewer().getControl();
-    if( uri != null )
-    {
-      final MenuManager menuManager = new MenuManager();
-      final Menu menu = menuManager.createContextMenu( control );
-      ContributionUtils.populateContributionManager( PlatformUI.getWorkbench(), menuManager, uri );
+    final BaseColumn columnType = column.getColumnType();
+    final String uri = columnType.getUriContextMenu();
+    if( uri == null )
+      return;
 
-      m_table.setContextMenu( menu );
-    }
-    else
-      m_table.setContextMenu( new Menu( control ) );
-
-  }
-
-  /**
-   * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
-   */
-  @Override
-  public void selectionChanged( final SelectionChangedEvent event )
-  {
-    String uri = null;
-    final IZmlTableColumn column = m_table.getActiveColumn();
-    if( column != null )
-    {
-      final BaseColumn columnType = column.getColumnType();
-      uri = columnType.getUriContextMenu();
-    }
-
-    setMenu( uri );
+    ContributionUtils.populateContributionManager( PlatformUI.getWorkbench(), menuManager, uri );
   }
 }
