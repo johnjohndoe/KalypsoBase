@@ -41,6 +41,8 @@
 package org.kalypso.contribs.java.util;
 
 import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -124,7 +126,7 @@ public class PropertiesUtilities
 // suffixes[0] );
 // JavaApiContributionsPlugin.getDefault().getLog().log( status );
   }
-  
+
   private static final String EXTENSION = ".properties"; //$NON-NLS-1$
 
   private static String[] NL_SUFFIXES;
@@ -173,6 +175,39 @@ public class PropertiesUtilities
     try
     {
       is = new BufferedInputStream( location.openStream() );
+      properties.load( is );
+      is.close();
+    }
+    finally
+    {
+      if( is != null )
+      {
+        try
+        {
+          is.close();
+        }
+        catch( final IOException e )
+        {
+          // ignore, this time, there must be another exception just about to been thrown
+        }
+      }
+    }
+  }
+
+  public static Properties load( final File file ) throws IOException
+  {
+    final Properties properties = new Properties();
+    load( file, properties );
+    return properties;
+  }
+
+  public static void load( final File file, final Properties properties ) throws IOException
+  {
+    InputStream is = null;
+    try
+    {
+
+      is = new BufferedInputStream( new FileInputStream( file ) );
       properties.load( is );
       is.close();
     }
