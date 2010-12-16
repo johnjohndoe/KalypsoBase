@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ZmlTable xmlns="schema.table.core.zml.kalypso.org">
-
   <StyleSet>
     <!-- basic zml table style -->
     <Style id="defaultCellStyle">
@@ -10,7 +9,6 @@
       <property name="fontSize">10</property>
       <property name="textFormat">%s</property>
     </Style>
-
     <!-- base w cell table style -->
     <Style id="wBaseCellStyle">
       <baseStyle>
@@ -18,14 +16,12 @@
       </baseStyle>
       <property name="textFormat">%.0f</property>
     </Style>
-
     <Style id="wBaseEditingCellStyle">
       <baseStyle>
         <reference>wBaseCellStyle</reference>
       </baseStyle>
       <property name="textFormat">%.3f</property>
     </Style>
-
     <!-- base n cell table style -->
     <Style id="nBaseCellStyle">
       <baseStyle>
@@ -33,7 +29,6 @@
       </baseStyle>
       <property name="textFormat">%.1f</property>
     </Style>
-
     <!-- base q cell table style -->
     <Style id="qBaseCellStyle">
       <baseStyle>
@@ -41,12 +36,10 @@
       </baseStyle>
       <property name="textFormat">%.3f</property>
     </Style>
-
     <!-- derived value style -->
     <Style id="derivedValueCellStyle">
       <property name="backgroundColor">F8F3C0</property>
     </Style>
-
     <!-- base date cell table styles -->
     <Style id="dateCellStyle">
       <baseStyle>
@@ -55,7 +48,12 @@
       <property name="backgroundColor">DEDEDE</property>
       <property name="textFormat">dd.MM.yy HH:mm</property>
     </Style>
-
+    <Style id="dateForecastCellStyle">
+      <baseStyle>
+        <reference>dateCellStyle</reference>
+      </baseStyle>
+      <property name="backgroundColor">FFF7EE</property> <!-- E2FFCC grün -->
+    </Style>
     <Style id="forecastCellStyleSafe">
       <property name="fontWeight">BOLD</property>
     </Style>
@@ -66,22 +64,18 @@
       <property name="fontWeight">ITALIC</property>
       <property name="textColor">CCCCCC</property>
     </Style>
-
     <!-- rule - value user modified? -->
     <Style id="userModifiedStyle">
       <property name="icon">urn:org:kalypso:zml:ui:table:icon:user:modified</property>
     </Style>
-
     <!-- rule - interpolated value? -->
     <Style id="interpolatedValueStyle">
       <property name="icon">urn:org:kalypso:zml:ui:table:icon:interpolated:value</property>
     </Style>
-
     <!-- rule - w/q conversion conflict? -->
     <Style id="wqConversionConflict">
       <property name="icon">urn:org:kalypso:zml:ui:table:icon:wq:conflict</property>
     </Style>
-
     <!-- alarmstufen styles -->
     <Style id="alarmstufe_1">
       <property name="backgroundColor">E8E800</property>
@@ -99,12 +93,28 @@
       <property name="backgroundColor">BD6DFF</property>
     </Style>
   </StyleSet>
-
   <defaultStyle>
     <reference>defaultCellStyle</reference>
   </defaultStyle>
-
   <RuleSet id="default">
+    <Rule ruleReference="org.kalypso.zml.ui.core.rule.forecast.value" id="ruleDateForecast">
+      <styleReference>
+        <reference>dateForecastCellStyle</reference>
+      </styleReference>
+      <RuleInstructions>
+        <MetadataDateRangeInstruction propertyFrom="Vorhersage Start" propertyTo="Vorhersage Ende" propertyToInclusive="true" />
+      </RuleInstructions>
+      <label>gesamter Vorhersagezeitraum</label>
+    </Rule>
+    <Rule ruleReference="org.kalypso.zml.ui.core.rule.forecast.value" id="ruleForecast">
+      <styleReference>
+        <reference>forecastCellStyleSafe</reference>
+      </styleReference>
+      <RuleInstructions>
+        <MetadataDateRangeInstruction propertyFrom="Vorhersage Start" propertyTo="Vorhersage Ende" propertyToInclusive="true" />
+      </RuleInstructions>
+      <label>gesamter Vorhersagezeitraum</label>
+    </Rule>
     <Rule ruleReference="org.kalypso.zml.ui.core.rule.forecast.value" id="ruleForecastSafe">
       <styleReference>
         <reference>forecastCellStyleSafe</reference>
@@ -112,16 +122,25 @@
       <RuleInstructions>
         <MetadataDateRangeInstruction propertyFrom="sichere Vorhersage Start" propertyTo="sichere Vorhersage Ende" propertyToInclusive="true" />
       </RuleInstructions>
-      <label>Sicherer Vorhersagezeitraum</label>
+      <label>Vorhersagezeitraum</label>
     </Rule>
     <Rule ruleReference="org.kalypso.zml.ui.core.rule.forecast.value" id="ruleForecastUnsafe">
       <styleReference>
         <reference>forecastCellStyleUnsafe</reference>
       </styleReference>
       <RuleInstructions>
-        <MetadataDateRangeInstruction propertyFrom="sichere Vorhersage Ende" propertyTo="Vorhersage Ende" />
+        <MetadataDateRangeInstruction propertyFrom="unsichere Vorhersage Start" propertyTo="unsichere Vorhersage Ende" propertyToInclusive="true" />
       </RuleInstructions>
-      <label>Unsicherer Vorhersagezeitraum</label>
+      <label>Abschätzungszeitraum</label>
+    </Rule>
+    <Rule ruleReference="org.kalypso.zml.ui.core.rule.forecast.value" id="ruleForecastRestrechenzeitraum">
+      <styleReference>
+        <reference>forecastCellStyleRestrechenzeitraum</reference>
+      </styleReference>
+      <RuleInstructions>
+        <MetadataDateRangeInstruction propertyFrom="unsichere Vorhersage Ende" propertyTo="Vorhersage Ende" propertyToInclusive="true" />
+      </RuleInstructions>
+      <label>Restrechenzeitraum</label>
     </Rule>
     <Rule id="ruleDerivedValue" ruleReference="org.kalypso.zml.ui.core.rule.derived.value" setHeaderIcon="true">
       <styleReference>
@@ -177,7 +196,6 @@
       </RuleInstructions>
       <label>Alarmstufe(n)</label>
     </Rule>
-
     <Rule id="ruleHauptzahlenQ" ruleReference="org.kalypso.zml.ui.core.rule.grenzwerte" enabled="false">
       <RuleInstructions>
         <MetadataBoundaryInstruction to="Grenzwert_Q: Kalypso_Grenzwert_NQ" label="&lt;N   ${text}" />
@@ -190,7 +208,6 @@
       </RuleInstructions>
       <label>Hauptzahl(en) Q</label>
     </Rule>
-
     <Rule id="ruleHauptzahlenW" ruleReference="org.kalypso.zml.ui.core.rule.grenzwerte" enabled="false">
       <RuleInstructions>
         <MetadataBoundaryInstruction to="Grenzwert_W: Kalypso_Grenzwert_NW" label="&lt;N   ${text}" />
@@ -204,5 +221,4 @@
       <label>Hauptzahl(en) W</label>
     </Rule>
   </RuleSet>
-
 </ZmlTable>
