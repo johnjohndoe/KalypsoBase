@@ -94,8 +94,8 @@ import org.kalypso.zml.ui.table.model.ZmlTableColumn;
 import org.kalypso.zml.ui.table.model.ZmlTableRow;
 import org.kalypso.zml.ui.table.provider.ZmlEditingSupport;
 import org.kalypso.zml.ui.table.provider.ZmlLabelProvider;
-import org.kalypso.zml.ui.table.provider.ZmlTableHeaderIconProvider;
 import org.kalypso.zml.ui.table.provider.ZmlTableEventListener;
+import org.kalypso.zml.ui.table.provider.ZmlTableHeaderIconProvider;
 import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
 
 /**
@@ -234,6 +234,8 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
         toolBarManager.update( true );
 
         toolkit.adapt( control );
+        composite.layout();
+        ZmlTableComposite.this.layout();
 
         return Status.OK_STATUS;
       }
