@@ -49,7 +49,7 @@ import org.kalypso.zml.ui.table.model.IZmlTableColumn;
 /**
  * @author Dirk Kuch
  */
-public class ZmlTableContextMenuListener
+public class ZmlTableContextMenuProvider
 {
   public void fillMenu( final IZmlTableColumn column, final MenuManager menuManager )
   {
