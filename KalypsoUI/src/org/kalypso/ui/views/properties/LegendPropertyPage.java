@@ -219,7 +219,7 @@ public class LegendPropertyPage extends PropertyPage implements IWorkbenchProper
       m_theme.setProperty( LegendUtilities.THEME_PROPERTY_BACKGROUND_COLOR, backgroundColorProperty );
     if( insetsProperty != null && insetsProperty.length() > 0 )
       m_theme.setProperty( LegendUtilities.THEME_PROPERTY_INSETS, insetsProperty );
-    if( themeIdsProperty != null && themeIdsProperty.length() > 0 )
+    if( themeIdsProperty != null )
       m_theme.setProperty( LegendUtilities.THEME_PROPERTY_THEME_IDS, themeIdsProperty );
 
     return super.performOk();
