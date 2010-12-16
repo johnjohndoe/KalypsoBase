@@ -46,8 +46,10 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.ui.PlatformUI;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.zml.core.table.binding.CellStyle;
+import org.kalypso.zml.core.table.binding.rule.ZmlRule;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.ZmlModelRow;
 import org.kalypso.zml.ui.KalypsoZmlUI;
@@ -160,9 +162,19 @@ public class ZmlLabelProvider extends ColumnLabelProvider
     {
       try
       {
-        final CellStyle style = m_column.findStyle( (IZmlModelRow) element );
+        final ZmlTableIconMerger iconMerger = new ZmlTableIconMerger( 2 );
 
-        return style.getImage();
+        final IZmlModelRow row = (IZmlModelRow) element;
+        final ZmlRule[] rules = m_column.findActiveRules( row );
+        for( final ZmlRule rule : rules )
+        {
+          final CellStyle style = rule.getPlainStyle();
+          final Image image = style.getImage();
+          if( image != null )
+            iconMerger.addImage( image );
+        }
+
+        return iconMerger.createImage( PlatformUI.getWorkbench().getDisplay() );
       }
       catch( final Exception e )
       {

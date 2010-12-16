@@ -47,7 +47,6 @@ import org.kalypso.zml.core.table.binding.BaseColumn;
 import org.kalypso.zml.core.table.binding.CellStyle;
 import org.kalypso.zml.core.table.binding.rule.ZmlRule;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
-import org.kalypso.zml.core.table.model.references.IZmlValueReference;
 import org.kalypso.zml.core.table.schema.AbstractColumnType;
 import org.kalypso.zml.core.table.schema.CellStyleType;
 import org.kalypso.zml.core.table.schema.DataColumnType;
@@ -136,23 +135,20 @@ public class ExtendedZmlTableColumn extends ZmlTableColumn
     if( m_lastRow == row )
       return m_lastCellStyle;
 
-    final BaseColumn columnType = getColumnType();
-    final IZmlValueReference reference = row.get( columnType.getType() );
-
-    final ZmlRule[] rules = m_mapper.findActiveRules( reference );
+    final ZmlRule[] rules = findActiveRules( row );
     if( ArrayUtils.isNotEmpty( rules ) )
     {
-      CellStyleType baseType = columnType.getDefaultStyle().getType();
+      CellStyleType baseType = getColumnType().getDefaultStyle().getType();
       for( final ZmlRule rule : rules )
       {
-        baseType = CellStyle.merge( baseType, rule.getStyle( row, columnType ).getType() );
+        baseType = CellStyle.merge( baseType, rule.getStyle( row, getColumnType() ).getType() );
       }
 
       m_lastCellStyle = new CellStyle( baseType );
     }
     else
     {
-      m_lastCellStyle = columnType.getDefaultStyle();
+      m_lastCellStyle = getColumnType().getDefaultStyle();
     }
 
     m_lastRow = row;
