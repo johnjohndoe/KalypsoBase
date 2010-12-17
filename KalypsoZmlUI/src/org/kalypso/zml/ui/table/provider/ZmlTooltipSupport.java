@@ -40,11 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.provider;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.swt.graphics.Image;
 import org.kalypso.commons.java.util.StringUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
+import org.kalypso.zml.core.table.binding.rule.ZmlRule;
+import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.ZmlModelRow;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
 import org.kalypso.zml.core.table.schema.AbstractColumnType;
@@ -57,7 +60,7 @@ import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
  */
 public class ZmlTooltipSupport
 {
-  private static final Image IMG = new Image( null, ZmlLabelProvider.class.getResourceAsStream( "icons/help_about_48.png" ) );
+  private static final Image IMG = new Image( null, ZmlLabelProvider.class.getResourceAsStream( "icons/help_hint_48.png" ) );
 
   private final ExtendedZmlTableColumn m_column;
 
@@ -71,15 +74,53 @@ public class ZmlTooltipSupport
     final AbstractColumnType type = m_column.getColumnType().getType();
     if( type instanceof DataColumnType )
     {
-      final IZmlValueReference reference = row.get( type );
+      final DataColumnType dataColumn = (DataColumnType) type;
+      final IZmlValueReference reference = row.get( dataColumn );
 
-      return getDataTooltip( (DataColumnType) type, reference );
+      final String tip1 = getSourceTooltip( reference );
+      final String tip2 = getRuleTooltip( row );
+      final String tip3 = getModelTooltip( dataColumn );
+
+      return StringUtilities.concat( tip1, "\n\n", tip2, "\n\n", tip3 );
     }
 
     return null;
   }
 
-  private String getDataTooltip( final DataColumnType column, final IZmlValueReference reference )
+  private String getRuleTooltip( final IZmlModelRow row )
+  {
+    final ZmlRule[] activeRules = m_column.findActiveRules( row );
+    if( ArrayUtils.isEmpty( activeRules ) )
+      return null;
+
+    final StringBuffer buffer = new StringBuffer();
+    buffer.append( "Aktive Regeln\n" );
+
+    for( final ZmlRule rule : activeRules )
+    {
+      buffer.append( String.format( "    - %s", rule.getLabel() ) );
+    }
+
+    return buffer.toString();
+  }
+
+  private String getModelTooltip( final DataColumnType column )
+  {
+    final StringBuffer buffer = new StringBuffer();
+
+    final String indexAxis = column.getIndexAxis();
+    final String valueAxis = column.getValueAxis();
+
+    if( indexAxis != null )
+      buffer.append( buildInfoText( "Indexachse", indexAxis ) );
+
+    if( valueAxis != null )
+      buffer.append( buildInfoText( "Datenachse", valueAxis ) );
+
+    return StringUtilities.chop( buffer.toString() );
+  }
+
+  private String getSourceTooltip( final IZmlValueReference reference )
   {
     final StringBuffer buffer = new StringBuffer();
 
@@ -108,24 +149,13 @@ public class ZmlTooltipSupport
       KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
     }
 
-    final String indexAxis = column.getIndexAxis();
-    final String valueAxis = column.getValueAxis();
-
-    buffer.append( "\n" );
-
-    if( indexAxis != null )
-      buffer.append( buildInfoText( "Indexachse", indexAxis ) );
-
-    if( valueAxis != null )
-      buffer.append( buildInfoText( "Datenachse", valueAxis ) );
-
     return StringUtilities.chop( buffer.toString() );
   }
 
   private String getStatus( final Integer status )
   {
     if( KalypsoStati.BIT_OK == status )
-      return "Stützstelle";
+      return "OK";
     else if( KalypsoStati.BIT_CHECK == status )
       return "Gewarnt";
     else if( KalypsoStati.BIT_USER_MODIFIED == status )
