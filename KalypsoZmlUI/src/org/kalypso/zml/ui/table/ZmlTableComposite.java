@@ -213,8 +213,8 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
       @Override
       public IStatus runInUIThread( final IProgressMonitor monitor )
       {
-        final String reference = tableType.getToolbar();
-        if( reference == null || reference.trim().isEmpty() )
+        final List<String> toolbarReferences = tableType.getToolbar();
+        if( toolbarReferences == null || toolbarReferences.isEmpty() )
           return Status.OK_STATUS;
 
         composite.setLayout( LayoutHelper.createGridLayout() );
@@ -225,7 +225,11 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
         final ToolBar control = toolBarManager.createControl( composite );
         control.setLayoutData( new GridData( SWT.RIGHT, GridData.FILL, true, false ) );
 
-        ContributionUtils.populateContributionManager( PlatformUI.getWorkbench(), toolBarManager, reference );
+        for( final String reference : toolbarReferences )
+        {
+          ContributionUtils.populateContributionManager( PlatformUI.getWorkbench(), toolBarManager, reference );
+        }
+
         toolBarManager.update( true );
 
         toolkit.adapt( control );
