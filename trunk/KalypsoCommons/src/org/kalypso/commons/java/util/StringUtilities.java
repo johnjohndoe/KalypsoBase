@@ -50,7 +50,7 @@ import org.kalypso.commons.internal.i18n.Messages;
 
 /**
  * Utilities around the String class.
- *
+ * 
  * @author schlienger
  */
 public final class StringUtilities
@@ -79,15 +79,15 @@ public final class StringUtilities
    * <p>
    * with R, G, B being the Red, Green, Blue components of the color and expressed as integers in the range (0 - 255).
    * with A optional, being the alpha composite value in the range (0 - 255).
-   *
+   * 
    * @param s
    * @throws IllegalArgumentException
-   *             if s is null
+   *           if s is null
    */
   public static Color stringToColor( final String s ) throws IllegalArgumentException
   {
     if( s == null )
-      throw new IllegalArgumentException( Messages.getString("org.kalypso.commons.java.util.StringUtilities.0") ); //$NON-NLS-1$
+      throw new IllegalArgumentException( Messages.getString( "org.kalypso.commons.java.util.StringUtilities.0" ) ); //$NON-NLS-1$
 
     final String[] sc = s.split( ";" ); //$NON-NLS-1$
 
@@ -97,22 +97,22 @@ public final class StringUtilities
     if( sc.length == 4 )
       return new Color( Integer.parseInt( sc[0] ), Integer.parseInt( sc[1] ), Integer.parseInt( sc[2] ), Integer.parseInt( sc[3] ) );
 
-    throw new IllegalArgumentException( Messages.getString("org.kalypso.commons.java.util.StringUtilities.2") + s ); //$NON-NLS-1$
+    throw new IllegalArgumentException( Messages.getString( "org.kalypso.commons.java.util.StringUtilities.2" ) + s ); //$NON-NLS-1$
   }
 
   /**
    * Converts a Color into a String.
    * <p>
    * String will have same format as specified in {@link StringUtilities#stringToColor(String)}
-   *
+   * 
    * @param c
    * @throws IllegalArgumentException
-   *             if color is null
+   *           if color is null
    */
   public static String colorToString( final Color c )
   {
     if( c == null )
-      throw new IllegalArgumentException( Messages.getString("org.kalypso.commons.java.util.StringUtilities.1") ); //$NON-NLS-1$
+      throw new IllegalArgumentException( Messages.getString( "org.kalypso.commons.java.util.StringUtilities.1" ) ); //$NON-NLS-1$
 
     final StringBuffer buf = new StringBuffer();
 
@@ -127,34 +127,34 @@ public final class StringUtilities
 
   /**
    * Converts a String to a Font.
-   *
+   * 
    * <pre>
-   *
-   *
-   *
-   *
-   *
+   * 
+   * 
+   * 
+   * 
+   * 
    *         FontName;FontStyle;FontSize
-   *
-   *
-   *
-   *
-   *
+   * 
+   * 
+   * 
+   * 
+   * 
    * </pre>
-   *
+   * 
    * @param s
    * @throws IllegalArgumentException
-   *             if s is null
+   *           if s is null
    */
   public static Font stringToFont( final String s )
   {
     if( s == null )
-      throw new IllegalArgumentException( Messages.getString("org.kalypso.commons.java.util.StringUtilities.3") ); //$NON-NLS-1$
+      throw new IllegalArgumentException( Messages.getString( "org.kalypso.commons.java.util.StringUtilities.3" ) ); //$NON-NLS-1$
 
     final String[] sc = s.split( ";" ); //$NON-NLS-1$
 
     if( sc.length != 3 )
-      throw new IllegalArgumentException( Messages.getString("org.kalypso.commons.java.util.StringUtilities.4") ); //$NON-NLS-1$
+      throw new IllegalArgumentException( Messages.getString( "org.kalypso.commons.java.util.StringUtilities.4" ) ); //$NON-NLS-1$
 
     final Font f = new Font( sc[0], Integer.parseInt( sc[1] ), Integer.parseInt( sc[2] ) );
 
@@ -163,15 +163,15 @@ public final class StringUtilities
 
   /**
    * Converts a font to a string. Format is defined in {@link StringUtilities#stringToFont(String)}
-   *
+   * 
    * @param f
    * @throws IllegalArgumentException
-   *             if f is null
+   *           if f is null
    */
   public static String fontToString( final Font f )
   {
     if( f == null )
-      throw new IllegalArgumentException( Messages.getString("org.kalypso.commons.java.util.StringUtilities.5") ); //$NON-NLS-1$
+      throw new IllegalArgumentException( Messages.getString( "org.kalypso.commons.java.util.StringUtilities.5" ) ); //$NON-NLS-1$
 
     final StringBuffer buf = new StringBuffer();
 
@@ -182,7 +182,7 @@ public final class StringUtilities
 
   /**
    * Replacement per Pattern-Matching
-   *
+   * 
    * @param sourceValue
    * @param replaceProperties
    * @return string
@@ -205,13 +205,13 @@ public final class StringUtilities
   /**
    * Spans a string onto lines, thus it inserts NEWLINE chars at lineLength + 1 for each line. It firsts removes all
    * existing NEWLINE chars.
-   *
+   * 
    * @param str
-   *            the string to span
+   *          the string to span
    * @param lineLength
-   *            the number of chars one line must have
+   *          the number of chars one line must have
    * @param keepWords
-   *            when true words are not cut at the end of the line but rather postponed on the next line
+   *          when true words are not cut at the end of the line but rather postponed on the next line
    * @return newly spaned string or null if str is null
    */
   public static String spanOverLines( final String str, final int lineLength, final boolean keepWords, final int alignment )
@@ -324,6 +324,20 @@ public final class StringUtilities
       return string.replace( oldString.charAt( 0 ), newString.charAt( 0 ) );
 
     return string.replace( oldString, newString );
+  }
+
+  public static String concat( final String... strings )
+  {
+    final StringBuffer buffer = new StringBuffer();
+    for( final String string : strings )
+    {
+      if( string == null )
+        continue;
+
+      buffer.append( string );
+    }
+
+    return buffer.toString();
   }
 
 }
