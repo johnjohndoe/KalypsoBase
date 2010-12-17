@@ -82,7 +82,8 @@ public class LegendThemeWizard extends AbstractOtherThemeWizard implements IKaly
     super.addPages();
 
     /* Add the legend theme wizard page. */
-    addPage( m_legendThemeWizardPage = new LegendThemeWizardPage( "LegendThemeWizardPage", getMapModel() ) );
+    m_legendThemeWizardPage = new LegendThemeWizardPage( "LegendThemeWizardPage", getMapModel() );
+    addPage( m_legendThemeWizardPage );
   }
 
   /**

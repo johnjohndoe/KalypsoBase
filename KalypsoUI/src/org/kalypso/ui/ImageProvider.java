@@ -70,6 +70,8 @@ public class ImageProvider
     IMAGE_THEME_SCALE("icons/full/obj16/scaleTheme.gif"), //$NON-NLS-1$
     IMAGE_THEME_LEGEND("icons/full/obj16/legendTheme.gif"), //$NON-NLS-1$
     IMAGE_THEME_SCRAP("icons/full/obj16/scrapTheme.gif"), //$NON-NLS-1$
+    IMAGE_THEME_IMAGE("icons/full/obj16/imageTheme.gif"), //$NON-NLS-1$
+    IMAGE_THEME_TEXT("icons/full/obj16/textTheme.gif"), //$NON-NLS-1$
 
     STATUS_LINE_SHOW_MAP_COORDS("icons/map/statusbarPosition.gif"), //$NON-NLS-1$
     STATUS_LINE_SHOW_CRS_INFO("icons/map/statusbarShowCRSInfo.gif"); //$NON-NLS-1$

@@ -77,8 +77,10 @@ import org.kalypso.core.jaxb.TemplateUtilities;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.i18n.Messages;
+import org.kalypso.ogc.gml.map.themes.KalypsoImageTheme;
 import org.kalypso.ogc.gml.map.themes.KalypsoLegendTheme;
 import org.kalypso.ogc.gml.map.themes.KalypsoScaleTheme;
+import org.kalypso.ogc.gml.map.themes.KalypsoTextTheme;
 import org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme;
 import org.kalypso.template.featureview.Featuretemplate;
 import org.kalypso.template.gismapview.CascadingLayer;
@@ -489,7 +491,7 @@ public final class GisTemplateHelper
       layer.setName( themeNameKey );
       layer.setFeaturePath( "" ); //$NON-NLS-1$
       layer.setVisible( theme.isVisible() );
-      layer.setId( id ); //$NON-NLS-1$
+      layer.setId( id );
       layer.setHref( "" ); //$NON-NLS-1$
 
       layer.setLinktype( "legend" ); //$NON-NLS-1$
@@ -532,18 +534,74 @@ public final class GisTemplateHelper
       layer.setShowChildren( extentFac.createStyledLayerTypeShowChildren( abstractKalypsoTheme.shouldShowLegendChildren() ) );
       return TemplateUtilities.OF_GISMAPVIEW.createLayer( layer );
     }
-    else
+
+    if( theme instanceof KalypsoImageTheme )
     {
-      final String type = theme.getType();
-      final IKalypsoThemeFactory themeFactory = ThemeFactoryExtension.getThemeFactory( type );
-      if( themeFactory == null )
+      layer.setName( themeNameKey );
+      layer.setFeaturePath( "" ); //$NON-NLS-1$
+      layer.setVisible( theme.isVisible() );
+      layer.setId( id );
+      layer.setHref( "" ); //$NON-NLS-1$
+      layer.setLinktype( "image" ); //$NON-NLS-1$
+
+      final org.kalypso.template.types.ObjectFactory extentFac = new org.kalypso.template.types.ObjectFactory();
+      final AbstractKalypsoTheme abstractKalypsoTheme = ((AbstractKalypsoTheme) theme);
+      final String legendIcon = abstractKalypsoTheme.getLegendIcon();
+      if( legendIcon != null )
+        layer.setLegendicon( extentFac.createStyledLayerTypeLegendicon( legendIcon ) );
+      layer.setShowChildren( extentFac.createStyledLayerTypeShowChildren( abstractKalypsoTheme.shouldShowLegendChildren() ) );
+
+      /* Update the properties. */
+      String[] propertyNames = ((KalypsoImageTheme) theme).getPropertyNames();
+      for( String propertyName : propertyNames )
       {
-        // Return null for unknown themes, else we produce invalid XML
-        return null;
+        Property property = TemplateUtilities.OF_TEMPLATE_TYPES.createStyledLayerTypeProperty();
+        property.setName( propertyName );
+        property.setValue( theme.getProperty( propertyName, null ) );
+        layer.getProperty().add( property );
       }
 
-      return themeFactory.configureLayer( theme, id, bbox, srsName );
+      return TemplateUtilities.OF_GISMAPVIEW.createLayer( layer );
     }
+
+    if( theme instanceof KalypsoTextTheme )
+    {
+      layer.setName( themeNameKey );
+      layer.setFeaturePath( "" ); //$NON-NLS-1$
+      layer.setVisible( theme.isVisible() );
+      layer.setId( id );
+      layer.setHref( "" ); //$NON-NLS-1$
+      layer.setLinktype( "text" ); //$NON-NLS-1$
+
+      final org.kalypso.template.types.ObjectFactory extentFac = new org.kalypso.template.types.ObjectFactory();
+      final AbstractKalypsoTheme abstractKalypsoTheme = ((AbstractKalypsoTheme) theme);
+      final String legendIcon = abstractKalypsoTheme.getLegendIcon();
+      if( legendIcon != null )
+        layer.setLegendicon( extentFac.createStyledLayerTypeLegendicon( legendIcon ) );
+      layer.setShowChildren( extentFac.createStyledLayerTypeShowChildren( abstractKalypsoTheme.shouldShowLegendChildren() ) );
+
+      /* Update the properties. */
+      String[] propertyNames = ((KalypsoTextTheme) theme).getPropertyNames();
+      for( String propertyName : propertyNames )
+      {
+        Property property = TemplateUtilities.OF_TEMPLATE_TYPES.createStyledLayerTypeProperty();
+        property.setName( propertyName );
+        property.setValue( theme.getProperty( propertyName, null ) );
+        layer.getProperty().add( property );
+      }
+
+      return TemplateUtilities.OF_GISMAPVIEW.createLayer( layer );
+    }
+
+    final String type = theme.getType();
+    final IKalypsoThemeFactory themeFactory = ThemeFactoryExtension.getThemeFactory( type );
+    if( themeFactory == null )
+    {
+      // Return null for unknown themes, else we produce invalid XML
+      return null;
+    }
+
+    return themeFactory.configureLayer( theme, id, bbox, srsName );
   }
 
   public static Filter getFilter( final Layer layer ) throws FilterConstructionException

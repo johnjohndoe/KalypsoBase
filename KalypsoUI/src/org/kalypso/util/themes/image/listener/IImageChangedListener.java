@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.util.themes.image.listener;
 
-import java.net.URL;
 import java.util.Properties;
 
 /**
@@ -62,5 +61,5 @@ public interface IImageChangedListener
    * @param imageUrl
    *          The URL of the image, which should be shown.
    */
-  public void imagePropertyChanged( Properties properties, int horizontal, int vertical, URL imageUrl );
+  public void imagePropertyChanged( Properties properties, int horizontal, int vertical, String imageUrl );
 }

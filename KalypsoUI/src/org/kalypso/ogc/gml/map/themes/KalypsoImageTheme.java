@@ -40,18 +40,21 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.themes;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 
+import javax.imageio.ImageIO;
+
+import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.kalypso.commons.i18n.I10nString;
-import org.kalypso.contribs.eclipse.swt.awt.ImageConverter;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
@@ -69,7 +72,7 @@ public class KalypsoImageTheme extends AbstractImageTheme
   /**
    * The URL of the image, which should be shown.
    */
-  protected URL m_imageUrl;
+  protected String m_imageUrl;
 
   /**
    * The constructor
@@ -93,7 +96,7 @@ public class KalypsoImageTheme extends AbstractImageTheme
   @Override
   public ImageDescriptor getDefaultIcon( )
   {
-    return KalypsoGisPlugin.getImageProvider().getImageDescriptor( ImageProvider.DESCRIPTORS.IMAGE_THEME_LEGEND );
+    return KalypsoGisPlugin.getImageProvider().getImageDescriptor( ImageProvider.DESCRIPTORS.IMAGE_THEME_IMAGE );
   }
 
   /**
@@ -106,6 +109,9 @@ public class KalypsoImageTheme extends AbstractImageTheme
     if( monitor == null )
       monitor = new NullProgressMonitor();
 
+    /* The input stream. */
+    InputStream inputStream = null;
+
     try
     {
       /* Monitor. */
@@ -116,42 +122,36 @@ public class KalypsoImageTheme extends AbstractImageTheme
       initFromProperties();
 
       /* Monitor. */
-      monitor.worked( 250 );
+      monitor.worked( 500 );
       monitor.subTask( "Erzeuge Bild..." );
 
-      /* Create the legend. */
-      // TODO Monitor 250
-      org.eclipse.swt.graphics.Image image = null;
-
-      /* Monitor. */
-      monitor.subTask( "Konvertiere Bild..." );
-
-      /* Convert to an AWT image. */
-      BufferedImage awtImage = ImageConverter.convertToAWT( image.getImageData() );
-      image.dispose();
-
-      /* Monitor. */
-      if( monitor.isCanceled() )
+      /* Create the input stream. */
+      if( m_imageUrl == null )
         return null;
 
-      /* Monitor. */
-      monitor.worked( 250 );
-      monitor.subTask( "Zeichne Bild..." );
+      /* Create the input stream. */
+      URL imageUrl = new URL( getContext(), m_imageUrl );
+      inputStream = imageUrl.openStream();
 
-      /* Draw the AWT image. */
-      Graphics2D graphics = (Graphics2D) awtImage.getGraphics();
-      graphics.setColor( Color.BLACK );
-      graphics.setStroke( new BasicStroke( 2.0f ) );
-      graphics.drawRect( 0, 0, awtImage.getWidth(), awtImage.getHeight() );
-      graphics.dispose();
+      /* Create the image. */
+      BufferedImage awtImage = ImageIO.read( inputStream );
 
       /* Monitor. */
-      monitor.worked( 250 );
+      monitor.worked( 500 );
 
       return awtImage;
     }
+    catch( IOException ex )
+    {
+      ex.printStackTrace();
+      setStatus( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), ex.getLocalizedMessage(), ex ) );
+      return null;
+    }
     finally
     {
+      /* Close the input stream. */
+      IOUtils.closeQuietly( inputStream );
+
       /* Monitor. */
       monitor.done();
     }

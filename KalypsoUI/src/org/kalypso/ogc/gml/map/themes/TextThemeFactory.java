@@ -54,11 +54,11 @@ import org.kalypso.template.types.StyledLayerType;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
- * Theme factory for {@link KalypsoLegendTheme}s.
+ * Theme factory for {@link KalypsoTextTheme}s.
  * 
- * @author Gernot Belger
+ * @author Holger Albert
  */
-public class LegendThemeFactory implements IKalypsoThemeFactory
+public class TextThemeFactory implements IKalypsoThemeFactory
 {
   /**
    * @see org.kalypso.ogc.gml.IKalypsoThemeFactory#createTheme(org.kalypso.commons.i18n.I10nString,
@@ -66,9 +66,9 @@ public class LegendThemeFactory implements IKalypsoThemeFactory
    *      org.kalypso.ogc.gml.selection.IFeatureSelectionManager)
    */
   @Override
-  public IKalypsoTheme createTheme( final I10nString layerName, final StyledLayerType layerType, final URL context, final IMapModell mapModell, final IFeatureSelectionManager selectionManager )
+  public IKalypsoTheme createTheme( I10nString layerName, StyledLayerType layerType, URL context, IMapModell mapModell, IFeatureSelectionManager selectionManager )
   {
-    return new KalypsoLegendTheme( layerName, mapModell );
+    return new KalypsoTextTheme( layerName, mapModell );
   }
 
   /**

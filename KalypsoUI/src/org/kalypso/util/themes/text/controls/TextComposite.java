@@ -165,7 +165,7 @@ public class TextComposite extends Composite
     /* Default values. */
     m_horizontal = PositionUtilities.RIGHT;
     m_vertical = PositionUtilities.BOTTOM;
-    m_text = "Bitte geben Sie einen Text an...";
+    m_text = null;
 
     /* Do not change the default values, if no new properties are set. */
     if( properties == null )
@@ -347,6 +347,9 @@ public class TextComposite extends Composite
     textText.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     if( m_text != null )
       textText.setText( m_text );
+    textText.setMessage( "<Anzeigetext>" );
+
+    /* Add a listener. */
     textText.addModifyListener( new ModifyListener()
     {
       /**
@@ -451,12 +454,16 @@ public class TextComposite extends Composite
     /* Serialize the properties. */
     String horizontalProperty = String.format( Locale.PRC, "%d", m_horizontal );
     String verticalProperty = String.format( Locale.PRC, "%d", m_vertical );
-    String textProperty = String.format( Locale.PRC, "%s", m_text );
+    String textProperty = null;
+    if( m_text != null )
+      textProperty = String.format( Locale.PRC, "%s", m_text );
 
     /* Add the properties. */
     properties.put( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION, horizontalProperty );
     properties.put( PositionUtilities.THEME_PROPERTY_VERTICAL_POSITION, verticalProperty );
-    properties.put( TextUtilities.THEME_PROPERTY_TEXT, textProperty );
+    properties.put( TextUtilities.THEME_PROPERTY_TEXT, "" );
+    if( textProperty != null )
+      properties.put( TextUtilities.THEME_PROPERTY_TEXT, textProperty );
 
     return properties;
   }

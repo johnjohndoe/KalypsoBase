@@ -40,17 +40,24 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.themes;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.ImageData;
+import org.eclipse.swt.graphics.PaletteData;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.RGB;
 import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.contribs.eclipse.swt.awt.ImageConverter;
+import org.kalypso.contribs.eclipse.swt.graphics.FontUtilities;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
@@ -92,7 +99,7 @@ public class KalypsoTextTheme extends AbstractImageTheme
   @Override
   public ImageDescriptor getDefaultIcon( )
   {
-    return KalypsoGisPlugin.getImageProvider().getImageDescriptor( ImageProvider.DESCRIPTORS.IMAGE_THEME_LEGEND );
+    return KalypsoGisPlugin.getImageProvider().getImageDescriptor( ImageProvider.DESCRIPTORS.IMAGE_THEME_TEXT );
   }
 
   /**
@@ -118,31 +125,18 @@ public class KalypsoTextTheme extends AbstractImageTheme
       monitor.worked( 250 );
       monitor.subTask( "Erzeuge Text..." );
 
-      /* Create the legend. */
-      // TODO Monitor 250
-      org.eclipse.swt.graphics.Image image = null;
+      /* Create the text. */
+      org.eclipse.swt.graphics.Image image = createSwtImage();
+      if( image == null )
+        return null;
 
       /* Monitor. */
+      monitor.worked( 500 );
       monitor.subTask( "Konvertiere Text..." );
 
       /* Convert to an AWT image. */
       BufferedImage awtImage = ImageConverter.convertToAWT( image.getImageData() );
       image.dispose();
-
-      /* Monitor. */
-      if( monitor.isCanceled() )
-        return null;
-
-      /* Monitor. */
-      monitor.worked( 250 );
-      monitor.subTask( "Zeichne Text..." );
-
-      /* Draw the AWT image. */
-      Graphics2D graphics = (Graphics2D) awtImage.getGraphics();
-      graphics.setColor( Color.BLACK );
-      graphics.setStroke( new BasicStroke( 2.0f ) );
-      graphics.drawRect( 0, 0, awtImage.getWidth(), awtImage.getHeight() );
-      graphics.dispose();
 
       /* Monitor. */
       monitor.worked( 250 );
@@ -190,5 +184,55 @@ public class KalypsoTextTheme extends AbstractImageTheme
     /* Check the text. */
     if( textProperty != null && textProperty.length() > 0 )
       m_text = TextUtilities.checkText( textProperty );
+  }
+
+  /**
+   * This function creates an SWT image.
+   * 
+   * @return The SWT image.
+   */
+  private org.eclipse.swt.graphics.Image createSwtImage( )
+  {
+    /* Is a text available? */
+    if( m_text == null || m_text.length() == 0 )
+      return null;
+
+    /* Get the font. */
+    Font smallFont = JFaceResources.getFont( JFaceResources.DIALOG_FONT );
+    Font bigFont = FontUtilities.changeHeightAndStyle( smallFont.getDevice(), smallFont, 35, SWT.BOLD );
+
+    /* Create a helper image. */
+    org.eclipse.swt.graphics.Image helperImage = new org.eclipse.swt.graphics.Image( bigFont.getDevice(), 100, 100 );
+    GC helperGC = new GC( helperImage );
+    helperGC.setFont( bigFont );
+
+    /* Get the text extent. */
+    Point textExtent = helperGC.textExtent( m_text );
+    int width = textExtent.x;
+    int height = textExtent.y;
+
+    /* Dispose the helper image. */
+    helperImage.dispose();
+    helperGC.dispose();
+
+    Color white = bigFont.getDevice().getSystemColor( SWT.COLOR_WHITE );
+    Color black = bigFont.getDevice().getSystemColor( SWT.COLOR_BLACK );
+    PaletteData palette = new PaletteData( new RGB[] { white.getRGB(), black.getRGB() } );
+
+    /* Create a new image. */
+    ImageData newImageData = new ImageData( width, height, 1, palette );
+    newImageData.transparentPixel = 0;
+    org.eclipse.swt.graphics.Image newImage = new org.eclipse.swt.graphics.Image( bigFont.getDevice(), newImageData );
+    GC newGC = new GC( newImage );
+    newGC.setFont( bigFont );
+
+    /* Draw the text. */
+    newGC.setForeground( bigFont.getDevice().getSystemColor( SWT.COLOR_BLACK ) );
+    newGC.drawText( m_text, 0, 0 );
+
+    /* Dispose the new image. */
+    newGC.dispose();
+
+    return newImage;
   }
 }

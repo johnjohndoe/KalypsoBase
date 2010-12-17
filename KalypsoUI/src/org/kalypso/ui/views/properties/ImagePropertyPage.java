@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.views.properties;
 
-import java.net.URL;
 import java.util.Properties;
 
 import org.eclipse.core.runtime.IAdaptable;
@@ -53,9 +52,12 @@ import org.eclipse.ui.IWorkbenchPropertyPage;
 import org.eclipse.ui.dialogs.PropertyPage;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.themes.KalypsoImageTheme;
+import org.kalypso.ogc.gml.map.themes.KalypsoTextTheme;
 import org.kalypso.ogc.gml.outline.nodes.IThemeNode;
+import org.kalypso.util.themes.image.ImageUtilities;
 import org.kalypso.util.themes.image.controls.ImageComposite;
 import org.kalypso.util.themes.image.listener.IImageChangedListener;
+import org.kalypso.util.themes.position.PositionUtilities;
 
 /**
  * @author Holger Albert
@@ -100,10 +102,10 @@ public class ImagePropertyPage extends PropertyPage implements IWorkbenchPropert
     {
       /**
        * @see org.kalypso.util.themes.image.listener.IImageChangedListener#imagePropertyChanged(java.util.Properties,
-       *      int, int, java.net.URL)
+       *      int, int, java.lang.String)
        */
       @Override
-      public void imagePropertyChanged( Properties properties, int horizontal, int vertical, URL imageUrl )
+      public void imagePropertyChanged( Properties properties, int horizontal, int vertical, String imageUrl )
       {
         /* Update the properties object. */
         m_properties = properties;
@@ -134,6 +136,10 @@ public class ImagePropertyPage extends PropertyPage implements IWorkbenchPropert
       return;
     }
 
+    /* Get the default properties. */
+    m_properties = ImageUtilities.getDefaultProperties();
+
+    /* Update the GUI. */
     // TODO
 
     super.performDefaults();
@@ -148,10 +154,21 @@ public class ImagePropertyPage extends PropertyPage implements IWorkbenchPropert
     if( m_theme == null || m_properties == null )
       return super.performOk();
 
-    if( !(m_theme instanceof KalypsoImageTheme) )
+    if( !(m_theme instanceof KalypsoTextTheme) )
       return super.performOk();
 
-    // TODO
+    /* Get the properties. */
+    String horizontalProperty = m_properties.getProperty( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION );
+    String verticalProperty = m_properties.getProperty( PositionUtilities.THEME_PROPERTY_VERTICAL_POSITION );
+    String imageUrlProperty = m_properties.getProperty( ImageUtilities.THEME_PROPERTY_IMAGE_URL );
+
+    /* Set the properties. */
+    if( horizontalProperty != null && horizontalProperty.length() > 0 )
+      m_theme.setProperty( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION, horizontalProperty );
+    if( verticalProperty != null && verticalProperty.length() > 0 )
+      m_theme.setProperty( PositionUtilities.THEME_PROPERTY_VERTICAL_POSITION, verticalProperty );
+    if( imageUrlProperty != null && imageUrlProperty.length() > 0 )
+      m_theme.setProperty( ImageUtilities.THEME_PROPERTY_IMAGE_URL, imageUrlProperty );
 
     return super.performOk();
   }
