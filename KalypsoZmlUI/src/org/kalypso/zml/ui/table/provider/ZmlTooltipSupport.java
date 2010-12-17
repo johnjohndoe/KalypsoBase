@@ -55,12 +55,14 @@ import org.kalypso.zml.core.table.schema.DataColumnType;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
 
+import com.google.common.base.Strings;
+
 /**
  * @author Dirk Kuch
  */
 public class ZmlTooltipSupport
 {
-  private static final Image IMG = new Image( null, ZmlLabelProvider.class.getResourceAsStream( "icons/help_hint_48.png" ) );
+  private static final Image IMG = new Image( null, ZmlLabelProvider.class.getResourceAsStream( "icons/help_hint_48.png" ) ); //$NON-NLS-1$
 
   private final ExtendedZmlTableColumn m_column;
 
@@ -81,7 +83,7 @@ public class ZmlTooltipSupport
       final String tip2 = getRuleTooltip( row );
       final String tip3 = getModelTooltip( dataColumn );
 
-      return StringUtilities.concat( tip1, "\n\n", tip2, "\n\n", tip3 );
+      return StringUtilities.concat( tip1, Strings.repeat( "\n", 2 ), tip2, Strings.repeat( "\n", 2 ), tip3 ); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     return null;
@@ -98,7 +100,7 @@ public class ZmlTooltipSupport
 
     for( final ZmlRule rule : activeRules )
     {
-      buffer.append( String.format( "    - %s", rule.getLabel() ) );
+      buffer.append( String.format( "    - %s", rule.getLabel() ) );//$NON-NLS-1$
     }
 
     return buffer.toString();
@@ -168,19 +170,19 @@ public class ZmlTooltipSupport
   {
     String tabs;
     if( label.length() > 8 )
-      tabs = "\t";
+      tabs = "\t"; //$NON-NLS-1$
     else
-      tabs = "\t\t";
+      tabs = "\t\t"; //$NON-NLS-1$
 
     String v;
     if( value.length() > 60 )
     {
-      v = value.subSequence( 0, 60 ) + "\n\t\t" + value.substring( 60 );
+      v = value.subSequence( 0, 60 ) + "\n\t\t" + value.substring( 60 ); //$NON-NLS-1$
     }
     else
       v = value;
 
-    return String.format( "%s:%s%s\n", label, tabs, v );
+    return String.format( "%s:%s%s\n", label, tabs, v ); //$NON-NLS-1$
   }
 
   public Image getToolTipImage( )
