@@ -52,7 +52,6 @@ import org.eclipse.ui.IWorkbenchPropertyPage;
 import org.eclipse.ui.dialogs.PropertyPage;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.themes.KalypsoImageTheme;
-import org.kalypso.ogc.gml.map.themes.KalypsoTextTheme;
 import org.kalypso.ogc.gml.outline.nodes.IThemeNode;
 import org.kalypso.util.themes.image.ImageUtilities;
 import org.kalypso.util.themes.image.controls.ImageComposite;
@@ -75,10 +74,24 @@ public class ImagePropertyPage extends PropertyPage implements IWorkbenchPropert
   protected Properties m_properties;
 
   /**
+   * The parent composite.
+   */
+  private Composite m_parent;
+
+  /**
+   * The main composite.
+   */
+  private Composite m_main;
+
+  /**
    * The constructor.
    */
   public ImagePropertyPage( )
   {
+    m_theme = null;
+    m_properties = null;
+    m_parent = null;
+    m_main = null;
   }
 
   /**
@@ -87,35 +100,21 @@ public class ImagePropertyPage extends PropertyPage implements IWorkbenchPropert
   @Override
   protected Control createContents( Composite parent )
   {
+    /* The content. */
+    Composite content = new Composite( parent, SWT.NONE );
+    GridLayout contentLayout = new GridLayout( 1, false );
+    contentLayout.marginHeight = 0;
+    contentLayout.marginWidth = 0;
+    content.setLayout( contentLayout );
+    content.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+
     /* Initialize. */
     init();
 
-    /* Create the main composite. */
-    Composite main = new Composite( parent, SWT.NONE );
-    main.setLayout( new GridLayout( 1, false ) );
-    main.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    /* Create the contents. */
+    createContentsInternal( content );
 
-    /* Create the image composite. */
-    ImageComposite imageComposite = new ImageComposite( main, SWT.NONE, m_properties );
-    imageComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-    imageComposite.addImageChangedListener( new IImageChangedListener()
-    {
-      /**
-       * @see org.kalypso.util.themes.image.listener.IImageChangedListener#imagePropertyChanged(java.util.Properties,
-       *      int, int, java.lang.String)
-       */
-      @Override
-      public void imagePropertyChanged( Properties properties, int horizontal, int vertical, String imageUrl )
-      {
-        /* Update the properties object. */
-        m_properties = properties;
-
-        /* Update the GUI. */
-        // TODO
-      }
-    } );
-
-    return main;
+    return content;
   }
 
   /**
@@ -140,7 +139,7 @@ public class ImagePropertyPage extends PropertyPage implements IWorkbenchPropert
     m_properties = ImageUtilities.getDefaultProperties();
 
     /* Update the GUI. */
-    // TODO
+    update();
 
     super.performDefaults();
   }
@@ -154,7 +153,7 @@ public class ImagePropertyPage extends PropertyPage implements IWorkbenchPropert
     if( m_theme == null || m_properties == null )
       return super.performOk();
 
-    if( !(m_theme instanceof KalypsoTextTheme) )
+    if( !(m_theme instanceof KalypsoImageTheme) )
       return super.performOk();
 
     /* Get the properties. */
@@ -171,6 +170,40 @@ public class ImagePropertyPage extends PropertyPage implements IWorkbenchPropert
       m_theme.setProperty( ImageUtilities.THEME_PROPERTY_IMAGE_URL, imageUrlProperty );
 
     return super.performOk();
+  }
+
+  /**
+   * This function creates the contents.
+   * 
+   * @param parent
+   *          The parent composite.
+   */
+  private void createContentsInternal( Composite parent )
+  {
+    /* Store the parent. */
+    m_parent = parent;
+
+    /* Create the main composite. */
+    m_main = new Composite( parent, SWT.NONE );
+    m_main.setLayout( new GridLayout( 1, false ) );
+    m_main.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+
+    /* Create the image composite. */
+    ImageComposite imageComposite = new ImageComposite( m_main, SWT.NONE, m_properties );
+    imageComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    imageComposite.addImageChangedListener( new IImageChangedListener()
+    {
+      /**
+       * @see org.kalypso.util.themes.image.listener.IImageChangedListener#imagePropertyChanged(java.util.Properties,
+       *      int, int, java.lang.String)
+       */
+      @Override
+      public void imagePropertyChanged( Properties properties, int horizontal, int vertical, String imageUrl )
+      {
+        /* Update the properties object. */
+        m_properties = properties;
+      }
+    } );
   }
 
   /**
@@ -206,5 +239,24 @@ public class ImagePropertyPage extends PropertyPage implements IWorkbenchPropert
       /* Store the member. */
       m_properties = imageProperties;
     }
+  }
+
+  /**
+   * This function updates the composite.
+   */
+  protected void update( )
+  {
+    if( m_parent == null || m_main == null )
+      return;
+
+    /* Dispose the content of the composite. */
+    if( !m_main.isDisposed() )
+      m_main.dispose();
+
+    /* Redraw the content of the composite. */
+    createContentsInternal( m_parent );
+
+    /* Do a reflow. */
+    m_parent.layout( true, true );
   }
 }

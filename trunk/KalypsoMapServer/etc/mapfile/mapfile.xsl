@@ -436,11 +436,12 @@
       <xsl:with-param name="node" select="'ms:extension'"/>
       <xsl:with-param name="quote" select="1"/>
     </xsl:call-template>
-    <xsl:call-template name="print">
-      <xsl:with-param name="indent" select="$indent"/>
-      <xsl:with-param name="node" select="'ms:formatOption'"/>
-      <xsl:with-param name="quote" select="1"/>
-    </xsl:call-template>
+    <xsl:for-each select="ms:formatOption">
+       <xsl:call-template name="print">
+         <xsl:with-param name="indent" select="$indent"/>
+         <xsl:with-param name="text" select="concat('FORMATOPTION ','&#34;',.,'&#34;')"/>
+       </xsl:call-template>
+    </xsl:for-each>
     <xsl:call-template name="print">
       <xsl:with-param name="indent" select="$indent"/>
       <xsl:with-param name="node" select="'ms:imageMode'"/>
@@ -1282,11 +1283,14 @@
       <xsl:with-param name="indent" select="$indent"/>
       <xsl:with-param name="node" select="'ms:postLabelCache'"/>
     </xsl:call-template>
-    <xsl:call-template name="print">
-      <xsl:with-param name="indent" select="$indent"/>
-      <xsl:with-param name="node" select="'ms:processing'"/>
-      <xsl:with-param name="quote" select="1"/>
-    </xsl:call-template>
+    <xsl:for-each select="ms:processing">
+      <xsl:call-template name="print">
+        <xsl:with-param name="indent" select="$indent"/>
+        <xsl:with-param name="text">
+          <xsl:value-of select="concat('PROCESSING ','&#34;',.,'&#34;')"/>
+        </xsl:with-param>
+      </xsl:call-template>
+    </xsl:for-each>
     <xsl:apply-templates select="ms:projection">
       <xsl:with-param name="indent" select="$indent + 1"/>
     </xsl:apply-templates>
@@ -1343,7 +1347,7 @@
       <xsl:with-param name="indent" select="$indent + 1"/>
     </xsl:apply-templates>
     <xsl:call-template name="print">
-      <xsl:with-param name="text" select="'END'"/>
+      <xsl:with-param name="text" select="'END&#xa;'"/>
       <xsl:with-param name="indent" select="$indent - 1"/>
     </xsl:call-template>
   </xsl:template>
@@ -1422,11 +1426,14 @@
       <xsl:with-param name="node" select="'ms:imageType'"/>
       <xsl:with-param name="quote" select="1"/>
     </xsl:call-template>
-    <xsl:call-template name="print">
-      <xsl:with-param name="indent" select="$indent"/>
-      <xsl:with-param name="node" select="'ms:include'"/>
-      <xsl:with-param name="quote" select="1"/>
-    </xsl:call-template>
+    <xsl:for-each select="ms:include">
+      <xsl:call-template name="print">
+        <xsl:with-param name="indent" select="$indent"/>
+        <xsl:with-param name="text">
+          <xsl:value-of select="concat('INCLUDE ','&#34;',.,'&#34;')"/>
+        </xsl:with-param>
+      </xsl:call-template>
+      </xsl:for-each>
     <xsl:call-template name="print">
       <xsl:with-param name="indent" select="$indent"/>
       <xsl:with-param name="node" select="'ms:maxSize'"/>
