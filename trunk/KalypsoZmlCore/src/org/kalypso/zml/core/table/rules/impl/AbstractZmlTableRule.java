@@ -69,12 +69,20 @@ public abstract class AbstractZmlTableRule implements IZmlRuleImplementation
   @Override
   public final boolean apply( final ZmlRule rule, final IZmlValueReference reference )
   {
-    if( !rule.isEnabled() )
-      return false;
-    else if( reference == null )
-      return false;
+    try
+    {
+      if( !rule.isEnabled() )
+        return false;
+      else if( reference == null )
+        return false;
 
-    return doApply( rule, reference );
+      return doApply( rule, reference );
+    }
+    catch( Throwable t )
+    {
+      t.printStackTrace();
+      return false;
+    }
   }
 
   protected abstract boolean doApply( ZmlRule rule, IZmlValueReference reference );
