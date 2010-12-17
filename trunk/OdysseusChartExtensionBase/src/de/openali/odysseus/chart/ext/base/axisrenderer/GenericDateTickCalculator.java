@@ -42,11 +42,9 @@ package de.openali.odysseus.chart.ext.base.axisrenderer;
 
 import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.TimeZone;
 
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
-import org.kalypso.core.KalypsoCorePlugin;
 
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
@@ -76,7 +74,6 @@ public class GenericDateTickCalculator implements ITickCalculator
   @Override
   public Number[] calcTicks( final GC gc, final IAxis axis, final Number minDisplayInterval, final Point ticklabelSize )
   {
-
     // TickLabelGröße + 2 wegen Rundungsfehlern beim positionieren
     final int minScreenInterval;
     if( axis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
@@ -132,11 +129,8 @@ public class GenericDateTickCalculator implements ITickCalculator
     if( min == null || max == null )
       return new Number[] {};
 
-    final TimeZone timeZone = KalypsoCorePlugin.getDefault().getTimeZone();
-    final int timeZoneOffset = timeZone.getRawOffset();
-
-    final long logicalMin = min.longValue() + timeZoneOffset;// axis.screenToNumeric( screenMin ).longValue();
-    final long logicalMax = max.longValue() + timeZoneOffset;// axis.screenToNumeric( screenMax ).longValue();
+    final long logicalMin = min.longValue();// axis.screenToNumeric( screenMin ).longValue();
+    final long logicalMax = max.longValue();// axis.screenToNumeric( screenMax ).longValue();
 
     // der minimale logische Abstand
     final long minLogInterval;
@@ -180,7 +174,7 @@ public class GenericDateTickCalculator implements ITickCalculator
       final long ticklv = tick.longValue();
       if( ticklv >= logicalMin && ticklv <= logicalMax )
       {
-        realticks.add( tick - timeZoneOffset );
+        realticks.add( tick );
       }
     }
 
