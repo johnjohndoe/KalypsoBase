@@ -337,5 +337,12 @@
    	<extension point="org.eclipse.ui.contexts">
 		<context id="de.openali.odysseus.chart.ui.context" name="Chart" parentId="org.eclipse.ui.contexts.window" />
 	</extension>
+    <extension
+          point="org.eclipse.core.contenttype.contentTypes">
+       <file-association
+             content-type="org.eclipse.core.runtime.xml"
+             file-extensions="kod">
+       </file-association>
+    </extension>
 
 </plugin>
