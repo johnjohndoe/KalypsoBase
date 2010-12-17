@@ -40,6 +40,21 @@
     <Style id="derivedValueCellStyle">
       <property name="backgroundColor">F8F3C0</property>
     </Style>
+    
+    <!-- base volume style -->
+    <Style id="volumeBaseCellStyle">
+      <baseStyle>
+        <reference>defaultCellStyle</reference>
+      </baseStyle>
+      <property name="textFormat">%.3f</property>
+    </Style>
+     <!-- base w [m NN] style, Wasserstand [m NN] z.B. durch Umrechnung aus Volumen in Talsperre -->
+    <Style id="wNNBaseCellStyle">
+      <baseStyle>
+        <reference>defaultCellStyle</reference>
+      </baseStyle>
+      <property name="textFormat">%.0f</property>
+    </Style>
     <!-- base date cell table styles -->
     <Style id="dateCellStyle">
       <baseStyle>
@@ -52,7 +67,7 @@
       <baseStyle>
         <reference>dateCellStyle</reference>
       </baseStyle>
-      <property name="backgroundColor">FFF7EE</property> <!-- E2FFCC grün -->
+      <property name="backgroundColor">FFF7EE</property> 
     </Style>
     <Style id="forecastCellStyleSafe">
       <property name="fontWeight">BOLD</property>
