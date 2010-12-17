@@ -74,10 +74,24 @@ public class TextPropertyPage extends PropertyPage implements IWorkbenchProperty
   protected Properties m_properties;
 
   /**
+   * The parent composite.
+   */
+  private Composite m_parent;
+
+  /**
+   * The main composite.
+   */
+  private Composite m_main;
+
+  /**
    * The constructor.
    */
   public TextPropertyPage( )
   {
+    m_theme = null;
+    m_properties = null;
+    m_parent = null;
+    m_main = null;
   }
 
   /**
@@ -86,35 +100,21 @@ public class TextPropertyPage extends PropertyPage implements IWorkbenchProperty
   @Override
   protected Control createContents( Composite parent )
   {
+    /* The content. */
+    Composite content = new Composite( parent, SWT.NONE );
+    GridLayout contentLayout = new GridLayout( 1, false );
+    contentLayout.marginHeight = 0;
+    contentLayout.marginWidth = 0;
+    content.setLayout( contentLayout );
+    content.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+
     /* Initialize. */
     init();
 
-    /* Create the main composite. */
-    Composite main = new Composite( parent, SWT.NONE );
-    main.setLayout( new GridLayout( 1, false ) );
-    main.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    /* Create the contents. */
+    createContentsInternal( content );
 
-    /* Create the text composite. */
-    TextComposite textComposite = new TextComposite( main, SWT.NONE, m_properties );
-    textComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-    textComposite.addTextChangedListener( new ITextChangedListener()
-    {
-      /**
-       * @see org.kalypso.util.themes.text.listener.ITextChangedListener#textPropertyChanged(java.util.Properties, int,
-       *      int, java.lang.String)
-       */
-      @Override
-      public void textPropertyChanged( Properties properties, int horizontal, int vertical, String text )
-      {
-        /* Update the properties object. */
-        m_properties = properties;
-
-        /* Update the GUI. */
-        // TODO
-      }
-    } );
-
-    return main;
+    return content;
   }
 
   /**
@@ -139,7 +139,7 @@ public class TextPropertyPage extends PropertyPage implements IWorkbenchProperty
     m_properties = TextUtilities.getDefaultProperties();
 
     /* Update the GUI. */
-    // TODO
+    update();
 
     super.performDefaults();
   }
@@ -170,6 +170,40 @@ public class TextPropertyPage extends PropertyPage implements IWorkbenchProperty
       m_theme.setProperty( TextUtilities.THEME_PROPERTY_TEXT, textProperty );
 
     return super.performOk();
+  }
+
+  /**
+   * This function creates the contents.
+   * 
+   * @param parent
+   *          The parent composite.
+   */
+  private void createContentsInternal( Composite parent )
+  {
+    /* Store the parent. */
+    m_parent = parent;
+
+    /* Create the main composite. */
+    m_main = new Composite( parent, SWT.NONE );
+    m_main.setLayout( new GridLayout( 1, false ) );
+    m_main.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+
+    /* Create the text composite. */
+    TextComposite textComposite = new TextComposite( m_main, SWT.NONE, m_properties );
+    textComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    textComposite.addTextChangedListener( new ITextChangedListener()
+    {
+      /**
+       * @see org.kalypso.util.themes.text.listener.ITextChangedListener#textPropertyChanged(java.util.Properties, int,
+       *      int, java.lang.String)
+       */
+      @Override
+      public void textPropertyChanged( Properties properties, int horizontal, int vertical, String text )
+      {
+        /* Update the properties object. */
+        m_properties = properties;
+      }
+    } );
   }
 
   /**
@@ -205,5 +239,24 @@ public class TextPropertyPage extends PropertyPage implements IWorkbenchProperty
       /* Store the member. */
       m_properties = textProperties;
     }
+  }
+
+  /**
+   * This function updates the composite.
+   */
+  protected void update( )
+  {
+    if( m_parent == null || m_main == null )
+      return;
+
+    /* Dispose the content of the composite. */
+    if( !m_main.isDisposed() )
+      m_main.dispose();
+
+    /* Redraw the content of the composite. */
+    createContentsInternal( m_parent );
+
+    /* Do a reflow. */
+    m_parent.layout( true, true );
   }
 }
