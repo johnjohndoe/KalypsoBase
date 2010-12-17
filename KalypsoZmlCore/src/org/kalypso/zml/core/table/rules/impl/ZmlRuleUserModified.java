@@ -78,9 +78,9 @@ public class ZmlRuleUserModified extends AbstractZmlTableRule
 
       return KalypsoStati.BIT_USER_MODIFIED == (KalypsoStati.BIT_USER_MODIFIED & status);
     }
-    catch( final SensorException e )
+    catch( final Throwable t )
     {
-      KalypsoZmlCore.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+      KalypsoZmlCore.getDefault().getLog().log( StatusUtilities.statusFromThrowable( t ) );
     }
 
     return false;
