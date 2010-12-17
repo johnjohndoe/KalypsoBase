@@ -44,6 +44,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.core.table.binding.CellStyle;
+import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.ZmlModelRow;
@@ -105,13 +106,19 @@ public class SumValueEditingStrategy extends AbstractEditingStrategy
       final Number targetValue = getTargetValue( value );
 
       final IZmlTableCell previousCell = cell.findPreviousCell();
-      if( previousCell == null )
+
+      if( cell.getTable().getResolution() == 0 )
       {
         updateOriginValue( cell.getValueReference(), targetValue );
       }
-      else if( cell.getTable().getResolution() == 0 )
+      else if( previousCell == null )
       {
-        updateOriginValue( cell.getValueReference(), targetValue );
+        /* get first invisible value (first value will is not part of the table!) */
+        final IZmlModel model = row.getModel();
+        final IZmlModelRow baseRow = model.getRowAt( 0 );
+        final IZmlValueReference previousReference = baseRow.get( column.getModelColumn() );
+
+        updateAggregatedValue( previousReference, cell.getValueReference(), targetValue );
       }
       else
       {

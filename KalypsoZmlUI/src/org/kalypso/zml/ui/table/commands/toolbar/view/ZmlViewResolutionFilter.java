@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.commands.toolbar.view;
 
+import java.util.Calendar;
 import java.util.Date;
 
 import org.apache.commons.lang.ArrayUtils;
@@ -87,7 +88,11 @@ public class ZmlViewResolutionFilter extends ViewerFilter
       final IZmlModelRow base = rows[0];
       final Date index = (Date) base.getIndexValue();
 
-      m_baseIndex = ZmlViewResolutionFilter.ticksInHours( index );
+      final Calendar calendar = Calendar.getInstance();
+      calendar.setTime( index );
+      calendar.add( Calendar.HOUR_OF_DAY, -1 );
+
+      m_baseIndex = ZmlViewResolutionFilter.ticksInHours( calendar.getTime() );
       m_model = model;
     }
   }
