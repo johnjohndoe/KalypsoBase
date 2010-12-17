@@ -44,6 +44,7 @@ package org.kalypso.zml.core.table.rules.impl;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHelper;
+import org.kalypso.ogc.sensor.timeseries.interpolation.InterpolationFilter;
 import org.kalypso.zml.core.KalypsoZmlCore;
 import org.kalypso.zml.core.table.binding.rule.ZmlRule;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
@@ -81,9 +82,8 @@ public class ZmlRuleInterpolatedValue extends AbstractZmlTableRule
       if( dataSource == null )
         return false;
 
-      return dataSource.startsWith( DataSourceHelper.FILTER_SOURCE );
-
-// return KalypsoStati.BIT_CHECK == (KalypsoStati.BIT_CHECK & status);
+      if( dataSource.startsWith( DataSourceHelper.FILTER_SOURCE ) )
+        return dataSource.contains( InterpolationFilter.FILTER_ID );
     }
     catch( final SensorException e )
     {

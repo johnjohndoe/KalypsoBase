@@ -72,6 +72,10 @@
     <Style id="interpolatedValueStyle">
       <property name="icon">urn:org:kalypso:zml:ui:table:icon:interpolated:value</property>
     </Style>
+    <!-- rule - interval value? -->
+    <Style id="intervalValueStyle">
+      <property name="icon">urn:org:kalypso:zml:ui:table:icon:interval:value</property>
+    </Style>
     <!-- rule - warned value? -->
     <Style id="warnedValueStyle">
       <property name="icon">urn:org:kalypso:zml:ui:table:icon:warned:value</property>
@@ -164,6 +168,12 @@
         <reference>interpolatedValueStyle</reference>
       </styleReference>
       <label>Interpolierte(r) Wert(e)</label>
+    </Rule>
+    <Rule id="ruleIntervalValue" ruleReference="org.kalypso.zml.ui.core.rule.value.interval" setHeaderIcon="true">
+      <styleReference>
+        <reference>intervalValueStyle</reference>
+      </styleReference>
+      <label>Intervall Wert(e)</label>
     </Rule>
     <Rule id="ruleWarnedValue" ruleReference="org.kalypso.zml.ui.core.rule.warned.value" setHeaderIcon="true">
       <styleReference>

@@ -128,6 +128,9 @@ public class ZmlModelColumn implements IZmlModelColumn
   @Override
   public Object get( final int index, final IAxis axis ) throws SensorException
   {
+    if( axis == null )
+      return null;
+
     return getModel().get( index, axis );
   }
 
