@@ -40,15 +40,21 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.dialogs.input;
 
+import java.util.Calendar;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
+import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.model.IZmlTableColumn;
 
 /**
@@ -56,7 +62,16 @@ import org.kalypso.zml.ui.table.model.IZmlTableColumn;
  */
 public class ZmlEinzelwertModel
 {
-  Set<ZmlEinzelwert> m_rows = new LinkedHashSet<ZmlEinzelwert>();
+  Set<ZmlEinzelwert> m_rows = new TreeSet<ZmlEinzelwert>( new Comparator<ZmlEinzelwert>()
+  {
+    @Override
+    public int compare( final ZmlEinzelwert o1, final ZmlEinzelwert o2 )
+    {
+      return o1.getDate().compareTo( o2.getDate() );
+    }
+  } );
+
+  Set<IZmlEinzelwertModelListener> m_listeners = new LinkedHashSet<IZmlEinzelwertModelListener>();
 
   private final IZmlTableColumn m_column;
 
@@ -78,13 +93,12 @@ public class ZmlEinzelwertModel
         final Date date = (Date) model.get( 0, column.getIndexAxis() );
         final Double value = (Double) model.get( 0, column.getValueAxis() );
 
-        m_rows.add( new ZmlEinzelwert( date, value ) );
+        m_rows.add( new ZmlEinzelwert( this, date, value ) );
       }
     }
     catch( final Exception e )
     {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
     }
 
   }
@@ -97,6 +111,34 @@ public class ZmlEinzelwertModel
   public void addRow( final ZmlEinzelwert row )
   {
     m_rows.add( row );
+
+    fireModelChanged();
+  }
+
+  protected void fireModelChanged( )
+  {
+    cleanUp();
+
+    final IZmlEinzelwertModelListener[] listeners = m_listeners.toArray( new IZmlEinzelwertModelListener[] {} );
+    for( final IZmlEinzelwertModelListener listener : listeners )
+    {
+      listener.modelChangedEvent();
+    }
+  }
+
+  /** sort out duplicated entries */
+  private void cleanUp( )
+  {
+    final Map<Date, ZmlEinzelwert> map = new HashMap<Date, ZmlEinzelwert>();
+
+    final ZmlEinzelwert[] rows = m_rows.toArray( new ZmlEinzelwert[] {} );
+    m_rows.clear();
+    for( final ZmlEinzelwert row : rows )
+    {
+      map.put( row.getDate(), row );
+    }
+
+    m_rows.addAll( map.values() );
   }
 
   public String getLabel( )
@@ -124,4 +166,40 @@ public class ZmlEinzelwertModel
     return existing.toArray( new Date[] {} );
   }
 
+  public void addRow( final Date steppingBase, final Integer stepping ) throws SensorException
+  {
+    final Calendar calendar = Calendar.getInstance();
+    calendar.setTime( steppingBase );
+    calendar.add( Calendar.HOUR_OF_DAY, stepping );
+    final Date base = calendar.getTime();
+
+    final IZmlModelColumn modelColumn = m_column.getModelColumn();
+    final ITupleModel model = modelColumn.getTupleModel();
+    final IAxis indexAxis = modelColumn.getIndexAxis();
+    final IAxis valueAxis = modelColumn.getValueAxis();
+
+    for( int index = 0; index < model.size(); index++ )
+    {
+      final Object objDate = model.get( index, indexAxis );
+      if( !(objDate instanceof Date) )
+        continue;
+
+      final Date date = (Date) objDate;
+      if( base.equals( date ) )
+      {
+        final Object objValue = model.get( index, valueAxis );
+        if( objValue instanceof Number )
+          addRow( new ZmlEinzelwert( this, date, ((Number) objValue).doubleValue() ) );
+        else
+          addRow( new ZmlEinzelwert( this, date, 0.0 ) );
+
+        return;
+      }
+    }
+  }
+
+  public void addListener( final IZmlEinzelwertModelListener listener )
+  {
+    m_listeners.add( listener );
+  }
 }
