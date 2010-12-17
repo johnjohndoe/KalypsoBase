@@ -78,6 +78,7 @@ import org.kalypso.zml.core.table.schema.AbstractColumnType;
 import org.kalypso.zml.core.table.schema.DataColumnType;
 import org.kalypso.zml.core.table.schema.ZmlTableType;
 import org.kalypso.zml.ui.table.commands.toolbar.view.ZmlViewResolutionFilter;
+import org.kalypso.zml.ui.table.layout.ZmlTableStateChangedHandler;
 import org.kalypso.zml.ui.table.model.IZmlTableCell;
 import org.kalypso.zml.ui.table.model.IZmlTableColumn;
 import org.kalypso.zml.ui.table.model.IZmlTableRow;
@@ -87,7 +88,6 @@ import org.kalypso.zml.ui.table.provider.ZmlEditingSupport;
 import org.kalypso.zml.ui.table.provider.ZmlLabelProvider;
 import org.kalypso.zml.ui.table.provider.ZmlTableEventListener;
 import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
-import org.kalypso.zml.ui.table.state.ZmlTableStateChangedHandler;
 
 /**
  * @author Dirk Kuch
