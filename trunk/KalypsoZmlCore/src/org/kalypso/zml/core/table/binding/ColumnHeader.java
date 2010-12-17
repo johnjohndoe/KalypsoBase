@@ -90,4 +90,9 @@ public class ColumnHeader
   {
     return TableTypeHelper.findProperty( m_type, ColumnHeaderPropertyName.LABEL );
   }
+
+  public String getIdentifier( )
+  {
+    return m_type.getId();
+  }
 }

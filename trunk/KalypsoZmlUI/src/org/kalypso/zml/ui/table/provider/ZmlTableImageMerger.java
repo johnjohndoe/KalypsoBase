@@ -44,6 +44,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.PaletteData;
@@ -51,28 +52,32 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.internal.OverlayIcon;
+import org.kalypso.commons.java.util.StringUtilities;
 
 /**
  * @author Dirk Kuch
  */
-public final class ZmlTableIconMerger
+@SuppressWarnings("restriction")
+public final class ZmlTableImageMerger
 {
-  private final static RGB RGB_WHITE = new RGB( 255, 255, 255 );
+  private static final ImageRegistry IMAGE_REGISTRY = new ImageRegistry();
 
-  private static final ImageData IMG_ADDITIONAL = new ImageData( ZmlTableIconMerger.class.getResourceAsStream( "icons/additional.png" ) );
+  private static final RGB RGB_WHITE = new RGB( 255, 255, 255 );
 
-  private final Set<Image> m_images = new LinkedHashSet<Image>();
+  private static final ImageData IMG_ADDITIONAL = new ImageData( ZmlTableImageMerger.class.getResourceAsStream( "icons/additional.png" ) );
+
+  private final Set<ZmlTableImage> m_images = new LinkedHashSet<ZmlTableImage>();
 
   protected final int m_numberOfIcons;
 
   protected final Point m_iconSize = new Point( 16, 16 );
 
-  public ZmlTableIconMerger( final int numberOfIcons )
+  public ZmlTableImageMerger( final int numberOfIcons )
   {
     m_numberOfIcons = numberOfIcons;
   }
 
-  public void addImage( final Image image )
+  public void addImage( final ZmlTableImage image )
   {
     m_images.add( image );
   }
@@ -82,12 +87,17 @@ public final class ZmlTableIconMerger
     if( m_images.size() == 0 )
       return null;
 
+    final ZmlTableImage[] images = m_images.toArray( new ZmlTableImage[] {} );
+    final String imageReference = buildImageReference( images );
+    final Image registered = IMAGE_REGISTRY.get( imageReference );
+    if( registered != null )
+      return registered;
+
     final Point size = getSize();
 
     ImageData base = new ImageData( 1, 1, 1, new PaletteData( new RGB[] { RGB_WHITE } ) );
     base.transparentPixel = base.palette.getPixel( RGB_WHITE );
 
-    final Image[] images = m_images.toArray( new Image[] {} );
     for( int index = 0; index < m_numberOfIcons; index++ )
     {
       if( index >= images.length )
@@ -95,10 +105,9 @@ public final class ZmlTableIconMerger
 
       final int i = index;
 
-      final Image tile = images[index];
+      final ZmlTableImage tile = images[index];
 
-      @SuppressWarnings("restriction")
-      final OverlayIcon overlay = new OverlayIcon( ImageDescriptor.createFromImageData( base ), ImageDescriptor.createFromImage( tile ), size )
+      final OverlayIcon overlay = new OverlayIcon( ImageDescriptor.createFromImageData( base ), ImageDescriptor.createFromImage( tile.getIcon() ), size )
       {
         /**
          * @see org.eclipse.ui.internal.OverlayIcon#drawTopRight(org.eclipse.jface.resource.ImageDescriptor)
@@ -118,7 +127,6 @@ public final class ZmlTableIconMerger
 
     if( images.length > m_numberOfIcons )
     {
-      @SuppressWarnings("restriction")
       final OverlayIcon overlay = new OverlayIcon( ImageDescriptor.createFromImageData( base ), ImageDescriptor.createFromImageData( IMG_ADDITIONAL ), size )
       {
         /**
@@ -134,7 +142,22 @@ public final class ZmlTableIconMerger
       base = overlay.getImageData();
     }
 
-    return new Image( display, base );
+    final Image image = new Image( display, base );
+    IMAGE_REGISTRY.put( imageReference, image );
+
+    return image;
+  }
+
+  private String buildImageReference( final ZmlTableImage[] images )
+  {
+    final StringBuffer buffer = new StringBuffer();
+    for( final ZmlTableImage image : images )
+    {
+      buffer.append( image.getHref() );
+      buffer.append( ";" );
+    }
+
+    return StringUtilities.chomp( buffer.toString() );
   }
 
   private Point getSize( )
