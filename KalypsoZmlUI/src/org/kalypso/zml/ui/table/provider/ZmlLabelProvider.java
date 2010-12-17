@@ -231,12 +231,8 @@ public class ZmlLabelProvider extends ColumnLabelProvider
   {
     if( !m_column.isVisible() )
       return null;
-
-    if( object instanceof IZmlModelRow )
-    {
-
+    else if( object instanceof IZmlModelRow )
       return m_tooltip.getToolTipImage();
-    }
 
     return super.getToolTipImage( object );
   }

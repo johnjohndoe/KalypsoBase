@@ -78,7 +78,7 @@ import org.kalypso.zml.core.table.schema.AbstractColumnType;
 import org.kalypso.zml.core.table.schema.DataColumnType;
 import org.kalypso.zml.core.table.schema.ZmlTableType;
 import org.kalypso.zml.ui.table.commands.toolbar.view.ZmlViewResolutionFilter;
-import org.kalypso.zml.ui.table.layout.ZmlTableStateChangedHandler;
+import org.kalypso.zml.ui.table.layout.ZmlTableLayoutHandler;
 import org.kalypso.zml.ui.table.model.IZmlTableCell;
 import org.kalypso.zml.ui.table.model.IZmlTableColumn;
 import org.kalypso.zml.ui.table.model.IZmlTableRow;
@@ -108,14 +108,14 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
 
   private ZmlViewResolutionFilter m_filter;
 
-  private final ZmlTableStateChangedHandler m_handler;
+  private final ZmlTableLayoutHandler m_handler;
 
   public ZmlTableComposite( final IZmlModel model, final Composite parent, final FormToolkit toolkit )
   {
     super( parent, SWT.NULL );
     m_model = model;
 
-    m_handler = new ZmlTableStateChangedHandler( this );
+    m_handler = new ZmlTableLayoutHandler( this );
 
     setLayout( LayoutHelper.createGridLayout() );
     setup( toolkit );

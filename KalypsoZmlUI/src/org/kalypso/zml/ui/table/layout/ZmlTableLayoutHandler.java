@@ -69,6 +69,8 @@ import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
  */
 public class ZmlTableLayoutHandler
 {
+  protected boolean m_firstChange = true;
+
   protected final ZmlTableComposite m_table;
 
   public ZmlTableLayoutHandler( final ZmlTableComposite table )
@@ -88,6 +90,14 @@ public class ZmlTableLayoutHandler
           return Status.CANCEL_STATUS;
 
         updateColumns();
+
+        if( m_firstChange )
+        {
+          final RevealTableCommand command = new RevealTableCommand( m_table );
+          command.run();
+
+          m_firstChange = false;
+        }
 
         return Status.OK_STATUS;
       }
