@@ -188,12 +188,12 @@ public abstract class AbstractInterpolationWorker implements ICoreRunnableWithPr
   protected Integer getDataSourceIndex( )
   {
     final DataSourceHandler handler = new DataSourceHandler( m_filter.getMetaDataList() );
-    final String src = String.format( "%s%s", DataSourceHelper.FILTER_SOURCE, InterpolationFilter.class.getName() );
+    final String src = String.format( "%s%s", DataSourceHelper.FILTER_SOURCE, InterpolationFilter.FILTER_ID );
     return handler.addDataSource( src, src );
   }
 
   /**
-   * Add one tupple with default values. The date is set to the given calendar which is stepped after the tupple was
+   * Add one tupple with default values. The date is set to the given calendar which is stepped after the tuple was
    * added.
    */
   protected void addDefaultTupple( final IAxis dateAxis, final IAxis[] valueAxes, final Object[] defaultValues, final Calendar calendar ) throws SensorException

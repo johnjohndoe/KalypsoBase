@@ -79,6 +79,9 @@ public class ZmlTableStateChangedHandler
       @Override
       public IStatus runInUIThread( final IProgressMonitor monitor )
       {
+        if( m_table.isDisposed() )
+          return Status.CANCEL_STATUS;
+
         updateColumns();
 
         return Status.OK_STATUS;

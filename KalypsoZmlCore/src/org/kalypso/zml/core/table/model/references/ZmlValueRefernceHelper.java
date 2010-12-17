@@ -58,8 +58,6 @@ public final class ZmlValueRefernceHelper
     final Integer status = reference.getStatus();
     if( (status & KalypsoStati.BIT_USER_MODIFIED) != 0 )
       return true;
-    else if( (status & KalypsoStati.BIT_CHECK) != 0 )
-      return false;
 
     final String source = reference.getDataSource();
     if( source == null )

@@ -74,6 +74,8 @@ public class IntervalFilter extends AbstractObservationFilter
     }
   }
 
+  public static final String FILTER_ID = "IntervalFilter"; //$NON-NLS-1$
+
   private IObservation m_baseobservation = null;
 
   private final MODE m_mode;

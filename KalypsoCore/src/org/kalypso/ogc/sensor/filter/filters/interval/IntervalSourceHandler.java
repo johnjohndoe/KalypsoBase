@@ -73,7 +73,7 @@ public final class IntervalSourceHandler
         final String[] srcs = DataSourceHelper.getSources( sources[i] );
 
         final StringBuffer buffer = new StringBuffer();
-        buffer.append( String.format( "%s%s?", DataSourceHelper.FILTER_SOURCE, IntervalFilter.class.getName() ) );
+        buffer.append( String.format( "%s%s?", DataSourceHelper.FILTER_SOURCE, IntervalFilter.FILTER_ID ) );
 
         if( !ArrayUtils.isEmpty( srcs ) )
         {
@@ -169,12 +169,12 @@ public final class IntervalSourceHandler
 
       if( sources.isEmpty() )
       {
-        return String.format( "%s%s?source_0=%s", DataSourceHelper.FILTER_SOURCE, IntervalFilter.class.getName(), SOURCE_EXTENDED );
+        return String.format( "%s%s?source_0=%s", DataSourceHelper.FILTER_SOURCE, IntervalFilter.FILTER_ID, SOURCE_EXTENDED );
       }
       else
       {
         final StringBuffer buffer = new StringBuffer();
-        buffer.append( String.format( "%s%s?", DataSourceHelper.FILTER_SOURCE, IntervalFilter.class.getName() ) );
+        buffer.append( String.format( "%s%s?", DataSourceHelper.FILTER_SOURCE, IntervalFilter.FILTER_ID ) );
 
         final String[] sourceArray = sources.toArray( new String[] {} );
         for( int i = 0; i < sourceArray.length; i++ )
