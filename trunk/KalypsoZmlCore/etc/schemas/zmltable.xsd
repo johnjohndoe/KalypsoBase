@@ -33,7 +33,7 @@
       <element ref="zmltable:StyleSet" minOccurs="0" maxOccurs="1" />
       <element name="defaultStyle" type="zmltable:StyleReferenceType" minOccurs="0" maxOccurs="1" />
       <element ref="zmltable:RuleSet" minOccurs="0" maxOccurs="unbounded" />
-      <element name="toolbar" type="string" minOccurs="0" maxOccurs="1" />
+      <element name="toolbar" type="string" minOccurs="0" maxOccurs="unbounded" />
       <element ref="zmltable:Columns" minOccurs="0" maxOccurs="1" />
     </sequence>
   </complexType>
