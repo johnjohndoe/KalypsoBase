@@ -159,7 +159,7 @@ public class KalypsoLegendTheme extends AbstractImageTheme
 
       /* Monitor. */
       monitor.worked( 250 );
-      monitor.subTask( "Zeichne Legende..." );
+      monitor.subTask( "Zeichne Rahmen..." );
 
       /* Draw the AWT image. */
       Graphics2D graphics = (Graphics2D) awtImage.getGraphics();

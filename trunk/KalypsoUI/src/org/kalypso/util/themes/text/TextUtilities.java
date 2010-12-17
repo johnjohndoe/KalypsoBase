@@ -40,6 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.util.themes.text;
 
+import java.util.Locale;
+import java.util.Properties;
+
+import org.kalypso.util.themes.position.PositionUtilities;
+
 /**
  * This class provides functions for {@link org.kalypso.ogc.gml.IKalypsoTheme}s.
  * 
@@ -63,5 +68,27 @@ public class TextUtilities
   {
     // TODO Perhaps we want to validate the text?
     return textProperty;
+  }
+
+  /**
+   * This function returns a properties object, containing all serialized default text properties.
+   * 
+   * @return A properties object, containing all serialized default text properties.
+   */
+  public static Properties getDefaultProperties( )
+  { /* Create the properties object. */
+    Properties properties = new Properties();
+
+    /* Serialize the properties. */
+    String horizontalProperty = String.format( Locale.PRC, "%d", PositionUtilities.RIGHT );
+    String verticalProperty = String.format( Locale.PRC, "%d", PositionUtilities.BOTTOM );
+    String textProperty = "";
+
+    /* Add the properties. */
+    properties.put( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION, horizontalProperty );
+    properties.put( PositionUtilities.THEME_PROPERTY_VERTICAL_POSITION, verticalProperty );
+    properties.put( TextUtilities.THEME_PROPERTY_TEXT, textProperty );
+
+    return properties;
   }
 }

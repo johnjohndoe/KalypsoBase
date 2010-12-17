@@ -85,10 +85,22 @@
             class="org.kalypso.ui.wizard.others.ScaleThemeWizard"
             icon="icon/scaleTheme.gif"
             id="org.kalypso.ui.wizard.others.ScaleThemeWizard"
-            name="Maßstab-Thema">
+            name="Maßstab">
          <description>
             Dieses Theme fügt einen Maßstabsbalken der Karte hinzu.
          </description>
+      </wizard>
+      <wizard
+            class="org.kalypso.ui.wizard.others.ImageThemeWizard"
+            icon="icon/imageTheme.gif"
+            id="org.kalypso.ui.wizard.others.ImageThemeWizard"
+            name="Bild">
+      </wizard>
+      <wizard
+            class="org.kalypso.ui.wizard.others.TextThemeWizard"
+            icon="icon/textTheme.gif"
+            id="org.kalypso.ui.wizard.others.TextThemeWizard"
+            name="Text">
       </wizard>
    </extension>
    <extension

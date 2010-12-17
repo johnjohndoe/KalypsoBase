@@ -42,12 +42,18 @@ package org.kalypso.ui.wizard.others;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.kalypso.util.themes.image.ImageUtilities;
+import org.kalypso.util.themes.image.controls.ImageComposite;
+import org.kalypso.util.themes.image.listener.IImageChangedListener;
+import org.kalypso.util.themes.position.PositionUtilities;
 
 /**
  * A wizard page for entering properties of for an image theme.
@@ -59,7 +65,7 @@ public class ImageThemeWizardPage extends WizardPage
   /**
    * The selected properties.
    */
-  private Map<String, String> m_properties;
+  protected Map<String, String> m_properties;
 
   /**
    * The constructor.
@@ -72,6 +78,9 @@ public class ImageThemeWizardPage extends WizardPage
     super( pageName );
 
     m_properties = new HashMap<String, String>();
+
+    setTitle( "Bildeigenschaften" );
+    setDescription( "Wählen Sie die Eigenschaften des Bildes." );
   }
 
   /**
@@ -89,6 +98,8 @@ public class ImageThemeWizardPage extends WizardPage
     super( pageName, title, titleImage );
 
     m_properties = new HashMap<String, String>();
+
+    setDescription( "Wählen Sie die Eigenschaften des Bildes." );
   }
 
   /**
@@ -99,18 +110,43 @@ public class ImageThemeWizardPage extends WizardPage
   {
     /* Create the main composite. */
     Composite main = new Composite( parent, SWT.NONE );
-    main.setLayout( new FillLayout() );
+    main.setLayout( new GridLayout( 1, false ) );
 
-    // TODO
+    /* Create the image composite. */
+    ImageComposite imageComposite = new ImageComposite( main, SWT.NONE, null );
+    imageComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    imageComposite.addImageChangedListener( new IImageChangedListener()
+    {
+      /**
+       * @see org.kalypso.util.themes.image.listener.IImageChangedListener#imagePropertyChanged(java.util.Properties,
+       *      int, int, java.lang.String)
+       */
+      @Override
+      public void imagePropertyChanged( Properties properties, int horizontal, int vertical, String imageUrl )
+      {
+        /* Store the properties. */
+        m_properties.clear();
+
+        /* Get the properties. */
+        String horizontalProperty = properties.getProperty( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION );
+        String verticalProperty = properties.getProperty( PositionUtilities.THEME_PROPERTY_VERTICAL_POSITION );
+        String imageUrlProperty = properties.getProperty( ImageUtilities.THEME_PROPERTY_IMAGE_URL );
+
+        /* Set the properties. */
+        m_properties.put( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION, horizontalProperty );
+        m_properties.put( PositionUtilities.THEME_PROPERTY_VERTICAL_POSITION, verticalProperty );
+        m_properties.put( ImageUtilities.THEME_PROPERTY_IMAGE_URL, imageUrlProperty );
+
+        /* Check if the page can be completed. */
+        checkPageComplete();
+      }
+    } );
 
     /* Set the control to the page. */
     setControl( main );
 
     /* In the first time, the page cannot be completed. */
     setPageComplete( false );
-
-    // TODO
-    checkPageComplete();
   }
 
   /**
@@ -123,9 +159,21 @@ public class ImageThemeWizardPage extends WizardPage
     setErrorMessage( null );
     setPageComplete( true );
 
-    // TODO
+    /* Get the URL of the image. */
+    String imageUrl = m_properties.get( ImageUtilities.THEME_PROPERTY_IMAGE_URL );
+    if( imageUrl == null || imageUrl.length() == 0 )
+    {
+      setErrorMessage( "Bitte geben Sie die URL zu dem Bild an..." );
+      setPageComplete( false );
+      return;
+    }
   }
 
+  /**
+   * This function returns the selected properties.
+   * 
+   * @return The selected properties.
+   */
   public Map<String, String> getProperties( )
   {
     return m_properties;

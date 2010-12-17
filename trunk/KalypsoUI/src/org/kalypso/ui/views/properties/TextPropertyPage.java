@@ -53,6 +53,8 @@ import org.eclipse.ui.dialogs.PropertyPage;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.themes.KalypsoTextTheme;
 import org.kalypso.ogc.gml.outline.nodes.IThemeNode;
+import org.kalypso.util.themes.position.PositionUtilities;
+import org.kalypso.util.themes.text.TextUtilities;
 import org.kalypso.util.themes.text.controls.TextComposite;
 import org.kalypso.util.themes.text.listener.ITextChangedListener;
 
@@ -133,6 +135,10 @@ public class TextPropertyPage extends PropertyPage implements IWorkbenchProperty
       return;
     }
 
+    /* Get the default properties. */
+    m_properties = TextUtilities.getDefaultProperties();
+
+    /* Update the GUI. */
     // TODO
 
     super.performDefaults();
@@ -150,7 +156,18 @@ public class TextPropertyPage extends PropertyPage implements IWorkbenchProperty
     if( !(m_theme instanceof KalypsoTextTheme) )
       return super.performOk();
 
-    // TODO
+    /* Get the properties. */
+    String horizontalProperty = m_properties.getProperty( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION );
+    String verticalProperty = m_properties.getProperty( PositionUtilities.THEME_PROPERTY_VERTICAL_POSITION );
+    String textProperty = m_properties.getProperty( TextUtilities.THEME_PROPERTY_TEXT );
+
+    /* Set the properties. */
+    if( horizontalProperty != null && horizontalProperty.length() > 0 )
+      m_theme.setProperty( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION, horizontalProperty );
+    if( verticalProperty != null && verticalProperty.length() > 0 )
+      m_theme.setProperty( PositionUtilities.THEME_PROPERTY_VERTICAL_POSITION, verticalProperty );
+    if( textProperty != null && textProperty.length() > 0 )
+      m_theme.setProperty( TextUtilities.THEME_PROPERTY_TEXT, textProperty );
 
     return super.performOk();
   }

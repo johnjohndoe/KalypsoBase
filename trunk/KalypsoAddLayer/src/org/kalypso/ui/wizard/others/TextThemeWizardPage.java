@@ -42,12 +42,18 @@ package org.kalypso.ui.wizard.others;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.kalypso.util.themes.position.PositionUtilities;
+import org.kalypso.util.themes.text.TextUtilities;
+import org.kalypso.util.themes.text.controls.TextComposite;
+import org.kalypso.util.themes.text.listener.ITextChangedListener;
 
 /**
  * A wizard page for entering properties of for a text theme.
@@ -59,7 +65,7 @@ public class TextThemeWizardPage extends WizardPage
   /**
    * The selected properties.
    */
-  private Map<String, String> m_properties;
+  protected Map<String, String> m_properties;
 
   /**
    * The constructor.
@@ -72,6 +78,9 @@ public class TextThemeWizardPage extends WizardPage
     super( pageName );
 
     m_properties = new HashMap<String, String>();
+
+    setTitle( "Texteigenschaften" );
+    setDescription( "Wählen Sie die Eigenschaften des Textes." );
   }
 
   /**
@@ -89,6 +98,8 @@ public class TextThemeWizardPage extends WizardPage
     super( pageName, title, titleImage );
 
     m_properties = new HashMap<String, String>();
+
+    setDescription( "Wählen Sie die Eigenschaften des Textes." );
   }
 
   /**
@@ -99,18 +110,43 @@ public class TextThemeWizardPage extends WizardPage
   {
     /* Create the main composite. */
     Composite main = new Composite( parent, SWT.NONE );
-    main.setLayout( new FillLayout() );
+    main.setLayout( new GridLayout( 1, false ) );
 
-    // TODO
+    /* Create the text composite. */
+    TextComposite textComposite = new TextComposite( main, SWT.NONE, null );
+    textComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    textComposite.addTextChangedListener( new ITextChangedListener()
+    {
+      /**
+       * @see org.kalypso.util.themes.text.listener.ITextChangedListener#textPropertyChanged(java.util.Properties, int,
+       *      int, java.lang.String)
+       */
+      @Override
+      public void textPropertyChanged( Properties properties, int horizontal, int vertical, String text )
+      {
+        /* Store the properties. */
+        m_properties.clear();
+
+        /* Get the properties. */
+        String horizontalProperty = properties.getProperty( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION );
+        String verticalProperty = properties.getProperty( PositionUtilities.THEME_PROPERTY_VERTICAL_POSITION );
+        String textProperty = properties.getProperty( TextUtilities.THEME_PROPERTY_TEXT );
+
+        /* Set the properties. */
+        m_properties.put( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION, horizontalProperty );
+        m_properties.put( PositionUtilities.THEME_PROPERTY_VERTICAL_POSITION, verticalProperty );
+        m_properties.put( TextUtilities.THEME_PROPERTY_TEXT, textProperty );
+
+        /* Check if the page can be completed. */
+        checkPageComplete();
+      }
+    } );
 
     /* Set the control to the page. */
     setControl( main );
 
     /* In the first time, the page cannot be completed. */
     setPageComplete( false );
-
-    // TODO
-    checkPageComplete();
   }
 
   /**
@@ -123,9 +159,21 @@ public class TextThemeWizardPage extends WizardPage
     setErrorMessage( null );
     setPageComplete( true );
 
-    // TODO
+    /* Get the text. */
+    String text = m_properties.get( TextUtilities.THEME_PROPERTY_TEXT );
+    if( text == null || text.length() == 0 )
+    {
+      setErrorMessage( "Bitte geben Sie den anzuzeigenden Text an..." );
+      setPageComplete( false );
+      return;
+    }
   }
 
+  /**
+   * This function returns the selected properties.
+   * 
+   * @return The selected properties.
+   */
   public Map<String, String> getProperties( )
   {
     return m_properties;

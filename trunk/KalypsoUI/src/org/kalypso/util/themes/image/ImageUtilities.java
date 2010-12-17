@@ -40,8 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.util.themes.image;
 
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.util.Locale;
+import java.util.Properties;
+
+import org.kalypso.util.themes.position.PositionUtilities;
 
 /**
  * This class provides functions for {@link org.kalypso.ogc.gml.IKalypsoTheme}s.
@@ -62,16 +64,31 @@ public class ImageUtilities
   {
   }
 
-  public static URL checkImageUrl( String imageUrlProperty )
+  public static String checkImageUrl( String imageUrlProperty )
   {
-    try
-    {
-      return new URL( imageUrlProperty );
-    }
-    catch( MalformedURLException ex )
-    {
-      ex.printStackTrace();
-      return null;
-    }
+    // TODO Perhaps we want to validate the URL of the image?
+    return imageUrlProperty;
+  }
+
+  /**
+   * This function returns a properties object, containing all serialized default image properties.
+   * 
+   * @return A properties object, containing all serialized default image properties.
+   */
+  public static Properties getDefaultProperties( )
+  { /* Create the properties object. */
+    Properties properties = new Properties();
+
+    /* Serialize the properties. */
+    String horizontalProperty = String.format( Locale.PRC, "%d", PositionUtilities.RIGHT );
+    String verticalProperty = String.format( Locale.PRC, "%d", PositionUtilities.BOTTOM );
+    String imageUrlProperty = "";
+
+    /* Add the properties. */
+    properties.put( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION, horizontalProperty );
+    properties.put( PositionUtilities.THEME_PROPERTY_VERTICAL_POSITION, verticalProperty );
+    properties.put( ImageUtilities.THEME_PROPERTY_IMAGE_URL, imageUrlProperty );
+
+    return properties;
   }
 }

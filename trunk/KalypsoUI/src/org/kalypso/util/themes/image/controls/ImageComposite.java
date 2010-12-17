@@ -40,19 +40,27 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.util.themes.image.controls;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
 
+import org.apache.commons.io.FileUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
@@ -101,7 +109,7 @@ public class ImageComposite extends Composite
   /**
    * The URL of the image, which should be shown.
    */
-  protected URL m_imageUrl;
+  protected String m_imageUrl;
 
   /**
    * The constructor.
@@ -343,19 +351,76 @@ public class ImageComposite extends Composite
     imageUrlLabel.setAlignment( SWT.LEFT );
 
     /* Create a text field. */
-    Text imageUrlText = new Text( imageGroup, SWT.BORDER );
+    final Text imageUrlText = new Text( imageGroup, SWT.BORDER );
     imageUrlText.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     if( m_imageUrl != null )
-      imageUrlText.setText( m_imageUrl.toExternalForm() );
+      imageUrlText.setText( m_imageUrl );
 
-    // TODO Listener...
+    /* Add a listener. */
+    imageUrlText.addModifyListener( new ModifyListener()
+    {
+      /**
+       * @see org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.swt.events.ModifyEvent)
+       */
+      @Override
+      public void modifyText( ModifyEvent e )
+      {
+        /* Reset the URL of the image. */
+        m_imageUrl = null;
+
+        /* Get the source. */
+        Text source = (Text) e.getSource();
+
+        /* Get the text. */
+        String text = source.getText();
+
+        /* Create the URL of the image. */
+        if( text != null && text.length() > 0 )
+          m_imageUrl = text;
+
+        /* Fire the image property changed event. */
+        fireImagePropertyChanged( getProperties(), m_horizontal, m_vertical, m_imageUrl );
+      }
+    } );
 
     /* Create a button. */
-    Button textButton = new Button( imageGroup, SWT.PUSH );
-    textButton.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
-    textButton.setText( "..." );
+    Button imageUrlButton = new Button( imageGroup, SWT.PUSH );
+    imageUrlButton.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
+    imageUrlButton.setText( "Dateisystem durchsuchen" );
 
-    // TODO Listener...
+    /* Add a listener. */
+    imageUrlButton.addSelectionListener( new SelectionAdapter()
+    {
+      /**
+       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+       */
+      @Override
+      public void widgetSelected( SelectionEvent e )
+      {
+        try
+        {
+          /* Create a file dialog. */
+          FileDialog dialog = new FileDialog( ImageComposite.this.getShell(), SWT.OPEN );
+          dialog.setText( "Dateisystem durchsuchen" );
+          dialog.setFilterExtensions( new String[] { "*.bmp", "*.png", "*.gif", "*.jpg", "*.tif" } );
+          dialog.setFilterNames( new String[] { "BMP Datei (*.bmp)", "PNG Datei (*.png)", "GIF Datei (*.gif)", "JPG Datei (*jpg)", "TIF Datei (*.tif)" } );
+
+          /* Open the dialog. */
+          String file = dialog.open();
+          if( file == null )
+            return;
+
+          /* Set the URL of the image. */
+          URL[] urls = FileUtils.toURLs( new File[] { new File( file ) } );
+          imageUrlText.setText( urls[0].toExternalForm() );
+        }
+        catch( IOException ex )
+        {
+          /* Print the stack trace. */
+          ex.printStackTrace();
+        }
+      }
+    } );
 
     return imageGroup;
   }
@@ -403,7 +468,7 @@ public class ImageComposite extends Composite
    * @param imageUrl
    *          The URL of the image, which should be shown.
    */
-  protected void fireImagePropertyChanged( Properties properties, int horizontal, int vertical, URL imageUrl )
+  protected void fireImagePropertyChanged( Properties properties, int horizontal, int vertical, String imageUrl )
   {
     for( IImageChangedListener listener : m_listener )
       listener.imagePropertyChanged( properties, horizontal, vertical, imageUrl );
@@ -446,12 +511,16 @@ public class ImageComposite extends Composite
     /* Serialize the properties. */
     String horizontalProperty = String.format( Locale.PRC, "%d", m_horizontal );
     String verticalProperty = String.format( Locale.PRC, "%d", m_vertical );
-    String imageUrlProperty = String.format( Locale.PRC, "%s", m_imageUrl.toExternalForm() );
+    String imageUrlProperty = null;
+    if( m_imageUrl != null )
+      imageUrlProperty = String.format( Locale.PRC, "%s", m_imageUrl );
 
     /* Add the properties. */
     properties.put( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION, horizontalProperty );
     properties.put( PositionUtilities.THEME_PROPERTY_VERTICAL_POSITION, verticalProperty );
-    properties.put( ImageUtilities.THEME_PROPERTY_IMAGE_URL, imageUrlProperty );
+    properties.put( ImageUtilities.THEME_PROPERTY_IMAGE_URL, "" );
+    if( imageUrlProperty != null )
+      properties.put( ImageUtilities.THEME_PROPERTY_IMAGE_URL, imageUrlProperty );
 
     return properties;
   }
