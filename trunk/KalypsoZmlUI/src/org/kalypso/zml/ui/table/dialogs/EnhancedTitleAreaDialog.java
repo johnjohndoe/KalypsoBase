@@ -71,7 +71,7 @@ public class EnhancedTitleAreaDialog extends TitleAreaDialog
     return new Point( Integer.valueOf( parts[0] ), Integer.valueOf( parts[1] ) );
   }
 
-  protected void setScreenSize( final String parameter, final Point size )
+  public void setScreenSize( final String parameter, final Point size )
   {
     final IDialogSettings settings = KalypsoZmlUI.getDefault().getDialogSettings();
     settings.put( parameter, String.format( "%d,%d", size.x, size.y ) );

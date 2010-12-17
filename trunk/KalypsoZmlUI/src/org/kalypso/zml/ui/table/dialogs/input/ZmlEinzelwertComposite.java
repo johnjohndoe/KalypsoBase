@@ -45,10 +45,16 @@ import java.util.Date;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
@@ -57,7 +63,9 @@ import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
+import org.eclipse.ui.progress.UIJob;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.jface.validators.IntegerInputValidator;
 import org.kalypso.contribs.eclipse.swt.layout.LayoutHelper;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.ui.KalypsoZmlUI;
@@ -70,43 +78,57 @@ import org.kalypso.zml.ui.table.base.widgets.rules.TimeWidgetRule;
 /**
  * @author Dirk Kuch
  */
-public class ZmlEinzelwertComposite extends Composite
+public class ZmlEinzelwertComposite extends Composite implements IZmlEinzelwertModelListener
 {
   private static final Image IMG_ADD = new Image( null, ZmlEinzelwertComposite.class.getResourceAsStream( "icons/add.png" ) );
 
   private static final Image IMG_REMOVE = new Image( null, ZmlEinzelwertComposite.class.getResourceAsStream( "icons/remove.png" ) );
 
-  private final ZmlEinzelwertModel m_model;
+  protected final ZmlEinzelwertModel m_model;
+
+  private Composite m_base;
+
+  private final FormToolkit m_toolkit;
 
   public ZmlEinzelwertComposite( final Composite parent, final FormToolkit toolkit, final ZmlEinzelwertModel model )
   {
     super( parent, SWT.NULL );
+    m_toolkit = toolkit;
     m_model = model;
 
     setLayout( LayoutHelper.createGridLayout() );
 
-    render( toolkit );
+    render();
     toolkit.adapt( this );
+
+    m_model.addListener( this );
   }
 
-  private void render( final FormToolkit toolkit )
+  protected void render( )
   {
-    final Composite base = toolkit.createComposite( this );
-    base.setLayout( LayoutHelper.createGridLayout( 5 ) );
-    base.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+    if( isDisposed() )
+      return;
 
-    toolkit.createLabel( base, "Datum" );
-    toolkit.createLabel( base, "Uhrzeit" );
-    toolkit.createLabel( base, "" );
-    toolkit.createLabel( base, "Wert" );
-    toolkit.createLabel( base, "" );
+    if( m_base != null && !m_base.isDisposed() )
+      m_base.dispose();
+
+    m_base = m_toolkit.createComposite( this );
+    m_base.setLayout( LayoutHelper.createGridLayout( 5 ) );
+    m_base.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+
+    m_toolkit.createLabel( m_base, "Datum" );
+    m_toolkit.createLabel( m_base, "Uhrzeit" );
+    m_toolkit.createLabel( m_base, "" );
+    m_toolkit.createLabel( m_base, "Wert" );
+    m_toolkit.createLabel( m_base, "" );
 
     final ZmlEinzelwert[] rows = m_model.getRows();
     for( final ZmlEinzelwert row : rows )
     {
-      addRow( base, toolkit, row );
+      addRow( m_base, m_toolkit, row );
     }
 
+    this.layout();
   }
 
   private void addRow( final Composite base, final FormToolkit toolkit, final ZmlEinzelwert row )
@@ -144,25 +166,61 @@ public class ZmlEinzelwertComposite extends Composite
         }
       } );
 
+      viewerTime.setInput( existing );
+      viewerTime.setSelection( date );
+
+// viewerDay.addListener( new ISelectionChangedListener()
+// {
+// @Override
+// public void selectionChanged( final SelectionChangedEvent event )
+// {
+// viewerTime.refresh();
+// }
+// } );
+
       viewerDay.addListener( new ISelectionChangedListener()
       {
         @Override
         public void selectionChanged( final SelectionChangedEvent event )
         {
-          viewerTime.refresh();
+          final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+          final Date selected = (Date) selection.getFirstElement();
+
+          final Calendar baseCalendar = Calendar.getInstance();
+          baseCalendar.setTime( date );
+
+          final Calendar calendar = Calendar.getInstance();
+          calendar.setTime( selected );
+
+          calendar.set( Calendar.HOUR_OF_DAY, baseCalendar.get( Calendar.HOUR_OF_DAY ) );
+          calendar.set( Calendar.MINUTE, baseCalendar.get( Calendar.MINUTE ) );
+          calendar.set( Calendar.SECOND, baseCalendar.get( Calendar.SECOND ) );
+          calendar.set( Calendar.MILLISECOND, baseCalendar.get( Calendar.MILLISECOND ) );
+
+          // FIXME doesn't work
+          row.setDate( calendar.getTime() );
         }
       } );
 
-      viewerTime.setInput( existing );
-      viewerTime.setSelection( date );
+      viewerTime.addListener( new ISelectionChangedListener()
+      {
+        @Override
+        public void selectionChanged( final SelectionChangedEvent event )
+        {
+          final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+          final Date selected = (Date) selection.getFirstElement();
+          row.setDate( selected );
+        }
+      } );
 
-// toolkit.createComposite( base ).setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+      toolkit.createLabel( base, "" ).setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
       final EnhancedTextBox<Double> textBox = new EnhancedTextBox<Double>( base, toolkit, new DoubeValueWidgetRule() );
       textBox.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
       textBox.setText( row.getValue() );
 
-      final ImageHyperlink lnkAdd = toolkit.createImageHyperlink( base, SWT.NULL );
+      final ImageHyperlink lnkAdd = toolkit.createImageHyperlink( base, SWT.BEGINNING );
+      lnkAdd.setLayoutData( new GridData( GridData.FILL, GridData.FILL, false, false ) );
       lnkAdd.setImage( IMG_ADD );
       lnkAdd.addHyperlinkListener( new HyperlinkAdapter()
       {
@@ -172,12 +230,24 @@ public class ZmlEinzelwertComposite extends Composite
         @Override
         public void linkActivated( final HyperlinkEvent e )
         {
+          final InputDialog dialog = new InputDialog( lnkAdd.getShell(), "Schrittweite", "Bitte geben Sie den Stunden-Offset (Schrittweite) des nächsten Wertes an", "1", new IntegerInputValidator() );
+          final int status = dialog.open();
+          if( Window.OK == status )
+          {
+            try
+            {
+              final Integer stepping = Integer.valueOf( dialog.getValue() );
+
+              m_model.addRow( date, stepping );
+            }
+            catch( final Throwable t )
+            {
+              KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( t ) );
+            }
+          }
 
         }
       } );
-
-      final ImageHyperlink lnkAdd2 = toolkit.createImageHyperlink( base, SWT.NULL );
-      lnkAdd2.setImage( IMG_ADD );
     }
     catch( final SensorException e )
     {
@@ -204,4 +274,21 @@ public class ZmlEinzelwertComposite extends Composite
     return anchors.toArray( new Date[] {} );
   }
 
+  /**
+   * @see org.kalypso.zml.ui.table.dialogs.input.IZmlEinzelwertModelListener#modelChangedEvent()
+   */
+  @Override
+  public void modelChangedEvent( )
+  {
+    new UIJob( "" )
+    {
+      @Override
+      public final IStatus runInUIThread( final IProgressMonitor monitor )
+      {
+        render();
+
+        return Status.OK_STATUS;
+      }
+    }.schedule();
+  }
 }
