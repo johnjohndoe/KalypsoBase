@@ -104,7 +104,6 @@ public final class ZmlTableImageMerger
         break;
 
       final int i = index;
-
       final ZmlTableImage tile = images[index];
 
       final OverlayIcon overlay = new OverlayIcon( ImageDescriptor.createFromImageData( base ), ImageDescriptor.createFromImage( tile.getIcon() ), size )
