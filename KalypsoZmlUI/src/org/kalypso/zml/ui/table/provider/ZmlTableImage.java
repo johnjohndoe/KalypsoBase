@@ -38,61 +38,32 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.core.table.binding;
+package org.kalypso.zml.ui.table.provider;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.graphics.Image;
-import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.core.catalog.ICatalog;
-import org.kalypso.zml.core.table.schema.ColumnHeaderPropertyName;
-import org.kalypso.zml.core.table.schema.HeaderEntry;
 
 /**
  * @author Dirk Kuch
  */
-public class ColumnHeader
+public class ZmlTableImage
 {
-  private static final ImageRegistry IMAGE_REGISTRY = new ImageRegistry();
+  private final String m_href;
 
-  private final HeaderEntry m_type;
+  private final Image m_icon;
 
-  public ColumnHeader( final HeaderEntry type )
+  public ZmlTableImage( final String href, final Image icon )
   {
-    m_type = type;
+    m_href = href;
+    m_icon = icon;
   }
 
-  public Image getIcon( ) throws MalformedURLException
+  public String getHref( )
   {
-    final String urlString = TableTypeHelper.findProperty( m_type, ColumnHeaderPropertyName.ICON );
-    if( urlString == null )
-      return null;
-
-    final Image cached = IMAGE_REGISTRY.get( m_type.getId() );
-    if( cached != null )
-      return cached;
-
-    final ICatalog baseCatalog = KalypsoCorePlugin.getDefault().getCatalogManager().getBaseCatalog();
-    final String uri = baseCatalog.resolve( urlString, urlString );
-
-    final ImageDescriptor descriptor = ImageDescriptor.createFromURL( new URL( uri ) );
-    final Image image = descriptor.createImage();
-
-    IMAGE_REGISTRY.put( m_type.getId(), image );
-
-    return image;
+    return m_href;
   }
 
-  public String getLabel( )
+  public Image getIcon( )
   {
-    return TableTypeHelper.findProperty( m_type, ColumnHeaderPropertyName.LABEL );
-  }
-
-  public String getIdentifier( )
-  {
-    return m_type.getId();
+    return m_icon;
   }
 }

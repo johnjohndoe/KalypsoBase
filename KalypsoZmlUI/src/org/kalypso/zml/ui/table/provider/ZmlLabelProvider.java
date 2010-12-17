@@ -162,7 +162,7 @@ public class ZmlLabelProvider extends ColumnLabelProvider
     {
       try
       {
-        final ZmlTableIconMerger iconMerger = new ZmlTableIconMerger( 2 );
+        final ZmlTableImageMerger iconMerger = new ZmlTableImageMerger( 2 );
 
         final IZmlModelRow row = (IZmlModelRow) element;
         final ZmlRule[] rules = m_column.findActiveRules( row );
@@ -171,7 +171,7 @@ public class ZmlLabelProvider extends ColumnLabelProvider
           final CellStyle style = rule.getPlainStyle();
           final Image image = style.getImage();
           if( image != null )
-            iconMerger.addImage( image );
+            iconMerger.addImage( new ZmlTableImage( style.getIdentifier(), image ) );
         }
 
         return iconMerger.createImage( PlatformUI.getWorkbench().getDisplay() );

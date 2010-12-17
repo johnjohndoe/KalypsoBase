@@ -56,7 +56,8 @@ import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.schema.DataColumnType;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.ZmlTableComposite;
-import org.kalypso.zml.ui.table.provider.ZmlTableIconMerger;
+import org.kalypso.zml.ui.table.provider.ZmlTableImage;
+import org.kalypso.zml.ui.table.provider.ZmlTableImageMerger;
 import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
 
 /**
@@ -131,7 +132,7 @@ public class ZmlTableStateChangedHandler
     final TableColumn tableColumn = column.getTableViewerColumn().getColumn();
     final ZmlRule[] applied = column.getAppliedRules();
 
-    final ZmlTableIconMerger provider = new ZmlTableIconMerger( 2 );
+    final ZmlTableImageMerger provider = new ZmlTableImageMerger( 2 );
 
     final BaseColumn columnType = column.getColumnType();
     for( final ColumnHeader header : columnType.getHeaders() )
@@ -140,7 +141,7 @@ public class ZmlTableStateChangedHandler
       {
         final Image icon = header.getIcon();
         if( icon != null )
-          provider.addImage( icon );
+          provider.addImage( new ZmlTableImage( header.getIdentifier(), icon ) );
       }
       catch( final Throwable t )
       {
@@ -157,7 +158,7 @@ public class ZmlTableStateChangedHandler
           final CellStyle style = rule.getPlainStyle();
           final Image image = style.getImage();
           if( image != null )
-            provider.addImage( image );
+            provider.addImage( new ZmlTableImage( style.getIdentifier(), image ) );
         }
       }
       catch( final Throwable t )

@@ -225,4 +225,9 @@ public class CellStyle implements Cloneable
     return format;
   }
 
+  public String getIdentifier( )
+  {
+    return m_style.getId();
+  }
+
 }
