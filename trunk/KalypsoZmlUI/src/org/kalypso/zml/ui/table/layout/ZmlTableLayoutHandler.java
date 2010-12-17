@@ -67,11 +67,11 @@ import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
 /**
  * @author Dirk Kuch
  */
-public class ZmlTableStateChangedHandler
+public class ZmlTableLayoutHandler
 {
   protected final ZmlTableComposite m_table;
 
-  public ZmlTableStateChangedHandler( final ZmlTableComposite table )
+  public ZmlTableLayoutHandler( final ZmlTableComposite table )
   {
     m_table = table;
   }
