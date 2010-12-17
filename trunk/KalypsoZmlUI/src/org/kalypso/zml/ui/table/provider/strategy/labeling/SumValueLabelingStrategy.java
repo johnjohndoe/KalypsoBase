@@ -44,6 +44,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.core.table.binding.rule.ZmlRule;
+import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
 import org.kalypso.zml.core.table.model.walker.ZmlModelWalker;
@@ -87,16 +88,22 @@ public class SumValueLabelingStrategy extends AbstractValueLabelingStrategy impl
     final IZmlTableCell current = column.findCell( row );
     final IZmlTableCell previous = current.findPreviousCell();
 
+    final IZmlValueReference previousReference;
     if( previous == null )
-      return getAsOriginValue( row );
+    {
+      /* get first invisible value (first value will is not part of the table!) */
+      final IZmlModel model = row.getModel();
+      final IZmlModelRow baseRow = model.getRowAt( 0 );
+      previousReference = baseRow.get( column.getModelColumn() );
+    }
+    else
+      previousReference = previous.getValueReference();
 
-    final IZmlValueReference previousReference = previous.getValueReference();
     final IZmlValueReference currentReference = current.getValueReference();
-
     if( previousReference == null || currentReference == null )
       return null;
 
-    final int startIndex = previousReference.getTupleModelIndex() + 1;
+    final int startIndex = previousReference.getTupleModelIndex();
     final int endIndex = currentReference.getTupleModelIndex();
 
     final SumOperation operation = new SumOperation();

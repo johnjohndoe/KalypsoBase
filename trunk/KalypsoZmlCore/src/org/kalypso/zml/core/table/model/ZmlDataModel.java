@@ -208,4 +208,17 @@ public class ZmlDataModel implements IZmlModel
 
     return rows;
   }
+
+  /**
+   * @see org.kalypso.zml.core.table.model.IZmlModel#getRowAt(int)
+   */
+  @Override
+  public IZmlModelRow getRowAt( final int index )
+  {
+    final IZmlModelRow[] rows = getRows();
+    if( index >= rows.length )
+      return null;
+
+    return rows[index];
+  }
 }

@@ -59,5 +59,7 @@ public interface IZmlModel
 
   IZmlModelRow getRow( final Object index );
 
+  IZmlModelRow getRowAt( final int index );
+
   IZmlModelRow[] getRows( );
 }
