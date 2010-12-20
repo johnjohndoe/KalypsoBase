@@ -326,7 +326,21 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
     final AbstractColumnType clone = TableTypeHelper.cloneColumn( base );
     clone.setId( newIdentifier );
 
-    buildColumnViewer( new BaseColumn( clone ) );
+    /** only one rule / style set! */
+    buildColumnViewer( new BaseColumn( base )
+    {
+      @Override
+      public String getIdentifier( )
+      {
+        return newIdentifier;
+      }
+
+      @Override
+      public AbstractColumnType getType( )
+      {
+        return clone;
+      }
+    } );
   }
 
   @Override
