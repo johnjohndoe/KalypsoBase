@@ -47,6 +47,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.zml.core.table.IZmlTableElement;
 import org.kalypso.zml.core.table.model.loader.ZmlColumnLoadCommand;
@@ -189,24 +190,18 @@ public class ZmlDataModel implements IZmlModel
   @Override
   public IZmlModelRow[] getRows( )
   {
-    if( m_rowsDirty )
+    synchronized( this )
     {
-      synchronized( this )
+      if( m_rowsDirty )
       {
         final ZmlModelBuilder builder = new ZmlModelBuilder( this );
-        ProgressUtilities.busyCursorWhile( builder );
+        builder.execute( new NullProgressMonitor() );
 
         m_rowsDirty = false;
       }
-    }
 
-    IZmlModelRow[] rows;
-    synchronized( m_rows )
-    {
-      rows = m_rows.values().toArray( new IZmlModelRow[] {} );
+      return m_rows.values().toArray( new IZmlModelRow[] {} );
     }
-
-    return rows;
   }
 
   /**
