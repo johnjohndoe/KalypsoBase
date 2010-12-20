@@ -61,6 +61,7 @@ import org.kalypso.zml.core.table.schema.ColumnPropertyType;
 import org.kalypso.zml.core.table.schema.DataColumnType;
 import org.kalypso.zml.core.table.schema.HeaderEntry;
 import org.kalypso.zml.core.table.schema.IndexColumnType;
+import org.kalypso.zml.core.table.schema.RuleRefernceType;
 import org.kalypso.zml.core.table.schema.StylePropertyName;
 import org.kalypso.zml.core.table.schema.StylePropertyType;
 import org.kalypso.zml.core.table.schema.StyleReferenceType;
@@ -118,6 +119,9 @@ public final class TableTypeHelper
 
       copyBasicSettings( base, clone );
 
+      copyStyles( base, clone );
+      copyRules( base, clone );
+
       clone.setIndexAxis( data.getIndexAxis() );
       clone.setValueAxis( data.getValueAxis() );
 
@@ -127,11 +131,35 @@ public final class TableTypeHelper
     {
       final IndexColumnType clone = new IndexColumnType();
       copyBasicSettings( base, clone );
+      copyStyles( base, clone );
+      copyRules( base, clone );
 
       return clone;
     }
 
     return null;
+  }
+
+  private static void copyRules( final AbstractColumnType base, final AbstractColumnType clone )
+  {
+    final List<RuleRefernceType> rules = clone.getRule();
+    for( final RuleRefernceType ruleType : base.getRule() )
+    {
+      rules.add( ruleType );
+    }
+
+    final List<JAXBElement<Object>> ruleSetReferences = clone.getRuleSetReference();
+    for( final JAXBElement<Object> jaxbElement : base.getRuleSetReference() )
+    {
+      ruleSetReferences.add( jaxbElement );
+    }
+  }
+
+  private static void copyStyles( final AbstractColumnType base, final AbstractColumnType clone )
+  {
+    clone.setDefaultCellEditingStyle( base.getDefaultCellEditingStyle() );
+    clone.setDefaultCellStyle( base.getDefaultCellStyle() );
+    clone.setEditable( base.isEditable() );
   }
 
   private static void copyBasicSettings( final AbstractColumnType source, final AbstractColumnType target )
