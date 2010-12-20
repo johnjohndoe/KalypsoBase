@@ -94,9 +94,9 @@ public class ZmlTableLayoutHandler
         if( m_firstChange )
         {
           final RevealTableCommand command = new RevealTableCommand( m_table );
-          command.run();
-
-          m_firstChange = false;
+          final IStatus status = command.execute( monitor );
+          if( status.isOK() )
+            m_firstChange = false;
         }
 
         return Status.OK_STATUS;
@@ -107,7 +107,8 @@ public class ZmlTableLayoutHandler
 
   protected void updateColumns( )
   {
-    for( final ExtendedZmlTableColumn column : m_table.getColumns() )
+    final ExtendedZmlTableColumn[] columns = m_table.getColumns();
+    for( final ExtendedZmlTableColumn column : columns )
     {
       final BaseColumn columnType = column.getColumnType();
       final TableViewerColumn tableViewerColumn = column.getTableViewerColumn();

@@ -133,7 +133,7 @@ public class ZmlColumnLoadCommand implements IObsProviderListener
     final DataColumn data = new DataColumn( type );
     final String label = m_column.getTitle( AxisUtils.findAxis( axes, data.getValueAxis() ) );
 
-    m_model.addColumn( new ZmlModelColumn( label, clone, m_model, data ) );
+    m_model.addColumn( new ZmlModelColumn( m_column.getIdentifier(), label, clone, m_model, data ) );
 
 // base.dispose();
   }
