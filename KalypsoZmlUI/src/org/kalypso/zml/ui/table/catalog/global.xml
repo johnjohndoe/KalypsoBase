@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ZmlTable xmlns="schema.table.core.zml.kalypso.org">
+  <StyleSet>
+    <!-- basic zml table style -->
+    <Style id="defaultCellStyle">
+      <property name="backgroundColor">FFFFFF</property>
+      <property name="textColor">000000</property>
+      <property name="fontFamily">Arial</property>
+      <property name="fontSize">10</property>
+      <property name="textFormat">%s</property>
+    </Style>
+    <!-- base w cell table style -->
+    <Style id="wBaseCellStyle">
+      <baseStyle>
+        <reference>defaultCellStyle</reference>
+      </baseStyle>
+      <property name="textFormat">%.0f</property>
+    </Style>
+    <Style id="wBaseEditingCellStyle">
+      <baseStyle>
+        <reference>wBaseCellStyle</reference>
+      </baseStyle>
+      <property name="textFormat">%.3f</property>
+    </Style>
+    <!-- base n cell table style -->
+    <Style id="nBaseCellStyle">
+      <baseStyle>
+        <reference>defaultCellStyle</reference>
+      </baseStyle>
+      <property name="textFormat">%.1f</property>
+    </Style>
+    <!-- base q cell table style -->
+    <Style id="qBaseCellStyle">
+      <baseStyle>
+        <reference>defaultCellStyle</reference>
+      </baseStyle>
+      <property name="textFormat">%.3f</property>
+    </Style>
+    <!-- derived value style -->
+    <Style id="derivedValueCellStyle">
+      <property name="backgroundColor">F8F3C0</property>
+    </Style>
+    
+    <!-- base volume style -->
+    <Style id="volumeBaseCellStyle">
+      <baseStyle>
+        <reference>defaultCellStyle</reference>
+      </baseStyle>
+      <property name="textFormat">%.3f</property>
+    </Style>
+     <!-- base w [m NN] style, Wasserstand [m NN] z.B. durch Umrechnung aus Volumen in Talsperre -->
+    <Style id="wNNBaseCellStyle">
+      <baseStyle>
+        <reference>defaultCellStyle</reference>
+      </baseStyle>
+      <property name="textFormat">%.0f</property>
+    </Style>
+    <!-- base date cell table styles -->
+    <Style id="dateCellStyle">
+      <baseStyle>
+        <reference>defaultCellStyle</reference>
+      </baseStyle>
+      <property name="backgroundColor">DEDEDE</property>
+      <property name="textFormat">dd.MM.yy HH:mm</property>
+    </Style>
+    <Style id="dateForecastCellStyle">
+      <baseStyle>
+        <reference>dateCellStyle</reference>
+      </baseStyle>
+      <property name="backgroundColor">FFF7EE</property> 
+    </Style>
+    <Style id="forecastCellStyleSafe">
+      <property name="fontWeight">BOLD</property>
+    </Style>
+    <Style id="forecastCellStyleUnsafe">
+      <property name="fontWeight">ITALIC</property>
+    </Style>
+    <Style id="forecastCellStyleRestrechenzeitraum">
+      <property name="fontWeight">ITALIC</property>
+      <property name="textColor">CCCCCC</property>
+    </Style>
+    <!-- rule - value user modified? -->
+    <Style id="userModifiedStyle">
+      <property name="icon">urn:org:kalypso:zml:ui:table:icon:user:modified</property>
+    </Style>
+    <!-- rule - interpolated value? -->
+    <Style id="interpolatedValueStyle">
+      <property name="icon">urn:org:kalypso:zml:ui:table:icon:interpolated:value</property>
+    </Style>
+    <!-- rule - interval value? -->
+    <Style id="intervalValueStyle">
+      <property name="icon">urn:org:kalypso:zml:ui:table:icon:interval:value</property>
+    </Style>
+    <!-- rule - warned value? -->
+    <Style id="warnedValueStyle">
+      <property name="icon">urn:org:kalypso:zml:ui:table:icon:warned:value</property>
+    </Style>
+
+    <!-- rule - w/q conversion conflict? -->
+    <Style id="wqConversionConflict">
+      <property name="icon">urn:org:kalypso:zml:ui:table:icon:wq:conflict</property>
+    </Style>
+    <!-- alarmstufen styles -->
+    <Style id="alarmstufe_1">
+      <property name="backgroundColor">E8E800</property>
+    </Style>
+    <Style id="alarmstufe_2">
+      <property name="backgroundColor">FF8000</property>
+    </Style>
+    <Style id="alarmstufe_3">
+      <property name="backgroundColor">FF8080</property>
+    </Style>
+    <Style id="alarmstufe_4">
+      <property name="backgroundColor">FF0000</property>
+    </Style>
+    <Style id="meldegrenze">
+      <property name="backgroundColor">BD6DFF</property>
+    </Style>
+  </StyleSet>
+  <defaultStyle>
+    <reference>defaultCellStyle</reference>
+  </defaultStyle>
+  <RuleSet id="default">
+    <Rule ruleReference="org.kalypso.zml.ui.core.rule.forecast.value" id="ruleDateForecast">
+      <styleReference>
+        <reference>dateForecastCellStyle</reference>
+      </styleReference>
+      <RuleInstructions>
+        <MetadataDateRangeInstruction propertyFrom="Vorhersage Start" propertyTo="Vorhersage Ende" propertyToInclusive="true" />
+      </RuleInstructions>
+      <label>gesamter Vorhersagezeitraum</label>
+    </Rule>
+    <Rule ruleReference="org.kalypso.zml.ui.core.rule.forecast.value" id="ruleForecast">
+      <styleReference>
+        <reference>forecastCellStyleSafe</reference>
+      </styleReference>
+      <RuleInstructions>
+        <MetadataDateRangeInstruction propertyFrom="Vorhersage Start" propertyTo="Vorhersage Ende" propertyToInclusive="true" />
+      </RuleInstructions>
+      <label>gesamter Vorhersagezeitraum</label>
+    </Rule>
+    <Rule ruleReference="org.kalypso.zml.ui.core.rule.forecast.value" id="ruleForecastSafe">
+      <styleReference>
+        <reference>forecastCellStyleSafe</reference>
+      </styleReference>
+      <RuleInstructions>
+        <MetadataDateRangeInstruction propertyFrom="sichere Vorhersage Start" propertyTo="sichere Vorhersage Ende" propertyToInclusive="true" />
+      </RuleInstructions>
+      <label>Vorhersagezeitraum</label>
+    </Rule>
+    <Rule ruleReference="org.kalypso.zml.ui.core.rule.forecast.value" id="ruleForecastUnsafe">
+      <styleReference>
+        <reference>forecastCellStyleUnsafe</reference>
+      </styleReference>
+      <RuleInstructions>
+        <MetadataDateRangeInstruction propertyFrom="unsichere Vorhersage Start" propertyTo="unsichere Vorhersage Ende" propertyToInclusive="true" />
+      </RuleInstructions>
+      <label>Abschätzungszeitraum</label>
+    </Rule>
+    <Rule ruleReference="org.kalypso.zml.ui.core.rule.forecast.value" id="ruleForecastRestrechenzeitraum">
+      <styleReference>
+        <reference>forecastCellStyleRestrechenzeitraum</reference>
+      </styleReference>
+      <RuleInstructions>
+        <MetadataDateRangeInstruction propertyFrom="unsichere Vorhersage Ende" propertyTo="Vorhersage Ende" propertyToInclusive="true" />
+      </RuleInstructions>
+      <label>Restrechenzeitraum</label>
+    </Rule>
+    <Rule id="ruleDerivedValue" ruleReference="org.kalypso.zml.ui.core.rule.derived.value" setHeaderIcon="true">
+      <styleReference>
+        <reference>derivedValueCellStyle</reference>
+      </styleReference>
+      <label>Abgeleitete(r) Wert(e)</label>
+    </Rule>
+    <Rule id="ruleUserModified" ruleReference="org.kalypso.zml.ui.core.rule.user.modified" setHeaderIcon="true">
+      <styleReference>
+        <reference>userModifiedStyle</reference>
+      </styleReference>
+      <label>Benutereingabe(n)</label>
+    </Rule>
+    <Rule id="ruleInterpolatedValue" ruleReference="org.kalypso.zml.ui.core.rule.value.interpolated" setHeaderIcon="true">
+      <styleReference>
+        <reference>interpolatedValueStyle</reference>
+      </styleReference>
+      <label>Interpolierte(r) Wert(e)</label>
+    </Rule>
+    <Rule id="ruleIntervalValue" ruleReference="org.kalypso.zml.ui.core.rule.value.interval" setHeaderIcon="true">
+      <styleReference>
+        <reference>intervalValueStyle</reference>
+      </styleReference>
+      <label>Intervall Wert(e)</label>
+    </Rule>
+    <Rule id="ruleWarnedValue" ruleReference="org.kalypso.zml.ui.core.rule.warned.value" setHeaderIcon="true">
+      <styleReference>
+        <reference>warnedValueStyle</reference>
+      </styleReference>
+      <label>Interpolierte(r) Wert(e)</label>
+    </Rule>
+    <Rule id="ruleWqConflict" ruleReference="org.kalypso.zml.ui.core.rule.wq.conflict" setHeaderIcon="true">
+      <styleReference>
+        <reference>wqConversionConflict</reference>
+      </styleReference>
+      <label>W/Q Konflikt(e)</label>
+    </Rule>
+    <Rule id="ruleAlarmstufen" ruleReference="org.kalypso.zml.ui.core.rule.grenzwerte" enabled="false">
+      <RuleInstructions>
+        <MetadataBoundaryInstruction from="Grenzwert_W: Alarmstufe_1" opFrom="&gt;=" to="Grenzwert_W: Alarmstufe_2" label="AS1   ${text}">
+          <styleReference>
+            <reference>alarmstufe_1</reference>
+          </styleReference>
+        </MetadataBoundaryInstruction>
+        <MetadataBoundaryInstruction from="Grenzwert_W: Alarmstufe_2" opFrom="&gt;=" to="Grenzwert_W: Alarmstufe_3" label="AS2   ${text}">
+          <styleReference>
+            <reference>alarmstufe_2</reference>
+          </styleReference>
+        </MetadataBoundaryInstruction>
+        <MetadataBoundaryInstruction from="Grenzwert_W: Alarmstufe_3" opFrom="&gt;=" to="Grenzwert_W: Alarmstufe_4" label="AS3   ${text}">
+          <styleReference>
+            <reference>alarmstufe_3</reference>
+          </styleReference>
+        </MetadataBoundaryInstruction>
+        <MetadataBoundaryInstruction from="Grenzwert_W: Alarmstufe_4" opFrom="&gt;=" label="AS4   ${text}">
+          <styleReference>
+            <reference>alarmstufe_4</reference>
+          </styleReference>
+        </MetadataBoundaryInstruction>
+        <MetadataBoundaryInstruction from="Grenzwert_W: Meldegrenze" opFrom="&gt;=" label="MG   ${text}">
+          <styleReference>
+            <reference>meldegrenze</reference>
+          </styleReference>
+        </MetadataBoundaryInstruction>
+      </RuleInstructions>
+      <label>Alarmstufe(n)</label>
+    </Rule>
+    <Rule id="ruleHauptzahlenQ" ruleReference="org.kalypso.zml.ui.core.rule.grenzwerte" enabled="false">
+      <RuleInstructions>
+        <MetadataBoundaryInstruction to="Grenzwert_Q: Kalypso_Grenzwert_NQ" label="&lt;N   ${text}" />
+        <MetadataBoundaryInstruction from="Grenzwert_Q: Kalypso_Grenzwert_NQ" opFrom="&gt;=" to="Grenzwert_Q: Kalypso_Grenzwert_MNQ" label="&lt;MN   ${text}" />
+        <MetadataBoundaryInstruction from="Grenzwert_Q: Kalypso_Grenzwert_MNQ" opFrom="&gt;=" to="Grenzwert_Q: Kalypso_Grenzwert_MQ" label="&lt;M   ${text}" />
+        <MetadataBoundaryInstruction from="Grenzwert_Q: Kalypso_Grenzwert_MQ" opFrom="&gt;=" to="Grenzwert_Q: Kalypso_Grenzwert_MQ" opTo="&lt;=" label="=M   ${text}" />
+        <MetadataBoundaryInstruction from="Grenzwert_Q: Kalypso_Grenzwert_MQ" to="Grenzwert_Q: Kalypso_Grenzwert_MHQ" opTo="&lt;=" label="&gt;M   ${text}" />
+        <MetadataBoundaryInstruction from="Grenzwert_Q: Kalypso_Grenzwert_MHQ" to="Grenzwert_Q: Kalypso_Grenzwert_HQ" opTo="&lt;=" label="&gt;MH   ${text}" />
+        <MetadataBoundaryInstruction from="Grenzwert_Q: Kalypso_Grenzwert_HQ" label="&gt;H   ${text}" />
+      </RuleInstructions>
+      <label>Hauptzahl(en) Q</label>
+    </Rule>
+    <Rule id="ruleHauptzahlenW" ruleReference="org.kalypso.zml.ui.core.rule.grenzwerte" enabled="false">
+      <RuleInstructions>
+        <MetadataBoundaryInstruction to="Grenzwert_W: Kalypso_Grenzwert_NW" label="&lt;N   ${text}" />
+        <MetadataBoundaryInstruction from="Grenzwert_W: Kalypso_Grenzwert_NW" opFrom="&gt;=" to="Grenzwert_W: Kalypso_Grenzwert_MNW" label="&lt;MN   ${text}" />
+        <MetadataBoundaryInstruction from="Grenzwert_W: Kalypso_Grenzwert_MNW" opFrom="&gt;=" to="Grenzwert_W: Kalypso_Grenzwert_MW" label="&lt;M   ${text}" />
+        <MetadataBoundaryInstruction from="Grenzwert_W: Kalypso_Grenzwert_MW" opFrom="&gt;=" to="Grenzwert_W: Kalypso_Grenzwert_MW" opTo="&lt;=" label="=M   ${text}" />
+        <MetadataBoundaryInstruction from="Grenzwert_W: Kalypso_Grenzwert_MW" to="Grenzwert_W: Kalypso_Grenzwert_MHW" opTo="&lt;=" label="&gt;M   ${text}" />
+        <MetadataBoundaryInstruction from="Grenzwert_W: Kalypso_Grenzwert_MHW" to="Grenzwert_W: Kalypso_Grenzwert_HW" opTo="&lt;=" label="&gt;MH   ${text}" />
+        <MetadataBoundaryInstruction from="Grenzwert_W: Kalypso_Grenzwert_HW" label="&gt;H   ${text}" />
+      </RuleInstructions>
+      <label>Hauptzahl(en) W</label>
+    </Rule>
+  </RuleSet>
+</ZmlTable>

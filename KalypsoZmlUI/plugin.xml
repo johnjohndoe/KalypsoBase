@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+    <extension
+       point="de.openali.odysseus.chart.factory.LayerProvider">
+    <provider
+          class="org.kalypso.zml.ui.chart.layer.provider.ZmlLineLayerProvider"
+          id="org.kalypso.zml.ui.chart.layer.provider.ZmlLineLayerProvider">
+    </provider>
+    <provider
+          class="org.kalypso.zml.ui.chart.layer.provider.ZmlGridLayerProvider"
+          id="org.kalypso.zml.ui.chart.layer.provider.ZmlGridLayerProvider">
+    </provider>
+    <provider
+          class="org.kalypso.zml.ui.chart.layer.provider.ZmlSinglePointProvider"
+          id="org.kalypso.zml.ui.chart.layer.provider.ZmlSinglePointProvider">
+    </provider>
+ </extension>
+	
+ 
+ 
+ <extension point="org.kalypso.core.catalogContribution">
+    <catalogContribution class="org.kalypso.zml.ui.table.catalog.ZmlTableCatalogContribution"
+      name="org.kalypso.zml.ui.core.rules.ZmlTableRulesCatalogContributionbution" />
+  </extension>
+    
+ <extension point="org.eclipse.ui.contexts">
+	<context id="org.kalypso.zml.ui.table.context" name="Table" parentId="org.eclipse.ui.contexts.window" />
+ </extension>
+  
+  
+ <extension point="org.eclipse.ui.commands">
+   <category id="org.kalypso.zml.ui.table.commands.category"
+      name="zml table commands - category">
+   </category>
+   <command
+         categoryId="org.kalypso.zml.ui.table.commands.category"
+         defaultHandler="org.kalypso.zml.ui.table.commands.menu.ZmlCommandSetAllValues"
+         id="org.kalypso.zml.ui.table.commands.value.set.all"
+         name="Alle Werte setzen">
+   </command>
+   <command
+         categoryId="org.kalypso.zml.ui.table.commands.category"
+         defaultHandler="org.kalypso.zml.ui.table.commands.menu.ZmlCommandSetSelectedValues"
+         id="org.kalypso.zml.ui.table.commands.value.set.selected"
+         name="Selektierte Werte setzen">
+   </command>
+   <command
+         categoryId="org.kalypso.zml.ui.table.commands.category"
+         defaultHandler="org.kalypso.zml.ui.table.commands.menu.ZmlCommandSetValuesAbove"
+         id="org.kalypso.zml.ui.table.commands.value.set.above"
+         name="Werte oberhalb setzen">
+   </command>
+   <command
+         categoryId="org.kalypso.zml.ui.table.commands.category"
+         defaultHandler="org.kalypso.zml.ui.table.commands.menu.ZmlCommandSetValuesBelow"
+         id="org.kalypso.zml.ui.table.commands.value.set.below"
+         name="Werte unterhalb setzen">
+   </command>
+   <command
+         categoryId="org.kalypso.zml.ui.table.commands.category"
+         defaultHandler="org.kalypso.zml.ui.table.commands.menu.ZmlCommandInterpolateValues"
+         id="org.kalypso.zml.ui.table.commands.value.interpolate"
+         name="Werte interpolieren">
+   </command>
+   <command
+         categoryId="org.kalypso.zml.ui.table.commands.category"
+         defaultHandler="org.kalypso.zml.ui.table.commands.menu.ZmlCommandCopyValue"
+         id="org.kalypso.zml.ui.table.commands.value.copy"
+         name="Kopieren">
+   </command>
+   <command
+         categoryId="org.kalypso.zml.ui.table.commands.category"
+         defaultHandler="org.kalypso.zml.ui.table.commands.menu.ZmlCommandPasteValue"
+         id="org.kalypso.zml.ui.table.commands.value.set.paste"
+         name="Einfügen">
+   </command>
+    <command
+          categoryId="org.kalypso.zml.ui.table.commands.category"
+          id="org.kalypso.zml.ui.table.commands.toolbar.view.all"
+          name="Vollansicht">
+    </command>
+    <command
+          categoryId="org.kalypso.zml.ui.table.commands.category"
+          id="org.kalypso.zml.ui.table.commands.toolbar.view.stuetzstellen"
+          name="Stützstellen">
+    </command>
+    <command
+          categoryId="org.kalypso.zml.ui.table.commands.category"
+          id="org.kalypso.zml.ui.table.commands.toolbar.view.6.hours"
+          name="6 Stunden Ansicht">
+    </command>
+    <command
+          categoryId="org.kalypso.zml.ui.table.commands.category"
+          id="org.kalypso.zml.ui.table.commands.toolbar.view.12.hours"
+          name="12 Stunden Ansicht">
+    </command>
+    <command
+          categoryId="org.kalypso.zml.ui.table.commands.category"
+          id="org.kalypso.zml.ui.table.commands.toolbar.view.24.hours"
+          name="24 Stunden Ansicht">
+    </command>
+    <command
+          categoryId="org.kalypso.zml.ui.table.commands.category"
+          id="org.kalypso.zml.ui.table.commands.toolbar.view.hour.add"
+          name="Stunde hinzufügen">
+    </command>
+    <command
+          categoryId="org.kalypso.zml.ui.table.commands.category"
+          id="org.kalypso.zml.ui.table.commands.toolbar.view.hour.minus"
+          name="Stunde abziehen">
+    </command>
+    <command
+          categoryId="org.kalypso.zml.ui.table.commands.category"
+          id="org.kalypso.zml.ui.table.commands.toolbar.view.boundaries"
+          name="View Boundary Command">
+       <commandParameter
+             id="rules"
+             name="zml rules seperated by ;"
+             optional="false">
+       </commandParameter>
+    </command>
+    <command
+          categoryId="org.kalypso.zml.ui.table.commands.category"
+          defaultHandler="org.kalypso.zml.ui.table.commands.menu.ZmlCommandDeleteStuetzstellen"
+          id="org.kalypso.zml.ui.table.commands.value.delete.stuetzstellen"
+          name="Stützstellen löschen">
+    </command>
+    <command
+          categoryId="org.kalypso.zml.ui.table.commands.category"
+          id="org.kalypso.zml.ui.table.commands.toolbar.value.input.dialog"
+          name="Eingabe von Einzelwerten">
+    </command>
+ </extension>
+ <extension
+       point="org.eclipse.ui.handlers">
+       
+    <handler
+    	  class="org.kalypso.zml.ui.table.commands.toolbar.view.ZmlCommandViewAll"
+          commandId="org.kalypso.zml.ui.table.commands.toolbar.view.all">
+    </handler>
+    <handler
+          class="org.kalypso.zml.ui.table.commands.toolbar.view.ZmlCommandViewStuetzstellen"
+          commandId="org.kalypso.zml.ui.table.commands.toolbar.view.stuetzstellen">
+    </handler>
+    <handler
+          class="org.kalypso.zml.ui.table.commands.toolbar.view.ZmlCommand6HourView"
+          commandId="org.kalypso.zml.ui.table.commands.toolbar.view.6.hours">
+    </handler>
+    <handler
+          class="org.kalypso.zml.ui.table.commands.toolbar.view.ZmlCommand12HourView"
+          commandId="org.kalypso.zml.ui.table.commands.toolbar.view.12.hours">
+    </handler>
+    <handler
+          class="org.kalypso.zml.ui.table.commands.toolbar.view.ZmlCommand24HourView"
+          commandId="org.kalypso.zml.ui.table.commands.toolbar.view.24.hours">
+    </handler>
+       
+       
+    <handler
+          class="org.kalypso.zml.ui.table.commands.toolbar.view.ZmlCommandHourAdd"
+          commandId="org.kalypso.zml.ui.table.commands.toolbar.view.hour.add">
+       <activeWhen>
+          <reference
+                definitionId="zml.table.shift.command.test.expression">
+          </reference>
+       </activeWhen>
+    </handler>
+    <handler
+          class="org.kalypso.zml.ui.table.commands.toolbar.view.ZmlCommandHourMinus"
+          commandId="org.kalypso.zml.ui.table.commands.toolbar.view.hour.minus">
+       <activeWhen>
+          <reference
+                definitionId="zml.table.shift.command.test.expression">
+          </reference>
+       </activeWhen>
+    </handler>
+    <handler
+          class="org.kalypso.zml.ui.table.commands.toolbar.ZmlCommandViewBoundaries"
+          commandId="org.kalypso.zml.ui.table.commands.toolbar.view.boundaries">
+    </handler>
+    <handler
+          class="org.kalypso.zml.ui.table.commands.toolbar.input.dialog.ZmlCommandOpenValueInputDialog"
+          commandId="org.kalypso.zml.ui.table.commands.toolbar.value.input.dialog">
+    </handler>
+ </extension>
+  <extension
+       point="org.eclipse.ui.commandImages">
+    <image
+          commandId="org.kalypso.zml.ui.table.commands.toolbar.view.all"
+          icon="icons/table/view_all.png">
+    </image>
+    <image
+          commandId="org.kalypso.zml.ui.table.commands.toolbar.view.stuetzstellen"
+          icon="icons/table/stuetzstelle.png">
+    </image>
+    <image
+          commandId="org.kalypso.zml.ui.table.commands.toolbar.view.6.hours"
+          icon="icons/table/6_hour_view.png">
+    </image>
+    <image
+          commandId="org.kalypso.zml.ui.table.commands.toolbar.view.12.hours"
+          icon="icons/table/12_hour_view.png">
+    </image>
+    <image
+          commandId="org.kalypso.zml.ui.table.commands.toolbar.view.24.hours"
+          icon="icons/table/24_hour_view.png">
+    </image>
+    <image
+          commandId="org.kalypso.zml.ui.table.commands.toolbar.view.hour.add"
+          icon="icons/table/hour_add.png">
+    </image>
+    <image
+          commandId="org.kalypso.zml.ui.table.commands.toolbar.view.hour.minus"
+          icon="icons/table/hour_minus.png">
+    </image>
+    <image
+          commandId="org.kalypso.zml.ui.table.commands.toolbar.value.input.dialog"
+          icon="icons/table/value_input_dialog.png">
+    </image>
+ </extension>
+ <extension
+       point="org.eclipse.core.expressions.propertyTesters">
+    <propertyTester
+          class="org.kalypso.zml.ui.table.commands.toolbar.view.ZmlPropertyTesterHourShiftCommand"
+          id="zml.table.shift.command.tester"
+          namespace="zml.table.command.shift"
+          properties="isActive"
+          type="org.kalypso.zml.ui.table.IZmlTable">
+    </propertyTester>
+ </extension>
+ <extension
+       point="org.eclipse.core.expressions.definitions">
+    <definition
+          id="zml.table.shift.command.test.expression">
+       <with
+             variable="activeTable">
+          <test
+                property="zml.table.command.shift.isActive">
+          </test>
+       </with>
+    </definition>
+ </extension> 
+ <extension
+       point="org.eclipse.core.contenttype.contentTypes">
+    <file-association
+          content-type="org.eclipse.core.runtime.xml"
+          file-extensions="kot">
+    </file-association>
+ </extension>
+</plugin>
