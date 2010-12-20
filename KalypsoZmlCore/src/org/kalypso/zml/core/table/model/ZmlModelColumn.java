@@ -87,8 +87,11 @@ public class ZmlModelColumn implements IZmlModelColumn
     }
   };
 
-  public ZmlModelColumn( final String label, final IObsProvider provider, final IZmlModel tabelModel, final DataColumn type )
+  private final String m_identifier;
+
+  public ZmlModelColumn( final String identifier, final String label, final IObsProvider provider, final IZmlModel tabelModel, final DataColumn type )
   {
+    m_identifier = identifier;
     m_label = label;
     m_zmlModel = tabelModel;
     m_provider = provider;
@@ -122,7 +125,7 @@ public class ZmlModelColumn implements IZmlModelColumn
   @Override
   public String getIdentifier( )
   {
-    return m_type.getIdentifier();
+    return m_identifier;
   }
 
   @Override

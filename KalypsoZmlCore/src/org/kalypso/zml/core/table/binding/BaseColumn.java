@@ -295,4 +295,13 @@ public class BaseColumn
   {
     return findProperty( ColumnPropertyName.URI_HEADER_CONTEXT_MENU );
   }
+
+  /**
+   * @see java.lang.Object#toString()
+   */
+  @Override
+  public String toString( )
+  {
+    return getIdentifier();
+  }
 }

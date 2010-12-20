@@ -42,7 +42,11 @@ package org.kalypso.zml.ui.table.layout;
 
 import java.util.Date;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.TableViewer;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.ogc.sensor.metadata.MetadataHelper;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.zml.core.table.model.IZmlModel;
@@ -53,7 +57,7 @@ import org.kalypso.zml.ui.table.ZmlTableComposite;
 /**
  * @author Dirk Kuch
  */
-public class RevealTableCommand implements Runnable
+public class RevealTableCommand implements ICoreRunnableWithProgress
 {
 
   private final ZmlTableComposite m_table;
@@ -64,14 +68,14 @@ public class RevealTableCommand implements Runnable
   }
 
   /**
-   * @see java.lang.Runnable#run()
+   * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  public void run( )
+  public IStatus execute( final IProgressMonitor monitor )
   {
     final Date forecastStart = findForecastDate();
     if( forecastStart == null )
-      return;
+      return Status.CANCEL_STATUS;
 
     final IZmlModel model = m_table.getDataModel();
     final IZmlModelRow[] rows = model.getRows();
@@ -88,9 +92,11 @@ public class RevealTableCommand implements Runnable
         final TableViewer tableViewer = m_table.getTableViewer();
         tableViewer.reveal( row );
 
-        return;
+        return Status.OK_STATUS;
       }
     }
+
+    return Status.CANCEL_STATUS;
   }
 
   private Date findForecastDate( )

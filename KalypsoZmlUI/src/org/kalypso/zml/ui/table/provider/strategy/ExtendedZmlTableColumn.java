@@ -183,4 +183,13 @@ public class ExtendedZmlTableColumn extends ZmlTableColumn
   {
     return m_tableColumnIndex;
   }
+
+  /**
+   * @see java.lang.Object#toString()
+   */
+  @Override
+  public String toString( )
+  {
+    return getColumnType().getIdentifier();
+  }
 }
