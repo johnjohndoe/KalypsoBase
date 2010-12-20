@@ -249,7 +249,7 @@ public class MergeObservationWorker implements ICoreRunnableWithProgress
       /* Clear the derived bit in all cases */
       final Number srcStatusNumber = (Number) srcValue;
       final int srcStatus = srcStatusNumber.intValue();
-      return srcStatus & ~KalypsoStati.BIT_DERIVATED;
+      return srcStatus & ~( KalypsoStati.BIT_DERIVATED | KalypsoStati.BIT_DERIVATION_ERROR );
     }
 
     return srcValue;
