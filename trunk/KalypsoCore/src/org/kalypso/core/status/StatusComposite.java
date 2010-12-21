@@ -89,6 +89,11 @@ public class StatusComposite extends Composite
    */
   public static final int HIDE_TEXT = SWT.SIMPLE;
 
+  /**
+   * Style constant: if set, the details button is hidden, if is is disabled.
+   */
+  public static final int HIDE_DETAILS_IF_DISABLED = SWT.WRAP;
+
   private Label m_imageLabel;
 
   private Text m_messageText;
@@ -270,7 +275,13 @@ public class StatusComposite extends Composite
     }
 
     if( m_detailsButton != null )
+    {
       m_detailsButton.setEnabled( enabled );
+
+      final boolean hideDetailsIfdisabled = (getStyle() & HIDE_DETAILS_IF_DISABLED) != 0;
+      final boolean visible = !hideDetailsIfdisabled || enabled;
+      m_detailsButton.setVisible( visible );
+    }
 
     layout();
   }
