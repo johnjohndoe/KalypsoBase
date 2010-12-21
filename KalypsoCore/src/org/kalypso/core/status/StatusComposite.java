@@ -92,7 +92,7 @@ public class StatusComposite extends Composite
   /**
    * Style constant: if set, the details button is hidden, if is is disabled.
    */
-  public static final int HIDE_DETAILS_IF_DISABLED = SWT.WRAP;
+  public static final int HIDE_DETAILS_IF_DISABLED = SWT.PASSWORD;
 
   private Label m_imageLabel;
 
