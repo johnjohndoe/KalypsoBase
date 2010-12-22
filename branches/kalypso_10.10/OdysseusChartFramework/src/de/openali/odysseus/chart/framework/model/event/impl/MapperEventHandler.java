@@ -50,7 +50,7 @@ public class MapperEventHandler extends AbstractEventProvider<IMapperEventListen
 {
   public void fireMapperChanged( final IMapper mapper )
   {
-    for( final IMapperEventListener l : getListeners() )
+    for( final IMapperEventListener l : getListeners( IMapperEventListener.class ) )
       l.onMapperChanged( mapper );
   }
 }

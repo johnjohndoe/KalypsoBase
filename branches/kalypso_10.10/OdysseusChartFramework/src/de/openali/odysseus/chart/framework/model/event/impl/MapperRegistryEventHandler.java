@@ -10,19 +10,19 @@ public class MapperRegistryEventHandler extends AbstractEventProvider<IMapperReg
 {
   public void fireMapperAdded( final IMapper mapper )
   {
-    for( final IMapperRegistryEventListener l : getListeners() )
+    for( final IMapperRegistryEventListener l : getListeners( IMapperRegistryEventListener.class ) )
       l.onMapperAdded( mapper );
   }
 
   public void fireMapperRemoved( final IMapper mapper )
   {
-    for( final IMapperRegistryEventListener l : getListeners() )
+    for( final IMapperRegistryEventListener l : getListeners( IMapperRegistryEventListener.class ) )
       l.onMapperRemoved( mapper );
   }
 
   public void fireMapperChanged( final IMapper mapper )
   {
-    for( final IMapperRegistryEventListener l : getListeners() )
+    for( final IMapperRegistryEventListener l : getListeners( IMapperRegistryEventListener.class ) )
       l.onMapperChanged( mapper );
   }
 }
