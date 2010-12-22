@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: KaylpsoAddLayer Plug-in
 Bundle-SymbolicName: org.kalypso.ui.addlayer; singleton:=true
-Bundle-Version: 10.10.0.qualifier
+Bundle-Version: 10.10.1.qualifier
 Bundle-Activator: org.kalypso.ui.KalypsoAddLayerPlugin
 Bundle-Vendor: kalypsobase.sourceforge.net
 Bundle-Localization: plugin
