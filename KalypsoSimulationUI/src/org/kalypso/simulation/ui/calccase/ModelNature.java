@@ -442,7 +442,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     if( launchFolder == null )
       throw new CoreException( new Status( IStatus.ERROR, KalypsoSimulationUIPlugin.getID(), Messages.getString( "org.kalypso.simulation.ui.calccase.ModelNature.8" ) ) ); //$NON-NLS-1$
 
-    return launchFolder.getFile( launchName + ".launch" );
+    return launchFolder.getFile( launchName + ".launch" ); //$NON-NLS-1$
   }
 
   private IFolder getLaunchFolder( )
