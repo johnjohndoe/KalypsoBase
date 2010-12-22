@@ -54,6 +54,7 @@ public class TupleResultLineLayer extends AbstractLineLayer
 
   protected TupleResultDomainValueData< ? , ? > m_data;
 
+  // FIXME: Aaarg, what is that?! MUST be an implementation details of the mapper/axes
   final private DataOperatorHelper m_dataOpertatorHelper = new DataOperatorHelper();
 
   final public static String TOOLTIP_FORMAT = "%-12s %s %n%-12s %s"; //$NON-NLS-1$
@@ -147,7 +148,6 @@ public class TupleResultLineLayer extends AbstractLineLayer
 
     if( domainValues.length > 0 && targetValues.length > 0 )
     {
-
       for( int i = 0; i < domainValues.length; i++ )
       {
         final Object domainValue = domainValues[i];
@@ -157,6 +157,8 @@ public class TupleResultLineLayer extends AbstractLineLayer
         // in that case
         if( domainValue != null && targetValue != null )
         {
+          // FIXME: this is really strange!
+          // FIXME: We should just call mapper.logicalToScreen, everything else is business of the framework!
           final Point screen = getCoordinateMapper().numericToScreen( domainDataOp.logicalToNumeric( domainValue ), targetDataOp.logicalToNumeric( targetValue ) );
           path.add( screen );
         }
@@ -212,8 +214,6 @@ public class TupleResultLineLayer extends AbstractLineLayer
     final int domainComponentIndex = tr.indexOfComponent( m_data.getDomainComponentName() );
     final String targetComponentLabel = ComponentUtilities.getComponentLabel( tr.getComponent( targetComponentIndex ) );
     final String domainComponentLabel = ComponentUtilities.getComponentLabel( tr.getComponent( domainComponentIndex ) );
-    final String targetComponentUnit = ComponentUtilities.getComponentUnitLabel( tr.getComponent( targetComponentIndex ) );
-    final String domainComponentUnit = ComponentUtilities.getComponentUnitLabel( tr.getComponent( domainComponentIndex ) );
     final Object y = tr.get( index ).getValue( targetComponentIndex );
     final Object x = tr.get( index ).getValue( domainComponentIndex );
 
@@ -233,7 +233,7 @@ public class TupleResultLineLayer extends AbstractLineLayer
    * @see de.openali.odysseus.chart.framework.model.layer.ITooltipChartLayer#getHover(org.eclipse.swt.graphics.Point)
    */
   @Override
-  public EditInfo getHover( Point pos )
+  public EditInfo getHover( final Point pos )
   {
     if( !isVisible() )
       return null;
