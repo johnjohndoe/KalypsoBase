@@ -5,7 +5,8 @@ Bundle-SymbolicName: org.kalypso.simulation.core; singleton:=true
 Bundle-Version: 10.10.0.qualifier
 Bundle-Activator: org.kalypso.simulation.core.KalypsoSimulationCorePlugin
 Bundle-Vendor: kalypsobase.sourceforge.net
-Require-Bundle: org.kalypso.core;bundle-version="1.0.0";visibility:=reexport
+Require-Bundle: org.kalypso.core;bundle-version="1.0.0";visibility:=reexport,
+ org.eclipse.wst.xml.core;resolution:=optional
 Bundle-ActivationPolicy: lazy
 Export-Package: org.kalypso.simulation.core,
  org.kalypso.simulation.core.ant,
