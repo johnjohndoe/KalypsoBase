@@ -10,7 +10,7 @@ public class LayerManagerEventHandler extends AbstractEventProvider<ILayerManage
 {
   public void fireLayerAdded( final IChartLayer layer )
   {
-    for( final ILayerManagerEventListener l : getListeners() )
+    for( final ILayerManagerEventListener l : getListeners( ILayerManagerEventListener.class ) )
     {
       l.onLayerAdded( layer );
     }
@@ -18,7 +18,7 @@ public class LayerManagerEventHandler extends AbstractEventProvider<ILayerManage
 
   public void fireActiveLayerChanged( final IChartLayer layer )
   {
-    for( final ILayerManagerEventListener l : getListeners() )
+    for( final ILayerManagerEventListener l : getListeners( ILayerManagerEventListener.class ) )
     {
       l.onActivLayerChanged( layer );
     }
@@ -26,7 +26,7 @@ public class LayerManagerEventHandler extends AbstractEventProvider<ILayerManage
 
   public void fireLayerRemoved( final IChartLayer layer )
   {
-    for( final ILayerManagerEventListener l : getListeners() )
+    for( final ILayerManagerEventListener l : getListeners( ILayerManagerEventListener.class ) )
     {
       l.onLayerRemoved( layer );
     }
@@ -34,7 +34,7 @@ public class LayerManagerEventHandler extends AbstractEventProvider<ILayerManage
 
   public void fireLayerMoved( final IChartLayer layer )
   {
-    for( final ILayerManagerEventListener l : getListeners() )
+    for( final ILayerManagerEventListener l : getListeners( ILayerManagerEventListener.class ) )
     {
       l.onLayerMoved( layer );
     }
@@ -42,7 +42,7 @@ public class LayerManagerEventHandler extends AbstractEventProvider<ILayerManage
 
   public void fireLayerVisibilityChanged( final IChartLayer layer )
   {
-    for( final ILayerManagerEventListener l : getListeners() )
+    for( final ILayerManagerEventListener l : getListeners( ILayerManagerEventListener.class ) )
     {
       l.onLayerVisibilityChanged( layer );
     }
@@ -50,7 +50,7 @@ public class LayerManagerEventHandler extends AbstractEventProvider<ILayerManage
 
   public void fireLayerContentChanged( final IChartLayer layer )
   {
-    for( final ILayerManagerEventListener l : getListeners() )
+    for( final ILayerManagerEventListener l : getListeners( ILayerManagerEventListener.class ) )
     {
       l.onLayerContentChanged( layer );
     }
