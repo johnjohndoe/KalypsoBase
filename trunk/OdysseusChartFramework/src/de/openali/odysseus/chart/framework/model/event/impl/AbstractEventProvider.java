@@ -50,14 +50,13 @@ import de.openali.odysseus.chart.framework.model.event.IEventProvider;
  */
 public abstract class AbstractEventProvider<T> implements IEventProvider<T>
 {
-
   private final Set<T> m_listeners = new HashSet<T>();
 
   /**
    * @see de.openali.odysseus.chart.framework.model.event.IEventProvider#addListener(java.lang.Object)
    */
   @Override
-  public final void addListener( T listener )
+  public final void addListener( final T listener )
   {
     m_listeners.add( listener );
   }
@@ -66,13 +65,19 @@ public abstract class AbstractEventProvider<T> implements IEventProvider<T>
    * @see de.openali.odysseus.chart.framework.model.event.IEventProvider#removeListener(java.lang.Object)
    */
   @Override
-  public final void removeListener( T listener )
+  public final void removeListener( final T listener )
   {
     m_listeners.remove( listener );
   }
 
-  public Set<T> getListeners( )
+  /**
+   * @param type
+   *          The real type is needed in order to create an generic array of that type
+   */
+  public T[] getListeners( final Class<T> type )
   {
-    return m_listeners;
+    @SuppressWarnings("unchecked")
+    final T[] array = (T[]) java.lang.reflect.Array.newInstance( type, m_listeners.size() );
+    return m_listeners.toArray( array );
   }
 }

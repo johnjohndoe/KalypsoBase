@@ -49,26 +49,26 @@ import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
  */
 public class LayerEventHandler extends AbstractEventProvider<ILayerEventListener>
 {
-	public void fireLayerContentChanged(final IChartLayer layer)
-	{
-		for (final ILayerEventListener l : getListeners())
-		{
-			l.onLayerContentChanged(layer);
-		}
-	}
-
-	public void fireLayerVisibilityChanged(final IChartLayer layer)
-	{
-		for (final ILayerEventListener l : getListeners())
-		{
-			l.onLayerVisibilityChanged(layer);
-		}
-	}
-	public void fireActiveLayerChanged(final IChartLayer layer)
+  public void fireLayerContentChanged(final IChartLayer layer)
+  {
+    for( final ILayerEventListener l : getListeners( ILayerEventListener.class ) )
     {
-        for (final ILayerEventListener l : getListeners())
-        {
-            l.onActiveLayerChanged(layer);
-        }
+      l.onLayerContentChanged(layer);
     }
+  }
+
+  public void fireLayerVisibilityChanged(final IChartLayer layer)
+  {
+    for( final ILayerEventListener l : getListeners( ILayerEventListener.class ) )
+    {
+      l.onLayerVisibilityChanged(layer);
+    }
+  }
+  public void fireActiveLayerChanged(final IChartLayer layer)
+  {
+    for( final ILayerEventListener l : getListeners( ILayerEventListener.class ) )
+    {
+      l.onActiveLayerChanged(layer);
+    }
+  }
 }
