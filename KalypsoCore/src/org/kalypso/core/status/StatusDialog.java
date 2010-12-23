@@ -71,6 +71,8 @@ public class StatusDialog extends AbstractStatusDialog
 {
   private boolean m_showAsTree;
 
+  private boolean m_showTime = true;
+
   public StatusDialog( final Shell parentShell, final IStatus status, final String dialogTitle )
   {
     super( parentShell, status, dialogTitle );
@@ -157,7 +159,8 @@ public class StatusDialog extends AbstractStatusDialog
       StatusLabelProvider.addNavigationColumn( columnViewer );
     StatusLabelProvider.addSeverityColumn( columnViewer );
     StatusLabelProvider.addMessageColumn( columnViewer );
-    StatusLabelProvider.addTimeColumn( columnViewer );
+    if( m_showTime )
+      StatusLabelProvider.addTimeColumn( columnViewer );
 
     if( columnViewer instanceof TreeViewer )
       columnViewer.setContentProvider( new StatusTreeContentProvider() );

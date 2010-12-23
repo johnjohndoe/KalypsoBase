@@ -726,7 +726,7 @@ public class TupleResult implements List<IRecord>
     }
   }
 
- 
+
   public int indexOfComponent( final IComponent comp )
   {
     return m_components.indexOf( comp );
@@ -743,6 +743,9 @@ public class TupleResult implements List<IRecord>
   @Override
   public int indexOf( final Object o )
   {
+    if( o == null )
+      return -1;
+
     if( o instanceof IRecord )
     {
       sort();
