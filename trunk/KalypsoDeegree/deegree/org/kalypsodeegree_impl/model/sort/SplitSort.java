@@ -528,7 +528,7 @@ public class SplitSort implements FeatureList
       for( final Object lObj : c )
       {
         final Envelope env = getEnvelope( lObj );
-        if( m_index != null && env != null )
+        if( m_index != null )
           m_index.remove( env, lObj );
       }
       result = m_items.removeAll( c );
