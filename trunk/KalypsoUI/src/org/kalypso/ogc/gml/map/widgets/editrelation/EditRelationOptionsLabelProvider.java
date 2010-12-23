@@ -42,8 +42,10 @@ package org.kalypso.ogc.gml.map.widgets.editrelation;
 
 import java.net.URL;
 
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -90,12 +92,19 @@ public class EditRelationOptionsLabelProvider extends LabelProvider
     if( element instanceof GMLWorkspace )
     {
       final URL context = ((GMLWorkspace) element).getContext();
-      return context == null ? Messages.getString( "org.kalypso.ogc.gml.map.widgets.editrelation.EditRelationOptionsLabelProvider.1" ) : context.toExternalForm(); //$NON-NLS-1$
+      if( context == null )
+        return Messages.getString( "org.kalypso.ogc.gml.map.widgets.editrelation.EditRelationOptionsLabelProvider.1" );
+
+      final IPath resourcePath = ResourceUtilities.findPathFromURL( context );
+      if( resourcePath != null )
+        return resourcePath.toOSString();
+
+      return context.toExternalForm();
     }
     if( element instanceof IFeatureType )
     {
       final IAnnotation annotation = ((IFeatureType) element).getAnnotation(  );
-      return annotation.getTooltip();
+      return annotation.getValue( IAnnotation.ANNO_NAME );
     }
     if( element instanceof IPropertyType )
     {
