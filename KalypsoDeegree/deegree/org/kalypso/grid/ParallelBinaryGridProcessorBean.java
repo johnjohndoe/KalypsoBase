@@ -47,9 +47,9 @@ import java.math.BigDecimal;
  */
 public class ParallelBinaryGridProcessorBean
 {
-  public ParallelBinaryGridProcessorBean( final int BLOCK_SIZE )
+  public ParallelBinaryGridProcessorBean( final int blockSize )
   {
-    m_blockData = new byte[BLOCK_SIZE];
+    m_blockData = new byte[blockSize];
   }
 
   public byte[] m_blockData;
