@@ -67,22 +67,18 @@ public class DeleteSelectedRowsHandler extends AbstractHandler
     if( tupleResult == null || viewer == null )
       throw new ExecutionException( Messages.getString( "org.kalypso.ogc.gml.om.table.command.DeleteSelectedRowsHandler.0" ) ); //$NON-NLS-1$
 
-    final IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
+    viewer.cancelEditing();
 
+    final IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
     final Object firstElement = selection.getFirstElement();
     final int firstIndex = tupleResult.indexOf( firstElement );
 
-    // TODO: we should force the table to stop editing first
+    // TODO: it is not always ok to delete every row -> we need to check if some rows are locked
     tupleResult.removeAll( selection.toList() );
 
-    if( tupleResult.size() > 0 )
-    {
-      final int indexToSelect = Math.min( firstIndex, tupleResult.size() - 1 );
-      // to prevent indexOutOfBounds
-      if( indexToSelect < 0 )
-        return null;
+    final int indexToSelect = Math.min( firstIndex, tupleResult.size() - 1 );
+    if( indexToSelect != -1 )
       viewer.setSelection( new StructuredSelection( tupleResult.get( indexToSelect ) ) );
-    }
 
     return null;
   }

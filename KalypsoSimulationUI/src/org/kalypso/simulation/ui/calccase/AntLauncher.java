@@ -45,6 +45,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import org.eclipse.ant.core.AntRunner;
 import org.eclipse.ant.internal.launching.AntLaunching;
 import org.eclipse.ant.internal.launching.AntLaunchingUtil;
 import org.eclipse.ant.launching.IAntLaunchConstants;
@@ -61,6 +62,8 @@ import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.core.ILaunchManager;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.simulation.ui.KalypsoSimulationUIPlugin;
+import org.kalypso.simulation.ui.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -91,7 +94,7 @@ public class AntLauncher
   private void checkInit( )
   {
     if( m_launchConfiguration == null )
-      throw new IllegalStateException( "AntLauncher not initialized" );
+      throw new IllegalStateException( "AntLauncher not initialized" ); //$NON-NLS-1$
   }
 
   @SuppressWarnings("unchecked")
@@ -150,6 +153,15 @@ public class AntLauncher
 
     try
     {
+      // Check, if a second launch is already running and provide an error message.
+      // REMARK: the ant launcher dies the same thing, but it's error message is not suitable for users
+      final boolean isSeparateJRE = AntLaunchingUtil.isSeparateJREAntBuild( m_launchConfiguration );
+      if( !isSeparateJRE && AntRunner.isBuildRunning() )
+      {
+        final String message = Messages.getString( "AntLauncher_1" ); //$NON-NLS-1$
+        return new Status( IStatus.ERROR, KalypsoSimulationUIPlugin.getID(), message );
+      }
+
       if( AntLaunchingUtil.isLaunchInBackground( m_launchConfiguration ) )
         return executeAndWait( monitor );
 
@@ -172,7 +184,7 @@ public class AntLauncher
   private IStatus executeAndWait( final IProgressMonitor monitor ) throws InterruptedException, CoreException
   {
     final String name = m_launchConfiguration.getName();
-    monitor.beginTask( String.format( "Launching %s", name ), IProgressMonitor.UNKNOWN );
+    monitor.beginTask( String.format( Messages.getString( "AntLauncher_2" ), name ), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
 
     final ILaunch launch = m_launchConfiguration.launch( ILaunchManager.RUN_MODE, new SubProgressMonitor( monitor, 1000 ) );
 
@@ -202,7 +214,7 @@ public class AntLauncher
     // TODO better ask for termination, but continue task in background?
     launch.terminate();
 
-    return StatusUtilities.createStatus( IStatus.WARNING, "Operation wegen Timeout abgebrochen", null );
+    return StatusUtilities.createStatus( IStatus.WARNING, Messages.getString( "AntLauncher_3" ), null ); //$NON-NLS-1$
   }
 
 }

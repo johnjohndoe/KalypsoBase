@@ -66,6 +66,8 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  */
 public class GMLContentProvider implements ITreeContentProvider
 {
+  private static final GMLXPath EMPTY_ROOT_PATH = new GMLXPath( "", null );//$NON-NLS-1$
+
   private final ModellEventListener m_workspaceListener = new ModellEventListener()
   {
     @Override
@@ -84,7 +86,7 @@ public class GMLContentProvider implements ITreeContentProvider
    * <p>
    * If null, the root-feature is the root element of the tree.
    */
-  private GMLXPath m_rootPath = new GMLXPath( "", null ); //$NON-NLS-1$
+  private GMLXPath m_rootPath = EMPTY_ROOT_PATH; //$NON-NLS-1$
 
   private final boolean m_showAssociations;
 
@@ -385,7 +387,7 @@ public class GMLContentProvider implements ITreeContentProvider
     final Object[] expandedElements = m_viewer.getExpandedElements();
 
     // prepare for exception
-    m_rootPath = new GMLXPath( "", null ); //$NON-NLS-1$
+    m_rootPath = EMPTY_ROOT_PATH; //$NON-NLS-1$
 
     try
     {
@@ -435,7 +437,7 @@ public class GMLContentProvider implements ITreeContentProvider
       KalypsoGisPlugin.getDefault().getLog().log( status );
     }
 
-    m_rootPath = new GMLXPath( "", null ); //$NON-NLS-1$
+    m_rootPath = EMPTY_ROOT_PATH; //$NON-NLS-1$
 
     m_viewer.setExpandedElements( expandedElements );
     m_viewer.refresh();
@@ -461,17 +463,16 @@ public class GMLContentProvider implements ITreeContentProvider
   {
     final Object[] expandedElements = m_viewer == null ? null : m_viewer.getExpandedElements();
 
-    try
-    {
+    if( rootPath == null )
+      m_rootPath = EMPTY_ROOT_PATH;
+    else
       m_rootPath = rootPath;
-    }
-    finally
+
+    // FIXME: dangerous: should be called in SWT thread...
+    if( m_viewer != null )
     {
-      if( m_viewer != null )
-      {
-        m_viewer.setExpandedElements( expandedElements );
-        m_viewer.refresh();
-      }
+      m_viewer.setExpandedElements( expandedElements );
+      m_viewer.refresh();
     }
   }
 

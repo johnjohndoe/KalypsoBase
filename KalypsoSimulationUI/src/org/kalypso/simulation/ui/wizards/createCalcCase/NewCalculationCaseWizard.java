@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.simulation.ui.wizards.createCalcCase;
 
@@ -44,6 +44,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
@@ -89,7 +90,7 @@ public class NewCalculationCaseWizard extends BasicNewResourceWizard
   public void init( final IWorkbench workbench, final IStructuredSelection currentSelection )
   {
     super.init( workbench, currentSelection );
-    setWindowTitle(Messages.getString("org.kalypso.simulation.ui.wizards.createCalcCase.NewCalculationCaseWizard.0") ); //$NON-NLS-1$
+    setWindowTitle( Messages.getString( "org.kalypso.simulation.ui.wizards.createCalcCase.NewCalculationCaseWizard.0" ) ); //$NON-NLS-1$
     setNeedsProgressMonitor( true );
   }
 
@@ -100,7 +101,7 @@ public class NewCalculationCaseWizard extends BasicNewResourceWizard
   public void addPages( )
   {
     super.addPages();
-    m_createFolderPage = new NewCalculationCaseCreateFolderPage(Messages.getString("org.kalypso.simulation.ui.wizards.createCalcCase.NewCalculationCaseWizard.1"), getSelection() ); //$NON-NLS-1$
+    m_createFolderPage = new NewCalculationCaseCreateFolderPage( Messages.getString( "org.kalypso.simulation.ui.wizards.createCalcCase.NewCalculationCaseWizard.1" ), getSelection() ); //$NON-NLS-1$
     m_createControlPage = new SteuerparameterWizardPage( m_createFolderPage, ImageProvider.IMAGE_KALYPSO_ICON_BIG, false )
     {
       /**
@@ -138,8 +139,8 @@ public class NewCalculationCaseWizard extends BasicNewResourceWizard
       @Override
       public void execute( final IProgressMonitor monitor ) throws CoreException
       {
-        monitor.beginTask( "Neue Rechenvariante erzeugen - ", 1000 );
-        monitor.subTask( "" ); // Hack, else the begin task will not be set here
+        monitor.beginTask( Messages.getString("NewCalculationCaseWizard.0"), 1000 ); //$NON-NLS-1$
+        monitor.subTask( StringUtils.EMPTY ); // Hack, else the begin task will not be set here
 
         controlPage.saveChanges( newFolderHandle, new SubProgressMonitor( monitor, 100 ) );
 
