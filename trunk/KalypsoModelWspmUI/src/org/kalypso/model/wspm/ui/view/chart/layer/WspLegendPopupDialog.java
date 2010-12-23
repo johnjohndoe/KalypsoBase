@@ -49,7 +49,9 @@ import org.eclipse.jface.viewers.CheckboxTreeViewer;
 import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
+import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -79,6 +81,15 @@ public class WspLegendPopupDialog extends PopupDialog
     super( parentShell, SWT.RESIZE, true, true, true, false, false, Messages.getString( "org.kalypso.model.wspm.ui.view.chart.layer.WspLegendPopupDialog.0" ), "" ); //$NON-NLS-1$ //$NON-NLS-2$
 
     m_wspLayer = wspLayer;
+  }
+
+  /**
+   * @see org.eclipse.jface.dialogs.PopupDialog#getDefaultSize()
+   */
+  @Override
+  protected Point getDefaultSize( )
+  {
+    return new Point( 200, 200 );
   }
 
   /**
@@ -129,6 +140,8 @@ public class WspLegendPopupDialog extends PopupDialog
 
       final ILabelProvider labelProvider = data.createLabelProvider();
       treeViewer.setLabelProvider( labelProvider );
+
+      treeViewer.setSorter( new ViewerSorter() );
 
       treeViewer.setInput( treeInput );
 
