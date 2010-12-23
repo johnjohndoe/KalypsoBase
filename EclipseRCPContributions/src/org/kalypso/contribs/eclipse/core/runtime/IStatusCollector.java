@@ -84,4 +84,9 @@ public interface IStatusCollector extends Collection<IStatus>
    * this collector is empty or contains only Ok-stati.
    */
   IStatus asMultiStatusOrOK( String msg );
+
+  /**
+   * Same as {@link #asMultiStatusOrOK(String)}, but returns a OK-Status with s specific message.
+   */
+  IStatus asMultiStatusOrOK( String msg, String okMessage );
 }
