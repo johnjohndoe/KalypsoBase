@@ -64,6 +64,7 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.MarkerIndex;
 import org.kalypso.model.wspm.core.profil.reparator.IProfilMarkerResolution;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
+import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.observation.result.IRecord;
 
 /**
@@ -116,7 +117,7 @@ public class ProfileProblemView
     return markerRes;
   }
 
-  private final Section createSection( final IProfil profil, final Composite parent, final IMarker[] markers, final int color, final String text )
+  private final Section createSection( final IProfil profil, final Composite parent, final IMarker[] markers, final int color, final String multiMessage )
   {
     Composite container = parent;
     Section result = null;
@@ -127,7 +128,7 @@ public class ProfileProblemView
       section.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false,2,1 ) );
       section.setTitleBarForeground( section.getDisplay().getSystemColor( color ) );
       section.setToggleColor( section.getDisplay().getSystemColor( color ) );
-      section.setText( markers.length + " " + text + org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.view.table.ProfileProblemView.0") ); //$NON-NLS-1$ //$NON-NLS-2$
+      section.setText( multiMessage );
 
       final Composite expanded_section = m_toolkit.createComposite( section );
 
@@ -145,13 +146,13 @@ public class ProfileProblemView
       final IProfilMarkerResolution[] markerRes = getResolutions( marker );
       if( markerRes == null || markerRes.length < 1 )
       {
-        quickFix.setToolTipText( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.view.table.ProfileProblemView.1") ); //$NON-NLS-1$
+        quickFix.setToolTipText( Messages.getString( "org.kalypso.model.wspm.ui.view.table.ProfileProblemView.1" ) ); //$NON-NLS-1$
         quickFix.setImage( JFaceResources.getResources().createImageWithDefault( IDEInternalWorkbenchImages.getImageDescriptor( IDEInternalWorkbenchImages.IMG_DLCL_QUICK_FIX_DISABLED ) ) );
       }
       else
       {
         final String toolTip = markerRes[0] == null ? null : markerRes[0].getDescription();
-        quickFix.setToolTipText( toolTip == null ? org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.view.table.ProfileProblemView.2") : toolTip ); //$NON-NLS-1$
+        quickFix.setToolTipText( toolTip == null ? Messages.getString( "org.kalypso.model.wspm.ui.view.table.ProfileProblemView.2" ) : toolTip ); //$NON-NLS-1$
         quickFix.setImage( JFaceResources.getResources().createImageWithDefault( IDEInternalWorkbenchImages.getImageDescriptor( IDEInternalWorkbenchImages.IMG_ELCL_QUICK_FIX_ENABLED ) ) );
         quickFix.addHyperlinkListener( new HyperlinkAdapter()
         {
@@ -228,15 +229,21 @@ public class ProfileProblemView
 
   private final boolean createSections( final Composite parent, final IProfil profil )
   {
-
     final MarkerIndex markerIndex = profil.getProblemMarker();
     if( !(markerIndex != null && markerIndex.hasMarkers()) )
-    {
       return false;
-    }
-    final Section errSec = createSection( profil, parent, markerIndex.get( IMarker.SEVERITY_ERROR ), SWT.COLOR_RED, org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.view.table.ProfileProblemView.3") ); //$NON-NLS-1$
-    final Section warnSec = createSection( profil, parent, markerIndex.get( IMarker.SEVERITY_WARNING ), SWT.COLOR_DARK_YELLOW, org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.view.table.ProfileProblemView.4") ); //$NON-NLS-1$
-    final Section infSec = createSection( profil, parent, markerIndex.get( IMarker.SEVERITY_INFO ), SWT.COLOR_DARK_BLUE, org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.view.table.ProfileProblemView.5") ); //$NON-NLS-1$
+
+    final IMarker[] errorMarkers = markerIndex.get( IMarker.SEVERITY_ERROR );
+    final IMarker[] warningMarkers = markerIndex.get( IMarker.SEVERITY_WARNING );
+    final IMarker[] infoMarkers = markerIndex.get( IMarker.SEVERITY_INFO );
+
+    final String errorMessage = Messages.getString( "org.kalypso.model.wspm.ui.view.table.ProfileProblemView.3", errorMarkers.length ); //$NON-NLS-1$
+    final String warningMessage = Messages.getString( "org.kalypso.model.wspm.ui.view.table.ProfileProblemView.4", warningMarkers.length ); //$NON-NLS-1$
+    final String infoMessage = Messages.getString( "org.kalypso.model.wspm.ui.view.table.ProfileProblemView.5", infoMarkers.length ); //$NON-NLS-1$
+
+    final Section errSec = createSection( profil, parent, errorMarkers, SWT.COLOR_RED, errorMessage );
+    final Section warnSec = createSection( profil, parent, warningMarkers, SWT.COLOR_DARK_YELLOW, warningMessage );
+    final Section infSec = createSection( profil, parent, infoMarkers, SWT.COLOR_DARK_BLUE, infoMessage );
     if( errSec != null )
     {
       errSec.setExpanded( errors_expanded );

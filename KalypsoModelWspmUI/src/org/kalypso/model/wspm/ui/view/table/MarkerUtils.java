@@ -49,7 +49,7 @@ public class MarkerUtils
 {
   private MarkerUtils( )
   {
-    throw new UnsupportedOperationException( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.view.table.MarkerUtils.0") ); //$NON-NLS-1$
+    throw new UnsupportedOperationException( "Do no instantiate this helper class" ); //$NON-NLS-1$
   }
 
   /**
