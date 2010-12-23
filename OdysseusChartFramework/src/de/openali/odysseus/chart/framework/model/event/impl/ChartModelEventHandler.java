@@ -50,7 +50,7 @@ public class ChartModelEventHandler extends AbstractEventProvider<IChartModelEve
 {
   public void fireModelChanged( final IChartModel oldModel, final IChartModel newModel )
   {
-    for( final IChartModelEventListener l : getListeners() )
+    for( final IChartModelEventListener l : getListeners( IChartModelEventListener.class ) )
       l.onModelChanged( oldModel, newModel );
   }
 }

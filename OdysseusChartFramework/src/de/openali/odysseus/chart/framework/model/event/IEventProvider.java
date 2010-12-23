@@ -45,7 +45,7 @@ package de.openali.odysseus.chart.framework.model.event;
  */
 public interface IEventProvider<T>
 {
-  public void addListener( T listener );
+  void addListener( T listener );
 
-  public void removeListener( T listener );
+  void removeListener( T listener );
 }
