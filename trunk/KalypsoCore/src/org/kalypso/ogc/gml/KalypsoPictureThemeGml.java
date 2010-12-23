@@ -41,12 +41,7 @@
 package org.kalypso.ogc.gml;
 
 import java.awt.Graphics;
-import java.net.MalformedURLException;
 import java.net.URL;
-
-import javax.media.jai.JAI;
-import javax.media.jai.RenderedOp;
-import javax.media.jai.TiledImage;
 
 import ogc31.www.opengis.net.gml.FileType;
 
@@ -82,13 +77,16 @@ public class KalypsoPictureThemeGml extends KalypsoPictureTheme
 
     try
     {
+      final URL gmlURL = UrlResolverSingleton.resolveUrl( context, layerType.getHref() );
+      setContext( gmlURL );
+
       // TODO: botch... find a better way of loading gml workspace!
       // maybe it could be treated as normal gml with a special display element?
-      final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( UrlResolverSingleton.resolveUrl( getURLContext(), getStyledLayerType().getHref() ), null );
+      final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( gmlURL, null );
       final Feature fRoot = workspace.getRootFeature();
 
       m_coverages = (ICoverageCollection) fRoot.getAdapter( ICoverageCollection.class );
-      IFeatureBindingCollection<ICoverage> coverages = m_coverages.getCoverages();
+      final IFeatureBindingCollection<ICoverage> coverages = m_coverages.getCoverages();
       if( coverages.size() != 1 )
         throw new NotImplementedException( Messages.getString( "org.kalypso.ogc.gml.KalypsoPictureThemeGml.0" ) ); //$NON-NLS-1$
 
@@ -122,37 +120,24 @@ public class KalypsoPictureThemeGml extends KalypsoPictureTheme
     /** image creation removed from constructor, so not visible themes will not be loaded! */
     if( getImage() == null )
     {
-      try
+      final IFeatureBindingCollection<ICoverage> coverages = m_coverages.getCoverages();
+      for( final ICoverage coverage : coverages )
       {
-        IFeatureBindingCollection<ICoverage> coverages = m_coverages.getCoverages();
-        for( final ICoverage coverage : coverages )
+        final RectifiedGridCoverage coverage2 = (RectifiedGridCoverage) coverage;
+
+        /* imgFile */
+        final Object rangeSet = coverage2.getRangeSet();
+        if( rangeSet instanceof FileType )
         {
-          final RectifiedGridCoverage coverage2 = (RectifiedGridCoverage) coverage;
-
-          /* imgFile */
-          final Object rangeSet = coverage2.getRangeSet();
-          if( rangeSet instanceof FileType )
-          {
-            final FileType type = (FileType) rangeSet;
-
-            final URL imageContext = UrlResolverSingleton.resolveUrl( getURLContext(), getStyledLayerType().getHref() );
-            final URL imageUrl = UrlResolverSingleton.resolveUrl( imageContext, type.getFileName() );
-            final RenderedOp image = JAI.create( "url", imageUrl ); //$NON-NLS-1$
-            setImage( new TiledImage( image, true ) );
-            image.dispose();
-          }
-
-          // HACK: we assume, that we only have exactly ONE coverage per picture-theme
-
-          break;
+          final FileType type = (FileType) rangeSet;
+          final String filePath = type.getFileName();
+          final URL imageURL = loadImage( filePath );
+          if( imageURL == null )
+            return getStatus();
         }
-      }
-      catch( final MalformedURLException e )
-      {
-        e.printStackTrace();
-        final IStatus status = StatusUtilities.statusFromThrowable( e );
-        setStatus( status );
-        return status;
+
+        // HACK: we assume, that we only have exactly ONE coverage per picture-theme
+        break;
       }
     }
 

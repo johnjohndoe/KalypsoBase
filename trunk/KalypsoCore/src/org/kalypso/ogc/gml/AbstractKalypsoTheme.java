@@ -496,6 +496,11 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
     return m_externIconUrn;
   }
 
+  protected void setContext( final URL context )
+  {
+    m_context = context;
+  }
+
   @Override
   public void setLegendIcon( final String legendIcon, final URL context )
   {

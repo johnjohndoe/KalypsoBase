@@ -30,9 +30,12 @@
 package org.kalypso.ogc.gml;
 
 import java.awt.Graphics;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.logging.Logger;
 
+import javax.media.jai.JAI;
+import javax.media.jai.RenderedOp;
 import javax.media.jai.TiledImage;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -40,6 +43,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.java.net.UrlResolverSingleton;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.template.types.ObjectFactory;
@@ -70,14 +75,13 @@ public abstract class KalypsoPictureTheme extends AbstractKalypsoTheme
 
   private final StyledLayerType m_layerType;
 
-  private final URL m_context;
-
   public KalypsoPictureTheme( final I10nString layerName, final StyledLayerType layerType, final URL context, final IMapModell modell )
   {
     super( layerName, layerType.getLinktype(), modell );
 
+    setContext( context );
+
     m_layerType = layerType;
-    m_context = context;
   }
 
   /**
@@ -152,11 +156,6 @@ public abstract class KalypsoPictureTheme extends AbstractKalypsoTheme
     return m_layerType;
   }
 
-  protected URL getURLContext( )
-  {
-    return m_context;
-  }
-
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#paint(java.awt.Graphics,
    *      org.kalypsodeegree.graphics.transformation.GeoTransform, java.lang.Boolean,
@@ -204,4 +203,60 @@ public abstract class KalypsoPictureTheme extends AbstractKalypsoTheme
   {
     m_domain = domain;
   }
+
+  protected URL loadImage( final String filePath )
+  {
+    RenderedOp image = null;
+
+    try
+    {
+      // UGLY HACK: replace backslashes with slashes. The add-picture-theme action seems to put backslashes (on windows)
+      // in the relative URLs (which is even wrong in windows). Should be fixed there, but is fixed also here to support
+      // older projects.
+      final String filePathChecked = filePath.replaceAll( "\\\\", "/" );
+
+      final URL context = getContext();
+      final URL imageUrl = UrlResolverSingleton.resolveUrl( context, filePathChecked );
+
+      image = JAI.create( "url", imageUrl ); //$NON-NLS-1$
+
+      // FIXME we get out of memory here, as the whole image is loaded... we should instead access the tiles of the
+      // RenderdOp
+      setImage( new TiledImage( image, true ) );
+      return imageUrl;
+    }
+    catch( final MalformedURLException e )
+    {
+      setStatus( e, "Fehlerhafter Dateipfad %s", filePath );
+    }
+    catch( final OutOfMemoryError error )
+    {
+      // REMARK: this will happen if we load big images
+      // It is safe to catch it here, as the heap will be freed immediately, if the image could not be loaded
+      setStatus( error, "Zu wenig Speicher zum Laden von Bild %s. Versuchen Sie die Bildgröße zu verkleinern oder dem Programm mehr Speicher zuzuweisen.", filePath );
+    }
+    catch( final Throwable error )
+    {
+      // REMARK: this will happen if we load big images
+      // It is safe to catch it here, as the heap will be freed immediately, if the image could not be loaded
+      setStatus( error, "Unerwarteter Fehler beim Laden von Bild %s, vermutlich zu wenig Speicher. Versuchen Sie die Bildgröße zu verkleinern oder dem Programm mehr Speicher zuzuweisen.", filePath );
+    }
+    finally
+    {
+      if( image != null )
+        image.dispose();
+    }
+
+    return null;
+  }
+
+  private IStatus setStatus( final Throwable e, final String formatString, final Object... formatArguments )
+  {
+    e.printStackTrace();
+    final String msg = String.format( formatString, formatArguments );
+    final IStatus status = new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), msg, e );
+    setStatus( status );
+    return status;
+  }
+
 }
