@@ -29,7 +29,7 @@
  */
 package org.kalypso.ui.wizard.image;
 
-import java.net.MalformedURLException;
+import java.net.URL;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
@@ -66,18 +66,14 @@ public class ImportImageSourceWizard extends Wizard implements IKalypsoDataImpor
   {
     if( m_mapModel != null )
     {
-      try
-      {
-        final AddThemeCommand command = new AddThemeCommand( m_mapModel, m_page.getRelativeSourcePath().removeFileExtension().lastSegment(), m_page.getFileType(), null, m_page.getURL().toString()
-            + "#" + m_page.getCSName() ); //$NON-NLS-1$
-        m_outlineviewer.postCommand( command, null );
-      }
-      catch( final MalformedURLException e )
-      {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-        return false;
-      }
+      final URL context = m_mapModel.getContext();
+
+      final String name = m_page.getSourcePath().removeFileExtension().lastSegment();
+      final String type = m_page.getFileType();
+      final String source = m_page.getSource( context );
+      final AddThemeCommand command = new AddThemeCommand( m_mapModel, name, type, null, source
+          + "#" + m_page.getCSName() ); //$NON-NLS-1$
+      m_outlineviewer.postCommand( command, null );
     }
     return true;
   }

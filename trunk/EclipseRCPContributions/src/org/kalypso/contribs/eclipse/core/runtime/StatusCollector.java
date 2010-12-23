@@ -116,6 +116,18 @@ public class StatusCollector implements IStatusCollector
     return Status.OK_STATUS;
   }
 
+  @Override
+  public IStatus asMultiStatusOrOK( final String msg, final String okMessage )
+  {
+    for( final IStatus status : m_stati )
+    {
+      if( !status.isOK() )
+        return asMultiStatus( msg );
+    }
+
+    return new Status( IStatus.OK, m_pluginID, okMessage );
+  }
+
   /**
    * @return
    * @see java.util.Collection#size()

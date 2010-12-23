@@ -40,12 +40,17 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse.jface.action;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
@@ -61,6 +66,8 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
  */
 public class ActionButton
 {
+  private final Collection<Image> m_images = new ArrayList<Image>();
+
   private final IAction m_action;
 
   private final Button m_button;
@@ -129,6 +136,8 @@ public class ActionButton
       public void widgetDisposed( final DisposeEvent e )
       {
         action.removePropertyChangeListener( propertyChangeListener );
+
+        disposeImages();
       }
     } );
 
@@ -140,6 +149,12 @@ public class ActionButton
         handleButtonSelected( event );
       }
     } );
+  }
+
+  protected void disposeImages( )
+  {
+    for( final Image image : m_images )
+      image.dispose();
   }
 
   protected void handleButtonSelected( final Event event )
@@ -158,6 +173,16 @@ public class ActionButton
     // m_action.getAccelerator();
 
     // m_action.getHelpListener();
+
+    // TODO: move to update and change if image changes
+    // TODO: implement hover image
+    final ImageDescriptor imageDescriptor = m_action.getImageDescriptor();
+    if( imageDescriptor != null )
+    {
+      final Image image = imageDescriptor.createImage( m_button.getDisplay() );
+      m_images.add( image );
+      m_button.setImage( image );
+    }
   }
 
   /**

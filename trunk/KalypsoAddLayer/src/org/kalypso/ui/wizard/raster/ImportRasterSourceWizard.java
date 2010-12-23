@@ -46,8 +46,8 @@ import java.net.URL;
 import org.apache.commons.io.FilenameUtils;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Assert;
@@ -162,8 +162,15 @@ public class ImportRasterSourceWizard extends Wizard implements IKalypsoDataImpo
       fileName += ".gml";
 
     final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-    final IFolder folder = root.getFolder( containerFullPath );
-    return folder.getFile( fileName );
+    final IResource folder = root.findMember( containerFullPath );
+    if( folder instanceof IContainer )
+    {
+      final IContainer container = (IContainer) folder;
+      return container.getFile( new Path( fileName ) );
+    }
+
+    // TODO: error handling
+    return null;
   }
 
   /**
