@@ -178,7 +178,6 @@ public class ZmlEinzelwertDialog extends EnhancedTitleAreaDialog
         if( objModelDate instanceof Date )
         {
           final Date modelDate = (Date) objModelDate;
-
           if( modelDate.equals( date ) )
             return index;
         }
