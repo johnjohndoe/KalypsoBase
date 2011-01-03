@@ -78,7 +78,7 @@ public interface IZmlModelColumn
 
   IZmlModel getZmlModel( );
 
-  ITupleModel getTupleModel( );
+  ITupleModel getTupleModel( ) throws SensorException;
 
   IAxis getIndexAxis( );
 }

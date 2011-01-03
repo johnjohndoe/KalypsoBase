@@ -73,36 +73,36 @@ public class ZmlCommandDeleteStuetzstellen extends AbstractHandler
   @Override
   public Object execute( final ExecutionEvent event )
   {
-    final IZmlTable table = ZmlHandlerUtil.getTable( event );
-    final IZmlTableColumn column = table.getActiveColumn();
-    final IZmlModelColumn modelColumn = column.getModelColumn();
-    final ITupleModel model = modelColumn.getTupleModel();
-
-    final IAxis statusAxis = AxisUtils.findStatusAxis( model.getAxisList() );
-    final IAxis dataSourceAxis = AxisUtils.findDataSourceAxis( model.getAxisList() );
-    final String src = String.format( "%s%s", DataSourceHelper.FILTER_SOURCE, InterpolationFilter.FILTER_ID ); //$NON-NLS-1$
-    final DataSourceHandler dataSourceHandler = new DataSourceHandler( modelColumn.getMetadata() );
-
-    final IZmlTableCell[] cells = column.getSelectedCells();
-    for( final IZmlTableCell cell : cells )
-    {
-      try
-      {
-        final IZmlValueReference reference = cell.getValueReference();
-        if( ZmlValueRefernceHelper.isStuetzstelle( reference ) )
-        {
-          model.set( reference.getTupleModelIndex(), statusAxis, KalypsoStati.BIT_CHECK );
-          model.set( reference.getTupleModelIndex(), dataSourceAxis, dataSourceHandler.addDataSource( src, src ) );
-        }
-      }
-      catch( final Throwable t )
-      {
-        KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( t ) );
-      }
-    }
-
     try
     {
+      final IZmlTable table = ZmlHandlerUtil.getTable( event );
+      final IZmlTableColumn column = table.getActiveColumn();
+      final IZmlModelColumn modelColumn = column.getModelColumn();
+      final ITupleModel model = modelColumn.getTupleModel();
+
+      final IAxis statusAxis = AxisUtils.findStatusAxis( model.getAxisList() );
+      final IAxis dataSourceAxis = AxisUtils.findDataSourceAxis( model.getAxisList() );
+      final String src = String.format( "%s%s", DataSourceHelper.FILTER_SOURCE, InterpolationFilter.FILTER_ID ); //$NON-NLS-1$
+      final DataSourceHandler dataSourceHandler = new DataSourceHandler( modelColumn.getMetadata() );
+
+      final IZmlTableCell[] cells = column.getSelectedCells();
+      for( final IZmlTableCell cell : cells )
+      {
+        try
+        {
+          final IZmlValueReference reference = cell.getValueReference();
+          if( ZmlValueRefernceHelper.isStuetzstelle( reference ) )
+          {
+            model.set( reference.getTupleModelIndex(), statusAxis, KalypsoStati.BIT_CHECK );
+            model.set( reference.getTupleModelIndex(), dataSourceAxis, dataSourceHandler.addDataSource( src, src ) );
+          }
+        }
+        catch( final Throwable t )
+        {
+          KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( t ) );
+        }
+      }
+
       // FIXME improve update value handling
       final IObservation observation = modelColumn.getObservation();
       observation.setValues( model );
