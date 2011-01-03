@@ -42,15 +42,20 @@ package org.kalypso.zml.ui.table.dialogs.input;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.kalypso.zml.ui.table.base.widgets.AbstractEnhancedWidget;
 
 /**
  * @author Dirk Kuch
  */
 public class ZmlEinzelwert
 {
+  Set<AbstractEnhancedWidget< ? >> m_widgets = new LinkedHashSet<AbstractEnhancedWidget< ? >>();
+
   private Date m_date;
 
   private Double m_value;
@@ -141,6 +146,22 @@ public class ZmlEinzelwert
     }
 
     return buffer.toString();
+  }
+
+  public void addWidget( final AbstractEnhancedWidget< ? > widget )
+  {
+    m_widgets.add( widget );
+  }
+
+  public boolean isValid( )
+  {
+    for( final AbstractEnhancedWidget< ? > widget : m_widgets )
+    {
+      if( !widget.isValid() )
+        return false;
+    }
+
+    return true;
   }
 
 }

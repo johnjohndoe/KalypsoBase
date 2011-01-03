@@ -138,8 +138,6 @@ public class ZmlEinzelwertComposite extends Composite implements IZmlEinzelwertM
       addRow( body, m_toolkit, row );
     }
 
-    body.layout();
-    form.reflow( true );
     this.layout();
   }
 
@@ -152,11 +150,13 @@ public class ZmlEinzelwertComposite extends Composite implements IZmlEinzelwertM
       final Date[] dayAnchors = getDayAnchors( existing );
 
       final EnhancedComboViewer<Date> viewerDay = new EnhancedComboViewer<Date>( base, toolkit, new DateWidgetRule() );
+      row.addWidget( viewerDay );
       viewerDay.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
       viewerDay.setInput( dayAnchors );
       viewerDay.setSelection( findSelectedAnchor( row, dayAnchors ) );
 
       final EnhancedComboViewer<Date> viewerTime = new EnhancedComboViewer<Date>( base, toolkit, new TimeWidgetRule() );
+      row.addWidget( viewerTime );
       viewerTime.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
       viewerTime.setFilter( new ViewerFilter()
       {
@@ -200,7 +200,6 @@ public class ZmlEinzelwertComposite extends Composite implements IZmlEinzelwertM
           calendar.set( Calendar.SECOND, baseCalendar.get( Calendar.SECOND ) );
           calendar.set( Calendar.MILLISECOND, baseCalendar.get( Calendar.MILLISECOND ) );
 
-          // FIXME doesn't work
           row.setDate( calendar.getTime() );
         }
       } );
@@ -219,6 +218,7 @@ public class ZmlEinzelwertComposite extends Composite implements IZmlEinzelwertM
       toolkit.createLabel( base, "" ).setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
       final EnhancedTextBox<Double> textBox = new EnhancedTextBox<Double>( base, toolkit, new DoubeValueWidgetRule() );
+      row.addWidget( textBox );
       textBox.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
       textBox.setText( row.getValue() );
 
@@ -379,8 +379,13 @@ public class ZmlEinzelwertComposite extends Composite implements IZmlEinzelwertM
 
   public boolean isValid( )
   {
-    // TODO Auto-generated method stub
+    final ZmlEinzelwert[] rows = m_model.getRows();
+    for( final ZmlEinzelwert row : rows )
+    {
+      if( !row.isValid() )
+        return false;
+    }
 
-    return false;
+    return true;
   }
 }

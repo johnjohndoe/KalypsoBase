@@ -91,4 +91,12 @@ public abstract class AbstractEnhancedWidget<T> extends Composite
   {
     return m_validationIcon;
   }
+
+  public boolean isValid( )
+  {
+    if( m_validationIcon.isDisposed() )
+      return true;
+
+    return !m_validationIcon.isVisible();
+  }
 }

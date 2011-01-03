@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.dialogs.input;
 
+import java.util.Date;
+
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
@@ -50,6 +53,12 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.ogc.sensor.IAxis;
+import org.kalypso.ogc.sensor.ITupleModel;
+import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.zml.core.table.model.IZmlModelColumn;
+import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.dialogs.EnhancedTitleAreaDialog;
 import org.kalypso.zml.ui.table.model.IZmlTableColumn;
 
@@ -64,9 +73,12 @@ public class ZmlEinzelwertDialog extends EnhancedTitleAreaDialog
 
   private ZmlEinzelwertComposite m_composite;
 
+  private final IZmlTableColumn m_column;
+
   public ZmlEinzelwertDialog( final Shell shell, final IZmlTableColumn column )
   {
     super( shell );
+    m_column = column;
     m_model = new ZmlEinzelwertModel( column );
 
     setShellStyle( SWT.CLOSE | SWT.MAX | SWT.TITLE | SWT.BORDER | SWT.APPLICATION_MODAL | SWT.RESIZE );
@@ -123,8 +135,60 @@ public class ZmlEinzelwertDialog extends EnhancedTitleAreaDialog
   {
     if( !m_composite.isValid() )
     {
-
+      MessageDialog.openError( getParentShell(), "Ungültige Werte", "Eine Verarbeitung ist nicht möglich, da Tabelle ungültige Werte enthält." );
+      return;
     }
+
+    saveChanges();
+
     super.okPressed();
+  }
+
+  private void saveChanges( )
+  {
+    final IZmlModelColumn modelColumn = m_column.getModelColumn();
+
+    final ZmlEinzelwert[] rows = m_model.getRows();
+    for( final ZmlEinzelwert row : rows )
+    {
+      try
+      {
+        final int index = findIndex( row, modelColumn );
+        modelColumn.update( index, row.getValue() );
+      }
+      catch( final Throwable t )
+      {
+        KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( t ) );
+      }
+    }
+  }
+
+  private int findIndex( final ZmlEinzelwert row, final IZmlModelColumn modelColumn ) throws SensorException
+  {
+    final Date date = row.getDate();
+
+    final ITupleModel model = modelColumn.getTupleModel();
+    final IAxis axis = modelColumn.getIndexAxis();
+
+    for( int index = 0; index < model.size(); index++ )
+    {
+      try
+      {
+        final Object objModelDate = model.get( index, axis );
+        if( objModelDate instanceof Date )
+        {
+          final Date modelDate = (Date) objModelDate;
+
+          if( modelDate.equals( date ) )
+            return index;
+        }
+      }
+      catch( final Throwable t )
+      {
+        KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( t ) );
+      }
+    }
+
+    return -1;
   }
 }
