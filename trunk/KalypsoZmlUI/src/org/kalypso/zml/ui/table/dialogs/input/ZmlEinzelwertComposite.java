@@ -63,6 +63,7 @@ import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
+import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.validators.IntegerInputValidator;
@@ -71,6 +72,7 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.base.widgets.EnhancedComboViewer;
 import org.kalypso.zml.ui.table.base.widgets.EnhancedTextBox;
+import org.kalypso.zml.ui.table.base.widgets.IEnhancedTextBoxListener;
 import org.kalypso.zml.ui.table.base.widgets.rules.DateWidgetRule;
 import org.kalypso.zml.ui.table.base.widgets.rules.DoubeValueWidgetRule;
 import org.kalypso.zml.ui.table.base.widgets.rules.TimeWidgetRule;
@@ -81,6 +83,8 @@ import org.kalypso.zml.ui.table.base.widgets.rules.TimeWidgetRule;
 public class ZmlEinzelwertComposite extends Composite implements IZmlEinzelwertModelListener
 {
   private static final Image IMG_ADD = new Image( null, ZmlEinzelwertComposite.class.getResourceAsStream( "icons/add.png" ) );
+
+  private static final Image IMG_ADD_ONE = new Image( null, ZmlEinzelwertComposite.class.getResourceAsStream( "icons/add_one.png" ) );
 
   private static final Image IMG_REMOVE = new Image( null, ZmlEinzelwertComposite.class.getResourceAsStream( "icons/remove.png" ) );
 
@@ -113,21 +117,29 @@ public class ZmlEinzelwertComposite extends Composite implements IZmlEinzelwertM
       m_base.dispose();
 
     m_base = m_toolkit.createComposite( this );
-    m_base.setLayout( LayoutHelper.createGridLayout( 5 ) );
+    m_base.setLayout( LayoutHelper.createGridLayout() );
     m_base.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
-    m_toolkit.createLabel( m_base, "Datum" );
-    m_toolkit.createLabel( m_base, "Uhrzeit" );
-    m_toolkit.createLabel( m_base, "" );
-    m_toolkit.createLabel( m_base, "Wert" );
-    m_toolkit.createLabel( m_base, "" );
+    final ScrolledForm form = m_toolkit.createScrolledForm( m_base );
+    form.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
+
+    final Composite body = form.getBody();
+    body.setLayout( LayoutHelper.createGridLayout( 5 ) );
+
+    m_toolkit.createLabel( body, "Datum" );
+    m_toolkit.createLabel( body, "Uhrzeit" );
+    m_toolkit.createLabel( body, "" );
+    m_toolkit.createLabel( body, "Wert" );
+    m_toolkit.createLabel( body, "" );
 
     final ZmlEinzelwert[] rows = m_model.getRows();
     for( final ZmlEinzelwert row : rows )
     {
-      addRow( m_base, m_toolkit, row );
+      addRow( body, m_toolkit, row );
     }
 
+    body.layout();
+    form.reflow( true );
     this.layout();
   }
 
@@ -142,7 +154,7 @@ public class ZmlEinzelwertComposite extends Composite implements IZmlEinzelwertM
       final EnhancedComboViewer<Date> viewerDay = new EnhancedComboViewer<Date>( base, toolkit, new DateWidgetRule() );
       viewerDay.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
       viewerDay.setInput( dayAnchors );
-      viewerDay.setSelection( dayAnchors[0] );
+      viewerDay.setSelection( findSelectedAnchor( row, dayAnchors ) );
 
       final EnhancedComboViewer<Date> viewerTime = new EnhancedComboViewer<Date>( base, toolkit, new TimeWidgetRule() );
       viewerTime.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
@@ -168,15 +180,6 @@ public class ZmlEinzelwertComposite extends Composite implements IZmlEinzelwertM
 
       viewerTime.setInput( existing );
       viewerTime.setSelection( date );
-
-// viewerDay.addListener( new ISelectionChangedListener()
-// {
-// @Override
-// public void selectionChanged( final SelectionChangedEvent event )
-// {
-// viewerTime.refresh();
-// }
-// } );
 
       viewerDay.addListener( new ISelectionChangedListener()
       {
@@ -219,40 +222,122 @@ public class ZmlEinzelwertComposite extends Composite implements IZmlEinzelwertM
       textBox.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
       textBox.setText( row.getValue() );
 
-      final ImageHyperlink lnkAdd = toolkit.createImageHyperlink( base, SWT.BEGINNING );
-      lnkAdd.setLayoutData( new GridData( GridData.FILL, GridData.FILL, false, false ) );
-      lnkAdd.setImage( IMG_ADD );
-      lnkAdd.addHyperlinkListener( new HyperlinkAdapter()
+      textBox.addListener( new IEnhancedTextBoxListener<Double>()
       {
-        /**
-         * @see org.eclipse.ui.forms.events.HyperlinkAdapter#linkActivated(org.eclipse.ui.forms.events.HyperlinkEvent)
-         */
         @Override
-        public void linkActivated( final HyperlinkEvent e )
+        public void valueChanged( final Double value )
         {
-          final InputDialog dialog = new InputDialog( lnkAdd.getShell(), "Schrittweite", "Bitte geben Sie den Stunden-Offset (Schrittweite) des nächsten Wertes an", "1", new IntegerInputValidator() );
-          final int status = dialog.open();
-          if( Window.OK == status )
-          {
-            try
-            {
-              final Integer stepping = Integer.valueOf( dialog.getValue() );
-
-              m_model.addRow( date, stepping );
-            }
-            catch( final Throwable t )
-            {
-              KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( t ) );
-            }
-          }
-
+          row.setValue( value );
         }
       } );
+
+      addRowControls( base, toolkit, row );
+
     }
     catch( final SensorException e )
     {
       KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
     }
+  }
+
+  private void addRowControls( final Composite parent, final FormToolkit toolkit, final ZmlEinzelwert row )
+  {
+    final Composite base = toolkit.createComposite( parent );
+    base.setLayout( LayoutHelper.createGridLayout( 3 ) );
+
+    final ImageHyperlink lnkAddOne = toolkit.createImageHyperlink( base, SWT.BEGINNING );
+    lnkAddOne.setLayoutData( new GridData( GridData.FILL, GridData.FILL, false, false ) );
+    lnkAddOne.setImage( IMG_ADD_ONE );
+    lnkAddOne.setToolTipText( "Wert hinzufügen (Schrittweite +1 Stunde )" );
+    lnkAddOne.addHyperlinkListener( new HyperlinkAdapter()
+    {
+      /**
+       * @see org.eclipse.ui.forms.events.HyperlinkAdapter#linkActivated(org.eclipse.ui.forms.events.HyperlinkEvent)
+       */
+      @Override
+      public void linkActivated( final HyperlinkEvent e )
+      {
+        try
+        {
+          m_model.addRow( row.getDate(), 1 );
+        }
+        catch( final Throwable t )
+        {
+          KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( t ) );
+        }
+      }
+    } );
+
+    final ImageHyperlink lnkAdd = toolkit.createImageHyperlink( base, SWT.BEGINNING );
+    lnkAdd.setLayoutData( new GridData( GridData.FILL, GridData.FILL, false, false ) );
+    lnkAdd.setToolTipText( "Wert hinzufügen (benutzerdefinierte Schrittweite)" );
+    lnkAdd.setImage( IMG_ADD );
+    lnkAdd.addHyperlinkListener( new HyperlinkAdapter()
+    {
+      /**
+       * @see org.eclipse.ui.forms.events.HyperlinkAdapter#linkActivated(org.eclipse.ui.forms.events.HyperlinkEvent)
+       */
+      @Override
+      public void linkActivated( final HyperlinkEvent e )
+      {
+        final InputDialog dialog = new InputDialog( lnkAdd.getShell(), "Schrittweite", "Bitte geben Sie den Stunden-Offset (Schrittweite) des nächsten Wertes an", "1", new IntegerInputValidator() );
+        final int status = dialog.open();
+        if( Window.OK == status )
+        {
+          try
+          {
+            final Integer stepping = Integer.valueOf( dialog.getValue() );
+
+            m_model.addRow( row.getDate(), stepping );
+          }
+          catch( final Throwable t )
+          {
+            KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( t ) );
+          }
+        }
+      }
+    } );
+
+    final ImageHyperlink lnkRemoveRow = toolkit.createImageHyperlink( base, SWT.BEGINNING );
+    lnkRemoveRow.setLayoutData( new GridData( GridData.FILL, GridData.FILL, false, false ) );
+    lnkRemoveRow.setImage( IMG_REMOVE );
+    lnkRemoveRow.setToolTipText( "Wert entfernen" );
+    lnkRemoveRow.addHyperlinkListener( new HyperlinkAdapter()
+    {
+      /**
+       * @see org.eclipse.ui.forms.events.HyperlinkAdapter#linkActivated(org.eclipse.ui.forms.events.HyperlinkEvent)
+       */
+      @Override
+      public void linkActivated( final HyperlinkEvent e )
+      {
+        try
+        {
+          m_model.removeRow( row );
+        }
+        catch( final Throwable t )
+        {
+          KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( t ) );
+        }
+      }
+    } );
+
+    if( m_model.size() == 1 )
+      lnkRemoveRow.setEnabled( false );
+  }
+
+  private Date findSelectedAnchor( final ZmlEinzelwert row, final Date[] dayAnchors )
+  {
+    final Date base = row.getDate();
+    if( base == null )
+      return null;
+
+    for( final Date anchor : dayAnchors )
+    {
+      if( ZmlEinzelwertHelper.compareDayAnchor( base, anchor ) )
+        return anchor;
+    }
+
+    return null;
   }
 
   private Date[] getDayAnchors( final Date[] existing )
@@ -290,5 +375,12 @@ public class ZmlEinzelwertComposite extends Composite implements IZmlEinzelwertM
         return Status.OK_STATUS;
       }
     }.schedule();
+  }
+
+  public boolean isValid( )
+  {
+    // TODO Auto-generated method stub
+
+    return false;
   }
 }
