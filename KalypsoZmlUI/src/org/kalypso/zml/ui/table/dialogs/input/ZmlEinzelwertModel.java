@@ -126,7 +126,7 @@ public class ZmlEinzelwertModel
     }
   }
 
-  /** sort out duplicated entries */
+  /** sort out duplicate entries */
   private void cleanUp( )
   {
     final Map<Date, ZmlEinzelwert> map = new HashMap<Date, ZmlEinzelwert>();
@@ -166,6 +166,10 @@ public class ZmlEinzelwertModel
     return existing.toArray( new Date[] {} );
   }
 
+  /**
+   * @param stepping
+   *          CALENDAR.HOUR_OF_DAY offset
+   */
   public void addRow( final Date steppingBase, final Integer stepping ) throws SensorException
   {
     final Calendar calendar = Calendar.getInstance();
@@ -201,5 +205,18 @@ public class ZmlEinzelwertModel
   public void addListener( final IZmlEinzelwertModelListener listener )
   {
     m_listeners.add( listener );
+  }
+
+  public void removeRow( final ZmlEinzelwert row )
+  {
+    final boolean removed = m_rows.remove( row );
+
+    if( removed )
+      fireModelChanged();
+  }
+
+  public int size( )
+  {
+    return m_rows.size();
   }
 }

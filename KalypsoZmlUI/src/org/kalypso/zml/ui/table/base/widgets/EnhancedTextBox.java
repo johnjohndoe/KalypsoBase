@@ -40,7 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.base.widgets;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.FocusAdapter;
+import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
@@ -57,6 +62,8 @@ public class EnhancedTextBox<T> extends AbstractEnhancedWidget<T>
   protected Text m_text;
 
   protected T m_value;
+
+  private final Set<IEnhancedTextBoxListener<T>> m_listeners = new LinkedHashSet<IEnhancedTextBoxListener<T>>();
 
   public EnhancedTextBox( final Composite parent, final FormToolkit toolkit, final ITextWidgetRule<T> rule )
   {
@@ -93,10 +100,37 @@ public class EnhancedTextBox<T> extends AbstractEnhancedWidget<T>
         m_value = getRule().parseValue( m_text.getText() );
       }
     } );
+
+    m_text.addFocusListener( new FocusAdapter()
+    {
+      /**
+       * @see org.eclipse.swt.events.FocusAdapter#focusLost(org.eclipse.swt.events.FocusEvent)
+       */
+      @Override
+      public void focusLost( final FocusEvent e )
+      {
+        fireValueChanged();
+      }
+    } );
   }
 
   public T getValue( )
   {
     return m_value;
+  }
+
+  protected void fireValueChanged( )
+  {
+    @SuppressWarnings("unchecked")
+    final IEnhancedTextBoxListener<T>[] listeners = m_listeners.toArray( new IEnhancedTextBoxListener[] {} );
+    for( final IEnhancedTextBoxListener<T> listener : listeners )
+    {
+      listener.valueChanged( getValue() );
+    }
+  }
+
+  public void addListener( final IEnhancedTextBoxListener<T> listener )
+  {
+    m_listeners.add( listener );
   }
 }

@@ -62,6 +62,8 @@ public class ZmlEinzelwertDialog extends EnhancedTitleAreaDialog
 
   private final ZmlEinzelwertModel m_model;
 
+  private ZmlEinzelwertComposite m_composite;
+
   public ZmlEinzelwertDialog( final Shell shell, final IZmlTableColumn column )
   {
     super( shell );
@@ -105,11 +107,24 @@ public class ZmlEinzelwertDialog extends EnhancedTitleAreaDialog
       }
     } );
 
-    final ZmlEinzelwertComposite composite = new ZmlEinzelwertComposite( base, toolkit, m_model );
-    composite.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
+    m_composite = new ZmlEinzelwertComposite( base, toolkit, m_model );
+    m_composite.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
 
     toolkit.adapt( parent );
 
     return super.createDialogArea( parent );
+  }
+
+  /**
+   * @see org.eclipse.jface.dialogs.Dialog#okPressed()
+   */
+  @Override
+  protected void okPressed( )
+  {
+    if( !m_composite.isValid() )
+    {
+
+    }
+    super.okPressed();
   }
 }

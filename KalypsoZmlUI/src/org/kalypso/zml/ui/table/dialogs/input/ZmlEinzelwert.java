@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.dialogs.input;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
@@ -52,7 +53,7 @@ public class ZmlEinzelwert
 {
   private Date m_date;
 
-  private final Double m_value;
+  private Double m_value;
 
   private final ZmlEinzelwertModel m_model;
 
@@ -112,6 +113,34 @@ public class ZmlEinzelwert
     m_date = selected;
 
     m_model.fireModelChanged();
+  }
+
+  public void setValue( final Double value )
+  {
+    m_value = value;
+
+    m_model.fireModelChanged();
+  }
+
+  /**
+   * @see java.lang.Object#toString()
+   */
+  @Override
+  public String toString( )
+  {
+    final StringBuffer buffer = new StringBuffer();
+    if( m_date != null )
+    {
+      final SimpleDateFormat sdf = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" );
+      buffer.append( String.format( "%s: ", sdf.format( m_date ) ) );
+    }
+
+    if( m_value != null )
+    {
+      buffer.append( String.format( "%.3f", m_value ) );
+    }
+
+    return buffer.toString();
   }
 
 }
