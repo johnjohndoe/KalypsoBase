@@ -105,6 +105,8 @@ public class EnhancedComboViewer<T> extends AbstractEnhancedWidget<T>
       {
         final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
         m_selection = (T) selection.getFirstElement();
+
+        fireWidgetChanged();
       }
     } );
   }

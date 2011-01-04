@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.base.widgets;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
@@ -52,13 +55,15 @@ import org.kalypso.zml.ui.table.base.widgets.rules.IWidgetRule;
 /**
  * @author Dirk Kuch
  */
-public abstract class AbstractEnhancedWidget<T> extends Composite
+public abstract class AbstractEnhancedWidget<T> extends Composite implements IAbstractEnhancedWidget
 {
   protected static final Image IMG_INVALID_PARAMETER = new Image( null, EnhancedTextBox.class.getResourceAsStream( "icons/invalid_parameter.gif" ) );
 
   private final IWidgetRule<T> m_rule;
 
   private ImageHyperlink m_validationIcon;
+
+  private final Set<IAbstractEnhancedWidgetChangeListener> m_changeListeners = new LinkedHashSet<IAbstractEnhancedWidgetChangeListener>();
 
   public AbstractEnhancedWidget( final Composite parent, final FormToolkit toolkit, final IWidgetRule<T> rule )
   {
@@ -70,6 +75,20 @@ public abstract class AbstractEnhancedWidget<T> extends Composite
     initValidationIcon( toolkit );
 
     toolkit.adapt( this );
+  }
+
+  public final void addListener( final IAbstractEnhancedWidgetChangeListener listener )
+  {
+    m_changeListeners.add( listener );
+  }
+
+  protected void fireWidgetChanged( )
+  {
+    final IAbstractEnhancedWidgetChangeListener[] listeners = m_changeListeners.toArray( new IAbstractEnhancedWidgetChangeListener[] {} );
+    for( final IAbstractEnhancedWidgetChangeListener listener : listeners )
+    {
+      listener.widgetChanged( this );
+    }
   }
 
   private void initValidationIcon( final FormToolkit toolkit )
@@ -92,6 +111,7 @@ public abstract class AbstractEnhancedWidget<T> extends Composite
     return m_validationIcon;
   }
 
+  @Override
   public boolean isValid( )
   {
     if( m_validationIcon.isDisposed() )

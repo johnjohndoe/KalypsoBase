@@ -98,6 +98,8 @@ public class EnhancedTextBox<T> extends AbstractEnhancedWidget<T>
       public void modifyText( final ModifyEvent e )
       {
         m_value = getRule().parseValue( m_text.getText() );
+
+        fireWidgetChanged();
       }
     } );
 
