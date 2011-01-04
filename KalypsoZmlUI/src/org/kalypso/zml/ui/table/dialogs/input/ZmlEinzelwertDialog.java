@@ -49,6 +49,7 @@ import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
@@ -65,7 +66,7 @@ import org.kalypso.zml.ui.table.model.IZmlTableColumn;
 /**
  * @author Dirk Kuch
  */
-public class ZmlEinzelwertDialog extends EnhancedTitleAreaDialog
+public class ZmlEinzelwertDialog extends EnhancedTitleAreaDialog implements IZmlEinzelwertCompositeListener
 {
   private static final String SCREEN_SIZE = "zml.input.dialog.screen.size";
 
@@ -123,6 +124,8 @@ public class ZmlEinzelwertDialog extends EnhancedTitleAreaDialog
     m_composite.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
 
     toolkit.adapt( parent );
+
+    m_composite.addListener( this );
 
     return super.createDialogArea( parent );
   }
@@ -189,5 +192,16 @@ public class ZmlEinzelwertDialog extends EnhancedTitleAreaDialog
     }
 
     return -1;
+  }
+
+  /**
+   * @see org.kalypso.zml.ui.table.dialogs.input.IZmlEinzelwertCompositeListener#inputChanged(boolean)
+   */
+  @Override
+  public void inputChanged( final boolean valid )
+  {
+    final Button button = getButton( OK );
+    if( button != null )
+      button.setEnabled( valid );
   }
 }
