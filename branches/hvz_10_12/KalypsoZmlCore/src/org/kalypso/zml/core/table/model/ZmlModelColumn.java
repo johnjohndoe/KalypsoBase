@@ -65,8 +65,6 @@ public class ZmlModelColumn implements IZmlModelColumn
 
   private final DataColumn m_type;
 
-  private ITupleModel m_tupleModel;
-
   private final String m_label;
 
   private final IObsProviderListener m_observationProviderListener = new IObsProviderListener()
@@ -117,9 +115,10 @@ public class ZmlModelColumn implements IZmlModelColumn
   }
 
   @Override
-  public ITupleModel getTupleModel( )
+  public ITupleModel getTupleModel( ) throws SensorException
   {
-    return m_tupleModel;
+    final IObservation observation = m_provider.getObservation();
+    return observation.getValues( null );
   }
 
   @Override
@@ -134,18 +133,7 @@ public class ZmlModelColumn implements IZmlModelColumn
     if( axis == null )
       return null;
 
-    return getModel().get( index, axis );
-  }
-
-  private ITupleModel getModel( ) throws SensorException
-  {
-    if( m_tupleModel == null )
-    {
-      final IObservation observation = m_provider.getObservation();
-      m_tupleModel = observation.getValues( null );
-    }
-
-    return m_tupleModel;
+    return getTupleModel().get( index, axis );
   }
 
   private boolean isTargetAxis( final IAxis axis )
@@ -156,13 +144,13 @@ public class ZmlModelColumn implements IZmlModelColumn
   @Override
   public int modelSize( ) throws SensorException
   {
-    return getModel().size();
+    return getTupleModel().size();
   }
 
   @Override
   public void update( final int index, final Object value ) throws SensorException
   {
-    final ITupleModel model = getModel();
+    final ITupleModel model = getTupleModel();
     final IAxis[] axes = model.getAxisList();
 
     for( final IAxis axis : axes )
