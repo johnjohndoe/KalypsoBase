@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestra�e 22
+ *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,47 +38,36 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.chart.layer.provider;
+package org.kalypso.zml.ui.chart.layer.visitor;
 
-import java.net.URL;
-
+import org.kalypso.ogc.sensor.provider.IObsProvider;
+import org.kalypso.zml.core.diagram.base.AbstractExternalChartModelVisitor;
 import org.kalypso.zml.ui.chart.layer.themes.ZmlForecastLayer;
-import org.kalypso.zml.ui.core.provider.observation.IRequestHandler;
 
-import de.openali.odysseus.chart.factory.config.exception.ConfigurationException;
-import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
-import de.openali.odysseus.chart.factory.provider.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlForecastLayerProvider extends AbstractLayerProvider implements ILayerProvider
+public class ForecastLayerChartModelVisitor extends AbstractExternalChartModelVisitor
 {
-  public static final String ID = "org.kalypso.zml.ui.chart.layer.provider.ZmlForecastLayerProvider";
+  private final IObsProvider m_provider;
+
+  public ForecastLayerChartModelVisitor( final IObsProvider provider )
+  {
+    m_provider = provider;
+  }
 
   /**
-   * @see de.openali.odysseus.chart.factory.provider.ILayerProvider#getLayer(java.net.URL)
+   * @see org.kalypso.zml.core.diagram.base.AbstractExternalChartModelVisitor#accept(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
    */
   @Override
-  public IChartLayer getLayer( final URL context ) throws ConfigurationException
+  protected void accept( final IChartLayer layer )
   {
+    if( !(layer instanceof ZmlForecastLayer) )
+      return;
 
-    try
-    {
-      final ZmlForecastLayer layer = new ZmlForecastLayer( this );
-
-      return layer;
-    }
-    catch( final Throwable t )
-    {
-      throw new ConfigurationException( "Configuring of .kod line layer theme failed.", t );
-    }
+    final ZmlForecastLayer forecastLayer = (ZmlForecastLayer) layer;
+    forecastLayer.setObsProvider( m_provider );
   }
-
-  protected IRequestHandler getRequestHandler( )
-  {
-    return new LineLayerRequestHandler( getParameterContainer() );
-  }
-
 }

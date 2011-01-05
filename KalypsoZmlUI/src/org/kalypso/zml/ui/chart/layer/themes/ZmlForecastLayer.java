@@ -71,18 +71,26 @@ import de.openali.odysseus.chart.framework.model.style.impl.LineStyle;
  */
 public class ZmlForecastLayer extends AbstractChartLayer implements IObsProviderListener
 {
-  private final IObsProvider m_provider;
+  private IObsProvider m_provider;
 
-  public ZmlForecastLayer( final ILayerProvider layerProvider, final IObsProvider provider )
+  public ZmlForecastLayer( final ILayerProvider layerProvider )
   {
     super( layerProvider );
+  }
+
+  public void setObsProvider( final IObsProvider provider )
+  {
+    if( m_provider != null )
+    {
+      m_provider.removeListener( this );
+      m_provider.dispose();
+    }
 
     m_provider = provider;
 
-    synchronized( provider )
+    if( provider != null )
     {
       provider.addListener( this );
-
       if( !provider.isLoaded() )
       {
         setVisible( false );
@@ -106,7 +114,6 @@ public class ZmlForecastLayer extends AbstractChartLayer implements IObsProvider
 
     final Number min = domainRange.getMin();
     final Number max = domainRange.getMax();
-
     if( min == null || max == null )
       return;
 
@@ -219,5 +226,4 @@ public class ZmlForecastLayer extends AbstractChartLayer implements IObsProvider
   {
     getEventHandler().fireLayerContentChanged( this );
   }
-
 }
