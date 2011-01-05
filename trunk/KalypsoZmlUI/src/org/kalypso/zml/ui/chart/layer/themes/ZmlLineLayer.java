@@ -186,7 +186,6 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
 
         drawLine( gc, path );
       }
-
     };
 
     return new ILegendEntry[] { le };
@@ -303,6 +302,7 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
             maxValue = (Number) model.get( i, getValueAxis() );
           }
         }
+
         return new DataRange<Number>( m_numberDataOperator.logicalToNumeric( minValue ), m_numberDataOperator.logicalToNumeric( maxValue ) );
       }
     }

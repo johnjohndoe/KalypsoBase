@@ -40,9 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.chart.layer.visitor;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.zml.core.diagram.base.AbstractExternalChartModelVisitor;
 
+import de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
+import de.openali.odysseus.chart.framework.model.mapper.IAxis;
+import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 
 /**
  * @author Dirk Kuch
@@ -62,7 +66,27 @@ public class SetVisibilityChartModelVisitor extends AbstractExternalChartModelVi
   @Override
   protected void accept( final IChartLayer layer )
   {
+    if( !(layer instanceof AbstractChartLayer) )
+      return;
 
+// final AbstractChartLayer abstractLayer = (AbstractChartLayer) layer;
+// final ILayerProvider provider = abstractLayer.getProvider();
+// if( provider == null )
+// return;
+
+    final String axisType = getTargetAxis( layer );
+    if( ArrayUtils.contains( m_ignoreTypes, axisType ) )
+      layer.setVisible( false );
+    else
+      layer.setVisible( true );
   }
 
+  private String getTargetAxis( final IChartLayer layer )
+  {
+    final ICoordinateMapper mapper = layer.getCoordinateMapper();
+    final IAxis targetAxis = mapper.getTargetAxis();
+    final String axisId = targetAxis.getId();
+
+    return axisId;
+  }
 }
